@@ -1,0 +1,59 @@
+.bg-4001_icon {
+  width: 45px;
+  height: 32px;
+  background: url("/img/sprite/sprites-icon.png") -65px -136px;
+}
+
+.bg-4003_icon {
+  width: 48px;
+  height: 45px;
+  background: url("/img/sprite/sprites-icon.png") -10px -10px;
+}
+
+.bg-4004_icon {
+  width: 41px;
+  height: 41px;
+  background: url("/img/sprite/sprites-icon.png") -10px -75px;
+}
+
+.bg-4005_icon {
+  width: 41px;
+  height: 41px;
+  background: url("/img/sprite/sprites-icon.png") -71px -75px;
+}
+
+.bg-4006_icon {
+  width: 41px;
+  height: 41px;
+  background: url("/img/sprite/sprites-icon.png") -140px -10px;
+}
+
+.bg-el_icon {
+  width: 30px;
+  height: 30px;
+  background: url("/img/sprite/sprites-icon.png") -130px -136px;
+}
+
+.bg-EPGS_COIN_icon {
+  width: 42px;
+  height: 45px;
+  background: url("/img/sprite/sprites-icon.png") -78px -10px;
+}
+
+.bg-ex_icon {
+  width: 30px;
+  height: 30px;
+  background: url("/img/sprite/sprites-icon.png") -201px -10px;
+}
+
+.bg-REP_COIN_icon {
+  width: 35px;
+  height: 45px;
+  background: url("/img/sprite/sprites-icon.png") -10px -136px;
+}
+
+.bg-SOCIAL_PT_icon {
+  width: 40px;
+  height: 40px;
+  background: url("/img/sprite/sprites-icon.png") -140px -71px;
+}

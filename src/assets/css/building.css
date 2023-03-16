@@ -1,0 +1,181 @@
+.build_area {
+  padding: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.build_checkBox_area {
+  margin-left: 5%;
+  width: 90%;
+  display: flex;
+  border: solid 1px grey;
+  flex-direction: column;
+  /* background-color: rgb(235, 235, 235); */
+}
+
+.build_checkBox_card {
+  width: 99%;
+  display: flex;
+
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.build_checkBox_card_title {
+  margin: 3px;
+  font-size: 14px;
+
+  width: 87px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.build_checkBox_card_room {
+  margin: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: rgb(247, 247, 247);
+  background-color: rgb(121, 121, 121);
+  margin-right: 10px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.build_checkBox_card_CONTROL {
+  margin: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  background-color: #005752;
+  color: #ffffff;
+  margin-right: 10px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.build_checkBox_card_TRADING {
+  margin: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  background-color: #0075a9;
+  color: #ffffff;
+  margin-right: 10px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.build_checkBox_card_MANUFACTURE {
+  margin: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  background-color: #ffd800;
+  color: #333333;
+  margin-right: 10px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.build_checkBox_card_WORKSHOP {
+  margin: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  background-color: #e3eb00;
+  color: #333333;
+  margin-right: 10px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.build_checkBox_card_TRAINING {
+  margin: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  background-color: #7d0022;
+  color: #ffffff;
+  margin-right: 10px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.build_checkBox_input {
+  margin: 5px;
+  margin-left: 1.5%;
+}
+
+.build_checkBox_input .el-input__inner {
+  width: 300px;
+  padding: 0 1px;
+  height: 22px;
+  border: 0px solid #d4d4d4;
+  background-color: rgb(240, 240, 240);
+  border-bottom: 1px solid #000000;
+  border-radius: 1px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.build_area {
+  min-height: 800px;
+  width: 100%;
+}
+
+.build_card {
+  /* border-top:1px solid rgb(167, 167, 167); */
+
+  text-align: center;
+}
+
+.build_roomName {
+  width: 65px;
+
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.build_phase {
+  width: 48px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.build_description {
+  font-weight: 700;
+}
+.build_char_img {
+  padding: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  /* margin-top: 30%;
+    margin-bottom: 30%; */
+}
+
+.build_char_img_size {
+  flex-direction: column;
+
+  justify-content: space-around;
+}
+
+.build_buffName {
+  text-align: center;
+  font-size: 18px;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.build_table {
+  margin: 2%;
+}
+
+.build_table td {
+  padding: 10px;
+  border-bottom: 1px solid rgb(196, 196, 196);
+}

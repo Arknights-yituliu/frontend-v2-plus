@@ -1,0 +1,32 @@
+.bg-4002icon {
+  width: 40px;
+  height: 36px;
+
+  background: url("https://image.yituliu.site/sprite/gachaSprite.png") 120px -1px;
+  background-size: 160px, 36px;
+}
+
+.bg-4003icon {
+  width: 40px;
+  height: 36px;
+
+  background: url("https://image.yituliu.site/sprite/gachaSprite.png") -2px -1px;
+  background-size: 160px, 36px;
+}
+
+.bg-7003icon {
+  width: 40px;
+  height: 36px;
+  background: url("https://image.yituliu.site/sprite/gachaSprite.png") 80px -1px;
+  background-size: 160px, 36px;
+}
+
+.bg-7004icon {
+  width: 40px;
+  height: 36px;
+  background: url("https://image.yituliu.site/sprite/gachaSprite.png") 40px -1px;
+  background-size: 160px, 36px;
+}
+
+.sprite_gacha {
+}

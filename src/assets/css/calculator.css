@@ -1,0 +1,184 @@
+.calculator_area {
+  margin-top: 1px;
+  margin-left: 1px;
+  width: 99%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: auto;
+}
+
+.calculator_null_area {
+  width: 100%;
+  height: 300px;
+}
+
+.calculator_input_area {
+  min-width: 45%;
+  height: 550px;
+}
+
+.calculator_input_table {
+  margin: 10%;
+  text-align: center;
+}
+
+.calculator_input_table td {
+  width: 90px;
+}
+
+.calculator_input_title {
+  margin-top: 10px;
+  font-size: 24px;
+  margin-left: 10px;
+  text-align: center;
+  width: 120px;
+  height: 30px;
+  border-right: 1px solid rgb(0, 0, 0);
+}
+
+.calculator_input_evo {
+  margin-top: 10px;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.calculator_input_level .el-input__inner {
+  margin-top: 6px;
+  width: 70px;
+  padding: 0 1px;
+  height: 30px;
+  font-size: 24px;
+  text-align: center;
+  background-color: rgb(210, 210, 210);
+  font-weight: 600;
+}
+
+.calculator_input_level_num .el-input__inner {
+  margin-top: 13px;
+  padding: 1px 5px;
+  height: 30px;
+  font-size: 25px;
+  text-align: center;
+  background-color: rgb(210, 210, 210);
+  font-weight: 600;
+}
+
+.calculator_input_level_num .el-input-number {
+  width: 85px;
+}
+
+.calculator_input_level_num .el-input-number__decrease {
+  margin-right: -1px;
+  margin-top: 12px;
+  width: 20px;
+  height: 30px;
+  background-color: rgb(210, 210, 210);
+  font-weight: 800;
+  color: #000;
+  text-align: center;
+  line-height: 30px;
+}
+
+.calculator_input_level_num .el-input-number__increase {
+  margin-right: -1px;
+  margin-top: 12px;
+  width: 20px;
+  height: 30px;
+  background-color: rgb(210, 210, 210);
+  font-weight: 800;
+  color: #000;
+  text-align: center;
+  line-height: 30px;
+}
+
+.el-input-number__increase .el-icon-plus {
+  margin-bottom: 5px;
+}
+
+.calculator_result_area {
+  margin-top: 2%;
+  margin-left: 3%;
+  min-width: 45%;
+  height: 550px;
+}
+
+.calculator_result_word_size {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.calculator_result_word_size_2 {
+  margin-top: 10px;
+  font-size: 28px;
+  margin-left: 10px;
+}
+
+.calculator_result_word_size_2 tr {
+  height: 55px;
+}
+
+.result_img_size {
+  height: 35px;
+  width: 35px;
+}
+
+::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
+}
+
+.result_cost_color {
+  color: rgb(50, 150, 250);
+  font-weight: 600;
+}
+
+.calculator_existGoods_input_size_Lmb {
+  color: rgb(0, 0, 0);
+  margin-bottom: 10px;
+}
+
+.calculator_existGoods_input_size_Lmb .el-input__inner {
+  width: 75px;
+  padding: 0 1px;
+  height: 22px;
+  border: 0px solid #d4d4d4;
+  border-bottom: 2px solid rgb(180, 180, 180);
+  border-radius: 1px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  background-color: rgb(210, 210, 210);
+  color: rgb(0, 0, 0);
+}
+
+.calculator_existGoods_input_size .el-input__inner {
+  width: 75px;
+  padding: 0 1px;
+  height: 22px;
+  border: 0px solid #d4d4d4;
+  background-color: rgb(210, 210, 210);
+  border-bottom: 2px solid rgb(180, 180, 180);
+  color: rgb(0, 0, 0);
+  border-radius: 1px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.calculator_downMenu_area {
+  margin-top: 10px;
+}
+.calculator_downMenu_border {
+  border-bottom: 1px solid rgb(204, 204, 204);
+}
+
+.calculator_downMenu_rarity_word_size {
+  font-size: 20px;
+  margin-left: 10px;
+  color: rgb(150, 150, 150);
+}
+
+.calculator_downMenu_rarity_item_size {
+  width: auto;
+  margin-top: 5px;
+}
