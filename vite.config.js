@@ -19,12 +19,12 @@ export default defineConfig({
         {
           name: "element-plus",
           var: "ElementPlus",
-          path: "https://unpkg.com/element-plus@2.3.0/dist/index.full.js",
+          path: "https://unpkg.com/element-plus@2.3.0/dist/index.full.min.js",
         },
         {
           name: "vue-router",
           var: "VueRouter",
-          path: "https://unpkg.com/vue-router@4.1.6/dist/vue-router.global.js",
+          path: "https://unpkg.com/vue-router@4.1.6/dist/vue-router.global.prod.js",
         },
         {
           name: "axios",
