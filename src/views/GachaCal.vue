@@ -206,7 +206,7 @@
               show-stops
               show-input
               @change="compute()"
-              style="display: inline-block; flex-grow: 1"
+              style="flex-grow: 1; flex-shrink: 5;"
             >
             </el-slider>
           </div>
