@@ -212,17 +212,15 @@
         </table>
         <!-- 数据表End -->
         <el-divider></el-divider>
-        <client-only>
-          <div class="popup_text f12">
-            效率基准:<b>常驻图</b>中综合效率最高者<br />
-            置信度:掉率对关卡效率误差影响在3%前提下的可信度范围
-            <a href="https://www.bilibili.com/video/BV1yL4y1P7K1" style="margin-left: 8px">
-              <div style="display: inline-block">详细介绍</div>
-              <div style="display: inline-block" :class="getSpriteImg('el', 7)"></div>
-            </a>
-            SPM:假设敌人被秒杀，1倍速下每分钟消耗的理智量，实际可能略有出入
-          </div>
-        </client-only>
+        <div class="popup_text f12">
+          效率基准:<b>常驻图</b>中综合效率最高者<br />
+          置信度:掉率对关卡效率误差影响在3%前提下的可信度范围
+          <a href="https://www.bilibili.com/video/BV1yL4y1P7K1" style="margin-left: 8px">
+            <div style="display: inline-block">详细介绍</div>
+            <div style="display: inline-block" :class="getSpriteImg('el', 7)"></div>
+          </a>
+          SPM:假设敌人被秒杀，1倍速下每分钟消耗的理智量，实际可能略有出入
+        </div>
       </div>
       <!-- 搓玉 -->
       <div class="popup_card" id="popup_card_orundum">

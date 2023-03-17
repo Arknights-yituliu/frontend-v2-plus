@@ -8,13 +8,13 @@
 				</div> -->
           <el-collapse accordion>
             <el-collapse-item name="1" style="">
-              <template slot="title">
+              <template #title>
                 <span style="font-size: large"><i class="el-icon-s-comment"></i>&nbsp;<b>网站反馈</b></span>
               </template>
               <a href="https://www.wjx.cn/vm/O68SHiq.aspx">点击此处</a>通过问卷反馈问题/提供建议。
             </el-collapse-item>
             <el-collapse-item name="2" style="">
-              <template slot="title">
+              <template #title>
                 <span style="font-size: large"><i class="el-icon-s-marketing"></i>&nbsp;<b>动态平衡算法简述</b></span>
               </template>
               <b>算法核心思路为“掉率越高，则价值越低”且“物品价值仅受获取成本影响”</b>
@@ -46,7 +46,7 @@
               </ul>
             </el-collapse-item>
             <el-collapse-item name="3" style="">
-              <template slot="title">
+              <template #title>
                 <span style="font-size: large"><i class="el-icon-s-opportunity"></i>&nbsp;<b>图例与计算细节</b></span>
               </template>
               <b>刷图规划</b>
@@ -60,7 +60,7 @@
                 <li>根据价值一览中的价格和企鹅物流的关卡掉落数据计算。</li>
                 <li>只有多于300样本的关卡才会被收录。</li>
                 <li>仅收录由自动刷图软件上报的掉落数据。</li>
-                <li>活动关卡只在活动期间出现，且都标记为<font style="color: red">红色</font>。</li>
+                <li>活动关卡只在活动期间出现，且都标记为<span style="color: red">红色</span>。</li>
                 <li>插曲和别传常驻后，视为新关卡并重新计算效率，该效率与活动时无关。</li>
               </ul>
 
@@ -95,7 +95,7 @@
               </ul>
             </el-collapse-item>
             <el-collapse-item name="4" style="">
-              <template slot="title">
+              <template #title>
                 <span style="font-size: large"><i class="el-icon-s-claim"></i>&nbsp;<b>算法公示卡</b></span>
               </template>
               <table id="al_card">
