@@ -1,0 +1,864 @@
+{
+  "code": 200,
+  "msg": "操作成功",
+  "data": [
+    {
+      "packShowName": "新人寻访组合包",
+      "packType": "once",
+      "packDraw": 20.0,
+      "packPPRDraw": 1.8243243243243241,
+      "packPPROriginium": 1.8229166666666667,
+      "packImg": "新人寻访组合包",
+      "packPrice": 128,
+      "packID": 51,
+      "packRmbPerOriginium": 1.92,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 66.66666666666667,
+      "packRmbPerDraw": 6.4,
+      "gachaPermit10": 2,
+      "gachaOriginium": 0,
+      "packName": "新人寻访组合包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": "40000",
+          "packContentItem": "龙门币"
+        },
+        {
+          "packContentQuantity": "20",
+          "packContentItem": "中级作战记录"
+        },
+        {
+          "packContentQuantity": "30",
+          "packContentItem": "初级作战记录"
+        },
+        {
+          "packContentQuantity": "40",
+          "packContentItem": "基础作战记录"
+        },
+        {
+          "packContentQuantity": "30",
+          "packContentItem": "技巧概要·卷1"
+        },
+        {
+          "packContentQuantity": "10",
+          "packContentItem": "技巧概要·卷2"
+        },
+        {
+          "packContentQuantity": "4",
+          "packContentItem": "装置"
+        },
+        {
+          "packContentQuantity": "5",
+          "packContentItem": "酮凝集"
+        },
+        {
+          "packContentQuantity": "5",
+          "packContentItem": "异铁"
+        },
+        {
+          "packContentQuantity": "7",
+          "packContentItem": "聚酸酯"
+        },
+        {
+          "packContentQuantity": "7",
+          "packContentItem": "糖"
+        },
+        {
+          "packContentQuantity": "10",
+          "packContentItem": "固源岩"
+        }
+      ],
+      "packShowName": "新人养成组合包",
+      "packType": "once",
+      "packDraw": 3.9,
+      "packPPRDraw": 0.6696343402225754,
+      "packPPROriginium": 0.8788201089324619,
+      "packImg": "新人养成组合包",
+      "packPrice": 68,
+      "packID": 52,
+      "packRmbPerOriginium": 3.982612555658963,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 17.07421925925926,
+      "packRmbPerDraw": 17.435897435897438,
+      "gachaPermit10": 0,
+      "gachaOriginium": 13,
+      "packName": "新人养成组合包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": "10000",
+          "packContentItem": "龙门币"
+        },
+        {
+          "packContentQuantity": "20",
+          "packContentItem": "基础作战记录"
+        }
+      ],
+      "packShowName": "新人组合包",
+      "packType": "once",
+      "packDraw": 1.0,
+      "packPPRDraw": 1.9459459459459458,
+      "packPPROriginium": 2.138888888888889,
+      "packImg": "新人组合包",
+      "packPrice": 6,
+      "packID": 53,
+      "packRmbPerOriginium": 1.6363636363636362,
+      "gachaPermit": 1,
+      "packState": 1,
+      "packOriginium": 3.666666666666667,
+      "packRmbPerDraw": 6.0,
+      "gachaPermit10": 0,
+      "gachaOriginium": 0,
+      "packName": "新人组合包",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "每月寻访组合包",
+      "packType": "monthly",
+      "packDraw": 22.6,
+      "packPPRDraw": 1.5706563706563708,
+      "packPPROriginium": 1.5694444444444444,
+      "packImg": "每月寻访组合包",
+      "packPrice": 168,
+      "packID": 30,
+      "packRmbPerOriginium": 2.230088495575221,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 75.33333333333334,
+      "packRmbPerDraw": 7.43362831858407,
+      "gachaPermit10": 1,
+      "gachaOriginium": 42,
+      "packName": "每月寻访组合包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 5,
+          "packContentItem": "先锋芯片"
+        },
+        {
+          "packContentQuantity": 8,
+          "packContentItem": "先锋芯片组"
+        }
+      ],
+      "packShowName": "每月芯片自选包",
+      "packType": "monthly",
+      "packDraw": 0.0,
+      "packPPRDraw": 0.0,
+      "packPPROriginium": 0.7774666666666668,
+      "packImg": "每月芯片自选组合包",
+      "packPrice": 12,
+      "packID": 31,
+      "packRmbPerOriginium": 4.501800720288115,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 2.6656000000000004,
+      "packRmbPerDraw": null,
+      "gachaPermit10": 0,
+      "gachaOriginium": 0,
+      "packName": "每月芯片自选组合包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 2400,
+          "packContentItem": "赤金"
+        }
+      ],
+      "packShowName": "月卡",
+      "packType": "monthly",
+      "packDraw": 11.8,
+      "packPPRDraw": 4.592432432432433,
+      "packPPROriginium": 6.662962962962963,
+      "packImg": "月卡",
+      "packPrice": 30,
+      "packID": 32,
+      "packRmbPerOriginium": 0.5252918287937743,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 57.111111111111114,
+      "packRmbPerDraw": 2.542372881355932,
+      "gachaPermit10": 0,
+      "gachaOriginium": 6,
+      "packName": "月卡",
+      "gachaOrundum": 6000
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": "80000",
+          "packContentItem": "龙门币"
+        },
+        {
+          "packContentQuantity": "10",
+          "packContentItem": "高级作战记录"
+        },
+        {
+          "packContentQuantity": "25",
+          "packContentItem": "中级作战记录"
+        },
+        {
+          "packContentQuantity": "50",
+          "packContentItem": "初级作战记录"
+        },
+        {
+          "packContentQuantity": "20",
+          "packContentItem": "技巧概要·卷2"
+        },
+        {
+          "packContentQuantity": "40",
+          "packContentItem": "技巧概要·卷1"
+        }
+      ],
+      "packShowName": "每周养成组合包",
+      "packType": "weekly",
+      "packDraw": 0.0,
+      "packPPRDraw": 0.0,
+      "packPPROriginium": 0.22351579520697168,
+      "packImg": "每周养成组合包",
+      "packPrice": 68,
+      "packID": 21,
+      "packRmbPerOriginium": 15.658848614072495,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 4.342592592592593,
+      "packRmbPerDraw": null,
+      "gachaPermit10": 0,
+      "gachaOriginium": 0,
+      "packName": "每周养成组合包",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "双倍源石6元",
+      "packType": "year",
+      "packDraw": 0.8999999999999999,
+      "packPPRDraw": 1.7513513513513512,
+      "packPPROriginium": 1.75,
+      "packImg": "6",
+      "packPrice": 6,
+      "packID": 41,
+      "packRmbPerOriginium": 2.0,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 3.0,
+      "packRmbPerDraw": 6.666666666666667,
+      "gachaPermit10": 0,
+      "gachaOriginium": 3,
+      "packName": "双倍源石6元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "双倍源石30元",
+      "packType": "year",
+      "packDraw": 3.5999999999999996,
+      "packPPRDraw": 1.401081081081081,
+      "packPPROriginium": 1.4,
+      "packImg": "30",
+      "packPrice": 30,
+      "packID": 42,
+      "packRmbPerOriginium": 2.5,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 12.0,
+      "packRmbPerDraw": 8.333333333333334,
+      "gachaPermit10": 0,
+      "gachaOriginium": 12,
+      "packName": "双倍源石30元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "双倍源石98元",
+      "packType": "year",
+      "packDraw": 12.0,
+      "packPPRDraw": 1.4296745725317155,
+      "packPPROriginium": 1.4285714285714284,
+      "packImg": "98",
+      "packPrice": 98,
+      "packID": 43,
+      "packRmbPerOriginium": 2.45,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 40.0,
+      "packRmbPerDraw": 8.166666666666666,
+      "gachaPermit10": 0,
+      "gachaOriginium": 40,
+      "packName": "双倍源石98元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "双倍源石198元",
+      "packType": "year",
+      "packDraw": 24.0,
+      "packPPRDraw": 1.4152334152334152,
+      "packPPROriginium": 1.4141414141414141,
+      "packImg": "198",
+      "packPrice": 198,
+      "packID": 44,
+      "packRmbPerOriginium": 2.475,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 80.0,
+      "packRmbPerDraw": 8.25,
+      "gachaPermit10": 0,
+      "gachaOriginium": 80,
+      "packName": "双倍源石198元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "双倍源石328元",
+      "packType": "year",
+      "packDraw": 39.6,
+      "packPPRDraw": 1.4096242584047463,
+      "packPPROriginium": 1.4085365853658536,
+      "packImg": "328",
+      "packPrice": 328,
+      "packID": 45,
+      "packRmbPerOriginium": 2.484848484848485,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 132.0,
+      "packRmbPerDraw": 8.282828282828282,
+      "gachaPermit10": 0,
+      "gachaOriginium": 132,
+      "packName": "双倍源石328元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "双倍源石648元",
+      "packType": "year",
+      "packDraw": 78.0,
+      "packPPRDraw": 1.4054054054054053,
+      "packPPROriginium": 1.404320987654321,
+      "packImg": "648",
+      "packPrice": 648,
+      "packID": 46,
+      "packRmbPerOriginium": 2.4923076923076923,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 260.0,
+      "packRmbPerDraw": 8.307692307692308,
+      "gachaPermit10": 0,
+      "gachaOriginium": 260,
+      "packName": "双倍源石648元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "普通源石6元",
+      "packType": "permanent",
+      "packDraw": 0.3,
+      "packPPRDraw": 0.5837837837837838,
+      "packPPROriginium": 0.5833333333333334,
+      "packImg": "6",
+      "packPrice": 6,
+      "packID": 11,
+      "packRmbPerOriginium": 6.0,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 1.0,
+      "packRmbPerDraw": 20.0,
+      "gachaPermit10": 0,
+      "gachaOriginium": 1,
+      "packName": "普通源石6元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "普通源石30元",
+      "packType": "permanent",
+      "packDraw": 2.1,
+      "packPPRDraw": 0.8172972972972974,
+      "packPPROriginium": 0.8166666666666667,
+      "packImg": "30",
+      "packPrice": 30,
+      "packID": 12,
+      "packRmbPerOriginium": 4.285714285714286,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 7.0,
+      "packRmbPerDraw": 14.285714285714285,
+      "gachaPermit10": 0,
+      "gachaOriginium": 7,
+      "packName": "普通源石30元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "普通源石98元",
+      "packType": "permanent",
+      "packDraw": 7.199999999999999,
+      "packPPRDraw": 0.8578047435190291,
+      "packPPROriginium": 0.8571428571428572,
+      "packImg": "98",
+      "packPrice": 98,
+      "packID": 13,
+      "packRmbPerOriginium": 4.083333333333333,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 24.0,
+      "packRmbPerDraw": 13.611111111111112,
+      "gachaPermit10": 0,
+      "gachaOriginium": 24,
+      "packName": "普通源石98元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "普通源石198元",
+      "packType": "permanent",
+      "packDraw": 15.0,
+      "packPPRDraw": 0.8845208845208845,
+      "packPPROriginium": 0.8838383838383839,
+      "packImg": "198",
+      "packPrice": 198,
+      "packID": 14,
+      "packRmbPerOriginium": 3.96,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 50.0,
+      "packRmbPerDraw": 13.2,
+      "gachaPermit10": 0,
+      "gachaOriginium": 50,
+      "packName": "普通源石198元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "普通源石328元",
+      "packType": "permanent",
+      "packDraw": 27.0,
+      "packPPRDraw": 0.9611074489123269,
+      "packPPROriginium": 0.9603658536585366,
+      "packImg": "328",
+      "packPrice": 328,
+      "packID": 15,
+      "packRmbPerOriginium": 3.6444444444444444,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 90.0,
+      "packRmbPerDraw": 12.148148148148149,
+      "gachaPermit10": 0,
+      "gachaOriginium": 90,
+      "packName": "普通源石328元",
+      "gachaOrundum": 0
+    },
+    {
+      "packShowName": "普通源石648元",
+      "packType": "permanent",
+      "packDraw": 55.5,
+      "packPPRDraw": 1.0,
+      "packPPROriginium": 0.9992283950617283,
+      "packImg": "648",
+      "packPrice": 648,
+      "packID": 16,
+      "packRmbPerOriginium": 3.502702702702703,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 185.0,
+      "packRmbPerDraw": 11.675675675675675,
+      "gachaPermit10": 0,
+      "gachaOriginium": 185,
+      "packName": "普通源石648元",
+      "gachaOrundum": 0
+    },
+    {
+      "packTag": "包含难以计价的模组材料",
+      "packContent": [
+        {
+          "packContentQuantity": 200000,
+          "packContentItem": "龙门币"
+        },
+        {
+          "packContentQuantity": "30",
+          "packContentItem": "高级作战记录"
+        },
+        {
+          "packContentQuantity": 40,
+          "packContentItem": "中级作战记录"
+        },
+        {
+          "packContentQuantity": "20",
+          "packContentItem": "技巧概要·卷3"
+        },
+        {
+          "packContentQuantity": "50",
+          "packContentItem": "技巧概要·卷2"
+        },
+        {
+          "packContentQuantity": "4",
+          "packContentItem": "芯片助剂"
+        }
+      ],
+      "packShowName": "罗德岛迎春组合包",
+      "packType": "limited",
+      "packDraw": 37.0,
+      "packPPRDraw": 1.3170731707317074,
+      "packPPROriginium": 1.4628248419150858,
+      "packImg": "罗德岛迎春组合包",
+      "packPrice": 328,
+      "packID": 61,
+      "packRmbPerOriginium": 2.39263095601925,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 137.0875851851852,
+      "packRmbPerDraw": 8.864864864864865,
+      "gachaPermit10": 1,
+      "gachaOriginium": 90,
+      "packName": "罗德岛迎春组合包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 200000,
+          "packContentItem": "龙门币"
+        },
+        {
+          "packContentQuantity": 20,
+          "packContentItem": "高级作战记录"
+        },
+        {
+          "packContentQuantity": 30,
+          "packContentItem": "中级作战记录"
+        },
+        {
+          "packContentQuantity": 4,
+          "packContentItem": "精炼溶剂"
+        },
+        {
+          "packContentQuantity": 2,
+          "packContentItem": "芯片助剂"
+        },
+        {
+          "packContentQuantity": 4,
+          "packContentItem": "切削原液"
+        }
+      ],
+      "packShowName": "玉门观光组合包",
+      "packType": "limited",
+      "packDraw": 27.2,
+      "packPPRDraw": 1.603931203931204,
+      "packPPROriginium": 1.835628860456416,
+      "packImg": "玉门观光组合包",
+      "packPrice": 198,
+      "packID": 62,
+      "packRmbPerOriginium": 1.9067035147452138,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 103.84414696296297,
+      "packRmbPerDraw": 7.279411764705882,
+      "gachaPermit10": 2,
+      "gachaOriginium": 24,
+      "packName": "玉门观光组合包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 100000,
+          "packContentItem": "龙门币"
+        },
+        {
+          "packContentQuantity": "2",
+          "packContentItem": "芯片助剂"
+        },
+        {
+          "packContentQuantity": "50",
+          "packContentItem": "技巧概要·卷1"
+        }
+      ],
+      "packShowName": "新春养成组合包",
+      "packType": "limited",
+      "packDraw": 8.333333333333334,
+      "packPPRDraw": 1.4308426073131955,
+      "packPPROriginium": 1.6925145969498914,
+      "packImg": "新春养成组合包",
+      "packPrice": 68,
+      "packID": 63,
+      "packRmbPerOriginium": 2.0679289893909383,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 32.88314074074074,
+      "packRmbPerDraw": 8.16,
+      "gachaPermit10": 0,
+      "gachaOriginium": 0,
+      "packName": "新春养成组合包",
+      "gachaOrundum": 5000
+    },
+    {
+      "packShowName": "新年组合包",
+      "packType": "limited",
+      "packDraw": 28.799999999999997,
+      "packPPRDraw": 1.698280098280098,
+      "packPPROriginium": 1.696969696969697,
+      "packImg": "新年组合包",
+      "packPrice": 198,
+      "packID": 64,
+      "packRmbPerOriginium": 2.0625,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 96.0,
+      "packRmbPerDraw": 6.875000000000001,
+      "gachaPermit10": 1,
+      "gachaOriginium": 51,
+      "packName": "新年组合包",
+      "gachaOrundum": 2100
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 2,
+          "packContentItem": "烧结核凝晶"
+        },
+        {
+          "packContentQuantity": 2,
+          "packContentItem": "转质盐聚块"
+        },
+        {
+          "packContentQuantity": 2,
+          "packContentItem": "晶体电子单元"
+        },
+        {
+          "packContentQuantity": 2,
+          "packContentItem": "转质盐组"
+        }
+      ],
+      "packShowName": "新春年货礼盒",
+      "packType": "limited",
+      "packDraw": 3.9,
+      "packPPRDraw": 1.011891891891892,
+      "packPPROriginium": 1.8841019786008233,
+      "packImg": "新春年货礼盒",
+      "packPrice": 45,
+      "packID": 65,
+      "packRmbPerOriginium": 1.857648916965301,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 24.2241682962963,
+      "packRmbPerDraw": 11.538461538461538,
+      "gachaPermit10": 0,
+      "gachaOriginium": 13,
+      "packName": "新春年货礼盒",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 700000,
+          "packContentItem": "龙门币"
+        }
+      ],
+      "packShowName": "林的荷包",
+      "packType": "limited",
+      "packDraw": 4.8,
+      "packPPRDraw": 0.8241653418124005,
+      "packPPROriginium": 1.7843137254901964,
+      "packImg": "林的荷包",
+      "packPrice": 68,
+      "packID": 66,
+      "packRmbPerOriginium": 1.9615384615384612,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 34.66666666666667,
+      "packRmbPerDraw": 14.166666666666668,
+      "gachaPermit10": 0,
+      "gachaOriginium": 16,
+      "packName": "林的荷包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 8,
+          "packContentItem": "术师芯片组"
+        },
+        {
+          "packContentQuantity": 5,
+          "packContentItem": "术师芯片"
+        },
+        {
+          "packContentQuantity": 45,
+          "packContentItem": "技巧概要·卷3"
+        },
+        {
+          "packContentQuantity": 25,
+          "packContentItem": "技巧概要·卷2"
+        },
+        {
+          "packContentQuantity": 10,
+          "packContentItem": "技巧概要·卷1"
+        },
+        {
+          "packContentQuantity": 4,
+          "packContentItem": "芯片助剂"
+        },
+        {
+          "packContentQuantity": 80,
+          "packContentItem": "无人机"
+        }
+      ],
+      "packShowName": "净沙芯片礼包",
+      "packType": "limited",
+      "packDraw": 0.0,
+      "packPPRDraw": 0.0,
+      "packPPROriginium": 1.2530255802469137,
+      "packImg": "净沙芯片礼包",
+      "packPrice": 30,
+      "packID": 67,
+      "packRmbPerOriginium": 2.7932390648483896,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 10.740219259259261,
+      "packRmbPerDraw": null,
+      "gachaPermit10": 0,
+      "gachaOriginium": 0,
+      "packName": "净沙芯片礼包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 8,
+          "packContentItem": "近卫芯片组"
+        },
+        {
+          "packContentQuantity": 5,
+          "packContentItem": "近卫芯片"
+        },
+        {
+          "packContentQuantity": 45,
+          "packContentItem": "技巧概要·卷3"
+        },
+        {
+          "packContentQuantity": 25,
+          "packContentItem": "技巧概要·卷2"
+        },
+        {
+          "packContentQuantity": 10,
+          "packContentItem": "技巧概要·卷1"
+        },
+        {
+          "packContentQuantity": 4,
+          "packContentItem": "芯片助剂"
+        },
+        {
+          "packContentQuantity": 80,
+          "packContentItem": "无人机"
+        }
+      ],
+      "packShowName": "春分芯片礼包",
+      "packType": "limited",
+      "packDraw": 0.0,
+      "packPPRDraw": 0.0,
+      "packPPROriginium": 1.3049472592592593,
+      "packImg": "春分芯片礼包",
+      "packPrice": 30,
+      "packID": 68,
+      "packRmbPerOriginium": 2.682100732551246,
+      "gachaPermit": 0,
+      "packState": 1,
+      "packOriginium": 11.185262222222223,
+      "packRmbPerDraw": null,
+      "gachaPermit10": 0,
+      "gachaOriginium": 0,
+      "packName": "春分芯片礼包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 744955,
+          "packContentItem": "龙门币"
+        },
+        {
+          "packContentQuantity": 750,
+          "packContentItem": "中级作战记录"
+        }
+      ],
+      "packShowName": "6⭐满级礼包",
+      "packType": "limited",
+      "packDraw": 5.7,
+      "packPPRDraw": 0.5199324324324325,
+      "packPPROriginium": 1.4045244791666667,
+      "packImg": "高级特训意向礼包",
+      "packPrice": 128,
+      "packID": 71,
+      "packRmbPerOriginium": 2.4919465996609915,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 51.36546666666666,
+      "packRmbPerDraw": 22.45614035087719,
+      "gachaPermit10": 0,
+      "gachaOriginium": 19,
+      "packName": "高级特训意向礼包",
+      "gachaOrundum": 0
+    },
+    {
+      "packContent": [
+        {
+          "packContentQuantity": 447378,
+          "packContentItem": "龙门币"
+        },
+        {
+          "packContentQuantity": 495,
+          "packContentItem": "中级作战记录"
+        }
+      ],
+      "packShowName": "5⭐满级礼包",
+      "packType": "limited",
+      "packDraw": 3.3,
+      "packPPRDraw": 0.5666136724960255,
+      "packPPROriginium": 1.6048570588235294,
+      "packImg": "特训意向礼包",
+      "packPrice": 68,
+      "packID": 72,
+      "packRmbPerOriginium": 2.1808795872236377,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 31.18008,
+      "packRmbPerDraw": 20.606060606060606,
+      "gachaPermit10": 0,
+      "gachaOriginium": 11,
+      "packName": "特训意向礼包",
+      "gachaOrundum": 0
+    },
+    {
+      "packTag": "皮肤以18石计价，包括头像和家具",
+      "packContent": [
+        {
+          "packContentQuantity": 30,
+          "packContentItem": "技巧概要·卷3"
+        },
+        {
+          "packContentQuantity": 60,
+          "packContentItem": "高级作战记录"
+        },
+        {
+          "packContentQuantity": 200000,
+          "packContentItem": "龙门币"
+        }
+      ],
+      "packShowName": "黎明前奏组合包",
+      "packType": "limited",
+      "packDraw": 15.399999999999999,
+      "packPPRDraw": 0.908108108108108,
+      "packPPROriginium": 1.0785059483726152,
+      "packImg": "黎明前奏组合包",
+      "packPrice": 198,
+      "packID": 73,
+      "packRmbPerOriginium": 3.245230130887306,
+      "gachaPermit": 0,
+      "packState": 0,
+      "packOriginium": 61.01262222222223,
+      "packRmbPerDraw": 12.857142857142858,
+      "gachaPermit10": 1,
+      "gachaOriginium": 18,
+      "packName": "黎明前奏组合包",
+      "gachaOrundum": 0
+    }
+  ]
+}

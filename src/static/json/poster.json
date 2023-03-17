@@ -1,0 +1,166 @@
+{
+    "data": {
+        "future": [
+            {
+                "type": "Image&Text",
+                "imageUrl": "/img/poster/登临意.png",
+                "imageSize": "image_big",
+                "contentType": "long",
+                "content": {
+                    "title": "全新SideStory·[登临意]",
+                    "description": "&&&&&&&&1月17日（下周二）",
+                    "key":["1月17日（下周二）"]
+                }
+            },
+            {
+                "type": "Image",
+                "imageUrl": "/img/poster/万象伶仃.png",
+                "imageSize": "image_small"
+            },
+            {
+                "type": "Image",
+                "imageUrl": "/img/poster/登临意皮肤.png",
+                "imageSize": "image_small"
+            },
+            {
+                "type": "Text",
+                "contentType": "short",
+                "content": {
+                    "title": "◆新限定寻访·[万象伶仃]",
+                    "description": "&&重岳·(新年限定)·(斗士)<br>&&林·(陪跑)·(阵法术士)",
+                    "fontSize":{
+                        "title":"36px",
+                        "description":"30px"
+                    }
+                }
+            },
+            {
+                "type": "Text",
+                "contentType": "short",
+                "content": {
+                    "title": "◆新皮肤",
+                    "description": "&&令·[XXX]<br>&&晓歌·[XXX]<br>&&桑葚·[XXX]",
+                    "fontSize":{
+                        "title":"36px",
+                        "description":"30px"
+                    }
+                }
+            }
+        ],
+        "underway": [
+            {
+                "type": "Image&Text",
+                "imageUrl": "/img/poster/登临意.png",
+                "imageSize": "image_big",
+                "contentType": "long&back",
+                "content": {
+                    "title": "这是一个测试标题",
+                    "description": "",
+                    "fontSize":{
+                        "title":"40px",
+                        "description":"30px"
+                    }
+                }
+            },
+            {
+                "type": "Image&Text",
+                "imageUrl": "/img/poster/登临意.png",
+                "imageSize": "image_small",
+                "contentType": "short&back",
+                "content": {
+                    "title": "这是一个测试标题",
+                    "description": "",
+                    "fontSize":{
+                        "title":"30px",
+                        "description":"30px"
+                    }
+                }
+            },
+            {
+                "type": "Image&Text",
+                "imageUrl": "/img/poster/登临意.png",
+                "imageSize": "image_small",
+                "contentType": "short&back",
+                "content": {
+                    "title": "这是一个测试标题",
+                    "description": "",
+                    "fontSize":{
+                        "title":"30px",
+                        "description":"30px"
+                    }
+                }
+            },
+            {
+                "type": "Image&Text",
+                "imageUrl": "/img/poster/登临意.png",
+                "imageSize": "image_small",
+                "contentType": "short&back",
+                "content": {
+                    "title": "这是一个测试标题",
+                    "description": "",
+                    "fontSize":{
+                        "title":"30px",
+                        "description":"30px"
+                    }
+                }
+            },
+            {
+                "type": "Image&Text",
+                "imageUrl": "/img/poster/登临意.png",
+                "imageSize": "image_small",
+                "contentType": "short&back",
+                "content": {
+                    "title": "这是一个测试标题",
+                    "description": "",
+                    "fontSize":{
+                        "title":"30px",
+                        "description":"30px"
+                    }
+                }
+            }
+        ],
+        "data": [
+            {
+                "type": "Text",
+                "contentType": "short",
+                "content": {
+                    "title": "春节限定池还有16天",
+                    "description": "无氪可攒75抽<br>月卡党可攒83抽",
+                    "key":["16天","75抽","83抽"],
+                    "fontSize":{
+                        "title":"40px",
+                        "description":"30px"
+                    }
+                }
+            },
+            {
+                "type": "Text",
+                "contentType": "short",
+                "content": {
+                    "title": "限定大约3月中寻",
+                    "description": "无氪可攒75抽<br>月卡党可攒83抽<br>*新攒抽计算器即将开放测试",
+                    "key":["限定大约3月中寻","75抽","83抽","*新攒抽计算器即将开放测试"],
+                    "fontSize":{
+                        "title":"40px",
+                        "description":"30px"
+                    }
+                }
+            },
+            {
+                "type": "Image&Text",
+                "imageUrl": "/img/poster/code.png",
+                "imageSize": "image_code",
+                "contentType": "long&code",
+                "content": {
+                    "title": "一图流新模块礼包性价比现已上线",
+                    "description": "除芯片组合包外，新礼包综合性价比均不低于大月卡<br>*仅看抽卡、更多性价比可访问网站查看",
+                    "key":["礼包性价比"],
+                    "fontSize":{
+                        "title":"40px",
+                        "description":"30px"
+                    }
+                }
+            }
+        ]
+    }
+}

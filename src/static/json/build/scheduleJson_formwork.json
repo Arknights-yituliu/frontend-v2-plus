@@ -1,0 +1,91 @@
+{
+   
+        "control": [
+            {
+                "operators": [
+                    "",
+                    "",
+                    ""
+                ]
+            }
+        ],
+        "trading": [
+            {
+                "product": "LMD",
+                "operators": [
+                    "",
+                    "",
+                    ""
+                ],
+                "sort": true,
+                "autofill": false
+            }
+        ],
+        "manufacture": [
+            {
+                "product": "LMD",
+                "operators": [
+                    "",
+                    "",
+                    ""
+                ],
+                "sort": true,
+                "autofill": false
+            }
+        ],
+        "hire": [
+            {
+                "operators": [
+                    "",
+                    "",
+                    ""
+                ],
+                "autofill": false
+            }
+        ],
+        "power": [
+            {
+                "operators": [
+                    "",
+                    "",
+                    ""
+                ],
+                "autofill": false
+            }
+        ],
+        "meeting": [
+            {
+                "operators": [
+                    "",
+                    "",
+                    ""
+                ],
+                "autofill": false
+            }
+        ],
+        "dormitory": [
+            {
+                "operators": [
+                    "",
+                    "",
+                    ""
+                ],
+                "sort": true,
+                "autofill": false
+            }
+        ]
+    ,
+    "Fiammetta": {
+        "enable": true,
+        "target": "但书",
+        "order": "pre"
+    },
+    "drones": {
+        "enable": true,
+        "index": 2,
+        "room": "manufacture",
+        "order": "post"
+    },
+    "name": "测试",
+    "description": "测试描述"
+}

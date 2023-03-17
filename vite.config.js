@@ -36,6 +36,11 @@ export default defineConfig({
           var: "Cookies",
           path: "https://unpkg.com/js-cookie@3.0.1/dist/js.cookie.min.js",
         },
+        {
+          name: "echarts",
+          var: "echarts",
+          path: "https://unpkg.com/echarts@5.4.1/dist/echarts.min.js",
+        },
       ],
     }),
   ],

@@ -1,0 +1,255 @@
+{
+    "槐琥": {
+        "skillName": "配合意识",
+        "skillData": "0",
+        "skillDataSp": "0.05",
+        "variable": "0.05"
+    },
+    "断罪者": {
+        "skillName": "作战指导录像",
+        "skillData": "0.35"
+    },
+    "食铁兽": {
+        "skillName": "作战指导录像",
+        "skillData": "0.35"
+    },
+    "砾": {
+        "skillName": "金属工艺",
+        "skillData": "0.35"
+    },
+    "铅踝": {
+        "skillName": "窗外雪啸",
+        "skillData": "0",
+        "skillDataSp": "0.1",
+        "prodLimit": "6"
+    },
+    "褐果": {
+        "skillName": "标准化",
+        "skillData": "0.15"
+    },
+    "梅尔": {
+        "skillName": "制造效率",
+        "skillData": "0.3"
+    },
+    "红豆": {
+        "skillName": "作战指导录像",
+        "skillData": "0.3"
+    },
+    "霜叶": {
+        "skillName": "作战指导录像",
+        "skillData": "0.3"
+    },
+    "白雪": {
+        "skillName": "作战指导录像",
+        "skillData": "0.3"
+    },
+    "Castle-3": {
+        "skillName": "作战指导录像",
+        "skillData": "0.3"
+    },
+    "夜烟": {
+        "skillName": "金属工艺",
+        "skillData": "0.3"
+    },
+    "斑点": {
+        "skillName": "金属工艺",
+        "skillData": "0.3"
+    },
+    "海沫": {
+        "skillName": "意识兼容",
+        "skillData": "0"
+    },
+    "星源": {
+        "skillName": "莱茵科技",
+        "skillData": "0.25"
+    },
+    "多萝西": {
+        "skillName": "莱茵科技",
+        "skillData": "0.25"
+    },
+    "野鬃": {
+        "skillName": "标准化红松",
+        "skillData": "0.25"
+    },
+    "灰毫": {
+        "skillName": "标准化红松",
+        "skillData": "0.25"
+    },
+    "远牙": {
+        "skillName": "标准化红松",
+        "skillData": "0.25"
+    },
+    "罗比菈塔": {
+        "skillName": "标准化",
+        "skillData": "0.25"
+    },
+    "水月": {
+        "skillName": "标准化增强",
+        "skillData": "0",
+        "skillDataSp": "0.05"
+    },
+    "帕拉斯": {
+        "skillName": "仓库上限",
+        "skillData": "0",
+        "prodLimit": "8"
+    },
+    "稀音": {
+        "skillName": "仓库上限-作战记录",
+        "skillData": "0",
+        "prodLimit": "12"
+    },
+    "石棉": {
+        "skillName": "仓库整备",
+        "skillData": "0.25",
+        "prodLimit": "4"
+    },
+    "刻俄柏": {
+        "skillName": "仓库整备",
+        "skillData": "0.25",
+        "prodLimit": "8"
+    },
+    "白面鸮": {
+        "skillName": "莱茵科技",
+        "skillData": "0.25"
+    },
+    "赫墨": {
+        "skillName": "莱茵科技",
+        "skillData": "0.25"
+    },
+    "杰西卡": {
+        "skillName": "标准化",
+        "skillData": "0.25"
+    },
+    "调香师": {
+        "skillName": "标准化",
+        "skillData": "0.25"
+    },
+    "香草": {
+        "skillName": "标准化",
+        "skillData": "0.25"
+    },
+    "史都华德": {
+        "skillName": "标准化",
+        "skillData": "0.25"
+    },
+    "泡普卡": {
+        "skillName": "仓库整备",
+        "skillData": "0.25",
+        "prodLimit": "-12"
+    },
+    "克洛丝": {
+        "skillName": "制造效率",
+        "skillData": "0.25"
+    },
+    "芬": {
+        "skillName": "制造效率",
+        "skillData": "0.25"
+    },
+    "清流": {
+        "skillName": "再生能源",
+        "skillData": "0",
+        "skillDataSp": "0.2",
+        "variable": "trade"
+    },
+    "石英": {
+        "skillName": "标准化",
+        "skillData": "0.15"
+    },
+    "豆苗": {
+        "skillName": "仓库整备",
+        "skillData": "0.15",
+        "prodLimit": "8"
+    },
+    "流星": {
+        "skillName": "标准化",
+        "skillData": "0.15"
+    },
+    "夜刀": {
+        "skillName": "标准化",
+        "skillData": "0.15"
+    },
+    "蛇屠箱": {
+        "skillName": "仓库整备",
+        "skillData": "0.1",
+        "prodLimit": "10"
+    },
+    "卡提": {
+        "skillName": "仓库整备",
+        "skillData": "0.1",
+        "prodLimit": "6"
+    },
+    "米格鲁": {
+        "skillName": "仓库整备",
+        "skillData": "0.1",
+        "prodLimit": "6"
+    },
+    "黑角": {
+        "skillName": "仓库整备",
+        "skillData": "0.1",
+        "prodLimit": "10"
+    },
+    "至简": {
+        "skillName": "机械辅助",
+        "skillData": "0.4"
+    },
+    "迷迭香": {
+        "skillName": "念力",
+        "skillData": "0",
+        "skillDataSp": "0.01"
+    },
+    "火神": {
+        "skillName": "仓库整备",
+        "skillData": "-0.05",
+        "prodLimit": "19"
+    },
+    "贝娜": {
+        "skillName": "仓库上限",
+        "skillData": "-0.2",
+        "prodLimit": "17"
+    },
+    "卡达": {
+        "skillName": "仓库上限-作战记录",
+        "skillData": "0",
+        "variable": "Battle Record",
+        "prodLimit": "15"
+    },
+    "泡泡": {
+        "skillName": "仓库上限",
+        "skillData": "0",
+        "prodLimit": "10"
+    },
+    "红云": {
+        "skillName": "仓库上限",
+        "skillData": "0",
+        "prodLimit": "8"
+    },
+    "清道夫": {
+        "skillName": "仓库上限",
+        "skillData": "0",
+        "prodLimit": "8"
+    },
+    "温蒂": {
+        "skillName": "自动化",
+        "skillData": "0",
+        "skillDataSp": "0.15",
+        "variable": "power"
+    },
+    "森蚺": {
+        "skillName": "自动化",
+        "skillData": "0",
+        "skillDataSp": "0.1",
+        "variable": "power"
+    },
+    "掠风": {
+        "skillName": "自动化",
+        "skillData": "0",
+        "skillDataSp": "0.05",
+        "variable": "power"
+    },
+    "异客": {
+        "skillName": "自动化",
+        "skillData": "0",
+        "skillDataSp": "0.05",
+        "variable": "power"
+    }
+}

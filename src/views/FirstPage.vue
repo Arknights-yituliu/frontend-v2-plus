@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     updateVisits() {
-      toolApi.updateVisits("index").then((response) => {});
+      toolApi.updateVisits("index");
     },
     getCookies() {
       let theme = cookie.get("theme");

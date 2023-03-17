@@ -1,0 +1,205 @@
+{
+    "序章 黑暗时代·上": {
+        "originium": 18,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "突袭": {
+        "originium": 20,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第一章 黑暗时代·下": {
+        "originium": 15,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第二章 异卵同生": {
+        "originium": 26,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第三章 二次呼吸": {
+        "originium": 16,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第四章 急性衰竭": {
+        "originium": 20,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第五章 靶向药物": {
+        "originium": 20,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第六章 局部坏死": {
+        "originium": 23,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第七章 苦难摇篮": {
+        "originium": 23,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第八章 怒号光明": {
+        "originium": 29,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第九章 风暴瞭望": {
+        "originium": 23,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第十章 破碎日冕": {
+        "originium": 20,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "第十一章 淬火尘霾": {
+        "originium": 22,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "main"
+    },
+    "骑兵与猎人": {
+        "originium": 15,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "火蓝之心": {
+        "originium": 29,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "喧闹法则": {
+        "originium": 29,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "生于黑夜": {
+        "originium": 22,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "沃伦姆德的薄暮": {
+        "originium": 32,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "密林悍将归来": {
+        "originium": 28,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "玛莉娅临光": {
+        "originium": 28,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "孤岛风云": {
+        "originium": 27,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "画中人": {
+        "originium": 30,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "遗尘漫步": {
+        "originium": 27,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "覆潮之下": {
+        "originium": 28,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "愚人号": {
+        "originium": 36,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "多索雷斯假日": {
+        "originium": 40,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "长夜临光": {
+        "originium": 42,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "风雪过境": {
+        "originium": 30,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    },
+    "将进酒": {
+        "originium": 28,
+        "orundum": 0,
+        "permit": 0,
+        "permit10": 0,
+        "module": "activity"
+    }
+}
