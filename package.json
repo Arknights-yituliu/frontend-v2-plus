@@ -25,8 +25,6 @@
     "eslint-plugin-vue": "^9.9.0",
     "prettier": "^2.8.4",
     "rollup-plugin-visualizer": "^5.9.0",
-    "unplugin-auto-import": "^0.15.1",
-    "unplugin-vue-components": "^0.24.1",
     "vite": "^4.1.4",
     "vite-plugin-cdn-import": "^0.3.5"
   }
