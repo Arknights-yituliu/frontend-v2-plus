@@ -13,16 +13,22 @@
 </template>
 
 <script>
-// import stage from "@/pages/module/stage.vue";
-// import storeVue from "@/pages/module/store.vue";
+import stage from "@/components/stage.vue";
+import StoreValue from "@/components/StoreValue.vue";
 // import pack from "@/pages/module/pack.vue";
-// import itemVue from "@/pages/module/itemValue.vue";
-// import foot from "@/pages/module/foot.vue";
+import ItemValue from "@/components/ItemValue.vue";
+import FootComponent from "@/components/FootComponent.vue";
 
 import cookie from "js-cookie";
 import toolApi from "@/api/tool";
 
 export default {
+  components: {
+    stage,
+    StoreValue,
+    ItemValue,
+    FootComponent
+  },
   data() {
     return {
       pageTheme: "op_title_etext_light",

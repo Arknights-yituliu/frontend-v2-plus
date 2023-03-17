@@ -4,7 +4,7 @@
       <myheader />
     </el-header>
     <el-main style="z-index: 10; background-color: #808080">
-      <FirstPage />
+      <first-page />
     </el-main>
     <el-footer style="z-index: 100; height: 40px; padding: 0px; background-color: rgb(52 68 104)">
       <myfooter />
@@ -26,7 +26,17 @@ import "@/assets/css/sprite_icon.css";
 import "@/assets/css/item.css";
 import "@/assets/css/recruit.css";
 
-import 'element-plus/es/components/message/style/css'
+import myheader from "@/components/myheader.vue";
+import FirstPage from "@/components/FirstPage.vue";
+import myfooter from "@/components/myfooter.vue";
+
+export default {
+  components: {
+    myheader,
+    FirstPage,
+    myfooter,
+  },
+};
 </script>
 
 <style scoped>
