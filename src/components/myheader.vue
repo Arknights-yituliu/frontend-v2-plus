@@ -147,7 +147,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* .menu-button{
   width:66px ;
   background-color: #409EFF;

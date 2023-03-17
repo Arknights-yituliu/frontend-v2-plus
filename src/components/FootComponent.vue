@@ -9,13 +9,17 @@
           <el-collapse accordion>
             <el-collapse-item name="1" style="">
               <template #title>
-                <span style="font-size: large"><i class="el-icon-s-comment"></i>&nbsp;<b>网站反馈</b></span>
+                <span style="font-size: large; display: flex; align-items: center"
+                  ><el-icon><Comment /></el-icon><b style="margin-left: 4px">网站反馈</b></span
+                >
               </template>
               <a href="https://www.wjx.cn/vm/O68SHiq.aspx">点击此处</a>通过问卷反馈问题/提供建议。
             </el-collapse-item>
             <el-collapse-item name="2" style="">
               <template #title>
-                <span style="font-size: large"><i class="el-icon-s-marketing"></i>&nbsp;<b>动态平衡算法简述</b></span>
+                <span style="font-size: large; display: flex; align-items: center"
+                  ><el-icon><TrendCharts /></el-icon><b style="margin-left: 4px">动态平衡算法简述</b></span
+                >
               </template>
               <b>算法核心思路为“掉率越高，则价值越低”且“物品价值仅受获取成本影响”</b>
               <hr />
@@ -47,7 +51,9 @@
             </el-collapse-item>
             <el-collapse-item name="3" style="">
               <template #title>
-                <span style="font-size: large"><i class="el-icon-s-opportunity"></i>&nbsp;<b>图例与计算细节</b></span>
+                <span style="font-size: large; display: flex; align-items: center"
+                  ><el-icon><Opportunity /></el-icon><b style="margin-left: 4px">图例与计算细节</b></span
+                >
               </template>
               <b>刷图规划</b>
               <hr />
@@ -96,7 +102,9 @@
             </el-collapse-item>
             <el-collapse-item name="4" style="">
               <template #title>
-                <span style="font-size: large"><i class="el-icon-s-claim"></i>&nbsp;<b>算法公示卡</b></span>
+                <span style="font-size: large; display: flex; align-items: center"
+                  ><el-icon><Checked /></el-icon><b style="margin-left: 4px">算法公示卡</b></span
+                >
               </template>
               <table id="al_card">
                 <tbody>
@@ -335,7 +343,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #extra {
   background-color: #dededede;
   margin-top: 8px;
@@ -475,6 +483,9 @@ export default {
   margin-top: 1em;
   font-size: unset;
 }
+</style>
+
+<style>
 .el-card__body {
   padding: 0px 12px;
 }

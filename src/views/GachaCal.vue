@@ -206,7 +206,7 @@
               show-stops
               show-input
               @change="compute()"
-              style="flex-grow: 1; flex-shrink: 5;"
+              style="flex-grow: 1; flex-shrink: 5"
             >
             </el-slider>
           </div>
@@ -1763,5 +1763,126 @@ export default {
   #gacha::-webkit-scrollbar {
     width: 0 !important;
   }
+}
+
+#foot_main {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0px 12px 0px 12px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.foot_unit {
+  display: inline;
+  top: 4px;
+  width: 210px;
+  float: left;
+  margin: 4px 8px;
+  white-space: nowrap;
+  /* background-color: #bbbbbbdd; */
+  border-radius: 8px;
+}
+
+#foot_main_dev {
+  width: 100%;
+  background-color: rgba(187, 187, 187, 0.86667);
+  padding: 0px 16px 16px 16px;
+  /* padding-bottom: 16px; */
+}
+
+#foot_main_dev > div {
+  display: inline-block;
+}
+
+.foot_unit_title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #444444;
+  margin: 14px 0px;
+}
+
+.foot_unit_content {
+  color: gray;
+  font-size: 16px;
+  padding-left: 5px;
+}
+
+.foot_unit_pic {
+  height: 30px;
+  width: 30px;
+  margin: 2px 3px 3px 3px;
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 6px;
+}
+
+#foot_frontEnd {
+  display: inline-block;
+  margin-right: -2px;
+  width: 100px;
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;
+  box-shadow: 0px 2px 2px 0px rgb(0 0 0 / 20%);
+  border-right-width: 0px;
+}
+
+#foot_backEnd {
+  display: inline-block;
+  margin-left: -2px;
+  width: 100px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
+  border-left: 1px solid #808080;
+}
+
+.footlist {
+  display: inline;
+  top: 5px;
+  height: 80px;
+  width: 180px;
+  margin: auto;
+  float: left;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+#foot_warning {
+  border-top: 1px solid #dddddd;
+  overflow-x: hidden;
+  padding-left: 12px;
+}
+
+#foot_warning_text {
+  font-size: 12px;
+  /* display: inline; */
+  /* top: 5px; */
+  /* float: left; */
+  padding: 10px;
+  text-align: center;
+}
+
+.foot_unit_button {
+  border: 1px solid #808080;
+  background-color: rgba(255, 253, 253, 0.6);
+  height: 38px;
+  width: 178px;
+  border-radius: 8px;
+  margin: 4px;
+  color: gray;
+  line-height: 36px;
+}
+
+.foot_unit a {
+  text-decoration: none;
+}
+
+#extra {
+  background-color: #dededede;
+  margin-top: -2px;
+  /* padding: 12px 0px; */
+  color: gray;
 }
 </style>

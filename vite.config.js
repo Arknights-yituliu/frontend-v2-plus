@@ -41,6 +41,11 @@ export default defineConfig({
           var: "echarts",
           path: "https://unpkg.com/echarts@5.4.1/dist/echarts.min.js",
         },
+        {
+          name: "@element-plus/icons-vue",
+          var: "ElementPlusIconsVue",
+          path: "https://unpkg.com/@element-plus/icons-vue@2.1.0/dist/index.iife.min.js",
+        },
       ],
     }),
   ],
