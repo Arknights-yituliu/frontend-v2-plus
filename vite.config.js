@@ -14,7 +14,7 @@ export default defineConfig({
         {
           name: "vue",
           var: "Vue",
-          path: "https://unpkg.com/vue@3.2.47/dist/vue.global.js",
+          path: "https://unpkg.com/vue@3.2.47/dist/vue.runtime.global.prod.js",
         },
         {
           name: "element-plus",
