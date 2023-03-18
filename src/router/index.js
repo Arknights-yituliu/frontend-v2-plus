@@ -11,8 +11,13 @@ const router = createRouter({
     {
       path: "/gachaCal",
       name: "gachaCal",
-      component: () => import("@/views/GachaCal.vue")
-    }
+      component: () => import("@/views/GachaCal.vue"),
+    },
+    {
+      path: "/riicCal",
+      name: "riicCal",
+      component: () => import("@/views/RiicCal.vue"),
+    },
   ],
 });
 
