@@ -11,14 +11,10 @@
           <div id="value_switch_to_saint" :class="tag_class_sanity" @click="switchUnit(1)">等效理智</div>
           <div id="value_switch_to_green" :class="tag_class_green" @click="switchUnit(2)">等效绿票</div>
           <div class="tab_text">
-            <a style="color: rgb(65, 105, 240)" href="https://houduan.yituliu.site/file/export/item/value/excel">
-              导出Excel</a
-            >
+            <a style="color: rgb(65, 105, 240)" href="https://backend.yituliu.site/api/item/export/excel"> 导出Excel</a>
           </div>
           <div class="tab_text">
-            <a style="color: rgb(65, 105, 240)" href="https://houduan.yituliu.site/file/export/item/value/json">
-              导出Json</a
-            >
+            <a style="color: rgb(65, 105, 240)" href="https://backend.yituliu.site/api/item/export/json"> 导出Json</a>
           </div>
         </div>
       </div>
