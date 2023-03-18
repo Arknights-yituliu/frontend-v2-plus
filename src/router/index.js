@@ -18,6 +18,11 @@ const router = createRouter({
       name: "riicCal",
       component: () => import("@/views/RiicCal.vue"),
     },
+    {
+      path: "/pack",
+      name: "pack",
+      component: () => import("@/views/PackPage.vue"),
+    },
   ],
 });
 
