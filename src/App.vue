@@ -1,10 +1,10 @@
 <template>
   <el-container>
     <el-header style="z-index: 100; height: 45px; position: sticky; width: 100%; top: 0px">
-      <myheader />
+      <nav-bar />
     </el-header>
     <el-main style="z-index: 10; background-color: #808080">
-      <router-view />
+      <slot></slot>
     </el-main>
     <el-footer style="z-index: 100; height: 40px; padding: 0px; background-color: rgb(52 68 104)">
       <myfooter />
@@ -26,12 +26,12 @@ import "@/assets/css/sprite_icon.css";
 import "@/assets/css/item.css";
 import "@/assets/css/recruit.css";
 
-import myheader from "@/components/myheader.vue";
+import NavBar from "@/components/NavBar.vue";
 import myfooter from "@/components/myfooter.vue";
 
 export default {
   components: {
-    myheader,
+    NavBar,
     myfooter,
   },
 };

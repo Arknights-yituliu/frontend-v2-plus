@@ -301,15 +301,20 @@
 <script>
 import stageApi from "@/api/stage";
 import cookie from "js-cookie";
+import { usePageContext } from "@/renderer/usePageContext";
 
 // import stageJson from "static/json-video/stage.json";
 
 export default {
+  setup() {
+    const pageContext = usePageContext();
+    return { pageContext };
+  },
   data() {
     return {
       popupData: [], //关卡弹窗用集合
       // stageRankT3: stageJson.data, //关卡效率集合
-      stageRankT3: [], //关卡效率集合
+      stageRankT3: this.pageContext.pageProps.data, //关卡效率集合
       stageRankT2: [], //关卡效率集合
       stageRankOrundum: [], //关卡效率集合
       stageActHistory: [],
@@ -327,7 +332,7 @@ export default {
   created() {},
 
   mounted() {
-    this.getStageResultDateT3();
+    // this.getStageResultDateT3();
     this.getStageResultDateT2();
     this.getStageResultDateOrundum();
     this.getStageResultDateClosed();
@@ -346,7 +351,7 @@ export default {
       return new Promise((resolve) => setTimeout(resolve, d));
     },
     async getRoute() {
-      var item = this.$route.query.item;
+      var item = this.pageContext.urlParsed.search.item;
       if (item != undefined) console.log("要展示的材料：", item);
       for (let i = 0; i < 40; i++) {
         await this.sleep(500);

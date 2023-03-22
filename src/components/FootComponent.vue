@@ -487,9 +487,9 @@ export default {
 
 <style>
 .el-card__body {
-  padding: 0px 12px;
+  padding: 0px 12px !important;
 }
 .el-collapse-item__content {
-  padding-bottom: 8px;
+  padding-bottom: 8px !important;
 }
 </style>
