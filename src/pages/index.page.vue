@@ -54,4 +54,9 @@ export default {
     },
   },
 };
+
+export const documentProps = {
+  title: "明日方舟一图流",
+  description: "明日方舟材料掉落地图效率，采购中心性价比，活动商店性价比，物品价值一览",
+};
 </script>

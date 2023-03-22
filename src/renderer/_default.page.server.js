@@ -18,8 +18,8 @@ async function render(pageContext) {
 
   // See https://vite-plugin-ssr.com/head
   const { documentProps } = pageContext.exports;
-  const title = (documentProps && documentProps.title) || "Vite SSR app";
-  const desc = (documentProps && documentProps.description) || "App using Vite + vite-plugin-ssr";
+  const title = (documentProps && documentProps.title) || "明日方舟一图流";
+  const desc = (documentProps && documentProps.description) || "明日方舟一图流";
 
   const documentHtml = escapeInject`<!DOCTYPE html>
     <html lang="en">
@@ -27,6 +27,7 @@ async function render(pageContext) {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=0.68, maximum-scale=0.68, user-scalable=no" />
         <meta name="description" content="${desc}" />
+        <meta name="keywords" content="素材获取,一图流,明日方舟,攒抽计算器,公招招募计算,基建排班生成器,刷图推荐,性价比,公开招募,掉率" />
         <title>${title}</title>
         <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
       </head>

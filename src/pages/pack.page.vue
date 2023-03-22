@@ -533,6 +533,10 @@ export default {
     },
   },
 };
+export const documentProps = {
+  title: "一图流 - 礼包性价比",
+  description: "明日方舟一图流，礼包性价比，礼包内容，氪金规划",
+};
 </script>
 
 <style>
