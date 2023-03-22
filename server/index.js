@@ -35,8 +35,9 @@ async function startServer() {
     const pageContext = await renderPage(pageContextInit);
     const { httpResponse } = pageContext;
     if (!httpResponse) return next();
-    const { body, statusCode, contentType, earlyHints } = httpResponse;
-    if (res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) });
+    // const { body, statusCode, contentType, earlyHints } = httpResponse;
+    // if (res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) });
+    const { body, statusCode, contentType } = httpResponse;
     res.status(statusCode).type(contentType).send(body);
   });
 
