@@ -247,148 +247,142 @@
       <!-- 标题区域end -->
       <!-- 内容区域 -->
       <div v-for="(singleAct, index) in actStoreList" :key="index" v-show="singleAct.actStartDate > 0.1">
-        <template>
-          <!-- banner -->
-          <div class="act_banner_background" :style="getBackground(singleAct.actImgUrl)">
-            <div class="act_banner_img">
-              <img class="act_img" :src="singleAct.actImgUrl" :alt="singleAct.actName" />
-            </div>
+        <!-- banner -->
+        <div class="act_banner_background" :style="getBackground(singleAct.actImgUrl)">
+          <div class="act_banner_img">
+            <img class="act_img" :src="singleAct.actImgUrl" :alt="singleAct.actName" />
           </div>
+        </div>
 
-          <!-- tag -->
-          <div class="stage_hint">
-            <div
-              v-for="(singleTag, index) in singleAct.actTagAera"
-              :key="index"
-              :class="getTagClass(singleTag.tagRank)"
-            >
-              {{ singleTag.tagText }}
-            </div>
+        <!-- tag -->
+        <div class="stage_hint">
+          <div v-for="(singleTag, index) in singleAct.actTagAera" :key="index" :class="getTagClass(singleTag.tagRank)">
+            {{ singleTag.tagText }}
           </div>
+        </div>
 
-          <!-- Area 1 -->
-          <div class="act_content">
-            <div
-              class="act_card uni_shadow_2 act_area1_border"
-              v-for="(singleItem, index) in singleAct.actStore"
-              :key="index"
-              :class="getDivVisible(singleItem.itemArea - 0.5, singleItem.itemArea + 0.5)"
-            >
-              <!-- <div class="act_card uni_shadow_2 act_area1_border" :class="getDivVisible(singleItem.itemArea - 0.5, singleItem.itemArea + 0.5)"> -->
-              <div class="act_card_img">
-                <!-- <img class="level_img" :src="getImgUrl(singleItem.itemName, 1)" :alt="(singleItem.itemName)"> -->
-                <div :class="getSpriteImg(singleItem.itemId, 2)"></div>
-              </div>
-              <div class="act_card_table">
-                <table class="act_table">
-                  <tbody>
-                    <tr class="act_table_r1">
-                      <td>{{ singleItem.itemName }}</td>
-                    </tr>
-                    <tr
-                      class="act_table_r2"
-                      :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)"
-                    >
-                      <!--故事集 合约 1.25 0.25  ss 3 1-->
-                      <td>{{ getEfficiency(singleItem.itemPPR) }}</td>
-                    </tr>
-                    <tr class="act_table_r3">
-                      <td>{{ singleItem.itemPrice }}代币</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- </div> -->
+        <!-- Area 1 -->
+        <div class="act_content">
+          <div
+            class="act_card uni_shadow_2 act_area1_border"
+            v-for="(singleItem, index) in singleAct.actStore"
+            :key="index"
+            :class="getDivVisible(singleItem.itemArea - 0.5, singleItem.itemArea + 0.5)"
+          >
+            <!-- <div class="act_card uni_shadow_2 act_area1_border" :class="getDivVisible(singleItem.itemArea - 0.5, singleItem.itemArea + 0.5)"> -->
+            <div class="act_card_img">
+              <!-- <img class="level_img" :src="getImgUrl(singleItem.itemName, 1)" :alt="(singleItem.itemName)"> -->
+              <div :class="getSpriteImg(singleItem.itemId, 2)"></div>
             </div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-          </div>
-          <!-- Area 2 -->
-          <div class="act_content">
-            <div
-              class="act_card uni_shadow_2 act_area3_border"
-              v-for="(singleItem, index) in singleAct.actStore"
-              :key="index"
-              :class="getDivVisible(singleItem.itemArea - 1.5, singleItem.itemArea - 0.5)"
-            >
-              <!-- <div class="act_card uni_shadow_2 act_area3_border" :class="getDivVisible(singleItem.itemArea - 1.5, singleItem.itemArea - 0.5)"> -->
-              <div class="act_card_img">
-                <div :class="getSpriteImg(singleItem.itemId, 2)"></div>
-              </div>
-              <div class="act_card_table">
-                <table class="act_table">
-                  <tbody>
-                    <tr class="act_table_r1">
-                      <td>{{ singleItem.itemName }}</td>
-                    </tr>
-                    <tr
-                      class="act_table_r2"
-                      :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)"
-                    >
-                      <!--故事集 合约 1.25 0.25  ss 3 1-->
-                      <td>{{ getEfficiency(singleItem.itemPPR) }}</td>
-                    </tr>
-                    <tr class="act_table_r3">
-                      <td>{{ singleItem.itemPrice }}代币</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- </div> -->
+            <div class="act_card_table">
+              <table class="act_table">
+                <tbody>
+                  <tr class="act_table_r1">
+                    <td>{{ singleItem.itemName }}</td>
+                  </tr>
+                  <tr
+                    class="act_table_r2"
+                    :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)"
+                  >
+                    <!--故事集 合约 1.25 0.25  ss 3 1-->
+                    <td>{{ getEfficiency(singleItem.itemPPR) }}</td>
+                  </tr>
+                  <tr class="act_table_r3">
+                    <td>{{ singleItem.itemPrice }}代币</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+            <!-- </div> -->
           </div>
-          <!-- Area 3 -->
-          <div class="act_content">
-            <div
-              class="act_card uni_shadow_2 act_area4_border"
-              v-for="(singleItem, index) in singleAct.actStore"
-              :key="index"
-              :class="getDivVisible(singleItem.itemArea - 2.5, singleItem.itemArea - 1.5)"
-            >
-              <!-- <div class="act_card uni_shadow_2 act_area4_border" :class="getDivVisible(singleItem.itemArea - 2.5, singleItem.itemArea - 1.5)"> -->
-              <div class="act_card_img">
-                <div :class="getSpriteImg(singleItem.itemId, 2)"></div>
-              </div>
-              <div class="act_card_table">
-                <table class="act_table">
-                  <tbody>
-                    <tr class="act_table_r1">
-                      <td>{{ singleItem.itemName }}</td>
-                    </tr>
-                    <tr
-                      class="act_table_r2"
-                      :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)"
-                    >
-                      <!--故事集 合约 1.25 0.25  ss 3 1-->
-                      <td>{{ getEfficiency(singleItem.itemPPR) }}</td>
-                    </tr>
-                    <tr class="act_table_r3">
-                      <td>{{ singleItem.itemPrice }}代币</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- </div> -->
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+        </div>
+        <!-- Area 2 -->
+        <div class="act_content">
+          <div
+            class="act_card uni_shadow_2 act_area3_border"
+            v-for="(singleItem, index) in singleAct.actStore"
+            :key="index"
+            :class="getDivVisible(singleItem.itemArea - 1.5, singleItem.itemArea - 0.5)"
+          >
+            <!-- <div class="act_card uni_shadow_2 act_area3_border" :class="getDivVisible(singleItem.itemArea - 1.5, singleItem.itemArea - 0.5)"> -->
+            <div class="act_card_img">
+              <div :class="getSpriteImg(singleItem.itemId, 2)"></div>
             </div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
-            <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+            <div class="act_card_table">
+              <table class="act_table">
+                <tbody>
+                  <tr class="act_table_r1">
+                    <td>{{ singleItem.itemName }}</td>
+                  </tr>
+                  <tr
+                    class="act_table_r2"
+                    :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)"
+                  >
+                    <!--故事集 合约 1.25 0.25  ss 3 1-->
+                    <td>{{ getEfficiency(singleItem.itemPPR) }}</td>
+                  </tr>
+                  <tr class="act_table_r3">
+                    <td>{{ singleItem.itemPrice }}代币</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- </div> -->
           </div>
-          <!-- 内容区域end -->
-        </template>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+        </div>
+        <!-- Area 3 -->
+        <div class="act_content">
+          <div
+            class="act_card uni_shadow_2 act_area4_border"
+            v-for="(singleItem, index) in singleAct.actStore"
+            :key="index"
+            :class="getDivVisible(singleItem.itemArea - 2.5, singleItem.itemArea - 1.5)"
+          >
+            <!-- <div class="act_card uni_shadow_2 act_area4_border" :class="getDivVisible(singleItem.itemArea - 2.5, singleItem.itemArea - 1.5)"> -->
+            <div class="act_card_img">
+              <div :class="getSpriteImg(singleItem.itemId, 2)"></div>
+            </div>
+            <div class="act_card_table">
+              <table class="act_table">
+                <tbody>
+                  <tr class="act_table_r1">
+                    <td>{{ singleItem.itemName }}</td>
+                  </tr>
+                  <tr
+                    class="act_table_r2"
+                    :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)"
+                  >
+                    <!--故事集 合约 1.25 0.25  ss 3 1-->
+                    <td>{{ getEfficiency(singleItem.itemPPR) }}</td>
+                  </tr>
+                  <tr class="act_table_r3">
+                    <td>{{ singleItem.itemPrice }}代币</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- </div> -->
+          </div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+          <div class="act_card uni_shadow_2 act_area1_border" style="height: 0px; margin-bottom: 0px"></div>
+        </div>
+        <!-- 内容区域end -->
       </div>
     </div>
     <!-- 活动商店end -->
@@ -411,10 +405,10 @@ export default {
       opETextTheme: "op_title_etext_light",
     };
   },
-  created() {
+  mounted() {
     this.findPermStorePer();
     this.getCookies();
-    this.finActStorePer();
+    this.findActStorePer();
   },
   methods: {
     getSpriteImg(id, index) {
@@ -522,7 +516,7 @@ export default {
         this.storeList = response.data;
       });
     },
-    finActStorePer() {
+    findActStorePer() {
       storeApi.findActStore().then((response) => {
         this.actStoreList = [];
         this.actStoreList = response.data;
