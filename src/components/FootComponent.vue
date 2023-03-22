@@ -199,6 +199,12 @@
             Yanstime
           </div>
         </a>
+        <a href="https://zhaozuohong.vip">
+          <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
+            <img class="foot_unit_pic" src="https://zhaozuohong.vip/avatar.png" />
+            ZhaoZuohong
+          </div>
+        </a>
       </div>
       <div class="foot_unit" id="houduan">
         <p class="foot_unit_title">-后端-</p>
@@ -240,10 +246,10 @@
 
       <div class="foot_unit" id="suanfa">
         <p class="foot_unit_title">-效率算法-</p>
-        <a href="https://www.bilibili.com/video/BV1pZ4y1g7QN">
+        <a href="https://www.bilibili.com/video/BV1Rm4y1r7Kp">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/Erit_Lux.webp" />
-            Erit_Lux
+            <img class="foot_unit_pic" src="/img/website/bilibili.png" />
+            算法科普视频
           </div>
         </a>
         <a href="https://space.bilibili.com/39109412">

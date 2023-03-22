@@ -62,9 +62,9 @@
             DSLM
           </div>
         </a>
-        <a href="https://github.com/ZhaoZuohong">
+        <a href="https://zhaozuohong.vip">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/34163622?v=4" />
+            <img class="foot_unit_pic" src="https://zhaozuohong.vip/avatar.png" />
             ZhaoZuohong
           </div>
         </a>

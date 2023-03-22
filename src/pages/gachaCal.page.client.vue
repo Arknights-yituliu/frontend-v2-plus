@@ -898,9 +898,9 @@
                   DSLM
                 </div>
               </a>
-              <a href="https://github.com/ZhaoZuohong">
+              <a href="https://zhaozuohong.vip">
                 <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                  <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/34163622?v=4" />
+                  <img class="foot_unit_pic" src="https://zhaozuohong.vip/avatar.png" />
                   ZhaoZuohong
                 </div>
               </a>
@@ -972,25 +972,6 @@ import * as echarts from "echarts";
 // import echarts from "static/js/echarts.min.js";
 
 export default {
-  layout: "defaultGacha",
-  head: {
-    title: "一图流攒抽计算器 yituliu.site",
-    meta: [
-      { charset: "utf-8" },
-      {
-        name: "viewport",
-        content: "width=device-width, initial-scale=0.68, maximum-scale=0.68, user-scalable=no",
-      },
-      {
-        hid: "description",
-        name: "description",
-        content: "一图流-感谢庆典攒抽规划",
-      },
-    ],
-
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
-  },
-
   data() {
     return {
       pageTheme: "light",

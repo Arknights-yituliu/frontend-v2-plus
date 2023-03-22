@@ -7,19 +7,23 @@ import { escapeInject, dangerouslySkipEscape } from "vite-plugin-ssr";
 import { createApp } from "./app";
 
 async function render(pageContext) {
+  // See https://vite-plugin-ssr.com/head
+  const { documentProps } = pageContext.exports;
+  const title = (documentProps && documentProps.title) || "明日方舟一图流";
+  const desc = (documentProps && documentProps.description) || "明日方舟一图流";
+
   const { Page, pageProps } = pageContext;
   let appHtml;
   if (Page) {
     const app = createApp(Page, pageProps, pageContext);
     appHtml = await renderToString(app);
   } else {
-    appHtml = "";
+    appHtml = `<div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 200px;">
+                <img style="width: 128px;" src="/img/website/icon-large.webp" />
+                <div style="font-size: 32px; font-weight: bold; font-family: sans-serif; margin: 40px 0 10px 0;">${title}</div>
+                <div style="font-size: 32px; font-family: sans-serif;">加载中……</div>
+              </div>`;
   }
-
-  // See https://vite-plugin-ssr.com/head
-  const { documentProps } = pageContext.exports;
-  const title = (documentProps && documentProps.title) || "明日方舟一图流";
-  const desc = (documentProps && documentProps.description) || "明日方舟一图流";
 
   const documentHtml = escapeInject`<!DOCTYPE html>
     <html lang="en">
@@ -30,6 +34,7 @@ async function render(pageContext) {
         <meta name="keywords" content="素材获取,一图流,明日方舟,攒抽计算器,公招招募计算,基建排班生成器,刷图推荐,性价比,公开招募,掉率" />
         <title>${title}</title>
         <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
       </head>
       <body>
         <div id="app">${dangerouslySkipEscape(appHtml)}</div>

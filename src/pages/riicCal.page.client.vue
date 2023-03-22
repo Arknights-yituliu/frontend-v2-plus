@@ -2303,22 +2303,6 @@ import CONTROLJson from "@/static/json/build/CONTROL.json";
 import POWERJson from "@/static/json/build/POWER.json";
 
 export default {
-  head: {
-    title: "一图流-基建排班生成器",
-    meta: [
-      { charset: "utf-8" },
-      {
-        name: "viewport",
-        content: "width=device-width, initial-scale=0.68, maximum-scale=0.68, user-scalable=no",
-      },
-      {
-        hid: "description",
-        name: "description",
-        content: "一图流-基建排班生成器",
-      },
-    ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
-  },
   data() {
     return {
       exportUrl: "https://houduan.yituliu.site/tool/building/schedule/export?schedule_id=1664632307607024",
