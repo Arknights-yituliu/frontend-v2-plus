@@ -1,5 +1,5 @@
 import { createSSRApp, h } from "vue";
-import ElementPlus from "element-plus";
+import ElementPlus, { ID_INJECTION_KEY } from "element-plus";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import App from "@/App.vue";
 import { setPageContext } from "./usePageContext";
@@ -26,6 +26,10 @@ function createApp(Page, pageProps, pageContext) {
     app.component(key, component);
   }
   app.use(ElementPlus);
+  app.provide(ID_INJECTION_KEY, {
+    prefix: 1024,
+    current: 0,
+  });
 
   // We make pageContext available from any Vue component
   setPageContext(app, pageContext);
