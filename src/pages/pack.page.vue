@@ -249,6 +249,7 @@ import cookie from "js-cookie";
 import storeApi from "@/api/store";
 import foot from "@/components/FootMini.vue";
 import { usePageContext } from "@/renderer/usePageContext";
+import toolApi from "@/api/tool";
 
 export default {
   setup() {
@@ -277,12 +278,10 @@ export default {
   components: {
     foot,
   },
-  created() {
-    this.initData();
-    // this.getStorePackData();
-  },
   mounted() {
+    this.initData();
     this.getCookies();
+    toolApi.updateVisits("pack");
   },
   methods: {
     getCookies() {

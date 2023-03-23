@@ -92,7 +92,7 @@ export default {
       valueVerison: 0.625,
     };
   },
-  created() {
+  mounted() {
     this.switchUnit(1);
     this.findAllItemValue();
   },
