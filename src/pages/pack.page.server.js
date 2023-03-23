@@ -1,5 +1,4 @@
 import axios from "axios";
-import stageApi from "@/api/stage";
 
 export async function onBeforeRender(pageContext) {
   const response = await axios.get("https://backend.yituliu.site/api/find/store/pack");

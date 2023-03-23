@@ -1,24 +1,4 @@
 {
-    "3月联动SideStory": {
-        "originium": 16,
-        "orundum": 0,
-        "permit": 0,
-        "permit10": 0,
-        "start": "2023/03/14 16:00:00",
-        "end": "2023/03/21 03:59:00",
-        "rewardType": "公共",
-        "module": "act"
-    },
-    "联动签到赠送十连寻访凭证": {
-        "originium": 0,
-        "orundum": 0,
-        "permit": 0,
-        "permit10": 1,
-        "start": "2023/03/14 16:00:00",
-        "end": "2023/03/15 03:59:00",
-        "rewardType": "联动限定",
-        "module": "honeyCake"
-    },
     "愚人号（源石）": {
         "originium": 36,
         "orundum": 0,
@@ -100,7 +80,7 @@
         "module": "honeyCake"
     },
     "游戏维护更新(3-5月)": {
-        "originium": 5,
+        "originium": 10,
         "orundum": 1600,
         "permit": 0,
         "permit10": 0,

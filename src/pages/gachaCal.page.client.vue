@@ -20,9 +20,9 @@
             v-model="timeSelector"
             @change="checkEndDate(timeSelector)"
           >
-            <el-radio-button label="怪猎联动(3.21)" style="width: 33%"></el-radio-button>
             <el-radio-button label="4周年(5.15)" style="width: 33%"></el-radio-button>
-            <el-radio-button label="夏活限定" type="primary" style="width: 33%" disabled></el-radio-button>
+            <el-radio-button label="夏活限定" style="width: 33%" disabled></el-radio-button>
+            <el-radio-button label="半周年" type="primary" style="width: 33%" disabled></el-radio-button>
             <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
           </el-radio-group>
           <!-- <el-divider></el-divider> -->
@@ -980,10 +980,10 @@ export default {
       // checkBox: ["1","7"],
       rewardType: "联动限定", //奖励的类型
       startDate: "", //开始时间
-      endDate: "2023/03/21 03:59:00", //结束时间
+      endDate: "2023/05/15 03:59:00", //结束时间
       start_TimeStamp: "", //开始时间戳
       end_TimeStamp: "", //结束时间戳
-      timeSelector: "怪猎联动(3.21)", //活动时间节点选择框的绑定对象
+      timeSelector: "4周年(5.15)", //活动时间节点选择框的绑定对象
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
       gacha_storePacks: gacha_storePacksJson.data, //商店礼包
@@ -1062,7 +1062,7 @@ export default {
         dangerouslyUseHTMLString: true,
         // message: '<strong> 限定池还有'+ this.poolCountDown + '天,结束</strong>',
         message:
-          "<strong> 新增 剿灭战模拟战计算<br>调整搓玉计算模块<br>因为鹰角自由的发饼更新了自由的联动日期</strong>",
+          "<strong> 新增 剿灭战模拟战计算<br>调整搓玉计算模块</strong>",
         duration: 12000,
       });
     },
@@ -1078,18 +1078,18 @@ export default {
     checkEndDate() {
       // this.cookieInit=true;
       console.log(this.timeSelector);
-      if (this.timeSelector === "怪猎联动(3.21)") {
-        this.endDate = "2023/03/21 03:59:00";
-        this.rewardType = "联动限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
-        this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.gacha_store258List = [];
-      } else if (this.timeSelector === "4周年(5.15)") {
+       if (this.timeSelector === "4周年(5.15)") {
         this.endDate = "2023/05/15 03:59:00";
         this.rewardType = "周年限定";
         this.poolCountDownFlag_permit = false;
-        this.poolCountDownFlag_orundum = true;
-      }
+        this.poolCountDownFlag_orundum = false;
+      }else if (this.timeSelector === "11111") {
+        // this.endDate = "2023/03/21 03:59:00";
+        // this.rewardType = "联动限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
+        // this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
+        // this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
+        // this.gacha_store258List = [];
+      } 
 
       this.getInterval();
       this.getEveryreWard();

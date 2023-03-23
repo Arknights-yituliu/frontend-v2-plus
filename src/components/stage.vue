@@ -325,7 +325,7 @@ export default {
       itemId: "",
       opETextTheme: "op_title_etext_light",
       stageVersion: 0.625,
-      activeName: ["1"],
+     
     };
   },
 
