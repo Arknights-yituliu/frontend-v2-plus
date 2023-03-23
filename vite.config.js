@@ -5,10 +5,13 @@ import ssr from "vite-plugin-ssr/plugin";
 import { visualizer } from "rollup-plugin-visualizer";
 import externalGlobals from "rollup-plugin-external-globals";
 
+import legacy from "@vitejs/plugin-legacy";
+
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode, ssrBuild }) => {
   const config = {
-    plugins: [vue(), ssr()],
+    plugins: [vue(), ssr(), legacy()],
+    // plugins: [vue(), ssr()],
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
@@ -21,6 +24,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
   };
   if (command == "build" && mode == "production" && !ssrBuild) {
     config.plugins.push(visualizer());
+    // config.plugins.push(legacy());
     config.build.rollupOptions = {
       external: ["vue", "element-plus", "js-cookie", "echarts", "@element-plus/icons-vue", "axios"],
       plugins: [
