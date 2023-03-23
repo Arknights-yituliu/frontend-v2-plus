@@ -278,8 +278,10 @@ export default {
   components: {
     foot,
   },
-  mounted() {
+  created() {
     this.initData();
+  },
+  mounted() {
     this.getCookies();
     toolApi.updateVisits("pack");
   },
