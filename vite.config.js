@@ -15,6 +15,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
       },
     },
     build: {
+      cssTarget: "chrome61",
       rollupOptions: {},
     },
   };
