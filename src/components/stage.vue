@@ -321,22 +321,19 @@ export default {
       actStageOnly: 0,
       cardList: [0, 1, 2, 3, 4, 5, 6, 7],
       itemType: "",
-      updateTime: "2000-01-01 00:00:00",
+      updateTime: this.pageContext.pageProps.data[0][0].updateTime,
       itemId: "",
       opETextTheme: "op_title_etext_light",
       stageVersion: 0.625,
-     
     };
   },
-
-  created() {},
-
   mounted() {
     // this.getStageResultDateT3();
     this.getStageResultDateT2();
     this.getStageResultDateOrundum();
     this.getStageResultDateClosed();
     this.getRoute();
+    cookie.set("updateTime", this.updateTime, { expires: 30 });
   },
   methods: {
     getCookies() {
