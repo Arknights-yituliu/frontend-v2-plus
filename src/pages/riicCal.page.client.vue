@@ -2446,11 +2446,12 @@ export default {
       switch_dormitory_plan2_3: [false, false, false],
     };
   },
-  created() {
+  mounted() {
     this.setJson();
     this.getUid();
     this.getDate();
     this.openNotification();
+    toolApi.updateVisits("building");
   },
   methods: {
     openNotification() {
@@ -2470,10 +2471,6 @@ export default {
       document.execCommand("Copy"); // 执行浏览器复制命令（相当于ctrl+c）
       oInput.style.display = "none"; //只是用一下input标签的特性，实际并不需要显示，所以这里要隐藏掉
       this.$message.success("复制成功");
-    },
-
-    updateVisits() {
-      toolApi.updateVisits("building").then(() => {});
     },
     setExportUrl() {
       this.exportUrl = "https://backend.yituliu.site/tool/building/schedule/export?schedule_id=" + this.uid;

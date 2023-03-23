@@ -34,15 +34,11 @@ export default {
       pageTheme: "op_title_etext_light",
     };
   },
-  created() {},
   mounted() {
-    // this.updateVisits();
+    toolApi.updateVisits("index");
     this.getCookies();
   },
   methods: {
-    updateVisits() {
-      toolApi.updateVisits("index");
-    },
     getCookies() {
       let theme = cookie.get("theme");
       if (typeof theme == "undefined" || theme == undefined) {

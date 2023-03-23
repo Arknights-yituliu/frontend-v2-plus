@@ -1049,12 +1049,9 @@ export default {
   mounted() {
     this.pieChart(this.pieData);
     this.openNotification();
+    toolApi.updateVisits("gacha");
   },
   methods: {
-    updateVisits() {
-      toolApi.updateVisits("gacha").then((response) => {});
-    },
-
     //公告通知
     openNotification() {
       this.$notify({
