@@ -4,7 +4,7 @@ export const passToClient = ["pageProps", "urlPathname", "urlParsed"];
 
 import { renderToString } from "@vue/server-renderer";
 import { escapeInject, dangerouslySkipEscape } from "vite-plugin-ssr";
-import { createApp } from "./app";
+import { createVPSApp } from "./app";
 
 async function render(pageContext) {
   // See https://vite-plugin-ssr.com/head
@@ -12,13 +12,13 @@ async function render(pageContext) {
   const title = (documentProps && documentProps.title) || "明日方舟一图流";
   const desc = (documentProps && documentProps.description) || "明日方舟一图流";
 
-  const { Page, pageProps } = pageContext;
+  const { Page } = pageContext;
   let appHtml;
   if (Page) {
-    const app = createApp(Page, pageProps, pageContext);
+    const app = createVPSApp(pageContext, false);
     appHtml = await renderToString(app);
   } else {
-    appHtml = `<div style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 200px;">
+    appHtml = `<div id="client_only" style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 200px;">
                 <img style="width: 128px;" src="/img/website/icon-large.webp" />
                 <div style="font-size: 32px; font-weight: bold; font-family: sans-serif; margin: 40px 0 10px 0;">${title}</div>
                 <div style="font-size: 32px; font-family: sans-serif;">加载中……</div>
