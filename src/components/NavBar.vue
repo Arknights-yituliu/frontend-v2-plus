@@ -39,6 +39,15 @@ function switchTheme() {
     for (let i = 0; i < titles.length; i++) titles[i].style.color = "#ffffffdd";
     titles = document.getElementsByClassName("op_title_etext");
     for (let i = 0; i < titles.length; i++) titles[i].style.WebkitTextStroke = "0.3px white";
+    for (let i of document.querySelectorAll(".popup_card")) {
+      i.style["background-color"] = "rgba(0, 0, 0, .95)";
+    }
+    for (let i of document.querySelectorAll(".popup_text")) {
+      i.style["color"] = "#888";
+    }
+    for (let i of document.querySelectorAll(".popup_header_penguin")) {
+      i.style["color"] = "#3f51b5";
+    }
     cookie.set("theme", "dark", { expires: 30 });
     console.log("nowdark");
   } else {
@@ -48,6 +57,15 @@ function switchTheme() {
     for (let i = 0; i < titles.length; i++) titles[i].style.color = "#000000dd";
     titles = document.getElementsByClassName("op_title_etext");
     for (let i = 0; i < titles.length; i++) titles[i].style.WebkitTextStroke = "0.6px black";
+    for (let i of document.querySelectorAll(".popup_card")) {
+      i.style["background-color"] = "rgba(255, 255, 255, .83)";
+    }
+    for (let i of document.querySelectorAll(".popup_text")) {
+      i.style["color"] = "#222";
+    }
+    for (let i of document.querySelectorAll(".popup_header_penguin")) {
+      i.style["color"] = "blue";
+    }
     cookie.set("theme", "light", { expires: 30 });
     console.log("nowlight");
   }
