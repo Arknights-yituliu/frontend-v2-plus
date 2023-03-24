@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
+    "@vitejs/plugin-legacy": "^4.0.2",
     "@vitejs/plugin-vue": "^4.1.0",
     "@vue/compiler-sfc": "^3.2.47",
     "@vue/server-renderer": "^3.2.47",
@@ -25,6 +26,7 @@
     "js-cookie": "^3.0.1",
     "pinia": "^2.0.32",
     "sirv": "^2.0.2",
+    "terser": "^5.16.6",
     "vite": "^4.2.1",
     "vite-plugin-ssr": "^0.4.99",
     "vue": "^3.2.47"
