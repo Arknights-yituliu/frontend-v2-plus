@@ -35,6 +35,7 @@ async function render(pageContext) {
         <title>${title}</title>
         <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <script defer src="https://polyfill.io/v3/polyfill.min.js?features=globalThis%2Ces2015"></script>
       </head>
       <body>
         <div id="app">${dangerouslySkipEscape(appHtml)}</div>
