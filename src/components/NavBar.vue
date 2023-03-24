@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <a :class="{ activate: '/' == pageContext.urlPathname }" href="/">材料一图流</a>
+    <a :class="{ activate: homepage }" href="/">材料一图流</a>
     <a :class="{ activate: '/gachaCal' == pageContext.urlPathname }" href="/gachaCal">攒抽规划</a>
     <a :class="{ activate: '/riicCal' == pageContext.urlPathname }" href="/riicCal">排班生成器</a>
     <a :class="{ activate: '/pack' == pageContext.urlPathname }" href="/pack">礼包性价比</a>
     <div class="spacer"></div>
     <el-switch
-      v-if="'/' == pageContext.urlPathname"
+      v-if="homepage"
       class="navbar-switch"
       inline-prompt
       v-model="theme"
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
 
@@ -27,8 +27,12 @@ const pageContext = usePageContext();
 
 const theme = ref();
 
+const homepage = computed(() => {
+  return "/" == pageContext.urlPathname;
+});
+
 onMounted(() => {
-  theme.value = cookie.get("theme") == "dark";
+  if (homepage.value) theme.value = cookie.get("theme") == "dark";
 });
 
 function switchTheme() {
