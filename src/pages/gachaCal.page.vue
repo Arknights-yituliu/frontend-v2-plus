@@ -1058,8 +1058,7 @@ export default {
         title: "更新公告",
         dangerouslyUseHTMLString: true,
         // message: '<strong> 限定池还有'+ this.poolCountDown + '天,结束</strong>',
-        message:
-          "<strong> 新增 剿灭战模拟战计算<br>调整搓玉计算模块</strong>",
+        message: "<strong> 新增 剿灭战模拟战计算<br>调整搓玉计算模块</strong>",
         duration: 12000,
       });
     },
@@ -1075,18 +1074,18 @@ export default {
     checkEndDate() {
       // this.cookieInit=true;
       console.log(this.timeSelector);
-       if (this.timeSelector === "4周年(5.15)") {
+      if (this.timeSelector === "4周年(5.15)") {
         this.endDate = "2023/05/15 03:59:00";
         this.rewardType = "周年限定";
         this.poolCountDownFlag_permit = false;
         this.poolCountDownFlag_orundum = false;
-      }else if (this.timeSelector === "11111") {
+      } else if (this.timeSelector === "11111") {
         // this.endDate = "2023/03/21 03:59:00";
         // this.rewardType = "联动限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         // this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
         // this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
         // this.gacha_store258List = [];
-      } 
+      }
 
       this.getInterval();
       this.getEveryreWard();
@@ -1661,6 +1660,11 @@ export default {
       // console.log(val);
     },
   },
+};
+
+export const documentProps = {
+  title: "一图流 - 攒抽规划",
+  description: "明日方舟一图流，攒抽规划，氪金规划，攒抽计算器",
 };
 </script>
 
