@@ -1,5 +1,11 @@
 # 明日方舟一图流 网站前端
 
+明日方舟一图流网站：<https://yituliu.site>
+
+欢迎加入开发群（QQ）交流讨论：938710832
+
+---
+
 此项目从前端的 [v2 版本](https://github.com/Arknights-yituliu/frontend-v2) 发展而来，保留大部分原有代码时，升级了工具链。在 v2-plus 中，主要用到了以下的库或工具：
 
 - 工具链：[Vite](https://cn.vitejs.dev/)，开发服务器启动快，修改反馈及时。
@@ -8,6 +14,59 @@
 - 组件库：[Element Plus](https://element-plus.org/zh-CN/)，v2 使用 element-ui，v2-plus 使用 element-plus，减少对原来代码的修改。
 - 图表：[Apache ECharts](https://echarts.apache.org/zh/index.html)，在攒抽、公招统计页面画图。
 - Polyfill：[Polyfill.io](https://polyfill.io/v3/)，兼容旧版本的浏览器。
+
+## 运行项目
+
+首先[安装 Node.js](https://nodejs.org/zh-cn/download)，推荐的版本是 18。
+
+```bash
+git clone https://github.com/Arknights-yituliu/frontend-v2-plus.git
+cd frontend-v2-plus
+npm install
+```
+
+如果网络环境不佳，可以换用国内的镜像源：
+
+```bash
+npm config set registry https://registry.npm.taobao.org
+```
+
+### 开发
+
+```bash
+npm run dev
+```
+
+然后在浏览器中打开 <http://localhost:3000>。
+
+### 部署
+
+#### 直接运行
+
+```bash
+npm run prod
+```
+
+默认运行在 `3000` 端口上。如果要改变端口，可以添加 `PORT` 环境变量：
+
+```bash
+PORT=10000 npm run prod  # 在 10000 端口上运行
+```
+
+#### 使用容器运行
+
+直接运行打包好的镜像：
+
+```bash
+docker run -d --rm --name v2plus -p 3000:3000  zhaozuohong/yituliu-frontend-v2-plus:latest
+```
+
+或者从本地构建镜像：
+
+```bash
+docker build . -t v2-plus
+docker run -d --rm --name v2plus -p 3000:3000  v2-plus:latest
+```
 
 ## 哪些页面用了 SSR？
 
