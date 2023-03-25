@@ -75,3 +75,9 @@ docker run -d --rm --name v2plus -p 3000:3000  v2-plus:latest
 - 基建排班（`/riicCal`）：在浏览器中渲染。因为这个页面的加载速度实在是太慢了，如果用服务端渲染，页面到达之后有很长时间不能交互，看起来像坏了一样。所以还是在浏览器中渲染，至少页面显示出来的时候就是可交互的。
 - 礼包性价比（`/pack`）：在服务端渲染。
 - 公招数据（`maarecruitdata`）：由于是半公开页面，访问较少，因此暂时在浏览器中渲染。关于 ECharts 如何在服务端渲染，或改写代码、只在客户端运行 ECharts，有待进一步研究。
+
+## 打包
+
+在 [vite.config.js](./vite.config.js) 中，调用了 [rollup-plugin-external-globals](https://github.com/eight04/rollup-plugin-external-globals)。为生产环境打包时，将 vue 与 element-plus 等库排除在产物以外，在渲染网页时，通过 CDN 引入这些库，以减小产物的体积。[相关代码](./src/renderer/_default.page.server.js)
+
+添加了 [rollup-plugin-visualizer](https://github.com/btd/rollup-plugin-visualizer)。运行 `npm run build` 或 `npm run prod` 时，会在项目的根目录生成 `stats.html`，有助于直观地分析打包产物。
