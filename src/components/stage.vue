@@ -420,7 +420,7 @@ export default {
       return "https://penguin-stats.cn/result/item/" + num;
     },
     getSpriteImg(id, index) {
-      if (id === "30012" && index !== 100) id = "30013";
+      if (id === "30012" && index !== "t2") id = "30013";
       if (index == "type") return "bg-" + id + "large" + " sprite_type";
       if (index === "sec") return "bg-" + id + " sprite_secondary";
       if (index === "title") return "bg-" + id + " sprite_title";
