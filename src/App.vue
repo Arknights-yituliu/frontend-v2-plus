@@ -1,6 +1,9 @@
 <template>
   <el-container>
-    <el-header style="z-index: 100; height: 45px; position: sticky; width: 100%; top: 0px">
+    <el-header
+      style="z-index: 100; height: 45px; position: sticky; width: 100%; top: 0px"
+      v-if="'/maarecruitdata' != pageContext.urlPathname"
+    >
       <nav-bar />
     </el-header>
     <el-main style="z-index: 10; background-color: #808080">
@@ -29,7 +32,13 @@ import "@/assets/css/recruit.css";
 import NavBar from "@/components/NavBar.vue";
 import myfooter from "@/components/myfooter.vue";
 
+import { usePageContext } from "@/renderer/usePageContext";
+
 export default {
+  setup() {
+    const pageContext = usePageContext();
+    return { pageContext };
+  },
   components: {
     NavBar,
     myfooter,
@@ -52,5 +61,11 @@ export default {
 
 .el-slider__button-wrapper {
   z-index: auto;
+}
+</style>
+
+<style>
+body {
+  overflow-x: hidden;
 }
 </style>
