@@ -813,6 +813,7 @@
         </template>
         <div class="gacha_unit_child" style="display: flex">
             <div class="gacha_unit_child_title">未知奖励</div>
+            <client-only>
             <el-slider
               v-model="customValue_slider"
               :step="1000"
@@ -824,6 +825,7 @@
               style="flex-grow: 1; flex-shrink: 5"
             >
             </el-slider>
+          </client-only>
           </div>
 
         <div class="gacha_unit" id="otherRes">
@@ -1088,6 +1090,7 @@ export default {
     this.checkEndDate();
   },
   mounted() {
+    myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
     this.openNotification();
     toolApi.updateVisits("gacha");
@@ -1654,7 +1657,7 @@ export default {
 
     pieChart(data) {
 
-       myChart = echarts.init(document.getElementById("gacha_total_pie"));
+       
 
       let option = {
         tooltip: {
