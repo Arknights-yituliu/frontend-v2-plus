@@ -1,6 +1,7 @@
 <template>
   <div id="indexDiv" :class="pageTheme" style="max-width: 1080px; margin: auto">
     <stage />
+    <newChapter />
     <store-value />
     <div class="title_null"></div>
     <!-- <pack> </pack> -->
@@ -14,6 +15,7 @@
 
 <script>
 import stage from "@/components/stage.vue";
+import newChapter from "@/components/newChapter.vue";
 import StoreValue from "@/components/StoreValue.vue";
 // import pack from "@/pages/module/pack.vue";
 import ItemValue from "@/components/ItemValue.vue";
@@ -28,6 +30,7 @@ export default {
     StoreValue,
     ItemValue,
     FootComponent,
+    newChapter,
   },
   data() {
     return {
