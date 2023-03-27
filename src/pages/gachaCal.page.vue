@@ -21,7 +21,7 @@
             @change="checkEndDate(timeSelector)"
           >
             <el-radio-button label="4周年(5.15)" style="width: 33%"></el-radio-button>
-            <el-radio-button label="夏活(日期待定)" style="width: 33%" disabled></el-radio-button>
+            <el-radio-button label="夏活(以8.15计)" style="width: 33%"></el-radio-button>
             <el-radio-button label="感谢庆典" type="primary" style="width: 33%" disabled></el-radio-button>
             <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
           </el-radio-group>
@@ -106,11 +106,15 @@
       <el-collapse-item name="1" style="display: block">
         <template #title>
           <div class="gacha_title_icon"></div>
-          <span class="collapse-item_title">现有库存 {{ toFixedByAcc(calResults.gachaTimes_exist, 0) }}抽</span>
+          <span class="collapse-item_title">库存/预留/搓玉 {{ toFixedByAcc(calResults.gachaTimes_exist, 0) }}抽</span>
         </template>
         <!-- 内容区 -->
         <div class="gacha_unit" id="wallet">
           <!-- 现有资源 -->
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            当前库存
+          </div>
           <div class="gacha_unit_child" style="display: flex">
             <div class="gacha_unit_child_title">
               <div style="display: flex">
@@ -170,8 +174,12 @@
 
           </div>
 
-          <el-divider></el-divider>
+          <!-- <el-divider></el-divider> -->
           <!-- 自定义修正值 -->
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            预留、自定义修正
+          </div>
           <div class="gacha_unit_child">
             <input
               class="gacha_unit_child_inputbox"
@@ -205,7 +213,7 @@
           </div>
           <!-- 搓玉计算 -->
           <div class="gacha_unit_fold">
-            <img class="gacha_img_small" src="/img/website/ex-icon.png" />
+            <div class="triangle"></div>
             搓玉计算
           </div>
           <div class="gacha_unit_child">
@@ -376,7 +384,7 @@
         <div class="gacha_unit" id="potential">
           <!-- 悖论模拟 剿灭战模拟-->
           <div class="gacha_unit_fold">
-            <img class="gacha_img_small" src="/img/website/ex-icon.png" />
+            <div class="triangle"></div>
             悖论模拟/剿灭战模拟
           </div>
           <div class="gacha_unit_child">
@@ -419,7 +427,7 @@
           </div>
           <!-- 主线 -->
           <div class="gacha_unit_fold">
-            <img class="gacha_img_small" src="/img/website/ex-icon.png" />
+            <div class="triangle"></div>
             主线、突袭、绝境
           </div>
           <el-checkbox-group v-model="gacha_potentialList" class="">
@@ -443,7 +451,7 @@
             </div>
           </el-checkbox-group>
           <!-- Sidestory -->
-          <div class="gacha_unit_fold"><img class="gacha_img_small" src="/img/website/ex-icon.png" />支线、别传</div>
+          <div class="gacha_unit_fold"><div class="triangle"></div>支线、别传</div>
           <el-checkbox-group v-model="gacha_potentialList" class="">
             <div
               v-for="(singlePack, index) in gacha_potential"
@@ -480,7 +488,7 @@
             <a href="https://yituliu.site/pack">点击跳转礼包完整性价比</a>
           </div>
           <!-- 月常礼包 -->
-          <div class="gacha_unit_fold"><img class="gacha_img_small" src="/img/website/ex-icon.png" />月常礼包</div>
+          <div class="gacha_unit_fold"><div class="triangle"></div>月常礼包</div>
           <el-checkbox-group v-model="gacha_storePacksList">
             <div
               v-for="(singlePack, index) in gacha_storePacks"
@@ -534,7 +542,7 @@
             </div>
           </el-checkbox-group>
           <!-- 限时礼包 -->
-          <div class="gacha_unit_fold"><img class="gacha_img_small" src="/img/website/ex-icon.png" />限时礼包</div>
+          <div class="gacha_unit_fold"><div class="triangle"></div>限时礼包</div>
           <el-checkbox-group v-model="gacha_storePacksList" class="">
             <div
               v-for="(singlePack, index) in gacha_storePacks"
@@ -589,7 +597,7 @@
             </div>
           </el-checkbox-group>
           <!-- 新人礼包 -->
-          <div class="gacha_unit_fold"><img class="gacha_img_small" src="/img/website/ex-icon.png" />新人礼包</div>
+          <div class="gacha_unit_fold"><div class="triangle"></div>新人礼包</div>
           <el-checkbox-group v-model="gacha_storePacksList" class="">
             <div
               v-for="(singlePack, index) in gacha_storePacks"
@@ -640,7 +648,7 @@
             </div>
           </el-checkbox-group>
           <!-- 首充 -->
-          <div class="gacha_unit_fold"><img class="gacha_img_small" src="/img/website/ex-icon.png" />源石首充</div>
+          <div class="gacha_unit_fold"><div class="triangle"></div>源石首充</div>
           <el-checkbox-group v-model="gacha_storePacksList" class="">
             <div
               v-for="(singlePack, index) in gacha_storePacks"
@@ -670,7 +678,7 @@
             </div>
           </el-checkbox-group>
           <!-- 非首充 -->
-          <div class="gacha_unit_fold"><img class="gacha_img_small" src="/img/website/ex-icon.png" />非首充</div>
+          <div class="gacha_unit_fold"><div class="triangle"></div>非首充</div>
 
           <div class="gacha_unit_child">
             <input class="gacha_unit_child_inputbox" type="text" @change="compute()" v-model.number="originium_648" />
@@ -826,8 +834,9 @@
             >
             </el-slider>
           </client-only>
-          </div>
-
+        </div>
+        <div class="gacha_unit_info">修bug，临时维护等，左边悲观右边乐观</div>
+        <div class="gacha_unit_info">数据来自明日方舟零氪玩家交流群</div>
         <div class="gacha_unit" id="otherRes">
           <div v-for="(other, key) in gacha_honeyCake" :key="key">
             <!-- 只显示当前选择的时间段内的奖励&&(公共的奖励||只可当期使用的奖励) -->
@@ -1920,5 +1929,14 @@ export const documentProps = {
   margin-top: -2px;
   /* padding: 12px 0px; */
   color: gray;
+}
+.triangle {
+  border-left: 12px solid transparent;
+  border-top: 16px solid rgb(255 255 255);
+  border-bottom: 4px solid transparent;
+  border-right: 12px solid transparent;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 2px;
 }
 </style>
