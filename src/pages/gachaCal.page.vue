@@ -198,17 +198,18 @@
           <!-- 预留皮肤 -->
           <div class="gacha_unit_child" style="display: flex">
             <div class="gacha_unit_child_title">预留皮肤(18石/件)</div>
-            <el-slider
-              v-model="skinNumValue"
-              :step="1"
-              :min="0"
-              :max="10"
-              show-stops
-              show-input
-              @change="compute()"
-              style="flex-grow: 1; flex-shrink: 5"
-            >
-            </el-slider>
+            <client-only>
+              <el-slider
+                v-model="skinNumValue"
+                :step="1"
+                :min="0"
+                :max="10"
+                show-stops
+                show-input
+                @change="compute()"
+                style="flex-grow: 1; flex-shrink: 5"
+              ></el-slider>
+            </client-only>
           </div>
           <!-- 搓玉计算 -->
           <div class="gacha_unit_fold">
@@ -970,8 +971,10 @@ import toolApi from "@/api/tool";
 import cookie from "js-cookie";
 import * as echarts from "echarts";
 // import echarts from "static/js/echarts.min.js";
+import { ClientOnly } from "@/components/ClientOnly";
 
 export default {
+  components: { ClientOnly },
   data() {
     return {
       pageTheme: "light",
