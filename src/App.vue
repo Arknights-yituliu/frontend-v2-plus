@@ -67,5 +67,7 @@ export default {
 <style>
 body {
   overflow-x: hidden;
+  text-size-adjust: none;
+  -webkit-text-size-adjust: none;
 }
 </style>
