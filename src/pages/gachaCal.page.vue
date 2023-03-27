@@ -21,8 +21,8 @@
             @change="checkEndDate(timeSelector)"
           >
             <el-radio-button label="4周年(5.15)" style="width: 33%"></el-radio-button>
-            <el-radio-button label="夏活限定" style="width: 33%" disabled></el-radio-button>
-            <el-radio-button label="半周年" type="primary" style="width: 33%" disabled></el-radio-button>
+            <el-radio-button label="夏活(日期待定)" style="width: 33%" disabled></el-radio-button>
+            <el-radio-button label="感谢庆典" type="primary" style="width: 33%" disabled></el-radio-button>
             <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
           </el-radio-group>
           <!-- <el-divider></el-divider> -->
@@ -167,7 +167,9 @@
               <el-switch v-model="originiumFlag" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
               源石是否用于抽卡
             </div>
+           
           </div>
+          
           <el-divider></el-divider>
           <!-- 自定义修正值 -->
           <div class="gacha_unit_child">
@@ -178,24 +180,14 @@
               v-model.number="customValue"
               oninput="value=value.replace(/[^0-9-]+/g, '')"
             />
-            <div class="gacha_unit_child_title" style="width: 330px">自定义修正值(合成玉)</div>
-            <div class="gacha_resources_unit" style="width: 135px">
+            <div class="gacha_unit_child_title" style="width: 220px">自定义修正值(合成玉)</div>
+            <div class="gacha_resources_unit" style="width: 125px">
               <div :class="getSpriteImg('4003icon', 0)"></div>
               {{ customValue }}
             </div>
           </div>
           <div class="gacha_unit_info">例如给轮换池预留、其它来源等，可填负数</div>
-          <!-- <div class="gacha_unit_child">
-            <div class="gacha_unit_child_title" style="width: 100%;">
-              搓玉比例:1理智=1.09玉(1-7)
-              <a href="/?item=Orundum" style="margin: 0px 20px;">查看备选搓玉关卡</a>
-              <a href="https://www.bilibili.com/video/BV1XT411F7m4" style="display: inline-block;">
-                如何安排搓玉？
-                <img class="gacha_img_small" src="/img/website/el.png"/>
-              </a>
-            </div>
-          </div> -->
-          <!-- 预留皮肤 -->
+        
           <div class="gacha_unit_child" style="display: flex">
             <div class="gacha_unit_child_title">预留皮肤(18石/件)</div>
             <el-slider
@@ -239,13 +231,38 @@
             </div>
           </div>
           <div class="gacha_unit_info">搓玉系数：1-7(1.09)</div>
+          <!-- <div class="gacha_unit_child">
+            <input
+              class="gacha_unit_child_inputbox"
+              type="text"
+              @change="compute()"
+              v-model.number="item_30012"
+              oninput="value=value.replace(/[^0-9]+/g, '')"
+            />
+            个固源岩 +
+            <input
+              class="gacha_unit_child_inputbox"
+              type="text"
+              @change="compute()"
+              v-model.number="item_30062"
+              oninput="value=value.replace(/[^0-9]+/g, '')"
+              style="width: 45px"
+            />
+            个装置 + {{ LMDCost }} 龙门币=
+            <div class="gacha_resources_unit">
+              <div :class="getSpriteImg('4003icon', 0)"></div>
+              {{ toFixedByAcc(orundumByManufacture, 2) }}
+            </div>
+          </div> -->
           <div class="gacha_unit_child">
             <a href="/?item=Orundum" style="margin: 0px 24px 0px 0px">查看其它可搓玉关卡</a>
             <a href="https://www.bilibili.com/video/BV1v54y1T7u5" style="display: inline-block">
               搓玉教程<img class="gacha_img_small" src="/img/website/el.png"
             /></a>
           </div>
-        </div>
+          
+          </div>
+       
       </el-collapse-item>
       <!-- 日常积累 -->
       <el-collapse-item class="collapse-item" name="2" style="display: block">
@@ -793,6 +810,20 @@
           <div class="gacha_title_icon"></div>
           <span class="collapse-item_title">其它资源（估算）{{ toFixedByAcc(calResults.gachaTimes_other, 0) }}抽</span>
         </template>
+        <div class="gacha_unit_child" style="display: flex">
+            <div class="gacha_unit_child_title">未知奖励</div>
+            <el-slider
+              v-model="customValue_slider"
+              :step="1000"
+              :min="0"
+              :max="10000"
+              show-stops
+              show-input
+              @change="compute()"
+              style="flex-grow: 1; flex-shrink: 5"
+            >
+            </el-slider>
+          </div>
 
         <div class="gacha_unit" id="otherRes">
           <div v-for="(other, key) in gacha_honeyCake" :key="key">
@@ -970,6 +1001,7 @@ import toolApi from "@/api/tool";
 import cookie from "js-cookie";
 import * as echarts from "echarts";
 // import echarts from "static/js/echarts.min.js";
+let myChart = "";
 
 export default {
   data() {
@@ -1006,6 +1038,9 @@ export default {
       annihilation: 0, //未通过剿灭个数
       orundum_ap: 0, //用于搓玉的理智数量
       orundum_rate: 1.09, //搓玉系数
+      item_30012:0,
+      item_30062:0,
+      orundumByManufacture:0,
 
       remainingDays: 0, //剩余天数
       remainingWeeks: 0, //剩余周数
@@ -1034,7 +1069,10 @@ export default {
       storeValue: 0, //绿票商店抽数
       skinNumValue: 0, //皮肤消耗源石数量
       customValue: 0, //自定义值
+      customValue_slider: 0, //自定义值
       cookieInit: 0, //cookie是否获取标志
+      moreOptions:true,
+      LMDCost:0,
       pieData: [],
     };
   },
@@ -1055,11 +1093,11 @@ export default {
     //公告通知
     openNotification() {
       this.$notify({
-        title: "更新公告",
+        title: "公告",
         dangerouslyUseHTMLString: true,
         // message: '<strong> 限定池还有'+ this.poolCountDown + '天,结束</strong>',
-        message: "<strong> 新增 剿灭战模拟战计算<br>调整搓玉计算模块</strong>",
-        duration: 12000,
+        message: "<strong><h3>新增内容</h3> 新增剿灭战模拟战计算<br>调整搓玉计算模块<br><h3>注意事项</h3>夏活攒抽数据根据去年同期数据编写<br>准确活动排期待直播后更新<br></strong>",
+        duration: 5000,
       });
     },
 
@@ -1079,12 +1117,13 @@ export default {
         this.rewardType = "周年限定";
         this.poolCountDownFlag_permit = false;
         this.poolCountDownFlag_orundum = false;
-      } else if (this.timeSelector === "11111") {
-        // this.endDate = "2023/03/21 03:59:00";
-        // this.rewardType = "联动限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
-        // this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        // this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        // this.gacha_store258List = [];
+        this.gacha_store258List = [];
+      } else if (this.timeSelector === "夏活(日期待定)") {
+        this.endDate = "2023/08/31 03:59:00";
+        this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
+        this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
+        this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
+        this.gacha_store258List = [];
       }
 
       this.getInterval();
@@ -1101,8 +1140,8 @@ export default {
 
     //获取雪碧图
     getSpriteImg(packName, index) {
-      if (index === 0) return "bg-" + packName + " sprite_gacha";
-      return "bg-" + packName;
+       return "bg-" + packName + " sprite_gacha";
+      // return "bg-" + packName;
     },
 
     //判断奖励是否在时间段内
@@ -1226,13 +1265,16 @@ export default {
       }
 
       //  计算自定义合成玉和搓玉
-      let custom_exist = this.customValue + this.orundum_ap * this.orundum_rate;
+      let custom_exist = this.customValue + this.orundum_ap * this.orundum_rate +
+       this.item_30012 * 5  + this.item_30062 * 10;
+       
+       this.orundumByManufacture =  this.item_30012 * 5  + this.item_30062 * 10;
+       this.LMDCost = this.item_30012 * 800 + this.item_30062 * 1000;
 
       //库存抽卡次数（单项）
       this.calResults.gachaTimes_exist =
         this.calResults.originium_exist * 0.3 * flag_originium +
-        this.calResults.orundum_exist / 600 +
-        custom_exist / 600 +
+        this.calResults.orundum_exist / 600 + custom_exist / 600 +
         this.calResults.permit_exist +
         this.calResults.permit10_exist * 10;
 
@@ -1379,6 +1421,9 @@ export default {
 
       //减去限定池已经赠送过的单抽
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
+      
+      console.log(this.customValue_slider)
+      this.calResults.orundum_other += parseInt(this.customValue_slider);
 
       //其他抽卡次数
       this.calResults.gachaTimes_other =
@@ -1605,8 +1650,8 @@ export default {
     },
 
     pieChart(data) {
-      let chartDom = document.getElementById("gacha_total_pie");
-      let myChart = echarts.init(chartDom);
+      
+       myChart = echarts.init(document.getElementById("gacha_total_pie"));
 
       let option = {
         tooltip: {
@@ -1621,7 +1666,7 @@ export default {
             radius: "70%",
             center: ["50%", "50%"],
             itemStyle: {
-              normal: {
+              
                 label: {
                   show: true,
                   textStyle: { color: "#000000", fontSize: "16" },
@@ -1634,8 +1679,11 @@ export default {
                   show: true,
                   lineStyle: { color: "#000000" },
                 }, //线条颜色
-              }, //基本样式
-              emphasis: {
+               //基本样式
+              
+            },
+            emphasis: {
+                itemStyle:{
                 shadowBlur: 10,
                 shadowOffsetX: 0,
                 shadowColor: "rgba(0, 0, 0, 0.5)", //鼠标放在区域边框颜色
@@ -1644,11 +1692,11 @@ export default {
             },
             data: data,
             emphasis: {
-              itemStyle: {
+              
                 shadowBlur: 10,
                 shadowOffsetX: 0,
                 shadowColor: "rgba(0, 0, 0, 0.5)",
-              },
+              
             },
           },
         ],
