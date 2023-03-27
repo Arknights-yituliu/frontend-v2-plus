@@ -167,9 +167,9 @@
               <el-switch v-model="originiumFlag" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
               源石是否用于抽卡
             </div>
-           
+
           </div>
-          
+
           <el-divider></el-divider>
           <!-- 自定义修正值 -->
           <div class="gacha_unit_child">
@@ -187,20 +187,21 @@
             </div>
           </div>
           <div class="gacha_unit_info">例如给轮换池预留、其它来源等，可填负数</div>
-        
+
           <div class="gacha_unit_child" style="display: flex">
             <div class="gacha_unit_child_title">预留皮肤(18石/件)</div>
-            <el-slider
-              v-model="skinNumValue"
-              :step="1"
-              :min="0"
-              :max="10"
-              show-stops
-              show-input
-              @change="compute()"
-              style="flex-grow: 1; flex-shrink: 5"
-            >
-            </el-slider>
+            <client-only>
+              <el-slider
+                v-model="skinNumValue"
+                :step="1"
+                :min="0"
+                :max="10"
+                show-stops
+                show-input
+                @change="compute()"
+                style="flex-grow: 1; flex-shrink: 5"
+              ></el-slider>
+            </client-only>
           </div>
           <!-- 搓玉计算 -->
           <div class="gacha_unit_fold">
@@ -260,9 +261,9 @@
               搓玉教程<img class="gacha_img_small" src="/img/website/el.png"
             /></a>
           </div>
-          
+
           </div>
-       
+
       </el-collapse-item>
       <!-- 日常积累 -->
       <el-collapse-item class="collapse-item" name="2" style="display: block">
@@ -1002,8 +1003,10 @@ import cookie from "js-cookie";
 import * as echarts from "echarts";
 // import echarts from "static/js/echarts.min.js";
 let myChart = "";
+import { ClientOnly } from "@/components/ClientOnly";
 
 export default {
+  components: { ClientOnly },
   data() {
     return {
       pageTheme: "light",
@@ -1267,7 +1270,7 @@ export default {
       //  计算自定义合成玉和搓玉
       let custom_exist = this.customValue + this.orundum_ap * this.orundum_rate +
        this.item_30012 * 5  + this.item_30062 * 10;
-       
+
        this.orundumByManufacture =  this.item_30012 * 5  + this.item_30062 * 10;
        this.LMDCost = this.item_30012 * 800 + this.item_30062 * 1000;
 
@@ -1421,7 +1424,7 @@ export default {
 
       //减去限定池已经赠送过的单抽
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
-      
+
       console.log(this.customValue_slider)
       this.calResults.orundum_other += parseInt(this.customValue_slider);
 
@@ -1650,7 +1653,7 @@ export default {
     },
 
     pieChart(data) {
-      
+
        myChart = echarts.init(document.getElementById("gacha_total_pie"));
 
       let option = {
@@ -1666,7 +1669,7 @@ export default {
             radius: "70%",
             center: ["50%", "50%"],
             itemStyle: {
-              
+
                 label: {
                   show: true,
                   textStyle: { color: "#000000", fontSize: "16" },
@@ -1680,7 +1683,7 @@ export default {
                   lineStyle: { color: "#000000" },
                 }, //线条颜色
                //基本样式
-              
+
             },
             emphasis: {
                 itemStyle:{
@@ -1692,11 +1695,11 @@ export default {
             },
             data: data,
             emphasis: {
-              
+
                 shadowBlur: 10,
                 shadowOffsetX: 0,
                 shadowColor: "rgba(0, 0, 0, 0.5)",
-              
+
             },
           },
         ],
