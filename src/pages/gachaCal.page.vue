@@ -972,6 +972,12 @@
                   <img class="foot_unit_pic" src="/img/website/公孙长乐.webp" />公孙长乐
                 </div>
               </a>
+              <a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
+                <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
+                  <img class="foot_unit_pic" src="/img/website/qq.png" />
+                  明日方舟零氪云玩家交流群
+                </div>
+              </a>
             </div>
             <div class="foot_unit">
               <p class="foot_unit_title">-B站发布-</p>
