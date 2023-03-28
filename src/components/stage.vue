@@ -314,14 +314,14 @@ export default {
     return {
       popupData: [], //关卡弹窗用集合
       // stageRankT3: stageJson.data, //关卡效率集合
-      stageRankT3: this.pageContext.pageProps.data, //关卡效率集合
-      stageRankT2: [], //关卡效率集合
-      stageRankOrundum: [], //关卡效率集合
-      stageActHistory: [],
+      stageRankT3: this.pageContext.pageProps.t3, //关卡效率集合
+      stageRankT2: this.pageContext.pageProps.t2, //关卡效率集合
+      stageRankOrundum: this.pageContext.pageProps.orundum, //关卡效率集合
+      stageActHistory: this.pageContext.pageProps.closed,
       actStageOnly: 0,
       cardList: [0, 1, 2, 3, 4, 5, 6, 7],
       itemType: "",
-      updateTime: this.pageContext.pageProps.data[0][0].updateTime,
+      updateTime: this.pageContext.pageProps.t3[0][0].updateTime,
       itemId: "",
       opETextTheme: "op_title_etext_light",
       stageVersion: 0.625,
@@ -329,9 +329,9 @@ export default {
   },
   mounted() {
     // this.getStageResultDateT3();
-    this.getStageResultDateT2();
-    this.getStageResultDateOrundum();
-    this.getStageResultDateClosed();
+    // this.getStageResultDateT2();
+    // this.getStageResultDateOrundum();
+    // this.getStageResultDateClosed();
     this.getRoute();
     cookie.set("updateTime", this.updateTime, { expires: 30 });
   },

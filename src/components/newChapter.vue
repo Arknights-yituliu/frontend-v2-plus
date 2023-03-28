@@ -93,7 +93,7 @@ export default {
       actStageOnly: 0,
       cardList: [0, 1, 2, 3, 4, 5, 6, 7],
       itemType: "",
-      updateTime: this.pageContext.pageProps.data[0][0].updateTime,
+      updateTime: this.pageContext.pageProps.t3[0][0].updateTime,
       itemId: "",
       opETextTheme: "op_title_etext_light",
       stageVersion: 0.625,
