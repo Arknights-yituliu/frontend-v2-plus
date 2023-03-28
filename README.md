@@ -98,6 +98,16 @@ SSR 是非常灵活的。在服务端与客户端各做什么，完全视需求�
 - [Client-only Components](https://vite-plugin-ssr.com/client-only-components)
 - [Server Routing VS Client Routing](https://vite-plugin-ssr.com/server-routing-vs-client-routing)
 
+## SSR 相关代码说明
+
+### 服务端
+
+SSR 需要在服务端渲染页面。在开发与部署时，调用渲染代码、返回网页均由 [`server/index.js`](./server/index.js) 实现。此文件来源于 vite-plugin-ssr 的脚手架（[文件链接](https://github.com/brillout/vite-plugin-ssr/blob/main/boilerplates/boilerplate-vue/server/index.js)）。
+
+由于我们使用的反代 Nginx 目前不支持 103 状态码，因此关闭了 [Early Hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/103) 相关的功能。
+
+服务端使用 express 框架。
+
 ## 哪些页面用了 SSR？
 
 - 首页（`/`）：打开网页后，屏幕空间几乎全被蓝材料占据。如果只对蓝材料部分采用服务端渲染，就能得到不错的效果。如果所有数据都在服务端渲染，经过 gzip 压缩后的页面大小约为 65 KB，完全可以接受，所以对整个首页都采用 SSR。
