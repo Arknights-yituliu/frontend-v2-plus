@@ -1139,7 +1139,7 @@ export default {
         this.poolCountDownFlag_permit = false;
         this.poolCountDownFlag_orundum = false;
         this.gacha_store258List = [];
-      } else if (this.timeSelector === "夏活(日期待定)") {
+      } else if (this.timeSelector === "夏活(以8.15计)") {
         this.endDate = "2023/08/31 03:59:00";
         this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
