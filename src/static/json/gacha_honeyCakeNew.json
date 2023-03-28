@@ -89,13 +89,33 @@
         "rewardType": "公共",
         "module": "honeyCake"
     },
-    "剿灭更新1": {
+    "游戏维护更新(6-8月)": {
+        "originium": 15,
+        "orundum": 1600,
+        "permit": 0,
+        "permit10": 0,
+        "start": "2099/01/01 16:00:00",
+        "end": "2023/05/15 03:59:00",
+        "rewardType": "公共",
+        "module": "honeyCake"
+    },
+    "5月剿灭更新": {
         "originium": 0,
         "orundum": 1500,
         "permit": 0,
         "permit10": 0,
         "start": "2023/05/01 03:59:00",
         "end": "2023/05/01 03:59:00",
+        "rewardType": "公共",
+        "module": "honeyCake"
+    },
+    "7月剿灭更新": {
+        "originium": 0,
+        "orundum": 1500,
+        "permit": 0,
+        "permit10": 0,
+        "start": "2023/06/01 03:59:00",
+        "end": "2023/08/01 03:59:00",
         "rewardType": "公共",
         "module": "honeyCake"
     },
@@ -141,6 +161,26 @@
     },
     "夏活SideStory": {
         "originium": 28,
+        "orundum": 0,
+        "permit": 3,
+        "permit10": 0,
+        "start": "2023/08/01 16:00:00",
+        "end": "2023/08/01 03:59:00",
+        "rewardType": "公共",
+        "module": "act"
+    },
+    "可能的SideStory": {
+        "originium": 28,
+        "orundum": 0,
+        "permit": 3,
+        "permit10": 0,
+        "start": "2023/08/01 16:00:00",
+        "end": "2023/08/01 03:59:00",
+        "rewardType": "公共",
+        "module": "act"
+    },
+    "可能的故事集": {
+        "originium": 16,
         "orundum": 0,
         "permit": 3,
         "permit10": 0,

@@ -758,7 +758,8 @@
         </template>
 
         <div class="gacha_unit" id="activity">
-          <div class="gacha_unit_child">复刻活动</div>
+          <!-- 复刻活动 -->
+          <div class="gacha_unit_fold"><div class="triangle"></div>复刻活动</div>
           <el-checkbox-group v-model="gacha_actReList" class="">
             <div v-for="(actRe, key) in gacha_honeyCake" :key="key" class="gacha_unit_child" @change="compute(key)">
               <el-checkbox-button :label="key" v-show="isDuringDate(actRe.start, actRe.end) && 'actRe' == actRe.module">
@@ -786,6 +787,8 @@
               </el-checkbox-button>
             </div>
           </el-checkbox-group>
+          <!-- 固定内容 -->
+          <div class="gacha_unit_fold"><div class="triangle"></div>其它活动</div>
           <div v-for="(act, key) in gacha_honeyCake" :key="key">
             <div class="gacha_unit_child" v-show="isDuringDate(act.start, act.end) && 'act' == act.module">
               <div class="gacha_unit_child_title">{{ key }}</div>
@@ -810,6 +813,7 @@
               </div>
             </div>
           </div>
+          <div class="gacha_unit_info">*4周年到夏活中间的内容仅作估算</div>
         </div>
       </el-collapse-item>
 
@@ -819,13 +823,14 @@
           <div class="gacha_title_icon"></div>
           <span class="collapse-item_title">其它资源（估算）{{ toFixedByAcc(calResults.gachaTimes_other, 0) }}抽</span>
         </template>
+        <!-- 夏活专用滑块 -->
         <div class="gacha_unit_child" style="display: flex">
             <div class="gacha_unit_child_title">未知奖励</div>
             <client-only>
             <el-slider
               v-model="customValue_slider"
               :step="1000"
-              :min="0"
+              :min="2000"
               :max="10000"
               show-stops
               show-input
@@ -835,8 +840,9 @@
             </el-slider>
           </client-only>
         </div>
-        <div class="gacha_unit_info">修bug，临时维护等，左边悲观右边乐观</div>
-        <div class="gacha_unit_info">数据来自明日方舟零氪玩家交流群</div>
+        <div class="gacha_unit_info">修bug，突发维护等。左边保守估计，右边乐观估计</div>
+        <div class="gacha_unit_info">数据参考自 <a href="https://www.bilibili.com/read/cv22112499">雷界一渣@B站</a> 的个人统计</div>
+        <!-- 其他资源 -->
         <div class="gacha_unit" id="otherRes">
           <div v-for="(other, key) in gacha_honeyCake" :key="key">
             <!-- 只显示当前选择的时间段内的奖励&&(公共的奖励||只可当期使用的奖励) -->
@@ -890,7 +896,7 @@
             <!-- <div id="foot_left"> -->
             <div class="foot_unit">
               <p class="foot_unit_title">-开发信息-</p>
-              <a href="https://github.com/Zirun-wang/yituliuFrontEnd">
+              <a href="https://github.com/Arknights-yituliu/frontend-v2-plus">
                 <div class="foot_unit_button uni_shadow_2" id="foot_frontEnd">
                   <img class="foot_unit_pic" src="/img/website/github.png" />
                   前端
@@ -970,12 +976,6 @@
               <a href="https://space.bilibili.com/22606843">
                 <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
                   <img class="foot_unit_pic" src="/img/website/公孙长乐.webp" />公孙长乐
-                </div>
-              </a>
-              <a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
-                <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                  <img class="foot_unit_pic" src="/img/website/qq.png" />
-                  明日方舟零氪云玩家交流群
                 </div>
               </a>
             </div>
@@ -1089,7 +1089,7 @@ export default {
       storeValue: 0, //绿票商店抽数
       skinNumValue: 0, //皮肤消耗源石数量
       customValue: 0, //自定义值
-      customValue_slider: 0, //自定义值
+      customValue_slider: 3000, //夏活前自定义滑块
       cookieInit: 0, //cookie是否获取标志
       moreOptions:true,
       LMDCost:0,
@@ -1114,11 +1114,12 @@ export default {
     //公告通知
     openNotification() {
       this.$notify({
-        title: "公告",
+        title: "3.30更新",
         dangerouslyUseHTMLString: true,
         // message: '<strong> 限定池还有'+ this.poolCountDown + '天,结束</strong>',
-        message: "<strong><h3>新增内容</h3> 新增剿灭战模拟战计算<br>调整搓玉计算模块<br><h3>注意事项</h3>夏活攒抽数据根据去年同期数据编写<br>准确活动排期待直播后更新<br></strong>",
-        duration: 5000,
+        // message: "<strong><h3>新增内容</h3> 新增剿灭战模拟战计算<br>调整搓玉计算模块<br><h3>注意事项</h3>夏活攒抽数据根据去年同期数据编写<br>准确活动排期待直播后更新<br></strong>",
+        message: "<strong>搓玉计算模块调整<br>夏活攒抽数据参考自去年同期数据</strong>",
+        duration: 3000,
       });
     },
 
@@ -1139,7 +1140,7 @@ export default {
         this.poolCountDownFlag_permit = false;
         this.poolCountDownFlag_orundum = false;
         this.gacha_store258List = [];
-      } else if (this.timeSelector === "夏活(日期待定)") {
+      } else if (this.timeSelector === "夏活(以8.15计)") {
         this.endDate = "2023/08/31 03:59:00";
         this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
