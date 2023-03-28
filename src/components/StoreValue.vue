@@ -393,22 +393,27 @@
 import storeApi from "@/api/store";
 import cookie from "js-cookie";
 // import storeJson from "static/json-video/store.json";
+import { usePageContext } from "@/renderer/usePageContext";
 
 export default {
+  setup() {
+    const pageContext = usePageContext();
+    return { pageContext };
+  },
   data() {
     return {
       // storeList: storeJson.data, //常驻商店性价比集合
-      storeList: [], //常驻商店性价比集合
-      actStoreList: [], //活动商店的json
+      storeList: this.pageContext.pageProps.perm, //常驻商店性价比集合
+      actStoreList: this.pageContext.pageProps.act, //活动商店的json
       storeVisiable: ["display:flex;", "display:flex;", "display:flex;", "display:flex;", "display:flex;"],
       tagColor: ["n", "n", "n", "n", "n"],
       opETextTheme: "op_title_etext_light",
     };
   },
   mounted() {
-    this.findPermStorePer();
+    // this.findPermStorePer();
     this.getCookies();
-    this.findActStorePer();
+    // this.findActStorePer();
   },
   methods: {
     getSpriteImg(id, index) {

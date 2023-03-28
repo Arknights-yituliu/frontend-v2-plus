@@ -78,11 +78,17 @@
 import storeApi from "@/api/store";
 // import itemJson from "static/json-video/item.json";
 
+import { usePageContext } from "@/renderer/usePageContext";
+
 export default {
+  setup() {
+    const pageContext = usePageContext();
+    return { pageContext };
+  },
   data() {
     return {
       // itemList: itemJson.data, //全部材料价值集合
-      itemList: [], //全部材料价值集合
+      itemList: this.pageContext.pageProps.value, //全部材料价值集合
       cardNum: [1, 2, 3, 4, 5, 6, 7, 8, 9],
       itemCardsanity: "",
       itemValueCard_css: "",
@@ -90,11 +96,13 @@ export default {
       tag_class_sanity: "yituliu_title_moudule_button",
       opETextTheme: "op_title_etext_light",
       valueVerison: 0.625,
+      valueType: "sanity",
     };
   },
   mounted() {
-    this.switchUnit(1);
-    this.findAllItemValue();
+    // this.switchUnit(1);
+    // this.findAllItemValue();
+    this.changeItemTagColor(1);
   },
   methods: {
     getCookies() {
