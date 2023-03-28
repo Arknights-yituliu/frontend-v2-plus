@@ -88,7 +88,7 @@ watch(theme, () => {
   align-items: center;
   background-color: rgb(52, 68, 104);
   z-index: 100;
-  box-shadow: 0 0 10px rgb(0 0 0);
+  box-shadow: none;
   gap: 8px;
   padding-left: 8px;
 }
@@ -110,7 +110,6 @@ a {
 }
 
 .navbar-switch {
-  box-shadow: none;
   --el-switch-on-color: rgb(52, 68, 104);
   --el-switch-off-color: rgb(52, 68, 104);
   --el-switch-border-color: white;

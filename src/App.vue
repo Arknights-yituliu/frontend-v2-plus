@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header
-      style="z-index: 100; height: 45px; position: sticky; width: 100%; top: 0px"
+      style="z-index: 100; height: 52px; position: sticky; width: 100%; top: 0px"
       v-if="'/maarecruitdata' != pageContext.urlPathname"
     >
       <nav-bar />
@@ -53,6 +53,7 @@ export default {
 }
 .el-header {
   padding: 0px;
+  box-shadow: 0 0 10px rgb(0 0 0);
 }
 
 .el-menu.el-menu--horizontal {
@@ -69,5 +70,6 @@ body {
   overflow-x: hidden;
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
+  overscroll-behavior: none;
 }
 </style>
