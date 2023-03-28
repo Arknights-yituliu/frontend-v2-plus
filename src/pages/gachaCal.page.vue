@@ -21,7 +21,7 @@
             @change="checkEndDate(timeSelector)"
           >
             <el-radio-button label="4周年(5.15)" style="width: 33%"></el-radio-button>
-            <el-radio-button disabled label="夏活(以8.15计)" style="width: 33%"></el-radio-button>
+            <el-radio-button label="夏活(以8.15计)" style="width: 33%"></el-radio-button>
             <el-radio-button label="感谢庆典" type="primary" style="width: 33%" disabled></el-radio-button>
             <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
           </el-radio-group>
@@ -824,9 +824,10 @@
           <span class="collapse-item_title">其它资源（估算）{{ toFixedByAcc(calResults.gachaTimes_other, 0) }}抽</span>
         </template>
         <!-- 夏活专用滑块 -->
-        <div class="gacha_unit_child" style="display: flex">
-            <div class="gacha_unit_child_title">未知奖励</div>
-            <client-only>
+        <!-- <div class="gacha_unit_child" style="display: flex;" v-show="this.timeSelector === '夏活(以8.15计)'"> -->
+        <div class="gacha_unit_child" style="display: flex;">
+          <div class="gacha_unit_child_title">未知奖励</div>
+          <client-only>
             <el-slider
               v-model="customValue_slider"
               :step="1000"
