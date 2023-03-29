@@ -10,7 +10,7 @@
     <div id="foot_main">
       <div class="foot_unit">
         <p class="foot_unit_title" style="margin-bottom: 11px">-开发信息-</p>
-        <a href="https://github.com/Zirun-wang/yituliuFrontEnd">
+        <a href="https://github.com/Arknights-yituliu/frontend-v2-plus">
           <div class="foot_unit_button uni_shadow_2" id="foot_frontEnd">
             <img class="foot_unit_pic" src="/img/website/github.png" />
             前端
