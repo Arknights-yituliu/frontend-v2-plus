@@ -112,6 +112,8 @@ SSR 是非常灵活的。在服务端与客户端各做什么，完全视需求�
 
 每个页面默认运行 [`_default.page.client.js`](./src/renderer/_default.page.client.js) 和 [`_default.page.server.js`](./src/renderer/_default.page.server.js)。`_default.page.client.js` 只运行在浏览器中，而 `_default.page.server.js` 只运行在服务端。两个文件各定义了 `render` 函数。如果页面采用 SPA 模式，则后端生成一个含加载页面的 html，前端将网页以 SPA 模式渲染。如果页面使用 SSR 模式，后端将网页渲染成 html 并返回，前端进行激活。
 
+渲染网页时，还需要网页的标题等信息，在下面的 pages 一节中提到。
+
 ### server
 
 SSR 需要在服务端渲染页面。在开发与部署时，调用渲染代码、返回网页均由 [`server/index.js`](./server/index.js) 实现。此文件来源于 vite-plugin-ssr 的脚手架（[文件链接](https://github.com/brillout/vite-plugin-ssr/blob/main/boilerplates/boilerplate-vue/server/index.js)）。
@@ -121,6 +123,60 @@ SSR 需要在服务端渲染页面。在开发与部署时，调用渲染代码�
 ### pages
 
 在 [`src/pages`](./src/pages) 目录下，是各个页面的文件。根据文件名与目录结构，确定对应页面的 URL。文件名为 `*.page.js` 的代码同时运行在客户端与服务端，`*.page.server.js` 的代码只在服务端运行，`*.page.client.js` 的代码只在客户端运行。参考：[Filesystem Routing](https://vite-plugin-ssr.com/filesystem-routing)
+
+渲染页面时要用到页面的标题与描述信息。在 `*.page.js`（或 `*.page.vue` 的 `<script>` 标签）中加入以下代码即可：
+
+```javascript
+export const documentProps = {
+  title: "一图流 - 礼包性价比",
+  description: "明日方舟一图流，礼包性价比，礼包内容，氪金规划",
+};
+```
+
+### 示例：添加新页面
+
+下面举例说明如何在项目中添加新页面。
+
+首先确定礼包页面的路径（`/demo`），由此得到文件应为 `src/pages/demo.page.vue`（也可以用 `src/pages/demo/index.page.vue`）。我们对此页面使用 SSR 的渲染方式，因此还要新建对应的 `demo.page.server.js`，在其中下载数据并添加到 `pageContext` 中。
+
+`demo.page.vue`：
+
+```vue
+<template>
+  <div @click="data = 'qwerty'">
+    {{ data }}
+  </div>
+</template>
+
+<script setup>
+import { usePageContext } from "@/renderer/usePageContext";
+import { ref } from "vue";
+
+const pageContext = usePageContext();
+const data = ref(pageContext.pageProps.data);
+</script>
+
+<script>
+export const documentProps = {
+  title: "示例页面",
+  description: "示例描述",
+};
+</script>
+```
+
+`demo.page.server.js`：
+
+```javascript
+export async function onBeforeRender(pageContext) {
+  const data = "Hello, World!";
+  const pageProps = { data };
+  return {
+    pageContext: {
+      pageProps,
+    },
+  };
+}
+```
 
 ## 哪些页面用了 SSR？
 
