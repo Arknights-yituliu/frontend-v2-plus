@@ -171,7 +171,6 @@
               <el-switch v-model="originiumFlag" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
               源石是否用于抽卡
             </div>
-
           </div>
 
           <!-- <el-divider></el-divider> -->
@@ -269,9 +268,7 @@
               搓玉教程<img class="gacha_img_small" src="/img/website/el.png"
             /></a>
           </div>
-
-          </div>
-
+        </div>
       </el-collapse-item>
       <!-- 日常积累 -->
       <el-collapse-item class="collapse-item" name="2" style="display: block">
@@ -451,7 +448,10 @@
             </div>
           </el-checkbox-group>
           <!-- Sidestory -->
-          <div class="gacha_unit_fold"><div class="triangle"></div>支线、别传</div>
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            支线、别传
+          </div>
           <el-checkbox-group v-model="gacha_potentialList" class="">
             <div
               v-for="(singlePack, index) in gacha_potential"
@@ -488,7 +488,10 @@
             <a href="https://yituliu.site/pack">点击跳转礼包完整性价比</a>
           </div>
           <!-- 月常礼包 -->
-          <div class="gacha_unit_fold"><div class="triangle"></div>月常礼包</div>
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            月常礼包
+          </div>
           <el-checkbox-group v-model="gacha_storePacksList">
             <div
               v-for="(singlePack, index) in gacha_storePacks"
@@ -542,7 +545,10 @@
             </div>
           </el-checkbox-group>
           <!-- 限时礼包 -->
-          <div class="gacha_unit_fold"><div class="triangle"></div>限时礼包</div>
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            限时礼包
+          </div>
           <el-checkbox-group v-model="gacha_storePacksList" class="">
             <div
               v-for="(singlePack, index) in gacha_storePacks"
@@ -597,7 +603,10 @@
             </div>
           </el-checkbox-group>
           <!-- 新人礼包 -->
-          <div class="gacha_unit_fold"><div class="triangle"></div>新人礼包</div>
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            新人礼包
+          </div>
           <el-checkbox-group v-model="gacha_storePacksList" class="">
             <div
               v-for="(singlePack, index) in gacha_storePacks"
@@ -648,7 +657,10 @@
             </div>
           </el-checkbox-group>
           <!-- 首充 -->
-          <div class="gacha_unit_fold"><div class="triangle"></div>源石首充</div>
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            源石首充
+          </div>
           <el-checkbox-group v-model="gacha_storePacksList" class="">
             <div
               v-for="(singlePack, index) in gacha_storePacks"
@@ -678,7 +690,10 @@
             </div>
           </el-checkbox-group>
           <!-- 非首充 -->
-          <div class="gacha_unit_fold"><div class="triangle"></div>非首充</div>
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            非首充
+          </div>
 
           <div class="gacha_unit_child">
             <input class="gacha_unit_child_inputbox" type="text" @change="compute()" v-model.number="originium_648" />
@@ -759,7 +774,10 @@
 
         <div class="gacha_unit" id="activity">
           <!-- 复刻活动 -->
-          <div class="gacha_unit_fold"><div class="triangle"></div>复刻活动</div>
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            复刻活动
+          </div>
           <el-checkbox-group v-model="gacha_actReList" class="">
             <div v-for="(actRe, key) in gacha_honeyCake" :key="key" class="gacha_unit_child" @change="compute(key)">
               <el-checkbox-button :label="key" v-show="isDuringDate(actRe.start, actRe.end) && 'actRe' == actRe.module">
@@ -788,7 +806,10 @@
             </div>
           </el-checkbox-group>
           <!-- 固定内容 -->
-          <div class="gacha_unit_fold"><div class="triangle"></div>其它活动</div>
+          <div class="gacha_unit_fold">
+            <div class="triangle"></div>
+            其它活动
+          </div>
           <div v-for="(act, key) in gacha_honeyCake" :key="key">
             <div class="gacha_unit_child" v-show="isDuringDate(act.start, act.end) && 'act' == act.module">
               <div class="gacha_unit_child_title">{{ key }}</div>
@@ -824,8 +845,7 @@
           <span class="collapse-item_title">其它资源（估算）{{ toFixedByAcc(calResults.gachaTimes_other, 0) }}抽</span>
         </template>
         <!-- 夏活专用滑块 -->
-        <!-- <div class="gacha_unit_child" style="display: flex;" v-show="this.timeSelector === '夏活(以8.15计)'"> -->
-        <div class="gacha_unit_child" style="display: flex;">
+        <div class="gacha_unit_child" style="display: flex" v-if="timeSelector === '夏活(以8.15计)'">
           <div class="gacha_unit_child_title">未知奖励</div>
           <client-only>
             <el-slider
@@ -842,7 +862,9 @@
           </client-only>
         </div>
         <div class="gacha_unit_info">修bug，突发维护等。左边保守估计，右边乐观估计</div>
-        <div class="gacha_unit_info">数据参考自 <a href="https://www.bilibili.com/read/cv22112499">雷界一渣@B站</a> 的个人统计</div>
+        <div class="gacha_unit_info">
+          数据参考自 <a href="https://www.bilibili.com/read/cv22112499">雷界一渣@B站</a> 的个人统计
+        </div>
         <!-- 其他资源 -->
         <div class="gacha_unit" id="otherRes">
           <div v-for="(other, key) in gacha_honeyCake" :key="key">
@@ -1059,9 +1081,9 @@ export default {
       annihilation: 0, //未通过剿灭个数
       orundum_ap: 0, //用于搓玉的理智数量
       orundum_rate: 1.09, //搓玉系数
-      item_30012:0,
-      item_30062:0,
-      orundumByManufacture:0,
+      item_30012: 0,
+      item_30062: 0,
+      orundumByManufacture: 0,
 
       remainingDays: 0, //剩余天数
       remainingWeeks: 0, //剩余周数
@@ -1092,8 +1114,8 @@ export default {
       customValue: 0, //自定义值
       customValue_slider: 3000, //夏活前自定义滑块
       cookieInit: 0, //cookie是否获取标志
-      moreOptions:true,
-      LMDCost:0,
+      moreOptions: true,
+      LMDCost: 0,
       pieData: [],
     };
   },
@@ -1163,7 +1185,7 @@ export default {
 
     //获取雪碧图
     getSpriteImg(packName, index) {
-       return "bg-" + packName + " sprite_gacha";
+      return "bg-" + packName + " sprite_gacha";
       // return "bg-" + packName;
     },
 
@@ -1288,16 +1310,17 @@ export default {
       }
 
       //  计算自定义合成玉和搓玉
-      let custom_exist = this.customValue + this.orundum_ap * this.orundum_rate +
-       this.item_30012 * 5  + this.item_30062 * 10;
+      let custom_exist =
+        this.customValue + this.orundum_ap * this.orundum_rate + this.item_30012 * 5 + this.item_30062 * 10;
 
-       this.orundumByManufacture =  this.item_30012 * 5  + this.item_30062 * 10;
-       this.LMDCost = this.item_30012 * 800 + this.item_30062 * 1000;
+      this.orundumByManufacture = this.item_30012 * 5 + this.item_30062 * 10;
+      this.LMDCost = this.item_30012 * 800 + this.item_30062 * 1000;
 
       //库存抽卡次数（单项）
       this.calResults.gachaTimes_exist =
         this.calResults.originium_exist * 0.3 * flag_originium +
-        this.calResults.orundum_exist / 600 + custom_exist / 600 +
+        this.calResults.orundum_exist / 600 +
+        custom_exist / 600 +
         this.calResults.permit_exist +
         this.calResults.permit10_exist * 10;
 
@@ -1424,7 +1447,7 @@ export default {
         });
 
       this.gacha_actReList.forEach((key) => {
-        //循环UI上绑定的复刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
+        //循环UI上绑定的��刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
         //这里是计算活动复刻奖励,通过key获得gacha_honeyCake内的奖励内容
         this.calResults.originium_act += this.gacha_honeyCake[key].originium;
         this.calResults.orundum_act += this.gacha_honeyCake[key].orundum;
@@ -1445,8 +1468,10 @@ export default {
       //减去限定池已经赠送过的单抽
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
 
-      console.log(this.customValue_slider)
-      this.calResults.orundum_other += parseInt(this.customValue_slider);
+      if (this.timeSelector === "夏活(以8.15计)") {
+        console.log(this.customValue_slider);
+        this.calResults.orundum_other += parseInt(this.customValue_slider);
+      }
 
       //其他抽卡次数
       this.calResults.gachaTimes_other =
@@ -1673,9 +1698,6 @@ export default {
     },
 
     pieChart(data) {
-
-       
-
       let option = {
         tooltip: {
           formatter: "{a} {b} : {c}抽,占 ({d}%)",
@@ -1689,24 +1711,22 @@ export default {
             radius: "70%",
             center: ["50%", "50%"],
             itemStyle: {
-
-                label: {
-                  show: true,
-                  textStyle: { color: "#000000", fontSize: "16" },
-                  formatter: function (val) {
-                    //让series 中的文字进行换行
-                    return val.name.split("-").join("\n");
-                  },
+              label: {
+                show: true,
+                textStyle: { color: "#000000", fontSize: "16" },
+                formatter: function (val) {
+                  //让series 中的文字进行换行
+                  return val.name.split("-").join("\n");
                 },
-                labelLine: {
-                  show: true,
-                  lineStyle: { color: "#000000" },
-                }, //线条颜色
-               //基本样式
-
+              },
+              labelLine: {
+                show: true,
+                lineStyle: { color: "#000000" },
+              }, //线条颜色
+              //基本样式
             },
             emphasis: {
-                itemStyle:{
+              itemStyle: {
                 shadowBlur: 10,
                 shadowOffsetX: 0,
                 shadowColor: "rgba(0, 0, 0, 0.5)", //鼠标放在区域边框颜色
@@ -1715,11 +1735,9 @@ export default {
             },
             data: data,
             emphasis: {
-
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)",
-
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: "rgba(0, 0, 0, 0.5)",
             },
           },
         ],
