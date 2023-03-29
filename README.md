@@ -100,13 +100,27 @@ SSR 是非常灵活的。在服务端与客户端各做什么，完全视需求�
 
 ## SSR 相关代码说明
 
-### 服务端
+先看这个：[Vue 教程](https://cn.vite-plugin-ssr.com/vue-tour)
+
+### renderer
+
+`src/renderer` 路径下是关于网页渲染的代码。
+
+首先是 [`app.js`](./src/renderer/app.js)，其中定义了函数 `createVPSApp()`。它的第二个参数是 `clientOnly`，用于区分页面是采用 SSR 还是 SPA 模式。对于前者，使用 Vue 的 `createApp`，对于后者，则是 `createSSRApp`。接下来使用选定的函数，使用 [`App.vue`](./src/App.vue) 创建一个 Vue 应用实例，并引入 Element Plus 及其图标。参考：[Render Modes (SPA, SSR, SSG, HTML-only)](https://cn.vite-plugin-ssr.com/render-modes) 中 _2. render() hooks (SPA + SSR)_ 一节、[AaronBeaudoin/vite-plugin-ssr-example](https://github.com/AaronBeaudoin/vite-plugin-ssr-example) 中的示例代码。
+
+接下来是 [`usePageContext.js`](./src/renderer/usePageContext.js)。PageContext 包含渲染当前页面所需的信息。它有两个重要的作用：一是为服务端与客户端代码统一地提供 URL 信息，二是传递数据。第一点，在浏览器中，URL 相关信息可以直接获取；在服务端，则由网页服务器提供。统一使用 pageContext，即可方便地获取 URL 相关信息。第二点，网页中的交互式部分，其数据在服务端与浏览器中均要用到：在服务端，使用数据渲染 html；在浏览器中，也要使用这些数据进行交互处理。使用 pageContext 传递数据时，vite-plugin-ssr 框架会把服务端下载到的数据序列化为 JSON，附在生成的 html 中。在浏览器中，反序列化这部分数据，浏览器中的代码也能访问到这些数据了。参考：[Data Fetching](https://vite-plugin-ssr.com/data-fetching) 及 [pageContext](https://vite-plugin-ssr.com/pageContext)。
+
+每个页面默认运行 [`_default.page.client.js`](./src/renderer/_default.page.client.js) 和 [`_default.page.server.js`](./src/renderer/_default.page.server.js)。`_default.page.client.js` 只运行在浏览器中，而 `_default.page.server.js` 只运行在服务端。两个文件各定义了 `render` 函数。如果页面采用 SPA 模式，则后端生成一个含加载页面的 html，前端将网页以 SPA 模式渲染。如果页面使用 SSR 模式，后端将网页渲染成 html 并返回，前端进行激活。
+
+### server
 
 SSR 需要在服务端渲染页面。在开发与部署时，调用渲染代码、返回网页均由 [`server/index.js`](./server/index.js) 实现。此文件来源于 vite-plugin-ssr 的脚手架（[文件链接](https://github.com/brillout/vite-plugin-ssr/blob/main/boilerplates/boilerplate-vue/server/index.js)）。
 
 由于我们使用的反代 Nginx 目前不支持 103 状态码，因此关闭了 [Early Hints](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/103) 相关的功能。
 
-服务端使用 express 框架。
+### pages
+
+在 [`src/pages`](./src/pages) 目录下，是各个页面的文件。根据文件名与目录结构，确定对应页面的 URL。文件名为 `*.page.js` 的代码同时运行在客户端与服务端，`*.page.server.js` 的代码只在服务端运行，`*.page.client.js` 的代码只在客户端运行。参考：[Filesystem Routing](https://vite-plugin-ssr.com/filesystem-routing)
 
 ## 哪些页面用了 SSR？
 
