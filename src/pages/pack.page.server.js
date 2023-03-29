@@ -10,5 +10,3 @@ export async function onBeforeRender(pageContext) {
     },
   };
 }
-
-export const passToClient = ["pageProps", "urlParsed"];
