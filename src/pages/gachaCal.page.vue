@@ -834,7 +834,7 @@
               </div>
             </div>
           </div>
-          <div class="gacha_unit_info">*4周年到夏活中间的内容仅作估算</div>
+          <div v-if="timeSelector === '夏活(以8.15计)'" class="gacha_unit_info">*4周年到夏活中间的内容仅作估算</div>
         </div>
       </el-collapse-item>
 
@@ -845,26 +845,28 @@
           <span class="collapse-item_title">其它资源（估算）{{ toFixedByAcc(calResults.gachaTimes_other, 0) }}抽</span>
         </template>
         <!-- 夏活专用滑块 -->
-        <div class="gacha_unit_child" style="display: flex" v-if="timeSelector === '夏活(以8.15计)'">
-          <div class="gacha_unit_child_title">未知奖励</div>
-          <client-only>
-            <el-slider
-              v-model="customValue_slider"
-              :step="1000"
-              :min="2000"
-              :max="10000"
-              show-stops
-              show-input
-              @change="compute()"
-              style="flex-grow: 1; flex-shrink: 5"
-            >
-            </el-slider>
-          </client-only>
-        </div>
-        <div class="gacha_unit_info">修bug，突发维护等。左边保守估计，右边乐观估计</div>
-        <div class="gacha_unit_info">
-          数据参考自 <a href="https://www.bilibili.com/read/cv22112499">雷界一渣@B站</a> 的个人统计
-        </div>
+        <template v-if="timeSelector === '夏活(以8.15计)'">
+          <div class="gacha_unit_child" style="display: flex">
+            <div class="gacha_unit_child_title">未知奖励</div>
+            <client-only>
+              <el-slider
+                v-model="customValue_slider"
+                :step="1000"
+                :min="2000"
+                :max="10000"
+                show-stops
+                show-input
+                @change="compute()"
+                style="flex-grow: 1; flex-shrink: 5"
+              >
+              </el-slider>
+            </client-only>
+          </div>
+          <div class="gacha_unit_info">修bug，突发维护等。左边保守估计，右边乐观估计</div>
+          <div class="gacha_unit_info">
+            数据参考自 <a href="https://www.bilibili.com/read/cv22112499">雷界一渣@B站</a> 的个人统计
+          </div>
+        </template>
         <!-- 其他资源 -->
         <div class="gacha_unit" id="otherRes">
           <div v-for="(other, key) in gacha_honeyCake" :key="key">
@@ -1375,7 +1377,7 @@ export default {
           this.calResults.orundum_gacha += parseInt(this.remainingDays) * 200; //根据天数计算月卡的合成玉
           this.calResults.originium_gacha += Math.ceil(this.remainingDays / 30) * 6; //根据天数/30 计算月卡的源石
         } else {
-          this.sellsCount += parseInt(this.gacha_storePacks[index].packPrice); //计算售价
+          this.sellsCount += parseInt(this.gacha_storePacks[index].packPrice); //��算售价
           this.calResults.orundum_gacha += parseInt(this.gacha_storePacks[index].gachaOrundum);
           this.calResults.originium_gacha += parseInt(this.gacha_storePacks[index].gachaOriginium);
         }
