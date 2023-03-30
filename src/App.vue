@@ -1,9 +1,6 @@
 <template>
   <el-container>
-    <el-header
-      style="z-index: 100; height: 52px; position: sticky; width: 100%; top: 0px"
-      v-if="'/maarecruitdata' != pageContext.urlPathname"
-    >
+    <el-header style="z-index: 100; height: 54px" v-if="'/maarecruitdata' != pageContext.urlPathname">
       <nav-bar />
     </el-header>
     <el-main style="z-index: 10; background-color: #808080">
@@ -47,9 +44,20 @@ export default {
 </script>
 
 <style scoped>
+.el-container {
+  height: 100vh; /* For browsers that don't support CSS variables */
+  height: calc(var(--1dvh, 1vh) * 100); /* This is the "polyfill" */
+  height: 100dvh; /* This is for future browsers that support svh, dvh and lvh viewport units */
+
+  display: flex;
+  flex-direction: column;
+}
+
 .el-main {
   padding: 0px;
-  overflow: inherit;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  flex-shrink: 1;
 }
 .el-header {
   padding: 0px;
@@ -67,7 +75,7 @@ export default {
 
 <style>
 body {
-  overflow-x: hidden;
+  overflow: hidden;
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
   overscroll-behavior: none;
