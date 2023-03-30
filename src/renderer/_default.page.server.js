@@ -3,7 +3,7 @@ export { render };
 export const passToClient = ["pageProps", "urlPathname", "urlParsed"];
 
 import { renderToString } from "@vue/server-renderer";
-import { escapeInject, dangerouslySkipEscape } from "vite-plugin-ssr";
+import { escapeInject, dangerouslySkipEscape } from "vite-plugin-ssr/server";
 import { createVPSApp } from "./app";
 
 async function render(pageContext) {
@@ -33,18 +33,19 @@ async function render(pageContext) {
         <meta name="description" content="${desc}" />
         <meta name="keywords" content="素材获取,一图流,明日方舟,攒抽计算器,公招招募计算,基建排班生成器,刷图推荐,性价比,公开招募,掉率" />
         <title>${title}</title>
-        <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+        __VITE_PLUGIN_SSR__ASSETS_FIRST__
         <script defer src="https://polyfill.io/v3/polyfill.min.js?features=globalThis%2Ces2015"></script>
+        <script defer src="https://unpkg.com/vue@3.2.47/dist/vue.runtime.global.prod.js"></script>
+        <script defer src="https://unpkg.com/element-plus@2.3.0/dist/index.full.min.js"></script>
+        <script defer src="https://unpkg.com/axios@1.3.4/dist/axios.min.js"></script>
+        <script defer src="https://unpkg.com/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+        <script defer src="https://unpkg.com/echarts@5.4.1/dist/echarts.min.js"></script>
+        <script defer src="https://unpkg.com/@element-plus/icons-vue@2.1.0/dist/index.iife.min.js"></script>
       </head>
       <body>
         <div id="app">${dangerouslySkipEscape(appHtml)}</div>
-        <script src="https://unpkg.com/vue@3.2.47/dist/vue.runtime.global.prod.js"></script>
-        <script src="https://unpkg.com/element-plus@2.3.0/dist/index.full.min.js"></script>
-        <script src="https://unpkg.com/axios@1.3.4/dist/axios.min.js"></script>
-        <script src="https://unpkg.com/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
-        <script src="https://unpkg.com/echarts@5.4.1/dist/echarts.min.js"></script>
-        <script src="https://unpkg.com/@element-plus/icons-vue@2.1.0/dist/index.iife.min.js"></script>
       </body>
     </html>`;
 
