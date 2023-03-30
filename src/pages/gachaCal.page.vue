@@ -21,7 +21,7 @@
             @change="checkEndDate(timeSelector)"
           >
             <el-radio-button label="4周年(5.15)" style="width: 33%"></el-radio-button>
-            <el-radio-button label="夏活(以8.15计)" style="width: 33%" disabled></el-radio-button>
+            <el-radio-button label="夏活(以8.15计)" style="width: 33%" ></el-radio-button>
             <el-radio-button label="感谢庆典" type="primary" style="width: 33%" disabled></el-radio-button>
             <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
           </el-radio-group>
@@ -780,7 +780,7 @@
           </div>
           <el-checkbox-group v-model="gacha_actReList" class="">
             <div v-for="(actRe, key) in gacha_honeyCake" :key="key" class="gacha_unit_child" @change="compute(key)">
-              <el-checkbox-button :label="key" v-show="isDuringDate(actRe.start, actRe.end) && 'actRe' == actRe.module">
+              <el-checkbox-button :label="key" v-show="isDuringDate(actRe.start, actRe.end,actRe.rewardType) && 'actRe' == actRe.module">
                 <div class="gacha_unit_child_title" style="width: 200px">
                   {{ key }}
                 </div>
@@ -811,7 +811,7 @@
             其它活动
           </div>
           <div v-for="(act, key) in gacha_honeyCake" :key="key">
-            <div class="gacha_unit_child" v-show="isDuringDate(act.start, act.end) && 'act' == act.module">
+            <div class="gacha_unit_child" v-show="isDuringDate(act.start, act.end, act.rewardType) && 'act' == act.module">
               <div class="gacha_unit_child_title">{{ key }}</div>
               <!-- 一个通用的资源显示模块 -->
               <div class="gacha_resources_unit" style="width: 234px">
@@ -874,9 +874,7 @@
             <div
               class="gacha_unit_child"
               v-show="
-                isDuringDate(other.start, other.end) &&
-                ('公共' == other.rewardType || rewardType == other.rewardType) &&
-                'honeyCake' == other.module
+                isDuringDate(other.start, other.end, other.rewardType) &&'honeyCake' == other.module
               "
             >
               <div class="gacha_unit_child_title" style="width: 240px">
@@ -1192,10 +1190,10 @@ export default {
     },
 
     //判断奖励是否在时间段内
-    isDuringDate(start, end) {
+    isDuringDate(start, end,rewardType) {
       // console.log(Date.parse(new Date(start))>=this.start_TimeStamp ||Date.parse(new Date(end))<=this.end_TimeStamp)
       // console.log(end ,'<=', this.end_TimeStamp)
-      if (end <= this.end_TimeStamp) return true;
+      if (end <= this.end_TimeStamp&&('公共'===rewardType||this.rewardType ===rewardType)) return true;
       return false;
     },
     //获取当天日期
@@ -1426,8 +1424,7 @@ export default {
             }*/
 
       Object.entries(this.gacha_honeyCake) //转为一个list[list]   结构为[[奖励名称,奖励内容],[奖励名称,奖励内容]]
-        .filter((list) =>this.isDuringDate(list[1].start, list[1].end) &&
-            ("公共" == list[1].rewardType || this.rewardType == list[1].rewardType)) //只计算当前选择的时间段内的奖励&&(公共的奖励||只可当期使用的奖励)
+        .filter((list) =>this.isDuringDate(list[1].start, list[1].end,list[1].rewardType)) //只计算当前选择的时间段内的奖励&&(公共的奖励||只可当期使用的奖励)
         .forEach((list) => {
           //循环list<list>， list为[奖励名称,奖励内容]
           if ("honeyCake" === list[1].module) {
@@ -1449,7 +1446,7 @@ export default {
       this.gacha_actReList.forEach((key) => {
         //循环UI上绑定的��刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
         //这里是计算活动复刻奖励,通过key获得gacha_honeyCake内的奖励内容
-        if(this.isDuringDate(this.gacha_honeyCake[key].start,this.gacha_honeyCake[key].end)){
+        if(this.isDuringDate(this.gacha_honeyCake[key].start,this.gacha_honeyCake[key].end,this.gacha_honeyCake[key].rewardType)){
            this.calResults.originium_act += this.gacha_honeyCake[key].originium;
            this.calResults.orundum_act += this.gacha_honeyCake[key].orundum;
            this.calResults.permit_act += this.gacha_honeyCake[key].permit;
