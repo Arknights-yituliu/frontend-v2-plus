@@ -1825,7 +1825,7 @@ export const documentProps = {
 
   #gacha {
     max-width: 1200px;
-    height: calc(100vh - 85px);
+    height: calc(100vh - 92px);
     scrollbar-width: none;
     /* firefox */
     -ms-overflow-style: none;
