@@ -6,6 +6,14 @@ import { renderToString } from "@vue/server-renderer";
 import { escapeInject, dangerouslySkipEscape } from "vite-plugin-ssr";
 import { createVPSApp } from "./app";
 
+const injectFilter = (assets) => {
+  assets.forEach((asset) => {
+    if (asset.assetType === "style") {
+      asset.inject = "HTML_END";
+    }
+  });
+};
+
 async function render(pageContext) {
   // See https://vite-plugin-ssr.com/head
   const { documentProps } = pageContext.exports;
@@ -50,6 +58,7 @@ async function render(pageContext) {
 
   return {
     documentHtml,
+    injectFilter,
     pageContext: {
       // We can add some `pageContext` here, which is useful if we want to do page redirection https://vite-plugin-ssr.com/page-redirection
     },
