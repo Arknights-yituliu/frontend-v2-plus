@@ -21,7 +21,7 @@
             @change="checkEndDate(timeSelector)"
           >
             <el-radio-button label="4周年(5.15)" style="width: 33%"></el-radio-button>
-            <el-radio-button label="夏活(以8.15计)" style="width: 33%"></el-radio-button>
+            <el-radio-button label="夏活(以8.15计)" style="width: 33%" disabled></el-radio-button>
             <el-radio-button label="感谢庆典" type="primary" style="width: 33%" disabled></el-radio-button>
             <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
           </el-radio-group>
@@ -1194,7 +1194,8 @@ export default {
     //判断奖励是否在时间段内
     isDuringDate(start, end) {
       // console.log(Date.parse(new Date(start))>=this.start_TimeStamp ||Date.parse(new Date(end))<=this.end_TimeStamp)
-      if (start >= this.start_TimeStamp && end <= this.end_TimeStamp) return true;
+      // console.log(end ,'<=', this.end_TimeStamp)
+      if (end <= this.end_TimeStamp) return true;
       return false;
     },
     //获取当天日期
@@ -1424,12 +1425,9 @@ export default {
                }
             }*/
 
-      Object.entries(this.gacha_honeyCake) //转为一个list<list>   结构为[[奖励名称,奖励内容],[奖励名称,奖励内容]]
-        .filter(
-          (list) =>
-            this.isDuringDate(list[1].start, list[1].end) &&
-            ("公共" == list[1].rewardType || this.rewardType == list[1].rewardType)
-        ) //只计算当前选择的时间段内的奖励&&(公共的奖励||只可当期使用的奖励)
+      Object.entries(this.gacha_honeyCake) //转为一个list[list]   结构为[[奖励名称,奖励内容],[奖励名称,奖励内容]]
+        .filter((list) =>this.isDuringDate(list[1].start, list[1].end) &&
+            ("公共" == list[1].rewardType || this.rewardType == list[1].rewardType)) //只计算当前选择的时间段内的奖励&&(公共的奖励||只可当期使用的奖励)
         .forEach((list) => {
           //循环list<list>， list为[奖励名称,奖励内容]
           if ("honeyCake" === list[1].module) {
@@ -1451,10 +1449,13 @@ export default {
       this.gacha_actReList.forEach((key) => {
         //循环UI上绑定的��刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
         //这里是计算活动复刻奖励,通过key获得gacha_honeyCake内的奖励内容
-        this.calResults.originium_act += this.gacha_honeyCake[key].originium;
-        this.calResults.orundum_act += this.gacha_honeyCake[key].orundum;
-        this.calResults.permit_act += this.gacha_honeyCake[key].permit;
-        this.calResults.permit10_act += this.gacha_honeyCake[key].permit10;
+        if(this.isDuringDate(this.gacha_honeyCake[key].start,this.gacha_honeyCake[key].end)){
+           this.calResults.originium_act += this.gacha_honeyCake[key].originium;
+           this.calResults.orundum_act += this.gacha_honeyCake[key].orundum;
+           this.calResults.permit_act += this.gacha_honeyCake[key].permit;
+           this.calResults.permit10_act += this.gacha_honeyCake[key].permit10;
+        }
+        
       });
 
       this.calResults.gachaTimes_act =
