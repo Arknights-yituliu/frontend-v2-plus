@@ -21,7 +21,7 @@
             @change="checkEndDate(timeSelector)"
           >
             <el-radio-button label="4周年(5.15)" style="width: 33%"></el-radio-button>
-            <el-radio-button disabled label="夏活(以8.15计)" style="width: 33%" ></el-radio-button>
+            <el-radio-button label="夏活(以8.15计)" style="width: 33%" ></el-radio-button>
             <el-radio-button label="感谢庆典" type="primary" style="width: 33%" disabled></el-radio-button>
             <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
           </el-radio-group>
