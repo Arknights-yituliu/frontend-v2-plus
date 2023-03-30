@@ -37,7 +37,6 @@ async function render(pageContext) {
         <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
         __VITE_PLUGIN_SSR__ASSETS_FIRST__
         <script defer src="https://polyfill.io/v3/polyfill.min.js?features=globalThis%2Ces2015"></script>
-        <script defer src="https://unpkg.com/large-small-dynamic-viewport-units-polyfill@0.1.1/dist/large-small-dynamic-viewport-units-polyfill.min.js"></script>
         <script defer src="https://unpkg.com/vue@3.2.47/dist/vue.runtime.global.prod.js"></script>
         <script defer src="https://unpkg.com/element-plus@2.3.0/dist/index.full.min.js"></script>
         <script defer src="https://unpkg.com/axios@1.3.4/dist/axios.min.js"></script>

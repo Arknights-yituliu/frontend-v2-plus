@@ -321,9 +321,6 @@
 
 .popup_table {
   text-align: center;
-  display: block;
-  max-height: calc(var(--1dvh, 1vh) * 100 - 360px);
-  overflow-y: scroll;
 }
 
 .popup_table_title {
