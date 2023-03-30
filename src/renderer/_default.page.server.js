@@ -3,7 +3,7 @@ export { render };
 export const passToClient = ["pageProps", "urlPathname", "urlParsed"];
 
 import { renderToString } from "@vue/server-renderer";
-import { escapeInject, dangerouslySkipEscape } from "vite-plugin-ssr/server";
+import { escapeInject, dangerouslySkipEscape } from "vite-plugin-ssr";
 import { createVPSApp } from "./app";
 
 async function render(pageContext) {
