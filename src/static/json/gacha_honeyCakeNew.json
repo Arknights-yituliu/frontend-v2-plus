@@ -39,6 +39,16 @@
     "rewardType": "公共",
     "module": "act"
   },
+  "周年SideStory(第三阶段)": {
+    "originium": 9,
+    "orundum": 0,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2023/05/01 16:00:00",
+    "end": "2023/05/16 03:59:00",
+    "rewardType": "公共",
+    "module": "act"
+  },
   "周年池每日赠送寻访凭证": {
     "originium": 0,
     "orundum": 0,
