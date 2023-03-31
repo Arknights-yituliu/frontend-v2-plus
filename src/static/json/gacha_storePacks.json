@@ -475,123 +475,17 @@
       "packName": "普通源石648元",
       "gachaOrundum": 0
     },
-    
-    {
-      "packTag": "包括头像[寻火之叶]",
-      "packShowName": "露华远行纪念礼包",
-      "packType": "limited",
-      "packDraw": 1.0,
-      "packPPRDraw": 1.9459459459459458,
-      "packPPROriginium": 1.9444444444444446,
-      "packImg": "露华远行纪念礼包",
-      "packPrice": 6,
-      "packID": 81,
-      "packRmbPerOriginium": 1.7999999999999998,
-      "gachaPermit": 0,
-      "packState": 1,
-      "packOriginium": 3.3333333333333335,
-      "packRmbPerDraw": 6.0,
-      "gachaPermit10": 0,
-      "gachaOriginium": 0,
-      "packName": "露华远行纪念礼包",
-      "gachaOrundum": 600
-    },
-    {
-      "packTag": "",
-      "packContent": [
-        {
-          "packContentQuantity": 6,
-          "packContentItem": "酮阵列"
-        },
-        {
-          "packContentQuantity": 11,
-          "packContentItem": "晶体元件"
-        }
-      ],
-      "packShowName": "苍暮山地调研礼包",
-      "packType": "limited",
-      "packDraw": 4.9,
-      "packPPRDraw": 1.2713513513513515,
-      "packPPROriginium": 1.741047927572016,
-      "packImg": "苍暮山地调研礼包",
-      "packPrice": 45,
-      "packID": 82,
-      "packRmbPerOriginium": 2.0102835450836416,
-      "gachaPermit": 1,
-      "packState": 1,
-      "packOriginium": 22.384901925925924,
-      "packRmbPerDraw": 9.183673469387754,
-      "gachaPermit10": 0,
-      "gachaOriginium": 13,
-      "packName": "苍暮山地调研礼包",
-      "gachaOrundum": 0
-    },
-    {
-      "packTag": "",
-      "packContent": [
-        {
-          "packContentQuantity": 700000,
-          "packContentItem": "龙门币"
-        }
-      ],
-      "packShowName": "村庄建设资金箱",
-      "packType": "limited",
-      "packDraw": 4.8,
-      "packPPRDraw": 0.8241653418124005,
-      "packPPROriginium": 1.7843137254901964,
-      "packImg": "村庄建设资金箱",
-      "packPrice": 68,
-      "packID": 83,
-      "packRmbPerOriginium": 1.9615384615384612,
-      "gachaPermit": 0,
-      "packState": 1,
-      "packOriginium": 34.66666666666667,
-      "packRmbPerDraw": 14.166666666666668,
-      "gachaPermit10": 0,
-      "gachaOriginium": 16,
-      "packName": "村庄建设资金箱",
-      "gachaOrundum": 0
-    },
-    {
-      "packTag": "包括模组材料数据增补条*20",
-      "packContent": [
-        {
-          "packContentQuantity": 60000,
-          "packContentItem": "龙门币"
-        },
-        {
-          "packContentQuantity": 20,
-          "packContentItem": "高级作战记录"
-        }
-      ],
-      "packShowName": "狩猎启程礼包",
-      "packType": "limited",
-      "packDraw": 27.2,
-      "packPPRDraw": 1.603931203931204,
-      "packPPROriginium": 1.6427609427609429,
-      "packImg": "狩猎启程礼包",
-      "packPrice": 198,
-      "packID": 84,
-      "packRmbPerOriginium": 2.1305595408895264,
-      "gachaPermit": 0,
-      "packState": 1,
-      "packOriginium": 92.93333333333334,
-      "packRmbPerDraw": 7.279411764705882,
-      "gachaPermit10": 2,
-      "gachaOriginium": 24,
-      "packName": "狩猎启程礼包",
-      "gachaOrundum": 0
-    },
+   
     {
       "packTag": "",
       "packContent": [
         {
           "packContentQuantity": 8,
-          "packContentItem": "特种芯片组"
+          "packContentItem": "先锋芯片组"
         },
         {
           "packContentQuantity": 5,
-          "packContentItem": "特种芯片"
+          "packContentItem": "先锋芯片"
         },
         {
           "packContentQuantity": 45,
@@ -614,12 +508,12 @@
           "packContentItem": "无人机"
         }
       ],
-      "packShowName": "砺火芯片礼包",
+      "packShowName": "匿影芯片礼包",
       "packType": "limited",
       "packDraw": 0.0,
       "packPPRDraw": 0.0,
       "packPPROriginium": 1.2010855802469136,
-      "packImg": "砺火芯片礼包",
+      "packImg": "匿影芯片礼包",
       "packPrice": 30,
       "packID": 85,
       "packRmbPerOriginium": 2.9140304883857535,
@@ -629,7 +523,7 @@
       "packRmbPerDraw": null,
       "gachaPermit10": 0,
       "gachaOriginium": 0,
-      "packName": "砺火芯片礼包",
+      "packName": "匿影芯片礼包",
       "gachaOrundum": 0
     }
   ]
