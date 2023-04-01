@@ -1,7 +1,7 @@
 <template>
   <div id="gacha">
     <el-row :gutter="12" justify="center">
-      <el-col :xs="24" :md="16" :lg="12">
+      <el-col :xs="24" :sm="16" :md="12">
         <el-collapse v-model="checkBox1" @change="handleChange" class="top-collapse">
           <!-- 总计 -->
           <el-collapse-item
@@ -110,7 +110,7 @@
           </el-collapse-item>
         </el-collapse>
       </el-col>
-      <el-col :xs="24" :md="16" :lg="12">
+      <el-col :xs="24" :sm="16" :md="12">
         <el-collapse v-model="checkBox">
           <!-- 现有库存 -->
           <el-collapse-item name="1" style="display: block">
