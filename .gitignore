@@ -29,3 +29,5 @@ coverage
 *.sln
 *.sw?
 /frontend-v2-plus.code-workspace
+
+.node-version
