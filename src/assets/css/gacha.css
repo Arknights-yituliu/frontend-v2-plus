@@ -1,6 +1,7 @@
 #gacha {
-  max-width: 800px;
+  max-width: 1600px;
   margin: auto;
+  padding: 0 12px;
   /* min-height: 900px; */
   transform-style: preserve-3d;
 }
