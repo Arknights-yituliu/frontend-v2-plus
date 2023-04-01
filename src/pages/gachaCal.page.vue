@@ -439,7 +439,7 @@
                 <div class="triangle"></div>
                 主线、突袭、绝境
               </div>
-              <el-checkbox-group v-model="gacha_potentialList" class="">
+              <el-checkbox-group v-model="gacha_potentialList" class="main-stages">
                 <div
                   v-for="(singlePack, index) in gacha_potential"
                   :key="index"
@@ -2016,5 +2016,9 @@ export const documentProps = {
   position: sticky;
   top: 64px;
   z-index: 99;
+}
+
+.main-stages {
+  max-width: 700px;
 }
 </style>
