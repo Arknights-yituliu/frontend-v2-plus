@@ -34,15 +34,15 @@ async function render(pageContext) {
         <meta name="keywords" content="素材获取,一图流,明日方舟,攒抽计算器,公招招募计算,基建排班生成器,刷图推荐,性价比,公开招募,掉率" />
         <title>${title}</title>
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
-        <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+        <link rel="stylesheet" href="https://cdn.staticfile.org/element-plus/2.3.2/index.min.css" />
         __VITE_PLUGIN_SSR__ASSETS_FIRST__
         <script defer src="https://polyfill.io/v3/polyfill.min.js?features=globalThis%2Ces2015"></script>
-        <script defer src="https://unpkg.com/vue@3.2.47/dist/vue.runtime.global.prod.js"></script>
-        <script defer src="https://unpkg.com/element-plus@2.3.0/dist/index.full.min.js"></script>
-        <script defer src="https://unpkg.com/axios@1.3.4/dist/axios.min.js"></script>
-        <script defer src="https://unpkg.com/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
-        <script defer src="https://unpkg.com/echarts@5.4.1/dist/echarts.min.js"></script>
-        <script defer src="https://unpkg.com/@element-plus/icons-vue@2.1.0/dist/index.iife.min.js"></script>
+        <script defer src="https://cdn.staticfile.org/vue/3.2.47/vue.global.prod.min.js"></script>
+        <script defer src="https://cdn.staticfile.org/element-plus/2.3.2/index.full.min.js"></script>
+        <script defer src="https://cdn.staticfile.org/axios/1.3.4/axios.min.js"></script>
+        <script defer src="https://cdn.staticfile.org/js-cookie/3.0.1/js.cookie.min.js"></script>
+        <script defer src="https://cdn.staticfile.org/echarts/5.4.2/echarts.min.js"></script>
+        <script defer src="https://cdn.staticfile.org/element-plus-icons-vue/2.1.0/index.iife.min.js"></script>
       </head>
       <body>
         <div id="app">${dangerouslySkipEscape(appHtml)}</div>
