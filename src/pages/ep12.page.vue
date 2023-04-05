@@ -1,60 +1,61 @@
 <template>
-  <div id="ep12">
-    <div >明日方舟一图流 EP12专题页面</div>
+  <div id="ep12" style="font-size: 20px;">
+    <div style="height: 280px;">占位</div>
+    <div>
+      <img src="\public\img\website\ico64.png">
+      明日方舟一图流 EP12专题页面
+    </div>
     <div>
       本页面上半部分集中展示新章节的掉落数据，下半部分推荐[后勤特别许可证]的使用优先级
     </div>
     <div style="height: 400px;">
-      数据补全计划<br>
-      【这里放图片】<br>
+      数据补全计划
+      <img src="public\img\temp\ep12_drb.png" style="max-width: 680px;margin: auto;">
       新章节开放时往往伴有明显的马太效应，即刷的人越多，数据越可靠，越能吸引更多的博士去刷；反之亦然。
       为了找到隐藏的高效率关卡，我们联合！缺少样本的关卡，我们碎石刷！
       同时也欢迎大家参与提交数据
     </div>
     <div style="height: 400px;">
-      数据表<br>
-      【这里放数据表】
       <table class="popup_table">
-            <tbody>
-              <tr class="popup_table_title">
-                <td class="popup_table_c1" style="width: 55px; width: 60px">关卡名</td>
-                <td class="popup_table_c2" style="width: 65px; width: 60px">主产物</td>
-                <td class="popup_table_c2" style="width: 65px; width: 60px">副产物</td>
-                <td class="popup_table_c4" style="width: 50px; width: 60px">样本数</td>
-                <td class="popup_table_c5" style="width: 80px; width: 60px">置信度</td>
-                <td class="popup_table_c6" style="width: 80px; width: 40px">SPM</td>
-                <td class="popup_table_c7" style="width: 70px; width: 80px">综合效率</td>
-                <td class="popup_table_c7" style="width: 70px; width: 80px">效率排名</td>
-                <td class="popup_table_c7" style="width: 70px; width: 80px">原始数据</td>
-                <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
-              </tr>
-              <!-- <tr
-                v-for="(stage, index) in popupData"
-                :key="index"
-                :class="getColor(stage.stageColor)"
-                class="stage_table_r"
-              >
-                <td class="popup_table_c1" :style="getHardcoreMark(stage.chapterName)">
-                  {{ stage.stageCode }}
-                </td>
-                <td class="popup_table_c2" style="font-size: 14px">
-                  {{ shrinkTimes(stage.sampleSize) }}<br />({{ stage.sampleConfidence }}%)
-                </td>
-                <td class="popup_table_c3">{{ getEfficiency(stage.spm, 1) }}</td>
-                <td style="padding-left: 20px">
-                  <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
-                </td>
-                <td class="popup_table_c5">{{ getEfficiency(stage.knockRating * 100, 1) }}%</td>
-                <td class="popup_table_c6">
-                  {{ getEfficiency(stage.apExpect) }}
-                </td>
-                <td class="popup_table_c7" :style="getUpMark(stage.stageState)">
-                  {{ getEfficiency(stage.stageEfficiency, 1) }}%
-                </td>
-              </tr> -->
-            </tbody>
-          </table>
-
+        <tbody>
+          <tr class="popup_table_title">
+            <td class="popup_table_c1" style="width: 55px; width: 60px">关卡名</td>
+            <td class="popup_table_c2" style="width: 65px; width: 60px">主产物</td>
+            <td class="popup_table_c2" style="width: 65px; width: 60px">副产物</td>
+            <td class="popup_table_c4" style="width: 50px; width: 60px">样本数</td>
+            <td class="popup_table_c5" style="width: 80px; width: 60px">置信度</td>
+            <td class="popup_table_c6" style="width: 80px; width: 40px">SPM</td>
+            <td class="popup_table_c7" style="width: 70px; width: 80px">综合效率</td>
+            <td class="popup_table_c7" style="width: 70px; width: 80px">效率排名</td>
+            <td class="popup_table_c7" style="width: 70px; width: 80px">原始数据</td>
+            <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
+          </tr>
+          <!-- <tr
+            v-for="(stage, index) in popupData"
+            :key="index"
+            :class="getColor(stage.stageColor)"
+            class="stage_table_r"
+          >
+            <td class="popup_table_c1" :style="getHardcoreMark(stage.chapterName)">
+              {{ stage.stageCode }}
+            </td>
+            <td class="popup_table_c2" style="font-size: 14px">
+              {{ shrinkTimes(stage.sampleSize) }}<br />({{ stage.sampleConfidence }}%)
+            </td>
+            <td class="popup_table_c3">{{ getEfficiency(stage.spm, 1) }}</td>
+            <td style="padding-left: 20px">
+              <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+            </td>
+            <td class="popup_table_c5">{{ getEfficiency(stage.knockRating * 100, 1) }}%</td>
+            <td class="popup_table_c6">
+              {{ getEfficiency(stage.apExpect) }}
+            </td>
+            <td class="popup_table_c7" :style="getUpMark(stage.stageState)">
+              {{ getEfficiency(stage.stageEfficiency, 1) }}%
+            </td>
+          </tr> -->
+        </tbody>
+      </table>
     </div>
     <div>
       [后勤特别许可证]<br>
