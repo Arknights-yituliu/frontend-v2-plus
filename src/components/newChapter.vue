@@ -1,5 +1,5 @@
 <template>
-  <div style="display: none;">
+  <div style="display: ;">
     <!-- 地图效率Start -->
     <div id="newChapter">
       <!-- 标题区域 -->
@@ -39,26 +39,50 @@
               <td class="new_chapter_c7" style="width: 90px">关卡效率</td>
               <td class="new_chapter_c8" style="width: 80px">上传数据</td>
             </tr>
-            <tr class="new_chapter_title">
-              <td class="new_chapter_c1" style="width: 65px">12-1</td>
-              <td class="new_chapter_c2" style="width: 65px">固源岩图</td>
-              <td class="new_chapter_c3" style="width: 65px">图</td>
-              <td class="new_chapter_c4" style="width: 75px">123</td> 
-              <td class="new_chapter_c5" style="width: 75px">50%</td>
-              <td class="new_chapter_c6" style="width: 50px">6.6</td>
-              <td class="new_chapter_c7" style="width: 90px">98.3%</td>
-              <td class="new_chapter_c9" style="width: 80px">企鹅物流链接</td>
+            <tr class="new_chapter_title" v-for="(stageNewChapter, indexAll) in stageNewChapter.slice(0,7)" :key="indexAll">
+              <td class="new_chapter_c1" style="width: 65px">{{ stageNewChapter.stageCode }}</td>
+              <td class="new_chapter_c2" style="width: 65px"><div :class="getSpriteImg(stageNewChapter.itemId, 'title')"></div></td>
+              <td class="new_chapter_c3" style="width: 65px"><div :class="getSpriteImg(stageNewChapter.secondaryId, 'title')"></div></td>
+              <td class="new_chapter_c4" style="width: 75px">{{stageNewChapter.sampleSize}}</td> 
+              <td class="new_chapter_c5" style="width: 75px">{{stageNewChapter.sampleConfidence}}</td>
+              <td class="new_chapter_c6" style="width: 50px">{{stageNewChapter.spm}}</td>
+              <td class="new_chapter_c7" style="width: 90px">{{stageNewChapter.stageEfficiency}}%</td>
+              <td class="new_chapter_c9" style="width: 80px">
+                <a :href="'https://penguin-stats.cn/result/stage/main_11/main_'+ stageNewChapter.itemId">企鹅物流上传链接</a>
+            
+              </td>
             </tr>
+            
+          </tbody>
+        </table>
+        </div>
+        <div class="new_chapter_table">
+          <table class="new_chapter">
+          <tbody>
             <tr class="new_chapter_title">
-              <td class="new_chapter_c1" style="width: 65px">12-1</td>
-              <td class="new_chapter_c2" style="width: 65px">固源岩图</td>
-              <td class="new_chapter_c3" style="width: 65px">图</td>
-              <td class="new_chapter_c4" style="width: 75px">123</td> 
-              <td class="new_chapter_c5" style="width: 75px">50%</td>
-              <td class="new_chapter_c6" style="width: 50px">6.6</td>
-              <td class="new_chapter_c7" style="width: 90px">98.3%</td>
-              <td class="new_chapter_c9" style="width: 80px">企鹅物流链接</td>
+              <td class="new_chapter_c1" style="width: 65px">关卡名</td>
+              <td class="new_chapter_c2" style="width: 65px">主产物</td>
+              <td class="new_chapter_c3" style="width: 65px">副产品</td>
+              <td class="new_chapter_c4" style="width: 75px">样本数</td> 
+              <td class="new_chapter_c5" style="width: 75px">置信度</td>
+              <td class="new_chapter_c6" style="width: 50px">SPM</td>
+              <td class="new_chapter_c7" style="width: 90px">关卡效率</td>
+              <td class="new_chapter_c8" style="width: 80px">上传数据</td>
             </tr>
+            <tr class="new_chapter_title" v-for="(stageNewChapter, indexAll) in stageNewChapter.slice(7,15)" :key="indexAll">
+              <td class="new_chapter_c1" style="width: 65px">{{ stageNewChapter.stageCode }}</td>
+              <td class="new_chapter_c2" style="width: 65px"><div :class="getSpriteImg(stageNewChapter.itemId, 'title')"></div></td>
+              <td class="new_chapter_c3" style="width: 65px"><div :class="getSpriteImg(stageNewChapter.secondaryId, 'title')"></div></td>
+              <td class="new_chapter_c4" style="width: 75px">{{stageNewChapter.sampleSize}}</td> 
+              <td class="new_chapter_c5" style="width: 75px">{{stageNewChapter.sampleConfidence}}</td>
+              <td class="new_chapter_c6" style="width: 50px">{{stageNewChapter.spm}}</td>
+              <td class="new_chapter_c7" style="width: 90px">{{stageNewChapter.stageEfficiency}}%</td>
+              <td class="new_chapter_c9" style="width: 80px">
+                <a :href="'https://penguin-stats.cn/result/stage/main_11/main_'+ stageNewChapter.itemId">企鹅物流上传链接</a>
+            
+              </td>
+            </tr>
+            
           </tbody>
         </table>
         </div>
@@ -90,6 +114,7 @@ export default {
       stageRankT2: this.pageContext.pageProps.t2, //关卡效率集合
       stageRankOrundum: this.pageContext.pageProps.orundum, //关卡效率集合
       stageActHistory: this.pageContext.pageProps.closed,
+      stageNewChapter:this.pageContext.pageProps.newChapter,
       actStageOnly: 0,
       cardList: [0, 1, 2, 3, 4, 5, 6, 7],
       itemType: "",
@@ -196,11 +221,9 @@ export default {
       if (index == "type") return "bg-" + id + "large" + " sprite_type";
       if (index === "sec") return "bg-" + id + " sprite_secondary";
       if (index === "title") return "bg-" + id + " sprite_title";
-      if (index === 3) return "bg-" + id + " sprite_secondary_dialog";
-      if (index === 4) return "bg-" + id + "_icon sprite_icon";
-      if (index === 5) return "bg-" + id + "_icon sprite_icon_small";
-      if (index === 6) return "bg-" + id + "_icon sprite_icon_up";
-      if (index === 7) return "bg-" + id + "_icon sprite_icon_el";
+      if (index === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
+      if (index === "up") return "bg-" + id + "_icon sprite_icon_up";
+      if (index === 'el') return "bg-" + id + "_icon sprite_icon_el";
       if (index === "t2") return "bg-" + id + " sprite_T2";
       return "bg-" + id;
     },

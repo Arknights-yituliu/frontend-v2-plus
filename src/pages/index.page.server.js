@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const http = "https://backend.yituliu.site/";
+// const http = "https://backend.yituliu.site/";
 
-// const http = "http://127.0.0.1:10012/";
+const http = "http://127.0.0.1:10012/";
 
 function get_t3() {
   return axios.get(http+"api/find/stage/t3?expCoefficient=0.625");
@@ -32,7 +32,11 @@ function get_value() {
   return axios.get(http+"api/find/item/value?expCoefficient=0.625");
 }
 
-console.log(http+"api/find/stage/t3?expCoefficient=0.625")
+function get_newChapter() {
+  return axios.get(http+"api/find/stage/newChapter?zone=11-");
+}
+
+console.log(http+"api/find/stage/newChapter?zone=11-")
 
 export async function onBeforeRender(pageContext) {
   const result = await Promise.all([
@@ -43,6 +47,7 @@ export async function onBeforeRender(pageContext) {
     get_perm(),
     get_act(),
     get_value(),
+    get_newChapter(),
   ]);
   const t3 = result[0].data.data;
   const t2 = result[1].data.data;
@@ -51,7 +56,8 @@ export async function onBeforeRender(pageContext) {
   const perm = result[4].data.data;
   const act = result[5].data.data;
   const value = result[6].data.data;
-  const pageProps = { t3, t2, orundum, closed, perm, act, value };
+  const newChapter = result[7].data.data
+  const pageProps = { t3, t2, orundum, closed, perm, act, value, newChapter};
   return {
     pageContext: {
       pageProps,
