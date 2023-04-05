@@ -1,5 +1,5 @@
 <template>
-  <div style="display: ;">
+  <div style="display:none ;">
     <!-- 地图效率Start -->
     <div id="newChapter">
       <!-- 标题区域 -->
