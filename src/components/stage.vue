@@ -428,8 +428,6 @@ export default {
       if (index == "type") return "bg-" + id + "large" + " sprite_type";
       if (index === "sec") return "bg-" + id + " sprite_secondary";
       if (index === "title") return "bg-" + id + " sprite_title";
-      // if (index === 3) return "bg-" + id + " sprite_secondary_dialog";
-      // if (index === 4) return "bg-" + id + "_icon sprite_icon";
       if (index === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
       if (index === "up") return "bg-" + id + "_icon sprite_icon_up";
       if (index === 'el') return "bg-" + id + "_icon sprite_icon_el";
