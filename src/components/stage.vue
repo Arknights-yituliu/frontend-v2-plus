@@ -163,7 +163,7 @@
           <a :href="getPenguinUrl(itemId)" target="_blank">
             <div class="t3 popup_header_penguin" style="display: flex">
               <div>查看企鹅物流原始数据</div>
-              <div :class="getSpriteImg('el', 7)"></div>
+              <div :class="getSpriteImg('el', 'el')"></div>
             </div>
           </a>
         </div>
@@ -176,7 +176,7 @@
               <td class="popup_table_c1" style="width: 55px; width: 65px">关卡名</td>
               <td class="popup_table_c2" style="width: 65px; width: 75px">样本数<br />(置信度)</td>
               <td class="popup_table_c3" style="width: 40px; width: 50px">SPM</td>
-              <td class="popup_table_c4" style="width: 50px; width: 60px">副产品</td>
+              <td class="popup_table_c4" style="width: 50px; width: 60px" colspan="2">副产品</td>
               <td class="popup_table_c5" style="width: 80px; width: 90px">主产物掉率</td>
               <td class="popup_table_c6" style="width: 80px; width: 90px">主产物期望</td>
               <td class="popup_table_c7" style="width: 70px; width: 80px">关卡效率</td>
@@ -196,16 +196,20 @@
               </td>
               <td class="popup_table_c3">{{ getEfficiency(stage.spm, 1) }}</td>
               <!-- <td class="popup_table_c4" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
-              <td style="padding-left: 20px">
-                <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+              <td style="padding-left: 20px;">
+                  <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+              </td>
+              <td style="padding-left: 20px;" >    
+                  <div v-show="stage.stageId.indexOf('perm')==-1" :class="getSpriteImg('ap_supply_lt_010', 'sec')"></div>
               </td>
               <td class="popup_table_c5">{{ getEfficiency(stage.knockRating * 100, 1) }}%</td>
               <td class="popup_table_c6">
                 {{ getEfficiency(stage.apExpect) }}
               </td>
-              <td class="popup_table_c7" :style="getUpMark(stage.stageState)">
+              <td class="popup_table_c7" >
                 {{ getEfficiency(stage.stageEfficiency, 1) }}%
               </td>
+              
               <!-- <td class="popup_table_c7">{{getBoxEfficiency(stage.stageState, stage.stageEfficiencyEx, stage.stageEfficiency)}}</td> -->
             </tr>
           </tbody>
@@ -217,7 +221,7 @@
           置信度:掉率对关卡效率误差影响在3%前提下的可信度范围
           <a href="https://www.bilibili.com/video/BV1yL4y1P7K1" style="margin-left: 8px">
             <div style="display: inline-block">详细介绍</div>
-            <div style="display: inline-block" :class="getSpriteImg('el', 7)"></div>
+            <div style="display: inline-block" :class="getSpriteImg('el', 'el')"></div>
           </a>
           SPM:假设敌人被秒杀，1倍速下每分钟消耗的理智量，实际可能略有出入
         </div>
@@ -254,11 +258,11 @@
                   <!-- <div>1</div> -->
                   <!-- <div :class="getSpriteImg('AP_GAMEPLAY', 5)" ></div> -->
                   <div>{{ getEfficiency(stage.orundumPerAp) }}</div>
-                  <div style="margin-bottom: -15px" :class="getSpriteImg(4003, 5)"></div>
+                  <div style="margin-bottom: -15px" :class="getSpriteImg(4003,'icon_small')"></div>
                 </td>
                 <td class="popup_orundum_c3" style="width: 120px">
                   <div>{{ getEfficiency(stage.lmdcost) }}w</div>
-                  <div style="margin-bottom: -8px" :class="getSpriteImg(4001, 5)"></div>
+                  <div style="margin-bottom: -8px" :class="getSpriteImg(4001, 'icon_small')"></div>
                 </td>
                 <td class="popup_table_c5" style="width: 95px">{{ getEfficiency(stage.stageEfficiency) }}%</td>
                 <td class="popup_table_c6" style="width: 95px">{{ getEfficiency(stage.orundumPerApEfficiency) }}%</td>
@@ -424,11 +428,11 @@ export default {
       if (index == "type") return "bg-" + id + "large" + " sprite_type";
       if (index === "sec") return "bg-" + id + " sprite_secondary";
       if (index === "title") return "bg-" + id + " sprite_title";
-      if (index === 3) return "bg-" + id + " sprite_secondary_dialog";
-      if (index === 4) return "bg-" + id + "_icon sprite_icon";
-      if (index === 5) return "bg-" + id + "_icon sprite_icon_small";
-      if (index === 6) return "bg-" + id + "_icon sprite_icon_up";
-      if (index === 7) return "bg-" + id + "_icon sprite_icon_el";
+      // if (index === 3) return "bg-" + id + " sprite_secondary_dialog";
+      // if (index === 4) return "bg-" + id + "_icon sprite_icon";
+      if (index === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
+      if (index === "up") return "bg-" + id + "_icon sprite_icon_up";
+      if (index === 'el') return "bg-" + id + "_icon sprite_icon_el";
       if (index === "t2") return "bg-" + id + " sprite_T2";
       return "bg-" + id;
     },
