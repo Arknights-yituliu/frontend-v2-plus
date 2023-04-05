@@ -131,6 +131,7 @@ export default {
       stageRankT2: this.pageContext.pageProps.t2, //关卡效率集合
       stageRankOrundum: this.pageContext.pageProps.orundum, //关卡效率集合
       stageActHistory: this.pageContext.pageProps.closed,
+      newChapter:this.pageContext.pageProps.newChapter,
       actStageOnly: 0,
       cardList: [0, 1, 2, 3, 4, 5, 6, 7],
       itemType: "",
