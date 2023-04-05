@@ -73,11 +73,11 @@
     </div>
     <!-- 后勤特别许可证 -->
     <div style="height: 192px;background-color: #ffffff0f;backdrop-filter: blur(8px);margin: 12px;">
-      <div style="text-align: center;font-size: 24px;font-weight: 600;">
+      <div style="text-align: center;font-size: 24px;font-weight: 600;padding: 6px 0px;">
         后勤特别许可证
       </div>
-      <div style="vertical-align: top;height: 144px;">
-        <div style="width: 96px;height: 96px;background-color: aqua;display: inline-block;vertical-align: top;margin: 24px 12px 24px 12px;">
+      <div style="vertical-align: top;height: 144px;margin: auto;">
+        <div style="width: 96px;height: 96px;background-color:bisque;display: inline-block;vertical-align: top;margin: 24px 12px 24px 12px;">
           此处图片
         </div>
         <div style="display: inline-block;max-width: 402px;">
@@ -85,16 +85,11 @@
           在【惊霆无声】任一可三星代理作战的关卡中，每日前两次作战可使用后勤特别许可证，使用后的当次作战不消耗理智且原常规掉落的报酬改为固定掉落且数量增加至三倍
         </div>
       </div>
-      
     </div>
-    <div>
-      推荐表-占位<br>
-      机制研究中【来个倒计时，6日20:00归零】
-    </div>
-    <div>
-      推荐表-正式版<br>
-      【这里放推荐表排名】<br>
-      数据来源<br>
+    <!-- 推荐表-占位 -->
+    <div style="height: 192px;background-color: #ffffff0f;backdrop-filter: blur(8px);margin: 12px;">
+      机制、数值研究中【来个倒计时，6日20:00归零】<br>
+      数据参考<br>
       【这里放价值表】
     </div>
     <div>
@@ -166,6 +161,9 @@ export default {
 
 
 .ep12_support{
+  background-color: #ffffff0f;
+  backdrop-filter: blur(8px);
+  margin: 8px;
   width: 258px;
   height: 96px;
   display: inline-block;
@@ -176,9 +174,9 @@ export default {
 }
 .ep12_support_text{
   width: 160px;
-  font-size: 20px;
+  font-size: 18px;
   display: inline-block;
-  height: 90px;
+  height: 80px;
   vertical-align: bottom;
 }
 .ep12_support_text div{
