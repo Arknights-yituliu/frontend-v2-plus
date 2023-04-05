@@ -1,11 +1,11 @@
 <template>
-  <div style="display:none ;">
+  <div style="display: none;">
     <!-- 地图效率Start -->
     <div id="newChapter">
       <!-- 标题区域 -->
       <div class="op_title">
         <div class="op_title_text">
-          <div class="op_title_ctext">新章节数据补全计划</div>
+          <div class="op_title_ctext">新章数据一览</div>
           <div :class="opETextTheme">New Chapter</div>
         </div>
         <div class="op_title_tag" style="height: 28px">
@@ -19,40 +19,37 @@
         新章节开放期间样本量阈值临时下调，刷图时请注意甄别<br>
         小样活动约可提供25%额外效率
       </div>
-      <!-- <div class="stage_hint">
-        <div class="stage_hint_t5">橙：双最优</div>
-        <div class="stage_hint_t4">紫：效率最高(长期最优)</div>
-        <div class="stage_hint_t2">绿：期望最低(短期最优)</div>
-      </div> -->
+      <div id="ep12_pic">
+        <img src="/img/temp/ep12.jpg">
+      </div>
       <!-- t3内容区域 -->
       <div class="op_content" id="stage_t3_content">
         <div class="new_chapter_table">
           <table class="new_chapter">
           <tbody>
-            <tr class="new_chapter_title">
-              <td class="new_chapter_c1" style="width: 65px">关卡名</td>
-              <td class="new_chapter_c2" style="width: 65px">主产物</td>
-              <td class="new_chapter_c3" style="width: 65px">副产品</td>
-              <td class="new_chapter_c4" style="width: 75px">样本数</td> 
-              <td class="new_chapter_c5" style="width: 75px">置信度</td>
-              <td class="new_chapter_c6" style="width: 50px">SPM</td>
-              <td class="new_chapter_c7" style="width: 90px">关卡效率</td>
-              <td class="new_chapter_c8" style="width: 80px">上传数据</td>
-            </tr>
+          <tr class="popup_table_title">
+            <td class="popup_table_c1" style="width: 55px; width: 65px">关卡名</td>
+            <td class="popup_table_c2" style="width: 65px; width: 75px">主产物</td>
+            <td class="popup_table_c4" style="width: 50px; width: 60px">样本数</td>
+            <td class="popup_table_c5" style="width: 80px; width: 90px">置信度</td>
+            <td class="popup_table_c6" style="width: 80px; width: 90px">SPM</td>
+            <td class="popup_table_c7" style="width: 70px; width: 80px">关卡效率</td>
+            <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
+          </tr>
             <tr class="new_chapter_title" v-for="(stageNewChapter, indexAll) in stageNewChapter.slice(0,7)" :key="indexAll">
               <td class="new_chapter_c1" style="width: 65px">{{ stageNewChapter.stageCode }}</td>
               <td class="new_chapter_c2" style="width: 65px"><div :class="getSpriteImg(stageNewChapter.itemId, 'title')"></div></td>
               <td class="new_chapter_c3" style="width: 65px"><div :class="getSpriteImg(stageNewChapter.secondaryId, 'title')"></div></td>
-              <td class="new_chapter_c4" style="width: 75px">{{stageNewChapter.sampleSize}}</td> 
+              <td class="new_chapter_c4" style="width: 75px">{{stageNewChapter.sampleSize}}</td>
               <td class="new_chapter_c5" style="width: 75px">{{stageNewChapter.sampleConfidence}}</td>
               <td class="new_chapter_c6" style="width: 50px">{{stageNewChapter.spm}}</td>
               <td class="new_chapter_c7" style="width: 90px">{{stageNewChapter.stageEfficiency}}%</td>
               <td class="new_chapter_c9" style="width: 80px">
                 <a :href="'https://penguin-stats.cn/result/stage/main_11/main_'+ stageNewChapter.itemId">企鹅物流上传链接</a>
-            
+
               </td>
             </tr>
-            
+
           </tbody>
         </table>
         </div>
@@ -63,7 +60,7 @@
               <td class="new_chapter_c1" style="width: 65px">关卡名</td>
               <td class="new_chapter_c2" style="width: 65px">主产物</td>
               <td class="new_chapter_c3" style="width: 65px">副产品</td>
-              <td class="new_chapter_c4" style="width: 75px">样本数</td> 
+              <td class="new_chapter_c4" style="width: 75px">样本数</td>
               <td class="new_chapter_c5" style="width: 75px">置信度</td>
               <td class="new_chapter_c6" style="width: 50px">SPM</td>
               <td class="new_chapter_c7" style="width: 90px">关卡效率</td>
@@ -73,20 +70,104 @@
               <td class="new_chapter_c1" style="width: 65px">{{ stageNewChapter.stageCode }}</td>
               <td class="new_chapter_c2" style="width: 65px"><div :class="getSpriteImg(stageNewChapter.itemId, 'title')"></div></td>
               <td class="new_chapter_c3" style="width: 65px"><div :class="getSpriteImg(stageNewChapter.secondaryId, 'title')"></div></td>
-              <td class="new_chapter_c4" style="width: 75px">{{stageNewChapter.sampleSize}}</td> 
+              <td class="new_chapter_c4" style="width: 75px">{{stageNewChapter.sampleSize}}</td>
               <td class="new_chapter_c5" style="width: 75px">{{stageNewChapter.sampleConfidence}}</td>
               <td class="new_chapter_c6" style="width: 50px">{{stageNewChapter.spm}}</td>
               <td class="new_chapter_c7" style="width: 90px">{{stageNewChapter.stageEfficiency}}%</td>
               <td class="new_chapter_c9" style="width: 80px">
                 <a :href="'https://penguin-stats.cn/result/stage/main_11/main_'+ stageNewChapter.itemId">企鹅物流上传链接</a>
-            
+
               </td>
             </tr>
-            
+
           </tbody>
         </table>
+      <!-- 头图 -->
+      <div id="ep12_pic">
+        <img src="/img/temp/ep12.jpg">
+      </div>
+
+      <div class="ep12_content" style="display:flex;flex-wrap:wrap;">
+        <div class="ep12_half" id="ep12_left">
+          <table class="popup_table">
+            <tbody>
+              <tr class="popup_table_title">
+                <td class="popup_table_c1" style="width: 55px; width: 65px">关卡名</td>
+                <td class="popup_table_c2" style="width: 65px; width: 75px">主产物</td>
+                <td class="popup_table_c4" style="width: 50px; width: 60px">样本数</td>
+                <td class="popup_table_c5" style="width: 80px; width: 90px">置信度</td>
+                <td class="popup_table_c6" style="width: 80px; width: 90px">SPM</td>
+                <td class="popup_table_c7" style="width: 70px; width: 80px">关卡效率</td>
+                <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
+              </tr>
+              <!-- <tr
+                v-for="(stage, index) in popupData"
+                :key="index"
+                :class="getColor(stage.stageColor)"
+                class="stage_table_r"
+              >
+                <td class="popup_table_c1" :style="getHardcoreMark(stage.chapterName)">
+                  {{ stage.stageCode }}
+                </td>
+                <td class="popup_table_c2" style="font-size: 14px">
+                  {{ shrinkTimes(stage.sampleSize) }}<br />({{ stage.sampleConfidence }}%)
+                </td>
+                <td class="popup_table_c3">{{ getEfficiency(stage.spm, 1) }}</td>
+                <td style="padding-left: 20px">
+                  <div :class="getSpriteImg(stage.secondaryId, 'title')"></div>
+                </td>
+                <td class="popup_table_c5">{{ getEfficiency(stage.knockRating * 100, 1) }}%</td>
+                <td class="popup_table_c6">
+                  {{ getEfficiency(stage.apExpect) }}
+                </td>
+                <td class="popup_table_c7" :style="getUpMark(stage.stageState)">
+                  {{ getEfficiency(stage.stageEfficiency, 1) }}%
+                </td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+        <div class="ep12_half" id="ep12_right">
+          <table class="popup_table">
+            <tbody>
+              <tr class="popup_table_title">
+                <td class="popup_table_c1" style="width: 55px; width: 65px">关卡名</td>
+                <td class="popup_table_c2" style="width: 65px; width: 75px">主产物</td>
+                <td class="popup_table_c4" style="width: 50px; width: 60px">样本数</td>
+                <td class="popup_table_c5" style="width: 80px; width: 90px">置信度</td>
+                <td class="popup_table_c6" style="width: 80px; width: 90px">SPM</td>
+                <td class="popup_table_c7" style="width: 70px; width: 80px">关卡效率</td>
+                <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
+              </tr>
+              <!-- <tr
+                v-for="(stage, index) in popupData"
+                :key="index"
+                :class="getColor(stage.stageColor)"
+                class="stage_table_r"
+              >
+                <td class="popup_table_c1" :style="getHardcoreMark(stage.chapterName)">
+                  {{ stage.stageCode }}
+                </td>
+                <td class="popup_table_c2" style="font-size: 14px">
+                  {{ shrinkTimes(stage.sampleSize) }}<br />({{ stage.sampleConfidence }}%)
+                </td>
+                <td class="popup_table_c3">{{ getEfficiency(stage.spm, 1) }}</td>
+                <td style="padding-left: 20px">
+                  <div :class="getSpriteImg(stage.secondaryId, 'title')"></div>
+                </td>
+                <td class="popup_table_c5">{{ getEfficiency(stage.knockRating * 100, 1) }}%</td>
+                <td class="popup_table_c6">
+                  {{ getEfficiency(stage.apExpect) }}
+                </td>
+                <td class="popup_table_c7" :style="getUpMark(stage.stageState)">
+                  {{ getEfficiency(stage.stageEfficiency, 1) }}%
+                </td>
+              </tr> -->
+            </tbody>
+          </table>
         </div>
       </div>
+
     </div>
     <!-- 地图效率End -->
 
@@ -347,4 +428,15 @@ export default {
 .el-divider--horizontal {
   margin: 6px 0;
 }
+
+.ep12_half {
+  margin-top: 8px;
+  display: flex;
+  flex: 1;
+  max-width: 720px;
+  min-width: 360px;
+  justify-content: space-around;
+  border: 1px solid #000000;
+}
+
 </style>
