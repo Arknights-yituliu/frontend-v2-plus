@@ -17,8 +17,7 @@
           <div style="display: flex; align-items: flex-end">
             <div
               :class="tagColor[0]"
-              style="
-                height: 45px;
+              style="height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
@@ -32,8 +31,7 @@
             </div>
             <div
               :class="tagColor[1]"
-              style="
-                height: 45px;
+              style="height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
@@ -47,8 +45,7 @@
             </div>
             <div
               :class="tagColor[2]"
-              style="
-                height: 45px;
+              style="height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
@@ -62,8 +59,7 @@
             </div>
             <div
               :class="tagColor[3]"
-              style="
-                height: 45px;
+              style="height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
@@ -77,14 +73,12 @@
             </div>
             <div
               :class="tagColor[4]"
-              style="
-                height: 45px;
+              style="height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
                 border-radius: 4px;
-                background: #f0f0f0;
-              "
+                background: #f0f0f0;"
               id="store_tag_4"
               @click="switch_store('4')"
             >
@@ -104,7 +98,7 @@
         <div v-for="(m_data, index) in storeList['green']" class="store_unit" :key="index">
           <!-- <img class="store_unit_pic" alt="" title=""	:src="getImgUrl(m_data.itemName)" >	 -->
           <div :class="getSpriteImg(m_data.itemId, 1)"></div>
-          <p class="store_unit_text" :class="getColor(m_data.costPer, 1, 0.03)">
+          <p class="store_unit_text" :class="getColor(m_data.costPer, 0.8, 0.024)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
         </div>
@@ -131,7 +125,7 @@
         </div>
         <div v-for="(m_data, index) in storeList['yellow']" class="store_unit" :key="index">
           <div :class="getSpriteImg(m_data.itemId, 1)"></div>
-          <p class="store_unit_text" :class="getColor(m_data.costPer, 12, 3)">
+          <p class="store_unit_text" :class="getColor(m_data.costPer, 9.6, 2.4)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
         </div>
@@ -159,7 +153,7 @@
         </div>
         <div v-for="(m_data, index) in storeList['orange']" class="store_unit" :key="index">
           <div :class="getSpriteImg(m_data.itemId, 1)"></div>
-          <p class="store_unit_text" :class="getColor(m_data.costPer, 1.6, 0.1)">
+          <p class="store_unit_text" :class="getColor(m_data.costPer, 1.28, 0.8)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
         </div>
@@ -186,7 +180,7 @@
         </div>
         <div v-for="(m_data, index) in storeList['purple']" class="store_unit" :key="index">
           <div :class="getSpriteImg(m_data.itemId, 1)"></div>
-          <p class="store_unit_text" :class="getColor(m_data.costPer, 2, 0.4)">
+          <p class="store_unit_text" :class="getColor(m_data.costPer, 1.6, 0.32)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
         </div>
@@ -213,7 +207,7 @@
         </div>
         <div v-for="(m_data, index) in storeList['grey']" class="store_unit" :key="index">
           <div :class="getSpriteImg(m_data.itemId, 1)"></div>
-          <p class="store_unit_text" :class="getColor(m_data.costPer, 8, 2)">
+          <p class="store_unit_text" :class="getColor(m_data.costPer, 6.4, 1.6)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
         </div>
