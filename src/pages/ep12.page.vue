@@ -1,18 +1,18 @@
 <template>
   <div id="ep12">
-    明日方舟一图流 EP12专题页面
+    <div >明日方舟一图流 EP12专题页面</div>
     <div>
-      说明模块
+      说明模块<br>
       本页面主要包括两部分，一部分用于展示新章节的掉落数据，另一部分用于推荐每天嫖两次的那个券怎么用
     </div>
-    <div>
-      数据补全计划
-      【这里放图片】
+    <div style="height: 400px;">
+      数据补全计划<br>
+      【这里放图片】<br>
       新章节开放时往往会有很明显的马太效应，刷的人越多，数据越可靠，越能吸引更多的博士去刷；反之亦然。
       为了破解这个局面，我们（以下省略xx字）
     </div>
-    <div>
-      数据表
+    <div style="height: 400px;">
+      数据表<br>
       【这里放数据表】
       <table class="popup_table">
             <tbody>
@@ -54,21 +54,26 @@
 
     </div>
     <div>
-      每天嫖两次推荐表
+      每天嫖两次推荐表<br>
       新玩意
     </div>
     <div>
-      推荐表-占位
+      推荐表-占位<br>
       机制研究中【来个倒计时，6日20:00归零】
     </div>
     <div>
-      推荐表-正式版
-      【这里放推荐表排名】
-      数据来源
+      推荐表-正式版<br>
+      【这里放推荐表排名】<br>
+      数据来源<br>
       【这里放价值表】
     </div>
     <div>
-      巴别塔攻略组（数据提供） 企鹅物流数据统计（数据收集） 明日方舟一图流（数据分析） xxxx（页面设计）
+      <div class="ep12_support">巴别塔攻略组<br>（数据提供）</div>
+      <div class="ep12_support">企鹅物流数据统计<br>（数据收集）</div>
+      <div class="ep12_support">明日方舟一图流<br>（数据分析） </div>
+      <div class="ep12_support">罗德岛基建BETA<br>（信息发布） </div>
+      <div class="ep12_support">xxxx<br>（页面设计）</div>
+        
     </div>
   </div>
 </template>
@@ -88,18 +93,21 @@ export default {
 </script>
 
 <style scoped>
-#sandbox{
-  height: 200px;
-}
+
 
 #ep12{
-  background-color: aqua;
+  background-color: rgb(0, 162, 255);
   max-width: 720px;
   margin: auto;
+  background-image: url(/img/temp/ep12_background.png);
 }
 
 #ep12 div{
   margin: 12px;
   border: 1px solid #000000;
+}
+
+.ep12_support{
+  display: inline-block;
 }
 </style>
