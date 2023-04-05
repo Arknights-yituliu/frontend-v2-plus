@@ -1,7 +1,7 @@
 <template>
   <div id="indexDiv" :class="pageTheme" style="max-width: 1080px; margin: auto">
     <stage />
-    <newChapter />
+    <!-- <newChapter /> -->
     <store-value />
     <div class="title_null"></div>
     <!-- <pack> </pack> -->
