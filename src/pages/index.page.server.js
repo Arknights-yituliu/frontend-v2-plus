@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// const http = "https://backend.yituliu.site/";
+const http = "https://backend.yituliu.site/";
 
-const http = "http://127.0.0.1:10012/";
+// const http = "http://127.0.0.1:10012/";
 
 function get_t3() {
   return axios.get(http+"api/find/stage/t3?expCoefficient=0.625");
