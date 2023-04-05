@@ -117,9 +117,7 @@
 import stageApi from "@/api/stage";
 import cookie from "js-cookie";
 import { usePageContext } from "@/renderer/usePageContext";
-
 // import stageJson from "static/json-video/stage.json";
-
 export default {
   setup() {
     const pageContext = usePageContext();
@@ -189,12 +187,10 @@ export default {
         }
       }
     },
-
     showPopup(index) {
       document.getElementById("popup_card").style.display = "block";
       document.getElementById("popup_background").style.display = "block";
       document.getElementById("popup_content").style.display = "block";
-
       if (index < 100) {
         this.popupData = [];
         this.popupData = this.stageRankT3[index];
@@ -254,7 +250,6 @@ export default {
       else if (source > 0.1) return "/img/materials/" + img + ".png";
       else return "https://cdn.jsdelivr.net/gh/zirun-wang/OnePicCDN/img/" + img + ".png";
     },
-
     getCardBackground(url) {
       return "background: linear-gradient(rgba(144, 164, 174, 0), rgba(144, 164, 174, 0)), url(https://yygh-atbriup.oss-cn-beijing.aliyuncs.com/sprite/mix.png) no-repeat 85% 50% /100%;margin-left:-32px";
     },
@@ -273,7 +268,6 @@ export default {
       if (times > 9999) return "9999+";
       else return times;
     },
-
     getCardId(num) {
       return "stage_card" + num.toString();
     },
@@ -303,13 +297,11 @@ export default {
       if (eff > 99) return "font-size:20px;";
       else return "font-size:16px;font-weight:500;";
     },
-
     getTimesColor(times) {
       if (times < 1000) return "color_t6 fb";
       else if (times < 2000) return "color_t6";
       else return "";
     },
-
     judgeActive(index) {
       if (this.stageRankT3[index][0].stageState > 0.1) return "";
       return "display:none";
@@ -326,7 +318,6 @@ export default {
       }
       this.actStageOnly++;
     },
-
     getStageResultDateT3() {
       stageApi.findStageDateByTypeOrderByEfficiencyDesc(this.stageVersion).then((response) => {
         this.stageRankT3 = [];
@@ -367,7 +358,6 @@ export default {
 .el-divider--horizontal {
   margin: 6px 0;
 }
-
 .ep12_half {
   margin-top: 8px;
   display: flex;
@@ -377,5 +367,4 @@ export default {
   justify-content: space-around;
   border: 1px solid #000000;
 }
-
 </style>
