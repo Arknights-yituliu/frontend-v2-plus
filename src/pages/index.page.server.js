@@ -5,38 +5,38 @@ const http = "https://backend.yituliu.site/";
 // const http = "http://127.0.0.1:10012/";
 
 function get_t3() {
-  return axios.get(http+"api/find/stage/t3?expCoefficient=0.625");
+  return axios.get(http+"stage/t3?expCoefficient=0.625");
 }
 
 function get_t2() {
-  return axios.get(http+"api/find/stage/t2?expCoefficient=0.625");
+  return axios.get(http+"stage/t2?expCoefficient=0.625");
 }
 
 function get_orundum() {
-  return axios.get(http+"api/find/stage/orundum");
+  return axios.get(http+"stage/orundum");
 }
 
 function get_closed() {
-  return axios.get(http+"api/find/stage/closed?expCoefficient=0.625");
+  return axios.get(http+"stage/closed?expCoefficient=0.625");
 }
 
 function get_perm() {
-  return axios.get(http+"api/find/store/perm");
+  return axios.get(http+"store/perm");
 }
 
 function get_act() {
-  return axios.get(http+"api/find/store/act");
+  return axios.get(http+"store/act");
 }
 
 function get_value() {
-  return axios.get(http+"api/find/item/value?expCoefficient=0.625");
+  return axios.get(http+"item/value?expCoefficient=0.625");
 }
 
 function get_newChapter() {
-  return axios.get(http+"api/find/stage/newChapter?zone=11-");
+  return axios.get(http+"stage/newChapter?zone=11-");
 }
 
-console.log(http+"api/find/stage/newChapter?zone=11-")
+console.log(http+"stage/newChapter?zone=11-")
 
 export async function onBeforeRender(pageContext) {
   const result = await Promise.all([
