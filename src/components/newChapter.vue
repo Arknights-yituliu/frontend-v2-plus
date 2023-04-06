@@ -22,12 +22,16 @@
       </div> -->
       <!-- 头图 -->
       <!-- <div> -->
-        <a id="ep12_pic" href="/ep12" style="margin: 4px 4px 0 4px;text-align: center;">
-          <img src="/img/temp/ep12.jpg" style="width: 300px;display:block;margin: auto;border-radius: 12px;" alt="ep12">
-        </a>
+      <a id="ep12_pic" href="/ep12" style="margin: 4px 4px 0 4px; text-align: center">
+        <img
+          src="/img/temp/ep12.webp"
+          style="width: 300px; display: block; margin: auto; border-radius: 12px"
+          alt="ep12"
+        />
+      </a>
       <!-- </div> -->
-      <div class="ep12_content" style="display:flex;flex-wrap:wrap;">
-        <div class="ep12_half" id="ep12_left">
+      <div class="ep12_content" style="display: flex; flex-wrap: wrap">
+        <div class="ep12_half" id="ep12_left" v-for="r in [0, 1]" :key="r">
           <table class="popup_table">
             <tbody>
               <tr class="popup_table_title">
@@ -40,46 +44,7 @@
                 <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
               </tr>
               <!-- <tr
-                v-for="(stage, index) in popupData"
-                :key="index"
-                :class="getColor(stage.stageColor)"
-                class="stage_table_r"
-              >
-                <td class="popup_table_c1" :style="getHardcoreMark(stage.chapterName)">
-                  {{ stage.stageCode }}
-                </td>
-                <td class="popup_table_c2" style="font-size: 14px">
-                  {{ shrinkTimes(stage.sampleSize) }}<br />({{ stage.sampleConfidence }}%)
-                </td>
-                <td class="popup_table_c3">{{ getEfficiency(stage.spm, 1) }}</td>
-                <td style="padding-left: 20px">
-                  <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
-                </td>
-                <td class="popup_table_c5">{{ getEfficiency(stage.knockRating * 100, 1) }}%</td>
-                <td class="popup_table_c6">
-                  {{ getEfficiency(stage.apExpect) }}
-                </td>
-                <td class="popup_table_c7" :style="getUpMark(stage.stageState)">
-                  {{ getEfficiency(stage.stageEfficiency, 1) }}%
-                </td>
-              </tr> -->
-            </tbody>
-          </table>
-        </div>
-        <div class="ep12_half" id="ep12_right">
-          <table class="popup_table">
-            <tbody>
-              <tr class="popup_table_title">
-                <td class="popup_table_c1" style="width: 55px; width: 65px">关卡名</td>
-                <td class="popup_table_c2" style="width: 65px; width: 75px">主产物</td>
-                <td class="popup_table_c4" style="width: 50px; width: 60px">样本数</td>
-                <td class="popup_table_c5" style="width: 80px; width: 90px">置信度</td>
-                <td class="popup_table_c6" style="width: 80px; width: 90px">SPM</td>
-                <td class="popup_table_c7" style="width: 70px; width: 80px">关卡效率</td>
-                <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
-              </tr>
-              <!-- <tr
-                v-for="(stage, index) in popupData"
+                v-for="(stage, index) in newChapter"
                 :key="index"
                 :class="getColor(stage.stageColor)"
                 class="stage_table_r"
@@ -106,11 +71,8 @@
           </table>
         </div>
       </div>
-
     </div>
     <!-- 地图效率End -->
-
-
   </div>
 </template>
 
@@ -132,7 +94,7 @@ export default {
       stageRankT2: this.pageContext.pageProps.t2, //关卡效率集合
       stageRankOrundum: this.pageContext.pageProps.orundum, //关卡效率集合
       stageActHistory: this.pageContext.pageProps.closed,
-      newChapter:this.pageContext.pageProps.newChapter,
+      newChapter: this.pageContext.pageProps.newChapter,
       actStageOnly: 0,
       cardList: [0, 1, 2, 3, 4, 5, 6, 7],
       itemType: "",

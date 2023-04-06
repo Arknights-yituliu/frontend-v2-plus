@@ -164,7 +164,7 @@ a {
   /* background-color: rgb(0, 162, 255); */
   max-width: 720px;
   margin: auto;
-  background-image: url(/img/temp/ep12_background2.png);
+  background-image: url(/img/temp/ep12_background2.webp);
   background-size: 100%;
   color: antiquewhite;
 }
