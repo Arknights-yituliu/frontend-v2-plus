@@ -16,15 +16,16 @@
           </div>
         </div>
       </div>
-      <div class="op_warning">
+      <!-- <div class="op_warning">
         新章节开放期间样本量阈值临时下调，刷图时请注意甄别<br>
         小样活动约可提供25%额外效率
-      </div>
+      </div> -->
       <!-- 头图 -->
-      <div id="ep12_pic">
-        <img src="/img/temp/ep12.jpg">
-      </div>
-
+      <!-- <div> -->
+        <a id="ep12_pic" href="/ep12" style="margin: 4px 4px 0px 4px;text-align: center;">
+          <img src="/img/temp/ep12.jpg" style="width: 300px;display:block;margin: auto;border-radius: 12px;">
+        </a>
+      <!-- </div> -->
       <div class="ep12_content" style="display:flex;flex-wrap:wrap;">
         <div class="ep12_half" id="ep12_left">
           <table class="popup_table">
