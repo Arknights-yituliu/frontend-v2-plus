@@ -85,17 +85,17 @@
           style="
             width: 96px;
             height: 96px;
-            background-color: #888888;
+            background: url('/img/temp/permit.webp');
             display: inline-block;
             vertical-align: top;
-            margin: 24px 12px 24px 12px;
+            margin: 18px 12px 24px 12px;
           "
-        >
-          蹲一个图片
-        </div>
-        <div style="display: inline-block; max-width: 402px">
-          ◆本次活动新增后勤特别许可证：<br />
-          在【惊霆无声】任一可三星代理作战的关卡中，每日前两次作战可使用后勤特别许可证，使用后的当次作战不消耗理智且原常规掉落的报酬改为固定掉落且数量增加至三倍
+        ></div>
+        <div style="display: inline-block; max-width: 540px; line-height: 32px;">
+          <div>◆本次活动新增后勤特别许可证：</div>
+          <div>
+            在【惊霆无声】任一可三星代理作战的关卡中，每日前两次作战可使用后勤特别许可证，使用后的当次作战不消耗理智且原常规掉落的报酬改为固定掉落且数量增加至三倍
+          </div>
         </div>
       </div>
     </div>
