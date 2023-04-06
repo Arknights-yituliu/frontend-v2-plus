@@ -4,7 +4,7 @@
     <div style="height: 210px"></div>
     <!-- 标题 -->
     <div style="text-align: center; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
-      <img src="//img/website/ico64.png" style="padding: 4px 0px 0px 0px; border-radius: 8px" />
+      <img src="/img/website/ico64.png" style="padding: 4px 0px 0px 0px; border-radius: 8px" />
       <div style="font-size: 32px; vertical-align: top; margin: 12px; display: inline-block">
         明日方舟一图流 EP12专题页面
       </div>
