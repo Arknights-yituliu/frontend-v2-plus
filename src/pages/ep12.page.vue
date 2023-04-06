@@ -70,7 +70,7 @@
               {{ stage.spm }}
             </td>
             <td>
-              {{ stage.stageEfficiency }}
+              {{ Math.round(stage.stageEfficiency) }}%
             </td>
             <td>链接？</td>
           </tr>
