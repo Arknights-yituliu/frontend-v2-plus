@@ -22,8 +22,8 @@
       </div> -->
       <!-- 头图 -->
       <!-- <div> -->
-        <a id="ep12_pic" href="/ep12" style="margin: 4px 4px 0px 4px;text-align: center;">
-          <img src="/img/temp/ep12.jpg" style="width: 300px;display:block;margin: auto;border-radius: 12px;">
+        <a id="ep12_pic" href="/ep12" style="margin: 4px 4px 0 4px;text-align: center;">
+          <img src="/img/temp/ep12.jpg" style="width: 300px;display:block;margin: auto;border-radius: 12px;" alt="ep12">
         </a>
       <!-- </div> -->
       <div class="ep12_content" style="display:flex;flex-wrap:wrap;">
@@ -163,8 +163,8 @@ export default {
       return new Promise((resolve) => setTimeout(resolve, d));
     },
     async getRoute() {
-      var item = this.pageContext.urlParsed.search.item;
-      if (item != undefined) console.log("要展示的材料：", item);
+      const item = this.pageContext.urlParsed.search.item;
+      if (item !== undefined) console.log("要展示的材料：", item);
       for (let i = 0; i < 40; i++) {
         await this.sleep(500);
         if (this.stageRankT3.length > 5) {
@@ -234,7 +234,7 @@ export default {
     },
     getSpriteImg(id, index) {
       if (id === "30012" && index !== "t2") id = "30013";
-      if (index == "type") return "bg-" + id + "large" + " sprite_type";
+      if (index === "type") return "bg-" + id + "large" + " sprite_type";
       if (index === "sec") return "bg-" + id + " sprite_secondary";
       if (index === "title") return "bg-" + id + " sprite_title";
       if (index === 3) return "bg-" + id + " sprite_secondary_dialog";
