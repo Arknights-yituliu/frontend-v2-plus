@@ -852,6 +852,7 @@
                       <div style="width: 40px" v-show="actRe.permit10 !== 0" :class="getSpriteImg('7004icon', 0)"></div>
                       <div style="width: 54px" v-show="actRe.permit10 !== 0">
                         {{ actRe.permit10 }}
+
                       </div>
                     </div>
                   </el-checkbox-button>
@@ -1256,25 +1257,26 @@ export default {
     //判断奖励是否在时间段内
     isDuringDate(start, end, rewardType) {
       // console.log(Date.parse(new Date(start))>=this.start_TimeStamp ||Date.parse(new Date(end))<=this.end_TimeStamp)
-      // console.log(end ,'<=', this.end_TimeStamp)
-      if (end <= this.end_TimeStamp && ("公共" === rewardType || this.rewardType === rewardType)) return true;
+      console.log(end ,'<=', this.end_TimeStamp)
+      
+      if (end>this.start_TimeStamp && end <= this.end_TimeStamp && ("公共" === rewardType || this.rewardType === rewardType)) return true;
       return false;
     },
     //获取当天日期
     getDate() {
-      var date = new Date();
-      var y = date.getFullYear(); //年
-      var m = (date.getMonth() + 1).toString().padStart(2, "0"); //月
-      var d = date.getDate().toString().padStart(2, "0"); //日
-      var h = date.getHours().toString().padStart(2, "0"); //时
-      var mm = date.getMinutes().toString().padStart(2, "0"); //分
-      var s = date.getSeconds().toString().padStart(2, "0"); //秒
+      const date = new Date();
+      const y = date.getFullYear(); //年
+      const m = (date.getMonth() + 1).toString().padStart(2, "0"); //月
+      const d = date.getDate().toString().padStart(2, "0"); //日
+      const h = date.getHours().toString().padStart(2, "0"); //时
+      const mm = date.getMinutes().toString().padStart(2, "0"); //分
+      const s = date.getSeconds().toString().padStart(2, "0"); //秒
       this.startDate = `${y}/${m}/${d} ${h}:${mm}:${s}`;
     },
 
     //获取限定池和红包倒计时
     getPoolCountDown() {
-      var num = parseInt((this.end_TimeStamp - this.start_TimeStamp) / 86400000); //计算距离限定池还有多少天
+      const num = parseInt((this.end_TimeStamp - this.start_TimeStamp) / 86400000); //计算距离限定池还有多少天
       if (num < 14) {
         //少于14天扣除每日赠送抽卡资源
         this.poolCountDown = 14 - num;
@@ -1497,7 +1499,7 @@ export default {
             this.calResults.orundum_other += list[1].orundum;
             this.calResults.permit_other += list[1].permit;
             this.calResults.permit10_other += list[1].permit10;
-            // console.log(list[0])
+            console.log(list[0])
           } else if ("act" === list[1].module) {
             //这里是计算活动奖励
             this.calResults.originium_act += list[1].originium; //xxxx_act格式的属性 活动奖励的各项奖励数量，下同
