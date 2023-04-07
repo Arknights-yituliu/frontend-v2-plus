@@ -125,7 +125,7 @@
         </div>
         <div v-for="(m_data, index) in storeList['yellow']" class="store_unit" :key="index">
           <div :class="getSpriteImg(m_data.itemId, 1)"></div>
-          <p class="store_unit_text" :class="getColor(m_data.costPer, 9.6, 2.4)">
+          <p class="store_unit_text" :class="getColor(m_data.costPer, 9.0, 1.5)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
         </div>
@@ -153,7 +153,7 @@
         </div>
         <div v-for="(m_data, index) in storeList['orange']" class="store_unit" :key="index">
           <div :class="getSpriteImg(m_data.itemId, 1)"></div>
-          <p class="store_unit_text" :class="getColor(m_data.costPer, 1.28, 0.8)">
+          <p class="store_unit_text" :class="getColor(m_data.costPer, 1.22, 0.05)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
         </div>
@@ -207,7 +207,7 @@
         </div>
         <div v-for="(m_data, index) in storeList['grey']" class="store_unit" :key="index">
           <div :class="getSpriteImg(m_data.itemId, 1)"></div>
-          <p class="store_unit_text" :class="getColor(m_data.costPer, 6.4, 1.6)">
+          <p class="store_unit_text" :class="getColor(m_data.costPer, 6.5, 1.6)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
         </div>
