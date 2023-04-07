@@ -20,7 +20,7 @@
     "module": "actRe"
   },
   "4月主线": {
-    "originium": 40,
+    "originium": 8,
     "orundum": 0,
     "permit": 0,
     "permit10": 0,
@@ -90,8 +90,8 @@
     "module": "honeyCake"
   },
   "游戏维护更新(3-5月)": {
-    "originium": 10,
-    "orundum": 1600,
+    "originium": 5,
+    "orundum": 600,
     "permit": 0,
     "permit10": 0,
     "start": "2099/01/01 16:00:00",
