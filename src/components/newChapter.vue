@@ -33,12 +33,12 @@
           <table class="popup_table">
             <tbody>
               <tr class="popup_table_title">
-                <td class="popup_table_c1" style="width: 55px; width: 65px">关卡</td>
+                <td class="popup_table_c1" style="width: 55px; width: 75px">关卡</td>
                 <td class="popup_table_c2" style="width: 65px; width: 75px">主产物</td>
-                <td class="popup_table_c4" style="width: 50px; width: 60px">样本数</td>
-                <td class="popup_table_c5" style="width: 80px; width: 90px">置信度</td>
-                <td class="popup_table_c6" style="width: 80px; width: 90px">SPM</td>
-                <td class="popup_table_c7" style="width: 70px; width: 80px">关卡效率</td>
+                <td class="popup_table_c4" style="width: 50px; width: 75px">样本数</td>
+                <td class="popup_table_c5" style="width: 80px; width: 75px">置信度</td>
+                <td class="popup_table_c6" style="width: 60px; width: 60px">SPM</td>
+                <td class="popup_table_c7" style="width: 70px; width: 90px">关卡效率</td>
                 <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
               </tr>
               <tr v-for="(stage, index) in newChapter[r]" :key="index" class="stage_table_r">
@@ -90,13 +90,16 @@ const updateTime = computed(() => {
   margin: 6px 0;
 }
 .ep12_half {
-  margin-top: 8px;
+  margin: 8px;
   display: flex;
   flex: 1;
   max-width: 720px;
   min-width: 360px;
   justify-content: space-around;
-  border: 1px solid #000000;
+  border-radius: 6px;
+  box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.2);
+  background: rgba(128, 128, 128, 0.1);
+  border: 0px solid #ebeef5;
 }
 
 .popup_table {
