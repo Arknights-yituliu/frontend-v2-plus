@@ -101,11 +101,98 @@
     </div>
     <!-- 推荐表-占位 -->
     <div
-      style="height: 192px; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center"
+      style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center"
     >
-      机制、数值研究中<br />
-      数据参考<br />
-      【这里放价值表】
+      <table style="margin: auto;padding: 8px;">
+        <tr>
+          <th style="width: 80px;">关卡</th>
+          <th style="width: 100px;">主产物</th>
+          <th style="width: 100px;">收益（理智）</th>
+          <th style="width: 80px;">关卡</th>
+          <th style="width: 100px;">主产物</th>
+          <th style="width: 100px;">收益（理智）</th>
+        </tr>
+        <tr>
+          <td>12-7</td>
+          <td>RMA70-12</td>
+          <td>152.23</td>
+          <td>12-12</td>
+          <td>炽合金</td>
+          <td>105.80</td>
+        </tr>
+        <tr>
+          <td>12-13</td>
+          <td>转质盐组</td>
+          <td>137.23</td>
+          <td>12-6</td>
+          <td>扭转醇</td>
+          <td>100.29</td>
+        </tr>
+        <tr>
+          <td>12-5</td>
+          <td>凝胶</td>
+          <td>126.70</td>
+          <td>12-14</td>
+          <td>糖组</td>
+          <td>93.87</td>
+        </tr>
+        <tr>
+          <td>12-8</td>
+          <td>研磨石</td>
+          <td>126.17</td>
+          <td>12-18</td>
+          <td>聚酸酯组</td>
+          <td>92.78</td>
+        </tr>
+        <tr>
+          <td>12-17</td>
+          <td>化合切削液</td>
+          <td>121.56</td>
+          <td>12-19</td>
+          <td>晶体元件</td>
+          <td>86.18</td>
+        </tr>
+        <tr>
+          <td>12-10</td>
+          <td>半自然溶剂</td>
+          <td>119.16</td>
+          <td>12-3</td>
+          <td>晶体元件</td>
+          <td>84.68</td>
+        </tr>
+        <tr>
+          <td>12-20</td>
+          <td>酮凝集组</td>
+          <td>113.27</td>
+          <td>12-15</td>
+          <td>固源岩组</td>
+          <td>69.61</td>
+        </tr>
+        <tr>
+          <td>12-4</td>
+          <td>酮凝集组</td>
+          <td>111.77</td>
+          <td>--</td>
+          <td>--</td>
+          <td>--</td>
+        </tr>
+        <tr style="height: 10px;">
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>12-2</td>
+          <td>龙门币</td>
+          <td>约40</td>
+          <td>12-9</td>
+          <td>作战记录</td>
+          <td>约30</td>
+        </tr>
+      </table>
     </div>
     <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
       <a class="ep12_support" href="https://space.bilibili.com/21342479">
