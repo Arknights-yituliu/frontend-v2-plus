@@ -4,8 +4,8 @@
     "orundum": 0,
     "permit": 3,
     "permit10": 0,
-    "start": "2023/04/13 16:00:00",
-    "end": "2023/04/13 03:59:00",
+    "start": "2023/04/21 16:00:00",
+    "end": "2023/04/21 03:59:00",
     "rewardType": "公共",
     "module": "actRe"
   },
@@ -14,18 +14,18 @@
     "orundum": 2000,
     "permit": 3,
     "permit10": 0,
-    "start": "2023/04/13 16:00:00",
-    "end": "2023/04/13 03:59:00",
+    "start": "2023/04/21 16:00:00",
+    "end": "2023/04/21 03:59:00",
     "rewardType": "公共",
     "module": "actRe"
   },
   "4月主线": {
-    "originium": 40,
+    "originium": 8,
     "orundum": 0,
     "permit": 0,
     "permit10": 0,
-    "start": "2023/04/06 16:00:00",
-    "end": "2023/04/06 03:59:00",
+    "start": "2023/04/13 16:00:00",
+    "end": "2023/04/13 03:59:00",
     "rewardType": "公共",
     "module": "act"
   },
@@ -90,8 +90,8 @@
     "module": "honeyCake"
   },
   "游戏维护更新(3-5月)": {
-    "originium": 10,
-    "orundum": 1600,
+    "originium": 5,
+    "orundum": 600,
     "permit": 0,
     "permit10": 0,
     "start": "2099/01/01 16:00:00",
