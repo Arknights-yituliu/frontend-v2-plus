@@ -80,7 +80,7 @@
                     <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
                   </td>
                   <td class="stage_table_c3">{{ getEfficiency(stage.stageEfficiency, 1) }}%</td>
-                  <!-- <td class="stage_table_c4">{{getBoxEfficiency(stage.stageState, stage.stageEfficiencyEx, stage.stageEfficiency)}}</td> -->
+                  <td class="stage_table_c4"><img v-show="stage.stageId.indexOf('perm')==-1" src="https://image.yituliu.site/ep12/up.png" alt=""></td>
                 </tr>
               </tbody>
             </table>

@@ -33,7 +33,7 @@ function get_value() {
 }
 
 function get_newChapter() {
-  return axios.get(http+"stage/newChapter?zone=11-");
+  return axios.get(http+"stage/newChapter?zone=12-");
 }
 
 // console.log(http+"stage/newChapter?zone=11-")

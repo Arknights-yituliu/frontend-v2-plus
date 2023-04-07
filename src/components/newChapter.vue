@@ -24,7 +24,7 @@
       <!-- <div> -->
       <div class="ep12_wrapper">
         <a href="/ep12">
-          <img class="ep12_pic" src="/img/temp/ep12.webp" alt="ep12" />
+          <img class="ep12_pic" src="https://image.yituliu.site/ep12/ep12.webp" alt="ep12" />
         </a>
       </div>
       <!-- </div> -->
@@ -54,7 +54,7 @@
                   {{ stage.sampleSize }}
                 </td>
                 <td>
-                  {{ stage.sampleConfidence }}
+                  {{ stage.sampleConfidence }}%
                 </td>
                 <td>
                   {{ stage.spm }}
@@ -81,7 +81,7 @@ const l = raw_data.length;
 const m = Math.ceil(l / 2);
 const newChapter = ref([raw_data.slice(0, m), raw_data.slice(m, l)]);
 const updateTime = computed(() => {
-  return newChapter.value[0].updateTime;
+return newChapter.value[0].updateTime;
 });
 </script>
 
