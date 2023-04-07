@@ -72,15 +72,15 @@
             <td>
               {{ Math.round(stage.stageEfficiency) }}%
             </td>
-            <td><a :href="'https://penguin-stats.cn/report/stage/main_12/'+stage.stageId">上传链接</a></td>
+            <td><a :href="'https://penguin-stats.cn/report/stage/main_12/'+stage.stageId">企鹅物流</a></td>
           </tr>
         </tbody>
       </table>
     </div>
     <!-- 后勤特别许可证 -->
-    <div style="height: 192px; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
+    <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
       <div style="text-align: center; font-size: 24px; font-weight: 600; padding: 6px 0px">后勤特别许可证</div>
-      <div style="vertical-align: top; height: 144px; margin: auto">
+      <div style="vertical-align: top;margin: auto">
         <div
           style="
             width: 96px;
@@ -91,7 +91,10 @@
             margin: 18px 12px 24px 12px;
           "
         ></div>
-        <div style="display: inline-block; max-width: 540px; line-height: 32px;">
+        <div style="display: inline-block;
+                    max-width: 75%;
+                    line-height: 32px;
+                    padding-bottom: 8px;">
           <div>◆本次活动新增后勤特别许可证：</div>
           <div>
             在【惊霆无声】任一可三星代理作战的关卡中，每日前两次作战可使用后勤特别许可证，使用后的当次作战不消耗理智且原常规掉落的报酬改为固定掉落且数量增加至三倍
