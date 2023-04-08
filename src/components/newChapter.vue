@@ -28,7 +28,7 @@
         </a>
       </div>
       <!-- </div> -->
-      <div class="ep12_content" style="display: flex; flex-wrap: wrap">
+      <div class="ep12_content">
         <div class="ep12_half" id="ep12_left" v-for="r in [0, 1]" :key="r">
           <table class="popup_table">
             <tbody>
@@ -53,15 +53,46 @@
                 <td>
                   {{ stage.sampleSize }}
                 </td>
-                <td>
-                  {{ stage.sampleConfidence }}%
-                </td>
+                <td>{{ stage.sampleConfidence }}%</td>
                 <td>
                   {{ stage.spm }}
                 </td>
+                <td>{{ Math.round(stage.stageEfficiency) }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ep12_content-mobile">
+        <div class="ep12_half">
+          <table class="popup_table">
+            <tbody>
+              <tr class="popup_table_title">
+                <td class="popup_table_c1" style="width: 55px; width: 75px">关卡</td>
+                <td class="popup_table_c2" style="width: 65px; width: 75px">主产物</td>
+                <td class="popup_table_c4" style="width: 50px; width: 75px">样本数</td>
+                <td class="popup_table_c5" style="width: 80px; width: 75px">置信度</td>
+                <td class="popup_table_c6" style="width: 60px; width: 60px">SPM</td>
+                <td class="popup_table_c7" style="width: 70px; width: 90px">关卡效率</td>
+                <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
+              </tr>
+              <tr v-for="(stage, index) in raw_data" :key="index" class="stage_table_r">
                 <td>
-                  {{ Math.round(stage.stageEfficiency) }}%
+                  {{ stage.stageCode }}
                 </td>
+                <td>
+                  <div class="img-wrapper">
+                    <div :class="`bg-${stage.itemId}`" class="img"></div>
+                  </div>
+                </td>
+                <td>
+                  {{ stage.sampleSize }}
+                </td>
+                <td>{{ stage.sampleConfidence }}%</td>
+                <td>
+                  {{ stage.spm }}
+                </td>
+                <td>{{ Math.round(stage.stageEfficiency) }}%</td>
               </tr>
             </tbody>
           </table>
@@ -74,12 +105,12 @@
 
 <script setup>
 import { usePageContext } from "@/renderer/usePageContext";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 const pageContext = usePageContext();
-const raw_data = pageContext.pageProps.newChapter;
-const l = raw_data.length;
+const raw_data = ref(pageContext.pageProps.newChapter);
+const l = raw_data.value.length;
 const m = Math.ceil(l / 2);
-const newChapter = ref([raw_data.slice(0, m), raw_data.slice(m, l)]);
+const newChapter = ref([raw_data.value.slice(0, m), raw_data.value.slice(m, l)]);
 // const updateTime = computed(() => {
 //   return newChapter.value[1].updateTime;
 // });
@@ -145,7 +176,24 @@ td div {
 .img {
   transform: scale(50%) translate(-50%, -50%);
 }
-.ep12_content > div:last-child{
+
+.ep12_content,
+.ep12_content-mobile {
+  display: flex;
+  flex-wrap: wrap;
+}
+.ep12_content > div:last-child {
   padding-bottom: 40px;
+}
+
+@media screen and (max-width: 771px) {
+  .ep12_content {
+    display: none;
+  }
+}
+@media (min-width: 770px) {
+  .ep12_content-mobile {
+    display: none;
+  }
 }
 </style>
