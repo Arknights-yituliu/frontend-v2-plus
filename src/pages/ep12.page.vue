@@ -110,10 +110,10 @@
         <tr>
           <th style="width: 80px;">关卡</th>
           <th style="width: 100px;">主产物</th>
-          <th style="width: 100px;">收益（理智）</th>
+          <th style="width: 100px;">收益<br>（理智）</th>
           <th style="width: 80px;">关卡</th>
           <th style="width: 100px;">主产物</th>
-          <th style="width: 100px;">收益（理智）</th>
+          <th style="width: 100px;">收益<br>（理智）</th>
         </tr>
         <tr>
           <td>12-7</td>
