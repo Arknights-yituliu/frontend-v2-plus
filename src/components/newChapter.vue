@@ -12,7 +12,7 @@
         <div class="op_title_tag" style="height: 28px">
           <div class="tab_text">
             <!-- *更新时间{{stageActHistory}} -->
-            *更新时间 {{ updateTime }}
+            *更新时间 {{ newChapter[0][0].updateTime }}
           </div>
         </div>
       </div>
@@ -80,9 +80,9 @@ const raw_data = pageContext.pageProps.newChapter;
 const l = raw_data.length;
 const m = Math.ceil(l / 2);
 const newChapter = ref([raw_data.slice(0, m), raw_data.slice(m, l)]);
-const updateTime = computed(() => {
-return newChapter.value[0].updateTime;
-});
+// const updateTime = computed(() => {
+//   return newChapter.value[1].updateTime;
+// });
 </script>
 
 <style scoped>
@@ -142,8 +142,10 @@ td div {
   overflow: hidden;
   margin-top: 3px;
 }
-
 .img {
   transform: scale(50%) translate(-50%, -50%);
+}
+.ep12_content > div:last-child{
+  padding-bottom: 40px;
 }
 </style>
