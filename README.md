@@ -17,7 +17,7 @@
 
 ## 运行项目
 
-首先[安装 Node.js](https://nodejs.org/zh-cn/download)，推荐的版本是 18。
+首先[安装 Node.js](https://nodejs.org/zh-cn/download)，16 和 18 版本都可以。
 
 ```bash
 git clone https://github.com/Arknights-yituliu/frontend-v2-plus.git
