@@ -183,7 +183,8 @@ td div {
   flex-wrap: wrap;
 }
 .ep12_content > div:last-child {
-  padding-bottom: 40px;
+  /* padding-bottom: 40px; */
+  padding-bottom: 0;
 }
 
 @media screen and (max-width: 771px) {
