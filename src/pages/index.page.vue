@@ -1,11 +1,11 @@
 <template>
   <div id="indexDiv" :class="pageTheme" style="max-width: 1080px; margin: auto">
-   <ep12/>
+    <ep12 />
     <div class="title_null"></div>
     <stage />
     <div class="title_null"></div>
-    <store-value />
-    <div class="title_null"></div>
+    <!-- <store-value />
+    <div class="title_null"></div> -->
     <!-- <pack> </pack> -->
     <div class="title_null"></div>
     <item-value />
@@ -29,10 +29,10 @@ import toolApi from "@/api/tool";
 export default {
   components: {
     stage,
-    StoreValue,
+    // StoreValue,
     ItemValue,
     FootComponent,
-    ep12
+    ep12,
   },
   data() {
     return {
