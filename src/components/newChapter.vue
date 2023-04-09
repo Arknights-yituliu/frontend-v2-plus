@@ -24,7 +24,7 @@
       <!-- <div> -->
       <div class="ep12_wrapper">
         <a href="/ep12">
-          <img class="ep12_pic" src="https://image.yituliu.site/ep12/ep12.webp" alt="ep12" />
+          <img class="ep12_pic" src="/img/temp/ep12.webp" alt="ep12" />
         </a>
       </div>
       <!-- </div> -->
@@ -183,7 +183,8 @@ td div {
   flex-wrap: wrap;
 }
 .ep12_content > div:last-child {
-  padding-bottom: 40px;
+  /* padding-bottom: 40px; */
+  padding-bottom: 0;
 }
 
 @media screen and (max-width: 771px) {

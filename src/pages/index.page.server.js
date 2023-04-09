@@ -45,7 +45,8 @@ export async function onBeforeRender(pageContext) {
     get_orundum(),
     get_closed(),
     get_perm(),
-    get_act(),
+    // get_act(),
+    [],
     get_value(),
     get_newChapter(),
   ]);
@@ -54,7 +55,8 @@ export async function onBeforeRender(pageContext) {
   const orundum = result[2].data.data;
   const closed = result[3].data.data;
   const perm = result[4].data.data;
-  const act = result[5].data.data;
+  // const act = result[5].data.data;
+  const act = [];
   const value = result[6].data.data;
   const newChapter = result[7].data.data;
   const pageProps = { t3, t2, orundum, closed, perm, act, value, newChapter};
