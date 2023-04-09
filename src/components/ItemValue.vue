@@ -190,11 +190,7 @@ export default {
       return item;
     },
 
-    OSS_imgUr1l(img) {
-      img = typeof img !== "undefined" ? img : 1;
-
-      return "https://image.yituliu.site/item/" + img + ".png";
-    },
+    
   },
 };
 </script>
