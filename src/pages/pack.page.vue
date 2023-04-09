@@ -518,9 +518,7 @@ export default {
       // if(true ===this.showFlag) return '';
       // console.log(true ===this.showFlag);
       if (type === "limited") {
-        return (
-          "background:url(/img/packs/limited/" + img + ".png) 0% 0% / cover no-repeat,#444444;"
-        );
+        return "background:url(/img/packs/limited/" + img + ".png) 0% 0% / cover no-repeat,#444444;";
       } else return "background:url(/img/packs/small/" + img + ".jpg) 0% 0% / cover no-repeat,#444444;";
     },
     getContentId(id, type) {
