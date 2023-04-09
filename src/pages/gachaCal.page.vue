@@ -277,7 +277,7 @@
               <div class="gacha_unit_child">
                 <a href="/?item=Orundum" style="margin: 0px 24px 0px 0px">查看其它可搓玉关卡</a>
                 <a href="https://www.bilibili.com/video/BV1v54y1T7u5" style="display: inline-block">
-                  搓玉教程<img class="gacha_img_small" src="/img/website/el.png"
+                  搓玉教程<img class="gacha_img_small" src="/img/icon/el.png"
                 /></a>
               </div>
             </div>
@@ -431,7 +431,7 @@
                   href="https://prts.wiki/w/%E5%85%B3%E5%8D%A1%E4%B8%80%E8%A7%88/%E5%B8%B8%E6%80%81%E4%BA%8B%E5%8A%A1"
                   style="display: inline-block"
                 >
-                  点我跳转<img class="gacha_img_small" src="/img/website/el.png" />
+                  点我跳转<img class="gacha_img_small" src="/img/icon/el.png" />
                 </a>
               </div>
               <!-- 主线 -->
@@ -1257,7 +1257,7 @@ export default {
     //判断奖励是否在时间段内
     isDuringDate(start, end, rewardType) {
       // console.log(Date.parse(new Date(start))>=this.start_TimeStamp ||Date.parse(new Date(end))<=this.end_TimeStamp)
-      console.log(end ,'<=', this.end_TimeStamp)
+      // console.log(end ,'<=', this.end_TimeStamp)
       
       if (end>this.start_TimeStamp && end <= this.end_TimeStamp && ("公共" === rewardType || this.rewardType === rewardType)) return true;
       return false;

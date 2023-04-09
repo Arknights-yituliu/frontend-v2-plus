@@ -80,7 +80,7 @@
                     <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
                   </td>
                   <td class="stage_table_c3">{{ getEfficiency(stage.stageEfficiency, 1) }}%</td>
-                  <td class="stage_table_c4"><img v-show="stage.stageId.indexOf('perm')==-1" src="https://image.yituliu.site/ep12/up.png" alt=""></td>
+                  <td class="stage_table_c4"><img v-show="stage.stageId.indexOf('perm')==-1" src="/img/icon/up.png" alt=""></td>
                 </tr>
               </tbody>
             </table>
@@ -436,8 +436,8 @@ export default {
     },
     getImgUrl(img, source) {
       source = typeof source !== "undefined" ? type : 1;
-      if (source > 2.1) return "https://image.yituliu.site/ activity_picture /" + img + ".png";
-      if (source > 1.1) return "https://image.yituliu.site/item/" + img + ".png";
+      if (source > 2.1) return "/img/ activity_picture /" + img + ".png";
+      if (source > 1.1) return "/img/item/" + img + ".png";
       else if (source > 0.1) return "/img/materials/" + img + ".png";
       else return "https://cdn.jsdelivr.net/gh/zirun-wang/OnePicCDN/img/" + img + ".png";
     },

@@ -167,7 +167,7 @@
         </div>
         <a href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe"
           ><div class="foot_unit_button uni_shadow_2" style="width: 202px; display: inline-block">
-            <img class="foot_unit_pic" src="/img/website/图标_源石.png" />
+            <img class="foot_unit_pic" src="/img/icon/图标_源石.png" />
             查看财政状况/捐助
           </div>
         </a>
