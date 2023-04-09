@@ -521,7 +521,7 @@ export default {
         return (
           "background:url(/img/packs/limited/" + img + ".png) 0% 0% / cover no-repeat,#444444;"
         );
-      } else return "background:url(/img/packs/" + img + ".png) 0% 0% / cover no-repeat,#444444;";
+      } else return "background:url(/img/packs/small" + img + ".jpg) 0% 0% / cover no-repeat,#444444;";
     },
     getContentId(id, type) {
       return type + "_" + id;
