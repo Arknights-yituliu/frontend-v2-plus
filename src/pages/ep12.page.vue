@@ -4,7 +4,7 @@
     <div style="height: 210px"></div>
     <!-- 标题 -->
     <div style="text-align: center; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
-      <img src="https://image.yituliu.site/ep12/ico64.png" style="padding: 4px 0px 0px 0px; border-radius: 8px" />
+      <img src="/img/website/ico64.png" style="padding: 4px 0px 0px 0px; border-radius: 8px" />
       <div style="font-size: 32px; vertical-align: top; margin: 12px; display: inline-block">
         明日方舟一图流 EP12专题页面
       </div>
@@ -28,7 +28,7 @@
     <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
       <div style="text-align: center; font-size: 24px; font-weight: 600; padding-top: 6px">数据补全计划</div>
       <div style="margin: 0px 6px">
-        <img src="https://image.yituliu.site/ep12/ep12_drb.webp" style="width: 100%" />
+        <img src="/img/temp/ep12_drb.webp" style="width: 100%" />
       </div>
       <div style="font-style: italic; padding: 0px 12px 12px 12px">
         新章节开放时往往伴有明显的马太效应，即刷的人越多，数据越可靠，越能吸引更多的博士去刷；反之亦然。<br />
@@ -85,7 +85,7 @@
           style="
             width: 96px;
             height: 96px;
-            background: url('https://image.yituliu.site/ep12/permit.webp');
+            background: url('/img/temp/permit.webp');
             display: inline-block;
             vertical-align: top;
             margin: 18px 12px 24px 12px;
@@ -199,35 +199,35 @@
     </div>
     <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
       <a class="ep12_support" href="https://space.bilibili.com/21342479">
-        <img class="ep12_support_img" src="https://image.yituliu.site/ep12/babel.jpg" />
+        <img class="ep12_support_img" src="/img/temp/babel.jpg" />
         <div class="ep12_support_text">
           <div class="ep12_support_org">巴别塔攻略组</div>
           <div class="ep12_support_role">数据提供</div>
         </div>
       </a>
       <a class="ep12_support" href="https://penguin-stats.cn/">
-        <img class="ep12_support_img" src="https://image.yituliu.site/ep12/ps_logo.png" />
+        <img class="ep12_support_img" src="/img/temp/ps_logo.png" />
         <div class="ep12_support_text">
           <div class="ep12_support_org">企鹅物流数据统计</div>
           <div class="ep12_support_role">数据收集</div>
         </div>
       </a>
       <a class="ep12_support" href="https://yituliu.site/">
-        <img class="ep12_support_img" src="https://image.yituliu.site/ep12/ico64.png" />
+        <img class="ep12_support_img" src="/img/website/ico64.png" />
         <div class="ep12_support_text">
           <div class="ep12_support_org">明日方舟一图流</div>
           <div class="ep12_support_role">数据分析</div>
         </div>
       </a>
       <a class="ep12_support" href="https://space.bilibili.com/688411531">
-        <img class="ep12_support_img" src="https://image.yituliu.site/ep12/beta_logo_yw.png" />
+        <img class="ep12_support_img" src="/img/temp/beta_logo_yw.png" />
         <div class="ep12_support_text">
           <div class="ep12_support_org">罗德岛基建BETA</div>
           <div class="ep12_support_role">信息发布</div>
         </div>
       </a>
       <!-- <a class="ep12_support">
-        <img class="ep12_support_img" src="https://image.yituliu.site/ep12/beta_logo_yw.png">
+        <img class="ep12_support_img" src="/img/temp/beta_logo_yw.png">
         <div class="ep12_support_text">
           <div class="ep12_support_org">xxxx</div>
           <div class="ep12_support_role">页面设计</div>
@@ -254,7 +254,7 @@ a {
   /* background-color: rgb(0, 162, 255); */
   max-width: 720px;
   margin: auto;
-  background-image: url(https://image.yituliu.site/ep12/ep12_background2.webp);
+  background-image: url(/img/temp/ep12_background2.webp);
   background-size: 100%;
   color: antiquewhite;
 }
