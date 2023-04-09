@@ -4,8 +4,8 @@
     <div class="title_null"></div>
     <stage />
     <div class="title_null"></div>
-    <!-- <store-value />
-    <div class="title_null"></div> -->
+    <store-value />
+    <div class="title_null"></div>
     <!-- <pack> </pack> -->
     <div class="title_null"></div>
     <item-value />
@@ -29,7 +29,7 @@ import toolApi from "@/api/tool";
 export default {
   components: {
     stage,
-    // StoreValue,
+    StoreValue,
     ItemValue,
     FootComponent,
     ep12,
