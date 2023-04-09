@@ -1,6 +1,6 @@
 <template>
   <div id="gacha">
-    <el-row :gutter="12" justify="center">
+    <el-row :gutter="12" justify="center" class="gacha-row">
       <el-col :xs="24" :sm="16" :md="12">
         <el-collapse v-model="checkBox1" @change="handleChange" class="top-collapse">
           <!-- 总计 -->
@@ -852,7 +852,6 @@
                       <div style="width: 40px" v-show="actRe.permit10 !== 0" :class="getSpriteImg('7004icon', 0)"></div>
                       <div style="width: 54px" v-show="actRe.permit10 !== 0">
                         {{ actRe.permit10 }}
-
                       </div>
                     </div>
                   </el-checkbox-button>
@@ -1499,7 +1498,7 @@ export default {
             this.calResults.orundum_other += list[1].orundum;
             this.calResults.permit_other += list[1].permit;
             this.calResults.permit10_other += list[1].permit10;
-            console.log(list[0])
+            // console.log(list[0]);
           } else if ("act" === list[1].module) {
             //这里是计算活动奖励
             this.calResults.originium_act += list[1].originium; //xxxx_act格式的属性 活动奖励的各项奖励数量，下同
@@ -2022,5 +2021,15 @@ export const documentProps = {
 
 .main-stages {
   max-width: 700px;
+}
+
+#gacha {
+  display: flex;
+  justify-content: center;
+}
+
+.gacha-row {
+  max-width: 1300px;
+  width: 100%;
 }
 </style>
