@@ -46,6 +46,7 @@ export async function onBeforeRender(pageContext) {
     get_closed(),
     get_perm(),
     get_act(),
+    // [],
     get_value(),
     get_newChapter(),
   ]);
