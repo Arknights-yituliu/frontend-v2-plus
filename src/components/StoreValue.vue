@@ -17,7 +17,8 @@
           <div style="display: flex; align-items: flex-end">
             <div
               :class="tagColor[0]"
-              style="height: 45px;
+              style="
+                height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
@@ -31,7 +32,8 @@
             </div>
             <div
               :class="tagColor[1]"
-              style="height: 45px;
+              style="
+                height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
@@ -45,7 +47,8 @@
             </div>
             <div
               :class="tagColor[2]"
-              style="height: 45px;
+              style="
+                height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
@@ -59,7 +62,8 @@
             </div>
             <div
               :class="tagColor[3]"
-              style="height: 45px;
+              style="
+                height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
@@ -73,12 +77,14 @@
             </div>
             <div
               :class="tagColor[4]"
-              style="height: 45px;
+              style="
+                height: 45px;
                 width: 45px;
                 margin: 0px 4px;
                 box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
                 border-radius: 4px;
-                background: #f0f0f0;"
+                background: #f0f0f0;
+              "
               id="store_tag_4"
               @click="switch_store('4')"
             >
@@ -230,7 +236,7 @@
     </div>
 
     <!-- 活动商店 -->
-    <div id="actStore">
+    <div id="actStore" v-if="false">
       <!-- 标题区域 -->
       <div class="op_title">
         <div class="op_title_text">
