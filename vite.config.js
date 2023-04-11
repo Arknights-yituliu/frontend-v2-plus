@@ -34,6 +34,17 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
           axios: "axios",
         }),
       ],
+      output: {
+        manualChunks: (id, { getModuleInfo }) => {
+          if (getModuleInfo(id).isEntry) {
+            if (id.includes("src/renderer")) {
+              return "bundle";
+            }
+          } else if (!id.includes("/src/components/")) {
+            return "bundle";
+          }
+        },
+      },
     };
   }
   return config;
