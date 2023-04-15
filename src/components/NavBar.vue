@@ -1,8 +1,8 @@
 <template>
   <div class="container" >
-    <div style="color:white" @click="menu_collapse(true)">
+    <!-- <div style="color:white" @click="menu_collapse(true)" >
       这里是 <br> 个图标
-    </div>
+    </div> -->
     <a :class="{ activate: homepage }" href="/">材料一图流</a>
     <a :class="{ activate: '/gachaCal' == pageContext.urlPathname }" href="/gachaCal">攒抽规划</a>
     <a :class="{ activate: '/riicCal' == pageContext.urlPathname }" href="/riicCal">排班生成器</a>
