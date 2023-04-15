@@ -60,7 +60,6 @@ const pageContext = usePageContext();
 
 const theme = ref();
 
-console.log(pageContext)
 
 const homepage = computed(() => {
   return "/" == pageContext.urlPathname;
