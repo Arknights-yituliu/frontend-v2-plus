@@ -1,5 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container" >
+    <div style="color:white" @click="menu_collapse(true)">
+      这里是 <br> 个图标
+    </div>
     <a :class="{ activate: homepage }" href="/">材料一图流</a>
     <a :class="{ activate: '/gachaCal' == pageContext.urlPathname }" href="/gachaCal">攒抽规划</a>
     <a :class="{ activate: '/riicCal' == pageContext.urlPathname }" href="/riicCal">排班生成器</a>
@@ -14,7 +17,37 @@
       :inactive-icon="Sunny"
       size="large"
     />
+   
+  <div class="menu_div"> 
+    <div class="menu-collapse" id="menu">
+        <h1>明日方舟一图流</h1>
+        <table>
+          <tbody>
+            <tr>
+              <td >材料一图流</td>
+            </tr>
+            <tr>
+              <td >攒抽规划</td>
+            </tr>
+            <tr>
+              <td >排班生成器</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="menu-mask" v-show="menu_flag"  @click="menu_collapse(false)">
+        
+    </div>
+
   </div>
+
+  
+</div>
+
 </template>
 
 <script setup>
@@ -31,9 +64,24 @@ const homepage = computed(() => {
   return "/" == pageContext.urlPathname;
 });
 
+let menu_flag = ref(false);
+
 onMounted(() => {
   if (homepage.value) theme.value = cookie.get("theme") == "dark";
 });
+
+function menu_collapse(flag) {
+      menu_flag.value = flag;
+      if (menu_flag.value) {
+        document.getElementById("menu").className = "menu-collapse ";
+        setTimeout(function () {
+          document.getElementById("menu").className = "menu-collapse menu-open";
+        }, 30); 
+      } else {
+        document.getElementById("menu").className = "menu-collapse";
+      }
+      console.log(menu_flag.value)
+}
 
 function switchTheme() {
   if (theme.value) {
@@ -124,5 +172,42 @@ a {
 <style>
 .navbar-switch .el-icon {
   font-size: 16px !important;
+}
+
+
+
+.menu_div {
+  display: flex;
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  border: solid red 1px;
+}
+
+.menu-collapse {
+  position: absolute;
+  top:0;
+  transform: translateX(-290px);
+}
+
+.menu-open {
+  background-color: white;
+  width: 200px;
+  height: 1000px;
+  white-space: nowrap;
+  text-align: center;
+  transition: all 0.3s;
+  transform: translateX(0) !important;
+  border: solid red 1px;
+}
+
+.menu-mask{
+  background:rgba(0,0,0,0.6);
+  width: 100%;
+  height: 1000px;
+  border: solid red 1px;
 }
 </style>
