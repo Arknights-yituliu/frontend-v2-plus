@@ -185,7 +185,7 @@ a {
   top: 0;
   left: 0;
   z-index: 200;
-  border: solid red 1px;
+  /* border: solid red 1px; */
 }
 
 .menu-collapse {
@@ -202,13 +202,13 @@ a {
   text-align: center;
   transition: all 0.3s;
   transform: translateX(0) !important;
-  border: solid red 1px;
+  /* border: solid red 1px; */
 }
 
 .menu-mask{
   background:rgba(0,0,0,0.6);
   width: 100%;
   height: 1000px;
-  border: solid red 1px;
+  /* border: solid red 1px; */
 }
 </style>
