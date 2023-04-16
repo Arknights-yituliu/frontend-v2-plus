@@ -1,0 +1,47 @@
+.debt-collapse{
+    margin: auto;
+    max-width: 1080px;
+    font-weight: 800;
+  }
+  
+.universal_module {
+    font-size: 20px;
+    text-align: center;
+    
+}
+
+.gacha_title_icon {
+    padding: 12px;
+    margin: 12px;
+    background: chocolate;
+    border-radius: 4px;
+}
+
+.collapse-item_title {
+    font-size: 24px;
+    padding: 8px 0px;
+    font-weight: 600;
+}
+
+.collapse-item_title_url{
+    font-size: 20px; 
+    color: rgb(136 136 136 / 69%);
+    margin-left: 16px
+}
+
+.input_style{
+  height: 30px;
+  width: 100px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.input_group{
+    display: flex;justify-content:center; flex-wrap: wrap ;
+}
+
+.input_group_item{
+    display: flex;
+    width: 200px;
+    height: 50px;
+}
