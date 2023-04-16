@@ -1,10 +1,17 @@
 <template>
     <div class="debt-collapse">
     <el-collapse v-model="activeNames" @change="handleChange">
-      <el-collapse-item title="上岸时间" name="1">
-        
+      <el-collapse-item  name="1">
+        <template #title>
+              <div class="gacha_title_icon" ></div>
+              <span class="collapse-item_title" >
+                上岸需要{{ calResult.days.toFixed(0) }}天
+              </span>
+              <span class="collapse-item_title_url">yituliu.site</span>
+        </template>
+        <hr>
         <div class="universal_module">
-           <div> 当前零件剩余<input type="text" v-model.number="furniturePartsLoan"></div>
+           <div> 当前零件剩余<input type="text" class="input_style" v-model.number="furniturePartsLoan"></div>
            <div v-show="calResult.days<0">已还清</div>
         </div>
         <div class="universal_module" >
@@ -14,16 +21,44 @@
         </div>
        
       </el-collapse-item>
-      <el-collapse-item title="库存" name="2">
-        <div class="universal_module">
-           碳 <input type="text" v-model.number="carbonStick" @change="cal()"><br>
-           碳素 <input type="text" v-model.number="carbonBrick" @change="cal()"><br>
-           碳素组 <input type="text" v-model.number="carbonPack" @change="cal()"><br>
-           是否拆解碳<el-switch v-model="cabronFlag" @change="cal()"></el-switch>
-           扣除库存后需要还{{ loansRepaid }} 个零件
+      <el-collapse-item  name="2">
+        <template #title>
+              <div class="gacha_title_icon" ></div>
+              <span class="collapse-item_title" >
+                库存
+              </span>
+            
+        </template>
+        <hr>
+        <div class="universal_module" >
+           <div class="input_group" >
+           <div class="input_group_item" >
+              <div style="width:70px">碳</div>
+              <input type="text" class="input_style" v-model.number="carbonStick" @change="cal()">
+            </div>
+            <div class="input_group_item" >  
+              <div style="width:70px">碳素 </div>
+              <input type="text" class="input_style" v-model.number="carbonBrick" @change="cal()">
+            </div>
+            <div class="input_group_item" >
+              <div style="width:70px">碳素组</div>
+              <input type="text" class="input_style" v-model.number="carbonPack" @change="cal()">
+           </div>
+           </div>
+        
+        <div>是否拆解碳<el-switch v-model="cabronFlag" @change="cal()"></el-switch></div>
+        扣除库存后需要还{{ loansRepaid }} 个零件
         </div>
       </el-collapse-item>
-      <el-collapse-item title="日常任务" name="3">
+      <el-collapse-item  name="3">
+        <template #title>
+              <div class="gacha_title_icon" ></div>
+              <span class="collapse-item_title" >
+                日常任务
+              </span>
+            
+        </template>
+        <hr>
         <div class="universal_module">
             <div>每日任务总计获得{{  calResult.daysParts.toFixed(0) }}零件</div>
             <div>每周任务总计获得{{ calResult.weeklyParts.toFixed(0) }}零件</div>
@@ -31,9 +66,17 @@
         </div>
        
       </el-collapse-item>
-      <el-collapse-item title="SK5刷取零件" name="4">
+      <el-collapse-item  name="4">
+        <template #title>
+              <div class="gacha_title_icon" ></div>
+              <span class="collapse-item_title" >
+                SK5额外刷取零件
+              </span>
+            
+        </template>
+        <hr>
         <div class="universal_module">
-            每天刷 <input type="text" v-model.number="SK5Times" @change="cal()">次SK5<br>
+            每天刷 <input type="text" class="input_style" v-model.number="SK5Times" @change="cal()">次SK5<br>
         </div>
       
       </el-collapse-item>
@@ -68,9 +111,8 @@ let  WeeklyTaskRewards  = 35.7;  //每周平均每天获取的零件
 let  check_in_monthlyRewards = 6.93;  //每月签到平均每天获取的家具零件
 
 let  CertStore = 16.7;   //凭证商店平均每天获取的零件
-let  SK5Times = ref(8);
+let  SK5Times = ref(1);  //刷碳本次数
 
-let apFlag = ref(true);  //判断是否刷SK5
 let cabronFlag = ref(false);  //判断是否拆碳
 
 function cal(){
@@ -125,18 +167,3 @@ onMounted(()=>{
 
 </script>
 
-<style>
-.debt-collapse{
-  margin: auto;
-  max-width: 1080px;
-  font-weight: 800;
-}
-
-.universal_module {
-  font-size: 20px;
-  text-align: center;
-}
-
-
-
-</style>

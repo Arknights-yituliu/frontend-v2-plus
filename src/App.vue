@@ -24,6 +24,7 @@ import "@/assets/css/sprite_item_large.css";
 import "@/assets/css/sprite_index.css";
 import "@/assets/css/sprite_gacha.css";
 import "@/assets/css/sprite_icon.css";
+import "@/assets/css/debt.css";
 
 // 旧版css，待修改
 import "@/assets/css/item.css";
