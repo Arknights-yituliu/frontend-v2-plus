@@ -34,6 +34,8 @@
   width: 100px;
   font-size: 20px;
   text-align: center;
+  border: solid 1px black;
+  border-radius: 5px;
 }
 
 .input_group{
