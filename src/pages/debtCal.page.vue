@@ -144,12 +144,12 @@ const handleChange = (val) => {
 };
 
 onMounted(() => {
-  furniturePartsLoan.value = localStorage.getItem("furniturePartsLoan") || 0;
-  carbonStick.value = localStorage.getItem("carbonStick") || 0;
-  carbonBrick.value = localStorage.getItem("carbonBrick") || 0;
-  carbonPack.value = localStorage.getItem("carbonPack") || 0;
+  furniturePartsLoan.value = parseInt(localStorage.getItem("furniturePartsLoan")) || 0;
+  carbonStick.value = parseInt(localStorage.getItem("carbonStick")) || 0;
+  carbonBrick.value = parseInt(localStorage.getItem("carbonBrick")) || 0;
+  carbonPack.value = parseInt(localStorage.getItem("carbonPack")) || 0;
   cabronFlag.value = (localStorage.getItem("cabronFlag") || false) == "true";
-  SK5Times.value = localStorage.getItem("SK5Times") || 0;
+  SK5Times.value = parseInt(localStorage.getItem("SK5Times")) || 0;
   cal();
 });
 
