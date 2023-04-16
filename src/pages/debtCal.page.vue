@@ -113,7 +113,7 @@ let  check_in_monthlyRewards = 6.93;  //每月签到平均每天获取的家具�
 let  CertStore = 16.7;   //凭证商店平均每天获取的零件
 let  SK5Times = ref(1);  //刷碳本次数
 
-let cabronFlag = ref(false);  //判断是否拆碳
+let cabronFlag = ref(true);  //判断是否拆碳
 
 function cal(){
        
