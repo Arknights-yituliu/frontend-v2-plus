@@ -1,19 +1,45 @@
 <template>
-    <div style="background-color: aliceblue;">
-    <button @click="cal()">计算</button><br>
-    贷款零件<input type="text" v-model.number="furniturePartsLoan"><br>
-    碳 <input type="text" v-model.number="carbonStick"><br>
-    碳素 <input type="text" v-model.number="carbonBrick"><br>
-    碳素组 <input type="text" v-model.number="carbonPack"><br>
-    是否拆解碳<el-switch v-model="cabronFlag"></el-switch>
-    是否刷SK5<el-switch v-model="apFlag"></el-switch>
-    <div>需要{{ calResult.days.toFixed(0) }}天</div>
-    <div>需要{{ calResult.apCost.toFixed(0) }}理智</div>
-    <div>每日任务获得{{   }}天</div>
-    <div>每周任务获得{{ calResult.apCost.toFixed(0) }}理智</div>
-    <div>每月签到大约{{ calResult.days.toFixed(0) }}天</div>
-    <div>{{ calResult.apCost.toFixed(0) }}理智</div>
-   </div>
+    <div class="debt-collapse">
+    <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse-item title="上岸时间" name="1">
+        
+        <div class="universal_module">
+           <div> 当前零件剩余<input type="text" v-model.number="furniturePartsLoan"></div>
+           <div v-show="calResult.days<0">已还清</div>
+        </div>
+        <div class="universal_module" >
+           <div>还清需要{{ calResult.days.toFixed(0) }}天</div>
+           <div>需要{{ calResult.apCost.toFixed(0) }}理智</div>
+           <div>拆解需要{{ calResult.lmdCost.toFixed(0) }}龙门币</div>
+        </div>
+       
+      </el-collapse-item>
+      <el-collapse-item title="库存" name="2">
+        <div class="universal_module">
+           碳 <input type="text" v-model.number="carbonStick" @change="cal()"><br>
+           碳素 <input type="text" v-model.number="carbonBrick" @change="cal()"><br>
+           碳素组 <input type="text" v-model.number="carbonPack" @change="cal()"><br>
+           是否拆解碳<el-switch v-model="cabronFlag" @change="cal()"></el-switch>
+           扣除库存后需要还{{ loansRepaid }} 个零件
+        </div>
+      </el-collapse-item>
+      <el-collapse-item title="日常任务" name="3">
+        <div class="universal_module">
+            <div>每日任务总计获得{{  calResult.daysParts.toFixed(0) }}零件</div>
+            <div>每周任务总计获得{{ calResult.weeklyParts.toFixed(0) }}零件</div>
+            <div>每月签到总计获得大约{{ calResult.monthlyParts.toFixed(0) }}零件</div>
+        </div>
+       
+      </el-collapse-item>
+      <el-collapse-item title="SK5刷取零件" name="4">
+        <div class="universal_module">
+            每天刷 <input type="text" v-model.number="SK5Times" @change="cal()">次SK5<br>
+        </div>
+      
+      </el-collapse-item>
+    </el-collapse>
+  </div>
+
 
 </template>
 
@@ -26,40 +52,71 @@ let calResult = ref({
     days:0,
     apCost:0,
     lmdCost:0,
+    daysParts:0,
+    weeklyParts:0,
+    monthlyParts:0,
 });  //计算结果对象
 
-let furniturePartsLoan  = ref(-10000)  //家具币的贷款
+let  furniturePartsLoan  = ref(-10000)  //家具币的贷款
 let  carbonStick = ref(1000)  //库存碳  -家具币4
 let  carbonBrick = ref(0)  //库存碳素  -家具币8
 let  carbonPack = ref(0)  //库存碳素组  -家具币12
+let  loansRepaid  = ref(0)  //待偿还贷款
 
-let  DailyTasksRewards = ref(72);  //每日获取的家具零件
-let  WeeklyTaskRewards  = ref(35.7);  //每周平均每天获取的零件
-let  check_in_monthlyRewards = ref(72);  //每月签到平均每天获取的家具零件
+let  DailyTasksRewards = 72;  //每日获取的家具零件
+let  WeeklyTaskRewards  = 35.7;  //每周平均每天获取的零件
+let  check_in_monthlyRewards = 6.93;  //每月签到平均每天获取的家具零件
 
-let  CertStore = ref(16.7);   //凭证商店平均每天获取的零件
-let  SK5Rewards = ref(457.1);   //体力全刷SK5平均每天获取的零件
+let  CertStore = 16.7;   //凭证商店平均每天获取的零件
+let  SK5Times = ref(8);
 
 let apFlag = ref(true);  //判断是否刷SK5
 let cabronFlag = ref(false);  //判断是否拆碳
 
 function cal(){
        
-    let difference =  furniturePartsLoan.value ;  //计算真实需要去还的贷款
-    if(!cabronFlag.value) {
-        difference +=  (carbonStick.value ) * 4 + carbonBrick.value * 8  + carbonPack.value * 12; //如果选择不拆碳就不计算
-        DailyTasksRewards.value -= 12; //每日奖励有一部分是碳 
+    calResult.value = {
+      days:0,
+      apCost:0,
+      lmdCost:0,
+      daysParts:0,
+      weeklyParts:0,
+      monthlyParts:0,
+    };  //计算结果对象
+
+    loansRepaid.value =  furniturePartsLoan.value ;  //计算真实需要去还的贷款
+    
+    if(cabronFlag.value) {  //拆解碳
+        loansRepaid.value +=  carbonStick.value  * 4 + carbonBrick.value * 8  + carbonPack.value * 12; //计算碳可拆解多少零件
+        calResult.value.lmdCost = (carbonStick.value  + carbonBrick.value + carbonPack.value) * 100;   //拆解碳的龙门币消耗
+    } else {  //不拆解碳
+        DailyTasksRewards = 60; //每日奖励扣除碳之后的奖励
+        check_in_monthlyRewards = 4.67; //每月奖励扣除碳之后的奖励
     }  
-    if(!apFlag.value) SK5Rewards = 0;  //如果选择不刷SK5，奖励归零
+
+       let SK5Rewards = 50 * SK5Times.value;  //SK5每局50个零件
       
+       console.log(loansRepaid.value)
 
-       difference = difference>0?difference:-difference;
-       calResult.value.days = difference / (DailyTasksRewards + WeeklyTaskRewards + CertStore + SK5Rewards); //计算需要多少天上岸
+       calResult.value.days = -loansRepaid.value / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore + SK5Rewards); //计算需要多少天上岸
+     
        calResult.value.apCost = calResult.value.days * SK5Rewards / 1.667;   //计算花费体力
-       console.log(calResult.value.days);
+       calResult.value.daysParts = calResult.value.days * DailyTasksRewards;  //计算每日获得多少零件
+       calResult.value.weeklyParts = calResult.value.days * WeeklyTaskRewards;   //计算每周获得多少零件
+       calResult.value.monthlyParts = calResult.value.days * check_in_monthlyRewards;   //计算每月获得多少零件
 
+    if(cabronFlag.value) {
+        calResult.value.lmdCost += (calResult.value.days * 3 * 100 )  //如果选择拆解零件则需计算每日赠送的碳的龙门币消耗
+    }
+       
+       console.log(calResult.value.days);
+         
 }
 
+const activeNames = ref(['1','2','3','4','5'])
+const handleChange = (val) => {
+  console.log(val)
+}
 
 onMounted(()=>{
    
@@ -67,3 +124,19 @@ onMounted(()=>{
 })
 
 </script>
+
+<style>
+.debt-collapse{
+  margin: auto;
+  max-width: 1080px;
+  font-weight: 800;
+}
+
+.universal_module {
+  font-size: 20px;
+  text-align: center;
+}
+
+
+
+</style>
