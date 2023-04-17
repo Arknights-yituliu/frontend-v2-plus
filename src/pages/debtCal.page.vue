@@ -112,7 +112,7 @@ function cal() {
 
   if (cabronFlag.value) {
     //拆解碳
-    loansRepaid.value -= carbonStick.value * 4 - carbonBrick.value * 8 - carbonPack.value * 12; //计算碳可拆解多少零件
+    loansRepaid.value -= carbonStick.value * 4 + carbonBrick.value * 8 + carbonPack.value * 12; //计算碳可拆解多少零件
     calResult.value.lmdCost = (carbonStick.value + carbonBrick.value + carbonPack.value) * 100; //拆解碳的龙门币消耗
   } else {
     //不拆解碳
