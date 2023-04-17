@@ -83,7 +83,7 @@ let calResult = ref({
 }); //计算结果对象
 
 let furniturePartsLoan = ref(0); //家具币的贷款
-let carbonStick = ref(1000); //库存碳  -家具币4
+let carbonStick = ref(0); //库存碳  -家具币4
 let carbonBrick = ref(0); //库存碳素  -家具币8
 let carbonPack = ref(0); //库存碳素组  -家具币12
 let loansRepaid = ref(0); //待偿还贷款
@@ -106,12 +106,13 @@ function cal() {
     weeklyParts: 0,
     monthlyParts: 0,
   }; //计算结果对象
-
-  loansRepaid.value = furniturePartsLoan.value; //计算真实需要去还的贷款
+  
+  
+  loansRepaid.value = furniturePartsLoan.value > 0 ? furniturePartsLoan.value : -furniturePartsLoan.value; //计算真实需要去还的贷款
 
   if (cabronFlag.value) {
     //拆解碳
-    loansRepaid.value += carbonStick.value * 4 + carbonBrick.value * 8 + carbonPack.value * 12; //计算碳可拆解多少零件
+    loansRepaid.value -= carbonStick.value * 4 - carbonBrick.value * 8 - carbonPack.value * 12; //计算碳可拆解多少零件
     calResult.value.lmdCost = (carbonStick.value + carbonBrick.value + carbonPack.value) * 100; //拆解碳的龙门币消耗
   } else {
     //不拆解碳
@@ -123,8 +124,10 @@ function cal() {
 
   console.log(loansRepaid.value);
 
+  
+
   calResult.value.days =
-    -loansRepaid.value / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore + SK5Rewards); //计算需要多少天上岸
+    loansRepaid.value / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore + SK5Rewards); //计算需要多少天上岸
 
   calResult.value.apCost = (calResult.value.days * SK5Rewards) / 1.667; //计算花费体力
   calResult.value.daysParts = calResult.value.days * DailyTasksRewards; //计算每日获得多少零件
@@ -132,7 +135,7 @@ function cal() {
   calResult.value.monthlyParts = calResult.value.days * check_in_monthlyRewards; //计算每月获得多少零件
 
   if (cabronFlag.value) {
-    calResult.value.lmdCost += calResult.value.days * 3 * 100; //如果选择拆解零件则需计算每日赠送的碳的龙门币消耗
+    calResult.value.lmdCost += parseInt(calResult.value.days) * 3 * 100; //如果选择拆解零件则需计算每日赠送的碳的龙门币消耗
   }
 
   console.log(calResult.value.days);
