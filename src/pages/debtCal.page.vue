@@ -13,7 +13,7 @@
           <div v-show="calResult.weeks < 0">已还清</div>
         </div>
         <div class="universal_module">
-          <div>{{ calResult.weeks.toFixed(0) }}周后可还清</div>
+          <div v-show="calResult.weeks > 0">{{ calResult.weeks.toFixed(0) }}周后可还清</div>
           <div>拆碳还债<el-switch v-model="cabronFlag" @change="cal()"></el-switch></div>
           <div>{{ calResult.lmdCost.toFixed(0) }}龙门币可拆{{furniturePartsByCarbon}}零件，尚欠{{ loansRepaid }}个零件</div>
           <div class="universal_module">
@@ -62,15 +62,15 @@
 import { onMounted, ref, watch } from "vue";
 
 let calResult = ref({
-    weeks: 0,
-    apCost: 0,
-    dailyCarbon:0,
-    dailyParts: 0,
-    dailyPartsByCarbon:0,
-    weeklyParts: 0,
-    monthlyParts: 0,
-    CertStoreParts:0,
-    lmdCost: 0,
+    weeks: 0,  //要多少周还清
+    apCost: 0,  //消耗多少理智
+    dailyCarbon:0, //每日任务的碳个数  
+    dailyParts: 0,  //每日任务的零件
+    dailyPartsByCarbon:0, //每日任务的碳拆解后的零件个数
+    weeklyParts: 0, //每周任务的零件
+    monthlyParts: 0, //每日任务的零件
+    CertStoreParts:0, //凭证商店的零件
+    lmdCost: 0,  //龙门币消耗
     lmdCost_daily:0,
 }); //计算结果对象
 
@@ -121,18 +121,16 @@ function cal() {
     check_in_monthlyRewards = 20; //每月奖励扣除碳之后的奖励
   }
 
-  let SK5Rewards = 50 * SK5Times.value; //SK5每局50个零件
+  console.log('每周获得:',loansRepaid.value - (SK5Times.value  * 50 ) );
 
- 
-
+  calResult.value.weeks = (loansRepaid.value - (SK5Times.value  * 50 ) ) / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards 
+  + CertStore ); //计算需要多少天上岸
   
+  console.log('每周获得:',DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore );
 
-  calResult.value.weeks = loansRepaid.value / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards 
-  + CertStore + SK5Rewards); //计算需要多少天上岸
-  console.log('每日获得:',DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards 
-  + CertStore + SK5Rewards);
-        let  weeksOfRepayment  = parseInt(calResult.value.weeks)
-  calResult.value.apCost = (weeksOfRepayment * SK5Rewards) / 1.667; //计算花费体力
+  let  weeksOfRepayment  = parseInt(calResult.value.weeks)
+
+  calResult.value.apCost = SK5Times.value * 30; //计算花费体力
   calResult.value.dailyParts = weeksOfRepayment * DailyTasksRewards; //计算每日获得多少零件
   calResult.value.weeklyParts = weeksOfRepayment * WeeklyTaskRewards; //计算每周获得多少零件
   calResult.value.monthlyParts = weeksOfRepayment * check_in_monthlyRewards; //计算每月获得多少零件
