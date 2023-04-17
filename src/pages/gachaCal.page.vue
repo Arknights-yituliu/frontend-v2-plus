@@ -1115,7 +1115,7 @@ export default {
       pageTheme: "light",
       itemList: [],
       checkBox1: ["0"],
-      checkBox: ["0", "1", "3", "6"], //折叠栏绑定数组
+      checkBox: ["1", "2","5","6"], //折叠栏绑定数组
       // checkBox: ["1","7"],
       rewardType: "联动限定", //奖励的类型
       startDate: "", //开始时间
