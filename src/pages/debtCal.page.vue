@@ -4,27 +4,19 @@
       <el-collapse-item name="1">
         <template #title>
           <div class="gacha_title_icon"></div>
-          <span class="collapse-item_title"> 上岸需要{{ calResult.days.toFixed(0) }}天 </span>
+          <span class="collapse-item_title"> 仅需{{ calResult.days.toFixed(0) }}天即可还清欠款！ </span>
           <span class="collapse-item_title_url">yituliu.site</span>
         </template>
         <hr />
         <div class="universal_module">
-          <div>当前零件剩余<input type="text" class="input_style" v-model.number="furniturePartsLoan" /></div>
+          <div>当前负债总额<input type="text" class="input_style" v-model.number="furniturePartsLoan" /></div>
           <div v-show="calResult.days < 0">已还清</div>
         </div>
         <div class="universal_module">
-          <div>还清需要{{ calResult.days.toFixed(0) }}天</div>
-          <div>需要{{ calResult.apCost.toFixed(0) }}理智</div>
-          <div>拆解需要{{ calResult.lmdCost.toFixed(0) }}龙门币</div>
-        </div>
-      </el-collapse-item>
-      <el-collapse-item name="2">
-        <template #title>
-          <div class="gacha_title_icon"></div>
-          <span class="collapse-item_title"> 库存 </span>
-        </template>
-        <hr />
-        <div class="universal_module">
+          <div>{{ calResult.days.toFixed(0) }}天后可还清</div>
+          <div>拆碳还债<el-switch v-model="cabronFlag" @change="cal()"></el-switch></div>
+          <div>{{ calResult.lmdCost.toFixed(0) }}龙门币可拆xxx零件，尚欠{{ loansRepaid }}个零件</div>
+          <div class="universal_module">
           <div class="input_group">
             <div class="input_group_item">
               <div style="width: 70px">碳</div>
@@ -39,33 +31,27 @@
               <input type="text" class="input_style" v-model.number="carbonPack" @change="cal()" />
             </div>
           </div>
-
-          <div>是否拆解碳<el-switch v-model="cabronFlag" @change="cal()"></el-switch></div>
-          扣除库存后需要还{{ loansRepaid }} 个零件
+          <div class="universal_module">
+            打工还债，刷 <input type="text" class="input_style" v-model.number="SK5Times" @change="cal()" />次SK5，需要{{ calResult.apCost.toFixed(0) }}理智<br />
+        </div>
+        </div>
         </div>
       </el-collapse-item>
+
       <el-collapse-item name="3">
         <template #title>
           <div class="gacha_title_icon"></div>
-          <span class="collapse-item_title"> 日常任务 </span>
+          <span class="collapse-item_title"> 详情 </span>
         </template>
         <hr />
         <div class="universal_module">
           <div>每日任务总计获得{{ calResult.daysParts.toFixed(0) }}零件</div>
           <div>每周任务总计获得{{ calResult.weeklyParts.toFixed(0) }}零件</div>
           <div>每月签到总计获得大约{{ calResult.monthlyParts.toFixed(0) }}零件</div>
+          <div>拆碳获得{{ calResult.monthlyParts.toFixed(0) }}零件，花费{{ calResult.lmdCost.toFixed(0) }}龙门币</div>
         </div>
       </el-collapse-item>
-      <el-collapse-item name="4">
-        <template #title>
-          <div class="gacha_title_icon"></div>
-          <span class="collapse-item_title"> SK5额外刷取零件 </span>
-        </template>
-        <hr />
-        <div class="universal_module">
-          每天刷 <input type="text" class="input_style" v-model.number="SK5Times" @change="cal()" />次SK5<br />
-        </div>
-      </el-collapse-item>
+
     </el-collapse>
   </div>
 </template>
