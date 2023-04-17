@@ -15,7 +15,7 @@
         <div class="universal_module">
           <div>{{ calResult.days.toFixed(0) }}天后可还清</div>
           <div>拆碳还债<el-switch v-model="cabronFlag" @change="cal()"></el-switch></div>
-          <div>{{ calResult.lmdCost.toFixed(0) }}龙门币可拆xxx零件，尚欠{{ loansRepaid }}个零件</div>
+          <div>{{ calResult.lmdCost.toFixed(0) }}龙门币可拆{{furniturePartsByCarbon}}零件，尚欠{{ loansRepaid }}个零件</div>
           <div class="universal_module">
           <div class="input_group">
             <div class="input_group_item">
@@ -45,10 +45,10 @@
         </template>
         <hr />
         <div class="universal_module">
-          <div>每日任务总计获得{{ calResult.daysParts.toFixed(0) }}零件</div>
+          <div>每日任务总计获得{{ calResult.dailyParts.toFixed(0) }}零件</div>
           <div>每周任务总计获得{{ calResult.weeklyParts.toFixed(0) }}零件</div>
           <div>每月签到总计获得大约{{ calResult.monthlyParts.toFixed(0) }}零件</div>
-          <div>拆碳获得{{ calResult.monthlyParts.toFixed(0) }}零件，花费{{ calResult.lmdCost.toFixed(0) }}龙门币</div>
+          <div>每日任务获得{{ calResult.dailyCarbon }}个碳，消耗{{ calResult.lmdCost_daily }}龙门币获得{{ calResult.dailyPartsByCarbon }}零件，</div>
         </div>
       </el-collapse-item>
 
@@ -63,7 +63,7 @@ let calResult = ref({
   days: 0,
   apCost: 0,
   lmdCost: 0,
-  daysParts: 0,
+  dailyParts: 0,
   weeklyParts: 0,
   monthlyParts: 0,
 }); //计算结果对象
@@ -73,6 +73,7 @@ let carbonStick = ref(0); //库存碳  -家具币4
 let carbonBrick = ref(0); //库存碳素  -家具币8
 let carbonPack = ref(0); //库存碳素组  -家具币12
 let loansRepaid = ref(0); //待偿还贷款
+let furniturePartsByCarbon = ref(0);
 
 let DailyTasksRewards = 72; //每日获取的家具零件
 let WeeklyTaskRewards = 35.7; //每周平均每天获取的零件
@@ -88,9 +89,13 @@ function cal() {
     days: 0,
     apCost: 0,
     lmdCost: 0,
-    daysParts: 0,
+    dailyCarbon:0,
+    dailyParts: 0,
+    dailyPartsByCarbon:0,
     weeklyParts: 0,
     monthlyParts: 0,
+    lmdCost_daily:0,
+    
   }; //计算结果对象
   
   
@@ -98,38 +103,43 @@ function cal() {
 
   if (cabronFlag.value) {
     //拆解碳
-    loansRepaid.value -= carbonStick.value * 4 + carbonBrick.value * 8 + carbonPack.value * 12; //计算碳可拆解多少零件
+    furniturePartsByCarbon.value = carbonStick.value * 4 + carbonBrick.value * 8 + carbonPack.value * 12
+    loansRepaid.value -=furniturePartsByCarbon.value ; //计算碳可拆解多少零件
     calResult.value.lmdCost = (carbonStick.value + carbonBrick.value + carbonPack.value) * 100; //拆解碳的龙门币消耗
+    DailyTasksRewards = 72; //每日奖励扣除碳之后的奖励
+    check_in_monthlyRewards = 6.93; //每月奖励扣除碳之后的奖励
   } else {
     //不拆解碳
+    furniturePartsByCarbon.value = 0;
     DailyTasksRewards = 60; //每日奖励扣除碳之后的奖励
     check_in_monthlyRewards = 4.67; //每月奖励扣除碳之后的奖励
   }
 
   let SK5Rewards = 50 * SK5Times.value; //SK5每局50个零件
 
-  console.log(loansRepaid.value);
+ 
 
   
 
-  calResult.value.days =
-    loansRepaid.value / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore + SK5Rewards); //计算需要多少天上岸
-
+  calResult.value.days =loansRepaid.value / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards 
+  + CertStore + SK5Rewards); //计算需要多少天上岸
+  console.log('每日获得:',DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards 
+  + CertStore + SK5Rewards);
   calResult.value.apCost = (calResult.value.days * SK5Rewards) / 1.667; //计算花费体力
-  calResult.value.daysParts = calResult.value.days * DailyTasksRewards; //计算每日获得多少零件
+  calResult.value.dailyParts = calResult.value.days * DailyTasksRewards; //计算每日获得多少零件
   calResult.value.weeklyParts = calResult.value.days * WeeklyTaskRewards; //计算每周获得多少零件
   calResult.value.monthlyParts = calResult.value.days * check_in_monthlyRewards; //计算每月获得多少零件
 
   if (cabronFlag.value) {
-    calResult.value.lmdCost += parseInt(calResult.value.days) * 3 * 100; //如果选择拆解零件则需计算每日赠送的碳的龙门币消耗
+    calResult.value.dailyCarbon = parseInt(calResult.value.days) * 3
+    calResult.value.dailyPartsByCarbon = parseInt(calResult.value.days) * 12;
+    calResult.value.lmdCost_daily = parseInt(calResult.value.days) * 3 * 100; //如果选择拆解零件则需计算每日赠送的碳的龙门币消耗
   }
 
-  console.log(calResult.value.days);
 }
 
 const activeNames = ref(["1", "2", "3", "4", "5"]);
 const handleChange = (val) => {
-  console.log(val);
 };
 
 onMounted(() => {
