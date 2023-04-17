@@ -1,12 +1,10 @@
 <template>
   <div class="debt-collapse">
-    <el-collapse v-model="activeNames" @change="handleChange">
-      <el-collapse-item name="1">
-        <template #title>
+    
           <div class="gacha_title_icon"></div>
           <span class="collapse-item_title"> 仅需{{ calResult.weeks.toFixed(0) }}周即可还清欠款！ </span>
           <span class="collapse-item_title_url">yituliu.site</span>
-        </template>
+        
         <hr />
         <div class="universal_module">
           <div>当前负债总额<input type="text" class="input_style" v-model.number="furniturePartsLoan" /></div>
@@ -36,25 +34,21 @@
         </div>
         </div>
         </div>
-      </el-collapse-item>
-
-      <el-collapse-item name="3">
-        <template #title>
+    
           <div class="gacha_title_icon"></div>
           <span class="collapse-item_title"> 详情 </span>
-        </template>
+        
         <hr />
         <div class="universal_module">
-          <div>每日任务总计获得{{ calResult.dailyParts.toFixed(0) }}零件</div>
-          <div>每周任务总计获得{{ calResult.weeklyParts.toFixed(0) }}零件</div>
-          <div>每月签到总计获得大约{{ calResult.monthlyParts.toFixed(0) }}零件</div>
+          <div>刷{{ SK5Times }}次SK5可得{{ SK5Times * 50 }}零件</div>
+          <div>每日任务总计获得{{ calResult.dailyTaskParts.toFixed(0) }}零件</div>
+          <div>每周任务总计获得{{ calResult.weeklyTaskParts.toFixed(0) }}零件</div>
+          <div>每月签到总计获得大约{{ calResult.monthlyTaskParts.toFixed(0) }}零件</div>
           <div>绿票商店总计获得大约{{ calResult.CertStoreParts.toFixed(0) }}零件</div>
-          <div>每日任务获得{{ calResult.dailyCarbon }}个碳，消耗{{ calResult.lmdCost_daily }}龙门币获得{{ calResult.dailyPartsByCarbon }}零件，</div>
+          <div>每日任务获得{{ calResult.dailyTaskCarbon }}个碳，消耗{{ calResult.lmdCost_daily }}龙门币获得{{ calResult.dailyTaskPartsByCarbon }}零件，</div>
           
         </div>
-      </el-collapse-item>
-
-    </el-collapse>
+     
   </div>
 </template>
 
@@ -64,11 +58,11 @@ import { onMounted, ref, watch } from "vue";
 let calResult = ref({
     weeks: 0,  //要多少周还清
     apCost: 0,  //消耗多少理智
-    dailyCarbon:0, //每日任务的碳个数  
-    dailyParts: 0,  //每日任务的零件
-    dailyPartsByCarbon:0, //每日任务的碳拆解后的零件个数
-    weeklyParts: 0, //每周任务的零件
-    monthlyParts: 0, //每日任务的零件
+    dailyTaskCarbon:0, //每日任务的碳个数  
+    dailyTaskParts: 0,  //每日任务的零件
+    dailyTaskPartsByCarbon:0, //每日任务的碳拆解后的零件个数
+    weeklyTaskParts: 0, //每周任务的零件
+    monthlyTaskParts: 0, //每日任务的零件
     CertStoreParts:0, //凭证商店的零件
     lmdCost: 0,  //龙门币消耗
     lmdCost_daily:0,
@@ -94,11 +88,11 @@ function cal() {
   calResult.value = {
     weeks: 0,
     apCost: 0,
-    dailyCarbon:0,
-    dailyParts: 0,
-    dailyPartsByCarbon:0,
-    weeklyParts: 0,
-    monthlyParts: 0,
+    dailyTaskCarbon:0,
+    dailyTaskParts: 0,
+    dailyTaskPartsByCarbon:0,
+    weeklyTaskParts: 0,
+    monthlyTaskParts: 0,
     CertStoreParts:0,
     lmdCost: 0,
     lmdCost_daily:0,
@@ -125,20 +119,22 @@ function cal() {
 
   calResult.value.weeks = (loansRepaid.value - (SK5Times.value  * 50 ) ) / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards 
   + CertStore ); //计算需要多少天上岸
+
+  
   
   console.log('每周获得:',DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore );
 
   let  weeksOfRepayment  = parseInt(calResult.value.weeks)
 
   calResult.value.apCost = SK5Times.value * 30; //计算花费体力
-  calResult.value.dailyParts = weeksOfRepayment * DailyTasksRewards; //计算每日获得多少零件
-  calResult.value.weeklyParts = weeksOfRepayment * WeeklyTaskRewards; //计算每周获得多少零件
-  calResult.value.monthlyParts = weeksOfRepayment * check_in_monthlyRewards; //计算每月获得多少零件
+  calResult.value.dailyTaskParts = weeksOfRepayment * DailyTasksRewards; //计算每日获得多少零件
+  calResult.value.weeklyTaskParts = weeksOfRepayment * WeeklyTaskRewards; //计算每周获得多少零件
+  calResult.value.monthlyTaskParts = weeksOfRepayment * check_in_monthlyRewards; //计算每月获得多少零件
   calResult.value.CertStoreParts = weeksOfRepayment * CertStore; //计算绿票商店获得多少零件
 
   if (cabronFlag.value) {
-    calResult.value.dailyCarbon = weeksOfRepayment * 21
-    calResult.value.dailyPartsByCarbon = weeksOfRepayment * 84;
+    calResult.value.dailyTaskCarbon = weeksOfRepayment * 21
+    calResult.value.dailyTaskPartsByCarbon = weeksOfRepayment * 84;
     calResult.value.lmdCost_daily = weeksOfRepayment * 21 * 100; //如果选择拆解零件则需计算每日赠送的碳的龙门币消耗
   }
 
