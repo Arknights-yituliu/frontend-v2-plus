@@ -1,6 +1,6 @@
 import request from "@/api/request";
 
-const api_name = `/api`;
+const api_name = ``;
 
 export default {
   //根据材料类型查询关卡效率按关卡效率降序 蓝材料
@@ -37,6 +37,13 @@ export default {
   findAllStageEfficiency() {
     return request({
       url: `${api_name}/find/stage/all`,
+      method: "get",
+    });
+  },
+
+  findStageDetailByStageCode(stageCode) {
+    return request({
+      url: `/stage/detail?stageCode=${stageCode}`,
       method: "get",
     });
   },
