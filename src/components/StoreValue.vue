@@ -236,7 +236,7 @@
     </div>
 
     <!-- 活动商店 -->
-    <div id="actStore" v-if="false">
+    <div id="actStore" v-if="true">
       <!-- 标题区域 -->
       <div class="op_title">
         <div class="op_title_text">
