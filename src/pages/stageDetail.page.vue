@@ -124,7 +124,7 @@ function pieChart(data) {
           {
             name: "产出占比",
             type: "pie",
-            radius: "65%",
+            radius: "60%",
             center: ["50%", "50%"],
             
             label: {

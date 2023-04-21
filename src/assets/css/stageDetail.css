@@ -10,7 +10,7 @@
 }
 
 .checkBox{
-   width: 530px;
+   width: 510px;
 }
 
 .stageDetaol_title{
@@ -34,7 +34,7 @@
 }
 
 .zoneId{
-    width: 160px;
+    width: 155px;
     margin: 3px;
     font-size: 14px;
 }
@@ -68,6 +68,6 @@
 
 .pieChartBlock {
     border: solid 1px rgb(0, 132, 255);
-    width: 530px;
-    height: 530px;  
+    width: 550px;
+    height: 550px;  
 }
