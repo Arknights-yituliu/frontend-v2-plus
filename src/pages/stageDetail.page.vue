@@ -1,7 +1,7 @@
 <template>
     
     <div class="stageDetail_main">
-      <div class="stageDetaol_title"><a class="button_select">查看副产物详情</a>  <el-switch @click="changePie()" v-model="by_product_flag"></el-switch>
+      <div class="stageDetaol_title"><a class="button_select">查看其他产物详情</a>  <el-switch @click="changePie()" v-model="by_product_flag"></el-switch>
       <br> <a class="button_select">{{stageCode}}的理智转化效率是{{ stageEff }}%</a></div>
       <div class="checkBox">
       <div class="stageTable">
@@ -83,7 +83,9 @@ function findStageDetailByStageCode(stageIdStr){
           
           let describption = element.itemName + ''         
           if(ratio>10)  {
-             if(stageIdStr.indexOf('act')==-1&&stageIdStr.indexOf('perm')!= -1) by_product -= ratio
+             if(stageIdStr.indexOf('act')==-1||stageIdStr.indexOf('perm')!= -1) {
+                  by_product -= ratio;
+             }
              describption = describption +"\n占"+ ratio.toFixed(1) + "%"
             setNestPieChart('inside',ratio,describption); 
           } 
@@ -95,8 +97,10 @@ function findStageDetailByStageCode(stageIdStr){
         
         
         console.log("副产物占"+by_product.toFixed(2)+'%')
-        
-        if(stageIdStr.indexOf('act')==-1&&stageIdStr.indexOf('perm')!= -1) setNestPieChart('inside',by_product,"副产物\n占"+by_product.toFixed(1)+'%' );
+       
+        if(stageIdStr.indexOf('act')==-1||stageIdStr.indexOf('perm')!= -1) {
+             setNestPieChart('inside',by_product,"其他产物\n占"+by_product.toFixed(1)+'%' );
+        }
 
         setNestPieChart('inside',1.2*0.036*apCost/totalOutput*100,"龙门币\n占"+(1.2*0.036*apCost/totalOutput*100).toFixed(1)+'%' );
         
@@ -129,7 +133,7 @@ function pieChart(data) {
             
             label: {
                 show: true,
-                textStyle: { color: "black", fontSize: "20" },
+                textStyle: { color: "black", fontSize: "16" },
             },
             labelLine: {
                 show: true,
@@ -146,11 +150,7 @@ function pieChart(data) {
               }, //鼠标放在各个区域的样式
             },
             data: data,
-            emphasis: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: "rgba(0, 0, 0, 0.5)",
-            },
+
           },
         ],
       };
