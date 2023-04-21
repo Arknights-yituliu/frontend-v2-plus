@@ -47,4 +47,18 @@ export default {
       method: "get",
     });
   },
+
+  findStageDetailByStageId(stageId) {
+    return request({
+      url: `/stage/detail/${stageId}`,
+      method: "get",
+    });
+  },
+
+  getStageTable() {
+    return request({
+      url: `/stage`,
+      method: "get",
+    });
+  },
 };

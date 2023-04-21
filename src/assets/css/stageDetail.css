@@ -1,21 +1,73 @@
-.pieChartBlock{
-    width: 500px;
-    height: 500px;
-    /* background: rgb(255, 255, 255); */
+.stageDetail_main {
+    max-width: 1080px;
+    margin: auto;
+    border: solid 1px red;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: rgb(255, 255, 255);
 }
 
-.input_select{
-    height: 40px;
-    width: 200px;
-    font-size: 24px;
-    font-weight: 700;
-    margin: 5px;
+.checkBox{
+   width: 530px;
 }
 
-.button_select{
+.stageDetaol_title{
+    width: 100%;
+    text-align: center;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.zoneTable{
+   width: 100%;
+   height: 435px;
+   border: solid 1px rgb(0, 132, 255);
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   justify-content: center;
+   overflow-y: scroll;
+}
+
+.zoneId{
+    width: 160px;
+    margin: 3px;
+    font-size: 14px;
+}
+
+.button_checkBox{
+   display: flex;
+}
+
+.stageTable{
+    width: 100%;
+    height: 110px;
+    display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+  
+   color: black;
+}
+
+.stageId{
+   width: 90px;
+   margin: 2px;
+}
+
+.button_select {
     height: 40px;
     width: 130px;
     font-size: 24px;
     font-weight: 700;
     margin: 5px;
+}
+
+.pieChartBlock {
+    border: solid 1px rgb(0, 132, 255);
+    width: 530px;
+    height: 530px;  
 }
