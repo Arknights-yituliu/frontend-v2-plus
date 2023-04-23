@@ -32,26 +32,13 @@
         <div class="stage_hint_t5">橙：双最优</div>
         <div class="stage_hint_t4">紫：效率最高(长期最优)</div>
         <div class="stage_hint_t2">绿：期望最低(短期最优)</div>
+        <div class="stage_hint_t0">红：计算了无限龙门币</div>
       </div>
       <!-- <div class="stage_hint">
         <div class="stage_hint_t5">
           当前企鹅物流CF-7数据有污染，正在等待修复，请谨慎参考
         </div>
       </div> -->
-
-      <!-- <el-collapse v-model="checkBox" @change="handleChange">
-        <el-collapse-item name="1" style="display: block">
-          <template slot="title">
-            <div class="gacha_title_icon"></div>
-          </template>
-          <div class="gacha_unit" id="wallet">
-            <div class="gacha_unit_child" style="display: flex">
-              fdsa
-
-            </div>
-          </div>
-        </el-collapse-item>
-      </el-collapse> -->
       <!-- t3内容区域 -->
       <div class="op_content" id="stage_t3_content">
         <!-- 基础卡 -->
@@ -74,7 +61,8 @@
                   v-for="(stage, index) in materialRankT3.slice(0, 6)"
                   :key="index"
                 >
-                  <td class="stage_table_c1">{{ stage.stageCode }}</td>
+                  <td class="stage_table_c1">{{ stage.stageCode }} </td>
+                  <!-- <td> <div v-show="stage.stageId.indexOf('perm')!=-1" style='font-size: 12px;line-height:12px;'> 常 <br> 驻 </div></td> -->
                   <!-- <td class="stage_table_c2" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
                   <td>
                     <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
@@ -498,7 +486,15 @@ export default {
     },
 
     judgeActive(index) {
-      if (this.stageRankT3[index][0].stageState > 0.1) return "";
+
+      let showFlag = false;
+      this.stageRankT3[index].forEach(element=>{
+        if(element.stageColor < 0) {
+          showFlag = true;
+        }
+      })
+      // if (this.stageRankT3[index][0]||this.stageRankT3[index][1].stageColor < 0) return "";
+      if(showFlag) return "";
       return "display:none";
     },
     showNowActive() {
