@@ -27,7 +27,7 @@
       </div>
       <!-- 标题区域end -->
 
-      <!-- <div class="pack_simple" style="display:none">
+      <div class="pack_simple" style="display:none">
         <table>
           <tbody>
           <tr class="pack_simple_tr_title">
@@ -52,7 +52,7 @@
           </tr>
           </tbody>
         </table>
-      </div> -->
+      </div>
 
       <div id="pack_content" style="display: flex">
         <!-- 仅计抽卡 -->
@@ -66,7 +66,6 @@
             "
           >
             <div class="pack_unit">
-              <!-- <div v-show="pack2.packState == 1&&!FilterCriteria.includes(pack2.packType)" class="pack_unit"> -->
               <!-- 图片部分 -->
               <div
                 class="pack_img"
@@ -155,7 +154,7 @@
             :style="getDisplayState(pack3.packState, pack3.packType, pack3.packPrice, packFilter)"
           >
             <!-- <div v-for="(pack3, index) in packsPPRData" :key="index" class="pack_unit_list"> -->
-            <div v-show="pack3.packState == 1 && !FilterCriteria.includes(pack3.packType)" class="pack_unit">
+            <div v-show="pack3.packState == 1 " class="pack_unit">
               <!-- 图片部分 -->
               <div
                 class="pack_img"
@@ -245,7 +244,6 @@
 
 <script>
 import cookie from "js-cookie";
-// import packsPPR from "static/json/pack_packsPPR_demo.json";
 import storeApi from "@/api/store";
 import foot from "@/components/FootMini.vue";
 import { usePageContext } from "@/renderer/usePageContext";
@@ -258,19 +256,11 @@ export default {
   },
   data() {
     return {
-      // packsPPRData:页面直接调用的数据
-      // packsPPRJson:缓冲区
-      // packsPPR:原始数据
-      // packsPPRDataSort:排序用缓冲区
+
       opETextTheme: "op_title_etext_light",
-      // packPPRResponse: packsPPR.data,
-      packPPRResponse: this.pageContext.pageProps.data,
-      // packsPPRJson: packsPPR,
-      packsPPRData: [],
-      packsPPRDataSort: [],
-      FilterCriteria: [],
-      filter1: true,
-      filter2: true,
+      packPPRResponse: this.pageContext.pageProps.data,  //原始数据
+      packsPPRData: [], //页面直接调用的数据
+      packsPPRDataSort: [],  //排序缓存数据
       packFilter: 11,
       showFlag: false,
     };
@@ -395,16 +385,16 @@ export default {
       this.packsPPRDataSort = [];
 
       for (let i = 0; i < this.packPPRResponse.length; i += 1) {
-        if (0 === this.packPPRResponse[i].packState) {
+        if (0 === this.packPPRResponse[i].packState) {    //下架礼包跳过
           // console.log('弹出：',this.packPPRResponse[i].packName);
           continue;
         }
         //  console.log('正常：',this.packPPRResponse[i].packName);
-        if (this.packPPRResponse[i].packRmbPerDraw === null) {
+        if (this.packPPRResponse[i].packRmbPerDraw === null) {  //性价比空的设置为0
           this.packPPRResponse[i].packRmbPerDraw = 0;
         }
 
-        if ("limited" === this.packPPRResponse[i].packType) {
+        if ("limited" === this.packPPRResponse[i].packType) { 
           this.packsPPRData.unshift(this.packPPRResponse[i]);
         } else {
           this.packsPPRData.push(this.packPPRResponse[i]);

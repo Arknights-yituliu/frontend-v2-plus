@@ -34,6 +34,12 @@
   color: #00a2a2;
 }
 
+.stage_hint_t0{
+  background-color: #f0f9eb;
+
+  color: #e80008;
+}
+
 .stage_card_t3 {
   border: 0px solid #ebeef5;
   overflow: hidden;
