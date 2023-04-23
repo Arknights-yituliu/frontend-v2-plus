@@ -1107,9 +1107,14 @@ import * as echarts from "echarts";
 // import echarts from "static/js/echarts.min.js";
 let myChart = "";
 import { ClientOnly } from "@/components/ClientOnly";
+import { usePageContext } from "@/renderer/usePageContext";
 
 export default {
   components: { ClientOnly },
+  setup() {
+    const pageContext = usePageContext();
+    return { pageContext };
+  },
   data() {
     return {
       pageTheme: "light",
@@ -1181,6 +1186,8 @@ export default {
       moreOptions: true,
       LMDCost: 0,
       pieData: [],
+
+      pack_data: this.pageContext.pageProps.pack_data,
     };
   },
   created() {
@@ -1196,6 +1203,7 @@ export default {
     this.pieChart(this.pieData);
     this.openNotification();
     toolApi.updateVisits("gacha");
+    console.log(this.pack_data);
   },
   methods: {
     //公告通知
