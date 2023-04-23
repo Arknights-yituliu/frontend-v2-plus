@@ -1115,7 +1115,7 @@ export default {
       pageTheme: "light",
       itemList: [],
       checkBox1: ["0"],
-      checkBox: ["1", "2","5","6"], //折叠栏绑定数组
+      checkBox: ["1", "2", "5", "6"], //折叠栏绑定数组
       // checkBox: ["1","7"],
       rewardType: "联动限定", //奖励的类型
       startDate: "", //开始时间
@@ -1257,8 +1257,13 @@ export default {
     isDuringDate(start, end, rewardType) {
       // console.log(Date.parse(new Date(start))>=this.start_TimeStamp ||Date.parse(new Date(end))<=this.end_TimeStamp)
       // console.log(end ,'<=', this.end_TimeStamp)
-      
-      if (end>this.start_TimeStamp && end <= this.end_TimeStamp && ("公共" === rewardType || this.rewardType === rewardType)) return true;
+
+      if (
+        end > this.start_TimeStamp &&
+        end <= this.end_TimeStamp &&
+        ("公共" === rewardType || this.rewardType === rewardType)
+      )
+        return true;
       return false;
     },
     //获取当天日期
