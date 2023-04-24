@@ -1,13 +1,13 @@
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted } from "vue";
 
 export const ClientOnly = defineComponent({
   setup(_, { slots }) {
-    const show = ref(false)
+    const show = ref(false);
 
     onMounted(() => {
-      show.value = true
-    })
+      show.value = true;
+    });
 
-    return () => (show.value && slots.default ? slots.default() : null)
-  }
-})
+    return () => (show.value && slots.default ? slots.default() : null);
+  },
+});

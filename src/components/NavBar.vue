@@ -1,5 +1,5 @@
 <template>
-  <div class="container" >
+  <div class="container">
     <!-- <div style="color:white" @click="menu_collapse(true)" >
       这里是 <br> 个图标
     </div> -->
@@ -17,20 +17,20 @@
       :inactive-icon="Sunny"
       size="large"
     />
-   
-  <div class="menu_div"> 
-    <div class="menu-collapse" id="menu">
+
+    <div class="menu_div">
+      <div class="menu-collapse" id="menu">
         <h1>明日方舟一图流</h1>
         <table>
           <tbody>
             <tr>
-              <td >材料一图流</td>
+              <td>材料一图流</td>
             </tr>
             <tr>
-              <td >攒抽规划</td>
+              <td>攒抽规划</td>
             </tr>
             <tr>
-              <td >排班生成器</td>
+              <td>排班生成器</td>
             </tr>
             <tr>
               <td></td>
@@ -39,15 +39,9 @@
           </tbody>
         </table>
       </div>
-      <div class="menu-mask" v-show="menu_flag"  @click="menu_collapse(false)">
-        
+      <div class="menu-mask" v-show="menu_flag" @click="menu_collapse(false)"></div>
     </div>
-
   </div>
-
-  
-</div>
-
 </template>
 
 <script setup>
@@ -60,7 +54,6 @@ const pageContext = usePageContext();
 
 const theme = ref();
 
-
 const homepage = computed(() => {
   return "/" == pageContext.urlPathname;
 });
@@ -72,16 +65,16 @@ onMounted(() => {
 });
 
 function menu_collapse(flag) {
-      menu_flag.value = flag;
-      if (menu_flag.value) {
-        document.getElementById("menu").className = "menu-collapse ";
-        setTimeout(function () {
-          document.getElementById("menu").className = "menu-collapse menu-open";
-        }, 30); 
-      } else {
-        document.getElementById("menu").className = "menu-collapse";
-      }
-      console.log(menu_flag.value)
+  menu_flag.value = flag;
+  if (menu_flag.value) {
+    document.getElementById("menu").className = "menu-collapse ";
+    setTimeout(function () {
+      document.getElementById("menu").className = "menu-collapse menu-open";
+    }, 30);
+  } else {
+    document.getElementById("menu").className = "menu-collapse";
+  }
+  console.log(menu_flag.value);
 }
 
 function switchTheme() {
@@ -175,8 +168,6 @@ a {
   font-size: 16px !important;
 }
 
-
-
 .menu_div {
   display: flex;
   width: 100%;
@@ -190,7 +181,7 @@ a {
 
 .menu-collapse {
   position: absolute;
-  top:0;
+  top: 0;
   transform: translateX(-290px);
 }
 
@@ -205,8 +196,8 @@ a {
   /* border: solid red 1px; */
 }
 
-.menu-mask{
-  background:rgba(0,0,0,0.6);
+.menu-mask {
+  background: rgba(0, 0, 0, 0.6);
   width: 100%;
   height: 1000px;
   /* border: solid red 1px; */

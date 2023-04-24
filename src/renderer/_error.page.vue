@@ -10,5 +10,5 @@
 </template>
 
 <script setup>
-defineProps(['is404'])
+defineProps(["is404"]);
 </script>
