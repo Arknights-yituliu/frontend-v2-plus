@@ -11,9 +11,85 @@
 
       <client-only>
         <div class="pack-table-wrapper">
-          <el-table :data="packPPRResponse" class="pack-table" stripe>
-            <el-table-column prop="packShowName" label="名称" />
-            <el-table-column prop="packPrice" label="售价（元）" />
+          <el-table
+            :data="packPPRResponse"
+            class="pack-table"
+            stripe
+            table-layout="auto"
+            :default-sort="{ prop: 'packPPROriginium', order: 'descending' }"
+          >
+            <el-table-column sortable prop="packShowName" label="名称" />
+            <el-table-column
+              sortable
+              label="类型"
+              :formatter="
+                (row, col) => {
+                  return {
+                    once: '一次性',
+                    monthly: '每月',
+                    weekly: '每周',
+                    year: '每年',
+                    permanent: '常驻',
+                    limited: '限时',
+                  }[row.packType];
+                }
+              "
+              :filters="[
+                { value: 'once', text: '一次性' },
+                { value: 'monthly', text: '每月' },
+                { value: 'weekly', text: '每周' },
+                { value: 'year', text: '每年' },
+                { value: 'permanent', text: '常驻' },
+                { value: 'limited', text: '限时' },
+              ]"
+              :filter-method="
+                (value, row, column) => {
+                  return row.packType == value;
+                }
+              "
+              :sort-by="
+                (row, index) => {
+                  return row.packType;
+                }
+              "
+            />
+            <el-table-column
+              sortable
+              label="售价"
+              :formatter="
+                (row, col) => {
+                  return row.packPrice + '元';
+                }
+              "
+            />
+            <el-table-column
+              sortable
+              label="抽数"
+              :formatter="
+                (row, col) => {
+                  return row.packDraw.toFixed(2);
+                }
+              "
+            />
+            <el-table-column
+              sortable
+              label="抽卡性价比"
+              :formatter="
+                (row, col) => {
+                  return row.packPPRDraw.toFixed(2);
+                }
+              "
+            />
+            <el-table-column
+              sortable
+              label="综合性价比"
+              prop="packPPROriginium"
+              :formatter="
+                (row, col) => {
+                  return row.packPPROriginium.toFixed(2);
+                }
+              "
+            />
           </el-table>
         </div>
       </client-only>
@@ -768,5 +844,7 @@ export const documentProps = {
 .pack-table {
   box-shadow: var(--el-box-shadow-light);
   width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
 }
 </style>
