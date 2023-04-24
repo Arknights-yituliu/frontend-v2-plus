@@ -1,16 +1,12 @@
 <template>
-  <div id="sandbox">
-  </div>
+  <div id="sandbox"></div>
 </template>
 
 <script>
-
-
 export default {
   layout: "poster",
   data() {
-    return {
-    };
+    return {};
   },
 
   methods: {},
@@ -18,7 +14,7 @@ export default {
 </script>
 
 <style scoped>
-#sandbox{
+#sandbox {
   height: 200px;
 }
 </style>

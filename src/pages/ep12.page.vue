@@ -69,10 +69,8 @@
             <td>
               {{ stage.spm }}
             </td>
-            <td>
-              {{ Math.round(stage.stageEfficiency) }}%
-            </td>
-            <td><a :href="'https://penguin-stats.cn/report/stage/main_12/'+stage.stageId">企鹅物流</a></td>
+            <td>{{ Math.round(stage.stageEfficiency) }}%</td>
+            <td><a :href="'https://penguin-stats.cn/report/stage/main_12/' + stage.stageId">企鹅物流</a></td>
           </tr>
         </tbody>
       </table>
@@ -80,7 +78,7 @@
     <!-- 后勤特别许可证 -->
     <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
       <div style="text-align: center; font-size: 24px; font-weight: 600; padding: 6px 0px">后勤特别许可证</div>
-      <div style="vertical-align: top;margin: auto">
+      <div style="vertical-align: top; margin: auto">
         <div
           style="
             width: 96px;
@@ -91,10 +89,7 @@
             margin: 18px 12px 24px 12px;
           "
         ></div>
-        <div style="display: inline-block;
-                    max-width: 75%;
-                    line-height: 32px;
-                    padding-bottom: 8px;">
+        <div style="display: inline-block; max-width: 75%; line-height: 32px; padding-bottom: 8px">
           <div>◆本次活动新增后勤特别许可证：</div>
           <div>
             在【惊霆无声】任一可三星代理作战的关卡中，每日前两次作战可使用后勤特别许可证，使用后的当次作战不消耗理智且原常规掉落的报酬改为固定掉落且数量增加至三倍
@@ -103,17 +98,15 @@
       </div>
     </div>
     <!-- 推荐表-占位 -->
-    <div
-      style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center"
-    >
-      <table style="margin: auto;padding: 8px;">
+    <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center">
+      <table style="margin: auto; padding: 8px">
         <tr>
-          <th style="width: 80px;">关卡</th>
-          <th style="width: 100px;">主产物</th>
-          <th style="width: 100px;">收益<br>（理智）</th>
-          <th style="width: 80px;">关卡</th>
-          <th style="width: 100px;">主产物</th>
-          <th style="width: 100px;">收益<br>（理智）</th>
+          <th style="width: 80px">关卡</th>
+          <th style="width: 100px">主产物</th>
+          <th style="width: 100px">收益<br />（理智）</th>
+          <th style="width: 80px">关卡</th>
+          <th style="width: 100px">主产物</th>
+          <th style="width: 100px">收益<br />（理智）</th>
         </tr>
         <tr>
           <td>12-7</td>
@@ -179,7 +172,7 @@
           <td>--</td>
           <td>--</td>
         </tr>
-        <tr style="height: 10px;">
+        <tr style="height: 10px">
           <td></td>
           <td></td>
           <td></td>

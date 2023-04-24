@@ -20,7 +20,7 @@ function createVPSApp(pageContext, clientOnly) {
   };
 
   const app = createAppFunc(PageWithLayout);
-  
+
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component);
   }

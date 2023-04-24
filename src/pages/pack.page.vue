@@ -8,6 +8,16 @@
           <div :class="opETextTheme">Packs Value</div>
         </div>
       </div>
+
+      <client-only>
+        <div class="pack-table-wrapper">
+          <el-table :data="packPPRResponse" class="pack-table" stripe>
+            <el-table-column prop="packShowName" label="名称" />
+            <el-table-column prop="packPrice" label="售价（元）" />
+          </el-table>
+        </div>
+      </client-only>
+
       <div class="op_title_tag">
         <div id="pack_sort_by_type" class="op_tag_1" @click="sortPackByType()">礼包类型排序</div>
         <div id="pack_sort_by_drawPpr" class="op_tag_0" @click="sortPackByPPRPerDraw()">抽卡性价比</div>
@@ -27,29 +37,40 @@
       </div>
       <!-- 标题区域end -->
 
-      <div class="pack_simple" style="display:none">
+      <div class="pack_simple" style="display: none">
         <table>
           <tbody>
-          <tr class="pack_simple_tr_title">
-            <td>礼包名称</td>
-            <td>类型</td>
-            <td>礼包价格</td>
-            <td>抽数</td>
-            <td class="">抽卡性价比</td>
-            <td>综合性价比</td>
-            <td>每抽价格</td>
-          </tr>
-          <tr v-for="(pack_simple, index) in packsPPRData" :key="index"
-           :style="getDisplayStateDrawOnly(pack_simple.packState, pack_simple.packType, pack_simple.packPrice, packFilter,pack_simple.packPPRDraw)"
-           :class="getBackColor(index)">
-            <td>{{ pack_simple.packName }}</td>
-            <td>{{ pack_simple.packType }}</td>
-            <td>{{ pack_simple.packPrice }}</td>
-            <td>{{ getFixed(pack_simple.packDraw, 1) }}抽</td>
-            <td class="">{{ getFixed(pack_simple.packPPRDraw * 100, 0) }}%</td>
-            <td> {{ getFixed(pack_simple.packPPROriginium * 100, 0) }}%</td>
-            <td>{{ getFixed(pack_simple.packRmbPerDraw, 1) }}元/抽</td>
-          </tr>
+            <tr class="pack_simple_tr_title">
+              <td>礼包名称</td>
+              <td>类型</td>
+              <td>礼包价格</td>
+              <td>抽数</td>
+              <td class="">抽卡性价比</td>
+              <td>综合性价比</td>
+              <td>每抽价格</td>
+            </tr>
+            <tr
+              v-for="(pack_simple, index) in packsPPRData"
+              :key="index"
+              :style="
+                getDisplayStateDrawOnly(
+                  pack_simple.packState,
+                  pack_simple.packType,
+                  pack_simple.packPrice,
+                  packFilter,
+                  pack_simple.packPPRDraw
+                )
+              "
+              :class="getBackColor(index)"
+            >
+              <td>{{ pack_simple.packName }}</td>
+              <td>{{ pack_simple.packType }}</td>
+              <td>{{ pack_simple.packPrice }}</td>
+              <td>{{ getFixed(pack_simple.packDraw, 1) }}抽</td>
+              <td class="">{{ getFixed(pack_simple.packPPRDraw * 100, 0) }}%</td>
+              <td>{{ getFixed(pack_simple.packPPROriginium * 100, 0) }}%</td>
+              <td>{{ getFixed(pack_simple.packRmbPerDraw, 1) }}元/抽</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -154,7 +175,7 @@
             :style="getDisplayState(pack3.packState, pack3.packType, pack3.packPrice, packFilter)"
           >
             <!-- <div v-for="(pack3, index) in packsPPRData" :key="index" class="pack_unit_list"> -->
-            <div v-show="pack3.packState == 1 " class="pack_unit">
+            <div v-show="pack3.packState == 1" class="pack_unit">
               <!-- 图片部分 -->
               <div
                 class="pack_img"
@@ -248,6 +269,7 @@ import storeApi from "@/api/store";
 import foot from "@/components/FootMini.vue";
 import { usePageContext } from "@/renderer/usePageContext";
 import toolApi from "@/api/tool";
+import { ClientOnly } from "@/components/ClientOnly";
 
 export default {
   setup() {
@@ -256,17 +278,17 @@ export default {
   },
   data() {
     return {
-
       opETextTheme: "op_title_etext_light",
-      packPPRResponse: this.pageContext.pageProps.data,  //原始数据
+      packPPRResponse: this.pageContext.pageProps.data, //原始数据
       packsPPRData: [], //页面直接调用的数据
-      packsPPRDataSort: [],  //排序缓存数据
+      packsPPRDataSort: [], //排序缓存数据
       packFilter: 11,
       showFlag: false,
     };
   },
   components: {
     foot,
+    ClientOnly,
   },
   created() {
     this.initData();
@@ -385,16 +407,18 @@ export default {
       this.packsPPRDataSort = [];
 
       for (let i = 0; i < this.packPPRResponse.length; i += 1) {
-        if (0 === this.packPPRResponse[i].packState) {    //下架礼包跳过
+        if (0 === this.packPPRResponse[i].packState) {
+          //下架礼包跳过
           // console.log('弹出：',this.packPPRResponse[i].packName);
           continue;
         }
         //  console.log('正常：',this.packPPRResponse[i].packName);
-        if (this.packPPRResponse[i].packRmbPerDraw === null) {  //性价比空的设置为0
+        if (this.packPPRResponse[i].packRmbPerDraw === null) {
+          //性价比空的设置为0
           this.packPPRResponse[i].packRmbPerDraw = 0;
         }
 
-        if ("limited" === this.packPPRResponse[i].packType) { 
+        if ("limited" === this.packPPRResponse[i].packType) {
           this.packsPPRData.unshift(this.packPPRResponse[i]);
         } else {
           this.packsPPRData.push(this.packPPRResponse[i]);
@@ -735,5 +759,14 @@ export const documentProps = {
 
 .pack_simple_tr_title {
   font-weight: 700;
+}
+
+.pack-table-wrapper {
+  padding: 18px 14px 0;
+}
+
+.pack-table {
+  box-shadow: var(--el-box-shadow-light);
+  width: 100%;
 }
 </style>

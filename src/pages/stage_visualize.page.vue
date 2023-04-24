@@ -1,17 +1,12 @@
 <template>
-  <div id="sv">
-    asdf
-  </div>
+  <div id="sv">asdf</div>
 </template>
 
-<script >
-
-
+<script>
 export default {
   layout: "poster",
   data() {
-    return {
-    };
+    return {};
   },
 
   methods: {},
@@ -22,6 +17,4 @@ export default {
 a {
   color: #ffffff;
 }
-
-
 </style>

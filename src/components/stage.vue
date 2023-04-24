@@ -61,7 +61,7 @@
                   v-for="(stage, index) in materialRankT3.slice(0, 6)"
                   :key="index"
                 >
-                  <td class="stage_table_c1">{{ stage.stageCode }} </td>
+                  <td class="stage_table_c1">{{ stage.stageCode }}</td>
                   <!-- <td> <div v-show="stage.stageId.indexOf('perm')!=-1" style='font-size: 12px;line-height:12px;'> 常 <br> 驻 </div></td> -->
                   <!-- <td class="stage_table_c2" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
                   <td>
@@ -184,8 +184,8 @@
               </td>
               <td class="popup_table_c3">{{ getEfficiency(stage.spm, 1) }}</td>
               <!-- <td class="popup_table_c4" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
-              <td style="padding-left: 20px;">
-                  <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+              <td style="padding-left: 20px">
+                <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
               </td>
               <!-- <td style="padding-left: 20px;" >    
                   <div v-show="stage.stageId.indexOf('perm')==-1" :class="getSpriteImg('ap_supply_lt_010', 'sec')"></div>
@@ -194,10 +194,8 @@
               <td class="popup_table_c6">
                 {{ getEfficiency(stage.apExpect) }}
               </td>
-              <td class="popup_table_c7" >
-                {{ getEfficiency(stage.stageEfficiency, 1) }}%
-              </td>
-              
+              <td class="popup_table_c7">{{ getEfficiency(stage.stageEfficiency, 1) }}%</td>
+
               <!-- <td class="popup_table_c7">{{getBoxEfficiency(stage.stageState, stage.stageEfficiencyEx, stage.stageEfficiency)}}</td> -->
             </tr>
           </tbody>
@@ -246,7 +244,7 @@
                   <!-- <div>1</div> -->
                   <!-- <div :class="getSpriteImg('AP_GAMEPLAY', 5)" ></div> -->
                   <div>{{ getEfficiency(stage.orundumPerAp) }}</div>
-                  <div style="margin-bottom: -15px" :class="getSpriteImg(4003,'icon_small')"></div>
+                  <div style="margin-bottom: -15px" :class="getSpriteImg(4003, 'icon_small')"></div>
                 </td>
                 <td class="popup_orundum_c3" style="width: 120px">
                   <div>{{ getEfficiency(stage.lmdcost) }}w</div>
@@ -418,7 +416,7 @@ export default {
       if (index === "title") return "bg-" + id + " sprite_title";
       if (index === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
       if (index === "up") return "bg-" + id + "_icon sprite_icon_up";
-      if (index === 'el') return "bg-" + id + "_icon sprite_icon_el";
+      if (index === "el") return "bg-" + id + "_icon sprite_icon_el";
       if (index === "t2") return "bg-" + id + " sprite_T2";
       return "bg-" + id;
     },
@@ -486,15 +484,14 @@ export default {
     },
 
     judgeActive(index) {
-
       let showFlag = false;
-      this.stageRankT3[index].forEach(element=>{
-        if(element.stageColor < 0) {
+      this.stageRankT3[index].forEach((element) => {
+        if (element.stageColor < 0) {
           showFlag = true;
         }
-      })
+      });
       // if (this.stageRankT3[index][0]||this.stageRankT3[index][1].stageColor < 0) return "";
-      if(showFlag) return "";
+      if (showFlag) return "";
       return "display:none";
     },
     showNowActive() {

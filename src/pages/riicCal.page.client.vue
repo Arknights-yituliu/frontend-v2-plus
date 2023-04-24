@@ -5,24 +5,23 @@
         <div class="riic_building_title">控制面板</div>
         <div class="riic_building_parameter">
           <div class="parameter_text">作业名称</div>
-          <el-input class="parameter_inputbox"  placeholder="究极资本家v1.0" v-model="title"></el-input>
+          <el-input class="parameter_inputbox" placeholder="究极资本家v1.0" v-model="title"></el-input>
         </div>
         <div class="riic_building_parameter">
           <div class="parameter_text">描述(可选)</div>
           <el-input
             class="parameter_inputbox"
-            
             placeholder="适合全干员，压榨每一个工具人！"
             v-model="descriptionH1"
           ></el-input>
         </div>
         <div class="riic_building_parameter">
           <div class="parameter_text">作者(可选)</div>
-          <el-input class="parameter_inputbox"  placeholder="yituliu" v-model="author"></el-input>
+          <el-input class="parameter_inputbox" placeholder="yituliu" v-model="author"></el-input>
         </div>
         <div class="riic_building_parameter">
           <div class="parameter_text">基建模式</div>
-          <el-radio-group  v-model="buildingType">
+          <el-radio-group v-model="buildingType">
             <el-radio-button label="243"></el-radio-button>
             <el-radio-button label="153"></el-radio-button>
             <el-radio-button label="333"></el-radio-button>
@@ -34,7 +33,7 @@
         <div class="riic_building_title">排班方案</div>
         <div class="riic_building_parameter">
           <div class="parameter_text">换班次数</div>
-          <el-radio-group  v-model="planTimes">
+          <el-radio-group v-model="planTimes">
             <el-radio-button label="2班"></el-radio-button>
             <el-radio-button label="3班"></el-radio-button>
             <!-- <el-radio-button label="4班" ></el-radio-button> -->
@@ -42,22 +41,14 @@
         </div>
         <div class="riic_building_parameter">
           <div class="parameter_text" style="width: 108px">名称/起止时间</div>
+          <el-input class="parameter_inputbox" placeholder="主力组A" style="width: 90px" v-model="name[0]"></el-input>
           <el-input
-            
-            class="parameter_inputbox"
-            placeholder="主力组A"
-            style="width: 90px"
-            v-model="name[0]"
-          ></el-input>
-          <el-input
-            
             class="parameter_inputbox"
             placeholder="20:00"
             style="width: 80px"
             v-model="period_plan0[0]"
           ></el-input>
           <el-input
-            
             class="parameter_inputbox"
             placeholder="23:59"
             style="width: 80px"
@@ -66,22 +57,14 @@
         </div>
         <div class="riic_building_parameter">
           <div class="parameter_text" style="width: 108px">名称/起止时间</div>
+          <el-input class="parameter_inputbox" placeholder="主力组B" style="width: 90px" v-model="name[1]"></el-input>
           <el-input
-            
-            class="parameter_inputbox"
-            placeholder="主力组B"
-            style="width: 90px"
-            v-model="name[1]"
-          ></el-input>
-          <el-input
-            
             class="parameter_inputbox"
             placeholder="03:00"
             style="width: 80px"
             v-model="period_plan1[0]"
           ></el-input>
           <el-input
-            
             class="parameter_inputbox"
             placeholder="10:00"
             style="width: 80px"
@@ -90,22 +73,14 @@
         </div>
         <div class="riic_building_parameter" v-show="'3班' === planTimes">
           <div class="parameter_text" style="width: 108px">名称/起止时间</div>
+          <el-input class="parameter_inputbox" placeholder="主力组C" style="width: 90px" v-model="name[2]"></el-input>
           <el-input
-            
-            class="parameter_inputbox"
-            placeholder="主力组C"
-            style="width: 90px"
-            v-model="name[2]"
-          ></el-input>
-          <el-input
-            
             class="parameter_inputbox"
             placeholder="10:00"
             style="width: 80px"
             v-model="period_plan2[0]"
           ></el-input>
           <el-input
-            
             class="parameter_inputbox"
             placeholder="20:00"
             style="width: 80px"
@@ -147,7 +122,6 @@
             通过id导入
           </el-button>
           <el-input
-            
             class="parameter_inputbox"
             placeholder="id"
             style="margin-left: 12px; width: 150px"
@@ -184,23 +158,23 @@
           <div class="riic_building_title">班次基本信息</div>
           <div class="riic_building_parameter">
             <div class="parameter_text">班次名称</div>
-            <el-input  class="parameter_inputbox" placeholder="例如：主力组A" v-model="name[0]"></el-input>
+            <el-input class="parameter_inputbox" placeholder="例如：主力组A" v-model="name[0]"></el-input>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">描述</div>
-            <el-input  class="parameter_inputbox" placeholder="可选" v-model="descriptionH2[0]"></el-input>
+            <el-input class="parameter_inputbox" placeholder="可选" v-model="descriptionH2[0]"></el-input>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">无人机</div>
             <el-switch active-color="#13ce66" inactive-color="#c0c4cc" v-model="switch_drones_enable[0]"></el-switch>
-            <el-radio-group  v-model="radio_drones[0]">
+            <el-radio-group v-model="radio_drones[0]">
               <el-radio-button label="贸易站"></el-radio-button>
               <el-radio-button label="制造站"></el-radio-button>
             </el-radio-group>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">目标房间编号</div>
-            <el-radio-group  v-model="radio_drones_index[0]">
+            <el-radio-group v-model="radio_drones_index[0]">
               <el-radio-button label="1"></el-radio-button>
               <el-radio-button label="2"></el-radio-button>
               <el-radio-button label="3"></el-radio-button>
@@ -210,7 +184,7 @@
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">使用顺序</div>
-            <el-radio-group  v-model="input_drones_order[0]">
+            <el-radio-group v-model="input_drones_order[0]">
               <el-radio-button label="换班前"></el-radio-button>
               <el-radio-button label="换班后"></el-radio-button>
             </el-radio-group>
@@ -219,7 +193,6 @@
             <div class="parameter_text">菲亚梅塔</div>
             <el-switch active-color="#13ce66" inactive-color="#c0c4cc" v-model="switch_Fiammetta_enable[0]"></el-switch>
             <el-input
-              
               style="width: 128px"
               class="parameter_inputbox"
               placeholder="例如：巫恋"
@@ -228,7 +201,7 @@
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">使用顺序</div>
-            <el-radio-group  v-model="input_Fiammetta_order[0]">
+            <el-radio-group v-model="input_Fiammetta_order[0]">
               <el-radio-button label="换班前"></el-radio-button>
               <el-radio-button label="换班后"></el-radio-button>
             </el-radio-group>
@@ -239,26 +212,25 @@
             控制中枢
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="control_skip[0]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="control_plan0[0]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan0[1]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan0[2]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan0[3]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan0[3]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan0[4]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan0[4]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -268,40 +240,37 @@
             贸易站1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_trading_plan0_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_trading_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_trading_plan0_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="trading_plan0_0[0]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan0_0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan0_0[1]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan0_0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan0_0[2]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan0_0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_trading_plan0[0]">
+            <el-radio-group v-model="radio_trading_plan0[0]">
               <el-radio-button label="龙门币"></el-radio-button>
               <el-radio-button label="合成玉"></el-radio-button>
             </el-radio-group>
@@ -316,40 +285,37 @@
             贸易站2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_trading_plan0_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_trading_plan0_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_trading_plan0_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="trading_plan0_1[0]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan0_1[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan0_1[1]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan0_1[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan0_1[2]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan0_1[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_trading_plan0[1]">
+            <el-radio-group v-model="radio_trading_plan0[1]">
               <el-radio-button label="龙门币"></el-radio-button>
               <el-radio-button label="合成玉"></el-radio-button>
             </el-radio-group>
@@ -361,40 +327,37 @@
             贸易站3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_trading_plan0_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_trading_plan0_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_trading_plan0_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="trading_plan0_2[0]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan0_2[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan0_2[1]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan0_2[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan0_2[2]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan0_2[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_trading_plan0[2]">
+            <el-radio-group v-model="radio_trading_plan0[2]">
               <el-radio-button label="龙门币"></el-radio-button>
               <el-radio-button label="合成玉"></el-radio-button>
             </el-radio-group>
@@ -405,40 +368,37 @@
             制造站1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan0_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan0_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan0_0[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_0[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_0[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan0[0]">
+            <el-radio-group v-model="radio_manufacture_plan0[0]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -451,40 +411,37 @@
             制造站2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan0_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan0_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan0_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan0_1[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_1[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_1[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_1[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_1[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_1[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan0[1]">
+            <el-radio-group v-model="radio_manufacture_plan0[1]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -497,40 +454,37 @@
             制造站3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan0_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan0_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan0_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan0_2[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_2[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_2[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_2[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_2[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_2[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan0[2]">
+            <el-radio-group v-model="radio_manufacture_plan0[2]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -546,40 +500,37 @@
             制造站4
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan0_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan0_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan0_3[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan0_3[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_3[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_3[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_3[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_3[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_3[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan0[3]">
+            <el-radio-group v-model="radio_manufacture_plan0[3]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -591,40 +542,37 @@
             制造站5
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan0_4[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan0_4[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan0_4[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan0_4[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_4[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_4[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_4[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan0_4[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan0_4[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan0[4]">
+            <el-radio-group v-model="radio_manufacture_plan0[4]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -637,21 +585,19 @@
             发电站1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_power_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_power_plan0_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="power_plan0_0[0]" filterable placeholder="请选择" >
+            <el-select v-model="power_plan0_0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_POWER" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -661,21 +607,19 @@
             发电站2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_power_plan0_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_power_plan0_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="power_plan0_0[1]" filterable placeholder="请选择" >
+            <el-select v-model="power_plan0_0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_POWER" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -686,21 +630,19 @@
             发电站3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_power_plan0_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_power_plan0_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="power_plan0_0[2]" filterable placeholder="请选择" >
+            <el-select v-model="power_plan0_0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_POWER" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -710,22 +652,20 @@
             会客室
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_meeting_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_meeting_plan0_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="meeting_plan0_0[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="meeting_plan0_0[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="meeting_plan0_0[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="meeting_plan0_0[1]"></el-input>
           </div>
         </div>
         <div class="riic_building building_hr">
@@ -733,21 +673,19 @@
             办公室
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_hire_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_hire_plan0_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="hire_plan0_0[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="hire_plan0_0[0]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -755,32 +693,29 @@
             宿舍1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan0_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan0_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_0[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_0[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_0[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_0[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_0[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_0[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_0[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_0[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_0[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_0[4]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -788,32 +723,29 @@
             宿舍2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan0_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan0_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan0_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_1[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_1[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_1[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_1[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_1[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_1[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_1[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_1[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_1[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_1[4]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -821,32 +753,29 @@
             宿舍3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan0_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan0_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan0_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_2[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_2[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_2[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_2[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_2[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_2[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_2[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_2[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_2[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_2[4]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -854,32 +783,29 @@
             宿舍4
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan0_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan0_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan0_3[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_3[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_3[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_3[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_3[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan0_3[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_3[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_3[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_3[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_3[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan0_3[4]"></el-input>
           </div>
         </div>
       </div>
@@ -888,23 +814,23 @@
           <div class="riic_building_title">班次基本信息</div>
           <div class="riic_building_parameter">
             <div class="parameter_text">班次名称</div>
-            <el-input  class="parameter_inputbox" placeholder="例如：主力组A" v-model="name[1]"></el-input>
+            <el-input class="parameter_inputbox" placeholder="例如：主力组A" v-model="name[1]"></el-input>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">描述</div>
-            <el-input  class="parameter_inputbox" placeholder="可选" v-model="descriptionH2[1]"></el-input>
+            <el-input class="parameter_inputbox" placeholder="可选" v-model="descriptionH2[1]"></el-input>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">无人机</div>
             <el-switch active-color="#13ce66" inactive-color="#c0c4cc" v-model="switch_drones_enable[1]"></el-switch>
-            <el-radio-group  v-model="radio_drones[1]">
+            <el-radio-group v-model="radio_drones[1]">
               <el-radio-button label="贸易站"></el-radio-button>
               <el-radio-button label="制造站"></el-radio-button>
             </el-radio-group>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">目标房间编号</div>
-            <el-radio-group  v-model="radio_drones_index[1]">
+            <el-radio-group v-model="radio_drones_index[1]">
               <el-radio-button label="1"></el-radio-button>
               <el-radio-button label="2"></el-radio-button>
               <el-radio-button label="3"></el-radio-button>
@@ -914,7 +840,7 @@
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">使用顺序</div>
-            <el-radio-group  v-model="input_drones_order[1]">
+            <el-radio-group v-model="input_drones_order[1]">
               <el-radio-button label="换班前"></el-radio-button>
               <el-radio-button label="换班后"></el-radio-button>
             </el-radio-group>
@@ -924,7 +850,6 @@
             <div class="parameter_text">菲亚梅塔</div>
             <el-switch active-color="#13ce66" inactive-color="#c0c4cc" v-model="switch_Fiammetta_enable[1]"></el-switch>
             <el-input
-              
               style="width: 128px"
               class="parameter_inputbox"
               placeholder="例如：巫恋"
@@ -933,7 +858,7 @@
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">使用顺序</div>
-            <el-radio-group  v-model="input_Fiammetta_order[1]">
+            <el-radio-group v-model="input_Fiammetta_order[1]">
               <el-radio-button label="换班前"></el-radio-button>
               <el-radio-button label="换班后"></el-radio-button>
             </el-radio-group>
@@ -945,26 +870,25 @@
             控制中枢
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="control_skip[1]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="control_plan1[0]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan1[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan1[1]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan1[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan1[2]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan1[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan1[3]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan1[3]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan1[4]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan1[4]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -975,40 +899,37 @@
             贸易站1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_trading_plan1_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_trading_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_trading_plan1_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="trading_plan1_0[0]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan1_0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan1_0[1]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan1_0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan1_0[2]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan1_0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_trading_plan1[0]">
+            <el-radio-group v-model="radio_trading_plan1[0]">
               <el-radio-button label="龙门币"></el-radio-button>
               <el-radio-button label="合成玉"></el-radio-button>
             </el-radio-group>
@@ -1022,40 +943,37 @@
             贸易站2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_trading_plan1_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_trading_plan1_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_trading_plan1_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="trading_plan1_1[0]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan1_1[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan1_1[1]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan1_1[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan1_1[2]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan1_1[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_trading_plan1[1]">
+            <el-radio-group v-model="radio_trading_plan1[1]">
               <el-radio-button label="龙门币"></el-radio-button>
               <el-radio-button label="合成玉"></el-radio-button>
             </el-radio-group>
@@ -1066,40 +984,37 @@
             贸易站3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_trading_plan1_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_trading_plan1_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_trading_plan1_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="trading_plan1_2[0]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan1_2[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan1_2[1]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan1_2[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan1_2[2]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan1_2[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_trading_plan1[2]">
+            <el-radio-group v-model="radio_trading_plan1[2]">
               <el-radio-button label="龙门币"></el-radio-button>
               <el-radio-button label="合成玉"></el-radio-button>
             </el-radio-group>
@@ -1111,40 +1026,37 @@
             制造站1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan1_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan1_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan1_0[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_0[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_0[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan1[0]">
+            <el-radio-group v-model="radio_manufacture_plan1[0]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -1156,40 +1068,37 @@
             制造站2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan1_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan1_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan1_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan1_1[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_1[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_1[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_1[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_1[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_1[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan1[1]">
+            <el-radio-group v-model="radio_manufacture_plan1[1]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -1202,40 +1111,37 @@
             制造站3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan1_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan1_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan1_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan1_2[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_2[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_2[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_2[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_2[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_2[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan1[2]">
+            <el-radio-group v-model="radio_manufacture_plan1[2]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -1251,40 +1157,37 @@
             制造站4
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan1_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan1_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan1_3[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan1_3[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_3[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_3[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_3[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_3[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_3[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan1[3]">
+            <el-radio-group v-model="radio_manufacture_plan1[3]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -1297,40 +1200,37 @@
             制造站5
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan1_4[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan1_4[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan1_4[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan1_4[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_4[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_4[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_4[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan1_4[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan1_4[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan1[4]">
+            <el-radio-group v-model="radio_manufacture_plan1[4]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -1343,21 +1243,19 @@
             发电站1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_power_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_power_plan1_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="power_plan1_0[0]" filterable placeholder="请选择" >
+            <el-select v-model="power_plan1_0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_POWER" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -1367,21 +1265,19 @@
             发电站2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_power_plan1_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_power_plan1_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="power_plan1_0[1]" filterable placeholder="请选择" >
+            <el-select v-model="power_plan1_0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_POWER" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -1392,21 +1288,19 @@
             发电站3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_power_plan1_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_power_plan1_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="power_plan1_0[2]" filterable placeholder="请选择" >
+            <el-select v-model="power_plan1_0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_POWER" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -1416,22 +1310,20 @@
             会客室
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_meeting_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_meeting_plan1_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="meeting_plan1_0[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="meeting_plan1_0[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="meeting_plan1_0[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="meeting_plan1_0[1]"></el-input>
           </div>
         </div>
         <div class="riic_building building_hr">
@@ -1439,21 +1331,19 @@
             办公室
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_hire_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_hire_plan1_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="hire_plan1_0[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="hire_plan1_0[0]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -1461,32 +1351,29 @@
             宿舍1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan1_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan1_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_0[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_0[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_0[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_0[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_0[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_0[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_0[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_0[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_0[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_0[4]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -1494,32 +1381,29 @@
             宿舍2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan1_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan1_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan1_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_1[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_1[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_1[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_1[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_1[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_1[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_1[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_1[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_1[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_1[4]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -1527,32 +1411,29 @@
             宿舍3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan1_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan1_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan1_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_2[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_2[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_2[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_2[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_2[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_2[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_2[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_2[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_2[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_2[4]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -1560,32 +1441,29 @@
             宿舍4
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan1_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan1_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan1_3[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_3[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_3[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_3[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_3[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan1_3[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_3[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_3[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_3[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_3[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan1_3[4]"></el-input>
           </div>
         </div>
       </div>
@@ -1594,23 +1472,23 @@
           <div class="riic_building_title">班次基本信息</div>
           <div class="riic_building_parameter">
             <div class="parameter_text">班次名称</div>
-            <el-input  class="parameter_inputbox" placeholder="例如：主力组A" v-model="name[2]"></el-input>
+            <el-input class="parameter_inputbox" placeholder="例如：主力组A" v-model="name[2]"></el-input>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">描述</div>
-            <el-input  class="parameter_inputbox" placeholder="可选" v-model="descriptionH2[2]"></el-input>
+            <el-input class="parameter_inputbox" placeholder="可选" v-model="descriptionH2[2]"></el-input>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">无人机</div>
             <el-switch active-color="#13ce66" inactive-color="#c0c4cc" v-model="switch_drones_enable[2]"></el-switch>
-            <el-radio-group  v-model="radio_drones[2]">
+            <el-radio-group v-model="radio_drones[2]">
               <el-radio-button label="贸易站"></el-radio-button>
               <el-radio-button label="制造站"></el-radio-button>
             </el-radio-group>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">目标房间编号</div>
-            <el-radio-group  v-model="radio_drones_index[2]">
+            <el-radio-group v-model="radio_drones_index[2]">
               <el-radio-button label="1"></el-radio-button>
               <el-radio-button label="2"></el-radio-button>
               <el-radio-button label="3"></el-radio-button>
@@ -1620,7 +1498,7 @@
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">使用顺序</div>
-            <el-radio-group  v-model="input_drones_order[2]">
+            <el-radio-group v-model="input_drones_order[2]">
               <el-radio-button label="换班前"></el-radio-button>
               <el-radio-button label="换班后"></el-radio-button>
             </el-radio-group>
@@ -1629,7 +1507,6 @@
             <div class="parameter_text">菲亚梅塔</div>
             <el-switch active-color="#13ce66" inactive-color="#c0c4cc" v-model="switch_Fiammetta_enable[2]"></el-switch>
             <el-input
-              
               style="width: 128px"
               class="parameter_inputbox"
               placeholder="例如：巫恋"
@@ -1638,7 +1515,7 @@
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">使用顺序</div>
-            <el-radio-group  v-model="input_Fiammetta_order[2]">
+            <el-radio-group v-model="input_Fiammetta_order[2]">
               <el-radio-button label="换班前"></el-radio-button>
               <el-radio-button label="换班后"></el-radio-button>
             </el-radio-group>
@@ -1649,26 +1526,25 @@
             控制中枢
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="control_skip[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="control_plan2[0]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan2[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan2[1]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan2[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan2[2]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan2[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan2[3]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan2[3]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="control_plan2[4]" filterable placeholder="请选择" >
+            <el-select v-model="control_plan2[4]" filterable placeholder="请选择">
               <el-option v-for="item in char_CONTROL" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -1679,40 +1555,37 @@
             贸易站1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_trading_plan2_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_trading_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_trading_plan2_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="trading_plan2_0[0]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan2_0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan2_0[1]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan2_0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan2_0[2]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan2_0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_trading_plan2[0]">
+            <el-radio-group v-model="radio_trading_plan2[0]">
               <el-radio-button label="龙门币"></el-radio-button>
               <el-radio-button label="合成玉"></el-radio-button>
             </el-radio-group>
@@ -1727,40 +1600,37 @@
             贸易站2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_trading_plan2_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_trading_plan2_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_trading_plan2_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="trading_plan2_1[0]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan2_1[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan2_1[1]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan2_1[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan2_1[2]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan2_1[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_trading_plan2[1]">
+            <el-radio-group v-model="radio_trading_plan2[1]">
               <el-radio-button label="龙门币"></el-radio-button>
               <el-radio-button label="合成玉"></el-radio-button>
             </el-radio-group>
@@ -1772,40 +1642,37 @@
             贸易站3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_trading_plan2_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_trading_plan2_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_trading_plan2_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="trading_plan2_2[0]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan2_2[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan2_2[1]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan2_2[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="trading_plan2_2[2]" filterable placeholder="请选择" >
+            <el-select v-model="trading_plan2_2[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_TRADING" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_trading_plan2[2]">
+            <el-radio-group v-model="radio_trading_plan2[2]">
               <el-radio-button label="龙门币"></el-radio-button>
               <el-radio-button label="合成玉"></el-radio-button>
             </el-radio-group>
@@ -1816,40 +1683,37 @@
             制造站1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan2_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan2_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan2_0[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_0[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_0[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan2[0]">
+            <el-radio-group v-model="radio_manufacture_plan2[0]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -1861,40 +1725,37 @@
             制造站2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan2_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan2_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan2_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan2_1[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_1[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_1[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_1[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_1[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_1[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan2[1]">
+            <el-radio-group v-model="radio_manufacture_plan2[1]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -1906,40 +1767,37 @@
             制造站3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan2_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan2_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan2_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan2_2[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_2[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_2[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_2[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_2[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_2[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan2[2]">
+            <el-radio-group v-model="radio_manufacture_plan2[2]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -1954,40 +1812,37 @@
             制造站4
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan2_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan2_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan2_3[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan2_3[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_3[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_3[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_3[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_3[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_3[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan2[3]">
+            <el-radio-group v-model="radio_manufacture_plan2[3]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -1999,40 +1854,37 @@
             制造站5
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_manufacture_plan2_4[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_manufacture_plan2_4[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_manufacture_plan2_4[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="manufacture_plan2_4[0]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_4[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_4[1]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_4[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
-            <el-select v-model="manufacture_plan2_4[2]" filterable placeholder="请选择" >
+            <el-select v-model="manufacture_plan2_4[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_MANUFACTURE" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text">产物</div>
-            <el-radio-group  v-model="radio_manufacture_plan2[4]">
+            <el-radio-group v-model="radio_manufacture_plan2[4]">
               <el-radio-button label="作战记录"></el-radio-button>
               <el-radio-button label="赤金"></el-radio-button>
               <el-radio-button label="源石碎片"></el-radio-button>
@@ -2044,21 +1896,19 @@
             发电站1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_power_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_power_plan2_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="power_plan2_0[0]" filterable placeholder="请选择" >
+            <el-select v-model="power_plan2_0[0]" filterable placeholder="请选择">
               <el-option v-for="item in char_POWER" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -2068,21 +1918,19 @@
             发电站2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_power_plan2_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_power_plan2_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="power_plan2_0[1]" filterable placeholder="请选择" >
+            <el-select v-model="power_plan2_0[1]" filterable placeholder="请选择">
               <el-option v-for="item in char_POWER" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -2093,21 +1941,19 @@
             发电站3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_power_plan2_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_power_plan2_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-select v-model="power_plan2_0[2]" filterable placeholder="请选择" >
+            <el-select v-model="power_plan2_0[2]" filterable placeholder="请选择">
               <el-option v-for="item in char_POWER" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </div>
@@ -2117,22 +1963,20 @@
             会客室
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_meeting_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_meeting_plan2_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="meeting_plan2_0[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="meeting_plan2_0[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="meeting_plan2_0[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="meeting_plan2_0[1]"></el-input>
           </div>
         </div>
         <div class="riic_building building_hr">
@@ -2140,21 +1984,19 @@
             办公室
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_hire_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_hire_plan2_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="hire_plan2_0[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="hire_plan2_0[0]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -2162,32 +2004,29 @@
             宿舍1
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan2_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan2_0[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_0[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_0[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_0[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_0[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_0[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_0[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_0[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_0[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_0[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_0[4]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -2195,32 +2034,29 @@
             宿舍2
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan2_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan2_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan2_1[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_1[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_1[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_1[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_1[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_1[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_1[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_1[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_1[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_1[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_1[4]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -2228,32 +2064,29 @@
             宿舍3
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan2_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan2_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan2_2[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_2[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_2[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_2[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_2[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_2[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_2[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_2[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_2[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_2[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_2[4]"></el-input>
           </div>
         </div>
         <div class="riic_building building_dormitory">
@@ -2261,32 +2094,29 @@
             宿舍4
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="顺序入驻"
               border
               v-model="switch_dormitory_plan2_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="补满空位"
               border
               v-model="switch_dormitory_plan2_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              
               label="跳过"
               border
               v-model="switch_dormitory_plan2_3[2]"
             ></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_3[0]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_3[1]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_3[2]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_3[3]"></el-input>
-            <el-input class="operator_inputbox"  placeholder="1" v-model="dormitory_plan2_3[4]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_3[0]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_3[1]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_3[2]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_3[3]"></el-input>
+            <el-input class="operator_inputbox" placeholder="1" v-model="dormitory_plan2_3[4]"></el-input>
           </div>
         </div>
       </div>

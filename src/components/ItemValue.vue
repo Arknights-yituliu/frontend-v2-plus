@@ -189,8 +189,6 @@ export default {
     getItemName(item) {
       return item;
     },
-
-    
   },
 };
 </script>
