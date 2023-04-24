@@ -18,7 +18,16 @@
             table-layout="auto"
             :default-sort="{ prop: 'packPPROriginium', order: 'descending' }"
           >
-            <el-table-column sortable prop="packShowName" label="名称" />
+            <el-table-column
+              sortable
+              prop="packShowName"
+              label="名称"
+              :sort-by="
+                (row, index) => {
+                  return row.packShowName;
+                }
+              "
+            />
             <el-table-column
               sortable
               label="类型"
@@ -61,6 +70,11 @@
                   return row.packPrice + '元';
                 }
               "
+              :sort-by="
+                (row, index) => {
+                  return row.packPrice;
+                }
+              "
             />
             <el-table-column
               sortable
@@ -68,6 +82,11 @@
               :formatter="
                 (row, col) => {
                   return row.packDraw.toFixed(2);
+                }
+              "
+              :sort-by="
+                (row, index) => {
+                  return row.packDraw;
                 }
               "
             />
@@ -79,6 +98,11 @@
                   return row.packPPRDraw.toFixed(2);
                 }
               "
+              :sort-by="
+                (row, index) => {
+                  return row.packPPRDraw;
+                }
+              "
             />
             <el-table-column
               sortable
@@ -87,6 +111,11 @@
               :formatter="
                 (row, col) => {
                   return row.packPPROriginium.toFixed(2);
+                }
+              "
+              :sort-by="
+                (row, index) => {
+                  return row.packPPROriginium;
                 }
               "
             />
