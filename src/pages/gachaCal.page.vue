@@ -1347,9 +1347,10 @@ export default {
 
     //判断奖励是否在时间段内
     isDuringDate(start, end, rewardType,packName) {
-      console.log(packName,end < this.start_TimeStamp,'/' ,start <= this.end_TimeStamp,'/' , ("公共" === rewardType || this.rewardType === rewardType),'/' ,)
+      console.log(packName,!end < this.start_TimeStamp,'/' ,start <= this.end_TimeStamp,'/'
+       , ("公共" === rewardType || this.rewardType === rewardType),'/' ,)
       if(end < this.start_TimeStamp) return false;
-      if (start <= this.end_TimeStamp &&("公共" === rewardType || this.rewardType === rewardType)) return true;
+      if(start <= this.end_TimeStamp &&("公共" === rewardType || this.rewardType === rewardType)) return true;
     
       return false;
     },
