@@ -12,9 +12,7 @@
     <div class="universal_module">
       <div v-show="calResult.weeks > 0">{{ calResult.weeks.toFixed(0) }}周后可还清</div>
       <div>拆碳还债<el-switch v-model="cabronFlag" @change="cal()"></el-switch></div>
-      <div>
-        {{ calResult.lmdCost.toFixed(0) }}龙门币可拆{{ furniturePartsByCarbon }}零件，尚欠{{ loansRepaid }}个零件
-      </div>
+      <div>{{ calResult.lmdCost.toFixed(0) }}龙门币可拆{{ furniturePartsByCarbon }}零件，尚欠{{ loansRepaid }}个零件</div>
       <div class="universal_module">
         <div class="input_group">
           <div class="input_group_item">
@@ -122,8 +120,7 @@ function cal() {
   console.log("每周获得:", loansRepaid.value - SK5Times.value * 50);
 
   calResult.value.weeks =
-    (loansRepaid.value - SK5Times.value * 50) /
-    (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore); //计算需要多少天上岸
+    (loansRepaid.value - SK5Times.value * 50) / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore); //计算需要多少天上岸
 
   console.log("每周获得:", DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore);
 

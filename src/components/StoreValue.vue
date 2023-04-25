@@ -280,10 +280,7 @@
                   <tr class="act_table_r1">
                     <td>{{ singleItem.itemName }}</td>
                   </tr>
-                  <tr
-                    class="act_table_r2"
-                    :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)"
-                  >
+                  <tr class="act_table_r2" :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)">
                     <!--故事集 合约 1.25 0.25  ss 3 1-->
                     <td>{{ getEfficiency(singleItem.itemPPR) }}</td>
                   </tr>
@@ -320,10 +317,7 @@
                   <tr class="act_table_r1">
                     <td>{{ singleItem.itemName }}</td>
                   </tr>
-                  <tr
-                    class="act_table_r2"
-                    :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)"
-                  >
+                  <tr class="act_table_r2" :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)">
                     <!--故事集 合约 1.25 0.25  ss 3 1-->
                     <td>{{ getEfficiency(singleItem.itemPPR) }}</td>
                   </tr>
@@ -360,10 +354,7 @@
                   <tr class="act_table_r1">
                     <td>{{ singleItem.itemName }}</td>
                   </tr>
-                  <tr
-                    class="act_table_r2"
-                    :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)"
-                  >
+                  <tr class="act_table_r2" :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)">
                     <!--故事集 合约 1.25 0.25  ss 3 1-->
                     <td>{{ getEfficiency(singleItem.itemPPR) }}</td>
                   </tr>
@@ -471,11 +462,7 @@ export default {
       return parseFloat(num).toFixed(2);
     },
     getBackground(url) {
-      return (
-        "background: linear-gradient(rgba(144, 164, 174, 0.7), rgba(144, 164, 174, 0.7)), url(" +
-        url +
-        ") no-repeat 50% 50% /cover;"
-      );
+      return "background: linear-gradient(rgba(144, 164, 174, 0.7), rgba(144, 164, 174, 0.7)), url(" + url + ") no-repeat 50% 50% /cover;";
     },
     getColor(color, dividing, tier) {
       tier = typeof tier !== "undefined" ? tier : 1;

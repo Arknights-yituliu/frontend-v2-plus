@@ -9,11 +9,7 @@
         </div>
         <div class="riic_building_parameter">
           <div class="parameter_text">描述(可选)</div>
-          <el-input
-            class="parameter_inputbox"
-            placeholder="适合全干员，压榨每一个工具人！"
-            v-model="descriptionH1"
-          ></el-input>
+          <el-input class="parameter_inputbox" placeholder="适合全干员，压榨每一个工具人！" v-model="descriptionH1"></el-input>
         </div>
         <div class="riic_building_parameter">
           <div class="parameter_text">作者(可选)</div>
@@ -42,50 +38,20 @@
         <div class="riic_building_parameter">
           <div class="parameter_text" style="width: 108px">名称/起止时间</div>
           <el-input class="parameter_inputbox" placeholder="主力组A" style="width: 90px" v-model="name[0]"></el-input>
-          <el-input
-            class="parameter_inputbox"
-            placeholder="20:00"
-            style="width: 80px"
-            v-model="period_plan0[0]"
-          ></el-input>
-          <el-input
-            class="parameter_inputbox"
-            placeholder="23:59"
-            style="width: 80px"
-            v-model="period_plan0[1]"
-          ></el-input>
+          <el-input class="parameter_inputbox" placeholder="20:00" style="width: 80px" v-model="period_plan0[0]"></el-input>
+          <el-input class="parameter_inputbox" placeholder="23:59" style="width: 80px" v-model="period_plan0[1]"></el-input>
         </div>
         <div class="riic_building_parameter">
           <div class="parameter_text" style="width: 108px">名称/起止时间</div>
           <el-input class="parameter_inputbox" placeholder="主力组B" style="width: 90px" v-model="name[1]"></el-input>
-          <el-input
-            class="parameter_inputbox"
-            placeholder="03:00"
-            style="width: 80px"
-            v-model="period_plan1[0]"
-          ></el-input>
-          <el-input
-            class="parameter_inputbox"
-            placeholder="10:00"
-            style="width: 80px"
-            v-model="period_plan1[1]"
-          ></el-input>
+          <el-input class="parameter_inputbox" placeholder="03:00" style="width: 80px" v-model="period_plan1[0]"></el-input>
+          <el-input class="parameter_inputbox" placeholder="10:00" style="width: 80px" v-model="period_plan1[1]"></el-input>
         </div>
         <div class="riic_building_parameter" v-show="'3班' === planTimes">
           <div class="parameter_text" style="width: 108px">名称/起止时间</div>
           <el-input class="parameter_inputbox" placeholder="主力组C" style="width: 90px" v-model="name[2]"></el-input>
-          <el-input
-            class="parameter_inputbox"
-            placeholder="10:00"
-            style="width: 80px"
-            v-model="period_plan2[0]"
-          ></el-input>
-          <el-input
-            class="parameter_inputbox"
-            placeholder="20:00"
-            style="width: 80px"
-            v-model="period_plan2[1]"
-          ></el-input>
+          <el-input class="parameter_inputbox" placeholder="10:00" style="width: 80px" v-model="period_plan2[0]"></el-input>
+          <el-input class="parameter_inputbox" placeholder="20:00" style="width: 80px" v-model="period_plan2[1]"></el-input>
         </div>
         <div class="riic_building_parameter">
           *跨天需写成 22:00 —— 06:00 (MAA执行周期为24小时)
@@ -96,17 +62,13 @@
       <div class="riic_building">
         <div class="riic_building_title">方案导入/导出</div>
         <div class="riic_building_parameter">
-          <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()">
-            生成排班方案
-          </el-button>
+          <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()"> 生成排班方案 </el-button>
           <div
             id="export_cover"
             style="position: absolute; width: 230px; height: 44px; margin: -42px 18px 18px 137px; background: #ffffff80"
           ></div>
           <a :href="exportUrl">
-            <el-button size="large" type="primary" round style="width: 108px; margin-left: 12px">
-              导出到本地
-            </el-button>
+            <el-button size="large" type="primary" round style="width: 108px; margin-left: 12px"> 导出到本地 </el-button>
           </a>
           <!-- <el-button size="large" type="primary" round style="width:108px;padding-left:10px;" @click="MaaURLCopy()">
                 导出到MAA
@@ -118,15 +80,8 @@
           </el-button> *(后续可用)
         </div> -->
         <div class="riic_building_parameter">
-          <el-button size="large" type="primary" round style="width: 126px" @click="retrieveSchedule()">
-            通过id导入
-          </el-button>
-          <el-input
-            class="parameter_inputbox"
-            placeholder="id"
-            style="margin-left: 12px; width: 150px"
-            v-model="importId"
-          ></el-input>
+          <el-button size="large" type="primary" round style="width: 126px" @click="retrieveSchedule()"> 通过id导入 </el-button>
+          <el-input class="parameter_inputbox" placeholder="id" style="margin-left: 12px; width: 150px" v-model="importId"></el-input>
         </div>
         <div class="riic_building_parameter">
           *导出json文件的文件名即为id <br />
@@ -192,12 +147,7 @@
           <div class="riic_building_parameter">
             <div class="parameter_text">菲亚梅塔</div>
             <el-switch active-color="#13ce66" inactive-color="#c0c4cc" v-model="switch_Fiammetta_enable[0]"></el-switch>
-            <el-input
-              style="width: 128px"
-              class="parameter_inputbox"
-              placeholder="例如：巫恋"
-              v-model="Fiammetta[0]"
-            ></el-input>
+            <el-input style="width: 128px" class="parameter_inputbox" placeholder="例如：巫恋" v-model="Fiammetta[0]"></el-input>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">使用顺序</div>
@@ -277,10 +227,7 @@
           </div>
         </div>
 
-        <div
-          class="riic_building building_trade"
-          v-show="'243' === buildingType || '333' === buildingType || '252' === buildingType"
-        >
+        <div class="riic_building building_trade" v-show="'243' === buildingType || '333' === buildingType || '252' === buildingType">
           <div class="riic_building_title">
             贸易站2
             <el-checkbox
@@ -492,10 +439,7 @@
           </div>
         </div>
 
-        <div
-          class="riic_building building_factory"
-          v-show="'243' === buildingType || '153' === buildingType || '252' === buildingType"
-        >
+        <div class="riic_building building_factory" v-show="'243' === buildingType || '153' === buildingType || '252' === buildingType">
           <div class="riic_building_title">
             制造站4
             <el-checkbox
@@ -849,12 +793,7 @@
           <div class="riic_building_parameter">
             <div class="parameter_text">菲亚梅塔</div>
             <el-switch active-color="#13ce66" inactive-color="#c0c4cc" v-model="switch_Fiammetta_enable[1]"></el-switch>
-            <el-input
-              style="width: 128px"
-              class="parameter_inputbox"
-              placeholder="例如：巫恋"
-              v-model="Fiammetta[1]"
-            ></el-input>
+            <el-input style="width: 128px" class="parameter_inputbox" placeholder="例如：巫恋" v-model="Fiammetta[1]"></el-input>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">使用顺序</div>
@@ -935,10 +874,7 @@
             </el-radio-group>
           </div>
         </div>
-        <div
-          class="riic_building building_trade"
-          v-show="'243' === buildingType || '333' === buildingType || '252' === buildingType"
-        >
+        <div class="riic_building building_trade" v-show="'243' === buildingType || '333' === buildingType || '252' === buildingType">
           <div class="riic_building_title">
             贸易站2
             <el-checkbox
@@ -1149,10 +1085,7 @@
           </div>
         </div>
 
-        <div
-          class="riic_building building_factory"
-          v-show="'243' === buildingType || '153' === buildingType || '252' === buildingType"
-        >
+        <div class="riic_building building_factory" v-show="'243' === buildingType || '153' === buildingType || '252' === buildingType">
           <div class="riic_building_title">
             制造站4
             <el-checkbox
@@ -1506,12 +1439,7 @@
           <div class="riic_building_parameter">
             <div class="parameter_text">菲亚梅塔</div>
             <el-switch active-color="#13ce66" inactive-color="#c0c4cc" v-model="switch_Fiammetta_enable[2]"></el-switch>
-            <el-input
-              style="width: 128px"
-              class="parameter_inputbox"
-              placeholder="例如：巫恋"
-              v-model="Fiammetta[2]"
-            ></el-input>
+            <el-input style="width: 128px" class="parameter_inputbox" placeholder="例如：巫恋" v-model="Fiammetta[2]"></el-input>
           </div>
           <div class="riic_building_parameter">
             <div class="parameter_text" style="font-size: 15px">使用顺序</div>
@@ -1592,10 +1520,7 @@
           </div>
         </div>
 
-        <div
-          class="riic_building building_trade"
-          v-show="'243' === buildingType || '333' === buildingType || '252' === buildingType"
-        >
+        <div class="riic_building building_trade" v-show="'243' === buildingType || '333' === buildingType || '252' === buildingType">
           <div class="riic_building_title">
             贸易站2
             <el-checkbox
@@ -1804,10 +1729,7 @@
             </el-radio-group>
           </div>
         </div>
-        <div
-          class="riic_building building_factory"
-          v-show="'243' === buildingType || '153' === buildingType || '252' === buildingType"
-        >
+        <div class="riic_building building_factory" v-show="'243' === buildingType || '153' === buildingType || '252' === buildingType">
           <div class="riic_building_title">
             制造站4
             <el-checkbox
@@ -3067,9 +2989,7 @@ export default {
         this.trading_plan0_0 = this.historicalData.plans[0].rooms.trading[0].operators;
         this.switch_trading_plan0_0[0] = this.historicalData.plans[0].rooms.trading[0].sort;
         this.switch_trading_plan0_0[1] = this.historicalData.plans[0].rooms.trading[0].autofill;
-        this.radio_trading_plan0[0] = this.getProductValueReverse(
-          this.historicalData.plans[0].rooms.trading[0].product
-        );
+        this.radio_trading_plan0[0] = this.getProductValueReverse(this.historicalData.plans[0].rooms.trading[0].product);
       }
 
       if (
@@ -3085,9 +3005,7 @@ export default {
           this.trading_plan0_1 = this.historicalData.plans[0].rooms.trading[1].operators;
           this.switch_trading_plan0_1[0] = this.historicalData.plans[0].rooms.trading[1].sort;
           this.switch_trading_plan0_1[1] = this.historicalData.plans[0].rooms.trading[1].autofill;
-          this.radio_trading_plan0[1] = this.getProductValueReverse(
-            this.historicalData.plans[0].rooms.trading[1].product
-          );
+          this.radio_trading_plan0[1] = this.getProductValueReverse(this.historicalData.plans[0].rooms.trading[1].product);
         }
       }
 
@@ -3099,9 +3017,7 @@ export default {
           this.trading_plan0_2 = this.historicalData.plans[0].rooms.trading[2].operators;
           this.switch_trading_plan0_2[0] = this.historicalData.plans[0].rooms.trading[2].sort;
           this.switch_trading_plan0_2[1] = this.historicalData.plans[0].rooms.trading[2].autofill;
-          this.radio_trading_plan0[2] = this.getProductValueReverse(
-            this.historicalData.plans[0].rooms.trading[2].product
-          );
+          this.radio_trading_plan0[2] = this.getProductValueReverse(this.historicalData.plans[0].rooms.trading[2].product);
         }
       }
 
@@ -3112,9 +3028,7 @@ export default {
         this.manufacture_plan0_0 = this.historicalData.plans[0].rooms.manufacture[0].operators;
         this.switch_manufacture_plan0_0[0] = this.historicalData.plans[0].rooms.manufacture[0].sort;
         this.switch_manufacture_plan0_0[1] = this.historicalData.plans[0].rooms.manufacture[0].autofill;
-        this.radio_manufacture_plan0[0] = this.getProductValueReverse(
-          this.historicalData.plans[0].rooms.manufacture[0].product
-        );
+        this.radio_manufacture_plan0[0] = this.getProductValueReverse(this.historicalData.plans[0].rooms.manufacture[0].product);
       }
 
       if (this.historicalData.plans[0].rooms.manufacture[1].skip) {
@@ -3124,9 +3038,7 @@ export default {
         this.manufacture_plan0_1 = this.historicalData.plans[0].rooms.manufacture[1].operators;
         this.switch_manufacture_plan0_1[0] = this.historicalData.plans[0].rooms.manufacture[1].sort;
         this.switch_manufacture_plan0_1[1] = this.historicalData.plans[0].rooms.manufacture[1].autofill;
-        this.radio_manufacture_plan0[1] = this.getProductValueReverse(
-          this.historicalData.plans[0].rooms.manufacture[1].product
-        );
+        this.radio_manufacture_plan0[1] = this.getProductValueReverse(this.historicalData.plans[0].rooms.manufacture[1].product);
       }
 
       if (this.historicalData.plans[0].rooms.manufacture[2].skip) {
@@ -3136,9 +3048,7 @@ export default {
         this.manufacture_plan0_2 = this.historicalData.plans[0].rooms.manufacture[2].operators;
         this.switch_manufacture_plan0_2[0] = this.historicalData.plans[0].rooms.manufacture[2].sort;
         this.switch_manufacture_plan0_2[1] = this.historicalData.plans[0].rooms.manufacture[2].autofill;
-        this.radio_manufacture_plan0[2] = this.getProductValueReverse(
-          this.historicalData.plans[0].rooms.manufacture[2].product
-        );
+        this.radio_manufacture_plan0[2] = this.getProductValueReverse(this.historicalData.plans[0].rooms.manufacture[2].product);
       }
 
       if (
@@ -3153,9 +3063,7 @@ export default {
           this.manufacture_plan0_3 = this.historicalData.plans[0].rooms.manufacture[3].operators;
           this.switch_manufacture_plan0_3[0] = this.historicalData.plans[0].rooms.manufacture[3].sort;
           this.switch_manufacture_plan0_3[1] = this.historicalData.plans[0].rooms.manufacture[3].autofill;
-          this.radio_manufacture_plan0[3] = this.getProductValueReverse(
-            this.historicalData.plans[0].rooms.manufacture[3].product
-          );
+          this.radio_manufacture_plan0[3] = this.getProductValueReverse(this.historicalData.plans[0].rooms.manufacture[3].product);
         }
       }
 
@@ -3167,9 +3075,7 @@ export default {
           this.manufacture_plan0_4 = this.historicalData.plans[0].rooms.manufacture[4].operators;
           this.switch_manufacture_plan0_4[0] = this.historicalData.plans[0].rooms.manufacture[4].sort;
           this.switch_manufacture_plan0_4[1] = this.historicalData.plans[0].rooms.manufacture[4].autofill;
-          this.radio_manufacture_plan0[4] = this.getProductValueReverse(
-            this.historicalData.plans[0].rooms.manufacture[4].product
-          );
+          this.radio_manufacture_plan0[4] = this.getProductValueReverse(this.historicalData.plans[0].rooms.manufacture[4].product);
         }
       }
 
@@ -3291,9 +3197,7 @@ export default {
         this.trading_plan1_0 = this.historicalData.plans[1].rooms.trading[0].operators;
         this.switch_trading_plan1_0[0] = this.historicalData.plans[1].rooms.trading[0].sort;
         this.switch_trading_plan1_0[1] = this.historicalData.plans[1].rooms.trading[0].autofill;
-        this.radio_trading_plan1[0] = this.getProductValueReverse(
-          this.historicalData.plans[1].rooms.trading[0].product
-        );
+        this.radio_trading_plan1[0] = this.getProductValueReverse(this.historicalData.plans[1].rooms.trading[0].product);
       }
 
       if (
@@ -3308,9 +3212,7 @@ export default {
           this.trading_plan1_1 = this.historicalData.plans[1].rooms.trading[1].operators;
           this.switch_trading_plan1_1[0] = this.historicalData.plans[1].rooms.trading[1].sort;
           this.switch_trading_plan1_1[1] = this.historicalData.plans[1].rooms.trading[1].autofill;
-          this.radio_trading_plan1[1] = this.getProductValueReverse(
-            this.historicalData.plans[1].rooms.trading[1].product
-          );
+          this.radio_trading_plan1[1] = this.getProductValueReverse(this.historicalData.plans[1].rooms.trading[1].product);
         }
       }
 
@@ -3322,9 +3224,7 @@ export default {
           this.trading_plan1_2 = this.historicalData.plans[1].rooms.trading[2].operators;
           this.switch_trading_plan1_2[0] = this.historicalData.plans[1].rooms.trading[2].sort;
           this.switch_trading_plan1_2[1] = this.historicalData.plans[1].rooms.trading[2].autofill;
-          this.radio_trading_plan1[2] = this.getProductValueReverse(
-            this.historicalData.plans[1].rooms.trading[2].product
-          );
+          this.radio_trading_plan1[2] = this.getProductValueReverse(this.historicalData.plans[1].rooms.trading[2].product);
         }
       }
 
@@ -3335,9 +3235,7 @@ export default {
         this.manufacture_plan1_0 = this.historicalData.plans[1].rooms.manufacture[0].operators;
         this.switch_manufacture_plan1_0[0] = this.historicalData.plans[1].rooms.manufacture[0].sort;
         this.switch_manufacture_plan1_0[1] = this.historicalData.plans[1].rooms.manufacture[0].autofill;
-        this.radio_manufacture_plan1[0] = this.getProductValueReverse(
-          this.historicalData.plans[1].rooms.manufacture[0].product
-        );
+        this.radio_manufacture_plan1[0] = this.getProductValueReverse(this.historicalData.plans[1].rooms.manufacture[0].product);
       }
 
       if (this.historicalData.plans[1].rooms.manufacture[1].skip) {
@@ -3347,9 +3245,7 @@ export default {
         this.manufacture_plan1_1 = this.historicalData.plans[1].rooms.manufacture[1].operators;
         this.switch_manufacture_plan1_1[0] = this.historicalData.plans[1].rooms.manufacture[1].sort;
         this.switch_manufacture_plan1_1[1] = this.historicalData.plans[1].rooms.manufacture[1].autofill;
-        this.radio_manufacture_plan1[1] = this.getProductValueReverse(
-          this.historicalData.plans[1].rooms.manufacture[1].product
-        );
+        this.radio_manufacture_plan1[1] = this.getProductValueReverse(this.historicalData.plans[1].rooms.manufacture[1].product);
       }
 
       if (this.historicalData.plans[1].rooms.manufacture[2].skip) {
@@ -3359,9 +3255,7 @@ export default {
         this.manufacture_plan1_2 = this.historicalData.plans[1].rooms.manufacture[2].operators;
         this.switch_manufacture_plan1_2[0] = this.historicalData.plans[1].rooms.manufacture[2].sort;
         this.switch_manufacture_plan1_2[1] = this.historicalData.plans[1].rooms.manufacture[2].autofill;
-        this.radio_manufacture_plan1[2] = this.getProductValueReverse(
-          this.historicalData.plans[1].rooms.manufacture[2].product
-        );
+        this.radio_manufacture_plan1[2] = this.getProductValueReverse(this.historicalData.plans[1].rooms.manufacture[2].product);
       }
 
       if (
@@ -3376,9 +3270,7 @@ export default {
           this.manufacture_plan1_3 = this.historicalData.plans[1].rooms.manufacture[3].operators;
           this.switch_manufacture_plan1_3[0] = this.historicalData.plans[1].rooms.manufacture[3].sort;
           this.switch_manufacture_plan1_3[1] = this.historicalData.plans[1].rooms.manufacture[3].autofill;
-          this.radio_manufacture_plan1[3] = this.getProductValueReverse(
-            this.historicalData.plans[1].rooms.manufacture[3].product
-          );
+          this.radio_manufacture_plan1[3] = this.getProductValueReverse(this.historicalData.plans[1].rooms.manufacture[3].product);
         }
       }
 
@@ -3390,9 +3282,7 @@ export default {
           this.manufacture_plan1_4 = this.historicalData.plans[1].rooms.manufacture[4].operators;
           this.switch_manufacture_plan1_4[0] = this.historicalData.plans[1].rooms.manufacture[4].sort;
           this.switch_manufacture_plan1_4[1] = this.historicalData.plans[1].rooms.manufacture[4].autofill;
-          this.radio_manufacture_plan1[4] = this.getProductValueReverse(
-            this.historicalData.plans[1].rooms.manufacture[4].product
-          );
+          this.radio_manufacture_plan1[4] = this.getProductValueReverse(this.historicalData.plans[1].rooms.manufacture[4].product);
         }
       }
 
@@ -3516,9 +3406,7 @@ export default {
           this.trading_plan2_0 = this.historicalData.plans[2].rooms.trading[0].operators;
           this.switch_trading_plan2_0[0] = this.historicalData.plans[2].rooms.trading[0].sort;
           this.switch_trading_plan2_0[1] = this.historicalData.plans[2].rooms.trading[0].autofill;
-          this.radio_trading_plan2[0] = this.getProductValueReverse(
-            this.historicalData.plans[2].rooms.trading[0].product
-          );
+          this.radio_trading_plan2[0] = this.getProductValueReverse(this.historicalData.plans[2].rooms.trading[0].product);
         }
 
         if (
@@ -3533,9 +3421,7 @@ export default {
             this.trading_plan2_1 = this.historicalData.plans[2].rooms.trading[1].operators;
             this.switch_trading_plan2_1[0] = this.historicalData.plans[2].rooms.trading[1].sort;
             this.switch_trading_plan2_1[1] = this.historicalData.plans[2].rooms.trading[1].autofill;
-            this.radio_trading_plan2[1] = this.getProductValueReverse(
-              this.historicalData.plans[2].rooms.trading[1].product
-            );
+            this.radio_trading_plan2[1] = this.getProductValueReverse(this.historicalData.plans[2].rooms.trading[1].product);
           }
         }
 
@@ -3547,9 +3433,7 @@ export default {
             this.trading_plan2_2 = this.historicalData.plans[2].rooms.trading[2].operators;
             this.switch_trading_plan2_2[0] = this.historicalData.plans[2].rooms.trading[2].sort;
             this.switch_trading_plan2_2[1] = this.historicalData.plans[2].rooms.trading[2].autofill;
-            this.radio_trading_plan2[2] = this.getProductValueReverse(
-              this.historicalData.plans[2].rooms.trading[2].product
-            );
+            this.radio_trading_plan2[2] = this.getProductValueReverse(this.historicalData.plans[2].rooms.trading[2].product);
           }
         }
 
@@ -3560,9 +3444,7 @@ export default {
           this.manufacture_plan2_0 = this.historicalData.plans[2].rooms.manufacture[0].operators;
           this.switch_manufacture_plan2_0[0] = this.historicalData.plans[2].rooms.manufacture[0].sort;
           this.switch_manufacture_plan2_0[1] = this.historicalData.plans[2].rooms.manufacture[0].autofill;
-          this.radio_manufacture_plan2[0] = this.getProductValueReverse(
-            this.historicalData.plans[2].rooms.manufacture[0].product
-          );
+          this.radio_manufacture_plan2[0] = this.getProductValueReverse(this.historicalData.plans[2].rooms.manufacture[0].product);
         }
 
         if (this.historicalData.plans[2].rooms.manufacture[1].skip) {
@@ -3572,9 +3454,7 @@ export default {
           this.manufacture_plan2_1 = this.historicalData.plans[2].rooms.manufacture[1].operators;
           this.switch_manufacture_plan2_1[0] = this.historicalData.plans[2].rooms.manufacture[1].sort;
           this.switch_manufacture_plan2_1[1] = this.historicalData.plans[2].rooms.manufacture[1].autofill;
-          this.radio_manufacture_plan2[1] = this.getProductValueReverse(
-            this.historicalData.plans[2].rooms.manufacture[1].product
-          );
+          this.radio_manufacture_plan2[1] = this.getProductValueReverse(this.historicalData.plans[2].rooms.manufacture[1].product);
         }
 
         if (this.historicalData.plans[2].rooms.manufacture[2].skip) {
@@ -3584,9 +3464,7 @@ export default {
           this.manufacture_plan2_2 = this.historicalData.plans[2].rooms.manufacture[2].operators;
           this.switch_manufacture_plan2_2[0] = this.historicalData.plans[2].rooms.manufacture[2].sort;
           this.switch_manufacture_plan2_2[1] = this.historicalData.plans[2].rooms.manufacture[2].autofill;
-          this.radio_manufacture_plan2[2] = this.getProductValueReverse(
-            this.historicalData.plans[2].rooms.manufacture[2].product
-          );
+          this.radio_manufacture_plan2[2] = this.getProductValueReverse(this.historicalData.plans[2].rooms.manufacture[2].product);
         }
 
         if (
@@ -3601,9 +3479,7 @@ export default {
             this.manufacture_plan2_3 = this.historicalData.plans[2].rooms.manufacture[3].operators;
             this.switch_manufacture_plan2_3[0] = this.historicalData.plans[2].rooms.manufacture[3].sort;
             this.switch_manufacture_plan2_3[1] = this.historicalData.plans[2].rooms.manufacture[3].autofill;
-            this.radio_manufacture_plan2[3] = this.getProductValueReverse(
-              this.historicalData.plans[2].rooms.manufacture[3].product
-            );
+            this.radio_manufacture_plan2[3] = this.getProductValueReverse(this.historicalData.plans[2].rooms.manufacture[3].product);
           }
         }
 
@@ -3615,9 +3491,7 @@ export default {
             this.manufacture_plan2_4 = this.historicalData.plans[2].rooms.manufacture[4].operators;
             this.switch_manufacture_plan2_4[0] = this.historicalData.plans[2].rooms.manufacture[4].sort;
             this.switch_manufacture_plan2_4[1] = this.historicalData.plans[2].rooms.manufacture[4].autofill;
-            this.radio_manufacture_plan2[4] = this.getProductValueReverse(
-              this.historicalData.plans[2].rooms.manufacture[4].product
-            );
+            this.radio_manufacture_plan2[4] = this.getProductValueReverse(this.historicalData.plans[2].rooms.manufacture[4].product);
           }
         }
 
@@ -3715,13 +3589,7 @@ export default {
     getList(list) {
       let listCopy = [];
       for (let i = 0; i < list.length; i++) {
-        if (
-          "" === list[i] ||
-          undefined === list[i] ||
-          "undefined" === list[i] ||
-          undefined === typeof list[i] ||
-          "空置" === list[i]
-        ) {
+        if ("" === list[i] || undefined === list[i] || "undefined" === list[i] || undefined === typeof list[i] || "空置" === list[i]) {
           continue;
         }
         listCopy.push(list[i]);
