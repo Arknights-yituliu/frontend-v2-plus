@@ -1130,7 +1130,8 @@ export default {
       timeSelector: "4周年(5.15)", //活动时间节点选择框的绑定对象
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
-      gacha_storePacks: gacha_storePacksJson.data, //商店礼包
+      // gacha_storePacks: gacha_storePacksJson.data,
+      gacha_storePacks:this.pageContext.pageProps.pack_data,  //商店礼包
       gacha_storePacksList: [],
       gacha_store258: [], //黄票兑换38抽
       gacha_store258List: [],
@@ -1186,24 +1187,22 @@ export default {
       moreOptions: true,
       LMDCost: 0,
       pieData: [],
-
-      pack_data: this.pageContext.pageProps.pack_data,
+      // pack_data: this.pageContext.pageProps.pack_data,
     };
   },
   created() {
-    this.TimeStampFormat();
-    this.getDate();
-    // this.getInterval();
-    // this.getEveryreWard();
-    // this.getPoolCountDown();
+    this.setGacha_store258();
+    this.getTodayDate();
     this.checkEndDate();
   },
   mounted() {
+    
+    this.TimeStampFormat();
+    
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
     this.openNotification();
     toolApi.updateVisits("gacha");
-    console.log(this.pack_data);
   },
   methods: {
     //公告通知
@@ -1218,64 +1217,8 @@ export default {
       });
     },
 
-    TimeStampFormat() {
-      Object.entries(this.gacha_honeyCake).forEach((list) => {
-        list[1].start = Date.parse(new Date(list[1].start));
-        list[1].end = Date.parse(new Date(list[1].end));
-      });
-    },
-
-    // 选择攒计算的时间节点
-    checkEndDate() {
-      // this.cookieInit=true;
-      console.log(this.timeSelector);
-      if (this.timeSelector === "4周年(5.15)") {
-        this.endDate = "2023/05/15 03:59:00";
-        this.rewardType = "周年限定";
-        this.poolCountDownFlag_permit = false;
-        this.poolCountDownFlag_orundum = false;
-        this.gacha_store258List = [];
-      } else if (this.timeSelector === "夏活(以8.15计)") {
-        this.endDate = "2023/08/15 03:59:00";
-        this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
-        this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.gacha_store258List = [];
-      }
-
-      this.getInterval();
-      this.getEveryreWard();
-      this.getPoolCountDown();
-      this.setGacha_store258();
-      this.compute();
-    },
-
-    toFixedByAcc(num, acc) {
-      acc = typeof acc !== "undefined" ? acc : 2;
-      return parseFloat(num).toFixed(acc);
-    },
-
-    //获取雪碧图
-    getSpriteImg(packName, index) {
-      return "bg-" + packName + " sprite_gacha";
-      // return "bg-" + packName;
-    },
-
-    //判断奖励是否在时间段内
-    isDuringDate(start, end, rewardType) {
-      // console.log(Date.parse(new Date(start))>=this.start_TimeStamp ||Date.parse(new Date(end))<=this.end_TimeStamp)
-      // console.log(end ,'<=', this.end_TimeStamp)
-
-      if (
-        end > this.start_TimeStamp &&
-        end <= this.end_TimeStamp &&
-        ("公共" === rewardType || this.rewardType === rewardType)
-      )
-        return true;
-      return false;
-    },
-    //获取当天日期
-    getDate() {
+     //获取当天日期
+     getTodayDate () {
       const date = new Date();
       const y = date.getFullYear(); //年
       const m = (date.getMonth() + 1).toString().padStart(2, "0"); //月
@@ -1285,16 +1228,20 @@ export default {
       const s = date.getSeconds().toString().padStart(2, "0"); //秒
       this.startDate = `${y}/${m}/${d} ${h}:${mm}:${s}`;
     },
+   
 
-    //获取限定池和红包倒计时
-    getPoolCountDown() {
-      const num = parseInt((this.end_TimeStamp - this.start_TimeStamp) / 86400000); //计算距离限定池还有多少天
-      if (num < 14) {
-        //少于14天扣除每日赠送抽卡资源
-        this.poolCountDown = 14 - num;
-      }
-      console.log("限定池还有" + this.poolCountDown + "天,结束");
+    //日期转为时间戳
+    TimeStampFormat() {
+      Object.entries(this.gacha_honeyCake).forEach((list) => {
+        list[1].start = Date.parse(new Date(list[1].start));
+        list[1].end = Date.parse(new Date(list[1].end));
+      });
+      this.gacha_storePacks.forEach(element=>{
+        element.start = Date.parse(new Date(element.start));
+        element.end = Date.parse(new Date(element.end));
+      })
     },
+
 
     //获取还有多少天
     getInterval() {
@@ -1327,24 +1274,98 @@ export default {
       );
     },
 
-    // 设置258黄票商店兑换抽卡券
-    setGacha_store258() {
-      var m = new Date().getMonth() + 1; //月
+
+     // 设置258黄票商店兑换抽卡券
+     setGacha_store258() {
+      var moon_now = new Date().getMonth() + 1; //月
+      
+      var moon_max = 8;
+      let year_now = new Date().getFullYear();
       this.gacha_store258 = [];
-      for (var i = 0; i < this.remainingMonths; i++) {
+      for (var i = moon_now; i <= moon_max; i++) {
+        var moon_str = moon_now.toString().padStart(2, "0");
         this.gacha_store258.push({
-          packName: m + "月黄票换抽",
-          packPrice: "0",
-          gachaOriginium: "0",
-          gachaOrundum: "0",
-          gachaPermit: "8",
-          gachaPermit10: "3",
-          price: "0.00",
+          packName: moon_now + "月黄票换抽",
+          packPrice: 0,
+          gachaOriginium: 0,
+          gachaOrundum: 0,
+          gachaPermit: 8,
+          gachaPermit10: 3,
           packType: "store",
+          start:946656000000,
+          end: Date.parse(new Date(year_now+'/'+ moon_str +'/01 00:00:00')),
+          rewardType:'公共'
         });
-        m++;
-        m = ((m - 1) % 12) + 1;
+
+        this.gacha_storePacks.push({
+          packName: moon_now + "月大月卡",
+          packPrice: 168,
+          gachaOriginium: 42,
+          gachaOrundum: 0,
+          gachaPermit: 0,
+          gachaPermit10: 1,
+          packType: "monthly",
+          packRmbPerDraw:7.4,
+          start:946656000000,
+          end: Date.parse(new Date(year_now+'/'+ moon_str +'/01 00:00:00')),
+          rewardType:'公共'
+        });
+
+        console.log(year_now+'/'+ moon_str +'/01 00:00:00')
+        moon_now++;
+        if(moon_now > 12){
+          moon_now =1;
+          year_now++;
+        }
       }
+    },
+
+    // 选择攒计算的时间节点
+    checkEndDate() {
+      // this.cookieInit=true;
+      console.log(this.timeSelector);
+      if (this.timeSelector === "4周年(5.15)") {
+        this.endDate = "2023/05/15 03:59:00";
+        this.rewardType = "周年限定";
+        this.poolCountDownFlag_permit = false;
+        this.poolCountDownFlag_orundum = false;
+        this.gacha_store258List = [];
+      } else if (this.timeSelector === "夏活(以8.15计)") {
+        this.endDate = "2023/08/15 03:59:00";
+        this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
+        this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
+        this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
+        this.gacha_store258List = [];
+      }
+
+      this.getInterval();
+      this.getEveryreWard();
+      this.getPoolCountDown();
+      
+      this.compute();
+    },
+
+    
+
+    //判断奖励是否在时间段内
+    isDuringDate(start, end, rewardType) {
+      // console.log(Date.parse(new Date(start))>=this.start_TimeStamp ||Date.parse(new Date(end))<=this.end_TimeStamp)
+      // console.log(end ,'<=', this.end_TimeStamp)
+       
+      if(end < this.start_TimeStamp) return false;
+      if (start <= this.end_TimeStamp &&("公共" === rewardType || this.rewardType === rewardType)) return true;
+      return false;
+    },
+   
+
+    //获取限定池和红包倒计时
+    getPoolCountDown() {
+      const num = parseInt((this.end_TimeStamp - this.start_TimeStamp) / 86400000); //计算距离限定池还有多少天
+      if (num < 14) {
+        //少于14天扣除每日赠送抽卡资源
+        this.poolCountDown = 14 - num;
+      }
+      console.log("限定池还有" + this.poolCountDown + "天,结束");
     },
 
     //  计算日常奖励
@@ -1445,6 +1466,13 @@ export default {
       // index是被选中的商店礼包json的索引
       this.gacha_storePacksList.forEach((index) => {
         //月卡单独判断
+        if(!this.isDuringDate(this.gacha_storePacks[index].start,this.gacha_storePacks[index].end,this.gacha_storePacks[index].rewardType)){
+          console.log(this.gacha_storePacks[index].packName,'过期');
+          console.log(this.gacha_storePacks[index].end > this.start_TimeStamp)
+          console.log(this.gacha_storePacks[index].end <= this.end_TimeStamp)
+          
+          return;
+        }
         if ("月卡" === this.gacha_storePacks[index].packName) {
           // console.log("买的月卡个数", Math.ceil(this.remainingDays / 30));
           this.gacha_storePacks[index].gachaOrundum = parseInt(this.remainingDays) * 200; //重新给商店礼包json的月卡的相关属性赋值
@@ -1552,7 +1580,7 @@ export default {
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
 
       if (this.timeSelector === "夏活(以8.15计)") {
-        console.log(this.customValue_slider);
+        // console.log(this.customValue_slider);
         this.calResults.orundum_other += parseInt(this.customValue_slider);
       }
 
@@ -1756,6 +1784,17 @@ export default {
       this.calResults.permit10_other = 0;
     },
 
+    toFixedByAcc(num, acc) {
+      acc = typeof acc !== "undefined" ? acc : 2;
+      return parseFloat(num).toFixed(acc);
+    },
+
+    //获取雪碧图
+    getSpriteImg(packName, index) {
+      return "bg-" + packName + " sprite_gacha";
+      // return "bg-" + packName;
+    },
+
     getChapterWidth(index) {
       if (index % 2 === 0) return "width:200px;";
       else return "width:60px;";
@@ -1767,18 +1806,9 @@ export default {
       return "gacha_packPpr_t3";
     },
 
-    getInteger(num) {
-      return parseInt(parseInt(num / 100) * 100);
-    },
+ 
 
-    getTitleWord(index) {
-      for (let i in this.checkBox) {
-        if (index === this.checkBox[i]) {
-          return "收起";
-        }
-      }
-      return "展开";
-    },
+  
 
     pieChart(data) {
       let option = {
