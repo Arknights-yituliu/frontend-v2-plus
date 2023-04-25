@@ -29,20 +29,23 @@ TimeStampFormat() {
 
 ```
 isDuringDate(start, end, rewardType) {
-      if (end <= this.end_TimeStamp &&('公共'===rewardType||this.rewardType ===rewardType)) 
-      return true;
+      if(end < this.start_TimeStamp) return false;
+      if (start <= this.end_TimeStamp &&('公共'===rewardType||this.rewardType ===rewardType)) return true;
       return false;
 },
 ```
 在计算每个元素之前会对他们的start,end,rewardType属性进行判断（start暂不判断）
 
-### 第一个判断条件 end 举例：
+### 第一个判断条件 start 距离：
 this.end_TimeStamp对象为当前选择的活动节点日期的时间戳，<br>
 例如选择夏活限定，该活动节点结束日期为2023-8-15 03:59:00，this.end_TimeStamp即为日期被转换后的1692043140000。<br>
-此时有俩个元素需要被计算，他们的end分别为为 1692043130000 ，1692043150000<br>
+此时有俩个元素需要被计算，他们的start分别为 1692043130000（2023-08-15 03:58:50） ，1692043150000（2023-08-15 03:59:10）<br>
 前者判断结果为true，后者为false。<br>
 
-### 第二个判断条件 rewardType 举例：
+### 第二个判断条件 end 举例：
+如果他的结束日期小于当天日期，则直接返回false
+
+### 第三个判断条件 rewardType 举例：
 rewardType为该奖励项目元素的类型，用于区分一些限定某个卡池才可使用的抽卡道具，<br>
 属性值为 "公共" 代表该元素被允许所有的活动时间节点计算，<br>
 属性值为 "xx限定" 代表该元素仅被允许某一个特定活动时间节点计算。<br>
