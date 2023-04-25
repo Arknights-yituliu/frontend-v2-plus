@@ -1,10 +1,10 @@
 <template>
   <div id="gacha">
     <el-row :gutter="12" justify="center" class="gacha-row">
-      <el-col :xs="24" :sm="16" :md="12">
+      <el-col :xs="24" :sm="16" :md="12" class="col-1">
         <el-collapse v-model="checkBox1" @change="handleChange" class="top-collapse">
           <!-- 总计 -->
-          <el-collapse-item style="display: block; position: sticky; top: 60px; z-index: 99999999" name="0" id="totalTable">
+          <el-collapse-item name="0" id="totalTable">
             <template #title>
               <div class="gacha_title_icon" style="background: chocolate"></div>
               <span class="collapse-item_title" style="color: purple">
@@ -27,7 +27,7 @@
                 <div
                   id="gacha_total_pie"
                   ref="gacha_total_pie"
-                  style="vertical-align: top; height: 200px; width: 300px; display: inline-block; top: 10px"
+                  style="vertical-align: top; height: 200px; width: 280px; display: inline-block; top: 10px"
                 ></div>
                 <table id="gacha_total_table">
                   <tbody>
@@ -104,7 +104,7 @@
       <el-col :xs="24" :sm="16" :md="12">
         <el-collapse v-model="checkBox">
           <!-- 现有库存 -->
-          <el-collapse-item name="1" style="display: block">
+          <el-collapse-item name="1">
             <template #title>
               <div class="gacha_title_icon"></div>
               <span class="collapse-item_title">库存/预留/搓玉 {{ toFixedByAcc(calResults.gachaTimes_exist, 0) }}抽</span>
@@ -1916,10 +1916,11 @@ export const documentProps = {
   border: none;
 }
 
-.top-collapse {
+.col-1 {
   position: sticky;
-  top: 64px;
+  top: 54px;
   z-index: 99;
+  height: 370px;
 }
 
 .main-stages {
@@ -1934,5 +1935,26 @@ export const documentProps = {
 .gacha-row {
   max-width: 1300px;
   width: 100%;
+}
+
+#totalTable {
+  margin-bottom: 0;
+}
+
+#gacha_total_chart {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#gacha_total_table {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-block;
+  position: relative;
+  top: 10px;
+  min-width: 150px;
+  width: 36%;
 }
 </style>
