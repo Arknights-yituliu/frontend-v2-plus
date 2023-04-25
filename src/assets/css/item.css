@@ -1,5 +1,4 @@
 .item_area {
-  display: flex;
   display: inline-flex;
   flex-wrap: wrap;
   width: 100%;
