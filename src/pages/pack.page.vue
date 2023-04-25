@@ -17,8 +17,20 @@
             stripe
             table-layout="auto"
             :default-sort="{ prop: 'packPPROriginium', order: 'descending' }"
+            border
           >
-            <el-table-column sortable prop="packShowName" label="名称" />
+            <el-table-column
+              sortable
+              prop="packShowName"
+              label="名称"
+              :sort-by="
+                (row, index) => {
+                  return row.packShowName;
+                }
+              "
+              min-width="154"
+              fixed
+            />
             <el-table-column
               sortable
               label="类型"
@@ -52,6 +64,7 @@
                   return row.packType;
                 }
               "
+              min-width="92"
             />
             <el-table-column
               sortable
@@ -61,6 +74,12 @@
                   return row.packPrice + '元';
                 }
               "
+              :sort-by="
+                (row, index) => {
+                  return row.packPrice;
+                }
+              "
+              min-width="80"
             />
             <el-table-column
               sortable
@@ -70,6 +89,27 @@
                   return row.packDraw.toFixed(2);
                 }
               "
+              :sort-by="
+                (row, index) => {
+                  return row.packDraw;
+                }
+              "
+              min-width="80"
+            />
+            <el-table-column
+              sortable
+              label="源石"
+              :formatter="
+                (row, col) => {
+                  return row.gachaOriginium;
+                }
+              "
+              :sort-by="
+                (row, index) => {
+                  return row.gachaOriginium;
+                }
+              "
+              min-width="80"
             />
             <el-table-column
               sortable
@@ -79,6 +119,12 @@
                   return row.packPPRDraw.toFixed(2);
                 }
               "
+              :sort-by="
+                (row, index) => {
+                  return row.packPPRDraw;
+                }
+              "
+              min-width="120"
             />
             <el-table-column
               sortable
@@ -89,6 +135,12 @@
                   return row.packPPROriginium.toFixed(2);
                 }
               "
+              :sort-by="
+                (row, index) => {
+                  return row.packPPROriginium;
+                }
+              "
+              min-width="120"
             />
           </el-table>
         </div>
