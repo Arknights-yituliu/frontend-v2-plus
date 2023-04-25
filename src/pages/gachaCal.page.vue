@@ -1077,7 +1077,7 @@ export default {
   created() {
     this.getTodayDate();
     this.TimeStampFormat();
-    this.setGacha_store258();
+    this.setPackData();
     this.checkEndDate();
   },
   mounted() {
@@ -1150,7 +1150,7 @@ export default {
     },
 
     // 设置258黄票商店兑换抽卡券
-    setGacha_store258() {
+    setPackData() {
       var moon_now = new Date().getMonth() + 1; //月
 
       var moon_max = 8;
@@ -1158,6 +1158,7 @@ export default {
       this.gacha_store258 = [];
       this.gacha_storePacks = [];
       this.gacha_storePacks = this.pageContext.pageProps.pack_data;
+      
       for (var i = moon_now; i <= moon_max; i++) {
         var moon_str = moon_now.toString().padStart(2, "0");
         this.gacha_store258.push({
