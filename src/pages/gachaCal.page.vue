@@ -1044,8 +1044,8 @@ export default {
       remainingMonths: 0, //剩余月数
       remainingCheckinTimes: 0, // 剩余签到次数
 
-      gachaTimes_originium:0,
-      
+      gachaTimes_originium: 0,
+
       originium_648: 0, //普通源石648
       originium_328: 0, //普通源石328
       originium_198: 0, //普通源石198
