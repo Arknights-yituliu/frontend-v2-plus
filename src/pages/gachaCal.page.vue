@@ -1191,14 +1191,12 @@ export default {
     };
   },
   created() {
-    this.setGacha_store258();
     this.getTodayDate();
+    this.setGacha_store258();
+    this.TimeStampFormat();
     this.checkEndDate();
   },
   mounted() {
-    
-    this.TimeStampFormat();
-    
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
     this.openNotification();
