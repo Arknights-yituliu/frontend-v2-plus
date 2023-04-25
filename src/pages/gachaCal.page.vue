@@ -1044,6 +1044,8 @@ export default {
       remainingMonths: 0, //剩余月数
       remainingCheckinTimes: 0, // 剩余签到次数
 
+      gachaTimes_originium:0,
+      
       originium_648: 0, //普通源石648
       originium_328: 0, //普通源石328
       originium_198: 0, //普通源石198
@@ -1077,10 +1079,11 @@ export default {
   created() {
     this.getTodayDate();
     this.TimeStampFormat();
-    this.setPackData();
     this.checkEndDate();
   },
   mounted() {
+    this.setPackData();
+
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
     this.openNotification();
@@ -1158,7 +1161,7 @@ export default {
       this.gacha_store258 = [];
       this.gacha_storePacks = [];
       this.gacha_storePacks = this.pageContext.pageProps.pack_data;
-      
+
       for (var i = moon_now; i <= moon_max; i++) {
         var moon_str = moon_now.toString().padStart(2, "0");
         this.gacha_store258.push({
@@ -1188,7 +1191,7 @@ export default {
           rewardType: "公共",
         });
 
-        console.log(year_now + "/" + moon_str + "/28 00:00:00");
+        // console.log(year_now + "/" + moon_str + "/28 00:00:00");
         moon_now++;
         if (moon_now > 12) {
           moon_now = 1;
@@ -1222,15 +1225,10 @@ export default {
 
     //判断奖励是否在时间段内
     isDuringDate(start, end, rewardType, packName) {
-      console.log(
-        packName,
-        !end < this.start_TimeStamp,
-        "/",
-        start <= this.end_TimeStamp,
-        "/",
-        "公共" === rewardType || this.rewardType === rewardType,
-        "/"
-      );
+      // console.log(
+      //   packName + !end < this.start_TimeStamp + "/" + start <= this.end_TimeStamp + "/",
+      //   "公共" === rewardType || this.rewardType === rewardType + "/"
+      // );
       if (end < this.start_TimeStamp) return false;
       if (start <= this.end_TimeStamp && ("公共" === rewardType || this.rewardType === rewardType)) return true;
 
