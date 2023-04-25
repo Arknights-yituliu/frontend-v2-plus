@@ -129,11 +129,7 @@
         <div class="stage_card_t2 uni_shadow_2">
           <div v-for="(materialRankT2, index) in stageRankT2.slice(0, 6)" :key="index" class="stage_card_t2_img">
             <!-- <img :src="getImgUrl(materialRankT2[0].itemName)" :alt="materialRankT2[0].itemName" "> -->
-            <div
-              :class="getSpriteImg(materialRankT2[0].itemId, 't2')"
-              :id="getCardId(index + 100)"
-              @click="showPopup(index + 100)"
-            ></div>
+            <div :class="getSpriteImg(materialRankT2[0].itemId, 't2')" :id="getCardId(index + 100)" @click="showPopup(index + 100)"></div>
           </div>
         </div>
       </div>
@@ -170,12 +166,7 @@
               <td class="popup_table_c7" style="width: 70px; width: 80px">关卡效率</td>
               <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
             </tr>
-            <tr
-              v-for="(stage, index) in popupData"
-              :key="index"
-              :class="getColor(stage.stageColor)"
-              class="stage_table_r"
-            >
+            <tr v-for="(stage, index) in popupData" :key="index" :class="getColor(stage.stageColor)" class="stage_table_r">
               <td class="popup_table_c1" :style="getHardcoreMark(stage.chapterName)">
                 {{ stage.stageCode }}
               </td>
@@ -275,9 +266,7 @@
           <div class="history_actStages">
             <div v-for="(stage, index) in closedAct" :key="index" class="history_stage">
               <div :class="getSpriteImg(stage.itemId, 'title')" style="display: inline-block"></div>
-              <div class="history_stage_table">
-                {{ stage.stageCode }}<br />{{ getEfficiency(stage.stageEfficiency) }}%
-              </div>
+              <div class="history_stage_table">{{ stage.stageCode }}<br />{{ getEfficiency(stage.stageEfficiency) }}%</div>
             </div>
           </div>
         </div>

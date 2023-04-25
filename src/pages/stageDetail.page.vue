@@ -115,11 +115,7 @@ function findStageDetailByStageCode(stageIdStr) {
       );
 
       if (efficiency < 0.9999) {
-        setNestPieChart(
-          "inside",
-          ((1 - efficiency) * 100).toFixed(2),
-          "浪费的理智\n占" + ((1 - efficiency) * 100).toFixed(1) + "%"
-        );
+        setNestPieChart("inside", ((1 - efficiency) * 100).toFixed(2), "浪费的理智\n占" + ((1 - efficiency) * 100).toFixed(1) + "%");
       }
 
       console.log(pieData_main.value);

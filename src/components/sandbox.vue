@@ -176,11 +176,7 @@ export default {
       return parseFloat(num).toFixed(2);
     },
     getBackground(url) {
-      return (
-        "background: linear-gradient(rgba(144, 164, 174, 0.7), rgba(144, 164, 174, 0.7)), url(" +
-        url +
-        ") no-repeat 50% 50% /cover;"
-      );
+      return "background: linear-gradient(rgba(144, 164, 174, 0.7), rgba(144, 164, 174, 0.7)), url(" + url + ") no-repeat 50% 50% /cover;";
     },
     getColor(color, dividing, tier) {
       tier = typeof tier !== "undefined" ? tier : 1;

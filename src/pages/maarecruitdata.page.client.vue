@@ -12,9 +12,7 @@
       <div id="poster_content">
         <div class="poster_block" style="margin-top: 0vw">
           <div class="poster_block_number">1</div>
-          <div class="poster_block_title" style="margin-top: 0">
-            各稀有度Tag<span class="text_special">出现的概率</span>
-          </div>
+          <div class="poster_block_title" style="margin-top: 0">各稀有度Tag<span class="text_special">出现的概率</span></div>
           <div class="poster_block_content pie_all" id="chart2" ref="chart"></div>
           <div class="probabilityDescribe">
             <table>
@@ -50,9 +48,7 @@
           </div>
           <div class="poster_block_content">
             <div class="poster_block_p1">
-              占到了5星tag的<span class="text_special"
-                >{{ getProbability(maaData.vulcan, maaData.seniorOperatorCount) }}%</span
-              >
+              占到了5星tag的<span class="text_special">{{ getProbability(maaData.vulcan, maaData.seniorOperatorCount) }}%</span>
             </div>
             <div class="poster_block_p1"></div>
             <div class="poster_block_p2">那因陀罗呢？</div>
@@ -79,8 +75,7 @@
           </div>
           <div class="poster_block_content">
             <div class="poster_block_p1">
-              但其中<span class="text_special">{{ getProbability(maaData.robotChoice, maaData.robot) }}%</span
-              >面临黄票的诱惑
+              但其中<span class="text_special">{{ getProbability(maaData.robotChoice, maaData.robot) }}%</span>面临黄票的诱惑
             </div>
             <div class="poster_block_p1"></div>
             <div class="poster_block_p2">Robot or certificates,</div>
@@ -96,9 +91,7 @@
             <span style="color: orange">MaaAssistantArknights</span>
           </div></a
         >
-        <a href="https://yituliu.site"
-          ><div class="poster_button" style="width: 64px; text-align: center">返回主站</div></a
-        >
+        <a href="https://yituliu.site"><div class="poster_button" style="width: 64px; text-align: center">返回主站</div></a>
       </div>
     </div>
   </div>

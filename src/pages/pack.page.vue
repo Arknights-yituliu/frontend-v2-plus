@@ -210,17 +210,11 @@
             v-for="(pack2, index) in packsPPRData"
             :key="index"
             class="pack_unit_list"
-            :style="
-              getDisplayStateDrawOnly(pack2.packState, pack2.packType, pack2.packPrice, packFilter, pack2.packPPRDraw)
-            "
+            :style="getDisplayStateDrawOnly(pack2.packState, pack2.packType, pack2.packPrice, packFilter, pack2.packPPRDraw)"
           >
             <div class="pack_unit">
               <!-- 图片部分 -->
-              <div
-                class="pack_img"
-                :style="getPackPic(pack2.packImg, pack2.packType)"
-                @click="switchPackContent(pack2.packID, 'draw')"
-              >
+              <div class="pack_img" :style="getPackPic(pack2.packImg, pack2.packType)" @click="switchPackContent(pack2.packID, 'draw')">
                 <div class="pack_img_text1">{{ pack2.packShowName }} ￥{{ pack2.packPrice }}</div>
 
                 <!-- 角标部分 -->
@@ -232,9 +226,7 @@
               </div>
               <!-- 表格部分 -->
               <div class="pack_info">
-                <div class="pack_info_text">
-                  共{{ getFixed(pack2.packDraw, 1) }}抽 <br />￥{{ getFixed(pack2.packRmbPerDraw, 1) }}/抽
-                </div>
+                <div class="pack_info_text">共{{ getFixed(pack2.packDraw, 1) }}抽 <br />￥{{ getFixed(pack2.packRmbPerDraw, 1) }}/抽</div>
                 <div class="pack_chart">
                   <div class="pack_chart_unit" v-show="pack2.packPPRDraw >= 1.57">
                     <div class="pack_chart_unit_text">本礼包</div>
@@ -305,11 +297,7 @@
             <!-- <div v-for="(pack3, index) in packsPPRData" :key="index" class="pack_unit_list"> -->
             <div v-show="pack3.packState == 1" class="pack_unit">
               <!-- 图片部分 -->
-              <div
-                class="pack_img"
-                :style="getPackPic(pack3.packImg, pack3.packType)"
-                @click="switchPackContent(pack3.packID, 'all')"
-              >
+              <div class="pack_img" :style="getPackPic(pack3.packImg, pack3.packType)" @click="switchPackContent(pack3.packID, 'all')">
                 <div class="pack_img_text1">{{ pack3.packShowName }} ￥{{ pack3.packPrice }}</div>
                 <!-- 角标部分 -->
                 <div class="pack_corner corner_new" v-show="pack3.packType == 'limited'">New!</div>
@@ -668,8 +656,7 @@ export default {
     },
 
     switchPackContent(id, type) {
-      if (document.getElementById(type + "_" + id).style.display == "none")
-        document.getElementById(type + "_" + id).style.display = "flex";
+      if (document.getElementById(type + "_" + id).style.display == "none") document.getElementById(type + "_" + id).style.display = "flex";
       else document.getElementById(type + "_" + id).style.display = "none";
     },
   },
@@ -896,7 +883,7 @@ export const documentProps = {
 .pack-table {
   box-shadow: var(--el-box-shadow-light);
   width: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-    "Helvetica Neue", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
 }
 </style>
