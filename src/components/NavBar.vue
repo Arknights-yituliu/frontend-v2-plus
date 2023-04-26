@@ -1,12 +1,16 @@
 <template>
   <div class="container">
-    <!-- <div style="color:white" @click="menu_collapse(true)" >
-      这里是 <br> 个图标
-    </div> -->
-    <a :class="{ activate: homepage }" href="/">材料一图流</a>
-    <a :class="{ activate: '/gachaCal' == pageContext.urlPathname }" href="/gachaCal">攒抽规划</a>
-    <a :class="{ activate: '/riicCal' == pageContext.urlPathname }" href="/riicCal">排班生成器</a>
-    <a :class="{ activate: '/pack' == pageContext.urlPathname }" href="/pack">礼包性价比</a>
+    <div class="menu-button" @click="menu_collapse(true)">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="bar-wrapper">
+      <a class="bar" :class="{ activate: homepage }" href="/">材料一图流</a>
+      <a class="bar" :class="{ activate: '/gachaCal' == pageContext.urlPathname }" href="/gachaCal">攒抽规划</a>
+      <a class="bar" :class="{ activate: '/riicCal' == pageContext.urlPathname }" href="/riicCal">排班生成器</a>
+      <a class="bar" :class="{ activate: '/pack' == pageContext.urlPathname }" href="/pack">礼包性价比</a>
+    </div>
     <div class="spacer"></div>
     <el-switch
       v-if="homepage"
@@ -24,17 +28,16 @@
         <table>
           <tbody>
             <tr>
-              <td>材料一图流</td>
+              <td><a href="/">材料一图流</a></td>
             </tr>
             <tr>
-              <td>攒抽规划</td>
+              <td><a href="/gachaCal">攒抽规划</a></td>
             </tr>
             <tr>
-              <td>排班生成器</td>
+              <td><a href="/riicCal">排班生成器</a></td>
             </tr>
             <tr>
-              <td></td>
-              <td></td>
+              <td><a href="/pack">礼包性价比</a></td>
             </tr>
           </tbody>
         </table>
@@ -135,7 +138,34 @@ watch(theme, () => {
   padding-left: 8px;
 }
 
-a {
+.bar-wrapper {
+  display: flex;
+}
+
+.menu-button {
+  display: none;
+  width: 18px;
+  padding: 6px 8px;
+  border: 1px solid white;
+  border-radius: 6px;
+}
+
+.menu-button div {
+  height: 2px;
+  background-color: white;
+  margin: 4px 0;
+}
+
+@media (max-width: 510px) {
+  .bar-wrapper {
+    display: none;
+  }
+  .menu-button {
+    display: block;
+  }
+}
+
+.bar {
   height: 100%;
   padding: 0 14px;
   font-size: 16px;
@@ -161,12 +191,6 @@ a {
 .spacer {
   flex-grow: 1;
 }
-</style>
-
-<style>
-.navbar-switch .el-icon {
-  font-size: 16px !important;
-}
 
 .menu_div {
   display: flex;
@@ -188,7 +212,7 @@ a {
 .menu-open {
   background-color: white;
   width: 200px;
-  height: 1000px;
+  height: 100vh;
   white-space: nowrap;
   text-align: center;
   transition: all 0.3s;
@@ -199,7 +223,11 @@ a {
 .menu-mask {
   background: rgba(0, 0, 0, 0.6);
   width: 100%;
-  height: 1000px;
+  height: 100vh;
   /* border: solid red 1px; */
+}
+
+:global(.navbar-switch .el-icon) {
+  font-size: 16px !important;
 }
 </style>
