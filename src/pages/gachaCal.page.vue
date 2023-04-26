@@ -1920,7 +1920,12 @@ export const documentProps = {
   position: sticky;
   top: 54px;
   z-index: 99;
-  height: 370px;
+}
+
+@media (min-width: 992px) {
+  .col-1 {
+    height: 370px;
+  }
 }
 
 .main-stages {
