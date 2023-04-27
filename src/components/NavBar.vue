@@ -22,25 +22,23 @@
       size="large"
     />
 
-    <div class="menu_div">
-      <div class="menu-collapse" id="menu">
-        <h1>明日方舟一图流</h1>
-        <table>
-          <tbody>
-            <tr>
-              <td><a href="/">材料一图流</a></td>
-            </tr>
-            <tr>
-              <td><a href="/gachaCal">攒抽规划</a></td>
-            </tr>
-            <tr>
-              <td><a href="/riicCal">排班生成器</a></td>
-            </tr>
-            <tr>
-              <td><a href="/pack">礼包性价比</a></td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="nav_div">
+      <div class="nav_collapse" id="menu">
+        <div class="menu_table">
+          <div class="menu_title"></div>
+          <div class="menu_item">
+            <a href="/">材料一图流</a>
+          </div>
+          <div class="menu_item">
+            <a href="/gachaCal">攒抽规划</a>
+          </div>
+          <div class="menu_item">
+            <a href="/riicCal">排班生成器</a>
+          </div>
+          <div class="menu_item">
+            <a href="/pack">礼包性价比</a>
+          </div>
+        </div>
       </div>
       <div class="menu-mask" v-show="menu_flag" @click="menu_collapse(false)"></div>
     </div>
@@ -70,12 +68,12 @@ onMounted(() => {
 function menu_collapse(flag) {
   menu_flag.value = flag;
   if (menu_flag.value) {
-    document.getElementById("menu").className = "menu-collapse ";
+    document.getElementById("menu").className = "nav_collapse ";
     setTimeout(function () {
-      document.getElementById("menu").className = "menu-collapse menu-open";
+      document.getElementById("menu").className = "nav_collapse menu-open";
     }, 30);
   } else {
-    document.getElementById("menu").className = "menu-collapse";
+    document.getElementById("menu").className = "nav_collapse";
   }
   console.log(menu_flag.value);
 }
@@ -192,7 +190,7 @@ watch(theme, () => {
   flex-grow: 1;
 }
 
-.menu_div {
+.nav_div {
   display: flex;
   width: 100%;
   height: auto;
@@ -203,7 +201,7 @@ watch(theme, () => {
   /* border: solid red 1px; */
 }
 
-.menu-collapse {
+.nav_collapse {
   position: absolute;
   top: 0;
   transform: translateX(-290px);
@@ -211,7 +209,7 @@ watch(theme, () => {
 
 .menu-open {
   background-color: white;
-  width: 200px;
+  width: 180px;
   height: 100vh;
   white-space: nowrap;
   text-align: center;
@@ -225,6 +223,25 @@ watch(theme, () => {
   width: 100%;
   height: 100vh;
   /* border: solid red 1px; */
+}
+
+.menu_table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.menu_title{
+  width: 170px;
+  height: 80px;
+  line-height: 40px;
+  border: 1px red solid;
+}
+
+.menu_item {
+  width: 170px;
+  height: 40px;
 }
 
 :global(.navbar-switch .el-icon) {

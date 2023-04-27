@@ -1104,7 +1104,8 @@ export default {
       this.$notify({
         title: "4.27更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong>1.氪金区新增周年礼包选项<br>2.优化了一些UI布局<br>3.夏活攒抽数据参考自去年同期数据(近期更新更加准确的活动排期)</strong>",
+        message:
+          "<strong>1.氪金区新增周年礼包选项<br>2.优化了一些UI布局<br>3.夏活攒抽数据参考自去年同期数据(近期更新更加准确的活动排期)</strong>",
         duration: 3000,
       });
     },
