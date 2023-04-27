@@ -3,6 +3,7 @@
     <!-- 地图效率Start -->
     <div id="stage">
       <!-- 标题区域 -->
+      
       <div class="op_title">
         <div class="op_title_text">
           <div class="op_title_ctext">地图效率</div>
@@ -29,15 +30,19 @@
         小样活动约可提供25%的效率1
       </div> -->
       <div class="stage_hint">
+         <div class="stage_hint_t5">
+          30日嘉年华会有实体卡片发放，详情请关注
+          <a style="text-decoration:none" href="https://space.bilibili.com/688411531/">'罗德岛基建BETA'</a>
+          动态
+         </div>
+      </div>
+      <div class="stage_hint">
         <div class="stage_hint_t5">橙：双最优</div>
         <div class="stage_hint_t4">紫：效率最高(长期最优)</div>
         <div class="stage_hint_t2">绿：期望最低(短期最优)</div>
         <div class="stage_hint_t0">红：计算了无限龙门币</div>
       </div>
-      <div class="stage_hint">
-        <div class="stage_hint_t5">30日嘉年华会有实体卡片发放，详情请关注'罗德岛基建BETA'相关动态</div>
-      </div>
-
+      
       <!-- <div class="stage_hint">
         <div class="stage_hint_t5">
           当前企鹅物流CF-7数据有污染，正在等待修复，请谨慎参考
