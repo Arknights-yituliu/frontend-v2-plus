@@ -491,7 +491,11 @@
                 <div
                   v-for="(singlePack, index) in gacha_storePacks"
                   :key="index"
-                  v-show="singlePack.packType == 'monthly' && singlePack.packRmbPerDraw > 0"
+                  v-show="
+                    singlePack.packType == 'monthly' &&
+                    singlePack.packRmbPerDraw > 0 &&
+                    isDuringDate(singlePack.start, singlePack.end, singlePack.rewardType)
+                  "
                   class="gacha_unit_child"
                   @change="compute(singlePack.packName)"
                 >
@@ -532,7 +536,12 @@
                 <div
                   v-for="(singlePack, index) in gacha_storePacks"
                   :key="index"
-                  v-show="singlePack.packType == 'limited' && 1 == singlePack.packState && singlePack.packRmbPerDraw > 0"
+                  v-show="
+                    singlePack.packType == 'limited' &&
+                    1 == singlePack.packState &&
+                    singlePack.packRmbPerDraw > 0 &&
+                    isDuringDate(singlePack.start, singlePack.end, singlePack.rewardType)
+                  "
                   class="gacha_unit_child"
                   @change="compute(singlePack.packName)"
                 >
@@ -616,7 +625,7 @@
                 <div
                   v-for="(singlePack, index) in gacha_storePacks"
                   :key="index"
-                  v-show="singlePack.packType == 'year'"
+                  v-show="singlePack.packType == 'year' && isDuringDate(singlePack.start, singlePack.end, singlePack.rewardType)"
                   class="gacha_unit_child"
                   @change="compute(singlePack.packName)"
                 >
@@ -828,10 +837,10 @@
                   </div>
                   <div class="gacha_resources_unit" style="width: 234px">
                     <div style="width: 40px" v-show="other.orundum !== 0" :class="getSpriteImg('4003icon', 0)"></div>
-                    <div style="width: 54px" v-show="other.orundum !== 0 && key !== '幸运墙'">
+                    <div style="width: 54px" v-show="other.orundum !== 0 && key !== '兔子矿区'">
                       {{ other.orundum }}
                     </div>
-                    <div style="width: 54px" v-show="other.orundum !== 0 && key === '幸运墙'">
+                    <div style="width: 54px" v-show="other.orundum !== 0 && key === '兔子矿区'">
                       {{ other.orundum - poolCountDown * 600 }}
                     </div>
                     <div style="width: 40px" v-show="other.originium !== 0" :class="getSpriteImg('4002icon', 0)"></div>
@@ -839,10 +848,10 @@
                       {{ other.originium }}
                     </div>
                     <div style="width: 40px" v-show="other.permit !== 0" :class="getSpriteImg('7003icon', 0)"></div>
-                    <div style="width: 54px" v-show="other.permit !== 0 && key.indexOf('春节池每日赠送寻访凭证') === -1">
+                    <div style="width: 54px" v-show="other.permit !== 0 && key.indexOf('周年池每日赠送寻访凭证') === -1">
                       {{ other.permit }}
                     </div>
-                    <div style="width: 54px" v-show="other.permit !== 0 && key.indexOf('春节池每日赠送寻访凭证') !== -1">
+                    <div style="width: 54px" v-show="other.permit !== 0 && key.indexOf('周年池每日赠送寻访凭证') !== -1">
                       {{ other.permit - poolCountDown }}
                     </div>
                     <div style="width: 40px" v-show="other.permit10 !== 0" :class="getSpriteImg('7004icon', 0)"></div>
@@ -1083,7 +1092,7 @@ export default {
   },
   mounted() {
     this.setPackData();
-
+    this.setFirstRecharge();
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
     this.openNotification();
@@ -1093,11 +1102,9 @@ export default {
     //公告通知
     openNotification() {
       this.$notify({
-        title: "3.30更新",
+        title: "4.27更新",
         dangerouslyUseHTMLString: true,
-        // message: '<strong> 限定池还有'+ this.poolCountDown + '天,结束</strong>',
-        // message: "<strong><h3>新增内容</h3> 新增剿灭战模拟战计算<br>调整搓玉计算模块<br><h3>注意事项</h3>夏活攒抽数据根据去年同期数据编写<br>准确活动排期待直播后更新<br></strong>",
-        message: "<strong>搓玉计算模块调整<br>夏活攒抽数据参考自去年同期数据</strong>",
+        message: "<strong>1.氪金区新增周年礼包选项<br>2.优化了一些UI布局<br>3.夏活攒抽数据参考自去年同期数据(近期更新更加准确的活动排期)</strong>",
         duration: 3000,
       });
     },
@@ -1112,6 +1119,7 @@ export default {
       const mm = date.getMinutes().toString().padStart(2, "0"); //分
       const s = date.getSeconds().toString().padStart(2, "0"); //秒
       this.startDate = `${y}/${m}/${d} ${h}:${mm}:${s}`;
+      // this.startDate = "2023/05/02 00:00:00";
     },
 
     //日期转为时间戳
@@ -1207,8 +1215,8 @@ export default {
       if (this.timeSelector === "4周年(5.15)") {
         this.endDate = "2023/05/15 03:59:00";
         this.rewardType = "周年限定";
-        this.poolCountDownFlag_permit = false;
-        this.poolCountDownFlag_orundum = false;
+        this.poolCountDownFlag_permit = true;
+        this.poolCountDownFlag_orundum = true;
       } else if (this.timeSelector === "夏活(以8.15计)") {
         this.endDate = "2023/08/15 03:59:00";
         this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
@@ -1225,10 +1233,14 @@ export default {
 
     //判断奖励是否在时间段内
     isDuringDate(start, end, rewardType, packName) {
-      // console.log(
-      //   packName + !end < this.start_TimeStamp + "/" + start <= this.end_TimeStamp + "/",
-      //   "公共" === rewardType || this.rewardType === rewardType + "/"
-      // );
+      if (packName != null) {
+        console.log(
+          packName,
+          !end < this.start_TimeStamp + "/",
+          start <= this.end_TimeStamp + "/",
+          "公共" === rewardType || this.rewardType === rewardType + "/"
+        );
+      }
       if (end < this.start_TimeStamp) return false;
       if (start <= this.end_TimeStamp && ("公共" === rewardType || this.rewardType === rewardType)) return true;
 
@@ -1720,6 +1732,87 @@ export default {
 
     handleChange(val) {
       // console.log(val);
+    },
+
+    setFirstRecharge() {
+      this.gacha_storePacks.push({
+        packName: "双倍源石6元(2023.4)",
+        packPrice: 6,
+        gachaOriginium: 3,
+        gachaOrundum: 0,
+        gachaPermit: 0,
+        gachaPermit10: 0,
+        packType: "year",
+        packRmbPerDraw: 6.7,
+        start: Date.parse(new Date("2022/05/01 00:00:00")),
+        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        rewardType: "公共",
+      });
+      this.gacha_storePacks.push({
+        packName: "双倍源石30元(2023.4)",
+        packPrice: 30,
+        gachaOriginium: 12,
+        gachaOrundum: 0,
+        gachaPermit: 0,
+        gachaPermit10: 0,
+        packType: "year",
+        packRmbPerDraw: 8.3,
+        start: Date.parse(new Date("2022/05/01 00:00:00")),
+        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        rewardType: "公共",
+      });
+      this.gacha_storePacks.push({
+        packName: "双倍源石98元(2023.4)",
+        packPrice: 98,
+        gachaOriginium: 40,
+        gachaOrundum: 0,
+        gachaPermit: 0,
+        gachaPermit10: 0,
+        packType: "year",
+        packRmbPerDraw: 8.2,
+        start: Date.parse(new Date("2022/05/01 00:00:00")),
+        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        rewardType: "公共",
+      });
+      this.gacha_storePacks.push({
+        packName: "双倍源石198元(2023.4)",
+        packPrice: 198,
+        gachaOriginium: 80,
+        gachaOrundum: 0,
+        gachaPermit: 0,
+        gachaPermit10: 0,
+        packType: "year",
+        packRmbPerDraw: 8.3,
+        start: Date.parse(new Date("2022/05/01 00:00:00")),
+        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        rewardType: "公共",
+      });
+      this.gacha_storePacks.push({
+        packName: "双倍源石328元(2023.4)",
+        packPrice: 328,
+        gachaOriginium: 132,
+        gachaOrundum: 0,
+        gachaPermit: 0,
+        gachaPermit10: 0,
+        packType: "year",
+        packRmbPerDraw: 8.3,
+        start: Date.parse(new Date("2022/05/01 00:00:00")),
+        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        rewardType: "公共",
+      });
+      this.gacha_storePacks.push({
+        packName: "双倍源石648元(2023.4)",
+        packPrice: 648,
+        gachaOriginium: 260,
+        gachaOrundum: 0,
+        gachaPermit: 0,
+        gachaPermit10: 0,
+        packType: "year",
+        packRmbPerDraw: 8.3,
+        start: Date.parse(new Date("2022/05/01 00:00:00")),
+        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        rewardType: "公共",
+      });
     },
   },
 };
