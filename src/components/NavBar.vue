@@ -25,18 +25,18 @@
     <div class="nav_div">
       <div class="nav_collapse" id="menu">
         <div class="menu_table">
-          <div class="menu_title"></div>
+          <div class="menu_title">明日方舟一图流</div>
           <div class="menu_item">
-            <a href="/">材料一图流</a>
+            <a href="/">&emsp;材料一图流</a>
           </div>
           <div class="menu_item">
-            <a href="/gachaCal">攒抽规划</a>
+            <a href="/gachaCal">&emsp;攒抽规划</a>
           </div>
           <div class="menu_item">
-            <a href="/riicCal">排班生成器</a>
+            <a href="/riicCal">&emsp;排班生成器</a>
           </div>
           <div class="menu_item">
-            <a href="/pack">礼包性价比</a>
+            <a href="/pack">&emsp;礼包性价比</a>
           </div>
         </div>
       </div>
@@ -208,8 +208,8 @@ watch(theme, () => {
 }
 
 .menu-open {
-  background-color: white;
-  width: 180px;
+  background-color: rgb(52 68 104);
+  width: 200px;
   height: 100vh;
   white-space: nowrap;
   text-align: center;
@@ -229,19 +229,34 @@ watch(theme, () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  color: white;
+}
+
+
+
+.menu_title{
+  width: 199px;
+  height: 100px;
+  line-height: 100px;
+  /* border: 1px red solid; */
+  font-size: 26px;
+  font-family: 800;
   text-align: center;
 }
 
-.menu_title{
-  width: 170px;
-  height: 80px;
-  line-height: 40px;
-  border: 1px red solid;
-}
 
 .menu_item {
   width: 170px;
-  height: 40px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 20px;
+  text-align: left;
+  
+}
+
+.menu_item a{
+  color: white;
+  text-decoration:none
 }
 
 :global(.navbar-switch .el-icon) {
