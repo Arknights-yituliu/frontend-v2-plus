@@ -27,16 +27,16 @@
         <div class="menu_table">
           <div class="menu_title">明日方舟一图流</div>
           <div class="menu_item">
-            <a href="/">&emsp;材料一图流</a>
+            <a href="/">&emsp;&emsp;材料一图流</a>
           </div>
           <div class="menu_item">
-            <a href="/gachaCal">&emsp;攒抽规划</a>
+            <a href="/gachaCal">&emsp;&emsp;攒抽规划</a>
           </div>
           <div class="menu_item">
-            <a href="/riicCal">&emsp;排班生成器</a>
+            <a href="/riicCal">&emsp;&emsp;排班生成器</a>
           </div>
           <div class="menu_item">
-            <a href="/pack">&emsp;礼包性价比</a>
+            <a href="/pack">&emsp;&emsp;礼包性价比</a>
           </div>
         </div>
       </div>
