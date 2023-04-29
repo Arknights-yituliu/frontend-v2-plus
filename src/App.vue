@@ -24,7 +24,7 @@ import "@/assets/css/sprite_icon.css";
 
 // 旧版css，待修改
 import "@/assets/css/item.css";
-import "@/assets/css/recruit.css";
+// import "@/assets/css/recruit.css";
 
 import NavBar from "@/components/NavBar.vue";
 import myfooter from "@/components/myfooter.vue";

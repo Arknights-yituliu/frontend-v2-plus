@@ -1,0 +1,202 @@
+
+.el-checkbox--mini {
+  border-radius: 16px !important;
+}
+
+#riic {
+  background: rgb(255, 255, 255);
+  margin: auto;
+  max-width: 1500px;
+}
+
+#riic_controlPanel {
+  /* margin-top: 16px; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+#riic_workerSets {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.riic_workerSet:nth-child(1) {
+  border: 4px dotted #ff000080;
+}
+
+.riic_workerSet:nth-child(2) {
+  border: 4px dotted #00ff0080;
+}
+
+.riic_workerSet:nth-child(3) {
+  border: 4px dotted #0000ff80;
+}
+
+.riic_workerSet {
+  /* width: 450px; */
+  border-radius: 8px;
+  font-size: 18px;
+  /* box-shadow: 0px 2px 6px rgb(160 160 160 / 69%); */
+  margin: 0px 12px 12px 12px;
+  /* margin: auto; */
+}
+
+.riic_building {
+  margin: 16px;
+  margin-top: 36px;
+  padding: 16px 0px 8px 0px;
+  border: 4px solid rgba(128, 128, 128, 0.50196);
+  border-radius: 16px;
+  width: 410px;
+}
+
+.riic_building_title {
+  position: absolute;
+  background: #e0e0e0;
+  margin: -36px -12px;
+  padding: 0px 8px;
+  font-size: 24px;
+  border-left: 4px solid #80808080;
+  border-right: 4px solid #80808080;
+  border-radius: 4px;
+  height: 36px;
+  /* width: 400px; */
+}
+
+.building_trade .riic_building_title {
+  border-left: 4px solid #000d8180;
+  border-right: 4px solid #000d8180;
+  background-color: #eeeeff;
+}
+
+.building_factory .riic_building_title {
+  border-left: 4px solid #7f810080;
+  border-right: 4px solid #7f810080;
+  background-color: #ffffee;
+}
+
+.building_powerPlant .riic_building_title {
+  border-left: 4px solid #00810080;
+  border-right: 4px solid #00810080;
+  background-color: #eeffee;
+}
+
+.building_powerPlant .riic_building_parameter div:nth-child(1) {
+  display: none;
+}
+
+.building_powerPlant .riic_building_parameter div:nth-child(2) {
+  display: none;
+}
+
+.building_powerPlant .riic_building_parameter div:nth-child(1) {
+  display: none;
+}
+
+.building_powerPlant .riic_building_parameter div:nth-child(2) {
+  display: none;
+}
+
+.building_powerPlant .riic_building_parameter {
+  display: inline-block;
+}
+
+.building_hr .riic_building_parameter div:nth-child(1) {
+  display: none;
+}
+
+.building_hr .riic_building_parameter div:nth-child(2) {
+  display: none;
+}
+
+.building_hr .riic_building_parameter div:nth-child(1) {
+  display: none;
+}
+
+.building_hr .riic_building_parameter div:nth-child(2) {
+  display: none;
+}
+
+.building_hr .riic_building_parameter {
+  display: inline-block;
+}
+
+.building_meetingRoom .riic_building_parameter div:nth-child(1) {
+  display: none;
+}
+
+.building_meetingRoom .riic_building_parameter div:nth-child(2) {
+  display: none;
+}
+
+.building_meetingRoom .riic_building_parameter div:nth-child(1) {
+  display: none;
+}
+
+.building_meetingRoom .riic_building_parameter div:nth-child(2) {
+  display: none;
+}
+
+.building_meetingRoom .riic_building_parameter {
+  display: inline-block;
+}
+
+.riic_building_operatorArray {
+  padding: 0px 20px;
+  line-height: 40px;
+  display: inline-block;
+}
+
+.riic_building_operator {
+  /* background-color: rgb(23, 148, 90); */
+  margin: 12px;
+  display: inline-block;
+}
+
+.riic_building_parameter {
+  /* background-color: rgb(110, 148, 23); */
+  margin: 12px 12px 0px 12px;
+  padding-left: 12px;
+  /* display: inline-block; */
+}
+
+.parameter_text {
+  width: 96px;
+  display: inline-block;
+}
+
+.parameter_inputbox {
+  width: 262px;
+  display: inline-block;
+  height: 20px;
+  position: relative;
+  top: -2px;
+}
+
+.operator_text {
+  width: 20px;
+  display: inline-block;
+}
+
+.operator_inputbox {
+  width: 117px;
+  display: inline-block;
+  height: 20px;
+  position: relative;
+  top: -2px;
+}
+
+#riic_jsonData {
+  margin-top: 24px;
+  /* background-color: rgb(255, 255, 255); */
+  width: 444px;
+  height: 300px;
+  overflow: auto;
+}
+
+.el-select {
+  width: 116px;
+}
+
