@@ -1,17 +1,11 @@
 <template>
   <div id="indexDiv" :class="pageTheme" style="max-width: 1080px; margin: auto">
     <!-- <ep12 /> -->
-    <div class="title_null"></div>
     <stage />
-    <div class="title_null"></div>
     <store-value />
-    <div class="title_null"></div>
     <!-- <pack> </pack> -->
-    <div class="title_null"></div>
-    <item-value />
-    <div class="title_null"></div>
+    <!-- <item-value /> -->
     <foot-component />
-    <div class="title_null"></div>
   </div>
 </template>
 
@@ -20,7 +14,7 @@ import stage from "@/components/stage.vue";
 import ep12 from "@/components/newChapter.vue";
 import StoreValue from "@/components/StoreValue.vue";
 // import pack from "@/pages/module/pack.vue";
-import ItemValue from "@/components/ItemValue.vue";
+// import ItemValue from "@/components/ItemValue.vue";
 import FootComponent from "@/components/FootComponent.vue";
 
 import cookie from "js-cookie";
@@ -30,7 +24,7 @@ export default {
   components: {
     stage,
     StoreValue,
-    ItemValue,
+    // ItemValue,
     FootComponent,
     ep12,
   },
