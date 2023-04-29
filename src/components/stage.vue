@@ -138,7 +138,11 @@
         <div class="stage_card_t2 uni_shadow_2">
           <div v-for="(materialRankT2, index) in stageRankT2.slice(0, 6)" :key="index" class="stage_card_t2_img">
             <!-- <img :src="getImgUrl(materialRankT2[0].itemName)" :alt="materialRankT2[0].itemName" "> -->
-            <div :class="getSpriteImg(materialRankT2[0].itemId, 'title')" :id="getCardId(index + 100)" @click="showPopup(index + 100)"></div>
+            <div
+              :class="getSpriteImg(materialRankT2[0].itemId, 'title')"
+              :id="getCardId(index + 100)"
+              @click="showPopup(index + 100)"
+            ></div>
           </div>
         </div>
       </div>
@@ -415,7 +419,7 @@ export default {
       if (index === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
       if (index === "up") return "bg-" + id + "_icon sprite_icon_up";
       if (index === "el") return "bg-" + id + "_icon sprite_icon_el";
-     
+
       return "bg-" + id;
     },
     getImgUrl(img, source) {
