@@ -1,8 +1,14 @@
 <template>
   <div class="main_survey">
     <div class="survey_title">
-        明日方舟干员{{surveyType}}统计
+        明日方舟干员{{surveyType}}统计  
     </div>
+    <div class="survey_button_box">
+    <div>
+        <button class="survey_button" @click="switchSurvey()">切换为{{'精二率'==surveyType?'持有率':'精二率'}}统计</button>
+      </div>
+    </div>
+
     <div class="survey_tip_box">
       <div class="survey_tip">
         <a> 当前样本量</a> <br />
@@ -14,11 +20,7 @@
       </div>
       
     </div>
-   <div class="survey_button_box">
-    <div>
-        <button class="survey_button" @click="switchSurvey()">切换为{{'精二率'==surveyType?'持有率':'精二率'}}统计</button>
-      </div>
-    </div>
+   
     <div class="oper_table">
       <div class="oper" v-for="(operData, index) in operServeyData" v-show="operData.rarity > 5">
         <div class="operIndex">No.{{ index + 1 }}</div>
