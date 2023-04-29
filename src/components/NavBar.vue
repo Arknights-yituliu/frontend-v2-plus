@@ -35,6 +35,7 @@
       <div class="nav_collapse" id="menu">
         <div class="menu_table">
           <div class="menu_title">明日方舟一图流</div>
+          <div class="line"></div>
           <div v-for="r in routes" class="menu_item">
             <a :href="r.path" style="display: flex; align-items: center; fill: white">
               <svg style="width: 24px; height: 24px; margin-right:10px;" viewbox="0 0 24 24">
@@ -279,7 +280,7 @@ const route = computed(() => {
 
 .menu-open {
   background-color: rgb(52 68 104);
-  width: 250px;
+  width: 300px;
   height: 100vh;
   white-space: nowrap;
   text-align: center;
@@ -303,8 +304,8 @@ const route = computed(() => {
 }
 
 .menu_title {
-  width: 250px;
-  height: 80px;
+  width: 300px;
+  height: 100px;
   line-height: 100px;
   /* border: 1px red solid; */
   font-size: 30px;
@@ -312,14 +313,21 @@ const route = computed(() => {
   text-align: center;
 }
 
+.line{
+  width: 100%;
+  /* height: 1px; */
+  background: white;
+  box-shadow: 0 0 1px 1px rgb(208, 208, 208);
+}
+
 .menu_item {
-  width: 220px;
+  width: 260px;
   height: 60px;
   line-height: 60px;
   font-size: 24px;
   text-align: left;
   margin: 6px;
-  margin-left:20px ;
+  margin-left:44px;
 }
 
 .menu_item a {
