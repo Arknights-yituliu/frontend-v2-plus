@@ -6,10 +6,16 @@
       <div></div>
     </div>
     <div class="bar-wrapper">
-      <a class="bar" :class="{ activate: homepage }" href="/">材料一图流</a>
-      <a class="bar" :class="{ activate: '/gachaCal' == pageContext.urlPathname }" href="/gachaCal">攒抽规划</a>
-      <a class="bar" :class="{ activate: '/riicCal' == pageContext.urlPathname }" href="/riicCal">排班生成器</a>
-      <a class="bar" :class="{ activate: '/pack' == pageContext.urlPathname }" href="/pack">礼包性价比</a>
+      <a v-for="r in routes" class="bar" :class="{ activate: pageContext.urlPathname == r.path }" :href="r.path">
+        <svg
+          style="width: 24px; height: 24px"
+          :style="{ fill: pageContext.urlPathname == r.path ? '#ffd04b' : 'white' }"
+          viewbox="0 0 24 24"
+        >
+          <path :d="r.icon" />
+        </svg>
+        {{ r.text }}
+      </a>
     </div>
     <div class="spacer"></div>
     <el-switch
@@ -26,17 +32,13 @@
       <div class="nav_collapse" id="menu">
         <div class="menu_table">
           <div class="menu_title">明日方舟一图流</div>
-          <div class="menu_item">
-            <a href="/">&emsp;&emsp;材料一图流</a>
-          </div>
-          <div class="menu_item">
-            <a href="/gachaCal">&emsp;&emsp;攒抽规划</a>
-          </div>
-          <div class="menu_item">
-            <a href="/riicCal">&emsp;&emsp;排班生成器</a>
-          </div>
-          <div class="menu_item">
-            <a href="/pack">&emsp;&emsp;礼包性价比</a>
+          <div v-for="r in routes" class="menu_item">
+            <a :href="r.path" style="display: flex; align-items: center; fill: white">
+              <svg style="width: 24px; height: 24px" viewbox="0 0 24 24">
+                <path :d="r.icon" />
+              </svg>
+              {{ r.text }}
+            </a>
           </div>
         </div>
       </div>
@@ -49,7 +51,7 @@
 import { ref, watch, onMounted, computed } from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
-
+import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline } from "@mdi/js";
 import { usePageContext } from "@/renderer/usePageContext";
 const pageContext = usePageContext();
 
@@ -121,10 +123,35 @@ function switchTheme() {
 watch(theme, () => {
   switchTheme();
 });
+
+const routes = [
+  {
+    path: "/",
+    text: "材料一图流",
+    icon: mdiChartBoxOutline,
+  },
+  {
+    path: "/gachaCal",
+    text: "攒抽规划",
+    icon: mdiGiftOutline,
+  },
+  {
+    path: "/riicCal",
+    text: "排班生成器",
+    icon: mdiCalculator,
+  },
+  {
+    path: "/pack",
+    text: "礼包性价比",
+    icon: mdiCalendarCursorOutline,
+  },
+];
 </script>
 
 <style scoped>
 .container {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
   display: flex;
   flex-direction: row;
   height: 54px;
@@ -133,7 +160,7 @@ watch(theme, () => {
   z-index: 100;
   box-shadow: none;
   gap: 8px;
-  padding-left: 8px;
+  padding-left: 16px;
 }
 
 .bar-wrapper {
@@ -154,7 +181,7 @@ watch(theme, () => {
   margin: 4px 0;
 }
 
-@media (max-width: 510px) {
+@media (max-width: 680px) {
   .bar-wrapper {
     display: none;
   }
@@ -166,24 +193,27 @@ watch(theme, () => {
 .bar {
   height: 100%;
   padding: 0 14px;
-  font-size: 16px;
+  font-size: 18px;
   vertical-align: center;
   line-height: 54px;
   text-decoration: none;
   color: white;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .activate {
   color: #ffd04b;
-  border-bottom: 2px solid #ffd04b;
+  border-bottom: 3px solid #ffd04b;
 }
 
 .navbar-switch {
   --el-switch-on-color: rgb(52, 68, 104);
   --el-switch-off-color: rgb(52, 68, 104);
   --el-switch-border-color: white;
-  padding-right: 20px;
+  padding-right: 28px;
 }
 
 .spacer {
@@ -232,9 +262,7 @@ watch(theme, () => {
   color: white;
 }
 
-
-
-.menu_title{
+.menu_title {
   width: 199px;
   height: 100px;
   line-height: 100px;
@@ -244,19 +272,17 @@ watch(theme, () => {
   text-align: center;
 }
 
-
 .menu_item {
   width: 170px;
   height: 60px;
   line-height: 60px;
   font-size: 20px;
   text-align: left;
-  
 }
 
-.menu_item a{
+.menu_item a {
   color: white;
-  text-decoration:none
+  text-decoration: none;
 }
 
 :global(.navbar-switch .el-icon) {
