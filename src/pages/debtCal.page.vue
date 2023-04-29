@@ -184,6 +184,4 @@ watch(SK5Times, (new_value) => {
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

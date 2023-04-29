@@ -6,18 +6,18 @@
   box-shadow: 0px 0px 2px 2px rgb(160, 160, 160);
 }
 
-.survey_title{
-    height: 70px;
-    line-height: 70px;
-    margin: auto;
-    
-    margin-bottom: 10px;
-    width: 90%;
-    text-align: center;
-    font-size: 30px;
-    font-family:  Arial, sans-serif;
-    font-weight: 900;
-    /* border: 1px red solid; */
+.survey_title {
+  height: 70px;
+  line-height: 70px;
+  margin: auto;
+
+  margin-bottom: 10px;
+  width: 90%;
+  text-align: center;
+  font-size: 30px;
+  font-family: Arial, sans-serif;
+  font-weight: 900;
+  /* border: 1px red solid; */
 }
 
 .survey_tip_box {
@@ -42,13 +42,12 @@
   font-weight: 600;
   border-radius: 10px;
   box-shadow: 0px 0px 3px 2px rgb(160, 160, 160);
-  
 }
 
-.survey_tip a{
-    font-family:  Arial, sans-serif;
-    font-size: 26px;
-    font-weight: 900;
+.survey_tip a {
+  font-family: Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 900;
 }
 
 .oper_table {
@@ -84,7 +83,7 @@
   margin-top: 6px;
 }
 
-.survey_button_box{
+.survey_button_box {
   margin: auto;
   margin-bottom: 10px;
   width: 85%;
@@ -93,10 +92,9 @@
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-start;
-  
 }
 
-.survey_button{
+.survey_button {
   text-align: center;
   margin: auto;
   line-height: 20px;
@@ -119,7 +117,5 @@
   border: 1px red solid;
 }
 
-.sprite{
-
+.sprite {
 }
-
