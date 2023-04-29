@@ -528,17 +528,6 @@
     "rarity": 6
   },
   {
-    "charId": "char_003_test",
-    "charName": "凯尔希test",
-    "owningRate": 85.38,
-    "phases1Rate": 0.0,
-    "phases2Rate": 100.0,
-    "potentialRanks": {
-      "1": 100.0
-    },
-    "rarity": 6
-  },
-  {
     "charId": "char_264_f12yin",
     "charName": "山",
     "owningRate": 84.58,
