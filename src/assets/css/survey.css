@@ -1,10 +1,52 @@
-.operTable {
-  margin: auto;
-  margin-top: 2px;
+.main_survey {
   max-width: 1080px;
   height: auto;
-  /* border: 1px red solid; */
   background: white;
+}
+
+.survey_title{
+    height: 60px;
+    line-height: 70px;
+    margin: auto;
+    width: 90%;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.survey_tip_box {
+  margin: auto;
+  width: 90%;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.survey_tip {
+  text-align: center;
+  margin: auto;
+  line-height: 36px;
+  width: 200px;
+  height: 70px;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px 2px rgb(160, 160, 160);
+}
+
+.survey_title_tip a{
+    font-size: 26px;
+    
+}
+
+.oper_table {
+  margin: auto;
+
+  width: 90%;
+  /* border: 1px red solid; */
+
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -12,9 +54,9 @@
 }
 
 .oper {
-  margin: 5px;
+  margin: 8px;
   width: 80px;
-  height: 200px;
+  height: 210px;
   border: 1px black solid;
   text-align: center;
   font-weight: 600;
@@ -29,6 +71,7 @@
   font-weight: 800;
   line-height: 28px;
 }
+
 .operRate {
   margin-top: 8px;
 }
