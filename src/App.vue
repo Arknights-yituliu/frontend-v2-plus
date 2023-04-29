@@ -1,9 +1,6 @@
 <template>
   <el-container>
-    <el-header
-      style="z-index: 100; height: 52px; position: sticky; width: 100%; top: 0px"
-      v-if="'/maarecruitdata' != pageContext.urlPathname"
-    >
+    <el-header class="header" v-if="'/maarecruitdata' != pageContext.urlPathname">
       <nav-bar />
     </el-header>
     <el-main style="z-index: 10; background-color: #808080">
@@ -72,5 +69,19 @@ body {
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
   overscroll-behavior: none;
+}
+
+.header {
+  z-index: 100;
+  height: 52px;
+  position: sticky;
+  width: 100%;
+  top: 0px;
+}
+
+@media (max-width: 680px) {
+  .header {
+    height: 78px;
+  }
 }
 </style>

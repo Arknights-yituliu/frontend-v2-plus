@@ -169,16 +169,18 @@ const routes = [
 
 .menu-button {
   display: none;
-  width: 18px;
+  width: 33px;
+  height: 33px;
   padding: 6px 8px;
-  border: 1px solid white;
+  margin-left: 12px;
+  border: 2px solid white;
   border-radius: 6px;
 }
 
 .menu-button div {
-  height: 2px;
+  height: 3px;
   background-color: white;
-  margin: 4px 0;
+  margin: 6px 0;
 }
 
 @media (max-width: 680px) {
@@ -187,6 +189,15 @@ const routes = [
   }
   .menu-button {
     display: block;
+  }
+  .container {
+    height: 80px;
+  }
+  .bar {
+    line-height: 80px;
+  }
+  .el-switch {
+    scale: 1.5;
   }
 }
 
