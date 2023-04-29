@@ -278,7 +278,7 @@ const route = computed(() => {
 
 .menu-open {
   background-color: rgb(52 68 104);
-  width: 200px;
+  width: 250px;
   height: 100vh;
   white-space: nowrap;
   text-align: center;
@@ -302,21 +302,23 @@ const route = computed(() => {
 }
 
 .menu_title {
-  width: 199px;
-  height: 100px;
+  width: 250px;
+  height: 80px;
   line-height: 100px;
   /* border: 1px red solid; */
-  font-size: 26px;
+  font-size: 30px;
   font-family: 800;
   text-align: center;
 }
 
 .menu_item {
-  width: 170px;
+  width: 220px;
   height: 60px;
   line-height: 60px;
-  font-size: 20px;
+  font-size: 24px;
   text-align: left;
+  margin: 6px;
+  margin-left:20px ;
 }
 
 .menu_item a {
