@@ -79,7 +79,7 @@ body {
   top: 0px;
 }
 
-@media (max-width: 680px) {
+@media (max-width: 810px) {
   .header {
     height: 78px;
   }
