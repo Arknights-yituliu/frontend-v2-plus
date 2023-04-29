@@ -38,10 +38,9 @@
           <div class="line"></div>
           <div v-for="r in routes" class="menu_item">
             <a :href="r.path" style="display: flex; align-items: center; fill: white">
-              <svg style="width: 24px; height: 24px; margin-right:10px;" viewbox="0 0 24 24">
+              <svg style="width: 36px; height: 36px; margin-right: 32px" viewbox="0 0 24 24">
                 <path :d="r.icon" />
               </svg>
-              
               {{ r.text }}
             </a>
           </div>
@@ -210,7 +209,7 @@ const route = computed(() => {
   padding-left: 24px;
 }
 
-@media (max-width: 810px) {
+@media (max-width: 820px) {
   .bar-wrapper {
     display: none;
   }
@@ -227,7 +226,7 @@ const route = computed(() => {
     line-height: 80px;
   }
   .el-switch {
-    scale: 1.5;
+    transform: scale(1.5);
   }
 }
 
@@ -275,16 +274,16 @@ const route = computed(() => {
 .nav_collapse {
   position: absolute;
   top: 0;
-  transform: translateX(-290px);
+  transform: translateX(-360px);
 }
 
 .menu-open {
-  background-color: rgb(52 68 104);
-  width: 300px;
+  background-color: rgb(52, 68, 104);
+  width: 360px;
   height: 100vh;
   white-space: nowrap;
   text-align: center;
-  transition: all 0.3s;
+  transition: all 0.15s;
   transform: translateX(0) !important;
   /* border: solid red 1px; */
 }
@@ -304,30 +303,30 @@ const route = computed(() => {
 }
 
 .menu_title {
-  width: 300px;
-  height: 100px;
-  line-height: 100px;
+  width: 100%;
+  height: 150px;
   /* border: 1px red solid; */
-  font-size: 30px;
-  font-family: 800;
-  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.line{
+.line {
   width: 100%;
   /* height: 1px; */
   background: white;
   box-shadow: 0 0 1px 1px rgb(208, 208, 208);
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .menu_item {
   width: 250px;
-  height: 60px;
-  line-height: 60px;
-  font-size: 24px;
+  height: 80px;
+  font-size: 28px;
   text-align: left;
-  margin-left:50px;
+  margin-left: 50px;
 }
 
 .menu_item a {
