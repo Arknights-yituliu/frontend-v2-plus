@@ -993,6 +993,7 @@
 import gacha_potentialJson from "@/static/json/gacha_potential.json"; //常驻活动和主线数据
 import gacha_storePacksJson from "@/static/json/gacha_storePacks.json"; //商店礼包数据
 import gacha_honeyCakeJson from "@/static/json/gacha_honeyCakeNew.json"; //其他奖励数据
+import "@/assets/css/sprite_gacha.css";
 import "@/assets/css/gacha.css";
 import toolApi from "@/api/tool";
 import cookie from "js-cookie";
@@ -1001,6 +1002,9 @@ import * as echarts from "echarts";
 let myChart = "";
 import { ClientOnly } from "@/components/ClientOnly";
 import { usePageContext } from "@/renderer/usePageContext";
+
+
+
 
 export default {
   components: { ClientOnly },
