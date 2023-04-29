@@ -1,39 +1,18 @@
-.sprite_type_div {
-  width: 50px;
-  height: 120px;
-  border: solid red 1px;
-}
 
-.sprite_type {
+
+.sprite_large {
   transform: scale(1);
   margin-top: -10px;
   /* margin-left: -68px; */
 }
 
 .sprite_secondary {
-  transform: scale(0.4);
+  transform: scale(0.5);
   margin: -20px;
 }
 
-.sprite_secondary_dialog {
-  transform: scale(0.5);
-  margin: -10px;
-}
-
-.sprite_sprite_title {
+.sprite_large_title {
   transform: scale(1.2);
-}
-
-.sprite_T2 {
-  transform: scale(1.2);
-  margin: auto;
-  /* margin-top: -2px; */
-  /* transform: scale(1.3); */
-}
-
-.sprite_icon {
-  transform: scale(1.2);
-  margin-bottom: -12px;
 }
 
 .sprite_icon_up {

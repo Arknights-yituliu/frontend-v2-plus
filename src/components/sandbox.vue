@@ -125,7 +125,7 @@ export default {
       if (index == 0) return "bg-" + id + "_icon sprite_store_icon";
       if (index == 1) return "bg-" + id + " sprite_store_perm";
       if (index == 2) return "bg-" + id + " sprite_store_act";
-      if (index == 3) return "bg-" + id + " sprite_secondary_dialog";
+      if (index == 3) return "bg-" + id + " sprite_secondary";
       return "bg-" + id;
     },
     getCookies() {

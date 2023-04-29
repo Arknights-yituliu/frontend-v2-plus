@@ -496,9 +496,7 @@ export default {
   margin-top: 1em;
   font-size: unset;
 }
-</style>
 
-<style>
 .el-card__body {
   padding: 0px 12px !important;
 }
@@ -506,3 +504,4 @@ export default {
   padding-bottom: 8px !important;
 }
 </style>
+

@@ -58,7 +58,7 @@
           @click="showPopup(indexAll)"
         >
           <!-- <div v-show="materialRankT3[0].itemType=='兽之泪'"  class="stage_card_t3_img" :style="getCardBackground(materialRankT3[1].itemType)"></div>  -->
-          <div class="stage_card_t3_img" :class="getSpriteImg(materialRankT3[0].itemId, 'type')"></div>
+          <div class="stage_card_t3_img" :class="getSpriteImg(materialRankT3[0].itemId, 'large')"></div>
 
           <div class="stage_card_t3_table">
             <table>
@@ -102,7 +102,7 @@
           :style="judgeActive(index)"
           @click="showPopup(index)"
         >
-          <div class="stage_card_t3_img" :class="getSpriteImg(materialRankT3[0].itemId, 'type')"></div>
+          <div class="stage_card_t3_img" :class="getSpriteImg(materialRankT3[0].itemId, 'large')"></div>
 
           <div class="stage_card_t3_table">
             <table>
@@ -138,7 +138,7 @@
         <div class="stage_card_t2 uni_shadow_2">
           <div v-for="(materialRankT2, index) in stageRankT2.slice(0, 6)" :key="index" class="stage_card_t2_img">
             <!-- <img :src="getImgUrl(materialRankT2[0].itemName)" :alt="materialRankT2[0].itemName" "> -->
-            <div :class="getSpriteImg(materialRankT2[0].itemId, 't2')" :id="getCardId(index + 100)" @click="showPopup(index + 100)"></div>
+            <div :class="getSpriteImg(materialRankT2[0].itemId, 'title')" :id="getCardId(index + 100)" @click="showPopup(index + 100)"></div>
           </div>
         </div>
       </div>
@@ -409,13 +409,13 @@ export default {
     },
     getSpriteImg(id, index) {
       if (id === "30012" && index !== "t2") id = "30013";
-      if (index == "type") return "bg-" + id + "large" + " sprite_type";
+      if (index == "large") return "bg-" + id + "large" + " sprite_large";
       if (index === "sec") return "bg-" + id + " sprite_secondary";
-      if (index === "title") return "bg-" + id + " sprite_title";
+      if (index === "title") return "bg-" + id + " sprite_large_title";
       if (index === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
       if (index === "up") return "bg-" + id + "_icon sprite_icon_up";
       if (index === "el") return "bg-" + id + "_icon sprite_icon_el";
-      if (index === "t2") return "bg-" + id + " sprite_T2";
+     
       return "bg-" + id;
     },
     getImgUrl(img, source) {
