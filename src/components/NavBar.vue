@@ -5,6 +5,9 @@
       <div></div>
       <div></div>
     </div>
+    <div class="page-title">
+      {{ route.text }}
+    </div>
     <div class="bar-wrapper">
       <a v-for="r in routes" class="bar" :class="{ activate: pageContext.urlPathname == r.path }" :href="r.path">
         <svg
@@ -146,6 +149,15 @@ const routes = [
     icon: mdiCalendarCursorOutline,
   },
 ];
+
+const route = computed(() => {
+  for (let i of routes) {
+    if (i.path == pageContext.urlPathname) {
+      return i;
+    }
+  }
+  return {};
+});
 </script>
 
 <style scoped>
@@ -183,11 +195,21 @@ const routes = [
   margin: 6px 0;
 }
 
+.page-title {
+  color: white;
+  font-size: 28px;
+  display: none;
+  padding-left: 24px;
+}
+
 @media (max-width: 680px) {
   .bar-wrapper {
     display: none;
   }
   .menu-button {
+    display: block;
+  }
+  .page-title {
     display: block;
   }
   .container {
