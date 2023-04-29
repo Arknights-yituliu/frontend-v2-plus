@@ -2012,13 +2012,19 @@ export const documentProps = {
 
 .col-1 {
   position: sticky;
-  top: 54px;
+  top: 52px;
   z-index: 99;
 }
 
 @media (min-width: 992px) {
   .col-1 {
     height: 370px;
+  }
+}
+
+@media (max-width: 810px) {
+  .col-1 {
+    top: 78px;
   }
 }
 
