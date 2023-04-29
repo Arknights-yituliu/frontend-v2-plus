@@ -318,16 +318,16 @@ const route = computed(() => {
   /* height: 1px; */
   background: white;
   box-shadow: 0 0 1px 1px rgb(208, 208, 208);
+  margin-bottom: 30px;
 }
 
 .menu_item {
-  width: 260px;
+  width: 250px;
   height: 60px;
   line-height: 60px;
   font-size: 24px;
   text-align: left;
-  margin: 6px;
-  margin-left:44px;
+  margin-left:50px;
 }
 
 .menu_item a {
