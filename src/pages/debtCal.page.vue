@@ -57,6 +57,7 @@
 
 <script setup>
 import { onMounted, ref, watch } from "vue";
+import "@/assets/css/debt.css";
 
 let calResult = ref({
   weeks: 0, //要多少周还清
@@ -184,19 +185,5 @@ watch(SK5Times, (new_value) => {
 </script>
 
 <style scoped>
-.el-collapse {
-  padding: 8px 16px 16px;
-}
 
-.el-collapse-item {
-  margin-top: 8px;
-}
-
-hr {
-  margin-top: 0;
-}
-
-:global(.el-collapse-item__content) {
-  padding-bottom: 6px;
-}
 </style>

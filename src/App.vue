@@ -18,10 +18,9 @@ import "@/assets/css/stage_v2.css";
 import "@/assets/css/store_v2.css";
 import "@/assets/css/sprite_item.css";
 import "@/assets/css/sprite_item_large.css";
-import "@/assets/css/sprite_index.css";
-import "@/assets/css/sprite_gacha.css";
+import "@/assets/css/sprite_style.css";
 import "@/assets/css/sprite_icon.css";
-import "@/assets/css/debt.css";
+
 
 // 旧版css，待修改
 import "@/assets/css/item.css";
