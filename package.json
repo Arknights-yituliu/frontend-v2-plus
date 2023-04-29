@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
+    "@mdi/js": "^7.2.96",
     "@vitejs/plugin-vue": "^4.1.0",
     "@vue/compiler-sfc": "^3.2.47",
     "@vue/server-renderer": "^3.2.47",
