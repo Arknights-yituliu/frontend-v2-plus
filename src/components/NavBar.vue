@@ -209,7 +209,7 @@ const route = computed(() => {
   padding-left: 24px;
 }
 
-@media (max-width: 810px) {
+@media (max-width: 820px) {
   .bar-wrapper {
     display: none;
   }
@@ -226,7 +226,7 @@ const route = computed(() => {
     line-height: 80px;
   }
   .el-switch {
-    scale: 1.5;
+    transform: scale(1.5);
   }
 }
 
@@ -278,7 +278,7 @@ const route = computed(() => {
 }
 
 .menu-open {
-  background-color: rgb(52 68 104);
+  background-color: rgb(52, 68, 104);
   width: 360px;
   height: 100vh;
   white-space: nowrap;
