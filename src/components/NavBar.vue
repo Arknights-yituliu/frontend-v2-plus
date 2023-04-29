@@ -22,7 +22,7 @@
     </div>
     <div class="spacer"></div>
     <el-switch
-      v-if="homepage"
+      v-if="route.dark_theme"
       class="navbar-switch"
       inline-prompt
       v-model="theme"
@@ -54,20 +54,16 @@
 import { ref, watch, onMounted, computed } from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
-import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline } from "@mdi/js";
+import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 import { usePageContext } from "@/renderer/usePageContext";
 const pageContext = usePageContext();
 
 const theme = ref();
 
-const homepage = computed(() => {
-  return "/" == pageContext.urlPathname;
-});
-
 let menu_flag = ref(false);
 
 onMounted(() => {
-  if (homepage.value) theme.value = cookie.get("theme") == "dark";
+  if (route.value.dark_theme) theme.value = cookie.get("theme") == "dark";
 });
 
 function menu_collapse(flag) {
@@ -132,21 +128,31 @@ const routes = [
     path: "/",
     text: "材料一图流",
     icon: mdiChartBoxOutline,
+    dark_theme: true,
   },
   {
     path: "/gachaCal",
     text: "攒抽规划",
     icon: mdiGiftOutline,
+    dark_theme: false,
   },
   {
     path: "/riicCal",
     text: "排班生成器",
     icon: mdiCalculator,
+    dark_theme: false,
   },
   {
     path: "/pack",
     text: "礼包性价比",
     icon: mdiCalendarCursorOutline,
+    dark_theme: false,
+  },
+  {
+    path: "/value",
+    text: "物品价值",
+    icon: mdiGold,
+    dark_theme: true,
   },
 ];
 
@@ -202,7 +208,7 @@ const route = computed(() => {
   padding-left: 24px;
 }
 
-@media (max-width: 680px) {
+@media (max-width: 810px) {
   .bar-wrapper {
     display: none;
   }

@@ -39,26 +39,14 @@ function get_newChapter() {
 // console.log(http+"stage/newChapter?zone=11-")
 
 export async function onBeforeRender(pageContext) {
-  const result = await Promise.all([
-    get_t3(),
-    get_t2(),
-    get_orundum(),
-    get_closed(),
-    get_perm(),
-    get_act(),
-    // [],
-    get_value(),
-    get_newChapter(),
-  ]);
+  const result = await Promise.all([get_t3(), get_t2(), get_orundum(), get_closed(), get_perm(), get_act()]);
   const t3 = result[0].data.data;
   const t2 = result[1].data.data;
   const orundum = result[2].data.data;
   const closed = result[3].data.data;
   const perm = result[4].data.data;
   const act = result[5].data.data;
-  const value = result[6].data.data;
-  const newChapter = result[7].data.data;
-  const pageProps = { t3, t2, orundum, closed, perm, act, value, newChapter };
+  const pageProps = { t3, t2, orundum, closed, perm, act };
   return {
     pageContext: {
       pageProps,
