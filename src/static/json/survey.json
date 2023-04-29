@@ -1,0 +1,662 @@
+[
+  {
+    "charId": "char_474_glady",
+    "charName": "歌蕾蒂娅",
+    "owningRate": 99.86,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "5": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_358_lisa",
+    "charName": "铃兰",
+    "owningRate": 99.65,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_1023_ghost2",
+    "charName": "归溟幽灵鲨",
+    "owningRate": 98.41,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4064_mlynar",
+    "charName": "玛恩纳",
+    "owningRate": 98.25,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_423_blemsh",
+    "charName": "瑕光",
+    "owningRate": 97.76,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_136_hsguma",
+    "charName": "星熊",
+    "owningRate": 97.65,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "2": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_420_flamtl",
+    "charName": "焰尾",
+    "owningRate": 97.42,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_197_poca",
+    "charName": "早露",
+    "owningRate": 96.65,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_350_surtr",
+    "charName": "史尔特尔",
+    "owningRate": 96.6,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_2024_chyue",
+    "charName": "重岳",
+    "owningRate": 96.38,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_456_ash",
+    "charName": "灰烬",
+    "owningRate": 96.15,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4009_irene",
+    "charName": "艾丽妮",
+    "owningRate": 95.97,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_1012_skadi2",
+    "charName": "浊心斯卡蒂",
+    "owningRate": 95.61,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_1013_chen2",
+    "charName": "假日威龙陈",
+    "owningRate": 95.42,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_332_archet",
+    "charName": "空弦",
+    "owningRate": 95.03,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_1020_reed2",
+    "charName": "焰影苇草",
+    "owningRate": 94.61,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_147_shining",
+    "charName": "闪灵",
+    "owningRate": 94.14,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_206_gnosis",
+    "charName": "灵知",
+    "owningRate": 93.77,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_010_chen",
+    "charName": "陈",
+    "owningRate": 93.68,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_340_shwaz",
+    "charName": "黑",
+    "owningRate": 93.53,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "2": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4048_doroth",
+    "charName": "多萝西",
+    "owningRate": 93.5,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_179_cgbird",
+    "charName": "夜莺",
+    "owningRate": 93.34,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_426_billro",
+    "charName": "卡涅利安",
+    "owningRate": 92.81,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_311_mudrok",
+    "charName": "泥岩",
+    "owningRate": 92.59,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "2": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_202_demkni",
+    "charName": "塞雷娅",
+    "owningRate": 92.29,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4039_horn",
+    "charName": "号角",
+    "owningRate": 91.73,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_377_gdglow",
+    "charName": "澄闪",
+    "owningRate": 91.05,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_472_pasngr",
+    "charName": "异客",
+    "owningRate": 91.02,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_003_kalts",
+    "charName": "凯尔希",
+    "owningRate": 90.59,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_188_helage",
+    "charName": "赫拉格",
+    "owningRate": 90.5,
+    "phases1Rate": 100.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_112_siege",
+    "charName": "推进之王",
+    "owningRate": 90.2,
+    "phases1Rate": 100.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4087_ines",
+    "charName": "伊内丝",
+    "owningRate": 90.05,
+    "phases1Rate": 100.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_250_phatom",
+    "charName": "傀影",
+    "owningRate": 90.03,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_400_weedy",
+    "charName": "温蒂",
+    "owningRate": 89.57,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_1028_texas2",
+    "charName": "缄默德克萨斯",
+    "owningRate": 89.49,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_172_svrash",
+    "charName": "银灰",
+    "owningRate": 89.37,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "4": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_362_saga",
+    "charName": "嵯峨",
+    "owningRate": 89.25,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4042_lumen",
+    "charName": "流明",
+    "owningRate": 89.0,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "5": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_479_sleach",
+    "charName": "琴柳",
+    "owningRate": 88.81,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_293_thorns",
+    "charName": "棘刺",
+    "owningRate": 88.49,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_134_ifrit",
+    "charName": "伊芙利特",
+    "owningRate": 87.51,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_263_skadi",
+    "charName": "斯卡蒂",
+    "owningRate": 87.41,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_213_mostma",
+    "charName": "莫斯提马",
+    "owningRate": 86.5,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_1014_nearl2",
+    "charName": "耀骑士临光",
+    "owningRate": 86.41,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_427_vigil",
+    "charName": "伺夜",
+    "owningRate": 86.2,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_1026_gvial2",
+    "charName": "百炼嘉维尔",
+    "owningRate": 86.17,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4055_bgsnow",
+    "charName": "鸿雪",
+    "owningRate": 86.09,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "2": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_103_angel",
+    "charName": "能天使",
+    "owningRate": 86.05,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_003_test",
+    "charName": "凯尔希test",
+    "owningRate": 85.38,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_264_f12yin",
+    "charName": "山",
+    "owningRate": 84.58,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_2023_ling",
+    "charName": "令",
+    "owningRate": 84.52,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4065_judge",
+    "charName": "斥罪",
+    "owningRate": 84.19,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4080_lin",
+    "charName": "林",
+    "owningRate": 83.9,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_4082_qiubai",
+    "charName": "仇白",
+    "owningRate": 83.86,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_017_huang",
+    "charName": "煌",
+    "owningRate": 82.94,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_180_amgoat",
+    "charName": "艾雅法拉",
+    "owningRate": 82.83,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_222_bpipe",
+    "charName": "风笛",
+    "owningRate": 82.62,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_1029_yato2",
+    "charName": "麒麟X夜刀",
+    "owningRate": 82.52,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "0": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_248_mgllan",
+    "charName": "麦哲伦",
+    "owningRate": 82.43,
+    "phases1Rate": 0.0,
+    "phases2Rate": 0.0,
+    "potentialRanks": {
+      "2": 100.0
+    },
+    "rarity": 6
+  },
+  {
+    "charId": "char_225_haak",
+    "charName": "阿",
+    "owningRate": 82.38,
+    "phases1Rate": 0.0,
+    "phases2Rate": 100.0,
+    "potentialRanks": {
+      "1": 100.0
+    },
+    "rarity": 6
+  }
+]
