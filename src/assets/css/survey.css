@@ -5,23 +5,29 @@
 }
 
 .survey_title{
-    height: 60px;
+    height: 70px;
     line-height: 70px;
     margin: auto;
+    
+    margin-bottom: 10px;
     width: 90%;
     text-align: center;
     font-size: 30px;
+    font-family:  Arial, sans-serif;
     font-weight: 900;
+    /* border: 1px red solid; */
 }
 
 .survey_tip_box {
   margin: auto;
-  width: 90%;
+  margin-bottom: 10px;
+  width: 85%;
   height: 80px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
+  /* border: 1px red solid; */
 }
 
 .survey_tip {
@@ -31,22 +37,22 @@
   width: 200px;
   height: 70px;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 600;
   border-radius: 10px;
   box-shadow: 0px 0px 3px 2px rgb(160, 160, 160);
+  
 }
 
 .survey_tip a{
+    font-family:  Arial, sans-serif;
     font-size: 26px;
     font-weight: 900;
 }
 
 .oper_table {
   margin: auto;
-
-  width: 90%;
+  width: 94%;
   /* border: 1px red solid; */
-
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -55,8 +61,8 @@
 
 .oper {
   margin: 8px;
-  width: 80px;
-  height: 210px;
+  width: 60px;
+  height: 170px;
   border: 1px black solid;
   text-align: center;
   font-weight: 600;
@@ -66,24 +72,26 @@
 }
 
 .operIndex {
-  height: 28px;
+  height: 22px;
   font-size: 20px;
   font-weight: 800;
-  line-height: 28px;
+  line-height: 22px;
 }
 
 .operRate {
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .image_avatar {
-  width: 70px;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
   border: 1px black solid;
   background: white;
+  border: 1px red solid;
 }
 
 .sprite{
-  
+
 }
 
