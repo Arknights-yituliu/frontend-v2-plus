@@ -2002,7 +2002,7 @@ export const documentProps = {
 }
 .triangle {
   border-left: 12px solid transparent;
-  border-top: 16px solid rgb(255 255 255);
+  border-top: 16px solid rgb(255, 255, 255);
   border-bottom: 4px solid transparent;
   border-right: 12px solid transparent;
   display: inline-block;
@@ -2026,7 +2026,7 @@ export const documentProps = {
   }
 }
 
-@media (max-width: 810px) {
+@media (max-width: 820px) {
   .col-1 {
     top: 78px;
   }

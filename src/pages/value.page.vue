@@ -1,5 +1,5 @@
 <template>
-  <div id="indexDiv" class="op_title_etext_light" style="max-width: 1080px; margin: auto">
+  <div id="indexDiv" style="max-width: 1080px; margin: auto">
     <item-value />
     <foot-component />
   </div>
