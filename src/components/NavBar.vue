@@ -37,9 +37,10 @@
           <div class="menu_title">明日方舟一图流</div>
           <div v-for="r in routes" class="menu_item">
             <a :href="r.path" style="display: flex; align-items: center; fill: white">
-              <svg style="width: 24px; height: 24px" viewbox="0 0 24 24">
+              <svg style="width: 24px; height: 24px; margin-right:10px;" viewbox="0 0 24 24">
                 <path :d="r.icon" />
               </svg>
+              
               {{ r.text }}
             </a>
           </div>
