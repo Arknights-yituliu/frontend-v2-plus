@@ -1003,9 +1003,6 @@ let myChart = "";
 import { ClientOnly } from "@/components/ClientOnly";
 import { usePageContext } from "@/renderer/usePageContext";
 
-
-
-
 export default {
   components: { ClientOnly },
   setup() {

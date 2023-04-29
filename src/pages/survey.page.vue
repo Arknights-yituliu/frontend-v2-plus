@@ -18,7 +18,6 @@
         <a>本表单更新时间</a> <br />
         2023-11-14
       </div>
-      
     </div>
    
     <div class="oper_table">
@@ -26,12 +25,12 @@
         <div class="operIndex">No.{{ index + 1 }}</div>
         <!-- <img class="image_avatar" :src="'/img/avatar/' + operData.charId + '.png'" alt="" /> -->
         <div :class="getSprite(operData.charId)"></div>
-        <div class="operRate" v-show="'持有率'==surveyType">
-         <a > 持有率 </a><br />
+        <div class="operRate" v-show="'持有率' == surveyType">
+          <a> 持有率 </a><br />
           {{ operData.owningRate.toFixed(1) }}%
         </div>
-        <div class="operRate" v-show="'精二率'==surveyType">
-          <a > 精二率</a><br />
+        <div class="operRate" v-show="'精二率' == surveyType">
+          <a> 精二率</a><br />
           {{ operData.phases2Rate }}%
         </div>
       </div>
@@ -48,20 +47,17 @@ import { ref } from "vue";
 // console.log(serveyJson)
 
 let operServeyData = ref(serveyJson);
-let surveyType = ref('持有率');
+let surveyType = ref("持有率");
 
-function getSprite(charId,index) {
- return "image_avatar bg-"+charId;
+function getSprite(charId, index) {
+  return "image_avatar bg-" + charId;
 }
 
-function switchSurvey(){
-       if('持有率'==surveyType.value){
-        return surveyType.value = "精二率"
-       }
+function switchSurvey() {
+  if ("持有率" == surveyType.value) {
+    return (surveyType.value = "精二率");
+  }
 
-       return surveyType.value = "持有率"
-       
-
+  return (surveyType.value = "持有率");
 }
-
 </script>

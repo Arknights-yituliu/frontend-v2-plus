@@ -504,4 +504,3 @@ export default {
   padding-bottom: 8px !important;
 }
 </style>
-

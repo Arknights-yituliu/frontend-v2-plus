@@ -21,7 +21,6 @@ import "@/assets/css/sprite_item_large.css";
 import "@/assets/css/sprite_style.css";
 import "@/assets/css/sprite_icon.css";
 
-
 // 旧版css，待修改
 import "@/assets/css/item.css";
 // import "@/assets/css/recruit.css";
