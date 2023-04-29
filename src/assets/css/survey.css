@@ -29,7 +29,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
-  /* border: 1px red solid; */
+  border: 1px red solid;
 }
 
 .survey_tip {
@@ -93,7 +93,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-start;
-
+  border: 1px red solid;
 }
 
 .survey_button {
@@ -106,7 +106,7 @@
   font-weight: 600;
   border-radius: 8px;
   box-shadow: 1px 1px 1px 1px rgb(226, 226, 226);
-  background-color: rgb(34, 139, 230);
+  background-color: rgb(71, 168, 253);
   color: rgb(255, 255, 255);
 }
 
