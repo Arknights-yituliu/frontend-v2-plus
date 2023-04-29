@@ -64,7 +64,7 @@
 .oper {
   margin: 8px;
   width: 60px;
-  height: 170px;
+  height: 130px;
   border: 1px black solid;
   text-align: center;
   font-weight: 600;
@@ -81,7 +81,31 @@
 }
 
 .operRate {
-  margin-top: 4px;
+  margin-top: 6px;
+}
+
+.survey_button_box{
+  margin: auto;
+  margin-bottom: 10px;
+  width: 85%;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  
+}
+
+.survey_button{
+  text-align: center;
+  margin: auto;
+  line-height: 20px;
+  width: 200px;
+  height: 32px;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px 2px rgb(160, 160, 160);
 }
 
 .image_avatar {
