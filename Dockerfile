@@ -1,6 +1,6 @@
 FROM almalinux:9
 RUN dnf -y upgrade --refresh \
-    && dnf -y module install nodejs:16
+    && dnf -y module install nodejs
 RUN npm config set registry https://registry.npm.taobao.org
 WORKDIR /app
 COPY package.json package-lock.json ./
