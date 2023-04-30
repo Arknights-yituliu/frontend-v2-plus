@@ -1165,14 +1165,24 @@ export default {
     setPackData() {
       var moon_now = new Date().getMonth() + 1; //月
 
-      var moon_max = 8;
+      var moon_max = 18;
       let year_now = new Date().getFullYear();
+      let year_next = year_now;
       this.gacha_store258 = [];
       this.gacha_storePacks = [];
       this.gacha_storePacks = this.pageContext.pageProps.pack_data;
 
       for (var i = moon_now; i <= moon_max; i++) {
-        var moon_str = moon_now.toString().padStart(2, "0");
+        var moon_now_str = moon_now.toString().padStart(2, "0");
+
+        var moon_next = moon_now + 1;
+        if (moon_next > 12) {
+          moon_next = 1;
+          year_next++;
+        }
+
+        var moon_next_str = moon_next.toString().padStart(2, "0");
+        
         this.gacha_store258.push({
           packName: moon_now + "月黄票换抽",
           packPrice: 0,
@@ -1181,8 +1191,8 @@ export default {
           gachaPermit: 8,
           gachaPermit10: 3,
           packType: "store",
-          start: Date.parse(new Date(year_now + "/" + moon_str + "/01 00:00:00")),
-          end: Date.parse(new Date(year_now + "/" + moon_str + "/28 00:00:00")),
+          start: Date.parse(new Date(year_now + "/" + moon_now_str + "/01 00:00:00")),
+          end: Date.parse(new Date(year_next + "/" + moon_next_str + "/01 04:00:00")),
           rewardType: "公共",
         });
 
@@ -1195,12 +1205,14 @@ export default {
           gachaPermit10: 1,
           packType: "monthly",
           packRmbPerDraw: 7.4,
-          start: Date.parse(new Date(year_now + "/" + moon_str + "/01 00:00:00")),
-          end: Date.parse(new Date(year_now + "/" + moon_str + "/28 00:00:00")),
+          start: Date.parse(new Date(year_now + "/" + moon_now_str + "/01 00:00:00")),
+          end: Date.parse(new Date(year_next + "/" + moon_next_str + "/01 04:00:00")),
           rewardType: "公共",
         });
 
-        // console.log(year_now + "/" + moon_str + "/28 00:00:00");
+        // console.log('start——', year_now + "/" + moon_now_str + "/01 00:00:00");
+        // console.log('end——',year_next + "/" + moon_next_str + "/01 04:00:00");
+
         moon_now++;
         if (moon_now > 12) {
           moon_now = 1;
