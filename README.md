@@ -17,7 +17,7 @@
 
 ## 运行项目
 
-首先[安装 Node.js](https://nodejs.org/zh-cn/download)，16 和 18 版本都可以。
+首先[安装 Node.js](https://nodejs.org/zh-cn/download)。项目可以在 16、18 和 20 版本上运行，但推荐的版本是 16，在开发时要避免使用 16 不支持的功能或特性。
 
 ```bash
 git clone https://github.com/Arknights-yituliu/frontend-v2-plus.git
