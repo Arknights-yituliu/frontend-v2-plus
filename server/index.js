@@ -1,6 +1,7 @@
 // Note that this file isn't processed by Vite, see https://github.com/brillout/vite-plugin-ssr/issues/562
 
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const compression = require("compression");
 const { renderPage } = require("vite-plugin-ssr/server");
 
@@ -13,6 +14,7 @@ async function startServer() {
   const app = express();
 
   app.use(compression());
+  app.use(cookieParser());
 
   if (isProduction) {
     const sirv = require("sirv");
@@ -29,8 +31,10 @@ async function startServer() {
   }
 
   app.get("*", async (req, res, next) => {
+    theme = req.cookies.theme || "light";
     const pageContextInit = {
       urlOriginal: req.originalUrl,
+      theme: theme,
     };
     const pageContext = await renderPage(pageContextInit);
     const { httpResponse } = pageContext;
