@@ -2058,7 +2058,7 @@ import "@/assets/css/riicCal.css";
 export default {
   data() {
     return {
-      exportUrl: "https://houduan.yituliu.site/tool/building/schedule/export?schedule_id=1664632307607024",
+      exportUrl: "https://backend.yituliu.site/maa/schedule/export?schedule_id=1664632307607024",
       maaUrl: "maa://infra.yituliu/1664632307607024",
       uid: 12345,
       importId: "",
@@ -2226,8 +2226,8 @@ export default {
       this.$message.success("复制成功");
     },
     setExportUrl() {
-      this.exportUrl = "https://backend.yituliu.site/tool/building/schedule/export?schedule_id=" + this.uid;
-      // this.exportUrl ="http://127.0.0.1:10011/tool/building/schedule/export?schedule_id=" + this.uid;
+      this.exportUrl = "https://backend.yituliu.site/maa/schedule/export?schedule_id=" + this.uid;
+      // this.exportUrl ="http://127.0.0.1:10011/maa/schedule/export?schedule_id=" + this.uid;
       this.maaUrl = "maa://infra.yituliu/" + this.uid;
     },
     maaBuildingJsonCreated() {

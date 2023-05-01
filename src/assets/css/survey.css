@@ -127,28 +127,73 @@
   width: 100%;
   height: 2000px;
   background-color: rgba(0, 0, 0, 0.7);
+  display:none
 }
 
 .survey_popup {
+  display:none;
   position: fixed;
   right: 0;
   left: 0;
   z-index: 50;
   margin: auto;
   margin-top: 100px;
-  width: 500px;
-  height: 500px;
+  width: 450px;
+  height: 160px;
   background-color: rgba(255, 255, 255);
   border-radius: 6px;
 }
 
+.survey_popup_title {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 400px;
+  height: 30px;
+  /* border-bottom: 1px red solid; */
+  text-align: left;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.survey_popup_input {
+  width: 500px;
+  height: 70px;
+}
+
 .input_operBox {
   display: block;
-  position: fixed;
+  position: absolute;
   z-index: 50;
-  margin-top: 20px;
-  margin-left: 50px;
+  top: 60px;
+  left: 25px;
   width: 400px;
-  height: 300px;
+  height: 24px;
+  text-align: left;
+  border: none;
+  border-bottom: 2px rgb(0, 132, 255) solid;
+  outline: none;
+}
+
+.survey_popup_foot {
+  position: absolute;
+  top: 120px;
+  right: 20px;
+  width: 160px;
+  height: 30px;
+  /* border: 1px red solid; */
+  display: flex;
+}
+
+.survey_popup_button {
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  margin-left: 10px;
+  font-weight: 600;
   text-align: center;
+}
+
+.survey_popup_button:hover {
+  background: rgb(241, 241, 241);
 }

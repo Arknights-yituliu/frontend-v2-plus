@@ -5,11 +5,8 @@ import cookie from "js-cookie";
 
 // 创建axios实例
 const service = axios.create({
-  // baseURL: 'http://127.0.0.1:10012/',
-  // baseURL: 'http://127.0.0.1:10011/',
+  // baseURL: 'http://127.0.0.1:10013/',
   baseURL: "https://backend.yituliu.site/",
-
-  // baseURL: 'https://houduan.yituliu.site/',
   timeout: 150000, // 请求超时时间
 });
 

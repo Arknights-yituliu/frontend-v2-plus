@@ -1,7 +1,14 @@
 <template>
-  <div :class="popClass" @click="closePopup()"></div>
-  <div class="survey_popup">
-    <input type="text" v-model="uploadOperBox" class="input_operBox" placeholder="粘贴从MAA干员识别小工具导出的数据" />
+  <div class="survey_popup_mask" :style="popupStyle" @click="closePopup()"></div>
+  <div class="survey_popup" :style="popupStyle">
+    <div class="survey_popup_title">导入JSON</div>
+    <div class="survey_popup_input">
+      <input type="text" v-model="operBoxData"  class="input_operBox" placeholder="粘贴从MAA干员识别小工具导出的数据" />
+    </div>
+    <div class="survey_popup_foot">
+      <div class="survey_popup_button" @click="closePopup()">取消</div>
+      <div class="survey_popup_button" @click="manualUpload()">导入</div>
+    </div>
   </div>
 
   <div class="main_survey">
@@ -46,14 +53,14 @@ import "@/assets/css/sprite_char_6.css";
 import "@/assets/css/survey.css";
 import serveyJson from "@/static/json/survey.json";
 import { ref, watch } from "vue";
-// console.log(serveyJson)
+
+import surveyApi from "@/api/survey";
 
 let operServeyData = ref(serveyJson);
 let surveyType = ref("持有率");
-let popClass = ref("survey_popup_mask");
+let popupStyle = ref("survey_popup_mask");
 
-let uploadOperBox = ref("");
-let operBoxJson = ref("");
+let operBoxData = ref("");
 
 function getSprite(charId, index) {
   return "image_avatar bg-" + charId;
@@ -68,18 +75,18 @@ function switchSurvey() {
 }
 
 function inputOperBox() {
-  popClass.value = "survey_popup_mask";
+  popupStyle.value = "display:block";
 }
 
 function closePopup() {
-  popClass.value = "";
+  popupStyle.value = "display:none";
 }
 
-watch(uploadOperBox, (new_value) => {
-  let obj = {};
-  obj = JSON.parse(new_value);
-  console.log(obj[0]);
-  uploadOperBox.value = JSON.stringify(obj, null, 4);
-  // console.log(uploadOperBox.value)
-});
+function manualUpload(){
+  let dataJson  = JSON.parse(operBoxData.value);
+  console.log(dataJson)
+  surveyApi.manualUploadOperBox(dataJson).then((response) => {
+    console.log(response)
+  })
+}
 </script>
