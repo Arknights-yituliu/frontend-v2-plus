@@ -1,0 +1,1367 @@
+[
+  {
+    "id": "char_250_phatom",
+    "name": "傀影",
+    "own": true
+  },
+  {
+    "id": "char_181_flower",
+    "name": "调香师",
+    "own": true
+  },
+  {
+    "id": "char_345_folnic",
+    "name": "亚叶",
+    "own": true
+  },
+  {
+    "id": "char_127_estell",
+    "name": "艾丝黛尔",
+    "own": true
+  },
+  {
+    "id": "char_017_huang",
+    "name": "煌",
+    "own": true
+  },
+  {
+    "id": "char_135_halo",
+    "name": "星源",
+    "own": true
+  },
+  {
+    "id": "char_121_lava",
+    "name": "炎熔",
+    "own": true
+  },
+  {
+    "id": "char_1030_noirc2",
+    "name": "火龙S黑角",
+    "own": true
+  },
+  {
+    "id": "char_193_frostl",
+    "name": "霜叶",
+    "own": true
+  },
+  {
+    "id": "char_002_amiya",
+    "name": "阿米娅",
+    "own": true
+  },
+  {
+    "id": "char_112_siege",
+    "name": "推进之王",
+    "own": true
+  },
+  {
+    "id": "char_451_robin",
+    "name": "罗宾",
+    "own": true
+  },
+  {
+    "id": "char_010_chen",
+    "name": "陈",
+    "own": true
+  },
+  {
+    "id": "char_107_liskam",
+    "name": "雷蛇",
+    "own": true
+  },
+  {
+    "id": "char_237_gravel",
+    "name": "砾",
+    "own": true
+  },
+  {
+    "id": "char_1021_kroos2",
+    "name": "寒芒克洛丝",
+    "own": true
+  },
+  {
+    "id": "char_009_12fce",
+    "name": "12F",
+    "own": true
+  },
+  {
+    "id": "char_308_swire",
+    "name": "诗怀雅",
+    "own": true
+  },
+  {
+    "id": "char_301_cutter",
+    "name": "刻刀",
+    "own": true
+  },
+  {
+    "id": "char_140_whitew",
+    "name": "拉普兰德",
+    "own": true
+  },
+  {
+    "id": "char_485_pallas",
+    "name": "帕拉斯",
+    "own": true
+  },
+  {
+    "id": "char_4078_bdhkgt",
+    "name": "截云",
+    "own": true
+  },
+  {
+    "id": "char_003_kalts",
+    "name": "凯尔希",
+    "own": true
+  },
+  {
+    "id": "char_322_lmlee",
+    "name": "老鲤",
+    "own": true
+  },
+  {
+    "id": "char_492_quercu",
+    "name": "夏栎",
+    "own": true
+  },
+  {
+    "id": "char_103_angel",
+    "name": "能天使",
+    "own": true
+  },
+  {
+    "id": "char_1011_lava2",
+    "name": "炎狱炎熔",
+    "own": true
+  },
+  {
+    "id": "char_133_mm",
+    "name": "梅",
+    "own": true
+  },
+  {
+    "id": "char_109_fmout",
+    "name": "远山",
+    "own": true
+  },
+  {
+    "id": "char_106_franka",
+    "name": "芙兰卡",
+    "own": true
+  },
+  {
+    "id": "char_300_phenxi",
+    "name": "菲亚梅塔",
+    "own": true
+  },
+  {
+    "id": "char_1023_ghost2",
+    "name": "归溟幽灵鲨",
+    "own": true
+  },
+  {
+    "id": "char_154_morgan",
+    "name": "摩根",
+    "own": true
+  },
+  {
+    "id": "char_204_platnm",
+    "name": "白金",
+    "own": true
+  },
+  {
+    "id": "char_1012_skadi2",
+    "name": "浊心斯卡蒂",
+    "own": true
+  },
+  {
+    "id": "char_400_weedy",
+    "name": "温蒂",
+    "own": true
+  },
+  {
+    "id": "char_122_beagle",
+    "name": "米格鲁",
+    "own": true
+  },
+  {
+    "id": "char_1013_chen2",
+    "name": "假日威龙陈",
+    "own": true
+  },
+  {
+    "id": "char_1014_nearl2",
+    "name": "耀骑士临光",
+    "own": true
+  },
+  {
+    "id": "char_150_snakek",
+    "name": "蛇屠箱",
+    "own": true
+  },
+  {
+    "id": "char_148_nearl",
+    "name": "临光",
+    "own": true
+  },
+  {
+    "id": "char_415_flint",
+    "name": "燧石",
+    "own": true
+  },
+  {
+    "id": "char_1028_texas2",
+    "name": "缄默德克萨斯",
+    "own": true
+  },
+  {
+    "id": "char_464_cement",
+    "name": "洋灰",
+    "own": true
+  },
+  {
+    "id": "char_155_tiger",
+    "name": "因陀罗",
+    "own": true
+  },
+  {
+    "id": "char_230_savage",
+    "name": "暴行",
+    "own": true
+  },
+  {
+    "id": "char_4025_aprot2",
+    "name": "暮落",
+    "own": true
+  },
+  {
+    "id": "char_4071_peper",
+    "name": "明椒",
+    "own": true
+  },
+  {
+    "id": "char_136_hsguma",
+    "name": "星熊",
+    "own": true
+  },
+  {
+    "id": "char_101_sora",
+    "name": "空",
+    "own": true
+  },
+  {
+    "id": "char_1020_reed2",
+    "name": "焰影苇草",
+    "own": true
+  },
+  {
+    "id": "char_141_nights",
+    "name": "夜烟",
+    "own": true
+  },
+  {
+    "id": "char_115_headbr",
+    "name": "凛冬",
+    "own": true
+  },
+  {
+    "id": "char_1026_gvial2",
+    "name": "百炼嘉维尔",
+    "own": true
+  },
+  {
+    "id": "char_1024_hbisc2",
+    "name": "濯尘芙蓉",
+    "own": true
+  },
+  {
+    "id": "char_272_strong",
+    "name": "孑",
+    "own": true
+  },
+  {
+    "id": "char_126_shotst",
+    "name": "流星",
+    "own": true
+  },
+  {
+    "id": "char_1029_yato2",
+    "name": "麒麟X夜刀",
+    "own": true
+  },
+  {
+    "id": "char_283_midn",
+    "name": "月见夜",
+    "own": true
+  },
+  {
+    "id": "char_222_bpipe",
+    "name": "风笛",
+    "own": true
+  },
+  {
+    "id": "char_174_slbell",
+    "name": "初雪",
+    "own": true
+  },
+  {
+    "id": "char_102_texas",
+    "name": "德克萨斯",
+    "own": true
+  },
+  {
+    "id": "char_123_fang",
+    "name": "芬",
+    "own": true
+  },
+  {
+    "id": "char_496_wildmn",
+    "name": "野鬃",
+    "own": true
+  },
+  {
+    "id": "char_108_silent",
+    "name": "赫默",
+    "own": true
+  },
+  {
+    "id": "char_110_deepcl",
+    "name": "深海色",
+    "own": true
+  },
+  {
+    "id": "char_4013_kjera",
+    "name": "耶拉",
+    "own": true
+  },
+  {
+    "id": "char_149_scave",
+    "name": "清道夫",
+    "own": true
+  },
+  {
+    "id": "char_473_mberry",
+    "name": "桑葚",
+    "own": true
+  },
+  {
+    "id": "char_411_tomimi",
+    "name": "特米米",
+    "own": true
+  },
+  {
+    "id": "char_113_cqbw",
+    "name": "W",
+    "own": true
+  },
+  {
+    "id": "char_4064_mlynar",
+    "name": "玛恩纳",
+    "own": true
+  },
+  {
+    "id": "char_130_doberm",
+    "name": "杜宾",
+    "own": true
+  },
+  {
+    "id": "char_282_catap",
+    "name": "空爆",
+    "own": true
+  },
+  {
+    "id": "char_117_myrrh",
+    "name": "末药",
+    "own": true
+  },
+  {
+    "id": "char_124_kroos",
+    "name": "克洛丝",
+    "own": true
+  },
+  {
+    "id": "char_158_milu",
+    "name": "守林人",
+    "own": true
+  },
+  {
+    "id": "char_118_yuki",
+    "name": "白雪",
+    "own": true
+  },
+  {
+    "id": "char_120_hibisc",
+    "name": "芙蓉",
+    "own": true
+  },
+  {
+    "id": "char_128_plosis",
+    "name": "白面鸮",
+    "own": true
+  },
+  {
+    "id": "char_199_yak",
+    "name": "角峰",
+    "own": true
+  },
+  {
+    "id": "char_289_gyuki",
+    "name": "缠丸",
+    "own": true
+  },
+  {
+    "id": "char_129_bluep",
+    "name": "蓝毒",
+    "own": true
+  },
+  {
+    "id": "char_376_therex",
+    "name": "THRM-EX",
+    "own": true
+  },
+  {
+    "id": "char_163_hpsts",
+    "name": "火神",
+    "own": true
+  },
+  {
+    "id": "char_157_dagda",
+    "name": "达格达",
+    "own": true
+  },
+  {
+    "id": "char_131_flameb",
+    "name": "炎客",
+    "own": true
+  },
+  {
+    "id": "char_4004_pudd",
+    "name": "布丁",
+    "own": true
+  },
+  {
+    "id": "char_260_durnar",
+    "name": "坚雷",
+    "own": true
+  },
+  {
+    "id": "char_134_ifrit",
+    "name": "伊芙利特",
+    "own": true
+  },
+  {
+    "id": "char_137_brownb",
+    "name": "猎蜂",
+    "own": true
+  },
+  {
+    "id": "char_143_ghost",
+    "name": "幽灵鲨",
+    "own": true
+  },
+  {
+    "id": "char_144_red",
+    "name": "红",
+    "own": true
+  },
+  {
+    "id": "char_145_prove",
+    "name": "普罗旺斯",
+    "own": true
+  },
+  {
+    "id": "char_213_mostma",
+    "name": "莫斯提马",
+    "own": true
+  },
+  {
+    "id": "char_147_shining",
+    "name": "闪灵",
+    "own": true
+  },
+  {
+    "id": "char_173_slchan",
+    "name": "崖心",
+    "own": true
+  },
+  {
+    "id": "char_151_myrtle",
+    "name": "桃金娘",
+    "own": true
+  },
+  {
+    "id": "trap_059_peacokfool",
+    "name": "断罪者",
+    "own": true
+  },
+  {
+    "id": "char_491_humus",
+    "name": "休谟斯",
+    "own": true
+  },
+  {
+    "id": "char_164_nightm",
+    "name": "夜魔",
+    "own": true
+  },
+  {
+    "id": "char_4063_quartz",
+    "name": "石英",
+    "own": true
+  },
+  {
+    "id": "char_358_lisa",
+    "name": "铃兰",
+    "own": true
+  },
+  {
+    "id": "char_166_skfire",
+    "name": "天火",
+    "own": true
+  },
+  {
+    "id": "char_171_bldsk",
+    "name": "华法琳",
+    "own": true
+  },
+  {
+    "id": "char_325_bison",
+    "name": "拜松",
+    "own": true
+  },
+  {
+    "id": "char_172_svrash",
+    "name": "银灰",
+    "own": true
+  },
+  {
+    "id": "char_484_robrta",
+    "name": "罗比菈塔",
+    "own": true
+  },
+  {
+    "id": "char_210_stward",
+    "name": "史都华德",
+    "own": true
+  },
+  {
+    "id": "char_4087_ines",
+    "name": "伊内丝",
+    "own": true
+  },
+  {
+    "id": "char_179_cgbird",
+    "name": "夜莺",
+    "own": true
+  },
+  {
+    "id": "char_4077_palico",
+    "name": "泰拉大陆调查团",
+    "own": true
+  },
+  {
+    "id": "char_4062_totter",
+    "name": "铅踝",
+    "own": true
+  },
+  {
+    "id": "char_4040_rockr",
+    "name": "洛洛",
+    "own": true
+  },
+  {
+    "id": "char_180_amgoat",
+    "name": "艾雅法拉",
+    "own": true
+  },
+  {
+    "id": "char_486_takila",
+    "name": "龙舌兰",
+    "own": true
+  },
+  {
+    "id": "char_183_skgoat",
+    "name": "地灵",
+    "own": true
+  },
+  {
+    "id": "char_243_waaifu",
+    "name": "槐琥",
+    "own": true
+  },
+  {
+    "id": "char_185_frncat",
+    "name": "慕斯",
+    "own": true
+  },
+  {
+    "id": "char_264_f12yin",
+    "name": "山",
+    "own": true
+  },
+  {
+    "id": "char_187_ccheal",
+    "name": "嘉维尔",
+    "own": true
+  },
+  {
+    "id": "char_4083_chimes",
+    "name": "铎铃",
+    "own": true
+  },
+  {
+    "id": "char_332_archet",
+    "name": "空弦",
+    "own": true
+  },
+  {
+    "id": "char_277_sqrrel",
+    "name": "阿消",
+    "own": true
+  },
+  {
+    "id": "char_188_helage",
+    "name": "赫拉格",
+    "own": true
+  },
+  {
+    "id": "char_190_clour",
+    "name": "红云",
+    "own": true
+  },
+  {
+    "id": "char_192_falco",
+    "name": "翎羽",
+    "own": true
+  },
+  {
+    "id": "char_195_glassb",
+    "name": "真理",
+    "own": true
+  },
+  {
+    "id": "char_196_sunbr",
+    "name": "古米",
+    "own": true
+  },
+  {
+    "id": "char_197_poca",
+    "name": "早露",
+    "own": true
+  },
+  {
+    "id": "char_503_rang",
+    "name": "巡林者",
+    "own": true
+  },
+  {
+    "id": "char_198_blackd",
+    "name": "讯使",
+    "own": true
+  },
+  {
+    "id": "char_2013_cerber",
+    "name": "刻俄柏",
+    "own": true
+  },
+  {
+    "id": "char_2014_nian",
+    "name": "年",
+    "own": true
+  },
+  {
+    "id": "char_2015_dusk",
+    "name": "夕",
+    "own": true
+  },
+  {
+    "id": "char_478_kirara",
+    "name": "绮良",
+    "own": true
+  },
+  {
+    "id": "char_201_moeshd",
+    "name": "可颂",
+    "own": true
+  },
+  {
+    "id": "char_235_jesica",
+    "name": "杰西卡",
+    "own": true
+  },
+  {
+    "id": "char_2023_ling",
+    "name": "令",
+    "own": true
+  },
+  {
+    "id": "char_2024_chyue",
+    "name": "重岳",
+    "own": true
+  },
+  {
+    "id": "char_202_demkni",
+    "name": "塞雷娅",
+    "own": true
+  },
+  {
+    "id": "char_500_noirc",
+    "name": "黑角",
+    "own": true
+  },
+  {
+    "id": "char_206_gnosis",
+    "name": "灵知",
+    "own": true
+  },
+  {
+    "id": "char_208_melan",
+    "name": "玫兰莎",
+    "own": true
+  },
+  {
+    "id": "char_209_ardign",
+    "name": "卡缇",
+    "own": true
+  },
+  {
+    "id": "char_211_adnach",
+    "name": "安德切尔",
+    "own": true
+  },
+  {
+    "id": "char_212_ansel",
+    "name": "安赛尔",
+    "own": true
+  },
+  {
+    "id": "char_214_kafka",
+    "name": "卡夫卡",
+    "own": true
+  },
+  {
+    "id": "char_281_popka",
+    "name": "泡普卡",
+    "own": true
+  },
+  {
+    "id": "char_215_mantic",
+    "name": "狮蝎",
+    "own": true
+  },
+  {
+    "id": "char_502_nblade",
+    "name": "夜刀",
+    "own": true
+  },
+  {
+    "id": "char_306_leizi",
+    "name": "惊蛰",
+    "own": true
+  },
+  {
+    "id": "char_302_glaze",
+    "name": "安比尔",
+    "own": true
+  },
+  {
+    "id": "char_218_cuttle",
+    "name": "安哲拉",
+    "own": true
+  },
+  {
+    "id": "char_219_meteo",
+    "name": "陨星",
+    "own": true
+  },
+  {
+    "id": "char_377_gdglow",
+    "name": "澄闪",
+    "own": true
+  },
+  {
+    "id": "char_365_aprl",
+    "name": "四月",
+    "own": true
+  },
+  {
+    "id": "char_220_grani",
+    "name": "格拉尼",
+    "own": true
+  },
+  {
+    "id": "char_225_haak",
+    "name": "阿",
+    "own": true
+  },
+  {
+    "id": "char_455_nothin",
+    "name": "乌有",
+    "own": true
+  },
+  {
+    "id": "char_226_hmau",
+    "name": "吽",
+    "own": true
+  },
+  {
+    "id": "char_459_tachak",
+    "name": "战车",
+    "own": true
+  },
+  {
+    "id": "char_402_tuye",
+    "name": "图耶",
+    "own": true
+  },
+  {
+    "id": "char_373_lionhd",
+    "name": "莱恩哈特",
+    "own": true
+  },
+  {
+    "id": "char_304_zebra",
+    "name": "暴雨",
+    "own": true
+  },
+  {
+    "id": "char_236_rope",
+    "name": "暗索",
+    "own": true
+  },
+  {
+    "id": "char_240_wyvern",
+    "name": "香草",
+    "own": true
+  },
+  {
+    "id": "char_241_panda",
+    "name": "食铁兽",
+    "own": true
+  },
+  {
+    "id": "char_340_shwaz",
+    "name": "黑",
+    "own": true
+  },
+  {
+    "id": "char_242_otter",
+    "name": "梅尔",
+    "own": true
+  },
+  {
+    "id": "char_4009_irene",
+    "name": "艾丽妮",
+    "own": true
+  },
+  {
+    "id": "char_388_mint",
+    "name": "薄绿",
+    "own": true
+  },
+  {
+    "id": "char_248_mgllan",
+    "name": "麦哲伦",
+    "own": true
+  },
+  {
+    "id": "char_252_bibeak",
+    "name": "柏喙",
+    "own": true
+  },
+  {
+    "id": "char_253_greyy",
+    "name": "格雷伊",
+    "own": true
+  },
+  {
+    "id": "char_346_aosta",
+    "name": "奥斯塔",
+    "own": true
+  },
+  {
+    "id": "char_254_vodfox",
+    "name": "巫恋",
+    "own": true
+  },
+  {
+    "id": "char_258_podego",
+    "name": "波登可",
+    "own": true
+  },
+  {
+    "id": "char_421_crow",
+    "name": "羽毛笔",
+    "own": true
+  },
+  {
+    "id": "char_261_sddrag",
+    "name": "苇草",
+    "own": true
+  },
+  {
+    "id": "char_263_skadi",
+    "name": "斯卡蒂",
+    "own": true
+  },
+  {
+    "id": "char_328_cammou",
+    "name": "卡达",
+    "own": true
+  },
+  {
+    "id": "char_265_sophia",
+    "name": "鞭刃",
+    "own": true
+  },
+  {
+    "id": "char_336_folivo",
+    "name": "稀音",
+    "own": true
+  },
+  {
+    "id": "char_271_spikes",
+    "name": "芳汀",
+    "own": true
+  },
+  {
+    "id": "char_479_sleach",
+    "name": "琴柳",
+    "own": true
+  },
+  {
+    "id": "char_274_astesi",
+    "name": "星极",
+    "own": true
+  },
+  {
+    "id": "char_275_breeze",
+    "name": "微风",
+    "own": true
+  },
+  {
+    "id": "char_378_asbest",
+    "name": "石棉",
+    "own": true
+  },
+  {
+    "id": "char_278_orchid",
+    "name": "梓兰",
+    "own": true
+  },
+  {
+    "id": "char_279_excu",
+    "name": "送葬人",
+    "own": true
+  },
+  {
+    "id": "char_284_spot",
+    "name": "斑点",
+    "own": true
+  },
+  {
+    "id": "char_285_medic2",
+    "name": "Lancet-2",
+    "own": true
+  },
+  {
+    "id": "char_433_windft",
+    "name": "掠风",
+    "own": true
+  },
+  {
+    "id": "char_293_thorns",
+    "name": "棘刺",
+    "own": true
+  },
+  {
+    "id": "char_4016_kazema",
+    "name": "风丸",
+    "own": true
+  },
+  {
+    "id": "char_286_cast3",
+    "name": "Castle-3",
+    "own": true
+  },
+  {
+    "id": "char_290_vigna",
+    "name": "红豆",
+    "own": true
+  },
+  {
+    "id": "char_501_durin",
+    "name": "杜林",
+    "own": true
+  },
+  {
+    "id": "char_291_aglina",
+    "name": "安洁莉娜",
+    "own": true
+  },
+  {
+    "id": "char_4042_lumen",
+    "name": "流明",
+    "own": true
+  },
+  {
+    "id": "char_294_ayer",
+    "name": "断崖",
+    "own": true
+  },
+  {
+    "id": "char_297_hamoni",
+    "name": "和弦",
+    "own": true
+  },
+  {
+    "id": "char_426_billro",
+    "name": "卡涅利安",
+    "own": true
+  },
+  {
+    "id": "char_298_susuro",
+    "name": "苏苏洛",
+    "own": true
+  },
+  {
+    "id": "char_379_sesa",
+    "name": "慑砂",
+    "own": true
+  },
+  {
+    "id": "char_311_mudrok",
+    "name": "泥岩",
+    "own": true
+  },
+  {
+    "id": "char_326_glacus",
+    "name": "格劳克斯",
+    "own": true
+  },
+  {
+    "id": "char_350_surtr",
+    "name": "史尔特尔",
+    "own": true
+  },
+  {
+    "id": "char_333_sidero",
+    "name": "铸铁",
+    "own": true
+  },
+  {
+    "id": "char_337_utage",
+    "name": "宴",
+    "own": true
+  },
+  {
+    "id": "char_343_tknogi",
+    "name": "月禾",
+    "own": true
+  },
+  {
+    "id": "char_344_beewax",
+    "name": "蜜蜡",
+    "own": true
+  },
+  {
+    "id": "char_383_snsant",
+    "name": "雪雉",
+    "own": true
+  },
+  {
+    "id": "char_347_jaksel",
+    "name": "杰克",
+    "own": true
+  },
+  {
+    "id": "char_348_ceylon",
+    "name": "锡兰",
+    "own": true
+  },
+  {
+    "id": "char_349_chiave",
+    "name": "贾维",
+    "own": true
+  },
+  {
+    "id": "char_423_blemsh",
+    "name": "瑕光",
+    "own": true
+  },
+  {
+    "id": "char_469_indigo",
+    "name": "深靛",
+    "own": true
+  },
+  {
+    "id": "char_355_ethan",
+    "name": "伊桑",
+    "own": true
+  },
+  {
+    "id": "char_356_broca",
+    "name": "布洛卡",
+    "own": true
+  },
+  {
+    "id": "char_362_saga",
+    "name": "嵯峨",
+    "own": true
+  },
+  {
+    "id": "char_363_toddi",
+    "name": "熔泉",
+    "own": true
+  },
+  {
+    "id": "char_366_acdrop",
+    "name": "酸糖",
+    "own": true
+  },
+  {
+    "id": "char_367_swllow",
+    "name": "灰喉",
+    "own": true
+  },
+  {
+    "id": "char_4047_pianst",
+    "name": "车尔尼",
+    "own": true
+  },
+  {
+    "id": "char_369_bena",
+    "name": "贝娜",
+    "own": true
+  },
+  {
+    "id": "char_381_bubble",
+    "name": "泡泡",
+    "own": true
+  },
+  {
+    "id": "char_385_finlpp",
+    "name": "清流",
+    "own": true
+  },
+  {
+    "id": "char_391_rosmon",
+    "name": "迷迭香",
+    "own": true
+  },
+  {
+    "id": "char_4000_jnight",
+    "name": "正义骑士号",
+    "own": true
+  },
+  {
+    "id": "char_405_absin",
+    "name": "苦艾",
+    "own": true
+  },
+  {
+    "id": "char_4014_lunacu",
+    "name": "子月",
+    "own": true
+  },
+  {
+    "id": "char_4017_puzzle",
+    "name": "谜图",
+    "own": true
+  },
+  {
+    "id": "char_4080_lin",
+    "name": "林",
+    "own": true
+  },
+  {
+    "id": "char_4019_ncdeer",
+    "name": "九色鹿",
+    "own": true
+  },
+  {
+    "id": "char_401_elysm",
+    "name": "极境",
+    "own": true
+  },
+  {
+    "id": "char_440_pinecn",
+    "name": "松果",
+    "own": true
+  },
+  {
+    "id": "char_4032_provs",
+    "name": "但书",
+    "own": true
+  },
+  {
+    "id": "char_4036_forcer",
+    "name": "见行者",
+    "own": true
+  },
+  {
+    "id": "char_456_ash",
+    "name": "灰烬",
+    "own": true
+  },
+  {
+    "id": "char_4039_horn",
+    "name": "号角",
+    "own": true
+  },
+  {
+    "id": "char_4041_chnut",
+    "name": "褐果",
+    "own": true
+  },
+  {
+    "id": "char_4043_erato",
+    "name": "埃拉托",
+    "own": true
+  },
+  {
+    "id": "char_4045_heidi",
+    "name": "海蒂",
+    "own": true
+  },
+  {
+    "id": "char_4046_ebnhlz",
+    "name": "黑键",
+    "own": true
+  },
+  {
+    "id": "char_4048_doroth",
+    "name": "多萝西",
+    "own": true
+  },
+  {
+    "id": "char_416_zumama",
+    "name": "森蚺",
+    "own": true
+  },
+  {
+    "id": "char_4054_malist",
+    "name": "至简",
+    "own": true
+  },
+  {
+    "id": "char_4055_bgsnow",
+    "name": "鸿雪",
+    "own": true
+  },
+  {
+    "id": "char_4065_judge",
+    "name": "斥罪",
+    "own": true
+  },
+  {
+    "id": "char_4066_highmo",
+    "name": "海沫",
+    "own": true
+  },
+  {
+    "id": "char_475_akafyu",
+    "name": "赤冬",
+    "own": true
+  },
+  {
+    "id": "char_4067_lolxh",
+    "name": "罗小黑",
+    "own": true
+  },
+  {
+    "id": "char_4082_qiubai",
+    "name": "仇白",
+    "own": true
+  },
+  {
+    "id": "char_4091_ulika",
+    "name": "U-Official",
+    "own": true
+  },
+  {
+    "id": "char_420_flamtl",
+    "name": "焰尾",
+    "own": true
+  },
+  {
+    "id": "char_422_aurora",
+    "name": "极光",
+    "own": true
+  },
+  {
+    "id": "char_493_firwhl",
+    "name": "火哨",
+    "own": true
+  },
+  {
+    "id": "char_427_vigil",
+    "name": "伺夜",
+    "own": true
+  },
+  {
+    "id": "char_430_fartth",
+    "name": "远牙",
+    "own": true
+  },
+  {
+    "id": "char_431_ashlok",
+    "name": "灰毫",
+    "own": true
+  },
+  {
+    "id": "char_436_whispr",
+    "name": "絮雨",
+    "own": true
+  },
+  {
+    "id": "char_437_mizuki",
+    "name": "水月",
+    "own": true
+  },
+  {
+    "id": "char_449_glider",
+    "name": "蜜莓",
+    "own": true
+  },
+  {
+    "id": "char_452_bstalk",
+    "name": "豆苗",
+    "own": true
+  },
+  {
+    "id": "char_457_blitz",
+    "name": "闪击",
+    "own": true
+  },
+  {
+    "id": "char_458_rfrost",
+    "name": "霜华",
+    "own": true
+  },
+  {
+    "id": "char_472_pasngr",
+    "name": "异客",
+    "own": true
+  },
+  {
+    "id": "char_474_glady",
+    "name": "歌蕾蒂娅",
+    "own": true
+  },
+  {
+    "id": "char_476_blkngt",
+    "name": "夜半",
+    "own": true
+  },
+  {
+    "id": "char_489_serum",
+    "name": "蚀清",
+    "own": true
+  },
+  {
+    "id": "char_497_ctable",
+    "name": "晓歌",
+    "own": true
+  }
+]

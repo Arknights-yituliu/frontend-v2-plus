@@ -29,13 +29,13 @@
         新章节开放期间样本量阈值临时下调至300，刷图时请注意甄别<br>
         小样活动约可提供25%的效率1
       </div> -->
-      <div class="stage_hint">
+      <!-- <div class="stage_hint">
         <div class="stage_hint_t5">
           30日嘉年华会有实体卡片发放，详情请关注
           <a style="text-decoration: none" href="https://space.bilibili.com/688411531/">'罗德岛基建BETA'</a>
           动态
         </div>
-      </div>
+      </div> -->
       <div class="stage_hint">
         <div class="stage_hint_t5">橙：双最优</div>
         <div class="stage_hint_t4">紫：效率最高(长期最优)</div>
