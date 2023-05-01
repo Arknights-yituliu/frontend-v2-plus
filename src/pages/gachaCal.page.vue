@@ -1011,7 +1011,6 @@ export default {
   },
   data() {
     return {
-      pageTheme: "light",
       itemList: [],
       checkBox1: ["0"],
       checkBox: ["1", "2", "5", "6"], //折叠栏绑定数组
