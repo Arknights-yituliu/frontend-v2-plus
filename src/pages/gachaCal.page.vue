@@ -1277,7 +1277,7 @@ export default {
 
     //  计算日常奖励
     getEveryreWard() {
-      this.dailyRewards = 100 * this.remainingDays;
+      this.dailyRewards = 100 * (this.remainingDays-1);
       this.weeklyTaskRewards = 500 * this.remainingWeeks;
       this.annihilationRewards = 1800 * this.remainingWeeks;
     },
