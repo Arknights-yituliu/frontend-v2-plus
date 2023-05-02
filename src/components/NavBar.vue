@@ -179,7 +179,7 @@ const route = computed(() => {
   z-index: 100;
   box-shadow: none;
   gap: 8px;
-  padding: 0 16px 0 28px;
+  padding: 0 28px 0 16px;
 }
 
 .bar-wrapper {
