@@ -86,26 +86,43 @@
 .survey_button_box {
   margin: auto;
   margin-bottom: 10px;
-  width: 85%;
-  height: 35px;
+  width: 90%;
+  height: auto;
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
+  flex-wrap: wrap;
+  justify-content:flex-start;
+  /* border: 1px red solid; */
+}
+
+.survey_button_title{
+  text-align: center;
+  /* margin: auto; */
+  margin-top: 10px;
+  line-height: 24px;
+  width: 50px;
+  height: 24px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 2px;
+  box-shadow: 0px 0px 1px 1px rgb(114, 113, 113);
+  background: #ffffff;
+  color: rgb(0, 0, 0);
   /* border: 1px red solid; */
 }
 
 .survey_button {
   text-align: center;
-  margin: auto;
-  line-height: 20px;
-  width: 200px;
-  height: 32px;
+  margin-top: 10px;
+  margin-left: 20px;
+  line-height: 24px;
+  
+  height: 24px;
   font-size: 20px;
-  font-weight: 600;
-  border-radius: 8px;
-  box-shadow: 1px 1px 1px 1px rgb(226, 226, 226);
-  background-color: rgb(71, 168, 253);
+  font-weight: 500;
+  border-radius: 2px;
+  box-shadow: 0px 0px 1px 1px rgb(114, 113, 113);
+  background: #0c72e7;
   color: rgb(255, 255, 255);
 }
 
