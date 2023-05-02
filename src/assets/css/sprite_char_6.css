@@ -1,437 +1,529 @@
 .bg-char_003_kalts {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -10px -10px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -10px -10px;
 }
+
+
 
 .bg-char_010_chen {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -90px -10px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -90px -10px;
 }
+
+
 
 .bg-char_017_huang {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -10px -90px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -10px -90px;
 }
+
+
 
 .bg-char_103_angel {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -90px -90px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -90px -90px;
 }
+
+
 
 .bg-char_112_siege {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -170px -10px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -170px -10px;
 }
+
+
 
 .bg-char_113_cqbw {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -170px -90px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -170px -90px;
 }
+
+
 
 .bg-char_134_ifrit {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -10px -170px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -10px -170px;
 }
+
+
 
 .bg-char_136_hsguma {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -90px -170px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -90px -170px;
 }
+
+
 
 .bg-char_147_shining {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -170px -170px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -170px -170px;
 }
+
+
 
 .bg-char_172_svrash {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -250px -10px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -250px -10px;
 }
+
+
 
 .bg-char_179_cgbird {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -250px -90px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -250px -90px;
 }
+
+
 
 .bg-char_180_amgoat {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -250px -170px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -250px -170px;
 }
+
+
 
 .bg-char_188_helage {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -10px -250px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -10px -250px;
 }
+
+
 
 .bg-char_197_poca {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -90px -250px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -90px -250px;
 }
+
+
 
 .bg-char_202_demkni {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -170px -250px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -170px -250px;
 }
+
+
 
 .bg-char_206_gnosis {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -250px -250px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -250px -250px;
 }
+
+
 
 .bg-char_213_mostma {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -330px -10px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -330px -10px;
 }
+
+
 
 .bg-char_222_bpipe {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -330px -90px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -330px -90px;
 }
+
+
 
 .bg-char_225_haak {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -330px -170px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -330px -170px;
 }
+
+
 
 .bg-char_248_mgllan {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -330px -250px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -330px -250px;
 }
+
+
+
+.bg-char_249_mlyss {
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -10px -330px;
+}
+
+
 
 .bg-char_250_phatom {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -10px -330px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -90px -330px;
 }
+
+
 
 .bg-char_263_skadi {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -90px -330px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -170px -330px;
 }
+
+
 
 .bg-char_264_f12yin {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -170px -330px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -250px -330px;
 }
+
+
 
 .bg-char_291_aglina {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -250px -330px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -330px -330px;
 }
+
+
 
 .bg-char_293_thorns {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -330px -330px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -410px -10px;
 }
+
+
 
 .bg-char_300_phenxi {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -410px -10px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -410px -90px;
 }
+
+
 
 .bg-char_311_mudrok {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -410px -90px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -410px -170px;
 }
+
+
 
 .bg-char_322_lmlee {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -410px -170px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -410px -250px;
 }
+
+
 
 .bg-char_332_archet {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -410px -250px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -410px -330px;
 }
+
+
 
 .bg-char_340_shwaz {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -410px -330px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -10px -410px;
 }
+
+
 
 .bg-char_350_surtr {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -10px -410px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -90px -410px;
 }
+
+
 
 .bg-char_358_lisa {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -90px -410px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -170px -410px;
 }
+
+
 
 .bg-char_362_saga {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -170px -410px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -250px -410px;
 }
+
+
 
 .bg-char_377_gdglow {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -250px -410px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -330px -410px;
 }
+
+
 
 .bg-char_391_rosmon {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -330px -410px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -410px -410px;
 }
+
+
 
 .bg-char_400_weedy {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -410px -410px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -490px -10px;
 }
+
+
 
 .bg-char_416_zumama {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -490px -10px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -490px -90px;
 }
+
+
 
 .bg-char_420_flamtl {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -490px -90px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -490px -170px;
 }
+
+
 
 .bg-char_423_blemsh {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -490px -170px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -490px -250px;
 }
+
+
 
 .bg-char_426_billro {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -490px -250px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -490px -330px;
 }
+
+
 
 .bg-char_427_vigil {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -490px -330px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -490px -410px;
 }
+
+
 
 .bg-char_430_fartth {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -490px -410px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -10px -490px;
 }
+
+
 
 .bg-char_437_mizuki {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -10px -490px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -90px -490px;
 }
+
+
 
 .bg-char_456_ash {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -90px -490px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -170px -490px;
 }
+
+
 
 .bg-char_472_pasngr {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -170px -490px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -250px -490px;
 }
+
+
 
 .bg-char_474_glady {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -250px -490px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -330px -490px;
 }
+
+
 
 .bg-char_479_sleach {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -330px -490px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -410px -490px;
 }
+
+
 
 .bg-char_485_pallas {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -410px -490px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -490px -490px;
 }
+
+
 
 .bg-char_1012_skadi2 {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -490px -490px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -570px -10px;
 }
+
+
 
 .bg-char_1013_chen2 {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -570px -10px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -570px -90px;
 }
+
+
 
 .bg-char_1014_nearl2 {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -570px -90px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -570px -170px;
 }
+
+
 
 .bg-char_1020_reed2 {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -570px -170px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -570px -250px;
 }
+
+
 
 .bg-char_1023_ghost2 {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -570px -250px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -570px -330px;
 }
+
+
 
 .bg-char_1026_gvial2 {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -570px -330px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -570px -410px;
 }
+
+
 
 .bg-char_1028_texas2 {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -570px -410px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -570px -490px;
 }
+
+
 
 .bg-char_1029_yato2 {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -570px -490px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -10px -570px;
 }
+
+
+
+.bg-char_1031_slent2 {
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -90px -570px;
+}
+
+
 
 .bg-char_2013_cerber {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -10px -570px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -170px -570px;
 }
+
+
 
 .bg-char_2014_nian {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -90px -570px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -250px -570px;
 }
+
+
 
 .bg-char_2015_dusk {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -170px -570px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -330px -570px;
 }
+
+
 
 .bg-char_2023_ling {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -250px -570px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -410px -570px;
 }
+
+
 
 .bg-char_2024_chyue {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -330px -570px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -490px -570px;
 }
+
+
 
 .bg-char_4009_irene {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -410px -570px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -570px -570px;
 }
+
+
+
+.bg-char_4027_heyak {
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -650px -10px;
+}
+
+
 
 .bg-char_4039_horn {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -490px -570px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -650px -90px;
 }
+
+
 
 .bg-char_4042_lumen {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -570px -570px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -650px -170px;
 }
+
+
 
 .bg-char_4046_ebnhlz {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -650px -10px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -650px -250px;
 }
+
+
 
 .bg-char_4048_doroth {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -650px -90px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -650px -330px;
 }
+
+
 
 .bg-char_4055_bgsnow {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -650px -170px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -650px -410px;
 }
+
+
 
 .bg-char_4064_mlynar {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -650px -250px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -650px -490px;
 }
+
+
 
 .bg-char_4065_judge {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -650px -330px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -650px -570px;
 }
+
+
 
 .bg-char_4072_ironmn {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -650px -410px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -10px -650px;
 }
+
+
 
 .bg-char_4080_lin {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -650px -490px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -90px -650px;
 }
+
+
 
 .bg-char_4082_qiubai {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -650px -570px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -170px -650px;
 }
 
+
+
 .bg-char_4087_ines {
-  width: 60px;
-  height: 60px;
-  background: url("/img/sprite/sprites-char-6.webp") -10px -650px;
+  width: 60px; height: 60px;
+  background: url('/img/sprite/sprites-char-6.webp') -250px -650px;
 }
