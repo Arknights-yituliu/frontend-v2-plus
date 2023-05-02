@@ -1016,8 +1016,8 @@ export default {
       checkBox: ["1", "2", "5", "6"], //折叠栏绑定数组
       // checkBox: ["1","7"],
       rewardType: "联动限定", //奖励的类型
-      startDate: "", //开始时间
-      endDate: "2023/05/15 03:59:00", //结束时间
+      startTime: "", //开始时间
+      endTime: "2023/05/15 03:59:00", //结束时间
       start_TimeStamp: "", //开始时间戳
       end_TimeStamp: "", //结束时间戳
       timeSelector: "4周年(5.15)", //活动时间节点选择框的绑定对象
@@ -1119,8 +1119,8 @@ export default {
       const h = date.getHours().toString().padStart(2, "0"); //时
       const mm = date.getMinutes().toString().padStart(2, "0"); //分
       const s = date.getSeconds().toString().padStart(2, "0"); //秒
-      this.startDate = `${y}/${m}/${d} ${h}:${mm}:${s}`;
-      // this.startDate = "2023/05/02 00:00:00";
+      this.startTime = `${y}/${m}/${d} ${h}:${mm}:${s}`;
+      // this.startTime = "2023/05/02 00:00:00";
     },
 
     //日期转为时间戳
@@ -1137,19 +1137,24 @@ export default {
 
     //获取还有多少天
     getInterval() {
-      console.log("今天是", this.startDate);
+      console.log("今天是", this.startTime);
       this.remainingWeeks = 0; //剩余周数
       this.remainingCheckinTimes = 0; //剩余签到次数
       this.remainingMonths = 1; //剩余月数
-      this.start_TimeStamp = Date.parse(new Date(this.startDate)); //今日日期的时间戳
-      this.end_TimeStamp = Date.parse(this.endDate); //结束日期的时间戳
+      this.start_TimeStamp = Date.parse(this.startTime); //今日日期的时间戳
+      this.end_TimeStamp = Date.parse(this.endTime); //结束日期的时间戳
       var timeInterval = parseInt((this.end_TimeStamp - this.start_TimeStamp) / 86400000); //计算剩余天数
 
-      let month = new Date(this.startDate).getMonth();
+      let month = new Date(this.startTime).getMonth();
+
+      var endDate = new Date(Date.parse(this.endTime));
+      if (endDate.getDay() === 1 )  this.remainingWeeks--;
 
       for (let i = 1; i < timeInterval + 1; i++) {
         var date = new Date(this.start_TimeStamp + 86400000 * i);
-        if (date.getDay() === 1) this.remainingWeeks++; //判断接下来还有多少个星期一
+        
+        console.log(this.start_TimeStamp + 86400000 * i)
+        if (date.getDay() === 1 )  this.remainingWeeks++; //判断接下来还有多少个星期一
         if (date.getDate() === 17) this.remainingCheckinTimes++; //判断接下来还有17号，17号签到有抽卡券
         if (month != new Date(date).getMonth()) {
           // 通过保存的月份!=当前获取的月份，判断是否到了下个月，是则月数+1
@@ -1226,12 +1231,12 @@ export default {
       // this.cookieInit=true;
       console.log(this.timeSelector);
       if (this.timeSelector === "4周年(5.15)") {
-        this.endDate = "2023/05/15 03:59:00";
+        this.endTime = "2023/05/15 03:59:00";
         this.rewardType = "周年限定";
         this.poolCountDownFlag_permit = true;
         this.poolCountDownFlag_orundum = true;
       } else if (this.timeSelector === "夏活(以8.15计)") {
-        this.endDate = "2023/08/15 03:59:00";
+        this.endTime = "2023/08/15 03:59:00";
         this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
         this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
@@ -1246,14 +1251,14 @@ export default {
 
     //判断奖励是否在时间段内
     isDuringDate(start, end, rewardType, packName) {
-      if (packName != null) {
-        console.log(
-          packName,
-          !end < this.start_TimeStamp + "/",
-          start <= this.end_TimeStamp + "/",
-          "公共" === rewardType || this.rewardType === rewardType + "/"
-        );
-      }
+      // if (packName != null) {
+      //   console.log(
+      //     packName,
+      //     !end < this.start_TimeStamp + "/",
+      //     start <= this.end_TimeStamp + "/",
+      //     "公共" === rewardType || this.rewardType === rewardType + "/"
+      //   );
+      // }
       if (end < this.start_TimeStamp) return false;
       if (start <= this.end_TimeStamp && ("公共" === rewardType || this.rewardType === rewardType)) return true;
 
