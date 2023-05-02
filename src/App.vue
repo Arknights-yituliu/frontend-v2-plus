@@ -62,11 +62,17 @@ export default {
 </style>
 
 <style>
+html {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
 body {
   overflow-x: hidden;
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
   overscroll-behavior: none;
+  width: 100vw;
 }
 
 .header {
