@@ -35,9 +35,9 @@
 .survey_tip {
   text-align: center;
   margin: auto;
-  line-height: 36px;
-  width: 200px;
-  height: 70px;
+  line-height: 32px;
+  width: 154px;
+  height: 64px;
   font-size: 20px;
   font-weight: 600;
   border-radius: 10px;
@@ -46,7 +46,7 @@
 
 .survey_tip a {
   font-family: Arial, sans-serif;
-  font-size: 26px;
+  font-size: 25px;
   font-weight: 900;
 }
 
