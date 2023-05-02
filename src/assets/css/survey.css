@@ -72,6 +72,21 @@
   box-shadow: 1px 1px 1px rgb(108, 108, 108);
 }
 
+.image_avatar_background{
+  width: 58px;
+  height:58px;
+  border-radius: 50%;
+  background: white;
+}
+
+.image_avatar {
+  
+  border-radius: 50%;
+  border: 1px rgb(255, 0, 0) solid;
+  
+  /* border: 1px red solid; */
+}
+
 .operIndex {
   height: 22px;
   font-size: 20px;
@@ -122,18 +137,11 @@
   font-weight: 500;
   border-radius: 2px;
   box-shadow: 0px 0px 1px 1px rgb(114, 113, 113);
-  background: #0c72e7;
+  background: #0077ff;
   color: rgb(255, 255, 255);
 }
 
-.image_avatar {
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  border: 1px rgb(44, 44, 44) solid;
-  background: white;
-  /* border: 1px red solid; */
-}
+
 
 .sprite {
 }

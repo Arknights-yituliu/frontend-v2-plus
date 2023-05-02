@@ -36,7 +36,9 @@
       <div class="oper" v-for="(operData, index) in operServeyData" v-show="operData.rarity > 5">
         <div class="operIndex">No.{{ index + 1 }}</div>
         <!-- <img class="image_avatar" :src="'/img/avatar/' + operData.charId + '.png'" alt="" /> -->
-        <div :class="getSprite(operData.charId)"></div>
+        <div class="image_avatar_background">
+        <div style="width: 58px;height:58px;" :class="getSprite(operData.charId)"></div>
+        </div>
         <div class="operRate" v-show="'持有率' == surveyType">
           <a> 持有率 </a><br />
           {{ operData.owningRate.toFixed(1) }}%
@@ -55,16 +57,28 @@ import "@/assets/css/survey.css";
 import "@/assets/css/sprite_char_6.css";
 import "@/assets/css/survey.css";
 import serveyJson from "@/static/json/survey.json";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { ElMessage } from 'element-plus';
 
 import surveyApi from "@/api/survey";
 
-let operServeyData = ref(serveyJson);
+let operServeyData = ref([]);
 let surveyType = ref("持有率");
 let popupStyle = ref("survey_popup_mask");
 
 let operBoxData = ref("");
+
+
+function getOperatorDataResult() {
+   surveyApi.getOperatorDataResult().then((response) => {
+      operServeyData.value = response.data
+   
+  })
+}
+
+onMounted(()=>{
+  getOperatorDataResult()
+})
 
 function getSprite(charId, index) {
   return "image_avatar bg-" + charId;

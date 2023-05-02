@@ -16,6 +16,15 @@ export default {
         });
     },
 
+    getOperatorDataResult() {
+        return request({
+            url: `${api_name}/operator/result`,
+            method: "get"
+        });
+    },
+
+
+
     maaStatistical() {
         return request({
             url: `${api_name}/recruit/statistical`,
