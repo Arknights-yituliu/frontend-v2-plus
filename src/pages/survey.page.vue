@@ -13,10 +13,7 @@
 
   <div class="main_survey">
     <div class="survey_title">明日方舟干员{{ surveyType }}统计</div>
-    <div class="survey_button_box">
-      <button class="survey_button" @click="switchSurvey()">切换为{{ "精二率" == surveyType ? "持有率" : "精二率" }}统计</button>
-      <button class="survey_button" @click="inputOperBox()">手动导入干员信息</button>
-    </div>
+    
 
     <div class="survey_tip_box">
       <div class="survey_tip">
@@ -27,6 +24,12 @@
         <a>本表单更新时间</a> <br />
         2023-11-14
       </div>
+    </div>
+    <div class="survey_button_box">
+      <div class="survey_button_title">设置</div>
+      <div class="survey_button" style="width: 120px;" @click="switchSurvey('精二率')">精二率统计</div>
+      <div class="survey_button" style="width: 120px;" @click="switchSurvey('持有率')">持有率统计</div>
+      <div class="survey_button" style="width: 190px;" @click="inputOperBox()">手动导入干员信息</div>
     </div>
 
     <div class="oper_table">
@@ -53,6 +56,7 @@ import "@/assets/css/sprite_char_6.css";
 import "@/assets/css/survey.css";
 import serveyJson from "@/static/json/survey.json";
 import { ref, watch } from "vue";
+import { ElMessage } from 'element-plus';
 
 import surveyApi from "@/api/survey";
 
@@ -66,12 +70,8 @@ function getSprite(charId, index) {
   return "image_avatar bg-" + charId;
 }
 
-function switchSurvey() {
-  if ("持有率" == surveyType.value) {
-    return (surveyType.value = "精二率");
-  }
-
-  return (surveyType.value = "持有率");
+function switchSurvey(type) {
+  surveyType.value = type;
 }
 
 function inputOperBox() {
@@ -87,6 +87,10 @@ function manualUpload(){
   console.log(dataJson)
   surveyApi.manualUploadOperBox(dataJson).then((response) => {
     console.log(response)
+    ElMessage({
+    message: '更新了'+response.data.rowsAffected+'条数据',
+    type: 'success',
+  })
   })
 }
 </script>
