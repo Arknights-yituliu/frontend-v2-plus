@@ -81,7 +81,7 @@ function getOperatorDataResult() {
         var d = date.getDate().toString().padStart(2, "0"); //日
         var h = date.getHours().toString().padStart(2, "0"); //时
         var mm = date.getMinutes().toString().padStart(2, "0"); //分
-        updateTime.value = `${y}/${m}/${d} ${h}:${mm}`;
+        updateTime.value = `${y}-${m}-${d}`;
           
   })
 }
