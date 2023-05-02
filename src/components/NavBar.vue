@@ -179,7 +179,7 @@ const route = computed(() => {
   z-index: 100;
   box-shadow: none;
   gap: 8px;
-  padding-left: 16px;
+  padding: 0 16px 0 28px;
 }
 
 .bar-wrapper {
@@ -253,7 +253,7 @@ const route = computed(() => {
   --el-switch-on-color: rgb(52, 68, 104);
   --el-switch-off-color: rgb(52, 68, 104);
   --el-switch-border-color: white;
-  padding-right: 28px;
+  /* padding-right: 28px; */
 }
 
 .spacer {
