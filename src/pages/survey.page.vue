@@ -17,12 +17,12 @@
 
     <div class="survey_tip_box">
       <div class="survey_tip">
-        <a> 当前样本量</a> <br />
-        114514人次
+        <a>调查人数</a> <br />
+        {{userCount}}人次
       </div>
       <div class="survey_tip">
-        <a>本表单更新时间</a> <br />
-        2023-11-14
+        <a>更新时间</a> <br />
+        {{updateTime}}
       </div>
     </div>
     <div class="survey_button_box">
@@ -67,12 +67,22 @@ let surveyType = ref("持有率");
 let popupStyle = ref("survey_popup_mask");
 
 let operBoxData = ref("");
-
+let userCount = ref(0);
+let updateTime = ref('2023-05-01');
 
 function getOperatorDataResult() {
    surveyApi.getOperatorDataResult().then((response) => {
-      operServeyData.value = response.data
-   
+      operServeyData.value = response.data.result;
+      userCount.value = response.data.userCount;
+       
+      var date = new Date(response.data.updateTime);
+        var y = date.getFullYear(); //年
+        var m = (date.getMonth() + 1).toString().padStart(2, "0"); //月
+        var d = date.getDate().toString().padStart(2, "0"); //日
+        var h = date.getHours().toString().padStart(2, "0"); //时
+        var mm = date.getMinutes().toString().padStart(2, "0"); //分
+        updateTime.value = `${y}/${m}/${d} ${h}:${mm}`;
+          
   })
 }
 
