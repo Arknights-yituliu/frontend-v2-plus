@@ -67,6 +67,7 @@ body {
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
   overscroll-behavior: none;
+  width: 100vw;
 }
 
 .header {
