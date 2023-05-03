@@ -1,5 +1,5 @@
 <template>
-  <div id="riic">
+  <div id="indexDiv">
     <div id="riic_controlPanel">
       <div class="riic_building">
         <div class="riic_building_title">控制面板</div>
@@ -3664,3 +3664,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.el-checkbox__label {
+  color: grey;
+}
+</style>

@@ -99,7 +99,7 @@ const routes = [
     path: "/riicCal",
     text: "排班生成器",
     icon: mdiCalculator,
-    dark_theme: false,
+    dark_theme: true,
   },
   {
     path: "/pack",
