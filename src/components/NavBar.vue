@@ -81,9 +81,9 @@ function menu_collapse(flag) {
 }
 
 function switchTheme() {
+  document.querySelector(":root").className = theme.value ? "dark" : "light";
+
   if (theme.value) {
-    document.getElementById("indexDiv").style.background = "#222222";
-    document.getElementById("indexDiv").style.color = "#ffffff";
     let titles = document.getElementsByClassName("op_title_ctext");
     for (let i = 0; i < titles.length; i++) titles[i].style.color = "#ffffffdd";
     titles = document.getElementsByClassName("op_title_etext");
@@ -100,8 +100,6 @@ function switchTheme() {
     cookie.set("theme", "dark", { expires: 30 });
     console.log("nowdark");
   } else {
-    document.getElementById("indexDiv").style.background = "#f0f0f0";
-    document.getElementById("indexDiv").style.color = "#000000";
     let titles = document.getElementsByClassName("op_title_ctext");
     for (let i = 0; i < titles.length; i++) titles[i].style.color = "#000000dd";
     titles = document.getElementsByClassName("op_title_etext");
