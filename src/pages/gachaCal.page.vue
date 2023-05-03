@@ -1120,7 +1120,7 @@ export default {
       const mm = date.getMinutes().toString().padStart(2, "0"); //分
       const s = date.getSeconds().toString().padStart(2, "0"); //秒
       this.startTime = `${y}/${m}/${d} ${h}:${mm}:${s}`;
-      this.startTime = "2023/05/02 04:00:00";
+      // this.startTime = "2023/05/02 04:00:00";
     },
 
     //日期转为时间戳
