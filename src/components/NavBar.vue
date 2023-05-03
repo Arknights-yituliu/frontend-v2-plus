@@ -22,7 +22,6 @@
     </div>
     <div class="spacer"></div>
     <el-switch
-      v-if="route.dark_theme"
       class="navbar-switch"
       inline-prompt
       v-model="theme"
@@ -87,31 +86,26 @@ const routes = [
     path: "/",
     text: "材料一图流",
     icon: mdiChartBoxOutline,
-    dark_theme: true,
   },
   {
     path: "/gachaCal",
     text: "攒抽规划",
     icon: mdiGiftOutline,
-    dark_theme: false,
   },
   {
     path: "/riicCal",
     text: "排班生成器",
     icon: mdiCalculator,
-    dark_theme: true,
   },
   {
     path: "/pack",
     text: "礼包性价比",
     icon: mdiCalendarCursorOutline,
-    dark_theme: true,
   },
   {
     path: "/value",
     text: "物品价值",
     icon: mdiGold,
-    dark_theme: true,
   },
 ];
 

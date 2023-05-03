@@ -4,6 +4,7 @@
   padding: 0 12px;
   /* min-height: 900px; */
   transform-style: preserve-3d;
+  background-color: var(--index-div-bg);
 }
 
 .gacha_img {

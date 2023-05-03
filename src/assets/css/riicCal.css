@@ -3,7 +3,7 @@
 }
 
 #riic {
-  background: rgb(255, 255, 255);
+  background: var(--index-div-bg);
   margin: auto;
   max-width: 1500px;
 }
