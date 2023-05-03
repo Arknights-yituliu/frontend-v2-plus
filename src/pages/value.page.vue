@@ -5,6 +5,13 @@
   </div>
 </template>
 
+<style scoped>
+#indexDiv {
+  color: var(--index-div-fg);
+  background-color: var(--index-div-bg);
+}
+</style>
+
 <script setup>
 import ItemValue from "@/components/ItemValue.vue";
 import FootComponent from "@/components/FootComponent.vue";

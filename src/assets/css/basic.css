@@ -261,10 +261,14 @@ body {
   background-color: #222222;
   color: #ffffff;
   /* -webkit-text-stroke: 0.3px #ffffff; */
+  --index-div-fg: #ffffff;
+  --index-div-bg: #222222;
 }
 
 .light {
   background-color: #f0f0f0;
   color: rgb(39, 39, 39);
   /* -webkit-text-stroke: 0.3px rgb(46, 46, 46); */
+  --index-div-fg: #000000;
+  --index-div-bg: #f0f0f0;
 }
