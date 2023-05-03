@@ -1162,7 +1162,7 @@ export default {
           this.remainingMonths++;
         }
       }
-      this.remainingDays = timeInterval; //赋值剩余天数
+      this.remainingDays = timeInterval-1; //赋值剩余天数
       console.log("距离活动还有：", this.remainingMonths + "月，", this.remainingWeeks + "周，", this.remainingDays + "天");
     },
 
@@ -1277,7 +1277,7 @@ export default {
 
     //  计算日常奖励
     getEveryreWard() {
-      this.dailyRewards = 100 * (this.remainingDays-1);
+      this.dailyRewards = 100 * (this.remainingDays);
       this.weeklyTaskRewards = 500 * this.remainingWeeks;
       this.annihilationRewards = 1800 * this.remainingWeeks;
     },
