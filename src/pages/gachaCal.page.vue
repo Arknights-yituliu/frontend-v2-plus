@@ -1120,7 +1120,7 @@ export default {
       const mm = date.getMinutes().toString().padStart(2, "0"); //分
       const s = date.getSeconds().toString().padStart(2, "0"); //秒
       this.startTime = `${y}/${m}/${d} ${h}:${mm}:${s}`;
-      // this.startTime = "2023/05/02 00:00:00";
+      this.startTime = "2023/05/02 04:00:00";
     },
 
     //日期转为时间戳
@@ -1148,12 +1148,25 @@ export default {
       let month = new Date(this.startTime).getMonth();
 
       var endDate = new Date(Date.parse(this.endTime));
-      if (endDate.getDay() === 1 )  this.remainingWeeks--;
+      // if (endDate.getDay() === 1 )  this.remainingWeeks--;
+      console.log(endDate.getDay())
 
-      for (let i = 1; i < timeInterval + 1; i++) {
+
+      // for (let i = 1; i < timeInterval + 1; i++) {
+      //   var date = new Date(this.start_TimeStamp + 86400000 * i);
+      //   console.log(this.start_TimeStamp + 86400000 * i)
+      //   if (date.getDay() === 1 )  this.remainingWeeks++; //判断接下来还有多少个星期一
+      //   if (date.getDate() === 17) this.remainingCheckinTimes++; //判断接下来还有17号，17号签到有抽卡券
+      //   if (month != new Date(date).getMonth()) {
+      //     // 通过保存的月份!=当前获取的月份，判断是否到了下个月，是则月数+1
+      //     month = new Date(date).getMonth();
+      //     this.remainingMonths++;
+      //   }
+      // }
+
+      for(let i=1;(this.start_TimeStamp + 86400000 * i)<=this.end_TimeStamp;i++){
         var date = new Date(this.start_TimeStamp + 86400000 * i);
-        
-        console.log(this.start_TimeStamp + 86400000 * i)
+        // console.log(this.start_TimeStamp + 86400000 * i)
         if (date.getDay() === 1 )  this.remainingWeeks++; //判断接下来还有多少个星期一
         if (date.getDate() === 17) this.remainingCheckinTimes++; //判断接下来还有17号，17号签到有抽卡券
         if (month != new Date(date).getMonth()) {
@@ -1162,6 +1175,9 @@ export default {
           this.remainingMonths++;
         }
       }
+
+
+
       this.remainingDays = timeInterval; //赋值剩余天数
       console.log("距离活动还有：", this.remainingMonths + "月，", this.remainingWeeks + "周，", this.remainingDays + "天");
     },
@@ -1277,7 +1293,7 @@ export default {
 
     //  计算日常奖励
     getEveryreWard() {
-      this.dailyRewards = 100 * (this.remainingDays-1);
+      this.dailyRewards = 100 * (this.remainingDays);
       this.weeklyTaskRewards = 500 * this.remainingWeeks;
       this.annihilationRewards = 1800 * this.remainingWeeks;
     },
