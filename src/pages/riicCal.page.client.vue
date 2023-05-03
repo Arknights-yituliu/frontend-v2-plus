@@ -1,5 +1,5 @@
 <template>
-  <div id="indexDiv">
+  <div id="riic">
     <div id="riic_controlPanel">
       <div class="riic_building">
         <div class="riic_building_title">控制面板</div>
