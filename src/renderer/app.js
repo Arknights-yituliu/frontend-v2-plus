@@ -3,6 +3,7 @@ import ElementPlus, { ID_INJECTION_KEY } from "element-plus";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import App from "@/App.vue";
 import { setPageContext } from "./usePageContext";
+import "element-plus/theme-chalk/dark/css-vars.css";
 
 export { createVPSApp };
 

@@ -10,13 +10,6 @@
   </div>
 </template>
 
-<style scoped>
-#indexDiv {
-  color: var(--index-div-fg);
-  background-color: var(--index-div-bg);
-}
-</style>
-
 <script setup>
 import stage from "@/components/stage.vue";
 // import ep12 from "@/components/newChapter.vue";
