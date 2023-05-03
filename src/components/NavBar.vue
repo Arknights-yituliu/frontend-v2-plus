@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
@@ -62,12 +62,6 @@ const pageContext = usePageContext();
 const theme = ref(pageContext.theme == "dark");
 
 let menu_flag = ref(false);
-
-onMounted(() => {
-  if (route.value.dark_theme) {
-    switchTheme();
-  }
-});
 
 function menu_collapse(flag) {
   menu_flag.value = flag;
@@ -82,46 +76,10 @@ function menu_collapse(flag) {
   console.log(menu_flag.value);
 }
 
-function switchTheme() {
-  document.querySelector(":root").className = theme.value ? "dark" : "light";
-
-  if (theme.value) {
-    let titles = document.getElementsByClassName("op_title_ctext");
-    for (let i = 0; i < titles.length; i++) titles[i].style.color = "#ffffffdd";
-    titles = document.getElementsByClassName("op_title_etext");
-    for (let i = 0; i < titles.length; i++) titles[i].style.WebkitTextStroke = "0.3px white";
-    for (let i of document.querySelectorAll(".popup_card")) {
-      i.style["background-color"] = "rgba(0, 0, 0, .95)";
-    }
-    for (let i of document.querySelectorAll(".popup_text")) {
-      i.style["color"] = "#888";
-    }
-    for (let i of document.querySelectorAll(".popup_header_penguin")) {
-      i.style["color"] = "#3f51b5";
-    }
-    cookie.set("theme", "dark", { expires: 30 });
-    console.log("nowdark");
-  } else {
-    let titles = document.getElementsByClassName("op_title_ctext");
-    for (let i = 0; i < titles.length; i++) titles[i].style.color = "#000000dd";
-    titles = document.getElementsByClassName("op_title_etext");
-    for (let i = 0; i < titles.length; i++) titles[i].style.WebkitTextStroke = "0.6px black";
-    for (let i of document.querySelectorAll(".popup_card")) {
-      i.style["background-color"] = "rgba(255, 255, 255, .83)";
-    }
-    for (let i of document.querySelectorAll(".popup_text")) {
-      i.style["color"] = "#222";
-    }
-    for (let i of document.querySelectorAll(".popup_header_penguin")) {
-      i.style["color"] = "blue";
-    }
-    cookie.set("theme", "light", { expires: 30 });
-    console.log("nowlight");
-  }
-}
-
 watch(theme, () => {
-  switchTheme();
+  const theme_name = theme.value ? "dark" : "light";
+  document.querySelector(":root").className = theme_name;
+  cookie.set("theme", theme_name, { expires: 30 });
 });
 
 const routes = [
@@ -147,7 +105,7 @@ const routes = [
     path: "/pack",
     text: "礼包性价比",
     icon: mdiCalendarCursorOutline,
-    dark_theme: false,
+    dark_theme: true,
   },
   {
     path: "/value",
