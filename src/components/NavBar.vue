@@ -59,12 +59,14 @@ import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOut
 import { usePageContext } from "@/renderer/usePageContext";
 const pageContext = usePageContext();
 
-const theme = ref();
+const theme = ref(pageContext.theme == "dark");
 
 let menu_flag = ref(false);
 
 onMounted(() => {
-  if (route.value.dark_theme) theme.value = cookie.get("theme") == "dark";
+  if (route.value.dark_theme) {
+    switchTheme();
+  }
 });
 
 function menu_collapse(flag) {
