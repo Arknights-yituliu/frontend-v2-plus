@@ -3,7 +3,7 @@
     <div class="stageDetaol_title">
       <a class="button_select">查看其他产物详情</a>
       <el-switch @click="changePie()" v-model="by_product_flag"></el-switch> <br />
-      <a class="button_select">{{ stageCode }}的理智转化效率是{{ stageEff }}%</a>
+      <a class="button_select">{{ stageCode }}的理智转化效率是{{ stageEfficiency }}%</a>
     </div>
     <div class="checkBox">
       <div class="stageTable">
@@ -20,8 +20,8 @@
         </div>
       </div>
       <div class="zoneTable">
-        <div v-for="(stageList, key) in stageTable">
-          <button class="zoneId" @click="zondId = key">{{ key }}</button>
+        <div v-for="(stageList, key) in stageTable" v-show="key!='落叶逐火'||key!='多索雷斯假日'||key!='多索雷斯假日·复刻'">
+          <button class="zoneId"  @click="zondId = key">{{ key }}</button>
         </div>
       </div>
     </div>
@@ -35,17 +35,17 @@ import stageApi from "@/api/stage";
 import * as echarts from "echarts";
 import { onMounted, ref } from "vue";
 
-let myChart = "";
-let stageCode = ref("1-7");
-let stageId = ref("main_01-07");
-let stageDetail = ref("");
-let pieData_main = ref([]);
-let pieData_secondary = ref([]);
-let by_product_flag = ref(false);
-let stageEff = ref(0);
-let zondId = ref("第九章");
+let myChart = "";   //echart的dom
+let stageCode = ref("1-7");   //关卡名称
+let stageId = ref("main_01-07");   //关卡id
+let stageDetail = ref("");   //关卡详情
+let pieData_main = ref([]);    //关卡主要产出
+let pieData_secondary = ref([]);   //次要产出
+let by_product_flag = ref(false); 
+let stageEfficiency = ref(0);    //关卡效率
+let zondId = ref("第九章");    //区域id
 
-function changePie() {
+function changePie() {   //切换展示关卡主要/次要产出
   if (by_product_flag.value) {
     pieChart(pieData_secondary.value);
   } else {
@@ -53,7 +53,7 @@ function changePie() {
   }
 }
 
-const stageTable = ref({});
+const stageTable = ref({});   //关卡信息表
 
 function getStageTable() {
   stageApi.getStageTable().then((response) => {
@@ -61,7 +61,8 @@ function getStageTable() {
   });
 }
 
-function setNestPieChart(InsideOrOutside, ratio, describption) {
+//设置饼图信息
+function setPieChartObj(InsideOrOutside, ratio, describption) {
   let chartFan = {};
   if (ratio > 0) {
     chartFan.value = ratio;
@@ -71,51 +72,75 @@ function setNestPieChart(InsideOrOutside, ratio, describption) {
   }
 }
 
+
+//根据关卡id查询关卡消息
 function findStageDetailByStageCode(stageIdStr) {
-  stageId.value = stageIdStr;
+  stageId.value = stageIdStr;  //关卡id
   stageApi.findStageDetailByStageId(stageId.value).then((response) => {
-    stageDetail.value = response.data;
+    stageDetail.value = response.data;   //关卡详情
     if (stageDetail.value.length > 0) {
-      pieData_main.value = [];
+      pieData_main.value = [];  
       pieData_secondary.value = [];
-      const efficiency = stageDetail.value[0].efficiency;
-      const apCost = stageDetail.value[0].apCost;
-      const totalOutput = efficiency * apCost;
-      stageEff.value = stageDetail.value[0].stageEfficiency;
-      let by_product = 100;
+      let efficiency = stageDetail.value[0].efficiency;  //关卡效率
+      let apCost = stageDetail.value[0].apCost;   //关卡效率
+      let totalOutputAP = efficiency * apCost;   //总产出理智
+      let isValue = stageDetail.value[0].isValue;   //是否用于定价，绝大部分情况活动本不参与定价，根据这个判断是否加无限龙门币
+     
+      stageEfficiency.value = (efficiency*100).toFixed(3);   //关卡效率%
+      let by_product = 100;  //副产物
+      
+      stageDetail.value.push({
+        result: 1.2 * 0.036 * apCost,
+        itemName:'龙门币'
+      })
+
+      if (isValue == 0){
+           stageDetail.value.push({
+           result: 20 * 0.0036 * apCost,
+           itemName:'龙门币\n(无限兑换)'
+        })
+        efficiency = efficiency+0.072;
+        totalOutputAP = efficiency* apCost;
+        stageEfficiency.value = (efficiency*100).toFixed(3);
+        console.log('是活动关')
+      }
 
       stageDetail.value.forEach((element) => {
         // console.log((element.result/element.apCost*100).toFixed(2),'%')
-        const ratio = (element.result / totalOutput) * 100;
+        const ratio = (element.result / totalOutputAP) * 100;  //占比
 
-        let describption = element.itemName + "";
-        if (ratio > 10) {
-          if (stageIdStr.indexOf("act") == -1 || stageIdStr.indexOf("perm") != -1) {
+        let describption = element.itemName ;
+        if (ratio > 10) {  //产出占比大于10%视为主要产出
+          // if (stageIdStr.indexOf("act") == -1 || stageIdStr.indexOf("perm") != -1) {
             by_product -= ratio;
-          }
-          describption = describption + "\n占" + ratio.toFixed(1) + "%";
-          setNestPieChart("inside", ratio, describption);
+          // }
+          describption = describption + "\n占" + ratio.toFixed(1) + "%";  //echart上的描述
+          setPieChartObj("inside", ratio, describption);   //设置echart的数据
         }
-        if (ratio < 10) setNestPieChart("outside", ratio, describption);
+
+        //产出占比小于10%视为次要产出
+        if (ratio < 10){
+          describption = describption + "\n占" + ratio.toFixed(1) + "%"
+          setPieChartObj("outside", ratio, describption);  
+        } 
       });
+
+
       pieData_secondary.value.sort((a, b) => {
         return a.value - b.value;
       });
 
       console.log("副产物占" + by_product.toFixed(2) + "%");
+          
+      // if (stageIdStr.indexOf("act") == -1 || stageIdStr.indexOf("perm") != -1) {
+        setPieChartObj("inside", by_product, "其他产物\n占" + by_product.toFixed(1) + "%");
+      // }
 
-      if (stageIdStr.indexOf("act") == -1 || stageIdStr.indexOf("perm") != -1) {
-        setNestPieChart("inside", by_product, "其他产物\n占" + by_product.toFixed(1) + "%");
-      }
-
-      setNestPieChart(
-        "inside",
-        ((1.2 * 0.036 * apCost) / totalOutput) * 100,
-        "龙门币\n占" + (((1.2 * 0.036 * apCost) / totalOutput) * 100).toFixed(1) + "%"
-      );
+      // setPieChartObj("inside",((1.2 * 0.036 * apCost) / totalOutputAP) * 100,
+      //   "龙门币\n占" + (((1.2 * 0.036 * apCost) / totalOutputAP) * 100).toFixed(1) + "%");
 
       if (efficiency < 0.9999) {
-        setNestPieChart("inside", ((1 - efficiency) * 100).toFixed(2), "浪费的理智\n占" + ((1 - efficiency) * 100).toFixed(1) + "%");
+        setPieChartObj("inside", ((1 - efficiency) * 100).toFixed(2), "浪费的理智\n占" + ((1 - efficiency) * 100).toFixed(1) + "%");
       }
 
       console.log(pieData_main.value);
