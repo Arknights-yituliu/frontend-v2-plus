@@ -1,10 +1,7 @@
 #gacha {
-  /* max-width: 1600px; */
   margin: auto;
   padding: 0 12px;
-  /* min-height: 900px; */
   transform-style: preserve-3d;
-  background-color: var(--index-div-bg);
 }
 
 .gacha_img {
@@ -46,7 +43,7 @@
 }
 
 .gacha_unit {
-  color: #222222;
+  /* color: #222222; */
   /* background-color: #f0f0f0; */
   /* border-radius: 12px; */
   /* border: 1px solid #d8d8d8; */
@@ -132,11 +129,10 @@
 }
 
 .gacha_unit_fold {
-  background-color: #e8e8e8;
+  background-color: var(--gacha-unit-fold-bg);
   padding-left: 8px;
   height: 36px;
   line-height: 36px;
-  /* font-weight: 600; */
 }
 
 .el-collapse-item__content {
