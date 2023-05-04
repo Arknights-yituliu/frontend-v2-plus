@@ -9,7 +9,8 @@
     "prod": "npm run build && npm run server:prod",
     "build": "vite build",
     "server": "node ./server",
-    "server:prod": "cross-env NODE_ENV=production node ./server"
+    "server:prod": "cross-env NODE_ENV=production node ./server",
+    "start": "npm run server:prod"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",

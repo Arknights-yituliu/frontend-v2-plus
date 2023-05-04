@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="indexDiv">
     <div id="pack" name="packPpr">
       <!-- 标题区域 -->
       <div class="op_title">
@@ -669,7 +669,7 @@ export const documentProps = {
 
 <style>
 #pack {
-  background-color: #eeeeee;
+  /* background-color: #eeeeee; */
   max-width: 1080px;
   margin: auto;
 }

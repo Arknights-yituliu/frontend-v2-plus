@@ -1,9 +1,10 @@
 #gacha {
-  max-width: 1600px;
+  /* max-width: 1600px; */
   margin: auto;
   padding: 0 12px;
   /* min-height: 900px; */
   transform-style: preserve-3d;
+  background-color: var(--index-div-bg);
 }
 
 .gacha_img {
@@ -169,6 +170,7 @@
 .el-radio-button--small .el-radio-button__inner {
   padding: 9px 0px;
 }
+
 .el-checkbox-button__inner {
   padding: 2px;
 }
