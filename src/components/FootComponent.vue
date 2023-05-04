@@ -371,6 +371,7 @@ export default {
 #al_card {
   margin: 0px;
   background: aliceblue;
+  color: black;
   border-radius: 4px;
   font-size: 16px;
   border: 1px solid #80808080;

@@ -3664,3 +3664,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.el-checkbox__label {
+  color: grey;
+}
+</style>
