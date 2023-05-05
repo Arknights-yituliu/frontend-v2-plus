@@ -1085,12 +1085,10 @@ export default {
       // pack_data: this.pageContext.pageProps.pack_data,
     };
   },
-  created() {
+  mounted() {
     this.getTodayDate();
     this.TimeStampFormat();
     this.checkEndDate();
-  },
-  mounted() {
     this.setPackData();
     this.setFirstRecharge();
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
