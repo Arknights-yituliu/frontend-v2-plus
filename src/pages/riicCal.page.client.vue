@@ -2212,7 +2212,7 @@ export default {
         title: "2023-03-13更新",
         dangerouslyUseHTMLString: true,
         message:
-          "<strong> 干员追加：<br>增加了落叶逐火活动干员 <br>BUG相关：  <br>由于存储服务重写的问题<br>如果遇到导入为空的情况可加Q群539600566</strong>",
+          "<strong> 干员追加：<br>增加了孤星活动干员 <br>BUG相关：  <br>由于存储服务重写的问题<br>如果遇到导入为空的情况可加Q群539600566</strong>",
         duration: 12000,
       });
     },

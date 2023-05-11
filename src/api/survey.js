@@ -1,37 +1,49 @@
 import request from "@/api/request";
 
-const api_name = `/maa`;
+const api_name = `/survey`;
 
 export default {
+  manualUploadOperBox(data) {
+    return request({
+      headers: {
+        "Content-Type": "application/json",
+      },
+      url: `${api_name}/upload/operBox/manual`,
+      method: "post",
+      data: data,
+    });
+  },
 
+  getOperatorDataResult() {
+    return request({
+      url: `${api_name}/operator/result`,
+      method: "get",
+    });
+  },
 
-    manualUploadOperBox(data) {
-        return request({
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            url: `${api_name}/upload/operBox/manual`,
-            method: "post",
-            data: data
-        });
-    },
+  maaStatistical() {
+    return request({
+      url: `${api_name}/recruit/statistical`,
+      method: "get",
+    });
+  },
 
-    getOperatorDataResult() {
-        return request({
-            url: `${api_name}/operator/result`,
-            method: "get"
-        });
-    },
+  register(userName) {
+    return request({
+      headers: {
+        "Content-Type": "application/json",
+      },
+      url: `${api_name}/register`,
+      method: "post",
+      data: userName,
+    });
+  },
 
-
-
-    maaStatistical() {
-        return request({
-            url: `${api_name}/recruit/statistical`,
-            method: "get",
-        });
-    },
-
-
-
+  upload_character(characterList, userName) {
+    return request({
+      url: `${api_name}/character?userName=${userName}`,
+      method: "post",
+      data: characterList,
+    });
+  },
 };

@@ -21,14 +21,7 @@
       </a>
     </div>
     <div class="spacer"></div>
-    <el-switch
-      class="navbar-switch"
-      inline-prompt
-      v-model="theme"
-      :active-icon="Moon"
-      :inactive-icon="Sunny"
-      size="large"
-    />
+    <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
 
     <div class="nav_div">
       <div class="nav_collapse" id="menu">

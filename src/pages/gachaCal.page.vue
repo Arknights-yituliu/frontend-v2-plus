@@ -1144,13 +1144,12 @@ export default {
       this.start_TimeStamp = Date.parse(this.startTime); //今日日期的时间戳
       this.end_TimeStamp = Date.parse(this.endTime); //结束日期的时间戳
       var timeInterval = parseInt((this.end_TimeStamp - this.start_TimeStamp) / 86400000); //计算剩余天数
-   
+
       let month = new Date(this.startTime).getMonth();
 
       var endDate = new Date(Date.parse(this.endTime));
       // if (endDate.getDay() === 1 )  this.remainingWeeks--;
-      console.log(endDate.getDay())
-
+      console.log(endDate.getDay());
 
       // for (let i = 1; i < timeInterval + 1; i++) {
       //   var date = new Date(this.start_TimeStamp + 86400000 * i);
@@ -1164,10 +1163,10 @@ export default {
       //   }
       // }
 
-      for(let i=1;(this.start_TimeStamp + 86400000 * i)<=this.end_TimeStamp;i++){
+      for (let i = 1; this.start_TimeStamp + 86400000 * i <= this.end_TimeStamp; i++) {
         var date = new Date(this.start_TimeStamp + 86400000 * i);
         // console.log(this.start_TimeStamp + 86400000 * i)
-        if (date.getDay() === 1 )  this.remainingWeeks++; //判断接下来还有多少个星期一
+        if (date.getDay() === 1) this.remainingWeeks++; //判断接下来还有多少个星期一
         if (date.getDate() === 17) this.remainingCheckinTimes++; //判断接下来还有17号，17号签到有抽卡券
         if (month != new Date(date).getMonth()) {
           // 通过保存的月份!=当前获取的月份，判断是否到了下个月，是则月数+1
@@ -1175,8 +1174,6 @@ export default {
           this.remainingMonths++;
         }
       }
-
-
 
       this.remainingDays = timeInterval; //赋值剩余天数
       console.log("距离活动还有：", this.remainingMonths + "月，", this.remainingWeeks + "周，", this.remainingDays + "天");
@@ -1293,7 +1290,7 @@ export default {
 
     //  计算日常奖励
     getEveryreWard() {
-      this.dailyRewards = 100 * (this.remainingDays);
+      this.dailyRewards = 100 * this.remainingDays;
       this.weeklyTaskRewards = 500 * this.remainingWeeks;
       this.annihilationRewards = 1800 * this.remainingWeeks;
     },
@@ -1735,6 +1732,7 @@ export default {
                 textStyle: { color: "#000000", fontSize: "16" },
                 formatter: function (val) {
                   //让series 中的文字进行换行
+                  console.log(val);
                   return val.name.split("-").join("\n");
                 },
               },
