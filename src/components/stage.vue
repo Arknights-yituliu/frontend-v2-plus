@@ -51,12 +51,7 @@
       <!-- t3内容区域 -->
       <div class="op_content" id="stage_t3_content">
         <!-- 基础卡 -->
-        <div
-          v-for="(materialRankT3, indexAll) in stageRankT3"
-          :key="indexAll"
-          class="stage_card_t3 uni_shadow_2"
-          @click="showPopup(indexAll)"
-        >
+        <div v-for="(materialRankT3, indexAll) in stageRankT3" :key="indexAll" class="stage_card_t3 uni_shadow_2" @click="showPopup(indexAll)">
           <!-- <div v-show="materialRankT3[0].itemType=='兽之泪'"  class="stage_card_t3_img" :style="getCardBackground(materialRankT3[1].itemType)"></div>  -->
           <div class="stage_card_t3_img" :class="getSpriteImg(materialRankT3[0].itemId, 'large')"></div>
 
@@ -138,11 +133,7 @@
         <div class="stage_card_t2 uni_shadow_2">
           <div v-for="(materialRankT2, index) in stageRankT2.slice(0, 6)" :key="index" class="stage_card_t2_img">
             <!-- <img :src="getImgUrl(materialRankT2[0].itemName)" :alt="materialRankT2[0].itemName" "> -->
-            <div
-              :class="getSpriteImg(materialRankT2[0].itemId, 'title')"
-              :id="getCardId(index + 100)"
-              @click="showPopup(index + 100)"
-            ></div>
+            <div :class="getSpriteImg(materialRankT2[0].itemId, 'title')" :id="getCardId(index + 100)" @click="showPopup(index + 100)"></div>
           </div>
         </div>
       </div>
@@ -183,9 +174,7 @@
               <td class="popup_table_c1" :style="getHardcoreMark(stage.chapterName)">
                 {{ stage.stageCode }}
               </td>
-              <td class="popup_table_c2" style="font-size: 14px">
-                {{ shrinkTimes(stage.sampleSize) }}<br />({{ stage.sampleConfidence }}%)
-              </td>
+              <td class="popup_table_c2" style="font-size: 14px">{{ shrinkTimes(stage.sampleSize) }}<br />({{ stage.sampleConfidence }}%)</td>
               <td class="popup_table_c3">{{ getEfficiency(stage.spm, 1) }}</td>
               <!-- <td class="popup_table_c4" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
               <td style="padding-left: 20px">
@@ -460,8 +449,7 @@ export default {
       else return "";
     },
     getUpMark(state) {
-      if (state === "1")
-        return "background: linear-gradient(#ffffff4a, rgba(144, 164, 174, 0)), url(/img/website/up.png) 106% 50% / 30% no-repeat;";
+      if (state === "1") return "background: linear-gradient(#ffffff4a, rgba(144, 164, 174, 0)), url(/img/website/up.png) 106% 50% / 30% no-repeat;";
       else return "";
     },
     getColor(color, dividing, tier) {

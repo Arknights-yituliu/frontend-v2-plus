@@ -29,9 +29,7 @@
           </div>
         </div>
         <div class="universal_module">
-          打工还债，刷 <input type="text" class="input_style" v-model.number="SK5Times" @change="cal()" />次SK5，需要{{
-            calResult.apCost.toFixed(0)
-          }}理智<br />
+          打工还债，刷 <input type="text" class="input_style" v-model.number="SK5Times" @change="cal()" />次SK5，需要{{ calResult.apCost.toFixed(0) }}理智<br />
         </div>
       </div>
     </div>
@@ -46,11 +44,7 @@
       <div>每周任务总计获得{{ calResult.weeklyTaskParts.toFixed(0) }}零件</div>
       <div>每月签到总计获得大约{{ calResult.monthlyTaskParts.toFixed(0) }}零件</div>
       <div>绿票商店总计获得大约{{ calResult.CertStoreParts.toFixed(0) }}零件</div>
-      <div>
-        每日任务获得{{ calResult.dailyTaskCarbon }}个碳，消耗{{ calResult.lmdCost_daily }}龙门币获得{{
-          calResult.dailyTaskPartsByCarbon
-        }}零件，
-      </div>
+      <div>每日任务获得{{ calResult.dailyTaskCarbon }}个碳，消耗{{ calResult.lmdCost_daily }}龙门币获得{{ calResult.dailyTaskPartsByCarbon }}零件，</div>
     </div>
   </div>
 </template>
@@ -120,8 +114,7 @@ function cal() {
 
   console.log("每周获得:", loansRepaid.value - SK5Times.value * 50);
 
-  calResult.value.weeks =
-    (loansRepaid.value - SK5Times.value * 50) / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore); //计算需要多少天上岸
+  calResult.value.weeks = (loansRepaid.value - SK5Times.value * 50) / (DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore); //计算需要多少天上岸
 
   console.log("每周获得:", DailyTasksRewards + WeeklyTaskRewards + check_in_monthlyRewards + CertStore);
 

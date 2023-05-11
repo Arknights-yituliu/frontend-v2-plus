@@ -8,16 +8,7 @@
       <div style="font-size: 32px; vertical-align: top; margin: 12px; display: inline-block">明日方舟一图流 EP12专题页面</div>
     </div>
     <!-- 简单说明 -->
-    <div
-      style="
-        padding: 8px 16px;
-        font-style: italic;
-        line-height: 32px;
-        background-color: #ffffff0f;
-        backdrop-filter: blur(8px);
-        margin: 12px;
-      "
-    >
+    <div style="padding: 8px 16px; font-style: italic; line-height: 32px; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
       上半页集中展示新章节<b>掉落数据</b><br />
       下半页推荐<b>[后勤特别许可证]</b>的使用优先级
       <div style="font-size: 14px">*转载本页内容需注明来源</div>
@@ -78,14 +69,7 @@
       <div style="text-align: center; font-size: 24px; font-weight: 600; padding: 6px 0px">后勤特别许可证</div>
       <div style="vertical-align: top; margin: auto">
         <div
-          style="
-            width: 96px;
-            height: 96px;
-            background: url('/img/temp/permit.webp');
-            display: inline-block;
-            vertical-align: top;
-            margin: 18px 12px 24px 12px;
-          "
+          style="width: 96px; height: 96px; background: url('/img/temp/permit.webp'); display: inline-block; vertical-align: top; margin: 18px 12px 24px 12px"
         ></div>
         <div style="display: inline-block; max-width: 75%; line-height: 32px; padding-bottom: 8px">
           <div>◆本次活动新增后勤特别许可证：</div>
