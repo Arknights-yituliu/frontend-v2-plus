@@ -266,7 +266,7 @@
               <div class="gacha_unit_child">
                 <a href="/?item=Orundum" style="margin: 0px 24px 0px 0px">查看其它可搓玉关卡</a>
                 <a href="https://www.bilibili.com/video/BV1v54y1T7u5" style="display: inline-block">
-                  搓玉教程<img class="gacha_img_small" src="/image/icon/el.png"
+                  搓玉教程<img class="gacha_img_small" src="/img/icon/el.png"
                 /></a>
               </div>
             </div>
@@ -405,7 +405,7 @@
               <div class="gacha_unit_info">
                 剿灭战模拟并非常驻，可前往prts.wiki查看开放历史
                 <a href="https://prts.wiki/w/%E5%85%B3%E5%8D%A1%E4%B8%80%E8%A7%88/%E5%B8%B8%E6%80%81%E4%BA%8B%E5%8A%A1" style="display: inline-block">
-                  点我跳转<img class="gacha_img_small" src="/image/icon/el.png" />
+                  点我跳转<img class="gacha_img_small" src="/img/icon/el.png" />
                 </a>
               </div>
               <!-- 主线 -->
@@ -859,25 +859,25 @@
                   <p class="foot_unit_title">-开发信息-</p>
                   <a href="https://github.com/Arknights-yituliu/frontend-v2-plus">
                     <div class="foot_unit_button uni_shadow_2" id="foot_frontEnd">
-                      <img class="foot_unit_pic" src="/image/website/github.png" />
+                      <img class="foot_unit_pic" src="/img/website/github.png" />
                       前端
                     </div>
                   </a>
                   <a href="https://github.com/yamasakura/yituliuBackEnd">
                     <div class="foot_unit_button uni_shadow_2" id="foot_backEnd">
-                      <img class="foot_unit_pic" src="/image/website/github.png" />
+                      <img class="foot_unit_pic" src="/img/website/github.png" />
                       后端
                     </div>
                   </a>
                   <a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
                     <div class="foot_unit_button uni_shadow_2" style="width: 198px">
-                      <img class="foot_unit_pic" src="/image/website/qq.png" />
+                      <img class="foot_unit_pic" src="/img/website/qq.png" />
                       开发群 938710832
                     </div>
                   </a>
                   <a href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe">
                     <div class="foot_unit_button uni_shadow_2" style="width: 198px">
-                      <img class="foot_unit_pic" src="/image/icon/图标_源石.png" />
+                      <img class="foot_unit_pic" src="/img/icon/图标_源石.png" />
                       本站财政状况
                     </div>
                   </a>
@@ -921,22 +921,22 @@
                   <p class="foot_unit_title">-数据支持-</p>
                   <a href="https://space.bilibili.com/8412516">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/image/website/honeycake.webp" />罗德岛蜜饼工坊
+                      <img class="foot_unit_pic" src="/img/website/honeycake.webp" />罗德岛蜜饼工坊
                     </div>
                   </a>
                   <a href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/image/website/prts.png" />PRTS
+                      <img class="foot_unit_pic" src="/img/website/prts.png" />PRTS
                     </div>
                   </a>
                   <a href="https://yituliu.site/">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/image/website/ico64.png" />一图流主站
+                      <img class="foot_unit_pic" src="/img/website/ico64.png" />一图流主站
                     </div>
                   </a>
                   <a href="https://space.bilibili.com/22606843">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/image/website/公孙长乐.webp" />公孙长乐
+                      <img class="foot_unit_pic" src="/img/website/公孙长乐.webp" />公孙长乐
                     </div>
                   </a>
                 </div>
@@ -944,14 +944,14 @@
                   <p class="foot_unit_title">-B站发布-</p>
                   <a href="https://space.bilibili.com/688411531">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                      <img class="foot_unit_pic" src="/image/website/bilibili.png" />
+                      <img class="foot_unit_pic" src="/img/website/bilibili.png" />
                       罗德岛基建BETA
                     </div>
                   </a>
                   <p class="foot_unit_title">-粉丝群/反馈-</p>
                   <a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                      <img class="foot_unit_pic" src="/image/website/qq.png" />
+                      <img class="foot_unit_pic" src="/img/website/qq.png" />
                       阿戈尔数据文献馆
                     </div>
                   </a>
