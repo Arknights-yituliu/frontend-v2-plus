@@ -7,7 +7,7 @@
           <el-collapse-item name="0" id="totalTable">
             <template #title>
               <div class="gacha_title_icon" style="background: chocolate"></div>
-              <span class="collapse-item_title" style="color: purple">
+              <span class="collapse-item_title" style="color: var(--gacha-total-fg)">
                 共计{{ toFixedByAcc(gachaTimes_total, 0) }}抽，氪金{{ sellsCount }}元
               </span>
               <span style="font-size: 20px; color: rgb(136 136 136 / 69%); margin-left: 16px">yituliu.site</span>
@@ -266,7 +266,7 @@
               <div class="gacha_unit_child">
                 <a href="/?item=Orundum" style="margin: 0px 24px 0px 0px">查看其它可搓玉关卡</a>
                 <a href="https://www.bilibili.com/video/BV1v54y1T7u5" style="display: inline-block">
-                  搓玉教程<img class="gacha_img_small" src="/img/icon/el.png"
+                  搓玉教程<img class="gacha_img_small" src="/image/icon/el.png"
                 /></a>
               </div>
             </div>
@@ -380,13 +380,7 @@
                 悖论模拟/剿灭战模拟
               </div>
               <div class="gacha_unit_child">
-                <input
-                  class="gacha_unit_child_inputbox"
-                  type="text"
-                  @change="compute()"
-                  v-model.number="paradox"
-                  oninput="value=value.replace(/[^\d]/g, '')"
-                />
+                <input class="gacha_unit_child_inputbox" type="text" @change="compute()" v-model.number="paradox" oninput="value=value.replace(/[^\d]/g, '')" />
                 <div class="gacha_unit_child_title" style="width: 120px">个悖论模拟</div>
                 <div class="gacha_resources_unit" style="width: 105px">
                   <div :class="getSpriteImg('4003icon', 0)"></div>
@@ -410,11 +404,8 @@
               </div>
               <div class="gacha_unit_info">
                 剿灭战模拟并非常驻，可前往prts.wiki查看开放历史
-                <a
-                  href="https://prts.wiki/w/%E5%85%B3%E5%8D%A1%E4%B8%80%E8%A7%88/%E5%B8%B8%E6%80%81%E4%BA%8B%E5%8A%A1"
-                  style="display: inline-block"
-                >
-                  点我跳转<img class="gacha_img_small" src="/img/icon/el.png" />
+                <a href="https://prts.wiki/w/%E5%85%B3%E5%8D%A1%E4%B8%80%E8%A7%88/%E5%B8%B8%E6%80%81%E4%BA%8B%E5%8A%A1" style="display: inline-block">
+                  点我跳转<img class="gacha_img_small" src="/image/icon/el.png" />
                 </a>
               </div>
               <!-- 主线 -->
@@ -477,7 +468,7 @@
             </template>
 
             <div class="gacha_unit" id="charge">
-              <div class="gacha_unit_child_instruction" style="padding: 4px 16px; font-size: 18px; color: brown">
+              <div class="gacha_unit_child_instruction" style="padding: 4px 16px; font-size: 18px; color: var(--charge-instruction-fg)">
                 标签内为每抽价格(元)，颜色用于区分性价比<br />
                 仅计入礼包内抽卡资源，紫色高于648，橙色高于大月卡<br />
                 <a href="https://yituliu.site/pack">点击跳转礼包完整性价比</a>
@@ -492,9 +483,7 @@
                   v-for="(singlePack, index) in gacha_storePacks"
                   :key="index"
                   v-show="
-                    singlePack.packType == 'monthly' &&
-                    singlePack.packRmbPerDraw > 0 &&
-                    isDuringDate(singlePack.start, singlePack.end, singlePack.rewardType)
+                    singlePack.packType == 'monthly' && singlePack.packRmbPerDraw > 0 && isDuringDate(singlePack.start, singlePack.end, singlePack.rewardType)
                   "
                   class="gacha_unit_child"
                   @change="compute(singlePack.packName)"
@@ -736,10 +725,7 @@
               </div>
               <el-checkbox-group v-model="gacha_actReList" class="">
                 <div v-for="(actRe, key) in gacha_honeyCake" :key="key" class="gacha_unit_child" @change="compute(key)">
-                  <el-checkbox-button
-                    :label="key"
-                    v-show="isDuringDate(actRe.start, actRe.end, actRe.rewardType) && 'actRe' == actRe.module"
-                  >
+                  <el-checkbox-button :label="key" v-show="isDuringDate(actRe.start, actRe.end, actRe.rewardType) && 'actRe' == actRe.module">
                     <div class="gacha_unit_child_title" style="width: 200px">
                       {{ key }}
                     </div>
@@ -828,10 +814,7 @@
             <div class="gacha_unit" id="otherRes">
               <div v-for="(other, key) in gacha_honeyCake" :key="key">
                 <!-- 只显示当前选择的时间段内的奖励&&(公共的奖励||只可当期使用的奖励) -->
-                <div
-                  class="gacha_unit_child"
-                  v-show="isDuringDate(other.start, other.end, other.rewardType) && 'honeyCake' == other.module"
-                >
+                <div class="gacha_unit_child" v-show="isDuringDate(other.start, other.end, other.rewardType) && 'honeyCake' == other.module">
                   <div class="gacha_unit_child_title" style="width: 240px">
                     {{ key }}
                   </div>
@@ -870,31 +853,31 @@
               <span class="collapse-item_title">开发信息</span>
             </template>
             <div id="extra" style="max-width: 1080px; margin: auto">
-              <div id="foot_main" style="background: white">
+              <div id="foot_main">
                 <!-- <div id="foot_left"> -->
                 <div class="foot_unit">
                   <p class="foot_unit_title">-开发信息-</p>
                   <a href="https://github.com/Arknights-yituliu/frontend-v2-plus">
                     <div class="foot_unit_button uni_shadow_2" id="foot_frontEnd">
-                      <img class="foot_unit_pic" src="/img/website/github.png" />
+                      <img class="foot_unit_pic" src="/image/website/github.png" />
                       前端
                     </div>
                   </a>
                   <a href="https://github.com/yamasakura/yituliuBackEnd">
                     <div class="foot_unit_button uni_shadow_2" id="foot_backEnd">
-                      <img class="foot_unit_pic" src="/img/website/github.png" />
+                      <img class="foot_unit_pic" src="/image/website/github.png" />
                       后端
                     </div>
                   </a>
                   <a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
                     <div class="foot_unit_button uni_shadow_2" style="width: 198px">
-                      <img class="foot_unit_pic" src="/img/website/qq.png" />
+                      <img class="foot_unit_pic" src="/image/website/qq.png" />
                       开发群 938710832
                     </div>
                   </a>
                   <a href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe">
                     <div class="foot_unit_button uni_shadow_2" style="width: 198px">
-                      <img class="foot_unit_pic" src="/img/icon/图标_源石.png" />
+                      <img class="foot_unit_pic" src="/image/icon/图标_源石.png" />
                       本站财政状况
                     </div>
                   </a>
@@ -938,22 +921,22 @@
                   <p class="foot_unit_title">-数据支持-</p>
                   <a href="https://space.bilibili.com/8412516">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/img/website/honeycake.webp" />罗德岛蜜饼工坊
+                      <img class="foot_unit_pic" src="/image/website/honeycake.webp" />罗德岛蜜饼工坊
                     </div>
                   </a>
                   <a href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/img/website/prts.png" />PRTS
+                      <img class="foot_unit_pic" src="/image/website/prts.png" />PRTS
                     </div>
                   </a>
                   <a href="https://yituliu.site/">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/img/website/ico64.png" />一图流主站
+                      <img class="foot_unit_pic" src="/image/website/ico64.png" />一图流主站
                     </div>
                   </a>
                   <a href="https://space.bilibili.com/22606843">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/img/website/公孙长乐.webp" />公孙长乐
+                      <img class="foot_unit_pic" src="/image/website/公孙长乐.webp" />公孙长乐
                     </div>
                   </a>
                 </div>
@@ -961,14 +944,14 @@
                   <p class="foot_unit_title">-B站发布-</p>
                   <a href="https://space.bilibili.com/688411531">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                      <img class="foot_unit_pic" src="/img/website/bilibili.png" />
+                      <img class="foot_unit_pic" src="/image/website/bilibili.png" />
                       罗德岛基建BETA
                     </div>
                   </a>
                   <p class="foot_unit_title">-粉丝群/反馈-</p>
                   <a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                      <img class="foot_unit_pic" src="/img/website/qq.png" />
+                      <img class="foot_unit_pic" src="/image/website/qq.png" />
                       阿戈尔数据文献馆
                     </div>
                   </a>
@@ -1085,12 +1068,10 @@ export default {
       // pack_data: this.pageContext.pageProps.pack_data,
     };
   },
-  created() {
+  mounted() {
     this.getTodayDate();
     this.TimeStampFormat();
     this.checkEndDate();
-  },
-  mounted() {
     this.setPackData();
     this.setFirstRecharge();
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
@@ -1104,8 +1085,7 @@ export default {
       this.$notify({
         title: "4.27更新",
         dangerouslyUseHTMLString: true,
-        message:
-          "<strong>1.氪金区新增周年礼包选项<br>2.优化了一些UI布局<br>3.夏活攒抽数据参考自去年同期数据(近期更新更加准确的活动排期)</strong>",
+        message: "<strong>1.氪金区新增周年礼包选项<br>2.优化了一些UI布局<br>3.夏活攒抽数据参考自去年同期数据(近期更新更加准确的活动排期)</strong>",
         duration: 3000,
       });
     },
@@ -1121,6 +1101,9 @@ export default {
       const s = date.getSeconds().toString().padStart(2, "0"); //秒
       this.startTime = `${y}/${m}/${d} ${h}:${mm}:${s}`;
       // this.startTime = "2023/05/02 04:00:00";
+      this.start_TimeStamp = Date.parse(this.startTime); //今日日期的时间戳
+      this.end_TimeStamp = Date.parse(this.endTime); //结束日期的时间戳
+      this.getPoolCountDown();
     },
 
     //日期转为时间戳
@@ -1141,16 +1124,15 @@ export default {
       this.remainingWeeks = 0; //剩余周数
       this.remainingCheckinTimes = 0; //剩余签到次数
       this.remainingMonths = 1; //剩余月数
-      this.start_TimeStamp = Date.parse(this.startTime); //今日日期的时间戳
+     
       this.end_TimeStamp = Date.parse(this.endTime); //结束日期的时间戳
       var timeInterval = parseInt((this.end_TimeStamp - this.start_TimeStamp) / 86400000); //计算剩余天数
 
       let month = new Date(this.startTime).getMonth();
 
       var endDate = new Date(Date.parse(this.endTime));
-      // if (endDate.getDay() === 1 )  this.remainingWeeks--;
-      console.log(endDate.getDay())
-
+      if (endDate.getDay() === 1 )  this.remainingWeeks--;
+      console.log(endDate.getDay());
 
       // for (let i = 1; i < timeInterval + 1; i++) {
       //   var date = new Date(this.start_TimeStamp + 86400000 * i);
@@ -1164,10 +1146,10 @@ export default {
       //   }
       // }
 
-      for(let i=1;(this.start_TimeStamp + 86400000 * i)<=this.end_TimeStamp;i++){
+      for (let i = 1; this.start_TimeStamp + 86400000 * i <= this.end_TimeStamp; i++) {
         var date = new Date(this.start_TimeStamp + 86400000 * i);
         // console.log(this.start_TimeStamp + 86400000 * i)
-        if (date.getDay() === 1 )  this.remainingWeeks++; //判断接下来还有多少个星期一
+        if (date.getDay() === 1) this.remainingWeeks++; //判断接下来还有多少个星期一
         if (date.getDate() === 17) this.remainingCheckinTimes++; //判断接下来还有17号，17号签到有抽卡券
         if (month != new Date(date).getMonth()) {
           // 通过保存的月份!=当前获取的月份，判断是否到了下个月，是则月数+1
@@ -1175,8 +1157,6 @@ export default {
           this.remainingMonths++;
         }
       }
-
-
 
       this.remainingDays = timeInterval; //赋值剩余天数
       console.log("距离活动还有：", this.remainingMonths + "月，", this.remainingWeeks + "周，", this.remainingDays + "天");
@@ -1255,12 +1235,12 @@ export default {
         this.endTime = "2023/08/15 03:59:00";
         this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
+        this.poolCountDownFlag_orundum = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
       }
 
       this.getInterval();
       this.getEveryreWard();
-      this.getPoolCountDown();
+      
 
       this.compute();
     },
@@ -1288,12 +1268,12 @@ export default {
         //少于14天扣除每日赠送抽卡资源
         this.poolCountDown = 14 - num;
       }
-      console.log("限定池还有" + this.poolCountDown + "天,结束");
+      console.log("限定池还有" + num + "天,结束");
     },
 
     //  计算日常奖励
     getEveryreWard() {
-      this.dailyRewards = 100 * (this.remainingDays);
+      this.dailyRewards = 100 * this.remainingDays;
       this.weeklyTaskRewards = 500 * this.remainingWeeks;
       this.annihilationRewards = 1800 * this.remainingWeeks;
     },
@@ -1385,8 +1365,7 @@ export default {
       this.calResults.orundum_potential += parseInt(this.paradox) * 200 + this.annihilation * 1500;
 
       //主线和常驻活动抽卡次数（单项）
-      this.calResults.gachaTimes_potential =
-        this.calResults.originium_potential * 0.3 * flag_originium + this.calResults.orundum_potential / 600;
+      this.calResults.gachaTimes_potential = this.calResults.originium_potential * 0.3 * flag_originium + this.calResults.orundum_potential / 600;
 
       // index是被选中的商店礼包json的索引
       this.gacha_storePacksList.forEach((index) => {
@@ -1413,12 +1392,7 @@ export default {
 
       //普通源石购买数量
       this.calResults.originium_gacha +=
-        this.originium_648 * 185 +
-        this.originium_328 * 90 +
-        this.originium_198 * 50 +
-        this.originium_98 * 24 +
-        this.originium_30 * 7 +
-        this.originium_6;
+        this.originium_648 * 185 + this.originium_328 * 90 + this.originium_198 * 50 + this.originium_98 * 24 + this.originium_30 * 7 + this.originium_6;
 
       //氪金项目抽卡次数（单项）
       this.calResults.gachaTimes_gacha =
@@ -1429,12 +1403,7 @@ export default {
 
       // 计算购买的普通源石的价格
       this.sellsCount +=
-        648 * this.originium_648 +
-        328 * this.originium_328 +
-        198 * this.originium_198 +
-        98 * this.originium_98 +
-        30 * this.originium_30 +
-        6 * this.originium_6;
+        648 * this.originium_648 + 328 * this.originium_328 + 198 * this.originium_198 + 98 * this.originium_98 + 30 * this.originium_30 + 6 * this.originium_6;
 
       /*
       gacha_honeyCake的数据格式是
@@ -1456,6 +1425,7 @@ export default {
           //循环list<list>， list为[奖励名称,奖励内容]
           if ("honeyCake" === list[1].module) {
             //这里是计算其他奖励
+            console.log(list[0])
             this.calResults.originium_other += list[1].originium; //xxxxx_other格式的属性  其他奖励的的各项奖励数量，下同
             this.calResults.orundum_other += list[1].orundum;
             this.calResults.permit_other += list[1].permit;
@@ -1489,7 +1459,9 @@ export default {
 
       //自动扣除部分 ↓
       //减去红包墙/矿区已经赠送过的合成玉
+      console.log(this.calResults.orundum_other)
       if (this.poolCountDownFlag_orundum) this.calResults.orundum_other -= parseInt(this.poolCountDown) * 600;
+      console.log(this.calResults.orundum_other)
 
       //减去限定池已经赠送过的单抽
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
@@ -1505,6 +1477,11 @@ export default {
         parseInt(this.calResults.orundum_other) / 600 +
         parseInt(this.calResults.permit_other) +
         parseInt(this.calResults.permit10_other) * 10;
+        
+      console.log(this.calResults.originium_other)
+      console.log(this.calResults.orundum_other)
+      console.log(this.calResults.permit_other)
+      console.log(this.calResults.permit10_other)
 
       // 所有模块相加-源石
       this.originium +=
@@ -1550,10 +1527,7 @@ export default {
 
       //总抽卡次数
       this.gachaTimes_total =
-        parseInt(this.originium) * 0.3 * parseInt(flag_originium) +
-        parseInt(this.orundum) / 600 +
-        parseInt(this.permit) +
-        parseInt(this.permit10) * 10;
+        parseInt(this.originium) * 0.3 * parseInt(flag_originium) + parseInt(this.orundum) / 600 + parseInt(this.permit) + parseInt(this.permit10) * 10;
 
       // 设置饼图的数据内容
       this.pieData = [];
@@ -1594,25 +1568,13 @@ export default {
       // console.log(this.calResults.originium_exist ===undefined||this.calResults.originium_exist == "undefined");
 
       //没有cookie记录值强制赋值0
-      if (
-        this.calResults.originium_exist == "" ||
-        this.calResults.originium_exist === undefined ||
-        this.calResults.originium_exist == "undefined"
-      )
+      if (this.calResults.originium_exist == "" || this.calResults.originium_exist === undefined || this.calResults.originium_exist == "undefined")
         this.calResults.originium_exist = 0;
-      if (
-        this.calResults.orundum_exist == "" ||
-        this.calResults.orundum_exist === undefined ||
-        this.calResults.orundum_exist == "undefined"
-      )
+      if (this.calResults.orundum_exist == "" || this.calResults.orundum_exist === undefined || this.calResults.orundum_exist == "undefined")
         this.calResults.orundum_exist = 0;
       if (this.calResults.permit_exist == "" || this.calResults.permit_exist === undefined || this.calResults.permit_exist == "undefined")
         this.calResults.permit_exist = 0;
-      if (
-        this.calResults.permit10_exist == "" ||
-        this.calResults.permit10_exist === undefined ||
-        this.calResults.permit10_exist == "undefined"
-      )
+      if (this.calResults.permit10_exist == "" || this.calResults.permit10_exist === undefined || this.calResults.permit10_exist == "undefined")
         this.calResults.permit10_exist = 0;
       if (this.paradox == "" || this.paradox === undefined || this.paradox == "undefined") this.paradox = 0;
       if (this.annihilation == "" || this.annihilation === undefined || this.annihilation == "undefined") this.annihilation = 0;
@@ -1735,6 +1697,7 @@ export default {
                 textStyle: { color: "#000000", fontSize: "16" },
                 formatter: function (val) {
                   //让series 中的文字进行换行
+                  console.log(val);
                   return val.name.split("-").join("\n");
                 },
               },
@@ -1866,38 +1829,10 @@ export const documentProps = {
   margin: 4px 0px;
 }
 
-.el-collapse-item {
-  color: #222222;
-  margin: 12px 0;
-  background-color: #d8d8d8;
-  border-radius: 8px;
-  font-size: 20px;
-  box-shadow: 0px 2px 6px #a0a0a0b0;
-  overflow: hidden;
-}
-
 .collapse-item_title {
   font-size: 24px;
   padding: 8px 0px;
   font-weight: 600;
-}
-
-.el-collapse-item__wrap {
-  margin: 6px;
-  margin-left: 8px;
-  vertical-align: middle;
-  display: inline-block;
-  will-change: height;
-  border-bottom: 0px;
-  background-color: #d8d8d8;
-}
-
-.el-collapse-item__content {
-  padding-bottom: 0px;
-}
-
-.el-collapse-item__header {
-  background-color: #d8d8d8;
 }
 
 .el-divider--horizontal {
@@ -1916,6 +1851,7 @@ export const documentProps = {
   padding: 0px 12px 0px 12px;
   max-width: 1200px;
   margin: auto;
+  background-color: var(--foot-main-bg);
 }
 
 .foot_unit {
@@ -2076,7 +2012,7 @@ export const documentProps = {
 }
 
 #totalTable {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 #gacha_total_chart {
@@ -2094,5 +2030,17 @@ export const documentProps = {
   top: 10px;
   min-width: 150px;
   width: 36%;
+}
+</style>
+
+<style>
+#gacha > div .el-collapse-item {
+  color: white;
+  margin: 12px 0;
+  background-color: #222222;
+  border-radius: 8px;
+  font-size: 20px;
+  box-shadow: var(--el-box-shadow-light);
+  overflow: hidden;
 }
 </style>
