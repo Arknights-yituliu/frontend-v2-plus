@@ -72,7 +72,7 @@
                     <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
                   </td>
                   <td class="stage_table_c3">{{ getEfficiency(stage.stageEfficiency, 1) }}%</td>
-                  <!-- <td class="stage_table_c4"><img v-show="stage.stageId.indexOf('perm')==-1" src="/img/icon/up.png" alt=""></td> -->
+                  <!-- <td class="stage_table_c4"><img v-show="stage.stageId.indexOf('perm')==-1" src="/image/icon/up.png" alt=""></td> -->
                 </tr>
               </tbody>
             </table>
@@ -413,10 +413,10 @@ export default {
     },
     getImgUrl(img, source) {
       source = typeof source !== "undefined" ? type : 1;
-      if (source > 2.1) return "/img/ activity_picture /" + img + ".png";
-      if (source > 1.1) return "/img/item/" + img + ".png";
-      else if (source > 0.1) return "/img/materials/" + img + ".png";
-      else return "https://cdn.jsdelivr.net/gh/zirun-wang/OnePicCDN/img/" + img + ".png";
+      if (source > 2.1) return "/image/ activity_picture /" + img + ".png";
+      if (source > 1.1) return "/image/item/" + img + ".png";
+      else if (source > 0.1) return "/image/materials/" + img + ".png";
+      else return "https://cdn.jsdelivr.net/gh/zirun-wang/OnePicCDN/image/" + img + ".png";
     },
 
     getCardBackground(url) {
@@ -449,7 +449,7 @@ export default {
       else return "";
     },
     getUpMark(state) {
-      if (state === "1") return "background: linear-gradient(#ffffff4a, rgba(144, 164, 174, 0)), url(/img/website/up.png) 106% 50% / 30% no-repeat;";
+      if (state === "1") return "background: linear-gradient(#ffffff4a, rgba(144, 164, 174, 0)), url(/image/website/up.png) 106% 50% / 30% no-repeat;";
       else return "";
     },
     getColor(color, dividing, tier) {

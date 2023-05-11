@@ -34,7 +34,7 @@
     <div class="oper_table">
       <div class="oper" v-for="(operData, index) in operServeyData" v-show="operData.rarity > 5">
         <div class="operIndex">No.{{ index + 1 }}</div>
-        <!-- <img class="image_avatar" :src="'/img/avatar/' + operData.charId + '.png'" alt="" /> -->
+        <!-- <img class="image_avatar" :src="'/image/avatar/' + operData.charId + '.png'" alt="" /> -->
         <div class="image_avatar_background">
           <div style="width: 58px; height: 58px" :class="getSprite(operData.charId)"></div>
         </div>

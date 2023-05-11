@@ -1,55 +1,143 @@
 .survey_main {
-  max-width: 1280px;
-  background: white;
-  overflow: auto;
-  margin: auto;
+    max-width: 1080px;
+    background: white;
+    overflow: auto;
+    margin: auto;
 }
 
-.upload_table {
-  max-width: 1280px;
-  text-align: center;
-  margin: auto;
-  margin-top: 20px;
-  border-collapse: collapse;
+.sprite_skill {
+    transform: scale(0.13);
+    margin: -104px;
+    /* margin-top:0px ; */
 }
 
-.upload_table_title {
-  height: 20px;
-  font-weight: 600;
+.sprite_mod {
+    transform: scale(0.1);
+    margin: -106px;
+    /* margin-top:0px ; */
 }
 
-.upload_table td {
-  border: 1px rgb(52, 52, 52) solid;
+.sprite_avatar {
+    transform: scale(0.5);
+    margin: -44px;
+    border-radius: 50%;
+    border: 1px solid gray;
+    /* border: 1px red solid; */
 }
 
-.upload_avatar {
-  transform: scale(0.5);
-  margin: -44px;
+.sprite_potential{
+    transform: scale(0.13);
+    margin: -100px;
+}
+
+
+.dropDown {
+    /* display: flex; */
+    margin: auto;
+    /* margin-top: 8px; */
+    width: 38px;
+    height: 20px;
+    line-height: 24px;
+    padding: 2px;
+    /* border: 1px red solid; */
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 3px;
+    /* box-shadow: 0px 1px 1px 1px rgb(188, 187, 187); */
+    cursor: pointer;
+}
+
+
+.dropDown_menu {
+    /* border: 1px red solid; */
+    position: relative;
+}
+
+.dropDown_content {
+    display: none;
+    margin-top: -30px;
+    position: absolute;
+    z-index: 20;
+    top: 35px;
+    left: -30px;
+    width: 140px;
+    background: rgb(255, 255, 255);
+    box-shadow: 0 0 1px 1px rgb(158, 158, 158);
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.dropDown_content_item {
+    margin: 8px;
+    width: 46px;
+    height: 24px;
+    line-height: 24px;
+    padding: 2px;
+    /* border: 1px red solid; */
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 3px;
+    box-shadow: 0px 1px 1px 1px rgb(188, 187, 187);
+    cursor: pointer;
+}
+
+.char_card_box {
+    margin: auto;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.char_card {
+    width: 460px;
+    display: flex;
+}
+
+.card_option {
+    height: 124px;
+    border: 1px rgb(0, 0, 0) solid;
+}
+
+.card_option_switch {
+    margin: auto;
+    margin-top: 20px;
+}
+
+.card_title {
+    font-weight: 600;
+    font-size: 12px;
+    border: 1px grey solid;
 }
 
 .checkItem {
-  margin: 4px;
-  width: 44px;
-  height: 24px;
-  line-height: 24px;
-  padding: 2px;
-  /* border: 1px red solid; */
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 3px;
-  box-shadow: 0px 1px 1px 1px rgb(188, 187, 187);
-  cursor: pointer;
+    /* margin: 6px; */
+    margin-top: 6px;
+    margin-left: 8px;
+    width: 28px;
+    height: 28px;
+    line-height: 24px;
+    padding: 2px;
+    /* border: 1px red solid; */
+    /* background: rgb(203, 203, 203); */
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 3px;
+    box-shadow: 0px 1px 1px 1px rgb(188, 187, 187);
+    cursor: pointer;
 }
 
 .checkItem_selected {
-  background: rgb(0, 170, 255);
-  color: white;
+    background: rgb(0, 170, 255);
+    color: white;
 }
 
 .potential_box {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 126px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 126px;
 }

@@ -266,7 +266,7 @@
               <div class="gacha_unit_child">
                 <a href="/?item=Orundum" style="margin: 0px 24px 0px 0px">查看其它可搓玉关卡</a>
                 <a href="https://www.bilibili.com/video/BV1v54y1T7u5" style="display: inline-block">
-                  搓玉教程<img class="gacha_img_small" src="/img/icon/el.png"
+                  搓玉教程<img class="gacha_img_small" src="/image/icon/el.png"
                 /></a>
               </div>
             </div>
@@ -405,7 +405,7 @@
               <div class="gacha_unit_info">
                 剿灭战模拟并非常驻，可前往prts.wiki查看开放历史
                 <a href="https://prts.wiki/w/%E5%85%B3%E5%8D%A1%E4%B8%80%E8%A7%88/%E5%B8%B8%E6%80%81%E4%BA%8B%E5%8A%A1" style="display: inline-block">
-                  点我跳转<img class="gacha_img_small" src="/img/icon/el.png" />
+                  点我跳转<img class="gacha_img_small" src="/image/icon/el.png" />
                 </a>
               </div>
               <!-- 主线 -->
@@ -859,25 +859,25 @@
                   <p class="foot_unit_title">-开发信息-</p>
                   <a href="https://github.com/Arknights-yituliu/frontend-v2-plus">
                     <div class="foot_unit_button uni_shadow_2" id="foot_frontEnd">
-                      <img class="foot_unit_pic" src="/img/website/github.png" />
+                      <img class="foot_unit_pic" src="/image/website/github.png" />
                       前端
                     </div>
                   </a>
                   <a href="https://github.com/yamasakura/yituliuBackEnd">
                     <div class="foot_unit_button uni_shadow_2" id="foot_backEnd">
-                      <img class="foot_unit_pic" src="/img/website/github.png" />
+                      <img class="foot_unit_pic" src="/image/website/github.png" />
                       后端
                     </div>
                   </a>
                   <a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
                     <div class="foot_unit_button uni_shadow_2" style="width: 198px">
-                      <img class="foot_unit_pic" src="/img/website/qq.png" />
+                      <img class="foot_unit_pic" src="/image/website/qq.png" />
                       开发群 938710832
                     </div>
                   </a>
                   <a href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe">
                     <div class="foot_unit_button uni_shadow_2" style="width: 198px">
-                      <img class="foot_unit_pic" src="/img/icon/图标_源石.png" />
+                      <img class="foot_unit_pic" src="/image/icon/图标_源石.png" />
                       本站财政状况
                     </div>
                   </a>
@@ -921,22 +921,22 @@
                   <p class="foot_unit_title">-数据支持-</p>
                   <a href="https://space.bilibili.com/8412516">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/img/website/honeycake.webp" />罗德岛蜜饼工坊
+                      <img class="foot_unit_pic" src="/image/website/honeycake.webp" />罗德岛蜜饼工坊
                     </div>
                   </a>
                   <a href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/img/website/prts.png" />PRTS
+                      <img class="foot_unit_pic" src="/image/website/prts.png" />PRTS
                     </div>
                   </a>
                   <a href="https://yituliu.site/">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/img/website/ico64.png" />一图流主站
+                      <img class="foot_unit_pic" src="/image/website/ico64.png" />一图流主站
                     </div>
                   </a>
                   <a href="https://space.bilibili.com/22606843">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/img/website/公孙长乐.webp" />公孙长乐
+                      <img class="foot_unit_pic" src="/image/website/公孙长乐.webp" />公孙长乐
                     </div>
                   </a>
                 </div>
@@ -944,14 +944,14 @@
                   <p class="foot_unit_title">-B站发布-</p>
                   <a href="https://space.bilibili.com/688411531">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                      <img class="foot_unit_pic" src="/img/website/bilibili.png" />
+                      <img class="foot_unit_pic" src="/image/website/bilibili.png" />
                       罗德岛基建BETA
                     </div>
                   </a>
                   <p class="foot_unit_title">-粉丝群/反馈-</p>
                   <a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                      <img class="foot_unit_pic" src="/img/website/qq.png" />
+                      <img class="foot_unit_pic" src="/image/website/qq.png" />
                       阿戈尔数据文献馆
                     </div>
                   </a>
@@ -1101,6 +1101,9 @@ export default {
       const s = date.getSeconds().toString().padStart(2, "0"); //秒
       this.startTime = `${y}/${m}/${d} ${h}:${mm}:${s}`;
       // this.startTime = "2023/05/02 04:00:00";
+      this.start_TimeStamp = Date.parse(this.startTime); //今日日期的时间戳
+      this.end_TimeStamp = Date.parse(this.endTime); //结束日期的时间戳
+      this.getPoolCountDown();
     },
 
     //日期转为时间戳
@@ -1121,14 +1124,14 @@ export default {
       this.remainingWeeks = 0; //剩余周数
       this.remainingCheckinTimes = 0; //剩余签到次数
       this.remainingMonths = 1; //剩余月数
-      this.start_TimeStamp = Date.parse(this.startTime); //今日日期的时间戳
+     
       this.end_TimeStamp = Date.parse(this.endTime); //结束日期的时间戳
       var timeInterval = parseInt((this.end_TimeStamp - this.start_TimeStamp) / 86400000); //计算剩余天数
 
       let month = new Date(this.startTime).getMonth();
 
       var endDate = new Date(Date.parse(this.endTime));
-      // if (endDate.getDay() === 1 )  this.remainingWeeks--;
+      if (endDate.getDay() === 1 )  this.remainingWeeks--;
       console.log(endDate.getDay());
 
       // for (let i = 1; i < timeInterval + 1; i++) {
@@ -1232,12 +1235,12 @@ export default {
         this.endTime = "2023/08/15 03:59:00";
         this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.poolCountDownFlag_orundum = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
+        this.poolCountDownFlag_orundum = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
       }
 
       this.getInterval();
       this.getEveryreWard();
-      this.getPoolCountDown();
+      
 
       this.compute();
     },
@@ -1265,7 +1268,7 @@ export default {
         //少于14天扣除每日赠送抽卡资源
         this.poolCountDown = 14 - num;
       }
-      console.log("限定池还有" + this.poolCountDown + "天,结束");
+      console.log("限定池还有" + num + "天,结束");
     },
 
     //  计算日常奖励
@@ -1422,6 +1425,7 @@ export default {
           //循环list<list>， list为[奖励名称,奖励内容]
           if ("honeyCake" === list[1].module) {
             //这里是计算其他奖励
+            console.log(list[0])
             this.calResults.originium_other += list[1].originium; //xxxxx_other格式的属性  其他奖励的的各项奖励数量，下同
             this.calResults.orundum_other += list[1].orundum;
             this.calResults.permit_other += list[1].permit;
@@ -1455,7 +1459,9 @@ export default {
 
       //自动扣除部分 ↓
       //减去红包墙/矿区已经赠送过的合成玉
+      console.log(this.calResults.orundum_other)
       if (this.poolCountDownFlag_orundum) this.calResults.orundum_other -= parseInt(this.poolCountDown) * 600;
+      console.log(this.calResults.orundum_other)
 
       //减去限定池已经赠送过的单抽
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
@@ -1471,6 +1477,11 @@ export default {
         parseInt(this.calResults.orundum_other) / 600 +
         parseInt(this.calResults.permit_other) +
         parseInt(this.calResults.permit10_other) * 10;
+        
+      console.log(this.calResults.originium_other)
+      console.log(this.calResults.orundum_other)
+      console.log(this.calResults.permit_other)
+      console.log(this.calResults.permit10_other)
 
       // 所有模块相加-源石
       this.originium +=

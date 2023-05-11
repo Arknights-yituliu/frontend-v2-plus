@@ -138,19 +138,19 @@
         <p class="foot_unit_title" style="margin-bottom: 11px">-开发-</p>
         <a href="https://github.com/Arknights-yituliu/frontend-v2-plus"
           ><div class="foot_unit_button uni_shadow_2" id="foot_frontEnd">
-            <img class="foot_unit_pic" src="/img/website/github.png" />
+            <img class="foot_unit_pic" src="/image/website/github.png" />
             前端
           </div>
         </a>
         <a href="https://github.com/Arknights-yituliu/BackEndV3"
           ><div class="foot_unit_button uni_shadow_2" id="foot_backEnd">
-            <img class="foot_unit_pic" src="/img/website/github.png" />
+            <img class="foot_unit_pic" src="/image/website/github.png" />
             后端
           </div>
         </a>
         <a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F"
           ><div class="foot_unit_button uni_shadow_2" style="width: 186px; display: inline-block">
-            <img class="foot_unit_pic" src="/img/website/qq.png" />
+            <img class="foot_unit_pic" src="/image/website/qq.png" />
             开发群938710832
           </div>
         </a>
@@ -160,7 +160,7 @@
         </div>
         <a href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe"
           ><div class="foot_unit_button uni_shadow_2" style="width: 202px; display: inline-block">
-            <img class="foot_unit_pic" src="/img/icon/图标_源石.png" />
+            <img class="foot_unit_pic" src="/image/icon/图标_源石.png" />
             查看财政状况/捐助
           </div>
         </a>
@@ -182,7 +182,7 @@
         </a>
         <a href="https://space.bilibili.com/12786648">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/wmm.png" />
+            <img class="foot_unit_pic" src="/image/website/wmm.png" />
             無冕Crownless
           </div>
         </a>
@@ -238,7 +238,7 @@
         <p class="foot_unit_title">-数据源-</p>
         <a href="https://penguin-stats.cn/"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-            <img class="foot_unit_pic" src="/img/website/penguin_stats_logo.png" />企鹅物流
+            <img class="foot_unit_pic" src="/image/website/penguin_stats_logo.png" />企鹅物流
           </div></a
         >
       </div>
@@ -247,7 +247,7 @@
         <p class="foot_unit_title">-效率算法-</p>
         <a href="https://www.bilibili.com/video/BV1Rm4y1r7Kp">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/bilibili.png" />
+            <img class="foot_unit_pic" src="/image/website/bilibili.png" />
             算法科普视频
           </div>
         </a>
@@ -265,7 +265,7 @@
         </a>
         <a href="https://www.bilibili.com/video/BV1yL4y1P7K1">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/shaobing.png" />
+            <img class="foot_unit_pic" src="/image/website/shaobing.png" />
             一个资深的烧饼
           </div>
         </a>
@@ -274,14 +274,14 @@
         <p class="foot_unit_title">-B站发布-</p>
         <a href="https://space.bilibili.com/688411531"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/bilibili.png" />
+            <img class="foot_unit_pic" src="/image/website/bilibili.png" />
             罗德岛基建BETA
           </div></a
         >
         <p class="foot_unit_title">-粉丝群-</p>
         <a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/qq.png" />
+            <img class="foot_unit_pic" src="/image/website/qq.png" />
             阿戈尔数据文献馆
           </div></a
         >
@@ -290,7 +290,7 @@
         <p class="foot_unit_title">-友情链接-</p>
         <a href="https://viktorlab.cn/akdata"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/akdps.jpg" />
+            <img class="foot_unit_pic" src="/image/website/akdps.jpg" />
             DPS计算器
           </div></a
         >
@@ -311,7 +311,7 @@
 
         <a href="https://apps.apple.com/cn/app/id1632810611"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/rhodes_asst.png" />
+            <img class="foot_unit_pic" src="/image/website/rhodes_asst.png" />
             罗德岛助理(iOS)
           </div></a
         >
