@@ -8,7 +8,7 @@ export default {
       headers: {
         "Content-Type": "application/json",
       },
-      url: `${api_name}/upload/operBox/manual`,
+      url: `maa/upload/operBox/manual`,
       method: "post",
       data: data,
     });
@@ -16,14 +16,14 @@ export default {
 
   getOperatorDataResult() {
     return request({
-      url: `${api_name}/operator/result`,
+      url: `maa}/operator/result`,
       method: "get",
     });
   },
 
   maaStatistical() {
     return request({
-      url: `${api_name}/recruit/statistical`,
+      url: `maa/recruit/statistical`,
       method: "get",
     });
   },

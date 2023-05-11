@@ -7,7 +7,7 @@
           <el-collapse-item name="0" id="totalTable">
             <template #title>
               <div class="gacha_title_icon" style="background: chocolate"></div>
-              <span class="collapse-item_title" style="color: purple">
+              <span class="collapse-item_title" style="color: var(--gacha-total-fg)">
                 共计{{ toFixedByAcc(gachaTimes_total, 0) }}抽，氪金{{ sellsCount }}元
               </span>
               <span style="font-size: 20px; color: rgb(136 136 136 / 69%); margin-left: 16px">yituliu.site</span>
@@ -477,7 +477,7 @@
             </template>
 
             <div class="gacha_unit" id="charge">
-              <div class="gacha_unit_child_instruction" style="padding: 4px 16px; font-size: 18px; color: brown">
+              <div class="gacha_unit_child_instruction" style="padding: 4px 16px; font-size: 18px; color: var(--charge-instruction-fg)">
                 标签内为每抽价格(元)，颜色用于区分性价比<br />
                 仅计入礼包内抽卡资源，紫色高于648，橙色高于大月卡<br />
                 <a href="https://yituliu.site/pack">点击跳转礼包完整性价比</a>
@@ -870,7 +870,7 @@
               <span class="collapse-item_title">开发信息</span>
             </template>
             <div id="extra" style="max-width: 1080px; margin: auto">
-              <div id="foot_main" style="background: white">
+              <div id="foot_main">
                 <!-- <div id="foot_left"> -->
                 <div class="foot_unit">
                   <p class="foot_unit_title">-开发信息-</p>
@@ -1085,12 +1085,10 @@ export default {
       // pack_data: this.pageContext.pageProps.pack_data,
     };
   },
-  created() {
+  mounted() {
     this.getTodayDate();
     this.TimeStampFormat();
     this.checkEndDate();
-  },
-  mounted() {
     this.setPackData();
     this.setFirstRecharge();
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
@@ -1864,38 +1862,10 @@ export const documentProps = {
   margin: 4px 0px;
 }
 
-.el-collapse-item {
-  color: #222222;
-  margin: 12px 0;
-  background-color: #d8d8d8;
-  border-radius: 8px;
-  font-size: 20px;
-  box-shadow: 0px 2px 6px #a0a0a0b0;
-  overflow: hidden;
-}
-
 .collapse-item_title {
   font-size: 24px;
   padding: 8px 0px;
   font-weight: 600;
-}
-
-.el-collapse-item__wrap {
-  margin: 6px;
-  margin-left: 8px;
-  vertical-align: middle;
-  display: inline-block;
-  will-change: height;
-  border-bottom: 0px;
-  background-color: #d8d8d8;
-}
-
-.el-collapse-item__content {
-  padding-bottom: 0px;
-}
-
-.el-collapse-item__header {
-  background-color: #d8d8d8;
 }
 
 .el-divider--horizontal {
@@ -1914,6 +1884,7 @@ export const documentProps = {
   padding: 0px 12px 0px 12px;
   max-width: 1200px;
   margin: auto;
+  background-color: var(--foot-main-bg);
 }
 
 .foot_unit {
@@ -2074,7 +2045,7 @@ export const documentProps = {
 }
 
 #totalTable {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 #gacha_total_chart {
@@ -2092,5 +2063,17 @@ export const documentProps = {
   top: 10px;
   min-width: 150px;
   width: 36%;
+}
+</style>
+
+<style>
+#gacha > div .el-collapse-item {
+  color: white;
+  margin: 12px 0;
+  background-color: #222222;
+  border-radius: 8px;
+  font-size: 20px;
+  box-shadow: var(--el-box-shadow-light);
+  overflow: hidden;
 }
 </style>
