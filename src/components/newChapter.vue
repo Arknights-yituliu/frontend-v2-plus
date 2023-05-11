@@ -24,7 +24,7 @@
       <!-- <div> -->
       <div class="ep12_wrapper">
         <a href="/ep12">
-          <img class="ep12_pic" src="/img/temp/ep12.webp" alt="ep12" />
+          <img class="ep12_pic" src="/image/temp/ep12.webp" alt="ep12" />
         </a>
       </div>
       <!-- </div> -->

@@ -3,7 +3,7 @@ a {
 }
 
 #maa_recruit_poster {
-  background: url("/img/website/立绘_梓兰_1.png") 0 110% / cover no-repeat, #444444;
+  background: url("/image/website/立绘_梓兰_1.png") 0 110% / cover no-repeat, #444444;
   background-size: 500px;
   background-attachment: fixed;
 }
@@ -46,7 +46,7 @@ a {
   width: 80%;
   min-height: 384px;
   max-height: 540px;
-  background: url("/img/website/hex.png") 0 50% / cover no-repeat;
+  background: url("/image/website/hex.png") 0 50% / cover no-repeat;
   background-size: 80%;
   z-index: 1;
 }

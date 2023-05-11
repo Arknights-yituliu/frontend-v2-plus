@@ -623,15 +623,15 @@ export default {
       return parseFloat(num).toFixed(acc);
     },
     getPackImgUrl(img) {
-      return "/img/packs/" + img + ".png";
+      return "/image/packs/" + img + ".png";
     },
 
     getPackPic(img, type) {
       // if(true ===this.showFlag) return '';
       // console.log(true ===this.showFlag);
       if (type === "limited") {
-        return "background:url(/img/packs/limited/" + img + ".png) 0% 0% / cover no-repeat,#444444;";
-      } else return "background:url(/img/packs/small/" + img + ".jpg) 0% 0% / cover no-repeat,#444444;";
+        return "background:url(/image/packs/limited/" + img + ".png) 0% 0% / cover no-repeat,#444444;";
+      } else return "background:url(/image/packs/small/" + img + ".jpg) 0% 0% / cover no-repeat,#444444;";
     },
     getContentId(id, type) {
       return type + "_" + id;

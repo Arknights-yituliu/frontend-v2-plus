@@ -125,12 +125,12 @@ export default {
 
     getImgUrl(img, source) {
       source = typeof source !== "undefined" ? source : 1;
-      if (source > 4.1) return "/img/materials/道具_" + img + ".png";
-      else if (source > 3.1) return "/img/icon/图标_" + img + ".png";
+      if (source > 4.1) return "/image/materials/道具_" + img + ".png";
+      else if (source > 3.1) return "/image/icon/图标_" + img + ".png";
       else if (source > 2.1) return "https://image.yituliu.site/ activity_picture /" + img + ".png";
       else if (source > 1.1) return "https://image.yituliu.site/item/" + img + ".png";
-      else if (source > 0.1) return "/img/materials/" + img + ".png";
-      else return "https://cdn.jsdelivr.net/gh/zirun-wang/OnePicCDN/img/" + img + ".png";
+      else if (source > 0.1) return "/image/materials/" + img + ".png";
+      else return "https://cdn.jsdelivr.net/gh/zirun-wang/OnePicCDN/image/" + img + ".png";
     },
     getEfficiency(num, acc) {
       acc = typeof acc !== "undefined" ? acc : 2;

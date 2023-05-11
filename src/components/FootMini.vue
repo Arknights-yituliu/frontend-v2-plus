@@ -11,25 +11,25 @@
         <p class="foot_unit_title" style="margin-bottom: 11px">-开发信息-</p>
         <a href="https://github.com/Arknights-yituliu/frontend-v2-plus">
           <div class="foot_unit_button uni_shadow_2" id="foot_frontEnd">
-            <img class="foot_unit_pic" src="/img/website/github.png" />
+            <img class="foot_unit_pic" src="/image/website/github.png" />
             前端
           </div>
         </a>
         <a href="https://github.com/yamasakura/yituliuBackEnd">
           <div class="foot_unit_button uni_shadow_2" id="foot_backEnd">
-            <img class="foot_unit_pic" src="/img/website/github.png" />
+            <img class="foot_unit_pic" src="/image/website/github.png" />
             后端
           </div>
         </a>
         <a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
           <div class="foot_unit_button uni_shadow_2" style="width: 202px">
-            <img class="foot_unit_pic" src="/img/website/qq.png" />
+            <img class="foot_unit_pic" src="/image/website/qq.png" />
             开发群938710832
           </div>
         </a>
         <a href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe">
           <div class="foot_unit_button uni_shadow_2" style="width: 202px">
-            <img class="foot_unit_pic" src="/img/icon/图标_源石.png" />
+            <img class="foot_unit_pic" src="/image/icon/图标_源石.png" />
             本站财政状况
           </div>
         </a>
@@ -73,7 +73,7 @@
         <p class="foot_unit_title">-数据源-</p>
         <a href="https://yituliu.site/">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-            <img class="foot_unit_pic" src="/img/website/ico64.png" />一图流主站
+            <img class="foot_unit_pic" src="/image/website/ico64.png" />一图流主站
           </div>
         </a>
       </div>
@@ -82,14 +82,14 @@
         <p class="foot_unit_title">-B站发布-</p>
         <a href="https://space.bilibili.com/688411531">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/bilibili.png" />
+            <img class="foot_unit_pic" src="/image/website/bilibili.png" />
             罗德岛基建BETA
           </div>
         </a>
         <p class="foot_unit_title">-粉丝群-</p>
         <a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/img/website/qq.png" />
+            <img class="foot_unit_pic" src="/image/website/qq.png" />
             阿戈尔数据文献馆
           </div>
         </a>
