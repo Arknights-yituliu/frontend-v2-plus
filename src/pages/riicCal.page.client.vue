@@ -63,10 +63,7 @@
         <div class="riic_building_title">方案导入/导出</div>
         <div class="riic_building_parameter">
           <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()"> 生成排班方案 </el-button>
-          <div
-            id="export_cover"
-            style="position: absolute; width: 230px; height: 44px; margin: -42px 18px 18px 137px; background: #ffffff80"
-          ></div>
+          <div id="export_cover" style="position: absolute; width: 230px; height: 44px; margin: -42px 18px 18px 137px; background: #ffffff80"></div>
           <a :href="exportUrl">
             <el-button size="large" type="primary" round style="width: 108px; margin-left: 12px"> 导出到本地 </el-button>
           </a>
@@ -2211,8 +2208,7 @@ export default {
       this.$notify({
         title: "2023-03-13更新",
         dangerouslyUseHTMLString: true,
-        message:
-          "<strong> 干员追加：<br>增加了孤星活动干员 <br>BUG相关：  <br>由于存储服务重写的问题<br>如果遇到导入为空的情况可加Q群539600566</strong>",
+        message: "<strong> 干员追加：<br>增加了孤星活动干员 <br>BUG相关：  <br>由于存储服务重写的问题<br>如果遇到导入为空的情况可加Q群539600566</strong>",
         duration: 12000,
       });
     },
@@ -2993,11 +2989,7 @@ export default {
         this.radio_trading_plan0[0] = this.getProductValueReverse(this.historicalData.plans[0].rooms.trading[0].product);
       }
 
-      if (
-        "333" === this.historicalData.buildingType ||
-        "243" === this.historicalData.buildingType ||
-        "252" === this.historicalData.buildingType
-      ) {
+      if ("333" === this.historicalData.buildingType || "243" === this.historicalData.buildingType || "252" === this.historicalData.buildingType) {
         if (this.historicalData.plans[0].rooms.trading[1].skip) {
           this.switch_trading_plan0_1[2] = true;
         }
@@ -3052,11 +3044,7 @@ export default {
         this.radio_manufacture_plan0[2] = this.getProductValueReverse(this.historicalData.plans[0].rooms.manufacture[2].product);
       }
 
-      if (
-        "243" === this.historicalData.buildingType ||
-        "153" === this.historicalData.buildingType ||
-        "252" === this.historicalData.buildingType
-      ) {
+      if ("243" === this.historicalData.buildingType || "153" === this.historicalData.buildingType || "252" === this.historicalData.buildingType) {
         if (this.historicalData.plans[0].rooms.manufacture[3].skip) {
           this.switch_manufacture_plan0_3[2] = true;
         }
@@ -3201,11 +3189,7 @@ export default {
         this.radio_trading_plan1[0] = this.getProductValueReverse(this.historicalData.plans[1].rooms.trading[0].product);
       }
 
-      if (
-        "333" === this.historicalData.buildingType ||
-        "243" === this.historicalData.buildingType ||
-        "252" === this.historicalData.buildingType
-      ) {
+      if ("333" === this.historicalData.buildingType || "243" === this.historicalData.buildingType || "252" === this.historicalData.buildingType) {
         if (this.historicalData.plans[1].rooms.trading[1].skip) {
           this.switch_trading_plan1_1[2] = true;
         }
@@ -3259,11 +3243,7 @@ export default {
         this.radio_manufacture_plan1[2] = this.getProductValueReverse(this.historicalData.plans[1].rooms.manufacture[2].product);
       }
 
-      if (
-        "243" === this.historicalData.buildingType ||
-        "153" === this.historicalData.buildingType ||
-        "252" === this.historicalData.buildingType
-      ) {
+      if ("243" === this.historicalData.buildingType || "153" === this.historicalData.buildingType || "252" === this.historicalData.buildingType) {
         if (this.historicalData.plans[1].rooms.manufacture[3].skip) {
           this.switch_manufacture_plan1_3[2] = true;
         }
@@ -3410,11 +3390,7 @@ export default {
           this.radio_trading_plan2[0] = this.getProductValueReverse(this.historicalData.plans[2].rooms.trading[0].product);
         }
 
-        if (
-          "333" === this.historicalData.buildingType ||
-          "243" === this.historicalData.buildingType ||
-          "252" === this.historicalData.buildingType
-        ) {
+        if ("333" === this.historicalData.buildingType || "243" === this.historicalData.buildingType || "252" === this.historicalData.buildingType) {
           if (this.historicalData.plans[2].rooms.trading[1].skip) {
             this.switch_trading_plan2_1[2] = true;
           }
@@ -3468,11 +3444,7 @@ export default {
           this.radio_manufacture_plan2[2] = this.getProductValueReverse(this.historicalData.plans[2].rooms.manufacture[2].product);
         }
 
-        if (
-          "243" === this.historicalData.buildingType ||
-          "153" === this.historicalData.buildingType ||
-          "252" === this.historicalData.buildingType
-        ) {
+        if ("243" === this.historicalData.buildingType || "153" === this.historicalData.buildingType || "252" === this.historicalData.buildingType) {
           if (this.historicalData.plans[2].rooms.manufacture[3].skip) {
             this.switch_manufacture_plan2_3[2] = true;
           }

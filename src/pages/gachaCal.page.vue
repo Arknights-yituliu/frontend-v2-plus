@@ -380,13 +380,7 @@
                 悖论模拟/剿灭战模拟
               </div>
               <div class="gacha_unit_child">
-                <input
-                  class="gacha_unit_child_inputbox"
-                  type="text"
-                  @change="compute()"
-                  v-model.number="paradox"
-                  oninput="value=value.replace(/[^\d]/g, '')"
-                />
+                <input class="gacha_unit_child_inputbox" type="text" @change="compute()" v-model.number="paradox" oninput="value=value.replace(/[^\d]/g, '')" />
                 <div class="gacha_unit_child_title" style="width: 120px">个悖论模拟</div>
                 <div class="gacha_resources_unit" style="width: 105px">
                   <div :class="getSpriteImg('4003icon', 0)"></div>
@@ -410,10 +404,7 @@
               </div>
               <div class="gacha_unit_info">
                 剿灭战模拟并非常驻，可前往prts.wiki查看开放历史
-                <a
-                  href="https://prts.wiki/w/%E5%85%B3%E5%8D%A1%E4%B8%80%E8%A7%88/%E5%B8%B8%E6%80%81%E4%BA%8B%E5%8A%A1"
-                  style="display: inline-block"
-                >
+                <a href="https://prts.wiki/w/%E5%85%B3%E5%8D%A1%E4%B8%80%E8%A7%88/%E5%B8%B8%E6%80%81%E4%BA%8B%E5%8A%A1" style="display: inline-block">
                   点我跳转<img class="gacha_img_small" src="/img/icon/el.png" />
                 </a>
               </div>
@@ -492,9 +483,7 @@
                   v-for="(singlePack, index) in gacha_storePacks"
                   :key="index"
                   v-show="
-                    singlePack.packType == 'monthly' &&
-                    singlePack.packRmbPerDraw > 0 &&
-                    isDuringDate(singlePack.start, singlePack.end, singlePack.rewardType)
+                    singlePack.packType == 'monthly' && singlePack.packRmbPerDraw > 0 && isDuringDate(singlePack.start, singlePack.end, singlePack.rewardType)
                   "
                   class="gacha_unit_child"
                   @change="compute(singlePack.packName)"
@@ -736,10 +725,7 @@
               </div>
               <el-checkbox-group v-model="gacha_actReList" class="">
                 <div v-for="(actRe, key) in gacha_honeyCake" :key="key" class="gacha_unit_child" @change="compute(key)">
-                  <el-checkbox-button
-                    :label="key"
-                    v-show="isDuringDate(actRe.start, actRe.end, actRe.rewardType) && 'actRe' == actRe.module"
-                  >
+                  <el-checkbox-button :label="key" v-show="isDuringDate(actRe.start, actRe.end, actRe.rewardType) && 'actRe' == actRe.module">
                     <div class="gacha_unit_child_title" style="width: 200px">
                       {{ key }}
                     </div>
@@ -828,10 +814,7 @@
             <div class="gacha_unit" id="otherRes">
               <div v-for="(other, key) in gacha_honeyCake" :key="key">
                 <!-- 只显示当前选择的时间段内的奖励&&(公共的奖励||只可当期使用的奖励) -->
-                <div
-                  class="gacha_unit_child"
-                  v-show="isDuringDate(other.start, other.end, other.rewardType) && 'honeyCake' == other.module"
-                >
+                <div class="gacha_unit_child" v-show="isDuringDate(other.start, other.end, other.rewardType) && 'honeyCake' == other.module">
                   <div class="gacha_unit_child_title" style="width: 240px">
                     {{ key }}
                   </div>
@@ -1102,8 +1085,7 @@ export default {
       this.$notify({
         title: "4.27更新",
         dangerouslyUseHTMLString: true,
-        message:
-          "<strong>1.氪金区新增周年礼包选项<br>2.优化了一些UI布局<br>3.夏活攒抽数据参考自去年同期数据(近期更新更加准确的活动排期)</strong>",
+        message: "<strong>1.氪金区新增周年礼包选项<br>2.优化了一些UI布局<br>3.夏活攒抽数据参考自去年同期数据(近期更新更加准确的活动排期)</strong>",
         duration: 3000,
       });
     },
@@ -1380,8 +1362,7 @@ export default {
       this.calResults.orundum_potential += parseInt(this.paradox) * 200 + this.annihilation * 1500;
 
       //主线和常驻活动抽卡次数（单项）
-      this.calResults.gachaTimes_potential =
-        this.calResults.originium_potential * 0.3 * flag_originium + this.calResults.orundum_potential / 600;
+      this.calResults.gachaTimes_potential = this.calResults.originium_potential * 0.3 * flag_originium + this.calResults.orundum_potential / 600;
 
       // index是被选中的商店礼包json的索引
       this.gacha_storePacksList.forEach((index) => {
@@ -1408,12 +1389,7 @@ export default {
 
       //普通源石购买数量
       this.calResults.originium_gacha +=
-        this.originium_648 * 185 +
-        this.originium_328 * 90 +
-        this.originium_198 * 50 +
-        this.originium_98 * 24 +
-        this.originium_30 * 7 +
-        this.originium_6;
+        this.originium_648 * 185 + this.originium_328 * 90 + this.originium_198 * 50 + this.originium_98 * 24 + this.originium_30 * 7 + this.originium_6;
 
       //氪金项目抽卡次数（单项）
       this.calResults.gachaTimes_gacha =
@@ -1424,12 +1400,7 @@ export default {
 
       // 计算购买的普通源石的价格
       this.sellsCount +=
-        648 * this.originium_648 +
-        328 * this.originium_328 +
-        198 * this.originium_198 +
-        98 * this.originium_98 +
-        30 * this.originium_30 +
-        6 * this.originium_6;
+        648 * this.originium_648 + 328 * this.originium_328 + 198 * this.originium_198 + 98 * this.originium_98 + 30 * this.originium_30 + 6 * this.originium_6;
 
       /*
       gacha_honeyCake的数据格式是
@@ -1545,10 +1516,7 @@ export default {
 
       //总抽卡次数
       this.gachaTimes_total =
-        parseInt(this.originium) * 0.3 * parseInt(flag_originium) +
-        parseInt(this.orundum) / 600 +
-        parseInt(this.permit) +
-        parseInt(this.permit10) * 10;
+        parseInt(this.originium) * 0.3 * parseInt(flag_originium) + parseInt(this.orundum) / 600 + parseInt(this.permit) + parseInt(this.permit10) * 10;
 
       // 设置饼图的数据内容
       this.pieData = [];
@@ -1589,25 +1557,13 @@ export default {
       // console.log(this.calResults.originium_exist ===undefined||this.calResults.originium_exist == "undefined");
 
       //没有cookie记录值强制赋值0
-      if (
-        this.calResults.originium_exist == "" ||
-        this.calResults.originium_exist === undefined ||
-        this.calResults.originium_exist == "undefined"
-      )
+      if (this.calResults.originium_exist == "" || this.calResults.originium_exist === undefined || this.calResults.originium_exist == "undefined")
         this.calResults.originium_exist = 0;
-      if (
-        this.calResults.orundum_exist == "" ||
-        this.calResults.orundum_exist === undefined ||
-        this.calResults.orundum_exist == "undefined"
-      )
+      if (this.calResults.orundum_exist == "" || this.calResults.orundum_exist === undefined || this.calResults.orundum_exist == "undefined")
         this.calResults.orundum_exist = 0;
       if (this.calResults.permit_exist == "" || this.calResults.permit_exist === undefined || this.calResults.permit_exist == "undefined")
         this.calResults.permit_exist = 0;
-      if (
-        this.calResults.permit10_exist == "" ||
-        this.calResults.permit10_exist === undefined ||
-        this.calResults.permit10_exist == "undefined"
-      )
+      if (this.calResults.permit10_exist == "" || this.calResults.permit10_exist === undefined || this.calResults.permit10_exist == "undefined")
         this.calResults.permit10_exist = 0;
       if (this.paradox == "" || this.paradox === undefined || this.paradox == "undefined") this.paradox = 0;
       if (this.annihilation == "" || this.annihilation === undefined || this.annihilation == "undefined") this.annihilation = 0;

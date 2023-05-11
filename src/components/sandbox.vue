@@ -12,14 +12,7 @@
           <div style="display: flex; align-items: flex-end">
             <div
               :class="tagColor[0]"
-              style="
-                height: 45px;
-                width: 45px;
-                margin: 0px 4px;
-                box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-                border-radius: 4px;
-                background: #f0f0f0;
-              "
+              style="height: 45px; width: 45px; margin: 0px 4px; box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3); border-radius: 4px; background: #f0f0f0"
               id="store_tag_0"
               @click="switch_store('0')"
             >
@@ -27,14 +20,7 @@
             </div>
             <div
               :class="tagColor[1]"
-              style="
-                height: 45px;
-                width: 45px;
-                margin: 0px 4px;
-                box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-                border-radius: 4px;
-                background: #f0f0f0;
-              "
+              style="height: 45px; width: 45px; margin: 0px 4px; box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3); border-radius: 4px; background: #f0f0f0"
               id="store_tag_1"
               @click="switch_store('1')"
             >
@@ -42,14 +28,7 @@
             </div>
             <div
               :class="tagColor[2]"
-              style="
-                height: 45px;
-                width: 45px;
-                margin: 0px 4px;
-                box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-                border-radius: 4px;
-                background: #f0f0f0;
-              "
+              style="height: 45px; width: 45px; margin: 0px 4px; box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3); border-radius: 4px; background: #f0f0f0"
               id="store_tag_2"
               @click="switch_store('2')"
             >
@@ -57,14 +36,7 @@
             </div>
             <div
               :class="tagColor[3]"
-              style="
-                height: 45px;
-                width: 45px;
-                margin: 0px 4px;
-                box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-                border-radius: 4px;
-                background: #f0f0f0;
-              "
+              style="height: 45px; width: 45px; margin: 0px 4px; box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3); border-radius: 4px; background: #f0f0f0"
               id="store_tag_3"
               @click="switch_store('3')"
             >
@@ -72,14 +44,7 @@
             </div>
             <div
               :class="tagColor[4]"
-              style="
-                height: 45px;
-                width: 45px;
-                margin: 0px 4px;
-                box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-                border-radius: 4px;
-                background: #f0f0f0;
-              "
+              style="height: 45px; width: 45px; margin: 0px 4px; box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3); border-radius: 4px; background: #f0f0f0"
               id="store_tag_4"
               @click="switch_store('4')"
             >

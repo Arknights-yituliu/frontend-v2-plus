@@ -3,61 +3,60 @@
     <!-- <button @click="register()">注册</button>
   <input type="text" v-model="userName.userName" />
   <div>{{ userData.userName }}</div> -->
-    <table class="upload_table">
-      <tbody>
-        <tr>
-          <td style="width: 50px">干员</td>
-          <td style="width: 50px">精英化</td>
-          <td style="width: 60px">1技能</td>
-          <td style="width: 60px">2技能</td>
-          <td style="width: 60px">3技能</td>
-          <td style="width: 50px">潜能</td>
-          <td style="width: 60px">模组X</td>
-          <td style="width: 60px">模组Y</td>
-        </tr>
-        <tr v-for="(character, index) in characterList" :key="index">
-          <td><div :class="getSprite(character.charId)"></div></td>
-          <td>
-            <div @click="character.phase = 0" :class="selected(character.phase, 0)">精英 0</div>
-            <div @click="character.phase = 1" :class="selected(character.phase, 1)">精英 1</div>
-            <div @click="character.phase = 2" :class="selected(character.phase, 2)">精英 2</div>
-          </td>
-          <td>
-            <div @click="character.skill1 = 0" :class="selected(character.skill1, 0)">未专精</div>
-            <div @click="character.skill1 = 1" :class="selected(character.skill1, 1)">专精 Ⅰ</div>
-            <div @click="character.skill1 = 2" :class="selected(character.skill1, 2)">专精 Ⅱ</div>
-            <div @click="character.skill1 = 3" :class="selected(character.skill1, 3)">专精 Ⅲ</div>
-          </td>
-          <td v-show="character.phase > 0">
-            <div @click="character.skill2 = 0" :class="selected(character.skill2, 0)">未专精</div>
-            <div @click="character.skill2 = 1" :class="selected(character.skill2, 1)">专精 Ⅰ</div>
-            <div @click="character.skill2 = 2" :class="selected(character.skill2, 2)">专精 Ⅱ</div>
-            <div @click="character.skill2 = 3" :class="selected(character.skill2, 3)">专精 Ⅲ</div>
-          </td>
-          <td v-show="character.phase > 1">
-            <div @click="character.skill3 = 0" :class="selected(character.skill3, 0)">未专精</div>
-            <div @click="character.skill3 = 1" :class="selected(character.skill3, 1)">专精 Ⅰ</div>
-            <div @click="character.skill3 = 2" :class="selected(character.skill3, 2)">专精 Ⅱ</div>
-            <div @click="character.skill3 = 3" :class="selected(character.skill3, 3)">专精 Ⅲ</div>
-          </td>
-          <td v-show="character.phase < 1"></td>
-          <td v-show="character.phase < 2"></td>
-          <td><input type="text" class="upload_check" v-model="character.potential" /></td>
-          <td v-show="character.phase > 1">
-            <div @click="character.modX = 0" :class="selected(character.modX, 0)">未专精</div>
-            <div @click="character.modX = 1" :class="selected(character.modX, 1)">专精 Ⅰ</div>
-            <div @click="character.modX = 2" :class="selected(character.modX, 2)">专精 Ⅱ</div>
-            <div @click="character.modX = 3" :class="selected(character.modX, 3)">专精 Ⅲ</div>
-          </td>
-          <td v-show="character.phase > 1">
-            <div @click="character.skill3 = 0" :class="selected(character.skill3, 0)">未专精</div>
-            <div @click="character.skill3 = 1" :class="selected(character.skill3, 1)">专精 Ⅰ</div>
-            <div @click="character.skill3 = 2" :class="selected(character.skill3, 2)">专精 Ⅱ</div>
-            <div @click="character.skill3 = 3" :class="selected(character.skill3, 3)">专精 Ⅲ</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div>
+      <table class="upload_table">
+        <tbody>
+          <tr class="upload_table_title">
+            <td>干员</td>
+            <td>精英化</td>
+            <td>1技能</td>
+            <td>2技能</td>
+            <td>3技能</td>
+            <td>潜能</td>
+            <td>模组X</td>
+            <td>模组Y</td>
+          </tr>
+          <tr v-for="(char, index) in characterList" :key="index">
+            <td><div :class="getSprite(char.charId)"></div></td>
+            <td>
+              <div v-for="rank in ranks.slice(0, 3)" @click="char.phase = rank" :class="selected(char.phase, rank)">精英 {{ rank }}</div>
+           
+            </td>
+            <td>
+              <div v-show="char.phase > 1" v-for="rank in ranks.slice(0, 4)" @click="char.skill1 = rank" :class="selected(char.skill1, rank)">
+                {{ rank == 0 ? "未专精" : "专精" + rank }}
+              </div>
+            </td>
+            <td>
+              <div v-show="char.phase > 1" v-for="rank in ranks.slice(0, 4)" @click="char.skill2 = rank" :class="selected(char.skill2, rank)">
+                {{ rank == 0 ? "未专精" : "专精" + rank }}
+              </div>
+            </td>
+            <td>
+              <div v-show="char.phase > 1" v-for="rank in ranks.slice(0, 4)" @click="char.skill3 = rank" :class="selected(char.skill3, rank)">
+                {{ rank == 0 ? "未专精" : "专精" + rank }}
+              </div>
+            </td>
+
+            <td>
+              <div class="potential_box">
+                <div v-for="rank in ranks.slice(1, 7)" @click="char.potential = rank" :class="selected(char.potential, rank)">潜能{{ rank }}</div>
+              </div>
+            </td>
+            <td>
+              <div v-show="char.phase > 1" v-for="rank in ranks.slice(0, 4)" @click="char.modX = rank" :class="selected(char.modX, rank)">
+                {{ rank == 0 ? "未开启" : "等级" + rank }}
+              </div>
+            </td>
+            <td>
+              <div v-show="char.phase > 1" v-for="rank in ranks.slice(0, 4)" @click="char.modY = rank" :class="selected(char.modY, rank)">
+                {{ rank == 0 ? "未开启" : "等级" + rank }}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -79,6 +78,8 @@ function register() {
     userData.value = response.data;
   });
 }
+
+let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 
 let characterList = ref([]);
 
@@ -117,7 +118,7 @@ function upload() {
 }
 
 function getSprite(charId, index) {
-  return "image_avatar bg-" + charId;
+  return "image_avatar bg-" + charId + " upload_avatar";
 }
 
 onMounted(() => {
