@@ -1,9 +1,6 @@
 <template>
-  <div class="survey_main">
-    <!-- <button @click="register()">注册</button>
-  <input type="text" v-model="userName.userName" />
-  <div>{{ userData.userName }}</div> -->
-    <!-- <div>
+  <div class="survey_page">
+    <!-- <div class="setupBox">
       设置 <br />
       设置 <br />
       设置 <br />
@@ -11,26 +8,46 @@
       设置 <br />
       设置 <br />
     </div> -->
-    <div class="char_card_box">
+    <div class="survey_header">
+      <div class="login_bar" v-show="userData.status < 0">
+        <div>
+          <input type="text" class="input_login" v-model="loginData.userName" />
+        </div>
+        <div style="display: flex">
+          <div class="btn_login" @click="register()">注册</div>
+          <div class="btn_login" @click="login()">登录</div>
+        </div>
+      </div>
+
+      <div class="user_bar" v-show="userData.status == 1">
+        <div class="user_name">
+          欢迎回来，{{ userData.userName }}
+          <div class="user_id">uid:{{ userData.id }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn_login" @click="userDataCacheClear()">清除缓存</div>
+    <div class="btn_login" @click="upload()">上传数据</div>
+    <div class="char_card_box" v-show="userData.status == 1">
       <div class="char_card">
         <div class="card_title" :style="tableSytle(1)">干员</div>
-        <div class="card_title" :style="tableSytle(2)" >持有</div>
-        <div class="card_title" :style="tableSytle(2)" >精英化</div>
-        <div class="card_title" :style="tableSytle(2)" >1技能</div>
-        <div class="card_title" :style="tableSytle(2)" >2技能</div>
-        <div class="card_title" :style="tableSytle(2)" >3技能</div>
-        <div class="card_title" :style="tableSytle(2)" >模组X</div>
-        <div class="card_title" :style="tableSytle(2)" >模组Y</div>
+        <div class="card_title" :style="tableSytle(2)">持有</div>
+        <div class="card_title" :style="tableSytle(2)">精英化</div>
+        <div class="card_title" :style="tableSytle(2)">1技能</div>
+        <div class="card_title" :style="tableSytle(2)">2技能</div>
+        <div class="card_title" :style="tableSytle(2)">3技能</div>
+        <div class="card_title" :style="tableSytle(2)">模组X</div>
+        <div class="card_title" :style="tableSytle(2)">模组Y</div>
       </div>
-      <div class="char_card" v-show="clientWidth>800">
+      <div class="char_card" v-show="clientWidth > 800">
         <div class="card_title" :style="tableSytle(1)">干员</div>
-        <div class="card_title" :style="tableSytle(2)" >持有</div>
-        <div class="card_title" :style="tableSytle(2)" >精英化</div>
-        <div class="card_title" :style="tableSytle(2)" >1技能</div>
-        <div class="card_title" :style="tableSytle(2)" >2技能</div>
-        <div class="card_title" :style="tableSytle(2)" >3技能</div>
-        <div class="card_title" :style="tableSytle(2)" >模组X</div>
-        <div class="card_title" :style="tableSytle(2)" >模组Y</div>
+        <div class="card_title" :style="tableSytle(2)">持有</div>
+        <div class="card_title" :style="tableSytle(2)">精英化</div>
+        <div class="card_title" :style="tableSytle(2)">1技能</div>
+        <div class="card_title" :style="tableSytle(2)">2技能</div>
+        <div class="card_title" :style="tableSytle(2)">3技能</div>
+        <div class="card_title" :style="tableSytle(2)">模组X</div>
+        <div class="card_title" :style="tableSytle(2)">模组Y</div>
       </div>
       <div class="char_card" v-for="(char, index) in characterList" :key="index">
         <div class="card_option" :style="tableSytle(1)">
@@ -94,23 +111,41 @@ import character_table from "@/static/json/character_table.json";
 import surveyApi from "@/api/survey";
 import { onMounted, ref } from "vue";
 
-let userName = ref({ userName: "山桜x" }); //用户输入的用户名，用obj没准后期有别的字段
-let userData = ref({ userName: "" }); //用户信息(用户名，用户id，用户状态)
+let loginData = ref({ userName: "" }); //用户输入的用户名，用obj没准后期有别的字段
+let userData = ref({ userName: "", status: -1 }); //用户信息(用户名，用户id，用户状态)
 
 //注册
 function register() {
-  surveyApi.register(userName.value).then((response) => {
+  surveyApi.register(loginData.value).then((response) => {
     console.log(response.data);
     userData.value = response.data;
+    window.localStorage.setItem("userData", JSON.stringify(userData.value));
   });
 }
 
+//登录
+function login() {
+  surveyApi.login(loginData.value).then((response) => {
+    console.log(response.data);
+    userData.value = response.data;
+    window.localStorage.setItem("userData", JSON.stringify(userData.value));
+  });
+}
+
+function userDataCache() {
+  let cacheData = window.localStorage.getItem("userData");
+  console.log(cacheData);
+  userData.value = cacheData == undefined ? userData.value : JSON.parse(cacheData);
+  console.log(userData.value);
+}
+
+function userDataCacheClear() {
+  window.localStorage.clear();
+}
 
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 
 let characterList = ref([]);
-
-
 
 function initData() {
   for (let charId in character_table) {
@@ -149,7 +184,9 @@ function changeData(index, attrib, value) {
 
 //上传
 function upload() {
-  surveyApi.upload_character().then((response) => {});
+  surveyApi.upload_character(characterList.value, userData.value.userName).then((response) => {
+    console.log(response.data);
+  });
 }
 
 function dropDown(id) {
@@ -166,25 +203,26 @@ function getSprite(id, type, index) {
   if ("mod" == type) return "bg-" + id + " sprite_mod";
   if ("skill" == type) return "bg-" + id + " sprite_skill";
   if ("potential" == type) return "bg-" + id + " sprite_potential";
-  
+
   return "bg-" + id + " sprite_avatar";
 }
 
-function tableSytle(index){
-   if(1==index) return 'min-width:94px'
-   if(2==index) return 'min-width:48px'
+function tableSytle(index) {
+  if (1 == index) return "min-width:94px";
+  if (2 == index) return "min-width:48px";
 }
 
-let clientWidth  = ref(500)
+let clientWidth = ref(500);
 
-function getClientWidth(){
-  const width =  document.documentElement.clientWidth;
-  clientWidth.value = width
-  console.log(width)
+function getClientWidth() {
+  const width = document.documentElement.clientWidth;
+  clientWidth.value = width;
+  console.log(width);
 }
 
 onMounted(() => {
-  getClientWidth()
+  getClientWidth();
   initData();
+  userDataCache();
 });
 </script>

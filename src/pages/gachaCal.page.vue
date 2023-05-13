@@ -1100,7 +1100,7 @@ export default {
       const mm = date.getMinutes().toString().padStart(2, "0"); //分
       const s = date.getSeconds().toString().padStart(2, "0"); //秒
       this.startTime = `${y}/${m}/${d} ${h}:${mm}:${s}`;
-      // this.startTime = "2023/05/02 04:00:00";
+      // this.startTime = "2023/05/12 04:00:00";
       this.start_TimeStamp = Date.parse(this.startTime); //今日日期的时间戳
       this.end_TimeStamp = Date.parse(this.endTime); //结束日期的时间戳
       this.getPoolCountDown();
@@ -1157,7 +1157,9 @@ export default {
           this.remainingMonths++;
         }
       }
-
+      
+      if(this.remainingWeeks<0) this.remainingWeeks = 0;
+      
       this.remainingDays = timeInterval; //赋值剩余天数
       console.log("距离活动还有：", this.remainingMonths + "月，", this.remainingWeeks + "周，", this.remainingDays + "天");
     },
