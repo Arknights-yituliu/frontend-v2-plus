@@ -10,11 +10,7 @@
     </div>
     <div class="bar-wrapper">
       <a v-for="r in routes" class="bar" :class="{ activate: pageContext.urlPathname == r.path }" :href="r.path">
-        <svg
-          style="width: 24px; height: 24px"
-          :style="{ fill: pageContext.urlPathname == r.path ? '#ffd04b' : 'white' }"
-          viewbox="0 0 24 24"
-        >
+        <svg style="width: 24px; height: 24px" :style="{ fill: pageContext.urlPathname == r.path ? '#ffd04b' : 'white' }" viewbox="0 0 24 24">
           <path :d="r.icon" />
         </svg>
         {{ r.text }}
@@ -114,8 +110,7 @@ const route = computed(() => {
 
 <style scoped>
 .container {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   display: flex;
   flex-direction: row;
   height: 54px;
