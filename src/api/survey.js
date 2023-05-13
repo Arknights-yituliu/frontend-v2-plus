@@ -16,7 +16,7 @@ export default {
 
   getOperatorDataResult() {
     return request({
-      url: `maa}/operator/result`,
+      url: `maa/operator/result`,
       method: "get",
     });
   },
@@ -34,6 +34,17 @@ export default {
         "Content-Type": "application/json",
       },
       url: `${api_name}/register`,
+      method: "post",
+      data: userName,
+    });
+  },
+
+  login(userName) {
+    return request({
+      headers: {
+        "Content-Type": "application/json",
+      },
+      url: `${api_name}/login`,
       method: "post",
       data: userName,
     });
