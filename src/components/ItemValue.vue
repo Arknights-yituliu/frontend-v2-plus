@@ -184,7 +184,7 @@ export default {
     static_imgUrl(img) {
       img = typeof img !== "undefined" ? img : 1;
 
-      return "/img/materials/" + img + ".png";
+      return "/image/materials/" + img + ".png";
     },
     getItemName(item) {
       return item;

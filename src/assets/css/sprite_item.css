@@ -1,665 +1,665 @@
 .bg-0 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -10px;
+  background: url("/image/sprite/sprites3.webp") -10px -10px;
 }
 
 .bg-1 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -10px;
+  background: url("/image/sprite/sprites3.webp") -90px -10px;
 }
 
 .bg-2001 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -90px;
+  background: url("/image/sprite/sprites3.webp") -10px -90px;
 }
 
 .bg-2002 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -90px;
+  background: url("/image/sprite/sprites3.webp") -90px -90px;
 }
 
 .bg-2003 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -10px;
+  background: url("/image/sprite/sprites3.webp") -170px -10px;
 }
 
 .bg-2004 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -90px;
+  background: url("/image/sprite/sprites3.webp") -170px -90px;
 }
 
 .bg-3003 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -170px;
+  background: url("/image/sprite/sprites3.webp") -10px -170px;
 }
 
 .bg-3211 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -170px;
+  background: url("/image/sprite/sprites3.webp") -90px -170px;
 }
 
 .bg-3212 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -170px;
+  background: url("/image/sprite/sprites3.webp") -170px -170px;
 }
 
 .bg-3213 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -10px;
+  background: url("/image/sprite/sprites3.webp") -250px -10px;
 }
 
 .bg-3221 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -90px;
+  background: url("/image/sprite/sprites3.webp") -250px -90px;
 }
 
 .bg-3222 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -170px;
+  background: url("/image/sprite/sprites3.webp") -250px -170px;
 }
 
 .bg-3223 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -250px;
+  background: url("/image/sprite/sprites3.webp") -10px -250px;
 }
 
 .bg-3231 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -250px;
+  background: url("/image/sprite/sprites3.webp") -90px -250px;
 }
 
 .bg-3232 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -250px;
+  background: url("/image/sprite/sprites3.webp") -170px -250px;
 }
 
 .bg-3233 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -250px;
+  background: url("/image/sprite/sprites3.webp") -250px -250px;
 }
 
 .bg-3241 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -10px;
+  background: url("/image/sprite/sprites3.webp") -330px -10px;
 }
 
 .bg-3242 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -90px;
+  background: url("/image/sprite/sprites3.webp") -330px -90px;
 }
 
 .bg-3243 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -170px;
+  background: url("/image/sprite/sprites3.webp") -330px -170px;
 }
 
 .bg-3251 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -250px;
+  background: url("/image/sprite/sprites3.webp") -330px -250px;
 }
 
 .bg-3252 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -330px;
+  background: url("/image/sprite/sprites3.webp") -10px -330px;
 }
 
 .bg-3253 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -330px;
+  background: url("/image/sprite/sprites3.webp") -90px -330px;
 }
 
 .bg-3261 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -330px;
+  background: url("/image/sprite/sprites3.webp") -170px -330px;
 }
 
 .bg-3262 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -330px;
+  background: url("/image/sprite/sprites3.webp") -250px -330px;
 }
 
 .bg-3263 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -330px;
+  background: url("/image/sprite/sprites3.webp") -330px -330px;
 }
 
 .bg-3271 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -10px;
+  background: url("/image/sprite/sprites3.webp") -410px -10px;
 }
 
 .bg-3272 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -90px;
+  background: url("/image/sprite/sprites3.webp") -410px -90px;
 }
 
 .bg-3273 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -170px;
+  background: url("/image/sprite/sprites3.webp") -410px -170px;
 }
 
 .bg-3281 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -250px;
+  background: url("/image/sprite/sprites3.webp") -410px -250px;
 }
 
 .bg-3282 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -330px;
+  background: url("/image/sprite/sprites3.webp") -410px -330px;
 }
 
 .bg-3283 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -410px;
+  background: url("/image/sprite/sprites3.webp") -10px -410px;
 }
 
 .bg-3301 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -410px;
+  background: url("/image/sprite/sprites3.webp") -90px -410px;
 }
 
 .bg-3302 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -410px;
+  background: url("/image/sprite/sprites3.webp") -170px -410px;
 }
 
 .bg-3303 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -410px;
+  background: url("/image/sprite/sprites3.webp") -250px -410px;
 }
 
 .bg-3401 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -410px;
+  background: url("/image/sprite/sprites3.webp") -330px -410px;
 }
 
 .bg-4001 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -410px;
+  background: url("/image/sprite/sprites3.webp") -410px -410px;
 }
 
 .bg-4002 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -10px;
+  background: url("/image/sprite/sprites3.webp") -490px -10px;
 }
 
 .bg-4003 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -90px;
+  background: url("/image/sprite/sprites3.webp") -490px -90px;
 }
 
 .bg-4004 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -170px;
+  background: url("/image/sprite/sprites3.webp") -490px -170px;
 }
 
 .bg-4005 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -250px;
+  background: url("/image/sprite/sprites3.webp") -490px -250px;
 }
 
 .bg-4006 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -330px;
+  background: url("/image/sprite/sprites3.webp") -490px -330px;
 }
 
 .bg-5001 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -410px;
+  background: url("/image/sprite/sprites3.webp") -490px -410px;
 }
 
 .bg-7001 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -490px;
+  background: url("/image/sprite/sprites3.webp") -10px -490px;
 }
 
 .bg-7003 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -490px;
+  background: url("/image/sprite/sprites3.webp") -90px -490px;
 }
 
 .bg-7004 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -490px;
+  background: url("/image/sprite/sprites3.webp") -170px -490px;
 }
 
 .bg-30011 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -490px;
+  background: url("/image/sprite/sprites3.webp") -250px -490px;
 }
 
 .bg-30012 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -490px;
+  background: url("/image/sprite/sprites3.webp") -330px -490px;
 }
 
 .bg-30013 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -490px;
+  background: url("/image/sprite/sprites3.webp") -410px -490px;
 }
 
 .bg-30014 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -490px;
+  background: url("/image/sprite/sprites3.webp") -490px -490px;
 }
 
 .bg-30021 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -10px;
+  background: url("/image/sprite/sprites3.webp") -570px -10px;
 }
 
 .bg-30022 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -90px;
+  background: url("/image/sprite/sprites3.webp") -570px -90px;
 }
 
 .bg-30023 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -170px;
+  background: url("/image/sprite/sprites3.webp") -570px -170px;
 }
 
 .bg-30024 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -250px;
+  background: url("/image/sprite/sprites3.webp") -570px -250px;
 }
 
 .bg-30031 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -330px;
+  background: url("/image/sprite/sprites3.webp") -570px -330px;
 }
 
 .bg-30032 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -410px;
+  background: url("/image/sprite/sprites3.webp") -570px -410px;
 }
 
 .bg-30033 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -490px;
+  background: url("/image/sprite/sprites3.webp") -570px -490px;
 }
 
 .bg-30034 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -570px;
+  background: url("/image/sprite/sprites3.webp") -10px -570px;
 }
 
 .bg-30041 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -570px;
+  background: url("/image/sprite/sprites3.webp") -90px -570px;
 }
 
 .bg-30042 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -570px;
+  background: url("/image/sprite/sprites3.webp") -170px -570px;
 }
 
 .bg-30043 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -570px;
+  background: url("/image/sprite/sprites3.webp") -250px -570px;
 }
 
 .bg-30044 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -570px;
+  background: url("/image/sprite/sprites3.webp") -330px -570px;
 }
 
 .bg-30051 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -570px;
+  background: url("/image/sprite/sprites3.webp") -410px -570px;
 }
 
 .bg-30052 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -570px;
+  background: url("/image/sprite/sprites3.webp") -490px -570px;
 }
 
 .bg-30053 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -570px;
+  background: url("/image/sprite/sprites3.webp") -570px -570px;
 }
 
 .bg-30054 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -10px;
+  background: url("/image/sprite/sprites3.webp") -650px -10px;
 }
 
 .bg-30061 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -90px;
+  background: url("/image/sprite/sprites3.webp") -650px -90px;
 }
 
 .bg-30062 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -170px;
+  background: url("/image/sprite/sprites3.webp") -650px -170px;
 }
 
 .bg-30063 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -250px;
+  background: url("/image/sprite/sprites3.webp") -650px -250px;
 }
 
 .bg-30064 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -330px;
+  background: url("/image/sprite/sprites3.webp") -650px -330px;
 }
 
 .bg-30073 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -410px;
+  background: url("/image/sprite/sprites3.webp") -650px -410px;
 }
 
 .bg-30074 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -490px;
+  background: url("/image/sprite/sprites3.webp") -650px -490px;
 }
 
 .bg-30083 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -570px;
+  background: url("/image/sprite/sprites3.webp") -650px -570px;
 }
 
 .bg-30084 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -650px;
+  background: url("/image/sprite/sprites3.webp") -10px -650px;
 }
 
 .bg-30093 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -650px;
+  background: url("/image/sprite/sprites3.webp") -90px -650px;
 }
 
 .bg-30094 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -650px;
+  background: url("/image/sprite/sprites3.webp") -170px -650px;
 }
 
 .bg-30103 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -650px;
+  background: url("/image/sprite/sprites3.webp") -250px -650px;
 }
 
 .bg-30104 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -650px;
+  background: url("/image/sprite/sprites3.webp") -330px -650px;
 }
 
 .bg-30115 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -650px;
+  background: url("/image/sprite/sprites3.webp") -410px -650px;
 }
 
 .bg-30125 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -650px;
+  background: url("/image/sprite/sprites3.webp") -490px -650px;
 }
 
 .bg-30135 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -650px;
+  background: url("/image/sprite/sprites3.webp") -570px -650px;
 }
 
 .bg-30145 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -650px;
+  background: url("/image/sprite/sprites3.webp") -650px -650px;
 }
 
 .bg-30155 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -10px;
+  background: url("/image/sprite/sprites3.webp") -730px -10px;
 }
 
 .bg-31013 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -90px;
+  background: url("/image/sprite/sprites3.webp") -730px -90px;
 }
 
 .bg-31014 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -170px;
+  background: url("/image/sprite/sprites3.webp") -730px -170px;
 }
 
 .bg-31023 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -250px;
+  background: url("/image/sprite/sprites3.webp") -730px -250px;
 }
 
 .bg-31024 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -330px;
+  background: url("/image/sprite/sprites3.webp") -730px -330px;
 }
 
 .bg-31033 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -410px;
+  background: url("/image/sprite/sprites3.webp") -730px -410px;
 }
 
 .bg-31034 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -490px;
+  background: url("/image/sprite/sprites3.webp") -730px -490px;
 }
 
 .bg-31043 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -570px;
+  background: url("/image/sprite/sprites3.webp") -730px -570px;
 }
 
 .bg-31044 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -650px;
+  background: url("/image/sprite/sprites3.webp") -730px -650px;
 }
 
 .bg-31053 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -730px;
+  background: url("/image/sprite/sprites3.webp") -10px -730px;
 }
 
 .bg-31054 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -90px -730px;
+  background: url("/image/sprite/sprites3.webp") -90px -730px;
 }
 
 .bg-31063 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -170px -730px;
+  background: url("/image/sprite/sprites3.webp") -170px -730px;
 }
 
 .bg-31064 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -250px -730px;
+  background: url("/image/sprite/sprites3.webp") -250px -730px;
 }
 
 .bg-32001 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -330px -730px;
+  background: url("/image/sprite/sprites3.webp") -330px -730px;
 }
 
 .bg-act24side_melding_5 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -410px -730px;
+  background: url("/image/sprite/sprites3.webp") -410px -730px;
 }
 
 .bg-AP_GAMEPLAY {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -490px -730px;
+  background: url("/image/sprite/sprites3.webp") -490px -730px;
 }
 
 .bg-ap_supply_lt_010 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -570px -730px;
+  background: url("/image/sprite/sprites3.webp") -570px -730px;
 }
 
 .bg-base_ap {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -650px -730px;
+  background: url("/image/sprite/sprites3.webp") -650px -730px;
 }
 
 .bg-charm_coin_1 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -730px -730px;
+  background: url("/image/sprite/sprites3.webp") -730px -730px;
 }
 
 .bg-charm_coin_2 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -10px;
+  background: url("/image/sprite/sprites3.webp") -810px -10px;
 }
 
 .bg-charm_coin_3 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -90px;
+  background: url("/image/sprite/sprites3.webp") -810px -90px;
 }
 
 .bg-charm_coin_4 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -170px;
+  background: url("/image/sprite/sprites3.webp") -810px -170px;
 }
 
 .bg-EPGS_COIN {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -250px;
+  background: url("/image/sprite/sprites3.webp") -810px -250px;
 }
 
 .bg-mod_unlock_token {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -330px;
+  background: url("/image/sprite/sprites3.webp") -810px -330px;
 }
 
 .bg-mod_update_token_1 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -410px;
+  background: url("/image/sprite/sprites3.webp") -810px -410px;
 }
 
 .bg-mod_update_token_2 {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -490px;
+  background: url("/image/sprite/sprites3.webp") -810px -490px;
 }
 
 .bg-REP_COIN {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -570px;
+  background: url("/image/sprite/sprites3.webp") -810px -570px;
 }
 
 .bg-RETRO_COIN {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -650px;
+  background: url("/image/sprite/sprites3.webp") -810px -650px;
 }
 
 .bg-SOCIAL_PT {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -810px -730px;
+  background: url("/image/sprite/sprites3.webp") -810px -730px;
 }
 
 .bg-STORY_REVIEW_COIN {
   width: 60px;
   height: 60px;
-  background: url("/img/sprite/sprites3.webp") -10px -810px;
+  background: url("/image/sprite/sprites3.webp") -10px -810px;
 }

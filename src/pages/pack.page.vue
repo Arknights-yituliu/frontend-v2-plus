@@ -180,15 +180,7 @@
             <tr
               v-for="(pack_simple, index) in packsPPRData"
               :key="index"
-              :style="
-                getDisplayStateDrawOnly(
-                  pack_simple.packState,
-                  pack_simple.packType,
-                  pack_simple.packPrice,
-                  packFilter,
-                  pack_simple.packPPRDraw
-                )
-              "
+              :style="getDisplayStateDrawOnly(pack_simple.packState, pack_simple.packType, pack_simple.packPrice, packFilter, pack_simple.packPPRDraw)"
               :class="getBackColor(index)"
             >
               <td>{{ pack_simple.packName }}</td>
@@ -230,9 +222,7 @@
                 <div class="pack_chart">
                   <div class="pack_chart_unit" v-show="pack2.packPPRDraw >= 1.57">
                     <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.packPPRDraw * 100, 0.75)">
-                      {{ getFixed(pack2.packPPRDraw * 100, 0) }}%
-                    </div>
+                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.packPPRDraw * 100, 0.75)">{{ getFixed(pack2.packPPRDraw * 100, 0) }}%</div>
                   </div>
                   <div class="pack_chart_unit">
                     <div class="pack_chart_unit_text">大月卡</div>
@@ -240,9 +230,7 @@
                   </div>
                   <div class="pack_chart_unit" v-show="pack2.packPPRDraw < 1.57 && pack2.packPPRDraw >= 1">
                     <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.packPPRDraw * 100, 0.75)">
-                      {{ getFixed(pack2.packPPRDraw * 100, 0) }}%
-                    </div>
+                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.packPPRDraw * 100, 0.75)">{{ getFixed(pack2.packPPRDraw * 100, 0) }}%</div>
                   </div>
                   <div class="pack_chart_unit">
                     <div class="pack_chart_unit_text">648源石</div>
@@ -250,9 +238,7 @@
                   </div>
                   <div class="pack_chart_unit" v-show="pack2.packPPRDraw < 1">
                     <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.packPPRDraw * 100, 0.75)">
-                      {{ getFixed(pack2.packPPRDraw * 100, 0) }}%
-                    </div>
+                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.packPPRDraw * 100, 0.75)">{{ getFixed(pack2.packPPRDraw * 100, 0) }}%</div>
                   </div>
                 </div>
                 <!-- 说明 -->
@@ -566,11 +552,7 @@ export default {
       document.getElementById("pack_sort_by_oriPpr").className = "op_tag_0";
       for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {
         for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {
-          console.log(
-            this.packsPPRDataSort[j].packName,
-            this.packsPPRDataSort[j].packRmbPerDraw,
-            this.packsPPRDataSort[j].packRmbPerDraw != "null"
-          );
+          console.log(this.packsPPRDataSort[j].packName, this.packsPPRDataSort[j].packRmbPerDraw, this.packsPPRDataSort[j].packRmbPerDraw != "null");
           // console.log(this.packsPPRDataSort[j+1].packName,this.packsPPRDataSort[j+1].packRmbPerDraw)
           if (this.packsPPRDataSort[j].packRmbPerDraw > this.packsPPRDataSort[j + 1].packRmbPerDraw) {
             const temp = this.packsPPRDataSort[j];
@@ -641,15 +623,15 @@ export default {
       return parseFloat(num).toFixed(acc);
     },
     getPackImgUrl(img) {
-      return "/img/packs/" + img + ".png";
+      return "/image/packs/" + img + ".png";
     },
 
     getPackPic(img, type) {
       // if(true ===this.showFlag) return '';
       // console.log(true ===this.showFlag);
       if (type === "limited") {
-        return "background:url(/img/packs/limited/" + img + ".png) 0% 0% / cover no-repeat,#444444;";
-      } else return "background:url(/img/packs/small/" + img + ".jpg) 0% 0% / cover no-repeat,#444444;";
+        return "background:url(/image/packs/limited/" + img + ".png) 0% 0% / cover no-repeat,#444444;";
+      } else return "background:url(/image/packs/small/" + img + ".jpg) 0% 0% / cover no-repeat,#444444;";
     },
     getContentId(id, type) {
       return type + "_" + id;
@@ -883,7 +865,6 @@ export const documentProps = {
 .pack-table {
   box-shadow: var(--el-box-shadow-light);
   width: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 </style>
