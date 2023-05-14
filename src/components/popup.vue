@@ -11,11 +11,7 @@
   height: 100vh;
 }
 
-
-
 .popup_card {
-
-    width: 80%;
-
+  width: 80%;
 }
 </style>

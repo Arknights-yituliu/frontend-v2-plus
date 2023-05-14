@@ -7,16 +7,15 @@
 
 <script setup>
 import { ref } from "vue";
-const emit =defineEmits(['update:modelValue'])
-const props = defineProps(['modelValue']);
-
+const emit = defineEmits(["update:modelValue"]);
+const props = defineProps(["modelValue"]);
 
 let switch_class = ref("switch");
 let switch_left_class = ref("switch_left");
 let switch_right_class = ref("switch_right switch_color");
 
 function handleClick() {
-  console.log(props.modelValue)
+  console.log(props.modelValue);
   if (!props.modelValue) {
     switch_class.value = "switch";
     switch_left_class.value = "switch_left ";
@@ -26,9 +25,8 @@ function handleClick() {
     switch_left_class.value = "switch_left switch_color";
     switch_right_class.value = "switch_right switch_back";
   }
-  emit('update:modelValue', !props.modelValue)
+  emit("update:modelValue", !props.modelValue);
 }
-
 </script>
 
 <style scoped>

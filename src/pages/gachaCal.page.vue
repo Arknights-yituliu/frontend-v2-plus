@@ -1124,14 +1124,14 @@ export default {
       this.remainingWeeks = 0; //剩余周数
       this.remainingCheckinTimes = 0; //剩余签到次数
       this.remainingMonths = 1; //剩余月数
-     
+
       this.end_TimeStamp = Date.parse(this.endTime); //结束日期的时间戳
       var timeInterval = parseInt((this.end_TimeStamp - this.start_TimeStamp) / 86400000); //计算剩余天数
 
       let month = new Date(this.startTime).getMonth();
 
       var endDate = new Date(Date.parse(this.endTime));
-      if (endDate.getDay() === 1 )  this.remainingWeeks--;
+      if (endDate.getDay() === 1) this.remainingWeeks--;
       console.log(endDate.getDay());
 
       // for (let i = 1; i < timeInterval + 1; i++) {
@@ -1157,9 +1157,9 @@ export default {
           this.remainingMonths++;
         }
       }
-      
-      if(this.remainingWeeks<0) this.remainingWeeks = 0;
-      
+
+      if (this.remainingWeeks < 0) this.remainingWeeks = 0;
+
       this.remainingDays = timeInterval; //赋值剩余天数
       console.log("距离活动还有：", this.remainingMonths + "月，", this.remainingWeeks + "周，", this.remainingDays + "天");
     },
@@ -1242,7 +1242,6 @@ export default {
 
       this.getInterval();
       this.getEveryreWard();
-      
 
       this.compute();
     },
@@ -1427,7 +1426,7 @@ export default {
           //循环list<list>， list为[奖励名称,奖励内容]
           if ("honeyCake" === list[1].module) {
             //这里是计算其他奖励
-            console.log(list[0])
+            console.log(list[0]);
             this.calResults.originium_other += list[1].originium; //xxxxx_other格式的属性  其他奖励的的各项奖励数量，下同
             this.calResults.orundum_other += list[1].orundum;
             this.calResults.permit_other += list[1].permit;
@@ -1461,9 +1460,9 @@ export default {
 
       //自动扣除部分 ↓
       //减去红包墙/矿区已经赠送过的合成玉
-      console.log(this.calResults.orundum_other)
+      console.log(this.calResults.orundum_other);
       if (this.poolCountDownFlag_orundum) this.calResults.orundum_other -= parseInt(this.poolCountDown) * 600;
-      console.log(this.calResults.orundum_other)
+      console.log(this.calResults.orundum_other);
 
       //减去限定池已经赠送过的单抽
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
@@ -1479,11 +1478,11 @@ export default {
         parseInt(this.calResults.orundum_other) / 600 +
         parseInt(this.calResults.permit_other) +
         parseInt(this.calResults.permit10_other) * 10;
-        
-      console.log(this.calResults.originium_other)
-      console.log(this.calResults.orundum_other)
-      console.log(this.calResults.permit_other)
-      console.log(this.calResults.permit10_other)
+
+      console.log(this.calResults.originium_other);
+      console.log(this.calResults.orundum_other);
+      console.log(this.calResults.permit_other);
+      console.log(this.calResults.permit10_other);
 
       // 所有模块相加-源石
       this.originium +=

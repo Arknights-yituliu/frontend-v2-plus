@@ -1,211 +1,203 @@
 .survey_page {
-    max-width: 1080px;
-    background: white;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    overflow: auto;
-    margin: auto;
-    height: 100vh;
-    border: 4px rgb(132, 120, 226) solid;
+  max-width: 1080px;
+  background: white;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  overflow: auto;
+  margin: auto;
+  height: 100vh;
+  border: 4px rgb(132, 120, 226) solid;
 }
 
 .survey_header {
-    position: relative;
-    width: 99%;
-    margin: auto;
-    margin-top: 2px;
-    height: 40px;
-    /* border: 1px red solid; */
-    box-shadow: 0px 2px 2px -2px #5E5E5E;
+  position: relative;
+  width: 99%;
+  margin: auto;
+  margin-top: 2px;
+  height: 40px;
+  /* border: 1px red solid; */
+  box-shadow: 0px 2px 2px -2px #5e5e5e;
 }
 
 .login_bar {
-   
-    width: 310px;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    display: flex;
-    /* border: 1px red solid; */
+  width: 310px;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  display: flex;
+  /* border: 1px red solid; */
 }
-
 
 .btn_login {
-    margin: 4px;
-    width: 70px;
-    height: 20px;
-    line-height: 20px;
-    text-align: center;
-    background: rgb(79, 143, 255);
-    color: white;
-    font-weight: 600;
-    box-shadow: 0 0 1px 1px grey;
+  margin: 4px;
+  width: 70px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  background: rgb(79, 143, 255);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 0 1px 1px grey;
 }
-
 
 .input_login {
-    width: 130px;
-    border: 0;
-    outline: none;
-    border-bottom: 1px black solid;
-    margin: 6px;
+  width: 130px;
+  border: 0;
+  outline: none;
+  border-bottom: 1px black solid;
+  margin: 6px;
 }
 
-.user_bar{
-    margin: 2px;
-    position: absolute;
-    right: 20px;
-    display: flex;
-    font-weight: 600;
+.user_bar {
+  margin: 2px;
+  position: absolute;
+  right: 20px;
+  display: flex;
+  font-weight: 600;
 }
-
 
 .user_name {
-    margin: 4px;
-    
+  margin: 4px;
 }
 
 .user_id {
-    font-size: 12px;
+  font-size: 12px;
 }
 
-
 .char_card_box {
-    margin: auto;
-    margin-top: 30px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+  margin: auto;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .char_card {
-    width: 460px;
-    display: flex;
+  width: 460px;
+  display: flex;
 }
 
 .card_option {
-    height: 124px;
-    border: 1px rgb(0, 0, 0) solid;
+  height: 124px;
+  border: 1px rgb(0, 0, 0) solid;
 }
 
 .card_option_switch {
-    margin: auto;
-    margin-top: 20px;
+  margin: auto;
+  margin-top: 20px;
 }
 
 .card_title {
-    font-weight: 600;
-    font-size: 16px;
-    border: 1px grey solid;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
+  font-weight: 600;
+  font-size: 16px;
+  border: 1px grey solid;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
 }
 
 .checkItem {
-    /* margin: 6px; */
-    margin-top: 6px;
-    margin-left: 8px;
-    width: 28px;
-    height: 28px;
-    line-height: 24px;
-    padding: 2px;
-    /* border: 1px red solid; */
-    /* background: rgb(203, 203, 203); */
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 3px;
-    box-shadow: 0px 1px 1px 1px rgb(188, 187, 187);
-    cursor: pointer;
+  /* margin: 6px; */
+  margin-top: 6px;
+  margin-left: 8px;
+  width: 28px;
+  height: 28px;
+  line-height: 24px;
+  padding: 2px;
+  /* border: 1px red solid; */
+  /* background: rgb(203, 203, 203); */
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 3px;
+  box-shadow: 0px 1px 1px 1px rgb(188, 187, 187);
+  cursor: pointer;
 }
 
 .checkItem_selected {
-    background: rgb(0, 170, 255);
-    color: white;
+  background: rgb(0, 170, 255);
+  color: white;
 }
 
 .potential_box {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 126px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 126px;
 }
-
 
 .dropDown {
-    /* display: flex; */
-    margin: auto;
-    /* margin-top: 8px; */
-    width: 38px;
-    height: 20px;
-    line-height: 24px;
-    padding: 2px;
-    /* border: 1px red solid; */
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 3px;
-    /* box-shadow: 0px 1px 1px 1px rgb(188, 187, 187); */
-    cursor: pointer;
+  /* display: flex; */
+  margin: auto;
+  /* margin-top: 8px; */
+  width: 38px;
+  height: 20px;
+  line-height: 24px;
+  padding: 2px;
+  /* border: 1px red solid; */
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 3px;
+  /* box-shadow: 0px 1px 1px 1px rgb(188, 187, 187); */
+  cursor: pointer;
 }
 
-
 .dropDown_menu {
-    /* border: 1px red solid; */
-    position: relative;
+  /* border: 1px red solid; */
+  position: relative;
 }
 
 .dropDown_content {
-    display: none;
-    margin-top: -30px;
-    position: absolute;
-    z-index: 20;
-    top: 35px;
-    left: -30px;
-    width: 140px;
-    background: rgb(255, 255, 255);
-    box-shadow: 0 0 1px 1px rgb(158, 158, 158);
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: none;
+  margin-top: -30px;
+  position: absolute;
+  z-index: 20;
+  top: 35px;
+  left: -30px;
+  width: 140px;
+  background: rgb(255, 255, 255);
+  box-shadow: 0 0 1px 1px rgb(158, 158, 158);
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .dropDown_content_item {
-    margin: 8px;
-    width: 46px;
-    height: 24px;
-    line-height: 24px;
-    padding: 2px;
-    /* border: 1px red solid; */
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 3px;
-    box-shadow: 0px 1px 1px 1px rgb(188, 187, 187);
-    cursor: pointer;
+  margin: 8px;
+  width: 46px;
+  height: 24px;
+  line-height: 24px;
+  padding: 2px;
+  /* border: 1px red solid; */
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 3px;
+  box-shadow: 0px 1px 1px 1px rgb(188, 187, 187);
+  cursor: pointer;
 }
 
 .sprite_skill {
-    transform: scale(0.13);
-    margin: -104px;
-    /* margin-top:0px ; */
+  transform: scale(0.13);
+  margin: -104px;
+  /* margin-top:0px ; */
 }
 
 .sprite_mod {
-    transform: scale(0.1);
-    margin: -106px;
-    /* margin-top:0px ; */
+  transform: scale(0.1);
+  margin: -106px;
+  /* margin-top:0px ; */
 }
 
 .sprite_avatar {
-    transform: scale(0.5);
-    margin: -44px;
-    border-radius: 50%;
-    border: 1px solid gray;
-    /* border: 1px red solid; */
+  transform: scale(0.5);
+  margin: -44px;
+  border-radius: 50%;
+  border: 1px solid gray;
+  /* border: 1px red solid; */
 }
 
 .sprite_potential {
-    transform: scale(0.13);
-    margin: -100px;
+  transform: scale(0.13);
+  margin: -100px;
 }
