@@ -25,11 +25,11 @@
       </div>
     </div>
 
-    <div class="char_forms_own">
+    <!-- <div class="char_forms_own">
       <div class="from_card_own">
         <div class="char_forms_own_title">已拥有</div>
         <div v-show="char.own" class="card_option_own" v-for="(char, index) in characterList" :key="index">
-          <div :class="charSelected(char.own)">
+          <div class="sprite_avatar_own_wrap">
             <div @click="char.own = !char.own" :class="getSprite(char.charId, 'own')"></div>
           </div>
         </div>
@@ -37,12 +37,12 @@
       <div class="from_card_own">
         <div class="char_forms_own_title">未拥有</div>
         <div v-show="!char.own" class="card_option_own" v-for="(char, index) in characterList" :key="index">
-          <div :class="charSelected(char.own)">
+          <div class="sprite_avatar_own_wrap">
             <div @click="char.own = !char.own" :class="getSprite(char.charId, 'own')"></div>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="setup_wrap">
       <div class="setup_bar">
@@ -56,7 +56,7 @@
         <div class="setup_title">筛选</div>
         <div class="btn_survey" @click="charIsOwnFlag = !charIsOwnFlag">是否拥有</div>
         <!-- <div class="btn_survey" @click="userDataCacheClear()">实装时间</div> -->
-        <div class="btn_survey" @click="upload()">是否精二</div>
+        <div class="btn_survey" >是否精二</div>
         <div class="btn_survey">是否有模组</div>
       </div>
     </div>
@@ -185,10 +185,12 @@ function userDataCacheClear() {
   userData.value = { userName: "", status: -1 };
 }
 
+
 function getSurveyCharData(userName) {
   surveyApi.getSurveyCharData(userName).then((response) => {
     let list = response.data;
     for (var i = 0; i < characterList.value.length; i++) {
+      // characterList.value[i].own =false;
       for (var j = 0; j < list.length; j++) {
         if (list[j].charId == characterList.value[i].charId) {
           characterList.value[i] = list[j];
@@ -203,24 +205,7 @@ function getSurveyCharData(userName) {
 
 let charIsOwnFlag = ref(false);
 
-function charSelected(own) {
-  if (own) return "sprite_avatar_own_wrap own_wrap_back";
-  return "sprite_avatar_own_wrap";
-}
 
-function sortCharList() {
-  for (var i = 0; i < characterList.value.length; i++) {
-    for (var j = i + 1; j < characterList.value.length; j++) {
-      if (characterList.value[i][attrib] > characterList.value[j][attrib]) {
-        let t = characterList.value[i];
-        characterList.value[i] = characterList.value[j];
-        characterList.value[j] = t;
-      }
-    }
-  }
-}
-
-let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 
 let characterList = ref([]);
 
@@ -245,6 +230,22 @@ function initData() {
   }
 }
 
+function sortCharList() {
+  for (var i = 0; i < characterList.value.length; i++) {
+    for (var j = i + 1; j < characterList.value.length; j++) {
+      if (characterList.value[i][attrib] > characterList.value[j][attrib]) {
+        let t = characterList.value[i];
+        characterList.value[i] = characterList.value[j];
+        characterList.value[j] = t;
+      }
+    }
+  }
+}
+
+let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
+
+
+
 function selected(value, checkValue) {
   if (value == checkValue) return "card_option_check check_selected";
   return "card_option_check";
@@ -261,26 +262,11 @@ function changeData(index, attrib, value) {
 
 //上传
 function upload() {
-  let uploadList = [];
 
-  for (var i = 0; i < characterList.value.length; i++) {
-    if (characterList.value[i].own) {
-      if (characterList.value[i].phase < 2) {
-        characterList.value[i] = {
-          modX: 0,
-          modY: 0,
-          skill1: 0,
-          skill2: 0,
-          skill3: 0,
-        };
-      }
-      uploadList.push(characterList.value[i]);
-    }
-  }
-
-  surveyApi.upload_character(uploadList, userData.value.userName).then((response) => {
+  surveyApi.upload_character(characterList.value, userData.value.userName).then((response) => {
     // console.log(response.data);
-    OPmessage("更新了 " + response.data.rowsAffected + " 条");
+    OPmessage("新增了 " + response.data.insertRows + " 条");
+    OPmessage("更新了 " + response.data.updateRows + " 条");
   });
 }
 
