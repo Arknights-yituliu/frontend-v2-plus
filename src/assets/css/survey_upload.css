@@ -14,7 +14,7 @@
     max-width: 920px;
     margin: auto;
     margin-top: 2px;
-    height: 34px;
+    height: 30px;
     /* border: 1px red solid; */
     /* box-shadow: 0px 2px 4px -2px #5E5E5E; */
 }
@@ -65,6 +65,7 @@
 
 .user_name {
     margin: 6px;
+    font-size: 18px;
 }
 
 .user_id {

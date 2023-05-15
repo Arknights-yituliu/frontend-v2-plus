@@ -23,7 +23,7 @@
     </div>
 
     <div class="char_form">
-      <div class="char_card" v-for="(operData, index) in charStatisticsResult" v-show="operData.rarity > 4">
+      <div class="char_card" v-for="(operData, index) in charStatisticsResult" v-show="operData.rarity =6">
         <div class="char_card_index">No.{{ index + 1 }}</div>
         <div class="avatar_back">
           <div :class="getSprite(operData.charId)"></div>

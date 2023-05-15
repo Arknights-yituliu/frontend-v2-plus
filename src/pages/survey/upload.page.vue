@@ -56,7 +56,7 @@
         <div class="setup_title">筛选</div>
         <div class="btn_survey" @click="charIsOwnFlag = !charIsOwnFlag">是否拥有</div>
         <!-- <div class="btn_survey" @click="userDataCacheClear()">实装时间</div> -->
-        <div class="btn_survey" >是否精二</div>
+        <div class="btn_survey">是否精二</div>
         <div class="btn_survey">是否有模组</div>
       </div>
     </div>
@@ -89,18 +89,16 @@
           <div class="ownAndPotential_warp">
             <op-switch v-model="char.own" class="card_option_switch"></op-switch>
             <div class="dropDown" @click="dropDown('potential' + index)">
-            <div :class="getSprite('potential' + char.potential, 'potential')"></div>
-          
-          </div>
-          <div class="dropDown_menu">
-            <div class="dropDown_content" :id="'potential' + index" @click="dropUp('potential' + index)">
-              <div v-for="rank in ranks.slice(1, 7)" @click="char.potential = rank" class="dropDown_content_item">潜能{{ rank }}</div>
+              <div :class="getSprite('potential' + char.potential, 'potential')"></div>
+            </div>
+            <div class="dropDown_menu">
+              <div class="dropDown_content" :id="'potential' + index" @click="dropUp('potential' + index)">
+                <div v-for="rank in ranks.slice(1, 7)" @click="char.potential = rank" class="dropDown_content_item">潜能{{ rank }}</div>
+              </div>
             </div>
           </div>
-          </div>
-          
         </div>
-     
+
         <div class="card_option" :style="tableSytle('long')">
           <div v-for="rank in ranks.slice(0, 3)" @click="changeData(index, 'phase', rank)" :class="selected(char.phase, rank)">
             <div :class="getSprite('phase' + rank, 'skill')"></div>
@@ -185,7 +183,6 @@ function userDataCacheClear() {
   userData.value = { userName: "", status: -1 };
 }
 
-
 function getSurveyCharData(userName) {
   surveyApi.getSurveyCharData(userName).then((response) => {
     let list = response.data;
@@ -205,14 +202,12 @@ function getSurveyCharData(userName) {
 
 let charIsOwnFlag = ref(false);
 
-
-
 let characterList = ref([]);
 
 function initData() {
   for (let charId in character_table) {
     var baseInfo = character_table[charId];
-    if (baseInfo.rarity < 5) continue;
+    if (baseInfo.rarity < 6) continue;
     let character = {
       charId: charId,
       own: true,
@@ -244,8 +239,6 @@ function sortCharList() {
 
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 
-
-
 function selected(value, checkValue) {
   if (value == checkValue) return "card_option_check check_selected";
   return "card_option_check";
@@ -262,7 +255,6 @@ function changeData(index, attrib, value) {
 
 //上传
 function upload() {
-
   surveyApi.upload_character(characterList.value, userData.value.userName).then((response) => {
     // console.log(response.data);
     OPmessage("新增了 " + response.data.insertRows + " 条");
