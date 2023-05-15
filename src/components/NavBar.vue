@@ -56,7 +56,7 @@ function menu_collapse(flag) {
   if (menu_flag.value) {
     document.getElementById("menu").className = "nav_collapse ";
     setTimeout(function () {
-      document.getElementById("menu").className = "nav_collapse menu-open";
+      document.getElementById("menu").className = "nav_collapse nav_open";
     }, 30);
   } else {
     document.getElementById("menu").className = "nav_collapse";
@@ -217,7 +217,7 @@ const route = computed(() => {
   transform: translateX(-360px);
 }
 
-.menu-open {
+.nav_open {
   background-color: rgb(52, 68, 104);
   width: 360px;
   height: 100vh;

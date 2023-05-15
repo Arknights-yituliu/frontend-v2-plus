@@ -6,20 +6,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 const emit =defineEmits(['update:modelValue'])
 const props = defineProps(['modelValue']);
 
+console.log(props.modelValue)
+let switch_class = ref(props.modelValue?"switch":"switch switch_back");
+let switch_left_class = ref(props.modelValue?"switch_left":"switch_left switch_color");
+let switch_right_class = ref(props.modelValue?"switch_right switch_color":"switch_right switch_back");
 
-let switch_class = ref("switch");
-let switch_left_class = ref("switch_left");
-let switch_right_class = ref("switch_right switch_color");
 
 function handleClick() {
   console.log(props.modelValue)
   if (!props.modelValue) {
     switch_class.value = "switch";
-    switch_left_class.value = "switch_left ";
+    switch_left_class.value = "switch_left";
     switch_right_class.value = "switch_right switch_color";
   } else {
     switch_class.value = "switch switch_back";
@@ -29,12 +30,25 @@ function handleClick() {
   emit('update:modelValue', !props.modelValue)
 }
 
+watch(() => props.modelValue, (newVal, oldVal) => {
+  if (newVal) {
+    switch_class.value = "switch";
+    switch_left_class.value = "switch_left";
+    switch_right_class.value = "switch_right switch_color";
+  } else {
+    switch_class.value = "switch switch_back";
+    switch_left_class.value = "switch_left switch_color";
+    switch_right_class.value = "switch_right switch_back";
+  }
+})
+
+
 </script>
 
 <style scoped>
 .switch {
-  height: 12px;
-  width: 26px;
+  height: 16px;
+  width: 38px;
   border: 1px rgb(201, 201, 201) solid;
   border-radius: 25px;
   display: flex;
@@ -46,17 +60,17 @@ function handleClick() {
 }
 
 .switch_left {
-  height: 10px;
-  width: 10px;
-  margin: 1px;
+  height: 16px;
+  width: 16px;
+  /* margin: 1px; */
   border-radius: 25px;
   /* background: white; */
 }
 
 .switch_right {
-  height: 10px;
-  width: 10px;
-  margin: 1px;
+  height: 16px;
+  width: 16px;
+  /* margin: 1px; */
   margin-left: 6px;
   border-radius: 25px;
 }

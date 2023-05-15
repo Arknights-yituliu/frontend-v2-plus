@@ -28,33 +28,52 @@ export default {
     });
   },
 
-  register(userName) {
+  register(userData) {
     return request({
       headers: {
         "Content-Type": "application/json",
       },
       url: `${api_name}/register`,
       method: "post",
-      data: userName,
+      data: userData,
     });
   },
 
-  login(userName) {
+  login(userData) {
     return request({
       headers: {
         "Content-Type": "application/json",
       },
       url: `${api_name}/login`,
       method: "post",
-      data: userName,
+      data: userData,
     });
   },
 
   upload_character(characterList, userName) {
+    userName =  userName.replace('#','%23')
     return request({
       url: `${api_name}/character?userName=${userName}`,
       method: "post",
       data: characterList,
     });
   },
+
+
+  getSurveyCharData(userName){
+    userName =  userName.replace('#','%23')
+    return request({
+      url: `${api_name}/find/character?userName=${userName}`,
+      method: "get",
+    });
+  },
+
+  getCharStatisticsResult(){
+    return request({
+      url: `${api_name}/result`,
+      method: "get",
+    });
+  }
+
+
 };
