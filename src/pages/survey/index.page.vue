@@ -15,10 +15,10 @@
 
     <div class="setup_wrap">
       <div class="setup_bar">
-        <div class="setup_title">设置</div>
+        <div class="setup_title">榜单类型</div>
         <div class="btn_survey" @click="switchSurvey('精二率')">精二率统计</div>
         <div class="btn_survey" @click="switchSurvey('持有率')">持有率统计</div>
-        <a href="/survey"> <div class="btn_survey">查看榜单</div></a>
+        <a href="/survey/upload"> <div class="btn_survey">上传数据</div></a>
       </div>
     </div>
 

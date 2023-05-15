@@ -20,8 +20,8 @@
       </div>
 
       <div class="user_wrap" v-show="userData.status == 1">
-        <div class="user_name">昵称：{{ userData.userName }}</div>
-        <div class="user_id">UID:{{ userData.uid }}</div>
+        <div class="user_name">用户：{{ userData.userName }}</div>
+        <!-- <div class="user_id">UID:{{ userData.uid }}</div> -->
       </div>
     </div>
 
@@ -30,16 +30,23 @@
         <div class="setup_title">设置</div>
         <div class="btn_survey" @click="userDataCacheClear()">退出登录</div>
         <div class="btn_survey" @click="upload()">上传数据</div>
-        <div class="btn_survey">查看榜单</div>
+        <a href="/survey"> <div class="btn_survey">查看榜单</div></a>
         <!-- <div class="btn_survey">第三方导入</div> -->
       </div>
-      <!-- <div class="setup_bar">
+      <div class="setup_bar">
         <div class="setup_title">筛选</div>
-        <div class="btn_survey" @click="userDataCacheClear()">实装时间</div>
+        <div class="btn_survey" @click="charIsOwnFlag=!charIsOwnFlag">是否拥有</div>
+        <!-- <div class="btn_survey" @click="userDataCacheClear()">实装时间</div> -->
         <div class="btn_survey" @click="upload()">是否精二</div>
         <div class="btn_survey">是否有模组</div>
-        <div class="btn_survey" @click="createMessage()">XXXX</div>
-      </div> -->
+      </div>
+    </div>
+
+    <div class="char_forms_own" v-if="charIsOwnFlag">
+      <div class="card_option_own" v-for="(char, index) in characterList" :key="index" :style="tableSytle('short')">
+        <div :class="getSprite(char.charId, 'own')"></div>
+        <op-switch v-model="char.own" class="card_option_switch_own"></op-switch>
+      </div>
     </div>
 
     <div class="char_forms">
@@ -135,7 +142,7 @@ let userData = ref({ userName: "山桜", status: -1, uid: 10000 }); //用户信�
 //注册
 function register() {
   surveyApi.register(loginData.value).then((response) => {
-    console.log(response.data);
+   
     userData.value = response.data;
     window.localStorage.setItem("userData", JSON.stringify(userData.value));
   });
@@ -144,23 +151,23 @@ function register() {
 //登录
 function login() {
   surveyApi.login(loginData.value).then((response) => {
-    console.log(response.data);
+   
     userData.value = response.data;
     window.localStorage.setItem("userData", JSON.stringify(userData.value));
     if (userData.value.status == 1) {
-      getSurveyData(userData.value.userName);
+      getSurveyCharData(userData.value.userName);
     }
   });
 }
 
 function userDataCache() {
   let cacheData = window.localStorage.getItem("userData");
-  console.log(cacheData);
+ 
   userData.value = cacheData == undefined ? userData.value : JSON.parse(cacheData);
-  console.log(userData.value);
+ 
   if (userData.value.status == 1) {
-    console.log(userData.value);
-    getSurveyData(userData.value.userName);
+  
+    getSurveyCharData(userData.value.userName);
   }
 }
 
@@ -169,8 +176,8 @@ function userDataCacheClear() {
   userData.value = { userName: "", status: -1 };
 }
 
-function getSurveyData(userName) {
-  surveyApi.getSurveyData(userName).then((response) => {
+function getSurveyCharData(userName) {
+  surveyApi.getSurveyCharData(userName).then((response) => {
     let list = response.data;
     for (var i = 0; i < characterList.value.length; i++) {
       for (var j = 0; j < list.length; j++) {
@@ -184,6 +191,10 @@ function getSurveyData(userName) {
     OPmessage("导入了 " + list.length + " 条数据");
   });
 }
+
+let charIsOwnFlag = ref(false);
+
+function charIsOwn() {}
 
 function sortCharList() {
   for (var i = 0; i < characterList.value.length; i++) {
@@ -256,18 +267,16 @@ function upload() {
   }
 
   surveyApi.upload_character(uploadList, userData.value.userName).then((response) => {
-    console.log(response.data);
+    // console.log(response.data);
     OPmessage("更新了 " + response.data.rowsAffected + " 条");
   });
 }
 
 function dropDown(id) {
-  console.log(id);
   document.getElementById(id).style.display = "flex";
 }
 
 function dropUp(id) {
-  console.log(id);
   document.getElementById(id).style.display = "none";
 }
 
@@ -275,6 +284,7 @@ function getSprite(id, type, index) {
   if ("mod" == type) return "bg-" + id + " sprite_mod";
   if ("skill" == type) return "bg-" + id + " sprite_skill";
   if ("potential" == type) return "bg-" + id + " sprite_potential";
+  if ("own" == type) return "bg-" + id + " sprite_avatar_own";
 
   return "bg-" + id + " sprite_avatar";
 }
