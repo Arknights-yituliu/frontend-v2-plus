@@ -17,7 +17,7 @@
               <!-- 如果有4个选项则修改为 style="width:98%;margin:0 1%;"，子项宽度25% -->
 
               <el-radio-group size="small" style="width: 90%; margin: 6px 5%" v-model="timeSelector" @change="checkEndDate(timeSelector)">
-                <el-radio-button label="夏活(以8.15计)" style="width: 33%"></el-radio-button>
+                <el-radio-button label="夏活(8.17)" style="width: 33%"></el-radio-button>
                 <el-radio-button label="感谢庆典" style="width: 33%" disabled></el-radio-button>
                 <el-radio-button label="待定" type="primary" style="width: 33%" disabled></el-radio-button>
                 <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
@@ -779,7 +779,6 @@
                   </div>
                 </div>
               </div>
-              <div v-if="timeSelector === '夏活(以8.15计)'" class="gacha_unit_info">*4周年到夏活中间的内容仅作估算</div>
             </div>
           </el-collapse-item>
 
@@ -790,7 +789,7 @@
               <span class="collapse-item_title">其它资源（估算）{{ toFixedByAcc(calResults.gachaTimes_other, 0) }}抽</span>
             </template>
             <!-- 夏活专用滑块 -->
-            <template v-if="timeSelector === '夏活(以8.15计)'">
+            <!-- <template v-if="timeSelector === '夏活(以8.3计)'">
               <div class="gacha_unit_child" style="display: flex">
                 <div class="gacha_unit_child_title">未知奖励</div>
                 <client-only>
@@ -809,7 +808,7 @@
               </div>
               <div class="gacha_unit_info">修bug，突发维护等。左边保守估计，右边乐观估计</div>
               <div class="gacha_unit_info">数据参考自 <a href="https://www.bilibili.com/read/cv22112499">雷界一渣@B站</a> 的个人统计</div>
-            </template>
+            </template> -->
             <!-- 其他资源 -->
             <div class="gacha_unit" id="otherRes">
               <div v-for="(other, key) in gacha_honeyCake" :key="key">
@@ -974,7 +973,6 @@
 
 <script>
 import gacha_potentialJson from "@/static/json/gacha_potential.json"; //常驻活动和主线数据
-import gacha_storePacksJson from "@/static/json/gacha_storePacks.json"; //商店礼包数据
 import gacha_honeyCakeJson from "@/static/json/gacha_honeyCakeNew.json"; //其他奖励数据
 import "@/assets/css/sprite_gacha.css";
 import "@/assets/css/gacha.css";
@@ -1000,10 +998,10 @@ export default {
       // checkBox: ["1","7"],
       rewardType: "联动限定", //奖励的类型
       startTime: "", //开始时间
-      endTime: "2023/08/15 03:59:00", //结束时间
+      endTime: "2023/08/17 03:59:00", //结束时间
       start_TimeStamp: "", //开始时间戳
       end_TimeStamp: "", //结束时间戳
-      timeSelector: "夏活(以8.15计)", //活动时间节点选择框的绑定对象
+      timeSelector: "夏活(8.17)", //活动时间节点选择框的绑定对象
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
       // gacha_storePacks: gacha_storePacksJson.data,
@@ -1132,7 +1130,6 @@ export default {
 
       var endDate = new Date(Date.parse(this.endTime));
       if (endDate.getDay() === 1) this.remainingWeeks--;
-      console.log(endDate.getDay());
 
       // for (let i = 1; i < timeInterval + 1; i++) {
       //   var date = new Date(this.start_TimeStamp + 86400000 * i);
@@ -1161,7 +1158,7 @@ export default {
       if (this.remainingWeeks < 0) this.remainingWeeks = 0;
 
       this.remainingDays = timeInterval; //赋值剩余天数
-      console.log("距离活动还有：", this.remainingMonths + "月，", this.remainingWeeks + "周，", this.remainingDays + "天");
+      // console.log("距离活动还有：", this.remainingMonths + "月，", this.remainingWeeks + "周，", this.remainingDays + "天");
     },
 
     // 设置258黄票商店兑换抽卡券
@@ -1227,14 +1224,13 @@ export default {
     // 选择攒计算的时间节点
     checkEndDate() {
       // this.cookieInit=true;
-      console.log(this.timeSelector);
-       if (this.timeSelector === "夏活(以8.15计)") {
-        this.endTime = "2023/08/15 03:59:00";
+      if (this.timeSelector === "夏活(8.17)") {
+        this.endTime = "2023/08/17 03:59:00";
         this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
-        this.poolCountDownFlag_permit = false; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
+        this.poolCountDownFlag_permit = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
         this.poolCountDownFlag_orundum = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-      }else if (this.timeSelector === "1111111") {
-        this.endTime = "2023/08/15 03:59:00";
+      } else if (this.timeSelector === "1111111") {
+        this.endTime = "2023/08/17 03:59:00";
         this.rewardType = "周年限定";
         this.poolCountDownFlag_permit = true;
         this.poolCountDownFlag_orundum = true;
@@ -1426,12 +1422,10 @@ export default {
           //循环list<list>， list为[奖励名称,奖励内容]
           if ("honeyCake" === list[1].module) {
             //这里是计算其他奖励
-            console.log(list[0]);
             this.calResults.originium_other += list[1].originium; //xxxxx_other格式的属性  其他奖励的的各项奖励数量，下同
             this.calResults.orundum_other += list[1].orundum;
             this.calResults.permit_other += list[1].permit;
             this.calResults.permit10_other += list[1].permit10;
-            // console.log(list[0]);
           } else if ("act" === list[1].module) {
             //这里是计算活动奖励
             this.calResults.originium_act += list[1].originium; //xxxx_act格式的属性 活动奖励的各项奖励数量，下同
@@ -1460,17 +1454,14 @@ export default {
 
       //自动扣除部分 ↓
       //减去红包墙/矿区已经赠送过的合成玉
-      console.log(this.calResults.orundum_other);
       if (this.poolCountDownFlag_orundum) this.calResults.orundum_other -= parseInt(this.poolCountDown) * 600;
-      console.log(this.calResults.orundum_other);
 
       //减去限定池已经赠送过的单抽
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
 
-      if (this.timeSelector === "夏活(以8.15计)") {
-        // console.log(this.customValue_slider);
-        this.calResults.orundum_other += parseInt(this.customValue_slider);
-      }
+      // if (this.timeSelector === "夏活(8.17)") {
+      //   this.calResults.orundum_other += parseInt(this.customValue_slider);
+      // }
 
       //其他抽卡次数
       this.calResults.gachaTimes_other =
@@ -1478,11 +1469,6 @@ export default {
         parseInt(this.calResults.orundum_other) / 600 +
         parseInt(this.calResults.permit_other) +
         parseInt(this.calResults.permit10_other) * 10;
-
-      console.log(this.calResults.originium_other);
-      console.log(this.calResults.orundum_other);
-      console.log(this.calResults.permit_other);
-      console.log(this.calResults.permit10_other);
 
       // 所有模块相加-源石
       this.originium +=
@@ -1692,21 +1678,15 @@ export default {
             type: "pie",
             radius: "70%",
             center: ["50%", "50%"],
-            itemStyle: {
-              label: {
-                show: true,
-                textStyle: { color: "#000000", fontSize: "16" },
-                formatter: function (val) {
-                  //让series 中的文字进行换行
-                  console.log(val);
-                  return val.name.split("-").join("\n");
-                },
-              },
-              labelLine: {
-                show: true,
-                lineStyle: { color: "#000000" },
-              }, //线条颜色
-              //基本样式
+            data: data,
+            itemStyle: {},
+            label: {
+              show: true,
+              textStyle: { color: "orange", fontSize: "16" },
+            },
+            labelLine:{
+                   length:6,
+                   length2:6
             },
             emphasis: {
               itemStyle: {
@@ -1716,7 +1696,7 @@ export default {
                 textColor: "#000",
               }, //鼠标放在各个区域的样式
             },
-            data: data,
+
             emphasis: {
               shadowBlur: 10,
               shadowOffsetX: 0,
@@ -1725,6 +1705,7 @@ export default {
           },
         ],
       };
+      console.log(option);
       myChart.setOption(option);
     },
 

@@ -168,14 +168,24 @@
     color: white;
 }
 
-.potential_box {
+
+.char_forms_own {
+    margin: auto;
+    margin-top: 30px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    width: 126px;
 }
 
+.card_option_own {
+    height: 130px;
+    border: 1px rgb(0, 0, 0) solid;
+}
+
+.card_option_switch_own{
+    margin: auto;
+}
 
 .dropDown {
     margin: auto;
@@ -247,6 +257,16 @@
     border: 1px solid gray;
     /* border: 1px red solid; */
 }
+
+.sprite_avatar_own {
+    transform: scale(0.48);
+    margin: -42px;
+    /* margin-top: -30px; */
+    border-radius: 50%;
+    border: 1px solid gray;
+    /* border: 1px red solid; */
+}
+
 
 .sprite_potential {
     transform: scale(0.13);
