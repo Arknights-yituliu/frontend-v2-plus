@@ -19,7 +19,7 @@
     /* box-shadow: 0px 2px 4px -2px #5E5E5E; */
 }
 
-.login_bar {
+.login_wrap {
     margin: 2px;
     position: absolute;
     right: 20px;
@@ -51,6 +51,7 @@
     font-size: 18px;
     margin-bottom: 0px;
 }
+
 
 .user_wrap {
     margin: 2px;
@@ -104,6 +105,8 @@
     border-bottom: 1px rgb(191, 191, 191) solid;
 }
 
+
+
 .char_forms {
     margin: auto;
     margin-top: 30px;
@@ -113,19 +116,20 @@
     justify-content: center;
 }
 
-.from_title{
+.from_title {
     width: 100%;
     display: flex;
     margin: auto;
 }
 
 .from_card {
-    width: 460px;
+
+    width: 520px;
     display: flex;
     margin: auto;
 }
 
-.from_title div{
+.from_title div {
     font-weight: 600;
     font-size: 16px;
     border: 1px rgb(0, 0, 0) solid;
@@ -135,23 +139,29 @@
 }
 
 .card_option {
-    height: 124px;
+    height: 148px;
     border: 1px rgb(0, 0, 0) solid;
 }
 
+.ownAndPotential_warp {
+    margin-left:8px;
+    margin-top: 8px; 
+    display: flex;
+    height: 30px;
+}
+
 .card_option_switch {
-    margin: auto;
-    margin-top: 10px;
+  margin-top: 6px;
 }
 
 
 
 .card_option_check {
     /* margin: 6px; */
+    margin: auto;
     margin-top: 6px;
-    margin-left: 8px;
-    width: 28px;
-    height: 28px;
+    width: 38px;
+    height: 38px;
     line-height: 24px;
     padding: 2px;
     /* border: 1px red solid; */
@@ -168,28 +178,9 @@
     color: white;
 }
 
-
-.char_forms_own {
-    margin: auto;
-    margin-top: 30px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.card_option_own {
-    height: 130px;
-    border: 1px rgb(0, 0, 0) solid;
-}
-
-.card_option_switch_own{
-    margin: auto;
-}
-
 .dropDown {
     margin: auto;
-    margin-top: 24px;
+    margin-top: -4px;
     width: 38px;
     height: 20px;
     line-height: 24px;
@@ -237,39 +228,104 @@
     cursor: pointer;
 }
 
+
+
+.char_forms_own {
+    margin: auto;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+.char_forms_own_title {
+    width: 100%;
+    height: 34px;
+    line-height: 34px;
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 1px rgb(174, 174, 174) solid;
+}
+
+
+
+.from_card_own {
+    width: 520px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto;
+    border: 1px rgb(0, 0, 0) solid;
+    height: 300px;
+    overflow: auto;
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+::-webkit-scrollbar {
+    display: none;/* Chrome Safari */
+}
+
+
+
+.card_option_own {
+    width: 78px;
+    height: 78px;
+    margin: 6px;
+    /* border: 1px rgb(0, 0, 0) solid; */
+}
+
+.card_option_switch_own {
+    margin: auto;
+}
+
+
+
+
 .sprite_skill {
-    transform: scale(0.13);
-    margin: -104px;
+    transform: scale(0.2);
+    margin: -98px;
     /* margin-top:0px ; */
 }
 
 .sprite_mod {
-    transform: scale(0.1);
-    margin: -106px;
+    transform: scale(0.18);
+    margin: -100px;
     /* margin-top:0px ; */
 }
 
 .sprite_avatar {
     transform: scale(0.48);
     margin: -42px;
-    margin-top: -30px;
+    margin-top: -40px;
     border-radius: 50%;
     border: 1px solid gray;
     /* border: 1px red solid; */
 }
 
 .sprite_avatar_own {
-    transform: scale(0.48);
-    margin: -42px;
-    /* margin-top: -30px; */
+    transform: scale(0.42);
+    margin: -52px;
+    border-radius: 50%;
+}
+
+.sprite_avatar_own_wrap {
+    width: 76px;
+    height: 76px;
     border-radius: 50%;
     border: 1px solid gray;
-    /* border: 1px red solid; */
+    overflow: hidden;
+
 }
+
+.own_wrap_back {}
 
 
 .sprite_potential {
     transform: scale(0.13);
     margin: -100px;
 }
-

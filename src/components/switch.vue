@@ -11,21 +11,23 @@ const emit =defineEmits(['update:modelValue'])
 const props = defineProps(['modelValue']);
 
 console.log(props.modelValue)
-let switch_class = ref(props.modelValue?"switch":"switch switch_back");
-let switch_left_class = ref(props.modelValue?"switch_left":"switch_left switch_color");
-let switch_right_class = ref(props.modelValue?"switch_right switch_color":"switch_right switch_back");
-
+// let switch_class = ref(props.modelValue?"switch":"switch switch_back");
+// let switch_left_class = ref(props.modelValue?"switch_left":"switch_left switch_color");
+// let switch_right_class = ref(props.modelValue?"switch_right switch_white":"switch_right switch_back");
+let switch_class = ref("switch");
+let switch_left_class = ref("switch_left");
+let switch_right_class = ref("switch_right switch_white");
 
 function handleClick() {
   console.log(props.modelValue)
   if (!props.modelValue) {
     switch_class.value = "switch";
     switch_left_class.value = "switch_left";
-    switch_right_class.value = "switch_right switch_color";
+    switch_right_class.value = "switch_right switch_white";
   } else {
-    switch_class.value = "switch switch_back";
-    switch_left_class.value = "switch_left switch_color";
-    switch_right_class.value = "switch_right switch_back";
+    switch_class.value = "switch switch_red";
+    switch_left_class.value = "switch_left switch_white";
+    switch_right_class.value = "switch_right switch_red";
   }
   emit('update:modelValue', !props.modelValue)
 }
@@ -34,11 +36,11 @@ watch(() => props.modelValue, (newVal, oldVal) => {
   if (newVal) {
     switch_class.value = "switch";
     switch_left_class.value = "switch_left";
-    switch_right_class.value = "switch_right switch_color";
+    switch_right_class.value = "switch_right switch_white";
   } else {
-    switch_class.value = "switch switch_back";
-    switch_left_class.value = "switch_left switch_color";
-    switch_right_class.value = "switch_right switch_back";
+    switch_class.value = "switch switch_red";
+    switch_left_class.value = "switch_left switch_white";
+    switch_right_class.value = "switch_right switch_red";
   }
 })
 
@@ -55,14 +57,10 @@ watch(() => props.modelValue, (newVal, oldVal) => {
   background: rgb(0, 140, 255);
 }
 
-.switch_back {
-  background: rgb(163, 163, 163);
-}
-
 .switch_left {
   height: 16px;
   width: 16px;
-  /* margin: 1px; */
+  margin-left: -1px;
   border-radius: 25px;
   /* background: white; */
 }
@@ -75,7 +73,11 @@ watch(() => props.modelValue, (newVal, oldVal) => {
   border-radius: 25px;
 }
 
-.switch_color {
+.switch_red{
+  background: rgb(220, 0, 0);
+}
+
+.switch_white {
   background: white;
 }
 </style>

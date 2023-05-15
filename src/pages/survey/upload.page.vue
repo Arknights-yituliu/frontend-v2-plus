@@ -9,7 +9,7 @@
       设置 <br />
     </div> -->
     <div class="survey_header">
-      <div class="login_bar" v-show="userData.status < 0">
+      <div class="login_wrap" v-show="userData.status < 0">
         <div>
           <input type="text" class="input_login" v-model="loginData.userName" />
         </div>
@@ -25,6 +25,25 @@
       </div>
     </div>
 
+    <div class="char_forms_own">
+      <div class="from_card_own">
+        <div class="char_forms_own_title">已拥有</div>
+        <div v-show="char.own" class="card_option_own" v-for="(char, index) in characterList" :key="index">
+          <div :class="charSelected(char.own)">
+            <div @click="char.own = !char.own" :class="getSprite(char.charId, 'own')"></div>
+          </div>
+        </div>
+      </div>
+      <div class="from_card_own">
+        <div class="char_forms_own_title">未拥有</div>
+        <div v-show="!char.own" class="card_option_own" v-for="(char, index) in characterList" :key="index">
+          <div :class="charSelected(char.own)">
+            <div @click="char.own = !char.own" :class="getSprite(char.charId, 'own')"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="setup_wrap">
       <div class="setup_bar">
         <div class="setup_title">设置</div>
@@ -35,17 +54,10 @@
       </div>
       <div class="setup_bar">
         <div class="setup_title">筛选</div>
-        <div class="btn_survey" @click="charIsOwnFlag=!charIsOwnFlag">是否拥有</div>
+        <div class="btn_survey" @click="charIsOwnFlag = !charIsOwnFlag">是否拥有</div>
         <!-- <div class="btn_survey" @click="userDataCacheClear()">实装时间</div> -->
         <div class="btn_survey" @click="upload()">是否精二</div>
         <div class="btn_survey">是否有模组</div>
-      </div>
-    </div>
-
-    <div class="char_forms_own" v-if="charIsOwnFlag">
-      <div class="card_option_own" v-for="(char, index) in characterList" :key="index" :style="tableSytle('short')">
-        <div :class="getSprite(char.charId, 'own')"></div>
-        <op-switch v-model="char.own" class="card_option_switch_own"></op-switch>
       </div>
     </div>
 
@@ -53,7 +65,6 @@
       <div class="from_title">
         <div class="from_card">
           <div :style="tableSytle('short')">干员</div>
-          <div :style="tableSytle('long')">持有</div>
           <div :style="tableSytle('long')">精英化</div>
           <div :style="tableSytle('long')">1技能</div>
           <div :style="tableSytle('long')">2技能</div>
@@ -63,7 +74,6 @@
         </div>
         <div class="from_card" v-show="clientWidth > 800">
           <div :style="tableSytle('short')">干员</div>
-          <div :style="tableSytle('long')">持有</div>
           <div :style="tableSytle('long')">精英化</div>
           <div :style="tableSytle('long')">1技能</div>
           <div :style="tableSytle('long')">2技能</div>
@@ -75,20 +85,22 @@
 
       <div class="from_card" v-for="(char, index) in characterList" :key="index">
         <div class="card_option" :style="tableSytle('short')">
-          <div :class="getSprite(char.charId)"></div>
-        </div>
-        <div class="card_option" :style="tableSytle('long')">
-          <op-switch v-model="char.own" class="card_option_switch"></op-switch>
-          <div class="dropDown" @click="dropDown('potential' + index)">
+          <div @click="char.own = !char.own" :class="getSprite(char.charId)"></div>
+          <div class="ownAndPotential_warp">
+            <op-switch v-model="char.own" class="card_option_switch"></op-switch>
+            <div class="dropDown" @click="dropDown('potential' + index)">
             <div :class="getSprite('potential' + char.potential, 'potential')"></div>
-            <div>{{ "潜能" + char.potential }}</div>
+          
           </div>
           <div class="dropDown_menu">
             <div class="dropDown_content" :id="'potential' + index" @click="dropUp('potential' + index)">
               <div v-for="rank in ranks.slice(1, 7)" @click="char.potential = rank" class="dropDown_content_item">潜能{{ rank }}</div>
             </div>
           </div>
+          </div>
+          
         </div>
+     
         <div class="card_option" :style="tableSytle('long')">
           <div v-for="rank in ranks.slice(0, 3)" @click="changeData(index, 'phase', rank)" :class="selected(char.phase, rank)">
             <div :class="getSprite('phase' + rank, 'skill')"></div>
@@ -142,7 +154,6 @@ let userData = ref({ userName: "山桜", status: -1, uid: 10000 }); //用户信�
 //注册
 function register() {
   surveyApi.register(loginData.value).then((response) => {
-   
     userData.value = response.data;
     window.localStorage.setItem("userData", JSON.stringify(userData.value));
   });
@@ -151,7 +162,6 @@ function register() {
 //登录
 function login() {
   surveyApi.login(loginData.value).then((response) => {
-   
     userData.value = response.data;
     window.localStorage.setItem("userData", JSON.stringify(userData.value));
     if (userData.value.status == 1) {
@@ -162,11 +172,10 @@ function login() {
 
 function userDataCache() {
   let cacheData = window.localStorage.getItem("userData");
- 
+
   userData.value = cacheData == undefined ? userData.value : JSON.parse(cacheData);
- 
+
   if (userData.value.status == 1) {
-  
     getSurveyCharData(userData.value.userName);
   }
 }
@@ -194,7 +203,10 @@ function getSurveyCharData(userName) {
 
 let charIsOwnFlag = ref(false);
 
-function charIsOwn() {}
+function charSelected(own) {
+  if (own) return "sprite_avatar_own_wrap own_wrap_back";
+  return "sprite_avatar_own_wrap";
+}
 
 function sortCharList() {
   for (var i = 0; i < characterList.value.length; i++) {
@@ -218,7 +230,7 @@ function initData() {
     if (baseInfo.rarity < 5) continue;
     let character = {
       charId: charId,
-      own: false,
+      own: true,
       level: 1,
       modX: 0,
       modY: 0,
@@ -291,7 +303,7 @@ function getSprite(id, type, index) {
 
 function tableSytle(type) {
   if ("short" == type) return "min-width:98px";
-  if ("long" == type) return "min-width:50px";
+  if ("long" == type) return "min-width:70px";
 }
 
 let clientWidth = ref(500);
