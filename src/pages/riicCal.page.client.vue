@@ -2223,7 +2223,7 @@ export default {
     },
     setExportUrl() {
       this.exportUrl = "https://backend.yituliu.site/maa/schedule/export?schedule_id=" + this.uid;
-      // this.exportUrl ="http://127.0.0.1:10011/maa/schedule/export?schedule_id=" + this.uid;
+      // this.exportUrl = "http://127.0.0.1:10013/maa/schedule/export?schedule_id=" + this.uid;
       this.maaUrl = "maa://infra.yituliu/" + this.uid;
     },
     maaBuildingJsonCreated() {
@@ -2237,9 +2237,11 @@ export default {
         });
         this.uid = response.data.uid;
         this.setExportUrl();
+        setTimeout(function () {
+          document.getElementById("export_cover").style.display = "none";
+        }, 4000);
       });
       this.setExportUrl();
-      document.getElementById("export_cover").style.display = "none";
     },
     retrieveSchedule() {
       buildingApi.retrieveSchedule(this.importId).then((response) => {

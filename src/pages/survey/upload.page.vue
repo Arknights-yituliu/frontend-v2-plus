@@ -191,7 +191,6 @@ function getSurveyCharData(userName) {
       for (var j = 0; j < list.length; j++) {
         if (list[j].charId == characterList.value[i].charId) {
           characterList.value[i] = list[j];
-          characterList.value[i].own = true;
         }
       }
     }
