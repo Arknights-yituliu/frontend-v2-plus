@@ -2239,7 +2239,7 @@ export default {
         this.setExportUrl();
         setTimeout(function () {
           document.getElementById("export_cover").style.display = "none";
-        }, 4000);
+        }, 2500);
       });
       this.setExportUrl();
     },
