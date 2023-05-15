@@ -1,116 +1,101 @@
 .bg-mod_0 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -10px -10px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -10px -10px;
 }
-
-
 
 .bg-mod_1 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -266px -10px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -266px -10px;
 }
-
-
 
 .bg-mod_2 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -10px -266px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -10px -266px;
 }
-
-
 
 .bg-mod_3 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -266px -266px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -266px -266px;
 }
-
-
 
 .bg-phase0 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -522px -10px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -522px -10px;
 }
-
-
 
 .bg-phase1 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -522px -266px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -522px -266px;
 }
-
-
 
 .bg-phase2 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -10px -522px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -10px -522px;
 }
-
-
 
 .bg-potential1 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -266px -522px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -266px -522px;
 }
-
-
 
 .bg-potential3 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -522px -522px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -522px -522px;
 }
-
-
 
 .bg-potential4 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -778px -10px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -778px -10px;
 }
-
-
 
 .bg-potential5 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -778px -266px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -778px -266px;
 }
-
-
 
 .bg-potential6 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -778px -522px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -778px -522px;
 }
-
-
 
 .bg-skill0 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -10px -778px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -10px -778px;
 }
-
-
 
 .bg-skill1 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -266px -778px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -266px -778px;
 }
-
-
 
 .bg-skill2 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -522px -778px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -522px -778px;
 }
-
-
 
 .bg-skill3 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -778px -778px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -778px -778px;
 }
 
-
-
 .bg-potential2 {
-    width: 236px; height: 236px;
-    background: url('/image/sprite/sprites-rank.png') -1034px -10px;
+  width: 236px;
+  height: 236px;
+  background: url("/image/sprite/sprites-rank.png") -1034px -10px;
 }
