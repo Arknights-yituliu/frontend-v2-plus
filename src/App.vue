@@ -1,5 +1,6 @@
 <template>
   <el-container>
+    
     <el-header class="header" v-if="'/maarecruitdata' != pageContext.urlPathname">
       <nav-bar />
     </el-header>
@@ -20,6 +21,7 @@ import "@/assets/css/sprite_item.css";
 import "@/assets/css/sprite_item_large.css";
 import "@/assets/css/sprite_style.css";
 import "@/assets/css/sprite_icon.css";
+import "@/assets/css/components.css";
 
 // 旧版css，待修改
 import "@/assets/css/item.css";
@@ -59,6 +61,8 @@ export default {
 .el-slider__button-wrapper {
   z-index: auto;
 }
+
+
 </style>
 
 <style>

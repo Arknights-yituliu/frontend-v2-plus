@@ -1,4 +1,4 @@
-.main_survey {
+.survey_page {
   max-width: 1080px;
   height: auto;
   background: white;
@@ -50,7 +50,7 @@
   font-weight: 900;
 }
 
-.oper_table {
+.char_form {
   margin: auto;
   width: 94%;
   /* border: 1px red solid; */
@@ -60,7 +60,7 @@
   justify-content: center;
 }
 
-.oper {
+.char_card {
   margin: 8px;
   width: 60px;
   height: 130px;
@@ -72,21 +72,28 @@
   box-shadow: 1px 1px 1px rgb(108, 108, 108);
 }
 
-.image_avatar_background {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: white;
-}
+
 
 .image_avatar {
+  transform: scale(0.3);
+  margin: -60px;
+  /* margin-top: -30px; */
   border-radius: 50%;
-  border: 1px rgb(255, 0, 0) solid;
-
+  /* border: 1px solid gray; */
   /* border: 1px red solid; */
 }
 
-.operIndex {
+.avatar_back{
+  /* margin: -60px; */
+  /* margin-top:-60px ; */
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 1px solid gray;
+  background: white;
+}
+
+.char_card_index {
   height: 22px;
   font-size: 20px;
   font-weight: 800;
@@ -140,48 +147,9 @@
   color: rgb(255, 255, 255);
 }
 
-.sprite {
-}
 
-.survey_popup_mask {
-  position: fixed;
-  z-index: 30;
-  width: 100%;
-  height: 2000px;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: none;
-}
 
-.survey_popup {
-  display: none;
-  position: fixed;
-  right: 0;
-  left: 0;
-  z-index: 50;
-  margin: auto;
-  margin-top: 100px;
-  width: 450px;
-  height: 160px;
-  background-color: rgba(255, 255, 255);
-  border-radius: 6px;
-}
 
-.survey_popup_title {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 400px;
-  height: 30px;
-  /* border-bottom: 1px red solid; */
-  text-align: left;
-  font-size: 22px;
-  font-weight: 500;
-}
-
-.survey_popup_input {
-  width: 500px;
-  height: 70px;
-}
 
 .input_operBox {
   display: block;
