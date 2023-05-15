@@ -11,12 +11,12 @@ const emit =defineEmits(['update:modelValue'])
 const props = defineProps(['modelValue']);
 
 console.log(props.modelValue)
-// let switch_class = ref(props.modelValue?"switch":"switch switch_back");
-// let switch_left_class = ref(props.modelValue?"switch_left":"switch_left switch_color");
-// let switch_right_class = ref(props.modelValue?"switch_right switch_white":"switch_right switch_back");
-let switch_class = ref("switch");
-let switch_left_class = ref("switch_left");
-let switch_right_class = ref("switch_right switch_white");
+let switch_class = ref(props.modelValue?"switch":"switch switch_red");
+let switch_left_class = ref(props.modelValue?"switch_left":"switch_left switch_white");
+let switch_right_class = ref(props.modelValue?"switch_right switch_white":"switch_right switch_red");
+// let switch_class = ref("switch");
+// let switch_left_class = ref("switch_left");
+// let switch_right_class = ref("switch_right switch_white");
 
 function handleClick() {
   console.log(props.modelValue)

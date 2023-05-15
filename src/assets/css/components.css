@@ -1,28 +1,34 @@
 .message_wrap {
     width: 100%;
     display: flex;
+    flex-direction:column;
     justify-content: center;
     align-items: center;
-    position: absolute;
+    position: fixed;
     top: 30px;
     z-index: 2000;
+    overflow: auto;
     transform: translateY(-360px);
 }
 
 .message_wrap_open{
     width: 100%;
     display: flex;
+    flex-direction:column;
     justify-content: center;
     align-items: center;
-    position: absolute;
+    position: fixed;
     top: 30px;
     z-index: 2000;
-    transition: all 0.2s;
+    overflow: auto;
+    transition: all 0.5s;
     transform: translateY(0) !important;
 }
 
 
 .messageBar {
+    margin: auto;
+    margin-top: 30px;
     width: 160px;
     border-radius: 4px;
     line-height: 32px;
