@@ -59,6 +59,7 @@
                   return row.packType == value;
                 }
               "
+              :filtered-value="['once', 'monthly', 'weekly', 'year', 'permanent', 'limited']"
               :sort-by="
                 (row, index) => {
                   return row.packType;
