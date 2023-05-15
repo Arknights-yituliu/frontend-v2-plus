@@ -253,6 +253,15 @@ function changeData(index, attrib, value) {
   // console.log(characterList.value[index]);
 }
 
+let maaData = ref([{}])
+
+function maaData1(){
+  let dataJson = JSON.parse(maaData.value);
+  for(let i in dataJson){
+     
+  }
+}
+
 //上传
 function upload() {
   surveyApi.upload_character(characterList.value, userData.value.userName).then((response) => {
@@ -278,6 +287,7 @@ function getSprite(id, type, index) {
 
   return "bg-" + id + " sprite_avatar";
 }
+
 
 function tableSytle(type) {
   if ("short" == type) return "min-width:98px";
