@@ -1682,7 +1682,7 @@ export default {
             itemStyle: {},
             label: {
               show: true,
-              textStyle: { color: "orange", fontSize: "16" },
+              textStyle: { color: "rgb(255,69,0)", fontSize: "16" },
             },
             labelLine:{
                    length:6,
