@@ -1238,7 +1238,7 @@ export default {
         this.rewardType = "周年限定";
         this.poolCountDownFlag_permit = true;
         this.poolCountDownFlag_orundum = true;
-      } 
+      }
 
       this.getInterval();
       this.getEveryreWard();
