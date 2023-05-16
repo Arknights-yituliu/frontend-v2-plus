@@ -1,4 +1,4 @@
-function OPmessage(text) {
+function cMessage(text) {
   let message_wrap = document.createElement("div");
   message_wrap.className = "message_wrap";
   message_wrap.id = "message_wrap";
@@ -24,4 +24,4 @@ function OPmessage(text) {
   }, 4000);
 }
 
-export { OPmessage };
+export { cMessage };

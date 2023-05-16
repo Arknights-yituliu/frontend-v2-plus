@@ -4,7 +4,8 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import App from "@/App.vue";
 import { setPageContext } from "./usePageContext";
 import "element-plus/theme-chalk/dark/css-vars.css";
-import opSwitch from "@/components/switch.vue";
+import cSwitch from "@/components/switch.vue";
+import cPopup from "@/components/popup.vue";
 
 export { createVPSApp };
 
@@ -26,7 +27,9 @@ function createVPSApp(pageContext, clientOnly) {
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component);
   }
-  app.component("op-switch", opSwitch);
+
+  app.component("c-switch", cSwitch);
+  app.component("c-popup", cPopup);
 
   app.use(ElementPlus);
   if (!clientOnly) {
