@@ -27,5 +27,4 @@
   background-color: rgba(255, 255, 255);
   border-radius: 6px;
 }
-
 </style>

@@ -1,6 +1,5 @@
 <template>
   <el-container>
-    
     <el-header class="header" v-if="'/maarecruitdata' != pageContext.urlPathname">
       <nav-bar />
     </el-header>
@@ -61,8 +60,6 @@ export default {
 .el-slider__button-wrapper {
   z-index: auto;
 }
-
-
 </style>
 
 <style>
