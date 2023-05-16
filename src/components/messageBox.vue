@@ -1,16 +1,9 @@
-<template>
+<template></template>
 
-
-</template>
-
-<script>
-
-
-</script>
+<script></script>
 
 <style>
-.messageBox{
-     position: absolute;
-     
+.messageBox {
+  position: absolute;
 }
 </style>

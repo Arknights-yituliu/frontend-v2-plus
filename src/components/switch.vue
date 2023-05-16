@@ -7,19 +7,19 @@
 
 <script setup>
 import { ref, watch } from "vue";
-const emit =defineEmits(['update:modelValue'])
-const props = defineProps(['modelValue']);
+const emit = defineEmits(["update:modelValue"]);
+const props = defineProps(["modelValue"]);
 
-console.log(props.modelValue)
-let switch_class = ref(props.modelValue?"switch":"switch switch_red");
-let switch_left_class = ref(props.modelValue?"switch_left":"switch_left switch_white");
-let switch_right_class = ref(props.modelValue?"switch_right switch_white":"switch_right switch_red");
+// console.log(props.modelValue)
+let switch_class = ref(props.modelValue ? "switch" : "switch switch_red");
+let switch_left_class = ref(props.modelValue ? "switch_left" : "switch_left switch_white");
+let switch_right_class = ref(props.modelValue ? "switch_right switch_white" : "switch_right switch_red");
 // let switch_class = ref("switch");
 // let switch_left_class = ref("switch_left");
 // let switch_right_class = ref("switch_right switch_white");
 
 function handleClick() {
-  console.log(props.modelValue)
+  console.log(props.modelValue);
   if (!props.modelValue) {
     switch_class.value = "switch";
     switch_left_class.value = "switch_left";
@@ -29,22 +29,23 @@ function handleClick() {
     switch_left_class.value = "switch_left switch_white";
     switch_right_class.value = "switch_right switch_red";
   }
-  emit('update:modelValue', !props.modelValue)
+  emit("update:modelValue", !props.modelValue);
 }
 
-watch(() => props.modelValue, (newVal, oldVal) => {
-  if (newVal) {
-    switch_class.value = "switch";
-    switch_left_class.value = "switch_left";
-    switch_right_class.value = "switch_right switch_white";
-  } else {
-    switch_class.value = "switch switch_red";
-    switch_left_class.value = "switch_left switch_white";
-    switch_right_class.value = "switch_right switch_red";
+watch(
+  () => props.modelValue,
+  (newVal, oldVal) => {
+    if (newVal) {
+      switch_class.value = "switch";
+      switch_left_class.value = "switch_left";
+      switch_right_class.value = "switch_right switch_white";
+    } else {
+      switch_class.value = "switch switch_red";
+      switch_left_class.value = "switch_left switch_white";
+      switch_right_class.value = "switch_right switch_red";
+    }
   }
-})
-
-
+);
 </script>
 
 <style scoped>
@@ -73,7 +74,7 @@ watch(() => props.modelValue, (newVal, oldVal) => {
   border-radius: 25px;
 }
 
-.switch_red{
+.switch_red {
   background: rgb(220, 0, 0);
 }
 

@@ -1,91 +1,81 @@
 <template>
-  <div class="survey_page">
-    <div class="survey_title">明日方舟干员{{ surveyType }}统计</div>
+  <div class="survey_index_page">
+    <div class="survey_index_header">欢迎来到明日方舟干员调查统计站</div>
 
-    <div class="survey_tip_box">
-      <div class="survey_tip">
-        <a>调查人数</a> <br />
-        {{ userCount }}人次
-      </div>
-      <div class="survey_tip">
-        <a>更新时间</a> <br />
-        {{ updateTime }}
-      </div>
-    </div>
-
-    <div class="setup_wrap">
-      <div class="setup_bar">
-        <div class="setup_title">榜单类型</div>
-        <div class="btn_survey" @click="switchSurvey('精二率')">精二率统计</div>
-        <div class="btn_survey" @click="switchSurvey('持有率')">持有率统计</div>
-        <a href="/survey/upload"> <div class="btn_survey">上传数据</div></a>
-      </div>
-    </div>
-
-    <div class="char_form">
-      <div class="char_card" v-for="(operData, index) in charStatisticsResult" v-show="operData.rarity =6">
-        <div class="char_card_index">No.{{ index + 1 }}</div>
-        <div class="avatar_back">
-          <div :class="getSprite(operData.charId)"></div>
-        </div>
-        <div class="operRate" v-show="'持有率' == surveyType">
-          <a> 持有率 </a><br />
-          {{ operData.own.toFixed(1) }}%
-        </div>
-        <div class="operRate" v-show="'精二率' == surveyType">
-          <a> 精二率</a><br />
-          {{ operData.phase2.toFixed(1) }}%
+    <div class="survey_index_content">
+      <div class="login_card_wrap" v-show="userData.status != 1">
+        <div class="login_card">
+          <div class="login_card_tips">
+            <div class="login_card_tips_title">填写您的用户ID，登录后可上传和恢复数据</div>
+            <div>如果您尚未注册过，请先点击「注册」按钮。</div>
+          </div>
+          <div class="login_card_input_wrap">
+            <input class="login_card_input" placeholder="您的用户ID" v-model="loginData.userName" />
+          </div>
+          <div class="login_card_btn_wrap">
+            <div class="login_card_btn" @click="register(loginData)">注册</div>
+            <div class="login_card_btn" @click="login()">登录</div>
+          </div>
         </div>
       </div>
+      <div class="login_card_wrap" v-show="userData.status == 1">
+        <div style="display: flex">
+          <div class="login_card_userName">
+            欢迎回来 <b> {{ userData.userName }}</b>
+          </div>
+
+          <div class="logout_btn" @click="logout()">登出</div>
+        </div>
+      </div>
+
+      <div class="login_card_guild">
+        <div v-for="key in guildKey" :key="key">
+          <div class="login_card_guild_question">{{ guild[key].question }}</div>
+          <div class="login_card_guild_answer">{{ replaceAnswer(guild[key].answer) }}</div>
+        </div>
+      </div>
+
+      <a href="/survey/upload">
+        <div class="login_card_link">我了解了,开始填写</div>
+      </a>
     </div>
   </div>
 </template>
 
 <script setup>
-import "@/assets/css/sprite_char_6.css";
-import "@/assets/css/survey.css";
-import "@/assets/css/survey_upload.css";
+import "@/assets/css/survey_index.css";
+import { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, globalUserData } from "./serveyService";
+import { onMounted, ref } from "vue";
+import guild from "@/static/json/survey/guild.json";
 
-import serveyJson from "@/static/json/survey.json";
+let guildKey = ["siteDescription", "registrationProcess", "developmentProgress"];
 
-import { onMounted, ref, watch } from "vue";
-import { ElMessage } from "element-plus";
+function replaceAnswer(answer) {
+  answer = answer.replaceAll(",", "，");
+  answer = answer.replaceAll(".", "。");
+  return answer;
+}
 
-import surveyApi from "@/api/survey";
+let loginData = ref({ userName: "山桜" }); //用户输入的用户名，用obj没准后期有别的字段
+let userData = ref({ userName: "山桜", status: -1, uid: 10000 });
 
-let charStatisticsResult = ref([]);
-let surveyType = ref("持有率");
-let popupStyle = ref("survey_popup_mask");
+async function register() {
+  let response = await registerEvent(loginData.value);
+  console.log("异步：", response);
+  userData.value = response;
+}
 
-let operBoxData = ref("");
-let userCount = ref(0);
-let updateTime = ref("2023-05-01");
+async function login() {
+  let response = await loginEvent(loginData.value);
+  console.log("异步：", response);
+  userData.value = response;
+}
 
-function getCharStatisticsResult() {
-  surveyApi.getCharStatisticsResult().then((response) => {
-    charStatisticsResult.value = response.data.result;
-    userCount.value = response.data.userCount;
-
-    // var date = new Date(response.data.updateTime);
-    // var y = date.getFullYear(); //年
-    // var m = (date.getMonth() + 1).toString().padStart(2, "0"); //月
-    // var d = date.getDate().toString().padStart(2, "0"); //日
-    // var h = date.getHours().toString().padStart(2, "0"); //时
-    // var mm = date.getMinutes().toString().padStart(2, "0"); //分
-    // updateTime.value = `${y}-${m}-${d}`;
-    updateTime.value = response.data.updateTime;
-  });
+function logout() {
+  userData.value = userDataCacheClearEvent();
 }
 
 onMounted(() => {
-  getCharStatisticsResult();
+  userData.value = userDataCacheEvent();
 });
-
-function getSprite(charId, index) {
-  return "image_avatar bg-" + charId;
-}
-
-function switchSurvey(type) {
-  surveyType.value = type;
-}
 </script>

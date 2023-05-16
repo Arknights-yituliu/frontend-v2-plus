@@ -51,7 +51,7 @@ export default {
   },
 
   upload_character(characterList, userName) {
-    userName =  userName.replace('#','%23')
+    userName = userName.replace("#", "%23");
     return request({
       url: `${api_name}/character?userName=${userName}`,
       method: "post",
@@ -59,21 +59,18 @@ export default {
     });
   },
 
-
-  getSurveyCharData(userName){
-    userName =  userName.replace('#','%23')
+  getSurveyCharData(userName) {
+    userName = userName.replace("#", "%23");
     return request({
       url: `${api_name}/find/character?userName=${userName}`,
       method: "get",
     });
   },
 
-  getCharStatisticsResult(){
+  getCharStatisticsResult() {
     return request({
       url: `${api_name}/result`,
       method: "get",
     });
-  }
-
-
+  },
 };

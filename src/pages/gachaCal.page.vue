@@ -1684,9 +1684,9 @@ export default {
               show: true,
               textStyle: { color: "rgb(255,69,0)", fontSize: "16" },
             },
-            labelLine:{
-                   length:6,
-                   length2:6
+            labelLine: {
+              length: 6,
+              length2: 6,
             },
             emphasis: {
               itemStyle: {
