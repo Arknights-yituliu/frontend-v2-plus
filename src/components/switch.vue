@@ -10,10 +10,16 @@ import { ref, watch } from "vue";
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps(["modelValue"]);
 
-// console.log(props.modelValue)
-let switch_class = ref(props.modelValue ? "switch" : "switch switch_red");
-let switch_left_class = ref(props.modelValue ? "switch_left" : "switch_left switch_white");
-let switch_right_class = ref(props.modelValue ? "switch_right switch_white" : "switch_right switch_red");
+if(typeof props.modelValue!="boolean"){
+console.log( '测试',props.modelValue === undefined)
+}
+
+
+let switch_class = ref(props.modelValue||props.modelValue === undefined ? "switch" : "switch switch_red");
+let switch_left_class = ref(props.modelValue||props.modelValue === undefined ? "switch_left" : "switch_left switch_white");
+let switch_right_class = ref(props.modelValue||props.modelValue === undefined ? "switch_right switch_white" : "switch_right switch_red");
+
+
 // let switch_class = ref("switch");
 // let switch_left_class = ref("switch_left");
 // let switch_right_class = ref("switch_right switch_white");
@@ -32,9 +38,7 @@ function handleClick() {
   emit("update:modelValue", !props.modelValue);
 }
 
-watch(
-  () => props.modelValue,
-  (newVal, oldVal) => {
+watch(() => props.modelValue,(newVal, oldVal) => {
     if (newVal) {
       switch_class.value = "switch";
       switch_left_class.value = "switch_left";
@@ -55,7 +59,7 @@ watch(
   border: 1px rgb(201, 201, 201) solid;
   border-radius: 25px;
   display: flex;
-  background: rgb(0, 140, 255);
+  background: rgb(13,135,228);
 }
 
 .switch_left {

@@ -1,5 +1,5 @@
 import surveyApi from "@/api/survey";
-import { OPmessage } from "@/components/message.js";
+import { cMessage } from "@/components/message.js";
 import character_table from "@/static/json/survey/character_table.json";
 import Cookies from "js-cookie";
 import { time } from "echarts";
@@ -63,6 +63,8 @@ function characterListInit() {
   return characterList;
 }
 
+
+
 export { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, characterListInit, globalUserData };
 
 async function getSurveyCharData(userName) {
@@ -76,6 +78,6 @@ async function getSurveyCharData(userName) {
         }
       }
     }
-    OPmessage("导入了 " + list.length + " 条数据");
+    cMessage("导入了 " + list.length + " 条数据");
   });
 }
