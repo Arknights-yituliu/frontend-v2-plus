@@ -76,6 +76,6 @@ function logout() {
 }
 
 onMounted(() => {
-  userData.value = userDataCacheEvent();
+  // userData.value = userDataCacheEvent();
 });
 </script>
