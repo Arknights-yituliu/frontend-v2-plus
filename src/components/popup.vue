@@ -2,31 +2,32 @@
   <div class="popup_mask" :style="popupStyle">
     <div class="popup">
       <slot></slot>
-        <div class="popup_btn_wrap">
-            <div class="popup_btn_white" @click="popupStyle='display: block'" >取消</div>
-            <div class="popup_btn" @click="popupStyle='display: none'">关闭</div>
-          </div>
+      <div class="popup_btn_wrap">
+        <div class="popup_btn_white" @click="popupStyle = 'display: block'">取消</div>
+        <div class="popup_btn" @click="popupStyle = 'display: none'">关闭</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch } from "vue";
 
-const props = defineProps(["modelValue", "visible","width"]);
-console.log(props.visible);
+const props = defineProps(["modelValue", "visible", "width"]);
 
-let popupStyle = ref("display: none;")
-if(props.visible){
-   popupStyle.value = "display: block;"
+let popupStyle = ref("display: none;");
+if (props.visible) {
+  popupStyle.value = "display: block;";
 }
 
-watch(() => props.visible,(newVal, oldVal) =>{
-  if(newVal){
-   popupStyle.value = "display: block;"
-}
-})
-
+watch(
+  () => props.visible,
+  (newVal, oldVal) => {
+    if (newVal) {
+      popupStyle.value = "display: block;";
+    }
+  }
+);
 </script>
 
 <style scoped>
@@ -72,7 +73,7 @@ watch(() => props.visible,(newVal, oldVal) =>{
   padding: 4px;
   line-height: 18px;
   text-align: center;
-  background: rgb(13,135,228);
+  background: rgb(13, 135, 228);
   color: white;
   font-weight: 600;
   box-shadow: 0 0 1px 1px rgb(209, 209, 209);

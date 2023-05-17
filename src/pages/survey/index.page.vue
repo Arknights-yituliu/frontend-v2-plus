@@ -29,7 +29,7 @@
       </div>
 
       <div class="login_card_guild">
-        <div v-for="key in guildKey" >
+        <div v-for="key in guildKey">
           <div class="login_card_guild_question">{{ guild[key].question }}</div>
           <div class="login_card_guild_answer">{{ replaceAnswer(guild[key].answer) }}</div>
         </div>

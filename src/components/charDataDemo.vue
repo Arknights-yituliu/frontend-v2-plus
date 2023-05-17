@@ -1,7 +1,12 @@
 <template>
-
-  <div class="fill_course_tip_btn" @click="popupVisible()"> <div @click="popupVisible()"> 填写教程及说明</div> <div @click="popupVisible()" class="fill_course_tip_icon">?</div></div>
-  <c-popup :visible="firstpopup">
+  <div class="fill_course_tip_btn" @click="popupVisible()">
+    <div @click="popupVisible()">填写流程说明</div>
+    <div @click="popupVisible()" class="fill_course_tip_icon">?</div>
+  </div>
+  <c-popup :visible="firstpopup" @click="isFirstPopupCache()">
+    
+      <div class="fill_course_title">填写流程说明</div>
+     
     <div class="fill_course_wrap">
       <div class="from_card">
         <div class="card_title" :style="tableSytle('short')">干员</div>
@@ -82,19 +87,31 @@
 import "@/assets/css/sprite_char_6.css";
 import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_charData.css";
-import { ref } from "vue";
+import { onMounted, ref  } from "vue";
+import jsCookie from "js-cookie";
 
-let firstpopup = ref(false)
+let firstpopup = ref(false);
 
-function popupVisible(){
-  firstpopup.value = !firstpopup.value
+function isFirstPopup(){
+   console.log(jsCookie.get('firstpopup'))
+   if('firstpopup'!=jsCookie.get('firstpopup')){
+    firstpopup.value = true
+   }
+}
+
+function isFirstPopupCache(){
+    jsCookie.set('firstpopup','firstpopup')
+}
+
+function popupVisible() {
+  firstpopup.value = !firstpopup.value;
 }
 
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 
 let characterListDemo = ref([
   {
-    charId: "char_377_gdglow",
+    charId: "char_332_archet",
     own: true,
     level: 1,
     modX: 0,
@@ -129,8 +146,6 @@ function dropUp(id) {
   document.getElementById(id).style.display = "none";
 }
 
-
-
 function getSprite(id, type, index) {
   if ("mod" == type) return "bg-" + id + " sprite_mod";
   if ("skill" == type) return "bg-" + id + " sprite_skill";
@@ -145,4 +160,10 @@ function tableSytle(type) {
   if ("short" == type) return "min-width:98px";
   if ("long" == type) return "min-width:66px";
 }
+
+onMounted(()=>{
+  isFirstPopup()
+})
+
+
 </script>
