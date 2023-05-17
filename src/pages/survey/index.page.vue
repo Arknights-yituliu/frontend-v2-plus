@@ -47,6 +47,9 @@ import "@/assets/css/survey_index.css";
 import { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, globalUserData } from "./serveyService";
 import { onMounted, ref } from "vue";
 import guild from "@/static/json/survey/guild.json";
+// import eruda from "eruda"
+
+// eruda.init();
 
 let guildKey = ["siteDescription", "registrationProcess", "developmentProgress"];
 
