@@ -150,17 +150,12 @@ async function login() {
   userData.value = response;
 }
 
-function userDataCache() {
-  let cacheData = window.localStorage.getItem("userData");
-  userData.value = cacheData == undefined ? userData.value : JSON.parse(cacheData);
-  if (userData.value.status == 1) {
-    getSurveyCharData(userData.value.userName);
-  }
-}
+
 
 function logout() {
-  userDataCacheClearEvent();
+  userData.value = userDataCacheClearEvent();
 }
+
 
 function getSurveyCharData(userName) {
   surveyApi.getSurveyCharData(userName).then((response) => {
@@ -173,7 +168,6 @@ function getSurveyCharData(userName) {
         }
       }
     }
-
     cMessage("导入了 " + list.length + " 条数据");
   });
 }
