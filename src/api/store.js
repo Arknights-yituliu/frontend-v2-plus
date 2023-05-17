@@ -1,12 +1,12 @@
 import request from "@/api/request";
 
-const api_name = `/api`;
+const api_name = ``;
 
 export default {
   //查询所有材料价值
   findAllItem(expCoefficient) {
     return request({
-      url: `${api_name}/find/item/value?expCoefficient=${expCoefficient}`,
+      url: `${api_name}/item/value?expCoefficient=${expCoefficient}`,
       method: "get",
     });
   },
@@ -14,7 +14,7 @@ export default {
   //查询所有常驻商店数据
   findPermStore() {
     return request({
-      url: `${api_name}/find/store/perm`,
+      url: `${api_name}/store/perm`,
       method: "get",
     });
   },
@@ -22,7 +22,7 @@ export default {
   //查询活动商店性价比
   findActStore() {
     return request({
-      url: `${api_name}/find/store/act`,
+      url: `${api_name}/store/act`,
       method: "get",
     });
   },
@@ -30,7 +30,7 @@ export default {
   //商店礼包性价比
   findPackStore() {
     return request({
-      url: `${api_name}/find/store/pack`,
+      url: `${api_name}/store/pack`,
       method: "get",
     });
   },

@@ -1,6 +1,6 @@
 import surveyApi from "@/api/survey";
 import { cMessage } from "@/components/message.js";
-import character_table from "@/static/json/survey/character_table.json";
+import characterBasicInfo from "@/static/json/survey/characterBasicInfo.json";
 import jsCookie from "js-cookie";
 
 
@@ -41,8 +41,8 @@ function userDataCacheClearEvent() {
 
 //初始化数据
 function characterListInit() {
-  for (let charId in character_table) {
-    var baseInfo = character_table[charId];
+  for (let charId in characterBasicInfo) {
+    var baseInfo = characterBasicInfo[charId];
     if (baseInfo.rarity < 6) continue;
     let modX = -1;
     let modY = -1;
