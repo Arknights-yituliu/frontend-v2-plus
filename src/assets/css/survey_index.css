@@ -5,7 +5,7 @@
   margin: auto;
   border: 1px rgb(0, 0, 0) solid;
   scrollbar-width: none;
-  height: 100vh;
+  /* height: 100vh; */
   /* Firefox */
 }
 
