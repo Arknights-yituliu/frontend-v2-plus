@@ -104,12 +104,12 @@
         </div>
 
         <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(1, 4)" v-show="char.modX>-1" @click="changeData(index, 'modX', rank)" :class="selected(char.modX, rank)" >
+          <div v-for="rank in ranks.slice(1, 4)" v-show="char.modX > -1" @click="changeData(index, 'modX', rank)" :class="selected(char.modX, rank)">
             <div :class="getSprite('mod_' + rank, 'mod')"></div>
           </div>
         </div>
         <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(1, 4)" v-show="char.modY>-1" @click="changeData(index, 'modY', rank)" :class="selected(char.modY, rank)">
+          <div v-for="rank in ranks.slice(1, 4)" v-show="char.modY > -1" @click="changeData(index, 'modY', rank)" :class="selected(char.modY, rank)">
             <div :class="getSprite('mod_' + rank, 'mod')"></div>
           </div>
         </div>
@@ -124,7 +124,7 @@ import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_charData.css";
 import { cMessage } from "@/components/message.js";
 import { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, characterListInit, globalUserData } from "./serveyService";
-import charDataDemo from "./charDataDemo.page.vue";
+import charDataDemo from "@/components/charDataDemo.vue";
 
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
@@ -150,12 +150,9 @@ async function login() {
   userData.value = response;
 }
 
-
-
 function logout() {
   userData.value = userDataCacheClearEvent();
 }
-
 
 function getSurveyCharData(userName) {
   surveyApi.getSurveyCharData(userName).then((response) => {

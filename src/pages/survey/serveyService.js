@@ -1,8 +1,8 @@
 import surveyApi from "@/api/survey";
 import { cMessage } from "@/components/message.js";
 import character_table from "@/static/json/survey/character_table.json";
-import Cookies from "js-cookie";
-import { time } from "echarts";
+import jsCookie from "js-cookie";
+
 
 let globalUserData = { userName: "山桜", status: -1, uid: 10000 }; //用户信息(用户名，用户id，用户状态)
 let characterList = [];
@@ -12,10 +12,9 @@ async function registerEvent(loginData) {
   console.log("传进来的请求：", loginData);
   await surveyApi.register(loginData).then((response) => {
     globalUserData = response.data;
-    Cookies.set("globalUserData", JSON.stringify(globalUserData));
+    jsCookie.set("globalUserData", JSON.stringify(globalUserData));
     // console.log("api返回数据：", globalUserData);
   });
-
   return globalUserData;
 }
 
@@ -23,20 +22,20 @@ async function registerEvent(loginData) {
 async function loginEvent(loginData) {
   await surveyApi.login(loginData).then((response) => {
     globalUserData = response.data;
-    Cookies.set("globalUserData", JSON.stringify(globalUserData));
+    jsCookie.set("globalUserData", JSON.stringify(globalUserData));
   });
   return globalUserData;
 }
 
 function userDataCacheEvent() {
   // let cacheData = window.localStorage.getItem("globalUserData");
-  let cacheData = Cookies.get("globalUserData");
+  let cacheData = jsCookie.get("globalUserData");
   globalUserData = cacheData == "undefined" || cacheData == undefined ? globalUserData : JSON.parse(cacheData);
   return globalUserData;
 }
 
 function userDataCacheClearEvent() {
-  Cookies.remove("globalUserData");
+  jsCookie.remove("globalUserData");
   return (globalUserData = { userName: "", status: -1 });
 }
 
@@ -47,7 +46,7 @@ function characterListInit() {
     if (baseInfo.rarity < 6) continue;
     let modX = -1;
     let modY = -1;
-   
+
     if (baseInfo.mod !== undefined) {
       if (baseInfo.mod.modX) {
         modX = 0;
@@ -72,7 +71,7 @@ function characterListInit() {
     characterList.push(character);
   }
 
-  console.log(characterList)
+  // console.log(characterList);
   return characterList;
 }
 
