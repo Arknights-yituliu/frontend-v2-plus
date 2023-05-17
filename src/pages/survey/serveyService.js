@@ -45,12 +45,23 @@ function characterListInit() {
   for (let charId in character_table) {
     var baseInfo = character_table[charId];
     if (baseInfo.rarity < 6) continue;
+    let modX = -1;
+    let modY = -1;
+   
+    if (baseInfo.mod !== undefined) {
+      if (baseInfo.mod.modX) {
+        modX = 0;
+      }
+      if (baseInfo.mod.modY) {
+        modY = 0;
+      }
+    }
     let character = {
       charId: charId,
       own: true,
       level: 1,
-      modX: 0,
-      modY: 0,
+      modX: modX,
+      modY: modY,
       phase: 2,
       potential: 1,
       rarity: baseInfo.rarity,
@@ -60,10 +71,10 @@ function characterListInit() {
     };
     characterList.push(character);
   }
+
+  console.log(characterList)
   return characterList;
 }
-
-
 
 export { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, characterListInit, globalUserData };
 

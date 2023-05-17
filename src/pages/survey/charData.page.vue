@@ -104,12 +104,12 @@
         </div>
 
         <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(1, 4)" @click="changeData(index, 'modX', rank)" :class="selected(char.modX, rank)">
+          <div v-for="rank in ranks.slice(1, 4)" v-show="char.modX>-1" @click="changeData(index, 'modX', rank)" :class="selected(char.modX, rank)" >
             <div :class="getSprite('mod_' + rank, 'mod')"></div>
           </div>
         </div>
         <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(1, 4)" @click="changeData(index, 'modY', rank)" :class="selected(char.modY, rank)">
+          <div v-for="rank in ranks.slice(1, 4)" v-show="char.modY>-1" @click="changeData(index, 'modY', rank)" :class="selected(char.modY, rank)">
             <div :class="getSprite('mod_' + rank, 'mod')"></div>
           </div>
         </div>
