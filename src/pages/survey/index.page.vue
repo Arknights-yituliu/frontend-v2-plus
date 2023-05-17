@@ -54,8 +54,10 @@ import guild from "@/static/json/survey/guild.json";
 let guildKey = ["siteDescription", "registrationProcess", "developmentProgress"];
 
 function replaceAnswer(answer) {
-  answer = answer.replaceAll(",", "，");
-  answer = answer.replaceAll(".", "。");
+  answer = answer.replace(/,/g, "，");
+  answer = answer.replace('.', "。");
+  answer = answer.replace('.', "。");
+  answer = answer.replace('.', "。");
   return answer;
 }
 
