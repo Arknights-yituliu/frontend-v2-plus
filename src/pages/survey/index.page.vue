@@ -51,9 +51,9 @@ let guildKey = ["siteDescription", "registrationProcess", "developmentProgress"]
 
 function replaceAnswer(answer) {
   answer = answer.replace(/,/g, "，");
-  answer = answer.replace('.', "。");
-  answer = answer.replace('.', "。");
-  answer = answer.replace('.', "。");
+  answer = answer.replace(/\./g, "。");
+  // answer = answer.replace('.', "。");
+  // answer = answer.replace('.', "。");
   return answer;
 }
 
