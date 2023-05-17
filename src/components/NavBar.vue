@@ -103,7 +103,6 @@ const route = computed(() => {
   for (let i of routes) {
     console.log('path:',i.path )
     if (i.path == pageContext.urlPathname) {
-     
       console.log('匹配的path是:',i.path)
       return i;
 
