@@ -57,7 +57,7 @@ function characterListInit() {
     }
     let character = {
       charId: charId,
-      own: true,
+      own: false,
       level: 1,
       modX: modX,
       modY: modY,
