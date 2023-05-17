@@ -99,9 +99,11 @@ const routes = [
 ];
 
 const route = computed(() => {
+  console.log('当前路径是:',pageContext.urlPathname)
   for (let i of routes) {
-    console.log('path:',i.path)
+    console.log('path:',i.path )
     if (i.path == pageContext.urlPathname) {
+     
       console.log('匹配的path是:',i.path)
       return i;
 

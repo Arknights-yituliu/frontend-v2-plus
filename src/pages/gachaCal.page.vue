@@ -1705,7 +1705,7 @@ export default {
           },
         ],
       };
-      console.log(option);
+      // console.log(option);
       myChart.setOption(option);
     },
 
