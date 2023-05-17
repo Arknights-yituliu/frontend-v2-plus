@@ -69,7 +69,7 @@
       </div>
     </div>
     <div class="fill_course_tip_wrap">
-      <div class="fill_course_tip">点击干员头像或<c-switch class="fill_course_tip_switch"></c-switch>来填写拥有此干员，默认拥有</div>
+      <div class="fill_course_tip">点击干员头像或<c-switch class="fill_course_tip_switch"></c-switch>来填写拥有此干员，默认未拥有</div>
       <div class="fill_course_tip">
         点击
         <div class="card_option_check fill_course_tip_image"><div :class="getSprite('phase' + 1, 'phase')"></div></div>
@@ -112,7 +112,7 @@ let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 let characterListDemo = ref([
   {
     charId: "char_332_archet",
-    own: true,
+    own: false,
     level: 1,
     modX: 0,
     modY: 0,

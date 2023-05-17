@@ -124,7 +124,7 @@ import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_charData.css";
 import { cMessage } from "@/components/message.js";
 import { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, characterListInit, globalUserData } from "./serveyService";
-import charDataDemo from "@/components/charDataDemo.vue";
+import charDataDemo from "@/pages/survey/charDataDemo.vue";
 
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";

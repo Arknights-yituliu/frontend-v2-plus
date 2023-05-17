@@ -45,7 +45,8 @@ async function render(pageContext) {
         <script defer src="https://cdn.staticfile.org/js-cookie/3.0.1/js.cookie.min.js"></script>
         <script defer src="https://cdn.staticfile.org/echarts/5.4.2/echarts.min.js"></script>
         <script defer src="https://cdn.staticfile.org/element-plus-icons-vue/2.1.0/index.iife.min.js"></script>
-      
+         <script src="https://cdn.bootcdn.net/ajax/libs/eruda/2.3.3/eruda.min.js"></script>
+          <script>eruda.init()</script>
       </head>
       <body>
         <div id="app">${dangerouslySkipEscape(appHtml)}</div>
@@ -61,5 +62,3 @@ async function render(pageContext) {
 }
 
 //手机控制台调试库
-//  <script src="https://cdn.bootcdn.net/ajax/libs/eruda/2.3.3/eruda.min.js"></script>
-//   <script>eruda.init()</script>
