@@ -267,7 +267,7 @@
           </div>
           <div class="history_actStages">
             <div v-for="(stage, index) in closedAct" :key="index" class="history_stage">
-              <div :class="getSpriteImg(stage.itemId, 'title')" style="display: inline-block"></div>
+              <div :class="getSpriteImg(stage.itemId, 'history')" style="display: inline-block"></div>
               <div class="history_stage_table">{{ stage.stageCode }}<br />{{ getEfficiency(stage.stageEfficiency) }}%</div>
             </div>
           </div>
@@ -405,6 +405,7 @@ export default {
       if (index == "large") return "bg-" + id + "large" + " sprite_large";
       if (index === "sec") return "bg-" + id + " sprite_secondary";
       if (index === "title") return "bg-" + id + " sprite_large_title";
+      if (index === "history") return "bg-" + id + " sprite_large_history";
       if (index === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
       if (index === "up") return "bg-" + id + "_icon sprite_icon_up";
       if (index === "el") return "bg-" + id + "_icon sprite_icon_el";
