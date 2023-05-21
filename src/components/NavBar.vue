@@ -100,7 +100,7 @@ const routes = [
 
 const route = computed(() => {
   for (let i of routes) {
-    if (i.path == pageContext.urlPathname) {
+    if (i.path == pageContext.urlPathname || i.path + "/" == pageContext.urlPathname) {
       return i;
     }
   }
