@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import character_table from "@/static/json/survey/character_table.json";
+// import character_table from "@/static/json/survey/character_table.json";
 import storeApi from "@/api/store";
 import { onMounted, ref } from "vue";
 
