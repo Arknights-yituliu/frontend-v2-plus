@@ -5,7 +5,7 @@ const api_name = `/tool`;
 export default {
   updateVisits(path) {
     return request({
-      url: `/private/visits?path=${path}`,
+      url: `/visits?path=${path}`,
       method: "get",
     });
   },
