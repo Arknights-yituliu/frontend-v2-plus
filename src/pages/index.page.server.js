@@ -2,7 +2,7 @@ import axios from "axios";
 
 const http = "https://backend.yituliu.site/";
 
-// const http = "http://127.0.0.1:10012/";
+// const http = "http://127.0.0.1:10013/";
 
 function get_t3() {
   return axios.get(http + "stage/t3?expCoefficient=0.625");

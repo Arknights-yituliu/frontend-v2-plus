@@ -13,6 +13,11 @@
   transform: scale(1.2);
 }
 
+.sprite_large_history{
+  transform: scale(0.8);
+  margin-top: -4px;
+}
+
 .sprite_icon_up {
   transform: scale(0.8);
   margin: -10px;

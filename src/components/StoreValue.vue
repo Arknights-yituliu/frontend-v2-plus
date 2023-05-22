@@ -211,7 +211,7 @@
       </div>
       <!-- 标题区域end -->
       <!-- 内容区域 -->
-      <div v-for="(singleAct, index) in actStoreList" :key="index" v-show="singleAct.actStartDate > 0.1">
+      <div v-for="(singleAct, index) in actStoreList" :key="index" >
         <!-- banner -->
         <div class="act_banner_background" :style="getBackground(singleAct.actImgUrl)">
           <div class="act_banner_img">
@@ -221,7 +221,7 @@
 
         <!-- tag -->
         <div class="stage_hint">
-          <div v-for="(singleTag, index) in singleAct.actTagAera" :key="index" :class="getTagClass(singleTag.tagRank)">
+          <div v-for="(singleTag, index) in singleAct.actTagArea" :key="index" :class="getTagClass(singleTag.tagRank)">
             {{ singleTag.tagText }}
           </div>
         </div>
