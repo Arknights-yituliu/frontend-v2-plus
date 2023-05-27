@@ -41,7 +41,7 @@
       </div>
     </div>
     <div class="fill_course_page">
-      <charDataDemo></charDataDemo>
+      <characterDemo></characterDemo>
     </div>
     <div class="char_forms">
       <div class="from_title_wrap">
@@ -124,7 +124,7 @@ import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_charData.css";
 import { cMessage } from "@/components/message.js";
 import { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, characterListInit, globalUserData } from "./serveyService";
-import charDataDemo from "@/pages/survey/charDataDemo.vue";
+import characterDemo from "@/pages/survey/characterDemo.vue";
 
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
@@ -150,12 +150,17 @@ async function login() {
   userData.value = response;
 }
 
+//登出
 function logout() {
   userData.value = userDataCacheClearEvent();
 }
 
-function getSurveyCharData(userName) {
-  surveyApi.getSurveyCharData(userName).then((response) => {
+
+
+//找回填写过的角色信息
+function getSurveyCharData() {
+  
+  surveyApi.getSurveyCharData(userData.value.userName).then((response) => {
     let list = response.data;
     for (var i = 0; i < characterList.value.length; i++) {
       // characterList.value[i].own =false;
@@ -255,5 +260,6 @@ onMounted(() => {
   getClientWidth();
   initData();
   userData.value = userDataCacheEvent();
+  getSurveyCharData()
 });
 </script>

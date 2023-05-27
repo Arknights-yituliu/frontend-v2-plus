@@ -61,7 +61,7 @@ function menu_collapse(flag) {
   } else {
     document.getElementById("menu").className = "nav_collapse";
   }
-  console.log(menu_flag.value);
+  // console.log(menu_flag.value);
 }
 
 watch(theme, () => {
