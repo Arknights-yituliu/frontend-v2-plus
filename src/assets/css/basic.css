@@ -267,6 +267,7 @@ body {
   --op-title-ctext-fg: #ffffffdd;
   --popup-card-bg: rgba(0, 0, 0, 0.95);
   --popup-text-fg: #888;
+  --popup-history-act-name-fg: #5972ff;
   --popup-header-penguin-fg: #3f51b5;
   --gacha-unit-fold-bg: #444444;
   --foot-main-bg: #ddd;
@@ -283,6 +284,7 @@ body {
   --op-title-ctext-fg: #000000dd;
   --popup-card-bg: rgba(255, 255, 255, 0.83);
   --popup-text-fg: #222;
+  --popup-history-act-name-fg: #3f51b5;
   --popup-header-penguin-fg: blue;
   --gacha-unit-fold-bg: #e8e8e8;
   --foot-main-bg: white;

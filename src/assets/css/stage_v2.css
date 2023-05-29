@@ -354,7 +354,7 @@
   margin-bottom: 8px;
   display: flex;
   padding: 4px;
-  background-color: rgb(255 255 255 / 90%);
+  background-color: var(--popup-card-bg);
   align-items: center;
 }
 
@@ -362,7 +362,7 @@
   display: inline-block;
   /* height: 60px; */
   width: 120px;
-  color: #3f51b5;
+  color: var(--popup-history-act-name-fg);
   font-size: 20px;
   font-weight: 600;
   padding: 0px 6px;
