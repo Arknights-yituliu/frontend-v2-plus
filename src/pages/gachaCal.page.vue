@@ -17,7 +17,7 @@
               <!-- 如果有4个选项则修改为 style="width:98%;margin:0 1%;"，子项宽度25% -->
 
               <el-radio-group size="small" style="width: 90%; margin: 6px 5%" v-model="timeSelector" @change="checkEndDate(timeSelector)">
-                <el-radio-button label="夏活(8.17)" style="width: 33%"></el-radio-button>
+                <el-radio-button label="夏活(8.22)" style="width: 33%"></el-radio-button>
                 <el-radio-button label="感谢庆典" style="width: 33%" disabled></el-radio-button>
                 <el-radio-button label="待定" type="primary" style="width: 33%" disabled></el-radio-button>
                 <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
@@ -998,10 +998,10 @@ export default {
       // checkBox: ["1","7"],
       rewardType: "联动限定", //奖励的类型
       startTime: "", //开始时间
-      endTime: "2023/08/17 03:59:00", //结束时间
+      endTime: "2023/08/22 03:59:00", //结束时间
       start_TimeStamp: "", //开始时间戳
       end_TimeStamp: "", //结束时间戳
-      timeSelector: "夏活(8.17)", //活动时间节点选择框的绑定对象
+      timeSelector: "夏活(8.22)", //活动时间节点选择框的绑定对象
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
       // gacha_storePacks: gacha_storePacksJson.data,
@@ -1224,13 +1224,13 @@ export default {
     // 选择攒计算的时间节点
     checkEndDate() {
       // this.cookieInit=true;
-      if (this.timeSelector === "夏活(8.17)") {
-        this.endTime = "2023/08/17 03:59:00";
+      if (this.timeSelector === "夏活(8.22)") {
+        this.endTime = "2023/08/22 03:59:00";
         this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.poolCountDownFlag_permit = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
         this.poolCountDownFlag_orundum = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
       } else if (this.timeSelector === "1111111") {
-        this.endTime = "2023/08/17 03:59:00";
+        this.endTime = "2023/08/22 03:59:00";
         this.rewardType = "周年限定";
         this.poolCountDownFlag_permit = true;
         this.poolCountDownFlag_orundum = true;
@@ -1459,7 +1459,7 @@ export default {
       //减去限定池已经赠送过的单抽
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
 
-      // if (this.timeSelector === "夏活(8.17)") {
+      // if (this.timeSelector === "夏活(8.22)") {
       //   this.calResults.orundum_other += parseInt(this.customValue_slider);
       // }
 
@@ -1748,7 +1748,7 @@ export default {
         gachaPermit: 0,
         gachaPermit10: 0,
         packType: "year",
-        packRmbPerDraw: 8.17,
+        packRmbPerDraw: 8.23,
         start: Date.parse(new Date("2022/05/01 00:00:00")),
         end: Date.parse(new Date("2023/04/30 00:00:00")),
         rewardType: "公共",
