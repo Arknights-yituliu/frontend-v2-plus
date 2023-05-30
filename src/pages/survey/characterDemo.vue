@@ -4,9 +4,8 @@
     <div @click="popupVisible()" class="fill_course_tip_icon">?</div>
   </div>
   <c-popup :visible="firstpopup" @click="isFirstPopupCache()">
-    
-      <div class="fill_course_title">填写流程说明</div>
-     
+    <div class="fill_course_title">填写流程说明</div>
+
     <div class="fill_course_wrap">
       <div class="from_card">
         <div class="card_title" :style="tableSytle('short')">干员</div>
@@ -87,20 +86,20 @@
 import "@/assets/css/sprite_char_6_part1.css";
 import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_charData.css";
-import { onMounted, ref  } from "vue";
+import { onMounted, ref } from "vue";
 import jsCookie from "js-cookie";
 
 let firstpopup = ref(false);
 
-function isFirstPopup(){
-   console.log(jsCookie.get('firstpopup'))
-   if('firstpopup'!=jsCookie.get('firstpopup')){
-    firstpopup.value = true
-   }
+function isFirstPopup() {
+  console.log(jsCookie.get("firstpopup"));
+  if ("firstpopup" != jsCookie.get("firstpopup")) {
+    firstpopup.value = true;
+  }
 }
 
-function isFirstPopupCache(){
-    jsCookie.set('firstpopup','firstpopup')
+function isFirstPopupCache() {
+  jsCookie.set("firstpopup", "firstpopup");
 }
 
 function popupVisible() {
@@ -161,9 +160,7 @@ function tableSytle(type) {
   if ("long" == type) return "min-width:66px";
 }
 
-onMounted(()=>{
-  isFirstPopup()
-})
-
-
+onMounted(() => {
+  isFirstPopup();
+});
 </script>

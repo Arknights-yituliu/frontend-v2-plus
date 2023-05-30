@@ -211,7 +211,7 @@
       </div>
       <!-- 标题区域end -->
       <!-- 内容区域 -->
-      <div v-for="(singleAct, index) in actStoreList" :key="index" >
+      <div v-for="(singleAct, index) in actStoreList" :key="index">
         <!-- banner -->
         <div class="act_banner_background" :style="getBackground(singleAct.actImgUrl)">
           <div class="act_banner_img">
