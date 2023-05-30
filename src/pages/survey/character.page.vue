@@ -119,7 +119,7 @@
 </template>
 
 <script setup>
-import "@/assets/css/sprite_char_6.css";
+import "@/assets/css/sprite_char_6_part1.css";
 import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_charData.css";
 import { cMessage } from "@/components/message.js";
