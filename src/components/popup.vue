@@ -15,7 +15,6 @@ import { ref, watch } from "vue";
 
 const props = defineProps(["modelValue", "visible", "width"]);
 
-
 let popupStyle = ref("display: none;");
 if (props.visible) {
   popupStyle.value = "display: block;";
@@ -24,7 +23,7 @@ if (props.visible) {
 watch(
   () => props.visible,
   (newVal, oldVal) => {
-    console.log(newVal, oldVal)
+    console.log(newVal, oldVal);
     if (newVal) {
       popupStyle.value = "display: block;";
     }

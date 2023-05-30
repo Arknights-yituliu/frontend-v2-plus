@@ -44,10 +44,13 @@ import { ref, watch, computed, onMounted } from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
+
 import { usePageContext } from "@/renderer/usePageContext";
 const pageContext = usePageContext();
 
 const theme = ref(pageContext.theme == "dark");
+
+const png = ref(false);
 
 let menu_flag = ref(false);
 
@@ -64,10 +67,21 @@ function menu_collapse(flag) {
   // console.log(menu_flag.value);
 }
 
-watch(theme, () => {
-  const theme_name = theme.value ? "dark" : "light";
-  document.querySelector(":root").className = theme_name;
-  cookie.set("theme", theme_name, { expires: 30 });
+watch(
+  () => (theme.value ? "dark" : "light") + (png.value ? " png" : ""),
+  (new_value, old_value) => {
+    const theme_name = theme.value ? "dark" : "light";
+    document.querySelector(":root").className = new_value;
+    cookie.set("theme", theme_name, { expires: 30 });
+  }
+);
+
+onMounted(async () => {
+  const supportsWebP = await import("supports-webp");
+  if (!(await supportsWebP)) {
+    console.log("WebP is not supported. Using PNG for sprites.");
+    png.value = true;
+  }
 });
 
 const routes = [

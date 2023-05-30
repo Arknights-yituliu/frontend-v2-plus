@@ -1,0 +1,101 @@
+.png .bg-30013large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -10px -10px;
+}
+
+.png .bg-30023large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -160px -10px;
+}
+
+.png .bg-30033large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -10px -160px;
+}
+
+.png .bg-30043large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -160px -160px;
+}
+
+.png .bg-30053large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -310px -10px;
+}
+
+.png .bg-30063large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -310px -160px;
+}
+
+.png .bg-30073large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -10px -310px;
+}
+
+.png .bg-30083large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -160px -310px;
+}
+
+.png .bg-30093large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -310px -310px;
+}
+
+.png .bg-30103large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -460px -10px;
+}
+
+.png .bg-31013large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -460px -160px;
+}
+
+.png .bg-31023large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -460px -310px;
+}
+
+.png .bg-31033large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -10px -460px;
+}
+
+.png .bg-31043large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -160px -460px;
+}
+
+.png .bg-31053large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -310px -460px;
+}
+
+.png .bg-31063large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -460px -460px;
+}
+
+.png .bg-act24side_melding_5large {
+  width: 130px;
+  height: 130px;
+  background: url("/image/sprite/sprites-large2.png") -610px -10px;
+}
