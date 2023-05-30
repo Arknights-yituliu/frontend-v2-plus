@@ -155,8 +155,11 @@ function logout() {
   userData.value = userDataCacheClearEvent();
 }
 
+
+
 //找回填写过的角色信息
 function getSurveyCharData() {
+  
   surveyApi.getSurveyCharData(userData.value.userName).then((response) => {
     let list = response.data;
     for (var i = 0; i < characterList.value.length; i++) {
@@ -257,6 +260,6 @@ onMounted(() => {
   getClientWidth();
   initData();
   userData.value = userDataCacheEvent();
-  getSurveyCharData();
+  getSurveyCharData()
 });
 </script>
