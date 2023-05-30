@@ -3,8 +3,7 @@ import { cMessage } from "@/components/message.js";
 import characterBasicInfo from "@/static/json/survey/characterBasicInfo.json";
 import jsCookie from "js-cookie";
 
-
-let globalUserData = { userName: "山桜", status: -1, uid: 10000 }; //用户信息(用户名，用户id，用户状态)
+let globalUserData = { userName: "未登录", status: -1, uid: 10000 }; //用户信息(用户名，用户id，用户状态)
 let characterList = [];
 
 //注册
@@ -12,7 +11,7 @@ async function registerEvent(loginData) {
   console.log("传进来的请求：", loginData);
   await surveyApi.register(loginData).then((response) => {
     globalUserData = response.data;
-    jsCookie.set("globalUserData", JSON.stringify(globalUserData));
+    jsCookie.set("globalUserData", JSON.stringify(globalUserData), { expires: 30 });
     // console.log("api返回数据：", globalUserData);
   });
   return globalUserData;
@@ -22,7 +21,7 @@ async function registerEvent(loginData) {
 async function loginEvent(loginData) {
   await surveyApi.login(loginData).then((response) => {
     globalUserData = response.data;
-    jsCookie.set("globalUserData", JSON.stringify(globalUserData));
+    jsCookie.set("globalUserData", JSON.stringify(globalUserData), { expires: 30 });
   });
   return globalUserData;
 }

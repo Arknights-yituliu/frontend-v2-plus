@@ -293,12 +293,11 @@
 }
 
 .fill_course_title {
- font-weight: 600;
- font-size: 20px;
- padding: 2px;
- margin-top: 10px;
- margin-left: 20px;
-
+  font-weight: 600;
+  font-size: 20px;
+  padding: 2px;
+  margin-top: 10px;
+  margin-left: 20px;
 }
 
 .fill_course_tip_btn {

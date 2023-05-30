@@ -1,6 +1,6 @@
 <template>
-  <charData></charData>
+  <character></character>
 </template>
 <script setup>
-import charData from "./charData.page.vue";
+import character from "./character.page.vue";
 </script>
