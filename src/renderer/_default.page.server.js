@@ -63,6 +63,4 @@ async function render(pageContext) {
 }
 
 //手机控制台调试库
-{
-  /*  */
-}
+{/*  */}

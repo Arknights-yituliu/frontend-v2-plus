@@ -28,7 +28,6 @@
     "js-cookie": "^3.0.1",
     "pinia": "^2.0.32",
     "sirv": "^2.0.2",
-    "supports-webp": "^3.0.0",
     "terser": "^5.16.6",
     "vite": "^4.2.1",
     "vite-plugin-ssr": "^0.4.99",

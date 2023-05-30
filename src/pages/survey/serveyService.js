@@ -3,6 +3,7 @@ import { cMessage } from "@/components/message.js";
 import characterBasicInfo from "@/static/json/survey/characterBasicInfo.json";
 import jsCookie from "js-cookie";
 
+
 let globalUserData = { userName: "未登录", status: -1, uid: 10000 }; //用户信息(用户名，用户id，用户状态)
 let characterList = [];
 
