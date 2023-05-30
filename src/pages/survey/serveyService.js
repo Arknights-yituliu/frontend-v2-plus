@@ -12,7 +12,7 @@ async function registerEvent(loginData) {
   console.log("传进来的请求：", loginData);
   await surveyApi.register(loginData).then((response) => {
     globalUserData = response.data;
-    jsCookie.set("globalUserData", JSON.stringify(globalUserData));
+    jsCookie.set("globalUserData", JSON.stringify(globalUserData), { expires: 30 });
     // console.log("api返回数据：", globalUserData);
   });
   return globalUserData;
@@ -22,7 +22,7 @@ async function registerEvent(loginData) {
 async function loginEvent(loginData) {
   await surveyApi.login(loginData).then((response) => {
     globalUserData = response.data;
-    jsCookie.set("globalUserData", JSON.stringify(globalUserData));
+    jsCookie.set("globalUserData", JSON.stringify(globalUserData), { expires: 30 });
   });
   return globalUserData;
 }
