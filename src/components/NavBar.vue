@@ -66,7 +66,12 @@ function menu_collapse(flag) {
 
 watch(theme, () => {
   const theme_name = theme.value ? "dark" : "light";
-  document.querySelector(":root").className = theme_name;
+  const remove_name = theme.value ? "light" : "dark";
+  const root_ele = document.querySelector(":root");
+  if (root_ele.classList.contains(remove_name)) {
+    root_ele.classList.remove(remove_name);
+  }
+  root_ele.classList.add(theme_name);
   cookie.set("theme", theme_name, { expires: 30 });
 });
 
