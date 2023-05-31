@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/",
     "dev": "npm run server",
-    "prod": "npm run build && npm run server:prod",
     "build": "vite build",
     "server": "node ./server",
-    "server:prod": "cross-env NODE_ENV=production node ./server",
-    "start": "npm run server:prod"
+    "start": "npm run server:prod",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "prod": "npm run build && npm run server:prod",
+    "server:prod": "cross-env NODE_ENV=production node ./server"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
