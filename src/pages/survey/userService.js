@@ -2,7 +2,7 @@ import surveyApi from "@/api/survey";
 import jsCookie from "js-cookie";
 import { ref } from "vue";
 
-let globalUserData = ref({ userName: "未登录", status: -1, uid: 10000 }); //用户信息(用户名，用户id，用户状态)
+let globalUserData = ref({ userName: "未登录",  uid: -1 }); //用户信息(用户名，用户id，用户状态)
 
 
 //注册
@@ -36,7 +36,7 @@ function userDataCacheEvent() {
 //清除缓存
 function userDataCacheClearEvent() {
   jsCookie.remove("globalUserData");
-  return (globalUserData.value = { userName: "未登录", status: -1 });
+  return (globalUserData.value = { userName: "未登录", uid: -1 });
 }
 
 
