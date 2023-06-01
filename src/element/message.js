@@ -29,7 +29,7 @@ function cMessage(text, type, duration) {
   setTimeout(function () {
     messageBar.remove()
     messageBars =  messageBars.splice(1)
-    console.log(messageBars)
+    // console.log(messageBars)
     for (let i in messageBars) {
       document.getElementById(messageBars[i]).style.top = (20+i*40)+'px'
     }

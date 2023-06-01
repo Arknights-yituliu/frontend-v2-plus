@@ -32,10 +32,15 @@ function characterListInit() {
       skill: baseInfo.skill,
       date: baseInfo.date,
       profession: baseInfo.profession,
+      mod:baseInfo.mod !== undefined,
       show: true,
     };
     characterList.push(character);
   }
+  
+  characterList.sort((a, b) => {
+    return b.rarity - a.rarity;
+  });
 
   // console.log(characterList);
   return characterList;
