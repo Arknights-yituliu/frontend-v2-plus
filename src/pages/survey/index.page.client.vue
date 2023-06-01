@@ -3,22 +3,22 @@
     <div class="survey_index_header">欢迎来到明日方舟干员调查统计站</div>
 
     <div class="survey_index_content">
-      <div class="login_card_wrap" v-show="userData.status != 1">
+      <div class="login_card_wrap" v-show="userData.uid < 0">
         <div class="login_card">
           <div class="login_card_tips">
             <div class="login_card_tips_title">填写您的用户ID，登录后可上传和恢复数据</div>
             <div>如果您尚未注册过，请先点击「注册」按钮。</div>
           </div>
           <div class="login_card_input_wrap">
-            <input class="login_card_input" placeholder="您的用户ID" v-model="loginData.userName" />
+            <input class="login_card_input" placeholder="您的用户ID" v-model="inputData.userName" />
           </div>
           <div class="login_card_btn_wrap">
-            <div class="login_card_btn" @click="register(loginData)">注册</div>
+            <div class="login_card_btn" @click="register(inputData)">注册</div>
             <div class="login_card_btn" @click="login()">登录</div>
           </div>
         </div>
       </div>
-      <div class="login_success_card_wrap" v-show="userData.status == 1">
+      <div class="login_success_card_wrap" v-show="userData.uid > 0">
         <p>
           <b>{{ userData.userName }}</b
           >&emsp;为您的用户ID，用于登录调查站,登录不设密码验证，请妥善保管ID！
@@ -38,39 +38,39 @@
         </div>
       </div>
       <div class="upload_type_wrap">
-      <div class="upload_type"><a class="href" href="survey/upload">填写干员信息</a></div>
-      <div class="upload_type"><a class="href" href="survey/upload">通过Excel上传填写</a></div>
-    </div>
+        <div class="upload_type"><a class="href" href="/survey/upload">填写干员信息</a></div>
+        <div class="upload_type"><a class="href" href="/survey/upload">通过Excel上传填写</a></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import "@/assets/css/survey_index.css";
-import { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, globalUserData } from "./serveyService";
 import { onMounted, ref } from "vue";
 import guild from "@/static/json/survey/guild.json";
 let guildKey = ["siteDescription", "registrationProcess", "developmentProgress"];
 
-function replaceAnswer(answer) {
-  return answer;
-}
+import { registerEvent, loginEvent, userDataCacheClearEvent, userDataCacheEvent } from "./userService";
 
-let loginData = ref({ userName: "山桜" }); //用户输入的用户名，用obj没准后期有别的字段
-let userData = ref({ userName: "山桜", status: -1, uid: 10000 });
+let inputData = ref({ userName: "" }); //用户输入的用户名，用obj没准后期有别的字段
+let userData = ref({ userName: "山桜", uid: -1 }); //用户信息(用户名，用户id，用户状态)
 
+//注册
 async function register() {
-  let response = await registerEvent(loginData.value);
+  let response = await registerEvent(inputData.value);
   console.log("异步：", response);
   userData.value = response;
 }
 
+//登录
 async function login() {
-  let response = await loginEvent(loginData.value);
+  let response = await loginEvent(inputData.value);
   console.log("异步：", response);
   userData.value = response;
 }
 
+//登出
 function logout() {
   userData.value = userDataCacheClearEvent();
 }

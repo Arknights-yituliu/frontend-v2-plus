@@ -179,14 +179,14 @@ function getSurveyCharData() {
       for (var j = 0; j < list.length; j++) {
         if (list[j].charId == characterList.value[i].charId) {
           characterList.value[i].phase = list[j].phase;
-          (characterList.value[i].level = list[j]), level;
-          (characterList.value[i].potential = list[j]), potential;
-          (characterList.value[i].skill1 = list[j]), skill1;
-          (characterList.value[i].skill2 = list[j]), skill2;
-          (characterList.value[i].skill3 = list[j]), skill3;
-          (characterList.value[i].modX = list[j]), modX;
-          (characterList.value[i].modY = list[j]), modY;
-          (characterList.value[i].own = list[j]), own;
+          characterList.value[i].level = list[j]. level;
+          characterList.value[i].potential = list[j].potential;
+          characterList.value[i].skill1 = list[j]. skill1;
+          characterList.value[i].skill2 = list[j]. skill2;
+          characterList.value[i].skill3 = list[j]. skill3;
+          characterList.value[i].modX = list[j]. modX;
+          characterList.value[i].modY = list[j]. modY;
+          characterList.value[i].own = list[j]. own;
         }
       }
     }
@@ -242,7 +242,7 @@ function maaData1() {
   }
 }
 
-let swithType = ref("pc");
+let swithType = ref("phone");
 
 //打开选择框
 function dropDown(id) {
@@ -350,10 +350,12 @@ let clientWidth = ref(500);
 function getClientWidth() {
   const width = document.documentElement.clientWidth;
   clientWidth.value = width;
+  if(width>1000) swithType = 'pc'
   console.log(width);
 }
 
 onMounted(() => {
   getClientWidth();
+  getSurveyCharData()
 });
 </script>

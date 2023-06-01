@@ -4,7 +4,7 @@
     <div class="nav_item"><a class="href" href="/survey/character">练度调查</a></div>
     <!-- <div class="nav_item"><a class="href" href="/survey">风评调查</a></div> -->
     <div class="nav_item"><a class="href" href="/survey/list">调查结果</a></div>
-    <div class="login_wrap" v-show="userData.status < 0">
+    <div class="login_wrap" v-show="userData.uid < 0">
       <!-- <div class="login_wrap"> -->
       <div>
         <input type="text" class="login_input" v-model="inputData.userName" />
@@ -14,7 +14,7 @@
         <div class="btn_survey" @click="login()">登录</div>
       </div>
     </div>
-    <div class="user_wrap" v-show="userData.status == 1">
+    <div class="user_wrap" v-show="userData.uid > 0">
       <div class="user_name">用户：{{ userData.userName }}</div>
       <div class="btn_survey" @click="logout()">登出</div>
     </div>
@@ -26,7 +26,7 @@ import { onMounted, ref } from "vue";
 import { registerEvent, loginEvent, userDataCacheClearEvent, userDataCacheEvent } from "./userService";
 
 let inputData = ref({ userName: "" }); //用户输入的用户名，用obj没准后期有别的字段
-let userData = ref({ userName: "山桜", status: -1, uid: 10000 }); //用户信息(用户名，用户id，用户状态)
+let userData = ref({ userName: "山桜", uid: -1 }); //用户信息(用户名，用户id，用户状态)
 
 //注册
 async function register() {
