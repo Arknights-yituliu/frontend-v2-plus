@@ -2,5 +2,5 @@
   <character></character>
 </template>
 <script setup>
-import character from "./character.page.vue";
+import character from "./character.vue";
 </script>
