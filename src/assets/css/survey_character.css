@@ -6,71 +6,7 @@
   /* border: 4px rgb(132, 120, 226) solid; */
 }
 
-.survey_charData_header {
-  width: 100%;
-  margin: auto;
-  margin-top: 2px;
-  height: 40px;
-  border-bottom: 1px rgb(210, 210, 210) solid;
-  display: flex;
-}
 
-
-
-.nav_item{
-  min-width: 50px;
-  /* border: 1px red solid; */
-  text-align: center;
-  line-height: 32px;
-  height: 32px;
-  margin: 4px;
-  font-weight: 700;
-}
-
-.login_wrap {
-  margin: 2px;
-  position: absolute;
-  right: 20px;
-  font-weight: 600;
-  display: flex;
-}
-
-
-
-.login_input {
-  width: 150px;
-  border: 0;
-  outline: none;
-  border-bottom: 1px black solid;
-  margin: 6px;
-  font-size: 18px;
-  margin-bottom: 0px;
-}
-
-.user_wrap {
-  margin: 2px;
-  position: absolute;
-  right: 20px;
-  font-weight: 600;
-  display: flex;
-  /* border: 1px red solid; */
-}
-
-.user_name {
-  font-size: 18px;
-  line-height: 40px;
-  height: 40;
-}
-
-.user_id {
-  margin: 10px;
-  font-size: 12px;
-}
-
-.setup_wrap {
-  max-width: 95%;
-  margin: auto;
-}
 
 .setup_bar {
   width: 100%;
@@ -106,6 +42,7 @@
   /* background: rgb(79, 143, 255); */
   font-weight: 600;
   box-shadow: 0 0 1px 1px rgb(223, 223, 223);
+  cursor:pointer
 }
 
 .btn_select {
