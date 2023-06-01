@@ -1,10 +1,8 @@
 import surveyApi from "@/api/survey";
-import { cMessage } from "@/components/message.js";
-import characterBasicInfo from "@/static/json/survey/characterBasicInfo.json";
 import jsCookie from "js-cookie";
 
 let globalUserData = { userName: "未登录", status: -1, uid: 10000 }; //用户信息(用户名，用户id，用户状态)
-let characterList = [];
+
 
 //注册
 async function registerEvent(loginData) {
@@ -26,6 +24,7 @@ async function loginEvent(loginData) {
   return globalUserData;
 }
 
+//缓存用户信息
 function userDataCacheEvent() {
   // let cacheData = window.localStorage.getItem("globalUserData");
   let cacheData = jsCookie.get("globalUserData");
@@ -33,60 +32,12 @@ function userDataCacheEvent() {
   return globalUserData;
 }
 
+//清除缓存
 function userDataCacheClearEvent() {
   jsCookie.remove("globalUserData");
   return (globalUserData = { userName: "", status: -1 });
 }
 
-//初始化数据
-function characterListInit() {
-  for (let charId in characterBasicInfo) {
-    var baseInfo = characterBasicInfo[charId];
-    if (baseInfo.rarity < 6) continue;
-    let modX = -1;
-    let modY = -1;
 
-    if (baseInfo.mod !== undefined) {
-      if (baseInfo.mod.modX) {
-        modX = 0;
-      }
-      if (baseInfo.mod.modY) {
-        modY = 0;
-      }
-    }
-    let character = {
-      charId: charId,
-      own: false,
-      level: 1,
-      modX: modX,
-      modY: modY,
-      phase: 2,
-      potential: 1,
-      rarity: baseInfo.rarity,
-      skill1: 0,
-      skill2: 0,
-      skill3: 0,
-    };
-    characterList.push(character);
-  }
 
-  // console.log(characterList);
-  return characterList;
-}
-
-export { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, characterListInit, globalUserData };
-
-async function getSurveyCharData(userName) {
-  await surveyApi.getSurveyCharData(userName).then((response) => {
-    let list = response.data;
-    for (var i = 0; i < characterList.length; i++) {
-      // characterList[i].own =false;
-      for (var j = 0; j < list.length; j++) {
-        if (list[j].charId == characterList[i].charId) {
-          characterList[i] = list[j];
-        }
-      }
-    }
-    cMessage("导入了 " + list.length + " 条数据");
-  });
-}
+export { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent,  globalUserData };

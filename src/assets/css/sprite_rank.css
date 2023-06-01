@@ -1,22 +1,22 @@
-.bg-mod_0 {
+.bg-mod0 {
   width: 236px;
   height: 236px;
   background: url("/image/sprite/sprites-rank.png") -10px -10px;
 }
 
-.bg-mod_1 {
+.bg-mod1 {
   width: 236px;
   height: 236px;
   background: url("/image/sprite/sprites-rank.png") -266px -10px;
 }
 
-.bg-mod_2 {
+.bg-mod2 {
   width: 236px;
   height: 236px;
   background: url("/image/sprite/sprites-rank.png") -10px -266px;
 }
 
-.bg-mod_3 {
+.bg-mod3 {
   width: 236px;
   height: 236px;
   background: url("/image/sprite/sprites-rank.png") -266px -266px;

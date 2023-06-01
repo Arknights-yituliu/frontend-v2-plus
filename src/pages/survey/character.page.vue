@@ -29,88 +29,93 @@
         <div class="setup_title">设置</div>
         <div class="btn_survey" @click="logout()">退出登录</div>
         <div class="btn_survey" @click="upload()">上传数据</div>
-        <a href="/survey/list"> <div class="btn_survey">查看榜单</div></a>
-        <!-- <div class="btn_survey">第三方导入</div> -->
+        <!-- <a href="/survey/list"> <div class="btn_survey">查看榜单</div></a> -->
+        <div class="btn_survey">展开筛选栏</div>
+        <div class="btn_survey"><characterDemo></characterDemo></div>
+      </div>
+
+      <div class="setup_bar">
+        <div class="setup_title">职业</div>
+        <div class="btn_survey" v-for="profession in professionDict" @click="addSortRule('profession', profession.value)">
+          {{ profession.label }}
+        </div>
       </div>
       <div class="setup_bar">
-        <div class="setup_title">筛选</div>
-        <div class="btn_survey">是否拥有</div>
-        <!-- <div class="btn_survey" @click="logout()">实装时间</div> -->
-        <div class="btn_survey">是否精二</div>
-        <div class="btn_survey">是否有模组</div>
+        <div class="setup_title">稀有度</div>
+        <div class="btn_survey" v-for="rarity in rarityDict" @click="addSortRule('rarity', rarity)">
+          {{ rarity + "⭐" }}
+        </div>
       </div>
-    </div>
-    <div class="fill_course_page">
-      <characterDemo></characterDemo>
-    </div>
-    <div class="char_forms">
-      <div class="from_title_wrap">
-        <div class="from_card">
-          <div class="from_title" :style="tableSytle('short')">干员</div>
-          <div class="from_title" :style="tableSytle('long')">精英化</div>
-          <div class="from_title" :style="tableSytle('long')">1技能</div>
-          <div class="from_title" :style="tableSytle('long')">2技能</div>
-          <div class="from_title" :style="tableSytle('long')">3技能</div>
-          <div class="from_title" :style="tableSytle('long')">模组X</div>
-          <div class="from_title" :style="tableSytle('long')">模组Y</div>
+      <div class="setup_bar">
+        <div class="setup_title">年份</div>
+        <div class="btn_survey" v-for="(year, key) in yearDict" :key="key" @click="addSortRule('year', key)">
+          {{ year.label }}
         </div>
-        <div class="from_card" v-show="clientWidth > 800">
-          <div class="from_title" :style="tableSytle('short')">干员</div>
-          <div class="from_title" :style="tableSytle('long')">精英化</div>
-          <div class="from_title" :style="tableSytle('long')">1技能</div>
-          <div class="from_title" :style="tableSytle('long')">2技能</div>
-          <div class="from_title" :style="tableSytle('long')">3技能</div>
-          <div class="from_title" :style="tableSytle('long')">模组X</div>
-          <div class="from_title" :style="tableSytle('long')">模组Y</div>
-        </div>
+      </div>
+      <div class="setup_bar">
+        <div class="setup_title">其他</div>
+        <div class="btn_survey" @click="addSortRule('own_own')">未填写拥有</div>
+        <div class="btn_survey" @click="addSortRule('own_mod')">是否有模组</div>
       </div>
 
-      <div class="from_card" v-for="(char, index) in characterList" :key="index">
+      <div class="setup_bar">
+        <div class="setup_title">排序</div>
+        <div class="btn_survey" @click="sortCharacterList('rarity')">按稀有度顺序</div>
+        <div class="btn_survey" @click="sortCharacterList('date')">按实装顺序</div>
+        <div>{{ filterRules }}</div>
+      </div>
+    </div>
+    <div class="fill_course_page"></div>
+    <div class="char_forms">
+      <div class="from_card" v-for="(char, index) in characterList" :key="index" v-show="char.show">
         <div class="card_option" :style="tableSytle('short')">
           <div @click="char.own = !char.own" :class="getSprite(char.charId)"></div>
+        </div>
+
+        <div class="card_option" style="width: 66px">
+          <div class="dropDown" @click="dropDown('potential' + index)">
+            <div :class="getSprite('potential' + char.potential, 'potential')"></div>
+          </div>
+          <div class="dropDown_menu">
+            <div class="dropDown_content" :id="'potential' + index" @click="dropUp('potential' + index)">
+              <div v-for="rank in ranks.slice(1, 7)" @click="char.potential = rank" class="dropDown_content_item">潜能{{ rank }}</div>
+            </div>
+          </div>
           <div class="ownAndPotential_wrap">
             <c-switch v-model="char.own" class="card_option_switch"></c-switch>
-            <div class="dropDown" @click="dropDown('potential' + index)">
-              <div :class="getSprite('potential' + char.potential, 'potential')"></div>
-            </div>
-            <div class="dropDown_menu">
-              <div class="dropDown_content" :id="'potential' + index" @click="dropUp('potential' + index)">
-                <div v-for="rank in ranks.slice(1, 7)" @click="char.potential = rank" class="dropDown_content_item">潜能{{ rank }}</div>
-              </div>
-            </div>
           </div>
         </div>
 
-        <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(0, 3)" @click="changeData(index, 'phase', rank)" :class="selected(char.phase, rank)">
-            <div :class="getSprite('phase' + rank, 'phase')"></div>
+        <div class="card_option" style="width: 66px">
+          <div class="card_option_title">精英化</div>
+          <div class="card_option_image" @click="changeData(index, 'phase')">
+            <div :class="getSprite('phase' + char.phase, 'phase')"></div>
           </div>
         </div>
 
-        <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(1, 4)" @click="changeData(index, 'skill1', rank)" :class="selected(char.skill1, rank)">
-            <div :class="getSprite('skill' + rank, 'skill')"></div>
+        <div class="card_option" style="width: 66px" v-for="(skill, rank) in char.skill" :key="rank">
+          <div class="card_option_image_noshadow">
+            <div :class="getSprite(skill.iconId, 'icon')"></div>
+          </div>
+          <div class="card_option_image" @click="changeData(index, 'skill1')">
+            <div :class="getSprite('skill' + char['skill' + (rank + 1)], 'skill')"></div>
           </div>
         </div>
-        <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(1, 4)" @click="changeData(index, 'skill2', rank)" :class="selected(char.skill2, rank)">
-            <div :class="getSprite('skill' + rank, 'skill')"></div>
-          </div>
-        </div>
-        <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(1, 4)" @click="changeData(index, 'skill3', rank)" :class="selected(char.skill3, rank)">
-            <div :class="getSprite('skill' + rank, 'skill')"></div>
+        <div class="card_option" style="width: 66px" v-show="char.skill.length < 3"></div>
+        <div class="card_option" style="width: 66px" v-show="char.skill.length < 2"></div>
+        <div class="card_option" style="width: 66px" v-show="char.skill.length < 1"></div>
+
+        <div class="card_option" style="width: 66px">
+          <div class="card_option_title">{{ "模组X" }}</div>
+          <div class="card_option_image" @click="changeData(index, 'modX')" v-show="char.modX > -1">
+            <div :class="getSprite('mod' + char.modX, 'mod')"></div>
           </div>
         </div>
 
-        <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(1, 4)" v-show="char.modX > -1" @click="changeData(index, 'modX', rank)" :class="selected(char.modX, rank)">
-            <div :class="getSprite('mod_' + rank, 'mod')"></div>
-          </div>
-        </div>
-        <div class="card_option" :style="tableSytle('long')">
-          <div v-for="rank in ranks.slice(1, 4)" v-show="char.modY > -1" @click="changeData(index, 'modY', rank)" :class="selected(char.modY, rank)">
-            <div :class="getSprite('mod_' + rank, 'mod')"></div>
+        <div class="card_option" style="width: 66px">
+          <div class="card_option_title">{{ "模组Y" }}</div>
+          <div class="card_option_image" @click="changeData(index, 'modY')" v-show="char.modY > -1">
+            <div :class="getSprite('mod' + char.modY, 'mod')"></div>
           </div>
         </div>
       </div>
@@ -120,10 +125,15 @@
 
 <script setup>
 import "@/assets/css/sprite_char_6_part1.css";
+import "@/assets/css/sprite_char_5_part1.css";
+import "@/assets/css/sprite_char_5_part2.css";
+import "@/assets/css/sprite_char_4_part1.css";
 import "@/assets/css/sprite_rank.css";
-import "@/assets/css/survey_charData.css";
-import { cMessage } from "@/components/message.js";
-import { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, characterListInit, globalUserData } from "./serveyService";
+import "@/assets/css/survey_character.css";
+import "@/assets/css/sprite_skill.css";
+import { cMessage } from "@/element/message.js";
+import { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, globalUserData } from "./serveyService";
+import { characterListInit, professionDict, rarityDict, yearDict } from "./baseData";
 import characterDemo from "@/pages/survey/characterDemo.vue";
 
 import surveyApi from "@/api/survey";
@@ -163,7 +173,15 @@ function getSurveyCharData() {
       // characterList.value[i].own =false;
       for (var j = 0; j < list.length; j++) {
         if (list[j].charId == characterList.value[i].charId) {
-          characterList.value[i] = list[j];
+          characterList.value[i].phase = list[j].phase;
+          (characterList.value[i].level = list[j]), level;
+          (characterList.value[i].potential = list[j]), potential;
+          (characterList.value[i].skill1 = list[j]), skill1;
+          (characterList.value[i].skill2 = list[j]), skill2;
+          (characterList.value[i].skill3 = list[j]), skill3;
+          (characterList.value[i].modX = list[j]), modX;
+          (characterList.value[i].modY = list[j]), modY;
+          (characterList.value[i].own = list[j]), own;
         }
       }
     }
@@ -179,33 +197,26 @@ function initData() {
 }
 
 function changeData(index, attrib, value) {
-  if (characterList.value[index][attrib] == value) {
-    characterList.value[index][attrib] = 0;
-  } else {
-    characterList.value[index][attrib] = value;
-  }
-}
-
-function sortCharList() {
-  for (var i = 0; i < characterList.value.length; i++) {
-    for (var j = i + 1; j < characterList.value.length; j++) {
-      if (characterList.value[i][attrib] > characterList.value[j][attrib]) {
-        let t = characterList.value[i];
-        characterList.value[i] = characterList.value[j];
-        characterList.value[j] = t;
-      }
+  if ("phase" == attrib) {
+    characterList.value[index][attrib]++;
+    if (characterList.value[index][attrib] > 2) {
+      characterList.value[index][attrib] = 0;
+      return;
     }
+    return;
   }
-}
 
-function selected(value, checkValue) {
-  if (value == checkValue) return "card_option_check check_selected";
-  return "card_option_check";
+  characterList.value[index][attrib]++;
+  if (characterList.value[index][attrib] > 3) {
+    characterList.value[index][attrib] = 0;
+    return;
+  }
+  return;
 }
 
 //上传
 function upload() {
-  surveyApi.upload_character(characterList.value, userData.value.userName).then((response) => {
+  surveyApi.uploadCharacter(characterList.value, userData.value.userName).then((response) => {
     // console.log(response.data);
     cMessage("新增了 " + response.data.insertRows + " 条");
     cMessage("更新了 " + response.data.updateRows + " 条");
@@ -220,24 +231,83 @@ function maaData1() {
   }
 }
 
+//打开选择框
 function dropDown(id) {
   document.getElementById(id).style.display = "flex";
 }
 
+//关闭选择框
 function dropUp(id) {
   document.getElementById(id).style.display = "none";
 }
 
-const popupFlag_illustrate = ref(true);
-
-function getSprite(id, type, index) {
+function getSprite(id, type) {
   if ("mod" == type) return "bg-" + id + " sprite_mod";
   if ("skill" == type) return "bg-" + id + " sprite_skill";
   if ("phase" == type) return "bg-" + id + " sprite_phase";
   if ("potential" == type) return "bg-" + id + " sprite_potential";
   if ("own" == type) return "bg-" + id + " sprite_avatar_own";
-
+  if ("icon" == type) return "bg-skill_icon_" + id + " sprite_skill_icon";
   return "bg-" + id + " sprite_avatar";
+}
+
+let filterRules = ref({ rarity: [], profession: [], year: [] });
+
+function addSortRule(attribute, rule) {
+  let filterRulesCopy = [];
+  if (filterRules.value[attribute].indexOf(rule) > -1) {
+    for (let i in filterRules.value[attribute]) {
+      if (rule != filterRules.value[attribute][i]) {
+        filterRulesCopy.push(filterRules.value[attribute][i]);
+      }
+    }
+    filterRules.value[attribute] = filterRulesCopy;
+    filterCharacterList();
+    return;
+  }
+
+  filterRules.value[attribute].push(rule);
+  filterCharacterList();
+}
+
+function filterCharacterList() {
+  for (let i in characterList.value) {
+    var character = characterList.value[i];
+    let isRarity = isAttribute(character, "rarity");
+    let isProfession = isAttribute(character, "profession");
+    let isYearFlag = isYear(character);
+    console.log(isRarity, isProfession);
+    characterList.value[i].show = isRarity & isProfession & isYearFlag;
+  }
+}
+
+function isAttribute(character, attribute) {
+  if (filterRules.value[attribute].length == 0) return true;
+  for (let r in filterRules.value[attribute]) {
+    if (character[attribute] == filterRules.value[attribute][r]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isYear(character) {
+  if (filterRules.value.year.length == 0) return true;
+  for (let r in filterRules.value.year) {
+    // console.log(filterRules.value.year[r])
+    let year = yearDict[filterRules.value.year[r]];
+    // console.log(character.date, ">=", year.start, character.date, "<=", year.end);
+    if (character.date >= year.start && character.date <= year.end) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function sortCharacterList(rule) {
+  characterList.value.sort((a, b) => {
+    return b[rule] - a[rule];
+  });
 }
 
 function tableSytle(type) {

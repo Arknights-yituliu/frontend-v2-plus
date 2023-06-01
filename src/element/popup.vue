@@ -1,31 +1,53 @@
 <template>
-  <div class="popup_mask" :style="popupStyle">
-    <div class="popup">
+<div :style="popupStyle">
+  <div class="popup_mask"  @click="openAndClose(false)">
+  </div>
+  
+  <div class="popup" :style="widthStyle" >
       <slot></slot>
-      <div class="popup_btn_wrap">
-        <div class="popup_btn_white" @click="popupStyle = 'display: block'">取消</div>
-        <div class="popup_btn" @click="popupStyle = 'display: none'">关闭</div>
+      <div class="popup_btn_wrap" >
+        <div class="popup_btn" >取消</div>
+        <div class="popup_btn" @click="openAndClose(false)">关闭</div>
       </div>
     </div>
-  </div>
+    </div>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
 
+const emit = defineEmits(['update:visible'])
 const props = defineProps(["modelValue", "visible", "width"]);
+
+const widthStyle = 'width:'+props.width
+
+// console.log(props.visible)
+// console.log(props.width)
 
 let popupStyle = ref("display: none;");
 if (props.visible) {
   popupStyle.value = "display: block;";
 }
 
+function openAndClose(visible){
+    emit('update:visible', visible)
+    if(visible){
+       popupStyle.value = "display: block;";
+    }else{
+      popupStyle.value = "display: none;";
+    }
+}
+
+
+
 watch(
   () => props.visible,
   (newVal, oldVal) => {
-    console.log(newVal, oldVal);
+    console.log(newVal, oldVal)
     if (newVal) {
       popupStyle.value = "display: block;";
+    }else{
+      popupStyle.value = "display: none;";
     }
   }
 );
@@ -45,14 +67,15 @@ watch(
 
 .popup {
   /* display: none; */
-  position: fixed;
+  position: absolute;;
   right: 0;
   left: 0;
-  z-index: 50;
+  z-index: 1000;
   margin: auto;
   margin-top: 100px;
   width: 540px;
   height: auto;
+   overflow: auto;
   background-color: rgba(255, 255, 255);
   border-radius: 6px;
 }
@@ -81,7 +104,7 @@ watch(
   border-radius: 3px;
 }
 
-.popup_btn_white {
+.popup_btn {
   margin: 6px;
   /* margin-right:30px; */
   min-width: 60px;
@@ -95,4 +118,6 @@ watch(
   box-shadow: 0 0 1px 1px rgb(228, 228, 228);
   border-radius: 3px;
 }
+
+
 </style>

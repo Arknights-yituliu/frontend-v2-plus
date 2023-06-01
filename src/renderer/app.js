@@ -4,8 +4,8 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import App from "@/App.vue";
 import { setPageContext } from "./usePageContext";
 import "element-plus/theme-chalk/dark/css-vars.css";
-import cSwitch from "@/components/switch.vue";
-import cPopup from "@/components/popup.vue";
+import cSwitch from "@/element/switch.vue";
+import cPopup from "@/element/popup.vue";
 
 export { createVPSApp };
 
