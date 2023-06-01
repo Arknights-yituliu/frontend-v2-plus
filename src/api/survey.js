@@ -50,7 +50,7 @@ export default {
     });
   },
 
-  upload_character(characterList, userName) {
+  uploadCharacter(characterList, userName) {
     userName = userName.replace("#", "%23");
     return request({
       url: `${api_name}/character?userName=${userName}`,

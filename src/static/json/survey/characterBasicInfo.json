@@ -1,294 +1,5226 @@
 {
-  "char_145_prove": { "mod": { "modX": true }, "name": "普罗旺斯", "rarity": 5 },
-  "char_4039_horn": { "name": "号角", "rarity": 6 },
-  "char_1028_texas2": { "mod": { "modY": true }, "name": "缄默德克萨斯", "rarity": 6 },
-  "char_271_spikes": { "name": "芳汀", "rarity": 4 },
-  "char_4016_kazema": { "mod": { "modX": true }, "name": "风丸", "rarity": 5 },
-  "char_4055_bgsnow": { "mod": { "modY": true }, "name": "鸿雪", "rarity": 6 },
-  "char_363_toddi": { "mod": { "modX": true }, "name": "熔泉", "rarity": 5 },
-  "char_328_cammou": { "name": "卡达", "rarity": 4 },
-  "char_433_windft": { "name": "掠风", "rarity": 5 },
-  "char_383_snsant": { "mod": { "modX": true }, "name": "雪雉", "rarity": 5 },
-  "char_174_slbell": { "mod": { "modX": true }, "name": "初雪", "rarity": 5 },
-  "char_340_shwaz": { "mod": { "modY": true, "modX": true }, "name": "黑", "rarity": 6 },
-  "char_1029_yato2": { "mod": { "modX": true }, "name": "麒麟X夜刀", "rarity": 6 },
-  "char_325_bison": { "mod": { "modX": true }, "name": "拜松", "rarity": 5 },
-  "char_376_therex": { "name": "THRM-EX", "rarity": 1 },
-  "char_4000_jnight": { "name": "正义骑士号", "rarity": 1 },
-  "char_135_halo": { "mod": { "modY": true }, "name": "星源", "rarity": 5 },
-  "char_4027_heyak": { "mod": { "modX": true }, "name": "霍尔海雅", "rarity": 6 },
-  "char_345_folnic": { "mod": { "modY": true }, "name": "亚叶", "rarity": 5 },
-  "char_180_amgoat": { "mod": { "modX": true }, "name": "艾雅法拉", "rarity": 6 },
-  "char_209_ardign": { "name": "卡缇", "rarity": 3 },
-  "char_140_whitew": { "name": "拉普兰德", "rarity": 5 },
-  "char_4083_chimes": { "name": "铎铃", "rarity": 5 },
-  "char_283_midn": { "name": "月见夜", "rarity": 3 },
-  "char_4004_pudd": { "mod": { "modY": true }, "name": "布丁", "rarity": 4 },
-  "char_492_quercu": { "name": "夏栎", "rarity": 5 },
-  "char_332_archet": { "mod": { "modY": true, "modX": true }, "name": "空弦", "rarity": 6 },
-  "char_401_elysm": { "name": "极境", "rarity": 5 },
-  "char_274_astesi": { "name": "星极", "rarity": 5 },
-  "char_514_rdfend": { "name": "预备干员-重装", "rarity": 3 },
-  "char_311_mudrok": { "name": "泥岩", "rarity": 6 },
-  "char_400_weedy": { "mod": { "modX": true }, "name": "温蒂", "rarity": 6 },
-  "char_190_clour": { "mod": { "modX": true }, "name": "红云", "rarity": 4 },
-  "char_458_rfrost": { "mod": { "modY": true }, "name": "霜华", "rarity": 5 },
-  "char_198_blackd": { "mod": { "modX": true }, "name": "讯使", "rarity": 4 },
-  "char_4065_judge": { "name": "斥罪", "rarity": 6 },
-  "char_405_absin": { "mod": { "modX": true }, "name": "苦艾", "rarity": 5 },
-  "char_402_tuye": { "mod": { "modX": true }, "name": "图耶", "rarity": 5 },
-  "char_134_ifrit": { "mod": { "modX": true }, "name": "伊芙利特", "rarity": 6 },
-  "char_346_aosta": { "name": "奥斯塔", "rarity": 5 },
-  "char_279_excu": { "name": "送葬人", "rarity": 5 },
-  "char_143_ghost": { "name": "幽灵鲨", "rarity": 5 },
-  "char_4082_qiubai": { "name": "仇白", "rarity": 6 },
-  "char_506_rmedic": { "name": "预备干员-后勤", "rarity": 3 },
-  "char_362_saga": { "mod": { "modY": true }, "name": "嵯峨", "rarity": 6 },
-  "char_509_acast": { "name": "Pith", "rarity": 5 },
-  "char_1027_greyy2": { "mod": { "modX": true }, "name": "承曦格雷伊", "rarity": 5 },
-  "char_469_indigo": { "mod": { "modX": true }, "name": "深靛", "rarity": 4 },
-  "char_378_asbest": { "name": "石棉", "rarity": 5 },
-  "char_308_swire": { "mod": { "modX": true }, "name": "诗怀雅", "rarity": 5 },
-  "char_4078_bdhkgt": { "mod": { "modY": true }, "name": "截云", "rarity": 5 },
-  "char_242_otter": { "mod": { "modX": true }, "name": "梅尔", "rarity": 5 },
-  "char_264_f12yin": { "name": "山", "rarity": 6 },
-  "char_199_yak": { "mod": { "modY": true }, "name": "角峰", "rarity": 4 },
-  "char_157_dagda": { "name": "达格达", "rarity": 5 },
-  "char_137_brownb": { "name": "猎蜂", "rarity": 4 },
-  "char_218_cuttle": { "mod": { "modX": true }, "name": "安哲拉", "rarity": 5 },
-  "char_485_pallas": { "mod": { "modY": true, "modX": true }, "name": "帕拉斯", "rarity": 6 },
-  "char_163_hpsts": { "name": "火神", "rarity": 5 },
-  "char_211_adnach": { "name": "安德切尔", "rarity": 3 },
-  "char_1023_ghost2": { "mod": { "modY": true, "modX": true }, "name": "归溟幽灵鲨", "rarity": 6 },
-  "char_122_beagle": { "name": "米格鲁", "rarity": 3 },
-  "char_252_bibeak": { "mod": { "modX": true }, "name": "柏喙", "rarity": 5 },
-  "char_185_frncat": { "name": "慕斯", "rarity": 4 },
-  "char_423_blemsh": { "mod": { "modY": true }, "name": "瑕光", "rarity": 6 },
-  "char_1030_noirc2": { "mod": { "modX": true }, "name": "火龙S黑角", "rarity": 5 },
-  "char_124_kroos": { "name": "克洛丝", "rarity": 3 },
-  "char_4025_aprot2": { "name": "暮落", "rarity": 5 },
-  "char_411_tomimi": { "mod": { "modY": true }, "name": "特米米", "rarity": 5 },
-  "char_4006_melnte": { "mod": { "modY": true }, "name": "玫拉", "rarity": 5 },
-  "char_422_aurora": { "mod": { "modX": true }, "name": "极光", "rarity": 5 },
-  "char_497_ctable": { "name": "晓歌", "rarity": 5 },
-  "char_141_nights": { "mod": { "modX": true }, "name": "夜烟", "rarity": 4 },
-  "char_275_breeze": { "mod": { "modX": true }, "name": "微风", "rarity": 5 },
-  "char_511_asnipe": { "name": "Stormeye", "rarity": 5 },
-  "char_261_sddrag": { "mod": { "modY": true }, "name": "苇草", "rarity": 5 },
-  "char_473_mberry": { "name": "桑葚", "rarity": 5 },
-  "char_103_angel": { "mod": { "modX": true }, "name": "能天使", "rarity": 6 },
-  "char_260_durnar": { "name": "坚雷", "rarity": 4 },
-  "char_265_sophia": { "mod": { "modX": true }, "name": "鞭刃", "rarity": 5 },
-  "char_437_mizuki": { "mod": { "modY": true, "modX": true }, "name": "水月", "rarity": 6 },
-  "char_301_cutter": { "mod": { "modY": true }, "name": "刻刀", "rarity": 4 },
-  "char_1014_nearl2": { "mod": { "modX": true }, "name": "耀骑士临光", "rarity": 6 },
-  "char_365_aprl": { "mod": { "modY": true }, "name": "四月", "rarity": 5 },
-  "char_484_robrta": { "name": "罗比菈塔", "rarity": 4 },
-  "char_108_silent": { "mod": { "modY": true }, "name": "赫默", "rarity": 5 },
-  "char_212_ansel": { "name": "安赛尔", "rarity": 3 },
-  "char_355_ethan": { "mod": { "modX": true }, "name": "伊桑", "rarity": 4 },
-  "char_286_cast3": { "name": "Castle-3", "rarity": 1 },
-  "char_4009_irene": { "mod": { "modY": true }, "name": "艾丽妮", "rarity": 6 },
-  "char_4067_lolxh": { "name": "罗小黑", "rarity": 4 },
-  "char_113_cqbw": { "mod": { "modY": true, "modX": true }, "name": "W", "rarity": 6 },
-  "char_476_blkngt": { "name": "夜半", "rarity": 5 },
-  "char_479_sleach": { "name": "琴柳", "rarity": 6 },
-  "char_4048_doroth": { "mod": { "modY": true }, "name": "多萝西", "rarity": 6 },
-  "char_210_stward": { "name": "史都华德", "rarity": 3 },
-  "char_455_nothin": { "mod": { "modX": true }, "name": "乌有", "rarity": 5 },
-  "char_144_red": { "mod": { "modY": true }, "name": "红", "rarity": 5 },
-  "char_285_medic2": { "name": "Lancet-2", "rarity": 1 },
-  "char_496_wildmn": { "mod": { "modX": true }, "name": "野鬃", "rarity": 5 },
-  "char_183_skgoat": { "mod": { "modY": true }, "name": "地灵", "rarity": 4 },
-  "char_4045_heidi": { "name": "海蒂", "rarity": 5 },
-  "char_478_kirara": { "mod": { "modX": true }, "name": "绮良", "rarity": 5 },
-  "char_173_slchan": { "mod": { "modX": true }, "name": "崖心", "rarity": 5 },
-  "char_366_acdrop": { "mod": { "modX": true }, "name": "酸糖", "rarity": 4 },
-  "char_4054_malist": { "name": "至简", "rarity": 5 },
-  "char_248_mgllan": { "mod": { "modY": true, "modX": true }, "name": "麦哲伦", "rarity": 6 },
-  "char_147_shining": { "mod": { "modY": true, "modX": true }, "name": "闪灵", "rarity": 6 },
-  "char_192_falco": { "name": "翎羽", "rarity": 3 },
-  "char_002_amiya": { "mod": { "modY": true }, "name": "阿米娅", "rarity": 5 },
-  "char_507_rsnipe": { "name": "预备干员-狙击", "rarity": 3 },
-  "char_284_spot": { "name": "斑点", "rarity": 3 },
-  "char_003_kalts": { "mod": { "modY": true, "modX": true }, "name": "凯尔希", "rarity": 6 },
-  "char_291_aglina": { "mod": { "modY": true, "modX": true }, "name": "安洁莉娜", "rarity": 6 },
-  "char_236_rope": { "mod": { "modX": true }, "name": "暗索", "rarity": 4 },
-  "char_127_estell": { "name": "艾丝黛尔", "rarity": 4 },
-  "char_1026_gvial2": { "name": "百炼嘉维尔", "rarity": 6 },
-  "char_197_poca": { "mod": { "modX": true }, "name": "早露", "rarity": 6 },
-  "char_243_waaifu": { "mod": { "modX": true }, "name": "槐琥", "rarity": 5 },
-  "char_338_iris": { "mod": { "modX": true }, "name": "爱丽丝", "rarity": 5 },
-  "char_254_vodfox": { "mod": { "modX": true }, "name": "巫恋", "rarity": 5 },
-  "char_367_swllow": { "mod": { "modY": true }, "name": "灰喉", "rarity": 5 },
-  "char_171_bldsk": { "mod": { "modX": true }, "name": "华法琳", "rarity": 5 },
-  "char_126_shotst": { "mod": { "modX": true }, "name": "流星", "rarity": 4 },
-  "char_4077_palico": { "name": "泰拉大陆调查团", "rarity": 1 },
-  "char_489_serum": { "mod": { "modX": true }, "name": "蚀清", "rarity": 5 },
-  "char_459_tachak": { "mod": { "modX": true }, "name": "战车", "rarity": 5 },
-  "char_4064_mlynar": { "name": "玛恩纳", "rarity": 6 },
-  "char_250_phatom": { "mod": { "modX": true }, "name": "傀影", "rarity": 6 },
-  "char_457_blitz": { "name": "闪击", "rarity": 5 },
-  "char_1011_lava2": { "mod": { "modX": true }, "name": "炎狱炎熔", "rarity": 5 },
-  "char_009_12fce": { "name": "12F", "rarity": 2 },
-  "char_491_humus": { "name": "休谟斯", "rarity": 4 },
-  "char_118_yuki": { "mod": { "modY": true }, "name": "白雪", "rarity": 4 },
-  "char_500_noirc": { "name": "黑角", "rarity": 2 },
-  "char_326_glacus": { "mod": { "modX": true }, "name": "格劳克斯", "rarity": 5 },
-  "char_420_flamtl": { "mod": { "modY": true }, "name": "焰尾", "rarity": 6 },
-  "char_4017_puzzle": { "name": "谜图", "rarity": 5 },
-  "char_297_hamoni": { "mod": { "modX": true }, "name": "和弦", "rarity": 5 },
-  "char_193_frostl": { "name": "霜叶", "rarity": 4 },
-  "char_2015_dusk": { "mod": { "modY": true, "modX": true }, "name": "夕", "rarity": 6 },
-  "char_381_bubble": { "mod": { "modX": true }, "name": "泡泡", "rarity": 4 },
-  "char_369_bena": { "mod": { "modY": true }, "name": "贝娜", "rarity": 5 },
-  "char_4043_erato": { "mod": { "modX": true }, "name": "埃拉托", "rarity": 5 },
-  "char_115_headbr": { "mod": { "modX": true }, "name": "凛冬", "rarity": 5 },
-  "char_348_ceylon": { "mod": { "modX": true }, "name": "锡兰", "rarity": 5 },
-  "char_1012_skadi2": { "name": "浊心斯卡蒂", "rarity": 6 },
-  "char_415_flint": { "name": "燧石", "rarity": 5 },
-  "char_1020_reed2": { "name": "焰影苇草", "rarity": 6 },
-  "char_373_lionhd": { "mod": { "modX": true }, "name": "莱恩哈特", "rarity": 5 },
-  "char_293_thorns": { "name": "棘刺", "rarity": 6 },
-  "char_452_bstalk": { "name": "豆苗", "rarity": 4 },
-  "char_337_utage": { "mod": { "modX": true }, "name": "宴", "rarity": 4 },
-  "char_456_ash": { "mod": { "modY": true }, "name": "灰烬", "rarity": 6 },
-  "char_377_gdglow": { "name": "澄闪", "rarity": 6 },
-  "char_131_flameb": { "mod": { "modY": true }, "name": "炎客", "rarity": 5 },
-  "char_440_pinecn": { "name": "松果", "rarity": 4 },
-  "char_464_cement": { "mod": { "modX": true }, "name": "洋灰", "rarity": 5 },
-  "char_385_finlpp": { "mod": { "modY": true }, "name": "清流", "rarity": 4 },
-  "char_249_mlyss": { "name": "缪尔赛思", "rarity": 6 },
-  "char_187_ccheal": { "mod": { "modY": true }, "name": "嘉维尔", "rarity": 4 },
-  "char_503_rang": { "name": "巡林者", "rarity": 2 },
-  "char_277_sqrrel": { "mod": { "modY": true }, "name": "阿消", "rarity": 4 },
-  "char_4046_ebnhlz": { "mod": { "modY": true, "modX": true }, "name": "黑键", "rarity": 6 },
-  "char_017_huang": { "name": "煌", "rarity": 6 },
-  "char_4087_ines": { "name": "伊内丝", "rarity": 6 },
-  "char_501_durin": { "name": "杜林", "rarity": 2 },
-  "char_510_amedic": { "name": "Touch", "rarity": 5 },
-  "char_106_franka": { "mod": { "modX": true }, "name": "芙兰卡", "rarity": 5 },
-  "char_213_mostma": { "mod": { "modY": true }, "name": "莫斯提马", "rarity": 6 },
-  "char_430_fartth": { "mod": { "modY": true, "modX": true }, "name": "远牙", "rarity": 6 },
-  "char_379_sesa": { "mod": { "modX": true }, "name": "慑砂", "rarity": 5 },
-  "char_263_skadi": { "mod": { "modY": true, "modX": true }, "name": "斯卡蒂", "rarity": 6 },
-  "char_109_fmout": { "mod": { "modX": true }, "name": "远山", "rarity": 4 },
-  "char_294_ayer": { "name": "断崖", "rarity": 5 },
-  "char_253_greyy": { "mod": { "modY": true }, "name": "格雷伊", "rarity": 4 },
-  "char_333_sidero": { "name": "铸铁", "rarity": 5 },
-  "char_179_cgbird": { "mod": { "modX": true }, "name": "夜莺", "rarity": 6 },
-  "char_2014_nian": { "mod": { "modY": true, "modX": true }, "name": "年", "rarity": 6 },
-  "char_436_whispr": { "mod": { "modX": true }, "name": "絮雨", "rarity": 5 },
-  "char_150_snakek": { "mod": { "modX": true }, "name": "蛇屠箱", "rarity": 4 },
-  "char_4041_chnut": { "name": "褐果", "rarity": 4 },
-  "char_241_panda": { "mod": { "modY": true }, "name": "食铁兽", "rarity": 5 },
-  "char_1031_slent2": { "name": "淬羽赫默", "rarity": 6 },
-  "char_110_deepcl": { "mod": { "modY": true }, "name": "深海色", "rarity": 4 },
-  "char_4072_ironmn": { "name": "白铁", "rarity": 6 },
-  "char_282_catap": { "name": "空爆", "rarity": 3 },
-  "char_208_melan": { "name": "玫兰莎", "rarity": 3 },
-  "char_504_rguard": { "name": "预备干员-近战", "rarity": 3 },
-  "char_166_skfire": { "mod": { "modY": true }, "name": "天火", "rarity": 5 },
-  "char_1024_hbisc2": { "name": "濯尘芙蓉", "rarity": 5 },
-  "char_474_glady": { "mod": { "modX": true }, "name": "歌蕾蒂娅", "rarity": 6 },
-  "char_133_mm": { "mod": { "modX": true }, "name": "梅", "rarity": 4 },
-  "char_306_leizi": { "mod": { "modX": true }, "name": "惊蛰", "rarity": 5 },
-  "char_4013_kjera": { "name": "耶拉", "rarity": 5 },
-  "char_235_jesica": { "mod": { "modY": true }, "name": "杰西卡", "rarity": 4 },
-  "char_4047_pianst": { "name": "车尔尼", "rarity": 5 },
-  "char_1013_chen2": { "name": "假日威龙陈", "rarity": 6 },
-  "char_214_kafka": { "mod": { "modY": true }, "name": "卡夫卡", "rarity": 5 },
-  "char_451_robin": { "mod": { "modY": true }, "name": "罗宾", "rarity": 5 },
-  "char_416_zumama": { "mod": { "modY": true, "modX": true }, "name": "森蚺", "rarity": 6 },
-  "char_204_platnm": { "mod": { "modX": true }, "name": "白金", "rarity": 5 },
-  "char_237_gravel": { "mod": { "modX": true }, "name": "砾", "rarity": 4 },
-  "char_117_myrrh": { "mod": { "modX": true }, "name": "末药", "rarity": 4 },
-  "char_136_hsguma": { "mod": { "modY": true, "modX": true }, "name": "星熊", "rarity": 6 },
-  "char_4071_peper": { "name": "明椒", "rarity": 5 },
-  "char_219_meteo": { "mod": { "modY": true }, "name": "陨星", "rarity": 5 },
-  "char_151_myrtle": { "name": "桃金娘", "rarity": 4 },
-  "char_508_aguard": { "name": "Sharp", "rarity": 5 },
-  "char_475_akafyu": { "mod": { "modX": true }, "name": "赤冬", "rarity": 5 },
-  "char_159_peacok": { "mod": { "modX": true }, "name": "断罪者", "rarity": 4 },
-  "char_4066_highmo": { "name": "海沫", "rarity": 5 },
-  "char_431_ashlok": { "name": "灰毫", "rarity": 5 },
-  "char_196_sunbr": { "mod": { "modX": true }, "name": "古米", "rarity": 4 },
-  "char_302_glaze": { "mod": { "modX": true }, "name": "安比尔", "rarity": 4 },
-  "char_1021_kroos2": { "mod": { "modX": true }, "name": "寒芒克洛丝", "rarity": 5 },
-  "char_289_gyuki": { "mod": { "modY": true }, "name": "缠丸", "rarity": 4 },
-  "char_278_orchid": { "name": "梓兰", "rarity": 3 },
-  "char_258_podego": { "mod": { "modX": true }, "name": "波登可", "rarity": 4 },
-  "char_101_sora": { "name": "空", "rarity": 5 },
-  "char_128_plosis": { "mod": { "modX": true }, "name": "白面鸮", "rarity": 5 },
-  "char_502_nblade": { "name": "夜刀", "rarity": 2 },
-  "char_123_fang": { "name": "芬", "rarity": 3 },
-  "char_226_hmau": { "mod": { "modY": true }, "name": "吽", "rarity": 5 },
-  "char_2013_cerber": { "mod": { "modY": true, "modX": true }, "name": "刻俄柏", "rarity": 6 },
-  "char_336_folivo": { "mod": { "modX": true }, "name": "稀音", "rarity": 5 },
-  "char_512_aprot": { "name": "暮落", "rarity": 5 },
-  "char_181_flower": { "mod": { "modY": true }, "name": "调香师", "rarity": 4 },
-  "char_505_rcast": { "name": "预备干员-术师", "rarity": 3 },
-  "char_164_nightm": { "mod": { "modY": true }, "name": "夜魔", "rarity": 5 },
-  "char_298_susuro": { "mod": { "modX": true }, "name": "苏苏洛", "rarity": 4 },
-  "char_322_lmlee": { "mod": { "modX": true }, "name": "老鲤", "rarity": 6 },
-  "char_155_tiger": { "name": "因陀罗", "rarity": 5 },
-  "char_4062_totter": { "mod": { "modX": true }, "name": "铅踝", "rarity": 4 },
-  "char_129_bluep": { "mod": { "modY": true }, "name": "蓝毒", "rarity": 5 },
-  "char_154_morgan": { "mod": { "modX": true }, "name": "摩根", "rarity": 5 },
-  "char_486_takila": { "name": "龙舌兰", "rarity": 5 },
-  "char_215_mantic": { "mod": { "modX": true }, "name": "狮蝎", "rarity": 5 },
-  "char_304_zebra": { "mod": { "modY": true }, "name": "暴雨", "rarity": 5 },
-  "char_300_phenxi": { "mod": { "modY": true }, "name": "菲亚梅塔", "rarity": 6 },
-  "char_107_liskam": { "name": "雷蛇", "rarity": 5 },
-  "char_343_tknogi": { "name": "月禾", "rarity": 5 },
-  "char_188_helage": { "mod": { "modX": true }, "name": "赫拉格", "rarity": 6 },
-  "char_4019_ncdeer": { "name": "九色鹿", "rarity": 5 },
-  "char_148_nearl": { "mod": { "modX": true }, "name": "临光", "rarity": 5 },
-  "char_240_wyvern": { "name": "香草", "rarity": 3 },
-  "char_466_qanik": { "mod": { "modY": true }, "name": "雪绒", "rarity": 5 },
-  "char_195_glassb": { "mod": { "modY": true }, "name": "真理", "rarity": 5 },
-  "char_172_svrash": { "name": "银灰", "rarity": 6 },
-  "char_220_grani": { "mod": { "modX": true }, "name": "格拉尼", "rarity": 5 },
-  "char_426_billro": { "mod": { "modX": true }, "name": "卡涅利安", "rarity": 6 },
-  "char_010_chen": { "mod": { "modX": true }, "name": "陈", "rarity": 6 },
-  "char_222_bpipe": { "mod": { "modX": true }, "name": "风笛", "rarity": 6 },
-  "char_130_doberm": { "mod": { "modY": true }, "name": "杜宾", "rarity": 4 },
-  "char_281_popka": { "name": "泡普卡", "rarity": 3 },
-  "char_4063_quartz": { "name": "石英", "rarity": 4 },
-  "char_388_mint": { "mod": { "modX": true }, "name": "薄绿", "rarity": 5 },
-  "char_344_beewax": { "mod": { "modX": true }, "name": "蜜蜡", "rarity": 5 },
-  "char_513_apionr": { "name": "郁金香", "rarity": 5 },
-  "char_427_vigil": { "name": "伺夜", "rarity": 6 },
-  "char_356_broca": { "name": "布洛卡", "rarity": 5 },
-  "char_358_lisa": { "mod": { "modX": true }, "name": "铃兰", "rarity": 6 },
-  "char_290_vigna": { "mod": { "modY": true }, "name": "红豆", "rarity": 4 },
-  "char_272_strong": { "mod": { "modX": true }, "name": "孑", "rarity": 4 },
-  "char_350_surtr": { "name": "史尔特尔", "rarity": 6 },
-  "char_225_haak": { "name": "阿", "rarity": 6 },
-  "char_206_gnosis": { "mod": { "modX": true }, "name": "灵知", "rarity": 6 },
-  "char_230_savage": { "name": "暴行", "rarity": 5 },
-  "char_349_chiave": { "mod": { "modY": true }, "name": "贾维", "rarity": 5 },
-  "char_4036_forcer": { "mod": { "modX": true }, "name": "见行者", "rarity": 5 },
-  "char_202_demkni": { "mod": { "modY": true, "modX": true }, "name": "塞雷娅", "rarity": 6 },
-  "char_158_milu": { "mod": { "modY": true }, "name": "守林人", "rarity": 5 },
-  "char_4091_ulika": { "name": "U-Official", "rarity": 1 },
-  "char_449_glider": { "name": "蜜莓", "rarity": 5 },
-  "char_112_siege": { "mod": { "modY": true, "modX": true }, "name": "推进之王", "rarity": 6 },
-  "char_120_hibisc": { "name": "芙蓉", "rarity": 3 },
-  "char_391_rosmon": { "mod": { "modX": true }, "name": "迷迭香", "rarity": 6 },
-  "char_2023_ling": { "mod": { "modY": true }, "name": "令", "rarity": 6 },
-  "char_121_lava": { "name": "炎熔", "rarity": 3 },
-  "char_4032_provs": { "mod": { "modX": true }, "name": "但书", "rarity": 5 },
-  "char_149_scave": { "mod": { "modX": true }, "name": "清道夫", "rarity": 4 },
-  "char_4080_lin": { "mod": { "modX": true }, "name": "林", "rarity": 6 },
-  "char_347_jaksel": { "name": "杰克", "rarity": 4 },
-  "char_4014_lunacu": { "mod": { "modY": true }, "name": "子月", "rarity": 5 },
-  "char_2024_chyue": { "name": "重岳", "rarity": 6 },
-  "char_201_moeshd": { "mod": { "modY": true }, "name": "可颂", "rarity": 5 },
-  "char_493_firwhl": { "name": "火哨", "rarity": 5 },
-  "char_472_pasngr": { "mod": { "modY": true, "modX": true }, "name": "异客", "rarity": 6 },
-  "char_102_texas": { "mod": { "modY": true }, "name": "德克萨斯", "rarity": 5 },
-  "char_4042_lumen": { "mod": { "modY": true, "modX": true }, "name": "流明", "rarity": 6 },
-  "char_4040_rockr": { "name": "洛洛", "rarity": 5 },
-  "char_421_crow": { "name": "羽毛笔", "rarity": 5 }
+    "char_145_prove": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_prove_1",
+                "name": "狼眼"
+            },
+            {
+                "iconId": "skchr_prove_2",
+                "name": "杀戮嗅觉"
+            }
+        ],
+        "name": "普罗旺斯",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_4039_horn": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_horn_1",
+                "name": "照明榴弹"
+            },
+            {
+                "iconId": "skchr_horn_2",
+                "name": "暴风号令"
+            },
+            {
+                "iconId": "skchr_horn_3",
+                "name": "终极防线"
+            }
+        ],
+        "name": "号角",
+        "rarity": 6,
+        "date": 1649923200000
+    },
+    "char_1028_texas2": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_texas2_1",
+                "name": "细雨无声"
+            },
+            {
+                "iconId": "skchr_texas2_2",
+                "name": "阵雨连绵"
+            },
+            {
+                "iconId": "skchr_texas2_3",
+                "name": "剑雨滂沱"
+            }
+        ],
+        "name": "缄默德克萨斯",
+        "rarity": 6,
+        "date": 1667289600000
+    },
+    "char_271_spikes": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_spikes_1",
+                "name": "小玩笑"
+            },
+            {
+                "iconId": "skchr_spikes_2",
+                "name": "致命恶作剧"
+            }
+        ],
+        "name": "芳汀",
+        "rarity": 4,
+        "date": 1600934400000
+    },
+    "char_4016_kazema": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_kazema_1",
+                "name": "纸艺·迅击"
+            },
+            {
+                "iconId": "skchr_kazema_2",
+                "name": "纸艺·双影"
+            }
+        ],
+        "name": "风丸",
+        "rarity": 5,
+        "date": 1647331200000
+    },
+    "char_4055_bgsnow": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_bgsnow_1",
+                "name": "抑扬格"
+            },
+            {
+                "iconId": "skchr_bgsnow_2",
+                "name": "点题"
+            },
+            {
+                "iconId": "skchr_bgsnow_3",
+                "name": "锐笔速写"
+            }
+        ],
+        "name": "鸿雪",
+        "rarity": 6,
+        "date": 1660204800000
+    },
+    "char_363_toddi": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_toddi_1",
+                "name": "信号矢"
+            },
+            {
+                "iconId": "skchr_toddi_2",
+                "name": "便携破城矢"
+            }
+        ],
+        "name": "熔泉",
+        "rarity": 5,
+        "date": 1618473600000
+    },
+    "char_328_cammou": {
+        "profession": "CASTER",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_2_"
+            },
+            {
+                "iconId": "skchr_cammou_2",
+                "name": "同步索敌攻击"
+            }
+        ],
+        "name": "卡达",
+        "rarity": 4,
+        "date": 1594281600000
+    },
+    "char_433_windft": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_windft_1",
+                "name": "此身为筑"
+            },
+            {
+                "iconId": "skchr_windft_2",
+                "name": "此身为源"
+            }
+        ],
+        "name": "掠风",
+        "rarity": 5,
+        "date": 1651392000000
+    },
+    "char_383_snsant": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_snsant_1",
+                "name": "倒刺钩爪"
+            },
+            {
+                "iconId": "skchr_snsant_2",
+                "name": "伸缩式电捕网"
+            }
+        ],
+        "name": "雪雉",
+        "rarity": 5,
+        "date": 1578513600000
+    },
+    "char_174_slbell": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_slbell_1",
+                "name": "传音回响"
+            },
+            {
+                "iconId": "skchr_slbell_2",
+                "name": "自然震慑"
+            }
+        ],
+        "name": "初雪",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_340_shwaz": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_shwaz_1",
+                "name": "强弩"
+            },
+            {
+                "iconId": "skchr_shwaz_2",
+                "name": "暮眼锐瞳"
+            },
+            {
+                "iconId": "skchr_shwaz_3",
+                "name": "战术的终结"
+            }
+        ],
+        "name": "黑",
+        "rarity": 6,
+        "date": 1566892800000
+    },
+    "char_1029_yato2": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_yato2_1",
+                "name": "鬼人化"
+            },
+            {
+                "iconId": "skchr_yato2_2",
+                "name": "乱舞"
+            },
+            {
+                "iconId": "skchr_yato2_3",
+                "name": "空中回旋乱舞"
+            }
+        ],
+        "name": "麒麟X夜刀",
+        "rarity": 6,
+        "date": 1678176000000
+    },
+    "char_325_bison": {
+        "profession": "TANK",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_def_up_3_"
+            },
+            {
+                "iconId": "skchr_bison_2",
+                "name": "深化阵线"
+            }
+        ],
+        "name": "拜松",
+        "rarity": 5,
+        "date": 1574150400000
+    },
+    "char_376_therex": {
+        "profession": "SPECIAL",
+        "skill": [],
+        "name": "THRM-EX",
+        "rarity": 1,
+        "date": 1588320000000
+    },
+    "char_4000_jnight": {
+        "profession": "SNIPER",
+        "skill": [],
+        "name": "正义骑士号",
+        "rarity": 1,
+        "date": 1635753600000
+    },
+    "char_135_halo": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_halo_1",
+                "name": "双端导流"
+            },
+            {
+                "iconId": "skchr_halo_2",
+                "name": "星束交汇"
+            }
+        ],
+        "name": "星源",
+        "rarity": 5,
+        "date": 1657008000000
+    },
+    "char_4027_heyak": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_heyak_1",
+                "name": "但为求索"
+            },
+            {
+                "iconId": "skchr_heyak_2",
+                "name": "群星逶迤"
+            },
+            {
+                "iconId": "skchr_heyak_3",
+                "name": "博览者的狂语"
+            }
+        ],
+        "name": "霍尔海雅",
+        "rarity": 6,
+        "date": 1682928000000
+    },
+    "char_345_folnic": {
+        "profession": "MEDIC",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_folnic_1",
+                "name": "最大剂量输注"
+            },
+            {
+                "iconId": "skchr_folnic_2",
+                "name": "复合型药物弹片"
+            }
+        ],
+        "name": "亚叶",
+        "rarity": 5,
+        "date": 1594281600000
+    },
+    "char_180_amgoat": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_amgoat_1",
+                "name": "二重咏唱"
+            },
+            {
+                "iconId": "skchr_amgoat_2",
+                "name": "点燃"
+            },
+            {
+                "iconId": "skchr_amgoat_3",
+                "name": "火山"
+            }
+        ],
+        "name": "艾雅法拉",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_209_ardign": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skcom_heal_self_1_"
+            }
+        ],
+        "name": "卡缇",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_140_whitew": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_whitew_1",
+                "name": "日晷"
+            },
+            {
+                "iconId": "skchr_whitew_2",
+                "name": "狼魂"
+            }
+        ],
+        "name": "拉普兰德",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_4083_chimes": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_chimes_2",
+                "name": "乡心无改"
+            }
+        ],
+        "name": "铎铃",
+        "rarity": 5,
+        "date": 1676361600000
+    },
+    "char_283_midn": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_midn_1",
+                "name": "武器附魔·α型"
+            }
+        ],
+        "name": "月见夜",
+        "rarity": 3,
+        "date": 1559181600000
+    },
+    "char_4004_pudd": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_magic_rage_2_"
+            },
+            {
+                "iconId": "skchr_pudd_2",
+                "name": "扩散电流"
+            }
+        ],
+        "name": "布丁",
+        "rarity": 4,
+        "date": 1635753600000
+    },
+    "char_492_quercu": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_quercu_1",
+                "name": "大地的慈悲"
+            },
+            {
+                "iconId": "skchr_quercu_2",
+                "name": "生灵的回响"
+            }
+        ],
+        "name": "夏栎",
+        "rarity": 5,
+        "date": 1644912000000
+    },
+    "char_332_archet": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_archet_1",
+                "name": "箭矢·散逸"
+            },
+            {
+                "iconId": "skchr_archet_2",
+                "name": "箭矢·追猎"
+            },
+            {
+                "iconId": "skchr_archet_3",
+                "name": "箭矢·暴风"
+            }
+        ],
+        "name": "空弦",
+        "rarity": 6,
+        "date": 1609833600000
+    },
+    "char_401_elysm": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skcom_assist_cost_3_"
+            },
+            {
+                "iconId": "skchr_elysm_2",
+                "name": "聆听"
+            }
+        ],
+        "name": "极境",
+        "rarity": 5,
+        "date": 1588320000000
+    },
+    "char_274_astesi": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_astesi_1",
+                "name": "星座守护"
+            },
+            {
+                "iconId": "skchr_astesi_2",
+                "name": "星辉剑"
+            }
+        ],
+        "name": "星极",
+        "rarity": 5,
+        "date": 1568102400000
+    },
+    "char_514_rdfend": {
+        "profession": "TANK",
+        "skill": [],
+        "name": "预备干员-重装",
+        "rarity": 3,
+        "date": 1664265600000
+    },
+    "char_311_mudrok": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skcom_def_up_3_"
+            },
+            {
+                "iconId": "skchr_mudrok_2",
+                "name": "岩崩锤"
+            },
+            {
+                "iconId": "skchr_mudrok_3",
+                "name": "秽壤的血脉"
+            }
+        ],
+        "name": "泥岩",
+        "rarity": 6,
+        "date": 1604217600000
+    },
+    "char_400_weedy": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_weedy_1",
+                "name": "炮管敲击"
+            },
+            {
+                "iconId": "skchr_weedy_2",
+                "name": "水炮模式"
+            },
+            {
+                "iconId": "skchr_weedy_3",
+                "name": "液氮大炮"
+            }
+        ],
+        "name": "温蒂",
+        "rarity": 6,
+        "date": 1588320000000
+    },
+    "char_190_clour": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_2_"
+            },
+            {
+                "iconId": "skchr_clour_2",
+                "name": "双弦开弓"
+            }
+        ],
+        "name": "红云",
+        "rarity": 4,
+        "date": 1571126400000
+    },
+    "char_458_rfrost": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_rfrost_1",
+                "name": "陷阱部署"
+            },
+            {
+                "iconId": "skchr_rfrost_2",
+                "name": "击倒猎物"
+            }
+        ],
+        "name": "霜华",
+        "rarity": 5,
+        "date": 1615276800000
+    },
+    "char_198_blackd": {
+        "profession": "PIONEER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_charge_cost_2_"
+            },
+            {
+                "iconId": "skchr_blackd_2",
+                "name": "冲锋号令·防御"
+            }
+        ],
+        "name": "讯使",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_4065_judge": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_judge_1",
+                "name": "一锤定音"
+            },
+            {
+                "iconId": "skchr_judge_2",
+                "name": "坚心苦修"
+            },
+            {
+                "iconId": "skchr_judge_3",
+                "name": "披荆斩棘"
+            }
+        ],
+        "name": "斥罪",
+        "rarity": 6,
+        "date": 1667289600000
+    },
+    "char_405_absin": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_absin_1",
+                "name": "执法模式"
+            },
+            {
+                "iconId": "skchr_absin_2",
+                "name": "终结连射"
+            }
+        ],
+        "name": "苦艾",
+        "rarity": 5,
+        "date": 1592467200000
+    },
+    "char_402_tuye": {
+        "profession": "MEDIC",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_tuye_1",
+                "name": "水流环"
+            },
+            {
+                "iconId": "skchr_tuye_2",
+                "name": "强心剂"
+            }
+        ],
+        "name": "图耶",
+        "rarity": 5,
+        "date": 1611043200000
+    },
+    "char_134_ifrit": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_ifrit_1",
+                "name": "狂热"
+            },
+            {
+                "iconId": "skchr_ifrit_2",
+                "name": "炎爆"
+            },
+            {
+                "iconId": "skchr_ifrit_3",
+                "name": "灼地"
+            }
+        ],
+        "name": "伊芙利特",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_346_aosta": {
+        "profession": "SNIPER",
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_3_"
+            },
+            {
+                "iconId": "skchr_aosta_2",
+                "name": "影钉"
+            }
+        ],
+        "name": "奥斯塔",
+        "rarity": 5,
+        "date": 1602748800000
+    },
+    "char_279_excu": {
+        "profession": "SNIPER",
+        "skill": [
+            {
+                "iconId": "skchr_excu_1",
+                "name": "铳口收束"
+            },
+            {
+                "iconId": "skchr_excu_2",
+                "name": "最终旅程"
+            }
+        ],
+        "name": "送葬人",
+        "rarity": 5,
+        "date": 1571126400000
+    },
+    "char_143_ghost": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_ghost_2",
+                "name": "肉斩骨断"
+            }
+        ],
+        "name": "幽灵鲨",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_4082_qiubai": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_qiubai_1",
+                "name": "留羽"
+            },
+            {
+                "iconId": "skchr_qiubai_2",
+                "name": "承影"
+            },
+            {
+                "iconId": "skchr_qiubai_3",
+                "name": "问雪"
+            }
+        ],
+        "name": "仇白",
+        "rarity": 6,
+        "date": 1676361600000
+    },
+    "char_506_rmedic": {
+        "profession": "MEDIC",
+        "skill": [],
+        "name": "预备干员-后勤",
+        "rarity": 3,
+        "date": 1598342400000
+    },
+    "char_362_saga": {
+        "profession": "PIONEER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_charge_cost_3_"
+            },
+            {
+                "iconId": "skchr_saga_2",
+                "name": "除恶"
+            },
+            {
+                "iconId": "skchr_saga_3",
+                "name": "怒目"
+            }
+        ],
+        "name": "嵯峨",
+        "rarity": 6,
+        "date": 1612512000000
+    },
+    "char_509_acast": {
+        "profession": "CASTER",
+        "skill": [
+            {
+                "iconId": "skchr_acast_1",
+                "name": "“为我所为”"
+            }
+        ],
+        "name": "Pith",
+        "rarity": 5,
+        "date": 1598342400000
+    },
+    "char_1027_greyy2": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_3_"
+            },
+            {
+                "iconId": "skchr_greyy2_2",
+                "name": "晨曦信标"
+            }
+        ],
+        "name": "承曦格雷伊",
+        "rarity": 5,
+        "date": 1657008000000
+    },
+    "char_469_indigo": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_indigo_1",
+                "name": "灯塔守卫者"
+            },
+            {
+                "iconId": "skchr_indigo_2",
+                "name": "光影迷宫"
+            }
+        ],
+        "name": "深靛",
+        "rarity": 4,
+        "date": 1622534400000
+    },
+    "char_378_asbest": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_asbest_1",
+                "name": "固守模式"
+            },
+            {
+                "iconId": "skchr_asbest_2",
+                "name": "火电模式"
+            }
+        ],
+        "name": "石棉",
+        "rarity": 5,
+        "date": 1591084800000
+    },
+    "char_308_swire": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_swire_1",
+                "name": "指挥调度"
+            },
+            {
+                "iconId": "skchr_swire_2",
+                "name": "协同作战"
+            }
+        ],
+        "name": "诗怀雅",
+        "rarity": 5,
+        "date": 1562659200000
+    },
+    "char_4078_bdhkgt": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_bdhkgt_1",
+                "name": "探前路"
+            },
+            {
+                "iconId": "skchr_bdhkgt_2",
+                "name": "掷旧尘"
+            }
+        ],
+        "name": "截云",
+        "rarity": 5,
+        "date": 1673942400000
+    },
+    "char_242_otter": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_otter_1",
+                "name": "迷惑装置"
+            },
+            {
+                "iconId": "skchr_otter_2",
+                "name": "爆破回收"
+            }
+        ],
+        "name": "梅尔",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_264_f12yin": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_f12yin_1",
+                "name": "左勾扫拳"
+            },
+            {
+                "iconId": "skchr_f12yin_2",
+                "name": "横扫架势"
+            },
+            {
+                "iconId": "skchr_f12yin_3",
+                "name": "震地碎岩击"
+            }
+        ],
+        "name": "山",
+        "rarity": 6,
+        "date": 1608192000000
+    },
+    "char_199_yak": {
+        "profession": "TANK",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_yak_1",
+                "name": "体能强化"
+            },
+            {
+                "iconId": "skchr_yak_2",
+                "name": "抗寒体质"
+            }
+        ],
+        "name": "角峰",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_157_dagda": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_dagda_1",
+                "name": "反制技巧"
+            },
+            {
+                "iconId": "skchr_dagda_2",
+                "name": "精准捕杀"
+            }
+        ],
+        "name": "达格达",
+        "rarity": 5,
+        "date": 1665475200000
+    },
+    "char_137_brownb": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_brownb_1",
+                "name": "高机动"
+            },
+            {
+                "iconId": "skchr_brownb_2",
+                "name": "急速拳"
+            }
+        ],
+        "name": "猎蜂",
+        "rarity": 4,
+        "date": 1559181600000
+    },
+    "char_218_cuttle": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_cuttle_2",
+                "name": "阻滞射击战术"
+            }
+        ],
+        "name": "安哲拉",
+        "rarity": 5,
+        "date": 1597132800000
+    },
+    "char_485_pallas": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_pallas_1",
+                "name": "胜利的连击"
+            },
+            {
+                "iconId": "skchr_pallas_2",
+                "name": "信念的长鞭"
+            },
+            {
+                "iconId": "skchr_pallas_3",
+                "name": "英勇的祝福"
+            }
+        ],
+        "name": "帕拉斯",
+        "rarity": 6,
+        "date": 1625212800000
+    },
+    "char_163_hpsts": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_hpsts_1",
+                "name": "坚守模式"
+            },
+            {
+                "iconId": "skchr_hpsts_2",
+                "name": "武力模式"
+            }
+        ],
+        "name": "火神",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_211_adnach": {
+        "profession": "SNIPER",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_1_"
+            }
+        ],
+        "name": "安德切尔",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_1023_ghost2": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_ghost2_1",
+                "name": "生存的技巧"
+            },
+            {
+                "iconId": "skchr_ghost2_2",
+                "name": "生存的渴望"
+            },
+            {
+                "iconId": "skchr_ghost2_3",
+                "name": "生存的重压"
+            }
+        ],
+        "name": "归溟幽灵鲨",
+        "rarity": 6,
+        "date": 1651392000000
+    },
+    "char_122_beagle": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skcom_def_up_1_"
+            }
+        ],
+        "name": "米格鲁",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_252_bibeak": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_bibeak_1",
+                "name": "飞针剑羽"
+            },
+            {
+                "iconId": "skchr_bibeak_2",
+                "name": "异刃斩"
+            }
+        ],
+        "name": "柏喙",
+        "rarity": 5,
+        "date": 1584432000000
+    },
+    "char_185_frncat": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_frncat_1",
+                "name": "挠伤"
+            },
+            {
+                "iconId": "skchr_frncat_2",
+                "name": "炸毛"
+            }
+        ],
+        "name": "慕斯",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_423_blemsh": {
+        "profession": "TANK",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_blemsh_1",
+                "name": "光芒涌动"
+            },
+            {
+                "iconId": "skchr_blemsh_2",
+                "name": "慑敌辉光"
+            },
+            {
+                "iconId": "skchr_blemsh_3",
+                "name": "先贤化身"
+            }
+        ],
+        "name": "瑕光",
+        "rarity": 6,
+        "date": 1602748800000
+    },
+    "char_1030_noirc2": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_noirc2_1",
+                "name": "居合拔刀气刃斩"
+            },
+            {
+                "iconId": "skchr_noirc2_2",
+                "name": "气刃兜割"
+            }
+        ],
+        "name": "火龙S黑角",
+        "rarity": 5,
+        "date": 1678176000000
+    },
+    "char_124_kroos": {
+        "profession": "SNIPER",
+        "skill": [
+            {
+                "iconId": "skchr_kroos_1",
+                "name": "二连射·自动"
+            }
+        ],
+        "name": "克洛丝",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_4025_aprot2": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_aprot2_1",
+                "name": "速战速决"
+            },
+            {
+                "iconId": "skchr_aprot2_2",
+                "name": "燃命狂欢"
+            }
+        ],
+        "name": "暮落",
+        "rarity": 5,
+        "date": 1641369600000
+    },
+    "char_411_tomimi": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_tomimi_1",
+                "name": "部族技艺"
+            },
+            {
+                "iconId": "skchr_tomimi_2",
+                "name": "嘉维尔保护方案"
+            }
+        ],
+        "name": "特米米",
+        "rarity": 5,
+        "date": 1598342400000
+    },
+    "char_4006_melnte": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_melnte_1",
+                "name": "饱和脉冲"
+            },
+            {
+                "iconId": "skchr_melnte_2",
+                "name": "临界爆发"
+            }
+        ],
+        "name": "玫拉",
+        "rarity": 5,
+        "date": 1682928000000
+    },
+    "char_422_aurora": {
+        "profession": "TANK",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_aurora_1",
+                "name": "固守家园"
+            },
+            {
+                "iconId": "skchr_aurora_2",
+                "name": "人工降雪"
+            }
+        ],
+        "name": "极光",
+        "rarity": 5,
+        "date": 1640073600000
+    },
+    "char_497_ctable": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skchr_ctable_1",
+                "name": "观火"
+            },
+            {
+                "iconId": "skchr_ctable_2",
+                "name": "浮光"
+            }
+        ],
+        "name": "晓歌",
+        "rarity": 5,
+        "date": 1660204800000
+    },
+    "char_141_nights": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_2_"
+            },
+            {
+                "iconId": "skchr_nights_2",
+                "name": "赤色之瞳"
+            }
+        ],
+        "name": "夜烟",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_275_breeze": {
+        "profession": "MEDIC",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_breeze_1",
+                "name": "集束疗法"
+            },
+            {
+                "iconId": "skchr_breeze_2",
+                "name": "扩散疗法"
+            }
+        ],
+        "name": "微风",
+        "rarity": 5,
+        "date": 1572552000000
+    },
+    "char_511_asnipe": {
+        "profession": "SNIPER",
+        "skill": [
+            {
+                "iconId": "skchr_asnipe_1",
+                "name": "旋臂"
+            }
+        ],
+        "name": "Stormeye",
+        "rarity": 5,
+        "date": 1598342400000
+    },
+    "char_261_sddrag": {
+        "profession": "PIONEER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_3_"
+            },
+            {
+                "iconId": "skchr_sddrag_2",
+                "name": "生灵火花"
+            }
+        ],
+        "name": "苇草",
+        "rarity": 5,
+        "date": 1575964800000
+    },
+    "char_473_mberry": {
+        "profession": "MEDIC",
+        "skill": [
+            {
+                "iconId": "skchr_mberry_1",
+                "name": "治愈云雾"
+            },
+            {
+                "iconId": "skchr_mberry_2",
+                "name": "安全区域"
+            }
+        ],
+        "name": "桑葚",
+        "rarity": 5,
+        "date": 1631865600000
+    },
+    "char_103_angel": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_angel_1",
+                "name": "冲锋模式"
+            },
+            {
+                "iconId": "skchr_angel_2",
+                "name": "扫射模式"
+            },
+            {
+                "iconId": "skchr_angel_3",
+                "name": "过载模式"
+            }
+        ],
+        "name": "能天使",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_260_durnar": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_2_"
+            },
+            {
+                "iconId": "skchr_durnar_2",
+                "name": "起盾回击"
+            }
+        ],
+        "name": "坚雷",
+        "rarity": 4,
+        "date": 1569873600000
+    },
+    "char_265_sophia": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_sophia_1",
+                "name": "激励艺术"
+            },
+            {
+                "iconId": "skchr_sophia_2",
+                "name": "鞭刃"
+            }
+        ],
+        "name": "鞭刃",
+        "rarity": 5,
+        "date": 1602748800000
+    },
+    "char_437_mizuki": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_mizuki_1",
+                "name": "唤醒"
+            },
+            {
+                "iconId": "skchr_mizuki_2",
+                "name": "囚徒困境"
+            },
+            {
+                "iconId": "skchr_mizuki_3",
+                "name": "镜花水月"
+            }
+        ],
+        "name": "水月",
+        "rarity": 6,
+        "date": 1627977600000
+    },
+    "char_301_cutter": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_cutter_1",
+                "name": "红移"
+            },
+            {
+                "iconId": "skchr_cutter_2",
+                "name": "绯红刺刀"
+            }
+        ],
+        "name": "刻刀",
+        "rarity": 4,
+        "date": 1587456000000
+    },
+    "char_1014_nearl2": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_nearl2_1",
+                "name": "灿焰长刃"
+            },
+            {
+                "iconId": "skchr_nearl2_2",
+                "name": "逐夜烁光"
+            },
+            {
+                "iconId": "skchr_nearl2_3",
+                "name": "耀阳颔首"
+            }
+        ],
+        "name": "耀骑士临光",
+        "rarity": 6,
+        "date": 1635753600000
+    },
+    "char_365_aprl": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_aprl_1",
+                "name": "精准射击"
+            },
+            {
+                "iconId": "skchr_aprl_2",
+                "name": "灵活伪装"
+            }
+        ],
+        "name": "四月",
+        "rarity": 5,
+        "date": 1600934400000
+    },
+    "char_484_robrta": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_robrta_1",
+                "name": "叙拉古式上妆"
+            },
+            {
+                "iconId": "skchr_robrta_2",
+                "name": "全自动造型仪"
+            }
+        ],
+        "name": "罗比菈塔",
+        "rarity": 4,
+        "date": 1631865600000
+    },
+    "char_108_silent": {
+        "profession": "MEDIC",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_heal_up_3_"
+            },
+            {
+                "iconId": "skchr_silent_2",
+                "name": "医疗无人机"
+            }
+        ],
+        "name": "赫默",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_212_ansel": {
+        "profession": "MEDIC",
+        "skill": [
+            {
+                "iconId": "skcom_range_extend",
+                "name": "治疗范围强化"
+            }
+        ],
+        "name": "安赛尔",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_355_ethan": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_ethan_1",
+                "name": "花式回旋"
+            },
+            {
+                "iconId": "skchr_ethan_2",
+                "name": "十字悬挂"
+            }
+        ],
+        "name": "伊桑",
+        "rarity": 4,
+        "date": 1572552000000
+    },
+    "char_286_cast3": {
+        "profession": "WARRIOR",
+        "skill": [],
+        "name": "Castle-3",
+        "rarity": 1,
+        "date": 1556589600000
+    },
+    "char_4009_irene": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_irene_1",
+                "name": "起风"
+            },
+            {
+                "iconId": "skchr_irene_2",
+                "name": "裂潮"
+            },
+            {
+                "iconId": "skchr_irene_3",
+                "name": "判决"
+            }
+        ],
+        "name": "艾丽妮",
+        "rarity": 6,
+        "date": 1651392000000
+    },
+    "char_4067_lolxh": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_lolxh_1",
+                "name": "掠光尾影"
+            },
+            {
+                "iconId": "skchr_lolxh_2",
+                "name": "碎金为刃"
+            }
+        ],
+        "name": "罗小黑",
+        "rarity": 4,
+        "date": 1663228800000
+    },
+    "char_113_cqbw": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_cqbw_1",
+                "name": "红桃K"
+            },
+            {
+                "iconId": "skchr_cqbw_2",
+                "name": "惊吓盒子"
+            },
+            {
+                "iconId": "skchr_cqbw_3",
+                "name": "D12"
+            }
+        ],
+        "name": "W",
+        "rarity": 6,
+        "date": 1588320000000
+    },
+    "char_476_blkngt": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skchr_blkngt_1",
+                "name": "半醒"
+            },
+            {
+                "iconId": "skchr_blkngt_2",
+                "name": "安眠"
+            }
+        ],
+        "name": "夜半",
+        "rarity": 5,
+        "date": 1643097600000
+    },
+    "char_479_sleach": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skcom_assist_cost_3_"
+            },
+            {
+                "iconId": "skchr_sleach_2",
+                "name": "信仰传承"
+            },
+            {
+                "iconId": "skchr_sleach_3",
+                "name": "光辉旗帜"
+            }
+        ],
+        "name": "琴柳",
+        "rarity": 6,
+        "date": 1631865600000
+    },
+    "char_4048_doroth": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_doroth_1",
+                "name": "危险目标清除"
+            },
+            {
+                "iconId": "skchr_doroth_2",
+                "name": "流沙区域生成"
+            },
+            {
+                "iconId": "skchr_doroth_3",
+                "name": "高速共振排障"
+            }
+        ],
+        "name": "多萝西",
+        "rarity": 6,
+        "date": 1657008000000
+    },
+    "char_210_stward": {
+        "profession": "CASTER",
+        "skill": [
+            {
+                "iconId": "skchr_stward_1",
+                "name": "强力击·α型"
+            }
+        ],
+        "name": "史都华德",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_455_nothin": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_nothin_1",
+                "name": "知难而退"
+            },
+            {
+                "iconId": "skchr_nothin_2",
+                "name": "阴晴圆缺"
+            }
+        ],
+        "name": "乌有",
+        "rarity": 5,
+        "date": 1612512000000
+    },
+    "char_144_red": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_red_1",
+                "name": "处决模式"
+            },
+            {
+                "iconId": "skchr_red_2",
+                "name": "狼群"
+            }
+        ],
+        "name": "红",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_285_medic2": {
+        "profession": "MEDIC",
+        "skill": [],
+        "name": "Lancet-2",
+        "rarity": 1,
+        "date": 1556589600000
+    },
+    "char_496_wildmn": {
+        "profession": "PIONEER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_wildmn_1",
+                "name": "骑枪刺击"
+            },
+            {
+                "iconId": "skchr_wildmn_2",
+                "name": "夹枪冲锋"
+            }
+        ],
+        "name": "野鬃",
+        "rarity": 5,
+        "date": 1635753600000
+    },
+    "char_183_skgoat": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_2_"
+            },
+            {
+                "iconId": "skchr_skgoat_2",
+                "name": "流沙化"
+            }
+        ],
+        "name": "地灵",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_4045_heidi": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_heidi_1",
+                "name": "虚构故事·怒士"
+            },
+            {
+                "iconId": "skchr_heidi_2",
+                "name": "虚构故事·锈城"
+            }
+        ],
+        "name": "海蒂",
+        "rarity": 5,
+        "date": 1649923200000
+    },
+    "char_478_kirara": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_kirara_1",
+                "name": "锚击"
+            },
+            {
+                "iconId": "skchr_kirara_2",
+                "name": "锚点捕捉"
+            }
+        ],
+        "name": "绮良",
+        "rarity": 5,
+        "date": 1622534400000
+    },
+    "char_173_slchan": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_slchan_1",
+                "name": "锁链勾爪"
+            },
+            {
+                "iconId": "skchr_slchan_2",
+                "name": "束缚链"
+            }
+        ],
+        "name": "崖心",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_366_acdrop": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_acdrop_1",
+                "name": "花式点射"
+            },
+            {
+                "iconId": "skchr_acdrop_2",
+                "name": "扳机时刻"
+            }
+        ],
+        "name": "酸糖",
+        "rarity": 4,
+        "date": 1598342400000
+    },
+    "char_4054_malist": {
+        "profession": "CASTER",
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_3_"
+            },
+            {
+                "iconId": "skchr_malist_2",
+                "name": "神工意匠"
+            }
+        ],
+        "name": "至简",
+        "rarity": 5,
+        "date": 1660204800000
+    },
+    "char_248_mgllan": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_mgllan_1",
+                "name": "高效制冷模块"
+            },
+            {
+                "iconId": "skchr_mgllan_2",
+                "name": "激光开采模块"
+            },
+            {
+                "iconId": "skchr_mgllan_3",
+                "name": "武装打击模块"
+            }
+        ],
+        "name": "麦哲伦",
+        "rarity": 6,
+        "date": 1571126400000
+    },
+    "char_147_shining": {
+        "profession": "MEDIC",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_shining_1",
+                "name": "信条"
+            },
+            {
+                "iconId": "skchr_shining_2",
+                "name": "自动掩护"
+            },
+            {
+                "iconId": "skchr_shining_3",
+                "name": "教条力场"
+            }
+        ],
+        "name": "闪灵",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_192_falco": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_1_"
+            }
+        ],
+        "name": "翎羽",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_002_amiya": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_magic_rage_3_"
+            },
+            {
+                "iconId": "skchr_amiya_2",
+                "name": "精神爆发"
+            },
+            {
+                "iconId": "skchr_amiya_3",
+                "name": "奇美拉"
+            }
+        ],
+        "name": "阿米娅",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_507_rsnipe": {
+        "profession": "SNIPER",
+        "skill": [],
+        "name": "预备干员-狙击",
+        "rarity": 3,
+        "date": 1598342400000
+    },
+    "char_284_spot": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_spot_1",
+                "name": "次级治疗模式"
+            }
+        ],
+        "name": "斑点",
+        "rarity": 3,
+        "date": 1562659200000
+    },
+    "char_003_kalts": {
+        "profession": "MEDIC",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_kalts_1",
+                "name": "指令：结构加固"
+            },
+            {
+                "iconId": "skchr_kalts_2",
+                "name": "指令：战术协同"
+            },
+            {
+                "iconId": "skchr_kalts_3",
+                "name": "指令：熔毁"
+            }
+        ],
+        "name": "凯尔希",
+        "rarity": 6,
+        "date": 1619856000000
+    },
+    "char_291_aglina": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_aglina_1",
+                "name": "秘杖·速充模式"
+            },
+            {
+                "iconId": "skchr_aglina_2",
+                "name": "秘杖·微粒模式"
+            },
+            {
+                "iconId": "skchr_aglina_3",
+                "name": "秘杖·反重力模式"
+            }
+        ],
+        "name": "安洁莉娜",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_236_rope": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_rope_1",
+                "name": "勾爪发射"
+            },
+            {
+                "iconId": "skchr_rope_2",
+                "name": "复式勾爪"
+            }
+        ],
+        "name": "暗索",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_127_estell": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_2_"
+            },
+            {
+                "iconId": "skchr_estell_2",
+                "name": "舍身突击"
+            }
+        ],
+        "name": "艾丝黛尔",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_1026_gvial2": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_gvial2_1",
+                "name": "精准痛击"
+            },
+            {
+                "iconId": "skchr_gvial2_2",
+                "name": "链锯强袭"
+            },
+            {
+                "iconId": "skchr_gvial2_3",
+                "name": "丛林之魂"
+            }
+        ],
+        "name": "百炼嘉维尔",
+        "rarity": 6,
+        "date": 1660204800000
+    },
+    "char_197_poca": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_poca_2",
+                "name": "分裂射击"
+            },
+            {
+                "iconId": "skchr_poca_3",
+                "name": "雪崩击"
+            }
+        ],
+        "name": "早露",
+        "rarity": 6,
+        "date": 1592467200000
+    },
+    "char_243_waaifu": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_waaifu_1",
+                "name": "寸劲"
+            },
+            {
+                "iconId": "skchr_waaifu_2",
+                "name": "七武掠阵踢"
+            }
+        ],
+        "name": "槐琥",
+        "rarity": 5,
+        "date": 1574150400000
+    },
+    "char_338_iris": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_iris_1",
+                "name": "童话守卫者"
+            },
+            {
+                "iconId": "skchr_iris_2",
+                "name": "梦乡摇篮"
+            }
+        ],
+        "name": "爱丽丝",
+        "rarity": 5,
+        "date": 1609833600000
+    },
+    "char_254_vodfox": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_vodfox_1",
+                "name": "病入膏肓"
+            },
+            {
+                "iconId": "skchr_vodfox_2",
+                "name": "诅咒娃娃"
+            }
+        ],
+        "name": "巫恋",
+        "rarity": 5,
+        "date": 1587456000000
+    },
+    "char_367_swllow": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_swllow_1",
+                "name": "飞羽"
+            },
+            {
+                "iconId": "skchr_swllow_2",
+                "name": "回流"
+            }
+        ],
+        "name": "灰喉",
+        "rarity": 5,
+        "date": 1577174400000
+    },
+    "char_171_bldsk": {
+        "profession": "MEDIC",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_bldsk_1",
+                "name": "紧急包扎"
+            },
+            {
+                "iconId": "skchr_bldsk_2",
+                "name": "不稳定血浆"
+            }
+        ],
+        "name": "华法琳",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_126_shotst": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_shotst_1",
+                "name": "碎甲击"
+            },
+            {
+                "iconId": "skchr_shotst_2",
+                "name": "碎甲击·扩散"
+            }
+        ],
+        "name": "流星",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_4077_palico": {
+        "profession": "SNIPER",
+        "skill": [],
+        "name": "泰拉大陆调查团",
+        "rarity": 1,
+        "date": 1678176000000
+    },
+    "char_489_serum": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_serum_1",
+                "name": "专注力超载"
+            },
+            {
+                "iconId": "skchr_serum_2",
+                "name": "传导蚀滞弹"
+            }
+        ],
+        "name": "蚀清",
+        "rarity": 5,
+        "date": 1635753600000
+    },
+    "char_459_tachak": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_tachak_1",
+                "name": "燃烧榴弹"
+            },
+            {
+                "iconId": "skchr_tachak_2",
+                "name": "倾泻弹药"
+            }
+        ],
+        "name": "战车",
+        "rarity": 5,
+        "date": 1615276800000
+    },
+    "char_4064_mlynar": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_mlynar_1",
+                "name": "未声张的怒火"
+            },
+            {
+                "iconId": "skchr_mlynar_2",
+                "name": "未宽解的悲哀"
+            },
+            {
+                "iconId": "skchr_mlynar_3",
+                "name": "未照耀的荣光"
+            }
+        ],
+        "name": "玛恩纳",
+        "rarity": 6,
+        "date": 1662624000000
+    },
+    "char_250_phatom": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_phatom_1",
+                "name": "暗夜魅影"
+            },
+            {
+                "iconId": "skchr_phatom_2",
+                "name": "血色乐章"
+            },
+            {
+                "iconId": "skchr_phatom_3",
+                "name": "夜幕突袭"
+            }
+        ],
+        "name": "傀影",
+        "rarity": 6,
+        "date": 1587456000000
+    },
+    "char_457_blitz": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_blitz_1",
+                "name": "闪光护盾"
+            },
+            {
+                "iconId": "skchr_blitz_2",
+                "name": "突破防线"
+            }
+        ],
+        "name": "闪击",
+        "rarity": 5,
+        "date": 1615276800000
+    },
+    "char_1011_lava2": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_lava2_1",
+                "name": "焰淬匕首"
+            },
+            {
+                "iconId": "skchr_lava2_2",
+                "name": "狱火之环"
+            }
+        ],
+        "name": "炎狱炎熔",
+        "rarity": 5,
+        "date": 1612512000000
+    },
+    "char_009_12fce": {
+        "profession": "CASTER",
+        "skill": [],
+        "name": "12F",
+        "rarity": 2,
+        "date": 1556589600000
+    },
+    "char_491_humus": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_humus_1",
+                "name": "固废切割"
+            },
+            {
+                "iconId": "skchr_humus_2",
+                "name": "高效处理"
+            }
+        ],
+        "name": "休谟斯",
+        "rarity": 4,
+        "date": 1680768000000
+    },
+    "char_118_yuki": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_yuki_1",
+                "name": "敌飙"
+            },
+            {
+                "iconId": "skchr_yuki_2",
+                "name": "凝武"
+            }
+        ],
+        "name": "白雪",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_500_noirc": {
+        "profession": "TANK",
+        "skill": [],
+        "name": "黑角",
+        "rarity": 2,
+        "date": 1556589600000
+    },
+    "char_326_glacus": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_glacus_1",
+                "name": "双线装填"
+            },
+            {
+                "iconId": "skchr_glacus_2",
+                "name": "反制电磁脉冲"
+            }
+        ],
+        "name": "格劳克斯",
+        "rarity": 5,
+        "date": 1566892800000
+    },
+    "char_420_flamtl": {
+        "profession": "PIONEER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_flamtl_1",
+                "name": "迅敏直觉"
+            },
+            {
+                "iconId": "skchr_flamtl_2",
+                "name": "“红松林”"
+            },
+            {
+                "iconId": "skchr_flamtl_3",
+                "name": "焰心"
+            }
+        ],
+        "name": "焰尾",
+        "rarity": 6,
+        "date": 1635753600000
+    },
+    "char_4017_puzzle": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skchr_puzzle_1",
+                "name": "关键线索"
+            },
+            {
+                "iconId": "skchr_puzzle_2",
+                "name": "疑点追踪"
+            }
+        ],
+        "name": "谜图",
+        "rarity": 5,
+        "date": 1671091200000
+    },
+    "char_297_hamoni": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_hamoni_1",
+                "name": "轻巧舞步"
+            },
+            {
+                "iconId": "skchr_hamoni_2",
+                "name": "沉溺之灾"
+            }
+        ],
+        "name": "和弦",
+        "rarity": 5,
+        "date": 1671091200000
+    },
+    "char_193_frostl": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_frostl_1",
+                "name": "寒霜枪刃"
+            },
+            {
+                "iconId": "skchr_frostl_2",
+                "name": "凝冰枪刃"
+            }
+        ],
+        "name": "霜叶",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_2015_dusk": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_dusk_1",
+                "name": "工笔入化"
+            },
+            {
+                "iconId": "skchr_dusk_2",
+                "name": "泼墨淋漓"
+            },
+            {
+                "iconId": "skchr_dusk_3",
+                "name": "写意胜形"
+            }
+        ],
+        "name": "夕",
+        "rarity": 6,
+        "date": 1612512000000
+    },
+    "char_381_bubble": {
+        "profession": "TANK",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_def_up_2_"
+            },
+            {
+                "iconId": "skchr_bubble_2",
+                "name": "“挨打”"
+            }
+        ],
+        "name": "泡泡",
+        "rarity": 4,
+        "date": 1602748800000
+    },
+    "char_369_bena": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_bena_1",
+                "name": "奋力修剪"
+            },
+            {
+                "iconId": "skchr_bena_2",
+                "name": "快速修剪"
+            }
+        ],
+        "name": "贝娜",
+        "rarity": 5,
+        "date": 1622534400000
+    },
+    "char_4043_erato": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_erato_1",
+                "name": "安眠旋律"
+            },
+            {
+                "iconId": "skchr_erato_2",
+                "name": "英雄赞歌"
+            }
+        ],
+        "name": "埃拉托",
+        "rarity": 5,
+        "date": 1652947200000
+    },
+    "char_115_headbr": {
+        "profession": "PIONEER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_charge_cost_3_"
+            },
+            {
+                "iconId": "skchr_headbr_2",
+                "name": "乌萨斯战吼"
+            }
+        ],
+        "name": "凛冬",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_348_ceylon": {
+        "profession": "MEDIC",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_ceylon_1",
+                "name": "集中式水疗"
+            },
+            {
+                "iconId": "skchr_ceylon_2",
+                "name": "水灵庇护"
+            }
+        ],
+        "name": "锡兰",
+        "rarity": 5,
+        "date": 1566892800000
+    },
+    "char_1012_skadi2": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_skadi2_1",
+                "name": "同归殊途之吟"
+            },
+            {
+                "iconId": "skchr_skadi2_2",
+                "name": "同葬无光之愿"
+            },
+            {
+                "iconId": "skchr_skadi2_3",
+                "name": "\"潮涌，潮枯\""
+            }
+        ],
+        "name": "浊心斯卡蒂",
+        "rarity": 6,
+        "date": 1619856000000
+    },
+    "char_415_flint": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_flint_1",
+                "name": "不息"
+            },
+            {
+                "iconId": "skchr_flint_2",
+                "name": "锋芒毕露"
+            }
+        ],
+        "name": "燧石",
+        "rarity": 5,
+        "date": 1598342400000
+    },
+    "char_1020_reed2": {
+        "profession": "MEDIC",
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_3_"
+            },
+            {
+                "iconId": "skchr_reed2_2",
+                "name": "枯荣共息"
+            },
+            {
+                "iconId": "skchr_reed2_3",
+                "name": "生命火种"
+            }
+        ],
+        "name": "焰影苇草",
+        "rarity": 6,
+        "date": 1671091200000
+    },
+    "char_373_lionhd": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_lionhd_2",
+                "name": "解构与爆破"
+            }
+        ],
+        "name": "莱恩哈特",
+        "rarity": 5,
+        "date": 1592467200000
+    },
+    "char_293_thorns": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_thorns_2",
+                "name": "护身尖刺"
+            },
+            {
+                "iconId": "skchr_thorns_3",
+                "name": "至高之术"
+            }
+        ],
+        "name": "棘刺",
+        "rarity": 6,
+        "date": 1597132800000
+    },
+    "char_452_bstalk": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skchr_bstalk_1",
+                "name": "定点指令"
+            },
+            {
+                "iconId": "skchr_bstalk_2",
+                "name": "“大家一起上”"
+            }
+        ],
+        "name": "豆苗",
+        "rarity": 4,
+        "date": 1609833600000
+    },
+    "char_337_utage": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_utage_1",
+                "name": "分神"
+            },
+            {
+                "iconId": "skchr_utage_2",
+                "name": "落地斩·破门"
+            }
+        ],
+        "name": "宴",
+        "rarity": 4,
+        "date": 1584432000000
+    },
+    "char_456_ash": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_ash_1",
+                "name": "支援射击"
+            },
+            {
+                "iconId": "skchr_ash_2",
+                "name": "突击战术"
+            },
+            {
+                "iconId": "skchr_ash_3",
+                "name": "攻坚榴弹"
+            }
+        ],
+        "name": "灰烬",
+        "rarity": 6,
+        "date": 1615276800000
+    },
+    "char_377_gdglow": {
+        "profession": "CASTER",
+        "skill": [
+            {
+                "iconId": "skchr_gdglow_1",
+                "name": "火花四溅"
+            },
+            {
+                "iconId": "skchr_gdglow_2",
+                "name": "电流翻涌"
+            },
+            {
+                "iconId": "skchr_gdglow_3",
+                "name": "澄净闪耀"
+            }
+        ],
+        "name": "澄闪",
+        "rarity": 6,
+        "date": 1644912000000
+    },
+    "char_131_flameb": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_flameb_1",
+                "name": "歃血"
+            },
+            {
+                "iconId": "skchr_flameb_2",
+                "name": "刃鬼"
+            }
+        ],
+        "name": "炎客",
+        "rarity": 5,
+        "date": 1571126400000
+    },
+    "char_440_pinecn": {
+        "profession": "SNIPER",
+        "skill": [
+            {
+                "iconId": "skchr_pinecn_1",
+                "name": "RMA长钉"
+            },
+            {
+                "iconId": "skchr_pinecn_2",
+                "name": "电能过载"
+            }
+        ],
+        "name": "松果",
+        "rarity": 4,
+        "date": 1608192000000
+    },
+    "char_464_cement": {
+        "profession": "TANK",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_cement_1",
+                "name": "突破矿层"
+            },
+            {
+                "iconId": "skchr_cement_2",
+                "name": "结构加固"
+            }
+        ],
+        "name": "洋灰",
+        "rarity": 5,
+        "date": 1680768000000
+    },
+    "char_385_finlpp": {
+        "profession": "MEDIC",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_finlpp_1",
+                "name": "治愈水波"
+            },
+            {
+                "iconId": "skchr_finlpp_2",
+                "name": "涌泉"
+            }
+        ],
+        "name": "清流",
+        "rarity": 4,
+        "date": 1583179200000
+    },
+    "char_249_mlyss": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skchr_mlyss_1",
+                "name": "渐进性润化"
+            },
+            {
+                "iconId": "skchr_mlyss_2",
+                "name": "生态耦合"
+            },
+            {
+                "iconId": "skchr_mlyss_3",
+                "name": "浅层非熵适应"
+            }
+        ],
+        "name": "缪尔赛思",
+        "rarity": 6,
+        "date": 1682928000000
+    },
+    "char_187_ccheal": {
+        "profession": "MEDIC",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_ccheal_1",
+                "name": "活力再生"
+            },
+            {
+                "iconId": "skchr_ccheal_2",
+                "name": "活力再生·广域"
+            }
+        ],
+        "name": "嘉维尔",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_503_rang": {
+        "profession": "SNIPER",
+        "skill": [],
+        "name": "巡林者",
+        "rarity": 2,
+        "date": 1556589600000
+    },
+    "char_277_sqrrel": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_sqrrel_1",
+                "name": "水蒸气泵"
+            },
+            {
+                "iconId": "skchr_sqrrel_2",
+                "name": "高压水炮"
+            }
+        ],
+        "name": "阿消",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_4046_ebnhlz": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_ebnhlz_1",
+                "name": "渐快急板"
+            },
+            {
+                "iconId": "skchr_ebnhlz_2",
+                "name": "荒芜回响"
+            },
+            {
+                "iconId": "skchr_ebnhlz_3",
+                "name": "寂静之声"
+            }
+        ],
+        "name": "黑键",
+        "rarity": 6,
+        "date": 1654761600000
+    },
+    "char_017_huang": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_huang_1",
+                "name": "强力击·γ型"
+            },
+            {
+                "iconId": "skchr_huang_2",
+                "name": "链锯延伸模块"
+            },
+            {
+                "iconId": "skchr_huang_3",
+                "name": "沸腾爆裂"
+            }
+        ],
+        "name": "煌",
+        "rarity": 6,
+        "date": 1577174400000
+    },
+    "char_4087_ines": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skchr_ines_1",
+                "name": "淬影突袭"
+            },
+            {
+                "iconId": "skchr_ines_2",
+                "name": "暗夜无明"
+            },
+            {
+                "iconId": "skchr_ines_3",
+                "name": "独影归途"
+            }
+        ],
+        "name": "伊内丝",
+        "rarity": 6,
+        "date": 1680768000000
+    },
+    "char_501_durin": {
+        "profession": "CASTER",
+        "skill": [],
+        "name": "杜林",
+        "rarity": 2,
+        "date": 1556589600000
+    },
+    "char_510_amedic": {
+        "profession": "MEDIC",
+        "skill": [
+            {
+                "iconId": "skchr_amedic_1",
+                "name": "宛如天启"
+            }
+        ],
+        "name": "Touch",
+        "rarity": 5,
+        "date": 1598342400000
+    },
+    "char_106_franka": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_3_"
+            },
+            {
+                "iconId": "skchr_franka_2",
+                "name": "极致锋度"
+            }
+        ],
+        "name": "芙兰卡",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_213_mostma": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_mostma_2",
+                "name": "荒时之锁"
+            },
+            {
+                "iconId": "skchr_mostma_3",
+                "name": "序时之匙"
+            }
+        ],
+        "name": "莫斯提马",
+        "rarity": 6,
+        "date": 1574150400000
+    },
+    "char_430_fartth": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_3_"
+            },
+            {
+                "iconId": "skchr_fartth_2",
+                "name": "同盟支援"
+            },
+            {
+                "iconId": "skchr_fartth_3",
+                "name": "光羽箭"
+            }
+        ],
+        "name": "远牙",
+        "rarity": 6,
+        "date": 1634284800000
+    },
+    "char_4093_frston": {
+        "profession": "TANK",
+        "skill": [],
+        "name": "Friston-3",
+        "rarity": 1,
+        "date": 1684742400000
+    },
+    "char_379_sesa": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_sesa_2",
+                "name": "延时震荡零件"
+            }
+        ],
+        "name": "慑砂",
+        "rarity": 5,
+        "date": 1584432000000
+    },
+    "char_263_skadi": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_3_"
+            },
+            {
+                "iconId": "skchr_skadi_2",
+                "name": "跃浪击"
+            },
+            {
+                "iconId": "skchr_skadi_3",
+                "name": "涌潮悲歌"
+            }
+        ],
+        "name": "斯卡蒂",
+        "rarity": 6,
+        "date": 1559181600000
+    },
+    "char_109_fmout": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_magic_rage_2_"
+            },
+            {
+                "iconId": "skchr_fmout_2",
+                "name": "命运"
+            }
+        ],
+        "name": "远山",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_294_ayer": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_ayer_1",
+                "name": "多导向散射弹丸"
+            },
+            {
+                "iconId": "skchr_ayer_2",
+                "name": "浮游刃启动"
+            }
+        ],
+        "name": "断崖",
+        "rarity": 5,
+        "date": 1594281600000
+    },
+    "char_253_greyy": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_magic_rage_2_"
+            },
+            {
+                "iconId": "skchr_greyy_2",
+                "name": "静电释放"
+            }
+        ],
+        "name": "格雷伊",
+        "rarity": 4,
+        "date": 1562659200000
+    },
+    "char_333_sidero": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skcom_heal_self_3_"
+            },
+            {
+                "iconId": "skchr_sidero_2",
+                "name": "破浪回神"
+            }
+        ],
+        "name": "铸铁",
+        "rarity": 5,
+        "date": 1587456000000
+    },
+    "char_179_cgbird": {
+        "profession": "MEDIC",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_heal_up_3_"
+            },
+            {
+                "iconId": "skchr_cgbird_2",
+                "name": "法术护盾"
+            },
+            {
+                "iconId": "skchr_cgbird_3",
+                "name": "圣域"
+            }
+        ],
+        "name": "夜莺",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_2014_nian": {
+        "profession": "TANK",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_nian_1",
+                "name": "锡灼"
+            },
+            {
+                "iconId": "skchr_nian_2",
+                "name": "铜印"
+            },
+            {
+                "iconId": "skchr_nian_3",
+                "name": "铁御"
+            }
+        ],
+        "name": "年",
+        "rarity": 6,
+        "date": 1579161600000
+    },
+    "char_436_whispr": {
+        "profession": "MEDIC",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_whispr_1",
+                "name": "定向诊断"
+            },
+            {
+                "iconId": "skchr_whispr_2",
+                "name": "痛觉抑制"
+            }
+        ],
+        "name": "絮雨",
+        "rarity": 5,
+        "date": 1604217600000
+    },
+    "char_150_snakek": {
+        "profession": "TANK",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_def_up_2_"
+            },
+            {
+                "iconId": "skchr_snakek_2",
+                "name": "壳状防御"
+            }
+        ],
+        "name": "蛇屠箱",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_4041_chnut": {
+        "profession": "MEDIC",
+        "skill": [
+            {
+                "iconId": "skchr_chnut_1",
+                "name": "积微成著"
+            },
+            {
+                "iconId": "skchr_chnut_2",
+                "name": "厚土迸发"
+            }
+        ],
+        "name": "褐果",
+        "rarity": 4,
+        "date": 1649923200000
+    },
+    "char_241_panda": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_panda_1",
+                "name": "铁意六合"
+            },
+            {
+                "iconId": "skchr_panda_2",
+                "name": "崩拳式"
+            }
+        ],
+        "name": "食铁兽",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_1031_slent2": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_slent2_1",
+                "name": "进取之心"
+            },
+            {
+                "iconId": "skchr_slent2_2",
+                "name": "俯瞰视界"
+            },
+            {
+                "iconId": "skchr_slent2_3",
+                "name": "无畏者协议"
+            }
+        ],
+        "name": "淬羽赫默",
+        "rarity": 6,
+        "date": 1682928000000
+    },
+    "char_110_deepcl": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_deepcl_1",
+                "name": "光影之触"
+            },
+            {
+                "iconId": "skchr_deepcl_2",
+                "name": "视觉陷阱"
+            }
+        ],
+        "name": "深海色",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_4072_ironmn": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_ironmn_1",
+                "name": "极致火力"
+            },
+            {
+                "iconId": "skchr_ironmn_2",
+                "name": "高效补给"
+            },
+            {
+                "iconId": "skchr_ironmn_3",
+                "name": "铁钳号·原型机"
+            }
+        ],
+        "name": "白铁",
+        "rarity": 6,
+        "date": 1665475200000
+    },
+    "char_282_catap": {
+        "profession": "SNIPER",
+        "skill": [
+            {
+                "iconId": "skchr_catap_1",
+                "name": "爆破范围提升·α型"
+            }
+        ],
+        "name": "空爆",
+        "rarity": 3,
+        "date": 1558576800000
+    },
+    "char_208_melan": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_1_"
+            }
+        ],
+        "name": "玫兰莎",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_504_rguard": {
+        "profession": "PIONEER",
+        "skill": [],
+        "name": "预备干员-近战",
+        "rarity": 3,
+        "date": 1598342400000
+    },
+    "char_166_skfire": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_skfire_2",
+                "name": "天坠之火"
+            }
+        ],
+        "name": "天火",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_1024_hbisc2": {
+        "profession": "MEDIC",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_hbisc2_2",
+                "name": "抚业之触"
+            }
+        ],
+        "name": "濯尘芙蓉",
+        "rarity": 5,
+        "date": 1654761600000
+    },
+    "char_474_glady": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_glady_1",
+                "name": "缺水的大洋裂断"
+            },
+            {
+                "iconId": "skchr_glady_2",
+                "name": "缺水的掌握怒海"
+            },
+            {
+                "iconId": "skchr_glady_3",
+                "name": "缺水的碎漩狂舞"
+            }
+        ],
+        "name": "歌蕾蒂娅",
+        "rarity": 6,
+        "date": 1619856000000
+    },
+    "char_133_mm": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_mm_1",
+                "name": "麻痹弹"
+            },
+            {
+                "iconId": "skchr_mm_2",
+                "name": "束缚电击"
+            }
+        ],
+        "name": "梅",
+        "rarity": 4,
+        "date": 1574150400000
+    },
+    "char_306_leizi": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_leizi_2",
+                "name": "初雷"
+            }
+        ],
+        "name": "惊蛰",
+        "rarity": 5,
+        "date": 1582617600000
+    },
+    "char_4013_kjera": {
+        "profession": "CASTER",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_kjera_2",
+                "name": "心随意动"
+            }
+        ],
+        "name": "耶拉",
+        "rarity": 5,
+        "date": 1640073600000
+    },
+    "char_235_jesica": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_jesica_1",
+                "name": "强力击·β型"
+            },
+            {
+                "iconId": "skchr_jesica_2",
+                "name": "掩护烟幕"
+            }
+        ],
+        "name": "杰西卡",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_4047_pianst": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_pianst_1",
+                "name": "纷飞十指"
+            },
+            {
+                "iconId": "skchr_pianst_2",
+                "name": "曲惊四座"
+            }
+        ],
+        "name": "车尔尼",
+        "rarity": 5,
+        "date": 1654761600000
+    },
+    "char_1013_chen2": {
+        "profession": "SNIPER",
+        "skill": [
+            {
+                "iconId": "skchr_chen2_1",
+                "name": "高压冲击"
+            },
+            {
+                "iconId": "skchr_chen2_2",
+                "name": "“堇青之夜”"
+            },
+            {
+                "iconId": "skchr_chen2_3",
+                "name": "“假日风暴”"
+            }
+        ],
+        "name": "假日威龙陈",
+        "rarity": 6,
+        "date": 1627977600000
+    },
+    "char_214_kafka": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_kafka_1",
+                "name": "怪异魔方"
+            },
+            {
+                "iconId": "skchr_kafka_2",
+                "name": "诡异剪刀"
+            }
+        ],
+        "name": "卡夫卡",
+        "rarity": 5,
+        "date": 1608192000000
+    },
+    "char_451_robin": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_robin_1",
+                "name": "束缚“夹子”"
+            },
+            {
+                "iconId": "skchr_robin_2",
+                "name": "弹射“夹子”"
+            }
+        ],
+        "name": "罗宾",
+        "rarity": 5,
+        "date": 1608192000000
+    },
+    "char_416_zumama": {
+        "profession": "TANK",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_zumama_1",
+                "name": "轻型挂斧"
+            },
+            {
+                "iconId": "skchr_zumama_2",
+                "name": "震慑劈砍"
+            },
+            {
+                "iconId": "skchr_zumama_3",
+                "name": "钢铁意志"
+            }
+        ],
+        "name": "森蚺",
+        "rarity": 6,
+        "date": 1598342400000
+    },
+    "char_204_platnm": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_platnm_2",
+                "name": "天马视域"
+            }
+        ],
+        "name": "白金",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_237_gravel": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_gravel_1",
+                "name": "影袭"
+            },
+            {
+                "iconId": "skchr_gravel_2",
+                "name": "鼠群"
+            }
+        ],
+        "name": "砾",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_117_myrrh": {
+        "profession": "MEDIC",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_myrrh_1",
+                "name": "二重治疗"
+            },
+            {
+                "iconId": "skchr_myrrh_2",
+                "name": "医疗力场"
+            }
+        ],
+        "name": "末药",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_136_hsguma": {
+        "profession": "TANK",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_hsguma_1",
+                "name": "战意"
+            },
+            {
+                "iconId": "skchr_hsguma_2",
+                "name": "荆棘"
+            },
+            {
+                "iconId": "skchr_hsguma_3",
+                "name": "力之锯"
+            }
+        ],
+        "name": "星熊",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_4071_peper": {
+        "profession": "MEDIC",
+        "skill": [
+            {
+                "iconId": "skcom_heal_rage_3_"
+            },
+            {
+                "iconId": "skchr_peper_2",
+                "name": "同伴意识"
+            }
+        ],
+        "name": "明椒",
+        "rarity": 5,
+        "date": 1665475200000
+    },
+    "char_219_meteo": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_meteo_1",
+                "name": "霰射弹头"
+            },
+            {
+                "iconId": "skchr_meteo_2",
+                "name": "高爆弹头"
+            }
+        ],
+        "name": "陨星",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_151_myrtle": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skcom_assist_cost_2_"
+            },
+            {
+                "iconId": "skchr_myrtle_2",
+                "name": "治愈之翼"
+            }
+        ],
+        "name": "桃金娘",
+        "rarity": 4,
+        "date": 1568102400000
+    },
+    "char_508_aguard": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_aguard_1",
+                "name": "亮剑"
+            }
+        ],
+        "name": "Sharp",
+        "rarity": 5,
+        "date": 1598342400000
+    },
+    "char_475_akafyu": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_akafyu_1",
+                "name": "信影流·雷刀之势"
+            },
+            {
+                "iconId": "skchr_akafyu_2",
+                "name": "信影流·十文字胜"
+            }
+        ],
+        "name": "赤冬",
+        "rarity": 5,
+        "date": 1619856000000
+    },
+    "char_159_peacok": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_peacok_1",
+                "name": "断罪"
+            },
+            {
+                "iconId": "skchr_peacok_2",
+                "name": "创世纪"
+            }
+        ],
+        "name": "断罪者",
+        "rarity": 4,
+        "date": 1585728000000
+    },
+    "char_4066_highmo": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_highmo_1",
+                "name": "回首，断舍"
+            },
+            {
+                "iconId": "skchr_highmo_2",
+                "name": "泡影，殆尽"
+            }
+        ],
+        "name": "海沫",
+        "rarity": 5,
+        "date": 1664265600000
+    },
+    "char_431_ashlok": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_3_"
+            },
+            {
+                "iconId": "skchr_ashlok_2",
+                "name": "专注轰击"
+            }
+        ],
+        "name": "灰毫",
+        "rarity": 5,
+        "date": 1634284800000
+    },
+    "char_196_sunbr": {
+        "profession": "TANK",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_sunbr_1",
+                "name": "备用军粮"
+            },
+            {
+                "iconId": "skchr_sunbr_2",
+                "name": "食粮烹制"
+            }
+        ],
+        "name": "古米",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_302_glaze": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_glaze_1",
+                "name": "阻挡弹"
+            },
+            {
+                "iconId": "skchr_glaze_2",
+                "name": "雷达定位"
+            }
+        ],
+        "name": "安比尔",
+        "rarity": 4,
+        "date": 1577174400000
+    },
+    "char_1021_kroos2": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_kroos2_1",
+                "name": "无痕"
+            },
+            {
+                "iconId": "skchr_kroos2_2",
+                "name": "封喉"
+            }
+        ],
+        "name": "寒芒克洛丝",
+        "rarity": 5,
+        "date": 1643097600000
+    },
+    "char_289_gyuki": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_heal_self_2_"
+            },
+            {
+                "iconId": "skchr_gyuki_2",
+                "name": "恶鬼之力"
+            }
+        ],
+        "name": "缠丸",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_278_orchid": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_1_"
+            }
+        ],
+        "name": "梓兰",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_258_podego": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_podego_1",
+                "name": "花香疗法"
+            },
+            {
+                "iconId": "skchr_podego_2",
+                "name": "孢子扩散"
+            }
+        ],
+        "name": "波登可",
+        "rarity": 4,
+        "date": 1592467200000
+    },
+    "char_101_sora": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_sora_1",
+                "name": "睡眠之歌"
+            },
+            {
+                "iconId": "skchr_sora_2",
+                "name": "战斗之歌"
+            }
+        ],
+        "name": "空",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_128_plosis": {
+        "profession": "MEDIC",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_heal_up_3_"
+            },
+            {
+                "iconId": "skchr_plosis_2",
+                "name": "脑啡肽"
+            }
+        ],
+        "name": "白面鸮",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_502_nblade": {
+        "profession": "PIONEER",
+        "skill": [],
+        "name": "夜刀",
+        "rarity": 2,
+        "date": 1556589600000
+    },
+    "char_123_fang": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skcom_charge_cost_1_"
+            }
+        ],
+        "name": "芬",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_226_hmau": {
+        "profession": "TANK",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_hmau_1",
+                "name": "反制治疗"
+            },
+            {
+                "iconId": "skchr_hmau_2",
+                "name": "反制医疗模式"
+            }
+        ],
+        "name": "吽",
+        "rarity": 5,
+        "date": 1579161600000
+    },
+    "char_2013_cerber": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_cerber_1",
+                "name": "“很冰的斧”"
+            },
+            {
+                "iconId": "skchr_cerber_2",
+                "name": "“很热的刀”"
+            },
+            {
+                "iconId": "skchr_cerber_3",
+                "name": "“很重的枪”"
+            }
+        ],
+        "name": "刻俄柏",
+        "rarity": 6,
+        "date": 1582617600000
+    },
+    "char_336_folivo": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_folivo_1",
+                "name": "保护色隐蔽"
+            },
+            {
+                "iconId": "skchr_folivo_2",
+                "name": "全景过载摄像"
+            }
+        ],
+        "name": "稀音",
+        "rarity": 5,
+        "date": 1595923200000
+    },
+    "char_512_aprot": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_aprot_1",
+                "name": "速战速决"
+            }
+        ],
+        "name": "暮落",
+        "rarity": 5,
+        "date": 1641369600000
+    },
+    "char_181_flower": {
+        "profession": "MEDIC",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_heal_up_2_"
+            },
+            {
+                "iconId": "skchr_flower_2",
+                "name": "精调"
+            }
+        ],
+        "name": "调香师",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_505_rcast": {
+        "profession": "CASTER",
+        "skill": [],
+        "name": "预备干员-术师",
+        "rarity": 3,
+        "date": 1598342400000
+    },
+    "char_164_nightm": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_nightm_1",
+                "name": "灵魂汲取"
+            },
+            {
+                "iconId": "skchr_nightm_2",
+                "name": "夜魇魔影"
+            }
+        ],
+        "name": "夜魔",
+        "rarity": 5,
+        "date": 1559181600000
+    },
+    "char_298_susuro": {
+        "profession": "MEDIC",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_heal_up_2_"
+            },
+            {
+                "iconId": "skchr_susuro_2",
+                "name": "深度治疗"
+            }
+        ],
+        "name": "苏苏洛",
+        "rarity": 4,
+        "date": 1566892800000
+    },
+    "char_322_lmlee": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_lmlee_1",
+                "name": "小惩大诫"
+            },
+            {
+                "iconId": "skchr_lmlee_2",
+                "name": "驱凶辟邪"
+            },
+            {
+                "iconId": "skchr_lmlee_3",
+                "name": "贵客盈门"
+            }
+        ],
+        "name": "老鲤",
+        "rarity": 6,
+        "date": 1643097600000
+    },
+    "char_155_tiger": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_tiger_1",
+                "name": "碎甲拳"
+            },
+            {
+                "iconId": "skchr_tiger_2",
+                "name": "裂魂"
+            }
+        ],
+        "name": "因陀罗",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_4062_totter": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_totter_1",
+                "name": "贯日"
+            },
+            {
+                "iconId": "skchr_totter_2",
+                "name": "破虹"
+            }
+        ],
+        "name": "铅踝",
+        "rarity": 4,
+        "date": 1665475200000
+    },
+    "char_129_bluep": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_bluep_1",
+                "name": "二重射击·自动"
+            },
+            {
+                "iconId": "skchr_bluep_2",
+                "name": "毒液散射"
+            }
+        ],
+        "name": "蓝毒",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_154_morgan": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_morgan_1",
+                "name": "街头好手"
+            },
+            {
+                "iconId": "skchr_morgan_2",
+                "name": "无畏招架"
+            }
+        ],
+        "name": "摩根",
+        "rarity": 5,
+        "date": 1680768000000
+    },
+    "char_486_takila": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_takila_1",
+                "name": "当机立断"
+            },
+            {
+                "iconId": "skchr_takila_2",
+                "name": "剑走偏锋"
+            }
+        ],
+        "name": "龙舌兰",
+        "rarity": 5,
+        "date": 1627977600000
+    },
+    "char_215_mantic": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_mantic_1",
+                "name": "蝎毒"
+            },
+            {
+                "iconId": "skchr_mantic_2",
+                "name": "蓄力毒尾击"
+            }
+        ],
+        "name": "狮蝎",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_304_zebra": {
+        "profession": "TANK",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_zebra_1",
+                "name": "应急迷彩"
+            },
+            {
+                "iconId": "skchr_zebra_2",
+                "name": "群体迷彩"
+            }
+        ],
+        "name": "暴雨",
+        "rarity": 5,
+        "date": 1618473600000
+    },
+    "char_300_phenxi": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_phenxi_1",
+                "name": "“你须直面”"
+            },
+            {
+                "iconId": "skchr_phenxi_2",
+                "name": "“你须愧悔”"
+            },
+            {
+                "iconId": "skchr_phenxi_3",
+                "name": "“你须偿还”"
+            }
+        ],
+        "name": "菲亚梅塔",
+        "rarity": 6,
+        "date": 1647331200000
+    },
+    "char_107_liskam": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_liskam_1",
+                "name": "充能防御"
+            },
+            {
+                "iconId": "skchr_liskam_2",
+                "name": "反击电弧"
+            }
+        ],
+        "name": "雷蛇",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_343_tknogi": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_tknogi_1",
+                "name": "迹无"
+            },
+            {
+                "iconId": "skchr_tknogi_2",
+                "name": "森廻"
+            }
+        ],
+        "name": "月禾",
+        "rarity": 5,
+        "date": 1591084800000
+    },
+    "char_188_helage": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_helage_1",
+                "name": "新月"
+            },
+            {
+                "iconId": "skchr_helage_2",
+                "name": "弦月"
+            },
+            {
+                "iconId": "skchr_helage_3",
+                "name": "满月"
+            }
+        ],
+        "name": "赫拉格",
+        "rarity": 6,
+        "date": 1568102400000
+    },
+    "char_4019_ncdeer": {
+        "profession": "SUPPORT",
+        "skill": [
+            {
+                "iconId": "skchr_ncdeer_1",
+                "name": "人间降吉"
+            },
+            {
+                "iconId": "skchr_ncdeer_2",
+                "name": "仙山去远"
+            }
+        ],
+        "name": "九色鹿",
+        "rarity": 5,
+        "date": 1641801600000
+    },
+    "char_148_nearl": {
+        "profession": "TANK",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_nearl_1",
+                "name": "急救"
+            },
+            {
+                "iconId": "skchr_nearl_2",
+                "name": "急救模式"
+            }
+        ],
+        "name": "临光",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_240_wyvern": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skchr_wyvern_1",
+                "name": "冲锋号令·援军"
+            }
+        ],
+        "name": "香草",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_466_qanik": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_qanik_1",
+                "name": "冻风"
+            },
+            {
+                "iconId": "skchr_qanik_2",
+                "name": "坠雪"
+            }
+        ],
+        "name": "雪绒",
+        "rarity": 5,
+        "date": 1667289600000
+    },
+    "char_195_glassb": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_glassb_1",
+                "name": "专心致志"
+            },
+            {
+                "iconId": "skchr_glassb_2",
+                "name": "文学风暴"
+            }
+        ],
+        "name": "真理",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_172_svrash": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_svrash_1",
+                "name": "强力击·γ型"
+            },
+            {
+                "iconId": "skchr_svrash_2",
+                "name": "雪境生存法则"
+            },
+            {
+                "iconId": "skchr_svrash_3",
+                "name": "真银斩"
+            }
+        ],
+        "name": "银灰",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_220_grani": {
+        "profession": "PIONEER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_def_up_3_"
+            },
+            {
+                "iconId": "skchr_grani_2",
+                "name": "永不后退！"
+            }
+        ],
+        "name": "格拉尼",
+        "rarity": 5,
+        "date": 1559181600000
+    },
+    "char_426_billro": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_billro_1",
+                "name": "沙暴守卫"
+            },
+            {
+                "iconId": "skchr_billro_2",
+                "name": "沙缚镣锁"
+            },
+            {
+                "iconId": "skchr_billro_3",
+                "name": "食噬之印"
+            }
+        ],
+        "name": "卡涅利安",
+        "rarity": 6,
+        "date": 1622534400000
+    },
+    "char_010_chen": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_chen_1",
+                "name": "鞘击"
+            },
+            {
+                "iconId": "skchr_chen_2",
+                "name": "赤霄·拔刀"
+            },
+            {
+                "iconId": "skchr_chen_3",
+                "name": "赤霄·绝影"
+            }
+        ],
+        "name": "陈",
+        "rarity": 6,
+        "date": 1562659200000
+    },
+    "char_222_bpipe": {
+        "profession": "PIONEER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_quickattack_3_"
+            },
+            {
+                "iconId": "skchr_bpipe_2",
+                "name": "高效冲击"
+            },
+            {
+                "iconId": "skchr_bpipe_3",
+                "name": "闭膛连发"
+            }
+        ],
+        "name": "风笛",
+        "rarity": 6,
+        "date": 1584432000000
+    },
+    "char_130_doberm": {
+        "profession": "WARRIOR",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_doberm_1",
+                "name": "强力击·β型"
+            },
+            {
+                "iconId": "skchr_doberm_2",
+                "name": "鞭策"
+            }
+        ],
+        "name": "杜宾",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_281_popka": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_1_"
+            }
+        ],
+        "name": "泡普卡",
+        "rarity": 3,
+        "date": 1562659200000
+    },
+    "char_4063_quartz": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skcom_atk_up_2_"
+            },
+            {
+                "iconId": "skchr_quartz_2",
+                "name": "全力相搏"
+            }
+        ],
+        "name": "石英",
+        "rarity": 4,
+        "date": 1667289600000
+    },
+    "char_388_mint": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_mint_1",
+                "name": "风语"
+            },
+            {
+                "iconId": "skchr_mint_2",
+                "name": "聚能涡旋"
+            }
+        ],
+        "name": "薄绿",
+        "rarity": 5,
+        "date": 1600934400000
+    },
+    "char_344_beewax": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_beewax_1",
+                "name": "沙暴扩散"
+            },
+            {
+                "iconId": "skchr_beewax_2",
+                "name": "守卫尖碑"
+            }
+        ],
+        "name": "蜜蜡",
+        "rarity": 5,
+        "date": 1595923200000
+    },
+    "char_513_apionr": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skchr_apionr_1",
+                "name": "只余芬芳"
+            }
+        ],
+        "name": "郁金香",
+        "rarity": 5,
+        "date": 1664265600000
+    },
+    "char_427_vigil": {
+        "profession": "PIONEER",
+        "skill": [
+            {
+                "iconId": "skchr_vigil_1",
+                "name": "领袖的呼唤"
+            },
+            {
+                "iconId": "skchr_vigil_2",
+                "name": "领袖的馈赠"
+            },
+            {
+                "iconId": "skchr_vigil_3",
+                "name": "领袖的尊严"
+            }
+        ],
+        "name": "伺夜",
+        "rarity": 6,
+        "date": 1667289600000
+    },
+    "char_356_broca": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_broca_1",
+                "name": "通电"
+            },
+            {
+                "iconId": "skchr_broca_2",
+                "name": "高压电流"
+            }
+        ],
+        "name": "布洛卡",
+        "rarity": 5,
+        "date": 1575964800000
+    },
+    "char_358_lisa": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_lisa_1",
+                "name": "全力以赴"
+            },
+            {
+                "iconId": "skchr_lisa_2",
+                "name": "儿时的舞乐"
+            },
+            {
+                "iconId": "skchr_lisa_3",
+                "name": "狐火渺然"
+            }
+        ],
+        "name": "铃兰",
+        "rarity": 6,
+        "date": 1594281600000
+    },
+    "char_290_vigna": {
+        "profession": "PIONEER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_vigna_1",
+                "name": "攻击力强化·β型"
+            },
+            {
+                "iconId": "skchr_vigna_2",
+                "name": "槌音"
+            }
+        ],
+        "name": "红豆",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_272_strong": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_strong_1",
+                "name": "断螯"
+            },
+            {
+                "iconId": "skchr_strong_2",
+                "name": "刺身拼盘"
+            }
+        ],
+        "name": "孑",
+        "rarity": 4,
+        "date": 1597132800000
+    },
+    "char_350_surtr": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_surtr_1",
+                "name": "烈焰魔剑"
+            },
+            {
+                "iconId": "skchr_surtr_2",
+                "name": "熔核巨影"
+            },
+            {
+                "iconId": "skchr_surtr_3",
+                "name": "黄昏"
+            }
+        ],
+        "name": "史尔特尔",
+        "rarity": 6,
+        "date": 1600934400000
+    },
+    "char_225_haak": {
+        "profession": "SPECIAL",
+        "skill": [
+            {
+                "iconId": "skchr_haak_1",
+                "name": "快速射击"
+            },
+            {
+                "iconId": "skchr_haak_2",
+                "name": "爆发剂·γ型"
+            },
+            {
+                "iconId": "skchr_haak_3",
+                "name": "爆发剂·榴莲味"
+            }
+        ],
+        "name": "阿",
+        "rarity": 6,
+        "date": 1579161600000
+    },
+    "char_206_gnosis": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_gnosis_1",
+                "name": "高速思考"
+            },
+            {
+                "iconId": "skchr_gnosis_2",
+                "name": "零度爆发"
+            },
+            {
+                "iconId": "skchr_gnosis_3",
+                "name": "失温症"
+            }
+        ],
+        "name": "灵知",
+        "rarity": 6,
+        "date": 1640073600000
+    },
+    "char_230_savage": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_savage_1",
+                "name": "强力击·β型"
+            },
+            {
+                "iconId": "skchr_savage_2",
+                "name": "微差爆破"
+            }
+        ],
+        "name": "暴行",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_349_chiave": {
+        "profession": "PIONEER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_charge_cost_3_"
+            },
+            {
+                "iconId": "skchr_chiave_2",
+                "name": "火焰剥离"
+            }
+        ],
+        "name": "贾维",
+        "rarity": 5,
+        "date": 1595923200000
+    },
+    "char_4036_forcer": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_forcer_1",
+                "name": "护身射击"
+            },
+            {
+                "iconId": "skchr_forcer_2",
+                "name": "惊爆射击"
+            }
+        ],
+        "name": "见行者",
+        "rarity": 5,
+        "date": 1647331200000
+    },
+    "char_202_demkni": {
+        "profession": "TANK",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_demkni_1",
+                "name": "急救"
+            },
+            {
+                "iconId": "skchr_demkni_2",
+                "name": "药物配置"
+            },
+            {
+                "iconId": "skchr_demkni_3",
+                "name": "钙质化"
+            }
+        ],
+        "name": "塞雷娅",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_158_milu": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_milu_1",
+                "name": "环境伪装"
+            },
+            {
+                "iconId": "skchr_milu_2",
+                "name": "战术电台"
+            }
+        ],
+        "name": "守林人",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_4091_ulika": {
+        "profession": "SUPPORT",
+        "skill": [],
+        "name": "U-Official",
+        "rarity": 1,
+        "date": 1680336000000
+    },
+    "char_449_glider": {
+        "profession": "MEDIC",
+        "skill": [
+            {
+                "iconId": "skchr_glider_1",
+                "name": "精神护理"
+            },
+            {
+                "iconId": "skchr_glider_2",
+                "name": "振奋"
+            }
+        ],
+        "name": "蜜莓",
+        "rarity": 5,
+        "date": 1635753600000
+    },
+    "char_112_siege": {
+        "profession": "PIONEER",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_charge_cost_3_"
+            },
+            {
+                "iconId": "skchr_siege_2",
+                "name": "跃空锤"
+            },
+            {
+                "iconId": "skchr_siege_3",
+                "name": "碎颅击"
+            }
+        ],
+        "name": "推进之王",
+        "rarity": 6,
+        "date": 1556589600000
+    },
+    "char_120_hibisc": {
+        "profession": "MEDIC",
+        "skill": [
+            {
+                "iconId": "skcom_heal_up_1_"
+            }
+        ],
+        "name": "芙蓉",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_391_rosmon": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_rosmon_1",
+                "name": "思维膨大"
+            },
+            {
+                "iconId": "skchr_rosmon_2",
+                "name": "末梢阻断"
+            },
+            {
+                "iconId": "skchr_rosmon_3",
+                "name": "“如你所愿”"
+            }
+        ],
+        "name": "迷迭香",
+        "rarity": 6,
+        "date": 1604217600000
+    },
+    "char_2023_ling": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_ling_1",
+                "name": "重进酒"
+            },
+            {
+                "iconId": "skchr_ling_2",
+                "name": "笑鸣瑟"
+            },
+            {
+                "iconId": "skchr_ling_3",
+                "name": "宁作吾"
+            }
+        ],
+        "name": "令",
+        "rarity": 6,
+        "date": 1643097600000
+    },
+    "char_121_lava": {
+        "profession": "CASTER",
+        "skill": [
+            {
+                "iconId": "skcom_magic_rage_1_"
+            }
+        ],
+        "name": "炎熔",
+        "rarity": 3,
+        "date": 1556589600000
+    },
+    "char_4032_provs": {
+        "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_provs_1",
+                "name": "纠纷起诉"
+            },
+            {
+                "iconId": "skchr_provs_2",
+                "name": "致胜立论"
+            }
+        ],
+        "name": "但书",
+        "rarity": 5,
+        "date": 1662624000000
+    },
+    "char_149_scave": {
+        "profession": "PIONEER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_charge_cost_2_"
+            },
+            {
+                "iconId": "skchr_scave_2",
+                "name": "冲锋号令·攻击"
+            }
+        ],
+        "name": "清道夫",
+        "rarity": 4,
+        "date": 1556589600000
+    },
+    "char_4080_lin": {
+        "profession": "CASTER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_lin_1",
+                "name": "玲珑"
+            },
+            {
+                "iconId": "skchr_lin_2",
+                "name": "荫庇"
+            },
+            {
+                "iconId": "skchr_lin_3",
+                "name": "流光乍裂"
+            }
+        ],
+        "name": "林",
+        "rarity": 6,
+        "date": 1673942400000
+    },
+    "char_347_jaksel": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_jaksel_1",
+                "name": "给你一拳！"
+            },
+            {
+                "iconId": "skchr_jaksel_2",
+                "name": "全神贯注！"
+            }
+        ],
+        "name": "杰克",
+        "rarity": 4,
+        "date": 1604217600000
+    },
+    "char_4014_lunacu": {
+        "profession": "SNIPER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_lunacu_1",
+                "name": "狩猎时刻"
+            },
+            {
+                "iconId": "skchr_lunacu_2",
+                "name": "伏击之影"
+            }
+        ],
+        "name": "子月",
+        "rarity": 5,
+        "date": 1667289600000
+    },
+    "char_2024_chyue": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_chyue_1",
+                "name": "冲盈"
+            },
+            {
+                "iconId": "skchr_chyue_2",
+                "name": "拂尘"
+            },
+            {
+                "iconId": "skchr_chyue_3",
+                "name": "我无"
+            }
+        ],
+        "name": "重岳",
+        "rarity": 6,
+        "date": 1673942400000
+    },
+    "char_201_moeshd": {
+        "profession": "TANK",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_moeshd_1",
+                "name": "自动防御"
+            },
+            {
+                "iconId": "skchr_moeshd_2",
+                "name": "磁爆锤"
+            }
+        ],
+        "name": "可颂",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_493_firwhl": {
+        "profession": "TANK",
+        "skill": [
+            {
+                "iconId": "skchr_firwhl_1",
+                "name": "野火"
+            },
+            {
+                "iconId": "skchr_firwhl_2",
+                "name": "焦土"
+            }
+        ],
+        "name": "火哨",
+        "rarity": 5,
+        "date": 1673942400000
+    },
+    "char_472_pasngr": {
+        "profession": "CASTER",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_pasngr_1",
+                "name": "电能之触"
+            },
+            {
+                "iconId": "skchr_pasngr_2",
+                "name": "聚焦指令"
+            },
+            {
+                "iconId": "skchr_pasngr_3",
+                "name": "辉煌裂片"
+            }
+        ],
+        "name": "异客",
+        "rarity": 6,
+        "date": 1618473600000
+    },
+    "char_102_texas": {
+        "profession": "PIONEER",
+        "mod": {
+            "modY": true
+        },
+        "skill": [
+            {
+                "iconId": "skcom_charge_cost_3_"
+            },
+            {
+                "iconId": "skchr_texas_2",
+                "name": "剑雨"
+            }
+        ],
+        "name": "德克萨斯",
+        "rarity": 5,
+        "date": 1556589600000
+    },
+    "char_4042_lumen": {
+        "profession": "MEDIC",
+        "mod": {
+            "modY": true,
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_lumen_1",
+                "name": "沐雨"
+            },
+            {
+                "iconId": "skchr_lumen_2",
+                "name": "沛霖"
+            },
+            {
+                "iconId": "skchr_lumen_3",
+                "name": "灯火不灭"
+            }
+        ],
+        "name": "流明",
+        "rarity": 6,
+        "date": 1651392000000
+    },
+    "char_4040_rockr": {
+        "profession": "CASTER",
+        "skill": [
+            {
+                "iconId": "skcom_magic_rage_3_"
+            },
+            {
+                "iconId": "skchr_rockr_2",
+                "name": "自负此轭"
+            }
+        ],
+        "name": "洛洛",
+        "rarity": 5,
+        "date": 1649923200000
+    },
+    "char_421_crow": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_crow_1",
+                "name": "高速切割"
+            },
+            {
+                "iconId": "skchr_crow_2",
+                "name": "收割"
+            }
+        ],
+        "name": "羽毛笔",
+        "rarity": 5,
+        "date": 1627977600000
+    }
 }

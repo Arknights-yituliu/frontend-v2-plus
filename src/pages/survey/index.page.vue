@@ -18,26 +18,29 @@
           </div>
         </div>
       </div>
-      <div class="login_card_wrap" v-show="userData.status == 1">
-        <div style="display: flex">
-          <div class="login_card_userName">
-            欢迎回来 <b> {{ userData.userName }}</b>
-          </div>
-
-          <div class="logout_btn" @click="logout()">登出</div>
-        </div>
+      <div class="login_success_card_wrap" v-show="userData.status == 1">
+        <p>
+          <b>{{ userData.userName }}</b
+          >&emsp;为您的用户ID，用于登录调查站,登录不设密码验证，请妥善保管ID！
+        </p>
+        <p>接下来你可以愉快的填写调查表了,选一个输入方式开始吧！</p>
+        <p>可以选择手动输入干员信息，我们提供了若干快捷选项，一分钟即可记录您的box</p>
+        <p>也可以选择下载Excel样表，自行填写并上传</p>
+        <!-- <p>可以选择手动输入干员信息，我们提供了若干快捷选项，一分钟即可记录您的box</p>
+        <p>也可以选择下载Excel样表，自行填写并上传</p>
+        <p>还可以通过第三方生成的json导入</p> -->
       </div>
 
       <div class="login_card_guild">
         <div v-for="key in guildKey">
           <div class="login_card_guild_question">{{ guild[key].question }}</div>
-          <div class="login_card_guild_answer">{{ replaceAnswer(guild[key].answer) }}</div>
+          <div class="login_card_guild_answer">{{ guild[key].answer }}</div>
         </div>
       </div>
-
-      <a href="/survey/upload">
-        <div class="login_card_link">我了解了,开始填写</div>
-      </a>
+      <div class="upload_type_wrap">
+      <div class="upload_type"><a class="href" href="survey/upload">填写干员信息</a></div>
+      <div class="upload_type"><a class="href" href="survey/upload">通过Excel上传填写</a></div>
+    </div>
     </div>
   </div>
 </template>
@@ -50,10 +53,6 @@ import guild from "@/static/json/survey/guild.json";
 let guildKey = ["siteDescription", "registrationProcess", "developmentProgress"];
 
 function replaceAnswer(answer) {
-  answer = answer.replace(/,/g, "，");
-  answer = answer.replace(/\./g, "。");
-  // answer = answer.replace('.', "。");
-  // answer = answer.replace('.', "。");
   return answer;
 }
 

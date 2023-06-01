@@ -5,7 +5,7 @@
   margin: auto;
   border: 1px rgb(0, 0, 0) solid;
   scrollbar-width: none;
-  height: 100vh;
+  /* height: 100vh; */
   /* Firefox */
 }
 
@@ -26,8 +26,14 @@
 
 .login_card_wrap {
   width: 330px;
-  /* height: 140px; */
-  /* border: 1px red solid; */
+  box-shadow: 0px 1px 1px 1px rgb(211, 211, 211);
+  margin: auto;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.login_success_card_wrap {
+  width: 70%;
   box-shadow: 0px 1px 1px 1px rgb(211, 211, 211);
   margin: auto;
   padding: 10px;
@@ -138,12 +144,15 @@
   /* border: 1px red solid; */
 }
 
-.login_card_link {
+.upload_type_wrap{
+  display: flex;
+}
+
+.upload_type {
   height: 28px;
   line-height: 28px;
   font-size: 20px;
   margin: auto;
-  margin-top: 40px;
   width: 220px;
   padding: 4px;
   text-align: center;
@@ -151,4 +160,11 @@
   color: white;
   font-weight: 600;
   box-shadow: 0 0 1px 1px grey;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.href{
+  text-decoration:none;
+  color:white;
 }
