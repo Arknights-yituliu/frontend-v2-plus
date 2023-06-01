@@ -1,62 +1,61 @@
 <template>
   <div class="survey_charData_page">
-    <navBar></navBar>
-
     <div class="setup_wrap">
       <div class="setup_bar">
         <div class="setup_title">设置</div>
-        <div class="btn_survey" @click="upload()">上传数据</div>
-        <!-- <a href="/survey/list"> <div class="btn_survey">查看榜单</div></a> -->
-        <div class="btn_survey">展开筛选栏</div>
         <div class="btn_survey"><characterDemo></characterDemo></div>
+        <!-- <a href="/survey/list"> <div class="btn_survey">查看榜单</div></a> -->
+        <div class="btn_survey" @click="filterCollapse = !filterCollapse">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
+        <div class="btn_survey" @click="upload()">上传数据</div>
       </div>
-
-      <div class="setup_bar">
-        <div class="setup_title">职业</div>
-        <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addSortRule('profession', profession.value)">
-          {{ profession.label }}
+      <div v-show="filterCollapse">
+        <div class="setup_bar">
+          <div class="setup_title">职业</div>
+          <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addSortRule('profession', profession.value)">
+            {{ profession.label }}
+          </div>
         </div>
-      </div>
-      <div class="setup_bar">
-        <div class="setup_title">稀有度</div>
-        <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addSortRule('rarity', rarity)">
-          {{ rarity + "⭐" }}
+        <div class="setup_bar">
+          <div class="setup_title">稀有度</div>
+          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addSortRule('rarity', rarity)">
+            {{ rarity + "⭐" }}
+          </div>
         </div>
-      </div>
-      <div class="setup_bar">
-        <div class="setup_title">年份</div>
-        <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addSortRule('year', key)">
-          {{ year.label }}
+        <div class="setup_bar">
+          <div class="setup_title">年份</div>
+          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addSortRule('year', key)">
+            {{ year.label }}
+          </div>
         </div>
-      </div>
-      <div class="setup_bar">
-        <div class="setup_title">其他</div>
-        <div class="btn_survey" @click="addSortRule('own', true)">已拥有</div>
-        <div class="btn_survey" @click="addSortRule('own', false)">未拥有</div>
-        <div class="btn_survey" @click="addSortRule('mod', true)">有模组</div>
-        <div class="btn_survey" @click="addSortRule('mod', false)">无模组</div>
-      </div>
+        <div class="setup_bar">
+          <div class="setup_title">其他</div>
+          <div class="btn_survey" @click="addSortRule('own', true)">已拥有</div>
+          <div class="btn_survey" @click="addSortRule('own', false)">未拥有</div>
+          <div class="btn_survey" @click="addSortRule('mod', true)">有模组</div>
+          <div class="btn_survey" @click="addSortRule('mod', false)">无模组</div>
+        </div>
 
-      <div class="setup_bar">
-        <div class="setup_title">排序</div>
-        <div class="btn_survey" @click="sortCharacterList('rarity')">按稀有度顺序</div>
-        <div class="btn_survey" @click="sortCharacterList('date')">按实装顺序</div>
-      </div>
+        <div class="setup_bar">
+          <div class="setup_title">排序</div>
+          <div class="btn_survey" @click="sortCharacterList('rarity')">按稀有度顺序</div>
+          <div class="btn_survey" @click="sortCharacterList('date')">按实装顺序</div>
+        </div>
 
-      <div class="setup_bar">
-        <div class="setup_title">批量操作</div>
-        <div class="btn_survey" @click="batchUpdates('own',true)">全部拥有</div>
-        <div class="btn_survey" @click="batchUpdates('phase',2)">全部精二</div>
-        <div class="btn_survey" @click="batchUpdates('skill2',3)">二技能专精三</div>
-        <div class="btn_survey" @click="batchUpdates('skill3',3)">三技能专精三</div>
-        <div class="btn_survey" @click="batchUpdates('modX',3)">X模组三级</div>
-        <div class="btn_survey" @click="batchUpdates('modY',3)">Y模组三级</div>
-      </div>
+        <div class="setup_bar">
+          <div class="setup_title">批量操作</div>
+          <div class="btn_survey" @click="batchUpdates('own', true)">全部拥有</div>
+          <div class="btn_survey" @click="batchUpdates('phase', 2)">全部精二</div>
+          <div class="btn_survey" @click="batchUpdates('skill2', 3)">二技能专精三</div>
+          <div class="btn_survey" @click="batchUpdates('skill3', 3)">三技能专精三</div>
+          <div class="btn_survey" @click="batchUpdates('modX', 3)">X模组三级</div>
+          <div class="btn_survey" @click="batchUpdates('modY', 3)">Y模组三级</div>
+        </div>
 
-      <div class="setup_bar">
-        已选择条件{ 星级:{{ filterRules.rarity }},职业：{{ filterRules.profession }}, 年份：{{ filterRules.year }},拥有：{{ filterRules.own }},模组：
-        {{ filterRules.mod }}
-        }
+        <div class="setup_bar">
+          已选择条件{ 星级:{{ filterRules.rarity }},职业：{{ filterRules.profession }}, 年份：{{ filterRules.year }},拥有：{{ filterRules.own }},模组：
+          {{ filterRules.mod }}
+          }
+        </div>
       </div>
     </div>
 
@@ -160,24 +159,16 @@
 </template>
 
 <script setup>
-import "@/assets/css/sprite_char_6_part1.css";
-import "@/assets/css/sprite_char_5_part1.css";
-import "@/assets/css/sprite_char_5_part2.css";
-import "@/assets/css/sprite_char_4_part1.css";
-import "@/assets/css/sprite_rank.css";
-import "@/assets/css/survey_character.css";
-import "@/assets/css/sprite_skill.css";
 import { cMessage } from "@/element/message.js";
-import {  globalUserData } from "./serveyService";
+import { globalUserData } from "./userService";
 import { characterListInit, professionDict, rarityDict, yearDict } from "./baseData";
 import characterDemo from "@/pages/survey/characterDemo.vue";
-import navBar from "@/pages/survey/navBar.vue";
-
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
 
-
-
+let characterList = ref(characterListInit());
+let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
+let filterCollapse = ref(true);
 
 //找回填写过的角色信息
 function getSurveyCharData() {
@@ -202,9 +193,6 @@ function getSurveyCharData() {
     cMessage("导入了 " + list.length + " 条数据");
   });
 }
-
-let characterList = ref(characterListInit());
-let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 
 function changeDataIncr(char_index, attrib) {
   if ("phase" == attrib) {
@@ -349,11 +337,11 @@ function selectedBtn(attribute, rule) {
   return "btn_survey";
 }
 
-function batchUpdates(attribute,rank){
+function batchUpdates(attribute, rank) {
   for (let i in characterList.value) {
-    if(characterList.value[i].show) {
-      if(characterList.value[i][attribute]==-1) continue
-      characterList.value[i][attribute]=rank;
+    if (characterList.value[i].show) {
+      if (characterList.value[i][attribute] == -1) continue;
+      characterList.value[i][attribute] = rank;
     }
   }
 }
