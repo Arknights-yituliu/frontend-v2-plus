@@ -7,6 +7,7 @@ import "@/assets/css/sprite_char_5_part1.css";
 import "@/assets/css/sprite_char_5_part2.css";
 import "@/assets/css/sprite_char_4_part1.css";
 import "@/assets/css/sprite_rank.css";
+import "@/assets/css/survey_index.css";
 import "@/assets/css/survey_character.css";
 import "@/assets/css/sprite_skill.css";
 import character from "./character.vue";

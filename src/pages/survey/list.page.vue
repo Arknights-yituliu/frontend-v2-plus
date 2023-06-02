@@ -28,14 +28,14 @@
         <div class="avatar_back">
           <div :class="getSprite(operData.charId)"></div>
         </div>
-        <div class="operRate" v-show="'持有率' == surveyType">
+        <!-- <div class="operRate" v-show="'持有率' == surveyType">
           <a> 持有率 </a><br />
           {{ operData.own.toFixed(1) }}%
         </div>
         <div class="operRate" v-show="'精二率' == surveyType">
           <a> 精二率</a><br />
           {{ operData.phase2.toFixed(1) }}%
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -53,7 +53,14 @@ import { ElMessage } from "element-plus";
 
 import surveyApi from "@/api/survey";
 
-let charStatisticsResult = ref([]);
+let charStatisticsResult = ref([
+  {
+    charId: "char_4055_bgsnow",
+  },
+  {
+    charId: "char_1028_texas2",
+  },
+]);
 let surveyType = ref("持有率");
 let popupStyle = ref("survey_popup_mask");
 
@@ -78,7 +85,7 @@ function getCharStatisticsResult() {
 }
 
 onMounted(() => {
-  getCharStatisticsResult();
+  // getCharStatisticsResult();
 });
 
 function getSprite(charId, index) {

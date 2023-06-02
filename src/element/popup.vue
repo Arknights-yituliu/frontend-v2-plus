@@ -5,10 +5,10 @@
   
   <div class="popup" :style="widthStyle" >
       <slot></slot>
-      <div class="popup_btn_wrap" >
+      <!-- <div class="popup_btn_wrap" >
         <div class="popup_btn" >取消</div>
         <div class="popup_btn" @click="openAndClose(false)">关闭</div>
-      </div>
+      </div> -->
     </div>
     </div>
 </template>

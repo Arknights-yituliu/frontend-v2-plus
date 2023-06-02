@@ -168,7 +168,7 @@ import { onMounted, ref, watch } from "vue";
 
 let characterList = ref(characterListInit());
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
-let filterCollapse = ref(true);
+let filterCollapse = ref(false);
 
 //找回填写过的角色信息
 function getSurveyCharData() {
@@ -221,7 +221,7 @@ function changeDataSwitch(char_index, attrib, rank) {
 }
 
 function switchSelected(dataValue, switchValue) {
-  if (dataValue == switchValue) return "card_option_image switch_selected";
+  if (dataValue == switchValue) return "card_option_image selected_color";
   return "card_option_image";
 }
 
@@ -332,7 +332,7 @@ function sortCharacterList(rule) {
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filterRules.value[attribute].indexOf(rule) > -1) {
-    return "btn_survey btn_select";
+    return "btn_survey selected_color";
   }
   return "btn_survey";
 }
@@ -346,11 +346,12 @@ function batchUpdates(attribute, rank) {
   }
 }
 
-let clientWidth = ref(500);
+let clientWidth = ref(1080);
 function getClientWidth() {
   const width = document.documentElement.clientWidth;
   clientWidth.value = width;
-  if(width>1000) swithType = 'pc'
+  console.log(width)
+  if(width>1000) swithType.value = 'pc'
   console.log(width);
 }
 

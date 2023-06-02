@@ -1,12 +1,16 @@
 .survey_charData_page {
   width: 100%;
-  background: white;
+  background: rgb(255, 255, 255);
   overflow: auto;
   margin: auto;
+  /* color: rgb(230, 221, 102); */
   /* border: 4px rgb(132, 120, 226) solid; */
 }
 
-
+.setup_wrap {
+  max-width: 95%;
+  margin: auto;
+}
 
 .setup_bar {
   width: 100%;
@@ -18,7 +22,6 @@
   border-bottom: 1px rgb(191, 191, 191) solid;
 }
 
-
 .setup_title {
   margin: 6px;
   min-width: 80px;
@@ -26,29 +29,11 @@
   padding: 3px;
   line-height: 20px;
   text-align: center;
-  background: rgb(52, 147, 255);
-  color: white;
+  /* background: rgb(52, 147, 255); */
+  /* color: white; */
   font-weight: 600;
-  box-shadow: 0 0 1px 1px rgb(223, 223, 223);
+  /* box-shadow: 0 0 1px 1px rgb(223, 223, 223); */
 }
-
-.btn_survey {
-  margin: 6px;
-  min-width: 80px;
-  height: 20px;
-  padding: 3px;
-  line-height: 20px;
-  text-align: center;
-  /* background: rgb(79, 143, 255); */
-  font-weight: 600;
-  box-shadow: 0 0 1px 1px rgb(223, 223, 223);
-  cursor:pointer
-}
-
-.btn_select {
-  background: rgb(165, 208, 255);
-}
-
 
 .char_forms {
   margin: auto;
@@ -58,8 +43,6 @@
   flex-wrap: wrap;
   justify-content: center;
 }
-
-
 
 .from_card {
   width: 450px;
@@ -82,17 +65,23 @@
   border-left: 1px rgb(197, 197, 197) solid;
 }
 
-
+.avatar_wrap {
+  background: rgb(255, 255, 255);
+  height: 88px;
+  width: 88px;
+  border-radius: 50%;
+  overflow: hidden;
+}
 
 .card_option_switch {
-  margin:auto;
+  margin: auto;
   margin-top: 6px;
 }
 
 .card_option_image {
   margin: auto;
   margin-top: 6px;
-  margin-bottom:4px ;
+  margin-bottom: 4px;
   width: 40px;
   height: 36px;
   line-height: 24px;
@@ -105,9 +94,6 @@
   /* border: 1px red solid; */
 }
 
-.switch_selected{
-  background: #0abde3;
-}
 
 .card_option_image_noshadow {
   margin: auto;
@@ -188,8 +174,8 @@
 
 .sprite_skill_icon {
   transform: scale(0.3);
-  margin: -46px;
-  border: 1px red solid;
+  margin: -44px;
+
 }
 
 .sprite_phase {
@@ -206,11 +192,10 @@
 
 .sprite_avatar {
   transform: scale(0.48);
-  margin: -44px;
-  /* margin-top: -40px; */
   border-radius: 50%;
-  border: 1px solid gray;
-  /* border: 1px red solid; */
+  position: relative;
+  top: -46px;
+  left: -46px;
 }
 
 .sprite_avatar_own {

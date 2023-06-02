@@ -59,7 +59,7 @@ watch(
   border: 1px rgb(201, 201, 201) solid;
   border-radius: 25px;
   display: flex;
-  background: rgb(13, 135, 228);
+  background: rgb(126, 203, 255);
 }
 
 .switch_left {
@@ -79,7 +79,7 @@ watch(
 }
 
 .switch_red {
-  background: rgb(220, 0, 0);
+  background: rgb(192, 192, 192);
 }
 
 .switch_white {

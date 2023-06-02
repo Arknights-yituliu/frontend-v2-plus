@@ -1,12 +1,11 @@
 .survey_index_page {
-  max-width: 1080px;
   background: white;
   overflow: auto;
   margin: auto;
   border: 1px rgb(0, 0, 0) solid;
   scrollbar-width: none;
-  /* height: 100vh; */
-  /* Firefox */
+  font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu;
+  color: black;
 }
 
 ::-webkit-scrollbar {
@@ -14,53 +13,62 @@
   /* Chrome Safari */
 }
 
-.survey_index_header {
-  margin: 14px;
-  font-size: 24px;
+.href {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+}
+
+.btn_survey {
+  margin: 6px;
+  min-width: 80px;
+  height: 20px;
+  padding: 3px;
+  line-height: 20px;
+  text-align: center;
+  /* background: rgb(79, 143, 255); */
   font-weight: 600;
+  box-shadow: 0 0 1px 1px rgb(182, 182, 182);
+  cursor: pointer
 }
 
-.survey_index_content {
-  width: 100%;
+
+
+.selected_color {
+  background: rgb(165, 208, 255);
 }
 
-.login_card_wrap {
-  width: 330px;
-  box-shadow: 0px 1px 1px 1px rgb(211, 211, 211);
-  margin: auto;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.login_success_card_wrap {
-  width: 70%;
-  box-shadow: 0px 1px 1px 1px rgb(211, 211, 211);
-  margin: auto;
-  padding: 10px;
-  border-radius: 10px;
-}
 
 .login_card {
-  width: 330px;
-  height: 130px;
-  /* border: 1px red solid; */
+  width: 350px;
+  height: auto;
   border-radius: 10px;
+  margin: auto;
+  padding: 10px;
 }
 
-.login_card_tips {
+.login_card_border {
+  border: 1px rgb(214, 214, 214) solid;
+  margin-top: 20px;
+}
+
+.login_tips {
   width: 100%;
   font-size: 14px;
-  color: rgb(158, 157, 157);
+  
   font-weight: 600;
 }
 
-.login_card_tips_title {
+.login_tips_1 {
   font-weight: 700;
   font-size: 16px;
-  color: black;
+  margin-top: 20px;
 }
 
-.login_card_input_wrap {
+.login_tips_2 {
+  color: rgb(158, 157, 157);
+}
+
+.login_input_wrap {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -71,64 +79,146 @@
   margin-top: 20px;
 }
 
-.login_card_input {
-  width: 290px;
+.login_input {
+  width: 320px;
   border: 0;
-  /* outline: 1px blue solid; */
   border: 1px rgb(196, 196, 196) solid;
-  border-radius: 4px;
   font-size: 18px;
 }
 
-.login_card_btn_wrap {
-  width: 90%;
+.login_btn_wrap {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
-  margin: auto;
+  margin-left: 140px;
 }
 
-.login_card_btn {
+.survey_nav {
+  width: 100%;
+  margin: auto;
+  border-bottom: 1px rgb(210, 210, 210) solid;
+}
+
+
+.survey_header {
+  width: 95%;
+  margin: auto;
+  height: 40px;
+  display: flex;
+}
+
+.nav_item {
+  min-width: 50px;
+  /* border: 1px red solid; */
+  text-align: center;
+  line-height: 32px;
+  height: 32px;
+  margin: 4px;
+  font-weight: 700;
+}
+
+.login_wrap {
+  margin: 2px;
+  position: absolute;
+  right: 20px;
+  font-weight: 600;
+  display: flex;
+}
+
+.login_input {
+  width: 300px;
+  border: 0;
+  outline: none;
+  border-bottom: 1px black solid;
   margin: 6px;
-  /* margin-right:30px; */
-  min-width: 60px;
-  height: 18px;
-  padding: 4px;
-  line-height: 18px;
-  text-align: center;
-  background: rgb(13, 135, 228);
-  color: white;
+  font-size: 18px;
+  margin-bottom: 0px;
+}
+
+.user_wrap {
+  margin: 2px;
+  position: absolute;
+  right: 20px;
   font-weight: 600;
-  box-shadow: 0 0 1px 1px grey;
-}
-
-.login_card_userName {
-  height: 24px;
-  line-height: 24px;
-}
-
-.logout_btn {
-  margin-left: 40px;
-  min-width: 60px;
-  height: 18px;
-  padding: 4px;
-  line-height: 18px;
-  text-align: center;
-  background: rgb(13, 135, 228);
-  color: white;
-  font-weight: 600;
-  box-shadow: 0 0 1px 1px grey;
-}
-
-.login_card_guild {
-  width: 90%;
-  margin: auto;
-  margin-top: 40px;
+  display: flex;
   /* border: 1px red solid; */
 }
 
-.login_card_guild_question {
+.user_name {
+  font-size: 18px;
+  line-height: 40px;
+  height: 40;
+}
+
+.survey_index_content {
+  width: calc(100% - 200px);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+
+.card_nav {
+  position: fixed;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nav_id {
+  min-width: 60px;
+  font-size: 20px;
+  text-align: right;
+  margin-right: 6px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /* border: 1px red solid; */
+  box-sizing: border-box;
+}
+
+.nav_selected{
+  border-right: 4px solid rgb(0, 60, 255); ;
+  color: rgb(0, 60, 255);
+}
+
+
+
+
+.card_wrap {
+  width: 100%;
+  /* box-shadow: 0px 0px 1px 1px rgb(211, 211, 211); */
+  padding: 10px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  margin: 10px;
+}
+
+.card_title {
+  /* margin-top: 50px; */
+  font-size: 24px;
+  font-weight: 900;
+}
+
+/* @media screen and (max-width: 900px) {
+  .card_wrap {
+    width: 100%;
+    box-shadow: 0px 0px 1px 1px rgb(211, 211, 211);
+    padding: 10px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin: 10px;
+  }
+} */
+
+
+
+
+
+.card_content {
+  width: 90%;
+  margin: auto;
+}
+
+.guild_question {
   width: 98%;
   margin: auto;
   margin-top: 20px;
@@ -138,33 +228,50 @@
   /* border: 1px red solid; */
 }
 
-.login_card_guild_answer {
-  width: 98%;
-  margin: auto;
-  /* border: 1px red solid; */
-}
 
-.upload_type_wrap{
+
+
+.label_wrap {
+  width: auto;
   display: flex;
 }
 
-.upload_type {
-  height: 28px;
-  line-height: 28px;
-  font-size: 20px;
-  margin: auto;
-  width: 220px;
+.label-left {
+  width: 120px;
+  display: flex;
+  border: 1px rgb(210, 210, 210) solid;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  line-height: 30px;
+  height: 30px;
   padding: 4px;
-  text-align: center;
-  background: rgb(79, 143, 255);
-  color: white;
-  font-weight: 600;
-  box-shadow: 0 0 1px 1px grey;
-  margin-top: 10px;
-  margin-bottom: 10px;
 }
 
-.href{
-  text-decoration:none;
-  color:white;
+.label-right {
+  width: 120px;
+  display: flex;
+  border: 1px rgb(210, 210, 210) solid;
+  border-left: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  line-height: 30px;
+  height: 30px;
+  padding: 4px;
 }
+
+.label_icon {
+  width:30px;
+  margin-left: 2px;
+}
+
+.label {
+  min-width: 120px;
+  display: flex;
+  border: 1px rgb(210, 210, 210) solid;
+  border-radius: 4px;
+  line-height: 30px;
+  height: 30px;
+  margin: 4px;
+  padding: 4px;
+}
+

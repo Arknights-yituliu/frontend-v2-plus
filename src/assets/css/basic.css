@@ -68,7 +68,7 @@ body {
   white-space: nowrap;
 }
 .op_footer {
-  /* height: 36px; */
+  height: 20px;
   margin: auto;
   width: 480px;
 }

@@ -1,22 +1,17 @@
 {
-  "registrationProcess": {
+  "register": {
     "description": "注册流程",
-    "question": "Q:如何使用本调查页",
+    "question": "Q:如何使用本调查站",
     "answer": "A: 如果您是新用户，请点击上方登录栏的注册按钮注册一个属于您的用户ID，之后请复制保存您的ID，这个ID可以帮助您找回已经提交过的数据，之后就可以愉快的上传数据了。"
   },
   "siteDescription": {
-    "description": "页面说明",
-    "question": "Q:这个页面是干什么用的",
-    "answer": "A: 本页面是一个明日方舟干员各类数据统计站,可以为一些新人提供一些干员养成参考,也可分析一些其他的有趣数据(待定)."
+    "description": "网站说明",
+    "question": "Q:这个网站是干什么用的",
+    "answer": "A: 本网站是一个明日方舟干员各类数据统计站,可以为一些新人提供一些干员养成参考,也可分析一些其他的有趣数据(待定)."
   },
-  "developmentProgress": {
+  "devProgress": {
     "description": "开发进度",
     "question": "Q:目前有什么统计内容",
     "answer": "A: 目前只完成了干员练度统计相关的表单(干员精二率,持有率,专精率,模组开启率).其他统计内容在开发了(正在压榨开发人员"
-  },
-  "fillingProcess": {
-    "description": "填写流程",
-    "question": "Q:如何填写调查表",
-    "answer": "A: 目前只完成了干员练度统计相关的表单(干员精二率,持有率,专精率,模组开启率)."
   }
 }
