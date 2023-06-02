@@ -79,12 +79,12 @@
         <div class="card_content">
           <div class="label_wrap">
             <div class="label">
-              <div><img class="label_icon" src="image/website/qq.png" alt="" /></div>
+              <div><img class="label_icon" src="/image/website/qq.png" alt="" /></div>
               <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F"> <div>开发群：938710832</div></a>
             </div>
 
             <div class="label">
-              <div><img class="label_icon" src="image/website/github.png" alt="" /></div>
+              <div><img class="label_icon" src="/image/website/github.png" alt="" /></div>
               <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus/issues"><div>Github issues</div></a>
             </div>
           </div>
@@ -97,12 +97,12 @@
           <p>目前服务器的支出部分主要来源是热心玩家捐助，你们的捐助给了我们很大的开发动力，感谢每一位捐助者的支持</p>
           <div class="label_wrap">
             <div class="label">
-              <div><img class="label_icon" src="image/icon/图标_源石.png" alt="" /></div>
+              <div><img class="label_icon" src="/image/icon/图标_源石.png" alt="" /></div>
               <a class="href" href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe"> <div>如何支持我们</div></a>
             </div>
 
             <div class="label">
-              <div><img class="label_icon" src="image/icon/图标_源石.png" alt="" /></div>
+              <div><img class="label_icon" src="/image/icon/图标_源石.png" alt="" /></div>
               <a class="href" href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/zm8QY"><div>查看收支情况</div></a>
             </div>
           </div>
