@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header class="header" v-if="'/maarecruitdata' != pageContext.urlPathname">
-      <nav-bar />
+       <nav-bar />
     </el-header>
     <el-main style="z-index: 10; background-color: #808080">
       <slot></slot>
