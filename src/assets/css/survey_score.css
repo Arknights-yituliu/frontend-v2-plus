@@ -1,0 +1,63 @@
+.score_page {
+    background: white;
+    height: 100%;
+    overflow: auto;
+}
+
+.score_icon {
+    width: 24px;
+    height: 24px;
+    margin: 2px;
+}
+
+.char_wrap {
+    display: flex;
+    width: 560px;
+    /* height: 190px; */
+    border: 1px rgb(223, 223, 223) solid;
+    margin: 10px;
+    border-radius: 6px;
+
+}
+
+.score_wrap {
+    border-left: 1px rgb(200, 200, 200) solid;
+}
+
+.score_bar {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.score_name {
+    height: 28px;
+    line-height: 28px;
+}
+
+.score_avatar_wrap {
+    border: 1px rgb(200, 200, 200) solid;
+    border-radius: 50%;
+    margin: 4px;
+    overflow: hidden;
+    height: 180px;
+    width: 180px;
+    margin-top: 10px;
+    background: rgba(255, 81, 0, 0.5);
+}
+
+.score_avatar {
+
+}
+
+.char_name {
+    /* margin-top: 180px; */
+    height: 30px;
+    color: rgb(255, 136, 0);
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+}

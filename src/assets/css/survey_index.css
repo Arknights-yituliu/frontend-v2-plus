@@ -8,36 +8,6 @@
   color: black;
 }
 
-::-webkit-scrollbar {
-  display: none;
-  /* Chrome Safari */
-}
-
-.href {
-  text-decoration: none;
-  color: rgb(0, 0, 0);
-}
-
-.btn_survey {
-  margin: 6px;
-  min-width: 80px;
-  height: 20px;
-  padding: 3px;
-  line-height: 20px;
-  text-align: center;
-  /* background: rgb(79, 143, 255); */
-  font-weight: 600;
-  box-shadow: 0 0 1px 1px rgb(182, 182, 182);
-  cursor: pointer
-}
-
-
-
-.selected_color {
-  background: rgb(165, 208, 255);
-}
-
-
 .login_card {
   width: 350px;
   height: auto;
@@ -54,7 +24,7 @@
 .login_tips {
   width: 100%;
   font-size: 14px;
-  
+
   font-weight: 600;
 }
 
@@ -148,13 +118,6 @@
   height: 40;
 }
 
-.survey_index_content {
-  width: calc(100% - 200px);
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
 
 
 .card_nav {
@@ -175,12 +138,20 @@
   box-sizing: border-box;
 }
 
-.nav_selected{
-  border-right: 4px solid rgb(0, 60, 255); ;
+.nav_selected {
+  border-right: 4px solid rgb(0, 60, 255);
+  ;
   color: rgb(0, 60, 255);
 }
 
 
+.survey_index_content {
+  width: 93%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
 
 
 .card_wrap {
@@ -260,7 +231,7 @@
 }
 
 .label_icon {
-  width:30px;
+  width: 30px;
   margin-left: 2px;
 }
 
@@ -274,4 +245,3 @@
   margin: 4px;
   padding: 4px;
 }
-

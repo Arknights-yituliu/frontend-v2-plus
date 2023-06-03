@@ -32,12 +32,12 @@ function characterListInit() {
       skill: baseInfo.skill,
       date: baseInfo.date,
       profession: baseInfo.profession,
-      mod:baseInfo.mod !== undefined,
+      mod: baseInfo.mod !== undefined,
       show: true,
     };
     characterList.push(character);
   }
-  
+
   characterList.sort((a, b) => {
     return b.rarity - a.rarity;
   });
@@ -79,4 +79,29 @@ let yearDict = [
 
 let rarityDict = [1, 2, 3, 4, 5, 6];
 
-export { characterListInit, professionDict, rarityDict, yearDict };
+let scoreList = [];
+function scoreListInit() {
+  for (let charId in characterBasicInfo) {
+    var baseInfo = characterBasicInfo[charId];
+    let score = {
+      charId: charId,
+      name:baseInfo.name,
+      rarity: baseInfo.rarity,
+      daily: 1,
+      rogue: 1,
+      securityService: 1,
+      hard: 1,
+      universal: 1,
+      countermeasures: 1,
+    };
+
+    scoreList.push(score);
+  }
+
+  scoreList.sort((a, b) => {
+    return b.rarity - a.rarity;
+  });
+  return scoreList;
+}
+
+export { characterListInit, professionDict, rarityDict, yearDict , scoreListInit };
