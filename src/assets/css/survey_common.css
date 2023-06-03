@@ -1,0 +1,21 @@
+.href {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+
+.btn_survey {
+    margin: 6px;
+    min-width: 80px;
+    height: 20px;
+    padding: 3px;
+    line-height: 20px;
+    text-align: center;
+    /* background: rgb(79, 143, 255); */
+    font-weight: 600;
+    box-shadow: 0 0 1px 1px rgb(182, 182, 182);
+    cursor: pointer
+}
+
+.selected_color {
+    background: rgb(165, 208, 255);
+}

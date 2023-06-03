@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import "@/assets/css/sprite_char_6_part1.css";
+import "@/assets/css/sprite_char_6.css";
 import "@/assets/css/survey_list.css";
 import "@/assets/css/survey_character.css";
 

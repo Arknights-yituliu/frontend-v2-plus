@@ -131,6 +131,7 @@
 
 <script setup>
 import "@/assets/css/survey_index.css";
+import "@/assets/css/survey_common.css";
 import { onMounted, ref } from "vue";
 import navBar from "@/pages/survey/navBar.vue";
 let guildKey = ["siteDescription", "register", "devProgress"];
