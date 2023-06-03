@@ -1,8 +1,8 @@
 <template>
   <div class="upload_page">
     <navBar></navBar>
-    <!-- <character></character> -->
-    <score></score>
+    <character></character>
+    <!-- <score></score> -->
     <a class="href"></a>
   </div>
 </template>
