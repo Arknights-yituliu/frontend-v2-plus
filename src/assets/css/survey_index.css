@@ -37,9 +37,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
-  margin: auto;
-  margin-bottom: 10px;
-  margin-top: 20px;
+  margin: 20px auto 10px;
 }
 
 
@@ -48,9 +46,8 @@
   border: 0;
   outline: none;
   border-bottom: 1px black solid;
-  margin: 6px;
   font-size: 18px;
-  margin-bottom: 0px;
+  margin: 6px 6px 0;
 }
 
 .user_wrap {
@@ -77,7 +74,7 @@
   margin: auto;
   border: 1px rgb(0, 0, 0) solid;
   scrollbar-width: none;
-  font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu;
+  font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
   color: black;
 }
 
@@ -121,7 +118,7 @@
 
 .card_nav {
   position: fixed;
-  right: 0px;
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
 
@@ -191,9 +188,7 @@
 
 .guild_question {
   width: 98%;
-  margin: auto;
-  margin-top: 20px;
-  margin-bottom: 6px;
+  margin: 20px auto 6px;
   font-weight: 600;
   font-size: 20px;
   /* border: 1px red solid; */
