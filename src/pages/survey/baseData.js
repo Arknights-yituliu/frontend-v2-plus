@@ -93,6 +93,10 @@ function scoreListInit() {
       hard: 1,
       universal: 1,
       countermeasures: 1,
+      date: baseInfo.date,
+      profession: baseInfo.profession,
+      mod: baseInfo.mod !== undefined,
+      show: true,
     };
 
     scoreList.push(score);

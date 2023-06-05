@@ -1,3 +1,76 @@
+.survey_nav_page {
+  width: 100%;
+  margin: auto;
+  border-bottom: 1px rgb(210, 210, 210) solid;
+  background: white;
+}
+
+.survey_header {
+  width: 95%;
+  margin: auto;
+  height: 40px;
+  display: flex;
+}
+
+.nav_item {
+  min-width: 50px;
+  /* border: 1px red solid; */
+  text-align: center;
+  line-height: 32px;
+  height: 32px;
+  margin: 4px;
+  font-weight: 700;
+}
+
+
+.login_wrap {
+  margin: 2px;
+  position: absolute;
+  right: 20px;
+  font-weight: 600;
+  display: flex;
+}
+
+.login_input_wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+
+.login_input {
+  width: 300px;
+  border: 0;
+  outline: none;
+  border-bottom: 1px black solid;
+  margin: 6px;
+  font-size: 18px;
+  margin-bottom: 0px;
+}
+
+.user_wrap {
+  margin: 2px;
+  position: absolute;
+  right: 20px;
+  font-weight: 600;
+  display: flex;
+  /* border: 1px red solid; */
+}
+
+.user_name {
+  font-size: 18px;
+  line-height: 40px;
+  height: 40px;
+}
+
+
+
+
 .survey_index_page {
   background: white;
   overflow: auto;
@@ -30,7 +103,7 @@
 
 .login_tips_1 {
   font-weight: 700;
-  font-size: 16px;
+  font-size: 18px;
   margin-top: 20px;
 }
 
@@ -38,86 +111,12 @@
   color: rgb(158, 157, 157);
 }
 
-.login_input_wrap {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  margin: auto;
-  margin-bottom: 10px;
-  margin-top: 20px;
-}
 
-.login_input {
-  width: 320px;
-  border: 0;
-  border: 1px rgb(196, 196, 196) solid;
-  font-size: 18px;
-}
 
 .login_btn_wrap {
   display: flex;
   margin-left: 140px;
 }
-
-.survey_nav {
-  width: 100%;
-  margin: auto;
-  border-bottom: 1px rgb(210, 210, 210) solid;
-}
-
-
-.survey_header {
-  width: 95%;
-  margin: auto;
-  height: 40px;
-  display: flex;
-}
-
-.nav_item {
-  min-width: 50px;
-  /* border: 1px red solid; */
-  text-align: center;
-  line-height: 32px;
-  height: 32px;
-  margin: 4px;
-  font-weight: 700;
-}
-
-.login_wrap {
-  margin: 2px;
-  position: absolute;
-  right: 20px;
-  font-weight: 600;
-  display: flex;
-}
-
-.login_input {
-  width: 300px;
-  border: 0;
-  outline: none;
-  border-bottom: 1px black solid;
-  margin: 6px;
-  font-size: 18px;
-  margin-bottom: 0px;
-}
-
-.user_wrap {
-  margin: 2px;
-  position: absolute;
-  right: 20px;
-  font-weight: 600;
-  display: flex;
-  /* border: 1px red solid; */
-}
-
-.user_name {
-  font-size: 18px;
-  line-height: 40px;
-  height: 40;
-}
-
 
 
 .card_nav {
@@ -125,6 +124,7 @@
   right: 0px;
   top: 50%;
   transform: translateY(-50%);
+
 }
 
 .nav_id {

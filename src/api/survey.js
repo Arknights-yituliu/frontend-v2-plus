@@ -53,24 +53,33 @@ export default {
   uploadCharacter(characterList, userName) {
     userName = userName.replace("#", "%23");
     return request({
-      url: `${api_name}/character?userName=${userName}`,
+      url: `${api_name}/character/upload?userName=${userName}`,
       method: "post",
       data: characterList,
     });
   },
 
-  getSurveyCharData(userName) {
+  getSurveyCharacter(userName) {
     userName = userName.replace("#", "%23");
     return request({
-      url: `${api_name}/find/character?userName=${userName}`,
+      url: `${api_name}/character/retrieval?userName=${userName}`,
       method: "get",
     });
   },
 
   getCharStatisticsResult() {
     return request({
-      url: `${api_name}/result`,
+      url: `${api_name}/character/result`,
       method: "get",
+    });
+  },
+
+  uploadScore(scoreList, userName) {
+    userName = userName.replace("#", "%23");
+    return request({
+      url: `${api_name}/score/upload?userName=${userName}`,
+      method: "post",
+      data: scoreList,
     });
   },
 };
