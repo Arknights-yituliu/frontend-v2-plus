@@ -12,10 +12,36 @@
     text-align: center;
     /* background: rgb(79, 143, 255); */
     font-weight: 600;
-    box-shadow: 0 0 1px 1px rgb(182, 182, 182);
-    cursor: pointer
+    box-shadow: 0 0 1px 1px rgb(200, 200, 200);
+    cursor: pointer;
 }
 
 .selected_color {
-    background: rgb(165, 208, 255);
+    background: rgb(97, 173, 255);
 }
+
+.setup_wrap {
+    max-width: 95%;
+    margin: auto;
+}
+
+.setup_bar {
+    width: 100%;
+    margin: 1%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    border-bottom: 1px rgb(191, 191, 191) solid;
+}
+
+.setup_title {
+    margin: 6px;
+    min-width: 80px;
+    height: 20px;
+    padding: 3px;
+    line-height: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+

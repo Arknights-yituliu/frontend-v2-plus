@@ -1,4 +1,5 @@
 <template>
+   <navBar></navBar>
   <div class="survey_charData_page">
     <div class="setup_wrap">
       <div class="setup_bar">
@@ -165,14 +166,15 @@ import { characterListInit, professionDict, rarityDict, yearDict } from "./baseD
 import characterDemo from "@/pages/survey/characterDemo.vue";
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
+import navBar from "@/pages/survey/navBar.vue";
 
 let characterList = ref(characterListInit());
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 let filterCollapse = ref(false);
 
 //找回填写过的角色信息
-function getSurveyCharData() {
-  surveyApi.getSurveyCharData(globalUserData.value.userName).then((response) => {
+function getSurveyCharacter() {
+  surveyApi.getSurveyCharacter(globalUserData.value.userName).then((response) => {
     let list = response.data;
     for (var i = 0; i < characterList.value.length; i++) {
       // characterList.value[i].own =false;
@@ -357,6 +359,6 @@ function getClientWidth() {
 
 onMounted(() => {
   getClientWidth();
-  getSurveyCharData()
+  getSurveyCharacter()
 });
 </script>

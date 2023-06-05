@@ -141,6 +141,8 @@ import { registerEvent, loginEvent, userDataCacheClearEvent, userDataCacheEvent 
 let inputData = ref({ userName: "" }); //用户输入的用户名，用obj没准后期有别的字段
 let userData = ref({ userName: "山桜", uid: -1 }); //用户信息(用户名，用户id，用户状态)
 
+
+
 //注册
 async function register() {
   let response = await registerEvent(inputData.value);

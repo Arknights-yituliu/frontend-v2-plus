@@ -1,3 +1,5 @@
+
+
 .score_page {
     background: white;
     height: 100%;
@@ -10,14 +12,24 @@
     margin: 2px;
 }
 
-.char_wrap {
+.image_rarity{
+    width: 18px;
+}
+
+.score_wrap{
     display: flex;
-    width: 560px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+.char_card {
+    display: flex;
+    width: 510px;
     /* height: 190px; */
     border: 1px rgb(223, 223, 223) solid;
     margin: 10px;
     border-radius: 6px;
-
 }
 
 .score_wrap {
@@ -43,14 +55,19 @@
     border-radius: 50%;
     margin: 4px;
     overflow: hidden;
-    height: 180px;
-    width: 180px;
-    margin-top: 10px;
-    background: rgba(255, 81, 0, 0.5);
+    height: 144px;
+    width: 144px;
+    margin-top: 30px;
+    /* background: rgba(255, 81, 0, 0.5); */
+    /* box-shadow: 0 0 1px 1px rgb(150, 150, 150); */
 }
 
 .score_avatar {
-
+    transform: scale(0.8);
+    border-radius: 50%;
+    position: relative;
+    top: -18px;
+    left: -18px;
 }
 
 .char_name {
