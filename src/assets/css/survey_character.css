@@ -3,11 +3,8 @@
   background: rgb(255, 255, 255);
   overflow: auto;
   margin: auto;
-  /* color: rgb(230, 221, 102); */
-  /* border: 4px rgb(132, 120, 226) solid; */
+  font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
 }
-
-
 
 .char_forms {
   margin: auto;
@@ -89,6 +86,9 @@
   text-align: center;
 }
 
+.icon_rarity{
+  width: 12px;
+}
 
 
 .dropDown {
