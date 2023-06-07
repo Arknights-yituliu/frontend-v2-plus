@@ -24,7 +24,8 @@
       </c-popup>
 
       <div class="user_wrap" v-show="userData.uid > 0">
-        <div class="user_name">用户：{{ userData.userName }}</div>
+         <img class="icon_user" src="/image/icon/user.png" alt="">
+        <div class="user_name">{{ userData.userName }}</div>
         <div class="btn_survey" @click="logout()">登出</div>
       </div>
     </div>
@@ -78,6 +79,3 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-
-</style>

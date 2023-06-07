@@ -3,7 +3,7 @@
     <div >填写流程说明</div>
     <div  class="fill_course_tip_icon">?</div>
   </div>
-  <c-popup :visible="firstpopup" @click="isFirstPopupCache()">
+  <c-popup :visible="firstpopup" v-model:visible="firstpopup" @click="isFirstPopupCache()">
     <div class="fill_course_title">填写流程说明</div>
 
     <div class="fill_course_wrap">

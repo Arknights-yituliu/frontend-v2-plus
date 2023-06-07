@@ -1,5 +1,5 @@
 <template>
-   <navBar></navBar>
+  <navBar></navBar>
   <div class="survey_charData_page">
     <div class="setup_wrap">
       <div class="setup_bar">
@@ -12,50 +12,44 @@
       <div v-show="filterCollapse">
         <div class="setup_bar">
           <div class="setup_title">职业</div>
-          <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addSortRule('profession', profession.value)">
+          <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
             {{ profession.label }}
           </div>
         </div>
         <div class="setup_bar">
           <div class="setup_title">稀有度</div>
-          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addSortRule('rarity', rarity)">
-            {{ rarity + "⭐" }}
+          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">
+            <img class="icon_rarity" :src="selectedBtn('rarity', rarity, 'rarity')" alt="" v-for="i in rarity" />
           </div>
         </div>
         <div class="setup_bar">
           <div class="setup_title">年份</div>
-          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addSortRule('year', key)">
+          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
             {{ year.label }}
           </div>
         </div>
         <div class="setup_bar">
           <div class="setup_title">其他</div>
-          <div class="btn_survey" @click="addSortRule('own', true)">已拥有</div>
-          <div class="btn_survey" @click="addSortRule('own', false)">未拥有</div>
-          <div class="btn_survey" @click="addSortRule('mod', true)">有模组</div>
-          <div class="btn_survey" @click="addSortRule('mod', false)">无模组</div>
+          <div :class="selectedBtn('own', true)" id="other1" @click="addFilterRule('own', true)">已拥有</div>
+          <div :class="selectedBtn('own', false)" id="other2" @click="addFilterRule('own', false)">未拥有</div>
+          <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">有模组</div>
+          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">无模组</div>
         </div>
 
         <div class="setup_bar">
           <div class="setup_title">排序</div>
-          <div class="btn_survey" @click="sortCharacterList('rarity')">按稀有度顺序</div>
-          <div class="btn_survey" @click="sortCharacterList('date')">按实装顺序</div>
+          <div class="set_btn" @click="sortCharacterList('rarity')">稀有度顺序</div>
+          <div class="set_btn" @click="sortCharacterList('date')">实装顺序</div>
         </div>
 
         <div class="setup_bar">
           <div class="setup_title">批量操作</div>
-          <div class="btn_survey" @click="batchUpdates('own', true)">全部拥有</div>
-          <div class="btn_survey" @click="batchUpdates('phase', 2)">全部精二</div>
-          <div class="btn_survey" @click="batchUpdates('skill2', 3)">二技能专精三</div>
-          <div class="btn_survey" @click="batchUpdates('skill3', 3)">三技能专精三</div>
-          <div class="btn_survey" @click="batchUpdates('modX', 3)">X模组三级</div>
-          <div class="btn_survey" @click="batchUpdates('modY', 3)">Y模组三级</div>
-        </div>
-
-        <div class="setup_bar">
-          已选择条件{ 星级:{{ filterRules.rarity }},职业：{{ filterRules.profession }}, 年份：{{ filterRules.year }},拥有：{{ filterRules.own }},模组：
-          {{ filterRules.mod }}
-          }
+          <div class="set_btn" @click="batchUpdates('own', true)">全部拥有</div>
+          <div class="set_btn" @click="batchUpdates('phase', 2)">全部精二</div>
+          <div class="set_btn" @click="batchUpdates('skill2', 3)">二技能专三</div>
+          <div class="set_btn" @click="batchUpdates('skill3', 3)">三技能专三</div>
+          <div class="set_btn" @click="batchUpdates('modX', 3)">X模组三级</div>
+          <div class="set_btn" @click="batchUpdates('modY', 3)">Y模组三级</div>
         </div>
       </div>
     </div>
@@ -170,7 +164,6 @@ import navBar from "@/pages/survey/navBar.vue";
 
 let characterList = ref(characterListInit());
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
-let filterCollapse = ref(false);
 
 //找回填写过的角色信息
 function getSurveyCharacter() {
@@ -181,14 +174,14 @@ function getSurveyCharacter() {
       for (var j = 0; j < list.length; j++) {
         if (list[j].charId == characterList.value[i].charId) {
           characterList.value[i].phase = list[j].phase;
-          characterList.value[i].level = list[j]. level;
+          characterList.value[i].level = list[j].level;
           characterList.value[i].potential = list[j].potential;
-          characterList.value[i].skill1 = list[j]. skill1;
-          characterList.value[i].skill2 = list[j]. skill2;
-          characterList.value[i].skill3 = list[j]. skill3;
-          characterList.value[i].modX = list[j]. modX;
-          characterList.value[i].modY = list[j]. modY;
-          characterList.value[i].own = list[j]. own;
+          characterList.value[i].skill1 = list[j].skill1;
+          characterList.value[i].skill2 = list[j].skill2;
+          characterList.value[i].skill3 = list[j].skill3;
+          characterList.value[i].modX = list[j].modX;
+          characterList.value[i].modY = list[j].modY;
+          characterList.value[i].own = list[j].own;
         }
       }
     }
@@ -223,7 +216,7 @@ function changeDataSwitch(char_index, attrib, rank) {
 }
 
 function switchSelected(dataValue, switchValue) {
-  if (dataValue == switchValue) return "card_option_image selected_color";
+  if (dataValue == switchValue) return "card_option_image selected_background";
   return "card_option_image";
 }
 
@@ -267,9 +260,27 @@ function getSprite(id, type) {
 }
 
 let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] });
+let filterCollapse = ref(true);
+
+//判断按钮是否选择赋予样式
+function selectedBtn(attribute, rule, type) {
+  if ("rarity" == type) {
+    if (filterRules.value[attribute].indexOf(rule) > -1) {
+      return "/image/rank2/rarity_fill.png";
+    }
+    return "/image/rank2/rarity.png";
+
+  }
+  if (filterRules.value[attribute].indexOf(rule) > -1) {
+    return "set_btn selected_color";
+  }
+  return "set_btn";
+}
+
+
 
 //增加筛选规则
-function addSortRule(attribute, rule) {
+function addFilterRule(attribute, rule) {
   let filterRulesCopy = [];
   if (filterRules.value[attribute].indexOf(rule) > -1) {
     for (let i in filterRules.value[attribute]) {
@@ -302,7 +313,6 @@ function filterCharacterList() {
 function isAttribute(character, attribute) {
   if (filterRules.value[attribute].length == 0) return true;
   for (let r in filterRules.value[attribute]) {
-    console.log(character[attribute] == undefined);
     if (character[attribute] == filterRules.value[attribute][r]) {
       return true;
     }
@@ -331,18 +341,11 @@ function sortCharacterList(rule) {
   });
 }
 
-//判断按钮是否选择赋予样式
-function selectedBtn(attribute, rule) {
-  if (filterRules.value[attribute].indexOf(rule) > -1) {
-    return "btn_survey selected_color";
-  }
-  return "btn_survey";
-}
-
 function batchUpdates(attribute, rank) {
   for (let i in characterList.value) {
     if (characterList.value[i].show) {
       if (characterList.value[i][attribute] == -1) continue;
+
       characterList.value[i][attribute] = rank;
     }
   }
@@ -352,13 +355,13 @@ let clientWidth = ref(1080);
 function getClientWidth() {
   const width = document.documentElement.clientWidth;
   clientWidth.value = width;
-  console.log(width)
-  if(width>1000) swithType.value = 'pc'
-  console.log(width);
+
+  if (width > 1000) swithType.value = "pc";
 }
 
 onMounted(() => {
   getClientWidth();
-  getSurveyCharacter()
+  getSurveyCharacter();
+  addFilterRule("rarity", 6);
 });
 </script>

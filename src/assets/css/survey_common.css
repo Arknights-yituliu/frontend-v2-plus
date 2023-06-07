@@ -17,7 +17,13 @@
 }
 
 .selected_color {
+    /* background: rgb(97, 173, 255); */
+    color: #3888FF;
+}
+
+.selected_background {
     background: rgb(97, 173, 255);
+    /* color: #3888FF; */
 }
 
 .setup_wrap {
@@ -33,6 +39,17 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     border-bottom: 1px rgb(191, 191, 191) solid;
+}
+
+.set_btn{
+    margin: 6px;
+    width: 90px;
+    height: 20px;
+    padding: 3px;
+    line-height: 20px;
+    text-align: center;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 .setup_title {

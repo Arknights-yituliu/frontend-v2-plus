@@ -23,8 +23,8 @@
     </div>
 
     <div class="survey_index_content">
-      <div class="card_wrap" id="question">
-        <div class="card_title">常见问题</div>
+      <div class="index_card_wrap" id="question">
+        <div class="index_card_title">常见问题</div>
         <div class="card_content">
           <p class="guild_question">Q:这个网站是做什么用的</p>
           <p>A: 本网站是一个干员各类数据统计站，可以为一些新人提供一些干员养成参考， 也可分析一些其他的有趣数据(待定)。</p>
@@ -50,8 +50,8 @@
           </p>
         </div>
       </div>
-      <div class="card_wrap" id="develop">
-        <div class="card_title">要想参与开发</div>
+      <div class="index_card_wrap" id="develop">
+        <div class="index_card_title">要想参与开发</div>
         <div class="card_content">
           <p>如果有以下技术之一，想要为一图流提供一些帮助和建议，可以尝试来参与开发或者在开发群提出改进意见</p>
           <ul>
@@ -74,8 +74,8 @@
         </div>
       </div>
 
-      <div class="card_wrap" id="feedback">
-        <div class="card_title">反馈方式</div>
+      <div class="index_card_wrap" id="feedback">
+        <div class="index_card_title">反馈方式</div>
         <div class="card_content">
           <div class="label_wrap">
             <div class="label">
@@ -91,8 +91,8 @@
         </div>
       </div>
 
-      <div class="card_wrap" id="expenses">
-        <div class="card_title">收支一览</div>
+      <div class="index_card_wrap" id="expenses">
+        <div class="index_card_title">收支一览</div>
         <div class="card_content">
           <p>目前服务器的支出部分主要来源是热心玩家捐助，你们的捐助给了我们很大的开发动力，感谢每一位捐助者的支持</p>
           <div class="label_wrap">
@@ -108,8 +108,8 @@
           </div>
         </div>
       </div>
-      <div class="card_wrap" id="license">
-        <div class="card_title">许可协议</div>
+      <div class="index_card_wrap" id="license">
+        <div class="index_card_title">许可协议</div>
         <div class="card_content">
           <p>
             本页采用知识共享 署名-非商业性使用 4.0 国际

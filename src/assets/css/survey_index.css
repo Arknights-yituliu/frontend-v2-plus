@@ -65,8 +65,16 @@
   height: 40px;
 }
 
+.icon_user {
+  width: 28px;
+  height: 28px;
+  margin: 4px;
+}
 
+.btn_logout {
+  box-shadow: 0 0 0 0;
 
+}
 
 .survey_index_page {
   background: white;
@@ -151,7 +159,7 @@
 }
 
 
-.card_wrap {
+.index_card_wrap {
   width: 100%;
   /* box-shadow: 0px 0px 1px 1px rgb(211, 211, 211); */
   padding: 10px;
@@ -160,9 +168,9 @@
   margin: 10px;
 }
 
-.card_title {
+.index_card_title {
   /* margin-top: 50px; */
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 900;
 }
 
@@ -187,11 +195,7 @@
 }
 
 .guild_question {
-  width: 98%;
-  margin: 20px auto 6px;
   font-weight: 600;
-  font-size: 20px;
-  /* border: 1px red solid; */
 }
 
 
