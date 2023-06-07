@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header class="header" v-if="'/maarecruitdata' != pageContext.urlPathname">
-       <nav-bar />
+      <nav-bar />
     </el-header>
     <el-main style="z-index: 10; background-color: #808080">
       <slot></slot>
@@ -12,7 +12,7 @@
   </el-container>
 </template>
 
-<script>
+<script setup>
 import "@/assets/css/basic.css";
 import "@/assets/css/stage_v2.css";
 import "@/assets/css/store_v2.css";
@@ -33,16 +33,12 @@ import myfooter from "@/components/myfooter.vue";
 
 import { usePageContext } from "@/renderer/usePageContext";
 
-export default {
-  setup() {
-    const pageContext = usePageContext();
-    return { pageContext };
-  },
-  components: {
-    NavBar,
-    myfooter,
-  },
-};
+const pageContext = usePageContext();
+
+import { provide, ref } from "vue";
+
+const theme = ref(pageContext.theme == "dark");
+provide("theme", theme);
 </script>
 
 <style scoped>

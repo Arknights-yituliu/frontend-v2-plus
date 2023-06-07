@@ -273,6 +273,7 @@ body {
   --foot-main-bg: #ddd;
   --gacha-total-fg: #dd88dd;
   --charge-instruction-fg: #ff8888;
+  --riic-mower-bg: black;
 }
 
 .light {
@@ -290,6 +291,7 @@ body {
   --foot-main-bg: white;
   --gacha-total-fg: purple;
   --charge-instruction-fg: brown;
+  --riic-mower-bg: white;
 }
 
 #indexDiv {
