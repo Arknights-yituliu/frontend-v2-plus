@@ -651,6 +651,6 @@ onMounted(() => {
 .avatars > img {
   box-sizing: content-box;
   border-radius: 2px;
-  background: lightgrey;
+  background: var(--riic-mower-avatar-bg);
 }
 </style>
