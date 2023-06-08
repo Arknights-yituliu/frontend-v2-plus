@@ -40,14 +40,14 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted } from "vue";
+import { ref, watch, computed, inject } from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 import { usePageContext } from "@/renderer/usePageContext";
 const pageContext = usePageContext();
 
-const theme = ref(pageContext.theme == "dark");
+const theme = inject("theme");
 
 let menu_flag = ref(false);
 
