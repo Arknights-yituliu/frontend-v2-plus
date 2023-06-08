@@ -152,7 +152,6 @@ function getSprite(id, type) {
   if ("skill" == type) return "bg-" + id + " sprite_skill";
   if ("phase" == type) return "bg-" + id + " sprite_phase";
   if ("potential" == type) return "bg-" + id + " sprite_potential";
-  if ("own" == type) return "bg-" + id + " sprite_avatar_own";
   if ("icon" == type) return "bg-skill_icon_" + id + " sprite_skill_icon";
 
   return "bg-" + id + " sprite_avatar";

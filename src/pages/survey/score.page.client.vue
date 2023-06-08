@@ -17,7 +17,7 @@
         <div class="setup_bar">
           <div class="setup_title">稀有度</div>
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">
-            <img class="icon_rarity" :src="selectedBtn('rarity', rarity, 'rarity')" alt="" v-for="i in rarity" />
+            {{ rarity }} ★
           </div>
         </div>
         <div class="setup_bar">
@@ -46,20 +46,20 @@
         <div class="score_bar_wrap">
           <div class="score_bar">
             <div class="score_name">日常：</div>
-            <img class="score_icon" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in 10" @click="updateScore(charId, 'daily', rank)" />
+            <img class="image_score" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in 10" @click="updateScore(charId, 'daily', rank)" />
           </div>
           <div class="score_bar">
             <div class="score_name">肉鸽：</div>
-            <img class="score_icon" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in 10" @click="updateScore(charId, 'rogue', rank)" />
+            <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in 10" @click="updateScore(charId, 'rogue', rank)" />
           </div>
           <div class="score_bar">
             <div class="score_name">高难：</div>
-            <img class="score_icon" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in 10" @click="updateScore(charId, 'hard', rank)" />
+            <img class="image_score" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in 10" @click="updateScore(charId, 'hard', rank)" />
           </div>
           <div class="score_bar">
             <div class="score_name">保全：</div>
             <img
-              class="score_icon"
+              class="image_score"
               :src="scoreSelected(rank, char.securityService)"
               alt=""
               v-for="rank in 10"
@@ -68,12 +68,12 @@
           </div>
           <div class="score_bar">
             <div class="score_name">泛用：</div>
-            <img class="score_icon" :src="scoreSelected(rank, char.universal)" alt="" v-for="rank in 10" @click="updateScore(charId, 'universal', rank)" />
+            <img class="image_score" :src="scoreSelected(rank, char.universal)" alt="" v-for="rank in 10" @click="updateScore(charId, 'universal', rank)" />
           </div>
           <div class="score_bar">
             <div class="score_name">对策：</div>
             <img
-              class="score_icon"
+              class="image_score"
               :src="scoreSelected(rank, char.countermeasures)"
               alt=""
               v-for="rank in 10"
