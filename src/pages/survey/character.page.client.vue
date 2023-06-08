@@ -1,5 +1,5 @@
 <template>
-  <!-- <navBar></navBar> -->
+  <navBar></navBar>
   <div class="survey_charData_page">
     <div class="setup_wrap">
       <div class="setup_bar">
