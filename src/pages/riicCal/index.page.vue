@@ -4,8 +4,7 @@
 
 <style>
 .riic-bg {
-  max-width: 600px;
-  margin: auto;
+  width: 100vw;
 }
 </style>
 
