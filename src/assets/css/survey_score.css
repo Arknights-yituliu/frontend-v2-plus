@@ -4,11 +4,13 @@
     background: white;
     height: 100%;
     overflow: auto;
+    max-width: 1080px;
+    margin: auto;
 }
 
-.score_icon {
-    width: 24px;
-    height: 24px;
+.image_score {
+    width: 20px;
+    height: 20px;
     margin: 2px;
 }
 
@@ -25,10 +27,10 @@
 
 .char_card {
     display: flex;
-    width: 510px;
+    width: 480px;
     /* height: 190px; */
     border: 1px rgb(223, 223, 223) solid;
-    margin: 10px;
+    margin: 14px;
     border-radius: 6px;
 }
 

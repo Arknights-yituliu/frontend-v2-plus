@@ -1,5 +1,5 @@
 .survey_nav_page {
-  width: 100%;
+  max-width: 1080px;
   margin: auto;
   border-bottom: 1px rgb(210, 210, 210) solid;
   background: white;
@@ -13,7 +13,7 @@
 }
 
 .nav_item {
-  min-width: 50px;
+  width: 100px;
   /* border: 1px red solid; */
   text-align: center;
   line-height: 32px;
@@ -25,11 +25,13 @@
 
 .login_wrap {
   margin: 2px;
-  position: absolute;
-  right: 20px;
+  width: 100%;
   font-weight: 600;
   display: flex;
+  justify-content: flex-end;
 }
+
+
 
 .login_input_wrap {
   width: 100%;
@@ -50,14 +52,6 @@
   margin: 6px 6px 0;
 }
 
-.user_wrap {
-  margin: 2px;
-  position: absolute;
-  right: 20px;
-  font-weight: 600;
-  display: flex;
-  /* border: 1px red solid; */
-}
 
 .user_name {
   font-size: 18px;
@@ -84,6 +78,7 @@
   scrollbar-width: none;
   font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
   color: black;
+  max-width: 1080px;
 }
 
 .login_card {
@@ -129,7 +124,9 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-
+  background: white;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 
 .nav_id {
@@ -144,9 +141,8 @@
 }
 
 .nav_selected {
-  border-right: 4px solid rgb(0, 60, 255);
-  ;
-  color: rgb(0, 60, 255);
+  border-right: 4px solid rgb(0, 89, 255);
+  color: rgb(0, 89, 255);
 }
 
 

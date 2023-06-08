@@ -1,5 +1,5 @@
 <template>
-  <navBar></navBar>
+  <!-- <navBar></navBar> -->
   <div class="survey_charData_page">
     <div class="setup_wrap">
       <div class="setup_bar">
@@ -19,7 +19,7 @@
         <div class="setup_bar">
           <div class="setup_title">稀有度</div>
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">
-            <img class="icon_rarity" :src="selectedBtn('rarity', rarity, 'rarity')" alt="" v-for="i in rarity" />
+               {{ rarity }}★
           </div>
         </div>
         <div class="setup_bar">
@@ -63,7 +63,7 @@
           </div>
         </div>
 
-        <div class="card_option" style="width: 50px">
+        <div class="card_option" style="width: 60px">
           <div class="dropDown" @click="dropDown('potential' + char_index)">
             <div :class="getSprite('potential' + char.potential, 'potential')"></div>
           </div>
@@ -78,7 +78,7 @@
           <c-switch v-model="char.own" class="card_option_switch"></c-switch>
         </div>
 
-        <div class="card_option" style="width: 50px">
+        <div class="card_option" style="width: 60px">
           <div class="card_option_title">精英化</div>
           <div class="card_option_image" @click="changeDataIncr(char_index, 'phase')" v-if="'phone' == swithType">
             <div :class="getSprite('phase' + char.phase, 'phase')"></div>
@@ -94,7 +94,7 @@
           </div>
         </div>
 
-        <div class="card_option" style="width: 50px" v-for="(skill, skill_index) in char.skill" :key="skill_index">
+        <div class="card_option" style="width: 60px" v-for="(skill, skill_index) in char.skill" :key="skill_index">
           <div class="card_option_image_noshadow">
             <div :class="getSprite(skill.iconId, 'icon')"></div>
           </div>
@@ -112,11 +112,11 @@
           </div>
         </div>
 
-        <div class="card_option" style="width: 50px" v-show="char.skill.length < 3"></div>
-        <div class="card_option" style="width: 50px" v-show="char.skill.length < 2"></div>
-        <div class="card_option" style="width: 50px" v-show="char.skill.length < 1"></div>
+        <div class="card_option" style="width: 60px" v-show="char.skill.length < 3"></div>
+        <div class="card_option" style="width: 60px" v-show="char.skill.length < 2"></div>
+        <div class="card_option" style="width: 60px" v-show="char.skill.length < 1"></div>
 
-        <div class="card_option" style="width: 50px">
+        <div class="card_option" style="width: 60px">
           <div class="card_option_title">{{ "模组X" }}</div>
           <div class="card_option_image" @click="changeDataIncr(char_index, 'modX')" v-show="char.modX > -1" v-if="'phone' == swithType">
             <div :class="getSprite('mod' + char.modX, 'mod')"></div>
@@ -133,7 +133,7 @@
           </div>
         </div>
 
-        <div class="card_option" style="width: 50px">
+        <div class="card_option" style="width: 60px">
           <div class="card_option_title">{{ "模组Y" }}</div>
           <div class="card_option_image" @click="changeDataIncr(char_index, 'modY')" v-show="char.modY > -1" v-if="'phone' == swithType">
             <div :class="getSprite('mod' + char.modY, 'mod')"></div>
@@ -254,7 +254,6 @@ function getSprite(id, type) {
   if ("skill" == type) return "bg-" + id + " sprite_skill";
   if ("phase" == type) return "bg-" + id + " sprite_phase";
   if ("potential" == type) return "bg-" + id + " sprite_potential";
-  if ("own" == type) return "bg-" + id + " sprite_avatar_own";
   if ("icon" == type) return "bg-skill_icon_" + id + " sprite_skill_icon";
   return "bg-" + id + " sprite_avatar";
 }
@@ -361,7 +360,7 @@ function getClientWidth() {
 
 onMounted(() => {
   getClientWidth();
-  getSurveyCharacter();
+  // getSurveyCharacter();
   addFilterRule("rarity", 6);
 });
 </script>

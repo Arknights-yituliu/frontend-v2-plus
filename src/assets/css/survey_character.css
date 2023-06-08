@@ -1,7 +1,7 @@
 .survey_charData_page {
-  width: 100%;
+  max-width: 1080px;
   background: rgb(255, 255, 255);
-  overflow: auto;
+  /* overflow: auto; */
   margin: auto;
   font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
 }
@@ -16,7 +16,7 @@
 }
 
 .from_card {
-  width: 450px;
+  width: 480px;
   display: flex;
   border-radius: 4px;
   margin: 10px;
@@ -42,6 +42,8 @@
   width: 88px;
   border-radius: 50%;
   overflow: hidden;
+  margin-top: 10px;
+  border: 1px solid #969696;
 }
 
 .card_option_switch {
@@ -62,6 +64,7 @@
   border-radius: 3px;
   box-shadow: 0px 1px 1px 1px rgb(86, 86, 86);
   cursor: pointer;
+  /* background: grey; */
   /* border: 1px red solid; */
 }
 
@@ -141,9 +144,9 @@
 }
 
 .sprite_skill {
-  transform: scale(0.2);
-  margin: -99px;
-  /* margin-top:0px ; */
+  transform: scale(0.18);
+  margin-top: -96px;
+  margin-left: -98px;
 }
 
 .sprite_skill_icon {
@@ -172,19 +175,6 @@
   left: -46px;
 }
 
-.sprite_avatar_own {
-  transform: scale(0.42);
-  margin: -52px;
-  border-radius: 50%;
-}
-
-.sprite_avatar_own_wrap {
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  border: 1px solid gray;
-  overflow: hidden;
-}
 
 
 

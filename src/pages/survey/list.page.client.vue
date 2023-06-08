@@ -28,11 +28,11 @@
         <div class="avatar_back">
           <div :class="getSprite(operData.charId)"></div>
         </div>
-        <!-- <div class="operRate" v-show="'持有率' == surveyType">
+        <div class="operRate" v-show="'持有率' == surveyType">
           <a> 持有率 </a><br />
           {{ operData.own.toFixed(1) }}%
         </div>
-        <div class="operRate" v-show="'精二率' == surveyType">
+        <!-- <div class="operRate" v-show="'精二率' == surveyType">
           <a> 精二率</a><br />
           {{ operData.phase2.toFixed(1) }}%
         </div> -->
@@ -45,7 +45,7 @@
 import "@/assets/css/sprite_char_6.css";
 import "@/assets/css/survey_list.css";
 import "@/assets/css/survey_character.css";
-
+import "@/assets/css/survey_common.css";
 import serveyJson from "@/static/json/survey.json";
 
 import { onMounted, ref, watch } from "vue";
@@ -56,9 +56,23 @@ import surveyApi from "@/api/survey";
 let charStatisticsResult = ref([
   {
     charId: "char_4055_bgsnow",
+    own: 93.0,
   },
   {
     charId: "char_1028_texas2",
+    own: 93.0,
+  },
+  {
+    charId: "char_1028_texas2",
+    own: 93.0,
+  },
+  {
+    charId: "char_1028_texas2",
+    own: 93.0,
+  },
+  {
+    charId: "char_1028_texas2",
+    own: 93.0,
   },
 ]);
 let surveyType = ref("持有率");
