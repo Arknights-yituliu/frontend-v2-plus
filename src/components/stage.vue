@@ -476,12 +476,12 @@ export default {
 
     judgeActive(index) {
       let showFlag = false;
-      this.stageRankT3[index].forEach((element) => {
-        if (element.stageColor < 0) {
+      for (let i = 0; i < 3; ++i) {
+        if (this.stageRankT3[index][i].stageColor < 0) {
           showFlag = true;
+          break;
         }
-      });
-      // if (this.stageRankT3[index][0]||this.stageRankT3[index][1].stageColor < 0) return "";
+      }
       if (showFlag) return "";
       return "display:none";
     },
