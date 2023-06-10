@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="header_wrap">
     <div class="menu-button" @click="menu_collapse(true)">
       <div></div>
       <div></div>
@@ -8,18 +8,29 @@
     <div class="page-title">
       {{ route.text }}
     </div>
-    <div class="bar-wrapper">
-      <a v-for="r in routes" class="bar" :class="{ activate: pageContext.urlPathname == r.path }" :href="r.path">
-        <svg style="width: 24px; height: 24px" :style="{ fill: pageContext.urlPathname == r.path ? '#ffd04b' : 'white' }" viewbox="0 0 24 24">
-          <path :d="r.icon" />
-        </svg>
-        {{ r.text }}
+    <!-- <div class="bar-wrapper">
+      <a v-for="r in routes" class="bar">
+        <a class="bar" :class="{ activate: pageContext.urlPathname == r.path }" :href="r.path">
+          <svg style="width: 24px; height: 24px" :style="{ fill: pageContext.urlPathname == r.path ? '#ffd04b' : 'white' }" viewbox="0 0 24 24">
+            <path :d="r.icon" />
+          </svg>
+          {{ r.text }}
+        </a>
+        <div class="bar-wrapper2" v-show="r.isChild">
+          <a v-for="child in r.child" class="bar" :class="{ activate: pageContext.urlPathname == child.path }" :href="child.path">
+            <svg style="width: 24px; height: 24px" :style="{ fill: pageContext.urlPathname == child.path ? '#ffd04b' : 'white' }" viewbox="0 0 24 24">
+              <path :d="child.icon" />
+            </svg>
+            {{ child.text }}
+          </a>
+        </div>
       </a>
-    </div>
+    </div> -->
     <div class="spacer"></div>
     <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
+    <navBar></navBar>
 
-    <div class="nav_div">
+    <!-- <div class="nav_div">
       <div class="nav_collapse" id="menu">
         <div class="menu_table">
           <div class="menu_title">明日方舟一图流</div>
@@ -35,16 +46,17 @@
         </div>
       </div>
       <div class="menu-mask" v-show="menu_flag" @click="menu_collapse(false)"></div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup>
-import { ref, watch, computed, inject } from "vue";
+import { ref, watch, computed, inject, onMounted } from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 import { usePageContext } from "@/renderer/usePageContext";
+import navBar from "@/pages/survey/navBar.vue";
 const pageContext = usePageContext();
 
 const theme = inject("theme");
@@ -74,6 +86,30 @@ watch(theme, () => {
   root_ele.classList.add(theme_name);
   cookie.set("theme", theme_name, { expires: 30 });
 });
+
+const devRoute = {
+  path: "/survey",
+  text: "干员调查",
+  icon: mdiGold,
+  isChild: true,
+  child: [
+    {
+      path: "/survey/character",
+      text: "干员练度调查",
+      icon: mdiGold,
+    },
+    {
+      path: "/survey/score",
+      text: "干员评分调查",
+      icon: mdiGold,
+    },
+    {
+      path: "/survey/rank",
+      text: "干员榜单",
+      icon: mdiGold,
+    },
+  ],
+};
 
 const routes = [
   {
@@ -111,10 +147,17 @@ const route = computed(() => {
   }
   return {};
 });
+
+onMounted(() => {
+  var domain = window.location.host;
+  if (domain.indexOf("dev") == -1) {
+    routes.push(devRoute);
+  }
+});
 </script>
 
 <style scoped>
-.container {
+.header_wrap {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   display: flex;
   flex-direction: row;
@@ -124,11 +167,40 @@ const route = computed(() => {
   z-index: 100;
   box-shadow: none;
   gap: 8px;
-  padding: 0 28px 0 16px;
+  padding: 0 10px 0 10px;
 }
 
 .bar-wrapper {
   display: flex;
+  /* border: 1px solid red; */
+}
+.bar {
+  height: 100%;
+  padding: 0 14px;
+  font-size: 18px;
+  vertical-align: center;
+  line-height: 54px;
+  text-decoration: none;
+  color: white;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  /* border: 1px solid red; */
+}
+
+.bar:hover .bar-wrapper2 {
+  display: block;
+}
+
+.bar-wrapper2 {
+  width: 250px;
+  background-color: rgb(52, 68, 104);
+  position: absolute;
+  top: 56px;
+  /* margin-left: -10px; */
+  display: none;
+  z-index: 2000;
 }
 
 .menu-button {
@@ -154,7 +226,7 @@ const route = computed(() => {
   padding-left: 24px;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 1280px) {
   .bar-wrapper {
     display: none;
   }
@@ -164,7 +236,7 @@ const route = computed(() => {
   .page-title {
     display: block;
   }
-  .container {
+  .header_wrap {
     height: 80px;
   }
   .bar {
@@ -173,20 +245,6 @@ const route = computed(() => {
   .el-switch {
     transform: scale(1.5);
   }
-}
-
-.bar {
-  height: 100%;
-  padding: 0 14px;
-  font-size: 18px;
-  vertical-align: center;
-  line-height: 54px;
-  text-decoration: none;
-  color: white;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .activate {

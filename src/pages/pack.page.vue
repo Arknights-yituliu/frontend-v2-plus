@@ -665,9 +665,15 @@ export const documentProps = {
   justify-content: space-around;
 }
 
+.pack_unit_list{
+   
+}
+
 .pack_unit {
   margin: 20px 0px;
   width: 522px;
+  display: flex;
+  flex-wrap: wrap;
   /* height: 120px; */
   /* overflow: hidden; */
 }
@@ -675,7 +681,7 @@ export const documentProps = {
 .pack_img {
   width: 160px;
   height: 120px;
-  position: absolute;
+  /* position: absolute; */
   /* display: inline-block; */
   /* z-index: 20; */
   /* vertical-align: top; */
@@ -716,7 +722,8 @@ export const documentProps = {
   height: 108px;
   width: 360px;
   background-color: #000000cc;
-  margin: 6px 0px 6px 156px;
+  /* margin: 6px 0px 6px 156px; */
+  margin-top: 6px;
   border-radius: 4px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }

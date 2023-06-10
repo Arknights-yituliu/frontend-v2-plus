@@ -1,8 +1,8 @@
 <template>
-  <div id="indexDiv" style="max-width: 1080px; margin: auto">
+  <div id="indexDiv" style=" margin: auto">
     <!-- <ep12 /> -->
     <stage />
-    <store-value />
+    <!-- <store-value /> -->
     <!-- <pack> </pack> -->
     <!-- <item-value /> -->
     <jump-to-value />
@@ -20,7 +20,7 @@
 <script setup>
 import stage from "@/components/stage.vue";
 // import ep12 from "@/components/newChapter.vue";
-import StoreValue from "@/components/StoreValue.vue";
+// import StoreValue from "@/components/StoreValue.vue";
 // import pack from "@/pages/module/pack.vue";
 // import ItemValue from "@/components/ItemValue.vue";
 import FootComponent from "@/components/FootComponent.vue";

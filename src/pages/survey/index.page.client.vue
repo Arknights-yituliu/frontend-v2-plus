@@ -1,6 +1,6 @@
 <template>
   <div class="survey_index_page">
-    <navBar></navBar>
+    
     <div class="login_card login_card_border" v-show="userData.uid < 1">
       <div class="login_tips">
         <div class="login_tips_1">填写您的用户ID，登录后可上传和恢复数据</div>

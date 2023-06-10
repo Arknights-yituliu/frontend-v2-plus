@@ -1,5 +1,4 @@
 <template>
-  <navBar></navBar>
   <div class="survey_charData_page">
     <div class="setup_wrap">
       <div class="setup_bar">
@@ -18,9 +17,7 @@
         </div>
         <div class="setup_bar">
           <div class="setup_title">稀有度</div>
-          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">
-               {{ rarity }}★
-          </div>
+          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }}★</div>
         </div>
         <div class="setup_bar">
           <div class="setup_title">年份</div>
@@ -262,21 +259,13 @@ let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] }
 let filterCollapse = ref(true);
 
 //判断按钮是否选择赋予样式
-function selectedBtn(attribute, rule, type) {
-  if ("rarity" == type) {
-    if (filterRules.value[attribute].indexOf(rule) > -1) {
-      return "/image/rank2/rarity_fill.png";
-    }
-    return "/image/rank2/rarity.png";
-
-  }
+function selectedBtn(attribute, rule) {
+  
   if (filterRules.value[attribute].indexOf(rule) > -1) {
     return "set_btn selected_color";
   }
   return "set_btn";
 }
-
-
 
 //增加筛选规则
 function addFilterRule(attribute, rule) {

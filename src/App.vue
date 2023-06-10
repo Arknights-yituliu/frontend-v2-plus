@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <!-- <el-container>
     <el-header class="header" v-if="'/maarecruitdata' != pageContext.urlPathname">
       <nav-bar />
     </el-header>
@@ -9,10 +9,22 @@
     <el-footer style="z-index: 100; height: 40px; padding: 0px; background-color: rgb(52, 68, 104)">
       <myfooter />
     </el-footer>
-  </el-container>
+  </el-container> -->
+
+  <div class="container">
+    <div :class="asideClass">
+      <myaside></myaside>
+    </div>
+    <div class="container is_vertical">
+      <div class="header"><nav-bar /></div>
+      <div class="main"><slot></slot> <div class="footer"><myfooter></myfooter> </div></div>
+     
+    </div>
+  </div>
 </template>
 
 <script setup>
+
 import "@/assets/css/basic.css";
 import "@/assets/css/stage_v2.css";
 import "@/assets/css/store_v2.css";
@@ -30,6 +42,9 @@ import "@/assets/css/item.css";
 
 import NavBar from "@/components/NavBar.vue";
 import myfooter from "@/components/myfooter.vue";
+import myaside from "@/components/aside.vue";
+
+
 
 import { usePageContext } from "@/renderer/usePageContext";
 
@@ -39,6 +54,19 @@ import { provide, ref } from "vue";
 
 const theme = ref(pageContext.theme == "dark");
 provide("theme", theme);
+
+let asideVisible = ref(true);
+let asideClass = ref("aside");
+
+function aside() {
+  asideVisible.value = !asideVisible.value;
+  console.log(asideVisible.value);
+  if (asideVisible.value) {
+    asideClass.value = "aside_hidden aside";
+  } else {
+    asideClass.value = "aside_hidden";
+  }
+}
 </script>
 
 <style scoped>
@@ -58,9 +86,7 @@ provide("theme", theme);
 .el-slider__button-wrapper {
   z-index: auto;
 }
-</style>
 
-<style>
 body {
   overflow-x: hidden;
   text-size-adjust: none;
@@ -68,17 +94,63 @@ body {
   overscroll-behavior: none;
 }
 
-.header {
+/* .header {
   z-index: 100;
   height: 52px;
   position: sticky;
   width: 100%;
   top: 0px;
+} */
+
+
+.header {
+  height: 54px;
+  line-height: 50px;
+  /* border: 1px solid rgb(223, 223, 223); */
 }
 
-@media (max-width: 820px) {
+@media (max-width: 1280px) {
   .header {
     height: 78px;
   }
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  /* border: 1px solid rgb(0, 119, 255); */
+  height: calc(100vh - 0px);
+  overflow: hidden;
+}
+
+.is_vertical {
+  flex-direction: column;
+}
+
+.aside_hidden {
+  width: 0px;
+  overflow: auto;
+  transform: translateX(-500px);
+}
+
+.aside {
+  width: 220px;
+  transition: all 0.2s;
+  transform: translateX(0) !important;
+  background-color: #545c64;
+}
+
+
+.main {
+  display: block;
+  flex: 1;
+  overflow: auto;
+  /* background-color: #bb0000ce */
+}
+
+.footer{
+  height: 40px;
+  line-height: 40px;
+  background-color: rgb(52, 68, 104);
 }
 </style>

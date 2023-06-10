@@ -1,5 +1,5 @@
 <template>
-  <navBar></navBar>
+  
   <div class="score_page">
     <div class="setup_wrap">
       <div class="setup_bar">

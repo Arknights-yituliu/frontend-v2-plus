@@ -63,10 +63,12 @@
         <div class="riic_building_title">方案导入/导出</div>
         <div class="riic_building_parameter">
           <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()"> 生成排班方案 </el-button>
-          <div id="export_cover" style="position: absolute; width: 230px; height: 44px; margin: -42px 18px 18px 137px; background: #ffffff80"></div>
-          <a :href="exportUrl">
-            <el-button size="large" type="primary" round style="width: 108px; margin-left: 12px"> 导出到本地 </el-button>
-          </a>
+            <a :href="exportUrl" >
+              <el-button size="large" type="primary" id="exportFileDone"  round style="width: 108px; margin-left: 12px;display: none;" > 导出到本地 </el-button>
+            </a>
+          
+              <!-- <el-button size="large" type="primary" id="exportFile" round style="width: 108px; margin-left: 12px;background-color:#c4c3c3" > 导出到本地 </el-button> -->
+          
           <!-- <el-button size="large" type="primary" round style="width:108px;padding-left:10px;" @click="MaaURLCopy()">
                 导出到MAA
           </el-button> -->
@@ -157,12 +159,7 @@
         <div class="riic_building building_cortrolCenter">
           <div class="riic_building_title">
             控制中枢
-            <el-checkbox
-              style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              label="跳过"
-              border
-              v-model="control_skip[0]"
-            ></el-checkbox>
+            <el-checkbox style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top" label="跳过" v-model="control_skip[0]"></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
             <el-select v-model="control_plan0[0]" filterable placeholder="请选择">
@@ -188,19 +185,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_trading_plan0_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_trading_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_trading_plan0_0[2]"
             ></el-checkbox>
           </div>
@@ -230,19 +224,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_trading_plan0_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_trading_plan0_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_trading_plan0_1[2]"
             ></el-checkbox>
           </div>
@@ -272,19 +263,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_trading_plan0_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_trading_plan0_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_trading_plan0_2[2]"
             ></el-checkbox>
           </div>
@@ -313,19 +301,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan0_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan0_0[2]"
             ></el-checkbox>
           </div>
@@ -356,19 +341,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan0_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan0_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan0_1[2]"
             ></el-checkbox>
           </div>
@@ -399,19 +381,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan0_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan0_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan0_2[2]"
             ></el-checkbox>
           </div>
@@ -442,19 +421,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan0_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan0_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan0_3[2]"
             ></el-checkbox>
           </div>
@@ -484,19 +460,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan0_4[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan0_4[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan0_4[2]"
             ></el-checkbox>
           </div>
@@ -527,13 +500,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_power_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_power_plan0_0[2]"
             ></el-checkbox>
           </div>
@@ -549,13 +520,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_power_plan0_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_power_plan0_1[2]"
             ></el-checkbox>
           </div>
@@ -572,13 +541,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_power_plan0_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_power_plan0_2[2]"
             ></el-checkbox>
           </div>
@@ -594,13 +561,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_meeting_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_meeting_plan0_0[2]"
             ></el-checkbox>
           </div>
@@ -615,13 +580,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_hire_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_hire_plan0_0[2]"
             ></el-checkbox>
           </div>
@@ -635,19 +598,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan0_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan0_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan0_0[2]"
             ></el-checkbox>
           </div>
@@ -665,19 +625,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan0_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan0_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan0_1[2]"
             ></el-checkbox>
           </div>
@@ -695,19 +652,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan0_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan0_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan0_2[2]"
             ></el-checkbox>
           </div>
@@ -725,19 +679,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan0_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan0_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan0_3[2]"
             ></el-checkbox>
           </div>
@@ -804,12 +755,7 @@
         <div class="riic_building building_cortrolCenter">
           <div class="riic_building_title">
             控制中枢
-            <el-checkbox
-              style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              label="跳过"
-              border
-              v-model="control_skip[1]"
-            ></el-checkbox>
+            <el-checkbox style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top" label="跳过" v-model="control_skip[1]"></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
             <el-select v-model="control_plan1[0]" filterable placeholder="请选择">
@@ -836,19 +782,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_trading_plan1_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_trading_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_trading_plan1_0[2]"
             ></el-checkbox>
           </div>
@@ -877,19 +820,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_trading_plan1_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_trading_plan1_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_trading_plan1_1[2]"
             ></el-checkbox>
           </div>
@@ -918,19 +858,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_trading_plan1_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_trading_plan1_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_trading_plan1_2[2]"
             ></el-checkbox>
           </div>
@@ -960,19 +897,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan1_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan1_0[2]"
             ></el-checkbox>
           </div>
@@ -1002,19 +936,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan1_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan1_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan1_1[2]"
             ></el-checkbox>
           </div>
@@ -1045,19 +976,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan1_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan1_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan1_2[2]"
             ></el-checkbox>
           </div>
@@ -1088,19 +1016,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan1_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan1_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan1_3[2]"
             ></el-checkbox>
           </div>
@@ -1131,19 +1056,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan1_4[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan1_4[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan1_4[2]"
             ></el-checkbox>
           </div>
@@ -1174,13 +1096,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_power_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_power_plan1_0[2]"
             ></el-checkbox>
           </div>
@@ -1196,13 +1116,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_power_plan1_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_power_plan1_1[2]"
             ></el-checkbox>
           </div>
@@ -1219,13 +1137,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_power_plan1_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_power_plan1_2[2]"
             ></el-checkbox>
           </div>
@@ -1241,13 +1157,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_meeting_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_meeting_plan1_0[2]"
             ></el-checkbox>
           </div>
@@ -1262,13 +1176,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_hire_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_hire_plan1_0[2]"
             ></el-checkbox>
           </div>
@@ -1282,19 +1194,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan1_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan1_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan1_0[2]"
             ></el-checkbox>
           </div>
@@ -1312,19 +1221,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan1_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan1_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan1_1[2]"
             ></el-checkbox>
           </div>
@@ -1342,19 +1248,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan1_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan1_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan1_2[2]"
             ></el-checkbox>
           </div>
@@ -1372,19 +1275,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan1_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan1_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan1_3[2]"
             ></el-checkbox>
           </div>
@@ -1449,12 +1349,7 @@
         <div class="riic_building building_cortrolCenter">
           <div class="riic_building_title">
             控制中枢
-            <el-checkbox
-              style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
-              label="跳过"
-              border
-              v-model="control_skip[2]"
-            ></el-checkbox>
+            <el-checkbox style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top" label="跳过" v-model="control_skip[2]"></el-checkbox>
           </div>
           <div class="riic_building_operatorArray">
             <el-select v-model="control_plan2[0]" filterable placeholder="请选择">
@@ -1481,19 +1376,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_trading_plan2_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_trading_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_trading_plan2_0[2]"
             ></el-checkbox>
           </div>
@@ -1523,19 +1415,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_trading_plan2_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_trading_plan2_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_trading_plan2_1[2]"
             ></el-checkbox>
           </div>
@@ -1565,19 +1454,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_trading_plan2_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_trading_plan2_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_trading_plan2_2[2]"
             ></el-checkbox>
           </div>
@@ -1606,19 +1492,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan2_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan2_0[2]"
             ></el-checkbox>
           </div>
@@ -1648,19 +1531,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan2_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan2_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan2_1[2]"
             ></el-checkbox>
           </div>
@@ -1690,19 +1570,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan2_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan2_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan2_2[2]"
             ></el-checkbox>
           </div>
@@ -1732,19 +1609,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan2_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan2_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan2_3[2]"
             ></el-checkbox>
           </div>
@@ -1774,19 +1648,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_manufacture_plan2_4[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_manufacture_plan2_4[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_manufacture_plan2_4[2]"
             ></el-checkbox>
           </div>
@@ -1816,13 +1687,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_power_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_power_plan2_0[2]"
             ></el-checkbox>
           </div>
@@ -1838,13 +1707,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_power_plan2_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_power_plan2_1[2]"
             ></el-checkbox>
           </div>
@@ -1861,13 +1728,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_power_plan2_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_power_plan2_2[2]"
             ></el-checkbox>
           </div>
@@ -1883,13 +1748,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_meeting_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_meeting_plan2_0[2]"
             ></el-checkbox>
           </div>
@@ -1904,13 +1767,11 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_hire_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_hire_plan2_0[2]"
             ></el-checkbox>
           </div>
@@ -1924,19 +1785,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan2_0[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan2_0[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan2_0[2]"
             ></el-checkbox>
           </div>
@@ -1954,19 +1812,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan2_1[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan2_1[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan2_1[2]"
             ></el-checkbox>
           </div>
@@ -1984,19 +1839,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan2_2[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan2_2[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan2_2[2]"
             ></el-checkbox>
           </div>
@@ -2014,19 +1866,16 @@
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="顺序入驻"
-              border
               v-model="switch_dormitory_plan2_3[0]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="补满空位"
-              border
               v-model="switch_dormitory_plan2_3[1]"
             ></el-checkbox>
             <el-checkbox
               style="margin: 4px 0px 0px 0px; background-color: #ffffff80; vertical-align: top"
               label="跳过"
-              border
               v-model="switch_dormitory_plan2_3[2]"
             ></el-checkbox>
           </div>
@@ -2194,6 +2043,7 @@ export default {
       switch_dormitory_plan2_1: [false, false, false],
       switch_dormitory_plan2_2: [false, false, false],
       switch_dormitory_plan2_3: [false, false, false],
+      exportFlag:false
     };
   },
   mounted() {
@@ -2238,7 +2088,7 @@ export default {
         this.uid = response.data.uid;
         this.setExportUrl();
         setTimeout(function () {
-          document.getElementById("export_cover").style.display = "none";
+          document.getElementById('exportFileDone').style.display=''
         }, 2500);
       });
       this.setExportUrl();

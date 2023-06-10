@@ -63,7 +63,7 @@
       <!-- 内容区域 -->
       <!-- 绿票商店 -->
       <div class="store_content" id="store_0" :style="storeVisiable[0]">
-        <div class="store_unit">
+        <div class="store_unit_first_icon">
           <div :class="getSpriteImg(4005, 0)"></div>
         </div>
         <div v-for="(m_data, index) in storeList['green']" class="store_unit" :key="index">
@@ -91,7 +91,7 @@
       </div>
       <!-- 黄票商店 -->
       <div class="store_content" id="store_1" :style="storeVisiable[1]">
-        <div class="store_unit">
+        <div class="store_unit_first_icon">
           <div :class="getSpriteImg(4004, 0)"></div>
         </div>
         <div v-for="(m_data, index) in storeList['yellow']" class="store_unit" :key="index">
@@ -118,7 +118,7 @@
       </div>
       <!-- 橙票商店 -->
       <div class="store_content" id="store_2" :style="storeVisiable[2]">
-        <div class="store_unit">
+        <div class="store_unit_first_icon">
           <!-- <img class="store_unit_pic store_unit_icon" alt="" title=""	:src="getImgUrl('寻访参数模型' ,4)">	 -->
           <div :class="getSpriteImg('EPGS_COIN', 0)"></div>
         </div>
@@ -146,7 +146,7 @@
       </div>
       <!-- 紫票商店 -->
       <div class="store_content" id="store_3" :style="storeVisiable[3]">
-        <div class="store_unit">
+        <div class="store_unit_first_icon">
           <div :class="getSpriteImg('REP_COIN', 0)"></div>
         </div>
         <div v-for="(m_data, index) in storeList['purple']" class="store_unit" :key="index">
@@ -173,7 +173,7 @@
       </div>
       <!-- 信用商店 -->
       <div class="store_content" id="store_4" :style="storeVisiable[4]">
-        <div class="store_unit">
+        <div class="store_unit_first_icon">
           <div :class="getSpriteImg('SOCIAL_PT', 0)"></div>
         </div>
         <div v-for="(m_data, index) in storeList['grey']" class="store_unit" :key="index">
