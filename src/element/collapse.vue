@@ -6,6 +6,7 @@
     </div>
     <div :class="collapse_item">
       <slot> </slot>
+      <div><img src="/image/icon/down.png" alt=""></div>
     </div>
   </div>
 </template>

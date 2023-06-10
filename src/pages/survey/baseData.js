@@ -85,7 +85,7 @@ function scoreListInit() {
     var baseInfo = characterBasicInfo[charId];
     let score = {
       charId: charId,
-      name:baseInfo.name,
+      name: baseInfo.name,
       rarity: baseInfo.rarity,
       daily: 1,
       rogue: 1,
@@ -108,4 +108,33 @@ function scoreListInit() {
   return scoreList;
 }
 
-export { characterListInit, professionDict, rarityDict, yearDict , scoreListInit };
+let rankingList = [];
+
+function rankingListinit() {
+  for (let charId in characterBasicInfo) {
+    var baseInfo = characterBasicInfo[charId];
+    let score = {
+      charId: charId,
+      name: baseInfo.name,
+      rarity: baseInfo.rarity,
+      own: 0,
+      phase: {},
+      skill1: {},
+      skill2: {},
+      skill3: {},
+      modX: {},
+      modY: {},
+      mod: baseInfo.mod !== undefined,
+      skill: baseInfo.skill,
+      show: true,
+    };
+    rankingList.push(score);
+  }
+
+  rankingList.sort((a, b) => {
+    return b.rarity - a.rarity;
+  });
+  return rankingList;
+}
+
+export { characterListInit, professionDict, rarityDict, yearDict, scoreListInit,rankingListinit };
