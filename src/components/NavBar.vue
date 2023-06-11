@@ -39,12 +39,12 @@
             <div :class="navSelected(index)" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
               <div class="drawer_nav_text">{{ r.text }}</div>
               <div>
-                <el-icon class="child_icon_phone"><ArrowDownBold :class="iconClass(index)" /></el-icon>
+                <el-icon class="drawer_child_icon"><ArrowDownBold :class="iconClass(index)" /></el-icon>
               </div>
             </div>
             <div :class="getChildClass(index)" :id="'nav_phone' + index" v-show="r.isChild">
               <a :href="c.path" class="nav_href" v-for="c in r.child">
-                <div class="nav_child_phone">{{ c.text }}</div></a
+                <div class="drawer_nav_child">{{ c.text }}</div></a
               >
             </div>
             <div class="drawer_nav" v-show="!r.isChild">
@@ -102,8 +102,8 @@ watch(theme, () => {
 let nav_collapseFlag = ref([true, true, true, true, true, true]);
 
 function getChildClass(index) {
-  if (nav_collapseFlag.value[index]) return "nav_child_wrap_phone_init";
-  return "nav_child_wrap_phone";
+  if (nav_collapseFlag.value[index]) return "drawer_nav_child_wrap_init";
+  return "drawer_nav_child_wrap";
 }
 
 function navChildOpen(index, childNum) {
@@ -126,8 +126,8 @@ function navSelected(index) {
 }
 
 function iconClass(index) {
-  if (nav_collapseFlag.value[index]) return "child_icon_phone child_icon_phone_selected";
-  return "child_icon_phone";
+  if (nav_collapseFlag.value[index]) return "drawer_child_icon icon_selected";
+  return "drawer_child_icon";
 }
 
 const devRoute = {
@@ -213,6 +213,9 @@ const route = computed(() => {
   return {};
 });
 
+var domain = window.location.host;
+
+
 onMounted(() => {
   if (domain.indexOf("dev") == -1) {
     console.log(111)
@@ -221,4 +224,11 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.icon_selected{
+    transform: rotate(180deg);
+}
+
+
+</style>
