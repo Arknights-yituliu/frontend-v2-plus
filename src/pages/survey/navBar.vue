@@ -32,8 +32,8 @@ import "@/assets/css/sprite_char_4.css";
 import "@/assets/css/sprite_skill.css";
 import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_index.css";
-import "@/assets/css/survey_character.css";
-import "@/assets/css/survey_score.css";
+// import "@/assets/css/survey_score.css";
+
 
 import { onMounted, ref } from "vue";
 import { registerEvent, loginEvent, userDataCacheClearEvent, userDataCacheEvent } from "./userService";

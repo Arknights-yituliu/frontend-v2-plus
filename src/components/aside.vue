@@ -38,7 +38,7 @@ function navChildOpen(index, childNum) {
   nav_collapseFlag.value[index] = !nav_collapseFlag.value[index];
   console.log(index, childNum);
   if (nav_collapseFlag.value[index]) {
-    document.getElementById("nav" + index).style.height = childNum * 34 + "px";
+    document.getElementById("nav" + index).style.height = childNum * 44 + "px";
     document.getElementById("nav" + index).style.overflow = "";
   } else {
     document.getElementById("nav" + index).style.height = "0px";
@@ -108,12 +108,12 @@ const routes = ref([
     child: [
       {
         path: "/riicCal/maa",
-        text: "攒抽规划",
+        text: "MAA基建排班表生成",
         isChild: false,
       },
       {
         path: "/riicCal/mower",
-        text: "攒抽规划",
+        text: "mower基建排班表生成",
         isChild: false,
       },
     ],
@@ -123,10 +123,13 @@ const routes = ref([
     text: "礼包性价比",
     isChild: false,
   },
+  {
+    path: "/developer",
+    text: "开发团队",
+    isChild: false,
+  },
+
 ]);
-
-var domain = window.location.host;
-
 
 onMounted(() => {
   // for (let i in routes) {
@@ -135,10 +138,9 @@ onMounted(() => {
   //     navChildOpen(i, routes[i].child.length);
   //   }
   // }
-
+  var domain = window.location.host;
 
   if (domain.indexOf("dev") == -1) {
-    console.log(111);
     routes.value.push(devRoute);
   }
 });

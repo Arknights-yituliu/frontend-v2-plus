@@ -1,7 +1,7 @@
 <template>
   <div id="extra">
     <div id="foot_main">
-      <div class="foot_unit" style="width: 872px; white-space: normal">
+      <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
           <!-- <div slot="header" class="clearfix">
 					<span style="font-size: large;"><i class="el-icon-info"></i>&nbsp;<b>帮助与反馈</b></span>

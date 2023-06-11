@@ -1,4 +1,4 @@
-.survey_charData_page {
+.survey_character_page {
   max-width: 1280px;
   background: rgb(255, 255, 255);
   /* overflow: auto; */
@@ -15,13 +15,22 @@
   justify-content: center;
 }
 
-.from_card {
-  width: 520px;
+
+.char_card {
+  /* width: 600px; */
   display: flex;
   border-radius: 4px;
   margin: 10px;
   box-shadow: 0 0 1px 1px rgb(192, 192, 192);
+  /* height: 210px; */ 
 }
+
+.char_card_notown{
+  filter:grayscale(100%)
+}
+
+
+
 
 .card_title {
   font-weight: 600;
@@ -32,47 +41,110 @@
   /* margin-bottom: -6px; */
 }
 
-.card_option {
-  border-left: 1px rgb(197, 197, 197) solid;
+.card_option_left {
+  margin:10px ;
 }
 
-.avatar_wrap {
+
+.card_option_top_left {
+  display: flex;
+}
+
+.image_avatar {
   background: rgb(255, 255, 255);
   height: 100px;
   width: 100px;
-  border-radius: 50%;
+  border-radius: 14px;
   overflow: hidden;
-  margin-top: 14px;
-  border: 1px solid #969696;
+  margin-right: 10px;
+  /* border: 1px solid #6f6f6f; */
+  background: rgb(230, 230, 230);
 }
 
-.char_char_name {
+.char_name {
   text-align: center;
   margin-top: 10px;
+  /* margin-left:10px; */
+  width: 100px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 4px;
   font-weight: 700;
+  background: rgb(230, 230, 230);
+}
+
+.potential_wrap{
+  display: flex;
+  flex-wrap: wrap;
+  width: 130px;
+  height: 100px;
+  margin-top: 10px;
 }
 
 
-.card_option_switch {
-  margin: auto;
+
+.image_potential{
+  width: 40px;
+  height: 40px;
   margin-top: 6px;
+  /* border: 1px solid red; */
 }
 
-.card_option_image {
+.phase_wrap{
+  display: flex;
+  margin-top: 10px;
+}
+
+
+.image_phase{
+  height: 60px;
+  width: 70px;
+  /* border: 1px solid red; */
+  /* margin-left: 6px; */
+  margin-right: 10px;
+  border-radius: 6px;
+}
+
+.card_option_right{
+  margin-top: 10px;
+  display: flex;
+}
+
+.skill_wrap{
+  margin-right: 10px;
+}
+
+.image_skill{
+  width: 44px;
+  height: 44px;
+  border: 1px red solid;
+}
+
+
+.switch_select{
+  background: rgba(0, 102, 255, 0.2);
+}
+
+.image_mod{
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  /* border: 1px red solid; */
+}
+
+
+.image_rank {
   margin: auto;
   margin-top: 6px;
   margin-bottom: 4px;
-  width: 40px;
-  height: 36px;
+  width: 44px;
+  height: 40px;
   line-height: 24px;
   padding: 2px;
   font-size: 14px;
   font-weight: 600;
-  border-radius: 3px;
-  box-shadow: 0px 1px 1px 1px rgb(86, 86, 86);
+  border-radius: 6px;
   cursor: pointer;
-  /* background: grey; */
-  /* border: 1px red solid; */
 }
 
 
@@ -152,32 +224,37 @@
 
 .sprite_skill {
   transform: scale(0.18);
-  margin-top: -96px;
-  margin-left: -98px;
+  position: relative;
+  top: -94px;
+  left: -96px;
 }
 
 .sprite_skill_icon {
-  transform: scale(0.3);
-  margin: -44px;
-
+  transform: scale(0.35);
+  position: relative;
+  top: -42px;
+  left: -42px;
+  
 }
 
 .sprite_phase {
-  transform: scale(0.19);
-  margin: -100px;
-  /* margin-top:0px ; */
+  transform: scale(0.30,0.26);
+  position: relative;
+  top: -90px;
+  left: -84px;
 }
 
 .sprite_mod {
   transform: scale(0.16);
-  margin: -100px;
-  /* margin-top:0px ; */
+  position: relative;
+  top: -98px;
+  left: -97px;
 }
 
 .sprite_avatar {
   transform: scale(0.56);
   /* border: 1px solid red; */
-  border-radius: 50%;
+  border-radius: 14px;
   position: relative;
   top: -40px;
   left: -40px;

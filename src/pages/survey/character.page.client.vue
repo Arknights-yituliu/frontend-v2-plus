@@ -1,5 +1,5 @@
 <template>
-  <div class="survey_charData_page">
+  <div class="survey_character_page">
     <div class="setup_wrap">
       <div class="setup_bar">
         <div class="setup_title">设置</div>
@@ -8,6 +8,7 @@
         <div class="btn_survey" @click="filterCollapse = !filterCollapse">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
         <div class="btn_survey" @click="upload()">上传数据</div>
       </div>
+
       <div v-show="filterCollapse">
         <div class="setup_bar">
           <div class="setup_title">职业</div>
@@ -51,100 +52,74 @@
       </div>
     </div>
 
-    <div class="fill_course_page"></div>
     <div class="char_forms">
-      <div class="from_card" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
-        <div class="card_option">
-          <div class="avatar_wrap">
-            <div @click="char.own = !char.own" :class="getSprite(char.charId)"></div>
-          </div>
-          <div class="char_char_name">{{ char.name }}</div>
-          <c-switch v-model="char.own" class="card_option_switch"></c-switch>
-        </div>
-
-        <div class="card_option" style="width: 60px">
-          <div class="dropDown" @click="dropDown('potential' + char_index)">
-            <div :class="getSprite('potential' + char.potential, 'potential')"></div>
-          </div>
-          <div class="dropDown_menu">
-            <div class="dropDown_content" :id="'potential' + char_index" @click="dropUp('potential' + char_index)">
-              <div v-for="rank in ranks.slice(1, 7)" @click="char.potential = rank" class="dropDown_content_item">
+      <div  :class="characterOwnClass(char.own)" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
+        <div class="card_option_left">
+          <div class="card_option_top_left">
+            <div>
+              <div class="image_avatar">
+                <div @click="char.own = !char.own" :class="getSprite(char.charId)"></div>
+              </div>
+              <div class="char_name">{{ char.name }}</div>
+            </div>
+            <div class="potential_wrap">
+              <div class="image_potential" v-for="rank in ranks.slice(1, 7)" @click="char.potential = rank">
                 <div :class="getSprite('potential' + rank, 'potential')"></div>
               </div>
             </div>
           </div>
+          <!--  -->
+          <div class="phase_wrap">
+            <div
+              v-for="rank in ranks.slice(0, 3)"
+              :class="phaseClass(char.phase, rank)"
+              @click="changeDataSwitch(char_index, 'phase', rank)"
+              v-if="'pc' == swithType"
+            >
+              <div :class="getSprite('phase' + rank, 'phase')"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card_option_right">
+          <div v-for="(skill, skill_index) in char.skill" :key="skill_index" class="skill_wrap">
+            <div class="image_skill">
+              <div :class="getSprite(skill.iconId, 'icon')"></div>
+            </div>
+            <div
+              v-for="rank in ranks.slice(1, 4)"
+              :class="switchSelected(char['skill' + (skill_index + 1)], rank)"
+              @click="changeDataSwitch(char_index, 'skill' + (skill_index + 1), rank)"
+              v-if="'pc' == swithType"
+            >
+              <div :class="getSprite('skill' + rank, 'skill')"></div>
+            </div>
+          </div>
 
+          <div class="skill_wrap">
+            <div class="image_mod">{{ "模组X" }}</div>
+            <div
+              v-for="rank in ranks.slice(1, 4)"
+              :class="switchSelected(char.modX, rank)"
+              @click="changeDataSwitch(char_index, 'modX', rank)"
+              v-show="char.modX > -1"
+              v-if="'pc' == swithType"
+            >
+              <div :class="getSprite('mod' + rank, 'mod')"></div>
+            </div>
+          </div>
+
+          <div class="skill_wrap">
+            <div class="image_mod">{{ "模组Y" }}</div>
         
-        </div>
-
-        <div class="card_option" style="width: 60px">
-          <div class="card_option_title">精英化</div>
-          <div class="card_option_image" @click="changeDataIncr(char_index, 'phase')" v-if="'phone' == swithType">
-            <div :class="getSprite('phase' + char.phase, 'phase')"></div>
-          </div>
-
-          <div
-            v-for="rank in ranks.slice(0, 3)"
-            :class="switchSelected(char.phase, rank)"
-            @click="changeDataSwitch(char_index, 'phase', rank)"
-            v-if="'pc' == swithType"
-          >
-            <div :class="getSprite('phase' + rank, 'phase')"></div>
-          </div>
-        </div>
-
-        <div class="card_option" style="width: 60px" v-for="(skill, skill_index) in char.skill" :key="skill_index">
-          <div class="card_option_image_noshadow">
-            <div :class="getSprite(skill.iconId, 'icon')"></div>
-          </div>
-          <div class="card_option_image" @click="changeDataIncr(char_index, 'skill' + (skill_index + 1))" v-if="'phone' == swithType">
-            <div :class="getSprite('skill' + char['skill' + (skill_index + 1)], 'skill')"></div>
-          </div>
-
-          <div
-            v-for="rank in ranks.slice(1, 4)"
-            :class="switchSelected(char['skill' + (skill_index + 1)], rank)"
-            @click="changeDataSwitch(char_index, 'skill' + (skill_index + 1), rank)"
-            v-if="'pc' == swithType"
-          >
-            <div :class="getSprite('skill' + rank, 'skill')"></div>
-          </div>
-        </div>
-
-        <div class="card_option" style="width: 60px" v-show="char.skill.length < 3"></div>
-        <div class="card_option" style="width: 60px" v-show="char.skill.length < 2"></div>
-        <div class="card_option" style="width: 60px" v-show="char.skill.length < 1"></div>
-
-        <div class="card_option" style="width: 60px">
-          <div class="card_option_title">{{ "模组X" }}</div>
-          <div class="card_option_image" @click="changeDataIncr(char_index, 'modX')" v-show="char.modX > -1" v-if="'phone' == swithType">
-            <div :class="getSprite('mod' + char.modX, 'mod')"></div>
-          </div>
-
-          <div
-            v-for="rank in ranks.slice(1, 4)"
-            :class="switchSelected(char.modX, rank)"
-            @click="changeDataSwitch(char_index, 'modX', rank)"
-            v-show="char.modX > -1"
-            v-if="'pc' == swithType"
-          >
-            <div :class="getSprite('mod' + rank, 'mod')"></div>
-          </div>
-        </div>
-
-        <div class="card_option" style="width: 60px">
-          <div class="card_option_title">{{ "模组Y" }}</div>
-          <div class="card_option_image" @click="changeDataIncr(char_index, 'modY')" v-show="char.modY > -1" v-if="'phone' == swithType">
-            <div :class="getSprite('mod' + char.modY, 'mod')"></div>
-          </div>
-          <div
-            v-for="rank in ranks.slice(1, 4)"
-            :class="switchSelected(char.modY, rank)"
-            @click="changeDataSwitch(char_index, 'modY', rank)"
-            v-show="char.modY > -1"
-            v-if="'pc' == swithType"
-          >
-            <div :class="getSprite('mod' + rank, 'mod')"></div>
+            <div
+              v-for="rank in ranks.slice(1, 4)"
+              :class="switchSelected(char.modY, rank)"
+              @click="changeDataSwitch(char_index, 'modY', rank)"
+              v-show="char.modY > -1"
+              v-if="'pc' == swithType"
+            >
+              <div :class="getSprite('mod' + rank, 'mod')"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -160,6 +135,7 @@ import characterDemo from "@/pages/survey/characterDemo.vue";
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
 import navBar from "@/pages/survey/navBar.vue";
+import "@/assets/css/survey_character.css";
 
 let characterList = ref(characterListInit());
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
@@ -214,9 +190,19 @@ function changeDataSwitch(char_index, attrib, rank) {
   characterList.value[char_index][attrib] = rank;
 }
 
+function characterOwnClass(own){
+  if(own) return 'char_card'
+  return 'char_card char_card_notown'
+}
+
 function switchSelected(dataValue, switchValue) {
-  if (dataValue == switchValue) return "card_option_image selected_background";
-  return "card_option_image";
+  if (dataValue == switchValue) return "image_rank switch_select";
+  return "image_rank";
+}
+
+function phaseClass(dataValue, switchValue) {
+  if (dataValue == switchValue) return "image_phase switch_select";
+  return "image_phase";
 }
 
 //上传

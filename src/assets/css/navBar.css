@@ -195,6 +195,7 @@
   margin-top: 4px;
 }
 
+
 .drawer_child_icon svg{
     width: 40px;
     height: 40px;
@@ -227,6 +228,13 @@
     margin-top: 10px;
 }
 
+
+.nowPage{
+    color: white;
+    font-size: 26px;
+    font-weight: 800;
+    /* margin-left: 20px; */
+}
 
 :global(.navbar-switch .el-icon) {
     font-size: 16px !important;
