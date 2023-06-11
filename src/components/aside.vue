@@ -3,7 +3,7 @@
     <div class="aside_title">明日方舟一图流</div>
 
     <div v-for="(r, index) in routes" :key="index">
-      <div :class="navSelected(nav_collapseFlag[index])" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
+      <div :class="navSelected(index)" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
         <div class="aside_nav_text">{{ r.text }}</div>
         <div>
           <el-icon class="child_icon"><ArrowDownBold :style="nav_collapseFlag[index] ? 'transform:rotate(180deg)' : ''" /></el-icon>
@@ -47,8 +47,8 @@ function navChildOpen(index, childNum) {
   }
 }
 
-function navSelected(flag) {
-  if (flag) return "aside_nav aside_nav_selected";
+function navSelected(index) {
+  if (nav_collapseFlag.value[index]) return "aside_nav aside_nav_selected";
   return "aside_nav";
 }
 
