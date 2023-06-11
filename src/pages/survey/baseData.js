@@ -19,6 +19,7 @@ function characterListInit() {
     }
     let character = {
       charId: charId,
+      name: baseInfo.name,
       own: false,
       level: 1,
       modX: modX,

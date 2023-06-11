@@ -38,13 +38,20 @@
 
 .avatar_wrap {
   background: rgb(255, 255, 255);
-  height: 88px;
-  width: 88px;
+  height: 100px;
+  width: 100px;
   border-radius: 50%;
   overflow: hidden;
-  margin-top: 10px;
+  margin-top: 14px;
   border: 1px solid #969696;
 }
+
+.char_char_name {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 700;
+}
+
 
 .card_option_switch {
   margin: auto;
@@ -168,11 +175,12 @@
 }
 
 .sprite_avatar {
-  transform: scale(0.48);
+  transform: scale(0.56);
+  /* border: 1px solid red; */
   border-radius: 50%;
   position: relative;
-  top: -46px;
-  left: -46px;
+  top: -40px;
+  left: -40px;
 }
 
 

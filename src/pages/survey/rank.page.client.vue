@@ -34,6 +34,7 @@
       <div class="rank_card" v-for="(result, index) in rankingList" v-show="result.show">
         <div class="rank_avatar_wrap">
           <div :class="getSprite(result.charId)"></div>
+        
         </div>
         <div class="survey_result">
           <div class="survey_result_titit">持有率</div>

@@ -110,8 +110,8 @@ function navChildOpen(index, childNum) {
   nav_collapseFlag.value[index] = !nav_collapseFlag.value[index];
   console.log(index, childNum);
   if (nav_collapseFlag.value[index]) {
-    console.log(childNum * 34 + "px")
-    console.log("nav" + index)
+    console.log(childNum * 34 + "px");
+    console.log("nav" + index);
     document.getElementById("nav_phone" + index).style.height = childNum * 60 + "px";
     document.getElementById("nav_phone" + index).style.overflow = "";
   } else {
@@ -125,7 +125,7 @@ function navSelected(index) {
   return "aside_nav";
 }
 
-function iconClass(index){
+function iconClass(index) {
   if (nav_collapseFlag.value[index]) return "child_icon_phone child_icon_phone_selected";
   return "child_icon_phone";
 }
@@ -137,7 +137,7 @@ const devRoute = {
   child: [
     {
       path: "/survey",
-      text: "干员调查",
+      text: "调查简介",
     },
     {
       path: "/survey/character",
@@ -145,16 +145,16 @@ const devRoute = {
     },
     {
       path: "/survey/score",
-      text: "干员评分调查",
+      text: "干员风评调查",
     },
     {
       path: "/survey/rank",
-      text: "干员榜单",
+      text: "调查结果",
     },
   ],
 };
 
-const routes = [
+const routes = ref([
   {
     path: "/",
     text: "材料一图流",
@@ -176,29 +176,6 @@ const routes = [
   },
 
   {
-    path: "/survey",
-    text: "干员调查",
-    isChild: true,
-    child: [
-      {
-        path: "/survey",
-        text: "调查简介",
-      },
-      {
-        path: "/survey/character",
-        text: "干员练度调查",
-      },
-      {
-        path: "/survey/score",
-        text: "干员风评调查",
-      },
-      {
-        path: "/survey/rank",
-        text: "调查结果",
-      },
-    ],
-  },
-  {
     path: "/gachaCal",
     text: "攒抽规划",
     isChild: false,
@@ -213,35 +190,7 @@ const routes = [
     text: "礼包性价比",
     isChild: false,
   },
-];
-
-// const routes = [
-//   {
-//     path: "/",
-//     text: "材料一图流",
-//     icon: mdiChartBoxOutline,
-//   },
-//   {
-//     path: "/gachaCal",
-//     text: "攒抽规划",
-//     icon: mdiGiftOutline,
-//   },
-//   {
-//     path: "/riicCal",
-//     text: "排班生成器",
-//     icon: mdiCalculator,
-//   },
-//   {
-//     path: "/pack",
-//     text: "礼包性价比",
-//     icon: mdiCalendarCursorOutline,
-//   },
-//   {
-//     path: "/value",
-//     text: "物品价值",
-//     icon: mdiGold,
-//   },
-// ];
+]);
 
 const route = computed(() => {
   for (let i of routes) {
@@ -253,13 +202,11 @@ const route = computed(() => {
 });
 
 onMounted(() => {
-  // var domain = window.location.host;
-  // if (domain.indexOf("dev") == -1) {
-  //   routes.push(devRoute);
-  // }
+  if (domain.indexOf("dev") == -1) {
+    console.log(111)
+    routes.value.push(devRoute);
+  }
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
