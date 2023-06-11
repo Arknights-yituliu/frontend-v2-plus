@@ -55,6 +55,14 @@
           <div class="survey_result_titit"><div :class="getSpriteIcon(result.skill, 2)"></div></div>
           <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}</div>
         </div>
+        <div class="survey_result">
+          <div class="survey_result_titit">X模组</div>
+          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.modX, "rank" + 3), 1) }}</div>
+        </div>
+        <div class="survey_result">
+          <div class="survey_result_titit">Y模组</div>
+          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.modY, "rank" + 3), 1) }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -76,7 +84,7 @@ import { ElMessage } from "element-plus";
 import surveyApi from "@/api/survey";
 
 let rankingList = ref(rankingListinit());
-let surveyType = ref("持有率");
+let surveyType = ref("练度");
 
 let userCount = ref(0);
 let updateTime = ref("2023-05-01");

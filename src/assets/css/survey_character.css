@@ -1,5 +1,5 @@
 .survey_charData_page {
-  max-width: 1080px;
+  max-width: 1280px;
   background: rgb(255, 255, 255);
   /* overflow: auto; */
   margin: auto;
@@ -16,7 +16,7 @@
 }
 
 .from_card {
-  width: 480px;
+  width: 520px;
   display: flex;
   border-radius: 4px;
   margin: 10px;
