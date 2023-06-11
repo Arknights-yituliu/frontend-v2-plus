@@ -193,7 +193,7 @@ const routes = ref([
 ]);
 
 const route = computed(() => {
-  for (let i of routes) {
+  for (let i of routes.value) {
     if (i.path == pageContext.urlPathname || i.path + "/" == pageContext.urlPathname) {
       return i;
     }
