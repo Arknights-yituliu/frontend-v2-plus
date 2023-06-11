@@ -5,9 +5,12 @@
       <div></div>
       <div></div>
     </div>
-    <div class="page-title">
-      {{ route.text }}
+    <div class="nowPage">
+      {{ nowPage }}
     </div>
+    <!-- <div class="page-title">
+      {{ route.text }}
+    </div> -->
     <!-- <div class="bar-wrapper">
       <a v-for="r in routes" class="bar">
         <a class="bar" :class="{ activate: pageContext.urlPathname == r.path }" :href="r.path">
@@ -131,7 +134,7 @@ function iconClass(index) {
 }
 
 const devRoute = {
-  path: "/survey",
+  path: "~",
   text: "干员调查",
   isChild: true,
   child: [
@@ -156,7 +159,7 @@ const devRoute = {
 
 const routes = ref([
   {
-    path: "/",
+    path: "~",
     text: "材料一图流",
     isChild: true,
     child: [
@@ -181,18 +184,18 @@ const routes = ref([
     isChild: false,
   },
   {
-    path: "/riicCal",
+    path: "~",
     text: "排班生成器",
     isChild: true,
     child: [
       {
         path: "/riicCal/maa",
-        text: "攒抽规划",
+        text: "MAA基建排班表生成",
         isChild: false,
       },
       {
         path: "/riicCal/mower",
-        text: "攒抽规划",
+        text: "mower基建排班表生成",
         isChild: false,
       },
     ],
@@ -200,6 +203,11 @@ const routes = ref([
   {
     path: "/pack",
     text: "礼包性价比",
+    isChild: false,
+  },
+  {
+    path: "/developer",
+    text: "开发团队",
     isChild: false,
   },
 ]);
@@ -213,22 +221,40 @@ const route = computed(() => {
   return {};
 });
 
-var domain = window.location.host;
+let nowPage = ref("");
 
+function getNowPage(path) {
+  if(path=='/') return nowPage.value = '材料一图流'
+  for (let i of routes.value) {
+    if (i.isChild) {
+      for (let c of i.child) {
+        console.log(c.path)
+        if (c.path.indexOf(path) > -1) {
+          nowPage.value = c.text;
+        }
+      }
+    } else {
+      console.log(i.path)
+      if (i.path.indexOf(path) > -1) {
+        nowPage.value = i.text;
+      }
+    }
+  }
+}
 
 onMounted(() => {
+  var domain = window.location.host;
+  var path = window.location.pathname;
+  getNowPage(path);
+
   if (domain.indexOf("dev") == -1) {
-    console.log(111)
     routes.value.push(devRoute);
   }
 });
 </script>
 
 <style scoped>
-
-.icon_selected{
-    transform: rotate(180deg);
+.icon_selected {
+  transform: rotate(180deg);
 }
-
-
 </style>

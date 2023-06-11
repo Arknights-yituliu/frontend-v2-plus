@@ -1,6 +1,8 @@
 .aside_table {
     color: white;
     font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu;
+    overflow: auto;
+    height: 100%;
 }
 
 .aside_title {
@@ -57,12 +59,18 @@
 
 .aside_nav_child {
     font-size: 18px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .child_icon {
-    height: 30px;
-    width: 30px;
+    height: 26px;
+    width: 26px;
+    margin-top: 4px;
+}
+
+.child_icon svg{
+    height: 26px;
+    width: 26px;
 }
 
 .nav_href {

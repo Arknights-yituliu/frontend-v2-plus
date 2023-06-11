@@ -23,7 +23,7 @@
 }
 
 .aside {
-    width: 250px;
+    width: 280px;
     transition: all 0.2s;
     transform: translateX(0) !important;
     background-color: rgb(52, 68, 104);
