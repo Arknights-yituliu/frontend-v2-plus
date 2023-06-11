@@ -27,12 +27,11 @@
 import { onMounted, ref } from "vue";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 
-
 let nav_collapseFlag = ref([true, true, true, true, true, true]);
 
-function getChildClass(index){
-    if(nav_collapseFlag.value[index]) return 'aside_nav_child_wrap_init';
-    return 'aside_nav_child_wrap'
+function getChildClass(index) {
+  if (nav_collapseFlag.value[index]) return "aside_nav_child_wrap_init";
+  return "aside_nav_child_wrap";
 }
 
 function navChildOpen(index, childNum) {
@@ -52,7 +51,31 @@ function navSelected(index) {
   return "aside_nav";
 }
 
-const routes = [
+const devRoute = {
+  path: "/survey",
+  text: "干员调查",
+  isChild: true,
+  child: [
+    {
+      path: "/survey",
+      text: "调查简介",
+    },
+    {
+      path: "/survey/character",
+      text: "干员练度调查",
+    },
+    {
+      path: "/survey/score",
+      text: "干员风评调查",
+    },
+    {
+      path: "/survey/rank",
+      text: "调查结果",
+    },
+  ],
+};
+
+const routes = ref([
   {
     path: "/",
     text: "材料一图流",
@@ -74,29 +97,6 @@ const routes = [
   },
 
   {
-    path: "/survey",
-    text: "干员调查",
-    isChild: true,
-    child: [
-      {
-        path: "/survey",
-        text: "调查简介",
-      },
-      {
-        path: "/survey/character",
-        text: "干员练度调查",
-      },
-      {
-        path: "/survey/score",
-        text: "干员风评调查",
-      },
-      {
-        path: "/survey/rank",
-        text: "调查结果",
-      },
-    ],
-  },
-  {
     path: "/gachaCal",
     text: "攒抽规划",
     isChild: false,
@@ -111,14 +111,21 @@ const routes = [
     text: "礼包性价比",
     isChild: false,
   },
-];
+]);
 
 onMounted(() => {
   // for (let i in routes) {
   //   if (routes[i].isChild) {
   //     navChildOpen(i, routes[i].child.length);
+  //     navChildOpen(i, routes[i].child.length);
   //   }
   // }
+
+  var domain = window.location.host;
+
+  if (domain.indexOf("dev") == -1) {
+    console.log(111)
+    routes.value.push(devRoute);
+  }
 });
 </script>
-

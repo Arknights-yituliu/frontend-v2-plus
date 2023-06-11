@@ -58,6 +58,8 @@
           <div class="avatar_wrap">
             <div @click="char.own = !char.own" :class="getSprite(char.charId)"></div>
           </div>
+          <div class="char_char_name">{{ char.name }}</div>
+          <c-switch v-model="char.own" class="card_option_switch"></c-switch>
         </div>
 
         <div class="card_option" style="width: 60px">
@@ -72,7 +74,7 @@
             </div>
           </div>
 
-          <c-switch v-model="char.own" class="card_option_switch"></c-switch>
+        
         </div>
 
         <div class="card_option" style="width: 60px">
@@ -234,8 +236,6 @@ function maaData1() {
   }
 }
 
-
-
 //打开选择框
 function dropDown(id) {
   document.getElementById(id).style.display = "flex";
@@ -260,7 +260,6 @@ let filterCollapse = ref(true);
 
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
-  
   if (filterRules.value[attribute].indexOf(rule) > -1) {
     return "set_btn selected_color";
   }
@@ -344,7 +343,6 @@ let clientWidth = ref(1280);
 function getClientWidth() {
   // const width = document.documentElement.clientWidth;
   // clientWidth.value = width;
-
   // if (width > 1200) swithType.value = "pc";
 }
 
