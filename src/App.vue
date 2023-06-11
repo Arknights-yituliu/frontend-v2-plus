@@ -11,6 +11,7 @@
     </el-footer>
   </el-container> -->
 
+
   <div class="container">
     <div :class="asideClass">
       <myaside></myaside>
@@ -25,6 +26,12 @@
 
 <script setup>
 
+//导航
+import "@/assets/css/main.css";
+import "@/assets/css/aside.css";
+import "@/assets/css/navBar.css";
+
+
 import "@/assets/css/basic.css";
 import "@/assets/css/stage_v2.css";
 import "@/assets/css/store_v2.css";
@@ -34,7 +41,6 @@ import "@/assets/css/sprite_item_large.css";
 import "@/assets/css/sprite_item_large_png.css";
 import "@/assets/css/sprite_style.css";
 import "@/assets/css/sprite_icon.css";
-import "@/assets/css/components.css";
 
 // 旧版css，待修改
 import "@/assets/css/item.css";
@@ -58,15 +64,7 @@ provide("theme", theme);
 let asideVisible = ref(true);
 let asideClass = ref("aside");
 
-function aside() {
-  asideVisible.value = !asideVisible.value;
-  console.log(asideVisible.value);
-  if (asideVisible.value) {
-    asideClass.value = "aside_hidden aside";
-  } else {
-    asideClass.value = "aside_hidden";
-  }
-}
+
 </script>
 
 <style scoped>
@@ -103,54 +101,4 @@ body {
 } */
 
 
-.header {
-  height: 54px;
-  line-height: 50px;
-  /* border: 1px solid rgb(223, 223, 223); */
-}
-
-@media (max-width: 1280px) {
-  .header {
-    height: 78px;
-  }
-}
-
-.container {
-  display: flex;
-  flex: 1;
-  /* border: 1px solid rgb(0, 119, 255); */
-  height: calc(100vh - 0px);
-  overflow: hidden;
-}
-
-.is_vertical {
-  flex-direction: column;
-}
-
-.aside_hidden {
-  width: 0px;
-  overflow: auto;
-  transform: translateX(-500px);
-}
-
-.aside {
-  width: 220px;
-  transition: all 0.2s;
-  transform: translateX(0) !important;
-  background-color: #545c64;
-}
-
-
-.main {
-  display: block;
-  flex: 1;
-  overflow: auto;
-  /* background-color: #bb0000ce */
-}
-
-.footer{
-  height: 40px;
-  line-height: 40px;
-  background-color: rgb(52, 68, 104);
-}
 </style>

@@ -1,6 +1,6 @@
 import axios from "axios";
-const http = "https://backend.yituliu.site/";
-// const http = "http://127.0.0.1:10013/";
+import {http} from '@/api/baseURL'
+
 
 function get_perm() {
 

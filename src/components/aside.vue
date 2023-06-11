@@ -4,19 +4,19 @@
 
     <div v-for="(r, index) in routes" :key="index">
       <div :class="navSelected(nav_collapseFlag[index])" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
-        <div class="nav_text">{{ r.text }}</div>
+        <div class="aside_nav_text">{{ r.text }}</div>
         <div>
           <el-icon class="child_icon"><ArrowDownBold :style="nav_collapseFlag[index] ? 'transform:rotate(180deg)' : ''" /></el-icon>
         </div>
       </div>
-      <div class="nav_child_wrap" :id="'nav' + index" v-show="r.isChild">
-        <a :href="c.path" class="href" v-for="c in r.child">
-          <div class="nav_child">{{ c.text }}</div></a
+      <div :class="getChildClass(index)" :id="'nav' + index" v-show="r.isChild">
+        <a :href="c.path" class="nav_href" v-for="c in r.child">
+          <div class="aside_nav_child">{{ c.text }}</div></a
         >
       </div>
-      <div class="nav" v-show="!r.isChild">
-        <a :href="r.path" class="href">
-          <div class="nav_text">{{ r.text }}</div></a
+      <div class="aside_nav" v-show="!r.isChild">
+        <a :href="r.path" class="nav_href">
+          <div class="aside_nav_text">{{ r.text }}</div></a
         >
       </div>
     </div>
@@ -27,7 +27,13 @@
 import { onMounted, ref } from "vue";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 
-let nav_collapseFlag = ref([false, false, false, false, false, false]);
+
+let nav_collapseFlag = ref([true, true, true, true, true, true]);
+
+function getChildClass(index){
+    if(nav_collapseFlag.value[index]) return 'aside_nav_child_wrap_init';
+    return 'aside_nav_child_wrap'
+}
 
 function navChildOpen(index, childNum) {
   nav_collapseFlag.value[index] = !nav_collapseFlag.value[index];
@@ -42,8 +48,8 @@ function navChildOpen(index, childNum) {
 }
 
 function navSelected(flag) {
-  if (flag) return "nav aside_nav_selected";
-  return "nav";
+  if (flag) return "aside_nav aside_nav_selected";
+  return "aside_nav";
 }
 
 const routes = [
@@ -108,74 +114,11 @@ const routes = [
 ];
 
 onMounted(() => {
-  for (let i in routes) {
-    if (routes[i].isChild) {
-      navChildOpen(i, routes[i].child.length);
-    }
-  }
+  // for (let i in routes) {
+  //   if (routes[i].isChild) {
+  //     navChildOpen(i, routes[i].child.length);
+  //   }
+  // }
 });
 </script>
 
-<style>
-.aside_table {
-  color: white;
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu;
-}
-
-.aside_title {
-  font-size: 30px;
-  text-align: center;
-  height: 54px;
-  line-height: 54px;
-  /* margin-bottom: 50px; */
-  font-weight: 900;
-  background-color: rgb(52, 68, 104);
-}
-
-.nav {
-  margin-top: 20px;
-  margin-left: 10px;
-  margin-right: 10px;
-  display: flex;
-  height: 30px;
-  padding-left: 4px;
-  /* border: 1px red solid; */
-  /* border-left: 2px solid rgb(255, 255, 255); */
-}
-
-.aside_nav_selected {
-  color: rgb(255, 217, 0);
-  border-left: 2px solid rgb(255, 217, 0);
-}
-
-.nav_child_wrap {
-  overflow: hidden;
-  height: 0px;
-  transition: all 0.2s;
-  margin-right: 10px;
-  margin-left: 10px;
-  padding-left: 6px;
-  /* border: 1px red solid; */
-}
-
-.nav_text {
-  font-size: 24px;
-  width: 200px;
-}
-
-.nav_child {
-  font-size: 18px;
-  margin-top: 10px;
-}
-
-.child_icon {
-  height: 30px;
-  width: 30px;
-}
-
-.href {
-  color: white;
-  text-decoration: none;
-  display: flex;
-}
-</style>

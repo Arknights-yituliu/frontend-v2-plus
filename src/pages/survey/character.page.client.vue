@@ -234,7 +234,7 @@ function maaData1() {
   }
 }
 
-let swithType = ref("phone");
+
 
 //打开选择框
 function dropDown(id) {
@@ -339,12 +339,13 @@ function batchUpdates(attribute, rank) {
   }
 }
 
-let clientWidth = ref(1080);
+let swithType = ref("pc");
+let clientWidth = ref(1280);
 function getClientWidth() {
-  const width = document.documentElement.clientWidth;
-  clientWidth.value = width;
+  // const width = document.documentElement.clientWidth;
+  // clientWidth.value = width;
 
-  if (width > 1000) swithType.value = "pc";
+  // if (width > 1200) swithType.value = "pc";
 }
 
 onMounted(() => {

@@ -1,5 +1,5 @@
 .survey_rank_page {
-  max-width: 1080px;
+  max-width: 1280px;
   height: auto;
   background: white;
   margin: auto;
@@ -8,11 +8,11 @@
 }
 
 .survey_title {
-  height: 70px;
-  line-height: 70px;
+  height: 100px;
+  line-height: 100px;
   margin: auto;
   text-align: center;
-  font-size: 30px;
+  font-size: 48px;
   font-weight: 900;
   /* border: 1px red solid; */
 }
@@ -58,7 +58,7 @@
 
 .rank_card {
   height: 90px;
-  width: 500px;
+  width: 550px;
   display: flex;
   border: 1px rgb(211, 211, 211) solid;
   margin: auto;
@@ -91,7 +91,7 @@
 .survey_result_titit {
   height: 50px;
   line-height: 50px;
-  width: 70px;
+  width: 65px;
   /* border: 1px rgb(30, 255, 0) solid; */
 }
 

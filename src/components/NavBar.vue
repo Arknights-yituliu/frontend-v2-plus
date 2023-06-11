@@ -30,23 +30,33 @@
     <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
     <navBar></navBar>
 
-    <!-- <div class="nav_div">
-      <div class="nav_collapse" id="menu">
+    <div class="drawer_wrap">
+      <div class="drawer" id="drawer114">
         <div class="menu_table">
           <div class="menu_title">明日方舟一图流</div>
           <div class="line"></div>
-          <div v-for="r in routes" class="menu_item">
-            <a :href="r.path" style="display: flex; align-items: center; fill: white">
-              <svg style="width: 36px; height: 36px; margin-right: 32px" viewbox="0 0 24 24">
-                <path :d="r.icon" />
-              </svg>
-              {{ r.text }}
-            </a>
+          <div v-for="(r, index) in routes" :key="index">
+            <div :class="navSelected(nav_collapseFlag[index])" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
+              <div class="nav_text_phone">{{ r.text }}</div>
+              <div>
+                <el-icon class="child_icon_phone"><ArrowDownBold :class="iconClass(index)" /></el-icon>
+              </div>
+            </div>
+            <div :class="getChildClass(index)" :id="'nav_phone' + index" v-show="r.isChild">
+              <a :href="c.path" class="nav_href" v-for="c in r.child">
+                <div class="nav_child_phone">{{ c.text }}</div></a
+              >
+            </div>
+            <div class="nav" v-show="!r.isChild">
+              <a :href="r.path" class="nav_href">
+                <div class="nav_text_phone">{{ r.text }}</div></a
+              >
+            </div>
           </div>
         </div>
       </div>
-      <div class="menu-mask" v-show="menu_flag" @click="menu_collapse(false)"></div>
-    </div> -->
+      <div class="menu-mask" id="draweMask514" @click="menu_collapse(false)"></div>
+    </div>
   </div>
 </template>
 
@@ -66,12 +76,14 @@ let menu_flag = ref(false);
 function menu_collapse(flag) {
   menu_flag.value = flag;
   if (menu_flag.value) {
-    document.getElementById("menu").className = "nav_collapse ";
     setTimeout(function () {
-      document.getElementById("menu").className = "nav_collapse nav_open";
+      document.getElementById("drawer114").style.transform = "translateX(0)";
+      document.getElementById("draweMask514").style.display = "block";
     }, 30);
   } else {
-    document.getElementById("menu").className = "nav_collapse";
+    document.getElementById("drawer114").style.transform = "translateX(-400px) ";
+    document.getElementById("draweMask514").style.display = "none";
+    // document.getElementById("drawer114514").className = "nav_collapse";
   }
   // console.log(menu_flag.value);
 }
@@ -87,26 +99,57 @@ watch(theme, () => {
   cookie.set("theme", theme_name, { expires: 30 });
 });
 
+let nav_collapseFlag = ref([true, true, true, true, true, true]);
+
+function getChildClass(index) {
+  if (nav_collapseFlag.value[index]) return "nav_child_wrap_phone_init";
+  return "nav_child_wrap_phone";
+}
+
+function navChildOpen(index, childNum) {
+  nav_collapseFlag.value[index] = !nav_collapseFlag.value[index];
+  console.log(index, childNum);
+  if (nav_collapseFlag.value[index]) {
+    console.log(childNum * 34 + "px")
+    console.log("nav" + index)
+    document.getElementById("nav_phone" + index).style.height = childNum * 60 + "px";
+    document.getElementById("nav_phone" + index).style.overflow = "";
+  } else {
+    document.getElementById("nav_phone" + index).style.height = "0px";
+    document.getElementById("nav_phone" + index).style.overflow = "hidden";
+  }
+}
+
+function navSelected(flag) {
+  if (flag) return "nav_phone aside_nav_selected";
+  return "nav_phone";
+}
+
+function iconClass(index){
+  if (nav_collapseFlag.value[index]) return "child_icon_phone child_icon_phone_selected";
+  return "child_icon_phone";
+}
+
 const devRoute = {
   path: "/survey",
   text: "干员调查",
-  icon: mdiGold,
   isChild: true,
   child: [
     {
+      path: "/survey",
+      text: "干员调查",
+    },
+    {
       path: "/survey/character",
       text: "干员练度调查",
-      icon: mdiGold,
     },
     {
       path: "/survey/score",
       text: "干员评分调查",
-      icon: mdiGold,
     },
     {
       path: "/survey/rank",
       text: "干员榜单",
-      icon: mdiGold,
     },
   ],
 };
@@ -115,29 +158,90 @@ const routes = [
   {
     path: "/",
     text: "材料一图流",
-    icon: mdiChartBoxOutline,
+    isChild: true,
+    child: [
+      {
+        path: "/",
+        text: "材料一图流",
+      },
+      {
+        path: "/store",
+        text: "商店性价比",
+      },
+      {
+        path: "/value",
+        text: "物品价值",
+      },
+    ],
+  },
+
+  {
+    path: "/survey",
+    text: "干员调查",
+    isChild: true,
+    child: [
+      {
+        path: "/survey",
+        text: "调查简介",
+      },
+      {
+        path: "/survey/character",
+        text: "干员练度调查",
+      },
+      {
+        path: "/survey/score",
+        text: "干员风评调查",
+      },
+      {
+        path: "/survey/rank",
+        text: "调查结果",
+      },
+    ],
   },
   {
     path: "/gachaCal",
     text: "攒抽规划",
-    icon: mdiGiftOutline,
+    isChild: false,
   },
   {
     path: "/riicCal",
     text: "排班生成器",
-    icon: mdiCalculator,
+    isChild: false,
   },
   {
     path: "/pack",
     text: "礼包性价比",
-    icon: mdiCalendarCursorOutline,
-  },
-  {
-    path: "/value",
-    text: "物品价值",
-    icon: mdiGold,
+    isChild: false,
   },
 ];
+
+// const routes = [
+//   {
+//     path: "/",
+//     text: "材料一图流",
+//     icon: mdiChartBoxOutline,
+//   },
+//   {
+//     path: "/gachaCal",
+//     text: "攒抽规划",
+//     icon: mdiGiftOutline,
+//   },
+//   {
+//     path: "/riicCal",
+//     text: "排班生成器",
+//     icon: mdiCalculator,
+//   },
+//   {
+//     path: "/pack",
+//     text: "礼包性价比",
+//     icon: mdiCalendarCursorOutline,
+//   },
+//   {
+//     path: "/value",
+//     text: "物品价值",
+//     icon: mdiGold,
+//   },
+// ];
 
 const route = computed(() => {
   for (let i of routes) {
@@ -149,195 +253,13 @@ const route = computed(() => {
 });
 
 onMounted(() => {
-  var domain = window.location.host;
-  if (domain.indexOf("dev") == -1) {
-    routes.push(devRoute);
-  }
+  // var domain = window.location.host;
+  // if (domain.indexOf("dev") == -1) {
+  //   routes.push(devRoute);
+  // }
 });
 </script>
 
 <style scoped>
-.header_wrap {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  display: flex;
-  flex-direction: row;
-  height: 54px;
-  align-items: center;
-  background-color: rgb(52, 68, 104);
-  z-index: 100;
-  box-shadow: none;
-  gap: 8px;
-  padding: 0 10px 0 10px;
-}
 
-.bar-wrapper {
-  display: flex;
-  /* border: 1px solid red; */
-}
-.bar {
-  height: 100%;
-  padding: 0 14px;
-  font-size: 18px;
-  vertical-align: center;
-  line-height: 54px;
-  text-decoration: none;
-  color: white;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  /* border: 1px solid red; */
-}
-
-.bar:hover .bar-wrapper2 {
-  display: block;
-}
-
-.bar-wrapper2 {
-  width: 250px;
-  background-color: rgb(52, 68, 104);
-  position: absolute;
-  top: 56px;
-  /* margin-left: -10px; */
-  display: none;
-  z-index: 2000;
-}
-
-.menu-button {
-  display: none;
-  width: 33px;
-  height: 33px;
-  padding: 6px 8px;
-  margin-left: 12px;
-  border: 2px solid white;
-  border-radius: 6px;
-}
-
-.menu-button div {
-  height: 3px;
-  background-color: white;
-  margin: 6px 0;
-}
-
-.page-title {
-  color: white;
-  font-size: 28px;
-  display: none;
-  padding-left: 24px;
-}
-
-@media (max-width: 1280px) {
-  .bar-wrapper {
-    display: none;
-  }
-  .menu-button {
-    display: block;
-  }
-  .page-title {
-    display: block;
-  }
-  .header_wrap {
-    height: 80px;
-  }
-  .bar {
-    line-height: 80px;
-  }
-  .el-switch {
-    transform: scale(1.5);
-  }
-}
-
-.activate {
-  color: #ffd04b;
-  border-bottom: 3px solid #ffd04b;
-}
-
-.navbar-switch {
-  --el-switch-on-color: rgb(52, 68, 104);
-  --el-switch-off-color: rgb(52, 68, 104);
-  --el-switch-border-color: white;
-  /* padding-right: 28px; */
-}
-
-.spacer {
-  flex-grow: 1;
-}
-
-.nav_div {
-  display: flex;
-  width: 100%;
-  height: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 200;
-  /* border: solid red 1px; */
-}
-
-.nav_collapse {
-  position: absolute;
-  top: 0;
-  transform: translateX(-360px);
-}
-
-.nav_open {
-  background-color: rgb(52, 68, 104);
-  width: 360px;
-  height: 100vh;
-  white-space: nowrap;
-  text-align: center;
-  transition: all 0.15s;
-  transform: translateX(0) !important;
-  /* border: solid red 1px; */
-}
-
-.menu-mask {
-  background: rgba(0, 0, 0, 0.6);
-  width: 100%;
-  height: 100vh;
-  /* border: solid red 1px; */
-}
-
-.menu_table {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: white;
-}
-
-.menu_title {
-  width: 100%;
-  height: 150px;
-  /* border: 1px red solid; */
-  font-size: 36px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.line {
-  width: 100%;
-  /* height: 1px; */
-  background: white;
-  box-shadow: 0 0 1px 1px rgb(208, 208, 208);
-  margin-bottom: 50px;
-}
-
-.menu_item {
-  width: 250px;
-  height: 80px;
-  font-size: 28px;
-  text-align: left;
-  margin-left: 50px;
-}
-
-.menu_item a {
-  color: white;
-  text-decoration: none;
-}
-
-:global(.navbar-switch .el-icon) {
-  font-size: 16px !important;
-}
 </style>
