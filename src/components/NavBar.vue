@@ -36,7 +36,7 @@
           <div class="menu_title">明日方舟一图流</div>
           <div class="line"></div>
           <div v-for="(r, index) in routes" :key="index">
-            <div :class="navSelected(nav_collapseFlag[index])" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
+            <div :class="navSelected(index)" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
               <div class="nav_text_phone">{{ r.text }}</div>
               <div>
                 <el-icon class="child_icon_phone"><ArrowDownBold :class="iconClass(index)" /></el-icon>
@@ -120,9 +120,9 @@ function navChildOpen(index, childNum) {
   }
 }
 
-function navSelected(flag) {
-  if (flag) return "nav_phone aside_nav_selected";
-  return "nav_phone";
+function navSelected(index) {
+  if (nav_collapseFlag.value[index]) return "aside_nav aside_nav_selected";
+  return "aside_nav";
 }
 
 function iconClass(index){
