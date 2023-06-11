@@ -125,6 +125,9 @@ const routes = ref([
   },
 ]);
 
+var domain = window.location.host;
+
+
 onMounted(() => {
   // for (let i in routes) {
   //   if (routes[i].isChild) {
@@ -133,7 +136,6 @@ onMounted(() => {
   //   }
   // }
 
-  var domain = window.location.host;
 
   if (domain.indexOf("dev") == -1) {
     console.log(111);
