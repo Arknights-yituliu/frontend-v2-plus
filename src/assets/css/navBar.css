@@ -173,7 +173,8 @@
     margin-bottom: 10px;
 }
 
-.nav_phone {
+
+.drawer_nav {
     margin-top: 20px;
     margin-left: 10px;
     margin-right: 10px;
@@ -183,7 +184,7 @@
     font-weight: 600;
 }
 
-.nav_text_phone {
+.drawer_nav_text {
     font-size: 30px;
     width: 260px;
 }
