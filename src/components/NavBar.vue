@@ -37,7 +37,7 @@
           <div class="line"></div>
           <div v-for="(r, index) in routes" :key="index">
             <div :class="navSelected(index)" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
-              <div class="nav_text_phone">{{ r.text }}</div>
+              <div class="drawer_nav_text">{{ r.text }}</div>
               <div>
                 <el-icon class="child_icon_phone"><ArrowDownBold :class="iconClass(index)" /></el-icon>
               </div>
@@ -47,9 +47,9 @@
                 <div class="nav_child_phone">{{ c.text }}</div></a
               >
             </div>
-            <div class="nav" v-show="!r.isChild">
+            <div class="drawer_nav" v-show="!r.isChild">
               <a :href="r.path" class="nav_href">
-                <div class="nav_text_phone">{{ r.text }}</div></a
+                <div class="drawer_nav_text">{{ r.text }}</div></a
               >
             </div>
           </div>
@@ -112,17 +112,17 @@ function navChildOpen(index, childNum) {
   if (nav_collapseFlag.value[index]) {
     console.log(childNum * 34 + "px");
     console.log("nav" + index);
-    document.getElementById("nav_phone" + index).style.height = childNum * 60 + "px";
-    document.getElementById("nav_phone" + index).style.overflow = "";
+    document.getElementById("drawer_nav" + index).style.height = childNum * 60 + "px";
+    document.getElementById("drawer_nav" + index).style.overflow = "";
   } else {
-    document.getElementById("nav_phone" + index).style.height = "0px";
-    document.getElementById("nav_phone" + index).style.overflow = "hidden";
+    document.getElementById("drawer_nav" + index).style.height = "0px";
+    document.getElementById("drawer_nav" + index).style.overflow = "hidden";
   }
 }
 
 function navSelected(index) {
-  if (nav_collapseFlag.value[index]) return "aside_nav aside_nav_selected";
-  return "aside_nav";
+  if (nav_collapseFlag.value[index]) return "drawer_nav aside_nav_selected";
+  return "drawer_nav";
 }
 
 function iconClass(index) {
@@ -183,7 +183,19 @@ const routes = ref([
   {
     path: "/riicCal",
     text: "排班生成器",
-    isChild: false,
+    isChild: true,
+    child: [
+      {
+        path: "/riicCal/maa",
+        text: "攒抽规划",
+        isChild: false,
+      },
+      {
+        path: "/riicCal/mower",
+        text: "攒抽规划",
+        isChild: false,
+      },
+    ],
   },
   {
     path: "/pack",

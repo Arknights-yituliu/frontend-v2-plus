@@ -104,7 +104,19 @@ const routes = ref([
   {
     path: "/riicCal",
     text: "排班生成器",
-    isChild: false,
+    isChild: true,
+    child: [
+      {
+        path: "/riicCal/maa",
+        text: "攒抽规划",
+        isChild: false,
+      },
+      {
+        path: "/riicCal/mower",
+        text: "攒抽规划",
+        isChild: false,
+      },
+    ],
   },
   {
     path: "/pack",
@@ -124,7 +136,7 @@ onMounted(() => {
   var domain = window.location.host;
 
   if (domain.indexOf("dev") == -1) {
-    console.log(111)
+    console.log(111);
     routes.value.push(devRoute);
   }
 });
