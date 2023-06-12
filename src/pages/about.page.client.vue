@@ -1,7 +1,7 @@
 <template>
   <div class="div_page">
     <div class="dev_page_title_1">开发团队</div>
-    <div class="dev_page_content">明日方舟一图流网站能走到今天，源自于各位成员的热情贡献，以下是成员的个人信息</div>
+    <div class="dev_page_content">明日方舟一图流的主要开发者和贡献者</div>
 
     <div class="dev_page_title_2">主要开发</div>
 
@@ -111,9 +111,57 @@
           <div class="dev_work">后端</div>
         </div>
       </div>
-
-     
     </div>
+
+    <div class="dev_page_title_1">资料来源</div>
+    <div class="dev_page_content">包括材料掉率,图片资源等</div>
+    <div class="dev_wrap">
+      <div class="dev_card">
+        <div class="dev_image_wrap">
+          <a href="https://penguin-stats.cn"> <img class="dev_image_head" src="/image/website/penguin_stats_logo.png" /></a>
+        </div>
+        <div class="dev_content">
+          <div class="dev_name">企鹅物流数据统计</div>
+          <div class="dev_profile">通过玩家自行上传的素材掉率统计网站</div>
+          <div class="dev_work">素材掉率统计</div>
+        </div>
+      </div>
+      <div class="dev_card">
+        <div class="dev_image_wrap">
+          <a href="https://github.com/yuanyan3060/ArknightsGameResource">
+            <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/58114805?v=4"
+          /></a>
+        </div>
+        <div class="dev_content">
+          <div class="dev_name">Arknights-Bot-Resource</div>
+          <div class="dev_profile"><a href="https://github.com/yuanyan3060">yuanyan3060</a>的个人仓库</div>
+          <div class="dev_work">明日方舟BOT资源</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dev_page_title_1">B站发布</div>
+    <div class="dev_wrap">
+      <div class="dev_card">
+        <div class="dev_image_wrap">
+          <a href="https://space.bilibili.com/688411531"> <img class="dev_image_head" src="/image/website/beta_logo_yw.png" /></a>
+        </div>
+        <div class="dev_content">
+          <div class="dev_name">罗德岛基建BETA</div>
+          <div class="dev_profile">方舟DPS计算器 和 一图流 的官方信息发布号</div>
+          <div class="dev_work">一图流官方信息发布号</div>
+        </div>
+      </div>
+    </div>
+     
+    
+
+
+
+
+
+
+
   </div>
 </template>
 
