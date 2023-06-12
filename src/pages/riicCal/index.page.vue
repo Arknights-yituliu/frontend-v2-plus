@@ -4,7 +4,7 @@
       <picture class="riic-icon">
         <source srcset="/image/website/maa.webp" type="image/webp" />
         <source srcset="/image/website/maa.png" type="image/png" />
-        <img src="maa.png" />
+        <img src="/image/website/maa.png" />
       </picture>
       <div class="riic-info">
         <div class="riic-guide">
@@ -19,7 +19,7 @@
       <picture class="riic-icon">
         <source srcset="/image/website/mower.webp" type="image/webp" />
         <source srcset="/image/website/mower.png" type="image/png" />
-        <img src="mower.png" />
+        <img src="/public/image/website/mower.png" />
       </picture>
       <div class="riic-info">
         <div class="riic-guide">
