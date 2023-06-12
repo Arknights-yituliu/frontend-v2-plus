@@ -1,3 +1,21 @@
+
+#app{
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+.container {
+    display: flex;
+    flex: 1;
+    /* height: 100%; */
+    /* border: 1px solid rgb(0, 119, 255); */
+    overflow: hidden;
+    background: white;
+    height: 100%;
+}
+
+
 .header {
     height: 54px;
     line-height: 50px;
@@ -6,33 +24,23 @@
     background: #262f3e;
 }
 
-.container {
-    display: flex;
-    flex: 1;
-    /* border: 1px solid rgb(0, 119, 255); */
-    height: calc(100vh - 0px);
-    overflow: hidden;
-    background: white;
-    flex-basis: auto;
-
-}
-
 .is_vertical {
     flex-direction: column;
-   
 }
 
 .aside_hidden {
     width: 0px;
-    overflow: auto;
+
     transform: translateX(-500px);
 }
 
 .aside {
-    width: 280px;
+    min-width: 250px;
     transition: all 0.2s;
     transform: translateX(0) !important;
     background-color: #1e222d;
+    overflow: auto;
+    height: 100vh;
 }
 
 
@@ -40,7 +48,6 @@
     box-sizing: border-box;
     display: block;
     flex: 1;
-    flex-basis: auto;
     overflow: auto;
     /* background-color: #bb0000ce */
 }
