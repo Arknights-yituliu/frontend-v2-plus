@@ -124,11 +124,15 @@ const routes = ref([
     isChild: false,
   },
   {
-    path: "/developer",
-    text: "开发团队",
+    path: "/friendlyLinks",
+    text: "友情链接",
     isChild: false,
   },
-
+  {
+    path: "/about",
+    text: "关于我们",
+    isChild: false,
+  },
 ]);
 
 onMounted(() => {

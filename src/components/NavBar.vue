@@ -134,7 +134,7 @@ function iconClass(index) {
 }
 
 const devRoute = {
-  path: "~",
+  path: "/survey",
   text: "干员调查",
   isChild: true,
   child: [
@@ -159,7 +159,7 @@ const devRoute = {
 
 const routes = ref([
   {
-    path: "~",
+    path: "/",
     text: "材料一图流",
     isChild: true,
     child: [
@@ -184,7 +184,7 @@ const routes = ref([
     isChild: false,
   },
   {
-    path: "~",
+    path: "/riicCal",
     text: "排班生成器",
     isChild: true,
     child: [
@@ -206,8 +206,13 @@ const routes = ref([
     isChild: false,
   },
   {
-    path: "/developer",
-    text: "开发团队",
+    path: "/friendlyLinks",
+    text: "友情链接",
+    isChild: false,
+  },
+  {
+    path: "/about",
+    text: "关于我们",
     isChild: false,
   },
 ]);
@@ -228,16 +233,23 @@ function getNowPage(path) {
 
   for (let i of routes.value) {
     if (i.isChild) {
+      console.log(path,' ',i.path)
+      if (i.path.indexOf(path) > -1) {
+        nowPage.value = i.text;
+        break;
+      }
       for (let c of i.child) {
         console.log(path,' ',c.path)
         if (c.path.indexOf(path) > -1) {
           nowPage.value = c.text;
+          break;
         }
       }
     } else {
       console.log(path,' ',i.path)
       if (i.path.indexOf(path) > -1) {
         nowPage.value = i.text;
+        break;
       }
     }
   }

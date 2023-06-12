@@ -78,7 +78,7 @@
   border-radius: 4px;
   font-weight: 700;
   background: rgb(230, 230, 230);
-  color: orangered;
+  color: rgb(48, 86, 255);
 }
 
 .potential_wrap{
@@ -222,7 +222,6 @@
   width: 500px;
   margin: auto;
   margin-top: 10px;
-  text-align: center;
   /* border: 1px rgb(132, 120, 226) solid; */
 }
 
@@ -246,7 +245,6 @@
 .fill_course_tip_icon {
   width: 20px;
   height: 20px;
-  text-align: center;
   border-radius: 50%;
   border: 1px grey solid;
 }
@@ -261,9 +259,6 @@
 }
 
 .fill_course_tip {
-  width: 496px;
-  height: 44px;
-  line-height: 32px;
   padding: 2px;
   display: flex;
 }
@@ -273,7 +268,3 @@
   /* margin-top: -10px; */
 }
 
-.fill_course_tip_image {
-  margin: 4px;
-  margin-top: -10px;
-}
