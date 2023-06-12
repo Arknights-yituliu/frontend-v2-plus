@@ -4,7 +4,7 @@
     flex-direction: row;
     height: 54px;
     align-items: center;
-    background-color: rgb(52, 68, 104);
+    /* background-color: rgb(52, 68, 104); */
     z-index: 100;
     box-shadow: none;
     gap: 8px;
@@ -132,13 +132,8 @@
     overflow: auto;
 }
 
-.nav_open {
 
-    white-space: nowrap;
-    text-align: center;
 
-    transform: translateX(0) !important;
-}
 
 .menu-mask {
     background: rgba(0, 0, 0, 0.6);

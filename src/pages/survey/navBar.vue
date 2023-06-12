@@ -1,9 +1,9 @@
 <template>
 
-    <div class="btn_survey btn_survey_white" @click="loginVisible = !loginVisible" v-show="userData.uid < 0">登录</div>
+    <div class="" @click="loginVisible = !loginVisible" v-show="userData.uid < 0">登录</div>
 
 
-  <c-popup :visible="loginVisible" :width="'370px'" v-model:visible="loginVisible">
+  <c-popup :visible="loginVisible" :width="'400px'" v-model:visible="loginVisible">
     <div class="login_tips">
       <div class="login_tips_1">填写您的用户ID，登录后可上传和恢复数据</div>
       <div class="login_tips_2">如果您尚未注册过，请先点击「注册」按钮。</div>
@@ -16,6 +16,7 @@
       <div class="btn_survey" @click="login()">登录</div>
     </div>
   </c-popup>
+
 
   <div v-show="userData.uid > 0">
     <img class="icon_user" src="/image/icon/user.png" alt="" />

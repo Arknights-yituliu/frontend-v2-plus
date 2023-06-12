@@ -2,8 +2,8 @@
 
 .score_page {
     background: white;
-    height: 100%;
-    overflow: auto;
+    /* height: 100%; */
+    /* overflow: auto; */
     max-width: 1280px;
     margin: auto;
 }

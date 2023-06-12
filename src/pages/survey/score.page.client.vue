@@ -1,13 +1,12 @@
 <template>
-  
   <div class="score_page">
-    <div class="setup_wrap">
+    <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
         <div class="setup_title">设置</div>
-        <div class="btn_survey" @click="filterCollapse = !filterCollapse">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
+        <div class="btn_survey" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
         <div class="btn_survey" @click="uploadScoreForm()">上传数据</div>
       </div>
-      <div v-show="filterCollapse">
+      <div>
         <div class="setup_bar">
           <div class="setup_title">职业</div>
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
@@ -16,9 +15,7 @@
         </div>
         <div class="setup_bar">
           <div class="setup_title">稀有度</div>
-          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">
-            {{ rarity }} ★
-          </div>
+          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }} ★</div>
         </div>
         <div class="setup_bar">
           <div class="setup_title">年份</div>
@@ -91,8 +88,7 @@ import { onMounted, ref } from "vue";
 import { scoreListInit, professionDict, rarityDict, yearDict } from "./baseData";
 import surveyApi from "@/api/survey";
 import { globalUserData } from "./userService";
-import navBar from "@/pages/survey/navBar.vue";
-
+import "@/assets/css/survey_score.css";
 import { cMessage } from "@/element/message.js";
 
 function uploadScoreForm() {
@@ -113,13 +109,7 @@ function scoreSelected(rank, score) {
 }
 
 //判断按钮是否选择赋予样式
-function selectedBtn(attribute, rule, type) {
-  if ("rarity" == type) {
-    if (filterRules.value[attribute].indexOf(rule) > -1) {
-      return "/image/rank2/rarity_fill.png";
-    }
-    return "/image/rank2/rarity.png";
-  }
+function selectedBtn(attribute, rule) {
   if (filterRules.value[attribute].indexOf(rule) > -1) {
     return "set_btn selected_color";
   }
@@ -128,6 +118,15 @@ function selectedBtn(attribute, rule, type) {
 
 let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] });
 let filterCollapse = ref(false);
+
+function setBarCollapse() {
+  filterCollapse.value = !filterCollapse.value;
+  if (filterCollapse.value) {
+    document.getElementById("setbar").style.height = 36 * 5 + "px";
+  } else {
+    document.getElementById("setbar").style.height = 36 * 1 + "px";
+  }
+}
 
 //增加筛选规则
 function addFilterRule(attribute, rule) {

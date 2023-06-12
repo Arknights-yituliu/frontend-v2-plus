@@ -11,26 +11,25 @@
     </el-footer>
   </el-container> -->
 
-
   <div class="container">
     <div :class="asideClass">
       <myaside></myaside>
     </div>
     <div class="container is_vertical">
       <div class="header"><nav-bar /></div>
-      <div class="main"><slot></slot> <div class="footer"><myfooter></myfooter> </div></div>
-     
+      <div class="main">
+        <slot></slot>
+        <div class="footer"><myfooter></myfooter></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-
 //导航
 import "@/assets/css/main.css";
 import "@/assets/css/aside.css";
 import "@/assets/css/navBar.css";
-
 
 import "@/assets/css/basic.css";
 import "@/assets/css/stage_v2.css";
@@ -50,8 +49,6 @@ import NavBar from "@/components/NavBar.vue";
 import myfooter from "@/components/myfooter.vue";
 import myaside from "@/components/aside.vue";
 
-
-
 import { usePageContext } from "@/renderer/usePageContext";
 
 const pageContext = usePageContext();
@@ -63,8 +60,6 @@ provide("theme", theme);
 
 let asideVisible = ref(true);
 let asideClass = ref("aside");
-
-
 </script>
 
 <style scoped>
@@ -99,6 +94,4 @@ body {
   width: 100%;
   top: 0px;
 } */
-
-
 </style>

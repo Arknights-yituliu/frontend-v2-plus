@@ -1,15 +1,17 @@
 <template>
-  <div class="survey_character_page">
-    <div class="setup_wrap">
+  <div class="survey_character_page" id="indexDiv">
+    <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
         <div class="setup_title">设置</div>
         <div class="btn_survey"><characterDemo></characterDemo></div>
         <!-- <a href="/survey/list"> <div class="btn_survey">查看榜单</div></a> -->
-        <div class="btn_survey" @click="filterCollapse = !filterCollapse">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
+        <div class="btn_survey" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
+        <div class="btn_survey" @click="cardSimple=!cardSimple">{{ cardSimple ? "显示详细内容" : "仅显示头像" }}</div>
         <div class="btn_survey" @click="upload()">上传数据</div>
       </div>
 
-      <div v-show="filterCollapse">
+
+      <div>
         <div class="setup_bar">
           <div class="setup_title">职业</div>
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
@@ -43,7 +45,7 @@
         <div class="setup_bar">
           <div class="setup_title">批量操作</div>
           <div class="set_btn" @click="batchUpdates('own', true)">全部拥有</div>
-          <div class="set_btn" @click="batchUpdates('phase', 2)">全部精二</div>
+          <div class="set_btn" @click="batchUpdates('elite', 2)">全部精二</div>
           <div class="set_btn" @click="batchUpdates('skill2', 3)">二技能专三</div>
           <div class="set_btn" @click="batchUpdates('skill3', 3)">三技能专三</div>
           <div class="set_btn" @click="batchUpdates('modX', 3)">X模组三级</div>
@@ -53,43 +55,38 @@
     </div>
 
     <div class="char_forms">
-      <div  :class="characterOwnClass(char.own)" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
+      <div :class="characterOwnClass()" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
         <div class="card_option_left">
           <div class="card_option_top_left">
             <div>
               <div class="image_avatar">
                 <div @click="char.own = !char.own" :class="getSprite(char.charId)"></div>
               </div>
-              <div class="char_name">{{ char.name }}</div>
+              <div :class="char.own?'char_name':'char_name notown'">{{ char.name }}</div>
             </div>
-            <div class="potential_wrap">
-              <div class="image_potential" v-for="rank in ranks.slice(1, 7)" @click="char.potential = rank">
+            <div :class="potentialWrapClass(char.own)">
+              <div :class="potentialClass(rank, char.potential)" v-for="rank in ranks.slice(1, 7)" @click="updateDataSwitch(char_index, 'potential', rank)">
                 <div :class="getSprite('potential' + rank, 'potential')"></div>
               </div>
             </div>
           </div>
           <!--  -->
-          <div class="phase_wrap">
-            <div
-              v-for="rank in ranks.slice(0, 3)"
-              :class="phaseClass(char.phase, rank)"
-              @click="changeDataSwitch(char_index, 'phase', rank)"
-              v-if="'pc' == swithType"
-            >
-              <div :class="getSprite('phase' + rank, 'phase')"></div>
+          <div :class="eliteWrapClass(char.own)">
+            <div v-for="rank in ranks.slice(0, 3)" :class="eliteClass(char.elite, rank)" @click="updateDataSwitch(char_index, 'elite', rank)">
+              <div :class="getSprite('elite' + rank, 'elite')"></div>
             </div>
           </div>
         </div>
-        <div class="card_option_right">
+
+        <div :class="cardOptionRightClass(char.own)">
           <div v-for="(skill, skill_index) in char.skill" :key="skill_index" class="skill_wrap">
             <div class="image_skill">
               <div :class="getSprite(skill.iconId, 'icon')"></div>
             </div>
             <div
               v-for="rank in ranks.slice(1, 4)"
-              :class="switchSelected(char['skill' + (skill_index + 1)], rank)"
-              @click="changeDataSwitch(char_index, 'skill' + (skill_index + 1), rank)"
-              v-if="'pc' == swithType"
+              :class="skillAndModClass(char['skill' + (skill_index + 1)], rank)"
+              @click="updateDataSwitch(char_index, 'skill' + (skill_index + 1), rank)"
             >
               <div :class="getSprite('skill' + rank, 'skill')"></div>
             </div>
@@ -99,10 +96,9 @@
             <div class="image_mod">{{ "模组X" }}</div>
             <div
               v-for="rank in ranks.slice(1, 4)"
-              :class="switchSelected(char.modX, rank)"
-              @click="changeDataSwitch(char_index, 'modX', rank)"
+              :class="skillAndModClass(char.modX, rank)"
+              @click="updateDataSwitch(char_index, 'modX', rank)"
               v-show="char.modX > -1"
-              v-if="'pc' == swithType"
             >
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
@@ -110,13 +106,12 @@
 
           <div class="skill_wrap">
             <div class="image_mod">{{ "模组Y" }}</div>
-        
+
             <div
               v-for="rank in ranks.slice(1, 4)"
-              :class="switchSelected(char.modY, rank)"
-              @click="changeDataSwitch(char_index, 'modY', rank)"
+              :class="skillAndModClass(char.modY, rank)"
+              @click="updateDataSwitch(char_index, 'modY', rank)"
               v-show="char.modY > -1"
-              v-if="'pc' == swithType"
             >
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
@@ -134,8 +129,16 @@ import { characterListInit, professionDict, rarityDict, yearDict } from "./baseD
 import characterDemo from "@/pages/survey/characterDemo.vue";
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
-import navBar from "@/pages/survey/navBar.vue";
 import "@/assets/css/survey_character.css";
+
+function getSprite(id, type) {
+  if ("mod" == type) return "bg-" + id + " sprite_mod";
+  if ("skill" == type) return "bg-" + id + " sprite_skill";
+  if ("elite" == type) return "bg-" + id + " sprite_elite";
+  if ("potential" == type) return "bg-" + id + " sprite_potential";
+  if ("icon" == type) return "bg-skill_icon_" + id + " sprite_skill_icon";
+  return "bg-" + id + " sprite_avatar";
+}
 
 let characterList = ref(characterListInit());
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
@@ -148,7 +151,7 @@ function getSurveyCharacter() {
       // characterList.value[i].own =false;
       for (var j = 0; j < list.length; j++) {
         if (list[j].charId == characterList.value[i].charId) {
-          characterList.value[i].phase = list[j].phase;
+          characterList.value[i].elite = list[j].elite;
           characterList.value[i].level = list[j].level;
           characterList.value[i].potential = list[j].potential;
           characterList.value[i].skill1 = list[j].skill1;
@@ -162,47 +165,6 @@ function getSurveyCharacter() {
     }
     cMessage("导入了 " + list.length + " 条数据");
   });
-}
-
-function changeDataIncr(char_index, attrib) {
-  if ("phase" == attrib) {
-    characterList.value[char_index][attrib]++;
-    if (characterList.value[char_index][attrib] > 2) {
-      characterList.value[char_index][attrib] = 0;
-      return;
-    }
-    return;
-  }
-
-  characterList.value[char_index][attrib]++;
-  if (characterList.value[char_index][attrib] > 3) {
-    characterList.value[char_index][attrib] = 0;
-    return;
-  }
-  return;
-}
-
-function changeDataSwitch(char_index, attrib, rank) {
-  console.log(rank, characterList.value[char_index][attrib]);
-  if (rank == characterList.value[char_index][attrib]) {
-    return (characterList.value[char_index][attrib] = 0);
-  }
-  characterList.value[char_index][attrib] = rank;
-}
-
-function characterOwnClass(own){
-  if(own) return 'char_card'
-  return 'char_card char_card_notown'
-}
-
-function switchSelected(dataValue, switchValue) {
-  if (dataValue == switchValue) return "image_rank switch_select";
-  return "image_rank";
-}
-
-function phaseClass(dataValue, switchValue) {
-  if (dataValue == switchValue) return "image_phase switch_select";
-  return "image_phase";
 }
 
 //上传
@@ -222,27 +184,19 @@ function maaData1() {
   }
 }
 
-//打开选择框
-function dropDown(id) {
-  document.getElementById(id).style.display = "flex";
-}
-
-//关闭选择框
-function dropUp(id) {
-  document.getElementById(id).style.display = "none";
-}
-
-function getSprite(id, type) {
-  if ("mod" == type) return "bg-" + id + " sprite_mod";
-  if ("skill" == type) return "bg-" + id + " sprite_skill";
-  if ("phase" == type) return "bg-" + id + " sprite_phase";
-  if ("potential" == type) return "bg-" + id + " sprite_potential";
-  if ("icon" == type) return "bg-skill_icon_" + id + " sprite_skill_icon";
-  return "bg-" + id + " sprite_avatar";
-}
-
 let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] });
-let filterCollapse = ref(true);
+let filterCollapse = ref(false);
+
+function setBarCollapse(){
+  filterCollapse.value = !filterCollapse.value
+  if(filterCollapse.value){
+    document.getElementById("setbar").style.height = 36*7+'px'
+    
+  }else{
+    document.getElementById("setbar").style.height = 36*1+'px'
+  }
+}
+
 
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
@@ -314,6 +268,34 @@ function sortCharacterList(rule) {
   });
 }
 
+function updateDataIncr(char_index, attrib) {
+  if ("elite" == attrib) {
+    characterList.value[char_index][attrib]++;
+    if (characterList.value[char_index][attrib] > 2) {
+      characterList.value[char_index][attrib] = 0;
+      return;
+    }
+    return;
+  }
+
+  characterList.value[char_index][attrib]++;
+  if (characterList.value[char_index][attrib] > 3) {
+    characterList.value[char_index][attrib] = 0;
+    return;
+  }
+  return;
+}
+
+//点选填写内容
+function updateDataSwitch(char_index, attrib, rank) {
+  console.log(rank, characterList.value[char_index][attrib]);
+  if (rank == characterList.value[char_index][attrib]) {
+    return (characterList.value[char_index][attrib] = 0);
+  }
+  characterList.value[char_index][attrib] = rank;
+}
+
+//批量更新
 function batchUpdates(attribute, rank) {
   for (let i in characterList.value) {
     if (characterList.value[i].show) {
@@ -324,16 +306,45 @@ function batchUpdates(attribute, rank) {
   }
 }
 
-let swithType = ref("pc");
-let clientWidth = ref(1280);
-function getClientWidth() {
-  // const width = document.documentElement.clientWidth;
-  // clientWidth.value = width;
-  // if (width > 1200) swithType.value = "pc";
+let cardSimple = ref(false)
+
+
+function characterOwnClass() {
+  if (cardSimple.value) return "char_card char_card_simple";
+  return "char_card";
+}
+
+function skillAndModClass(dataValue, switchValue) {
+  if (dataValue == switchValue) return "image_rank switch_select";
+  return "image_rank";
+}
+
+function eliteClass(dataValue, switchValue) {
+  if (dataValue == switchValue) return "image_elite switch_select";
+  return "image_elite";
+}
+
+function potentialClass(dataValue, switchValue) {
+  if (dataValue == switchValue) return "image_potential switch_select";
+  return "image_potential";
+}
+
+function cardOptionRightClass(own) {
+  if (own) return "card_option_right";
+  return "card_option_right notown";
+}
+
+function eliteWrapClass(own) {
+  if (own) return "elite_wrap";
+  return "elite_wrap notown";
+}
+
+function potentialWrapClass(own) {
+  if (own) return "potential_wrap";
+  return "potential_wrap notown";
 }
 
 onMounted(() => {
-  getClientWidth();
   // getSurveyCharacter();
   addFilterRule("rarity", 6);
 });
