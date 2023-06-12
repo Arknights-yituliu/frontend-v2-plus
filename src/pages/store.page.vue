@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="indexDiv">
     <!-- 采购中心 -->
     <div id="store">
       <!-- 标题区域 -->

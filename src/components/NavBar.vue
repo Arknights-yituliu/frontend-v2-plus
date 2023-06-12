@@ -1,5 +1,5 @@
 <template>
-  <div class="header_wrap">
+  <div class="header_wrap" >
     <div class="menu-button" @click="menu_collapse(true)">
       <div></div>
       <div></div>
@@ -225,16 +225,17 @@ let nowPage = ref("");
 
 function getNowPage(path) {
   if(path=='/') return nowPage.value = '材料一图流'
+
   for (let i of routes.value) {
     if (i.isChild) {
       for (let c of i.child) {
-        console.log(c.path)
+        console.log(path,' ',c.path)
         if (c.path.indexOf(path) > -1) {
           nowPage.value = c.text;
         }
       }
     } else {
-      console.log(i.path)
+      console.log(path,' ',i.path)
       if (i.path.indexOf(path) > -1) {
         nowPage.value = i.text;
       }
@@ -245,11 +246,13 @@ function getNowPage(path) {
 onMounted(() => {
   var domain = window.location.host;
   var path = window.location.pathname;
-  getNowPage(path);
+  
 
   if (domain.indexOf("dev") == -1) {
     routes.value.push(devRoute);
   }
+
+  getNowPage(path);
 });
 </script>
 
