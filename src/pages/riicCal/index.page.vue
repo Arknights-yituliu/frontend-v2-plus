@@ -41,6 +41,7 @@
   align-items: center;
   align-content: center;
   flex-wrap: wrap;
+  height: 100%;
 }
 
 .riic-btn {

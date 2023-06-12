@@ -13,10 +13,13 @@
     height: calc(100vh - 0px);
     overflow: hidden;
     background: white;
+    flex-basis: auto;
+
 }
 
 .is_vertical {
     flex-direction: column;
+   
 }
 
 .aside_hidden {
@@ -34,8 +37,10 @@
 
 
 .main {
+    box-sizing: border-box;
     display: block;
     flex: 1;
+    flex-basis: auto;
     overflow: auto;
     /* background-color: #bb0000ce */
 }
@@ -53,6 +58,6 @@
     }
 
     .aside {
-       display: none;
+        display: none;
     }
 }
