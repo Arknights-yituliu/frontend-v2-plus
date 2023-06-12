@@ -34,7 +34,7 @@
 }
 
 .riic_workerSet {
-  /* width: 450px; */
+  max-width: 420px;
   border-radius: 8px;
   font-size: 18px;
   /* box-shadow: 0px 2px 6px rgb(160 160 160 / 69%); */
