@@ -3,6 +3,7 @@
   margin: auto;
   margin-top: 10px;
   font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
+ 
 }
 
 .char_forms {
@@ -12,23 +13,23 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  transition: all 0.4s;
+   transition: all 0.3s;
 }
 
 
 .char_card {
-  /* width: 600px; */
   display: flex;
   border-radius: 4px;
   margin: 4px;
   box-shadow: 0 0 1px 1px rgb(192, 192, 192);
   width: 570px;
-  /* height: 210px; */ 
+  height: 210px;
   transition: all 0.2s;
 }
 
 .char_card_simple{
-  max-width: 110px;
+  transition: all 0.2s;
+  width: 110px;
   height: 150px;
   overflow: hidden;
 }

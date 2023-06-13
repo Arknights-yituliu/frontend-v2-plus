@@ -1,27 +1,29 @@
 <template>
+  <div class="" @click="loginVisible = !loginVisible" v-show="userData.uid < 0">登录</div>
+  <c-popup :visible="loginVisible" v-model:visible="loginVisible" :width="'400px'">
+      <div class="login_card" v-show="userData.uid < 0">
+        <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
+        <div style="display: flex">
+          <div class="btn_login" @click="register()">注册</div>
+          <div class="btn_login" @click="login()">登录</div>
+        </div>
+        <div>
+          <p>新用户输入用户名即可分配ID，此用户 ID 仅于本网站使用， 用于在不同设备间同步您的数据，请妥善保管您的ID</p>
+          <p>老用户请输入 <b>用户名#ID</b> 登录</p>
+        </div>
+      </div>
 
-    <div class="" @click="loginVisible = !loginVisible" v-show="userData.uid < 0">登录</div>
+      <div class="login_card" v-show="userData.uid > 0">
+        <div class="logout_text">确定登出当前用户？</div>
+        <div class="logout_btn_wrap">
+          <div class="btn_login" @click="logout()">确定</div>
+          <div class="btn_login" @click="loginVisible = !loginVisible">取消</div>
+        </div>
+      </div>
+    </c-popup>
 
-
-  <c-popup :visible="loginVisible" :width="'400px'" v-model:visible="loginVisible">
-    <div class="login_tips">
-      <div class="login_tips_1">填写您的用户ID，登录后可上传和恢复数据</div>
-      <div class="login_tips_2">如果您尚未注册过，请先点击「注册」按钮。</div>
-    </div>
-    <div class="login_input_wrap">
-      <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
-    </div>
-    <div class="login_btn_wrap">
-      <div class="btn_survey" @click="register(inputData)">注册</div>
-      <div class="btn_survey" @click="login()">登录</div>
-    </div>
-  </c-popup>
-
-
-  <div v-show="userData.uid > 0">
-    <img class="icon_user" src="/image/icon/user.png" alt="" />
-    <div class="user_name">{{ userData.userName }}</div>
-    <div class="btn_survey" @click="logout()">登出</div>
+  <div v-show="userData.uid > 0" >
+    <div class="user_name" @click="loginVisible = !loginVisible">{{ userData.userName }}</div>
   </div>
 </template>
 
@@ -35,7 +37,6 @@ import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_index.css";
 // import "@/assets/css/survey_score.css";
 
-
 import { onMounted, ref } from "vue";
 import { registerEvent, loginEvent, userDataCacheClearEvent, userDataCacheEvent } from "./userService";
 
@@ -48,17 +49,26 @@ let loginVisible = ref(false);
 async function register() {
   let response = await registerEvent(inputData.value);
   userData.value = response;
+  setTimeout(() => {
+    loginVisible.value = !loginVisible;
+  }, 400);
 }
 
 //登录
 async function login() {
   let response = await loginEvent(inputData.value);
   userData.value = response;
+  setTimeout(() => {
+    loginVisible.value = !loginVisible;
+  }, 400);
 }
 
 //登出
 function logout() {
   userData.value = userDataCacheClearEvent();
+  setTimeout(() => {
+    loginVisible.value = !loginVisible;
+  }, 400);
 }
 
 onMounted(() => {
@@ -66,9 +76,8 @@ onMounted(() => {
 });
 </script>
 
-
 <style scoped>
-.btn_survey_white{
+.btn_survey_white {
   color: white;
 }
 </style>

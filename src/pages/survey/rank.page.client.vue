@@ -13,7 +13,11 @@
       </div>
     </div>
 
-    <div class="setup_wrap">
+    <div class="setup_wrap" id="setbar">
+      <div class="setup_bar">
+        <div class="setup_title">设置</div>
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>       
+      </div>
       <div class="setup_bar">
         <div class="setup_title">稀有度</div>
         <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }}★</div>
@@ -25,8 +29,8 @@
         </div>
       <div class="setup_bar">
           <div class="setup_title">排序</div>
-          <div class="set_btn" @click="sortCharacterList('rarity')">稀有度顺序</div>
-          <div class="set_btn" @click="sortCharacterList('date')">实装顺序</div>
+          <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
+          <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
         </div>
     </div>
 
@@ -41,7 +45,7 @@
           <div class="survey_result_content">{{ getPercentage(result.own, 1) }}</div>
         </div>
         <div class="survey_result">
-          <div class="survey_result_titit"><div :class="getSprite('elite2', 'elite')"></div></div>
+          <div class="survey_result_titit"><div class="rank_image_elite_wrap"><div :class="getSprite('elite2', 'elite')"></div></div> </div>
           <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.elite, "rank" + 2), 1) }}</div>
         </div>
         <div class="survey_result">
@@ -76,11 +80,10 @@ import "@/assets/css/sprite_char_4.css";
 import "@/assets/css/sprite_skill.css";
 import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_rank.css";
-import "@/assets/css/survey_character.css";
+// import "@/assets/css/survey_character.css";
 import "@/assets/css/survey_common.css";
 import { rankingListinit, rarityDict } from "./baseData";
 import { onMounted, ref, watch } from "vue";
-import { ElMessage } from "element-plus";
 
 import surveyApi from "@/api/survey";
 
@@ -139,14 +142,31 @@ function getSpriteIcon(skill, index) {
 }
 
 let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] });
-let filterCollapse = ref(true);
+
+
+let filterCollapse = ref(false);
+
+function setBarCollapse(){
+  filterCollapse.value = !filterCollapse.value
+  if(filterCollapse.value){
+    let elements =  document.getElementsByClassName('setup_bar')
+    let height = 5
+    for(let e of elements){
+      height+=e.offsetHeight+10
+    }
+    document.getElementById("setbar").style.height=height+'px'
+    
+  }else{
+    document.getElementById("setbar").style.height = 36*1+'px'
+  }
+}
 
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filterRules.value[attribute].indexOf(rule) > -1) {
-    return "set_btn selected_color";
+    return "switch_set selected_color";
   }
-  return "set_btn";
+  return "switch_set";
 }
 
 //增加筛选规则
@@ -210,4 +230,11 @@ function sortCharacterList(rule) {
     return b[rule] - a[rule];
   });
 }
+
+
+function btnSetClass(flag) {
+  if (flag) return "btn_set btn_set_select";
+  return "btn_set";
+}
+
 </script>

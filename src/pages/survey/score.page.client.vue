@@ -3,8 +3,8 @@
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
         <div class="setup_title">设置</div>
-        <div class="btn_survey" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
-        <div class="btn_survey" @click="uploadScoreForm()">上传数据</div>
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
+        <div class="btn_set" @click="uploadScoreForm()">上传数据</div>
       </div>
       <div>
         <div class="setup_bar">
@@ -26,8 +26,8 @@
 
         <div class="setup_bar">
           <div class="setup_title">排序</div>
-          <div class="set_btn" @click="sortCharacterList('rarity')">稀有度顺序</div>
-          <div class="set_btn" @click="sortCharacterList('date')">实装顺序</div>
+          <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
+          <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
         </div>
       </div>
     </div>
@@ -111,9 +111,9 @@ function scoreSelected(rank, score) {
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filterRules.value[attribute].indexOf(rule) > -1) {
-    return "set_btn selected_color";
+    return "switch_set selected_color";
   }
-  return "set_btn";
+  return "switch_set";
 }
 
 let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] });
@@ -122,7 +122,12 @@ let filterCollapse = ref(false);
 function setBarCollapse() {
   filterCollapse.value = !filterCollapse.value;
   if (filterCollapse.value) {
-    document.getElementById("setbar").style.height = 36 * 5 + "px";
+    let elements =  document.getElementsByClassName('setup_bar')
+    let height = 5
+    for(let e of elements){
+      height+=e.offsetHeight+10
+    }
+    document.getElementById("setbar").style.height=height+'px'
   } else {
     document.getElementById("setbar").style.height = 36 * 1 + "px";
   }
@@ -191,6 +196,12 @@ function sortCharacterList(rule) {
 function getSprite(id, type) {
   return "bg-" + id + " score_avatar";
 }
+
+function btnSetClass(flag) {
+  if (flag) return "btn_set btn_set_select";
+  return "btn_set";
+}
+
 
 onMounted(() => {
   addFilterRule("rarity", 6);

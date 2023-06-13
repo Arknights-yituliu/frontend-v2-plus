@@ -102,17 +102,27 @@
   /* border: 1px rgb(30, 255, 0) solid; */
 }
 
+.rank_image_elite_wrap{
+  height: 50px;
+  width: 50px;
+}
+
 .rank_sprite_elite {
   transform: scale(0.2);
   position: relative;
-  top: -92px;
-  left: -82px;
+  top: -80px;
+  left: -90px;
+}
+
+.rank_image_skill_wrap{
+  height: 50px;
+  width: 50px;
 }
 
 .rank_sprite_skill {
   transform: scale(0.39);
   position: relative;
-  top: -38px;
-  left: -30px;
+  top: -36px;
+  left: -32px;
   /* border: 1px red solid; */
 }
