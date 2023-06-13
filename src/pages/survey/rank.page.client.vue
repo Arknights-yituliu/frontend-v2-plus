@@ -41,8 +41,8 @@
           <div class="survey_result_content">{{ getPercentage(result.own, 1) }}</div>
         </div>
         <div class="survey_result">
-          <div class="survey_result_titit"><div :class="getSprite('phase2', 'phase')"></div></div>
-          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.phase, "rank" + 2), 1) }}</div>
+          <div class="survey_result_titit"><div :class="getSprite('elite2', 'elite')"></div></div>
+          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.elite, "rank" + 2), 1) }}</div>
         </div>
         <div class="survey_result">
           <div class="survey_result_titit"><div :class="getSpriteIcon(result.skill, 0)"></div></div>
@@ -96,7 +96,7 @@ function getCharStatisticsResult() {
       for (let j in response.data.result) {
         if (rankingList.value[i].charId == response.data.result[j].charId) {
           rankingList.value[i].own = response.data.result[j].own;
-          rankingList.value[i].phase = response.data.result[j].phase;
+          rankingList.value[i].elite = response.data.result[j].elite;
           rankingList.value[i].skill1 = response.data.result[j].skill1;
           rankingList.value[i].skill2 = response.data.result[j].skill2;
           rankingList.value[i].skill3 = response.data.result[j].skill3;
@@ -117,7 +117,7 @@ onMounted(() => {
 });
 
 function getSprite(id, type) {
-  if ("phase" == type) return "bg-" + id + " rank_sprite_phase";
+  if ("elite" == type) return "bg-" + id + " rank_sprite_elite";
   return "bg-" + id + " rank_avatar";
 }
 

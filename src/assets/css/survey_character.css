@@ -3,7 +3,6 @@
   margin: auto;
   margin-top: 10px;
   font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
-  height: 100%;
 }
 
 .char_forms {
@@ -23,7 +22,7 @@
   border-radius: 4px;
   margin: 4px;
   box-shadow: 0 0 1px 1px rgb(192, 192, 192);
-  max-width: 570px;
+  width: 570px;
   /* height: 210px; */ 
   transition: all 0.2s;
 }

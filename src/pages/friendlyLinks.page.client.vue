@@ -51,7 +51,7 @@
         <div class="dev_content">
           <div class="dev_name">泰拉通讯枢纽</div>
 
-          <div class="dev_work">交流社区，由明日方舟玩家创建的干净、纯粹的论坛。</div>
+          <div class="dev_work">由明日方舟玩家创建的干净、纯粹的论坛。</div>
         </div>
       </div>
     </div>
@@ -122,7 +122,7 @@ import { ref } from "vue";
 
 .dev_name {
   /* text-align: center; */
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
 }
 
