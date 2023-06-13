@@ -1,5 +1,5 @@
 <template>
-  <div class="survey_character_page" id="indexDiv">
+  <div class="survey_character_page" >
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
         <div class="setup_title">设置</div>
