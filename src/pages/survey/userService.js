@@ -1,9 +1,9 @@
 import surveyApi from "@/api/survey";
 import jsCookie from "js-cookie";
 import { ref } from "vue";
+import { cMessage } from "@/element/message";
 
-let globalUserData = ref({ userName: "未登录",  uid: -1 }); //用户信息(用户名，用户id，用户状态)
-
+let globalUserData = ref({ userName: "未登录", uid: -1 }); //用户信息(用户名，用户id，用户状态)
 
 //注册
 async function registerEvent(loginData) {
@@ -12,6 +12,7 @@ async function registerEvent(loginData) {
     globalUserData.value = response.data;
     jsCookie.set("globalUserData", JSON.stringify(globalUserData.value), { expires: 30 });
     // console.log("api返回数据：", globalUserData);
+    cMessage("注册成功");
   });
   return globalUserData.value;
 }
@@ -29,7 +30,7 @@ async function loginEvent(loginData) {
 function userDataCacheEvent() {
   // let cacheData = window.localStorage.getItem("globalUserData");
   let cacheData = jsCookie.get("globalUserData");
-  globalUserData.value = (cacheData == "undefined" || cacheData == undefined) ? globalUserData.value : JSON.parse(cacheData);
+  globalUserData.value = cacheData == "undefined" || cacheData == undefined ? globalUserData.value : JSON.parse(cacheData);
   return globalUserData.value;
 }
 
@@ -39,6 +40,4 @@ function userDataCacheClearEvent() {
   return (globalUserData.value = { userName: "未登录", uid: -1 });
 }
 
-
-
-export { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent,  globalUserData };
+export { registerEvent, loginEvent, userDataCacheEvent, userDataCacheClearEvent, globalUserData };

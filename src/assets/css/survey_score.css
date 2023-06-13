@@ -6,6 +6,8 @@
     /* overflow: auto; */
     max-width: 1280px;
     margin: auto;
+    font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
+
 }
 
 .image_score {

@@ -4,7 +4,6 @@
 }
 
 .btn_survey {
-    margin: 6px;
     min-width: 80px;
     height: 20px;
     padding: 3px;
@@ -29,7 +28,7 @@
 .setup_wrap {
     max-width: 95%;
     margin: auto;
-    background: #f0f8ff;
+    background: #F7F9FA;
     border-radius: 6px;
     transition: all 0.4s;
     overflow: hidden;
@@ -43,11 +42,31 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     /* border-bottom: 1px rgb(180, 180, 180) solid; */
-    margin:auto;
-    height: 36px;
+    margin: auto;
+    min-height: 36px;
+    margin-bottom: 10px;
 }
 
-.set_btn{
+.btn_set {
+    margin: 6px;
+    width: 90px;
+    height: 20px;
+    padding: 3px;
+    line-height: 20px;
+    text-align: center;
+    /* background: rgb(79, 143, 255); */
+    font-weight: 600;
+    box-shadow: 0 0 1px 1px rgb(200, 200, 200);
+    cursor: pointer;
+}
+
+.btn_set_select {
+    background: #5096ff;
+    color: white;
+}
+
+
+.switch_set {
     margin: 6px;
     width: 90px;
     height: 20px;
@@ -67,4 +86,3 @@
     text-align: center;
     font-weight: 600;
 }
-

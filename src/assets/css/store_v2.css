@@ -99,7 +99,7 @@
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-content: flex-start;
-  max-width: 900px;
+  /* max-width: 900px; */
 }
 
 .act_card {
@@ -110,7 +110,7 @@
   -webkit-transition: 0.3s;
   transition: 0.3s;
   margin: 3px;
-  width: 169px;
+  width: 180px;
   height: 100px;
 }
 .act_card_img {

@@ -3,11 +3,10 @@
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
         <div class="setup_title">设置</div>
-        <div class="btn_survey"><characterDemo></characterDemo></div>
-        <!-- <a href="/survey/list"> <div class="btn_survey">查看榜单</div></a> -->
-        <div class="btn_survey" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
-        <div class="btn_survey" @click="cardSimple=!cardSimple">{{ cardSimple ? "显示详细内容" : "仅显示头像" }}</div>
-        <div class="btn_survey" @click="upload()">上传数据</div>
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
+        <div :class="btnSetClass(cardSimple)" @click="cardSimple=!cardSimple">仅显示头像</div>
+        <div class="btn_set" @click="upload()">上传数据</div>
+        <div class="btn_set"><characterDemo></characterDemo></div>
       </div>
 
 
@@ -38,18 +37,18 @@
 
         <div class="setup_bar">
           <div class="setup_title">排序</div>
-          <div class="set_btn" @click="sortCharacterList('rarity')">稀有度顺序</div>
-          <div class="set_btn" @click="sortCharacterList('date')">实装顺序</div>
+          <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
+          <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
         </div>
 
         <div class="setup_bar">
           <div class="setup_title">批量操作</div>
-          <div class="set_btn" @click="batchUpdates('own', true)">全部拥有</div>
-          <div class="set_btn" @click="batchUpdates('elite', 2)">全部精二</div>
-          <div class="set_btn" @click="batchUpdates('skill2', 3)">二技能专三</div>
-          <div class="set_btn" @click="batchUpdates('skill3', 3)">三技能专三</div>
-          <div class="set_btn" @click="batchUpdates('modX', 3)">X模组三级</div>
-          <div class="set_btn" @click="batchUpdates('modY', 3)">Y模组三级</div>
+          <div class="switch_set" @click="batchUpdates('own', true)">全部拥有</div>
+          <div class="switch_set" @click="batchUpdates('elite', 2)">全部精二</div>
+          <div class="switch_set" @click="batchUpdates('skill2', 3)">二技能专三</div>
+          <div class="switch_set" @click="batchUpdates('skill3', 3)">三技能专三</div>
+          <div class="switch_set" @click="batchUpdates('modX', 3)">X模组三级</div>
+          <div class="switch_set" @click="batchUpdates('modY', 3)">Y模组三级</div>
         </div>
       </div>
     </div>
@@ -190,7 +189,12 @@ let filterCollapse = ref(false);
 function setBarCollapse(){
   filterCollapse.value = !filterCollapse.value
   if(filterCollapse.value){
-    document.getElementById("setbar").style.height = 36*7+'px'
+    let elements =  document.getElementsByClassName('setup_bar')
+    let height = 5
+    for(let e of elements){
+      height+=e.offsetHeight+10
+    }
+    document.getElementById("setbar").style.height=height+'px'
     
   }else{
     document.getElementById("setbar").style.height = 36*1+'px'
@@ -201,9 +205,9 @@ function setBarCollapse(){
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filterRules.value[attribute].indexOf(rule) > -1) {
-    return "set_btn selected_color";
+    return "switch_set selected_color";
   }
-  return "set_btn";
+  return "switch_set";
 }
 
 //增加筛选规则
@@ -307,6 +311,11 @@ function batchUpdates(attribute, rank) {
 }
 
 let cardSimple = ref(false)
+
+function btnSetClass(flag) {
+  if (flag) return "btn_set btn_set_select";
+  return "btn_set";
+}
 
 
 function characterOwnClass() {

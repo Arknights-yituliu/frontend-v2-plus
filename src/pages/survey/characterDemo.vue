@@ -1,7 +1,6 @@
 <template>
   <div class="fill_course_tip_btn" @click="popupVisible()">
-    <div >填写流程说明</div>
-    <div  class="fill_course_tip_icon">?</div>
+    <div >填写流程</div>
   </div>
   <c-popup :visible="firstpopup" v-model:visible="firstpopup" @click="isFirstPopupCache()" :width="'600px'">
     <div class="fill_course_title">填写流程说明</div>
