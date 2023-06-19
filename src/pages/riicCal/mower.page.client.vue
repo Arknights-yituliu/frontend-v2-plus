@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, nextTick, watch, onMounted, onBeforeMount, inject } from "vue";
 import { zhCN, dateZhCN, darkTheme } from "naive-ui";
+import operators_json from "@/static/json/operators.json"
 
 const ling_xi = ref("1");
 const max_resting_count = ref([]);
@@ -59,9 +60,8 @@ async function load_plan() {
 }
 
 async function load_operators() {
-  const response = await axios.get("http://localhost:5000/operator");
   const option_list = [];
-  for (const i of response.data) {
+  for (const i of operators_json) {
     option_list.push({
       value: i,
       label: i,
