@@ -1,5 +1,5 @@
 <template>
-  <div class="" @click="loginVisible = !loginVisible" v-show="userData.uid < 0">登录</div>
+  <div class="survey_top_right_btn" @click="loginVisible = !loginVisible" v-show="userData.uid < 0">登录</div>
   <c-popup :visible="loginVisible" v-model:visible="loginVisible" :width="'400px'">
       <div class="login_card" v-show="userData.uid < 0">
         <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
@@ -7,9 +7,9 @@
           <div class="btn_login" @click="register()">注册</div>
           <div class="btn_login" @click="login()">登录</div>
         </div>
-        <div>
-          <p>新用户输入用户名即可分配ID，此用户 ID 仅于本网站使用， 用于在不同设备间同步您的数据，请妥善保管您的ID</p>
-          <p>老用户请输入 <b>用户名#ID</b> 登录</p>
+        <div class="login_tip">
+          <a>新用户输入用户名即可分配ID，此用户 ID 仅于本网站使用， 用于在不同设备间同步您的数据，请妥善保管您的ID</a>
+          <br><a>老用户请输入 <b>用户名#ID</b> 登录</a>
         </div>
       </div>
 
@@ -78,6 +78,19 @@ onMounted(() => {
 
 <style scoped>
 .btn_survey_white {
+  
+}
+
+.survey_top_right_btn{
+  min-width: 60px;
   color: white;
+  text-align: center;
+  margin-right: 20px;
+  font-size: 20px;
+}
+
+.login_tip{
+  margin-top: 20px;
+  line-height: 36px;
 }
 </style>

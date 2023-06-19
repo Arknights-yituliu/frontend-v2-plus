@@ -12,7 +12,7 @@
   </el-container> -->
 
   <div class="container">
-    <div :class="asideClass">
+    <div class="aside" id="aside114">
       <myaside></myaside>
     </div>
     <div class="container is_vertical">
@@ -58,8 +58,7 @@ import { provide, ref } from "vue";
 const theme = ref(pageContext.theme == "dark");
 provide("theme", theme);
 
-let asideVisible = ref(true);
-let asideClass = ref("aside");
+
 </script>
 
 <style scoped>

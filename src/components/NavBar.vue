@@ -5,6 +5,11 @@
       <div></div>
       <div></div>
     </div>
+    <div class="aside-btn" @click="aside_collapse()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
     <div class="nowPage">
       {{ nowPage }}
     </div>
@@ -90,6 +95,22 @@ function menu_collapse(flag) {
     // document.getElementById("drawer114514").className = "nav_collapse";
   }
   // console.log(menu_flag.value);
+}
+
+let aside_flag = ref(true);
+
+function aside_collapse() {
+  aside_flag.value = !aside_flag.value;
+  if (aside_flag.value) {
+    setTimeout(function () {
+      document.getElementById("aside114").style.transform = "translateX(0)";
+      document.getElementById("aside114").style.width = "250px";
+    }, 30);
+  } else {
+    document.getElementById("aside114").style.transform = "translateX(-400px)";
+    document.getElementById("aside114").style.width = "0px";
+  }
+  // console.log(aside_flag.value);
 }
 
 watch(theme, () => {

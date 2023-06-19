@@ -1,5 +1,5 @@
 <template>
-  <div class="aside_table">
+  <div class="aside_table" >
     <div class="aside_title">明日方舟一图流</div>
 
     <div v-for="(r, index) in routes" :key="index">
