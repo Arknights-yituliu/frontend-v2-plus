@@ -17,7 +17,7 @@
 
 .selected_color {
     /* background: rgb(97, 173, 255); */
-    color: #3888FF;
+    color: #cf31ff;
 }
 
 .selected_background {
@@ -32,7 +32,10 @@
     border-radius: 6px;
     transition: all 0.4s;
     overflow: hidden;
-    height: 36px;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 0px;
 }
 
 .setup_bar {
@@ -44,20 +47,23 @@
     /* border-bottom: 1px rgb(180, 180, 180) solid; */
     margin: auto;
     min-height: 36px;
-    margin-bottom: 10px;
+    margin-bottom: 10px; 
 }
 
 .btn_set {
-    margin: 6px;
-    width: 90px;
-    height: 20px;
-    padding: 3px;
-    line-height: 20px;
+    margin: 6px 2px;
+    width: 96px;
+    height: 48px;
+    padding: 0px;
+    line-height: 48px;
     text-align: center;
     /* background: rgb(79, 143, 255); */
     font-weight: 600;
-    box-shadow: 0 0 1px 1px rgb(200, 200, 200);
+    /* box-shadow: 0 0 1px 1px #f0f0f0; */
+    background-color: #e8e8ff;
     cursor: pointer;
+    border-radius: 4px;
+    vertical-align: middle;
 }
 
 .btn_set_select {
@@ -85,4 +91,15 @@
     line-height: 20px;
     text-align: center;
     font-weight: 600;
+    background: rgb(230, 230, 230);
+}
+
+.card{
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 0px;
+}
+
+.tool_card{
+    margin: 8px;
 }
