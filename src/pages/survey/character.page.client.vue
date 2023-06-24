@@ -1,16 +1,19 @@
 <template>
   <div class="survey_character_page" >
+    <!-- 设置区域 -->
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
-        <div class="setup_title">设置</div>
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
+        <!-- <div class="setup_title">设置</div> -->
+        <div class="btn_set" ><characterDemo></characterDemo></div>
+        <div class="btn_set" @click="upload()">导入/导出</div>
+        <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选</div>
         <div :class="btnSetClass(cardSimple)" @click="cardSimple=!cardSimple">仅显示头像</div>
-        <div class="btn_set" @click="upload()">上传数据</div>
-        <div class="btn_set"><characterDemo></characterDemo></div>
+        <div class="btn_set">统计</div>
       </div>
 
 
-      <div>
+      <div id="survey_filter">
         <div class="setup_bar">
           <div class="setup_title">职业</div>
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
@@ -53,8 +56,11 @@
       </div>
     </div>
 
+
+    <!-- 干员组 -->
     <div class="char_forms">
       <div :class="characterOwnClass()" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
+        <!-- 左半部分 -->
         <div class="card_option_left">
           <div class="card_option_top_left">
             <div>
@@ -74,9 +80,11 @@
             <div v-for="rank in ranks.slice(0, 3)" :class="eliteClass(char.elite, rank)" @click="updateDataSwitch(char_index, 'elite', rank)">
               <div :class="getSprite('elite' + rank, 'elite')"></div>
             </div>
+            <div class="image_elite">Lv.Max</div>
           </div>
         </div>
 
+        <!-- 右半部分 -->
         <div :class="cardOptionRightClass(char.own)">
           <div v-for="(skill, skill_index) in char.skill" :key="skill_index" class="skill_wrap">
             <div class="image_skill">
@@ -118,6 +126,9 @@
         </div>
       </div>
     </div>
+
+    <!-- 数据声明 -->
+    <div class="char_card">此处安放版权声明/开发信息</div>
   </div>
 </template>
 
