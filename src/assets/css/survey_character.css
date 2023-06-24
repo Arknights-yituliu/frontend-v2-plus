@@ -1,14 +1,14 @@
 .survey_character_page {
   max-width: 1280px;
   margin: auto;
-  margin-top: 10px;
+  padding-top: 8px;
   font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
- 
+ background-color: #a5a5a540;
 }
 
 .char_forms {
   margin: auto;
-  margin-top: 14px;
+  margin-top: 8px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -19,19 +19,21 @@
 
 .char_card {
   display: flex;
-  border-radius: 4px;
-  margin: 4px;
-  box-shadow: 0 0 1px 1px rgb(192, 192, 192);
+  border-radius: 0px;
+  margin: 1px;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
   width: 570px;
-  height: 210px;
+  height: 222px;
   transition: all 0.2s;
+  background-color: rgba(255, 255, 255, 1);
 }
 
 .char_card_simple{
   transition: all 0.2s;
-  width: 110px;
+  width: 124px;
   height: 150px;
   overflow: hidden;
+  margin: 0px;
 }
 
 .notown{
@@ -51,7 +53,7 @@
 }
 
 .card_option_left {
-  margin:5px ;
+  margin:12px ;
 }
 
 
@@ -62,21 +64,22 @@
 .image_avatar {
   height: 100px;
   width: 100px;
-  border-radius: 14px;
+  border-radius: 0px;
   overflow: hidden;
   margin-right: 10px;
-  border: 1px solid #a5a5a5;
+  border-bottom: 4px solid #a5a5a5;
+  background-color: rgba(0, 0, 0, 0.2);
   filter:grayscale(0%)
 }
 
 .char_name {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 0px;
   /* margin-left:10px; */
   width: 100px;
   height: 26px;
   line-height: 26px;
-  border-radius: 4px;
+  border-radius: 0px;
   font-weight: 700;
   background: rgb(230, 230, 230);
   color: rgb(48, 86, 255);
@@ -85,9 +88,9 @@
 .potential_wrap{
   display: flex;
   flex-wrap: wrap;
-  width: 155px;
+  width: 156px;
   height: 100px;
-  margin-top: 20px;
+  margin-top: 12px;
 
 }
 
@@ -96,8 +99,8 @@
 .image_potential{
   width: 40px;
   height: 40px;
-  margin: 5px;
-
+  margin: 6px;
+  background: rgba(127, 127, 127, 0.1);
   /* border: 1px solid red; */
 }
 
@@ -108,16 +111,19 @@
 
 
 .image_elite{
-  height: 50px;
-  width: 72px;
+  height: 40px;
+  width: 40px;
   /* border: 1px solid red; */
   /* margin-left: 6px; */
-  margin-right: 10px;
-  border-radius: 6px;
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-top: 12px;
+  border-radius: 0px;
+  background: rgba(127, 127, 127, 0.1);
 }
 
 .card_option_right{
-  margin-top: 5px;
+  margin: 12px;
   display: flex;
 }
 
@@ -126,14 +132,16 @@
 }
 
 .image_skill{
-  width: 44px;
-  height: 44px;
-  border: 1px red solid;
+  width: 42px;
+  height: 42px;
+  border: 1px grey solid;
 }
 
 
 .switch_select{
-  background: rgba(0, 102, 255, 0.2);
+  background: rgba(0, 102, 255, 0.25);
+  /* border: 1px solid #3131ff80; */
+  /* padding: 0px; */
 }
 
 .image_mod{
@@ -148,13 +156,14 @@
   margin: auto;
   margin-top: 6px;
   margin-bottom: 4px;
-  width: 44px;
+  width: 40px;
   height: 40px;
   line-height: 24px;
   padding: 2px;
   font-size: 14px;
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: 0px;
+  background: rgba(127, 127, 127, 0.1);
   cursor: pointer;
 }
 
@@ -174,36 +183,36 @@
 .sprite_skill {
   transform: scale(0.18);
   position: relative;
-  top: -94px;
-  left: -96px;
+  top: -96px;
+  left: -98px;
 }
 
 .sprite_skill_icon {
-  transform: scale(0.35);
+  transform: scale(0.30);
   position: relative;
-  top: -42px;
-  left: -42px;
+  top: -43px;
+  left: -43px;
   
 }
 
 .sprite_elite {
-  transform: scale(0.30,0.26);
+  transform: scale(0.23,0.2);
   position: relative;
-  top: -80px;
-  left: -92px;
+  top: -86px;
+  left: -108px;
 }
 
 .sprite_mod {
   transform: scale(0.16);
   position: relative;
   top: -98px;
-  left: -97px;
+  left: -98px;
 }
 
 .sprite_avatar {
   transform: scale(0.56);
   /* border: 1px solid red; */
-  border-radius: 14px;
+  border-radius: 0px;
   position: relative;
   top: -40px;
   left: -40px;
