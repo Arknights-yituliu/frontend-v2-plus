@@ -32,6 +32,7 @@ function characterListInit() {
       skill3: 0,
       skill: baseInfo.skill,
       date: baseInfo.date,
+      itemObtainApproach:baseInfo.itemObtainApproach,
       profession: baseInfo.profession,
       mod: baseInfo.mod !== undefined,
       show: true,

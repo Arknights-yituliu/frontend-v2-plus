@@ -1,17 +1,18 @@
 <template>
-  <div class="survey_character_page" >
+  <div class="survey_character_page">
     <!-- 设置区域 -->
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
         <!-- <div class="setup_title">设置</div> -->
-        <div class="btn_set" ><characterDemo></characterDemo></div>
-        <div class="btn_set" @click="upload()">导入/导出</div>
+        <div class="btn_set"><characterDemo></characterDemo></div>
+        <div class="btn_set" @click="upload()">上传数据</div>
         <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
+        <div class="btn_set" v-show="!exportExcelBtnVisible" @click="exportExcel()">转为Excel</div> 
+        <a :href=exportExcelUrl v-show="exportExcelBtnVisible"><div class="btn_set" >导出Excel</div></a> 
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选</div>
-        <div :class="btnSetClass(cardSimple)" @click="cardSimple=!cardSimple">仅显示头像</div>
-        <div class="btn_set">统计</div>
+        <div :class="btnSetClass(cardSimple)" @click="cardSimple = !cardSimple">仅显示头像</div>
+        <!-- <div class="btn_set">统计</div> -->
       </div>
-
 
       <div id="survey_filter">
         <div class="setup_bar">
@@ -36,6 +37,7 @@
           <div :class="selectedBtn('own', false)" id="other2" @click="addFilterRule('own', false)">未拥有</div>
           <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">有模组</div>
           <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">无模组</div>
+          <div :class="selectedBtn('itemObtainApproach', 0)" id="other5" @click="addFilterRule('itemObtainApproach', 0)">是否赠送</div>
         </div>
 
         <div class="setup_bar">
@@ -47,7 +49,9 @@
         <div class="setup_bar">
           <div class="setup_title">批量操作</div>
           <div class="switch_set" @click="batchUpdates('own', true)">全部拥有</div>
+          <div class="switch_set" @click="batchUpdates('own', false)">全部未拥有</div>
           <div class="switch_set" @click="batchUpdates('elite', 2)">全部精二</div>
+          <div class="switch_set" @click="batchUpdates('skill1', 3)">一技能专三</div>
           <div class="switch_set" @click="batchUpdates('skill2', 3)">二技能专三</div>
           <div class="switch_set" @click="batchUpdates('skill3', 3)">三技能专三</div>
           <div class="switch_set" @click="batchUpdates('modX', 3)">X模组三级</div>
@@ -55,7 +59,6 @@
         </div>
       </div>
     </div>
-
 
     <!-- 干员组 -->
     <div class="char_forms">
@@ -67,7 +70,7 @@
               <div class="image_avatar">
                 <div @click="char.own = !char.own" :class="getSprite(char.charId)"></div>
               </div>
-              <div :class="char.own?'char_name':'char_name notown'">{{ char.name }}</div>
+              <div :class="char.own ? 'char_name' : 'char_name notown'">{{ char.name }}</div>
             </div>
             <div :class="potentialWrapClass(char.own)">
               <div :class="potentialClass(rank, char.potential)" v-for="rank in ranks.slice(1, 7)" @click="updateDataSwitch(char_index, 'potential', rank)">
@@ -77,8 +80,14 @@
           </div>
           <!--  -->
           <div :class="eliteWrapClass(char.own)">
-            <div v-for="rank in ranks.slice(0, 3)" :class="eliteClass(char.elite, rank)" @click="updateDataSwitch(char_index, 'elite', rank)">
-              <div :class="getSprite('elite' + rank, 'elite')"></div>
+            <div :class="eliteClass(char.elite, 0)" @click="updateDataSwitch(char_index, 'elite', 0)">
+              <div :class="getSprite('elite0', 'elite')"></div>
+            </div>
+            <div v-show="char.rarity > 2" :class="eliteClass(char.elite, 1)" @click="updateDataSwitch(char_index, 'elite', 1)">
+              <div :class="getSprite('elite1', 'elite')"></div>
+            </div>
+            <div v-show="char.rarity > 3" :class="eliteClass(char.elite, 2)" @click="updateDataSwitch(char_index, 'elite', 2)">
+              <div :class="getSprite('elite2', 'elite')"></div>
             </div>
             <div class="image_elite">Lv.Max</div>
           </div>
@@ -128,7 +137,14 @@
     </div>
 
     <!-- 数据声明 -->
-    <div class="char_card">此处安放版权声明/开发信息</div>
+    <!-- <div class="char_card">此处安放版权声明/开发信息</div> -->
+    <div class="footer_info">
+      除非另有声明，网站其他内容采用
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享</a>授权。
+    </div>
+    <div>
+      <input id="uploadFile" type="file" />
+    </div>
   </div>
 </template>
 
@@ -152,6 +168,9 @@ function getSprite(id, type) {
 
 let characterList = ref(characterListInit());
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
+
+let exportExcelUrl = ref('http://127.0.0.1:10013/survey/character/export?userName=')
+
 
 //找回填写过的角色信息
 function getSurveyCharacter() {
@@ -177,6 +196,14 @@ function getSurveyCharacter() {
   });
 }
 
+let exportExcelBtnVisible = ref(false)
+
+function exportExcel(){
+  exportExcelUrl.value = 'http://127.0.0.1:10013/survey/character/export?userName='+globalUserData.value.userName
+  exportExcelBtnVisible.value = ref(true)
+
+}
+
 //上传
 function upload() {
   surveyApi.uploadCharacter(characterList.value, globalUserData.value.userName).then((response) => {
@@ -184,6 +211,11 @@ function upload() {
     cMessage("新增了 " + response.data.insertRows + " 条");
     cMessage("更新了 " + response.data.updateRows + " 条");
   });
+}
+
+function uploadByExcel(){
+   
+    
 }
 
 let maaData = ref([{}]);
@@ -194,24 +226,33 @@ function maaData1() {
   }
 }
 
-let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] });
+let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach:[] });
 let filterCollapse = ref(false);
 
-function setBarCollapse(){
-  filterCollapse.value = !filterCollapse.value
-  if(filterCollapse.value){
-    let elements =  document.getElementsByClassName('setup_bar')
-    let height = 5
-    for(let e of elements){
-      height+=e.offsetHeight+10
+function setBarCollapse() {
+  filterCollapse.value = !filterCollapse.value;
+  if (filterCollapse.value) {
+    let elements = document.getElementsByClassName("setup_bar");
+    let height = 5;
+    for (let e of elements) {
+      height += e.offsetHeight + 10;
     }
-    document.getElementById("setbar").style.height=height+'px'
-    
-  }else{
-    document.getElementById("setbar").style.height = 36*1+'px'
+    document.getElementById("setbar").style.height = height + "px";
+    setTimeout(() => {
+      document.getElementById("setbar").style.height = "auto";
+    }, 500);
+  } else {
+    let elements = document.getElementsByClassName("setup_bar");
+    let height = 5;
+    for (let e of elements) {
+      height += e.offsetHeight + 10;
+    }
+    document.getElementById("setbar").style.height = height + "px";
+    setTimeout(() => {
+      document.getElementById("setbar").style.height = 54 + "px";
+    }, 100);
   }
 }
-
 
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
@@ -246,8 +287,9 @@ function filterCharacterList() {
     let isProfession = isAttribute(character, "profession");
     let isOwn = isAttribute(character, "own");
     let isMod = isAttribute(character, "mod");
+    let isItemObtainApproach = isAttribute(character, "itemObtainApproach");
     let isYearFlag = isYear(character);
-    characterList.value[i].show = isRarity & isProfession & isYearFlag & isOwn & isMod;
+    characterList.value[i].show = isRarity & isProfession & isYearFlag & isOwn & isMod & isItemObtainApproach;
   }
 }
 
@@ -255,7 +297,9 @@ function filterCharacterList() {
 function isAttribute(character, attribute) {
   if (filterRules.value[attribute].length == 0) return true;
   for (let r in filterRules.value[attribute]) {
+    console.log(character, '==' , filterRules.value[attribute][r])
     if (character[attribute] == filterRules.value[attribute][r]) {
+      
       return true;
     }
   }
@@ -283,23 +327,23 @@ function sortCharacterList(rule) {
   });
 }
 
-function updateDataIncr(char_index, attrib) {
-  if ("elite" == attrib) {
-    characterList.value[char_index][attrib]++;
-    if (characterList.value[char_index][attrib] > 2) {
-      characterList.value[char_index][attrib] = 0;
-      return;
-    }
-    return;
-  }
+// function updateDataIncr(char_index, attrib) {
+//   if ("elite" == attrib) {
+//     characterList.value[char_index][attrib]++;
+//     if (characterList.value[char_index][attrib] > 2) {
+//       characterList.value[char_index][attrib] = 0;
+//       return;
+//     }
+//     return;
+//   }
 
-  characterList.value[char_index][attrib]++;
-  if (characterList.value[char_index][attrib] > 3) {
-    characterList.value[char_index][attrib] = 0;
-    return;
-  }
-  return;
-}
+//   characterList.value[char_index][attrib]++;
+//   if (characterList.value[char_index][attrib] > 3) {
+//     characterList.value[char_index][attrib] = 0;
+//     return;
+//   }
+//   return;
+// }
 
 //点选填写内容
 function updateDataSwitch(char_index, attrib, rank) {
@@ -315,19 +359,26 @@ function batchUpdates(attribute, rank) {
   for (let i in characterList.value) {
     if (characterList.value[i].show) {
       if (characterList.value[i][attribute] == -1) continue;
-
       characterList.value[i][attribute] = rank;
     }
   }
 }
 
-let cardSimple = ref(false)
+
+// function batchCancellation(){
+//   for (let i in characterList.value) {
+//     if (characterList.value[i].show) {
+//      characterList.value[i].show = false;
+//     }
+//   }
+// }
+
+let cardSimple = ref(false);
 
 function btnSetClass(flag) {
   if (flag) return "btn_set btn_set_select";
   return "btn_set";
 }
-
 
 function characterOwnClass() {
   if (cardSimple.value) return "char_card char_card_simple";
@@ -335,7 +386,7 @@ function characterOwnClass() {
 }
 
 function skillAndModClass(dataValue, switchValue) {
-  if (dataValue == switchValue) return "image_rank switch_select";
+  if (dataValue == switchValue) return "switch_select image_rank";
   return "image_rank";
 }
 

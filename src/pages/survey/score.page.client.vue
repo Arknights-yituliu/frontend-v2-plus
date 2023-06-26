@@ -43,15 +43,15 @@
         <div class="score_bar_wrap">
           <div class="score_bar">
             <div class="score_name">日常：</div>
-            <img class="image_score" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in 10" @click="updateScore(charId, 'daily', rank)" />
+            <img class="image_score" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'daily', rank)" />
           </div>
           <div class="score_bar">
             <div class="score_name">肉鸽：</div>
-            <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in 10" @click="updateScore(charId, 'rogue', rank)" />
+            <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'rogue', rank)" />
           </div>
           <div class="score_bar">
             <div class="score_name">高难：</div>
-            <img class="image_score" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in 10" @click="updateScore(charId, 'hard', rank)" />
+            <img class="image_score" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'hard', rank)" />
           </div>
           <div class="score_bar">
             <div class="score_name">保全：</div>
@@ -59,13 +59,13 @@
               class="image_score"
               :src="scoreSelected(rank, char.securityService)"
               alt=""
-              v-for="rank in 10"
+              v-for="rank in scoreDict"
               @click="updateScore(charId, 'securityService', rank)"
             />
           </div>
           <div class="score_bar">
             <div class="score_name">泛用：</div>
-            <img class="image_score" :src="scoreSelected(rank, char.universal)" alt="" v-for="rank in 10" @click="updateScore(charId, 'universal', rank)" />
+            <img class="image_score" :src="scoreSelected(rank, char.universal)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'universal', rank)" />
           </div>
           <div class="score_bar">
             <div class="score_name">对策：</div>
@@ -73,7 +73,7 @@
               class="image_score"
               :src="scoreSelected(rank, char.countermeasures)"
               alt=""
-              v-for="rank in 10"
+              v-for="rank in scoreDict"
               @click="updateScore(charId, 'countermeasures', rank)"
             />
           </div>
@@ -99,6 +99,7 @@ function uploadScoreForm() {
 }
 
 let scoreList = ref(scoreListInit());
+let scoreDict = ref([1,2,3,4,5])
 function updateScore(charId, attribute, score) {
   scoreList.value[charId][attribute] = score;
 }

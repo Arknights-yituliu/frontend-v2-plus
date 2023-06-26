@@ -2,7 +2,7 @@
   <div class="survey_index_page">
    
     <c-popup :visible="loginVisible" v-model:visible="loginVisible" :width="'400px'">
-      <div class="login_card" v-show="globalUserData.uid < 0">
+      <div class="login_card" v-show="globalUserData.status < 0">
         <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
         <div style="display: flex">
           <div class="btn_login" @click="register()">注册</div>
@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <div class="login_card" v-show="globalUserData.uid > 0">
+      <div class="login_card" v-show="globalUserData.status > 0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
           <div class="btn_login" @click="logout()">确定</div>
@@ -25,8 +25,8 @@
 
     <div class="survey_index_header">
       <div class="survey_index_login_wrap">
-        <div class="survey_index_login_text" @click="loginVisible = !loginVisible" v-show="globalUserData.uid > 0">{{ globalUserData.userName }}</div>
-        <div class="survey_index_login_text" @click="loginVisible = !loginVisible" v-show="globalUserData.uid < 0">点击登录</div>
+        <div class="survey_index_login_text" @click="loginVisible = !loginVisible" v-show="globalUserData.status > 0">{{ globalUserData.userName }}</div>
+        <div class="survey_index_login_text" @click="loginVisible = !loginVisible" v-show="globalUserData.status < 0">点击登录</div>
       
       </div>
     </div>
@@ -148,7 +148,7 @@ let guildKey = ["siteDescription", "register", "devProgress"];
 import { registerEvent, loginEvent, userDataCacheClearEvent, userDataCacheEvent, globalUserData } from "./userService";
 
 let inputData = ref({ userName: "" }); //用户输入的用户名，用obj没准后期有别的字段
-let userData = ref({ userName: "山桜", uid: -1 }); //用户信息(用户名，用户id，用户状态)
+let userData = ref({ userName: "山桜", status: -100 }); //用户信息(用户名，用户id，用户状态)
 
 let loginVisible = ref(false);
 

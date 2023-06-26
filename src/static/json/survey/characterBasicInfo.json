@@ -1,5 +1,6 @@
 {
     "char_145_prove": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -15,10 +16,11 @@
             }
         ],
         "name": "普罗旺斯",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4039_horn": {
+        "date": 1649923200000,
         "profession": "TANK",
         "skill": [
             {
@@ -35,10 +37,11 @@
             }
         ],
         "name": "号角",
-        "rarity": 6,
-        "date": 1649923200000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_1028_texas2": {
+        "date": 1667289600000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true
@@ -58,10 +61,11 @@
             }
         ],
         "name": "缄默德克萨斯",
-        "rarity": 6,
-        "date": 1667289600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_271_spikes": {
+        "date": 1600934400000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -74,10 +78,11 @@
             }
         ],
         "name": "芳汀",
-        "rarity": 4,
-        "date": 1600934400000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4016_kazema": {
+        "date": 1647331200000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -93,10 +98,11 @@
             }
         ],
         "name": "风丸",
-        "rarity": 5,
-        "date": 1647331200000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4055_bgsnow": {
+        "date": 1660204800000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -116,10 +122,11 @@
             }
         ],
         "name": "鸿雪",
-        "rarity": 6,
-        "date": 1660204800000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_363_toddi": {
+        "date": 1618473600000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -135,10 +142,11 @@
             }
         ],
         "name": "熔泉",
-        "rarity": 5,
-        "date": 1618473600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_328_cammou": {
+        "date": 1594281600000,
         "profession": "CASTER",
         "skill": [
             {
@@ -150,11 +158,15 @@
             }
         ],
         "name": "卡达",
-        "rarity": 4,
-        "date": 1594281600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_433_windft": {
+        "date": 1651392000000,
         "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
         "skill": [
             {
                 "iconId": "skchr_windft_1",
@@ -166,10 +178,11 @@
             }
         ],
         "name": "掠风",
-        "rarity": 5,
-        "date": 1651392000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_383_snsant": {
+        "date": 1578513600000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -185,10 +198,11 @@
             }
         ],
         "name": "雪雉",
-        "rarity": 5,
-        "date": 1578513600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_174_slbell": {
+        "date": 1556589600000,
         "profession": "SUPPORT",
         "mod": {
             "modX": true
@@ -204,10 +218,11 @@
             }
         ],
         "name": "初雪",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_340_shwaz": {
+        "date": 1566892800000,
         "profession": "SNIPER",
         "mod": {
             "modY": true,
@@ -228,10 +243,11 @@
             }
         ],
         "name": "黑",
-        "rarity": 6,
-        "date": 1566892800000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_1029_yato2": {
+        "date": 1678176000000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -251,10 +267,11 @@
             }
         ],
         "name": "麒麟X夜刀",
-        "rarity": 6,
-        "date": 1678176000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_325_bison": {
+        "date": 1574150400000,
         "profession": "TANK",
         "mod": {
             "modX": true
@@ -269,24 +286,27 @@
             }
         ],
         "name": "拜松",
-        "rarity": 5,
-        "date": 1574150400000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_376_therex": {
+        "date": 1588320000000,
         "profession": "SPECIAL",
         "skill": [],
         "name": "THRM-EX",
-        "rarity": 1,
-        "date": 1588320000000
+        "itemObtainApproach": 1,
+        "rarity": 1
     },
     "char_4000_jnight": {
+        "date": 1635753600000,
         "profession": "SNIPER",
         "skill": [],
         "name": "正义骑士号",
-        "rarity": 1,
-        "date": 1635753600000
+        "itemObtainApproach": 1,
+        "rarity": 1
     },
     "char_135_halo": {
+        "date": 1657008000000,
         "profession": "CASTER",
         "mod": {
             "modY": true
@@ -302,10 +322,11 @@
             }
         ],
         "name": "星源",
-        "rarity": 5,
-        "date": 1657008000000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_4027_heyak": {
+        "date": 1682928000000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -325,10 +346,11 @@
             }
         ],
         "name": "霍尔海雅",
-        "rarity": 6,
-        "date": 1682928000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_345_folnic": {
+        "date": 1594281600000,
         "profession": "MEDIC",
         "mod": {
             "modY": true
@@ -344,10 +366,11 @@
             }
         ],
         "name": "亚叶",
-        "rarity": 5,
-        "date": 1594281600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_180_amgoat": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -367,10 +390,11 @@
             }
         ],
         "name": "艾雅法拉",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_209_ardign": {
+        "date": 1556589600000,
         "profession": "TANK",
         "skill": [
             {
@@ -378,10 +402,11 @@
             }
         ],
         "name": "卡缇",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_140_whitew": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -394,10 +419,11 @@
             }
         ],
         "name": "拉普兰德",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4083_chimes": {
+        "date": 1676361600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -409,10 +435,11 @@
             }
         ],
         "name": "铎铃",
-        "rarity": 5,
-        "date": 1676361600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_283_midn": {
+        "date": 1559181600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -421,10 +448,11 @@
             }
         ],
         "name": "月见夜",
-        "rarity": 3,
-        "date": 1559181600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_4004_pudd": {
+        "date": 1635753600000,
         "profession": "CASTER",
         "mod": {
             "modY": true
@@ -439,10 +467,11 @@
             }
         ],
         "name": "布丁",
-        "rarity": 4,
-        "date": 1635753600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_492_quercu": {
+        "date": 1644912000000,
         "profession": "SUPPORT",
         "skill": [
             {
@@ -455,10 +484,11 @@
             }
         ],
         "name": "夏栎",
-        "rarity": 5,
-        "date": 1644912000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_332_archet": {
+        "date": 1609833600000,
         "profession": "SNIPER",
         "mod": {
             "modY": true,
@@ -479,10 +509,30 @@
             }
         ],
         "name": "空弦",
-        "rarity": 6,
-        "date": 1609833600000
+        "itemObtainApproach": 1,
+        "rarity": 6
+    },
+    "char_498_inside": {
+        "profession": "SNIPER",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_inside_1",
+                "name": "“不惹麻烦”"
+            },
+            {
+                "iconId": "skchr_inside_2",
+                "name": "“解决麻烦”"
+            }
+        ],
+        "name": "隐现",
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_401_elysm": {
+        "date": 1588320000000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -494,10 +544,11 @@
             }
         ],
         "name": "极境",
-        "rarity": 5,
-        "date": 1588320000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_274_astesi": {
+        "date": 1568102400000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -510,17 +561,11 @@
             }
         ],
         "name": "星极",
-        "rarity": 5,
-        "date": 1568102400000
-    },
-    "char_514_rdfend": {
-        "profession": "TANK",
-        "skill": [],
-        "name": "预备干员-重装",
-        "rarity": 3,
-        "date": 1664265600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_311_mudrok": {
+        "date": 1604217600000,
         "profession": "TANK",
         "skill": [
             {
@@ -536,10 +581,11 @@
             }
         ],
         "name": "泥岩",
-        "rarity": 6,
-        "date": 1604217600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_400_weedy": {
+        "date": 1588320000000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -559,10 +605,11 @@
             }
         ],
         "name": "温蒂",
-        "rarity": 6,
-        "date": 1588320000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_190_clour": {
+        "date": 1571126400000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -577,10 +624,11 @@
             }
         ],
         "name": "红云",
-        "rarity": 4,
-        "date": 1571126400000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_458_rfrost": {
+        "date": 1615276800000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true
@@ -596,10 +644,11 @@
             }
         ],
         "name": "霜华",
-        "rarity": 5,
-        "date": 1615276800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_198_blackd": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "mod": {
             "modX": true
@@ -614,10 +663,11 @@
             }
         ],
         "name": "讯使",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4065_judge": {
+        "date": 1667289600000,
         "profession": "TANK",
         "skill": [
             {
@@ -634,10 +684,11 @@
             }
         ],
         "name": "斥罪",
-        "rarity": 6,
-        "date": 1667289600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_405_absin": {
+        "date": 1592467200000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -653,10 +704,11 @@
             }
         ],
         "name": "苦艾",
-        "rarity": 5,
-        "date": 1592467200000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_402_tuye": {
+        "date": 1611043200000,
         "profession": "MEDIC",
         "mod": {
             "modX": true
@@ -672,10 +724,11 @@
             }
         ],
         "name": "图耶",
-        "rarity": 5,
-        "date": 1611043200000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_134_ifrit": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -695,10 +748,11 @@
             }
         ],
         "name": "伊芙利特",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_346_aosta": {
+        "date": 1602748800000,
         "profession": "SNIPER",
         "skill": [
             {
@@ -710,10 +764,11 @@
             }
         ],
         "name": "奥斯塔",
-        "rarity": 5,
-        "date": 1602748800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_279_excu": {
+        "date": 1571126400000,
         "profession": "SNIPER",
         "skill": [
             {
@@ -726,10 +781,11 @@
             }
         ],
         "name": "送葬人",
-        "rarity": 5,
-        "date": 1571126400000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_143_ghost": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -741,10 +797,11 @@
             }
         ],
         "name": "幽灵鲨",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4082_qiubai": {
+        "date": 1676361600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -761,17 +818,11 @@
             }
         ],
         "name": "仇白",
-        "rarity": 6,
-        "date": 1676361600000
-    },
-    "char_506_rmedic": {
-        "profession": "MEDIC",
-        "skill": [],
-        "name": "预备干员-后勤",
-        "rarity": 3,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_362_saga": {
+        "date": 1612512000000,
         "profession": "PIONEER",
         "mod": {
             "modY": true
@@ -790,22 +841,11 @@
             }
         ],
         "name": "嵯峨",
-        "rarity": 6,
-        "date": 1612512000000
-    },
-    "char_509_acast": {
-        "profession": "CASTER",
-        "skill": [
-            {
-                "iconId": "skchr_acast_1",
-                "name": "“为我所为”"
-            }
-        ],
-        "name": "Pith",
-        "rarity": 5,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_1027_greyy2": {
+        "date": 1657008000000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -820,10 +860,11 @@
             }
         ],
         "name": "承曦格雷伊",
-        "rarity": 5,
-        "date": 1657008000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_469_indigo": {
+        "date": 1622534400000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -839,10 +880,11 @@
             }
         ],
         "name": "深靛",
-        "rarity": 4,
-        "date": 1622534400000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_378_asbest": {
+        "date": 1591084800000,
         "profession": "TANK",
         "skill": [
             {
@@ -855,10 +897,11 @@
             }
         ],
         "name": "石棉",
-        "rarity": 5,
-        "date": 1591084800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_308_swire": {
+        "date": 1562659200000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -874,10 +917,11 @@
             }
         ],
         "name": "诗怀雅",
-        "rarity": 5,
-        "date": 1562659200000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4078_bdhkgt": {
+        "date": 1673942400000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -893,10 +937,11 @@
             }
         ],
         "name": "截云",
-        "rarity": 5,
-        "date": 1673942400000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_242_otter": {
+        "date": 1556589600000,
         "profession": "SUPPORT",
         "mod": {
             "modX": true
@@ -912,10 +957,11 @@
             }
         ],
         "name": "梅尔",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_264_f12yin": {
+        "date": 1608192000000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -932,10 +978,11 @@
             }
         ],
         "name": "山",
-        "rarity": 6,
-        "date": 1608192000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_199_yak": {
+        "date": 1556589600000,
         "profession": "TANK",
         "mod": {
             "modY": true
@@ -951,10 +998,11 @@
             }
         ],
         "name": "角峰",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_157_dagda": {
+        "date": 1665475200000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -967,10 +1015,11 @@
             }
         ],
         "name": "达格达",
-        "rarity": 5,
-        "date": 1665475200000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_137_brownb": {
+        "date": 1559181600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -983,10 +1032,11 @@
             }
         ],
         "name": "猎蜂",
-        "rarity": 4,
-        "date": 1559181600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_218_cuttle": {
+        "date": 1597132800000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -1001,10 +1051,11 @@
             }
         ],
         "name": "安哲拉",
-        "rarity": 5,
-        "date": 1597132800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_485_pallas": {
+        "date": 1625212800000,
         "profession": "WARRIOR",
         "mod": {
             "modY": true,
@@ -1025,10 +1076,11 @@
             }
         ],
         "name": "帕拉斯",
-        "rarity": 6,
-        "date": 1625212800000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_163_hpsts": {
+        "date": 1556589600000,
         "profession": "TANK",
         "skill": [
             {
@@ -1041,10 +1093,11 @@
             }
         ],
         "name": "火神",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_211_adnach": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "skill": [
             {
@@ -1052,10 +1105,11 @@
             }
         ],
         "name": "安德切尔",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_1023_ghost2": {
+        "date": 1651392000000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true,
@@ -1076,10 +1130,11 @@
             }
         ],
         "name": "归溟幽灵鲨",
-        "rarity": 6,
-        "date": 1651392000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_122_beagle": {
+        "date": 1556589600000,
         "profession": "TANK",
         "skill": [
             {
@@ -1087,10 +1142,11 @@
             }
         ],
         "name": "米格鲁",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_252_bibeak": {
+        "date": 1584432000000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -1106,10 +1162,11 @@
             }
         ],
         "name": "柏喙",
-        "rarity": 5,
-        "date": 1584432000000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_185_frncat": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -1122,13 +1179,15 @@
             }
         ],
         "name": "慕斯",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_423_blemsh": {
+        "date": 1602748800000,
         "profession": "TANK",
         "mod": {
-            "modY": true
+            "modY": true,
+            "modX": true
         },
         "skill": [
             {
@@ -1145,10 +1204,11 @@
             }
         ],
         "name": "瑕光",
-        "rarity": 6,
-        "date": 1602748800000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_1030_noirc2": {
+        "date": 1678176000000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -1164,10 +1224,11 @@
             }
         ],
         "name": "火龙S黑角",
-        "rarity": 5,
-        "date": 1678176000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_124_kroos": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "skill": [
             {
@@ -1176,10 +1237,11 @@
             }
         ],
         "name": "克洛丝",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_4025_aprot2": {
+        "date": 1641369600000,
         "profession": "TANK",
         "skill": [
             {
@@ -1192,10 +1254,11 @@
             }
         ],
         "name": "暮落",
-        "rarity": 5,
-        "date": 1641369600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_411_tomimi": {
+        "date": 1598342400000,
         "profession": "CASTER",
         "mod": {
             "modY": true
@@ -1211,10 +1274,11 @@
             }
         ],
         "name": "特米米",
-        "rarity": 5,
-        "date": 1598342400000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_4006_melnte": {
+        "date": 1682928000000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -1230,10 +1294,11 @@
             }
         ],
         "name": "玫拉",
-        "rarity": 5,
-        "date": 1682928000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_422_aurora": {
+        "date": 1640073600000,
         "profession": "TANK",
         "mod": {
             "modX": true
@@ -1249,10 +1314,11 @@
             }
         ],
         "name": "极光",
-        "rarity": 5,
-        "date": 1640073600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_497_ctable": {
+        "date": 1660204800000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -1265,10 +1331,11 @@
             }
         ],
         "name": "晓歌",
-        "rarity": 5,
-        "date": 1660204800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_141_nights": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -1283,10 +1350,11 @@
             }
         ],
         "name": "夜烟",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_275_breeze": {
+        "date": 1572552000000,
         "profession": "MEDIC",
         "mod": {
             "modX": true
@@ -1302,22 +1370,11 @@
             }
         ],
         "name": "微风",
-        "rarity": 5,
-        "date": 1572552000000
-    },
-    "char_511_asnipe": {
-        "profession": "SNIPER",
-        "skill": [
-            {
-                "iconId": "skchr_asnipe_1",
-                "name": "旋臂"
-            }
-        ],
-        "name": "Stormeye",
-        "rarity": 5,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_261_sddrag": {
+        "date": 1575964800000,
         "profession": "PIONEER",
         "mod": {
             "modY": true
@@ -1332,10 +1389,11 @@
             }
         ],
         "name": "苇草",
-        "rarity": 5,
-        "date": 1575964800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_473_mberry": {
+        "date": 1631865600000,
         "profession": "MEDIC",
         "skill": [
             {
@@ -1348,10 +1406,11 @@
             }
         ],
         "name": "桑葚",
-        "rarity": 5,
-        "date": 1631865600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_103_angel": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -1371,10 +1430,11 @@
             }
         ],
         "name": "能天使",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_260_durnar": {
+        "date": 1569873600000,
         "profession": "TANK",
         "skill": [
             {
@@ -1386,10 +1446,11 @@
             }
         ],
         "name": "坚雷",
-        "rarity": 4,
-        "date": 1569873600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_265_sophia": {
+        "date": 1602748800000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -1405,10 +1466,11 @@
             }
         ],
         "name": "鞭刃",
-        "rarity": 5,
-        "date": 1602748800000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_437_mizuki": {
+        "date": 1627977600000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true,
@@ -1429,10 +1491,11 @@
             }
         ],
         "name": "水月",
-        "rarity": 6,
-        "date": 1627977600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_301_cutter": {
+        "date": 1587456000000,
         "profession": "WARRIOR",
         "mod": {
             "modY": true
@@ -1448,10 +1511,11 @@
             }
         ],
         "name": "刻刀",
-        "rarity": 4,
-        "date": 1587456000000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_1014_nearl2": {
+        "date": 1635753600000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -1471,10 +1535,11 @@
             }
         ],
         "name": "耀骑士临光",
-        "rarity": 6,
-        "date": 1635753600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_365_aprl": {
+        "date": 1600934400000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -1490,11 +1555,15 @@
             }
         ],
         "name": "四月",
-        "rarity": 5,
-        "date": 1600934400000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_484_robrta": {
+        "date": 1631865600000,
         "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
         "skill": [
             {
                 "iconId": "skchr_robrta_1",
@@ -1506,10 +1575,11 @@
             }
         ],
         "name": "罗比菈塔",
-        "rarity": 4,
-        "date": 1631865600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_108_silent": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "mod": {
             "modY": true
@@ -1524,10 +1594,11 @@
             }
         ],
         "name": "赫默",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_212_ansel": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "skill": [
             {
@@ -1536,10 +1607,11 @@
             }
         ],
         "name": "安赛尔",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_355_ethan": {
+        "date": 1572552000000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -1555,17 +1627,19 @@
             }
         ],
         "name": "伊桑",
-        "rarity": 4,
-        "date": 1572552000000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_286_cast3": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [],
         "name": "Castle-3",
-        "rarity": 1,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 1
     },
     "char_4009_irene": {
+        "date": 1651392000000,
         "profession": "WARRIOR",
         "mod": {
             "modY": true
@@ -1585,10 +1659,11 @@
             }
         ],
         "name": "艾丽妮",
-        "rarity": 6,
-        "date": 1651392000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_4067_lolxh": {
+        "date": 1663228800000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -1601,10 +1676,11 @@
             }
         ],
         "name": "罗小黑",
-        "rarity": 4,
-        "date": 1663228800000
+        "itemObtainApproach": 0,
+        "rarity": 4
     },
     "char_113_cqbw": {
+        "date": 1588320000000,
         "profession": "SNIPER",
         "mod": {
             "modY": true,
@@ -1625,10 +1701,11 @@
             }
         ],
         "name": "W",
-        "rarity": 6,
-        "date": 1588320000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_476_blkngt": {
+        "date": 1643097600000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -1641,10 +1718,11 @@
             }
         ],
         "name": "夜半",
-        "rarity": 5,
-        "date": 1643097600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_479_sleach": {
+        "date": 1631865600000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -1660,10 +1738,11 @@
             }
         ],
         "name": "琴柳",
-        "rarity": 6,
-        "date": 1631865600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_4048_doroth": {
+        "date": 1657008000000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true
@@ -1683,10 +1762,11 @@
             }
         ],
         "name": "多萝西",
-        "rarity": 6,
-        "date": 1657008000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_210_stward": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "skill": [
             {
@@ -1695,10 +1775,11 @@
             }
         ],
         "name": "史都华德",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_455_nothin": {
+        "date": 1612512000000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -1714,10 +1795,11 @@
             }
         ],
         "name": "乌有",
-        "rarity": 5,
-        "date": 1612512000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_144_red": {
+        "date": 1556589600000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true
@@ -1733,17 +1815,19 @@
             }
         ],
         "name": "红",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_285_medic2": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "skill": [],
         "name": "Lancet-2",
-        "rarity": 1,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 1
     },
     "char_496_wildmn": {
+        "date": 1635753600000,
         "profession": "PIONEER",
         "mod": {
             "modX": true
@@ -1759,10 +1843,11 @@
             }
         ],
         "name": "野鬃",
-        "rarity": 5,
-        "date": 1635753600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_183_skgoat": {
+        "date": 1556589600000,
         "profession": "SUPPORT",
         "mod": {
             "modY": true
@@ -1777,10 +1862,11 @@
             }
         ],
         "name": "地灵",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4045_heidi": {
+        "date": 1649923200000,
         "profession": "SUPPORT",
         "skill": [
             {
@@ -1793,10 +1879,11 @@
             }
         ],
         "name": "海蒂",
-        "rarity": 5,
-        "date": 1649923200000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_478_kirara": {
+        "date": 1622534400000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -1812,10 +1899,11 @@
             }
         ],
         "name": "绮良",
-        "rarity": 5,
-        "date": 1622534400000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_173_slchan": {
+        "date": 1556589600000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -1831,10 +1919,11 @@
             }
         ],
         "name": "崖心",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_366_acdrop": {
+        "date": 1598342400000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -1850,10 +1939,11 @@
             }
         ],
         "name": "酸糖",
-        "rarity": 4,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4054_malist": {
+        "date": 1660204800000,
         "profession": "CASTER",
         "skill": [
             {
@@ -1865,10 +1955,11 @@
             }
         ],
         "name": "至简",
-        "rarity": 5,
-        "date": 1660204800000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_248_mgllan": {
+        "date": 1571126400000,
         "profession": "SUPPORT",
         "mod": {
             "modY": true,
@@ -1889,10 +1980,11 @@
             }
         ],
         "name": "麦哲伦",
-        "rarity": 6,
-        "date": 1571126400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_147_shining": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "mod": {
             "modY": true,
@@ -1913,10 +2005,11 @@
             }
         ],
         "name": "闪灵",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_192_falco": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -1924,10 +2017,11 @@
             }
         ],
         "name": "翎羽",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_002_amiya": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "mod": {
             "modY": true
@@ -1946,17 +2040,11 @@
             }
         ],
         "name": "阿米娅",
-        "rarity": 5,
-        "date": 1556589600000
-    },
-    "char_507_rsnipe": {
-        "profession": "SNIPER",
-        "skill": [],
-        "name": "预备干员-狙击",
-        "rarity": 3,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_284_spot": {
+        "date": 1562659200000,
         "profession": "TANK",
         "skill": [
             {
@@ -1965,10 +2053,11 @@
             }
         ],
         "name": "斑点",
-        "rarity": 3,
-        "date": 1562659200000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_003_kalts": {
+        "date": 1619856000000,
         "profession": "MEDIC",
         "mod": {
             "modY": true,
@@ -1989,10 +2078,11 @@
             }
         ],
         "name": "凯尔希",
-        "rarity": 6,
-        "date": 1619856000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_291_aglina": {
+        "date": 1556589600000,
         "profession": "SUPPORT",
         "mod": {
             "modY": true,
@@ -2013,10 +2103,11 @@
             }
         ],
         "name": "安洁莉娜",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_236_rope": {
+        "date": 1556589600000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -2032,10 +2123,11 @@
             }
         ],
         "name": "暗索",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_127_estell": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -2047,10 +2139,11 @@
             }
         ],
         "name": "艾丝黛尔",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_1026_gvial2": {
+        "date": 1660204800000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -2067,10 +2160,11 @@
             }
         ],
         "name": "百炼嘉维尔",
-        "rarity": 6,
-        "date": 1660204800000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_197_poca": {
+        "date": 1592467200000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -2089,10 +2183,11 @@
             }
         ],
         "name": "早露",
-        "rarity": 6,
-        "date": 1592467200000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_243_waaifu": {
+        "date": 1574150400000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -2108,10 +2203,11 @@
             }
         ],
         "name": "槐琥",
-        "rarity": 5,
-        "date": 1574150400000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_338_iris": {
+        "date": 1609833600000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -2127,10 +2223,11 @@
             }
         ],
         "name": "爱丽丝",
-        "rarity": 5,
-        "date": 1609833600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_254_vodfox": {
+        "date": 1587456000000,
         "profession": "SUPPORT",
         "mod": {
             "modX": true
@@ -2146,10 +2243,11 @@
             }
         ],
         "name": "巫恋",
-        "rarity": 5,
-        "date": 1587456000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_367_swllow": {
+        "date": 1577174400000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -2165,10 +2263,11 @@
             }
         ],
         "name": "灰喉",
-        "rarity": 5,
-        "date": 1577174400000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_171_bldsk": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "mod": {
             "modX": true
@@ -2184,10 +2283,11 @@
             }
         ],
         "name": "华法琳",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_126_shotst": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -2203,17 +2303,19 @@
             }
         ],
         "name": "流星",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4077_palico": {
+        "date": 1678176000000,
         "profession": "SNIPER",
         "skill": [],
         "name": "泰拉大陆调查团",
-        "rarity": 1,
-        "date": 1678176000000
+        "itemObtainApproach": 0,
+        "rarity": 1
     },
     "char_489_serum": {
+        "date": 1635753600000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -2229,10 +2331,11 @@
             }
         ],
         "name": "蚀清",
-        "rarity": 5,
-        "date": 1635753600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_459_tachak": {
+        "date": 1615276800000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -2248,10 +2351,11 @@
             }
         ],
         "name": "战车",
-        "rarity": 5,
-        "date": 1615276800000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_4064_mlynar": {
+        "date": 1662624000000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -2268,10 +2372,11 @@
             }
         ],
         "name": "玛恩纳",
-        "rarity": 6,
-        "date": 1662624000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_250_phatom": {
+        "date": 1587456000000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -2291,10 +2396,11 @@
             }
         ],
         "name": "傀影",
-        "rarity": 6,
-        "date": 1587456000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_457_blitz": {
+        "date": 1615276800000,
         "profession": "TANK",
         "skill": [
             {
@@ -2307,10 +2413,11 @@
             }
         ],
         "name": "闪击",
-        "rarity": 5,
-        "date": 1615276800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_1011_lava2": {
+        "date": 1612512000000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -2326,17 +2433,19 @@
             }
         ],
         "name": "炎狱炎熔",
-        "rarity": 5,
-        "date": 1612512000000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_009_12fce": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "skill": [],
         "name": "12F",
-        "rarity": 2,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 2
     },
     "char_491_humus": {
+        "date": 1680768000000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -2349,10 +2458,11 @@
             }
         ],
         "name": "休谟斯",
-        "rarity": 4,
-        "date": 1680768000000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_118_yuki": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -2368,17 +2478,19 @@
             }
         ],
         "name": "白雪",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_500_noirc": {
+        "date": 1556589600000,
         "profession": "TANK",
         "skill": [],
         "name": "黑角",
-        "rarity": 2,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 2
     },
     "char_326_glacus": {
+        "date": 1566892800000,
         "profession": "SUPPORT",
         "mod": {
             "modX": true
@@ -2394,13 +2506,15 @@
             }
         ],
         "name": "格劳克斯",
-        "rarity": 5,
-        "date": 1566892800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_420_flamtl": {
+        "date": 1635753600000,
         "profession": "PIONEER",
         "mod": {
-            "modY": true
+            "modY": true,
+            "modX": true
         },
         "skill": [
             {
@@ -2417,10 +2531,11 @@
             }
         ],
         "name": "焰尾",
-        "rarity": 6,
-        "date": 1635753600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_4017_puzzle": {
+        "date": 1671091200000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -2433,10 +2548,11 @@
             }
         ],
         "name": "谜图",
-        "rarity": 5,
-        "date": 1671091200000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_297_hamoni": {
+        "date": 1671091200000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -2452,10 +2568,11 @@
             }
         ],
         "name": "和弦",
-        "rarity": 5,
-        "date": 1671091200000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_193_frostl": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -2468,10 +2585,11 @@
             }
         ],
         "name": "霜叶",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_2015_dusk": {
+        "date": 1612512000000,
         "profession": "CASTER",
         "mod": {
             "modY": true,
@@ -2492,10 +2610,11 @@
             }
         ],
         "name": "夕",
-        "rarity": 6,
-        "date": 1612512000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_381_bubble": {
+        "date": 1602748800000,
         "profession": "TANK",
         "mod": {
             "modX": true
@@ -2510,10 +2629,11 @@
             }
         ],
         "name": "泡泡",
-        "rarity": 4,
-        "date": 1602748800000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_369_bena": {
+        "date": 1622534400000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true
@@ -2529,10 +2649,11 @@
             }
         ],
         "name": "贝娜",
-        "rarity": 5,
-        "date": 1622534400000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_4043_erato": {
+        "date": 1652947200000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -2548,10 +2669,11 @@
             }
         ],
         "name": "埃拉托",
-        "rarity": 5,
-        "date": 1652947200000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_115_headbr": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "mod": {
             "modX": true
@@ -2566,10 +2688,11 @@
             }
         ],
         "name": "凛冬",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_348_ceylon": {
+        "date": 1566892800000,
         "profession": "MEDIC",
         "mod": {
             "modX": true
@@ -2585,10 +2708,11 @@
             }
         ],
         "name": "锡兰",
-        "rarity": 5,
-        "date": 1566892800000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_1012_skadi2": {
+        "date": 1619856000000,
         "profession": "SUPPORT",
         "skill": [
             {
@@ -2605,10 +2729,11 @@
             }
         ],
         "name": "浊心斯卡蒂",
-        "rarity": 6,
-        "date": 1619856000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_415_flint": {
+        "date": 1598342400000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -2621,10 +2746,11 @@
             }
         ],
         "name": "燧石",
-        "rarity": 5,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_1020_reed2": {
+        "date": 1671091200000,
         "profession": "MEDIC",
         "skill": [
             {
@@ -2640,10 +2766,11 @@
             }
         ],
         "name": "焰影苇草",
-        "rarity": 6,
-        "date": 1671091200000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_373_lionhd": {
+        "date": 1592467200000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -2658,10 +2785,11 @@
             }
         ],
         "name": "莱恩哈特",
-        "rarity": 5,
-        "date": 1592467200000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_293_thorns": {
+        "date": 1597132800000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -2677,10 +2805,11 @@
             }
         ],
         "name": "棘刺",
-        "rarity": 6,
-        "date": 1597132800000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_452_bstalk": {
+        "date": 1609833600000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -2693,10 +2822,11 @@
             }
         ],
         "name": "豆苗",
-        "rarity": 4,
-        "date": 1609833600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_337_utage": {
+        "date": 1584432000000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -2712,10 +2842,11 @@
             }
         ],
         "name": "宴",
-        "rarity": 4,
-        "date": 1584432000000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_456_ash": {
+        "date": 1615276800000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -2735,10 +2866,11 @@
             }
         ],
         "name": "灰烬",
-        "rarity": 6,
-        "date": 1615276800000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_377_gdglow": {
+        "date": 1644912000000,
         "profession": "CASTER",
         "skill": [
             {
@@ -2755,10 +2887,11 @@
             }
         ],
         "name": "澄闪",
-        "rarity": 6,
-        "date": 1644912000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_131_flameb": {
+        "date": 1571126400000,
         "profession": "WARRIOR",
         "mod": {
             "modY": true
@@ -2774,10 +2907,11 @@
             }
         ],
         "name": "炎客",
-        "rarity": 5,
-        "date": 1571126400000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_440_pinecn": {
+        "date": 1608192000000,
         "profession": "SNIPER",
         "skill": [
             {
@@ -2790,10 +2924,11 @@
             }
         ],
         "name": "松果",
-        "rarity": 4,
-        "date": 1608192000000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_464_cement": {
+        "date": 1680768000000,
         "profession": "TANK",
         "mod": {
             "modX": true
@@ -2809,10 +2944,11 @@
             }
         ],
         "name": "洋灰",
-        "rarity": 5,
-        "date": 1680768000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_385_finlpp": {
+        "date": 1583179200000,
         "profession": "MEDIC",
         "mod": {
             "modY": true
@@ -2828,10 +2964,11 @@
             }
         ],
         "name": "清流",
-        "rarity": 4,
-        "date": 1583179200000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_249_mlyss": {
+        "date": 1682928000000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -2848,10 +2985,11 @@
             }
         ],
         "name": "缪尔赛思",
-        "rarity": 6,
-        "date": 1682928000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_187_ccheal": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "mod": {
             "modY": true
@@ -2867,17 +3005,19 @@
             }
         ],
         "name": "嘉维尔",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_503_rang": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "skill": [],
         "name": "巡林者",
-        "rarity": 2,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 2
     },
     "char_277_sqrrel": {
+        "date": 1556589600000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true
@@ -2893,10 +3033,11 @@
             }
         ],
         "name": "阿消",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4046_ebnhlz": {
+        "date": 1654761600000,
         "profession": "CASTER",
         "mod": {
             "modY": true,
@@ -2917,10 +3058,11 @@
             }
         ],
         "name": "黑键",
-        "rarity": 6,
-        "date": 1654761600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_017_huang": {
+        "date": 1577174400000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -2937,10 +3079,11 @@
             }
         ],
         "name": "煌",
-        "rarity": 6,
-        "date": 1577174400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_4087_ines": {
+        "date": 1680768000000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -2957,29 +3100,19 @@
             }
         ],
         "name": "伊内丝",
-        "rarity": 6,
-        "date": 1680768000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_501_durin": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "skill": [],
         "name": "杜林",
-        "rarity": 2,
-        "date": 1556589600000
-    },
-    "char_510_amedic": {
-        "profession": "MEDIC",
-        "skill": [
-            {
-                "iconId": "skchr_amedic_1",
-                "name": "宛如天启"
-            }
-        ],
-        "name": "Touch",
-        "rarity": 5,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 2
     },
     "char_106_franka": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -2994,10 +3127,11 @@
             }
         ],
         "name": "芙兰卡",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_213_mostma": {
+        "date": 1574150400000,
         "profession": "CASTER",
         "mod": {
             "modY": true
@@ -3016,10 +3150,11 @@
             }
         ],
         "name": "莫斯提马",
-        "rarity": 6,
-        "date": 1574150400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_430_fartth": {
+        "date": 1634284800000,
         "profession": "SNIPER",
         "mod": {
             "modY": true,
@@ -3039,17 +3174,19 @@
             }
         ],
         "name": "远牙",
-        "rarity": 6,
-        "date": 1634284800000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_4093_frston": {
+        "date": 1684742400000,
         "profession": "TANK",
         "skill": [],
         "name": "Friston-3",
-        "rarity": 1,
-        "date": 1684742400000
+        "itemObtainApproach": 1,
+        "rarity": 1
     },
     "char_379_sesa": {
+        "date": 1584432000000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -3064,10 +3201,11 @@
             }
         ],
         "name": "慑砂",
-        "rarity": 5,
-        "date": 1584432000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_263_skadi": {
+        "date": 1559181600000,
         "profession": "WARRIOR",
         "mod": {
             "modY": true,
@@ -3087,10 +3225,11 @@
             }
         ],
         "name": "斯卡蒂",
-        "rarity": 6,
-        "date": 1559181600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_109_fmout": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -3105,10 +3244,11 @@
             }
         ],
         "name": "远山",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_294_ayer": {
+        "date": 1594281600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -3121,10 +3261,31 @@
             }
         ],
         "name": "断崖",
-        "rarity": 5,
-        "date": 1594281600000
+        "itemObtainApproach": 1,
+        "rarity": 5
+    },
+    "char_1032_excu2": {
+        "profession": "WARRIOR",
+        "skill": [
+            {
+                "iconId": "skchr_excu2_1",
+                "name": "遗嘱执行"
+            },
+            {
+                "iconId": "skchr_excu2_2",
+                "name": "近身铳斗"
+            },
+            {
+                "iconId": "skchr_excu2_3",
+                "name": "圣约决裁"
+            }
+        ],
+        "name": "圣约送葬人",
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_253_greyy": {
+        "date": 1562659200000,
         "profession": "CASTER",
         "mod": {
             "modY": true
@@ -3139,10 +3300,11 @@
             }
         ],
         "name": "格雷伊",
-        "rarity": 4,
-        "date": 1562659200000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_333_sidero": {
+        "date": 1587456000000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -3154,10 +3316,11 @@
             }
         ],
         "name": "铸铁",
-        "rarity": 5,
-        "date": 1587456000000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_179_cgbird": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "mod": {
             "modX": true
@@ -3176,10 +3339,11 @@
             }
         ],
         "name": "夜莺",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_2014_nian": {
+        "date": 1579161600000,
         "profession": "TANK",
         "mod": {
             "modY": true,
@@ -3200,10 +3364,11 @@
             }
         ],
         "name": "年",
-        "rarity": 6,
-        "date": 1579161600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_436_whispr": {
+        "date": 1604217600000,
         "profession": "MEDIC",
         "mod": {
             "modX": true
@@ -3219,10 +3384,11 @@
             }
         ],
         "name": "絮雨",
-        "rarity": 5,
-        "date": 1604217600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_150_snakek": {
+        "date": 1556589600000,
         "profession": "TANK",
         "mod": {
             "modX": true
@@ -3237,10 +3403,11 @@
             }
         ],
         "name": "蛇屠箱",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4041_chnut": {
+        "date": 1649923200000,
         "profession": "MEDIC",
         "skill": [
             {
@@ -3253,10 +3420,11 @@
             }
         ],
         "name": "褐果",
-        "rarity": 4,
-        "date": 1649923200000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_241_panda": {
+        "date": 1556589600000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true
@@ -3272,10 +3440,11 @@
             }
         ],
         "name": "食铁兽",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_1031_slent2": {
+        "date": 1682928000000,
         "profession": "SUPPORT",
         "skill": [
             {
@@ -3292,10 +3461,11 @@
             }
         ],
         "name": "淬羽赫默",
-        "rarity": 6,
-        "date": 1682928000000
+        "itemObtainApproach": 0,
+        "rarity": 6
     },
     "char_110_deepcl": {
+        "date": 1556589600000,
         "profession": "SUPPORT",
         "mod": {
             "modY": true
@@ -3311,11 +3481,15 @@
             }
         ],
         "name": "深海色",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4072_ironmn": {
+        "date": 1665475200000,
         "profession": "SUPPORT",
+        "mod": {
+            "modX": true
+        },
         "skill": [
             {
                 "iconId": "skchr_ironmn_1",
@@ -3331,10 +3505,11 @@
             }
         ],
         "name": "白铁",
-        "rarity": 6,
-        "date": 1665475200000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_282_catap": {
+        "date": 1558576800000,
         "profession": "SNIPER",
         "skill": [
             {
@@ -3343,10 +3518,11 @@
             }
         ],
         "name": "空爆",
-        "rarity": 3,
-        "date": 1558576800000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_208_melan": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -3354,17 +3530,11 @@
             }
         ],
         "name": "玫兰莎",
-        "rarity": 3,
-        "date": 1556589600000
-    },
-    "char_504_rguard": {
-        "profession": "PIONEER",
-        "skill": [],
-        "name": "预备干员-近战",
-        "rarity": 3,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_166_skfire": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "mod": {
             "modY": true
@@ -3379,10 +3549,11 @@
             }
         ],
         "name": "天火",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_1024_hbisc2": {
+        "date": 1654761600000,
         "profession": "MEDIC",
         "skill": [
             {
@@ -3394,10 +3565,11 @@
             }
         ],
         "name": "濯尘芙蓉",
-        "rarity": 5,
-        "date": 1654761600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_474_glady": {
+        "date": 1619856000000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -3417,10 +3589,11 @@
             }
         ],
         "name": "歌蕾蒂娅",
-        "rarity": 6,
-        "date": 1619856000000
+        "itemObtainApproach": 0,
+        "rarity": 6
     },
     "char_133_mm": {
+        "date": 1574150400000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -3436,10 +3609,11 @@
             }
         ],
         "name": "梅",
-        "rarity": 4,
-        "date": 1574150400000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_306_leizi": {
+        "date": 1582617600000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -3454,10 +3628,11 @@
             }
         ],
         "name": "惊蛰",
-        "rarity": 5,
-        "date": 1582617600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4013_kjera": {
+        "date": 1640073600000,
         "profession": "CASTER",
         "skill": [
             {
@@ -3469,10 +3644,11 @@
             }
         ],
         "name": "耶拉",
-        "rarity": 5,
-        "date": 1640073600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_235_jesica": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -3488,10 +3664,11 @@
             }
         ],
         "name": "杰西卡",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4047_pianst": {
+        "date": 1654761600000,
         "profession": "TANK",
         "skill": [
             {
@@ -3504,10 +3681,11 @@
             }
         ],
         "name": "车尔尼",
-        "rarity": 5,
-        "date": 1654761600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_1013_chen2": {
+        "date": 1627977600000,
         "profession": "SNIPER",
         "skill": [
             {
@@ -3524,10 +3702,11 @@
             }
         ],
         "name": "假日威龙陈",
-        "rarity": 6,
-        "date": 1627977600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_214_kafka": {
+        "date": 1608192000000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true
@@ -3543,10 +3722,11 @@
             }
         ],
         "name": "卡夫卡",
-        "rarity": 5,
-        "date": 1608192000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_451_robin": {
+        "date": 1608192000000,
         "profession": "SPECIAL",
         "mod": {
             "modY": true
@@ -3562,10 +3742,11 @@
             }
         ],
         "name": "罗宾",
-        "rarity": 5,
-        "date": 1608192000000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_416_zumama": {
+        "date": 1598342400000,
         "profession": "TANK",
         "mod": {
             "modY": true,
@@ -3586,10 +3767,11 @@
             }
         ],
         "name": "森蚺",
-        "rarity": 6,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_204_platnm": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -3604,10 +3786,11 @@
             }
         ],
         "name": "白金",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_237_gravel": {
+        "date": 1556589600000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -3623,10 +3806,11 @@
             }
         ],
         "name": "砾",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_117_myrrh": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "mod": {
             "modX": true
@@ -3642,10 +3826,11 @@
             }
         ],
         "name": "末药",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_136_hsguma": {
+        "date": 1556589600000,
         "profession": "TANK",
         "mod": {
             "modY": true,
@@ -3666,10 +3851,11 @@
             }
         ],
         "name": "星熊",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_4071_peper": {
+        "date": 1665475200000,
         "profession": "MEDIC",
         "skill": [
             {
@@ -3681,10 +3867,11 @@
             }
         ],
         "name": "明椒",
-        "rarity": 5,
-        "date": 1665475200000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_219_meteo": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -3700,10 +3887,11 @@
             }
         ],
         "name": "陨星",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_151_myrtle": {
+        "date": 1568102400000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -3715,22 +3903,11 @@
             }
         ],
         "name": "桃金娘",
-        "rarity": 4,
-        "date": 1568102400000
-    },
-    "char_508_aguard": {
-        "profession": "WARRIOR",
-        "skill": [
-            {
-                "iconId": "skchr_aguard_1",
-                "name": "亮剑"
-            }
-        ],
-        "name": "Sharp",
-        "rarity": 5,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_475_akafyu": {
+        "date": 1619856000000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -3746,10 +3923,11 @@
             }
         ],
         "name": "赤冬",
-        "rarity": 5,
-        "date": 1619856000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_159_peacok": {
+        "date": 1585728000000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -3765,10 +3943,11 @@
             }
         ],
         "name": "断罪者",
-        "rarity": 4,
-        "date": 1585728000000
+        "itemObtainApproach": 0,
+        "rarity": 4
     },
     "char_4066_highmo": {
+        "date": 1664265600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -3781,10 +3960,11 @@
             }
         ],
         "name": "海沫",
-        "rarity": 5,
-        "date": 1664265600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_431_ashlok": {
+        "date": 1634284800000,
         "profession": "TANK",
         "skill": [
             {
@@ -3796,10 +3976,11 @@
             }
         ],
         "name": "灰毫",
-        "rarity": 5,
-        "date": 1634284800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_196_sunbr": {
+        "date": 1556589600000,
         "profession": "TANK",
         "mod": {
             "modX": true
@@ -3815,10 +3996,11 @@
             }
         ],
         "name": "古米",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_302_glaze": {
+        "date": 1577174400000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -3834,10 +4016,11 @@
             }
         ],
         "name": "安比尔",
-        "rarity": 4,
-        "date": 1577174400000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_1021_kroos2": {
+        "date": 1643097600000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -3853,10 +4036,11 @@
             }
         ],
         "name": "寒芒克洛丝",
-        "rarity": 5,
-        "date": 1643097600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_289_gyuki": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "mod": {
             "modY": true
@@ -3871,10 +4055,11 @@
             }
         ],
         "name": "缠丸",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_278_orchid": {
+        "date": 1556589600000,
         "profession": "SUPPORT",
         "skill": [
             {
@@ -3882,10 +4067,11 @@
             }
         ],
         "name": "梓兰",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_258_podego": {
+        "date": 1592467200000,
         "profession": "SUPPORT",
         "mod": {
             "modX": true
@@ -3901,10 +4087,11 @@
             }
         ],
         "name": "波登可",
-        "rarity": 4,
-        "date": 1592467200000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_101_sora": {
+        "date": 1556589600000,
         "profession": "SUPPORT",
         "skill": [
             {
@@ -3917,10 +4104,11 @@
             }
         ],
         "name": "空",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_128_plosis": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "mod": {
             "modX": true
@@ -3935,17 +4123,19 @@
             }
         ],
         "name": "白面鸮",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_502_nblade": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "skill": [],
         "name": "夜刀",
-        "rarity": 2,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 2
     },
     "char_123_fang": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -3953,10 +4143,11 @@
             }
         ],
         "name": "芬",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_226_hmau": {
+        "date": 1579161600000,
         "profession": "TANK",
         "mod": {
             "modY": true
@@ -3972,10 +4163,11 @@
             }
         ],
         "name": "吽",
-        "rarity": 5,
-        "date": 1579161600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_2013_cerber": {
+        "date": 1582617600000,
         "profession": "CASTER",
         "mod": {
             "modY": true,
@@ -3996,10 +4188,11 @@
             }
         ],
         "name": "刻俄柏",
-        "rarity": 6,
-        "date": 1582617600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_336_folivo": {
+        "date": 1595923200000,
         "profession": "SUPPORT",
         "mod": {
             "modX": true
@@ -4015,22 +4208,11 @@
             }
         ],
         "name": "稀音",
-        "rarity": 5,
-        "date": 1595923200000
-    },
-    "char_512_aprot": {
-        "profession": "TANK",
-        "skill": [
-            {
-                "iconId": "skchr_aprot_1",
-                "name": "速战速决"
-            }
-        ],
-        "name": "暮落",
-        "rarity": 5,
-        "date": 1641369600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_181_flower": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "mod": {
             "modY": true
@@ -4045,17 +4227,11 @@
             }
         ],
         "name": "调香师",
-        "rarity": 4,
-        "date": 1556589600000
-    },
-    "char_505_rcast": {
-        "profession": "CASTER",
-        "skill": [],
-        "name": "预备干员-术师",
-        "rarity": 3,
-        "date": 1598342400000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_164_nightm": {
+        "date": 1559181600000,
         "profession": "CASTER",
         "mod": {
             "modY": true
@@ -4071,10 +4247,11 @@
             }
         ],
         "name": "夜魔",
-        "rarity": 5,
-        "date": 1559181600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_298_susuro": {
+        "date": 1566892800000,
         "profession": "MEDIC",
         "mod": {
             "modX": true
@@ -4089,10 +4266,11 @@
             }
         ],
         "name": "苏苏洛",
-        "rarity": 4,
-        "date": 1566892800000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_322_lmlee": {
+        "date": 1643097600000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -4112,10 +4290,11 @@
             }
         ],
         "name": "老鲤",
-        "rarity": 6,
-        "date": 1643097600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_155_tiger": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -4128,10 +4307,11 @@
             }
         ],
         "name": "因陀罗",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4062_totter": {
+        "date": 1665475200000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -4147,10 +4327,11 @@
             }
         ],
         "name": "铅踝",
-        "rarity": 4,
-        "date": 1665475200000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_129_bluep": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -4166,10 +4347,11 @@
             }
         ],
         "name": "蓝毒",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_154_morgan": {
+        "date": 1680768000000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -4185,10 +4367,11 @@
             }
         ],
         "name": "摩根",
-        "rarity": 5,
-        "date": 1680768000000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_486_takila": {
+        "date": 1627977600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -4201,10 +4384,11 @@
             }
         ],
         "name": "龙舌兰",
-        "rarity": 5,
-        "date": 1627977600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_215_mantic": {
+        "date": 1556589600000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -4220,10 +4404,11 @@
             }
         ],
         "name": "狮蝎",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_304_zebra": {
+        "date": 1618473600000,
         "profession": "TANK",
         "mod": {
             "modY": true
@@ -4239,10 +4424,11 @@
             }
         ],
         "name": "暴雨",
-        "rarity": 5,
-        "date": 1618473600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_300_phenxi": {
+        "date": 1647331200000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -4262,10 +4448,11 @@
             }
         ],
         "name": "菲亚梅塔",
-        "rarity": 6,
-        "date": 1647331200000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_107_liskam": {
+        "date": 1556589600000,
         "profession": "TANK",
         "skill": [
             {
@@ -4278,10 +4465,11 @@
             }
         ],
         "name": "雷蛇",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_343_tknogi": {
+        "date": 1591084800000,
         "profession": "SUPPORT",
         "skill": [
             {
@@ -4294,10 +4482,11 @@
             }
         ],
         "name": "月禾",
-        "rarity": 5,
-        "date": 1591084800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_188_helage": {
+        "date": 1568102400000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -4317,10 +4506,11 @@
             }
         ],
         "name": "赫拉格",
-        "rarity": 6,
-        "date": 1568102400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_4019_ncdeer": {
+        "date": 1641801600000,
         "profession": "SUPPORT",
         "skill": [
             {
@@ -4333,10 +4523,11 @@
             }
         ],
         "name": "九色鹿",
-        "rarity": 5,
-        "date": 1641801600000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_148_nearl": {
+        "date": 1556589600000,
         "profession": "TANK",
         "mod": {
             "modX": true
@@ -4352,10 +4543,11 @@
             }
         ],
         "name": "临光",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_240_wyvern": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -4364,10 +4556,11 @@
             }
         ],
         "name": "香草",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_466_qanik": {
+        "date": 1667289600000,
         "profession": "CASTER",
         "mod": {
             "modY": true
@@ -4383,10 +4576,11 @@
             }
         ],
         "name": "雪绒",
-        "rarity": 5,
-        "date": 1667289600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_195_glassb": {
+        "date": 1556589600000,
         "profession": "SUPPORT",
         "mod": {
             "modY": true
@@ -4402,10 +4596,11 @@
             }
         ],
         "name": "真理",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_172_svrash": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -4422,10 +4617,11 @@
             }
         ],
         "name": "银灰",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_220_grani": {
+        "date": 1559181600000,
         "profession": "PIONEER",
         "mod": {
             "modX": true
@@ -4440,10 +4636,30 @@
             }
         ],
         "name": "格拉尼",
-        "rarity": 5,
-        "date": 1559181600000
+        "itemObtainApproach": 0,
+        "rarity": 5
+    },
+    "char_4015_spuria": {
+        "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
+        "skill": [
+            {
+                "iconId": "skchr_spuria_1",
+                "name": "见机行事"
+            },
+            {
+                "iconId": "skchr_spuria_2",
+                "name": "临场铳械改装"
+            }
+        ],
+        "name": "空构",
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_426_billro": {
+        "date": 1622534400000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -4463,10 +4679,11 @@
             }
         ],
         "name": "卡涅利安",
-        "rarity": 6,
-        "date": 1622534400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_010_chen": {
+        "date": 1562659200000,
         "profession": "WARRIOR",
         "mod": {
             "modX": true
@@ -4486,10 +4703,11 @@
             }
         ],
         "name": "陈",
-        "rarity": 6,
-        "date": 1562659200000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_222_bpipe": {
+        "date": 1584432000000,
         "profession": "PIONEER",
         "mod": {
             "modX": true
@@ -4508,10 +4726,11 @@
             }
         ],
         "name": "风笛",
-        "rarity": 6,
-        "date": 1584432000000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_130_doberm": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "mod": {
             "modY": true
@@ -4527,10 +4746,11 @@
             }
         ],
         "name": "杜宾",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_281_popka": {
+        "date": 1562659200000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -4538,10 +4758,11 @@
             }
         ],
         "name": "泡普卡",
-        "rarity": 3,
-        "date": 1562659200000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_4063_quartz": {
+        "date": 1667289600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -4553,10 +4774,11 @@
             }
         ],
         "name": "石英",
-        "rarity": 4,
-        "date": 1667289600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_388_mint": {
+        "date": 1600934400000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -4572,10 +4794,11 @@
             }
         ],
         "name": "薄绿",
-        "rarity": 5,
-        "date": 1600934400000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_344_beewax": {
+        "date": 1595923200000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -4591,22 +4814,11 @@
             }
         ],
         "name": "蜜蜡",
-        "rarity": 5,
-        "date": 1595923200000
-    },
-    "char_513_apionr": {
-        "profession": "PIONEER",
-        "skill": [
-            {
-                "iconId": "skchr_apionr_1",
-                "name": "只余芬芳"
-            }
-        ],
-        "name": "郁金香",
-        "rarity": 5,
-        "date": 1664265600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_427_vigil": {
+        "date": 1667289600000,
         "profession": "PIONEER",
         "skill": [
             {
@@ -4623,10 +4835,11 @@
             }
         ],
         "name": "伺夜",
-        "rarity": 6,
-        "date": 1667289600000
+        "itemObtainApproach": 0,
+        "rarity": 6
     },
     "char_356_broca": {
+        "date": 1575964800000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -4639,10 +4852,11 @@
             }
         ],
         "name": "布洛卡",
-        "rarity": 5,
-        "date": 1575964800000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_358_lisa": {
+        "date": 1594281600000,
         "profession": "SUPPORT",
         "mod": {
             "modX": true
@@ -4662,10 +4876,11 @@
             }
         ],
         "name": "铃兰",
-        "rarity": 6,
-        "date": 1594281600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_290_vigna": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "mod": {
             "modY": true
@@ -4681,10 +4896,11 @@
             }
         ],
         "name": "红豆",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_272_strong": {
+        "date": 1597132800000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -4700,10 +4916,11 @@
             }
         ],
         "name": "孑",
-        "rarity": 4,
-        "date": 1597132800000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_350_surtr": {
+        "date": 1600934400000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -4720,11 +4937,15 @@
             }
         ],
         "name": "史尔特尔",
-        "rarity": 6,
-        "date": 1600934400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_225_haak": {
+        "date": 1579161600000,
         "profession": "SPECIAL",
+        "mod": {
+            "modX": true
+        },
         "skill": [
             {
                 "iconId": "skchr_haak_1",
@@ -4740,10 +4961,11 @@
             }
         ],
         "name": "阿",
-        "rarity": 6,
-        "date": 1579161600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_206_gnosis": {
+        "date": 1640073600000,
         "profession": "SUPPORT",
         "mod": {
             "modX": true
@@ -4763,10 +4985,11 @@
             }
         ],
         "name": "灵知",
-        "rarity": 6,
-        "date": 1640073600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_230_savage": {
+        "date": 1556589600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -4779,10 +5002,11 @@
             }
         ],
         "name": "暴行",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_349_chiave": {
+        "date": 1595923200000,
         "profession": "PIONEER",
         "mod": {
             "modY": true
@@ -4797,10 +5021,11 @@
             }
         ],
         "name": "贾维",
-        "rarity": 5,
-        "date": 1595923200000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4036_forcer": {
+        "date": 1647331200000,
         "profession": "SPECIAL",
         "mod": {
             "modX": true
@@ -4816,10 +5041,11 @@
             }
         ],
         "name": "见行者",
-        "rarity": 5,
-        "date": 1647331200000
+        "itemObtainApproach": 0,
+        "rarity": 5
     },
     "char_202_demkni": {
+        "date": 1556589600000,
         "profession": "TANK",
         "mod": {
             "modY": true,
@@ -4840,10 +5066,11 @@
             }
         ],
         "name": "塞雷娅",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_158_milu": {
+        "date": 1556589600000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -4859,17 +5086,19 @@
             }
         ],
         "name": "守林人",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4091_ulika": {
+        "date": 1680336000000,
         "profession": "SUPPORT",
         "skill": [],
         "name": "U-Official",
-        "rarity": 1,
-        "date": 1680336000000
+        "itemObtainApproach": 0,
+        "rarity": 1
     },
     "char_449_glider": {
+        "date": 1635753600000,
         "profession": "MEDIC",
         "skill": [
             {
@@ -4882,10 +5111,11 @@
             }
         ],
         "name": "蜜莓",
-        "rarity": 5,
-        "date": 1635753600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_112_siege": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "mod": {
             "modY": true,
@@ -4905,10 +5135,11 @@
             }
         ],
         "name": "推进之王",
-        "rarity": 6,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_120_hibisc": {
+        "date": 1556589600000,
         "profession": "MEDIC",
         "skill": [
             {
@@ -4916,10 +5147,11 @@
             }
         ],
         "name": "芙蓉",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_391_rosmon": {
+        "date": 1604217600000,
         "profession": "SNIPER",
         "mod": {
             "modX": true
@@ -4939,10 +5171,11 @@
             }
         ],
         "name": "迷迭香",
-        "rarity": 6,
-        "date": 1604217600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_2023_ling": {
+        "date": 1643097600000,
         "profession": "SUPPORT",
         "mod": {
             "modY": true
@@ -4962,10 +5195,11 @@
             }
         ],
         "name": "令",
-        "rarity": 6,
-        "date": 1643097600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_121_lava": {
+        "date": 1556589600000,
         "profession": "CASTER",
         "skill": [
             {
@@ -4973,10 +5207,11 @@
             }
         ],
         "name": "炎熔",
-        "rarity": 3,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 3
     },
     "char_4032_provs": {
+        "date": 1662624000000,
         "profession": "SUPPORT",
         "mod": {
             "modX": true
@@ -4992,10 +5227,11 @@
             }
         ],
         "name": "但书",
-        "rarity": 5,
-        "date": 1662624000000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_149_scave": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "mod": {
             "modX": true
@@ -5010,10 +5246,11 @@
             }
         ],
         "name": "清道夫",
-        "rarity": 4,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4080_lin": {
+        "date": 1673942400000,
         "profession": "CASTER",
         "mod": {
             "modX": true
@@ -5033,10 +5270,11 @@
             }
         ],
         "name": "林",
-        "rarity": 6,
-        "date": 1673942400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_347_jaksel": {
+        "date": 1604217600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -5049,10 +5287,11 @@
             }
         ],
         "name": "杰克",
-        "rarity": 4,
-        "date": 1604217600000
+        "itemObtainApproach": 1,
+        "rarity": 4
     },
     "char_4014_lunacu": {
+        "date": 1667289600000,
         "profession": "SNIPER",
         "mod": {
             "modY": true
@@ -5068,10 +5307,11 @@
             }
         ],
         "name": "子月",
-        "rarity": 5,
-        "date": 1667289600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_2024_chyue": {
+        "date": 1673942400000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -5088,10 +5328,11 @@
             }
         ],
         "name": "重岳",
-        "rarity": 6,
-        "date": 1673942400000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_201_moeshd": {
+        "date": 1556589600000,
         "profession": "TANK",
         "mod": {
             "modY": true
@@ -5107,10 +5348,11 @@
             }
         ],
         "name": "可颂",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_493_firwhl": {
+        "date": 1673942400000,
         "profession": "TANK",
         "skill": [
             {
@@ -5123,10 +5365,11 @@
             }
         ],
         "name": "火哨",
-        "rarity": 5,
-        "date": 1673942400000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_472_pasngr": {
+        "date": 1618473600000,
         "profession": "CASTER",
         "mod": {
             "modY": true,
@@ -5147,10 +5390,11 @@
             }
         ],
         "name": "异客",
-        "rarity": 6,
-        "date": 1618473600000
+        "itemObtainApproach": 1,
+        "rarity": 6
     },
     "char_102_texas": {
+        "date": 1556589600000,
         "profession": "PIONEER",
         "mod": {
             "modY": true
@@ -5165,10 +5409,11 @@
             }
         ],
         "name": "德克萨斯",
-        "rarity": 5,
-        "date": 1556589600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_4042_lumen": {
+        "date": 1651392000000,
         "profession": "MEDIC",
         "mod": {
             "modY": true,
@@ -5189,10 +5434,11 @@
             }
         ],
         "name": "流明",
-        "rarity": 6,
-        "date": 1651392000000
+        "itemObtainApproach": 0,
+        "rarity": 6
     },
     "char_4040_rockr": {
+        "date": 1649923200000,
         "profession": "CASTER",
         "skill": [
             {
@@ -5204,10 +5450,11 @@
             }
         ],
         "name": "洛洛",
-        "rarity": 5,
-        "date": 1649923200000
+        "itemObtainApproach": 1,
+        "rarity": 5
     },
     "char_421_crow": {
+        "date": 1627977600000,
         "profession": "WARRIOR",
         "skill": [
             {
@@ -5220,7 +5467,7 @@
             }
         ],
         "name": "羽毛笔",
-        "rarity": 5,
-        "date": 1627977600000
+        "itemObtainApproach": 1,
+        "rarity": 5
     }
 }

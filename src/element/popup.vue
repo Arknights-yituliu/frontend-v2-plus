@@ -9,6 +9,7 @@
         <div class="popup_btn" >取消</div>
         <div class="popup_btn" @click="openAndClose(false)">关闭</div>
       </div> -->
+      
     </div>
     </div>
 </template>
@@ -72,12 +73,12 @@ watch(
   left: 0;
   z-index: 1000;
   margin: auto;
-  margin-top: 100px;
   width: 540px;
-  height: auto;
-   overflow: auto;
+  height:auto;
+  overflow: auto;
   background-color: rgba(255, 255, 255);
   border-radius: 6px;
+  margin-top: 100px;
 }
 
 .popup_btn_wrap {
@@ -87,6 +88,7 @@ watch(
   flex-wrap: nowrap;
   justify-content: flex-end;
   margin: auto;
+ 
 }
 
 .popup_btn {
