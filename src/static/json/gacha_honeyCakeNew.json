@@ -129,7 +129,6 @@
     "rewardType": "公共",
     "module": "honeyCake"
   },
- 
   "端午": {
     "originium": 1,
     "orundum": 200,
@@ -180,16 +179,6 @@
     "rewardType": "公共",
     "module": "act"
   },
-  "联动故事集": {
-    "originium": 16,
-    "orundum": 0,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/07/11 00:00:00",
-    "end": "2023/07/11 00:00:00",
-    "rewardType": "公共",
-    "module": "act"
-  },
   "绿野幻梦(源石)": {
     "originium": 27,
     "orundum": 0,
@@ -210,8 +199,6 @@
     "rewardType": "公共",
     "module": "actRe"
   },
-  
-  
   "理想城复刻(源石)": {
     "originium": 40,
     "orundum": 0,
