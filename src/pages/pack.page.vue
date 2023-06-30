@@ -8,7 +8,10 @@
           <div :class="opETextTheme">Packs Value</div>
         </div>
       </div>
-
+      <div class="stage_hint">
+        <div class="stage_hint_t5">移动端可左右滑动表格查看性价比</div>
+      </div>
+ 
       <client-only>
         <div class="pack-table-wrapper">
           <el-table
