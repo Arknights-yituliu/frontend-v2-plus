@@ -69,8 +69,9 @@ watch(
 .popup {
   /* display: none; */
   position: absolute;;
-  right: 0;
+  top: 50px;
   left: 0;
+  right: 0;
   z-index: 1000;
   margin: auto;
   width: 540px;
@@ -78,7 +79,7 @@ watch(
   overflow: auto;
   background-color: rgba(255, 255, 255);
   border-radius: 6px;
-  margin-top: 100px;
+  /* margin-top: 100px; */
 }
 
 .popup_btn_wrap {

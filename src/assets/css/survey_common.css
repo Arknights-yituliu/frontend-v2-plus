@@ -47,7 +47,7 @@
     /* border-bottom: 1px rgb(180, 180, 180) solid; */
     margin: auto;
     min-height: 36px;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
 
 .btn_set {
@@ -61,6 +61,13 @@
     cursor: pointer;
     border-radius: 4px;
     vertical-align: middle;
+}
+
+@media (max-width: 1080px) {
+    .aside-btn {
+        display: none;
+    }
+
 }
 
 .btn_set_select {
@@ -92,12 +99,37 @@
     background: rgb(230, 230, 230);
 }
 
-.card{
+.card {
     background-color: rgba(255, 255, 255, 1);
     box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
     border-radius: 0px;
 }
 
-.tool_card{
+.tool_card {
     margin: 8px;
 }
+
+
+.input_upload_wrap {
+    position: relative;
+}
+
+.input_upload {
+    width: 100%;
+    height: 100%;
+    outline: none;
+    -moz-opacity: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2000;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+.upload_file_text {
+  width: 100%;
+  overflow: hidden;
+}
+
