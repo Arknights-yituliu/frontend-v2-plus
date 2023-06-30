@@ -11,7 +11,7 @@
       </div>
       <div :class="getChildClass(index)" :id="'nav' + index" v-show="r.isChild">
         <a :href="c.path" class="nav_href" v-for="c in r.child">
-          <div class="aside_nav_child">{{ c.text }}</div></a
+          <div class="aside_nav_child_text">{{ c.text }}</div></a
         >
       </div>
       <div class="aside_nav" v-show="!r.isChild">
