@@ -4,13 +4,21 @@
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
         <!-- <div class="setup_title">设置</div> -->
-        <div class="btn_set"><characterDemo></characterDemo></div>
-        <div class="btn_set" @click="upload()">上传数据</div>
-        <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
-        <div class="btn_set" v-show="!exportExcelBtnVisible" @click="exportExcel()">转为Excel</div> 
-        <a :href=exportExcelUrl v-show="exportExcelBtnVisible"><div class="btn_set" >导出Excel</div></a> 
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选</div>
         <div :class="btnSetClass(cardSimple)" @click="cardSimple = !cardSimple">仅显示头像</div>
+        <div class="btn_set" @click="upload()">上传数据</div>
+        <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
+        <div class="btn_set" v-show="!exportExcelBtnVisible" @click="exportExcel()">转为Excel</div>
+        <a :href="exportExcelUrl" v-show="exportExcelBtnVisible"><div class="btn_set">导出Excel</div></a>
+
+        <div class="btn_set btn_upload">
+          <div class="input_upload_wrap">
+            <div class="upload_file_text">{{ uploadFileName }}</div>
+            <input id="uploadInput" type="file" class="input_upload" @input="uploadFile()" />
+          </div>
+        </div>
+        <div class="btn_set" @click="uploadByExcel">上传EXCEL</div>
+        <div class="btn_set"><characterDemo></characterDemo></div>
         <!-- <div class="btn_set">统计</div> -->
       </div>
 
@@ -142,9 +150,7 @@
       除非另有声明，网站其他内容采用
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享</a>授权。
     </div>
-    <div>
-      <input id="uploadFile" type="file" />
-    </div>
+    <div></div>
   </div>
 </template>
 
@@ -169,12 +175,11 @@ function getSprite(id, type) {
 let characterList = ref(characterListInit());
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 
-let exportExcelUrl = ref('http://127.0.0.1:10013/survey/character/export?userName=')
-
+let exportExcelUrl = ref("");
 
 //找回填写过的角色信息
 function getSurveyCharacter() {
-  surveyApi.getSurveyCharacter(globalUserData.value.userName).then((response) => {
+  surveyApi.getSurveyCharacter(globalUserData.value.token).then((response) => {
     let list = response.data;
     for (var i = 0; i < characterList.value.length; i++) {
       // characterList.value[i].own =false;
@@ -196,26 +201,40 @@ function getSurveyCharacter() {
   });
 }
 
-let exportExcelBtnVisible = ref(false)
+let exportExcelBtnVisible = ref(false);
 
-function exportExcel(){
-  exportExcelUrl.value = 'http://127.0.0.1:10013/survey/character/export?userName='+globalUserData.value.userName
-  exportExcelBtnVisible.value = ref(true)
-
+function exportExcel() {
+  exportExcelUrl.value = "http://127.0.0.1:10013/survey/character/export?token=" + globalUserData.value.token;
+  exportExcelBtnVisible.value = ref(true);
 }
 
 //上传
 function upload() {
-  surveyApi.uploadCharacter(characterList.value, globalUserData.value.userName).then((response) => {
+  surveyApi.uploadCharacter(characterList.value, globalUserData.value.token).then((response) => {
     // console.log(response.data);
     cMessage("新增了 " + response.data.insertRows + " 条");
     cMessage("更新了 " + response.data.updateRows + " 条");
   });
 }
 
-function uploadByExcel(){
-   
-    
+let uploadFileName = ref("未选择文件");
+
+function uploadFile() {
+  const file = document.getElementById("uploadInput");
+  uploadFileName.value = file.files[0].name;
+}
+
+function uploadByExcel() {
+  const file = document.getElementById("uploadInput");
+
+  let formData = new FormData();
+  formData.append("file", file.files[0]);
+  console.log(file);
+  surveyApi.uploadCharacterByExcel(formData, globalUserData.value.token).then((response) => {
+    // console.log(response.data);
+    cMessage("新增了 " + response.data.insertRows + " 条");
+    cMessage("更新了 " + response.data.updateRows + " 条");
+  });
 }
 
 let maaData = ref([{}]);
@@ -226,7 +245,7 @@ function maaData1() {
   }
 }
 
-let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach:[] });
+let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [] });
 let filterCollapse = ref(false);
 
 function setBarCollapse() {
@@ -297,9 +316,8 @@ function filterCharacterList() {
 function isAttribute(character, attribute) {
   if (filterRules.value[attribute].length == 0) return true;
   for (let r in filterRules.value[attribute]) {
-    console.log(character, '==' , filterRules.value[attribute][r])
+    // console.log(character, '==' , filterRules.value[attribute][r])
     if (character[attribute] == filterRules.value[attribute][r]) {
-      
       return true;
     }
   }
@@ -363,7 +381,6 @@ function batchUpdates(attribute, rank) {
     }
   }
 }
-
 
 // function batchCancellation(){
 //   for (let i in characterList.value) {

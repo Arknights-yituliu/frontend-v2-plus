@@ -50,19 +50,25 @@ export default {
     });
   },
 
-  uploadCharacter(characterList, userName) {
-    userName = userName.replace("#", "%23");
+  uploadCharacter(characterList, token) {
     return request({
-      url: `${api_name}/character/upload?userName=${userName}`,
+      url: `${api_name}/character/upload?token=${token}`,
       method: "post",
       data: characterList,
     });
   },
 
-  getSurveyCharacter(userName) {
-    userName = userName.replace("#", "%23");
+  uploadCharacterByExcel(file,token){
     return request({
-      url: `${api_name}/character/retrieval?userName=${userName}`,
+      url: `${api_name}/character/import?token=${token}`,
+      method: "post",
+      data: file,
+    });
+  },
+
+  getSurveyCharacter(token) {
+    return request({
+      url: `${api_name}/character/retrieval?token=${token}`,
       method: "get",
     });
   },
@@ -74,10 +80,9 @@ export default {
     });
   },
 
-  uploadScore(scoreList, userName) {
-    userName = userName.replace("#", "%23");
+  uploadScore(scoreList, token) {
     return request({
-      url: `${api_name}/score/upload?userName=${userName}`,
+      url: `${api_name}/score/upload?token=${token}`,
       method: "post",
       data: scoreList,
     });
