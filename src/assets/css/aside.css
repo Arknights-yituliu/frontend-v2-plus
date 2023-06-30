@@ -32,7 +32,7 @@
 }
 
 .aside_title {
-    font-size: 30px;
+    font-size: 28px;
     text-align: center;
     height: 54px;
     line-height: 54px;
@@ -56,6 +56,16 @@
     border-left: 2px solid rgb(255, 217, 0);
 }
 
+.aside_nav_child_wrap_init {
+    height: auto;
+    transition: all 0.2s;
+    margin-right: 10px;
+    margin-left: 10px;
+    padding-left: 6px;
+    font-weight: 500;
+    /* border: 1px red solid; */
+}
+
 .aside_nav_child_wrap {
     overflow: hidden;
     height: 0px;
@@ -67,22 +77,14 @@
     /* border: 1px red solid; */
 }
 
-.aside_nav_child_wrap_init {
-    height: auto;
-    transition: all 0.2s;
-    margin-right: 10px;
-    margin-left: 10px;
-    padding-left: 6px;
-    font-weight: 500;
-    /* border: 1px red solid; */
-}
+
 
 .aside_nav_text {
     font-size: 24px;
     width: 200px;
 }
 
-.aside_nav_child {
+.aside_nav_child_text {
     font-size: 18px;
     margin-top: 20px;
 }
