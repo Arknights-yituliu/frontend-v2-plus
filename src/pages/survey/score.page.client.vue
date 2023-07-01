@@ -91,7 +91,7 @@ import "@/assets/css/survey_score.css";
 import { cMessage } from "@/element/message.js";
 
 function uploadScoreForm() {
-  surveyApi.uploadScore(scoreList.value, globalUserData.value.userName).then((response) => {
+  surveyApi.uploadScore(scoreList.value, globalUserData.value.token).then((response) => {
     cMessage("新增了 " + response.data.insertRows + " 条");
     cMessage("更新了 " + response.data.updateRows + " 条");
   });
