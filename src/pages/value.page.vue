@@ -1,7 +1,7 @@
 <template>
   <div id="indexDiv" style=" margin: auto">
     <item-value />
-    <foot-component />
+    <!-- <foot-component /> -->
   </div>
 </template>
 
@@ -14,7 +14,6 @@
 
 <script setup>
 import ItemValue from "@/components/ItemValue.vue";
-import FootComponent from "@/components/FootComponent.vue";
 
 import toolApi from "@/api/tool";
 

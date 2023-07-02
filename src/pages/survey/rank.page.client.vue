@@ -15,8 +15,8 @@
 
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
-        <div class="setup_title">设置</div>
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>       
+        
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选</div>       
       </div>
       <div class="setup_bar">
         <div class="setup_title">稀有度</div>
@@ -142,22 +142,30 @@ function getSpriteIcon(skill, index) {
 }
 
 let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] });
-
-
 let filterCollapse = ref(false);
 
-function setBarCollapse(){
-  filterCollapse.value = !filterCollapse.value
-  if(filterCollapse.value){
-    let elements =  document.getElementsByClassName('setup_bar')
-    let height = 5
-    for(let e of elements){
-      height+=e.offsetHeight+10
+function setBarCollapse() {
+  filterCollapse.value = !filterCollapse.value;
+  if (filterCollapse.value) {
+    let elements = document.getElementsByClassName("setup_bar");
+    let height = 5;
+    for (let e of elements) {
+      height += e.offsetHeight + 10;
     }
-    document.getElementById("setbar").style.height=height+'px'
-    
-  }else{
-    document.getElementById("setbar").style.height = 36*1+'px'
+    document.getElementById("setbar").style.height = height + "px";
+    setTimeout(() => {
+      document.getElementById("setbar").style.height = "auto";
+    }, 500);
+  } else {
+    let elements = document.getElementsByClassName("setup_bar");
+    let height = 5;
+    for (let e of elements) {
+      height += e.offsetHeight + 10;
+    }
+    document.getElementById("setbar").style.height = height + "px";
+    setTimeout(() => {
+      document.getElementById("setbar").style.height = 54 + "px";
+    }, 100);
   }
 }
 

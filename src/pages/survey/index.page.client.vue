@@ -71,14 +71,16 @@
           </ul>
           <p>开发群：938710832</p>
           <div class="label_wrap">
-            <div class="label-left">
-              <img src="/image/website/github.png" class="label_icon" />
-              <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus"> 前端仓库</a>
+            <div class="label">
+              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
+              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus"> <div>前端仓库</div></a>
             </div>
-            <div class="label-right">
-              <img src="/image/website/github.png" class="label_icon" />
-              <a class="href" href="https://github.com/Arknights-yituliu/BackEndV3">后端仓库</a>
+
+            <div class="label">
+              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
+              <a class="href" href="https://GitHub.com/Arknights-yituliu/BackEndV3"><div>后端仓库</div></a>
             </div>
+         
           </div>
         </div>
       </div>
@@ -88,13 +90,13 @@
         <div class="card_content">
           <div class="label_wrap">
             <div class="label">
-              <div><img class="label_icon" src="/image/website/qq.png" alt="" /></div>
+              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/qq.webp" alt="" /></div>
               <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F"> <div>开发群：938710832</div></a>
             </div>
 
             <div class="label">
-              <div><img class="label_icon" src="/image/website/github.png" alt="" /></div>
-              <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus/issues"><div>Github issues</div></a>
+              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
+              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus/issues"><div>GitHub issues</div></a>
             </div>
           </div>
         </div>

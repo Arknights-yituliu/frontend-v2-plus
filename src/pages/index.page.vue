@@ -1,10 +1,6 @@
 <template>
   <div id="indexDiv" style=" margin: auto">
-    <!-- <ep12 /> -->
     <stage />
-    <!-- <store-value /> -->
-    <!-- <pack> </pack> -->
-    <!-- <item-value /> -->
     <jump-to-value />
     <foot-component />
   </div>
@@ -19,10 +15,7 @@
 
 <script setup>
 import stage from "@/components/stage.vue";
-// import ep12 from "@/components/newChapter.vue";
-// import StoreValue from "@/components/StoreValue.vue";
-// import pack from "@/pages/module/pack.vue";
-// import ItemValue from "@/components/ItemValue.vue";
+
 import FootComponent from "@/components/FootComponent.vue";
 import JumpToValue from "@/components/JumpToValue.vue";
 

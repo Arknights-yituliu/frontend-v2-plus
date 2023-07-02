@@ -1,4 +1,4 @@
-import characterBasicInfo from "@/static/json/survey/characterBasicInfo.json";
+import characterBasicInfo from "@/static/json/survey/character_table_simple.json";
 import { ref } from "vue";
 let characterList = [];
 //干员基础数据
@@ -85,9 +85,12 @@ let scoreList = [];
 function scoreListInit() {
   for (let charId in characterBasicInfo) {
     var baseInfo = characterBasicInfo[charId];
+    console.log(baseInfo)
     let score = {
       charId: charId,
       name: baseInfo.name,
+      itemDesc:baseInfo.itemDesc,
+      itemUsage:baseInfo.itemUsage,
       rarity: baseInfo.rarity,
       daily: 1,
       rogue: 1,

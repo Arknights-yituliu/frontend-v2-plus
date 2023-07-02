@@ -1,18 +1,19 @@
 <template>
-  <div class="header_wrap" >
+  <div class="header_wrap">
     <div class="menu-button" @click="menu_collapse(true)">
       <div></div>
       <div></div>
       <div></div>
     </div>
-    <div class="aside-btn" @click="aside_collapse()">
-      <div></div>
-      <div></div>
-      <div></div>
+    <div class="aside-btn">
+      <el-icon :size="40" color="#FFFFFF" @click="aside_collapse()"><Menu /></el-icon>
     </div>
-    <div class="nowPage">
-      {{ nowPage }}
+
+    <div class="pageTitle">
+      {{ pageTitle }}
     </div>
+
+
     <!-- <div class="page-title">
       {{ route.text }}
     </div> -->
@@ -34,7 +35,7 @@
         </div>
       </a>
     </div> -->
-    
+
     <div class="spacer"></div>
     <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
     <navBar></navBar>
@@ -248,29 +249,29 @@ const route = computed(() => {
   return {};
 });
 
-let nowPage = ref("");
+let pageTitle = ref("");
 
-function getNowPage(path) {
-  if(path=='/') return nowPage.value = '材料一图流'
+function getpageTitle(path) {
+  if (path == "/") return (pageTitle.value = "材料一图流");
 
   for (let i of routes.value) {
     if (i.isChild) {
-      console.log(path,' ',i.path)
+      console.log(path, " ", i.path);
       if (i.path.indexOf(path) > -1) {
-        nowPage.value = i.text;
+        pageTitle.value = i.text;
         break;
       }
       for (let c of i.child) {
-        console.log(path,' ',c.path)
+        console.log(path, " ", c.path);
         if (c.path.indexOf(path) > -1) {
-          nowPage.value = c.text;
+          pageTitle.value = c.text;
           break;
         }
       }
     } else {
-      console.log(path,' ',i.path)
+      console.log(path, " ", i.path);
       if (i.path.indexOf(path) > -1) {
-        nowPage.value = i.text;
+        pageTitle.value = i.text;
         break;
       }
     }
@@ -280,13 +281,12 @@ function getNowPage(path) {
 onMounted(() => {
   var domain = window.location.host;
   var path = window.location.pathname;
-  
 
   if (domain.indexOf("dev") == -1) {
     routes.value.push(devRoute);
   }
 
-  getNowPage(path);
+  getpageTitle(path);
 });
 </script>
 
