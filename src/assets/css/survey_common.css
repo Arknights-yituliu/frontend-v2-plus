@@ -34,8 +34,8 @@
     overflow: hidden;
     height: 60px;
     background-color: rgba(255, 255, 255, 1);
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
-    border-radius: 0px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
 }
 
 .setup_bar {
@@ -101,8 +101,8 @@
 
 .card {
     background-color: rgba(255, 255, 255, 1);
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
-    border-radius: 0px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
 }
 
 .tool_card {
