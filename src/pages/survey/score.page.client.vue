@@ -33,27 +33,41 @@
 
     <div class="score_wrap">
       <div v-for="(char, charId) in scoreList.slice(0)" :key="charId" class="char_card" v-show="char.show">
-        <div>
-          <div class="score_avatar_wrap">
-            <div :class="getSprite(char.charId)"></div>
-          </div>
-          <div class="char_name">{{ char.name }}</div>
-        </div>
+        <!-- 标题区域 -->
+        <table class="score_wrap_title" rules="none">
+          <tr>
+            <td style="padding: 0px;width: 100px;">
+              <div class="score_avatar_wrap">
+                <div :class="getSprite(char.charId)"></div>
+              </div>
+            </td>
+            <td style="padding-left: 12px;">
+              <div class="char_name">{{ char.name }}</div>
+              <div class="char_description">维多利亚军人号角，与您共御危机。</div>
+              <div class="char_description" style="font-style: italic;color: rgb(95,95,95);">炮弹迅疾如风暴，盾牌坚硬似铁壁。</div>
+            </td>
+          </tr>
+        </table>
+        <!-- 评分区域 -->
         <div class="score_bar_wrap">
           <div class="score_bar">
-            <div class="score_name">日常：</div>
+            <!-- <div class="score_name">日常：</div> -->
+            日常
             <img class="image_score" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'daily', rank)" />
           </div>
           <div class="score_bar">
-            <div class="score_name">肉鸽：</div>
+            <!-- <div class="score_name">肉鸽：</div> -->
+            肉鸽
             <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'rogue', rank)" />
           </div>
           <div class="score_bar">
-            <div class="score_name">高难：</div>
+            <!-- <div class="score_name">高难：</div> -->
+            高难
             <img class="image_score" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'hard', rank)" />
           </div>
           <div class="score_bar">
-            <div class="score_name">保全：</div>
+            <!-- <div class="score_name">保全：</div> -->
+            保全
             <img
               class="image_score"
               :src="scoreSelected(rank, char.securityService)"
@@ -63,11 +77,13 @@
             />
           </div>
           <div class="score_bar">
-            <div class="score_name">泛用：</div>
+            <!-- <div class="score_name">泛用：</div> -->
+            泛用
             <img class="image_score" :src="scoreSelected(rank, char.universal)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'universal', rank)" />
           </div>
           <div class="score_bar">
-            <div class="score_name">对策：</div>
+            <!-- <div class="score_name">对策：</div> -->
+            对策
             <img
               class="image_score"
               :src="scoreSelected(rank, char.countermeasures)"

@@ -7,44 +7,61 @@
     font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
 }
 
-.image_score {
-    width: 26px;
-    height: 26px;
-    margin: 2px;
-    margin-left: 20px;
-}
 
 .image_rarity{
     width: 18px;
 }
 
+
 .score_wrap{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    padding: 8px;
+    /* border-left: 1px rgb(200, 200, 200) solid; */
 }
+
 
 .char_card {
-    display: flex;
+    /* display: flex; */
     width: 480px;
     /* height: 190px; */
-    border: 1px rgb(223, 223, 223) solid;
-    margin: 14px;
-    border-radius: 6px;
+    /* border: 1px rgb(223, 223, 223) solid; */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    transition: all 0.2s;
+    background-color: rgba(255, 255, 255, 1);
+    margin: 4px 2px;
+    /* margin: 14px; */
 }
 
-.score_wrap {
-    border-left: 1px rgb(200, 200, 200) solid;
+
+.score_wrap_title{
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    border-radius: 2px;
+    background: linear-gradient(60deg, rgba(255, 255, 255,0) 60%, rgba(255, 115, 0,0.5));
+    /* background-color: rgba(0, 81, 255, 0.1); */
 }
 
 .score_bar {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 700;
-    margin: 4px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 12px auto;
+    width: 348px;
     display: flex;
+    line-height: 36px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
 }
+
+.image_score {
+    width: 32px;
+    height: 32px;
+    margin: 2px;
+    margin-left: 24px;
+}
+
 
 .score_name {
     height: 28px;
@@ -52,20 +69,22 @@
 }
 
 .score_avatar_wrap {
-    border: 1px rgb(200, 200, 200) solid;
-    border-radius: 50%;
-    margin: 4px;
+    /* border: 1px rgb(200, 200, 200) solid; */
+    /* border-radius: 50%; */
+    margin: 0px;
     /* overflow: hidden; */
-    height: 100px;
-    width: 100px;
-    margin-top: 30px;
+    height: 99px;
+    width: 99px;
+    /* margin-top: 30px; */
     /* background: rgba(255, 81, 0, 0.5); */
     /* box-shadow: 0 0 1px 1px rgb(150, 150, 150); */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
 }
 
 .score_avatar {
     transform: scale(0.55);
-    border-radius: 50%;
+    /* border-radius: 50%; */
     position: relative;
     top: -40px;
     left: -40px;
@@ -74,9 +93,25 @@
 
 .char_name {
     /* margin-top: 180px; */
-    height: 30px;
-    color: rgb(255, 136, 0);
-    text-align: center;
-    font-size: 20px;
+    height: 32px;
+    color: rgb(95,95,95);
+    /* text-align: center; */
+    font-size: 28px;
     font-weight: 700;
+    font-family: 'Times New Roman', Times, serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    padding: 2px 0px;
+    /* position: absolute; */
+    /* margin: -88px 112px; */
+}
+
+.char_description{
+    height: 20px;
+    color: rgb(31,31,31);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Arial, Helvetica, sans-serif;
+    /* text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3); */
+    padding-left: 2px;
+    padding-top: 2px;
 }
