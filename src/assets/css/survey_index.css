@@ -178,31 +178,38 @@
 }
 
 
-
-
 .label_wrap {
   width: auto;
   display: flex;
 }
 
 .label {
-  min-width: 120px;
+  width: 300px;
   display: flex;
-  border: 1px rgb(210, 210, 210) solid;
-  border-radius: 4px;
-  line-height: 30px;
-  height: 30px;
-  margin: 4px;
-  padding: 4px;
+  /* border: 1px rgb(180, 180, 180) solid; */
+  margin: 10px;
+  background: rgb(240, 240, 240);
+  border-radius: 6px;
+}
+
+.label_name {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.label_desc {
+  color: rgb(94, 94, 94);
+  margin-bottom: 20px;
 }
 
 .label_icon_wrap {
-  width: 50px;
-  margin-left: 2px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
 }
 
 .label_icon {
-  width: 30px;
-  margin-left: 2px;
+  width: 65px;
+  border-radius: 50%;
 }
 
