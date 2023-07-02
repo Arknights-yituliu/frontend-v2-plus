@@ -2,9 +2,9 @@
   <div class="riic-bg">
     <div class="riic-btn">
       <picture class="riic-icon">
-        <source srcset="/image/website/maa.webp" type="image/webp" />
-        <source srcset="/image/website/maa.png" type="image/png" />
-        <img src="/image/website/maa.png" />
+        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/webp" />
+        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/png" />
+        <img src="https://avatars.githubusercontent.com/u/97677443?s=200" />
       </picture>
       <div class="riic-title">Maa Assistant Arknights</div>
       <div class="riic-intro">每日定时进行三次换班</div>
