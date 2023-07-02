@@ -43,8 +43,8 @@
             </td>
             <td style="padding-left: 12px;">
               <div class="char_name">{{ char.name }}</div>
-              <div class="char_description">维多利亚军人号角，与您共御危机。</div>
-              <div class="char_description" style="font-style: italic;color: rgb(95,95,95);">炮弹迅疾如风暴，盾牌坚硬似铁壁。</div>
+              <div class="char_description">{{char.itemUsage}}</div>
+              <div class="char_description" style="font-style: italic;color: rgb(95,95,95);">{{char.itemDesc}}</div>
             </td>
           </tr>
         </table>

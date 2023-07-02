@@ -7,22 +7,9 @@
 
 .aside-btn {
     display: block;
-    width: 33px;
-    height: 33px;
-    padding: 6px 8px;
-    margin-left: 6px;
-    border: 2px solid white;
-    border-radius: 6px;
-    /* flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center; */
+    margin-top: 20px;
 }
 
-.aside-btn div {
-    height: 3px;
-    background-color: white;
-    margin: 6px 0;
-}
 
 @media (max-width: 1080px) {
     .aside-btn {

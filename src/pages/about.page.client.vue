@@ -1,5 +1,26 @@
 <template>
   <div class="div_page">
+    <div class="dev_page_title_1">参与开发</div>
+    <div class="dev_page_content">一图流的组织仓库地址</div>
+    <div class="dev_wrap">
+      <div class="label_wrap">
+        <div class="label">
+          <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
+          <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus"> <div>前端仓库</div></a>
+        </div>
+
+        <div class="label">
+          <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
+          <a class="href" href="https://GitHub.com/Arknights-yituliu/BackEndV3"><div>后端仓库</div></a>
+        </div>
+
+        <div class="label">
+          <div class="label_icon_wrap"><img class="label_icon" src="/image/website/qq.webp" alt="" /></div>
+          <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F"> <div>开发群：938710832</div></a>
+        </div>
+      </div>
+    </div>
+
     <div class="dev_page_title_1">开发团队</div>
     <div class="dev_page_content">明日方舟一图流的主要开发者和贡献者</div>
 
@@ -12,7 +33,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">山桜</div>
-          <div class="dev_profile">创建</div>
+          <div class="dev_desc">创建</div>
           <div class="dev_work">后端</div>
           <div class="dev_work">前端</div>
         </div>
@@ -24,7 +45,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">Zirunwang</div>
-          <div class="dev_profile">创建</div>
+          <div class="dev_desc">创建</div>
           <div class="dev_work">前端</div>
           <div class="dev_work">UI</div>
           <div class="dev_work">效率算法</div>
@@ -37,7 +58,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">hguandl</div>
-          <div class="dev_profile">顾问、创建</div>
+          <div class="dev_desc">顾问、创建</div>
           <div class="dev_work">后端</div>
         </div>
       </div>
@@ -48,7 +69,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">ZhaoZuohong</div>
-          <div class="dev_profile">开发</div>
+          <div class="dev_desc">开发</div>
           <div class="dev_work">后端</div>
           <div class="dev_work">前端</div>
           <div class="dev_work">UI</div>
@@ -61,7 +82,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">一个资深的烧饼</div>
-          <div class="dev_profile">顾问</div>
+          <div class="dev_desc">顾问</div>
           <div class="dev_work">算法顾问</div>
         </div>
       </div>
@@ -75,7 +96,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">無冕Crownless</div>
-          <div class="dev_profile">开发</div>
+          <div class="dev_desc">开发</div>
           <div class="dev_work">UI设计</div>
         </div>
       </div>
@@ -86,7 +107,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">Yanstime</div>
-          <div class="dev_profile">开发</div>
+          <div class="dev_desc">开发</div>
           <div class="dev_work">前端</div>
         </div>
       </div>
@@ -96,7 +117,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">youcai922</div>
-          <div class="dev_profile">开发</div>
+          <div class="dev_desc">开发</div>
           <div class="dev_work">后端</div>
         </div>
       </div>
@@ -107,7 +128,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">Ks-luow</div>
-          <div class="dev_profile">开发</div>
+          <div class="dev_desc">开发</div>
           <div class="dev_work">后端</div>
         </div>
       </div>
@@ -122,8 +143,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">企鹅物流数据统计</div>
-          <div class="dev_profile">素材掉率统计网站</div>
-         
+          <div class="dev_desc">素材掉率统计网站</div>
         </div>
       </div>
       <div class="dev_card">
@@ -134,30 +154,25 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">Arknights-Bot-Resource</div>
-          <div class="dev_profile">明日方舟常用素材</div>
-          
+          <div class="dev_desc">明日方舟常用素材</div>
         </div>
       </div>
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
-            <img class="dev_image_head" src="/image/website/prts.webp"
-          /></a>
+          <a href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5"> <img class="dev_image_head" src="/image/website/prts.webp" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">prts.wiki</div>
-          <div class="dev_profile">明日方舟wiki</div>
+          <div class="dev_desc">明日方舟wiki</div>
         </div>
       </div>
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://space.bilibili.com/8412516">
-            <img class="dev_image_head" src="/image/website/honeycake.webp"
-          /></a>
+          <a href="https://space.bilibili.com/8412516"> <img class="dev_image_head" src="/image/website/honeycake.webp" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">罗德岛蜜饼工坊</div>
-          <div class="dev_profile">明日方舟饼学研究组</div>
+          <div class="dev_desc">明日方舟饼学研究组</div>
         </div>
       </div>
     </div>
@@ -170,8 +185,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">罗德岛基建BETA</div>
-          <div class="dev_profile">官方信息发布号</div>
-          
+          <div class="dev_desc">官方信息发布号</div>
         </div>
       </div>
       <div class="dev_card">
@@ -180,8 +194,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">一图流组织</div>
-          <div class="dev_profile">GitHub的issues</div>
-          
+          <div class="dev_desc">GitHub的issues</div>
         </div>
       </div>
     </div>
@@ -194,20 +207,24 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">罗德岛基建BETA</div>
-          <div class="dev_profile">官方信息发布号</div>
-         
+          <div class="dev_desc">官方信息发布号</div>
         </div>
       </div>
     </div>
-     
-    
 
-
-
-
-
-
-
+    <div class="dev_page_title_1">版权声明与许可协议</div>
+    <div class="dev_wrap">
+      <div class="dev_notice">
+        <p>&emsp;&emsp;网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。</p>
+        <p>&emsp;&emsp;网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于 Arknights/上海鹰角网络科技有限公司。</p>
+        <p>
+          &emsp;&emsp;除非另有声明网站其他内容采用
+          <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享 署名-非商业性使用 4.0 国际 许可协议</a>
+          进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和作品链接；且未经许可，不得将本站内容或由其衍生作品用于商业目的。
+        </p>
+        <p>&emsp;&emsp;本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来开发群一叙。</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -245,6 +262,7 @@ import { ref } from "vue";
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  margin-left: 20px;
 }
 
 .dev_card {
@@ -272,12 +290,10 @@ import { ref } from "vue";
 }
 
 .dev_name {
-  /* text-align: center; */
-  /* font-size: 20px; */
   font-weight: 700;
 }
 
-.dev_profile {
+.dev_desc {
   color: rgb(94, 94, 94);
   margin-bottom: 20px;
 }
@@ -286,5 +302,35 @@ import { ref } from "vue";
   margin-top: 5px;
   margin-bottom: 5px;
   font-weight: 700;
+}
+
+.dev_notice {
+  width: 90%;
+}
+
+.label_wrap {
+  width: auto;
+  display: flex;
+}
+
+.label {
+  min-width: 120px;
+  display: flex;
+  border: 1px rgb(210, 210, 210) solid;
+  border-radius: 4px;
+  line-height: 30px;
+  height: 30px;
+  margin: 4px;
+  padding: 4px;
+}
+
+.label_icon_wrap {
+  width: 50px;
+  margin-left: 2px;
+}
+
+.label_icon {
+  width: 30px;
+  margin-left: 2px;
 }
 </style>

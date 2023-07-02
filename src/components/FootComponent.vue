@@ -44,6 +44,7 @@
                   <b>A：大部分关卡都掉落多种材料，单一材料的期望只能说明短期最优，长期最优是要计算副产物的。</b>
                 </li>
               </ul>
+
             </el-collapse-item>
             <el-collapse-item name="3" style="">
               <template #title>
@@ -138,19 +139,19 @@
         <p class="foot_unit_title" style="margin-bottom: 11px">-开发-</p>
         <a href="https://github.com/Arknights-yituliu/frontend-v2-plus"
           ><div class="foot_unit_button uni_shadow_2" id="foot_frontEnd">
-            <img class="foot_unit_pic" src="/image/website/github.png" />
+            <img class="foot_unit_pic" src="/image/website/GitHub.webp" />
             前端
           </div>
         </a>
         <a href="https://github.com/Arknights-yituliu/BackEndV3"
           ><div class="foot_unit_button uni_shadow_2" id="foot_backEnd">
-            <img class="foot_unit_pic" src="/image/website/github.png" />
+            <img class="foot_unit_pic" src="/image/website/GitHub.webp" />
             后端
           </div>
         </a>
         <a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F"
           ><div class="foot_unit_button uni_shadow_2" style="width: 186px; display: inline-block">
-            <img class="foot_unit_pic" src="/image/website/qq.png" />
+            <img class="foot_unit_pic" src="/image/website/qq.webp" />
             开发群938710832
           </div>
         </a>
@@ -170,25 +171,25 @@
         <p class="foot_unit_title">-前端/UI-</p>
         <a href="https://github.com/yamasakura">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84258011?v=4" />
+            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84258011" />
             山桜
           </div>
         </a>
         <a href="https://space.bilibili.com/10057492">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84625349?v=4" />
+            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84625349" />
             Zirunwang
           </div>
         </a>
         <a href="https://space.bilibili.com/12786648">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/image/website/wmm.png" />
+            <img class="foot_unit_pic" src="/image/website/wmm.webp" />
             無冕Crownless
           </div>
         </a>
         <a href="https://github.com/Yanstory">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/5153875?v=4" />
+            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/5153875" />
             Yanstime
           </div>
         </a>
@@ -203,25 +204,25 @@
         <p class="foot_unit_title">-后端-</p>
         <a href="https://github.com/hguandl">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/10684225?v=4" />
+            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/10684225" />
             hguandl
           </div>
         </a>
         <a href="https://github.com/yamasakura">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84258011?v=4" />
+            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84258011" />
             山桜
           </div>
         </a>
         <a href="https://github.com/youcai922">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/64458943?v=4" />
+            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/64458943" />
             youcai922
           </div>
         </a>
         <a href="https://github.com/Ks-luow">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/64978950?v=4" />
+            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/64978950" />
             Ks-luow
           </div>
         </a>
@@ -238,7 +239,7 @@
         <p class="foot_unit_title">-数据源-</p>
         <a href="https://penguin-stats.cn/"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-            <img class="foot_unit_pic" src="/image/website/penguin_stats_logo.png" />企鹅物流
+            <img class="foot_unit_pic" src="/image/website/penguin_stats_logo.webp" />企鹅物流
           </div></a
         >
       </div>
@@ -247,25 +248,25 @@
         <p class="foot_unit_title">-效率算法-</p>
         <a href="https://www.bilibili.com/video/BV1Rm4y1r7Kp">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/image/website/bilibili.png" />
+            <img class="foot_unit_pic" src="/image/website/bilibili.webp" />
             算法科普视频
           </div>
         </a>
         <a href="https://github.com/yamasakura">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84258011?v=4" />
+            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84258011" />
             山桜
           </div>
         </a>
         <a href="https://space.bilibili.com/10057492">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84625349?v=4" />
+            <img class="foot_unit_pic" src="https://avatars.githubusercontent.com/u/84625349" />
             Zirunwang
           </div>
         </a>
         <a href="https://www.bilibili.com/video/BV1yL4y1P7K1">
           <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/image/website/shaobing.png" />
+            <img class="foot_unit_pic" src="/image/website/shaobing.webp" />
             一个资深的烧饼
           </div>
         </a>
@@ -274,14 +275,14 @@
         <p class="foot_unit_title">-B站发布-</p>
         <a href="https://space.bilibili.com/688411531"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/image/website/bilibili.png" />
+            <img class="foot_unit_pic" src="/image/website/beta_logo_yw.webp" />
             罗德岛基建BETA
           </div></a
         >
         <p class="foot_unit_title">-粉丝群-</p>
         <a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/image/website/qq.png" />
+            <img class="foot_unit_pic" src="/image/website/qq.webp" />
             阿戈尔数据文献馆
           </div></a
         >
@@ -290,7 +291,7 @@
         <p class="foot_unit_title">-友情链接-</p>
         <a href="https://viktorlab.cn/akdata"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/image/website/akdps.jpg" />
+            <img class="foot_unit_pic" src="/image/website/akdps.webp" />
             DPS计算器
           </div></a
         >
@@ -311,13 +312,13 @@
 
         <a href="https://apps.apple.com/cn/app/id1632810611"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/image/website/rhodes_asst.png" />
+            <img class="foot_unit_pic" src="/image/website/rhodes_asst.webp" />
             罗德岛助理(iOS)
           </div></a
         >
         <a href=" https://terrach.net/"
           ><div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-            <img class="foot_unit_pic" src="/image/website/terra.png" />
+            <img class="foot_unit_pic" src="/image/website/terra.webp" />
             泰拉通讯枢纽
           </div></a
         >
