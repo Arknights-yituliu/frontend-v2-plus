@@ -1,6 +1,5 @@
 <template>
   <div class="survey_index_page">
-   
     <c-popup :visible="loginVisible" v-model:visible="loginVisible" :width="'400px'">
       <div class="login_card" v-show="globalUserData.status < 0">
         <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
@@ -27,7 +26,6 @@
       <div class="survey_index_login_wrap">
         <div class="survey_index_login_text" @click="loginVisible = !loginVisible" v-show="globalUserData.status > 0">{{ globalUserData.userName }}</div>
         <div class="survey_index_login_text" @click="loginVisible = !loginVisible" v-show="globalUserData.status < 0">点击登录</div>
-      
       </div>
     </div>
 
@@ -36,25 +34,25 @@
         <div class="index_card_title">常见问题</div>
         <div class="card_content">
           <p class="guild_question">Q:这个网站是做什么用的</p>
-          <p> <b>A： </b>本网站是一个干员各类数据统计站，可以为一些新人提供一些干员养成参考， 也可分析一些其他的有趣数据(待定)。</p>
+          <p><b>A： </b>本网站是一个干员各类数据统计站，可以为一些新人提供一些干员养成参考， 也可分析一些其他的有趣数据(待定)。</p>
 
           <p class="guild_question">Q:那我该怎么上传数据</p>
           <p>
-             <b>A： </b>如果您是新用户，请点击上方登录栏的注册按钮注册属于您的用户ID，之后请复制妥善保存您的ID，之后就可以愉快的上传数据了。<br />
+            <b>A： </b>如果您是新用户，请点击上方登录栏的注册按钮注册属于您的用户ID，之后请复制妥善保存您的ID，之后就可以愉快的上传数据了。<br />
             这个ID将作为您的账号用于后续登录、上传、找回调查数据，<br />
             <b>注：登录不设密码验证，请妥善保管ID！</b>
           </p>
 
           <p class="guild_question">Q:我可以用什么方式上传数据呢</p>
           <p>
-             <b>A： </b>目前已开放的上传方式： <br />
+            <b>A： </b>目前已开放的上传方式： <br />
             1.在我们的网页直接填写调查问卷进行上传，有一些快捷选项可以方便批量填写<br />
             2.通过下载模板Excel格式，填写后上传（开发中<br />
           </p>
 
           <p class="guild_question">Q:目前有什么统计内容</p>
           <p>
-             <b>A： </b>目前只完成了干员练度统计(干员精二率,持有率,专精率,模组开启率)相关的表单。
+            <b>A： </b>目前只完成了干员练度统计(干员精二率,持有率,专精率,模组开启率)相关的表单。
             <a style="text-decoration: line-through">(其他统计内容在开发了，正在压榨开发人员)</a>
           </p>
         </div>
@@ -80,7 +78,6 @@
               <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
               <a class="href" href="https://GitHub.com/Arknights-yituliu/BackEndV3"><div>后端仓库</div></a>
             </div>
-         
           </div>
         </div>
       </div>
@@ -91,12 +88,22 @@
           <div class="label_wrap">
             <div class="label">
               <div class="label_icon_wrap"><img class="label_icon" src="/image/website/qq.webp" alt="" /></div>
-              <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F"> <div>开发群：938710832</div></a>
+              <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
+                <div>
+                  <div class="label_name">一图流开发群</div>
+                  <div class="label_desc">开发人员交流和BUG反馈</div>
+                </div>
+              </a>
             </div>
 
             <div class="label">
-              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
-              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus/issues"><div>GitHub issues</div></a>
+              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/ico64.webp" alt="" /></div>
+              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus/issues">
+                <div>
+                  <div class="label_name">一图流组织仓库</div>
+                  <div class="label_desc">GitHub issues</div>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -162,7 +169,6 @@ async function register() {
   setTimeout(() => {
     loginVisible.value = !loginVisible;
   }, 400);
-
 }
 
 //登录

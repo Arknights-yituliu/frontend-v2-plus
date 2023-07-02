@@ -194,7 +194,7 @@
         </div>
         <div class="dev_content">
           <div class="dev_name">一图流组织</div>
-          <div class="dev_desc">GitHub的issues</div>
+          <div class="dev_desc">GitHub issues</div>
         </div>
       </div>
     </div>
