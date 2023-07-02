@@ -858,19 +858,19 @@
                   <p class="foot_unit_title">-开发信息-</p>
                   <a href="https://github.com/Arknights-yituliu/frontend-v2-plus">
                     <div class="foot_unit_button uni_shadow_2" id="foot_frontEnd">
-                      <img class="foot_unit_pic" src="/image/website/github.png" />
+                      <img class="foot_unit_pic" src="/image/website/GitHub.webp" />
                       前端
                     </div>
                   </a>
                   <a href="https://github.com/yamasakura/yituliuBackEnd">
                     <div class="foot_unit_button uni_shadow_2" id="foot_backEnd">
-                      <img class="foot_unit_pic" src="/image/website/github.png" />
+                      <img class="foot_unit_pic" src="/image/website/GitHub.webp" />
                       后端
                     </div>
                   </a>
                   <a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
                     <div class="foot_unit_button uni_shadow_2" style="width: 198px">
-                      <img class="foot_unit_pic" src="/image/website/qq.png" />
+                      <img class="foot_unit_pic" src="/image/website/qq.webp" />
                       开发群 938710832
                     </div>
                   </a>
@@ -925,7 +925,7 @@
                   </a>
                   <a href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
-                      <img class="foot_unit_pic" src="/image/website/prts.png" />PRTS
+                      <img class="foot_unit_pic" src="/image/website/prts.webp" />PRTS
                     </div>
                   </a>
                   <a href="https://yituliu.site/">
@@ -943,14 +943,14 @@
                   <p class="foot_unit_title">-B站发布-</p>
                   <a href="https://space.bilibili.com/688411531">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                      <img class="foot_unit_pic" src="/image/website/bilibili.png" />
+                      <img class="foot_unit_pic" src="/image/website/bilibili.webp" />
                       罗德岛基建BETA
                     </div>
                   </a>
                   <p class="foot_unit_title">-粉丝群/反馈-</p>
                   <a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle">
-                      <img class="foot_unit_pic" src="/image/website/qq.png" />
+                      <img class="foot_unit_pic" src="/image/website/qq.webp" />
                       阿戈尔数据文献馆
                     </div>
                   </a>
