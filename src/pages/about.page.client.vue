@@ -8,7 +8,7 @@
     <div class="dev_wrap">
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://github.com/yamasakura"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/84258011?v=4" /></a>
+          <a href="https://github.com/yamasakura"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/84258011" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">山桜</div>
@@ -20,7 +20,7 @@
 
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://space.bilibili.com/10057492"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/84625349?v=4" /></a>
+          <a href="https://space.bilibili.com/10057492"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/84625349" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">Zirunwang</div>
@@ -33,7 +33,7 @@
 
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://github.com/hguandl"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/10684225?v=4" /></a>
+          <a href="https://github.com/hguandl"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/10684225" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">hguandl</div>
@@ -57,7 +57,7 @@
 
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://www.bilibili.com/video/BV1yL4y1P7K1"> <img class="dev_image_head" src="/image/website/shaobing.png" /></a>
+          <a href="https://www.bilibili.com/video/BV1yL4y1P7K1"> <img class="dev_image_head" src="/image/website/shaobing.webp" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">一个资深的烧饼</div>
@@ -71,7 +71,7 @@
     <div class="dev_wrap">
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://space.bilibili.com/12786648"> <img class="dev_image_head" src="/image/website/wmm.png" /></a>
+          <a href="https://space.bilibili.com/12786648"> <img class="dev_image_head" src="/image/website/wmm.webp" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">無冕Crownless</div>
@@ -82,7 +82,7 @@
 
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://github.com/Yanstory"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/5153875?v=4" /></a>
+          <a href="https://github.com/Yanstory"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/5153875" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">Yanstime</div>
@@ -92,7 +92,7 @@
       </div>
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://github.com/youcai922"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/64458943?v=4" /></a>
+          <a href="https://github.com/youcai922"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/64458943" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">youcai922</div>
@@ -103,7 +103,7 @@
 
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://github.com/Ks-luow"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/64978950?v=4" /></a>
+          <a href="https://github.com/Ks-luow"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/64978950" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">Ks-luow</div>
@@ -114,28 +114,74 @@
     </div>
 
     <div class="dev_page_title_1">资料来源</div>
-    <div class="dev_page_content">包括材料掉率,图片资源等</div>
+    <div class="dev_page_content">网站上使用的资料来源</div>
     <div class="dev_wrap">
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://penguin-stats.cn"> <img class="dev_image_head" src="/image/website/penguin_stats_logo.png" /></a>
+          <a href="https://penguin-stats.cn"> <img class="dev_image_head" src="/image/website/penguin_stats_logo.webp" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">企鹅物流数据统计</div>
-          <div class="dev_profile">通过玩家自行上传的素材掉率统计网站</div>
-          <div class="dev_work">素材掉率统计</div>
+          <div class="dev_profile">素材掉率统计网站</div>
+         
         </div>
       </div>
       <div class="dev_card">
         <div class="dev_image_wrap">
           <a href="https://github.com/yuanyan3060/ArknightsGameResource">
-            <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/58114805?v=4"
+            <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/58114805"
           /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">Arknights-Bot-Resource</div>
-          <div class="dev_profile"><a href="https://github.com/yuanyan3060">yuanyan3060</a>的个人仓库</div>
-          <div class="dev_work">明日方舟BOT资源</div>
+          <div class="dev_profile">明日方舟常用素材</div>
+          
+        </div>
+      </div>
+      <div class="dev_card">
+        <div class="dev_image_wrap">
+          <a href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
+            <img class="dev_image_head" src="/image/website/prts.webp"
+          /></a>
+        </div>
+        <div class="dev_content">
+          <div class="dev_name">prts.wiki</div>
+          <div class="dev_profile">明日方舟wiki</div>
+        </div>
+      </div>
+      <div class="dev_card">
+        <div class="dev_image_wrap">
+          <a href="https://space.bilibili.com/8412516">
+            <img class="dev_image_head" src="/image/website/honeycake.webp"
+          /></a>
+        </div>
+        <div class="dev_content">
+          <div class="dev_name">罗德岛蜜饼工坊</div>
+          <div class="dev_profile">明日方舟饼学研究组</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dev_page_title_1">网站问题反馈</div>
+    <div class="dev_wrap">
+      <div class="dev_card">
+        <div class="dev_image_wrap">
+          <a href="https://space.bilibili.com/688411531"> <img class="dev_image_head" src="/image/website/beta_logo_yw.webp" /></a>
+        </div>
+        <div class="dev_content">
+          <div class="dev_name">罗德岛基建BETA</div>
+          <div class="dev_profile">官方信息发布号</div>
+          
+        </div>
+      </div>
+      <div class="dev_card">
+        <div class="dev_image_wrap">
+          <a href="https://github.com/Arknights-yituliu/frontend-v2-plus/issues"> <img class="dev_image_head" src="/image/website/ico64.webp" /></a>
+        </div>
+        <div class="dev_content">
+          <div class="dev_name">一图流组织</div>
+          <div class="dev_profile">GitHub的issues</div>
+          
         </div>
       </div>
     </div>
@@ -144,12 +190,12 @@
     <div class="dev_wrap">
       <div class="dev_card">
         <div class="dev_image_wrap">
-          <a href="https://space.bilibili.com/688411531"> <img class="dev_image_head" src="/image/website/beta_logo_yw.png" /></a>
+          <a href="https://space.bilibili.com/688411531"> <img class="dev_image_head" src="/image/website/beta_logo_yw.webp" /></a>
         </div>
         <div class="dev_content">
           <div class="dev_name">罗德岛基建BETA</div>
-          <div class="dev_profile">方舟DPS计算器 和 一图流 的官方信息发布号</div>
-          <div class="dev_work">一图流官方信息发布号</div>
+          <div class="dev_profile">官方信息发布号</div>
+         
         </div>
       </div>
     </div>
@@ -178,21 +224,21 @@ import { ref } from "vue";
   margin-top: 30px;
   margin-left: 20px;
   margin-bottom: 10px;
-  font-size: 32px;
+  font-size: 26px;
   font-weight: 800;
-}
-
-.dev_page_content {
-  margin-left: 20px;
-  margin-bottom: 20px;
 }
 
 .dev_page_title_2 {
   margin-top: 30px;
   margin-left: 20px;
   margin-bottom: 10px;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 800;
+}
+
+.dev_page_content {
+  margin-left: 20px;
+  margin-bottom: 20px;
 }
 
 .dev_wrap {
@@ -206,7 +252,7 @@ import { ref } from "vue";
   display: flex;
   /* border: 1px rgb(180, 180, 180) solid; */
   margin: 10px;
-  background: rgb(231, 230, 230);
+  background: rgb(240, 240, 240);
   border-radius: 6px;
 }
 
@@ -227,7 +273,7 @@ import { ref } from "vue";
 
 .dev_name {
   /* text-align: center; */
-  font-size: 24px;
+  /* font-size: 20px; */
   font-weight: 700;
 }
 
