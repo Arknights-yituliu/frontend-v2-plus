@@ -4,19 +4,46 @@
     <div class="dev_page_content">一图流的组织仓库地址</div>
     <div class="dev_wrap">
       <div class="label_wrap">
-        <div class="label">
-          <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
-          <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus"> <div>前端仓库</div></a>
+        <div class="label_card">
+          <a class="href" href="https://space.bilibili.com/688411531">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/beta_logo_yw.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">罗德岛基建BETA</div>
+                <div class="label_desc">B站官方信息发布号</div>
+              </div>
+            </div>
+          </a>
         </div>
 
-        <div class="label">
-          <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
-          <a class="href" href="https://GitHub.com/Arknights-yituliu/BackEndV3"><div>后端仓库</div></a>
+        <div class="label_card">
+          <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">前端仓库</div>
+                <div class="label_desc">数据可视化</div>
+              </div>
+            </div>
+          </a>
         </div>
 
-        <div class="label">
-          <div class="label_icon_wrap"><img class="label_icon" src="/image/website/qq.webp" alt="" /></div>
-          <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F"> <div>开发群：938710832</div></a>
+        <div class="label_card">
+          <a class="href" href="https://github.com/Arknights-yituliu/BackEndV3">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">后端仓库</div>
+                <div class="label_desc">数据统计，计算，分析</div>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>
@@ -27,189 +54,288 @@
     <div class="dev_page_title_2">主要开发</div>
 
     <div class="dev_wrap">
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://github.com/yamasakura"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/84258011" /></a>
+      <div class="label_wrap">
+        <div class="label_card">
+          <a class="href" href="https://github.com/yamasakura">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="https://avatars.githubusercontent.com/u/84258011" alt="" />
+              </div>
+              <div>
+                <div class="label_name">山桜</div>
+                <div class="label_desc">创建</div>
+                
+                <div class="label_work">后端</div>
+                <div class="label_work">前端</div>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">山桜</div>
-          <div class="dev_desc">创建</div>
-          <div class="dev_work">后端</div>
-          <div class="dev_work">前端</div>
-        </div>
-      </div>
 
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://space.bilibili.com/10057492"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/84625349" /></a>
+        <div class="label_card">
+          <a class="href" href="https://space.bilibili.com/10057492">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="https://avatars.githubusercontent.com/u/84625349" alt="" />
+              </div>
+              <div>
+                <div class="label_name">Zirunwang</div>
+                <div class="label_desc">创建</div>
+                
+                <div class="label_work">前端</div>
+                <div class="label_work">UI</div>
+                <div class="label_work">算法</div>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">Zirunwang</div>
-          <div class="dev_desc">创建</div>
-          <div class="dev_work">前端</div>
-          <div class="dev_work">UI</div>
-          <div class="dev_work">效率算法</div>
-        </div>
-      </div>
 
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://github.com/hguandl"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/10684225" /></a>
+        <div class="label_card">
+          <a class="href" href="https://github.com/hguandl">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="https://avatars.githubusercontent.com/u/10684225" alt="" />
+              </div>
+              <div>
+                <div class="label_name">hguandl</div>
+                <div class="label_desc">创建</div>
+                
+                <div class="label_work">后端</div>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">hguandl</div>
-          <div class="dev_desc">顾问、创建</div>
-          <div class="dev_work">后端</div>
-        </div>
-      </div>
 
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://zhaozuohong.vip"> <img class="dev_image_head" src="https://zhaozuohong.vip/avatar.png" /></a>
+        <div class="label_card">
+          <a class="href" href="https://zhaozuohong.vip">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="https://zhaozuohong.vip/avatar.png" alt="" />
+              </div>
+              <div>
+                <div class="label_name">ZhaoZuohong</div>
+                <div class="label_desc">开发</div>
+                
+                <div class="label_work">后端</div>
+                <div class="label_work">前端</div>
+                <div class="label_work">UI</div>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">ZhaoZuohong</div>
-          <div class="dev_desc">开发</div>
-          <div class="dev_work">后端</div>
-          <div class="dev_work">前端</div>
-          <div class="dev_work">UI</div>
-        </div>
-      </div>
 
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://www.bilibili.com/video/BV1yL4y1P7K1"> <img class="dev_image_head" src="/image/website/shaobing.webp" /></a>
-        </div>
-        <div class="dev_content">
-          <div class="dev_name">一个资深的烧饼</div>
-          <div class="dev_desc">顾问</div>
-          <div class="dev_work">算法顾问</div>
+        <div class="label_card">
+          <a class="href" href="https://www.bilibili.com/video/BV1yL4y1P7K1">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/shaobing.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">一个资深的烧饼</div>
+                <div class="label_desc">开发</div>
+                
+                <div class="label_work">算法</div>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>
 
     <div class="dev_page_title_2">贡献者</div>
+
     <div class="dev_wrap">
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://space.bilibili.com/12786648"> <img class="dev_image_head" src="/image/website/wmm.webp" /></a>
+      <div class="label_wrap">
+        <div class="label_card">
+          <a class="href" href="https://space.bilibili.com/12786648">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/wmm.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">無冕Crownless</div>
+                <div class="label_desc">开发</div>
+                
+                <div class="label_work">UI</div>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">無冕Crownless</div>
-          <div class="dev_desc">开发</div>
-          <div class="dev_work">UI设计</div>
-        </div>
-      </div>
 
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://github.com/Yanstory"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/5153875" /></a>
+        <div class="label_card">
+          <a class="href" href="https://github.com/Yanstory">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="https://avatars.githubusercontent.com/u/5153875" alt="" />
+              </div>
+              <div>
+                <div class="label_name">Yanstime</div>
+                <div class="label_desc">开发</div>
+                
+                <div class="label_work">前端</div>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">Yanstime</div>
-          <div class="dev_desc">开发</div>
-          <div class="dev_work">前端</div>
-        </div>
-      </div>
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://github.com/youcai922"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/64458943" /></a>
-        </div>
-        <div class="dev_content">
-          <div class="dev_name">youcai922</div>
-          <div class="dev_desc">开发</div>
-          <div class="dev_work">后端</div>
-        </div>
-      </div>
 
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://github.com/Ks-luow"> <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/64978950" /></a>
+        <div class="label_card">
+          <a class="href" href="https://github.com/youcai922">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="https://avatars.githubusercontent.com/u/64458943" alt="" />
+              </div>
+              <div>
+                <div class="label_name">youcai922</div>
+                <div class="label_desc">开发</div>
+                
+                <div class="label_work">后端</div>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">Ks-luow</div>
-          <div class="dev_desc">开发</div>
-          <div class="dev_work">后端</div>
+
+        <div class="label_card">
+          <a class="href" href="https://github.com/Ks-luow">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="https://avatars.githubusercontent.com/u/64978950" alt="" />
+              </div>
+              <div>
+                <div class="label_name">Ks-luow</div>
+                <div class="label_desc">开发</div>
+                
+                <div class="label_work">后端</div>
+               
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>
+
+    
 
     <div class="dev_page_title_1">资料来源</div>
     <div class="dev_page_content">网站上使用的资料来源</div>
+     
     <div class="dev_wrap">
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://penguin-stats.cn"> <img class="dev_image_head" src="/image/website/penguin_stats_logo.webp" /></a>
+      <div class="label_wrap">
+        <div class="label_card">
+          <a class="href" href="https://penguin-stats.cn">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/penguin_stats_logo.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">企鹅物流数据统计</div>
+                <div class="label_desc">素材掉率统计网站</div>
+                
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">企鹅物流数据统计</div>
-          <div class="dev_desc">素材掉率统计网站</div>
+
+        <div class="label_card">
+          <a class="href" href="https://github.com/yuanyan3060/ArknightsGameResource">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="https://avatars.githubusercontent.com/u/58114805" alt="" />
+              </div>
+              <div>
+                <div class="label_name">Arknights-Bot-Resource</div>
+                <div class="label_desc">明日方舟常用素材</div>
+               
+              </div>
+            </div>
+          </a>
         </div>
-      </div>
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://github.com/yuanyan3060/ArknightsGameResource">
-            <img class="dev_image_head" src="https://avatars.githubusercontent.com/u/58114805"
-          /></a>
+
+        <div class="label_card">
+          <a class="href" href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/prts.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">prts.wiki</div>
+                <div class="label_desc">明日方舟wiki</div>
+               
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">Arknights-Bot-Resource</div>
-          <div class="dev_desc">明日方舟常用素材</div>
-        </div>
-      </div>
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5"> <img class="dev_image_head" src="/image/website/prts.webp" /></a>
-        </div>
-        <div class="dev_content">
-          <div class="dev_name">prts.wiki</div>
-          <div class="dev_desc">明日方舟wiki</div>
-        </div>
-      </div>
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://space.bilibili.com/8412516"> <img class="dev_image_head" src="/image/website/honeycake.webp" /></a>
-        </div>
-        <div class="dev_content">
-          <div class="dev_name">罗德岛蜜饼工坊</div>
-          <div class="dev_desc">明日方舟饼学研究组</div>
+
+        <div class="label_card">
+          <a class="href" href="https://space.bilibili.com/8412516">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/honeycake.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">罗德岛蜜饼工坊</div>
+                <div class="label_desc">明日方舟饼学研究组</div>
+             
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>
 
+    
+
     <div class="dev_page_title_1">网站问题反馈</div>
     <div class="dev_wrap">
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://space.bilibili.com/688411531"> <img class="dev_image_head" src="/image/website/beta_logo_yw.webp" /></a>
+      <div class="label_wrap">
+        <div class="label_card">
+          <a class="href" href="https://space.bilibili.com/688411531">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/beta_logo_yw.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">罗德岛基建BETA</div>
+                <div class="label_desc">B站官方信息发布号</div>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="dev_content">
-          <div class="dev_name">罗德岛基建BETA</div>
-          <div class="dev_desc">官方信息发布号</div>
+
+        <div class="label_card">
+          <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus/issues">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">GitHub Issues</div>
+                <div class="label_desc">一图流仓库</div>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://github.com/Arknights-yituliu/frontend-v2-plus/issues"> <img class="dev_image_head" src="/image/website/ico64.webp" /></a>
-        </div>
-        <div class="dev_content">
-          <div class="dev_name">一图流组织</div>
-          <div class="dev_desc">GitHub issues</div>
-        </div>
-      </div>
+
     </div>
 
     <div class="dev_page_title_1">B站发布</div>
     <div class="dev_wrap">
-      <div class="dev_card">
-        <div class="dev_image_wrap">
-          <a href="https://space.bilibili.com/688411531"> <img class="dev_image_head" src="/image/website/beta_logo_yw.webp" /></a>
-        </div>
-        <div class="dev_content">
-          <div class="dev_name">罗德岛基建BETA</div>
-          <div class="dev_desc">官方信息发布号</div>
+      <div class="label_wrap">
+        <div class="label_card">
+          <a class="href" href="https://space.bilibili.com/688411531">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/beta_logo_yw.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">罗德岛基建BETA</div>
+                <div class="label_desc">B站官方信息发布号</div>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
+      
     </div>
 
     <div class="dev_page_title_1">版权声明与许可协议</div>
@@ -262,75 +388,11 @@ import { ref } from "vue";
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  margin-left: 20px;
-}
-
-.dev_card {
-  width: 300px;
-  display: flex;
-  /* border: 1px rgb(180, 180, 180) solid; */
-  margin: 10px;
-  background: rgb(240, 240, 240);
-  border-radius: 6px;
-}
-
-.dev_image_wrap {
-  margin: 10px;
-  margin-right: 20px;
-  margin-top: 20px;
-}
-
-.dev_image_head {
-  border-radius: 50%;
-  width: 65px;
-}
-
-.dev_content {
-  margin-top: 20px;
-}
-
-.dev_name {
-  font-weight: 700;
-}
-
-.dev_desc {
-  color: rgb(94, 94, 94);
-  margin-bottom: 20px;
-}
-
-.dev_work {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  font-weight: 700;
+  width: 96%;
+  margin: auto;
 }
 
 .dev_notice {
-  width: 90%;
-}
-
-.label_wrap {
-  width: auto;
-  display: flex;
-}
-
-.label {
-  min-width: 120px;
-  display: flex;
-  border: 1px rgb(210, 210, 210) solid;
-  border-radius: 4px;
-  line-height: 30px;
-  height: 30px;
-  margin: 4px;
-  padding: 4px;
-}
-
-.label_icon_wrap {
-  width: 50px;
-  margin-left: 2px;
-}
-
-.label_icon {
-  width: 30px;
-  margin-left: 2px;
+  width: 96%;
 }
 </style>

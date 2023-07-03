@@ -69,14 +69,33 @@
           </ul>
           <p>开发群：938710832</p>
           <div class="label_wrap">
-            <div class="label">
-              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
-              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus"> <div>前端仓库</div></a>
+            <div class="label_card">
+              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus">
+                <div class="label_content">
+                  <div class="label_icon_wrap">
+                    <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
+                  </div>
+
+                  <div>
+                    <div class="label_name">前端仓库</div>
+                    <div class="label_desc">数据可视化</div>
+                  </div>
+                </div>
+              </a>
             </div>
 
-            <div class="label">
-              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/GitHub.webp" alt="" /></div>
-              <a class="href" href="https://GitHub.com/Arknights-yituliu/BackEndV3"><div>后端仓库</div></a>
+            <div class="label_card">
+              <a class="href" href="https://GitHub.com/Arknights-yituliu/BackEndV3">
+                <div class="label_content">
+                  <div class="label_icon_wrap">
+                    <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
+                  </div>
+                  <div>
+                    <div class="label_name">后端仓库</div>
+                    <div class="label_desc">数据统计，计算，分析</div>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -86,22 +105,45 @@
         <div class="index_card_title">反馈方式</div>
         <div class="card_content">
           <div class="label_wrap">
-            <div class="label">
-              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/qq.webp" alt="" /></div>
+            <div class="label_card">
               <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
-                <div>
-                  <div class="label_name">一图流开发群</div>
-                  <div class="label_desc">开发人员交流和BUG反馈</div>
+                <div class="label_content">
+                  <div class="label_icon_wrap">
+                    <img class="label_icon" src="/image/website/qq.webp" alt="" />
+                  </div>
+
+                  <div>
+                    <div class="label_name">一图流开发群</div>
+                    <div class="label_desc">向开发人员反馈群号：938710832</div>
+                  </div>
                 </div>
               </a>
             </div>
 
-            <div class="label">
-              <div class="label_icon_wrap"><img class="label_icon" src="/image/website/ico64.webp" alt="" /></div>
+            <div class="label_card">
               <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus/issues">
-                <div>
-                  <div class="label_name">一图流组织仓库</div>
-                  <div class="label_desc">GitHub issues</div>
+                <div class="label_content">
+                  <div class="label_icon_wrap">
+                    <img class="label_icon" src="/image/website/ico64.webp" alt="" />
+                  </div>
+                  <div>
+                    <div class="label_name">一图流组织仓库</div>
+                    <div class="label_desc">GitHub issues</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="label_card">
+              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus/issues">
+                <div class="label_content">
+                  <div class="label_icon_wrap">
+                    <img class="label_icon" src="/image/website/beta_logo_yw.webp" alt="" />
+                  </div>
+                  <div>
+                    <div class="label_name">罗德岛基建BETA</div>
+                    <div class="label_desc">B站官方信息发布号</div>
+                  </div>
                 </div>
               </a>
             </div>
@@ -112,16 +154,34 @@
       <div class="index_card_wrap" id="expenses">
         <div class="index_card_title">收支一览</div>
         <div class="card_content">
-          <p>目前服务器的支出部分主要来源是热心玩家捐助，你们的捐助给了我们很大的开发动力，感谢每一位捐助者的支持</p>
+          <p>目前服务器的运营支出部分主要源自是热心玩家捐助，感谢每一位捐助者的支持</p>
           <div class="label_wrap">
-            <div class="label">
-              <div><img class="label_icon" src="/image/icon/图标_源石.png" alt="" /></div>
-              <a class="href" href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe"> <div>如何支持我们</div></a>
+            <div class="label_card">
+              <a class="href" href="/donate">
+                <div class="label_content">
+                  <div class="label_icon_wrap">
+                    <img class="label_icon" src="/image/icon/图标_源石.png" alt="" />
+                  </div>
+                  <div>
+                    <div class="label_name">支持我们</div>
+                  </div>
+                </div>
+              </a>
             </div>
 
-            <div class="label">
-              <div><img class="label_icon" src="/image/icon/图标_源石.png" alt="" /></div>
-              <a class="href" href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/zm8QY"><div>查看收支情况</div></a>
+            <div class="label_card">
+              <a class="href" href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe">
+                <div class="label_content">
+                  <div class="label_icon_wrap">
+                    <img class="label_icon" src="/image/icon/图标_源石.png" alt="" />
+                  </div>
+
+                  <div>
+                    <div class="label_name">收支一览</div>
+                    <div class="label_desc">收支情况的明细表</div>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -129,21 +189,17 @@
       <div class="index_card_wrap" id="license">
         <div class="index_card_title">许可协议</div>
         <div class="card_content">
+          <p>网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。</p>
+          <p>网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于 Arknights/上海鹰角网络科技有限公司。</p>
           <p>
-            本页采用知识共享 署名-非商业性使用 4.0 国际
-            许可协议进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和作品链接；且未经许可，不得将本站内容或由其衍生作品用于商业目的。
-            本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来开发群一叙。
+            除非另有声明网站其他内容采用
+            <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享 署名-非商业性使用 4.0 国际 许可协议</a>
+            进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和作品链接；且未经许可，不得将本站内容或由其衍生作品用于商业目的。
           </p>
+          <p>本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来开发群一叙。</p>
         </div>
       </div>
     </div>
-    <!-- <div class="survey_index_aside">
-      <div class="survey_index_menu" @click="navId=1"><a :class="selected(1)" href="#question"> 常见问题</a></div>
-      <div class="survey_index_menu" @click="navId=2"><a :class="selected(2)" href="#develop">参与开发</a></div>
-      <div class="survey_index_menu" @click="navId=3"><a :class="selected(3)" href="#feedback">反馈方式</a></div>
-      <div class="survey_index_menu" @click="navId=4"><a :class="selected(4)" href="#expenses">收支一览</a></div>
-      <div class="survey_index_menu" @click="navId=5"><a :class="selected(5)" href="#license">许可协议</a></div>
-    </div> -->
   </div>
 </template>
 

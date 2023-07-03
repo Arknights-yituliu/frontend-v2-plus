@@ -40,6 +40,7 @@ import "@/assets/css/sprite_item_large.css";
 import "@/assets/css/sprite_item_large_png.css";
 import "@/assets/css/sprite_style.css";
 import "@/assets/css/sprite_icon.css";
+import "@/assets/css/common.css";
 
 // 旧版css，待修改
 import "@/assets/css/item.css";
