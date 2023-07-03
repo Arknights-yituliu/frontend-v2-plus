@@ -82,7 +82,7 @@
             <div class="friend_tag">支持调用MAA</div>
           </div>
         </div>
-        <div class="friend_link"><a href="https://github.com/ArkMowers/arknights-mower">arknights-mower</a></div>
+        <div class="friend_link"><a href="https://github.com/ArkMowers/arknights-mower">ArkMowers/arknights-mower</a></div>
       </div>
 
       <div class="friend_card">
@@ -100,7 +100,7 @@
             <div class="friend_tag">公开招募计算</div>
           </div>
         </div>
-        <div class="friend_link"><a href="https://apps.apple.com/cn/app/id1632810611">apps.apple.com/cn/app/</a></div>
+        <div class="friend_link"><a href="https://apps.apple.com/cn/app/id1632810611">apps.apple.com/cn/app</a></div>
 
       </div>
 
@@ -151,7 +151,8 @@ a {
   margin: 10px;
   background: rgb(240, 240, 240);
   border-radius: 6px;
-  height: 260px;
+  height: 270px;
+  box-shadow: 1px 1px 2px 1px rgb(200, 200, 200);
 }
 
 .friend_title {
@@ -222,5 +223,6 @@ a {
   color: white;
   height: 30px;
   line-height: 30px;
+  font-size: 14px;
 }
 </style>
