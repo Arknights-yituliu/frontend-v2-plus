@@ -1,24 +1,38 @@
 <template>
   <div class="aside_table" >
-    <div class="aside_title">明日方舟一图流</div>
-
-    <div v-for="(r, index) in routes" :key="index">
-      <div :class="navSelected(index)" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
+    <!-- 标题区 -->
+    <a href="yituliu.site" style="text-decoration:none;color: white;">
+      <div class="aside_title">明日方舟一图流</div>
+    </a>
+    <!-- 导航菜单 -->
+    <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
+      <!-- 一级标题 -->
+      <!-- <div :class="navSelected(index)" @click="navChildOpen(index, r.child.length)" v-show="r.isChild"> -->
+      <a class="aside_menu_parent nav_href" :href="r.path">
+        <div :class="navSelected(index)" v-show="r.isChild">
+          <div class="aside_menu_parent_icon"></div>
+          {{ r.text }}
+        </div>
+      </a>
+      <!-- <div :class="navSelected(index)" v-show="r.isChild">
         <div class="aside_nav_text">{{ r.text }}</div>
         <div>
           <el-icon class="child_icon"><ArrowDownBold :style="nav_collapseFlag[index] ? 'transform:rotate(180deg)' : ''" /></el-icon>
         </div>
-      </div>
-      <div :class="getChildClass(index)" :id="'nav' + index" v-show="r.isChild">
-        <a :href="c.path" class="nav_href" v-for="c in r.child">
-          <div class="aside_nav_child_text">{{ c.text }}</div></a
-        >
-      </div>
-      <div class="aside_nav" v-show="!r.isChild">
+      </div> -->
+      <!-- 二级标题组 -->
+      <!-- <div :class="getChildClass(index)" :id="'nav' + index" v-show="r.isChild"> -->
+      <a :href="c.path" class="nav_href" v-for="c in r.child">
+        <div class="aside_nav">
+          <div class="aside_menu_child_icon"></div>{{ c.text }}
+        </div>
+      </a>
+      <!-- </div> -->
+      <!-- <div class="aside_nav" v-show="!r.isChild">
         <a :href="r.path" class="nav_href">
-          <div class="aside_nav_text">{{ r.text }}</div></a
-        >
-      </div>
+          <div class="aside_nav_text">{{ r.text }}</div>
+        </a>
+      </div> -->
     </div>
   </div>
 </template>
