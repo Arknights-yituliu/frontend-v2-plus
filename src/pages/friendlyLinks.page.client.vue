@@ -31,7 +31,7 @@
             <div class="friend_tag">DPS可视化</div>
           </div>
         </div>
-        <div class="friend_link"><a href="https://viktorlab.cn/akdata/">viktorlab.cn/akdata/</a></div>
+        <div class="friend_link"><a href="https://viktorlab.cn/akdata/">viktorlab.cn/akdata</a></div>
       </div>
 
       <div class="friend_card">
@@ -65,7 +65,7 @@
             <div class="friend_tag">一键长草</div>
           </div>
         </div>
-        <div class="friend_link"><a href="https://maa.plus/">maa.plus/</a></div>
+        <div class="friend_link"><a href="https://maa.plus/">maa.plus</a></div>
       </div>
 
       <div class="friend_card">
@@ -82,7 +82,7 @@
             <div class="friend_tag">支持调用MAA</div>
           </div>
         </div>
-        <div class="friend_link"><a href="https://maa.plus/">maa.plus/</a></div>
+        <div class="friend_link"><a href="https://github.com/ArkMowers/arknights-mower">arknights-mower</a></div>
       </div>
 
       <div class="friend_card">
