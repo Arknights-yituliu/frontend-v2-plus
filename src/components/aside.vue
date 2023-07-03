@@ -26,8 +26,9 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
+import routesJson from "@/static/json/routes.json"
 
-let nav_collapseFlag = ref([true, true, true, true, true, true]);
+let nav_collapseFlag = ref([true, true, true, true, true, true, true, true]);
 
 function getChildClass(index) {
   if (nav_collapseFlag.value[index]) return "aside_nav_child_wrap_init";
@@ -75,65 +76,8 @@ const devRoute = {
   ],
 };
 
-const routes = ref([
-  {
-    path: "/",
-    text: "材料一图流",
-    isChild: true,
-    child: [
-      {
-        path: "/",
-        text: "材料一图流",
-      },
-      {
-        path: "/store",
-        text: "商店性价比",
-      },
-      {
-        path: "/value",
-        text: "物品价值",
-      },
-    ],
-  },
-
-  {
-    path: "/gachaCal",
-    text: "攒抽规划",
-    isChild: false,
-  },
-  {
-    path: "/riicCal",
-    text: "排班生成器",
-    isChild: true,
-    child: [
-      {
-        path: "/riicCal/maa",
-        text: "MAA基建排班表生成",
-        isChild: false,
-      },
-      {
-        path: "/riicCal/mower",
-        text: "mower基建排班表生成",
-        isChild: false,
-      },
-    ],
-  },
-  {
-    path: "/pack",
-    text: "礼包性价比",
-    isChild: false,
-  },
-  {
-    path: "/friendlyLinks",
-    text: "友情链接",
-    isChild: false,
-  },
-  {
-    path: "/about",
-    text: "关于我们",
-    isChild: false,
-  },
-]);
+const routesLength = ref(routesJson.length)
+const routes = ref(routesJson);
 
 onMounted(() => {
   // for (let i in routes) {
@@ -145,7 +89,7 @@ onMounted(() => {
   var domain = window.location.host;
 
   if (domain.indexOf("dev") == -1) {
-    routes.value.push(devRoute);
+    routes.value[routesLength]=devRoute;
   }
 });
 </script>

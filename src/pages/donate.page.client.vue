@@ -57,7 +57,7 @@
               </div>
               <div>
                 <div class="label_name">后端仓库</div>
-                <div class="label_desc">数据统计，计算，分析</div>
+                <div class="label_desc">数据统计，数据处理</div>
               </div>
             </div>
           </a>
@@ -103,10 +103,12 @@
 
 .donate_image_wrap {
   display: flex;
+  flex-wrap: wrap;
 }
 .donate_card {
   width: 300px;
   margin: auto;
+  margin-top: 20px;
   box-shadow: 1px 1px 2px 1px rgb(200, 200, 200);
 }
 .donate_image {

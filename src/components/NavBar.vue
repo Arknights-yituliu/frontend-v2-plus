@@ -77,6 +77,7 @@ import cookie from "js-cookie";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 import { usePageContext } from "@/renderer/usePageContext";
 import navBar from "@/pages/survey/navBar.vue";
+import routesJson from "@/static/json/routes.json"
 const pageContext = usePageContext();
 
 const theme = inject("theme");
@@ -180,65 +181,7 @@ const devRoute = {
   ],
 };
 
-const routes = ref([
-  {
-    path: "/",
-    text: "材料一图流",
-    isChild: true,
-    child: [
-      {
-        path: "/",
-        text: "材料一图流",
-      },
-      {
-        path: "/store",
-        text: "商店性价比",
-      },
-      {
-        path: "/value",
-        text: "物品价值",
-      },
-    ],
-  },
-
-  {
-    path: "/gachaCal",
-    text: "攒抽规划",
-    isChild: false,
-  },
-  {
-    path: "/riicCal",
-    text: "排班生成器",
-    isChild: true,
-    child: [
-      {
-        path: "/riicCal/maa",
-        text: "MAA基建排班表生成",
-        isChild: false,
-      },
-      {
-        path: "/riicCal/mower",
-        text: "mower基建排班表生成",
-        isChild: false,
-      },
-    ],
-  },
-  {
-    path: "/pack",
-    text: "礼包性价比",
-    isChild: false,
-  },
-  {
-    path: "/friendlyLinks",
-    text: "友情链接",
-    isChild: false,
-  },
-  {
-    path: "/about",
-    text: "关于我们",
-    isChild: false,
-  },
-]);
+const routes = ref(routesJson);
 
 const route = computed(() => {
   for (let i of routes.value) {

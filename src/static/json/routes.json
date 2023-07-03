@@ -1,0 +1,63 @@
+[
+  {
+    "path": "/",
+    "text": "材料一图流",
+    "isChild": true,
+    "child": [
+      {
+        "path": "/",
+        "text": "材料一图流"
+      },
+      {
+        "path": "/store",
+        "text": "商店性价比"
+      },
+      {
+        "path": "/value",
+        "text": "物品价值"
+      }
+    ]
+  },
+  {
+    "path": "/gachaCal",
+    "text": "攒抽规划",
+    "isChild": false
+  },
+  {
+    "path": "/riicCal",
+    "text": "排班生成器",
+    "isChild": true,
+    "child": [
+      {
+        "path": "/riicCal/maa",
+        "text": "MAA基建排班表生成",
+        "isChild": false
+      },
+      {
+        "path": "/riicCal/mower",
+        "text": "mower基建排班表生成",
+        "isChild": false
+      }
+    ]
+  },
+  {
+    "path": "/pack",
+    "text": "礼包性价比",
+    "isChild": false
+  },
+  {
+    "path": "/donate",
+    "text": "支持我们",
+    "isChild": false
+  },
+  {
+    "path": "/friendlyLinks",
+    "text": "友情链接",
+    "isChild": false
+  },
+  {
+    "path": "/about",
+    "text": "关于我们",
+    "isChild": false
+  }
+]
