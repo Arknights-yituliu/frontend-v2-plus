@@ -153,23 +153,15 @@
   font-weight: 900;
 }
 
-/* @media screen and (max-width: 900px) {
-  .card_wrap {
-    width: 100%;
-    box-shadow: 0px 0px 1px 1px rgb(211, 211, 211);
-    padding: 10px;
-    border-radius: 10px;
-    box-sizing: border-box;
-    margin: 10px;
+@media screen and (max-width: 1080px) {
+  .index_card_wrap {
+   width: 98%;
   }
-} */
-
-
-
+}
 
 
 .card_content {
-  width: 90%;
+  /* width: 90%; */
   margin: auto;
 }
 
@@ -178,38 +170,5 @@
 }
 
 
-.label_wrap {
-  width: auto;
-  display: flex;
-}
 
-.label {
-  width: 300px;
-  display: flex;
-  /* border: 1px rgb(180, 180, 180) solid; */
-  margin: 10px;
-  background: rgb(240, 240, 240);
-  border-radius: 6px;
-}
-
-.label_name {
-  font-weight: 700;
-  font-size: 18px;
-}
-
-.label_desc {
-  color: rgb(94, 94, 94);
-  margin-bottom: 20px;
-}
-
-.label_icon_wrap {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-}
-
-.label_icon {
-  width: 65px;
-  border-radius: 50%;
-}
 

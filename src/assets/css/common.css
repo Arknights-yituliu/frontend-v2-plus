@@ -1,0 +1,51 @@
+.label_wrap {
+   
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.label_card {
+    width: 230px;
+    display: flex;
+    /* border: 1px rgb(180, 180, 180) solid; */
+    margin: 10px;
+    background: rgb(245, 245, 245);
+    border-radius: 6px;
+    box-shadow: 1px 1px 2px 1px rgb(200, 200, 200);
+}
+
+.label_content {
+    display: flex;
+}
+
+.label_name {
+    font-weight: 700;
+    font-size: 18px;
+    height: auto;
+    margin-top: 6px;
+}
+
+.label_desc {
+    color: rgb(94, 94, 94);
+    font-size: 16px;
+}
+
+.label_icon_wrap {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.label_icon {
+    width: 55px;
+    margin: 5px;
+    border-radius: 50%;
+}
+
+.label_work{
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
