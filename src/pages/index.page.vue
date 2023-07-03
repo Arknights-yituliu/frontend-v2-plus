@@ -1,7 +1,7 @@
 <template>
   <div id="indexDiv" style=" margin: auto">
     <stage />
-    <jump-to-value />
+    <!-- <jump-to-value /> -->
     <foot-component />
   </div>
 </template>
@@ -17,7 +17,7 @@
 import stage from "@/components/stage.vue";
 
 import FootComponent from "@/components/FootComponent.vue";
-import JumpToValue from "@/components/JumpToValue.vue";
+// import JumpToValue from "@/components/JumpToValue.vue";
 
 import toolApi from "@/api/tool";
 
