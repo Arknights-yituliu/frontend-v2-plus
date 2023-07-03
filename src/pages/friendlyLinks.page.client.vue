@@ -164,6 +164,7 @@ a {
   margin-top: 10px;
   margin-left: 10px;
   height: 70px;
+  margin-right:10px;
 }
 
 .friend_image {
