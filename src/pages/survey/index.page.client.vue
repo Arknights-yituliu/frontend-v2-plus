@@ -92,7 +92,7 @@
                   </div>
                   <div>
                     <div class="label_name">后端仓库</div>
-                    <div class="label_desc">数据统计，计算，分析</div>
+                    <div class="label_desc">数据统计，数据处理</div>
                   </div>
                 </div>
               </a>

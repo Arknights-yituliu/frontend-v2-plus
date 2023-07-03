@@ -4,20 +4,7 @@
     <div class="dev_page_content">一图流的组织仓库地址</div>
     <div class="dev_wrap">
       <div class="label_wrap">
-        <div class="label_card">
-          <a class="href" href="https://space.bilibili.com/688411531">
-            <div class="label_content">
-              <div class="label_icon_wrap">
-                <img class="label_icon" src="/image/website/beta_logo_yw.webp" alt="" />
-              </div>
-              <div>
-                <div class="label_name">罗德岛基建BETA</div>
-                <div class="label_desc">B站官方信息发布号</div>
-              </div>
-            </div>
-          </a>
-        </div>
-
+        
         <div class="label_card">
           <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
             <div class="label_content">
@@ -40,7 +27,7 @@
               </div>
               <div>
                 <div class="label_name">后端仓库</div>
-                <div class="label_desc">数据统计，计算，分析</div>
+                <div class="label_desc">数据统计，数据处理</div>
               </div>
             </div>
           </a>
