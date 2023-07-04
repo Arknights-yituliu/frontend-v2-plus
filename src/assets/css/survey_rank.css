@@ -4,7 +4,7 @@
   background: white;
   margin: auto;
   box-shadow: 0px 0px 2px 2px rgb(160, 160, 160);
-  font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, serif;
+  font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, sans-serif;
 }
 
 .survey_title {

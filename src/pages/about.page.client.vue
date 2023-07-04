@@ -347,7 +347,7 @@ import { ref } from "vue";
 
 <style>
 .div_page {
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu;
+  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
 }
 
 .dev_page_title_1 {
