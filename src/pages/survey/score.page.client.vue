@@ -24,6 +24,20 @@
         </div>
 
         <div class="setup_bar">
+          <div class="setup_title">选择评分项目</div>
+          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
+            {{ year.label }}
+          </div>
+        </div>
+
+        <div class="setup_bar">
+          <div class="setup_title">其他</div>
+          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
+            {{ year.label }}
+          </div>
+        </div>
+
+        <div class="setup_bar">
           <div class="setup_title">排序</div>
           <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
           <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
@@ -122,6 +136,13 @@ function updateScore(charId, attribute, score) {
 function scoreSelected(rank, score) {
   if (rank <= score) return "/image/rank2/rarity_fill.png";
   return "/image/rank2/rarity.png";
+}
+
+
+const scoreItem = ref([])
+
+function selectrdScoreItem(){
+   
 }
 
 //判断按钮是否选择赋予样式
