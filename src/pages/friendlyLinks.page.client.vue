@@ -130,7 +130,7 @@ import { ref } from "vue";
 
 <style>
 .link_page {
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu;
+  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
   /* min-height: 95%; */
   /* height: 100%; */
 }

@@ -1,6 +1,6 @@
 .aside_table {
     color: white;
-    font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu;
+    font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
     margin-bottom: 50px;
     height: 100%;
     overflow-y: scroll;
