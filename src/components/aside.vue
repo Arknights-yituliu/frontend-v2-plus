@@ -1,7 +1,7 @@
 <template>
   <div class="aside_table" >
     <!-- 标题区 -->
-    <a href="yituliu.site" style="text-decoration:none;color: white;">
+    <a href="https://yituliu.site/" style="text-decoration:none;color: white;">
       <div class="aside_title">明日方舟一图流</div>
     </a>
     <!-- 导航菜单 -->
