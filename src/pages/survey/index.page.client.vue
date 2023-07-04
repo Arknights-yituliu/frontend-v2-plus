@@ -199,6 +199,8 @@
           <p>本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来开发群一叙。</p>
         </div>
       </div>
+
+      <div class="index_card_wrap_null" ></div>
     </div>
   </div>
 </template>

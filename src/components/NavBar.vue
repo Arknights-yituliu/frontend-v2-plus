@@ -19,27 +19,7 @@
     </div>
 
 
-    <!-- <div class="page-title">
-      {{ route.text }}
-    </div> -->
-    <!-- <div class="bar-wrapper">
-      <a v-for="r in routes" class="bar">
-        <a class="bar" :class="{ activate: pageContext.urlPathname == r.path }" :href="r.path">
-          <svg style="width: 24px; height: 24px" :style="{ fill: pageContext.urlPathname == r.path ? '#ffd04b' : 'white' }" viewbox="0 0 24 24">
-            <path :d="r.icon" />
-          </svg>
-          {{ r.text }}
-        </a>
-        <div class="bar-wrapper2" v-show="r.isChild">
-          <a v-for="child in r.child" class="bar" :class="{ activate: pageContext.urlPathname == child.path }" :href="child.path">
-            <svg style="width: 24px; height: 24px" :style="{ fill: pageContext.urlPathname == child.path ? '#ffd04b' : 'white' }" viewbox="0 0 24 24">
-              <path :d="child.icon" />
-            </svg>
-            {{ child.text }}
-          </a>
-        </div>
-      </a>
-    </div> -->
+ 
 
     <div class="spacer"></div>
     <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
@@ -230,9 +210,9 @@ onMounted(() => {
   var domain = window.location.host;
   var path = window.location.pathname;
 
-  if (domain.indexOf("dev") == -1) {
-    routes.value.push(devRoute);
-  }
+  // if (domain.indexOf("dev") == -1) {
+  //   routes.value.push(devRoute);
+  // }
 
   getpageTitle(path);
 });

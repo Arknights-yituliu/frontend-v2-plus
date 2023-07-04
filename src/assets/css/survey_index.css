@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 .survey_index_page {
   background: white;
   overflow: auto;
@@ -145,7 +137,10 @@
   margin: 1%;
 }
 
-
+.index_card_wrap_null{
+  width: 47%;
+  margin: 1%;
+}
 
 .index_card_title {
   /* margin-top: 50px; */

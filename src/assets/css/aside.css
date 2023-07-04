@@ -6,20 +6,18 @@
     overflow-y: scroll;
 }
 
-.aside_table::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
-	background-color: #94b9ff;
-}
-.aside_table::-webkit-scrollbar
-{
-	width: 4px;
-	background-color: #0059ff;
+.aside_table::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+    background-color: #94b9ff;
 }
 
-.aside_table::-webkit-scrollbar-thumb
-{
-	background-color: #ebebeb;
+.aside_table::-webkit-scrollbar {
+    width: 4px;
+    background-color: #0059ff;
+}
+
+.aside_table::-webkit-scrollbar-thumb {
+    background-color: #ebebeb;
     border-radius: 2px;
 }
 
@@ -46,8 +44,8 @@
     transition: background-color 0.2s;
 }
 
-.aside_title:hover{
-    background-color:dimgray;
+.aside_title:hover {
+    background-color: dimgray;
 }
 
 .aside_nav {
@@ -64,74 +62,33 @@
     transition: background-color 0.2s;
 }
 
-.aside_nav:hover{
-    background-color:dimgray;
+.aside_nav:hover {
+    background-color: dimgray;
 }
 
 .aside_nav_selected {
     color: #ffd04b;
     /* border-left: 2px solid #ffd04b; */
 }
-.aside_menu_parent_icon{
+
+.aside_menu_parent_icon {
     width: 16px;
     height: 16px;
     margin: 8px 20px 8px 8px;
-    display:inline-block;
+    display: inline-block;
     background-color: #ffd04b;
     border-radius: 6px;
 }
 
-.aside_menu_child_icon{
+.aside_menu_child_icon {
     width: 32px;
     height: 32px;
     margin: 0px 12px 0px 0px;
-    display:inline-block;
+    display: inline-block;
     /* background-color: #ffd04b; */
 }
 
-.aside_nav_child_wrap_init {
-    height: auto;
-    transition: all 0.2s;
-    margin-right: 10px;
-    margin-left: 10px;
-    padding-left: 6px;
-    font-weight: 500;
-    /* border: 1px red solid; */
-}
 
-.aside_nav_child_wrap {
-    overflow: hidden;
-    height: 0px;
-    transition: all 0.2s;
-    margin-right: 10px;
-    margin-left: 10px;
-    padding-left: 6px;
-    font-weight: 500;
-    /* border: 1px red solid; */
-}
-
-
-
-.aside_nav_text {
-    font-size: 22px;
-    width: 200px;
-}
-
-.aside_nav_child_text {
-    font-size: 18px;
-    margin-top: 20px;
-}
-
-.child_icon {
-    height: 26px;
-    width: 26px;
-    margin-top: 4px;
-}
-
-.child_icon svg {
-    height: 26px;
-    width: 26px;
-}
 
 .nav_href {
     color: white;
@@ -140,6 +97,6 @@
     /* display: flex; */
 }
 
-.nav_href div{
+.nav_href div {
     /* display: inline-block; */
 }

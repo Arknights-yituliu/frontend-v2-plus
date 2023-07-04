@@ -50,17 +50,17 @@
     "isChild": true,
     "child": [
       {
-        "path": "/gachaCal",
+        "path": "/survey/character",
         "text": "干员持有调查",
         "isChild": false
       },
       {
-        "path": "/riicCal/maa",
+        "path": "/survey/score",
         "text": "干员风评调查",
         "isChild": false
       },
       {
-        "path": "/gachaCal",
+        "path": "/survey/build",
         "text": "基建调查",
         "isChild": false
       },
@@ -82,12 +82,12 @@
         "isChild": false
       },
       {
-        "path": "/gachaCal",
+        "path": "/algorithm",
         "text": "算法说明",
         "isChild": false
       },
       {
-        "path": "/riicCal/maa",
+        "path": "/donate",
         "text": "支持我们",
         "isChild": false
       },
@@ -97,20 +97,5 @@
         "isChild": false
       }
     ]
-  },
-  {
-    "path": "/about",
-    "text": "开发者平台",
-    "isChild": false
-  },
-  {
-    "path": "/donate",
-    "text": "关于我们",
-    "isChild": false
-  },
-  {
-    "path": "/friendlyLinks",
-    "text": "友情链接",
-    "isChild": false
   }
 ]
