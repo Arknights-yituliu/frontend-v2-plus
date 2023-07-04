@@ -1,63 +1,116 @@
 [
   {
     "path": "/",
-    "text": "材料一图流",
+    "text": "材料收益相关",
     "isChild": true,
     "child": [
       {
         "path": "/",
-        "text": "材料一图流"
+        "text": "刷图推荐"
       },
       {
         "path": "/store",
         "text": "商店性价比"
       },
       {
+        "path": "/pack",
+        "text": "礼包性价比"
+      },
+      {
         "path": "/value",
-        "text": "物品价值"
+        "text": "物品价值表"
       }
     ]
   },
   {
-    "path": "/gachaCal",
-    "text": "攒抽规划",
-    "isChild": false
-  },
-  {
     "path": "/riicCal",
-    "text": "排班生成器",
+    "text": "一图流工具箱",
     "isChild": true,
     "child": [
       {
+        "path": "/gachaCal",
+        "text": "攒抽计算器",
+        "isChild": false
+      },
+      {
         "path": "/riicCal/maa",
-        "text": "MAA基建排班表生成",
+        "text": "MAA排班表生成器",
         "isChild": false
       },
       {
         "path": "/riicCal/mower",
-        "text": "mower基建排班表生成",
+        "text": "mower排班表生成器",
+        "isChild": false
+      }
+    ]
+  },  
+  {
+    "path": "/survey",
+    "text": "调查与统计",
+    "isChild": true,
+    "child": [
+      {
+        "path": "/gachaCal",
+        "text": "干员持有调查",
+        "isChild": false
+      },
+      {
+        "path": "/riicCal/maa",
+        "text": "干员风评调查",
+        "isChild": false
+      },
+      {
+        "path": "/gachaCal",
+        "text": "基建调查",
+        "isChild": false
+      },
+      {
+        "path": "/maarecruitdata",
+        "text": "公开招募大数据",
         "isChild": false
       }
     ]
   },
   {
-    "path": "/pack",
-    "text": "礼包性价比",
+    "path": "/riicCal",
+    "text": "其它信息",
+    "isChild": true,
+    "child": [
+      {
+        "path": "/about",
+        "text": "开发者中心",
+        "isChild": false
+      },
+      {
+        "path": "/gachaCal",
+        "text": "算法说明",
+        "isChild": false
+      },
+      {
+        "path": "/riicCal/maa",
+        "text": "支持我们",
+        "isChild": false
+      },
+      {
+        "path": "/friendlyLinks",
+        "text": "友情链接",
+        "isChild": false
+      }
+    ]
+  },
+  {
+    "path": "/about",
+    "text": "开发者平台",
     "isChild": false
   },
   {
     "path": "/donate",
-    "text": "支持我们",
+    "text": "关于我们",
     "isChild": false
   },
   {
     "path": "/friendlyLinks",
     "text": "友情链接",
-    "isChild": false
-  },
-  {
-    "path": "/about",
-    "text": "关于我们",
     "isChild": false
   }
 ]

@@ -10,8 +10,8 @@
 
 
 .header {
-    height: 40px;
-    line-height: 50px;
+    height: 48px;
+    line-height: 44px;
     border-bottom: 2px solid rgb(223, 223, 223);
     /* box-shadow: 0 0 4px 4px rgb(208, 208, 208); */
     background: #262f3e;
@@ -52,10 +52,14 @@
 
 @media (max-width: 1080px) {
     .header {
-        height: 78px;
+        height: 72px;
     }
 
     .aside {
+        display: none;
+    }
+
+    .menu_button_desktop{
         display: none;
     }
 }

@@ -5,11 +5,16 @@
       <div></div>
       <div></div>
     </div>
-    <div class="aside-btn">
-      <el-icon :size="40" color="#FFFFFF" @click="aside_collapse()"><Menu /></el-icon>
+    <div class="menu_button_desktop" @click="aside_collapse()">
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
+    <!-- <div class="aside-btn">
+      <el-icon :size="40" color="#FFFFFF" @click="aside_collapse()"><Menu /></el-icon>
+    </div> -->
 
-    <div class="pageTitle">
+    <div class="pageTitle" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
 
@@ -43,7 +48,7 @@
     <div class="drawer_wrap">
       <div class="drawer" id="drawer114">
         <div class="menu_table">
-          <div class="menu_title">明日方舟一图流</div>
+          <div class="menu_title">明日方舟一图流bar</div>
           <div class="line"></div>
           <div v-for="(r, index) in routes" :key="index">
             <div :class="navSelected(index)" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
