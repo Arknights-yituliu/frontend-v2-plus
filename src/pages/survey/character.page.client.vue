@@ -4,17 +4,16 @@
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
         <!-- <div class="setup_title">设置</div> -->
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选</div>
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
         <div :class="btnSetClass(cardSimple)" @click="cardSimple = !cardSimple">仅显示头像</div>
         <div class="btn_set" @click="upload()">上传数据</div>
         <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
-        <div class="btn_set" v-show="!exportExcelBtnVisible" @click="exportExcel()">转为Excel</div>
-        <a :href="exportExcelUrl" v-show="exportExcelBtnVisible"><div class="btn_set">导出Excel</div></a>
+        <div class="btn_set" @click="exportExcel()">{{ exportExcelBtnText }}</div>
 
         <div class="btn_set btn_upload">
           <div class="input_upload_wrap">
             <div class="upload_file_text">{{ uploadFileName }}</div>
-            <input id="uploadInput" type="file" class="input_upload" @input="uploadFile()" />
+            <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
           </div>
         </div>
         <div class="btn_set" @click="uploadByExcel">上传EXCEL</div>
@@ -75,69 +74,83 @@
         <div class="card_option_left">
           <div class="card_option_top_left">
             <div>
-              <div class="image_avatar">
-                <div @click="char.own = !char.own" :class="getSprite(char.charId)"></div>
+              <div :class="char.own ? 'image_avatar_own' : 'image_avatar'">
+                <div @click="updateOwn(char_index)" :class="getSprite(char.charId)"></div>
               </div>
               <div :class="char.own ? 'char_name' : 'char_name notown'">{{ char.name }}</div>
             </div>
-            <div :class="potentialWrapClass(char.own)">
-              <div :class="potentialClass(rank, char.potential)" v-for="rank in ranks.slice(1, 7)" @click="updateDataSwitch(char_index, 'potential', rank)">
+            <div :class="char.own ? 'potential_wrap' : 'potential_wrap notown'">
+              <div
+                class="image_potential"
+                :id="char_index + 'potential' + rank"
+                v-for="rank in ranks.slice(1, 7)"
+                @click="updateDataSwitch(char_index, 'potential', rank)"
+              >
                 <div :class="getSprite('potential' + rank, 'potential')"></div>
               </div>
             </div>
           </div>
           <!--  -->
-          <div :class="eliteWrapClass(char.own)">
-            <div :class="eliteClass(char.elite, 0)" @click="updateDataSwitch(char_index, 'elite', 0)">
+          <div :class="char.own ? 'elite_wrap' : 'elite_wrap notown'">
+            <div class="image_elite" :id="char_index + 'elite0'" @click="updateDataSwitch(char_index, 'elite', 0)">
               <div :class="getSprite('elite0', 'elite')"></div>
             </div>
-            <div v-show="char.rarity > 2" :class="eliteClass(char.elite, 1)" @click="updateDataSwitch(char_index, 'elite', 1)">
+            <div :id="char_index + 'elite1'" class="image_elite" @click="updateDataSwitch(char_index, 'elite', 1)" v-show="char.rarity > 2">
               <div :class="getSprite('elite1', 'elite')"></div>
             </div>
-            <div v-show="char.rarity > 3" :class="eliteClass(char.elite, 2)" @click="updateDataSwitch(char_index, 'elite', 2)">
+            <div :id="char_index + 'elite2'" class="image_elite" @click="updateDataSwitch(char_index, 'elite', 2)" v-show="char.rarity > 3">
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
-            <div class="image_elite">Lv.Max</div>
+            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index, char.rarity, char.elite)">
+              <img class="image_lvMax" src="/image/rank2/lvMax.png" alt="" />
+            </div>
           </div>
         </div>
 
         <!-- 右半部分 -->
-        <div :class="cardOptionRightClass(char.own)">
+        <!-- 技能 -->
+        <div :class="char.own ? 'card_option_right' : 'card_option_right notown'">
           <div v-for="(skill, skill_index) in char.skill" :key="skill_index" class="skill_wrap">
             <div class="image_skill">
               <div :class="getSprite(skill.iconId, 'icon')"></div>
             </div>
             <div
               v-for="rank in ranks.slice(1, 4)"
-              :class="skillAndModClass(char['skill' + (skill_index + 1)], rank)"
+              class="image_rank"
+              :id="char_index + 'skill' + (skill_index + 1) + rank"
               @click="updateDataSwitch(char_index, 'skill' + (skill_index + 1), rank)"
             >
               <div :class="getSprite('skill' + rank, 'skill')"></div>
             </div>
           </div>
-
-          <div class="skill_wrap">
+          <!-- 模组X -->
+          <div class="skill_wrap" v-show="char.modXOwn">
             <div class="image_mod">{{ "模组X" }}</div>
-            <div
-              v-for="rank in ranks.slice(1, 4)"
-              :class="skillAndModClass(char.modX, rank)"
-              @click="updateDataSwitch(char_index, 'modX', rank)"
-              v-show="char.modX > -1"
-            >
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank" @click="updateDataSwitch(char_index, 'modX', rank)">
+              <div :class="getSprite('mod' + rank, 'mod')"></div>
+            </div>
+          </div>
+          <!-- 没有模组X显示 -->
+          <div class="skill_wrap" v-show="!char.modXOwn">
+            <div class="image_mod">[N/A]</div>
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
+              <img class="image_null" src="/image/rank2/null.png" alt="" />
+            </div>
+          </div>
+          <!-- 模组Y -->
+          <div class="skill_wrap" v-show="char.modYOwn">
+            <div class="image_mod">{{ "模组Y" }}</div>
+
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank" @click="updateDataSwitch(char_index, 'modY', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
           </div>
 
-          <div class="skill_wrap">
-            <div class="image_mod">{{ "模组Y" }}</div>
-
-            <div
-              v-for="rank in ranks.slice(1, 4)"
-              :class="skillAndModClass(char.modY, rank)"
-              @click="updateDataSwitch(char_index, 'modY', rank)"
-              v-show="char.modY > -1"
-            >
-              <div :class="getSprite('mod' + rank, 'mod')"></div>
+          <!-- 没有模组Y显示 -->
+          <div class="skill_wrap" v-show="!char.modYOwn">
+            <div class="image_mod">[N/A]</div>
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
+              <img class="image_null" src="/image/rank2/null.png" alt="" />
             </div>
           </div>
         </div>
@@ -175,8 +188,6 @@ function getSprite(id, type) {
 let characterList = ref(characterListInit());
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 
-let exportExcelUrl = ref("");
-
 //找回填写过的角色信息
 function getSurveyCharacter() {
   surveyApi.getSurveyCharacter(globalUserData.value.token).then((response) => {
@@ -201,14 +212,23 @@ function getSurveyCharacter() {
   });
 }
 
-let exportExcelBtnVisible = ref(false);
+let exportExcelBtnText = ref("导出excel");
 
+//导出评分表的excel
 function exportExcel() {
-  exportExcelUrl.value = "http://127.0.0.1:10013/survey/character/export?token=" + globalUserData.value.token;
-  exportExcelBtnVisible.value = ref(true);
+  exportExcelBtnText.value = "导出中";
+  const exportExcelUrl = "http://127.0.0.1:10013/survey/character/export?token=" + globalUserData.value.token;
+  var dom = document.createElement("a");
+  dom.download = "form.xlsx";
+  dom.style.display = "none";
+  dom.href = exportExcelUrl;
+  dom.click();
+  setTimeout(() => {
+    exportExcelBtnText.value = "导出excel";
+  }, 5000);
 }
 
-//上传
+//上传风评表
 function upload() {
   surveyApi.uploadCharacter(characterList.value, globalUserData.value.token).then((response) => {
     // console.log(response.data);
@@ -219,11 +239,13 @@ function upload() {
 
 let uploadFileName = ref("未选择文件");
 
-function uploadFile() {
+//显示文件名称
+function getUploadFileName() {
   const file = document.getElementById("uploadInput");
   uploadFileName.value = file.files[0].name;
 }
 
+//通过excel上传
 function uploadByExcel() {
   const file = document.getElementById("uploadInput");
 
@@ -245,9 +267,7 @@ function maaData1() {
   }
 }
 
-let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [] });
-let filterCollapse = ref(false);
-
+//控制筛选栏的展开
 function setBarCollapse() {
   filterCollapse.value = !filterCollapse.value;
   if (filterCollapse.value) {
@@ -272,6 +292,9 @@ function setBarCollapse() {
     }, 100);
   }
 }
+
+let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [] });
+let filterCollapse = ref(false);
 
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
@@ -345,31 +368,80 @@ function sortCharacterList(rule) {
   });
 }
 
-// function updateDataIncr(char_index, attrib) {
-//   if ("elite" == attrib) {
-//     characterList.value[char_index][attrib]++;
-//     if (characterList.value[char_index][attrib] > 2) {
-//       characterList.value[char_index][attrib] = 0;
-//       return;
-//     }
-//     return;
-//   }
+function updateOwn(char_index) {
+  const character = characterList.value[char_index];
+  characterList.value[char_index].own = !character.own;
+  if (characterList.value[char_index].own) {
+  } else {
+    switchSelected(char_index + "level", -1, character.level, false);
+    switchSelected(char_index + "elite", -1, character.elite, false);
+    switchSelected(char_index + "potential", -1, character.potential, false);
+    switchSelected(char_index + "skill1", -1, character.skill1, false);
+    switchSelected(char_index + "skill2", -1, character.skill2, false);
+    switchSelected(char_index + "skill3", -1, character.skill3, false);
+    switchSelected(char_index + "modX", -1, character.modX, false);
+    switchSelected(char_index + "modY", -1, character.modY, false);
 
-//   characterList.value[char_index][attrib]++;
-//   if (characterList.value[char_index][attrib] > 3) {
-//     characterList.value[char_index][attrib] = 0;
-//     return;
-//   }
-//   return;
-// }
+    characterList.value[char_index].level = -1;
+    characterList.value[char_index].elite = -1;
+    characterList.value[char_index].potential = -1;
+    characterList.value[char_index].skill1 = -1;
+    characterList.value[char_index].skill2 = -1;
+    characterList.value[char_index].skill3 = -1;
+    characterList.value[char_index].modX = -1;
+    characterList.value[char_index].modY = -1;
+  }
+}
 
 //点选填写内容
-function updateDataSwitch(char_index, attrib, rank) {
-  console.log(rank, characterList.value[char_index][attrib]);
-  if (rank == characterList.value[char_index][attrib]) {
-    return (characterList.value[char_index][attrib] = 0);
+function updateDataSwitch(char_index, attribute, rank) {
+  console.log(rank, characterList.value[char_index][attribute]);
+  let domId = char_index + attribute;
+  let oldRank = characterList.value[char_index][attribute];
+  if (rank == oldRank) {
+    characterList.value[char_index][attribute] = -1;
+    switchSelected(domId, rank, oldRank, false);
+    return;
   }
-  characterList.value[char_index][attrib] = rank;
+  characterList.value[char_index][attribute] = rank;
+  switchSelected(domId, rank, oldRank, true);
+  characterList.value[char_index].own = true;
+}
+
+//最大等级
+function updateLevel(char_index, rarity, elite) {
+  let level = 0;
+
+  characterList.value[char_index].own = true;
+  if (characterList.value[char_index].level > 0) {
+    console.log("取消满级:");
+    characterList.value[char_index].level = level;
+    document.getElementById(char_index + "level").style.backgroundColor = "rgba(127, 127, 127, 0.1)";
+    return;
+  }
+
+  console.log(rarity, elite);
+  if (rarity == 6 && elite == 2) {
+    level = 90;
+  }
+  if (rarity == 5 && elite == 2) {
+    level = 80;
+  }
+  if (rarity == 4 && elite == 2) {
+    level = 70;
+  }
+  if (rarity == 3 && elite == 1) {
+    level = 55;
+  }
+  if (rarity < 3 && elite == 0) {
+    level = 30;
+  }
+
+  if (level == 0) return;
+
+  console.log("满级:", level);
+  characterList.value[char_index].level = level;
+  document.getElementById(char_index + "level").style.backgroundColor = "rgba(0, 102, 255, 0.3)";
 }
 
 //批量更新
@@ -397,39 +469,23 @@ function btnSetClass(flag) {
   return "btn_set";
 }
 
+function switchSelected(domId, rank, oldRank, selected) {
+  let dom = document.getElementById(domId + rank);
+  let oldDom = document.getElementById(domId + oldRank);
+  if (dom != null) {
+    console.log("修改：", domId + rank);
+    dom.style.backgroundColor = "rgba(0, 102, 255, 0.3)";
+  }
+
+  if (oldDom != null) {
+    console.log("修改：", domId + oldRank);
+    oldDom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
+  }
+}
+
 function characterOwnClass() {
   if (cardSimple.value) return "char_card char_card_simple";
   return "char_card";
-}
-
-function skillAndModClass(dataValue, switchValue) {
-  if (dataValue == switchValue) return "switch_select image_rank";
-  return "image_rank";
-}
-
-function eliteClass(dataValue, switchValue) {
-  if (dataValue == switchValue) return "image_elite switch_select";
-  return "image_elite";
-}
-
-function potentialClass(dataValue, switchValue) {
-  if (dataValue == switchValue) return "image_potential switch_select";
-  return "image_potential";
-}
-
-function cardOptionRightClass(own) {
-  if (own) return "card_option_right";
-  return "card_option_right notown";
-}
-
-function eliteWrapClass(own) {
-  if (own) return "elite_wrap";
-  return "elite_wrap notown";
-}
-
-function potentialWrapClass(own) {
-  if (own) return "potential_wrap";
-  return "potential_wrap notown";
 }
 
 onMounted(() => {

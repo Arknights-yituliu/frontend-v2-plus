@@ -50,6 +50,11 @@
     "isChild": true,
     "child": [
       {
+        "path": "/survey",
+        "text": "调查说明",
+        "isChild": false
+      },
+      {
         "path": "/survey/character",
         "text": "干员持有调查",
         "isChild": false

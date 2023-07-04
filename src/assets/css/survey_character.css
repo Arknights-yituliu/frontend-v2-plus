@@ -7,7 +7,7 @@
 }
 
 .char_forms {
-  margin-top: 8px;
+  margin-top: 14px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -22,7 +22,7 @@
   height: 222px;
   transition: all 0.2s;
   background-color: rgba(255, 255, 255, 1);
-  margin: 2px;
+  margin: 8px;
   /* margin: 14px; */
 }
 
@@ -62,10 +62,21 @@
   border-radius: 0px;
   overflow: hidden;
   margin-right: 10px;
-  border-bottom: 4px solid #a5a5a5;
+  border-bottom: 5px solid #a5a5a5;
   background-color: rgba(0, 0, 0, 0.2);
-  filter: grayscale(0%)
+
 }
+
+.image_avatar_own {
+  height: 100px;
+  width: 100px;
+  border-radius: 0px;
+  overflow: hidden;
+  margin-right: 10px;
+  border-bottom: 5px solid rgb(35, 212, 0);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 
 .char_name {
   text-align: center;
@@ -80,13 +91,14 @@
   color: rgb(48, 86, 255);
 }
 
+
+
 .potential_wrap {
   display: flex;
   flex-wrap: wrap;
   width: 156px;
   height: 100px;
   margin-top: 12px;
-
 }
 
 .image_potential {
@@ -173,6 +185,17 @@
 ::-webkit-scrollbar {
   display: none;
   /* Chrome Safari */
+}
+
+.image_lvMax {
+  width: 55px;
+  margin-left: -8px;
+  margin-top: 2px;
+}
+
+.image_null {
+  width: 41px;
+  margin-top: 1px;
 }
 
 .sprite_skill {
