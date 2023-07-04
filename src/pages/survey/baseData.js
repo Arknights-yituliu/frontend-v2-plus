@@ -6,30 +6,32 @@ function characterListInit() {
   for (let charId in characterBasicInfo) {
     var baseInfo = characterBasicInfo[charId];
     // if (baseInfo.rarity < 5) continue;
-    let modX = -1;
-    let modY = -1;
+    let modXOwn = false;
+    let modYOwn = false;
 
     if (baseInfo.mod !== undefined) {
       if (baseInfo.mod.modX) {
-        modX = 0;
+        modXOwn = true;
       }
       if (baseInfo.mod.modY) {
-        modY = 0;
+        modYOwn = true;
       }
     }
     let character = {
       charId: charId,
       name: baseInfo.name,
       own: false,
-      level: 1,
-      modX: modX,
-      modY: modY,
-      elite: 0,
-      potential: 1,
+      level: -1,
+      modX: -1,
+      modXOwn:modXOwn,
+      modY: -1,
+      modYOwn:modYOwn,
+      elite: -1,
+      potential: -1,
       rarity: baseInfo.rarity,
-      skill1: 0,
-      skill2: 0,
-      skill3: 0,
+      skill1: -1,
+      skill2: -1,
+      skill3: -1,
       skill: baseInfo.skill,
       date: baseInfo.date,
       itemObtainApproach:baseInfo.itemObtainApproach,
@@ -85,19 +87,19 @@ let scoreList = [];
 function scoreListInit() {
   for (let charId in characterBasicInfo) {
     var baseInfo = characterBasicInfo[charId];
-    console.log(baseInfo)
+    // console.log(baseInfo)
     let score = {
       charId: charId,
       name: baseInfo.name,
       itemDesc:baseInfo.itemDesc,
       itemUsage:baseInfo.itemUsage,
       rarity: baseInfo.rarity,
-      daily: 1,
-      rogue: 1,
-      securityService: 1,
-      hard: 1,
-      universal: 1,
-      countermeasures: 1,
+      daily: -1,
+      rogue: -1,
+      securityService: -1,
+      hard: -1,
+      universal: -1,
+      countermeasures: -1,
       date: baseInfo.date,
       profession: baseInfo.profession,
       mod: baseInfo.mod !== undefined,

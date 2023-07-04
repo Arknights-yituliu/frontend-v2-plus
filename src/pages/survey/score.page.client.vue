@@ -2,29 +2,32 @@
   <div class="score_page">
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "展开" : "收起" }}筛选栏</div>
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
         <div class="btn_set" @click="uploadScoreForm()">上传数据</div>
       </div>
       <div>
+
+        <div class="setup_bar">
+          <div class="setup_title">选择评分项目</div>
+          <div :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
+            {{ item.label }}
+          </div>
+        </div>
+
         <div class="setup_bar">
           <div class="setup_title">职业</div>
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
             {{ profession.label }}
           </div>
         </div>
+
         <div class="setup_bar">
           <div class="setup_title">稀有度</div>
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }} ★</div>
         </div>
-        <div class="setup_bar">
-          <div class="setup_title">年份</div>
-          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
-            {{ year.label }}
-          </div>
-        </div>
 
         <div class="setup_bar">
-          <div class="setup_title">选择评分项目</div>
+          <div class="setup_title">年份</div>
           <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
             {{ year.label }}
           </div>
@@ -46,64 +49,70 @@
     </div>
 
     <div class="score_wrap">
-      <div v-for="(char, charId) in scoreList.slice(0)" :key="charId" class="char_card" v-show="char.show">
+      <div v-for="(char, char_index) in scoreList.slice(0)" :key="char_index" class="char_card" v-show="char.show">
         <!-- 标题区域 -->
-        <table class="score_wrap_title" rules="none">
+        <table :class="'score_wrap_title_'+char.rarity" rules="none">
           <tr>
-            <td style="padding: 0px;width: 100px;">
+            <td style="padding: 0px; width: 100px">
               <div class="score_avatar_wrap">
                 <div :class="getSprite(char.charId)"></div>
               </div>
             </td>
-            <td style="padding-left: 12px;">
+            <td style="padding-left: 12px">
               <div class="char_name">{{ char.name }}</div>
-              <div class="char_description">{{char.itemUsage}}</div>
-              <div class="char_description" style="font-style: italic;color: rgb(95,95,95);">{{char.itemDesc}}</div>
+              <div class="char_description">{{ char.itemUsage }}</div>
+              <div class="char_description" style="font-style: italic; color: rgb(95, 95, 95)">{{ char.itemDesc }}</div>
             </td>
           </tr>
         </table>
         <!-- 评分区域 -->
         <div class="score_bar_wrap">
-          <div class="score_bar">
-            <!-- <div class="score_name">日常：</div> -->
-            日常
-            <img class="image_score" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'daily', rank)" />
+          <div class="score_bar" v-show="scoreItem.daily.show">
+            <div class="score_name" @click="resetScore(char_index, 'daily')">日常：</div>
+            <!-- 日常 -->
+            <img class="image_score" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'daily', rank)" />
           </div>
-          <div class="score_bar">
-            <!-- <div class="score_name">肉鸽：</div> -->
-            肉鸽
-            <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'rogue', rank)" />
+          <div class="score_bar" v-show="scoreItem.rogue.show">
+            <div class="score_name" @click="resetScore(char_index, 'rogue')">肉鸽：</div>
+            <!-- 肉鸽 -->
+            <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'rogue', rank)" />
           </div>
-          <div class="score_bar">
-            <!-- <div class="score_name">高难：</div> -->
-            高难
-            <img class="image_score" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'hard', rank)" />
+          <div class="score_bar" v-show="scoreItem.hard.show">
+            <div class="score_name" @click="resetScore(char_index, 'hard')">高难：</div>
+            <!-- 高难 -->
+            <img class="image_score" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'hard', rank)" />
           </div>
-          <div class="score_bar">
-            <!-- <div class="score_name">保全：</div> -->
-            保全
+          <div class="score_bar" v-show="scoreItem.securityService.show">
+            <div class="score_name" @click="resetScore(char_index, 'securityService')">保全：</div>
+            <!-- 保全 -->
             <img
               class="image_score"
               :src="scoreSelected(rank, char.securityService)"
               alt=""
               v-for="rank in scoreDict"
-              @click="updateScore(charId, 'securityService', rank)"
+              @click="updateScore(char_index, 'securityService', rank)"
             />
           </div>
-          <div class="score_bar">
-            <!-- <div class="score_name">泛用：</div> -->
-            泛用
-            <img class="image_score" :src="scoreSelected(rank, char.universal)" alt="" v-for="rank in scoreDict" @click="updateScore(charId, 'universal', rank)" />
+          <div class="score_bar" v-show="scoreItem.universal.show">
+            <div class="score_name" @click="resetScore(char_index, 'universal')">泛用：</div>
+            <!-- 泛用 -->
+            <img
+              class="image_score"
+              :src="scoreSelected(rank, char.universal)"
+              alt=""
+              v-for="rank in scoreDict"
+              @click="updateScore(char_index, 'universal', rank)"
+            />
           </div>
-          <div class="score_bar">
-            <!-- <div class="score_name">对策：</div> -->
-            对策
+          <div class="score_bar" v-show="scoreItem.countermeasures.show">
+            <div class="score_name" @click="resetScore(char_index, 'countermeasures')">对策：</div>
+            <!-- 对策 -->
             <img
               class="image_score"
               :src="scoreSelected(rank, char.countermeasures)"
               alt=""
               v-for="rank in scoreDict"
-              @click="updateScore(charId, 'countermeasures', rank)"
+              @click="updateScore(char_index, 'countermeasures', rank)"
             />
           </div>
         </div>
@@ -128,9 +137,14 @@ function uploadScoreForm() {
 }
 
 let scoreList = ref(scoreListInit());
-let scoreDict = ref([1,2,3,4,5])
-function updateScore(charId, attribute, score) {
-  scoreList.value[charId][attribute] = score;
+let scoreDict = ref([1, 2, 3, 4, 5]);
+
+function updateScore(char_index, attribute, score) {
+  scoreList.value[char_index][attribute] = score;
+}
+
+function resetScore(char_index, attribute){
+  scoreList.value[char_index][attribute] = -1;
 }
 
 function scoreSelected(rank, score) {
@@ -138,11 +152,25 @@ function scoreSelected(rank, score) {
   return "/image/rank2/rarity.png";
 }
 
+const scoreItem = ref({
+  daily: { show: true, label: "日常" },
+  rogue: { show: true, label: "肉鸽" },
+  hard: { show: true, label: "高难" },
+  securityService: { show: true, label: "保全" },
+  universal: { show: true, label: "泛用" },
+  countermeasures: { show: true, label: "对策" },
+});
 
-const scoreItem = ref([])
+function selectScoreItem(attribute){
+  scoreItem.value[attribute].show = !scoreItem.value[attribute].show
+  console.log(scoreItem.value[attribute].show)
+}
 
-function selectrdScoreItem(){
-   
+function selectedScoreItem(attribute) {
+  if (scoreItem.value[attribute].show) {
+    return "switch_set selected_color";
+  }
+  return "switch_set";
 }
 
 //判断按钮是否选择赋予样式
@@ -191,15 +219,19 @@ function addFilterRule(attribute, rule) {
       }
     }
     filterRules.value[attribute] = filterRulesCopy;
-    filterCharacterList();
+    filterCard();
     return;
   }
   filterRules.value[attribute].push(rule);
-  filterCharacterList();
+  filterCard();
+}
+
+function filterByScore(char){
+      
 }
 
 //筛选
-function filterCharacterList() {
+function filterCard() {
   for (let i in scoreList.value) {
     var character = scoreList.value[i];
     let isRarity = isAttribute(character, "rarity");
@@ -210,6 +242,7 @@ function filterCharacterList() {
     scoreList.value[i].show = isRarity & isProfession & isYearFlag & isOwn & isMod;
   }
 }
+
 
 //是否有这个属性
 function isAttribute(character, attribute) {
@@ -249,7 +282,6 @@ function btnSetClass(flag) {
   if (flag) return "btn_set btn_set_select";
   return "btn_set";
 }
-
 
 onMounted(() => {
   addFilterRule("rarity", 6);

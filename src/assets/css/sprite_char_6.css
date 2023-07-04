@@ -1,455 +1,536 @@
 .bg-char_003_kalts {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -10px -10px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -10px -10px;
 }
+
+
 
 .bg-char_010_chen {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -210px -10px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -210px -10px;
 }
+
+
 
 .bg-char_017_huang {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -10px -210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -10px -210px;
 }
+
+
 
 .bg-char_103_angel {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -210px -210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -210px -210px;
 }
+
+
 
 .bg-char_112_siege {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -410px -10px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -410px -10px;
 }
+
+
 
 .bg-char_113_cqbw {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -410px -210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -410px -210px;
 }
+
+
 
 .bg-char_134_ifrit {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -10px -410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -10px -410px;
 }
+
+
 
 .bg-char_136_hsguma {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -210px -410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -210px -410px;
 }
+
+
 
 .bg-char_147_shining {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -410px -410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -410px -410px;
 }
+
+
 
 .bg-char_172_svrash {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -610px -10px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -610px -10px;
 }
+
+
 
 .bg-char_179_cgbird {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -610px -210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -610px -210px;
 }
+
+
 
 .bg-char_180_amgoat {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -610px -410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -610px -410px;
 }
+
+
 
 .bg-char_188_helage {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -10px -610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -10px -610px;
 }
+
+
 
 .bg-char_197_poca {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -210px -610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -210px -610px;
 }
+
+
 
 .bg-char_202_demkni {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -410px -610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -410px -610px;
 }
+
+
 
 .bg-char_206_gnosis {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -610px -610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -610px -610px;
 }
+
+
 
 .bg-char_213_mostma {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -810px -10px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -810px -10px;
 }
+
+
 
 .bg-char_222_bpipe {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -810px -210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -810px -210px;
 }
+
+
 
 .bg-char_225_haak {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -810px -410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -810px -410px;
 }
+
+
 
 .bg-char_248_mgllan {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -810px -610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -810px -610px;
 }
+
+
 
 .bg-char_249_mlyss {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -10px -810px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -10px -810px;
 }
+
+
 
 .bg-char_250_phatom {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -210px -810px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -210px -810px;
 }
+
+
 
 .bg-char_263_skadi {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -410px -810px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -410px -810px;
 }
+
+
 
 .bg-char_264_f12yin {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -610px -810px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -610px -810px;
 }
+
+
 
 .bg-char_291_aglina {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -810px -810px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -810px -810px;
 }
+
+
 
 .bg-char_293_thorns {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1010px -10px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1010px -10px;
 }
+
+
 
 .bg-char_300_phenxi {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1010px -210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1010px -210px;
 }
+
+
 
 .bg-char_311_mudrok {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1010px -410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1010px -410px;
 }
+
+
 
 .bg-char_322_lmlee {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1010px -610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1010px -610px;
 }
+
+
 
 .bg-char_332_archet {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1010px -810px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1010px -810px;
 }
+
+
 
 .bg-char_340_shwaz {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -10px -1010px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -10px -1010px;
 }
+
+
 
 .bg-char_350_surtr {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -210px -1010px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -210px -1010px;
 }
+
+
 
 .bg-char_358_lisa {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -410px -1010px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -410px -1010px;
 }
+
+
 
 .bg-char_362_saga {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -610px -1010px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -610px -1010px;
 }
+
+
 
 .bg-char_377_gdglow {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -810px -1010px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -810px -1010px;
 }
+
+
 
 .bg-char_391_rosmon {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1010px -1010px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1010px -1010px;
 }
+
+
 
 .bg-char_400_weedy {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1210px -10px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1210px -10px;
 }
+
+
 
 .bg-char_416_zumama {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1210px -210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1210px -210px;
 }
+
+
 
 .bg-char_420_flamtl {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1210px -410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1210px -410px;
 }
+
+
 
 .bg-char_423_blemsh {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1210px -610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1210px -610px;
 }
+
+
 
 .bg-char_426_billro {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1210px -810px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1210px -810px;
 }
+
+
 
 .bg-char_427_vigil {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1210px -1010px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1210px -1010px;
 }
+
+
 
 .bg-char_430_fartth {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -10px -1210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -10px -1210px;
 }
+
+
 
 .bg-char_437_mizuki {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -210px -1210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -210px -1210px;
 }
+
+
 
 .bg-char_456_ash {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -410px -1210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -410px -1210px;
 }
+
+
 
 .bg-char_472_pasngr {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -610px -1210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -610px -1210px;
 }
+
+
 
 .bg-char_474_glady {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -810px -1210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -810px -1210px;
 }
+
+
 
 .bg-char_479_sleach {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1010px -1210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1010px -1210px;
 }
+
+
 
 .bg-char_485_pallas {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1210px -1210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1210px -1210px;
 }
+
+
 
 .bg-char_1012_skadi2 {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1410px -10px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1410px -10px;
 }
+
+
 
 .bg-char_1013_chen2 {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1410px -210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1410px -210px;
 }
+
+
 
 .bg-char_1014_nearl2 {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1410px -410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1410px -410px;
 }
+
+
 
 .bg-char_1020_reed2 {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1410px -610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1410px -610px;
 }
+
+
 
 .bg-char_1023_ghost2 {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1410px -810px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1410px -810px;
 }
+
+
 
 .bg-char_1026_gvial2 {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1410px -1010px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1410px -1010px;
 }
+
+
 
 .bg-char_1028_texas2 {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1410px -1210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1410px -1210px;
 }
+
+
 
 .bg-char_1029_yato2 {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -10px -1410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -10px -1410px;
 }
+
+
 
 .bg-char_1031_slent2 {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -210px -1410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -210px -1410px;
 }
+
+
+
+.bg-char_1032_excu2 {
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -410px -1410px;
+}
+
+
 
 .bg-char_2013_cerber {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -410px -1410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -610px -1410px;
 }
+
+
 
 .bg-char_2014_nian {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -610px -1410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -810px -1410px;
 }
+
+
 
 .bg-char_2015_dusk {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -810px -1410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1010px -1410px;
 }
+
+
 
 .bg-char_2023_ling {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1010px -1410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1210px -1410px;
 }
+
+
 
 .bg-char_2024_chyue {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1210px -1410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1410px -1410px;
 }
+
+
 
 .bg-char_4009_irene {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1410px -1410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1610px -10px;
 }
+
+
 
 .bg-char_4027_heyak {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1610px -10px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1610px -210px;
 }
+
+
 
 .bg-char_4039_horn {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1610px -210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1610px -410px;
 }
+
+
 
 .bg-char_4042_lumen {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1610px -410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1610px -610px;
 }
+
+
 
 .bg-char_4046_ebnhlz {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1610px -610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1610px -810px;
 }
+
+
 
 .bg-char_4048_doroth {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1610px -810px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1610px -1010px;
 }
+
+
 
 .bg-char_4055_bgsnow {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1610px -1010px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1610px -1210px;
 }
+
+
 
 .bg-char_4064_mlynar {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1610px -1210px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -1610px -1410px;
 }
+
+
 
 .bg-char_4065_judge {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -1610px -1410px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -10px -1610px;
 }
+
+
 
 .bg-char_4072_ironmn {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -10px -1610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -210px -1610px;
 }
+
+
 
 .bg-char_4080_lin {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -210px -1610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -410px -1610px;
 }
+
+
 
 .bg-char_4082_qiubai {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -410px -1610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -610px -1610px;
 }
 
+
+
 .bg-char_4087_ines {
-  width: 180px;
-  height: 180px;
-  background: url("https://image.yituliu.site/sprites/sprites-char-6.webp") -610px -1610px;
+  width: 180px; height: 180px;
+  background: url('https://image.yituliu.site/sprites/sprites-char-6.webp') -810px -1610px;
 }

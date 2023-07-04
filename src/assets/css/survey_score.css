@@ -1,5 +1,3 @@
-
-
 .score_page {
     background: white;
     max-width: 1280px;
@@ -8,12 +6,12 @@
 }
 
 
-.image_rarity{
+.image_rarity {
     width: 18px;
 }
 
 
-.score_wrap{
+.score_wrap {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -36,12 +34,53 @@
 }
 
 
-.score_wrap_title{
+.score_wrap_title_6 {
     box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
     width: 100%;
     border-radius: 2px;
-    background: linear-gradient(60deg, rgba(255, 255, 255,0) 60%, rgba(255, 115, 0,0.5));
-    /* background-color: rgba(0, 81, 255, 0.1); */
+    background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(255, 98, 0, 0.5));
+
+}
+
+.score_wrap_title_5 {
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    border-radius: 2px;
+    background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(255, 221, 0, 0.5));
+
+}
+
+.score_wrap_title_4 {
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    border-radius: 2px;
+    background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(179, 0, 255, 0.5));
+
+}
+
+.score_wrap_title_3 {
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    border-radius: 2px;
+    background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(0, 166, 255, 0.5));
+
+}
+
+.score_wrap_title_2 {
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    border-radius: 2px;
+    background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(109, 109, 109, 0.5));
+
+}
+
+
+.score_wrap_title_1 {
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    border-radius: 2px;
+    background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0.5));
+
 }
 
 .score_bar {
@@ -94,7 +133,7 @@
 .char_name {
     /* margin-top: 180px; */
     height: 32px;
-    color: rgb(95,95,95);
+    color: rgb(95, 95, 95);
     /* text-align: center; */
     font-size: 28px;
     font-weight: 700;
@@ -105,9 +144,9 @@
     /* margin: -88px 112px; */
 }
 
-.char_description{
+.char_description {
     height: 20px;
-    color: rgb(31,31,31);
+    color: rgb(31, 31, 31);
     font-size: 14px;
     font-weight: 500;
     font-family: Arial, Helvetica, sans-serif;
