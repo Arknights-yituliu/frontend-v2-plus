@@ -175,6 +175,7 @@ import characterDemo from "@/pages/survey/characterDemo.vue";
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
 import "@/assets/css/survey_character.css";
+import {http} from '@/api/baseURL'
 
 function getSprite(id, type) {
   if ("mod" == type) return "bg-" + id + " sprite_mod";
@@ -217,7 +218,7 @@ let exportExcelBtnText = ref("导出excel");
 //导出评分表的excel
 function exportExcel() {
   exportExcelBtnText.value = "导出中";
-  const exportExcelUrl = "http://127.0.0.1:10013/survey/character/export?token=" + globalUserData.value.token;
+  const exportExcelUrl = http+"survey/character/export?token=" + globalUserData.value.token;
   var dom = document.createElement("a");
   dom.download = "form.xlsx";
   dom.style.display = "none";
