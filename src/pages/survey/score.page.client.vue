@@ -59,7 +59,7 @@
               </div>
             </td>
             <td style="padding-left: 12px">
-              <div class="char_name">{{ char.name }}</div>
+              <div class="score_char_name">{{ char.name }}</div>
               <div class="char_description">{{ char.itemUsage }}</div>
               <div class="char_description" style="font-style: italic; color: rgb(95, 95, 95)">{{ char.itemDesc }}</div>
             </td>
