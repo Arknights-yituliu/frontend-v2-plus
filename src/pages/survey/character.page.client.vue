@@ -372,6 +372,10 @@ function updateOwn(char_index) {
   const character = characterList.value[char_index];
   characterList.value[char_index].own = !character.own;
   if (characterList.value[char_index].own) {
+    if (character.rarity == 6) {
+      characterList.value[char_index].elite = 2;
+      characterList.value[char_index].potential = 1;
+    }
   } else {
     switchSelected(char_index + "level", -1, character.level, false);
     switchSelected(char_index + "elite", -1, character.elite, false);
