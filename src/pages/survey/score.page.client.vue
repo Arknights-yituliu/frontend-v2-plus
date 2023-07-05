@@ -49,7 +49,7 @@
     </div>
 
     <div class="score_wrap">
-      <div v-for="(char, char_index) in scoreList.slice(0)" :key="char_index" class="char_card" v-show="char.show">
+      <div v-for="(char, char_index) in scoreList.slice(0)" :key="char_index" class="score_card" v-show="char.show">
         <!-- 标题区域 -->
         <table :class="'score_wrap_title_'+char.rarity" rules="none">
           <tr>
@@ -59,7 +59,7 @@
               </div>
             </td>
             <td style="padding-left: 12px">
-              <div class="char_name">{{ char.name }}</div>
+              <div class="score_char_name">{{ char.name }}</div>
               <div class="char_description">{{ char.itemUsage }}</div>
               <div class="char_description" style="font-style: italic; color: rgb(95, 95, 95)">{{ char.itemDesc }}</div>
             </td>

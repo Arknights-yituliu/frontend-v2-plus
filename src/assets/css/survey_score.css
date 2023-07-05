@@ -20,7 +20,7 @@
 }
 
 
-.char_card {
+.score_card {
     /* display: flex; */
     width: 480px;
     /* height: 190px; */
@@ -130,7 +130,7 @@
     /* border: 1px rgb(255, 0, 0) solid; */
 }
 
-.char_name {
+.score_char_name {
     /* margin-top: 180px; */
     height: 32px;
     color: rgb(95, 95, 95);
