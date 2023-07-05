@@ -296,14 +296,6 @@
     "packType": "activity"
   },
   {
-    "packName": "愚人号",
-    "gachaOriginium": "36",
-    "gachaOrundum": "0",
-    "gachaPermit": "0",
-    "gachaPermit10": "0",
-    "packType": "activity"
-  },
-  {
     "packName": "多索雷斯假日",
     "gachaOriginium": "40",
     "gachaOrundum": "0",
@@ -314,6 +306,14 @@
   {
     "packName": "长夜临光",
     "gachaOriginium": "42",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "愚人号",
+    "gachaOriginium": "36",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
@@ -336,8 +336,24 @@
     "packType": "activity"
   },
   {
-    "packName": "愚人号",
-    "gachaOriginium": "36",
+    "packName": "孤星",
+    "gachaOriginium": "40",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "吾导先路",
+    "gachaOriginium": "27",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "尘影余音",
+    "gachaOriginium": "29",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
