@@ -57,7 +57,7 @@
           <div class="setup_title">批量操作</div>
           <div class="switch_set" @click="batchUpdates('own', true)">全部拥有</div>
           <div class="switch_set" @click="batchUpdates('own', false)">全部未拥有</div>
-          <div class="switch_set" @click="batchUpdates('elite', 2)">全部精二</div>
+          <div class="switch_set" @click="batchUpdates('elite', 2)">全部设为精二</div>
           <div class="switch_set" @click="batchUpdates('skill1', 3)">一技能专三</div>
           <div class="switch_set" @click="batchUpdates('skill2', 3)">二技能专三</div>
           <div class="switch_set" @click="batchUpdates('skill3', 3)">三技能专三</div>
