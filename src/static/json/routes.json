@@ -1,6 +1,6 @@
 [
   {
-    "path": "/",
+    "path": "/Grandet",
     "text": "材料收益相关",
     "isChild": true,
     "child": [
@@ -23,7 +23,7 @@
     ]
   },
   {
-    "path": "/riicCal",
+    "path": "/tools",
     "text": "一图流工具箱",
     "isChild": true,
     "child": [
@@ -55,17 +55,17 @@
         "isChild": false
       },
       {
-        "path": "/survey/character",
-        "text": "干员持有调查",
+        "path": "/survey/operators",
+        "text": "干员持有率",
         "isChild": false
       },
       {
         "path": "/survey/score",
-        "text": "干员风评调查",
+        "text": "干员评分",
         "isChild": false
       },
       {
-        "path": "/survey/build",
+        "path": "/survey/riic",
         "text": "基建调查",
         "isChild": false
       },
@@ -77,12 +77,12 @@
     ]
   },
   {
-    "path": "/riicCal",
+    "path": "/about",
     "text": "其它信息",
     "isChild": true,
     "child": [
       {
-        "path": "/about",
+        "path": "/dev",
         "text": "开发者中心",
         "isChild": false
       },
