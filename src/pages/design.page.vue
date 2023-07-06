@@ -1,4 +1,20 @@
+<script setup>
+import "mdui/dist/css/mdui.min.css";
+import "@/assets/css/sprite_item_large.css";
+</script>
+
 <template>
+  <div class="mdui-container">
+    <div class="mdui-row">
+      <div v-for="i in 24" class="mdui-col-xs-6 mdui-col-sm-4 mdui-col-md-3 mdui-col-lg-2 mdui-p-y-1">
+        <div class="mdui-shadow-2 mdui-p-a-3 mdui-text-center mdui-ripple">
+          <div class="bg-30063large sprite_large mdui-center"></div>
+          {{ i }}
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="theme_light">
     <div class="light_card demo_card">
       <picture class="riic_icon">
@@ -29,7 +45,7 @@
 </template>
 
 <style>
-.demo_card{
+.demo_card {
   width: 460px;
   height: 480px;
   margin: 12px;
@@ -43,7 +59,7 @@
   transition: background-color 0.2s;
 }
 
-.demo_button{
+.demo_button {
   height: 48px;
   line-height: 48px;
   font-size: 18px;
@@ -52,7 +68,7 @@
   border-radius: 8px;
   background-color: #80808020;
 }
-.demo_button_pressed{
+.demo_button_pressed {
   height: 48px;
   line-height: 48px;
   font-size: 18px;
@@ -62,11 +78,11 @@
   background: #5096ff;
   /* color: white; */
 }
-.black_light{
+.black_light {
   background-color: white;
 }
 
-.light_card{
+.light_card {
   color: black;
 
   box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.08), 0 3px 6px 0 rgba(0, 0, 0, 0.06), 0 5px 12px 4px rgba(0, 0, 0, 0.04);
@@ -79,11 +95,11 @@
   box-sizing: border-box;
   transition: background-color 0.2s;
 }
-.black_dark{
+.black_dark {
   background-color: #121212;
 }
 
-.dark_card{
+.dark_card {
   background-color: #242424;
   color: #e0e0e0;
 
@@ -97,7 +113,6 @@
   box-sizing: border-box;
   transition: background-color 0.2s;
 }
-
 </style>
 
 <script>
