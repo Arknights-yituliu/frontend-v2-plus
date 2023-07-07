@@ -17,7 +17,7 @@
               <!-- 如果有4个选项则修改为 style="width:98%;margin:0 1%;"，子项宽度25% -->
 
               <el-radio-group size="small" style="width: 90%; margin: 6px 5%" v-model="timeSelector" @change="checkEndDate(timeSelector)">
-                <el-radio-button label="夏活(8.22)" style="width: 33%"></el-radio-button>
+                <el-radio-button label="夏活(8.15)" style="width: 33%"></el-radio-button>
                 <el-radio-button label="感谢庆典" style="width: 33%" disabled></el-radio-button>
                 <el-radio-button label="待定" type="primary" style="width: 33%" disabled></el-radio-button>
                 <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
@@ -605,6 +605,11 @@
                   </el-checkbox-button>
                 </div>
               </el-checkbox-group>
+                  <div id="newbie_info" style="font-size: 12px;padding:0px 8px;color: var(--charge-instruction-fg)">
+                *[新人进阶组合包]内置了一张月卡，这导致攒抽计算需要根据自身情况进行修正<br>
+                非月卡党：直接选择“新人进阶组合包”，但需减去池子结束前领不到的玉<br>
+                月卡党：选择“进阶包不含月卡”，如果[当前月卡有效期>池子关闭日期]，需加上提前获得的6源石
+              </div>
               <!-- 首充 -->
               <div class="gacha_unit_fold">
                 <div class="triangle"></div>
@@ -998,10 +1003,10 @@ export default {
       // checkBox: ["1","7"],
       rewardType: "联动限定", //奖励的类型
       startTime: "", //开始时间
-      endTime: "2023/08/22 03:59:00", //结束时间
+      endTime: "2023/08/15 03:59:00", //结束时间
       start_TimeStamp: "", //开始时间戳
       end_TimeStamp: "", //结束时间戳
-      timeSelector: "夏活(8.22)", //活动时间节点选择框的绑定对象
+      timeSelector: "夏活(8.15)", //活动时间节点选择框的绑定对象
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
       // gacha_storePacks: gacha_storePacksJson.data,
@@ -1224,13 +1229,13 @@ export default {
     // 选择攒计算的时间节点
     checkEndDate() {
       // this.cookieInit=true;
-      if (this.timeSelector === "夏活(8.22)") {
-        this.endTime = "2023/08/22 03:59:00";
+      if (this.timeSelector === "夏活(8.15)") {
+        this.endTime = "2023/08/15 03:59:00";
         this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.poolCountDownFlag_permit = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
         this.poolCountDownFlag_orundum = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
       } else if (this.timeSelector === "1111111") {
-        this.endTime = "2023/08/22 03:59:00";
+        this.endTime = "2023/08/15 03:59:00";
         this.rewardType = "周年限定";
         this.poolCountDownFlag_permit = true;
         this.poolCountDownFlag_orundum = true;
@@ -1459,7 +1464,7 @@ export default {
       //减去限定池已经赠送过的单抽
       if (this.poolCountDownFlag_permit) this.calResults.permit_other -= parseInt(this.poolCountDown);
 
-      // if (this.timeSelector === "夏活(8.22)") {
+      // if (this.timeSelector === "夏活(8.15)") {
       //   this.calResults.orundum_other += parseInt(this.customValue_slider);
       // }
 

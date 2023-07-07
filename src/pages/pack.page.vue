@@ -8,7 +8,10 @@
           <div :class="opETextTheme">Packs Value</div>
         </div>
       </div>
-
+      <div class="stage_hint">
+        <div class="stage_hint_t0">由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。</div>
+        
+      </div>
       <client-only>
         <div class="pack-table-wrapper">
           <el-table
@@ -631,7 +634,7 @@ export default {
       // if(true ===this.showFlag) return '';
       // console.log(true ===this.showFlag);
       if (type === "limited") {
-        return "background:url(/image/packs/limited/" + img + ".png) 0% 0% / cover no-repeat,#444444;";
+        return "background:url(/image/packs/limited/" + img + ".jpg) 0% 0% / cover no-repeat,#444444;";
       } else return "background:url(/image/packs/small/" + img + ".jpg) 0% 0% / cover no-repeat,#444444;";
     },
     getContentId(id, type) {
