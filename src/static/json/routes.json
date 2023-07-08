@@ -1,6 +1,6 @@
 [
   {
-    "path": "/Grandet",
+    "path": "/stgae/index",
     "text": "材料收益相关",
     "isChild": true,
     "child": [
@@ -9,15 +9,15 @@
         "text": "刷图推荐"
       },
       {
-        "path": "/store",
+        "path": "/stage/store",
         "text": "商店性价比"
       },
       {
-        "path": "/pack",
+        "path": "/stage/pack",
         "text": "礼包性价比"
       },
       {
-        "path": "/value",
+        "path": "/stage/value",
         "text": "物品价值表"
       }
     ]
@@ -28,17 +28,17 @@
     "isChild": true,
     "child": [
       {
-        "path": "/gachaCal",
+        "path": "/tools/gachaCal",
         "text": "攒抽计算器",
         "isChild": false
       },
       {
-        "path": "/riicCal/maa",
+        "path": "/tools/maa",
         "text": "MAA排班表生成器",
         "isChild": false
       },
       {
-        "path": "/riicCal/mower",
+        "path": "/tools/mower",
         "text": "mower排班表生成器",
         "isChild": false
       }
@@ -70,7 +70,7 @@
         "isChild": false
       },
       {
-        "path": "/maarecruitdata",
+        "path": "/survey/maarecruitdata",
         "text": "公开招募大数据",
         "isChild": false
       }
@@ -82,8 +82,8 @@
     "isChild": true,
     "child": [
       {
-        "path": "/dev",
-        "text": "开发者中心",
+        "path": "/about/dev",
+        "text": "开发相关",
         "isChild": false
       },
       {
@@ -92,12 +92,12 @@
         "isChild": false
       },
       {
-        "path": "/donate",
+        "path": "/about/donate",
         "text": "支持我们",
         "isChild": false
       },
       {
-        "path": "/friendlyLinks",
+        "path": "/about/friendlyLinks",
         "text": "友情链接",
         "isChild": false
       }
