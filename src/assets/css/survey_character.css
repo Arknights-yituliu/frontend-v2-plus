@@ -49,10 +49,20 @@
 
 .card_option_left {
   margin: 12px;
+  display: flex;
+}
+
+.card_option_left_basic {
+  margin: 12px;
 }
 
 
 .card_option_top_left {
+  margin: 12px;
+  padding-top: 20px;
+}
+
+.card_option_top_left_basic {
   display: flex;
 }
 
@@ -94,6 +104,14 @@
 
 
 .potential_wrap {
+  display: none;
+  flex-wrap: wrap;
+  width: 156px;
+  height: 100px;
+  margin-top: 12px;
+}
+
+.potential_wrap_basic {
   display: flex;
   flex-wrap: wrap;
   width: 156px;
@@ -110,6 +128,11 @@
 }
 
 .elite_wrap {
+  /* display: flex; */
+  margin-top: -8px;
+}
+
+.elite_wrap_basic {
   display: flex;
   margin-top: 10px;
 }
@@ -133,6 +156,14 @@
 
 .skill_wrap {
   margin-right: 10px;
+}
+
+.skill_delimiter{
+  width: 12px;
+}
+
+.skill_delimiter_basic{
+  width: 4px;
 }
 
 .image_skill {
@@ -194,14 +225,14 @@
 }
 
 .image_null {
-  width: 41px;
-  margin-top: 1px;
+  width: 40px;
+  margin-top: 0px;
 }
 
 .sprite_skill {
   transform: scale(0.18);
   position: relative;
-  top: -96px;
+  top: -94px;
   left: -98px;
 }
 

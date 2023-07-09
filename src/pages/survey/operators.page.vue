@@ -123,6 +123,7 @@
               <div :class="getSprite('skill' + rank, 'skill')"></div>
             </div>
           </div>
+          <div class="skill_delimiter"></div>
           <!-- 模组X -->
           <div class="skill_wrap" v-show="char.modXOwn">
             <div class="image_mod">{{ "模组X" }}</div>
