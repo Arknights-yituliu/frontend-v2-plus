@@ -130,6 +130,7 @@
 .elite_wrap {
   /* display: flex; */
   margin-top: -8px;
+  padding-right: 8px;
 }
 
 .elite_wrap_basic {
@@ -155,11 +156,15 @@
 }
 
 .skill_wrap {
+  margin-right: 16px;
+}
+
+.skill_wrap_basic {
   margin-right: 10px;
 }
 
 .skill_delimiter{
-  width: 12px;
+  width: 16px;
 }
 
 .skill_delimiter_basic{
