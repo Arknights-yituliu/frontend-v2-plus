@@ -6,6 +6,7 @@
         <!-- <div class="setup_title">设置</div> -->
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
         <div :class="btnSetClass(cardSimple)" @click="cardSimple = !cardSimple">仅显示头像</div>
+        <div class="btn_set" @click="potentialHide()">{{potentialHideText}}</div>
         <div class="btn_set" @click="upload()">上传数据</div>
         <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
         <div class="btn_set" @click="exportExcel()">{{ exportExcelBtnText }}</div>
@@ -69,17 +70,17 @@
 
     <!-- 干员组 -->
     <div class="char_forms">
-      <div :class="characterOwnClass()" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
+      <div :class="characterCardClass()" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
         <!-- 左半部分 -->
-        <div class="card_option_left">
-          <div class="card_option_top_left">
+        <div :class="class_card_option_left">
+          <div :class="class_card_option_top_left">
             <div>
               <div :class="char.own ? 'image_avatar_own' : 'image_avatar'">
                 <div @click="updateOwn(char_index)" :class="getSprite(char.charId)"></div>
               </div>
               <div :class="char.own ? 'char_name' : 'char_name notown'">{{ char.name }}</div>
             </div>
-            <div :class="char.own ? 'potential_wrap' : 'potential_wrap notown'">
+            <div :class="char.own ? class_potential_wrap : class_potential_wrap+' notown'">
               <div
                 class="image_potential"
                 :id="char_index + 'potential' + rank"
@@ -90,8 +91,9 @@
               </div>
             </div>
           </div>
+
           <!--  -->
-          <div :class="char.own ? 'elite_wrap' : 'elite_wrap notown'">
+          <div :class="char.own ? class_elite_wrap : class_elite_wrap+' notown'">
             <div class="image_elite" :id="char_index + 'elite0'" @click="updateDataSwitch(char_index, 'elite', 0)">
               <div :class="getSprite('elite0', 'elite')"></div>
             </div>
@@ -110,7 +112,7 @@
         <!-- 右半部分 -->
         <!-- 技能 -->
         <div :class="char.own ? 'card_option_right' : 'card_option_right notown'">
-          <div v-for="(skill, skill_index) in char.skill" :key="skill_index" class="skill_wrap">
+          <div v-for="(skill, skill_index) in char.skill" :key="skill_index" :class="class_skill_wrap">
             <div class="image_skill">
               <div :class="getSprite(skill.iconId, 'icon')"></div>
             </div>
@@ -123,23 +125,23 @@
               <div :class="getSprite('skill' + rank, 'skill')"></div>
             </div>
           </div>
-          <div class="skill_delimiter"></div>
+          <div :class="class_skill_delimiter"></div>
           <!-- 模组X -->
-          <div class="skill_wrap" v-show="char.modXOwn">
+          <div :class="class_skill_wrap" v-show="char.modXOwn">
             <div class="image_mod">{{ "模组X" }}</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank" @click="updateDataSwitch(char_index, 'modX', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
           </div>
           <!-- 没有模组X显示 -->
-          <div class="skill_wrap" v-show="!char.modXOwn">
+          <div :class="class_skill_wrap" v-show="!char.modXOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
               <img class="image_null" src="/image/rank2/null.png" alt="" />
             </div>
           </div>
           <!-- 模组Y -->
-          <div class="skill_wrap" v-show="char.modYOwn">
+          <div :class="class_skill_wrap" v-show="char.modYOwn">
             <div class="image_mod">{{ "模组Y" }}</div>
 
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank" @click="updateDataSwitch(char_index, 'modY', rank)">
@@ -148,7 +150,7 @@
           </div>
 
           <!-- 没有模组Y显示 -->
-          <div class="skill_wrap" v-show="!char.modYOwn">
+          <div :class="class_skill_wrap" v-show="!char.modYOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
               <img class="image_null" src="/image/rank2/null.png" alt="" />
@@ -176,7 +178,7 @@ import characterDemo from "@/pages/survey/characterDemo.vue";
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
 import "@/assets/css/survey_character.css";
-import {http} from '@/api/baseURL'
+import { http } from "@/api/baseURL";
 
 function getSprite(id, type) {
   if ("mod" == type) return "bg-" + id + " sprite_mod";
@@ -219,7 +221,7 @@ let exportExcelBtnText = ref("导出excel");
 //导出评分表的excel
 function exportExcel() {
   exportExcelBtnText.value = "导出中";
-  const exportExcelUrl = http+"survey/character/export?token=" + globalUserData.value.token;
+  const exportExcelUrl = http + "survey/character/export?token=" + globalUserData.value.token;
   var dom = document.createElement("a");
   dom.download = "form.xlsx";
   dom.style.display = "none";
@@ -427,14 +429,20 @@ function updateLevel(char_index, rarity, elite) {
   }
 
   console.log(rarity, elite);
-  if (rarity == 6 && elite == 2) {
+  if (rarity == 6) {
     level = 90;
+    characterList.value[char_index].elite = 2;
+    document.getElementById(char_index + "elite2").style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   }
-  if (rarity == 5 && elite == 2) {
+  if (rarity == 5) {
     level = 80;
+    characterList.value[char_index].elite = 2;
+    document.getElementById(char_index + "elite2").style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   }
-  if (rarity == 4 && elite == 2) {
+  if (rarity == 4) {
     level = 70;
+    characterList.value[char_index].elite = 2;
+    document.getElementById(char_index + "elite2").style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   }
   if (rarity == 3 && elite == 1) {
     level = 55;
@@ -442,12 +450,13 @@ function updateLevel(char_index, rarity, elite) {
   if (rarity < 3 && elite == 0) {
     level = 30;
   }
+  
 
   if (level == 0) return;
 
   console.log("满级:", level);
   characterList.value[char_index].level = level;
-  document.getElementById(char_index + "level").style.backgroundColor = "rgba(0, 102, 255, 0.3)";
+  document.getElementById(char_index + "level").style.backgroundColor = "rgba(255, 115, 0, 0.5)";
 }
 
 //批量更新
@@ -479,17 +488,49 @@ function switchSelected(domId, rank, oldRank, selected) {
   let dom = document.getElementById(domId + rank);
   let oldDom = document.getElementById(domId + oldRank);
   if (dom != null) {
-    console.log("修改：", domId + rank);
-    dom.style.backgroundColor = "rgba(0, 102, 255, 0.3)";
+    // console.log("修改：", domId + rank);
+    dom.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   }
 
   if (oldDom != null) {
-    console.log("修改：", domId + oldRank);
+    // console.log("修改：", domId + oldRank);
     oldDom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
   }
 }
 
-function characterOwnClass() {
+let class_card_option_left = ref('card_option_left_basic')
+let class_card_option_top_left = ref('card_option_top_left_basic')
+let class_potential_wrap = ref('potential_wrap_basic')
+let class_elite_wrap = ref('elite_wrap_basic')
+let class_skill_wrap = ref('skill_wrap_basic')
+let class_skill_delimiter = ref('skill_delimiter_basic')
+
+let potentialHideFlag = ref(false)
+let potentialHideText = ref('基础问卷')
+
+
+function potentialHide(){
+    potentialHideFlag.value  = !potentialHideFlag.value
+    if(potentialHideFlag.value){
+      class_card_option_left.value = 'card_option_left'
+      class_card_option_top_left.value = 'card_option_top_left'
+      class_potential_wrap.value = 'potential_wrap'
+      class_elite_wrap.value = 'elite_wrap'
+      class_skill_wrap.value = 'skill_wrap'
+      class_skill_delimiter.value = 'skill_delimiter'
+      potentialHideText.value ='完整问卷'
+    }else{
+      class_card_option_left.value = 'card_option_left_basic'
+      class_card_option_top_left.value = 'card_option_top_left_basic'
+      class_potential_wrap.value = 'potential_wrap_basic'
+      class_elite_wrap.value = 'elite_wrap_basic'
+      class_skill_wrap.value = 'skill_wrap_basic'
+      class_skill_delimiter.value = 'skill_delimiter_basic'
+      potentialHideText.value = '基础问卷'
+    }
+}
+
+function characterCardClass() {
   if (cardSimple.value) return "char_card char_card_simple";
   return "char_card";
 }

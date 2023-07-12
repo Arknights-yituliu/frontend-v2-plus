@@ -32,6 +32,7 @@ import "@/assets/css/survey_common.css";
 import "@/assets/css/sprite_char_6.css";
 import "@/assets/css/sprite_char_5.css";
 import "@/assets/css/sprite_char_4.css";
+import "@/assets/css/sprite_portrait_6.css";
 import "@/assets/css/sprite_skill.css";
 import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_index.css";

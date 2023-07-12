@@ -6,6 +6,20 @@
       <div class="label_wrap">
         
         <div class="label_card">
+          <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
+            <div class="label_content">
+              <div class="label_icon_wrap">
+                <img class="label_icon" src="/image/website/qq.webp" alt="" />
+              </div>
+              <div>
+                <div class="label_name">开发群</div>
+                <div class="label_desc">938710832</div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="label_card">
           <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
             <div class="label_content">
               <div class="label_icon_wrap">

@@ -6,7 +6,6 @@
         <div class="btn_set" @click="uploadScoreForm()">上传数据</div>
       </div>
       <div>
-
         <div class="setup_bar">
           <div class="setup_title">选择评分项目</div>
           <div :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
@@ -51,21 +50,18 @@
     <div class="score_wrap">
       <div v-for="(char, char_index) in scoreList.slice(0)" :key="char_index" class="score_card" v-show="char.show">
         <!-- 标题区域 -->
-        <table :class="'score_wrap_title_'+char.rarity" rules="none">
-          <tr>
-            <td style="padding: 0px; width: 100px">
-              <div class="score_avatar_wrap">
-                <div :class="getSprite(char.charId)"></div>
-              </div>
-            </td>
-            <td style="padding-left: 12px">
-              <div class="score_char_name">{{ char.name }}</div>
-              <div class="char_description">{{ char.itemUsage }}</div>
-              <div class="char_description" style="font-style: italic; color: rgb(95, 95, 95)">{{ char.itemDesc }}</div>
-            </td>
-          </tr>
-        </table>
-        <!-- 评分区域 -->
+       
+      
+        <div class="score_left_wrap">
+          <div class="score_portrait_wrap">
+            <div :class="getSprite(char.charId)"></div>
+          </div>
+          <div class="score_char_name">
+            {{ char.name }}
+          </div>
+        </div>
+
+          <!-- 评分区域 -->
         <div class="score_bar_wrap">
           <div class="score_bar" v-show="scoreItem.daily.show">
             <div class="score_name" @click="resetScore(char_index, 'daily')">日常：</div>
@@ -123,7 +119,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { scoreListInit, professionDict, rarityDict, yearDict } from "./baseData";
+import { scoreListInit, getProfession, professionDict, rarityDict, yearDict } from "./baseData";
 import surveyApi from "@/api/survey";
 import { globalUserData } from "./userService";
 import "@/assets/css/survey_score.css";
@@ -143,7 +139,7 @@ function updateScore(char_index, attribute, score) {
   scoreList.value[char_index][attribute] = score;
 }
 
-function resetScore(char_index, attribute){
+function resetScore(char_index, attribute) {
   scoreList.value[char_index][attribute] = -1;
 }
 
@@ -161,9 +157,9 @@ const scoreItem = ref({
   countermeasures: { show: true, label: "对策" },
 });
 
-function selectScoreItem(attribute){
-  scoreItem.value[attribute].show = !scoreItem.value[attribute].show
-  console.log(scoreItem.value[attribute].show)
+function selectScoreItem(attribute) {
+  scoreItem.value[attribute].show = !scoreItem.value[attribute].show;
+  console.log(scoreItem.value[attribute].show);
 }
 
 function selectedScoreItem(attribute) {
@@ -226,9 +222,7 @@ function addFilterRule(attribute, rule) {
   filterCard();
 }
 
-function filterByScore(char){
-      
-}
+function filterByScore(char) {}
 
 //筛选
 function filterCard() {
@@ -242,7 +236,6 @@ function filterCard() {
     scoreList.value[i].show = isRarity & isProfession & isYearFlag & isOwn & isMod;
   }
 }
-
 
 //是否有这个属性
 function isAttribute(character, attribute) {
@@ -275,7 +268,7 @@ function sortCharacterList(rule) {
 }
 
 function getSprite(id, type) {
-  return "bg-" + id + " score_avatar";
+  return "bg-" + id + "_1 score_portrait";
 }
 
 function btnSetClass(flag) {

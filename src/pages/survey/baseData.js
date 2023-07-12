@@ -59,6 +59,7 @@ function getProfession(str) {
   if ("PIONEER" == str) return "先锋";
   if ("TANK" == str) return "重装";
   if ("CASTER" == str) return "术师";
+  return "";
 }
 
 let professionDict = [
@@ -144,4 +145,4 @@ function rankingListinit() {
   return rankingList;
 }
 
-export { characterListInit, professionDict, rarityDict, yearDict, scoreListInit,rankingListinit };
+export { characterListInit, getProfession , professionDict, rarityDict, yearDict, scoreListInit,rankingListinit };
