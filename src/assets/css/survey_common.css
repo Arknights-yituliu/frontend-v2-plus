@@ -32,7 +32,7 @@
     border-radius: 6px;
     transition: all 0.4s;
     overflow: hidden;
-    height: 60px;
+    height: 40px;
     background-color: rgba(255, 255, 255, 1);
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
     border-radius: 2px;
@@ -45,23 +45,28 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     /* border-bottom: 1px rgb(180, 180, 180) solid; */
-    margin: auto;
-    min-height: 36px;
-    margin-bottom: 10px;
+    /* margin: auto; */
+    padding: 2px;
 }
 
+
+
 .btn_set {
-    margin: 6px 2px;
     width: 120px;
-    height: 42px;
-    line-height: 42px;
+    height: 30px;
+    line-height: 30px;
     text-align: center;
     font-weight: 600;
-    background-color: #e8e8ff;
+    background-color: #e8f3fd;
     cursor: pointer;
     border-radius: 4px;
-    vertical-align: middle;
+    /* vertical-align: middle; */
+    box-shadow: 0 1px 1px 1px rgb(197, 197, 197);
+    padding: 2px;
+    margin-right: 10px;
 }
+
+
 
 @media (max-width: 1080px) {
     .aside-btn {
@@ -80,7 +85,7 @@
     margin: 6px;
     width: 110px;
     height: 20px;
-    padding: 3px;
+    padding: 4px;
     line-height: 20px;
     text-align: center;
     font-weight: 600;
@@ -88,11 +93,24 @@
     cursor: pointer;
 }
 
+.switch_set_samll {
+    margin: 6px;
+    width: 110px;
+    height: 20px;
+    padding: 4px;
+    line-height: 20px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+
 .setup_title {
     margin: 6px;
     width: 110px;
     height: 20px;
-    padding: 3px;
+    padding: 4px;
     line-height: 20px;
     text-align: center;
     font-weight: 600;

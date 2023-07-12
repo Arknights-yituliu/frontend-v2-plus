@@ -5,8 +5,8 @@
       <div class="setup_bar">
         <!-- <div class="setup_title">设置</div> -->
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
-        <div :class="btnSetClass(cardSimple)" @click="cardSimple = !cardSimple">仅显示头像</div>
-        <div class="btn_set" @click="potentialHide()">{{potentialHideText}}</div>
+        <div :class="btnSetClass(simpleCard)" @click="simpleCard = !simpleCard">仅显示头像</div>
+        <div class="btn_set" @click="potentialHide()">{{ potentialHideText }}</div>
         <div class="btn_set" @click="upload()">上传数据</div>
         <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
         <div class="btn_set" @click="exportExcel()">{{ exportExcelBtnText }}</div>
@@ -57,7 +57,7 @@
         <div class="setup_bar">
           <div class="setup_title">批量操作</div>
           <div class="switch_set" @click="batchUpdates('own', true)">全部拥有</div>
-          <div class="switch_set" @click="batchUpdates('own', false)">当前干员全部未拥有</div>
+          <div class="switch_set_samll" @click="batchUpdates('own', false)">全部设为未拥有</div>
           <div class="switch_set" @click="batchUpdates('elite', 2)">全部设为精二</div>
           <div class="switch_set" @click="batchUpdates('skill1', 3)">一技能专三</div>
           <div class="switch_set" @click="batchUpdates('skill2', 3)">二技能专三</div>
@@ -70,17 +70,17 @@
 
     <!-- 干员组 -->
     <div class="char_forms">
-      <div :class="characterCardClass()" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
+      <div :class="simpleCardClass()" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
         <!-- 左半部分 -->
-        <div :class="class_card_option_left">
-          <div :class="class_card_option_top_left">
+        <div :class="'card_option_left' + surveyType">
+          <div :class="'card_option_top_left' + surveyType">
             <div>
               <div :class="char.own ? 'image_avatar_own' : 'image_avatar'">
                 <div @click="updateOwn(char_index)" :class="getSprite(char.charId)"></div>
               </div>
               <div :class="char.own ? 'char_name' : 'char_name notown'">{{ char.name }}</div>
             </div>
-            <div :class="char.own ? class_potential_wrap : class_potential_wrap+' notown'">
+            <div :class="char.own ? 'potential_wrap' + surveyType : 'potential_wrap' + surveyType + ' notown'">
               <div
                 class="image_potential"
                 :id="char_index + 'potential' + rank"
@@ -93,7 +93,7 @@
           </div>
 
           <!--  -->
-          <div :class="char.own ? class_elite_wrap : class_elite_wrap+' notown'">
+          <div :class="char.own ? 'elite_wrap' + surveyType : 'elite_wrap' + surveyType + ' notown'">
             <div class="image_elite" :id="char_index + 'elite0'" @click="updateDataSwitch(char_index, 'elite', 0)">
               <div :class="getSprite('elite0', 'elite')"></div>
             </div>
@@ -112,7 +112,7 @@
         <!-- 右半部分 -->
         <!-- 技能 -->
         <div :class="char.own ? 'card_option_right' : 'card_option_right notown'">
-          <div v-for="(skill, skill_index) in char.skill" :key="skill_index" :class="class_skill_wrap">
+          <div v-for="(skill, skill_index) in char.skill" :key="skill_index" :class="'skill_wrap' + surveyType">
             <div class="image_skill">
               <div :class="getSprite(skill.iconId, 'icon')"></div>
             </div>
@@ -125,23 +125,23 @@
               <div :class="getSprite('skill' + rank, 'skill')"></div>
             </div>
           </div>
-          <div :class="class_skill_delimiter"></div>
+          <div :class="'skill_delimiter' + surveyType"></div>
           <!-- 模组X -->
-          <div :class="class_skill_wrap" v-show="char.modXOwn">
+          <div :class="'skill_wrap' + surveyType" v-show="char.modXOwn">
             <div class="image_mod">{{ "模组X" }}</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank" @click="updateDataSwitch(char_index, 'modX', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
           </div>
           <!-- 没有模组X显示 -->
-          <div :class="class_skill_wrap" v-show="!char.modXOwn">
+          <div :class="'skill_wrap' + surveyType" v-show="!char.modXOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
               <img class="image_null" src="/image/rank2/null.png" alt="" />
             </div>
           </div>
           <!-- 模组Y -->
-          <div :class="class_skill_wrap" v-show="char.modYOwn">
+          <div :class="'skill_wrap' + surveyType" v-show="char.modYOwn">
             <div class="image_mod">{{ "模组Y" }}</div>
 
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank" @click="updateDataSwitch(char_index, 'modY', rank)">
@@ -150,7 +150,7 @@
           </div>
 
           <!-- 没有模组Y显示 -->
-          <div :class="class_skill_wrap" v-show="!char.modYOwn">
+          <div :class="'skill_wrap' + surveyType" v-show="!char.modYOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
               <img class="image_null" src="/image/rank2/null.png" alt="" />
@@ -276,23 +276,28 @@ function setBarCollapse() {
   filterCollapse.value = !filterCollapse.value;
   if (filterCollapse.value) {
     let elements = document.getElementsByClassName("setup_bar");
-    let height = 5;
+    let height = 0;
     for (let e of elements) {
-      height += e.offsetHeight + 10;
+      height += e.offsetHeight;
+      console.log(e);
     }
     document.getElementById("setbar").style.height = height + "px";
+
     setTimeout(() => {
       document.getElementById("setbar").style.height = "auto";
     }, 500);
   } else {
     let elements = document.getElementsByClassName("setup_bar");
-    let height = 5;
+    let height = 0;
     for (let e of elements) {
-      height += e.offsetHeight + 10;
+      height += e.offsetHeight;
     }
     document.getElementById("setbar").style.height = height + "px";
+
+    height = elements[0].offsetHeight;
+
     setTimeout(() => {
-      document.getElementById("setbar").style.height = 54 + "px";
+      document.getElementById("setbar").style.height = height + "px";
     }, 100);
   }
 }
@@ -300,7 +305,7 @@ function setBarCollapse() {
 let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [] });
 let filterCollapse = ref(false);
 
-//判断按钮是否选择赋予样式
+//判断按钮是否选中
 function selectedBtn(attribute, rule) {
   if (filterRules.value[attribute].indexOf(rule) > -1) {
     return "switch_set selected_color";
@@ -372,32 +377,25 @@ function sortCharacterList(rule) {
   });
 }
 
+let attributeList = ref(["level", "elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"]);
+
 function updateOwn(char_index) {
   const character = characterList.value[char_index];
   characterList.value[char_index].own = !character.own;
   if (characterList.value[char_index].own) {
     if (character.rarity == 6) {
       characterList.value[char_index].elite = 2;
+      setDomBackgroundColor(char_index + "elite2", true);
       characterList.value[char_index].potential = 1;
+      setDomBackgroundColor(char_index + "potential1", true);
     }
   } else {
-    switchSelected(char_index + "level", -1, character.level, false);
-    switchSelected(char_index + "elite", -1, character.elite, false);
-    switchSelected(char_index + "potential", -1, character.potential, false);
-    switchSelected(char_index + "skill1", -1, character.skill1, false);
-    switchSelected(char_index + "skill2", -1, character.skill2, false);
-    switchSelected(char_index + "skill3", -1, character.skill3, false);
-    switchSelected(char_index + "modX", -1, character.modX, false);
-    switchSelected(char_index + "modY", -1, character.modY, false);
-
-    characterList.value[char_index].level = -1;
-    characterList.value[char_index].elite = -1;
-    characterList.value[char_index].potential = -1;
-    characterList.value[char_index].skill1 = -1;
-    characterList.value[char_index].skill2 = -1;
-    characterList.value[char_index].skill3 = -1;
-    characterList.value[char_index].modX = -1;
-    characterList.value[char_index].modY = -1;
+    for (let attribute of attributeList.value) {
+      console.log(attribute);
+      switchSelected(char_index + attribute, -1, character[attribute]);
+      characterList.value[char_index][attribute] = -1;
+    }
+    setDomBackgroundColor(char_index + "level", false);
   }
 }
 
@@ -408,11 +406,11 @@ function updateDataSwitch(char_index, attribute, rank) {
   let oldRank = characterList.value[char_index][attribute];
   if (rank == oldRank) {
     characterList.value[char_index][attribute] = -1;
-    switchSelected(domId, rank, oldRank, false);
+    switchSelected(domId, rank, oldRank);
     return;
   }
   characterList.value[char_index][attribute] = rank;
-  switchSelected(domId, rank, oldRank, true);
+  switchSelected(domId, rank, oldRank);
   characterList.value[char_index].own = true;
 }
 
@@ -424,25 +422,26 @@ function updateLevel(char_index, rarity, elite) {
   if (characterList.value[char_index].level > 0) {
     console.log("取消满级:");
     characterList.value[char_index].level = level;
-    document.getElementById(char_index + "level").style.backgroundColor = "rgba(127, 127, 127, 0.1)";
+    setDomBackgroundColor(char_index + "level", false);
     return;
   }
 
   console.log(rarity, elite);
+
   if (rarity == 6) {
     level = 90;
     characterList.value[char_index].elite = 2;
-    document.getElementById(char_index + "elite2").style.backgroundColor = "rgba(255, 115, 0, 0.5)";
+    setDomBackgroundColor(char_index + "elite2", true);
   }
   if (rarity == 5) {
     level = 80;
     characterList.value[char_index].elite = 2;
-    document.getElementById(char_index + "elite2").style.backgroundColor = "rgba(255, 115, 0, 0.5)";
+    setDomBackgroundColor(char_index + "elite2", true);
   }
   if (rarity == 4) {
     level = 70;
     characterList.value[char_index].elite = 2;
-    document.getElementById(char_index + "elite2").style.backgroundColor = "rgba(255, 115, 0, 0.5)";
+    setDomBackgroundColor(char_index + "elite2", true);
   }
   if (rarity == 3 && elite == 1) {
     level = 55;
@@ -450,21 +449,19 @@ function updateLevel(char_index, rarity, elite) {
   if (rarity < 3 && elite == 0) {
     level = 30;
   }
-  
 
   if (level == 0) return;
 
   console.log("满级:", level);
   characterList.value[char_index].level = level;
-  document.getElementById(char_index + "level").style.backgroundColor = "rgba(255, 115, 0, 0.5)";
+  setDomBackgroundColor(char_index + "level", true);
 }
 
 //批量更新
-function batchUpdates(attribute, rank) {
+function batchUpdates(attribute, value) {
   for (let i in characterList.value) {
     if (characterList.value[i].show) {
-      if (characterList.value[i][attribute] == -1) continue;
-      characterList.value[i][attribute] = rank;
+      updateDataSwitch(i, attribute, value);
     }
   }
 }
@@ -477,61 +474,45 @@ function batchUpdates(attribute, rank) {
 //   }
 // }
 
-let cardSimple = ref(false);
-
 function btnSetClass(flag) {
   if (flag) return "btn_set btn_set_select";
   return "btn_set";
 }
 
-function switchSelected(domId, rank, oldRank, selected) {
-  let dom = document.getElementById(domId + rank);
-  let oldDom = document.getElementById(domId + oldRank);
-  if (dom != null) {
-    // console.log("修改：", domId + rank);
+function switchSelected(domId, rank, oldRank) {
+  setDomBackgroundColor(domId + rank, true);
+  setDomBackgroundColor(domId + oldRank, false);
+}
+
+function setDomBackgroundColor(domId, selected) {
+  let dom = document.getElementById(domId);
+  if (dom == null) return;
+  if (selected) {
     dom.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
-  }
-
-  if (oldDom != null) {
-    // console.log("修改：", domId + oldRank);
-    oldDom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
+  } else {
+    dom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
   }
 }
 
-let class_card_option_left = ref('card_option_left_basic')
-let class_card_option_top_left = ref('card_option_top_left_basic')
-let class_potential_wrap = ref('potential_wrap_basic')
-let class_elite_wrap = ref('elite_wrap_basic')
-let class_skill_wrap = ref('skill_wrap_basic')
-let class_skill_delimiter = ref('skill_delimiter_basic')
+let potentialHideFlag = ref(false);
+let potentialHideText = ref("基础问卷");
+let surveyType = ref("_basic");
 
-let potentialHideFlag = ref(false)
-let potentialHideText = ref('基础问卷')
-
-
-function potentialHide(){
-    potentialHideFlag.value  = !potentialHideFlag.value
-    if(potentialHideFlag.value){
-      class_card_option_left.value = 'card_option_left'
-      class_card_option_top_left.value = 'card_option_top_left'
-      class_potential_wrap.value = 'potential_wrap'
-      class_elite_wrap.value = 'elite_wrap'
-      class_skill_wrap.value = 'skill_wrap'
-      class_skill_delimiter.value = 'skill_delimiter'
-      potentialHideText.value ='完整问卷'
-    }else{
-      class_card_option_left.value = 'card_option_left_basic'
-      class_card_option_top_left.value = 'card_option_top_left_basic'
-      class_potential_wrap.value = 'potential_wrap_basic'
-      class_elite_wrap.value = 'elite_wrap_basic'
-      class_skill_wrap.value = 'skill_wrap_basic'
-      class_skill_delimiter.value = 'skill_delimiter_basic'
-      potentialHideText.value = '基础问卷'
-    }
+function potentialHide() {
+  potentialHideFlag.value = !potentialHideFlag.value;
+  if (potentialHideFlag.value) {
+    surveyType.value = "";
+    potentialHideText.value = "完整问卷";
+  } else {
+    surveyType.value = "_basic";
+    potentialHideText.value = "基础问卷";
+  }
 }
 
-function characterCardClass() {
-  if (cardSimple.value) return "char_card char_card_simple";
+//简易卡片样式
+let simpleCard = ref(false);
+function simpleCardClass() {
+  if (simpleCard.value) return "char_card char_card_simple";
   return "char_card";
 }
 
