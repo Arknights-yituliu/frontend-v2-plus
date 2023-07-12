@@ -33,13 +33,6 @@
         </div>
 
         <div class="setup_bar">
-          <div class="setup_title">其他</div>
-          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
-            {{ year.label }}
-          </div>
-        </div>
-
-        <div class="setup_bar">
           <div class="setup_title">排序</div>
           <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
           <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
@@ -118,7 +111,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { h, onMounted, ref } from "vue";
 import { scoreListInit, getProfession, professionDict, rarityDict, yearDict } from "./baseData";
 import surveyApi from "@/api/survey";
 import { globalUserData } from "./userService";
@@ -184,23 +177,28 @@ function setBarCollapse() {
   filterCollapse.value = !filterCollapse.value;
   if (filterCollapse.value) {
     let elements = document.getElementsByClassName("setup_bar");
-    let height = 5;
+    let height = 0;
     for (let e of elements) {
-      height += e.offsetHeight + 10;
+      height += e.offsetHeight ;
+      console.log(e)
     }
     document.getElementById("setbar").style.height = height + "px";
+
     setTimeout(() => {
       document.getElementById("setbar").style.height = "auto";
     }, 500);
   } else {
     let elements = document.getElementsByClassName("setup_bar");
-    let height = 5;
+    let height = 0;
     for (let e of elements) {
-      height += e.offsetHeight + 10;
+      height += e.offsetHeight ;
     }
     document.getElementById("setbar").style.height = height + "px";
+        
+    height = elements[0].offsetHeight
+
     setTimeout(() => {
-      document.getElementById("setbar").style.height = 54 + "px";
+      document.getElementById("setbar").style.height = height + "px";
     }, 100);
   }
 }
