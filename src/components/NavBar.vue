@@ -10,9 +10,7 @@
       <div></div>
       <div></div>
     </div>
-    <!-- <div class="aside-btn">
-      <el-icon :size="40" color="#FFFFFF" @click="aside_collapse()"><Menu /></el-icon>
-    </div> -->
+
 
     <div class="pageTitle" @click="aside_collapse()">
       {{ pageTitle }}

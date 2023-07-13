@@ -1,11 +1,11 @@
 <template>
   <div class="score_page">
-    <div class="setup_title_wrap">
-      <div class="setup_title_bar">
+    <div class="setup_wrap">
+      <div class="setup_bar">
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
-        <div class="btn_setup_title" @click="uploadScoreForm()">上传数据</div>
+        <div class="btn_setup" @click="uploadScoreForm()">上传数据</div>
       </div>
-      <div class="setup_title_bar">
+      <div class="setup_bar">
           <div class="switch_title">选择评分项目</div>
           <div :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
             {{ item.label }}
@@ -13,7 +13,7 @@
         </div>
 
     </div>
-    <div class="setup_wrap" id="setbar">
+    <div class="switch_wrap" id="setbar">
       <div>
         
         <div class="switch_bar">
@@ -57,7 +57,7 @@
         </div>
 
         <!-- 评分区域 -->
-        <div class="score_bar_wrap">
+        <div class="score_right_wrap">
           <div class="score_bar" v-show="scoreItem.daily.show">
             <div class="score_name" @click="resetScore(char_index, 'daily')">日常：</div>
             <!-- 日常 -->
@@ -268,8 +268,8 @@ function getSprite(id, type) {
 }
 
 function btnSetClass(flag) {
-  if (flag) return "btn_setup_title btn_set_select";
-  return "btn_setup_title";
+  if (flag) return "btn_setup btn_set_select";
+  return "btn_setup";
 }
 
 onMounted(() => {

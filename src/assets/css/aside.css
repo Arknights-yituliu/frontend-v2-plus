@@ -21,18 +21,7 @@
     border-radius: 2px;
 }
 
-.aside-btn {
-    display: block;
-    margin-top: 20px;
-}
 
-
-@media (max-width: 1080px) {
-    .aside-btn {
-        display: none;
-    }
-
-}
 
 .aside_title {
     font-size: 24px;
