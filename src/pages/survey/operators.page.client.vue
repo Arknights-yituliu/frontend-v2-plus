@@ -1,46 +1,48 @@
 <template>
   <div class="survey_character_page">
     <!-- 设置区域 -->
-    <div class="setup_wrap" id="setbar">
-      <div class="setup_bar">
-        <!-- <div class="setup_title">设置</div> -->
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
-        <div :class="btnSetClass(simpleCard)" @click="simpleCard = !simpleCard">仅显示头像</div>
-        <div class="btn_set" @click="potentialHide()">{{ potentialHideText }}</div>
-        <div class="btn_set" @click="upload()">上传数据</div>
-        <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
-        <div class="btn_set" @click="exportExcel()">{{ exportExcelBtnText }}</div>
 
-        <div class="btn_set btn_upload">
+    <div class="setup_title_wrap">
+      <div class="setup_title_bar">
+        <!-- <div class="switch_title">设置</div> -->
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
+        <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
+        <div class="btn_setup_title" @click="changeSurveyType()">{{ surveyTypeText }}</div>
+        <div class="btn_setup_title" @click="upload()">上传数据</div>
+        <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
+        <div class="btn_setup_title" @click="exportExcel()">{{ exportExcelBtnText }}</div>
+
+        <div class="btn_setup_title btn_upload">
           <div class="input_upload_wrap">
             <div class="upload_file_text">{{ uploadFileName }}</div>
             <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
           </div>
         </div>
-        <div class="btn_set" @click="uploadByExcel">上传EXCEL</div>
-        <div class="btn_set"><characterDemo></characterDemo></div>
-        <!-- <div class="btn_set">统计</div> -->
+        <div class="btn_setup_title" @click="uploadByExcel">上传EXCEL</div>
+        <div class="btn_setup_title"><characterDemo></characterDemo></div>
       </div>
+    </div>
 
+    <div class="setup_wrap" id="setbar">
       <div id="survey_filter">
-        <div class="setup_bar">
-          <div class="setup_title">职业</div>
+        <div class="switch_bar">
+          <div class="switch_title">职业</div>
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
             {{ profession.label }}
           </div>
         </div>
-        <div class="setup_bar">
-          <div class="setup_title">稀有度</div>
+        <div class="switch_bar">
+          <div class="switch_title">稀有度</div>
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }}★</div>
         </div>
-        <div class="setup_bar">
-          <div class="setup_title">年份</div>
+        <div class="switch_bar">
+          <div class="switch_title">年份</div>
           <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
             {{ year.label }}
           </div>
         </div>
-        <div class="setup_bar">
-          <div class="setup_title">其他</div>
+        <div class="switch_bar">
+          <div class="switch_title">其他</div>
           <div :class="selectedBtn('own', true)" id="other1" @click="addFilterRule('own', true)">已拥有</div>
           <div :class="selectedBtn('own', false)" id="other2" @click="addFilterRule('own', false)">未拥有</div>
           <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">有模组</div>
@@ -48,22 +50,22 @@
           <div :class="selectedBtn('itemObtainApproach', 0)" id="other5" @click="addFilterRule('itemObtainApproach', 0)">是否赠送</div>
         </div>
 
-        <div class="setup_bar">
-          <div class="setup_title">排序</div>
-          <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
-          <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
+        <div class="switch_bar">
+          <div class="switch_title">排序</div>
+          <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>
+          <div class="btn_switch" @click="sortCharacterList('date')">实装顺序</div>
         </div>
 
-        <div class="setup_bar">
-          <div class="setup_title">批量操作</div>
-          <div class="switch_set" @click="batchUpdates('own', true)">全部拥有</div>
-          <div class="switch_set_samll" @click="batchUpdates('own', false)">全部设为未拥有</div>
-          <div class="switch_set" @click="batchUpdates('elite', 2)">全部设为精二</div>
-          <div class="switch_set" @click="batchUpdates('skill1', 3)">一技能专三</div>
-          <div class="switch_set" @click="batchUpdates('skill2', 3)">二技能专三</div>
-          <div class="switch_set" @click="batchUpdates('skill3', 3)">三技能专三</div>
-          <div class="switch_set" @click="batchUpdates('modX', 3)">X模组三级</div>
-          <div class="switch_set" @click="batchUpdates('modY', 3)">Y模组三级</div>
+        <div class="switch_bar">
+          <div class="switch_title">批量操作</div>
+          <div class="btn_switch" @click="batchUpdatesOwn(true)">全部拥有</div>
+          <div class="btn_switch_samll" @click="batchUpdatesOwn(false)">全部设为未拥有</div>
+          <div class="btn_switch" @click="batchUpdatesElite( 2)">全部设为精二</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能专三</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能专三</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能专三</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('modX', 3)">X模组三级</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组三级</div>
         </div>
       </div>
     </div>
@@ -76,7 +78,7 @@
           <div :class="'card_option_top_left' + surveyType">
             <div>
               <div :class="char.own ? 'image_avatar_own' : 'image_avatar'">
-                <div @click="updateOwn(char_index)" :class="getSprite(char.charId)"></div>
+                <div @click="updateOwn(char_index, !char.own)" :class="getSprite(char.charId)"></div>
               </div>
               <div :class="char.own ? 'char_name' : 'char_name notown'">{{ char.name }}</div>
             </div>
@@ -85,7 +87,7 @@
                 class="image_potential"
                 :id="char_index + 'potential' + rank"
                 v-for="rank in ranks.slice(1, 7)"
-                @click="updateDataSwitch(char_index, 'potential', rank)"
+                @click="updatePotential(char_index, 'potential', rank)"
               >
                 <div :class="getSprite('potential' + rank, 'potential')"></div>
               </div>
@@ -94,13 +96,13 @@
 
           <!--  -->
           <div :class="char.own ? 'elite_wrap' + surveyType : 'elite_wrap' + surveyType + ' notown'">
-            <div class="image_elite" :id="char_index + 'elite0'" @click="updateDataSwitch(char_index, 'elite', 0)">
+            <div class="image_elite" :id="char_index + 'elite0'" @click="updateElite(char_index, 0)">
               <div :class="getSprite('elite0', 'elite')"></div>
             </div>
-            <div :id="char_index + 'elite1'" class="image_elite" @click="updateDataSwitch(char_index, 'elite', 1)" v-show="char.rarity > 2">
+            <div :id="char_index + 'elite1'" class="image_elite" @click="updateElite(char_index, 1)" v-show="char.rarity > 2">
               <div :class="getSprite('elite1', 'elite')"></div>
             </div>
-            <div :id="char_index + 'elite2'" class="image_elite" @click="updateDataSwitch(char_index, 'elite', 2)" v-show="char.rarity > 3">
+            <div :id="char_index + 'elite2'" class="image_elite" @click="updateElite(char_index, 2)" v-show="char.rarity > 3">
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
             <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index, char.rarity, char.elite)">
@@ -120,19 +122,22 @@
               v-for="rank in ranks.slice(1, 4)"
               class="image_rank"
               :id="char_index + 'skill' + (skill_index + 1) + rank"
-              @click="updateDataSwitch(char_index, 'skill' + (skill_index + 1), rank)"
+              @click="updateSkillAndMod(char_index, 'skill' + (skill_index + 1), rank)"
             >
               <div :class="getSprite('skill' + rank, 'skill')"></div>
             </div>
           </div>
+
           <div :class="'skill_delimiter' + surveyType"></div>
+
           <!-- 模组X -->
           <div :class="'skill_wrap' + surveyType" v-show="char.modXOwn">
             <div class="image_mod">{{ "模组X" }}</div>
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank" @click="updateDataSwitch(char_index, 'modX', rank)">
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank" @click="updateSkillAndMod(char_index, 'modX', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
           </div>
+
           <!-- 没有模组X显示 -->
           <div :class="'skill_wrap' + surveyType" v-show="!char.modXOwn">
             <div class="image_mod">[N/A]</div>
@@ -140,11 +145,12 @@
               <img class="image_null" src="/image/rank2/null.png" alt="" />
             </div>
           </div>
+
           <!-- 模组Y -->
           <div :class="'skill_wrap' + surveyType" v-show="char.modYOwn">
             <div class="image_mod">{{ "模组Y" }}</div>
 
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank" @click="updateDataSwitch(char_index, 'modY', rank)">
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank" @click="updateSkillAndMod(char_index, 'modY', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
           </div>
@@ -275,29 +281,25 @@ function maaData1() {
 function setBarCollapse() {
   filterCollapse.value = !filterCollapse.value;
   if (filterCollapse.value) {
-    let elements = document.getElementsByClassName("setup_bar");
+    let elements = document.getElementsByClassName("switch_bar");
     let height = 0;
     for (let e of elements) {
       height += e.offsetHeight;
-      console.log(e);
     }
     document.getElementById("setbar").style.height = height + "px";
-
     setTimeout(() => {
       document.getElementById("setbar").style.height = "auto";
     }, 500);
   } else {
-    let elements = document.getElementsByClassName("setup_bar");
+    let elements = document.getElementsByClassName("switch_bar");
     let height = 0;
     for (let e of elements) {
       height += e.offsetHeight;
     }
     document.getElementById("setbar").style.height = height + "px";
 
-    height = elements[0].offsetHeight;
-
     setTimeout(() => {
-      document.getElementById("setbar").style.height = height + "px";
+      document.getElementById("setbar").style.height = 0 + "px";
     }, 100);
   }
 }
@@ -308,13 +310,14 @@ let filterCollapse = ref(false);
 //判断按钮是否选中
 function selectedBtn(attribute, rule) {
   if (filterRules.value[attribute].indexOf(rule) > -1) {
-    return "switch_set selected_color";
+    return "btn_switch selected_color";
   }
-  return "switch_set";
+  return "btn_switch";
 }
 
 //增加筛选规则
 function addFilterRule(attribute, rule) {
+  console.log(filterRules.value);
   let filterRulesCopy = [];
   if (filterRules.value[attribute].indexOf(rule) > -1) {
     for (let i in filterRules.value[attribute]) {
@@ -326,6 +329,7 @@ function addFilterRule(attribute, rule) {
     filterCharacterList();
     return;
   }
+
   filterRules.value[attribute].push(rule);
   filterCharacterList();
 }
@@ -377,21 +381,20 @@ function sortCharacterList(rule) {
   });
 }
 
-let attributeList = ref(["level", "elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"]);
-
-function updateOwn(char_index) {
+//更新是否持有
+function updateOwn(char_index, newVal) {
   const character = characterList.value[char_index];
-  characterList.value[char_index].own = !character.own;
+  characterList.value[char_index].own = newVal;
   if (characterList.value[char_index].own) {
-    if (character.rarity == 6) {
+    if (character.rarity > 3) {
       characterList.value[char_index].elite = 2;
       setDomBackgroundColor(char_index + "elite2", true);
       characterList.value[char_index].potential = 1;
       setDomBackgroundColor(char_index + "potential1", true);
     }
   } else {
-    for (let attribute of attributeList.value) {
-      console.log(attribute);
+    let attributeList = ["level", "elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
+    for (let attribute of attributeList) {
       switchSelected(char_index + attribute, -1, character[attribute]);
       characterList.value[char_index][attribute] = -1;
     }
@@ -399,20 +402,96 @@ function updateOwn(char_index) {
   }
 }
 
-//点选填写内容
-function updateDataSwitch(char_index, attribute, rank) {
-  console.log(rank, characterList.value[char_index][attribute]);
-  let domId = char_index + attribute;
-  let oldRank = characterList.value[char_index][attribute];
-  if (rank == oldRank) {
-    characterList.value[char_index][attribute] = -1;
-    switchSelected(domId, rank, oldRank);
+//批量更新是否持有
+function batchUpdatesOwn(newVal) {
+  for (let i in characterList.value) {
+    if (characterList.value[i].show) {
+      updateOwn(i, newVal);
+    }
+  }
+}
+
+//更新精英化等级
+function updateElite(char_index, newVal) {
+  let domId = char_index + "elite";
+  let oldVal = characterList.value[char_index].elite;
+  console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  if (newVal == oldVal) {
+    characterList.value[char_index].elite = -1;
+    switchSelected(domId, newVal, oldVal);
+    cancelSkillAndMod(char_index);
     return;
   }
-  characterList.value[char_index][attribute] = rank;
-  switchSelected(domId, rank, oldRank);
+  if (newVal < 2) {
+    cancelSkillAndMod(char_index);
+  }
+  characterList.value[char_index].elite = newVal;
+  switchSelected(domId, newVal, oldVal);
+  characterList.value[char_index].own = true;
+  console.log(characterList.value[char_index]);
+}
+
+//取消专精和模组等级
+function cancelSkillAndMod(char_index) {
+  let attributeList = ["skill1", "skill2", "skill3", "modX", "modY"];
+  for (let attribute of attributeList) {
+    switchSelected(char_index + attribute, -1, characterList.value[char_index][attribute]);
+    characterList.value[char_index][attribute] = -1;
+  }
+}
+
+// 批量精英化
+function batchUpdatesElite(newVal) {
+  for (let i in characterList.value) {
+    if (characterList.value[i].show) {
+      updateElite(char_index, newVal);
+    }
+  }
+}
+
+//更新专精或模组等级
+function updateSkillAndMod(char_index, attribute, newVal) {
+  let domId = char_index + attribute;
+  let oldVal = characterList.value[char_index][attribute];
+  console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  if (newVal == oldVal) {
+    characterList.value[char_index][attribute] = -1;
+    switchSelected(domId, newVal, oldVal);
+    return;
+  }
+  characterList.value[char_index][attribute] = newVal;
+  if (characterList.value[char_index].rarity > 3) {
+    characterList.value[char_index].elite = 2;
+    switchSelected(char_index + "elite", 2, -1);
+  }
+  switchSelected(domId, newVal, oldVal);
   characterList.value[char_index].own = true;
 }
+
+// 批量精英化
+function batchUpdatesSkillAndMod(attribute,newVal) {
+  for (let i in characterList.value) {
+    if (characterList.value[i].show) {
+      updateSkillAndMod(char_index,attribute,newVal)
+    }
+  }
+}
+
+//更新潜能
+function updatePotential(char_index,newVal){
+  let domId = char_index + 'potential';
+  let oldRank = characterList.value[char_index].potential;
+  console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  if (newVal == oldRank) {
+    characterList.value[char_index].potential = -1;
+    switchSelected(domId, newVal, oldRank);
+    return;
+  }
+  characterList.value[char_index].potential = newVal;
+  switchSelected(domId, newVal, oldRank);
+  characterList.value[char_index].own = true;
+}
+
 
 //最大等级
 function updateLevel(char_index, rarity, elite) {
@@ -425,9 +504,7 @@ function updateLevel(char_index, rarity, elite) {
     setDomBackgroundColor(char_index + "level", false);
     return;
   }
-
   console.log(rarity, elite);
-
   if (rarity == 6) {
     level = 90;
     characterList.value[char_index].elite = 2;
@@ -443,11 +520,15 @@ function updateLevel(char_index, rarity, elite) {
     characterList.value[char_index].elite = 2;
     setDomBackgroundColor(char_index + "elite2", true);
   }
-  if (rarity == 3 && elite == 1) {
+  if (rarity == 3) {
     level = 55;
+    characterList.value[char_index].elite = 1;
+    setDomBackgroundColor(char_index + "elite1", true);
   }
-  if (rarity < 3 && elite == 0) {
+  if (rarity < 3) {
     level = 30;
+    characterList.value[char_index].elite = 0;
+    setDomBackgroundColor(char_index + "elite0", true);
   }
 
   if (level == 0) return;
@@ -457,33 +538,21 @@ function updateLevel(char_index, rarity, elite) {
   setDomBackgroundColor(char_index + "level", true);
 }
 
-//批量更新
-function batchUpdates(attribute, value) {
-  for (let i in characterList.value) {
-    if (characterList.value[i].show) {
-      updateDataSwitch(i, attribute, value);
-    }
-  }
-}
 
-// function batchCancellation(){
-//   for (let i in characterList.value) {
-//     if (characterList.value[i].show) {
-//      characterList.value[i].show = false;
-//     }
-//   }
-// }
 
+//选中标题
 function btnSetClass(flag) {
-  if (flag) return "btn_set btn_set_select";
-  return "btn_set";
+  if (flag) return "btn_setup_title btn_set_select";
+  return "btn_setup_title";
 }
 
+//调用 setDomBackgroundColor 修改选中的新选项和旧选项的背景颜色
 function switchSelected(domId, rank, oldRank) {
   setDomBackgroundColor(domId + rank, true);
   setDomBackgroundColor(domId + oldRank, false);
 }
 
+// 修改dom的背景颜色
 function setDomBackgroundColor(domId, selected) {
   let dom = document.getElementById(domId);
   if (dom == null) return;
@@ -494,23 +563,36 @@ function setDomBackgroundColor(domId, selected) {
   }
 }
 
-let potentialHideFlag = ref(false);
-let potentialHideText = ref("基础问卷");
+let surveyTypeFlag = ref(false);
+let surveyTypeText = ref("基础问卷");
 let surveyType = ref("_basic");
 
-function potentialHide() {
-  potentialHideFlag.value = !potentialHideFlag.value;
-  if (potentialHideFlag.value) {
+//基础问卷与完整问卷
+function changeSurveyType() {
+  surveyTypeFlag.value = !surveyTypeFlag.value;
+  if (surveyTypeFlag.value) {
     surveyType.value = "";
-    potentialHideText.value = "完整问卷";
+    surveyTypeText.value = "完整问卷";
   } else {
     surveyType.value = "_basic";
-    potentialHideText.value = "基础问卷";
+    surveyTypeText.value = "基础问卷";
   }
 }
 
 //简易卡片样式
 let simpleCard = ref(false);
+function changeSurveyCard() {
+  simpleCard.value = !simpleCard.value;
+  if (simpleCard.value) {
+    surveyType.value = "";
+    surveyTypeText.value = "完整问卷";
+  } else {
+    surveyType.value = "_basic";
+    surveyTypeText.value = "基础问卷";
+  }
+}
+
+//
 function simpleCardClass() {
   if (simpleCard.value) return "char_card char_card_simple";
   return "char_card";

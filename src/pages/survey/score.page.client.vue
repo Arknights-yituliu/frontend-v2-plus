@@ -1,41 +1,44 @@
 <template>
   <div class="score_page">
-    <div class="setup_wrap" id="setbar">
-      <div class="setup_bar">
+    <div class="setup_title_wrap">
+      <div class="setup_title_bar">
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
-        <div class="btn_set" @click="uploadScoreForm()">上传数据</div>
+        <div class="btn_setup_title" @click="uploadScoreForm()">上传数据</div>
       </div>
-      <div>
-        <div class="setup_bar">
-          <div class="setup_title">选择评分项目</div>
+      <div class="setup_title_bar">
+          <div class="switch_title">选择评分项目</div>
           <div :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
             {{ item.label }}
           </div>
         </div>
 
-        <div class="setup_bar">
-          <div class="setup_title">职业</div>
+    </div>
+    <div class="setup_wrap" id="setbar">
+      <div>
+        
+        <div class="switch_bar">
+          <div class="switch_title">职业</div>
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
             {{ profession.label }}
           </div>
         </div>
 
-        <div class="setup_bar">
-          <div class="setup_title">稀有度</div>
+        <div class="switch_bar">
+          <div class="switch_title">稀有度</div>
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }} ★</div>
         </div>
 
-        <div class="setup_bar">
-          <div class="setup_title">年份</div>
+        <div class="switch_bar">
+          <div class="switch_title">年份</div>
           <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
             {{ year.label }}
           </div>
         </div>
 
-        <div class="setup_bar">
-          <div class="setup_title">排序</div>
-          <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
-          <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
+        <div class="switch_bar">
+          <div class="switch_title">排序</div>
+          <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>
+          <div class="btn_switch" @click="sortCharacterList('date')">实装顺序</div>
         </div>
       </div>
     </div>
@@ -43,8 +46,7 @@
     <div class="score_wrap">
       <div v-for="(char, char_index) in scoreList.slice(0)" :key="char_index" class="score_card" v-show="char.show">
         <!-- 标题区域 -->
-       
-      
+
         <div class="score_left_wrap">
           <div class="score_portrait_wrap">
             <div :class="getSprite(char.charId)"></div>
@@ -54,7 +56,7 @@
           </div>
         </div>
 
-          <!-- 评分区域 -->
+        <!-- 评分区域 -->
         <div class="score_bar_wrap">
           <div class="score_bar" v-show="scoreItem.daily.show">
             <div class="score_name" @click="resetScore(char_index, 'daily')">日常：</div>
@@ -112,7 +114,7 @@
 
 <script setup>
 import { h, onMounted, ref } from "vue";
-import { scoreListInit, getProfession, professionDict, rarityDict, yearDict } from "./baseData";
+import { scoreListInit, professionDict, rarityDict, yearDict } from "./baseData";
 import surveyApi from "@/api/survey";
 import { globalUserData } from "./userService";
 import "@/assets/css/survey_score.css";
@@ -157,17 +159,17 @@ function selectScoreItem(attribute) {
 
 function selectedScoreItem(attribute) {
   if (scoreItem.value[attribute].show) {
-    return "switch_set selected_color";
+    return "btn_switch selected_color";
   }
-  return "switch_set";
+  return "btn_switch";
 }
 
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filterRules.value[attribute].indexOf(rule) > -1) {
-    return "switch_set selected_color";
+    return "btn_switch selected_color";
   }
-  return "switch_set";
+  return "btn_switch";
 }
 
 let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] });
@@ -176,29 +178,25 @@ let filterCollapse = ref(false);
 function setBarCollapse() {
   filterCollapse.value = !filterCollapse.value;
   if (filterCollapse.value) {
-    let elements = document.getElementsByClassName("setup_bar");
+    let elements = document.getElementsByClassName("switch_bar");
     let height = 0;
     for (let e of elements) {
-      height += e.offsetHeight ;
-      console.log(e)
+      height += e.offsetHeight;
     }
     document.getElementById("setbar").style.height = height + "px";
-
     setTimeout(() => {
       document.getElementById("setbar").style.height = "auto";
     }, 500);
   } else {
-    let elements = document.getElementsByClassName("setup_bar");
+    let elements = document.getElementsByClassName("switch_bar");
     let height = 0;
     for (let e of elements) {
-      height += e.offsetHeight ;
+      height += e.offsetHeight;
     }
     document.getElementById("setbar").style.height = height + "px";
-        
-    height = elements[0].offsetHeight
 
     setTimeout(() => {
-      document.getElementById("setbar").style.height = height + "px";
+      document.getElementById("setbar").style.height = 0 + "px";
     }, 100);
   }
 }
@@ -270,8 +268,8 @@ function getSprite(id, type) {
 }
 
 function btnSetClass(flag) {
-  if (flag) return "btn_set btn_set_select";
-  return "btn_set";
+  if (flag) return "btn_setup_title btn_set_select";
+  return "btn_setup_title";
 }
 
 onMounted(() => {
