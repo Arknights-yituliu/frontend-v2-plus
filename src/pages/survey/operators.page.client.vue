@@ -2,28 +2,28 @@
   <div class="survey_character_page">
     <!-- 设置区域 -->
 
-    <div class="setup_title_wrap">
-      <div class="setup_title_bar">
+    <div class="setup_wrap">
+      <div class="setup_bar">
         <!-- <div class="switch_title">设置</div> -->
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
         <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
-        <div class="btn_setup_title" @click="changeSurveyType()">{{ surveyTypeText }}</div>
-        <div class="btn_setup_title" @click="upload()">上传数据</div>
+        <div class="btn_setup" @click="changeSurveyType()">{{ surveyTypeText }}</div>
+        <div class="btn_setup" @click="upload()">上传数据</div>
         <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
-        <div class="btn_setup_title" @click="exportExcel()">{{ exportExcelBtnText }}</div>
+        <div class="btn_setup" @click="exportExcel()">{{ exportExcelBtnText }}</div>
 
-        <div class="btn_setup_title btn_upload">
+        <div class="btn_setup btn_upload">
           <div class="input_upload_wrap">
             <div class="upload_file_text">{{ uploadFileName }}</div>
             <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
           </div>
         </div>
-        <div class="btn_setup_title" @click="uploadByExcel">上传EXCEL</div>
-        <div class="btn_setup_title"><characterDemo></characterDemo></div>
+        <div class="btn_setup" @click="uploadByExcel">上传EXCEL</div>
+        <div class="btn_setup"><characterDemo></characterDemo></div>
       </div>
     </div>
 
-    <div class="setup_wrap" id="setbar">
+    <div class="switch_wrap" id="setbar">
       <div id="survey_filter">
         <div class="switch_bar">
           <div class="switch_title">职业</div>
@@ -542,8 +542,8 @@ function updateLevel(char_index, rarity, elite) {
 
 //选中标题
 function btnSetClass(flag) {
-  if (flag) return "btn_setup_title btn_set_select";
-  return "btn_setup_title";
+  if (flag) return "btn_setup btn_set_select";
+  return "btn_setup";
 }
 
 //调用 setDomBackgroundColor 修改选中的新选项和旧选项的背景颜色
