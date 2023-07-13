@@ -1,18 +1,8 @@
-.href {
-    text-decoration: none;
-    color: rgb(0, 0, 0);
-}
 
-.btn_survey {
-    min-width: 80px;
-    height: 20px;
-    padding: 3px;
-    line-height: 20px;
-    text-align: center;
-    /* background: rgb(79, 143, 255); */
-    font-weight: 600;
-    box-shadow: 0 0 1px 1px rgb(200, 200, 200);
-    cursor: pointer;
+
+.selected_background {
+    background: rgb(97, 173, 255);
+    /* color: #3888FF; */
 }
 
 .selected_color {
@@ -20,9 +10,45 @@
     color: #cf31ff;
 }
 
-.selected_background {
-    background: rgb(97, 173, 255);
-    /* color: #3888FF; */
+.setup_title_wrap{
+    max-width: 95%;
+    margin: auto;
+    background: #F7F9FA;
+    border-radius: 6px;
+    transition: all 0.4s;
+    overflow: hidden;
+    height: auto;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    margin-bottom: 6px;
+}
+
+.setup_title_bar {
+    width: 98%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    /* border-bottom: 1px rgb(180, 180, 180) solid; */
+    /* margin: auto; */
+    padding: 2px;
+}
+
+.btn_setup_title {
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-weight: 600;
+    background-color: #e8f3fd;
+    cursor: pointer;
+    border-radius: 4px;
+    /* vertical-align: middle; */
+    box-shadow: 0 1px 1px 1px rgb(197, 197, 197);
+    padding: 2px;
+    
+    margin: 4px;
 }
 
 .setup_wrap {
@@ -32,7 +58,7 @@
     border-radius: 6px;
     transition: all 0.4s;
     overflow: hidden;
-    height: 40px;
+    height: 0px;
     background-color: rgba(255, 255, 255, 1);
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
     border-radius: 2px;
@@ -51,21 +77,6 @@
 
 
 
-.btn_set {
-    width: 120px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    font-weight: 600;
-    background-color: #e8f3fd;
-    cursor: pointer;
-    border-radius: 4px;
-    /* vertical-align: middle; */
-    box-shadow: 0 1px 1px 1px rgb(197, 197, 197);
-    padding: 2px;
-    margin-right: 10px;
-}
-
 
 
 @media (max-width: 1080px) {
@@ -75,13 +86,26 @@
 
 }
 
+
 .btn_set_select {
-    background: #5096ff;
+    background: #67bbff;
     color: white;
 }
 
 
-.switch_set {
+.switch_bar {
+    width: 98%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    /* border-bottom: 1px rgb(180, 180, 180) solid; */
+    /* margin: auto; */
+    padding: 2px;
+}
+
+
+.btn_switch {
     margin: 6px;
     width: 110px;
     height: 20px;
@@ -93,7 +117,7 @@
     cursor: pointer;
 }
 
-.switch_set_samll {
+.btn_switch_samll {
     margin: 6px;
     width: 110px;
     height: 20px;
@@ -106,7 +130,7 @@
 }
 
 
-.setup_title {
+.switch_title {
     margin: 6px;
     width: 110px;
     height: 20px;
@@ -114,7 +138,8 @@
     line-height: 20px;
     text-align: center;
     font-weight: 600;
-    background: rgb(230, 230, 230);
+    background: rgb(199, 226, 255);
+    border-radius: 2px;
 }
 
 .card {
