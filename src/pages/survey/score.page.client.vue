@@ -54,55 +54,57 @@
           </div>
         </div>
 
-          <!-- 评分区域 -->
-        <div class="score_bar_wrap">
-          <div class="score_bar" v-show="scoreItem.daily.show">
-            <div class="score_name" @click="resetScore(char_index, 'daily')">日常：</div>
-            <!-- 日常 -->
-            <img class="image_score" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'daily', rank)" />
-          </div>
-          <div class="score_bar" v-show="scoreItem.rogue.show">
-            <div class="score_name" @click="resetScore(char_index, 'rogue')">肉鸽：</div>
-            <!-- 肉鸽 -->
-            <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'rogue', rank)" />
-          </div>
-          <div class="score_bar" v-show="scoreItem.hard.show">
-            <div class="score_name" @click="resetScore(char_index, 'hard')">高难：</div>
-            <!-- 高难 -->
-            <img class="image_score" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'hard', rank)" />
-          </div>
-          <div class="score_bar" v-show="scoreItem.securityService.show">
-            <div class="score_name" @click="resetScore(char_index, 'securityService')">保全：</div>
-            <!-- 保全 -->
-            <img
-              class="image_score"
-              :src="scoreSelected(rank, char.securityService)"
-              alt=""
-              v-for="rank in scoreDict"
-              @click="updateScore(char_index, 'securityService', rank)"
-            />
-          </div>
-          <div class="score_bar" v-show="scoreItem.universal.show">
-            <div class="score_name" @click="resetScore(char_index, 'universal')">泛用：</div>
-            <!-- 泛用 -->
-            <img
-              class="image_score"
-              :src="scoreSelected(rank, char.universal)"
-              alt=""
-              v-for="rank in scoreDict"
-              @click="updateScore(char_index, 'universal', rank)"
-            />
-          </div>
-          <div class="score_bar" v-show="scoreItem.countermeasures.show">
-            <div class="score_name" @click="resetScore(char_index, 'countermeasures')">对策：</div>
-            <!-- 对策 -->
-            <img
-              class="image_score"
-              :src="scoreSelected(rank, char.countermeasures)"
-              alt=""
-              v-for="rank in scoreDict"
-              @click="updateScore(char_index, 'countermeasures', rank)"
-            />
+        <!-- 评分区域 -->
+        <div class="score_right_wrap">
+          <div class="score_bar_wrap">
+            <div class="score_bar" v-show="scoreItem.daily.show">
+              <div class="score_name" @click="resetScore(char_index, 'daily')">日常：</div>
+              <!-- 日常 -->
+              <img class="image_score" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'daily', rank)" />
+            </div>
+            <div class="score_bar" v-show="scoreItem.rogue.show">
+              <div class="score_name" @click="resetScore(char_index, 'rogue')">肉鸽：</div>
+              <!-- 肉鸽 -->
+              <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'rogue', rank)" />
+            </div>
+            <div class="score_bar" v-show="scoreItem.hard.show">
+              <div class="score_name" @click="resetScore(char_index, 'hard')">高难：</div>
+              <!-- 高难 -->
+              <img class="image_score" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'hard', rank)" />
+            </div>
+            <div class="score_bar" v-show="scoreItem.securityService.show">
+              <div class="score_name" @click="resetScore(char_index, 'securityService')">保全：</div>
+              <!-- 保全 -->
+              <img
+                class="image_score"
+                :src="scoreSelected(rank, char.securityService)"
+                alt=""
+                v-for="rank in scoreDict"
+                @click="updateScore(char_index, 'securityService', rank)"
+              />
+            </div>
+            <div class="score_bar" v-show="scoreItem.universal.show">
+              <div class="score_name" @click="resetScore(char_index, 'universal')">泛用：</div>
+              <!-- 泛用 -->
+              <img
+                class="image_score"
+                :src="scoreSelected(rank, char.universal)"
+                alt=""
+                v-for="rank in scoreDict"
+                @click="updateScore(char_index, 'universal', rank)"
+              />
+            </div>
+            <div class="score_bar" v-show="scoreItem.countermeasures.show">
+              <div class="score_name" @click="resetScore(char_index, 'countermeasures')">对策：</div>
+              <!-- 对策 -->
+              <img
+                class="image_score"
+                :src="scoreSelected(rank, char.countermeasures)"
+                alt=""
+                v-for="rank in scoreDict"
+                @click="updateScore(char_index, 'countermeasures', rank)"
+              />
+            </div>
           </div>
         </div>
       </div>
