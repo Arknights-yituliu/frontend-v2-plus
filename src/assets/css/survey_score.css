@@ -91,8 +91,9 @@
 
 
 .score_left_wrap{
-    height: 260px;
+    /* height: 260px; */
     width: 140px;
+    margin-top: 8px;
     /* border: 1px rgb(255, 0, 0) solid; */
  }
 
@@ -102,6 +103,8 @@
    margin: auto;
    /* border: 1px rgb(255, 0, 0) solid; */
    margin-top: 4px;
+   background-color:beige;
+   box-shadow: 6px 6px 0px #808080;
 }
 
 
@@ -120,11 +123,12 @@
     color: rgb(95, 95, 95);
     font-size: 18px;
     font-weight: 700;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: 'Times New Roman', Times, serif; */
     /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); */
     /* padding-left: 20px; */
     text-align: center;
-    margin-top: 10px;
+    margin-top: 4px;
 }
 
 .char_description {
