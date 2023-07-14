@@ -53,7 +53,8 @@
 
 .control_panel{
     display: flex;
-    flex-wrap: wrap
+    flex-wrap: wrap;
+    padding: 8px;
 }
 
 .btn_setup {
@@ -87,7 +88,7 @@
 
 .switch_wrap {
     max-width: 95%;
-    margin: auto;
+    margin: 8px auto;
     background: #F7F9FA;
     border-radius: 6px;
     transition: all 0.4s;
