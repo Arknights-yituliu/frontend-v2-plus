@@ -45,7 +45,7 @@
 
       <div class="setup_bar" id="score_selector_sort">
         <div class="switch_title">排序</div>
-          <div class="switch_btns_wrap">
+        <div class="switch_btns_wrap">
           <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>
           <div class="btn_switch" @click="sortCharacterList('date')">实装顺序</div>
         </div>
