@@ -43,7 +43,7 @@
 
     <div class="switch_wrap" id="dom_switch_wrap">
       <div id="survey_filter">
-        <div class="setup_bar">
+        <div class="switch_bar">
           <div class="switch_title">职业</div>
           <div class="switch_btns_wrap">
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
@@ -307,7 +307,7 @@ function setBarCollapse() {
       height += e.offsetHeight;
     }
     document.getElementById("dom_switch_wrap").style.height = height + "px";
-
+    console.log('展开高度', height + "px")
     setTimeout(() => {
       document.getElementById("dom_switch_wrap").style.height = "auto";
     }, 500);
