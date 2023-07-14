@@ -27,6 +27,8 @@
     border-radius: 2px;
     margin-bottom: 6px;
 }
+
+
 .selector_wrap{
     max-width: 95%;
     margin: auto;
@@ -40,16 +42,7 @@
     border-radius: 2px;
     margin-bottom: 6px;
 }
-.setup_bar {
-    width: 98%;
-    /* display: flex; */
-    /* flex-direction: row; */
-    /* flex-wrap: wrap; */
-    justify-content: flex-start;
-    /* border-bottom: 1px rgb(180, 180, 180) solid; */
-    /* margin: auto; */
-    padding: 2px;
-}
+
 
 .control_panel{
     display: flex;

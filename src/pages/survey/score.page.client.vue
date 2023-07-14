@@ -16,8 +16,8 @@
         </div>
       </div>
 
-    <!-- 筛选器 -->
-    <!-- <div class="selector_wrap" style="height: auto;"> -->
+      <!-- 筛选器 -->
+      <!-- <div class="selector_wrap" style="height: auto;"> -->
       <div class="setup_bar" id="score_selector_class">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
@@ -59,11 +59,18 @@
 
         <div class="score_left_wrap">
           <div class="score_portrait_wrap">
+        
+            <div :class="getBgSprite('bg-tl', char.rarity)"></div>
+            <div :class="getBgSprite('profession', char.profession)"></div>
+            <div :class="getBgSprite('rarity', char.rarity)"></div>
+            <div :class="getBgSprite('bg', char.rarity)"></div>
             <div :class="getSprite(char.charId)"></div>
+            <div :class="getBgSprite('light', char.rarity)"></div>
+            <div :class="getBgSprite('mask', char.rarity)"></div>
+            <div class="score_portrait_bg_bl"></div>
+            <div class="score_char_name">{{ char.name }}</div>
           </div>
-          <div class="score_char_name">
-            {{ char.name }}
-          </div>
+         
         </div>
 
         <!-- 打分区域 -->
@@ -275,6 +282,15 @@ function sortCharacterList(rule) {
 
 function getSprite(id, type) {
   return "bg-" + id + "_1 score_portrait";
+}
+
+function getBgSprite(type, name) {
+  if (type == "bg-tl") return "bg-portrait_bg_tl_" + name + " score_portrait_bg_tl";
+  if (type == "profession") return "bg-" + name + " score_portrait_profession";
+  if (type == "rarity") return "bg-rarity_" + name + " score_portrait_rarity";
+  if (type == "bg") return "bg-portrait_bg_" + name + " score_portrait_bg";
+  if (type == "light") return "bg-light_" + name + " score_portrait_right";
+  if (type == "mask") return "bg-mask" + " score_portrait_mask";
 }
 
 function btnSetClass(flag) {
