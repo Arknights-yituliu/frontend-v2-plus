@@ -42,7 +42,7 @@
     </div>
 
     <div class="switch_wrap" id="dom_switch_wrap">
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
@@ -51,14 +51,14 @@
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">稀有度</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }}★</div>
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">年份</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
@@ -67,7 +67,7 @@
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">其他</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('own', true)" id="other1" @click="addFilterRule('own', true)">已拥有</div>
@@ -78,7 +78,7 @@
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">排序</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>
@@ -86,7 +86,7 @@
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">批量操作</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="batchUpdatesOwn(true)">全部拥有</div>
@@ -101,8 +101,8 @@
       </div>
     </div>
 
-    <div class="switch_wrap" style="height: auto;">
-      <div class="setup_bar">
+    <!-- <div class="switch_wrap" style="height: auto;">
+      <div class="switch_bar">
         <div class="switch_title">导入导出</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch">导入按钮1</div>
@@ -110,17 +110,17 @@
           <div class="btn_switch">导出按钮1</div>
         </div>
       </div>
-    </div>
+    </div> -->
 <!-- 
     <div class="switch_wrap" style="height: auto;">
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">反馈</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch">B站私信</div>
           <div class="btn_switch">粉丝群</div>
         </div>
       </div>
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">参与开发</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch">Github</div>
