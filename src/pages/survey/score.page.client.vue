@@ -1,7 +1,7 @@
 <template>
   <div class="score_page">
     <!-- 设置区 -->
-    <div class="selector_wrap">
+    <div class="switch_wrap" style=" height: auto;">
       <!-- <div class="setup_bar">
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">干员筛选</div>
         <div class="btn_setup" @click="uploadScoreForm()">上传数据</div>
@@ -16,8 +16,7 @@
         </div>
       </div>
 
-      <!-- 筛选器 -->
-      <!-- <div class="selector_wrap" style="height: auto;"> -->
+    
       <div class="setup_bar" id="score_selector_class">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
@@ -294,7 +293,7 @@ function getBgSprite(type, name) {
 }
 
 function btnSetClass(flag) {
-  if (flag) return "btn_setup btn_set_selected";
+  if (flag) return "btn_setup btn_setup_selecteded";
   return "btn_setup";
 }
 
