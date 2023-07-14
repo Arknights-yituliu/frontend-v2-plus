@@ -5,26 +5,31 @@
     <div class="setup_wrap">
       <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
-        <div class="btn_setup"><characterDemo></characterDemo>
-          <div class="btn_setup_tips">功能介绍<br>使用说明</div>
+        <div class="btn_setup">
+          <characterDemo></characterDemo>
+          <div class="btn_setup_tips">功能介绍<br />使用说明</div>
         </div>
 
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作
-          <div class="btn_setup_tips">筛选，然后批量操作<br>高效填写</div>
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">
+          筛选/批量操作
+          <div class="btn_setup_tips">筛选，然后批量操作<br />高效填写</div>
         </div>
 
-        <div class="btn_setup">数据导入/导出
-          <div class="btn_setup_tips">导出到Excel<br>或从Excel/MAA导入数据</div>
+        <div class="btn_setup">
+          数据导入/导出
+          <div class="btn_setup_tips">导出到Excel<br />或从Excel/MAA导入数据</div>
         </div>
 
-        <div class="btn_setup">模式切换
-          <div class="btn_setup_tips">当前模式：标准模式<br>仅头像/标准模式/高级模式</div>
+        <div class="btn_setup">
+          模式切换
+          <div class="btn_setup_tips">当前模式：标准模式<br />仅头像/标准模式/高级模式</div>
         </div>
 
-        <div class="btn_setup">开发信息
-          <div class="btn_setup_tips">反馈、建议<br></div>
+        <div class="btn_setup">
+          开发信息
+          <div class="btn_setup_tips">反馈、建议<br /></div>
         </div>
-      <!--    以下噶掉
+        <!--    以下噶掉
        <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
         <div class="btn_setup" @click="changeSurveyType()">{{ surveyTypeText }}</div>
         <div class="btn_setup" @click="upload()">上传数据</div>
@@ -42,7 +47,7 @@
     </div>
 
     <div class="switch_wrap" id="dom_switch_wrap">
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
@@ -51,14 +56,14 @@
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">稀有度</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }}★</div>
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">年份</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
@@ -67,7 +72,7 @@
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">其他</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('own', true)" id="other1" @click="addFilterRule('own', true)">已拥有</div>
@@ -78,7 +83,7 @@
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">排序</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>
@@ -86,12 +91,12 @@
         </div>
       </div>
 
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">批量操作</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="batchUpdatesOwn(true)">全部拥有</div>
           <div class="btn_switch" @click="batchUpdatesOwn(false)">全部设为未拥有</div>
-          <div class="btn_switch" @click="batchUpdatesElite( 2)">全部设为精二</div>
+          <div class="btn_switch" @click="batchUpdatesElite(2)">全部设为精二</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能专三</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能专三</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能专三</div>
@@ -101,26 +106,33 @@
       </div>
     </div>
 
-    <div class="switch_wrap" style="height: auto;">
-      <div class="setup_bar">
+    <div class="switch_wrap" style="height: auto">
+      <div class="switch_bar">
         <div class="switch_title">导入导出</div>
         <div class="switch_btns_wrap">
-          <div class="btn_switch">导入按钮1</div>
-          <div class="btn_switch">导入按钮2</div>
-          <div class="btn_switch">导出按钮1</div>
+          <div class="btn_switch" @click="exportExcel()">导出到Excel</div>
+          <div class="btn_switch">
+            <div class="input_upload_wrap">
+              选择文件
+              <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
+            </div>
+          </div>
+          <div class="btn_switch">上传文件</div>
+          <div class="upload_file_name">文件名：{{ uploadFileName }}</div>
         </div>
       </div>
     </div>
-<!-- 
+
+    <!-- 
     <div class="switch_wrap" style="height: auto;">
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">反馈</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch">B站私信</div>
           <div class="btn_switch">粉丝群</div>
         </div>
       </div>
-      <div class="setup_bar">
+      <div class="switch_bar">
         <div class="switch_title">参与开发</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch">Github</div>
@@ -306,7 +318,7 @@ function upload() {
   });
 }
 
-let uploadFileName = ref("未选择文件");
+let uploadFileName = ref("文件名称");
 
 //显示文件名称
 function getUploadFileName() {
@@ -346,7 +358,7 @@ function setBarCollapse() {
       height += e.offsetHeight;
     }
     document.getElementById("dom_switch_wrap").style.height = height + "px";
-    console.log('展开高度', height + "px")
+    console.log("展开高度", height + "px");
     setTimeout(() => {
       document.getElementById("dom_switch_wrap").style.height = "auto";
     }, 500);
@@ -529,17 +541,17 @@ function updateSkillAndMod(char_index, attribute, newVal) {
 }
 
 // 批量精英化
-function batchUpdatesSkillAndMod(attribute,newVal) {
+function batchUpdatesSkillAndMod(attribute, newVal) {
   for (let i in characterList.value) {
     if (characterList.value[i].show) {
-      updateSkillAndMod(char_index,attribute,newVal)
+      updateSkillAndMod(char_index, attribute, newVal);
     }
   }
 }
 
 //更新潜能
-function updatePotential(char_index,newVal){
-  let domId = char_index + 'potential';
+function updatePotential(char_index, newVal) {
+  let domId = char_index + "potential";
   let oldRank = characterList.value[char_index].potential;
   console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldRank) {
@@ -551,7 +563,6 @@ function updatePotential(char_index,newVal){
   switchSelected(domId, newVal, oldRank);
   characterList.value[char_index].own = true;
 }
-
 
 //最大等级
 function updateLevel(char_index, rarity, elite) {
@@ -598,11 +609,9 @@ function updateLevel(char_index, rarity, elite) {
   setDomBackgroundColor(char_index + "level", true);
 }
 
-
-
 //选中标题
 function btnSetClass(flag) {
-  if (flag) return "btn_setup btn_set_select";
+  if (flag) return "btn_setup btn_setup_selected";
   return "btn_setup";
 }
 

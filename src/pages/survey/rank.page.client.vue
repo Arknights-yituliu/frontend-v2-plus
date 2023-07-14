@@ -236,7 +236,7 @@ function sortCharacterList(rule) {
 
 
 function btnSetClass(flag) {
-  if (flag) return "btn_set btn_set_select";
+  if (flag) return "btn_set btn_setup_selected";
   return "btn_set";
 }
 
