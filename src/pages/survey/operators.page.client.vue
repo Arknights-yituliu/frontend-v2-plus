@@ -3,9 +3,28 @@
     <!-- 设置区域 -->
 
     <div class="setup_wrap">
-      <div class="setup_bar">
+      <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
+        <div :class="btnSetClass(filterCollapse)">填写指南
+          <div class="btn_setup_tips">功能介绍<br>使用说明</div>
+        </div>
+
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作
+          <div class="btn_setup_tips">筛选，然后批量操作<br>高效填写</div>
+        </div>
+
+        <div :class="btnSetClass(filterCollapse)">数据导入/导出
+          <div class="btn_setup_tips">导出到Excel<br>或从Excel/MAA导入数据</div>
+        </div>
+
+        <div :class="btnSetClass(filterCollapse)">模式切换
+          <div class="btn_setup_tips">当前模式<br>仅头像/标准模式/高级模式</div>
+        </div>
+
+        <div :class="btnSetClass(filterCollapse)">开发信息
+          <div class="btn_setup_tips">反馈、建议<br></div>
+        </div>
+        以下噶掉
         <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
         <div class="btn_setup" @click="changeSurveyType()">{{ surveyTypeText }}</div>
         <div class="btn_setup" @click="upload()">上传数据</div>
@@ -25,11 +44,13 @@
 
     <div class="switch_wrap" id="setbar">
       <div id="survey_filter">
-        <div class="switch_bar">
+        <div class="setup_bar">
           <div class="switch_title">职业</div>
+          <div class="switch_btns_wrap">
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
             {{ profession.label }}
           </div>
+        </div>
         </div>
         <div class="switch_bar">
           <div class="switch_title">稀有度</div>
@@ -59,7 +80,7 @@
         <div class="switch_bar">
           <div class="switch_title">批量操作</div>
           <div class="btn_switch" @click="batchUpdatesOwn(true)">全部拥有</div>
-          <div class="btn_switch_samll" @click="batchUpdatesOwn(false)">全部设为未拥有</div>
+          <div class="btn_switch" @click="batchUpdatesOwn(false)">全部设为未拥有</div>
           <div class="btn_switch" @click="batchUpdatesElite( 2)">全部设为精二</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能专三</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能专三</div>
