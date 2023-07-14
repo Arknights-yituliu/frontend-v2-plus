@@ -5,7 +5,7 @@
     <div class="setup_wrap">
       <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
-        <div :class="btnSetClass(filterCollapse)">填写指南
+        <div class="btn_setup"><characterDemo></characterDemo>
           <div class="btn_setup_tips">功能介绍<br>使用说明</div>
         </div>
 
@@ -13,22 +13,21 @@
           <div class="btn_setup_tips">筛选，然后批量操作<br>高效填写</div>
         </div>
 
-        <div :class="btnSetClass(filterCollapse)">数据导入/导出
+        <div class="btn_setup">数据导入/导出
           <div class="btn_setup_tips">导出到Excel<br>或从Excel/MAA导入数据</div>
         </div>
 
-        <div :class="btnSetClass(filterCollapse)">模式切换
+        <div class="btn_setup">模式切换
           <div class="btn_setup_tips">当前模式<br>仅头像/标准模式/高级模式</div>
         </div>
 
-        <div :class="btnSetClass(filterCollapse)">开发信息
+        <div class="btn_setup">开发信息
           <div class="btn_setup_tips">反馈、建议<br></div>
         </div>
-        以下噶掉
-        <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
+      <!--    以下噶掉
+       <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
         <div class="btn_setup" @click="changeSurveyType()">{{ surveyTypeText }}</div>
         <div class="btn_setup" @click="upload()">上传数据</div>
-        <!-- <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">{{ filterCollapse ? "收起" : "展开" }}筛选栏</div> -->
         <div class="btn_setup" @click="exportExcel()">{{ exportExcelBtnText }}</div>
 
         <div class="btn_setup btn_upload">
@@ -38,7 +37,7 @@
           </div>
         </div>
         <div class="btn_setup" @click="uploadByExcel">上传EXCEL</div>
-        <div class="btn_setup"><characterDemo></characterDemo></div>
+        <div class="btn_setup"><characterDemo></characterDemo></div> -->
       </div>
     </div>
 
