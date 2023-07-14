@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="switch_wrap" id="setbar">
+    <div class="switch_wrap" id="dom_switch_wrap">
       <div id="survey_filter">
         <div class="setup_bar">
           <div class="switch_title">职业</div>
@@ -306,9 +306,10 @@ function setBarCollapse() {
     for (let e of elements) {
       height += e.offsetHeight;
     }
-    document.getElementById("setbar").style.height = height + "px";
+    document.getElementById("dom_switch_wrap").style.height = height + "px";
+
     setTimeout(() => {
-      document.getElementById("setbar").style.height = "auto";
+      document.getElementById("dom_switch_wrap").style.height = "auto";
     }, 500);
   } else {
     let elements = document.getElementsByClassName("switch_bar");
@@ -316,10 +317,10 @@ function setBarCollapse() {
     for (let e of elements) {
       height += e.offsetHeight;
     }
-    document.getElementById("setbar").style.height = height + "px";
+    document.getElementById("dom_switch_wrap").style.height = height + "px";
 
     setTimeout(() => {
-      document.getElementById("setbar").style.height = 0 + "px";
+      document.getElementById("dom_switch_wrap").style.height = 0 + "px";
     }, 100);
   }
 }
