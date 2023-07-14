@@ -8,6 +8,10 @@
 .selected_color {
     /* background: rgb(97, 173, 255); */
     color: #cf31ff;
+    color: #ffffff;
+    background-color: #6795ff !important;
+    box-shadow: 1px 1px 2px #cccccc !important;
+
 }
 
 .setup_wrap{
@@ -23,12 +27,24 @@
     border-radius: 2px;
     margin-bottom: 6px;
 }
-
+.selector_wrap{
+    max-width: 95%;
+    margin: auto;
+    background: #F7F9FA;
+    border-radius: 6px;
+    transition: all 0.4s;
+    overflow: hidden;
+    height: auto;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    margin-bottom: 6px;
+}
 .setup_bar {
     width: 98%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    /* display: flex; */
+    /* flex-direction: row; */
+    /* flex-wrap: wrap; */
     justify-content: flex-start;
     /* border-bottom: 1px rgb(180, 180, 180) solid; */
     /* margin: auto; */
@@ -86,15 +102,19 @@
 
 
 .btn_switch {
+    background-color: #eeeeee;
     margin: 6px;
-    width: 110px;
+    width: 108px;
     height: 20px;
     padding: 4px;
     line-height: 20px;
     text-align: center;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 14px;
     cursor: pointer;
+    border-radius: 4px;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 2px 2px 4px #cccccc;
 }
 
 .btn_switch_samll {
@@ -111,15 +131,22 @@
 
 
 .switch_title {
+    float: left;
     margin: 6px;
-    width: 110px;
+    width: 96px;
     height: 20px;
     padding: 4px;
     line-height: 20px;
     text-align: center;
-    font-weight: 600;
-    background: rgb(199, 226, 255);
+    font-weight: 500;
+    /* background: rgb(199, 226, 255); */
     border-radius: 2px;
+}
+
+.switch_btns_wrap{
+    margin-left: 108px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .card {
