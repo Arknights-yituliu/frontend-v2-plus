@@ -1,48 +1,58 @@
 <template>
   <div class="score_page">
-    <div class="setup_wrap">
-      <div class="setup_bar">
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选/批量操作</div>
+    <!-- 设置区 -->
+    <div class="selector_wrap">
+      <!-- <div class="setup_bar">
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">干员筛选</div>
         <div class="btn_setup" @click="uploadScoreForm()">上传数据</div>
-      </div>
-      <div class="setup_bar">
-          <div class="switch_title">选择评分项目</div>
-          <div :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
+      </div> -->
+      <!-- 评分项选择 -->
+      <div class="setup_bar" id="score_selector_dimension">
+        <div class="switch_title">选择评分项</div>
+        <div class="switch_btns_wrap">
+          <div class="mdui-btn" :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
             {{ item.label }}
           </div>
         </div>
+      </div>
 
-    </div>
-    <div class="switch_wrap" id="setbar">
-      <div>
-        
-        <div class="switch_bar">
-          <div class="switch_title">职业</div>
+    <!-- 筛选器 -->
+    <!-- <div class="selector_wrap" style="height: auto;"> -->
+      <div class="setup_bar" id="score_selector_class">
+        <div class="switch_title">职业</div>
+        <div class="switch_btns_wrap">
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
             {{ profession.label }}
           </div>
         </div>
+      </div>
 
-        <div class="switch_bar">
-          <div class="switch_title">稀有度</div>
+      <div class="setup_bar" id="score_selector_rarity">
+        <div class="switch_title">稀有度</div>
+        <div class="switch_btns_wrap">
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }} ★</div>
         </div>
+      </div>
 
-        <div class="switch_bar">
-          <div class="switch_title">年份</div>
+      <div class="setup_bar" id="score_selector_years">
+        <div class="switch_title">年份</div>
+        <div class="switch_btns_wrap">
           <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
             {{ year.label }}
           </div>
         </div>
+      </div>
 
-        <div class="switch_bar">
-          <div class="switch_title">排序</div>
+      <div class="setup_bar" id="score_selector_sort">
+        <div class="switch_title">排序</div>
+          <div class="switch_btns_wrap">
           <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>
           <div class="btn_switch" @click="sortCharacterList('date')">实装顺序</div>
         </div>
       </div>
     </div>
 
+    <!-- 评分卡片 -->
     <div class="score_wrap">
       <div v-for="(char, char_index) in scoreList.slice(0)" :key="char_index" class="score_card" v-show="char.show">
         <!-- 标题区域 -->
@@ -56,7 +66,7 @@
           </div>
         </div>
 
-        <!-- 评分区域 -->
+        <!-- 打分区域 -->
         <div class="score_right_wrap">
           <div class="score_bar" v-show="scoreItem.daily.show">
             <div class="score_name" @click="resetScore(char_index, 'daily')">日常：</div>
@@ -183,9 +193,9 @@ function setBarCollapse() {
     for (let e of elements) {
       height += e.offsetHeight;
     }
-    document.getElementById("setbar").style.height = height + "px";
+    document.getElementById("filter").style.height = height + "px";
     setTimeout(() => {
-      document.getElementById("setbar").style.height = "auto";
+      document.getElementById("filter").style.height = "auto";
     }, 500);
   } else {
     let elements = document.getElementsByClassName("switch_bar");
@@ -193,10 +203,10 @@ function setBarCollapse() {
     for (let e of elements) {
       height += e.offsetHeight;
     }
-    document.getElementById("setbar").style.height = height + "px";
+    document.getElementById("filter").style.height = height + "px";
 
     setTimeout(() => {
-      document.getElementById("setbar").style.height = 0 + "px";
+      document.getElementById("filter").style.height = 0 + "px";
     }, 100);
   }
 }
@@ -268,7 +278,7 @@ function getSprite(id, type) {
 }
 
 function btnSetClass(flag) {
-  if (flag) return "btn_setup btn_set_select";
+  if (flag) return "btn_setup btn_set_selected";
   return "btn_setup";
 }
 

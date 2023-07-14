@@ -93,9 +93,16 @@
 .score_left_wrap{
     /* height: 260px; */
     width: 140px;
-    margin-top: 8px;
+    margin: 8px 0px 0px 16px;
     /* border: 1px rgb(255, 0, 0) solid; */
  }
+
+ .score_right_wrap{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+}
 
 .score_portrait_wrap{
    height: 216px;
@@ -166,6 +173,8 @@
 
 
 .score_name {
-    height: 28px;
-    line-height: 28px;
+    height: 24px;
+    line-height: 24px;
+    font-weight: 500;
+    font-style: italic;
 }
