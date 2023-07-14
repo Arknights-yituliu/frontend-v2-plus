@@ -1,7 +1,7 @@
 <template>
   <div class="score_page">
     <!-- 设置区 -->
-    <div class="selector_wrap">
+    <div class="switch_wrap" style=" height: auto;">
       <!-- <div class="setup_bar">
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">干员筛选</div>
         <div class="btn_setup" @click="uploadScoreForm()">上传数据</div>
@@ -16,8 +16,7 @@
         </div>
       </div>
 
-    <!-- 筛选器 -->
-    <!-- <div class="selector_wrap" style="height: auto;"> -->
+    
       <div class="setup_bar" id="score_selector_class">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
@@ -59,11 +58,18 @@
 
         <div class="score_left_wrap">
           <div class="score_portrait_wrap">
+        
+            <div :class="getBgSprite('bg-tl', char.rarity)"></div>
+            <div :class="getBgSprite('profession', char.profession)"></div>
+            <div :class="getBgSprite('rarity', char.rarity)"></div>
+            <div :class="getBgSprite('bg', char.rarity)"></div>
             <div :class="getSprite(char.charId)"></div>
+            <div :class="getBgSprite('light', char.rarity)"></div>
+            <div :class="getBgSprite('mask', char.rarity)"></div>
+            <div class="score_portrait_bg_bl"></div>
+            <div class="score_char_name">{{ char.name }}</div>
           </div>
-          <div class="score_char_name">
-            {{ char.name }}
-          </div>
+         
         </div>
 
         <!-- 打分区域 -->
@@ -277,8 +283,17 @@ function getSprite(id, type) {
   return "bg-" + id + "_1 score_portrait";
 }
 
+function getBgSprite(type, name) {
+  if (type == "bg-tl") return "bg-portrait_bg_tl_" + name + " score_portrait_bg_tl";
+  if (type == "profession") return "bg-" + name + " score_portrait_profession";
+  if (type == "rarity") return "bg-rarity_" + name + " score_portrait_rarity";
+  if (type == "bg") return "bg-portrait_bg_" + name + " score_portrait_bg";
+  if (type == "light") return "bg-light_" + name + " score_portrait_right";
+  if (type == "mask") return "bg-mask" + " score_portrait_mask";
+}
+
 function btnSetClass(flag) {
-  if (flag) return "btn_setup btn_set_selected";
+  if (flag) return "btn_setup btn_setup_selecteded";
   return "btn_setup";
 }
 

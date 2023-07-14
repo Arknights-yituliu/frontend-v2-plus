@@ -22,7 +22,8 @@
 
 .score_card {
     display: flex;
-    width: 460px;
+    width: 520px;
+
     /* height: 190px; */
     /* border: 1px rgb(223, 223, 223) solid; */
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
@@ -105,37 +106,92 @@
 }
 
 .score_portrait_wrap{
-   height: 216px;
-   width: 108px;
+   height: 250px;
+   width: 120px;
    margin: auto;
    /* border: 1px rgb(255, 0, 0) solid; */
    margin-top: 4px;
-   background-color:beige;
-   box-shadow: 6px 6px 0px #808080;
+   /* background-color:beige; */
+   /* box-shadow: 6px 6px 0px #808080; */
+   position: relative;
+   overflow: hidden;
+   
 }
 
+.score_portrait_bg_tl{
+    transform: scale(0.9);
+    position: absolute;
+    left: 0px;
+    top: -2px;
+}
 
+.score_portrait_profession{
+    transform: scale(0.1);
+    position: absolute;
+    top: -110px;
+    left: -106px;
+    z-index: 20;
+}
+
+.score_portrait_rarity{
+    transform: scale(0.7);
+    position: absolute;
+    left: 24px;
+    top: 4px;
+    z-index: 20;
+}
+
+.score_portrait_bg{
+    transform: scale(0.76);
+    position: absolute;
+    height: 216px;
+    left: -12px;
+    top: -10px;
+}
+
+.score_portrait_right{
+    transform: scale(0.75);
+    position: absolute;
+    z-index: 10;
+    top: 120px;
+    left: -12px;
+}
+
+.score_portrait_mask{
+    transform: scale(0.76);
+    position: absolute;
+    z-index: 11;
+    top: 156px;
+    left: -18px;
+}
+
+.score_portrait_bg_bl{
+    background: black;
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    top: 214px;
+    left: 4px;
+}
 
 .score_portrait {
     transform: scale(0.6);
     /* border-radius: 50%; */
-    position: relative;
-    top: -73px;
-    left: -37px;
+    position: absolute;
+    top: -60px;
+    left: -30px;
     /* border: 1px rgb(255, 0, 0) solid; */
 }
 
 .score_char_name {
-    height: 32px;
-    color: rgb(95, 95, 95);
-    font-size: 18px;
-    font-weight: 700;
-    font-family: Arial, Helvetica, sans-serif;
-    /* font-family: 'Times New Roman', Times, serif; */
-    /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); */
-    /* padding-left: 20px; */
-    text-align: center;
-    margin-top: 4px;
+    color: white;
+    position: absolute;
+    top:218px;
+    right: 10px;
+    z-index: 20;
+    font-size: 14px;
+  
+
 }
 
 .char_description {
