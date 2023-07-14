@@ -164,11 +164,11 @@
   margin-right: 10px;
 }
 
-.skill_delimiter_basic{
+.skill_delimiter_basic {
   width: 16px;
 }
 
-.skill_delimiter{
+.skill_delimiter {
   width: 4px;
 }
 
@@ -290,6 +290,7 @@
   /* border: 1px rgb(132, 120, 226) solid; */
 }
 
+
 .fill_course_title {
   font-weight: 600;
   font-size: 20px;
@@ -298,14 +299,6 @@
   margin-left: 20px;
 }
 
-.fill_course_tip_btn {
-  display: flex;
-  /* border: 1px rgb(132, 120, 226) solid; */
-}
-
-.fill_course_tip_btn :hover {
-  cursor: pointer;
-}
 
 .fill_course_tip_icon {
   width: 20px;
