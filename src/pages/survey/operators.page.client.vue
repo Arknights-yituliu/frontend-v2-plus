@@ -36,6 +36,16 @@
           开发信息
           <div class="btn_setup_tips">反馈、建议<br /></div>
         </div>
+
+        <div class="btn_setup">
+          最后保存时间
+          <div class="btn_setup_tips btn_setup_tips_wran">
+            {{ uploadMessage.updateTime }}<br />
+
+            新增&nbsp;{{ uploadMessage.insertRows }}条&nbsp;/&nbsp;更新&nbsp;{{ uploadMessage.updateRows }}条
+          </div>
+        </div>
+
         <!--    以下噶掉
        <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
         <div class="btn_setup" @click="changeSurveyType()">{{ surveyTypeText }}</div>
@@ -130,7 +140,7 @@
       </div>
     </div>
 
-    <div class="switch_wrap" id="statistics_info" style="height: auto">
+    <!-- <div class="switch_wrap" id="statistics_info" style="height: auto">
       <div class="stats_classify" id="own_rate_rarity">
         <div class="stats_module">
           <div class="stats_title">总持有率</div>
@@ -219,9 +229,9 @@
           <div class="stats_content">114 / 514</div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="switch_wrap" style="height: auto">
+    <!-- <div class="switch_wrap" style="height: auto">
       <div class="switch_bar">
         <div class="switch_title">反馈</div>
         <div class="switch_btns_wrap">
@@ -237,7 +247,7 @@
           <div class="btn_switch">开发群</div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- 干员组 -->
     <div class="char_forms">
@@ -407,13 +417,42 @@ function exportExcel() {
   }, 5000);
 }
 
+let lastUploadTimeStamp = 1689425013364;
+let uploadMessage = ref({ updateTime: "00:00:00", insertRows: 0, updateRows: 0 });
+
 //上传风评表
 function upload() {
-  surveyApi.uploadCharacter(characterList.value, globalUserData.value.token).then((response) => {
-    // console.log(response.data);
-    cMessage("新增了 " + response.data.insertRows + " 条");
-    cMessage("更新了 " + response.data.updateRows + " 条");
-  });
+  let uploadList = [];
+  console.log(characterList.value);
+  for (const i in characterList.value) {
+    const character = {
+      charId: characterList.value[i].charId,
+      own: characterList.value[i].own,
+      elite: characterList.value[i].elite,
+      level: characterList.value[i].level,
+      potential: characterList.value[i].potential,
+      skill1: characterList.value[i].skill1,
+      skill2: characterList.value[i].skill2,
+      skill3: characterList.value[i].skill3,
+      modX: characterList.value[i].modX,
+      modY: characterList.value[i].modY,
+    };
+    uploadList.push(character);
+  }
+
+  let nowUploadTimeStamp = Date.parse(new Date());
+  let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
+  console.log("上传频率：", uploadFrequency / 1000, "s");
+  if (uploadFrequency > 30000) {
+    surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
+      // console.log(response.data);
+      cMessage("新增了 " + response.data.insertRows + " 条");
+      cMessage("更新了 " + response.data.updateRows + " 条");
+
+      lastUploadTimeStamp = nowUploadTimeStamp;
+      uploadMessage.value = response.data;
+    });
+  }
 }
 
 let uploadFileName = ref("文件名称");
@@ -570,6 +609,8 @@ function updateOwn(char_index, newVal) {
     }
     setDomBackgroundColor(char_index + "level", false);
   }
+
+  upload();
 }
 
 //批量更新是否持有
