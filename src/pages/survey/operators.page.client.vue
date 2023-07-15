@@ -26,10 +26,11 @@
         </div>
         <div class="btn_setup">
           统计数据
-          <div class="btn_setup_tips">干员持有率：114 / 514<br>点击查看更多</div>
+          <div class="btn_setup_tips">干员持有率：114 / 514<br />点击查看更多</div>
+        </div>
         <div class="btn_setup" @click="changeSurveyType()">
           问卷类型切换
-          <div class="btn_setup_tips">当前问卷：{{surveyTypeText}}<br />简易/标准/完整问卷</div>
+          <div class="btn_setup_tips">当前问卷：{{ surveyTypeText }}<br />简易/标准/完整问卷</div>
         </div>
         <div class="btn_setup">
           开发信息
@@ -129,7 +130,7 @@
       </div>
     </div>
 
-    <div class="switch_wrap" id="statistics_info" style="height: auto;">
+    <div class="switch_wrap" id="statistics_info" style="height: auto">
       <div class="stats_classify" id="own_rate_rarity">
         <div class="stats_module">
           <div class="stats_title">总持有率</div>
@@ -145,7 +146,7 @@
         </div>
         <div class="stats_module">
           <div class="stats_title">五星干员</div>
-            <div class="stats_content">114 / 514</div>
+          <div class="stats_content">114 / 514</div>
         </div>
         <div class="stats_module">
           <div class="stats_title">四星干员</div>
@@ -180,7 +181,7 @@
         </div>
         <div class="stats_module">
           <div class="stats_title">狙击干员</div>
-            <div class="stats_content">114 / 514</div>
+          <div class="stats_content">114 / 514</div>
         </div>
         <div class="stats_module">
           <div class="stats_title">术师干员</div>
@@ -220,7 +221,7 @@
       </div>
     </div>
 
-    <div class="switch_wrap" style="height: auto;">
+    <div class="switch_wrap" style="height: auto">
       <div class="switch_bar">
         <div class="switch_title">反馈</div>
         <div class="switch_btns_wrap">
@@ -637,8 +638,6 @@ function updateSkillAndMod(char_index, attribute, newVal) {
   characterList.value[char_index].own = true;
 }
 
-
-
 // 批量精英化
 function batchUpdatesSkillAndMod(attribute, newVal) {
   for (let i in characterList.value) {
@@ -757,7 +756,6 @@ function changeSurveyType(type) {
     return;
   }
 }
-
 
 //
 function simpleCardClass() {
