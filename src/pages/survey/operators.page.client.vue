@@ -127,92 +127,92 @@
     </div>
 
     <div class="switch_wrap" id="statistics_info" style="height: auto;">
-      <div class="stats_module">
-        <div class="stats_title">
-          总持有率
+      <div class="stats_classify" id="own_rate_rarity">
+        <div class="stats_module">
+          <div class="stats_title">总持有率</div>
+          <div class="stats_content">114 / 514</div>
         </div>
-        <div class="stats_content">
-          114 / 514
+        <div class="stats_module">
+          <div class="stats_title">限定干员</div>
+          <div class="stats_content">114 / 514</div>
         </div>
-      </div>
-      <div class="stats_module">
-        <div class="stats_title">
-          六星持有率
+        <div class="stats_module">
+          <div class="stats_title">六星干员</div>
+          <div class="stats_content">114 / 514</div>
         </div>
-        <div class="stats_content">
-          114 / 514
+        <div class="stats_module">
+          <div class="stats_title">五星干员</div>
+            <div class="stats_content">114 / 514</div>
         </div>
-      </div>
-      <div class="stats_module">
-        <div class="stats_title">
-          五星持有率
+        <div class="stats_module">
+          <div class="stats_title">四星干员</div>
+          <div class="stats_content">114 / 514</div>
         </div>
-        <div class="stats_content">
-          114 / 514
+        <div class="stats_module">
+          <div class="stats_title">三星干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div> 
+        <div class="stats_module">
+          <div class="stats_title">二星干员</div>
+          <div class="stats_content">114 / 514</div>
         </div>
-      </div>
-      <div class="stats_module">
-        <div class="stats_title">
-          四星持有率
-        </div>
-        <div class="stats_content">
-          114 / 514
-        </div>
-      </div>
-      <div class="stats_module">
-        <div class="stats_title">
-          三星持有率
-        </div>
-        <div class="stats_content">
-          114 / 514
-        </div>
-      </div> 
-      <div class="stats_module">
-        <div class="stats_title">
-          二星持有率
-        </div>
-        <div class="stats_content">
-          114 / 514
+        <div class="stats_module">
+          <div class="stats_title">一星干员</div>
+          <div class="stats_content">114 / 514</div>
         </div>
       </div>
-      <div class="stats_module">
-        <div class="stats_title">
-          一星持有率
+
+      <div class="stats_classify" id="own_rate_profession">
+        <div class="stats_module">
+          <div class="stats_title">先锋干员</div>
+          <div class="stats_content">114 / 514</div>
         </div>
-        <div class="stats_content">
-          114 / 514
+        <div class="stats_module">
+          <div class="stats_title">近卫干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">重装干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">狙击干员</div>
+            <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">术师干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">医疗干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div> 
+        <div class="stats_module">
+          <div class="stats_title">辅助干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">特种干员</div>
+          <div class="stats_content">114 / 514</div>
         </div>
       </div>
-      <div class="stats_module">
-        <div class="stats_title">
-          专三数
+
+      <div class="stats_classify" id="module_expect">
+        <div class="stats_module">
+          <div class="stats_title">专三数</div>
+          <div class="stats_content">19</div>
         </div>
-        <div class="stats_content">
-          19
+        <div class="stats_module">
+          <div class="stats_title">模组解锁数</div>
+          <div class="stats_content">19</div>
         </div>
-      </div>
-      <div class="stats_module">
-        <div class="stats_title">
-          模组解锁数
+        <div class="stats_module">
+          <div class="stats_title">标准寻访黄票期望</div>
+          <div class="stats_content">114 / 514</div>
         </div>
-        <div class="stats_content">
-          19
-        </div>
-      </div>
-      <div class="stats_module">
-        <div class="stats_title">
-          先锋持有率
-        </div>
-        <div class="stats_content">
-          114 / 514
-        </div>
-      </div>
-      <div class="stats_module">
-        <div class="stats_title">
-          近卫持有率
-        </div>
-        <div class="stats_content">
-          114 / 514
+        <div class="stats_module">
+          <div class="stats_title">限定寻访黄票期望</div>
+          <div class="stats_content">114 / 514</div>
         </div>
       </div>
     </div>

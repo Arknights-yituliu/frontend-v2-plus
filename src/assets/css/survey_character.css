@@ -325,3 +325,28 @@
   margin: 4px;
   /* margin-top: -10px; */
 }
+
+.stats_classify{
+  display: flex;
+  background-color: #eeeeee;
+  margin: 12px;
+  border-radius: 4px;
+  padding: 8px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.stats_module{
+  width: 144px;
+  height: 48px;
+}
+
+.stats_title{
+  font-style: italic;
+  height: 24px;
+}
+
+.stats_content{
+  font-family: Arial, Helvetica, sans-serif;  
+}
