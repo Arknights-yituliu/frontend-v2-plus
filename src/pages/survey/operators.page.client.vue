@@ -20,9 +20,9 @@
           <div class="btn_setup_tips">导出到Excel<br />或从Excel/MAA导入数据</div>
         </div>
 
-        <div class="btn_setup">
-          模式切换
-          <div class="btn_setup_tips">当前模式：标准模式<br />仅头像/标准模式/高级模式</div>
+        <div class="btn_setup" @click="changeSurveyType()">
+          问卷类型切换
+          <div class="btn_setup_tips">当前问卷：{{surveyTypeText}}<br />简易/标准/完整问卷</div>
         </div>
 
         <div class="btn_setup">
@@ -540,6 +540,8 @@ function updateSkillAndMod(char_index, attribute, newVal) {
   characterList.value[char_index].own = true;
 }
 
+
+
 // 批量精英化
 function batchUpdatesSkillAndMod(attribute, newVal) {
   for (let i in characterList.value) {
@@ -632,34 +634,33 @@ function setDomBackgroundColor(domId, selected) {
   }
 }
 
-let surveyTypeFlag = ref(false);
 let surveyTypeText = ref("基础问卷");
 let surveyType = ref("_basic");
-
-//基础问卷与完整问卷
-function changeSurveyType() {
-  surveyTypeFlag.value = !surveyTypeFlag.value;
-  if (surveyTypeFlag.value) {
-    surveyType.value = "";
-    surveyTypeText.value = "完整问卷";
-  } else {
-    surveyType.value = "_basic";
-    surveyTypeText.value = "基础问卷";
-  }
-}
-
 //简易卡片样式
 let simpleCard = ref(false);
-function changeSurveyCard() {
-  simpleCard.value = !simpleCard.value;
-  if (simpleCard.value) {
-    surveyType.value = "";
-    surveyTypeText.value = "完整问卷";
-  } else {
+
+//基础问卷与完整问卷
+function changeSurveyType(type) {
+  if ("简易问卷" == surveyTypeText.value) {
     surveyType.value = "_basic";
     surveyTypeText.value = "基础问卷";
+    simpleCard.value = !simpleCard.value;
+    return;
+  }
+  if ("基础问卷" == surveyTypeText.value) {
+    surveyType.value = "";
+    surveyTypeText.value = "完整问卷";
+    return;
+  }
+
+  if ("完整问卷" == surveyTypeText.value) {
+    surveyType.value = "";
+    simpleCard.value = !simpleCard.value;
+    surveyTypeText.value = "简易问卷";
+    return;
   }
 }
+
 
 //
 function simpleCardClass() {
