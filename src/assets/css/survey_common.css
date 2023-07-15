@@ -70,7 +70,7 @@
 
 .switch_bar {
     width: 98%;
-    display: flex;
+    /* display: flex; */
     flex-direction: row;
     /* flex-wrap: wrap; */
     justify-content: flex-start;
