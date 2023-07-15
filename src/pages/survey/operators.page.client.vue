@@ -20,11 +20,17 @@
           <div class="btn_setup_tips">导出到Excel<br />或从Excel/MAA导入数据</div>
         </div>
 
+        <div class="btn_setup">
+          模式切换
+          <div class="btn_setup_tips">当前模式：标准统计<br />仅持有/标准统计/高级统计</div>
+        </div>
+        <div class="btn_setup">
+          统计数据
+          <div class="btn_setup_tips">干员持有率：114 / 514<br>点击查看更多</div>
         <div class="btn_setup" @click="changeSurveyType()">
           问卷类型切换
           <div class="btn_setup_tips">当前问卷：{{surveyTypeText}}<br />简易/标准/完整问卷</div>
         </div>
-
         <div class="btn_setup">
           开发信息
           <div class="btn_setup_tips">反馈、建议<br /></div>
@@ -123,11 +129,102 @@
       </div>
     </div>
 
-    <!-- 
+    <div class="switch_wrap" id="statistics_info" style="height: auto;">
+      <div class="stats_classify" id="own_rate_rarity">
+        <div class="stats_module">
+          <div class="stats_title">总持有率</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">限定干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">六星干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">五星干员</div>
+            <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">四星干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">三星干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">二星干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">一星干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+      </div>
+
+      <div class="stats_classify" id="own_rate_profession">
+        <div class="stats_module">
+          <div class="stats_title">先锋干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">近卫干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">重装干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">狙击干员</div>
+            <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">术师干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">医疗干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">辅助干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">特种干员</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+      </div>
+
+      <div class="stats_classify" id="module_expect">
+        <div class="stats_module">
+          <div class="stats_title">专三数</div>
+          <div class="stats_content">19</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">模组解锁数</div>
+          <div class="stats_content">19</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">标准寻访黄票期望</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+        <div class="stats_module">
+          <div class="stats_title">限定寻访黄票期望</div>
+          <div class="stats_content">114 / 514</div>
+        </div>
+      </div>
+    </div>
+
     <div class="switch_wrap" style="height: auto;">
       <div class="switch_bar">
         <div class="switch_title">反馈</div>
         <div class="switch_btns_wrap">
+          <div class="btn_switch">留言板</div>
           <div class="btn_switch">B站私信</div>
           <div class="btn_switch">粉丝群</div>
         </div>
@@ -139,7 +236,7 @@
           <div class="btn_switch">开发群</div>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <!-- 干员组 -->
     <div class="char_forms">
