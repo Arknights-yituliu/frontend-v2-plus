@@ -51,6 +51,10 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.btn_setup_tips_wran{
+    color: rgb(61, 80, 255);
+}
+
 
 .switch_wrap {
     max-width: 95%;
