@@ -115,7 +115,7 @@
    /* box-shadow: 6px 6px 0px #808080; */
    position: relative;
    overflow: hidden;
-   
+   /* box-shadow: 1px 2px 2px #eeeeee; */
 }
 
 .score_portrait_bg_tl{
@@ -123,6 +123,7 @@
     position: absolute;
     left: 0px;
     top: -2px;
+    top: 10px;
 }
 
 .score_portrait_profession{
@@ -130,7 +131,12 @@
     position: absolute;
     top: -110px;
     left: -106px;
-    z-index: 20;
+    z-index: 30;
+    top: -98px;
+    left: -106px;
+    top: 76px;
+    left: -106px;
+    border: 2px solid #eeeeee;
 }
 
 .score_portrait_rarity{
@@ -138,7 +144,12 @@
     position: absolute;
     left: 24px;
     top: 4px;
-    z-index: 20;
+    z-index: 30;
+    transform: scale(0.8);
+    position: absolute;
+    left: 28px;
+    top: 16px;
+    top: 200px;
 }
 
 .score_portrait_bg{
@@ -147,10 +158,11 @@
     height: 216px;
     left: -12px;
     top: -10px;
+    top: -12px;
 }
 
 .score_portrait_right{
-    transform: scale(0.75);
+    transform: scale(0.78);
     position: absolute;
     z-index: 10;
     top: 120px;
@@ -160,9 +172,10 @@
 .score_portrait_mask{
     transform: scale(0.76);
     position: absolute;
-    z-index: 11;
-    top: 156px;
+    z-index: 21;
+    top: 150px;
     left: -18px;
+    top: 148px;
 }
 
 .score_portrait_bg_bl{
@@ -172,6 +185,7 @@
     position: absolute;
     top: 214px;
     left: 4px;
+    z-index: 20;
 }
 
 .score_portrait {
@@ -181,17 +195,19 @@
     top: -60px;
     left: -30px;
     /* border: 1px rgb(255, 0, 0) solid; */
+    box-shadow: 2px 2px 8px #000000;
 }
 
 .score_char_name {
     color: white;
     position: absolute;
-    top:218px;
-    right: 10px;
-    z-index: 20;
-    font-size: 14px;
-  
-
+    top:216px;
+    right: 16px;
+    z-index: 30;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: Arial, Helvetica, sans-serif;
+    right: 8px;
 }
 
 .char_description {
