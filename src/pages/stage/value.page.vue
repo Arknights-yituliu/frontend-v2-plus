@@ -20,7 +20,7 @@ import toolApi from "@/api/tool";
 import { onMounted } from "vue";
 
 onMounted(() => {
-  toolApi.updateVisits("index");
+
 });
 </script>
 

@@ -11,13 +11,9 @@
       <div></div>
     </div>
 
-
     <div class="pageTitle" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
-
-
- 
 
     <div class="spacer"></div>
     <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
@@ -57,10 +53,11 @@
 import { ref, watch, computed, inject, onMounted } from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
+import toolApi from "@/api/tool";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 import { usePageContext } from "@/renderer/usePageContext";
 import navBar from "@/pages/survey/navBar.vue";
-import routesJson from "@/static/json/routes.json"
+import routesJson from "@/static/json/routes.json";
 const pageContext = usePageContext();
 
 const theme = inject("theme");
@@ -182,20 +179,20 @@ function getpageTitle(path) {
 
   for (let i of routes.value) {
     if (i.isChild) {
-      console.log(path, " ", i.path);
+      // console.log(path, " ", i.path);
       if (i.path.indexOf(path) > -1) {
         pageTitle.value = i.text;
         break;
       }
       for (let c of i.child) {
-        console.log(path, " ", c.path);
+        // console.log(path, " ", c.path);
         if (c.path.indexOf(path) > -1) {
           pageTitle.value = c.text;
           break;
         }
       }
     } else {
-      console.log(path, " ", i.path);
+      // console.log(path, " ", i.path);
       if (i.path.indexOf(path) > -1) {
         pageTitle.value = i.text;
         break;
@@ -204,15 +201,42 @@ function getpageTitle(path) {
   }
 }
 
+function getPathName(pathName) {
+  console.log('当前访问路径：',pathName);
+  if (pathName == "/") {
+    toolApi.updateVisits(pathName);
+    return 1;
+  }
+  
+  let strLength = pathName.length;
+
+  if(strLength<2)  {
+    toolApi.updateVisits(pathName);
+    return 1;
+  }
+  
+  const lastStr = pathName.substr(strLength - 1, strLength )
+
+  if (lastStr=="/") {
+    pathName = pathName.substr(0, strLength - 1);
+    console.log("路径以“/”结尾，被截取后路径：", pathName);
+    toolApi.updateVisits(pathName);
+    return 1;
+  }
+
+  toolApi.updateVisits(pathName);
+  return 1;
+}
+
 onMounted(() => {
   var domain = window.location.host;
-  var path = window.location.pathname;
+  var pathName = window.location.pathname;
 
   // if (domain.indexOf("dev") == -1) {
   //   routes.value.push(devRoute);
   // }
-
-  getpageTitle(path);
+  // getPathName(pathName);
+  getpageTitle(pathName);
 });
 </script>
 

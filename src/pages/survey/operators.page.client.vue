@@ -42,7 +42,7 @@
           <div class="btn_setup_tips btn_setup_tips_wran">
             {{ uploadMessage.updateTime }}<br />
 
-            新增&nbsp;{{ uploadMessage.insertRows }}条&nbsp;/&nbsp;更新&nbsp;{{ uploadMessage.updateRows }}条
+            更新&nbsp;{{ uploadMessage.affectedRows }}条
           </div>
         </div>
 
@@ -446,9 +446,6 @@ function upload() {
   if (uploadFrequency > 30000) {
     surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
       // console.log(response.data);
-      cMessage("新增了 " + response.data.insertRows + " 条");
-      cMessage("更新了 " + response.data.updateRows + " 条");
-
       lastUploadTimeStamp = nowUploadTimeStamp;
       uploadMessage.value = response.data;
     });

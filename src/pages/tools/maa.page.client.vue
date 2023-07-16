@@ -2051,7 +2051,7 @@ export default {
     this.getUid();
     this.getDate();
     this.openNotification();
-    toolApi.updateVisits("building");
+
   },
   methods: {
     openNotification() {
