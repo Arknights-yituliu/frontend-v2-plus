@@ -232,10 +232,10 @@ onMounted(() => {
   var domain = window.location.host;
   var pathName = window.location.pathname;
 
-  // if (domain.indexOf("dev") == -1) {
-  //   routes.value.push(devRoute);
-  // }
-  // getPathName(pathName);
+  if (domain.indexOf("dev") == -1) {
+     getPathName(pathName);
+  }
+  
   getpageTitle(pathName);
 });
 </script>
