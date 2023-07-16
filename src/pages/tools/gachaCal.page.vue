@@ -1080,7 +1080,7 @@ export default {
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
     this.openNotification();
-    toolApi.updateVisits("gacha");
+
   },
   methods: {
     //公告通知
@@ -1693,14 +1693,7 @@ export default {
               length: 6,
               length2: 6,
             },
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)", //鼠标放在区域边框颜色
-                textColor: "#000",
-              }, //鼠标放在各个区域的样式
-            },
+
 
             emphasis: {
               shadowBlur: 10,

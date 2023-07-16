@@ -401,7 +401,7 @@ export default {
   },
   mounted() {
     this.getCookies();
-    toolApi.updateVisits("pack");
+ 
   },
   methods: {
     getCookies() {
