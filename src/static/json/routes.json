@@ -65,6 +65,11 @@
         "isChild": false
       },
       {
+        "path": "/survey/rank",
+        "text": "统计结果",
+        "isChild": false
+      },
+      {
         "path": "/survey/riic",
         "text": "基建调查",
         "isChild": false

@@ -134,120 +134,12 @@
               <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
             </div>
           </div>
-          <div class="btn_switch">上传文件</div>
+          <div class="btn_switch" @click="uploadByExcel()">上传文件</div>
           <div class="upload_file_name">文件名：{{ uploadFileName }}</div>
         </div>
       </div>
     </div>
 
-    <!-- <div class="switch_wrap" id="statistics_info" style="height: auto">
-      <div class="stats_classify" id="own_rate_rarity">
-        <div class="stats_module">
-          <div class="stats_title">总持有率</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">限定干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">六星干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">五星干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">四星干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">三星干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">二星干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">一星干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-      </div>
-
-      <div class="stats_classify" id="own_rate_profession">
-        <div class="stats_module">
-          <div class="stats_title">先锋干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">近卫干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">重装干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">狙击干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">术师干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">医疗干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">辅助干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">特种干员</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-      </div>
-
-      <div class="stats_classify" id="module_expect">
-        <div class="stats_module">
-          <div class="stats_title">专三数</div>
-          <div class="stats_content">19</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">模组解锁数</div>
-          <div class="stats_content">19</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">标准寻访黄票期望</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-        <div class="stats_module">
-          <div class="stats_title">限定寻访黄票期望</div>
-          <div class="stats_content">114 / 514</div>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <div class="switch_wrap" style="height: auto">
-      <div class="switch_bar">
-        <div class="switch_title">反馈</div>
-        <div class="switch_btns_wrap">
-          <div class="btn_switch">留言板</div>
-          <div class="btn_switch">B站私信</div>
-          <div class="btn_switch">粉丝群</div>
-        </div>
-      </div>
-      <div class="switch_bar">
-        <div class="switch_title">参与开发</div>
-        <div class="switch_btns_wrap">
-          <div class="btn_switch">Github</div>
-          <div class="btn_switch">开发群</div>
-        </div>
-      </div>
-    </div> -->
 
     <!-- 干员组 -->
     <div class="char_forms">
@@ -452,7 +344,7 @@ function upload() {
   }
 }
 
-let uploadFileName = ref("文件名称");
+let uploadFileName = ref("null");
 
 //显示文件名称
 function getUploadFileName() {
@@ -463,7 +355,6 @@ function getUploadFileName() {
 //通过excel上传
 function uploadByExcel() {
   const file = document.getElementById("uploadInput");
-
   let formData = new FormData();
   formData.append("file", file.files[0]);
   console.log(file);
