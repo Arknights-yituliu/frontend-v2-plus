@@ -48,7 +48,6 @@
           </div>
         </div>
         <div class="friend_link"><a href="https://arkgacha.kwer.top/">arkgacha.kwer.top</a></div>
-
       </div>
 
       <div class="friend_card">
@@ -101,7 +100,6 @@
           </div>
         </div>
         <div class="friend_link"><a href="https://apps.apple.com/cn/app/id1632810611">apps.apple.com/cn/app</a></div>
-
       </div>
 
       <div class="friend_card">
@@ -118,7 +116,6 @@
         </div>
 
         <div class="friend_link"><a href="https://terrach.net/">terrach.net</a></div>
-
       </div>
     </div>
   </div>
@@ -165,7 +162,7 @@ a {
   margin-top: 10px;
   margin-left: 10px;
   height: 70px;
-  margin-right:10px;
+  margin-right: 10px;
 }
 
 .friend_image {
@@ -205,7 +202,7 @@ a {
   padding: 6px;
   padding-left: 10px;
   padding-right: 10px;
-  margin:4px;
+  margin: 4px;
   background: rgb(72, 130, 255);
   font-size: 14px;
   color: white;

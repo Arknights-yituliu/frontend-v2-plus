@@ -1,5 +1,5 @@
 import axios from "axios";
-import {http} from '@/api/baseURL'
+import { http } from "@/api/baseURL";
 
 function get_value() {
   return axios.get(http + "item/value?expCoefficient=0.625");

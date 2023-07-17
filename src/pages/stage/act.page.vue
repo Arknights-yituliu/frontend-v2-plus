@@ -16,7 +16,6 @@
           <div :class="getSpriteImg(stage.itemId)"></div>
           <div>{{ stage.stageEfficiency.toFixed(2) }}%</div>
         </div>
-       
       </div>
     </div>
   </div>

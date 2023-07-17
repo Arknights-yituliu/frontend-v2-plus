@@ -605,9 +605,9 @@
                   </el-checkbox-button>
                 </div>
               </el-checkbox-group>
-              <div id="newbie_info" style="font-size: 12px;padding:0px 8px;color: var(--charge-instruction-fg)">
-                *[新人进阶组合包]内置了一张月卡，这导致攒抽计算需要根据自身情况进行修正<br>
-                非月卡党：直接选择“新人进阶组合包”，但需减去池子结束前领不到的玉<br>
+              <div id="newbie_info" style="font-size: 12px; padding: 0px 8px; color: var(--charge-instruction-fg)">
+                *[新人进阶组合包]内置了一张月卡，这导致攒抽计算需要根据自身情况进行修正<br />
+                非月卡党：直接选择“新人进阶组合包”，但需减去池子结束前领不到的玉<br />
                 月卡党：选择“进阶包不含月卡”，如果[当前月卡有效期>池子关闭日期]，需加上提前获得的6源石
               </div>
               <!-- 首充 -->
@@ -1080,7 +1080,6 @@ export default {
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
     this.openNotification();
-
   },
   methods: {
     //公告通知
@@ -1693,7 +1692,6 @@ export default {
               length: 6,
               length2: 6,
             },
-
 
             emphasis: {
               shadowBlur: 10,

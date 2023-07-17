@@ -1,5 +1,5 @@
 import axios from "axios";
-import {http} from '@/api/baseURL'
+import { http } from "@/api/baseURL";
 
 function get_t3() {
   return axios.get(http + "stage/t3?expCoefficient=0.625");
@@ -33,8 +33,6 @@ function get_closed() {
 //   return axios.get(http + "stage/newChapter?zone=12-");
 // }
 
-
-
 export async function onBeforeRender(pageContext) {
   const result = await Promise.all([get_t3(), get_t2(), get_orundum(), get_closed()]);
   const t3 = result[0].data.data;
@@ -42,7 +40,7 @@ export async function onBeforeRender(pageContext) {
   const orundum = result[2].data.data;
   const closed = result[3].data.data;
 
-  const pageProps = { t3, t2, orundum, closed};
+  const pageProps = { t3, t2, orundum, closed };
   return {
     pageContext: {
       pageProps,

@@ -1,5282 +1,4529 @@
 .bg-skill_icon_skchr_absin_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_absin_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_acast_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_acdrop_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_acdrop_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_aglina_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_aglina_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_aglina_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_aguard_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_akafyu_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_akafyu_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_amedic_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_amgoat_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_amgoat_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_amgoat_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_amiya_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_amiya_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_amiya2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_amiya2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_angel_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_angel_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_angel_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_aosta_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_apionr_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_aprl_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_aprl_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_aprot_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_aprot2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_aprot2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_archet_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_archet_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_archet_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_asbest_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_asbest_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_ash_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_ash_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_ash_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_ashlok_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_asnipe_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_astesi_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_astesi_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_aurora_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_aurora_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_ayer_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_ayer_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_bdhkgt_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_bdhkgt_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_beewax_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_beewax_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_bena_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_bena_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_bgsnow_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_bgsnow_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_bgsnow_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_bibeak_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_bibeak_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_billro_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_billro_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_billro_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_bison_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_blackd_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_bldsk_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_bldsk_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_blemsh_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_blemsh_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_blemsh_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_blitz_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_blitz_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_blkngt_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_blkngt_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_bluep_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_bluep_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_bpipe_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_bpipe_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_breeze_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_breeze_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_broca_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_broca_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_brownb_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_brownb_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_bstalk_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_bstalk_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_bubble_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_cammou_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_ccheal_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_ccheal_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_cement_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_cement_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_cerber_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_cerber_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_cerber_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_ceylon_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_ceylon_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_cgbird_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_cgbird_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_chen_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_chen_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_chen_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_chen2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_chen2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_chen2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_chiave_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_chimes_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_chnut_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_chnut_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_chyue_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_chyue_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_chyue_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_clour_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_cqbw_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_cqbw_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_cqbw_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_crow_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_crow_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_ctable_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_ctable_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_cutter_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_cutter_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_cuttle_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_dagda_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_dagda_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_deepcl_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_deepcl_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_demkni_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_demkni_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_demkni_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_doberm_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_doroth_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_doroth_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_doroth_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_durnar_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_dusk_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_dusk_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_dusk_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_ebnhlz_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_ebnhlz_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_ebnhlz_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_elysm_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_erato_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_erato_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_estell_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_ethan_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_ethan_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_excu_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_excu_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_excu2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_excu2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_excu2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_f12yin_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_f12yin_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_f12yin_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_fartth_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_fartth_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_finlpp_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_finlpp_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_firwhl_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_firwhl_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_flameb_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_flameb_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_flamtl_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_flamtl_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_flamtl_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_flint_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_flint_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_flower_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_fmout_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_folivo_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_folivo_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_folnic_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_folnic_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_forcer_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_forcer_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_franka_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_franka_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_frncat_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_frncat_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_frostl_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_frostl_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_gdglow_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_gdglow_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_gdglow_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_ghost_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_ghost2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_ghost2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_ghost2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glacus_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glacus_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glady_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glady_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glady_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glassb_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glassb_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glaze_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glaze_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glider_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_glider_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_gnosis_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_gnosis_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_gnosis_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_grani_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_gravel_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_gravel_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_greyy_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_greyy2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_gvial2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_gvial2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_gvial2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_gyuki_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_haak_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_haak_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_haak_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_halo_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_halo_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_hamoni_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_hamoni_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_hbisc2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_headbr_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_heidi_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_heidi_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_helage_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_helage_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_helage_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_heyak_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_heyak_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_heyak_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_highmo_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_highmo_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_hmau_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_hmau_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_horn_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_horn_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_horn_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_hpsts_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_hpsts_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_hsguma_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_hsguma_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_hsguma_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_huang_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_huang_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_humus_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_humus_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_ifrit_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_ifrit_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_ifrit_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_indigo_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_indigo_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_ines_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_ines_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_ines_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_inside_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_inside_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_irene_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_irene_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_irene_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_iris_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_iris_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_ironmn_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_ironmn_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_ironmn_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_jaksel_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_jaksel_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_jesica_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_judge_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_judge_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_judge_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_kafka_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_kafka_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_kalts_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_kalts_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_kalts_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_kazema_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_kazema_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_kirara_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_kirara_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_kjera_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_kroos_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_kroos2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_kroos2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_lava2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_lava2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_leizi_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_lin_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_lin_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_lin_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_ling_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_ling_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_ling_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_lionhd_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_lisa_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_lisa_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_lisa_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_liskam_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_liskam_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_lmlee_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_lmlee_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_lmlee_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_lolxh_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_lolxh_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_lumen_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_lumen_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_lumen_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_lunacu_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_lunacu_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_malist_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_mantic_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_mantic_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_mberry_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mberry_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_melnte_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_melnte_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_meteo_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_meteo_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mgllan_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mgllan_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mgllan_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_milu_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_milu_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mint_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mint_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mizuki_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mizuki_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mizuki_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mlynar_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mlynar_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_mlynar_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_mlyss_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_mlyss_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_mlyss_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_mm_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_mm_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_moeshd_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_moeshd_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_morgan_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_morgan_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_mostma_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_mostma_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_mudrok_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_mudrok_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_myrrh_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_myrrh_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_myrtle_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_ncdeer_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_ncdeer_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nearl_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nearl_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nearl2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nearl2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nearl2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nian_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nian_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nian_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nightm_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nightm_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nights_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_noirc2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_noirc2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nothin_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_nothin_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_otter_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_otter_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_pallas_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_pallas_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_pallas_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_panda_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_panda_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_pasngr_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_pasngr_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_pasngr_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_peacok_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_peacok_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_peper_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_phatom_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_phatom_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_phatom_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_phenxi_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_phenxi_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_phenxi_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_pianst_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_pianst_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_pinecn_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_pinecn_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_platnm_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_plosis_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_poca_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_poca_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_podego_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_podego_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_prove_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_prove_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_provs_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_provs_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_pudd_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_puzzle_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_puzzle_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_qanik_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_qanik_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_qiubai_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_qiubai_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_qiubai_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_quartz_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_quercu_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_quercu_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_red_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_red_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_reed2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_reed2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_rfrost_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_rfrost_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_robin_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_robin_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_robrta_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_robrta_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_rockr_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_rope_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_rope_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_rosmon_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_rosmon_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_rosmon_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_saga_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_saga_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_savage_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_scave_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_sddrag_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_serum_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_serum_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_sesa_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_shining_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_shining_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_shining_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_shotst_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_shotst_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_shwaz_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_shwaz_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_shwaz_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_sidero_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_siege_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_siege_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_silent_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_skadi_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_skadi_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_skadi2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_skadi2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_skadi2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_skfire_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_skgoat_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_skgoat_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_slbell_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_slbell_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_slchan_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_slchan_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_sleach_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_sleach_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_slent2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_slent2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_slent2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_snakek_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_snsant_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_snsant_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_sntlla_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_sophia_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_sophia_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_sora_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_sora_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_spikes_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_spikes_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_spot_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_spuria_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_spuria_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_sqrrel_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_sqrrel_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_strong_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_strong_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_sunbr_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_sunbr_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_surtr_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_surtr_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_surtr_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_susuro_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_svrash_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_svrash_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_swire_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_swire_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_swllow_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_swllow_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_tachak_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_tachak_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_takila_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_takila_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_texas_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_texas2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_texas2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_texas2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_thorns_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_thorns_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_tiger_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_tiger_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_tknogi_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -1786px;
 }
-
-
 
 .bg-skill_icon_skchr_tknogi_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -1934px;
 }
-
-
 
 .bg-skill_icon_skchr_toddi_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -2082px;
 }
-
-
 
 .bg-skill_icon_skchr_toddi_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -2230px;
 }
-
-
 
 .bg-skill_icon_skchr_tomimi_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -2378px;
 }
-
-
 
 .bg-skill_icon_skchr_tomimi_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -2526px;
 }
-
-
 
 .bg-skill_icon_skchr_totter_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -2674px;
 }
-
-
 
 .bg-skill_icon_skchr_totter_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -2822px;
 }
-
-
 
 .bg-skill_icon_skchr_tuye_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -2970px;
 }
-
-
 
 .bg-skill_icon_skchr_tuye_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -3118px;
 }
-
-
 
 .bg-skill_icon_skchr_typhon_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_typhon_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_utage_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_utage_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_vigil_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_vigil_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_vigil_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_vigna_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_vodfox_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_vodfox_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_waaifu_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_waaifu_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_weedy_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_weedy_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_weedy_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_whispr_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_whispr_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_whitew_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_whitew_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_wildmn_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_wildmn_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_windft_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_windft_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -3266px;
 }
-
-
 
 .bg-skill_icon_skchr_wyvern_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -10px;
 }
-
-
 
 .bg-skill_icon_skchr_yak_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -158px;
 }
-
-
 
 .bg-skill_icon_skchr_yak_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -306px;
 }
-
-
 
 .bg-skill_icon_skchr_yato2_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -454px;
 }
-
-
 
 .bg-skill_icon_skchr_yato2_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -602px;
 }
-
-
 
 .bg-skill_icon_skchr_yato2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -750px;
 }
-
-
 
 .bg-skill_icon_skchr_yuki_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -898px;
 }
-
-
 
 .bg-skill_icon_skchr_yuki_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -1046px;
 }
-
-
 
 .bg-skill_icon_skchr_zebra_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -1194px;
 }
-
-
 
 .bg-skill_icon_skchr_zebra_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -1342px;
 }
-
-
 
 .bg-skill_icon_skchr_zumama_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -1490px;
 }
-
-
 
 .bg-skill_icon_skchr_zumama_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -1638px;
 }
-
-
 
 .bg-skill_icon_skchr_zumama_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -1786px;
 }
-
-
 
 .bg-skill_icon_skcom_assist_cost_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -1934px;
 }
-
-
 
 .bg-skill_icon_skcom_assist_cost_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -2082px;
 }
-
-
 
 .bg-skill_icon_skcom_atk_up_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -2230px;
 }
-
-
 
 .bg-skill_icon_skcom_atk_up_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -2378px;
 }
-
-
 
 .bg-skill_icon_skcom_atk_up_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -2526px;
 }
-
-
 
 .bg-skill_icon_skcom_blowrange_up_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -2674px;
 }
-
-
 
 .bg-skill_icon_skcom_charge_cost_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -2822px;
 }
-
-
 
 .bg-skill_icon_skcom_charge_cost_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -2970px;
 }
-
-
 
 .bg-skill_icon_skcom_charge_cost_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -3118px;
 }
-
-
 
 .bg-skill_icon_skcom_def_up_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -3266px;
 }
-
-
 
 .bg-skill_icon_skcom_def_up_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_def_up_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_enchant_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_heal_rage_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_heal_rage_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_heal_rage_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_heal_self_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_heal_self_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_heal_self_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_heal_up_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_heal_up_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_heal_up_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_magic_rage_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_magic_rage_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_magic_rage_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_powerstrike_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_powerstrike_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_powerstrike_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_quickattack_1_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_quickattack_2_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_quickattack_3_ {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_range_extend {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -3414px;
 }
-
-
 
 .bg-skill_icon_skcom_withdraw {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -3414px;
 }
-
-
 
 .bg-skill_icon_sktok_aidkit {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -3414px;
 }
-
-
 
 .bg-skill_icon_sktok_airbomb {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -10px;
 }
-
-
 
 .bg-skill_icon_sktok_airsup {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -158px;
 }
-
-
 
 .bg-skill_icon_sktok_allady {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -306px;
 }
-
-
 
 .bg-skill_icon_sktok_allydonq {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -454px;
 }
-
-
 
 .bg-skill_icon_sktok_antidr {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -602px;
 }
-
-
 
 .bg-skill_icon_sktok_badbox {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -750px;
 }
-
-
 
 .bg-skill_icon_sktok_ballis {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -898px;
 }
-
-
 
 .bg-skill_icon_sktok_bbombcard {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -1046px;
 }
-
-
 
 .bg-skill_icon_sktok_beewax {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -1194px;
 }
-
-
 
 .bg-skill_icon_sktok_beewax_oblisk_summer#11 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -1342px;
 }
-
-
 
 .bg-skill_icon_sktok_bgarms {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -1490px;
 }
-
-
 
 .bg-skill_icon_sktok_bgarmn {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -1638px;
 }
-
-
 
 .bg-skill_icon_sktok_blkngt_hypnos {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -1786px;
 }
-
-
 
 .bg-skill_icon_sktok_blkngt_hypnos_nian#8 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -1934px;
 }
-
-
 
 .bg-skill_icon_sktok_blkngt_hypnos_summer#8 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -2082px;
 }
-
-
 
 .bg-skill_icon_sktok_blower {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -2230px;
 }
-
-
 
 .bg-skill_icon_sktok_motter_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -2378px;
 }
-
-
 
 .bg-skill_icon_sktok_bomb {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -2526px;
 }
-
-
 
 .bg-skill_icon_sktok_bondtw {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -2674px;
 }
-
-
 
 .bg-skill_icon_sktok_bouncy {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -2822px;
 }
-
-
 
 .bg-skill_icon_sktok_btauntcard {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -2970px;
 }
-
-
 
 .bg-skill_icon_sktok_buffcard {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -3118px;
 }
-
-
 
 .bg-skill_icon_sktok_bunker {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -3266px;
 }
-
-
 
 .bg-skill_icon_sktok_candle {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -3414px;
 }
-
-
 
 .bg-skill_icon_sktok_cannon_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cannon_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_canoe {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdabyss {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdaltar {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdbeacon {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdbeacona {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdbeaconb {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdcredit {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cddiff {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdflsb {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdheal {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdhvrk {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdshield {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cdshielda {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_cqbw_token {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_crate {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_crsbow {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_dancdol {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_doroth_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_doroth_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_doroth_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_dplant {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_dsbell {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_dstnta {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_dublst {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -10px;
 }
-
-
 
 .bg-skill_icon_sktok_dupilr {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -158px;
 }
-
-
 
 .bg-skill_icon_sktok_duruin {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -306px;
 }
-
-
 
 .bg-skill_icon_sktok_ebnhlz_rcube {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -454px;
 }
-
-
 
 .bg-skill_icon_sktok_electric {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -602px;
 }
-
-
 
 .bg-skill_icon_sktok_emp {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -750px;
 }
-
-
 
 .bg-skill_icon_sktok_emperor {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -898px;
 }
-
-
 
 .bg-skill_icon_sktok_enhancer {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -1046px;
 }
-
-
 
 .bg-skill_icon_sktok_factory_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -1194px;
 }
-
-
 
 .bg-skill_icon_sktok_factory_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -1342px;
 }
-
-
 
 .bg-skill_icon_sktok_farm {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -1490px;
 }
-
-
 
 .bg-skill_icon_sktok_fcanon {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -1638px;
 }
-
-
 
 .bg-skill_icon_sktok_flame {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -1786px;
 }
-
-
 
 .bg-skill_icon_sktok_folivo_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -1934px;
 }
-
-
 
 .bg-skill_icon_sktok_folivo_car_epoque#22 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -2082px;
 }
-
-
 
 .bg-skill_icon_sktok_frosts {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -2230px;
 }
-
-
 
 .bg-skill_icon_sktok_frosts_friend {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -2378px;
 }
-
-
 
 .bg-skill_icon_sktok_garage {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -2526px;
 }
-
-
 
 .bg-skill_icon_sktok_gtreasure {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -2674px;
 }
-
-
 
 .bg-skill_icon_sktok_hiddenstone {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -2822px;
 }
-
-
 
 .bg-skill_icon_sktok_inverter {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -2970px;
 }
-
-
 
 .bg-skill_icon_sktok_ironmn_pile1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -3118px;
 }
-
-
 
 .bg-skill_icon_sktok_ironmn_pile1_summer#11 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -3266px;
 }
-
-
 
 .bg-skill_icon_sktok_ironmn_pile2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -3414px;
 }
-
-
 
 .bg-skill_icon_sktok_ironmn_pile2_summer#11 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_ironmn_pile3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_ironmn_pile3_summer#11 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_kazema_shadow_witch#3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_larva {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_ling_soul1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_ling_soul2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_ling_soul3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_ltstat {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_machst {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_magiccircle {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_mgllan_drone {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_mhflsb {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_mhlbmb {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_mhshok {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_mhwrbg {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_mine {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_mlyss_wtrman {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_motter_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_mound {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_nearl2_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_nearl2_sword_epoque#17 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_neonlamp {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_normbox {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_npc {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_npcsld {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_ore {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_ore_friend {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -10px;
 }
-
-
 
 .bg-skill_icon_sktok_oxygen {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -158px;
 }
-
-
 
 .bg-skill_icon_sktok_paras {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -306px;
 }
-
-
 
 .bg-skill_icon_sktok_peacokfool {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -454px;
 }
-
-
 
 .bg-skill_icon_sktok_phatom_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -602px;
 }
-
-
 
 .bg-skill_icon_sktok_phatom_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -750px;
 }
-
-
 
 .bg-skill_icon_sktok_phatom_3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -898px;
 }
-
-
 
 .bg-skill_icon_sktok_poachr {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -1046px;
 }
-
-
 
 .bg-skill_icon_sktok_poison_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -1194px;
 }
-
-
 
 .bg-skill_icon_sktok_poison_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -1342px;
 }
-
-
 
 .bg-skill_icon_sktok_prison {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -1490px;
 }
-
-
 
 .bg-skill_icon_sktok_pushtw {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -1638px;
 }
-
-
 
 .bg-skill_icon_sktok_rarebox {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -1786px;
 }
-
-
 
 .bg-skill_icon_sktok_rdblock {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -1934px;
 }
-
-
 
 .bg-skill_icon_sktok_rdrepair {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -2082px;
 }
-
-
 
 .bg-skill_icon_sktok_recodr {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -2230px;
 }
-
-
 
 .bg-skill_icon_sktok_recyclecard {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -2378px;
 }
-
-
 
 .bg-skill_icon_sktok_redtower {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -2526px;
 }
-
-
 
 .bg-skill_icon_sktok_repairman {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -2674px;
 }
-
-
 
 .bg-skill_icon_sktok_revivecard {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -2822px;
 }
-
-
 
 .bg-skill_icon_sktok_rfrost_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -2970px;
 }
-
-
 
 .bg-skill_icon_sktok_rfrost_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -3118px;
 }
-
-
 
 .bg-skill_icon_sktok_rmtarmn {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -3266px;
 }
-
-
 
 .bg-skill_icon_sktok_rmtarms {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -3414px;
 }
-
-
 
 .bg-skill_icon_sktok_roadblock {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -3562px;
 }
-
-
 
 .bg-skill_icon_sktok_robin_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -3710px;
 }
-
-
 
 .bg-skill_icon_sktok_robin_2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -10px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -10px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_robrta {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -158px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -158px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_robrta_mach_summer#10 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -306px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -306px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_rockfl {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -454px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -454px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_rosmon {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -602px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -602px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_rosmon_shield_epoque#17 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -750px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -750px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_salecard {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -898px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -898px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_sbomb {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1046px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1046px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_sensor {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1194px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1194px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_shielder {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1342px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1342px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_skadi2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1490px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1490px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_sleep {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1638px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1638px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_slent2_protrb {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1786px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1786px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_slowfd {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -1934px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -1934px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_smokebomb {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2082px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2082px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_snflwr {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2230px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2230px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_stdurk {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2378px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2378px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_stone {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2526px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2526px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_streasure {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2674px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2674px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_supplycard {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2822px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2822px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_tentac_1 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -2970px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -2970px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_tileblock {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3118px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3118px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_tower {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3266px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3266px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_tree {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3414px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3414px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_turngear {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3562px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3562px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_umbrella {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3710px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3710px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_vegetation {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -3858px -3858px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -3858px -3858px;
 }
-
-
 
 .bg-skill_icon_sktok_vigil_wolf {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -10px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -10px;
 }
-
-
 
 .bg-skill_icon_sktok_vodfox_token {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -158px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -158px;
 }
-
-
 
 .bg-skill_icon_sktok_vultres {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -306px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -306px;
 }
-
-
 
 .bg-skill_icon_sktok_wdescp {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -454px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -454px;
 }
-
-
 
 .bg-skill_icon_sktok_weedy_token {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -602px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -602px;
 }
-
-
 
 .bg-skill_icon_sktok_wfactory {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -750px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -750px;
 }
-
-
 
 .bg-skill_icon_sktok_windft_wrench {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -898px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -898px;
 }
-
-
 
 .bg-skill_icon_sktok_wpnsts {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -1046px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -1046px;
 }
-
-
 
 .bg-skill_icon_sktok_xbbase {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -1194px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -1194px;
 }
-
-
 
 .bg-skill_icon_sktok_xbcore {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -1342px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -1342px;
 }
-
-
 
 .bg-skill_icon_sktok_xbescp {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -1490px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -1490px;
 }
-
-
 
 .bg-skill_icon_sktok_xbfarm {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -1638px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -1638px;
 }
-
-
 
 .bg-skill_icon_sktok_xbfato {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -1786px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -1786px;
 }
-
-
 
 .bg-skill_icon_sktok_xbfato2 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -1934px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -1934px;
 }
-
-
 
 .bg-skill_icon_sktok_xbfato3 {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -2082px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -2082px;
 }
-
-
 
 .bg-skill_icon_sktok_xbfortress {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -2230px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -2230px;
 }
-
-
 
 .bg-skill_icon_sktok_xbgldn {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -2378px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -2378px;
 }
-
-
 
 .bg-skill_icon_sktok_xbiron {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -2526px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -2526px;
 }
-
-
 
 .bg-skill_icon_sktok_xblrsh {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -2674px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -2674px;
 }
-
-
 
 .bg-skill_icon_sktok_xbmrcl {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -2822px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -2822px;
 }
-
-
 
 .bg-skill_icon_sktok_xboverwatch {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -2970px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -2970px;
 }
-
-
 
 .bg-skill_icon_sktok_xbprsh {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -3118px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -3118px;
 }
-
-
 
 .bg-skill_icon_sktok_xbroadblock {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -3266px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -3266px;
 }
-
-
 
 .bg-skill_icon_sktok_xbstone {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -3414px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -3414px;
 }
-
-
 
 .bg-skill_icon_sktok_xbwall {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -3562px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -3562px;
 }
 
-
-
 .bg-skill_icon_sktok_xbwood {
-    width: 128px; height: 128px;
-    background: url('/image/sprite/sprites_skill.webp') -4006px -3710px;
+  width: 128px;
+  height: 128px;
+  background: url("/image/sprite/sprites_skill.webp") -4006px -3710px;
 }

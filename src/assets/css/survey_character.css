@@ -2,7 +2,7 @@
   background: white;
   /* max-width: 1280px; */
   margin: auto;
-  font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, sans-serif;
+  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
   margin-bottom: 100px;
 }
 
@@ -12,7 +12,6 @@
   flex-wrap: wrap;
   justify-content: center;
 }
-
 
 .char_card {
   display: flex;
@@ -36,7 +35,7 @@
 }
 
 .notown {
-  filter: grayscale(100%)
+  filter: grayscale(100%);
 }
 
 .card_title {
@@ -57,7 +56,6 @@
   margin: 12px;
 }
 
-
 .card_option_top_left_basic {
   margin: 12px;
   padding-top: 20px;
@@ -75,7 +73,6 @@
   margin-right: 10px;
   border-bottom: 5px solid #a5a5a5;
   /* background-color: rgba(0, 0, 0, 0.2); */
-
 }
 
 .image_avatar_own {
@@ -88,7 +85,6 @@
   /* background-color: rgba(0, 0, 0, 0.2); */
 }
 
-
 .char_name {
   text-align: center;
   margin-top: 0px;
@@ -99,10 +95,8 @@
   border-radius: 0px;
   font-weight: 700;
   background: rgb(230, 230, 230);
-  color: rgb(167,75,0);
+  color: rgb(167, 75, 0);
 }
-
-
 
 .potential_wrap_basic {
   display: none;
@@ -200,14 +194,9 @@
   cursor: pointer;
 }
 
-
-
 .switch_select {
   background: rgba(0, 102, 255, 0.3);
-
 }
-
-
 
 .footer_info {
   margin: auto;
@@ -215,9 +204,6 @@
   width: 80%;
   text-align: center;
 }
-
-
-
 
 ::-webkit-scrollbar {
   display: none;
@@ -243,11 +229,10 @@
 }
 
 .sprite_skill_icon {
-  transform: scale(0.30);
+  transform: scale(0.3);
   position: relative;
   top: -43px;
   left: -43px;
-
 }
 
 .sprite_elite {
@@ -282,14 +267,12 @@
 
 /* 填写说明 */
 
-
 .fill_course_wrap {
   width: 500px;
   margin: auto;
   margin-top: 10px;
   /* border: 1px rgb(132, 120, 226) solid; */
 }
-
 
 .fill_course_title {
   font-weight: 600;
@@ -298,7 +281,6 @@
   margin-top: 10px;
   margin-left: 20px;
 }
-
 
 .fill_course_tip_icon {
   width: 20px;
@@ -326,7 +308,7 @@
   /* margin-top: -10px; */
 }
 
-.stats_classify{
+.stats_classify {
   display: flex;
   background-color: #eeeeee;
   margin: 12px;
@@ -337,16 +319,16 @@
   text-align: center;
 }
 
-.stats_module{
+.stats_module {
   width: 144px;
   height: 48px;
 }
 
-.stats_title{
+.stats_title {
   font-style: italic;
   height: 24px;
 }
 
-.stats_content{
-  font-family: Arial, Helvetica, sans-serif;  
+.stats_content {
+  font-family: Arial, Helvetica, sans-serif;
 }

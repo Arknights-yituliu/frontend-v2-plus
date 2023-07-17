@@ -63,12 +63,12 @@
         <div class="riic_building_title">方案导入/导出</div>
         <div class="riic_building_parameter">
           <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()"> 生成排班方案 </el-button>
-            <a :href="exportUrl" >
-              <el-button size="large" type="primary" id="exportFileDone"  round style="width: 108px; margin-left: 12px;display: none;" > 导出到本地 </el-button>
-            </a>
-          
-              <!-- <el-button size="large" type="primary" id="exportFile" round style="width: 108px; margin-left: 12px;background-color:#c4c3c3" > 导出到本地 </el-button> -->
-          
+          <a :href="exportUrl">
+            <el-button size="large" type="primary" id="exportFileDone" round style="width: 108px; margin-left: 12px; display: none"> 导出到本地 </el-button>
+          </a>
+
+          <!-- <el-button size="large" type="primary" id="exportFile" round style="width: 108px; margin-left: 12px;background-color:#c4c3c3" > 导出到本地 </el-button> -->
+
           <!-- <el-button size="large" type="primary" round style="width:108px;padding-left:10px;" @click="MaaURLCopy()">
                 导出到MAA
           </el-button> -->
@@ -2043,7 +2043,7 @@ export default {
       switch_dormitory_plan2_1: [false, false, false],
       switch_dormitory_plan2_2: [false, false, false],
       switch_dormitory_plan2_3: [false, false, false],
-      exportFlag:false
+      exportFlag: false,
     };
   },
   mounted() {
@@ -2051,7 +2051,6 @@ export default {
     this.getUid();
     this.getDate();
     this.openNotification();
-
   },
   methods: {
     openNotification() {
@@ -2088,7 +2087,7 @@ export default {
         this.uid = response.data.uid;
         this.setExportUrl();
         setTimeout(function () {
-          document.getElementById('exportFileDone').style.display=''
+          document.getElementById("exportFileDone").style.display = "";
         }, 2500);
       });
       this.setExportUrl();

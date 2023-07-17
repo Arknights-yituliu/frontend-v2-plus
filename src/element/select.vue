@@ -1,16 +1,8 @@
 <template>
   <div class="selectPage" :style="widthStyle">
-    <input :style="widthStyle"
-      type="text"
-      class="selectInput"
-      @click="openAndColseOption()"
-      v-model="props.modelValue" />
+    <input :style="widthStyle" type="text" class="selectInput" @click="openAndColseOption()" v-model="props.modelValue" />
     <div class="options" :style="visibleStyle">
-      <div
-        class="option"
-        v-for="(option, index) in options"
-        :key="index"
-        @click="selectOptions(option[props.value])">
+      <div class="option" v-for="(option, index) in options" :key="index" @click="selectOptions(option[props.value])">
         <!-- {{option}} -->
         {{ option[props.label] }}
       </div>
@@ -19,17 +11,17 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch } from "vue";
 
-const emit = defineEmits(['update:modelValue'])
-const props = defineProps(['modelValue', 'options', 'label','value', "width"])
+const emit = defineEmits(["update:modelValue"]);
+const props = defineProps(["modelValue", "options", "label", "value", "width"]);
 
-let visibleStyle = ref('display:none')
-const widthStyle = 'width:'+props.width
+let visibleStyle = ref("display:none");
+const widthStyle = "width:" + props.width;
 
-let visible = false
+let visible = false;
 
-let options = ref(props.options)
+let options = ref(props.options);
 
 // console.log('label：',props.label)
 // console.log('key：',props.value)
@@ -37,27 +29,27 @@ let options = ref(props.options)
 function openAndColseOption() {
   // console.log(visible)
   if (!visible) {
-    visibleStyle.value = 'display:block'
+    visibleStyle.value = "display:block";
   } else {
-    visibleStyle.value = 'display:none'
+    visibleStyle.value = "display:none";
   }
 
-  visible = !visible
+  visible = !visible;
   // visibleStyle.value = 'display:none'
 }
 
 function selectOptions(option) {
-  emit('update:modelValue', option)
-  openAndColseOption()
+  emit("update:modelValue", option);
+  openAndColseOption();
 }
 
 watch(
   () => props.options,
   (newVal, oldVal) => {
     // console.log(newVal)
-    options.value = newVal
+    options.value = newVal;
   }
-)
+);
 
 // watch(
 //   () => props.label,
@@ -98,8 +90,8 @@ watch(
   z-index: 2000;
   /* overflow-y: hidden; */
   margin: auto;
-     scrollbar-width: none; /* firefox */
-   -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; /* firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }
 
 ::-webkit-scrollbar {
@@ -115,7 +107,7 @@ watch(
   line-height: 22px;
   font-weight: 600;
   color: rgb(68, 68, 68);
-  padding-left:4px ;
+  padding-left: 4px;
   /* border: 1px rgb(0, 47, 255) solid; */
 }
 </style>

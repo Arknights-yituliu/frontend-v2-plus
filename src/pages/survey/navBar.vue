@@ -1,28 +1,28 @@
 <template>
   <div class="survey_top_right_btn" @click="loginVisible = !loginVisible" v-show="userData.status < 0">登录</div>
   <c-popup :visible="loginVisible" v-model:visible="loginVisible" :width="'400px'">
-      <div class="login_card" v-show="userData.status < 0">
-        <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
-        <div style="display: flex">
-          <div class="btn_login" @click="register()">注册</div>
-          <div class="btn_login" @click="login()">登录</div>
-        </div>
-        <div class="login_tip">
-          <a>新用户输入用户名即可分配ID，此用户 ID 仅于本网站使用， 用于在不同设备间同步您的数据，请妥善保管您的ID</a>
-          <br><a>老用户请输入 <b>用户名#ID</b> 登录</a>
-        </div>
+    <div class="login_card" v-show="userData.status < 0">
+      <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
+      <div style="display: flex">
+        <div class="btn_login" @click="register()">注册</div>
+        <div class="btn_login" @click="login()">登录</div>
       </div>
-
-      <div class="login_card" v-show="userData.status > 0">
-        <div class="logout_text">确定登出当前用户？</div>
-        <div class="logout_btn_wrap">
-          <div class="btn_login" @click="logout()">确定</div>
-          <div class="btn_login" @click="loginVisible = !loginVisible">取消</div>
-        </div>
+      <div class="login_tip">
+        <a>新用户输入用户名即可分配ID，此用户 ID 仅于本网站使用， 用于在不同设备间同步您的数据，请妥善保管您的ID</a>
+        <br /><a>老用户请输入 <b>用户名#ID</b> 登录</a>
       </div>
-    </c-popup>
+    </div>
 
-  <div v-show="userData.status > 0" >
+    <div class="login_card" v-show="userData.status > 0">
+      <div class="logout_text">确定登出当前用户？</div>
+      <div class="logout_btn_wrap">
+        <div class="btn_login" @click="logout()">确定</div>
+        <div class="btn_login" @click="loginVisible = !loginVisible">取消</div>
+      </div>
+    </div>
+  </c-popup>
+
+  <div v-show="userData.status > 0">
     <div class="user_name" @click="loginVisible = !loginVisible">{{ userData.userName }}</div>
   </div>
 </template>
@@ -83,10 +83,9 @@ onMounted(() => {
 
 <style scoped>
 .btn_survey_white {
-  
 }
 
-.survey_top_right_btn{
+.survey_top_right_btn {
   min-width: 60px;
   color: white;
   text-align: center;
@@ -94,7 +93,7 @@ onMounted(() => {
   font-size: 20px;
 }
 
-.login_tip{
+.login_tip {
   margin-top: 20px;
   line-height: 36px;
 }

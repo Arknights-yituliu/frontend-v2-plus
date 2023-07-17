@@ -1,47 +1,47 @@
 <template>
-  <div class="collapse_wrap" >
+  <div class="collapse_wrap">
     <div class="collapse_title" @click="collapse()">
       <!-- 这是个测试 -->
       <slot name="title"> </slot>
     </div>
     <div :class="collapse_item">
       <slot> </slot>
-      <div><img src="/image/icon/down.png" alt=""></div>
+      <div><img src="/image/icon/down.png" alt="" /></div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch } from "vue";
 
-const emit = defineEmits(['update:visible'])
-const props = defineProps(['modelValue', 'visible', 'index', 'width'])
+const emit = defineEmits(["update:visible"]);
+const props = defineProps(["modelValue", "visible", "index", "width"]);
 
-let collapseFlag = ref(props.visible.indexOf(props.index)>-1)
-let collapse_item = ref(props.visible.indexOf(props.index)>-1?'collapse_item collapse_item_open':'collapse_item')
+let collapseFlag = ref(props.visible.indexOf(props.index) > -1);
+let collapse_item = ref(props.visible.indexOf(props.index) > -1 ? "collapse_item collapse_item_open" : "collapse_item");
 
 function collapse() {
-  collapseFlag.value = !collapseFlag.value
-  console.log(collapseFlag.value)
+  collapseFlag.value = !collapseFlag.value;
+  console.log(collapseFlag.value);
   if (collapseFlag.value) {
-    collapse_item.value = 'collapse_item collapse_item_open'
+    collapse_item.value = "collapse_item collapse_item_open";
   } else {
-    collapse_item.value = 'collapse_item'
+    collapse_item.value = "collapse_item";
   }
 }
 
 watch(
   () => props.visible,
   (newVal, oldVal) => {
-    console.log(newVal, oldVal)
+    console.log(newVal, oldVal);
     if (newVal) {
-      collapse_item.value = 'collapse_item collapse_item_open'
+      collapse_item.value = "collapse_item collapse_item_open";
     } else {
-      collapse_item.value = 'collapse_item'
+      collapse_item.value = "collapse_item";
     }
-    emit('update:visible', newVal)
+    emit("update:visible", newVal);
   }
-)
+);
 </script>
 
 <style scoped>

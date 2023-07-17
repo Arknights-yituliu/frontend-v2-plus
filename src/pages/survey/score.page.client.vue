@@ -1,7 +1,7 @@
 <template>
   <div class="score_page">
     <!-- 设置区 -->
-    <div class="switch_wrap" style=" height: auto;">
+    <div class="switch_wrap" style="height: auto">
       <!-- <div class="setup_bar">
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">干员筛选</div>
         <div class="btn_setup" @click="uploadScoreForm()">上传数据</div>
@@ -16,7 +16,6 @@
         </div>
       </div>
 
-    
       <div class="setup_bar" id="score_selector_class">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
@@ -58,7 +57,6 @@
 
         <div class="score_left_wrap">
           <div class="score_portrait_wrap">
-        
             <div :class="getBgSprite('bg-tl', char.rarity)"></div>
             <div :class="getBgSprite('profession', char.profession)"></div>
             <div :class="getBgSprite('rarity', char.rarity)"></div>
@@ -69,7 +67,6 @@
             <div class="score_portrait_bg_bl"></div>
             <div class="score_char_name">{{ char.name }}</div>
           </div>
-         
         </div>
 
         <!-- 打分区域 -->
