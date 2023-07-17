@@ -20,10 +20,10 @@
           <div class="btn_setup_tips">导出到Excel<br />或从Excel/MAA导入数据</div>
         </div>
 
-        <div class="btn_setup">
+        <!-- <div class="btn_setup">
           模式切换
           <div class="btn_setup_tips">当前模式：标准统计<br />仅持有/标准统计/高级统计</div>
-        </div>
+        </div> -->
         <div class="btn_setup">
           统计数据
           <div class="btn_setup_tips">干员持有率：114 / 514<br />点击查看更多</div>
@@ -658,20 +658,20 @@ function setDomBackgroundColor(domId, selected) {
   }
 }
 
-let surveyTypeText = ref("基础问卷");
+let surveyTypeText = ref("标准问卷");
 let surveyType = ref("_basic");
 //简易卡片样式
 let simpleCard = ref(false);
 
-//基础问卷与完整问卷
+//标准问卷与完整问卷
 function changeSurveyType(type) {
   if ("简易问卷" == surveyTypeText.value) {
     surveyType.value = "_basic";
-    surveyTypeText.value = "基础问卷";
+    surveyTypeText.value = "标准问卷";
     simpleCard.value = !simpleCard.value;
     return;
   }
-  if ("基础问卷" == surveyTypeText.value) {
+  if ("标准问卷" == surveyTypeText.value) {
     surveyType.value = "";
     surveyTypeText.value = "完整问卷";
     return;
