@@ -215,7 +215,9 @@
 .score_bar {
   font-size: 18px;
   font-weight: 700;
-  margin: 12px auto;
+  margin:  auto;
+  margin-top: 12px;
+  margin-top: 12px;
   /* width: 348px; */
   display: flex;
   line-height: 36px;

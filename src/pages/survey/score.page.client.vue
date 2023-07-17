@@ -108,15 +108,39 @@
               @click="updateScore(char_index, 'universal', rank)"
             />
           </div>
-          <div class="score_bar" v-show="scoreItem.countermeasures.show">
-            <div class="score_name" @click="resetScore(char_index, 'countermeasures')">对策：</div>
+          <div class="score_bar" v-show="scoreItem.counter.show">
+            <div class="score_name" @click="resetScore(char_index, 'counter')">对策：</div>
             <!-- 对策 -->
             <img
               class="image_score"
-              :src="scoreSelected(rank, char.countermeasures)"
+              :src="scoreSelected(rank, char.counter)"
               alt=""
               v-for="rank in scoreDict"
-              @click="updateScore(char_index, 'countermeasures', rank)"
+              @click="updateScore(char_index, 'counter', rank)"
+            />
+          </div>
+
+          <div class="score_bar" v-show="scoreItem.building.show">
+            <div class="score_name" @click="resetScore(char_index, 'building')">基建：</div>
+            <!-- 基建 -->
+            <img
+              class="image_score"
+              :src="scoreSelected(rank, char.building)"
+              alt=""
+              v-for="rank in scoreDict"
+              @click="updateScore(char_index, 'building', rank)"
+            />
+          </div>
+
+          <div class="score_bar" v-show="scoreItem.comprehensive.show">
+            <div class="score_name" @click="resetScore(char_index, 'comprehensive')">综合：</div>
+            <!-- 综合 -->
+            <img
+              class="image_score"
+              :src="scoreSelected(rank, char.comprehensive)"
+              alt=""
+              v-for="rank in scoreDict"
+              @click="updateScore(char_index, 'comprehensive', rank)"
             />
           </div>
         </div>
@@ -162,7 +186,9 @@ const scoreItem = ref({
   hard: { show: true, label: "高难" },
   securityService: { show: true, label: "保全" },
   universal: { show: true, label: "泛用" },
-  countermeasures: { show: true, label: "对策" },
+  counter: { show: true, label: "对策" },
+  building: { show: true, label: "基建" },
+  comprehensive: { show: true, label: "综合" },
 });
 
 function selectScoreItem(attribute) {
