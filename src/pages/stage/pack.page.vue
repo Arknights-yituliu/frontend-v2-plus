@@ -11,7 +11,7 @@
       <div class="stage_hint">
         <div class="stage_hint_t5">移动端可左右滑动表格查看性价比</div>
       </div>
- 
+
       <client-only>
         <div class="pack-table-wrapper">
           <el-table
@@ -401,7 +401,6 @@ export default {
   },
   mounted() {
     this.getCookies();
- 
   },
   methods: {
     getCookies() {
@@ -670,8 +669,7 @@ export const documentProps = {
   justify-content: space-around;
 }
 
-.pack_unit_list{
-   
+.pack_unit_list {
 }
 
 .pack_unit {

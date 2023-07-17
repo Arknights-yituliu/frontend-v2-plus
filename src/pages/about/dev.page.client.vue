@@ -4,7 +4,6 @@
     <div class="dev_page_content">一图流的组织仓库地址</div>
     <div class="dev_wrap">
       <div class="label_wrap">
-        
         <div class="label_card">
           <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
             <div class="label_content">
@@ -65,7 +64,7 @@
               <div>
                 <div class="label_name">山桜</div>
                 <div class="label_desc">创建</div>
-                
+
                 <div class="label_work">后端</div>
                 <div class="label_work">前端</div>
               </div>
@@ -82,7 +81,7 @@
               <div>
                 <div class="label_name">Zirunwang</div>
                 <div class="label_desc">创建</div>
-                
+
                 <div class="label_work">前端</div>
                 <div class="label_work">UI</div>
                 <div class="label_work">算法</div>
@@ -100,7 +99,7 @@
               <div>
                 <div class="label_name">hguandl</div>
                 <div class="label_desc">创建</div>
-                
+
                 <div class="label_work">后端</div>
               </div>
             </div>
@@ -116,7 +115,7 @@
               <div>
                 <div class="label_name">ZhaoZuohong</div>
                 <div class="label_desc">开发</div>
-                
+
                 <div class="label_work">后端</div>
                 <div class="label_work">前端</div>
                 <div class="label_work">UI</div>
@@ -134,7 +133,7 @@
               <div>
                 <div class="label_name">一个资深的烧饼</div>
                 <div class="label_desc">开发</div>
-                
+
                 <div class="label_work">算法</div>
               </div>
             </div>
@@ -156,7 +155,7 @@
               <div>
                 <div class="label_name">無冕Crownless</div>
                 <div class="label_desc">开发</div>
-                
+
                 <div class="label_work">UI</div>
               </div>
             </div>
@@ -172,7 +171,7 @@
               <div>
                 <div class="label_name">Yanstime</div>
                 <div class="label_desc">开发</div>
-                
+
                 <div class="label_work">前端</div>
               </div>
             </div>
@@ -188,7 +187,7 @@
               <div>
                 <div class="label_name">youcai922</div>
                 <div class="label_desc">开发</div>
-                
+
                 <div class="label_work">后端</div>
               </div>
             </div>
@@ -204,9 +203,8 @@
               <div>
                 <div class="label_name">Ks-luow</div>
                 <div class="label_desc">开发</div>
-                
+
                 <div class="label_work">后端</div>
-               
               </div>
             </div>
           </a>
@@ -214,11 +212,9 @@
       </div>
     </div>
 
-    
-
     <div class="dev_page_title_1">资料来源</div>
     <div class="dev_page_content">网站上使用的资料来源</div>
-     
+
     <div class="dev_wrap">
       <div class="label_wrap">
         <div class="label_card">
@@ -230,7 +226,6 @@
               <div>
                 <div class="label_name">企鹅物流数据统计</div>
                 <div class="label_desc">素材掉率统计网站</div>
-                
               </div>
             </div>
           </a>
@@ -245,7 +240,6 @@
               <div>
                 <div class="label_name">Arknights-Bot-Resource</div>
                 <div class="label_desc">明日方舟常用素材</div>
-               
               </div>
             </div>
           </a>
@@ -260,7 +254,6 @@
               <div>
                 <div class="label_name">prts.wiki</div>
                 <div class="label_desc">明日方舟wiki</div>
-               
               </div>
             </div>
           </a>
@@ -275,15 +268,12 @@
               <div>
                 <div class="label_name">罗德岛蜜饼工坊</div>
                 <div class="label_desc">明日方舟饼学研究组</div>
-             
               </div>
             </div>
           </a>
         </div>
       </div>
     </div>
-
-    
 
     <div class="dev_page_title_1">网站问题反馈</div>
     <div class="dev_wrap">
@@ -316,7 +306,6 @@
           </a>
         </div>
       </div>
-
     </div>
 
     <div class="dev_page_title_1">B站发布</div>
@@ -336,7 +325,6 @@
           </a>
         </div>
       </div>
-      
     </div>
 
     <div class="dev_page_title_1">版权声明与许可协议</div>

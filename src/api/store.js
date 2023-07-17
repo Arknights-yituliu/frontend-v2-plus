@@ -10,7 +10,7 @@ export default {
       method: "get",
     });
   },
-  
+
   //查询所有常驻商店数据
   findPermStore() {
     return request({

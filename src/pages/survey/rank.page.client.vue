@@ -15,37 +15,37 @@
 
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
-        
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选</div>       
+        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选</div>
       </div>
       <div class="setup_bar">
         <div class="setup_title">稀有度</div>
         <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }}★</div>
       </div>
       <div class="setup_bar">
-          <div class="setup_title">其他</div>
-          <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">有模组</div>
-          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">无模组</div>
-        </div>
+        <div class="setup_title">其他</div>
+        <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">有模组</div>
+        <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">无模组</div>
+      </div>
       <div class="setup_bar">
-          <div class="setup_title">排序</div>
-          <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
-          <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
-        </div>
+        <div class="setup_title">排序</div>
+        <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
+        <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
+      </div>
     </div>
 
     <div class="rank_wrap">
       <div class="rank_card" v-for="(result, index) in rankingList" v-show="result.show">
         <div class="rank_avatar_wrap">
           <div :class="getSprite(result.charId)"></div>
-        
         </div>
         <div class="survey_result">
           <div class="survey_result_titit">持有率</div>
           <div class="survey_result_content">{{ getPercentage(result.own, 1) }}</div>
         </div>
         <div class="survey_result">
-          <div class="survey_result_titit"><div class="rank_image_elite_wrap"><div :class="getSprite('elite2', 'elite')"></div></div> </div>
+          <div class="survey_result_titit">
+            <div class="rank_image_elite_wrap"><div :class="getSprite('elite2', 'elite')"></div></div>
+          </div>
           <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.elite, "rank" + 2), 1) }}</div>
         </div>
         <div class="survey_result">
@@ -74,7 +74,6 @@
 </template>
 
 <script setup>
-
 import "@/assets/css/survey_rank.css";
 
 import { rankingListinit, rarityDict } from "./baseData";
@@ -234,10 +233,8 @@ function sortCharacterList(rule) {
   });
 }
 
-
 function btnSetClass(flag) {
   if (flag) return "btn_set btn_setup_selected";
   return "btn_set";
 }
-
 </script>

@@ -4,7 +4,7 @@
   margin: auto;
   /* border: 1px rgb(0, 0, 0) solid; */
   scrollbar-width: none;
-  font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, sans-serif;
+  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
   /* color: black; */
 }
 
@@ -65,7 +65,6 @@
   color: white;
 }
 
-
 .btn_login {
   width: 100px;
   height: 20px;
@@ -78,7 +77,7 @@
   margin: auto;
 }
 
-.logout_text{
+.logout_text {
   margin: auto;
   margin-top: 30px;
   margin-bottom: 30px;
@@ -87,7 +86,7 @@
   font-weight: 800;
 }
 
-.logout_btn_wrap{
+.logout_btn_wrap {
   display: flex;
   justify-content: flex-end;
 }
@@ -118,7 +117,6 @@
   color: rgb(0, 89, 255);
 }
 
-
 .survey_index_content {
   /* width: 100%; */
   display: flex;
@@ -126,7 +124,6 @@
   flex-wrap: wrap;
   justify-content: center;
 }
-
 
 .index_card_wrap {
   width: 47%;
@@ -137,7 +134,7 @@
   margin: 1%;
 }
 
-.index_card_wrap_null{
+.index_card_wrap_null {
   width: 47%;
   margin: 1%;
 }
@@ -146,24 +143,25 @@
   /* margin-top: 50px; */
   font-size: 28px;
   font-weight: 900;
+  margin-bottom: 18px;
 }
 
 @media screen and (max-width: 1080px) {
   .index_card_wrap {
-   width: 98%;
+    width: 98%;
   }
 }
-
 
 .card_content {
   /* width: 90%; */
   margin: auto;
 }
 
-.guild_question {
-  font-weight: 600;
+.card_content p {
+  margin-top: 6px;
 }
 
-
-
-
+.guild_question {
+  font-weight: 600;
+  margin-bottom: 6px;
+}

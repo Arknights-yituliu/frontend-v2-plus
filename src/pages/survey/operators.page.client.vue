@@ -140,7 +140,6 @@
       </div>
     </div>
 
-
     <!-- 干员组 -->
     <div class="char_forms">
       <div :class="simpleCardClass()" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">

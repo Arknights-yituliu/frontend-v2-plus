@@ -58,7 +58,7 @@ export default {
     });
   },
 
-  uploadCharacterByExcel(file,token){
+  uploadCharacterByExcel(file, token) {
     return request({
       url: `${api_name}/character/import?token=${token}`,
       method: "post",

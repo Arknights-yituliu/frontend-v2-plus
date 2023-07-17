@@ -1,5 +1,5 @@
 <template>
-  <div id="indexDiv" style=" margin: auto">
+  <div id="indexDiv" style="margin: auto">
     <item-value />
     <!-- <foot-component /> -->
   </div>
@@ -19,9 +19,7 @@ import toolApi from "@/api/tool";
 
 import { onMounted } from "vue";
 
-onMounted(() => {
-
-});
+onMounted(() => {});
 </script>
 
 <script>

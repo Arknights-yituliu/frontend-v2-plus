@@ -11,19 +11,19 @@ html {
   margin: 0;
 }
 
-.el-menu--horizontal>.el-menu-item {
+.el-menu--horizontal > .el-menu-item {
   height: 48px;
   line-height: 48px;
 }
 
-.el-menu--horizontal>.el-submenu .el-submenu__title {
+.el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 48px;
   line-height: 48px;
 }
 
-.el-menu--horizontal>.el-menu-item:not(.is-disabled):focus,
-.el-menu--horizontal>.el-menu-item:not(.is-disabled):hover,
-.el-menu--horizontal>.el-submenu .el-submenu__title:hover {
+.el-menu--horizontal > .el-menu-item:not(.is-disabled):focus,
+.el-menu--horizontal > .el-menu-item:not(.is-disabled):hover,
+.el-menu--horizontal > .el-submenu .el-submenu__title:hover {
   background-color: rgb(52, 68, 104);
 }
 

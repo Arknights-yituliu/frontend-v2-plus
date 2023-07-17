@@ -23,9 +23,9 @@ function characterListInit() {
       own: false,
       level: -1,
       modX: -1,
-      modXOwn:modXOwn,
+      modXOwn: modXOwn,
       modY: -1,
-      modYOwn:modYOwn,
+      modYOwn: modYOwn,
       elite: -1,
       potential: -1,
       rarity: baseInfo.rarity,
@@ -34,7 +34,7 @@ function characterListInit() {
       skill3: -1,
       skill: baseInfo.skill,
       date: baseInfo.date,
-      itemObtainApproach:baseInfo.itemObtainApproach,
+      itemObtainApproach: baseInfo.itemObtainApproach,
       profession: baseInfo.profession,
       mod: baseInfo.mod !== undefined,
       show: true,
@@ -92,8 +92,8 @@ function scoreListInit() {
     let score = {
       charId: charId,
       name: baseInfo.name,
-      itemDesc:baseInfo.itemDesc,
-      itemUsage:baseInfo.itemUsage,
+      itemDesc: baseInfo.itemDesc,
+      itemUsage: baseInfo.itemUsage,
       rarity: baseInfo.rarity,
       daily: -1,
       rogue: -1,
@@ -145,4 +145,4 @@ function rankingListinit() {
   return rankingList;
 }
 
-export { characterListInit, getProfession , professionDict, rarityDict, yearDict, scoreListInit,rankingListinit };
+export { characterListInit, getProfession, professionDict, rarityDict, yearDict, scoreListInit, rankingListinit };

@@ -7,39 +7,38 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
-const emit = defineEmits(['update:visible'])
-const props = defineProps(['modelValue', 'visible', 'width'])
+import { onMounted, ref, watch } from "vue";
+const emit = defineEmits(["update:visible"]);
+const props = defineProps(["modelValue", "visible", "width"]);
 
 function nav_switch(flag) {
   if (flag) {
     setTimeout(function () {
-      document.getElementById('drawer').className = 'drawer-collapse drawer'
-      document.getElementById('drawer_wrap').style.minWidth = '200px'
-    }, 30)
+      document.getElementById("drawer").className = "drawer-collapse drawer";
+      document.getElementById("drawer_wrap").style.minWidth = "200px";
+    }, 30);
   } else {
-    document.getElementById('drawer').className = 'drawer-collapse'
-    document.getElementById('drawer_wrap').style.minWidth = ''
+    document.getElementById("drawer").className = "drawer-collapse";
+    document.getElementById("drawer_wrap").style.minWidth = "";
   }
   // console.log(menu_flag.value)
 }
 
 onMounted(() => {
-  nav_switch(false)
-})
+  nav_switch(false);
+});
 
 watch(
   () => props.visible,
   (newVal, oldVal) => {
-    nav_switch(newVal)
+    nav_switch(newVal);
   }
-)
+);
 </script>
 <style scoped>
 .drawer_wrap {
   height: 100%;
   width: 0px;
- 
 }
 
 .drawer-collapse {
@@ -61,7 +60,7 @@ watch(
   transform: translateX(0) !important;
   /* border: 1px red solid; */
   opacity: 1;
- border-right: 1px solid rgb(213, 213, 213);
+  border-right: 1px solid rgb(213, 213, 213);
 }
 
 .btn {

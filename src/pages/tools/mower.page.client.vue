@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, nextTick, watch, onMounted, onBeforeMount, inject } from "vue";
 import { zhCN, dateZhCN, darkTheme } from "naive-ui";
-import operators_json from "@/static/json/operators.json"
+import operators_json from "@/static/json/operators.json";
 
 const ling_xi = ref("1");
 const max_resting_count = ref([]);

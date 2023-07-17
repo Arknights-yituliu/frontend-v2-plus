@@ -1,7 +1,7 @@
 <template>
-  <div class="aside_table" >
+  <div class="aside_table">
     <!-- 标题区 -->
-    <a href="https://yituliu.site/" style="text-decoration:none;color: white;">
+    <a href="https://yituliu.site/" style="text-decoration: none; color: white">
       <div class="aside_title">明日方舟一图流</div>
     </a>
     <!-- 导航菜单 -->
@@ -16,7 +16,8 @@
       <!-- 二级标题组 -->
       <a :href="c.path" class="nav_href" v-for="c in r.child">
         <div class="aside_nav">
-          <div class="aside_menu_child_icon"></div>{{ c.text }}
+          <div class="aside_menu_child_icon"></div>
+          {{ c.text }}
         </div>
       </a>
     </div>
@@ -26,7 +27,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
-import routesJson from "@/static/json/routes.json"
+import routesJson from "@/static/json/routes.json";
 
 let nav_collapseFlag = ref([true, true, true, true, true, true, true, true]);
 
@@ -76,7 +77,7 @@ const devRoute = {
   ],
 };
 
-const routesLength = ref(routesJson.length)
+const routesLength = ref(routesJson.length);
 const routes = ref(routesJson);
 
 onMounted(() => {

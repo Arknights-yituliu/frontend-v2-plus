@@ -12,7 +12,7 @@
   </el-container> -->
 
   <div class="container">
-    <div class="aside" id="aside114" style="overflow-y: hidden;">
+    <div class="aside" id="aside114" style="overflow-y: hidden">
       <myaside></myaside>
     </div>
     <div class="container is_vertical">
@@ -58,8 +58,6 @@ import { provide, ref } from "vue";
 
 const theme = ref(pageContext.theme == "dark");
 provide("theme", theme);
-
-
 </script>
 
 <style scoped>

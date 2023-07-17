@@ -3,7 +3,6 @@
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
-         
           <el-collapse accordion>
             <el-collapse-item name="1" style="">
               <template #title>
@@ -42,7 +41,6 @@
                   <b>A：大部分关卡都掉落多种材料，单一材料的期望只能说明短期最优，长期最优是要计算副产物的。</b>
                 </li>
               </ul>
-
             </el-collapse-item>
             <el-collapse-item name="3" style="">
               <template #title>
@@ -132,7 +130,6 @@
           </el-collapse>
         </el-card>
       </div>
-
     </div>
   </div>
 </template>

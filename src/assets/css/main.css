@@ -1,64 +1,62 @@
 .container {
-    display: flex;
-    flex: 1;
-    /* height: 100%; */
-    /* border: 1px solid rgb(0, 119, 255); */
-    overflow: hidden;
-    background: white;
-    height: 100vh;
+  display: flex;
+  flex: 1;
+  /* height: 100%; */
+  /* border: 1px solid rgb(0, 119, 255); */
+  overflow: hidden;
+  background: white;
+  height: 100vh;
 }
 
-
 .header {
-    height: 48px;
-    line-height: 44px;
-    border-bottom: 2px solid rgb(223, 223, 223);
-    /* box-shadow: 0 0 4px 4px rgb(208, 208, 208); */
-    background: #262f3e;
+  height: 48px;
+  line-height: 44px;
+  border-bottom: 2px solid rgb(223, 223, 223);
+  /* box-shadow: 0 0 4px 4px rgb(208, 208, 208); */
+  background: #262f3e;
 }
 
 .is_vertical {
-    flex-direction: column;
+  flex-direction: column;
 }
 
 .aside_hidden {
-    width: 0px;
-    transform: translateX(-500px);
+  width: 0px;
+  transform: translateX(-500px);
 }
 
 .aside {
-    width: 250px;
-    transition: all 0.2s;
-    transform: translateX(0) ;
-    background-color: #1e222d;
-    overflow: auto;
-    height: 100%;
+  width: 250px;
+  transition: all 0.2s;
+  transform: translateX(0);
+  background-color: #1e222d;
+  overflow: auto;
+  height: 100%;
 }
 
 .main {
-    box-sizing: border-box;
-    display: block;
-    flex: 1;
-    overflow: auto;
+  box-sizing: border-box;
+  display: block;
+  flex: 1;
+  overflow: auto;
 }
 
 .footer {
-    height: 30px;
-    line-height: 30px;
-    background-color: rgb(52, 68, 104);
+  height: 30px;
+  line-height: 30px;
+  background-color: rgb(52, 68, 104);
 }
 
-
 @media (max-width: 1080px) {
-    .header {
-        height: 72px;
-    }
+  .header {
+    height: 72px;
+  }
 
-    .aside {
-        display: none;
-    }
+  .aside {
+    display: none;
+  }
 
-    .menu_button_desktop{
-        display: none;
-    }
+  .menu_button_desktop {
+    display: none;
+  }
 }

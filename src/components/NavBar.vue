@@ -202,22 +202,22 @@ function getpageTitle(path) {
 }
 
 function getPathName(pathName) {
-  console.log('当前访问路径：',pathName);
+  console.log("当前访问路径：", pathName);
   if (pathName == "/") {
     toolApi.updateVisits(pathName);
     return 1;
   }
-  
+
   let strLength = pathName.length;
 
-  if(strLength<2)  {
+  if (strLength < 2) {
     toolApi.updateVisits(pathName);
     return 1;
   }
-  
-  const lastStr = pathName.substr(strLength - 1, strLength )
 
-  if (lastStr=="/") {
+  const lastStr = pathName.substr(strLength - 1, strLength);
+
+  if (lastStr == "/") {
     pathName = pathName.substr(0, strLength - 1);
     console.log("路径以“/”结尾，被截取后路径：", pathName);
     toolApi.updateVisits(pathName);
@@ -233,9 +233,9 @@ onMounted(() => {
   var pathName = window.location.pathname;
 
   if (domain.indexOf("dev") == -1) {
-     getPathName(pathName);
+    getPathName(pathName);
   }
-  
+
   getpageTitle(pathName);
 });
 </script>

@@ -4,7 +4,7 @@
   background: white;
   margin: auto;
   box-shadow: 0px 0px 2px 2px rgb(160, 160, 160);
-  font-family: 'Microsoft YaHei', 微软雅黑, 'MicrosoftJhengHei', 华文细黑, STHeiti, MingLiu, sans-serif;
+  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
 }
 
 .survey_title {
@@ -63,7 +63,6 @@
   border: 1px rgb(211, 211, 211) solid;
   margin: auto;
   margin-top: 10px;
-  
 }
 
 .rank_avatar_wrap {
@@ -98,11 +97,11 @@
 .survey_result_content {
   height: 40px;
   line-height: 40px;
- 
+
   /* border: 1px rgb(30, 255, 0) solid; */
 }
 
-.rank_image_elite_wrap{
+.rank_image_elite_wrap {
   height: 50px;
   width: 50px;
 }
@@ -114,7 +113,7 @@
   left: -90px;
 }
 
-.rank_image_skill_wrap{
+.rank_image_skill_wrap {
   height: 50px;
   width: 50px;
 }
