@@ -20,10 +20,10 @@
           <div class="btn_setup_tips">导出到Excel<br />或从Excel/MAA导入数据</div>
         </div>
 
-        <div class="btn_setup">
+        <!-- <div class="btn_setup">
           模式切换
           <div class="btn_setup_tips">当前模式：标准统计<br />仅持有/标准统计/高级统计</div>
-        </div>
+        </div> -->
         <div class="btn_setup">
           统计数据
           <div class="btn_setup_tips">干员持有率：114 / 514<br />点击查看更多</div>
