@@ -5,10 +5,7 @@
     <div class="setup_wrap">
       <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
-        <div class="btn_setup">
-          <characterDemo></characterDemo>
-          <div class="btn_setup_tips">功能介绍<br />使用说明</div>
-        </div>
+        <characterDemo></characterDemo>
 
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">
           筛选/批量操作
