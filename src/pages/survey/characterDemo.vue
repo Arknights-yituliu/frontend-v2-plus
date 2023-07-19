@@ -1,5 +1,8 @@
 <template>
-  <div @click="popupVisible()">填写说明</div>
+  <div class="btn_setup" @click="popupVisible()">
+    <div>填写说明</div>
+    <div class="btn_setup_tips">功能介绍<br />使用说明</div>
+  </div>
   <c-popup :visible="firstpopup" v-model:visible="firstpopup" @click="isFirstPopupCache()" :width="'600px'">
     <!-- <div class="fill_course_title">填写流程说明</div> -->
 
