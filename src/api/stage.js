@@ -41,19 +41,14 @@ export default {
     });
   },
 
-  findStageDetailByStageCode(stageCode) {
+  findStageDetailByStageId(stageId) {
     return request({
-      url: `/stage/detail?stageCode=${stageCode}`,
+      url: `/stage/detail?stageId=${stageId}`,
       method: "get",
     });
   },
 
-  findStageDetailByStageId(stageId) {
-    return request({
-      url: `/stage/detail/${stageId}`,
-      method: "get",
-    });
-  },
+
 
   getStageTable() {
     return request({
