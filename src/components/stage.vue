@@ -53,7 +53,7 @@
         <!-- 基础卡 -->
         <div v-for="(materialRankT3, indexAll) in stageRankT3" :key="indexAll" class="stage_card_t3 uni_shadow_2" @click="showPopup(indexAll)">
           <!-- <div v-show="materialRankT3[0].itemType=='兽之泪'"  class="stage_card_t3_img" :style="getCardBackground(materialRankT3[1].itemType)"></div>  -->
-          <div class="stage_card_t3_img" :class="getSpriteImg(materialRankT3[0].itemId, 'large')"></div>
+          <div class="stage_sprite_t3_wrap"><div :class="getSpriteImg(materialRankT3[0].itemId, 't3')"></div></div>
 
           <div class="stage_card_t3_table">
             <table>
@@ -69,7 +69,9 @@
                   <!-- <td> <div v-show="stage.stageId.indexOf('perm')!=-1" style='font-size: 12px;line-height:12px;'> 常 <br> 驻 </div></td> -->
                   <!-- <td class="stage_table_c2" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
                   <td>
-                    <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+                    <div class="stage_sprite_sec_wrap">
+                      <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+                    </div>
                   </td>
                   <td class="stage_table_c3">{{ getEfficiency(stage.stageEfficiency, 1) }}%</td>
                   <!-- <td class="stage_table_c4"><img v-show="stage.stageId.indexOf('perm')==-1" src="/image/icon/up.png" alt=""></td> -->
@@ -97,7 +99,7 @@
           :style="judgeActive(index)"
           @click="showPopup(index)"
         >
-          <div class="stage_card_t3_img" :class="getSpriteImg(materialRankT3[0].itemId, 'large')"></div>
+          <div class="stage_sprite_t3_wrap"><div :class="getSpriteImg(materialRankT3[0].itemId, 't3')"></div></div>
 
           <div class="stage_card_t3_table">
             <table>
@@ -112,7 +114,9 @@
                   <td class="stage_table_c1">{{ stage.stageCode }}</td>
                   <!-- <td class="stage_table_c2" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
                   <td>
-                    <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+                    <div class="stage_sprite_sec_wrap">
+                      <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+                    </div>
                   </td>
                   <td class="stage_table_c3">{{ getEfficiency(stage.stageEfficiency, 1) }}%</td>
                   <!-- <td class="stage_table_c4">{{getBoxEfficiency(stage.stageState, stage.stageEfficiencyEx, stage.stageEfficiency)}}</td> -->
@@ -131,9 +135,8 @@
       <!-- t2内容区域 -->
       <div class="op_content" id="stage_t2_content">
         <div class="stage_card_t2 uni_shadow_2">
-          <div v-for="(materialRankT2, index) in stageRankT2.slice(0, 6)" :key="index" class="stage_card_t2_img">
-            <!-- <img :src="getImgUrl(materialRankT2[0].itemName)" :alt="materialRankT2[0].itemName" "> -->
-            <div :class="getSpriteImg(materialRankT2[0].itemId, 'title')" :id="getCardId(index + 100)" @click="showPopup(index + 100)"></div>
+          <div v-for="(materialRankT2, index) in stageRankT2.slice(0, 6)" :key="index" class="stage_card_t2_img" @click="showPopup(index + 100)">
+            <div class="stage_sprite_t3_wrap"><div :class="getSpriteImg(materialRankT2[0].itemId, 't2')"></div></div>
           </div>
         </div>
       </div>
@@ -146,7 +149,8 @@
       <!-- 散装标题Start -->
       <div class="popup_card" id="popup_card">
         <div class="popup_header">
-          <div :class="getSpriteImg(itemId, 'title')" style="display: inline-block; margin: 10px"></div>
+          <div class="stage_sprite_popup_wrap"><div :class="getSpriteImg(itemId, 'popup')"></div></div>
+
           <div class="popup_header_text">{{ itemType }}</div>
           <a :href="getPenguinUrl(itemId)" target="_blank">
             <div class="t3 popup_header_penguin" style="display: flex">
@@ -178,7 +182,9 @@
               <td class="popup_table_c3">{{ getEfficiency(stage.spm, 1) }}</td>
               <!-- <td class="popup_table_c4" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
               <td style="padding-left: 20px">
-                <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+                <div class="stage_sprite_sec_wrap">
+                  <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+                </div>
               </td>
               <!-- <td style="padding-left: 20px;" >    
                   <div v-show="stage.stageId.indexOf('perm')==-1" :class="getSpriteImg('ap_supply_lt_010', 'sec')"></div>
@@ -267,7 +273,9 @@
           </div>
           <div class="history_actStages">
             <div v-for="(stage, index) in closedAct" :key="index" class="history_stage">
-              <div :class="getSpriteImg(stage.itemId, 'history')" style="display: inline-block"></div>
+              <div class="stage_sprite_closed_wrap">
+                <div :class="getSpriteImg(stage.itemId, 'closed')"></div>
+              </div>
               <div class="history_stage_table">{{ stage.stageCode }}<br />{{ getEfficiency(stage.stageEfficiency) }}%</div>
             </div>
           </div>
@@ -400,17 +408,18 @@ export default {
     getPenguinUrl(num) {
       return "https://penguin-stats.cn/result/item/" + num;
     },
-    getSpriteImg(id, index) {
-      if (id === "30012" && index !== "t2") id = "30013";
-      if (index == "large") return "bg-" + id + "large" + " sprite_large";
-      if (index === "sec") return "bg-" + id + " sprite_secondary";
-      if (index === "title") return "bg-" + id + " sprite_large_title";
-      if (index === "history") return "bg-" + id + " sprite_large_history";
-      if (index === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
-      if (index === "up") return "bg-" + id + "_icon sprite_icon_up";
-      if (index === "el") return "bg-" + id + "_icon sprite_icon_el";
+    getSpriteImg(id, type) {
+      if (id === "30012" && type === "t3") id = "30013";
+      if ("t3" === type) return "bg-" + id + " stage_sprite_t3";
+      if ("sec" === type) return "bg-" + id + " stage_sprite_sec";
+      if ("t2" === type) return "bg-" + id + " stage_sprite_t2";
+      if ("popup" === type) return "bg-" + id + " stage_sprite_popup";
+      if ("closed" === type) return "bg-" + id + " stage_sprite_closed";
+      if (type === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
+      if (type === "up") return "bg-" + id + "_icon sprite_icon_up";
+      if (type === "el") return "bg-" + id + "_icon sprite_icon_el";
 
-      return "bg-" + id;
+      // return "bg-" + id;
     },
     getImgUrl(img, source) {
       source = typeof source !== "undefined" ? type : 1;

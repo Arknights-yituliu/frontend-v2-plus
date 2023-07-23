@@ -21,7 +21,7 @@
               id="store_tag_0"
               @click="switch_store('0')"
             >
-              <div style="margin: 3px" :class="getSpriteImg(4005, 0)"></div>
+              <div style="margin: 3px" :class="getSpriteImg(4005, 'icon')"></div>
             </div>
             <div
               :class="tagColor[1]"
@@ -29,7 +29,7 @@
               id="store_tag_1"
               @click="switch_store('1')"
             >
-              <div style="margin: 3px" :class="getSpriteImg(4004, 0)"></div>
+              <div style="margin: 3px" :class="getSpriteImg(4004, 'icon')"></div>
             </div>
             <div
               :class="tagColor[2]"
@@ -37,7 +37,7 @@
               id="store_tag_2"
               @click="switch_store('2')"
             >
-              <div style="margin: 0px 2px" :class="getSpriteImg('EPGS_COIN', 0)"></div>
+              <div style="margin: 0px 2px" :class="getSpriteImg('EPGS_COIN', 'icon')"></div>
             </div>
             <div
               :class="tagColor[3]"
@@ -45,7 +45,7 @@
               id="store_tag_3"
               @click="switch_store('3')"
             >
-              <div style="margin: 0px 5px" :class="getSpriteImg('REP_COIN', 0)"></div>
+              <div style="margin: 0px 5px" :class="getSpriteImg('REP_COIN', 'icon')"></div>
             </div>
             <div
               :class="tagColor[4]"
@@ -53,7 +53,7 @@
               id="store_tag_4"
               @click="switch_store('4')"
             >
-              <div style="margin: 3px" :class="getSpriteImg('SOCIAL_PT', 0)"></div>
+              <div style="margin: 3px" :class="getSpriteImg('SOCIAL_PT', 'icon')"></div>
             </div>
             <div class="tab_text">*点击图标切换</div>
           </div>
@@ -64,11 +64,11 @@
       <!-- 绿票商店 -->
       <div class="store_content" id="store_0" :style="storeVisiable[0]">
         <div class="store_unit_first_icon">
-          <div :class="getSpriteImg(4005, 0)"></div>
+          <div :class="getSpriteImg(4005, 'icon')"></div>
         </div>
         <div v-for="(m_data, index) in storeList['green']" class="store_unit" :key="index">
           <!-- <img class="store_unit_pic" alt="" title=""	:src="getImgUrl(m_data.itemName)" >	 -->
-          <div :class="getSpriteImg(m_data.itemId, 1)"></div>
+          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 0.8, 0.024)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -92,10 +92,10 @@
       <!-- 黄票商店 -->
       <div class="store_content" id="store_1" :style="storeVisiable[1]">
         <div class="store_unit_first_icon">
-          <div :class="getSpriteImg(4004, 0)"></div>
+          <div :class="getSpriteImg(4004, 'icon')"></div>
         </div>
         <div v-for="(m_data, index) in storeList['yellow']" class="store_unit" :key="index">
-          <div :class="getSpriteImg(m_data.itemId, 1)"></div>
+          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 9.0, 1.5)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -120,10 +120,10 @@
       <div class="store_content" id="store_2" :style="storeVisiable[2]">
         <div class="store_unit_first_icon">
           <!-- <img class="store_unit_pic store_unit_icon" alt="" title=""	:src="getImgUrl('寻访参数模型' ,4)">	 -->
-          <div :class="getSpriteImg('EPGS_COIN', 0)"></div>
+          <div :class="getSpriteImg('EPGS_COIN', 'icon')"></div>
         </div>
         <div v-for="(m_data, index) in storeList['orange']" class="store_unit" :key="index">
-          <div :class="getSpriteImg(m_data.itemId, 1)"></div>
+          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 1.22, 0.05)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -147,10 +147,10 @@
       <!-- 紫票商店 -->
       <div class="store_content" id="store_3" :style="storeVisiable[3]">
         <div class="store_unit_first_icon">
-          <div :class="getSpriteImg('REP_COIN', 0)"></div>
+          <div :class="getSpriteImg('REP_COIN', 'icon')"></div>
         </div>
         <div v-for="(m_data, index) in storeList['purple']" class="store_unit" :key="index">
-          <div :class="getSpriteImg(m_data.itemId, 1)"></div>
+          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 1.6, 0.32)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -174,10 +174,10 @@
       <!-- 信用商店 -->
       <div class="store_content" id="store_4" :style="storeVisiable[4]">
         <div class="store_unit_first_icon">
-          <div :class="getSpriteImg('SOCIAL_PT', 0)"></div>
+          <div :class="getSpriteImg('SOCIAL_PT', 'icon')"></div>
         </div>
         <div v-for="(m_data, index) in storeList['grey']" class="store_unit" :key="index">
-          <div :class="getSpriteImg(m_data.itemId, 1)"></div>
+          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 6.5, 1.6)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -237,7 +237,7 @@
             <!-- <div class="act_card uni_shadow_2 act_area1_border" :class="getDivVisible(singleItem.itemArea - 0.5, singleItem.itemArea + 0.5)"> -->
             <div class="act_card_img">
               <!-- <img class="level_img" :src="getImgUrl(singleItem.itemName, 1)" :alt="(singleItem.itemName)"> -->
-              <div :class="getSpriteImg(singleItem.itemId, 2)"></div>
+              <div class="store_sprite_act_wrap"> <div :class="getSpriteImg(singleItem.itemId, 'act')"></div></div>
             </div>
             <div class="act_card_table">
               <table class="act_table">
@@ -274,7 +274,7 @@
           >
             <!-- <div class="act_card uni_shadow_2 act_area3_border" :class="getDivVisible(singleItem.itemArea - 1.5, singleItem.itemArea - 0.5)"> -->
             <div class="act_card_img">
-              <div :class="getSpriteImg(singleItem.itemId, 2)"></div>
+              <div class="store_sprite_act_wrap"> <div :class="getSpriteImg(singleItem.itemId, 'act')"></div></div>
             </div>
             <div class="act_card_table">
               <table class="act_table">
@@ -311,7 +311,7 @@
           >
             <!-- <div class="act_card uni_shadow_2 act_area4_border" :class="getDivVisible(singleItem.itemArea - 2.5, singleItem.itemArea - 1.5)"> -->
             <div class="act_card_img">
-              <div :class="getSpriteImg(singleItem.itemId, 2)"></div>
+              <div class="store_sprite_act_wrap"> <div :class="getSpriteImg(singleItem.itemId, 'act')"></div></div>
             </div>
             <div class="act_card_table">
               <table class="act_table">
@@ -372,11 +372,10 @@ export default {
     // this.findActStorePer();
   },
   methods: {
-    getSpriteImg(id, index) {
-      if (index == 0) return "bg-" + id + "_icon sprite_store_icon";
-      if (index == 1) return "bg-" + id + " sprite_store_perm";
-      if (index == 2) return "bg-" + id + " sprite_store_act";
-      if (index == 3) return "bg-" + id + " sprite_secondary";
+    getSpriteImg(id, type) {
+      if ('icon' === type) return "bg-" + id + "_icon sprite_store_icon";
+      if ('perm' === type) return "bg-" + id + " store_sprite_perm";
+      if ('act' === type) return "bg-" + id + " store_sprite_act";
       return "bg-" + id;
     },
     getCookies() {
