@@ -143,7 +143,7 @@
         <!-- 左半部分 -->
         <div :class="'card_option_left' + surveyType">
           <div :class="'card_option_top_left' + surveyType">
-            <div>
+            <div class="avatar_at_top">
               <div :class="char.own ? 'image_avatar_own' : 'image_avatar'">
                 <div @click="updateOwn(char_index, !char.own)" :class="getSprite(char.charId)"></div>
               </div>
@@ -229,6 +229,11 @@
               <img class="image_null" src="/image/rank2/null.png" alt="" />
             </div>
           </div>
+        </div>
+
+        <div class="card-overlay" v-show="'简易问卷' != surveyTypeText && !characterList[char_index].own">
+          <div class="card-overlay-title">未拥有</div>
+          <div class="card-overlay-detail">点击干员头像切换</div>
         </div>
       </div>
     </div>
