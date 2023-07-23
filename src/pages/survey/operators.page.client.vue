@@ -91,8 +91,8 @@
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('own', true)" id="other1" @click="addFilterRule('own', true)">已拥有</div>
           <div :class="selectedBtn('own', false)" id="other2" @click="addFilterRule('own', false)">未拥有</div>
-          <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">有模组</div>
-          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">无模组</div>
+          <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">模组已实装</div>
+          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">模组未实装</div>
           <div :class="selectedBtn('itemObtainApproach', 0)" id="other5" @click="addFilterRule('itemObtainApproach', 0)">赠送干员</div>
         </div>
       </div>
