@@ -30,7 +30,7 @@
                     <tr>
                       <td style="padding: 0px 0px 0px 6px; width: 30px">
                         <!-- <img class="item_img_size" :src="static_imgUrl(item.itemName)" :alt="getItemName(item.itemName)"/> -->
-                        <div :class="getSpriteImg(item.itemId, 0)"></div>
+                        <div class="item_sprite_value_wrap"> <div :class="getSpriteImg(item.itemId, 'value')"></div></div>
                       </td>
                       <td v-show="valueType == 'sanity'" class="value_subList_value_font">
                         {{ getItemsanityValue(item.itemId, item.itemValue) }}
@@ -54,7 +54,7 @@
                     <tr>
                       <td style="padding: 0px 0px 0px 6px; width: 30px">
                         <!-- <img class="item_img_size" :src="static_imgUrl(item.itemName)" :alt="getItemName(item.itemName)"/> -->
-                        <div :class="getSpriteImg(item.itemId, 0)"></div>
+                        <div class="item_sprite_value_wrap"> <div :class="getSpriteImg(item.itemId, 'value')"></div></div>
                       </td>
                       <td v-show="valueType == 'sanity'" class="value_subList_value_font">
                         {{ getItemsanityValue(item.itemId, item.itemValue) }}
@@ -143,10 +143,10 @@ export default {
       }
     },
 
-    getSpriteImg(id, index) {
-      if (index === 0) return "bg-" + id + " sprite_itemValue";
+    getSpriteImg(id, type) {
+       return "bg-" + id + " item_sprite_value";
 
-      return "bg-" + id;
+      
     },
 
     getItemGreenValue(id, num) {

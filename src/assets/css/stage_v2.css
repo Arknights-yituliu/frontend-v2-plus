@@ -295,15 +295,16 @@
 .popup_header {
   margin: 0px;
   vertical-align: middle;
-  /* display: inline; */
+  display: flex;
   font-size: 24px;
   font-weight: 600;
   height: 66px;
 }
 
 .popup_header_text {
-  display: inline-block;
-  position: relative;
+  /* display: inline-block; */
+  /* position: relative; */
+  margin-top: 20px;
   bottom: 28px;
   color: #3f51b5;
 }
@@ -391,4 +392,149 @@
   /* border: 1px solid #000000; */
   vertical-align: top;
   margin: 6px 0px 0px -4px;
+}
+
+
+
+.sprite_icon_up {
+  transform: scale(0.8);
+  margin: -10px;
+}
+
+.sprite_icon_el {
+  transform: scale(0.6);
+  margin: -5px;
+}
+
+.sprite_icon_small {
+  transform: scale(0.6);
+  margin: -12px;
+  /* margin-top: -8px; */
+}
+
+.sprite_store_icon {
+  transform: scale(0.8);
+  /* margin-top: -80px; */
+  margin-left: 10px;
+}
+
+.stage_sprite_t3_wrap{
+  position: relative;
+  
+}
+
+.stage_sprite_t3{
+  position: absolute;
+  transform: scale(0.8);
+  top: -30px;
+  right:  140px;
+}
+
+
+.stage_sprite_sec_wrap{
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.stage_sprite_sec{
+  position: absolute;
+  transform: scale(0.14);
+  top: -78px;
+  left: -82px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+
+.stage_sprite_t2_wrap{
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.stage_sprite_t2{
+  position: absolute;
+  transform: scale(0.4);
+  top: -60px;
+  left: -66px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+.stage_sprite_popup_wrap{
+  position: relative;
+  width: 100px;
+  height: 60px;
+}
+
+.stage_sprite_popup{
+  position: absolute;
+  transform: scale(0.4);
+  top: -56px;
+  left: -50px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+.stage_sprite_closed_wrap{
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.stage_sprite_closed{
+  position: absolute;
+  transform: scale(0.3);
+  top: -60px;
+  left: -66px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+
+.store_sprite_perm_wrap{
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.store_sprite_perm{
+  position: absolute;
+  transform: scale(0.3);
+  top: -60px;
+  left: -50px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+.store_sprite_act_wrap{
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.store_sprite_act{
+  position: absolute;
+  transform: scale(0.5);
+  top: -40px;
+  left: -40px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+
+.item_sprite_value_wrap{
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.item_sprite_value{
+  position: absolute;
+  transform: scale(0.35);
+  top: -60px;
+  left: -60px;
+  /* top: -30px;
+  right:  140px; */
 }
