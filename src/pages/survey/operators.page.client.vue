@@ -141,15 +141,15 @@
     <div class="char_forms">
       <div :class="simpleCardClass()" v-for="(char, char_index) in characterList" :key="char_index" v-show="char.show">
         <!-- 左半部分 -->
-        <div :class="'card_option_left' + surveyType">
-          <div :class="'card_option_top_left' + surveyType">
+        <div :class="surveyTypeClass('card_option_left')">
+          <div :class="surveyTypeClass('card_option_top_left')">
             <div class="avatar_at_top">
-              <div :class="char.own ? 'image_avatar_own' : 'image_avatar'">
+              <div class="image_avatar">
                 <div @click="updateOwn(char_index, !char.own)" :class="getSprite(char.charId)"></div>
               </div>
-              <div :class="char.own ? 'char_name' : 'char_name notown'">{{ char.name }}</div>
+              <div class="char_name">{{ char.name }}</div>
             </div>
-            <div :class="char.own ? 'potential_wrap' + surveyType : 'potential_wrap' + surveyType + ' notown'">
+            <div :class="surveyTypeClass('potential_wrap')">
               <div
                 class="image_potential"
                 :id="char_index + 'potential' + rank"
@@ -162,7 +162,7 @@
           </div>
 
           <!--  -->
-          <div :class="char.own ? 'elite_wrap' + surveyType : 'elite_wrap' + surveyType + ' notown'">
+          <div :class="surveyTypeClass('elite_wrap')">
             <div class="image_elite" :id="char_index + 'elite0'" @click="updateElite(char_index, 0)">
               <div :class="getSprite('elite0', 'elite')"></div>
             </div>
@@ -180,8 +180,8 @@
 
         <!-- 右半部分 -->
         <!-- 技能 -->
-        <div :class="char.own ? 'card_option_right' : 'card_option_right notown'">
-          <div v-for="(skill, skill_index) in char.skill" :key="skill_index" :class="'skill_wrap' + surveyType">
+        <div class="card_option_right">
+          <div v-for="(skill, skill_index) in char.skill" :key="skill_index" :class="surveyTypeClass('skill_wrap')">
             <div class="image_skill">
               <div :class="getSprite(skill.iconId, 'icon')"></div>
             </div>
@@ -195,10 +195,10 @@
             </div>
           </div>
 
-          <div :class="'skill_delimiter' + surveyType"></div>
+          <div :class="surveyTypeClass('skill_delimiter')"></div>
 
           <!-- 模组X -->
-          <div :class="'skill_wrap' + surveyType" v-show="char.modXOwn">
+          <div :class="surveyTypeClass('skill_wrap')" v-show="char.modXOwn">
             <div class="image_mod">{{ "模组X" }}</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank" @click="updateSkillAndMod(char_index, 'modX', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
@@ -206,7 +206,7 @@
           </div>
 
           <!-- 没有模组X显示 -->
-          <div :class="'skill_wrap' + surveyType" v-show="!char.modXOwn">
+          <div :class="surveyTypeClass('skill_wrap')" v-show="!char.modXOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
               <img class="image_null" src="/image/rank2/null.png" alt="" />
@@ -214,7 +214,7 @@
           </div>
 
           <!-- 模组Y -->
-          <div :class="'skill_wrap' + surveyType" v-show="char.modYOwn">
+          <div :class="surveyTypeClass('skill_wrap')" v-show="char.modYOwn">
             <div class="image_mod">{{ "模组Y" }}</div>
 
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank" @click="updateSkillAndMod(char_index, 'modY', rank)">
@@ -223,7 +223,7 @@
           </div>
 
           <!-- 没有模组Y显示 -->
-          <div :class="'skill_wrap' + surveyType" v-show="!char.modYOwn">
+          <div :class="surveyTypeClass('skill_wrap')" v-show="!char.modYOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
               <img class="image_null" src="/image/rank2/null.png" alt="" />
@@ -483,20 +483,25 @@ function sortCharacterList(rule) {
 function updateOwn(char_index, newVal) {
   const character = characterList.value[char_index];
   characterList.value[char_index].own = newVal;
+  const oldElite = characterList.value[char_index].elite;
+  const oldPotential = characterList.value[char_index].potential;
+
   if (characterList.value[char_index].own) {
     if (character.rarity > 3) {
       characterList.value[char_index].elite = 2;
-      setDomBackgroundColor(char_index + "elite2", true);
+      cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
       characterList.value[char_index].potential = 1;
-      setDomBackgroundColor(char_index + "potential1", true);
+      cancelBackBeforeUpdate(char_index + "potential", 1, oldPotential);
+
     }
   } else {
     let attributeList = ["level", "elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
     for (let attribute of attributeList) {
-      switchSelected(char_index + attribute, -1, character[attribute]);
+      setDomBackgroundColor(char_index + attribute + character[attribute],false);
+
       characterList.value[char_index][attribute] = -1;
     }
-    setDomBackgroundColor(char_index + "level", false);
+    setDomBackgroundColor(char_index + "level",false);
   }
 
   upload();
@@ -518,24 +523,24 @@ function updateElite(char_index, newVal) {
   console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldVal) {
     characterList.value[char_index].elite = -1;
-    switchSelected(domId, newVal, oldVal);
-    cancelSkillAndMod(char_index);
+    setDomBackgroundColor(domId+oldVal, false);
+    // cancelSkillAndMod(char_index);
     return;
   }
   if (newVal < 2) {
-    cancelSkillAndMod(char_index);
+    // cancelSkillAndMod(char_index);
   }
   characterList.value[char_index].elite = newVal;
-  switchSelected(domId, newVal, oldVal);
+  cancelBackBeforeUpdate(domId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
-  console.log(characterList.value[char_index]);
+  console.log("精英化:", JSON.stringify(characterList.value[char_index], null, 2));
 }
 
 //取消专精和模组等级
 function cancelSkillAndMod(char_index) {
   let attributeList = ["skill1", "skill2", "skill3", "modX", "modY"];
   for (let attribute of attributeList) {
-    switchSelected(char_index + attribute, -1, characterList.value[char_index][attribute]);
+    cancelBackBeforeUpdate(char_index + attribute, -1, characterList.value[char_index][attribute]);
     characterList.value[char_index][attribute] = -1;
   }
 }
@@ -549,23 +554,30 @@ function batchUpdatesElite(newVal) {
   }
 }
 
+
 //更新专精或模组等级
 function updateSkillAndMod(char_index, attribute, newVal) {
   let domId = char_index + attribute;
   let oldVal = characterList.value[char_index][attribute];
+  let oldElite = characterList.value[char_index].elite;
   console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldVal) {
     characterList.value[char_index][attribute] = -1;
-    switchSelected(domId, newVal, oldVal);
+    setDomBackgroundColor(domId + oldVal, false);
     return;
   }
+
   characterList.value[char_index][attribute] = newVal;
+
   if (characterList.value[char_index].rarity > 3) {
     characterList.value[char_index].elite = 2;
-    switchSelected(char_index + "elite", 2, -1);
+    cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
   }
-  switchSelected(domId, newVal, oldVal);
+
+  cancelBackBeforeUpdate(domId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
+
+  console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
 }
 
 // 批量精英化
@@ -584,57 +596,61 @@ function updatePotential(char_index, newVal) {
   console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldRank) {
     characterList.value[char_index].potential = -1;
-    switchSelected(domId, newVal, oldRank);
+    setDomBackgroundColor(domId + oldRank,false);
     return;
   }
+
   characterList.value[char_index].potential = newVal;
-  switchSelected(domId, newVal, oldRank);
+  cancelBackBeforeUpdate(domId, newVal, oldRank);
   characterList.value[char_index].own = true;
+
+  console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
 }
 
 //最大等级
-function updateLevel(char_index, rarity, elite) {
+function updateLevel(char_index, rarity) {
   let level = 0;
+  let oldElite = characterList.value[char_index].elite;
 
   characterList.value[char_index].own = true;
   if (characterList.value[char_index].level > 0) {
-    console.log("取消满级:");
     characterList.value[char_index].level = level;
-    setDomBackgroundColor(char_index + "level", false);
+    setDomBackgroundColor(char_index + "level",false);
     return;
   }
-  console.log(rarity, elite);
+
   if (rarity == 6) {
     level = 90;
     characterList.value[char_index].elite = 2;
-    setDomBackgroundColor(char_index + "elite2", true);
+    cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
   }
   if (rarity == 5) {
     level = 80;
     characterList.value[char_index].elite = 2;
-    setDomBackgroundColor(char_index + "elite2", true);
+    cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
   }
   if (rarity == 4) {
     level = 70;
     characterList.value[char_index].elite = 2;
-    setDomBackgroundColor(char_index + "elite2", true);
+    cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
   }
   if (rarity == 3) {
     level = 55;
     characterList.value[char_index].elite = 1;
-    setDomBackgroundColor(char_index + "elite1", true);
+    cancelBackBeforeUpdate(char_index + "elite", 1, oldElite);
   }
   if (rarity < 3) {
     level = 30;
     characterList.value[char_index].elite = 0;
-    setDomBackgroundColor(char_index + "elite0", true);
+    cancelBackBeforeUpdate(char_index + "elite", 0, oldElite);
   }
 
   if (level == 0) return;
 
-  console.log("满级:", level);
   characterList.value[char_index].level = level;
-  setDomBackgroundColor(char_index + "level", true);
+  setDomBackgroundColor(char_index + "level",true);
+
+  console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
 }
 
 //选中标题
@@ -644,9 +660,14 @@ function btnSetClass(flag) {
 }
 
 //调用 setDomBackgroundColor 修改选中的新选项和旧选项的背景颜色
-function switchSelected(domId, rank, oldRank) {
-  setDomBackgroundColor(domId + rank, true);
-  setDomBackgroundColor(domId + oldRank, false);
+function cancelBackBeforeUpdate(domIdHeader, rank, oldRank) {
+  setDomBackgroundColor(domIdHeader + oldRank, false);
+  setDomBackgroundColor(domIdHeader + rank, true);
+}
+
+function updateBackBeforecancel(domIdHeader, rank, oldRank) {
+    setDomBackgroundColor(domIdHeader + rank, true);
+    setDomBackgroundColor(domIdHeader + oldRank, false);
 }
 
 // 修改dom的背景颜色
@@ -654,8 +675,10 @@ function setDomBackgroundColor(domId, selected) {
   let dom = document.getElementById(domId);
   if (dom == null) return;
   if (selected) {
+    console.log("添加背景色id", domId);
     dom.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   } else {
+    console.log("取消背景色id", domId);
     dom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
   }
 }
@@ -687,6 +710,9 @@ function changeSurveyType(type) {
   }
 }
 
+function surveyTypeClass(classNameHeader) {
+  return classNameHeader + surveyType.value;
+}
 //
 function simpleCardClass() {
   if (simpleCard.value) return "char_card char_card_simple";
