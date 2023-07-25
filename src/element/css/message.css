@@ -7,8 +7,8 @@
 .messageBar_success {
   min-width: 300px;
   border-radius: 4px;
-  line-height: 24px;
-  height: 24px;
+  line-height: 26px;
+  height: 26px;
   color: rgb(58, 151, 58);
   /* font-weight: 600; */
   text-align: center;
@@ -27,8 +27,8 @@
 .messageBar_error {
   min-width: 300px;
   border-radius: 4px;
-  line-height: 24px;
-  height: 24px;
+  line-height: 26px;
+  height: 26px;
   color: rgb(255, 78, 78);
   font-size: 14px;
   /* font-weight: 600; */

@@ -1,29 +1,35 @@
 <template>
-  <div class="survey_top_right_btn" @click="loginVisible = !loginVisible" v-show="userData.status < 0">登录</div>
-  <c-popup :visible="loginVisible" v-model:visible="loginVisible" :width="'400px'">
-    <div class="login_card" v-show="userData.status < 0">
-      <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
-      <div style="display: flex">
-        <div class="btn_login" @click="register()">注册</div>
-        <div class="btn_login" @click="login()">登录</div>
+  <div class="survey_nav_page">
+    <div class="survey_top_right_btn" @click="loginVisible = !loginVisible" v-show="userData.status < 0">登录</div>
+    <c-popup :visible="loginVisible" v-model:visible="loginVisible">
+      <div class="login_card" v-show="userData.status < 0">
+        <div class="login_input_wrap">
+          <div>用户名：</div>
+          <input class="login_input" placeholder="请输入" v-model="inputData.userName" />
+        </div>
+        <div style="display: flex">
+          <div class="btn_login" @click="register()">注册</div>
+          <div class="btn_login" @click="login()">登录</div>
+        </div>
+        <div class="login_tip">
+          新用户输入自己喜欢的昵称后点击注册即可分配ID，昵称+ID即为您的用户名。<br />
+          （例如输入昵称 <b>巴别塔恶灵</b>，分配后返回ID为 <b>#1141</b>，则用户名即为 <b>巴别塔恶灵#1141</b>）<br />
+          当注册成功后，再次访问该网站需输入 <b>巴别塔恶灵#1141</b> ，即可登录找回您上次填写的信息
+        </div>
       </div>
-      <div class="login_tip">
-        <a>新用户输入用户名即可分配ID，此用户 ID 仅于本网站使用， 用于在不同设备间同步您的数据，请妥善保管您的ID</a>
-        <br /><a>老用户请输入 <b>用户名#ID</b> 登录</a>
-      </div>
-    </div>
 
-    <div class="login_card" v-show="userData.status > 0">
-      <div class="logout_text">确定登出当前用户？</div>
-      <div class="logout_btn_wrap">
-        <div class="btn_login" @click="logout()">确定</div>
-        <div class="btn_login" @click="loginVisible = !loginVisible">取消</div>
+      <div class="login_card" v-show="userData.status > 0">
+        <div class="logout_text">确定登出当前用户？</div>
+        <div class="logout_btn_wrap">
+          <div class="btn_login" @click="logout()">确定</div>
+          <div class="btn_login" @click="loginVisible = !loginVisible">取消</div>
+        </div>
       </div>
-    </div>
-  </c-popup>
+    </c-popup>
 
-  <div v-show="userData.status > 0">
-    <div class="user_name" @click="loginVisible = !loginVisible">{{ userData.userName }}</div>
+    <div v-show="userData.status > 0">
+      <div class="user_name" @click="loginVisible = !loginVisible">{{ userData.userName }}</div>
+    </div>
   </div>
 </template>
 
@@ -83,18 +89,5 @@ onMounted(() => {
 
 <style scoped>
 .btn_survey_white {
-}
-
-.survey_top_right_btn {
-  min-width: 60px;
-  color: white;
-  text-align: center;
-  margin-right: 20px;
-  font-size: 20px;
-}
-
-.login_tip {
-  margin-top: 20px;
-  line-height: 36px;
 }
 </style>

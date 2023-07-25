@@ -58,19 +58,19 @@ watch(
   z-index: 30;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
   /* display: none; */
 }
 
 .popup {
   /* display: none; */
   position: absolute;
-  top: 50px;
+  top: 150px;
   left: 0;
   right: 0;
   z-index: 1000;
   margin: auto;
-  width: 540px;
+  width: 500px;
   height: auto;
   overflow: auto;
   background-color: rgba(255, 255, 255);

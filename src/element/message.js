@@ -16,7 +16,7 @@ function cMessage(text, type, duration) {
   messageBar.appendChild(text);
   document.body.appendChild(messageBar);
 
-  type = type === undefined ? "success" : type;
+  type = type === void 0 ? "success" : type;
   setTimeout(function () {
     for (let i in messageBars) {
       document.getElementById(messageBars[i]).style.top = 20 + i * 40 + "px";
@@ -24,7 +24,7 @@ function cMessage(text, type, duration) {
     messageBar.className = "messageBar_" + type;
   }, 500);
 
-  if (duration === undefined) duration = 4000;
+  if (duration === void 0) duration = 4000;
 
   setTimeout(function () {
     messageBar.remove();

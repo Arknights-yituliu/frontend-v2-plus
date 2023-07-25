@@ -36,10 +36,25 @@
   line-height: 50px;
   margin-right: 20px;
   cursor: pointer;
+  
+}
+
+.survey_nav_page{
+  width: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.survey_top_right_btn {
+  min-width: 60px;
+  color: white;
+  text-align: center;
+  margin-right: 20px;
+  font-size: 20px;
 }
 
 .login_card {
-  width: 300px;
+  width: 400px;
   height: auto;
   border-radius: 10px;
   margin: auto;
@@ -47,28 +62,43 @@
   /* padding: 10px; */
 }
 
+.login_input_wrap{
+  display: flex;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 18px;
+}
+
 .login_input {
   width: 300px;
   border: 0;
   outline: none;
   border-bottom: 1px black solid;
-  font-size: 18px;
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
   display: block;
+  height: 30px;
+  line-height: 30px;
+  font-size: 18px;
+}
+
+.login_tip {
+  margin-top: 20px;
+  line-height: 30px;
 }
 
 .user_name {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 40px;
   height: 40px;
   color: white;
   cursor: pointer;
+  margin-left: 20px;
 }
 
 .btn_login {
-  width: 100px;
+  width: 160px;
   height: 20px;
   padding: 3px;
   line-height: 20px;
@@ -77,6 +107,7 @@
   box-shadow: 0 0 1px 1px rgb(200, 200, 200);
   cursor: pointer;
   margin: auto;
+  
 }
 
 .logout_text {
@@ -88,36 +119,12 @@
   font-weight: 800;
 }
 
+
 .logout_btn_wrap {
   display: flex;
   justify-content: flex-end;
 }
 
-.survey_index_aside {
-  position: fixed;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  background: white;
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-}
-
-.survey_index_menu {
-  min-width: 60px;
-  font-size: 20px;
-  text-align: right;
-  margin-right: 6px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  /* border: 1px red solid; */
-  box-sizing: border-box;
-}
-
-.menu_selected {
-  border-right: 4px solid rgb(0, 89, 255);
-  color: rgb(0, 89, 255);
-}
 
 .survey_index_content {
   /* width: 100%; */
