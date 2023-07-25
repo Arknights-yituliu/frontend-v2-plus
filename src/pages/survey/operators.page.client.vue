@@ -233,7 +233,7 @@
 
         <div class="card-overlay" v-show="'简易问卷' != surveyTypeText && !characterList[char_index].own">
           <div class="card-overlay-title">未拥有</div>
-          <div class="card-overlay-detail">点击干员头像设为拥有</div>
+          <div class="card-overlay-detail">点击头像将干员设为拥有</div>
         </div>
       </div>
     </div>
