@@ -248,10 +248,7 @@ function logout() {
 
 let navId = ref(1);
 
-function selected(id) {
-  if (id == navId.value) return "href menu_selected";
-  return "href";
-}
+
 
 onMounted(() => {
   userData.value = userDataCacheEvent();

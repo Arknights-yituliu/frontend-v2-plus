@@ -123,7 +123,7 @@
   -moz-opacity: 0;
   opacity: 0;
   cursor: pointer;
-  z-index: 2000;
+  /* z-index: 2000; */
   position: absolute;
   top: 0;
   left: 0;

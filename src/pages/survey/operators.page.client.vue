@@ -233,7 +233,7 @@
 
         <div class="card-overlay" v-show="'简易问卷' != surveyTypeText && !characterList[char_index].own">
           <div class="card-overlay-title">未拥有</div>
-          <div class="card-overlay-detail">点击干员头像切换</div>
+          <div class="card-overlay-detail">点击干员头像设为拥有</div>
         </div>
       </div>
     </div>
@@ -311,13 +311,16 @@ function exportExcel() {
 }
 
 let lastUploadTimeStamp = 1689425013364;
-let uploadMessage = ref({ updateTime: "00:00:00", insertRows: 0, updateRows: 0 });
+let uploadMessage = ref({ updateTime: "00:00:00", affectedRows: 0});
+let updateIndexMap = ref({})
 
 //上传风评表
 function upload() {
   let uploadList = [];
-  console.log(characterList.value);
-  for (const i in characterList.value) {
+  console.log(updateIndexMap.value);
+  
+  
+  for (const i in updateIndexMap.value) {
     const character = {
       charId: characterList.value[i].charId,
       own: characterList.value[i].own,
@@ -333,16 +336,26 @@ function upload() {
     uploadList.push(character);
   }
 
+  
   let nowUploadTimeStamp = Date.parse(new Date());
   let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
+  
+  if (uploadFrequency < 5000)  return;
+  if (globalUserData.value.token == void 0)   {
+    console.log(globalUserData.value.token == void 0)
+    cMessage("未登录",'error')
+    return;
+  }
+
   console.log("上传频率：", uploadFrequency / 1000, "s");
-  if (uploadFrequency > 30000) {
+  
     surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
       // console.log(response.data);
       lastUploadTimeStamp = nowUploadTimeStamp;
       uploadMessage.value = response.data;
+      updateIndexMap.value = {}
     });
-  }
+  
 }
 
 let uploadFileName = ref("null");
@@ -486,7 +499,7 @@ function updateOwn(char_index, newVal) {
   const oldElite = characterList.value[char_index].elite;
   const oldPotential = characterList.value[char_index].potential;
 
-  if (characterList.value[char_index].own) {
+  if (newVal) {
     if (character.rarity > 3) {
       characterList.value[char_index].elite = 2;
       cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
@@ -498,12 +511,12 @@ function updateOwn(char_index, newVal) {
     let attributeList = ["level", "elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
     for (let attribute of attributeList) {
       setDomBackgroundColor(char_index + attribute + character[attribute],false);
-
       characterList.value[char_index][attribute] = -1;
     }
     setDomBackgroundColor(char_index + "level",false);
   }
-
+  
+  updateIndexMap.value[char_index]=char_index
   upload();
 }
 
@@ -520,7 +533,7 @@ function batchUpdatesOwn(newVal) {
 function updateElite(char_index, newVal) {
   let domId = char_index + "elite";
   let oldVal = characterList.value[char_index].elite;
-  console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  // console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldVal) {
     characterList.value[char_index].elite = -1;
     setDomBackgroundColor(domId+oldVal, false);
@@ -533,7 +546,10 @@ function updateElite(char_index, newVal) {
   characterList.value[char_index].elite = newVal;
   cancelBackBeforeUpdate(domId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
-  console.log("精英化:", JSON.stringify(characterList.value[char_index], null, 2));
+  // console.log("精英化:", JSON.stringify(characterList.value[char_index], null, 2));
+  
+  updateIndexMap.value[char_index]=char_index
+  upload();
 }
 
 //取消专精和模组等级
@@ -560,7 +576,7 @@ function updateSkillAndMod(char_index, attribute, newVal) {
   let domId = char_index + attribute;
   let oldVal = characterList.value[char_index][attribute];
   let oldElite = characterList.value[char_index].elite;
-  console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  // console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldVal) {
     characterList.value[char_index][attribute] = -1;
     setDomBackgroundColor(domId + oldVal, false);
@@ -577,7 +593,10 @@ function updateSkillAndMod(char_index, attribute, newVal) {
   cancelBackBeforeUpdate(domId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
 
-  console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
+  // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
+
+  updateIndexMap.value[char_index]=char_index
+  upload();
 }
 
 // 批量精英化
@@ -593,7 +612,7 @@ function batchUpdatesSkillAndMod(attribute, newVal) {
 function updatePotential(char_index, newVal) {
   let domId = char_index + "potential";
   let oldRank = characterList.value[char_index].potential;
-  console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  // console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldRank) {
     characterList.value[char_index].potential = -1;
     setDomBackgroundColor(domId + oldRank,false);
@@ -604,7 +623,10 @@ function updatePotential(char_index, newVal) {
   cancelBackBeforeUpdate(domId, newVal, oldRank);
   characterList.value[char_index].own = true;
 
-  console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
+  // console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
+
+  updateIndexMap.value[char_index]=char_index
+  upload();
 }
 
 //最大等级
@@ -650,7 +672,10 @@ function updateLevel(char_index, rarity) {
   characterList.value[char_index].level = level;
   setDomBackgroundColor(char_index + "level",true);
 
-  console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
+  // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
+
+  updateIndexMap.value[char_index]=char_index
+  upload();
 }
 
 //选中标题
@@ -722,5 +747,6 @@ function simpleCardClass() {
 onMounted(() => {
   // getSurveyCharacter();
   addFilterRule("rarity", 6);
+ 
 });
 </script>
