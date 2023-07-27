@@ -5,7 +5,7 @@
     <div class="dev_wrap">
       <div class="label_wrap">
         <div class="label_card">
-          <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
+          <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/qq.webp" alt="" />
@@ -19,7 +19,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
+          <a class="href_black" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
@@ -33,7 +33,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://github.com/Arknights-yituliu/BackEndV3">
+          <a class="href_black" href="https://github.com/Arknights-yituliu/BackEndV3">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
@@ -56,7 +56,7 @@
     <div class="dev_wrap">
       <div class="label_wrap">
         <div class="label_card">
-          <a class="href" href="https://github.com/yamasakura">
+          <a class="href_black" href="https://github.com/yamasakura">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="https://avatars.githubusercontent.com/u/84258011" alt="" />
@@ -73,7 +73,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://space.bilibili.com/10057492">
+          <a class="href_black" href="https://space.bilibili.com/10057492">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="https://avatars.githubusercontent.com/u/84625349" alt="" />
@@ -91,7 +91,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://github.com/hguandl">
+          <a class="href_black" href="https://github.com/hguandl">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="https://avatars.githubusercontent.com/u/10684225" alt="" />
@@ -107,7 +107,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://zhaozuohong.vip">
+          <a class="href_black" href="https://zhaozuohong.vip">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="https://zhaozuohong.vip/avatar.png" alt="" />
@@ -125,7 +125,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://www.bilibili.com/video/BV1yL4y1P7K1">
+          <a class="href_black" href="https://www.bilibili.com/video/BV1yL4y1P7K1">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/shaobing.webp" alt="" />
@@ -147,7 +147,7 @@
     <div class="dev_wrap">
       <div class="label_wrap">
         <div class="label_card">
-          <a class="href" href="https://space.bilibili.com/12786648">
+          <a class="href_black" href="https://space.bilibili.com/12786648">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/wmm.webp" alt="" />
@@ -163,7 +163,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://github.com/Yanstory">
+          <a class="href_black" href="https://github.com/Yanstory">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="https://avatars.githubusercontent.com/u/5153875" alt="" />
@@ -179,7 +179,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://github.com/youcai922">
+          <a class="href_black" href="https://github.com/youcai922">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="https://avatars.githubusercontent.com/u/64458943" alt="" />
@@ -195,7 +195,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://github.com/Ks-luow">
+          <a class="href_black" href="https://github.com/Ks-luow">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="https://avatars.githubusercontent.com/u/64978950" alt="" />
@@ -218,7 +218,7 @@
     <div class="dev_wrap">
       <div class="label_wrap">
         <div class="label_card">
-          <a class="href" href="https://penguin-stats.cn">
+          <a class="href_black" href="https://penguin-stats.cn">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/penguin_stats_logo.webp" alt="" />
@@ -232,7 +232,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://github.com/yuanyan3060/ArknightsGameResource">
+          <a class="href_black" href="https://github.com/yuanyan3060/ArknightsGameResource">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="https://avatars.githubusercontent.com/u/58114805" alt="" />
@@ -246,7 +246,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
+          <a class="href_black" href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/prts.webp" alt="" />
@@ -260,7 +260,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://space.bilibili.com/8412516">
+          <a class="href_black" href="https://space.bilibili.com/8412516">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/honeycake.webp" alt="" />
@@ -279,7 +279,7 @@
     <div class="dev_wrap">
       <div class="label_wrap">
         <div class="label_card">
-          <a class="href" href="https://space.bilibili.com/688411531">
+          <a class="href_black" href="https://space.bilibili.com/688411531">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/beta_logo_yw.webp" alt="" />
@@ -293,7 +293,7 @@
         </div>
 
         <div class="label_card">
-          <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus/issues">
+          <a class="href_black" href="https://github.com/Arknights-yituliu/frontend-v2-plus/issues">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
@@ -312,7 +312,7 @@
     <div class="dev_wrap">
       <div class="label_wrap">
         <div class="label_card">
-          <a class="href" href="https://space.bilibili.com/688411531">
+          <a class="href_black" href="https://space.bilibili.com/688411531">
             <div class="label_content">
               <div class="label_icon_wrap">
                 <img class="label_icon" src="/image/website/beta_logo_yw.webp" alt="" />
@@ -383,5 +383,10 @@ import { ref } from "vue";
 
 .dev_notice {
   width: 96%;
+}
+
+.href_black{
+  text-decoration:none;
+  color: rgb(57, 57, 57);
 }
 </style>
