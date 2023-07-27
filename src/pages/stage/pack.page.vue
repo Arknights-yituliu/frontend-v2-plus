@@ -302,7 +302,7 @@
                 <div class="pack_info_text" style="color: #ff8f6e">
                   {{ getFixed(pack3.packOriginium, 1) }}源石 <br />￥{{ getFixed(pack3.packRmbPerOriginium, 1) }}/石
                 </div>
-                <div class="pack_info_alert" v-show="!pack3.packTag == ''">含难以估价内容，点击图片查看</div>
+               
                 <div class="pack_chart">
                   <div class="pack_chart_unit" v-show="pack3.packPPROriginium >= 1.57">
                     <div class="pack_chart_unit_text">本礼包</div>
@@ -331,6 +331,7 @@
                     </div>
                   </div>
                 </div>
+                <div class="pack_info_alert" v-show="!pack3.packTag == ''">含难以估价内容，点击图片查看</div>
                 <!-- 说明 -->
                 <div class="pack_type">材料折合源石</div>
               </div>
@@ -365,14 +366,14 @@
       </div>
     </div>
 
-    <foot></foot>
+    <!-- <foot></foot> -->
   </div>
 </template>
 
 <script>
 import cookie from "js-cookie";
 import storeApi from "@/api/store";
-import foot from "@/components/FootMini.vue";
+// import foot from "@/components/FootMini.vue";
 import { usePageContext } from "@/renderer/usePageContext";
 import toolApi from "@/api/tool";
 import { ClientOnly } from "@/components/ClientOnly";
@@ -393,7 +394,7 @@ export default {
     };
   },
   components: {
-    foot,
+    // foot,
     ClientOnly,
   },
   created() {
@@ -413,7 +414,7 @@ export default {
     },
 
     getBackColor(index) {
-      console.log(index);
+     
       if (index % 2 !== 0) return "pack_simple_tr_back";
     },
 
@@ -657,7 +658,7 @@ export const documentProps = {
 <style>
 #pack {
   /* background-color: #eeeeee; */
-  max-width: 1080px;
+  /* max-width: 1080px; */
   margin: auto;
 }
 
@@ -677,17 +678,11 @@ export const documentProps = {
   width: 522px;
   display: flex;
   flex-wrap: wrap;
-  /* height: 120px; */
-  /* overflow: hidden; */
 }
 
 .pack_img {
   width: 160px;
   height: 120px;
-  /* position: absolute; */
-  /* display: inline-block; */
-  /* z-index: 20; */
-  /* vertical-align: top; */
   border-radius: 8px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   overflow: hidden;
@@ -720,7 +715,7 @@ export const documentProps = {
 }
 
 .pack_info {
-  display: inline-block;
+ 
   z-index: 10;
   height: 108px;
   width: 360px;
@@ -729,6 +724,8 @@ export const documentProps = {
   margin-top: 6px;
   border-radius: 4px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  position: relative;
+  
 }
 
 .pack_info_text {
@@ -746,11 +743,14 @@ export const documentProps = {
 .pack_info_alert {
   position: absolute;
   color: white;
-  margin-top: -14px;
-  margin-left: 14px;
+  /* margin-top: -14px;
+  margin-left: 14px; */
   background: chocolate;
   border-radius: 21px;
   padding: 2px 6px;
+  width: 240px;
+  top: 96px;
+  /* display: none; */
 }
 
 .t1 {
@@ -793,11 +793,11 @@ export const documentProps = {
 .pack_type {
   display: inline-block;
   color: gray;
-  position: relative;
+  position: absolute;
   /* text-align: right; */
   float: right;
-  right: 12px;
-  bottom: 28px;
+  right: 8px;
+  top: 82px;
   font-size: 14px;
 }
 
