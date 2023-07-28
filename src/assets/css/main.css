@@ -27,7 +27,7 @@
 
 .aside {
   width: 250px;
-  transition: all 0.2s;
+  transition: all 0.1s;
   transform: translateX(0);
   background-color: #1e222d;
   overflow: auto;

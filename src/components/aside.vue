@@ -8,18 +8,17 @@
     <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
       <!-- 一级标题 -->
       <a class="aside_menu_parent nav_href" :href="r.path">
-        <div :class="navSelected(index)" v-show="r.isChild">
-          <div class="aside_menu_parent_icon"></div>
+        <div :class="navParentSelected(r.path)" v-show="r.isChild">
           {{ r.text }}
         </div>
       </a>
       <!-- 二级标题组 -->
       <a :href="c.path" class="nav_href" v-for="c in r.child">
-        <div class="aside_nav">
-          <div class="aside_menu_child_icon"></div>
+        <div :class="navChildSelected(c.path)">
           {{ c.text }}
         </div>
       </a>
+      <div class="aside_divider"></div>
     </div>
   </div>
 </template>
@@ -29,27 +28,43 @@ import { onMounted, ref } from "vue";
 import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 import routesJson from "@/static/json/routes.json";
 
-let nav_collapseFlag = ref([true, true, true, true, true, true, true, true]);
+let pathName = ref("/");
 
-function getChildClass(index) {
-  if (nav_collapseFlag.value[index]) return "aside_nav_child_wrap_init";
-  return "aside_nav_child_wrap";
-}
-
-function navChildOpen(index, childNum) {
-  nav_collapseFlag.value[index] = !nav_collapseFlag.value[index];
-  console.log(index, childNum);
-  if (nav_collapseFlag.value[index]) {
-    document.getElementById("nav" + index).style.height = childNum * 44 + "px";
-    document.getElementById("nav" + index).style.overflow = "";
-  } else {
-    document.getElementById("nav" + index).style.height = "0px";
-    document.getElementById("nav" + index).style.overflow = "hidden";
+function getPathName(path) {
+  if (path == "/") {
+    pathName.value = path;
+    return 1;
   }
+
+  let strLength = path.length;
+
+  if (strLength < 2) {
+    pathName.value = path;
+    return 1;
+  }
+
+  const lastStr = path.substr(strLength - 1, strLength);
+
+  if (lastStr == "/") {
+    path = path.substr(0, strLength - 1);
+    console.log("路径以“/”结尾，被截取后路径：", path);
+    pathName.value = path;
+    return 1;
+  }
+
+  pathName.value = path;
+  return pathName;
 }
 
-function navSelected(index) {
-  if (nav_collapseFlag.value[index]) return "aside_nav aside_nav_selected";
+function navParentSelected(path) {
+  console.log(path, "==", pathName.value);
+  if (path == pathName.value) return "aside_nav aside_parent aside_nav_selected";
+  return "aside_nav aside_parent";
+}
+
+function navChildSelected(path) {
+  console.log(path, "==", pathName.value);
+  if (path == pathName.value) return "aside_nav aside_nav_selected";
   return "aside_nav";
 }
 
@@ -87,8 +102,9 @@ onMounted(() => {
   //     navChildOpen(i, routes[i].child.length);
   //   }
   // }
-  var domain = window.location.host;
-
+  const domain = window.location.host;
+  const nowPathName = window.location.pathname;
+  getPathName(nowPathName);
   // if (domain.indexOf("dev") == -1) {
   //   routes.value[routesLength]=devRoute;
   // }
