@@ -27,16 +27,15 @@
   background-color: white;
   margin: 6px 0;
 }
+
+
 .menu_button_desktop {
-  /* display: none; */
   width: 24px;
   height: 24px;
   padding: 8px 8px;
-  /* margin-left: 4px; */
-  /* border: 2px solid white; */
   border-radius: 24px;
   transition: background-color 0.2s;
-  /* background-color: aqua; */
+
 }
 
 .menu_button_desktop:hover {
@@ -56,6 +55,7 @@
   display: none;
   padding-left: 24px;
 }
+
 .pageTitle {
   color: white;
   font-size: 16px;
@@ -63,6 +63,8 @@
   padding-left: 8px;
   /* margin-left: 20px; */
 }
+
+
 @media (max-width: 1080px) {
   .menu-button {
     display: block;
@@ -112,6 +114,7 @@
   /* border: solid red 1px; */
 }
 
+
 .drawer {
   position: absolute;
   top: 0;
@@ -119,7 +122,7 @@
   height: 100vh;
   transform: translateX(-500px);
   transition: all 0.1s;
-  background-color: rgb(52, 68, 104);
+  background-color: #1e222d;
   overflow: auto;
 }
 
@@ -135,6 +138,7 @@
   flex-direction: column;
   justify-content: center;
   color: white;
+  margin-bottom: 100px;
 }
 
 .menu_title {
