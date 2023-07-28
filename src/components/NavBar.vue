@@ -22,25 +22,27 @@
     <div class="drawer_wrap">
       <div class="drawer" id="drawer114">
         <div class="menu_table">
-          <div class="menu_title">明日方舟一图流bar</div>
-          <div class="line"></div>
-          <div v-for="(r, index) in routes" :key="index">
-            <div :class="navSelected(index)" @click="navChildOpen(index, r.child.length)" v-show="r.isChild">
-              <div class="drawer_nav_text">{{ r.text }}</div>
-              <div>
-                <el-icon class="drawer_child_icon"><ArrowDownBold :class="iconClass(index)" /></el-icon>
+          <!-- 标题区 -->
+          <a href="https://yituliu.site/" style="text-decoration: none; color: white">
+            <div class="aside_title">明日方舟一图流</div>
+          </a>
+          <!-- 导航菜单 -->
+          <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
+            <!-- 一级标题 -->
+            <a class="aside_menu_parent nav_href" :href="r.path">
+              <div class="aside_nav aside_parent" v-show="r.isChild">
+                <div class="aside_menu_parent_icon"></div>
+                {{ r.text }}
               </div>
-            </div>
-            <div :class="getChildClass(index)" :id="'nav_phone' + index" v-show="r.isChild">
-              <a :href="c.path" class="nav_href" v-for="c in r.child">
-                <div class="drawer_nav_child">{{ c.text }}</div></a
-              >
-            </div>
-            <div class="drawer_nav" v-show="!r.isChild">
-              <a :href="r.path" class="nav_href">
-                <div class="drawer_nav_text">{{ r.text }}</div></a
-              >
-            </div>
+            </a>
+            <!-- 二级标题组 -->
+            <a :href="c.path" class="nav_href" v-for="c in r.child">
+              <div class="aside_nav">
+                <div class="aside_menu_child_icon"></div>
+                {{ c.text }}
+              </div>
+            </a>
+            <div class="aside_divider"></div>
           </div>
         </div>
       </div>
@@ -106,60 +108,17 @@ watch(theme, () => {
   cookie.set("theme", theme_name, { expires: 30 });
 });
 
-let nav_collapseFlag = ref([true, true, true, true, true, true]);
-
-function getChildClass(index) {
-  if (nav_collapseFlag.value[index]) return "drawer_nav_child_wrap_init";
-  return "drawer_nav_child_wrap";
+function navParentSelected(path) {
+  console.log(path, "==", pathName.value);
+  if (path == pathName.value) return "aside_nav aside_parent aside_nav_selected";
+  return "aside_nav aside_parent";
 }
 
-function navChildOpen(index, childNum) {
-  nav_collapseFlag.value[index] = !nav_collapseFlag.value[index];
-  console.log(index, childNum);
-  if (nav_collapseFlag.value[index]) {
-    console.log(childNum * 34 + "px");
-    console.log("nav" + index);
-    document.getElementById("drawer_nav" + index).style.height = childNum * 60 + "px";
-    document.getElementById("drawer_nav" + index).style.overflow = "";
-  } else {
-    document.getElementById("drawer_nav" + index).style.height = "0px";
-    document.getElementById("drawer_nav" + index).style.overflow = "hidden";
-  }
+function navChildSelected(path) {
+  console.log(path, "==", pathName.value);
+  if (path == pathName.value) return "aside_nav aside_nav_selected";
+  return "aside_nav";
 }
-
-function navSelected(index) {
-  if (nav_collapseFlag.value[index]) return "drawer_nav aside_nav_selected";
-  return "drawer_nav";
-}
-
-function iconClass(index) {
-  if (nav_collapseFlag.value[index]) return "drawer_child_icon icon_selected";
-  return "drawer_child_icon";
-}
-
-const devRoute = {
-  path: "/survey",
-  text: "干员调查",
-  isChild: true,
-  child: [
-    {
-      path: "/survey",
-      text: "调查简介",
-    },
-    {
-      path: "/survey/character",
-      text: "干员练度调查",
-    },
-    {
-      path: "/survey/score",
-      text: "干员风评调查",
-    },
-    {
-      path: "/survey/rank",
-      text: "调查结果",
-    },
-  ],
-};
 
 const routes = ref(routesJson);
 
@@ -200,6 +159,8 @@ function getpageTitle(path) {
     }
   }
 }
+
+
 
 function getPathName(pathName) {
   console.log("当前访问路径：", pathName);
