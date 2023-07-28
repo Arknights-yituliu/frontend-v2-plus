@@ -1,5 +1,4 @@
 <script setup>
-import "mdui/dist/css/mdui.min.css";
 import "@/assets/css/sprite_item_large.css";
 </script>
 
