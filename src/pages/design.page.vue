@@ -8,32 +8,30 @@ import "@/assets/css/sprite_item_large.css";
     <div class="mdui-row-xs-2 mdui-row-md-3 mdui-row-lg-4">
       <div class="mdui-col mdui-p-y-1">
         <div class="mdui-shadow-2 mdui-text-center mdui-ripple mdui-p-a-3 navi-card">
-          <img class="mdui-img-fluid mdui-center navi-icon" src="/image/icon/无框_全新装置.png" />
-          <div class="mdui-typo-title">刷图推荐</div>
-          <div class="mdui-typo-body-1">我该去哪刷图？活动图效率怎么样？xx图适合不适合搓玉？xx材料什么时候up过？</div>
+          <img class="mdui-center" src="/image/icon/无框_全新装置.png" />
+          <div class="title mdui-m-t-3 mdui-m-b-1">刷图推荐</div>
+          <div class="desc">我该去哪刷图？活动图效率怎么样？xx图适合不适合搓玉？xx材料什么时候up过？</div>
         </div>
       </div>
       <div class="mdui-col mdui-p-y-1">
         <div class="mdui-shadow-2 mdui-text-center mdui-ripple mdui-p-a-3 navi-card">
-          <img class="mdui-img-fluid mdui-center navi-icon" src="/image/icon/无框_四凭证.png" />
-          <div class="mdui-typo-title">商店性价比</div>
-          <div class="mdui-typo-body-1">绿票、橙票买哪个比较赚？活动商店优先换哪些材料？</div>
-        </div>
-      </div>
-    <!-- </div> -->
-    <!-- <div class="mdui-row-xs-2"> -->
-      <div class="mdui-col mdui-p-y-1">
-        <div class="mdui-shadow-2 mdui-text-center mdui-ripple mdui-p-a-3 navi-card">
-          <img class="mdui-img-fluid mdui-center navi-icon" src="/image/icon/无框_龙门币.png" />
-          <div class="mdui-typo-title">礼包性价比</div>
-          <div class="mdui-typo-body-1">礼包综合性价比、仅计抽卡的性价比</div>
+          <img class="mdui-center" src="/image/icon/无框_四凭证.png" />
+          <div class="title mdui-m-t-3 mdui-m-b-1">商店性价比</div>
+          <div class="desc">绿票、橙票买哪个比较赚？活动商店优先换哪些材料？</div>
         </div>
       </div>
       <div class="mdui-col mdui-p-y-1">
         <div class="mdui-shadow-2 mdui-text-center mdui-ripple mdui-p-a-3 navi-card">
-          <img class="mdui-img-fluid mdui-center navi-icon" src="/image/icon/无框_理智.png" />
-          <div class="mdui-typo-title">物品价值表</div>
-          <div class="mdui-typo-body-1">查看物品的价值，并导出为json或excel以作研究或二次开发</div>
+          <img class="mdui-center" src="/image/icon/无框_龙门币.png" />
+          <div class="title mdui-m-t-3 mdui-m-b-1">礼包性价比</div>
+          <div class="desc">礼包综合性价比、仅计抽卡的性价比</div>
+        </div>
+      </div>
+      <div class="mdui-col mdui-p-y-1">
+        <div class="mdui-shadow-2 mdui-text-center mdui-ripple mdui-p-a-3 navi-card">
+          <img class="mdui-center" src="/image/icon/无框_理智.png" />
+          <div class="title mdui-m-t-3 mdui-m-b-1">物品价值表</div>
+          <div class="desc">查看物品的价值，并导出为json或excel以作研究或二次开发</div>
         </div>
       </div>
     </div>
@@ -79,13 +77,23 @@ import "@/assets/css/sprite_item_large.css";
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .navi-card {
-  height: 250px;
-}
+  height: 300px;
 
-.navi-icon {
-  min-height: 180px;
+  img {
+    height: 100px;
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .desc {
+    font-size: 18px;
+    line-height: 28px;
+  }
 }
 
 .demo_card {
