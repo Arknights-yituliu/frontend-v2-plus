@@ -6,6 +6,13 @@
   overflow-y: scroll;
 }
 
+.nav_href {
+  color: white;
+  text-decoration: none;
+  background-color: pink;
+  /* display: flex; */
+}
+
 .aside_table::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
   background-color: #94b9ff;
@@ -23,11 +30,10 @@
 
 .aside_title {
   font-size: 24px;
-  text-align: center;
-  height: 48px;
-  line-height: 48px;
-  padding: 24px 0px;
+  height: 60px;
+  line-height: 60px;
   font-weight: 900;
+  padding-left: 20px;
   transition: background-color 0.2s;
 }
 
@@ -36,15 +42,13 @@
 }
 
 .aside_nav {
-  margin-top: 12px;
-  margin-left: 12px;
+  margin-top: 8px;
+  margin-left: 40px;
   margin-right: 12px;
   display: flex;
   height: 32px;
   line-height: 32px;
   padding-left: 4px;
-  font-weight: 400;
-  /* background-color:aqua; */
   border-radius: 4px;
   transition: background-color 0.2s;
 }
@@ -54,34 +58,55 @@
 }
 
 .aside_nav_selected {
-  color: #ffd04b;
+  /* color: #ffd04b; */
+  background-color: rgba(255, 255, 255, 0.2);
   /* border-left: 2px solid #ffd04b; */
 }
 
-.aside_menu_parent_icon {
+.aside_divider{
+  margin: auto;
+  width: 85%;
+  border-bottom: 1px solid rgb(255, 255, 255,0.4);
+  margin-top:10px;
+}
+
+.aside_parent{
+  margin-left: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffd257;
+}
+
+/* .aside_menu_parent_icon {
   width: 16px;
   height: 16px;
   margin: 8px 20px 8px 8px;
   display: inline-block;
   background-color: #ffd04b;
   border-radius: 6px;
-}
+} */
 
-.aside_menu_child_icon {
+/* .aside_menu_child_icon {
   width: 32px;
   height: 32px;
   margin: 0px 12px 0px 0px;
   display: inline-block;
-  /* background-color: #ffd04b; */
-}
 
-.nav_href {
-  color: white;
-  text-decoration: none;
-  background-color: pink;
-  /* display: flex; */
-}
+} */
 
-.nav_href div {
-  /* display: inline-block; */
+@media (max-width: 1080px) {
+  .aside_title{
+    font-size: 28px;
+    height: 80px;
+    line-height: 80px;
+  }
+
+  .aside_nav{
+     margin-top: 16px;
+     font-size: 20px;
+  }
+
+  .aside_parent{
+    font-size: 24px;
+  }
 }
