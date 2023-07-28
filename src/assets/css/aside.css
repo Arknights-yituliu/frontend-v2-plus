@@ -43,7 +43,7 @@
 
 .aside_nav {
   margin-top: 8px;
-  margin-left: 40px;
+  margin-left: 28px;
   margin-right: 12px;
   display: flex;
   height: 32px;
@@ -71,9 +71,9 @@
 }
 
 .aside_parent{
-  margin-left: 20px;
-  font-size: 18px;
-  font-weight: 600;
+  /* margin-left: 20px; */
+  /* font-size: 18px; */
+  /* font-weight: 600; */
   color: #ffd257;
 }
 
@@ -106,7 +106,7 @@
      font-size: 20px;
   }
 
-  .aside_parent{
+  /* .aside_parent{
     font-size: 24px;
-  }
+  } */
 }
