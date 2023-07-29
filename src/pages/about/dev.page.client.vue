@@ -59,6 +59,7 @@
     <div class="mdui-typo" id="dev_api">
       <h1>数据接口</h1>
       可供第三方使用的数据接口
+      详见<a href="/about/api">API文档</a>页面
     </div>
 
     <div class="mdui-typo" id="dev_feedback">
