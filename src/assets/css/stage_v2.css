@@ -51,7 +51,7 @@
   max-width: 330px;
   margin-right: 6px;
   margin-bottom: 6px;
-
+  display: flex;
   border-radius: 6px;
   flex-grow: 1;
 }
@@ -101,13 +101,14 @@
   max-width: 210px;
   float: right;
   margin-left: -100px;
+  position: relative;
+  left: 44px;
+ 
 }
 
 .stage_card_t3_table table {
   border-spacing: 0px;
   table-layout: fixed;
-  /* margin-left: calc(62.5% - 100px); */
-  margin-left: calc(62.5% - 115px);
 }
 
 .stage_table_r {
@@ -255,6 +256,7 @@
   justify-content: center;
   backdrop-filter: blur(4px);
 }
+
 #popup_content {
   /* max-width: 1080px; */
   display: none;
@@ -285,9 +287,11 @@
 .popup_orundum_c2 div {
   display: inline-block;
 }
+
 .popup_orundum_c3 div {
   display: inline-block;
 }
+
 .el-card__header * {
   display: inline;
 }
@@ -369,16 +373,19 @@
   padding: 0px 6px;
   text-align: center;
 }
+
 .history_actStages {
   display: inline-block;
   width: 405px;
   border-left: 1px solid #808080;
 }
+
 .history_stage {
   display: inline-block;
   height: 60px;
   width: 135px;
 }
+
 .history_stage div {
   display: inline-block;
   /* margin-top: 6px; */
@@ -418,26 +425,32 @@
   margin-left: 10px;
 }
 
-.stage_sprite_t3_wrap{
+.stage_sprite_t3_wrap {
   position: relative;
+  opacity: 0.7;
+  -webkit-filter: grayscale(0.1);
+  filter: grayscale(0.1);
+  width: 110px;
+  height: 110px;
+}
+
+.stage_sprite_t3 {
+  position: absolute;
+  transform: scale(0.8);
+  top: -35px;
+  left: -80px;
+  /* right: 140px; */
   
 }
 
-.stage_sprite_t3{
-  position: absolute;
-  transform: scale(0.8);
-  top: -30px;
-  right:  140px;
-}
 
-
-.stage_sprite_sec_wrap{
+.stage_sprite_sec_wrap {
   position: relative;
   width: 25px;
   height: 25px;
 }
 
-.stage_sprite_sec{
+.stage_sprite_sec {
   position: absolute;
   transform: scale(0.14);
   top: -78px;
@@ -447,13 +460,13 @@
 }
 
 
-.stage_sprite_t2_wrap{
+.stage_sprite_t2_wrap {
   position: relative;
   width: 25px;
   height: 25px;
 }
 
-.stage_sprite_t2{
+.stage_sprite_t2 {
   position: absolute;
   transform: scale(0.4);
   top: -60px;
@@ -462,13 +475,13 @@
   right:  140px; */
 }
 
-.stage_sprite_popup_wrap{
+.stage_sprite_popup_wrap {
   position: relative;
   width: 100px;
   height: 60px;
 }
 
-.stage_sprite_popup{
+.stage_sprite_popup {
   position: absolute;
   transform: scale(0.4);
   top: -56px;
@@ -477,13 +490,13 @@
   right:  140px; */
 }
 
-.stage_sprite_closed_wrap{
+.stage_sprite_closed_wrap {
   position: relative;
   width: 60px;
   height: 60px;
 }
 
-.stage_sprite_closed{
+.stage_sprite_closed {
   position: absolute;
   transform: scale(0.3);
   top: -60px;
@@ -493,13 +506,13 @@
 }
 
 
-.store_sprite_perm_wrap{
+.store_sprite_perm_wrap {
   position: relative;
   width: 60px;
   height: 60px;
 }
 
-.store_sprite_perm{
+.store_sprite_perm {
   position: absolute;
   transform: scale(0.3);
   top: -60px;
@@ -508,13 +521,13 @@
   right:  140px; */
 }
 
-.store_sprite_act_wrap{
+.store_sprite_act_wrap {
   position: relative;
   width: 60px;
   height: 60px;
 }
 
-.store_sprite_act{
+.store_sprite_act {
   position: absolute;
   transform: scale(0.5);
   top: -40px;
@@ -524,13 +537,13 @@
 }
 
 
-.item_sprite_value_wrap{
+.item_sprite_value_wrap {
   position: relative;
   width: 60px;
   height: 60px;
 }
 
-.item_sprite_value{
+.item_sprite_value {
   position: absolute;
   transform: scale(0.35);
   top: -60px;
