@@ -67,125 +67,87 @@
             <li>UI/UX设计</li>
             <li>统计分析</li>
           </ul>
-          <p>开发群：938710832</p>
-          <div class="label_wrap">
-            <div class="label_card">
-              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus">
-                <div class="label_content">
-                  <div class="label_icon_wrap">
-                    <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
-                  </div>
+         
 
-                  <div>
-                    <div class="label_name">前端仓库</div>
-                    <div class="label_desc">数据可视化</div>
-                  </div>
+          <div class="mdui-typo" id="dev_feedback">
+            <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
+              <div class="mdui-card dev_card">
+                <img class="dev_card_icon" src="/image/website/qq.webp" alt="" />
+                <div class="dev_card_text">
+                  <div class="dev_card_text_title">开发群</div>
+                  <div class="dev_card_text_content">938710832</div>
                 </div>
-              </a>
-            </div>
-
-            <div class="label_card">
-              <a class="href" href="https://GitHub.com/Arknights-yituliu/BackEndV3">
-                <div class="label_content">
-                  <div class="label_icon_wrap">
-                    <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
-                  </div>
-                  <div>
-                    <div class="label_name">后端仓库</div>
-                    <div class="label_desc">数据统计，数据处理</div>
-                  </div>
+              </div>
+            </a>
+            <a class="href_black" href="https://github.com/Arknights-yituliu/">
+              <div class="mdui-card dev_card">
+                <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
+                <div class="dev_card_text">
+                  <div class="dev_card_text_title">项目仓库</div>
+                  <div class="dev_card_text_content">包括前后端以及其它项目</div>
                 </div>
-              </a>
-            </div>
+              </div>
+            </a>
+            <a class="href_black" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
+              <div class="mdui-card dev_card">
+                <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
+                <div class="dev_card_text">
+                  <div class="dev_card_text_title">前端仓库</div>
+                  <div class="dev_card_text_content">数据可视化</div>
+                </div>
+              </div>
+            </a>
+            <a class="href_black" href="https://github.com/Arknights-yituliu/BackEndV3">
+              <div class="mdui-card dev_card">
+                <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
+                <div class="dev_card_text">
+                  <div class="dev_card_text_title">后端仓库</div>
+                  <div class="dev_card_text_content">数据统计，数据处理</div>
+                </div>
+              </div>
+            </a>
           </div>
+
+
         </div>
       </div>
 
       <div class="index_card_wrap" id="feedback">
         <div class="index_card_title">反馈方式</div>
         <div class="card_content">
-          <div class="label_wrap">
-            <div class="label_card">
-              <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
-                <div class="label_content">
-                  <div class="label_icon_wrap">
-                    <img class="label_icon" src="/image/website/qq.webp" alt="" />
-                  </div>
-
-                  <div>
-                    <div class="label_name">一图流开发群</div>
-                    <div class="label_desc">向开发人员反馈群号：938710832</div>
-                  </div>
+          <div class="mdui-typo" id="dev_feedback">
+            <a class="href_black" href="https://github.com/Arknights-yituliu/">
+              <div class="mdui-card dev_card">
+                <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
+                <div class="dev_card_text">
+                  <div class="dev_card_text_title">GitHub</div>
+                  <div class="dev_card_text_content">可提交相应的issue</div>
                 </div>
-              </a>
-            </div>
-
-            <div class="label_card">
-              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus/issues">
-                <div class="label_content">
-                  <div class="label_icon_wrap">
-                    <img class="label_icon" src="/image/website/ico64.webp" alt="" />
-                  </div>
-                  <div>
-                    <div class="label_name">一图流组织仓库</div>
-                    <div class="label_desc">GitHub issues</div>
-                  </div>
+              </div>
+            </a>
+            <a class="href_black" href="https://space.bilibili.com/688411531">
+              <div class="mdui-card dev_card">
+                <img class="dev_card_icon" src="/image/website/beta_logo_yw.webp" alt="" />
+                <div class="dev_card_text">
+                  <div class="dev_card_text_title">罗德岛基建BETA</div>
+                  <div class="dev_card_text_content">可私信反馈问题</div>
                 </div>
-              </a>
-            </div>
-
-            <div class="label_card">
-              <a class="href" href="https://GitHub.com/Arknights-yituliu/frontend-v2-plus/issues">
-                <div class="label_content">
-                  <div class="label_icon_wrap">
-                    <img class="label_icon" src="/image/website/beta_logo_yw.webp" alt="" />
-                  </div>
-                  <div>
-                    <div class="label_name">罗德岛基建BETA</div>
-                    <div class="label_desc">B站官方信息发布号</div>
-                  </div>
+              </div>
+            </a>
+            <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
+              <div class="mdui-card dev_card">
+                <img class="dev_card_icon" src="/image/website/qq.webp" alt="" />
+                <div class="dev_card_text">
+                  <div class="dev_card_text_title">粉丝群</div>
+                  <div class="dev_card_text_content">可联系管理反馈问题</div>
                 </div>
-              </a>
-            </div>
+              </div>
+            </a>
           </div>
         </div>
       </div>
 
-      <div class="index_card_wrap" id="expenses">
-        <div class="index_card_title">收支一览</div>
-        <div class="card_content">
-          <p>目前服务器的运营支出部分主要源自是热心玩家捐助，感谢每一位捐助者的支持</p>
-          <div class="label_wrap">
-            <div class="label_card">
-              <a class="href" href="/donate">
-                <div class="label_content">
-                  <div class="label_icon_wrap">
-                    <img class="label_icon" src="/image/icon/图标_源石.png" alt="" />
-                  </div>
-                  <div>
-                    <div class="label_name">支持我们</div>
-                  </div>
-                </div>
-              </a>
-            </div>
-
-            <div class="label_card">
-              <a class="href" href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe">
-                <div class="label_content">
-                  <div class="label_icon_wrap">
-                    <img class="label_icon" src="/image/icon/图标_源石.png" alt="" />
-                  </div>
-
-                  <div>
-                    <div class="label_name">收支一览</div>
-                    <div class="label_desc">收支情况的明细表</div>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+    
       <div class="index_card_wrap" id="license">
         <div class="index_card_title">许可协议</div>
         <div class="card_content">
@@ -247,8 +209,6 @@ function logout() {
 }
 
 let navId = ref(1);
-
-
 
 onMounted(() => {
   userData.value = userDataCacheEvent();

@@ -7,18 +7,20 @@
     <!-- 导航菜单 -->
     <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
       <!-- 一级标题 -->
-      <a class="aside_menu_parent nav_href" :href="r.path">
+      <a class="nav_href" :href="r.path">
         <div :class="navParentSelected(r.path)" v-show="r.isChild">
+          <div class="aside_menu_parent_icon"></div>
           {{ r.text }}
         </div>
       </a>
       <!-- 二级标题组 -->
       <a :href="c.path" class="nav_href" v-for="c in r.child">
         <div :class="navChildSelected(c.path)">
+          <div class="aside_menu_child_icon"></div>
           {{ c.text }}
         </div>
       </a>
-      <div class="aside_divider"></div>
+      <!-- <div class="aside_divider"></div> -->
     </div>
   </div>
 </template>

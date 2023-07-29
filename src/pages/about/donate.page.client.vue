@@ -2,7 +2,7 @@
   <div class="donate_page">
     <div>
       <div class="donate_content">
-        本项目为无偿开源项目，但因国内服务提供商带宽和流量费用较高，访问量日益增加，支出已经超出预期，如果想要支持一图流可以对我们进行资助，目前服务器的运营支出大部分源自热心玩家资助，感谢每一位资助者的支持
+        本项目为无偿开源项目，如果想要支持一图流可以对我们进行捐助，目前服务器的运营支出大部分源自热心玩家捐助， 感谢每一位捐助者的支持。
       </div>
     </div>
     <div class="donate_image_wrap">
@@ -19,63 +19,55 @@
     <div>
       <div class="donate_content">除了资助也可以通过其他方式支持一图流，例如：关注我们的信息发布号、参与一图流开发</div>
     </div>
-    <div class="donate_content">
-      <div class="label_wrap">
-        <div class="label_card">
-          <a class="href" href="https://space.bilibili.com/688411531">
-            <div class="label_content">
-              <div class="label_icon_wrap">
-                <img class="label_icon" src="/image/website/beta_logo_yw.webp" alt="" />
-              </div>
-              <div>
-                <div class="label_name">罗德岛基建BETA</div>
-                <div class="label_desc">B站官方信息发布号</div>
-              </div>
+    <div class="mdui-typo" id="dev_join_us">
+      <div class="card-wrap" id="dev_github">
+        <a class="href_black" href="https://space.bilibili.com/688411531">
+          <div class="mdui-card dev_card">
+            <img class="dev_card_icon" src="/image/website/beta_logo_yw.webp" alt="" />
+            <div class="dev_card_text">
+              <div class="dev_card_text_title">罗德岛基建BETA</div>
+              <div class="dev_card_text_content">B站官方信息发布号</div>
             </div>
-          </a>
-        </div>
+          </div>
+        </a>
 
-        <div class="label_card">
-          <a class="href" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
-            <div class="label_content">
-              <div class="label_icon_wrap">
-                <img class="label_icon" src="/image/website/qq.webp" alt="" />
-              </div>
-              <div>
-                <div class="label_name">开发群</div>
-                <div class="label_desc">938710832</div>
-              </div>
+        <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
+          <div class="mdui-card dev_card">
+            <img class="dev_card_icon" src="/image/website/qq.webp" alt="" />
+            <div class="dev_card_text">
+              <div class="dev_card_text_title">开发群</div>
+              <div class="dev_card_text_content">938710832</div>
             </div>
-          </a>
-        </div>
+          </div>
+        </a>
 
-        <div class="label_card">
-          <a class="href" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
-            <div class="label_content">
-              <div class="label_icon_wrap">
-                <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
-              </div>
-              <div>
-                <div class="label_name">前端仓库</div>
-                <div class="label_desc">数据可视化</div>
-              </div>
+        <a class="href_black" href="https://github.com/Arknights-yituliu/">
+          <div class="mdui-card dev_card">
+            <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
+            <div class="dev_card_text">
+              <div class="dev_card_text_title">项目仓库</div>
+              <div class="dev_card_text_content">包括前后端以及其它项目</div>
             </div>
-          </a>
-        </div>
-
-        <div class="label_card">
-          <a class="href" href="https://github.com/Arknights-yituliu/BackEndV3">
-            <div class="label_content">
-              <div class="label_icon_wrap">
-                <img class="label_icon" src="/image/website/GitHub.webp" alt="" />
-              </div>
-              <div>
-                <div class="label_name">后端仓库</div>
-                <div class="label_desc">数据统计，数据处理</div>
-              </div>
+          </div>
+        </a>
+        <a class="href_black" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
+          <div class="mdui-card dev_card">
+            <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
+            <div class="dev_card_text">
+              <div class="dev_card_text_title">前端仓库</div>
+              <div class="dev_card_text_content">数据可视化</div>
             </div>
-          </a>
-        </div>
+          </div>
+        </a>
+        <a class="href_black" href="https://github.com/Arknights-yituliu/BackEndV3">
+          <div class="mdui-card dev_card">
+            <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
+            <div class="dev_card_text">
+              <div class="dev_card_text_title">后端仓库</div>
+              <div class="dev_card_text_content">数据统计，数据处理</div>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
 

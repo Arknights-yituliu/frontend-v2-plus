@@ -135,6 +135,8 @@ import { ref } from "vue";
 .friend_card_wrap {
   display: flex;
   flex-wrap: wrap;
+  max-width: 1280px;
+  margin: auto;
 }
 
 a {
