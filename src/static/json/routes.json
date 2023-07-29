@@ -91,7 +91,11 @@
         "text": "开发相关",
         "isChild": false
       },
-      
+      {
+        "path": "/about/api",
+        "text": "API文档",
+        "isChild": false
+      },
       {
         "path": "/about/donate",
         "text": "支持我们",
@@ -100,11 +104,6 @@
       {
         "path": "/about/friendlyLinks",
         "text": "友情链接",
-        "isChild": false
-      },
-      {
-        "path": "/about/api",
-        "text": "API文档",
         "isChild": false
       }
     ]
