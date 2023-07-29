@@ -152,11 +152,10 @@
           <div class="stage_sprite_popup_wrap"><div :class="getSpriteImg(itemId, 'popup')"></div></div>
 
           <div class="popup_header_text">{{ itemType }}</div>
-          <a :href="getPenguinUrl(itemId)" target="_blank">
-            <div class="t3 popup_header_penguin" style="display: flex">
-              <div>查看企鹅物流原始数据</div>
-              <div :class="getSpriteImg('el', 'el')"></div>
-            </div>
+
+          <a :href="getPenguinUrl(itemId)" class="t3 popup_header_penguin">
+            <div>查看企鹅物流原始数据</div>
+            <div :class="getSpriteImg('el', 'el')"></div>
           </a>
         </div>
         <!-- 散装标题End -->
@@ -202,13 +201,17 @@
         <!-- 数据表End -->
         <el-divider></el-divider>
         <div class="popup_text f12">
-          效率基准:<b>常驻图</b>中综合效率最高者<br />
-          置信度:掉率对关卡效率误差影响在3%前提下的可信度范围
-          <a href="https://www.bilibili.com/video/BV1yL4y1P7K1" style="margin-left: 8px">
-            <div style="display: inline-block">详细介绍</div>
-            <div style="display: inline-block" :class="getSpriteImg('el', 'el')"></div>
-          </a>
-          SPM:假设敌人被秒杀，1倍速下每分钟消耗的理智量，实际可能略有出入
+          <div class="popup_item">效率基准:<b>常驻图</b>中综合效率最高者</div>
+          <div class="popup_item">
+            置信度:掉率对关卡效率误差影响在3%前提下的可信度范围&emsp;
+            <a href="https://www.bilibili.com/video/BV1yL4y1P7K1">
+              <div style="display: flex;">
+                 详细介绍
+                <div :class="getSpriteImg('el', 'el')"></div>
+              </div>
+            </a>
+          </div>
+          <div class="popup_item">SPM:假设敌人被秒杀，1倍速下每分钟消耗的理智量，实际可能略有出入</div>
         </div>
       </div>
       <!-- 搓玉 -->
