@@ -1,7 +1,7 @@
 <template>
-  <div class="api_page">
-    <p class="title1">一图流API文档</p>
-    <p class="title2">一图流API响应格式说明</p>
+  <div class="api_page mdui-typo">
+    <h1><b>一图流API文档</b></h1>
+    <h2><b>一图流API响应格式说明</b></h2>
 
     <p>一般情况下API无论GET、POST或其他请求返回的都是统一格式，格式如下</p>
     <div class="mdui-table-fluid api_response_table">
@@ -34,22 +34,23 @@
     </div>
     <p>因此文档后续只展示data（返回数据）内字段</p>
 
-    <p class="title2">公开的API</p>
-    <div class="api_wrap">
-      <div class="mdui-collapse" mdui-collapse>
-        <div class="mdui-collapse-item mdui-collapse-item-open" v-for="(api, index) in APIList" :key="index" :id="api.path">
+    <h2><b>公开的API</b></h2>
+
+    <div class="api_wrap" >
+      <div class="mdui-collapse" mdui-collapse v-for="(api, index) in APIList" :key="index" :id="api.path">
+        <div class="mdui-collapse-item mdui-collapse-item-open" >
           <div class="mdui-collapse-item-header">
-            <p class="title3">{{ api.apiContent }} &emsp;{{ api.requestMethod }}</p>
+            <h3><b>{{ api.apiContent }} &emsp;{{ api.requestMethod }}</b></h3>
           </div>
 
           <div class="mdui-collapse-item-body">
-            <p class="title4">API路径</p>
+            <h3><b> API路径</b></h3>
 
             <div class="requestURL">
               {{ api.path }}
             </div>
 
-            <p class="title4">请求参数</p>
+            <h3><b> 请求参数</b></h3>
 
             <div v-show="api.requestParms === undefined">无参数</div>
 
@@ -79,13 +80,13 @@
               </table>
             </div>
 
-            <p class="title4">请求格式示例</p>
+            <h3><b> 请求格式示例</b></h3>
 
             <div class="requestURL">
               {{ requestURL(index) }}
             </div>
 
-            <p class="title4">返回字段说明</p>
+            <h3><b> 返回字段说明</b></h3>
 
             <div class="api_response_table" v-for="(model, index) in api.model" :key="index">
               <p class="table_header">{{ model.description }}</p>
@@ -110,7 +111,8 @@
             </div>
 
             <button class="mdui-btn mdui-color-blue-accent mdui-ripple tryBtn" @click="tryBtn(index)">尝试一下</button>
-            <p class="title4">服务响应结果</p>
+
+            <h3><b> 服务响应结果</b></h3>
 
             <div class="response_body">
               <div>返回消息体</div>
