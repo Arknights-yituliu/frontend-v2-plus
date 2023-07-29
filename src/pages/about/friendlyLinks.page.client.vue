@@ -3,9 +3,11 @@
     <div class="friend_card_wrap">
       <div class="friend_card">
         <div class="friend_title">
-          <div class="friend_image_wrap">
-            <a href="https://penguin-stats.cn"> <img class="friend_image" src="/image/website/penguin_stats_logo.webp" /></a>
-          </div>
+          <a href="https://penguin-stats.cn">
+            <div class="friend_image_wrap">
+              <img class="friend_image" src="/image/website/penguin_stats_logo.webp" />
+            </div>
+          </a>
           <div class="friend_name">企鹅物流数据统计</div>
         </div>
         <div class="friend_tag_wrap">
@@ -198,12 +200,13 @@ a {
 .friend_tag {
   width: auto;
   height: 20px;
+  line-height: 20px;
   border-radius: 20px;
   /* border: 1px solid red; */
   text-align: center;
   padding: 6px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
   margin: 4px;
   background: rgb(72, 130, 255);
   font-size: 14px;
@@ -215,7 +218,8 @@ a {
 
 .friend_link {
   margin: auto;
-  width: 200px;
+  min-width: 200px;
+  padding: 0px 24px;
   border-radius: 20px;
   text-align: center;
   background: rgb(40, 40, 40);
