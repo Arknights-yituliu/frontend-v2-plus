@@ -306,22 +306,23 @@
 }
 
 .popup_header_text {
-  /* display: inline-block; */
-  /* position: relative; */
-  margin-top: 20px;
-  bottom: 28px;
+  line-height: 66px;
+  height: 66px;
   color: #3f51b5;
+  width: 210px;
 }
 
 .popup_header_penguin {
-  float: right;
+  display: flex;
   margin: 20px;
   padding: 4px 4px 4px 8px;
   font-size: 18px;
   font-weight: 500;
-  /* border: 1px solid #80808040; */
+  
   border-radius: 4px;
   color: var(--popup-header-penguin-fg);
+  position: relative;
+  
 }
 
 .popup_img {
@@ -345,6 +346,12 @@
   padding: 0px 8px 6px 8px;
   color: var(--popup-text-fg);
   margin: 0px;
+}
+
+.popup_item{
+  height: 24px;
+  line-height: 24px;
+  display: flex;
 }
 
 #popup_card_history {
@@ -477,15 +484,15 @@
 
 .stage_sprite_popup_wrap {
   position: relative;
-  width: 100px;
-  height: 60px;
+  width: 76px;
+  height: 66px;
 }
 
 .stage_sprite_popup {
   position: absolute;
   transform: scale(0.4);
   top: -56px;
-  left: -50px;
+  left: -58px;
   /* top: -30px;
   right:  140px; */
 }
