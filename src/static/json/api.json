@@ -15,7 +15,6 @@
     "model": {
       "data": {
         "description": "每种蓝材料按关卡效率倒序的推荐关卡",
-        "type": "list<object>",
         "value": [
           {
             "name": "stageCode",
@@ -112,7 +111,6 @@
     "model": {
       "data": {
         "description": "每种蓝材料按关卡效率倒序的推荐关卡",
-        "type": "list<object>",
         "value": [
           {
             "name": "stageCode",
@@ -209,7 +207,6 @@
     "model": {
       "data": {
         "description": "每种蓝材料按关卡效率倒序的推荐关卡",
-        "type": "list<object>",
         "value": [
           {
             "name": "itemId",
@@ -357,8 +354,7 @@
     ],
     "model": {
       "data": {
-        "description": "每种蓝材料按关卡效率倒序的推荐关卡",
-        "type": "list<object>",
+        "description": "返回以每个活动的蓝材料关卡为一个元素的集合",
         "value": [
           {
             "name": "stageCode",
@@ -447,7 +443,6 @@
     "model": {
       "data": {
         "description": "按搓玉效率倒序的推荐关卡",
-        "type": "list<object>",
         "value": [
           {
             "name": "stageCode",
@@ -484,20 +479,8 @@
     "requestMethod": "GET",
     "path": "/store/perm",
     "model": {
-      "storeType": {
-        "description": "商店类型(按凭证颜色，green，orange等)",
-        "type": "object",
-        "value": [
-          {
-            "name": "storeType",
-            "description": "商店性价比数据（具体字段见下面）",
-            "type": "list<object>"
-          }
-        ]
-      },
       "data": {
-        "description": "商店性价比数据",
-        "type": "list<object>",
+        "description": "(商店性价比数据是key-value格式，key为商店代币的颜色（green为绿票商店），value字段如下，)",
         "value": [
           {
             "name": "storeType",
