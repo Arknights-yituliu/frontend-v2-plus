@@ -87,8 +87,9 @@
 
             <p class="title4">返回字段说明</p>
 
-            <div class="mdui-table-fluid api_response_table" v-for="(model, index) in api.model" :key="index">
-              <p>{{ model.description }}  {{ model.type }}</p>   
+            <div class="api_response_table" v-for="(model, index) in api.model" :key="index">
+              <p class="table_header">{{ model.description }}</p>
+
               <table class="mdui-table mdui-table-hoverable">
                 <thead>
                   <tr>
@@ -175,25 +176,25 @@ let menu_index = ref(0);
 
 <style scoped>
 .title1 {
- 
   font-size: 32px;
   font-weight: 700;
 }
 .title2 {
- 
   font-size: 28px;
   font-weight: 600;
 }
 .title3 {
- 
   font-size: 24px;
   font-weight: 600;
 }
 .title4 {
-  
   font-size: 20px;
   font-weight: 600;
+}
 
+.table_header {
+  margin: 8px;
+  display: block;
 }
 
 .api_page {
@@ -202,6 +203,7 @@ let menu_index = ref(0);
 }
 .api_response_table {
   width: 810px;
+  margin-top: 20px;
 }
 
 .noParm {
