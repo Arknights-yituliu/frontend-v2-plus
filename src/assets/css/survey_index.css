@@ -36,10 +36,10 @@
   line-height: 50px;
   margin-right: 20px;
   cursor: pointer;
-  
+
 }
 
-.survey_nav_page{
+.survey_nav_page {
   width: auto;
   display: flex;
   justify-content: flex-end;
@@ -62,7 +62,7 @@
   /* padding: 10px; */
 }
 
-.login_input_wrap{
+.login_input_wrap {
   display: flex;
   margin: auto;
   margin-top: 20px;
@@ -107,7 +107,7 @@
   box-shadow: 0 0 1px 1px rgb(200, 200, 200);
   cursor: pointer;
   margin: auto;
-  
+
 }
 
 .logout_text {
@@ -135,17 +135,17 @@
 }
 
 .index_card_wrap {
-  width: 47%;
+  width: 48%;
   box-shadow: 0px 0px 1px 1px rgb(211, 211, 211);
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 4px;
   box-sizing: border-box;
-  margin: 1%;
+  margin: 4px;
 }
 
 .index_card_wrap_null {
-  width: 47%;
-  margin: 1%;
+  width: 48%;
+  margin: 4px;
 }
 
 .index_card_title {
