@@ -40,7 +40,7 @@
       <div class="mdui-collapse" mdui-collapse v-for="(api, index) in APIList" :key="index" :id="api.path">
         <div class="mdui-collapse-item mdui-collapse-item-open" >
           <div class="mdui-collapse-item-header">
-            <h3><b>{{ api.apiContent }} &emsp;{{ api.requestMethod }}</b></h3>
+            <h3><b>#&nbsp;{{ api.apiContent }} &emsp;{{ api.requestMethod }}</b></h3>
           </div>
 
           <div class="mdui-collapse-item-body">
