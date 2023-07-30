@@ -1102,7 +1102,7 @@ export default {
       const mm = date.getMinutes().toString().padStart(2, "0"); //分
       const s = date.getSeconds().toString().padStart(2, "0"); //秒
       this.startTime = `${y}/${m}/${d} ${h}:${mm}:${s}`;
-      this.startTime = "2023/08/14 04:00:00";
+      // this.startTime = "2023/08/14 04:00:00";
       this.start_TimeStamp = Date.parse(this.startTime); //今日日期的时间戳
       this.end_TimeStamp = Date.parse(this.endTime); //结束日期的时间戳
       this.getPoolCountDown();
@@ -1951,7 +1951,7 @@ export const documentProps = {
 
 .col-1 {
   position: sticky;
-  top: 52px;
+  top: 0px;
   z-index: 99;
 }
 
