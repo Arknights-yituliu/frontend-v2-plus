@@ -487,7 +487,8 @@
               <div class="el-input_wrap">
                 <div class="el-input_text">额外购买</div>
                 <el-input-number v-model="monthlyCardExtra" @change="compute()" :min="0" :max="4" label="描述文字"></el-input-number>
-                <div class="el-input_text">张月卡</div>（每张月卡可预支6石）
+                <div class="el-input_text">张月卡</div>
+                （每张月卡可预支6石）
               </div>
               <el-checkbox-group v-model="gacha_storePacksList">
                 <div
@@ -1052,8 +1053,8 @@ export default {
 
       gachaTimes_originium: 0,
 
-      monthlyFlag:0,//本月月卡是否已买
-      monthlyCardExtra:0, //额外月卡
+      monthlyFlag: 0, //本月月卡是否已买
+      monthlyCardExtra: 0, //额外月卡
 
       originium_648: 0, //普通源石648
       originium_328: 0, //普通源石328
@@ -1981,19 +1982,13 @@ export const documentProps = {
 
 .col-1 {
   position: sticky;
-  top: 52px;
+  top: 0;
   z-index: 99;
 }
 
 @media (min-width: 992px) {
   .col-1 {
     height: 370px;
-  }
-}
-
-@media (max-width: 820px) {
-  .col-1 {
-    top: 78px;
   }
 }
 
@@ -2004,6 +1999,7 @@ export const documentProps = {
 #gacha {
   display: flex;
   justify-content: center;
+  background-color: var(--index-div-bg);
 }
 
 .gacha-row {
@@ -2019,6 +2015,7 @@ export const documentProps = {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 #gacha_total_table {
