@@ -28,14 +28,12 @@
   margin: 6px 0;
 }
 
-
 .menu_button_desktop {
   width: 24px;
   height: 24px;
   padding: 8px 8px;
   border-radius: 24px;
   transition: background-color 0.2s;
-
 }
 
 .menu_button_desktop:hover {
@@ -63,7 +61,6 @@
   padding-left: 8px;
   /* margin-left: 20px; */
 }
-
 
 @media (max-width: 1080px) {
   .menu-button {
@@ -113,7 +110,6 @@
   z-index: 2000;
   /* border: solid red 1px; */
 }
-
 
 .drawer {
   position: absolute;
