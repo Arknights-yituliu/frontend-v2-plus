@@ -68,7 +68,7 @@
         </div>
         <div v-for="(m_data, index) in storeList['green']" class="store_unit" :key="index">
           <!-- <img class="store_unit_pic" alt="" title=""	:src="getImgUrl(m_data.itemName)" >	 -->
-          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
+          <div class="store_sprite_perm_wrap"><div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 0.8, 0.024)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -95,7 +95,7 @@
           <div :class="getSpriteImg(4004, 'icon')"></div>
         </div>
         <div v-for="(m_data, index) in storeList['yellow']" class="store_unit" :key="index">
-          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
+          <div class="store_sprite_perm_wrap"><div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 9.0, 1.5)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -123,7 +123,7 @@
           <div :class="getSpriteImg('EPGS_COIN', 'icon')"></div>
         </div>
         <div v-for="(m_data, index) in storeList['orange']" class="store_unit" :key="index">
-          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
+          <div class="store_sprite_perm_wrap"><div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 1.22, 0.05)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -150,7 +150,7 @@
           <div :class="getSpriteImg('REP_COIN', 'icon')"></div>
         </div>
         <div v-for="(m_data, index) in storeList['purple']" class="store_unit" :key="index">
-          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
+          <div class="store_sprite_perm_wrap"><div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 1.6, 0.32)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -177,7 +177,7 @@
           <div :class="getSpriteImg('SOCIAL_PT', 'icon')"></div>
         </div>
         <div v-for="(m_data, index) in storeList['grey']" class="store_unit" :key="index">
-          <div class="store_sprite_perm_wrap"> <div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
+          <div class="store_sprite_perm_wrap"><div :class="getSpriteImg(m_data.itemId, 'perm')"></div></div>
           <p class="store_unit_text" :class="getColor(m_data.costPer, 6.5, 1.6)">
             {{ getEfficiency(m_data.costPer, 2) }}
           </p>
@@ -237,7 +237,7 @@
             <!-- <div class="act_card uni_shadow_2 act_area1_border" :class="getDivVisible(singleItem.itemArea - 0.5, singleItem.itemArea + 0.5)"> -->
             <div class="act_card_img">
               <!-- <img class="level_img" :src="getImgUrl(singleItem.itemName, 1)" :alt="(singleItem.itemName)"> -->
-              <div class="store_sprite_act_wrap"> <div :class="getSpriteImg(singleItem.itemId, 'act')"></div></div>
+              <div class="store_sprite_act_wrap"><div :class="getSpriteImg(singleItem.itemId, 'act')"></div></div>
             </div>
             <div class="act_card_table">
               <table class="act_table">
@@ -274,7 +274,7 @@
           >
             <!-- <div class="act_card uni_shadow_2 act_area3_border" :class="getDivVisible(singleItem.itemArea - 1.5, singleItem.itemArea - 0.5)"> -->
             <div class="act_card_img">
-              <div class="store_sprite_act_wrap"> <div :class="getSpriteImg(singleItem.itemId, 'act')"></div></div>
+              <div class="store_sprite_act_wrap"><div :class="getSpriteImg(singleItem.itemId, 'act')"></div></div>
             </div>
             <div class="act_card_table">
               <table class="act_table">
@@ -311,7 +311,7 @@
           >
             <!-- <div class="act_card uni_shadow_2 act_area4_border" :class="getDivVisible(singleItem.itemArea - 2.5, singleItem.itemArea - 1.5)"> -->
             <div class="act_card_img">
-              <div class="store_sprite_act_wrap"> <div :class="getSpriteImg(singleItem.itemId, 'act')"></div></div>
+              <div class="store_sprite_act_wrap"><div :class="getSpriteImg(singleItem.itemId, 'act')"></div></div>
             </div>
             <div class="act_card_table">
               <table class="act_table">
@@ -373,9 +373,9 @@ export default {
   },
   methods: {
     getSpriteImg(id, type) {
-      if ('icon' === type) return "bg-" + id + "_icon sprite_store_icon";
-      if ('perm' === type) return "bg-" + id + " store_sprite_perm";
-      if ('act' === type) return "bg-" + id + " store_sprite_act";
+      if ("icon" === type) return "bg-" + id + "_icon sprite_store_icon";
+      if ("perm" === type) return "bg-" + id + " store_sprite_perm";
+      if ("act" === type) return "bg-" + id + " store_sprite_act";
       return "bg-" + id;
     },
     getCookies() {

@@ -317,7 +317,7 @@ export default {
       itemId: "",
       opETextTheme: "op_title_etext_light",
       stageVersion: 0.625,
-      popupRank:3,
+      popupRank: 3,
     };
   },
   mounted() {
@@ -368,8 +368,6 @@ export default {
       }
     },
 
-
-
     showPopup(index) {
       document.getElementById("popup_card").style.display = "block";
       document.getElementById("popup_background").style.display = "block";
@@ -380,12 +378,12 @@ export default {
         this.popupData = this.stageRankT3[index];
         this.itemType = this.stageRankT3[index][0].itemType;
         this.itemId = this.stageRankT3[index][0].itemId;
-        this.popupRank = 3
+        this.popupRank = 3;
       } else {
         this.popupData = [];
         this.popupData = this.stageRankT2[index - 100];
         console.log(this.stageRankT2[index - 100][0].itemType);
-        this.popupRank = 2
+        this.popupRank = 2;
         this.itemType = this.stageRankT2[index - 100][0].itemType;
         if (this.itemType === "全新装置") this.itemType = "装置";
         if (this.itemType === "聚酸酯组") this.itemType = "聚酸酯";
@@ -420,7 +418,6 @@ export default {
     getPenguinUrl(num) {
       return "https://penguin-stats.cn/result/item/" + num;
     },
-
 
     getSpriteImg(id, type) {
       if (id === "30012" && type === "t3") id = "30013";
