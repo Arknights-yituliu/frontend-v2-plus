@@ -78,18 +78,18 @@
 
     <h1><b>公开的API</b></h1>
 
-    <div class="mdui-collapse api_wrap" mdui-collapse v-for="(api, index) in APIList" :key="index" :id="api.path">
-      <div class="mdui-collapse-item mdui-collapse-item-open">
-        <div class="mdui-collapse-item-header">
+    <div class="mdui-panel mdui-panel-gapless api_wrap" mdui-panel v-for="(api, index) in APIList" :key="index" :id="api.path">
+      <div class="mdui-panel-item mdui-panel-item-open">
+        <div class="mdui-panel-item-header api-header">
           <h2>
             <b>#&nbsp;{{ api.apiContent }} &emsp;{{ api.requestMethod }}</b> <br />
             <div class="api_wrap_divider"></div>
           </h2>
+
+          <p>{{ api.description }}</p>
         </div>
 
-        <p>{{ api.description }}</p>
-
-        <div class="mdui-collapse-item-body">
+        <div class="mdui-panel-item-body">
           <h3><b> API路径</b></h3>
 
           <div class="requestURL">
@@ -227,7 +227,7 @@ function tryBtn(index) {
 let menu_index = ref(0);
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .title1 {
   font-size: 32px;
   font-weight: 700;
@@ -264,7 +264,18 @@ let menu_index = ref(0);
 }
 
 .api_wrap {
-  margin-bottom: 100px;
+  margin-bottom: 24px;
+}
+
+.api-header {
+  height: 96px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  h2 {
+    margin: 0;
+  }
 }
 
 .api_response_table {
