@@ -311,15 +311,14 @@ function exportExcel() {
 }
 
 let lastUploadTimeStamp = 1689425013364;
-let uploadMessage = ref({ updateTime: "00:00:00", affectedRows: 0});
-let updateIndexMap = ref({})
+let uploadMessage = ref({ updateTime: "00:00:00", affectedRows: 0 });
+let updateIndexMap = ref({});
 
 //上传风评表
 function upload() {
   let uploadList = [];
   console.log(updateIndexMap.value);
-  
-  
+
   for (const i in updateIndexMap.value) {
     const character = {
       charId: characterList.value[i].charId,
@@ -336,26 +335,24 @@ function upload() {
     uploadList.push(character);
   }
 
-  
   let nowUploadTimeStamp = Date.parse(new Date());
   let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
-  
-  if (uploadFrequency < 5000)  return;
-  if (globalUserData.value.token == void 0)   {
-    console.log(globalUserData.value.token == void 0)
-    cMessage("未登录",'error')
+
+  if (uploadFrequency < 5000) return;
+  if (globalUserData.value.token == void 0) {
+    console.log(globalUserData.value.token == void 0);
+    cMessage("未登录", "error");
     return;
   }
 
   console.log("上传频率：", uploadFrequency / 1000, "s");
-  
-    surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
-      // console.log(response.data);
-      lastUploadTimeStamp = nowUploadTimeStamp;
-      uploadMessage.value = response.data;
-      updateIndexMap.value = {}
-    });
-  
+
+  surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
+    // console.log(response.data);
+    lastUploadTimeStamp = nowUploadTimeStamp;
+    uploadMessage.value = response.data;
+    updateIndexMap.value = {};
+  });
 }
 
 let uploadFileName = ref("null");
@@ -505,18 +502,17 @@ function updateOwn(char_index, newVal) {
       cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
       characterList.value[char_index].potential = 1;
       cancelBackBeforeUpdate(char_index + "potential", 1, oldPotential);
-
     }
   } else {
     let attributeList = ["level", "elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
     for (let attribute of attributeList) {
-      setDomBackgroundColor(char_index + attribute + character[attribute],false);
+      setDomBackgroundColor(char_index + attribute + character[attribute], false);
       characterList.value[char_index][attribute] = -1;
     }
-    setDomBackgroundColor(char_index + "level",false);
+    setDomBackgroundColor(char_index + "level", false);
   }
-  
-  updateIndexMap.value[char_index]=char_index
+
+  updateIndexMap.value[char_index] = char_index;
   upload();
 }
 
@@ -536,7 +532,7 @@ function updateElite(char_index, newVal) {
   // console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldVal) {
     characterList.value[char_index].elite = -1;
-    setDomBackgroundColor(domId+oldVal, false);
+    setDomBackgroundColor(domId + oldVal, false);
     // cancelSkillAndMod(char_index);
     return;
   }
@@ -547,8 +543,8 @@ function updateElite(char_index, newVal) {
   cancelBackBeforeUpdate(domId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
   // console.log("精英化:", JSON.stringify(characterList.value[char_index], null, 2));
-  
-  updateIndexMap.value[char_index]=char_index
+
+  updateIndexMap.value[char_index] = char_index;
   upload();
 }
 
@@ -569,7 +565,6 @@ function batchUpdatesElite(newVal) {
     }
   }
 }
-
 
 //更新专精或模组等级
 function updateSkillAndMod(char_index, attribute, newVal) {
@@ -595,7 +590,7 @@ function updateSkillAndMod(char_index, attribute, newVal) {
 
   // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
 
-  updateIndexMap.value[char_index]=char_index
+  updateIndexMap.value[char_index] = char_index;
   upload();
 }
 
@@ -615,7 +610,7 @@ function updatePotential(char_index, newVal) {
   // console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldRank) {
     characterList.value[char_index].potential = -1;
-    setDomBackgroundColor(domId + oldRank,false);
+    setDomBackgroundColor(domId + oldRank, false);
     return;
   }
 
@@ -625,7 +620,7 @@ function updatePotential(char_index, newVal) {
 
   // console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
 
-  updateIndexMap.value[char_index]=char_index
+  updateIndexMap.value[char_index] = char_index;
   upload();
 }
 
@@ -637,7 +632,7 @@ function updateLevel(char_index, rarity) {
   characterList.value[char_index].own = true;
   if (characterList.value[char_index].level > 0) {
     characterList.value[char_index].level = level;
-    setDomBackgroundColor(char_index + "level",false);
+    setDomBackgroundColor(char_index + "level", false);
     return;
   }
 
@@ -670,11 +665,11 @@ function updateLevel(char_index, rarity) {
   if (level == 0) return;
 
   characterList.value[char_index].level = level;
-  setDomBackgroundColor(char_index + "level",true);
+  setDomBackgroundColor(char_index + "level", true);
 
   // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
 
-  updateIndexMap.value[char_index]=char_index
+  updateIndexMap.value[char_index] = char_index;
   upload();
 }
 
@@ -691,8 +686,8 @@ function cancelBackBeforeUpdate(domIdHeader, rank, oldRank) {
 }
 
 function updateBackBeforecancel(domIdHeader, rank, oldRank) {
-    setDomBackgroundColor(domIdHeader + rank, true);
-    setDomBackgroundColor(domIdHeader + oldRank, false);
+  setDomBackgroundColor(domIdHeader + rank, true);
+  setDomBackgroundColor(domIdHeader + oldRank, false);
 }
 
 // 修改dom的背景颜色
@@ -747,6 +742,5 @@ function simpleCardClass() {
 onMounted(() => {
   // getSurveyCharacter();
   addFilterRule("rarity", 6);
- 
 });
 </script>

@@ -160,8 +160,6 @@ function getpageTitle(path) {
   }
 }
 
-
-
 function getPathName(pathName) {
   console.log("当前访问路径：", pathName);
   if (pathName == "/") {

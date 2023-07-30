@@ -36,7 +36,6 @@
   line-height: 50px;
   margin-right: 20px;
   cursor: pointer;
-
 }
 
 .survey_nav_page {
@@ -107,7 +106,6 @@
   box-shadow: 0 0 1px 1px rgb(200, 200, 200);
   cursor: pointer;
   margin: auto;
-
 }
 
 .logout_text {
@@ -119,12 +117,10 @@
   font-weight: 800;
 }
 
-
 .logout_btn_wrap {
   display: flex;
   justify-content: flex-end;
 }
-
 
 .survey_index_content {
   /* width: 100%; */
