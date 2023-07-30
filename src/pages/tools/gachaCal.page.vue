@@ -484,34 +484,7 @@
                   本月月卡已买（选中该选项则-6源石）
                 </div>
               </div>
-              <div class="el-input_wrap">
-                <div class="el-input_text">购买</div>
-                <el-input-number v-model="monthlyCardNum" @change="compute()" :min="0" :max="12" label="描述文字"></el-input-number>
-                <div class="el-input_text">张月卡</div>
-              </div>
-
-              <!-- <div class="gacha_unit_child">
-                <el-checkbox-button>
-                  <div class="gacha_packPpr" :class="getPprLabel(2.54)">
-                    {{ 2.54 }}
-                  </div>
-                  <div class="gacha_unit_child_title" style="width: 168px">
-                    {{ '月卡' }}
-                  </div>
-                  <div class="gacha_resources_unit" style="width: 192px">
-                    <div style="width: 40px" :class="getSpriteImg('4003icon', 0)"></div>
-                    <div style="width: 54px">
-                      {{ monthlyCardOrundum }}
-                    </div>
-                    <div style="width: 40px" :class="getSpriteImg('4002icon', 0)"></div>
-                    <div style="width: 54px">
-                      {{ monthlyCardOriginium }}
-                    </div>
-                  </div>
-                </el-checkbox-button>
-              </div> -->
-
-
+            
               <el-checkbox-group v-model="gacha_storePacksList">
                 <div
                   v-for="(singlePack, index) in gacha_storePacks"
@@ -519,7 +492,7 @@
                   v-show="
                     singlePack.packType == 'monthly' &&
                     singlePack.packRmbPerDraw > 0 &&
-                    checkExpiration(singlePack.start, singlePack.end, singlePack.rewardType) && singlePack.packName!='月卡'
+                    checkExpiration(singlePack.start, singlePack.end, singlePack.rewardType)
                   "
                   class="gacha_unit_child"
                   @change="compute(singlePack.packName)"
@@ -1402,22 +1375,22 @@ export default {
         //月卡单独判断
         var packItem = this.gacha_storePacks[index];
         if (this.checkExpiration(packItem.start, packItem.end, packItem.rewardType, packItem.packName)) {
-          // if ("月卡" === packItem.packName) {
-          //   // console.log("买的月卡个数", Math.ceil(this.remainingDays / 30));
-          //   packItem.gachaOrundum = parseInt(this.remainingDays) * 200; //重新给商店礼包json的月卡的相关属性赋值
-          //   packItem.gachaOriginium = Math.ceil(this.remainingDays / 30) * 6; //重新给商店礼包json的月卡的相关属性赋值
+          if ("月卡" === packItem.packName) {
+            // console.log("买的月卡个数", Math.ceil(this.remainingDays / 30));
+            packItem.gachaOrundum = parseInt(this.remainingDays) * 200; //重新给商店礼包json的月卡的相关属性赋值
+            packItem.gachaOriginium = Math.ceil(this.remainingDays / 30) * 6; //重新给商店礼包json的月卡的相关属性赋值
 
-          //   this.sellsCount += Math.ceil(this.remainingDays / 30) * 30; //计算售价
-          //   this.calResults.orundum_gacha += parseInt(this.remainingDays) * 200; //根据天数计算月卡的合成玉
-          //   this.calResults.originium_gacha += Math.ceil(this.remainingDays / 30) * 6; //根据天数/30 计算月卡的源石
-          // } else {}
+            this.sellsCount += Math.ceil(this.remainingDays / 30) * 30; //计算售价
+            this.calResults.orundum_gacha += parseInt(this.remainingDays) * 200; //根据天数计算月卡的合成玉
+            this.calResults.originium_gacha += Math.ceil(this.remainingDays / 30) * 6; //根据天数/30 计算月卡的源石
+          } else {
+            this.sellsCount += parseInt(packItem.packPrice); //计算售价
+            this.calResults.orundum_gacha += parseInt(packItem.gachaOrundum);
+            this.calResults.originium_gacha += parseInt(packItem.gachaOriginium);
 
-          this.sellsCount += parseInt(packItem.packPrice); //计算售价
-          this.calResults.orundum_gacha += parseInt(packItem.gachaOrundum);
-          this.calResults.originium_gacha += parseInt(packItem.gachaOriginium);
-
-          this.calResults.permit_gacha += parseInt(packItem.gachaPermit);
-          this.calResults.permit10_gacha += parseInt(packItem.gachaPermit10);
+            this.calResults.permit_gacha += parseInt(packItem.gachaPermit);
+            this.calResults.permit10_gacha += parseInt(packItem.gachaPermit10);
+          }
         }
       });
 
