@@ -1102,10 +1102,10 @@ export default {
     //公告通知
     openNotification() {
       this.$notify({
-        title: "5.15更新",
+        title: "7.30更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong>1.移除了4周年攒抽<br>2.夏活攒抽数据参考自去年同期数据(近期更新更加准确的活动排期)</strong>",
-        duration: 3000,
+        message: "<strong>1.增加了感谢庆典攒抽<br>2.对月卡计算增加了更多选项</strong>",
+        duration: 6000,
       });
     },
 
@@ -1393,11 +1393,13 @@ export default {
 
             if (this.monthlyCardExtra > 2) {
               this.$message.error("月卡限制最多购买90天");
+              packItem.gachaOriginium += 12;
+              this.calResults.originium_gacha += 12;
+              this.sellsCount += 60; //计算售价
             } else {
               packItem.gachaOriginium += parseInt(this.monthlyCardExtra) * 6;
               this.calResults.originium_gacha += parseInt(this.monthlyCardExtra) * 6;
               this.sellsCount += parseInt(this.monthlyCardExtra) * 30; //计算售价
-              
             }
           } else {
             this.sellsCount += parseInt(packItem.packPrice); //计算售价
