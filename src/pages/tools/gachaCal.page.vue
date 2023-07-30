@@ -1463,7 +1463,7 @@ export default {
           }
         });
 
-        console.log(
+      console.log(
         "预测资源，",
         "源石:",
         this.calResults.originium_other,
@@ -2018,6 +2018,7 @@ export const documentProps = {
 #gacha {
   display: flex;
   justify-content: center;
+  background-color: var(--index-div-bg);
 }
 
 .gacha-row {
@@ -2033,6 +2034,7 @@ export const documentProps = {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 #gacha_total_table {
