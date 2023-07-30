@@ -45,43 +45,6 @@
     ]
   },
   {
-    "path": "/survey",
-    "text": "调查与统计",
-    "isChild": true,
-    "child": [
-      {
-        "path": "/survey/QA",
-        "text": "调查说明",
-        "isChild": false
-      },
-      {
-        "path": "/survey/operators",
-        "text": "干员持有统计",
-        "isChild": false
-      },
-      {
-        "path": "/survey/score",
-        "text": "干员评分",
-        "isChild": false
-      },
-      {
-        "path": "/survey/rank",
-        "text": "统计结果",
-        "isChild": false
-      },
-      {
-        "path": "/survey/riic",
-        "text": "基建调查",
-        "isChild": false
-      },
-      {
-        "path": "/survey/maarecruitdata",
-        "text": "公开招募大数据",
-        "isChild": false
-      }
-    ]
-  },
-  {
     "path": "/about",
     "text": "其它信息",
     "isChild": true,

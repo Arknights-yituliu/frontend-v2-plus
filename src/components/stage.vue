@@ -205,8 +205,8 @@
           <div class="popup_item">
             置信度:掉率对关卡效率误差影响在3%前提下的可信度范围&emsp;
             <a href="https://www.bilibili.com/video/BV1yL4y1P7K1">
-              <div style="display: flex;">
-                 详细介绍
+              <div style="display: flex">
+                详细介绍
                 <div :class="getSpriteImg('el', 'el')"></div>
               </div>
             </a>
@@ -317,6 +317,7 @@ export default {
       itemId: "",
       opETextTheme: "op_title_etext_light",
       stageVersion: 0.625,
+      popupRank:3,
     };
   },
   mounted() {
@@ -367,6 +368,8 @@ export default {
       }
     },
 
+
+
     showPopup(index) {
       document.getElementById("popup_card").style.display = "block";
       document.getElementById("popup_background").style.display = "block";
@@ -377,10 +380,12 @@ export default {
         this.popupData = this.stageRankT3[index];
         this.itemType = this.stageRankT3[index][0].itemType;
         this.itemId = this.stageRankT3[index][0].itemId;
+        this.popupRank = 3
       } else {
         this.popupData = [];
         this.popupData = this.stageRankT2[index - 100];
         console.log(this.stageRankT2[index - 100][0].itemType);
+        this.popupRank = 2
         this.itemType = this.stageRankT2[index - 100][0].itemType;
         if (this.itemType === "全新装置") this.itemType = "装置";
         if (this.itemType === "聚酸酯组") this.itemType = "聚酸酯";
@@ -391,16 +396,19 @@ export default {
         this.itemId = this.stageRankT2[index - 100][0].itemId;
       }
     },
+
     showOrundumPopup() {
       document.getElementById("popup_card_orundum").style.display = "block";
       document.getElementById("popup_background").style.display = "block";
       document.getElementById("popup_content").style.display = "block";
     },
+
     showHistoryPopup() {
       document.getElementById("popup_card_history").style.display = "block";
       document.getElementById("popup_background").style.display = "block";
       document.getElementById("popup_content").style.display = "block";
     },
+
     hidePopup() {
       document.getElementById("popup_card").style.display = "none";
       document.getElementById("popup_card_orundum").style.display = "none";
@@ -408,11 +416,15 @@ export default {
       document.getElementById("popup_background").style.display = "none";
       document.getElementById("popup_content").style.display = "none";
     },
+
     getPenguinUrl(num) {
       return "https://penguin-stats.cn/result/item/" + num;
     },
+
+
     getSpriteImg(id, type) {
       if (id === "30012" && type === "t3") id = "30013";
+      if (id === "30012" && this.popupRank === 3 && "popup" === type) id = "30013";
       if ("t3" === type) return "bg-" + id + " stage_sprite_t3";
       if ("sec" === type) return "bg-" + id + " stage_sprite_sec";
       if ("t2" === type) return "bg-" + id + " stage_sprite_t2";
