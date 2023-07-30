@@ -480,11 +480,16 @@
               </div>
               <div class="gacha_unit_child" style="display: flex">
                 <div @click="compute()">
-                  <el-switch v-model="originiumFlag" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                  <el-switch v-model="monthlyFlag" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                   本月月卡已买（选中该选项则-6源石）
                 </div>
               </div>
-            
+              <div class="el-input_wrap">
+                <div class="el-input_text">额外购买</div>
+                <el-input-number v-model="monthlyCardExtra" @change="compute()" :min="0" :max="4" label="描述文字"></el-input-number>
+                <div class="el-input_text">张月卡</div>
+                （每张月卡可预支6石）
+              </div>
               <el-checkbox-group v-model="gacha_storePacksList">
                 <div
                   v-for="(singlePack, index) in gacha_storePacks"
@@ -1050,6 +1055,8 @@ export default {
 
       gachaTimes_originium: 0,
 
+
+
       originium_648: 0, //普通源石648
       originium_328: 0, //普通源石328
       originium_198: 0, //普通源石198
@@ -1060,6 +1067,8 @@ export default {
       poolCountDownFlag_permit: true, //限定池每日送抽倒计时
       poolCountDownFlag_orundum: true, //限定池每日送抽倒计时
 
+      monthlyFlag: 0, //本月月卡是否已买
+      monthlyCardExtra: 0, //额外月卡
       monthlyCardNum: 0,
       monthlyCardOrundum: 0,
       monthlyCardOriginium: 0,
@@ -1461,18 +1470,6 @@ export default {
           }
         });
 
-      console.log(
-        "预测资源，",
-        "源石:",
-        this.calResults.originium_other,
-        "合成玉:",
-        this.calResults.orundum_other,
-        "寻访凭证:",
-        this.calResults.permit_other,
-        "十连凭证:",
-        this.calResults.permit10_other
-      );
-
       this.gacha_actReList.forEach((key) => {
         //循环UI上绑定的复刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
         //这里是计算活动复刻奖励,通过key获得gacha_honeyCake内的奖励内容
@@ -1593,17 +1590,17 @@ export default {
       // console.log(this.calResults.originium_exist ===undefined||this.calResults.originium_exist == "undefined");
 
       //没有cookie记录值强制赋值0
-      if (this.calResults.originium_exist == "" || this.calResults.originium_exist === undefined || this.calResults.originium_exist == "undefined")
+      if (this.calResults.originium_exist === "" || this.calResults.originium_exist === undefined || this.calResults.originium_exist == "undefined")
         this.calResults.originium_exist = 0;
-      if (this.calResults.orundum_exist == "" || this.calResults.orundum_exist === undefined || this.calResults.orundum_exist == "undefined")
+      if (this.calResults.orundum_exist === "" || this.calResults.orundum_exist === undefined || this.calResults.orundum_exist == "undefined")
         this.calResults.orundum_exist = 0;
-      if (this.calResults.permit_exist == "" || this.calResults.permit_exist === undefined || this.calResults.permit_exist == "undefined")
+      if (this.calResults.permit_exist === "" || this.calResults.permit_exist === undefined || this.calResults.permit_exist == "undefined")
         this.calResults.permit_exist = 0;
-      if (this.calResults.permit10_exist == "" || this.calResults.permit10_exist === undefined || this.calResults.permit10_exist == "undefined")
+      if (this.calResults.permit10_exist === "" || this.calResults.permit10_exist === undefined || this.calResults.permit10_exist == "undefined")
         this.calResults.permit10_exist = 0;
-      if (this.paradox == "" || this.paradox === undefined || this.paradox == "undefined") this.paradox = 0;
-      if (this.annihilation == "" || this.annihilation === undefined || this.annihilation == "undefined") this.annihilation = 0;
-      if (this.storeFlag === undefined || this.storeFlag == "undefined") this.storeFlag = true;
+      if (this.paradox === "" || this.paradox === undefined || this.paradox === "undefined") this.paradox = 0;
+      if (this.annihilation === "" || this.annihilation === undefined || this.annihilation === "undefined") this.annihilation = 0;
+      if (this.storeFlag === undefined || this.storeFlag === "undefined") this.storeFlag = true;
 
       //保存cookie
       cookie.set("originium_exist", this.calResults.originium_exist, {
