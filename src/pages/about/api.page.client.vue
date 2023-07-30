@@ -1,10 +1,52 @@
 <template>
   <div class="api_page mdui-typo">
     <h1><b>一图流API文档</b></h1>
+    <p>HTTP GET</p>
+    <h2><b>一图流API请求说明</b></h2>
+    <div class="mdui-table-fluid">
+      <table class="mdui-table mdui-table-hoverable">
+        <thead>
+          <tr>
+            <th style="width: 100px">注意事项</th>
+            <th style="width: 600px">说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>请求 URL</td>
+            <td>/API路径?参数名=参数值&参数名=参数值......</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>HTTP POST</p>
+    <div class="mdui-table-fluid">
+      <table class="mdui-table mdui-table-hoverable">
+        <thead>
+          <tr>
+            <th style="width: 100px">注意事项</th>
+            <th style="width: 600px">说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>请求 URL</td>
+            <td>/API路径</td>
+          </tr>
+          <tr>
+            <td>请求体</td>
+            <td>请求体可以使用 JSON 也可以使用 Form 表单，一般为json</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <h2><b>一图流API响应格式说明</b></h2>
 
-    <p>一般情况下API无论GET、POST或其他请求返回的都是统一格式，格式如下</p>
-    <div class="mdui-table-fluid api_response_table">
+    <p>一般情况下API无论GET、POST或其他请求，调用成功后返回的都是统一格式，格式如下</p>
+    <pre class="response">{{ parse(apiResponseDemo) }}</pre>
+    <p>统一响应格式字段说明</p>
+    <div class="mdui-table-fluid">
       <table class="mdui-table mdui-table-hoverable">
         <thead>
           <tr>
@@ -32,16 +74,22 @@
         </tbody>
       </table>
     </div>
-    <p>因此文档后续只展示data（返回数据）内字段</p>
+    <p>因此文档后续除特殊情况外，只说明data（返回数据）内字段</p>
 
-    <h2><b>公开的API</b></h2>
+    <h1><b>公开的API</b></h1>
 
-    <div class="api_wrap" >
-      <div class="mdui-collapse" mdui-collapse v-for="(api, index) in APIList" :key="index" :id="api.path">
-        <div class="mdui-collapse-item mdui-collapse-item-open" >
+    
+      <div class="mdui-collapse api_wrap" mdui-collapse v-for="(api, index) in APIList" :key="index" :id="api.path">
+        <div class="mdui-collapse-item mdui-collapse-item-open">
           <div class="mdui-collapse-item-header">
-            <h3><b>#&nbsp;{{ api.apiContent }} &emsp;{{ api.requestMethod }}</b></h3>
+            <h2>
+              <b>#&nbsp;{{ api.apiContent }} &emsp;{{ api.requestMethod }}</b> <br>
+              <div class="api_wrap_divider"></div>
+            </h2>
+            
           </div>
+
+          <p>{{ api.description }}</p>
 
           <div class="mdui-collapse-item-body">
             <h3><b> API路径</b></h3>
@@ -54,7 +102,7 @@
 
             <div v-show="api.requestParms === undefined">无参数</div>
 
-            <div class="mdui-table-fluid api_response_table" v-show="api.requestParms !== undefined">
+            <div class="mdui-table-fluid" v-show="api.requestParms !== undefined">
               <table class="mdui-table mdui-table-hoverable">
                 <thead>
                   <tr>
@@ -122,8 +170,9 @@
             <div class="nullblock"></div>
           </div>
         </div>
+        
       </div>
-    </div>
+    
   </div>
 </template>
 
@@ -153,6 +202,12 @@ function requestURL(index) {
   }
   return url;
 }
+
+let apiResponseDemo = {
+  code: 200,
+  mes: "调用成功",
+  data: {},
+};
 
 let apiResponse = ref({
   code: 200,
@@ -194,17 +249,30 @@ let menu_index = ref(0);
   font-weight: 600;
 }
 
+.api_wrap_divider {
+  border-bottom: 1px solid rgb(109, 109, 109);
+  width: 100%;
+
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
 .table_header {
   margin: 8px;
   display: block;
 }
 
 .api_page {
-  width: 96%;
+  width: 800px;
   margin: auto;
 }
+
+
+.api_wrap{
+  margin-bottom: 100px;
+}
+
 .api_response_table {
-  width: 810px;
   margin-top: 20px;
 }
 
@@ -227,7 +295,6 @@ let menu_index = ref(0);
   border-radius: 4px;
   height: 32px;
   line-height: 32px;
-  width: 800px;
 }
 
 .try_btn {
@@ -239,7 +306,7 @@ let menu_index = ref(0);
   border-radius: 3px;
   color: white;
   overflow: auto;
-  width: 810px;
+
   max-height: 480px;
 }
 </style>
