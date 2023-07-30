@@ -486,7 +486,7 @@
               </div>
               <div class="el-input_wrap">
                 <div class="el-input_text">额外购买</div>
-                <el-input-number v-model="monthlyCardExtra" @change="compute()" :min="0" :max="4" label="描述文字"></el-input-number>
+                <el-input-number v-model="monthlyCardExtra" @change="compute()" :min="0" :max="3" label="描述文字"></el-input-number>
                 <div class="el-input_text">张月卡</div>
                 （每张月卡可预支6石）
               </div>
@@ -1055,8 +1055,6 @@ export default {
 
       gachaTimes_originium: 0,
 
-
-
       originium_648: 0, //普通源石648
       originium_328: 0, //普通源石328
       originium_198: 0, //普通源石198
@@ -1067,12 +1065,8 @@ export default {
       poolCountDownFlag_permit: true, //限定池每日送抽倒计时
       poolCountDownFlag_orundum: true, //限定池每日送抽倒计时
 
-      monthlyFlag: 0, //本月月卡是否已买
+      monthlyFlag: true, //本月月卡是否已买
       monthlyCardExtra: 0, //额外月卡
-      monthlyCardNum: 0,
-      monthlyCardOrundum: 0,
-      monthlyCardOriginium: 0,
-      monthlyCardSell: 0,
 
       dailyRewards: 100, //每日奖励
       weeklyTaskRewards: 500, //周常奖励
@@ -1392,6 +1386,19 @@ export default {
             this.sellsCount += Math.ceil(this.remainingDays / 30) * 30; //计算售价
             this.calResults.orundum_gacha += parseInt(this.remainingDays) * 200; //根据天数计算月卡的合成玉
             this.calResults.originium_gacha += Math.ceil(this.remainingDays / 30) * 6; //根据天数/30 计算月卡的源石
+            if (this.monthlyFlag) {
+              packItem.gachaOriginium = packItem.gachaOriginium - 6;
+              this.calResults.originium_gacha -= 6;
+            }
+
+            if (this.monthlyCardExtra > 2) {
+              this.$message.error("月卡限制最多购买90天");
+            } else {
+              packItem.gachaOriginium += parseInt(this.monthlyCardExtra) * 6;
+              this.calResults.originium_gacha += parseInt(this.monthlyCardExtra) * 6;
+              this.sellsCount += parseInt(this.monthlyCardExtra) * 30; //计算售价
+              
+            }
           } else {
             this.sellsCount += parseInt(packItem.packPrice); //计算售价
             this.calResults.orundum_gacha += parseInt(packItem.gachaOrundum);
@@ -1402,24 +1409,6 @@ export default {
           }
         }
       });
-
-      if (Math.ceil(this.remainingDays / 30) < parseInt(this.monthlyCardNum)) {
-        this.$message.error("剩余天数不足再买一张月卡");
-        this.monthlyCardNum = Math.ceil(this.remainingDays / 30);
-        console.log(this.monthlyCardNum);
-      }
-
-      let monthlyCardEffectiveDays = parseInt(this.monthlyCardNum) * 30;
-      if (this.remainingDays < monthlyCardEffectiveDays) {
-        monthlyCardEffectiveDays = this.remainingDays;
-      }
-      this.monthlyCardOriginium = parseInt(this.monthlyCardNum) * 6;
-      this.monthlyCardOrundum = monthlyCardEffectiveDays * 200;
-
-      this.monthlyCardSell = parseInt(this.monthlyCardNum) * 30;
-      this.sellsCount += this.monthlyCardSell;
-      this.calResults.orundum_gacha += this.monthlyCardOrundum;
-      this.calResults.originium_gacha += this.monthlyCardOriginium;
 
       //普通源石购买数量
       this.calResults.originium_gacha +=
@@ -1456,19 +1445,33 @@ export default {
           //循环list<list>， list为[奖励名称,奖励内容]
           if ("honeyCake" === list[1].module) {
             //这里是计算其他奖励
+            console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
+
             this.calResults.originium_other += list[1].originium; //xxxxx_other格式的属性  其他奖励的的各项奖励数量，下同
             this.calResults.orundum_other += list[1].orundum;
             this.calResults.permit_other += list[1].permit;
             this.calResults.permit10_other += list[1].permit10;
           } else if ("act" === list[1].module) {
             //这里是计算活动奖励
-            console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
+            // console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
             this.calResults.originium_act += list[1].originium; //xxxx_act格式的属性 活动奖励的各项奖励数量，下同
             this.calResults.orundum_act += list[1].orundum;
             this.calResults.permit_act += list[1].permit;
             this.calResults.permit10_act += list[1].permit10;
           }
         });
+
+        console.log(
+        "预测资源，",
+        "源石:",
+        this.calResults.originium_other,
+        "合成玉:",
+        this.calResults.orundum_other,
+        "寻访凭证:",
+        this.calResults.permit_other,
+        "十连凭证:",
+        this.calResults.permit10_other
+      );
 
       this.gacha_actReList.forEach((key) => {
         //循环UI上绑定的复刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
