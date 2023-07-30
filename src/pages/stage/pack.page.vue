@@ -302,7 +302,7 @@
                 <div class="pack_info_text" style="color: #ff8f6e">
                   {{ getFixed(pack3.packOriginium, 1) }}源石 <br />￥{{ getFixed(pack3.packRmbPerOriginium, 1) }}/石
                 </div>
-               
+
                 <div class="pack_chart">
                   <div class="pack_chart_unit" v-show="pack3.packPPROriginium >= 1.57">
                     <div class="pack_chart_unit_text">本礼包</div>
@@ -414,7 +414,6 @@ export default {
     },
 
     getBackColor(index) {
-     
       if (index % 2 !== 0) return "pack_simple_tr_back";
     },
 
@@ -715,7 +714,6 @@ export const documentProps = {
 }
 
 .pack_info {
- 
   z-index: 10;
   height: 108px;
   width: 360px;
@@ -725,7 +723,6 @@ export const documentProps = {
   border-radius: 4px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   position: relative;
-  
 }
 
 .pack_info_text {

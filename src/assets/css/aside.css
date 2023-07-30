@@ -63,14 +63,14 @@
   /* border-left: 2px solid #ffd04b; */
 }
 
-.aside_divider{
+.aside_divider {
   margin: auto;
   width: 85%;
-  border-bottom: 1px solid rgb(255, 255, 255,0.4);
-  margin-top:10px;
+  border-bottom: 1px solid rgb(255, 255, 255, 0.4);
+  margin-top: 10px;
 }
 
-.aside_parent{
+.aside_parent {
   color: #ffd257;
 }
 
@@ -81,8 +81,7 @@
   display: inline-block;
   background-color: #ffd04b;
   border-radius: 6px;
-} 
-
+}
 
 .aside_menu_child_icon {
   width: 32px;
@@ -92,15 +91,15 @@
 }
 
 @media (max-width: 1080px) {
-  .aside_title{
+  .aside_title {
     font-size: 28px;
     height: 80px;
     line-height: 80px;
   }
 
-  .aside_nav{
-     margin-top: 16px;
-     font-size: 20px;
+  .aside_nav {
+    margin-top: 16px;
+    font-size: 20px;
   }
 
   /* .aside_parent{

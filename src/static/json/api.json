@@ -4,7 +4,7 @@
     "apiContent": "获取蓝材料推荐关",
     "requestMethod": "GET",
     "path": "/stage/t3",
-    "description":"用于获取蓝色品质材料的推荐关卡，排列顺序为关卡效率倒序",
+    "description": "用于获取蓝色品质材料的推荐关卡，排列顺序为关卡效率倒序",
     "requestParms": [
       {
         "name": "expCoefficient",
@@ -100,7 +100,7 @@
     "apiType": "stage",
     "apiContent": "获取绿材料推荐关",
     "requestMethod": "GET",
-    "description":"用于获取绿色品质材料的推荐关卡，排列顺序为材料期望理智升序",
+    "description": "用于获取绿色品质材料的推荐关卡，排列顺序为材料期望理智升序",
     "path": "/stage/t2",
     "requestParms": [
       {
@@ -197,7 +197,7 @@
     "apiType": "item",
     "apiContent": "获取材料价值表",
     "requestMethod": "GET",
-    "description":"用于获取各种常见精英化材料和其他材料的等效理智价值",
+    "description": "用于获取各种常见精英化材料和其他材料的等效理智价值",
     "path": "/item/value",
     "requestParms": [
       {
@@ -250,7 +250,7 @@
     "apiContent": "获取往期活动关卡效率",
     "requestMethod": "GET",
     "path": "/stage/closed",
-    "description":"用于获取往期活动的活动关卡效率，仅返回掉落蓝色材料的关卡",
+    "description": "用于获取往期活动的活动关卡效率，仅返回掉落蓝色材料的关卡",
     "requestParms": [
       {
         "name": "expCoefficient",
@@ -347,7 +347,7 @@
     "apiType": "stage",
     "apiContent": "获取搓玉推荐关卡",
     "requestMethod": "GET",
-    "description":"用于获取游戏内所有可刷取关卡的搓玉效率，仅展示大于20%搓玉效率的关卡，排序顺序为搓玉效率倒序",
+    "description": "用于获取游戏内所有可刷取关卡的搓玉效率，仅展示大于20%搓玉效率的关卡，排序顺序为搓玉效率倒序",
     "path": "/stage/orundum",
     "model": {
       "data": {
@@ -386,7 +386,7 @@
     "apiType": "store",
     "apiContent": "获取常驻商店性价比",
     "requestMethod": "GET",
-    "description":"用于获取采购中心常驻商店的性价比，返回的数据是key-value格式，key为商店代币的颜色（green为绿票商店），value是对应商店的性价比集合",
+    "description": "用于获取采购中心常驻商店的性价比，返回的数据是key-value格式，key为商店代币的颜色（green为绿票商店），value是对应商店的性价比集合",
     "path": "/store/perm",
     "model": {
       "data": {

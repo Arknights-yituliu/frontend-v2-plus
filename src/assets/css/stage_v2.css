@@ -103,7 +103,6 @@
   margin-left: -100px;
   position: relative;
   left: 44px;
- 
 }
 
 .stage_card_t3_table table {
@@ -318,11 +317,10 @@
   padding: 4px 4px 4px 8px;
   font-size: 18px;
   font-weight: 500;
-  
+
   border-radius: 4px;
   color: var(--popup-header-penguin-fg);
   position: relative;
-  
 }
 
 .popup_img {
@@ -348,7 +346,7 @@
   margin: 0px;
 }
 
-.popup_item{
+.popup_item {
   height: 24px;
   line-height: 24px;
   display: flex;
@@ -408,8 +406,6 @@
   margin: 6px 0px 0px -4px;
 }
 
-
-
 .sprite_icon_up {
   transform: scale(0.8);
   margin: -10px;
@@ -447,9 +443,7 @@
   top: -35px;
   left: -80px;
   /* right: 140px; */
-  
 }
-
 
 .stage_sprite_sec_wrap {
   position: relative;
@@ -465,7 +459,6 @@
   /* top: -30px;
   right:  140px; */
 }
-
 
 .stage_sprite_t2_wrap {
   position: relative;
@@ -512,7 +505,6 @@
   right:  140px; */
 }
 
-
 .store_sprite_perm_wrap {
   position: relative;
   width: 60px;
@@ -542,7 +534,6 @@
   /* top: -30px;
   right:  140px; */
 }
-
 
 .item_sprite_value_wrap {
   position: relative;

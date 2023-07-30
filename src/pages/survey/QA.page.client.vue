@@ -67,7 +67,6 @@
             <li>UI/UX设计</li>
             <li>统计分析</li>
           </ul>
-         
 
           <div class="mdui-typo" id="dev_feedback">
             <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
@@ -107,8 +106,6 @@
               </div>
             </a>
           </div>
-
-
         </div>
       </div>
 
@@ -147,7 +144,6 @@
         </div>
       </div>
 
-    
       <div class="index_card_wrap" id="license">
         <div class="index_card_title">许可协议</div>
         <div class="card_content">

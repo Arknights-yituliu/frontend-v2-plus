@@ -78,101 +78,97 @@
 
     <h1><b>公开的API</b></h1>
 
-    
-      <div class="mdui-collapse api_wrap" mdui-collapse v-for="(api, index) in APIList" :key="index" :id="api.path">
-        <div class="mdui-collapse-item mdui-collapse-item-open">
-          <div class="mdui-collapse-item-header">
-            <h2>
-              <b>#&nbsp;{{ api.apiContent }} &emsp;{{ api.requestMethod }}</b> <br>
-              <div class="api_wrap_divider"></div>
-            </h2>
-            
-          </div>
-
-          <p>{{ api.description }}</p>
-
-          <div class="mdui-collapse-item-body">
-            <h3><b> API路径</b></h3>
-
-            <div class="requestURL">
-              {{ api.path }}
-            </div>
-
-            <h3><b> 请求参数</b></h3>
-
-            <div v-show="api.requestParms === undefined">无参数</div>
-
-            <div class="mdui-table-fluid" v-show="api.requestParms !== undefined">
-              <table class="mdui-table mdui-table-hoverable">
-                <thead>
-                  <tr>
-                    <th>参数名</th>
-                    <th>参数类型</th>
-                    <th>参数说明</th>
-                    <th>参数值</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr v-for="(parm, index) in api.requestParms" :key="index">
-                    <td>{{ parm.name }}</td>
-                    <td>{{ parm.type }}</td>
-                    <td>{{ parm.description }}</td>
-                    <td>
-                      <div class="mdui-textfield">
-                        <input class="mdui-textfield-input" type="text" :placeholder="parm.value" v-model="parm.value" />
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <h3><b> 请求格式示例</b></h3>
-
-            <div class="requestURL">
-              {{ requestURL(index) }}
-            </div>
-
-            <h3><b> 返回字段说明</b></h3>
-
-            <div class="api_response_table" v-for="(model, index) in api.model" :key="index">
-              <p class="table_header">{{ model.description }}</p>
-
-              <table class="mdui-table mdui-table-hoverable">
-                <thead>
-                  <tr>
-                    <th>参数名</th>
-                    <th>参数类型</th>
-                    <th>参数说明</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr v-for="(value, index) in model.value" :key="index">
-                    <td>{{ value.name }}</td>
-                    <td>{{ value.type }}</td>
-                    <td>{{ value.description }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <button class="mdui-btn mdui-color-blue-accent mdui-ripple tryBtn" @click="tryBtn(index)">尝试一下</button>
-
-            <h3><b> 服务响应结果</b></h3>
-
-            <div class="response_body">
-              <div>返回消息体</div>
-              <pre class="response">{{ parse(apiResponse) }}</pre>
-            </div>
-
-            <div class="nullblock"></div>
-          </div>
+    <div class="mdui-collapse api_wrap" mdui-collapse v-for="(api, index) in APIList" :key="index" :id="api.path">
+      <div class="mdui-collapse-item mdui-collapse-item-open">
+        <div class="mdui-collapse-item-header">
+          <h2>
+            <b>#&nbsp;{{ api.apiContent }} &emsp;{{ api.requestMethod }}</b> <br />
+            <div class="api_wrap_divider"></div>
+          </h2>
         </div>
-        
+
+        <p>{{ api.description }}</p>
+
+        <div class="mdui-collapse-item-body">
+          <h3><b> API路径</b></h3>
+
+          <div class="requestURL">
+            {{ api.path }}
+          </div>
+
+          <h3><b> 请求参数</b></h3>
+
+          <div v-show="api.requestParms === undefined">无参数</div>
+
+          <div class="mdui-table-fluid" v-show="api.requestParms !== undefined">
+            <table class="mdui-table mdui-table-hoverable">
+              <thead>
+                <tr>
+                  <th>参数名</th>
+                  <th>参数类型</th>
+                  <th>参数说明</th>
+                  <th>参数值</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="(parm, index) in api.requestParms" :key="index">
+                  <td>{{ parm.name }}</td>
+                  <td>{{ parm.type }}</td>
+                  <td>{{ parm.description }}</td>
+                  <td>
+                    <div class="mdui-textfield">
+                      <input class="mdui-textfield-input" type="text" :placeholder="parm.value" v-model="parm.value" />
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3><b> 请求格式示例</b></h3>
+
+          <div class="requestURL">
+            {{ requestURL(index) }}
+          </div>
+
+          <h3><b> 返回字段说明</b></h3>
+
+          <div class="api_response_table" v-for="(model, index) in api.model" :key="index">
+            <p class="table_header">{{ model.description }}</p>
+
+            <table class="mdui-table mdui-table-hoverable">
+              <thead>
+                <tr>
+                  <th>参数名</th>
+                  <th>参数类型</th>
+                  <th>参数说明</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="(value, index) in model.value" :key="index">
+                  <td>{{ value.name }}</td>
+                  <td>{{ value.type }}</td>
+                  <td>{{ value.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button class="mdui-btn mdui-color-blue-accent mdui-ripple tryBtn" @click="tryBtn(index)">尝试一下</button>
+
+          <h3><b> 服务响应结果</b></h3>
+
+          <div class="response_body">
+            <div>返回消息体</div>
+            <pre class="response">{{ parse(apiResponse) }}</pre>
+          </div>
+
+          <div class="nullblock"></div>
+        </div>
       </div>
-    
+    </div>
   </div>
 </template>
 
@@ -267,8 +263,7 @@ let menu_index = ref(0);
   margin: auto;
 }
 
-
-.api_wrap{
+.api_wrap {
   margin-bottom: 100px;
 }
 

@@ -511,7 +511,6 @@
                 </el-checkbox-button>
               </div> -->
 
-
               <el-checkbox-group v-model="gacha_storePacksList">
                 <div
                   v-for="(singlePack, index) in gacha_storePacks"
@@ -519,7 +518,8 @@
                   v-show="
                     singlePack.packType == 'monthly' &&
                     singlePack.packRmbPerDraw > 0 &&
-                    checkExpiration(singlePack.start, singlePack.end, singlePack.rewardType) && singlePack.packName!='月卡'
+                    checkExpiration(singlePack.start, singlePack.end, singlePack.rewardType) &&
+                    singlePack.packName != '月卡'
                   "
                   class="gacha_unit_child"
                   @change="compute(singlePack.packName)"
