@@ -478,12 +478,42 @@
                 <div class="triangle"></div>
                 月常礼包
               </div>
+              <div class="el-input_wrap">
+                <div class="el-input_text">购买</div>
+                <el-input-number v-model="monthlyCardNum" @change="compute()" :min="0" :max="12" label="描述文字"></el-input-number>
+                <div class="el-input_text">张月卡</div>
+              </div>
+             
+              <!-- <div class="gacha_unit_child">
+                <el-checkbox-button>
+                  <div class="gacha_packPpr" :class="getPprLabel(2.54)">
+                    {{ 2.54 }}
+                  </div>
+                  <div class="gacha_unit_child_title" style="width: 168px">
+                    {{ '月卡' }}
+                  </div>
+                  <div class="gacha_resources_unit" style="width: 192px">
+                    <div style="width: 40px" :class="getSpriteImg('4003icon', 0)"></div>
+                    <div style="width: 54px">
+                      {{ monthlyCardOrundum }}
+                    </div>
+                    <div style="width: 40px" :class="getSpriteImg('4002icon', 0)"></div>
+                    <div style="width: 54px">
+                      {{ monthlyCardOriginium }}
+                    </div>
+                  </div>
+                </el-checkbox-button>
+              </div> -->
+
+              
               <el-checkbox-group v-model="gacha_storePacksList">
                 <div
                   v-for="(singlePack, index) in gacha_storePacks"
                   :key="index"
                   v-show="
-                    singlePack.packType == 'monthly' && singlePack.packRmbPerDraw > 0 && checkExpiration(singlePack.start, singlePack.end, singlePack.rewardType)
+                    singlePack.packType == 'monthly' &&
+                    singlePack.packRmbPerDraw > 0 &&
+                    checkExpiration(singlePack.start, singlePack.end, singlePack.rewardType) && singlePack.packName!='月卡'
                   "
                   class="gacha_unit_child"
                   @change="compute(singlePack.packName)"
@@ -1051,6 +1081,11 @@ export default {
       poolCountDownFlag_permit: true, //限定池每日送抽倒计时
       poolCountDownFlag_orundum: true, //限定池每日送抽倒计时
 
+      monthlyCardNum: 0,
+      monthlyCardOrundum: 0,
+      monthlyCardOriginium: 0,
+      monthlyCardSell: 0,
+
       dailyRewards: 100, //每日奖励
       weeklyTaskRewards: 500, //周常奖励
       annihilationRewards: 1800, //剿灭奖励
@@ -1135,7 +1170,6 @@ export default {
       var endDate = new Date(Date.parse(this.endTime));
       if (endDate.getDay() === 1) this.remainingWeeks--;
 
-     
       for (let i = 1; this.start_TimeStamp + 86400000 * i <= this.end_TimeStamp; i++) {
         var date = new Date(this.start_TimeStamp + 86400000 * i);
         // console.log(this.start_TimeStamp + 86400000 * i)
@@ -1362,23 +1396,42 @@ export default {
         //月卡单独判断
         var packItem = this.gacha_storePacks[index];
         if (this.checkExpiration(packItem.start, packItem.end, packItem.rewardType, packItem.packName)) {
-          if ("月卡" === packItem.packName) {
-            // console.log("买的月卡个数", Math.ceil(this.remainingDays / 30));
-            packItem.gachaOrundum = parseInt(this.remainingDays) * 200; //重新给商店礼包json的月卡的相关属性赋值
-            packItem.gachaOriginium = Math.ceil(this.remainingDays / 30) * 6; //重新给商店礼包json的月卡的相关属性赋值
+          // if ("月卡" === packItem.packName) {
+          //   // console.log("买的月卡个数", Math.ceil(this.remainingDays / 30));
+          //   packItem.gachaOrundum = parseInt(this.remainingDays) * 200; //重新给商店礼包json的月卡的相关属性赋值
+          //   packItem.gachaOriginium = Math.ceil(this.remainingDays / 30) * 6; //重新给商店礼包json的月卡的相关属性赋值
 
-            this.sellsCount += Math.ceil(this.remainingDays / 30) * 30; //计算售价
-            this.calResults.orundum_gacha += parseInt(this.remainingDays) * 200; //根据天数计算月卡的合成玉
-            this.calResults.originium_gacha += Math.ceil(this.remainingDays / 30) * 6; //根据天数/30 计算月卡的源石
-          } else {
-            this.sellsCount += parseInt(packItem.packPrice); //计算售价
-            this.calResults.orundum_gacha += parseInt(packItem.gachaOrundum);
-            this.calResults.originium_gacha += parseInt(packItem.gachaOriginium);
-          }
+          //   this.sellsCount += Math.ceil(this.remainingDays / 30) * 30; //计算售价
+          //   this.calResults.orundum_gacha += parseInt(this.remainingDays) * 200; //根据天数计算月卡的合成玉
+          //   this.calResults.originium_gacha += Math.ceil(this.remainingDays / 30) * 6; //根据天数/30 计算月卡的源石
+          // } else {}
+
+          this.sellsCount += parseInt(packItem.packPrice); //计算售价
+          this.calResults.orundum_gacha += parseInt(packItem.gachaOrundum);
+          this.calResults.originium_gacha += parseInt(packItem.gachaOriginium);
+
           this.calResults.permit_gacha += parseInt(packItem.gachaPermit);
           this.calResults.permit10_gacha += parseInt(packItem.gachaPermit10);
         }
       });
+
+      if (Math.ceil(this.remainingDays / 30) < parseInt(this.monthlyCardNum)) {
+        this.$message.error("剩余天数不足再买一张月卡");
+        this.monthlyCardNum = Math.ceil(this.remainingDays / 30);
+        console.log(this.monthlyCardNum);
+      }
+
+      let monthlyCardEffectiveDays = parseInt(this.monthlyCardNum) * 30;
+      if (this.remainingDays < monthlyCardEffectiveDays) {
+        monthlyCardEffectiveDays = this.remainingDays;
+      }
+      this.monthlyCardOriginium = parseInt(this.monthlyCardNum) * 6;
+      this.monthlyCardOrundum = monthlyCardEffectiveDays * 200;
+
+      this.monthlyCardSell = parseInt(this.monthlyCardNum) * 30;
+      this.sellsCount += this.monthlyCardSell;
+      this.calResults.orundum_gacha += this.monthlyCardOrundum;
+      this.calResults.originium_gacha += this.monthlyCardOriginium;
 
       //普通源石购买数量
       this.calResults.originium_gacha +=
@@ -1421,7 +1474,7 @@ export default {
             this.calResults.permit10_other += list[1].permit10;
           } else if ("act" === list[1].module) {
             //这里是计算活动奖励
-            console.log(list[0],'源石:',list[1].originium,'合成玉:',list[1].orundum,'寻访凭证:',list[1].permit,'十连凭证:',list[1].permit10)
+            console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
             this.calResults.originium_act += list[1].originium; //xxxx_act格式的属性 活动奖励的各项奖励数量，下同
             this.calResults.orundum_act += list[1].orundum;
             this.calResults.permit_act += list[1].permit;
@@ -1429,7 +1482,17 @@ export default {
           }
         });
 
-        console.log('预测资源，','源石:',this.calResults.originium_other,'合成玉:',this.calResults.orundum_other,'寻访凭证:',this.calResults.permit_other,'十连凭证:',this.calResults.permit10_other)
+      console.log(
+        "预测资源，",
+        "源石:",
+        this.calResults.originium_other,
+        "合成玉:",
+        this.calResults.orundum_other,
+        "寻访凭证:",
+        this.calResults.permit_other,
+        "十连凭证:",
+        this.calResults.permit10_other
+      );
 
       this.gacha_actReList.forEach((key) => {
         //循环UI上绑定的复刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
@@ -1461,10 +1524,10 @@ export default {
 
       //其他抽卡次数
       this.calResults.gachaTimes_other =
-        parseInt(this.calResults.originium_other) * 0.3 * parseInt(flag_originium) + parseInt(this.calResults.orundum_other) / 600 +
-        parseInt(this.calResults.permit_other) + parseInt(this.calResults.permit10_other) * 10;
-
-        
+        parseInt(this.calResults.originium_other) * 0.3 * parseInt(flag_originium) +
+        parseInt(this.calResults.orundum_other) / 600 +
+        parseInt(this.calResults.permit_other) +
+        parseInt(this.calResults.permit10_other) * 10;
 
       // 所有模块相加-源石
       this.originium +=
