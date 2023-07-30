@@ -478,6 +478,12 @@
                 <div class="triangle"></div>
                 月常礼包
               </div>
+              <div class="gacha_unit_child" style="display: flex">
+                <div @click="compute()">
+                  <el-switch v-model="originiumFlag" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                  本月月卡已买（选中该选项则-6源石）
+                </div>
+              </div>
               <el-checkbox-group v-model="gacha_storePacksList">
                 <div
                   v-for="(singlePack, index) in gacha_storePacks"
