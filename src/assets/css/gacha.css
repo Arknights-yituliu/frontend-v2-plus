@@ -139,12 +139,12 @@
   padding-bottom: 0px;
 }
 
-.el-input_wrap{
- display: flex;
- margin-top: 12px;
+.el-input_wrap {
+  display: flex;
+  margin-top: 12px;
 }
 
-.el-input_text{
+.el-input_text {
   height: 32px;
   line-height: 32px;
   margin-left: 16px;

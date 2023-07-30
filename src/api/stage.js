@@ -48,8 +48,6 @@ export default {
     });
   },
 
-
-
   getStageTable() {
     return request({
       url: `/stage`,
