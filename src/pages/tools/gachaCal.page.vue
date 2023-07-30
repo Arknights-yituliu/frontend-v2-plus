@@ -1995,7 +1995,7 @@ export const documentProps = {
 
 .col-1 {
   position: sticky;
-  top: 0px;
+  top: 0;
   z-index: 99;
 }
 
@@ -2007,7 +2007,7 @@ export const documentProps = {
 
 @media (max-width: 820px) {
   .col-1 {
-    top: 78px;
+    top: 0;
   }
 }
 
