@@ -3,7 +3,7 @@ const props = defineProps(["data"]);
 </script>
 
 <template>
-  <div class="mdui-container-fluid mdui-theme-layout-dark">
+  <div class="mdui-container-fluid">
     <div class="mdui-container mdui-valign">
       <div class="mdui-row-xs-2 mdui-row-md-3 mdui-row-lg-4">
         <div class="mdui-col mdui-p-y-1" v-for="d in data">
@@ -39,6 +39,7 @@ const props = defineProps(["data"]);
 
 .mdui-container {
   min-height: calc(100vh - 50px);
+  justify-content: center;
 }
 
 @media screen and (max-width: 1080px) {
@@ -69,5 +70,7 @@ a {
     font-size: 18px;
     line-height: 32px;
   }
+
+  border-radius: 4px;
 }
 </style>
