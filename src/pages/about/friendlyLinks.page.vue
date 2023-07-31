@@ -141,11 +141,6 @@ import { ref } from "vue";
   margin: auto;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
 .friend_card {
   width: 360px;
   /* border: 1px rgb(180, 180, 180) solid; */
@@ -227,5 +222,12 @@ a {
   height: 30px;
   line-height: 30px;
   font-size: 14px;
+}
+</style>
+
+<style scoped>
+a {
+  color: inherit;
+  text-decoration: none;
 }
 </style>
