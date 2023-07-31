@@ -11,7 +11,7 @@ const props = defineProps(["data"]);
             <div class="mdui-shadow-2 mdui-text-center mdui-ripple mdui-p-x-3 mdui-p-y-5 navi-card" :href="d.link">
               <img class="mdui-center" :src="d.icon" />
               <div class="title mdui-m-t-4 mdui-m-b-2">{{ d.title }}</div>
-              <div class="desc">{{ d.desc }}</div>
+              <div class="desc" v-for="i in d.desc">{{ i }}</div>
             </div>
           </a>
         </div>
@@ -22,7 +22,7 @@ const props = defineProps(["data"]);
 
 <style lang="scss">
 .light {
-  --bg: white;
+  --bg: #f5f5f5;
   --card-bg: white;
   --fg: rgba(0, 0, 0, 0.87);
 }
@@ -67,7 +67,7 @@ a {
 
   .desc {
     font-size: 18px;
-    line-height: 28px;
+    line-height: 32px;
   }
 }
 </style>
