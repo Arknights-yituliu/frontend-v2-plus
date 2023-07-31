@@ -1,92 +1,22 @@
+<script setup>
+import NaviCards from "@/components/NaviCards.vue";
+
+const navi_data = [
+  {
+    title: "开发相关",
+    desc: ["参与开发的方式", "团队成员", "数据和素材来源", "版权声明与许可协议"],
+    icon: "/image/icon/集成战略_道具_设备维护装置.png",
+    link: "/about/dev",
+  },
+  { title: "API文档", desc: ["调用一图流提供的接口", "获取关卡推荐", "获取商店性价比", "获取材料价值"], icon: "/image/icon/头像_装置_伏击电路芯片.png", link: "/about/api" },
+  { title: "支持我们", desc: ["查看支持我们的方式", "查看项目当前财务状况"], icon: "/image/icon/至纯源石.png", link: "/about/donate" },
+  { title: "友情链接", desc: ["其它明日方舟工具站", "实用App"], icon: "/image/icon/蚀刻章_深情厚谊奖章·Ⅴ.png", link: "/about/friendlyLinks" },
+];
+</script>
+
 <template>
-  <div class="riic-bg">
-    <div class="riic-btn">
-      <picture class="riic-icon">
-        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/webp" />
-        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/png" />
-        <img src="https://avatars.githubusercontent.com/u/97677443?s=200" />
-      </picture>
-      <div class="riic-title">Maa Assistant Arknights</div>
-      <div class="riic-intro">每日定时进行三次换班</div>
-      <div class="riic-guide">
-        Maa及排班表生成的使用讲解：
-        <span>BV1De411L7C9</span>
-      </div>
-    </div>
-    <div class="riic-btn">
-      <picture class="riic-icon">
-        <source srcset="/image/website/mower.webp" type="image/webp" />
-        <source srcset="/image/website/mower.png" type="image/png" />
-        <img src="/public/image/website/mower.png" />
-      </picture>
-      <div class="riic-title">Arknights Mower</div>
-      <div class="riic-intro">动态换班，使用但书与龙舌兰跑单</div>
-      <div class="riic-guide">
-        跑单玩法及Mower工具讲解：
-        <span>BV1KT411s7Ar</span>
-      </div>
-    </div>
-  </div>
+  <navi-cards :data="navi_data" />
 </template>
-
-<style>
-.riic-bg {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  /* min-height: calc(100vh - 156px); */
-  padding: 30px 0;
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  flex-wrap: wrap;
-  height: 100%;
-}
-
-.riic-btn {
-  width: 460px;
-  height: 382px;
-  border-radius: 14px;
-  box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.08), 0 3px 6px 0 rgba(0, 0, 0, 0.06), 0 5px 12px 4px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  box-sizing: border-box;
-  transition: background-color 0.2s;
-}
-
-.riic-btn:hover {
-  background-color: #18a058;
-  color: white;
-}
-
-.riic-icon {
-  margin-bottom: 8px;
-}
-
-.riic-icon source,
-.riic-icon img {
-  width: 200px;
-  height: 200px;
-}
-
-.riic-guide {
-  font-size: 18px;
-}
-
-.riic-title {
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.riic-intro {
-  font-size: 22px;
-}
-</style>
 
 <script>
 export const documentProps = {
