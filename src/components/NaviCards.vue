@@ -8,10 +8,10 @@ const props = defineProps(["data"]);
       <div class="mdui-row-xs-2 mdui-row-md-3 mdui-row-lg-4">
         <div class="mdui-col mdui-p-y-1" v-for="d in data">
           <a :href="d.link">
-            <div class="mdui-shadow-2 mdui-text-center mdui-ripple mdui-p-x-3 mdui-p-y-5 navi-card" :href="d.link">
-              <img class="mdui-center" :src="d.icon" />
-              <div class="title mdui-m-t-4 mdui-m-b-2">{{ d.title }}</div>
-              <div class="desc" v-for="i in d.desc">{{ i }}</div>
+            <div class="mdui-shadow-2 mdui-text-center mdui-ripple mdui-p-y-5 navi-card" :href="d.link">
+              <img class="mdui-center icon mdui-m-b-5" :src="d.icon" />
+              <div class="title mdui-p-y-2 mdui-m-t-5 mdui-m-b-2">{{ d.title }}</div>
+              <div class="desc mdui-m-x-3" v-for="i in d.desc">{{ i }}</div>
             </div>
           </a>
         </div>
@@ -25,12 +25,14 @@ const props = defineProps(["data"]);
   --bg: #f5f5f5;
   --card-bg: white;
   --fg: rgba(0, 0, 0, 0.87);
+  --title-bg: #e0e0e0;
 }
 
 .dark {
   --bg: #303030;
   --card-bg: #424242;
   --fg: white;
+  --title-bg: #616161;
 }
 
 .mdui-container-fluid {
@@ -56,6 +58,7 @@ a {
 .navi-card {
   background-color: var(--card-bg);
   height: 300px;
+  min-width: 220px;
 
   img {
     height: 100px;
@@ -64,13 +67,22 @@ a {
   .title {
     font-size: 24px;
     font-weight: bold;
+    background-color: var(--title-bg);
+    position: relative;
   }
 
   .desc {
-    font-size: 18px;
-    line-height: 32px;
+    font-size: 14px;
+    line-height: 24px;
+    white-space: nowrap;
   }
 
   border-radius: 4px;
+
+  .icon {
+    transform: scale(1.6) translateY(30px);
+    opacity: 0.5;
+    position: relative;
+  }
 }
 </style>
