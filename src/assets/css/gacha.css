@@ -142,6 +142,7 @@
 .el-input_wrap {
   display: flex;
   margin-top: 12px;
+  flex-wrap: wrap;
 }
 
 .el-input_text {
