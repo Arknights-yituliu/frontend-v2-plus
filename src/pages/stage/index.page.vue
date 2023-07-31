@@ -10,7 +10,7 @@ const navi_data = [
   },
   { title: "商店性价比", desc: ["绿票、橙票买哪个比较赚？", "活动商店优先换哪些材料？"], icon: "/image/icon/无框_四凭证.png", link: "/stage/store" },
   { title: "礼包性价比", desc: ["礼包综合性价比", "仅计抽卡的性价比"], icon: "/image/icon/无框_龙门币.png", link: "/stage/pack" },
-  { title: "物品价值表", desc: ["查看物品的价值", "导出为JSON或Excel以作研究或二次开发"], icon: "/image/icon/无框_理智.png", link: "/stage/value" },
+  { title: "物品价值表", desc: ["查看物品的价值", "导出为JSON或Excel", "以作研究或二次开发"], icon: "/image/icon/无框_理智.png", link: "/stage/value" },
 ];
 </script>
 
