@@ -10,7 +10,7 @@ const props = defineProps(["data"]);
           <a :href="d.link">
             <div class="mdui-shadow-2 mdui-text-center mdui-ripple mdui-p-y-5 navi-card" :href="d.link">
               <img class="mdui-center icon mdui-m-b-5" :src="d.icon" />
-              <div class="title mdui-p-y-2 mdui-m-t-5 mdui-m-b-2">{{ d.title }}</div>
+              <div class="title mdui-shadow-1 mdui-p-y-2 mdui-m-t-5 mdui-m-b-2">{{ d.title }}</div>
               <div class="desc mdui-m-x-3" v-for="i in d.desc">{{ i }}</div>
             </div>
           </a>
@@ -65,10 +65,11 @@ a {
   }
 
   .title {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     background-color: var(--title-bg);
     position: relative;
+    opacity: 0.8;
   }
 
   .desc {
@@ -80,7 +81,7 @@ a {
   border-radius: 4px;
 
   .icon {
-    transform: scale(1.6) translateY(30px);
+    transform: scale(1.8) translateY(30px);
     opacity: 0.5;
     position: relative;
   }
