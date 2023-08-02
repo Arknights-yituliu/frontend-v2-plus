@@ -190,13 +190,9 @@ function updateVisits(pathName) {
 }
 
 onMounted(() => {
-  var domain = window.location.host;
   var pathName = window.location.pathname;
 
-  if (domain.indexOf("dev") == -1) {
-    updateVisits(pathName);
-  }
-
+  updateVisits(pathName);
   getpageTitle(pathName);
 });
 </script>
