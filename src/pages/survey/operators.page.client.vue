@@ -332,6 +332,9 @@ let updateIndexMap = ref({});
 //上传风评表
 function automaticUpload() {
 
+  let nowUploadTimeStamp = Date.parse(new Date());
+  let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
+
   if (uploadFrequency < 30000) return;
   if (globalUserData.value.token == void 0) {
     console.log(globalUserData.value.token == void 0);
@@ -359,8 +362,7 @@ function automaticUpload() {
     uploadList.push(character);
   }
 
-  let nowUploadTimeStamp = Date.parse(new Date());
-  let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
+ 
 
  
 
