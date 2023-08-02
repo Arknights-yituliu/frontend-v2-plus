@@ -15,16 +15,20 @@
 <script setup>
 import ItemValue from "@/components/ItemValue.vue";
 
-import toolApi from "@/api/tool";
+// import toolApi from "@/api/tool";
 
-import { onMounted, ref } from "vue";
-
-const old_path = ref(false);
+import { onMounted } from "vue";
+import { ElMessage } from "element-plus";
 
 onMounted(() => {
   const url_path = window.location.pathname.split("/")[1];
-  old_path.value = url_path == "value";
-  console.log(old_path.value);
+  if (url_path == "value") {
+    ElMessage({
+      dangerouslyUseHTMLString: true,
+      message: '此页面已迁移至<a href="/stage/value">https://yituliu.site/stage/value</a>',
+      type: "warning",
+    });
+  }
 });
 </script>
 

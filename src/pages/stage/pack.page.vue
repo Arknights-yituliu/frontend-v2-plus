@@ -377,6 +377,7 @@ import storeApi from "@/api/store";
 import { usePageContext } from "@/renderer/usePageContext";
 import toolApi from "@/api/tool";
 import { ClientOnly } from "@/components/ClientOnly";
+import { ElMessage } from "element-plus";
 
 export default {
   setup() {
@@ -391,8 +392,6 @@ export default {
       packsPPRDataSort: [], //排序缓存数据
       packFilter: 11,
       showFlag: false,
-
-      old_path: false,
     };
   },
   components: {
@@ -406,8 +405,13 @@ export default {
     this.getCookies();
 
     const url_path = window.location.pathname.split("/")[1];
-    this.old_path = url_path == "pack";
-    console.log(this.old_path);
+    if (url_path == "pack") {
+      ElMessage({
+        dangerouslyUseHTMLString: true,
+        message: '此页面已迁移至<a href="/stage/pack">https://yituliu.site/stage/pack</a>',
+        type: "warning",
+      });
+    }
   },
   methods: {
     getCookies() {
