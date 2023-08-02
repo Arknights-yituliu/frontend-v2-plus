@@ -1086,6 +1086,8 @@ export default {
       LMDCost: 0,
       pieData: [],
       // pack_data: this.pageContext.pageProps.pack_data,
+
+      old_path: false,
     };
   },
   mounted() {
@@ -1097,6 +1099,10 @@ export default {
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
     this.openNotification();
+
+    const url_path = window.location.pathname.split("/")[0];
+    old_path.value = url_path == "gachaCal";
+    console.log(old_path.value);
   },
   methods: {
     //公告通知
