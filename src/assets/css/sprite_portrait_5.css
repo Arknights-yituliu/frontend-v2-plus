@@ -1,0 +1,599 @@
+.bg-char_002_amiya_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -10px -10px;
+}
+
+.bg-char_102_texas_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -210px -10px;
+}
+
+.bg-char_129_bluep_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -410px -10px;
+}
+
+.bg-char_131_flameb_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -610px -10px;
+}
+
+.bg-char_145_prove_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -10px -390px;
+}
+
+.bg-char_163_hpsts_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -210px -390px;
+}
+
+.bg-char_164_nightm_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -410px -390px;
+}
+
+.bg-char_171_bldsk_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -610px -390px;
+}
+
+.bg-char_218_cuttle_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -810px -10px;
+}
+
+.bg-char_226_hmau_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -810px -390px;
+}
+
+.bg-char_230_savage_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1010px -10px;
+}
+
+.bg-char_279_excu_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1010px -390px;
+}
+
+.bg-char_356_broca_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -10px -770px;
+}
+
+.bg-char_367_swllow_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -210px -770px;
+}
+
+.bg-char_405_absin_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -410px -770px;
+}
+
+.bg-char_421_crow_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -610px -770px;
+}
+
+.bg-char_433_windft_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -810px -770px;
+}
+
+.bg-char_457_blitz_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1010px -770px;
+}
+
+.bg-char_459_tachak_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1210px -10px;
+}
+
+.bg-char_489_serum_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1210px -390px;
+}
+
+.bg-char_101_sora_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1210px -770px;
+}
+
+.bg-char_106_franka_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1410px -10px;
+}
+
+.bg-char_107_liskam_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1410px -390px;
+}
+
+.bg-char_108_silent_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1410px -770px;
+}
+
+.bg-char_115_headbr_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -10px -1150px;
+}
+
+.bg-char_128_plosis_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -210px -1150px;
+}
+
+.bg-char_135_halo_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -410px -1150px;
+}
+
+.bg-char_140_whitew_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -610px -1150px;
+}
+
+.bg-char_143_ghost_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -810px -1150px;
+}
+
+.bg-char_144_red_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1010px -1150px;
+}
+
+.bg-char_148_nearl_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1210px -1150px;
+}
+
+.bg-char_154_morgan_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1410px -1150px;
+}
+
+.bg-char_155_tiger_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1610px -10px;
+}
+
+.bg-char_157_dagda_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1610px -390px;
+}
+
+.bg-char_158_milu_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1610px -770px;
+}
+
+.bg-char_166_skfire_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1610px -1150px;
+}
+
+.bg-char_173_slchan_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1810px -10px;
+}
+
+.bg-char_174_slbell_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1810px -390px;
+}
+
+.bg-char_195_glassb_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1810px -770px;
+}
+
+.bg-char_201_moeshd_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1810px -1150px;
+}
+
+.bg-char_204_platnm_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -10px -1530px;
+}
+
+.bg-char_214_kafka_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -210px -1530px;
+}
+
+.bg-char_215_mantic_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -410px -1530px;
+}
+
+.bg-char_219_meteo_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -610px -1530px;
+}
+
+.bg-char_220_grani_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -810px -1530px;
+}
+
+.bg-char_241_panda_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1010px -1530px;
+}
+
+.bg-char_242_otter_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1210px -1530px;
+}
+
+.bg-char_243_waaifu_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1410px -1530px;
+}
+
+.bg-char_252_bibeak_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1610px -1530px;
+}
+
+.bg-char_254_vodfox_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1810px -1530px;
+}
+
+.bg-char_261_sddrag_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2010px -10px;
+}
+
+.bg-char_265_sophia_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2010px -390px;
+}
+
+.bg-char_274_astesi_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2010px -770px;
+}
+
+.bg-char_275_breeze_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2010px -1150px;
+}
+
+.bg-char_294_ayer_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2010px -1530px;
+}
+
+.bg-char_297_hamoni_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2210px -10px;
+}
+
+.bg-char_304_zebra_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2210px -390px;
+}
+
+.bg-char_306_leizi_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2210px -770px;
+}
+
+.bg-char_308_swire_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2210px -1150px;
+}
+
+.bg-char_325_bison_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2210px -1530px;
+}
+
+.bg-char_326_glacus_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -10px -1910px;
+}
+
+.bg-char_333_sidero_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -210px -1910px;
+}
+
+.bg-char_336_folivo_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -410px -1910px;
+}
+
+.bg-char_338_iris_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -610px -1910px;
+}
+
+.bg-char_341_sntlla_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -810px -1910px;
+}
+
+.bg-char_343_tknogi_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1010px -1910px;
+}
+
+.bg-char_344_beewax_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1210px -1910px;
+}
+
+.bg-char_345_folnic_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1410px -1910px;
+}
+
+.bg-char_346_aosta_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1610px -1910px;
+}
+
+.bg-char_348_ceylon_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1810px -1910px;
+}
+
+.bg-char_349_chiave_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2010px -1910px;
+}
+
+.bg-char_363_toddi_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2210px -1910px;
+}
+
+.bg-char_365_aprl_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2410px -10px;
+}
+
+.bg-char_369_bena_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2410px -390px;
+}
+
+.bg-char_373_lionhd_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2410px -770px;
+}
+
+.bg-char_378_asbest_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2410px -1150px;
+}
+
+.bg-char_379_sesa_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2410px -1530px;
+}
+
+.bg-char_383_snsant_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2410px -1910px;
+}
+
+.bg-char_388_mint_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2610px -10px;
+}
+
+.bg-char_401_elysm_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2610px -390px;
+}
+
+.bg-char_402_tuye_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2610px -770px;
+}
+
+.bg-char_411_tomimi_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2610px -1150px;
+}
+
+.bg-char_415_flint_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2610px -1530px;
+}
+
+.bg-char_422_aurora_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2610px -1910px;
+}
+
+.bg-char_431_ashlok_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -10px -2290px;
+}
+
+.bg-char_436_whispr_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -210px -2290px;
+}
+
+.bg-char_449_glider_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -410px -2290px;
+}
+
+.bg-char_451_robin_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -610px -2290px;
+}
+
+.bg-char_455_nothin_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -810px -2290px;
+}
+
+.bg-char_458_rfrost_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1010px -2290px;
+}
+
+.bg-char_464_cement_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1210px -2290px;
+}
+
+.bg-char_466_qanik_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1410px -2290px;
+}
+
+.bg-char_473_mberry_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1610px -2290px;
+}
+
+.bg-char_475_akafyu_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -1810px -2290px;
+}
+
+.bg-char_476_blkngt_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2010px -2290px;
+}
+
+.bg-char_478_kirara_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2210px -2290px;
+}
+
+.bg-char_486_takila_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2410px -2290px;
+}
+
+.bg-char_492_quercu_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2610px -2290px;
+}
+
+.bg-char_493_firwhl_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2810px -10px;
+}
+
+.bg-char_496_wildmn_1 {
+  width: 180px;
+  height: 360px;
+  background: url("/image/sprite/portrait-5.webp") -2810px -390px;
+}

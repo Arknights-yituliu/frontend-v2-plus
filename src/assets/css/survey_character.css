@@ -1,0 +1,361 @@
+.survey_character_page {
+  background: white;
+  /* max-width: 1280px; */
+  margin: auto;
+  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
+  margin-bottom: 100px;
+}
+
+.char_forms {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.char_card {
+  display: flex;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  width: 570px;
+  height: 222px;
+  transition: all 0.2s;
+  background-color: rgba(255, 255, 255, 1);
+  margin: 8px;
+  /* background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(255, 115, 0, 0.3)); */
+  /* margin: 14px; */
+  position: relative;
+}
+
+.char_card_simple {
+  transition: all 0.2s;
+  width: 124px;
+  height: 150px;
+  overflow: hidden;
+  margin: 8px;
+}
+
+.notown {
+  filter: grayscale(100%);
+}
+
+.card_title {
+  font-weight: 600;
+  font-size: 16px;
+  border-left: 1px rgb(197, 197, 197) solid;
+  height: 30px;
+  line-height: 30px;
+  /* margin-bottom: -6px; */
+}
+
+.card_option_left_basic {
+  margin: 12px;
+  display: flex;
+}
+
+.card_option_left {
+  margin: 12px;
+}
+
+.card_option_top_left_basic {
+  margin: 12px;
+  padding-top: 20px;
+}
+
+.card_option_top_left {
+  display: flex;
+}
+
+.image_avatar {
+  height: 100px;
+  width: 100px;
+  border-radius: 0px;
+  overflow: hidden;
+  margin-right: 10px;
+  cursor: pointer;
+
+  /* background-color: rgba(0, 0, 0, 0.2); */
+}
+
+.image_avatar_own {
+  height: 100px;
+  width: 100px;
+  border-radius: 0px;
+  overflow: hidden;
+  margin-right: 10px;
+
+  /* background-color: rgba(0, 0, 0, 0.2); */
+}
+
+.avatar_at_top {
+  position: relative;
+  z-index: 20;
+}
+
+.card-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(24px);
+}
+
+.card-overlay-title {
+  font-size: 48px;
+  font-weight: bold;
+  margin: 54px 0 0 280px;
+}
+
+.card-overlay-detail {
+  font-size: 24px;
+  margin: 10px 0 0 220px;
+}
+
+.char_name {
+  text-align: center;
+  margin-top: 0px;
+  /* margin-left:10px; */
+  width: 100px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 0px;
+  font-weight: 700;
+  background: rgb(230, 230, 230);
+}
+
+.potential_wrap_basic {
+  display: none;
+  flex-wrap: wrap;
+  width: 156px;
+  height: 100px;
+  margin-top: 12px;
+}
+
+.potential_wrap {
+  display: flex;
+  flex-wrap: wrap;
+  width: 156px;
+  height: 100px;
+  margin-top: 12px;
+}
+
+.image_potential {
+  width: 40px;
+  height: 40px;
+  margin: 6px;
+  background: rgba(127, 127, 127, 0.1);
+  /* border: 1px solid red; */
+}
+
+.elite_wrap_basic {
+  /* display: flex; */
+  margin-top: -8px;
+  padding-right: 8px;
+}
+
+.elite_wrap {
+  display: flex;
+  margin-top: 10px;
+}
+
+.image_elite {
+  height: 40px;
+  width: 40px;
+  /* border: 1px solid red; */
+  /* margin-left: 6px; */
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-top: 12px;
+  border-radius: 0px;
+  background: rgba(127, 127, 127, 0.1);
+}
+
+.card_option_right {
+  margin: 12px;
+  display: flex;
+}
+
+.skill_wrap_basic {
+  margin-right: 16px;
+}
+
+.skill_wrap {
+  margin-right: 10px;
+}
+
+.skill_delimiter_basic {
+  width: 16px;
+}
+
+.skill_delimiter {
+  width: 4px;
+}
+
+.image_skill {
+  width: 42px;
+  height: 42px;
+  border: 1px grey solid;
+}
+
+.image_mod {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  /* border: 1px red solid; */
+}
+
+.image_rank {
+  margin: auto;
+  margin-top: 6px;
+  margin-bottom: 4px;
+  width: 40px;
+  height: 40px;
+  line-height: 24px;
+  padding: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 0px;
+  background: rgba(127, 127, 127, 0.1);
+  cursor: pointer;
+}
+
+.switch_select {
+  background: rgba(0, 102, 255, 0.3);
+}
+
+.footer_info {
+  margin: auto;
+  margin-top: 30px;
+  width: 80%;
+  text-align: center;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  /* Chrome Safari */
+}
+
+.image_lvMax {
+  width: 55px;
+  margin-left: -8px;
+  margin-top: 2px;
+}
+
+.image_null {
+  width: 40px;
+  margin-top: 0px;
+}
+
+.sprite_skill {
+  transform: scale(0.18);
+  position: relative;
+  top: -94px;
+  left: -98px;
+}
+
+.sprite_skill_icon {
+  transform: scale(0.3);
+  position: relative;
+  top: -43px;
+  left: -43px;
+}
+
+.sprite_elite {
+  transform: scale(0.23, 0.2);
+  position: relative;
+  top: -86px;
+  left: -108px;
+}
+
+.sprite_mod {
+  transform: scale(0.16);
+  position: relative;
+  top: -98px;
+  left: -98px;
+}
+
+.sprite_avatar {
+  transform: scale(0.56);
+  /* border: 1px solid red; */
+  border-radius: 0px;
+  position: relative;
+  top: -40px;
+  left: -40px;
+}
+
+.sprite_potential {
+  transform: scale(0.16);
+  position: relative;
+  top: -130px;
+  left: -130px;
+}
+
+/* 填写说明 */
+
+.fill_course_wrap {
+  width: 500px;
+  margin: auto;
+  margin-top: 10px;
+  /* border: 1px rgb(132, 120, 226) solid; */
+}
+
+.fill_course_title {
+  font-weight: 600;
+  font-size: 20px;
+  padding: 2px;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+.fill_course_tip_icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px grey solid;
+}
+
+.fill_course_tip_wrap {
+  width: 500px;
+  margin: auto;
+  margin-top: 10px;
+  /* border: 1px rgb(132, 120, 226) solid; */
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.fill_course_tip {
+  padding: 2px;
+  display: flex;
+}
+
+.fill_course_tip_switch {
+  margin: 4px;
+  /* margin-top: -10px; */
+}
+
+.stats_classify {
+  display: flex;
+  background-color: #eeeeee;
+  margin: 12px;
+  border-radius: 4px;
+  padding: 8px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.stats_module {
+  width: 144px;
+  height: 48px;
+}
+
+.stats_title {
+  font-style: italic;
+  height: 24px;
+}
+
+.stats_content {
+  font-family: Arial, Helvetica, sans-serif;
+}

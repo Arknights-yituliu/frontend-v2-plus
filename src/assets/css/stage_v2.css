@@ -51,7 +51,7 @@
   max-width: 330px;
   margin-right: 6px;
   margin-bottom: 6px;
-
+  display: flex;
   border-radius: 6px;
   flex-grow: 1;
 }
@@ -101,13 +101,13 @@
   max-width: 210px;
   float: right;
   margin-left: -100px;
+  position: relative;
+  left: 40px;
 }
 
 .stage_card_t3_table table {
   border-spacing: 0px;
   table-layout: fixed;
-  /* margin-left: calc(62.5% - 100px); */
-  margin-left: calc(62.5% - 115px);
 }
 
 .stage_table_r {
@@ -244,7 +244,7 @@
 
 #popup_background {
   z-index: 128;
-  max-width: 1080px;
+  /* max-width: 1080px; */
   display: none;
   position: fixed;
   top: 0;
@@ -255,8 +255,9 @@
   justify-content: center;
   backdrop-filter: blur(4px);
 }
+
 #popup_content {
-  max-width: 1080px;
+  /* max-width: 1080px; */
   display: none;
   position: fixed;
   top: 100px;
@@ -285,9 +286,11 @@
 .popup_orundum_c2 div {
   display: inline-block;
 }
+
 .popup_orundum_c3 div {
   display: inline-block;
 }
+
 .el-card__header * {
   display: inline;
 }
@@ -295,28 +298,29 @@
 .popup_header {
   margin: 0px;
   vertical-align: middle;
-  /* display: inline; */
+  display: flex;
   font-size: 24px;
   font-weight: 600;
   height: 66px;
 }
 
 .popup_header_text {
-  display: inline-block;
-  position: relative;
-  bottom: 28px;
+  line-height: 66px;
+  height: 66px;
   color: #3f51b5;
+  width: 210px;
 }
 
 .popup_header_penguin {
-  float: right;
+  display: flex;
   margin: 20px;
   padding: 4px 4px 4px 8px;
   font-size: 18px;
   font-weight: 500;
-  /* border: 1px solid #80808040; */
+
   border-radius: 4px;
   color: var(--popup-header-penguin-fg);
+  position: relative;
 }
 
 .popup_img {
@@ -340,6 +344,12 @@
   padding: 0px 8px 6px 8px;
   color: var(--popup-text-fg);
   margin: 0px;
+}
+
+.popup_item {
+  height: 24px;
+  line-height: 24px;
+  display: flex;
 }
 
 #popup_card_history {
@@ -368,16 +378,19 @@
   padding: 0px 6px;
   text-align: center;
 }
+
 .history_actStages {
   display: inline-block;
   width: 405px;
   border-left: 1px solid #808080;
 }
+
 .history_stage {
   display: inline-block;
   height: 60px;
   width: 135px;
 }
+
 .history_stage div {
   display: inline-block;
   /* margin-top: 6px; */
@@ -391,4 +404,148 @@
   /* border: 1px solid #000000; */
   vertical-align: top;
   margin: 6px 0px 0px -4px;
+}
+
+.sprite_icon_up {
+  transform: scale(0.8);
+  margin: -10px;
+}
+
+.sprite_icon_el {
+  transform: scale(0.6);
+  margin: -5px;
+}
+
+.sprite_icon_small {
+  transform: scale(0.6);
+  margin: -12px;
+  /* margin-top: -8px; */
+}
+
+.sprite_store_icon {
+  transform: scale(0.8);
+  /* margin-top: -80px; */
+  margin-left: 10px;
+}
+
+.stage_sprite_t3_wrap {
+  position: relative;
+  opacity: 0.7;
+  -webkit-filter: grayscale(0.1);
+  filter: grayscale(0.1);
+  width: 110px;
+  height: 110px;
+}
+
+.stage_sprite_t3 {
+  position: absolute;
+  transform: scale(0.8);
+  top: -35px;
+  left: -80px;
+  /* right: 140px; */
+}
+
+.stage_sprite_sec_wrap {
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.stage_sprite_sec {
+  position: absolute;
+  transform: scale(0.14);
+  top: -78px;
+  left: -82px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+.stage_sprite_t2_wrap {
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.stage_sprite_t2 {
+  position: absolute;
+  transform: scale(0.4);
+  top: -60px;
+  left: -66px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+.stage_sprite_popup_wrap {
+  position: relative;
+  width: 76px;
+  height: 66px;
+}
+
+.stage_sprite_popup {
+  position: absolute;
+  transform: scale(0.4);
+  top: -56px;
+  left: -58px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+.stage_sprite_closed_wrap {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.stage_sprite_closed {
+  position: absolute;
+  transform: scale(0.3);
+  top: -60px;
+  left: -66px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+.store_sprite_perm_wrap {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.store_sprite_perm {
+  position: absolute;
+  transform: scale(0.3);
+  top: -60px;
+  left: -50px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+.store_sprite_act_wrap {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.store_sprite_act {
+  position: absolute;
+  transform: scale(0.5);
+  top: -40px;
+  left: -40px;
+  /* top: -30px;
+  right:  140px; */
+}
+
+.item_sprite_value_wrap {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.item_sprite_value {
+  position: absolute;
+  transform: scale(0.35);
+  top: -60px;
+  left: -60px;
+  /* top: -30px;
+  right:  140px; */
 }

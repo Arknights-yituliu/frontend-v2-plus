@@ -1,0 +1,45 @@
+.messageBar {
+  position: absolute;
+  top: 10px;
+  transform: translate(-50%, -360px);
+}
+
+.messageBar_success {
+  min-width: 240px;
+  border-radius: 2px;
+  line-height: 28px;
+  height: 28px;
+  color: rgb(58, 151, 58);
+  /* font-weight: 600; */
+  text-align: center;
+  background: rgb(243, 255, 239);
+  box-shadow: 0px 0px 1px 1px rgb(219, 219, 219);
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  /* right: 50%; */
+  /* margin-left:-150px; */
+  z-index: 2000;
+  transition: all 0.5s;
+  transform: translate(-50%, 0) !important;
+}
+
+.messageBar_error {
+  min-width: 240px;
+  border-radius: 2px;
+  line-height: 28px;
+  height: 28px;
+  color: rgb(255, 78, 78);
+  font-size: 14px;
+  /* font-weight: 600; */
+  text-align: center;
+  background: rgb(247, 227, 227);
+  box-shadow: 0px 0px 1px 1px rgb(219, 219, 219);
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  right: 50%;
+  z-index: 2000;
+  transition: all 0.5s;
+  transform: translate(-50%, 0) !important;
+}
