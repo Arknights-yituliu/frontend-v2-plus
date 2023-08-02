@@ -26,9 +26,9 @@ export default {
   },
 
   //根据关卡ID查询已结束活动
-  findClosedActivStageByStageId(expCoefficient) {
+  findClosedStage(expCoefficient) {
     return request({
-      url: `${api_name}/find/stage/closed?expCoefficient=${expCoefficient}`,
+      url: `/stage/closed?expCoefficient=${expCoefficient}`,
       method: "get",
     });
   },
@@ -41,16 +41,9 @@ export default {
     });
   },
 
-  findStageDetailByStageCode(stageCode) {
-    return request({
-      url: `/stage/detail?stageCode=${stageCode}`,
-      method: "get",
-    });
-  },
-
   findStageDetailByStageId(stageId) {
     return request({
-      url: `/stage/detail/${stageId}`,
+      url: `/stage/detail?stageId=${stageId}`,
       method: "get",
     });
   },

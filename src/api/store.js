@@ -14,7 +14,7 @@ export default {
   //查询所有常驻商店数据
   findPermStore() {
     return request({
-      url: `${api_name}/store/perm`,
+      url: `$store/perm`,
       method: "get",
     });
   },
@@ -22,7 +22,7 @@ export default {
   //查询活动商店性价比
   findActStore() {
     return request({
-      url: `${api_name}/store/act`,
+      url: `store/act`,
       method: "get",
     });
   },

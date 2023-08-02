@@ -1,0 +1,69 @@
+[
+  {
+    "path": "/material",
+    "text": "材料收益相关",
+    "isChild": true,
+    "child": [
+      {
+        "path": "/",
+        "text": "刷图推荐"
+      },
+      {
+        "path": "/material/store",
+        "text": "商店性价比"
+      },
+      {
+        "path": "/material/pack",
+        "text": "礼包性价比"
+      },
+      {
+        "path": "/material/value",
+        "text": "物品价值表"
+      }
+    ]
+  },
+  {
+    "path": "/tools",
+    "text": "一图流工具箱",
+    "isChild": true,
+    "child": [
+      {
+        "path": "/tools/gachaCal",
+        "text": "攒抽计算器",
+        "isChild": false
+      },
+      {
+        "path": "/tools/maa",
+        "text": "排班表生成器",
+        "isChild": false
+      }
+    ]
+  },
+  {
+    "path": "/about",
+    "text": "其它信息",
+    "isChild": true,
+    "child": [
+      {
+        "path": "/about/dev",
+        "text": "开发相关",
+        "isChild": false
+      },
+      {
+        "path": "/about/api",
+        "text": "API文档",
+        "isChild": false
+      },
+      {
+        "path": "/about/donate",
+        "text": "支持我们",
+        "isChild": false
+      },
+      {
+        "path": "/about/friendlyLinks",
+        "text": "友情链接",
+        "isChild": false
+      }
+    ]
+  }
+]

@@ -1,11 +1,12 @@
 import { createSSRApp, createApp, h } from "vue";
 import ElementPlus, { ID_INJECTION_KEY } from "element-plus";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import naive from "naive-ui";
 import App from "@/App.vue";
 import { setPageContext } from "./usePageContext";
 import "element-plus/theme-chalk/dark/css-vars.css";
-import cSwitch from "@/components/switch.vue";
-import cPopup from "@/components/popup.vue";
+import cSwitch from "@/element/switch.vue";
+import cPopup from "@/element/popup.vue";
 
 export { createVPSApp };
 
@@ -38,6 +39,8 @@ function createVPSApp(pageContext, clientOnly) {
       current: 0,
     });
   }
+
+  app.use(naive);
 
   // We make pageContext available from any Vue component
   setPageContext(app, pageContext);

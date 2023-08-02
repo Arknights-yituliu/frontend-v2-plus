@@ -139,6 +139,19 @@
   padding-bottom: 0px;
 }
 
+.el-input_wrap {
+  display: flex;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.el-input_text {
+  height: 32px;
+  line-height: 32px;
+  margin-left: 16px;
+  margin-right: 12px;
+}
+
 .el-collapse-item__wrap {
   /* margin: 1px; */
   vertical-align: middle;

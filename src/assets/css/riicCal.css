@@ -6,6 +6,7 @@
   background: var(--index-div-bg);
   margin: auto;
   max-width: 1500px;
+  color: var(--index-div-fg);
 }
 
 #riic_controlPanel {
@@ -34,7 +35,7 @@
 }
 
 .riic_workerSet {
-  /* width: 450px; */
+  max-width: 420px;
   border-radius: 8px;
   font-size: 18px;
   /* box-shadow: 0px 2px 6px rgb(160 160 160 / 69%); */
@@ -43,18 +44,21 @@
 }
 
 .riic_building {
-  margin: 16px;
+  margin: 8px;
   margin-top: 36px;
-  padding: 16px 0px 8px 0px;
+  padding: 8px 0px 8px 0px;
   border: 4px solid rgba(128, 128, 128, 0.50196);
   border-radius: 16px;
-  width: 410px;
+  max-width: 400px;
 }
 
 .riic_building_title {
-  position: absolute;
+  /* position: absolute; */
+  max-width: 230px;
   background: #e0e0e0;
-  margin: -36px -12px;
+  /* margin: -36px -12px; */
+  margin-top: -28px;
+  margin-left: -12px;
   padding: 0px 8px;
   font-size: 24px;
   border-left: 4px solid #80808080;

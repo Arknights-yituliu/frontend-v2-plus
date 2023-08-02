@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <!-- <el-container>
     <el-header class="header" v-if="'/maarecruitdata' != pageContext.urlPathname">
       <nav-bar />
     </el-header>
@@ -9,10 +9,28 @@
     <el-footer style="z-index: 100; height: 40px; padding: 0px; background-color: rgb(52, 68, 104)">
       <myfooter />
     </el-footer>
-  </el-container>
+  </el-container> -->
+
+  <div class="container">
+    <div class="aside" id="aside114" style="overflow-y: hidden">
+      <myaside></myaside>
+    </div>
+    <div class="container is_vertical">
+      <div class="header"><nav-bar /></div>
+      <div class="main">
+        <slot></slot>
+        <div class="footer"><myfooter></myfooter></div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
+<script setup>
+//导航
+import "@/assets/css/main.css";
+import "@/assets/css/aside.css";
+import "@/assets/css/navBar.css";
+
 import "@/assets/css/basic.css";
 import "@/assets/css/stage_v2.css";
 import "@/assets/css/store_v2.css";
@@ -22,7 +40,7 @@ import "@/assets/css/sprite_item_large.css";
 import "@/assets/css/sprite_item_large_png.css";
 import "@/assets/css/sprite_style.css";
 import "@/assets/css/sprite_icon.css";
-import "@/assets/css/components.css";
+import "@/assets/css/common.css";
 
 // 旧版css，待修改
 import "@/assets/css/item.css";
@@ -30,19 +48,16 @@ import "@/assets/css/item.css";
 
 import NavBar from "@/components/NavBar.vue";
 import myfooter from "@/components/myfooter.vue";
+import myaside from "@/components/aside.vue";
 
 import { usePageContext } from "@/renderer/usePageContext";
 
-export default {
-  setup() {
-    const pageContext = usePageContext();
-    return { pageContext };
-  },
-  components: {
-    NavBar,
-    myfooter,
-  },
-};
+const pageContext = usePageContext();
+
+import { provide, ref } from "vue";
+
+const theme = ref(pageContext.theme == "dark");
+provide("theme", theme);
 </script>
 
 <style scoped>
@@ -62,9 +77,7 @@ export default {
 .el-slider__button-wrapper {
   z-index: auto;
 }
-</style>
 
-<style>
 body {
   overflow-x: hidden;
   text-size-adjust: none;
@@ -72,17 +85,11 @@ body {
   overscroll-behavior: none;
 }
 
-.header {
+/* .header {
   z-index: 100;
   height: 52px;
   position: sticky;
   width: 100%;
   top: 0px;
-}
-
-@media (max-width: 820px) {
-  .header {
-    height: 78px;
-  }
-}
+} */
 </style>

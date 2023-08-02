@@ -1,12 +1,21 @@
 body {
   margin: 0;
+  padding: 0;
+  /* height: 100%;
+  width: 100%; */
   /* filter:grayscale(1); */
+}
+html {
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .el-menu--horizontal > .el-menu-item {
   height: 48px;
   line-height: 48px;
 }
+
 .el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 48px;
   line-height: 48px;
@@ -67,11 +76,13 @@ body {
   display: block;
   white-space: nowrap;
 }
+
 .op_footer {
-  /* height: 36px; */
+  height: 20px;
   margin: auto;
   width: 480px;
 }
+
 .op_footer img {
   height: 28px;
   width: 28px;
@@ -111,6 +122,7 @@ body {
   margin-left: 36px;
   border-left: 8px solid #6495ed;
 }
+
 .op_title_etext_dark {
   background-color: #888888;
   color: #ffffff;
@@ -125,6 +137,7 @@ body {
     -webkit-text-stroke: 0.3px white; */
   border-left: 8px solid #6495ed;
 }
+
 .op_title_etext_light {
   background-color: #888888;
   color: #ffffff;
@@ -221,19 +234,24 @@ body {
 .color_t6 {
   color: #ff0000;
 }
+
 .color_t5 {
   color: #e85d06;
 }
+
 .color_t4 {
   color: #7446ff;
 }
+
 .color_t3 {
   /* color: #0070dd; */
   color: #168afa;
 }
+
 .color_t2 {
   color: #00a2a2;
 }
+
 .color_t1 {
   color: #a0a0a0;
 }
@@ -273,6 +291,8 @@ body {
   --foot-main-bg: #ddd;
   --gacha-total-fg: #dd88dd;
   --charge-instruction-fg: #ff8888;
+  --riic-mower-bg: black;
+  --riic-mower-avatar-bg: gray;
 }
 
 .light {
@@ -280,7 +300,7 @@ body {
   color: rgb(39, 39, 39);
   /* -webkit-text-stroke: 0.3px rgb(46, 46, 46); */
   --index-div-fg: #000000;
-  --index-div-bg: #f0f0f0;
+  --index-div-bg: #ffffff;
   --op-title-ctext-fg: #000000dd;
   --popup-card-bg: rgba(255, 255, 255, 0.83);
   --popup-text-fg: #222;
@@ -290,6 +310,8 @@ body {
   --foot-main-bg: white;
   --gacha-total-fg: purple;
   --charge-instruction-fg: brown;
+  --riic-mower-bg: white;
+  --riic-mower-avatar-bg: lightgray;
 }
 
 #indexDiv {
