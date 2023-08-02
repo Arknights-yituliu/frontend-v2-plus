@@ -17,9 +17,15 @@ import ItemValue from "@/components/ItemValue.vue";
 
 import toolApi from "@/api/tool";
 
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
-onMounted(() => {});
+const old_path = ref(false);
+
+onMounted(() => {
+  const url_path = window.location.pathname.split("/")[0];
+  old_path.value = url_path == "value";
+  console.log(old_path.value);
+});
 </script>
 
 <script>

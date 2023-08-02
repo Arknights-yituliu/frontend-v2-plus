@@ -391,6 +391,8 @@ export default {
       packsPPRDataSort: [], //排序缓存数据
       packFilter: 11,
       showFlag: false,
+
+      old_path: false,
     };
   },
   components: {
@@ -402,6 +404,10 @@ export default {
   },
   mounted() {
     this.getCookies();
+
+    const url_path = window.location.pathname.split("/")[0];
+    old_path.value = url_path == "pack";
+    console.log(old_path.value);
   },
   methods: {
     getCookies() {
