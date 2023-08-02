@@ -1100,9 +1100,9 @@ export default {
     this.pieChart(this.pieData);
     this.openNotification();
 
-    const url_path = window.location.pathname.split("/")[0];
-    old_path.value = url_path == "gachaCal";
-    console.log(old_path.value);
+    const url_path = window.location.pathname.split("/")[1];
+    this.old_path = url_path == "gachaCal";
+    console.log(this.old_path);
   },
   methods: {
     //公告通知
