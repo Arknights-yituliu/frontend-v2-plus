@@ -746,10 +746,10 @@ function setDomBackgroundColor(domId, selected) {
   let dom = document.getElementById(domId);
   if (dom == null) return;
   if (selected) {
-    console.log("添加背景色id", domId);
+    // console.log("添加背景色id", domId);
     dom.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   } else {
-    console.log("取消背景色id", domId);
+    // console.log("取消背景色id", domId);
     dom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
   }
 }
