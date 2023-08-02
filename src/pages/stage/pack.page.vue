@@ -406,8 +406,8 @@ export default {
     this.getCookies();
 
     const url_path = window.location.pathname.split("/")[1];
-    old_path.value = url_path == "pack";
-    console.log(old_path.value);
+    this.old_path = url_path == "pack";
+    console.log(this.old_path);
   },
   methods: {
     getCookies() {
