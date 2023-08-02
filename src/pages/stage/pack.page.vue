@@ -405,7 +405,7 @@ export default {
   mounted() {
     this.getCookies();
 
-    const url_path = window.location.pathname.split("/")[0];
+    const url_path = window.location.pathname.split("/")[1];
     old_path.value = url_path == "pack";
     console.log(old_path.value);
   },
