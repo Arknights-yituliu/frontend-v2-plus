@@ -2054,9 +2054,9 @@ export default {
     this.getDate();
     this.openNotification();
 
-    const url_path = window.location.pathname.split("/")[0];
-    old_path.value = url_path == "riicCal";
-    console.log(old_path.value);
+    const url_path = window.location.pathname.split("/")[1];
+    this.old_path = url_path == "riicCal";
+    console.log(this.old_path);
   },
   methods: {
     openNotification() {

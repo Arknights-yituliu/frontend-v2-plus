@@ -22,7 +22,7 @@ import { onMounted, ref } from "vue";
 const old_path = ref(false);
 
 onMounted(() => {
-  const url_path = window.location.pathname.split("/")[0];
+  const url_path = window.location.pathname.split("/")[1];
   old_path.value = url_path == "value";
   console.log(old_path.value);
 });
