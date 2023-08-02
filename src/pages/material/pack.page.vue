@@ -408,7 +408,7 @@ export default {
     if (url_path == "pack") {
       ElMessage({
         dangerouslyUseHTMLString: true,
-        message: '此页面已迁移至<a href="/stage/pack">https://yituliu.site/stage/pack</a>',
+        message: '此页面已迁移至<a href="/material/pack">https://yituliu.site/material/pack</a>',
         type: "warning",
       });
     }
