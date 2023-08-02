@@ -35,18 +35,23 @@
         </div>
 
         <div class="btn_setup">
-          最后保存时间
+          最后一次自动保存于
           <div class="btn_setup_tips btn_setup_tips_wran">
             {{ uploadMessage.updateTime }}<br />
+          </div>
+        </div>
 
-            更新&nbsp;{{ uploadMessage.affectedRows }}条
+        <div class="btn_setup" @click="upload()">
+          手动上传数据
+          <div class="btn_setup_tips">
+            手动保存
           </div>
         </div>
 
         <!--    以下噶掉
        <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
         <div class="btn_setup" @click="changeSurveyType()">{{ surveyTypeText }}</div>
-        <div class="btn_setup" @click="upload()">上传数据</div>
+        <div class="btn_setup" @click="automaticUpload()">上传数据</div>
         <div class="btn_setup" @click="exportExcel()">{{ exportExcelBtnText }}</div>
 
         <div class="btn_setup btn_upload">
@@ -279,6 +284,7 @@ function getSurveyCharacter() {
       for (var j = 0; j < list.length; j++) {
         if (list[j].charId == characterList.value[i].charId) {
           characterList.value[i].elite = list[j].elite;
+          
           characterList.value[i].level = list[j].level;
           characterList.value[i].potential = list[j].potential;
           characterList.value[i].skill1 = list[j].skill1;
@@ -287,6 +293,15 @@ function getSurveyCharacter() {
           characterList.value[i].modX = list[j].modX;
           characterList.value[i].modY = list[j].modY;
           characterList.value[i].own = list[j].own;
+
+          setDomBackgroundColor(i+'elite'+list[j].elite,true)
+          setDomBackgroundColor(i+'potential'+list[j].potential,true)
+          setDomBackgroundColor(i+'skill1'+list[j].skill1,true)
+          setDomBackgroundColor(i+'skill2'+list[j].skill2,true)
+          setDomBackgroundColor(i+'skill3'+list[j].skill3,true)
+          setDomBackgroundColor(i+'modX'+list[j].modX,true)
+          setDomBackgroundColor(i+'modY'+list[j].modY,true)
+          
         }
       }
     }
@@ -315,7 +330,16 @@ let uploadMessage = ref({ updateTime: "00:00:00", affectedRows: 0 });
 let updateIndexMap = ref({});
 
 //上传风评表
-function upload() {
+function automaticUpload() {
+
+  if (uploadFrequency < 30000) return;
+  if (globalUserData.value.token == void 0) {
+    console.log(globalUserData.value.token == void 0);
+    cMessage("未登录", "error");
+    return;
+  }
+  console.log("上传频率：", uploadFrequency / 1000, "s");
+
   let uploadList = [];
   console.log(updateIndexMap.value);
 
@@ -338,15 +362,9 @@ function upload() {
   let nowUploadTimeStamp = Date.parse(new Date());
   let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
 
-  if (uploadFrequency < 5000) return;
-  if (globalUserData.value.token == void 0) {
-    console.log(globalUserData.value.token == void 0);
-    cMessage("未登录", "error");
-    return;
-  }
+ 
 
-  console.log("上传频率：", uploadFrequency / 1000, "s");
-
+ 
   surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
     // console.log(response.data);
     lastUploadTimeStamp = nowUploadTimeStamp;
@@ -354,6 +372,37 @@ function upload() {
     updateIndexMap.value = {};
   });
 }
+
+
+function  upload(){
+  let uploadList = [];
+  console.log(updateIndexMap.value);
+
+  for (const i in updateIndexMap.value) {
+    const character = {
+      charId: characterList.value[i].charId,
+      own: characterList.value[i].own,
+      elite: characterList.value[i].elite,
+      level: characterList.value[i].level,
+      potential: characterList.value[i].potential,
+      skill1: characterList.value[i].skill1,
+      skill2: characterList.value[i].skill2,
+      skill3: characterList.value[i].skill3,
+      modX: characterList.value[i].modX,
+      modY: characterList.value[i].modY,
+    };
+    uploadList.push(character);
+  }
+
+
+  surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
+    cMessage("手动保存成功");
+    updateIndexMap.value = {};
+  });
+
+}
+
+
 
 let uploadFileName = ref("null");
 
@@ -513,7 +562,7 @@ function updateOwn(char_index, newVal) {
   }
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+  automaticUpload();
 }
 
 //批量更新是否持有
@@ -545,7 +594,7 @@ function updateElite(char_index, newVal) {
   // console.log("精英化:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+  automaticUpload();
 }
 
 //取消专精和模组等级
@@ -591,7 +640,7 @@ function updateSkillAndMod(char_index, attribute, newVal) {
   // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+  automaticUpload();
 }
 
 // 批量精英化
@@ -621,7 +670,7 @@ function updatePotential(char_index, newVal) {
   // console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+  automaticUpload();
 }
 
 //最大等级
@@ -670,7 +719,7 @@ function updateLevel(char_index, rarity) {
   // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+  automaticUpload();
 }
 
 //选中标题
@@ -740,7 +789,7 @@ function simpleCardClass() {
 }
 
 onMounted(() => {
-  // getSurveyCharacter();
+  getSurveyCharacter();
   addFilterRule("rarity", 6);
 });
 </script>
