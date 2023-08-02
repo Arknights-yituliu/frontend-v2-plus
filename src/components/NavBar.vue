@@ -160,8 +160,8 @@ function getpageTitle(path) {
   }
 }
 
-function getPathName(pathName) {
-  console.log("当前访问路径：", pathName);
+function updateVisits(pathName) {
+ 
   if (pathName == "/") {
     toolApi.updateVisits(pathName);
     return 1;
@@ -180,9 +180,11 @@ function getPathName(pathName) {
     pathName = pathName.substr(0, strLength - 1);
     console.log("路径以“/”结尾，被截取后路径：", pathName);
     toolApi.updateVisits(pathName);
+    console.log("访问的页面是：",pathName)
     return 1;
   }
 
+  console.log("访问的页面是：",pathName)
   toolApi.updateVisits(pathName);
   return 1;
 }
@@ -192,7 +194,7 @@ onMounted(() => {
   var pathName = window.location.pathname;
 
   if (domain.indexOf("dev") == -1) {
-    getPathName(pathName);
+    updateVisits(pathName);
   }
 
   getpageTitle(pathName);
