@@ -2044,6 +2044,8 @@ export default {
       switch_dormitory_plan2_2: [false, false, false],
       switch_dormitory_plan2_3: [false, false, false],
       exportFlag: false,
+
+      old_path: false,
     };
   },
   mounted() {
@@ -2051,6 +2053,10 @@ export default {
     this.getUid();
     this.getDate();
     this.openNotification();
+
+    const url_path = window.location.pathname.split("/")[0];
+    old_path.value = url_path == "riicCal";
+    console.log(old_path.value);
   },
   methods: {
     openNotification() {
