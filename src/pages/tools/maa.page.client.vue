@@ -1907,7 +1907,7 @@ export default {
     return {
       exportUrl: "https://backend.yituliu.site/maa/schedule/export?schedule_id=1664632307607024",
       maaUrl: "maa://infra.yituliu/1664632307607024",
-      uid: 12345,
+      scheduleId: 12345,
       importId: "",
       historicalData: [],
       dialogTableVisible: false,
@@ -2067,9 +2067,11 @@ export default {
   methods: {
     openNotification() {
       this.$notify({
-        title: "2023-03-13更新",
+        title: "2023-08-03更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong> 干员追加：<br>增加了孤星活动干员 <br>BUG相关：  <br>由于存储服务重写的问题<br>如果遇到导入为空的情况可加Q群539600566</strong>",
+        message: "<strong> 干员追加：<br>苍苔、琳琅诗怀雅、圣约送葬人、空构、洋灰、Friston-3" +
+          "<br><br>UI问题：<br>如果遇到不能展开三列排班请收起侧边导航栏或缩小网页比例"                                                                            +
+            "<br><br>BUG相关：<br>如果遇到导入为空的情况可加Q群539600566</strong>",
         duration: 12000,
       });
     },
@@ -2083,20 +2085,20 @@ export default {
       this.$message.success("复制成功");
     },
     setExportUrl() {
-      this.exportUrl = "https://backend.yituliu.site/maa/schedule/export?schedule_id=" + this.uid;
-      // this.exportUrl = "http://127.0.0.1:10013/maa/schedule/export?schedule_id=" + this.uid;
-      this.maaUrl = "maa://infra.yituliu/" + this.uid;
+      this.exportUrl = "https://backend.yituliu.site/maa/schedule/export?schedule_id=" + this.scheduleId;
+      // this.exportUrl = "http://127.0.0.1:10013/maa/schedule/export?schedule_id=" + this.scheduleId;
+      this.maaUrl = "maa://infra.yituliu/" + this.scheduleId;
     },
     maaBuildingJsonCreated() {
       this.setJson();
-      buildingApi.maaBuildingJsonCreated(this.scheduleJson, this.uid).then((response) => {
+      buildingApi.maaBuildingJsonCreated(this.scheduleJson, this.scheduleId).then((response) => {
         this.$message({
-          message: response.data.message + "作业id为：" + response.data.uid,
+          message: response.data.message + "作业id为：" + response.data.scheduleId,
           type: "success",
           showClose: true,
           duration: 4000,
         });
-        this.uid = response.data.uid;
+        this.scheduleId = response.data.scheduleId;
         this.setExportUrl();
         setTimeout(function () {
           document.getElementById("exportFileDone").style.display = "";
@@ -2113,8 +2115,8 @@ export default {
     getUid() {
       let timestamp = new Date().getTime();
       let randNum = Math.floor(Math.random() * 999) + 1000000000000000;
-      this.uid = timestamp * 1000 + randNum - 1000000000000000;
-      console.log("id：", this.uid);
+      this.scheduleId = timestamp * 1000 + randNum - 1000000000000000;
+      console.log("id：", this.scheduleId);
     },
     getDate() {
       let date = new Date();
@@ -2171,7 +2173,7 @@ export default {
       this.scheduleJson.description = this.descriptionH1;
       this.scheduleJson.author = this.author;
       this.scheduleJson.buildingType = this.buildingType;
-      this.scheduleJson.id = this.uid;
+      this.scheduleJson.id = this.scheduleId;
       this.scheduleJson.planTimes = this.planTimes;
       plans_0.name = this.name[0];
       plans_0.description = this.descriptionH2[0];
