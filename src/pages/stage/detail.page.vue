@@ -81,7 +81,7 @@ function findStageDetailByStageCode(stageIdStr) {
     if (stageDetail.value.length > 0) {
       pieData_main.value = [];
       pieData_secondary.value = [];
-      let efficiency = stageDetail.value[0].efficiency; //关卡效率
+      let efficiency = stageDetail.value[0].stageEfficiency/100; //关卡效率
       let apCost = stageDetail.value[0].apCost; //关卡效率
       let totalOutputAP = efficiency * apCost; //总产出理智
       let isValue = stageDetail.value[0].isValue; //是否用于定价，绝大部分情况活动本不参与定价，根据这个判断是否加无限龙门币
