@@ -1002,6 +1002,7 @@ import * as echarts from "echarts";
 let myChart = "";
 import { ClientOnly } from "@/components/ClientOnly";
 import { usePageContext } from "@/renderer/usePageContext";
+import { ElMessage } from "element-plus";
 
 export default {
   components: { ClientOnly },
@@ -1086,8 +1087,6 @@ export default {
       LMDCost: 0,
       pieData: [],
       // pack_data: this.pageContext.pageProps.pack_data,
-
-      old_path: false,
     };
   },
   mounted() {
@@ -1101,8 +1100,13 @@ export default {
     this.openNotification();
 
     const url_path = window.location.pathname.split("/")[1];
-    this.old_path = url_path == "gachaCal";
-    console.log(this.old_path);
+    if (url_path == "gachaCal") {
+      ElMessage({
+        dangerouslyUseHTMLString: true,
+        message: '此页面已迁移至<a href="/tools/gachaCal">https://yituliu.site/tools/gachaCal</a>',
+        type: "warning",
+      });
+    }
   },
   methods: {
     //公告通知

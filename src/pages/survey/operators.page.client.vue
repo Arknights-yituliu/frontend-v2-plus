@@ -146,7 +146,7 @@
           <div :class="surveyTypeClass('card_option_top_left')">
             <div class="avatar_at_top">
               <div class="image_avatar">
-                <div @click="updateOwn(char_index, !char.own)" :class="getSprite(char.charId)"></div>
+                <div @click="updateOwn(char_index, !char.own,true)" :class="getSprite(char.charId)"></div>
               </div>
               <div class="char_name">{{ char.name }}</div>
             </div>

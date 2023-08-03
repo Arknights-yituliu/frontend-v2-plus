@@ -1900,6 +1900,7 @@ import MANUFACTUREJson from "@/static/json/build/MANUFACTURE.json";
 import CONTROLJson from "@/static/json/build/CONTROL.json";
 import POWERJson from "@/static/json/build/POWER.json";
 import "@/assets/css/riicCal.css";
+import { ElMessage } from "element-plus";
 
 export default {
   data() {
@@ -2044,8 +2045,6 @@ export default {
       switch_dormitory_plan2_2: [false, false, false],
       switch_dormitory_plan2_3: [false, false, false],
       exportFlag: false,
-
-      old_path: false,
     };
   },
   mounted() {
@@ -2057,6 +2056,13 @@ export default {
     const url_path = window.location.pathname.split("/")[1];
     this.old_path = url_path == "riicCal";
     console.log(this.old_path);
+    if (url_path == "riicCal") {
+      ElMessage({
+        dangerouslyUseHTMLString: true,
+        message: '此页面已迁移至<a href="/tools/maa">https://yituliu.site/tools/maa</a>',
+        type: "warning",
+      });
+    }
   },
   methods: {
     openNotification() {

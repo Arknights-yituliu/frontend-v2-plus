@@ -161,7 +161,6 @@ function getpageTitle(path) {
 }
 
 function updateVisits(pathName) {
- 
   if (pathName == "/") {
     toolApi.updateVisits(pathName);
     return 1;
@@ -180,11 +179,11 @@ function updateVisits(pathName) {
     pathName = pathName.substr(0, strLength - 1);
     console.log("路径以“/”结尾，被截取后路径：", pathName);
     toolApi.updateVisits(pathName);
-    console.log("访问的页面是：",pathName)
+    console.log("访问的页面是：", pathName);
     return 1;
   }
 
-  console.log("访问的页面是：",pathName)
+  console.log("访问的页面是：", pathName);
   toolApi.updateVisits(pathName);
   return 1;
 }
