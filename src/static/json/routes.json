@@ -1,6 +1,6 @@
 [
   {
-    "path": "/stage",
+    "path": "/material",
     "text": "材料收益相关",
     "isChild": true,
     "child": [
@@ -9,15 +9,15 @@
         "text": "刷图推荐"
       },
       {
-        "path": "/stage/store",
+        "path": "/material/store",
         "text": "商店性价比"
       },
       {
-        "path": "/stage/pack",
+        "path": "/material/pack",
         "text": "礼包性价比"
       },
       {
-        "path": "/stage/value",
+        "path": "/material/value",
         "text": "物品价值表"
       }
     ]
