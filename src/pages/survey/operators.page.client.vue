@@ -146,7 +146,7 @@
           <div :class="surveyTypeClass('card_option_top_left')">
             <div class="avatar_at_top">
               <div class="image_avatar">
-                <div @click="updateOwn(char_index, !char.own, true)" :class="getSprite(char.charId)"></div>
+                <div @click="updateOwn(char_index, !char.own,true)" :class="getSprite(char.charId)"></div>
               </div>
               <div class="char_name">{{ char.name }}</div>
             </div>
@@ -164,13 +164,13 @@
 
           <!--  -->
           <div :class="surveyTypeClass('elite_wrap')">
-            <div class="image_elite" :id="char_index + 'elite0'" @click="updateElite(char_index, 0, true)">
+            <div class="image_elite" :id="char_index + 'elite0'" @click="updateElite(char_index, 0)">
               <div :class="getSprite('elite0', 'elite')"></div>
             </div>
-            <div :id="char_index + 'elite1'" class="image_elite" @click="updateElite(char_index, 1, true)" v-show="char.rarity > 2">
+            <div :id="char_index + 'elite1'" class="image_elite" @click="updateElite(char_index, 1)" v-show="char.rarity > 2">
               <div :class="getSprite('elite1', 'elite')"></div>
             </div>
-            <div :id="char_index + 'elite2'" class="image_elite" @click="updateElite(char_index, 2, true)" v-show="char.rarity > 3">
+            <div :id="char_index + 'elite2'" class="image_elite" @click="updateElite(char_index, 2)" v-show="char.rarity > 3">
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
             <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index, char.rarity, char.elite)">
@@ -190,7 +190,7 @@
               v-for="rank in ranks.slice(1, 4)"
               class="image_rank"
               :id="char_index + 'skill' + (skill_index + 1) + rank"
-              @click="updateSkillAndMod(char_index, 'skill' + (skill_index + 1), rank, true)"
+              @click="updateSkillAndMod(char_index, 'skill' + (skill_index + 1), rank)"
             >
               <div :class="getSprite('skill' + rank, 'skill')"></div>
             </div>
@@ -201,12 +201,7 @@
           <!-- 模组X -->
           <div :class="surveyTypeClass('skill_wrap')" v-show="char.modXOwn">
             <div class="image_mod">{{ "模组X" }}</div>
-            <div
-              v-for="rank in ranks.slice(1, 4)"
-              class="image_rank"
-              :id="char_index + 'modX' + rank"
-              @click="updateSkillAndMod(char_index, 'modX', rank, true)"
-            >
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank" @click="updateSkillAndMod(char_index, 'modX', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
           </div>
@@ -223,12 +218,7 @@
           <div :class="surveyTypeClass('skill_wrap')" v-show="char.modYOwn">
             <div class="image_mod">{{ "模组Y" }}</div>
 
-            <div
-              v-for="rank in ranks.slice(1, 4)"
-              class="image_rank"
-              :id="char_index + 'modY' + rank"
-              @click="updateSkillAndMod(char_index, 'modY', rank, true)"
-            >
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank" @click="updateSkillAndMod(char_index, 'modY', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
           </div>
@@ -536,7 +526,7 @@ function sortCharacterList(rule) {
 }
 
 //更新是否持有
-function updateOwn(char_index, newVal, autoFlag) {
+function updateOwn(char_index, newVal) {
   const character = characterList.value[char_index];
   characterList.value[char_index].own = newVal;
   const oldElite = characterList.value[char_index].elite;
@@ -559,31 +549,31 @@ function updateOwn(char_index, newVal, autoFlag) {
   }
 
   updateIndexMap.value[char_index] = char_index;
-  if (autoFlag) automaticUpload();
+
+  automaticUpload();
 }
 
 //批量更新是否持有
 function batchUpdatesOwn(newVal) {
-  for (let i in characterList.value) {
-    if (characterList.value[i].show) {
-      updateOwn(i, newVal, false);
+  for (let index in characterList.value) {
+    if (characterList.value[index].show) {
+      characterList.value[index].own = newVal;
     }
   }
 }
 
 //更新精英化等级
-function updateElite(char_index, newVal, autoFlag) {
+function updateElite(char_index, newVal) {
   let domId = char_index + "elite";
   let oldVal = characterList.value[char_index].elite;
   // console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldVal) {
     characterList.value[char_index].elite = -1;
     setDomBackgroundColor(domId + oldVal, false);
-    // cancelSkillAndMod(char_index);
+
     return;
   }
   if (newVal < 2) {
-    // cancelSkillAndMod(char_index);
   }
   characterList.value[char_index].elite = newVal;
   cancelBackBeforeUpdate(domId, newVal, oldVal, true);
@@ -591,7 +581,7 @@ function updateElite(char_index, newVal, autoFlag) {
   // console.log("精英化:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  if (autoFlag) automaticUpload();
+  automaticUpload();
 }
 
 //取消专精和模组等级
@@ -605,15 +595,20 @@ function cancelSkillAndMod(char_index) {
 
 // 批量精英化
 function batchUpdatesElite(newVal) {
-  for (let i in characterList.value) {
-    if (characterList.value[i].show) {
-      updateElite(i, newVal, false);
+  for (let index in characterList.value) {
+    if (characterList.value[index].show) {
+      let domId = index + "elite";
+      let oldVal = characterList.value[index].elite;
+      characterList.value[char_index].elite = newVal;
+      cancelBackBeforeUpdate(domId, newVal, oldVal, true);
     }
   }
+
+  automaticUpload();
 }
 
 //更新专精或模组等级
-function updateSkillAndMod(char_index, attribute, newVal, autoFlag) {
+function updateSkillAndMod(char_index, attribute, newVal) {
   let domId = char_index + attribute;
   let oldVal = characterList.value[char_index][attribute];
   let oldElite = characterList.value[char_index].elite;
@@ -637,16 +632,21 @@ function updateSkillAndMod(char_index, attribute, newVal, autoFlag) {
   // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  if (autoFlag) automaticUpload();
+  automaticUpload();
 }
 
 // 批量专精或模组
 function batchUpdatesSkillAndMod(attribute, newVal) {
-  for (let i in characterList.value) {
-    if (characterList.value[i].show) {
-      updateSkillAndMod(i, attribute, newVal, false);
+  for (let index in characterList.value) {
+    if (characterList.value[index].show) {
+      let domId = index + attribute;
+      let oldVal = characterList.value[index][attribute];
+      characterList.value[index][attribute] = newVal;
+      cancelBackBeforeUpdate(domId, newVal, oldVal, true);
     }
   }
+
+  automaticUpload();
 }
 
 //更新潜能
