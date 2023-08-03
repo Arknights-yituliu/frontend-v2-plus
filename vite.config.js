@@ -23,7 +23,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
   if (command == "build" && mode == "production" && !ssrBuild) {
     config.plugins.push(visualizer());
     config.build.rollupOptions = {
-      external: ["vue", "element-plus", "js-cookie", "echarts", "@element-plus/icons-vue", "axios"],
+      external: ["vue", "element-plus", "js-cookie", "echarts", "@element-plus/icons-vue", "axios", "mdui"],
       plugins: [
         externalGlobals({
           vue: "Vue",
@@ -32,6 +32,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
           echarts: "echarts",
           "@element-plus/icons-vue": "ElementPlusIconsVue",
           axios: "axios",
+          mdui: "mdui",
         }),
       ],
       output: {
