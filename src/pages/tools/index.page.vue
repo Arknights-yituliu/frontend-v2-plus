@@ -8,6 +8,8 @@ const navi_data = [
     icon: "/image/icon/道具_十连寻访凭证.png",
     link: "/tools/gachaCal",
   },
+  { title: "雪雉小店计算器", desc: ["帮帮雪雉！", "努力让风情街恢复繁荣！"], icon: "/image/icon/snowsant.png", link: "/tools/snowsant" },
+
   { title: "排班表生成器", desc: ["生成MAA排班表"], icon: "https://avatars.githubusercontent.com/u/97677443?s=200", link: "/tools/maa" },
   // { title: "排班表生成器", desc: ["生成MAA排班表"], icon: "https://avatars.githubusercontent.com/u/97677443?s=200", link: "/about/api" },
   // { title: "排班表生成器", desc: ["生成MAA排班表"], icon: "https://avatars.githubusercontent.com/u/97677443?s=200", link: "/about/api" },
