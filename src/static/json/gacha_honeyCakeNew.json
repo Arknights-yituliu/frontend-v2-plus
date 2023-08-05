@@ -29,18 +29,18 @@
     "rewardType": "公共",
     "module": "actRe"
   },
-  "夏活SideStory": {
-    "originium": 28,
+  "夏活SideStory(EX)": {
+    "originium": 16,
     "orundum": 0,
-    "permit": 3,
+    "permit": 0,
     "permit10": 0,
-    "start": "2023/08/01 00:00:00",
-    "end": "2023/08/02 03:58:00",
+    "start": "2023/08/07 00:00:00",
+    "end": "2023/08/08 03:58:00",
     "rewardType": "公共",
     "module": "act"
   },
-  "夏活SideStory三阶段": {
-    "originium": 8,
+  "夏活SideStory(S关)": {
+    "originium": 11,
     "orundum": 0,
     "permit": 0,
     "permit10": 0,
@@ -49,13 +49,23 @@
     "rewardType": "公共",
     "module": "act"
   },
-  "夏活签到": {
-    "originium": 1,
-    "orundum": 400,
+  "夏活签到6": {
+    "originium": 0,
+    "orundum": 200,
     "permit": 0,
     "permit10": 0,
-    "start": "2023/08/01 00:00:00",
+    "start": "2023/08/06 00:00:00",
     "end": "2023/08/07 03:58:00",
+    "rewardType": "公共",
+    "module": "honeyCake"
+  },
+  "夏活签到10": {
+    "originium": 0,
+    "orundum": 200,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2023/08/10 00:00:00",
+    "end": "2023/08/11 03:58:00",
     "rewardType": "公共",
     "module": "honeyCake"
   },
@@ -109,7 +119,7 @@
     "rewardType": "公共",
     "module": "actRe"
   },
-  "黑钢（可能是SS）": {
+  "黑钢(可能是SS)": {
     "originium": 28,
     "orundum": 0,
     "permit": 3,

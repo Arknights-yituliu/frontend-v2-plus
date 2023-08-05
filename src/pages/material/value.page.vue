@@ -15,11 +15,21 @@
 <script setup>
 import ItemValue from "@/components/ItemValue.vue";
 
-import toolApi from "@/api/tool";
+// import toolApi from "@/api/tool";
 
 import { onMounted } from "vue";
+import { ElMessage } from "element-plus";
 
-onMounted(() => {});
+onMounted(() => {
+  const url_path = window.location.pathname.split("/")[1];
+  if (url_path == "value") {
+    ElMessage({
+      dangerouslyUseHTMLString: true,
+      message: '此页面已迁移至<a href="/material/value">https://yituliu.site/material/value</a>',
+      type: "warning",
+    });
+  }
+});
 </script>
 
 <script>

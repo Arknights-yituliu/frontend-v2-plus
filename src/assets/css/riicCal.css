@@ -6,6 +6,7 @@
   background: var(--index-div-bg);
   margin: auto;
   max-width: 1500px;
+  color: var(--index-div-fg);
 }
 
 #riic_controlPanel {
@@ -53,7 +54,7 @@
 
 .riic_building_title {
   /* position: absolute; */
-  max-width: 230px;
+  max-width: 330px;
   background: #e0e0e0;
   /* margin: -36px -12px; */
   margin-top: -28px;
