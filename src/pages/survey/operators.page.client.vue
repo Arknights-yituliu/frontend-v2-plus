@@ -35,18 +35,19 @@
         </div>
 
         <div class="btn_setup">
-          最后保存时间
-          <div class="btn_setup_tips btn_setup_tips_wran">
-            {{ uploadMessage.updateTime }}<br />
+          最后一次自动保存于
+          <div class="btn_setup_tips btn_setup_tips_wran">{{ uploadMessage.updateTime }}<br /></div>
+        </div>
 
-            更新&nbsp;{{ uploadMessage.affectedRows }}条
-          </div>
+        <div class="btn_setup" @click="upload()">
+          手动上传数据
+          <div class="btn_setup_tips">手动保存</div>
         </div>
 
         <!--    以下噶掉
        <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
         <div class="btn_setup" @click="changeSurveyType()">{{ surveyTypeText }}</div>
-        <div class="btn_setup" @click="upload()">上传数据</div>
+        <div class="btn_setup" @click="automaticUpload()">上传数据</div>
         <div class="btn_setup" @click="exportExcel()">{{ exportExcelBtnText }}</div>
 
         <div class="btn_setup btn_upload">
@@ -145,7 +146,7 @@
           <div :class="surveyTypeClass('card_option_top_left')">
             <div class="avatar_at_top">
               <div class="image_avatar">
-                <div @click="updateOwn(char_index, !char.own)" :class="getSprite(char.charId)"></div>
+                <div @click="updateOwn(char_index, !char.own,true)" :class="getSprite(char.charId)"></div>
               </div>
               <div class="char_name">{{ char.name }}</div>
             </div>
@@ -279,6 +280,7 @@ function getSurveyCharacter() {
       for (var j = 0; j < list.length; j++) {
         if (list[j].charId == characterList.value[i].charId) {
           characterList.value[i].elite = list[j].elite;
+
           characterList.value[i].level = list[j].level;
           characterList.value[i].potential = list[j].potential;
           characterList.value[i].skill1 = list[j].skill1;
@@ -287,6 +289,14 @@ function getSurveyCharacter() {
           characterList.value[i].modX = list[j].modX;
           characterList.value[i].modY = list[j].modY;
           characterList.value[i].own = list[j].own;
+
+          setDomBackgroundColor(i + "elite" + list[j].elite, true);
+          setDomBackgroundColor(i + "potential" + list[j].potential, true);
+          setDomBackgroundColor(i + "skill1" + list[j].skill1, true);
+          setDomBackgroundColor(i + "skill2" + list[j].skill2, true);
+          setDomBackgroundColor(i + "skill3" + list[j].skill3, true);
+          setDomBackgroundColor(i + "modX" + list[j].modX, true);
+          setDomBackgroundColor(i + "modY" + list[j].modY, true);
         }
       }
     }
@@ -315,6 +325,46 @@ let uploadMessage = ref({ updateTime: "00:00:00", affectedRows: 0 });
 let updateIndexMap = ref({});
 
 //上传风评表
+function automaticUpload() {
+  let nowUploadTimeStamp = Date.parse(new Date());
+  let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
+
+  if (uploadFrequency < 30000) return;
+  if (globalUserData.value.token == void 0) {
+    console.log(globalUserData.value.token == void 0);
+    cMessage("未登录", "error");
+    return;
+  }
+  console.log("上传频率：", uploadFrequency / 1000, "s");
+
+  let uploadList = [];
+  console.log(updateIndexMap.value);
+
+  for (const i in updateIndexMap.value) {
+    const character = {
+      charId: characterList.value[i].charId,
+      own: characterList.value[i].own,
+      elite: characterList.value[i].elite,
+      level: characterList.value[i].level,
+      potential: characterList.value[i].potential,
+      skill1: characterList.value[i].skill1,
+      skill2: characterList.value[i].skill2,
+      skill3: characterList.value[i].skill3,
+      modX: characterList.value[i].modX,
+      modY: characterList.value[i].modY,
+    };
+    uploadList.push(character);
+  }
+
+  surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
+    // console.log(response.data);
+    lastUploadTimeStamp = nowUploadTimeStamp;
+    uploadMessage.value = response.data;
+    updateIndexMap.value = {};
+    cMessage("自动保存成功");
+  });
+}
+
 function upload() {
   let uploadList = [];
   console.log(updateIndexMap.value);
@@ -335,22 +385,8 @@ function upload() {
     uploadList.push(character);
   }
 
-  let nowUploadTimeStamp = Date.parse(new Date());
-  let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
-
-  if (uploadFrequency < 5000) return;
-  if (globalUserData.value.token == void 0) {
-    console.log(globalUserData.value.token == void 0);
-    cMessage("未登录", "error");
-    return;
-  }
-
-  console.log("上传频率：", uploadFrequency / 1000, "s");
-
   surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
-    // console.log(response.data);
-    lastUploadTimeStamp = nowUploadTimeStamp;
-    uploadMessage.value = response.data;
+    cMessage("手动保存成功");
     updateIndexMap.value = {};
   });
 }
@@ -513,14 +549,15 @@ function updateOwn(char_index, newVal) {
   }
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+
+  automaticUpload();
 }
 
 //批量更新是否持有
 function batchUpdatesOwn(newVal) {
-  for (let i in characterList.value) {
-    if (characterList.value[i].show) {
-      updateOwn(i, newVal);
+  for (let index in characterList.value) {
+    if (characterList.value[index].show) {
+      characterList.value[index].own = newVal;
     }
   }
 }
@@ -533,11 +570,10 @@ function updateElite(char_index, newVal) {
   if (newVal == oldVal) {
     characterList.value[char_index].elite = -1;
     setDomBackgroundColor(domId + oldVal, false);
-    // cancelSkillAndMod(char_index);
+
     return;
   }
   if (newVal < 2) {
-    // cancelSkillAndMod(char_index);
   }
   characterList.value[char_index].elite = newVal;
   cancelBackBeforeUpdate(domId, newVal, oldVal, true);
@@ -545,7 +581,7 @@ function updateElite(char_index, newVal) {
   // console.log("精英化:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+  automaticUpload();
 }
 
 //取消专精和模组等级
@@ -559,11 +595,16 @@ function cancelSkillAndMod(char_index) {
 
 // 批量精英化
 function batchUpdatesElite(newVal) {
-  for (let i in characterList.value) {
-    if (characterList.value[i].show) {
-      updateElite(char_index, newVal);
+  for (let index in characterList.value) {
+    if (characterList.value[index].show) {
+      let domId = index + "elite";
+      let oldVal = characterList.value[index].elite;
+      characterList.value[char_index].elite = newVal;
+      cancelBackBeforeUpdate(domId, newVal, oldVal, true);
     }
   }
+
+  automaticUpload();
 }
 
 //更新专精或模组等级
@@ -591,16 +632,21 @@ function updateSkillAndMod(char_index, attribute, newVal) {
   // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+  automaticUpload();
 }
 
-// 批量精英化
+// 批量专精或模组
 function batchUpdatesSkillAndMod(attribute, newVal) {
-  for (let i in characterList.value) {
-    if (characterList.value[i].show) {
-      updateSkillAndMod(char_index, attribute, newVal);
+  for (let index in characterList.value) {
+    if (characterList.value[index].show) {
+      let domId = index + attribute;
+      let oldVal = characterList.value[index][attribute];
+      characterList.value[index][attribute] = newVal;
+      cancelBackBeforeUpdate(domId, newVal, oldVal, true);
     }
   }
+
+  automaticUpload();
 }
 
 //更新潜能
@@ -621,7 +667,7 @@ function updatePotential(char_index, newVal) {
   // console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+  automaticUpload();
 }
 
 //最大等级
@@ -670,7 +716,7 @@ function updateLevel(char_index, rarity) {
   // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
 
   updateIndexMap.value[char_index] = char_index;
-  upload();
+  automaticUpload();
 }
 
 //选中标题
@@ -695,10 +741,10 @@ function setDomBackgroundColor(domId, selected) {
   let dom = document.getElementById(domId);
   if (dom == null) return;
   if (selected) {
-    console.log("添加背景色id", domId);
+    // console.log("添加背景色id", domId);
     dom.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   } else {
-    console.log("取消背景色id", domId);
+    // console.log("取消背景色id", domId);
     dom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
   }
 }
@@ -740,7 +786,7 @@ function simpleCardClass() {
 }
 
 onMounted(() => {
-  // getSurveyCharacter();
+  getSurveyCharacter();
   addFilterRule("rarity", 6);
 });
 </script>

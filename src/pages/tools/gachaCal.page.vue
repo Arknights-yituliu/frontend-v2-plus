@@ -1002,6 +1002,7 @@ import * as echarts from "echarts";
 let myChart = "";
 import { ClientOnly } from "@/components/ClientOnly";
 import { usePageContext } from "@/renderer/usePageContext";
+import { ElMessage } from "element-plus";
 
 export default {
   components: { ClientOnly },
@@ -1097,6 +1098,15 @@ export default {
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
     this.openNotification();
+
+    const url_path = window.location.pathname.split("/")[1];
+    if (url_path == "gachaCal") {
+      ElMessage({
+        dangerouslyUseHTMLString: true,
+        message: '此页面已迁移至<a href="/tools/gachaCal">https://yituliu.site/tools/gachaCal</a>',
+        type: "warning",
+      });
+    }
   },
   methods: {
     //公告通知

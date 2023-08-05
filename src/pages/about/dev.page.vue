@@ -167,6 +167,16 @@
           </div>
         </div>
       </a>
+      <a class="href_black" href="https://github.com/lethefrost">
+        <div class="mdui-card dev_card dev_card_member">
+          <img class="dev_card_icon" src="/image/website/寒上词.jpg" alt="" />
+          <div class="dev_card_text">
+            <div class="dev_card_text_title">寒上词</div>
+            <div class="dev_card_text_content" style="font-style: italic">开发</div>
+            <div class="dev_card_text_content">UI</div>
+          </div>
+        </div>
+      </a>
 
       <h2>贡献者</h2>
 

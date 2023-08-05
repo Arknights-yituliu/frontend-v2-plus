@@ -49,7 +49,7 @@ function getPathName(path) {
 
   if (lastStr == "/") {
     path = path.substr(0, strLength - 1);
-    console.log("路径以“/”结尾，被截取后路径：", path);
+    // console.log("路径以“/”结尾，被截取后路径：", path);
     pathName.value = path;
     return 1;
   }
@@ -59,13 +59,13 @@ function getPathName(path) {
 }
 
 function navParentSelected(path) {
-  console.log(path, "==", pathName.value);
+  // console.log(path, "==", pathName.value);
   if (path == pathName.value) return "aside_nav aside_parent aside_nav_selected";
   return "aside_nav aside_parent";
 }
 
 function navChildSelected(path) {
-  console.log(path, "==", pathName.value);
+  // console.log(path, "==", pathName.value);
   if (path == pathName.value) return "aside_nav aside_nav_selected";
   return "aside_nav";
 }
