@@ -39,7 +39,6 @@
     "@vue/eslint-config-prettier": "^7.1.0",
     "eslint": "^8.34.0",
     "eslint-plugin-vue": "^9.9.0",
-    "naive-ui": "^2.34.4",
     "prettier": "^2.8.4",
     "rollup-plugin-external-globals": "^0.7.3",
     "rollup-plugin-visualizer": "^5.9.0",
