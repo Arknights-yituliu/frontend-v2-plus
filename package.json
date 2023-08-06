@@ -32,7 +32,8 @@
     "terser": "^5.16.6",
     "vite": "^4.2.1",
     "vite-plugin-ssr": "^0.4.99",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "xterm": "^5.2.1"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
