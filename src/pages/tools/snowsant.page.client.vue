@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { Terminal } from "xterm";
 import "xterm/css/xterm.css";
+import axios from "axios";
 
 const term_e = ref(null);
 const input_e = ref(null);
@@ -10,7 +11,20 @@ const user_input = ref("");
 const term = new Terminal();
 const ws = new WebSocket("wss://backend.yituliu.site/snowsant");
 
-onMounted(() => {
+const p_count = ref(0);
+const P_LIMIT = ref(0);
+
+onMounted(async () => {
+  const resp = await axios.get("https://backend.yituliu.site/snowsant/p");
+  p_count.value = resp.data.p_count;
+  P_LIMIT.value = resp.data.P_LIMIT;
+
+  if (p_count.value >= P_LIMIT.value) {
+    return;
+  }
+
+  p_count.value += 1;
+
   input_e.value.focus();
   term.open(term_e.value);
 
@@ -34,8 +48,14 @@ function submit() {
 </script>
 
 <template>
-  <div class="mdui-container">
+  <div class="mdui-container mdui-typo">
+    <h2>Konano的雪雉计算器</h2>
+    <p>运算对网站服务器性能影响较大，仅供{{ P_LIMIT }}名用户同时使用。当前用户数量：{{ p_count }}</p>
+    <p>本地版下载：<a href="https://backend.yituliu.site/snowsant/Konano的雪雉计算器.exe">Konano的雪雉计算器.exe</a>（4.4 MB）</p>
+    <p>作者：<a href="https://github.com/Konano">Konano</a></p>
+    <p>代码仓库：<a href="https://github.com/Konano/snowsant-calculator" target="_blank">https://github.com/Konano/snowsant-calculator</a></p>
     <div ref="term_e" id="terminal"></div>
+    <p v-if="p_count >= P_LIMIT">请您稍后再试</p>
     <div class="mdui-textfield">
       <input ref="input_e" v-model="user_input" class="mdui-textfield-input" type="text" placeholder="按回车确认" @keyup.enter="submit" />
     </div>
