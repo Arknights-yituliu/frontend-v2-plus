@@ -36,7 +36,8 @@
 
         <div class="btn_setup">
           最后一次自动保存于
-          <div class="btn_setup_tips btn_setup_tips_wran">{{ uploadMessage.updateTime }}<br />
+          <div class="btn_setup_tips btn_setup_tips_wran">
+            {{ uploadMessage.updateTime }}<br />
             每30秒自动保存一次
           </div>
         </div>
@@ -64,7 +65,7 @@
     </div>
 
     <div class="switch_wrap" id="dom_switch_wrap">
-      <div class="switch_bar">
+      <div class="switch_bar select">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
@@ -73,14 +74,14 @@
         </div>
       </div>
 
-      <div class="switch_bar">
+      <div class="switch_bar select">
         <div class="switch_title">稀有度</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }}★</div>
         </div>
       </div>
 
-      <div class="switch_bar">
+      <div class="switch_bar select">
         <div class="switch_title">年份</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
@@ -89,7 +90,7 @@
         </div>
       </div>
 
-      <div class="switch_bar">
+      <div class="switch_bar select">
         <div class="switch_title">其他</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('own', true)" id="other1" @click="addFilterRule('own', true)">已拥有</div>
@@ -100,7 +101,7 @@
         </div>
       </div>
 
-      <div class="switch_bar">
+      <div class="switch_bar select">
         <div class="switch_title">排序</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>
@@ -108,7 +109,7 @@
         </div>
       </div>
 
-      <div class="switch_bar">
+      <div class="switch_bar select">
         <div class="switch_title">批量操作</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="batchUpdatesOwn(true)">全部拥有</div>
@@ -153,12 +154,7 @@
               <div class="char_name">{{ char.name }}</div>
             </div>
             <div :class="surveyTypeClass('potential_wrap')">
-              <div
-                class="image_potential"
-                :id="char_index + 'potential' + rank"
-                v-for="rank in ranks.slice(1, 7)"
-                @click="updatePotential(char_index,rank)"
-              >
+              <div class="image_potential" :id="char_index + 'potential' + rank" v-for="rank in ranks.slice(1, 7)" @click="updatePotential(char_index, rank)">
                 <div :class="getSprite('potential' + rank, 'potential')"></div>
               </div>
             </div>
@@ -325,9 +321,9 @@ function exportExcel() {
   }, 5000);
 }
 
-let lastUploadTimeStamp = 1689425013364;  //上次上传时间的时间戳
-let uploadMessage = ref({ updateTime: "2023/08/08 00:00:00", affectedRows: 0 });  //上传APi返回的信息
-let updateIndexMap = ref({});  //每次点击操作记录下被更新的干员，只上传被修改过的干员
+let lastUploadTimeStamp = 1689425013364; //上次上传时间的时间戳
+let uploadMessage = ref({ updateTime: "2023/08/08 00:00:00", affectedRows: 0 }); //上传APi返回的信息
+let updateIndexMap = ref({}); //每次点击操作记录下被更新的干员，只上传被修改过的干员
 
 //自动上传风评表
 function automaticUpload() {
@@ -350,7 +346,7 @@ function automaticUpload() {
 
   surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
     uploadMessage.value = response.data;
-    updateIndexMap.value = {};  
+    updateIndexMap.value = {};
     cMessage("自动保存成功");
   });
 
@@ -388,6 +384,7 @@ function uploadDataReduction() {
       modX: characterList.value[i].modX,
       modY: characterList.value[i].modY,
     };
+    console.log(character);
     uploadList.push(character);
   }
 
@@ -420,7 +417,6 @@ function maaData1() {
   for (let i in dataJson) {
   }
 }
-
 
 //更新是否持有
 function updateOwn(char_index, newVal) {
@@ -455,6 +451,7 @@ function batchUpdatesOwn(newVal) {
   for (let index in characterList.value) {
     if (characterList.value[index].show) {
       characterList.value[index].own = newVal;
+      updateIndexMap.value[index] = index;
     }
   }
 }
@@ -469,7 +466,7 @@ function updateElite(char_index, newVal) {
     updateOption(domId + oldVal, false);
     return;
   }
-  
+
   characterList.value[char_index].elite = newVal;
   cancelAndUpdateOption(domId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
@@ -493,12 +490,11 @@ function batchUpdatesElite(newVal) {
     if (characterList.value[index].show) {
       let domId = index + "elite";
       let oldVal = characterList.value[index].elite;
-      characterList.value[char_index].elite = newVal;
+      characterList.value[index].elite = newVal;
       cancelAndUpdateOption(domId, newVal, oldVal, true);
+      updateIndexMap.value[index] = index;
     }
   }
-
-  automaticUpload();
 }
 
 //更新专精或模组等级
@@ -532,15 +528,32 @@ function updateSkillAndMod(char_index, attribute, newVal) {
 // 批量专精或模组
 function batchUpdatesSkillAndMod(attribute, newVal) {
   for (let index in characterList.value) {
-    if (characterList.value[index].show) {
-      let domId = index + attribute;
-      let oldVal = characterList.value[index][attribute];
-      characterList.value[index][attribute] = newVal;
-      cancelAndUpdateOption(domId, newVal, oldVal, true);
+    if (!characterList.value[index].show) continue;
+    if ("modX" == attribute && !characterList.value[index].modXOwn) {
+      console.log('没有x模组')
+      continue;
     }
-  }
+    if ("modY" == attribute && !characterList.value[index].modYOwn) {
+      console.log('没有y模组')
+      continue;
+    }
+    if ("skill3" == attribute && characterList.value[index].rarity < 6) {
+      console.log('6星以下没有三技能')
+      continue;
+    }
 
-  automaticUpload();
+    if ("skill2" == attribute && characterList.value[index].rarity < 4) {
+      console.log('4星以下没有三技能')
+      continue;
+    }
+
+    let domId = index + attribute;
+    let oldVal = characterList.value[index][attribute];
+    characterList.value[index][attribute] = newVal;
+
+    cancelAndUpdateOption(domId, newVal, oldVal, true);
+    updateIndexMap.value[index] = index;
+  }
 }
 
 //更新潜能
@@ -679,13 +692,11 @@ function simpleCardClass() {
   return "char_card";
 }
 
-
-
 //控制筛选栏的展开
 function setBarCollapse() {
   filterCollapse.value = !filterCollapse.value;
   if (filterCollapse.value) {
-    let elements = document.getElementsByClassName("switch_bar");
+    let elements = document.getElementsByClassName("switch_bar select");
     let height = 0;
     for (let e of elements) {
       height += e.offsetHeight;
@@ -696,7 +707,7 @@ function setBarCollapse() {
       document.getElementById("dom_switch_wrap").style.height = "auto";
     }, 500);
   } else {
-    let elements = document.getElementsByClassName("switch_bar");
+    let elements = document.getElementsByClassName("switch_bar select");
     let height = 0;
     for (let e of elements) {
       height += e.offsetHeight;
@@ -785,7 +796,6 @@ function sortCharacterList(rule) {
     return b[rule] - a[rule];
   });
 }
-
 
 onMounted(() => {
   getSurveyCharacter();
