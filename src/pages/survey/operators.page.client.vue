@@ -323,7 +323,7 @@ function exportExcel() {
 
 let lastUploadTimeStamp = 1689425013364; //上次上传时间的时间戳
 let uploadMessage = ref({ updateTime: "2023/08/08 00:00:00", affectedRows: 0 }); //上传APi返回的信息
-let updateIndexMap = ref({}); //每次点击操作记录下被更新的干员，只上传被修改过的干员
+let updateIndexMap = ref({}); //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
 
 //自动上传风评表
 function automaticUpload() {
@@ -420,12 +420,15 @@ function maaData1() {
 
 //更新是否持有
 function updateOwn(char_index, newVal) {
+  updateIndexMap.value[char_index] = char_index; //记录更新的干员的索引
+
   const character = characterList.value[char_index];
   characterList.value[char_index].own = newVal;
-  const oldElite = characterList.value[char_index].elite;
-  const oldPotential = characterList.value[char_index].potential;
+  const oldElite = characterList.value[char_index].elite; //旧精英等级
+  const oldPotential = characterList.value[char_index].potential; //旧潜能等级
 
   if (newVal) {
+    //点击拥有且干员三星以上，设为精英等级2，潜能1
     if (character.rarity > 3) {
       characterList.value[char_index].elite = 2;
       cancelAndUpdateOption(char_index + "elite", 2, oldElite);
@@ -433,15 +436,14 @@ function updateOwn(char_index, newVal) {
       cancelAndUpdateOption(char_index + "potential", 1, oldPotential);
     }
   } else {
-    let attributeList = ["level", "elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
+    //点击未拥有时，撤销所有选项
+    let attributeList = ["elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
     for (let attribute of attributeList) {
-      updateOption(char_index + attribute + character[attribute], false);
       characterList.value[char_index][attribute] = -1;
+      updateOption(char_index + attribute + character[attribute], false);
     }
     updateOption(char_index + "level", false);
   }
-
-  updateIndexMap.value[char_index] = char_index;
 
   automaticUpload();
 }
@@ -458,30 +460,26 @@ function batchUpdatesOwn(newVal) {
 
 //更新精英化等级
 function updateElite(char_index, newVal) {
+  //记录更新过信息的干员的索引
+  updateIndexMap.value[char_index] = char_index;
+  //需要修改的elementId
   let elementId = char_index + "elite";
+  //需要删去的旧值
   let oldVal = characterList.value[char_index].elite;
   // console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  //新旧值相同直接取消选项背景色，并更新精英等级为-1
   if (newVal == oldVal) {
     characterList.value[char_index].elite = -1;
     updateOption(elementId + oldVal, false);
     return;
   }
 
+  //更新精英等级并取消旧值的选项背景色，给新值的选项加上选项背景色
   characterList.value[char_index].elite = newVal;
   cancelAndUpdateOption(elementId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
 
-  updateIndexMap.value[char_index] = char_index;
   automaticUpload();
-}
-
-//取消专精和模组等级
-function cancelSkillAndMod(char_index) {
-  let attributeList = ["skill1", "skill2", "skill3", "modX", "modY"];
-  for (let attribute of attributeList) {
-    cancelAndUpdateOption(char_index + attribute, -1, characterList.value[char_index][attribute]);
-    characterList.value[char_index][attribute] = -1;
-  }
 }
 
 // 批量精英化
@@ -499,29 +497,35 @@ function batchUpdatesElite(newVal) {
 
 //更新专精或模组等级
 function updateSkillAndMod(char_index, attribute, newVal) {
+  updateIndexMap.value[char_index] = char_index;
+  //需要修改的elementId
   let elementId = char_index + attribute;
+  //需要删去的旧值
   let oldVal = characterList.value[char_index][attribute];
   let oldElite = characterList.value[char_index].elite;
   // console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+
+  //新旧值相同直接取消选项背景色，并更新专精/模组等级为-1
   if (newVal == oldVal) {
     characterList.value[char_index][attribute] = -1;
     updateOption(elementId + oldVal, false);
     return;
   }
 
+  //更新精英等级并取消旧值的选项背景色，给新值的选项加上选项背景色
   characterList.value[char_index][attribute] = newVal;
+  cancelAndUpdateOption(elementId, newVal, oldVal, true);
 
+  //如果干员是三星以上，自动更新精英等级为2
   if (characterList.value[char_index].rarity > 3) {
     characterList.value[char_index].elite = 2;
     cancelAndUpdateOption(char_index + "elite", 2, oldElite);
   }
 
-  cancelAndUpdateOption(elementId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
 
   // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
 
-  updateIndexMap.value[char_index] = char_index;
   automaticUpload();
 }
 
@@ -530,20 +534,20 @@ function batchUpdatesSkillAndMod(attribute, newVal) {
   for (let index in characterList.value) {
     if (!characterList.value[index].show) continue;
     if ("modX" == attribute && !characterList.value[index].modXOwn) {
-      console.log('没有x模组')
+      console.log("没有x模组");
       continue;
     }
     if ("modY" == attribute && !characterList.value[index].modYOwn) {
-      console.log('没有y模组')
+      console.log("没有y模组");
       continue;
     }
     if ("skill3" == attribute && characterList.value[index].rarity < 6) {
-      console.log('6星以下没有三技能')
+      console.log("6星以下没有三技能");
       continue;
     }
 
     if ("skill2" == attribute && characterList.value[index].rarity < 4) {
-      console.log('4星以下没有三技能')
+      console.log("4星以下没有三技能");
       continue;
     }
 
@@ -558,37 +562,46 @@ function batchUpdatesSkillAndMod(attribute, newVal) {
 
 //更新潜能
 function updatePotential(char_index, newVal) {
+  //记录更新过信息的干员的索引
+  updateIndexMap.value[char_index] = char_index;
+  //需要修改的elementId
   let elementId = char_index + "potential";
+  //需要删去的旧值
   let oldVal = characterList.value[char_index].potential;
   // console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  //新旧值相同直接取消选项背景色，并更新潜能等级为-1
   if (newVal == oldVal) {
     characterList.value[char_index].potential = -1;
     updateOption(elementId + oldVal, false);
     return;
   }
 
+  //更新潜能等级并取消旧值的选项背景色，给新值的选项加上选项背景色
   characterList.value[char_index].potential = newVal;
   cancelAndUpdateOption(elementId, newVal, oldVal);
   characterList.value[char_index].own = true;
 
-  console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
-
-  updateIndexMap.value[char_index] = char_index;
   automaticUpload();
 }
 
 //最大等级
 function updateLevel(char_index, rarity) {
-  let level = 0;
+ //记录更新过信息的干员的索引
+  updateIndexMap.value[char_index] = char_index;
+  
+  let level = -1;
+  //旧精英等级
   let oldElite = characterList.value[char_index].elite;
 
   characterList.value[char_index].own = true;
+   //如果是满级则取消满级，并将选项背景色去除
   if (characterList.value[char_index].level > 0) {
     characterList.value[char_index].level = level;
     updateOption(char_index + "level", false);
     return;
   }
 
+  // 根据星级更新精英等级和等级
   if (rarity == 6) {
     level = 90;
     characterList.value[char_index].elite = 2;
@@ -615,14 +628,16 @@ function updateLevel(char_index, rarity) {
     cancelAndUpdateOption(char_index + "elite", 0, oldElite);
   }
 
-  if (level == 0) return;
-
+  if (level == -1) return;
+  
   characterList.value[char_index].level = level;
+
+  //更新等级选项背景色
   updateOption(char_index + "level", true);
 
   // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
 
-  updateIndexMap.value[char_index] = char_index;
+  
   automaticUpload();
 }
 
@@ -643,7 +658,7 @@ function updateBackBeforecancel(elementIdHeader, rank, oldRank) {
   updateOption(elementIdHeader + oldRank, false);
 }
 
-// 修改选项的背景色   
+// 修改选项的背景色
 function updateOption(elementId, selected) {
   // 干员数据是一个数组，每个选项的element的id为 索引+属性名，例如 第一个干员号角的3技能的id是 '0skill3'
   let element = document.getElementById(elementId);
