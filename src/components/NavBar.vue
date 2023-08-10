@@ -17,7 +17,7 @@
 
     <div class="spacer"></div>
     <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
-    <!-- <navBar></navBar> -->
+    <navBar></navBar>
 
     <div class="drawer_wrap">
       <div class="drawer" id="drawer114">
@@ -161,31 +161,30 @@ function getpageTitle(path) {
 }
 
 function updateVisits(pathName) {
+  //访问/直接更新
   if (pathName == "/") {
     toolApi.updateVisits(pathName);
     return 1;
   }
-
-  let strLength = pathName.length;
-
-  if (strLength < 2) {
-    toolApi.updateVisits(pathName);
-    return 1;
-  }
-
-  const lastStr = pathName.substr(strLength - 1, strLength);
-
-  if (lastStr == "/") {
-    pathName = pathName.substr(0, strLength - 1);
-    console.log("路径以“/”结尾，被截取后路径：", pathName);
-    toolApi.updateVisits(pathName);
-    console.log("访问的页面是：", pathName);
-    return 1;
-  }
+  
+  pathName = pathName.replace("/src/pages")
+  pathName = substrPath(pathName);
+  pathName = substrPath(pathName);
 
   console.log("访问的页面是：", pathName);
   toolApi.updateVisits(pathName);
   return 1;
+}
+
+function substrPath(pathName) {
+  let strLength = pathName.length;
+  const lastStr = pathName.substr(strLength - 1, strLength);
+  if (lastStr == "/") {
+    pathName = pathName.substr(0, strLength - 1);
+    console.log("路径以“/”结尾，被截取后路径：", pathName);
+    return pathName;
+  }
+  return pathName
 }
 
 onMounted(() => {
