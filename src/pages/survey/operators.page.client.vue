@@ -36,12 +36,14 @@
 
         <div class="btn_setup">
           最后一次自动保存于
-          <div class="btn_setup_tips btn_setup_tips_wran">{{ uploadMessage.updateTime }}<br /></div>
+          <div class="btn_setup_tips btn_setup_tips_wran">{{ uploadMessage.updateTime }}<br />
+            每30秒自动保存一次
+          </div>
         </div>
 
         <div class="btn_setup" @click="upload()">
           手动上传数据
-          <div class="btn_setup_tips">手动保存</div>
+          <div class="btn_setup_tips">建议退出网页前手动保存一下</div>
         </div>
 
         <!--    以下噶掉
@@ -146,7 +148,7 @@
           <div :class="surveyTypeClass('card_option_top_left')">
             <div class="avatar_at_top">
               <div class="image_avatar">
-                <div @click="updateOwn(char_index, !char.own,true)" :class="getSprite(char.charId)"></div>
+                <div @click="updateOwn(char_index, !char.own, true)" :class="getSprite(char.charId)"></div>
               </div>
               <div class="char_name">{{ char.name }}</div>
             </div>
@@ -155,7 +157,7 @@
                 class="image_potential"
                 :id="char_index + 'potential' + rank"
                 v-for="rank in ranks.slice(1, 7)"
-                @click="updatePotential(char_index, 'potential', rank)"
+                @click="updatePotential(char_index,rank)"
               >
                 <div :class="getSprite('potential' + rank, 'potential')"></div>
               </div>
@@ -251,8 +253,8 @@
 
 <script setup>
 import { cMessage } from "@/element/message.js";
-import { globalUserData } from "./userService";
-import { characterListInit, professionDict, rarityDict, yearDict } from "./baseData";
+import { globalUserData } from "./userService"; //从用户服务js获取用户信息
+import { characterListInit, professionDict, yearDict } from "./baseData"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import characterDemo from "@/pages/survey/characterDemo.vue";
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
@@ -270,11 +272,14 @@ function getSprite(id, type) {
 
 let characterList = ref(characterListInit());
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
+let rarityDict = [1, 2, 3, 4, 5, 6];
 
 //找回填写过的角色信息
 function getSurveyCharacter() {
   surveyApi.getSurveyCharacter(globalUserData.value.token).then((response) => {
-    let list = response.data;
+    let list = response.data; //后端返回的数据
+
+    //转为前端的数据格式
     for (var i = 0; i < characterList.value.length; i++) {
       // characterList.value[i].own =false;
       for (var j = 0; j < list.length; j++) {
@@ -290,13 +295,13 @@ function getSurveyCharacter() {
           characterList.value[i].modY = list[j].modY;
           characterList.value[i].own = list[j].own;
 
-          setDomBackgroundColor(i + "elite" + list[j].elite, true);
-          setDomBackgroundColor(i + "potential" + list[j].potential, true);
-          setDomBackgroundColor(i + "skill1" + list[j].skill1, true);
-          setDomBackgroundColor(i + "skill2" + list[j].skill2, true);
-          setDomBackgroundColor(i + "skill3" + list[j].skill3, true);
-          setDomBackgroundColor(i + "modX" + list[j].modX, true);
-          setDomBackgroundColor(i + "modY" + list[j].modY, true);
+          updateOption(i + "elite" + list[j].elite, true);
+          updateOption(i + "potential" + list[j].potential, true);
+          updateOption(i + "skill1" + list[j].skill1, true);
+          updateOption(i + "skill2" + list[j].skill2, true);
+          updateOption(i + "skill3" + list[j].skill3, true);
+          updateOption(i + "modX" + list[j].modX, true);
+          updateOption(i + "modY" + list[j].modY, true);
         }
       }
     }
@@ -308,7 +313,7 @@ let exportExcelBtnText = ref("导出excel");
 
 //导出评分表的excel
 function exportExcel() {
-  exportExcelBtnText.value = "导出中";
+  exportExcelBtnText.value = "导出中···";
   const exportExcelUrl = http + "survey/character/export?token=" + globalUserData.value.token;
   var dom = document.createElement("a");
   dom.download = "form.xlsx";
@@ -320,78 +325,74 @@ function exportExcel() {
   }, 5000);
 }
 
-let lastUploadTimeStamp = 1689425013364;
-let uploadMessage = ref({ updateTime: "00:00:00", affectedRows: 0 });
-let updateIndexMap = ref({});
+let lastUploadTimeStamp = 1689425013364;  //上次上传时间的时间戳
+let uploadMessage = ref({ updateTime: "2023/08/08 00:00:00", affectedRows: 0 });  //上传APi返回的信息
+let updateIndexMap = ref({});  //每次点击操作记录下被更新的干员，只上传被修改过的干员
 
-//上传风评表
+//自动上传风评表
 function automaticUpload() {
+  //方法触发时的时间戳
   let nowUploadTimeStamp = Date.parse(new Date());
+  //与上一次自动上传时间的间隔
   let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
-
-  if (uploadFrequency < 30000) return;
+  // 检查用户是否登录
   if (globalUserData.value.token == void 0) {
     console.log(globalUserData.value.token == void 0);
     cMessage("未登录", "error");
     return;
   }
+  //上传间隔小于30s退出方法
+  if (uploadFrequency < 30000) return;
   console.log("上传频率：", uploadFrequency / 1000, "s");
 
-  let uploadList = [];
-  console.log(updateIndexMap.value);
-
-  for (const i in updateIndexMap.value) {
-    const character = {
-      charId: characterList.value[i].charId,
-      own: characterList.value[i].own,
-      elite: characterList.value[i].elite,
-      level: characterList.value[i].level,
-      potential: characterList.value[i].potential,
-      skill1: characterList.value[i].skill1,
-      skill2: characterList.value[i].skill2,
-      skill3: characterList.value[i].skill3,
-      modX: characterList.value[i].modX,
-      modY: characterList.value[i].modY,
-    };
-    uploadList.push(character);
-  }
+  //上传的数据
+  let uploadList = uploadDataReduction();
 
   surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
-    // console.log(response.data);
-    lastUploadTimeStamp = nowUploadTimeStamp;
     uploadMessage.value = response.data;
-    updateIndexMap.value = {};
+    updateIndexMap.value = {};  
     cMessage("自动保存成功");
   });
+
+  lastUploadTimeStamp = nowUploadTimeStamp;
 }
 
+//手动上传
 function upload() {
-  let uploadList = [];
-  console.log(updateIndexMap.value);
-
-  for (const i in updateIndexMap.value) {
-    const character = {
-      charId: characterList.value[i].charId,
-      own: characterList.value[i].own,
-      elite: characterList.value[i].elite,
-      level: characterList.value[i].level,
-      potential: characterList.value[i].potential,
-      skill1: characterList.value[i].skill1,
-      skill2: characterList.value[i].skill2,
-      skill3: characterList.value[i].skill3,
-      modX: characterList.value[i].modX,
-      modY: characterList.value[i].modY,
-    };
-    uploadList.push(character);
-  }
-
+  let uploadList = uploadDataReduction();
   surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
+    uploadMessage.value = response.data;
     cMessage("手动保存成功");
     updateIndexMap.value = {};
   });
 }
 
-let uploadFileName = ref("null");
+let uploadFileName = ref("上传的文件名");
+
+// 将需要上传的数据去除无用信息
+function uploadDataReduction() {
+  let uploadList = [];
+  console.log(updateIndexMap.value);
+
+  for (const i in updateIndexMap.value) {
+    const character = {
+      charId: characterList.value[i].charId,
+      own: characterList.value[i].own,
+      rarity: characterList.value[i].rarity,
+      elite: characterList.value[i].elite,
+      level: characterList.value[i].level,
+      potential: characterList.value[i].potential,
+      skill1: characterList.value[i].skill1,
+      skill2: characterList.value[i].skill2,
+      skill3: characterList.value[i].skill3,
+      modX: characterList.value[i].modX,
+      modY: characterList.value[i].modY,
+    };
+    uploadList.push(character);
+  }
+
+  return uploadList;
+}
 
 //显示文件名称
 function getUploadFileName() {
@@ -419,6 +420,266 @@ function maaData1() {
   for (let i in dataJson) {
   }
 }
+
+
+//更新是否持有
+function updateOwn(char_index, newVal) {
+  const character = characterList.value[char_index];
+  characterList.value[char_index].own = newVal;
+  const oldElite = characterList.value[char_index].elite;
+  const oldPotential = characterList.value[char_index].potential;
+
+  if (newVal) {
+    if (character.rarity > 3) {
+      characterList.value[char_index].elite = 2;
+      cancelAndUpdateOption(char_index + "elite", 2, oldElite);
+      characterList.value[char_index].potential = 1;
+      cancelAndUpdateOption(char_index + "potential", 1, oldPotential);
+    }
+  } else {
+    let attributeList = ["level", "elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
+    for (let attribute of attributeList) {
+      updateOption(char_index + attribute + character[attribute], false);
+      characterList.value[char_index][attribute] = -1;
+    }
+    updateOption(char_index + "level", false);
+  }
+
+  updateIndexMap.value[char_index] = char_index;
+
+  automaticUpload();
+}
+
+//批量更新是否持有
+function batchUpdatesOwn(newVal) {
+  for (let index in characterList.value) {
+    if (characterList.value[index].show) {
+      characterList.value[index].own = newVal;
+    }
+  }
+}
+
+//更新精英化等级
+function updateElite(char_index, newVal) {
+  let domId = char_index + "elite";
+  let oldVal = characterList.value[char_index].elite;
+  // console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  if (newVal == oldVal) {
+    characterList.value[char_index].elite = -1;
+    updateOption(domId + oldVal, false);
+    return;
+  }
+  
+  characterList.value[char_index].elite = newVal;
+  cancelAndUpdateOption(domId, newVal, oldVal, true);
+  characterList.value[char_index].own = true;
+
+  updateIndexMap.value[char_index] = char_index;
+  automaticUpload();
+}
+
+//取消专精和模组等级
+function cancelSkillAndMod(char_index) {
+  let attributeList = ["skill1", "skill2", "skill3", "modX", "modY"];
+  for (let attribute of attributeList) {
+    cancelAndUpdateOption(char_index + attribute, -1, characterList.value[char_index][attribute]);
+    characterList.value[char_index][attribute] = -1;
+  }
+}
+
+// 批量精英化
+function batchUpdatesElite(newVal) {
+  for (let index in characterList.value) {
+    if (characterList.value[index].show) {
+      let domId = index + "elite";
+      let oldVal = characterList.value[index].elite;
+      characterList.value[char_index].elite = newVal;
+      cancelAndUpdateOption(domId, newVal, oldVal, true);
+    }
+  }
+
+  automaticUpload();
+}
+
+//更新专精或模组等级
+function updateSkillAndMod(char_index, attribute, newVal) {
+  let domId = char_index + attribute;
+  let oldVal = characterList.value[char_index][attribute];
+  let oldElite = characterList.value[char_index].elite;
+  // console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  if (newVal == oldVal) {
+    characterList.value[char_index][attribute] = -1;
+    updateOption(domId + oldVal, false);
+    return;
+  }
+
+  characterList.value[char_index][attribute] = newVal;
+
+  if (characterList.value[char_index].rarity > 3) {
+    characterList.value[char_index].elite = 2;
+    cancelAndUpdateOption(char_index + "elite", 2, oldElite);
+  }
+
+  cancelAndUpdateOption(domId, newVal, oldVal, true);
+  characterList.value[char_index].own = true;
+
+  // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
+
+  updateIndexMap.value[char_index] = char_index;
+  automaticUpload();
+}
+
+// 批量专精或模组
+function batchUpdatesSkillAndMod(attribute, newVal) {
+  for (let index in characterList.value) {
+    if (characterList.value[index].show) {
+      let domId = index + attribute;
+      let oldVal = characterList.value[index][attribute];
+      characterList.value[index][attribute] = newVal;
+      cancelAndUpdateOption(domId, newVal, oldVal, true);
+    }
+  }
+
+  automaticUpload();
+}
+
+//更新潜能
+function updatePotential(char_index, newVal) {
+  let domId = char_index + "potential";
+  let oldVal = characterList.value[char_index].potential;
+  // console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
+  if (newVal == oldVal) {
+    characterList.value[char_index].potential = -1;
+    updateOption(domId + oldVal, false);
+    return;
+  }
+
+  characterList.value[char_index].potential = newVal;
+  cancelAndUpdateOption(domId, newVal, oldVal);
+  characterList.value[char_index].own = true;
+
+  console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
+
+  updateIndexMap.value[char_index] = char_index;
+  automaticUpload();
+}
+
+//最大等级
+function updateLevel(char_index, rarity) {
+  let level = 0;
+  let oldElite = characterList.value[char_index].elite;
+
+  characterList.value[char_index].own = true;
+  if (characterList.value[char_index].level > 0) {
+    characterList.value[char_index].level = level;
+    updateOption(char_index + "level", false);
+    return;
+  }
+
+  if (rarity == 6) {
+    level = 90;
+    characterList.value[char_index].elite = 2;
+    cancelAndUpdateOption(char_index + "elite", 2, oldElite);
+  }
+  if (rarity == 5) {
+    level = 80;
+    characterList.value[char_index].elite = 2;
+    cancelAndUpdateOption(char_index + "elite", 2, oldElite);
+  }
+  if (rarity == 4) {
+    level = 70;
+    characterList.value[char_index].elite = 2;
+    cancelAndUpdateOption(char_index + "elite", 2, oldElite);
+  }
+  if (rarity == 3) {
+    level = 55;
+    characterList.value[char_index].elite = 1;
+    cancelAndUpdateOption(char_index + "elite", 1, oldElite);
+  }
+  if (rarity < 3) {
+    level = 30;
+    characterList.value[char_index].elite = 0;
+    cancelAndUpdateOption(char_index + "elite", 0, oldElite);
+  }
+
+  if (level == 0) return;
+
+  characterList.value[char_index].level = level;
+  updateOption(char_index + "level", true);
+
+  // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
+
+  updateIndexMap.value[char_index] = char_index;
+  automaticUpload();
+}
+
+//选中标题
+function btnSetClass(flag) {
+  if (flag) return "btn_setup btn_setup_selected";
+  return "btn_setup";
+}
+
+//先取消旧选项，更修改新选项的背景色
+function cancelAndUpdateOption(domIdHeader, rank, oldRank) {
+  updateOption(domIdHeader + oldRank, false);
+  updateOption(domIdHeader + rank, true);
+}
+
+function updateBackBeforecancel(domIdHeader, rank, oldRank) {
+  updateOption(domIdHeader + rank, true);
+  updateOption(domIdHeader + oldRank, false);
+}
+
+// 修改选项的背景色
+function updateOption(domId, selected) {
+  let dom = document.getElementById(domId);
+  if (dom == null) return;
+  if (selected) {
+    // console.log("添加背景色id", domId);
+    dom.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
+  } else {
+    // console.log("取消背景色id", domId);
+    dom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
+  }
+}
+
+let surveyTypeText = ref("标准问卷");
+let surveyType = ref("_basic");
+//简易卡片样式
+let simpleCard = ref(false);
+
+//标准问卷与完整问卷
+function changeSurveyType(type) {
+  if ("简易问卷" == surveyTypeText.value) {
+    surveyType.value = "_basic";
+    surveyTypeText.value = "标准问卷";
+    simpleCard.value = !simpleCard.value;
+    return;
+  }
+  if ("标准问卷" == surveyTypeText.value) {
+    surveyType.value = "";
+    surveyTypeText.value = "完整问卷";
+    return;
+  }
+
+  if ("完整问卷" == surveyTypeText.value) {
+    surveyType.value = "";
+    simpleCard.value = !simpleCard.value;
+    surveyTypeText.value = "简易问卷";
+    return;
+  }
+}
+
+function surveyTypeClass(classNameHeader) {
+  return classNameHeader + surveyType.value;
+}
+//
+function simpleCardClass() {
+  if (simpleCard.value) return "char_card char_card_simple";
+  return "char_card";
+}
+
+
 
 //控制筛选栏的展开
 function setBarCollapse() {
@@ -525,265 +786,6 @@ function sortCharacterList(rule) {
   });
 }
 
-//更新是否持有
-function updateOwn(char_index, newVal) {
-  const character = characterList.value[char_index];
-  characterList.value[char_index].own = newVal;
-  const oldElite = characterList.value[char_index].elite;
-  const oldPotential = characterList.value[char_index].potential;
-
-  if (newVal) {
-    if (character.rarity > 3) {
-      characterList.value[char_index].elite = 2;
-      cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
-      characterList.value[char_index].potential = 1;
-      cancelBackBeforeUpdate(char_index + "potential", 1, oldPotential);
-    }
-  } else {
-    let attributeList = ["level", "elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
-    for (let attribute of attributeList) {
-      setDomBackgroundColor(char_index + attribute + character[attribute], false);
-      characterList.value[char_index][attribute] = -1;
-    }
-    setDomBackgroundColor(char_index + "level", false);
-  }
-
-  updateIndexMap.value[char_index] = char_index;
-
-  automaticUpload();
-}
-
-//批量更新是否持有
-function batchUpdatesOwn(newVal) {
-  for (let index in characterList.value) {
-    if (characterList.value[index].show) {
-      characterList.value[index].own = newVal;
-    }
-  }
-}
-
-//更新精英化等级
-function updateElite(char_index, newVal) {
-  let domId = char_index + "elite";
-  let oldVal = characterList.value[char_index].elite;
-  // console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
-  if (newVal == oldVal) {
-    characterList.value[char_index].elite = -1;
-    setDomBackgroundColor(domId + oldVal, false);
-
-    return;
-  }
-  if (newVal < 2) {
-  }
-  characterList.value[char_index].elite = newVal;
-  cancelBackBeforeUpdate(domId, newVal, oldVal, true);
-  characterList.value[char_index].own = true;
-  // console.log("精英化:", JSON.stringify(characterList.value[char_index], null, 2));
-
-  updateIndexMap.value[char_index] = char_index;
-  automaticUpload();
-}
-
-//取消专精和模组等级
-function cancelSkillAndMod(char_index) {
-  let attributeList = ["skill1", "skill2", "skill3", "modX", "modY"];
-  for (let attribute of attributeList) {
-    cancelBackBeforeUpdate(char_index + attribute, -1, characterList.value[char_index][attribute]);
-    characterList.value[char_index][attribute] = -1;
-  }
-}
-
-// 批量精英化
-function batchUpdatesElite(newVal) {
-  for (let index in characterList.value) {
-    if (characterList.value[index].show) {
-      let domId = index + "elite";
-      let oldVal = characterList.value[index].elite;
-      characterList.value[char_index].elite = newVal;
-      cancelBackBeforeUpdate(domId, newVal, oldVal, true);
-    }
-  }
-
-  automaticUpload();
-}
-
-//更新专精或模组等级
-function updateSkillAndMod(char_index, attribute, newVal) {
-  let domId = char_index + attribute;
-  let oldVal = characterList.value[char_index][attribute];
-  let oldElite = characterList.value[char_index].elite;
-  // console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
-  if (newVal == oldVal) {
-    characterList.value[char_index][attribute] = -1;
-    setDomBackgroundColor(domId + oldVal, false);
-    return;
-  }
-
-  characterList.value[char_index][attribute] = newVal;
-
-  if (characterList.value[char_index].rarity > 3) {
-    characterList.value[char_index].elite = 2;
-    cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
-  }
-
-  cancelBackBeforeUpdate(domId, newVal, oldVal, true);
-  characterList.value[char_index].own = true;
-
-  // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
-
-  updateIndexMap.value[char_index] = char_index;
-  automaticUpload();
-}
-
-// 批量专精或模组
-function batchUpdatesSkillAndMod(attribute, newVal) {
-  for (let index in characterList.value) {
-    if (characterList.value[index].show) {
-      let domId = index + attribute;
-      let oldVal = characterList.value[index][attribute];
-      characterList.value[index][attribute] = newVal;
-      cancelBackBeforeUpdate(domId, newVal, oldVal, true);
-    }
-  }
-
-  automaticUpload();
-}
-
-//更新潜能
-function updatePotential(char_index, newVal) {
-  let domId = char_index + "potential";
-  let oldRank = characterList.value[char_index].potential;
-  // console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
-  if (newVal == oldRank) {
-    characterList.value[char_index].potential = -1;
-    setDomBackgroundColor(domId + oldRank, false);
-    return;
-  }
-
-  characterList.value[char_index].potential = newVal;
-  cancelBackBeforeUpdate(domId, newVal, oldRank);
-  characterList.value[char_index].own = true;
-
-  // console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
-
-  updateIndexMap.value[char_index] = char_index;
-  automaticUpload();
-}
-
-//最大等级
-function updateLevel(char_index, rarity) {
-  let level = 0;
-  let oldElite = characterList.value[char_index].elite;
-
-  characterList.value[char_index].own = true;
-  if (characterList.value[char_index].level > 0) {
-    characterList.value[char_index].level = level;
-    setDomBackgroundColor(char_index + "level", false);
-    return;
-  }
-
-  if (rarity == 6) {
-    level = 90;
-    characterList.value[char_index].elite = 2;
-    cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
-  }
-  if (rarity == 5) {
-    level = 80;
-    characterList.value[char_index].elite = 2;
-    cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
-  }
-  if (rarity == 4) {
-    level = 70;
-    characterList.value[char_index].elite = 2;
-    cancelBackBeforeUpdate(char_index + "elite", 2, oldElite);
-  }
-  if (rarity == 3) {
-    level = 55;
-    characterList.value[char_index].elite = 1;
-    cancelBackBeforeUpdate(char_index + "elite", 1, oldElite);
-  }
-  if (rarity < 3) {
-    level = 30;
-    characterList.value[char_index].elite = 0;
-    cancelBackBeforeUpdate(char_index + "elite", 0, oldElite);
-  }
-
-  if (level == 0) return;
-
-  characterList.value[char_index].level = level;
-  setDomBackgroundColor(char_index + "level", true);
-
-  // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
-
-  updateIndexMap.value[char_index] = char_index;
-  automaticUpload();
-}
-
-//选中标题
-function btnSetClass(flag) {
-  if (flag) return "btn_setup btn_setup_selected";
-  return "btn_setup";
-}
-
-//调用 setDomBackgroundColor 修改选中的新选项和旧选项的背景颜色
-function cancelBackBeforeUpdate(domIdHeader, rank, oldRank) {
-  setDomBackgroundColor(domIdHeader + oldRank, false);
-  setDomBackgroundColor(domIdHeader + rank, true);
-}
-
-function updateBackBeforecancel(domIdHeader, rank, oldRank) {
-  setDomBackgroundColor(domIdHeader + rank, true);
-  setDomBackgroundColor(domIdHeader + oldRank, false);
-}
-
-// 修改dom的背景颜色
-function setDomBackgroundColor(domId, selected) {
-  let dom = document.getElementById(domId);
-  if (dom == null) return;
-  if (selected) {
-    // console.log("添加背景色id", domId);
-    dom.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
-  } else {
-    // console.log("取消背景色id", domId);
-    dom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
-  }
-}
-
-let surveyTypeText = ref("标准问卷");
-let surveyType = ref("_basic");
-//简易卡片样式
-let simpleCard = ref(false);
-
-//标准问卷与完整问卷
-function changeSurveyType(type) {
-  if ("简易问卷" == surveyTypeText.value) {
-    surveyType.value = "_basic";
-    surveyTypeText.value = "标准问卷";
-    simpleCard.value = !simpleCard.value;
-    return;
-  }
-  if ("标准问卷" == surveyTypeText.value) {
-    surveyType.value = "";
-    surveyTypeText.value = "完整问卷";
-    return;
-  }
-
-  if ("完整问卷" == surveyTypeText.value) {
-    surveyType.value = "";
-    simpleCard.value = !simpleCard.value;
-    surveyTypeText.value = "简易问卷";
-    return;
-  }
-}
-
-function surveyTypeClass(classNameHeader) {
-  return classNameHeader + surveyType.value;
-}
-//
-function simpleCardClass() {
-  if (simpleCard.value) return "char_card char_card_simple";
-  return "char_card";
-}
 
 onMounted(() => {
   getSurveyCharacter();
