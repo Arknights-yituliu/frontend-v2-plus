@@ -64,7 +64,7 @@
       </div>
     </div>
 
-    <div class="switch_wrap" id="dom_switch_wrap">
+    <div class="switch_wrap" id="element_switch_wrap">
       <div class="switch_bar select">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
@@ -311,11 +311,11 @@ let exportExcelBtnText = ref("导出excel");
 function exportExcel() {
   exportExcelBtnText.value = "导出中···";
   const exportExcelUrl = http + "survey/character/export?token=" + globalUserData.value.token;
-  var dom = document.createElement("a");
-  dom.download = "form.xlsx";
-  dom.style.display = "none";
-  dom.href = exportExcelUrl;
-  dom.click();
+  var element = document.createElement("a");
+  element.download = "form.xlsx";
+  element.style.display = "none";
+  element.href = exportExcelUrl;
+  element.click();
   setTimeout(() => {
     exportExcelBtnText.value = "导出excel";
   }, 5000);
@@ -458,17 +458,17 @@ function batchUpdatesOwn(newVal) {
 
 //更新精英化等级
 function updateElite(char_index, newVal) {
-  let domId = char_index + "elite";
+  let elementId = char_index + "elite";
   let oldVal = characterList.value[char_index].elite;
   // console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldVal) {
     characterList.value[char_index].elite = -1;
-    updateOption(domId + oldVal, false);
+    updateOption(elementId + oldVal, false);
     return;
   }
 
   characterList.value[char_index].elite = newVal;
-  cancelAndUpdateOption(domId, newVal, oldVal, true);
+  cancelAndUpdateOption(elementId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
 
   updateIndexMap.value[char_index] = char_index;
@@ -488,10 +488,10 @@ function cancelSkillAndMod(char_index) {
 function batchUpdatesElite(newVal) {
   for (let index in characterList.value) {
     if (characterList.value[index].show) {
-      let domId = index + "elite";
+      let elementId = index + "elite";
       let oldVal = characterList.value[index].elite;
       characterList.value[index].elite = newVal;
-      cancelAndUpdateOption(domId, newVal, oldVal, true);
+      cancelAndUpdateOption(elementId, newVal, oldVal, true);
       updateIndexMap.value[index] = index;
     }
   }
@@ -499,13 +499,13 @@ function batchUpdatesElite(newVal) {
 
 //更新专精或模组等级
 function updateSkillAndMod(char_index, attribute, newVal) {
-  let domId = char_index + attribute;
+  let elementId = char_index + attribute;
   let oldVal = characterList.value[char_index][attribute];
   let oldElite = characterList.value[char_index].elite;
   // console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldVal) {
     characterList.value[char_index][attribute] = -1;
-    updateOption(domId + oldVal, false);
+    updateOption(elementId + oldVal, false);
     return;
   }
 
@@ -516,7 +516,7 @@ function updateSkillAndMod(char_index, attribute, newVal) {
     cancelAndUpdateOption(char_index + "elite", 2, oldElite);
   }
 
-  cancelAndUpdateOption(domId, newVal, oldVal, true);
+  cancelAndUpdateOption(elementId, newVal, oldVal, true);
   characterList.value[char_index].own = true;
 
   // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
@@ -547,28 +547,28 @@ function batchUpdatesSkillAndMod(attribute, newVal) {
       continue;
     }
 
-    let domId = index + attribute;
+    let elementId = index + attribute;
     let oldVal = characterList.value[index][attribute];
     characterList.value[index][attribute] = newVal;
 
-    cancelAndUpdateOption(domId, newVal, oldVal, true);
+    cancelAndUpdateOption(elementId, newVal, oldVal, true);
     updateIndexMap.value[index] = index;
   }
 }
 
 //更新潜能
 function updatePotential(char_index, newVal) {
-  let domId = char_index + "potential";
+  let elementId = char_index + "potential";
   let oldVal = characterList.value[char_index].potential;
   // console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   if (newVal == oldVal) {
     characterList.value[char_index].potential = -1;
-    updateOption(domId + oldVal, false);
+    updateOption(elementId + oldVal, false);
     return;
   }
 
   characterList.value[char_index].potential = newVal;
-  cancelAndUpdateOption(domId, newVal, oldVal);
+  cancelAndUpdateOption(elementId, newVal, oldVal);
   characterList.value[char_index].own = true;
 
   console.log("潜能:", JSON.stringify(characterList.value[char_index], null, 2));
@@ -633,26 +633,27 @@ function btnSetClass(flag) {
 }
 
 //先取消旧选项，更修改新选项的背景色
-function cancelAndUpdateOption(domIdHeader, rank, oldRank) {
-  updateOption(domIdHeader + oldRank, false);
-  updateOption(domIdHeader + rank, true);
+function cancelAndUpdateOption(elementIdHeader, rank, oldRank) {
+  updateOption(elementIdHeader + oldRank, false);
+  updateOption(elementIdHeader + rank, true);
 }
 
-function updateBackBeforecancel(domIdHeader, rank, oldRank) {
-  updateOption(domIdHeader + rank, true);
-  updateOption(domIdHeader + oldRank, false);
+function updateBackBeforecancel(elementIdHeader, rank, oldRank) {
+  updateOption(elementIdHeader + rank, true);
+  updateOption(elementIdHeader + oldRank, false);
 }
 
-// 修改选项的背景色
-function updateOption(domId, selected) {
-  let dom = document.getElementById(domId);
-  if (dom == null) return;
+// 修改选项的背景色   
+function updateOption(elementId, selected) {
+  // 干员数据是一个数组，每个选项的element的id为 索引+属性名，例如 第一个干员号角的3技能的id是 '0skill3'
+  let element = document.getElementById(elementId);
+  if (element == null) return;
   if (selected) {
-    // console.log("添加背景色id", domId);
-    dom.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
+    // console.log("添加背景色id", elementId);
+    element.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   } else {
-    // console.log("取消背景色id", domId);
-    dom.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
+    // console.log("取消背景色id", elementId);
+    element.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
   }
 }
 
@@ -662,7 +663,7 @@ let surveyType = ref("_basic");
 let simpleCard = ref(false);
 
 //标准问卷与完整问卷
-function changeSurveyType(type) {
+function changeSurveyType() {
   if ("简易问卷" == surveyTypeText.value) {
     surveyType.value = "_basic";
     surveyTypeText.value = "标准问卷";
@@ -701,10 +702,10 @@ function setBarCollapse() {
     for (let e of elements) {
       height += e.offsetHeight;
     }
-    document.getElementById("dom_switch_wrap").style.height = height + "px";
+    document.getElementById("element_switch_wrap").style.height = height + "px";
     console.log("展开高度", height + "px");
     setTimeout(() => {
-      document.getElementById("dom_switch_wrap").style.height = "auto";
+      document.getElementById("element_switch_wrap").style.height = "auto";
     }, 500);
   } else {
     let elements = document.getElementsByClassName("switch_bar select");
@@ -712,10 +713,10 @@ function setBarCollapse() {
     for (let e of elements) {
       height += e.offsetHeight;
     }
-    document.getElementById("dom_switch_wrap").style.height = height + "px";
+    document.getElementById("element_switch_wrap").style.height = height + "px";
 
     setTimeout(() => {
-      document.getElementById("dom_switch_wrap").style.height = 0 + "px";
+      document.getElementById("element_switch_wrap").style.height = 0 + "px";
     }, 100);
   }
 }
