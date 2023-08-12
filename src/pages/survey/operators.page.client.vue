@@ -291,6 +291,10 @@ function getSurveyCharacter() {
           characterList.value[i].modY = list[j].modY;
           characterList.value[i].own = list[j].own;
 
+          if(characterList.value[i].level>-1){
+            updateOption(i + "level", true);
+          }
+
           updateOption(i + "elite" + list[j].elite, true);
           updateOption(i + "potential" + list[j].potential, true);
           updateOption(i + "skill1" + list[j].skill1, true);
