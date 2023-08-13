@@ -23,7 +23,9 @@ const navi_data = [
       </div>
     </div>
   </div>
-
+  <button class="mdui-btn mdui-btn-raised">Button</button>
+  <button class="mdui-btn mdui-ripple">button</button>
+  <button class="mdui-btn mdui-color-theme-accent mdui-ripple">button</button>
   <div class="theme_light">
     <div class="light_card demo_card">
       <picture class="riic_icon">
