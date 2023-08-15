@@ -50,9 +50,9 @@ function submit() {
 <template>
   <div class="mdui-container mdui-typo">
     <h2>Konano的雪雉计算器</h2>
-    <p>作者：<a href="https://github.com/Konano">Konano</a></p>
-    <p>代码仓库：<a href="https://github.com/Konano/snowsant-calculator" target="_blank">https://github.com/Konano/snowsant-calculator</a></p>
-    <p>下载：Windows平台 <a href="https://backend.yituliu.site/snowsant/Konano的雪雉计算器.exe">Konano的雪雉计算器.exe</a>（4.4 MB）</p>
+    <button class="mdui-btn mdui-btn-raised"><a href="https://github.com/Konano"><p>作者：Konano</p></a></button>
+    <button class="mdui-btn mdui-btn-raised"><a href="https://github.com/Konano/snowsant-calculator" target="_blank"><p>代码仓库</p></a></button>
+    <button class="mdui-btn mdui-btn-raised"><a href="https://backend.yituliu.site/snowsant/Konano的雪雉计算器.exe"><p>下载(windows)(4.4 MB) </p></a></button>
     <hr />
     <p>运算对网站服务器性能影响较大，仅供{{ P_LIMIT }}名用户同时使用。当前用户数量：{{ p_count }}</p>
     <p><em>请在下方的输入框中输入，按回车确认。</em></p>
@@ -68,4 +68,8 @@ function submit() {
 .mdui-container {
   min-height: 100vh;
 }
+.mdui-btn{
+  margin-right: 8px;
+}
+
 </style>
