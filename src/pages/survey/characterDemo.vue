@@ -1,10 +1,27 @@
 <template>
-  <div class="btn_setup" @click="popupVisible()">
-    <div>填写说明</div>
-    <div class="btn_setup_tips">功能介绍<br />使用说明</div>
-  </div>
+  <button class="mdui-btn mdui-btn-raised" @click="popupVisible()">
+    <p>填写说明</p>
+    <!-- <div class="btn_setup_tips">功能介绍<br />使用说明</div> -->
+  </button>
   <c-popup :visible="firstpopup" v-model:visible="firstpopup" @click="isFirstPopupCache()" :width="'600px'">
     <!-- <div class="fill_course_title">填写流程说明</div> -->
+
+    <div class="fill_course_wrap">
+      填写完毕记得点击保存
+    </div>
+
+    <div class="fill_course_wrap">
+      极简模式：是否持有
+      标准模式：是否持有、精英化程度、专精、模组
+      完整模式：是否持有、精英化程度、专精、模组、潜能
+    </div>
+
+    <div class="fill_course_wrap">
+      批量操作：先筛选，再应用于全部筛选出的干员
+    </div>
+    <div class="fill_course_wrap">
+      数据导入/导出：想想说明怎么写
+    </div>
 
     <div class="fill_course_wrap">
       <div class="char_forms">

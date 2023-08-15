@@ -1,12 +1,18 @@
 <template>
   <div class="survey_character_page">
-    <!-- 设置区域 -->
+    <!-- 常驻条 -->
+    <div class="setup_top">
+      <characterDemo></characterDemo>
+      <button class="mdui-btn mdui-btn-raised"><p>干员持有率：114 / 514</p></button>
+      <button class="mdui-btn mdui-btn-raised" @click="upload()"><p>保存数据</p></button>
+        上次保存时间{{ uploadMessage.updateTime }}
+    </div>
 
+    <!-- 设置区域 -->
     <div class="setup_wrap">
       <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
-        <characterDemo></characterDemo>
-
+        
         <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">
           筛选/批量操作
           <div class="btn_setup_tips">筛选，然后批量操作<br />高效填写</div>
@@ -21,10 +27,7 @@
           模式切换
           <div class="btn_setup_tips">当前模式：标准统计<br />仅持有/标准统计/高级统计</div>
         </div> -->
-        <div class="btn_setup">
-          统计数据
-          <div class="btn_setup_tips">干员持有率：114 / 514<br />点击查看更多</div>
-        </div>
+
         <div class="btn_setup" @click="changeSurveyType()">
           问卷类型切换
           <div class="btn_setup_tips">当前问卷：{{ surveyTypeText }}<br />简易/标准/完整问卷</div>
@@ -34,7 +37,7 @@
           <div class="btn_setup_tips">反馈、建议<br /></div>
         </div>
 
-        <div class="btn_setup">
+        <!-- <div class="btn_setup">
           最后一次自动保存于
           <div class="btn_setup_tips btn_setup_tips_wran">
             {{ uploadMessage.updateTime }}<br />
@@ -45,7 +48,7 @@
         <div class="btn_setup" @click="upload()">
           手动上传数据
           <div class="btn_setup_tips">建议退出网页前手动保存一下</div>
-        </div>
+        </div> -->
 
         <!--    以下噶掉
        <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
@@ -64,6 +67,7 @@
       </div>
     </div>
 
+    <!-- 筛选模块 -->
     <div class="switch_wrap" id="element_switch_wrap">
       <div class="switch_bar select">
         <div class="switch_title">职业</div>
@@ -124,6 +128,7 @@
       </div>
     </div>
 
+    <!-- 导入导出模块 -->
     <div class="switch_wrap" style="height: auto">
       <div class="switch_bar">
         <div class="switch_title">导入导出</div>
@@ -244,7 +249,6 @@
       除非另有声明，网站其他内容采用
       <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享</a>授权。
     </div>
-    <div></div>
   </div>
 </template>
 
