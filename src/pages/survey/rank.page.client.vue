@@ -76,10 +76,12 @@
 <script setup>
 import "@/assets/css/survey_rank.css";
 
-import { rankingListinit, rarityDict } from "./baseData";
+import { rankingListinit } from "./commonUtils";
 import { onMounted, ref, watch } from "vue";
 
 import surveyApi from "@/api/survey";
+
+let rarityDict = [1, 2, 3, 4, 5, 6];
 
 let rankingList = ref(rankingListinit());
 let surveyType = ref("练度");

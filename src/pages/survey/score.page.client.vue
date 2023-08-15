@@ -151,11 +151,14 @@
 
 <script setup>
 import { h, onMounted, ref } from "vue";
-import { scoreListInit, professionDict, rarityDict, yearDict } from "./baseData";
+import { scoreListInit, professionDict, yearDict } from "./commonUtils";
 import surveyApi from "@/api/survey";
 import { globalUserData } from "./userService";
 import "@/assets/css/survey_score.css";
 import { cMessage } from "@/element/message.js";
+
+
+let rarityDict = [1, 2, 3, 4, 5, 6];
 
 function uploadScoreForm() {
   surveyApi.uploadScore(scoreList.value, globalUserData.value.token).then((response) => {
