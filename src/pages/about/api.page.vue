@@ -62,7 +62,7 @@
             <td>响应状态值</td>
           </tr>
           <tr>
-            <td>mes</td>
+            <td>msg</td>
             <td>string</td>
             <td>响应信息</td>
           </tr>
@@ -201,13 +201,13 @@ function requestURL(index) {
 
 let apiResponseDemo = {
   code: 200,
-  mes: "调用成功",
+  msg: "调用成功",
   data: {},
 };
 
 let apiResponse = ref({
   code: 200,
-  mes: "调用成功",
+  msg: "调用成功",
   data: {},
 });
 

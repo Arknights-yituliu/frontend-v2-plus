@@ -119,13 +119,13 @@ export default {
     };
   },
   created() {
-    this.maaStatistical1();
+    this.getRecruitResult();
   },
   methods: {
     // 设置饼图
-    maaStatistical1() {
-      console.log("api方法");
-      toolApi.maaStatistical().then((response) => {
+    getRecruitResult() {
+     
+      toolApi.getRecruitResult().then((response) => {
         this.maaData = response.data;
         if (this.maaData.maaTagsDataCount == null) this.maaData.maaTagsDataCount = this.maaData.maaRecruitDataCount;
         this.pieData[0].value = this.maaData.topOperator;
