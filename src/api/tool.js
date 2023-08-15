@@ -10,9 +10,9 @@ export default {
     });
   },
 
-  maaStatistical() {
+  getRecruitResult() {
     return request({
-      url: `${api_name}/recruit/statistical`,
+      url: `/maa/recruit/result`,
       method: "get",
     });
   },
