@@ -5,20 +5,20 @@
       <characterDemo></characterDemo>
       <button class="mdui-btn mdui-btn-raised"><p>干员持有率：114 / 514</p></button>
       <button class="mdui-btn mdui-btn-raised" @click="upload()"><p>保存数据</p></button>
-        上次保存时间{{ uploadMessage.updateTime }}
+      上次保存时间{{ uploadMessage.updateTime }}
     </div>
 
     <!-- 设置区域 -->
     <div class="setup_wrap">
       <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
-        
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">
+
+        <div class="btn_setup" @click="barCollapse('switch_bar select', 'element_switch_wrap')">
           筛选/批量操作
           <div class="btn_setup_tips">筛选，然后批量操作<br />高效填写</div>
         </div>
 
-        <div class="btn_setup">
+        <div class="btn_setup" @click="barCollapse('switch_bar upload', 'element_upload_wrap')">
           数据导入/导出
           <div class="btn_setup_tips">导出到Excel<br />或从Excel/MAA导入数据</div>
         </div>
@@ -128,9 +128,9 @@
       </div>
     </div>
 
-    <!-- 导入导出模块 -->
-    <div class="switch_wrap" style="height: auto">
-      <div class="switch_bar">
+     <!-- 导入导出模块 -->
+    <div class="switch_wrap" id="element_upload_wrap">
+      <div class="switch_bar upload">
         <div class="switch_title">导入导出</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="exportExcel()">导出到Excel</div>
@@ -154,8 +154,7 @@
           <div :class="surveyTypeClass('card_option_top_left')">
             <div class="avatar_at_top">
               <div class="image_avatar" @click="updateOwn(char_index, !char.own, true)">
-                 
-                <div  :class="getSprite(char.charId)"></div>
+                <div :class="getSprite(char.charId)"></div>
               </div>
               <div class="char_name">{{ char.name }}</div>
             </div>
@@ -255,7 +254,7 @@
 <script setup>
 import { cMessage } from "@/element/message.js";
 import { globalUserData } from "./userService"; //从用户服务js获取用户信息
-import { characterListInit, professionDict, yearDict } from "./baseData"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import { characterListInit, professionDict, yearDict, barCollapse } from "./commonUtils"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import characterDemo from "@/pages/survey/characterDemo.vue";
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
@@ -285,7 +284,7 @@ function getSurveyCharacter() {
       // characterList.value[i].own =false;
       for (var j = 0; j < list.length; j++) {
         if (list[j].charId == characterList.value[i].charId) {
-          if(!list[j].own) continue;
+          if (!list[j].own) continue;
           characterList.value[i].elite = list[j].elite;
 
           characterList.value[i].level = list[j].level;
@@ -297,7 +296,7 @@ function getSurveyCharacter() {
           characterList.value[i].modY = list[j].modY;
           characterList.value[i].own = list[j].own;
 
-          if(characterList.value[i].level>-1){
+          if (characterList.value[i].level > -1) {
             updateOption(i + "level", true);
           }
 
@@ -596,15 +595,15 @@ function updatePotential(char_index, newVal) {
 
 //最大等级
 function updateLevel(char_index, rarity) {
- //记录更新过信息的干员的索引
+  //记录更新过信息的干员的索引
   updateIndexMap.value[char_index] = char_index;
-  
+
   let level = -1;
   //旧精英等级
   let oldElite = characterList.value[char_index].elite;
 
   characterList.value[char_index].own = true;
-   //如果是满级则取消满级，并将选项背景色去除
+  //如果是满级则取消满级，并将选项背景色去除
   if (characterList.value[char_index].level > 0) {
     characterList.value[char_index].level = level;
     updateOption(char_index + "level", false);
@@ -639,7 +638,7 @@ function updateLevel(char_index, rarity) {
   }
 
   if (level == -1) return;
-  
+
   characterList.value[char_index].level = level;
 
   //更新等级选项背景色
@@ -647,7 +646,6 @@ function updateLevel(char_index, rarity) {
 
   // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
 
-  
   automaticUpload();
 }
 
@@ -672,7 +670,7 @@ function updateBackBeforecancel(elementIdHeader, rank, oldRank) {
 // 修改选项的背景色
 function updateOption(elementId, selected) {
   // 干员数据是一个数组，每个选项的element的id为 索引+属性名，例如 第一个干员号角的3技能的id是 '0skill3'
-  console.log('修改的元素id',elementId)
+  console.log("修改的元素id", elementId);
   let element = document.getElementById(elementId);
   if (element == null) return;
   if (selected) {
@@ -720,36 +718,9 @@ function simpleCardClass() {
   return "char_card";
 }
 
-//控制筛选栏的展开
-function setBarCollapse() {
-  filterCollapse.value = !filterCollapse.value;
-  if (filterCollapse.value) {
-    let elements = document.getElementsByClassName("switch_bar select");
-    let height = 0;
-    for (let e of elements) {
-      height += e.offsetHeight;
-    }
-    document.getElementById("element_switch_wrap").style.height = height + "px";
-    console.log("展开高度", height + "px");
-    setTimeout(() => {
-      document.getElementById("element_switch_wrap").style.height = "auto";
-    }, 500);
-  } else {
-    let elements = document.getElementsByClassName("switch_bar select");
-    let height = 0;
-    for (let e of elements) {
-      height += e.offsetHeight;
-    }
-    document.getElementById("element_switch_wrap").style.height = height + "px";
 
-    setTimeout(() => {
-      document.getElementById("element_switch_wrap").style.height = 0 + "px";
-    }, 100);
-  }
-}
 
 let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [] });
-let filterCollapse = ref(false);
 
 //判断按钮是否选中
 function selectedBtn(attribute, rule) {

@@ -108,7 +108,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import jsCookie from "js-cookie";
-import { professionDict, rarityDict, yearDict } from "./baseData";
+import { professionDict, yearDict } from "./commonUtils";
 
 function getSprite(id, type) {
   if ("mod" == type) return "bg-" + id + " sprite_mod";
