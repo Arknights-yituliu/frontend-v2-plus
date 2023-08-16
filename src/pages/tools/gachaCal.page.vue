@@ -18,7 +18,7 @@
 
               <el-radio-group size="small" style="width: 90%; margin: 6px 5%" v-model="timeSelector" @change="checkEndDate(timeSelector)">
                 <el-radio-button label="感谢庆典(11.15)" style="width: 33%"></el-radio-button>
-                <el-radio-button label="新年卡池" style="width: 33%" type="primary"></el-radio-button>
+                <el-radio-button label="新年卡池" type="primary" style="width: 33%" disabled></el-radio-button>
                 <el-radio-button label="敬请期待" type="primary" style="width: 33%" disabled></el-radio-button>
                 <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
               </el-radio-group>
@@ -1016,12 +1016,12 @@ export default {
       checkBox1: ["0"],
       checkBox: ["1", "2", "5", "6"], //折叠栏绑定数组
       // checkBox: ["1","7"],
-      rewardType: "联动限定", //奖励的类型
+      rewardType: "周年限定", //奖励的类型
       startTime: "", //开始时间
       endTime: "2023/11/15 04:00:00", //结束时间
       start_TimeStamp: "", //开始时间戳
       end_TimeStamp: "", //结束时间戳
-      timeSelector: "夏活(8.15)", //活动时间节点选择框的绑定对象
+      timeSelector: "感谢庆典(11.15)", //活动时间节点选择框的绑定对象
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
       // gacha_storePacks: gacha_storePacksJson.data,
