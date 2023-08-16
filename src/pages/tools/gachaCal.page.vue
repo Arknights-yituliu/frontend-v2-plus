@@ -17,9 +17,9 @@
               <!-- 如果有4个选项则修改为 style="width:98%;margin:0 1%;"，子项宽度25% -->
 
               <el-radio-group size="small" style="width: 90%; margin: 6px 5%" v-model="timeSelector" @change="checkEndDate(timeSelector)">
-                <el-radio-button label="夏活(8.15)" style="width: 33%"></el-radio-button>
                 <el-radio-button label="感谢庆典(11.15)" style="width: 33%"></el-radio-button>
                 <el-radio-button label="新年卡池" type="primary" style="width: 33%" disabled></el-radio-button>
+                <el-radio-button label="敬请期待" type="primary" style="width: 33%" disabled></el-radio-button>
                 <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
               </el-radio-group>
               <!-- <el-divider></el-divider> -->
@@ -1016,12 +1016,12 @@ export default {
       checkBox1: ["0"],
       checkBox: ["1", "2", "5", "6"], //折叠栏绑定数组
       // checkBox: ["1","7"],
-      rewardType: "联动限定", //奖励的类型
+      rewardType: "周年限定", //奖励的类型
       startTime: "", //开始时间
-      endTime: "2023/08/15 04:00:00", //结束时间
+      endTime: "2023/11/15 04:00:00", //结束时间
       start_TimeStamp: "", //开始时间戳
       end_TimeStamp: "", //结束时间戳
-      timeSelector: "夏活(8.15)", //活动时间节点选择框的绑定对象
+      timeSelector: "感谢庆典(11.15)", //活动时间节点选择框的绑定对象
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
       // gacha_storePacks: gacha_storePacksJson.data,
@@ -1243,14 +1243,14 @@ export default {
     // 选择攒计算的时间节点
     checkEndDate() {
       // this.cookieInit=true;
-      if (this.timeSelector === "夏活(8.15)") {
-        this.endTime = "2023/08/15 04:00:00";
-        this.rewardType = "夏活限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
+      if (this.timeSelector === "感谢庆典(11.15)") {
+        this.endTime = "2023/11/15 04:00:00";
+        this.rewardType = "周年限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.poolCountDownFlag_permit = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
         this.poolCountDownFlag_orundum = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-      } else if (this.timeSelector === "感谢庆典(11.15)") {
-        this.endTime = "2023/11/15 04:00:00";
-        this.rewardType = "周年限定";
+      } else if (this.timeSelector === "1") {
+        this.endTime = "1";
+        this.rewardType = "1";
         this.poolCountDownFlag_permit = false;
         this.poolCountDownFlag_orundum = true;
       }
