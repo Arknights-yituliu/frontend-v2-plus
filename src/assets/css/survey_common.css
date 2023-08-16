@@ -10,12 +10,13 @@
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
   border-radius: 2px;
   margin-bottom: 6px;
+  padding: 4px;
 }
 .setup_top {
   position: sticky;
   top:0px;
   z-index: 114514;
-  height: 48px;
+  /* height: 48px; */
   max-width: 95%;
   margin: auto;
   background: #f7f9fa;
@@ -24,19 +25,33 @@
   background-color: rgba(255, 255, 255, 1);
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
   margin-bottom: 6px;
+  padding: 4px;
 }
 
+.survey_button{
+  margin:4px;
+  border-radius: 4px;
+  background-color: #eeeeeeee;
+}
+
+#updateTime{
+  padding: 0px;
+  display: inline-block;
+  font-size: 12px;
+  position: relative;
+  top: 6px;
+}
 .control_panel {
   display: flex;
   flex-wrap: wrap;
-  padding: 8px;
+  /* padding: 4px; */
 }
 
 .btn_setup {
-  background-color: #eeeeee;
-  margin: 6px;
+  background-color: #eeeeeeee;
+  margin: 4px;
   width: 180px;
-  height: 72px;
+  height: 48px;
   padding: 4px;
   line-height: 28px;
   text-align: center;
@@ -45,7 +60,7 @@
   cursor: pointer;
   border-radius: 4px;
   font-family: Arial, Helvetica, sans-serif;
-  box-shadow: 2px 2px 4px #cccccc;
+  /* box-shadow: 2px 2px 4px #cccccc; */
 }
 
 .btn_setup_selected {
@@ -69,7 +84,7 @@
 
 .switch_wrap {
   max-width: 95%;
-  margin: 8px auto;
+  margin: 4px auto;
   background: #f7f9fa;
   border-radius: 6px;
   transition: all 0.3s;
@@ -104,7 +119,7 @@
   cursor: pointer;
   border-radius: 4px;
   font-family: Arial, Helvetica, sans-serif;
-  box-shadow: 2px 2px 4px #cccccc;
+  /* box-shadow: 2px 2px 4px #cccccc; */
 }
 
 .switch_title {
