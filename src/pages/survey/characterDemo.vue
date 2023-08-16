@@ -1,6 +1,6 @@
 <template>
-  <button class="mdui-btn mdui-btn-raised" @click="popupVisible()">
-    <p>填写说明</p>
+  <button class="mdui-btn survey_button" @click="popupVisible()">
+    填写说明
     <!-- <div class="btn_setup_tips">功能介绍<br />使用说明</div> -->
   </button>
   <c-popup :visible="firstpopup" v-model:visible="firstpopup" @click="isFirstPopupCache()" :width="'600px'">
