@@ -1,108 +1,38 @@
 <template>
-  <button class="mdui-btn mdui-btn-raised" @click="popupVisible()">
-    <p>填写说明</p>
-    <!-- <div class="btn_setup_tips">功能介绍<br />使用说明</div> -->
-  </button>
   <c-popup :visible="firstpopup" v-model:visible="firstpopup" @click="isFirstPopupCache()" :width="'600px'">
-    <!-- <div class="fill_course_title">填写流程说明</div> -->
-
-    <div class="fill_course_wrap">
-      填写完毕记得点击保存
+    <!-- <div class="intro_title">填写流程说明</div> -->
+    <div class="intro_wrap">
+      <div class="intro_title">填写方法</div>
+      默认干员未拥有,卡片显示为灰色(除头像外),点击头像设置为拥有此干员
+      <br>点击选择精英化、专精、模组等级，再次点击则可以取消
+    </div>
+    
+    <div class="intro_wrap">
+      <div class="intro_title">保存机制</div>
+      填写的时候可以多点点保存，如不慎误操作，可以刷新页面从服务器上重新拉取数据
     </div>
 
-    <div class="fill_course_wrap">
-      极简模式：是否持有
-      标准模式：是否持有、精英化程度、专精、模组
-      完整模式：是否持有、精英化程度、专精、模组、潜能
+    <div class="intro_wrap">
+      <div class="intro_title">三种填写模式</div>
+      极简模式：是否持有<br>
+      标准模式：是否持有、精英化程度、专精、模组<br>
+      完整模式：是否持有、精英化程度、专精、模组、潜能<br>
+      建议填的详细一些，以后会基于这些数据推出新功能
     </div>
 
-    <div class="fill_course_wrap">
-      批量操作：先筛选，再应用于全部筛选出的干员
+    <div class="intro_wrap">
+      <div class="intro_title">批量操作</div>
+      批量操作：先筛选，再应用于全部筛选出的干员<br>
+      除“全部设为已拥有”和“全部设为未拥有”外，都仅对已拥有的干员生效
     </div>
-    <div class="fill_course_wrap">
-      数据导入/导出：想想说明怎么写
+
+    <div class="intro_wrap">
+      <div class="intro_title">导入和导出</div>
+      数据导入/导出：目前支持Excel的导出，导入功能还在开发中
     </div>
 
-    <div class="fill_course_wrap">
-      <div class="char_forms">
-        <div :class="characterOwnClass()" v-for="(char, char_index) in characterList" :key="char_index">
-          <div class="card_option_left">
-            <div class="card_option_top_left">
-              <div>
-                <div class="image_avatar">
-                  <div @click="char.own = !char.own" :class="getSprite(char.charId)"></div>
-                </div>
-                <div :class="char.own ? 'char_name' : 'char_name notown'">{{ char.name }}</div>
-              </div>
-              <div :class="potentialWrapClass(char.own)">
-                <div :class="potentialClass(rank, char.potential)" v-for="rank in ranks.slice(1, 7)" @click="updateDataSwitch(char_index, 'potential', rank)">
-                  <div :class="getSprite('potential' + rank, 'potential')"></div>
-                </div>
-              </div>
-            </div>
-            <!--  -->
-            <div :class="eliteWrapClass(char.own)">
-              <div v-for="rank in ranks.slice(0, 3)" :class="eliteClass(char.elite, rank)" @click="updateDataSwitch(char_index, 'elite', rank)">
-                <div :class="getSprite('elite' + rank, 'elite')"></div>
-              </div>
-            </div>
-          </div>
-
-          <div :class="cardOptionRightClass(char.own)">
-            <div v-for="(skill, skill_index) in char.skill" :key="skill_index" class="skill_wrap">
-              <div class="image_skill">
-                <div :class="getSprite(skill.iconId, 'icon')"></div>
-              </div>
-              <div
-                v-for="rank in ranks.slice(1, 4)"
-                :class="skillAndModClass(char['skill' + (skill_index + 1)], rank)"
-                @click="updateDataSwitch(char_index, 'skill' + (skill_index + 1), rank)"
-              >
-                <div :class="getSprite('skill' + rank, 'skill')"></div>
-              </div>
-            </div>
-
-            <div class="skill_wrap">
-              <div class="image_mod">{{ "模组X" }}</div>
-              <div
-                v-for="rank in ranks.slice(1, 4)"
-                :class="skillAndModClass(char.modX, rank)"
-                @click="updateDataSwitch(char_index, 'modX', rank)"
-                v-show="char.modX > -1"
-              >
-                <div :class="getSprite('mod' + rank, 'mod')"></div>
-              </div>
-            </div>
-
-            <div class="skill_wrap">
-              <div class="image_mod">{{ "模组Y" }}</div>
-
-              <div
-                v-for="rank in ranks.slice(1, 4)"
-                :class="skillAndModClass(char.modY, rank)"
-                @click="updateDataSwitch(char_index, 'modY', rank)"
-                v-show="char.modY > -1"
-              >
-                <div :class="getSprite('mod' + rank, 'mod')"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="fill_course_tip_wrap">
-      <p>默认干员未拥有,卡片显示为灰色(除头像外),点击头像设置为拥有此干员,干员名字和其他区域会恢复颜色</p>
-      <div style="display: flex">
-        <p>点击</p>
-        <div class="image_elite"><div :class="getSprite('elite' + 1, 'elite')"></div></div>
-        <div class="image_rank"><div :class="getSprite('skill' + 1, 'skill')"></div></div>
-        <div class="image_mod" style="margin: 10px"><div :class="getSprite('mod' + 1, 'mod')"></div></div>
-        <p>选择精英化、专精、模组等级，</p>
-      </div>
-      <p>点击图片后会设为图片上显示的登记,再次点击则可以取消</p>
-      <!-- <div class="fill_course_tip">点击干员头像或按钮来填写拥有此干员，默认拥有</div> -->
-    </div>
   </c-popup>
+  <button class="mdui-btn survey_button" @click="popupVisible()">填写说明</button>
 </template>
 
 <script setup>

@@ -3,9 +3,9 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <characterDemo></characterDemo>
-      <button class="mdui-btn mdui-btn-raised"><p>干员持有率：114 / 514</p></button>
-      <button class="mdui-btn mdui-btn-raised" @click="upload()"><p>保存数据</p></button>
-      上次保存时间{{ uploadMessage.updateTime }}
+      <button class="mdui-btn survey_button">干员持有率：114 / 514</button>
+      <button class="mdui-btn survey_button" @click="upload()">保存数据</button>
+      <div id="updateTime">上次保存时间<br>{{ uploadMessage.updateTime }}</div>
     </div>
 
     <!-- 设置区域 -->
@@ -15,12 +15,12 @@
 
         <div class="btn_setup" @click="barCollapse('switch_bar select', 'element_switch_wrap')">
           筛选/批量操作
-          <div class="btn_setup_tips">筛选，然后批量操作<br />高效填写</div>
+          <div class="btn_setup_tips">可筛选后批量进行填写</div>
         </div>
 
         <div class="btn_setup" @click="barCollapse('switch_bar upload', 'element_upload_wrap')">
           数据导入/导出
-          <div class="btn_setup_tips">导出到Excel<br />或从Excel/MAA导入数据</div>
+          <div class="btn_setup_tips">导入/导出json/Excel等</div>
         </div>
 
         <!-- <div class="btn_setup">
@@ -30,7 +30,7 @@
 
         <div class="btn_setup" @click="changeSurveyType()">
           问卷类型切换
-          <div class="btn_setup_tips">当前问卷：{{ surveyTypeText }}<br />简易/标准/完整问卷</div>
+          <div class="btn_setup_tips">当前问卷：{{ surveyTypeText }}</div>
         </div>
         <div class="btn_setup">
           开发信息
@@ -114,9 +114,11 @@
       </div>
 
       <div class="switch_bar select">
-        <div class="switch_title">批量操作</div>
+        <div class="switch_title">批量操作
+          <!-- <br><div style="font-size: 12px;">仅对被筛选的干员生效</div> -->
+        </div>
         <div class="switch_btns_wrap">
-          <div class="btn_switch" @click="batchUpdatesOwn(true)">全部拥有</div>
+          <div class="btn_switch" @click="batchUpdatesOwn(true)">全部设为已拥有</div>
           <div class="btn_switch" @click="batchUpdatesOwn(false)">全部设为未拥有</div>
           <div class="btn_switch" @click="batchUpdatesElite(2)">全部设为精二</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能专三</div>
