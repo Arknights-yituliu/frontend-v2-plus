@@ -114,7 +114,9 @@
       </div>
 
       <div class="switch_bar select">
-        <div class="switch_title">批量操作<br><div style="font-size: 12px;">仅对被筛选的干员生效</div></div>
+        <div class="switch_title">批量操作
+          <!-- <br><div style="font-size: 12px;">仅对被筛选的干员生效</div> -->
+        </div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="batchUpdatesOwn(true)">全部设为已拥有</div>
           <div class="btn_switch" @click="batchUpdatesOwn(false)">全部设为未拥有</div>
