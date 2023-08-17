@@ -66,12 +66,20 @@
   display: flex;
 }
 
+
+.avatar_at_top {
+  position: relative;
+  z-index: 20;
+  margin-right: 12px;
+
+}
+
 .image_avatar {
   height: 100px;
   width: 100px;
   border-radius: 0px;
   overflow: hidden;
-  margin-right: 10px;
+
   cursor: pointer;
   box-shadow: 2px 2px 8px rgba(172, 172, 172, 0.3);
   position: absolute;
@@ -89,10 +97,6 @@
   /* background-color: rgba(0, 0, 0, 0.2); */
 }
 
-.avatar_at_top {
-  position: relative;
-  z-index: 20;
-}
 
 .card-overlay {
   position: absolute;
@@ -161,7 +165,7 @@
 
 .elite_wrap {
   display: flex;
-  margin-top: 10px;
+  margin-top: 16px;
 }
 
 .image_elite {
