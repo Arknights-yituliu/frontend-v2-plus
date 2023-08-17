@@ -102,14 +102,28 @@
           <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">模组已实装</div>
           <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">模组未实装</div>
           <div :class="selectedBtn('itemObtainApproach', 0)" id="other5" @click="addFilterRule('itemObtainApproach', 0)">赠送干员</div>
+          <div :class="selectedBtn('itemObtainApproach', 0)" id="other5" @click="addFilterRule('itemObtainApproach', 0)">限定干员</div>
+        </div>
+      </div>
+
+      <div class="switch_bar select">
+        <div class="switch_title">练度</div>
+        <div class="switch_btns_wrap">
+          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">无专三</div>
+          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">一个专三</div>
+          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">两个专三</div>
+          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">三个专三</div>
+          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">未开模组</div>
+          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">已开模组</div>
         </div>
       </div>
 
       <div class="switch_bar select">
         <div class="switch_title">排序</div>
         <div class="switch_btns_wrap">
-          <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>
-          <div class="btn_switch" @click="sortCharacterList('date')">实装顺序</div>
+          <div class="btn_switch">按职业</div>
+          <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
+          <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
         </div>
       </div>
 
@@ -121,6 +135,8 @@
           <div class="btn_switch" @click="batchUpdatesOwn(true)">全部设为已拥有</div>
           <div class="btn_switch" @click="batchUpdatesOwn(false)">全部设为未拥有</div>
           <div class="btn_switch" @click="batchUpdatesElite(2)">全部设为精二</div>
+          <div class="btn_switch" >全部设为满级</div>
+          <div class="btn_switch" >全部设为满潜能</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能专三</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能专三</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能专三</div>
@@ -147,6 +163,25 @@
         </div>
       </div>
     </div>
+
+    <!-- 统计模块 -->
+    <div class="switch_wrap" id="element_stats_wrap">
+      <div class="switch_bar upload">
+        <div class="switch_title">导入导出</div>
+        <div class="switch_btns_wrap">
+          <div class="btn_switch" @click="exportExcel()">导出到Excel</div>
+          <div class="btn_switch">
+            <div class="input_upload_wrap">
+              选择文件
+              <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
+            </div>
+          </div>
+          <div class="btn_switch" @click="uploadByExcel()">上传文件</div>
+          <div class="upload_file_name">文件名：{{ uploadFileName }}</div>
+        </div>
+      </div>
+    </div>
+
 
     <!-- 干员组 -->
     <div class="char_forms">
