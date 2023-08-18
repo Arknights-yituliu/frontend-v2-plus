@@ -102,7 +102,16 @@
           <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">模组已实装</div>
           <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">模组未实装</div>
           <div :class="selectedBtn('itemObtainApproach', 0)" id="other5" @click="addFilterRule('itemObtainApproach', 0)">赠送干员</div>
-          <div :class="selectedBtn('itemObtainApproach', 0)" id="other5" @click="addFilterRule('itemObtainApproach', 0)">限定干员</div>
+          <div :class="selectedBtn('itemObtainApproach', 0)" >限定干员</div>
+        </div>
+      </div>
+
+      <div class="switch_bar select">
+        <div class="switch_title">排序</div>
+        <div class="switch_btns_wrap">
+          <div class="btn_switch">按职业</div>
+          <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
+          <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
         </div>
       </div>
 
@@ -118,32 +127,26 @@
         </div>
       </div>
 
-      <div class="switch_bar select">
-        <div class="switch_title">排序</div>
-        <div class="switch_btns_wrap">
-          <div class="btn_switch">按职业</div>
-          <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
-          <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
-        </div>
-      </div>
 
       <div class="mdui-divider"></div>
 
       <div class="switch_bar select">
         <div class="switch_title">批量操作
-          <!-- <br><div style="font-size: 12px;">仅对被筛选的干员生效</div> -->
+          <br><div style="font-size: 12px;font-style: italic;">对所有被筛选出的干员生效</div>
         </div>
         <div class="switch_btns_wrap">
-          <div class="btn_switch" @click="batchUpdatesOwn(true)">全部设为已拥有</div>
-          <div class="btn_switch" @click="batchUpdatesOwn(false)">全部设为未拥有</div>
-          <div class="btn_switch" @click="batchUpdatesElite(2)">全部设为精二</div>
-          <div class="btn_switch" >全部设为满级</div>
-          <div class="btn_switch" >全部设为满潜能</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能专三</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能专三</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能专三</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('modX', 3)">X模组三级</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组三级</div>
+          <div class="btn_switch" @click="batchUpdatesOwn(true)">设为已拥有</div>
+          <div class="btn_switch" @click="batchUpdatesOwn(false)">设为未拥有</div>
+          <div class="btn_switch" @click="batchUpdatesElite(2)">设为无精</div>
+          <div class="btn_switch" @click="batchUpdatesElite(2)">设为精一</div>
+          <div class="btn_switch" @click="batchUpdatesElite(2)">设为精二</div>
+          <div class="btn_switch" >设为满级</div>
+          <div class="btn_switch" >设为满潜能</div>
+          <div class="btn_switch" >一技能设为专三</div>
+          <div class="btn_switch" >二技能设为专三</div>
+          <div class="btn_switch" >三技能设为专三</div>
+          <div class="btn_switch" >X模组设为三级</div>
+          <div class="btn_switch" >Y模组设为三级</div>
         </div>
       </div>
     </div>
