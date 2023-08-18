@@ -22,12 +22,6 @@
           数据导入/导出
           <div class="btn_setup_tips">导入/导出json/Excel等</div>
         </div>
-
-        <!-- <div class="btn_setup">
-          模式切换
-          <div class="btn_setup_tips">当前模式：标准统计<br />仅持有/标准统计/高级统计</div>
-        </div> -->
-
         <div class="btn_setup" @click="changeSurveyType()">
           问卷类型切换
           <div class="btn_setup_tips">当前问卷：{{ surveyTypeText }}</div>
@@ -37,33 +31,6 @@
           <div class="btn_setup_tips">反馈、建议<br /></div>
         </div>
 
-        <!-- <div class="btn_setup">
-          最后一次自动保存于
-          <div class="btn_setup_tips btn_setup_tips_wran">
-            {{ uploadMessage.updateTime }}<br />
-            每30秒自动保存一次
-          </div>
-        </div>
-
-        <div class="btn_setup" @click="upload()">
-          手动上传数据
-          <div class="btn_setup_tips">建议退出网页前手动保存一下</div>
-        </div> -->
-
-        <!--    以下噶掉
-       <div :class="btnSetClass(simpleCard)" @click="changeSurveyCard()">仅显示头像</div>
-        <div class="btn_setup" @click="changeSurveyType()">{{ surveyTypeText }}</div>
-        <div class="btn_setup" @click="automaticUpload()">上传数据</div>
-        <div class="btn_setup" @click="exportExcel()">{{ exportExcelBtnText }}</div>
-
-        <div class="btn_setup btn_upload">
-          <div class="input_upload_wrap">
-            <div class="upload_file_text">{{ uploadFileName }}</div>
-            <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
-          </div>
-        </div>
-        <div class="btn_setup" @click="uploadByExcel">上传EXCEL</div>
-        <div class="btn_setup"><characterDemo></characterDemo></div> -->
       </div>
     </div>
 
@@ -97,12 +64,12 @@
       <div class="switch_bar select">
         <div class="switch_title">其他</div>
         <div class="switch_btns_wrap">
-          <div :class="selectedBtn('own', true)" id="other1" @click="addFilterRule('own', true)">已拥有</div>
-          <div :class="selectedBtn('own', false)" id="other2" @click="addFilterRule('own', false)">未拥有</div>
-          <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">模组已实装</div>
-          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">模组未实装</div>
-          <div :class="selectedBtn('itemObtainApproach', 0)" id="other5" @click="addFilterRule('itemObtainApproach', 0)">赠送干员</div>
-          <div :class="selectedBtn('itemObtainApproach', 0)" >限定干员</div>
+          <div :class="selectedBtn('own', true)" @click="addFilterRule('own', true)">已拥有</div>
+          <div :class="selectedBtn('own', false)" @click="addFilterRule('own', false)">未拥有</div>
+          <div :class="selectedBtn('mod', true)" @click="addFilterRule('mod', true)">模组已实装</div>
+          <div :class="selectedBtn('mod', false)" @click="addFilterRule('mod', false)">模组未实装</div>
+          <div :class="selectedBtn('itemObtainApproach', 0)" @click="addFilterRule('itemObtainApproach', 0)">赠送干员</div>
+          <div :class="selectedBtn('itemObtainApproach', 1)" >限定干员</div>
         </div>
       </div>
 
@@ -118,12 +85,12 @@
       <div class="switch_bar select">
         <div class="switch_title">练度</div>
         <div class="switch_btns_wrap">
-          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">无专三</div>
-          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">一个专三</div>
-          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">两个专三</div>
-          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">三个专三</div>
-          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">未开模组</div>
-          <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">已开模组</div>
+          <div :class="selectedBtn('TODO', 0)" @click="addFilterRule('mod', false)">无专三</div>
+          <div :class="selectedBtn('TODO', 1)" @click="addFilterRule('mod', false)">一个专三</div>
+          <div :class="selectedBtn('TODO', 2)" @click="addFilterRule('mod', false)">两个专三</div>
+          <div :class="selectedBtn('TODO', 3)" @click="addFilterRule('mod', false)">三个专三</div>
+          <div :class="selectedBtn('TODO', 4)" @click="addFilterRule('mod', false)">未开模组</div>
+          <div :class="selectedBtn('TODO', 5)" @click="addFilterRule('mod', false)">已开模组</div>
         </div>
       </div>
 
@@ -137,16 +104,16 @@
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="batchUpdatesOwn(true)">设为已拥有</div>
           <div class="btn_switch" @click="batchUpdatesOwn(false)">设为未拥有</div>
-          <div class="btn_switch" @click="batchUpdatesElite(2)">设为无精</div>
-          <div class="btn_switch" @click="batchUpdatesElite(2)">设为精一</div>
+          <div class="btn_switch" @click="batchUpdatesElite(0)">设为无精</div>
+          <div class="btn_switch" @click="batchUpdatesElite(1)">设为精一</div>
           <div class="btn_switch" @click="batchUpdatesElite(2)">设为精二</div>
           <div class="btn_switch" >设为满级</div>
           <div class="btn_switch" >设为满潜能</div>
-          <div class="btn_switch" >一技能设为专三</div>
-          <div class="btn_switch" >二技能设为专三</div>
-          <div class="btn_switch" >三技能设为专三</div>
-          <div class="btn_switch" >X模组设为三级</div>
-          <div class="btn_switch" >Y模组设为三级</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
+          <div class="btn_switch" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
         </div>
       </div>
     </div>
@@ -277,7 +244,7 @@
           </div>
         </div>
 
-        <div class="card-overlay" v-show="'简易问卷' != surveyTypeText && !characterList[char_index].own">
+        <div class="card-overlay" v-show="'简易问卷' !== surveyTypeText && !characterList[char_index].own">
           <div class="card-overlay-title">未拥有</div>
           <div class="card-overlay-detail">点击头像将干员设为拥有</div>
         </div>
@@ -304,11 +271,11 @@ import "@/assets/css/survey_character.css";
 import { http } from "@/api/baseURL";
 
 function getSprite(id, type) {
-  if ("mod" == type) return "bg-" + id + " sprite_mod";
-  if ("skill" == type) return "bg-" + id + " sprite_skill";
-  if ("elite" == type) return "bg-" + id + " sprite_elite";
-  if ("potential" == type) return "bg-" + id + " sprite_potential";
-  if ("icon" == type) return "bg-skill_icon_" + id + " sprite_skill_icon";
+  if ("mod" === type) return "bg-" + id + " sprite_mod";
+  if ("skill" === type) return "bg-" + id + " sprite_skill";
+  if ("elite" === type) return "bg-" + id + " sprite_elite";
+  if ("potential" === type) return "bg-" + id + " sprite_potential";
+  if ("icon" === type) return "bg-skill_icon_" + id + " sprite_skill_icon";
   return "bg-" + id + " sprite_avatar";
 }
 
@@ -322,10 +289,10 @@ function getSurveyCharacter() {
     let list = response.data; //后端返回的数据
 
     //转为前端的数据格式
-    for (var i = 0; i < characterList.value.length; i++) {
+    for (let i = 0; i < characterList.value.length; i++) {
       // characterList.value[i].own =false;
-      for (var j = 0; j < list.length; j++) {
-        if (list[j].charId == characterList.value[i].charId) {
+      for (let j = 0; j < list.length; j++) {
+        if (list[j].charId === characterList.value[i].charId) {
           if (!list[j].own) continue;
           characterList.value[i].elite = list[j].elite;
 
@@ -362,7 +329,7 @@ let exportExcelBtnText = ref("导出excel");
 function exportExcel() {
   exportExcelBtnText.value = "导出中···";
   const exportExcelUrl = http + "survey/character/export?token=" + globalUserData.value.token;
-  var element = document.createElement("a");
+  const element = document.createElement("a");
   element.download = "form.xlsx";
   element.style.display = "none";
   element.href = exportExcelUrl;
@@ -383,8 +350,8 @@ function automaticUpload() {
   //与上一次自动上传时间的间隔
   let uploadFrequency = nowUploadTimeStamp - lastUploadTimeStamp;
   // 检查用户是否登录
-  if (globalUserData.value.token == void 0) {
-    console.log(globalUserData.value.token == void 0);
+  if (globalUserData.value.token === void 0) {
+    console.log(globalUserData.value.token === void 0);
     cMessage("未登录", "error");
     return;
   }
@@ -519,7 +486,7 @@ function updateElite(char_index, newVal) {
   let oldVal = characterList.value[char_index].elite;
   // console.log("更新精英化——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   //新旧值相同直接取消选项背景色，并更新精英等级为-1
-  if (newVal == oldVal) {
+  if (newVal === oldVal) {
     characterList.value[char_index].elite = -1;
     updateOption(elementId + oldVal, false);
     return;
@@ -557,7 +524,7 @@ function updateSkillAndMod(char_index, attribute, newVal) {
   // console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
 
   //新旧值相同直接取消选项背景色，并更新专精/模组等级为-1
-  if (newVal == oldVal) {
+  if (newVal === oldVal) {
     characterList.value[char_index][attribute] = -1;
     updateOption(elementId + oldVal, false);
     return;
@@ -584,20 +551,20 @@ function updateSkillAndMod(char_index, attribute, newVal) {
 function batchUpdatesSkillAndMod(attribute, newVal) {
   for (let index in characterList.value) {
     if (!(characterList.value[index].show && characterList.value[index].own)) continue;
-    if ("modX" == attribute && !characterList.value[index].modXOwn) {
+    if ("modX" === attribute && !characterList.value[index].modXOwn) {
       console.log("没有x模组");
       continue;
     }
-    if ("modY" == attribute && !characterList.value[index].modYOwn) {
+    if ("modY" === attribute && !characterList.value[index].modYOwn) {
       console.log("没有y模组");
       continue;
     }
-    if ("skill3" == attribute && characterList.value[index].rarity < 6) {
+    if ("skill3" === attribute && characterList.value[index].rarity < 6) {
       console.log("6星以下没有三技能");
       continue;
     }
 
-    if ("skill2" == attribute && characterList.value[index].rarity < 4) {
+    if ("skill2" === attribute && characterList.value[index].rarity < 4) {
       console.log("4星以下没有三技能");
       continue;
     }
@@ -621,7 +588,7 @@ function updatePotential(char_index, newVal) {
   let oldVal = characterList.value[char_index].potential;
   // console.log("更新潜能——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
   //新旧值相同直接取消选项背景色，并更新潜能等级为-1
-  if (newVal == oldVal) {
+  if (newVal === oldVal) {
     characterList.value[char_index].potential = -1;
     updateOption(elementId + oldVal, false);
     return;
@@ -653,22 +620,22 @@ function updateLevel(char_index, rarity) {
   }
 
   // 根据星级更新精英等级和等级
-  if (rarity == 6) {
+  if (rarity === 6) {
     level = 90;
     characterList.value[char_index].elite = 2;
     cancelAndUpdateOption(char_index + "elite", 2, oldElite);
   }
-  if (rarity == 5) {
+  if (rarity === 5) {
     level = 80;
     characterList.value[char_index].elite = 2;
     cancelAndUpdateOption(char_index + "elite", 2, oldElite);
   }
-  if (rarity == 4) {
+  if (rarity === 4) {
     level = 70;
     characterList.value[char_index].elite = 2;
     cancelAndUpdateOption(char_index + "elite", 2, oldElite);
   }
-  if (rarity == 3) {
+  if (rarity === 3) {
     level = 55;
     characterList.value[char_index].elite = 1;
     cancelAndUpdateOption(char_index + "elite", 1, oldElite);
@@ -679,7 +646,7 @@ function updateLevel(char_index, rarity) {
     cancelAndUpdateOption(char_index + "elite", 0, oldElite);
   }
 
-  if (level == -1) return;
+  if (level === -1) return;
 
   characterList.value[char_index].level = level;
 
@@ -704,7 +671,7 @@ function cancelAndUpdateOption(elementIdHeader, rank, oldRank) {
   updateOption(elementIdHeader + rank, true);
 }
 
-function updateBackBeforecancel(elementIdHeader, rank, oldRank) {
+function updateBackBeforeCancel(elementIdHeader, rank, oldRank) {
   updateOption(elementIdHeader + rank, true);
   updateOption(elementIdHeader + oldRank, false);
 }
@@ -731,23 +698,23 @@ let simpleCard = ref(false);
 
 //标准问卷与完整问卷
 function changeSurveyType() {
-  if ("简易问卷" == surveyTypeText.value) {
+  if ("简易问卷" === surveyTypeText.value) {
     surveyType.value = "_basic";
     surveyTypeText.value = "标准问卷";
     simpleCard.value = !simpleCard.value;
     return;
   }
-  if ("标准问卷" == surveyTypeText.value) {
+  if ("标准问卷" === surveyTypeText.value) {
     surveyType.value = "";
     surveyTypeText.value = "完整问卷";
     return;
   }
 
-  if ("完整问卷" == surveyTypeText.value) {
+  if ("完整问卷" === surveyTypeText.value) {
     surveyType.value = "";
     simpleCard.value = !simpleCard.value;
     surveyTypeText.value = "简易问卷";
-    return;
+
   }
 }
 
@@ -762,7 +729,7 @@ function simpleCardClass() {
 
 
 
-let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [] });
+let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO:[] });
 
 //判断按钮是否选中
 function selectedBtn(attribute, rule) {
@@ -778,7 +745,7 @@ function addFilterRule(attribute, rule) {
   let filterRulesCopy = [];
   if (filterRules.value[attribute].indexOf(rule) > -1) {
     for (let i in filterRules.value[attribute]) {
-      if (rule != filterRules.value[attribute][i]) {
+      if (rule !== filterRules.value[attribute][i]) {
         filterRulesCopy.push(filterRules.value[attribute][i]);
       }
     }
@@ -807,10 +774,9 @@ function filterCharacterList() {
 
 //是否有这个属性
 function isAttribute(character, attribute) {
-  if (filterRules.value[attribute].length == 0) return true;
+  if (filterRules.value[attribute].length === 0) return true;
   for (let r in filterRules.value[attribute]) {
-    // console.log(character, '==' , filterRules.value[attribute][r])
-    if (character[attribute] == filterRules.value[attribute][r]) {
+    if (character[attribute] === filterRules.value[attribute][r]) {
       return true;
     }
   }
@@ -819,7 +785,7 @@ function isAttribute(character, attribute) {
 
 //是否在这个年份
 function isYear(character) {
-  if (filterRules.value.year.length == 0) return true;
+  if (filterRules.value.year.length === 0) return true;
   for (let r in filterRules.value.year) {
     // console.log(filterRules.value.year[r])
     let year = yearDict[filterRules.value.year[r]];
