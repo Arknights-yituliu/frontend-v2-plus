@@ -76,7 +76,7 @@
 <script setup>
 import "@/assets/css/survey_rank.css";
 
-import { rankingListinit } from "./commonUtils";
+import { rankingListinit } from "./common";
 import { onMounted, ref, watch } from "vue";
 
 import surveyApi from "@/api/survey";

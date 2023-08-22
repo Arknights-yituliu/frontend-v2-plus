@@ -13,12 +13,12 @@
       <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
 
-        <div class="btn_setup" @click="barCollapse('switch_bar select', 'element_switch_wrap')">
+        <div class="btn_setup" @click="collapse('switch_bar select', 'element_switch_wrap')">
           筛选/批量操作
           <div class="btn_setup_tips">可筛选后批量进行填写</div>
         </div>
 
-        <div class="btn_setup" @click="barCollapse('switch_bar upload', 'element_upload_wrap')">
+        <div class="btn_setup" @click="collapse('switch_bar upload', 'element_upload_wrap')">
           数据导入/导出
           <div class="btn_setup_tips">导入/导出json/Excel等</div>
         </div>
@@ -263,11 +263,12 @@
 <script setup>
 import { cMessage } from "@/element/message.js";
 import { globalUserData } from "./userService"; //从用户服务js获取用户信息
-import { characterListInit, professionDict, yearDict, barCollapse } from "./commonUtils"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import { characterListInit, professionDict, yearDict, collapse } from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import characterDemo from "@/pages/survey/characterDemo.vue";
 import surveyApi from "@/api/survey";
 import { onMounted, ref, watch } from "vue";
 import "@/assets/css/survey_character.css";
+
 import { http } from "@/api/baseURL";
 
 function getSprite(id, type) {

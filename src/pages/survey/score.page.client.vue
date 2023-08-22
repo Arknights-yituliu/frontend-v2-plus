@@ -151,7 +151,7 @@
 
 <script setup>
 import { h, onMounted, ref } from "vue";
-import { scoreListInit, professionDict, yearDict } from "./commonUtils";
+import { scoreListInit, professionDict, yearDict } from "./common";
 import surveyApi from "@/api/survey";
 import { globalUserData } from "./userService";
 import "@/assets/css/survey_score.css";
