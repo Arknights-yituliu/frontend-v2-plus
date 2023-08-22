@@ -261,15 +261,14 @@
 </template>
 
 <script setup>
-import { cMessage } from "@/element/message.js";
-import { globalUserData } from "./userService"; //从用户服务js获取用户信息
-import { characterListInit, professionDict, yearDict, collapse } from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import characterDemo from "@/pages/survey/characterDemo.vue";
+import {cMessage} from "@/element/message.js";
+import {globalUserData} from "./userService"; //从用户服务js获取用户信息
+import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import surveyApi from "@/api/survey";
-import { onMounted, ref, watch } from "vue";
+import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
 
-import { http } from "@/api/baseURL";
+import {http} from "@/api/baseURL";
 
 function getSprite(id, type) {
   if ("mod" === type) return "bg-" + id + " sprite_mod";
@@ -679,15 +678,15 @@ function updateBackBeforeCancel(elementIdHeader, rank, oldRank) {
 
 // 修改选项的背景色
 function updateOption(elementId, selected) {
-  // 干员数据是一个数组，每个选项的element的id为 索引+属性名，例如 第一个干员号角的3技能的id是 '0skill3'
-  console.log("修改的元素id", elementId);
+  // 干员数据是一个数组，每个选项的element的id为 数组索引+属性名，例如 第一个干员号角的3技能的id是 '0skill3'
+  // console.log("修改的元素id", elementId);
   let element = document.getElementById(elementId);
   if (element == null) return;
   if (selected) {
-    console.log("添加背景色id", elementId);
+    // console.log("添加背景色id", elementId);
     element.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   } else {
-    console.log("取消背景色id", elementId);
+    // console.log("取消背景色id", elementId);
     element.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
   }
 }
@@ -762,41 +761,12 @@ function addFilterRule(attribute, rule) {
 //筛选
 function filterCharacterList() {
   for (let i in characterList.value) {
-    var character = characterList.value[i];
-    let isRarity = isAttribute(character, "rarity");
-    let isProfession = isAttribute(character, "profession");
-    let isOwn = isAttribute(character, "own");
-    let isMod = isAttribute(character, "mod");
-    let isItemObtainApproach = isAttribute(character, "itemObtainApproach");
-    let isYearFlag = isYear(character);
-    characterList.value[i].show = isRarity & isProfession & isYearFlag & isOwn & isMod & isItemObtainApproach;
+    const character = characterList.value[i];
+    characterList.value[i].show = filterByCharacterProperty(filterRules.value, character);
   }
 }
 
-//是否有这个属性
-function isAttribute(character, attribute) {
-  if (filterRules.value[attribute].length === 0) return true;
-  for (let r in filterRules.value[attribute]) {
-    if (character[attribute] === filterRules.value[attribute][r]) {
-      return true;
-    }
-  }
-  return false;
-}
 
-//是否在这个年份
-function isYear(character) {
-  if (filterRules.value.year.length === 0) return true;
-  for (let r in filterRules.value.year) {
-    // console.log(filterRules.value.year[r])
-    let year = yearDict[filterRules.value.year[r]];
-    // console.log(character.date, ">=", year.start, character.date, "<=", year.end);
-    if (character.date >= year.start && character.date <= year.end) {
-      return true;
-    }
-  }
-  return false;
-}
 
 //按条件排序
 function sortCharacterList(rule) {
