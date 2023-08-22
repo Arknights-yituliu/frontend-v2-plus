@@ -2,31 +2,35 @@ import characterBasicInfo from "@/static/json/survey/character_table_simple.json
 import {ref} from "vue";
 
 let yearDict = [
-    {label: "开服", start: Date.parse(new Date("2019/04/28 00:00:00")), end: Date.parse(new Date("2019/05/02 00:00:00"))},
+    {
+        label: "开服干员",
+        start: 1556553600000,
+        end: 1556726400000
+    },
     {
         label: "2019",
-        start: Date.parse(new Date("2019/01/01 00:00:00")),
-        end: Date.parse(new Date("2020/01/01 00:00:00"))
+        start: 1556553600000,
+        end: 1577721600000
     },
     {
         label: "2020",
-        start: Date.parse(new Date("2020/01/01 00:00:00")),
-        end: Date.parse(new Date("2021/01/01 00:00:00"))
+        start: 1577808000000,
+        end: 1609344000000
     },
     {
         label: "2021",
-        start: Date.parse(new Date("2021/01/01 00:00:00")),
-        end: Date.parse(new Date("2022/01/01 00:00:00"))
+        start: 1609430400000,
+        end: 1640880000000
     },
     {
         label: "2022",
-        start: Date.parse(new Date("2022/01/01 00:00:00")),
-        end: Date.parse(new Date("2023/01/01 00:00:00"))
+        start: 1640966400000,
+        end: 1672416000000
     },
     {
         label: "2023",
-        start: Date.parse(new Date("2023/01/01 00:00:00")),
-        end: Date.parse(new Date("2024/01/01 00:00:00"))
+        start: 1672502400000,
+        end: 1703952000000
     },
 ];
 
@@ -88,6 +92,49 @@ function collapse(collapse_item_class, collapse_id) {
     }
 }
 
+function filterByCharacterProperty(filterCondition, character) {
+    let show = true;
+    for (const property in filterCondition) {
+
+        if (property === 'rarity' || property === 'profession' || property === 'own' ||
+            property === 'mod' || property === 'itemObtainApproach') {
+            const flag = determineProperty(filterCondition, character, property);
+            show = show && flag
+        }
+        if (property === 'year') {
+            const flag = determineYear(filterCondition,character);
+            show = show && flag
+        }
+    }
+
+    return show;
+}
+
+
+//是否有这个属性
+function determineProperty(filterCondition, character, property) {
+    if (filterCondition[property].length === 0) return true;
+    for (let value of filterCondition[property]) {
+        if (character[property] === value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+//是否在这个年份
+function determineYear(filterCondition, character) {
+    if (filterCondition.year.length === 0) return true;
+    for (let value of filterCondition.year) {
+        // console.log(filterRules.value.year[r])
+        let year = yearDict[value];
+        // console.log(character.date, ">=", year.start, character.date, "<=", year.end);
+        if (character.date >= year.start && character.date <= year.end) {
+            return true;
+        }
+    }
+    return false;
+}
 
 let characterList = [];
 
@@ -203,4 +250,4 @@ function rankingListinit() {
     return rankingList;
 }
 
-export {characterListInit, getProfession, professionDict, yearDict, scoreListInit, rankingListinit, collapse};
+export {characterListInit, getProfession, professionDict, yearDict, scoreListInit, rankingListinit, collapse, filterByCharacterProperty};
