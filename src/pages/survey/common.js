@@ -92,17 +92,25 @@ function collapse(collapse_item_class, collapse_id) {
     }
 }
 
-function filterByCharacterProperty(filterCondition, character) {
+
+/**
+ *
+ * @param filterCondition  筛选条件对象
+ * @param characterInfo   角色信息
+ * @returns {boolean}  筛选结果
+ */
+
+function filterByCharacterProperty(filterCondition, characterInfo) {
     let show = true;
     for (const property in filterCondition) {
 
         if (property === 'rarity' || property === 'profession' || property === 'own' ||
             property === 'mod' || property === 'itemObtainApproach') {
-            const flag = determineProperty(filterCondition, character, property);
+            const flag = determineProperty(filterCondition, characterInfo, property);
             show = show && flag
         }
         if (property === 'year') {
-            const flag = determineYear(filterCondition,character);
+            const flag = determineYear(filterCondition,characterInfo);
             show = show && flag
         }
     }
@@ -110,26 +118,36 @@ function filterByCharacterProperty(filterCondition, character) {
     return show;
 }
 
-
-//是否有这个属性
-function determineProperty(filterCondition, character, property) {
+/**
+ *
+ * @param filterCondition  筛选条件
+ * @param characterInfo  角色信息
+ * @param property  角色属性
+ * @returns {boolean}  筛选结果
+ */
+function determineProperty(filterCondition, characterInfo, property) {
     if (filterCondition[property].length === 0) return true;
-    for (let value of filterCondition[property]) {
-        if (character[property] === value) {
+    for (let condition of filterCondition[property]) {
+        if (characterInfo[property] === condition) {
             return true;
         }
     }
     return false;
 }
 
-//是否在这个年份
-function determineYear(filterCondition, character) {
+/**
+ *
+ * @param filterCondition  筛选条件
+ * @param characterInfo  角色信息
+ * @returns {boolean}  筛选结果
+ */
+function determineYear(filterCondition, characterInfo) {
     if (filterCondition.year.length === 0) return true;
     for (let value of filterCondition.year) {
         // console.log(filterRules.value.year[r])
         let year = yearDict[value];
-        // console.log(character.date, ">=", year.start, character.date, "<=", year.end);
-        if (character.date >= year.start && character.date <= year.end) {
+        // console.log(characterInfo.date, ">=", year.start, characterInfo.date, "<=", year.end);
+        if (characterInfo.date >= year.start && characterInfo.date <= year.end) {
             return true;
         }
     }
@@ -223,7 +241,7 @@ function scoreListInit() {
 
 let rankingList = [];
 
-function rankingListinit() {
+function rankingListInit() {
     for (let charId in characterBasicInfo) {
         const baseInfo = characterBasicInfo[charId];
         let score = {
@@ -250,4 +268,4 @@ function rankingListinit() {
     return rankingList;
 }
 
-export {characterListInit, getProfession, professionDict, yearDict, scoreListInit, rankingListinit, collapse, filterByCharacterProperty};
+export {characterListInit, getProfession, professionDict, yearDict, scoreListInit, rankingListInit, collapse, filterByCharacterProperty};

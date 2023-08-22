@@ -729,43 +729,45 @@ function simpleCardClass() {
 
 
 
-let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO:[] });
+let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO:[] });
 
 //判断按钮是否选中
 function selectedBtn(attribute, rule) {
-  if (filterRules.value[attribute].indexOf(rule) > -1) {
+  if (filterCondition.value[attribute].indexOf(rule) > -1) {
     return "btn_switch selected_color";
   }
   return "btn_switch";
 }
 
+
+
 //增加筛选规则
 function addFilterRule(attribute, rule) {
-  console.log(filterRules.value);
+  console.log(filterCondition.value);
   let filterRulesCopy = [];
-  if (filterRules.value[attribute].indexOf(rule) > -1) {
-    for (let i in filterRules.value[attribute]) {
-      if (rule !== filterRules.value[attribute][i]) {
-        filterRulesCopy.push(filterRules.value[attribute][i]);
+  if (filterCondition.value[attribute].indexOf(rule) > -1) {
+    for (let i in filterCondition.value[attribute]) {
+      if (rule !== filterCondition.value[attribute][i]) {
+        filterRulesCopy.push(filterCondition.value[attribute][i]);
       }
     }
-    filterRules.value[attribute] = filterRulesCopy;
+    filterCondition.value[attribute] = filterRulesCopy;
     filterCharacterList();
     return;
   }
 
-  filterRules.value[attribute].push(rule);
+  filterCondition.value[attribute].push(rule);
   filterCharacterList();
 }
+
 
 //筛选
 function filterCharacterList() {
   for (let i in characterList.value) {
     const character = characterList.value[i];
-    characterList.value[i].show = filterByCharacterProperty(filterRules.value, character);
+    characterList.value[i].show = filterByCharacterProperty(filterCondition.value, character);
   }
 }
-
 
 
 //按条件排序
