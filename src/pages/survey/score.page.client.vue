@@ -10,7 +10,7 @@
       <div class="setup_bar" id="score_selector_dimension">
         <div class="switch_title">选择评分项</div>
         <div class="switch_btns_wrap">
-          <div class="mdui-btn" :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
+          <div :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
             {{ item.label }}
           </div>
         </div>
