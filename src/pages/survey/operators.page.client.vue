@@ -39,7 +39,7 @@
       <div class="switch_bar select">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
-          <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterRule('profession', profession.value)">
+          <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterCondition('profession', profession.value)">
             {{ profession.label }}
           </div>
         </div>
@@ -48,14 +48,14 @@
       <div class="switch_bar select">
         <div class="switch_title">稀有度</div>
         <div class="switch_btns_wrap">
-          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }}★</div>
+          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterCondition('rarity', rarity)">{{ rarity }}★</div>
         </div>
       </div>
 
       <div class="switch_bar select">
         <div class="switch_title">年份</div>
         <div class="switch_btns_wrap">
-          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterRule('year', key)">
+          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterCondition('year', key)">
             {{ year.label }}
           </div>
         </div>
@@ -64,11 +64,11 @@
       <div class="switch_bar select">
         <div class="switch_title">其他</div>
         <div class="switch_btns_wrap">
-          <div :class="selectedBtn('own', true)" @click="addFilterRule('own', true)">已拥有</div>
-          <div :class="selectedBtn('own', false)" @click="addFilterRule('own', false)">未拥有</div>
-          <div :class="selectedBtn('mod', true)" @click="addFilterRule('mod', true)">模组已实装</div>
-          <div :class="selectedBtn('mod', false)" @click="addFilterRule('mod', false)">模组未实装</div>
-          <div :class="selectedBtn('itemObtainApproach', 0)" @click="addFilterRule('itemObtainApproach', 0)">赠送干员</div>
+          <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
+          <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
+          <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
+          <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
+          <div :class="selectedBtn('itemObtainApproach', 0)" @click="addFilterCondition('itemObtainApproach', 0)">赠送干员</div>
           <div :class="selectedBtn('itemObtainApproach', 1)" >限定干员</div>
         </div>
       </div>
@@ -76,7 +76,7 @@
       <div class="switch_bar select">
         <div class="switch_title">排序</div>
         <div class="switch_btns_wrap">
-          <div class="btn_switch">按职业</div>
+          <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
           <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
           <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
         </div>
@@ -85,12 +85,12 @@
       <div class="switch_bar select">
         <div class="switch_title">练度</div>
         <div class="switch_btns_wrap">
-          <div :class="selectedBtn('TODO', 0)" @click="addFilterRule('mod', false)">无专三</div>
-          <div :class="selectedBtn('TODO', 1)" @click="addFilterRule('mod', false)">一个专三</div>
-          <div :class="selectedBtn('TODO', 2)" @click="addFilterRule('mod', false)">两个专三</div>
-          <div :class="selectedBtn('TODO', 3)" @click="addFilterRule('mod', false)">三个专三</div>
-          <div :class="selectedBtn('TODO', 4)" @click="addFilterRule('mod', false)">未开模组</div>
-          <div :class="selectedBtn('TODO', 5)" @click="addFilterRule('mod', false)">已开模组</div>
+          <div :class="selectedBtn('TODO', 0)" @click="addFilterCondition('mod', false)">无专三</div>
+          <div :class="selectedBtn('TODO', 1)" @click="addFilterCondition('mod', false)">一个专三</div>
+          <div :class="selectedBtn('TODO', 2)" @click="addFilterCondition('mod', false)">两个专三</div>
+          <div :class="selectedBtn('TODO', 3)" @click="addFilterCondition('mod', false)">三个专三</div>
+          <div :class="selectedBtn('TODO', 4)" @click="addFilterCondition('mod', false)">未开模组</div>
+          <div :class="selectedBtn('TODO', 5)" @click="addFilterCondition('mod', false)">已开模组</div>
         </div>
       </div>
 
@@ -677,12 +677,12 @@ function updateBackBeforeCancel(elementIdHeader, rank, oldRank) {
 }
 
 // 修改选项的背景色
-function updateOption(elementId, selected) {
+function updateOption(elementId, selectedFlag) {
   // 干员数据是一个数组，每个选项的element的id为 数组索引+属性名，例如 第一个干员号角的3技能的id是 '0skill3'
   // console.log("修改的元素id", elementId);
   let element = document.getElementById(elementId);
   if (element == null) return;
-  if (selected) {
+  if (selectedFlag) {
     // console.log("添加背景色id", elementId);
     element.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
   } else {
@@ -742,12 +742,12 @@ function selectedBtn(attribute, rule) {
 
 
 //增加筛选规则
-function addFilterRule(attribute, rule) {
+function addFilterCondition(attribute, condition) {
   console.log(filterCondition.value);
   let filterRulesCopy = [];
-  if (filterCondition.value[attribute].indexOf(rule) > -1) {
+  if (filterCondition.value[attribute].indexOf(condition) > -1) {
     for (let i in filterCondition.value[attribute]) {
-      if (rule !== filterCondition.value[attribute][i]) {
+      if (condition !== filterCondition.value[attribute][i]) {
         filterRulesCopy.push(filterCondition.value[attribute][i]);
       }
     }
@@ -756,7 +756,7 @@ function addFilterRule(attribute, rule) {
     return;
   }
 
-  filterCondition.value[attribute].push(rule);
+  filterCondition.value[attribute].push(condition);
   filterCharacterList();
 }
 
@@ -779,6 +779,6 @@ function sortCharacterList(rule) {
 
 onMounted(() => {
   getSurveyCharacter();
-  addFilterRule("rarity", 6);
+  addFilterCondition("rarity", 6);
 });
 </script>
