@@ -1,6 +1,13 @@
 <template>
   <div class="survey_rank_page">
-    <div class="survey_title">明日方舟干员{{ surveyType }}统计</div>
+    <div class="setup_wrap">
+      <button class="mdui-btn survey_button">说明</button>
+      <button class="mdui-btn survey_button">筛选</button>
+      <div id="updateTime">调查人数{{ userCount }}<br>更新时间{{ updateTime }}</div>
+    </div>
+
+
+    <!-- <div class="survey_title">明日方舟干员{{ surveyType }}统计</div>
 
     <div class="survey_tip_box">
       <div class="survey_tip">
@@ -11,7 +18,7 @@
         <a>更新时间</a> <br />
         {{ updateTime }}
       </div>
-    </div>
+    </div> -->
 
     <div class="setup_wrap" id="setbar">
       <div class="setup_bar">
@@ -33,7 +40,7 @@
       </div>
     </div>
 
-    <div class="rank_wrap">
+    <!-- <div class="rank_wrap">
       <div class="rank_card" v-for="(result, index) in rankingList" v-show="result.show">
         <div class="rank_avatar_wrap">
           <div :class="getSprite(result.charId)"></div>
@@ -69,7 +76,38 @@
           <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.modY, "rank" + 3), 1) }}</div>
         </div>
       </div>
+    </div> -->
+    <!-- {{ rankingList }} -->
+    <div id="rank_table" class="mdui-table-fluid">
+      <table class="mdui-table">
+        <thead>
+          <tr>
+            <td class="rank_table_1">代号</td>
+            <td class="rank_table_2">持有率</td>
+            <td class="rank_table_3">精二率</td>
+            <td class="rank_table_4">一技能专三率</td>
+            <td class="rank_table_5">二技能专三率</td>
+            <td class="rank_table_6">三技能专三率</td>
+            <td class="rank_table_7">x模组解锁率</td>
+            <td class="rank_table_8">y模组解锁率</td>
+          </tr>
+        </thead>
+        <tr v-for="(result, index) in rankingList" v-show="result.show">
+          <td class="rank_table_1"><div class="rank_table_img"><div :class="getSprite(result.charId)"></div></div>{{result.name}}</td>
+          <td class="rank_table_2">{{ getPercentage(result.own, 1) }}114%</td>
+          <td class="rank_table_3">{{ getPercentage(result.own, 1) }}114%</td>
+          <td class="rank_table_4">
+            <div class="rank_table_img"><div :class="getSpriteIcon(result.skill, 0)"></div></div>
+            <div>技能名{{ getPercentage(getSurveyResult(result.skill1, "rank" + 3), 1) }}114%</div>            
+          </td>
+          <td class="rank_table_5"><div class="rank_table_img"><div :class="getSpriteIcon(result.skill, 1)"></div></div>技能名{{ getPercentage(getSurveyResult(result.skill2, "rank" + 3), 1) }}114%</td>
+          <td class="rank_table_6"><div class="rank_table_img"><div :class="getSpriteIcon(result.skill, 2)"></div></div>技能名{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}114%</td>
+          <td class="rank_table_7">{{ getPercentage(getSurveyResult(result.modX, "rank" + 3), 1) }}114%</td>
+          <td class="rank_table_8">{{ getPercentage(getSurveyResult(result.modY, "rank" + 3), 1) }}114%</td>
+        </tr>
+      </table>
     </div>
+
   </div>
 </template>
 
