@@ -13,7 +13,7 @@
       <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
 
-        <div class="btn_setup" @click="collapse('switch_bar select', 'element_switch_wrap')">
+        <div class="btn_setup" @click="collapse('switch_bar select', 'element_filter_wrap')">
           筛选/批量操作
           <div class="btn_setup_tips">可筛选后批量进行填写</div>
         </div>
@@ -35,7 +35,7 @@
     </div>
 
     <!-- 筛选模块 -->
-    <div class="switch_wrap" id="element_switch_wrap">
+    <div class="switch_wrap" id="element_filter_wrap">
       <div class="switch_bar select">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
@@ -267,7 +267,7 @@ import {characterListInit, collapse, filterByCharacterProperty, professionDict, 
 import surveyApi from "@/api/survey";
 import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
-
+import characterDemo from '@/pages/survey/characterDemo.vue'
 import {http} from "@/api/baseURL";
 
 function getSprite(id, type) {
@@ -729,7 +729,6 @@ function simpleCardClass() {
 
 
 
-let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO:[] });
 
 //判断按钮是否选中
 function selectedBtn(attribute, rule) {
@@ -740,6 +739,7 @@ function selectedBtn(attribute, rule) {
 }
 
 
+let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO:[] });
 
 //增加筛选规则
 function addFilterCondition(attribute, condition) {

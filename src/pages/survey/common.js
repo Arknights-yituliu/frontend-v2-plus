@@ -226,6 +226,7 @@ function scoreListInit() {
             countermeasures: -1,
             date: baseInfo.date,
             profession: baseInfo.profession,
+            itemObtainApproach: baseInfo.itemObtainApproach,
             mod: baseInfo.mod !== undefined,
             show: true,
         };
@@ -255,6 +256,8 @@ function rankingListInit() {
             skill3: {},
             modX: {},
             modY: {},
+            profession: baseInfo.profession,
+            itemObtainApproach: baseInfo.itemObtainApproach,
             mod: baseInfo.mod !== undefined,
             skill: baseInfo.skill,
             show: true,

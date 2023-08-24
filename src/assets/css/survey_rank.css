@@ -7,62 +7,9 @@
   font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
 }
 
-.survey_title {
-  height: 100px;
-  line-height: 100px;
-  margin: auto;
+
+.rank_character_name{
   text-align: center;
-  font-size: 48px;
-  font-weight: 900;
-  /* border: 1px red solid; */
-}
-
-.survey_tip_box {
-  margin: auto;
-  margin-bottom: 10px;
-  width: 85%;
-  height: 80px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  /* border: 1px red solid; */
-}
-
-.survey_tip {
-  text-align: center;
-  margin: auto;
-  line-height: 32px;
-  width: 154px;
-  height: 64px;
-  font-size: 20px;
-  font-weight: 600;
-  border-radius: 10px;
-  box-shadow: 0px 0px 3px 2px rgb(160, 160, 160);
-}
-
-.survey_tip a {
-  font-family: Arial, sans-serif;
-  font-size: 25px;
-  font-weight: 900;
-}
-
-.rank_wrap {
-  margin: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.rank_card {
-  height: 90px;
-  width: 550px;
-  display: flex;
-  border: 1px rgb(211, 211, 211) solid;
-  margin: auto;
-  margin-top: 10px;
 }
 
 .rank_avatar_wrap {
@@ -75,47 +22,17 @@
 }
 
 .rank_avatar {
-  transform: scale(0.44);
+  transform: scale(0.46);
   position: relative;
   top: -51px;
-  left: -51px;
+  left: -50px;
   border-radius: 50%;
 }
 
-.survey_result {
-  text-align: center;
-  font-weight: 900;
-}
-
-.survey_result_titit {
-  height: 50px;
-  line-height: 50px;
-  width: 65px;
-  /* border: 1px rgb(30, 255, 0) solid; */
-}
-
-.survey_result_content {
-  height: 40px;
-  line-height: 40px;
-
-  /* border: 1px rgb(30, 255, 0) solid; */
-}
-
-.rank_image_elite_wrap {
-  height: 50px;
-  width: 50px;
-}
-
-.rank_sprite_elite {
-  transform: scale(0.2);
-  position: relative;
-  top: -80px;
-  left: -90px;
-}
 
 .rank_image_skill_wrap {
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 100px;
 }
 
 .rank_sprite_skill {
@@ -126,10 +43,7 @@
   /* border: 1px red solid; */
 }
 
-
-
-.rank_table_img{
-  height: 60px;
-  display: inline-block;
-  overflow: hidden;
+.rank_table{
+  text-align: center;
 }
+

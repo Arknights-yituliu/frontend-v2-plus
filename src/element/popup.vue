@@ -4,10 +4,7 @@
 
     <div class="popup" :style="widthStyle">
       <slot></slot>
-      <!-- <div class="popup_btn_wrap" >
-        <div class="popup_btn" >取消</div>
-        <div class="popup_btn" @click="openAndClose(false)">关闭</div>
-      </div> -->
+     
     </div>
   </div>
 </template>
@@ -65,55 +62,17 @@ watch(
 .popup {
   /* display: none; */
   position: absolute;
-  top: 150px;
+  top: 30px;
   left: 0;
   right: 0;
   z-index: 1000;
   margin: auto;
   width: 500px;
-  height: auto;
+  height: 500px;
   overflow: auto;
   background-color: rgba(255, 255, 255);
   border-radius: 6px;
   /* margin-top: 100px; */
 }
 
-.popup_btn_wrap {
-  width: 90%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
-  margin: auto;
-}
-
-.popup_btn {
-  margin: 6px;
-  /* margin-right:30px; */
-  min-width: 60px;
-  height: 18px;
-  padding: 4px;
-  line-height: 18px;
-  text-align: center;
-  background: rgb(13, 135, 228);
-  color: white;
-  font-weight: 600;
-  box-shadow: 0 0 1px 1px rgb(209, 209, 209);
-  border-radius: 3px;
-}
-
-.popup_btn {
-  margin: 6px;
-  /* margin-right:30px; */
-  min-width: 60px;
-  height: 18px;
-  padding: 4px;
-  line-height: 18px;
-  text-align: center;
-  background: white;
-  color: black;
-  font-weight: 600;
-  box-shadow: 0 0 1px 1px rgb(228, 228, 228);
-  border-radius: 3px;
-}
 </style>
