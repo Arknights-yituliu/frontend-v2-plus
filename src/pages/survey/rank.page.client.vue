@@ -1,83 +1,59 @@
 <template>
   <div class="survey_rank_page">
-    <div class="setup_wrap">
+    <!-- 常驻条 -->
+    <div class="setup_top">
       <button class="mdui-btn survey_button">说明</button>
-      <button class="mdui-btn survey_button">筛选</button>
-      <div id="updateTime">调查人数{{ userCount }}<br>更新时间{{ updateTime }}</div>
-    </div>
-
-
-    <!-- <div class="survey_title">明日方舟干员{{ surveyType }}统计</div>
-
-    <div class="survey_tip_box">
-      <div class="survey_tip">
-        <a>调查人数</a> <br />
-        {{ userCount }}人次
-      </div>
-      <div class="survey_tip">
-        <a>更新时间</a> <br />
-        {{ updateTime }}
-      </div>
-    </div> -->
-
-    <div class="setup_wrap" id="setbar">
-      <div class="setup_bar">
-        <div :class="btnSetClass(filterCollapse)" @click="setBarCollapse()">筛选</div>
-      </div>
-      <div class="setup_bar">
-        <div class="setup_title">稀有度</div>
-        <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterRule('rarity', rarity)">{{ rarity }}★</div>
-      </div>
-      <div class="setup_bar">
-        <div class="setup_title">其他</div>
-        <div :class="selectedBtn('mod', true)" id="other3" @click="addFilterRule('mod', true)">有模组</div>
-        <div :class="selectedBtn('mod', false)" id="other4" @click="addFilterRule('mod', false)">无模组</div>
-      </div>
-      <div class="setup_bar">
-        <div class="setup_title">排序</div>
-        <div class="switch_set" @click="sortCharacterList('rarity')">稀有度顺序</div>
-        <div class="switch_set" @click="sortCharacterList('date')">实装顺序</div>
+      <button class="mdui-btn survey_button" @click="collapse('switch_bar select', 'element_filter_wrap')">筛选</button>
+      <div id="updateTime">
+        调查人数5000<br />
+        更新时间2023-05-27
       </div>
     </div>
 
-    <!-- <div class="rank_wrap">
-      <div class="rank_card" v-for="(result, index) in rankingList" v-show="result.show">
-        <div class="rank_avatar_wrap">
-          <div :class="getSprite(result.charId)"></div>
-        </div>
-        <div class="survey_result">
-          <div class="survey_result_titit">持有率</div>
-          <div class="survey_result_content">{{ getPercentage(result.own, 1) }}</div>
-        </div>
-        <div class="survey_result">
-          <div class="survey_result_titit">
-            <div class="rank_image_elite_wrap"><div :class="getSprite('elite2', 'elite')"></div></div>
+    <!-- 筛选模块 -->
+    <div class="switch_wrap" id="element_filter_wrap">
+      <div class="switch_bar select">
+        <div class="switch_title">职业</div>
+        <div class="switch_btns_wrap">
+          <div
+            :class="selectedBtn('profession', profession.value)"
+            v-for="profession in professionDict"
+            @click="addFilterCondition('profession', profession.value)"
+          >
+            {{ profession.label }}
           </div>
-          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.elite, "rank" + 2), 1) }}</div>
-        </div>
-        <div class="survey_result">
-          <div class="survey_result_titit"><div :class="getSpriteIcon(result.skill, 0)"></div></div>
-          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.skill1, "rank" + 3), 1) }}</div>
-        </div>
-        <div class="survey_result">
-          <div class="survey_result_titit"><div :class="getSpriteIcon(result.skill, 1)"></div></div>
-          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.skill2, "rank" + 3), 1) }}</div>
-        </div>
-        <div class="survey_result">
-          <div class="survey_result_titit"><div :class="getSpriteIcon(result.skill, 2)"></div></div>
-          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}</div>
-        </div>
-        <div class="survey_result">
-          <div class="survey_result_titit">X模组</div>
-          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.modX, "rank" + 3), 1) }}</div>
-        </div>
-        <div class="survey_result">
-          <div class="survey_result_titit">Y模组</div>
-          <div class="survey_result_content">{{ getPercentage(getSurveyResult(result.modY, "rank" + 3), 1) }}</div>
         </div>
       </div>
-    </div> -->
-    <!-- {{ rankingList }} -->
+
+      <div class="switch_bar select">
+        <div class="switch_title">稀有度</div>
+        <div class="switch_btns_wrap">
+          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterCondition('rarity', rarity)">{{ rarity }}★</div>
+        </div>
+      </div>
+
+      <div class="switch_bar select">
+        <div class="switch_title">其他</div>
+        <div class="switch_btns_wrap">
+          <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
+          <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
+          <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
+          <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
+          <div :class="selectedBtn('itemObtainApproach', 0)" @click="addFilterCondition('itemObtainApproach', 0)">赠送干员</div>
+          <div :class="selectedBtn('itemObtainApproach', 1)">限定干员</div>
+        </div>
+      </div>
+
+      <!-- <div class="switch_bar select">
+        <div class="switch_title">排序</div>
+        <div class="switch_btns_wrap">
+          <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
+          <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
+          <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
+        </div>
+      </div> -->
+    </div>
+
     <div id="rank_table" class="mdui-table-fluid">
       <table class="mdui-table">
         <thead>
@@ -93,28 +69,38 @@
           </tr>
         </thead>
         <tr v-for="(result, index) in rankingList" v-show="result.show">
-          <td class="rank_table_1"><div class="rank_table_img"><div :class="getSprite(result.charId)"></div></div>{{result.name}}</td>
+          <td class="rank_table_1">
+            <div class="rank_avatar_wrap"><div :class="getSprite(result.charId)"></div></div>
+            <div class="rank_character_name">{{ result.name }}</div>
+          </td>
           <td class="rank_table_2">{{ getPercentage(result.own, 1) }}114%</td>
           <td class="rank_table_3">{{ getPercentage(result.own, 1) }}114%</td>
           <td class="rank_table_4">
-            <div class="rank_table_img"><div :class="getSpriteIcon(result.skill, 0)"></div></div>
-            <div>技能名{{ getPercentage(getSurveyResult(result.skill1, "rank" + 3), 1) }}114%</div>            
+            <div class="rank_image_skill_wrap"><div :class="getSpriteIcon(result.skill, 0)"></div></div>
+            <div>
+              {{ getSkillName(result.skill, 0) }}{{ getPercentage(getSurveyResult(result.skill1, "rank" + 3), 1) }} <br />
+              114%
+            </div>
           </td>
-          <td class="rank_table_5"><div class="rank_table_img"><div :class="getSpriteIcon(result.skill, 1)"></div></div>技能名{{ getPercentage(getSurveyResult(result.skill2, "rank" + 3), 1) }}114%</td>
-          <td class="rank_table_6"><div class="rank_table_img"><div :class="getSpriteIcon(result.skill, 2)"></div></div>技能名{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}114%</td>
+          <td class="rank_table_5">
+            <div class="rank_image_skill_wrap"><div :class="getSpriteIcon(result.skill, 1)"></div></div>
+            {{ getSkillName(result.skill, 1) }}{{ getPercentage(getSurveyResult(result.skill2, "rank" + 3), 1) }} <br />114%
+          </td>
+          <td class="rank_table_6">
+            <div class="rank_image_skill_wrap"><div :class="getSpriteIcon(result.skill, 2)"></div></div>
+            {{ getSkillName(result.skill, 2) }}{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }} <br />114%
+          </td>
           <td class="rank_table_7">{{ getPercentage(getSurveyResult(result.modX, "rank" + 3), 1) }}114%</td>
           <td class="rank_table_8">{{ getPercentage(getSurveyResult(result.modY, "rank" + 3), 1) }}114%</td>
         </tr>
       </table>
     </div>
-
   </div>
 </template>
 
 <script setup>
 import "@/assets/css/survey_rank.css";
-
-import { rankingListInit } from "./common";
+import { rankingListInit, collapse, filterByCharacterProperty, professionDict } from "./common";
 import { onMounted, ref, watch } from "vue";
 
 import surveyApi from "@/api/survey";
@@ -175,100 +161,52 @@ function getSpriteIcon(skill, index) {
   return "bg-skill_icon_" + iconId + " rank_sprite_skill";
 }
 
-let filterRules = ref({ rarity: [], profession: [], year: [], own: [], mod: [] });
-let filterCollapse = ref(false);
-
-function setBarCollapse() {
-  filterCollapse.value = !filterCollapse.value;
-  if (filterCollapse.value) {
-    let elements = document.getElementsByClassName("setup_bar");
-    let height = 5;
-    for (let e of elements) {
-      height += e.offsetHeight + 10;
-    }
-    document.getElementById("setbar").style.height = height + "px";
-    setTimeout(() => {
-      document.getElementById("setbar").style.height = "auto";
-    }, 500);
-  } else {
-    let elements = document.getElementsByClassName("setup_bar");
-    let height = 5;
-    for (let e of elements) {
-      height += e.offsetHeight + 10;
-    }
-    document.getElementById("setbar").style.height = height + "px";
-    setTimeout(() => {
-      document.getElementById("setbar").style.height = 54 + "px";
-    }, 100);
-  }
+function getSkillName(skill, index) {
+  if (skill.length < index + 1) return "";
+  return skill[index].name;
+  // console.log(iconId);
 }
 
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
-  if (filterRules.value[attribute].indexOf(rule) > -1) {
-    return "switch_set selected_color";
+  if (filterCondition.value[attribute].indexOf(rule) > -1) {
+    return "btn_switch selected_color";
   }
-  return "switch_set";
+  return "btn_switch";
 }
+
+let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: [] });
 
 //增加筛选规则
-function addFilterRule(attribute, rule) {
+function addFilterCondition(attribute, condition) {
+  console.log(filterCondition.value);
   let filterRulesCopy = [];
-  if (filterRules.value[attribute].indexOf(rule) > -1) {
-    for (let i in filterRules.value[attribute]) {
-      if (rule != filterRules.value[attribute][i]) {
-        filterRulesCopy.push(filterRules.value[attribute][i]);
+  if (filterCondition.value[attribute].indexOf(condition) > -1) {
+    for (let i in filterCondition.value[attribute]) {
+      if (condition !== filterCondition.value[attribute][i]) {
+        filterRulesCopy.push(filterCondition.value[attribute][i]);
       }
     }
-    filterRules.value[attribute] = filterRulesCopy;
-    filterRankingList();
+    filterCondition.value[attribute] = filterRulesCopy;
+    filterCharacterList();
     return;
   }
-  filterRules.value[attribute].push(rule);
-  filterRankingList();
+
+  filterCondition.value[attribute].push(condition);
+  filterCharacterList();
 }
 
-//筛选rankingList
-function filterRankingList() {
+//筛选
+function filterCharacterList() {
   for (let i in rankingList.value) {
-    var character = rankingList.value[i];
-    let isRarity = isAttribute(character, "rarity");
-    let isProfession = isAttribute(character, "profession");
-    let isOwn = isAttribute(character, "own");
-    let isMod = isAttribute(character, "mod");
-    let isYearFlag = isYear(character);
-    rankingList.value[i].show = isRarity & isProfession & isYearFlag & isOwn & isMod;
+    const character = rankingList.value[i];
+    rankingList.value[i].show = filterByCharacterProperty(filterCondition.value, character);
   }
-}
-
-//是否有这个属性
-function isAttribute(character, attribute) {
-  if (filterRules.value[attribute].length == 0) return true;
-  for (let r in filterRules.value[attribute]) {
-    if (character[attribute] == filterRules.value[attribute][r]) {
-      return true;
-    }
-  }
-  return false;
-}
-
-//是否在这个年份
-function isYear(character) {
-  if (filterRules.value.year.length == 0) return true;
-  for (let r in filterRules.value.year) {
-    // console.log(filterRules.value.year[r])
-    let year = yearDict[filterRules.value.year[r]];
-    // console.log(character.date, ">=", year.start, character.date, "<=", year.end);
-    if (character.date >= year.start && character.date <= year.end) {
-      return true;
-    }
-  }
-  return false;
 }
 
 //按条件排序
 function sortCharacterList(rule) {
-  characterList.value.sort((a, b) => {
+  rankingList.value.sort((a, b) => {
     return b[rule] - a[rule];
   });
 }
