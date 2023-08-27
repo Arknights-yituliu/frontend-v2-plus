@@ -300,6 +300,29 @@
   left: -130px;
 }
 
+
+.skland_desc{
+  margin: 4px;
+  height: 20px;
+  padding: 4px;
+  line-height: 20px;
+}
+
+.skland_input{
+  margin: 4px;
+  height: 20px;
+  padding: 4px;
+  line-height: 20px;
+  width: 230px;
+  border:none;
+  border-bottom: solid black 1px;
+  outline: none;
+}
+
+.skland_input:hover{
+  border-bottom: solid rgb(0, 98, 255) 2px;
+}
+
 /* 填写说明 */
 
 .intro_wrap {

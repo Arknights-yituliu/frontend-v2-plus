@@ -5,7 +5,7 @@
       <characterDemo></characterDemo>
       <button class="mdui-btn survey_button">干员持有率：114 / 514</button>
       <button class="mdui-btn survey_button" @click="upload()">保存数据</button>
-      <div id="updateTime">上次保存时间<br>{{ uploadMessage.updateTime }}</div>
+      <div id="updateTime">上次保存时间<br />{{ uploadMessage.updateTime }}</div>
     </div>
 
     <!-- 设置区域 -->
@@ -30,7 +30,6 @@
           开发信息
           <div class="btn_setup_tips">反馈、建议<br /></div>
         </div>
-
       </div>
     </div>
 
@@ -39,7 +38,11 @@
       <div class="switch_bar select">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
-          <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterCondition('profession', profession.value)">
+          <div
+            :class="selectedBtn('profession', profession.value)"
+            v-for="profession in professionDict"
+            @click="addFilterCondition('profession', profession.value)"
+          >
             {{ profession.label }}
           </div>
         </div>
@@ -69,7 +72,7 @@
           <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
           <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
           <div :class="selectedBtn('itemObtainApproach', 0)" @click="addFilterCondition('itemObtainApproach', 0)">赠送干员</div>
-          <div :class="selectedBtn('itemObtainApproach', 1)" >限定干员</div>
+          <div :class="selectedBtn('itemObtainApproach', 1)">限定干员</div>
         </div>
       </div>
 
@@ -94,12 +97,12 @@
         </div>
       </div>
 
-
       <div class="mdui-divider"></div>
 
       <div class="switch_bar select">
-        <div class="switch_title">批量操作
-          <br><div style="font-size: 12px;font-style: italic;">对所有被筛选出的干员生效</div>
+        <div class="switch_title">
+          批量操作 <br />
+          <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员生效</div>
         </div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="batchUpdatesOwn(true)">设为已拥有</div>
@@ -107,8 +110,8 @@
           <div class="btn_switch" @click="batchUpdatesElite(0)">设为无精</div>
           <div class="btn_switch" @click="batchUpdatesElite(1)">设为精一</div>
           <div class="btn_switch" @click="batchUpdatesElite(2)">设为精二</div>
-          <div class="btn_switch" >设为满级</div>
-          <div class="btn_switch" >设为满潜能</div>
+          <div class="btn_switch">设为满级</div>
+          <div class="btn_switch">设为满潜能</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
@@ -118,7 +121,7 @@
       </div>
     </div>
 
-     <!-- 导入导出模块 -->
+    <!-- 导入导出模块 -->
     <div class="switch_wrap" id="element_upload_wrap">
       <div class="switch_bar upload">
         <div class="switch_title">导入导出</div>
@@ -134,11 +137,20 @@
           <div class="upload_file_name">文件名：{{ uploadFileName }}</div>
         </div>
       </div>
+      <div class="switch_bar upload">
+        <div class="switch_title">森空岛导入</div>
+        <div class="switch_btns_wrap">
+          <div class="skland_desc">输入CRED</div>
+          <div ><input class="skland_input" type="text" v-model="SKLandCRED"></div>
+          <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
+          
+        </div>
+      </div>
     </div>
 
     <!-- 统计模块 -->
     <div class="switch_wrap" id="element_stats_wrap">
-      <div class="switch_bar upload">
+      <div class="switch_bar 1111">
         <div class="switch_title">导入导出</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="exportExcel()">导出到Excel</div>
@@ -153,7 +165,6 @@
         </div>
       </div>
     </div>
-
 
     <!-- 干员组 -->
     <div class="char_forms">
@@ -261,14 +272,14 @@
 </template>
 
 <script setup>
-import {cMessage} from "@/element/message.js";
-import {globalUserData} from "./userService"; //从用户服务js获取用户信息
-import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import { cMessage } from "@/element/message.js";
+import { globalUserData } from "./userService"; //从用户服务js获取用户信息
+import { characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict } from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import surveyApi from "@/api/survey";
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import "@/assets/css/survey_character.css";
-import characterDemo from '@/pages/survey/characterDemo.vue'
-import {http} from "@/api/baseURL";
+import characterDemo from "@/pages/survey/characterDemo.vue";
+import { http } from "@/api/baseURL";
 
 function getSprite(id, type) {
   if ("mod" === type) return "bg-" + id + " sprite_mod";
@@ -337,6 +348,21 @@ function exportExcel() {
   setTimeout(() => {
     exportExcelBtnText.value = "导出excel";
   }, 5000);
+}
+
+//森空岛导入
+let SKLandCRED = ref('')
+
+function importSKLandCRED(){
+  let info = {
+    token:globalUserData.value.token,cred:SKLandCRED.value
+  }
+  surveyApi.uploadCharacterBySKLand(info).then((response) => {
+    uploadMessage.value = response.data;
+    updateIndexMap.value = {};
+    cMessage("森空岛信息导入成功");
+
+  });
 }
 
 let lastUploadTimeStamp = 1689425013364; //上次上传时间的时间戳
@@ -714,7 +740,6 @@ function changeSurveyType() {
     surveyType.value = "";
     simpleCard.value = !simpleCard.value;
     surveyTypeText.value = "简易问卷";
-
   }
 }
 
@@ -727,9 +752,6 @@ function simpleCardClass() {
   return "char_card";
 }
 
-
-
-
 //判断按钮是否选中
 function selectedBtn(attribute, rule) {
   if (filterCondition.value[attribute].indexOf(rule) > -1) {
@@ -738,8 +760,7 @@ function selectedBtn(attribute, rule) {
   return "btn_switch";
 }
 
-
-let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO:[] });
+let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: [] });
 
 //增加筛选规则
 function addFilterCondition(attribute, condition) {
@@ -760,7 +781,6 @@ function addFilterCondition(attribute, condition) {
   filterCharacterList();
 }
 
-
 //筛选
 function filterCharacterList() {
   for (let i in characterList.value) {
@@ -768,7 +788,6 @@ function filterCharacterList() {
     characterList.value[i].show = filterByCharacterProperty(filterCondition.value, character);
   }
 }
-
 
 //按条件排序
 function sortCharacterList(rule) {

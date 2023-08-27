@@ -65,7 +65,7 @@ watch(
   top: 30px;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 2001;
   margin: auto;
   width: 500px;
   height: 500px;
