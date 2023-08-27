@@ -60,9 +60,18 @@ export default {
 
   uploadCharacterByExcel(file, token) {
     return request({
-      url: `${api_name}/character/import?token=${token}`,
+      url: `${api_name}/character/import/excel?token=${token}`,
       method: "post",
       data: file,
+    });
+  },
+
+
+  uploadCharacterBySKLand(data){
+    return request({
+      url: `${api_name}/character/import/skland`,
+      method: "post",
+      data: data,
     });
   },
 
