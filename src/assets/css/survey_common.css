@@ -15,7 +15,7 @@
 .setup_top {
   position: sticky;
   top:0px;
-  z-index: 114514;
+  z-index: 1000;
   /* height: 48px; */
   max-width: 95%;
   margin: auto;

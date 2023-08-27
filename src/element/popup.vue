@@ -62,7 +62,7 @@ watch(
 .popup {
   /* display: none; */
   position: absolute;
-  top: 30px;
+  top: 60px;
   left: 0;
   right: 0;
   z-index: 2001;
