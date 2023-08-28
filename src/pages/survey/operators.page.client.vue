@@ -26,7 +26,7 @@
           问卷类型切换
           <div class="btn_setup_tips">当前问卷：{{ surveyTypeText }}</div>
         </div>
-        <div class="btn_setup">
+        <div class="btn_setup" @click="toBiliblili()">
           开发信息
           <div class="btn_setup_tips">反馈、建议<br /></div>
         </div>
@@ -71,21 +71,21 @@
           <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
           <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
           <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
-          <div :class="selectedBtn('itemObtainApproach', 0)" @click="addFilterCondition('itemObtainApproach', 0)">赠送干员</div>
-          <div :class="selectedBtn('itemObtainApproach', 1)">限定干员</div>
+          <div :class="selectedBtn('itemObtainApproach', '赠送干员')" @click="addFilterCondition('itemObtainApproach','赠送干员')">赠送干员</div>
+          <div :class="selectedBtn('itemObtainApproach', '限定干员')" @click="addFilterCondition('itemObtainApproach','限定干员')">限定干员</div>
         </div>
       </div>
 
       <div class="switch_bar select">
         <div class="switch_title">排序</div>
         <div class="switch_btns_wrap">
-          <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
+          <!-- <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div> -->
           <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
           <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
         </div>
       </div>
 
-      <div class="switch_bar select">
+      <!-- <div class="switch_bar select">
         <div class="switch_title">练度</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('TODO', 0)" @click="addFilterCondition('mod', false)">无专三</div>
@@ -95,7 +95,7 @@
           <div :class="selectedBtn('TODO', 4)" @click="addFilterCondition('mod', false)">未开模组</div>
           <div :class="selectedBtn('TODO', 5)" @click="addFilterCondition('mod', false)">已开模组</div>
         </div>
-      </div>
+      </div> -->
 
       <div class="mdui-divider"></div>
 
@@ -141,9 +141,8 @@
         <div class="switch_title">森空岛导入</div>
         <div class="switch_btns_wrap">
           <div class="skland_desc">输入CRED</div>
-          <div ><input class="skland_input" type="text" v-model="SKLandCRED"></div>
+          <div><input class="skland_input" type="text" v-model="SKLandCRED" /></div>
           <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
-          
         </div>
       </div>
     </div>
@@ -196,7 +195,7 @@
             <div :id="char_index + 'elite2'" class="image_elite" @click="updateElite(char_index, 2)" v-show="char.rarity > 3">
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
-            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index, char.rarity, char.elite)">
+            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">
               <img class="image_lvMax" src="/image/rank2/lvMax.png" alt="" />
             </div>
           </div>
@@ -281,6 +280,13 @@ import "@/assets/css/survey_character.css";
 import characterDemo from "@/pages/survey/characterDemo.vue";
 import { http } from "@/api/baseURL";
 
+
+/**
+ * 获取雪碧图
+ * @param id 图片id
+ * @param type 图片类型
+ * @returns {string}  
+ */
 function getSprite(id, type) {
   if ("mod" === type) return "bg-" + id + " sprite_mod";
   if ("skill" === type) return "bg-" + id + " sprite_skill";
@@ -351,17 +357,23 @@ function exportExcel() {
 }
 
 //森空岛导入
-let SKLandCRED = ref('')
+let SKLandCRED = ref("");
 
-function importSKLandCRED(){
-  let info = {
-    token:globalUserData.value.token,cred:SKLandCRED.value
+function importSKLandCRED() {
+  if (globalUserData.value.token === void 0) {
+    console.log(globalUserData.value.token === void 0);
+    cMessage("未登录", "error");
+    return;
   }
+
+  let info = {
+    token: globalUserData.value.token,
+    cred: SKLandCRED.value,
+  };
   surveyApi.uploadCharacterBySKLand(info).then((response) => {
     uploadMessage.value = response.data;
     updateIndexMap.value = {};
     cMessage("森空岛信息导入成功");
-
   });
 }
 
@@ -387,14 +399,16 @@ function automaticUpload() {
 
   //上传的数据
   let uploadList = uploadDataReduction();
-
+  
+  lastUploadTimeStamp = nowUploadTimeStamp;
+  
   surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
     uploadMessage.value = response.data;
     updateIndexMap.value = {};
     cMessage("自动保存成功");
   });
 
-  lastUploadTimeStamp = nowUploadTimeStamp;
+  
 }
 
 //手动上传
@@ -462,7 +476,13 @@ function maaData1() {
   }
 }
 
-//更新是否持有
+
+/**
+ * 更新是否持有
+ * @param char_index  干员数组的索引  
+ * @param newVal   传入的新值
+ */
+
 function updateOwn(char_index, newVal) {
   updateIndexMap.value[char_index] = char_index; //记录更新的干员的索引
 
@@ -481,10 +501,10 @@ function updateOwn(char_index, newVal) {
     }
   } else {
     //点击未拥有时，撤销所有选项
-    let attributeList = ["elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
-    for (let attribute of attributeList) {
-      updateOption(char_index + attribute + character[attribute], false);
-      characterList.value[char_index][attribute] = -1;
+    let propertyList = ["elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
+    for (let property of propertyList) {
+      updateOption(char_index + property + character[property], false);
+      characterList.value[char_index][property] = -1;
     }
     updateOption(char_index + "level", false);
   }
@@ -502,7 +522,12 @@ function batchUpdatesOwn(newVal) {
   }
 }
 
-//更新精英化等级
+
+/**
+ * 更新精英化等级
+ * @param char_index  干员数组的索引
+ * @param newVal   传入的新值
+ */
 function updateElite(char_index, newVal) {
   //记录更新过信息的干员的索引
   updateIndexMap.value[char_index] = char_index;
@@ -539,25 +564,31 @@ function batchUpdatesElite(newVal) {
   }
 }
 
+/**
+ * 更新精英化等级
+ * @param char_index  干员数组的索引
+ * @param property 需要修改的干员信息属性名称
+ * @param newVal   传入的新值
+ */
 //更新专精或模组等级
-function updateSkillAndMod(char_index, attribute, newVal) {
+function updateSkillAndMod(char_index, property, newVal) {
   updateIndexMap.value[char_index] = char_index;
   //需要修改的elementId
-  let elementId = char_index + attribute;
+  let elementId = char_index + property;
   //需要删去的旧值
-  let oldVal = characterList.value[char_index][attribute];
+  let oldVal = characterList.value[char_index][property];
   let oldElite = characterList.value[char_index].elite;
   // console.log("更新专精模组——", "新值：", newVal, "，旧值：", oldVal, "，结果：", newVal == oldVal);
 
   //新旧值相同直接取消选项背景色，并更新专精/模组等级为-1
   if (newVal === oldVal) {
-    characterList.value[char_index][attribute] = -1;
+    characterList.value[char_index][property] = -1;
     updateOption(elementId + oldVal, false);
     return;
   }
 
   //更新精英等级并取消旧值的选项背景色，给新值的选项加上选项背景色
-  characterList.value[char_index][attribute] = newVal;
+  characterList.value[char_index][property] = newVal;
   cancelAndUpdateOption(elementId, newVal, oldVal);
 
   //如果干员是三星以上，自动更新精英等级为2
@@ -573,38 +604,46 @@ function updateSkillAndMod(char_index, attribute, newVal) {
   automaticUpload();
 }
 
-// 批量专精或模组
-function batchUpdatesSkillAndMod(attribute, newVal) {
+/**
+ * 批量专精或模组
+ * @param property 需要修改的干员信息属性名称
+ * @param newVal   传入的新值
+ */
+function batchUpdatesSkillAndMod(property, newVal) {
   for (let index in characterList.value) {
     if (!(characterList.value[index].show && characterList.value[index].own)) continue;
-    if ("modX" === attribute && !characterList.value[index].modXOwn) {
+    if ("modX" === property && !characterList.value[index].modXOwn) {
       console.log("没有x模组");
       continue;
     }
-    if ("modY" === attribute && !characterList.value[index].modYOwn) {
+    if ("modY" === property && !characterList.value[index].modYOwn) {
       console.log("没有y模组");
       continue;
     }
-    if ("skill3" === attribute && characterList.value[index].rarity < 6) {
+    if ("skill3" === property && characterList.value[index].rarity < 6) {
       console.log("6星以下没有三技能");
       continue;
     }
 
-    if ("skill2" === attribute && characterList.value[index].rarity < 4) {
+    if ("skill2" === property && characterList.value[index].rarity < 4) {
       console.log("4星以下没有三技能");
       continue;
     }
 
-    let elementId = index + attribute;
-    let oldVal = characterList.value[index][attribute];
-    characterList.value[index][attribute] = newVal;
+    let elementId = index + property;
+    let oldVal = characterList.value[index][property];
+    characterList.value[index][property] = newVal;
 
     cancelAndUpdateOption(elementId, newVal, oldVal);
     updateIndexMap.value[index] = index;
   }
 }
 
-//更新潜能
+/**
+ * 更新潜能
+ * @param char_index 干员数组的索引
+ * @param newVal   传入的新值
+ */
 function updatePotential(char_index, newVal) {
   //记录更新过信息的干员的索引
   updateIndexMap.value[char_index] = char_index;
@@ -628,14 +667,18 @@ function updatePotential(char_index, newVal) {
   automaticUpload();
 }
 
-//最大等级
-function updateLevel(char_index, rarity) {
+/**
+ * 更新干员的等级
+ * @param char_index 干员数组的索引
+ */
+function updateLevel(char_index) {
   //记录更新过信息的干员的索引
   updateIndexMap.value[char_index] = char_index;
 
   let level = -1;
   //旧精英等级
   let oldElite = characterList.value[char_index].elite;
+  let rarity = characterList.value[char_index].rarity;
 
   characterList.value[char_index].own = true;
   //如果是满级则取消满级，并将选项背景色去除
@@ -753,8 +796,8 @@ function simpleCardClass() {
 }
 
 //判断按钮是否选中
-function selectedBtn(attribute, rule) {
-  if (filterCondition.value[attribute].indexOf(rule) > -1) {
+function selectedBtn(property, rule) {
+  if (filterCondition.value[property].indexOf(rule) > -1) {
     return "btn_switch selected_color";
   }
   return "btn_switch";
@@ -763,21 +806,21 @@ function selectedBtn(attribute, rule) {
 let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: [] });
 
 //增加筛选规则
-function addFilterCondition(attribute, condition) {
+function addFilterCondition(property, condition) {
   console.log(filterCondition.value);
   let filterRulesCopy = [];
-  if (filterCondition.value[attribute].indexOf(condition) > -1) {
-    for (let i in filterCondition.value[attribute]) {
-      if (condition !== filterCondition.value[attribute][i]) {
-        filterRulesCopy.push(filterCondition.value[attribute][i]);
+  if (filterCondition.value[property].indexOf(condition) > -1) {
+    for (let i in filterCondition.value[property]) {
+      if (condition !== filterCondition.value[property][i]) {
+        filterRulesCopy.push(filterCondition.value[property][i]);
       }
     }
-    filterCondition.value[attribute] = filterRulesCopy;
+    filterCondition.value[property] = filterRulesCopy;
     filterCharacterList();
     return;
   }
 
-  filterCondition.value[attribute].push(condition);
+  filterCondition.value[property].push(condition);
   filterCharacterList();
 }
 
@@ -791,9 +834,22 @@ function filterCharacterList() {
 
 //按条件排序
 function sortCharacterList(rule) {
+  console.log(rule)
   characterList.value.sort((a, b) => {
     return b[rule] - a[rule];
   });
+}
+
+
+//转跳罗德岛基建Beta
+function toBiliblili() {
+  
+  const bilibiliHref = 'https://space.bilibili.com/688411531/dynamic';
+  const element = document.createElement("a");
+  element.style.display = "none";
+  element.href = bilibiliHref;
+  element.click();
+ 
 }
 
 onMounted(() => {
