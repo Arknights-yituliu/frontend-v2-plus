@@ -71,8 +71,8 @@
           <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
           <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
           <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
-          <div :class="selectedBtn('itemObtainApproach', '赠送干员')" @click="addFilterCondition('itemObtainApproach','赠送干员')">赠送干员</div>
-          <div :class="selectedBtn('itemObtainApproach', '限定干员')" @click="addFilterCondition('itemObtainApproach','限定干员')">限定干员</div>
+          <div :class="selectedBtn('itemObtainApproach', '赠送干员')" @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员</div>
+          <div :class="selectedBtn('itemObtainApproach', '限定干员')" @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员</div>
         </div>
       </div>
 
@@ -172,6 +172,8 @@
         <div :class="surveyTypeClass('card_option_left')">
           <div :class="surveyTypeClass('card_option_top_left')">
             <div class="avatar_at_top">
+              <div class="character_own_label" v-if="char.own">已拥有</div>
+              <div class="character_not_own_label" v-if="!char.own">未拥有</div>
               <div class="image_avatar" @click="updateOwn(char_index, !char.own, true)">
                 <div :class="getSprite(char.charId)"></div>
               </div>
@@ -280,12 +282,11 @@ import "@/assets/css/survey_character.css";
 import characterDemo from "@/pages/survey/characterDemo.vue";
 import { http } from "@/api/baseURL";
 
-
 /**
  * 获取雪碧图
  * @param id 图片id
  * @param type 图片类型
- * @returns {string}  
+ * @returns {string}
  */
 function getSprite(id, type) {
   if ("mod" === type) return "bg-" + id + " sprite_mod";
@@ -302,6 +303,12 @@ let rarityDict = [1, 2, 3, 4, 5, 6];
 
 //找回填写过的角色信息
 function getSurveyCharacter() {
+  if (globalUserData.value.token === void 0) {
+    console.log(globalUserData.value.token === void 0);
+    cMessage("未登录", "error");
+    return;
+  }
+
   surveyApi.getSurveyCharacter(globalUserData.value.token).then((response) => {
     let list = response.data; //后端返回的数据
 
@@ -362,7 +369,7 @@ let SKLandCRED = ref("");
 function importSKLandCRED() {
   if (globalUserData.value.token === void 0) {
     console.log(globalUserData.value.token === void 0);
-    cMessage("未登录", "error");
+    // cMessage("未登录", "error");
     return;
   }
 
@@ -370,6 +377,7 @@ function importSKLandCRED() {
     token: globalUserData.value.token,
     cred: SKLandCRED.value,
   };
+
   surveyApi.uploadCharacterBySKLand(info).then((response) => {
     uploadMessage.value = response.data;
     updateIndexMap.value = {};
@@ -383,6 +391,7 @@ let updateIndexMap = ref({}); //每次点击操作记录下被更新的干员的
 
 //自动上传风评表
 function automaticUpload() {
+  return;
   //方法触发时的时间戳
   let nowUploadTimeStamp = Date.parse(new Date());
   //与上一次自动上传时间的间隔
@@ -399,16 +408,14 @@ function automaticUpload() {
 
   //上传的数据
   let uploadList = uploadDataReduction();
-  
+
   lastUploadTimeStamp = nowUploadTimeStamp;
-  
+
   surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
     uploadMessage.value = response.data;
     updateIndexMap.value = {};
     cMessage("自动保存成功");
   });
-
-  
 }
 
 //手动上传
@@ -476,10 +483,9 @@ function maaData1() {
   }
 }
 
-
 /**
  * 更新是否持有
- * @param char_index  干员数组的索引  
+ * @param char_index  干员数组的索引
  * @param newVal   传入的新值
  */
 
@@ -521,7 +527,6 @@ function batchUpdatesOwn(newVal) {
     }
   }
 }
-
 
 /**
  * 更新精英化等级
@@ -834,22 +839,19 @@ function filterCharacterList() {
 
 //按条件排序
 function sortCharacterList(rule) {
-  console.log(rule)
+  console.log(rule);
   characterList.value.sort((a, b) => {
     return b[rule] - a[rule];
   });
 }
 
-
 //转跳罗德岛基建Beta
 function toBiliblili() {
-  
-  const bilibiliHref = 'https://space.bilibili.com/688411531/dynamic';
+  const bilibiliHref = "https://space.bilibili.com/688411531/dynamic";
   const element = document.createElement("a");
   element.style.display = "none";
   element.href = bilibiliHref;
   element.click();
- 
 }
 
 onMounted(() => {
