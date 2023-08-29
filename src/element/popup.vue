@@ -4,7 +4,6 @@
 
     <div class="popup" :style="widthStyle">
       <slot></slot>
-     
     </div>
   </div>
 </template>
@@ -56,13 +55,14 @@ watch(
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
   /* display: none; */
 }
 
 .popup {
   /* display: none; */
   position: absolute;
-  top: 60px;
+  top: 15vh;
   left: 0;
   right: 0;
   z-index: 2001;
@@ -70,9 +70,10 @@ watch(
   width: 500px;
   height: 500px;
   overflow: auto;
-  background-color: rgba(255, 255, 255);
-  border-radius: 6px;
-  /* margin-top: 100px; */
-}
 
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
 </style>

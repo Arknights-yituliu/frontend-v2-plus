@@ -33,17 +33,19 @@
 .rank_image_skill_wrap {
   height: 60px;
   width: 100px;
+  border: 1px red solid;
 }
 
 .rank_sprite_skill {
   transform: scale(0.39);
   position: relative;
   top: -36px;
-  left: -32px;
-  /* border: 1px red solid; */
+  left: -10px;
+  /*  */
 }
 
-.rank_table{
+
+
+.rank_ratio{
   text-align: center;
 }
-

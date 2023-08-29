@@ -1,4 +1,9 @@
 <template>
+
+<c-popup :visible="importPopupVisible" v-model:visible="importPopupVisible">
+
+
+</c-popup>
   <div class="survey_character_page">
     <!-- 常驻条 -->
     <div class="setup_top">
@@ -126,17 +131,22 @@
       <div class="switch_bar upload">
         <div class="switch_title">导入导出</div>
         <div class="switch_btns_wrap">
-          <div class="btn_switch" @click="exportExcel()">导出到Excel</div>
+          <div class="btn_switch" @click="exportExcel()">导出为Excel文件</div>
           <div class="btn_switch">
             <div class="input_upload_wrap">
-              选择文件
+              导入Excel文件
               <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
             </div>
           </div>
-          <div class="btn_switch" @click="uploadByExcel()">上传文件</div>
-          <div class="upload_file_name">文件名：{{ uploadFileName }}</div>
+          <!-- <div class="btn_switch" @click="uploadByExcel()">上传Excel文件</div> -->
+          <div class="upload_file_name">文件名：{{ uploadFileName }} </div>
         </div>
       </div>
+      <div class="switch_bar upload">
+        <div class="switch_desc"><b>*上传须知：</b>导入的Excel的数据格式需与一图流导出的Excel内数据格式一致，请先导出一份空白表格以确保格式无误</div>
+      </div>
+
+      <div class="divider"></div>
       <div class="switch_bar upload">
         <div class="switch_title">森空岛导入</div>
         <div class="switch_btns_wrap">
@@ -144,6 +154,9 @@
           <div><input class="skland_input" type="text" v-model="SKLandCRED" /></div>
           <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
         </div>
+      </div>
+      <div class="switch_bar upload">
+        <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了《森空岛导入的风险和声明》</div>
       </div>
     </div>
 
@@ -281,6 +294,9 @@ import { onMounted, ref } from "vue";
 import "@/assets/css/survey_character.css";
 import characterDemo from "@/pages/survey/characterDemo.vue";
 import { http } from "@/api/baseURL";
+
+
+let importPopupVisible = ref(true)
 
 /**
  * 获取雪碧图
@@ -456,15 +472,10 @@ function uploadDataReduction() {
   return uploadList;
 }
 
-//显示文件名称
+//Excel文件上传
 function getUploadFileName() {
   const file = document.getElementById("uploadInput");
   uploadFileName.value = file.files[0].name;
-}
-
-//通过excel上传
-function uploadByExcel() {
-  const file = document.getElementById("uploadInput");
   let formData = new FormData();
   formData.append("file", file.files[0]);
   console.log(file);
@@ -474,6 +485,19 @@ function uploadByExcel() {
     cMessage("更新了 " + response.data.updateRows + " 条");
   });
 }
+
+//通过excel上传
+// function uploadByExcel() {
+//   const file = document.getElementById("uploadInput");
+//   let formData = new FormData();
+//   formData.append("file", file.files[0]);
+//   console.log(file);
+//   surveyApi.uploadCharacterByExcel(formData, globalUserData.value.token).then((response) => {
+//     // console.log(response.data);
+//     cMessage("新增了 " + response.data.insertRows + " 条");
+//     cMessage("更新了 " + response.data.updateRows + " 条");
+//   });
+// }
 
 let maaData = ref([{}]);
 
