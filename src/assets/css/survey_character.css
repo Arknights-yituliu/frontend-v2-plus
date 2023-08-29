@@ -30,7 +30,7 @@
 .char_card_simple {
   transition: all 0.2s;
   width: 124px;
-  height: 150px;
+  height: 170px;
   overflow: hidden;
   margin: 8px;
 }
@@ -64,6 +64,7 @@
 
 .card_option_top_left {
   display: flex;
+  
 }
 
 
@@ -71,32 +72,67 @@
   position: relative;
   z-index: 20;
   margin-right: 12px;
-
+  overflow: hidden;
+  height: 146px;
+  box-shadow: 2px 2px 8px rgba(128, 128, 128, 0.3);
 }
 
 .image_avatar {
-  height: 100px;
+  height: 120px;
   width: 100px;
   border-radius: 0px;
   overflow: hidden;
-
   cursor: pointer;
-  box-shadow: 2px 2px 8px rgba(172, 172, 172, 0.3);
   position: absolute;
   z-index: 20;
-  /* background-color: rgba(0, 0, 0, 0.2); */
+  /* background-color: rgba(0, 0, 0); */
 }
 
-.image_avatar_own {
-  height: 100px;
+.character_own_label {
+   width: 100px;
+   text-align: center;
+   height: 24px;
+   line-height: 24px;
+   position: absolute;
+   left:28px;
+   top: 8px;
+   z-index: 21;
+   font-weight: 600;
+   color: white;   
+   font-size: 16px;
+   background-color: rgb(255, 123, 0);
+   transform: rotate(40deg);
+}
+
+.character_not_own_label {
   width: 100px;
-  border-radius: 0px;
-  overflow: hidden;
-  margin-right: 10px;
+  text-align: center;
+  height: 24px;
+  line-height: 24px;
   position: absolute;
-  /* background-color: rgba(0, 0, 0, 0.2); */
+  left:28px;
+  top: 8px;
+  z-index: 21;
+  font-weight: 600;
+  color: white;   
+  font-size: 16px;
+  background-color: rgb(0, 110, 255);
+  transform: rotate(40deg);
 }
 
+.char_name {
+  text-align: center;
+  margin-top: 0px;
+  /* margin-left:10px; */
+  width: 100px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 0px;
+  font-weight: 700;
+  position: relative;
+  top: 120px;
+  background: rgb(230, 230, 230);
+}
 
 .card-overlay {
   position: absolute;
@@ -119,19 +155,7 @@
   margin: 10px 0 0 220px;
 }
 
-.char_name {
-  text-align: center;
-  margin-top: 0px;
-  /* margin-left:10px; */
-  width: 100px;
-  height: 26px;
-  line-height: 26px;
-  border-radius: 0px;
-  font-weight: 700;
-  position: relative;
-  top: 100px;
-  background: rgb(230, 230, 230);
-}
+
 
 .potential_wrap_basic {
   display: none;
@@ -289,7 +313,7 @@
   /* border: 1px solid red; */
   border-radius: 0px;
   position: absolute;
-  top: -40px;
+  top: -20px;
   left: -40px;
 }
 
