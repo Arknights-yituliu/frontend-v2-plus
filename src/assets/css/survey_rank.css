@@ -6,19 +6,47 @@
   /* box-shadow: 0px 0px 2px 2px rgb(160, 160, 160); */
   font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
 }
+.rank_table_tr{
+  height: 96px;
+}
 
+.rank_table_tr td{
+  padding: 0px !important;
+}
+
+.rank_table_1{
+  width: 240px;
+}
+.rank_table_avatar{
+  width: 240px;
+  height: 96px;
+}
 
 .rank_character_name{
-  text-align: center;
+  /* z-index: 1; */
+  text-align: left;
+  display: inline-block;
+  background: linear-gradient(to right,#3f51b5,#ffffffff);
+  vertical-align: top;
+  margin:48px 0px 0px -36px;
+  padding-left: 40px;
+  width: 128px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .rank_avatar_wrap {
   height: 80px;
   width: 80px;
-  border-radius: 50%;
-  border: 1px rgb(231, 231, 231) solid;
-  margin: 5px;
+  /* border-radius: 50%; */
+  /* border: 1px rgb(231, 231, 231) solid; */
+  margin: 8px;
   overflow: hidden;
+  display: inline-block;
+  /* background-color: gray; */
+  /* z-index: 2; */
 }
 
 .rank_avatar {
@@ -26,26 +54,50 @@
   position: relative;
   top: -51px;
   left: -50px;
-  border-radius: 50%;
+  /* border-radius: 50%; */
 }
 
+.rank_table_4{
+  width: 240px;
+}
+
+.rank_table_5{
+  width: 240px;
+}
+
+.rank_table_6{
+  width: 240px;
+}
+
+.rank_table_skill{
+  width: 160px;
+}
 
 .rank_image_skill_wrap {
   height: 60px;
-  width: 100px;
-  border: 1px red solid;
+  width: 60px;
+  display: inline-block;
+  /* border: 1px red solid; */
 }
 
 .rank_sprite_skill {
   transform: scale(0.39);
   position: relative;
-  top: -36px;
-  left: -10px;
+  top: -32px;
+  left: -24px;
   /*  */
 }
 
-
-
-.rank_ratio{
-  text-align: center;
+.rank_table_skill_text{
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
+  margin: 6px 0px 0px 12px;
 }
+
+.rank_table_skill_text :first-child{
+  font-size: 12px;
+  line-height: 16px;
+}
+
+
