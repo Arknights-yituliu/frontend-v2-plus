@@ -54,8 +54,8 @@
       </div> -->
     </div>
 
-    <div id="rank_table" class="mdui-table-fluid">
-      <table class="mdui-table">
+    <div id="rank_table" >
+      <table >
         <thead>
           <tr>
             <td class="rank_table_1">代号</td>
@@ -69,29 +69,29 @@
           </tr>
         </thead>
         <tr v-for="(result, index) in rankingList" v-show="result.show">
-          <td class="rank_table_1">
+          <td class="rank_table_1 rank_table_text">
             <div class="rank_avatar_wrap"><div :class="getSprite(result.charId)"></div></div>
             <div class="rank_character_name">{{ result.name }}</div>
           </td>
-          <td class="rank_table_2">{{ getPercentage(result.own, 1) }}114%</td>
-          <td class="rank_table_3">{{ getPercentage(result.own, 1) }}114%</td>
-          <td class="rank_table_4">
+          <td class="rank_table_2 rank_table_text">{{ getPercentage(result.own, 1) }}</td>
+          <td class="rank_table_3 rank_table_text">{{ getPercentage(result.elite2, 1) }}</td>
+          <td class="rank_table_4 rank_table_text">
             <div class="rank_image_skill_wrap"><div :class="getSpriteIcon(result.skill, 0)"></div></div>
-            <div>
-              {{ getSkillName(result.skill, 0) }}{{ getPercentage(getSurveyResult(result.skill1, "rank" + 3), 1) }} <br />
-              114%
-            </div>
+            <div class="rank_ratio">{{ getSkillName(result.skill, 0) }}</div>
+            <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill1, "rank3"), 1) }}</div>
           </td>
-          <td class="rank_table_5">
+          <td class="rank_table_5 rank_table_text">
             <div class="rank_image_skill_wrap"><div :class="getSpriteIcon(result.skill, 1)"></div></div>
-            {{ getSkillName(result.skill, 1) }}{{ getPercentage(getSurveyResult(result.skill2, "rank" + 3), 1) }} <br />114%
+            <div class="rank_ratio"> {{ getSkillName(result.skill, 1) }}</div>
+            <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill2, "rank3"), 1) }}</div>
           </td>
-          <td class="rank_table_6">
+          <td class="rank_table_6 rank_table_text">
             <div class="rank_image_skill_wrap"><div :class="getSpriteIcon(result.skill, 2)"></div></div>
-            {{ getSkillName(result.skill, 2) }}{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }} <br />114%
+            <div class="rank_ratio"> {{ getSkillName(result.skill, 2) }}</div>
+            <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}</div>
           </td>
-          <td class="rank_table_7">{{ getPercentage(getSurveyResult(result.modX, "rank" + 3), 1) }}114%</td>
-          <td class="rank_table_8">{{ getPercentage(getSurveyResult(result.modY, "rank" + 3), 1) }}114%</td>
+          <td class="rank_table_7">{{ getPercentage(getSurveyResult(result.modX, "rank" + 3), 1) }}</td>
+          <td class="rank_table_8">{{ getPercentage(getSurveyResult(result.modY, "rank" + 3), 1) }}</td>
         </tr>
       </table>
     </div>
@@ -136,7 +136,7 @@ function getCharStatisticsResult() {
 }
 
 onMounted(() => {
-  getCharStatisticsResult();
+  // getCharStatisticsResult();
 });
 
 function getSprite(id, type) {
@@ -150,7 +150,7 @@ function getPercentage(value, digit) {
 }
 
 function getSurveyResult(obj, rank) {
-  if (obj[rank] == undefined) return -1;
+  if (obj[rank] == void 0) return -1;
   return obj[rank];
 }
 

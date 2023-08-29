@@ -12,6 +12,7 @@
   margin-bottom: 6px;
   /* padding: 4px; */
 }
+
 .setup_top {
   position: sticky;
   top:0px;
@@ -128,7 +129,7 @@
 
 .switch_title {
   float: left;
-  margin: 6px;
+  margin: 4px;
   width: 96px;
   height: 20px;
   padding: 4px;
@@ -137,6 +138,25 @@
   font-weight: 500;
   /* background: rgb(199, 226, 255); */
   border-radius: 2px;
+}
+
+.switch_desc {
+  margin: 4px;
+  height: 20px;
+  padding: 4px;
+  padding-left: 20px;
+  line-height: 20px;
+  font-style:italic;
+  color: rgb(97, 97, 97);
+}
+
+
+.divider{
+  width: 100%;
+  background-color: rgb(179, 179, 179);
+  height: 1px;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .switch_btns_wrap {
