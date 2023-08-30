@@ -92,6 +92,7 @@
   align-content: center;
 }
 
+
 .score_portrait_wrap {
   height: 250px;
   width: 120px;
@@ -208,6 +209,14 @@
   padding-top: 2px;
 }
 
+.score_fastFill{
+  background-color: gray;
+  text-align: center;
+  margin: 8px;
+  height: 24px;
+  line-height: 24px;
+}
+
 .score_bar_wrap {
   margin-left: 20px;
 }
@@ -216,8 +225,8 @@
   font-size: 18px;
   font-weight: 700;
   margin: auto;
-  margin-top: 12px;
-  margin-top: 12px;
+  margin-top: 6px;
+  margin-bottom: 6px;
   /* width: 348px; */
   display: flex;
   line-height: 36px;
@@ -237,4 +246,10 @@
   line-height: 24px;
   font-weight: 500;
   font-style: italic;
+}
+
+.score_avg{
+  display: inline-block;
+  font-size: 15px;
+  color: gray;
 }
