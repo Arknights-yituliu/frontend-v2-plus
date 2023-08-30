@@ -25,7 +25,7 @@
           <div class="btn_setup_tips">可筛选后批量进行填写</div>
         </div>
 
-        <div class="btn_setup" @click="collapse('switch_bar upload', 'element_upload_wrap')">
+        <div class="btn_setup" @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">
           数据导入/导出
           <div class="btn_setup_tips">导入/导出json/Excel等</div>
         </div>
@@ -132,7 +132,8 @@
     </div>
 
     <!-- 导入导出模块 -->
-    <div class="switch_wrap" id="element_upload_wrap">
+    <div class="switch_wrap" id="switch_upload_wrap">
+      <div class="switch_box" id="switch_upload_box">
       <div class="switch_bar upload">
         <div class="switch_title">导入导出</div>
         <div class="switch_btns_wrap">
@@ -162,6 +163,7 @@
       </div>
       <div class="switch_bar upload">
         <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了 <a @click="importPopupVisible = !importPopupVisible">《森空岛导入须知》</a></div>
+      </div>
       </div>
     </div>
 
