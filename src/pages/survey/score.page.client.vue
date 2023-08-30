@@ -53,8 +53,7 @@
     <!-- 评分卡片 -->
     <div class="score_wrap">
       <div v-for="(char, char_index) in scoreList.slice(0)" :key="char_index" class="score_card" v-show="char.show">
-        <!-- 标题区域 -->
-
+        <!-- 左侧区域 -->
         <div class="score_left_wrap">
           <div class="score_portrait_wrap">
             <div :class="getBgSprite('bg-tl', char.rarity)"></div>
@@ -67,27 +66,40 @@
             <div class="score_portrait_bg_bl"></div>
             <div class="score_char_name">{{ char.name }}</div>
           </div>
+          <div class="score_fastFill">
+            填入平均分
+          </div>
         </div>
+
 
         <!-- 打分区域 -->
         <div class="score_right_wrap">
           <div class="score_bar" v-show="scoreItem.daily.show">
-            <div class="score_name" @click="resetScore(char_index, 'daily')">日常：</div>
+            <div class="score_name" @click="resetScore(char_index, 'daily')">
+              <div class="score_avg">(4.3)</div>
+              日常：
+            </div>
             <!-- 日常 -->
             <img class="image_score" :src="scoreSelected(rank, char.daily)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'daily', rank)" />
           </div>
           <div class="score_bar" v-show="scoreItem.rogue.show">
-            <div class="score_name" @click="resetScore(char_index, 'rogue')">肉鸽：</div>
+            <div class="score_name" @click="resetScore(char_index, 'rogue')">
+              <div class="score_avg">(4.3)</div>
+              肉鸽：</div>
             <!-- 肉鸽 -->
             <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'rogue', rank)" />
           </div>
           <div class="score_bar" v-show="scoreItem.hard.show">
-            <div class="score_name" @click="resetScore(char_index, 'hard')">高难：</div>
+            <div class="score_name" @click="resetScore(char_index, 'hard')">
+              <div class="score_avg">(4.3)</div>
+              高难：</div>
             <!-- 高难 -->
             <img class="image_score" :src="scoreSelected(rank, char.hard)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'hard', rank)" />
           </div>
           <div class="score_bar" v-show="scoreItem.securityService.show">
-            <div class="score_name" @click="resetScore(char_index, 'securityService')">保全：</div>
+            <div class="score_name" @click="resetScore(char_index, 'securityService')">
+              <div class="score_avg">(4.3)</div>
+              保全：</div>
             <!-- 保全 -->
             <img
               class="image_score"
@@ -98,7 +110,9 @@
             />
           </div>
           <div class="score_bar" v-show="scoreItem.universal.show">
-            <div class="score_name" @click="resetScore(char_index, 'universal')">泛用：</div>
+            <div class="score_name" @click="resetScore(char_index, 'universal')">
+              <div class="score_avg">(4.3)</div>
+              泛用：</div>
             <!-- 泛用 -->
             <img
               class="image_score"
@@ -109,7 +123,9 @@
             />
           </div>
           <div class="score_bar" v-show="scoreItem.counter.show">
-            <div class="score_name" @click="resetScore(char_index, 'counter')">对策：</div>
+            <div class="score_name" @click="resetScore(char_index, 'counter')">
+              <div class="score_avg">(4.3)</div>
+              对策：</div>
             <!-- 对策 -->
             <img
               class="image_score"
@@ -121,7 +137,9 @@
           </div>
 
           <div class="score_bar" v-show="scoreItem.building.show">
-            <div class="score_name" @click="resetScore(char_index, 'building')">基建：</div>
+            <div class="score_name" @click="resetScore(char_index, 'building')">
+              <div class="score_avg">(4.3)</div>
+              基建：</div>
             <!-- 基建 -->
             <img
               class="image_score"
@@ -133,7 +151,9 @@
           </div>
 
           <div class="score_bar" v-show="scoreItem.comprehensive.show">
-            <div class="score_name" @click="resetScore(char_index, 'comprehensive')">综合：</div>
+            <div class="score_name" @click="resetScore(char_index, 'comprehensive')">
+              <div class="score_avg">(4.3)</div>
+              综合：</div>
             <!-- 综合 -->
             <img
               class="image_score"
