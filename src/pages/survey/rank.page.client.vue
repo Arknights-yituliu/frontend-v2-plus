@@ -3,7 +3,7 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <button class="mdui-btn survey_button">说明</button>
-      <button class="mdui-btn survey_button" @click="collapse('switch_bar select', 'element_filter_wrap')">筛选</button>
+      <button class="mdui-btn survey_button" @click="collapse('switch_bar select', 'switch_filter_wrap','switch_filter_box')">筛选</button>
       <div id="updateTime">
         调查人数5000<br />
         更新时间2023-05-27
@@ -11,7 +11,8 @@
     </div>
 
     <!-- 筛选模块 -->
-    <div class="switch_wrap" id="element_filter_wrap">
+    <div class="switch_wrap" id="switch_filter_wrap">
+      <div class="switch_box" id="switch_filter_box">
       <div class="switch_bar select">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
@@ -52,6 +53,7 @@
           <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
         </div>
       </div> -->
+      </div>
     </div>
 
     <div id="rank_table mdui-table-fluid">

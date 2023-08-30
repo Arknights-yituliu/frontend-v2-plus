@@ -1,6 +1,8 @@
 <template>
 
 <c-popup :visible="importPopupVisible" v-model:visible="importPopupVisible">
+   <p>森空岛CRED与鹰角网络通行证的Token并不通用（仅实验了官网，其他未知），仅可获取目前森空岛内展示的游戏数据</p>
+   <p>使用森空岛CRED导入游戏练度数据时，CRED不会被一图流后台保存，每次导入需要重新输入CRED，建议导入完毕后退出森空岛登录，将CRED失效</p>
 
 
 </c-popup>
@@ -18,7 +20,7 @@
       <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
 
-        <div class="btn_setup" @click="collapse('switch_bar select', 'element_filter_wrap')">
+        <div class="btn_setup" @click="collapse('switch_bar select', 'switch_filter_wrap','switch_filter_box')">
           筛选/批量操作
           <div class="btn_setup_tips">可筛选后批量进行填写</div>
         </div>
@@ -35,11 +37,16 @@
           开发信息
           <div class="btn_setup_tips">反馈、建议<br /></div>
         </div>
+        <div class="btn_setup" @click="importPopupVisible = !importPopupVisible">
+          测试弹窗
+          <div class="btn_setup_tips">反馈、建议<br /></div>
+        </div>
       </div>
     </div>
 
     <!-- 筛选模块 -->
-    <div class="switch_wrap" id="element_filter_wrap">
+    <div class="switch_wrap" id="switch_filter_wrap">
+      <div class="switch_box" id="switch_filter_box">
       <div class="switch_bar select">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
@@ -123,6 +130,7 @@
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
           <div class="btn_switch" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
         </div>
+      </div>
       </div>
     </div>
 
@@ -296,7 +304,7 @@ import characterDemo from "@/pages/survey/characterDemo.vue";
 import { http } from "@/api/baseURL";
 
 
-let importPopupVisible = ref(true)
+let importPopupVisible = ref(false)
 
 /**
  * 获取雪碧图

@@ -1,5 +1,5 @@
 <template>
-  <c-popup :visible="firstpopup" v-model:visible="firstpopup" @click="isFirstPopupCache()" :width="'600px'">
+  <c-popup :visible="firstpopup" v-model:visible="firstpopup" @click="isFirstPopupCache()" >
     <!-- <div class="intro_title">填写流程说明</div> -->
     <div class="intro_wrap">
       <div class="intro_title">填写方法</div>
