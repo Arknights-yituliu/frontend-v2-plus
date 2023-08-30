@@ -37,10 +37,7 @@
           开发信息
           <div class="btn_setup_tips">反馈、建议<br /></div>
         </div>
-        <div class="btn_setup" @click="importPopupVisible = !importPopupVisible">
-          测试弹窗
-          <div class="btn_setup_tips">反馈、建议<br /></div>
-        </div>
+
       </div>
     </div>
 
@@ -164,7 +161,7 @@
         </div>
       </div>
       <div class="switch_bar upload">
-        <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了《森空岛导入的风险和声明》</div>
+        <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了 <a @click="importPopupVisible = !importPopupVisible">《森空岛导入须知》</a></div>
       </div>
     </div>
 
