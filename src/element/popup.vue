@@ -1,10 +1,12 @@
 <template>
   <div :style="popupStyle">
-    <div class="popup_mask" @click="openAndClose(false)"></div>
-
-    <div class="popup" :style="widthStyle">
-      <slot></slot>
+    <div class="popup_mask" @click="openAndClose(false)">
+      <div class="popup" :style="widthStyle">
+        <slot></slot>
+      </div>
     </div>
+
+
   </div>
 </template>
 
@@ -51,7 +53,6 @@ watch(
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 30;
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
@@ -61,12 +62,10 @@ watch(
 
 .popup {
   /* display: none; */
-  position: absolute;
-  top: 15vh;
-  left: 0;
-  right: 0;
+  position: relative;
   z-index: 2001;
   margin: auto;
+  margin-top: 15vh;
   width: 500px;
   height: 500px;
   overflow: auto;
