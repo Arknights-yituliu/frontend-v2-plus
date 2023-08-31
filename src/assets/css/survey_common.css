@@ -1,35 +1,29 @@
 .setup_wrap {
   max-width: 95%;
-  margin: auto;
-  background: #f7f9fa;
   transition: all 0.4s;
   overflow: hidden;
   height: auto;
-  background-color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 1);
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
   border-radius: 2px;
-  margin-bottom: 6px;
+  margin: auto auto 6px;
   /* padding: 4px; */
 }
 
 .setup_top {
   position: sticky;
-  top:0px;
+  top:0;
   z-index: 1000;
   /* height: 48px; */
   max-width: 95%;
-  margin: auto;
-  background: #f7f9fa;
-  /* border-bottom-left-radius: 6px; */
-  /* border-bottom-right-radius: 6px; */
   background-color: rgba(255, 255, 255, 1);
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-  margin-bottom: 6px;
-  /* padding: 4px; */
+  margin: auto auto 6px;
+
 }
 
 .survey_button{
-  margin:8px 0px 8px 8px;
+  margin:8px 0 8px 8px;
   border-radius: 4px;
   background-color: #eeeeeeee;
 }
@@ -194,8 +188,6 @@
 }
 
 .selected_color {
-  /* background: rgb(97, 173, 255); */
-  color: #cf31ff;
   color: #ffffff;
   background-color: #6795ff !important;
   box-shadow: 1px 1px 2px #cccccc !important;
