@@ -258,25 +258,39 @@ let rankingList = [];
 
 function rankingListInit() {
     for (let charId in characterBasicInfo) {
+        let randomNum = Math.random();
+        let randomNum1 = Math.random();
+        let randomNum2 = Math.random();
+        let randomNum3 = Math.random();
+        let randomNum4 = Math.random();
+        let randomNum5 = Math.random();
+        let randomNum6 = Math.random();
+
         const baseInfo = characterBasicInfo[charId];
-        let score = {
+        let rankInfo = {
             charId: charId,
             name: baseInfo.name,
             rarity: baseInfo.rarity,
-            own: 0.7,
-            elite2: 0.8,
-            skill1: {'rank3':0.8},
-            skill2: {'rank3':0.8},
-            skill3: {'rank3':0.8},
-            modX: {'rank3':0.8},
-            modY: {'rank3':0.8},
+            own: 1-randomNum,
+            elite2: 1-randomNum1,
+            skill1: {'rank3':1-randomNum2},
+            skill2: {'rank3':1-randomNum3},
+            skill3: {'rank3':1-randomNum4},
+            modX: {'rank3':1-randomNum5},
+            modY: {'rank3':1-randomNum6},
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
             mod: baseInfo.mod !== undefined,
             skill: baseInfo.skill,
             show: true,
         };
-        rankingList.push(score);
+
+        if(rankInfo.rarity<6){
+            // console.log(rankInfo)
+            rankInfo.skill3={rank3: undefined}
+        }
+
+        rankingList.push(rankInfo);
     }
 
     rankingList.sort((a, b) => {

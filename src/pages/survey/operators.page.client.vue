@@ -901,6 +901,9 @@ function sortCharacterList(rule) {
   });
 }
 
+
+
+
 //转跳罗德岛基建Beta
 function toBiliblili() {
   const bilibiliHref = "https://space.bilibili.com/688411531/dynamic";

@@ -61,13 +61,13 @@
         <thead>
           <tr>
             <td class="rank_table_1">代号</td>
-            <td class="rank_table_2">持有率</td>
-            <td class="rank_table_3">精二率</td>
-            <td class="rank_table_4">一技能专三率</td>
-            <td class="rank_table_5">二技能专三率</td>
-            <td class="rank_table_6">三技能专三率</td>
-            <td class="rank_table_7">x模组解锁率</td>
-            <td class="rank_table_8">y模组解锁率</td>
+            <td class="rank_table_2" @click="sortRank('own')">持有率</td>
+            <td class="rank_table_3" @click="sortRank('elite2')">精二率</td>
+            <td class="rank_table_4" @click="bubbleSort('skill1','rank3')">一技能专三率</td>
+            <td class="rank_table_5" @click="bubbleSort('skill2','rank3')">二技能专三率</td>
+            <td class="rank_table_6" @click="bubbleSort('skill3','rank3')">三技能专三率</td>
+            <td class="rank_table_7" @click="bubbleSort('modX','rank3')">x模组解锁率</td>
+            <td class="rank_table_8" @click="bubbleSort('modY','rank3')">y模组解锁率</td>
           </tr>
         </thead>
         <tr v-for="(result, index) in rankingList" v-show="result.show" class="rank_table_tr">
@@ -133,7 +133,7 @@ function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
     for (let i in rankingList.value) {
       for (let j in response.data.result) {
-        if (rankingList.value[i].charId == response.data.result[j].charId) {
+        if (rankingList.value[i].charId === response.data.result[j].charId) {
           rankingList.value[i].own = response.data.result[j].own;
           rankingList.value[i].elite = response.data.result[j].elite;
           rankingList.value[i].skill1 = response.data.result[j].skill1;
@@ -156,7 +156,7 @@ onMounted(() => {
 });
 
 function getSprite(id, type) {
-  if ("elite" == type) return "bg-" + id + " rank_sprite_elite";
+  if ("elite" === type) return "bg-" + id + " rank_sprite_elite";
   return "bg-" + id + " rank_avatar";
 }
 
@@ -166,13 +166,13 @@ function getPercentage(value, digit) {
 }
 
 function getSurveyResult(obj, rank) {
-  if (obj[rank] == void 0) return -1;
+  if (obj[rank] === void 0) return -1;
   return obj[rank];
 }
 
 function getSpriteIcon(skill, index) {
   if (skill.length < index + 1) return "";
-  var iconId = skill[index].iconId;
+  const iconId = skill[index].iconId;
   // console.log(iconId);
   return "bg-skill_icon_" + iconId + " rank_sprite_skill";
 }
@@ -194,21 +194,21 @@ function selectedBtn(attribute, rule) {
 let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: [] });
 
 //增加筛选规则
-function addFilterCondition(attribute, condition) {
+function addFilterCondition(property, condition) {
   console.log(filterCondition.value);
   let filterRulesCopy = [];
-  if (filterCondition.value[attribute].indexOf(condition) > -1) {
-    for (let i in filterCondition.value[attribute]) {
-      if (condition !== filterCondition.value[attribute][i]) {
-        filterRulesCopy.push(filterCondition.value[attribute][i]);
+  if (filterCondition.value[property].indexOf(condition) > -1) {
+    for (let i in filterCondition.value[property]) {
+      if (condition !== filterCondition.value[property][i]) {
+        filterRulesCopy.push(filterCondition.value[property][i]);
       }
     }
-    filterCondition.value[attribute] = filterRulesCopy;
+    filterCondition.value[property] = filterRulesCopy;
     filterCharacterList();
     return;
   }
 
-  filterCondition.value[attribute].push(condition);
+  filterCondition.value[property].push(condition);
   filterCharacterList();
 }
 
@@ -221,10 +221,27 @@ function filterCharacterList() {
 }
 
 //按条件排序
-function sortCharacterList(rule) {
+function sortRank(condition) {
   rankingList.value.sort((a, b) => {
-    return b[rule] - a[rule];
+    return b[condition] - a[condition];
   });
+}
+
+function bubbleSort(property, condition) {
+  const len = rankingList.value.length
+  for(let i = 0; i < len - 1; i++) {
+
+    for(let j = 0; j < len -1 - i; j++) {
+      // console.log(rankingList.value[j][property][condition],rankingList.value[j + 1][property][condition])
+      if(rankingList.value[j][property][condition]<rankingList.value[j + 1][property][condition]
+          ||rankingList.value[j][property][condition]===void 0
+          ||rankingList.value[j+1][property][condition]===void 0) {
+        const temp =  rankingList.value[j]
+        rankingList.value[j] =  rankingList.value[j + 1]
+        rankingList.value[j + 1] =  temp;
+      }
+    }
+  }
 }
 
 function btnSetClass(flag) {
