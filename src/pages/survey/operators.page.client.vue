@@ -1,18 +1,28 @@
 <template>
 
-<c-popup :visible="importPopupVisible" v-model:visible="importPopupVisible">
-   <p>森空岛CRED与鹰角网络通行证的Token并不通用（仅实验了官网，其他未知），仅可获取目前森空岛内展示的游戏数据</p>
-   <p>使用森空岛CRED导入游戏练度数据时，CRED不会被一图流后台保存，每次导入需要重新输入CRED，建议导入完毕后退出森空岛登录，将CRED失效</p>
+  <c-popup :visible="importPopupVisible" v-model:visible="importPopupVisible">
+    <div class="skland_notice_popup">
+      <h3>森空岛数据导入流程</h3>
+      <p><b>step1：</b>打开森空岛官网<a href="https://www.skland.com/">https://www.skland.com/</a>进行登录</p>
+      <p><b>step2：</b>登录后在森空岛官网页面按键盘F12，打开开发者工具，选择控制台(console)输入 localStorage.getItem('SK_OAUTH_CRED_KEY') ,按确认键</p>
+      <img src="/image/skland/step1.jpg" class="skland_import_image"><img>
+      <p><b>step3：</b>此时你可以获得一段由数字英文组成的字符，复制这段获得的字符</p>
+      <img src="/image/skland/step2.jpg" class="skland_import_image"><img>
+      <p><b> step4：</b>将 <b>step3</b> 获得的字符复制进入森空岛导入的输入栏</p>
+      <img src="/image/skland/step3.jpg" class="skland_import_image"><img>
+      <h3>森空岛CRED的风险声明</h3>
+      <p>&emsp;&emsp;森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），仅可获取目前森空岛内展示的游戏数据<br/>
+        &emsp;&emsp;使用森空岛CRED导入游戏练度数据时，CRED不会被一图流后台保存，每次导入需要重新输入CRED，建议导入完毕后退出森空岛登录，将CRED失效</p>
+    </div>
 
-
-</c-popup>
+  </c-popup>
   <div class="survey_character_page">
     <!-- 常驻条 -->
     <div class="setup_top">
       <characterDemo></characterDemo>
       <button class="mdui-btn survey_button">干员持有率：114 / 514</button>
       <button class="mdui-btn survey_button" @click="upload()">保存数据</button>
-      <div id="updateTime">上次保存时间<br />{{ uploadMessage.updateTime }}</div>
+      <div id="updateTime">上次保存时间<br/>{{ uploadMessage.updateTime }}</div>
     </div>
 
     <!-- 设置区域 -->
@@ -35,7 +45,7 @@
         </div>
         <div class="btn_setup" @click="toBiliblili()">
           开发信息
-          <div class="btn_setup_tips">反馈、建议<br /></div>
+          <div class="btn_setup_tips">反馈、建议<br/></div>
         </div>
 
       </div>
@@ -44,126 +54,135 @@
     <!-- 筛选模块 -->
     <div class="switch_wrap" id="switch_filter_wrap">
       <div class="switch_box" id="switch_filter_box">
-      <div class="switch_bar select">
-        <div class="switch_title">职业</div>
-        <div class="switch_btns_wrap">
-          <div
-            :class="selectedBtn('profession', profession.value)"
-            v-for="profession in professionDict"
-            @click="addFilterCondition('profession', profession.value)"
-          >
-            {{ profession.label }}
+        <div class="switch_bar select">
+          <div class="switch_title">职业</div>
+          <div class="switch_btns_wrap">
+            <div
+                :class="selectedBtn('profession', profession.value)"
+                v-for="profession in professionDict"
+                @click="addFilterCondition('profession', profession.value)"
+            >
+              {{ profession.label }}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="switch_bar select">
-        <div class="switch_title">稀有度</div>
-        <div class="switch_btns_wrap">
-          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterCondition('rarity', rarity)">{{ rarity }}★</div>
-        </div>
-      </div>
-
-      <div class="switch_bar select">
-        <div class="switch_title">年份</div>
-        <div class="switch_btns_wrap">
-          <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterCondition('year', key)">
-            {{ year.label }}
+        <div class="switch_bar select">
+          <div class="switch_title">稀有度</div>
+          <div class="switch_btns_wrap">
+            <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict"
+                 @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="switch_bar select">
-        <div class="switch_title">其他</div>
-        <div class="switch_btns_wrap">
-          <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
-          <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
-          <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
-          <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
-          <div :class="selectedBtn('itemObtainApproach', '赠送干员')" @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员</div>
-          <div :class="selectedBtn('itemObtainApproach', '限定干员')" @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员</div>
+        <div class="switch_bar select">
+          <div class="switch_title">年份</div>
+          <div class="switch_btns_wrap">
+            <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
+                 @click="addFilterCondition('year', key)">
+              {{ year.label }}
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="switch_bar select">
-        <div class="switch_title">排序</div>
-        <div class="switch_btns_wrap">
-          <!-- <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div> -->
-          <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
-          <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
+        <div class="switch_bar select">
+          <div class="switch_title">其他</div>
+          <div class="switch_btns_wrap">
+            <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
+            <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
+            <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
+            <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
+            <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
+                 @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员
+            </div>
+            <div :class="selectedBtn('itemObtainApproach', '限定干员')"
+                 @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- <div class="switch_bar select">
-        <div class="switch_title">练度</div>
-        <div class="switch_btns_wrap">
-          <div :class="selectedBtn('TODO', 0)" @click="addFilterCondition('mod', false)">无专三</div>
-          <div :class="selectedBtn('TODO', 1)" @click="addFilterCondition('mod', false)">一个专三</div>
-          <div :class="selectedBtn('TODO', 2)" @click="addFilterCondition('mod', false)">两个专三</div>
-          <div :class="selectedBtn('TODO', 3)" @click="addFilterCondition('mod', false)">三个专三</div>
-          <div :class="selectedBtn('TODO', 4)" @click="addFilterCondition('mod', false)">未开模组</div>
-          <div :class="selectedBtn('TODO', 5)" @click="addFilterCondition('mod', false)">已开模组</div>
+        <div class="switch_bar select">
+          <div class="switch_title">排序</div>
+          <div class="switch_btns_wrap">
+            <!-- <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div> -->
+            <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
+            <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
+          </div>
         </div>
-      </div> -->
 
-      <div class="mdui-divider"></div>
+        <!-- <div class="switch_bar select">
+          <div class="switch_title">练度</div>
+          <div class="switch_btns_wrap">
+            <div :class="selectedBtn('TODO', 0)" @click="addFilterCondition('mod', false)">无专三</div>
+            <div :class="selectedBtn('TODO', 1)" @click="addFilterCondition('mod', false)">一个专三</div>
+            <div :class="selectedBtn('TODO', 2)" @click="addFilterCondition('mod', false)">两个专三</div>
+            <div :class="selectedBtn('TODO', 3)" @click="addFilterCondition('mod', false)">三个专三</div>
+            <div :class="selectedBtn('TODO', 4)" @click="addFilterCondition('mod', false)">未开模组</div>
+            <div :class="selectedBtn('TODO', 5)" @click="addFilterCondition('mod', false)">已开模组</div>
+          </div>
+        </div> -->
 
-      <div class="switch_bar select">
-        <div class="switch_title">
-          批量操作 <br />
-          <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员生效</div>
+        <div class="mdui-divider"></div>
+
+        <div class="switch_bar select">
+          <div class="switch_title">
+            批量操作 <br/>
+            <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员生效</div>
+          </div>
+          <div class="switch_btns_wrap">
+            <div class="btn_switch" @click="batchUpdatesOwn(true)">设为已拥有</div>
+            <div class="btn_switch" @click="batchUpdatesOwn(false)">设为未拥有</div>
+            <div class="btn_switch" @click="batchUpdatesElite(0)">设为无精</div>
+            <div class="btn_switch" @click="batchUpdatesElite(1)">设为精一</div>
+            <div class="btn_switch" @click="batchUpdatesElite(2)">设为精二</div>
+            <div class="btn_switch">设为满级</div>
+            <div class="btn_switch">设为满潜能</div>
+            <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
+            <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
+            <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
+            <div class="btn_switch" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
+            <div class="btn_switch" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
+          </div>
         </div>
-        <div class="switch_btns_wrap">
-          <div class="btn_switch" @click="batchUpdatesOwn(true)">设为已拥有</div>
-          <div class="btn_switch" @click="batchUpdatesOwn(false)">设为未拥有</div>
-          <div class="btn_switch" @click="batchUpdatesElite(0)">设为无精</div>
-          <div class="btn_switch" @click="batchUpdatesElite(1)">设为精一</div>
-          <div class="btn_switch" @click="batchUpdatesElite(2)">设为精二</div>
-          <div class="btn_switch">设为满级</div>
-          <div class="btn_switch">设为满潜能</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
-          <div class="btn_switch" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
-        </div>
-      </div>
       </div>
     </div>
 
     <!-- 导入导出模块 -->
     <div class="switch_wrap" id="switch_upload_wrap">
       <div class="switch_box" id="switch_upload_box">
-      <div class="switch_bar upload">
-        <div class="switch_title">导入导出</div>
-        <div class="switch_btns_wrap">
-          <div class="btn_switch" @click="exportExcel()">导出为Excel文件</div>
-          <div class="btn_switch">
-            <div class="input_upload_wrap">
-              导入Excel文件
-              <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
+        <div class="switch_bar upload">
+          <div class="switch_title">导入导出</div>
+          <div class="switch_btns_wrap">
+            <div class="btn_switch" @click="exportExcel()">导出为Excel文件</div>
+            <div class="btn_switch">
+              <div class="input_upload_wrap">
+                导入Excel文件
+                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>
+              </div>
             </div>
+            <!-- <div class="btn_switch" @click="uploadByExcel()">上传Excel文件</div> -->
+            <div class="upload_file_name">文件名：{{ uploadFileName }}</div>
           </div>
-          <!-- <div class="btn_switch" @click="uploadByExcel()">上传Excel文件</div> -->
-          <div class="upload_file_name">文件名：{{ uploadFileName }} </div>
         </div>
-      </div>
-      <div class="switch_bar upload">
-        <div class="switch_desc"><b>*上传须知：</b>导入的Excel的数据格式需与一图流导出的Excel内数据格式一致，请先导出一份空白表格以确保格式无误</div>
-      </div>
+        <div class="switch_bar upload">
+          <div class="switch_desc"><b>*上传须知：</b>导入的Excel的数据格式需与一图流导出的Excel内数据格式一致，请先导出一份空白表格以确保格式无误</div>
+        </div>
 
-      <div class="divider"></div>
-      <div class="switch_bar upload">
-        <div class="switch_title">森空岛导入</div>
-        <div class="switch_btns_wrap">
-          <div class="skland_desc">输入CRED</div>
-          <div><input class="skland_input" type="text" v-model="SKLandCRED" /></div>
-          <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
+        <div class="divider"></div>
+        <div class="switch_bar upload">
+          <div class="switch_title">森空岛导入</div>
+          <div class="switch_btns_wrap">
+            <div class="skland_desc">输入CRED</div>
+            <div><input class="skland_input" type="text" v-model="SKLandCRED"/></div>
+            <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
+          </div>
         </div>
-      </div>
-      <div class="switch_bar upload">
-        <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了 <a @click="importPopupVisible = !importPopupVisible">《森空岛导入须知》</a></div>
-      </div>
+        <div class="switch_bar upload">
+          <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了
+            <a class="skland_notice_popup_btn" @click="importPopupVisible = !importPopupVisible">《森空岛导入须知》</a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -176,7 +195,7 @@
           <div class="btn_switch">
             <div class="input_upload_wrap">
               选择文件
-              <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()" />
+              <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>
             </div>
           </div>
           <div class="btn_switch" @click="uploadByExcel()">上传文件</div>
@@ -200,7 +219,8 @@
               <div class="char_name">{{ char.name }}</div>
             </div>
             <div :class="surveyTypeClass('potential_wrap')">
-              <div class="image_potential" :id="char_index + 'potential' + rank" v-for="rank in ranks.slice(1, 7)" @click="updatePotential(char_index, rank)">
+              <div class="image_potential" :id="char_index + 'potential' + rank" v-for="rank in ranks.slice(1, 7)"
+                   @click="updatePotential(char_index, rank)">
                 <div :class="getSprite('potential' + rank, 'potential')"></div>
               </div>
             </div>
@@ -211,14 +231,16 @@
             <div class="image_elite" :id="char_index + 'elite0'" @click="updateElite(char_index, 0)">
               <div :class="getSprite('elite0', 'elite')"></div>
             </div>
-            <div :id="char_index + 'elite1'" class="image_elite" @click="updateElite(char_index, 1)" v-show="char.rarity > 2">
+            <div :id="char_index + 'elite1'" class="image_elite" @click="updateElite(char_index, 1)"
+                 v-show="char.rarity > 2">
               <div :class="getSprite('elite1', 'elite')"></div>
             </div>
-            <div :id="char_index + 'elite2'" class="image_elite" @click="updateElite(char_index, 2)" v-show="char.rarity > 3">
+            <div :id="char_index + 'elite2'" class="image_elite" @click="updateElite(char_index, 2)"
+                 v-show="char.rarity > 3">
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
             <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">
-              <img class="image_lvMax" src="/image/rank2/lvMax.png" alt="" />
+              <img class="image_lvMax" src="/image/rank2/lvMax.png" alt=""/>
             </div>
           </div>
         </div>
@@ -231,10 +253,10 @@
               <div :class="getSprite(skill.iconId, 'icon')"></div>
             </div>
             <div
-              v-for="rank in ranks.slice(1, 4)"
-              class="image_rank"
-              :id="char_index + 'skill' + (skill_index + 1) + rank"
-              @click="updateSkillAndMod(char_index, 'skill' + (skill_index + 1), rank)"
+                v-for="rank in ranks.slice(1, 4)"
+                class="image_rank"
+                :id="char_index + 'skill' + (skill_index + 1) + rank"
+                @click="updateSkillAndMod(char_index, 'skill' + (skill_index + 1), rank)"
             >
               <div :class="getSprite('skill' + rank, 'skill')"></div>
             </div>
@@ -245,7 +267,8 @@
           <!-- 模组X -->
           <div :class="surveyTypeClass('skill_wrap')" v-show="char.modXOwn">
             <div class="image_mod">{{ "模组X" }}</div>
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank" @click="updateSkillAndMod(char_index, 'modX', rank)">
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank"
+                 @click="updateSkillAndMod(char_index, 'modX', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
           </div>
@@ -254,7 +277,7 @@
           <div :class="surveyTypeClass('skill_wrap')" v-show="!char.modXOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
-              <img class="image_null" src="/image/rank2/null.png" alt="" />
+              <img class="image_null" src="/image/rank2/null.png" alt=""/>
             </div>
           </div>
 
@@ -262,7 +285,8 @@
           <div :class="surveyTypeClass('skill_wrap')" v-show="char.modYOwn">
             <div class="image_mod">{{ "模组Y" }}</div>
 
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank" @click="updateSkillAndMod(char_index, 'modY', rank)">
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank"
+                 @click="updateSkillAndMod(char_index, 'modY', rank)">
               <div :class="getSprite('mod' + rank, 'mod')"></div>
             </div>
           </div>
@@ -271,7 +295,7 @@
           <div :class="surveyTypeClass('skill_wrap')" v-show="!char.modYOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
-              <img class="image_null" src="/image/rank2/null.png" alt="" />
+              <img class="image_null" src="/image/rank2/null.png" alt=""/>
             </div>
           </div>
         </div>
@@ -293,14 +317,14 @@
 </template>
 
 <script setup>
-import { cMessage } from "@/element/message.js";
-import { globalUserData } from "./userService"; //从用户服务js获取用户信息
-import { characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict } from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {cMessage} from "@/element/message.js";
+import {globalUserData} from "./userService"; //从用户服务js获取用户信息
+import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import surveyApi from "@/api/survey";
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
 import characterDemo from "@/pages/survey/characterDemo.vue";
-import { http } from "@/api/baseURL";
+import {http} from "@/api/baseURL";
 
 
 let importPopupVisible = ref(false)
@@ -328,7 +352,7 @@ let rarityDict = [1, 2, 3, 4, 5, 6];
 function getSurveyCharacter() {
   if (globalUserData.value.token === void 0) {
     console.log(globalUserData.value.token === void 0);
-    cMessage("未登录", "error");
+    // cMessage("未登录", "error");
     return;
   }
 
@@ -409,7 +433,7 @@ function importSKLandCRED() {
 }
 
 let lastUploadTimeStamp = 1689425013364; //上次上传时间的时间戳
-let uploadMessage = ref({ updateTime: "2023/08/08 00:00:00", affectedRows: 0 }); //上传APi返回的信息
+let uploadMessage = ref({updateTime: "2023/08/08 00:00:00", affectedRows: 0}); //上传APi返回的信息
 let updateIndexMap = ref({}); //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
 
 //自动上传风评表
@@ -825,6 +849,7 @@ function changeSurveyType() {
 function surveyTypeClass(classNameHeader) {
   return classNameHeader + surveyType.value;
 }
+
 //
 function simpleCardClass() {
   if (simpleCard.value) return "char_card char_card_simple";
@@ -839,7 +864,7 @@ function selectedBtn(property, rule) {
   return "btn_switch";
 }
 
-let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: [] });
+let filterCondition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
 
 //增加筛选规则
 function addFilterCondition(property, condition) {

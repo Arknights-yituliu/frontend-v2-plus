@@ -1,9 +1,7 @@
 .survey_character_page {
   background: white;
-  /* max-width: 1280px; */
-  margin: auto;
   font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
-  margin-bottom: 100px;
+  margin: auto auto 100px;
 }
 
 .char_forms {
@@ -22,8 +20,6 @@
   transition: all 0.2s;
   background-color: rgba(255, 255, 255, 1);
   margin: 8px;
-  /* background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(255, 115, 0, 0.3)); */
-  /* margin: 14px; */
   position: relative;
 }
 
@@ -35,9 +31,6 @@
   margin: 8px;
 }
 
-.notown {
-  filter: grayscale(100%);
-}
 
 .card_title {
   font-weight: 600;
@@ -80,7 +73,7 @@
 .image_avatar {
   height: 120px;
   width: 100px;
-  border-radius: 0px;
+  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
   position: absolute;
@@ -122,12 +115,12 @@
 
 .char_name {
   text-align: center;
-  margin-top: 0px;
+  margin-top: 0;
   /* margin-left:10px; */
   width: 100px;
   height: 26px;
   line-height: 26px;
-  border-radius: 0px;
+  border-radius: 0;
   font-weight: 700;
   position: relative;
   top: 120px;
@@ -311,7 +304,7 @@
 .sprite_avatar {
   transform: scale(0.56);
   /* border: 1px solid red; */
-  border-radius: 0px;
+  border-radius: 0;
   position: absolute;
   top: -20px;
   left: -40px;
@@ -345,6 +338,21 @@
 
 .skland_input:hover{
   border-bottom: solid rgb(0, 98, 255) 2px;
+}
+
+.skland_notice_popup_btn{
+   color: #ff4e4e;
+}
+
+.skland_notice_popup{
+  padding: 0 20px;
+}
+
+.skland_import_image{
+  width: 400px;
+  display: inline-block;
+  margin: 0 50px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* 填写说明 */
