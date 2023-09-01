@@ -238,6 +238,7 @@ function scoreListInit() {
             hard: -1,
             universal: -1,
             countermeasures: -1,
+            comprehensive:-1,
             date: baseInfo.date,
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
