@@ -241,7 +241,7 @@
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
             <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">
-              <img class="image_lvMax" src="/image/rank2/lvMax.png" alt=""/>
+              <img class="image_lvMax" src="/image/survey/lvMax.png" alt=""/>
             </div>
           </div>
         </div>
@@ -278,7 +278,7 @@
           <div :class="surveyTypeClass('skill_wrap')" v-show="!char.modXOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
-              <img class="image_null" src="/image/rank2/null.png" alt=""/>
+              <img class="image_null" src="/image/survey/null.png" alt=""/>
             </div>
           </div>
 
@@ -296,7 +296,7 @@
           <div :class="surveyTypeClass('skill_wrap')" v-show="!char.modYOwn">
             <div class="image_mod">[N/A]</div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
-              <img class="image_null" src="/image/rank2/null.png" alt=""/>
+              <img class="image_null" src="/image/survey/null.png" alt=""/>
             </div>
           </div>
         </div>
