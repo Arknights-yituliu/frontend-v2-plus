@@ -84,13 +84,13 @@
   margin: 4px auto;
   overflow: hidden;
   height: 0;
-  transition: all 0.1s;
+  /*transition: all 0.1s;*/
   /* padding: 2px; */
 }
 
 .switch_box {
   margin: 4px;
-  transition: all 0.2s;
+  transition: all 0.3s;
   transform: translateY(-1000px);
   background-color: rgba(255, 255, 255, 1);
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);

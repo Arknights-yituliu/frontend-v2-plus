@@ -16,6 +16,7 @@
     </div>
 
   </c-popup>
+
   <div class="survey_character_page">
     <!-- 常驻条 -->
     <div class="setup_top">
@@ -30,7 +31,7 @@
       <div class="control_panel">
         <!-- <div class="switch_title">设置</div> -->
 
-        <div class="btn_setup" @click="collapse('switch_bar select', 'switch_filter_wrap','switch_filter_box')">
+        <div class="btn_setup" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">
           筛选/批量操作
           <div class="btn_setup_tips">可筛选后批量进行填写</div>
         </div>
@@ -54,7 +55,7 @@
     <!-- 筛选模块 -->
     <div class="switch_wrap" id="switch_filter_wrap">
       <div class="switch_box" id="switch_filter_box">
-        <div class="switch_bar select">
+        <div class="switch_bar filter">
           <div class="switch_title">职业</div>
           <div class="switch_btns_wrap">
             <div
@@ -67,7 +68,7 @@
           </div>
         </div>
 
-        <div class="switch_bar select">
+        <div class="switch_bar filter">
           <div class="switch_title">稀有度</div>
           <div class="switch_btns_wrap">
             <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict"
@@ -76,7 +77,7 @@
           </div>
         </div>
 
-        <div class="switch_bar select">
+        <div class="switch_bar filter">
           <div class="switch_title">年份</div>
           <div class="switch_btns_wrap">
             <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
@@ -86,7 +87,7 @@
           </div>
         </div>
 
-        <div class="switch_bar select">
+        <div class="switch_bar filter">
           <div class="switch_title">其他</div>
           <div class="switch_btns_wrap">
             <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
@@ -102,7 +103,7 @@
           </div>
         </div>
 
-        <div class="switch_bar select">
+        <div class="switch_bar filter">
           <div class="switch_title">排序</div>
           <div class="switch_btns_wrap">
             <!-- <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div> -->
@@ -111,7 +112,7 @@
           </div>
         </div>
 
-        <!-- <div class="switch_bar select">
+        <!-- <div class="switch_bar filter">
           <div class="switch_title">练度</div>
           <div class="switch_btns_wrap">
             <div :class="selectedBtn('TODO', 0)" @click="addFilterCondition('mod', false)">无专三</div>
@@ -125,7 +126,7 @@
 
         <div class="mdui-divider"></div>
 
-        <div class="switch_bar select">
+        <div class="switch_bar filter">
           <div class="switch_title">
             批量操作 <br/>
             <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员生效</div>
@@ -805,7 +806,11 @@ function updateBackBeforeCancel(elementIdHeader, rank, oldRank) {
   updateOption(elementIdHeader + oldRank, false);
 }
 
-// 修改选项的背景色
+/**
+ *
+ * @param elementId  需要修改的选项背景所在的元素id
+ * @param selectedFlag  是否选中
+ */
 function updateOption(elementId, selectedFlag) {
   // 干员数据是一个数组，每个选项的element的id为 数组索引+属性名，例如 第一个干员号角的3技能的id是 '0skill3'
   // console.log("修改的元素id", elementId);
@@ -866,7 +871,12 @@ function selectedBtn(property, rule) {
 
 let filterCondition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
 
-//增加筛选规则
+/**
+ *  增加筛选规则
+ * @param property  干员属性
+ * @param condition 筛选条件
+ */
+
 function addFilterCondition(property, condition) {
   console.log(filterCondition.value);
   let filterRulesCopy = [];
