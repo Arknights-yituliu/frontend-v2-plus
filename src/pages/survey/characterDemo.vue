@@ -3,6 +3,7 @@
     <!-- <div class="intro_title">填写流程说明</div> -->
     <div class="intro_wrap">
       <div class="intro_title">填写方法</div>
+      <b>填写前请在右上角注册并登录一个账号，以方便在不同设备间同步</b><br>
       默认干员未拥有,卡片显示为灰色(除头像外),点击头像设置为拥有此干员
       <br />点击选择精英化、专精、模组等级，再次点击则可以取消
     </div>
@@ -28,7 +29,7 @@
 
     <div class="intro_wrap">
       <div class="intro_title">导入和导出</div>
-      数据导入/导出：目前支持Excel的导出，导入功能还在开发中
+      数据导入/导出：目前支持Excel的导入导出和森空岛CRED导入，json导出等功能还在开发中
     </div>
   </c-popup>
   <button class="mdui-btn survey_button" @click="popupVisible()">填写说明</button>
