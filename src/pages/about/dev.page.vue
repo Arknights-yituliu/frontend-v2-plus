@@ -111,6 +111,16 @@
           </div>
         </div>
       </a>
+      <a class="href_black" href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">
+        <div class="mdui-card dev_card">
+          <img class="dev_card_icon" src="/image/website/qq.webp" alt="" />
+          <div class="dev_card_text">
+            <div class="dev_card_text_title">在线收集表</div>
+            <div class="dev_card_text_content">填写表单，记录问题</div>
+          </div>
+        </div>
+      </a>
+
     </div>
 
     <div class="mdui-typo" id="dev_team">
