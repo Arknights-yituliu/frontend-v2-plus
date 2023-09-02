@@ -173,40 +173,47 @@ let characterList = [];
 //干员基础数据
 function characterListInit() {
     for (let charId in characterBasicInfo) {
-        const baseInfo = characterBasicInfo[charId];
+        const baseData = characterBasicInfo[charId];
         // if (baseInfo.rarity < 5) continue;
-        let modXOwn = false;
-        let modYOwn = false;
+        let modX_own = false;
+        let modY_own = false;
+        let default_show = false;
 
-        if (baseInfo.mod !== undefined) {
-            if (baseInfo.mod.modX) {
-                modXOwn = true;
+        if (baseData.mod !== undefined) {
+            if (baseData.mod.modX) {
+                modX_own = true;
             }
-            if (baseInfo.mod.modY) {
-                modYOwn = true;
+            if (baseData.mod.modY) {
+                modY_own = true;
             }
         }
+
+        if(baseData.rarity===6) {
+            default_show = true
+        }
+
+
         let character = {
             charId: charId,
-            name: baseInfo.name,
+            name: baseData.name,
             own: false,
             level: -1,
             modX: -1,
-            modXOwn: modXOwn,
+            modXOwn: modX_own,
             modY: -1,
-            modYOwn: modYOwn,
+            modYOwn: modY_own,
             elite: -1,
             potential: -1,
-            rarity: baseInfo.rarity,
+            rarity: baseData.rarity,
             skill1: -1,
             skill2: -1,
             skill3: -1,
-            skill: baseInfo.skill,
-            date: baseInfo.date,
-            itemObtainApproach: baseInfo.itemObtainApproach,
-            profession: baseInfo.profession,
-            mod: baseInfo.mod !== undefined,
-            show: true,
+            skill: baseData.skill,
+            date: baseData.date,
+            itemObtainApproach: baseData.itemObtainApproach,
+            profession: baseData.profession,
+            mod: baseData.mod !== undefined,
+            show: default_show,
         };
         characterList.push(character);
     }

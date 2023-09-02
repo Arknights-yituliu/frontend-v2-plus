@@ -930,7 +930,7 @@ function selectedBtn(property, rule) {
   return "btn_switch";
 }
 
-let filterCondition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
+let filterCondition = ref({rarity: [6], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
 
 /**
  *  增加筛选规则
@@ -988,6 +988,5 @@ function toBiliblili() {
 
 onMounted(() => {
   getSurveyCharacter();
-  addFilterCondition("rarity", 6);
 });
 </script>
