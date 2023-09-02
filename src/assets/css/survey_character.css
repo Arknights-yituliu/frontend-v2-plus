@@ -340,14 +340,6 @@
   border-bottom: solid rgb(0, 98, 255) 2px;
 }
 
-.skland_notice_popup_btn{
-   color: #ff4e4e;
-}
-
-.skland_notice_popup{
-  padding: 0 20px;
-}
-
 .skland_import_image{
   width: 400px;
   display: inline-block;
@@ -355,51 +347,7 @@
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* 填写说明 */
 
-.intro_wrap {
-  /* width: 540px; */
-  margin: 12px 32px 20px 32px;
-  line-height: 28px;
-  font-family: Arial, Helvetica, sans-serif;
-  /* margin-top: 10px; */
-  /* border: 1px rgb(132, 120, 226) solid; */
-}
-
-.intro_title {
-  font-weight: 600;
-  font-size: 20px;
-  /* padding: 2px; */
-  margin-top: 10px;
-  line-height: 32px;
-  /* margin-left: 20px; */
-}
-
-.intro_tip_icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px grey solid;
-}
-
-.intro_tip_wrap {
-  width: 500px;
-  margin: auto;
-  margin-top: 10px;
-  /* border: 1px rgb(132, 120, 226) solid; */
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.intro_tip {
-  padding: 2px;
-  display: flex;
-}
-
-.intro_tip_switch {
-  margin: 4px;
-  /* margin-top: -10px; */
-}
 
 .stats_classify {
   display: flex;
