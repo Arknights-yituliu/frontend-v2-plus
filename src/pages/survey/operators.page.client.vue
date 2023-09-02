@@ -415,7 +415,7 @@ function initOperatorsList(){
   operator_list.value = characterListInit();
   setTimeout(() => {
     list_size.value = operator_list.value.length;
-  }, 3000);
+  }, 2000);
 }
 
 //找回填写过的角色信息
