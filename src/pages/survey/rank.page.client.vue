@@ -248,4 +248,8 @@ function btnSetClass(flag) {
   if (flag) return "btn_set btn_setup_selected";
   return "btn_set";
 }
+
+onMounted(()=>{
+  addFilterCondition('rarity', 6)
+})
 </script>

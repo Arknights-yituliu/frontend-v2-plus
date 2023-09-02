@@ -1,6 +1,36 @@
 <template>
   <div class="score_page">
 
+    <c-popup :visible="first_popup" v-model:visible="first_popup"  >
+      <!-- <div class="intro_title">填写流程说明</div> -->
+      <div class="intro_wrap">
+        <div class="intro_title">填写方法</div>
+        <b>填写前请在右上角注册并登录一个账号，以方便在不同设备间同步</b><br>
+        默认展示的评分项目四种，可在筛选面板选择更多评分项目
+        <br />不同评分项目互不干扰，
+      </div>
+
+      <div class="intro_wrap">
+        <div class="intro_title">保存机制</div>
+        填写的时候可以多点点保存，如不慎误操作，请不要点击上传，此时可刷新页面从服务器上重新拉取上次上传的数据
+      </div>
+
+      <div class="intro_wrap">
+        <div class="intro_title">批量操作</div>
+        批量操作：先筛选，再应用于全部筛选出的干员<br />
+        除“全部设为已拥有”和“全部设为未拥有”外，都仅对已拥有的干员生效
+      </div>
+
+    </c-popup>
+
+
+    <!-- 常驻条 -->
+    <div class="setup_top">
+      <button class="mdui-btn survey_button" @click="firstPopupClose()">填写说明</button>
+<!--      <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
+
+    </div>
+
     <!-- 设置区域 -->
     <div class="setup_wrap">
       <div class="control_panel">
@@ -87,7 +117,7 @@
             <div class="score_char_name">{{ char.name }}</div>
           </div>
           <div class="score_fastFill">
-            请输入平均分 <input class="score_input_avg" v-model="avgScore" />
+            请输入平均分 <input class="score_input_avg" v-model="avg_score" />
           </div>
         </div>
 
@@ -197,7 +227,21 @@ import { globalUserData } from "./userService";
 import "@/assets/css/survey_score.css";
 import { cMessage } from "@/element/message.js";
 
-let avgScore = ref(4)
+let first_popup = ref(false)
+let import_popup_visible = ref(false)
+
+function isFirstPopup() {
+  if ("done" !== localStorage.getItem("first_popup")) {
+    first_popup.value = true;
+  }
+}
+
+function firstPopupClose() {
+  first_popup.value = !first_popup.value
+  localStorage.setItem("first_popup", "done");
+}
+
+let avg_score = ref(4)
 
 let rarityDict = [1, 2, 3, 4, 5, 6];
 

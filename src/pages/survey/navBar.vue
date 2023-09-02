@@ -40,7 +40,6 @@ import "@/assets/css/sprite_avatar_5.css";
 import "@/assets/css/sprite_avatar_4.css";
 import "@/assets/css/sprite_portrait_6.css";
 import "@/assets/css/sprite_portrait_5.css";
-import "@/assets/css/sprite_portrait_5_2.css";
 import "@/assets/css/sprite_portrait_4.css";
 import "@/assets/css/sprite_portrait_bg.css";
 import "@/assets/css/sprite_skill.css";

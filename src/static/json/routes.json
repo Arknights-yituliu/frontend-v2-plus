@@ -45,6 +45,28 @@
     ]
   },
   {
+    "path": "/survey",
+    "text": "其它信息",
+    "isChild": true,
+    "child": [
+      {
+        "path": "/survey/operators",
+        "text": "干员练度调查",
+        "isChild": false
+      },
+      {
+        "path": "/survey/score",
+        "text": "干员风评调查",
+        "isChild": false
+      },
+      {
+        "path": "/survey/rank",
+        "text": "干员练度调查结果",
+        "isChild": false
+      }
+    ]
+  },
+  {
     "path": "/about",
     "text": "其它信息",
     "isChild": true,
