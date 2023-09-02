@@ -406,9 +406,13 @@ function getSprite(id, type) {
   return "bg-" + id + " sprite_avatar";
 }
 
-let operators_list = ref(characterListInit());
+let operators_list = ref([]);
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 let rarity_dict = [1, 2, 3, 4, 5, 6];
+
+function initOperatorsList(){
+  operators_list.value = characterListInit();
+}
 
 //找回填写过的角色信息
 function getSurveyCharacter() {
@@ -988,5 +992,6 @@ function toBiliblili() {
 
 onMounted(() => {
   getSurveyCharacter();
+  initOperatorsList();
 });
 </script>
