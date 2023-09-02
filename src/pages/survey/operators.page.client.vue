@@ -327,7 +327,7 @@
           <!-- 没有模组X显示 -->
           <div :class="surveyTypeClass('skill_wrap')" v-show="!char.modXOwn">
             <div class="image_mod">[N/A]</div>
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank_disable">
               <img class="image_null" src="/image/survey/null.png" alt=""/>
             </div>
           </div>
@@ -345,7 +345,7 @@
           <!-- 没有模组Y显示 -->
           <div :class="surveyTypeClass('skill_wrap')" v-show="!char.modYOwn">
             <div class="image_mod">[N/A]</div>
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank">
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank_disable">
               <img class="image_null" src="/image/survey/null.png" alt=""/>
             </div>
           </div>
