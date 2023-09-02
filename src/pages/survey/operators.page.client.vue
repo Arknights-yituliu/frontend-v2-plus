@@ -2,17 +2,17 @@
 
   <c-popup :visible="importPopupVisible" v-model:visible="importPopupVisible">
     <div class="skland_notice_popup">
-      <h3>森空岛数据导入流程</h3>
-      <p><b>step1：</b>打开森空岛官网<a href="https://www.skland.com/">https://www.skland.com/</a>进行登录</p>
-      <p><b>step2：</b>登录后在森空岛官网页面按键盘F12，打开开发者工具，选择控制台(console)输入 localStorage.getItem('SK_OAUTH_CRED_KEY') ,按确认键</p>
-      <img src="/image/skland/step1.jpg" class="skland_import_image"><img>
-      <p><b>step3：</b>此时你可以获得一段由数字英文组成的字符，复制这段获得的字符</p>
-      <img src="/image/skland/step2.jpg" class="skland_import_image"><img>
-      <p><b> step4：</b>将 <b>step3</b> 获得的字符复制进入森空岛导入的输入栏</p>
-      <img src="/image/skland/step3.jpg" class="skland_import_image"><img>
       <h3>森空岛CRED的风险声明</h3>
       <p>&emsp;&emsp;森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），仅可获取目前森空岛内展示的游戏数据<br/>
-        &emsp;&emsp;使用森空岛CRED导入游戏练度数据时，CRED不会被一图流后台保存，每次导入需要重新输入CRED，建议导入完毕后退出森空岛登录，将CRED失效</p>
+        &emsp;&emsp;一图流不会保存CRED，每次导入需要重新输入CRED，建议导入完毕后退出森空岛登录，将原有CRED失效</p>
+      <h3>森空岛数据导入流程</h3>
+      <p><b>step1：</b>使用PC打开森空岛官网<a href="https://www.skland.com/">https://www.skland.com/</a>进行登录</p>
+      <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入  localStorage.getItem('SK_OAUTH_CRED_KEY')  ,回车确认</p>
+      <img src="/image/skland/step1.jpg" class="skland_import_image"><img>
+      <p><b>step3：</b>此时你可以获得一段神秘的字符，此即为CRED，复制这段CRED</p>
+      <img src="/image/skland/step2.jpg" class="skland_import_image"><img>
+      <p><b> step4：</b>将 <b>step3</b> 中获得的CRED粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
+      <img src="/image/skland/step3.jpg" class="skland_import_image"><img>
     </div>
 
   </c-popup>
@@ -22,7 +22,7 @@
     <div class="setup_top">
       <characterDemo></characterDemo>
       <button class="mdui-btn survey_button">干员持有率：114 / 514</button>
-      <button class="mdui-btn survey_button" @click="upload()">保存数据</button>
+      <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>
       <div id="updateTime">上次保存时间<br/>{{ uploadMessage.updateTime }}</div>
     </div>
 
@@ -46,7 +46,7 @@
         </div>
         <div class="btn_setup" @click="toBiliblili()">
           开发信息
-          <div class="btn_setup_tips">反馈、建议<br/></div>
+          <div class="btn_setup_tips">反馈、建议、参与开发<br/></div>
         </div>
 
       </div>
@@ -88,10 +88,16 @@
         </div>
 
         <div class="switch_bar filter">
-          <div class="switch_title">其他</div>
+          <div class="switch_title">是否拥有</div>
           <div class="switch_btns_wrap">
             <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
             <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
+          </div>
+        </div>
+
+        <div class="switch_bar filter">
+          <div class="switch_title">其它</div>
+          <div class="switch_btns_wrap">
             <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
             <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
             <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
@@ -124,12 +130,12 @@
           </div>
         </div> -->
 
-        <div class="mdui-divider"></div>
+        <div class="mdui-divider" style="margin: 8px;"></div>
 
         <div class="switch_bar filter">
           <div class="switch_title">
             批量操作 <br/>
-            <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员生效</div>
+            <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员进行操作</div>
           </div>
           <div class="switch_btns_wrap">
             <div class="btn_switch" @click="batchUpdatesOwn(true)">设为已拥有</div>
@@ -181,7 +187,7 @@
         </div>
         <div class="switch_bar upload">
           <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了
-            <a class="skland_notice_popup_btn" @click="importPopupVisible = !importPopupVisible">《森空岛导入须知》</a>
+            <a class="skland_notice_popup_btn" @click="importPopupVisible = !importPopupVisible">《森空岛导入说明》</a>
           </div>
         </div>
       </div>
@@ -917,9 +923,11 @@ function sortCharacterList(rule) {
 //转跳罗德岛基建Beta
 function toBiliblili() {
   const bilibiliHref = "https://space.bilibili.com/688411531/dynamic";
+  const devHerf = "/about/dev";
   const element = document.createElement("a");
   element.style.display = "none";
-  element.href = bilibiliHref;
+  // element.href = bilibiliHref;
+  element.href = devHerf;
   element.click();
 }
 
