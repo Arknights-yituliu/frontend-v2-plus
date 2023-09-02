@@ -183,6 +183,7 @@
 .elite_wrap {
   display: flex;
   margin-top: 16px;
+
 }
 
 .image_elite {
@@ -195,6 +196,11 @@
   margin-top: 12px;
   border-radius: 0px;
   background: rgba(127, 127, 127, 0.1);
+  cursor: pointer;
+}
+
+.image_elite:hover {
+  background: rgb(142, 222, 255);
 }
 
 .card_option_right {
@@ -221,7 +227,8 @@
 .image_skill {
   width: 42px;
   height: 42px;
-  border: 1px grey solid;
+  /*border: 1px grey solid;*/
+
 }
 
 .image_mod {
@@ -232,9 +239,7 @@
 }
 
 .image_rank {
-  margin: auto;
-  margin-top: 6px;
-  margin-bottom: 4px;
+  margin: 6px auto 4px;
   width: 40px;
   height: 40px;
   line-height: 24px;
@@ -246,13 +251,29 @@
   cursor: pointer;
 }
 
+.image_rank:hover {
+  background: rgb(142, 222, 255);
+}
+
+.image_rank_disable {
+  margin: 6px auto 4px;
+  width: 40px;
+  height: 40px;
+  line-height: 24px;
+  padding: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 0;
+  background: rgba(127, 127, 127, 0.1);
+  cursor: not-allowed;
+}
+
 .switch_select {
   background: rgba(0, 102, 255, 0.3);
 }
 
 .footer_info {
-  margin: auto;
-  margin-top: 30px;
+  margin: 30px auto auto;
   width: 80%;
   text-align: center;
 }

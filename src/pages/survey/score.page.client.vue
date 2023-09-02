@@ -37,8 +37,8 @@
         <!-- <div class="switch_title">设置</div> -->
 
         <div class="btn_setup" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">
-          筛选/批量操作
-          <div class="btn_setup_tips">可筛选后批量进行填写</div>
+          筛选干员
+          <div class="btn_setup_tips">筛选符合条件的干员</div>
         </div>
 
 <!--        <div class="btn_setup" @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">-->
@@ -117,7 +117,7 @@
             <div class="score_char_name">{{ char.name }}</div>
           </div>
           <div class="score_fastFill">
-            请输入平均分 <input class="score_input_avg" v-model="avg_score" />
+            请输入平均分
           </div>
         </div>
 
