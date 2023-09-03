@@ -116,9 +116,9 @@
             <div class="score_portrait_bg_bl"></div>
             <div class="score_char_name">{{ char.name }}</div>
           </div>
-          <div class="score_fastFill">
-            请输入平均分
-          </div>
+<!--          <div class="score_fastFill">-->
+<!--            请输入平均分-->
+<!--          </div>-->
         </div>
 
 
@@ -134,7 +134,7 @@
           </div>
           <div class="score_bar" v-show="scoreItem.rogue.show" :style="notScore(char.rogue)">
             <div class="score_item" @click="resetScore(char_index, 'rogue')">
-              <div class="score_avg">(4.3)</div>
+              <div class="score_avg" >(4.3)</div>
               肉鸽：</div>
             <!-- 肉鸽 -->
             <img class="image_score" :src="scoreSelected(rank, char.rogue)" alt="" v-for="rank in scoreDict" @click="updateScore(char_index, 'rogue', rank)" />
