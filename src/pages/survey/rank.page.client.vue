@@ -86,7 +86,7 @@
             </div>
           </td>
           <td class="rank_table_2 rank_table_text">{{ getPercentage(result.own, 1) }}</td>
-          <td class="rank_table_3 rank_table_text">{{ getPercentage(result.elite2, 1) }}</td>
+          <td class="rank_table_3 rank_table_text">{{ getPercentage(getSurveyResult(result.elite,'rank2'), 1) }}</td>
           <td class="rank_table_4 rank_table_text">
             <div class="rank_table_skill">
               <div class="rank_image_skill_wrap">
@@ -176,7 +176,8 @@ function getPercentage(value, digit) {
 }
 
 function getSurveyResult(obj, rank) {
-  if (obj[rank] === void 0) return -1;
+  if(obj == void 0) return '';
+  if (obj[rank] == void 0) return '';
   return obj[rank];
 }
 

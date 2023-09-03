@@ -267,14 +267,6 @@ let rankingList = [];
 
 function rankingListInit() {
     for (let charId in characterBasicInfo) {
-        let randomNum = Math.random();
-        let randomNum1 = Math.random();
-        let randomNum2 = Math.random();
-        let randomNum3 = Math.random();
-        let randomNum4 = Math.random();
-        let randomNum5 = Math.random();
-        let randomNum6 = Math.random();
-
         const baseInfo = characterBasicInfo[charId];
         let rankInfo = {
             charId: charId,
