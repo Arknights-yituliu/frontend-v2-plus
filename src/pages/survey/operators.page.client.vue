@@ -13,9 +13,13 @@
       <div class="intro_wrap">
         <div class="intro_title">森空岛数据导入流程</div>
 
-      <p><b>step1：</b>使用PC打开森空岛官网<a href="https://www.skland.com/">https://www.skland.com/</a>进行登录</p>
+      <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="skland_url">https://www.skland.com/</a>进行登录</p>
       <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：<br/>
-       <a style="color:dodgerblue">localStorage.getItem('SK_OAUTH_CRED_KEY')</a><br/>输入之后回车确认</p>
+       <a style="color:dodgerblue">localStorage.getItem('SK_OAUTH_CRED_KEY')</a>
+        <br/>
+        <button class="mdui-btn survey_button" @click="copyCode()">复制命令</button>
+
+        <br/>输入之后回车确认</p>
       <img src="/image/skland/step1.jpg" class="skland_import_image" alt=""><img>
       <p><b>step3：</b>此时你可以获得一段神秘的字符，此即为CRED，复制这段CRED</p>
       <img src="/image/skland/step2.jpg" class="skland_import_image" alt=""><img>
@@ -231,7 +235,7 @@
         </div>
         <div class="switch_bar upload">
           <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了
-            <a class="skland_notice_popup_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>
+            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>
           </div>
         </div>
       </div>
@@ -412,11 +416,11 @@ let rarity_dict = [1, 2, 3, 4, 5, 6];
 let list_size = ref(10)
 
 function initOperatorsList(){
-
   operator_list.value = characterListInit();
+  getSurveyCharacter();
   setTimeout(() => {
     list_size.value = operator_list.value.length;
-    getSurveyCharacter();
+
     statistics()
   }, 1000);
 }
@@ -1012,6 +1016,19 @@ function statistics(){
 
 }
 
+function toSkland(){
+   window.open("https://www.skland.com");
+}
+
+function copyCode(){
+
+  let elementInput = document.createElement('input');
+  elementInput.value = "localStorage.getItem('SK_OAUTH_CRED_KEY')"
+  document.body.appendChild(elementInput)
+  elementInput.select()
+  document.execCommand("Copy");
+  elementInput.remove()
+}
 
 
 //转跳罗德岛基建Beta

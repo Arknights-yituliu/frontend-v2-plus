@@ -338,6 +338,16 @@
   left: -130px;
 }
 
+.skland_url{
+  padding:0 8px 0 8px ;
+  color: dodgerblue;
+  cursor: pointer;
+}
+
+.skland_notice_btn{
+  color: #e03b3b;
+  cursor: pointer;
+}
 
 .skland_desc{
   margin: 4px;

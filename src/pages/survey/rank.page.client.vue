@@ -158,8 +158,7 @@ function getCharStatisticsResult() {
         }
       }
     }
-    console.log(operators_statistics_list.value);
-    // rankingList.value = response.data.result;
+
     user_count.value = response.data.userCount;
     update_time.value = response.data.updateTime;
   });
@@ -285,5 +284,6 @@ function btnSetClass(flag) {
 
 onMounted(() => {
   addFilterCondition('rarity', 6)
+  getCharStatisticsResult()
 })
 </script>
