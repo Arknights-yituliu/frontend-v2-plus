@@ -65,7 +65,7 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <button class="mdui-btn survey_button" @click="firstPopupClose()">填写说明</button>
-      <button class="mdui-btn survey_button">干员持有率：114 / 514</button>
+      <button class="mdui-btn survey_button">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>
       <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>
       <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
     </div>
@@ -412,10 +412,13 @@ let rarity_dict = [1, 2, 3, 4, 5, 6];
 let list_size = ref(10)
 
 function initOperatorsList(){
+
   operator_list.value = characterListInit();
   setTimeout(() => {
     list_size.value = operator_list.value.length;
-  }, 2000);
+    getSurveyCharacter();
+    statistics()
+  }, 1000);
 }
 
 //找回填写过的角色信息
@@ -501,6 +504,9 @@ function importSKLandCRED() {
     cMessage("森空岛信息导入成功");
   });
 }
+
+
+
 
 let last_upload_time_stamp = 1689425013364; //上次上传时间的时间戳
 let upload_message = ref({updateTime: "2023/08/08 00:00:00", affectedRows: 0}); //上传APi返回的信息
@@ -641,6 +647,7 @@ function updateOwn(char_index, new_value) {
   }
 
   automaticUpload();
+  statistics()
 }
 
 //批量更新是否持有
@@ -651,6 +658,7 @@ function batchUpdatesOwn(new_value) {
       selected_index_obj.value[index] = index;
     }
   }
+  statistics()
 }
 
 /**
@@ -679,6 +687,7 @@ function updateElite(char_index, new_value) {
   operator_list.value[char_index].own = true;
 
   automaticUpload();
+  statistics()
 }
 
 // 批量精英化
@@ -692,6 +701,8 @@ function batchUpdatesElite(new_value) {
       selected_index_obj.value[index] = index;
     }
   }
+
+  statistics()
 }
 
 /**
@@ -732,6 +743,8 @@ function updateSkillAndMod(char_index, property, new_value) {
   // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
 
   automaticUpload();
+
+  statistics()
 }
 
 /**
@@ -767,6 +780,8 @@ function batchUpdatesSkillAndMod(property, new_value) {
     cancelAndUpdateOption(element_id, new_value, old_value);
     selected_index_obj.value[index] = index;
   }
+
+  statistics()
 }
 
 /**
@@ -795,6 +810,7 @@ function updatePotential(char_index, new_value) {
   operator_list.value[char_index].own = true;
 
   automaticUpload();
+  statistics()
 }
 
 /**
@@ -855,6 +871,7 @@ function updateLevel(char_index) {
   // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
 
   automaticUpload();
+  statistics()
 }
 
 //选中标题
@@ -980,6 +997,20 @@ function sortCharacterList(rule) {
   });
 }
 
+let operator_count = ref(0)
+let user_own_operator_count = ref(0)
+
+function statistics(){
+  user_own_operator_count.value = 0;
+  operator_count.value = operator_list.value.length
+  for(const i in operator_list.value){
+    if(operator_list.value[i].own){
+      user_own_operator_count.value++;
+    }
+  }
+
+
+}
 
 
 
@@ -995,7 +1026,8 @@ function toBiliblili() {
 }
 
 onMounted(() => {
-  getSurveyCharacter();
+
   initOperatorsList();
+
 });
 </script>
