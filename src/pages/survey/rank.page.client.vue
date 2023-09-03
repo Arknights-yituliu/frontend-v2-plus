@@ -3,9 +3,11 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <button class="mdui-btn survey_button">说明</button>
-      <button class="mdui-btn survey_button" @click="collapse('switch_bar select', 'switch_filter_wrap','switch_filter_box')">筛选</button>
+      <button class="mdui-btn survey_button"
+              @click="collapse('switch_bar select', 'switch_filter_wrap','switch_filter_box')">筛选
+      </button>
       <div id="updateTime">
-        调查人数5000<br />
+        调查人数5000<br/>
         更新时间2023-05-27
       </div>
     </div>
@@ -13,67 +15,73 @@
     <!-- 筛选模块 -->
     <div class="switch_wrap" id="switch_filter_wrap">
       <div class="switch_box" id="switch_filter_box">
-      <div class="switch_bar select">
-        <div class="switch_title">职业</div>
-        <div class="switch_btns_wrap">
-          <div
-            :class="selectedBtn('profession', profession.value)"
-            v-for="profession in professionDict"
-            @click="addFilterCondition('profession', profession.value)"
-          >
-            {{ profession.label }}
+        <div class="switch_bar select">
+          <div class="switch_title">职业</div>
+          <div class="switch_btns_wrap">
+            <div
+                :class="selectedBtn('profession', profession.value)"
+                v-for="profession in professionDict"
+                @click="addFilterCondition('profession', profession.value)"
+            >
+              {{ profession.label }}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="switch_bar select">
-        <div class="switch_title">稀有度</div>
-        <div class="switch_btns_wrap">
-          <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterCondition('rarity', rarity)">{{ rarity }}★</div>
+        <div class="switch_bar select">
+          <div class="switch_title">稀有度</div>
+          <div class="switch_btns_wrap">
+            <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarity_dict"
+                 @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="switch_bar select">
-        <div class="switch_title">其他</div>
-        <div class="switch_btns_wrap">
-          <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
-          <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
-          <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
-          <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
-          <div :class="selectedBtn('itemObtainApproach', 0)" @click="addFilterCondition('itemObtainApproach', 0)">赠送干员</div>
-          <div :class="selectedBtn('itemObtainApproach', 1)">限定干员</div>
+        <div class="switch_bar select">
+          <div class="switch_title">其他</div>
+          <div class="switch_btns_wrap">
+            <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
+            <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
+            <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
+            <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
+            <div :class="selectedBtn('itemObtainApproach', 0)" @click="addFilterCondition('itemObtainApproach', '赠送干员')">
+              赠送干员
+            </div>
+            <div :class="selectedBtn('itemObtainApproach', 1)" @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员</div>
+          </div>
         </div>
-      </div>
 
-      <!-- <div class="switch_bar select">
-        <div class="switch_title">排序</div>
-        <div class="switch_btns_wrap">
-          <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
-          <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
-          <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
-        </div>
-      </div> -->
+        <!-- <div class="switch_bar select">
+          <div class="switch_title">排序</div>
+          <div class="switch_btns_wrap">
+            <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
+            <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
+            <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
+          </div>
+        </div> -->
       </div>
     </div>
 
     <div id="rank_table mdui-table-fluid">
       <table class="mdui-table">
         <thead>
-          <tr>
-            <td class="rank_table_1">代号</td>
-            <td class="rank_table_2" @click="sortRank('own')">持有率</td>
-            <td class="rank_table_3" @click="sortRank('elite2')">精二率</td>
-            <td class="rank_table_4" @click="bubbleSort('skill1','rank3')">一技能专三率</td>
-            <td class="rank_table_5" @click="bubbleSort('skill2','rank3')">二技能专三率</td>
-            <td class="rank_table_6" @click="bubbleSort('skill3','rank3')">三技能专三率</td>
-            <td class="rank_table_7" @click="bubbleSort('modX','rank3')">x模组解锁率</td>
-            <td class="rank_table_8" @click="bubbleSort('modY','rank3')">y模组解锁率</td>
-          </tr>
+        <tr>
+          <td class="rank_table_1">代号</td>
+          <td class="rank_table_2" @click="sortRank('own')">持有率</td>
+          <td class="rank_table_3" @click="sortRank('elite2')">精二率</td>
+          <td class="rank_table_4" @click="commonSort('skill1','rank3')">一技能专三率</td>
+          <td class="rank_table_5" @click="commonSort('skill2','rank3')">二技能专三率</td>
+          <td class="rank_table_6" @click="commonSort('skill3','rank3')">三技能专三率</td>
+          <td class="rank_table_7" @click="commonSort('modX','rank3')">x模组解锁率</td>
+          <td class="rank_table_8" @click="commonSort('modY','rank3')">y模组解锁率</td>
+        </tr>
         </thead>
-        <tr v-for="(result, index) in rankingList" v-show="result.show" class="rank_table_tr">
+        <tr v-for="(result, index) in operators_statistics_list" v-show="result.show" class="rank_table_tr">
           <td class="rank_table_1 rank_table_text">
             <div class="rank_table_avatar">
-              <div class="rank_avatar_wrap"><div :class="getSprite(result.charId)"></div></div>
+              <div class="rank_avatar_wrap">
+                <div :class="getSprite(result.charId)"></div>
+              </div>
               <div class="rank_character_name">{{ result.name }}</div>
             </div>
           </td>
@@ -81,7 +89,9 @@
           <td class="rank_table_3 rank_table_text">{{ getPercentage(result.elite2, 1) }}</td>
           <td class="rank_table_4 rank_table_text">
             <div class="rank_table_skill">
-              <div class="rank_image_skill_wrap"><div :class="getSpriteIcon(result.skill, 0)"></div></div>
+              <div class="rank_image_skill_wrap">
+                <div :class="getSpriteIcon(result.skill, 0)"></div>
+              </div>
               <div class="rank_table_skill_text">
                 <div class="rank_ratio">{{ getSkillName(result.skill, 0) }}</div>
                 <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill1, "rank3"), 1) }}</div>
@@ -90,7 +100,9 @@
           </td>
           <td class="rank_table_5 rank_table_text">
             <div class="rank_table_skill">
-              <div class="rank_image_skill_wrap"><div :class="getSpriteIcon(result.skill, 1)"></div></div>
+              <div class="rank_image_skill_wrap">
+                <div :class="getSpriteIcon(result.skill, 1)"></div>
+              </div>
               <div class="rank_table_skill_text">
                 <div class="rank_ratio"> {{ getSkillName(result.skill, 1) }}</div>
                 <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill2, "rank3"), 1) }}</div>
@@ -99,7 +111,9 @@
           </td>
           <td class="rank_table_6 rank_table_text">
             <div class="rank_table_skill">
-              <div class="rank_image_skill_wrap"><div :class="getSpriteIcon(result.skill, 2)"></div></div>
+              <div class="rank_image_skill_wrap">
+                <div :class="getSpriteIcon(result.skill, 2)"></div>
+              </div>
               <div class="rank_table_skill_text">
                 <div class="rank_ratio"> {{ getSkillName(result.skill, 2) }}</div>
                 <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}</div>
@@ -116,44 +130,41 @@
 
 <script setup>
 import "@/assets/css/survey_rank.css";
-import { rankingListInit, collapse, filterByCharacterProperty, professionDict } from "./common";
-import { onMounted, ref, watch } from "vue";
+import {rankingListInit, collapse, filterByCharacterProperty, professionDict} from "./common";
+import {onMounted, ref, watch} from "vue";
 
 import surveyApi from "@/api/survey";
 
-let rarityDict = [1, 2, 3, 4, 5, 6];
+let rarity_dict = [1, 2, 3, 4, 5, 6];
 
-let rankingList = ref(rankingListInit());
+let operators_statistics_list = ref(rankingListInit());
 let surveyType = ref("练度");
 
-let userCount = ref(0);
-let updateTime = ref("2023-05-01");
+let user_count = ref(0);
+let update_time = ref("2023-05-01");
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
-    for (let i in rankingList.value) {
+    for (let i in operators_statistics_list.value) {
       for (let j in response.data.result) {
-        if (rankingList.value[i].charId === response.data.result[j].charId) {
-          rankingList.value[i].own = response.data.result[j].own;
-          rankingList.value[i].elite = response.data.result[j].elite;
-          rankingList.value[i].skill1 = response.data.result[j].skill1;
-          rankingList.value[i].skill2 = response.data.result[j].skill2;
-          rankingList.value[i].skill3 = response.data.result[j].skill3;
-          rankingList.value[i].modX = response.data.result[j].modX;
-          rankingList.value[i].modY = response.data.result[j].modY;
+        if (operators_statistics_list.value[i].charId === response.data.result[j].charId) {
+          operators_statistics_list.value[i].own = response.data.result[j].own;
+          operators_statistics_list.value[i].elite = response.data.result[j].elite;
+          operators_statistics_list.value[i].skill1 = response.data.result[j].skill1;
+          operators_statistics_list.value[i].skill2 = response.data.result[j].skill2;
+          operators_statistics_list.value[i].skill3 = response.data.result[j].skill3;
+          operators_statistics_list.value[i].modX = response.data.result[j].modX;
+          operators_statistics_list.value[i].modY = response.data.result[j].modY;
         }
       }
     }
-    console.log(rankingList.value);
+    console.log(operators_statistics_list.value);
     // rankingList.value = response.data.result;
-    userCount.value = response.data.userCount;
-    updateTime.value = response.data.updateTime;
+    user_count.value = response.data.userCount;
+    update_time.value = response.data.updateTime;
   });
 }
 
-onMounted(() => {
-  // getCharStatisticsResult();
-});
 
 function getSprite(id, type) {
   if ("elite" === type) return "bg-" + id + " rank_sprite_elite";
@@ -185,63 +196,86 @@ function getSkillName(skill, index) {
 
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
-  if (filterCondition.value[attribute].indexOf(rule) > -1) {
+  if (filter_condition.value[attribute].indexOf(rule) > -1) {
     return "btn_switch selected_color";
   }
   return "btn_switch";
 }
 
-let filterCondition = ref({ rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: [] });
+let filter_condition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
 
 //增加筛选规则
 function addFilterCondition(property, condition) {
-  console.log(filterCondition.value);
+  console.log(filter_condition.value);
   let filterRulesCopy = [];
-  if (filterCondition.value[property].indexOf(condition) > -1) {
-    for (let i in filterCondition.value[property]) {
-      if (condition !== filterCondition.value[property][i]) {
-        filterRulesCopy.push(filterCondition.value[property][i]);
+  if (filter_condition.value[property].indexOf(condition) > -1) {
+    for (let i in filter_condition.value[property]) {
+      if (condition !== filter_condition.value[property][i]) {
+        filterRulesCopy.push(filter_condition.value[property][i]);
       }
     }
-    filterCondition.value[property] = filterRulesCopy;
+    filter_condition.value[property] = filterRulesCopy;
     filterCharacterList();
     return;
   }
 
-  filterCondition.value[property].push(condition);
+  filter_condition.value[property].push(condition);
   filterCharacterList();
 }
 
 //筛选
 function filterCharacterList() {
-  for (let i in rankingList.value) {
-    const character = rankingList.value[i];
-    rankingList.value[i].show = filterByCharacterProperty(filterCondition.value, character);
+  for (let i in operators_statistics_list.value) {
+    const character = operators_statistics_list.value[i];
+    operators_statistics_list.value[i].show = filterByCharacterProperty(filter_condition.value, character);
   }
 }
 
 //按条件排序
 function sortRank(condition) {
-  rankingList.value.sort((a, b) => {
+  operators_statistics_list.value.sort((a, b) => {
     return b[condition] - a[condition];
   });
 }
 
-function bubbleSort(property, condition) {
-  const len = rankingList.value.length
-  for(let i = 0; i < len - 1; i++) {
+let last_property = ref('')
+let desc_or_asc = ref(1)
 
-    for(let j = 0; j < len -1 - i; j++) {
-      // console.log(rankingList.value[j][property][condition],rankingList.value[j + 1][property][condition])
-      if(rankingList.value[j][property][condition]<rankingList.value[j + 1][property][condition]
-          ||rankingList.value[j][property][condition]===void 0
-          ||rankingList.value[j+1][property][condition]===void 0) {
-        const temp =  rankingList.value[j]
-        rankingList.value[j] =  rankingList.value[j + 1]
-        rankingList.value[j + 1] =  temp;
+function commonSort(property, condition) {
+  if (last_property.value === property) {
+    desc_or_asc.value++;
+  } else {
+    desc_or_asc.value = 1;
+  }
+  console.log(desc_or_asc.value)
+  const len = operators_statistics_list.value.length
+  for (let i = 0; i < len - 1; i++) {
+    for (let j = 0; j < len - 1 - i; j++) {
+      if (desc_or_asc.value % 2 !== 0) {
+        // console.log(rankingList.value[j][property][condition],rankingList.value[j + 1][property][condition])
+        if (operators_statistics_list.value[j][property][condition] < operators_statistics_list.value[j + 1][property][condition]
+            || operators_statistics_list.value[j][property][condition] === void 0
+            || operators_statistics_list.value[j + 1][property][condition] === void 0) {
+          const temp = operators_statistics_list.value[j]
+          operators_statistics_list.value[j] = operators_statistics_list.value[j + 1]
+          operators_statistics_list.value[j + 1] = temp;
+        }
+      }
+
+      if (desc_or_asc.value % 2 === 0) {
+        // console.log(rankingList.value[j][property][condition],rankingList.value[j + 1][property][condition])
+        if (operators_statistics_list.value[j][property][condition] > operators_statistics_list.value[j + 1][property][condition]
+            || operators_statistics_list.value[j][property][condition] === void 0
+            || operators_statistics_list.value[j + 1][property][condition] === void 0) {
+          const temp = operators_statistics_list.value[j]
+          operators_statistics_list.value[j] = operators_statistics_list.value[j + 1]
+          operators_statistics_list.value[j + 1] = temp;
+        }
       }
     }
   }
+
+  last_property.value = property;
 }
 
 function btnSetClass(flag) {
@@ -249,7 +283,7 @@ function btnSetClass(flag) {
   return "btn_set";
 }
 
-onMounted(()=>{
+onMounted(() => {
   addFilterCondition('rarity', 6)
 })
 </script>
