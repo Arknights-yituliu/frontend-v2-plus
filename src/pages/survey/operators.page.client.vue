@@ -1044,6 +1044,13 @@ function statistics() {
     }
   }
 
+  user_own_operator_count_6.value = 0;
+  operator_count.value = operator_list.value.length
+  for (const i in operator_list.value) {
+    if (operator_list.value[i].own) {
+      user_own_operator_count_6.value++;
+    }
+  }
 
   itemCostResult.value = calAPCost(operator_list.value).itemList;
   apCostCount.value = calAPCost(operator_list.value).apCostCount;
