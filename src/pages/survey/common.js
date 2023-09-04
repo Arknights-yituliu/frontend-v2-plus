@@ -83,7 +83,7 @@ function calAPCost(operatorList) {
 
         console.log('基础技能：',operator.mainSkill)
         for (let i = 0; i < operator.mainSkill; i++) {
-            for (let itemId in itemCost.allSkill) {
+            for (let itemId in itemCost.allSkill[i]) {
                 if (itemCountMap.get(itemId) === void 0) {
                     let count = itemCost.allSkill[i][itemId];
                     itemCountMap.set(itemId, count)

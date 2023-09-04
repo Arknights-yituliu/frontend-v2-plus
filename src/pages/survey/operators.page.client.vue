@@ -266,7 +266,7 @@
       <div class="switch_box switch_box_open" id="switch_statistics_box">
         <div class="switch_bar statistics" style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;"> 总计消耗{{apCostCount.toFixed(0)}} 理智 </div>
         <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,index) in itemCostResult" :key="index">
-        <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
+        <div v-for="(item,index) in itemList" :key="index" class="item_cost_card" v-show="item.id!=='4001'">
           <div class="image_item_wrap">
             <div :class="getSprite(item.id,'item')"></div>
           </div>
@@ -467,6 +467,7 @@ function getSurveyCharacter() {
 
           operator_list.value[i].level = list[j].level;
           operator_list.value[i].potential = list[j].potential;
+          operator_list.value[i].mainSkill = list[j].mainSkill;
           operator_list.value[i].skill1 = list[j].skill1;
           operator_list.value[i].skill2 = list[j].skill2;
           operator_list.value[i].skill3 = list[j].skill3;
@@ -1044,11 +1045,11 @@ function statistics() {
     }
   }
 
-  user_own_operator_count_6.value = 0;
+  user_own_operator_count.value = 0;
   operator_count.value = operator_list.value.length
   for (const i in operator_list.value) {
     if (operator_list.value[i].own) {
-      user_own_operator_count_6.value++;
+      user_own_operator_count.value++;
     }
   }
 
