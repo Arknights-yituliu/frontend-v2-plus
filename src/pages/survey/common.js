@@ -79,19 +79,19 @@ function calAPCost(operatorList) {
             if (itemCountMap.get(itemId) === void 0) {
                 let count = levelApCost[itemId];
                 itemCountMap.set(itemId, count)
-                console.log("没添加过的材料：", itemId, '数量：', count)
+
             } else {
                 let count = itemCountMap.get(itemId);
                 count += levelApCost[itemId]
                 itemCountMap.set(itemId, count)
-                console.log("已添加过的材料：", itemId, '数量：', count)
+
             }
         }
 
 
 
 
-        console.log(name,"--狗粮：",levelApCost.EXPCount,"--龙门币：",levelApCost.LMDCount)
+
 
         for (let i = 1; i <= operator.elite; i++) {
             for (let itemId in itemCost.elite[i]) {
