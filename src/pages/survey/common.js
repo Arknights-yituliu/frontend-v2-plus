@@ -81,7 +81,7 @@ function calAPCost(operatorList) {
             }
         }
 
-        console.log('基础技能：',operator.mainSkill)
+        // console.log('基础技能：',operator.mainSkill)
         for (let i = 0; i < operator.mainSkill; i++) {
             for (let itemId in itemCost.allSkill[i]) {
                 if (itemCountMap.get(itemId) === void 0) {
@@ -219,7 +219,7 @@ function calAPCost(operatorList) {
         }
     })
 
-    console.log(rarity5List)
+
 
     rarity5List.sort((a,b)=>{
         return b.id-a.id

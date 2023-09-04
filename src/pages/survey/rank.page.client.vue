@@ -7,8 +7,8 @@
               @click="collapse('switch_bar select', 'switch_filter_wrap','switch_filter_box')">筛选
       </button>
       <div id="updateTime">
-        调查人数5000<br/>
-        更新时间2023-05-27
+        调查人数{{ user_count }}<br/>
+        更新时间{{ update_time }}
       </div>
     </div>
 

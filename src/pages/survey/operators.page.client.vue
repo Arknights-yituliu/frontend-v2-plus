@@ -92,7 +92,7 @@
         </button>
       </div>
       <button class="mdui-btn survey_button" @click="toBiliblili()">建议与反馈</button>
-      <button class="mdui-btn survey_button" @click="statistics()">统计材料消耗</button>
+      <button class="mdui-btn survey_button" @click="statisticsCollapse()">统计材料消耗</button>
 
     </div>
 
@@ -262,8 +262,8 @@
       </div>
     </div>
 
-    <div class="switch_wrap switch_wrap_open" id="switch_statistics_wrap">
-      <div class="switch_box switch_box_open" id="switch_statistics_box">
+    <div class="switch_wrap" id="switch_statistics_wrap">
+      <div class="switch_box" id="switch_statistics_box">
         <div class="switch_bar statistics" style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;"> 总计消耗{{apCostCount.toFixed(0)}} 理智 </div>
         <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,index) in itemCostResult" :key="index">
         <div v-for="(item,index) in itemList" :key="index" class="item_cost_card" v-show="item.id!=='4001'">
@@ -1034,6 +1034,12 @@ let user_own_operator_count = ref(0)
 
 let itemCostResult = ref({})
 let apCostCount = ref(0)
+
+function statisticsCollapse() {
+  statistics()
+  collapse('switch_bar statistics','switch_statistics_wrap','switch_statistics_box')
+
+}
 
 //各种统计
 function statistics() {
