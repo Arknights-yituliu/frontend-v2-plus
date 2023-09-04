@@ -227,10 +227,10 @@
     <!-- 导入导出模块 -->
     <div class="switch_wrap switch_wrap_open" id="switch_upload_wrap">
       <div class="switch_box switch_box_open" id="switch_upload_box">
-<!--        <div class="switch_bar upload">-->
-<!--          <div class="switch_title">导入导出</div>-->
-<!--          <div class="switch_btns_wrap">-->
-<!--            <div class="btn_switch" @click="exportExcel()">导出为Excel文件</div>-->
+        <div class="switch_bar upload">
+          <div class="switch_title">导入导出</div>
+          <div class="switch_btns_wrap">
+            <div class="btn_switch" @click="exportExcel()">导出为Excel</div>
 <!--            <div class="btn_switch">-->
 <!--              <div class="input_upload_wrap">-->
 <!--                导入Excel文件-->
@@ -239,8 +239,8 @@
 <!--            </div>-->
 <!--            &lt;!&ndash; <div class="btn_switch" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
 <!--            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>-->
-<!--          </div>-->
-<!--        </div>-->
+          </div>
+        </div>
         <div class="switch_bar upload">
           <div class="switch_desc"><b>*上传须知：</b>导入的Excel的数据格式需与一图流导出的Excel内数据格式一致，请先导出一份空白表格以确保格式无误</div>
         </div>
