@@ -27,9 +27,9 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <button class="mdui-btn survey_button" @click="firstPopupClose()">填写说明</button>
-<!--      <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
       <button class="mdui-btn survey_button" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选干员</button>
       <button class="mdui-btn survey_button" @click="feedback()">建议与反馈</button>
+      <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>
     </div>
 
     <!-- 设置区域 -->
