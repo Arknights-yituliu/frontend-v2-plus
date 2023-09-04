@@ -2,7 +2,7 @@
   <div class="survey_rank_page">
     <!-- 常驻条 -->
     <div class="setup_top">
-      <button class="mdui-btn survey_button">说明</button>
+      <!-- <button class="mdui-btn survey_button">说明</button> -->
       <button class="mdui-btn survey_button"
               @click="collapse('switch_bar select', 'switch_filter_wrap','switch_filter_box')">筛选
       </button>
