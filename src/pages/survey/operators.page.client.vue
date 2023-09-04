@@ -4,9 +4,9 @@
     <div>
       <div class="intro_wrap">
         <div class="intro_title">森空岛CRED的风险声明</div>
-        &emsp;&emsp;森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），仅可获取目前森空岛内展示的游戏数据<br/>
-        &emsp;&emsp;一图流不会保存CRED，每次导入需要重新输入CRED <br/>
-        <a style="color: #fa5e5e">&emsp;&emsp;*森空岛CRED退出登录后依旧可获取数据</a>
+        &emsp;&emsp;森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
+        &emsp;&emsp;一图流不会保存任何CRED信息<br/>
+        <a style="color: #fa5e5e">&emsp;&emsp;*请妥善保管此CRED</a>
       </div>
 
 
@@ -92,7 +92,7 @@
         </button>
       </div>
       <button class="mdui-btn survey_button" @click="toBiliblili()">建议与反馈</button>
-      <button class="mdui-btn survey_button" @click="statistics()">统计</button>
+      <button class="mdui-btn survey_button" @click="statistics()">统计材料消耗</button>
 
     </div>
 
@@ -571,7 +571,7 @@ function upload() {
   let uploadList = uploadDataReduction();
   surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
     upload_message.value = response.data;
-    cMessage("手动保存成功");
+    cMessage("保存成功");
     selected_index_obj.value = {};
   });
 }
