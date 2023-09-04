@@ -345,8 +345,9 @@
 }
 
 .skland_notice_btn{
-  color: #e03b3b;
+  color: #ff0000;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .skland_desc{

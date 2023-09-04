@@ -55,13 +55,8 @@
         "isChild": false
       },
       {
-        "path": "/survey/score",
-        "text": "干员使用调查",
-        "isChild": false
-      },
-      {
         "path": "/survey/rank",
-        "text": "练度/风评统计",
+        "text": "练度统计",
         "isChild": false
       },
       {
