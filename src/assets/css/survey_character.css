@@ -412,7 +412,7 @@
 }
 
 .image_item{
-  transform: scale(0.32);
+  transform: scale(0.25);
   position: absolute;
   left: -66px;
   top:-66px
@@ -421,14 +421,15 @@
 .item_count{
   height: 20px;
   line-height: 20px;
-  font-size: 18px;
-  width: 70px;
+  /*font-size: 18px;*/
+  width:60px;
   position: absolute;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.6);
   color: white;
-  top: 36px;
+  top: 32px;
   left: 16px;
   text-align: center;
+  border-radius: 1px;
 }
 
 .stats_classify {
