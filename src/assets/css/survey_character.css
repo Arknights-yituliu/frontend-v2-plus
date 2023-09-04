@@ -393,7 +393,7 @@
   height:50px;
   width: 50px;
   position: relative;
-  border: 1px red solid;
+  /* border: 1px red solid; */
   margin: 4px;
 }
 

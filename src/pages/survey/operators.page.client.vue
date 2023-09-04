@@ -264,7 +264,7 @@
 
     <div class="switch_wrap switch_wrap_open" id="switch_statistics_wrap">
       <div class="switch_box switch_box_open" id="switch_statistics_box">
-        <div class="switch_bar statistics"> 总计消耗{{apCostCount.toFixed(0)}} 理智 </div>
+        <div class="switch_bar statistics" style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;"> 总计消耗{{apCostCount.toFixed(0)}} 理智 </div>
         <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,index) in itemCostResult" :key="index">
         <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
           <div class="image_item_wrap">
