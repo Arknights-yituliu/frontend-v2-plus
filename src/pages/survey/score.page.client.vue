@@ -27,31 +27,32 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <button class="mdui-btn survey_button" @click="firstPopupClose()">填写说明</button>
-<!--      <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
-
+      <button class="mdui-btn survey_button" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选干员</button>
+      <button class="mdui-btn survey_button" @click="feedback()">建议与反馈</button>
+      <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>
     </div>
 
     <!-- 设置区域 -->
-    <div class="setup_wrap">
+    <!-- <div class="setup_wrap">
       <div class="control_panel">
-        <!-- <div class="switch_title">设置</div> -->
+        <div class="switch_title">设置</div>
 
         <div class="btn_setup" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">
           筛选干员
           <div class="btn_setup_tips">筛选符合条件的干员</div>
         </div>
 
-<!--        <div class="btn_setup" @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">-->
-<!--          数据导入/导出-->
-<!--          <div class="btn_setup_tips">导入/导出json/Excel等</div>-->
-<!--        </div>-->
+       <div class="btn_setup" @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">
+         数据导入/导出
+         <div class="btn_setup_tips">导入/导出json/Excel等</div>
+       </div>
 
         <div class="btn_setup" @click="toBiliblili()">
           开发信息
           <div class="btn_setup_tips">反馈、建议<br/></div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- 设置区 -->
     <div class="switch_wrap" id="switch_filter_wrap">
@@ -341,6 +342,15 @@ function filterCharacterList() {
   }
 }
 
+function feedback() {
+const excelHref = "https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ"
+const element = document.createElement("a");
+element.style.display = "none";
+// element.href = bilibiliHref;
+// element.href = devHerf;
+element.href = excelHref;
+element.click();
+}
 
 
 //按条件排序

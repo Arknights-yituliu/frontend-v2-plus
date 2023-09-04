@@ -4,9 +4,9 @@
     <div>
       <div class="intro_wrap">
         <div class="intro_title">森空岛CRED的风险声明</div>
-        &emsp;&emsp;森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），仅可获取目前森空岛内展示的游戏数据<br/>
-        &emsp;&emsp;一图流不会保存CRED，每次导入需要重新输入CRED <br/>
-        <a style="color: #fa5e5e">&emsp;&emsp;*森空岛CRED退出登录后依旧可获取数据</a>
+        &emsp;&emsp;森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
+        &emsp;&emsp;一图流不会保存任何CRED信息<br/>
+        <a style="color: #fa5e5e">&emsp;&emsp;*请妥善保管此CRED</a>
       </div>
 
 
@@ -92,7 +92,7 @@
         </button>
       </div>
       <button class="mdui-btn survey_button" @click="toBiliblili()">建议与反馈</button>
-      <button class="mdui-btn survey_button" @click="statistics()">统计</button>
+      <button class="mdui-btn survey_button" @click="statistics()">统计材料消耗</button>
 
     </div>
 
@@ -264,7 +264,7 @@
 
     <div class="switch_wrap switch_wrap_open" id="switch_statistics_wrap">
       <div class="switch_box switch_box_open" id="switch_statistics_box">
-        <div class="switch_bar statistics"> 总计消耗{{apCostCount.toFixed(0)}} 理智 </div>
+        <div class="switch_bar statistics" style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;"> 总计消耗{{apCostCount.toFixed(0)}} 理智 </div>
         <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,index) in itemCostResult" :key="index">
         <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
           <div class="image_item_wrap">
@@ -571,7 +571,7 @@ function upload() {
   let uploadList = uploadDataReduction();
   surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
     upload_message.value = response.data;
-    cMessage("手动保存成功");
+    cMessage("保存成功");
     selected_index_obj.value = {};
   });
 }
@@ -1044,6 +1044,13 @@ function statistics() {
     }
   }
 
+  user_own_operator_count_6.value = 0;
+  operator_count.value = operator_list.value.length
+  for (const i in operator_list.value) {
+    if (operator_list.value[i].own) {
+      user_own_operator_count_6.value++;
+    }
+  }
 
   itemCostResult.value = calAPCost(operator_list.value).itemList;
   apCostCount.value = calAPCost(operator_list.value).apCostCount;
