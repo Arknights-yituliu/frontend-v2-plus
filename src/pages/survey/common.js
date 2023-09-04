@@ -1,4 +1,6 @@
 import characterBasicInfo from "@/static/json/survey/character_table_simple.json";
+import operatorItemCostTable from "@/static/json/survey/operator_item_cost_table.json";
+import itemTable from "@/static/json/survey/item_table.json";
 import {ref} from "vue";
 
 let yearDict = [
@@ -57,7 +59,132 @@ function getProfession(str) {
     return "";
 }
 
-function calAPCost(){
+function calAPCost(operatorList) {
+    let itemCountMap = new Map();
+    for (let c in operatorList) {
+        const charId = operatorList[c].charId;
+        const itemCost = operatorItemCostTable[charId];
+        const operator = operatorList[c];
+
+        for (let i = 1; i < operator.elite; i++) {
+            for (let itemId in itemCost.elite[i]) {
+                if (itemCountMap.get(itemId) === void 0) {
+                    let count = itemCost.elite[i][itemId];
+                    itemCountMap.set(itemId, count)
+                    console.log("没添加过的材料：", itemId, '数量：', count)
+                } else {
+                    let count = itemCountMap.get(itemId);
+                    count += itemCost.elite[i][itemId]
+                    itemCountMap.set(itemId, count)
+                    console.log("已添加过的材料：", itemId, '数量：', count)
+                }
+            }
+        }
+
+        for (let i = 1; i <= operator.skill1; i++) {
+            for (let itemId in itemCost.skills[0][i - 1]) {
+                if (itemCountMap.get(itemId) === void 0) {
+                    let count = itemCost.skills[0][i - 1][itemId];
+                    itemCountMap.set(itemId, count)
+                    console.log("没添加过的材料：", itemId, '数量：', count)
+                } else {
+                    let count = itemCountMap.get(itemId);
+                    count += itemCost.skills[0][i - 1][itemId]
+                    itemCountMap.set(itemId, count)
+                    console.log("已添加过的材料：", itemId, '数量：', count)
+                }
+            }
+        }
+
+        for (let i = 1; i <= operator.skill2; i++) {
+            for (let itemId in itemCost.skills[1][i - 1]) {
+                if (itemCountMap.get(itemId) === void 0) {
+                    let count = itemCost.skills[1][i - 1][itemId];
+                    itemCountMap.set(itemId, count)
+                    console.log("没添加过的材料：", itemId, '数量：', count)
+                } else {
+                    let count = itemCountMap.get(itemId);
+                    count += itemCost.skills[1][i - 1][itemId]
+                    itemCountMap.set(itemId, count)
+                    console.log("已添加过的材料：", itemId, '数量：', count)
+                }
+            }
+        }
+
+        for (let i = 1; i <= operator.skill3; i++) {
+            for (let itemId in itemCost.skills[2][i - 1]) {
+                if (itemCountMap.get(itemId) === void 0) {
+                    let count = itemCost.skills[2][i - 1][itemId];
+                    itemCountMap.set(itemId, count)
+                    console.log("没添加过的材料：", itemId, '数量：', count)
+                } else {
+                    let count = itemCountMap.get(itemId);
+                    count += itemCost.skills[2][i - 1][itemId]
+                    itemCountMap.set(itemId, count)
+                    console.log("已添加过的材料：", itemId, '数量：', count)
+                }
+            }
+        }
+
+    }
+
+
+    let itemList = []
+    let rarity5List = []
+    let rarity4List = []
+    let rarity3List = []
+    let rarity2List = []
+    let rarity1List = []
+
+    let apCostCount = 0;
+
+    itemCountMap.forEach((v, k) => {
+        console.log('材料id', k)
+        if (itemTable[k] !== void 0) {
+            const rarity = itemTable[k].rarity;
+            let  itemValueAp =  itemTable[k].itemValueAp;
+            let item = {
+                id: k,
+                rarity: itemTable[k].rarity,
+                count: v,
+                itemValueAp:itemTable[k].itemValueAp
+            }
+            apCostCount+=(itemValueAp*v)
+            if (rarity === 5) {
+                rarity5List.push(item)
+            }
+            if (rarity === 4) {
+                rarity4List.push(item)
+            }
+            if (rarity === 3) {
+                rarity3List.push(item)
+            }
+            if (rarity === 2) {
+                rarity2List.push(item)
+            }
+            if (rarity === 1) {
+                rarity1List.push(item)
+            }
+        }
+    })
+
+    console.log(rarity5List)
+
+    itemList.push(rarity5List)
+    itemList.push(rarity4List)
+    itemList.push(rarity3List)
+    itemList.push(rarity2List)
+    itemList.push(rarity1List)
+
+    const result={
+        itemList:itemList,
+        apCostCount:apCostCount
+    }
+
+    return result;
+}
+
+function skillItemCost() {
 
 }
 
@@ -78,7 +205,7 @@ function filterByCharacterProperty(filterCondition, characterInfo) {
             show = show && flag
         }
         if (property === 'year') {
-            const flag = determineYear(filterCondition,characterInfo);
+            const flag = determineYear(filterCondition, characterInfo);
             show = show && flag
         }
     }
@@ -142,7 +269,7 @@ function characterListInit() {
             }
         }
 
-        if(baseData.rarity===6) {
+        if (baseData.rarity === 6) {
             default_show = true
         }
 
@@ -198,9 +325,9 @@ function scoreListInit() {
             securityService: -1,
             hard: -1,
             universal: -1,
-            building:-1,
+            building: -1,
             counter: -1,
-            comprehensive:-1,
+            comprehensive: -1,
             date: baseInfo.date,
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
@@ -228,11 +355,11 @@ function rankingListInit() {
             rarity: baseInfo.rarity,
             own: 0,
             elite2: 0,
-            skill1: {'rank3':0},
-            skill2: {'rank3':0},
-            skill3: {'rank3':0},
-            modX: {'rank3':0},
-            modY: {'rank3':0},
+            skill1: {'rank3': 0},
+            skill2: {'rank3': 0},
+            skill3: {'rank3': 0},
+            modX: {'rank3': 0},
+            modY: {'rank3': 0},
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
             mod: baseInfo.mod !== undefined,
@@ -240,9 +367,9 @@ function rankingListInit() {
             show: true,
         };
 
-        if(rankInfo.rarity<6){
+        if (rankInfo.rarity < 6) {
             // console.log(rankInfo)
-            rankInfo.skill3={rank3: undefined}
+            rankInfo.skill3 = {rank3: undefined}
         }
 
         rankingList.push(rankInfo);
@@ -261,7 +388,7 @@ function rankingListInit() {
  * @param collapse_box_id 传入折叠内容盒子的元素id
  * @param collapse_wrap_id  传入折叠内容盒子外的套子的元素id
  */
-function collapse(collapse_item_class, collapse_wrap_id,collapse_box_id) {
+function collapse(collapse_item_class, collapse_wrap_id, collapse_box_id) {
     // 包裹折叠内容的元素高度
     const wrapHeight = document.getElementById(collapse_wrap_id).offsetHeight;
     //获取所有折叠内容的样式高度
@@ -276,7 +403,7 @@ function collapse(collapse_item_class, collapse_wrap_id,collapse_box_id) {
         height += e.offsetHeight;
     }
 
-    document.getElementById(collapse_box_id).style.transform = 'translateY(-'+height+'px)';
+    document.getElementById(collapse_box_id).style.transform = 'translateY(-' + height + 'px)';
 
     // document.getElementById(collapse_box_id).style.transform = 'translateY(0)';
 
@@ -296,7 +423,7 @@ function collapse(collapse_item_class, collapse_wrap_id,collapse_box_id) {
 
         document.getElementById(collapse_wrap_id).style.height = height + "px";
         //设置包裹折叠内容的元素高度为0
-        document.getElementById(collapse_box_id).style.transform = 'translateY(-'+height+'px)';
+        document.getElementById(collapse_box_id).style.transform = 'translateY(-' + height + 'px)';
         setTimeout(() => {
             document.getElementById(collapse_wrap_id).style.height = 0 + "px";
         }, 100);
@@ -304,4 +431,14 @@ function collapse(collapse_item_class, collapse_wrap_id,collapse_box_id) {
 }
 
 
-export {characterListInit, getProfession, professionDict, yearDict, scoreListInit, rankingListInit, collapse, filterByCharacterProperty};
+export {
+    characterListInit,
+    getProfession,
+    professionDict,
+    yearDict,
+    scoreListInit,
+    rankingListInit,
+    collapse,
+    filterByCharacterProperty,
+    calAPCost
+};

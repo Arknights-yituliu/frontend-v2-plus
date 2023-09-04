@@ -378,7 +378,39 @@
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+.item_cost_card{
+  display: flex;
+  margin: 4px;
+}
 
+.item_cost_wrap{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.image_item_wrap{
+  height:50px;
+  width: 50px;
+  position: relative;
+  border: 1px red solid;
+  margin: 4px;
+}
+
+.image_item{
+  transform: scale(0.32);
+  position: absolute;
+  left: -66px;
+  top:-66px
+}
+
+.item_count{
+  height: 60px;
+  line-height: 60px;
+  margin: 4px;
+  font-size: 20px;
+  width: 50px;
+}
 
 .stats_classify {
   display: flex;

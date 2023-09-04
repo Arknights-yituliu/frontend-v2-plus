@@ -13,31 +13,32 @@
       <div class="intro_wrap">
         <div class="intro_title">森空岛数据导入流程</div>
 
-      <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="skland_url">https://www.skland.com/</a>进行登录</p>
-      <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：<br/>
-       <a style="color:dodgerblue">localStorage.getItem('SK_OAUTH_CRED_KEY')</a>
-        <br/>
-        <button class="mdui-btn survey_button" @click="copyCode()">复制命令</button>
+        <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="skland_url">https://www.skland.com/</a>进行登录</p>
+        <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：<br/>
+          <a style="color:dodgerblue">localStorage.getItem('SK_OAUTH_CRED_KEY')</a>
+          <br/>
+          <button class="mdui-btn survey_button" @click="copyCode()">复制命令</button>
 
-        <br/>输入之后回车确认</p>
-      <img src="/image/skland/step1.jpg" class="skland_import_image" alt=""><img>
-      <p><b>step3：</b>此时你可以获得一段神秘的字符，此即为CRED，复制这段CRED</p>
-      <img src="/image/skland/step2.jpg" class="skland_import_image" alt=""><img>
-      <p><b>step4：</b>将 <b>step3</b> 中获得的CRED粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
-      <img src="/image/skland/step3.jpg" class="skland_import_image" alt=""><img>
+          <br/>输入之后回车确认
+        </p>
+        <img src="/image/skland/step1.jpg" class="skland_import_image" alt=""><img>
+        <p><b>step3：</b>此时你可以获得一段神秘的字符，此即为CRED，复制这段CRED</p>
+        <img src="/image/skland/step2.jpg" class="skland_import_image" alt=""><img>
+        <p><b>step4：</b>将 <b>step3</b> 中获得的CRED粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
+        <img src="/image/skland/step3.jpg" class="skland_import_image" alt=""><img>
       </div>
     </div>
 
   </c-popup>
 
 
-  <c-popup :visible="first_popup" v-model:visible="first_popup"  >
+  <c-popup :visible="first_popup" v-model:visible="first_popup">
     <!-- <div class="intro_title">填写流程说明</div> -->
     <div class="intro_wrap">
       <div class="intro_title">填写方法</div>
       <b>填写前请在右上角注册并登录一个账号，以方便在不同设备间同步</b><br>
       默认干员未拥有,卡片显示为灰色(除头像外),点击头像设置为拥有此干员
-      <br />点击选择精英化、专精、模组等级，再次点击则可以取消
+      <br/>点击选择精英化、专精、模组等级，再次点击则可以取消
     </div>
 
     <div class="intro_wrap">
@@ -47,15 +48,15 @@
 
     <div class="intro_wrap">
       <div class="intro_title">三种填写模式</div>
-      极简模式：是否持有<br />
-      标准模式：是否持有、精英化程度、专精、模组<br />
-      完整模式：是否持有、精英化程度、专精、模组、潜能<br />
+      极简模式：是否持有<br/>
+      标准模式：是否持有、精英化程度、专精、模组<br/>
+      完整模式：是否持有、精英化程度、专精、模组、潜能<br/>
       建议填的详细一些，以后会基于这些数据推出新功能
     </div>
 
     <div class="intro_wrap">
       <div class="intro_title">批量操作</div>
-      批量操作：先筛选，再应用于全部筛选出的干员<br />
+      批量操作：先筛选，再应用于全部筛选出的干员<br/>
       除“全部设为已拥有”和“全部设为未拥有”外，都仅对已拥有的干员生效
     </div>
 
@@ -73,14 +74,26 @@
       <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>
       <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
       <div class="mdui-divider" style="margin: 4px;"></div>
-      <button class="mdui-btn survey_button" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选/批量操作</button>
-      <button class="mdui-btn survey_button" @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">数据导入导出</button>
+      <button class="mdui-btn survey_button"
+              @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选/批量操作
+      </button>
+      <button class="mdui-btn survey_button"
+              @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">数据导入导出
+      </button>
       <div class="mdui-btn-group">
-        <button type="button" class="mdui-btn survey_button_group_left">极简模式</button>
-        <button type="button" class="mdui-btn survey_button_group mdui-btn-active">标准模式</button>
-        <button type="button" class="mdui-btn survey_button_group">高级模式</button>
+        <button type="button" class="mdui-btn survey_button_group_left" :class="surveyTypeBtnClass('极简模式')"
+                @click="changeSurveyType('极简模式')">极简模式
+        </button>
+        <button type="button" class="mdui-btn survey_button_group" :class="surveyTypeBtnClass('标准模式')"
+                @click="changeSurveyType('标准模式')">标准模式
+        </button>
+        <button type="button" class="mdui-btn survey_button_group" :class="surveyTypeBtnClass('高级模式')"
+                @click="changeSurveyType('高级模式')">高级模式
+        </button>
       </div>
       <button class="mdui-btn survey_button" @click="toBiliblili()">建议与反馈</button>
+      <button class="mdui-btn survey_button" @click="statistics()">统计</button>
+
     </div>
 
     <!-- 设置区域 -->
@@ -105,7 +118,6 @@
           开发信息
           <div class="btn_setup_tips">反馈、建议、参与开发<br/></div>
         </div>
-
       </div>
     </div> -->
 
@@ -213,8 +225,8 @@
     </div>
 
     <!-- 导入导出模块 -->
-    <div class="switch_wrap" id="switch_upload_wrap">
-      <div class="switch_box" id="switch_upload_box">
+    <div class="switch_wrap switch_wrap_open" id="switch_upload_wrap">
+      <div class="switch_box switch_box_open" id="switch_upload_box">
         <div class="switch_bar upload">
           <div class="switch_title">导入导出</div>
           <div class="switch_btns_wrap">
@@ -250,27 +262,26 @@
       </div>
     </div>
 
-    <!-- 统计模块 -->
-    <div class="switch_wrap" id="element_stats_wrap">
-      <div class="switch_bar 1111">
-        <div class="switch_title">导入导出</div>
-        <div class="switch_btns_wrap">
-          <div class="btn_switch" @click="exportExcel()">导出到Excel</div>
-          <div class="btn_switch">
-            <div class="input_upload_wrap">
-              选择文件
-              <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>
-            </div>
+    <div class="switch_wrap switch_wrap_open" id="switch_statistics_wrap">
+      <div class="switch_box switch_box_open" id="switch_statistics_box">
+        <div class="switch_bar statistics"> 总计消耗{{apCostCount.toFixed(0)}} 理智 </div>
+        <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,index) in itemCostResult" :key="index">
+        <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
+          <div class="image_item_wrap">
+            <div :class="getSprite(item.id,'item')"></div>
           </div>
-          <div class="btn_switch" @click="uploadByExcel()">上传文件</div>
-          <div class="upload_file_name">文件名：{{ upload_file_name }}</div>
+          <div class="item_count">
+            {{ item.count }}
+          </div>
+        </div>
         </div>
       </div>
     </div>
 
     <!-- 干员组 -->
     <div class="char_forms">
-      <div :class="simpleCardClass()" v-for="(operator, char_index) in operator_list.slice(0,list_size)" :key="char_index" v-show="operator.show">
+      <div :class="simpleCardClass()" v-for="(operator, char_index) in operator_list.slice(0,list_size)"
+           :key="char_index" v-show="operator.show">
         <!-- 左半部分 -->
         <div :class="surveyTypeClass('card_option_left')">
           <div :class="surveyTypeClass('card_option_top_left')">
@@ -383,7 +394,7 @@
 <script setup>
 import {cMessage} from "@/element/message.js";
 import {globalUserData} from "./userService"; //从用户服务js获取用户信息
-import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict, calAPCost} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import surveyApi from "@/api/survey";
 import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
@@ -416,6 +427,7 @@ function getSprite(id, type) {
   if ("elite" === type) return "bg-" + id + " sprite_elite";
   if ("potential" === type) return "bg-" + id + " sprite_potential";
   if ("icon" === type) return "bg-skill_icon_" + id + " sprite_skill_icon";
+  if ("item" === type) return 'bg-' + id + " image_item"
   return "bg-" + id + " sprite_avatar";
 }
 
@@ -424,7 +436,7 @@ let ranks = ref([0, 1, 2, 3, 4, 5, 6]);
 let rarity_dict = [1, 2, 3, 4, 5, 6];
 let list_size = ref(10)
 
-function initOperatorsList(){
+function initOperatorsList() {
   operator_list.value = characterListInit();
   getSurveyCharacter();
   setTimeout(() => {
@@ -480,6 +492,7 @@ function getSurveyCharacter() {
   });
 }
 
+
 let export_excel_etn_text = ref("导出excel");
 
 //导出评分表的excel
@@ -515,10 +528,9 @@ function importSKLandCRED() {
     upload_message.value = response.data;
     selected_index_obj.value = {};
     cMessage("森空岛信息导入成功");
+    getSurveyCharacter()
   });
 }
-
-
 
 
 let last_upload_time_stamp = 1689425013364; //上次上传时间的时间戳
@@ -924,30 +936,36 @@ function updateOption(element_id, selected_flag) {
   }
 }
 
-let surveyTypeText = ref("标准问卷");
+let surveyTypeText = ref("标准模式");
 let surveyType = ref("_basic");
 //简易卡片样式
 let simpleCard = ref(false);
 
 //标准问卷与完整问卷
-function changeSurveyType() {
-  if ("简易问卷" === surveyTypeText.value) {
-    surveyType.value = "_basic";
-    surveyTypeText.value = "标准问卷";
-    simpleCard.value = !simpleCard.value;
+function changeSurveyType(type) {
+  if ("极简模式" === type) {
+    surveyType.value = "";
+    simpleCard.value = true;
+    surveyTypeText.value = "极简模式";
     return;
   }
-  if ("标准问卷" === surveyTypeText.value) {
-    surveyType.value = "";
-    surveyTypeText.value = "完整问卷";
+  if ("标准模式" === type) {
+    surveyType.value = "_basic";
+    surveyTypeText.value = "标准模式";
+    simpleCard.value = false
     return;
   }
 
-  if ("完整问卷" === surveyTypeText.value) {
+  if ("高级模式" === type) {
     surveyType.value = "";
-    simpleCard.value = !simpleCard.value;
-    surveyTypeText.value = "简易问卷";
+    surveyTypeText.value = "高级模式";
+    simpleCard.value = false
   }
+}
+
+function surveyTypeBtnClass(now) {
+  if (now === surveyTypeText.value) return 'mdui-btn-active'
+  return ''
 }
 
 function surveyTypeClass(classNameHeader) {
@@ -1013,23 +1031,31 @@ function sortCharacterList(rule) {
 let operator_count = ref(0)
 let user_own_operator_count = ref(0)
 
-function statistics(){
+let itemCostResult = ref({})
+let apCostCount = ref(0)
+
+//各种统计
+function statistics() {
   user_own_operator_count.value = 0;
   operator_count.value = operator_list.value.length
-  for(const i in operator_list.value){
-    if(operator_list.value[i].own){
+  for (const i in operator_list.value) {
+    if (operator_list.value[i].own) {
       user_own_operator_count.value++;
     }
   }
 
 
+  itemCostResult.value = calAPCost(operator_list.value).itemList;
+  apCostCount.value = calAPCost(operator_list.value).apCostCount;
+
+
 }
 
-function toSkland(){
-   window.open("https://www.skland.com");
+function toSkland() {
+  window.open("https://www.skland.com");
 }
 
-function copyCode(){
+function copyCode() {
 
   let elementInput = document.createElement('input');
   elementInput.value = "localStorage.getItem('SK_OAUTH_CRED_KEY')"
@@ -1042,14 +1068,13 @@ function copyCode(){
 
 //转跳罗德岛基建Beta
 function toBiliblili() {
-  const bilibiliHref = "https://space.bilibili.com/688411531/dynamic";
-  const devHerf = "/about/dev";
-  const excelHerf = "https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ"
+
+  const excelHref = "https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ"
   const element = document.createElement("a");
   element.style.display = "none";
   // element.href = bilibiliHref;
   // element.href = devHerf;
-  element.href = excelHerf;
+  element.href = excelHref;
   element.click();
 }
 

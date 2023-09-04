@@ -94,6 +94,10 @@
   height: 0;
 }
 
+.switch_wrap_open {
+  height: auto;
+}
+
 
 .switch_box {
   margin: 4px;
@@ -102,6 +106,10 @@
   background-color: rgba(255, 255, 255, 1);
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
   border-radius: 2px;
+}
+
+.switch_box_open{
+  transform: translateY(0px);
 }
 
 .switch_bar {
