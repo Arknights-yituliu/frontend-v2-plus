@@ -542,7 +542,7 @@ function importSKLandCRED() {
 
   if (globalUserData.value.token === void 0) {
     console.log(globalUserData.value.token === void 0);
-    cMessage("请先注册一个一图流账号", "error");
+    cMessage("请先注册或登录一图流账号", "error");
     return;
   }
 
