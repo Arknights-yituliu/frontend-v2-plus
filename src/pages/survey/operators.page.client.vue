@@ -521,9 +521,10 @@ function exportExcel() {
 let skland_CRED = ref("");
 
 function importSKLandCRED() {
+
   if (globalUserData.value.token === void 0) {
     console.log(globalUserData.value.token === void 0);
-    // cMessage("未登录", "error");
+    cMessage("请先注册一个一图流账号", "error");
     return;
   }
 
