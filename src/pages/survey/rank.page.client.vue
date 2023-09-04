@@ -69,11 +69,11 @@
           <td class="rank_table_1">代号</td>
           <td class="rank_table_2" @click="sortRank('own')">持有率</td>
           <td class="rank_table_3" @click="sortRank('elite2')">精二率</td>
-          <td class="rank_table_4" @click="commonSort('skill1','rank3')">一技能专三率</td>
-          <td class="rank_table_5" @click="commonSort('skill2','rank3')">二技能专三率</td>
-          <td class="rank_table_6" @click="commonSort('skill3','rank3')">三技能专三率</td>
-          <td class="rank_table_7" @click="commonSort('modX','rank3')">x模组解锁率</td>
-          <td class="rank_table_8" @click="commonSort('modY','rank3')">y模组解锁率</td>
+          <td class="rank_table_4" @click="commonSort('skill1','rank3')" style="text-align: center !important;">一技能专三率</td>
+          <td class="rank_table_5" @click="commonSort('skill2','rank3')" style="text-align: center !important;">二技能专三率</td>
+          <td class="rank_table_6" @click="commonSort('skill3','rank3')" style="text-align: center !important;">三技能专三率</td>
+          <td class="rank_table_7" @click="commonSort('modX','rank3')" style="text-align: center !important;">x模组解锁率</td>
+          <td class="rank_table_8" @click="commonSort('modY','rank3')" style="text-align: center !important;">y模组解锁率</td>
         </tr>
         </thead>
         <tr v-for="(result, index) in operators_statistics_list" v-show="result.show" class="rank_table_tr">

@@ -72,12 +72,21 @@
       <button class="mdui-btn survey_button">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>
       <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>
       <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
+      <div class="mdui-divider" style="margin: 4px;"></div>
+      <button class="mdui-btn survey_button" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选/批量操作</button>
+      <button class="mdui-btn survey_button" @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">数据导入导出</button>
+      <div class="mdui-btn-group">
+        <button type="button" class="mdui-btn survey_button_group_left">极简模式</button>
+        <button type="button" class="mdui-btn survey_button_group mdui-btn-active">标准模式</button>
+        <button type="button" class="mdui-btn survey_button_group">高级模式</button>
+      </div>
+      <button class="mdui-btn survey_button" @click="toBiliblili()">建议与反馈</button>
     </div>
 
     <!-- 设置区域 -->
-    <div class="setup_wrap">
+    <!-- <div class="setup_wrap">
       <div class="control_panel">
-        <!-- <div class="switch_title">设置</div> -->
+        <div class="switch_title">设置</div>
 
         <div class="btn_setup" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">
           筛选/批量操作
@@ -98,7 +107,7 @@
         </div>
 
       </div>
-    </div>
+    </div> -->
 
     <!-- 筛选模块 -->
     <div class="switch_wrap" id="switch_filter_wrap">
@@ -1035,10 +1044,12 @@ function copyCode(){
 function toBiliblili() {
   const bilibiliHref = "https://space.bilibili.com/688411531/dynamic";
   const devHerf = "/about/dev";
+  const excelHerf = "https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ"
   const element = document.createElement("a");
   element.style.display = "none";
   // element.href = bilibiliHref;
-  element.href = devHerf;
+  // element.href = devHerf;
+  element.href = excelHerf;
   element.click();
 }
 

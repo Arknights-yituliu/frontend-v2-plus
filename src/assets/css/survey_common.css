@@ -26,7 +26,16 @@
   border-radius: 4px;
   background-color: #eeeeeeee;
 }
-
+.survey_button_group_left{
+  margin:8px 0px 8px 8px;
+  border-radius: 4px;
+  background-color: #eeeeeeee;
+}
+.survey_button_group{
+  margin:8px 0px 8px 0px;
+  border-radius: 4px;
+  background-color: #eeeeeeee;
+}
 #updateTime{
   padding: 0px;
   display: inline-block;
