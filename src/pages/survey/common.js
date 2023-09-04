@@ -66,62 +66,113 @@ function calAPCost(operatorList) {
         const itemCost = operatorItemCostTable[charId];
         const operator = operatorList[c];
 
-        for (let i = 1; i < operator.elite; i++) {
+        for (let i = 1; i <= operator.elite; i++) {
             for (let itemId in itemCost.elite[i]) {
                 if (itemCountMap.get(itemId) === void 0) {
                     let count = itemCost.elite[i][itemId];
                     itemCountMap.set(itemId, count)
-                    console.log("没添加过的材料：", itemId, '数量：', count)
+                    // console.log("没添加过的材料：", itemId, '数量：', count)
                 } else {
                     let count = itemCountMap.get(itemId);
                     count += itemCost.elite[i][itemId]
                     itemCountMap.set(itemId, count)
-                    console.log("已添加过的材料：", itemId, '数量：', count)
+                    // console.log("已添加过的材料：", itemId, '数量：', count)
                 }
             }
         }
 
-        for (let i = 1; i <= operator.skill1; i++) {
-            for (let itemId in itemCost.skills[0][i - 1]) {
+        console.log('基础技能：',operator.mainSkill)
+        for (let i = 0; i < operator.mainSkill; i++) {
+            for (let itemId in itemCost.allSkill) {
                 if (itemCountMap.get(itemId) === void 0) {
-                    let count = itemCost.skills[0][i - 1][itemId];
+                    let count = itemCost.allSkill[i][itemId];
                     itemCountMap.set(itemId, count)
-                    console.log("没添加过的材料：", itemId, '数量：', count)
+                    // console.log("没添加过的材料：", itemId, '数量：', count)
                 } else {
                     let count = itemCountMap.get(itemId);
-                    count += itemCost.skills[0][i - 1][itemId]
+                    count += itemCost.allSkill[i][itemId]
                     itemCountMap.set(itemId, count)
-                    console.log("已添加过的材料：", itemId, '数量：', count)
+                    // console.log("已添加过的材料：", itemId, '数量：', count)
                 }
             }
         }
 
-        for (let i = 1; i <= operator.skill2; i++) {
-            for (let itemId in itemCost.skills[1][i - 1]) {
+        for (let i = 0; i < operator.skill1; i++) {
+            for (let itemId in itemCost.skills[0][i]) {
                 if (itemCountMap.get(itemId) === void 0) {
-                    let count = itemCost.skills[1][i - 1][itemId];
+                    let count = itemCost.skills[0][i][itemId];
                     itemCountMap.set(itemId, count)
-                    console.log("没添加过的材料：", itemId, '数量：', count)
+                    // console.log("没添加过的材料：", itemId, '数量：', count)
                 } else {
                     let count = itemCountMap.get(itemId);
-                    count += itemCost.skills[1][i - 1][itemId]
+                    count += itemCost.skills[0][i][itemId]
                     itemCountMap.set(itemId, count)
-                    console.log("已添加过的材料：", itemId, '数量：', count)
+                    // console.log("已添加过的材料：", itemId, '数量：', count)
                 }
             }
         }
 
-        for (let i = 1; i <= operator.skill3; i++) {
-            for (let itemId in itemCost.skills[2][i - 1]) {
+        for (let i = 0; i < operator.skill2; i++) {
+            for (let itemId in itemCost.skills[1][i]) {
                 if (itemCountMap.get(itemId) === void 0) {
-                    let count = itemCost.skills[2][i - 1][itemId];
+                    let count = itemCost.skills[1][i][itemId];
                     itemCountMap.set(itemId, count)
-                    console.log("没添加过的材料：", itemId, '数量：', count)
+                    // console.log("没添加过的材料：", itemId, '数量：', count)
                 } else {
                     let count = itemCountMap.get(itemId);
-                    count += itemCost.skills[2][i - 1][itemId]
+                    count += itemCost.skills[1][i][itemId]
                     itemCountMap.set(itemId, count)
-                    console.log("已添加过的材料：", itemId, '数量：', count)
+                    // console.log("已添加过的材料：", itemId, '数量：', count)
+                }
+            }
+        }
+
+        for (let i = 0; i < operator.skill3; i++) {
+            for (let itemId in itemCost.skills[2][i]) {
+                if (itemCountMap.get(itemId) === void 0) {
+                    let count = itemCost.skills[2][i][itemId];
+                    itemCountMap.set(itemId, count)
+                    // console.log("没添加过的材料：", itemId, '数量：', count)
+                } else {
+                    let count = itemCountMap.get(itemId);
+                    count += itemCost.skills[2][i][itemId]
+                    itemCountMap.set(itemId, count)
+                    // console.log("已添加过的材料：", itemId, '数量：', count)
+                }
+            }
+        }
+
+        if(operator.modXOwn){
+            for (let i = 0; i < operator.modX; i++) {
+                for (let itemId in itemCost.modX[i]){
+                    if (itemCountMap.get(itemId) === void 0) {
+                        let count = itemCost.modX[i][itemId];
+                        itemCountMap.set(itemId, count)
+                        // console.log("模组——没添加过的材料：", itemId, '数量：', count)
+                    } else {
+                        let count = itemCountMap.get(itemId);
+                        count += itemCost.modX[i][itemId]
+                        itemCountMap.set(itemId, count)
+                        // console.log("模组——已添加过的材料：", itemId, '数量：', count)
+                    }
+                }
+            }
+        }
+
+
+        if(operator.modYOwn){
+            for (let i = 0; i < operator.modY; i++) {
+                for (let itemId in itemCost.modY[i]){
+                    if (itemCountMap.get(itemId) === void 0) {
+                        let count = itemCost.modY[i][itemId];
+                        itemCountMap.set(itemId, count)
+                        // console.log("模组——没添加过的材料：", itemId, '数量：', count)
+                    } else {
+                        let count = itemCountMap.get(itemId);
+                        count += itemCost.modY[i][itemId]
+                        itemCountMap.set(itemId, count)
+                        // console.log("模组——已添加过的材料：", itemId, '数量：', count)
+                    }
                 }
             }
         }
@@ -139,7 +190,7 @@ function calAPCost(operatorList) {
     let apCostCount = 0;
 
     itemCountMap.forEach((v, k) => {
-        console.log('材料id', k)
+        // console.log('材料id', k)
         if (itemTable[k] !== void 0) {
             const rarity = itemTable[k].rarity;
             let  itemValueAp =  itemTable[k].itemValueAp;
@@ -169,6 +220,18 @@ function calAPCost(operatorList) {
     })
 
     console.log(rarity5List)
+
+    rarity5List.sort((a,b)=>{
+        return b.id-a.id
+    })
+
+    rarity4List.sort((a,b)=>{
+        return b.id-a.id
+    })
+
+    rarity3List.sort((a,b)=>{
+        return b.id-a.id
+    })
 
     itemList.push(rarity5List)
     itemList.push(rarity4List)
@@ -286,6 +349,7 @@ function characterListInit() {
             elite: -1,
             potential: -1,
             rarity: baseData.rarity,
+            mainSkill:-1,
             skill1: -1,
             skill2: -1,
             skill3: -1,
