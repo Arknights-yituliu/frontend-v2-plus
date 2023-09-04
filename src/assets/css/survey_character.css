@@ -387,7 +387,6 @@
 .item_cost_wrap{
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
 .image_item_wrap{
