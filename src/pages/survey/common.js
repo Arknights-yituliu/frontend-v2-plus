@@ -1,6 +1,7 @@
 import characterBasicInfo from "@/static/json/survey/character_table_simple.json";
 import operatorItemCostTable from "@/static/json/survey/operator_item_cost_table.json";
 import itemTable from "@/static/json/survey/item_table.json";
+import levelCostTable from "@/static/json/survey/level_cost_table.json";
 import {ref} from "vue";
 
 let yearDict = [
@@ -62,9 +63,35 @@ function getProfession(str) {
 function calAPCost(operatorList) {
     let itemCountMap = new Map();
     for (let c in operatorList) {
-        const charId = operatorList[c].charId;
-        const itemCost = operatorItemCostTable[charId];
         const operator = operatorList[c];
+        const charId = operator.charId;
+        const name = operator.name;
+        const rarity = operator.rarity;
+        const elite = operator.elite;
+        const level = operator.level;
+        const itemCost = operatorItemCostTable[charId];
+
+
+        const levelApCost = levelApCostCal(rarity, elite, level);
+
+
+        for(const itemId in levelApCost){
+            if (itemCountMap.get(itemId) === void 0) {
+                let count = levelApCost[itemId];
+                itemCountMap.set(itemId, count)
+                console.log("没添加过的材料：", itemId, '数量：', count)
+            } else {
+                let count = itemCountMap.get(itemId);
+                count += levelApCost[itemId]
+                itemCountMap.set(itemId, count)
+                console.log("已添加过的材料：", itemId, '数量：', count)
+            }
+        }
+
+
+
+
+        console.log(name,"--狗粮：",levelApCost.EXPCount,"--龙门币：",levelApCost.LMDCount)
 
         for (let i = 1; i <= operator.elite; i++) {
             for (let itemId in itemCost.elite[i]) {
@@ -181,6 +208,7 @@ function calAPCost(operatorList) {
 
 
     let itemList = []
+    let rarityEXList = []
     let rarity5List = []
     let rarity4List = []
     let rarity3List = []
@@ -196,16 +224,21 @@ function calAPCost(operatorList) {
             let  itemValueAp =  itemTable[k].itemValueAp;
             let item = {
                 id: k,
-                rarity: itemTable[k].rarity,
+                rarity: rarity,
                 count: v,
                 itemValueAp:itemTable[k].itemValueAp
             }
             apCostCount+=(itemValueAp*v)
+
             if (rarity === 5) {
                 rarity5List.push(item)
             }
             if (rarity === 4) {
-                rarity4List.push(item)
+                if("4001"===k||"2003"===k){
+                    rarityEXList.push(item)
+                }else {
+                    rarity4List.push(item)
+                }
             }
             if (rarity === 3) {
                 rarity3List.push(item)
@@ -233,6 +266,7 @@ function calAPCost(operatorList) {
         return b.id-a.id
     })
 
+    itemList.push(rarityEXList)
     itemList.push(rarity5List)
     itemList.push(rarity4List)
     itemList.push(rarity3List)
@@ -247,9 +281,62 @@ function calAPCost(operatorList) {
     return result;
 }
 
-function skillItemCost() {
+function levelApCostCal(rarity,elite,level) {
+
+      if(rarity===6){
+         return   tableByRarity(elite,level,49,79)
+      }
+
+    if(rarity===5){
+        return   tableByRarity(elite,level,49,69)
+    }
+
+    if(rarity===4){
+        return   tableByRarity(elite,level,44,59)
+    }
+
+    if(rarity===3){
+        return   tableByRarity(elite,level,39,54)
+    }
+
+    if(rarity===2){
+        return   tableByRarity(elite,level,29,0)
+    }
+
+    if(rarity===1){
+        return   tableByRarity(elite,level,29,0)
+    }
+
 
 }
+
+
+function tableByRarity(elite,level,elite_0_max_level,elite_1_max_level){
+    let LMDCost = 0;
+    let EXPCost = 0;
+
+          if(elite>0){
+              LMDCost += levelCostTable['elite0'][elite_0_max_level].LMDCount
+              EXPCost += levelCostTable['elite0'][elite_0_max_level].EXPCount
+          }
+          if(elite>1){
+              LMDCost += levelCostTable['elite1'][elite_1_max_level].LMDCount
+              EXPCost += levelCostTable['elite1'][elite_1_max_level].EXPCount
+          }
+
+          if(level>0){
+              LMDCost += levelCostTable['elite'+elite][level-1].LMDCount
+              EXPCost += levelCostTable['elite'+elite][level-1].EXPCount
+          }
+
+          let result={
+              "4001":LMDCost,
+              "2003":EXPCost/1000
+          }
+
+          return result;
+}
+
 
 /**
  *

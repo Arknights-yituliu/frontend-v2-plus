@@ -231,14 +231,14 @@
           <div class="switch_title">导入导出</div>
           <div class="switch_btns_wrap">
             <div class="btn_switch" @click="exportExcel()">导出为Excel</div>
-<!--            <div class="btn_switch">-->
-<!--              <div class="input_upload_wrap">-->
-<!--                导入Excel文件-->
-<!--                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash; <div class="btn_switch" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
-<!--            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>-->
+            <!--            <div class="btn_switch">-->
+            <!--              <div class="input_upload_wrap">-->
+            <!--                导入Excel文件-->
+            <!--                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash; <div class="btn_switch" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
+            <!--            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>-->
           </div>
         </div>
         <div class="switch_bar upload">
@@ -264,16 +264,21 @@
 
     <div class="switch_wrap" id="switch_statistics_wrap">
       <div class="switch_box" id="switch_statistics_box">
-        <div class="switch_bar statistics" style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;"> 总计消耗{{apCostCount.toFixed(0)}} 理智 </div>
-        <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,index) in itemCostResult" :key="index">
-        <div v-for="(item,index) in itemList" :key="index" class="item_cost_card" v-show="item.id!=='4001'">
-          <div class="image_item_wrap">
-            <div :class="getSprite(item.id,'item')"></div>
-          </div>
-          <div class="item_count">
-            {{ item.count }}
-          </div>
+        <div class="switch_bar statistics"
+             style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
+          总计消耗{{ apCostCount.toFixed(0) }} 理智
         </div>
+
+        <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,type) in itemCostResult"
+             :key="type" >
+          <div v-for="(item,index) in itemList" :key="index" class="item_cost_card" >
+            <div class="image_item_wrap">
+              <div :class="getSprite(item.id,'item')"></div>
+              <div class="item_count">
+                {{ strShowLength(item.count) }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -314,10 +319,10 @@
                  v-show="operator.rarity > 3">
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
-<!--            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">-->
+            <!--            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">-->
             <div class="level_wrap" :id="char_index + 'level'">
-<!--              <img class="image_lvMax" src="/image/survey/lvMax.png" alt=""/>-->
-              {{operator.level}}
+              <!--              <img class="image_lvMax" src="/image/survey/lvMax.png" alt=""/>-->
+              {{ operator.level }}
             </div>
           </div>
         </div>
@@ -1039,7 +1044,7 @@ let apCostCount = ref(0)
 
 function statisticsCollapse() {
   statistics()
-  collapse('switch_bar statistics','switch_statistics_wrap','switch_statistics_box')
+  collapse('switch_bar statistics', 'switch_statistics_wrap', 'switch_statistics_box')
 
 }
 
@@ -1063,9 +1068,18 @@ function statistics() {
 
   itemCostResult.value = calAPCost(operator_list.value).itemList;
   apCostCount.value = calAPCost(operator_list.value).apCostCount;
-
-
 }
+
+function strShowLength(num){
+     if(num>99999999){
+        return (num/100000000).toFixed(2)+"亿"
+     }
+     if(num>9999){
+       return (num/10000).toFixed(0)+"万"
+     }
+     return num
+}
+
 
 function toSkland() {
   window.open("https://www.skland.com");

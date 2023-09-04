@@ -405,7 +405,7 @@
 
 .image_item_wrap{
   height:50px;
-  width: 50px;
+  width: 70px;
   position: relative;
   /* border: 1px red solid; */
   margin: 4px;
@@ -419,11 +419,16 @@
 }
 
 .item_count{
-  height: 60px;
-  line-height: 60px;
-  margin: 4px;
-  font-size: 20px;
-  width: 50px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 18px;
+  width: 70px;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  top: 36px;
+  left: 16px;
+  text-align: center;
 }
 
 .stats_classify {
