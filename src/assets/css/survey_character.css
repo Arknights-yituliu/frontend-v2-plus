@@ -358,6 +358,20 @@
   cursor: pointer;
 }
 
+.skland_login_btn{
+  width: 270px;
+  margin: 8px 0 0 0;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #b5e6ff;
+  text-align: center;
+  color: #006fe0;
+  cursor: pointer;
+}
+
+
+
+
 .skland_notice_btn{
   color: #ff0000;
   cursor: pointer;

@@ -254,6 +254,12 @@
             <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
           </div>
         </div>
+        <div class="switch_bar upload" v-show="upload_message.registered">
+          <div class="switch_desc">您已经导入过该账号的练度数据，你之前的一图流账号为：<a style="color: #ff0000;"> {{upload_message.userName}} </a> 请登录之前的账号 <br>
+            <div class="skland_login_btn" @click="login(upload_message.userName)">登录用户{{upload_message.userName}}并刷新网页</div>
+          </div>
+
+        </div>
         <div class="switch_bar upload">
           <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了
             <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>
@@ -402,10 +408,22 @@
 import {cMessage} from "@/element/message.js";
 import {globalUserData} from "./userService"; //从用户服务js获取用户信息
 import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict, calAPCost} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {  loginEvent } from "./userService";
 import surveyApi from "@/api/survey";
 import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
 import {http} from "@/api/baseURL";
+
+
+async function login(userName){
+  let loginData = {
+    userName:userName
+  }
+  await loginEvent(loginData)
+
+  location.reload()
+}
+
 
 let first_popup = ref(false)
 let import_popup_visible = ref(false)
@@ -543,7 +561,7 @@ function importSKLandCRED() {
 
 
 let last_upload_time_stamp = 1689425013364; //上次上传时间的时间戳
-let upload_message = ref({updateTime: "2023/08/08 00:00:00", affectedRows: 0}); //上传APi返回的信息
+let upload_message = ref({updateTime: "", affectedRows: 0, registered:false, userName:'' }); //上传APi返回的信息
 let selected_index_obj = ref({}); //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
 
 //自动上传风评表
