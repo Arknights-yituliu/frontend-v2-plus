@@ -255,8 +255,8 @@
           </div>
         </div>
         <div class="switch_bar upload" v-show="upload_message.registered">
-          <div class="switch_desc">您已经导入过该账号的练度数据，你之前的一图流账号为：<a style="color: #ff0000;"> {{upload_message.userName}} </a> 请登录之前的账号 <br>
-            <div class="skland_login_btn" @click="login(upload_message.userName)">登录用户{{upload_message.userName}}并刷新网页</div>
+          <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;"> {{upload_message.userName}} </a> 请登录之前的账号 <br>
+            <div class="skland_login_btn" @click="login(upload_message.userName)">请登录用户{{upload_message.userName}}并刷新网页</div>
           </div>
 
         </div>
@@ -554,8 +554,15 @@ function importSKLandCRED() {
   surveyApi.uploadCharacterBySKLand(info).then((response) => {
     upload_message.value = response.data;
     selected_index_obj.value = {};
-    cMessage("森空岛信息导入成功");
-    getSurveyCharacter()
+    if(upload_message.value.registered){
+      cMessage("您已经注册导入过了","error");
+    }else {
+      cMessage("森空岛数据导入成功");
+      getSurveyCharacter()
+    }
+
+
+
   });
 }
 
