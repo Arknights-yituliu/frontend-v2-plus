@@ -61,7 +61,12 @@
       },
       {
         "path": "/survey/rank",
-        "text": "干员练度调查结果",
+        "text": "练度/风评统计",
+        "isChild": false
+      },
+      {
+        "path": "/survey/maarecruitdata",
+        "text": "公招结果统计",
         "isChild": false
       }
     ]
