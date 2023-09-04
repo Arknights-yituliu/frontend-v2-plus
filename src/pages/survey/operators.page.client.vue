@@ -255,8 +255,8 @@
           </div>
         </div>
         <div class="switch_bar upload">
-          <div class="switch_desc"><b>*森空岛导入须知：</b>在使用该功能之前，请确保您已经浏览了
-            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>
+          <div class="switch_desc"><b>*森空岛导入：</b>请遵循
+            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完请手动保存并刷新页面
           </div>
         </div>
       </div>
