@@ -44,10 +44,13 @@
             <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
             <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
             <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
-            <div :class="selectedBtn('itemObtainApproach', 0)" @click="addFilterCondition('itemObtainApproach', '赠送干员')">
+            <div :class="selectedBtn('itemObtainApproach', 0)"
+                 @click="addFilterCondition('itemObtainApproach', '赠送干员')">
               赠送干员
             </div>
-            <div :class="selectedBtn('itemObtainApproach', 1)" @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员</div>
+            <div :class="selectedBtn('itemObtainApproach', 1)"
+                 @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
+            </div>
           </div>
         </div>
 
@@ -62,31 +65,99 @@
       </div>
     </div>
 
-    <div id="rank_table mdui-table-fluid">
-      <table class="mdui-table">
-        <thead>
+    <!--    <div id="rank_table mdui-table-fluid">-->
+    <!--      <table class="mdui-table">-->
+
+
+    <div id="rank_table">
+      <table class="rank_table">
         <tr>
-          <td class="rank_table_1">代号</td>
-          <td class="rank_table_2" @click="sortRank('own')">持有率</td>
-          <td class="rank_table_3" @click="commonSort('elite','rank2')">精二率</td>
-          <td class="rank_table_4" @click="commonSort('skill1','rank3')" style="text-align: center !important;">一技能专三率</td>
-          <td class="rank_table_5" @click="commonSort('skill2','rank3')" style="text-align: center !important;">二技能专三率</td>
-          <td class="rank_table_6" @click="commonSort('skill3','rank3')" style="text-align: center !important;">三技能专三率</td>
-          <td class="rank_table_7" @click="commonSort('modX','rank3')" style="text-align: center !important;">x模组解锁率</td>
-          <td class="rank_table_8" @click="commonSort('modY','rank3')" style="text-align: center !important;">y模组解锁率</td>
+          <td>
+            <div class="rank_table_title" style="width: 220px">代号</div>
+          </td>
+          <td @click="sortRank('own')">
+            <div class="rank_table_title" style="width: 80px">
+              <div>持有率</div>
+              <div>
+                <div class="sort_asc_icon"></div>
+                <div class="sort_desc_icon" ></div>
+              </div>
+            </div>
+          </td>
+          <td @click="commonSort('elite','rank2')">
+            <div class="rank_table_title" style="width: 80px">
+              <div>精二率</div>
+              <div>
+                <div class="sort_asc_icon" :style="sortIconClass('elite','asc')"></div>
+                <div class="sort_desc_icon" :style="sortIconClass('elite','desc')"></div>
+
+              </div>
+            </div>
+          </td>
+          <td @click="commonSort('skill1','rank3')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>一技能专三率</div>
+              <div>
+                <div class="sort_asc_icon" :style="sortIconClass('skill1','asc')"></div>
+                <div class="sort_desc_icon" :style="sortIconClass('skill1','desc')"></div>
+
+              </div>
+            </div>
+          </td>
+          <td @click="commonSort('skill2','rank3')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>二技能专三率</div>
+              <div>
+                <div class="sort_asc_icon" :style="sortIconClass('skill2','asc')"></div>
+                <div class="sort_desc_icon" :style="sortIconClass('skill2','desc')"></div>
+
+              </div>
+            </div>
+          </td>
+          <td @click="commonSort('skill3','rank3')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>三技能专三率</div>
+              <div>
+                <div class="sort_asc_icon" :style="sortIconClass('skill3','asc')"></div>
+                <div class="sort_desc_icon" :style="sortIconClass('skill3','desc')"></div>
+
+              </div>
+            </div>
+          </td>
+          <td @click="commonSort('modX','rank3')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>x模组解锁率</div>
+              <div>
+                <div class="sort_asc_icon" :style="sortIconClass('modX','asc')"></div>
+                <div class="sort_desc_icon" :style="sortIconClass('modX','desc')"></div>
+
+              </div>
+            </div>
+          </td>
+          <td @click="commonSort('modY','rank3')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>y模组解锁率</div>
+              <div>
+                <div class="sort_asc_icon" :style="sortIconClass('modY','asc')"></div>
+                <div class="sort_desc_icon" :style="sortIconClass('modY','desc')"></div>
+
+              </div>
+            </div>
+          </td>
         </tr>
-        </thead>
+
+
         <tr v-for="(result, index) in operators_statistics_list" v-show="result.show" class="rank_table_tr">
           <td class="rank_table_1 rank_table_text">
             <div class="rank_table_avatar">
               <div class="rank_avatar_wrap">
                 <div :class="getSprite(result.charId)"></div>
               </div>
-              <div class="rank_character_name">{{ result.name }}</div>
+              <div class="rank_operator_name" :class="'rarity_'+result.rarity">{{ result.name }}</div>
             </div>
           </td>
           <td class="rank_table_2 rank_table_text">{{ getPercentage(result.own, 1) }}</td>
-          <td class="rank_table_3 rank_table_text">{{ getPercentage(getSurveyResult(result.elite,'rank2'), 1) }}</td>
+          <td class="rank_table_3 rank_table_text">{{ getPercentage(getSurveyResult(result.elite, 'rank2'), 1) }}</td>
           <td class="rank_table_4 rank_table_text">
             <div class="rank_table_skill">
               <div class="rank_image_skill_wrap">
@@ -155,9 +226,9 @@ function getCharStatisticsResult() {
           operators_statistics_list.value[i].skill3 = response.data.result[j].skill3;
           operators_statistics_list.value[i].modX = response.data.result[j].modX;
           operators_statistics_list.value[i].modY = response.data.result[j].modY;
-          if(operators_statistics_list.value[i].elite.rank2 === void 0) operators_statistics_list.value[i].elite.rank2 = 0.0
-          if(operators_statistics_list.value[i].modX.rank3 === void 0) operators_statistics_list.value[i].modX.rank3 = 0.0
-          if(operators_statistics_list.value[i].modY.rank3 === void 0) operators_statistics_list.value[i].modY.rank3 = 0.0
+          if (operators_statistics_list.value[i].elite.rank2 === void 0) operators_statistics_list.value[i].elite.rank2 = 0.0
+          if (operators_statistics_list.value[i].modX.rank3 === void 0) operators_statistics_list.value[i].modX.rank3 = 0.0
+          if (operators_statistics_list.value[i].modY.rank3 === void 0) operators_statistics_list.value[i].modY.rank3 = 0.0
         }
       }
     }
@@ -179,7 +250,7 @@ function getPercentage(value, digit) {
 }
 
 function getSurveyResult(obj, rank) {
-  if(obj === void 0) return '';
+  if (obj === void 0) return '';
   if (obj[rank] === void 0) return '';
   return obj[rank];
 }
@@ -241,6 +312,24 @@ function sortRank(condition) {
   });
 }
 
+function sortIconClass(property,descOrAsc){
+  console.log(property,descOrAsc)
+  if(last_property.value===property){
+    if (desc_or_asc.value % 2 !== 0 && 'desc'===descOrAsc) {
+       console.log('降序')
+      return 'border-top: 8px solid #545454'
+    }
+
+    if (desc_or_asc.value % 2 === 0 && 'asc'===descOrAsc) {
+      console.log('升序')
+      return 'border-bottom: 8px solid #545454'
+    }
+
+  }
+
+    return ''
+}
+
 let last_property = ref('')
 let desc_or_asc = ref(1)
 
@@ -256,7 +345,7 @@ function commonSort(property, condition) {
 
     for (let j = 0; j < len - 1 - i; j++) {
 
-        if (desc_or_asc.value % 2 !== 0) {
+      if (desc_or_asc.value % 2 !== 0) {
         // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
         if (operators_statistics_list.value[j][property][condition] < operators_statistics_list.value[j + 1][property][condition]) {
           const temp = operators_statistics_list.value[j]
