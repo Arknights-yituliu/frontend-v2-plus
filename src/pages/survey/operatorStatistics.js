@@ -285,7 +285,7 @@ function getLevelCostByRarity(rarity,elite,level,elite_0_max_level,elite_1_max_l
 function operatorStatistics(operatorList){
     for(const i in operatorList){
         const operator = operatorList[i];
-        // for()
+        // for(item)
     }
 }
 

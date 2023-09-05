@@ -68,7 +68,7 @@
         <tr>
           <td class="rank_table_1">代号</td>
           <td class="rank_table_2" @click="sortRank('own')">持有率</td>
-          <td class="rank_table_3" @click="sortRank('elite2')">精二率</td>
+          <td class="rank_table_3" @click="commonSort('elite','rank2')">精二率</td>
           <td class="rank_table_4" @click="commonSort('skill1','rank3')" style="text-align: center !important;">一技能专三率</td>
           <td class="rank_table_5" @click="commonSort('skill2','rank3')" style="text-align: center !important;">二技能专三率</td>
           <td class="rank_table_6" @click="commonSort('skill3','rank3')" style="text-align: center !important;">三技能专三率</td>
@@ -155,6 +155,9 @@ function getCharStatisticsResult() {
           operators_statistics_list.value[i].skill3 = response.data.result[j].skill3;
           operators_statistics_list.value[i].modX = response.data.result[j].modX;
           operators_statistics_list.value[i].modY = response.data.result[j].modY;
+          if(operators_statistics_list.value[i].elite.rank2 === void 0) operators_statistics_list.value[i].elite.rank2 = 0.0
+          if(operators_statistics_list.value[i].modX.rank3 === void 0) operators_statistics_list.value[i].modX.rank3 = 0.0
+          if(operators_statistics_list.value[i].modY.rank3 === void 0) operators_statistics_list.value[i].modY.rank3 = 0.0
         }
       }
     }
@@ -176,8 +179,8 @@ function getPercentage(value, digit) {
 }
 
 function getSurveyResult(obj, rank) {
-  if(obj == void 0) return '';
-  if (obj[rank] == void 0) return '';
+  if(obj === void 0) return '';
+  if (obj[rank] === void 0) return '';
   return obj[rank];
 }
 
@@ -250,12 +253,12 @@ function commonSort(property, condition) {
   console.log(desc_or_asc.value)
   const len = operators_statistics_list.value.length
   for (let i = 0; i < len - 1; i++) {
+
     for (let j = 0; j < len - 1 - i; j++) {
-      if (desc_or_asc.value % 2 !== 0) {
-        // console.log(rankingList.value[j][property][condition],rankingList.value[j + 1][property][condition])
-        if (operators_statistics_list.value[j][property][condition] < operators_statistics_list.value[j + 1][property][condition]
-            || operators_statistics_list.value[j][property][condition] === void 0
-            || operators_statistics_list.value[j + 1][property][condition] === void 0) {
+
+        if (desc_or_asc.value % 2 !== 0) {
+        // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
+        if (operators_statistics_list.value[j][property][condition] < operators_statistics_list.value[j + 1][property][condition]) {
           const temp = operators_statistics_list.value[j]
           operators_statistics_list.value[j] = operators_statistics_list.value[j + 1]
           operators_statistics_list.value[j + 1] = temp;
@@ -263,10 +266,8 @@ function commonSort(property, condition) {
       }
 
       if (desc_or_asc.value % 2 === 0) {
-        // console.log(rankingList.value[j][property][condition],rankingList.value[j + 1][property][condition])
-        if (operators_statistics_list.value[j][property][condition] > operators_statistics_list.value[j + 1][property][condition]
-            || operators_statistics_list.value[j][property][condition] === void 0
-            || operators_statistics_list.value[j + 1][property][condition] === void 0) {
+        // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
+        if (operators_statistics_list.value[j][property][condition] > operators_statistics_list.value[j + 1][property][condition]) {
           const temp = operators_statistics_list.value[j]
           operators_statistics_list.value[j] = operators_statistics_list.value[j + 1]
           operators_statistics_list.value[j + 1] = temp;
