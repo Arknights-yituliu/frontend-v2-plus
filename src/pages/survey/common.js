@@ -88,7 +88,7 @@ function calAPCost(operatorList) {
             }
         }
 
-
+        console.table(levelApCost)
 
 
 
@@ -284,44 +284,50 @@ function calAPCost(operatorList) {
 function levelApCostCal(rarity,elite,level) {
 
       if(rarity===6){
-         return   tableByRarity(elite,level,49,79)
+         return   tableByRarity(rarity,elite,level,49,79)
       }
 
     if(rarity===5){
-        return   tableByRarity(elite,level,49,69)
+        return   tableByRarity(rarity,elite,level,49,69)
     }
 
     if(rarity===4){
-        return   tableByRarity(elite,level,44,59)
+        return   tableByRarity(rarity,elite,level,44,59)
     }
 
     if(rarity===3){
-        return   tableByRarity(elite,level,39,54)
+        return   tableByRarity(rarity,elite,level,39,54)
     }
 
     if(rarity===2){
-        return   tableByRarity(elite,level,29,0)
+        return   tableByRarity(rarity,elite,level,29,0)
     }
 
     if(rarity===1){
-        return   tableByRarity(elite,level,29,0)
+        return   tableByRarity(rarity,elite,level,29,0)
     }
 
 
 }
 
 
-function tableByRarity(elite,level,elite_0_max_level,elite_1_max_level){
+function tableByRarity(rarity,elite,level,elite_0_max_level,elite_1_max_level){
     let LMDCost = 0;
     let EXPCost = 0;
 
           if(elite>0){
               LMDCost += levelCostTable['elite0'][elite_0_max_level].LMDCount
               EXPCost += levelCostTable['elite0'][elite_0_max_level].EXPCount
+              if(rarity>2){
+                  LMDCost += (5000*(rarity-1))
+              }
           }
           if(elite>1){
               LMDCost += levelCostTable['elite1'][elite_1_max_level].LMDCount
               EXPCost += levelCostTable['elite1'][elite_1_max_level].EXPCount
+              if(rarity>3){
+                  LMDCost += (60000*(rarity-3))
+              }
           }
 
           if(level>0){
