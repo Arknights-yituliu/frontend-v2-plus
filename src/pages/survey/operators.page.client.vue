@@ -407,7 +407,8 @@
 <script setup>
 import {cMessage} from "@/element/message.js";
 import {globalUserData} from "./userService"; //从用户服务js获取用户信息
-import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict, calAPCost} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {calAPCost} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import {  loginEvent } from "./userService";
 import surveyApi from "@/api/survey";
 import {onMounted, ref} from "vue";
@@ -1083,19 +1084,13 @@ function statisticsCollapse() {
 function statistics() {
   user_own_operator_count.value = 0;
   operator_count.value = operator_list.value.length
+
   for (const i in operator_list.value) {
     if (operator_list.value[i].own) {
       user_own_operator_count.value++;
     }
   }
 
-  user_own_operator_count.value = 0;
-  operator_count.value = operator_list.value.length
-  for (const i in operator_list.value) {
-    if (operator_list.value[i].own) {
-      user_own_operator_count.value++;
-    }
-  }
 
   itemCostResult.value = calAPCost(operator_list.value).itemList;
   apCostCount.value = calAPCost(operator_list.value).apCostCount;
