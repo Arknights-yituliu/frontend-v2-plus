@@ -61,7 +61,7 @@
       },
       {
         "path": "/survey/maarecruitdata",
-        "text": "公招结果统计",
+        "text": "公招tag统计",
         "isChild": false
       }
     ]
