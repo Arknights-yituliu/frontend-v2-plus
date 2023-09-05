@@ -88,7 +88,7 @@ function calAPCost(operatorList) {
             }
         }
 
-        console.table(levelApCost)
+
 
 
 
