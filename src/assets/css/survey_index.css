@@ -42,6 +42,7 @@
   width: auto;
   display: flex;
   justify-content: flex-end;
+
 }
 
 .survey_top_right_btn {
@@ -93,7 +94,7 @@
   height: 40px;
   color: white;
   cursor: pointer;
-  margin-left: 20px;
+  padding:0 4px 0 32px;
 }
 
 .btn_login {
@@ -109,9 +110,7 @@
 }
 
 .logout_text {
-  margin: auto;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin: 30px auto;
   text-align: center;
   font-size: 20px;
   font-weight: 800;
