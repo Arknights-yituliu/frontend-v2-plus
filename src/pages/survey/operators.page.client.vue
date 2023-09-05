@@ -463,12 +463,17 @@ let list_size = ref(10)
 
 function initOperatorsList() {
   operator_list.value = characterListInit();
-  getSurveyCharacter();
+
   setTimeout(() => {
     list_size.value = operator_list.value.length;
+    getSurveyCharacter();
 
-    statistics()
   }, 1000);
+
+  setTimeout(() => {
+    statistics()
+  }, 2000);
+
 }
 
 //找回填写过的角色信息
