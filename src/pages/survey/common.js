@@ -121,6 +121,9 @@ function determineYear(filterCondition, characterInfo) {
     return false;
 }
 
+
+
+
 let characterList = [];
 
 //干员基础数据
@@ -131,8 +134,8 @@ function characterListInit() {
         let modX_own = false;
         let modY_own = false;
         let default_show = false;
-
-        if (baseData.mod !== undefined) {
+        console.log(baseData.mod)
+        if (baseData.mod != void 0) {
             if (baseData.mod.modX) {
                 modX_own = true;
             }
@@ -166,7 +169,7 @@ function characterListInit() {
             date: baseData.date,
             itemObtainApproach: baseData.itemObtainApproach,
             profession: baseData.profession,
-            mod: baseData.mod !== undefined,
+            mod: baseData.mod != void 0,
             show: default_show,
         };
         characterList.push(character);
@@ -204,7 +207,7 @@ function scoreListInit() {
             date: baseInfo.date,
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
-            mod: baseInfo.mod !== undefined,
+            mod: baseInfo.mod != void 0,
             show: true,
         };
 
@@ -235,14 +238,14 @@ function rankingListInit() {
             modY: {'rank3': 0},
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
-            mod: baseInfo.mod !== undefined,
+            mod: baseInfo.mod != void 0,
             skill: baseInfo.skill,
             show: true,
         };
 
         if (rankInfo.rarity < 6) {
             // console.log(rankInfo)
-            rankInfo.skill3 = {rank3: undefined}
+            rankInfo.skill3 = {rank3: void 0}
         }
 
         rankingList.push(rankInfo);

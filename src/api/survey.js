@@ -30,9 +30,6 @@ export default {
 
   register(userData) {
     return request({
-      headers: {
-        "Content-Type": "application/json",
-      },
       url: `${api_name}/register`,
       method: "post",
       data: userData,

@@ -229,6 +229,8 @@ function getCharStatisticsResult() {
           if (operators_statistics_list.value[i].elite.rank2 === void 0) operators_statistics_list.value[i].elite.rank2 = 0.0
           if (operators_statistics_list.value[i].modX.rank3 === void 0) operators_statistics_list.value[i].modX.rank3 = 0.0
           if (operators_statistics_list.value[i].modY.rank3 === void 0) operators_statistics_list.value[i].modY.rank3 = 0.0
+          if (operators_statistics_list.value[i].skill2.rank3 === void 0) operators_statistics_list.value[i].skill2.rank3 = 0.0
+          if (operators_statistics_list.value[i].skill3.rank3 === void 0) operators_statistics_list.value[i].skill3.rank3 = 0.0
         }
       }
     }

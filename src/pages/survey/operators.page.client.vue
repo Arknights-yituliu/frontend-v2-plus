@@ -254,7 +254,7 @@
             <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
           </div>
         </div>
-        <div class="switch_bar upload" v-show="upload_message.registered">
+        <div class="switch_bar upload" v-show="bindAccount">
           <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;"> {{upload_message.userName}} </a> 请登录之前的账号 <br>
             <div class="skland_login_btn" @click="login(upload_message.userName)">请登录用户{{upload_message.userName}}并刷新网页</div>
           </div>
@@ -409,22 +409,12 @@ import {cMessage} from "@/element/message.js";
 import {globalUserData} from "./userService"; //从用户服务js获取用户信息
 import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import {calAPCost} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import {  loginEvent } from "./userService";
 import surveyApi from "@/api/survey";
 import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
 import {http} from "@/api/baseURL";
-
-
-async function login(userName){
-  let loginData = {
-    userName:userName
-  }
-  await loginEvent(loginData)
-
-  location.reload()
-}
-
+import request from "@/api/requestBase";
+import { importSklandData } from "./skland.js";
 
 let first_popup = ref(false)
 let import_popup_visible = ref(false)
@@ -543,33 +533,74 @@ function exportExcel() {
 
 //森空岛导入
 let skland_CRED = ref("");
+let bindAccount = ref(false)
 
 function importSKLandCRED() {
 
-  if (globalUserData.value.token === void 0) {
-    console.log(globalUserData.value.token === void 0);
-    cMessage("请先注册或登录一图流账号", "error");
-    return;
-  }
+  importSklandData(skland_CRED.value)
 
-  let info = {
-    token: globalUserData.value.token,
-    cred: skland_CRED.value,
-  };
+  // if (globalUserData.value.token === void 0) {
+  //   console.log(globalUserData.value.token === void 0);
+  //   cMessage("请先注册或登录一图流账号", "error");
+  //   return;
+  // }
+  //
+  // let info = {
+  //   token: globalUserData.value.token,
+  //   cred: skland_CRED.value,
+  // };
+  //
+  // request({
+  //   url: `survey/operator/import/skland`,
+  //   method: "post",
+  //   data: info,
+  // }).then(response => {
+  //     response = response.data
+  //     upload_message.value = response.data;
+  //     if(response.code === 20004){
+  //       cMessage("您已经注册导入过了","error");
+  //       bindAccount.value = true;
+  //     }
+  //
+  //     if(response.code === 200){
+  //       cMessage("森空岛数据导入成功");
+  //       getSurveyCharacter()
+  //       bindAccount.value = false;
+  //     }else {
+  //       cMessage("您已经注册导入过了","error");
+  //     }
+  // })
 
-  surveyApi.uploadCharacterBySKLand(info).then((response) => {
-    upload_message.value = response.data;
-    selected_index_obj.value = {};
-    if(upload_message.value.registered){
-      cMessage("您已经注册导入过了","error");
-    }else {
-      cMessage("森空岛数据导入成功");
-      getSurveyCharacter()
+  // surveyApi.uploadCharacterBySKLand(info).then((response) => {
+  //   upload_message.value = response.data;
+  //   selected_index_obj.value = {};
+  //   if(upload_message.value.registered){
+  //     cMessage("您已经注册导入过了","error");
+  //   }else {
+  //     cMessage("森空岛数据导入成功");
+  //     getSurveyCharacter()
+  //   }
+  //
+  // });
+}
+
+function login(userName) {
+  let info ={userName:userName}
+  request({
+    url: `survey/login`,
+    method: "post",
+    data: info,
+  }).then(response => {
+    response = response.data
+    if (response.code !== 200) {
+      cMessage(response.msg,'error')
     }
-
-
-
-  });
+    if (response.code === 200 && response.data.status > 0) {
+      localStorage.setItem("globalUserData", JSON.stringify(response.data));
+      // 登录成功刷新
+      location.reload()
+    }
+  })
 }
 
 

@@ -54,7 +54,7 @@
 }
 
 .login_card {
-  width: 400px;
+  width: 500px;
   height: auto;
   border-radius: 10px;
   margin: auto;
@@ -64,16 +64,18 @@
 
 .login_input_wrap {
   display: flex;
-  margin: auto;
-  margin-top: 20px;
-  margin-bottom: 30px;
+  margin: 20px auto 20px;
   height: 30px;
   line-height: 30px;
   font-size: 18px;
 }
 
+.input_label{
+  width: 80px;
+}
+
 .login_input {
-  width: 300px;
+  width: 200px;
   border: 0;
   outline: none;
   border-bottom: 1px black solid;
@@ -83,9 +85,25 @@
   font-size: 18px;
 }
 
+.login_tip_wrap {
+  margin: 28px 0 0 0 ;
+}
+
 .login_tip {
-  margin-top: 20px;
-  line-height: 30px;
+  margin:8px;
+  line-height: 28px;
+}
+
+.login_tip_warn {
+  color: #d72a2a;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.login_tip_info {
+  color: #26a3ef;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .user_name {

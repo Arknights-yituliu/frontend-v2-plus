@@ -12,26 +12,26 @@ function cMessage(text, type, duration) {
   messageBar.id = "messageBar" + send;
   messageBars.push("messageBar" + send);
 
-  var text = document.createTextNode(text);
-  messageBar.appendChild(text);
+  const textElement = document.createTextNode(text);
+  messageBar.appendChild(textElement);
   document.body.appendChild(messageBar);
 
-  type = type === void 0 ? "success" : type;
+  type = type == void 0 ? "success" : type;
   setTimeout(function () {
     for (let i in messageBars) {
-      document.getElementById(messageBars[i]).style.top = 20 + i * 40 + "px";
+      document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
     }
     messageBar.className = "messageBar_" + type;
   }, 500);
 
-  if (duration === void 0) duration = 4000;
+  if (duration == void 0) duration = 4000;
 
   setTimeout(function () {
     messageBar.remove();
     messageBars = messageBars.splice(1);
     // console.log(messageBars)
     for (let i in messageBars) {
-      document.getElementById(messageBars[i]).style.top = 20 + i * 40 + "px";
+      document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
     }
   }, duration);
 }
