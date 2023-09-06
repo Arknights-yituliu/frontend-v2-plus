@@ -22,7 +22,7 @@
           <br/>输入之后回车确认
         </p>
         <img src="/image/skland/step1.jpg" class="skland_import_image" alt=""><img>
-        <p><b>step3：</b>此时你可以获得一段神秘的字符，此即为CRED，复制这段CRED</p>
+        <p><b>step3：</b>此时你可以获得一段神秘的字符，此即为CRED，复制这段CRED，<b>不要带引号</b></p>
         <img src="/image/skland/step2.jpg" class="skland_import_image" alt=""><img>
         <p><b>step4：</b>将 <b>step3</b> 中获得的CRED粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
         <img src="/image/skland/step3.jpg" class="skland_import_image" alt=""><img>
