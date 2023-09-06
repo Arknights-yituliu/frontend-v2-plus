@@ -134,7 +134,7 @@ function characterListInit() {
         let modX_own = false;
         let modY_own = false;
         let default_show = false;
-        console.log(baseData.mod)
+
         if (baseData.mod != void 0) {
             if (baseData.mod.modX) {
                 modX_own = true;

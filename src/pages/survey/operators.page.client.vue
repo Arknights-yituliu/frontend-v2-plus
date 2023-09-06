@@ -1,35 +1,6 @@
 <template>
 
-  <c-popup :visible="import_popup_visible" v-model:visible="import_popup_visible">
-    <div>
-      <div class="intro_wrap">
-        <div class="intro_title">森空岛CRED的风险声明</div>
-        &emsp;&emsp;森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
-        &emsp;&emsp;一图流不会保存任何CRED信息<br/>
-        <a style="color: #fa5e5e">&emsp;&emsp;*请妥善保管此CRED</a>
-      </div>
 
-
-      <div class="intro_wrap">
-        <div class="intro_title">森空岛数据导入流程</div>
-
-        <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="skland_url">https://www.skland.com/</a>进行登录</p>
-        <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：<br/>
-          <a style="color:dodgerblue">localStorage.getItem('SK_OAUTH_CRED_KEY')</a>
-          <br/>
-          <button class="mdui-btn survey_button" @click="copyCode()">复制命令</button>
-
-          <br/>输入之后回车确认
-        </p>
-        <img src="/image/skland/step1.jpg" class="skland_import_image" alt=""><img>
-        <p><b>step3：</b>此时你可以获得一段神秘的字符，此即为CRED，复制这段CRED，<b>不要带引号</b></p>
-        <img src="/image/skland/step2.jpg" class="skland_import_image" alt=""><img>
-        <p><b>step4：</b>将 <b>step3</b> 中获得的CRED粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
-        <img src="/image/skland/step3.jpg" class="skland_import_image" alt=""><img>
-      </div>
-    </div>
-
-  </c-popup>
 
 
   <c-popup :visible="first_popup" v-model:visible="first_popup">
@@ -224,6 +195,47 @@
       </div>
     </div>
 
+
+    <c-popup :visible="import_popup_visible" v-model:visible="import_popup_visible">
+      <div>
+        <div class="intro_wrap">
+          <div class="intro_title">森空岛CRED的风险声明</div>
+          &emsp;&emsp;森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
+          &emsp;&emsp;一图流不会保存任何CRED信息<br/>
+          <a style="color: #fa5e5e">&emsp;&emsp;*请妥善保管此CRED</a>
+        </div>
+
+
+        <div class="intro_wrap">
+          <div class="intro_title">森空岛数据导入流程</div>
+
+          <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="skland_url">https://www.skland.com/</a>进行登录</p>
+          <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：<br/>
+            <a style="color:dodgerblue">localStorage.getItem('SK_OAUTH_CRED_KEY')</a>
+            <br/>
+            <button class="mdui-btn survey_button" @click="copyCode()">复制命令</button>
+
+            <br/>输入之后回车确认
+          </p>
+          <img src="/image/skland/step1.jpg" class="skland_import_image" alt=""><img>
+          <p><b>step3：</b>此时你可以获得一段神秘的字符，此即为CRED，复制这段CRED，<b>不要带引号</b></p>
+          <img src="/image/skland/step2.jpg" class="skland_import_image" alt=""><img>
+          <p><b>step4：</b>将 <b>step3</b> 中获得的CRED粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
+          <img src="/image/skland/step3.jpg" class="skland_import_image" alt=""><img>
+        </div>
+      </div>
+
+    </c-popup>
+
+    <c-popup :visible="reset_popup_visible" v-model:visible="reset_popup_visible">
+      <div class="popup_action_tip">此操作将解除您的森空岛UID与一图流账号的绑定，同时并清空一图流账号上保存的干员数据，确定要执行操作吗？</div>
+      <div class="btn_switch_wrap">
+        <div class="btn_switch" @click="operatorDataReset()">确定</div>
+        <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible">取消</div>
+      </div>
+
+    </c-popup>
+
     <!-- 导入导出模块 -->
     <div class="switch_wrap switch_wrap_open" id="switch_upload_wrap">
       <div class="switch_box switch_box_open" id="switch_upload_box">
@@ -252,13 +264,13 @@
             <div class="skland_desc">输入CRED</div>
             <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>
             <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
+            <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible" >清空所有数据</div>
           </div>
         </div>
         <div class="switch_bar upload" v-show="bindAccount">
           <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;"> {{upload_message.userName}} </a> 请登录之前的账号 <br>
             <div class="skland_login_btn" @click="login(upload_message.userName)">请登录用户{{upload_message.userName}}并刷新网页</div>
           </div>
-
         </div>
         <div class="switch_bar upload">
           <div class="switch_desc"><b>*森空岛导入：</b>请遵循
@@ -535,16 +547,43 @@ function exportExcel() {
 let skland_CRED = ref("");
 let bindAccount = ref(false)
 
-function importSKLandCRED() {
+async function importSKLandCRED() {
 
-  importSklandData(skland_CRED.value)
+  const response = await importSklandData(skland_CRED.value);
 
-  // if (globalUserData.value.token === void 0) {
-  //   console.log(globalUserData.value.token === void 0);
-  //   cMessage("请先注册或登录一图流账号", "error");
-  //   return;
-  // }
-  //
+  if (globalUserData.value.token === void 0) {
+    console.log(globalUserData.value.token === void 0);
+    cMessage("请先注册或登录一图流账号", "error");
+    return;
+  }
+
+  const data = {
+    token:globalUserData.value.token,
+    data:JSON.stringify(response)
+  }
+
+   request({
+    url:'survey/operator/import/skland/v2',
+    method: "post",
+    data:data
+  }).then(response=>{
+         response = response.data
+         upload_message.value = response.data;
+         if(response.code === 20004){
+           cMessage("您已经注册导入过了","error");
+           bindAccount.value = true;
+           return;
+         }
+
+         if(response.code === 200){
+           cMessage("森空岛数据导入成功");
+           getSurveyCharacter()
+           bindAccount.value = false;
+         }else {
+           cMessage(response.msg,"error");
+         }
+  })
+
   // let info = {
   //   token: globalUserData.value.token,
   //   cred: skland_CRED.value,
@@ -582,6 +621,28 @@ function importSKLandCRED() {
   //   }
   //
   // });
+}
+
+let reset_popup_visible = ref(false)
+
+function  operatorDataReset(){
+
+  let data = {
+    token:globalUserData.value.token,
+  }
+
+  request({
+    url:'survey/operator/reset',
+    method: "post",
+    data:data
+  }).then(response=>{
+    response =  response.data
+    if(response.code===200){
+      cMessage(response.data)
+    }else {
+      cMessage(response.mes,'error')
+    }
+  })
 }
 
 function login(userName) {

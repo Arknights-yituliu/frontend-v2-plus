@@ -20,7 +20,7 @@
         </div>
 
         <div class="login_tip_wrap">
-          <div class="login_tip login_tip_info">如果您想让自己的练度数据保存的更加安全可在个人中心设置密码，但设置密码后，登录时必须输入密码才可登录</div>
+<!--          <div class="login_tip login_tip_info">如果您想让自己的练度数据保存的更加安全可在个人中心设置密码，但设置密码后，登录时必须输入密码才可登录</div>-->
           <div class="login_tip">
             新用户输入自己喜欢的昵称后点击注册即可分配ID，昵称+ID即为您的用户名。
           </div>

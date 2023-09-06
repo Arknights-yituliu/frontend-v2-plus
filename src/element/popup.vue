@@ -74,8 +74,8 @@ watch(
   position: relative;
   z-index: 2100;
   margin: 15vh auto auto;
-  width: 550px;
-  height: 75vh;
+  width: 500px;
+  height: 500px;
   overflow: auto;
   background: #fff;
   border-radius: 4px;

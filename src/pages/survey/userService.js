@@ -54,7 +54,7 @@ return responseData
 function userDataCacheEvent() {
   // let cacheData = window.localStorage.getItem("globalUserData");
   let cacheData = jsCookie.get("globalUserData");
-  if(cacheData == "undefined" || cacheData == void 0){
+  if(cacheData == "undefined" || cacheData == void 0 || cacheData == null){
     cacheData =localStorage.getItem("globalUserData");
   }else {
     localStorage.setItem("globalUserData",cacheData);

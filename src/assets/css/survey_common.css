@@ -21,23 +21,27 @@
   margin: auto auto 6px;
 }
 
+
+
 .survey_button{
-  margin:8px 0px 8px 8px;
+  margin:8px 0 8px 8px;
   border-radius: 4px;
   background-color: #eeeeeeee;
 }
+
 .survey_button_group_left{
-  margin:8px 0px 8px 8px;
+  margin:8px 0 8px 8px;
   border-radius: 4px;
   background-color: #eeeeeeee;
 }
 .survey_button_group{
-  margin:8px 0px 8px 0px;
+  margin:8px 0 8px 0;
   border-radius: 4px;
   background-color: #eeeeeeee;
 }
+
 #updateTime{
-  padding: 0px;
+  padding: 0;
   display: inline-block;
   font-size: 12px;
   position: relative;
@@ -117,6 +121,14 @@
   flex-direction: row;
   justify-content: flex-start;
   padding: 2px;
+}
+
+.btn_switch_wrap{
+  width: 70%;
+  margin: auto;
+  display: flex;
+  padding: 16px;
+  justify-content: space-between;
 }
 
 .btn_switch {
@@ -203,10 +215,19 @@
 
 .selected_color {
   /* background: rgb(97, 173, 255); */
-  color: #cf31ff;
   color: #ffffff;
   background-color: #6795ff !important;
   box-shadow: 1px 1px 2px #cccccc !important;
+}
+
+.popup_action_tip{
+   width: 90%;
+   margin: auto;
+   line-height: 32px;
+   font-size: 18px;
+   font-weight: 800;
+   text-align: center;
+   padding: 16px 8px 20px 8px;
 }
 
 
