@@ -230,15 +230,15 @@
         <div class="switch_bar upload">
           <div class="switch_title">导入导出</div>
           <div class="switch_btns_wrap">
-            <div class="btn_switch" @click="exportExcel()">导出为Excel文件</div>
-            <div class="btn_switch">
-              <div class="input_upload_wrap">
-                导入Excel文件
-                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>
-              </div>
-            </div>
-            <!-- <div class="btn_switch" @click="uploadByExcel()">上传Excel文件</div> -->
-            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>
+            <div class="btn_switch" @click="exportExcel()">导出为Excel</div>
+            <!--            <div class="btn_switch">-->
+            <!--              <div class="input_upload_wrap">-->
+            <!--                导入Excel文件-->
+            <!--                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash; <div class="btn_switch" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
+            <!--            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>-->
           </div>
         </div>
         <div class="switch_bar upload">
@@ -254,6 +254,12 @@
             <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
           </div>
         </div>
+        <div class="switch_bar upload" v-show="upload_message.registered">
+          <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;"> {{upload_message.userName}} </a> 请登录之前的账号 <br>
+            <div class="skland_login_btn" @click="login(upload_message.userName)">请登录用户{{upload_message.userName}}并刷新网页</div>
+          </div>
+
+        </div>
         <div class="switch_bar upload">
           <div class="switch_desc"><b>*森空岛导入：</b>请遵循
             <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完请手动保存并刷新页面
@@ -264,16 +270,21 @@
 
     <div class="switch_wrap" id="switch_statistics_wrap">
       <div class="switch_box" id="switch_statistics_box">
-        <div class="switch_bar statistics" style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;"> 总计消耗{{apCostCount.toFixed(0)}} 理智 </div>
-        <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,index) in itemCostResult" :key="index">
-        <div v-for="(item,index) in itemList" :key="index" class="item_cost_card" v-show="item.id!=='4001'">
-          <div class="image_item_wrap">
-            <div :class="getSprite(item.id,'item')"></div>
-          </div>
-          <div class="item_count">
-            {{ item.count }}
-          </div>
+        <div class="switch_bar statistics"
+             style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
+          总计消耗{{ apCostCount.toFixed(0) }} 理智
         </div>
+
+        <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,type) in itemCostResult"
+             :key="type" >
+          <div v-for="(item,index) in itemList" :key="index" class="item_cost_card" >
+            <div class="image_item_wrap">
+              <div :class="getSprite(item.id,'item')"></div>
+              <div class="item_count">
+                {{ strShowLength(item.count) }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -314,8 +325,10 @@
                  v-show="operator.rarity > 3">
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
-            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">
-              <img class="image_lvMax" src="/image/survey/lvMax.png" alt=""/>
+            <!--            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">-->
+            <div class="level_wrap" :id="char_index + 'level'">
+              <!--              <img class="image_lvMax" src="/image/survey/lvMax.png" alt=""/>-->
+              {{ operator.level }}
             </div>
           </div>
         </div>
@@ -394,11 +407,24 @@
 <script setup>
 import {cMessage} from "@/element/message.js";
 import {globalUserData} from "./userService"; //从用户服务js获取用户信息
-import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict, calAPCost} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {calAPCost} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {  loginEvent } from "./userService";
 import surveyApi from "@/api/survey";
 import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
 import {http} from "@/api/baseURL";
+
+
+async function login(userName){
+  let loginData = {
+    userName:userName
+  }
+  await loginEvent(loginData)
+
+  location.reload()
+}
+
 
 let first_popup = ref(false)
 let import_popup_visible = ref(false)
@@ -438,12 +464,17 @@ let list_size = ref(10)
 
 function initOperatorsList() {
   operator_list.value = characterListInit();
-  getSurveyCharacter();
+
   setTimeout(() => {
     list_size.value = operator_list.value.length;
+    getSurveyCharacter();
 
-    statistics()
   }, 1000);
+
+  setTimeout(() => {
+    statistics()
+  }, 2000);
+
 }
 
 //找回填写过的角色信息
@@ -514,9 +545,10 @@ function exportExcel() {
 let skland_CRED = ref("");
 
 function importSKLandCRED() {
+
   if (globalUserData.value.token === void 0) {
     console.log(globalUserData.value.token === void 0);
-    // cMessage("未登录", "error");
+    cMessage("请先注册或登录一图流账号", "error");
     return;
   }
 
@@ -528,14 +560,21 @@ function importSKLandCRED() {
   surveyApi.uploadCharacterBySKLand(info).then((response) => {
     upload_message.value = response.data;
     selected_index_obj.value = {};
-    cMessage("森空岛信息导入成功");
-    getSurveyCharacter()
+    if(upload_message.value.registered){
+      cMessage("您已经注册导入过了","error");
+    }else {
+      cMessage("森空岛数据导入成功");
+      getSurveyCharacter()
+    }
+
+
+
   });
 }
 
 
 let last_upload_time_stamp = 1689425013364; //上次上传时间的时间戳
-let upload_message = ref({updateTime: "2023/08/08 00:00:00", affectedRows: 0}); //上传APi返回的信息
+let upload_message = ref({updateTime: "", affectedRows: 0, registered:false, userName:'' }); //上传APi返回的信息
 let selected_index_obj = ref({}); //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
 
 //自动上传风评表
@@ -1037,7 +1076,7 @@ let apCostCount = ref(0)
 
 function statisticsCollapse() {
   statistics()
-  collapse('switch_bar statistics','switch_statistics_wrap','switch_statistics_box')
+  collapse('switch_bar statistics', 'switch_statistics_wrap', 'switch_statistics_box')
 
 }
 
@@ -1045,25 +1084,28 @@ function statisticsCollapse() {
 function statistics() {
   user_own_operator_count.value = 0;
   operator_count.value = operator_list.value.length
+
   for (const i in operator_list.value) {
     if (operator_list.value[i].own) {
       user_own_operator_count.value++;
     }
   }
 
-  user_own_operator_count.value = 0;
-  operator_count.value = operator_list.value.length
-  for (const i in operator_list.value) {
-    if (operator_list.value[i].own) {
-      user_own_operator_count.value++;
-    }
-  }
 
   itemCostResult.value = calAPCost(operator_list.value).itemList;
   apCostCount.value = calAPCost(operator_list.value).apCostCount;
-
-
 }
+
+function strShowLength(num){
+     if(num>99999999){
+        return (num/100000000).toFixed(2)+"亿"
+     }
+     if(num>9999){
+       return (num/10000).toFixed(0)+"万"
+     }
+     return num
+}
+
 
 function toSkland() {
   window.open("https://www.skland.com");

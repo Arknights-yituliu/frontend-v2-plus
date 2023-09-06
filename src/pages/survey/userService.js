@@ -11,6 +11,7 @@ async function registerEvent(loginData) {
   await surveyApi.register(loginData).then((response) => {
     globalUserData.value = response.data;
     jsCookie.set("globalUserData", JSON.stringify(globalUserData.value), { expires: 30 });
+    localStorage.setItem("globalUserData",JSON.stringify(globalUserData.value));
     // console.log("api返回数据：", globalUserData);
     cMessage("注册成功");
   });
@@ -22,6 +23,7 @@ async function loginEvent(loginData) {
   await surveyApi.login(loginData).then((response) => {
     globalUserData.value = response.data;
     jsCookie.set("globalUserData", JSON.stringify(globalUserData.value), { expires: 30 });
+    localStorage.setItem("globalUserData",JSON.stringify(globalUserData.value));
   });
   return globalUserData.value;
 }
@@ -30,7 +32,9 @@ async function loginEvent(loginData) {
 function userDataCacheEvent() {
   // let cacheData = window.localStorage.getItem("globalUserData");
   let cacheData = jsCookie.get("globalUserData");
-  globalUserData.value = cacheData == "undefined" || cacheData == undefined ? globalUserData.value : JSON.parse(cacheData);
+  localStorage.setItem("globalUserData",cacheData);
+  cacheData =localStorage.getItem("globalUserData");
+  globalUserData.value = cacheData === "undefined" || cacheData === void 0 ? globalUserData.value : JSON.parse(cacheData);
 
   return globalUserData.value;
 }

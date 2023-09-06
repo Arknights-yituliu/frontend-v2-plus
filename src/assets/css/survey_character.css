@@ -186,6 +186,20 @@
 
 }
 
+
+.level_wrap{
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  font-size: 20px;
+  text-align: center;
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-top: 12px;
+  border-radius: 0;
+  background: rgba(127, 127, 127, 0.1);
+}
+
 .image_elite {
   height: 40px;
   width: 40px;
@@ -344,6 +358,20 @@
   cursor: pointer;
 }
 
+.skland_login_btn{
+  width: 270px;
+  margin: 8px 0 0 0;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #b5e6ff;
+  text-align: center;
+  color: #006fe0;
+  cursor: pointer;
+}
+
+
+
+
 .skland_notice_btn{
   color: #ff0000;
   cursor: pointer;
@@ -387,30 +415,36 @@
 .item_cost_wrap{
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
 .image_item_wrap{
   height:50px;
-  width: 50px;
+  width: 70px;
   position: relative;
   /* border: 1px red solid; */
   margin: 4px;
 }
 
 .image_item{
-  transform: scale(0.32);
+  transform: scale(0.25);
   position: absolute;
   left: -66px;
   top:-66px
 }
 
 .item_count{
-  height: 60px;
-  line-height: 60px;
-  margin: 4px;
-  font-size: 20px;
-  width: 50px;
+  height: 20px;
+  line-height: 20px;
+  /*font-size: 18px;*/
+  width:60px;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  top: 32px;
+  left: 16px;
+  text-align: center;
+  border-radius: 1px;
+
 }
 
 .stats_classify {

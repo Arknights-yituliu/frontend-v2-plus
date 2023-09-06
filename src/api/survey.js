@@ -50,6 +50,14 @@ export default {
     });
   },
 
+  updateUser(token,data) {
+    return request({
+      url: `${api_name}/user/update?token=${token}`,
+      method: "post",
+      data: data,
+    });
+  },
+
   uploadCharacter(characterList, token) {
     return request({
       url: `${api_name}/character/upload?token=${token}`,
