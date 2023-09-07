@@ -80,10 +80,11 @@ export default {
     });
   },
 
-  getSurveyCharacter(token) {
+  getSurveyCharacter(data) {
     return request({
-      url: `${api_name}/operator/retrieval?token=${token}`,
-      method: "get",
+      url: `${api_name}/operator/retrieval`,
+      method: "post",
+      data:data
     });
   },
 

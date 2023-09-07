@@ -61,7 +61,7 @@ import "@/assets/css/sprite_rank.css";
 import "@/assets/css/survey_index.css";
 
 import {onMounted, ref} from "vue";
-import {registerEvent, loginEvent, userDataCacheClearEvent, userDataCacheEvent, globalUserData} from "./userService";
+import { userDataCacheClearEvent, userDataCacheEvent, globalUserData} from "./userService";
 import request from "@/api/requestBase";
 import {cMessage} from "@/element/message";
 

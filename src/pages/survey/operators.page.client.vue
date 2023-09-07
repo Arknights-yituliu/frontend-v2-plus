@@ -489,12 +489,15 @@ function initOperatorsList() {
 
 //找回填写过的角色信息
 function getSurveyCharacter() {
+  cacheUserData()
   if (userData.value.token === void 0) {
     // cMessage("未登录", "error");
     return;
   }
 
-  surveyApi.getSurveyCharacter(userData.value.token).then((response) => {
+  const data = {token:userData.value.token}
+
+  surveyApi.getSurveyCharacter(data).then((response) => {
     let list = response.data; //后端返回的数据
 
     //转为前端的数据格式
@@ -538,6 +541,7 @@ let export_excel_etn_text = ref("导出excel");
 
 //导出评分表的excel
 function exportExcel() {
+  cacheUserData()
   export_excel_etn_text.value = "导出中···";
   const export_excel_url = http + "survey/operator/export?token=" + userData.value.token;
   const element = document.createElement("a");
@@ -554,8 +558,12 @@ function exportExcel() {
 let skland_CRED = ref("");
 let bindAccount = ref(false)
 
-
+/**
+ * 找回一图流账号
+ * @returns {Promise<void>}
+ */
 async function retrieveAccount(){
+  cacheUserData()
   // const playerBind = await getPlayerBind(skland_CRED.value);
   const data = {
     cred:skland_CRED.value
@@ -581,7 +589,7 @@ async function retrieveAccount(){
  * @returns {Promise<void>}
  */
 async function importSKLandCRED() {
-
+  cacheUserData()
   const response = await importSklandData(skland_CRED.value);
 
   if (userData.value.token === void 0) {
@@ -627,6 +635,7 @@ let reset_popup_visible = ref(false)
  * 重置账号数据
  */
 function  operatorDataReset(){
+  cacheUserData()
 
   let data = {
     token:userData.value.token,
@@ -706,6 +715,7 @@ function automaticUpload() {
 
 //手动上传
 function upload() {
+  cacheUserData()
   let uploadList = uploadDataReduction();
   surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
     upload_message.value = response.data;
