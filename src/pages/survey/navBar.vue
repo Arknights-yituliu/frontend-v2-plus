@@ -154,7 +154,9 @@ function logout() {
     login_need_pass_word.value = false
     user_name_show.value = false
     logout_tip_show.value = false
+
   }, 400);
+
 }
 
 onMounted(() => {

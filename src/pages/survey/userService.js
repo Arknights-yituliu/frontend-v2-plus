@@ -71,6 +71,7 @@ function userDataCacheEvent() {
 function userDataCacheClearEvent() {
   jsCookie.remove("globalUserData");
   localStorage.removeItem("globalUserData")
+  location.reload()
   return (globalUserData.value = { userName: "未登录", status: -100 });
 }
 
