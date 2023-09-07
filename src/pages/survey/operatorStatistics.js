@@ -2,7 +2,10 @@ import operatorItemCostTable from "@/static/json/survey/operator_item_cost_table
 import itemTable from "@/static/json/survey/item_table.json";
 import levelCostTable from "@/static/json/survey/level_cost_table.json";
 
+
+
 function calAPCost(operatorList) {
+
     let itemCountMap = new Map();
     for (let c in operatorList) {
         const operator = operatorList[c];
@@ -12,8 +15,6 @@ function calAPCost(operatorList) {
         const elite = operator.elite;
         const level = operator.level;
         const itemCost = operatorItemCostTable[charId];
-
-
         const levelApCost = levelApCostCal(rarity, elite, level);
 
 
@@ -282,15 +283,10 @@ function getLevelCostByRarity(rarity,elite,level,elite_0_max_level,elite_1_max_l
 }
 
 
-function operatorStatistics(operatorList){
-    for(const i in operatorList){
-        const operator = operatorList[i];
-        // for(item)
-    }
-}
+
 
 
 export {
-    calAPCost,
-    operatorStatistics
+    calAPCost
+
 }

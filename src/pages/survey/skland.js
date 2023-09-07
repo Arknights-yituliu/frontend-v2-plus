@@ -73,6 +73,14 @@ async function getPlayerBind(cred){
         }else {
             const list = response.data.list
             uid = list[0].defaultUid;
+            if(uid===""){
+                const bindingList = list[0].bindingList;
+                for(const binding of bindingList ){
+                   if(binding.isDefault){
+                       uid = binding.uid;
+                   }
+                }
+            }
 
         }
 
