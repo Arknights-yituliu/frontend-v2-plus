@@ -433,6 +433,12 @@ import { importSklandData,getPlayerBind} from "./skland.js";
 let first_popup = ref(false)
 let import_popup_visible = ref(false)
 
+let userData = ref({ userName: "未登录", status: -100, token:void 0 });
+
+function cacheUserData(){
+  userData.value = globalUserData.value
+}
+
 function isFirstPopup() {
   if ("done" !== localStorage.getItem("first_popup")) {
     first_popup.value = true;
@@ -483,13 +489,12 @@ function initOperatorsList() {
 
 //找回填写过的角色信息
 function getSurveyCharacter() {
-  if (globalUserData.value.token === void 0) {
-    console.log(globalUserData.value.token === void 0);
+  if (userData.value.token === void 0) {
     // cMessage("未登录", "error");
     return;
   }
 
-  surveyApi.getSurveyCharacter(globalUserData.value.token).then((response) => {
+  surveyApi.getSurveyCharacter(userData.value.token).then((response) => {
     let list = response.data; //后端返回的数据
 
     //转为前端的数据格式
@@ -534,7 +539,7 @@ let export_excel_etn_text = ref("导出excel");
 //导出评分表的excel
 function exportExcel() {
   export_excel_etn_text.value = "导出中···";
-  const export_excel_url = http + "survey/operator/export?token=" + globalUserData.value.token;
+  const export_excel_url = http + "survey/operator/export?token=" + userData.value.token;
   const element = document.createElement("a");
   element.download = "form.xlsx";
   element.style.display = "none";
@@ -551,9 +556,9 @@ let bindAccount = ref(false)
 
 
 async function retrieveAccount(){
-  const playerBind = await getPlayerBind(skland_CRED.value);
+  // const playerBind = await getPlayerBind(skland_CRED.value);
   const data = {
-    uid:playerBind.uid
+    cred:skland_CRED.value
   }
 
   request({
@@ -579,14 +584,14 @@ async function importSKLandCRED() {
 
   const response = await importSklandData(skland_CRED.value);
 
-  if (globalUserData.value.token === void 0) {
-    console.log(globalUserData.value.token === void 0);
+  if (userData.value.token === void 0) {
+    console.log(userData.value.token === void 0);
     cMessage("请先注册或登录一图流账号", "error");
     return;
   }
 
   const data = {
-    token:globalUserData.value.token,
+    token:userData.value.token,
     data:JSON.stringify(response)
   }
 
@@ -612,43 +617,7 @@ async function importSKLandCRED() {
          }
   })
 
-  // let info = {
-  //   token: globalUserData.value.token,
-  //   cred: skland_CRED.value,
-  // };
-  //
-  // request({
-  //   url: `survey/operator/import/skland`,
-  //   method: "post",
-  //   data: info,
-  // }).then(response => {
-  //     response = response.data
-  //     upload_message.value = response.data;
-  //     if(response.code === 20004){
-  //       cMessage("您已经注册导入过了","error");
-  //       bindAccount.value = true;
-  //     }
-  //
-  //     if(response.code === 200){
-  //       cMessage("森空岛数据导入成功");
-  //       getSurveyCharacter()
-  //       bindAccount.value = false;
-  //     }else {
-  //       cMessage("您已经注册导入过了","error");
-  //     }
-  // })
 
-  // surveyApi.uploadCharacterBySKLand(info).then((response) => {
-  //   upload_message.value = response.data;
-  //   selected_index_obj.value = {};
-  //   if(upload_message.value.registered){
-  //     cMessage("您已经注册导入过了","error");
-  //   }else {
-  //     cMessage("森空岛数据导入成功");
-  //     getSurveyCharacter()
-  //   }
-  //
-  // });
 }
 
 let reset_popup_visible = ref(false)
@@ -660,7 +629,7 @@ let reset_popup_visible = ref(false)
 function  operatorDataReset(){
 
   let data = {
-    token:globalUserData.value.token,
+    token:userData.value.token,
   }
 
   request({
@@ -714,8 +683,8 @@ function automaticUpload() {
   //与上一次自动上传时间的间隔
   let upload_frequency = now_upload_time_stamp - last_upload_time_stamp;
   // 检查用户是否登录
-  if (globalUserData.value.token === void 0) {
-    console.log(globalUserData.value.token === void 0);
+  if (userData.value.token === void 0) {
+    console.log(userData.value.token === void 0);
     cMessage("未登录", "error");
     return;
   }
@@ -728,7 +697,7 @@ function automaticUpload() {
 
   last_upload_time_stamp = now_upload_time_stamp;
 
-  surveyApi.uploadCharacter(upload_list, globalUserData.value.token).then((response) => {
+  surveyApi.uploadCharacter(upload_list, userData.value.token).then((response) => {
     upload_message.value = response.data;
     selected_index_obj.value = {};
     cMessage("自动保存成功");
@@ -738,7 +707,7 @@ function automaticUpload() {
 //手动上传
 function upload() {
   let uploadList = uploadDataReduction();
-  surveyApi.uploadCharacter(uploadList, globalUserData.value.token).then((response) => {
+  surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
     upload_message.value = response.data;
     cMessage("保存成功");
     selected_index_obj.value = {};
@@ -780,7 +749,7 @@ function getUploadFileName() {
   let formData = new FormData();
   formData.append("file", file.files[0]);
   console.log(file);
-  surveyApi.uploadCharacterByExcel(formData, globalUserData.value.token).then((response) => {
+  surveyApi.uploadCharacterByExcel(formData, userData.value.token).then((response) => {
     // console.log(response.data);
     cMessage("新增了 " + response.data.insertRows + " 条");
     cMessage("更新了 " + response.data.updateRows + " 条");
@@ -793,7 +762,7 @@ function getUploadFileName() {
 //   let formData = new FormData();
 //   formData.append("file", file.files[0]);
 //   console.log(file);
-//   surveyApi.uploadCharacterByExcel(formData, globalUserData.value.token).then((response) => {
+//   surveyApi.uploadCharacterByExcel(formData, userData.value.token).then((response) => {
 //     // console.log(response.data);
 //     cMessage("新增了 " + response.data.insertRows + " 条");
 //     cMessage("更新了 " + response.data.updateRows + " 条");
@@ -1264,8 +1233,7 @@ function toBiliblili() {
 }
 
 onMounted(() => {
-
   initOperatorsList();
-
+  cacheUserData()
 });
 </script>
