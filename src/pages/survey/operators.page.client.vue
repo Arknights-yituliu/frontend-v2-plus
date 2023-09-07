@@ -264,6 +264,7 @@
             <div class="skland_desc">输入CRED</div>
             <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>
             <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
+            <div class="btn_switch" @click="retrieveAccount()">找回一图流账号</div>
             <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible" >清空所有数据</div>
           </div>
         </div>
@@ -274,7 +275,8 @@
         </div>
         <div class="switch_bar upload">
           <div class="switch_desc"><b>*森空岛导入：</b>请遵循
-            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完请手动保存并刷新页面
+            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
+            如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">找回一图流账号</a> &nbsp;按钮，此时会找回您的一图流账号
           </div>
         </div>
       </div>
@@ -426,7 +428,7 @@ import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
 import {http} from "@/api/baseURL";
 import request from "@/api/requestBase";
-import { importSklandData } from "./skland.js";
+import { importSklandData,getPlayerBind} from "./skland.js";
 
 let first_popup = ref(false)
 let import_popup_visible = ref(false)
@@ -532,7 +534,7 @@ let export_excel_etn_text = ref("导出excel");
 //导出评分表的excel
 function exportExcel() {
   export_excel_etn_text.value = "导出中···";
-  const export_excel_url = http + "survey/character/export?token=" + globalUserData.value.token;
+  const export_excel_url = http + "survey/operator/export?token=" + globalUserData.value.token;
   const element = document.createElement("a");
   element.download = "form.xlsx";
   element.style.display = "none";
@@ -543,10 +545,36 @@ function exportExcel() {
   }, 5000);
 }
 
-//森空岛导入
+
 let skland_CRED = ref("");
 let bindAccount = ref(false)
 
+
+async function retrieveAccount(){
+  const playerBind = await getPlayerBind(skland_CRED.value);
+  const data = {
+    uid:playerBind.uid
+  }
+
+  request({
+    url:'survey/user/retrieval',
+    method: "post",
+    data:data
+  }).then(response=>{
+   response = response.data
+    if(response.code===200){
+      const userName = response.data.userName;
+      login(userName)
+    }else {
+      cMessage(response.msg,'error')
+    }
+  })
+}
+
+/**
+ * 森空岛导入
+ * @returns {Promise<void>}
+ */
 async function importSKLandCRED() {
 
   const response = await importSklandData(skland_CRED.value);
@@ -625,6 +653,10 @@ async function importSKLandCRED() {
 
 let reset_popup_visible = ref(false)
 
+
+/**
+ * 重置账号数据
+ */
 function  operatorDataReset(){
 
   let data = {
@@ -640,14 +672,19 @@ function  operatorDataReset(){
     if(response.code===200){
       cMessage(response.data)
     }else {
-      cMessage(response.mes,'error')
+      cMessage(response.msg,'error')
     }
   })
 }
 
+/**
+ * 登录一图流账号
+ * @param userName 一图流用户名（即账号名）
+ */
+
 function login(userName) {
   let info ={userName:userName}
-  request({
+   request({
     url: `survey/login`,
     method: "post",
     data: info,
@@ -673,7 +710,7 @@ let selected_index_obj = ref({}); //每次点击操作记录下被更新的干�
 function automaticUpload() {
   return;
   //方法触发时的时间戳
-  const now_upload_time_stamp = Date.parse(new Date());
+  const now_upload_time_stamp = Date.parse(new Date().toString());
   //与上一次自动上传时间的间隔
   let upload_frequency = now_upload_time_stamp - last_upload_time_stamp;
   // 检查用户是否登录

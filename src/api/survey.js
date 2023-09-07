@@ -82,14 +82,14 @@ export default {
 
   getSurveyCharacter(token) {
     return request({
-      url: `${api_name}/character/retrieval?token=${token}`,
+      url: `${api_name}/operator/retrieval?token=${token}`,
       method: "get",
     });
   },
 
   getCharStatisticsResult() {
     return request({
-      url: `${api_name}/character/result`,
+      url: `${api_name}/operator/result`,
       method: "get",
     });
   },

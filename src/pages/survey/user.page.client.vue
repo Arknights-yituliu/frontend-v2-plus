@@ -8,6 +8,23 @@
       <div class="user_name">{{ userData.userName }}</div>
     </div>
 
+    <div class="user_operator_statistics_wrap">
+      <div class="user_operator_statistics">
+        总计招募干员：<a class="user_operator_statistics_num"> {{ operatorStatisticsObj.count }}</a>
+      </div>
+      <div class="user_operator_statistics">
+        精二干员总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.elite2 }}</a>
+      </div>
+      <div class="user_operator_statistics">
+        专一技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank1 }}</a>
+      </div>
+      <div class="user_operator_statistics">
+        专二技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank2 }}</a>
+      </div>
+      <div class="user_operator_statistics">
+        专三技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank3 }}</a>
+      </div>
+    </div>
     <div class="operator_card_wrap">
       <div class="operator_card" v-for="operator in operator_list">
         <div class="user_portrait_wrap">
@@ -20,36 +37,36 @@
           <div :class="getBgSprite('elite', 'elite2')"></div>
           <div :class="getBgSprite('mask', operator.rarity)"></div>
           <div class="user_portrait_bg_bl"></div>
-          <div class="user_operator_name">{{operator.name}}</div>
-          <div class="user_operator_level" >90</div>
+          <div class="user_operator_name">{{ operator.name }}</div>
+          <div class="user_operator_level">{{ operator.level>0?operator.level:0 }}</div>
 
         </div>
         <div class="user_operator_skill_wrap">
-                <div v-for="(skill,rank) in operator.skill" >
-                  <div class="user_skill_icon_wrap">
-                    <div :class="getSprite('skill_icon', skill.iconId)"></div>
-                    <div class="user_skill_rank_bg"></div>
-<!--                    <div :class="getSprite('skill_rank', 'skill3')"></div>-->
-                    <div class="user_skill_rank_1"></div>
-                    <div class="user_skill_rank_2"></div>
-                    <div class="user_skill_rank_3"></div>
-                  </div>
-                </div>
+          <div v-for="(skill,rank) in operator.skill">
+            <div class="user_skill_icon_wrap">
+              <div :class="getSprite('skill_icon', skill.iconId)"></div>
+              <div class="user_skill_rank_bg"></div>
+              <!--                    <div :class="getSprite('skill_rank', 'skill3')"></div>-->
+              <div class="user_skill_rank_1" v-show="operator[('skill'+(1+rank))]>=1"></div>
+              <div class="user_skill_rank_2" v-show="operator[('skill'+(1+rank))]>=2"></div>
+              <div class="user_skill_rank_3" v-show="operator[('skill'+(1+rank))]>=2"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="user_input_bar">
       <div class="user_input_item">用户名</div>
-      <input v-model="userData.userName" />
+      <input v-model="userData.userName"/>
     </div>
     <div class="user_input_bar">
       <div class="user_input_item">森空岛CRED</div>
-      <input v-model="userData.cred" />
+      <input v-model="userData.cred"/>
     </div>
     <div class="user_input_bar">
       <div class="user_input_item">密码</div>
-      <input v-model="userData.passWord" />
+      <input v-model="userData.passWord"/>
     </div>
     <div class="user_btn" @click="updateUser()">更新密码</div>
 
@@ -58,22 +75,79 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 import surveyApi from "@/api/survey";
-import { characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict } from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import request from "@/api/requestBase";
 
-let operator_list = characterListInit();
-let userData = ref({ userName: "未登录", code: 0, status: -100, passWord: "", token: undefined, oldPassWord: "", cred: "" });
-let cacheUserData = localStorage.getItem("globalUserData");
-// userData.value = cacheUserData === "undefined" || cacheUserData === void 0 ? userData.value : JSON.parse(cacheUserData);
-console.log(cacheUserData);
+let operator_list = ref(characterListInit())
+let userData = ref({userName: "未登录", code: 0, status: -100, passWord: "", token: undefined, oldPassWord: "", cred: ""});
 
-if (!(cacheUserData === "undefined" || cacheUserData === void 0)) {
-  const parse = JSON.parse(cacheUserData);
-  userData.value.userName = parse.userName;
-  userData.value.code = parse.code;
-  userData.value.status = parse.status;
-  userData.value.token = parse.token;
+function getCacheUserData() {
+  let cacheUserData = localStorage.getItem("globalUserData");
+  if (!(cacheUserData == "undefined" || cacheUserData == void 0)) {
+    const parse = JSON.parse(cacheUserData);
+    userData.value.userName = parse.userName;
+    userData.value.code = parse.code;
+    userData.value.status = parse.status;
+    userData.value.token = parse.token;
+    getUserOperatorData()
+  }
+}
+
+let operatorStatisticsObj = ref({
+  rank1: 0,
+  rank2: 0,
+  rank3: 0,
+  elite2: 0,
+  count: 0,
+})
+
+
+function getUserOperatorData() {
+
+  request({
+    url: `survey/operator/retrieval?token=${userData.value.token}`,
+    method: "get"
+  }).then(response => {
+    response = response.data
+    if (response.code !== 200) {
+
+    } else {
+      const list = response.data
+      operatorStatisticsObj.value.count = list.length
+      //转为前端的数据格式
+      for (let i = 0; i < operator_list.value.length; i++) {
+        // characterList.value[i].own =false;
+        for (let j = 0; j < list.length; j++) {
+          if (list[j].charId === operator_list.value[i].charId) {
+            if (!list[j].own) continue;
+            operator_list.value[i].elite = list[j].elite;
+            operator_list.value[i].level = list[j].level;
+            operator_list.value[i].potential = list[j].potential;
+            operator_list.value[i].mainSkill = list[j].mainSkill;
+            operator_list.value[i].skill1 = list[j].skill1;
+            operator_list.value[i].skill2 = list[j].skill2;
+            operator_list.value[i].skill3 = list[j].skill3;
+            operator_list.value[i].modX = list[j].modX;
+            operator_list.value[i].modY = list[j].modY;
+            operator_list.value[i].own = list[j].own;
+            operatorStatisticsObj.value['elite' + list[j].elite]++
+            operatorStatisticsObj.value['rank' + list[j].skill1]++
+            operatorStatisticsObj.value['rank' + list[j].skill2]++
+            operatorStatisticsObj.value['rank' + list[j].skill3]++
+          }
+        }
+      }
+
+      console.log(operator_list.value)
+    }
+
+  })
+}
+
+function getSkillRank(skill, rank) {
+
 }
 
 function updateUser() {
@@ -103,6 +177,12 @@ function getBgSprite(type, id) {
   if (type === "light") return "bg-light_" + id + " user_portrait_right";
   if (type === "mask") return "bg-mask" + " user_portrait_mask";
 }
+
+onMounted(() => {
+  getCacheUserData()
+})
+
+
 </script>
 
 <style scoped>
@@ -110,7 +190,7 @@ function getBgSprite(type, id) {
   padding: 20px;
   width: 99%;
   margin: auto;
-  background: #0a0a0a;
+
 }
 
 .user_info_wrap {
@@ -140,26 +220,43 @@ function getBgSprite(type, id) {
   font-size: 18px;
   font-weight: 600;
   line-height: 70px;
-  color: white;
+  color: black;
 }
+
+.user_operator_statistics_wrap {
+  display: flex;
+}
+
+.user_operator_statistics{
+  padding: 8px;
+  line-height: 28px;
+}
+
+.user_operator_statistics_num{
+  color: #ff6a00;
+  font-size: 18px;
+}
+
 
 .operator_card_wrap {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  background: #0a0a0a;
-  margin: 20px 0 0 0 ;
+  justify-content: center;
+  /*background: #0a0a0a;*/
+  margin: 20px 0 0 0;
+  width: 1105px;
 }
 
-.operator_card{
+.operator_card {
   /*border: 1px solid #fa5e5e;*/
   margin: 4px;
   display: flex;
   padding: 4px;
+  background: #d9d9d9;
 }
 
-.user_operator_name{
-   color: white;
+.user_operator_name {
+  color: white;
   position: absolute;
   text-align: right;
   width: 110px;
@@ -168,25 +265,26 @@ function getBgSprite(type, id) {
 }
 
 
-.user_operator_level{
+.user_operator_level {
   color: white;
   position: absolute;
   text-align: center;
-  font-size: 18px;
-  top: 196px;
+  font-size: 22px;
+  font-weight: 700;
+  top: 204px;
   left: 0px;
   border: 2px solid orange;
-  padding: 8px;
+  padding: 4px;
   border-radius: 50%;
   z-index: 50;
 }
 
-.user_operator_elite{
+.user_operator_elite {
   transform: scale(0.15);
   position: absolute;
   z-index: 31;
   top: 120px;
-  left: -60px;
+  left: -66px;
 
 }
 
@@ -254,44 +352,44 @@ function getBgSprite(type, id) {
   left: -36px;
 }
 
-.user_portrait_wrap{
+.user_portrait_wrap {
   position: relative;
   width: 110px;
   height: 266px;
   background: white;
 }
 
-.user_operator_skill_wrap{
+.user_operator_skill_wrap {
   left: 300px;
   top: -100px;
   width: 58px;
 }
 
-.user_skill_icon_wrap{
+.user_skill_icon_wrap {
   position: relative;
-  width:50px;
-  height:50px;
+  width: 50px;
+  height: 50px;
   margin: 8px 0px 8px 8px;
 }
 
-.user_skill_icon{
+.user_skill_icon {
   transform: scale(0.38);
   position: absolute;
   top: -40px;
   left: -40px;
 }
 
-.user_skill_rank_bg{
+.user_skill_rank_bg {
   position: absolute;
   width: 18px;
   height: 18px;
-  background: #000000;
+  background: #3d3d3d;
   /*z-index: 30;*/
   left: -4px;
   top: -4px;
 }
 
-.user_skill_rank_1{
+.user_skill_rank_1 {
   position: absolute;
   background: #ffffff;
   border-radius: 50%;
@@ -300,7 +398,8 @@ function getBgSprite(type, id) {
   left: 1px;
   top: -4px;
 }
-.user_skill_rank_2{
+
+.user_skill_rank_2 {
   position: absolute;
   background: #ffffff;
   border-radius: 50%;
@@ -309,17 +408,18 @@ function getBgSprite(type, id) {
   left: -3px;
   top: 4px;
 }
-.user_skill_rank_3{
+
+.user_skill_rank_3 {
   position: absolute;
   background: #ffffff;
   border-radius: 50%;
   width: 8px;
   height: 8px;
-  left:6px;
+  left: 6px;
   top: 4px;
 }
 
-.user_skill_rank{
+.user_skill_rank {
   transform: scale(0.11);
   position: absolute;
   top: -110px;

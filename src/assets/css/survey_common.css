@@ -7,7 +7,6 @@
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
   border-radius: 2px;
   margin: auto auto 6px;
-  /* padding: 4px; */
 }
 
 .setup_top {
@@ -162,9 +161,8 @@
 
 .switch_desc {
   margin: 4px;
-
   padding: 4px 4px 4px 16px;
-  line-height: 20px;
+  line-height: 28px;
   font-style:italic;
   color: rgb(97, 97, 97);
 }

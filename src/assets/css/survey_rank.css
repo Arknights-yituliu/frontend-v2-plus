@@ -34,9 +34,10 @@
 /*}*/
 
 .rank_table{
-  min-width: 1080px;
+  /*min-width:700px;*/
   border-collapse: separate;
   border-spacing: 0;
+  margin:auto;
 }
 
 .rank_table_tr td{

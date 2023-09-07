@@ -369,9 +369,6 @@
   cursor: pointer;
 }
 
-
-
-
 .skland_notice_btn{
   color: #ff0000;
   cursor: pointer;
@@ -403,7 +400,7 @@
 .skland_import_image{
   width: 400px;
   display: inline-block;
-  margin: 0 50px;
+  margin: auto;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 

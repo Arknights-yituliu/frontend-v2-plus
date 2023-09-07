@@ -79,8 +79,8 @@
             <div class="rank_table_title" style="width: 80px">
               <div>持有率</div>
               <div>
-                <div class="sort_asc_icon"></div>
-                <div class="sort_desc_icon" ></div>
+                <div class="sort_asc_icon" :style="sortIconClass('own','asc')"></div>
+                <div class="sort_desc_icon" :style="sortIconClass('own','desc')"></div>
               </div>
             </div>
           </td>
@@ -307,23 +307,40 @@ function filterCharacterList() {
   }
 }
 
+let last_property = ref('')
+let desc_or_asc = ref(1)
+
 //按条件排序
-function sortRank(condition) {
+function sortRank(property) {
+  if (last_property.value === property) {
+    desc_or_asc.value++;
+  } else {
+    desc_or_asc.value = 1;
+  }
   operators_statistics_list.value.sort((a, b) => {
-    return b[condition] - a[condition];
+    if (desc_or_asc.value % 2 !== 0) {
+      return b[property] - a[property];
+    }
+
+    if (desc_or_asc.value % 2 === 0) {
+      return a[property] - b[property];
+    }
+
   });
+
+  last_property.value = property;
 }
 
 function sortIconClass(property,descOrAsc){
-  console.log(property,descOrAsc)
+  // console.log(property,descOrAsc)
   if(last_property.value===property){
     if (desc_or_asc.value % 2 !== 0 && 'desc'===descOrAsc) {
-       console.log('降序')
+       // console.log('降序')
       return 'border-top: 8px solid #545454'
     }
 
     if (desc_or_asc.value % 2 === 0 && 'asc'===descOrAsc) {
-      console.log('升序')
+      // console.log('升序')
       return 'border-bottom: 8px solid #545454'
     }
 
@@ -332,8 +349,7 @@ function sortIconClass(property,descOrAsc){
     return ''
 }
 
-let last_property = ref('')
-let desc_or_asc = ref(1)
+
 
 function commonSort(property, condition) {
   if (last_property.value === property) {
@@ -341,7 +357,7 @@ function commonSort(property, condition) {
   } else {
     desc_or_asc.value = 1;
   }
-  console.log(desc_or_asc.value)
+
   const len = operators_statistics_list.value.length
   for (let i = 0; i < len - 1; i++) {
 
