@@ -60,7 +60,6 @@ function userDataCacheEvent() {
     localStorage.setItem("globalUserData",cacheData);
   }
 
-  console.log(cacheData)
 
   globalUserData.value = cacheData == "undefined" || cacheData == void 0 || cacheData == null ? globalUserData.value : JSON.parse(cacheData);
 

@@ -136,7 +136,7 @@ function userDataCache() {
   userData.value.userName = userDataCache.userName;
   userData.value.status = userDataCache.status;
   userData.value.token = userDataCache.token;
-  console.log(userDataCache)
+
   if (userDataCache.status > 0) {
     user_name_show.value = true
     logout_tip_show.value = true
