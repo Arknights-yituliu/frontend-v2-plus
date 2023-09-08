@@ -126,7 +126,7 @@
           </td>
           <td @click="commonSort('modX','open')">
             <div class="rank_table_title" style="width: 150px">
-              <div>x模组解锁率</div>
+              <div>X模组解锁率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('modX','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('modX','desc')"></div>
@@ -136,7 +136,7 @@
           </td>
           <td @click="commonSort('modY','open')">
             <div class="rank_table_title" style="width: 150px">
-              <div>y模组解锁率</div>
+              <div>Y模组解锁率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('modY','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('modY','desc')"></div>
