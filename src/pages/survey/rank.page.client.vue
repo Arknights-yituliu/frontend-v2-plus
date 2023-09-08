@@ -124,7 +124,7 @@
               </div>
             </div>
           </td>
-          <td @click="commonSort('modX','rank3')">
+          <td @click="commonSort('modX','open')">
             <div class="rank_table_title" style="width: 150px">
               <div>x模组解锁率</div>
               <div>
@@ -134,13 +134,12 @@
               </div>
             </div>
           </td>
-          <td @click="commonSort('modY','rank3')">
+          <td @click="commonSort('modY','open')">
             <div class="rank_table_title" style="width: 150px">
               <div>y模组解锁率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('modY','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('modY','desc')"></div>
-
               </div>
             </div>
           </td>
@@ -191,8 +190,8 @@
               </div>
             </div>
           </td>
-          <td class="rank_table_7">{{ getPercentage(getSurveyResult(result.modX, "rank" + 3), 1) }}</td>
-          <td class="rank_table_8">{{ getPercentage(getSurveyResult(result.modY, "rank" + 3), 1) }}</td>
+          <td class="rank_table_7">{{ getPercentage(getSurveyResult(result.modX, 'open'), 1) }}</td>
+          <td class="rank_table_8">{{ getPercentage(getSurveyResult(result.modY, 'open'), 1) }}</td>
         </tr>
       </table>
     </div>
@@ -209,10 +208,12 @@ import surveyApi from "@/api/survey";
 let rarity_dict = [1, 2, 3, 4, 5, 6];
 
 let operators_statistics_list = ref(rankingListInit());
-let surveyType = ref("练度");
+
 
 let user_count = ref(0);
 let update_time = ref("2023-05-01");
+
+
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
@@ -226,11 +227,30 @@ function getCharStatisticsResult() {
           operators_statistics_list.value[i].skill3 = response.data.result[j].skill3;
           operators_statistics_list.value[i].modX = response.data.result[j].modX;
           operators_statistics_list.value[i].modY = response.data.result[j].modY;
-          if (operators_statistics_list.value[i].elite.rank2 === void 0) operators_statistics_list.value[i].elite.rank2 = 0.0
-          if (operators_statistics_list.value[i].modX.rank3 === void 0) operators_statistics_list.value[i].modX.rank3 = 0.0
-          if (operators_statistics_list.value[i].modY.rank3 === void 0) operators_statistics_list.value[i].modY.rank3 = 0.0
-          if (operators_statistics_list.value[i].skill2.rank3 === void 0) operators_statistics_list.value[i].skill2.rank3 = 0.0
-          if (operators_statistics_list.value[i].skill3.rank3 === void 0) operators_statistics_list.value[i].skill3.rank3 = 0.0
+          if (operators_statistics_list.value[i].elite.rank2 == void 0) operators_statistics_list.value[i].elite.rank2 = 0.0
+          // if (operators_statistics_list.value[i].modX.rank3 === void 0) operators_statistics_list.value[i].modX.rank3 = 0.0
+          // if (operators_statistics_list.value[i].modY.rank3 === void 0) operators_statistics_list.value[i].modY.rank3 = 0.0
+          if (operators_statistics_list.value[i].skill1.rank3 == void 0) operators_statistics_list.value[i].skill1.rank3 = 0.0
+          if (operators_statistics_list.value[i].skill2.rank3 == void 0) operators_statistics_list.value[i].skill2.rank3 = 0.0
+          if (operators_statistics_list.value[i].skill3.rank3 == void 0) operators_statistics_list.value[i].skill3.rank3 = 0.0
+
+          if (response.data.result[j].modX != void 0) {
+
+            const rank1 = response.data.result[j].modX.rank1!= void 0 ? response.data.result[j].modX.rank1 : 0.0;
+            const rank2 = response.data.result[j].modX.rank2!= void 0 ? response.data.result[j].modX.rank2 : 0.0;
+            const rank3 = response.data.result[j].modX.rank3!= void 0 ? response.data.result[j].modX.rank3 : 0.0;
+            operators_statistics_list.value[i].modX.open = rank1+rank2+rank3;
+            operators_statistics_list.value[i].modXRank3 = rank3;
+          }
+
+          if (response.data.result[j].modY != void 0) {
+            const rank1 = response.data.result[j].modY.rank1!= void 0 ? response.data.result[j].modY.rank1 : 0.0;
+            const rank2 = response.data.result[j].modY.rank2!= void 0 ? response.data.result[j].modY.rank2 : 0.0;
+            const rank3 = response.data.result[j].modY.rank3!= void 0 ? response.data.result[j].modY.rank3 : 0.0;
+            operators_statistics_list.value[i].modY.open = rank1+rank2+rank3;
+            operators_statistics_list.value[i].modYRank3 = rank3;
+          }
+
         }
       }
     }

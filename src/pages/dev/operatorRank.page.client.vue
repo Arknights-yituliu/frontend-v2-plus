@@ -70,30 +70,43 @@ function getCharStatisticsResult() {
       }
 
       if (result.skill1 != undefined) {
+        operator.skill1Name = operatorData.skill[0].name
         operator.skill1 = result.skill1.rank3 != undefined ? result.skill1.rank3 : 0.0;
+
       }
 
       if (result.skill2 != undefined) {
+        operator.skill2Name = operatorData.skill[1].name
         operator.skill2 = result.skill2.rank3 != undefined ? result.skill2.rank3 : 0.0;
       }
 
       if (result.skill3 != undefined) {
+        operator.skill3Name = operatorData.skill[2].name
         operator.skill3 = result.skill3.rank3 != undefined ? result.skill3.rank3 : 0.0;
       }
 
       if (result.modX != undefined) {
-        operator.modX = result.modX.rank3 != undefined ? result.modX.rank3 : 0.0;
+
+        const rank1 = result.modX.rank1!= undefined ? result.modX.rank1 : 0.0;
+        const rank2 = result.modX.rank2!= undefined ? result.modX.rank2 : 0.0;
+        const rank3 = result.modX.rank3!= undefined ? result.modX.rank3 : 0.0;
+        operator.modX = rank1+rank2+rank3;
+        operator.modXRank3 = rank3;
       }
 
       if (result.modY != undefined) {
-        operator.modY = result.modY.rank3 != undefined ? result.modY.rank3 : 0.0;
+        const rank1 = result.modY.rank1!= undefined ? result.modY.rank1 : 0.0;
+        const rank2 = result.modY.rank2!= undefined ? result.modY.rank2 : 0.0;
+        const rank3 = result.modY.rank3!= undefined ? result.modY.rank3 : 0.0;
+        operator.modY = rank1+rank2+rank3;
+        operator.modY = rank3;
       }
 
       operator_list.value.push(operator)
     }
 
      selectProperty('elite')
-    console.log(operator_list.value)
+    console.log(JSON.stringify(operator_list.value))
   })
 }
 
@@ -157,7 +170,7 @@ onMounted(() => {
 .itemObtainApproach {
   width: 100px;
   text-align: center;
-  line-height: 80px;
+  line-height: 50px;
   font-size: 16px;
   font-weight: 600;
   color: #ff6200;
@@ -166,7 +179,7 @@ onMounted(() => {
 .operator_card_wrap{
   margin: 20px;
   width: 720px;
-  height: 6591px;
+  /*height: 6591px;*/
   /*border: 1px solid black;*/
 }
 
@@ -185,7 +198,8 @@ onMounted(() => {
 }
 
 .operator_image {
-  width: 80px;
+  width:50px;
+  height: 50px;
   display: block;
   position: relative;
 }
@@ -196,17 +210,17 @@ onMounted(() => {
   /*line-height: 60px;*/
   font-size: 20px;
   font-weight: 600;
-  height: 32px;
-  line-height: 32px;
+  height: 28px;
+  line-height: 28px;
   padding: 0 0 0 24px;
-  margin: 30px 0 0 -20px;
+  margin: 16px 0 0 -20px;
   background: linear-gradient(to right, #fcbb9a, #ffffffff);
 }
 
 .operator_subProfession {
   width: 120px;
   /*text-align: center;*/
-  line-height: 80px;
+  line-height: 50px;
   font-size: 16px;
   font-weight: 600;
 }
@@ -221,7 +235,7 @@ onMounted(() => {
   width: 250px;
   background: linear-gradient(to right, rgba(221, 241, 255, 0.81), rgba(168, 220, 255));
   height: 32px;
-  margin: 24px 0 0 0;
+  margin: 10px 0 0 0;
   line-height: 32px;
   font-size: 18px;
   font-weight: 600;
