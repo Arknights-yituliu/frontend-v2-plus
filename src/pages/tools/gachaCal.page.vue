@@ -2063,7 +2063,6 @@ export const documentProps = {
 #gacha > div .el-collapse-item {
   color: white;
   margin: 12px 0;
-  background-color: #222222;
   border-radius: 8px;
   font-size: 20px;
   box-shadow: var(--el-box-shadow-light);
