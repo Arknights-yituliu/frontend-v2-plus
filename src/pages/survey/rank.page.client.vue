@@ -44,11 +44,11 @@
             <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
             <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
             <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
-            <div :class="selectedBtn('itemObtainApproach', 0)"
+            <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
                  @click="addFilterCondition('itemObtainApproach', '赠送干员')">
               赠送干员
             </div>
-            <div :class="selectedBtn('itemObtainApproach', 1)"
+            <div :class="selectedBtn('itemObtainApproach', '限定干员')"
                  @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
             </div>
           </div>
@@ -283,19 +283,17 @@ let filter_condition = ref({rarity: [], profession: [], year: [], own: [], mod: 
 //增加筛选规则
 function addFilterCondition(property, condition) {
   console.log(filter_condition.value);
-  let filterRulesCopy = [];
-  if (filter_condition.value[property].indexOf(condition) > -1) {
-    for (let i in filter_condition.value[property]) {
-      if (condition !== filter_condition.value[property][i]) {
-        filterRulesCopy.push(filter_condition.value[property][i]);
-      }
-    }
-    filter_condition.value[property] = filterRulesCopy;
-    filterCharacterList();
-    return;
+
+  let radio_properties = ['itemObtainApproach', 'mod'];
+
+  if (radio_properties.includes(property) && !filter_condition.value[property].includes(condition)) {
+    filter_condition.value[property] = [condition];
+  } else if (filter_condition.value[property].indexOf(condition) > -1) {
+    filter_condition.value[property] = filter_condition.value[property].filter(item => item !== condition);
+  } else {
+    filter_condition.value[property].push(condition);
   }
 
-  filter_condition.value[property].push(condition);
   filterCharacterList();
 }
 
