@@ -1,8 +1,6 @@
 <template>
 
 
-
-
   <c-popup :visible="first_popup" v-model:visible="first_popup">
     <!-- <div class="intro_title">填写流程说明</div> -->
     <div class="intro_wrap">
@@ -265,12 +263,15 @@
             <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>
             <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
             <div class="btn_switch" @click="retrieveAccount()">找回一图流账号</div>
-            <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible" >清空所有数据</div>
+            <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
           </div>
         </div>
         <div class="switch_bar upload" v-show="bindAccount">
-          <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;"> {{upload_message.userName}} </a> 请登录之前的账号 <br>
-            <div class="skland_login_btn" @click="login(upload_message.userName)">请登录用户{{upload_message.userName}}并刷新网页</div>
+          <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;">
+            {{ upload_message.userName }} </a> 请登录之前的账号 <br>
+            <div class="skland_login_btn" @click="login(upload_message.userName)">
+              请登录用户{{ upload_message.userName }}并刷新网页
+            </div>
           </div>
         </div>
         <div class="switch_bar upload">
@@ -290,8 +291,8 @@
         </div>
 
         <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,type) in itemCostResult"
-             :key="type" >
-          <div v-for="(item,index) in itemList" :key="index" class="item_cost_card" >
+             :key="type">
+          <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
             <div class="image_item_wrap">
               <div :class="getSprite(item.id,'item')"></div>
               <div class="item_count">
@@ -366,40 +367,52 @@
 
           <div :class="surveyTypeClass('skill_delimiter')"></div>
 
-          <!-- 模组X -->
-          <div :class="surveyTypeClass('skill_wrap')" v-show="operator.modXOwn">
-            <div class="image_mod">{{ "模组X" }}</div>
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank"
-                 @click="updateSkillAndMod(char_index, 'modX', rank)">
-              <div :class="getSprite('mod' + rank, 'mod')"></div>
+          <div v-for="equip in operator.equip" :class="surveyTypeClass('skill_wrap')">
+<!--            <div class="image_mod">{{ "模组" + equip.typeName2 }}</div>-->
+            <div class="image_mod">
+              {{ equip.typeName1 +"-"+ equip.typeName2 }}
             </div>
+            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'mod'+ equip.typeName2 + rank"
+              @click="updateSkillAndMod(char_index, 'mod'+ equip.typeName2, rank)">
+              <div :class="getSprite('mod' + rank, 'mod_rank')"></div>
+            </div>
+
           </div>
 
-          <!-- 没有模组X显示 -->
-          <div :class="surveyTypeClass('skill_wrap')" v-show="!operator.modXOwn">
-            <div class="image_mod">[N/A]</div>
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank_disable">
-              <img class="image_null" src="/image/survey/null.png" alt=""/>
-            </div>
-          </div>
+          <!--          &lt;!&ndash; 模组X &ndash;&gt;-->
+          <!--          <div :class="surveyTypeClass('skill_wrap')" v-show="operator.modXOwn">-->
+          <!--            <div class="image_mod">{{ "模组X" }}</div>-->
+          <!--            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank"-->
+          <!--                 @click="updateSkillAndMod(char_index, 'modX', rank)">-->
+          <!--              <div :class="getSprite('mod' + rank, 'mod')"></div>-->
+          <!--            </div>-->
+          <!--          </div>-->
 
-          <!-- 模组Y -->
-          <div :class="surveyTypeClass('skill_wrap')" v-show="operator.modYOwn">
-            <div class="image_mod">{{ "模组Y" }}</div>
+          <!--          &lt;!&ndash; 没有模组X显示 &ndash;&gt;-->
+          <!--          <div :class="surveyTypeClass('skill_wrap')" v-show="!operator.modXOwn">-->
+          <!--            <div class="image_mod">[N/A]</div>-->
+          <!--            <div v-for="rank in ranks.slice(1, 4)" class="image_rank_disable">-->
+          <!--              <img class="image_null" src="/image/survey/null.png" alt=""/>-->
+          <!--            </div>-->
+          <!--          </div>-->
 
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank"
-                 @click="updateSkillAndMod(char_index, 'modY', rank)">
-              <div :class="getSprite('mod' + rank, 'mod')"></div>
-            </div>
-          </div>
+          <!--          &lt;!&ndash; 模组Y &ndash;&gt;-->
+          <!--          <div :class="surveyTypeClass('skill_wrap')" v-show="operator.modYOwn">-->
+          <!--            <div class="image_mod">{{ "模组Y" }}</div>-->
 
-          <!-- 没有模组Y显示 -->
-          <div :class="surveyTypeClass('skill_wrap')" v-show="!operator.modYOwn">
-            <div class="image_mod">[N/A]</div>
-            <div v-for="rank in ranks.slice(1, 4)" class="image_rank_disable">
-              <img class="image_null" src="/image/survey/null.png" alt=""/>
-            </div>
-          </div>
+          <!--            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank"-->
+          <!--                 @click="updateSkillAndMod(char_index, 'modY', rank)">-->
+          <!--              <div :class="getSprite('mod' + rank, 'mod')"></div>-->
+          <!--            </div>-->
+          <!--          </div>-->
+
+          <!--          &lt;!&ndash; 没有模组Y显示 &ndash;&gt;-->
+          <!--          <div :class="surveyTypeClass('skill_wrap')" v-show="!operator.modYOwn">-->
+          <!--            <div class="image_mod">[N/A]</div>-->
+          <!--            <div v-for="rank in ranks.slice(1, 4)" class="image_rank_disable">-->
+          <!--              <img class="image_null" src="/image/survey/null.png" alt=""/>-->
+          <!--            </div>-->
+          <!--          </div>-->
         </div>
 
         <div class="card-overlay" v-show="'简易问卷' !== surveyTypeText && !operator_list[char_index].own">
@@ -428,14 +441,14 @@ import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
 import {http} from "@/api/baseURL";
 import request from "@/api/requestBase";
-import { importSklandData,getPlayerBind} from "./skland.js";
+import {importSklandData, getPlayerBind} from "./skland.js";
 
 let first_popup = ref(false)
 let import_popup_visible = ref(false)
 
-let userData = ref({ userName: "未登录", status: -100, token:void 0 });
+let userData = ref({userName: "未登录", status: -100, token: void 0});
 
-function cacheUserData(){
+function cacheUserData() {
   userData.value = globalUserData.value
 }
 
@@ -459,11 +472,13 @@ function firstPopupClose() {
  */
 function getSprite(id, type) {
   if ("mod" === type) return "bg-" + id + " sprite_mod";
+  if ("mod_rank" === type) return "bg-" + id + " sprite_mod_rank";
   if ("skill" === type) return "bg-" + id + " sprite_skill";
   if ("elite" === type) return "bg-" + id + " sprite_elite";
   if ("potential" === type) return "bg-" + id + " sprite_potential";
   if ("icon" === type) return "bg-skill_icon_" + id + " sprite_skill_icon";
   if ("item" === type) return 'bg-' + id + " image_item"
+
   return "bg-" + id + " sprite_avatar";
 }
 
@@ -490,12 +505,12 @@ function initOperatorsList() {
 //找回填写过的角色信息
 function getSurveyCharacter() {
   cacheUserData()
-  if (userData.value.token === void 0) {
+  if (userData.value.token == void 0) {
     // cMessage("未登录", "error");
     return;
   }
 
-  const data = {token:userData.value.token}
+  const data = {token: userData.value.token}
 
   surveyApi.getSurveyCharacter(data).then((response) => {
     let list = response.data; //后端返回的数据
@@ -504,7 +519,7 @@ function getSurveyCharacter() {
     for (let i = 0; i < operator_list.value.length; i++) {
       // characterList.value[i].own =false;
       for (let j = 0; j < list.length; j++) {
-        if (list[j].charId === operator_list.value[i].charId) {
+        if (list[j].charId == operator_list.value[i].charId) {
           if (!list[j].own) continue;
           operator_list.value[i].elite = list[j].elite;
 
@@ -562,24 +577,24 @@ let bindAccount = ref(false)
  * 找回一图流账号
  * @returns {Promise<void>}
  */
-async function retrieveAccount(){
+async function retrieveAccount() {
   cacheUserData()
   // const playerBind = await getPlayerBind(skland_CRED.value);
   const data = {
-    cred:skland_CRED.value
+    cred: skland_CRED.value
   }
 
   request({
-    url:'survey/user/retrieval',
+    url: 'survey/user/retrieval',
     method: "post",
-    data:data
-  }).then(response=>{
-   response = response.data
-    if(response.code===200){
+    data: data
+  }).then(response => {
+    response = response.data
+    if (response.code === 200) {
       const userName = response.data.userName;
       login(userName)
-    }else {
-      cMessage(response.msg,'error')
+    } else {
+      cMessage(response.msg, 'error')
     }
   })
 }
@@ -592,37 +607,36 @@ async function importSKLandCRED() {
   cacheUserData()
   const response = await importSklandData(skland_CRED.value);
 
-  if (userData.value.token === void 0) {
-    console.log(userData.value.token === void 0);
+  if (userData.value.token == void 0) {
     cMessage("请先注册或登录一图流账号", "error");
     return;
   }
 
   const data = {
-    token:userData.value.token,
-    data:JSON.stringify(response)
+    token: userData.value.token,
+    data: JSON.stringify(response)
   }
 
-   request({
-    url:'survey/operator/import/skland/v2',
+  request({
+    url: 'survey/operator/import/skland/v2',
     method: "post",
-    data:data
-  }).then(response=>{
-         response = response.data
-         upload_message.value = response.data;
-         if(response.code === 20004){
-           cMessage("您已经注册导入过了","error");
-           bindAccount.value = true;
-           return;
-         }
+    data: data
+  }).then(response => {
+    response = response.data
+    upload_message.value = response.data;
+    if (response.code === 20008) {
+      cMessage("您已经注册导入过了", "error");
+      bindAccount.value = true;
+      return;
+    }
 
-         if(response.code === 200){
-           cMessage("森空岛数据导入成功");
-           getSurveyCharacter()
-           bindAccount.value = false;
-         }else {
-           cMessage(response.msg,"error");
-         }
+    if (response.code === 200) {
+      cMessage("森空岛数据导入成功");
+      getSurveyCharacter()
+      bindAccount.value = false;
+    } else {
+      cMessage(response.msg, "error");
+    }
   })
 
 
@@ -634,23 +648,23 @@ let reset_popup_visible = ref(false)
 /**
  * 重置账号数据
  */
-function  operatorDataReset(){
+function operatorDataReset() {
   cacheUserData()
 
   let data = {
-    token:userData.value.token,
+    token: userData.value.token,
   }
 
   request({
-    url:'survey/operator/reset',
+    url: 'survey/operator/reset',
     method: "post",
-    data:data
-  }).then(response=>{
-    response =  response.data
-    if(response.code===200){
+    data: data
+  }).then(response => {
+    response = response.data
+    if (response.code === 200) {
       cMessage(response.data)
-    }else {
-      cMessage(response.msg,'error')
+    } else {
+      cMessage(response.msg, 'error')
     }
   })
 }
@@ -661,15 +675,15 @@ function  operatorDataReset(){
  */
 
 function login(userName) {
-  let info ={userName:userName}
-   request({
+  let info = {userName: userName}
+  request({
     url: `survey/login`,
     method: "post",
     data: info,
   }).then(response => {
     response = response.data
     if (response.code !== 200) {
-      cMessage(response.msg,'error')
+      cMessage(response.msg, 'error')
     }
     if (response.code === 200 && response.data.status > 0) {
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
@@ -681,7 +695,7 @@ function login(userName) {
 
 
 let last_upload_time_stamp = 1689425013364; //上次上传时间的时间戳
-let upload_message = ref({updateTime: "", affectedRows: 0, registered:false, userName:'' }); //上传APi返回的信息
+let upload_message = ref({updateTime: "", affectedRows: 0, registered: false, userName: ''}); //上传APi返回的信息
 let selected_index_obj = ref({}); //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
 
 //自动上传风评表
@@ -692,8 +706,8 @@ function automaticUpload() {
   //与上一次自动上传时间的间隔
   let upload_frequency = now_upload_time_stamp - last_upload_time_stamp;
   // 检查用户是否登录
-  if (userData.value.token === void 0) {
-    console.log(userData.value.token === void 0);
+  if (userData.value.token == void 0) {
+    console.log(userData.value.token == void 0);
     cMessage("未登录", "error");
     return;
   }
@@ -848,7 +862,7 @@ function updateElite(char_index, new_value) {
   let old_value = operator_list.value[char_index].elite;
   // console.log("更新精英化——", "新值：", new_value, "，旧值：", old_value, "，结果：", new_value == old_value);
   //新旧值相同直接取消选项背景色，并更新精英等级为-1
-  if (new_value === old_value) {
+  if (new_value == old_value) {
     operator_list.value[char_index].elite = -1;
     updateOption(element_id + old_value, false);
     return;
@@ -895,7 +909,7 @@ function updateSkillAndMod(char_index, property, new_value) {
   // console.log("更新专精模组——", "新值：", new_value, "，旧值：", old_value, "，结果：", new_value == old_value);
 
   //新旧值相同直接取消选项背景色，并更新专精/模组等级为-1
-  if (new_value === old_value) {
+  if (new_value == old_value) {
     operator_list.value[char_index][property] = -1;
     updateOption(element_id + old_value, false);
     return;
@@ -971,7 +985,7 @@ function updatePotential(char_index, new_value) {
   let old_value = operator_list.value[char_index].potential;
   // console.log("更新潜能——", "新值：", new_value, "，旧值：", old_value, "，结果：", new_value == old_value);
   //新旧值相同直接取消选项背景色，并更新潜能等级为-1
-  if (new_value === old_value) {
+  if (new_value == old_value) {
     operator_list.value[char_index].potential = -1;
     updateOption(element_id + old_value, false);
     return;
@@ -1008,22 +1022,22 @@ function updateLevel(char_index) {
   }
 
   // 根据星级更新精英等级和等级
-  if (rarity === 6) {
+  if (rarity == 6) {
     level = 90;
     operator_list.value[char_index].elite = 2;
     cancelAndUpdateOption(char_index + "elite", 2, oldElite);
   }
-  if (rarity === 5) {
+  if (rarity == 5) {
     level = 80;
     operator_list.value[char_index].elite = 2;
     cancelAndUpdateOption(char_index + "elite", 2, oldElite);
   }
-  if (rarity === 4) {
+  if (rarity == 4) {
     level = 70;
     operator_list.value[char_index].elite = 2;
     cancelAndUpdateOption(char_index + "elite", 2, oldElite);
   }
-  if (rarity === 3) {
+  if (rarity == 3) {
     level = 55;
     operator_list.value[char_index].elite = 1;
     cancelAndUpdateOption(char_index + "elite", 1, oldElite);
@@ -1091,20 +1105,20 @@ let simpleCard = ref(false);
 
 //标准问卷与完整问卷
 function changeSurveyType(type) {
-  if ("极简模式" === type) {
+  if ("极简模式" == type) {
     surveyType.value = "";
     simpleCard.value = true;
     surveyTypeText.value = "极简模式";
     return;
   }
-  if ("标准模式" === type) {
+  if ("标准模式" == type) {
     surveyType.value = "_basic";
     surveyTypeText.value = "标准模式";
     simpleCard.value = false
     return;
   }
 
-  if ("高级模式" === type) {
+  if ("高级模式" == type) {
     surveyType.value = "";
     surveyTypeText.value = "高级模式";
     simpleCard.value = false
@@ -1112,7 +1126,7 @@ function changeSurveyType(type) {
 }
 
 function surveyTypeBtnClass(now) {
-  if (now === surveyTypeText.value) return 'mdui-btn-active'
+  if (now == surveyTypeText.value) return 'mdui-btn-active'
   return ''
 }
 
@@ -1204,14 +1218,18 @@ function statistics() {
   apCostCount.value = calAPCost(operator_list.value).apCostCount;
 }
 
-function strShowLength(num){
-     if(num>99999999){
-        return (num/100000000).toFixed(2)+"亿"
-     }
-     if(num>9999){
-       return (num/10000).toFixed(0)+"万"
-     }
-     return num
+function toThousands(num) {
+  return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+}
+
+function strShowLength(num) {
+  if (num > 99999999) {
+    return (num / 100000000).toFixed(2) + "亿"
+  }
+  if (num > 9999) {
+    return (num / 10000).toFixed(0) + "万"
+  }
+  return num
 }
 
 

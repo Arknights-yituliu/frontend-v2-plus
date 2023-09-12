@@ -246,10 +246,11 @@
 }
 
 .image_mod {
-  width: 44px;
-  height: 44px;
-  line-height: 44px;
-  /* border: 1px red solid; */
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  /*background: #afafaf;*/
 }
 
 .image_rank {
@@ -330,6 +331,15 @@
 }
 
 .sprite_mod {
+  transform: scale(0.44);
+  position: relative;
+  border: 1px solid red;
+  top: -30px;
+  left: -30px;
+  z-index: 3000;
+}
+
+.sprite_mod_rank {
   transform: scale(0.16);
   position: relative;
   top: -98px;

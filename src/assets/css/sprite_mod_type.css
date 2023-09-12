@@ -1,0 +1,466 @@
+.bg-amb-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -10px -10px;
+}
+
+
+
+.bg-amb-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -132px -10px;
+}
+
+
+
+.bg-arc-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -10px -132px;
+}
+
+
+
+.bg-arc-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -132px -132px;
+}
+
+
+
+.bg-art-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -254px -10px;
+}
+
+
+
+.bg-art-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -254px -132px;
+}
+
+
+
+.bg-bea-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -10px -254px;
+}
+
+
+
+.bg-bla-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -132px -254px;
+}
+
+
+
+.bg-bls-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -254px -254px;
+}
+
+
+
+.bg-bom-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -376px -10px;
+}
+
+
+
+.bg-ccr-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -376px -132px;
+}
+
+
+
+.bg-ccr-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -376px -254px;
+}
+
+
+
+.bg-cen-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -10px -376px;
+}
+
+
+
+.bg-cen-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -132px -376px;
+}
+
+
+
+.bg-cha-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -254px -376px;
+}
+
+
+
+.bg-cha-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -376px -376px;
+}
+
+
+
+.bg-chg-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -498px -10px;
+}
+
+
+
+.bg-chg-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -498px -132px;
+}
+
+
+
+.bg-cra-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -498px -254px;
+}
+
+
+
+.bg-dea-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -498px -376px;
+}
+
+
+
+.bg-dea-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -10px -498px;
+}
+
+
+
+.bg-dec-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -132px -498px;
+}
+
+
+
+.bg-dec-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -254px -498px;
+}
+
+
+
+.bg-dre-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -376px -498px;
+}
+
+
+
+.bg-dre-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -498px -498px;
+}
+
+
+
+.bg-exe-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -620px -10px;
+}
+
+
+
+.bg-exe-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -620px -132px;
+}
+
+
+
+.bg-gee-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -620px -254px;
+}
+
+
+
+.bg-gua-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -620px -376px;
+}
+
+
+
+.bg-gua-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -620px -498px;
+}
+
+
+
+.bg-hes-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -10px -620px;
+}
+
+
+
+.bg-hes-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -132px -620px;
+}
+
+
+
+.bg-hok-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -254px -620px;
+}
+
+
+
+.bg-ins-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -376px -620px;
+}
+
+
+
+.bg-ins-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -498px -620px;
+}
+
+
+
+.bg-mar-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -620px -620px;
+}
+
+
+
+.bg-mar-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -742px -10px;
+}
+
+
+
+.bg-mer-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -742px -132px;
+}
+
+
+
+.bg-msc-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -742px -254px;
+}
+
+
+
+.bg-msc-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -742px -376px;
+}
+
+
+
+.bg-mus-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -742px -498px;
+}
+
+
+
+.bg-mus-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -742px -620px;
+}
+
+
+
+.bg-phy-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -10px -742px;
+}
+
+
+
+.bg-phy-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -132px -742px;
+}
+
+
+
+.bg-plx-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -254px -742px;
+}
+
+
+
+.bg-pro-x {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -376px -742px;
+}
+
+
+
+.bg-pro-y {
+    width: 102px; height: 102px;
+    background: url('/image/sprite/sprite-mod-type.webp') -498px -742px;
+}
+
+
+
+.bg-pum-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -864px -129px;
+}
+
+
+
+.bg-pum-y {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -864px -247px;
+}
+
+
+
+.bg-pus-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -864px -365px;
+}
+
+
+
+.bg-pus-y {
+    width: 99px; height: 99px;
+    background: url('/image/sprite/sprite-mod-type.webp') -620px -742px;
+}
+
+
+
+.bg-rea-x {
+    width: 99px; height: 99px;
+    background: url('/image/sprite/sprite-mod-type.webp') -739px -742px;
+}
+
+
+
+.bg-rin-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -864px -483px;
+}
+
+
+
+.bg-rin-y {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -864px -601px;
+}
+
+
+
+.bg-sie-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -864px -719px;
+}
+
+
+
+.bg-sol-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -10px -864px;
+}
+
+
+
+.bg-sol-y {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -128px -864px;
+}
+
+
+
+.bg-spc-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -246px -864px;
+}
+
+
+
+.bg-spc-y {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -364px -864px;
+}
+
+
+
+.bg-sum-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -482px -864px;
+}
+
+
+
+.bg-sum-y {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -600px -864px;
+}
+
+
+
+.bg-swo-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -718px -864px;
+}
+
+
+
+.bg-swo-y {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -836px -864px;
+}
+
+
+
+.bg-trp-y {
+    width: 99px; height: 99px;
+    background: url('/image/sprite/sprite-mod-type.webp') -864px -10px;
+}
+
+
+
+.bg-umd-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -983px -10px;
+}
+
+
+
+.bg-wah-x {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -983px -128px;
+}
+
+
+
+.bg-wah-y {
+    width: 98px; height: 98px;
+    background: url('/image/sprite/sprite-mod-type.webp') -983px -246px;
+}

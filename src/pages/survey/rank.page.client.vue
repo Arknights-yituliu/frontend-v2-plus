@@ -190,8 +190,18 @@
               </div>
             </div>
           </td>
-          <td class="rank_table_7">{{ getPercentage(getSurveyResult(result.modX, 'open'), 1) }}</td>
-          <td class="rank_table_8">{{ getPercentage(getSurveyResult(result.modY, 'open'), 1) }}</td>
+          <td class="rank_table_7">
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'open'), 1) }}</div>
+<!--            <div>一级：{{ getPercentage(getSurveyResult(result.modX, 'rank1'), 1) }}</div>-->
+<!--            <div>二级：{{ getPercentage(getSurveyResult(result.modX, 'rank2'), 1) }}</div>-->
+<!--            <div>三级：{{ getPercentage(getSurveyResult(result.modX, 'rank3'), 1) }}</div>-->
+          </td>
+          <td class="rank_table_8">
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modY, 'open'), 1) }}</div>
+<!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
+<!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
+<!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
+          </td>
         </tr>
       </table>
     </div>
@@ -212,7 +222,6 @@ let operators_statistics_list = ref(rankingListInit());
 
 let user_count = ref(0);
 let update_time = ref("2023-05-01");
-
 
 
 function getCharStatisticsResult() {
@@ -236,19 +245,23 @@ function getCharStatisticsResult() {
 
           if (response.data.result[j].modX != void 0) {
 
-            const rank1 = response.data.result[j].modX.rank1!= void 0 ? response.data.result[j].modX.rank1 : 0.0;
-            const rank2 = response.data.result[j].modX.rank2!= void 0 ? response.data.result[j].modX.rank2 : 0.0;
-            const rank3 = response.data.result[j].modX.rank3!= void 0 ? response.data.result[j].modX.rank3 : 0.0;
-            operators_statistics_list.value[i].modX.open = rank1+rank2+rank3;
-            operators_statistics_list.value[i].modXRank3 = rank3;
+            const rank1 = response.data.result[j].modX.rank1 != void 0 ? response.data.result[j].modX.rank1 : 0.0;
+            const rank2 = response.data.result[j].modX.rank2 != void 0 ? response.data.result[j].modX.rank2 : 0.0;
+            const rank3 = response.data.result[j].modX.rank3 != void 0 ? response.data.result[j].modX.rank3 : 0.0;
+            operators_statistics_list.value[i].modX.open = rank1 + rank2 + rank3;
+            operators_statistics_list.value[i].modX.rank1 = rank1;
+            operators_statistics_list.value[i].modX.rank2 = rank2;
+            operators_statistics_list.value[i].modX.rank3 = rank3;
           }
 
           if (response.data.result[j].modY != void 0) {
-            const rank1 = response.data.result[j].modY.rank1!= void 0 ? response.data.result[j].modY.rank1 : 0.0;
-            const rank2 = response.data.result[j].modY.rank2!= void 0 ? response.data.result[j].modY.rank2 : 0.0;
-            const rank3 = response.data.result[j].modY.rank3!= void 0 ? response.data.result[j].modY.rank3 : 0.0;
-            operators_statistics_list.value[i].modY.open = rank1+rank2+rank3;
-            operators_statistics_list.value[i].modYRank3 = rank3;
+            const rank1 = response.data.result[j].modY.rank1 != void 0 ? response.data.result[j].modY.rank1 : 0.0;
+            const rank2 = response.data.result[j].modY.rank2 != void 0 ? response.data.result[j].modY.rank2 : 0.0;
+            const rank3 = response.data.result[j].modY.rank3 != void 0 ? response.data.result[j].modY.rank3 : 0.0;
+            operators_statistics_list.value[i].modY.open = rank1 + rank2 + rank3;
+            operators_statistics_list.value[i].modY.rank1 = rank1;
+            operators_statistics_list.value[i].modY.rank2 = rank2;
+            operators_statistics_list.value[i].modY.rank3 = rank3;
           }
 
         }
@@ -351,24 +364,23 @@ function sortRank(property) {
   last_property.value = property;
 }
 
-function sortIconClass(property,descOrAsc){
+function sortIconClass(property, descOrAsc) {
   // console.log(property,descOrAsc)
-  if(last_property.value===property){
-    if (desc_or_asc.value % 2 !== 0 && 'desc'===descOrAsc) {
-       // console.log('降序')
+  if (last_property.value === property) {
+    if (desc_or_asc.value % 2 !== 0 && 'desc' === descOrAsc) {
+      // console.log('降序')
       return 'border-top: 8px solid #545454'
     }
 
-    if (desc_or_asc.value % 2 === 0 && 'asc'===descOrAsc) {
+    if (desc_or_asc.value % 2 === 0 && 'asc' === descOrAsc) {
       // console.log('升序')
       return 'border-bottom: 8px solid #545454'
     }
 
   }
 
-    return ''
+  return ''
 }
-
 
 
 function commonSort(property, condition) {

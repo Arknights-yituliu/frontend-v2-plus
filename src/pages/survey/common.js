@@ -131,23 +131,12 @@ function characterListInit() {
     for (let charId in characterBasicInfo) {
         const baseData = characterBasicInfo[charId];
         // if (baseInfo.rarity < 5) continue;
-        let modX_own = false;
-        let modY_own = false;
-        let default_show = false;
 
-        if (baseData.mod != void 0) {
-            if (baseData.mod.modX) {
-                modX_own = true;
-            }
-            if (baseData.mod.modY) {
-                modY_own = true;
-            }
-        }
+        let default_show = false;
 
         if (baseData.rarity === 6) {
             default_show = true
         }
-
 
         let character = {
             charId: charId,
@@ -155,9 +144,7 @@ function characterListInit() {
             own: false,
             level: -1,
             modX: -1,
-            modXOwn: modX_own,
             modY: -1,
-            modYOwn: modY_own,
             elite: -1,
             potential: -1,
             rarity: baseData.rarity,
@@ -169,9 +156,12 @@ function characterListInit() {
             date: baseData.date,
             itemObtainApproach: baseData.itemObtainApproach,
             profession: baseData.profession,
-            mod: baseData.mod != void 0,
-            show: default_show,
+            equip:baseData.equip,
+            show: default_show
         };
+
+
+
         characterList.push(character);
     }
 

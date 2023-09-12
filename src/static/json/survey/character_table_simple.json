@@ -5,6 +5,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "ARC",
+        "typeName2": "X",
+        "charId": "char_145_prove",
+        "uniEquipIcon": "uniequip_002_prove",
+        "typeIcon": "arc-x",
+        "uniEquipName": "尾巴养护套装",
+        "uniEquipId": "uniequip_002_prove"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_prove_1",
@@ -24,6 +35,7 @@
     "date": 1649923200000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_horn_1",
@@ -49,6 +61,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "EXE",
+        "typeName2": "Y",
+        "charId": "char_1028_texas2",
+        "uniEquipIcon": "uniequip_002_texas2",
+        "typeIcon": "exe-y",
+        "uniEquipName": "蓝莓与黑巧",
+        "uniEquipId": "uniequip_002_texas2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_texas2_1",
@@ -72,6 +95,7 @@
     "date": 1600934400000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_spikes_1",
@@ -93,6 +117,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PUM",
+        "typeName2": "X",
+        "charId": "char_4016_kazema",
+        "uniEquipIcon": "uniequip_002_kazema",
+        "typeIcon": "pum-x",
+        "uniEquipName": "旧物",
+        "uniEquipId": "uniequip_002_kazema"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_kazema_1",
@@ -114,6 +149,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "ARC",
+        "typeName2": "Y",
+        "charId": "char_4055_bgsnow",
+        "uniEquipIcon": "uniequip_002_bgsnow",
+        "typeIcon": "arc-y",
+        "uniEquipName": "打字机色带",
+        "uniEquipId": "uniequip_002_bgsnow"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_bgsnow_1",
@@ -139,6 +185,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SIE",
+        "typeName2": "X",
+        "charId": "char_363_toddi",
+        "uniEquipIcon": "uniequip_002_toddi",
+        "typeIcon": "sie-x",
+        "uniEquipName": "弩箭调试箱",
+        "uniEquipId": "uniequip_002_toddi"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_toddi_1",
@@ -158,6 +215,7 @@
     "date": 1594281600000,
     "profession": "CASTER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_2_",
@@ -179,6 +237,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CRA",
+        "typeName2": "X",
+        "charId": "char_433_windft",
+        "uniEquipIcon": "uniequip_002_windft",
+        "typeIcon": "cra-x",
+        "uniEquipName": "“灵机一动”",
+        "uniEquipId": "uniequip_002_windft"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_windft_1",
@@ -200,6 +269,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "HOK",
+        "typeName2": "X",
+        "charId": "char_383_snsant",
+        "uniEquipIcon": "uniequip_002_snsant",
+        "typeIcon": "hok-x",
+        "uniEquipName": "雪雉的宝贝存钱罐",
+        "uniEquipId": "uniequip_002_snsant"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_snsant_1",
@@ -221,6 +301,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "UMD",
+        "typeName2": "X",
+        "charId": "char_174_slbell",
+        "uniEquipIcon": "uniequip_002_slbell",
+        "typeIcon": "umd-x",
+        "uniEquipName": "“续针”",
+        "uniEquipId": "uniequip_002_slbell"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_slbell_1",
@@ -243,6 +334,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "ARC",
+        "typeName2": "X",
+        "charId": "char_340_shwaz",
+        "uniEquipIcon": "uniequip_002_shwaz",
+        "typeIcon": "arc-x",
+        "uniEquipName": "定制弩配件套装",
+        "uniEquipId": "uniequip_002_shwaz"
+      },
+      {
+        "typeName1": "ARC",
+        "typeName2": "Y",
+        "charId": "char_340_shwaz",
+        "uniEquipIcon": "uniequip_003_shwaz",
+        "typeIcon": "arc-y",
+        "uniEquipName": "老剃刀",
+        "uniEquipId": "uniequip_003_shwaz"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_shwaz_1",
@@ -268,6 +379,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "EXE",
+        "typeName2": "X",
+        "charId": "char_1029_yato2",
+        "uniEquipIcon": "uniequip_002_yato2",
+        "typeIcon": "exe-x",
+        "uniEquipName": "训练用木桩",
+        "uniEquipId": "uniequip_002_yato2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_yato2_1",
@@ -293,6 +415,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PRO",
+        "typeName2": "X",
+        "charId": "char_325_bison",
+        "uniEquipIcon": "uniequip_002_bison",
+        "typeIcon": "pro-x",
+        "uniEquipName": "“一路以来”",
+        "uniEquipId": "uniequip_002_bison"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_def_up_3_",
@@ -312,6 +445,7 @@
     "date": 1588320000000,
     "profession": "SPECIAL",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "THRM-EX",
     "subProfessionId": "executor",
@@ -322,6 +456,7 @@
     "date": 1635753600000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "正义骑士号",
     "subProfessionId": "fastshot",
@@ -334,6 +469,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "CHA",
+        "typeName2": "Y",
+        "charId": "char_135_halo",
+        "uniEquipIcon": "uniequip_002_halo",
+        "typeIcon": "cha-y",
+        "uniEquipName": "未组装的钟表",
+        "uniEquipId": "uniequip_002_halo"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_halo_1",
@@ -355,6 +501,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CCR",
+        "typeName2": "X",
+        "charId": "char_4027_heyak",
+        "uniEquipIcon": "uniequip_002_heyak",
+        "typeIcon": "ccr-x",
+        "uniEquipName": "“图书馆”",
+        "uniEquipId": "uniequip_002_heyak"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_heyak_1",
@@ -380,6 +537,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "PHY",
+        "typeName2": "Y",
+        "charId": "char_345_folnic",
+        "uniEquipIcon": "uniequip_002_folnic",
+        "typeIcon": "phy-y",
+        "uniEquipName": "母亲的领巾",
+        "uniEquipId": "uniequip_002_folnic"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_folnic_1",
@@ -401,6 +569,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CCR",
+        "typeName2": "X",
+        "charId": "char_180_amgoat",
+        "uniEquipIcon": "uniequip_002_amgoat",
+        "typeIcon": "ccr-x",
+        "uniEquipName": "“错过的声音”",
+        "uniEquipId": "uniequip_002_amgoat"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_amgoat_1",
@@ -424,6 +603,7 @@
     "date": 1556589600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_heal_self_1_",
@@ -439,6 +619,7 @@
     "date": 1556589600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_whitew_1",
@@ -458,6 +639,7 @@
     "date": 1676361600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -477,6 +659,7 @@
     "date": 1559181600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_enchant_1_",
@@ -494,6 +677,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "CHA",
+        "typeName2": "Y",
+        "charId": "char_4004_pudd",
+        "uniEquipIcon": "uniequip_002_pudd",
+        "typeIcon": "cha-y",
+        "uniEquipName": "便携测电设备",
+        "uniEquipId": "uniequip_002_pudd"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_magic_rage_2_",
@@ -515,6 +709,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BLS",
+        "typeName2": "X",
+        "charId": "char_492_quercu",
+        "uniEquipIcon": "uniequip_002_quercu",
+        "typeIcon": "bls-x",
+        "uniEquipName": "锈枝",
+        "uniEquipId": "uniequip_002_quercu"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_quercu_1",
@@ -537,6 +742,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "Y",
+        "charId": "char_332_archet",
+        "uniEquipIcon": "uniequip_002_archet",
+        "typeIcon": "mar-y",
+        "uniEquipName": "“明天的种子”",
+        "uniEquipId": "uniequip_002_archet"
+      },
+      {
+        "typeName1": "MAR",
+        "typeName2": "X",
+        "charId": "char_332_archet",
+        "uniEquipIcon": "uniequip_003_archet",
+        "typeIcon": "mar-x",
+        "uniEquipName": "旧日重现",
+        "uniEquipId": "uniequip_003_archet"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_archet_1",
@@ -562,6 +787,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "X",
+        "charId": "char_498_inside",
+        "uniEquipIcon": "uniequip_002_inside",
+        "typeIcon": "mar-x",
+        "uniEquipName": "“最初的惊喜”",
+        "uniEquipId": "uniequip_002_inside"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_inside_1",
@@ -583,6 +819,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BEA",
+        "typeName2": "X",
+        "charId": "char_401_elysm",
+        "uniEquipIcon": "uniequip_002_elysm",
+        "typeIcon": "bea-x",
+        "uniEquipName": "应急通讯指南",
+        "uniEquipId": "uniequip_002_elysm"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_assist_cost_3_",
@@ -602,6 +849,7 @@
     "date": 1568102400000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_astesi_1",
@@ -621,6 +869,7 @@
     "date": 1604217600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_def_up_3_",
@@ -646,6 +895,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "X",
+        "charId": "char_190_clour",
+        "uniEquipIcon": "uniequip_002_clour",
+        "typeIcon": "mar-x",
+        "uniEquipName": "“不落”",
+        "uniEquipId": "uniequip_002_clour"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_2_",
@@ -667,6 +927,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PUS",
+        "typeName2": "X",
+        "charId": "char_400_weedy",
+        "uniEquipIcon": "uniequip_002_weedy",
+        "typeIcon": "pus-x",
+        "uniEquipName": "仿生海龙改型",
+        "uniEquipId": "uniequip_002_weedy"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_weedy_1",
@@ -692,6 +963,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "TRP",
+        "typeName2": "Y",
+        "charId": "char_458_rfrost",
+        "uniEquipIcon": "uniequip_002_rfrost",
+        "typeIcon": "trp-y",
+        "uniEquipName": "机械式陷阱压力板",
+        "uniEquipId": "uniequip_002_rfrost"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_rfrost_1",
@@ -713,6 +995,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SOL",
+        "typeName2": "X",
+        "charId": "char_198_blackd",
+        "uniEquipIcon": "uniequip_002_blackd",
+        "typeIcon": "sol-x",
+        "uniEquipName": "耐低温通讯设备",
+        "uniEquipId": "uniequip_002_blackd"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_charge_cost_2_",
@@ -732,6 +1025,7 @@
     "date": 1667289600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_judge_1",
@@ -757,6 +1051,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CCR",
+        "typeName2": "X",
+        "charId": "char_405_absin",
+        "uniEquipIcon": "uniequip_002_absin",
+        "typeIcon": "ccr-x",
+        "uniEquipName": "“监护者”单兵通讯单元",
+        "uniEquipId": "uniequip_002_absin"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_absin_1",
@@ -778,6 +1083,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PHY",
+        "typeName2": "X",
+        "charId": "char_402_tuye",
+        "uniEquipIcon": "uniequip_002_tuye",
+        "typeIcon": "phy-x",
+        "uniEquipName": "集水装置",
+        "uniEquipId": "uniequip_002_tuye"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_tuye_1",
@@ -799,6 +1115,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BLA",
+        "typeName2": "X",
+        "charId": "char_134_ifrit",
+        "uniEquipIcon": "uniequip_002_ifrit",
+        "typeIcon": "bla-x",
+        "uniEquipName": "“同熔”",
+        "uniEquipId": "uniequip_002_ifrit"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ifrit_1",
@@ -822,6 +1149,7 @@
     "date": 1602748800000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -841,6 +1169,7 @@
     "date": 1571126400000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_excu_1",
@@ -862,6 +1191,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CEN",
+        "typeName2": "X",
+        "charId": "char_143_ghost",
+        "uniEquipIcon": "uniequip_002_ghost",
+        "typeIcon": "cen-x",
+        "uniEquipName": "幽明烛光",
+        "uniEquipId": "uniequip_002_ghost"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -881,6 +1221,7 @@
     "date": 1676361600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_qiubai_1",
@@ -907,6 +1248,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SOL",
+        "typeName2": "Y",
+        "charId": "char_362_saga",
+        "uniEquipIcon": "uniequip_002_saga",
+        "typeIcon": "sol-y",
+        "uniEquipName": "身向云泥",
+        "uniEquipId": "uniequip_002_saga"
+      },
+      {
+        "typeName1": "SOL",
+        "typeName2": "X",
+        "charId": "char_362_saga",
+        "uniEquipIcon": "uniequip_003_saga",
+        "typeIcon": "sol-x",
+        "uniEquipName": "何处寻驮？",
+        "uniEquipId": "uniequip_003_saga"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_charge_cost_3_",
@@ -932,6 +1293,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BOM",
+        "typeName2": "X",
+        "charId": "char_1027_greyy2",
+        "uniEquipIcon": "uniequip_002_greyy2",
+        "typeIcon": "bom-x",
+        "uniEquipName": "新型电控设备技术原型",
+        "uniEquipId": "uniequip_002_greyy2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -953,6 +1325,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MSC",
+        "typeName2": "X",
+        "charId": "char_469_indigo",
+        "uniEquipIcon": "uniequip_002_indigo",
+        "typeIcon": "msc-x",
+        "uniEquipName": "法杖保养套装",
+        "uniEquipId": "uniequip_002_indigo"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_indigo_1",
@@ -972,6 +1355,7 @@
     "date": 1591084800000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_asbest_1",
@@ -993,6 +1377,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "INS",
+        "typeName2": "X",
+        "charId": "char_308_swire",
+        "uniEquipIcon": "uniequip_002_swire",
+        "typeIcon": "ins-x",
+        "uniEquipName": "防身口红",
+        "uniEquipId": "uniequip_002_swire"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_swire_1",
@@ -1014,6 +1409,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "ART",
+        "typeName2": "Y",
+        "charId": "char_4078_bdhkgt",
+        "uniEquipIcon": "uniequip_002_bdhkgt",
+        "typeIcon": "art-y",
+        "uniEquipName": "小石头",
+        "uniEquipId": "uniequip_002_bdhkgt"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_bdhkgt_1",
@@ -1035,6 +1441,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SUM",
+        "typeName2": "X",
+        "charId": "char_242_otter",
+        "uniEquipIcon": "uniequip_002_otter",
+        "typeIcon": "sum-x",
+        "uniEquipName": "咪波控制终端XP",
+        "uniEquipId": "uniequip_002_otter"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_otter_1",
@@ -1054,6 +1471,7 @@
     "date": 1608192000000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_f12yin_1",
@@ -1079,6 +1497,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "PRO",
+        "typeName2": "Y",
+        "charId": "char_199_yak",
+        "uniEquipIcon": "uniequip_002_yak",
+        "typeIcon": "pro-y",
+        "uniEquipName": "父亲的袍子",
+        "uniEquipId": "uniequip_002_yak"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_yak_1",
@@ -1098,6 +1527,7 @@
     "date": 1665475200000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_dagda_1",
@@ -1117,6 +1547,7 @@
     "date": 1559181600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_brownb_1",
@@ -1138,6 +1569,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DEA",
+        "typeName2": "X",
+        "charId": "char_218_cuttle",
+        "uniEquipIcon": "uniequip_002_cuttle",
+        "typeIcon": "dea-x",
+        "uniEquipName": "枪支调试工具组",
+        "uniEquipId": "uniequip_002_cuttle"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -1160,6 +1602,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "INS",
+        "typeName2": "X",
+        "charId": "char_485_pallas",
+        "uniEquipIcon": "uniequip_002_pallas",
+        "typeIcon": "ins-x",
+        "uniEquipName": "“故乡的山岩”",
+        "uniEquipId": "uniequip_002_pallas"
+      },
+      {
+        "typeName1": "INS",
+        "typeName2": "Y",
+        "charId": "char_485_pallas",
+        "uniEquipIcon": "uniequip_003_pallas",
+        "typeIcon": "ins-y",
+        "uniEquipName": "“赫里亚之辉”",
+        "uniEquipId": "uniequip_003_pallas"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_pallas_1",
@@ -1183,6 +1645,7 @@
     "date": 1556589600000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_1_",
@@ -1198,6 +1661,7 @@
     "date": 1556589600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_hpsts_1",
@@ -1220,6 +1684,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PUM",
+        "typeName2": "X",
+        "charId": "char_1023_ghost2",
+        "uniEquipIcon": "uniequip_002_ghost2",
+        "typeIcon": "pum-x",
+        "uniEquipName": "“唱片”收藏箱",
+        "uniEquipId": "uniequip_002_ghost2"
+      },
+      {
+        "typeName1": "PUM",
+        "typeName2": "Y",
+        "charId": "char_1023_ghost2",
+        "uniEquipIcon": "uniequip_003_ghost2",
+        "typeIcon": "pum-y",
+        "uniEquipName": "未竟之美",
+        "uniEquipId": "uniequip_003_ghost2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ghost2_1",
@@ -1243,6 +1727,7 @@
     "date": 1556589600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_def_up_1_",
@@ -1260,6 +1745,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SWO",
+        "typeName2": "X",
+        "charId": "char_252_bibeak",
+        "uniEquipIcon": "uniequip_002_bibeak",
+        "typeIcon": "swo-x",
+        "uniEquipName": "做工优良的衬衣",
+        "uniEquipId": "uniequip_002_bibeak"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_bibeak_1",
@@ -1279,6 +1775,7 @@
     "date": 1556589600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_frncat_1",
@@ -1301,6 +1798,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "GUA",
+        "typeName2": "Y",
+        "charId": "char_423_blemsh",
+        "uniEquipIcon": "uniequip_002_blemsh",
+        "typeIcon": "gua-y",
+        "uniEquipName": "工匠团的回响",
+        "uniEquipId": "uniequip_002_blemsh"
+      },
+      {
+        "typeName1": "GUA",
+        "typeName2": "X",
+        "charId": "char_423_blemsh",
+        "uniEquipIcon": "uniequip_003_blemsh",
+        "typeIcon": "gua-x",
+        "uniEquipName": "“长骑”",
+        "uniEquipId": "uniequip_003_blemsh"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_blemsh_1",
@@ -1326,6 +1843,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MUS",
+        "typeName2": "X",
+        "charId": "char_1030_noirc2",
+        "uniEquipIcon": "uniequip_002_noirc2",
+        "typeIcon": "mus-x",
+        "uniEquipName": "黑角的随身笔记",
+        "uniEquipId": "uniequip_002_noirc2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_noirc2_1",
@@ -1345,6 +1873,7 @@
     "date": 1556589600000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_kroos_1",
@@ -1360,6 +1889,7 @@
     "date": 1641369600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_aprot2_1",
@@ -1381,6 +1911,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "CCR",
+        "typeName2": "Y",
+        "charId": "char_411_tomimi",
+        "uniEquipIcon": "uniequip_002_tomimi",
+        "typeIcon": "ccr-y",
+        "uniEquipName": "损坏的尾尾佳",
+        "uniEquipId": "uniequip_002_tomimi"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_tomimi_1",
@@ -1402,6 +1943,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "ARC",
+        "typeName2": "Y",
+        "charId": "char_4006_melnte",
+        "uniEquipIcon": "uniequip_002_melnte",
+        "typeIcon": "arc-y",
+        "uniEquipName": "香薰耳坠",
+        "uniEquipId": "uniequip_002_melnte"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_melnte_1",
@@ -1423,6 +1975,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "HES",
+        "typeName2": "X",
+        "charId": "char_422_aurora",
+        "uniEquipIcon": "uniequip_002_aurora",
+        "typeIcon": "hes-x",
+        "uniEquipName": "盾用摄制模块",
+        "uniEquipId": "uniequip_002_aurora"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_aurora_1",
@@ -1444,6 +2007,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CCR",
+        "typeName2": "X",
+        "charId": "char_141_nights",
+        "uniEquipIcon": "uniequip_002_nights",
+        "typeIcon": "ccr-x",
+        "uniEquipName": "女巫的帽子",
+        "uniEquipId": "uniequip_002_nights"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_2_",
@@ -1463,6 +2037,7 @@
     "date": 1660204800000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_ctable_1",
@@ -1484,6 +2059,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "RIN",
+        "typeName2": "X",
+        "charId": "char_275_breeze",
+        "uniEquipIcon": "uniequip_002_breeze",
+        "typeIcon": "rin-x",
+        "uniEquipName": "外科医疗套组",
+        "uniEquipId": "uniequip_002_breeze"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_breeze_1",
@@ -1505,6 +2091,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "CHG",
+        "typeName2": "Y",
+        "charId": "char_261_sddrag",
+        "uniEquipIcon": "uniequip_002_sddrag",
+        "typeIcon": "chg-y",
+        "uniEquipName": "枪刃清洁套装",
+        "uniEquipId": "uniequip_002_sddrag"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -1524,6 +2121,7 @@
     "date": 1631865600000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_mberry_1",
@@ -1545,6 +2143,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "X",
+        "charId": "char_103_angel",
+        "uniEquipIcon": "uniequip_002_angel",
+        "typeIcon": "mar-x",
+        "uniEquipName": "能天使的杰作",
+        "uniEquipId": "uniequip_002_angel"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_angel_1",
@@ -1568,6 +2177,7 @@
     "date": 1569873600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_2_",
@@ -1589,6 +2199,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "INS",
+        "typeName2": "X",
+        "charId": "char_265_sophia",
+        "uniEquipIcon": "uniequip_002_sophia",
+        "typeIcon": "ins-x",
+        "uniEquipName": "加长鞭刃丝线",
+        "uniEquipId": "uniequip_002_sophia"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_sophia_1",
@@ -1611,6 +2232,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "AMB",
+        "typeName2": "X",
+        "charId": "char_437_mizuki",
+        "uniEquipIcon": "uniequip_002_mizuki",
+        "typeIcon": "amb-x",
+        "uniEquipName": "使者之约",
+        "uniEquipId": "uniequip_002_mizuki"
+      },
+      {
+        "typeName1": "AMB",
+        "typeName2": "Y",
+        "charId": "char_437_mizuki",
+        "uniEquipIcon": "uniequip_003_mizuki",
+        "typeIcon": "amb-y",
+        "uniEquipName": "深蓝之籽",
+        "uniEquipId": "uniequip_003_mizuki"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_mizuki_1",
@@ -1636,6 +2277,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SWO",
+        "typeName2": "Y",
+        "charId": "char_301_cutter",
+        "uniEquipIcon": "uniequip_002_cutter",
+        "typeIcon": "swo-y",
+        "uniEquipName": "可替换刀具套装",
+        "uniEquipId": "uniequip_002_cutter"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_cutter_1",
@@ -1657,6 +2309,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DRE",
+        "typeName2": "X",
+        "charId": "char_1014_nearl2",
+        "uniEquipIcon": "uniequip_002_nearl2",
+        "typeIcon": "dre-x",
+        "uniEquipName": "耀阳锋刃",
+        "uniEquipId": "uniequip_002_nearl2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_nearl2_1",
@@ -1682,6 +2345,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "Y",
+        "charId": "char_365_aprl",
+        "uniEquipIcon": "uniequip_002_aprl",
+        "typeIcon": "mar-y",
+        "uniEquipName": "高保真通讯耳机",
+        "uniEquipId": "uniequip_002_aprl"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_aprl_1",
@@ -1703,6 +2377,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CRA",
+        "typeName2": "X",
+        "charId": "char_484_robrta",
+        "uniEquipIcon": "uniequip_002_robrta",
+        "typeIcon": "cra-x",
+        "uniEquipName": "半自动造型工具套组",
+        "uniEquipId": "uniequip_002_robrta"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_robrta_1",
@@ -1724,6 +2409,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "PHY",
+        "typeName2": "Y",
+        "charId": "char_108_silent",
+        "uniEquipIcon": "uniequip_002_silent",
+        "typeIcon": "phy-y",
+        "uniEquipName": "紧急防卫程序",
+        "uniEquipId": "uniequip_002_silent"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_heal_up_3_",
@@ -1743,6 +2439,7 @@
     "date": 1556589600000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_range_extend",
@@ -1760,6 +2457,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "AMB",
+        "typeName2": "X",
+        "charId": "char_355_ethan",
+        "uniEquipIcon": "uniequip_002_ethan",
+        "typeIcon": "amb-x",
+        "uniEquipName": "超级喷漆套装",
+        "uniEquipId": "uniequip_002_ethan"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ethan_1",
@@ -1779,6 +2487,7 @@
     "date": 1556589600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "Castle-3",
     "subProfessionId": "fearless",
@@ -1791,6 +2500,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SWO",
+        "typeName2": "Y",
+        "charId": "char_4009_irene",
+        "uniEquipIcon": "uniequip_002_irene",
+        "typeIcon": "swo-y",
+        "uniEquipName": "厚重的经卷",
+        "uniEquipId": "uniequip_002_irene"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_irene_1",
@@ -1814,6 +2534,7 @@
     "date": 1663228800000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_lolxh_1",
@@ -1836,6 +2557,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "ART",
+        "typeName2": "X",
+        "charId": "char_113_cqbw",
+        "uniEquipIcon": "uniequip_002_cqbw",
+        "typeIcon": "art-x",
+        "uniEquipName": "佣兵的行囊",
+        "uniEquipId": "uniequip_002_cqbw"
+      },
+      {
+        "typeName1": "ART",
+        "typeName2": "Y",
+        "charId": "char_113_cqbw",
+        "uniEquipIcon": "uniequip_003_cqbw",
+        "typeIcon": "art-y",
+        "uniEquipName": "刺棱钝刃",
+        "uniEquipId": "uniequip_003_cqbw"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_cqbw_1",
@@ -1859,6 +2600,7 @@
     "date": 1643097600000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_blkngt_1",
@@ -1880,6 +2622,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BEA",
+        "typeName2": "X",
+        "charId": "char_479_sleach",
+        "uniEquipIcon": "uniequip_002_sleach",
+        "typeIcon": "bea-x",
+        "uniEquipName": "牧人的歌",
+        "uniEquipId": "uniequip_002_sleach"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_assist_cost_3_",
@@ -1903,6 +2656,7 @@
     "date": 1556589600000,
     "profession": "CASTER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_powerstrike_1_",
@@ -1920,6 +2674,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "TRP",
+        "typeName2": "Y",
+        "charId": "char_4048_doroth",
+        "uniEquipIcon": "uniequip_002_doroth",
+        "typeIcon": "trp-y",
+        "uniEquipName": "童话书",
+        "uniEquipId": "uniequip_002_doroth"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_doroth_1",
@@ -1945,6 +2710,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MER",
+        "typeName2": "X",
+        "charId": "char_455_nothin",
+        "uniEquipIcon": "uniequip_002_nothin",
+        "typeIcon": "mer-x",
+        "uniEquipName": "“檐下听雨”",
+        "uniEquipId": "uniequip_002_nothin"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_nothin_1",
@@ -1964,6 +2740,7 @@
     "date": 1556589600000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "Lancet-2",
     "subProfessionId": "physician",
@@ -1976,6 +2753,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "EXE",
+        "typeName2": "Y",
+        "charId": "char_144_red",
+        "uniEquipIcon": "uniequip_002_red",
+        "typeIcon": "exe-y",
+        "uniEquipName": "神秘的道具包",
+        "uniEquipId": "uniequip_002_red"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_red_1",
@@ -1997,6 +2785,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CHG",
+        "typeName2": "X",
+        "charId": "char_496_wildmn",
+        "uniEquipIcon": "uniequip_002_wildmn",
+        "typeIcon": "chg-x",
+        "uniEquipName": "长枪替补套装",
+        "uniEquipId": "uniequip_002_wildmn"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_wildmn_1",
@@ -2018,6 +2817,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "DEC",
+        "typeName2": "Y",
+        "charId": "char_183_skgoat",
+        "uniEquipIcon": "uniequip_002_skgoat",
+        "typeIcon": "dec-y",
+        "uniEquipName": "待确认的申请表",
+        "uniEquipId": "uniequip_002_skgoat"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_2_",
@@ -2037,6 +2847,7 @@
     "date": 1649923200000,
     "profession": "SUPPORT",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_heidi_1",
@@ -2058,6 +2869,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "AMB",
+        "typeName2": "X",
+        "charId": "char_478_kirara",
+        "uniEquipIcon": "uniequip_002_kirara",
+        "typeIcon": "amb-x",
+        "uniEquipName": "《闹闹生存挑战3 联机版》",
+        "uniEquipId": "uniequip_002_kirara"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_kirara_1",
@@ -2079,6 +2901,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "HOK",
+        "typeName2": "X",
+        "charId": "char_173_slchan",
+        "uniEquipIcon": "uniequip_002_slchan",
+        "typeIcon": "hok-x",
+        "uniEquipName": "“凌绝顶”",
+        "uniEquipId": "uniequip_002_slchan"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_slchan_1",
@@ -2100,6 +2933,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "ARC",
+        "typeName2": "X",
+        "charId": "char_366_acdrop",
+        "uniEquipIcon": "uniequip_002_acdrop",
+        "typeIcon": "arc-x",
+        "uniEquipName": "“自由、洋葱圈和我”",
+        "uniEquipId": "uniequip_002_acdrop"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_acdrop_1",
@@ -2119,6 +2963,7 @@
     "date": 1660204800000,
     "profession": "CASTER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -2141,6 +2986,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SUM",
+        "typeName2": "X",
+        "charId": "char_248_mgllan",
+        "uniEquipIcon": "uniequip_002_mgllan",
+        "typeIcon": "sum-x",
+        "uniEquipName": "专业无人机操作模块",
+        "uniEquipId": "uniequip_002_mgllan"
+      },
+      {
+        "typeName1": "SUM",
+        "typeName2": "Y",
+        "charId": "char_248_mgllan",
+        "uniEquipIcon": "uniequip_003_mgllan",
+        "typeIcon": "sum-y",
+        "uniEquipName": "教学用龙腾无人机",
+        "uniEquipId": "uniequip_003_mgllan"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_mgllan_1",
@@ -2167,6 +3032,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PHY",
+        "typeName2": "Y",
+        "charId": "char_147_shining",
+        "uniEquipIcon": "uniequip_002_shining",
+        "typeIcon": "phy-y",
+        "uniEquipName": "干枯剑鞘",
+        "uniEquipId": "uniequip_002_shining"
+      },
+      {
+        "typeName1": "PHY",
+        "typeName2": "X",
+        "charId": "char_147_shining",
+        "uniEquipIcon": "uniequip_003_shining",
+        "typeIcon": "phy-x",
+        "uniEquipName": "“使徒”",
+        "uniEquipId": "uniequip_003_shining"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_shining_1",
@@ -2190,6 +3075,7 @@
     "date": 1556589600000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_quickattack_1_",
@@ -2207,6 +3093,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "CCR",
+        "typeName2": "Y",
+        "charId": "char_002_amiya",
+        "uniEquipIcon": "uniequip_002_amiya",
+        "typeIcon": "ccr-y",
+        "uniEquipName": "DWDB-221E",
+        "uniEquipId": "uniequip_002_amiya"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_magic_rage_3_",
@@ -2230,6 +3127,7 @@
     "date": 1562659200000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_spot_1",
@@ -2248,6 +3146,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PHY",
+        "typeName2": "X",
+        "charId": "char_003_kalts",
+        "uniEquipIcon": "uniequip_002_kalts",
+        "typeIcon": "phy-x",
+        "uniEquipName": "Mon2tr",
+        "uniEquipId": "uniequip_002_kalts"
+      },
+      {
+        "typeName1": "PHY",
+        "typeName2": "Y",
+        "charId": "char_003_kalts",
+        "uniEquipIcon": "uniequip_003_kalts",
+        "typeIcon": "phy-y",
+        "uniEquipName": "医者",
+        "uniEquipId": "uniequip_003_kalts"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_kalts_1",
@@ -2274,6 +3192,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DEC",
+        "typeName2": "Y",
+        "charId": "char_291_aglina",
+        "uniEquipIcon": "uniequip_002_aglina",
+        "typeIcon": "dec-y",
+        "uniEquipName": "重力校准模块",
+        "uniEquipId": "uniequip_002_aglina"
+      },
+      {
+        "typeName1": "DEC",
+        "typeName2": "X",
+        "charId": "char_291_aglina",
+        "uniEquipIcon": "uniequip_003_aglina",
+        "typeIcon": "dec-X",
+        "uniEquipName": "实验用反重力模块",
+        "uniEquipId": "uniequip_003_aglina"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_aglina_1",
@@ -2299,6 +3237,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "HOK",
+        "typeName2": "X",
+        "charId": "char_236_rope",
+        "uniEquipIcon": "uniequip_002_rope",
+        "typeIcon": "hok-x",
+        "uniEquipName": "铁皮首饰盒",
+        "uniEquipId": "uniequip_002_rope"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_rope_1",
@@ -2320,6 +3269,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "CEN",
+        "typeName2": "Y",
+        "charId": "char_127_estell",
+        "uniEquipIcon": "uniequip_002_estell",
+        "typeIcon": "cen-y",
+        "uniEquipName": "荒野地的饯别礼",
+        "uniEquipId": "uniequip_002_estell"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_2_",
@@ -2341,6 +3301,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SPC",
+        "typeName2": "Y",
+        "charId": "char_341_sntlla",
+        "uniEquipIcon": "uniequip_002_sntlla",
+        "typeIcon": "spc-y",
+        "uniEquipName": "“冰焰”",
+        "uniEquipId": "uniequip_002_sntlla"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -2362,6 +3333,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CEN",
+        "typeName2": "X",
+        "charId": "char_1026_gvial2",
+        "uniEquipIcon": "uniequip_002_gvial2",
+        "typeIcon": "cen-x",
+        "uniEquipName": "嘉维尔的折磨",
+        "uniEquipId": "uniequip_002_gvial2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_gvial2_1",
@@ -2387,6 +3369,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SIE",
+        "typeName2": "X",
+        "charId": "char_197_poca",
+        "uniEquipIcon": "uniequip_002_poca",
+        "typeIcon": "sie-x",
+        "uniEquipName": "攻城器械训练装置",
+        "uniEquipId": "uniequip_002_poca"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -2412,6 +3405,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "EXE",
+        "typeName2": "X",
+        "charId": "char_243_waaifu",
+        "uniEquipIcon": "uniequip_002_waaifu",
+        "typeIcon": "exe-x",
+        "uniEquipName": "红眉咏春拳谱",
+        "uniEquipId": "uniequip_002_waaifu"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_waaifu_1",
@@ -2433,6 +3437,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MSC",
+        "typeName2": "X",
+        "charId": "char_338_iris",
+        "uniEquipIcon": "uniequip_002_iris",
+        "typeIcon": "msc-x",
+        "uniEquipName": "梦之城堡立体书",
+        "uniEquipId": "uniequip_002_iris"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_iris_1",
@@ -2454,6 +3469,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "Y",
+        "charId": "char_367_swllow",
+        "uniEquipIcon": "uniequip_002_swllow",
+        "typeIcon": "mar-y",
+        "uniEquipName": "母爱的倒影",
+        "uniEquipId": "uniequip_002_swllow"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_swllow_1",
@@ -2475,6 +3501,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "UMD",
+        "typeName2": "X",
+        "charId": "char_254_vodfox",
+        "uniEquipIcon": "uniequip_002_vodfox",
+        "typeIcon": "umd-x",
+        "uniEquipName": "布艺苹果",
+        "uniEquipId": "uniequip_002_vodfox"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_vodfox_1",
@@ -2496,6 +3533,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PHY",
+        "typeName2": "X",
+        "charId": "char_171_bldsk",
+        "uniEquipIcon": "uniequip_002_bldsk",
+        "typeIcon": "phy-x",
+        "uniEquipName": "应急储备",
+        "uniEquipId": "uniequip_002_bldsk"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_bldsk_1",
@@ -2515,6 +3563,7 @@
     "date": 1678176000000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "泰拉大陆调查团",
     "subProfessionId": "bombarder",
@@ -2527,6 +3576,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "X",
+        "charId": "char_126_shotst",
+        "uniEquipIcon": "uniequip_002_shotst",
+        "typeIcon": "mar-x",
+        "uniEquipName": "猎刀",
+        "uniEquipId": "uniequip_002_shotst"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_shotst_1",
@@ -2548,6 +3608,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BLA",
+        "typeName2": "X",
+        "charId": "char_489_serum",
+        "uniEquipIcon": "uniequip_002_serum",
+        "typeIcon": "bla-x",
+        "uniEquipName": "无可抹消",
+        "uniEquipId": "uniequip_002_serum"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_serum_1",
@@ -2569,6 +3640,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SWO",
+        "typeName2": "X",
+        "charId": "char_459_tachak",
+        "uniEquipIcon": "uniequip_002_tachak",
+        "typeIcon": "swo-x",
+        "uniEquipName": "轻机枪枪架",
+        "uniEquipId": "uniequip_002_tachak"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_tachak_1",
@@ -2588,6 +3670,7 @@
     "date": 1662624000000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_mlynar_1",
@@ -2611,6 +3694,7 @@
     "date": 1690876800000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_agoat2_1",
@@ -2636,6 +3720,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SOL",
+        "typeName2": "X",
+        "charId": "char_488_buildr",
+        "uniEquipIcon": "uniequip_002_buildr",
+        "typeIcon": "sol-x",
+        "uniEquipName": "寻乡人的启明星",
+        "uniEquipId": "uniequip_002_buildr"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_charge_cost_3_",
@@ -2658,6 +3753,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "EXE",
+        "typeName2": "X",
+        "charId": "char_250_phatom",
+        "uniEquipIcon": "uniequip_002_phatom",
+        "typeIcon": "exe-x",
+        "uniEquipName": "克里斯汀小姐的毛毡",
+        "uniEquipId": "uniequip_002_phatom"
+      },
+      {
+        "typeName1": "EXE",
+        "typeName2": "Y",
+        "charId": "char_250_phatom",
+        "uniEquipIcon": "uniequip_003_phatom",
+        "typeIcon": "exe-y",
+        "uniEquipName": "“如影随形”",
+        "uniEquipId": "uniequip_003_phatom"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_phatom_1",
@@ -2681,6 +3796,7 @@
     "date": 1615276800000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_blitz_1",
@@ -2702,6 +3818,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SPC",
+        "typeName2": "X",
+        "charId": "char_1011_lava2",
+        "uniEquipIcon": "uniequip_002_lava2",
+        "typeIcon": "spc-x",
+        "uniEquipName": "萨卡兹的刀",
+        "uniEquipId": "uniequip_002_lava2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_lava2_1",
@@ -2721,6 +3848,7 @@
     "date": 1556589600000,
     "profession": "CASTER",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "12F",
     "subProfessionId": "splashcaster",
@@ -2733,6 +3861,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "REA",
+        "typeName2": "X",
+        "charId": "char_491_humus",
+        "uniEquipIcon": "uniequip_002_humus",
+        "typeIcon": "rea-x",
+        "uniEquipName": "恶地奇异工具套组",
+        "uniEquipId": "uniequip_002_humus"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_humus_1",
@@ -2754,6 +3893,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "ART",
+        "typeName2": "Y",
+        "charId": "char_118_yuki",
+        "uniEquipIcon": "uniequip_002_yuki",
+        "typeIcon": "art-y",
+        "uniEquipName": "手里剑",
+        "uniEquipId": "uniequip_002_yuki"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_yuki_1",
@@ -2773,6 +3923,7 @@
     "date": 1556589600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "黑角",
     "subProfessionId": "protector",
@@ -2785,6 +3936,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DEC",
+        "typeName2": "X",
+        "charId": "char_326_glacus",
+        "uniEquipIcon": "uniequip_002_glacus",
+        "typeIcon": "dec-x",
+        "uniEquipName": "外骨骼装备",
+        "uniEquipId": "uniequip_002_glacus"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_glacus_1",
@@ -2807,6 +3969,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SOL",
+        "typeName2": "Y",
+        "charId": "char_420_flamtl",
+        "uniEquipIcon": "uniequip_002_flamtl",
+        "typeIcon": "sol-y",
+        "uniEquipName": "红松的起点",
+        "uniEquipId": "uniequip_002_flamtl"
+      },
+      {
+        "typeName1": "SOL",
+        "typeName2": "X",
+        "charId": "char_420_flamtl",
+        "uniEquipIcon": "uniequip_003_flamtl",
+        "typeIcon": "sol-x",
+        "uniEquipName": "她们的未来",
+        "uniEquipId": "uniequip_003_flamtl"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_flamtl_1",
@@ -2830,6 +4012,7 @@
     "date": 1671091200000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_puzzle_1",
@@ -2851,6 +4034,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MSC",
+        "typeName2": "X",
+        "charId": "char_297_hamoni",
+        "uniEquipIcon": "uniequip_002_hamoni",
+        "typeIcon": "msc-x",
+        "uniEquipName": "情报人员资料夹",
+        "uniEquipId": "uniequip_002_hamoni"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_hamoni_1",
@@ -2870,6 +4064,7 @@
     "date": 1556589600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_frostl_1",
@@ -2892,6 +4087,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SPC",
+        "typeName2": "X",
+        "charId": "char_2015_dusk",
+        "uniEquipIcon": "uniequip_002_dusk",
+        "typeIcon": "spc-x",
+        "uniEquipName": "无题长卷",
+        "uniEquipId": "uniequip_002_dusk"
+      },
+      {
+        "typeName1": "SPC",
+        "typeName2": "Y",
+        "charId": "char_2015_dusk",
+        "uniEquipIcon": "uniequip_003_dusk",
+        "typeIcon": "spc-y",
+        "uniEquipName": "“终夜无寐”",
+        "uniEquipId": "uniequip_003_dusk"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_dusk_1",
@@ -2917,6 +4132,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PRO",
+        "typeName2": "X",
+        "charId": "char_381_bubble",
+        "uniEquipIcon": "uniequip_002_bubble",
+        "typeIcon": "pro-x",
+        "uniEquipName": "泡泡闪光必杀剑",
+        "uniEquipId": "uniequip_002_bubble"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_def_up_2_",
@@ -2938,6 +4164,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "PUM",
+        "typeName2": "Y",
+        "charId": "char_369_bena",
+        "uniEquipIcon": "uniequip_002_bena",
+        "typeIcon": "pum-y",
+        "uniEquipName": "《乔弗瑞古今童话集》精装本",
+        "uniEquipId": "uniequip_002_bena"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_bena_1",
@@ -2959,6 +4196,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SIE",
+        "typeName2": "X",
+        "charId": "char_4043_erato",
+        "uniEquipIcon": "uniequip_002_erato",
+        "typeIcon": "sie-x",
+        "uniEquipName": "改弦更张",
+        "uniEquipId": "uniequip_002_erato"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_erato_1",
@@ -2980,6 +4228,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SOL",
+        "typeName2": "X",
+        "charId": "char_115_headbr",
+        "uniEquipIcon": "uniequip_002_headbr",
+        "typeIcon": "sol-x",
+        "uniEquipName": "冬将军的毕业礼物",
+        "uniEquipId": "uniequip_002_headbr"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_charge_cost_3_",
@@ -2995,12 +4254,43 @@
     "itemObtainApproach": "常驻干员",
     "rarity": 5
   },
+  "char_1001_amiya2": {
+    "date": 1662633117000,
+    "profession": "WARRIOR",
+    "mod": null,
+    "equip": null,
+    "skill": [
+      {
+        "iconId": "skchr_amiya2_1",
+        "name": "影霄·奔夜"
+      },
+      {
+        "iconId": "skchr_amiya2_2",
+        "name": "影霄·绝影"
+      }
+    ],
+    "name": "阿米娅",
+    "subProfessionId": "artsfghter",
+    "itemObtainApproach": "常驻干员",
+    "rarity": 5
+  },
   "char_348_ceylon": {
     "date": 1566892800000,
     "profession": "MEDIC",
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "WAH",
+        "typeName2": "X",
+        "charId": "char_348_ceylon",
+        "uniEquipIcon": "uniequip_002_ceylon",
+        "typeIcon": "wah-x",
+        "uniEquipName": "野外考察套装",
+        "uniEquipId": "uniequip_002_ceylon"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ceylon_1",
@@ -3020,6 +4310,7 @@
     "date": 1619856000000,
     "profession": "SUPPORT",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_skadi2_1",
@@ -3043,6 +4334,7 @@
     "date": 1598342400000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_flint_1",
@@ -3062,6 +4354,7 @@
     "date": 1671091200000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -3087,6 +4380,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SPC",
+        "typeName2": "X",
+        "charId": "char_373_lionhd",
+        "uniEquipIcon": "uniequip_002_lionhd",
+        "typeIcon": "spc-x",
+        "uniEquipName": "传承与开拓",
+        "uniEquipId": "uniequip_002_lionhd"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -3106,6 +4410,7 @@
     "date": 1597132800000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -3129,6 +4434,7 @@
     "date": 1609833600000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_bstalk_1",
@@ -3150,6 +4456,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MUS",
+        "typeName2": "X",
+        "charId": "char_337_utage",
+        "uniEquipIcon": "uniequip_002_utage",
+        "typeIcon": "mus-x",
+        "uniEquipName": "翻盖手机",
+        "uniEquipId": "uniequip_002_utage"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_utage_1",
@@ -3171,6 +4488,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "Y",
+        "charId": "char_456_ash",
+        "uniEquipIcon": "uniequip_002_ash",
+        "typeIcon": "mar-y",
+        "uniEquipName": "破墙榴弹战术收纳包",
+        "uniEquipId": "uniequip_002_ash"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ash_1",
@@ -3194,6 +4522,7 @@
     "date": 1644912000000,
     "profession": "CASTER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_gdglow_1",
@@ -3219,6 +4548,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "DRE",
+        "typeName2": "Y",
+        "charId": "char_131_flameb",
+        "uniEquipIcon": "uniequip_002_flameb",
+        "typeIcon": "dre-y",
+        "uniEquipName": "锈损的断刀",
+        "uniEquipId": "uniequip_002_flameb"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_flameb_1",
@@ -3238,6 +4578,7 @@
     "date": 1608192000000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_pinecn_1",
@@ -3259,6 +4600,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "HES",
+        "typeName2": "X",
+        "charId": "char_464_cement",
+        "uniEquipIcon": "uniequip_002_cement",
+        "typeIcon": "hes-x",
+        "uniEquipName": "工程记录仪",
+        "uniEquipId": "uniequip_002_cement"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_cement_1",
@@ -3280,6 +4632,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "WAH",
+        "typeName2": "Y",
+        "charId": "char_385_finlpp",
+        "uniEquipIcon": "uniequip_002_finlpp",
+        "typeIcon": "wah-y",
+        "uniEquipName": "“江河之韵”",
+        "uniEquipId": "uniequip_002_finlpp"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_finlpp_1",
@@ -3299,6 +4662,7 @@
     "date": 1682928000000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_mlyss_1",
@@ -3324,6 +4688,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "PHY",
+        "typeName2": "Y",
+        "charId": "char_187_ccheal",
+        "uniEquipIcon": "uniequip_002_ccheal",
+        "typeIcon": "phy-y",
+        "uniEquipName": "“请遵医嘱”",
+        "uniEquipId": "uniequip_002_ccheal"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ccheal_1",
@@ -3343,6 +4718,7 @@
     "date": 1556589600000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "巡林者",
     "subProfessionId": "fastshot",
@@ -3355,6 +4731,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "PUS",
+        "typeName2": "Y",
+        "charId": "char_277_sqrrel",
+        "uniEquipIcon": "uniequip_002_sqrrel",
+        "typeIcon": "pus-y",
+        "uniEquipName": "客制化防火服",
+        "uniEquipId": "uniequip_002_sqrrel"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_sqrrel_1",
@@ -3377,6 +4764,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MSC",
+        "typeName2": "X",
+        "charId": "char_4046_ebnhlz",
+        "uniEquipIcon": "uniequip_002_ebnhlz",
+        "typeIcon": "msc-x",
+        "uniEquipName": "源石骰子收纳盒",
+        "uniEquipId": "uniequip_002_ebnhlz"
+      },
+      {
+        "typeName1": "MSC",
+        "typeName2": "Y",
+        "charId": "char_4046_ebnhlz",
+        "uniEquipIcon": "uniequip_003_ebnhlz",
+        "typeIcon": "msc-y",
+        "uniEquipName": "“乐理阐释者”",
+        "uniEquipId": "uniequip_003_ebnhlz"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ebnhlz_1",
@@ -3402,6 +4809,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CEN",
+        "typeName2": "X",
+        "charId": "char_017_huang",
+        "uniEquipIcon": "uniequip_002_huang",
+        "typeIcon": "cen-x",
+        "uniEquipName": "过载的武器与过热的心脏",
+        "uniEquipId": "uniequip_002_huang"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_powerstrike_3_",
@@ -3425,6 +4843,7 @@
     "date": 1693900800000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -3444,6 +4863,7 @@
     "date": 1680768000000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_ines_1",
@@ -3467,6 +4887,7 @@
     "date": 1556589600000,
     "profession": "CASTER",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "杜林",
     "subProfessionId": "corecaster",
@@ -3479,6 +4900,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DRE",
+        "typeName2": "X",
+        "charId": "char_106_franka",
+        "uniEquipIcon": "uniequip_002_franka",
+        "typeIcon": "dre-x",
+        "uniEquipName": "尖端铝热单元",
+        "uniEquipId": "uniequip_002_franka"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -3500,6 +4932,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SPC",
+        "typeName2": "Y",
+        "charId": "char_213_mostma",
+        "uniEquipIcon": "uniequip_002_mostma",
+        "typeIcon": "spc-y",
+        "uniEquipName": "锁与匙之家",
+        "uniEquipId": "uniequip_002_mostma"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -3523,6 +4966,7 @@
     "date": 1684742400000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "Friston-3",
     "subProfessionId": "protector",
@@ -3536,6 +4980,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DEA",
+        "typeName2": "X",
+        "charId": "char_430_fartth",
+        "uniEquipIcon": "uniequip_002_fartth",
+        "typeIcon": "dea-x",
+        "uniEquipName": "首战支援套组",
+        "uniEquipId": "uniequip_002_fartth"
+      },
+      {
+        "typeName1": "DEA",
+        "typeName2": "Y",
+        "charId": "char_430_fartth",
+        "uniEquipIcon": "uniequip_003_fartth",
+        "typeIcon": "dea-y",
+        "uniEquipName": "支持者来信",
+        "uniEquipId": "uniequip_003_fartth"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -3561,6 +5025,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "ART",
+        "typeName2": "X",
+        "charId": "char_379_sesa",
+        "uniEquipIcon": "uniequip_002_sesa",
+        "typeIcon": "art-x",
+        "uniEquipName": "“灵魂共鸣”",
+        "uniEquipId": "uniequip_002_sesa"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -3582,6 +5057,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SPC",
+        "typeName2": "X",
+        "charId": "char_109_fmout",
+        "uniEquipIcon": "uniequip_002_fmout",
+        "typeIcon": "spc-x",
+        "uniEquipName": "占卜师旅行套装",
+        "uniEquipId": "uniequip_002_fmout"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_magic_rage_2_",
@@ -3604,6 +5090,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DRE",
+        "typeName2": "Y",
+        "charId": "char_263_skadi",
+        "uniEquipIcon": "uniequip_002_skadi",
+        "typeIcon": "dre-y",
+        "uniEquipName": "潮湿的剑袋",
+        "uniEquipId": "uniequip_002_skadi"
+      },
+      {
+        "typeName1": "DRE",
+        "typeName2": "X",
+        "charId": "char_263_skadi",
+        "uniEquipIcon": "uniequip_003_skadi",
+        "typeIcon": "dre-x",
+        "uniEquipName": "往日残梦",
+        "uniEquipId": "uniequip_003_skadi"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -3627,6 +5133,7 @@
     "date": 1594281600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_ayer_1",
@@ -3648,6 +5155,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "REA",
+        "typeName2": "X",
+        "charId": "char_1032_excu2",
+        "uniEquipIcon": "uniequip_002_excu2",
+        "typeIcon": "rea-x",
+        "uniEquipName": "待解答",
+        "uniEquipId": "uniequip_002_excu2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_excu2_1",
@@ -3673,6 +5191,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SPC",
+        "typeName2": "Y",
+        "charId": "char_253_greyy",
+        "uniEquipIcon": "uniequip_002_greyy",
+        "typeIcon": "spc-y",
+        "uniEquipName": "新的开始",
+        "uniEquipId": "uniequip_002_greyy"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_magic_rage_2_",
@@ -3692,6 +5221,7 @@
     "date": 1587456000000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_heal_self_3_",
@@ -3713,6 +5243,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "RIN",
+        "typeName2": "X",
+        "charId": "char_179_cgbird",
+        "uniEquipIcon": "uniequip_002_cgbird",
+        "typeIcon": "rin-x",
+        "uniEquipName": "“封闭的希望”",
+        "uniEquipId": "uniequip_002_cgbird"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_heal_up_3_",
@@ -3739,6 +5280,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PRO",
+        "typeName2": "X",
+        "charId": "char_2014_nian",
+        "uniEquipIcon": "uniequip_002_nian",
+        "typeIcon": "pro-x",
+        "uniEquipName": "混沌阵列",
+        "uniEquipId": "uniequip_002_nian"
+      },
+      {
+        "typeName1": "PRO",
+        "typeName2": "Y",
+        "charId": "char_2014_nian",
+        "uniEquipIcon": "uniequip_003_nian",
+        "typeIcon": "pro-y",
+        "uniEquipName": "“请勿叩门”",
+        "uniEquipId": "uniequip_003_nian"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_nian_1",
@@ -3764,6 +5325,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "WAH",
+        "typeName2": "X",
+        "charId": "char_436_whispr",
+        "uniEquipIcon": "uniequip_002_whispr",
+        "typeIcon": "wah-x",
+        "uniEquipName": "古朴的急救箱",
+        "uniEquipId": "uniequip_002_whispr"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_whispr_1",
@@ -3783,6 +5355,7 @@
     "date": 1649923200000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_chnut_1",
@@ -3804,6 +5377,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PRO",
+        "typeName2": "X",
+        "charId": "char_150_snakek",
+        "uniEquipIcon": "uniequip_002_snakek",
+        "typeIcon": "pro-x",
+        "uniEquipName": "超强棒球套装",
+        "uniEquipId": "uniequip_002_snakek"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_def_up_2_",
@@ -3825,6 +5409,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "PUS",
+        "typeName2": "Y",
+        "charId": "char_241_panda",
+        "uniEquipIcon": "uniequip_002_panda",
+        "typeIcon": "pus-y",
+        "uniEquipName": "尚蜀风味自制辣酱",
+        "uniEquipId": "uniequip_002_panda"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_panda_1",
@@ -3846,6 +5441,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BLS",
+        "typeName2": "X",
+        "charId": "char_1031_slent2",
+        "uniEquipIcon": "uniequip_002_slent2",
+        "typeIcon": "bls-x",
+        "uniEquipName": "难得清醒",
+        "uniEquipId": "uniequip_002_slent2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_slent2_1",
@@ -3871,6 +5477,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SUM",
+        "typeName2": "Y",
+        "charId": "char_110_deepcl",
+        "uniEquipIcon": "uniequip_002_deepcl",
+        "typeIcon": "sum-y",
+        "uniEquipName": "诡异的调色盘",
+        "uniEquipId": "uniequip_002_deepcl"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_deepcl_1",
@@ -3890,6 +5507,7 @@
     "date": 1693900800000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_jesca2_1",
@@ -3915,6 +5533,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CRA",
+        "typeName2": "X",
+        "charId": "char_4072_ironmn",
+        "uniEquipIcon": "uniequip_002_ironmn",
+        "typeIcon": "cra-x",
+        "uniEquipName": "铁钳号·爬行者",
+        "uniEquipId": "uniequip_002_ironmn"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ironmn_1",
@@ -3938,6 +5567,7 @@
     "date": 1556589600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_1_",
@@ -3953,6 +5583,7 @@
     "date": 1558576800000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_blowrange_up_1_",
@@ -3970,6 +5601,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SPC",
+        "typeName2": "Y",
+        "charId": "char_166_skfire",
+        "uniEquipIcon": "uniequip_002_skfire",
+        "typeIcon": "spc-y",
+        "uniEquipName": "阻燃处理方案",
+        "uniEquipId": "uniequip_002_skfire"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -3989,6 +5631,7 @@
     "date": 1654761600000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -4010,6 +5653,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "HOK",
+        "typeName2": "X",
+        "charId": "char_474_glady",
+        "uniEquipIcon": "uniequip_002_glady",
+        "typeIcon": "hok-x",
+        "uniEquipName": "执政官手镜",
+        "uniEquipId": "uniequip_002_glady"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_glady_1",
@@ -4035,6 +5689,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "X",
+        "charId": "char_133_mm",
+        "uniEquipIcon": "uniequip_002_mm",
+        "typeIcon": "mar-x",
+        "uniEquipName": "新手侦探礼包",
+        "uniEquipId": "uniequip_002_mm"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_mm_1",
@@ -4056,6 +5721,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CHA",
+        "typeName2": "X",
+        "charId": "char_306_leizi",
+        "uniEquipIcon": "uniequip_002_leizi",
+        "typeIcon": "cha-x",
+        "uniEquipName": "“天地通明”",
+        "uniEquipId": "uniequip_002_leizi"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -4077,6 +5753,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "Y",
+        "charId": "char_235_jesica",
+        "uniEquipIcon": "uniequip_002_jesica",
+        "typeIcon": "mar-y",
+        "uniEquipName": "杰西卡的订单",
+        "uniEquipId": "uniequip_002_jesica"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_powerstrike_2_",
@@ -4096,6 +5783,7 @@
     "date": 1640073600000,
     "profession": "CASTER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -4115,6 +5803,7 @@
     "date": 1654761600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_pianst_1",
@@ -4134,6 +5823,7 @@
     "date": 1627977600000,
     "profession": "SNIPER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_chen2_1",
@@ -4159,6 +5849,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "EXE",
+        "typeName2": "Y",
+        "charId": "char_214_kafka",
+        "uniEquipIcon": "uniequip_002_kafka",
+        "typeIcon": "exe-y",
+        "uniEquipName": "魔方挂坠",
+        "uniEquipId": "uniequip_002_kafka"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_kafka_1",
@@ -4180,6 +5881,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "TRP",
+        "typeName2": "Y",
+        "charId": "char_451_robin",
+        "uniEquipIcon": "uniequip_002_robin",
+        "typeIcon": "trp-y",
+        "uniEquipName": "限量版年历",
+        "uniEquipId": "uniequip_002_robin"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_robin_1",
@@ -4202,6 +5914,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "HES",
+        "typeName2": "X",
+        "charId": "char_416_zumama",
+        "uniEquipIcon": "uniequip_002_zumama",
+        "typeIcon": "hes-x",
+        "uniEquipName": "祖玛玛的工具箱",
+        "uniEquipId": "uniequip_002_zumama"
+      },
+      {
+        "typeName1": "HES",
+        "typeName2": "Y",
+        "charId": "char_416_zumama",
+        "uniEquipIcon": "uniequip_003_zumama",
+        "typeIcon": "hes-y",
+        "uniEquipName": "“小小的丑东西”",
+        "uniEquipId": "uniequip_003_zumama"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_zumama_1",
@@ -4227,6 +5959,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "X",
+        "charId": "char_204_platnm",
+        "uniEquipIcon": "uniequip_002_platnm",
+        "typeIcon": "mar-x",
+        "uniEquipName": "独自旅行套装",
+        "uniEquipId": "uniequip_002_platnm"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -4248,6 +5991,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "EXE",
+        "typeName2": "X",
+        "charId": "char_237_gravel",
+        "uniEquipIcon": "uniequip_002_gravel",
+        "typeIcon": "exe-x",
+        "uniEquipName": "隐秘行动工具包",
+        "uniEquipId": "uniequip_002_gravel"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_gravel_1",
@@ -4269,6 +6023,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PHY",
+        "typeName2": "X",
+        "charId": "char_117_myrrh",
+        "uniEquipIcon": "uniequip_002_myrrh",
+        "typeIcon": "phy-x",
+        "uniEquipName": "“生命的短暂”",
+        "uniEquipId": "uniequip_002_myrrh"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_myrrh_1",
@@ -4290,6 +6055,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SIE",
+        "typeName2": "X",
+        "charId": "char_2012_typhon",
+        "uniEquipIcon": "uniequip_002_typhon",
+        "typeIcon": "sie-x",
+        "uniEquipName": "自然的包容",
+        "uniEquipId": "uniequip_002_typhon"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -4316,6 +6092,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PRO",
+        "typeName2": "Y",
+        "charId": "char_136_hsguma",
+        "uniEquipIcon": "uniequip_002_hsguma",
+        "typeIcon": "pro-y",
+        "uniEquipName": "友人们的赠礼",
+        "uniEquipId": "uniequip_002_hsguma"
+      },
+      {
+        "typeName1": "PRO",
+        "typeName2": "X",
+        "charId": "char_136_hsguma",
+        "uniEquipIcon": "uniequip_003_hsguma",
+        "typeIcon": "pro-x",
+        "uniEquipName": "护身符",
+        "uniEquipId": "uniequip_003_hsguma"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_hsguma_1",
@@ -4339,6 +6135,7 @@
     "date": 1665475200000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_heal_rage_3_",
@@ -4360,6 +6157,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "ART",
+        "typeName2": "Y",
+        "charId": "char_219_meteo",
+        "uniEquipIcon": "uniequip_002_meteo",
+        "typeIcon": "art-y",
+        "uniEquipName": "无名的身份牌",
+        "uniEquipId": "uniequip_002_meteo"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_meteo_1",
@@ -4381,6 +6189,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BEA",
+        "typeName2": "X",
+        "charId": "char_151_myrtle",
+        "uniEquipIcon": "uniequip_002_myrtle",
+        "typeIcon": "bea-x",
+        "uniEquipName": "“私人收藏”",
+        "uniEquipId": "uniequip_002_myrtle"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_assist_cost_2_",
@@ -4402,6 +6221,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MUS",
+        "typeName2": "X",
+        "charId": "char_475_akafyu",
+        "uniEquipIcon": "uniequip_002_akafyu",
+        "typeIcon": "mus-x",
+        "uniEquipName": "武将甲胄",
+        "uniEquipId": "uniequip_002_akafyu"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_akafyu_1",
@@ -4423,6 +6253,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "HOK",
+        "typeName2": "X",
+        "charId": "char_4105_almond",
+        "uniEquipIcon": "uniequip_002_almond",
+        "typeIcon": "hok-x",
+        "uniEquipName": "“毕业设计”",
+        "uniEquipId": "uniequip_002_almond"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_almond_1",
@@ -4444,6 +6285,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DRE",
+        "typeName2": "X",
+        "charId": "char_159_peacok",
+        "uniEquipIcon": "uniequip_002_peacok",
+        "typeIcon": "dre-x",
+        "uniEquipName": "断罪之拳",
+        "uniEquipId": "uniequip_002_peacok"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_peacok_1",
@@ -4465,6 +6317,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "REA",
+        "typeName2": "X",
+        "charId": "char_4066_highmo",
+        "uniEquipIcon": "uniequip_002_highmo",
+        "typeIcon": "rea-x",
+        "uniEquipName": "“启航”",
+        "uniEquipId": "uniequip_002_highmo"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_highmo_1",
@@ -4484,6 +6347,7 @@
     "date": 1634284800000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_3_",
@@ -4505,6 +6369,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "GUA",
+        "typeName2": "X",
+        "charId": "char_196_sunbr",
+        "uniEquipIcon": "uniequip_002_sunbr",
+        "typeIcon": "gua-x",
+        "uniEquipName": "蜜糖馅饼礼包",
+        "uniEquipId": "uniequip_002_sunbr"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_sunbr_1",
@@ -4526,6 +6401,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DEA",
+        "typeName2": "X",
+        "charId": "char_302_glaze",
+        "uniEquipIcon": "uniequip_002_glaze",
+        "typeIcon": "dea-x",
+        "uniEquipName": "便携雷达的辅助器材",
+        "uniEquipId": "uniequip_002_glaze"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_glaze_1",
@@ -4547,6 +6433,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "X",
+        "charId": "char_1021_kroos2",
+        "uniEquipIcon": "uniequip_002_kroos2",
+        "typeIcon": "mar-x",
+        "uniEquipName": "真心的话和想冒的险",
+        "uniEquipId": "uniequip_002_kroos2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_kroos2_1",
@@ -4568,6 +6465,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "DRE",
+        "typeName2": "Y",
+        "charId": "char_289_gyuki",
+        "uniEquipIcon": "uniequip_002_gyuki",
+        "typeIcon": "dre-y",
+        "uniEquipName": "断竹插花作品",
+        "uniEquipId": "uniequip_002_gyuki"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_heal_self_2_",
@@ -4587,6 +6495,7 @@
     "date": 1556589600000,
     "profession": "SUPPORT",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_quickattack_1_",
@@ -4604,6 +6513,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DEC",
+        "typeName2": "X",
+        "charId": "char_258_podego",
+        "uniEquipIcon": "uniequip_002_podego",
+        "typeIcon": "dec-x",
+        "uniEquipName": "“不谢的苗圃”",
+        "uniEquipId": "uniequip_002_podego"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_podego_1",
@@ -4623,6 +6543,7 @@
     "date": 1556589600000,
     "profession": "SUPPORT",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_sora_1",
@@ -4644,6 +6565,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "RIN",
+        "typeName2": "X",
+        "charId": "char_128_plosis",
+        "uniEquipIcon": "uniequip_002_plosis",
+        "typeIcon": "rin-x",
+        "uniEquipName": "医疗环境分析装置",
+        "uniEquipId": "uniequip_002_plosis"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_heal_up_3_",
@@ -4663,6 +6595,7 @@
     "date": 1556589600000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "夜刀",
     "subProfessionId": "pioneer",
@@ -4673,6 +6606,7 @@
     "date": 1556589600000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_charge_cost_1_",
@@ -4690,6 +6624,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "GUA",
+        "typeName2": "Y",
+        "charId": "char_226_hmau",
+        "uniEquipIcon": "uniequip_002_hmau",
+        "typeIcon": "gua-y",
+        "uniEquipName": "八点档情景剧录像带",
+        "uniEquipId": "uniequip_002_hmau"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_hmau_1",
@@ -4712,6 +6657,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CCR",
+        "typeName2": "X",
+        "charId": "char_2013_cerber",
+        "uniEquipIcon": "uniequip_002_cerber",
+        "typeIcon": "ccr-x",
+        "uniEquipName": "“很干的面包”",
+        "uniEquipId": "uniequip_002_cerber"
+      },
+      {
+        "typeName1": "CCR",
+        "typeName2": "Y",
+        "charId": "char_2013_cerber",
+        "uniEquipIcon": "uniequip_003_cerber",
+        "typeIcon": "ccr-y",
+        "uniEquipName": "“我打的刀”",
+        "uniEquipId": "uniequip_003_cerber"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_cerber_1",
@@ -4737,6 +6702,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SUM",
+        "typeName2": "X",
+        "charId": "char_336_folivo",
+        "uniEquipIcon": "uniequip_002_folivo",
+        "typeIcon": "sum-x",
+        "uniEquipName": "专业级改良镜头",
+        "uniEquipId": "uniequip_002_folivo"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_folivo_1",
@@ -4758,6 +6734,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "RIN",
+        "typeName2": "Y",
+        "charId": "char_181_flower",
+        "uniEquipIcon": "uniequip_002_flower",
+        "typeIcon": "rin-y",
+        "uniEquipName": "“爱琴之吻”",
+        "uniEquipId": "uniequip_002_flower"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_heal_up_2_",
@@ -4779,6 +6766,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "CCR",
+        "typeName2": "Y",
+        "charId": "char_164_nightm",
+        "uniEquipIcon": "uniequip_002_nightm",
+        "typeIcon": "ccr-y",
+        "uniEquipName": "“两生花”",
+        "uniEquipId": "uniequip_002_nightm"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_nightm_1",
@@ -4800,6 +6798,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PHY",
+        "typeName2": "X",
+        "charId": "char_298_susuro",
+        "uniEquipIcon": "uniequip_002_susuro",
+        "typeIcon": "phy-x",
+        "uniEquipName": "医不自治",
+        "uniEquipId": "uniequip_002_susuro"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_heal_up_2_",
@@ -4821,6 +6830,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MER",
+        "typeName2": "X",
+        "charId": "char_322_lmlee",
+        "uniEquipIcon": "uniequip_002_lmlee",
+        "typeIcon": "mer-x",
+        "uniEquipName": "“无问吉凶”",
+        "uniEquipId": "uniequip_002_lmlee"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_lmlee_1",
@@ -4844,6 +6864,7 @@
     "date": 1556589600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_tiger_1",
@@ -4865,6 +6886,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SIE",
+        "typeName2": "X",
+        "charId": "char_4062_totter",
+        "uniEquipIcon": "uniequip_002_totter",
+        "typeIcon": "sie-x",
+        "uniEquipName": "雪花球",
+        "uniEquipId": "uniequip_002_totter"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_totter_1",
@@ -4886,6 +6918,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "MAR",
+        "typeName2": "Y",
+        "charId": "char_129_bluep",
+        "uniEquipIcon": "uniequip_002_bluep",
+        "typeIcon": "mar-y",
+        "uniEquipName": "标准比色卡",
+        "uniEquipId": "uniequip_002_bluep"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_bluep_1",
@@ -4907,6 +6950,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DRE",
+        "typeName2": "X",
+        "charId": "char_154_morgan",
+        "uniEquipIcon": "uniequip_002_morgan",
+        "typeIcon": "dre-x",
+        "uniEquipName": "“钢铁之心”",
+        "uniEquipId": "uniequip_002_morgan"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_morgan_1",
@@ -4926,6 +6980,7 @@
     "date": 1627977600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_takila_1",
@@ -4947,6 +7002,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "AMB",
+        "typeName2": "X",
+        "charId": "char_215_mantic",
+        "uniEquipIcon": "uniequip_002_mantic",
+        "typeIcon": "amb-x",
+        "uniEquipName": "训练用尾部防护套装",
+        "uniEquipId": "uniequip_002_mantic"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_mantic_1",
@@ -4968,6 +7034,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "PRO",
+        "typeName2": "Y",
+        "charId": "char_304_zebra",
+        "uniEquipIcon": "uniequip_002_zebra",
+        "typeIcon": "pro-y",
+        "uniEquipName": "人气角色贴纸",
+        "uniEquipId": "uniequip_002_zebra"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_zebra_1",
@@ -4989,6 +7066,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "ART",
+        "typeName2": "Y",
+        "charId": "char_300_phenxi",
+        "uniEquipIcon": "uniequip_002_phenxi",
+        "typeIcon": "art-y",
+        "uniEquipName": "“律外”特种弹药配给组",
+        "uniEquipId": "uniequip_002_phenxi"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_phenxi_1",
@@ -5014,6 +7102,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MER",
+        "typeName2": "X",
+        "charId": "char_1033_swire2",
+        "uniEquipIcon": "uniequip_002_swire2",
+        "typeIcon": "mer-x",
+        "uniEquipName": "“金币辉煌”",
+        "uniEquipId": "uniequip_002_swire2"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_swire2_1",
@@ -5037,6 +7136,7 @@
     "date": 1556589600000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_liskam_1",
@@ -5058,6 +7158,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BLS",
+        "typeName2": "X",
+        "charId": "char_343_tknogi",
+        "uniEquipIcon": "uniequip_002_tknogi",
+        "typeIcon": "bls-x",
+        "uniEquipName": "胧夜微明",
+        "uniEquipId": "uniequip_002_tknogi"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_tknogi_1",
@@ -5080,6 +7191,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MUS",
+        "typeName2": "X",
+        "charId": "char_188_helage",
+        "uniEquipIcon": "uniequip_002_helage",
+        "typeIcon": "mus-x",
+        "uniEquipName": "藏锋",
+        "uniEquipId": "uniequip_002_helage"
+      },
+      {
+        "typeName1": "MUS",
+        "typeName2": "Y",
+        "charId": "char_188_helage",
+        "uniEquipIcon": "uniequip_003_helage",
+        "typeIcon": "mus-y",
+        "uniEquipName": "“热的雪”",
+        "uniEquipId": "uniequip_003_helage"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_helage_1",
@@ -5105,6 +7236,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BLS",
+        "typeName2": "X",
+        "charId": "char_4019_ncdeer",
+        "uniEquipIcon": "uniequip_002_ncdeer",
+        "typeIcon": "bls-x",
+        "uniEquipName": "“仙药”",
+        "uniEquipId": "uniequip_002_ncdeer"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ncdeer_1",
@@ -5126,6 +7268,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "GUA",
+        "typeName2": "X",
+        "charId": "char_148_nearl",
+        "uniEquipIcon": "uniequip_002_nearl",
+        "typeIcon": "gua-x",
+        "uniEquipName": "改良骑士盾牌",
+        "uniEquipId": "uniequip_002_nearl"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_nearl_1",
@@ -5145,6 +7298,7 @@
     "date": 1556589600000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_wyvern_1",
@@ -5162,6 +7316,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "CCR",
+        "typeName2": "Y",
+        "charId": "char_466_qanik",
+        "uniEquipIcon": "uniequip_002_qanik",
+        "typeIcon": "ccr-y",
+        "uniEquipName": "自制登山杖",
+        "uniEquipId": "uniequip_002_qanik"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_qanik_1",
@@ -5183,6 +7348,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "DEC",
+        "typeName2": "Y",
+        "charId": "char_195_glassb",
+        "uniEquipIcon": "uniequip_002_glassb",
+        "typeIcon": "dec-y",
+        "uniEquipName": "读书笔记",
+        "uniEquipId": "uniequip_002_glassb"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_glassb_1",
@@ -5202,6 +7378,7 @@
     "date": 1556589600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_powerstrike_3_",
@@ -5227,6 +7404,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CHG",
+        "typeName2": "X",
+        "charId": "char_220_grani",
+        "uniEquipIcon": "uniequip_002_grani",
+        "typeIcon": "chg-x",
+        "uniEquipName": "骑警套装",
+        "uniEquipId": "uniequip_002_grani"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_def_up_3_",
@@ -5248,6 +7436,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "GEE",
+        "typeName2": "X",
+        "charId": "char_4015_spuria",
+        "uniEquipIcon": "uniequip_002_spuria",
+        "typeIcon": "gee-x",
+        "uniEquipName": "无人机喷涂套装",
+        "uniEquipId": "uniequip_002_spuria"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_spuria_1",
@@ -5269,6 +7468,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PLX",
+        "typeName2": "X",
+        "charId": "char_426_billro",
+        "uniEquipIcon": "uniequip_002_billro",
+        "typeIcon": "plx-x",
+        "uniEquipName": "风信子与匕首",
+        "uniEquipId": "uniequip_002_billro"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_billro_1",
@@ -5295,6 +7505,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SWO",
+        "typeName2": "X",
+        "charId": "char_010_chen",
+        "uniEquipIcon": "uniequip_002_chen",
+        "typeIcon": "swo-x",
+        "uniEquipName": "罗德岛制式剑",
+        "uniEquipId": "uniequip_002_chen"
+      },
+      {
+        "typeName1": "SWO",
+        "typeName2": "Y",
+        "charId": "char_010_chen",
+        "uniEquipIcon": "uniequip_003_chen",
+        "typeIcon": "swo-y",
+        "uniEquipName": "往昔时光",
+        "uniEquipId": "uniequip_003_chen"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_chen_1",
@@ -5320,6 +7550,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CHG",
+        "typeName2": "X",
+        "charId": "char_222_bpipe",
+        "uniEquipIcon": "uniequip_002_bpipe",
+        "typeIcon": "chg-x",
+        "uniEquipName": "破城矛弹夹",
+        "uniEquipId": "uniequip_002_bpipe"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_quickattack_3_",
@@ -5345,6 +7586,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "INS",
+        "typeName2": "Y",
+        "charId": "char_130_doberm",
+        "uniEquipIcon": "uniequip_002_doberm",
+        "typeIcon": "ins-y",
+        "uniEquipName": "军用望远镜",
+        "uniEquipId": "uniequip_002_doberm"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_powerstrike_2_",
@@ -5364,6 +7616,7 @@
     "date": 1562659200000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_1_",
@@ -5379,6 +7632,7 @@
     "date": 1667289600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_atk_up_2_",
@@ -5400,6 +7654,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PLX",
+        "typeName2": "X",
+        "charId": "char_388_mint",
+        "uniEquipIcon": "uniequip_002_mint",
+        "typeIcon": "plx-x",
+        "uniEquipName": "注意力保持装置",
+        "uniEquipId": "uniequip_002_mint"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_mint_1",
@@ -5421,6 +7686,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "INS",
+        "typeName2": "X",
+        "charId": "char_4106_bryota",
+        "uniEquipIcon": "uniequip_002_bryota",
+        "typeIcon": "ins-x",
+        "uniEquipName": "餐后好时光",
+        "uniEquipId": "uniequip_002_bryota"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_powerstrike_2_",
@@ -5442,6 +7718,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PLX",
+        "typeName2": "X",
+        "charId": "char_344_beewax",
+        "uniEquipIcon": "uniequip_002_beewax",
+        "typeIcon": "plx-x",
+        "uniEquipName": "“司祭的祝福”",
+        "uniEquipId": "uniequip_002_beewax"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_beewax_1",
@@ -5461,6 +7748,7 @@
     "date": 1667289600000,
     "profession": "PIONEER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_vigil_1",
@@ -5486,6 +7774,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CEN",
+        "typeName2": "X",
+        "charId": "char_356_broca",
+        "uniEquipIcon": "uniequip_002_broca",
+        "typeIcon": "cen-x",
+        "uniEquipName": "“兄弟”",
+        "uniEquipId": "uniequip_002_broca"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_broca_1",
@@ -5507,6 +7806,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DEC",
+        "typeName2": "X",
+        "charId": "char_358_lisa",
+        "uniEquipIcon": "uniequip_002_lisa",
+        "typeIcon": "dec-x",
+        "uniEquipName": "怀中御守",
+        "uniEquipId": "uniequip_002_lisa"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_lisa_1",
@@ -5532,6 +7842,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "CHG",
+        "typeName2": "Y",
+        "charId": "char_290_vigna",
+        "uniEquipIcon": "uniequip_002_vigna",
+        "typeIcon": "chg-y",
+        "uniEquipName": "伟大的摇滚",
+        "uniEquipId": "uniequip_002_vigna"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_atk_up_2_",
@@ -5553,6 +7874,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "MER",
+        "typeName2": "X",
+        "charId": "char_272_strong",
+        "uniEquipIcon": "uniequip_002_strong",
+        "typeIcon": "mer-x",
+        "uniEquipName": "精钢刀具套组",
+        "uniEquipId": "uniequip_002_strong"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_strong_1",
@@ -5572,6 +7904,7 @@
     "date": 1600934400000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_surtr_1",
@@ -5597,6 +7930,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "UMD",
+        "typeName2": "X",
+        "charId": "char_206_gnosis",
+        "uniEquipIcon": "uniequip_002_gnosis",
+        "typeIcon": "umd-x",
+        "uniEquipName": "“誓言”",
+        "uniEquipId": "uniequip_002_gnosis"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_gnosis_1",
@@ -5622,6 +7966,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "GEE",
+        "typeName2": "X",
+        "charId": "char_225_haak",
+        "uniEquipIcon": "uniequip_002_haak",
+        "typeIcon": "gee-x",
+        "uniEquipName": "什锦果味医用箱",
+        "uniEquipId": "uniequip_002_haak"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_haak_1",
@@ -5647,6 +8002,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CEN",
+        "typeName2": "X",
+        "charId": "char_230_savage",
+        "uniEquipIcon": "uniequip_002_savage",
+        "typeIcon": "cen-x",
+        "uniEquipName": "未竟的旅程",
+        "uniEquipId": "uniequip_002_savage"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_powerstrike_2_",
@@ -5668,6 +8034,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SOL",
+        "typeName2": "Y",
+        "charId": "char_349_chiave",
+        "uniEquipIcon": "uniequip_002_chiave",
+        "typeIcon": "sol-y",
+        "uniEquipName": "自制千斤顶",
+        "uniEquipId": "uniequip_002_chiave"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_charge_cost_3_",
@@ -5689,6 +8066,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PUS",
+        "typeName2": "X",
+        "charId": "char_4036_forcer",
+        "uniEquipIcon": "uniequip_002_forcer",
+        "typeIcon": "pus-x",
+        "uniEquipName": "可执行的幻想",
+        "uniEquipId": "uniequip_002_forcer"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_forcer_1",
@@ -5711,6 +8099,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "GUA",
+        "typeName2": "X",
+        "charId": "char_202_demkni",
+        "uniEquipIcon": "uniequip_002_demkni",
+        "typeIcon": "gua-x",
+        "uniEquipName": "闲置的拳击手套",
+        "uniEquipId": "uniequip_002_demkni"
+      },
+      {
+        "typeName1": "GUA",
+        "typeName2": "Y",
+        "charId": "char_202_demkni",
+        "uniEquipIcon": "uniequip_003_demkni",
+        "typeIcon": "gua-y",
+        "uniEquipName": "科技新星",
+        "uniEquipId": "uniequip_003_demkni"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_demkni_1",
@@ -5736,6 +8144,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "DEA",
+        "typeName2": "Y",
+        "charId": "char_158_milu",
+        "uniEquipIcon": "uniequip_002_milu",
+        "typeIcon": "dea-y",
+        "uniEquipName": "野战狙击套装",
+        "uniEquipId": "uniequip_002_milu"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_milu_1",
@@ -5755,6 +8174,7 @@
     "date": 1680336000000,
     "profession": "SUPPORT",
     "mod": null,
+    "equip": null,
     "skill": [],
     "name": "U-Official",
     "subProfessionId": "bard",
@@ -5765,6 +8185,7 @@
     "date": 1635753600000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_glider_1",
@@ -5787,6 +8208,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SOL",
+        "typeName2": "X",
+        "charId": "char_112_siege",
+        "uniEquipIcon": "uniequip_002_siege",
+        "typeIcon": "sol-x",
+        "uniEquipName": "“糖果盒”",
+        "uniEquipId": "uniequip_002_siege"
+      },
+      {
+        "typeName1": "SOL",
+        "typeName2": "Y",
+        "charId": "char_112_siege",
+        "uniEquipIcon": "uniequip_003_siege",
+        "typeIcon": "sol-y",
+        "uniEquipName": "“初诺”",
+        "uniEquipId": "uniequip_003_siege"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_charge_cost_3_",
@@ -5810,6 +8251,7 @@
     "date": 1556589600000,
     "profession": "MEDIC",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_heal_up_1_",
@@ -5827,6 +8269,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "BOM",
+        "typeName2": "X",
+        "charId": "char_391_rosmon",
+        "uniEquipIcon": "uniequip_002_rosmon",
+        "typeIcon": "bom-x",
+        "uniEquipName": "“记事”",
+        "uniEquipId": "uniequip_002_rosmon"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_rosmon_1",
@@ -5852,6 +8305,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SUM",
+        "typeName2": "Y",
+        "charId": "char_2023_ling",
+        "uniEquipIcon": "uniequip_002_ling",
+        "typeIcon": "sum-y",
+        "uniEquipName": "诗短梦长",
+        "uniEquipId": "uniequip_002_ling"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_ling_1",
@@ -5875,6 +8339,7 @@
     "date": 1556589600000,
     "profession": "CASTER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_magic_rage_1_",
@@ -5892,6 +8357,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "DEC",
+        "typeName2": "X",
+        "charId": "char_4032_provs",
+        "uniEquipIcon": "uniequip_002_provs",
+        "typeIcon": "dec-x",
+        "uniEquipName": "黛丝特的毕业礼",
+        "uniEquipId": "uniequip_002_provs"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_provs_1",
@@ -5913,6 +8389,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "SOL",
+        "typeName2": "X",
+        "charId": "char_149_scave",
+        "uniEquipIcon": "uniequip_002_scave",
+        "typeIcon": "sol-x",
+        "uniEquipName": "“专属餐具”",
+        "uniEquipId": "uniequip_002_scave"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_charge_cost_2_",
@@ -5934,6 +8421,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "DEA",
+        "typeName2": "Y",
+        "charId": "char_4014_lunacu",
+        "uniEquipIcon": "uniequip_002_lunacu",
+        "typeIcon": "dea-y",
+        "uniEquipName": "“移动的窝”",
+        "uniEquipId": "uniequip_002_lunacu"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_lunacu_1",
@@ -5955,6 +8453,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "PLX",
+        "typeName2": "X",
+        "charId": "char_4080_lin",
+        "uniEquipIcon": "uniequip_002_lin",
+        "typeIcon": "plx-x",
+        "uniEquipName": "“七窍玲珑”",
+        "uniEquipId": "uniequip_002_lin"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_lin_1",
@@ -5978,6 +8487,7 @@
     "date": 1604217600000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_jaksel_1",
@@ -5997,6 +8507,7 @@
     "date": 1673942400000,
     "profession": "WARRIOR",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_chyue_1",
@@ -6022,6 +8533,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "PRO",
+        "typeName2": "Y",
+        "charId": "char_201_moeshd",
+        "uniEquipIcon": "uniequip_002_moeshd",
+        "typeIcon": "pro-y",
+        "uniEquipName": "作战靴",
+        "uniEquipId": "uniequip_002_moeshd"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_moeshd_1",
@@ -6041,6 +8563,7 @@
     "date": 1673942400000,
     "profession": "TANK",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_firwhl_1",
@@ -6060,6 +8583,7 @@
     "date": 1690876800000,
     "profession": "SUPPORT",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skchr_threye_1",
@@ -6082,6 +8606,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "CHA",
+        "typeName2": "X",
+        "charId": "char_472_pasngr",
+        "uniEquipIcon": "uniequip_002_pasngr",
+        "typeIcon": "cha-x",
+        "uniEquipName": "电磁调节器",
+        "uniEquipId": "uniequip_002_pasngr"
+      },
+      {
+        "typeName1": "CHA",
+        "typeName2": "Y",
+        "charId": "char_472_pasngr",
+        "uniEquipIcon": "uniequip_003_pasngr",
+        "typeIcon": "cha-y",
+        "uniEquipName": "王权金币",
+        "uniEquipId": "uniequip_003_pasngr"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_pasngr_1",
@@ -6107,6 +8651,17 @@
     "mod": {
       "modY": true
     },
+    "equip": [
+      {
+        "typeName1": "SOL",
+        "typeName2": "Y",
+        "charId": "char_102_texas",
+        "uniEquipIcon": "uniequip_002_texas",
+        "typeIcon": "sol-y",
+        "uniEquipName": "外勤私人补给包",
+        "uniEquipId": "uniequip_002_texas"
+      }
+    ],
     "skill": [
       {
         "iconId": "skcom_charge_cost_3_",
@@ -6129,6 +8684,26 @@
       "modY": true,
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "WAH",
+        "typeName2": "X",
+        "charId": "char_4042_lumen",
+        "uniEquipIcon": "uniequip_002_lumen",
+        "typeIcon": "wah-x",
+        "uniEquipName": "纯铜单筒望远镜",
+        "uniEquipId": "uniequip_002_lumen"
+      },
+      {
+        "typeName1": "WAH",
+        "typeName2": "Y",
+        "charId": "char_4042_lumen",
+        "uniEquipIcon": "uniequip_003_lumen",
+        "typeIcon": "WAH-Y",
+        "uniEquipName": "“幸运”",
+        "uniEquipId": "uniequip_003_lumen"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_lumen_1",
@@ -6152,6 +8727,7 @@
     "date": 1649923200000,
     "profession": "CASTER",
     "mod": null,
+    "equip": null,
     "skill": [
       {
         "iconId": "skcom_magic_rage_3_",
@@ -6173,6 +8749,17 @@
     "mod": {
       "modX": true
     },
+    "equip": [
+      {
+        "typeName1": "REA",
+        "typeName2": "X",
+        "charId": "char_421_crow",
+        "uniEquipIcon": "uniequip_002_crow",
+        "typeIcon": "rea-x",
+        "uniEquipName": "水蓝色黎明",
+        "uniEquipId": "uniequip_002_crow"
+      }
+    ],
     "skill": [
       {
         "iconId": "skchr_crow_1",

@@ -60,8 +60,8 @@ function getCharStatisticsResult() {
       const operatorData = characterBasicInfo[charId];
       if (operatorData.rarity < 6) continue
       let operator = {
-        charId: result.charId,
         name: operatorData.name,
+        charId: result.charId,
         profession: getProfession(operatorData.profession),
         subProfession: profession_table[operatorData.subProfessionId],
         elite: result.elite.rank2 != undefined ? result.elite.rank2 : 0.0,
