@@ -624,7 +624,7 @@ async function importSKLandCRED() {
   }).then(response => {
     response = response.data
     upload_message.value = response.data;
-    if (response.code === 20008) {
+    if (response.code === 20004) {
       cMessage("您已经注册导入过了", "error");
       bindAccount.value = true;
       return;
