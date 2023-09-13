@@ -73,7 +73,7 @@ async function getPlayerBind(cred){
         }else {
             const list = response.data.list
             uid = list[0].defaultUid;
-            if(uid===""){
+            if(uid == ""){
                 const bindingList = list[0].bindingList;
                 for(const binding of bindingList ){
                    if(binding.isDefault){
@@ -81,7 +81,12 @@ async function getPlayerBind(cred){
                    }
                 }
             }
-
+            if(uid == ""){
+                uid = list[0].bindingList[0].uid;
+            }
+            if(uid == ""){
+                cMessage("未能成功获取数据")
+            }
         }
 
 
