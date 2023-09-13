@@ -1,90 +1,95 @@
 import request from "@/api/requestBase";
 import {cMessage} from "@/element/message";
 
-async function importSklandData(cred){
-    cred = cred.replace(/\s+/g,'')
-    cred = cred.replace(/["']/g,'')
+async function importSklandData(cred) {
+    cred = cred.replace(/\s+/g, '')
+    cred = cred.replace(/["']/g, '')
 
 
     let playerInfoAPI = 'https://zonai.skland.com/api/v1/game/player/info?uid='
     let playerBind = await getPlayerBind(cred);
     console.log(playerBind)
     const uid = playerBind.uid
+    const userName = playerBind.userName
 
-    playerInfoAPI = playerInfoAPI+uid;
+    playerInfoAPI = playerInfoAPI + uid;
 
     let uploadData = {}
 
     await request({
-        url:playerInfoAPI,
+        url: playerInfoAPI,
         headers: {
             "cred": cred,
         },
         method: "get",
-    }).then(response=>{
+    }).then(response => {
         response = response.data
-        if(response.code!==0){
+        if (response.code !== 0) {
             cMessage("读取森空岛数据失败")
-        }else {
+        } else {
 
-           const data = response.data
-           const chars =  data.chars;
-           const charInfoMap =  data.charInfoMap;
+            const data = response.data
+            const chars = data.chars;
+            const charInfoMap = data.charInfoMap;
 
-           uploadData ={
-                   uid:uid,
-                   chars: chars,
-                   charInfoMap : charInfoMap
-           }
+            uploadData = {
+                userName:userName,
+                uid: uid,
+                chars: chars,
+                charInfoMap: charInfoMap
+            }
         }
     })
 
     return uploadData
 }
 
-function uploadOperatorData(data){
+function uploadOperatorData(data) {
     request({
-        url:'survey/operator/import/skland/v2',
+        url: 'survey/operator/import/skland/v2',
         method: "post",
-        data:data
-    }).then(response=>{
+        data: data
+    }).then(response => {
         response = response.data
         console.log(response)
     })
 }
 
 
-async function getPlayerBind(cred){
-    cred = cred.replace(/\s+/g,'')
-    cred = cred.replace(/["']/g,'')
+async function getPlayerBind(cred) {
+    cred = cred.replace(/\s+/g, '')
+    cred = cred.replace(/["']/g, '')
 
     const playerBindingAPI = 'https://zonai.skland.com/api/v1/game/player/binding?'
     let uid = ''
+    let userName = ''
     await request({
-        url:playerBindingAPI,
+        url: playerBindingAPI,
         headers: {
             "cred": cred,
         },
         method: "get",
-    }).then(response=>{
+    }).then(response => {
         response = response.data
-        if(response.code!==0){
+        if (response.code !== 0) {
             cMessage("森空岛CRED错误或失效")
-        }else {
+        } else {
             const list = response.data.list
-            uid = list[0].defaultUid;
-            if(uid == ""){
-                const bindingList = list[0].bindingList;
-                for(const binding of bindingList ){
-                   if(binding.isDefault){
-                       uid = binding.uid;
-                   }
+
+            const bindingList = list[0].bindingList;
+            for (const binding of bindingList) {
+                if (binding.isDefault) {
+                    uid = binding.uid;
+                    userName = binding.nickName;
                 }
             }
-            if(uid == ""){
+
+            if (uid == "") {
                 uid = list[0].bindingList[0].uid;
+                userName = list[0].bindingList[0].nickName;
             }
-            if(uid == ""){
+
+            if (uid == "") {
                 cMessage("未能成功获取数据")
             }
         }
@@ -93,8 +98,9 @@ async function getPlayerBind(cred){
     })
 
     return {
+        userName:userName,
         uid: uid
     }
 }
 
-export {importSklandData,getPlayerBind}
+export {importSklandData, getPlayerBind}

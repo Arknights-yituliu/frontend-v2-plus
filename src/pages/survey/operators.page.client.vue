@@ -42,6 +42,7 @@
       <button class="mdui-btn survey_button">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>
       <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>
       <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
+      <div style="margin: 12px;color: red;font-weight: 600">因账号系统升级，如遇到无法登录或用户不存在，请使用《数据导入导出》内的”根据CRED找回账号“功能根据下方提示进行登录</div>
       <div class="mdui-divider" style="margin: 4px;"></div>
       <button class="mdui-btn survey_button"
               @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选/批量操作
@@ -262,7 +263,7 @@
             <div class="skland_desc">输入CRED</div>
             <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>
             <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
-            <div class="btn_switch" @click="retrieveAccount()">找回一图流账号</div>
+            <div class="btn_switch" @click="loginByCRED()">根据CRED找回账号</div>
             <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
           </div>
         </div>
@@ -442,6 +443,7 @@ import "@/assets/css/survey_character.css";
 import {http} from "@/api/baseURL";
 import request from "@/api/requestBase";
 import {importSklandData, getPlayerBind} from "./skland.js";
+import jsCookie from "js-cookie";
 
 let first_popup = ref(false)
 let import_popup_visible = ref(false)
@@ -449,7 +451,18 @@ let import_popup_visible = ref(false)
 let userData = ref({userName: "未登录", status: -100, token: void 0});
 
 function cacheUserData() {
-  userData.value = globalUserData.value
+  let cacheData = jsCookie.get("globalUserData");
+  if(cacheData == "undefined" || cacheData == void 0 || cacheData == null){
+    cacheData =localStorage.getItem("globalUserData");
+  }else {
+    localStorage.setItem("globalUserData",cacheData);
+  }
+  if(cacheData == "undefined" || cacheData == void 0 || cacheData == null){
+    // cMessage('未登录','error')
+  }else {
+    userData.value = JSON.parse(cacheData);
+  }
+    userData.value = globalUserData.value
 }
 
 function isFirstPopup() {
@@ -599,6 +612,31 @@ async function retrieveAccount() {
   })
 }
 
+
+async function  loginByCRED(){
+  const response = await importSklandData(skland_CRED.value);
+  const data = {
+    token:'',
+    uid: response.uid,
+    userName:response.userName,
+    data: JSON.stringify(response)
+  }
+
+  request({
+    url: 'survey/user/login/cred',
+    method: "post",
+    data: data
+  }).then(response => {
+    response = response.data
+    localStorage.setItem("globalUserData", JSON.stringify(response.data));
+    cMessage('登录成功')
+    data.token = response.data.token;
+    userData.value = response.data
+    uploadSklandData(data)
+  })
+
+}
+
 /**
  * 森空岛导入
  * @returns {Promise<void>}
@@ -617,6 +655,10 @@ async function importSKLandCRED() {
     data: JSON.stringify(response)
   }
 
+  await uploadSklandData(data)
+}
+
+async function uploadSklandData(data){
   request({
     url: 'survey/operator/import/skland/v2',
     method: "post",
@@ -638,8 +680,6 @@ async function importSKLandCRED() {
       cMessage(response.msg, "error");
     }
   })
-
-
 }
 
 let reset_popup_visible = ref(false)

@@ -68,7 +68,7 @@ function calAPCost(operatorList) {
             }
         }
 
-        console.log(operator.equip)
+        // console.log(operator.equip)
 
         if (operator.equip != undefined) {
             for (const mod of operator.equip) {

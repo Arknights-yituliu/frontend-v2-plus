@@ -59,8 +59,6 @@ function userDataCacheEvent() {
   }else {
     localStorage.setItem("globalUserData",cacheData);
   }
-
-
   globalUserData.value = cacheData == "undefined" || cacheData == void 0 || cacheData == null ? globalUserData.value : JSON.parse(cacheData);
 
   return globalUserData.value;

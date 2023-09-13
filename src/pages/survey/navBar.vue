@@ -18,9 +18,25 @@
           <div class="btn_login" @click="register()">注册</div>
           <div class="btn_login" @click="login()">登录</div>
         </div>
+<!--        <div class="login_tip_wrap">-->
+<!--          <div class="login_tip" style="color: red;font-weight: 600">-->
+<!--             也可使用森空岛CRED直接登录-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="login_input_wrap">-->
+<!--          <div class="input_label">森空岛CRED：</div>-->
+<!--          <input class="login_input" placeholder="请输入" v-model="inputData.cred"/>-->
+<!--        </div>-->
+<!--        <div style="display: flex">-->
+<!--          <div class="btn_login" @click="loginByCRED()">CRED直接登录</div>-->
+<!--        </div>-->
 
         <div class="login_tip_wrap">
 <!--          <div class="login_tip login_tip_info">如果您想让自己的练度数据保存的更加安全可在个人中心设置密码，但设置密码后，登录时必须输入密码才可登录</div>-->
+
+          <div class="login_tip" style="color: red;font-weight: 600">
+            因账号系统升级，如遇到无法登录或用户不存在，请使用《数据导入导出》内的森空岛CRED找回功能进行登录
+          </div>
           <div class="login_tip">
             新用户输入自己喜欢的昵称后点击注册即可分配ID，昵称+ID即为您的用户名。
           </div>
@@ -67,7 +83,7 @@ import { userDataCacheClearEvent, userDataCacheEvent, globalUserData} from "./us
 import request from "@/api/requestBase";
 import {cMessage} from "@/element/message";
 
-let inputData = ref({userName: '', passWord: ''}); //用户输入的用户名，用obj没准后期有别的字段
+let inputData = ref({userName: '', passWord: '', cred:''}); //用户输入的用户名，用obj没准后期有别的字段
 let userData = ref({userName: "山桜", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
 
 let loginVisible = ref(false);
@@ -76,6 +92,42 @@ let login_tip_show = ref(true)
 let login_need_pass_word = ref(false)
 let logout_tip_show = ref(false)
 let user_name_show = ref(false)
+
+
+async function registerAndLogin(){
+
+  await request({
+    url: `survey/user/login/v2`,
+    method: "post",
+    data: inputData.value,
+  }).then(response=> {
+    response = response.data
+    if(response.code===200){
+       const token =  response.data.token
+      globalUserData.value = response.data;
+      localStorage.setItem("globalUserData",JSON.stringify(response.data));
+      userData.value.userName = response.data.userName;
+      userData.value.status = response.data.status;
+      userData.value.token = response.data.token;
+
+      setTimeout(() => {
+        loginVisible.value = !loginVisible;
+        user_name_show.value = true
+        logout_tip_show.value = true
+        login_need_pass_word.value = false
+        login_tip_show.value = false
+      }, 400);
+
+      cMessage("登录成功");
+    }else{
+      cMessage(response.msg,'error')
+    }
+  })
+}
+
+async function loginByCRED(){
+
+}
 
 //注册
 async function register() {
