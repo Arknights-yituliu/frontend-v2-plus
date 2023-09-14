@@ -463,7 +463,7 @@ function cacheUserData() {
   }else {
     userData.value = JSON.parse(cacheData);
   }
-    userData.value = globalUserData.value
+
 }
 
 function isFirstPopup() {
@@ -629,11 +629,15 @@ async function  loginByCRED(){
     data: data
   }).then(response => {
     response = response.data
-    localStorage.setItem("globalUserData", JSON.stringify(response.data));
-    cMessage('登录成功')
-    data.token = response.data.token;
-    userData.value = response.data
-    uploadSklandData(data)
+    if(response.code===200){
+      localStorage.setItem("globalUserData", JSON.stringify(response.data));
+      cMessage('登录成功')
+      data.token = response.data.token;
+      userData.value = response.data
+      uploadSklandData(data)
+
+    }
+
   })
 
 }
@@ -660,7 +664,7 @@ async function importSKLandCRED() {
 }
 
 async function uploadSklandData(data){
-  request({
+  await request({
     url: 'survey/operator/import/skland/v2',
     method: "post",
     data: data
@@ -675,8 +679,13 @@ async function uploadSklandData(data){
 
     if (response.code === 200) {
       cMessage("森空岛数据导入成功");
-      getSurveyCharacter()
+      // getSurveyCharacter()
+      setTimeout(() => {
+        location.reload()
+      }, 1000);
+
       bindAccount.value = false;
+
     } else {
       cMessage(response.msg, "error");
     }
