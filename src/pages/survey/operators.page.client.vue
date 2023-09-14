@@ -263,7 +263,7 @@
             <div class="skland_desc">输入CRED</div>
             <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>
             <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
-            <div class="btn_switch" @click="loginByCRED()">根据CRED找回账号</div>
+            <div class="btn_switch" style="width: 135px" @click="loginByCRED()">根据CRED找回账号</div>
             <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
           </div>
         </div>
@@ -278,7 +278,7 @@
         <div class="switch_bar upload">
           <div class="switch_desc"><b>*森空岛导入：</b>请遵循
             <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
-            如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">找回一图流账号</a> &nbsp;按钮，此时会找回您的一图流账号
+            如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号
           </div>
         </div>
       </div>
