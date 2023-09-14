@@ -263,6 +263,7 @@
             <div class="skland_desc">输入CRED</div>
             <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>
             <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
+            <div class="btn_switch" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>
             <div class="btn_switch" style="width: 135px" @click="loginByCRED()">根据CRED找回账号</div>
             <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
           </div>
