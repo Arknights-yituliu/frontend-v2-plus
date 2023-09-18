@@ -46,7 +46,7 @@
 <!--      <button class="survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
       <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
 
-      <div style="margin: 12px;color: red;font-weight: 600">因账号系统升级，如遇到无法登录或用户不存在，请使用《数据导入导出》内的”根据CRED找回账号“功能根据下方提示进行登录</div>
+      <div style="margin: 12px;color: red;font-weight: 600">因森空岛加入了签名验证，森空岛导入数据暂不可用，现已下线功能</div>
       <div class="mdui-divider" style="margin: 4px;"></div>
       <button class="survey_button_blue"
               @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')"> 筛选/批量操作
@@ -259,31 +259,31 @@
         </div>
 
         <div class="divider"></div>
-        <div class="switch_bar upload">
-          <div class="switch_title">森空岛导入</div>
-          <div class="switch_btns_wrap">
-            <div class="skland_desc">输入CRED</div>
-            <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>
-            <div class="survey_button" @click="importSKLandCRED()">导入森空岛数据</div>
-            <div class="survey_button" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>
-            <div class="survey_button" style="width: 135px" @click="loginByCRED()">根据CRED找回账号</div>
-            <div class="survey_button" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
-          </div>
-        </div>
-        <div class="switch_bar upload" v-show="bindAccount">
-          <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;">
-            {{ upload_message.userName }} </a> 请登录之前的账号 <br>
-            <div class="skland_login_btn" @click="login(upload_message.userName)">
-              请登录用户{{ upload_message.userName }}并刷新网页
-            </div>
-          </div>
-        </div>
-        <div class="switch_bar upload">
-          <div class="switch_desc"><b>*森空岛导入：</b>请遵循
-            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
-            如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号
-          </div>
-        </div>
+<!--        <div class="switch_bar upload">-->
+<!--          <div class="switch_title">森空岛导入</div>-->
+<!--          <div class="switch_btns_wrap">-->
+<!--            <div class="skland_desc">输入CRED</div>-->
+<!--            <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>-->
+<!--            <div class="survey_button" @click="importSKLandCRED()">导入森空岛数据</div>-->
+<!--            <div class="survey_button" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>-->
+<!--            <div class="survey_button" style="width: 135px" @click="loginByCRED()">根据CRED找回账号</div>-->
+<!--            <div class="survey_button" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="switch_bar upload" v-show="bindAccount">-->
+<!--          <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;">-->
+<!--            {{ upload_message.userName }} </a> 请登录之前的账号 <br>-->
+<!--            <div class="skland_login_btn" @click="login(upload_message.userName)">-->
+<!--              请登录用户{{ upload_message.userName }}并刷新网页-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="switch_bar upload">-->
+<!--          <div class="switch_desc"><b>*森空岛导入：</b>请遵循-->
+<!--            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>-->
+<!--            如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </div>
 
@@ -452,13 +452,13 @@ import jsCookie from "js-cookie";
 import { ElNotification } from 'element-plus'
 
 function openNotification() {
-  ElNotification({
-    title: '森空岛导入功能暂时下线',
-    message: '因森空岛加入了签名验证，森空岛导入数据暂不可用',
-    type: 'warning',
-    offset: 100,
-    duration:6000
-  })
+  // ElNotification({
+  //   title: '森空岛导入功能暂时下线',
+  //   message: '',
+  //   type: 'warning',
+  //   offset: 100,
+  //   duration:6000
+  // })
 }
 
 let first_popup = ref(false)
