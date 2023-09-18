@@ -38,31 +38,35 @@
   <div class="survey_character_page">
     <!-- 常驻条 -->
     <div class="setup_top">
-      <button class="mdui-btn survey_button" @click="firstPopupClose()">填写说明</button>
-      <button class="mdui-btn survey_button">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>
-      <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>
+      <button class="survey_button_blue" @click="firstPopupClose()">填写说明</button>
+      <button class="survey_button" @click="firstPopupClose()">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>
+      <button class="survey_button_blue" @click="upload()">保存问卷</button>
+<!--      <button class="survey_button" @click="firstPopupClose()">填写说明</button>-->
+<!--      <button class="survey_button">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>-->
+<!--      <button class="survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
       <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
+
       <div style="margin: 12px;color: red;font-weight: 600">因账号系统升级，如遇到无法登录或用户不存在，请使用《数据导入导出》内的”根据CRED找回账号“功能根据下方提示进行登录</div>
       <div class="mdui-divider" style="margin: 4px;"></div>
-      <button class="mdui-btn survey_button"
-              @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选/批量操作
+      <button class="survey_button_blue"
+              @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')"> 筛选/批量操作
       </button>
-      <button class="mdui-btn survey_button"
+      <button class="survey_button_blue"
               @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">数据导入导出
       </button>
-      <div class="mdui-btn-group">
-        <button type="button" class="mdui-btn survey_button_group_left" :class="surveyTypeBtnClass('极简模式')"
+
+        <button  class="survey_button_blue_left" :class="surveyTypeBtnClass('极简模式')"
                 @click="changeSurveyType('极简模式')">极简模式
         </button>
-        <button type="button" class="mdui-btn survey_button_group" :class="surveyTypeBtnClass('标准模式')"
+        <button  class="survey_button_blue_center" :class="surveyTypeBtnClass('标准模式')"
                 @click="changeSurveyType('标准模式')">标准模式
         </button>
-        <button type="button" class="mdui-btn survey_button_group" :class="surveyTypeBtnClass('高级模式')"
+        <button  class="survey_button_blue_right" :class="surveyTypeBtnClass('高级模式')"
                 @click="changeSurveyType('高级模式')">高级模式
         </button>
-      </div>
-      <button class="mdui-btn survey_button" @click="toBiliblili()">建议与反馈</button>
-      <button class="mdui-btn survey_button" @click="statisticsCollapse()">统计材料消耗</button>
+
+      <button class="survey_button_blue" @click="toBiliblili()">建议与反馈</button>
+      <button class="survey_button_blue" @click="statisticsCollapse()">统计材料消耗</button>
 
     </div>
 
@@ -151,9 +155,9 @@
         <div class="switch_bar filter">
           <div class="switch_title">排序</div>
           <div class="switch_btns_wrap">
-            <!-- <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div> -->
-            <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
-            <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
+            <!-- <div class="survey_button" @click="sortCharacterList('profession')">按职业</div> -->
+            <div class="survey_button" @click="sortCharacterList('rarity')">按稀有度</div>
+            <div class="survey_button" @click="sortCharacterList('date')">按实装顺序</div>
           </div>
         </div>
 
@@ -177,18 +181,18 @@
             <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员进行操作</div>
           </div>
           <div class="switch_btns_wrap">
-            <div class="btn_switch" @click="batchUpdatesOwn(true)">设为已拥有</div>
-            <div class="btn_switch" @click="batchUpdatesOwn(false)">设为未拥有</div>
-            <div class="btn_switch" @click="batchUpdatesElite(0)">设为无精</div>
-            <div class="btn_switch" @click="batchUpdatesElite(1)">设为精一</div>
-            <div class="btn_switch" @click="batchUpdatesElite(2)">设为精二</div>
-            <div class="btn_switch">设为满级</div>
-            <div class="btn_switch">设为满潜能</div>
-            <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
-            <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
-            <div class="btn_switch" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
-            <div class="btn_switch" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
-            <div class="btn_switch" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
+            <div class="survey_button" @click="batchUpdatesOwn(true)">设为已拥有</div>
+            <div class="survey_button" @click="batchUpdatesOwn(false)">设为未拥有</div>
+            <div class="survey_button" @click="batchUpdatesElite(0)">设为无精</div>
+            <div class="survey_button" @click="batchUpdatesElite(1)">设为精一</div>
+            <div class="survey_button" @click="batchUpdatesElite(2)">设为精二</div>
+            <div class="survey_button">设为满级</div>
+            <div class="survey_button">设为满潜能</div>
+            <div class="survey_button" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
+            <div class="survey_button" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
+            <div class="survey_button" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
+            <div class="survey_button" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
+            <div class="survey_button" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
           </div>
         </div>
       </div>
@@ -199,12 +203,10 @@
       <div>
         <div class="intro_wrap">
           <div class="intro_title">森空岛CRED的风险声明</div>
-          &emsp;&emsp;森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
-          &emsp;&emsp;一图流不会保存任何CRED信息<br/>
-          <a style="color: #fa5e5e">&emsp;&emsp;*请妥善保管此CRED</a>
+         森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
+         一图流不会保存任何CRED信息<br/>
+          <a style="color: #fa5e5e">*请妥善保管此CRED</a>
         </div>
-
-
         <div class="intro_wrap">
           <div class="intro_title">森空岛数据导入流程</div>
 
@@ -212,7 +214,7 @@
           <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：<br/>
             <a style="color:dodgerblue">localStorage.getItem('SK_OAUTH_CRED_KEY')</a>
             <br/>
-            <button class="mdui-btn survey_button" @click="copyCode()">复制命令</button>
+            <button class="survey_button" @click="copyCode()">复制命令</button>
 
             <br/>输入之后回车确认
           </p>
@@ -229,8 +231,8 @@
     <c-popup :visible="reset_popup_visible" v-model:visible="reset_popup_visible">
       <div class="popup_action_tip">此操作将解除您的森空岛UID与一图流账号的绑定，同时并清空一图流账号上保存的干员数据，确定要执行操作吗？</div>
       <div class="btn_switch_wrap">
-        <div class="btn_switch" @click="operatorDataReset()">确定</div>
-        <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible">取消</div>
+        <div class="survey_button" @click="operatorDataReset()">确定</div>
+        <div class="survey_button" @click="reset_popup_visible = !reset_popup_visible">取消</div>
       </div>
 
     </c-popup>
@@ -241,14 +243,14 @@
         <div class="switch_bar upload">
           <div class="switch_title">导入导出</div>
           <div class="switch_btns_wrap">
-            <div class="btn_switch" @click="exportExcel()">导出为Excel</div>
-            <!--            <div class="btn_switch">-->
+            <div class="survey_button" @click="exportExcel()">导出为Excel</div>
+            <!--            <div class="survey_button">-->
             <!--              <div class="input_upload_wrap">-->
             <!--                导入Excel文件-->
             <!--                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>-->
             <!--              </div>-->
             <!--            </div>-->
-            <!--            &lt;!&ndash; <div class="btn_switch" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
+            <!--            &lt;!&ndash; <div class="survey_button" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
             <!--            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>-->
           </div>
         </div>
@@ -262,10 +264,10 @@
           <div class="switch_btns_wrap">
             <div class="skland_desc">输入CRED</div>
             <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>
-            <div class="btn_switch" @click="importSKLandCRED()">导入森空岛数据</div>
-            <div class="btn_switch" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>
-            <div class="btn_switch" style="width: 135px" @click="loginByCRED()">根据CRED找回账号</div>
-            <div class="btn_switch" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
+            <div class="survey_button" @click="importSKLandCRED()">导入森空岛数据</div>
+            <div class="survey_button" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>
+            <div class="survey_button" style="width: 135px" @click="loginByCRED()">根据CRED找回账号</div>
+            <div class="survey_button" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
           </div>
         </div>
         <div class="switch_bar upload" v-show="bindAccount">
@@ -289,10 +291,12 @@
       <div class="switch_box" id="switch_statistics_box">
         <div class="switch_bar statistics"
              style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
-          总计消耗{{ apCostCount.toFixed(0) }} 理智
+          总计消耗{{ ap_cost_count.toFixed(0) }} 理智
         </div>
-
-        <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,type) in itemCostResult"
+        <button class="survey_button"  @click="splitMaterialByRarity(5)">不拆分</button>
+        <button class="survey_button" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
+        <button class="survey_button" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+        <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,type) in item_cost_list"
              :key="type">
           <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
             <div class="image_item_wrap">
@@ -345,7 +349,7 @@
             <!--            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">-->
             <div class="level_wrap" :id="char_index + 'level'">
               <!--              <img class="image_lvMax" src="/image/survey/lvMax.png" alt=""/>-->
-              {{ operator.level }}
+              {{ operator.level>0?operator.level:0 }}
             </div>
           </div>
         </div>
@@ -437,7 +441,7 @@
 import {cMessage} from "@/element/message.js";
 import {globalUserData} from "./userService"; //从用户服务js获取用户信息
 import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import {calAPCost} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {calAPCost,splitMaterial} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import surveyApi from "@/api/survey";
 import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
@@ -445,6 +449,17 @@ import {http} from "@/api/baseURL";
 import request from "@/api/requestBase";
 import {importSklandData, getPlayerBind} from "./skland.js";
 import jsCookie from "js-cookie";
+import { ElNotification } from 'element-plus'
+
+function openNotification() {
+  ElNotification({
+    title: '森空岛导入功能暂时下线',
+    message: '因森空岛加入了签名验证，森空岛导入数据暂不可用',
+    type: 'warning',
+    offset: 100,
+    duration:6000
+  })
+}
 
 let first_popup = ref(false)
 let import_popup_visible = ref(false)
@@ -619,7 +634,7 @@ async function  loginByCRED(){
   const data = {
     token:'',
     uid: response.uid,
-    userName:response.userName,
+    nickName:response.nickName,
     data: JSON.stringify(response)
   }
 
@@ -680,9 +695,9 @@ async function uploadSklandData(data){
     if (response.code === 200) {
       cMessage("森空岛数据导入成功");
       // getSurveyCharacter()
-      setTimeout(() => {
-        location.reload()
-      }, 1000);
+      // setTimeout(() => {
+      //   location.reload()
+      // }, 1000);
 
       bindAccount.value = false;
 
@@ -1176,7 +1191,7 @@ function changeSurveyType(type) {
 }
 
 function surveyTypeBtnClass(now) {
-  if (now == surveyTypeText.value) return 'mdui-btn-active'
+  if (now == surveyTypeText.value) return 'survey_button_blue_select'
   return ''
 }
 
@@ -1193,9 +1208,9 @@ function simpleCardClass() {
 //判断按钮是否选中
 function selectedBtn(property, rule) {
   if (filterCondition.value[property].indexOf(rule) > -1) {
-    return "btn_switch selected_color";
+    return "survey_button survey_button_select";
   }
-  return "btn_switch";
+  return "survey_button";
 }
 
 let filterCondition = ref({rarity: [6], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
@@ -1243,12 +1258,19 @@ function sortCharacterList(rule) {
 let operator_count = ref(0)
 let user_own_operator_count = ref(0)
 
-let itemCostResult = ref({})
-let apCostCount = ref(0)
+let item_cost_list = ref([])
+let ap_cost_count = ref(0)
+let item_cost_map=ref({})
 
 function statisticsCollapse() {
   statistics()
   collapse('switch_bar statistics', 'switch_statistics_wrap', 'switch_statistics_box')
+}
+
+
+let btn_selected_list = ref([])
+
+function barCollapse(){
 
 }
 
@@ -1263,9 +1285,19 @@ function statistics() {
     }
   }
 
+  const result = calAPCost(operator_list.value);
 
-  itemCostResult.value = calAPCost(operator_list.value).itemList;
-  apCostCount.value = calAPCost(operator_list.value).apCostCount;
+  item_cost_map.value = result.itemMap;
+  item_cost_list.value = result.itemList;
+  ap_cost_count.value = result.apCostCount;
+
+}
+
+
+function splitMaterialByRarity(highest_rarity){
+  const list =  splitMaterial(highest_rarity,item_cost_map.value);
+  // console.table(list)
+  item_cost_list.value  = list;
 }
 
 function toThousands(num) {
@@ -1277,7 +1309,7 @@ function strShowLength(num) {
     return (num / 100000000).toFixed(2) + "亿"
   }
   if (num > 9999) {
-    return (num / 10000).toFixed(0) + "万"
+    return (num / 10000).toFixed(1) + "万"
   }
   return num
 }
@@ -1313,5 +1345,6 @@ function toBiliblili() {
 onMounted(() => {
   initOperatorsList();
   cacheUserData()
+  openNotification()
 });
 </script>

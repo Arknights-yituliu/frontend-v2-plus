@@ -10,7 +10,7 @@ async function importSklandData(cred) {
     let playerBind = await getPlayerBind(cred);
     console.log(playerBind)
     const uid = playerBind.uid
-    const userName = playerBind.userName
+    const nickName = playerBind.nickName
 
     playerInfoAPI = playerInfoAPI + uid;
 
@@ -33,7 +33,7 @@ async function importSklandData(cred) {
             const charInfoMap = data.charInfoMap;
 
             uploadData = {
-                userName:userName,
+                nickName:nickName,
                 uid: uid,
                 chars: chars,
                 charInfoMap: charInfoMap
@@ -62,7 +62,7 @@ async function getPlayerBind(cred) {
 
     const playerBindingAPI = 'https://zonai.skland.com/api/v1/game/player/binding?'
     let uid = ''
-    let userName = ''
+    let nickName = ''
     await request({
         url: playerBindingAPI,
         headers: {
@@ -80,13 +80,13 @@ async function getPlayerBind(cred) {
             for (const binding of bindingList) {
                 if (binding.isDefault) {
                     uid = binding.uid;
-                    userName = binding.nickName;
+                    nickName = binding.nickName;
                 }
             }
 
             if (uid == "") {
                 uid = list[0].bindingList[0].uid;
-                userName = list[0].bindingList[0].nickName;
+                nickName = list[0].bindingList[0].nickName;
             }
 
             if (uid == "") {
@@ -98,7 +98,7 @@ async function getPlayerBind(cred) {
     })
 
     return {
-        userName:userName,
+        nickName:nickName,
         uid: uid
     }
 }
