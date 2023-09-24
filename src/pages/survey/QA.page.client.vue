@@ -4,8 +4,8 @@
       <div class="login_card" v-show="globalUserData.status < 0">
         <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
         <div style="display: flex">
-          <div class="btn_login" @click="register()">注册</div>
-          <div class="btn_login" @click="login()">登录</div>
+          <div class="login_btn" @click="register()">注册</div>
+          <div class="login_btn" @click="login()">登录</div>
         </div>
         <div>
           <p>新用户输入用户名即可分配ID，此用户 ID 仅于本网站使用， 用于在不同设备间同步您的数据，请妥善保管您的ID</p>
@@ -16,8 +16,8 @@
       <div class="login_card" v-show="globalUserData.status > 0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
-          <div class="btn_login" @click="logout()">确定</div>
-          <div class="btn_login" @click="loginVisible = !loginVisible">取消</div>
+          <div class="login_btn" @click="logout()">确定</div>
+          <div class="login_btn" @click="loginVisible = !loginVisible">取消</div>
         </div>
       </div>
     </c-popup>

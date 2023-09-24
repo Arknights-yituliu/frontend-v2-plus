@@ -10,7 +10,8 @@
 .sort_desc_icon{
   width: 0;
   height: 0;
-  border-top: 8px solid #adadad;
+  color: #2692fd;
+  border-top: 8px solid #c4c4c4;
   border-right: 8px solid transparent;
   border-left: 8px solid transparent;
   margin: 4px;
@@ -19,7 +20,7 @@
 .sort_asc_icon{
   width: 0;
   height: 0;
-  border-bottom: 8px solid #adadad;
+  border-bottom: 8px solid #c4c4c4;
   border-right: 8px solid transparent;
   border-left: 8px solid transparent;
   margin: 4px;

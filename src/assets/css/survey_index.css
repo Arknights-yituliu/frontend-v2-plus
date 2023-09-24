@@ -53,6 +53,11 @@
   font-size: 20px;
 }
 
+
+
+
+
+
 .login_card {
   width: 450px;
   height: auto;
@@ -62,30 +67,75 @@
   /* padding: 10px; */
 }
 
-.login_input_wrap {
-  display: flex;
-  margin: 20px auto 20px;
-  height: 30px;
-  line-height: 30px;
-  font-size: 18px;
-  justify-content: center;
+
+
+/*.login_input_wrap {*/
+/*  display: flex;*/
+/*  margin: 20px auto 20px;*/
+/*  height: 32px;*/
+/*  line-height: 32px;*/
+/*  font-size: 18px;*/
+/*  justify-content: center;*/
+/*}*/
+
+.login_input_wrap{
+  margin: auto;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  width: 400px;
+  font-weight: 600;
 }
 
+.login_form{
+  display: flex;
+  padding: 8px 0 8px 20px;
+}
+
+.login_form_divider{
+  border-top: 1px solid #dcdcdc;
+}
+
+
 .input_label{
-  width: 120px;
-  /*text-align: right;*/
+   line-height: 32px;
+   min-width: 60px;
 }
 
 .login_input {
   width: 200px;
   border: 0;
   outline: none;
-  border-bottom: 1px black solid;
+  /*border-bottom: 1px black solid;*/
   display: block;
   height: 30px;
   line-height: 30px;
-  font-size: 18px;
+  /*font-size: 18px;*/
+  /*margin: 0 0 0 4px;*/
 }
+
+.login_btn{
+  width: 170px;
+  line-height: 22px;
+  margin: 8px 20px 8px 0;
+  border-radius: 8px;
+}
+
+.login_btn_tip{
+  text-align: center;
+  margin: auto;
+  cursor: pointer;
+}
+
+.login_btn_wrap{
+  width: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+
 
 .login_tip_wrap {
   margin: 28px 0 0 0 ;
@@ -108,6 +158,10 @@
   font-weight: 600;
 }
 
+.user_page_wrap{
+  position: relative;
+}
+
 .user_name {
   font-size: 16px;
   line-height: 40px;
@@ -117,17 +171,41 @@
   padding:0 4px 0 32px;
 }
 
-.btn_login {
-  width: 160px;
-  height: 20px;
-  padding: 3px;
-  line-height: 20px;
-  text-align: center;
-  font-weight: 600;
-  box-shadow: 0 0 1px 1px rgb(200, 200, 200);
-  cursor: pointer;
-  margin: auto;
+.survey_user_menu {
+  color: white;
+  position: absolute;
+  top: 38px;
+  right: 4px;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  transition: all 0.3s;
+  z-index:3000;
 }
+
+.user_page_wrap:hover .survey_user_menu{
+  width:100px;
+  height: 120px;
+  background-color: #262f3e;
+}
+
+.survey_user_menu_item{
+  display: flex;
+  height: 28px;
+  line-height: 28px;
+  margin: 4px;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.survey_user_menu_item:hover{
+  background-color:grey;
+
+}
+
+
+
 
 .logout_text {
   margin: 30px auto;

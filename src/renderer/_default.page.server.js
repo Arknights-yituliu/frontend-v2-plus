@@ -46,8 +46,8 @@ async function render(pageContext) {
         <script defer src="https://cdn.staticfile.org/js-cookie/3.0.1/js.cookie.min.js"></script>
         <script defer src="https://cdn.staticfile.org/echarts/5.4.2/echarts.min.js"></script>
         <script defer src="https://cdn.staticfile.org/element-plus-icons-vue/2.1.0/index.iife.min.js"></script>
-        <script defer src="https://cdn.staticfile.org/mdui/1.0.2/js/mdui.min.js"></script>
-        <script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+         <script defer src="https://cdn.staticfile.org/mdui/1.0.2/js/mdui.min.js"></script>
+        
       </head>
       <body>
         <div id="app">${dangerouslySkipEscape(appHtml)}</div>

@@ -21,42 +21,78 @@
   padding: 4px 0px 4px 16px;
 }
 
-.survey_button{
+
+.href_black{
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+}
+
+
+.survey_btn_transparent{
+  background-color: transparent;
+  padding: 4px 8px;
+  margin: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  min-width:100px;
+  text-align: center;
+  border: none;
+  font-size: 16px;
+}
+
+.survey_btn{
   /*color: #409eff;*/
   background-color: #ffffff;
   border: 1px solid #dcdfe6;
   border-radius: 4px;
-  padding: 8px 12px;
+  padding: 4px 8px;
   margin: 4px;
   font-weight: 600;
   cursor: pointer;
+  min-width:100px;
+  text-align: center;
+  font-size: 16px;
 }
 
-.survey_button_blue{
+.selected_grey{
+  background-color: #545454;
+  color: white;
+}
+
+.survey_btn:hover{
+  background-color: #6e6e6e;
+  color: white;
+}
+
+.survey_btn_blue{
   color: #409eff;
   background-color: #ecf5ff;
   border: 1px solid #b3d8ff;
   border-radius: 4px;
-  padding: 8px 12px;
+  padding: 4px 8px;
   margin: 4px;
   font-weight: 600;
   cursor: pointer;
+  min-width:100px;
+  text-align: center;
+  font-size: 16px;
 }
 
-.survey_button_blue_left{
+.survey_btn_blue_left{
   color: #409eff;
   background-color: #ecf5ff;
   border: 1px solid #b3d8ff;
   border-right:none;
   border-bottom-left-radius: 4px;
   border-top-left-radius: 4px;
-  padding: 8px 12px;
+  padding: 4px 8px;
   margin: 4px 0 4px 4px;
   font-weight: 600;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.survey_button_blue_center{
+.survey_btn_blue_center{
   color: #409eff;
   background-color: #ecf5ff;
   border-top: 1px solid #b3d8ff;
@@ -64,51 +100,89 @@
   border-right:1px solid rgba(255, 255, 255, 0);
   border-left:1px solid rgba(255, 255, 255, 0);
   /*border-radius: 4px;*/
-  padding: 8px 12px;
+  padding: 4px 8px;
   margin: 4px 0 4px 0;
   font-weight: 600;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.survey_button_blue_right{
+.survey_btn_blue_right{
   color: #409eff;
   background-color: #ecf5ff;
   border: 1px solid #b3d8ff;
   border-left:1px solid rgba(255, 255, 255, 0);
   border-bottom-right-radius: 4px;
   border-top-right-radius: 4px;
-  padding: 8px 12px;
+  padding: 4px 8px;
   margin: 4px 4px 4px 0;
   font-weight: 600;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.survey_button_select{
-  background-color: #6e6e6e;
-  color: white;
-}
-
-.survey_button_blue_select{
+.survey_btn_blue:hover{
   background-color: #409eff;
   color: white;
 }
 
-.survey_button:hover{
-  background-color: #6e6e6e;
-  color: white;
-}
-
-.survey_button_blue:hover{
+.selected_blue{
   background-color: #409eff;
   color: white;
 }
 
-.survey_button_group_left{
+.survey_btn_green{
+  color: #67c23a;
+  background-color: #f0f9eb;
+  border: 1px solid #c2e7b0;
+  border-radius: 4px;
+  font-size: 16px;
+  margin: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  min-width:100px;
+  text-align: center;
+}
+
+.survey_btn_green:hover{
+  background-color: #67c23a;
+  color: white;
+}
+
+.selected_green{
+  background-color: #67c23a;
+  color: white;
+}
+
+.survey_btn_red{
+  color: #f56c6c;
+  background-color: rgb(255, 225, 225);
+  border: 1px solid #c2e7b0;
+  border-radius: 4px;
+  padding: 8px 8px;
+  margin: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  min-width:100px;
+  text-align: center;
+}
+
+.survey_btn_red:hover{
+  background-color: #f56c6c;
+  color: white;
+}
+
+.selected_red{
+  background-color: #f56c6c;
+  color: white;
+}
+
+.survey_btn_group_left{
   margin:8px 0 8px 8px;
   border-radius: 4px;
   background-color: #eeeeeeee;
 }
-.survey_button_group{
+.survey_btn_group{
   margin:8px 0 8px 0;
   border-radius: 4px;
   background-color: #eeeeeeee;

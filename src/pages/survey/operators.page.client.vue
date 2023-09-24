@@ -38,62 +38,44 @@
   <div class="survey_character_page">
     <!-- 常驻条 -->
     <div class="setup_top">
-      <button class="survey_button_blue" @click="firstPopupClose()">填写说明</button>
-      <button class="survey_button" @click="firstPopupClose()">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>
-      <button class="survey_button_blue" @click="upload()">保存问卷</button>
-<!--      <button class="survey_button" @click="firstPopupClose()">填写说明</button>-->
-<!--      <button class="survey_button">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>-->
-<!--      <button class="survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
+      <button class="survey_btn_blue" @click="firstPopupClose()">填写说明</button>
+      <button class="survey_btn" @click="firstPopupClose()">干员持有率：{{ user_own_operator_count }} / {{
+          operator_count
+        }}
+      </button>
+      <button class="survey_btn_green" @click="upload()">手动保存问卷</button>
+      <!--      <button class="survey_btn" @click="firstPopupClose()">填写说明</button>-->
+      <!--      <button class="survey_btn">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>-->
+      <!--      <button class="survey_btn" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
       <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
 
-      <div style="margin: 12px;color: red;font-weight: 600">因森空岛加入了签名验证，森空岛导入数据暂不可用，现已下线功能</div>
+      <div style="margin: 12px;color: #f56c6c;font-weight: 600">因森空岛加入了签名验证，森空岛导入数据暂不可用，现已下线功能</div>
       <div class="mdui-divider" style="margin: 4px;"></div>
-      <button class="survey_button_blue"
-              @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')"> 筛选/批量操作
+      <button :class="btnClass('btn_filter')"
+              @click="clickBtn('btn_filter');collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">
+        筛选/批量操作
       </button>
-      <button class="survey_button_blue"
-              @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">数据导入导出
+      <button :class="btnClass('btn_import')"
+              @click="clickBtn('btn_import');collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">
+        数据导入导出
       </button>
 
-        <button  class="survey_button_blue_left" :class="surveyTypeBtnClass('极简模式')"
-                @click="changeSurveyType('极简模式')">极简模式
-        </button>
-        <button  class="survey_button_blue_center" :class="surveyTypeBtnClass('标准模式')"
-                @click="changeSurveyType('标准模式')">标准模式
-        </button>
-        <button  class="survey_button_blue_right" :class="surveyTypeBtnClass('高级模式')"
-                @click="changeSurveyType('高级模式')">高级模式
-        </button>
+      <button class="survey_btn_blue_left" :class="surveyTypeBtnClass('极简模式')"
+              @click="changeSurveyType('极简模式')">极简模式
+      </button>
+      <button class="survey_btn_blue_center" :class="surveyTypeBtnClass('标准模式')"
+              @click="changeSurveyType('标准模式')">标准模式
+      </button>
+      <button class="survey_btn_blue_right" :class="surveyTypeBtnClass('高级模式')"
+              @click="changeSurveyType('高级模式')">高级模式
+      </button>
 
-      <button class="survey_button_blue" @click="toBiliblili()">建议与反馈</button>
-      <button class="survey_button_blue" @click="statisticsCollapse()">统计材料消耗</button>
+      <button class="survey_btn_blue" @click="toBiliblili()">建议与反馈</button>
+      <button :class="btnClass('btn_statistics')" @click="clickBtn('btn_statistics');statisticsCollapse()">统计材料消耗
+      </button>
 
     </div>
 
-    <!-- 设置区域 -->
-    <!-- <div class="setup_wrap">
-      <div class="control_panel">
-        <div class="switch_title">设置</div>
-
-        <div class="btn_setup" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">
-          筛选/批量操作
-          <div class="btn_setup_tips">可筛选后批量进行填写</div>
-        </div>
-
-        <div class="btn_setup" @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">
-          数据导入/导出
-          <div class="btn_setup_tips">导入/导出json/Excel等</div>
-        </div>
-        <div class="btn_setup" @click="changeSurveyType()">
-          问卷类型切换
-          <div class="btn_setup_tips">当前问卷：{{ surveyTypeText }}</div>
-        </div>
-        <div class="btn_setup" @click="toBiliblili()">
-          开发信息
-          <div class="btn_setup_tips">反馈、建议、参与开发<br/></div>
-        </div>
-      </div>
-    </div> -->
 
     <!-- 筛选模块 -->
     <div class="switch_wrap" id="switch_filter_wrap">
@@ -155,9 +137,9 @@
         <div class="switch_bar filter">
           <div class="switch_title">排序</div>
           <div class="switch_btns_wrap">
-            <!-- <div class="survey_button" @click="sortCharacterList('profession')">按职业</div> -->
-            <div class="survey_button" @click="sortCharacterList('rarity')">按稀有度</div>
-            <div class="survey_button" @click="sortCharacterList('date')">按实装顺序</div>
+            <!-- <div class="survey_btn" @click="sortCharacterList('profession')">按职业</div> -->
+            <div class="survey_btn" @click="sortCharacterList('rarity')">按稀有度</div>
+            <div class="survey_btn" @click="sortCharacterList('date')">按实装顺序</div>
           </div>
         </div>
 
@@ -181,18 +163,18 @@
             <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员进行操作</div>
           </div>
           <div class="switch_btns_wrap">
-            <div class="survey_button" @click="batchUpdatesOwn(true)">设为已拥有</div>
-            <div class="survey_button" @click="batchUpdatesOwn(false)">设为未拥有</div>
-            <div class="survey_button" @click="batchUpdatesElite(0)">设为无精</div>
-            <div class="survey_button" @click="batchUpdatesElite(1)">设为精一</div>
-            <div class="survey_button" @click="batchUpdatesElite(2)">设为精二</div>
-            <div class="survey_button">设为满级</div>
-            <div class="survey_button">设为满潜能</div>
-            <div class="survey_button" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
-            <div class="survey_button" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
-            <div class="survey_button" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
-            <div class="survey_button" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
-            <div class="survey_button" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
+            <div class="survey_btn" @click="batchUpdatesOwn(true)">设为已拥有</div>
+            <div class="survey_btn" @click="batchUpdatesOwn(false)">设为未拥有</div>
+            <div class="survey_btn" @click="batchUpdatesElite(0)">设为无精</div>
+            <div class="survey_btn" @click="batchUpdatesElite(1)">设为精一</div>
+            <div class="survey_btn" @click="batchUpdatesElite(2)">设为精二</div>
+            <div class="survey_btn">设为满级</div>
+            <div class="survey_btn">设为满潜能</div>
+            <div class="survey_btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
+            <div class="survey_btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
+            <div class="survey_btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
+            <div class="survey_btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
+            <div class="survey_btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
           </div>
         </div>
       </div>
@@ -203,8 +185,8 @@
       <div>
         <div class="intro_wrap">
           <div class="intro_title">森空岛CRED的风险声明</div>
-         森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
-         一图流不会保存任何CRED信息<br/>
+          森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
+          一图流不会保存任何CRED信息<br/>
           <a style="color: #fa5e5e">*请妥善保管此CRED</a>
         </div>
         <div class="intro_wrap">
@@ -214,7 +196,7 @@
           <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：<br/>
             <a style="color:dodgerblue">localStorage.getItem('SK_OAUTH_CRED_KEY')</a>
             <br/>
-            <button class="survey_button" @click="copyCode()">复制命令</button>
+            <button class="survey_btn" @click="copyCode()">复制命令</button>
 
             <br/>输入之后回车确认
           </p>
@@ -231,8 +213,8 @@
     <c-popup :visible="reset_popup_visible" v-model:visible="reset_popup_visible">
       <div class="popup_action_tip">此操作将解除您的森空岛UID与一图流账号的绑定，同时并清空一图流账号上保存的干员数据，确定要执行操作吗？</div>
       <div class="btn_switch_wrap">
-        <div class="survey_button" @click="operatorDataReset()">确定</div>
-        <div class="survey_button" @click="reset_popup_visible = !reset_popup_visible">取消</div>
+        <div class="survey_btn" @click="operatorDataReset()">确定</div>
+        <div class="survey_btn" @click="reset_popup_visible = !reset_popup_visible">取消</div>
       </div>
 
     </c-popup>
@@ -243,14 +225,14 @@
         <div class="switch_bar upload">
           <div class="switch_title">导入导出</div>
           <div class="switch_btns_wrap">
-            <div class="survey_button" @click="exportExcel()">导出为Excel</div>
-            <!--            <div class="survey_button">-->
+            <div class="survey_btn_blue" @click="exportExcel()">导出为Excel</div>
+            <!--            <div class="survey_btn">-->
             <!--              <div class="input_upload_wrap">-->
             <!--                导入Excel文件-->
             <!--                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>-->
             <!--              </div>-->
             <!--            </div>-->
-            <!--            &lt;!&ndash; <div class="survey_button" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
+            <!--            &lt;!&ndash; <div class="survey_btn" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
             <!--            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>-->
           </div>
         </div>
@@ -259,31 +241,48 @@
         </div>
 
         <div class="divider"></div>
-<!--        <div class="switch_bar upload">-->
-<!--          <div class="switch_title">森空岛导入</div>-->
-<!--          <div class="switch_btns_wrap">-->
-<!--            <div class="skland_desc">输入CRED</div>-->
-<!--            <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>-->
-<!--            <div class="survey_button" @click="importSKLandCRED()">导入森空岛数据</div>-->
-<!--            <div class="survey_button" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>-->
-<!--            <div class="survey_button" style="width: 135px" @click="loginByCRED()">根据CRED找回账号</div>-->
-<!--            <div class="survey_button" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="switch_bar upload" v-show="bindAccount">-->
-<!--          <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;">-->
-<!--            {{ upload_message.userName }} </a> 请登录之前的账号 <br>-->
-<!--            <div class="skland_login_btn" @click="login(upload_message.userName)">-->
-<!--              请登录用户{{ upload_message.userName }}并刷新网页-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="switch_bar upload">-->
-<!--          <div class="switch_desc"><b>*森空岛导入：</b>请遵循-->
-<!--            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>-->
-<!--            如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号-->
-<!--          </div>-->
-<!--        </div>-->
+
+        <div class="switch_bar upload">
+          <div class="switch_title">根据游戏UID找回数据</div>
+          <div class="switch_btns_wrap">
+            <div class="skland_desc">输入CRED</div>
+            <div><input class="skland_input" type="text" v-model="ark_uid"/></div>
+            <div class="survey_btn" @click="retrievalByUid()">找回练度数据</div>
+            <div class="survey_btn" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
+          </div>
+        </div>
+
+        <div class="switch_bar upload">
+          <div class="switch_desc "><a class="skland_notice_btn">*须知：因账号系统维护和森空岛导入功能失效，可能导致一图流账号无法登录，可以注册新的账号，以往导入的数据可以根据uid进行找回</a>
+
+          </div>
+        </div>
+
+        <!--        <div class="switch_bar upload">-->
+        <!--          <div class="switch_title">森空岛导入</div>-->
+        <!--          <div class="switch_btns_wrap">-->
+        <!--            <div class="skland_desc">输入CRED</div>-->
+        <!--            <div><input class="skland_input" type="text" v-model="skland_CRED"/></div>-->
+        <!--            <div class="survey_btn" @click="importSKLandCRED()">导入森空岛数据</div>-->
+        <!--            <div class="survey_btn" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>-->
+        <!--            <div class="survey_btn" style="width: 135px" @click="loginByCRED()">根据CRED找回账号</div>-->
+        <!--            <div class="survey_btn" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <!--        <div class="switch_bar upload" v-show="bindAccount">-->
+        <!--          <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a style="color: #ff0000;">-->
+        <!--            {{ upload_message.userName }} </a> 请登录之前的账号 <br>-->
+        <!--            <div class="skland_login_btn" @click="login(upload_message.userName)">-->
+        <!--              请登录用户{{ upload_message.userName }}并刷新网页-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <!--        <div class="switch_bar upload">-->
+        <!--          <div class="switch_desc"><b>*森空岛导入：</b>请遵循-->
+        <!--            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>-->
+        <!--            如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号-->
+        <!--          </div>-->
+        <!--        </div>-->
       </div>
     </div>
 
@@ -293,9 +292,9 @@
              style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
           总计消耗{{ ap_cost_count.toFixed(0) }} 理智
         </div>
-        <button class="survey_button"  @click="splitMaterialByRarity(5)">不拆分</button>
-        <button class="survey_button" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
-        <button class="survey_button" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+        <button class="survey_btn" @click="splitMaterialByRarity(5)">不拆分</button>
+        <button class="survey_btn" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
+        <button class="survey_btn" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
         <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,type) in item_cost_list"
              :key="type">
           <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
@@ -349,7 +348,7 @@
             <!--            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">-->
             <div class="level_wrap" :id="char_index + 'level'">
               <!--              <img class="image_lvMax" src="/image/survey/lvMax.png" alt=""/>-->
-              {{ operator.level>0?operator.level:0 }}
+              {{ operator.level > 0 ? operator.level : 0 }}
             </div>
           </div>
         </div>
@@ -374,12 +373,12 @@
           <div :class="surveyTypeClass('skill_delimiter')"></div>
 
           <div v-for="equip in operator.equip" :class="surveyTypeClass('skill_wrap')">
-<!--            <div class="image_mod">{{ "模组" + equip.typeName2 }}</div>-->
+            <!--            <div class="image_mod">{{ "模组" + equip.typeName2 }}</div>-->
             <div class="image_mod">
-              {{ equip.typeName1 +"-"+ equip.typeName2 }}
+              {{ equip.typeName1 + "-" + equip.typeName2 }}
             </div>
             <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'mod'+ equip.typeName2 + rank"
-              @click="updateSkillAndMod(char_index, 'mod'+ equip.typeName2, rank)">
+                 @click="updateSkillAndMod(char_index, 'mod'+ equip.typeName2, rank)">
               <div :class="getSprite('mod' + rank, 'mod_rank')"></div>
             </div>
 
@@ -441,7 +440,7 @@
 import {cMessage} from "@/element/message.js";
 import {globalUserData} from "./userService"; //从用户服务js获取用户信息
 import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import {calAPCost,splitMaterial} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {calAPCost, splitMaterial} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import surveyApi from "@/api/survey";
 import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
@@ -449,7 +448,7 @@ import {http} from "@/api/baseURL";
 import request from "@/api/requestBase";
 import {importSklandData, getPlayerBind} from "./skland.js";
 import jsCookie from "js-cookie";
-import { ElNotification } from 'element-plus'
+import {ElNotification} from 'element-plus'
 
 function openNotification() {
   // ElNotification({
@@ -468,14 +467,14 @@ let userData = ref({userName: "未登录", status: -100, token: void 0});
 
 function cacheUserData() {
   let cacheData = jsCookie.get("globalUserData");
-  if(cacheData == "undefined" || cacheData == void 0 || cacheData == null){
-    cacheData =localStorage.getItem("globalUserData");
-  }else {
-    localStorage.setItem("globalUserData",cacheData);
+  if (cacheData == "undefined" || cacheData == void 0 || cacheData == null) {
+    cacheData = localStorage.getItem("globalUserData");
+  } else {
+    localStorage.setItem("globalUserData", cacheData);
   }
-  if(cacheData == "undefined" || cacheData == void 0 || cacheData == null){
+  if (cacheData == "undefined" || cacheData == void 0 || cacheData == null) {
     // cMessage('未登录','error')
-  }else {
+  } else {
     userData.value = JSON.parse(cacheData);
   }
 
@@ -602,6 +601,32 @@ function exportExcel() {
 let skland_CRED = ref("");
 let bindAccount = ref(false)
 
+let ark_uid = ref('')
+
+function retrievalByUid(){
+  const data = {
+    token: userData.value.token,
+    uid:ark_uid.value
+  }
+
+  request({
+    url: 'survey/operator/retrieval/uid',
+    method: "post",
+    data: data
+  }).then(response => {
+    response = response.data
+    if (response.code === 200) {
+      setTimeout(() => {
+       location.reload()
+      }, 1000);
+
+    }else {
+      cMessage(response.msg, 'error')
+    }
+
+  })
+}
+
 /**
  * 找回一图流账号
  * @returns {Promise<void>}
@@ -629,12 +654,12 @@ async function retrieveAccount() {
 }
 
 
-async function  loginByCRED(){
+async function loginByCRED() {
   const response = await importSklandData(skland_CRED.value);
   const data = {
-    token:'',
+    token: '',
     uid: response.uid,
-    nickName:response.nickName,
+    nickName: response.nickName,
     data: JSON.stringify(response)
   }
 
@@ -644,7 +669,7 @@ async function  loginByCRED(){
     data: data
   }).then(response => {
     response = response.data
-    if(response.code===200){
+    if (response.code === 200) {
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
       cMessage('登录成功')
       data.token = response.data.token;
@@ -678,7 +703,7 @@ async function importSKLandCRED() {
   await uploadSklandData(data)
 }
 
-async function uploadSklandData(data){
+async function uploadSklandData(data) {
   await request({
     url: 'survey/operator/import/skland/v2',
     method: "post",
@@ -1190,8 +1215,8 @@ function changeSurveyType(type) {
   }
 }
 
-function surveyTypeBtnClass(now) {
-  if (now == surveyTypeText.value) return 'survey_button_blue_select'
+function surveyTypeBtnClass(type) {
+  if (type == surveyTypeText.value) return 'selected_blue'
   return ''
 }
 
@@ -1208,9 +1233,9 @@ function simpleCardClass() {
 //判断按钮是否选中
 function selectedBtn(property, rule) {
   if (filterCondition.value[property].indexOf(rule) > -1) {
-    return "survey_button survey_button_select";
+    return "survey_btn selected_grey";
   }
-  return "survey_button";
+  return "survey_btn";
 }
 
 let filterCondition = ref({rarity: [6], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
@@ -1260,7 +1285,7 @@ let user_own_operator_count = ref(0)
 
 let item_cost_list = ref([])
 let ap_cost_count = ref(0)
-let item_cost_map=ref({})
+let item_cost_map = ref({})
 
 function statisticsCollapse() {
   statistics()
@@ -1270,7 +1295,7 @@ function statisticsCollapse() {
 
 let btn_selected_list = ref([])
 
-function barCollapse(){
+function barCollapse() {
 
 }
 
@@ -1294,10 +1319,10 @@ function statistics() {
 }
 
 
-function splitMaterialByRarity(highest_rarity){
-  const list =  splitMaterial(highest_rarity,item_cost_map.value);
+function splitMaterialByRarity(highest_rarity) {
+  const list = splitMaterial(highest_rarity, item_cost_map.value);
   // console.table(list)
-  item_cost_list.value  = list;
+  item_cost_list.value = list;
 }
 
 function toThousands(num) {
@@ -1329,6 +1354,16 @@ function copyCode() {
   elementInput.remove()
 }
 
+let btn_status = ref({btn_import: true})
+
+function btnClass(btn_id) {
+  if (btn_status.value[btn_id]) return 'survey_btn_blue selected_blue'
+  return 'survey_btn_blue'
+}
+
+function clickBtn(btn_id) {
+  btn_status.value[btn_id] = !btn_status.value[btn_id]
+}
 
 //转跳罗德岛基建Beta
 function toBiliblili() {

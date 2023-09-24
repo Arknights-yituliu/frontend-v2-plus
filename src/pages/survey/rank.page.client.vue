@@ -3,7 +3,7 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <!-- <button class="mdui-btn survey_button">说明</button> -->
-      <button class="mdui-btn survey_button"
+      <button class="survey_btn_blue"
               @click="collapse('switch_bar select', 'switch_filter_wrap','switch_filter_box')">筛选
       </button>
       <div id="updateTime">
@@ -306,9 +306,9 @@ function getSkillName(skill, index) {
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filter_condition.value[attribute].indexOf(rule) > -1) {
-    return "btn_switch selected_color";
+    return "survey_btn selected_grey";
   }
-  return "btn_switch";
+  return "survey_btn";
 }
 
 let filter_condition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
@@ -369,12 +369,12 @@ function sortIconClass(property, descOrAsc) {
   if (last_property.value === property) {
     if (desc_or_asc.value % 2 !== 0 && 'desc' === descOrAsc) {
       // console.log('降序')
-      return 'border-top: 8px solid #545454'
+      return 'border-top: 8px solid #2692fd'
     }
 
     if (desc_or_asc.value % 2 === 0 && 'asc' === descOrAsc) {
       // console.log('升序')
-      return 'border-bottom: 8px solid #545454'
+      return 'border-bottom: 8px solid #2692fd'
     }
 
   }

@@ -3,126 +3,139 @@
     <div class="user_info_wrap">
 
       <div class="user_head_wrap">
-      <div class="user_image_wrap">
-        <div class="user_image bg-char_010_chen"></div>
-      </div>
-      <div class="user_name">{{ userData.userName }}</div>
-      </div>
-
-<!--    <div class="user_operator_statistics_wrap">-->
-<!--      <div class="user_operator_statistics">-->
-<!--        总计招募干员：<a class="user_operator_statistics_num"> {{ operatorStatisticsObj.count }}</a>-->
-<!--      </div>-->
-<!--      <div class="user_operator_statistics">-->
-<!--        精二干员总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.elite2 }}</a>-->
-<!--      </div>-->
-<!--      <div class="user_operator_statistics">-->
-<!--        专一技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank1 }}</a>-->
-<!--      </div>-->
-<!--      <div class="user_operator_statistics">-->
-<!--        专二技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank2 }}</a>-->
-<!--      </div>-->
-<!--      <div class="user_operator_statistics">-->
-<!--        专三技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank3 }}</a>-->
-<!--      </div>-->
-<!--    </div>-->
-
-
-
-
-    <div class="user_info_card">
-
-      <div class="user_info_title">身份验证</div>
-      <div class="user_input_bar">
-        <div class="survey_input_label">请输入森空岛CRED</div>
-        <input class="survey_input" v-model="inputData.cred"/>
-        <button class="survey_button_blue" @click="authentication()">验证身份</button>
-      </div>
-    </div>
-
-    <div class="user_info_card">
-      <div class="user_info_title">用户信息</div>
-      <div class="user_input_bar">
-        <div class="survey_input_label">一图流账号用户名</div>
-        <input class="survey_input" v-model="userData.userName"/>
-        <button class="survey_button_blue" @click="updateUser()">更新昵称</button>
-      </div>
-      <div class="user_input_bar">
-        <div class="survey_input_label">明日方舟昵称</div>
-        <div class="user_info"> {{ userData.nickName }}</div>
-      </div>
-      <div class="user_input_bar">
-        <div class="survey_input_label">明日方舟UID</div>
-        <div class="user_info">{{ userData.uid }}</div>
-      </div>
-      <div class="user_input_bar">
-        <div class="survey_input_label">绑定邮箱</div>
-        <div class="user_info">{{ userData.email }}</div>
-      </div>
-      <div class="user_input_bar">
-        <div class="survey_input_label">明日方舟UID</div>
-        <div class="user_info">{{ userData.uid }}</div>
-      </div>
-    </div>
-
-    <div class="user_info_card">
-      <div class="user_info_title">修改信息</div>
-      <div></div>
-      <div>您还没有设置密码</div>
-      <div class="user_input_bar">
-        <div class="survey_input_label">密码</div>
-        <input class="survey_input" v-model="inputData.passWord"/>
-      </div>
-      <div class="user_input_bar">
-        <div class="survey_input_label">确认密码</div>
-        <input class="survey_input" v-model="inputData.confirmPassWord"/>
-        <button class="survey_button_blue" @click="updatePassWord()">更新密码</button>
+        <div class="user_image_wrap">
+          <div class="user_image bg-char_010_chen"></div>
+        </div>
+        <div class="user_name">{{ userData.userName }}</div>
       </div>
 
-      <div>绑定邮箱后也可通过邮箱登录</div>
-      <div class="user_input_bar">
-        <div class="survey_input_label">绑定邮箱</div>
-        <input class="survey_input" v-model="inputData.email"/>
-        <button class="survey_button_blue" @click="sendEmailCode()">发送验证码</button>
+
+      <!--    <div class="user_operator_statistics_wrap">-->
+      <!--      <div class="user_operator_statistics">-->
+      <!--        总计招募干员：<a class="user_operator_statistics_num"> {{ operatorStatisticsObj.count }}</a>-->
+      <!--      </div>-->
+      <!--      <div class="user_operator_statistics">-->
+      <!--        精二干员总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.elite2 }}</a>-->
+      <!--      </div>-->
+      <!--      <div class="user_operator_statistics">-->
+      <!--        专一技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank1 }}</a>-->
+      <!--      </div>-->
+      <!--      <div class="user_operator_statistics">-->
+      <!--        专二技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank2 }}</a>-->
+      <!--      </div>-->
+      <!--      <div class="user_operator_statistics">-->
+      <!--        专三技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank3 }}</a>-->
+      <!--      </div>-->
+      <!--    </div>-->
+
+
+      <!--    <div class="user_info_card">-->
+      <!--      <div class="user_info_title">身份验证</div>-->
+      <!--      <div class="user_input_bar">-->
+      <!--        <div class="user_input_label">请输入森空岛CRED</div>-->
+      <!--        <input class="user_input" v-model="inputData.cred"/>-->
+      <!--        <button class="survey_btn_blue" @click="authentication()">验证身份</button>-->
+      <!--      </div>-->
+      <!--    </div>-->
+
+      <div class="user_info_card">
+        <div class="user_info_title">用户信息</div>
+        <div class="user_input_bar">
+          <div class="user_input_label">一图流账号用户名</div>
+          <div class="user_input_tip">设置密码后可更换不带后缀数字的用户名</div>
+          <input class="user_input" v-model="inputData.userName"/>
+          <button class="survey_btn_blue" @click="updateUserName()">更新昵称</button>
+        </div>
+        <!--        <div class="user_input_bar">-->
+        <!--          <div class="user_input_label">明日方舟昵称</div>-->
+        <!--          <div class="user_info"> {{ userData.nickName }}</div>-->
+        <!--        </div>-->
+        <!--        <div class="user_input_bar">-->
+        <!--          <div class="user_input_label">明日方舟UID</div>-->
+        <!--          <div class="user_info">{{ userData.uid }}</div>-->
+        <!--        </div>-->
+        <div class="user_input_bar">
+          <div class="user_input_label">绑定邮箱</div>
+          <div class="user_info">{{ userData.email }}</div>
+        </div>
       </div>
 
-      <div class="user_input_bar">
-        <div class="survey_input_label">输入验证码</div>
-        <input class="survey_input" v-model="inputData.emailCode"/>
-        <button class="survey_button_blue" @click="updateEmail()">修改邮箱</button>
+      <div class="user_info_card">
+        <div class="user_info_title">修改密码</div>
+        <div class="user_input_tip" v-show="!hasPermission(userData.status,HAS_PASSWORD)">您还没有设置密码</div>
+        <div class="user_input_bar" v-show="hasPermission(userData.status,HAS_PASSWORD)">
+          <div class="user_input_label">旧密码</div>
+          <input class="user_input" type="password" v-model="inputData.oldPassWord"/>
+        </div>
+        <div class="user_input_bar">
+          <div class="user_input_label">密码</div>
+          <input class="user_input" type="password" v-model="inputData.newPassWord"/>
+        </div>
+        <div class="user_input_bar">
+          <div class="user_input_label">确认密码</div>
+          <input class="user_input" type="password" v-model="inputData.confirmPassWord"/>
+          <button class="survey_btn_blue btn_position" @click="updatePassWord()">更新密码</button>
+          <div>{{ checkPassWord() }}</div>
+        </div>
       </div>
 
-    </div>
+      <div class="user_info_card">
+        <div class="user_info_title">修改邮箱</div>
+        <div class="user_input_bar">
+          <div class="user_input_tip" v-show="!hasPermission(userData.status,HAS_EMAIL)">绑定邮箱后也可通过邮箱作为账号登录</div>
+          <div class="user_input_tip" v-show="hasPermission(userData.status,HAS_EMAIL)">如需替换邮箱将会直接向您的绑定邮箱发送验证码</div>
+          <div class="user_input_label">输入新邮箱</div>
+          <input class="user_input" v-model="inputData.email"/>
+          <button class="survey_btn_blue btn_position" @click="sendEmailCode()">发送验证码</button>
+        </div>
+
+        <div class="user_input_bar">
+          <div class="user_input_label">输入邮件验证码</div>
+          <input class="user_input" v-model="inputData.emailCode"/>
+          <button class="survey_btn_blue btn_position" @click="updateEmail()">修改邮箱</button>
+        </div>
+      </div>
+      <div class="user_info_card">
+      <button class="survey_btn_red selected_red" style="margin: auto" @click="logout()">退出登录</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import {onMounted, ref} from "vue";
-import surveyApi from "@/api/survey";
-import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import request from "@/api/requestBase";
 import {cMessage} from "../../element/message";
 
-let operator_list = ref(characterListInit())
+
+
 let userData = ref({
   userName: "未登录",
-  verificationCode: 0,
+  emailCode: 0,
   status: -100,
   nickName: '山桜#9180',
-  uid: 114514,
-  email: '1969314158@qq.com',
-  passWord: "",
+  uid: '',
+  email: '未绑定',
   token: undefined,
   cred: ""
 });
-let inputData = ref({cred:'' ,passWord: '114514', confirmPassWord: '514', email: '1969314158@qq.com', emailCode: 395129})
 
 
-function authentication(){
+let inputData = ref({
+  userName:'',
+  cred: '',
+  newPassWord: "",
+  confirmPassWord: '',
+  oldPassWord: "",
+  email: '',
+  emailCode: ''
+})
+
+
+function authentication() {
   const data = {
-    token :userData.value.token,
-    cred:inputData.value.cred
+    token: userData.value.token,
+    cred: inputData.value.cred
   }
 
   request({
@@ -131,89 +144,147 @@ function authentication(){
     data: data
   }).then(response => {
     response = response.data
-    if(response.code!==200){
-      cMessage(response.msg,'error')
-    }else {
+    if (response.code !== 200) {
+      cMessage(response.msg, 'error')
+    } else {
       console.log(response.data)
     }
   })
 }
 
 
-function updatePassWord(){
+function checkPassWord() {
+  if (inputData.value.newPassWord.length > 5 && inputData.value.confirmPassWord.length > 5) {
+    if (inputData.value.newPassWord === inputData.value.confirmPassWord) {
+      return ''
+    } else {
+    }
+    return '确认密码不一致'
+  }
+}
+
+function updatePassWord() {
   const data = {
-    token:userData.value.token,
-    passWord:inputData.value.passWord
+    token: userData.value.token,
+    newPassWord: inputData.value.newPassWord,
+    oldPassWord: inputData.value.oldPassWord
   }
 
   request({
-    url: `/survey/user/updatePassWord`,
+    url: `/survey/user/update?property=passWord`,
     method: "post",
     data: data
   }).then(response => {
     response = response.data
-    if(response.code!==200){
-      cMessage(response.msg,'error')
-    }else {
+    if (response.code !== 200) {
+      cMessage(response.msg, 'error')
+    } else {
       cMessage('修改密码成功')
+      userData.value.status = response.data.status
+      localStorage.setItem("globalUserData", JSON.stringify(userData.value));
     }
   })
 }
 
-function sendEmailCode(){
+function sendEmailCode() {
   const data = {
-    token:userData.value.token,
-    email:inputData.value.email
+    token: userData.value.token,
+    email: inputData.value.email
   }
   request({
-    url: `/survey/user/sendEmailCode`,
+    url: `/survey/user/emailCode?type=changeEmail`,
     method: "post",
     data: data
   }).then(response => {
     response = response.data
-    if(response.code!==200){
-      cMessage(response.msg,'error')
-    }else {
+    if (response.code !== 200) {
+      cMessage(response.msg, 'error')
+    } else {
       cMessage('验证码已发送')
     }
   })
+
+
 }
 
-function updateEmail(){
+function updateEmail() {
   const data = {
-    token:userData.value.token,
-    email:inputData.value.email,
+    token: userData.value.token,
+    email: inputData.value.email,
     emailCode: inputData.value.emailCode
   }
   request({
-    url: `/survey/user/updateEmail`,
+    url: `/survey/user/update?property=email`,
     method: "post",
     data: data
   }).then(response => {
     response = response.data
-    if(response.code!==200){
-      cMessage(response.msg,'error')
-    }else {
+    if (response.code !== 200) {
+      cMessage(response.msg, 'error')
+    } else {
       cMessage('邮箱绑定成功')
+      userData.value.status = response.data.status
+      localStorage.setItem("globalUserData", JSON.stringify(userData.value));
     }
   })
+}
+
+
+
+function updateUserName() {
+  const data = {
+    token: userData.value.token,
+    userName:inputData.value.userName
+  }
+  request({
+    url: `/survey/user/update?property=userName`,
+    method: "post",
+    data: data
+  }).then(response => {
+    response = response.data
+    if (response.code !== 200) {
+      cMessage(response.msg, 'error')
+    } else {
+      cMessage('用户名更改成功')
+      document.getElementById("user_name").innerText = response.data.userName
+      userData.value.userName = response.data.userName
+      localStorage.setItem("globalUserData", JSON.stringify(userData.value));
+    }
+  })
+}
+
+//登出
+function logout() {
+  localStorage.removeItem('globalUserData')
+  setTimeout(() => {
+  location.reload()
+  }, 1000);
+}
+
+const HAS_PASSWORD = 1 << 1;
+const HAS_EMAIL = 1 << 2;
+
+function hasPermission(status, permission) {
+  console.log((status & permission) === permission)
+  return (status & permission) === permission;
 }
 
 function getCacheUserData() {
   let cacheUserData = localStorage.getItem("globalUserData");
   if (!(cacheUserData == "undefined" || cacheUserData == void 0 || cacheUserData == null)) {
     const parse = JSON.parse(cacheUserData);
+    console.table(parse)
     userData.value.userName = parse.userName;
     userData.value.code = parse.code;
     userData.value.status = parse.status;
     userData.value.token = parse.token;
+    userData.value.email = parse['email']==undefined?"未绑定1":parse['email'];
   }
 }
 
 onMounted(() => {
   getCacheUserData()
 })
-
 
 
 </script>
@@ -227,12 +298,15 @@ onMounted(() => {
 }
 
 .user_info_wrap {
-  /*display: flex;*/
+  width: 450px;
+  margin: auto;
 }
 
-.user_head_wrap{
+.user_head_wrap {
   display: flex;
 }
+
+
 
 .user_image_wrap {
   width: 70px;
@@ -281,20 +355,34 @@ onMounted(() => {
 .user_input_bar {
   width: 450px;
   margin: 8px auto;
+
 }
 
-.survey_input_label {
+.user_input_br {
+  width: 99%;
+  height: 8px;
+}
+
+.user_input_label {
   color: #006fe0;
   font-weight: 600;
 }
 
-.survey_input {
+.user_input_tip {
+  font-style: italic;
+  color: grey;
+  padding: 4px 0 4px 0;
+  line-height: 24px;
+}
+
+.user_input {
+  /*display: block;*/
   outline: none;
   border: none;
   border-bottom: 2px solid #e1e1e1;
-  margin: 8px 8px 8px 0px;
+  margin: 4px 4px 4px 0px;
   line-height: 28px;
-  width: 300px;
+  width: 280px;
   font-weight: 600;
 }
 
@@ -306,8 +394,9 @@ onMounted(() => {
 }
 
 
-
-
+.btn_position {
+  margin-left: 20px;
+}
 
 .user_operator_statistics_wrap {
   display: flex;
@@ -322,8 +411,6 @@ onMounted(() => {
   color: #ff6a00;
   font-size: 18px;
 }
-
-
 
 
 .user_btn {

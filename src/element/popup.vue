@@ -64,7 +64,7 @@ watch(
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.3);
   z-index: 2001;
   /* display: none; */
 }
@@ -79,7 +79,7 @@ watch(
   overflow: auto;
   background: #fff;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
   box-sizing: border-box;
 
 }

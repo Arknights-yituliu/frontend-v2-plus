@@ -1,65 +1,100 @@
 <template>
   <div class="survey_nav_page">
-    <div class="survey_top_right_btn" @click="loginVisible = !loginVisible" v-show="login_tip_show">登录</div>
-    <c-popup :visible="loginVisible" v-model:visible="loginVisible">
-      <div class="login_card" v-show="login_tip_show">
-        <div class="login_input_wrap">
-          <div class="input_label">用户名：</div>
-          <input class="login_input" placeholder="请输入" v-model="inputData.userName"/>
+    <div class="survey_top_right_btn" @click="login_visible = !login_visible" v-show="user_data.status<0">登录</div>
+
+    <div v-show="user_data.status>0" class="user_page_wrap">
+      <div class="user_name" id="user_name">{{ user_data.userName }}</div>
+      <div class="survey_user_menu">
+        <a class="survey_user_menu_item href_black" href="/survey/user"> 个人中心 </a>
+        <a class="survey_user_menu_item href_black" @click="logout()"> 退出登录 </a>
+      </div>
+    </div>
+    <c-popup :visible="login_visible" v-model:visible="login_visible">
+
+      <div class="login_card">
+        <div class="login_btn_wrap">
+          <button class="survey_btn_transparent" :style="accountTypeClass('passWord')"
+                  @click="selectAccountType('passWord')">密码{{ 'register' === registerOrLogin ? '注册' : '登录' }}
+          </button>
+          <div style="border: 1px solid black;height: 18px"></div>
+          <button class="survey_btn_transparent" :style="accountTypeClass('emailCode')"
+                  @click="selectAccountType('emailCode')">邮箱{{ 'register' === registerOrLogin ? '注册' : '登录' }}
+          </button>
         </div>
-        <div class="login_input_wrap" v-show="login_need_pass_word">
-          <div class="input_label">密码：</div>
-          <input class="login_input" placeholder="请输入" v-model="inputData.passWord"/>
+
+        <div class="login_input_wrap" v-show="'passWord'===account_type">
+          <div class="login_form">
+            <div class="input_label">账号：</div>
+            <input class="login_input" placeholder="请输入" v-model="input_data.userName"/>
+          </div>
+
+          <div class="login_form_divider"></div>
+          <div class="login_form">
+            <div class="input_label">密码：</div>
+            <input class="login_input" placeholder="请输入" v-model="input_data.passWord"/>
+          </div>
         </div>
-        <div class="login_tip login_tip_warn" v-show="login_need_pass_word">
-          您设置过密码了，需要输入密码才可登录
+
+        <div class="login_input_wrap" v-show="'emailCode'===account_type">
+          <div class="login_form">
+            <div class="input_label">邮箱：</div>
+            <input class="login_input" placeholder="请输入" v-model="input_data.email"/>
+            <div style="border: 1px solid #d9d9d9;height: 32px;margin: 0 4px"></div>
+            <div class="input_label" @click="sendEmailCodeByRegister()" style="cursor: pointer">获取验证码</div>
+          </div>
+          <div class="login_form_divider"></div>
+          <div class="login_form">
+            <div class="input_label">验证码：</div>
+            <input class="login_input" placeholder="请输入" v-model="input_data.emailCode"/>
+          </div>
         </div>
-        <div style="display: flex">
-          <div class="btn_login" @click="register()">注册</div>
-          <div class="btn_login" @click="login()">登录</div>
+
+
+        <div class="login_btn_wrap">
+          <div @click="registerOrLogin='register'" v-show="'login'===registerOrLogin" class="login_btn_tip">
+            没有账号请先注册
+          </div>
+          <div @click="registerOrLogin='login'" v-show="'register'===registerOrLogin" class="login_btn_tip">
+            已注册过直接登录
+          </div>
+          <button class="survey_btn_blue selected_blue login_btn" @click="register()" v-show="'register'===registerOrLogin">
+            注册
+          </button>
+          <button class="survey_btn_blue selected_blue login_btn" @click="login()" v-show="'login'===registerOrLogin">
+            登录
+          </button>
+
         </div>
-<!--        <div class="login_tip_wrap">-->
-<!--          <div class="login_tip" style="color: red;font-weight: 600">-->
-<!--             也可使用森空岛CRED直接登录-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="login_input_wrap">-->
-<!--          <div class="input_label">森空岛CRED：</div>-->
-<!--          <input class="login_input" placeholder="请输入" v-model="inputData.cred"/>-->
-<!--        </div>-->
-<!--        <div style="display: flex">-->
-<!--          <div class="btn_login" @click="loginByCRED()">CRED直接登录</div>-->
-<!--        </div>-->
+
 
         <div class="login_tip_wrap">
-<!--          <div class="login_tip login_tip_info">如果您想让自己的练度数据保存的更加安全可在个人中心设置密码，但设置密码后，登录时必须输入密码才可登录</div>-->
+          <!--          <div class="login_tip login_tip_info">如果您想让自己的练度数据保存的更加安全可在个人中心设置密码，但设置密码后，登录时必须输入密码才可登录</div>-->
 
-          <div class="login_tip" style="color: red;font-weight: 600">
-            因账号系统升级，如遇到无法登录或用户不存在，请使用《数据导入导出》内的森空岛CRED找回功能进行登录
+          <div class="login_tip" style="color: #f56c6c;font-weight: 600">
+            账号系统更新，老用户直接输入用户名，无需密码即可登录 <br><br>
+            新用户注册可用账号密码注册和邮箱注册，也可在个人中心进行设置密码和邮箱绑定等操作<br><br>
           </div>
-          <div class="login_tip">
-            新用户输入自己喜欢的昵称后点击注册即可分配ID，昵称+ID即为您的用户名。
-          </div>
-          <div class="login_tip">
-            （例如输入昵称 <b>巴别塔恶灵</b>，分配后返回ID为 <b>#1141</b>，则用户名即为 <b>巴别塔恶灵#1141</b>）
-          </div>
-          <div class="login_tip"> 当注册成功后，再次访问该网站需输入 <b>巴别塔恶灵#1141</b> ，即可登录找回您上次填写的信息
-          </div>
+          <!--          <div class="login_tip">-->
+          <!--            新用户输入自己喜欢的昵称后点击注册即可分配ID，昵称+ID即为您的用户名。-->
+          <!--          </div>-->
+          <!--          <div class="login_tip">-->
+          <!--            （例如输入昵称 <b>巴别塔恶灵</b>，分配后返回ID为 <b>#1141</b>，则用户名即为 <b>巴别塔恶灵#1141</b>）-->
+          <!--          </div>-->
+          <!--          <div class="login_tip"> 当注册成功后，再次访问该网站需输入 <b>巴别塔恶灵#1141</b> ，即可登录找回您上次填写的信息-->
+          <!--          </div>-->
         </div>
       </div>
 
-      <div class="login_card" v-show="logout_tip_show">
-        <div class="logout_text">确定登出当前用户？</div>
-        <div class="logout_btn_wrap">
-          <div class="btn_login" @click="logout()">确定</div>
-          <div class="btn_login" @click="loginVisible = !loginVisible">取消</div>
-        </div>
-      </div>
+      <!--      <div class="login_card" >-->
+      <!--        <div class="logout_text">确定登出当前用户？</div>-->
+      <!--        <div class="logout_btn_wrap">-->
+      <!--          <div class="btn_login" @click="logout()">确定</div>-->
+      <!--          <div class="btn_login" @click="loginVisible = !loginVisible">取消</div>-->
+      <!--        </div>-->
+      <!--      </div>-->
     </c-popup>
 
-    <div v-show="user_name_show">
-      <div class="user_name" @click="loginVisible = !loginVisible">{{ userData.userName }}</div>
-    </div>
+
   </div>
 </template>
 
@@ -79,103 +114,82 @@ import "@/assets/css/survey_index.css";
 import "@/assets/css/sprite_avatar_4.css";
 
 import {onMounted, ref} from "vue";
-import { userDataCacheClearEvent, userDataCacheEvent, globalUserData} from "./userService";
 import request from "@/api/requestBase";
 import {cMessage} from "@/element/message";
+import jsCookie from "js-cookie";
 
-let inputData = ref({userName: '', passWord: '', cred:''}); //用户输入的用户名，用obj没准后期有别的字段
-let userData = ref({userName: "山桜", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
+let input_data = ref({userName: '', passWord: '', cred: '', email: '', emailCode: '', accountType: ''}); //用户输入的用户名，用obj没准后期有别的字段
+let user_data = ref({userName: "山桜", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
 
-let loginVisible = ref(false);
+let login_visible = ref(false);
 
-let login_tip_show = ref(true)
-let login_need_pass_word = ref(false)
-let logout_tip_show = ref(false)
-let user_name_show = ref(false)
+let registerOrLogin = ref('login')
 
 
-async function registerAndLogin(){
-
-  await request({
-    url: `survey/user/login/v2`,
+function sendEmailCodeByRegister() {
+  request({
+    url: 'survey/user/emailCode?type='+registerOrLogin.value,
     method: "post",
-    data: inputData.value,
-  }).then(response=> {
+    data: input_data.value,
+  }).then(response => {
     response = response.data
-    if(response.code===200){
-       const token =  response.data.token
-      globalUserData.value = response.data;
-      localStorage.setItem("globalUserData",JSON.stringify(response.data));
-      userData.value.userName = response.data.userName;
-      userData.value.status = response.data.status;
-      userData.value.token = response.data.token;
-
-      setTimeout(() => {
-        loginVisible.value = !loginVisible;
-        user_name_show.value = true
-        logout_tip_show.value = true
-        login_need_pass_word.value = false
-        login_tip_show.value = false
-      }, 400);
-
-      cMessage("登录成功");
-    }else{
-      cMessage(response.msg,'error')
+    if (response.code === 200) {
+      cMessage("验证码发送成功");
+    } else {
+      cMessage(response.msg, 'error')
     }
   })
-}
-
-async function loginByCRED(){
 
 }
+
 
 //注册
 async function register() {
-
+  input_data.value.accountType = account_type.value
   await request({
-    url: `survey/register`,
+    url: `survey/register/v2`,
     method: "post",
-    data: inputData.value,
-  }).then(response=>{
+    data: input_data.value,
+  }).then(response => {
     response = response.data
-    if(response.code===200){
-      globalUserData.value = response.data;
-      localStorage.setItem("globalUserData",JSON.stringify(globalUserData.value));
+    if (response.code === 200) {
+      localStorage.setItem("globalUserData", JSON.stringify(response.data));
       cMessage("注册成功");
-      userData.value.userName = response.data.userName;
-      userData.value.status = response.data.status;
-      userData.value.token = response.data.token;
+      user_data.value.userName = response.data.userName;
+      user_data.value.status = response.data.status;
+      user_data.value.token = response.data.token;
 
       setTimeout(() => {
-        loginVisible.value = !loginVisible;
-        user_name_show.value = true
-        logout_tip_show.value = true
-        login_need_pass_word.value = false
-        login_tip_show.value = false
+        login_visible.value = !login_visible;
       }, 400);
 
-    }else {
-      cMessage(response.msg)
+    } else {
+      cMessage(response.msg, 'error')
     }
   })
-
 }
 
+let account_type = ref('passWord')
+
+function selectAccountType(type) {
+  account_type.value = type
+}
+
+function accountTypeClass(type) {
+  if (account_type.value === type) return 'color:#409eff;'
+}
 
 //登录
 function login() {
+  input_data.value.accountType = account_type.value
   request({
-    url: `survey/login`,
+    url: `survey/login/v2`,
     method: "post",
-    data: inputData.value,
+    data: input_data.value,
   }).then(response => {
     response = response.data
-    if (response.code === 10001) {
-      login_need_pass_word.value = true
-      return;
-    }
     if (response.code !== 200) {
-      cMessage(response.msg,'error')
+      cMessage(response.msg, 'error')
     }
     if (response.code === 200 && response.data.status > 0) {
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
@@ -186,31 +200,30 @@ function login() {
 }
 
 function userDataCache() {
-  const userDataCache = userDataCacheEvent();
-  userData.value.userName = userDataCache.userName;
-  userData.value.status = userDataCache.status;
-  userData.value.token = userDataCache.token;
-
-  if (userDataCache.status > 0) {
-    user_name_show.value = true
-    logout_tip_show.value = true
-    login_need_pass_word.value = false
-    login_tip_show.value = false
+  let cacheData = jsCookie.get("globalUserData");
+  if (cacheData == "undefined" || cacheData == void 0 || cacheData == null) {
+    cacheData = localStorage.getItem("globalUserData");
+  } else {
+    localStorage.setItem("globalUserData", cacheData);
   }
+
+  if (cacheData == "undefined" || cacheData == void 0 || cacheData == null) {
+    return
+  }
+  cacheData = JSON.parse(cacheData)
+  console.table(cacheData)
+  user_data.value.userName = cacheData.userName;
+  user_data.value.status = cacheData.status;
+  user_data.value.token = cacheData.token;
+  user_data.value.email = cacheData['email'] == undefined ? "未绑定1" : cacheData['email'];
 }
 
 //登出
 function logout() {
-  userDataCacheClearEvent();
+  localStorage.removeItem('globalUserData')
   setTimeout(() => {
-    loginVisible.value = !loginVisible;
-    login_tip_show.value = true
-    login_need_pass_word.value = false
-    user_name_show.value = false
-    logout_tip_show.value = false
-
-  }, 400);
-
+    location.reload()
+  }, 1000);
 }
 
 onMounted(() => {
