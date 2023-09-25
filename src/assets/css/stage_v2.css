@@ -483,9 +483,10 @@
 
 .stage_sprite_popup {
   position: absolute;
-  transform: scale(0.4);
+  transform: scale(0.32);
   top: -56px;
-  left: -58px;
+  left: -56px;
+  margin: 2px;
   /* top: -30px;
   right:  140px; */
 }
