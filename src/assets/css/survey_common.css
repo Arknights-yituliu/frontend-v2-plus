@@ -27,7 +27,6 @@
   color: rgb(255, 255, 255);
 }
 
-
 .survey_btn_transparent{
   background-color: transparent;
   padding: 4px 8px;
@@ -41,41 +40,41 @@
 }
 
 .survey_btn{
-  /*color: #409eff;*/
+  padding: 4px 8px;
+  margin: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  min-width:100px;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+.btn_white{
   background-color: #ffffff;
   border: 1px solid #dcdfe6;
   border-radius: 4px;
-  padding: 4px 8px;
-  margin: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  min-width:100px;
-  text-align: center;
-  font-size: 16px;
 }
 
-.selected_grey{
-  background-color: #545454;
+.btn_white:hover{
+  background-color: #969696;
   color: white;
 }
 
-.survey_btn:hover{
-  background-color: #6e6e6e;
+.btn_white_selected{
+  background-color: #969696;
   color: white;
 }
 
-.survey_btn_blue{
+.btn_blue{
   color: #409eff;
   background-color: #ecf5ff;
   border: 1px solid #b3d8ff;
-  border-radius: 4px;
-  padding: 4px 8px;
-  margin: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  min-width:100px;
-  text-align: center;
-  font-size: 16px;
+}
+
+.btn_blue:hover{
+  background-color: #409eff;
+  color: white;
 }
 
 .survey_btn_blue_left{
@@ -121,61 +120,44 @@
   font-size: 16px;
 }
 
-.survey_btn_blue:hover{
+.btn_blue_selected{
   background-color: #409eff;
   color: white;
 }
 
-.selected_blue{
-  background-color: #409eff;
-  color: white;
-}
-
-.survey_btn_green{
+.btn_green{
   color: #67c23a;
   background-color: #f0f9eb;
-  border: 1px solid #c2e7b0;
-  border-radius: 4px;
-  font-size: 16px;
-  margin: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  min-width:100px;
-  text-align: center;
+  border: 1px solid #ddffcc;
 }
 
-.survey_btn_green:hover{
+.btn_green:hover{
   background-color: #67c23a;
   color: white;
 }
 
-.selected_green{
+.btn_green_selected{
   background-color: #67c23a;
   color: white;
 }
 
-.survey_btn_red{
-  color: #f56c6c;
-  background-color: rgb(255, 225, 225);
-  border: 1px solid #c2e7b0;
-  border-radius: 4px;
-  padding: 8px 8px;
-  margin: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  min-width:100px;
-  text-align: center;
+.btn_red{
+  color: #ff6363;
+  background-color: rgb(255, 239, 239);
+  border: 1px solid #ffc6c6;
 }
 
-.survey_btn_red:hover{
-  background-color: #f56c6c;
+.btn_red:hover{
+  background-color: #ff6363;
   color: white;
 }
 
-.selected_red{
-  background-color: #f56c6c;
+.btn_red_selected{
+  background-color: #ff6363;
   color: white;
 }
+
+
 
 .survey_btn_group_left{
   margin:8px 0 8px 8px;

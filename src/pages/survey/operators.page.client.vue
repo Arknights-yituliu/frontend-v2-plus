@@ -38,12 +38,12 @@
   <div class="survey_character_page">
     <!-- 常驻条 -->
     <div class="setup_top">
-      <button class="survey_btn_blue" @click="firstPopupClose()">填写说明</button>
-      <button class="survey_btn" @click="firstPopupClose()">干员持有率：{{ user_own_operator_count }} / {{
+      <button class="survey_btn btn_blue" @click="firstPopupClose()">填写说明</button>
+      <button class="survey_btn btn_white" @click="firstPopupClose()">干员持有率：{{ user_own_operator_count }} / {{
           operator_count
         }}
       </button>
-      <button class="survey_btn_green" @click="upload()">手动保存问卷</button>
+      <button class="survey_btn btn_green" @click="upload()">手动保存问卷</button>
       <!--      <button class="survey_btn" @click="firstPopupClose()">填写说明</button>-->
       <!--      <button class="survey_btn">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>-->
       <!--      <button class="survey_btn" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
@@ -70,7 +70,7 @@
               @click="changeSurveyType('高级模式')">高级模式
       </button>
 
-      <button class="survey_btn_blue" @click="toBiliblili()">建议与反馈</button>
+      <button class="survey_btn btn_blue" @click="toBiliblili()">建议与反馈</button>
       <button :class="btnClass('btn_statistics')" @click="clickBtn('btn_statistics');statisticsCollapse()">统计材料消耗
       </button>
 
@@ -213,8 +213,8 @@
     <c-popup :visible="reset_popup_visible" v-model:visible="reset_popup_visible">
       <div class="popup_action_tip">此操作将解除您的森空岛UID与一图流账号的绑定，同时并清空一图流账号上保存的干员数据，确定要执行操作吗？</div>
       <div class="btn_switch_wrap">
-        <div class="survey_btn" @click="operatorDataReset()">确定</div>
-        <div class="survey_btn" @click="reset_popup_visible = !reset_popup_visible">取消</div>
+        <div class="survey_btn btn_red" @click="operatorDataReset()">确定</div>
+        <div class="survey_btn btn_white" @click="reset_popup_visible = !reset_popup_visible">取消</div>
       </div>
 
     </c-popup>
@@ -225,7 +225,7 @@
         <div class="switch_bar upload">
           <div class="switch_title">导入导出</div>
           <div class="switch_btns_wrap">
-            <div class="survey_btn_blue" @click="exportExcel()">导出为Excel</div>
+            <div class="survey_btn btn_blue" @click="exportExcel()">导出为Excel</div>
             <!--            <div class="survey_btn">-->
             <!--              <div class="input_upload_wrap">-->
             <!--                导入Excel文件-->
@@ -243,12 +243,12 @@
         <div class="divider"></div>
 
         <div class="switch_bar upload">
-          <div class="switch_title">根据游戏UID找回数据</div>
+          <div class="switch_title">根据uid找回数据</div>
           <div class="switch_btns_wrap">
-            <div class="skland_desc">输入CRED</div>
+            <div class="skland_desc">输入uid</div>
             <div><input class="skland_input" type="text" v-model="ark_uid"/></div>
-            <div class="survey_btn" @click="retrievalByUid()">找回练度数据</div>
-            <div class="survey_btn" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
+            <button class="survey_btn btn_white" @click="retrievalByUid()">找回练度数据</button>
+            <button class="survey_btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</button>
           </div>
         </div>
 
@@ -1216,7 +1216,7 @@ function changeSurveyType(type) {
 }
 
 function surveyTypeBtnClass(type) {
-  if (type == surveyTypeText.value) return 'selected_blue'
+  if (type == surveyTypeText.value) return 'btn_blue_selected'
   return ''
 }
 
@@ -1233,9 +1233,9 @@ function simpleCardClass() {
 //判断按钮是否选中
 function selectedBtn(property, rule) {
   if (filterCondition.value[property].indexOf(rule) > -1) {
-    return "survey_btn selected_grey";
+    return "survey_btn btn_white btn_white_selected";
   }
-  return "survey_btn";
+  return "survey_btn btn_white";
 }
 
 let filterCondition = ref({rarity: [6], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
@@ -1357,8 +1357,8 @@ function copyCode() {
 let btn_status = ref({btn_import: true})
 
 function btnClass(btn_id) {
-  if (btn_status.value[btn_id]) return 'survey_btn_blue selected_blue'
-  return 'survey_btn_blue'
+  if (btn_status.value[btn_id]) return 'survey_btn btn_blue btn_blue_selected'
+  return 'survey_btn btn_blue'
 }
 
 function clickBtn(btn_id) {

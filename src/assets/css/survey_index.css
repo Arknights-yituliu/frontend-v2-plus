@@ -53,11 +53,6 @@
   font-size: 20px;
 }
 
-
-
-
-
-
 .login_card {
   width: 450px;
   height: auto;
@@ -66,8 +61,6 @@
   padding: 20px;
   /* padding: 10px; */
 }
-
-
 
 /*.login_input_wrap {*/
 /*  display: flex;*/
@@ -135,8 +128,6 @@
   margin: auto;
 }
 
-
-
 .login_tip_wrap {
   margin: 28px 0 0 0 ;
 }
@@ -175,7 +166,7 @@
   color: white;
   position: absolute;
   top: 38px;
-  right: 4px;
+  right: 0;
   height: 0;
   width: 0;
   overflow: hidden;
@@ -203,9 +194,6 @@
   background-color:grey;
 
 }
-
-
-
 
 .logout_text {
   margin: 30px auto;
