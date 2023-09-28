@@ -438,15 +438,15 @@
 </template>
 
 <script setup>
-import {cMessage} from "@/element/message.js";
+import {cMessage} from "/src/element/message.js";
 
 import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import {calAPCost, splitMaterial} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import surveyApi from "@/api/survey";
+import surveyApi from "/src/api/survey";
 import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
-import {http} from "@/api/baseURL";
-import request from "@/api/requestBase";
+import {http} from "/src/api/baseURL";
+import request from "/src/api/requestBase";
 import {importSklandData} from "./skland.js";
 
 
