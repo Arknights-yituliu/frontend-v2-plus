@@ -159,9 +159,8 @@ async function register() {
       user_data.value.status = response.data.status;
       user_data.value.token = response.data.token;
 
-      setTimeout(() => {
-        login_visible.value = !login_visible;
-      }, 400);
+      login_visible.value = !login_visible.value;
+
 
     } else {
       cMessage(response.msg, 'error')
