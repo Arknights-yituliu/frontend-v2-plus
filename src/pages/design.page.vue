@@ -1,5 +1,5 @@
 <script setup>
-import "@/assets/css/sprite_item_large.css";
+import "/src/assets/css/sprite_item.css";
 import NaviCards from "@/components/NaviCards.vue";
 
 const navi_data = [
@@ -15,7 +15,7 @@ const navi_data = [
 
   <div class="mdui-container">
     <div class="mdui-row">
-      <div v-for="i in 24" class="mdui-col-xs-6 mdui-col-sm-4 mdui-col-md-3 mdui-col-lg-2 mdui-p-y-1">
+      <div v-for="(i,index) in 24" :key="index" class="mdui-col-xs-6 mdui-col-sm-4 mdui-col-md-3 mdui-col-lg-2 mdui-p-y-1">
         <div class="mdui-shadow-2 mdui-p-a-3 mdui-text-center mdui-ripple">
           <div class="bg-30063large sprite_large mdui-center"></div>
           {{ i }}

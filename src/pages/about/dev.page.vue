@@ -301,9 +301,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 
-import "@/assets/css/sprite_item_large.css";
+
+import "@/assets/css/sprite_item.css";
 </script>
 
 <style>
