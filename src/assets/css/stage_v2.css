@@ -537,15 +537,15 @@
 
 .item_sprite_value_wrap {
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 54px;
+  height: 54px;
 }
 
 .item_sprite_value {
   position: absolute;
-  transform: scale(0.35);
-  top: -60px;
-  left: -60px;
+  transform: scale(0.3);
+  top: -66px;
+  left: -66px;
   /* top: -30px;
   right:  140px; */
 }

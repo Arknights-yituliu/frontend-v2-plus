@@ -56,7 +56,6 @@ import { ref, watch, computed, inject, onMounted } from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
 import toolApi from "@/api/tool";
-import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 import { usePageContext } from "@/renderer/usePageContext";
 import navBar from "@/pages/survey/navBar.vue";
 import routesJson from "@/static/json/routes.json";
@@ -108,20 +107,21 @@ watch(theme, () => {
   cookie.set("theme", theme_name, { expires: 30 });
 });
 
-function navParentSelected(path) {
-  console.log(path, "==", pathName.value);
-  if (path == pathName.value) return "aside_nav aside_parent aside_nav_selected";
-  return "aside_nav aside_parent";
-}
-
-function navChildSelected(path) {
-  console.log(path, "==", pathName.value);
-  if (path == pathName.value) return "aside_nav aside_nav_selected";
-  return "aside_nav";
-}
+// function navParentSelected(path) {
+//   console.log(path, "==", pathName.value);
+//   if (path == pathName.value) return "aside_nav aside_parent aside_nav_selected";
+//   return "aside_nav aside_parent";
+// }
+//
+// function navChildSelected(path) {
+//   console.log(path, "==", pathName.value);
+//   if (path == pathName.value) return "aside_nav aside_nav_selected";
+//   return "aside_nav";
+// }
 
 const routes = ref(routesJson);
 
+// eslint-disable-next-line no-unused-vars
 const route = computed(() => {
   for (let i of routes.value) {
     if (i.path == pageContext.urlPathname || i.path + "/" == pageContext.urlPathname) {

@@ -146,7 +146,7 @@
         </tr>
 
 
-        <tr v-for="(result, index) in operators_statistics_list" v-show="result.show" class="rank_table_tr">
+        <tr v-for="(result, index) in operators_statistics_list" :key="index" v-show="result.show" class="rank_table_tr">
           <td class="rank_table_1 rank_table_text">
             <div class="rank_table_avatar">
               <div class="rank_avatar_wrap">
@@ -209,9 +209,9 @@
 </template>
 
 <script setup>
-import "@/assets/css/survey_rank.css";
+import "@/assets/css/survey/survey_rank.css";
 import {rankingListInit, collapse, filterByCharacterProperty, professionDict} from "./common";
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 
 import surveyApi from "@/api/survey";
 
@@ -418,10 +418,7 @@ function commonSort(property, condition) {
   last_property.value = property;
 }
 
-function btnSetClass(flag) {
-  if (flag) return "btn_set btn_setup_selected";
-  return "btn_set";
-}
+
 
 onMounted(() => {
   addFilterCondition('rarity', 6)

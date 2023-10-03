@@ -164,11 +164,10 @@
 </template>
 
 <script setup>
-import "@/assets/css/survey_index.css";
-import "@/assets/css/survey_common.css";
+import "@/assets/css/survey/survey_index.css";
+import "@/assets/css/survey/survey_common.css";
 import { onMounted, ref } from "vue";
-import navBar from "@/pages/survey/navBar.vue";
-let guildKey = ["siteDescription", "register", "devProgress"];
+
 
 import { registerEvent, loginEvent, userDataCacheClearEvent, userDataCacheEvent, globalUserData } from "./userService";
 
@@ -183,7 +182,7 @@ async function register() {
   // console.log("异步：", response);
   userData.value = response;
   setTimeout(() => {
-    loginVisible.value = !loginVisible;
+    loginVisible.value = !loginVisible.value;
   }, 400);
 }
 
@@ -192,7 +191,7 @@ async function login() {
   let response = await loginEvent(inputData.value);
   userData.value = response;
   setTimeout(() => {
-    loginVisible.value = !loginVisible;
+    loginVisible.value = !loginVisible.value;
   }, 400);
 }
 
@@ -200,11 +199,11 @@ async function login() {
 function logout() {
   userData.value = userDataCacheClearEvent();
   setTimeout(() => {
-    loginVisible.value = !loginVisible;
+    loginVisible.value = !loginVisible.value;
   }, 400);
 }
 
-let navId = ref(1);
+
 
 onMounted(() => {
   userData.value = userDataCacheEvent();

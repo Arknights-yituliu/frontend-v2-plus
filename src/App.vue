@@ -27,20 +27,18 @@
 
 <script setup>
 //导航
-import "@/assets/css/main.css";
-import "@/assets/css/aside.css";
-import "@/assets/css/navBar.css";
+import "@/assets/css/layout/main.css";
+import "@/assets/css/layout/aside.css";
+import "@/assets/css/layout/navBar.css";
+import "@/assets/css/layout/basic.css";
 
-import "@/assets/css/basic.css";
+
 import "@/assets/css/stage_v2.css";
 import "@/assets/css/store_v2.css";
 import "@/assets/css/sprite_item.css";
-import "@/assets/css/sprite_item_png.css";
-import "@/assets/css/sprite_item_large.css";
-import "@/assets/css/sprite_item_large_png.css";
 import "@/assets/css/sprite_style.css";
 import "@/assets/css/sprite_icon.css";
-import "@/assets/css/common.css";
+
 
 // 旧版css，待修改
 import "@/assets/css/item.css";

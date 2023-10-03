@@ -68,6 +68,35 @@ docker build . -t v2-plus
 docker run -d --rm --name v2plus -p 3000:3000  v2-plus:latest
 ```
 
+
+## 项目文件结构
+```
+├─docs 文档
+├─server 启动文件
+└─src 主要文件
+    ├─api    封装的API的js文件存放位置
+    ├─assets 资源文件
+    │  └─css  样式文件
+    │      ├─layout 主题样式
+    │      ├─sprite 雪碧图
+    │      └─survey 调查站样式
+    ├─components 组件
+    ├─element 自己封装的小组件
+    │  └─css 
+    ├─pages 页面
+    │  ├─about  网站信息
+    │  ├─dev 
+    │  ├─home 
+    │  ├─material 材料相关
+    │  ├─survey 干员调查
+    │  └─tools 实用工具
+    ├─renderer SSR渲染
+    └─static 静态文件
+        └─json json文件
+            ├─build 基建页面的json资源
+            └─survey 干员调查的json资源
+```
+
 ## 什么是 SSR？
 
 ### 与 SPA 对比

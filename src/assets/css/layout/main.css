@@ -11,8 +11,6 @@
 .header {
   height: 48px;
   line-height: 44px;
-  border-bottom: 2px solid rgb(223, 223, 223);
-  /* box-shadow: 0 0 4px 4px rgb(208, 208, 208); */
   background: #262f3e;
 }
 

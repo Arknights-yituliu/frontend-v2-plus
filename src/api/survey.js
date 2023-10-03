@@ -70,11 +70,10 @@ export default {
 
   /**
    * 更新用户信息
-   * @param property
    * @param data
    * @returns {*}
    */
-  updateUserData(property, data) {
+  updateUserData(data) {
     return request({
       url: `${api_name}/user/update`,
       method: "post",

@@ -99,19 +99,17 @@
 </template>
 
 <script setup>
-import "@/assets/css/survey_common.css";
-import "@/assets/css/sprite_avatar_6.css";
-import "@/assets/css/sprite_avatar_5.css";
-import "@/assets/css/sprite_avatar_4.css";
-import "@/assets/css/sprite_portrait_6.css";
-import "@/assets/css/sprite_portrait_5.css";
-import "@/assets/css/sprite_portrait_4.css";
-import "@/assets/css/sprite_portrait_bg.css";
-import "@/assets/css/sprite_skill.css";
-import "@/assets/css/sprite_mod_type.css";
-import "@/assets/css/sprite_rank.css";
-import "@/assets/css/survey_index.css";
-import "@/assets/css/sprite_avatar_4.css";
+import "@/assets/css/survey/survey_common.css";
+import "@/assets/css/sprite/sprite_avatar_5.css";
+import "@/assets/css/sprite/sprite_avatar_4.css";
+import "@/assets/css/sprite/sprite_avatar_6.css";
+import "@/assets/css/sprite/sprite_portrait_6.css";
+import "@/assets/css/sprite/sprite_portrait_5.css";
+import "@/assets/css/sprite/sprite_portrait_4.css";
+import "@/assets/css/sprite/sprite_portrait_bg.css";
+import "@/assets/css/sprite/sprite_skill.css";
+import "@/assets/css/sprite/sprite_rank.css";
+import "@/assets/css/survey/survey_index.css";
 
 import {onMounted, ref} from "vue";
 import {cMessage} from "/src/element/message";

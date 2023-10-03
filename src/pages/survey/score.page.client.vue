@@ -221,11 +221,11 @@
 </template>
 
 <script setup>
-import { h, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { scoreListInit, collapse, filterByCharacterProperty, professionDict, yearDict } from "./common";
 import surveyApi from "@/api/survey";
 import { globalUserData } from "./userService";
-import "@/assets/css/survey_score.css";
+import "@/assets/css/survey/survey_score.css";
 import { cMessage } from "@/element/message.js";
 
 let first_popup = ref(false)

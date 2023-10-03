@@ -27,7 +27,6 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { mdiChartBoxOutline, mdiGiftOutline, mdiCalculator, mdiCalendarCursorOutline, mdiGold } from "@mdi/js";
 import routesJson from "@/static/json/routes.json";
 
 let pathName = ref("/");
@@ -70,45 +69,15 @@ function navChildSelected(path) {
   return "aside_nav";
 }
 
-const devRoute = {
-  path: "/survey",
-  text: "干员调查",
-  isChild: true,
-  child: [
-    {
-      path: "/survey",
-      text: "调查简介",
-    },
-    {
-      path: "/survey/character",
-      text: "干员练度调查",
-    },
-    {
-      path: "/survey/score",
-      text: "干员风评调查",
-    },
-    {
-      path: "/survey/rank",
-      text: "调查结果",
-    },
-  ],
-};
 
-const routesLength = ref(routesJson.length);
+
 const routes = ref(routesJson);
 
 onMounted(() => {
-  // for (let i in routes) {
-  //   if (routes[i].isChild) {
-  //     navChildOpen(i, routes[i].child.length);
-  //     navChildOpen(i, routes[i].child.length);
-  //   }
-  // }
-  const domain = window.location.host;
+
+
   const nowPathName = window.location.pathname;
   getPathName(nowPathName);
-  // if (domain.indexOf("dev") == -1) {
-  //   routes.value[routesLength]=devRoute;
-  // }
+
 });
 </script>

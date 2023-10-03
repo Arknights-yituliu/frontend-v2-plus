@@ -7,7 +7,7 @@
       <div class="op_title">
         <div class="op_title_text">
           <div class="op_title_ctext">地图效率</div>
-          <div :class="opETextTheme">Best Stages</div>
+          <div class="op_title_etext_light">Best Stages</div>
         </div>
         <div class="op_title_tag">
           <div id="nowActStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>
@@ -304,68 +304,41 @@ export default {
   },
   data() {
     return {
-      popupData: [], //关卡弹窗用集合
+      popupData: [], //弹窗展示数据
       // stageRankT3: stageJson.data, //关卡效率集合
-      stageRankT3: this.pageContext.pageProps.t3, //关卡效率集合
-      stageRankT2: this.pageContext.pageProps.t2, //关卡效率集合
-      stageRankOrundum: this.pageContext.pageProps.orundum, //关卡效率集合
-      stageActHistory: this.pageContext.pageProps.closed,
+      stageRankT3: this.pageContext.pageProps.t3, //T3材料关卡推荐数据
+      stageRankT2: this.pageContext.pageProps.t2, //T2材料关卡推荐数据
+      stageRankOrundum: this.pageContext.pageProps.orundum, //搓玉推荐关卡数据
+      stageActHistory: this.pageContext.pageProps.closed, //历史关卡数据
       actStageOnly: 0,
-      cardList: [0, 1, 2, 3, 4, 5, 6, 7],
       itemType: "",
-      updateTime: this.pageContext.pageProps.t3[0][0].updateTime,
+      updateTime: this.pageContext.pageProps.t3[0][0].updateTime, //更新时间
       itemId: "",
-      opETextTheme: "op_title_etext_light",
       stageVersion: 0.625,
       popupRank: 3,
     };
   },
   mounted() {
-    // this.getStageResultDateT3();
-    // this.getStageResultDateT2();
-    // this.getStageResultDateOrundum();
-    // this.getStageResultDateClosed();
-    this.getRoute();
+    this.getUrlParm();
     cookie.set("updateTime", this.updateTime, { expires: 30 });
   },
   methods: {
-    getCookies() {
-      let theme = cookie.get("theme");
-      if (typeof theme == "undefined" || theme === undefined) {
-        theme = "op_title_etext_light";
-      }
-      //  console.log('stage',theme);
-      this.opETextTheme = "op_title_etext_" + theme;
-    },
+
     sleep(d) {
       return new Promise((resolve) => setTimeout(resolve, d));
     },
-    async getRoute() {
-      var item = this.pageContext.urlParsed.search.item;
+    async getUrlParm() {
+      const item = this.pageContext.urlParsed.search.item;
       if (item != undefined) console.log("要展示的材料：", item);
-      for (let i = 0; i < 40; i++) {
-        await this.sleep(500);
-        if (this.stageRankT3.length > 5) {
-          if ("全新装置" === item) this.showPopup(0);
-          if ("异铁组" === item) this.showPopup(1);
-          if ("轻锰矿" === item) this.showPopup(2);
-          if ("凝胶" === item) this.showPopup(3);
-          if ("扭转醇" === item) this.showPopup(4);
-          if ("酮凝集组" === item) this.showPopup(5);
-          if ("RMA70-12" === item) this.showPopup(6);
-          if ("炽合金" === item) this.showPopup(7);
-          if ("研磨石" === item) this.showPopup(8);
-          if ("糖组" === item) this.showPopup(9);
-          if ("聚酸酯组" === item) this.showPopup(10);
-          if ("晶体元件" === item) this.showPopup(11);
-          if ("固源岩组" === item) this.showPopup(12);
-          if ("半自然溶剂" === item) this.showPopup(13);
-          if ("化合切削液" === item) this.showPopup(14);
-          if ("转质盐组" === item) this.showPopup(15);
-          if ("Orundum" === item) this.showOrundumPopup();
-          break;
-        }
+
+      for (const index in this.stageRankT3) {
+         if(this.stageRankT3[index][0].itemType == item){
+           this.showPopup(index);
+         }
       }
+
+      if ("Orundum" === item) this.showOrundumPopup();
+
     },
 
     showPopup(index) {
@@ -434,27 +407,21 @@ export default {
       // return "bg-" + id;
     },
     getImgUrl(img, source) {
-      source = typeof source !== "undefined" ? type : 1;
+      source = typeof source !== "undefined" ? source : 1;
       if (source > 2.1) return "/image/ activity_picture /" + img + ".png";
       if (source > 1.1) return "/image/item/" + img + ".png";
       else if (source > 0.1) return "/image/materials/" + img + ".png";
       else return "https://cdn.jsdelivr.net/gh/zirun-wang/OnePicCDN/image/" + img + ".png";
     },
 
-    getCardBackground(url) {
+    getCardBackground() {
       return "background: linear-gradient(rgba(144, 164, 174, 0), rgba(144, 164, 174, 0)), url(https://yygh-atbriup.oss-cn-beijing.aliyuncs.com/sprite/mix.png) no-repeat 85% 50% /100%;margin-left:-32px";
     },
     getEfficiency(num, acc) {
       acc = typeof acc !== "undefined" ? acc : 2;
       return parseFloat(num).toFixed(acc);
     },
-    getBoxEfficiency(state, effex, eff) {
-      if (state === 3)
-        // return effex
-        return "+" + (effex - eff).toFixed(0).toString() + "%";
-      else if (state === 4) return "样本少";
-      else return "无小样";
-    },
+
     shrinkTimes(times) {
       if (times > 9999) return "9999+";
       else return times;

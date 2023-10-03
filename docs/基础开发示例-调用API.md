@@ -1,9 +1,9 @@
-# 开发须知
+# 基础开发示例-调用API
 ## 引用API的简易案例
 
 如何获取蓝色品质材料的关卡推荐数据
 
-在 src/api路径下新建一个JavaScript文件stage.js
+在 src/api路径下新建一个JavaScript文件stage.js，编写api的请求路径、请求类型、请求参数等
 ```
  import request from "/src/api/request";
  
@@ -22,11 +22,23 @@
 
 在src/pages路径下新建stage.page.client.vue文件
 ```
+<template>
+  <!-- 页面加载完毕后会执行函数，这时即可展示API返回的数据-->
+  <div v-for="(stageList,index) in stageData" :key='index'> 
+     <div v-for="(stage,index) in stageList" :key='index'> 
+            {{stage}}
+     </div>
+  </div>
+  
+</template>
+
+
 <script>
-import stageApi from '/src/api/stage'
+import stageApi from '/src/api/stage' //引入封装的API
 
-let stageData = ref([])
+let stageData = ref([])  //接收API内数据的数组
 
+// 调用API的函数
 function getT3StageData() {
       const  expCoefficient = 0.625
       stageApi.getT3StageData(expCoefficient).then((response) => {
@@ -35,6 +47,7 @@ function getT3StageData() {
     })
 }
 
+//页面加载后执行函数获取数据
 onMounted(() => {
   getT3StageData()
 });

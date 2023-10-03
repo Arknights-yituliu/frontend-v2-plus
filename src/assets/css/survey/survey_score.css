@@ -236,6 +236,6 @@
 .score_avg{
   display: inline-block;
   font-size: 15px;
-  color: gray;
+  color: rgb(128, 128, 128);
   display: none;
 }

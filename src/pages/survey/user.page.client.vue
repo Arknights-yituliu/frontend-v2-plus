@@ -9,26 +9,6 @@
         <div class="user_name">{{ userData.userName }}</div>
       </div>
 
-
-      <!--    <div class="user_operator_statistics_wrap">-->
-      <!--      <div class="user_operator_statistics">-->
-      <!--        总计招募干员：<a class="user_operator_statistics_num"> {{ operatorStatisticsObj.count }}</a>-->
-      <!--      </div>-->
-      <!--      <div class="user_operator_statistics">-->
-      <!--        精二干员总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.elite2 }}</a>-->
-      <!--      </div>-->
-      <!--      <div class="user_operator_statistics">-->
-      <!--        专一技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank1 }}</a>-->
-      <!--      </div>-->
-      <!--      <div class="user_operator_statistics">-->
-      <!--        专二技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank2 }}</a>-->
-      <!--      </div>-->
-      <!--      <div class="user_operator_statistics">-->
-      <!--        专三技能总数：<a class="user_operator_statistics_num">{{ operatorStatisticsObj.rank3 }}</a>-->
-      <!--      </div>-->
-      <!--    </div>-->
-
-
       <!--    <div class="user_info_card">-->
       <!--      <div class="user_info_title">身份验证</div>-->
       <!--      <div class="user_input_bar">-->
@@ -82,8 +62,12 @@
       <div class="user_info_card">
         <div class="user_info_title">修改邮箱</div>
         <div class="user_input_bar">
-          <div class="user_input_tip" v-show="!hasPermission(userData.status,HAS_EMAIL)">绑定邮箱后也可通过邮箱作为账号登录</div>
-          <div class="user_input_tip" v-show="hasPermission(userData.status,HAS_EMAIL)">如需替换邮箱将会直接向您的绑定邮箱发送验证码</div>
+          <div class="user_input_tip" v-show="!hasPermission(userData.status,HAS_EMAIL)">
+            绑定邮箱后也可通过邮箱作为账号登录
+          </div>
+          <div class="user_input_tip" v-show="hasPermission(userData.status,HAS_EMAIL)">
+            需修改邮箱请输入新邮箱点击发送，将向您的旧邮箱发送验证码
+          </div>
           <div class="user_input_label">输入新邮箱</div>
           <input class="user_input" v-model="inputData.email"/>
           <button class="survey_btn btn_blue btn_position" @click="sendEmailCode()">发送验证码</button>
@@ -96,7 +80,7 @@
         </div>
       </div>
       <div class="user_info_card">
-      <button class="survey_btn btn_red btn_red_selected" style="margin: auto" @click="logout()">退出登录</button>
+        <button class="survey_btn btn_red btn_red_selected" style="margin: auto" @click="logout()">退出登录</button>
       </div>
     </div>
   </div>
@@ -106,7 +90,6 @@
 import {onMounted, ref} from "vue";
 import {cMessage} from "../../element/message";
 import surveyApi from "/src/api/survey"
-
 
 
 let userData = ref({
@@ -122,7 +105,7 @@ let userData = ref({
 
 
 let inputData = ref({
-  userName:'',
+  userName: '',
   cred: '',
   newPassWord: "",
   confirmPassWord: '',
@@ -130,7 +113,6 @@ let inputData = ref({
   email: '',
   emailCode: ''
 })
-
 
 
 function checkPassWord() {
@@ -147,13 +129,13 @@ function updatePassWord() {
     token: userData.value.token,
     newPassWord: inputData.value.newPassWord,
     oldPassWord: inputData.value.oldPassWord,
-    property:"passWord"
+    property: "passWord"
   }
 
   surveyApi.updateUserData(data).then(response => {
-      cMessage('修改密码成功')
-      userData.value.status = response.data.status
-      localStorage.setItem("globalUserData", JSON.stringify(userData.value));
+    cMessage('修改密码成功')
+    userData.value.status = response.data.status
+    localStorage.setItem("globalUserData", JSON.stringify(userData.value));
   })
 }
 
@@ -161,13 +143,13 @@ function sendEmailCode() {
   const data = {
     token: userData.value.token,
     email: inputData.value.email,
-    mailUsage:'changeEmail'
+    mailUsage: 'changeEmail'
   }
 
   // eslint-disable-next-line no-unused-vars
   surveyApi.sendEmailCode(data).then(response => {
 
-      cMessage('验证码已发送')
+    cMessage('验证码已发送')
   })
 
 }
@@ -177,28 +159,27 @@ function updateEmail() {
     token: userData.value.token,
     email: inputData.value.email,
     emailCode: inputData.value.emailCode,
-    property:"email"
+    property: "email"
   }
   surveyApi.updateUserData(data).then(response => {
-      cMessage('邮箱绑定成功')
-      userData.value.status = response.data.status
-      localStorage.setItem("globalUserData", JSON.stringify(userData.value));
+    cMessage('邮箱绑定成功')
+    userData.value.status = response.data.status
+    localStorage.setItem("globalUserData", JSON.stringify(userData.value));
   })
 }
-
 
 
 function updateUserName() {
   const data = {
     token: userData.value.token,
-    userName:inputData.value.userName,
-    property:"userName"
+    userName: inputData.value.userName,
+    property: "userName"
   }
   surveyApi.updateUserData(data).then(response => {
-      cMessage('用户名更改成功')
-      document.getElementById("user_name").innerText = response.data.userName
-      userData.value.userName = response.data.userName
-      localStorage.setItem("globalUserData", JSON.stringify(userData.value));
+    cMessage('用户名更改成功')
+    document.getElementById("user_name").innerText = response.data.userName
+    userData.value.userName = response.data.userName
+    localStorage.setItem("globalUserData", JSON.stringify(userData.value));
   })
 }
 
@@ -206,7 +187,7 @@ function updateUserName() {
 function logout() {
   localStorage.removeItem('globalUserData')
   setTimeout(() => {
-  location.reload()
+    location.reload()
   }, 1000);
 }
 
@@ -227,7 +208,7 @@ function getCacheUserData() {
     userData.value.code = parse.code;
     userData.value.status = parse.status;
     userData.value.token = parse.token;
-    userData.value.email = parse['email']==undefined?"未绑定1":parse['email'];
+    userData.value.email = parse['email'] == undefined ? "未绑定1" : parse['email'];
   }
 }
 
@@ -254,7 +235,6 @@ onMounted(() => {
 .user_head_wrap {
   display: flex;
 }
-
 
 
 .user_image_wrap {
@@ -347,32 +327,5 @@ onMounted(() => {
   margin-left: 20px;
 }
 
-.user_operator_statistics_wrap {
-  display: flex;
-}
 
-.user_operator_statistics {
-  padding: 8px;
-  line-height: 28px;
-}
-
-.user_operator_statistics_num {
-  color: #ff6a00;
-  font-size: 18px;
-}
-
-
-.user_btn {
-  height: 28px;
-  line-height: 28px;
-  text-align: center;
-  width: 120px;
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.user_btn:hover {
-  background: #d5d5d5;
-}
 </style>

@@ -452,7 +452,7 @@ import {calAPCost, splitMaterial} from "./operatorStatistics"; //基础信息（
 import surveyApi from "/src/api/survey";
 import surveyOperatorApi from "/src/api/surveyOperator"
 import {onMounted, ref} from "vue";
-import "@/assets/css/survey_character.css";
+import "@/assets/css/survey/survey_character.css";
 import {http} from "/src/api/baseURL";
 import request from "/src/api/requestBase";
 import {importSklandData} from "./skland.js";

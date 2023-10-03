@@ -292,7 +292,7 @@ html {
   --gacha-total-fg: #dd88dd;
   --charge-instruction-fg: #ff8888;
   --riic-mower-bg: black;
-  --riic-mower-avatar-bg: gray;
+  --riic-mower-avatar-bg: rgb(128, 128, 128);
 }
 
 .light {
