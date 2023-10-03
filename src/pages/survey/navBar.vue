@@ -51,16 +51,16 @@
 
 
         <div class="login_btn_wrap">
-          <div @click="registerOrLogin='register'" v-show="'login'===registerOrLogin" class="login_btn_tip">
+          <div @click="registerOrLogin='register'" v-show="'login'===registerOrLogin" class="survey_btn btn_white login_btn">
             没有账号请先注册
           </div>
-          <div @click="registerOrLogin='login'" v-show="'register'===registerOrLogin" class="login_btn_tip">
+          <div @click="registerOrLogin='login'" v-show="'register'===registerOrLogin" class="survey_btn btn_white login_btn">
             已注册过直接登录
           </div>
-          <button class="survey_btn_blue selected_blue login_btn" @click="register()" v-show="'register'===registerOrLogin">
+          <button class="survey_btn btn_blue btn_blue_selected login_btn" @click="register()" v-show="'register'===registerOrLogin">
             注册
           </button>
-          <button class="survey_btn_blue selected_blue login_btn" @click="login()" v-show="'login'===registerOrLogin">
+          <button class="survey_btn btn_blue btn_blue_selected login_btn" @click="login()" v-show="'login'===registerOrLogin">
             登录
           </button>
 
@@ -114,11 +114,11 @@ import "@/assets/css/survey_index.css";
 import "@/assets/css/sprite_avatar_4.css";
 
 import {onMounted, ref} from "vue";
-import request from "@/api/requestBase";
-import {cMessage} from "@/element/message";
+import {cMessage} from "/src/element/message";
 import jsCookie from "js-cookie";
+import surveyApi from "/src/api/survey";
 
-let input_data = ref({userName: '', passWord: '', cred: '', email: '', emailCode: '', accountType: ''}); //用户输入的用户名，用obj没准后期有别的字段
+let input_data = ref({userName: '', passWord: '', cred: '', email: '', emailCode: '', accountType: '',mailUsage:'register'}); //用户输入的用户名，用obj没准后期有别的字段
 let user_data = ref({userName: "山桜", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
 
 let login_visible = ref(false);
@@ -127,41 +127,39 @@ let registerOrLogin = ref('login')
 
 
 function sendEmailCodeByRegister() {
-  request({
-    url: 'survey/user/emailCode?type='+registerOrLogin.value,
-    method: "post",
-    data: input_data.value,
-  }).then(response => {
-    response = response.data
-    if (response.code === 200) {
-      cMessage("验证码发送成功");
-    } else {
-      cMessage(response.msg, 'error')
-    }
+  const data = {
+    mailUsage:registerOrLogin.value,
+    email:input_data.value.email,
+  }
+  surveyApi.sendEmailCode(data).then(response => {
+    console.log(response)
+      cMessage("验证码发送成功")
   })
-
 }
 
+// eslint-disable-next-line no-unused-vars
+function sendEmailCodeForLogin() {
+  const data = {
+    mailUsage:'login',
+    email:input_data.value.email,
+  }
+  surveyApi.sendEmailCode(data).then(response => {
+    console.log(response)
+    cMessage("验证码发送成功")
+  })
+}
 
 //注册
-async function register() {
+function register() {
   input_data.value.accountType = account_type.value
-  await request({
-    url: `survey/register/v2`,
-    method: "post",
-    data: input_data.value,
-  }).then(response => {
-    response = response.data
+  surveyApi.register(input_data.value).then(response => {
     if (response.code === 200) {
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
       cMessage("注册成功");
       user_data.value.userName = response.data.userName;
       user_data.value.status = response.data.status;
       user_data.value.token = response.data.token;
-
       login_visible.value = !login_visible.value;
-
-
     } else {
       cMessage(response.msg, 'error')
     }
@@ -181,16 +179,8 @@ function accountTypeClass(type) {
 //登录
 function login() {
   input_data.value.accountType = account_type.value
-  request({
-    url: `survey/login/v2`,
-    method: "post",
-    data: input_data.value,
-  }).then(response => {
-    response = response.data
-    if (response.code !== 200) {
-      cMessage(response.msg, 'error')
-    }
-    if (response.code === 200 && response.data.status > 0) {
+  surveyApi.login(input_data.value).then(response => {
+    if (response.data.status > 0) {
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
       // 登录成功刷新
       location.reload()

@@ -1,26 +1,29 @@
-import request from "@/api/request";
-
-const api_name = ``;
+import request from "/src/api/request";
 
 export default {
+  /**
+   * 查询蓝色品质材料的推荐关卡
+   * @param expCoefficient 经验书价值系数
+   * @returns {*}
+   */
   //根据材料类型查询关卡效率按关卡效率降序 蓝材料
   findStageDateByTypeOrderByEfficiencyDesc(expCoefficient) {
     return request({
-      url: `${api_name}/find/stage/t3?expCoefficient=${expCoefficient}`,
+      url: `/find/stage/t3?expCoefficient=${expCoefficient}`,
       method: "get",
     });
   },
   //根据材料查询关卡效率按期望理智降序  绿材料
   findStageDateByMainOrderByExpectDesc(expCoefficient) {
     return request({
-      url: `${api_name}/find/stage/t2?expCoefficient=${expCoefficient}`,
+      url: `/find/stage/t2?expCoefficient=${expCoefficient}`,
       method: "get",
     });
   },
   //搓玉查询
   findStageDataOfOrundum() {
     return request({
-      url: `${api_name}/find/stage/orundum`,
+      url: `/find/stage/orundum`,
       method: "get",
     });
   },
@@ -36,7 +39,7 @@ export default {
   //查询所有关卡效率
   findAllStageEfficiency() {
     return request({
-      url: `${api_name}/find/stage/all`,
+      url: `/find/stage/all`,
       method: "get",
     });
   },

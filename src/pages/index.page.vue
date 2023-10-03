@@ -19,7 +19,6 @@ import stage from "@/components/stage.vue";
 import FootComponent from "@/components/FootComponent.vue";
 // import JumpToValue from "@/components/JumpToValue.vue";
 
-import toolApi from "@/api/tool";
 
 import { onMounted } from "vue";
 

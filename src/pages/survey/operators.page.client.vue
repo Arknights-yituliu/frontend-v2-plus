@@ -38,9 +38,7 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <button class="survey_btn btn_blue" @click="checkFirstPopup()">填写说明</button>
-      <button class="survey_btn btn_white" >干员持有率：{{ user_own_operator_count }} / {{
-          operator_count
-        }}
+      <button class="survey_btn btn_white">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}
       </button>
       <button class="survey_btn btn_green" @click="upload()">手动保存问卷</button>
       <!--      <button class="survey_btn" @click="firstPopupClose()">填写说明</button>-->
@@ -48,7 +46,9 @@
       <!--      <button class="survey_btn" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
       <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
 
-      <div style="margin: 12px;color: #f56c6c;font-weight: 600">因森空岛加入了签名验证，森空岛导入数据暂不可用，现已下线功能</div>
+      <div style="margin: 12px;color: #f56c6c;font-weight: 600">
+        因森空岛加入了签名验证，森空岛导入数据暂不可用，现已下线功能
+      </div>
       <div class="mdui-divider" style="margin: 4px;"></div>
       <button :class="btnClass('btn_filter')"
               @click="clickBtn('btn_filter');collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">
@@ -192,11 +192,13 @@
         <div class="intro_wrap">
           <div class="intro_title">森空岛数据导入流程</div>
 
-          <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="skland_url">https://www.skland.com/</a>进行登录</p>
+          <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="skland_url">https://www.skland.com/</a>进行登录
+          </p>
           <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：<br/>
             <a style="color:dodgerblue">localStorage.getItem('SK_OAUTH_CRED_KEY')</a>
             <br/>
-            <button class="survey_btn" @click="copyCode('localStorage.getItem(\'SK_OAUTH_CRED_KEY\')')">复制命令</button>
+            <button class="survey_btn" @click="copyCode('localStorage.getItem(\'SK_OAUTH_CRED_KEY\')')">复制命令
+            </button>
 
             <br/>输入之后回车确认
           </p>
@@ -211,7 +213,9 @@
     </c-popup>
 
     <c-popup :visible="reset_popup_visible" v-model:visible="reset_popup_visible">
-      <div class="popup_action_tip">此操作将解除您的森空岛UID与一图流账号的绑定，同时并清空一图流账号上保存的干员数据，确定要执行操作吗？</div>
+      <div class="popup_action_tip">
+        此操作将解除您的森空岛UID与一图流账号的绑定，同时并清空一图流账号上保存的干员数据，确定要执行操作吗？
+      </div>
       <div class="btn_switch_wrap">
         <div class="survey_btn btn_red" @click="operatorDataReset()">确定</div>
         <div class="survey_btn btn_white" @click="reset_popup_visible = !reset_popup_visible">取消</div>
@@ -237,7 +241,8 @@
           </div>
         </div>
         <div class="switch_bar upload">
-          <div class="switch_desc"><b>*上传须知：</b>导入的Excel的数据格式需与一图流导出的Excel内数据格式一致，请先导出一份空白表格以确保格式无误</div>
+          <div class="switch_desc"><b>*上传须知：</b>导入的Excel的数据格式需与一图流导出的Excel内数据格式一致，请先导出一份空白表格以确保格式无误
+          </div>
         </div>
 
         <div class="divider"></div>
@@ -325,7 +330,8 @@
               <div class="char_name">{{ operator.name }}</div>
             </div>
             <div :class="surveyTypeClass('potential_wrap')">
-              <div class="image_potential" :id="char_index + 'potential' + rank" v-for="(rank,index) in ranks.slice(1, 7)" :key="index"
+              <div class="image_potential" :id="char_index + 'potential' + rank"
+                   v-for="(rank,index) in ranks.slice(1, 7)" :key="index"
                    @click="updatePotential(char_index, rank)">
                 <div :class="getSprite('potential' + rank, 'potential')"></div>
               </div>
@@ -378,7 +384,8 @@
             <div class="image_mod">
               {{ equip.typeName1 + "-" + equip.typeName2 }}
             </div>
-            <div v-for="(rank,index) in ranks.slice(1, 4)" :key="index" class="image_rank" :id="char_index + 'mod'+ equip.typeName2 + rank"
+            <div v-for="(rank,index) in ranks.slice(1, 4)" :key="index" class="image_rank"
+                 :id="char_index + 'mod'+ equip.typeName2 + rank"
                  @click="updateSkillAndMod(char_index, 'mod'+ equip.typeName2, rank)">
               <div :class="getSprite('mod' + rank, 'mod_rank')"></div>
             </div>
@@ -443,6 +450,7 @@ import {cMessage} from "/src/element/message.js";
 import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import {calAPCost, splitMaterial} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import surveyApi from "/src/api/survey";
+import surveyOperatorApi from "/src/api/surveyOperator"
 import {onMounted, ref} from "vue";
 import "@/assets/css/survey_character.css";
 import {http} from "/src/api/baseURL";
@@ -463,7 +471,7 @@ function getCacheUserData() {
   let cacheData = localStorage.getItem("globalUserData");
   // localStorage.setItem("globalUserData", cacheData);
   if (cacheData == "undefined" || cacheData == void 0 || cacheData == null) {
-    cMessage('未登录或登录失效','error')
+    cMessage('未登录或登录失效', 'error')
   } else {
     userData.value = JSON.parse(cacheData);
   }
@@ -477,7 +485,7 @@ function checkFirstPopup() {
 
 /**
  * 获取雪碧图
- * @param id 图片id  
+ * @param id 图片id
  * @param type 图片类型 (每类图片对应的css不一样）
  * @returns {string}
  */
@@ -564,7 +572,6 @@ function getSurveyCharacter() {
 }
 
 
-
 /**
  * 导出评分表的excel
  */
@@ -588,26 +595,16 @@ let player_uid = ref('')  //玩家uid
 /**
  * 通过玩家uid找回数据
  */
-function retrievalByUid(){
+function retrievalByUid() {
   const data = {
     token: userData.value.token,
-    uid:player_uid.value
+    uid: player_uid.value
   }
-
-  request({
-    url: 'survey/operator/retrieval/uid',
-    method: "post",
-    data: data
-  }).then(response => {
-    response = response.data
-    if (response.code === 200) {
+  surveyOperatorApi.retrievalOperatorDataByUid(data).then(response => {
+      console.log(response)
       setTimeout(() => {
-       location.reload()
+        location.reload()
       }, 1000);
-
-    }else {
-      cMessage(response.msg, 'error')
-    }
 
   })
 }
@@ -623,18 +620,9 @@ async function retrieveAccount() {
     cred: skland_CRED.value
   }
 
-  request({
-    url: 'survey/user/retrieval',
-    method: "post",
-    data: data
-  }).then(response => {
-    response = response.data
-    if (response.code === 200) {
+  surveyApi.retrievalUserAccountByCred(data).then(response => {
       const userName = response.data.userName;
       login(userName)
-    } else {
-      cMessage(response.msg, 'error')
-    }
   })
 }
 
@@ -652,21 +640,12 @@ async function loginByCRED() {
     data: JSON.stringify(response)
   }
 
-  request({
-    url: 'survey/user/login/cred',
-    method: "post",
-    data: data
-  }).then(response => {
-    response = response.data
-    if (response.code === 200) {
+  surveyApi.loginByCred(data).then(response => {
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
       cMessage('登录成功')
       data.token = response.data.token;
       userData.value = response.data
-      uploadSklandData(data)
-
-    }
-
+      uploadSKLandData(data)
   })
 
 }
@@ -690,10 +669,10 @@ async function importSKLandCRED() {
     data: JSON.stringify(response)
   }
 
-  await uploadSklandData(data)
+  await uploadSKLandData(data)
 }
 
-async function uploadSklandData(data) {
+async function uploadSKLandData(data) {
   await request({
     url: 'survey/operator/import/skland/v2',
     method: "post",
@@ -733,18 +712,8 @@ function operatorDataReset() {
   let data = {
     token: userData.value.token,
   }
-
-  request({
-    url: 'survey/operator/reset',
-    method: "post",
-    data: data
-  }).then(response => {
-    response = response.data
-    if (response.code === 200) {
+  surveyOperatorApi.resetOperatorData(data).then(response => {
       cMessage(response.data)
-    } else {
-      cMessage(response.msg, 'error')
-    }
   })
 }
 
@@ -754,17 +723,8 @@ function operatorDataReset() {
  */
 function login(userName) {
   let data = {userName: userName}
-  
-  request({
-    url: `survey/login`,
-    method: "post",
-    data: data,
-  }).then(response => {
-    response = response.data
-    if (response.code !== 200) {
-      cMessage(response.msg, 'error')
-    }
-    if (response.code === 200 && response.data.status > 0) {
+  surveyApi.login(data).then(response => {
+    if (response.data.status > 0) {
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
       // 登录成功刷新
       location.reload()
@@ -782,7 +742,7 @@ let selected_index_obj = ref({}); //每次点击操作记录下被更新的干�
  * 自动上传风评表
  */
 function automaticUpload() {
-  return;
+
   //方法触发时的时间戳
   // const now_upload_time_stamp = Date.parse(new Date().toString());
   // //与上一次自动上传时间的间隔

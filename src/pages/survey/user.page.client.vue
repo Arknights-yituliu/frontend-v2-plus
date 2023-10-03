@@ -104,8 +104,8 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import request from "@/api/requestBase";
 import {cMessage} from "../../element/message";
+import surveyApi from "/src/api/survey"
 
 
 
@@ -132,32 +132,11 @@ let inputData = ref({
 })
 
 
-function authentication() {
-  const data = {
-    token: userData.value.token,
-    cred: inputData.value.cred
-  }
-
-  request({
-    url: `/survey/user/authentication`,
-    method: "post",
-    data: data
-  }).then(response => {
-    response = response.data
-    if (response.code !== 200) {
-      cMessage(response.msg, 'error')
-    } else {
-      console.log(response.data)
-    }
-  })
-}
-
 
 function checkPassWord() {
   if (inputData.value.newPassWord.length > 5 && inputData.value.confirmPassWord.length > 5) {
     if (inputData.value.newPassWord === inputData.value.confirmPassWord) {
       return ''
-    } else {
     }
     return '确认密码不一致'
   }
@@ -167,43 +146,29 @@ function updatePassWord() {
   const data = {
     token: userData.value.token,
     newPassWord: inputData.value.newPassWord,
-    oldPassWord: inputData.value.oldPassWord
+    oldPassWord: inputData.value.oldPassWord,
+    property:"passWord"
   }
 
-  request({
-    url: `/survey/user/update?property=passWord`,
-    method: "post",
-    data: data
-  }).then(response => {
-    response = response.data
-    if (response.code !== 200) {
-      cMessage(response.msg, 'error')
-    } else {
+  surveyApi.updateUserData(data).then(response => {
       cMessage('修改密码成功')
       userData.value.status = response.data.status
       localStorage.setItem("globalUserData", JSON.stringify(userData.value));
-    }
   })
 }
 
 function sendEmailCode() {
   const data = {
     token: userData.value.token,
-    email: inputData.value.email
+    email: inputData.value.email,
+    mailUsage:'changeEmail'
   }
-  request({
-    url: `/survey/user/emailCode?type=changeEmail`,
-    method: "post",
-    data: data
-  }).then(response => {
-    response = response.data
-    if (response.code !== 200) {
-      cMessage(response.msg, 'error')
-    } else {
-      cMessage('验证码已发送')
-    }
-  })
 
+  // eslint-disable-next-line no-unused-vars
+  surveyApi.sendEmailCode(data).then(response => {
+
+      cMessage('验证码已发送')
+  })
 
 }
 
@@ -211,21 +176,13 @@ function updateEmail() {
   const data = {
     token: userData.value.token,
     email: inputData.value.email,
-    emailCode: inputData.value.emailCode
+    emailCode: inputData.value.emailCode,
+    property:"email"
   }
-  request({
-    url: `/survey/user/update?property=email`,
-    method: "post",
-    data: data
-  }).then(response => {
-    response = response.data
-    if (response.code !== 200) {
-      cMessage(response.msg, 'error')
-    } else {
+  surveyApi.updateUserData(data).then(response => {
       cMessage('邮箱绑定成功')
       userData.value.status = response.data.status
       localStorage.setItem("globalUserData", JSON.stringify(userData.value));
-    }
   })
 }
 
@@ -234,22 +191,14 @@ function updateEmail() {
 function updateUserName() {
   const data = {
     token: userData.value.token,
-    userName:inputData.value.userName
+    userName:inputData.value.userName,
+    property:"userName"
   }
-  request({
-    url: `/survey/user/update?property=userName`,
-    method: "post",
-    data: data
-  }).then(response => {
-    response = response.data
-    if (response.code !== 200) {
-      cMessage(response.msg, 'error')
-    } else {
+  surveyApi.updateUserData(data).then(response => {
       cMessage('用户名更改成功')
       document.getElementById("user_name").innerText = response.data.userName
       userData.value.userName = response.data.userName
       localStorage.setItem("globalUserData", JSON.stringify(userData.value));
-    }
   })
 }
 

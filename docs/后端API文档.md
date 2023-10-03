@@ -1,8 +1,5 @@
 # API
 
-注：文档可能更新不及时，可查看在线文档
-### Swagger API文档  https://backend.yituliu.site/swagger-ui.html
-
 # 基础传输
 
 请求一个 API 时, 包含了: API 终结点, 以及 API 所需参数.

@@ -1,9 +1,9 @@
-import request from "@/api/request";
+import request from "/src/api/request"
 
-const api_name = `/survey`;
+const api_name = `/survey`
 
 export default {
-  manualUploadOperBox(data) {
+  manualUploadOperatorBox(data) {
     return request({
       headers: {
         "Content-Type": "application/json",
@@ -11,48 +11,102 @@ export default {
       url: `maa/upload/operBox/manual`,
       method: "post",
       data: data,
-    });
+    })
   },
 
   getOperatorDataResult() {
     return request({
       url: `maa/operator/result`,
       method: "get",
-    });
+    })
   },
 
   maaStatistical() {
     return request({
       url: `maa/recruit/statistical`,
       method: "get",
-    });
+    })
   },
 
+  /**
+   * 注册
+   * @param userData 账号密码或邮箱验证码
+   * @returns {*} 用户信息
+   */
   register(userData) {
     return request({
-      url: `${api_name}/register`,
+      url: `${api_name}/register/register/v2`,
       method: "post",
       data: userData,
-    });
+    })
   },
+
+  /**
+   * 调查站登录
+   * @param userData 账号密码或邮箱验证码
+   * @returns {*} 用户信息
+   */
 
   login(userData) {
     return request({
-      headers: {
-        "Content-Type": "application/json",
-      },
-      url: `${api_name}/login`,
+      url: `${api_name}/login/v2`,
       method: "post",
       data: userData,
-    });
+    })
   },
 
-  updateUser(token,data) {
+  /**
+   * 发送邮件验证码
+   * @param userData  内部数据包括邮件用途，邮箱等
+   * @returns {*}  成功信息
+   */
+  sendEmailCode(userData){
     return request({
-      url: `${api_name}/user/update?token=${token}`,
+      url: `${api_name}/user/emailCode`,
+      method: "post",
+      data: userData,
+    })
+  },
+
+  /**
+   * 更新用户信息
+   * @param property
+   * @param data
+   * @returns {*}
+   */
+  updateUserData(property, data) {
+    return request({
+      url: `${api_name}/user/update`,
       method: "post",
       data: data,
-    });
+    })
+  },
+
+
+  /**
+   * 通过cred找回账号
+   * @param data
+   * @returns {*}
+   */
+  retrievalUserAccountByCred(data){
+    return request({
+      url: `${api_name}/character/user/retrieval`,
+      method: "post",
+      data: data,
+    })
+  },
+
+  /**
+   * 通过cred找回账号
+   * @param data
+   * @returns {*}
+   */
+  loginByCred(data){
+    return request({
+      url: `${api_name}/user/login/cred`,
+      method: "post",
+      data: data,
+    })
   },
 
   uploadCharacter(characterList, token) {
@@ -60,7 +114,7 @@ export default {
       url: `${api_name}/character/upload?token=${token}`,
       method: "post",
       data: characterList,
-    });
+    })
   },
 
   uploadCharacterByExcel(file, token) {
@@ -68,7 +122,7 @@ export default {
       url: `${api_name}/character/import/excel?token=${token}`,
       method: "post",
       data: file,
-    });
+    })
   },
 
 
@@ -77,7 +131,7 @@ export default {
       url: `${api_name}/character/import/skland`,
       method: "post",
       data: data,
-    });
+    })
   },
 
   getSurveyCharacter(data) {
@@ -85,14 +139,14 @@ export default {
       url: `${api_name}/operator/retrieval`,
       method: "post",
       data:data
-    });
+    })
   },
 
   getCharStatisticsResult() {
     return request({
       url: `${api_name}/operator/result`,
       method: "get",
-    });
+    })
   },
 
   uploadScore(scoreList, token) {
@@ -100,6 +154,6 @@ export default {
       url: `${api_name}/score/upload?token=${token}`,
       method: "post",
       data: scoreList,
-    });
+    })
   },
-};
+}
