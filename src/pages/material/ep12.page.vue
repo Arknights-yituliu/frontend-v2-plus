@@ -46,9 +46,13 @@
               {{ stage.stageCode }}
             </td>
             <td>
-              <div :class="`bg-${stage.itemId}`" style="transform: scale(0.8)"></div>
+<!--              <div :class="`bg-${stage.itemId}`" style="transform: scale(0.8)"></div>-->
+              <div class="item_sprite_value_wrap"><div :class="`bg-${stage.itemId}`+' item_sprite_value'"></div></div>
             </td>
-            <td v-if="show_secondary"><div :class="`bg-${stage.secondaryId}`" style="transform: scale(0.6)"></div></td>
+            <td v-if="show_secondary">
+              <div class="item_sprite_value_wrap"><div :class="`bg-${stage.secondaryId}`+' item_sprite_value'"></div></div>
+<!--              <div :class="`bg-${stage.secondaryId}`" style="transform: scale(0.6)"></div>-->
+            </td>
             <td>
               {{ stage.sampleSize }}
             </td>
@@ -215,7 +219,7 @@
 <script setup>
 import { usePageContext } from "@/renderer/usePageContext";
 import { ref } from "vue";
-const show_secondary = ref(false);
+const show_secondary = ref(true);
 const pageContext = usePageContext();
 const table_data = ref(pageContext.pageProps.newChapter);
 </script>

@@ -297,9 +297,9 @@
              style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
           总计消耗{{ ap_cost_count.toFixed(0) }} 理智
         </div>
-        <button class="survey_btn" @click="splitMaterialByRarity(5)">不拆分</button>
-        <button class="survey_btn" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
-        <button class="survey_btn" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+        <button class="survey_btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
+        <button class="survey_btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
+        <button class="survey_btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
         <div class="switch_bar statistics item_cost_wrap" v-for="(itemList,type) in item_cost_list"
              :key="type">
           <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">

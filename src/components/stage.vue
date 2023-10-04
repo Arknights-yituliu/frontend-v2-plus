@@ -10,15 +10,13 @@
           <div class="op_title_etext_light">Best Stages</div>
         </div>
         <div class="op_title_tag">
-          <div id="nowActStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>
+          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>
           <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>
           <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>
-          <!-- <div id="orundumStageKey" class="op_tag_0" @click="switchStrategy()">
-            高级选项
-          </div> -->
+
           <div class="tab_text">*点击卡片查看详情</div>
         </div>
-        <div class="op_title_tag" style="height: 28px">
+        <div class="op_title_tag" style="height: 24px">
           <div class="tab_text">
             <!-- *更新时间{{stageActHistory}} -->
             *更新时间 {{ updateTime }}
@@ -477,11 +475,11 @@ export default {
       if (this.actStageOnly % 2 === 0) {
         document.getElementById("stage_t3_content_plus").style.display = "flex";
         document.getElementById("stage_t3_content").style.display = "none";
-        document.getElementById("nowActStageKey").className = "op_tag_1";
+        document.getElementById("upStageKey").className = "op_tag_1";
       } else {
         document.getElementById("stage_t3_content").style.display = "flex";
         document.getElementById("stage_t3_content_plus").style.display = "none";
-        document.getElementById("nowActStageKey").className = "op_tag_0";
+        document.getElementById("upStageKey").className = "op_tag_0";
       }
       this.actStageOnly++;
     },

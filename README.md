@@ -72,7 +72,7 @@ docker run -d --rm --name v2plus -p 3000:3000  v2-plus:latest
 ## 项目文件结构
 ```
 ├─docs 文档
-├─server 启动文件
+├─server 服务启动文件
 └─src 主要文件
     ├─api    封装的API的js文件存放位置
     ├─assets 资源文件
@@ -84,12 +84,12 @@ docker run -d --rm --name v2plus -p 3000:3000  v2-plus:latest
     ├─element 自己封装的小组件
     │  └─css 
     ├─pages 页面
-    │  ├─about  网站信息
-    │  ├─dev 
+    │  ├─about  网站信息页面
+    │  ├─dev 部分开发中页面
     │  ├─home 
-    │  ├─material 材料相关
-    │  ├─survey 干员调查
-    │  └─tools 实用工具
+    │  ├─material 材料相关页面
+    │  ├─survey 干员调查页面
+    │  └─tools 实用工具页面
     ├─renderer SSR渲染
     └─static 静态文件
         └─json json文件
