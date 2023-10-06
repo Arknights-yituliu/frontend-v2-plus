@@ -35,7 +35,7 @@ export default {
    */
   register(userData) {
     return request({
-      url: `${api_name}/register/register/v2`,
+      url: `${api_name}/register/v2`,
       method: "post",
       data: userData,
     })

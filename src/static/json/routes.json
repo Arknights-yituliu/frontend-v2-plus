@@ -45,6 +45,11 @@
     "isChild": true,
     "child": [
       {
+        "path": "/survey/account/home",
+        "text": "用户中心",
+        "isChild": false
+      },
+      {
         "path": "/survey/operators",
         "text": "干员练度调查",
         "isChild": false

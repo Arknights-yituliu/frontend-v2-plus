@@ -2,8 +2,6 @@ import axios from "axios";
 import { ElMessage } from "element-plus";
 import { http } from "@/api/baseURL";
 
-import cookie from "js-cookie";
-
 // 创建axios实例
 const service = axios.create({
   baseURL: http,

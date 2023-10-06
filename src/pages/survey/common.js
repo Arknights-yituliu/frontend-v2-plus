@@ -1,6 +1,5 @@
 import characterBasicInfo from "@/static/json/survey/character_table_simple.json";
 
-import {ref} from "vue";
 
 let yearDict = [
     {

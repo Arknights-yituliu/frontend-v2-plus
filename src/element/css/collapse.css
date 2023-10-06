@@ -1,0 +1,30 @@
+.collapse_item_wrap {
+    max-width: 95%;
+    margin: 4px auto;
+    overflow: hidden;
+    height: 0;
+}
+
+.collapse_item_wrap_open {
+    height: auto;
+}
+
+.collapse_item {
+    margin: 4px;
+    transition: all 0.3s;
+    transform: translateY(-1000px);
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+}
+
+.collapse_item_open{
+    transform: translateY(0px);
+}
+
+.collapse_bar {
+    width: 98%;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 2px;
+}
