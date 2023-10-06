@@ -4,24 +4,7 @@
 
 
 
-      <c-popup :visible="avatar_visible" v-model:visible="avatar_visible">
 
-        <div class="user_now_avatar_wrap">
-          <div class="user_avatar_text">当前头像</div>
-          <div class="user_avatar_image_wrap">
-            <div :class="getSprite(selected_avatar)"></div>
-
-          </div>
-          <button class="btn btn_green user_avatar_btn" @click="updateAvatar()"> 保存修改</button>
-        </div>
-
-        <div class="user_avatar_popup_wrap">
-          <div class="user_avatar_image_wrap" v-for="(avatar,index) in avatar" :key="index">
-            <div :class="getSprite(avatar.charId)" @click="chooseAvatar(avatar.charId)"></div>
-          </div>
-        </div>
-
-      </c-popup>
 
       <!--    <div class="user_info_card">-->
       <!--      <div class="user_info_title">身份验证</div>-->
@@ -58,21 +41,33 @@
         </div>
       </div>
 
-<!--      <div class="user_info_card">-->
-<!--        <div class="user_info_title">明日方舟游戏</div>-->
-<!--        <div class="user_input_bar">-->
-<!--          <div class="user_input_label">输入CRED</div>-->
-<!--          <div class="user_input_tip">设置密码后可更换不带后缀数字的用户名</div>-->
-<!--          <input class="user_input" v-model="inputData.userName"/>-->
-<!--          <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>-->
-<!--          <button class="btn btn_blue btn_position" @click="updateUserName()">更新昵称</button>-->
-<!--        </div>-->
-<!--      </div>-->
+      <c-popup :visible="avatar_visible" v-model:visible="avatar_visible">
+
+        <div class="user_now_avatar_wrap">
+          <div class="user_avatar_text">当前头像</div>
+          <div class="user_avatar_image_wrap">
+            <div :class="getSprite(selected_avatar)"></div>
+          </div>
+          <button class="btn btn_green user_avatar_btn" @click="updateAvatar()"> 保存修改</button>
+        </div>
+
+        <div class="user_avatar_popup_wrap">
+          <div class="user_avatar_image_wrap" v-for="(avatar,index) in avatar" :key="index">
+            <div :class="getSprite(avatar.charId)" @click="chooseAvatar(avatar.charId)"></div>
+          </div>
+        </div>
+
+      </c-popup>
 
       <div class="user_info_card">
-        <div class="user_info_title">修改用户名</div>
+        <div class="user_info_title">修改基本信息</div>
         <div class="user_input_bar">
-          <div class="user_input_label">一图流账号用户名</div>
+          <div class="user_input_label">头像</div>
+          更新用户头像
+          <button class="btn btn_blue btn_position" @click="avatarPopupVisible()">更换头像</button>
+        </div>
+        <div class="user_input_bar">
+          <div class="user_input_label">用户名</div>
           <div class="user_input_tip">设置密码后可更换不带后缀数字的用户名</div>
           <input class="user_input" v-model="inputData.userName"/>
           <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>

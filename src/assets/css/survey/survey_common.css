@@ -39,45 +39,6 @@
   font-size: 16px;
 }
 
-.survey_btn{
-  padding: 4px 8px;
-  margin: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  min-width:100px;
-  text-align: center;
-  border-radius: 3px;
-  height: 30px;
-  line-height: 18px;
-  box-sizing: border-box;
-}
-
-.btn_white{
-  background-color: #ffffff;
-  border: 1px solid #cbcbce;
-  border-radius: 4px;
-}
-
-.btn_white:hover{
-  background-color: #eaeaea;
-}
-
-.btn_white_selected{
-  background-color: #969696;
-  color: white;
-}
-
-.btn_blue{
-  color: #409eff;
-  background-color: #ecf5ff;
-  border: 1px solid #b3d8ff;
-}
-
-.btn_blue:hover{
-  background-color: #409eff;
-  color: white;
-}
-
 .survey_btn_blue_left{
   color: #409eff;
   background-color: #ecf5ff;
@@ -122,45 +83,8 @@
 }
 
 .btn_blue_selected{
-  background-color: #409eff;
+  background-color: #5fa7f1;
   color: white;
-}
-
-.btn_green{
-  color: #67c23a;
-  background-color: #f0f9eb;
-  border: 1px solid #ddffcc;
-}
-
-.btn_green:hover{
-  background-color: #67c23a;
-  color: white;
-}
-
-.btn_green_selected{
-  background-color: #67c23a;
-  color: white;
-}
-
-.btn_red{
-  color: #ff6363;
-  background-color: rgb(255, 239, 239);
-  border: 1px solid #ffc6c6;
-}
-
-.btn_red:hover{
-  background-color: #ff6363;
-  color: white;
-}
-
-.btn_red_selected{
-  background-color: #ff6363;
-  color: white;
-}
-
-.warning_color{
-  color: #ff6363;
-  font-weight: 600;
 }
 
 .survey_btn_group_left{

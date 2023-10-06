@@ -38,14 +38,14 @@
 }
 
 .btn_blue_selected{
-    background-color: #409eff;
+    background-color: #5fa7f1;
     color: white;
 }
 
 .btn_green{
     color: #67c23a;
     background-color: #f0f9eb;
-    border: 1px solid #ddffcc;
+    border: 1px solid #67c23a;
 }
 
 .btn_green:hover{
@@ -60,17 +60,17 @@
 
 .btn_red{
     color: #ff6363;
-    background-color: rgb(255, 239, 239);
-    border: 1px solid #ffc6c6;
+    background-color: #fef0f0;
+    border: 1px solid #fbc4c4;
 }
 
 .btn_red:hover{
-    background-color: #ff6363;
+    background-color: #f56c6c;
     color: white;
 }
 
 .btn_red_selected{
-    background-color: #ff6363;
+    background-color: #f56c6c;
     color: white;
 }
 

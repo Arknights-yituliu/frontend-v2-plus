@@ -1,4 +1,3 @@
-import surveyApi from "@/api/survey";
 import jsCookie from "js-cookie";
 import { ref } from "vue";
 import { cMessage } from "@/element/message";

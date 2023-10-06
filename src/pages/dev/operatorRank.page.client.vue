@@ -26,7 +26,7 @@
 import characterBasicInfo from "@/static/json/survey/character_table_simple.json";
 import professionId from "@/static/json/survey/professionId.json";
 import {onMounted, ref, watch} from "vue";
-import surveyApi from "@/api/survey";
+import surveyApi from "@/api/surveyUser";
 // import html2canvas from 'html2canvas';
 
 let profession_table = {}

@@ -273,7 +273,7 @@
             <div class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
           </div>
         </div>
-        <div class="collapse_bar upload">
+        <div class="collapse_bar upload" v-show="bindingList.length>0">
           <div class="collapse_title" style="width: 140px;">导入账号不正确？</div>
           <div class="switch_btns_wrap">
             <div class="skland_desc">选择你想要导入的账号</div>
