@@ -18,9 +18,9 @@ function getSign(path, requestParam, secret) {
     }
     requestParam =  requestParam?requestParam:''
     let message = path + requestParam + timestamp + JSON.stringify(headers);
-    console.log('原始message',message);
+    // console.log('message',message);
     const sign = md5(hmacSHA256(message, secret).toString()).toString()
-    console.log('加密message',sign)
+    // console.log('sign',sign)
     return {timestamp,sign}
 }
 
@@ -38,7 +38,7 @@ async function getPlayBinding(path, requestParam, secret,cred){
     let nickName = ""
 
     const url = `${host}${path}`
-    console.log(url)
+    // console.log(url)
     const headers = {
         "platform":'3',
         "timestamp":timestamp,
@@ -47,7 +47,7 @@ async function getPlayBinding(path, requestParam, secret,cred){
         "cred": cred,
         "sign":sign
     }
-    console.table(headers)
+    // console.table(headers)
 
     let  bindingData =  {
             bindingList: [],
@@ -61,7 +61,7 @@ async function getPlayBinding(path, requestParam, secret,cred){
         method: "get",
     }).then(response => {
         response = response.data
-        console.log(response)
+        // console.log(response)
         if (response.code !== 0) {
             cMessage("森空岛CRED错误或失效")
         } else {
@@ -89,8 +89,6 @@ async function getPlayBinding(path, requestParam, secret,cred){
             bindingData.nickName = nickName;
             bindingData.uid = uid;
 
-            console.log(bindingData)
-
         }
     })
     return bindingData;
@@ -100,7 +98,7 @@ async function getPlayerInfo(path, requestParam, secret, cred, uid, nickName){
 
     const {timestamp,sign} = getSign(path, requestParam, secret);
     const url = `${host}${path}?${requestParam}`
-    console.log(url)
+    // console.log(url)
     const headers = {
         "platform":'3',
         "timestamp":timestamp,
@@ -109,7 +107,7 @@ async function getPlayerInfo(path, requestParam, secret, cred, uid, nickName){
         "cred": cred,
         "sign":sign
     }
-    console.table(headers)
+    // console.table(headers)
 
     let uploadData = {}
 

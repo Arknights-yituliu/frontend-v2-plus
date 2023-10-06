@@ -27,7 +27,7 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <button class="mdui-btn survey_button" @click="firstPopupClose()">填写说明</button>
-      <button class="mdui-btn survey_button" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选干员</button>
+      <button class="mdui-btn survey_button" @click="collapse('collapse_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选干员</button>
       <button class="mdui-btn survey_button" @click="feedback()">建议与反馈</button>
       <button class="mdui-btn survey_button" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>
     </div>
@@ -37,12 +37,12 @@
       <div class="control_panel">
         <div class="switch_title">设置</div>
 
-        <div class="btn_setup" @click="collapse('switch_bar filter', 'switch_filter_wrap','switch_filter_box')">
+        <div class="btn_setup" @click="collapse('collapse_bar filter', 'switch_filter_wrap','switch_filter_box')">
           筛选干员
           <div class="btn_setup_tips">筛选符合条件的干员</div>
         </div>
 
-       <div class="btn_setup" @click="collapse('switch_bar upload', 'switch_upload_wrap','switch_upload_box')">
+       <div class="btn_setup" @click="collapse('collapse_bar upload', 'switch_upload_wrap','switch_upload_box')">
          数据导入/导出
          <div class="btn_setup_tips">导入/导出json/Excel等</div>
        </div>
@@ -55,9 +55,9 @@
     </div> -->
 
     <!-- 设置区 -->
-    <div class="switch_wrap" id="switch_filter_wrap">
-      <div class="switch_box" id="switch_filter_box">
-      <div class="switch_bar filter" id="score_selector_dimension">
+    <div class="collapse_item_wrap" id="switch_filter_wrap">
+      <div class="collapse_item" id="switch_filter_box">
+      <div class="collapse_bar filter" id="score_selector_dimension">
         <div class="switch_title">选择评分项</div>
         <div class="switch_btns_wrap">
           <div :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <div class="switch_bar filter" id="score_selector_class">
+      <div class="collapse_bar filter" id="score_selector_class">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterCondition('profession', profession.value)">
@@ -75,14 +75,14 @@
         </div>
       </div>
 
-      <div class="switch_bar filter" id="score_selector_rarity">
+      <div class="collapse_bar filter" id="score_selector_rarity">
         <div class="switch_title">稀有度</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterCondition('rarity', rarity)">{{ rarity }} ★</div>
         </div>
       </div>
 
-      <div class="switch_bar filter" id="score_selector_years">
+      <div class="collapse_bar filter" id="score_selector_years">
         <div class="switch_title">年份</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterCondition('year', key)">
@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <div class="switch_bar filter" id="score_selector_sort">
+      <div class="collapse_bar filter" id="score_selector_sort">
         <div class="switch_title">排序</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>

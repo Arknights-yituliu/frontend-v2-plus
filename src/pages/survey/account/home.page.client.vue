@@ -12,7 +12,7 @@
             <div :class="getSprite(selected_avatar)"></div>
 
           </div>
-          <button class="survey_btn btn_green user_avatar_btn" @click="updateAvatar()"> 保存修改</button>
+          <button class="btn btn_green user_avatar_btn" @click="updateAvatar()"> 保存修改</button>
         </div>
 
         <div class="user_avatar_popup_wrap">
@@ -28,7 +28,7 @@
       <!--      <div class="user_input_bar">-->
       <!--        <div class="user_input_label">请输入森空岛CRED</div>-->
       <!--        <input class="user_input" v-model="inputData.cred"/>-->
-      <!--        <button class="survey_btn btn_blue" @click="authentication()">验证身份</button>-->
+      <!--        <button class="btn btn_blue" @click="authentication()">验证身份</button>-->
       <!--      </div>-->
       <!--    </div>-->
 
@@ -65,7 +65,7 @@
 <!--          <div class="user_input_tip">设置密码后可更换不带后缀数字的用户名</div>-->
 <!--          <input class="user_input" v-model="inputData.userName"/>-->
 <!--          <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>-->
-<!--          <button class="survey_btn btn_blue btn_position" @click="updateUserName()">更新昵称</button>-->
+<!--          <button class="btn btn_blue btn_position" @click="updateUserName()">更新昵称</button>-->
 <!--        </div>-->
 <!--      </div>-->
 
@@ -76,7 +76,7 @@
           <div class="user_input_tip">设置密码后可更换不带后缀数字的用户名</div>
           <input class="user_input" v-model="inputData.userName"/>
           <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>
-          <button class="survey_btn btn_blue btn_position" @click="updateUserName()">更新昵称</button>
+          <button class="btn btn_blue btn_position" @click="updateUserName()">更新昵称</button>
         </div>
       </div>
 
@@ -97,7 +97,7 @@
           <div class="user_input_label">确认密码</div>
           <input class="user_input" type="password" v-model="inputData.confirmPassWord"/>
           <a v-show="inputData.confirmPassWord.length>0">{{ inputData.confirmPassWord.length }}/20</a>
-          <button class="survey_btn btn_blue btn_position" @click="updatePassWord()">更新密码</button>
+          <button class="btn btn_blue btn_position" @click="updatePassWord()">更新密码</button>
           <div class="warning_color">{{ checkPassWord() }}</div>
         </div>
       </div>
@@ -113,17 +113,17 @@
           </div>
           <div class="user_input_label">输入新邮箱</div>
           <input class="user_input" v-model="inputData.email"/>
-          <button class="survey_btn btn_blue btn_position" @click="sendEmailCode()">发送验证码</button>
+          <button class="btn btn_blue btn_position" @click="sendEmailCode()">发送验证码</button>
         </div>
 
         <div class="user_input_bar">
           <div class="user_input_label">输入邮件验证码</div>
           <input class="user_input" v-model="inputData.emailCode"/>
-          <button class="survey_btn btn_blue btn_position" @click="updateEmail()">修改邮箱</button>
+          <button class="btn btn_blue btn_position" @click="updateEmail()">修改邮箱</button>
         </div>
       </div>
       <div class="user_info_card">
-        <button class="survey_btn btn_red btn_red_selected" style="margin: auto" @click="logout()">退出登录</button>
+        <button class="btn btn_red btn_red_selected" style="margin: auto" @click="logout()">退出登录</button>
       </div>
     </div>
   </div>

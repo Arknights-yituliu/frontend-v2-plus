@@ -3,8 +3,8 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <!-- <button class="mdui-btn survey_button">说明</button> -->
-      <button class="survey_btn btn_blue"
-              @click="collapse('switch_bar select', 'switch_filter_wrap','switch_filter_box')">筛选
+      <button class="btn btn_blue"
+              @click="collapse('collapse_bar select', 'switch_filter_wrap','switch_filter_box')">筛选
       </button>
       <div id="updateTime">
         调查人数{{ user_count }}<br/>
@@ -13,9 +13,9 @@
     </div>
 
     <!-- 筛选模块 -->
-    <div class="switch_wrap" id="switch_filter_wrap">
-      <div class="switch_box" id="switch_filter_box">
-        <div class="switch_bar select">
+    <div class="collapse_item_wrap" id="switch_filter_wrap">
+      <div class="collapse_item" id="switch_filter_box">
+        <div class="collapse_bar select">
           <div class="switch_title">职业</div>
           <div class="switch_btns_wrap">
             <div
@@ -28,7 +28,7 @@
           </div>
         </div>
 
-        <div class="switch_bar select">
+        <div class="collapse_bar select">
           <div class="switch_title">稀有度</div>
           <div class="switch_btns_wrap">
             <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarity_dict"
@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <div class="switch_bar select">
+        <div class="collapse_bar select">
           <div class="switch_title">其他</div>
           <div class="switch_btns_wrap">
             <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        <!-- <div class="switch_bar select">
+        <!-- <div class="collapse_bar select">
           <div class="switch_title">排序</div>
           <div class="switch_btns_wrap">
             <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
@@ -210,10 +210,12 @@
 
 <script setup>
 import "@/assets/css/survey/survey_rank.css";
-import {rankingListInit, collapse, filterByCharacterProperty, professionDict} from "./common";
+import {rankingListInit, filterByCharacterProperty, professionDict} from "./common";
+import { collapse} from "/src/element/collapse";
+import '/src/element//css/collapse.css'
 import {onMounted, ref} from "vue";
 
-import surveyApi from "@/api/survey";
+import surveyApi from "/src/api/surveyUser";
 
 let rarity_dict = [1, 2, 3, 4, 5, 6];
 
@@ -306,9 +308,9 @@ function getSkillName(skill, index) {
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filter_condition.value[attribute].indexOf(rule) > -1) {
-    return "survey_btn btn_white btn_white_selected";
+    return "btn btn_white btn_white_selected";
   }
-  return "survey_btn btn_white";
+  return "btn btn_white";
 }
 
 let filter_condition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});

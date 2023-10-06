@@ -52,18 +52,18 @@
 
         <div class="login_btn_wrap">
           <div @click="registerOrLogin='register'" v-show="'login'===registerOrLogin"
-               class="survey_btn btn_white login_btn">
+               class="btn btn_white login_btn">
             没有账号请先注册
           </div>
           <div @click="registerOrLogin='login'" v-show="'register'===registerOrLogin"
-               class="survey_btn btn_white login_btn">
+               class="btn btn_white login_btn">
             已注册过直接登录
           </div>
-          <button class="survey_btn btn_blue btn_blue_selected login_btn" @click="register()"
+          <button class="btn btn_blue btn_blue_selected login_btn" @click="register()"
                   v-show="'register'===registerOrLogin">
             注册
           </button>
-          <button class="survey_btn btn_blue btn_blue_selected login_btn" @click="login()"
+          <button class="btn btn_blue btn_blue_selected login_btn" @click="login()"
                   v-show="'login'===registerOrLogin">
             登录
           </button>
@@ -90,8 +90,8 @@
       <div class="login_card" v-show="user_data.status>0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
-          <button class="survey_btn btn_blue logout_btn" @click="logout()">确定</button>
-          <button class="survey_btn btn_red logout_btn" @click="login_visible = !login_visible">取消</button>
+          <button class="btn btn_blue logout_btn" @click="logout()">确定</button>
+          <button class="btn btn_red logout_btn" @click="login_visible = !login_visible">取消</button>
         </div>
       </div>
     </c-popup>

@@ -38,7 +38,7 @@ import "@/assets/css/store_v2.css";
 import "@/assets/css/sprite_item.css";
 import "@/assets/css/sprite_style.css";
 import "@/assets/css/sprite_icon.css";
-
+import "@/assets/css/common.css";
 
 // 旧版css，待修改
 import "@/assets/css/item.css";

@@ -28,3 +28,15 @@
     justify-content: flex-start;
     padding: 2px;
 }
+
+.collapse_title {
+    float: left;
+    margin: 4px;
+    width: 96px;
+    height: 20px;
+    padding: 4px 0px 4px 12px;
+    line-height: 20px;
+    font-weight: 500;
+    /* background: rgb(199, 226, 255); */
+    border-radius: 2px;
+}
