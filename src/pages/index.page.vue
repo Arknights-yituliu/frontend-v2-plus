@@ -1,23 +1,30 @@
 <template>
-  <div id="indexDiv" style="margin: auto">
+  <div id="indexDiv" >
+    <newChapter />
+
     <stage />
-    <!-- <jump-to-value /> -->
+
     <foot-component />
+
+
   </div>
 </template>
 
 <style scoped>
 #indexDiv {
+  margin: auto;
   color: var(--index-div-fg);
   background-color: var(--index-div-bg);
 }
+
+
 </style>
 
 <script setup>
 import stage from "@/components/stage.vue";
 
 import FootComponent from "@/components/FootComponent.vue";
-// import JumpToValue from "@/components/JumpToValue.vue";
+import newChapter from '/src/components/newChapter.vue'
 
 
 import { onMounted } from "vue";

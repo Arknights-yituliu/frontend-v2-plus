@@ -28,7 +28,7 @@ export default {
     });
   },
 
-  //根据关卡ID查询已结束活动
+  //查询已结束活动
   findClosedStage(expCoefficient) {
     return request({
       url: `/stage/closed?expCoefficient=${expCoefficient}`,
@@ -36,13 +36,13 @@ export default {
     });
   },
 
-  //查询所有关卡效率
-  findAllStageEfficiency() {
+  getNewChapter(){
     return request({
-      url: `/find/stage/all`,
+      url: `stage/chapter?expCoefficient=0.625&zone=12-`,
       method: "get",
     });
   },
+
 
   findStageDetailByStageId(stageId) {
     return request({

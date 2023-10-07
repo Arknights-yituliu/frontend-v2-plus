@@ -12,7 +12,7 @@
         <div class="op_title_tag" style="height: 28px">
           <div class="tab_text">
             <!-- *更新时间{{stageActHistory}} -->
-            *更新时间 {{ newChapter[0][0].updateTime }}
+<!--            *更新时间 {{ newChapter[0][0].updateTime }}-->
           </div>
         </div>
       </div>
@@ -23,8 +23,8 @@
       <!-- 头图 -->
       <!-- <div> -->
       <div class="ep12_wrapper">
-        <a href="/ep12">
-          <img class="ep12_pic" src="/image/temp/ep12.webp" alt="ep12" />
+        <a href="/material/ep13">
+          <img class="ep12_pic" src="/image/temp/ep13.webp" alt="ep12" />
         </a>
       </div>
       <!-- </div> -->
@@ -33,12 +33,12 @@
           <table class="popup_table">
             <tbody>
               <tr class="popup_table_title">
-                <td class="popup_table_c1" style="width: 55px; width: 75px">关卡</td>
-                <td class="popup_table_c2" style="width: 65px; width: 75px">主产物</td>
-                <td class="popup_table_c4" style="width: 50px; width: 75px">样本数</td>
-                <td class="popup_table_c5" style="width: 80px; width: 75px">置信度</td>
-                <td class="popup_table_c6" style="width: 60px; width: 60px">SPM</td>
-                <td class="popup_table_c7" style="width: 70px; width: 90px">关卡效率</td>
+                <td class="popup_table_c1" style="width: 75px">关卡</td>
+                <td class="popup_table_c2" style="width: 75px">主产物</td>
+                <td class="popup_table_c4" style="width: 75px">样本数</td>
+                <td class="popup_table_c5" style="width: 75px">置信度</td>
+                <td class="popup_table_c6" style="width: 60px">SPM</td>
+                <td class="popup_table_c7" style="width: 90px">关卡效率</td>
                 <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
               </tr>
               <tr v-for="(stage, index) in newChapter[r]" :key="index" class="stage_table_r">
@@ -46,8 +46,8 @@
                   {{ stage.stageCode }}
                 </td>
                 <td>
-                  <div class="img-wrapper">
-                    <div :class="`bg-${stage.itemId}`" class="img"></div>
+                  <div class="store_sprite_perm_wrap">
+                    <div :class="`bg-${stage.itemId} store_sprite_perm`"></div>
                   </div>
                 </td>
                 <td>
@@ -68,12 +68,12 @@
           <table class="popup_table">
             <tbody>
               <tr class="popup_table_title">
-                <td class="popup_table_c1" style="width: 55px; width: 75px">关卡</td>
-                <td class="popup_table_c2" style="width: 65px; width: 75px">主产物</td>
-                <td class="popup_table_c4" style="width: 50px; width: 75px">样本数</td>
-                <td class="popup_table_c5" style="width: 80px; width: 75px">置信度</td>
-                <td class="popup_table_c6" style="width: 60px; width: 60px">SPM</td>
-                <td class="popup_table_c7" style="width: 70px; width: 90px">关卡效率</td>
+                <td class="popup_table_c1" style="width: 75px">关卡</td>
+                <td class="popup_table_c2" style="width: 75px">主产物</td>
+                <td class="popup_table_c4" style="width: 75px">样本数</td>
+                <td class="popup_table_c5" style="width: 75px">置信度</td>
+                <td class="popup_table_c6" style="width: 60px">SPM</td>
+                <td class="popup_table_c7" style="width: 90px">关卡效率</td>
                 <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
               </tr>
               <tr v-for="(stage, index) in raw_data" :key="index" class="stage_table_r">
@@ -81,8 +81,8 @@
                   {{ stage.stageCode }}
                 </td>
                 <td>
-                  <div class="img-wrapper">
-                    <div :class="`bg-${stage.itemId}`" class="img"></div>
+                  <div class="store_sprite_perm_wrap">
+                    <div :class="`bg-${stage.itemId} store_sprite_perm` "></div>
                   </div>
                 </td>
                 <td>
@@ -104,13 +104,26 @@
 </template>
 
 <script setup>
-import { usePageContext } from "@/renderer/usePageContext";
-import { ref } from "vue";
-const pageContext = usePageContext();
-const raw_data = ref(pageContext.pageProps.newChapter);
-const l = raw_data.value.length;
-const m = Math.ceil(l / 2);
-const newChapter = ref([raw_data.value.slice(0, m), raw_data.value.slice(m, l)]);
+import stageApi from '/src/api/stage'
+import {onMounted, ref} from "vue";
+
+
+
+
+let newChapter = ref([]);
+let raw_data = ref([])
+
+onMounted(()=>{
+   stageApi.getNewChapter().then(response=>{
+     response = response.data
+     raw_data.value  = response
+     const l = response.length;
+     const m = Math.ceil(l / 2);
+     newChapter.value = [response.slice(0, m), response.slice(m, l)];
+   })
+})
+
+
 // const updateTime = computed(() => {
 //   return newChapter.value[1].updateTime;
 // });
@@ -122,15 +135,11 @@ const newChapter = ref([raw_data.value.slice(0, m), raw_data.value.slice(m, l)])
 }
 .ep12_half {
   margin: 8px;
-  display: flex;
-  flex: 1;
-  max-width: 720px;
-  min-width: 360px;
-  justify-content: space-around;
   border-radius: 6px;
   box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.2);
   background: rgba(128, 128, 128, 0.1);
-  border: 0px solid #ebeef5;
+  display: flex;
+  justify-content: space-around;
 }
 
 .popup_table {
@@ -165,6 +174,8 @@ td div {
 
 .popup_table_title {
   font-size: 18px;
+  line-height: 24px;
+  height: 36px;
 }
 
 .img-wrapper {
@@ -181,10 +192,10 @@ td div {
 .ep12_content-mobile {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .ep12_content > div:last-child {
-  padding-bottom: 40px;
-  /* padding-bottom: 0; */
+
 }
 
 @media screen and (max-width: 771px) {

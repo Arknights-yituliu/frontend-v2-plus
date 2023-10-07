@@ -5,6 +5,10 @@
     "isChild": true,
     "child": [
       {
+        "path": "/material/ep13",
+        "text": "EP13专题页面"
+      },
+      {
         "path": "/",
         "text": "刷图推荐"
       },
