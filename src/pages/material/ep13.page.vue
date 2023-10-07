@@ -211,6 +211,8 @@ import { ref } from "vue";
 const show_secondary = ref(true);
 const pageContext = usePageContext();
 const table_data = ref(pageContext.pageProps.newChapter);
+
+
 </script>
 
 <style scoped>

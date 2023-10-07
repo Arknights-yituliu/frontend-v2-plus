@@ -125,8 +125,8 @@
 
     <div class="mdui-typo" id="dev_team">
       <h1>团队成员</h1>
-      明日方舟一图流的主要开发者和贡献者
-      <h2>开发</h2>
+      <h4> 明日方舟一图流开发者和贡献者</h4>
+
       <a class="href_black" href="https://github.com/yamasakura">
         <div class="mdui-card dev_card dev_card_member">
           <img class="dev_card_icon" src="https://avatars.githubusercontent.com/u/84258011" alt="" />
@@ -188,7 +188,7 @@
         </div>
       </a>
 
-      <h2>贡献者</h2>
+
 
       <a class="href_black" href="https://github.com/Yanstory">
         <div class="mdui-card dev_card dev_card_member">
@@ -304,6 +304,7 @@
 
 
 import "@/assets/css/sprite_item.css";
+
 </script>
 
 <style>
