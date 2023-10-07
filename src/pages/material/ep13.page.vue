@@ -5,12 +5,12 @@
     <!-- 标题 -->
     <div style="text-align: center; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
       <img src="/image/website/ico64.png" style="padding: 4px 0px 0px 0px; border-radius: 8px" />
-      <div style="font-size: 32px; vertical-align: top; margin: 12px; display: inline-block">明日方舟一图流 EP12专题页面</div>
+      <div style="font-size: 32px; vertical-align: top; margin: 12px; display: inline-block">明日方舟一图流 EP13专题页面</div>
     </div>
     <!-- 简单说明 -->
     <div style="padding: 8px 16px; font-style: italic; line-height: 32px; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
       上半页集中展示新章节<b>掉落数据</b><br />
-      下半页推荐<b>[后勤特别许可证]</b>的使用优先级
+      下半页为战备支援的<b>刷图攻略</b>
       <div style="font-size: 14px">*转载本页内容需注明来源</div>
     </div>
     <!-- 数据补全计划 -->
@@ -70,7 +70,7 @@
     </div>
     <!-- 后勤特别许可证 -->
     <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
-      <div style="text-align: center; font-size: 24px; font-weight: 600; padding: 6px 0px">后勤特别许可证</div>
+      <div style="text-align: center; font-size: 24px; font-weight: 600; padding: 12px 0px">后勤特别许可证</div>
       <div style="vertical-align: top; margin: auto">
         <div
           style="width: 96px; height: 96px; background: url('/image/temp/permit.webp'); display: inline-block; vertical-align: top; margin: 18px 12px 24px 12px"
@@ -84,98 +84,87 @@
       </div>
     </div>
     <!-- 推荐表-占位 -->
+
     <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center">
-      <table style="margin: auto; padding: 8px">
+      <div style="text-align: center; font-size: 24px; font-weight: 600; padding: 12px 0px">不同主线进度收益率</div>
+      <table style="margin: auto; padding: 8px" class="table_tip">
         <tr>
-          <th style="width: 80px">关卡</th>
-          <th style="width: 100px">主产物</th>
-          <th style="width: 100px">收益<br />（理智）</th>
-          <th style="width: 80px">关卡</th>
-          <th style="width: 100px">主产物</th>
-          <th style="width: 100px">收益<br />（理智）</th>
+          <td style="width: 180px"> 通关进度</td>
+          <td style="width: 180px"> 激励提升幅度</td>
+          <td style="width: 180px"> 等效理智收益</td>
         </tr>
         <tr>
-          <td>12-7</td>
-          <td>RMA70-12</td>
-          <td>124.61</td>
-          <td>12-6</td>
-          <td>扭转醇</td>
-          <td>82.57</td>
+          <td> 基础激励</td>
+          <td> 40%</td>
+          <td> 117.5%</td>
         </tr>
         <tr>
-          <td>12-13</td>
-          <td>转质盐组</td>
-          <td>111.47</td>
-          <td>12-17</td>
-          <td>化合切削液</td>
-          <td>82.22</td>
+          <td> 通关标准9-10</td>
+          <td> +50%</td>
+          <td> 118.8%</td>
         </tr>
         <tr>
-          <td>12-8</td>
-          <td>研磨石</td>
-          <td>103.01</td>
-          <td>12-14</td>
-          <td>糖组</td>
-          <td>77.25</td>
+          <td> 通关标准10-7</td>
+          <td> +60%</td>
+          <td> 120%</td>
         </tr>
         <tr>
-          <td>12-5</td>
-          <td>凝胶</td>
-          <td>102.99</td>
-          <td>12-18</td>
-          <td>聚酸酯组</td>
-          <td>76.36</td>
+          <td> 通关标准11-18</td>
+          <td> +70%</td>
+          <td> 121.3%</td>
         </tr>
         <tr>
-          <td>12-10</td>
-          <td>半自然溶剂</td>
-          <td>99.74</td>
-          <td>12-19</td>
-          <td>晶体元件</td>
-          <td>71.28</td>
+          <td> 通关标准12-7</td>
+          <td> +80%</td>
+          <td> 122.5%</td>
         </tr>
         <tr>
-          <td>12-20</td>
-          <td>酮凝集组</td>
-          <td>93.06</td>
-          <td>12-3</td>
-          <td>晶体元件</td>
-          <td>69.78</td>
-        </tr>
-        <tr>
-          <td>12-4</td>
-          <td>酮凝集组</td>
-          <td>91.56</td>
-          <td>12-15</td>
-          <td>固源岩组</td>
-          <td>57.78</td>
-        </tr>
-        <tr>
-          <td>12-12</td>
-          <td>炽合金</td>
-          <td>86.99</td>
-          <td>--</td>
-          <td>--</td>
-          <td>--</td>
-        </tr>
-        <tr style="height: 10px">
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>12-2</td>
-          <td>龙门币</td>
-          <td>约40</td>
-          <td>12-9</td>
-          <td>作战记录</td>
-          <td>约30</td>
+          <td> 通关标准12-20</td>
+          <td> +100%</td>
+          <td> 125%</td>
         </tr>
       </table>
     </div>
+
+    <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center">
+      <div style="text-align: center; font-size: 24px; font-weight: 600; padding: 12px 0px">不同活动刷图效率对比</div>
+      <table style="margin: auto; padding: 8px" class="table_tip">
+        <tr>
+          <td style="width: 120px"> 材料类型 </td>
+          <td style="width: 100px"> 长草期 </td>
+          <td style="width: 100px"> Side Story</td>
+          <td style="width: 100px"> 故事集</td>
+          <td style="width: 100px">战备支援</td>
+        </tr>
+        <tr>
+          <td> 固源岩系(1-7) </td>
+          <td rowspan="4">100%</td>
+          <td> 101%± <br> 活动关卡 </td>
+          <td rowspan="4" > 105%  </td>
+          <td rowspan="4" > 125%<br>(需通关12-20)  </td>
+        </tr>
+        <tr>
+          <td> 晶体元件(R8-11) <br>化合切削液(12-17)  </td>
+          <td> 92%± <br> 活动关卡 </td>
+
+        </tr>
+        <tr>
+          <td> 资源本<br>龙门币/芯片/红票等 </td>
+          <td> 100% </td>
+
+        </tr>
+        <tr>
+          <td> 其他精英材料 </td>
+          <td> 110%-120% </td>
+
+        </tr>
+
+
+
+      </table>
+    </div>
+
+
     <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
       <a class="ep12_support" href="https://space.bilibili.com/21342479">
         <img class="ep12_support_img" src="/image/temp/babel.jpg" />
@@ -233,7 +222,7 @@ a {
   /* background-color: rgb(0, 162, 255); */
   max-width: 720px;
   margin: auto;
-  background-image: url(/image/temp/ep12_background2.webp);
+  background-image: url(/image/temp/ep13_bg.jpg);
   background-size: 100%;
   color: antiquewhite;
 }
@@ -274,5 +263,14 @@ a {
 
 td > div {
   display: inline-block;
+}
+
+.table_tip{
+  border-collapse: collapse;
+}
+
+.table_tip td{
+  padding: 8px;
+  border: 1px solid antiquewhite;
 }
 </style>
