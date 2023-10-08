@@ -38,7 +38,7 @@ export default {
 
   getNewChapter(){
     return request({
-      url: `stage/chapter?expCoefficient=0.625&zone=12-`,
+      url: `stage/chapter?expCoefficient=0.625&zone=13-`,
       method: "get",
     });
   },

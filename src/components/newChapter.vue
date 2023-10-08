@@ -106,22 +106,26 @@
 <script setup>
 import stageApi from '/src/api/stage'
 import {onMounted, ref} from "vue";
+import { usePageContext } from "@/renderer/usePageContext";
 
+const pageContext = usePageContext();
+const raw_data = ref(pageContext.pageProps.newChapter);
+const l = raw_data.value.length;
+const m = Math.ceil(l / 2);
+const newChapter = ref([raw_data.value.slice(0, m), raw_data.value.slice(m, l)]);
 
-
-
-let newChapter = ref([]);
-let raw_data = ref([])
-
-onMounted(()=>{
-   stageApi.getNewChapter().then(response=>{
-     response = response.data
-     raw_data.value  = response
-     const l = response.length;
-     const m = Math.ceil(l / 2);
-     newChapter.value = [response.slice(0, m), response.slice(m, l)];
-   })
-})
+// let newChapter = ref([]);
+// let raw_data = ref([])
+//
+// onMounted(()=>{
+//    stageApi.getNewChapter().then(response=>{
+//      response = response.data
+//      raw_data.value  = response
+//      const l = response.length;
+//      const m = Math.ceil(l / 2);
+//      newChapter.value = [response.slice(0, m), response.slice(m, l)];
+//    })
+// })
 
 
 // const updateTime = computed(() => {
@@ -159,9 +163,10 @@ td div {
 
 .ep12_pic {
   transition: transform 0.3s;
-  width: 300px;
+  width: 400px;
   display: block;
   border-radius: 12px;
+  margin: 12px;
 }
 
 .ep12_pic:hover {
