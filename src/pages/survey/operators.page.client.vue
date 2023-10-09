@@ -269,7 +269,7 @@
             <div><input class="skland_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
             <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
             <div class="btn btn_blue" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>
-            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>
+<!--            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
             <div class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
           </div>
         </div>
@@ -469,7 +469,7 @@ import {onMounted, ref} from "vue";
 import "@/assets/css/survey/survey_character.css";
 import {http} from "/src/api/baseURL";
 import request from "/src/api/requestBase";
-import {importSklandData} from "./skland.js";
+
 
 
 let intro_popup_visible = ref(false)
@@ -606,31 +606,12 @@ function exportExcel() {
 let skland_CRED_and_SECRET = ref("");  //森空岛cred
 let bindAccount = ref(false) //玩家uid是否绑定了一图流账号
 
-let player_uid = ref('')  //玩家uid
-
-/**
- * 通过玩家uid找回数据
- */
-function retrievalByUid() {
-  const data = {
-    token: userData.value.token,
-    uid: player_uid.value
-  }
-  surveyOperatorApi.retrievalOperatorDataByUid(data).then(response => {
-    console.log(response)
-    setTimeout(() => {
-      location.reload()
-    }, 1000);
-
-  })
-}
 
 /**
  * 找回一图流账号
  */
 // eslint-disable-next-line
 async function retrieveAccount() {
-
   // const playerBind = await getPlayerBind(skland_CRED_and_SECRET.value);
   const data = {
     cred: skland_CRED_and_SECRET.value
@@ -648,29 +629,14 @@ async function retrieveAccount() {
  */
 // eslint-disable-next-line
 async function loginByCRED() {
-  const response = await importSklandData(skland_CRED_and_SECRET.value);
-  const data = {
-    token: '',
-    uid: response.uid,
-    nickName: response.nickName,
-    data: JSON.stringify(response)
-  }
-
-  surveyApi.loginByCred(data).then(response => {
-    localStorage.setItem("globalUserData", JSON.stringify(response.data));
-    cMessage('登录成功')
-    data.token = response.data.token;
-    userData.value = response.data
-    uploadSKLandData(data)
-  })
-
 }
 
 
 let bindingList = ref([])
 let defaultUid = ref('')
+
 /**
- * 森空岛导入
+ * 通过cred和secret进行森空岛干员信息导入
  * @returns {Promise<void>}
  */
 // eslint-disable-next-line
@@ -702,13 +668,18 @@ async function importSKLandOperatorData() {
       cred,
       playerBinding.uid)
 
-  const data = {
+
+  await uploadSKLandData({
     token: userData.value.token,
     data: JSON.stringify(playerInfo)
-  }
-
-  await uploadSKLandData(data)
+  })
 }
+
+/**
+ * 如果导入错误可以自己选择uid进行导入
+ * @param uid 玩家uid
+ * @returns {Promise<void>}
+ */
 
 async function importSKLandOperatorDataByUid(uid){
   if (userData.value.token == void 0) {
@@ -732,19 +703,24 @@ async function importSKLandOperatorDataByUid(uid){
       cred,
       uid)
 
-  const data = {
-    token: userData.value.token,
-    data: JSON.stringify(playerInfo)
-  }
 
-  await uploadSKLandData(data)
+  await uploadSKLandData({
+    token: userData.value.token.toString(),
+    data: JSON.stringify(playerInfo)
+  })
 }
 
-async function uploadSKLandData(data) {
+/**
+ * 上传获取到的森空岛干员数据
+ * @param token 用户凭证
+ * @param data 干员数据
+ * @returns {Promise<void>}
+ */
+async function uploadSKLandData({token,data}) {
   await request({
     url: 'survey/operator/import/skland/v2',
     method: "post",
-    data: data
+    data: {token,data}
   }).then(response => {
     response = response.data
     upload_message.value = response.data;
