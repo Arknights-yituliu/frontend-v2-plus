@@ -39,7 +39,6 @@ export async function onBeforeRender(pageContext) {
   const t2 = result[1].data.data;
   const orundum = result[2].data.data;
   const closed = result[3].data.data;
-   console.log(t3[0][0])
   const pageProps = { t3, t2, orundum, closed };
   return {
     pageContext: {
