@@ -1,0 +1,81 @@
+.stage_card_3{
+  border: 0px solid #ebeef5;
+  overflow: hidden;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  background: rgba(128, 128, 128, 0.1);
+  height: 120px;
+  width: 240px;
+  max-width: 330px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  border-radius: 6px;
+  flex-grow: 1;
+  background-color: aquamarine;
+}
+
+.stage_card_3_left{
+  width: 38%;
+  height: 100%;
+  padding: 0 0px;
+  background-color: blueviolet;
+}
+
+.stage_card_3_mainImg{
+  width: 64px;
+  height: 64px;
+  margin: 8px auto 4px auto;
+  background-color: bisque;
+}
+
+.stage_card_3_best{
+  color: #e85d06;
+  font-size: 20px;
+  width: 100%;
+  height: 24px;
+  text-align: center;
+  padding: 0px;
+}
+
+.stage_card_3_markText{
+  color: gray;
+  float: right;
+  font-size: 14px;
+  padding-right: 8px;
+}
+
+.stage_card_3_right{
+  width: 62%;
+  height: 100%;
+  padding: 0 0px;
+  background-color: rgb(112, 165, 42);
+}
+
+.stage_card_3_list{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  width: 120px;
+  height: 100px;
+  margin: 0px auto;
+  background-color: bisque;
+}
+
+.stage_card_3_line{
+  height: 28px;
+  background-color: cadetblue;
+  display: flex;
+}
+.stage_card_3_line_text{
+  width: 80px;
+  height: 28px;
+  /* display: inline-block; */
+}
+.stage_card_3_img{
+  height: 28px;
+  width: 28px;
+  background-color: chocolate;
+  /* display: inline-block; */
+}

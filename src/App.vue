@@ -41,6 +41,7 @@ import "@/assets/css/sprite_icon.css";
 import "@/assets/css/common.css";
 import "/src/assets/css/about.css";
 
+import "@/assets/css/stage_v3.css";
 
 // 旧版css，待修改
 import "@/assets/css/item.css";
