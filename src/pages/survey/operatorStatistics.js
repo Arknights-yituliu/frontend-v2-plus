@@ -6,6 +6,11 @@ import itemTable from "@/static/json/survey/item_table.json";
 
 let itemCountStatistics = {};
 
+/**
+ * 计算干员消耗材料
+ * @param operatorList 干员列表
+ * @returns {{apCostCount('理智消耗总量'): number, itemList('材料消耗表'): [], itemMap('材料原始数据'): {}|*}}
+ */
 function calAPCost(operatorList) {
 
     itemCountStatistics = {};
@@ -13,7 +18,7 @@ function calAPCost(operatorList) {
     for (let c in operatorList) {
         const operator = operatorList[c];
         const charId = operator.charId;
-        const name = operator.name;
+        // const name = operator.name;
         const rarity = operator.rarity;
         const elite = operator.elite;
         const level = operator.level;
@@ -185,6 +190,13 @@ function updateItemCostMap(id, count) {
     }
 }
 
+/**
+ *
+ * @param rarity 星级
+ * @param elite 精英等级
+ * @param level 等级
+ * @returns {{"4001": number, "2003": number}} 龙门币和经验书的消耗情况
+ */
 function levelApCostCal(rarity, elite, level) {
 
     if (rarity == 6) {
@@ -238,13 +250,20 @@ function getLevelCostByRarity(rarity, elite, level, elite_0_max_level, elite_1_m
         EXPCost += levelCostTable['elite' + elite][level - 1].EXPCount
     }
 
-    let result = {
-        "4001": LMDCost,
-        "2003": EXPCost / 1000
-    }
 
-    return result;
+
+    return {
+        "4001": LMDCost,
+        "2003": parseInt(EXPCost / 1000)
+    };
 }
+
+/**
+ * 按材料等级拆分材料
+ * @param highest_rarity 最高材料等级 int
+ * @param item_cost_obj 材料消耗原始数据 obj
+ * @returns {*[]} 材料消耗表 arr
+ */
 
 function splitMaterial(highest_rarity, item_cost_obj) {
 
@@ -270,7 +289,7 @@ function splitMaterial(highest_rarity, item_cost_obj) {
                 if (compositeTable[product_name] != void 0) {
                     let composite_list = compositeTable[product_name]  //材料的合成列表
                     for (const composite_list_element of composite_list) {
-                        const material_name = composite_list_element.name;  //合成原料名称
+                        // const material_name = composite_list_element.name;  //合成原料名称
                         const material_id = composite_list_element.id;  //合成原料id
                         const material_count = composite_list_element.count;  //合成原料总数
                         let new_item = item_cost_obj_copy[material_id];
@@ -337,12 +356,9 @@ function splitMaterial(highest_rarity, item_cost_obj) {
     // console.table(itemList)
 
     return itemList
-
-
 }
 
 
-export {
+export default {
     calAPCost, splitMaterial
-
 }

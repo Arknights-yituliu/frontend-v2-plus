@@ -404,40 +404,6 @@
 
           </div>
 
-          <!--          &lt;!&ndash; 模组X &ndash;&gt;-->
-          <!--          <div :class="surveyTypeClass('skill_wrap')" v-show="operator.modXOwn">-->
-          <!--            <div class="image_mod">{{ "模组X" }}</div>-->
-          <!--            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modX' + rank"-->
-          <!--                 @click="updateSkillAndMod(char_index, 'modX', rank)">-->
-          <!--              <div :class="getSprite('mod' + rank, 'mod')"></div>-->
-          <!--            </div>-->
-          <!--          </div>-->
-
-          <!--          &lt;!&ndash; 没有模组X显示 &ndash;&gt;-->
-          <!--          <div :class="surveyTypeClass('skill_wrap')" v-show="!operator.modXOwn">-->
-          <!--            <div class="image_mod">[N/A]</div>-->
-          <!--            <div v-for="rank in ranks.slice(1, 4)" class="image_rank_disable">-->
-          <!--              <img class="image_null" src="/image/survey/null.png" alt=""/>-->
-          <!--            </div>-->
-          <!--          </div>-->
-
-          <!--          &lt;!&ndash; 模组Y &ndash;&gt;-->
-          <!--          <div :class="surveyTypeClass('skill_wrap')" v-show="operator.modYOwn">-->
-          <!--            <div class="image_mod">{{ "模组Y" }}</div>-->
-
-          <!--            <div v-for="rank in ranks.slice(1, 4)" class="image_rank" :id="char_index + 'modY' + rank"-->
-          <!--                 @click="updateSkillAndMod(char_index, 'modY', rank)">-->
-          <!--              <div :class="getSprite('mod' + rank, 'mod')"></div>-->
-          <!--            </div>-->
-          <!--          </div>-->
-
-          <!--          &lt;!&ndash; 没有模组Y显示 &ndash;&gt;-->
-          <!--          <div :class="surveyTypeClass('skill_wrap')" v-show="!operator.modYOwn">-->
-          <!--            <div class="image_mod">[N/A]</div>-->
-          <!--            <div v-for="rank in ranks.slice(1, 4)" class="image_rank_disable">-->
-          <!--              <img class="image_null" src="/image/survey/null.png" alt=""/>-->
-          <!--            </div>-->
-          <!--          </div>-->
         </div>
 
         <div class="card-overlay" v-show="'简易问卷' !== surveyTypeText && !operator_list[char_index].own">
@@ -461,7 +427,7 @@ import {cMessage} from "/src/element/message.js";
 import {characterListInit, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import {collapse} from '/src/element/collapse'
 import "/src/element/css/collapse.css"
-import {calAPCost, splitMaterial} from "./operatorStatistics"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import operatorStatistics from "/src/pages/survey/operatorStatistics"
 import surveyApi from "/src/api/surveyUser";
 import surveyOperatorApi from "/src/api/surveyOperator"
 import sklandApi from '/src/api/skland'
@@ -477,11 +443,9 @@ let import_popup_visible = ref(false)  //导入弹窗是否显示
 let userData = ref({userName: "未登录", status: -100, token: void 0});  //用户信息
 
 /**
- * 获取缓存的用户信息
+ * 获取本地缓存的用户信息
  */
 function getCacheUserData() {
-  // let cacheData = jsCookie.get("globalUserData");  
-  // 第一版前端存在了cookie里面，后面改成了localStorage
   let cacheData = localStorage.getItem("globalUserData");
   // localStorage.setItem("globalUserData", cacheData);
   if (cacheData == "undefined" || cacheData == void 0 || cacheData == null) {
@@ -493,6 +457,9 @@ function getCacheUserData() {
   initOperatorsList()
 }
 
+/**
+ * 检查是否是第一次进入页面
+ */
 
 function checkFirstPopup() {
   intro_popup_visible.value = !intro_popup_visible.value
@@ -501,9 +468,9 @@ function checkFirstPopup() {
 
 /**
  * 获取雪碧图
- * @param id 图片id
- * @param type 图片类型 (每类图片对应的css不一样）
- * @returns {string}
+ * @param id 图片id string
+ * @param type 图片类型 string (每类图片对应的css不一样）
+ * @returns {string} css样式名
  */
 function getSprite(id, type) {
   if ("mod" === type) return "bg-" + id + " sprite_mod";
@@ -516,31 +483,29 @@ function getSprite(id, type) {
   return "bg-" + id + " sprite_avatar";
 }
 
+
 let operator_list = ref([]);   //干员列表
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let rarity_dict = [1, 2, 3, 4, 5, 6];  //星级
-let list_max_size = ref(10)  //列表数据最大显示个数
+let list_max_size = ref(10)  //页面显示干员最大显示个数
 
+/**
+ * 初始化干员列表
+ */
 function initOperatorsList() {
+  //干员列表，有干员的各种属性
   operator_list.value = characterListInit();
-
   setTimeout(() => {
     list_max_size.value = operator_list.value.length;
     getOperatorData();
-  }, 1000);
-
-  // setTimeout(() => {
-  //   statistics()
-  // }, 2000);
-
+  }, 4000);
 }
 
 /**
  * 找回填写过的角色信息
  */
-
 function getOperatorData() {
-
+  //检查是否登录
   if (userData.value.token == void 0) {
     // cMessage("未登录", "error");
     return;
@@ -548,7 +513,8 @@ function getOperatorData() {
 
   const data = {token: userData.value.token}
 
-  surveyApi.getSurveyCharacter(data).then((response) => {
+  //根据一图流的token查询用户填写的干员数据
+  surveyApi.getSurveyOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
 
     //转为前端的数据格式
@@ -558,7 +524,6 @@ function getOperatorData() {
         if (list[j].charId == operator_list.value[i].charId) {
           if (!list[j].own) continue;
           operator_list.value[i].elite = list[j].elite;
-
           operator_list.value[i].level = list[j].level;
           operator_list.value[i].potential = list[j].potential;
           operator_list.value[i].mainSkill = list[j].mainSkill;
@@ -592,20 +557,17 @@ function getOperatorData() {
  * 导出评分表的excel
  */
 function exportExcel() {
-
   const export_excel_url = http + "survey/operator/export?token=" + userData.value.token;
   const element = document.createElement("a");
   element.download = "form.xlsx";
   element.style.display = "none";
   element.href = export_excel_url;
   element.click();
-
 }
 
 
 let skland_CRED_and_SECRET = ref("");  //森空岛cred
 let bindAccount = ref(false) //玩家uid是否绑定了一图流账号
-
 
 /**
  * 找回一图流账号
@@ -647,15 +609,17 @@ async function importSKLandOperatorData() {
     return;
   }
 
+  //替换掉cred和secret的引号
   skland_CRED_and_SECRET.value = skland_CRED_and_SECRET.value
       .replace(/\s+/g, '')
       .replace(/["']/g, '')
 
+  //将cred和secret分开
   const textArr = skland_CRED_and_SECRET.value.split(',')
-
   const cred = textArr[0]
   const secret = textArr[1]
 
+  //获取绑定信息
   const playerBinding = await sklandApi.getPlayBinding('/api/v1/game/player/binding', '', secret, cred);
 
   bindingList.value = playerBinding.bindingList
@@ -702,8 +666,6 @@ async function importSKLandOperatorDataByUid(uid){
       secret,
       cred,
       uid)
-
-
   await uploadSKLandData({
     token: userData.value.token.toString(),
     data: JSON.stringify(playerInfo)
@@ -745,6 +707,7 @@ async function uploadSKLandData({token,data}) {
   })
 }
 
+//选择导入uid的按钮样式
 function chooseUidClass(uid){
     if(uid==defaultUid.value) return 'btn_blue_selected'
 }
@@ -819,7 +782,6 @@ function automaticUpload() {
  * 手动上传
  */
 function upload() {
-
   let uploadList = uploadDataReduction();
   surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
     upload_message.value = response.data;
@@ -833,7 +795,6 @@ let upload_file_name = ref("上传的文件名");
 /**
  * 将需要上传的数据去除无用信息
  */
-
 function uploadDataReduction() {
   let upload_list = [];
   console.log(selected_index_obj.value);
@@ -903,7 +864,6 @@ function maaData1() {
  * @param char_index  干员数组operator_list的索引
  * @param new_value   传入的新值
  */
-
 function updateOwn(char_index, new_value) {
   selected_index_obj.value[char_index] = char_index; //记录更新的干员的索引
 
@@ -1322,7 +1282,7 @@ function statistics() {
     }
   }
 
-  const result = calAPCost(operator_list.value);
+  const result = operatorStatistics.calAPCost(operator_list.value);
 
   item_cost_map.value = result.itemMap;
   item_cost_list.value = result.itemList;
@@ -1335,7 +1295,7 @@ function statistics() {
  * @param highest_rarity  材料最大星级
  */
 function splitMaterialByRarity(highest_rarity) {
-  const list = splitMaterial(highest_rarity, item_cost_map.value);
+  const list = operatorStatistics.splitMaterial(highest_rarity, item_cost_map.value);
   // console.table(list)
   item_cost_list.value = list;
 }

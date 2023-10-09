@@ -24,6 +24,7 @@ function getSign(path, requestParam, secret) {
     return {timestamp,sign}
 }
 
+
 async function getPlayBinding(path, requestParam, secret,cred){
 
     cred = cred.replace(/\s+/g, '')
