@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// const http = "https://backend.yituliu.site/";
+const http = "https://backend.yituliu.site/";
 
-const http = "http://127.0.0.1:10010/";
+// const http = "http://127.0.0.1:10010/";
 
 function get_newChapter() {
   return axios.get(http + "stage/chapter?expCoefficient=0.625&zone=13-");

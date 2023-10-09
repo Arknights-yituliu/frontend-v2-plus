@@ -192,7 +192,11 @@
 
 .survey_user_menu_item:hover{
   background-color:grey;
+}
 
+.menu_href{
+  text-decoration: none;
+  color :white;
 }
 
 .logout_text {

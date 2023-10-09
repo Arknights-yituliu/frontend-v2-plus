@@ -5,8 +5,8 @@
     <div v-show="user_data.status>0" class="user_page_wrap">
       <div class="user_name" id="user_name">{{ user_data.userName }}</div>
       <div class="survey_user_menu">
-        <a class="survey_user_menu_item href_black" href="/survey/account/home"> 个人中心 </a>
-        <a class="survey_user_menu_item href_black" @click="login_visible=!login_visible"> 退出登录 </a>
+        <a class="survey_user_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>
+        <a class="survey_user_menu_item menu_href" @click="login_visible=!login_visible"> 退出登录 </a>
       </div>
     </div>
     <c-popup :visible="login_visible" v-model:visible="login_visible">

@@ -508,7 +508,7 @@ export default {
 
     judgeActive(index) {
       let showFlag = false;
-      for (let i = 0; i < 3; ++i) {
+      for (let i = 0; i < this.stageRankT3[index][i].length>3?3:this.stageRankT3[index][i].length; ++i) {
         if (this.stageRankT3[index][i].stageColor < 0) {
           showFlag = true;
           break;
