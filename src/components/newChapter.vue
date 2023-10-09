@@ -159,9 +159,10 @@ td div {
 
 .ep12_pic {
   transition: transform 0.3s;
-  width: 300px;
+  width: 400px;
   display: block;
   border-radius: 12px;
+  margin: 12px;
 }
 
 .ep12_pic:hover {
