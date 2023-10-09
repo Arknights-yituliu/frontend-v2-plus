@@ -137,15 +137,15 @@
           <td style="width: 100px">战备支援</td>
         </tr>
         <tr>
-          <td> 固源岩系(1-7) </td>
+          <td> 固源岩系<br>(1-7) </td>
           <td rowspan="4">100%</td>
-          <td> 101%± <br> 活动关卡 </td>
+          <td> 101% <br> 活动关卡 </td>
           <td rowspan="4" > 105%  </td>
           <td rowspan="4" > 125%<br>(需通关12-20)  </td>
         </tr>
         <tr>
-          <td> 晶体元件(R8-11) <br>化合切削液(12-17)  </td>
-          <td> 92%± <br> 活动关卡 </td>
+          <td> 晶体元件<br>(R8-11) <br>化合切削液<br>(12-17)  </td>
+          <td> 92% <br> 活动关卡 </td>
 
         </tr>
         <tr>
