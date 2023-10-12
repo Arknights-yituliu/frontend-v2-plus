@@ -12,7 +12,7 @@
         <div class="op_title_tag" style="height: 28px">
           <div class="tab_text">
             <!-- *更新时间{{stageActHistory}} -->
-<!--            *更新时间 {{ newChapter[0][0].updateTime }}-->
+            <!--            *更新时间 {{ newChapter[0][0].updateTime }}-->
           </div>
         </div>
       </div>
@@ -24,7 +24,7 @@
       <!-- <div> -->
       <div class="ep12_wrapper">
         <a href="/material/ep13">
-          <img class="ep12_pic" src="/image/temp/ep13.webp" alt="ep12" />
+          <img class="ep12_pic" src="/image/temp/ep13.webp" alt="ep12"/>
         </a>
       </div>
       <!-- </div> -->
@@ -32,33 +32,33 @@
         <div class="ep12_half" id="ep12_left" v-for="r in [0, 1]" :key="r">
           <table class="popup_table">
             <tbody>
-              <tr class="popup_table_title">
-                <td class="popup_table_c1" style="width: 75px">关卡</td>
-                <td class="popup_table_c2" style="width: 75px">主产物</td>
-                <td class="popup_table_c4" style="width: 75px">样本数</td>
-                <td class="popup_table_c5" style="width: 75px">置信度</td>
-                <td class="popup_table_c6" style="width: 60px">SPM</td>
-                <td class="popup_table_c7" style="width: 90px">关卡效率</td>
-                <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
-              </tr>
-              <tr v-for="(stage, index) in newChapter[r]" :key="index" class="stage_table_r">
-                <td>
-                  {{ stage.stageCode }}
-                </td>
-                <td>
-                  <div class="store_sprite_perm_wrap">
-                    <div :class="`bg-${stage.itemId} store_sprite_perm`"></div>
-                  </div>
-                </td>
-                <td>
-                  {{ stage.sampleSize }}
-                </td>
-                <td>{{ stage.sampleConfidence }}%</td>
-                <td>
-                  {{ stage.spm }}
-                </td>
-                <td>{{ Math.round(stage.stageEfficiency) }}%</td>
-              </tr>
+            <tr class="popup_table_title">
+              <td class="popup_table_c1" style="width: 75px">关卡</td>
+              <td class="popup_table_c2" style="width: 75px">主产物</td>
+              <td class="popup_table_c4" style="width: 75px">样本数</td>
+              <td class="popup_table_c5" style="width: 75px">置信度</td>
+              <td class="popup_table_c6" style="width: 60px">SPM</td>
+              <td class="popup_table_c7" style="width: 90px">关卡效率</td>
+              <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
+            </tr>
+            <tr v-for="(stage, index) in newChapter[r]" :key="index" class="stage_table_r">
+              <td>
+                {{ stage.stageCode }}
+              </td>
+              <td>
+                <div class="store_sprite_perm_wrap">
+                  <div :class="`bg-${stage.itemId} store_sprite_perm`"></div>
+                </div>
+              </td>
+              <td>
+                {{ stage.sampleSize }}
+              </td>
+              <td>{{ sampleConfidenceFormat(stage.sampleConfidence, 1) }}</td>
+              <td>
+                {{ stage.spm }}
+              </td>
+              <td>{{ efficiencyFormat(stage.stageEfficiency, 1) }}</td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -67,33 +67,35 @@
         <div class="ep12_half">
           <table class="popup_table">
             <tbody>
-              <tr class="popup_table_title">
-                <td class="popup_table_c1" style="width: 75px">关卡</td>
-                <td class="popup_table_c2" style="width: 75px">主产物</td>
-                <td class="popup_table_c4" style="width: 75px">样本数</td>
-                <td class="popup_table_c5" style="width: 75px">置信度</td>
-                <td class="popup_table_c6" style="width: 60px">SPM</td>
-                <td class="popup_table_c7" style="width: 90px">关卡效率</td>
-                <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
-              </tr>
-              <tr v-for="(stage, index) in raw_data" :key="index" class="stage_table_r">
-                <td>
-                  {{ stage.stageCode }}
-                </td>
-                <td>
-                  <div class="store_sprite_perm_wrap">
-                    <div :class="`bg-${stage.itemId} store_sprite_perm` "></div>
-                  </div>
-                </td>
-                <td>
-                  {{ stage.sampleSize }}
-                </td>
-                <td>{{ stage.sampleConfidence }}%</td>
-                <td>
-                  {{ stage.spm }}
-                </td>
-                <td>{{ Math.round(stage.stageEfficiency) }}%</td>
-              </tr>
+            <tr class="popup_table_title">
+              <td class="popup_table_c1" style="width: 75px">关卡</td>
+              <td class="popup_table_c2" style="width: 75px">主产物</td>
+              <td class="popup_table_c4" style="width: 75px">样本数</td>
+              <td class="popup_table_c5" style="width: 75px">置信度</td>
+              <td class="popup_table_c6" style="width: 60px">SPM</td>
+              <td class="popup_table_c7" style="width: 90px">关卡效率</td>
+              <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
+            </tr>
+            <tr v-for="(stage, index) in raw_data" :key="index" class="stage_table_r">
+              <td>
+                {{ stage.stageCode }}
+              </td>
+              <td>
+                <div class="store_sprite_perm_wrap">
+                  <div :class="`bg-${stage.itemId} store_sprite_perm` "></div>
+                </div>
+              </td>
+              <td>
+                {{ stage.sampleSize }}
+              </td>
+              <td>
+                {{ sampleConfidenceFormat(stage.sampleConfidence, 1) }}
+              </td>
+              <td>
+                {{ stage.spm }}
+              </td>
+              <td>{{ efficiencyFormat(stage.stageEfficiency, 1) }}</td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -108,19 +110,29 @@ import stageApi from '/src/api/stage'
 import {onMounted, ref} from "vue";
 
 
-
-
 let newChapter = ref([]);
 let raw_data = ref([])
 
-onMounted(()=>{
-   stageApi.getNewChapter().then(response=>{
-     response = response.data
-     raw_data.value  = response
-     const l = response.length;
-     const m = Math.ceil(l / 2);
-     newChapter.value = [response.slice(0, m), response.slice(m, l)];
-   })
+function sampleConfidenceFormat(confidence, digit) {
+  digit = digit == void 0 ? 1 : digit;
+  if (confidence == void 0 || confidence < 1) return ''
+  return confidence.toFixed(digit) + "%"
+}
+
+function efficiencyFormat(efficiency, digit) {
+  digit = digit == void 0 ? 1 : digit;
+  if (efficiency == void 0 || efficiency < 1) return '样本不足'
+  return efficiency.toFixed(digit) + "%"
+}
+
+onMounted(() => {
+  stageApi.getNewChapter().then(response => {
+    response = response.data
+    raw_data.value = response
+    const l = response.length;
+    const m = Math.ceil(l / 2);
+    newChapter.value = [response.slice(0, m), response.slice(m, l)];
+  })
 })
 
 
@@ -133,6 +145,7 @@ onMounted(()=>{
 .el-divider--horizontal {
   margin: 6px 0;
 }
+
 .ep12_half {
   margin: 8px;
   border-radius: 6px;
@@ -185,6 +198,7 @@ td div {
   overflow: hidden;
   margin-top: 3px;
 }
+
 .img {
   transform: scale(50%) translate(-50%, -50%);
 }
@@ -195,6 +209,7 @@ td div {
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .ep12_content > div:last-child {
 
 }
@@ -204,6 +219,7 @@ td div {
     display: none;
   }
 }
+
 @media (min-width: 770px) {
   .ep12_content-mobile {
     display: none;

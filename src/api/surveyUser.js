@@ -108,6 +108,19 @@ export default {
     })
   },
 
+  /**
+   * 找回用户填写的干员数据
+   * @param data
+   * @returns {*}
+   */
+  getSurveyOperatorData(data) {
+    return request({
+      url: `${api_name}/operator/retrieval`,
+      method: "post",
+      data:data
+    })
+  },
+
   uploadCharacter(characterList, token) {
     return request({
       url: `${api_name}/character/upload?token=${token}`,
@@ -133,13 +146,7 @@ export default {
     })
   },
 
-  getSurveyCharacter(data) {
-    return request({
-      url: `${api_name}/operator/retrieval`,
-      method: "post",
-      data:data
-    })
-  },
+
 
   getCharStatisticsResult() {
     return request({

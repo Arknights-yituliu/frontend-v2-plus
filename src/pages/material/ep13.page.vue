@@ -57,12 +57,12 @@
               {{ stage.sampleSize }}
             </td>
             <td>
-              {{ stage.sampleConfidence }}
+              {{ sampleConfidenceFormat(stage.sampleConfidence,1) }}
             </td>
             <td>
               {{ stage.spm }}
             </td>
-            <td>{{ Math.round(stage.stageEfficiency) }}%</td>
+            <td>{{ efficiencyFormat(stage.stageEfficiency,1) }}</td>
             <td><a :href="'https://penguin-stats.cn/report/stage/main_12/' + stage.stageId">企鹅物流</a></td>
           </tr>
         </tbody>
@@ -212,7 +212,17 @@ const show_secondary = ref(true);
 const pageContext = usePageContext();
 const table_data = ref(pageContext.pageProps.newChapter);
 
+function sampleConfidenceFormat(confidence,digit){
+  digit = digit==void 0?1:digit;
+  if(confidence == void 0||confidence<1) return ''
+  return confidence.toFixed(digit)+"%"
+}
 
+function efficiencyFormat(efficiency,digit){
+  digit = digit==void 0?1:digit;
+  if(efficiency == void 0||efficiency<1) return '样本不足'
+  return efficiency.toFixed(digit)+"%"
+}
 </script>
 
 <style scoped>
