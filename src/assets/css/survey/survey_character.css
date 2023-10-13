@@ -42,16 +42,16 @@
 }
 
 .card_option_left_basic {
-  margin: 12px;
+  margin: 8px 0 ;
   display: flex;
 }
 
 .card_option_left {
-  margin: 12px;
+  margin: 8px 0 8px 4px;
 }
 
 .card_option_top_left_basic {
-  margin: 12px;
+  margin: 8px 0;
   padding-top: 20px;
 }
 
@@ -152,18 +152,15 @@
 
 .potential_wrap_basic {
   display: none;
-  flex-wrap: wrap;
-  width: 156px;
-  height: 100px;
-  margin-top: 12px;
+
 }
 
 .potential_wrap {
   display: flex;
   flex-wrap: wrap;
-  width: 156px;
+  width: 120px;
   height: 100px;
-  margin-top: 12px;
+  margin-left: 8px;
 }
 
 .image_potential {
@@ -175,14 +172,14 @@
 }
 
 .elite_wrap_basic {
-  /* display: flex; */
+
   margin-top: -8px;
   padding-right: 8px;
 }
 
 .elite_wrap {
   display: flex;
-  /* margin-top: 16px; */
+  margin-left: -12px;
 
 }
 
@@ -218,7 +215,7 @@
 }
 
 .card_option_right {
-  margin: 12px;
+  margin: 8px 0;
   display: flex;
 }
 

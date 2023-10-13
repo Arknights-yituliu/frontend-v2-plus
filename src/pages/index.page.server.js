@@ -2,7 +2,7 @@ import axios from "axios";
 import { http } from "@/api/baseURL";
 
 function get_t3() {
-  return axios.get(http + "stage/t3?expCoefficient=0.625");
+  return axios.get(http + "stage/t3?expCoefficient=0.625&sampleSize=500");
 }
 
 function get_t2() {

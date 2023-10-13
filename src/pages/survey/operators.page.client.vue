@@ -389,7 +389,7 @@
             </div>
           </div>
 
-          <div :class="surveyTypeClass('skill_delimiter')"></div>
+<!--          <div :class="surveyTypeClass('skill_delimiter')"></div>-->
 
           <div v-for="(equip,index) in operator.equip" :key="index" :class="surveyTypeClass('skill_wrap')">
             <!--            <div class="image_mod">{{ "模组" + equip.typeName2 }}</div>-->
