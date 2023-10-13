@@ -45,7 +45,7 @@
   },
   {
     "path": "/survey",
-    "text": "干员调查",
+    "text": "调查与统计",
     "isChild": true,
     "child": [
       {
