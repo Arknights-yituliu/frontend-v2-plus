@@ -1,0 +1,129 @@
+.survey_user_page {
+    padding: 20px;
+    width: 99%;
+    margin: auto;
+    background-color: #dcdcdc;
+}
+
+.user_info_wrap {
+    width: 450px;
+    margin: auto;
+}
+
+
+.user_info_card {
+    width: 450px;
+    padding: 24px;
+    margin: 20px 0;
+    border-radius: 4px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.user_info_bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.user_info_title {
+    font-size: 20px;
+    font-weight: 600;
+    /*padding: 12px;*/
+}
+
+.user_input_bar {
+    width: 450px;
+    margin: 8px auto;
+}
+
+.user_input_br {
+    width: 99%;
+    height: 8px;
+}
+
+.user_input_label {
+    color: #006fe0;
+    font-weight: 600;
+}
+
+.user_input_tip {
+    font-style: italic;
+    color: grey;
+    padding: 4px 0 4px 0;
+    font-size: 14px;
+    line-height: 20px;
+    height: 20px;
+}
+
+.user_input {
+    /*display: block;*/
+    outline: none;
+    border: none;
+    border-bottom: 2px solid #e1e1e1;
+    margin: 4px 4px 4px 0;
+    line-height: 28px;
+    width: 270px;
+    font-weight: 600;
+}
+
+.user_info {
+    line-height: 32px;
+    font-weight: 600;
+}
+
+
+.btn_position {
+    margin-left: 20px;
+}
+
+.user_avatar_text {
+    width: 190px;
+    text-align: center;
+}
+
+.user_avatar_btn {
+    margin: 28px 50px;
+}
+
+.user_now_avatar_wrap {
+    display: flex;
+    justify-content: center;
+    line-height: 90px;
+    height: 100px;
+}
+
+.user_avatar_popup_wrap {
+    border-top: 1px solid grey;
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.user_avatar_image_wrap {
+    height: 70px;
+    width: 70px;
+    position: relative;
+    margin: 4px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: white;
+    border: 1px solid #d2d2d2;
+}
+
+.user_avatar_image {
+    transform: scale(0.4);
+    position: absolute;
+    top: -55px;
+    left: -55px;
+}
+
+

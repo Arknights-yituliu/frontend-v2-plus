@@ -174,12 +174,11 @@
             <td class="popup_table_c2" style="width: 65px; width: 75px">样本数<br/>(置信度)</td>
             <td class="popup_table_c3" style="width: 40px; width: 50px">SPM</td>
             <td class="popup_table_c4" style="width: 50px; width: 60px" colspan="1">副产品</td>
-            <!-- <td class="popup_table_c5" style="width: 80px; width: 90px">主产物掉率</td> -->
-            <!-- <td class="popup_table_c6" style="width: 80px; width: 90px">主产物期望</td> -->
+             <td class="popup_table_c5" style="width: 80px; width: 90px">主产物掉率</td>
+             <td class="popup_table_c6" style="width: 80px; width: 90px">主产物期望</td>
             <td class="popup_table_c7" style="width: 70px; width: 80px">总效率</td>
-            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>
-            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>
-            <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
+<!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>-->
+<!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>-->
           </tr>
           <tr v-for="(stage, index) in popupData.slice(0,7)" :key="index" :class="getColor(stage.stageColor)"
               class="stage_table_r">
@@ -196,16 +195,14 @@
                 <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
               </div>
             </td>
-            <!-- <td style="padding-left: 20px;" >
-                <div v-show="stage.stageId.indexOf('perm')==-1" :class="getSpriteImg('ap_supply_lt_010', 'sec')"></div>
-            </td> -->
-            <!-- <td class="popup_table_c5">{{ getEfficiency(stage.knockRating * 100, 1) }}%</td>
+
+             <td class="popup_table_c5">{{ formatNumber(stage.knockRating * 100, 1) }}%</td>
             <td class="popup_table_c6">
-              {{ getEfficiency(stage.apExpect) }}
-            </td> -->
+              {{ formatNumber(stage.apExpect) }}
+            </td>
             <td class="popup_table_c7">{{ formatNumber(stage.stageEfficiency, 1) }}%</td>
-            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency, 1) }}%</td>
-            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency, 1) }}%</td>
+<!--            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency, 1) }}%</td>-->
+<!--            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency, 1) }}%</td>-->
             <!-- <td class="popup_table_c7">{{getBoxEfficiency(stage.stageState, stage.stageEfficiencyEx, stage.stageEfficiency)}}</td> -->
           </tr>
           </tbody>
@@ -225,9 +222,9 @@
           </div>
           <div class="popup_item">SPM:假设敌人被秒杀，1倍速下每分钟消耗的理智量，实际可能略有出入</div>
           <div class="popup_item">总效率:<b>所有产物</b>的价值之和占理智消耗的比例</div>
-          <div class="popup_item">T4效率:<b>紫材料+蓝材料+绿材料+白材料</b>的价值之和占理智消耗的比例</div>
-          <div class="popup_item">T3效率:<b>蓝材料+绿材料+白材料</b>的价值之和占理智消耗的比例</div>
-          <div class="popup_item">例如:糖系T4效率=(糖聚块价值+糖组价值+糖价值+代糖价值)/理智消耗</div>
+<!--          <div class="popup_item">T4效率:<b>紫材料+蓝材料+绿材料+白材料</b>的价值之和占理智消耗的比例</div>-->
+<!--          <div class="popup_item">T3效率:<b>蓝材料+绿材料+白材料</b>的价值之和占理智消耗的比例</div>-->
+<!--          <div class="popup_item">例如:糖系T4效率=(糖聚块价值+糖组价值+糖价值+代糖价值)/理智消耗</div>-->
         </div>
       </div>
       <!-- 搓玉 -->
@@ -485,7 +482,7 @@ export default {
 
     formatNumber(num, acc) {
       acc = typeof acc !== "undefined" ? acc : 2;
-      num = num < 1.5 ? num * 100 : num;
+      // num = num < 1.5 ? num * 100 : num;
       return parseFloat(num).toFixed(acc);
     },
 

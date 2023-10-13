@@ -1,0 +1,46 @@
+
+.nav_user_name {
+    font-size: 16px;
+    line-height: 40px;
+    height: 40px;
+    color: white;
+    cursor: pointer;
+    padding:0 4px 0 32px;
+}
+
+.survey_nav_menu {
+    color: white;
+    position: absolute;
+    top: 38px;
+    right: 0;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    transition: all 0.3s;
+    z-index:3000;
+}
+
+.nav_wrap:hover .survey_nav_menu{
+    width:120px;
+    height: 120px;
+    background-color: #262f3e;
+}
+
+.survey_nav_menu_item{
+    display: flex;
+    height: 28px;
+    line-height: 28px;
+    margin: 8px 4px;
+    border-radius: 4px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.survey_nav_menu_item:hover{
+    background-color:grey;
+}
+
+.menu_href{
+    text-decoration: none;
+    color :white;
+}

@@ -2,13 +2,18 @@
   <div class="survey_nav_page">
     <div class="survey_top_right_btn" @click="login_visible = !login_visible" v-show="user_data.status<0">登录</div>
 
-    <div v-show="user_data.status>0" class="user_page_wrap">
-      <div class="user_name" id="user_name">{{ user_data.userName }}</div>
-      <div class="survey_user_menu">
-        <a class="survey_user_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>
-        <a class="survey_user_menu_item menu_href" @click="login_visible=!login_visible"> 退出登录 </a>
+    <div v-show="user_data.status>0" class="nav_wrap">
+      <div class="nav_user_name" id="nav_user_name">{{ user_data.userName }}</div>
+<!--      <div class="user_avatar_image_wrap">-->
+<!--        <div :class="getSprite(user_data.avatar)"></div>-->
+<!--      </div>-->
+      <div class="survey_nav_menu">
+        <a class="survey_nav_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>
+        <a class="survey_nav_menu_item menu_href" @click="login_visible=!login_visible"> 退出登录 </a>
       </div>
     </div>
+    
+    
     <c-popup :visible="login_visible" v-model:visible="login_visible">
 
       <div class="login_card" v-show="user_data.status<0">
@@ -25,13 +30,13 @@
         <div class="login_input_wrap" v-show="'passWord'===account_type">
           <div class="login_form">
             <div class="input_label">账号：</div>
-            <input class="login_input" placeholder="请输入" v-model="input_data.userName"/>
+            <input class="login_input" type="text" placeholder="请输入" v-model="input_data.userName"/>
           </div>
 
           <div class="login_form_divider"></div>
           <div class="login_form">
             <div class="input_label">密码：</div>
-            <input class="login_input" placeholder="请输入" v-model="input_data.passWord"/>
+            <input class="login_input" type="password" placeholder="请输入" v-model="input_data.passWord"/>
           </div>
         </div>
 
@@ -112,6 +117,8 @@ import "@/assets/css/sprite/sprite_portrait_bg.css";
 import "@/assets/css/sprite/sprite_skill.css";
 import "@/assets/css/sprite/sprite_rank.css";
 import "@/assets/css/survey/survey_index.css";
+import "@/assets/css/survey/survey_user.css";
+import "@/assets/css/survey/survey_nav.css";
 
 import {onMounted, ref} from "vue";
 import {cMessage} from "/src/element/message";
@@ -125,6 +132,7 @@ let input_data = ref({
   email: '',
   emailCode: '',
   accountType: '',
+  avatar:'',
   mailUsage: 'register'
 }); //用户输入的用户名，用obj没准后期有别的字段
 let user_data = ref({userName: "山桜", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
@@ -161,16 +169,15 @@ function sendEmailCodeForLogin() {
 function register() {
   input_data.value.accountType = account_type.value
   surveyApi.register(input_data.value).then(response => {
-    if (response.code === 200) {
+      response = response.data
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
       cMessage("注册成功");
-      user_data.value.userName = response.data.userName;
-      user_data.value.status = response.data.status;
-      user_data.value.token = response.data.token;
+      user_data.value.userName = response.userName;
+      user_data.value.status = response.status;
+      user_data.value.token = response.token;
+      user_data.value.avatar = response.avatar == void 0 ? 'char_377_gdglow':response.avatar;
       login_visible.value = !login_visible.value;
-    } else {
-      cMessage(response.msg, 'error')
-    }
+
   })
 }
 
@@ -189,6 +196,7 @@ function login() {
   input_data.value.accountType = account_type.value
   surveyApi.login(input_data.value).then(response => {
     if (response.data.status > 0) {
+
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
       // 登录成功刷新
       location.reload()
@@ -197,14 +205,10 @@ function login() {
 }
 
 function userDataCache() {
-  let cacheData = jsCookie.get("globalUserData");
-  if (cacheData == "undefined" || cacheData == void 0 || cacheData == null) {
-    cacheData = localStorage.getItem("globalUserData");
-  } else {
-    localStorage.setItem("globalUserData", cacheData);
-  }
 
-  if (cacheData == "undefined" || cacheData == void 0 || cacheData == null) {
+  let cacheData = localStorage.getItem("globalUserData");
+
+  if ( cacheData == void 0 ) {
     return
   }
   cacheData = JSON.parse(cacheData)
@@ -212,6 +216,7 @@ function userDataCache() {
   user_data.value.userName = cacheData.userName;
   user_data.value.status = cacheData.status;
   user_data.value.token = cacheData.token;
+  user_data.value.avatar = cacheData.avatar == void 0 ? 'char_377_gdglow':cacheData.avatar;
   user_data.value.email = cacheData['email'] == undefined ? "未绑定1" : cacheData['email'];
 }
 
@@ -221,6 +226,11 @@ function logout() {
   setTimeout(() => {
     location.reload()
   }, 1000);
+}
+
+function getSprite(id, type) {
+  type = type == void 0 ? '' : type;
+  return "bg-" + id + " user_avatar_image";
 }
 
 onMounted(() => {

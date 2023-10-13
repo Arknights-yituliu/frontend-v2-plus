@@ -62,14 +62,6 @@
   /* padding: 10px; */
 }
 
-/*.login_input_wrap {*/
-/*  display: flex;*/
-/*  margin: 20px auto 20px;*/
-/*  height: 32px;*/
-/*  line-height: 32px;*/
-/*  font-size: 18px;*/
-/*  justify-content: center;*/
-/*}*/
 
 .login_input_wrap{
   margin: auto;
@@ -108,7 +100,6 @@
 
 .login_btn{
   width: 170px;
-  line-height: 22px;
   margin: 8px 20px 8px 0;
   border-radius: 8px;
 }
@@ -153,51 +144,7 @@
   position: relative;
 }
 
-.user_name {
-  font-size: 16px;
-  line-height: 40px;
-  height: 40px;
-  color: white;
-  cursor: pointer;
-  padding:0 4px 0 32px;
-}
 
-.survey_user_menu {
-  color: white;
-  position: absolute;
-  top: 38px;
-  right: 0;
-  height: 0;
-  width: 0;
-  overflow: hidden;
-  transition: all 0.3s;
-  z-index:3000;
-}
-
-.user_page_wrap:hover .survey_user_menu{
-  width:120px;
-  height: 120px;
-  background-color: #262f3e;
-}
-
-.survey_user_menu_item{
-  display: flex;
-  height: 28px;
-  line-height: 28px;
-  margin: 8px 4px;
-  border-radius: 4px;
-  padding: 4px;
-  cursor: pointer;
-}
-
-.survey_user_menu_item:hover{
-  background-color:grey;
-}
-
-.menu_href{
-  text-decoration: none;
-  color :white;
-}
 
 .logout_text {
   margin: 30px auto;
