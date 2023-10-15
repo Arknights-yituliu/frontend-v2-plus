@@ -1,19 +1,24 @@
 <template>
   <div class="survey_nav_page">
-    <div class="survey_top_right_btn" @click="login_visible = !login_visible" v-show="user_data.status<0">登录</div>
+    <div class="survey_nav_bar" @click="login_visible = !login_visible" v-show="user_data.status<0">
+      <div class="nav_user_name" id="nav_user_name">登录</div>
+    </div>
 
-    <div v-show="user_data.status>0" class="nav_wrap">
-      <div class="nav_user_name" id="nav_user_name">{{ user_data.userName }}</div>
-<!--      <div class="user_avatar_image_wrap">-->
-<!--        <div :class="getSprite(user_data.avatar)"></div>-->
-<!--      </div>-->
-      <div class="survey_nav_menu">
-        <a class="survey_nav_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>
-        <a class="survey_nav_menu_item menu_href" @click="login_visible=!login_visible"> 退出登录 </a>
+    <div v-show="user_data.status>0" class="survey_nav_bar">
+      <!--      <div class="nav_user_name" id="nav_user_name">{{ user_data.userName }}</div>-->
+      <div class="nav_avatar_image_wrap">
+        <div :class="getSprite(user_data.avatar)"></div>
+      </div>
+      <div class="survey_nav_menu_wrap">
+        <div class="survey_nav_menu_arrow"></div>
+        <div class="survey_nav_menu">
+          <a class="survey_nav_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>
+          <a class="survey_nav_menu_item menu_href" @click="login_visible=!login_visible"> 退出登录 </a>
+        </div>
       </div>
     </div>
-    
-    
+
+
     <c-popup :visible="login_visible" v-model:visible="login_visible">
 
       <div class="login_card" v-show="user_data.status<0">
@@ -77,7 +82,7 @@
 
 
         <div class="login_tip_wrap">
-          <div class="login_tip warning_color" >
+          <div class="login_tip warning_color">
             账号系统更新，老用户直接输入用户名，无需密码即可登录 <br><br>
             新用户注册可用账号密码注册和邮箱注册，也可在个人中心进行设置密码和邮箱绑定等操作<br><br>
           </div>
@@ -119,10 +124,11 @@ import "@/assets/css/sprite/sprite_rank.css";
 import "@/assets/css/survey/survey_index.css";
 import "@/assets/css/survey/survey_user.css";
 import "@/assets/css/survey/survey_nav.css";
+import AES from 'crypto-js/aes'
 
 import {onMounted, ref} from "vue";
 import {cMessage} from "/src/element/message";
-import jsCookie from "js-cookie";
+
 import surveyApi from "/src/api/surveyUser";
 
 let input_data = ref({
@@ -132,7 +138,7 @@ let input_data = ref({
   email: '',
   emailCode: '',
   accountType: '',
-  avatar:'',
+  avatar: '',
   mailUsage: 'register'
 }); //用户输入的用户名，用obj没准后期有别的字段
 let user_data = ref({userName: "山桜", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
@@ -169,14 +175,14 @@ function sendEmailCodeForLogin() {
 function register() {
   input_data.value.accountType = account_type.value
   surveyApi.register(input_data.value).then(response => {
-      response = response.data
-      localStorage.setItem("globalUserData", JSON.stringify(response.data));
-      cMessage("注册成功");
-      user_data.value.userName = response.userName;
-      user_data.value.status = response.status;
-      user_data.value.token = response.token;
-      user_data.value.avatar = response.avatar == void 0 ? 'char_377_gdglow':response.avatar;
-      login_visible.value = !login_visible.value;
+    response = response.data
+    localStorage.setItem("globalUserData", JSON.stringify(response.data));
+    cMessage("注册成功");
+    user_data.value.userName = response.userName;
+    user_data.value.status = response.status;
+    user_data.value.token = response.token;
+    user_data.value.avatar = response.avatar == void 0 ? 'char_377_gdglow' : response.avatar;
+    login_visible.value = !login_visible.value;
 
   })
 }
@@ -191,9 +197,12 @@ function accountTypeClass(type) {
   if (account_type.value === type) return 'color:#409eff;'
 }
 
+
+
 //登录
 function login() {
   input_data.value.accountType = account_type.value
+
   surveyApi.login(input_data.value).then(response => {
     if (response.data.status > 0) {
 
@@ -208,7 +217,7 @@ function userDataCache() {
 
   let cacheData = localStorage.getItem("globalUserData");
 
-  if ( cacheData == void 0 ) {
+  if (cacheData == void 0) {
     return
   }
   cacheData = JSON.parse(cacheData)
@@ -216,7 +225,7 @@ function userDataCache() {
   user_data.value.userName = cacheData.userName;
   user_data.value.status = cacheData.status;
   user_data.value.token = cacheData.token;
-  user_data.value.avatar = cacheData.avatar == void 0 ? 'char_377_gdglow':cacheData.avatar;
+  user_data.value.avatar = cacheData.avatar == void 0 ? 'char_377_gdglow' : cacheData.avatar;
   user_data.value.email = cacheData['email'] == undefined ? "未绑定1" : cacheData['email'];
 }
 
@@ -230,7 +239,7 @@ function logout() {
 
 function getSprite(id, type) {
   type = type == void 0 ? '' : type;
-  return "bg-" + id + " user_avatar_image";
+  return "bg-" + id + " nav_avatar_image";
 }
 
 onMounted(() => {

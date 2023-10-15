@@ -2,15 +2,15 @@ import axios from "axios";
 import { http } from "@/api/baseURL";
 
 function get_t3() {
-  return axios.get(http + "stage/t3?expCoefficient=0.625&sampleSize=500");
+  return axios.get(http + "stage/t3/v2?expCoefficient=0.625&sampleSize=300");
 }
 
 function get_t2() {
-  return axios.get(http + "stage/t2?expCoefficient=0.625");
+  return axios.get(http + "stage/t2/v2?expCoefficient=0.625&sampleSize=300");
 }
 
 function get_orundum() {
-  return axios.get(http + "stage/orundum");
+  return axios.get(http + "stage/orundum/v2");
 }
 
 function get_closed() {

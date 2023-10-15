@@ -61,6 +61,7 @@
 
       <div class="user_info_card">
         <div class="user_info_title">修改基本信息</div>
+        <div style=""></div>
         <div class="user_input_bar">
           <div class="user_input_label">头像</div>
           更新用户头像
