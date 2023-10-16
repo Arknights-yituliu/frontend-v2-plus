@@ -1,6 +1,6 @@
 
 .nav_user_name {
-    font-size: 16px;
+    font-size: 20px;
     line-height: 40px;
     height: 40px;
     color: white;
@@ -8,31 +8,66 @@
     padding:0 4px 0 32px;
 }
 
-.survey_nav_menu {
-    color: white;
+.survey_nav_menu_wrap {
+    /*background-color:red ;*/
     position: absolute;
-    top: 38px;
+    top: 40px;
     right: 0;
+    width:0;
     height: 0;
-    width: 0;
     overflow: hidden;
     transition: all 0.3s;
     z-index:3000;
 }
 
-.nav_wrap:hover .survey_nav_menu{
+@media (max-width: 1080px) {
+    .survey_nav_menu_wrap{
+        top: 66px;
+    }
+}
+
+.survey_nav_bar{
+    width: 80px;
+
+}
+
+.survey_nav_menu_arrow{
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    border-bottom: 10px solid  #262f3e;
+    position: relative;
+    left: 64px;
+}
+
+.survey_nav_menu {
+    background-color: #262f3e;
+    position: relative;
+    top: -4px;
+    width: 100px;
+    padding:1px;
+    border-radius: 4px;
+}
+
+
+.survey_nav_bar:hover .survey_nav_menu_wrap{
     width:120px;
     height: 120px;
-    background-color: #262f3e;
 }
+
+.survey_nav_bar:hover .nav_avatar_image_wrap{
+    transform: scale(1.3);
+}
+
 
 .survey_nav_menu_item{
     display: flex;
     height: 28px;
     line-height: 28px;
-    margin: 8px 4px;
+    margin: 8px;
     border-radius: 4px;
-    padding: 4px;
     cursor: pointer;
 }
 
@@ -43,4 +78,23 @@
 .menu_href{
     text-decoration: none;
     color :white;
+}
+
+.nav_avatar_image_wrap{
+    height: 42px;
+    width: 42px;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: white;
+    border: 1px solid #d2d2d2;
+    margin: 0 20px;
+    transition: all 0.3s;
+}
+
+.nav_avatar_image {
+    transform: scale(0.28);
+    position: absolute;
+    top: -68px;
+    left: -68px;
 }

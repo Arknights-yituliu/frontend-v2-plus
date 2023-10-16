@@ -230,6 +230,29 @@
           </div>
         </div>
       </a>
+
+      <a class="href_black" href="https://github.com/Ks-luow">
+        <div class="mdui-card dev_card dev_card_member">
+          <img class="dev_card_icon" src="https://avatars.githubusercontent.com/u/45513885" alt="" />
+          <div class="dev_card_text">
+            <div class="dev_card_text_title">ZFengMo</div>
+            <div class="dev_card_text_content" style="font-style: italic">开发</div>
+            <div class="dev_card_text_content">前端</div>
+          </div>
+        </div>
+      </a>
+
+      <a class="href_black" href="https://github.com/Ks-luow">
+        <div class="mdui-card dev_card dev_card_member">
+          <img class="dev_card_icon" src="https://avatars.githubusercontent.com/u/62287903" alt="" />
+          <div class="dev_card_text">
+            <div class="dev_card_text_title">qianxuu</div>
+            <div class="dev_card_text_content" style="font-style: italic">开发</div>
+            <div class="dev_card_text_content">前端</div>
+          </div>
+        </div>
+      </a>
+
     </div>
 
     <div class="mdui-typo" id="dev_refer">

@@ -48,10 +48,9 @@
       <div class="op_content" id="stage_t3_content">
         <!-- 基础卡 -->
         <div v-for="(materialRankT3, indexAll) in stageRankT3" :key="indexAll" class="stage_card_t3 uni_shadow_2"
-             @click="showPopup(indexAll)">
-          <!-- <div v-show="materialRankT3[0].itemType=='兽之泪'"  class="stage_card_t3_img" :style="getCardBackground(materialRankT3[1].itemType)"></div>  -->
+             @click="showT3Popup(indexAll)">
           <div class="stage_sprite_t3_wrap">
-            <div :class="getSpriteImg(materialRankT3[0].itemId, 't3')"></div>
+            <div :class="getSpriteImg(materialRankT3.itemTypeId, 't3')"></div>
           </div>
 
           <div class="stage_card_t3_table">
@@ -60,20 +59,19 @@
               <tr
                   :class="getColor(stage.stageColor)"
                   class="stage_table_r"
-                  :style="getFontSize(stage.stageEfficiency)"
-                  v-for="(stage, index) in materialRankT3.slice(0, 3)"
+                  :style="getFontSize(stage.stageEfficiency*100)"
+                  v-for="(stage, index) in materialRankT3.stageResultList.slice(0, 3)"
                   :key="index"
               >
                 <td class="stage_table_c1">{{ stage.stageCode }}</td>
-                <!-- <td> <div v-show="stage.stageId.indexOf('perm')!=-1" style='font-size: 12px;line-height:12px;'> 常 <br> 驻 </div></td> -->
-                <!-- <td class="stage_table_c2" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
+
                 <td>
                   <div class="stage_sprite_sec_wrap">
-                    <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+                    <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
                   </div>
                 </td>
-                <td class="stage_table_c3">{{ formatNumber(stage.stageEfficiency, 1) }}%</td>
-                <!-- <td class="stage_table_c4"><img v-show="stage.stageId.indexOf('perm')==-1" src="/image/icon/up.png" alt=""></td> -->
+                <td class="stage_table_c3">{{ formatNumber(stage.stageEfficiency*100, 1) }}%</td>
+
               </tr>
               </tbody>
             </table>
@@ -96,10 +94,10 @@
             :key="index"
             class="stage_card_t3 uni_shadow_2"
             :style="judgeActive(index)"
-            @click="showPopup(index)"
+            @click="showT3Popup(index)"
         >
           <div class="stage_sprite_t3_wrap">
-            <div :class="getSpriteImg(materialRankT3[0].itemId, 't3')"></div>
+            <div :class="getSpriteImg(materialRankT3.itemTypeId, 't3')"></div>
           </div>
 
           <div class="stage_card_t3_table">
@@ -108,19 +106,19 @@
               <tr
                   :class="getColor(stage.stageColor)"
                   class="stage_table_r"
-                  :style="getFontSize(stage.stageEfficiency)"
-                  v-for="(stage, index) in materialRankT3.slice(0, 6)"
+                  :style="getFontSize(stage.stageEfficiency*100)"
+                  v-for="(stage, index) in materialRankT3.stageResultList.slice(0, 3)"
                   :key="index"
               >
                 <td class="stage_table_c1">{{ stage.stageCode }}</td>
-                <!-- <td class="stage_table_c2" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
+
                 <td>
                   <div class="stage_sprite_sec_wrap">
-                    <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+                    <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
                   </div>
                 </td>
-                <td class="stage_table_c3">{{ formatNumber(stage.stageEfficiency, 1) }}%</td>
-                <!-- <td class="stage_table_c4">{{getBoxEfficiency(stage.stageState, stage.stageEfficiencyEx, stage.stageEfficiency)}}</td> -->
+                <td class="stage_table_c3">{{ formatNumber(stage.stageEfficiency*100, 1) }}%</td>
+
               </tr>
               </tbody>
             </table>
@@ -137,9 +135,9 @@
       <div class="op_content" id="stage_t2_content">
         <div class="stage_card_t2 uni_shadow_2">
           <div v-for="(materialRankT2, index) in stageRankT2.slice(0, 6)" :key="index" class="stage_card_t2_img"
-               @click="showPopup(index + 100)">
+               @click="showT2Popup(index)">
             <div class="stage_sprite_t3_wrap">
-              <div :class="getSpriteImg(materialRankT2[0].itemId, 't2')"></div>
+              <div :class="getSpriteImg(materialRankT2.itemTypeId, 't2')"></div>
             </div>
           </div>
         </div>
@@ -154,12 +152,12 @@
       <div class="popup_card" id="popup_card">
         <div class="popup_header">
           <div class="stage_sprite_popup_wrap">
-            <div :class="getSpriteImg(itemId, 'popup')"></div>
+            <div :class="getSpriteImg(popupData.itemTypeId, 'popup')"></div>
           </div>
 
-          <div class="popup_header_text">{{ itemType }}</div>
+          <div class="popup_header_text">{{ popupData.itemType }}</div>
 
-          <a :href="getPenguinUrl(itemId)" class="t3 popup_header_penguin">
+          <a :href="getPenguinUrl(popupData.itemTypeId)" class="t3 popup_header_penguin">
             <div>查看企鹅物流原始数据</div>
             <div :class="getSpriteImg('el', 'el')"></div>
           </a>
@@ -177,22 +175,21 @@
              <td class="popup_table_c5" style="width: 80px; width: 90px">主产物掉率</td>
              <td class="popup_table_c6" style="width: 80px; width: 90px">主产物期望</td>
             <td class="popup_table_c7" style="width: 70px; width: 80px">总效率</td>
-<!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>-->
-<!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>-->
+            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>
+            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>
           </tr>
-          <tr v-for="(stage, index) in popupData.slice(0,7)" :key="index" :class="getColor(stage.stageColor)"
+          <tr v-for="(stage, index) in popupData.stageResultList" :key="index" :class="getColor(stage.stageColor)"
               class="stage_table_r">
-            <td class="popup_table_c1" :style="getHardcoreMark(stage.chapterName)">
+            <td class="popup_table_c1" >
               {{ stage.stageCode }}
             </td>
             <td class="popup_table_c2" style="font-size: 14px">{{shrinkTimes(stage.sampleSize)
               }}<br/>({{ formatNumber(stage.sampleConfidence,1) }}%)
             </td>
             <td class="popup_table_c3">{{ formatNumber(stage.spm, 1) }}</td>
-            <!-- <td class="popup_table_c4" ><img class="stage_img_secondary" :src="getImgUrl(stage.secondary)" alt=""></td> -->
             <td style="padding-left: 20px">
               <div class="stage_sprite_sec_wrap">
-                <div :class="getSpriteImg(stage.secondaryId, 'sec')"></div>
+                <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
               </div>
             </td>
 
@@ -200,10 +197,9 @@
             <td class="popup_table_c6">
               {{ formatNumber(stage.apExpect) }}
             </td>
-            <td class="popup_table_c7">{{ formatNumber(stage.stageEfficiency, 1) }}%</td>
-<!--            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency, 1) }}%</td>-->
-<!--            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency, 1) }}%</td>-->
-            <!-- <td class="popup_table_c7">{{getBoxEfficiency(stage.stageState, stage.stageEfficiencyEx, stage.stageEfficiency)}}</td> -->
+            <td class="popup_table_c7">{{ formatNumber(stage.stageEfficiency * 100, 1) }}%</td>
+            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency * 100, 1) }}%</td>
+            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency * 100, 1) }}%</td>
           </tr>
           </tbody>
         </table>
@@ -242,14 +238,14 @@
           </tbody>
         </table>
         <el-divider></el-divider>
-        <div style="height: 550px; overflow: auto; margin-top: -6px">
+        <div style="height: 500px; overflow: auto; margin-top: -6px">
           <table class="popup_table">
             <tbody style="font-size: 20px; vertical-align: baseline">
             <tr
                 style="height: 36px"
                 v-for="(stage, index) in stageRankOrundum"
                 :key="index"
-                :class="getColor(stage.stageEfficiency, 90, 20)"
+                :class="getColor(stage.stageEfficiency*100, 90, 20)"
                 class="stage_table_r"
             >
               <td class="popup_table_c1" style="width: 85px">
@@ -265,8 +261,8 @@
                 <div>{{ formatNumber(stage.lmdcost) }}w</div>
                 <div style="margin-bottom: -8px" :class="getSpriteImg(4001, 'icon_small')"></div>
               </td>
-              <td class="popup_table_c5" style="width: 95px">{{ formatNumber(stage.stageEfficiency) }}%</td>
-              <td class="popup_table_c6" style="width: 95px">{{ formatNumber(stage.orundumPerApEfficiency) }}%</td>
+              <td class="popup_table_c5" style="width: 95px">{{ formatNumber(stage.stageEfficiency*100) }}%</td>
+              <td class="popup_table_c6" style="width: 95px">{{ formatNumber(stage.orundumPerApEfficiency*100) }}%</td>
             </tr>
             </tbody>
           </table>
@@ -280,19 +276,16 @@
       </div>
       <!-- 往期活动 -->
       <div id="popup_card_history">
-        <div v-for="(closedAct, index) in stageActHistory" :key="index" class="popup_card">
-          <div v-show="closedAct[0].zoneName != null" class="history_actName">
-            {{ closedAct[0].zoneName }}
-          </div>
-          <div v-show="closedAct[0].zoneName == null" class="history_actName">
-            {{ closedAct[0].activityName }}
+        <div v-for="(actStageVo, index) in stageActHistory" :key="index" class="popup_card">
+          <div  class="history_actName">
+            {{ actStageVo.zoneName }}
           </div>
           <div class="history_actStages">
-            <div v-for="(stage, index) in closedAct" :key="index" class="history_stage">
+            <div v-for="(stage, index) in actStageVo.actStageList" :key="index" class="history_stage">
               <div class="stage_sprite_closed_wrap">
                 <div :class="getSpriteImg(stage.itemId, 'closed')"></div>
               </div>
-              <div class="history_stage_table">{{ stage.stageCode }}<br/>{{ formatNumber(stage.stageEfficiency) }}%
+              <div class="history_stage_table">{{ stage.stageCode }}<br/>{{ formatNumber(stage.stageEfficiency*100) }}%
               </div>
             </div>
           </div>
@@ -374,7 +367,7 @@ export default {
       stageActHistory: this.pageContext.pageProps.closed, //历史关卡数据
       actStageOnly: 0,
       itemType: "",
-      updateTime: this.pageContext.pageProps.t3[0][0].updateTime, //更新时间
+      updateTime:this.pageContext.pageProps.t3.updateTime,
       itemId: "",
       stageVersion: 0.625,
       popupRank: 3,
@@ -391,15 +384,35 @@ export default {
     },
     async getUrlParm() {
       const item = this.pageContext.urlParsed.search.item;
+      if(item == void 0 ) return;
       if (item != undefined) console.log("要展示的材料：", item);
 
       for (const index in this.stageRankT3) {
         if (this.stageRankT3[index][0].itemType == item) {
-          this.showPopup(index);
+          this.showT3Popup(index);
         }
       }
 
       if ("Orundum" === item) this.showOrundumPopup();
+
+    },
+
+    showT3Popup(index){
+      document.getElementById("popup_card").style.display = "block";
+      document.getElementById("popup_background").style.display = "block";
+      document.getElementById("popup_content").style.display = "block";
+      console.log(this.stageRankT3[index])
+      this.popupData = [];
+      this.popupData = this.stageRankT3[index];
+    },
+
+    showT2Popup(index){
+      document.getElementById("popup_card").style.display = "block";
+      document.getElementById("popup_background").style.display = "block";
+      document.getElementById("popup_content").style.display = "block";
+      console.log(this.stageRankT2[index])
+      this.popupData = [];
+      this.popupData = this.stageRankT2[index];
 
     },
 
@@ -455,8 +468,8 @@ export default {
     },
 
     getSpriteImg(id, type) {
-      if (id === "30012" && type === "t3") id = "30013";
-      if (id === "30012" && this.popupRank === 3 && "popup" === type) id = "30013";
+      // if (id === "30012" && type === "t3") id = "30013";
+      // if (id === "30012" && this.popupRank === 3 && "popup" === type) id = "30013";
       if ("t3" === type) return "bg-" + id + " stage_sprite_t3";
       if ("sec" === type) return "bg-" + id + " stage_sprite_sec";
       if ("t2" === type) return "bg-" + id + " stage_sprite_t2";
@@ -468,17 +481,7 @@ export default {
 
       // return "bg-" + id;
     },
-    getImgUrl(img, source) {
-      source = typeof source !== "undefined" ? source : 1;
-      if (source > 2.1) return "/image/ activity_picture /" + img + ".png";
-      if (source > 1.1) return "/image/item/" + img + ".png";
-      else if (source > 0.1) return "/image/materials/" + img + ".png";
-      else return "https://cdn.jsdelivr.net/gh/zirun-wang/OnePicCDN/image/" + img + ".png";
-    },
 
-    getCardBackground() {
-      return "background: linear-gradient(rgba(144, 164, 174, 0), rgba(144, 164, 174, 0)), url(https://yygh-atbriup.oss-cn-beijing.aliyuncs.com/sprite/mix.png) no-repeat 85% 50% /100%;margin-left:-32px";
-    },
 
     formatNumber(num, acc) {
       acc = typeof acc !== "undefined" ? acc : 2;
@@ -528,7 +531,7 @@ export default {
 
     judgeActive(index) {
       let showFlag = false;
-      for (let i = 0; i < this.stageRankT3[index][i].length > 3 ? 3 : this.stageRankT3[index][i].length; ++i) {
+      for (let i = 0; i < this.stageRankT3[index].length > 3 ? 3 : this.stageRankT3[index].length; ++i) {
         if (this.stageRankT3[index][i].stageColor < 0) {
           showFlag = true;
           break;
@@ -550,38 +553,6 @@ export default {
       this.actStageOnly++;
     },
 
-    getStageResultDateT3() {
-      stageApi.findStageDateByTypeOrderByEfficiencyDesc(this.stageVersion).then((response) => {
-        this.stageRankT3 = [];
-        this.stageRankT3 = response.data;
-        this.updateTime = response.data[0][0].updateTime;
-        cookie.set("updateTime", this.updateTime, {expires: 30});
-        // this.$message({
-        //       message: '切换成功' ,
-        //       type: "success",
-        //       showClose: true,
-        //       duration: 2000,
-        //     });
-      });
-    },
-    getStageResultDateT2() {
-      stageApi.findStageDateByMainOrderByExpectDesc(this.stageVersion).then((response) => {
-        this.stageRankT2 = [];
-        this.stageRankT2 = response.data;
-      });
-    },
-    getStageResultDateOrundum() {
-      stageApi.findStageDataOfOrundum().then((response) => {
-        this.stageRankOrundum = [];
-        this.stageRankOrundum = response.data;
-      });
-    },
-    getStageResultDateClosed() {
-      stageApi.findClosedActivStageByStageId(this.stageVersion).then((response) => {
-        this.stageActHistory = [];
-        this.stageActHistory = response.data;
-      });
-    },
   },
 };
 </script>

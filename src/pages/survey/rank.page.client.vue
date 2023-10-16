@@ -20,7 +20,8 @@
           <div class="switch_btns_wrap">
             <div
                 :class="selectedBtn('profession', profession.value)"
-                v-for="profession in professionDict"
+                v-for="(profession,index) in professionDict"
+                :key="index"
                 @click="addFilterCondition('profession', profession.value)"
             >
               {{ profession.label }}
@@ -44,11 +45,11 @@
             <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
             <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
             <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
-            <div :class="selectedBtn('itemObtainApproach', 0)"
+            <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
                  @click="addFilterCondition('itemObtainApproach', '赠送干员')">
               赠送干员
             </div>
-            <div :class="selectedBtn('itemObtainApproach', 1)"
+            <div :class="selectedBtn('itemObtainApproach', '限定干员')"
                  @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
             </div>
           </div>
@@ -211,8 +212,8 @@
 <script setup>
 import "@/assets/css/survey/survey_rank.css";
 import {rankingListInit, filterByCharacterProperty, professionDict} from "./common";
-import { collapse} from "/src/element/collapse";
-import '/src/element//css/collapse.css'
+import { collapse} from "/src/custom/collapse";
+import '/src/custom/css/collapse.css'
 import {onMounted, ref} from "vue";
 
 import surveyApi from "/src/api/surveyUser";
@@ -315,9 +316,25 @@ function selectedBtn(attribute, rule) {
 
 let filter_condition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
 
-//增加筛选规则
+/**
+ * 增加筛选条件
+ * 同属性的条件可以多条，比如星级选择4，5，6星，筛选后显示4，5，6星干员
+ * 不同属性的条件要均符合才能显示，比如星级选择4，5，6星，实装时间选择2019年，筛选后显示2019年的4，5，6星干员
+ * @param property 要筛选的属性
+ * @param condition 属性的条件
+ */
 function addFilterCondition(property, condition) {
   console.log(filter_condition.value);
+
+  // let radio_properties = ['itemObtainApproach', 'mod'];
+  // //判断筛选属性是Boolean类型，判断这个属性没有包含传入的条件
+  // if (radio_properties.includes(property) && !filter_condition.value[property].includes(condition)) {
+  //   filter_condition.value[property] = [condition];
+  // } else if (filter_condition.value[property].indexOf(condition) > -1) {
+  //   filter_condition.value[property] = filter_condition.value[property].filter(item => item !== condition);
+  // } else {
+  //   filter_condition.value[property].push(condition);
+  // }
   let filterRulesCopy = [];
   if (filter_condition.value[property].indexOf(condition) > -1) {
     for (let i in filter_condition.value[property]) {

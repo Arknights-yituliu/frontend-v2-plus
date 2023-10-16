@@ -1,7 +1,7 @@
 import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
 import request from "@/api/requestBase";
-import {cMessage} from "@/element/message";
+import {cMessage} from "@/custom/message";
 
 const host = "https://zonai.skland.com";
 // const playerInfoAPI = '/api/v1/game/player/info'

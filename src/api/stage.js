@@ -38,22 +38,22 @@ export default {
 
   getNewChapter(){
     return request({
-      url: `stage/chapter?expCoefficient=0.625&zone=13-`,
+      url: `stage/chapter/v2?expCoefficient=0.625&zone=13-`,
       method: "get",
     });
   },
 
 
-  findStageDetailByStageId(stageId) {
+  getAllStageResultDetail(expCoefficient) {
     return request({
-      url: `/stage/detail?stageId=${stageId}`,
+      url: `/stage/detail?expCoefficient=${expCoefficient}`,
       method: "get",
     });
   },
 
-  getStageTable() {
+  getStageMenu() {
     return request({
-      url: `/stage`,
+      url: `/stage/zone`,
       method: "get",
     });
   },

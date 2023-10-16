@@ -1,6 +1,6 @@
 import jsCookie from "js-cookie";
 import { ref } from "vue";
-import { cMessage } from "@/element/message";
+import { cMessage } from "@/message";
 import request from "@/api/requestBase";
 
 let globalUserData = ref({ userName: "未登录", status: -100, token:void 0, code:0 }); //用户信息(用户名，用户id，用户状态)

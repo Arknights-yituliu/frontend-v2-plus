@@ -1,4 +1,4 @@
-import "@/element/css/message.css";
+import "@/custom/css/message.css";
 
 let send = 1;
 let messageBars = [];

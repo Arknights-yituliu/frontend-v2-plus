@@ -61,6 +61,7 @@
 
       <div class="user_info_card">
         <div class="user_info_title">修改基本信息</div>
+        <div style=""></div>
         <div class="user_input_bar">
           <div class="user_input_label">头像</div>
           更新用户头像
@@ -126,7 +127,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {cMessage} from "/src/element/message";
+import {cMessage} from "/src/custom/message";
 import surveyApi from "/src/api/surveyUser"
 import operator_table_simple from '/src/static/json/survey/character_table_simple.json'
 
