@@ -4,8 +4,8 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import App from "@/App.vue";
 import { setPageContext } from "./usePageContext";
 import "element-plus/theme-chalk/dark/css-vars.css";
-import cSwitch from "@/element/switch.vue";
-import cPopup from "@/element/popup.vue";
+import cSwitch from "/src/custom/switch.vue";
+import cPopup from "/src/custom/popup.vue";
 
 export { createVPSApp };
 
@@ -28,7 +28,10 @@ function createVPSApp(pageContext, clientOnly) {
     app.component(key, component);
   }
 
+  const files = import.meta.glob('/src/custom/*.vue')
+
   app.component("c-switch", cSwitch);
+  app.component("c-popup", cPopup);
   app.component("c-popup", cPopup);
 
   app.use(ElementPlus);

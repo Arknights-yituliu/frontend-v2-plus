@@ -127,7 +127,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {cMessage} from "/src/element/message";
+import {cMessage} from "/src/custom/message";
 import surveyApi from "/src/api/surveyUser"
 import operator_table_simple from '/src/static/json/survey/character_table_simple.json'
 

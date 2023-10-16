@@ -1,21 +1,59 @@
 <script setup>
 import "/src/assets/css/sprite_item.css";
 import NaviCards from "@/components/NaviCards.vue";
+import {collapseV2} from '/src/custom/collapse'
+import collapse from '/src/custom/collapse.vue'
 
 const navi_data = [
-  { title: "刷图推荐", desc: "我该去哪刷图？活动图效率怎么样？xx图适合不适合搓玉？xx材料什么时候up过？", icon: "/image/icon/无框_全新装置.png", link: "/" },
-  { title: "商店性价比", desc: "绿票、橙票买哪个比较赚？活动商店优先换哪些材料？", icon: "/image/icon/无框_四凭证.png", link: "/stage/store" },
-  { title: "礼包性价比", desc: "礼包综合性价比、仅计抽卡的性价比", icon: "/image/icon/无框_龙门币.png", link: "/stage/pack" },
-  { title: "物品价值表", desc: "查看物品的价值，并导出为json或excel以作研究或二次开发", icon: "/image/icon/无框_理智.png", link: "/stage/value" },
+  {
+    title: "刷图推荐",
+    desc: "我该去哪刷图？活动图效率怎么样？xx图适合不适合搓玉？xx材料什么时候up过？",
+    icon: "/image/icon/无框_全新装置.png",
+    link: "/"
+  },
+  {
+    title: "商店性价比",
+    desc: "绿票、橙票买哪个比较赚？活动商店优先换哪些材料？",
+    icon: "/image/icon/无框_四凭证.png",
+    link: "/stage/store"
+  },
+  {
+    title: "礼包性价比",
+    desc: "礼包综合性价比、仅计抽卡的性价比",
+    icon: "/image/icon/无框_龙门币.png",
+    link: "/stage/pack"
+  },
+  {
+    title: "物品价值表",
+    desc: "查看物品的价值，并导出为json或excel以作研究或二次开发",
+    icon: "/image/icon/无框_理智.png",
+    link: "/stage/value"
+  },
 ];
 </script>
 
 <template>
-  <navi-cards :data="navi_data" />
+
+  <collapse :name="'collapse'">
+    <template #title>测试标题</template>
+
+      <div>
+        <h1>1111</h1>
+      </div>
+      <div>
+        <h1>2222</h1>
+      </div>
+
+  </collapse>
+
+
+
+  <navi-cards :data="navi_data"/>
 
   <div class="mdui-container">
     <div class="mdui-row">
-      <div v-for="(i,index) in 24" :key="index" class="mdui-col-xs-6 mdui-col-sm-4 mdui-col-md-3 mdui-col-lg-2 mdui-p-y-1">
+      <div v-for="(i,index) in 24" :key="index"
+           class="mdui-col-xs-6 mdui-col-sm-4 mdui-col-md-3 mdui-col-lg-2 mdui-p-y-1">
         <div class="mdui-shadow-2 mdui-p-a-3 mdui-text-center mdui-ripple">
           <div class="bg-30063large sprite_large mdui-center"></div>
           {{ i }}
@@ -29,9 +67,9 @@ const navi_data = [
   <div class="theme_light">
     <div class="light_card demo_card">
       <picture class="riic_icon">
-        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/webp" />
-        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/png" />
-        <img src="https://avatars.githubusercontent.com/u/97677443?s=200" />
+        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/webp"/>
+        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/png"/>
+        <img src="https://avatars.githubusercontent.com/u/97677443?s=200"/>
       </picture>
       <div class="demo_main_text">这里是主要内容 Here is the main content</div>
       <div class="demo_secondary_text">这里是次要内容 Here is the secondary content</div>
@@ -42,9 +80,9 @@ const navi_data = [
   <div class="theme_dark">
     <div class="dark_card demo_card">
       <picture class="riic_icon">
-        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/webp" />
-        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/png" />
-        <img src="https://avatars.githubusercontent.com/u/97677443?s=200" />
+        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/webp"/>
+        <source srcset="https://avatars.githubusercontent.com/u/97677443?s=200" type="image/png"/>
+        <img src="https://avatars.githubusercontent.com/u/97677443?s=200"/>
       </picture>
       <div class="demo_main_text">这里是主要内容 Here is the main content</div>
       <div class="demo_secondary_text">这里是次要内容 Here is the secondary content</div>
@@ -53,7 +91,10 @@ const navi_data = [
       <div class="demo_button_pressed">这里是一个被按下的按钮</div>
     </div>
   </div>
+
+
 </template>
+
 
 <style lang="scss">
 .navi-card {
@@ -97,6 +138,7 @@ const navi_data = [
   border-radius: 8px;
   background-color: #80808020;
 }
+
 .demo_button_pressed {
   height: 48px;
   line-height: 48px;
@@ -107,6 +149,7 @@ const navi_data = [
   background: #5096ff;
   /* color: white; */
 }
+
 .black_light {
   background-color: white;
 }
@@ -124,6 +167,7 @@ const navi_data = [
   box-sizing: border-box;
   transition: background-color 0.2s;
 }
+
 .black_dark {
   background-color: #121212;
 }

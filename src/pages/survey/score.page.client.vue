@@ -226,7 +226,7 @@ import { scoreListInit, collapse, filterByCharacterProperty, professionDict, yea
 import surveyApi from "@/api/surveyUser";
 import { globalUserData } from "./userService";
 import "@/assets/css/survey/survey_score.css";
-import { cMessage } from "@/element/message.js";
+import { cMessage } from "@/custom/message.js";
 
 let first_popup = ref(false)
 let import_popup_visible = ref(false)

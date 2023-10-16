@@ -14,7 +14,7 @@ function get_orundum() {
 }
 
 function get_closed() {
-  return axios.get(http + "stage/closed?expCoefficient=0.625");
+  return axios.get(http + "stage/act/v2?expCoefficient=0.625");
 }
 
 // function get_perm() {

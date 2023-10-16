@@ -24,7 +24,7 @@
       <!-- <div> -->
       <div class="ep12_wrapper">
         <a href="/material/ep13">
-          <img class="ep12_pic" src="/image/temp/ep13.webp" alt="ep12"/>
+          <img class="ep12_pic" src="/image/temp/ep13-1.webp" alt="ep12"/>
         </a>
       </div>
       <!-- </div> -->
@@ -57,7 +57,7 @@
               <td>
                 {{ stage.spm }}
               </td>
-              <td>{{ efficiencyFormat(stage.stageEfficiency, 1) }}</td>
+              <td>{{ efficiencyFormat(stage.stageEfficiency *100, 1) }}</td>
             </tr>
             </tbody>
           </table>
@@ -94,7 +94,7 @@
               <td>
                 {{ stage.spm }}
               </td>
-              <td>{{ efficiencyFormat(stage.stageEfficiency, 1) }}</td>
+              <td>{{ efficiencyFormat(stage.stageEfficiency * 100, 1) }}</td>
             </tr>
             </tbody>
           </table>

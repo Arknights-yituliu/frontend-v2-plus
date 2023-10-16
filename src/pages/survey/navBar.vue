@@ -127,7 +127,7 @@ import "@/assets/css/survey/survey_nav.css";
 import AES from 'crypto-js/aes'
 
 import {onMounted, ref} from "vue";
-import {cMessage} from "/src/element/message";
+import {cMessage} from "/src/custom/message";
 
 import surveyApi from "/src/api/surveyUser";
 

@@ -423,10 +423,10 @@
 </template>
 
 <script setup>
-import {cMessage} from "/src/element/message.js";
+import {cMessage} from "/src/custom/message.js";
 import {characterListInit, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import {collapse} from '/src/element/collapse'
-import "/src/element/css/collapse.css"
+import {collapse} from '/src/custom/collapse'
+import "/src/custom/css/collapse.css"
 import operatorStatistics from "/src/pages/survey/operatorStatistics"
 import surveyApi from "/src/api/surveyUser";
 import surveyOperatorApi from "/src/api/surveyOperator"
