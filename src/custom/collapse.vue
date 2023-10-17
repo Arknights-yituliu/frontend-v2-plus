@@ -6,9 +6,7 @@
     </div>
     <div :id="collapse_wrap_id" class="c_collapse_item_wrap">
       <div :id="collapse_item_id" class="c_collapse_item">
-
         <slot></slot>
-
       </div>
     </div>
   </div>
