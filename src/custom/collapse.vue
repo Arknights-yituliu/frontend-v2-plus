@@ -1,11 +1,11 @@
 <template>
-  <div class="collapse_wrap">
-    <div class="collapse_title" @click="collapse()">
+  <div class="c_collapse_wrap">
+    <div class="c_collapse_title" @click="collapse()">
       <!-- 这是个测试 -->
       <slot name="title"></slot>
     </div>
-    <div :id="collapse_wrap_id" class="collapse_item_wrap">
-      <div :id="collapse_item_id" class="collapse_item">
+    <div :id="collapse_wrap_id" class="c_collapse_item_wrap">
+      <div :id="collapse_item_id" class="c_collapse_item">
 
         <slot></slot>
 
@@ -47,13 +47,13 @@ function collapse() {
 </script>
 
 <style scoped>
-.collapse_wrap {
+.c_collapse_wrap {
   border-radius: 4px;
   border: 1px solid #e3e3e3;
   box-shadow: 0 0 8px #efefef, 0 1px 1px #b6b6b6;
 }
 
-.collapse_title {
+.c_collapse_title {
   cursor: pointer;
   border-bottom: 1px solid #cecece;
   height: 36px;
@@ -63,13 +63,13 @@ function collapse() {
   text-align: center;
 }
 
-.collapse_item_wrap {
+.c_collapse_item_wrap {
   height: 0;
   overflow: hidden;
   transition: all .3s;
 }
 
-.collapse_item{
+.c_collapse_item{
   padding: 1px;
 }
 
