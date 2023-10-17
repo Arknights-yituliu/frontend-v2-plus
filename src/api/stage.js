@@ -38,15 +38,15 @@ export default {
 
   getNewChapter(){
     return request({
-      url: `stage/chapter/v2?expCoefficient=0.625&zone=13-`,
+      url: `stage/chapter?expCoefficient=0.625&sampleSize=300&zone=13-`,
       method: "get",
     });
   },
 
 
-  getAllStageResultDetail(expCoefficient) {
+  getAllStageResultDetail(expCoefficient,sampleSize) {
     return request({
-      url: `/stage/detail?expCoefficient=${expCoefficient}`,
+      url: `/stage/detail?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
       method: "get",
     });
   },

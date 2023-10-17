@@ -367,7 +367,8 @@ export default {
       stageActHistory: this.pageContext.pageProps.closed, //历史关卡数据
       actStageOnly: 0,
       itemType: "",
-      updateTime:this.pageContext.pageProps.t3.updateTime,
+      // updateTime:this.pageContext.pageProps.t3.updateTime,
+      updateTime:'',
       itemId: "",
       stageVersion: 0.625,
       popupRank: 3,

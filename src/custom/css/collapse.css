@@ -1,25 +1,19 @@
 .collapse_item_wrap {
-    max-width: 95%;
-    margin: 4px auto;
-    overflow: hidden;
     height: 0;
-}
-
-.collapse_item_wrap_open {
-    height: auto;
+    overflow: hidden;
+    transition: all .3s;
 }
 
 .collapse_item {
-    margin: 4px;
-    transition: all 0.3s;
-    transform: translateY(-1000px);
-    background-color: rgba(255, 255, 255, 1);
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-    border-radius: 2px;
+    padding: 1px;
 }
 
-.collapse_item_open{
-    transform: translateY(0px);
+.collapse_bar_wrap {
+    max-width: 95%;
+    margin: auto auto 6px;
+    padding: 4px 0px 4px 16px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
 }
 
 .collapse_bar {
@@ -27,6 +21,7 @@
     flex-direction: row;
     justify-content: flex-start;
     padding: 2px;
+    margin: auto;
 }
 
 .collapse_title {
@@ -40,3 +35,6 @@
     /* background: rgb(199, 226, 255); */
     border-radius: 2px;
 }
+
+
+

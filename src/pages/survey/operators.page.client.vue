@@ -37,27 +37,36 @@
   <div class="survey_character_page">
     <!-- 常驻条 -->
     <div class="setup_top">
-      <button class="btn btn_blue" @click="checkFirstPopup()">填写说明</button>
-      <button class="btn btn_white">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}
-      </button>
+      <c-button :color="'blue'" @click="checkFirstPopup()">填写说明</c-button>
+      <c-button>干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</c-button>
+      <!--      <button class="btn btn_blue" @click="checkFirstPopup()">填写说明</button>-->
+      <!--      <button class="btn btn_white">干员持有率：{{ user_own_operator_count }} / {{ operator_count }} </button>-->
       <button class="btn btn_green" @click="upload()">手动保存问卷</button>
-      <!--      <button class="btn" @click="firstPopupClose()">填写说明</button>-->
-      <!--      <button class="btn">干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</button>-->
-      <!--      <button class="btn" @click="upload()" style="background-color:lightsalmon;">保存问卷</button>-->
       <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
 
       <!--      <div style="margin: 12px;color: #f56c6c;font-weight: 600">-->
       <!--        因森空岛加入了签名验证，森空岛导入数据暂不可用，现已下线功能-->
       <!--      </div>-->
       <div class="mdui-divider" style="margin: 4px;"></div>
-      <button :class="btnClass('btn_filter')"
-              @click="clickBtn('btn_filter');collapse('collapse_bar filter', 'switch_filter_wrap','switch_filter_box')">
+      <c-button :color="'blue'" :status="btn_status.btn_filter"
+                @click="clickBtn('btn_filter');
+                collapseV2('filter_box_wrap', 'filter_box')">
         筛选/批量操作
-      </button>
-      <button :class="btnClass('btn_import')"
-              @click="clickBtn('btn_import');collapse('collapse_bar upload', 'switch_upload_wrap','switch_upload_box')">
+      </c-button>
+
+      <!--      <button :class="btnClass('btn_filter')"-->
+      <!--              @click="clickBtn('btn_filter');collapse('collapse_bar', 'switch_filter_wrap','switch_filter_box')">-->
+      <!--        筛选/批量操作-->
+      <!--      </button>-->
+      <c-button :color="'blue'" :status="btn_status.btn_import"
+                @click="clickBtn('btn_import');
+                collapseV2('upload_box_wrap', 'upload_box')">
         数据导入导出
-      </button>
+      </c-button>
+      <!--      <button :class="btnClass('btn_import')"-->
+      <!--              @click="clickBtn('btn_import');collapse('collapse_bar', 'switch_upload_wrap','switch_upload_box')">-->
+      <!--        数据导入导出-->
+      <!--      </button>-->
 
       <button class="survey_btn_blue_left" :class="surveyTypeBtnClass('极简模式')"
               @click="changeSurveyType('极简模式')">极简模式
@@ -70,111 +79,118 @@
       </button>
 
       <button class="btn btn_blue" @click="toBiliblili()">建议与反馈</button>
-      <button :class="btnClass('btn_statistics')" @click="clickBtn('btn_statistics');statisticsCollapse()">统计材料消耗
-      </button>
+      <c-button :color="'blue'" :status="btn_status.btn_statistics"
+                @click="clickBtn('btn_statistics');
+                statisticsCollapse()">
+        数据导入导出
+      </c-button>
+      <!--      <button :class="btnClass('btn_statistics')" @click="clickBtn('btn_statistics');statisticsCollapse()">统计材料消耗 </button>-->
+
 
     </div>
 
 
     <!-- 筛选模块 -->
-    <div class="collapse_item_wrap" id="switch_filter_wrap">
-      <div class="collapse_item" id="switch_filter_box">
-        <div class="collapse_bar filter">
-          <div class="collapse_title">职业</div>
-          <div class="switch_btns_wrap">
-            <div
-                :class="selectedBtn('profession', profession.value)"
-                v-for="(profession,index) in professionDict"
-                :key="index"
-                @click="addFilterCondition('profession', profession.value)"
-            >
-              {{ profession.label }}
+    <div class="collapse_item_wrap" id="filter_box_wrap">
+      <div class="collapse_item" id="filter_box">
+        <div class="collapse_bar_wrap">
+          <div class="collapse_bar">
+            <div class="collapse_title">职业</div>
+            <div class="switch_btns_wrap">
+              <div
+                  :class="selectedBtn('profession', profession.value)"
+                  v-for="(profession,index) in professionDict"
+                  :key="index"
+                  @click="addFilterCondition('profession', profession.value)"
+              >
+                {{ profession.label }}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="collapse_bar filter">
-          <div class="collapse_title">稀有度</div>
-          <div class="switch_btns_wrap">
-            <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in rarity_dict" :key="index"
-                 @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
+          <div class="collapse_bar">
+            <div class="collapse_title">稀有度</div>
+            <div class="switch_btns_wrap">
+              <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in rarity_dict" :key="index"
+                   @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="collapse_bar filter">
-          <div class="collapse_title">年份</div>
-          <div class="switch_btns_wrap">
-            <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
-                 @click="addFilterCondition('year', key)">
-              {{ year.label }}
+          <div class="collapse_bar">
+            <div class="collapse_title">年份</div>
+            <div class="switch_btns_wrap">
+              <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
+                   @click="addFilterCondition('year', key)">
+                {{ year.label }}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="collapse_bar filter">
-          <div class="collapse_title">是否拥有</div>
-          <div class="switch_btns_wrap">
-            <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
-            <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
-          </div>
-        </div>
-
-        <div class="collapse_bar filter">
-          <div class="collapse_title">其它</div>
-          <div class="switch_btns_wrap">
-            <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
-            <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
-            <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
-                 @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员
-            </div>
-            <div :class="selectedBtn('itemObtainApproach', '限定干员')"
-                 @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
+          <div class="collapse_bar">
+            <div class="collapse_title">是否拥有</div>
+            <div class="switch_btns_wrap">
+              <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
+              <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
             </div>
           </div>
-        </div>
 
-        <div class="collapse_bar filter">
-          <div class="collapse_title">排序</div>
-          <div class="switch_btns_wrap">
-            <!-- <div class="btn" @click="sortCharacterList('profession')">按职业</div> -->
-            <div class="btn" @click="sortCharacterList('rarity')">按稀有度</div>
-            <div class="btn" @click="sortCharacterList('date')">按实装顺序</div>
+          <div class="collapse_bar">
+            <div class="collapse_title">其它</div>
+            <div class="switch_btns_wrap">
+              <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
+              <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
+              <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
+                   @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员
+              </div>
+              <div :class="selectedBtn('itemObtainApproach', '限定干员')"
+                   @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- <div class="collapse_bar filter">
-          <div class="collapse_title">练度</div>
-          <div class="switch_btns_wrap">
-            <div :class="selectedBtn('TODO', 0)" @click="addFilterCondition('mod', false)">无专三</div>
-            <div :class="selectedBtn('TODO', 1)" @click="addFilterCondition('mod', false)">一个专三</div>
-            <div :class="selectedBtn('TODO', 2)" @click="addFilterCondition('mod', false)">两个专三</div>
-            <div :class="selectedBtn('TODO', 3)" @click="addFilterCondition('mod', false)">三个专三</div>
-            <div :class="selectedBtn('TODO', 4)" @click="addFilterCondition('mod', false)">未开模组</div>
-            <div :class="selectedBtn('TODO', 5)" @click="addFilterCondition('mod', false)">已开模组</div>
+          <div class="collapse_bar">
+            <div class="collapse_title">排序</div>
+            <div class="switch_btns_wrap">
+              <!-- <div class="btn" @click="sortCharacterList('profession')">按职业</div> -->
+              <div class="btn" @click="sortCharacterList('rarity')">按稀有度</div>
+              <div class="btn" @click="sortCharacterList('date')">按实装顺序</div>
+            </div>
           </div>
-        </div> -->
 
-        <div class="mdui-divider" style="margin: 8px;"></div>
+          <!-- <div class="collapse_bar">
+            <div class="collapse_title">练度</div>
+            <div class="switch_btns_wrap">
+              <div :class="selectedBtn('TODO', 0)" @click="addFilterCondition('mod', false)">无专三</div>
+              <div :class="selectedBtn('TODO', 1)" @click="addFilterCondition('mod', false)">一个专三</div>
+              <div :class="selectedBtn('TODO', 2)" @click="addFilterCondition('mod', false)">两个专三</div>
+              <div :class="selectedBtn('TODO', 3)" @click="addFilterCondition('mod', false)">三个专三</div>
+              <div :class="selectedBtn('TODO', 4)" @click="addFilterCondition('mod', false)">未开模组</div>
+              <div :class="selectedBtn('TODO', 5)" @click="addFilterCondition('mod', false)">已开模组</div>
+            </div>
+          </div> -->
 
-        <div class="collapse_bar filter">
-          <div class="collapse_title">
-            批量操作 <br/>
-            <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员进行操作</div>
-          </div>
-          <div class="switch_btns_wrap">
-            <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>
-            <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>
-            <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>
-            <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>
-            <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>
-            <div class="btn">设为满级</div>
-            <div class="btn">设为满潜能</div>
-            <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
-            <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
-            <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
-            <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
-            <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
+          <div class="mdui-divider" style="margin: 8px;"></div>
+
+          <div class="collapse_bar">
+            <div class="collapse_title">
+              批量操作 <br/>
+              <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员进行操作</div>
+            </div>
+            <div class="switch_btns_wrap">
+              <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>
+              <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>
+              <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>
+              <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>
+              <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>
+              <div class="btn">设为满级</div>
+              <div class="btn">设为满潜能</div>
+              <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
+              <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
+              <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
+              <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
+              <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
+            </div>
           </div>
         </div>
       </div>
@@ -227,98 +243,103 @@
     </c-popup>
 
     <!-- 导入导出模块 -->
-    <div class="collapse_item_wrap collapse_item_wrap_open" id="switch_upload_wrap">
-      <div class="collapse_item collapse_item_open" id="switch_upload_box">
-        <div class="collapse_bar upload">
-          <div class="collapse_title">导入导出</div>
-          <div class="switch_btns_wrap">
-            <div class="btn btn_blue" @click="exportExcel()">导出为Excel</div>
-            <!--            <div class="btn">-->
-            <!--              <div class="input_upload_wrap">-->
-            <!--                导入Excel文件-->
-            <!--                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>-->
-            <!--              </div>-->
-            <!--            </div>-->
-            <!--            &lt;!&ndash; <div class="btn" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
-            <!--            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>-->
-          </div>
-        </div>
-        <!--        <div class="collapse_bar upload">-->
-        <!--          <div class="switch_desc"><b>*上传须知：</b>导入的Excel的数据格式需与一图流导出的Excel内数据格式一致，请先导出一份空白表格以确保格式无误-->
-        <!--          </div>-->
-        <!--        </div>-->
-
-        <div class="divider"></div>
-        <!--        <div class="collapse_bar upload">-->
-        <!--          <div class="collapse_title">uid找回数据</div>-->
-        <!--          <div class="switch_btns_wrap">-->
-        <!--            <div class="skland_desc">输入uid</div>-->
-        <!--            <div><input class="skland_input" type="text" v-model="player_uid"/></div>-->
-        <!--            <button class="btn btn_white" @click="retrievalByUid()">找回练度数据</button>-->
-        <!--            <button class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</button>-->
-        <!--          </div>-->
-        <!--        </div>-->
-        <div class="collapse_bar upload">
-          <div class="switch_desc "><a class="skland_notice_btn">*须知：因账号系统维护和森空岛导入功能失效，可能导致一图流账号无法登录，可以注册新的账号，以往导入的数据可以根据uid进行找回</a>
-          </div>
-        </div>
-        <div class="collapse_bar upload">
-          <div class="collapse_title" style="width: 140px;">森空岛导入</div>
-          <div class="switch_btns_wrap">
-            <div class="skland_desc">输入CRED</div>
-            <div><input class="skland_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
-            <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
-            <div class="btn btn_blue" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>
-<!--            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
-            <div class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
-          </div>
-        </div>
-        <div class="collapse_bar upload" v-show="bindingList.length>0">
-          <div class="collapse_title" style="width: 140px;">导入账号不正确？</div>
-          <div class="switch_btns_wrap">
-            <div class="skland_desc">选择你想要导入的账号</div>
-            <div v-for="(binding,index) in bindingList" :key="index"
-                 class="btn btn_blue" :class="chooseUidClass(binding.uid)"
-                 @click="importSKLandOperatorDataByUid(binding.uid)">
-                {{binding.uid}}
+    <div class="collapse_item_wrap" style="height: auto;" id="upload_box_wrap">
+      <div class="collapse_item" id="upload_box">
+        <div class="collapse_bar_wrap">
+          <div class="collapse_bar">
+            <div class="collapse_title">导入导出</div>
+            <div class="switch_btns_wrap">
+              <div class="btn btn_blue" @click="exportExcel()">导出为Excel</div>
+              <!--            <div class="btn">-->
+              <!--              <div class="input_upload_wrap">-->
+              <!--                导入Excel文件-->
+              <!--                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>-->
+              <!--              </div>-->
+              <!--            </div>-->
+              <!--            &lt;!&ndash; <div class="btn" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
+              <!--            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>-->
             </div>
           </div>
+          <!--        <div class="collapse_bar">-->
+          <!--          <div class="switch_desc"><b>*上传须知：</b>导入的Excel的数据格式需与一图流导出的Excel内数据格式一致，请先导出一份空白表格以确保格式无误-->
+          <!--          </div>-->
+          <!--        </div>-->
 
-        </div>
-
-        <div class="collapse_bar upload" v-show="bindAccount">
-          <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
-            {{ upload_message.userName }} </a> 请登录之前的账号 <br>
-            <div class="skland_login_btn" @click="login(upload_message.userName)">
-              请登录用户{{ upload_message.userName }}并刷新网页
+          <div class="divider"></div>
+          <!--        <div class="collapse_bar">-->
+          <!--          <div class="collapse_title">uid找回数据</div>-->
+          <!--          <div class="switch_btns_wrap">-->
+          <!--            <div class="skland_desc">输入uid</div>-->
+          <!--            <div><input class="skland_input" type="text" v-model="player_uid"/></div>-->
+          <!--            <button class="btn btn_white" @click="retrievalByUid()">找回练度数据</button>-->
+          <!--            <button class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</button>-->
+          <!--          </div>-->
+          <!--        </div>-->
+          <div class="collapse_bar">
+            <div class="switch_desc ">
+              <a class="skland_notice_btn">*须知：因账号系统维护和森空岛导入功能失效，可能导致一图流账号无法登录，可以注册新的账号，以往导入的数据可以根据uid进行找回</a>
             </div>
           </div>
-        </div>
-        <div class="collapse_bar upload">
-          <div class="switch_desc"><b>*森空岛导入：</b>请遵循
-            <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
-            如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号
+          <div class="collapse_bar">
+            <div class="collapse_title" style="width: 140px;">森空岛导入</div>
+            <div class="switch_btns_wrap">
+              <div class="skland_desc">输入CRED</div>
+              <div><input class="skland_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
+              <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
+              <div class="btn btn_blue" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>
+              <!--            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
+              <div class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
+            </div>
+          </div>
+          <div class="collapse_bar" v-show="bindingList.length>0">
+            <div class="collapse_title" style="width: 140px;">导入账号不正确？</div>
+            <div class="switch_btns_wrap">
+              <div class="skland_desc">选择你想要导入的账号</div>
+              <div v-for="(binding,index) in bindingList" :key="index"
+                   class="btn btn_blue" :class="chooseUidClass(binding.uid)"
+                   @click="importSKLandOperatorDataByUid(binding.uid)">
+                {{ binding.uid }}
+              </div>
+            </div>
+
+          </div>
+
+          <div class="collapse_bar" v-show="bindAccount">
+            <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
+              {{ upload_message.userName }} </a> 请登录之前的账号 <br>
+              <div class="skland_login_btn" @click="login(upload_message.userName)">
+                请登录用户{{ upload_message.userName }}并刷新网页
+              </div>
+            </div>
+          </div>
+          <div class="collapse_bar">
+            <div class="switch_desc"><b>*森空岛导入：</b>请遵循
+              <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
+              如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="collapse_item_wrap" id="switch_statistics_wrap">
-      <div class="collapse_item" id="switch_statistics_box">
-        <div class="collapse_bar statistics"
-             style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
-          总计消耗{{ ap_cost_count.toFixed(0) }} 理智
-        </div>
-        <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
-        <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
-        <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
-        <div class="collapse_bar statistics item_cost_wrap" v-for="(itemList,type) in item_cost_list"
-             :key="type">
-          <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
-            <div class="image_item_wrap">
-              <div :class="getSprite(item.id,'item')"></div>
-              <div class="item_count">
-                {{ strShowLength(item.count) }}
+    <div class="collapse_item_wrap" id="statistics_box_wrap">
+      <div class="collapse_item" id="statistics_box">
+        <div class="collapse_bar_wrap">
+          <div class="collapse_bar"
+               style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
+            总计消耗{{ ap_cost_count.toFixed(0) }} 理智
+          </div>
+          <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
+          <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
+          <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+          <div class="collapse_bar item_cost_wrap" v-for="(itemList,type) in item_cost_list"
+               :key="type">
+            <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
+              <div class="image_item_wrap">
+                <div :class="getSprite(item.id,'item')"></div>
+                <div class="item_count">
+                  {{ strShowLength(item.count) }}
+                </div>
               </div>
             </div>
           </div>
@@ -389,7 +410,7 @@
             </div>
           </div>
 
-<!--          <div :class="surveyTypeClass('skill_delimiter')"></div>-->
+          <!--          <div :class="surveyTypeClass('skill_delimiter')"></div>-->
 
           <div v-for="(equip,index) in operator.equip" :key="index" :class="surveyTypeClass('skill_wrap')">
             <!--            <div class="image_mod">{{ "模组" + equip.typeName2 }}</div>-->
@@ -425,7 +446,7 @@
 <script setup>
 import {cMessage} from "/src/custom/message.js";
 import {characterListInit, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import {collapse} from '/src/custom/collapse'
+import {collapseV2} from '/src/custom/collapse.js'
 import "/src/custom/css/collapse.css"
 import operatorStatistics from "/src/pages/survey/operatorStatistics"
 import surveyApi from "/src/api/surveyUser";
@@ -435,7 +456,6 @@ import {onMounted, ref} from "vue";
 import "@/assets/css/survey/survey_character.css";
 import {http} from "/src/api/baseURL";
 import request from "/src/api/requestBase";
-
 
 
 let intro_popup_visible = ref(false)
@@ -645,7 +665,7 @@ async function importSKLandOperatorData() {
  * @returns {Promise<void>}
  */
 
-async function importSKLandOperatorDataByUid(uid){
+async function importSKLandOperatorDataByUid(uid) {
   if (userData.value.token == void 0) {
     cMessage("请先注册或登录一图流账号", "error");
     return;
@@ -678,11 +698,11 @@ async function importSKLandOperatorDataByUid(uid){
  * @param data 干员数据
  * @returns {Promise<void>}
  */
-async function uploadSKLandData({token,data}) {
+async function uploadSKLandData({token, data}) {
   await request({
     url: 'survey/operator/import/skland/v2',
     method: "post",
-    data: {token,data}
+    data: {token, data}
   }).then(response => {
     response = response.data
     upload_message.value = response.data;
@@ -708,11 +728,12 @@ async function uploadSKLandData({token,data}) {
 }
 
 //选择导入uid的按钮样式
-function chooseUidClass(uid){
-    if(uid==defaultUid.value) return 'btn_blue_selected'
+function chooseUidClass(uid) {
+  if (uid == defaultUid.value) return 'btn_blue_selected'
 }
 
 let reset_popup_visible = ref(false)
+
 /**
  * 重置账号数据
  */
@@ -1268,7 +1289,7 @@ let item_cost_map = ref({})  //材料消耗数量
 
 function statisticsCollapse() {
   statistics()
-  collapse('collapse_bar statistics', 'switch_statistics_wrap', 'switch_statistics_box')
+  collapseV2('statistics_box_wrap', 'statistics_box',)
 }
 
 //各种统计
@@ -1337,17 +1358,7 @@ function copyCode(text) {
   elementInput.remove()
 }
 
-let btn_status = ref({btn_import: true})  //所有按钮的状态
-
-/**
- *  获取按钮样式
- * @param btn_id 按钮id
- * @returns {string} 按钮样式
- */
-function btnClass(btn_id) {
-  if (btn_status.value[btn_id]) return 'btn btn_blue btn_blue_selected'
-  return 'btn btn_blue'
-}
+let btn_status = ref({btn_import: true, btn_filter: false, btn_statistics: false})  //所有按钮的状态
 
 /**
  * 点击按钮改变按钮状态
