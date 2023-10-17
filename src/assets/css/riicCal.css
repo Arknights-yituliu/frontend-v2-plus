@@ -16,6 +16,13 @@
   justify-content: space-evenly;
 }
 
+.riic_card{
+  /* display: flex; */
+  width: 438px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
 #riic_workerSets {
   display: flex;
   flex-wrap: wrap;
