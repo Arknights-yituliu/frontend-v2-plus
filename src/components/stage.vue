@@ -174,9 +174,9 @@
             <td class="popup_table_c4" style="width: 50px; width: 60px" colspan="1">副产品</td>
              <td class="popup_table_c5" style="width: 80px; width: 90px">主产物掉率</td>
              <td class="popup_table_c6" style="width: 80px; width: 90px">主产物期望</td>
+<!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>-->
+<!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>-->
             <td class="popup_table_c7" style="width: 70px; width: 80px">总效率</td>
-            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>
-            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>
           </tr>
           <tr v-for="(stage, index) in popupData.stageResultList" :key="index" :class="getColor(stage.stageColor)"
               class="stage_table_r">
@@ -197,9 +197,9 @@
             <td class="popup_table_c6">
               {{ formatNumber(stage.apExpect) }}
             </td>
+<!--            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency * 100, 1) }}%</td>-->
+<!--            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency * 100, 1) }}%</td>-->
             <td class="popup_table_c7">{{ formatNumber(stage.stageEfficiency * 100, 1) }}%</td>
-            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency * 100, 1) }}%</td>
-            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency * 100, 1) }}%</td>
           </tr>
           </tbody>
         </table>
