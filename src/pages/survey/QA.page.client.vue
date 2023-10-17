@@ -169,7 +169,6 @@ import "@/assets/css/survey/survey_common.css";
 import { onMounted, ref } from "vue";
 
 
-import { registerEvent, loginEvent, userDataCacheClearEvent, userDataCacheEvent, globalUserData } from "./userService";
 
 let inputData = ref({ userName: "" }); //用户输入的用户名，用obj没准后期有别的字段
 let userData = ref({ userName: "山桜", status: -100 }); //用户信息(用户名，用户id，用户状态)

@@ -224,9 +224,10 @@
 import { onMounted, ref } from "vue";
 import { scoreListInit, collapse, filterByCharacterProperty, professionDict, yearDict } from "./common";
 import surveyApi from "@/api/surveyUser";
-import { globalUserData } from "./userService";
 import "@/assets/css/survey/survey_score.css";
 import { cMessage } from "@/custom/message.js";
+
+let globalUserData = ref({})
 
 let first_popup = ref(false)
 let import_popup_visible = ref(false)
