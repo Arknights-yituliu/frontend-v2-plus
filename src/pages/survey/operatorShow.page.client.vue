@@ -35,7 +35,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import surveyApi from "@/api/surveyUser";
-import {characterListInit, collapse, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {characterListInit, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import request from "@/api/requestBase";
 
 let operator_list = ref(characterListInit())

@@ -16,56 +16,56 @@
     <div class="collapse_item_wrap" id="filter_box_wrap">
       <div class="collapse_item" id="filter_box">
         <div class="collapse_bar_wrap">
-        <div class="collapse_bar">
-          <div class="switch_title">职业</div>
-          <div class="switch_btns_wrap">
-            <div
-                :class="selectedBtn('profession', profession.value)"
-                v-for="(profession,index) in professionDict"
-                :key="index"
-                @click="addFilterCondition('profession', profession.value)"
-            >
-              {{ profession.label }}
+          <div class="collapse_bar">
+            <div class="switch_title">职业</div>
+            <div class="switch_btns_wrap">
+              <div
+                  :class="selectedBtn('profession', profession.value)"
+                  v-for="(profession,index) in professionDict"
+                  :key="index"
+                  @click="addFilterCondition('profession', profession.value)"
+              >
+                {{ profession.label }}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="collapse_bar">
-          <div class="switch_title">稀有度</div>
-          <div class="switch_btns_wrap">
-            <div :class="selectedBtn('rarity', rarity)"
-                 v-for="(rarity,index) in rarity_dict" :key="index"
-                 @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
+          <div class="collapse_bar">
+            <div class="switch_title">稀有度</div>
+            <div class="switch_btns_wrap">
+              <div :class="selectedBtn('rarity', rarity)"
+                   v-for="(rarity,index) in rarity_dict" :key="index"
+                   @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="collapse_bar">
-          <div class="switch_title">其他</div>
-          <div class="switch_btns_wrap">
-            <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
-            <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
-            <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
-            <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
-            <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
-                 @click="addFilterCondition('itemObtainApproach', '赠送干员')">
-              赠送干员
-            </div>
-            <div :class="selectedBtn('itemObtainApproach', '限定干员')"
-                 @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
+          <div class="collapse_bar">
+            <div class="switch_title">其他</div>
+            <div class="switch_btns_wrap">
+              <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
+              <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
+              <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
+              <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
+              <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
+                   @click="addFilterCondition('itemObtainApproach', '赠送干员')">
+                赠送干员
+              </div>
+              <div :class="selectedBtn('itemObtainApproach', '限定干员')"
+                   @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- <div class="collapse_bar">
-          <div class="switch_title">排序</div>
-          <div class="switch_btns_wrap">
-            <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
-            <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
-            <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
-          </div>
-        </div> -->
-      </div>
+          <!-- <div class="collapse_bar">
+            <div class="switch_title">排序</div>
+            <div class="switch_btns_wrap">
+              <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
+              <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
+              <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
+            </div>
+          </div> -->
+        </div>
       </div>
     </div>
 
@@ -128,7 +128,7 @@
               </div>
             </div>
           </td>
-          <td @click="commonSort('modX','open')">
+          <td @click="commonSort('modX','count')">
             <div class="rank_table_title" style="width: 150px">
               <div>X模组解锁率</div>
               <div>
@@ -138,7 +138,7 @@
               </div>
             </div>
           </td>
-          <td @click="commonSort('modY','open')">
+          <td @click="commonSort('modY','count')">
             <div class="rank_table_title" style="width: 150px">
               <div>Y模组解锁率</div>
               <div>
@@ -150,7 +150,8 @@
         </tr>
 
 
-        <tr v-for="(result, index) in operators_statistics_list" :key="index" v-show="result.show" class="rank_table_tr">
+        <tr v-for="(result, index) in operators_statistics_list" :key="index" v-show="result.show"
+            class="rank_table_tr">
           <td class="rank_table_1 rank_table_text">
             <div class="rank_table_avatar">
               <div class="rank_avatar_wrap">
@@ -195,16 +196,16 @@
             </div>
           </td>
           <td class="rank_table_7">
-            <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'open'), 1) }}</div>
-<!--            <div>一级：{{ getPercentage(getSurveyResult(result.modX, 'rank1'), 1) }}</div>-->
-<!--            <div>二级：{{ getPercentage(getSurveyResult(result.modX, 'rank2'), 1) }}</div>-->
-<!--            <div>三级：{{ getPercentage(getSurveyResult(result.modX, 'rank3'), 1) }}</div>-->
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'count'), 1) }}</div>
+            <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modX, 'rank1'), 1) }}</div>-->
+            <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modX, 'rank2'), 1) }}</div>-->
+            <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modX, 'rank3'), 1) }}</div>-->
           </td>
           <td class="rank_table_8">
-            <div>解锁：{{ getPercentage(getSurveyResult(result.modY, 'open'), 1) }}</div>
-<!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
-<!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
-<!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modY, 'count'), 1) }}</div>
+            <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
+            <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
+            <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
           </td>
         </tr>
       </table>
@@ -214,16 +215,18 @@
 
 <script setup>
 import "@/assets/css/survey/survey_rank.css";
-import {rankingListInit, filterByCharacterProperty, professionDict} from "./common";
-import { collapseV2} from "/src/custom/collapse";
+import { filterByCharacterProperty, professionDict} from "./common";
+import {collapseV2} from "/src/custom/collapse";
 import '/src/custom/css/collapse.css'
 import {onMounted, ref} from "vue";
+import character_table_simple from "@/static/json/survey/character_table_simple.json";
+
 
 import surveyApi from "/src/api/surveyUser";
 
 let rarity_dict = [1, 2, 3, 4, 5, 6];
 
-let operators_statistics_list = ref(rankingListInit());
+let operators_statistics_list = ref([]);
 
 
 let user_count = ref(0);
@@ -232,50 +235,33 @@ let update_time = ref("2023-05-01");
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
-    for (let i in operators_statistics_list.value) {
-      for (let j in response.data.result) {
-        if (operators_statistics_list.value[i].charId === response.data.result[j].charId) {
-          operators_statistics_list.value[i].own = response.data.result[j].own;
-          operators_statistics_list.value[i].elite = response.data.result[j].elite;
-          operators_statistics_list.value[i].skill1 = response.data.result[j].skill1;
-          operators_statistics_list.value[i].skill2 = response.data.result[j].skill2;
-          operators_statistics_list.value[i].skill3 = response.data.result[j].skill3;
-          operators_statistics_list.value[i].modX = response.data.result[j].modX;
-          operators_statistics_list.value[i].modY = response.data.result[j].modY;
-          if (operators_statistics_list.value[i].elite.rank2 == void 0) operators_statistics_list.value[i].elite.rank2 = 0.0
-          // if (operators_statistics_list.value[i].modX.rank3 === void 0) operators_statistics_list.value[i].modX.rank3 = 0.0
-          // if (operators_statistics_list.value[i].modY.rank3 === void 0) operators_statistics_list.value[i].modY.rank3 = 0.0
-          if (operators_statistics_list.value[i].skill1.rank3 == void 0) operators_statistics_list.value[i].skill1.rank3 = 0.0
-          if (operators_statistics_list.value[i].skill2.rank3 == void 0) operators_statistics_list.value[i].skill2.rank3 = 0.0
-          if (operators_statistics_list.value[i].skill3.rank3 == void 0) operators_statistics_list.value[i].skill3.rank3 = 0.0
-
-          if (response.data.result[j].modX != void 0) {
-
-            const rank1 = response.data.result[j].modX.rank1 != void 0 ? response.data.result[j].modX.rank1 : 0.0;
-            const rank2 = response.data.result[j].modX.rank2 != void 0 ? response.data.result[j].modX.rank2 : 0.0;
-            const rank3 = response.data.result[j].modX.rank3 != void 0 ? response.data.result[j].modX.rank3 : 0.0;
-            operators_statistics_list.value[i].modX.open = rank1 + rank2 + rank3;
-            operators_statistics_list.value[i].modX.rank1 = rank1;
-            operators_statistics_list.value[i].modX.rank2 = rank2;
-            operators_statistics_list.value[i].modX.rank3 = rank3;
-          }
-
-          if (response.data.result[j].modY != void 0) {
-            const rank1 = response.data.result[j].modY.rank1 != void 0 ? response.data.result[j].modY.rank1 : 0.0;
-            const rank2 = response.data.result[j].modY.rank2 != void 0 ? response.data.result[j].modY.rank2 : 0.0;
-            const rank3 = response.data.result[j].modY.rank3 != void 0 ? response.data.result[j].modY.rank3 : 0.0;
-            operators_statistics_list.value[i].modY.open = rank1 + rank2 + rank3;
-            operators_statistics_list.value[i].modY.rank1 = rank1;
-            operators_statistics_list.value[i].modY.rank2 = rank2;
-            operators_statistics_list.value[i].modY.rank3 = rank3;
-          }
-
-        }
+    const {result,userCount,updateTime} = response.data
+    for(const item of result){
+      const charId =  item.charId
+      const char_info =  character_table_simple[charId]
+      let rank_info = {
+        charId: charId,
+        name: char_info.name,
+        rarity: char_info.rarity,
+        own: item.own,
+        elite: item.elite,
+        skill1: item.skill1,
+        skill2: item.skill2,
+        skill3: item.skill3,
+        modX: item.modX,
+        modY: item.modY,
+        profession: char_info.profession,
+        itemObtainApproach: char_info.itemObtainApproach,
+        mod: char_info.mod,
+        skill: char_info.skill,
+        show: true,
       }
-    }
 
-    user_count.value = response.data.userCount;
-    update_time.value = response.data.updateTime;
+      operators_statistics_list.value.push(rank_info)
+    }
+    addFilterCondition('rarity', 6)
+    user_count.value = userCount ;
+    update_time.value = updateTime;
   });
 }
 
@@ -413,10 +399,13 @@ function commonSort(property, condition) {
   }
 
   const len = operators_statistics_list.value.length
+
+  for(const item of operators_statistics_list.value){
+    console.log(item.elite.rank2)
+  }
+
   for (let i = 0; i < len - 1; i++) {
-
     for (let j = 0; j < len - 1 - i; j++) {
-
       if (desc_or_asc.value % 2 !== 0) {
         // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
         if (operators_statistics_list.value[j][property][condition] < operators_statistics_list.value[j + 1][property][condition]) {
@@ -441,9 +430,8 @@ function commonSort(property, condition) {
 }
 
 
-
 onMounted(() => {
-  addFilterCondition('rarity', 6)
+
   getCharStatisticsResult()
 })
 </script>
