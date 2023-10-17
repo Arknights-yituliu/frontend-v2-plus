@@ -1,38 +1,34 @@
 <template>
   <div id="riic">
     <div id="riic_controlPanel">
-      <div class="riic_building">
-        <div class="riic_building_title">控制面板</div>
+      <el-card class="box-card riic_card">
+        <template #header>
+          <div class="card-header">
+            <span>基本参数</span>
+          </div>
+        </template>
         <div class="riic_building_parameter">
-          <div class="parameter_text">作业名称</div>
-          <el-input class="parameter_inputbox" placeholder="究极资本家v1.0" v-model="title"></el-input>
+            <div class="parameter_text">基建模式</div>
+            <el-radio-group v-model="buildingType">
+              <el-radio-button label="243"></el-radio-button>
+              <el-radio-button label="153"></el-radio-button>
+              <el-radio-button label="333"></el-radio-button>
+              <el-radio-button label="252"></el-radio-button>
+            </el-radio-group>
         </div>
-        <div class="riic_building_parameter">
-          <div class="parameter_text">描述(可选)</div>
-          <el-input class="parameter_inputbox" placeholder="适合全干员，压榨每一个工具人！" v-model="descriptionH1"></el-input>
-        </div>
-        <div class="riic_building_parameter">
-          <div class="parameter_text">作者(可选)</div>
-          <el-input class="parameter_inputbox" placeholder="yituliu" v-model="author"></el-input>
-        </div>
-        <div class="riic_building_parameter">
-          <div class="parameter_text">基建模式</div>
-          <el-radio-group v-model="buildingType">
-            <el-radio-button label="243"></el-radio-button>
-            <el-radio-button label="153"></el-radio-button>
-            <el-radio-button label="333"></el-radio-button>
-            <el-radio-button label="252"></el-radio-button>
-          </el-radio-group>
-        </div>
-      </div>
-      <div class="riic_building">
-        <div class="riic_building_title">排班方案</div>
         <div class="riic_building_parameter">
           <div class="parameter_text">换班次数</div>
           <el-radio-group v-model="planTimes">
             <el-radio-button label="2班"></el-radio-button>
             <el-radio-button label="3班"></el-radio-button>
             <!-- <el-radio-button label="4班" ></el-radio-button> -->
+          </el-radio-group>
+        </div>
+        <div class="riic_building_parameter">
+          <div class="parameter_text">换班模式</div>
+          <el-radio-group v-model="planTimes">
+            <el-radio-button label="自动按时换班"></el-radio-button>
+            <el-radio-button label="手动换班"></el-radio-button>
           </el-radio-group>
         </div>
         <div class="riic_building_parameter">
@@ -57,27 +53,28 @@
           *跨天需写成 22:00 —— 06:00 (MAA执行周期为24小时)
           <!-- (示例，写的时候别带&emsp;[&emsp;]！) -->
         </div>
-      </div>
-
-      <div class="riic_building">
-        <div class="riic_building_title">方案导入/导出</div>
+      </el-card>
+      <el-card class="box-card riic_card">
+        <template #header>
+          <div class="card-header">
+            <span>排班表信息</span>
+          </div>
+        </template>
+        <div class="riic_building_parameter">
+          <div class="parameter_text" style="width: 108px">作业名称</div>
+          <el-input class="parameter_inputbox" placeholder="243极限排班" style="width: 180px" v-model="title"></el-input>
+        </div>
+        <div class="riic_building_parameter">
+          <div class="parameter_text" style="width: 108px">描述(可选)</div>
+          <el-input class="parameter_inputbox" placeholder="适合全干员，压榨每一个工具人！" style="width: 180px" v-model="descriptionH1"></el-input>
+        </div>
+        <div class="riic_building_parameter">
+          <div class="parameter_text" style="width: 108px">作者(可选)</div>
+          <el-input class="parameter_inputbox" placeholder="yituliu" style="width: 180px" v-model="author"></el-input>
+        </div>
         <div class="riic_building_parameter">
           <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()"> 生成排班方案 </el-button>
-          <a :href="exportUrl">
-            <el-button size="large" type="primary" id="exportFileDone" round style="width: 108px; margin-left: 12px; display: none"> 导出到本地 </el-button>
-          </a>
-
-          <!-- <el-button size="large" type="primary" id="exportFile" round style="width: 108px; margin-left: 12px;background-color:#c4c3c3" > 导出到本地 </el-button> -->
-
-          <!-- <el-button size="large" type="primary" round style="width:108px;padding-left:10px;" @click="MaaURLCopy()">
-                导出到MAA
-          </el-button> -->
         </div>
-        <!-- <div class="riic_building_parameter">
-          <el-button size="large" type="primary" round style="width:126px;">
-            通过文件导入
-          </el-button> *(后续可用)
-        </div> -->
         <div class="riic_building_parameter">
           <el-button size="large" type="primary" round style="width: 126px" @click="retrieveSchedule()"> 通过id导入 </el-button>
           <el-input class="parameter_inputbox" placeholder="id" style="margin-left: 12px; width: 150px" v-model="importId"></el-input>
@@ -88,22 +85,13 @@
         </div>
         <div class="riic_building_parameter">
           <a href="https://www.wjx.cn/vm/mRNtSzd.aspx#">
-            <el-button size="large" type="warning" round style="width: 186px"> 排班生成器 问题反馈 </el-button>
+            <el-button size="large" type="warning" round style="width: 186px;display:inline;"> 排班表生成问题反馈 </el-button>
+          </a>
+          <a href="https://www.wjx.cn/vm/mRNtSzd.aspx#">
+            <el-button size="large" type="warning" round style="width: 186px;display:inline;"> 排班表执行问题反馈 </el-button>
           </a>
         </div>
-
-        <!-- 如果需要注释 从这里开始 -->
-        <!--        <div class="riic_building_parameter">-->
-        <!--          <div class="parameter_text">预设模板</div>-->
-        <!--          <el-radio-group >-->
-        <!--            <el-radio-button label="243"></el-radio-button>-->
-        <!--            <el-radio-button label="153"></el-radio-button>-->
-        <!--            <el-radio-button label="333"></el-radio-button>-->
-        <!--            <el-radio-button label="252" disabled></el-radio-button>-->
-        <!--          </el-radio-group>-->
-        <!--        </div>-->
-        <!-- 到这里结束 -->
-      </div>
+      </el-card>
     </div>
     <el-divider></el-divider>
     <div id="riic_workerSets">
