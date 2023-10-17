@@ -4,7 +4,7 @@
     <div class="setup_top">
       <!-- <button class="mdui-btn survey_button">说明</button> -->
       <button class="btn btn_blue"
-              @click="collapse('collapse_bar select', 'switch_filter_wrap','switch_filter_box')">筛选
+              @click="collapseV2('filter_box_wrap', 'filter_box')">筛选
       </button>
       <div id="updateTime">
         调查人数{{ user_count }}<br/>
@@ -13,9 +13,10 @@
     </div>
 
     <!-- 筛选模块 -->
-    <div class="collapse_item_wrap" id="switch_filter_wrap">
-      <div class="collapse_item" id="switch_filter_box">
-        <div class="collapse_bar select">
+    <div class="collapse_item_wrap" id="filter_box_wrap">
+      <div class="collapse_item" id="filter_box">
+        <div class="collapse_bar_wrap">
+        <div class="collapse_bar">
           <div class="switch_title">职业</div>
           <div class="switch_btns_wrap">
             <div
@@ -29,16 +30,17 @@
           </div>
         </div>
 
-        <div class="collapse_bar select">
+        <div class="collapse_bar">
           <div class="switch_title">稀有度</div>
           <div class="switch_btns_wrap">
-            <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarity_dict"
+            <div :class="selectedBtn('rarity', rarity)"
+                 v-for="(rarity,index) in rarity_dict" :key="index"
                  @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
             </div>
           </div>
         </div>
 
-        <div class="collapse_bar select">
+        <div class="collapse_bar">
           <div class="switch_title">其他</div>
           <div class="switch_btns_wrap">
             <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
@@ -55,7 +57,7 @@
           </div>
         </div>
 
-        <!-- <div class="collapse_bar select">
+        <!-- <div class="collapse_bar">
           <div class="switch_title">排序</div>
           <div class="switch_btns_wrap">
             <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
@@ -63,6 +65,7 @@
             <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
           </div>
         </div> -->
+      </div>
       </div>
     </div>
 
@@ -212,7 +215,7 @@
 <script setup>
 import "@/assets/css/survey/survey_rank.css";
 import {rankingListInit, filterByCharacterProperty, professionDict} from "./common";
-import { collapse} from "/src/custom/collapse";
+import { collapseV2} from "/src/custom/collapse";
 import '/src/custom/css/collapse.css'
 import {onMounted, ref} from "vue";
 

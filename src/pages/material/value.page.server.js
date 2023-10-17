@@ -1,11 +1,13 @@
 import axios from "axios";
 import { http } from "@/api/baseURL";
 
+const expCoefficient = 0.625
+const sampleSize = 300
+
 function get_value() {
-  return axios.get(http + "item/value?expCoefficient=0.625");
+  return axios.get(http + `item/value?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`);
 }
 
-console.log(http + "item/value?expCoefficient=0.625");
 
 export async function onBeforeRender(pageContext) {
   const result = await get_value();

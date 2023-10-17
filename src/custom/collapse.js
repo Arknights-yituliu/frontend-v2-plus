@@ -70,6 +70,8 @@ function collapseV2(collapse_id,collapse_item_id){
             document.getElementById(collapse_id).style.height = 0 + "px";
         }, 50);
     }
+
+
 }
 
 export {

@@ -6,28 +6,26 @@
       <br/>
       <a class="">{{ stage_code }}的理智转化效率是{{ stage_efficiency }}%</a>
     </div>
-    <div class="checkBox">
-      <div>
-        <div v-for="(zoneList, stageType) in zoneTable" :key="stageType" >
-          <div class="zone_title">{{ stageType }}</div>
-          <div class="zone_table">
-            <div v-for="(zone,index) in zoneList" :key="index" class="zone_title">
-              <div>{{ zone.zoneName }}</div>
-              <collapse>
-
-              </collapse>
-              <div :id="zone.zoneId+'wrap'" class="stage_table_wrap">
-                <div :id="zone.zoneId" class="stage_table">
-                <div  v-for="(stage,index) in zone.stageList" :key="index" class="btn btn_white"
-                     @click="getStageDetailByStageId(stage.stageId)">
-                  {{ stage.stageCode }}
+    <div class="zone_table_wrap">
+      <div class="stage_type">
+        <c-button :color="'blue'" :status="stage_type==='MAIN'" @click="stage_type='MAIN'">主线</c-button>
+        <c-button :color="'blue'" :status="stage_type==='ACT_PERM'" @click="stage_type='ACT_PERM'">常驻</c-button>
+        <c-button :color="'blue'" :status="stage_type==='ACT'" @click="stage_type='ACT'">SideStory</c-button>
+        <c-button :color="'blue'" :status="stage_type==='ACT_MINI'" @click="stage_type='ACT_MINI'">故事集</c-button>
+        <c-button :color="'blue'" :status="stage_type==='ACT_REP'" @click="stage_type='ACT_REP'">SideStory复刻</c-button>
+      </div>
+        <div class="zone_table">
+          <div v-for="({zoneName,stageList},index) in zoneTable[stage_type]" :key="index" class="zone_title">
+            <collapse :name="zoneName" class="stage_table_wrap">
+              <template #title>{{ zoneName }}</template>
+                <div class="stage_table">
+                  <div v-for="({stageId,stageCode},index) in stageList" :key="index" class="btn btn_white"
+                       @click="getStageDetailByStageId(stageId)">
+                    {{ stageCode }}
+                  </div>
                 </div>
-                </div>
-              </div>
-            </div>
-
+            </collapse>
           </div>
-        </div>
       </div>
 
     </div>
@@ -40,18 +38,17 @@ import "@/assets/css/stageDetail.css";
 import stageApi from "/src/api/stage";
 import * as echarts from "echarts";
 import {onMounted, ref} from "vue";
-import {collapseV2} from '/src/custom/collapse'
 import {cMessage} from '/src/custom/message'
 import collapse from '/src/custom/collapse.vue'
 
 let myChart = ""; //echart的dom
 let stage_code = ref("1-7"); //关卡名称
-let stageId = ref("main_01-07"); //关卡id
-let stageDetail = ref(""); //关卡详情
 let pieData_main = ref([]); //关卡主要产出
 let pieData_extra = ref([]); //次要产出
 let by_product_flag = ref(false);
 let stage_efficiency = ref(0); //关卡效率
+let stage_type = ref("MAIN")
+
 
 function changePie() {
   //切换展示关卡主要/次要产出
@@ -73,7 +70,7 @@ function getZoneTable() {
 let all_stage_result_detail = ref({})
 
 function getStageResultDetail() {
-  stageApi.getAllStageResultDetail(0.625).then(response => {
+  stageApi.getAllStageResultDetail(0.625,300).then(response => {
     all_stage_result_detail.value = response.data
   })
 }
@@ -84,8 +81,8 @@ function setPieChartObj(InsideOrOutside, ratio, description) {
   if (ratio > 0) {
     chartFan.value = ratio;
     chartFan.name = description;
-    if ("inside" == InsideOrOutside) pieData_main.value.push(chartFan);
-    if ("outside" == InsideOrOutside) pieData_extra.value.push(chartFan);
+    if ("inside" === InsideOrOutside) pieData_main.value.push(chartFan);
+    if ("outside" === InsideOrOutside) pieData_extra.value.push(chartFan);
   }
 }
 
@@ -94,7 +91,7 @@ function getStageDetailByStageId(stage_id) {
   let stage_result_detail = all_stage_result_detail.value[stage_id];
   if (stage_result_detail == void 0) {
     stage_result_detail = []
-    cMessage("没有数据", 'error')
+    cMessage(`${stage_id}没有掉落数据`, 'error')
     return;
   }
 
@@ -136,84 +133,6 @@ function getStageDetailByStageId(stage_id) {
   console.log(pieData_extra.value)
   pieChart(pieData_main.value);
 }
-
-//根据关卡id查询关卡消息
-function findStageDetailByStageCode(stageIdStr) {
-  stageId.value = stageIdStr; //关卡id
-  stageApi.findStageDetailByStageId(stageId.value).then((response) => {
-    stageDetail.value = response.data; //关卡详情
-    if (stageDetail.value.length > 0) {
-      pieData_main.value = [];
-      pieData_extra.value = [];
-      let efficiency = stageDetail.value[0].stageEfficiency / 100; //关卡效率
-      let apCost = stageDetail.value[0].apCost; //关卡效率
-      let totalOutputAP = efficiency * apCost; //总产出理智
-      let isValue = stageDetail.value[0].isValue; //是否用于定价，绝大部分情况活动本不参与定价，根据这个判断是否加无限龙门币
-
-      stage_efficiency.value = (efficiency * 100).toFixed(3); //关卡效率%
-      let by_product = 100; //副产物
-
-      stageDetail.value.push({
-        result: 1.2 * 0.036 * apCost,
-        itemName: "龙门币",
-      });
-
-      if (isValue == 0) {
-        stageDetail.value.push({
-          result: 20 * 0.0036 * apCost,
-          itemName: "龙门币\n(无限兑换)",
-        });
-        efficiency = efficiency + 0.072;
-        totalOutputAP = efficiency * apCost;
-        stage_efficiency.value = (efficiency * 100).toFixed(3);
-        console.log("是活动关");
-      }
-
-      stageDetail.value.forEach((element) => {
-
-        const ratio = (element.result / totalOutputAP) * 100; //占比
-
-        let describption = element.itemName;
-        if (ratio > 10) {
-          //产出占比大于10%视为主要产出
-          // if (stageIdStr.indexOf("act") == -1 || stageIdStr.indexOf("perm") != -1) {
-          by_product -= ratio;
-          // }
-          describption = describption + "\n占" + (ratio * 100).toFixed(1) + "%"; //echart上的描述
-          setPieChartObj("inside", ratio, describption); //设置echart的数据
-        }
-
-        //产出占比小于10%视为次要产出
-        if (ratio < 10) {
-          describption = describption + "\n占" + ratio.toFixed(1) + "%";
-          setPieChartObj("outside", ratio, describption);
-        }
-      });
-
-      pieData_extra.value.sort((a, b) => {
-        return a.value - b.value;
-      });
-
-      console.log("副产物占" + by_product.toFixed(2) + "%");
-
-      // if (stageIdStr.indexOf("act") == -1 || stageIdStr.indexOf("perm") != -1) {
-      setPieChartObj("inside", by_product, "其他产物\n占" + by_product.toFixed(1) + "%");
-      // }
-
-      // setPieChartObj("inside",((1.2 * 0.036 * apCost) / totalOutputAP) * 100,
-      //   "龙门币\n占" + (((1.2 * 0.036 * apCost) / totalOutputAP) * 100).toFixed(1) + "%");
-
-      if (efficiency < 0.9999) {
-        setPieChartObj("inside", formatNumber((1 - efficiency) * 100, 1), "浪费的理智\n占" + ((1 - efficiency) * 100).toFixed(1) + "%");
-      }
-
-      console.log(pieData_main.value);
-
-      pieChart(pieData_main.value);
-    }
-  });
-}
-
 
 function formatNumber(num, acc) {
   acc = typeof acc !== "undefined" ? acc : 2;

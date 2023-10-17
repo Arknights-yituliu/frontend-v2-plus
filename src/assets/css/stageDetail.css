@@ -24,14 +24,39 @@
 
 .pieChartBlock {
   border: solid 1px rgb(0, 132, 255);
-  width: 550px;
-  height: 550px;
+  border-radius: 4px;
+  width: 500px;
+  height: 500px;
+}
+
+.stage_type{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.zone_title{
+  line-height: 48px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.zone_table_wrap{
+  width: 500px;
+  border: 1px red solid;
+  padding: 1px;
+}
+
+.zone_table{
+  padding: 1px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .stage_table_wrap{
-  height: 0;
-  overflow: hidden;
-  transition: all .3s;
+  margin: 2px;
 }
 
 .stage_table{
@@ -41,20 +66,3 @@
   justify-content: center;
 }
 
-.zone_title{
-  width: 100%;
-  line-height: 48px;
-  font-size: 18px;
-  font-weight: 600;
-  text-align: center;
-  /*border-radius: 4px;*/
-  /*box-shadow: 0 0 2px #b6b6b6 ,0 1px 1px #b6b6b6;*/
-  border-bottom: 1px solid #cecece;
-}
-
-.zone_table{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-}

@@ -1,20 +1,24 @@
 import axios from "axios";
 import { http } from "@/api/baseURL";
 
+
+const expCoefficient = 0.625
+const sampleSize = 300
+
 function get_t3() {
-  return axios.get(http + "stage/t3/v2?expCoefficient=0.625&sampleSize=300");
+  return axios.get(  `${http}stage/t3/v2?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`);
 }
 
 function get_t2() {
-  return axios.get(http + "stage/t2/v2?expCoefficient=0.625&sampleSize=300");
+  return axios.get(`${http}stage/t2/v2?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`);
 }
 
 function get_orundum() {
-  return axios.get(http + "stage/orundum/v2");
+  return axios.get(`${http}stage/orundum?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`);
 }
 
 function get_closed() {
-  return axios.get(http + "stage/act/v2?expCoefficient=0.625");
+  return axios.get(`${http}stage/act?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`);
 }
 
 // function get_perm() {
