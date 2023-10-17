@@ -18,7 +18,7 @@
 
 .riic_card{
   /* display: flex; */
-  width: 420px;
+  width: 438px;
   flex-wrap: wrap;
   justify-content: space-evenly;
 }
