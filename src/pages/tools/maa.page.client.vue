@@ -24,13 +24,13 @@
             <!-- <el-radio-button label="4班" ></el-radio-button> -->
           </el-radio-group>
         </div>
-        <div class="riic_building_parameter">
-          <div class="parameter_text">换班模式</div>
-          <el-radio-group v-model="planTimes">
-            <el-radio-button label="自动按时换班"></el-radio-button>
-            <el-radio-button label="手动换班"></el-radio-button>
-          </el-radio-group>
-        </div>
+<!--        <div class="riic_building_parameter">-->
+<!--          <div class="parameter_text">换班模式</div>-->
+<!--          <el-radio-group v-model="planTimes">-->
+<!--            <el-radio-button label="自动按时换班"></el-radio-button>-->
+<!--            <el-radio-button label="手动换班"></el-radio-button>-->
+<!--          </el-radio-group>-->
+<!--        </div>-->
         <div class="riic_building_parameter">
           <div class="parameter_text" style="width: 108px">名称/起止时间</div>
           <el-input class="parameter_inputbox" placeholder="主力组A" style="width: 90px" v-model="name[0]"></el-input>
@@ -74,7 +74,14 @@
         </div>
         <div class="riic_building_parameter">
           <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()"> 生成排班方案 </el-button>
+          <a>
+            <el-button size="large" type="primary" id="disableBtn" round style="width: 108px; margin-left: 12px;filter:grayscale(50%) "> 导出到本地 </el-button>
+          </a>
+          <a :href="exportUrl">
+            <el-button size="large" type="primary" id="exportBtn" round style="width: 108px; margin-left: 12px; display: none"> 导出到本地 </el-button>
+          </a>
         </div>
+
         <div class="riic_building_parameter">
           <el-button size="large" type="primary" round style="width: 126px" @click="retrieveSchedule()"> 通过id导入 </el-button>
           <el-input class="parameter_inputbox" placeholder="id" style="margin-left: 12px; width: 150px" v-model="importId"></el-input>
@@ -84,9 +91,10 @@
           或打开排班文件最末尾中寻找id
         </div>
         <div class="riic_building_parameter">
-          <a href="https://www.wjx.cn/vm/mRNtSzd.aspx#">
+          <a href="https://www.wjx.cn/vm/mRNtSzd.aspx#" style="display: block;margin-bottom: 4px">
             <el-button size="large" type="warning" round style="width: 186px;display:inline;"> 排班表生成问题反馈 </el-button>
           </a>
+
           <a href="https://www.wjx.cn/vm/mRNtSzd.aspx#">
             <el-button size="large" type="warning" round style="width: 186px;display:inline;"> 排班表执行问题反馈 </el-button>
           </a>
@@ -2089,8 +2097,9 @@ export default {
         this.scheduleId = response.data.scheduleId;
         this.setExportUrl();
         setTimeout(function () {
-          document.getElementById("exportFileDone").style.display = "";
-        }, 2500);
+          document.getElementById("exportBtn").style.display = "";
+          document.getElementById("disableBtn").style.display = "none";
+        }, 500);
       });
       this.setExportUrl();
     },
@@ -3415,7 +3424,7 @@ export default {
     getList(list) {
       let listCopy = [];
       for (let i = 0; i < list.length; i++) {
-        if ("" === list[i] || undefined === list[i] || "undefined" === list[i] || undefined === typeof list[i] || "空置" === list[i]) {
+        if (list[i]==void 0||list[i]==''||list[i]=='空置') {
           continue;
         }
         listCopy.push(list[i]);
