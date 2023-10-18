@@ -76,7 +76,7 @@
           <div class="parameter_text" style="width: 108px">作者(可选)</div>
           <el-input class="parameter_inputbox" placeholder="yituliu" style="width: 180px" v-model="author"></el-input>
         </div>
-        <div class="riic_building_parameter">
+        <div class="riic_building_parameter" style="margin: 8px 2px">
           <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()"> 生成排班方案 </el-button>
           <a>
             <el-button size="large" type="primary" id="disableBtn" round style="width: 108px; margin-left: 12px;filter:grayscale(50%) "> 导出到本地 </el-button>
