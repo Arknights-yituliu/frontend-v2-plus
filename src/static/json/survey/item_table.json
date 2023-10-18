@@ -9,33 +9,43 @@
     "name": "狙击芯片组",
     "rarity": 4
   },
+  "31074": {
+    "itemValueAp": 90.40818,
+    "name": "固化纤维板",
+    "rarity": 4
+  },
   "3241": {
     "itemValueAp": 17.136,
     "name": "狙击芯片",
     "rarity": 3
   },
+  "31073": {
+    "itemValueAp": 33.046658,
+    "name": "褐素纤维",
+    "rarity": 3
+  },
   "30145": {
-    "itemValueAp": 322.519235,
+    "itemValueAp": 321.084802,
     "name": "晶体电子单元",
     "rarity": 5
   },
   "30024": {
-    "itemValueAp": 96.564478,
+    "itemValueAp": 94.548712,
     "name": "糖聚块",
     "rarity": 4
   },
   "30023": {
-    "itemValueAp": 23.092868,
+    "itemValueAp": 22.573634,
     "name": "糖组",
     "rarity": 3
   },
   "30022": {
-    "itemValueAp": 5.886406,
+    "itemValueAp": 5.75522,
     "name": "糖",
     "rarity": 2
   },
   "30021": {
-    "itemValueAp": 1.973176,
+    "itemValueAp": 1.928792,
     "name": "代糖",
     "rarity": 1
   },
@@ -65,12 +75,12 @@
     "rarity": 1
   },
   "30093": {
-    "itemValueAp": 31.285922,
+    "itemValueAp": 31.453389,
     "name": "研磨石",
     "rarity": 3
   },
   "31063": {
-    "itemValueAp": 33.17998,
+    "itemValueAp": 32.486646,
     "name": "转质盐组",
     "rarity": 3
   },
@@ -80,7 +90,7 @@
     "rarity": 5
   },
   "30094": {
-    "itemValueAp": 91.236404,
+    "itemValueAp": 90.491848,
     "name": "五水研磨石",
     "rarity": 4
   },
@@ -95,7 +105,7 @@
     "rarity": 3
   },
   "30013": {
-    "itemValueAp": 17.203163,
+    "itemValueAp": 17.261865,
     "name": "固源岩组",
     "rarity": 3
   },
@@ -105,32 +115,32 @@
     "rarity": 1
   },
   "30012": {
-    "itemValueAp": 3.531184,
+    "itemValueAp": 3.541822,
     "name": "固源岩",
     "rarity": 2
   },
   "30135": {
-    "itemValueAp": 267.447107,
+    "itemValueAp": 263.929135,
     "name": "D32钢",
     "rarity": 5
   },
   "30014": {
-    "itemValueAp": 64.684904,
+    "itemValueAp": 64.764241,
     "name": "提纯源岩",
     "rarity": 4
   },
   "31064": {
-    "itemValueAp": 83.309318,
+    "itemValueAp": 81.044653,
     "name": "转质盐聚块",
     "rarity": 4
   },
   "30011": {
-    "itemValueAp": 1.188102,
+    "itemValueAp": 1.190992,
     "name": "源岩",
     "rarity": 1
   },
   "3003": {
-    "itemValueAp": 1.0,
+    "itemValueAp": 0.888,
     "name": "赤金",
     "rarity": 4
   },
@@ -140,12 +150,12 @@
     "rarity": 4
   },
   "30084": {
-    "itemValueAp": 96.671251,
+    "itemValueAp": 94.373557,
     "name": "三水锰矿",
     "rarity": 4
   },
   "30083": {
-    "itemValueAp": 27.46837,
+    "itemValueAp": 26.665125,
     "name": "轻锰矿",
     "rarity": 3
   },
@@ -165,17 +175,17 @@
     "rarity": 3
   },
   "30125": {
-    "itemValueAp": 244.041865,
+    "itemValueAp": 239.392471,
     "name": "双极纳米片",
     "rarity": 5
   },
   "31054": {
-    "itemValueAp": 75.435939,
+    "itemValueAp": 73.624155,
     "name": "切削原液",
     "rarity": 4
   },
   "31053": {
-    "itemValueAp": 22.820417,
+    "itemValueAp": 22.334865,
     "name": "化合切削液",
     "rarity": 3
   },
@@ -195,7 +205,7 @@
     "rarity": 5
   },
   "30073": {
-    "itemValueAp": 23.902064,
+    "itemValueAp": 23.135088,
     "name": "扭转醇",
     "rarity": 3
   },
@@ -220,7 +230,7 @@
     "rarity": 4
   },
   "31043": {
-    "itemValueAp": 31.164219,
+    "itemValueAp": 30.267593,
     "name": "半自然溶剂",
     "rarity": 3
   },
@@ -230,7 +240,7 @@
     "rarity": 4
   },
   "30074": {
-    "itemValueAp": 80.800262,
+    "itemValueAp": 78.731379,
     "name": "白马醇",
     "rarity": 4
   },
@@ -245,12 +255,12 @@
     "rarity": 2
   },
   "31044": {
-    "itemValueAp": 80.8234,
+    "itemValueAp": 79.310093,
     "name": "精炼溶剂",
     "rarity": 4
   },
   "30115": {
-    "itemValueAp": 258.886051,
+    "itemValueAp": 257.070228,
     "name": "聚合剂",
     "rarity": 5
   },
@@ -275,7 +285,7 @@
     "rarity": 3
   },
   "30062": {
-    "itemValueAp": 9.373217,
+    "itemValueAp": 9.187346,
     "name": "装置",
     "rarity": 2
   },
@@ -285,7 +295,7 @@
     "rarity": 2
   },
   "30061": {
-    "itemValueAp": 3.135446,
+    "itemValueAp": 3.072834,
     "name": "破损装置",
     "rarity": 1
   },
@@ -315,12 +325,12 @@
     "rarity": 5
   },
   "30103": {
-    "itemValueAp": 37.933079,
+    "itemValueAp": 37.305876,
     "name": "RMA70-12",
     "rarity": 3
   },
   "30064": {
-    "itemValueAp": 98.60461,
+    "itemValueAp": 97.996039,
     "name": "改量装置",
     "rarity": 4
   },
@@ -330,17 +340,17 @@
     "rarity": 4
   },
   "30063": {
-    "itemValueAp": 37.04011,
+    "itemValueAp": 36.302139,
     "name": "全新装置",
     "rarity": 3
   },
   "31034": {
-    "itemValueAp": 90.026974,
+    "itemValueAp": 88.986794,
     "name": "晶体电路",
     "rarity": 4
   },
   "31033": {
-    "itemValueAp": 18.810192,
+    "itemValueAp": 18.266633,
     "name": "晶体元件",
     "rarity": 3
   },
@@ -350,7 +360,7 @@
     "rarity": 3
   },
   "30104": {
-    "itemValueAp": 95.702721,
+    "itemValueAp": 95.130056,
     "name": "RMA70-24",
     "rarity": 4
   },
@@ -365,7 +375,7 @@
     "rarity": 3
   },
   "30051": {
-    "itemValueAp": 2.339693,
+    "itemValueAp": 2.346294,
     "name": "双酮",
     "rarity": 1
   },
@@ -375,27 +385,27 @@
     "rarity": 5
   },
   "31024": {
-    "itemValueAp": 89.766109,
+    "itemValueAp": 89.218201,
     "name": "炽合金块",
     "rarity": 4
   },
   "30053": {
-    "itemValueAp": 27.491065,
+    "itemValueAp": 27.583669,
     "name": "酮凝集组",
     "rarity": 3
   },
   "30052": {
-    "itemValueAp": 6.985955,
+    "itemValueAp": 7.007729,
     "name": "酮凝集",
     "rarity": 2
   },
   "31023": {
-    "itemValueAp": 25.567825,
+    "itemValueAp": 25.745893,
     "name": "炽合金",
     "rarity": 3
   },
   "30054": {
-    "itemValueAp": 101.415619,
+    "itemValueAp": 100.122877,
     "name": "酮阵列",
     "rarity": 4
   },
@@ -410,12 +420,12 @@
     "rarity": 3
   },
   "31014": {
-    "itemValueAp": 79.444711,
+    "itemValueAp": 79.473066,
     "name": "聚合凝胶",
     "rarity": 4
   },
   "31013": {
-    "itemValueAp": 30.966514,
+    "itemValueAp": 30.990854,
     "name": "凝胶",
     "rarity": 3
   },
@@ -425,12 +435,12 @@
     "rarity": 5
   },
   "30042": {
-    "itemValueAp": 6.872719,
+    "itemValueAp": 6.866696,
     "name": "异铁",
     "rarity": 2
   },
   "30041": {
-    "itemValueAp": 2.301947,
+    "itemValueAp": 2.299284,
     "name": "异铁碎片",
     "rarity": 1
   },
@@ -440,7 +450,7 @@
     "rarity": 5
   },
   "30044": {
-    "itemValueAp": 108.948797,
+    "itemValueAp": 108.249436,
     "name": "异铁块",
     "rarity": 4
   },
@@ -455,7 +465,7 @@
     "rarity": 5
   },
   "30043": {
-    "itemValueAp": 27.038121,
+    "itemValueAp": 27.019539,
     "name": "异铁组",
     "rarity": 3
   },
@@ -474,6 +484,11 @@
     "name": "重装双芯片",
     "rarity": 5
   },
+  "31083": {
+    "itemValueAp": 36.702837,
+    "name": "环烃聚质",
+    "rarity": 3
+  },
   "3232": {
     "itemValueAp": 39.9936,
     "name": "重装芯片组",
@@ -489,13 +504,18 @@
     "name": "重装芯片",
     "rarity": 3
   },
+  "31084": {
+    "itemValueAp": 97.952921,
+    "name": "环烃预制体",
+    "rarity": 4
+  },
   "30155": {
-    "itemValueAp": 304.228789,
+    "itemValueAp": 297.222667,
     "name": "烧结核凝晶",
     "rarity": 5
   },
   "30034": {
-    "itemValueAp": 91.185769,
+    "itemValueAp": 90.818414,
     "name": "聚酸酯块",
     "rarity": 4
   },
@@ -505,17 +525,17 @@
     "rarity": 3
   },
   "30031": {
-    "itemValueAp": 1.878787,
+    "itemValueAp": 1.896942,
     "name": "酯原料",
     "rarity": 1
   },
   "30033": {
-    "itemValueAp": 21.960195,
+    "itemValueAp": 22.191438,
     "name": "聚酸酯组",
     "rarity": 3
   },
   "30032": {
-    "itemValueAp": 5.603238,
+    "itemValueAp": 5.659671,
     "name": "聚酸酯",
     "rarity": 2
   },

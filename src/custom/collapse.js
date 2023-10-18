@@ -49,13 +49,13 @@ function collapse(collapse_item_class, collapse_wrap_id, collapse_item_id) {
 function collapseV2(collapse_id,collapse_item_id){
     const wrapHeight = document.getElementById(collapse_id).offsetHeight;
     let element = document.getElementById(collapse_item_id);
-    console.log(collapse_item_id)
+    // console.log(collapse_item_id)
     let height = element.offsetHeight;
     // for (let e of elements) {
     //     height += e.offsetHeight;
     // }
 
-    console.log(height)
+    // console.log(height)
     if (wrapHeight < 1) {
         // document.getElementById(collapse_id).style.willChange = 'height'
         document.getElementById(collapse_id).style.height = height + "px";

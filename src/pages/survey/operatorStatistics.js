@@ -17,7 +17,9 @@ function calAPCost(operatorList) {
 
     for (let c in operatorList) {
         const operator = operatorList[c];
+
         const charId = operator.charId;
+
         // const name = operator.name;
         const rarity = operator.rarity;
         const elite = operator.elite;
@@ -60,6 +62,9 @@ function calAPCost(operatorList) {
             }
         }
 
+        if(charId==='char_4088_hodrer'){
+          console.log(operatorItemCost.skills[2])
+        }
         for (let i = 0; i < operator.skill3; i++) {
             for (let itemId in operatorItemCost.skills[2][i]) {
                 let count = operatorItemCost.skills[2][i][itemId];
@@ -293,6 +298,16 @@ function splitMaterial(highest_rarity, item_cost_obj) {
                         const material_id = composite_list_element.id;  //合成原料id
                         const material_count = composite_list_element.count;  //合成原料总数
                         let new_item = item_cost_obj_copy[material_id];
+                        if(new_item == void 0 ) {
+                           const item =  itemTable[material_id]
+                           new_item = {
+                               count:0,
+                               id:material_id,
+                               itemValueAp:item.itemValueAp,
+                               name:item.name,
+                               rarity:item.rarity
+                           }
+                        }
                         new_item.count = new_item.count + product_count * material_count;
                         item_cost_obj_copy[material_id] = new_item;
                     }
