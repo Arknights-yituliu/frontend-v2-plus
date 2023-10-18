@@ -19,7 +19,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 150px;
-
+    align-content: flex-start;
 }
 
 .room_bg {
