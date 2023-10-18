@@ -82,7 +82,7 @@
       <c-button :color="'blue'" :status="btn_status.btn_statistics"
                 @click="clickBtn('btn_statistics');
                 statisticsCollapse()">
-        数据导入导出
+        统计材料消耗
       </c-button>
       <!--      <button :class="btnClass('btn_statistics')" @click="clickBtn('btn_statistics');statisticsCollapse()">统计材料消耗 </button>-->
 
