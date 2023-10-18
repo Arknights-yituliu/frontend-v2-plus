@@ -79,7 +79,7 @@
         <div class="riic_building_parameter" style="margin: 8px 2px">
           <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()"> 生成排班方案 </el-button>
           <a>
-            <el-button size="large" type="primary" id="disableBtn" round style="width: 108px; margin-left: 12px;filter:grayscale(50%) "> 导出到本地 </el-button>
+            <el-button size="large" type="primary" id="disableBtn" round style="width: 108px; margin-left: 12px;filter:grayscale(80%) "> 导出到本地 </el-button>
           </a>
           <a :href="exportUrl">
             <el-button size="large" type="primary" id="exportBtn" round style="width: 108px; margin-left: 12px; display: none"> 导出到本地 </el-button>
@@ -91,11 +91,12 @@
           <el-input class="parameter_inputbox" placeholder="id" style="margin-left: 12px; width: 150px" v-model="importId"></el-input>
         </div>
         <div class="riic_building_parameter">
-          *导出json文件的文件名即为id <br />
+          本次导出的id为：{{scheduleId}} <br />
+          *导出json文件的文件名即为id<br />
           或打开排班文件最末尾中寻找id
         </div>
-        <div class="riic_building_parameter">
-          <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ" style="display: block;margin-bottom: 4px">
+        <div class="riic_building_parameter" style="display: flex">
+          <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ" style="display: block;margin-bottom: 4px;margin-right: 4px">
             <el-button size="large" type="warning" round style="width: 186px;display:inline;"> 排班表生成问题反馈 </el-button>
           </a>
           <a href="https://ota.maa.plus/MaaAssistantArknights/api/qqgroup/index.html">
