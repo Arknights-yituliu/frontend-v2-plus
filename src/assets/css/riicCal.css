@@ -168,14 +168,18 @@
 
 .riic_building_parameter {
   /* background-color: rgb(110, 148, 23); */
-  margin: 12px 12px 0px 12px;
+  /* margin: 12px 12px 0px 12px; */
   padding-left: 12px;
+  line-height: 36px;
+  vertical-align: middle;
   /* display: inline-block; */
 }
 
 .parameter_text {
   width: 96px;
+  line-height: 36px;
   display: inline-block;
+  vertical-align: middle;
 }
 
 .parameter_inputbox {

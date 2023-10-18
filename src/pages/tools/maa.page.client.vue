@@ -31,6 +31,7 @@
             <el-radio-button label="手动换班"></el-radio-button>
           </el-radio-group>
         </div>
+        <!-- 自动换班则显示时间表 -->
         <div class="riic_building_parameter">
           <div class="parameter_text" style="width: 108px">名称/起止时间</div>
           <el-input class="parameter_inputbox" placeholder="主力组A" style="width: 90px" v-model="name[0]"></el-input>
@@ -51,7 +52,10 @@
         </div>
         <div class="riic_building_parameter">
           *跨天需写成 22:00 —— 06:00 (MAA执行周期为24小时)
-          <!-- (示例，写的时候别带&emsp;[&emsp;]！) -->
+        </div>
+        <!-- 手动换班则显示提示 -->
+        <div class="riic_building_parameter">
+          *手动选择换班无需填写时间表
         </div>
       </el-card>
       <el-card class="box-card riic_card">
@@ -84,10 +88,10 @@
           或打开排班文件最末尾中寻找id
         </div>
         <div class="riic_building_parameter">
-          <a href="https://www.wjx.cn/vm/mRNtSzd.aspx#">
+          <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">
             <el-button size="large" type="warning" round style="width: 186px;display:inline;"> 排班表生成问题反馈 </el-button>
           </a>
-          <a href="https://www.wjx.cn/vm/mRNtSzd.aspx#">
+          <a href="https://ota.maa.plus/MaaAssistantArknights/api/qqgroup/index.html">
             <el-button size="large" type="warning" round style="width: 186px;display:inline;"> 排班表执行问题反馈 </el-button>
           </a>
         </div>
@@ -3493,5 +3497,9 @@ export default {
 <style>
 .el-checkbox__label {
   color: grey;
+}
+
+.el-card__body {
+  padding:12px;
 }
 </style>
