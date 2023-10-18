@@ -30,15 +30,15 @@
 }
 
 .riic_workerSet:nth-child(1) {
-  border: 4px dotted #ff000080;
+  border: 2px dotted #ff000080;
 }
 
 .riic_workerSet:nth-child(2) {
-  border: 4px dotted #00ff0080;
+  border: 2px dotted #00ff0080;
 }
 
 .riic_workerSet:nth-child(3) {
-  border: 4px dotted #0000ff80;
+  border: 2px dotted #0000ff80;
 }
 
 .riic_workerSet {
@@ -51,8 +51,7 @@
 }
 
 .riic_building {
-  margin: 8px;
-  margin-top: 36px;
+  margin: 24px 12px;
   padding: 8px 0px 8px 0px;
   border: 4px solid rgba(128, 128, 128, 0.50196);
   border-radius: 16px;
@@ -61,7 +60,7 @@
 
 .riic_building_title {
   /* position: absolute; */
-  max-width: 330px;
+  max-width: 360px;
   background: #e0e0e0;
   /* margin: -36px -12px; */
   margin-top: -28px;
@@ -72,6 +71,7 @@
   border-right: 4px solid #80808080;
   border-radius: 4px;
   height: 36px;
+  line-height: 36px;
   color: black;
   /* width: 400px; */
 }
@@ -185,9 +185,10 @@
 .parameter_inputbox {
   width: 262px;
   display: inline-block;
-  height: 20px;
+  height: 36px;
   position: relative;
-  top: -2px;
+  top: 0px;
+  line-height: 36px;
 }
 
 .operator_text {
