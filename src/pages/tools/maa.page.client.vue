@@ -78,7 +78,7 @@
         </div>
         <div class="riic_building_parameter" style="margin: 8px 2px">
           <el-button size="large" type="primary" round style="width: 126px" @click="maaBuildingJsonCreated()"> 生成排班方案 </el-button>
-          <a>
+          <a @click="downFile()">
             <el-button size="large" type="primary" id="disableBtn" round style="width: 108px; margin-left: 12px;filter:grayscale(80%) "> 导出到本地 </el-button>
           </a>
           <a :href="exportUrl">
@@ -2088,6 +2088,23 @@ export default {
       this.exportUrl = "https://backend.yituliu.site/maa/schedule/export?schedule_id=" + this.scheduleId;
       // this.exportUrl = "http://127.0.0.1:10013/maa/schedule/export?schedule_id=" + this.scheduleId;
       this.maaUrl = "maa://infra.yituliu/" + this.scheduleId;
+    },
+
+    downFile(){
+      this.setJson();
+      buildingApi.maaBuildingJsonCreated(this.scheduleJson, this.scheduleId).then((response) => {
+        this.$message({
+          message: response.data.message + "作业id为：" + response.data.scheduleId,
+          type: "success",
+          showClose: true,
+          duration: 4000,
+        });
+        this.scheduleId = response.data.scheduleId;
+        let link = document.createElement('a')
+        link.download = `${response.data.scheduleId}.json`
+        link.href = 'data:text/plain,' + JSON.stringify( this.scheduleJson )
+        link.click()
+      });
     },
     maaBuildingJsonCreated() {
       this.setJson();

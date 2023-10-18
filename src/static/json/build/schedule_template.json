@@ -1,0 +1,1250 @@
+{
+  "title": "排班文件标题",
+  "description": "排班文件描述",
+  "author": "yituliu",
+  "buildingType": "243",
+  "id": 1697606525017292,
+  "planTimes": "3班",
+  "plans": [
+    {
+      "drones": {
+        "room": "trading",
+        "index": 1,
+        "enable": true,
+        "order": "pre"
+      },
+      "period": [
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ]
+      ],
+      "room": {
+        "control": [
+          {
+            "operators": [
+              "阿米娅",
+              "凯尔希",
+              "琴柳",
+              "令",
+              "夕"
+            ]
+          }
+        ],
+        "trading": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          }
+        ],
+        "manufacture": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          }
+        ],
+        "power": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "hire": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "meeting": [
+          {
+            "operators": [
+              "null",
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "dormitory": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          }
+        ]
+      },
+      "name": "第0组",
+      "description": "描述0"
+    },
+    {
+      "drones": {
+        "room": "trading",
+        "index": 1,
+        "enable": true,
+        "order": "pre"
+      },
+      "period": [
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ]
+      ],
+      "room": {
+        "control": [
+          {
+            "operators": [
+              "阿米娅",
+              "凯尔希",
+              "琴柳",
+              "令",
+              "夕"
+            ]
+          }
+        ],
+        "trading": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          }
+        ],
+        "manufacture": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          }
+        ],
+        "power": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "hire": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "meeting": [
+          {
+            "operators": [
+              "null",
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "dormitory": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          }
+        ]
+      },
+      "name": "第1组",
+      "description": "描述1"
+    },
+    {
+      "drones": {
+        "room": "trading",
+        "index": 1,
+        "enable": true,
+        "order": "pre"
+      },
+      "period": [
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ]
+      ],
+      "room": {
+        "control": [
+          {
+            "operators": [
+              "阿米娅",
+              "凯尔希",
+              "琴柳",
+              "令",
+              "夕"
+            ]
+          }
+        ],
+        "trading": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          }
+        ],
+        "manufacture": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          }
+        ],
+        "power": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "hire": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "meeting": [
+          {
+            "operators": [
+              "null",
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "dormitory": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          }
+        ]
+      },
+      "name": "第2组",
+      "description": "描述2"
+    },
+    {
+      "drones": {
+        "room": "trading",
+        "index": 1,
+        "enable": true,
+        "order": "pre"
+      },
+      "period": [
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ]
+      ],
+      "room": {
+        "control": [
+          {
+            "operators": [
+              "阿米娅",
+              "凯尔希",
+              "琴柳",
+              "令",
+              "夕"
+            ]
+          }
+        ],
+        "trading": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          }
+        ],
+        "manufacture": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          }
+        ],
+        "power": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "hire": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "meeting": [
+          {
+            "operators": [
+              "null",
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "dormitory": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          }
+        ]
+      },
+      "name": "第3组",
+      "description": "描述3"
+    },
+    {
+      "drones": {
+        "room": "trading",
+        "index": 1,
+        "enable": true,
+        "order": "pre"
+      },
+      "period": [
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ],
+        [
+          "00:00",
+          "00:00"
+        ]
+      ],
+      "room": {
+        "control": [
+          {
+            "operators": [
+              "阿米娅",
+              "凯尔希",
+              "琴柳",
+              "令",
+              "夕"
+            ]
+          }
+        ],
+        "trading": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "LMD"
+          }
+        ],
+        "manufacture": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false,
+            "product": "Battle Record"
+          }
+        ],
+        "power": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "hire": [
+          {
+            "operators": [
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "meeting": [
+          {
+            "operators": [
+              "null",
+              "null"
+            ],
+            "autofill": false
+          }
+        ],
+        "dormitory": [
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          },
+          {
+            "operators": [
+              "null",
+              "null",
+              "null",
+              "null",
+              "null"
+            ],
+            "sort": false,
+            "autofill": false
+          }
+        ]
+      },
+      "name": "第4组",
+      "description": "描述4"
+    }
+  ]
+}

@@ -18,7 +18,7 @@
         <div class="collapse_bar_wrap">
           <div class="collapse_bar">
             <div class="switch_title">职业</div>
-            <div class="switch_btns_wrap">
+            <div class="switch_btn_wrap">
               <div
                   :class="selectedBtn('profession', profession.value)"
                   v-for="(profession,index) in professionDict"
@@ -32,7 +32,7 @@
 
           <div class="collapse_bar">
             <div class="switch_title">稀有度</div>
-            <div class="switch_btns_wrap">
+            <div class="switch_btn_wrap">
               <div :class="selectedBtn('rarity', rarity)"
                    v-for="(rarity,index) in rarity_dict" :key="index"
                    @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
@@ -42,7 +42,7 @@
 
           <div class="collapse_bar">
             <div class="switch_title">其他</div>
-            <div class="switch_btns_wrap">
+            <div class="switch_btn_wrap">
               <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
               <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
               <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
@@ -59,7 +59,7 @@
 
           <!-- <div class="collapse_bar">
             <div class="switch_title">排序</div>
-            <div class="switch_btns_wrap">
+            <div class="switch_btn_wrap">
               <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
               <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
               <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>

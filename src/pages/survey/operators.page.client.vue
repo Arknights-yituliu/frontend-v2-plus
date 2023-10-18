@@ -91,12 +91,12 @@
 
 
     <!-- 筛选模块 -->
-    <div class="collapse_item_wrap" id="filter_box_wrap">
+    <div class="collapse_item_wrap"  id="filter_box_wrap">
       <div class="collapse_item" id="filter_box">
         <div class="collapse_bar_wrap">
           <div class="collapse_bar">
-            <div class="collapse_title">职业</div>
-            <div class="switch_btns_wrap">
+            <div class="collapse_title" style="width: 80px;">职业</div>
+            <div class="switch_btn_wrap">
               <div
                   :class="selectedBtn('profession', profession.value)"
                   v-for="(profession,index) in professionDict"
@@ -109,8 +109,8 @@
           </div>
 
           <div class="collapse_bar">
-            <div class="collapse_title">稀有度</div>
-            <div class="switch_btns_wrap">
+            <div class="collapse_title" style="width: 80px;">稀有度</div>
+            <div class="switch_btn_wrap">
               <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in rarity_dict" :key="index"
                    @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
               </div>
@@ -118,8 +118,8 @@
           </div>
 
           <div class="collapse_bar">
-            <div class="collapse_title">年份</div>
-            <div class="switch_btns_wrap">
+            <div class="collapse_title" style="width: 80px;">年份</div>
+            <div class="switch_btn_wrap">
               <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
                    @click="addFilterCondition('year', key)">
                 {{ year.label }}
@@ -128,16 +128,16 @@
           </div>
 
           <div class="collapse_bar">
-            <div class="collapse_title">是否拥有</div>
-            <div class="switch_btns_wrap">
+            <div class="collapse_title" style="width: 80px;">是否拥有</div>
+            <div class="switch_btn_wrap">
               <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
               <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
             </div>
           </div>
 
           <div class="collapse_bar">
-            <div class="collapse_title">其它</div>
-            <div class="switch_btns_wrap">
+            <div class="collapse_title" style="width: 80px;">其它</div>
+            <div class="switch_btn_wrap">
               <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
               <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
               <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
@@ -150,17 +150,17 @@
           </div>
 
           <div class="collapse_bar">
-            <div class="collapse_title">排序</div>
-            <div class="switch_btns_wrap">
-              <!-- <div class="btn" @click="sortCharacterList('profession')">按职业</div> -->
-              <div class="btn" @click="sortCharacterList('rarity')">按稀有度</div>
-              <div class="btn" @click="sortCharacterList('date')">按实装顺序</div>
+            <div class="collapse_title" style="width: 80px;">排序</div>
+            <div class="switch_btn_wrap">
+              <!-- <div class="btn btn_white" @click="sortCharacterList('profession')">按职业</div> -->
+              <div class="btn btn_white" @click="sortCharacterList('rarity')">按稀有度</div>
+              <div class="btn btn_white" @click="sortCharacterList('date')">按实装顺序</div>
             </div>
           </div>
 
           <!-- <div class="collapse_bar">
             <div class="collapse_title">练度</div>
-            <div class="switch_btns_wrap">
+            <div class="switch_btn_wrap">
               <div :class="selectedBtn('TODO', 0)" @click="addFilterCondition('mod', false)">无专三</div>
               <div :class="selectedBtn('TODO', 1)" @click="addFilterCondition('mod', false)">一个专三</div>
               <div :class="selectedBtn('TODO', 2)" @click="addFilterCondition('mod', false)">两个专三</div>
@@ -171,25 +171,26 @@
           </div> -->
 
           <div class="mdui-divider" style="margin: 8px;"></div>
-
+          <div class="switch_desc ">
+            <a class="">对所有被筛选出的干员进行操作</a>
+          </div>
           <div class="collapse_bar">
-            <div class="collapse_title">
-              批量操作 <br/>
-              <div style="font-size: 12px; font-style: italic">对所有被筛选出的干员进行操作</div>
+            <div class="collapse_title" style="width: 100px;">
+              批量操作
             </div>
-            <div class="switch_btns_wrap">
-              <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>
-              <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>
-              <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>
-              <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>
-              <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>
-              <div class="btn">设为满级</div>
-              <div class="btn">设为满潜能</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
+            <div class="switch_btn_wrap">
+              <div class="btn btn_white" @click="batchUpdatesOwn(true)">设为已拥有</div>
+              <div class="btn btn_white" @click="batchUpdatesOwn(false)">设为未拥有</div>
+              <div class="btn btn_white" @click="batchUpdatesElite(0)">设为无精</div>
+              <div class="btn btn_white" @click="batchUpdatesElite(1)">设为精一</div>
+              <div class="btn btn_white" @click="batchUpdatesElite(2)">设为精二</div>
+              <div class="btn btn_white">设为满级</div>
+              <div class="btn btn_white">设为满潜能</div>
+              <div class="btn btn_white" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
+              <div class="btn btn_white" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
+              <div class="btn btn_white" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
+              <div class="btn btn_white" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
+              <div class="btn btn_white" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
             </div>
           </div>
         </div>
@@ -248,15 +249,15 @@
         <div class="collapse_bar_wrap">
           <div class="collapse_bar">
             <div class="collapse_title">导入导出</div>
-            <div class="switch_btns_wrap">
+            <div class="switch_btn_wrap">
               <div class="btn btn_blue" @click="exportExcel()">导出为Excel</div>
-              <!--            <div class="btn">-->
+              <!--            <div class="btn btn_white">-->
               <!--              <div class="input_upload_wrap">-->
               <!--                导入Excel文件-->
               <!--                <input id="uploadInput" type="file" class="input_upload" @input="getUploadFileName()"/>-->
               <!--              </div>-->
               <!--            </div>-->
-              <!--            &lt;!&ndash; <div class="btn" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
+              <!--            &lt;!&ndash; <div class="btn btn_white" @click="uploadByExcel()">上传Excel文件</div> &ndash;&gt;-->
               <!--            <div class="upload_file_name">文件名：{{ upload_file_name }}</div>-->
             </div>
           </div>
@@ -268,7 +269,7 @@
           <div class="divider"></div>
           <!--        <div class="collapse_bar">-->
           <!--          <div class="collapse_title">uid找回数据</div>-->
-          <!--          <div class="switch_btns_wrap">-->
+          <!--          <div class="switch_btn_wrap">-->
           <!--            <div class="skland_desc">输入uid</div>-->
           <!--            <div><input class="skland_input" type="text" v-model="player_uid"/></div>-->
           <!--            <button class="btn btn_white" @click="retrievalByUid()">找回练度数据</button>-->
@@ -282,7 +283,7 @@
           </div>
           <div class="collapse_bar">
             <div class="collapse_title" style="width: 140px;">森空岛导入</div>
-            <div class="switch_btns_wrap">
+            <div class="switch_btn_wrap">
               <div class="skland_desc">输入CRED</div>
               <div><input class="skland_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
               <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
@@ -293,7 +294,7 @@
           </div>
           <div class="collapse_bar" v-show="bindingList.length>0">
             <div class="collapse_title" style="width: 140px;">导入账号不正确？</div>
-            <div class="switch_btns_wrap">
+            <div class="switch_btn_wrap">
               <div class="skland_desc">选择你想要导入的账号</div>
               <div v-for="(binding,index) in bindingList" :key="index"
                    class="btn btn_blue" :class="chooseUidClass(binding.uid)"
@@ -1142,12 +1143,7 @@ function updateLevel(char_index) {
   statistics()
 }
 
-//选中标题
-// eslint-disable-next-line
-function btnSetClass(flag) {
-  if (flag) return "btn_setup btn_setup_selected";
-  return "btn_setup";
-}
+
 
 //先取消旧选项，更修改新选项的背景色
 function cancelAndUpdateOption(elementIdHeader, rank, oldRank) {

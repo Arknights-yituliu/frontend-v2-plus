@@ -23,13 +23,13 @@
 
       <div class="login_card" v-show="user_data.status<0">
         <div class="login_btn_wrap">
-          <button class="survey_btn_transparent" :style="accountTypeClass('passWord')"
+          <div class="btn" :style="accountTypeClass('passWord')"
                   @click="selectAccountType('passWord')">密码{{ 'register' === registerOrLogin ? '注册' : '登录' }}
-          </button>
+          </div>
           <div style="border: 1px solid black;height: 18px"></div>
-          <button class="survey_btn_transparent" :style="accountTypeClass('emailCode')"
+          <div class="btn" :style="accountTypeClass('emailCode')"
                   @click="selectAccountType('emailCode')">邮箱{{ 'register' === registerOrLogin ? '注册' : '登录' }}
-          </button>
+          </div>
         </div>
 
         <div class="login_input_wrap" v-show="'passWord'===account_type">

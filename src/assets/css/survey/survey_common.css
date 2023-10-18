@@ -1,13 +1,3 @@
-.setup_wrap {
-  max-width: 95%;
-  transition: all 0.4s;
-  overflow: hidden;
-  height: auto;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 2px;
-  margin: auto auto 6px;
-}
 
 .setup_top {
   position: sticky;
@@ -21,10 +11,16 @@
   padding: 4px 0px 4px 16px;
 }
 
-
 .href_black{
   text-decoration: none;
   color: rgb(255, 255, 255);
+}
+
+
+
+.switch_btn_wrap{
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .survey_btn_transparent{
@@ -87,17 +83,6 @@
   color: white;
 }
 
-.survey_btn_group_left{
-  margin:8px 0 8px 8px;
-  border-radius: 4px;
-  background-color: #eeeeeeee;
-}
-.survey_btn_group{
-  margin:8px 0 8px 0;
-  border-radius: 4px;
-  background-color: #eeeeeeee;
-}
-
 #updateTime{
   padding: 0;
   display: inline-block;
@@ -108,79 +93,6 @@
 }
 
 
-.control_panel {
-  display: flex;
-  flex-wrap: wrap;
-  /* padding: 4px; */
-}
-
-.btn_setup {
-  background-color: #eeeeeeee;
-  width: 180px;
-  height: 48px;
-  padding: 4px;
-  line-height: 28px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 18px;
-  cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
-  margin:8px 0px 8px 8px;
-  border-radius: 4px;
-  /* box-shadow: 2px 2px 4px #cccccc; */
-}
-
-.btn_setup_selected {
-  background: #6795ff;
-  color: white;
-}
-
-.btn_setup_tips {
-  line-height: 20px;
-  text-align: center;
-  font-weight: 400;
-  font-style: italic;
-  font-size: 14px;
-  color: #222222;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.btn_setup_tips_wrap {
-  color: rgb(61, 80, 255);
-}
-
-.switch_wrap {
-  max-width: 95%;
-  margin: 4px auto;
-  overflow: hidden;
-  height: 0;
-}
-
-.switch_wrap_open {
-  height: auto;
-}
-
-
-.switch_box {
-  margin: 4px;
-  transition: all 0.3s;
-  transform: translateY(-1000px);
-  background-color: rgba(255, 255, 255, 1);
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 2px;
-}
-
-.switch_box_open{
-  transform: translateY(0px);
-}
-
-.switch_bar {
-  width: 98%;
-  flex-direction: row;
-  justify-content: flex-start;
-  padding: 2px;
-}
-
 .btn_switch_wrap{
   width: 70%;
   margin: auto;
@@ -189,21 +101,7 @@
   justify-content: space-between;
 }
 
-.btn_switch {
-  background-color: #eeeeee;
-  margin: 4px;
-  width: 108px;
-  height: 20px;
-  padding: 4px;
-  line-height: 20px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-family: Arial, Helvetica, sans-serif;
-  /* box-shadow: 2px 2px 4px #cccccc; */
-}
+
 
 .switch_title {
   float: left;
@@ -236,9 +134,7 @@
 }
 
 .switch_btns_wrap {
-  margin-left: 108px;
-  display: flex;
-  flex-wrap: wrap;
+
 }
 
 .input_upload_wrap {
