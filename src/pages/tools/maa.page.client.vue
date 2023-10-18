@@ -2057,7 +2057,7 @@ export default {
       this.$notify({
         title: "2023-08-03更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong> 干员追加：<br>苍苔、琳琅诗怀雅、圣约送葬人、空构、洋灰、Friston-3" +
+        message: "<strong> 干员追加：<br>【恶兆湍流】：赫德雷" +
           "<br><br>UI问题：<br>如果遇到不能展开三列排班请收起侧边导航栏或缩小网页比例"                                                                            +
             "<br><br>BUG相关：<br>如果遇到导入为空的情况可加Q群539600566</strong>",
         duration: 12000,
