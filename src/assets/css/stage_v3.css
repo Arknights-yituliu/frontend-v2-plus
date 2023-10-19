@@ -1,3 +1,7 @@
+#stage_3{
+  display: flex;
+}
+
 .stage_card_3{
   border: 0px solid #ebeef5;
   overflow: hidden;
