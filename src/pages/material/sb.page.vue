@@ -53,7 +53,7 @@
         </div>
       </div>
     </div>
-    {{ detailDemo }}
+    {{ chartData }}
     {{ stageRank[6] }}
     {{ stageRank[6].itemType }}
     <!-- 地图效率End -->
@@ -81,11 +81,12 @@ import { ref } from "vue";
 import stageApi from "@/api/stage";
 
 import detailDemo from "@/pages/material/detail.json";
-
 import { usePageContext } from "@/renderer/usePageContext";
 
 const pageContext = usePageContext();
 const stageRank = pageContext.pageProps.t3;
+
+// this.chartData = detailDemo.data;
 
 let closedStageList = ref([]);
 
