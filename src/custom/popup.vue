@@ -89,7 +89,7 @@ watch(
 
 .popup_context {
   width: 100%;
-  max-height: 450px;
+  max-height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
 }
