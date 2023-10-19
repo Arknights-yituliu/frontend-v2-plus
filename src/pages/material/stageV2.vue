@@ -181,9 +181,8 @@
           <td class="popup_table_c1">
             {{ stage.stageCode }}
           </td>
-          <td class="popup_table_c2" style="font-size: 14px">{{
-              shrinkTimes(stage.sampleSize)
-            }}<br/>({{ formatNumber(stage.sampleConfidence, 1) }}%)
+          <td class="popup_table_c2" style="font-size: 14px">{{shrinkTimes(stage.sampleSize)}}
+            <br/>({{ formatNumber(stage.sampleConfidence, 1) }}%)
           </td>
           <td class="popup_table_c3">{{ formatNumber(stage.spm, 1) }}</td>
           <td style="padding-left: 20px">
@@ -191,11 +190,8 @@
               <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
             </div>
           </td>
-
           <td class="popup_table_c5">{{ formatNumber(stage.knockRating * 100, 1) }}%</td>
-          <td class="popup_table_c6">
-            {{ formatNumber(stage.apExpect) }}
-          </td>
+          <td class="popup_table_c6">{{ formatNumber(stage.apExpect) }}</td>
           <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency * 100, 1) }}%</td>-->
           <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency * 100, 1) }}%</td>-->
           <td class="popup_table_c7">{{ formatNumber(stage.stageEfficiency * 100, 2) }}%</td>

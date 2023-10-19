@@ -29,9 +29,9 @@ export default {
   },
 
   //查询已结束活动
-  findClosedStage(expCoefficient) {
+  getActStageResult(expCoefficient) {
     return request({
-      url: `/stage/closed?expCoefficient=${expCoefficient}`,
+      url: `/stage/act?expCoefficient=${expCoefficient}`,
       method: "get",
     });
   },

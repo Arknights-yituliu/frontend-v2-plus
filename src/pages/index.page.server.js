@@ -21,22 +21,6 @@ function get_closed() {
   return axios.get(`${http}stage/act?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`);
 }
 
-// function get_perm() {
-//   return axios.get(http + "store/perm");
-// }
-
-// function get_act() {
-//   return axios.get(http + "store/act");
-// }
-
-// function get_value() {
-//   return axios.get(http + "item/value?expCoefficient=0.625");
-// }
-
-// function get_newChapter() {
-//   return axios.get(http + "stage/newChapter?zone=12-");
-// }
-
 export async function onBeforeRender(pageContext) {
   const result = await Promise.all([get_t3(), get_t2(), get_orundum(), get_closed()]);
   const t3 = result[0].data.data;

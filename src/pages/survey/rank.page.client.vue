@@ -351,6 +351,8 @@ function filterCharacterList() {
 let last_property = ref('')
 let desc_or_asc = ref(1)
 
+
+
 //按条件排序
 function sortRank(property) {
   if (last_property.value === property) {
