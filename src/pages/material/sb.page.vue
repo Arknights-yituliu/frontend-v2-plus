@@ -78,7 +78,7 @@
 <script setup>
 
 import { ref } from "vue";
-import stageApi from "@/api/stage";
+import stageApi from "/src/api/stage";
 
 import detailDemo from "@/pages/material/detail.json";
 import { usePageContext } from "@/renderer/usePageContext";
@@ -90,7 +90,7 @@ const stageRank = pageContext.pageProps.t3;
 
 let closedStageList = ref([]);
 
-stageApi.findClosedStage(0.625).then((response) => {
+stageApi.getActStageResult(0.625).then((response) => {
   closedStageList.value = [];
   closedStageList.value = response.data;
 });

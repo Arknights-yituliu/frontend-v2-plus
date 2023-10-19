@@ -1,8 +1,8 @@
 <template>
   <div :style="popupStyle" class="popup_page">
     <div class="popup_mask" @click="openAndClose(false)">
-
     </div>
+
     <div class="popup" :style="widthStyle">
       <slot name="header"></slot>
       <div class="popup_context">
@@ -10,8 +10,7 @@
       </div>
       <slot name="footer"></slot>
     </div>
-    <div class="popup_footer">
-    </div>
+
   </div>
 </template>
 
@@ -82,8 +81,6 @@ watch(
   z-index: 2100;
   margin: 15vh auto auto;
   width: 500px;
-  height: 500px;
-
   background: rgba(255, 255, 255, 0.9);
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
@@ -92,7 +89,7 @@ watch(
 
 .popup_context {
   width: 100%;
-  height: 300px;
+  max-height: 450px;
   overflow-y: auto;
   overflow-x: hidden;
 }

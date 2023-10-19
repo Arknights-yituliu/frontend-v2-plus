@@ -219,213 +219,72 @@
           <!--          <div class="popup_item">例如:糖系T4效率=(糖聚块价值+糖组价值+糖价值+代糖价值)/理智消耗</div>-->
         </div>
       </template>
+    </c-popup>
 
+    <c-popup v-model:visible="popup_orundum" :width="'550px'">
+      <table class="popup_table" style="padding-top: 6px">
+        <tbody style="font-size: 20px">
+        <tr class="popup_table_title" style="height: 36px">
+          <td class="popup_table_c1" style="width: 85px">关卡名</td>
+          <td class="popup_table_c2" style="width: 80px">每理智可搓玉</td>
+          <td class="popup_table_c3" style="width: 120px">每搓1抽消耗</td>
+          <td class="popup_table_c5" style="width: 95px">关卡效率</td>
+          <td class="popup_table_c6" style="width: 95px">搓玉效率</td>
+        </tr>
+        <tr
+            style="height: 36px"
+            v-for="(stage, index) in stageRankOrundum"
+            :key="index"
+            :class="getColor(stage.stageEfficiency*100, 90, 20)"
+            class="stage_table_r"
+        >
+          <td class="popup_table_c1" style="width: 85px">
+            {{ stage.stageCode }}
+          </td>
+          <td class="popup_orundum_c2" style="width: 120px">
+            <!-- <div>1</div> -->
+            <!-- <div :class="getSpriteImg('AP_GAMEPLAY', 5)" ></div> -->
+            <div>{{ formatNumber(stage.orundumPerAp) }}</div>
+            <div style="margin-bottom: -15px" :class="getSpriteImg(4003, 'icon_small')"></div>
+          </td>
+          <td class="popup_orundum_c3" style="width: 120px">
+            <div>{{ formatNumber(stage.lmdcost) }}w</div>
+            <div style="margin-bottom: -8px" :class="getSpriteImg(4001, 'icon_small')"></div>
+          </td>
+          <td class="popup_table_c5" style="width: 95px">{{ formatNumber(stage.stageEfficiency * 100) }}%</td>
+          <td class="popup_table_c6" style="width: 95px">{{
+              formatNumber(stage.orundumPerApEfficiency * 100)
+            }}%
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </c-popup>
+
+
+    <c-popup v-model:visible="popup_act" :width="'550px'">
+      <div v-for="(actStageVo, index) in stageActHistory" :key="index" class="popup_act_card">
+        <div class="popup_act_card_left">
+
+           {{ actStageVo.zoneName }}
+<!--          <div> {{ actStageVo.endTime }}</div>-->
+        </div>
+        <div class="popup_act_stages">
+          <div v-for="(stage, index) in actStageVo.actStageList" :key="index" class="history_stage">
+            <div class="stage_sprite_closed_wrap">
+              <div :class="getSpriteImg(stage.itemId, 'closed')"></div>
+            </div>
+            <div class="history_stage_table">{{ stage.stageCode }}<br/>{{
+                formatNumber(stage.stageEfficiency * 100)
+              }}%
+            </div>
+          </div>
+        </div>
+      </div>
 
     </c-popup>
 
-    <!-- 弹窗Start -->
-    <!--    <div id="popup_background" @click="hidePopup()"></div>-->
-    <div id="popup_content">
-      <!-- 散装标题Start -->
-      <div class="popup_card" id="popup_card">
-        <div class="popup_header">
-          <div class="stage_sprite_popup_wrap">
-            <div :class="getSpriteImg(popupData.itemTypeId, 'popup')"></div>
-          </div>
 
-          <div class="popup_header_text">{{ popupData.itemType }}</div>
-
-          <a :href="getPenguinUrl(popupData.itemTypeId)" class="t3 popup_header_penguin">
-            <div>查看企鹅物流原始数据</div>
-            <div :class="getSpriteImg('el', 'el')"></div>
-          </a>
-        </div>
-        <!-- 散装标题End -->
-        <el-divider></el-divider>
-        <!-- 数据表Start -->
-        <table class="popup_table">
-          <tbody>
-          <tr class="popup_table_title">
-            <td class="popup_table_c1" style="width: 55px; width: 65px">关卡名</td>
-            <td class="popup_table_c2" style="width: 65px; width: 75px">样本数<br/>(置信度)</td>
-            <td class="popup_table_c3" style="width: 40px; width: 50px">SPM</td>
-            <td class="popup_table_c4" style="width: 50px; width: 60px" colspan="1">副产品</td>
-            <td class="popup_table_c5" style="width: 80px; width: 90px">主产物掉率</td>
-            <td class="popup_table_c6" style="width: 80px; width: 90px">主产物期望</td>
-            <!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>-->
-            <!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>-->
-            <td class="popup_table_c7" style="width: 70px; width: 80px">总效率</td>
-          </tr>
-          <tr v-for="(stage, index) in popupData.stageResultList" :key="index" :class="getColor(stage.stageColor)"
-              class="stage_table_r">
-            <td class="popup_table_c1">
-              {{ stage.stageCode }}
-            </td>
-            <td class="popup_table_c2" style="font-size: 14px">{{
-                shrinkTimes(stage.sampleSize)
-              }}<br/>({{ formatNumber(stage.sampleConfidence, 1) }}%)
-            </td>
-            <td class="popup_table_c3">{{ formatNumber(stage.spm, 1) }}</td>
-            <td style="padding-left: 20px">
-              <div class="stage_sprite_sec_wrap">
-                <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
-              </div>
-            </td>
-
-            <td class="popup_table_c5">{{ formatNumber(stage.knockRating * 100, 1) }}%</td>
-            <td class="popup_table_c6">
-              {{ formatNumber(stage.apExpect) }}
-            </td>
-            <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency * 100, 1) }}%</td>-->
-            <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency * 100, 1) }}%</td>-->
-            <td class="popup_table_c7">{{ formatNumber(stage.stageEfficiency * 100, 1) }}%</td>
-          </tr>
-          </tbody>
-        </table>
-        <!-- 数据表End -->
-        <el-divider></el-divider>
-        <div class="popup_text f12">
-          <div class="popup_item">效率基准:<b>常驻图</b>中综合效率最高者</div>
-          <div class="popup_item">
-            置信度:掉率对关卡效率误差影响在3%前提下的可信度范围&emsp;
-            <a href="https://www.bilibili.com/video/BV1yL4y1P7K1">
-              <div style="display: flex">
-                详细介绍
-                <div :class="getSpriteImg('el', 'el')"></div>
-              </div>
-            </a>
-          </div>
-          <div class="popup_item">SPM:假设敌人被秒杀，1倍速下每分钟消耗的理智量，实际可能略有出入</div>
-          <div class="popup_item">总效率:<b>所有产物</b>的价值之和占理智消耗的比例</div>
-          <!--          <div class="popup_item">T4效率:<b>紫材料+蓝材料+绿材料+白材料</b>的价值之和占理智消耗的比例</div>-->
-          <!--          <div class="popup_item">T3效率:<b>蓝材料+绿材料+白材料</b>的价值之和占理智消耗的比例</div>-->
-          <!--          <div class="popup_item">例如:糖系T4效率=(糖聚块价值+糖组价值+糖价值+代糖价值)/理智消耗</div>-->
-        </div>
-      </div>
-      <!-- 搓玉 -->
-      <div class="popup_card" id="popup_card_orundum">
-        <!-- 数据表Start -->
-        <table class="popup_table" style="padding-top: 6px">
-          <tbody style="font-size: 20px">
-          <tr class="popup_table_title" style="height: 36px">
-            <td class="popup_table_c1" style="width: 85px">关卡名</td>
-            <td class="popup_table_c2" style="width: 120px">每理智可搓玉</td>
-            <td class="popup_table_c3" style="width: 120px">每搓1抽消耗</td>
-            <td class="popup_table_c5" style="width: 95px">关卡效率</td>
-            <td class="popup_table_c6" style="width: 95px">搓玉效率</td>
-          </tr>
-          </tbody>
-        </table>
-        <el-divider></el-divider>
-        <div style="height: 500px; overflow: auto; margin-top: -6px">
-          <table class="popup_table">
-            <tbody style="font-size: 20px; vertical-align: baseline">
-            <tr
-                style="height: 36px"
-                v-for="(stage, index) in stageRankOrundum"
-                :key="index"
-                :class="getColor(stage.stageEfficiency*100, 90, 20)"
-                class="stage_table_r"
-            >
-              <td class="popup_table_c1" style="width: 85px">
-                {{ stage.stageCode }}
-              </td>
-              <td class="popup_orundum_c2" style="width: 120px">
-                <!-- <div>1</div> -->
-                <!-- <div :class="getSpriteImg('AP_GAMEPLAY', 5)" ></div> -->
-                <div>{{ formatNumber(stage.orundumPerAp) }}</div>
-                <div style="margin-bottom: -15px" :class="getSpriteImg(4003, 'icon_small')"></div>
-              </td>
-              <td class="popup_orundum_c3" style="width: 120px">
-                <div>{{ formatNumber(stage.lmdcost) }}w</div>
-                <div style="margin-bottom: -8px" :class="getSpriteImg(4001, 'icon_small')"></div>
-              </td>
-              <td class="popup_table_c5" style="width: 95px">{{ formatNumber(stage.stageEfficiency * 100) }}%</td>
-              <td class="popup_table_c6" style="width: 95px">{{
-                  formatNumber(stage.orundumPerApEfficiency * 100)
-                }}%
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <!-- 数据表End -->
-        <el-divider></el-divider>
-        <div class="popup_text f12 t1">
-          关卡效率:该关卡掉落物价值之和与理智消耗之比，颜色用于区分数值大小<br/>
-          搓玉效率:该关卡的转化率与无加成1-7的转化率之比
-        </div>
-      </div>
-      <!-- 往期活动 -->
-      <div id="popup_card_history">
-        <div v-for="(actStageVo, index) in stageActHistory" :key="index" class="popup_card">
-          <div class="history_actName">
-            {{ actStageVo.zoneName }}
-          </div>
-          <div class="history_actStages">
-            <div v-for="(stage, index) in actStageVo.actStageList" :key="index" class="history_stage">
-              <div class="stage_sprite_closed_wrap">
-                <div :class="getSpriteImg(stage.itemId, 'closed')"></div>
-              </div>
-              <div class="history_stage_table">{{ stage.stageCode }}<br/>{{
-                  formatNumber(stage.stageEfficiency * 100)
-                }}%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- </div> -->
-      <!-- 弹窗End -->
-    </div>
-    <!-- 新卡片 -->
-    <div id="stage_3" style="display: none;">
-      <!-- 标题区域 -->
-      <div class="op_title">
-        <div class="op_title_text">
-          <div class="op_title_ctext">地图效率</div>
-          <div class="op_title_etext_light">Best Stages</div>
-        </div>
-        <div class="op_title_tag">
-          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>
-          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>
-          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>
-
-          <div class="tab_text">*点击卡片查看详情</div>
-        </div>
-        <div class="op_title_tag" style="height: 24px">
-          <div class="tab_text">
-            <!-- *更新时间{{stageActHistory}} -->
-            *更新时间 {{ updateTime }}
-          </div>
-        </div>
-      </div>
-      <div class="op_content" id="stage_t3_content_3">
-        <div class="stage_card_3">
-          <div class="stage_card_3_left">
-            <div class="stage_card_3_mainImg"></div>
-            <div class="stage_card_3_best">9-10</div>
-            <div class="stage_card_3_markText">长期最优</div>
-          </div>
-          <div class="stage_card_3_right">
-            <div class="stage_card_3_list">
-              <div class="stage_card_3_line">
-                <div class="stage_card_3_line_text">9-10</div>
-                <div class="stage_card_3_img"></div>
-                <div class="stage_card_3_img"></div>
-              </div>
-              <div class="stage_card_3_line">
-
-              </div>
-              <div class="stage_card_3_line">
-
-              </div>
-            </div>
-            <div class="stage_card_3_markText">短期最优</div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 <script setup>
@@ -458,27 +317,28 @@ async function getUrlParm() {
 let popup_t3 = ref(false)
 
 function showT3Popup(index) {
-  document.getElementById("popup_card").style.display = "block";
   popupData.value = [];
   popupData.value = stageRankT3[index];
   console.log("点击展开:", popup_t3.value)
   popup_t3.value = !popup_t3.value
-
 }
 
 function showT2Popup(index) {
-  document.getElementById("popup_card").style.display = "block";
-  console.log(stageRankT2[index])
   popupData.value = [];
   popupData.value = stageRankT2[index];
+  popup_t3.value = !popup_t3.value
 }
+
+let popup_orundum = ref(false)
 
 function showOrundumPopup() {
-
+   popup_orundum.value = !popup_orundum.value
 }
 
-function showHistoryPopup() {
+let popup_act = ref(false)
 
+function showHistoryPopup() {
+  popup_act.value = !popup_act.value
 }
 
 function getPenguinUrl(num) {
@@ -555,7 +415,7 @@ function showNowActive() {
 }
 
 onMounted(() => {
-  showT3Popup(1)
+  // showT3Popup(1)
 })
 
 </script>
@@ -585,9 +445,33 @@ onMounted(() => {
 }
 
 .popup_tip_v2 {
-  position: absolute;
-  bottom: 0;
+
   padding: 8px;
+}
+
+.popup_act_card{
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  border-bottom: 1px solid #939393;
+}
+
+.popup_act_image{
+  width: 150px;
+}
+
+.popup_act_card_left{
+  width: 200px;
+  text-align: center;
+  font-size: 20px;
+  color: var(--popup-history-act-name-fg);
+  font-weight: 600;
+  display: inline-block;
+}
+
+
+.popup_act_stages{
+   display: flex;
 }
 
 </style>
