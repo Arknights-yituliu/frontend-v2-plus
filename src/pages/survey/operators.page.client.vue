@@ -276,11 +276,11 @@
           <!--            <button class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</button>-->
           <!--          </div>-->
           <!--        </div>-->
-          <div class="collapse_bar">
-            <div class="switch_desc ">
-              <a class="skland_notice_btn">*须知：因账号系统维护和森空岛导入功能失效，可能导致一图流账号无法登录，可以注册新的账号，以往导入的数据可以根据uid进行找回</a>
-            </div>
-          </div>
+<!--          <div class="collapse_bar">-->
+<!--            <div class="switch_desc ">-->
+<!--              <a class="skland_notice_btn">*须知：因账号系统维护和森空岛导入功能失效，可能导致一图流账号无法登录，可以注册新的账号，以往导入的数据可以根据uid进行找回</a>-->
+<!--            </div>-->
+<!--          </div>-->
           <div class="collapse_bar">
             <div class="collapse_title" style="width: 140px;">森空岛导入</div>
             <div class="switch_btn_wrap">
@@ -316,7 +316,7 @@
           <div class="collapse_bar">
             <div class="switch_desc"><b>*森空岛导入：</b>请遵循
               <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
-              如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号
+<!--              如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号-->
             </div>
           </div>
         </div>
