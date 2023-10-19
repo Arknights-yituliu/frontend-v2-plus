@@ -568,7 +568,7 @@ onMounted(() => {
 
 
 .popup_header_v2 {
-  width: 99%;
+  width: 100%;
   display: flex;
   border-bottom: 1px solid dodgerblue;
   margin: auto auto 8px;
