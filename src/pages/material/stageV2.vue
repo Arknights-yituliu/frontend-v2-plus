@@ -445,7 +445,7 @@ onMounted(() => {
 }
 
 .popup_tip_v2 {
-
+  color:var(--popup-text-fg);
   padding: 8px;
 }
 

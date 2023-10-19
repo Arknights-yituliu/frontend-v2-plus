@@ -79,9 +79,9 @@ watch(
   /* display: none; */
   position: relative;
   z-index: 2100;
-  margin: 15vh auto auto;
+  margin: 10vh auto auto;
   width: 500px;
-  background: rgba(255, 255, 255, 0.9);
+  background-color: var(--popup-card-bg);
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
   box-sizing: border-box;
