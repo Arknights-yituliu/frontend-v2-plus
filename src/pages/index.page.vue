@@ -21,7 +21,7 @@
 </style>
 
 <script setup>
-import stage from "@/components/stage.vue";
+import stage from "/src/pages/material/stageV2.vue";
 
 import FootComponent from "@/components/FootComponent.vue";
 import newChapter from '/src/components/newChapter.vue'

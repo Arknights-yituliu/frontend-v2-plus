@@ -145,8 +145,85 @@
     </div>
     <!-- 地图效率End -->
 
+    <c-popup :visible="popup_t3" :width="'550px'" @openAndClose="popupAction()">
+      <div class="popup_card"  id="popup_card">
+        <div class="popup_header">
+          <div class="stage_sprite_popup_wrap">
+            <div :class="getSpriteImg(popupData.itemTypeId, 'popup')"></div>
+          </div>
+
+          <div class="popup_header_text">{{ popupData.itemType }}</div>
+
+          <a :href="getPenguinUrl(popupData.itemTypeId)" class="t3 popup_header_penguin">
+            <div>查看企鹅物流原始数据</div>
+            <div :class="getSpriteImg('el', 'el')"></div>
+          </a>
+        </div>
+        <!-- 散装标题End -->
+        <el-divider></el-divider>
+        <!-- 数据表Start -->
+        <table class="popup_table">
+          <tbody>
+          <tr class="popup_table_title">
+            <td class="popup_table_c1" style="width: 55px; width: 65px">关卡名</td>
+            <td class="popup_table_c2" style="width: 65px; width: 75px">样本数<br/>(置信度)</td>
+            <td class="popup_table_c3" style="width: 40px; width: 50px">SPM</td>
+            <td class="popup_table_c4" style="width: 50px; width: 60px" colspan="1">副产品</td>
+            <td class="popup_table_c5" style="width: 80px; width: 90px">主产物掉率</td>
+            <td class="popup_table_c6" style="width: 80px; width: 90px">主产物期望</td>
+            <!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>-->
+            <!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>-->
+            <td class="popup_table_c7" style="width: 70px; width: 80px">总效率</td>
+          </tr>
+          <tr v-for="(stage, index) in popupData.stageResultList" :key="index" :class="getColor(stage.stageColor)"
+              class="stage_table_r">
+            <td class="popup_table_c1" >
+              {{ stage.stageCode }}
+            </td>
+            <td class="popup_table_c2" style="font-size: 14px">{{shrinkTimes(stage.sampleSize)
+              }}<br/>({{ formatNumber(stage.sampleConfidence,1) }}%)
+            </td>
+            <td class="popup_table_c3">{{ formatNumber(stage.spm, 1) }}</td>
+            <td style="padding-left: 20px">
+              <div class="stage_sprite_sec_wrap">
+                <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
+              </div>
+            </td>
+
+            <td class="popup_table_c5">{{ formatNumber(stage.knockRating * 100, 1) }}%</td>
+            <td class="popup_table_c6">
+              {{ formatNumber(stage.apExpect) }}
+            </td>
+            <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency * 100, 1) }}%</td>-->
+            <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency * 100, 1) }}%</td>-->
+            <td class="popup_table_c7">{{ formatNumber(stage.stageEfficiency * 100, 1) }}%</td>
+          </tr>
+          </tbody>
+        </table>
+        <!-- 数据表End -->
+        <el-divider></el-divider>
+        <div class="popup_text f12">
+          <div class="popup_item">效率基准:<b>常驻图</b>中综合效率最高者</div>
+          <div class="popup_item">
+            置信度:掉率对关卡效率误差影响在3%前提下的可信度范围&emsp;
+            <a href="https://www.bilibili.com/video/BV1yL4y1P7K1">
+              <div style="display: flex">
+                详细介绍
+                <div :class="getSpriteImg('el', 'el')"></div>
+              </div>
+            </a>
+          </div>
+          <div class="popup_item">SPM:假设敌人被秒杀，1倍速下每分钟消耗的理智量，实际可能略有出入</div>
+          <div class="popup_item">总效率:<b>所有产物</b>的价值之和占理智消耗的比例</div>
+          <!--          <div class="popup_item">T4效率:<b>紫材料+蓝材料+绿材料+白材料</b>的价值之和占理智消耗的比例</div>-->
+          <!--          <div class="popup_item">T3效率:<b>蓝材料+绿材料+白材料</b>的价值之和占理智消耗的比例</div>-->
+          <!--          <div class="popup_item">例如:糖系T4效率=(糖聚块价值+糖组价值+糖价值+代糖价值)/理智消耗</div>-->
+        </div>
+      </div>
+    </c-popup>
+
     <!-- 弹窗Start -->
-    <div id="popup_background" @click="hidePopup()"></div>
+<!--    <div id="popup_background" @click="hidePopup()"></div>-->
     <div id="popup_content">
       <!-- 散装标题Start -->
       <div class="popup_card" id="popup_card">
@@ -345,9 +422,8 @@
   </div>
 </template>
 
-<script>
-import stageApi from "@/api/stage";
-import cookie from "js-cookie";
+<script >
+
 import {usePageContext} from "@/renderer/usePageContext";
 
 // import stageJson from "static/json-video/stage.json";
@@ -372,11 +448,11 @@ export default {
       itemId: "",
       stageVersion: 0.625,
       popupRank: 3,
-    };
+      popup_t3:false
+    }
   },
   mounted() {
     this.getUrlParm();
-    cookie.set("updateTime", this.updateTime, {expires: 30});
   },
   methods: {
 
@@ -398,13 +474,17 @@ export default {
 
     },
 
+
+
     showT3Popup(index){
       document.getElementById("popup_card").style.display = "block";
-      document.getElementById("popup_background").style.display = "block";
-      document.getElementById("popup_content").style.display = "block";
-      console.log(this.stageRankT3[index])
+      // document.getElementById("popup_background").style.display = "block";
+      // document.getElementById("popup_content").style.display = "block";
+      // console.log(this.stageRankT3[index])
       this.popupData = [];
       this.popupData = this.stageRankT3[index];
+      this.popup_t3 = !this.popup_t3
+      console.log("点击展开:",this.popup_t3)
     },
 
     showT2Popup(index){
@@ -414,7 +494,6 @@ export default {
       console.log(this.stageRankT2[index])
       this.popupData = [];
       this.popupData = this.stageRankT2[index];
-
     },
 
     showPopup(index) {

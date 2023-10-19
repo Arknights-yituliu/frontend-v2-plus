@@ -4,14 +4,19 @@
 
     </div>
     <div class="popup" :style="widthStyle">
-      <slot></slot>
+      <slot name="header"></slot>
+      <div class="popup_context">
+        <slot></slot>
+      </div>
+      <slot name="footer"></slot>
     </div>
-
+    <div class="popup_footer">
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import {ref, watch} from "vue";
 
 const emit = defineEmits(["update:visible"]);
 const props = defineProps(["modelValue", "visible", "width"]);
@@ -28,6 +33,7 @@ if (props.visible) {
 
 function openAndClose(visible) {
   emit("update:visible", visible);
+  console.log("绑定的值:", visible)
   if (visible) {
     popupStyle.value = "display: block;";
   } else {
@@ -38,8 +44,9 @@ function openAndClose(visible) {
 watch(
     () => props.visible,
     (newVal, oldVal) => {
-      console.log(newVal, oldVal);
+      console.log('新值：', newVal)
       if (newVal) {
+
         popupStyle.value = "display: block;";
       } else {
         popupStyle.value = "display: none;";
@@ -49,7 +56,7 @@ watch(
 </script>
 
 <style scoped>
-.popup_page{
+.popup_page {
   position: fixed;
   top: 0;
   left: 0;
@@ -76,11 +83,17 @@ watch(
   margin: 15vh auto auto;
   width: 500px;
   height: 500px;
-  overflow: auto;
-  background: #fff;
-  border-radius: 4px;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-  box-sizing: border-box;
 
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+  box-sizing: border-box;
+}
+
+.popup_context {
+  width: 100%;
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 </style>
