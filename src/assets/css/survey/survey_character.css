@@ -399,6 +399,7 @@
   border-bottom: solid black 1px;
   outline: none;
   background-color: white;
+  color: black;
 }
 
 .skland_input:hover{

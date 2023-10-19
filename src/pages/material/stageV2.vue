@@ -442,6 +442,7 @@ onMounted(() => {
 
 .popup_table_v2 {
   text-align: center;
+  margin: auto;
 }
 
 .popup_tip_v2 {

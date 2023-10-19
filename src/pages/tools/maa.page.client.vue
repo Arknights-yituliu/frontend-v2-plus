@@ -2052,7 +2052,6 @@ export default {
   },
   mounted() {
     this.setJson();
-    this.getUid();
     this.getDate();
     this.openNotification();
 
