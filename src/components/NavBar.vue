@@ -69,6 +69,7 @@ function menu_collapse(flag) {
   menu_flag.value = flag;
   if (menu_flag.value) {
     setTimeout(function () {
+      document.getElementById("drawer114").style.willChange = 'transform'
       document.getElementById("drawer114").style.transform = "translateX(0)";
       document.getElementById("draweMask514").style.display = "block";
     }, 30);
@@ -133,7 +134,7 @@ const route = computed(() => {
 
 let pageTitle = ref("");
 
-function getpageTitle(path) {
+function getPageTitle(path) {
   if (path == "/") return (pageTitle.value = "材料一图流");
 
   for (let i of routes.value) {
@@ -179,7 +180,7 @@ function updateVisits(pathName) {
 function substrPath(pathName) {
   let strLength = pathName.length;
   const lastStr = pathName.substr(strLength - 1, strLength);
-  if (lastStr == "/") {
+  if (lastStr === "/") {
     pathName = pathName.substr(0, strLength - 1);
     console.log("路径以“/”结尾，被截取后路径：", pathName);
     return pathName;
@@ -187,11 +188,12 @@ function substrPath(pathName) {
   return pathName
 }
 
-onMounted(() => {
-  var pathName = window.location.pathname;
 
+
+onMounted(() => {
+  const pathName = window.location.pathname;
   updateVisits(pathName);
-  getpageTitle(pathName);
+  getPageTitle(pathName);
 });
 </script>
 
