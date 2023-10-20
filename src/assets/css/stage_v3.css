@@ -2,6 +2,11 @@
   display: flex;
 }
 
+.stage_card_wrap_3{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .stage_card_3{
   border: 0px solid #ebeef5;
   overflow: hidden;
@@ -16,21 +21,21 @@
   display: flex;
   border-radius: 6px;
   flex-grow: 1;
-  background-color: aquamarine;
+  /*background-color: aquamarine;*/
 }
 
 .stage_card_3_left{
   width: 38%;
   height: 100%;
   padding: 0 0px;
-  background-color: blueviolet;
+  /*background-color: blueviolet;*/
 }
 
 .stage_card_3_mainImg{
   width: 64px;
   height: 64px;
   margin: 8px auto 4px auto;
-  background-color: bisque;
+  /*background-color: bisque;*/
 }
 
 .stage_card_3_best{
@@ -43,7 +48,7 @@
 }
 
 .stage_card_3_markText{
-  color: gray;
+  color: rgb(128, 128, 128);
   float: right;
   font-size: 14px;
   padding-right: 8px;
@@ -53,7 +58,7 @@
   width: 62%;
   height: 100%;
   padding: 0 0px;
-  background-color: rgb(112, 165, 42);
+  /*background-color: rgb(112, 165, 42);*/
 }
 
 .stage_card_3_list{
@@ -64,22 +69,33 @@
   width: 120px;
   height: 100px;
   margin: 0px auto;
-  background-color: bisque;
+  /*background-color: bisque;*/
 }
 
 .stage_card_3_line{
   height: 28px;
-  background-color: cadetblue;
+  /*background-color: cadetblue;*/
   display: flex;
 }
 .stage_card_3_line_text{
-  width: 80px;
+  width: 70px;
   height: 28px;
+  line-height: 28px;
+  padding: 0 0px 0 8px ;
   /* display: inline-block; */
 }
 .stage_card_3_img{
   height: 28px;
   width: 28px;
-  background-color: chocolate;
+  /*background-color: chocolate;*/
   /* display: inline-block; */
+}
+
+.stage_detail_table_3{
+  text-align: center;
+  border-collapse: collapse;
+}
+
+.stage_detail_table_3 td{
+
 }

@@ -1,0 +1,227 @@
+<template>
+  <div>
+    <!-- 地图效率Start -->
+    <div id="stage">
+      <!-- 标题区域 -->
+      <div class="op_title">
+        <div class="op_title_text">
+          <div class="op_title_ctext">地图效率</div>
+          <div class="op_title_etext_light">Best Stages</div>
+        </div>
+        <div class="op_title_tag">
+          <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
+          <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
+          <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
+
+          <div class="tab_text">*点击卡片查看详情</div>
+        </div>
+        <div class="op_title_tag" style="height: 24px">
+          <div class="tab_text">
+            <!-- *更新时间{{stageActHistory}} -->
+            <!--            *更新时间 {{ updateTime }}-->
+          </div>
+        </div>
+      </div>
+
+      <div id="stage_3">
+        <div class="stage_card_wrap_3">
+          <div class="stage_card_3" v-for="(stage,index) in item_card_data" :key="index" @click="getItemTableData(stage.series.r3)">
+            <!-- 长期最优 -->
+            <div class="stage_card_3_left">
+              <div class="stage_card_3_mainImg"><img  :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 66px"></div>
+              <div class="stage_card_3_best">{{stage.maxEfficiencyStage.stage_code}}</div>
+              <div class="stage_card_3_markText">长期最优</div>
+            </div>
+            <!-- 短期最优 -->
+            <div class="stage_card_3_right">
+              <div class="stage_card_3_list">
+                <div class="stage_card_3_line">
+                  <div class="stage_card_3_line_text">{{stage.leT5MaxEfficiencyStage.stage_code}}</div>
+                  <div class="stage_card_3_img"><img  :src="`/image/items/${stage.series.r4}.png`" alt="" style="height: 26px"></div>
+                </div>
+                <div class="stage_card_3_line">
+                  <div class="stage_card_3_line_text">{{stage.leT4MaxEfficiencyStage.stage_code}}</div>
+                  <div class="stage_card_3_img"><img  :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 26px"></div>
+
+                </div>
+                <div class="stage_card_3_line" v-show="stage.series.r2">
+                  <div class="stage_card_3_line_text">{{stage.leT3MaxEfficiencyStage.stage_code}}</div>
+                  <div class="stage_card_3_img"><img  :src="`/image/items/${stage.series.r2}.png`" alt="" style="height: 26px"></div>
+
+                </div>
+              </div>
+              <div class="stage_card_3_markText">短期最优</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="stage_detail_table_3">
+         <tr>
+           <td style="width: 70px">
+             关卡名
+           </td>
+           <td style="width: 65px">
+             主掉落物
+           </td>
+           <td style="width: 65px">
+             副掉落物
+           </td>
+           <td style="width: 65px">
+             t4效率
+           </td>
+           <td style="width: 65px">
+             t3效率
+           </td>
+           <td style="width: 65px">
+             t2效率
+           </td>
+           <td style="width: 65px">
+             总效率
+           </td>
+         </tr>
+        <tr v-for="(stage,index) in current_page_data" :key="index" >
+          <td>
+            {{ stage.stageCode }}
+          </td>
+          <td>
+            <img  :src="`/image/items/${stage.itemId}.png`" alt="" style="height: 48px">
+          </td>
+          <td>
+            <img  :src="`/image/items/${stage.secondaryItemId}.png`" alt="" style="height: 48px">
+          </td>
+
+          <td>
+            {{ formatNumber(stage.leT5Efficiency*100,1) }}%
+          </td>
+          <td>
+            {{ formatNumber(stage.leT4Efficiency*100,1) }}%
+          </td>
+          <td>
+            {{ formatNumber(stage.leT3Efficiency*100,1) }}%
+          </td>
+          <td>
+            {{ formatNumber(stage.stageEfficiency*100,1) }}%
+          </td>
+        </tr>
+      </table>
+
+      <div style="display: flex">
+        <div style="margin: 12px"> page to</div>
+        <div @click="currentPage(1)" style="margin: 12px">1</div>
+        <div @click="currentPage(2)" style="margin: 12px">2</div>
+        <div @click="currentPage(3)" style="margin: 12px">3</div>
+        <div @click="currentPage(4)" style="margin: 12px">4</div>
+        <div @click="currentPage(5)" style="margin: 12px">5</div>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script setup>
+
+import stageDetailDemo from '/src/static/json/detailv2.json'
+import {onMounted, ref} from "vue";
+import item_series from '/src/static/json/item_series.json'
+
+let stage_detail_data = ref(stageDetailDemo.data)
+
+let item_card_data = ref([])
+
+let nowTimeStamp = new Date().getTime();
+
+function getItemCardData(){
+  for (let item_id in stage_detail_data.value) {
+    let stage_detail_group_by_item_series = stage_detail_data.value[item_id]
+
+    const item_recommend_stage = {
+      maxEfficiencyStage:getStageCode(stage_detail_group_by_item_series,'stageEfficiency'),
+      leT5MaxEfficiencyStage:getStageCode(stage_detail_group_by_item_series,'leT5Efficiency'),
+      leT4MaxEfficiencyStage:getStageCode(stage_detail_group_by_item_series,'leT4Efficiency'),
+      leT3MaxEfficiencyStage:getStageCode(stage_detail_group_by_item_series,'leT3Efficiency'),
+      series : {r4:'',r3:'',r2:'',r1:''}
+    }
+
+    item_recommend_stage.series = item_series[item_id]
+
+    item_card_data.value.push(item_recommend_stage)
+    // console.log(item_recommend_stage)
+  }
+}
+
+function getStageCode(stageList,property){
+  stageList.sort((a, b) => {
+    return b[property] - a[property]
+  })
+  for (const index in stageList) {
+    const stage = stageList[index]
+    if (stage.endTime < nowTimeStamp) continue;
+    return {
+      stage_code: stage.stageCode,
+    }
+  }
+}
+
+
+let stage_detail_data_by_item_id = ref([])
+let current_page_data = ref([])
+
+function currentPage(page_num){
+   current_page_data.value = []
+   for(let i = page_num;i<stage_detail_data_by_item_id.value.length;i++){
+        if(i>page_num+9) break;
+        current_page_data.value.push(stage_detail_data_by_item_id.value[i])
+   }
+}
+
+function getItemTableData(item_id){
+    let stage_detail_group_by_item_series = stage_detail_data.value[item_id];
+    let stage_detail_list = []
+    console.table(stage_detail_group_by_item_series)
+    for(const index in stage_detail_group_by_item_series){
+      let stage_detail =  stage_detail_group_by_item_series[index];
+      const {itemId} = getMainDropDetail(stage_detail.dropDetailList)
+      const element = {
+        stageCode: stage_detail.stageCode,
+        itemId: itemId,
+        secondaryItemId: stage_detail.secondaryItemId,
+        leT5Efficiency: stage_detail.leT5Efficiency,
+        leT4Efficiency: stage_detail.leT4Efficiency,
+        leT3Efficiency: stage_detail.leT3Efficiency,
+        stageEfficiency:stage_detail.stageEfficiency,
+        endTime:stage_detail.endTime
+      }
+      stage_detail_list.push(element)
+    }
+
+  stage_detail_data_by_item_id.value = stage_detail_list.sort((a,b)=>b.stageEfficiency-a.stageEfficiency)
+  currentPage(1)
+}
+
+function getMainDropDetail(drop_list){
+    drop_list.sort((a,b)=>b.ratio - a.ratio)
+    return drop_list[0]
+}
+
+function formatNumber(num, acc) {
+  acc = typeof acc !== "undefined" ? acc : 2;
+  return parseFloat(num).toFixed(acc);
+}
+
+
+onMounted(()=>{
+  getItemCardData()
+  getItemTableData("30063")
+  currentPage(1)
+})
+
+// for(let id in item_series){
+//   item_series[id] =  {
+//     t4:id.substring(0,4)+'4',
+//     t3:id.substring(0,4)+'3',
+//     t2:id.substring(0,4)+'2',
+//     t1:id.substring(0,4)+'1',
+//   }
+// }
+</script>

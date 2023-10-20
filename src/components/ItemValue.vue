@@ -76,7 +76,7 @@
 
 <script>
 import storeApi from "@/api/store";
-// import itemJson from "static/json-video/item.json";
+// import itemJson from "static/json-video/item_series.json";
 
 import { usePageContext } from "@/renderer/usePageContext";
 
