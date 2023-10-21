@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, inject, onMounted } from "vue";
+import {ref, watch, computed, inject, onMounted, onBeforeMount} from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
 import toolApi from "@/api/tool";
@@ -107,6 +107,8 @@ watch(theme, () => {
   root_ele.classList.add(theme_name);
   cookie.set("theme", theme_name, { expires: 30 });
 });
+
+
 
 // function navParentSelected(path) {
 //   console.log(path, "==", pathName.value);
