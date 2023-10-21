@@ -34,14 +34,13 @@
                   style="transform: scale(1);">
                   <!-- <img :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 96px"> -->
                   <div class="stage_card_3_cover"></div>
-                  <div class="stage_card_3_best">{{ stage.maxEfficiencyStage.stage_code }}
+                  <div class="stage_card_3_best">
+                    <div class="stage_card_3_best_chapter">第九章</div>
+                    {{ stage.maxEfficiencyStage.stage_code }}
                     <div class="stage_card_3_markText_l">综合最优</div>
                   </div>
-
                 </div>
               </div>
-
-
             </div>
             <!-- 短期最优 -->
             <div class="stage_card_3_right">
