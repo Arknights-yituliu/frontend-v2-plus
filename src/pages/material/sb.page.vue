@@ -90,7 +90,7 @@ const stageRank = pageContext.pageProps.t3;
 
 let closedStageList = ref([]);
 
-stageApi.getActStageResult(0.625).then((response) => {
+stageApi.getHistoryActStage(0.625).then((response) => {
   closedStageList.value = [];
   closedStageList.value = response.data;
 });

@@ -41,7 +41,7 @@ import {ref} from "vue";
 
 let actList = ref([])
 
-stageApi.getActStageResult(0.625).then(response => {
+stageApi.getHistoryActStage(0.625).then(response => {
   actList.value = response.data
 })
 

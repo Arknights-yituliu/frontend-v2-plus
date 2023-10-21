@@ -4,46 +4,81 @@ export default {
   /**
    * 查询蓝色品质材料的推荐关卡
    * @param expCoefficient 经验书价值系数
+   * @param sampleSize 样本量
    * @returns {*}
    */
-  //根据材料类型查询关卡效率按关卡效率降序 蓝材料
-  findStageDateByTypeOrderByEfficiencyDesc(expCoefficient) {
+
+  getT3RecommendedStage(expCoefficient, sampleSize) {
     return request({
-      url: `/find/stage/t3?expCoefficient=${expCoefficient}`,
+      url: `/stage/t3?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
       method: "get",
     });
   },
-  //根据材料查询关卡效率按期望理智降序  绿材料
-  findStageDateByMainOrderByExpectDesc(expCoefficient) {
+
+  /**
+   * 获取关卡效率，按材料系列分组
+   * @param expCoefficient 经验书价值系数
+   * @param sampleSize 样本量
+   * @returns {*}
+   */
+  getStageResultGroupByItemSeries(expCoefficient,sampleSize) {
     return request({
-      url: `/find/stage/t2?expCoefficient=${expCoefficient}`,
+      url: `/stage/result?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
       method: "get",
     });
   },
+
+  /**
+   * 查询绿色品质材料的推荐关卡
+   * @param expCoefficient 经验书价值系数
+   * @param sampleSize 样本量
+   * @returns {*}
+   */
+  getT2RecommendedStage(expCoefficient, sampleSize) {
+    return request({
+      url: `/stage/t2?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
+      method: "get",
+    });
+  },
+
   //搓玉查询
-  findStageDataOfOrundum() {
+  getOrundumRecommendedStage() {
     return request({
-      url: `/find/stage/orundum`,
+      url: `/stage/orundum`,
       method: "get",
     });
   },
 
-  //查询已结束活动
-  getActStageResult(expCoefficient) {
+  /**
+   * 查询历史活动关
+   * @param expCoefficient 经验书价值系数
+   * @param sampleSize 样本量
+   * @returns {*}
+   */
+  getHistoryActStage(expCoefficient, sampleSize) {
     return request({
-      url: `/stage/act?expCoefficient=${expCoefficient}`,
+      url: `/stage/act?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
       method: "get",
     });
   },
 
-  getNewChapter(){
+  /**
+   * 单独获取新章节关卡效率
+   * @returns {*}
+   */
+  getNewChapterStage(){
     return request({
       url: `stage/chapter?expCoefficient=0.625&sampleSize=300&zone=13-`,
       method: "get",
     });
   },
 
-
+  /**
+   * 获取关卡掉落详情
+   * @param expCoefficient 经验书价值系数
+   * @param sampleSize 样本量
+   * @returns {*}
+   */
   getAllStageResultDetail(expCoefficient,sampleSize) {
     return request({
       url: `/stage/detail?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
@@ -51,6 +86,12 @@ export default {
     });
   },
 
+
+
+  /**
+   * 获取章节与关卡的映射表
+   * @returns {*}
+   */
   getStageMenu() {
     return request({
       url: `/stage/zone`,

@@ -25,7 +25,7 @@
 
       <div id="stage_3">
         <div class="stage_card_wrap_3">
-          <div class="stage_card_3" v-for="(stage,index) in item_card_data" :key="index" @click="getItemTableData(stage.series.r3)">
+          <div class="stage_card_3" v-for="(stage,index) in item_card_data" :key="index" @click="getItemTableData(index)">
             <!-- 长期最优 -->
             <div class="stage_card_3_left">
               <div class="stage_card_3_mainImg"><img  :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 66px"></div>
@@ -58,37 +58,42 @@
 
       <table class="stage_detail_table_3">
          <tr>
-           <td style="width: 70px">
+           <td style="width: 150px;">
              关卡名
            </td>
-           <td style="width: 65px">
+           <td >
              主掉落物
            </td>
-           <td style="width: 65px">
+           <td >
              副掉落物
            </td>
-           <td style="width: 65px">
+           <td>
              t4效率
            </td>
-           <td style="width: 65px">
+           <td>
              t3效率
            </td>
-           <td style="width: 65px">
+           <td >
              t2效率
            </td>
-           <td style="width: 65px">
+           <td >
              总效率
+           </td>
+           <td >
+            spm
            </td>
          </tr>
         <tr v-for="(stage,index) in current_page_data" :key="index" >
           <td>
-            {{ stage.stageCode }}
+            <div> {{ stage.stageCode }} </div>
+            <div class="zone_name"> {{ stage.zoneName }} </div>
+<!--            <div class="zone_name"> {{ stage.stageId.indexOf("LMD")>0?'计入商店龙门币':'' }} </div>-->
           </td>
           <td>
-            <img  :src="`/image/items/${stage.itemId}.png`" alt="" style="height: 48px">
+            <img  :src="`/image/items/${stage.itemId}.png`" alt="" style="height: 36px">
           </td>
           <td>
-            <img  :src="`/image/items/${stage.secondaryItemId}.png`" alt="" style="height: 48px">
+            <img  :src="`/image/items/${stage.secondaryItemId}.png`" alt="" style="height: 36px">
           </td>
 
           <td>
@@ -103,16 +108,15 @@
           <td>
             {{ formatNumber(stage.stageEfficiency*100,1) }}%
           </td>
+          <td>
+            {{ formatNumber(stage.spm,2) }}
+          </td>
         </tr>
       </table>
 
-      <div style="display: flex">
+      <div style="display: flex;justify-content: center" >
         <div style="margin: 12px"> page to</div>
-        <div @click="currentPage(1)" style="margin: 12px">1</div>
-        <div @click="currentPage(2)" style="margin: 12px">2</div>
-        <div @click="currentPage(3)" style="margin: 12px">3</div>
-        <div @click="currentPage(4)" style="margin: 12px">4</div>
-        <div @click="currentPage(5)" style="margin: 12px">5</div>
+        <div @click="currentPage(index-1)" style="margin: 12px" v-for="index in page_count" :key="index">{{index}}</div>
       </div>
 
     </div>
@@ -120,30 +124,38 @@
 </template>
 
 <script setup>
-
-import stageDetailDemo from '/src/static/json/detailv2.json'
+import stageApi from '/src/api/stage'
 import {onMounted, ref} from "vue";
 import item_series from '/src/static/json/item_series.json'
+import stage_api_data from '/src/static/json/stage_api_data.v2.json'
 
-let stage_detail_data = ref(stageDetailDemo.data)
+let stage_result_group = ref(stage_api_data.data.recommendedStage)
 
 let item_card_data = ref([])
 
 let nowTimeStamp = new Date().getTime();
 
-function getItemCardData(){
-  for (let item_id in stage_detail_data.value) {
-    let stage_detail_group_by_item_series = stage_detail_data.value[item_id]
 
+// stageApi.getStageResultGroupByItemSeries(0.625,300).then(response=>{
+//        stage_result_group.value = response.data.recommendedStage
+//        getItemCardData()
+//        getItemTableData(8)
+// })
+
+function getItemCardData(){
+  for (let index in stage_result_group.value) {
+    let recommended_stage = stage_result_group.value[index]
+
+    let stage_result_list = recommended_stage.stageResultList;
     const item_recommend_stage = {
-      maxEfficiencyStage:getStageCode(stage_detail_group_by_item_series,'stageEfficiency'),
-      leT5MaxEfficiencyStage:getStageCode(stage_detail_group_by_item_series,'leT5Efficiency'),
-      leT4MaxEfficiencyStage:getStageCode(stage_detail_group_by_item_series,'leT4Efficiency'),
-      leT3MaxEfficiencyStage:getStageCode(stage_detail_group_by_item_series,'leT3Efficiency'),
+      maxEfficiencyStage:getStageCode(stage_result_list,'stageEfficiency'),
+      leT5MaxEfficiencyStage:getStageCode(stage_result_list,'leT5Efficiency'),
+      leT4MaxEfficiencyStage:getStageCode(stage_result_list,'leT4Efficiency'),
+      leT3MaxEfficiencyStage:getStageCode(stage_result_list,'leT3Efficiency'),
       series : {r4:'',r3:'',r2:'',r1:''}
     }
 
-    item_recommend_stage.series = item_series[item_id]
+    item_recommend_stage.series = item_series[recommended_stage.itemSeriesId]
 
     item_card_data.value.push(item_recommend_stage)
     // console.log(item_recommend_stage)
@@ -164,45 +176,53 @@ function getStageCode(stageList,property){
 }
 
 
-let stage_detail_data_by_item_id = ref([])
+let stage_result_by_item_id = ref([])
 let current_page_data = ref([])
+let page_size = ref(10);
+let page_count = ref(0)
 
 function currentPage(page_num){
+   page_num = page_num *page_size.value
    current_page_data.value = []
-   for(let i = page_num;i<stage_detail_data_by_item_id.value.length;i++){
-        if(i>page_num+9) break;
-        current_page_data.value.push(stage_detail_data_by_item_id.value[i])
+   for(let i = page_num;i<stage_result_by_item_id.value.length;i++){
+        if(i>page_num+page_size.value) break;
+        current_page_data.value.push(stage_result_by_item_id.value[i])
    }
 }
 
-function getItemTableData(item_id){
-    let stage_detail_group_by_item_series = stage_detail_data.value[item_id];
-    let stage_detail_list = []
-    console.table(stage_detail_group_by_item_series)
-    for(const index in stage_detail_group_by_item_series){
-      let stage_detail =  stage_detail_group_by_item_series[index];
-      const {itemId} = getMainDropDetail(stage_detail.dropDetailList)
-      const element = {
-        stageCode: stage_detail.stageCode,
-        itemId: itemId,
-        secondaryItemId: stage_detail.secondaryItemId,
-        leT5Efficiency: stage_detail.leT5Efficiency,
-        leT4Efficiency: stage_detail.leT4Efficiency,
-        leT3Efficiency: stage_detail.leT3Efficiency,
-        stageEfficiency:stage_detail.stageEfficiency,
-        endTime:stage_detail.endTime
-      }
-      stage_detail_list.push(element)
+function getPageCount(){
+  page_count.value = parseInt((stage_result_by_item_id.value.length / page_size.value).toString())+1
+}
+
+function getItemTableData(index){
+    let recommended_stage = stage_result_group.value[index];
+    console.log(recommended_stage)
+    let stage_result_list = recommended_stage.stageResultList;
+
+    let table_data = []
+    for(const index in stage_result_list){
+      let stage_result =  stage_result_list[index];
+      // const element = {
+      //   stageCode: stage_result.stageCode,
+      //   itemId: stage_result.itemId,
+      //   secondaryItemId: stage_result.secondaryItemId,
+      //   leT5Efficiency: stage_result.leT5Efficiency,
+      //   leT4Efficiency: stage_result.leT4Efficiency,
+      //   leT3Efficiency: stage_result.leT3Efficiency,
+      //   stageEfficiency:stage_result.stageEfficiency,
+      //   endTime:stage_result.endTime
+      // }
+      table_data.push(stage_result)
     }
 
-  stage_detail_data_by_item_id.value = stage_detail_list.sort((a,b)=>b.stageEfficiency-a.stageEfficiency)
-  currentPage(1)
+  stage_result_by_item_id.value = table_data.sort((a,b)=>b.stageEfficiency-a.stageEfficiency)
+  console.log(stage_result_by_item_id.value)
+
+  getPageCount()
+  currentPage(0)
 }
 
-function getMainDropDetail(drop_list){
-    drop_list.sort((a,b)=>b.ratio - a.ratio)
-    return drop_list[0]
-}
+
 
 function formatNumber(num, acc) {
   acc = typeof acc !== "undefined" ? acc : 2;
@@ -212,8 +232,8 @@ function formatNumber(num, acc) {
 
 onMounted(()=>{
   getItemCardData()
-  getItemTableData("30063")
-  currentPage(1)
+  getItemTableData(8)
+  // currentPage(1)
 })
 
 // for(let id in item_series){

@@ -126,7 +126,7 @@ function efficiencyFormat(efficiency, digit) {
 }
 
 onMounted(() => {
-  stageApi.getNewChapter().then(response => {
+  stageApi.getNewChapterStage().then(response => {
     response = response.data
     raw_data.value = response
     const l = response.length;
