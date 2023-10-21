@@ -72,6 +72,7 @@ let all_stage_result_detail = ref({})
 function getStageResultDetail() {
   stageApi.getAllStageResultDetail(0.625,300).then(response => {
     all_stage_result_detail.value = response.data
+    getStageDetailByStageId('main_01-07')
   })
 }
 
@@ -98,13 +99,13 @@ function getStageDetailByStageId(stage_id) {
   pieData_main.value = [];
   pieData_extra.value = [];
 
-  console.log(stage_result_detail)
-  const detail = stage_result_detail[0]
-  stage_efficiency.value = formatNumber(detail.stageEfficiency * 100, 2)
-  let extra_ratio = detail.stageEfficiency * 100
-  stage_code.value = detail.stageCode
+  console.log(stage_id)
 
-  for (const element of stage_result_detail) {
+  stage_efficiency.value = formatNumber(stage_result_detail.stageEfficiency * 100, 2)
+  let extra_ratio = stage_result_detail.stageEfficiency * 100
+  stage_code.value = stage_result_detail.stageCode
+  const drop_detail_list = stage_result_detail.dropDetailList
+  for (const element of drop_detail_list) {
     const ratio = formatNumber(element.ratio * 100, 1); //占比
 
     let description = element.itemName;
@@ -149,9 +150,8 @@ function pieChart(data) {
       {
         name: "产出占比",
         type: "pie",
-        radius: "60%",
+        radius: "70%",
         center: ["50%", "50%"],
-
         label: {
           show: true,
           textStyle: {color: "black", fontSize: "16"},
@@ -159,6 +159,8 @@ function pieChart(data) {
         labelLine: {
           show: true,
           lineStyle: {color: "red"},
+          length:5,
+          length2:10
         }, //线条颜色
         //基本样式
 
@@ -181,6 +183,7 @@ onMounted(() => {
   myChart = echarts.init(document.getElementById("pieChartBlock"));
   getZoneTable();
   getStageResultDetail()
+
 });
 
 
