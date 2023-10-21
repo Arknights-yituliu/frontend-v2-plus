@@ -80,7 +80,7 @@
 import { ref } from "vue";
 import stageApi from "/src/api/stage";
 
-import detailDemo from "@/pages/material/detail.json";
+import detailDemo from "/src/static/json/detail.json";
 import { usePageContext } from "@/renderer/usePageContext";
 
 const pageContext = usePageContext();
