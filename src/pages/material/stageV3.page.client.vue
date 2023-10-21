@@ -24,8 +24,7 @@
       </div>
 
       <div id="stage_3">
-        <div class="stage_card_wrap_3">
-          <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
+        <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
             @click="getItemTableData(index)">
             <!-- 长期最优 -->
             <div class="stage_card_3_left">
@@ -67,7 +66,8 @@
               </div>
               <div class="stage_card_3_markText">短期最优</div>
             </div>
-          </div>
+        </div>
+        <div class="stage_card_3 " v-for="(times, index) in 4" style="height: 0px; margin-bottom: 0px;opacity: 0;">
         </div>
       </div>
 
