@@ -150,7 +150,7 @@
     <!--    给:visible前面加上v-model可以接收弹窗隐藏后的返回值-->
     <!--    <template #header> </template> 是组件的头部-->
     <!--    <template #footer> </template> 是组件的尾部-->
-    <c-popup v-model:visible="popup_t3" :width="'550px'">
+    <c-popup v-model:visible="popup_t3" :width="'550px'" :height="'380px'">
       <template #header>
         <div class="popup_header_v2">
           <div class="stage_sprite_popup_wrap">
@@ -221,7 +221,8 @@
       </template>
     </c-popup>
 
-    <c-popup v-model:visible="popup_orundum" :width="'550px'">
+<!--    搓玉-->
+    <c-popup v-model:visible="popup_orundum" :width="'550px'" >
       <table class="popup_table" style="padding-top: 6px">
         <tbody style="font-size: 20px">
         <tr class="popup_table_title" style="height: 36px">

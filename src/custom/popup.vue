@@ -3,9 +3,9 @@
     <div class="popup_mask" @click="openAndClose(false)">
     </div>
 
-    <div class="popup" :style="widthStyle">
+    <div class="popup" :style="width_style">
       <slot name="header"></slot>
-      <div class="popup_context">
+      <div class="popup_context" :style="context_height_style">
         <slot></slot>
       </div>
       <slot name="footer"></slot>
@@ -18,9 +18,10 @@
 import {ref, watch} from "vue";
 
 const emit = defineEmits(["update:visible"]);
-const props = defineProps(["modelValue", "visible", "width"]);
+const props = defineProps(["modelValue", "visible", "width", "height"]);
 
-const widthStyle = "width:" + props.width;
+const width_style = `width: ${props.width}`;
+const context_height_style = `height:${props.height}`;
 
 // console.log(props.visible)
 // console.log(props.width)
@@ -80,7 +81,7 @@ watch(
   position: relative;
   z-index: 2100;
   margin: 10vh auto auto;
-  width: 500px;
+  width: 520px;
   background-color: var(--popup-card-bg);
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
@@ -89,7 +90,7 @@ watch(
 
 .popup_context {
   width: 100%;
-  max-height: 400px;
+  max-height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
 }
