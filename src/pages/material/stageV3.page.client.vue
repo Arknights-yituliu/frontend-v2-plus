@@ -65,7 +65,7 @@
             <div class="stage_card_3_markText">短期最优</div>
           </div>
         </div>
-        <div class="stage_card_3 " v-for="(times, index) in 4" style="height: 0px; margin-bottom: 0px;opacity: 0;">
+        <div class="stage_card_3 " v-for="index in 4" :key="index" style="height: 0; margin-bottom: 0;opacity: 0;">
         </div>
       </div>
 

@@ -1,11 +1,9 @@
 #stage_3{
   display: flex;
-  max-width: 1260px;
   flex-wrap: wrap;
 }
 
 .stage_card_3{
-  border: 0px solid #ebeef5;
   overflow: hidden;
   -webkit-transition: 0.3s;
   transition: 0.3s;
@@ -26,8 +24,8 @@
 .stage_card_3_left{
   width: 102px;
   height: 100%;
-  padding: 0 0px;
-  box-shadow: 2px 0px 8px 4px #80808040;
+  padding: 0 0;
+  box-shadow: 2px 0 8px 4px #80808040;
   overflow: hidden;
   float: left;
   /*background-color: blueviolet;*/
