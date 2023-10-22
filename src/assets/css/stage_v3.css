@@ -141,6 +141,29 @@
   /* display: inline-block; */
 }
 
+.td_1{
+ width: 80px
+}
+
+.td_2{
+
+}
+
+.td_3{
+
+}
+
+.td_4{
+
+}
+
+@media (min-width: 800px) {
+
+}
+
+
+
+
 .stage_detail_table_3{
   text-align: center;
   border-collapse: collapse;

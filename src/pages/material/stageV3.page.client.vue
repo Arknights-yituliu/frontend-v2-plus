@@ -119,42 +119,42 @@
         </div>
       </div>
       <!-- 详情表 -->
-      <el-table id="detailTable" :data="current_page_data" style="width: 100%" max-height="450">
-        <el-table-column fixed prop="stageCode" label="关卡名" width="120" sortable>
+      <el-table id="detailTable" :data="item_table_data_by_item_id" style="width: 100%" max-height="450">
+        <el-table-column fixed prop="stageCode" label="关卡名" :width="td_6" sortable>
           <template #default="scope">
             <div>
-              <span style="font-size: 8px;line-height: 8px;">{{ scope.row.zoneName }}</span><br>
+              <span style="font-size: 10px;line-height: 8px;">{{ scope.row.zoneName }}</span><br>
               {{scope.row.stageCode}}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="主产品" width="90">
+        <el-table-column prop="primary" label="主产品" :width="td_1">
           <template #default="scope">
             <img :src="`/image/items/${scope.row.itemId}.png`" alt="" style="height: 36px">
           </template>
         </el-table-column>
-        <el-table-column prop="secondary" label="副产品" width="90">
+        <el-table-column prop="secondary" label="副产品" :width="td_1">
           <template #default="scope">
             <img :src="`/image/items/${scope.row.secondaryItemId}.png`" alt="" style="height: 36px">
           </template>
         </el-table-column>
-        <el-table-column prop="eff" label="综合效率" width="108" sortable>
+        <el-table-column prop="eff" label="综合效率" :width="td_5" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="spm" label="SPM" width="96" sortable/>
-        <el-table-column prop="effT4" label="T4效率" width="96" sortable>
+        <el-table-column prop="spm" label="SPM" :width="td_4" sortable/>
+        <el-table-column prop="effT4" label="T4效率" :width="td_4" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="effT3" label="T3效率" width="96" sortable>
+        <el-table-column prop="effT3" label="T3效率" :width="td_4" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="effT2" label="T2效率" width="96" sortable>
+        <el-table-column prop="effT2" label="T2效率" :width="td_4" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
           </template>
@@ -230,12 +230,12 @@
 
 <script setup>
 import stageApi from '/src/api/stage'
-import { onMounted, ref } from "vue";
+import {onMounted, ref, watch} from "vue";
 import item_series from '/src/static/json/item_series.json'
 import stage_api_data from '/src/static/json/stage_api_data.v2.json'
 
 // 根据物品系列进行分组的推荐关卡
-let stage_result_group = ref(stage_api_data.data.recommendedStage)
+let stage_result_group = ref(stage_api_data.data.recommendedStage.sort((a,b)=>a.itemSeriesId-b.itemSeriesId))
 
 //材料卡片数据
 let item_card_data = ref([])
@@ -298,9 +298,26 @@ function getStageDataByProperty(stageList, property) {
   }
 }
 
-
 //根据物品id获得对应的关卡推荐数据集合
 let item_table_data_by_item_id = ref([])
+
+/**
+ * 根据索引获得对应材料系列的所有推荐关卡
+ * @param index 集合索引,卡片展示的材料和索引对应  简单例子[0:xxx材料的所有数据]
+ */
+function getItemTableData(index) {
+  //当前材料系列的推荐关卡
+  let recommended_stage = stage_result_group.value[index];
+  //推荐关卡集合
+  let stage_result_list = recommended_stage.stageResultList;
+
+  //拼接表格数据,默认按总效率排序
+  item_table_data_by_item_id.value = stage_result_list.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
+  console.log(item_table_data_by_item_id.value)
+
+  jumpToTable()
+}
+
 //材料表格当前页数据
 let current_page_data = ref([])
 //页大小
@@ -330,23 +347,7 @@ function getPageCount() {
   page_count.value = parseInt((item_table_data_by_item_id.value.length / page_size.value).toString()) + 1
 }
 
-/**
- * 根据索引获得对应材料系列的所有推荐关卡
- * @param index 集合索引,卡片展示的材料和索引对应  简单例子[0:xxx材料的所有数据]
- */
-function getItemTableData(index) {
-  //当前材料系列的推荐关卡
-  let recommended_stage = stage_result_group.value[index];
-  //推荐关卡集合
-  let stage_result_list = recommended_stage.stageResultList;
-  //拼接表格数据,默认按总效率排序
-  item_table_data_by_item_id.value = stage_result_list.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
-  console.log(item_table_data_by_item_id.value)
 
-  getPageCount()
-  currentPage(0)
-  jumpToTable()
-}
 
 
 
@@ -392,8 +393,34 @@ function formatNumber(num, acc) {
 onMounted(() => {
   getItemCardData()
   getItemTableData(8)
-  // currentPage(1)
 })
+
+let td_1= ref()
+let td_2= ref()
+let td_3= ref()
+let td_4= ref()
+let td_5= ref()
+let td_6= ref()
+
+window.addEventListener("resize",function(){
+  if(window.innerWidth<800){
+    td_1.value = 70
+    td_2.value = 80
+    td_3.value = 90
+    td_4.value = 100
+    td_5.value = 110
+    td_6.value = 120
+  }else {
+    td_1.value = ''
+    td_2.value = ''
+    td_3.value = ''
+    td_4.value = ''
+    td_5.value = ''
+    td_6.value = ''
+  }
+})
+
+
 
 // for(let id in item_series){
 //   item_series[id] =  {
@@ -404,3 +431,5 @@ onMounted(() => {
 //   }
 // }
 </script>
+
+
