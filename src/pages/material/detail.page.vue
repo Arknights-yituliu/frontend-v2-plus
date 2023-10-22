@@ -8,11 +8,11 @@
     </div>
     <div class="zone_table_wrap">
       <div class="stage_type">
-        <c-button :color="'blue'" :status="stage_type==='MAIN'" @click="stage_type='MAIN'">主线</c-button>
-        <c-button :color="'blue'" :status="stage_type==='ACT_PERM'" @click="stage_type='ACT_PERM'">常驻</c-button>
-        <c-button :color="'blue'" :status="stage_type==='ACT'" @click="stage_type='ACT'">SideStory</c-button>
-        <c-button :color="'blue'" :status="stage_type==='ACT_MINI'" @click="stage_type='ACT_MINI'">故事集</c-button>
-        <c-button :color="'blue'" :status="stage_type==='ACT_REP'" @click="stage_type='ACT_REP'">SideStory复刻</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='MAIN'" @click="stage_type='MAIN'">主线</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='ACT_PERM'" @click="stage_type='ACT_PERM'">常驻</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='ACT'" @click="stage_type='ACT'">SideStory</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='ACT_MINI'" @click="stage_type='ACT_MINI'">故事集</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='ACT_REP'" @click="stage_type='ACT_REP'">SideStory复刻</c-button>
       </div>
         <div class="zone_table">
           <div v-for="({zoneName,stageList},index) in zoneTable[stage_type]" :key="index" class="zone_title">

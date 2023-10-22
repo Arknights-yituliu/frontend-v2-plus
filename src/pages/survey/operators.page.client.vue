@@ -48,7 +48,7 @@
       <!--        因森空岛加入了签名验证，森空岛导入数据暂不可用，现已下线功能-->
       <!--      </div>-->
       <div class="mdui-divider" style="margin: 4px;"></div>
-      <c-button :color="'blue'" :status="btn_status.btn_filter"
+      <c-button :color="'blue'" :isSelected="btn_status.btn_filter"
                 @click="clickBtn('btn_filter');
                 collapseV2('filter_box_wrap', 'filter_box')">
         筛选/批量操作
@@ -58,7 +58,7 @@
       <!--              @click="clickBtn('btn_filter');collapse('collapse_bar', 'switch_filter_wrap','switch_filter_box')">-->
       <!--        筛选/批量操作-->
       <!--      </button>-->
-      <c-button :color="'blue'" :status="btn_status.btn_import"
+      <c-button :color="'blue'" :isSelected="btn_status.btn_import"
                 @click="clickBtn('btn_import');
                 collapseV2('upload_box_wrap', 'upload_box')">
         数据导入导出
@@ -79,7 +79,7 @@
       </button>
 
       <button class="btn btn_blue" @click="toBiliblili()">建议与反馈</button>
-      <c-button :color="'blue'" :status="btn_status.btn_statistics"
+      <c-button :color="'blue'" :isSelected="btn_status.btn_statistics"
                 @click="clickBtn('btn_statistics');
                 statisticsCollapse()">
         统计材料消耗
@@ -157,18 +157,6 @@
               <div class="btn btn_white" @click="sortCharacterList('date')">按实装顺序</div>
             </div>
           </div>
-
-          <!-- <div class="collapse_bar">
-            <div class="collapse_title">练度</div>
-            <div class="switch_btn_wrap">
-              <div :class="selectedBtn('TODO', 0)" @click="addFilterCondition('mod', false)">无专三</div>
-              <div :class="selectedBtn('TODO', 1)" @click="addFilterCondition('mod', false)">一个专三</div>
-              <div :class="selectedBtn('TODO', 2)" @click="addFilterCondition('mod', false)">两个专三</div>
-              <div :class="selectedBtn('TODO', 3)" @click="addFilterCondition('mod', false)">三个专三</div>
-              <div :class="selectedBtn('TODO', 4)" @click="addFilterCondition('mod', false)">未开模组</div>
-              <div :class="selectedBtn('TODO', 5)" @click="addFilterCondition('mod', false)">已开模组</div>
-            </div>
-          </div> -->
 
           <div class="mdui-divider" style="margin: 8px;"></div>
           <div class="switch_desc ">
@@ -1382,3 +1370,11 @@ onMounted(() => {
 
 });
 </script>
+
+
+<style>
+.btn{
+  margin: 4px;
+}
+
+</style>
