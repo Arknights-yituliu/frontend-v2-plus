@@ -101,8 +101,8 @@ function getStageDetailByStageId(stage_id) {
 
   console.log(stage_id)
 
-  stage_efficiency.value = formatNumber(stage_result_detail.stageEfficiency * 100, 2)
-  let extra_ratio = stage_result_detail.stageEfficiency * 100
+  stage_efficiency.value = 100
+  let extra_ratio = 100
   stage_code.value = stage_result_detail.stageCode
   const drop_detail_list = stage_result_detail.dropDetailList
   for (const element of drop_detail_list) {
@@ -143,7 +143,7 @@ function formatNumber(num, acc) {
 function pieChart(data) {
   let option = {
     tooltip: {
-      formatter: "{a} ({d}%)",
+      formatter: "{b} ({d}%)",
     },
 
     series: [
