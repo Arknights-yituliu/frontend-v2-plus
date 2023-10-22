@@ -65,7 +65,7 @@
     "permit": 3,
     "permit10": 0,
     "start": "2023/10/19  16:00:00",
-    "end": "2023/10/29  03:58:00",
+    "end": "2023/10/22  03:58:00",
     "rewardType": "公共",
     "module": "actRe"
   },
@@ -75,7 +75,7 @@
     "permit": 3,
     "permit10": 0,
     "start": "2023/10/19  16:00:00",
-    "end": "2023/10/29  03:58:00",
+    "end": "2023/10/22  03:58:00",
     "rewardType": "公共",
     "module": "actRe"
   },
@@ -155,7 +155,17 @@
     "permit": 0,
     "permit10": 0,
     "start": "2023/10/01 00:00:00",
-    "end": "2023/10/30 00:00:00",
+    "end": "2023/10/22 00:00:00",
+    "rewardType": "公共",
+    "module": "honeyCake"
+  },
+  "10月剿灭更新": {
+    "originium": 0,
+    "orundum": 1500,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2023/10/22 00:00:00",
+    "end": "2023/10/30 04:00:00",
     "rewardType": "公共",
     "module": "honeyCake"
   },

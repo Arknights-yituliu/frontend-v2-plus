@@ -1112,9 +1112,9 @@ export default {
     //公告通知
     openNotification() {
       this.$notify({
-        title: "7.30更新",
+        title: "10.21更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong>1.增加了感谢庆典攒抽<br>2.对月卡计算增加了更多选项</strong>",
+        message: "<strong>1.更新了主线相关攒抽计算<br>2.修复了一些bug</strong>",
         duration: 6000,
       });
     },
