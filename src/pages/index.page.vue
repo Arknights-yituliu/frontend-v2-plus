@@ -1,6 +1,6 @@
 <template>
   <div id="indexDiv" >
-    <newChapter />
+
 
     <stage />
 
@@ -22,10 +22,7 @@
 
 <script setup>
 import stage from "/src/pages/material/stageV2.vue";
-
 import FootComponent from "@/components/FootComponent.vue";
-import newChapter from '/src/components/newChapter.vue'
-
 
 import { onMounted } from "vue";
 

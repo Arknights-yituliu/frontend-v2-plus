@@ -44,7 +44,6 @@ import "/src/assets/css/about.css";
 import "@/assets/css/stage_v3.css";
 
 // 旧版css，待修改
-import "@/assets/css/item.css";
 // import "@/assets/css/recruit.css";
 
 import NavBar from "@/components/NavBar.vue";

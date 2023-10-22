@@ -1,25 +1,23 @@
 .btn{
     padding:2px 8px;
-    margin: 2px;
-    font-weight: 500;
+    /*font-weight: 600;*/
     cursor: pointer;
     min-width: 80px;
     text-align: center;
-    border-radius: 3px;
+    border-radius: 4px;
     height: 28px;
-    line-height: 24px;
+    line-height: 22px;
     box-sizing: border-box;
 }
 
 .btn_white{
     background-color: #ffffff;
     border: 1px solid #cbcbce;
-    border-radius: 4px;
     color: black;
 }
 
 .btn_white:hover{
-    background-color: #eaeaea;
+    background-color: #d5d5d5;
 }
 
 .btn_white_selected{
@@ -28,18 +26,18 @@
 }
 
 .btn_blue{
-    color: #409eff;
+    color: #409EFF;
     background-color: #ecf5ff;
     border: 1px solid #b3d8ff;
 }
 
 .btn_blue:hover{
-    background-color: #409eff;
+    background-color: #409EFF;
     color: white;
 }
 
 .btn_blue_selected{
-    background-color: #5fa7f1;
+    background-color: #409EFF;
     color: white;
 }
 

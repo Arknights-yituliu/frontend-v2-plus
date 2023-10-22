@@ -8,11 +8,11 @@
     </div>
     <div class="zone_table_wrap">
       <div class="stage_type">
-        <c-button :color="'blue'" :status="stage_type==='MAIN'" @click="stage_type='MAIN'">主线</c-button>
-        <c-button :color="'blue'" :status="stage_type==='ACT_PERM'" @click="stage_type='ACT_PERM'">常驻</c-button>
-        <c-button :color="'blue'" :status="stage_type==='ACT'" @click="stage_type='ACT'">SideStory</c-button>
-        <c-button :color="'blue'" :status="stage_type==='ACT_MINI'" @click="stage_type='ACT_MINI'">故事集</c-button>
-        <c-button :color="'blue'" :status="stage_type==='ACT_REP'" @click="stage_type='ACT_REP'">SideStory复刻</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='MAIN'" @click="stage_type='MAIN'">主线</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='ACT_PERM'" @click="stage_type='ACT_PERM'">常驻</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='ACT'" @click="stage_type='ACT'">SideStory</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='ACT_MINI'" @click="stage_type='ACT_MINI'">故事集</c-button>
+        <c-button :color="'blue'" :isSelected="stage_type==='ACT_REP'" @click="stage_type='ACT_REP'">SideStory复刻</c-button>
       </div>
         <div class="zone_table">
           <div v-for="({zoneName,stageList},index) in zoneTable[stage_type]" :key="index" class="zone_title">
@@ -101,8 +101,8 @@ function getStageDetailByStageId(stage_id) {
 
   console.log(stage_id)
 
-  stage_efficiency.value = formatNumber(stage_result_detail.stageEfficiency * 100, 2)
-  let extra_ratio = stage_result_detail.stageEfficiency * 100
+  stage_efficiency.value = 100
+  let extra_ratio = 100
   stage_code.value = stage_result_detail.stageCode
   const drop_detail_list = stage_result_detail.dropDetailList
   for (const element of drop_detail_list) {
@@ -143,7 +143,7 @@ function formatNumber(num, acc) {
 function pieChart(data) {
   let option = {
     tooltip: {
-      formatter: "{a} ({d}%)",
+      formatter: "{b} ({d}%)",
     },
 
     series: [
