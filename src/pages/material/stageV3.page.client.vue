@@ -24,53 +24,66 @@
       </div>
 
       <div id="stage_3">
-        <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
-            @click="getItemTableData(index)">
-            <!-- 长期最优 -->
-            <div class="stage_card_3_left">
-              <div class="img_wrap" style="position: relative;">
-                <div class="stage_card_3_mainImg" :class="getSpriteImg(stage.series.r3, 't3')"
-                  style="transform: scale(1);">
-                  <!-- <img :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 96px"> -->
-                  <div class="stage_card_3_cover"></div>
-                  <div class="stage_card_3_best">
-                    <div class="stage_card_3_best_chapter">第九章</div>
-                    {{ stage.maxEfficiencyStage.stage_code }}
-                    <div class="stage_card_3_markText_l">综合最优</div>
-                  </div>
+        <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index" @click="getItemTableData(index)">
+          <!-- 长期最优 -->
+          <div class="stage_card_3_left">
+            <div class="img_wrap" style="position: relative;">
+              <div class="stage_card_3_mainImg" :class="getSpriteImg(stage.series.r3, 't3')" style="transform: scale(1);">
+                <!-- <img :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 96px"> -->
+                <div class="stage_card_3_cover"></div>
+                <div class="stage_card_3_best">
+                  <div class="stage_card_3_best_chapter">第九章</div>
+                  {{ stage.maxEfficiencyStage.stage_code }}
+                  <div class="stage_card_3_markText_l">综合最优</div>
                 </div>
               </div>
             </div>
-            <!-- 短期最优 -->
-            <div class="stage_card_3_right">
-              <div class="stage_card_3_list">
-                <div class="stage_card_3_line">
-                  <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">65%</div>
-                  <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r4}.png`" alt=""
-                      style="height: 32px"></div>
-                </div>
-                <div class="stage_card_3_line">
-                  <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">55%</div>
-                  <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r3}.png`" alt=""
-                      style="height: 32px"></div>
-                </div>
-                <div class="stage_card_3_line" v-show="stage.series.r2">
-                  <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">45%</div>
-                  <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r2}.png`" alt=""
-                      style="height: 32px"></div>
+          </div>
+          <!-- 短期最优 -->
+          <div class="stage_card_3_right">
+            <div class="stage_card_3_list">
+              <div class="stage_card_3_line">
+                <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
+                <div class="stage_card_3_line_text">65%</div>
+                <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r4}.png`" alt=""
+                    style="height: 32px"></div>
+              </div>
+              <div class="stage_card_3_line">
+                <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
+                <div class="stage_card_3_line_text">55%</div>
+                <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r3}.png`" alt=""
+                    style="height: 32px"></div>
+              </div>
+              <div class="stage_card_3_line" v-show="stage.series.r2">
+                <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
+                <div class="stage_card_3_line_text">45%</div>
+                <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r2}.png`" alt=""
+                    style="height: 32px"></div>
 
-                </div>
               </div>
-              <div class="stage_card_3_markText">短期最优</div>
             </div>
+            <div class="stage_card_3_markText">短期最优</div>
+          </div>
         </div>
         <div class="stage_card_3 " v-for="(times, index) in 4" style="height: 0px; margin-bottom: 0px;opacity: 0;">
         </div>
+        {{ item_card_data[1] }}
       </div>
 
+      <el-table :data="current_page_data" style="width: 100%" height="250">
+        <el-table-column fixed prop="stageCode" label="关卡名" width="150">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              test
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="主掉落物" width="120" />
+        <el-table-column prop="state" label="State" width="120" />
+        <el-table-column prop="city" label="City" width="320" />
+        <el-table-column prop="address" label="Address" width="600" />
+        <el-table-column prop="zip" label="Zip" width="120" />
+      </el-table>
       <table class="stage_detail_table_3">
         <tr>
           <td style="width: 150px;">
