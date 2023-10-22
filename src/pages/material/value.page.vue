@@ -1,7 +1,44 @@
 <template>
   <div id="indexDiv" style="margin: auto">
-    <item-value />
-    <!-- <foot-component /> -->
+
+      <div id="value">
+        <!-- 标题区域 -->
+        <div class="op_title">
+          <div class="op_title_text">
+            <div class="op_title_ctext">价值一览</div>
+            <div :class="opETextTheme">Material Value</div>
+          </div>
+          <div class="value_unit_btn_wrap">
+            <button  class="btn btn_blue" :class="value_unit==='itemValueAp'?'btn_blue_selected':''" @click="value_unit='itemValueAp'">等效理智</button>
+            <button  class="btn btn_blue" :class="value_unit==='itemValue'?'btn_blue_selected':''" @click="value_unit='itemValue'">等效绿票</button>
+            <div class="item_value_down">
+              <a style="color: rgb(65, 105, 240)" href="https://backend.yituliu.site/item/export/excel"> 导出Excel</a>
+            </div>
+            <div class="item_value_down">
+              <a style="color: rgb(65, 105, 240)" href="https://backend.yituliu.site/item/export/json"> 导出Json</a>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="item_value_card_wrap color">
+          <div v-for="(item_group,index) in item_value_list" :key="index" class="item_value_card_list">
+            <div class="item_value_card"
+                 v-for="(item,index) in item_group" :key="index"
+                 :style="getItemRarityColor(item.rarity)">
+              <div class="item_sprite_value_wrap">
+                <div :class="getSpriteImg(item.itemId, 'value')"></div>
+              </div>
+              <div class="item_value">
+                {{item[value_unit].toFixed(2)}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
   </div>
 </template>
 
@@ -13,16 +50,40 @@
 </style>
 
 <script setup>
-import ItemValue from "@/components/ItemValue.vue";
-
-// import toolApi from "@/api/tool";
-
-import { onMounted } from "vue";
+import { usePageContext } from "/src/renderer/usePageContext";
+import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
+
+let opETextTheme =  ref("op_title_etext_light")
+
+let value_unit = ref('itemValueAp')
+
+let item_value_list = ref([[], [], [], [], [], [], [], []])
+
+const pageContext = usePageContext();
+
+for (const item of pageContext.pageProps.value) {
+  if (item.cardNum > 8) continue
+  item_value_list.value[item.cardNum - 1].push(item)
+}
+
+
+
+function getSpriteImg(id, type) {
+  return "bg-" + id + " item_sprite_value";
+}
+
+function getItemRarityColor(rarity) {
+  if (rarity === 1) return 'border-color: var(--grey)'
+  if (rarity === 2) return 'border-color: var(--green)'
+  if (rarity === 3) return 'border-color: var(--blue)'
+  if (rarity === 4) return 'border-color: var(--purple)'
+  if (rarity === 5) return 'border-color: var(--orange)'
+}
 
 onMounted(() => {
   const url_path = window.location.pathname.split("/")[1];
-  if (url_path == "value") {
+  if (url_path === "value") {
     ElMessage({
       dangerouslyUseHTMLString: true,
       message: '此页面已迁移至<a href="/material/value">https://yituliu.site/material/value</a>',
@@ -32,9 +93,57 @@ onMounted(() => {
 });
 </script>
 
+
+
 <script>
 export const documentProps = {
   title: "一图流 - 物品价值一览",
   description: "明日方舟物品价值一览,价值表",
 };
 </script>
+
+<style>
+
+.value_unit_btn_wrap{
+  display: flex;
+  padding: 12px 0 0 12px ;
+}
+
+.item_value_down{
+  line-height: 36px;
+  padding: 0 12px;
+}
+
+.item_value_card_wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 4px;
+}
+
+.item_value_card_list{
+  margin: 4px;
+}
+
+.item_value_card {
+  width: 116px;
+  display: flex;
+  border-left: 4px solid;
+  line-height: 54px;
+  margin: 2px;
+}
+
+.item_value{
+  padding: 0 4px;
+}
+
+.color {
+  --purple: #7F3C8D;
+  --red: #E74C3C;
+  --blue: #4A90E2;
+  --green: #28cc9e;
+  --orange: #ff7f3f;
+  --grey: #e6e6e6;
+}
+
+</style>
