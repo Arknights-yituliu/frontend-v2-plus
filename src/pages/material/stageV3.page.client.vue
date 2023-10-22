@@ -24,8 +24,7 @@
       </div>
 
       <div id="stage_3">
-        <div class="stage_card_wrap_3">
-          <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
+        <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
             @click="getItemTableData(index)">
             <!-- 长期最优 -->
             <div class="stage_card_3_left">
@@ -34,14 +33,13 @@
                   style="transform: scale(1);">
                   <!-- <img :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 96px"> -->
                   <div class="stage_card_3_cover"></div>
-                  <div class="stage_card_3_best">{{ stage.maxEfficiencyStage.stage_code }}
+                  <div class="stage_card_3_best">
+                    <div class="stage_card_3_best_chapter">第九章</div>
+                    {{ stage.maxEfficiencyStage.stage_code }}
                     <div class="stage_card_3_markText_l">综合最优</div>
                   </div>
-
                 </div>
               </div>
-
-
             </div>
             <!-- 短期最优 -->
             <div class="stage_card_3_right">
@@ -68,7 +66,8 @@
               </div>
               <div class="stage_card_3_markText">短期最优</div>
             </div>
-          </div>
+        </div>
+        <div class="stage_card_3 " v-for="(times, index) in 4" style="height: 0px; margin-bottom: 0px;opacity: 0;">
         </div>
       </div>
 

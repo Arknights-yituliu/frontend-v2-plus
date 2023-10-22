@@ -265,9 +265,9 @@
               </div>
               <div class="gacha_unit_child">
                 <a href="/?item=Orundum" style="margin: 0px 24px 0px 0px">查看其它可搓玉关卡</a>
-                <a href="https://www.bilibili.com/video/BV1v54y1T7u5" style="display: inline-block">
+                <!-- <a href="https://www.bilibili.com/video/BV1v54y1T7u5" style="display: inline-block">
                   搓玉教程<img class="gacha_img_small" src="/image/icon/el.png"
-                /></a>
+                /></a> -->
               </div>
             </div>
           </el-collapse-item>
@@ -952,11 +952,11 @@
                       <img class="foot_unit_pic" src="/image/website/ico64.png" />一图流主站
                     </div>
                   </a>
-                  <a href="https://space.bilibili.com/22606843">
+                  <!-- <a href="https://space.bilibili.com/22606843">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: gray">
                       <img class="foot_unit_pic" src="/image/website/公孙长乐.webp" />公孙长乐
                     </div>
-                  </a>
+                  </a> -->
                 </div>
                 <div class="foot_unit">
                   <p class="foot_unit_title">-B站发布-</p>
