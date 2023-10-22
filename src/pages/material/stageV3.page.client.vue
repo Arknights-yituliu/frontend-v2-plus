@@ -46,19 +46,19 @@
               <div class="stage_card_3_list">
                 <div class="stage_card_3_line">
                   <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">65%</div>
+                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT5MaxEfficiencyStage.efficiency,1)}}% </div>
                   <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r4}.png`" alt=""
                       style="height: 32px"></div>
                 </div>
                 <div class="stage_card_3_line">
                   <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">55%</div>
+                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT4MaxEfficiencyStage.efficiency,1)}}%</div>
                   <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r3}.png`" alt=""
                       style="height: 32px"></div>
                 </div>
                 <div class="stage_card_3_line" v-show="stage.series.r2">
                   <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">45%</div>
+                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT3MaxEfficiencyStage.efficiency,1)}}%</div>
                   <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r2}.png`" alt=""
                       style="height: 32px"></div>
 
@@ -203,7 +203,7 @@ function getStageDataByProperty(stageList, property) {
     if (stage.endTime < nowTimeStamp) continue;
     return {
       stage_code: stage.stageCode,
-      efficiency:stage[property]
+      efficiency:stage[property]*100
     }
   }
 }
