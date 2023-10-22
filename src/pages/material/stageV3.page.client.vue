@@ -32,7 +32,7 @@
                 <!-- <img :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 96px"> -->
                 <div class="stage_card_3_cover"></div>
                 <div class="stage_card_3_best">
-                  <div class="stage_card_3_best_chapter">第九章</div>
+                  <div class="stage_card_3_best_chapter">{{ stage.maxEfficiencyStage.zoneName }}</div>
                   {{ stage.maxEfficiencyStage.stage_code }}
                   <div class="stage_card_3_markText_l">综合最优</div>
                 </div>
@@ -44,19 +44,19 @@
             <div class="stage_card_3_list">
               <div class="stage_card_3_line">
                 <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
-                <div class="stage_card_3_line_text">65%</div>
+                <div class="stage_card_3_line_text">{{ formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}% </div>
                 <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r4}.png`" alt=""
                     style="height: 32px"></div>
               </div>
               <div class="stage_card_3_line">
                 <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
-                <div class="stage_card_3_line_text">55%</div>
+                <div class="stage_card_3_line_text">{{ formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%</div>
                 <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r3}.png`" alt=""
                     style="height: 32px"></div>
               </div>
               <div class="stage_card_3_line" v-show="stage.series.r2">
                 <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
-                <div class="stage_card_3_line_text">45%</div>
+                <div class="stage_card_3_line_text">{{ formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%</div>
                 <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r2}.png`" alt=""
                     style="height: 32px"></div>
 
@@ -158,10 +158,13 @@ import { onMounted, ref } from "vue";
 import item_series from '/src/static/json/item_series.json'
 import stage_api_data from '/src/static/json/stage_api_data.v2.json'
 
+// 根据物品系列进行分组的推荐关卡
 let stage_result_group = ref(stage_api_data.data.recommendedStage)
 
+//材料卡片数据
 let item_card_data = ref([])
 
+//当前时间的时间戳
 let nowTimeStamp = new Date().getTime();
 
 
@@ -171,19 +174,26 @@ let nowTimeStamp = new Date().getTime();
 //        getItemTableData(8)
 // })
 
+/**
+ * 拼接材料卡片的数据
+ */
 function getItemCardData() {
   for (let index in stage_result_group.value) {
+    //每一种材料系列的推荐关卡
     let recommended_stage = stage_result_group.value[index]
-
+    //推荐关卡集合
     let stage_result_list = recommended_stage.stageResultList;
+
+    //获得每种评价标准的最优关和效率
     const item_recommend_stage = {
-      maxEfficiencyStage: getStageCode(stage_result_list, 'stageEfficiency'),
-      leT5MaxEfficiencyStage: getStageCode(stage_result_list, 'leT5Efficiency'),
-      leT4MaxEfficiencyStage: getStageCode(stage_result_list, 'leT4Efficiency'),
-      leT3MaxEfficiencyStage: getStageCode(stage_result_list, 'leT3Efficiency'),
+      maxEfficiencyStage: getStageDataByProperty(stage_result_list, 'stageEfficiency'),
+      leT5MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT5Efficiency'),
+      leT4MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT4Efficiency'),
+      leT3MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT3Efficiency'),
       series: { r4: '', r3: '', r2: '', r1: '' }
     }
 
+    //获得该材料系列的上下级材料的物品id
     item_recommend_stage.series = item_series[recommended_stage.itemSeriesId]
 
     item_card_data.value.push(item_recommend_stage)
@@ -191,7 +201,13 @@ function getItemCardData() {
   }
 }
 
-function getStageCode(stageList, property) {
+/**
+ * 根据传入的对象属性进行倒序排序,获得该属性最优关卡
+ * @param stageList 推荐关卡集合
+ * @param property 要排序的属性
+ * @returns {{efficiency, stage_code}} 该属性最优关卡效率和关卡名称
+ */
+function getStageDataByProperty(stageList, property) {
   stageList.sort((a, b) => {
     return b[property] - a[property]
   })
@@ -200,57 +216,67 @@ function getStageCode(stageList, property) {
     if (stage.endTime < nowTimeStamp) continue;
     return {
       stage_code: stage.stageCode,
+      efficiency: stage[property] * 100,
+      zoneName:stage.zoneName
     }
   }
 }
 
 
-let stage_result_by_item_id = ref([])
+//根据物品id获得对应的关卡推荐数据集合
+let item_table_data_by_item_id = ref([])
+//材料表格当前页数据
 let current_page_data = ref([])
-let page_size = ref(10);
+//页大小
+let page_size = ref(8);
+//总页数
 let page_count = ref(0)
 
+/**
+ * 根据页数跳转
+ */
 function currentPage(page_num) {
+  //起始数据索引
   page_num = page_num * page_size.value
   current_page_data.value = []
-  for (let i = page_num; i < stage_result_by_item_id.value.length; i++) {
+  //拼接表格数据
+  for (let i = page_num; i < item_table_data_by_item_id.value.length; i++) {
+    //当表格数据长度大于页大小时跳出
     if (i > page_num + page_size.value) break;
-    current_page_data.value.push(stage_result_by_item_id.value[i])
+    current_page_data.value.push(item_table_data_by_item_id.value[i])
   }
 }
 
+/**
+ * 获取数据总页数
+ */
 function getPageCount() {
-  page_count.value = parseInt((stage_result_by_item_id.value.length / page_size.value).toString()) + 1
+  page_count.value = parseInt((item_table_data_by_item_id.value.length / page_size.value).toString()) + 1
 }
 
+/**
+ * 根据索引获得对应材料系列的所有推荐关卡
+ * @param index 集合索引,卡片展示的材料和索引对应  简单例子[0:xxx材料的所有数据]
+ */
 function getItemTableData(index) {
+  //当前材料系列的推荐关卡
   let recommended_stage = stage_result_group.value[index];
-  console.log(recommended_stage)
+  //推荐关卡集合
   let stage_result_list = recommended_stage.stageResultList;
-
-  let table_data = []
-  for (const index in stage_result_list) {
-    let stage_result = stage_result_list[index];
-    // const element = {
-    //   stageCode: stage_result.stageCode,
-    //   itemId: stage_result.itemId,
-    //   secondaryItemId: stage_result.secondaryItemId,
-    //   leT5Efficiency: stage_result.leT5Efficiency,
-    //   leT4Efficiency: stage_result.leT4Efficiency,
-    //   leT3Efficiency: stage_result.leT3Efficiency,
-    //   stageEfficiency:stage_result.stageEfficiency,
-    //   endTime:stage_result.endTime
-    // }
-    table_data.push(stage_result)
-  }
-
-  stage_result_by_item_id.value = table_data.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
-  console.log(stage_result_by_item_id.value)
+  //拼接表格数据,默认按总效率排序
+  item_table_data_by_item_id.value = stage_result_list.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
+  console.log(item_table_data_by_item_id.value)
 
   getPageCount()
   currentPage(0)
 }
 
+/**
+ * 获取雪碧图样式
+ * @param id 图片id
+ * @param type 图片类型,对应着一个css
+ * @returns {string} 样式
+ */
 function getSpriteImg(id, type) {
   // if (id === "30012" && type === "t3") id = "30013";
   // if (id === "30012" && this.popupRank === 3 && "popup" === type) id = "30013";
@@ -266,6 +292,12 @@ function getSpriteImg(id, type) {
   // return "bg-" + id;
 }
 
+/**
+ * 格式化数字
+ * @param num 数字
+ * @param acc 位数
+ * @returns {string} 格式化后的数字
+ */
 function formatNumber(num, acc) {
   acc = typeof acc !== "undefined" ? acc : 2;
   return parseFloat(num).toFixed(acc);
