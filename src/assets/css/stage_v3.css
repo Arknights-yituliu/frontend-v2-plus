@@ -3,6 +3,17 @@
   max-width: 1260px;
   flex-wrap: wrap;
 }
+#stage_3_intro{
+  display: flex;
+  max-width: 1260px;
+  flex-wrap: wrap;
+}
+
+
+.stage_card_wrap_3{
+  display: flex;
+  flex-wrap: wrap;
+}
 
 .stage_card_3{
   border: 0px solid #ebeef5;
