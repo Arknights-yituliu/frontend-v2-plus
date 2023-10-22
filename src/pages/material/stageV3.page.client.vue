@@ -67,24 +67,50 @@
         </div>
         <div class="stage_card_3 " v-for="(times, index) in 4" style="height: 0px; margin-bottom: 0px;opacity: 0;">
         </div>
-        {{ item_card_data[1] }}
       </div>
 
       <el-table :data="current_page_data" style="width: 100%" height="250">
-        <el-table-column fixed prop="stageCode" label="关卡名" width="150">
+        <el-table-column fixed prop="stageCode" label="关卡名" width="120">
           <template #default="scope">
-            <div style="display: flex; align-items: center">
-              test
+            <div>
+              <span style="font-size: 8px;line-height: 8px;">{{ scope.row.zoneName }}</span><br>
+              {{scope.row.stageCode}}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="主掉落物" width="120" />
-        <el-table-column prop="state" label="State" width="120" />
-        <el-table-column prop="city" label="City" width="320" />
-        <el-table-column prop="address" label="Address" width="600" />
-        <el-table-column prop="zip" label="Zip" width="120" />
+        <el-table-column prop="primary" label="主产品" width="90">
+          <template #default="scope">
+            <img :src="`/image/items/${scope.row.itemId}.png`" alt="" style="height: 36px">
+          </template>
+        </el-table-column>
+        <el-table-column prop="secondary" label="副产品" width="90">
+          <template #default="scope">
+            <img :src="`/image/items/${scope.row.secondaryItemId}.png`" alt="" style="height: 36px">
+          </template>
+        </el-table-column>
+        <el-table-column prop="eff" label="综合效率" width="90">
+          <template #default="scope">
+            {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
+          </template>
+        </el-table-column>
+        <el-table-column prop="spm" label="SPM" width="60" />
+        <el-table-column prop="effT4" label="T4效率" width="90">
+          <template #default="scope">
+            {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
+          </template>
+        </el-table-column>
+        <el-table-column prop="effT3" label="T3效率" width="90">
+          <template #default="scope">
+            {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
+          </template>
+        </el-table-column>
+        <el-table-column prop="effT2" label="T2效率" width="90">
+          <template #default="scope">
+            {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
+          </template>
+        </el-table-column>
       </el-table>
-      <table class="stage_detail_table_3">
+      <!-- <table class="stage_detail_table_3">
         <tr>
           <td style="width: 150px;">
             关卡名
@@ -115,7 +141,7 @@
           <td>
             <div> {{ stage.stageCode }} </div>
             <div class="zone_name"> {{ stage.zoneName }} </div>
-            <!--            <div class="zone_name"> {{ stage.stageId.indexOf("LMD")>0?'计入商店龙门币':'' }} </div>-->
+                       <div class="zone_name"> {{ stage.stageId.indexOf("LMD")>0?'计入商店龙门币':'' }} </div>
           </td>
           <td>
             <img :src="`/image/items/${stage.itemId}.png`" alt="" style="height: 36px">
@@ -140,13 +166,13 @@
             {{ formatNumber(stage.spm, 2) }}
           </td>
         </tr>
-      </table>
+      </table> -->
 
-      <div style="display: flex;justify-content: center">
+      <!-- <div style="display: flex;justify-content: center">
         <div style="margin: 12px"> page to</div>
         <div @click="currentPage(index - 1)" style="margin: 12px" v-for="index in page_count" :key="index">{{ index }}
         </div>
-      </div>
+      </div> -->
 
     </div>
   </div>
@@ -217,7 +243,7 @@ function getStageDataByProperty(stageList, property) {
     return {
       stage_code: stage.stageCode,
       efficiency: stage[property] * 100,
-      zoneName:stage.zoneName
+      zoneName:stage.zoneName.replace(" (标准)","")
     }
   }
 }
