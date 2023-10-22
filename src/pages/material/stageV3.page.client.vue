@@ -22,8 +22,58 @@
           </div>
         </div>
       </div>
+      <!-- 说明区域 -->
+      <div id="stage_3_intro">
+        <!-- 说明卡片1 -->
+        <div class="stage_card_3">
+          <!-- 长期最优 -->
+          <div class="stage_card_3_left">
+            <div class="img_wrap" style="position: relative;">
+              <div class="stage_card_3_mainImg"  style="transform: scale(1);">
+                <div class="stage_card_3_cover"></div>
+                <div class="stage_card_3_best" style="font-size: 16px;">
+                  <div class="stage_card_3_best_chapter">区域</div>
+                  综合最优关卡
+                  <div class="stage_card_3_markText_l">综合最优</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 短期最优 -->
+          <div class="stage_card_3_right">
+            <div class="stage_card_3_list">
+              <div class="stage_card_3_line">
+                <div class="stage_card_3_line_text" style="font-size: 16px;">T4最优</div>
+                <div class="stage_card_3_line_text" style="font-size: 16px;">T4效率 </div>
+                <!-- <div class="stage_card_3_img"><img :src="`/image/items/${item_card_data[1].series.r4}.png`" alt=""
+                    style="height: 32px"></div> -->
+              </div>
+              <div class="stage_card_3_line">
+                <div class="stage_card_3_line_text" style="font-size: 16px;">T3最优</div>
+                <div class="stage_card_3_line_text" style="font-size: 16px;">T3效率 </div>
+                <!-- <div class="stage_card_3_img"><img :src="`/image/items/${item_card_data[1].series.r3}.png`" alt=""
+                    style="height: 32px"></div> -->
+              </div>
+              <div class="stage_card_3_line">
+                <div class="stage_card_3_line_text" style="font-size: 16px;">T2最优</div>
+                <div class="stage_card_3_line_text" style="font-size: 16px;">T2效率 </div>
+                <!-- <div class="stage_card_3_img"><img :src="`/image/items/${item_card_data[1].series.r2}.png`" alt=""
+                    style="height: 32px"></div> -->
+              </div>
+            </div>
+            <div class="stage_card_3_markText">短期最优</div>
+          </div>
+        </div>
+        <!-- 说明卡片2 -->
+        <div class="stage_card_3">
 
+        </div>
+      </div>
+
+
+      <!-- 卡片区域 -->
       <div id="stage_3">
+        <!-- 正式卡片 -->
         <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index" @click="getItemTableData(index)">
           <!-- 长期最优 -->
           <div class="stage_card_3_left">
@@ -68,9 +118,9 @@
         <div class="stage_card_3 " v-for="index in 4" :key="index" style="height: 0; margin-bottom: 0;opacity: 0;">
         </div>
       </div>
-
-      <el-table :data="current_page_data" style="width: 100%" height="250">
-        <el-table-column fixed prop="stageCode" label="关卡名" width="120">
+      <!-- 详情表 -->
+      <el-table id="detailTable" :data="current_page_data" style="width: 100%" max-height="450">
+        <el-table-column fixed prop="stageCode" label="关卡名" width="120" sortable>
           <template #default="scope">
             <div>
               <span style="font-size: 8px;line-height: 8px;">{{ scope.row.zoneName }}</span><br>
@@ -88,23 +138,23 @@
             <img :src="`/image/items/${scope.row.secondaryItemId}.png`" alt="" style="height: 36px">
           </template>
         </el-table-column>
-        <el-table-column prop="eff" label="综合效率" width="90">
+        <el-table-column prop="eff" label="综合效率" width="108" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="spm" label="SPM" width="60" />
-        <el-table-column prop="effT4" label="T4效率" width="90">
+        <el-table-column prop="spm" label="SPM" width="96" sortable/>
+        <el-table-column prop="effT4" label="T4效率" width="96" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="effT3" label="T3效率" width="90">
+        <el-table-column prop="effT3" label="T3效率" width="96" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="effT2" label="T2效率" width="90">
+        <el-table-column prop="effT2" label="T2效率" width="96" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
           </template>
@@ -295,8 +345,17 @@ function getItemTableData(index) {
 
   getPageCount()
   currentPage(0)
+  jumpToTable()
 }
 
+
+
+function jumpToTable(){
+  window.scrollTo({
+        top:100,
+        behavior:'smooth'
+    })
+}
 /**
  * 获取雪碧图样式
  * @param id 图片id
