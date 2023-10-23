@@ -29,10 +29,10 @@
           <!-- 长期最优 -->
           <div class="stage_card_3_left">
             <div class="img_wrap" style="position: relative;">
-              <div class="stage_card_3_mainImg"  style="transform: scale(1);">
-                <div class="stage_card_3_cover"></div>
+              <div class="stage_card_3_mainImg bg-30013 stage_sprite_t3" style="transform: scale(1);">
+                <div class="stage_card_3_cover" style="height:114px;"></div>
                 <div class="stage_card_3_best" style="font-size: 16px;">
-                  <div class="stage_card_3_best_chapter">区域</div>
+                  <div class="stage_card_3_best_chapter">关卡所在区域</div>
                   综合最优关卡
                   <div class="stage_card_3_markText_l">综合最优</div>
                 </div>
@@ -41,24 +41,24 @@
           </div>
           <!-- 短期最优 -->
           <div class="stage_card_3_right">
-            <div class="stage_card_3_list">
+            <div class="stage_card_3_list" style="width:144px;">
               <div class="stage_card_3_line">
-                <div class="stage_card_3_line_text" style="font-size: 16px;">T4最优</div>
-                <div class="stage_card_3_line_text" style="font-size: 16px;">T4效率 </div>
-                <!-- <div class="stage_card_3_img"><img :src="`/image/items/${item_card_data[1].series.r4}.png`" alt=""
-                    style="height: 32px"></div> -->
+                <div class="stage_card_3_line_text" style="font-size: 12px;">T4最优关</div>
+                <div class="stage_card_3_line_text" style="font-size: 12px;">T4效率 </div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30014.png`" alt=""
+                    style="height: 32px"></div>
               </div>
               <div class="stage_card_3_line">
-                <div class="stage_card_3_line_text" style="font-size: 16px;">T3最优</div>
-                <div class="stage_card_3_line_text" style="font-size: 16px;">T3效率 </div>
-                <!-- <div class="stage_card_3_img"><img :src="`/image/items/${item_card_data[1].series.r3}.png`" alt=""
-                    style="height: 32px"></div> -->
+                <div class="stage_card_3_line_text" style="font-size: 12px;">T3最优关</div>
+                <div class="stage_card_3_line_text" style="font-size: 12px;">T3效率 </div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30013.png`" alt=""
+                    style="height: 32px"></div>
               </div>
               <div class="stage_card_3_line">
-                <div class="stage_card_3_line_text" style="font-size: 16px;">T2最优</div>
-                <div class="stage_card_3_line_text" style="font-size: 16px;">T2效率 </div>
-                <!-- <div class="stage_card_3_img"><img :src="`/image/items/${item_card_data[1].series.r2}.png`" alt=""
-                    style="height: 32px"></div> -->
+                <div class="stage_card_3_line_text" style="font-size: 12px;">T2最优关</div>
+                <div class="stage_card_3_line_text" style="font-size: 12px;">T2效率 </div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30012.png`" alt=""
+                    style="height: 32px"></div>
               </div>
             </div>
             <div class="stage_card_3_markText">短期最优</div>
@@ -66,11 +66,40 @@
         </div>
         <!-- 说明卡片2 -->
         <div class="stage_card_3">
-
+          <div>
+            <div class="stage_card_3_list" style="width:244px;">
+              <div class="stage_card_3_line">
+                <div class="stage_card_3_line_text" style="font-size: 12px;width:48px;">综合最优</div>
+                <div class="stage_card_3_line_text" style="font-size: 12px;font-weight:500;width:180px;">该关卡所有掉落物的<b>总价值</b>最高 </div>
+              </div>
+              <div class="stage_card_3_line">
+                <div class="stage_card_3_img"><img :src="`/image/items/30014.png`" style="height: 28px;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30013.png`" style="height: 28px;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30012.png`" style="height: 28px;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30041.png`" style="height: 28px;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30051.png`" style="height: 28px;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30061.png`" style="height: 28px;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30023.png`" style="height: 28px;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30033.png`" style="height: 28px;"></div>
+              </div>
+              <div class="stage_card_3_line">
+                <div class="stage_card_3_line_text" style="font-size: 12px;width:48px;">T3最优</div>
+                <div class="stage_card_3_line_text" style="font-size: 12px;font-weight:500;width:180px;">T3+T2+T1材料总价值/理智消耗 </div>
+              </div>
+              <div class="stage_card_3_line">
+                <div class="stage_card_3_img"><img :src="`/image/items/30014.png`" style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30013.png`" style="height: 28px;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30012.png`" style="height: 28px;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30041.png`" style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30051.png`" style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30061.png`" style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30023.png`" style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
+                <div class="stage_card_3_img"><img :src="`/image/items/30033.png`" style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-
       <!-- 卡片区域 -->
       <div id="stage_3">
         <!-- 正式卡片 -->
@@ -124,7 +153,7 @@
           <template #default="scope">
             <div>
               <span style="font-size: 10px;line-height: 8px;">{{ scope.row.zoneName }}</span><br>
-              {{scope.row.stageCode}}
+              {{ scope.row.stageCode }}
             </div>
           </template>
         </el-table-column>
@@ -143,7 +172,7 @@
             {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="spm" label="SPM" :width="td_4" sortable/>
+        <el-table-column prop="spm" label="SPM" :width="td_4" sortable />
         <el-table-column prop="effT4" label="T4效率" :width="td_4" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
@@ -230,12 +259,12 @@
 
 <script setup>
 import stageApi from '/src/api/stage'
-import {onMounted, ref, watch} from "vue";
+import { onMounted, ref, watch } from "vue";
 import item_series from '/src/static/json/item_series.json'
 import stage_api_data from '/src/static/json/stage_api_data.v2.json'
 
 // 根据物品系列进行分组的推荐关卡
-let stage_result_group = ref(stage_api_data.data.recommendedStage.sort((a,b)=>a.itemSeriesId-b.itemSeriesId))
+let stage_result_group = ref(stage_api_data.data.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId))
 
 //材料卡片数据
 let item_card_data = ref([])
@@ -293,7 +322,7 @@ function getStageDataByProperty(stageList, property) {
     return {
       stage_code: stage.stageCode,
       efficiency: stage[property] * 100,
-      zoneName:stage.zoneName.replace(" (标准)","")
+      zoneName: stage.zoneName.replace(" (标准)", "")
     }
   }
 }
@@ -351,11 +380,11 @@ function getPageCount() {
 
 
 
-function jumpToTable(){
+function jumpToTable() {
   window.scrollTo({
-        top:100,
-        behavior:'smooth'
-    })
+    top: 100,
+    behavior: 'smooth'
+  })
 }
 /**
  * 获取雪碧图样式
@@ -395,22 +424,22 @@ onMounted(() => {
   getItemTableData(8)
 })
 
-let td_1= ref()
-let td_2= ref()
-let td_3= ref()
-let td_4= ref()
-let td_5= ref()
-let td_6= ref()
+let td_1 = ref()
+let td_2 = ref()
+let td_3 = ref()
+let td_4 = ref()
+let td_5 = ref()
+let td_6 = ref()
 
-window.addEventListener("resize",function(){
-  if(window.innerWidth<800){
+window.addEventListener("resize", function () {
+  if (window.innerWidth < 800) {
     td_1.value = 70
     td_2.value = 80
     td_3.value = 90
     td_4.value = 100
     td_5.value = 110
     td_6.value = 120
-  }else {
+  } else {
     td_1.value = ''
     td_2.value = ''
     td_3.value = ''
