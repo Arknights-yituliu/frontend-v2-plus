@@ -83,7 +83,7 @@
                 <div class="stage_card_3_img"><img :src="`/image/items/30033.png`" style="height: 28px;"></div>
               </div>
               <div class="stage_card_3_line">
-                <div class="stage_card_3_line_text" style="font-size: 12px;width:48px;">T3最优</div>
+                <div class="stage_card_3_line_text" style="font-size: 12px;width:48px;">T3效率</div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;font-weight:500;width:180px;">T3+T2+T1材料总价值/理智消耗 </div>
               </div>
               <div class="stage_card_3_line">
