@@ -27,13 +27,13 @@
             <!-- <el-radio-button label="4班" ></el-radio-button> -->
           </el-radio-group>
         </div>
-<!--        <div class="riic_building_parameter">-->
-<!--          <div class="parameter_text">换班模式</div>-->
-<!--          <el-radio-group v-model="planTimes">-->
-<!--            <el-radio-button label="自动按时换班"></el-radio-button>-->
-<!--            <el-radio-button label="手动换班"></el-radio-button>-->
-<!--          </el-radio-group>-->
-<!--        </div>-->
+        <div class="riic_building_parameter">
+          <div class="parameter_text">换班模式</div>
+          <el-radio-group v-model="is_period">
+            <el-radio-button label="自动按时换班" ></el-radio-button>
+            <el-radio-button label="手动换班" ></el-radio-button>
+          </el-radio-group>
+        </div>
         <!-- 自动换班则显示时间表 -->
         <div class="riic_building_parameter">
           <div class="parameter_text" style="width: 108px">名称/起止时间</div>
@@ -1897,7 +1897,6 @@
 
 <script>
 import buildingApi from "@/api/building";
-import toolApi from "@/api/tool";
 import TRADINGJson from "@/static/json/build/TRADING.json";
 import MANUFACTUREJson from "@/static/json/build/MANUFACTURE.json";
 import CONTROLJson from "@/static/json/build/CONTROL.json";
@@ -1935,8 +1934,7 @@ export default {
       switch_Fiammetta_enable: [false, false, false],
       input_Fiammetta_order: ["换班前", "换班前", "换班前"],
       control_skip: [false, false, false],
-
-      // A换班参数
+      is_period:'自动按时换班',
       period_plan0: ["20:00", "07:59"],
       control_plan0: ["阿米娅", "凯尔希", "琴柳", "令", "夕"],
       trading_plan0_0: ["巫恋", "龙舌兰", "柏喙"],
@@ -2197,7 +2195,8 @@ export default {
       this.scheduleJson.planTimes = this.planTimes;
       plans_0.name = this.name[0];
       plans_0.description = this.descriptionH2[0];
-      plans_0.period = this.setPeriod(this.period_plan0);
+      console.log(this.is_period)
+      if(this.is_period === '自动按时换班') plans_0.period = this.setPeriod(this.period_plan0);
 
       if (this.switch_Fiammetta_enable[0]) {
         plans_0.Fiammetta.target = this.Fiammetta[0];
@@ -2406,7 +2405,7 @@ export default {
       // B换班表
 
       plans_1.name = this.name[1];
-      plans_1.period = this.setPeriod(this.period_plan1);
+      if(this.is_period === '自动按时换班') plans_1.period = this.setPeriod(this.period_plan1);
       plans_1.description = this.descriptionH2[1];
 
       if (this.switch_Fiammetta_enable[1]) {
@@ -2614,7 +2613,7 @@ export default {
 
       // C换班表
       plans_2.name = this.name[2];
-      plans_2.period = this.setPeriod(this.period_plan2);
+      if(this.is_period === '自动按时换班') plans_2.period = this.setPeriod(this.period_plan2);
       plans_2.description = this.descriptionH2[2];
 
       if (this.switch_Fiammetta_enable[2]) {
@@ -2837,7 +2836,7 @@ export default {
       this.name[0] = this.historicalData.plans[0].name; //班次名称
       this.descriptionH2[0] = this.historicalData.plans[0].description; //班次描述
 
-      if (undefined === this.historicalData.plans[0].period) {
+      if (void 0 == this.historicalData.plans[0].period) {
         this.period_plan0 = [];
       } else {
         this.period_plan0 = this.getPeriodReverse(this.historicalData.plans[0].period);

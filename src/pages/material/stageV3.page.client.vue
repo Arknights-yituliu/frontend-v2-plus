@@ -232,10 +232,13 @@
 import stageApi from '/src/api/stage'
 import {onMounted, ref, watch} from "vue";
 import item_series from '/src/static/json/item_series.json'
-import stage_api_data from '/src/static/json/stage_api_data.v2.json'
+//本地测试数据
+// import stage_api_data from '/src/static/json/stage_api_data.v2.json'
 
 // 根据物品系列进行分组的推荐关卡
-let stage_result_group = ref(stage_api_data.data.recommendedStage.sort((a,b)=>a.itemSeriesId-b.itemSeriesId))
+let stage_result_group = ref()
+// let stage_result_group = ref(stage_api_data.data.recommendedStage.sort((a,b)=>a.itemSeriesId-b.itemSeriesId))
+
 
 //材料卡片数据
 let item_card_data = ref([])
@@ -244,11 +247,12 @@ let item_card_data = ref([])
 let nowTimeStamp = new Date().getTime();
 
 
-// stageApi.getStageResultGroupByItemSeries(0.625,300).then(response=>{
-//        stage_result_group.value = response.data.recommendedStage
-//        getItemCardData()
-//        getItemTableData(8)
-// })
+stageApi.getStageResultGroupByItemSeries(0.625,300).then(response=>{
+       stage_result_group.value = response.data.recommendedStage.sort((a,b)=>a.itemSeriesId-b.itemSeriesId)
+
+       getItemCardData()
+       getItemTableData(8)
+})
 
 /**
  * 拼接材料卡片的数据
