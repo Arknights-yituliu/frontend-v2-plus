@@ -6,7 +6,8 @@
 .room_wrap_left {
     display: flex;
     flex-wrap: wrap;
-    width: 400px;
+    justify-content: center;
+    width: 430px;
 }
 
 .room_wrap_center {
@@ -29,7 +30,8 @@
     margin: 4px;
     border-radius: 3px;
     flex-wrap: wrap;
-    height: 58px;
+    font-weight: 600;
+    /*height: 58px;*/
 }
 
 .room_btn_wrap {
@@ -45,39 +47,43 @@
 .trading {
     border-left: 4px solid #0288d1;
     background-color: #c2e9ff;
-
+    width: 200px;
 }
 
 .manufacture {
     border-left: 4px solid #ffbc00;
     background-color: #ffe6b9;
-
+    width: 200px;
 }
 
 .power {
     border-left: 4px solid #43a047;
     background-color: #b8ffa4;
-
+    width: 120px;
 }
 
 .control {
     border-left: 4px solid #1b5e20;
     background-color: #b8ffa4;
+    width: 360px;
 }
 
 .dormitory {
     border-left: 4px solid #00cde8;
     background-color: #adfdf2;
+    width: 360px;
 }
 
 .meeting {
     border-left: 4px solid #ff8800;
     background-color: #ffca87;
+    width: 120px;
 }
 
 .hire {
     border-left: 4px solid #606060;
     background-color: #a9a9a9;
+    width: 120px;
 }
 
 .operator_image_wrap {
@@ -96,4 +102,17 @@
     top: -66px;
     left: -64px;
     transform: scale(0.28);
+}
+
+.room_popup{
+    margin:8px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.operator_check_box{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }

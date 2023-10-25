@@ -81,7 +81,7 @@ watch(
   position: relative;
   z-index: 2100;
   margin: 10vh auto auto;
-  width: 520px;
+  width: 500px;
   background-color: var(--popup-card-bg);
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
