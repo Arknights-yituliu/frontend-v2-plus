@@ -43,22 +43,25 @@
           <div class="stage_card_3_right">
             <div class="stage_card_3_list" style="width:144px;">
               <div class="stage_card_3_line">
+                <div class="stage_card_3_img"><img :src="`/image/items/30014.png`" alt=""
+                                                   style="height: 32px"></div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T4最优关</div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T4效率 </div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30014.png`" alt=""
-                    style="height: 32px"></div>
+
               </div>
               <div class="stage_card_3_line">
+                <div class="stage_card_3_img"><img :src="`/image/items/30013.png`" alt=""
+                                                   style="height: 32px"></div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T3最优关</div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T3效率 </div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30013.png`" alt=""
-                    style="height: 32px"></div>
+
               </div>
               <div class="stage_card_3_line">
+                <div class="stage_card_3_img"><img :src="`/image/items/30012.png`" alt=""
+                                                   style="height: 32px"></div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T2最优关</div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T2效率 </div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30012.png`" alt=""
-                    style="height: 32px"></div>
+
               </div>
             </div>
             <div class="stage_card_3_markText">短期最优</div>
