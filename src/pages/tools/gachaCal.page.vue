@@ -1015,12 +1015,12 @@ export default {
       checkBox1: ["0"],
       checkBox: ["1", "2", "5", "6"], //折叠栏绑定数组
       // checkBox: ["1","7"],
-      rewardType: "感谢庆典(11.15)", //奖励的类型
+      rewardType: "周年限定", //奖励的类型
       startTime: "", //开始时间
       endTime: "2023/11/15 04:00:00", //结束时间
       start_TimeStamp: "", //开始时间戳
       end_TimeStamp: "", //结束时间戳
-      timeSelector: "春节(2.17)", //活动时间节点选择框的绑定对象
+      timeSelector: "感谢庆典(11.15)", //活动时间节点选择框的绑定对象
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
       // gacha_storePacks: gacha_storePacksJson.data,
