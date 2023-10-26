@@ -1,7 +1,13 @@
 <template>
-  <div :class="switch_class" @click="handleClick()">
-    <div :class="switch_left_class"></div>
-    <div :class="switch_right_class"></div>
+  <div class="switch" :class="switch_bg" @click="handleClick()">
+<!--    <div :class="switch_left_class"></div>-->
+<!--    <div :class="switch_right_class"></div>-->
+    <div class="switch_left" :class="switch_left_class">
+
+    </div>
+    <div class="switch_right" :class="switch_right_class">
+
+    </div>
   </div>
 </template>
 
@@ -10,13 +16,17 @@ import { ref, watch } from "vue";
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps(["modelValue"]);
 
+console.log('传入值', props.modelValue)
+
 if (typeof props.modelValue != "boolean") {
-  // console.log("测试", props.modelValue === undefined);
+  console.log("测试", props.modelValue === undefined);
 }
 
-let switch_class = ref(props.modelValue || props.modelValue === undefined ? "switch" : "switch switch_red");
-let switch_left_class = ref(props.modelValue || props.modelValue === undefined ? "switch_left" : "switch_left switch_white");
-let switch_right_class = ref(props.modelValue || props.modelValue === undefined ? "switch_right switch_white" : "switch_right switch_red");
+
+
+let switch_bg = ref( props.modelValue ? "switch_true" : "switch_false");
+let switch_left_class = ref( props.modelValue ? "" : "switch_bg");
+let switch_right_class = ref(props.modelValue ? "switch_bg" : "");
 
 // let switch_class = ref("switch");
 // let switch_left_class = ref("switch_left");
@@ -25,13 +35,13 @@ let switch_right_class = ref(props.modelValue || props.modelValue === undefined 
 function handleClick() {
   console.log(props.modelValue);
   if (!props.modelValue) {
-    switch_class.value = "switch";
-    switch_left_class.value = "switch_left";
-    switch_right_class.value = "switch_right switch_white";
+    switch_bg.value = "switch_true";
+    switch_left_class.value = "";
+    switch_right_class.value = "switch_bg";
   } else {
-    switch_class.value = "switch switch_red";
-    switch_left_class.value = "switch_left switch_white";
-    switch_right_class.value = "switch_right switch_red";
+    switch_bg.value = "switch_false";
+    switch_left_class.value = "switch_bg";
+    switch_right_class.value = "";
   }
   emit("update:modelValue", !props.modelValue);
 }
@@ -40,49 +50,57 @@ watch(
   () => props.modelValue,
   (newVal, oldVal) => {
     if (newVal) {
-      switch_class.value = "switch";
-      switch_left_class.value = "switch_left";
-      switch_right_class.value = "switch_right switch_white";
+      switch_bg.value = "switch_true";
+      switch_left_class.value = "";
+      switch_right_class.value = "switch_bg";
     } else {
-      switch_class.value = "switch switch_red";
-      switch_left_class.value = "switch_left switch_white";
-      switch_right_class.value = "switch_right switch_red";
+      switch_bg.value = "switch_false";
+      switch_left_class.value = "switch_bg";
+      switch_right_class.value = "";
     }
   }
 );
 </script>
 
 <style scoped>
-.switch {
-  height: 16px;
-  width: 38px;
-  border: 1px rgb(201, 201, 201) solid;
+.switch{
+  width: 42px;
   border-radius: 25px;
   display: flex;
-  background: rgb(126, 203, 255);
+  justify-content: space-between;
+  height: 19px;
+}
+
+.switch_false{
+  border: 1px rgb(172, 178, 183) solid;
+  background: rgb(78, 98, 128);
+}
+
+.switch_true {
+  border: 1px #cce4ff solid;
+  background: #5fa7f1;
 }
 
 .switch_left {
   height: 16px;
   width: 16px;
-  margin-left: -1px;
+  margin: 1px;
   border-radius: 25px;
-  /* background: white; */
+
+}
+
+.switch_bg {
+  background-color: #ffffff;
 }
 
 .switch_right {
   height: 16px;
   width: 16px;
-  /* margin: 1px; */
-  margin-left: 6px;
+  margin: 1px;
   border-radius: 25px;
 }
 
-.switch_red {
-  background: rgb(192, 192, 192);
-}
 
-.switch_white {
-  background: white;
-}
+
+
 </style>
