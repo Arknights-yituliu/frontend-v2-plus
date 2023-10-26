@@ -1,6 +1,13 @@
 .room_wrap {
     display: flex;
+}
 
+.room_times_wrap{
+    display: flex;
+}
+
+.room_times{
+    padding: 8px;
 }
 
 .room_wrap_left {
@@ -31,6 +38,7 @@
     border-radius: 3px;
     flex-wrap: wrap;
     font-weight: 600;
+    height: 90px;
     /*height: 58px;*/
 }
 
@@ -47,30 +55,35 @@
 .trading {
     border-left: 4px solid #0288d1;
     background-color: #c2e9ff;
+    color: #0288d1;
     width: 200px;
 }
 
 .manufacture {
     border-left: 4px solid #ffbc00;
     background-color: #ffe6b9;
+    color: #ff9900;
     width: 200px;
 }
 
 .power {
     border-left: 4px solid #43a047;
     background-color: #b8ffa4;
+    color: #43a047;
     width: 120px;
 }
 
 .control {
     border-left: 4px solid #1b5e20;
     background-color: #b8ffa4;
+    color: #1b5e20;
     width: 360px;
 }
 
 .dormitory {
     border-left: 4px solid #00cde8;
     background-color: #adfdf2;
+    color: #00b2e8;
     width: 360px;
 }
 
@@ -78,12 +91,28 @@
     border-left: 4px solid #ff8800;
     background-color: #ffca87;
     width: 120px;
+    color: #ff8800
 }
 
 .hire {
     border-left: 4px solid #606060;
     background-color: #a9a9a9;
     width: 120px;
+    color: #606060;
+}
+
+.selected_operator_wrap{
+    margin:8px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.selected_room_title{
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
 }
 
 .operator_image_wrap {
@@ -104,11 +133,7 @@
     transform: scale(0.28);
 }
 
-.room_popup{
-    margin:8px;
-    display: flex;
-    justify-content: center;
-}
+
 
 
 .operator_check_box{
