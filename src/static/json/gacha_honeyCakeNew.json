@@ -1,84 +1,4 @@
 {
-   "理想城复刻(源石)": {
-    "originium": 37,
-    "orundum": 0,
-    "permit": 3,
-    "permit10": 0,
-    "start": "2023/08/31 16:00:00",
-    "end": "2023/09/10  03:58:00",
-    "rewardType": "公共",
-    "module": "actRe"
-  },
-  "理想城复刻(紫票)": {
-    "originium": 0,
-    "orundum": 2000,
-    "permit": 3,
-    "permit10": 0,
-    "start": "2023/08/31 16:00:00",
-    "end": "2023/09/10  03:58:00",
-    "rewardType": "公共",
-    "module": "actRe"
-  },
-  "黑钢(可能是SS)": {
-    "originium": 28,
-    "orundum": 0,
-    "permit": 3,
-    "permit10": 0,
-    "start": "2023/09/06  16:00:00",
-    "end": "2023/09/07  03:58:00",
-    "rewardType": "公共",
-    "module": "act"
-  },
-  "中秋签到": {
-    "originium": 0,
-    "orundum": 200,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/09/26  16:00:00",
-    "end": "2023/09/27  03:58:00",
-    "rewardType": "公共",
-    "module": "honeyCake"
-  },
-  "主线预热签到": {
-    "originium": 0,
-    "orundum": 200,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/09/26  16:00:00",
-    "end": "2023/09/27  03:58:00",
-    "rewardType": "公共",
-    "module": "honeyCake"
-  },
-  "主线第十三章": {
-    "originium": 40,
-    "orundum": 0,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/10/05  16:00:00",
-    "end": "2023/10/12  03:58:00",
-    "rewardType": "公共",
-    "module": "act"
-  },
-  "叙拉古人复刻(源石)": {
-    "originium": 41,
-    "orundum": 0,
-    "permit": 3,
-    "permit10": 0,
-    "start": "2023/10/19  16:00:00",
-    "end": "2023/10/22  03:58:00",
-    "rewardType": "公共",
-    "module": "actRe"
-  },
-  "叙拉古人复刻(紫票)": {
-    "originium": 0,
-    "orundum": 2000,
-    "permit": 3,
-    "permit10": 0,
-    "start": "2023/10/19  16:00:00",
-    "end": "2023/10/22  03:58:00",
-    "rewardType": "公共",
-    "module": "actRe"
-  },
   "4.5周年SS": {
     "originium": 28,
     "orundum": 0,
@@ -119,46 +39,6 @@
     "rewardType": "周年限定",
     "module": "honeyCake"
   },
-  "游戏维护更新(8月下)": {
-    "originium": 0,
-    "orundum": 600,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/08/16 00:00:00",
-    "end": "2023/08/30 00:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake"
-  },
-  "游戏维护更新(9月)": {
-    "originium": 5,
-    "orundum": 1600,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/09/01 00:00:00",
-    "end": "2023/09/30 00:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake"
-  },
-  "9月剿灭更新": {
-    "originium": 0,
-    "orundum": 1500,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/09/04 00:00:00",
-    "end": "2023/09/04 00:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake"
-  },
-  "游戏维护更新(10月)": {
-    "originium": 0,
-    "orundum": 400,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/10/01 00:00:00",
-    "end": "2023/10/22 00:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake"
-  },
   "10月剿灭更新": {
     "originium": 0,
     "orundum": 1500,
@@ -169,13 +49,163 @@
     "rewardType": "公共",
     "module": "honeyCake"
   },
+  "4.5周年SS(二阶段)": {
+    "originium": 10,
+    "orundum": 0,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2023/11/15  16:00:00",
+    "end": "2023/11/16  03:58:00",
+    "rewardType": "公共",
+    "module": "act"
+  },
+  "照我以火复刻(源石)": {
+    "originium": 29,
+    "orundum": 0,
+    "permit": 3,
+    "permit10": 0,
+    "start": "2023/12/04  16:00:00",
+    "end": "2023/12/14  03:58:00",
+    "rewardType": "公共",
+    "module": "actRe"
+  },
+  "照我以火复刻(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "permit": 3,
+    "permit10": 0,
+    "start": "2023/12/04  16:00:00",
+    "end": "2023/12/14  03:58:00",
+    "rewardType": "公共",
+    "module": "actRe"
+  },
+  "谢拉格SS": {
+    "originium": 29,
+    "orundum": 0,
+    "permit": 3,
+    "permit10": 0,
+    "start": "2023/12/14  16:00:00",
+    "end": "2023/12/28  03:58:00",
+    "rewardType": "公共",
+    "module": "act"
+  },
+  "雷姆必拓故事集": {
+    "originium": 16,
+    "orundum": 0,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2024/01/09  16:00:00",
+    "end": "2024/01/23  03:58:00",
+    "rewardType": "公共",
+    "module": "act"
+  },
+  "登临意复刻(源石)": {
+    "originium": 29,
+    "orundum": 0,
+    "permit": 3,
+    "permit10": 0,
+    "start": "2024/01/23  16:00:00",
+    "end": "2024/02/02  03:58:00",
+    "rewardType": "公共",
+    "module": "actRe"
+  },
+  "登临意复刻(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "permit": 3,
+    "permit10": 0,
+    "start": "2024/01/23  16:00:00",
+    "end": "2024/02/02  03:58:00",
+    "rewardType": "公共",
+    "module": "actRe"
+  },
+  "春节SS": {
+    "originium": 29,
+    "orundum": 0,
+    "permit": 3,
+    "permit10": 0,
+    "start": "2024/02/03  16:00:00",
+    "end": "2024/02/17  03:58:00",
+    "rewardType": "公共",
+    "module": "act"
+  },
+  "红包墙": {
+    "originium": 0,
+    "orundum": 8400,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2024/02/03  16:00:00",
+    "end": "2024/02/17  03:58:00",
+    "rewardType": "公共",
+    "module": "honeyCake"
+  },
+  "春节池每日赠送寻访凭证": {
+    "originium": 0,
+    "orundum": 0,
+    "permit": 14,
+    "permit10": 0,
+    "start": "2024/02/03  16:00:00",
+    "end": "2024/02/17  03:58:00",
+    "rewardType": "春节限定",
+    "module": "honeyCake"
+  },
+  "春节池专属十连寻访凭证": {
+    "originium": 0,
+    "orundum": 0,
+    "permit": 0,
+    "permit10": 1,
+    "start": "2024/02/03  16:00:00",
+    "end": "2024/02/04  03:58:00",
+    "rewardType": "春节限定",
+    "module": "honeyCake"
+  },
   "游戏维护更新(11月)": {
     "originium": 5,
     "orundum": 400,
     "permit": 0,
     "permit10": 0,
     "start": "2023/11/01 00:00:00",
-    "end": "2023/11/15 00:00:00",
+    "end": "2023/11/02 00:00:00",
+    "rewardType": "公共",
+    "module": "honeyCake"
+  },
+  "游戏维护更新(11月下)": {
+    "originium": 5,
+    "orundum": 400,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2023/11/16 00:00:00",
+    "end": "2023/11/29 00:00:00",
+    "rewardType": "公共",
+    "module": "honeyCake"
+  },
+  "游戏维护更新(12月)": {
+    "originium": 5,
+    "orundum": 800,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2023/12/01 00:00:00",
+    "end": "2023/12/29 00:00:00",
+    "rewardType": "公共",
+    "module": "honeyCake"
+  },
+  "游戏维护更新(1月)": {
+    "originium": 5,
+    "orundum": 800,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2024/01/01 00:00:00",
+    "end": "2024/01/29 00:00:00",
+    "rewardType": "公共",
+    "module": "honeyCake"
+  },
+  "游戏维护更新(2月)": {
+    "originium": 5,
+    "orundum": 800,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2024/02/01 00:00:00",
+    "end": "2024/02/29 00:00:00",
     "rewardType": "公共",
     "module": "honeyCake"
   }

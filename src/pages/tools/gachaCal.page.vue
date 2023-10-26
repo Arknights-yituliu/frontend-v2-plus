@@ -18,7 +18,7 @@
 
               <el-radio-group size="small" style="width: 90%; margin: 6px 5%" v-model="timeSelector" @change="checkEndDate(timeSelector)">
                 <el-radio-button label="感谢庆典(11.15)" style="width: 33%"></el-radio-button>
-                <el-radio-button label="新年卡池" type="primary" style="width: 33%" disabled></el-radio-button>
+                <el-radio-button label="春节(2.17)" type="primary" style="width: 33%" ></el-radio-button>
                 <el-radio-button label="敬请期待" type="primary" style="width: 33%" disabled></el-radio-button>
                 <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
               </el-radio-group>
@@ -995,7 +995,6 @@ import gacha_potentialJson from "@/static/json/gacha_potential.json"; //常驻�
 import gacha_honeyCakeJson from "@/static/json/gacha_honeyCakeNew.json"; //其他奖励数据
 import "@/assets/css/sprite_gacha.css";
 import "@/assets/css/gacha.css";
-import toolApi from "@/api/tool";
 import cookie from "js-cookie";
 import * as echarts from "echarts";
 // import echarts from "static/js/echarts.min.js";
@@ -1016,12 +1015,12 @@ export default {
       checkBox1: ["0"],
       checkBox: ["1", "2", "5", "6"], //折叠栏绑定数组
       // checkBox: ["1","7"],
-      rewardType: "周年限定", //奖励的类型
+      rewardType: "春节限定", //奖励的类型
       startTime: "", //开始时间
-      endTime: "2023/11/15 04:00:00", //结束时间
+      endTime: "2024/02/17 04:00:00", //结束时间
       start_TimeStamp: "", //开始时间戳
       end_TimeStamp: "", //结束时间戳
-      timeSelector: "感谢庆典(11.15)", //活动时间节点选择框的绑定对象
+      timeSelector: "春节(2.17)", //活动时间节点选择框的绑定对象
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
       // gacha_storePacks: gacha_storePacksJson.data,
@@ -1112,9 +1111,9 @@ export default {
     //公告通知
     openNotification() {
       this.$notify({
-        title: "10.21更新",
+        title: "2023.10.26更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong>1.更新了主线相关攒抽计算<br>2.修复了一些bug</strong>",
+        message: "<strong>1.更新了春节池攒抽排期<br></strong>",
         duration: 6000,
       });
     },
@@ -1248,9 +1247,9 @@ export default {
         this.rewardType = "周年限定"; //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.poolCountDownFlag_permit = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
         this.poolCountDownFlag_orundum = true; //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-      } else if (this.timeSelector === "1") {
-        this.endTime = "1";
-        this.rewardType = "1";
+      } else if (this.timeSelector === "春节(2.17)") {
+        this.endTime = "2024/02/17 04:00:00";
+        this.rewardType = "春节限定";
         this.poolCountDownFlag_permit = false;
         this.poolCountDownFlag_orundum = true;
       }
