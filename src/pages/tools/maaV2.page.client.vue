@@ -90,9 +90,9 @@
   <c-popup v-model:visible="room_visible">
     <div class="room_popup">
       <div class="operator_image_wrap"
-           v-for="(charName,index) in operators5" :key="index"
-           @click="deleteOperator(index)">
-        <div :class="getAvatar(charName)"></div>
+           v-for="(charId,index) in operator_selected[`${room_type}_${room_index}`]" :key="index"
+           @click="deleteOperator(charId)">
+        <div :class="getAvatar(charId)"></div>
 
       </div>
     </div>
@@ -138,16 +138,27 @@ function openPopup(type,index){
   room_visible.value = true
 }
 
-function chooseOperator(operator_index, operator_id) {
-  let key = `${room_type.value}_${room_index.value}_${operator_index}`
+function chooseOperator( operator_id) {
+  let key = `${room_type.value}_${room_index.value}`
   console.log('添加的干员位置是',key,'干员是',operator_id)
-  operator_selected.value[key] = operator_id
+  if(operator_selected.value[key]){
+    if(!operator_selected.value[key].includes(operator_id)){
+      operator_selected.value[key].push(operator_id)
+    }
+  }else {
+    operator_selected.value[key] = [operator_id]
+  }
+   console.log(operator_selected.value)
 }
 
-function deleteOperator(operator_index) {
-  let key = `${room_type.value}_${room_index.value}_${operator_index}`
+function deleteOperator(operator_id) {
+  let key = `${room_type.value}_${room_index.value}`
   console.log('删除的干员位置是',key)
-  operator_selected.value[key] = ''
+  if(operator_selected.value[key]){
+    operator_selected.value[key] = operator_selected.value[key].filter(e=>{return e!==operator_id})
+  }
+
+  console.log(operator_selected.value)
 }
 
 let operators = ['char_010_chen', 'char_010_chen', 'char_010_chen']
