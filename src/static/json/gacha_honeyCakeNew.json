@@ -169,6 +169,16 @@
     "rewardType": "公共",
     "module": "honeyCake"
   },
+    "24年1月剿灭更新": {
+    "originium": 0,
+    "orundum": 1500,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2024/1/22 00:00:00",
+    "end": "2024/1/30 04:00:00",
+    "rewardType": "公共",
+    "module": "honeyCake"
+  },
   "游戏维护更新(11月)": {
     "originium": 5,
     "orundum": 400,
