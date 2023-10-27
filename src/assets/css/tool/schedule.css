@@ -6,10 +6,13 @@
  display: flex;
  flex-wrap: wrap;
 
+
 }
 
 .schedule_control{
-
+    margin: 4px;
+    padding: 4px;
+    box-shadow: 1px 1px 1px 1px #e5e5e5,-1px -1px 1px 1px #e5e5e5;
 }
 
 .schedule_control_option{
@@ -23,15 +26,14 @@
 }
 
 .room_times{
-    padding: 8px;
+
 }
 
 .room_wrap_left {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: flex-end;
-    width: 430px;
+    width: 480px;
 }
 
 .room_wrap_center {
@@ -43,7 +45,7 @@
 .room_wrap_right {
     display: flex;
     flex-wrap: wrap;
-    width: 150px;
+    width: 180px;
     align-content: flex-start;
 }
 
@@ -87,34 +89,34 @@
     border-left: 4px solid #43a047;
     background-color: #b8ffa4;
     color: #43a047;
-    width: 120px;
+    width: 130px;
 }
 
 .control {
     border-left: 4px solid #1b5e20;
     background-color: #b8ffa4;
     color: #1b5e20;
-    width: 360px;
+    width: 390px;
 }
 
 .dormitory {
     border-left: 4px solid #00cde8;
-    background-color: #adfdf2;
-    color: #00b2e8;
-    width: 360px;
+    background-color: #91faea;
+    color: #0097e8;
+    width: 390px;
 }
 
 .meeting {
     border-left: 4px solid #ff8800;
     background-color: #ffca87;
-    width: 120px;
+    width: 160px;
     color: #ff8800
 }
 
 .hire {
     border-left: 4px solid #606060;
     background-color: #a9a9a9;
-    width: 120px;
+    width: 160px;
     color: #606060;
 }
 
