@@ -9,7 +9,7 @@
       </div>
 
       <div class="to_act_wrap">
-        <div class="code">直播兑换码——30000龙门币</div>
+        <div class="code">直播兑换码——20000龙门币</div>
         <div class="code">02023CELEBRATION</div>
         <c-button :color="'blue'" @click="copyCode('02023CELEBRATION')">点击复制兑换码并转跳官网</c-button>
       </div>

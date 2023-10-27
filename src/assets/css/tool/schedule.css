@@ -1,5 +1,31 @@
 .room_wrap {
     display: flex;
+}
+
+.schedule_control_wrap{
+ display: flex;
+ flex-wrap: wrap;
+
+
+}
+
+.schedule_control{
+    margin: 4px;
+    padding: 4px;
+    box-shadow: 1px 1px 1px 1px #e5e5e5,-1px -1px 1px 1px #e5e5e5;
+}
+
+.schedule_control_option{
+    display: flex;
+    align-items: center;
+    margin: 8px;
+}
+
+.room_times_wrap{
+    display: flex;
+}
+
+.room_times{
 
 }
 
@@ -7,7 +33,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    width: 430px;
+    width: 480px;
 }
 
 .room_wrap_center {
@@ -19,7 +45,7 @@
 .room_wrap_right {
     display: flex;
     flex-wrap: wrap;
-    width: 150px;
+    width: 180px;
     align-content: flex-start;
 }
 
@@ -31,6 +57,7 @@
     border-radius: 3px;
     flex-wrap: wrap;
     font-weight: 600;
+    height: 90px;
     /*height: 58px;*/
 }
 
@@ -47,43 +74,83 @@
 .trading {
     border-left: 4px solid #0288d1;
     background-color: #c2e9ff;
+    color: #0288d1;
     width: 200px;
 }
 
 .manufacture {
     border-left: 4px solid #ffbc00;
     background-color: #ffe6b9;
+    color: #ff9900;
     width: 200px;
 }
 
 .power {
     border-left: 4px solid #43a047;
     background-color: #b8ffa4;
-    width: 120px;
+    color: #43a047;
+    width: 130px;
 }
 
 .control {
     border-left: 4px solid #1b5e20;
     background-color: #b8ffa4;
-    width: 360px;
+    color: #1b5e20;
+    width: 390px;
 }
 
 .dormitory {
     border-left: 4px solid #00cde8;
-    background-color: #adfdf2;
-    width: 360px;
+    background-color: #91faea;
+    color: #0097e8;
+    width: 390px;
 }
 
 .meeting {
     border-left: 4px solid #ff8800;
     background-color: #ffca87;
-    width: 120px;
+    width: 160px;
+    color: #ff8800
 }
 
 .hire {
     border-left: 4px solid #606060;
     background-color: #a9a9a9;
-    width: 120px;
+    width: 160px;
+    color: #606060;
+}
+
+.check_image_wrap{
+    width: 80px;
+    height: 80px;
+    margin: 4px;
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #858585;
+    overflow: hidden;
+}
+
+.check_image {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    transform: scale(0.5);
+}
+
+.selected_operator_wrap{
+    margin:8px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 70px;
+}
+
+.selected_room_title{
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+
 }
 
 .operator_image_wrap {
@@ -93,8 +160,9 @@
     position: relative;
     border-radius: 4px;
     border: 1px solid #858585;
-    background-color: #858585;
+    background-color: #e5e5e5;
     overflow: hidden;
+
 }
 
 .operator_image {
@@ -104,15 +172,23 @@
     transform: scale(0.28);
 }
 
-.room_popup{
-    margin:8px;
-    display: flex;
-    justify-content: center;
-}
-
-
 .operator_check_box{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.operator_check_box_option{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.building_buff_name{
+    display: inline-block;
+    margin: 4px;
+}
+
+.building_buff_description{
+    width: 300px;
 }

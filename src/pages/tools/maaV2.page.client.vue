@@ -1,46 +1,185 @@
 <template>
 
+  <div class="schedule_control_wrap">
+    <div class="schedule_control">
+      <div class="schedule_control_option">
+        <div> 基建模式</div>
+        <c-button :color="'blue'" :isSelected="'243'===selected_schedule_type" @click="chooseScheduleType('243')">243
+        </c-button>
+        <c-button :color="'blue'" :isSelected="'153'===selected_schedule_type" @click="chooseScheduleType('153')">153
+        </c-button>
+        <c-button :color="'blue'" :isSelected="'333'===selected_schedule_type" @click="chooseScheduleType('333')">333
+        </c-button>
+        <c-button :color="'blue'" :isSelected="'252'===selected_schedule_type" @click="chooseScheduleType('252')">252
+        </c-button>
+      </div>
+
+      <div class="schedule_control_option">
+        <div> 换班次数</div>
+        <c-button :color="'blue'" :isSelected="2===schedule_type.planTimes.length" @click="choosePlanTimes(2)">2
+        </c-button>
+        <c-button :color="'blue'" :isSelected="3===schedule_type.planTimes.length" @click="choosePlanTimes(3)">3
+        </c-button>
+        <c-button :color="'blue'" :isSelected="4===schedule_type.planTimes.length" @click="choosePlanTimes(4)">4
+        </c-button>
+        <c-button :color="'blue'" :isSelected="5===schedule_type.planTimes.length" @click="choosePlanTimes(5)">5
+        </c-button>
+      </div>
+
+      <div class="schedule_control_option">
+        <div> 当前班次</div>
+        <c-button :color="'blue'" :isSelected="index === current_plan_index"
+                  v-for="index in schedule_type.planTimes" :key="index"
+                  @click="currentPlan(index)" class="room_times">
+          第{{ index + 1 }}班
+        </c-button>
+      </div>
+
+      <div class="schedule_control_option">
+        <div> 班次名称</div>
+        <input>
+      </div>
+
+      <div class="schedule_control_option">
+        <div> 班次描述</div>
+        <input>
+      </div>
+    </div>
+
+    <div class="schedule_control">
+      <div class="schedule_control_option">
+        <div> 第{{ current_plan_index }}班是否使用无人机</div>
+        <c-switch v-model="drones_set_obj[`${current_plan_index}_enable`]"></c-switch>
+      </div>
+
+      <div class="schedule_control_option">
+        <div>目标房间</div>
+        <c-button :color="'blue'"
+                  :isSelected="'trading' === drones_set_obj[`${current_plan_index}_room`]"
+                  @click="setDrone('room','trading')">
+          贸易站
+        </c-button>
+        <c-button :color="'blue'"
+                  :isSelected="'manufacture' === drones_set_obj[`${current_plan_index}_room`]"
+                  @click="setDrone('room','manufacture')">
+          制造站
+        </c-button>
+
+      </div>
+      <div class="schedule_control_option">
+        <div> 目标房间编号</div>
+        <c-button :color="'blue'" style="width: 10px"
+                  :isSelected="index === drones_set_obj[`${current_plan_index}_index`]"
+                  @click="setDrone('index',index)"
+                  v-for="index in index_list.slice(0,5)" :key="index">
+          {{ index + 1 }}
+        </c-button>
+      </div>
+
+      <div class="schedule_control_option">
+        <div> 换班前后</div>
+        <c-button :color="'blue'"
+                  :isSelected="'pre' === drones_set_obj[`${current_plan_index}_order`]"
+                  @click="setDrone('order','pre')">
+          换班前
+        </c-button>
+        <c-button :color="'blue'"
+                  :isSelected="'post' === drones_set_obj[`${current_plan_index}_order`]"
+                  @click="setDrone('order','post')">
+          换班后
+        </c-button>
+      </div>
+    </div>
+
+    <div class="schedule_control">
+      <div class="schedule_control_option">
+        <div> 第{{ current_plan_index }}班是否使用菲亚梅塔</div>
+        <c-switch v-model="Fiammetta_set_obj[`${current_plan_index}_enable`]"></c-switch>
+      </div>
+
+      <div class="schedule_control_option">
+        <div> 恢复目标</div>
+        <div class="operator_image_wrap" @click="Fiammetta_target_visible=true">
+          <div :class="getAvatar(Fiammetta_set_obj[`${current_plan_index}_target`])"></div>
+        </div>
+      </div>
+
+      <c-popup v-model:visible="Fiammetta_target_visible">
+        <c-button v-for="(character,type) in building_data" :key="type"
+                  :color="'blue'" :isSelected="type === popup_room_type"
+                  @click="popup_room_type=type">
+          {{ type }}
+        </c-button>
+        <div class="operator_check_box">
+          <div class="operator_image_wrap"
+               v-for="(character,index) in building_data[popup_room_type]"
+               :key="index" @click="setFiammetta('target',character.charId)">
+            <div :class="getAvatar(character.charId)"></div>
+          </div>
+        </div>
+      </c-popup>
+
+      <div class="schedule_control_option">
+        <div> 换班前后</div>
+        <c-button :color="'blue'"
+                  :isSelected="'pre' === Fiammetta_set_obj[`${current_plan_index}_order`]"
+                  @click="setFiammetta('order','pre')">
+          换班前
+        </c-button>
+        <c-button :color="'blue'"
+                  :isSelected="'post' === Fiammetta_set_obj[`${current_plan_index}_order`]"
+                  @click="setFiammetta('order','post')">
+          换班后
+        </c-button>
+      </div>
+    </div>
+  </div>
+  <c-button :color="'blue'" @click="createScheduleJsonFile()">创建排班文件</c-button>
+
   <div class="room_wrap">
     <!--  左边站点-->
     <div class="room_wrap_left">
       <!--     控制中枢-->
-
-      <div class="room_bg control">
-        <div class="room_name" style="color: #1b5e20"> 控制中枢</div>
+      <div class="room_bg control" @click="openPopup('control',0)">
+        <div class="room_name"> 控制中枢</div>
         <div class="operator_image_wrap"
-             v-for="(charName,index) in operators5" :key="index">
+             v-for="(charName,index) in operator_set_obj[`${current_plan_index}_control_0`]"
+             :key="index">
           <div :class="getAvatar(charName)"></div>
 
         </div>
       </div>
       <!--    贸易站-->
-
-      <div class="room_bg trading" v-for="index of buildingType.trading" :key="index" @click="openPopup('trading',index)">
-        <div class="room_name" style="color: #0288d1"> 贸易站</div>
+      <div class="room_bg trading" v-for="trading_index of schedule_type.trading" :key="trading_index"
+           @click="openPopup('trading',trading_index)">
+        <div class="room_name"> 贸易站</div>
         <div class="operator_image_wrap"
-             v-for="(charName,index) in operators" :key="index">
+             v-for="(charName,index) in operator_set_obj[`${current_plan_index}_trading_${trading_index}`]"
+             :key="index">
           <div :class="getAvatar(charName)"></div>
 
         </div>
       </div>
 
       <!--  制造站-->
-
-      <div class="room_bg manufacture" v-for="index of buildingType.manufacture" :key="index">
-        <div class="room_name" style="color: #ff9900"> 制造站</div>
+      <div class="room_bg manufacture" v-for="manufacture_index of schedule_type.manufacture" :key="manufacture_index"
+           @click="openPopup('manufacture',manufacture_index)">
+        <div class="room_name"> 制造站</div>
         <div class="operator_image_wrap"
-             v-for="(charName,index) in operators" :key="index">
+             v-for="(charName,index) in operator_set_obj[`${current_plan_index}_manufacture_${manufacture_index}`]"
+             :key="index">
           <div :class="getAvatar(charName)"></div>
 
         </div>
       </div>
 
       <!--  发电站-->
-
-      <div class="room_bg power" v-for="index of buildingType.power" :key="index">
-        <div class="room_name" style="color: #43a047"> 发电站</div>
+      <div class="room_bg power" v-for="power_index of schedule_type.power" :key="power_index"
+           @click="openPopup('power',power_index)">
+        <div class="room_name"> 发电站</div>
         <div class="operator_image_wrap"
-             v-for="(charName,index) in operators1" :key="index">
+             v-for="(charName,index) in operator_set_obj[`${current_plan_index}_power_${power_index}`]"
+             :key="index">
           <div :class="getAvatar(charName)"></div>
 
         </div>
@@ -49,13 +188,15 @@
     </div>
 
     <div class="room_wrap_center">
-      <!--     宿舍-->
 
-      <div class="room_bg dormitory" v-for="index of 5" :key="index">
-        <div class="room_name" style="color: #00b2e8"> 宿舍</div>
+      <!--     宿舍-->
+      <div class="room_bg dormitory" v-for="dormitory_index of 5" :key="dormitory_index"
+           @click="openPopup('dormitory',dormitory_index)">
+        <div class="room_name"> 宿舍</div>
         <div class="operator_image_wrap"
-             v-for="(charName,index) in operators5" :key="index">
-          <div :class="getAvatar(charName)"> </div>
+             v-for="(charName,index) in operator_set_obj[`${current_plan_index}_dormitory_${dormitory_index}`]"
+             :key="index">
+          <div :class="getAvatar(charName)"></div>
 
         </div>
       </div>
@@ -64,23 +205,20 @@
 
     <div class="room_wrap_right">
       <!--     会客室-->
-
-      <div class="room_bg meeting">
-        <div class="room_name" style="color: #ff8800"> 会客室</div>
+      <div class="room_bg meeting" @click="openPopup('meeting',0)">
+        <div class="room_name"> 会客室</div>
         <div class="operator_image_wrap"
-             v-for="(charName,index) in operators2" :key="index">
+             v-for="(charName,index) in operator_set_obj[`${current_plan_index}_meeting_0`]" :key="index">
           <div :class="getAvatar(charName)"></div>
 
         </div>
       </div>
       <!--     办公室 -->
-
-      <div class="room_bg hire">
-        <div class="room_name" style="color: #606060"> 会客室</div>
+      <div class="room_bg hire" @click="openPopup('hire',0)">
+        <div class="room_name"> 办公室</div>
         <div class="operator_image_wrap"
-             v-for="(charName,index) in operators1" :key="index">
+             v-for="(charName,index) in operator_set_obj[`${current_plan_index}_hire_0`]" :key="index">
           <div :class="getAvatar(charName)"></div>
-
         </div>
       </div>
     </div>
@@ -88,21 +226,33 @@
 
 
   <c-popup v-model:visible="room_visible">
-    <div class="room_popup">
+
+    <div class="selected_room_title">第{{ current_plan_index + 1 }}班—第{{
+        selected_room_index + 1
+      }}个{{ selected_room_type }}选中的干员
+    </div>
+
+    <div class="selected_operator_wrap">
       <div class="operator_image_wrap"
-           v-for="(charName,index) in operators5" :key="index"
-           @click="deleteOperator(index)">
-        <div :class="getAvatar(charName)"></div>
+           v-for="(charId,index) in operator_set_obj[`${current_plan_index}_${selected_room_type}_${selected_room_index}`]"
+           :key="index"
+           @click="deleteOperator(charId)">
+        <div :class="getAvatar(charId)"></div>
 
       </div>
     </div>
 
+    <c-button v-for="(character,type) in building_data" :key="type"
+              :color="'blue'" :isSelected="type === popup_room_type"
+              @click="popup_room_type=type">
+      {{ type }}
+    </c-button>
     <div class="operator_check_box">
-    <div class="operator_image_wrap"
-         v-for="(info,charId) in operator_table_sample" :key="charId"
-         @click="chooseOperator(charId)">
-      <div :class="getAvatar(charId)"> </div>
-    </div>
+      <div class="operator_image_wrap"
+           v-for="(character,index) in building_data[popup_room_type]"
+           :key="index" @click="chooseOperator(character.charId)">
+        <div :class="getAvatar(character.charId)"></div>
+      </div>
     </div>
   </c-popup>
 </template>
@@ -113,221 +263,246 @@ import '/src/assets/css/tool/schedule.css'
 import '/src/assets/css/sprite/sprite_avatar_6.css'
 import '/src/assets/css/sprite/sprite_avatar_5.css'
 import '/src/assets/css/sprite/sprite_avatar_4.css'
-import operator_table_sample from '/src/static/json/survey/character_table_simple.json'
+import building_data from '/src/static/json/build/buildingData.json'
+import {cMessage} from '/src/custom/message.js'
 
-let buildingType = ref({
+let selected_schedule_type = ref('243')
+
+let schedule_type = ref({
   trading: 2,
   manufacture: 4,
-  power: 3
+  power: 3,
+  planTimes: [0, 1, 2, 3]
 })
 
-
-function getAvatar(charName) {
-  return `operator_image bg-${charName}`
+function chooseScheduleType(type) {
+  selected_schedule_type.value = type
+  schedule_type.value.trading = parseInt(type.substring(0, 1))
+  schedule_type.value.manufacture = parseInt(type.substring(1, 2))
+  schedule_type.value.power = parseInt(type.substring(2, 3))
 }
 
+let index_list = [0, 1, 2, 3, 4, 5, 6];
+
+
+function choosePlanTimes(num) {
+  schedule_type.value.planTimes = index_list.slice(0, num)
+}
+
+let max_operator_num = {
+  control: 5,
+  dormitory: 5,
+  trading: 3,
+  manufacture: 3,
+  power: 1,
+  meeting: 2,
+  hire: 1
+}
+
+function getAvatar(charName, type) {
+  if ('check' === type) return `bg-${charName} check_image`
+  return `bg-${charName} operator_image`
+}
+
+//控制选择房间内干员的弹窗展开的属性
 let room_visible = ref(false)
-let operator_selected = ref({})
-let room_type = ref('')
-let room_index = ref(0)
+let popup_room_type = ref('trading')
+//已选中干员的暂存对象
+let operator_set_obj = ref({})
+//当前选中房间在暂存对面里面的key
+//第几次换班
+let current_plan_index = ref(0)
+//房间类型
+let selected_room_type = ref('')
+//房间序号
+let selected_room_index = ref(0)
+
+/**
+ * 选择当前班次
+ * @param index 班次（班次1为0,以此类推)
+ */
+function currentPlan(index) {
+  current_plan_index.value = index
+}
+
+const inputCache = localStorage.getItem("inputCache");
+operator_set_obj.value = inputCache ? JSON.parse(inputCache) : {}
 
 
-function openPopup(type,index){
-  room_type.value = type
-  room_index.value = index
+/**
+ * 打开入驻干员的弹窗
+ * @param type 房间类型
+ * @param index 房间编号
+ */
+function openPopup(type, index) {
+  selected_room_type.value = type
+  selected_room_index.value = index
   room_visible.value = true
 }
 
-function chooseOperator(operator_index, operator_id) {
-  let key = `${room_type.value}_${room_index.value}_${operator_index}`
-  console.log('添加的干员位置是',key,'干员是',operator_id)
-  operator_selected.value[key] = operator_id
-}
-
-function deleteOperator(operator_index) {
-  let key = `${room_type.value}_${room_index.value}_${operator_index}`
-  console.log('删除的干员位置是',key)
-  operator_selected.value[key] = ''
-}
-
-let operators = ['char_010_chen', 'char_010_chen', 'char_010_chen']
-
-let operators1 = ['char_010_chen']
-let operators2 = ['char_010_chen', 'char_010_chen']
-let operators5 = ['char_010_chen', 'char_010_chen', 'char_010_chen', 'char_010_chen', 'char_010_chen']
-
-
-let schedule_init = {
-  title: "排班文件标题",
-  description: "排班文件描述",
-  author: "yituliu",
-  buildingType: "243",
-  id: 1697606525017292,
-  planTimes: "3班",
-  plans: []
-}
-
-let schedule = ref({})
-
-for (const i in [1, 2, 3, 4, 5]) {
-  const drones = {
-    room: "trading",
-    index: 1,
-    enable: true,
-    order: "pre"
-  }
-  const period = [['00:00', '00:00'], ['00:00', '00:00'], ['00:00', '00:00'], ['00:00', '00:00']]
-  let control = [
-    {
-      operators: ["阿米娅", "凯尔希", "琴柳", "令", "夕"]
-    }
-  ]
-
-  let trading = [
-    {
-      operators: ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "LMD"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "LMD"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "LMD"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "LMD"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "LMD"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "LMD"
-    }
-  ]
-  let manufacture = [
-    {
-      operators: ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "Battle Record"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "Battle Record"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "Battle Record"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "Battle Record"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "Battle Record"
-    },
-    {
-      "operators": ['null', 'null', 'null'],
-      "sort": false,
-      "autofill": false,
-      "product": "Battle Record"
-    }
-  ]
-
-  let power = [
-    {
-      "operators": ['null'],
-      "autofill": false
-    },
-    {
-      "operators": ['null'],
-      "autofill": false
-    },
-    {
-      "operators": ['null'],
-      "autofill": false
-    }
-  ]
-
-  let hire = [
-    {
-      "operators": ['null'],
-      "autofill": false
-    }
-  ]
-  let meeting = [
-    {
-      "operators": ['null', 'null'],
-      "autofill": false
-    }
-  ]
-  let dormitory = [
-    {
-      "operators": ['null', 'null', 'null', 'null', 'null'],
-      "sort": false,
-      "autofill": false
-    },
-    {
-      "operators": ['null', 'null', 'null', 'null', 'null'],
-      "sort": false,
-      "autofill": false
-    },
-    {
-      "operators": ['null', 'null', 'null', 'null', 'null'],
-      "sort": false,
-      "autofill": false
-    },
-    {
-      "operators": ['null', 'null', 'null', 'null', 'null'],
-      "sort": false,
-      "autofill": false
-    }
-  ]
-  let room = {
-    control: control,
-    trading: trading,
-    manufacture: manufacture,
-    power: power,
-    hire: hire,
-    meeting: meeting,
-    dormitory: dormitory
+/**
+ * 选择该房间入驻干员
+ * @param operator_id 干员id
+ */
+function chooseOperator(operator_id) {
+  let key = `${current_plan_index.value}_${selected_room_type.value}_${selected_room_index.value}`
+  console.log('添加的干员位置是', key, '干员是', operator_id)
+  if (!operator_set_obj.value[key]) {
+    operator_set_obj.value[key] = [operator_id]
+    return;
   }
 
-  let plan = {
-    drones: drones,
-    period: period,
-    room: room,
-    name: `第${i}组`,
-    description: `描述${i}`
+  if (operator_set_obj.value[key].includes(operator_id)) {
+    cMessage('不要选择同一干员')
+    return;
   }
-  schedule_init.plans.push(plan)
+
+  if (operator_set_obj.value[key].length === max_operator_num[selected_room_type.value]) {
+    cMessage('当前房间干员数量已达上限')
+    return;
+  }
+
+  operator_set_obj.value[key].push(operator_id)
+
+  localStorage.setItem("inputCache", JSON.stringify(operator_set_obj.value))
 }
 
-// console.log(JSON.stringify(schedule_init))
+/**
+ * 删除该房间中选中的干员
+ * @param operator_id 干员id
+ */
+function deleteOperator(operator_id) {
+  let key = `${current_plan_index.value}_${selected_room_type.value}_${selected_room_index.value}`
+  console.log('删除的干员位置是', key)
+  if (operator_set_obj.value[key]) {
+    operator_set_obj.value[key] = operator_set_obj.value[key].filter(e => {
+      return e !== operator_id
+    })
+  }
+  localStorage.setItem("inputCache", JSON.stringify(operator_set_obj.value))
+}
+
+let drones_set_obj = ref({})
+
+/**
+ * 写入无人机使用设置
+ * @param property 无人机设置参数 如enable等
+ * @param value 参数值
+ */
+function setDrone(property, value) {
+  const key = `${current_plan_index.value}_${property}`
+  drones_set_obj.value[key] = value
+}
+
+let Fiammetta_set_obj = ref({})
+let Fiammetta_target_visible = ref(true)
+
+/**
+ * 写入菲亚梅塔使用设置
+ * @param property 无人机设置参数 如enable等
+ * @param value 参数值
+ */
+function setFiammetta(property, value) {
+  const key = `${current_plan_index.value}_${property}`
+  Fiammetta_set_obj.value[key] = value
+}
+
+// let schedule_init = {
+//   title: "排班文件标题",
+//   description: "排班文件描述",
+//   author: "一图流",
+//   schedule_type: "243",
+//   id: 1697606525017292,
+//   planTimes: "3班",
+//   plans: []
+// }
+
+/**
+ * 创建排班文件
+ */
+function createScheduleJsonFile() {
+  console.log('开始创建')
+  let plans = []
+
+  for (let index of schedule_type.value.planTimes) {
+    const plan = {
+      rooms: {
+        trading: [],
+        manufacture: [],
+        hire: [],
+        dormitory: [],
+        control: [],
+        power: [],
+        meeting: [],
+      },
+      Fiammetta: {
+        enable: false,
+        target: "",
+        order: "pre"
+      },
+      drones: {
+        room: "trading",
+        index: index,
+        enable: false,
+        order: "pre"
+      }
+    }
+    plans.push(plan)
+  }
+
+  //写入无人机设置
+  for (let key in drones_set_obj) {
+    const text_list = key.split('_')
+    //班次
+    const plan_index = text_list[0]
+    //属性
+    const property = text_list[1]
+    // 如果当前班次不需要使用无人机 跳过
+    if (!drones_set_obj[`${plan_index}_enable`]) continue;
+    // 如果班次大于选择的班次跳过
+    if (plan_index >= schedule_type.value.planTimes.length) continue;
+    // 班次为空写入初始值
+    plans[plan_index]['drones'][property] = drones_set_obj.value[key]
+  }
+
+  for (let key in Fiammetta_set_obj) {
+
+    const text_list = key.split('_')
+    const plan_index = text_list[0]
+    const property = text_list[1]
+    // 如果当前班次不需要使用无人机 跳过
+    if (!Fiammetta_set_obj[`${plan_index}_enable`]) continue;
+    if (plan_index >= schedule_type.value.planTimes.length) continue;
+    plans[plan_index]['Fiammetta'][property] = Fiammetta_set_obj.value[key]
+  }
+
+  for (let key in operator_set_obj.value) {
+    const text_list = key.split('_')
+    const plan_index = text_list[0]
+    const room_type = text_list[1]
+    const room_index = text_list[2]
+
+    if (!plans[plan_index][room_type][room_index]) {
+      plans[plan_index][room_type][room_index] = {
+        product: 'TEST',
+        operators: operator_set_obj.value[key],
+        sort: false,
+        autofill: false
+      }
+    }
+  }
+
+  console.log(JSON.stringify(plans))
+
+}
+
+
 </script>
+
+
+<style scoped>
+.btn {
+  margin: 4px;
+  min-width: 50px;
+}
+</style>

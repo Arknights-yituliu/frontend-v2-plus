@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="stage_hint">
-        <div class="stage_hint_t5">移动端可左右滑动表格查看性价比</div>
+        <div class="stage_hint_t5">性价比基准为648￥源石，移动端可左右滑动表格</div>
       </div>
       <div class="stage_hint">
         <div class="stage_hint_t0">由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。</div>

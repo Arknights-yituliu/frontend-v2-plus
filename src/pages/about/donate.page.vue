@@ -7,11 +7,11 @@
     </div>
     <div class="donate_image_wrap">
       <div class="donate_card">
-        <img class="donate_image" src="https://image.yituliu.site/pay/alipay.png" alt="" />
+        <img class="donate_image" src="https://public.yituliu.site/donate/zfb.png" alt="" />
         <div class="donate_image_desc">支付宝</div>
       </div>
       <div class="donate_card">
-        <img class="donate_image" src="https://image.yituliu.site/pay/wechat.png" alt="" />
+        <img class="donate_image" src="https://public.yituliu.site/donate/wx.png" alt="1" />
         <div class="donate_image_desc">微信</div>
       </div>
     </div>
