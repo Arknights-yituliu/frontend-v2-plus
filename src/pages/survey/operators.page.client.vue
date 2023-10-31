@@ -887,9 +887,9 @@ function updateOwn(char_index, new_value) {
     }
   } else {
     //点击未拥有时，撤销所有选项
-    let propertyL_list = ["elite", "potential", "skill1", "skill2", "skill3", "modX", "modY","level"];
+    let propertyL_list = ["elite", "potential", "skill1", "skill2", "skill3", "modX", "modY", "modD","level"];
     for (let property of propertyL_list) {
-      operator_list.value[char_index][property] = -1;
+      operator_list.value[char_index][property] = 0;
     }
   }
   automaticUpload();
@@ -917,9 +917,9 @@ function updateElite(char_index, new_value) {
   selected_index_obj.value[char_index] = char_index;
   //需要删去的旧值
   let old_value = operator_list.value[char_index].elite;
-  //新旧值相同直接取消选项背景色，并更新精英等级为-1
+  //新旧值相同直接取消选项背景色，并更新精英等级为0
   if (new_value === old_value) {
-    operator_list.value[char_index].elite = -1;
+    operator_list.value[char_index].elite = 0;
     return;
   }
 
@@ -958,9 +958,9 @@ function updateSkillAndMod(char_index, property, new_value) {
   let old_value = operator_list.value[char_index][property];
   // console.log("更新专精模组——", "新值：", new_value, "，旧值：", old_value, "，结果：", new_value == old_value);
 
-  //新旧值相同设为-1
+  //新旧值相同设为0
   if (new_value === old_value) {
-    operator_list.value[char_index][property] = -1;
+    operator_list.value[char_index][property] = 0;
     return;
   }
 
@@ -1025,9 +1025,9 @@ function updatePotential(char_index, new_value) {
   //需要删去的旧值
   let old_value = operator_list.value[char_index].potential;
   // console.log("更新潜能——", "新值：", new_value, "，旧值：", old_value, "，结果：", new_value == old_value);
-  //新旧值相同更新潜能等级为-1
+  //新旧值相同更新潜能等级为0
   if (new_value === old_value) {
-    operator_list.value[char_index].potential = -1;
+    operator_list.value[char_index].potential = 0;
     return;
   }
 
@@ -1119,15 +1119,9 @@ let filterCondition = ref({rarity: [6], profession: [], year: [], own: [], mod: 
  */
 
 function addFilterCondition(property, condition) {
-  console.log(filterCondition.value);
-  let filterRulesCopy = [];
+  console.log(filterCondition.value[property]);
   if (filterCondition.value[property].indexOf(condition) > -1) {
-    for (let i in filterCondition.value[property]) {
-      if (condition !== filterCondition.value[property][i]) {
-        filterRulesCopy.push(filterCondition.value[property][i]);
-      }
-    }
-    filterCondition.value[property] = filterRulesCopy;
+    filterCondition.value[property] = filterCondition.value[property].filter(e=>e!==condition)
     filterCharacterList();
     return;
   }
