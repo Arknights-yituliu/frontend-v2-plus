@@ -300,8 +300,10 @@
               </tr>
             </table>
            <div v-for="(result,pro) in operator_statistics_result" :key="pro" style="width: 100%" v-show="pro!=='score'">
-             {{result.description}}持有数为{{result.own}}/{{result.count}} <br>
              <table class="dev_table">
+               <tr>
+                 <td>{{result.description}}</td><td>持有数为:</td><td>  {{result.own}}/{{result.count}}</td>
+               </tr>
                <tr>
                  <td
                      v-for="(count,index) in result.skill" :key="index">
@@ -1264,6 +1266,7 @@ onMounted(() => {
 .dev_table{
   border-collapse: collapse;
   text-align: center;
+  margin:12px 0;
 }
 
 .dev_table td{
