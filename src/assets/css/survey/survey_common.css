@@ -177,6 +177,7 @@
   width: 98%;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: flex-start;
   padding: 2px;
   margin: auto;

@@ -62,9 +62,7 @@ function calAPCost(operatorList) {
             }
         }
 
-        if(charId==='char_4088_hodrer'){
-          console.log(operatorItemCost.skills[2])
-        }
+
         for (let i = 0; i < operator.skill3; i++) {
             for (let itemId in operatorItemCost.skills[2][i]) {
                 let count = operatorItemCost.skills[2][i][itemId];
@@ -256,7 +254,6 @@ function getLevelCostByRarity(rarity, elite, level, elite_0_max_level, elite_1_m
     }
 
 
-
     return {
         "4001": LMDCost,
         "2003": parseInt(EXPCost / 1000)
@@ -298,15 +295,15 @@ function splitMaterial(highest_rarity, item_cost_obj) {
                         const material_id = composite_list_element.id;  //合成原料id
                         const material_count = composite_list_element.count;  //合成原料总数
                         let new_item = item_cost_obj_copy[material_id];
-                        if(new_item == void 0 ) {
-                           const item =  itemTable[material_id]
-                           new_item = {
-                               count:0,
-                               id:material_id,
-                               itemValueAp:item.itemValueAp,
-                               name:item.name,
-                               rarity:item.rarity
-                           }
+                        if (new_item == void 0) {
+                            const item = itemTable[material_id]
+                            new_item = {
+                                count: 0,
+                                id: material_id,
+                                itemValueAp: item.itemValueAp,
+                                name: item.name,
+                                rarity: item.rarity
+                            }
                         }
                         new_item.count = new_item.count + product_count * material_count;
                         item_cost_obj_copy[material_id] = new_item;
@@ -374,6 +371,66 @@ function splitMaterial(highest_rarity, item_cost_obj) {
 }
 
 
+function operatorStatistics(list) {
+    console.log("开始统计干员")
+    let groupByRarity = {}
+    for (const item of list) {
+        if (!groupByRarity[`rarity${item.rarity}`]) {
+            groupByRarity[`rarity${item.rarity}`] = [item]
+        } else {
+            groupByRarity[`rarity${item.rarity}`].push(item)
+        }
+    }
+
+
+    let operatorStatisticsResult = {
+        total:{description:'总计干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
+        rarity6: {description:'六星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
+        rarity5: {description:'五星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
+        rarity4: {description:'四星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
+        rarity3: {description:'三星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
+        rarity2: {description:'二星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
+        rarity1: {description:'一星计干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0}
+    }
+    for (const rarity in groupByRarity) {
+        operatorStatisticsResult[rarity].count = groupByRarity[rarity].length
+        for (const item of groupByRarity[rarity]) {
+            for (const index of [1, 2, 3]) {
+                if (item[`skill${index}`] === 3) {
+                    operatorStatisticsResult[rarity].skillRank3++
+                }
+                if (item[`skill${index}`] === 2) {
+                    operatorStatisticsResult[rarity].skillRank2++
+                }
+                if (item[`skill${index}`] === 1) {
+                    operatorStatisticsResult[rarity].skillRank1++
+                }
+            }
+            if (item.own) operatorStatisticsResult[rarity].own++
+            if (item.modX > 0) operatorStatisticsResult[rarity].modX++
+            if (item.modY > 0) operatorStatisticsResult[rarity].modY++
+        }
+
+        operatorStatisticsResult.total.count +=operatorStatisticsResult[rarity].count
+        operatorStatisticsResult.total.own +=operatorStatisticsResult[rarity].own
+        operatorStatisticsResult.total.skillRank3 +=operatorStatisticsResult[rarity].skillRank3
+        operatorStatisticsResult.total.skillRank2 +=operatorStatisticsResult[rarity].skillRank2
+        operatorStatisticsResult.total.skillRank1 +=operatorStatisticsResult[rarity].skillRank1
+        operatorStatisticsResult.total.modX +=operatorStatisticsResult[rarity].modX
+        operatorStatisticsResult.total.modY +=operatorStatisticsResult[rarity].modY
+
+
+    }
+
+
+
+    console.log(operatorStatisticsResult)
+
+    return operatorStatisticsResult
+
+}
+
+
 export default {
-    calAPCost, splitMaterial
+    calAPCost, splitMaterial, operatorStatistics
 }
