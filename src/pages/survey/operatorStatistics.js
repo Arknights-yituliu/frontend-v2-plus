@@ -1,7 +1,7 @@
-import operatorItemCostTable from "@/static/json/survey/operator_item_cost_table.json";
-import levelCostTable from "@/static/json/survey/level_cost_table.json";
-import compositeTable from "@/static/json/survey/compositeTable.json";
-import itemTable from "@/static/json/survey/item_table.json";
+import operatorItemCostTable from "/src/static/json/survey/operator_item_cost_table.json";
+import levelCostTable from "/src/static/json/survey/level_cost_table.json";
+import compositeTable from "/src/static/json/survey/compositeTable.json";
+import itemTable from "/src/static/json/survey/item_table.json";
 
 
 let itemCountStatistics = {};
@@ -9,23 +9,18 @@ let itemCountStatistics = {};
 /**
  * 计算干员消耗材料
  * @param operatorList 干员列表
- * @returns {{apCostCount('理智消耗总量'): number, itemList('材料消耗表'): [], itemMap('材料原始数据'): {}|*}}
+ * @returns {{apCostCount: number, itemList: [], itemMap: {}|*}} 理智消耗总量，物品列表，物品列表
  */
 function calAPCost(operatorList) {
 
     itemCountStatistics = {};
 
     for (let c in operatorList) {
-        const operator = operatorList[c];
+        const {charId, rarity, elite, level, mainSkill, skill1, skill2, skill3, modX, modY} = operatorList[c];
 
-        const charId = operator.charId;
-
-        // const name = operator.name;
-        const rarity = operator.rarity;
-        const elite = operator.elite;
-        const level = operator.level;
         if (operatorItemCostTable[charId] == void 0) continue;
         const operatorItemCost = operatorItemCostTable[charId];
+        const {allSkill, skills} = operatorItemCostTable[charId];
         const levelApCost = levelApCostCal(rarity, elite, level);
 
         for (const itemId in levelApCost) {
@@ -33,7 +28,7 @@ function calAPCost(operatorList) {
             updateItemCostMap(itemId, count)
         }
 
-        for (let i = 1; i <= operator.elite; i++) {
+        for (let i = 1; i <= elite; i++) {
             for (let itemId in operatorItemCost.elite[i]) {
                 let count = operatorItemCost.elite[i][itemId];
                 updateItemCostMap(itemId, count)
@@ -41,69 +36,38 @@ function calAPCost(operatorList) {
         }
 
         // console.log('基础技能：',operator.mainSkill)
-        for (let i = 0; i < operator.mainSkill; i++) {
-            for (let itemId in operatorItemCost.allSkill[i]) {
-                let count = operatorItemCost.allSkill[i][itemId];
+        for (let i = 0; i < mainSkill; i++) {
+            for (let itemId in allSkill[i]) {
+                let count = allSkill[i][itemId];
                 updateItemCostMap(itemId, count)
             }
         }
 
-        for (let i = 0; i < operator.skill1; i++) {
-            for (let itemId in operatorItemCost.skills[0][i]) {
-                let count = operatorItemCost.skills[0][i][itemId];
-                updateItemCostMap(itemId, count)
-            }
-        }
-
-        for (let i = 0; i < operator.skill2; i++) {
-            for (let itemId in operatorItemCost.skills[1][i]) {
-                let count = operatorItemCost.skills[1][i][itemId];
-                updateItemCostMap(itemId, count)
-            }
-        }
-
-
-        for (let i = 0; i < operator.skill3; i++) {
-            for (let itemId in operatorItemCost.skills[2][i]) {
-                let count = operatorItemCost.skills[2][i][itemId];
-                updateItemCostMap(itemId, count)
-            }
-        }
-
-
-        if (operator.equip != void 0) {
-            for (const mod of operator.equip) {
-                if ('X' == mod.typeName2) {
-                    for (let i = 0; i < operator.modX; i++) {
-                        if (operatorItemCost.modX == void 0) continue;
-                        for (let itemId in operatorItemCost.modX[i]) {
-                            let count = operatorItemCost.modX[i][itemId];
-                            updateItemCostMap(itemId, count)
-                        }
-                    }
+        const skillRanks = [skill1, skill2, skill3]
+        for (let index in skillRanks) {
+            for (let rank = 0; rank < skillRanks[index]; rank++) {
+                for (let itemId in skills[index][rank]) {
+                    let count = skills[index][rank][itemId];
+                    updateItemCostMap(itemId, count)
                 }
+            }
+        }
 
-                if ('Y' == mod.typeName2) {
-                    for (let i = 0; i < operator.modY; i++) {
-                        if (operatorItemCost.modY == void 0) continue;
-                        for (let itemId in operatorItemCost.modY[i]) {
-                            let count = operatorItemCost.modY[i][itemId];
-                            updateItemCostMap(itemId, count)
-                        }
-                    }
+        const modRanks = {"X": modX, "Y": modY}
+        for (const type in modRanks) {
+            if (operatorItemCost[`mod${type}`] == void 0) continue;
+            for (let i = 0; i < modRanks[type]; i++) {
+                for (let itemId in operatorItemCost[`mod${type}`][i]) {
+                    let count = operatorItemCost[`mod${type}`][i][itemId];
+                    updateItemCostMap(itemId, count)
                 }
             }
         }
     }
 
 
-    let itemList = []
-    let rarityEXList = []
-    let rarity5List = []
-    let rarity4List = []
-    let rarity3List = []
-    let rarity2List = []
-    let rarity1List = []
+    let itemList = [[],[],[],[],[],[]]
+
 
     let apCostCount = 0;
 
@@ -114,56 +78,38 @@ function calAPCost(operatorList) {
         const count = item.count;
         apCostCount += (itemValueAp * count)
 
-
-        if (rarity == 5) {
-            rarity5List.push(item)
+        if (rarity === 5) {
+            itemList[1].push(item)
         }
-        if (rarity == 4) {
-            if ("4001" == itemId || "2003" == itemId) {
-                rarityEXList.push(item)
+        if (rarity === 4) {
+            if ("4001" === itemId || "2003" === itemId) {
+                itemList[0].push(item)
             } else {
-                rarity4List.push(item)
+                itemList[2].push(item)
             }
         }
-        if (rarity == 3) {
-            rarity3List.push(item)
+
+        if (rarity === 3) {
+            itemList[3].push(item)
         }
-        if (rarity == 2) {
-            rarity2List.push(item)
+        if (rarity === 2) {
+            itemList[4].push(item)
         }
-        if (rarity == 1) {
-            rarity1List.push(item)
+        if (rarity === 1) {
+            itemList[5].push(item)
         }
 
     }
 
+    for(let list of itemList){
+        list.sort((a, b) => { return b.id - a.id})
+    }
 
-    rarity5List.sort((a, b) => {
-        return b.id - a.id
-    })
-
-    rarity4List.sort((a, b) => {
-        return b.id - a.id
-    })
-
-    rarity3List.sort((a, b) => {
-        return b.id - a.id
-    })
-
-    itemList.push(rarityEXList)
-    itemList.push(rarity5List)
-    itemList.push(rarity4List)
-    itemList.push(rarity3List)
-    itemList.push(rarity2List)
-    itemList.push(rarity1List)
-
-
-    const result = {
+    return {
         itemList: itemList,
         apCostCount: apCostCount,
         itemMap: itemCountStatistics
     }
-    return result;
 }
 
 function updateItemCostMap(id, count) {
@@ -202,27 +148,27 @@ function updateItemCostMap(id, count) {
  */
 function levelApCostCal(rarity, elite, level) {
 
-    if (rarity == 6) {
+    if (rarity === 6) {
         return getLevelCostByRarity(rarity, elite, level, 49, 79)
     }
 
-    if (rarity == 5) {
+    if (rarity === 5) {
         return getLevelCostByRarity(rarity, elite, level, 49, 69)
     }
 
-    if (rarity == 4) {
+    if (rarity === 4) {
         return getLevelCostByRarity(rarity, elite, level, 44, 59)
     }
 
-    if (rarity == 3) {
+    if (rarity === 3) {
         return getLevelCostByRarity(rarity, elite, level, 39, 54)
     }
 
-    if (rarity == 2) {
+    if (rarity === 2) {
         return getLevelCostByRarity(rarity, elite, level, 29, 0)
     }
 
-    if (rarity == 1) {
+    if (rarity === 1) {
         return getLevelCostByRarity(rarity, elite, level, 29, 0)
     }
 }
@@ -231,6 +177,7 @@ function levelApCostCal(rarity, elite, level) {
 function getLevelCostByRarity(rarity, elite, level, elite_0_max_level, elite_1_max_level) {
     let LMDCost = 0;
     let EXPCost = 0;
+
 
     if (elite > 0) {
         LMDCost += levelCostTable['elite0'][elite_0_max_level].LMDCount
@@ -256,7 +203,7 @@ function getLevelCostByRarity(rarity, elite, level, elite_0_max_level, elite_1_m
 
     return {
         "4001": LMDCost,
-        "2003": parseInt(EXPCost / 1000)
+        "2003": parseInt((EXPCost / 1000).toString())
     };
 }
 
@@ -270,13 +217,7 @@ function getLevelCostByRarity(rarity, elite, level, elite_0_max_level, elite_1_m
 function splitMaterial(highest_rarity, item_cost_obj) {
 
     let item_cost_obj_copy = JSON.parse(JSON.stringify(item_cost_obj))
-    let itemList = []
-    let rarityEXList = []
-    let rarity5List = []
-    let rarity4List = []
-    let rarity3List = []
-    let rarity2List = []
-    let rarity1List = []
+
 
 
     for (let rarity = 5; rarity > highest_rarity; rarity--) {
@@ -284,7 +225,7 @@ function splitMaterial(highest_rarity, item_cost_obj) {
 
         for (const itemId in item_cost_obj_copy) {
             const item = item_cost_obj_copy[itemId]
-            if (item.rarity == rarity) {
+            if (item.rarity === rarity) {
                 const product_id = item.id   //材料id
                 const product_name = item.name //材料名称
                 const product_count = item.count; //材料总数
@@ -320,52 +261,40 @@ function splitMaterial(highest_rarity, item_cost_obj) {
 
     // console.log(item_cost_map)
 
+    let itemList = [[],[],[],[],[],[]]
+
+
     for (const itemId in item_cost_obj_copy) {
         const item = item_cost_obj_copy[itemId]
         const rarity = item.rarity
         if (item.count > 0) {
-            if (rarity == 5) {
-                rarity5List.push(item)
+            if (rarity === 5) {
+                itemList[1].push(item)
             }
-            if (rarity == 4) {
-                if ("4001" == itemId || "2003" == itemId) {
-                    rarityEXList.push(item)
+            if (rarity === 4) {
+                if ("4001" === itemId || "2003" === itemId) {
+                    itemList[0].push(item)
                 } else {
-                    rarity4List.push(item)
+                    itemList[2].push(item)
                 }
             }
-            if (rarity == 3) {
-                rarity3List.push(item)
+            if (rarity === 3) {
+                itemList[3].push(item)
             }
-            if (rarity == 2) {
-                rarity2List.push(item)
+            if (rarity === 2) {
+                itemList[4].push(item)
             }
-            if (rarity == 1) {
-                rarity1List.push(item)
+            if (rarity === 1) {
+                itemList[5].push(item)
             }
 
         }
     }
 
-    rarity5List.sort((a, b) => {
-        return b.id - a.id
-    })
+    for(let list of itemList){
+        list.sort((a, b) => { return b.id - a.id})
+    }
 
-    rarity4List.sort((a, b) => {
-        return b.id - a.id
-    })
-
-    rarity3List.sort((a, b) => {
-        return b.id - a.id
-    })
-
-    itemList.push(rarityEXList)
-    itemList.push(rarity5List)
-    itemList.push(rarity4List)
-    itemList.push(rarity3List)
-    itemList.push(rarity2List)
-    itemList.push(rarity1List)
-    // console.table(itemList)
 
     return itemList
 }
@@ -373,60 +302,115 @@ function splitMaterial(highest_rarity, item_cost_obj) {
 
 function operatorStatistics(list) {
     console.log("开始统计干员")
-    let groupByRarity = {}
+    let group_by_rarity = {}
     for (const item of list) {
-        if (!groupByRarity[`rarity${item.rarity}`]) {
-            groupByRarity[`rarity${item.rarity}`] = [item]
+        if (!group_by_rarity[`rarity${item.rarity}`]) {
+            group_by_rarity[`rarity${item.rarity}`] = [item]
         } else {
-            groupByRarity[`rarity${item.rarity}`].push(item)
+            group_by_rarity[`rarity${item.rarity}`].push(item)
+        }
+    }
+
+    let initData = {
+        total: {description: '总计干员练度：'},
+        rarity6: {description: '六星干员练度：'},
+        rarity5: {description: '五星干员练度：'},
+        rarity4: {description: '四星干员练度：'},
+        rarity3: {description: '三星干员练度：'},
+        rarity2: {description: '二星干员练度：'},
+        rarity1: {description: '一星计干员练度：'}
+    }
+
+    let operator_statistics_result = {
+        score: []
+    }
+
+    for (const key in initData) {
+        operator_statistics_result[key] = {
+            description: initData[key].description,
+            count: 0,
+            own: 0,
+            skill: [0, 0, 0],
+            mod: [0, 0, 0],
+            modX: [0, 0, 0],
+            modY: [0, 0, 0],
+
         }
     }
 
 
-    let operatorStatisticsResult = {
-        total:{description:'总计干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
-        rarity6: {description:'六星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
-        rarity5: {description:'五星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
-        rarity4: {description:'四星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
-        rarity3: {description:'三星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
-        rarity2: {description:'二星干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0},
-        rarity1: {description:'一星计干员练度：',count: 0, own: 0, skillRank3: 0, skillRank2: 0, skillRank1: 0, modX: 0, modY: 0}
-    }
-    for (const rarity in groupByRarity) {
-        operatorStatisticsResult[rarity].count = groupByRarity[rarity].length
-        for (const item of groupByRarity[rarity]) {
+
+    for (const rarity in group_by_rarity) {
+        operator_statistics_result[rarity].count = group_by_rarity[rarity].length
+        operator_statistics_result["total"].count += group_by_rarity[rarity].length
+        for (const item of group_by_rarity[rarity]) {
+
+            if (!item.own) continue
+
+            operator_statistics_result[rarity].own++
+            operator_statistics_result["total"].own++
+
+
             for (const index of [1, 2, 3]) {
                 if (item[`skill${index}`] === 3) {
-                    operatorStatisticsResult[rarity].skillRank3++
+                    operator_statistics_result[rarity].skill[0]++
+                    operator_statistics_result["total"].skill[0]++
                 }
                 if (item[`skill${index}`] === 2) {
-                    operatorStatisticsResult[rarity].skillRank2++
+                    operator_statistics_result[rarity].skill[1]++
+                    operator_statistics_result["total"].skill[1]++
                 }
                 if (item[`skill${index}`] === 1) {
-                    operatorStatisticsResult[rarity].skillRank1++
+                    operator_statistics_result[rarity].skill[2]++
+                    operator_statistics_result["total"].skill[2]++
                 }
             }
-            if (item.own) operatorStatisticsResult[rarity].own++
-            if (item.modX > 0) operatorStatisticsResult[rarity].modX++
-            if (item.modY > 0) operatorStatisticsResult[rarity].modY++
+
+
+            for (const type of ['X', 'Y']) {
+                if (item[`mod${type}`] === 3) {
+                    operator_statistics_result[rarity][`mod${type}`][0]++
+                    operator_statistics_result[rarity][`mod`][0]++
+                    operator_statistics_result["total"][`mod${type}`][0]++
+                    operator_statistics_result["total"][`mod`][0]++
+                }
+                if (item[`mod${type}`] === 2) {
+                    operator_statistics_result[rarity][`mod${type}`][1]++
+                    operator_statistics_result[rarity][`mod`][1]++
+                    operator_statistics_result["total"][`mod${type}`][1]++
+                    operator_statistics_result["total"][`mod`][1]++
+                }
+                if (item[`mod${type}`] === 1) {
+                    operator_statistics_result[rarity][`mod${type}`][2]++
+                    operator_statistics_result[rarity][`mod`][2]++
+                    operator_statistics_result["total"][`mod${type}`][2]++
+                    operator_statistics_result["total"][`mod`][2]++
+                }
+            }
+
+            if (item.rarity ===6) {
+
+                item.score = item.elite
+                    + (item.mainSkill === 7 ? 1 : 0)
+                    + (item.skill1 < 1 ? 0 : item.skill1)
+                    + (item.skill2 < 1 ? 0 : item.skill2)
+                    + (item.skill3 < 1 ? 0 : item.skill3)
+                    + (item.modX < 1 ? 0 : item.modX)
+                    + (item.modY < 1 ? 0 : item.modY)
+
+                operator_statistics_result.score.push(item)
+            }
+            // if (item.modX > 0) operatorStatisticsResult[rarity].modX++
+            // if (item.modY > 0) operatorStatisticsResult[rarity].modY++
         }
-
-        operatorStatisticsResult.total.count +=operatorStatisticsResult[rarity].count
-        operatorStatisticsResult.total.own +=operatorStatisticsResult[rarity].own
-        operatorStatisticsResult.total.skillRank3 +=operatorStatisticsResult[rarity].skillRank3
-        operatorStatisticsResult.total.skillRank2 +=operatorStatisticsResult[rarity].skillRank2
-        operatorStatisticsResult.total.skillRank1 +=operatorStatisticsResult[rarity].skillRank1
-        operatorStatisticsResult.total.modX +=operatorStatisticsResult[rarity].modX
-        operatorStatisticsResult.total.modY +=operatorStatisticsResult[rarity].modY
-
-
     }
 
+    operator_statistics_result.score.sort((a, b) => {return b.score - a.score})
+    operator_statistics_result.score = operator_statistics_result.score.slice(0,10)
 
+    console.log(operator_statistics_result)
 
-    console.log(operatorStatisticsResult)
-
-    return operatorStatisticsResult
+    return operator_statistics_result
 
 }
 

@@ -286,9 +286,48 @@
         <div class="control_bar_wrap">
 
           <div class="control_bar">
-           <div v-for="(result,index) in operator_statistics_result" :key="index" style="width: 100%">
-             {{result.description}}持有数为{{result.own}}/{{result.count}}，专精3数量为{{result.skillRank3}}，专精2数量为{{result.skillRank2}}
-             ，专精1数量为{{result.skillRank1}}，X模组开启了{{result.modX}}个，Y模组开启了{{result.modY}}个
+
+            <table class="dev_table">
+              <tr>
+                <td colspan="9">练度前十干员</td>
+              </tr>
+              <tr>
+                <td >干员</td><td >精英等级</td><td >1技能</td><td >2技能</td><td >3技能</td><td >X模组</td><td >Y模组</td>
+              </tr>
+              <tr v-for="(operator,index) in operator_statistics_result.score">
+                <td >{{ operator.name }}</td><td >{{ operator.elite }}</td><td >{{ operator.skill1 }}级</td>
+                <td >{{ operator.skill2 }}级</td><td >{{ operator.skill3 }}级</td><td >{{ operator.modX }}级</td><td >{{ operator.modY }}级</td>
+              </tr>
+            </table>
+           <div v-for="(result,pro) in operator_statistics_result" :key="pro" style="width: 100%" v-show="pro!=='score'">
+             {{result.description}}持有数为{{result.own}}/{{result.count}} <br>
+             <table class="dev_table">
+               <tr>
+                 <td
+                     v-for="(count,index) in result.skill" :key="index">
+                   专精{{ 3-index }}数量为{{count}}
+                 </td>
+               </tr>
+               <tr>
+                 <td
+                     v-for="(count,index) in result.mod" :key="index">
+                   {{ 3-index }}级模组数量为{{count}}
+                 </td>
+               </tr>
+               <tr>
+                 <td
+                     v-for="(count,index) in result.modX" :key="index">
+                   X模组{{ 3-index }}级数量为{{count}}
+                 </td>
+               </tr>
+               <tr>
+                 <td
+                     v-for="(count,index) in result.modY" :key="index">
+                   Y模组{{ 3-index }}级数量为{{count}}
+                 </td>
+               </tr>
+             </table>
+
            </div>
           </div>
           <div class="control_bar"
@@ -1220,6 +1259,16 @@ onMounted(() => {
 <style>
 .btn{
   margin: 4px;
+}
+
+.dev_table{
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.dev_table td{
+ border: 1px solid black;
+  padding: 8px
 }
 
 </style>
