@@ -1,6 +1,5 @@
 .survey_character_page {
   background: white;
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
   margin: auto auto 100px;
 }
 
@@ -42,7 +41,7 @@
 }
 
 .card_option_left_basic {
-  margin: 8px 0 ;
+  margin: 8px 0;
   display: flex;
 }
 
@@ -51,7 +50,7 @@
 }
 
 .card_option_top_left_basic {
-  margin: 8px 0;
+  margin: 8px  4px;
   padding-top: 20px;
 }
 
@@ -239,8 +238,9 @@
   width: 42px;
   height: 42px;
   /*border: 1px grey solid;*/
-
 }
+
+
 
 .image_mod {
   width: 50px;
@@ -359,6 +359,11 @@
   left: -130px;
 }
 
+
+.operator_selected{
+  background-color: #ff723d;
+}
+
 .skland_url{
   padding:0 8px 0 8px ;
   color: dodgerblue;
@@ -384,9 +389,9 @@
 
 .skland_desc{
   margin: 4px;
-  height: 20px;
+  height: 36px;
+  line-height: 28px;
   padding: 4px;
-  line-height: 20px;
 }
 
 .skland_input{
@@ -474,5 +479,6 @@
 }
 
 .stats_content {
-  font-family: Arial, Helvetica, sans-serif;
 }
+
+

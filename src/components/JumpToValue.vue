@@ -32,7 +32,6 @@ import { mdiGold } from "@mdi/js";
   justify-content: center;
   align-items: center;
   color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 22px;
   text-decoration: none;
 }

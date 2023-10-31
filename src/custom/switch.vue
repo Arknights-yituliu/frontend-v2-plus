@@ -16,10 +16,10 @@ import { ref, watch } from "vue";
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps(["modelValue"]);
 
-console.log('传入值', props.modelValue)
+// console.log('传入值', props.modelValue)
 
 if (typeof props.modelValue != "boolean") {
-  console.log("测试", props.modelValue === undefined);
+  // console.log("测试", props.modelValue === undefined);
 }
 
 
@@ -33,7 +33,7 @@ let switch_right_class = ref(props.modelValue ? "switch_bg" : "");
 // let switch_right_class = ref("switch_right switch_white");
 
 function handleClick() {
-  console.log(props.modelValue);
+  // console.log(props.modelValue);
   if (!props.modelValue) {
     switch_bg.value = "switch_true";
     switch_left_class.value = "";

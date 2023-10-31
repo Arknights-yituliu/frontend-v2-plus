@@ -178,17 +178,17 @@
           </template>
         </el-table-column>
         <el-table-column prop="spm" label="SPM" :width="td_4" sortable />
-        <el-table-column prop="effT4" label="T4效率" :width="td_4" sortable>
+        <el-table-column prop="leT5Efficiency" label="T4效率" :width="td_4" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="effT3" label="T3效率" :width="td_4" sortable>
+        <el-table-column prop="leT4Efficiency" label="T3效率" :width="td_4" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="effT2" label="T2效率" :width="td_4" sortable>
+        <el-table-column prop="leT3Efficiency" label="T2效率" :width="td_4" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
           </template>
@@ -264,7 +264,7 @@
 
 <script setup>
 import stageApi from '/src/api/stage'
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import item_series from '/src/static/json/item_series.json'
 //本地测试数据
 // import stage_api_data from '/src/static/json/stage_api_data.v2.json'
@@ -363,27 +363,8 @@ let page_size = ref(8);
 //总页数
 let page_count = ref(0)
 
-/**
- * 根据页数跳转
- */
-function currentPage(page_num) {
-  //起始数据索引
-  page_num = page_num * page_size.value
-  current_page_data.value = []
-  //拼接表格数据
-  for (let i = page_num; i < item_table_data_by_item_id.value.length; i++) {
-    //当表格数据长度大于页大小时跳出
-    if (i > page_num + page_size.value) break;
-    current_page_data.value.push(item_table_data_by_item_id.value[i])
-  }
-}
 
-/**
- * 获取数据总页数
- */
-function getPageCount() {
-  page_count.value = parseInt((item_table_data_by_item_id.value.length / page_size.value).toString()) + 1
-}
+
 
 
 

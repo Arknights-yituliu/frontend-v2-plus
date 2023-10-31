@@ -332,9 +332,7 @@ import "@/assets/css/sprite_item.css";
 
 <style>
 .div_page {
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
   margin-left: 12px;
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 .href_black {

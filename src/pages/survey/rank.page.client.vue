@@ -13,11 +13,11 @@
     </div>
 
     <!-- 筛选模块 -->
-    <div class="collapse_item_wrap" id="filter_box_wrap">
-      <div class="collapse_item" id="filter_box">
-        <div class="collapse_bar_wrap">
-          <div class="collapse_bar">
-            <div class="switch_title">职业</div>
+    <div class="survey_control_wrap" id="filter_box_wrap">
+      <div class="survey_control" id="filter_box">
+        <div class="control_bar_wrap">
+          <div class="control_bar">
+            <div class="control_title">职业</div>
             <div class="switch_btn_wrap">
               <div
                   :class="selectedBtn('profession', profession.value)"
@@ -30,8 +30,8 @@
             </div>
           </div>
 
-          <div class="collapse_bar">
-            <div class="switch_title">稀有度</div>
+          <div class="control_bar">
+            <div class="control_title">稀有度</div>
             <div class="switch_btn_wrap">
               <div :class="selectedBtn('rarity', rarity)"
                    v-for="(rarity,index) in rarity_dict" :key="index"
@@ -40,8 +40,8 @@
             </div>
           </div>
 
-          <div class="collapse_bar">
-            <div class="switch_title">其他</div>
+          <div class="control_bar">
+            <div class="control_title">其他</div>
             <div class="switch_btn_wrap">
               <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
               <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
@@ -58,7 +58,7 @@
           </div>
 
           <!-- <div class="collapse_bar">
-            <div class="switch_title">排序</div>
+            <div class="collapse_title">排序</div>
             <div class="switch_btn_wrap">
               <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
               <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
@@ -217,7 +217,6 @@
 import "@/assets/css/survey/survey_rank.css";
 import { filterByCharacterProperty, professionDict} from "./common";
 import {collapseV2} from "/src/custom/collapse";
-import '/src/custom/css/collapse.css'
 import {onMounted, ref} from "vue";
 import character_table_simple from "@/static/json/survey/character_table_simple.json";
 
@@ -437,3 +436,10 @@ onMounted(() => {
   getCharStatisticsResult()
 })
 </script>
+
+
+<style scoped>
+.btn{
+  margin: 4px;
+}
+</style>

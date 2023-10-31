@@ -1,13 +1,13 @@
 .btn{
-    padding:2px 8px;
-    /*font-weight: 600;*/
+    padding:8px;
+    font-weight: 500;
     cursor: pointer;
     min-width: 80px;
     text-align: center;
     border-radius: 4px;
-    height: 28px;
-    line-height: 22px;
     box-sizing: border-box;
+    height: 36px;
+    line-height: 20px;
 }
 
 .btn_white{

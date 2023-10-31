@@ -378,7 +378,7 @@ import cookie from "js-cookie";
 import storeApi from "@/api/store";
 // import foot from "@/components/FootMini.vue";
 import { usePageContext } from "@/renderer/usePageContext";
-import toolApi from "@/api/tool";
+
 import { ClientOnly } from "@/components/ClientOnly";
 import { ElMessage } from "element-plus";
 
@@ -802,7 +802,7 @@ export const documentProps = {
 
 .pack_type {
   display: inline-block;
-  color: gray;
+  color: rgb(128, 128, 128);
   position: absolute;
   /* text-align: right; */
   float: right;
@@ -886,6 +886,5 @@ export const documentProps = {
 .pack-table {
   box-shadow: var(--el-box-shadow-light);
   width: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 </style>

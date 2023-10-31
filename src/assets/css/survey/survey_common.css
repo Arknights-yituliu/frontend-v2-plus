@@ -17,22 +17,9 @@
 }
 
 
-
 .switch_btn_wrap{
   display: flex;
   flex-wrap: wrap;
-}
-
-.survey_btn_transparent{
-  background-color: transparent;
-  padding: 4px 8px;
-  margin: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  min-width:100px;
-  text-align: center;
-  border: none;
-  font-size: 16px;
 }
 
 .survey_btn_blue_left{
@@ -44,7 +31,6 @@
   border-top-left-radius: 4px;
   padding: 4px 8px;
   margin: 4px 0 4px 4px;
-  font-weight: 600;
   cursor: pointer;
   font-size: 16px;
 }
@@ -59,7 +45,6 @@
   /*border-radius: 4px;*/
   padding: 4px 8px;
   margin: 4px 0 4px 0;
-  font-weight: 600;
   cursor: pointer;
   font-size: 16px;
 }
@@ -73,7 +58,6 @@
   border-top-right-radius: 4px;
   padding: 4px 8px;
   margin: 4px 4px 4px 0;
-  font-weight: 600;
   cursor: pointer;
   font-size: 16px;
 }
@@ -101,20 +85,6 @@
   justify-content: space-between;
 }
 
-
-
-.switch_title {
-  float: left;
-  margin: 4px;
-  width: 96px;
-  height: 20px;
-  padding: 4px;
-  line-height: 20px;
-  text-align: center;
-  font-weight: 500;
-  /* background: rgb(199, 226, 255); */
-  border-radius: 2px;
-}
 
 .switch_desc {
   margin: 4px;
@@ -163,7 +133,6 @@
   line-height: 20px;
   text-align: center;
   font-size: 14px;
-  font-family: Arial, Helvetica, sans-serif;
   color: rgb(158, 158, 158);
   font-style: italic;
 }
@@ -186,6 +155,44 @@
 }
 
 
+.survey_control_wrap {
+  height: 0;
+  overflow: hidden;
+  transition: all .3s;
+}
+
+.survey_control {
+  padding: 1px;
+}
+
+.control_bar_wrap {
+  max-width: 95%;
+  margin: auto auto 6px;
+  padding: 4px 0px 4px 16px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+}
+
+.control_bar {
+  width: 98%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 2px;
+  margin: auto;
+}
+
+.control_title {
+  float: left;
+  margin: 4px;
+  height: 36px;
+  padding: 4px 0px 4px 12px;
+  line-height: 28px;
+  font-weight: 500;
+  /* background: rgb(199, 226, 255); */
+  border-radius: 2px;
+}
+
 
 /* 填写说明 */
 
@@ -193,9 +200,7 @@
   /* width: 540px; */
   margin: 12px 32px 20px 32px;
   line-height: 28px;
-  font-family: Arial, Helvetica, sans-serif;
-  /* margin-top: 10px; */
-  /* border: 1px rgb(132, 120, 226) solid; */
+
 }
 
 .intro_title {

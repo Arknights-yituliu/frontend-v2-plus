@@ -55,9 +55,9 @@
     </div> -->
 
     <!-- 设置区 -->
-    <div class="collapse_item_wrap" id="switch_filter_wrap">
-      <div class="collapse_item" id="switch_filter_box">
-      <div class="collapse_bar filter" id="score_selector_dimension">
+    <div class="survey_control_wrap" id="switch_filter_wrap">
+      <div class="survey_control" id="switch_filter_box">
+      <div class="control_bar filter" id="score_selector_dimension">
         <div class="switch_title">选择评分项</div>
         <div class="switch_btns_wrap">
           <div :class="selectedScoreItem(key)" v-for="(item, key) in scoreItem" :key="key" @click="selectScoreItem(key)">
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <div class="collapse_bar filter" id="score_selector_class">
+      <div class="control_bar filter" id="score_selector_class">
         <div class="switch_title">职业</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('profession', profession.value)" v-for="profession in professionDict" @click="addFilterCondition('profession', profession.value)">
@@ -75,14 +75,14 @@
         </div>
       </div>
 
-      <div class="collapse_bar filter" id="score_selector_rarity">
+      <div class="control_bar filter" id="score_selector_rarity">
         <div class="switch_title">稀有度</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('rarity', rarity)" v-for="rarity in rarityDict" @click="addFilterCondition('rarity', rarity)">{{ rarity }} ★</div>
         </div>
       </div>
 
-      <div class="collapse_bar filter" id="score_selector_years">
+      <div class="control_bar filter" id="score_selector_years">
         <div class="switch_title">年份</div>
         <div class="switch_btns_wrap">
           <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key" @click="addFilterCondition('year', key)">
@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <div class="collapse_bar filter" id="score_selector_sort">
+      <div class="control_bar filter" id="score_selector_sort">
         <div class="switch_title">排序</div>
         <div class="switch_btns_wrap">
           <div class="btn_switch" @click="sortCharacterList('rarity')">稀有度顺序</div>
@@ -230,20 +230,15 @@ import { cMessage } from "@/custom/message.js";
 let globalUserData = ref({})
 
 let first_popup = ref(false)
-let import_popup_visible = ref(false)
 
-function isFirstPopup() {
-  if ("done" !== localStorage.getItem("first_popup")) {
-    first_popup.value = true;
-  }
-}
+
 
 function firstPopupClose() {
   first_popup.value = !first_popup.value
   localStorage.setItem("first_popup", "done");
 }
 
-let avg_score = ref(4)
+
 
 let rarityDict = [1, 2, 3, 4, 5, 6];
 

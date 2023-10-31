@@ -38,36 +38,19 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <c-button :color="'blue'" @click="checkFirstPopup()">填写说明</c-button>
-      <c-button>干员持有率：{{ user_own_operator_count }} / {{ operator_count }}</c-button>
-      <!--      <button class="btn btn_blue" @click="checkFirstPopup()">填写说明</button>-->
-      <!--      <button class="btn btn_white">干员持有率：{{ user_own_operator_count }} / {{ operator_count }} </button>-->
-      <button class="btn btn_green" @click="upload()">手动保存问卷</button>
-      <div id="updateTime">上次保存时间<br/>{{ upload_message.updateTime }}</div>
 
-      <!--      <div style="margin: 12px;color: #f56c6c;font-weight: 600">-->
-      <!--        因森空岛加入了签名验证，森空岛导入数据暂不可用，现已下线功能-->
-      <!--      </div>-->
-      <div class="mdui-divider" style="margin: 4px;"></div>
       <c-button :color="'blue'" :isSelected="btn_status.btn_filter"
                 @click="clickBtn('btn_filter');
                 collapseV2('filter_box_wrap', 'filter_box')">
         筛选/批量操作
       </c-button>
 
-      <!--      <button :class="btnClass('btn_filter')"-->
-      <!--              @click="clickBtn('btn_filter');collapse('collapse_bar', 'switch_filter_wrap','switch_filter_box')">-->
-      <!--        筛选/批量操作-->
-      <!--      </button>-->
       <c-button :color="'blue'" :isSelected="btn_status.btn_import"
                 @click="clickBtn('btn_import');
                 collapseV2('upload_box_wrap', 'upload_box')">
         数据导入导出
       </c-button>
-      <!--      <button :class="btnClass('btn_import')"-->
-      <!--              @click="clickBtn('btn_import');collapse('collapse_bar', 'switch_upload_wrap','switch_upload_box')">-->
-      <!--        数据导入导出-->
-      <!--      </button>-->
-
+      <c-button :color="'green'" @click="upload()">手动保存问卷</c-button>
       <button class="survey_btn_blue_left" :class="surveyTypeBtnClass('极简模式')"
               @click="changeSurveyType('极简模式')">极简模式
       </button>
@@ -255,20 +238,6 @@
           <!--        </div>-->
 
           <div class="divider"></div>
-          <!--        <div class="collapse_bar">-->
-          <!--          <div class="collapse_title">uid找回数据</div>-->
-          <!--          <div class="switch_btn_wrap">-->
-          <!--            <div class="skland_desc">输入uid</div>-->
-          <!--            <div><input class="skland_input" type="text" v-model="player_uid"/></div>-->
-          <!--            <button class="btn btn_white" @click="retrievalByUid()">找回练度数据</button>-->
-          <!--            <button class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</button>-->
-          <!--          </div>-->
-          <!--        </div>-->
-<!--          <div class="collapse_bar">-->
-<!--            <div class="switch_desc ">-->
-<!--              <a class="skland_notice_btn">*须知：因账号系统维护和森空岛导入功能失效，可能导致一图流账号无法登录，可以注册新的账号，以往导入的数据可以根据uid进行找回</a>-->
-<!--            </div>-->
-<!--          </div>-->
           <div class="control_bar">
             <div class="control_title" style="width: 140px;">森空岛导入</div>
             <div class="switch_btn_wrap">
@@ -338,7 +307,7 @@
 
     <!-- 干员组 -->
     <div class="char_forms">
-      <div :class="simpleCardClass()" v-for="(operator, char_index) in operator_list.slice(0,list_max_size)"
+      <div :class="simpleCardClass()" v-for="(operator, char_index) in operator_list"
            :key="char_index" v-show="operator.show">
         <!-- 左半部分 -->
         <div :class="surveyTypeClass('card_option_left')">
@@ -352,7 +321,7 @@
               <div class="char_name">{{ operator.name }}</div>
             </div>
             <div :class="surveyTypeClass('potential_wrap')">
-              <div class="image_potential" :id="char_index + 'potential' + rank"
+              <div :class="potentialIsSelected(index,operator.potential)"
                    v-for="(rank,index) in ranks.slice(1, 7)" :key="index"
                    @click="updatePotential(char_index, rank)">
                 <div :class="getSprite('potential' + rank, 'potential')"></div>
@@ -362,19 +331,19 @@
 
           <!--  -->
           <div :class="surveyTypeClass('elite_wrap')">
-            <div class="image_elite" :id="char_index + 'elite0'" @click="updateElite(char_index, 0)">
+            <div :class="eliteIsSelected(0,operator.elite)"  @click="updateElite(char_index, 0)">
               <div :class="getSprite('elite0', 'elite')"></div>
             </div>
-            <div :id="char_index + 'elite1'" class="image_elite" @click="updateElite(char_index, 1)"
+            <div :class="eliteIsSelected(1,operator.elite)" @click="updateElite(char_index, 1)"
                  v-show="operator.rarity > 2">
               <div :class="getSprite('elite1', 'elite')"></div>
             </div>
-            <div :id="char_index + 'elite2'" class="image_elite" @click="updateElite(char_index, 2)"
+            <div :class="eliteIsSelected(2,operator.elite)" @click="updateElite(char_index, 2)"
                  v-show="operator.rarity > 3">
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
             <!--            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">-->
-            <div class="level_wrap" :id="char_index + 'level'">
+            <div class="level_wrap" >
               <!--              <img class="image_lvMax" src="/image/survey/lvMax.png" alt=""/>-->
               {{ operator.level > 0 ? operator.level : 0 }}
             </div>
@@ -391,9 +360,8 @@
             <div
                 v-for="(rank,index) in ranks.slice(1, 4)"
                 :key="index"
-                class="image_rank"
-                :id="char_index + 'skill' + (skill_index + 1) + rank"
-                @click="updateSkillAndMod(char_index, 'skill' + (skill_index + 1), rank)"
+                :class="skillOrModIsSelected(rank,operator[`skill${(skill_index+1)}`])"
+                @click="updateSkillAndMod(char_index, `skill${(skill_index+1)}`, rank)"
             >
               <div :class="getSprite('skill' + rank, 'skill')"></div>
             </div>
@@ -406,9 +374,9 @@
             <div class="image_mod">
               {{ equip.typeName1 + "-" + equip.typeName2 }}
             </div>
-            <div v-for="(rank,index) in ranks.slice(1, 4)" :key="index" class="image_rank"
-                 :id="char_index + 'mod'+ equip.typeName2 + rank"
-                 @click="updateSkillAndMod(char_index, 'mod'+ equip.typeName2, rank)">
+            <div v-for="(rank,index) in ranks.slice(1, 4)" :key="index"
+                 :class="skillOrModIsSelected(rank,operator[`mod${equip.typeName2}`])"
+                 @click="updateSkillAndMod(char_index, `mod${equip.typeName2}`, rank)">
               <div :class="getSprite('mod' + rank, 'mod_rank')"></div>
             </div>
 
@@ -434,7 +402,7 @@
 
 <script setup>
 import {cMessage} from "/src/custom/message.js";
-import {characterListInit, filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import { filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import {collapseV2} from '/src/custom/collapse.js'
 
 import operatorStatistics from "/src/pages/survey/operatorStatistics"
@@ -445,6 +413,7 @@ import {onMounted, ref} from "vue";
 import "@/assets/css/survey/survey_character.css";
 import {http} from "/src/api/baseURL";
 import request from "/src/api/requestBase";
+import character_list from '/src/static/json/survey/character_list.json'
 
 
 let intro_popup_visible = ref(false)
@@ -493,23 +462,17 @@ function getSprite(id, type) {
 }
 
 
-let operator_list = ref([]);   //干员列表
+let operator_list = ref(character_list);   //干员列表
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let rarity_dict = [1, 2, 3, 4, 5, 6];  //星级
-let list_max_size = ref(10)  //页面显示干员最大显示个数
+
+let show_operator_list = ref({})
 
 /**
  * 初始化干员列表
  */
 function initOperatorsList() {
-  //干员列表，有干员的各种属性
-  operator_list.value = characterListInit();
 
-
-  setTimeout(() => {
-    list_max_size.value = operator_list.value.length;
-    getOperatorData();
-  }, 4000);
 }
 
 /**
@@ -532,7 +495,7 @@ function getOperatorData() {
     for (let i = 0; i < operator_list.value.length; i++) {
       // characterList.value[i].own =false;
       for (let j = 0; j < list.length; j++) {
-        if (list[j].charId == operator_list.value[i].charId) {
+        if (list[j].charId === operator_list.value[i].charId) {
           if (!list[j].own) continue;
           operator_list.value[i].elite = list[j].elite;
           operator_list.value[i].level = list[j].level;
@@ -544,18 +507,6 @@ function getOperatorData() {
           operator_list.value[i].modX = list[j].modX;
           operator_list.value[i].modY = list[j].modY;
           operator_list.value[i].own = list[j].own;
-
-          if (operator_list.value[i].level > -1) {
-            updateOption(i + "level", true);
-          }
-
-          updateOption(i + "elite" + list[j].elite, true);
-          updateOption(i + "potential" + list[j].potential, true);
-          updateOption(i + "skill1" + list[j].skill1, true);
-          updateOption(i + "skill2" + list[j].skill2, true);
-          updateOption(i + "skill3" + list[j].skill3, true);
-          updateOption(i + "modX" + list[j].modX, true);
-          updateOption(i + "modY" + list[j].modY, true);
         }
       }
     }
@@ -825,7 +776,6 @@ function uploadDataReduction() {
       modX: operator_list.value[i].modX,
       modY: operator_list.value[i].modY,
     };
-    console.log(operator);
     upload_list.push(operator);
   }
 
@@ -881,29 +831,20 @@ function updateOwn(char_index, new_value) {
 
   const operator = operator_list.value[char_index];
   operator_list.value[char_index].own = new_value;
-  const oldElite = operator_list.value[char_index].elite; //旧精英等级
-  const oldPotential = operator_list.value[char_index].potential; //旧潜能等级
-
   if (new_value) {
     //点击拥有且干员三星以上，设为精英等级2，潜能1
     if (operator.rarity > 3) {
       operator_list.value[char_index].elite = 2;
-      cancelAndUpdateOption(char_index + "elite", 2, oldElite);
       operator_list.value[char_index].potential = 1;
-      cancelAndUpdateOption(char_index + "potential", 1, oldPotential);
     }
   } else {
     //点击未拥有时，撤销所有选项
-    let propertyL_list = ["elite", "potential", "skill1", "skill2", "skill3", "modX", "modY"];
+    let propertyL_list = ["elite", "potential", "skill1", "skill2", "skill3", "modX", "modY","level"];
     for (let property of propertyL_list) {
-      updateOption(char_index + property + operator[property], false);
       operator_list.value[char_index][property] = -1;
     }
-    updateOption(char_index + "level", false);
   }
-
   automaticUpload();
-  statistics()
 }
 
 /**
@@ -912,11 +853,10 @@ function updateOwn(char_index, new_value) {
 function batchUpdatesOwn(new_value) {
   for (let index in operator_list.value) {
     if (operator_list.value[index].show) {
-      operator_list.value[index].own = new_value;
-      selected_index_obj.value[index] = index;
+      updateOwn(index,true)
+      selected_index_obj.value[index] = new_value;
     }
   }
-  statistics()
 }
 
 /**
@@ -927,44 +867,37 @@ function batchUpdatesOwn(new_value) {
 function updateElite(char_index, new_value) {
   //记录更新过信息的干员的索引
   selected_index_obj.value[char_index] = char_index;
-  //需要修改的elementId
-  let element_id = char_index + "elite";
   //需要删去的旧值
   let old_value = operator_list.value[char_index].elite;
-  // console.log("更新精英化——", "新值：", new_value, "，旧值：", old_value, "，结果：", new_value == old_value);
   //新旧值相同直接取消选项背景色，并更新精英等级为-1
-  if (new_value == old_value) {
+  if (new_value === old_value) {
     operator_list.value[char_index].elite = -1;
-    updateOption(element_id + old_value, false);
     return;
   }
 
   //更新精英等级并取消旧值的选项背景色，给新值的选项加上选项背景色
   operator_list.value[char_index].elite = new_value;
-  cancelAndUpdateOption(element_id, new_value, old_value);
   operator_list.value[char_index].own = true;
 
-  automaticUpload();
-  statistics()
 }
 
 // 批量精英化
 function batchUpdatesElite(new_value) {
   for (let index in operator_list.value) {
     if (operator_list.value[index].show && operator_list.value[index].own) {
-      let element_id = index + "elite";
-      let old_value = operator_list.value[index].elite;
-      operator_list.value[index].elite = new_value;
-      cancelAndUpdateOption(element_id, new_value, old_value);
+      updateElite(index, new_value)
       selected_index_obj.value[index] = index;
     }
   }
+}
 
-  statistics()
+function eliteIsSelected(index,value){
+  if(index === value) return "image_elite operator_selected"
+  return 'image_elite'
 }
 
 /**
- * 更新精英化等级
+ * 更新技能等级
  * @param char_index  干员数组operator_list的索引
  * @param property 需要修改的干员信息属性名称
  * @param new_value   传入的新值
@@ -972,37 +905,35 @@ function batchUpdatesElite(new_value) {
 //更新专精或模组等级
 function updateSkillAndMod(char_index, property, new_value) {
   selected_index_obj.value[char_index] = char_index;
-  //需要修改的elementId
-  let element_id = char_index + property;
-  //需要删去的旧值
+
+  //旧值
   let old_value = operator_list.value[char_index][property];
-  let oldElite = operator_list.value[char_index].elite;
   // console.log("更新专精模组——", "新值：", new_value, "，旧值：", old_value, "，结果：", new_value == old_value);
 
-  //新旧值相同直接取消选项背景色，并更新专精/模组等级为-1
-  if (new_value == old_value) {
+  //新旧值相同设为-1
+  if (new_value === old_value) {
     operator_list.value[char_index][property] = -1;
-    updateOption(element_id + old_value, false);
     return;
   }
 
-  //更新精英等级并取消旧值的选项背景色，给新值的选项加上选项背景色
+  //更新技能或模组技能
   operator_list.value[char_index][property] = new_value;
-  cancelAndUpdateOption(element_id, new_value, old_value);
 
   //如果干员是三星以上，自动更新精英等级为2
   if (operator_list.value[char_index].rarity > 3) {
     operator_list.value[char_index].elite = 2;
-    cancelAndUpdateOption(char_index + "elite", 2, oldElite);
   }
 
   operator_list.value[char_index].own = true;
 
   // console.log("专精模组:", JSON.stringify(characterList.value[char_index], null, 2));
 
-  automaticUpload();
 
-  statistics()
+}
+
+function skillOrModIsSelected(index,value){
+  if(index === value) return "image_rank operator_selected"
+  return 'image_rank'
 }
 
 /**
@@ -1013,33 +944,26 @@ function updateSkillAndMod(char_index, property, new_value) {
 function batchUpdatesSkillAndMod(property, new_value) {
   for (let index in operator_list.value) {
     if (!(operator_list.value[index].show && operator_list.value[index].own)) continue;
-    if ("modX" === property && !operator_list.value[index].modXOwn) {
-      console.log("没有x模组");
+
+    if (operator_list.value[index].rarity < 4) {
+      console.log("4星以下不能专精");
       continue;
     }
-    if ("modY" === property && !operator_list.value[index].modYOwn) {
-      console.log("没有y模组");
-      continue;
+
+    if ("modX" === property || "modY" === property || "modD" === property) {
+       if(!operator_list.value[index].equip)  continue;
     }
+
     if ("skill3" === property && operator_list.value[index].rarity < 6) {
       console.log("6星以下没有三技能");
       continue;
     }
 
-    if ("skill2" === property && operator_list.value[index].rarity < 4) {
-      console.log("4星以下没有三技能");
-      continue;
-    }
+    updateSkillAndMod(index, property, new_value)
 
-    let element_id = index + property;
-    let old_value = operator_list.value[index][property];
-    operator_list.value[index][property] = new_value;
-
-    cancelAndUpdateOption(element_id, new_value, old_value);
     selected_index_obj.value[index] = index;
   }
 
-  statistics()
 }
 
 /**
@@ -1050,25 +974,24 @@ function batchUpdatesSkillAndMod(property, new_value) {
 function updatePotential(char_index, new_value) {
   //记录更新过信息的干员的索引
   selected_index_obj.value[char_index] = char_index;
-  //需要修改的elementId
-  let element_id = char_index + "potential";
   //需要删去的旧值
   let old_value = operator_list.value[char_index].potential;
   // console.log("更新潜能——", "新值：", new_value, "，旧值：", old_value, "，结果：", new_value == old_value);
-  //新旧值相同直接取消选项背景色，并更新潜能等级为-1
-  if (new_value == old_value) {
+  //新旧值相同更新潜能等级为-1
+  if (new_value === old_value) {
     operator_list.value[char_index].potential = -1;
-    updateOption(element_id + old_value, false);
     return;
   }
 
-  //更新潜能等级并取消旧值的选项背景色，给新值的选项加上选项背景色
+  //更新潜能等级
   operator_list.value[char_index].potential = new_value;
-  cancelAndUpdateOption(element_id, new_value, old_value);
   operator_list.value[char_index].own = true;
 
-  automaticUpload();
-  statistics()
+}
+
+function potentialIsSelected(index,value){
+  if(index === value) return "image_potential operator_selected"
+  return 'image_potential'
 }
 
 /**
@@ -1080,92 +1003,10 @@ function updateLevel(char_index) {
   //记录更新过信息的干员的索引
   selected_index_obj.value[char_index] = char_index;
 
-  let level = -1;
-  //旧精英等级
-  let oldElite = operator_list.value[char_index].elite;
-  let rarity = operator_list.value[char_index].rarity;
-
-  operator_list.value[char_index].own = true;
-  //如果是满级则取消满级，并将选项背景色去除
-  if (operator_list.value[char_index].level > 0) {
-    operator_list.value[char_index].level = level;
-    updateOption(char_index + "level", false);
-    return;
-  }
-
-  // 根据星级更新精英等级和等级
-  if (rarity == 6) {
-    level = 90;
-    operator_list.value[char_index].elite = 2;
-    cancelAndUpdateOption(char_index + "elite", 2, oldElite);
-  }
-  if (rarity == 5) {
-    level = 80;
-    operator_list.value[char_index].elite = 2;
-    cancelAndUpdateOption(char_index + "elite", 2, oldElite);
-  }
-  if (rarity == 4) {
-    level = 70;
-    operator_list.value[char_index].elite = 2;
-    cancelAndUpdateOption(char_index + "elite", 2, oldElite);
-  }
-  if (rarity == 3) {
-    level = 55;
-    operator_list.value[char_index].elite = 1;
-    cancelAndUpdateOption(char_index + "elite", 1, oldElite);
-  }
-  if (rarity < 3) {
-    level = 30;
-    operator_list.value[char_index].elite = 0;
-    cancelAndUpdateOption(char_index + "elite", 0, oldElite);
-  }
-
-  if (level === -1) return;
-
-  operator_list.value[char_index].level = level;
-
-  //更新等级选项背景色
-  updateOption(char_index + "level", true);
-
-  // console.log("等级:", JSON.stringify(characterList.value[char_index], null, 2));
-
-  automaticUpload();
-  statistics()
 }
 
 
 
-//先取消旧选项，更修改新选项的背景色
-function cancelAndUpdateOption(elementIdHeader, rank, oldRank) {
-  // console.log("元素id：",elementIdHeader,"，旧值：",oldRank,'，新值：',rank)
-  updateOption(elementIdHeader + oldRank, false);
-  updateOption(elementIdHeader + rank, true);
-}
-
-// eslint-disable-next-line
-function updateBackBeforeCancel(elementIdHeader, rank, oldRank) {
-  updateOption(elementIdHeader + rank, true);
-  updateOption(elementIdHeader + oldRank, false);
-}
-
-/**
- *
- * @param element_id  需要修改的选项背景所在的元素id
- * @param selected_flag  是否选中
- */
-function updateOption(element_id, selected_flag) {
-  // 干员数据是一个数组，每个选项的element的id为 数组索引+属性名，例如 第一个干员号角的3技能的id是 '0skill3'
-  // console.log("修改的元素id", element_id);
-  let element = document.getElementById(element_id);
-  if (element == null) return;
-  if (selected_flag) {
-    // console.log("添加背景色id", element_id);
-    element.style.backgroundColor = "rgba(255, 115, 0, 0.5)";
-  } else {
-    // console.log("取消背景色id", element_id);
-    element.style.backgroundColor = "rgba(127, 127, 127, 0.1)";
-  }
-}
 
 let surveyTypeText = ref("标准模式");
 let surveyType = ref("_basic");
@@ -1173,20 +1014,20 @@ let simpleCard = ref(false);
 
 //标准问卷与完整问卷
 function changeSurveyType(type) {
-  if ("极简模式" == type) {
+  if ("极简模式" === type) {
     surveyType.value = "";
     simpleCard.value = true;
     surveyTypeText.value = "极简模式";
     return;
   }
-  if ("标准模式" == type) {
+  if ("标准模式" === type) {
     surveyType.value = "_basic";
     surveyTypeText.value = "标准模式";
     simpleCard.value = false
     return;
   }
 
-  if ("高级模式" == type) {
+  if ("高级模式" === type) {
     surveyType.value = "";
     surveyTypeText.value = "高级模式";
     simpleCard.value = false
@@ -1194,13 +1035,15 @@ function changeSurveyType(type) {
 }
 
 function surveyTypeBtnClass(type) {
-  if (type == surveyTypeText.value) return 'btn_blue_selected'
+  if (type === surveyTypeText.value) return 'btn_blue_selected'
   return ''
 }
 
 function surveyTypeClass(classNameHeader) {
   return classNameHeader + surveyType.value;
 }
+
+
 
 /**
  * 获取干员卡片的样式
@@ -1368,7 +1211,7 @@ function toBiliblili() {
 
 onMounted(() => {
   getCacheUserData()
-
+  getOperatorData();
 
 });
 </script>

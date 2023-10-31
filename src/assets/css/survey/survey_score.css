@@ -2,7 +2,6 @@
   background: white;
   /*max-width: 1280px;*/
   margin: auto;
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
 }
 
 .image_rarity {
@@ -180,7 +179,6 @@
   z-index: 30;
   font-size: 16px;
   font-weight: 500;
-  font-family: Arial, Helvetica, sans-serif;
   right: 8px;
 }
 
@@ -189,7 +187,6 @@
   color: rgb(31, 31, 31);
   font-size: 14px;
   font-weight: 500;
-  font-family: Arial, Helvetica, sans-serif;
   padding-left: 2px;
   padding-top: 2px;
 }
@@ -218,7 +215,6 @@
   display: flex;
   line-height: 36px;
   text-align: center;
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 .image_score {

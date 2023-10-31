@@ -196,7 +196,6 @@ function scoreListInit() {
             date: baseInfo.date,
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
-            mod: baseInfo.mod != void 0,
             show: true,
         };
 
@@ -227,7 +226,6 @@ function rankingListInit() {
             modY: {'rank3': 0},
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
-            mod: baseInfo.mod != void 0,
             skill: baseInfo.skill,
             show: true,
         };
