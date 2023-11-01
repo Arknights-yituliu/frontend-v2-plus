@@ -120,16 +120,25 @@
           </div>
 
           <div class="control_bar">
-            <div class="control_title" style="width: 80px;">其它</div>
+            <div class="control_title" style="width: 80px;">获得方式</div>
             <div class="switch_btn_wrap">
-              <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
-              <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
+              <div :class="selectedBtn('itemObtainApproach', '常驻干员')"
+                   @click="addFilterCondition('itemObtainApproach', '常驻干员')">常驻干员
+              </div>
               <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
                    @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员
               </div>
               <div :class="selectedBtn('itemObtainApproach', '限定干员')"
                    @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
               </div>
+            </div>
+          </div>
+
+          <div class="control_bar">
+            <div class="control_title" style="width: 80px;">模组</div>
+            <div class="switch_btn_wrap">
+              <div :class="selectedBtn('equip', true)" @click="addFilterCondition('equip', true)">模组已实装</div>
+              <div :class="selectedBtn('equip', false)" @click="addFilterCondition('equip', false)">模组未实装</div>
             </div>
           </div>
 
@@ -1110,7 +1119,7 @@ function selectedBtn(property, rule) {
   return "btn btn_white";
 }
 
-let filterCondition = ref({rarity: [6], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
+let filterCondition = ref({rarity: [6], profession: [], year: [], own: [], equip: [], itemObtainApproach: [], TODO: []});
 
 /**
  *  增加筛选规则
