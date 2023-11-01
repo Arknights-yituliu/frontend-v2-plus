@@ -281,7 +281,7 @@
       </div>
     </div>
 
-    <div class="survey_control_wrap" id="statistics_box_wrap" style="height: auto">
+    <div class="survey_control_wrap" id="statistics_box_wrap" style="height: 0">
       <div class="survey_control" id="statistics_box">
         <div class="control_bar_wrap">
 
