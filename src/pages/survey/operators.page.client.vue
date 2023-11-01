@@ -285,7 +285,7 @@
       <div class="survey_control" id="statistics_box">
         <div class="control_bar_wrap">
 
-          <div class="control_bar">
+          <div class="control_bar" style="display: none">
 
             <table class="dev_table">
               <tr>
@@ -294,7 +294,7 @@
               <tr>
                 <td >干员</td><td >精英等级</td><td >1技能</td><td >2技能</td><td >3技能</td><td >X模组</td><td >Y模组</td>
               </tr>
-              <tr v-for="(operator,index) in operator_statistics_result.score">
+              <tr v-for="(operator,index) in operator_statistics_result.score" :key="index">
                 <td >{{ operator.name }}</td><td >{{ operator.elite }}</td><td >{{ operator.skill1 }}级</td>
                 <td >{{ operator.skill2 }}级</td><td >{{ operator.skill3 }}级</td><td >{{ operator.modX }}级</td><td >{{ operator.modY }}级</td>
               </tr>
