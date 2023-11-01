@@ -240,7 +240,7 @@
 
           <div class="divider"></div>
           <div class="control_bar">
-            <div class="control_title" style="width: 140px;">森空岛导入</div>
+            <div class="control_title" style="width: 80px;">森空岛导入</div>
             <div class="switch_btn_wrap">
               <div class="skland_desc">输入CRED</div>
               <div><input class="skland_input" type="text" v-model="skland_CRED_and_SECRET"/></div>

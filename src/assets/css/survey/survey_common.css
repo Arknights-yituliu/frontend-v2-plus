@@ -88,8 +88,6 @@
 
 .switch_desc {
   margin: 4px;
-  padding: 4px 4px 4px 16px;
-  line-height: 28px;
   font-style:italic;
   color: rgb(97, 97, 97);
 }
@@ -181,13 +179,12 @@
   justify-content: flex-start;
   padding: 2px;
   margin: auto;
+  align-items: center;
 }
 
 .control_title {
-  float: left;
-  margin: 4px;
   height: 36px;
-  padding: 4px 0px 4px 12px;
+  margin: 0 12px;
   line-height: 28px;
   font-weight: 500;
   /* background: rgb(199, 226, 255); */
