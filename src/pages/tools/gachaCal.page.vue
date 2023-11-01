@@ -18,13 +18,13 @@
 
               <el-radio-group size="small" style="width: 90%; margin: 6px 5%" v-model="timeSelector"
                               @change="checkEndDate(timeSelector)">
-                <el-radio-button v-for="(schedule,name) in schedules" :key="name"
+                <el-radio-button v-for="(schedule,name) in schedules.slice(0,2)" :key="name"
                                  :label="name" style="width: 33%">
 
                 </el-radio-button>
                 <!--                <el-radio-button label="感谢庆典(11.15)" style="width: 33%"></el-radio-button>-->
                 <!--                <el-radio-button label="春节(2.17)" type="primary" style="width: 33%"></el-radio-button>-->
-                <!--                <el-radio-button label="彩六二期联动" type="primary" style="width: 33%" disabled></el-radio-button>-->
+                                <el-radio-button label="敬请期待" type="primary" style="width: 33%" disabled></el-radio-button>
                 <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
               </el-radio-group>
               <!-- <el-divider></el-divider> -->
