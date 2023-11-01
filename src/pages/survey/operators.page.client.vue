@@ -1254,7 +1254,7 @@ onMounted(() => {
 
 <style>
 .btn{
-  margin: 4px;
+  margin:0 4px;
 }
 
 .dev_table{
