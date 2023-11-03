@@ -63,9 +63,5 @@ watch(
   border-right: 1px solid rgb(213, 213, 213);
 }
 
-.btn {
-  position: absolute;
-  top: 200px;
-  left: 50%;
-}
+
 </style>

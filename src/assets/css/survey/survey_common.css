@@ -183,11 +183,9 @@
 }
 
 .control_title {
-  height: 36px;
   margin: 0 12px;
   line-height: 28px;
   font-weight: 500;
-  /* background: rgb(199, 226, 255); */
   border-radius: 2px;
 }
 

@@ -1263,9 +1263,9 @@ onMounted(() => {
 </script>
 
 
-<style>
+<style scoped>
 .btn{
-  margin:0 4px;
+  margin:2px;
 }
 
 .dev_table{
