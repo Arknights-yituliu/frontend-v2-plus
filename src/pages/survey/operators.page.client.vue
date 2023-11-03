@@ -591,7 +591,7 @@ function getOperatorData() {
       }
     }
 
-    statisticsCollapse()
+    // statisticsCollapse()
     cMessage("导入了 " + list.length + " 条数据");
   });
 }
