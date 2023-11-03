@@ -373,10 +373,10 @@ function operatorStatistics(list) {
             notOwn:[],
             count: 0,
             own: 0,
-            skill: [0, 0, 0],
-            mod: [0, 0, 0],
-            modX: [0, 0, 0],
-            modY: [0, 0, 0],
+            skill: {rank1:0,rank2:0,rank3:0},
+            mod: {rank1:0,rank2:0,rank3:0},
+            modX: {rank1:0,rank2:0,rank3:0},
+            modY: {rank1:0,rank2:0,rank3:0},
         }
     }
 
@@ -396,39 +396,39 @@ function operatorStatistics(list) {
 
 
             for (const index of [1, 2, 3]) {
-                if (item[`skill${index}`] === 3) {
-                    operator_statistics_result[rarity].skill[0]++
-                    operator_statistics_result["total"].skill[0]++
+                if (item[`skill${index}`] === 1) {
+                    operator_statistics_result[rarity].skill.rank1++
+                    operator_statistics_result["total"].skill.rank1++
                 }
                 if (item[`skill${index}`] === 2) {
-                    operator_statistics_result[rarity].skill[1]++
-                    operator_statistics_result["total"].skill[1]++
+                    operator_statistics_result[rarity].skill.rank2++
+                    operator_statistics_result["total"].skill.rank2++
                 }
-                if (item[`skill${index}`] === 1) {
-                    operator_statistics_result[rarity].skill[2]++
-                    operator_statistics_result["total"].skill[2]++
+                if (item[`skill${index}`] === 3) {
+                    operator_statistics_result[rarity].skill.rank3++
+                    operator_statistics_result["total"].skill.rank3++
                 }
             }
 
 
             for (const type of ['X', 'Y']) {
-                if (item[`mod${type}`] === 3) {
-                    operator_statistics_result[rarity][`mod${type}`][0]++
-                    operator_statistics_result[rarity][`mod`][0]++
-                    operator_statistics_result["total"][`mod${type}`][0]++
-                    operator_statistics_result["total"][`mod`][0]++
+                if (item[`mod${type}`] === 1) {
+                    operator_statistics_result[rarity][`mod${type}`].rank1++
+                    operator_statistics_result[rarity][`mod`].rank1++
+                    operator_statistics_result["total"][`mod${type}`].rank1++
+                    operator_statistics_result["total"][`mod`].rank1++
                 }
                 if (item[`mod${type}`] === 2) {
-                    operator_statistics_result[rarity][`mod${type}`][1]++
-                    operator_statistics_result[rarity][`mod`][1]++
-                    operator_statistics_result["total"][`mod${type}`][1]++
-                    operator_statistics_result["total"][`mod`][1]++
+                    operator_statistics_result[rarity][`mod${type}`].rank2++
+                    operator_statistics_result[rarity][`mod`].rank2++
+                    operator_statistics_result["total"][`mod${type}`].rank2++
+                    operator_statistics_result["total"][`mod`].rank2++
                 }
-                if (item[`mod${type}`] === 1) {
-                    operator_statistics_result[rarity][`mod${type}`][2]++
-                    operator_statistics_result[rarity][`mod`][2]++
-                    operator_statistics_result["total"][`mod${type}`][2]++
-                    operator_statistics_result["total"][`mod`][2]++
+                if (item[`mod${type}`] === 3) {
+                    operator_statistics_result[rarity][`mod${type}`].rank3++
+                    operator_statistics_result[rarity][`mod`].rank3++
+                    operator_statistics_result["total"][`mod${type}`].rank3++
+                    operator_statistics_result["total"][`mod`].rank3++
                 }
             }
 
@@ -448,7 +448,7 @@ function operatorStatistics(list) {
         return b.apCost - a.apCost
     })
     operator_statistics_result.max = operator_statistics_result.max.slice(0, 10)
-   console.log(operator_statistics_result.max)
+   console.log(operator_statistics_result)
 
     return operator_statistics_result
 

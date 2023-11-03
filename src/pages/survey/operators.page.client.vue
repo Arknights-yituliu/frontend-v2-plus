@@ -295,34 +295,58 @@
 
           <div class="control_bar" style="display: block">
 
-            <p> Dr.{{ userData.userName }}，您一共招募了{{ stast_result.total.own }}位干员,
-              尚未招募到的干员有{{ stast_result.total.count - stast_result.total.own }}位，
-              您还没有招募到的是</p>
+            <p> Dr.{{ userData.userName }}，您的BOX情况如下：</p>
+            <p> 已招募干员{{ stast_result.total.own }}位，
+              未招募干员{{ stast_result.total.count - stast_result.total.own }}位，
+              您还没有招募到的是
+            </p>
             <div class="not_own_operator_wrap">
-            <div class="operator_image_small_wrap"
-                 v-for="(charId,index) in stast_result.total.notOwn" :key="index">
-              <div :class="getOperatorSprite(charId)"></div>
+              <div class="operator_image_small_wrap"
+                   v-for="(charId,index) in stast_result.total.notOwn" :key="index">
+                <div :class="getOperatorSprite(charId)"></div>
+              </div>
             </div>
-            </div>
-            <p>招募详情如下：</p>
-            <table>
+            <p>专三技能：{{ stast_result.total.skill.rank3 }}个，专二技能：{{ stast_result.total.skill.rank2 }}个，
+              专一技能：{{ stast_result.total.skill.rank1 }}个
+            </p>
+            <p>
+              模组解锁了{{
+                stast_result.total.mod.rank3 + stast_result.total.mod.rank2 + stast_result.total.mod.rank1
+              }}个，
+              其中三级模组{{ stast_result.total.mod.rank3 }}个，其中二级模组{{ stast_result.total.mod.rank2 }}个，
+              其中一级模组{{ stast_result.total.mod.rank1 }}个
+            </p>
+
+            <p>详情如下：</p>
+            <table class="dev_table">
               <tbody>
-                <tr><td>星级</td><td>已招募/未招募</td></tr>
-                <tr><td>6</td><td>{{ stast_result.rarity6.own }}/{{ stast_result.rarity6.count }}</td></tr>
+              <tr>
+                <td>星级</td>
+                <td>已招募/未招募</td>
+                <td>专三技能数</td>
+                <td>3级X模组</td>
+                <td>3级Y模组</td>
+              </tr>
+              <tr v-for="(detail,index) in stast_detail" :key="index">
+                <td>{{ 6 - index }}</td>
+                <td>{{ detail.own }}/{{ detail.count }}</td>
+                <td>{{ detail.skill.rank3 }}</td>
+                <td>{{ detail.modX.rank3 }}</td>
+                <td>{{ detail.modY.rank3 }}</td>
+              </tr>
               </tbody>
             </table>
-            <p>六星干员招募了{{ stast_result.rarity6.own }}位</p>
-            <p>五星干员招募了{{ stast_result.rarity5.own }}位</p>
-            <p>四星干员招募了{{ stast_result.rarity4.own }}位</p>
+
             <p>其中练度最高的十位干员是</p>
 
             <table class="dev_table">
+              <tbody>
               <tr>
                 <td colspan="9">练度前十干员</td>
               </tr>
               <tr>
                 <td>干员</td>
-                <td>精英等级</td>
+                <td>精英</td>
                 <td>1技能</td>
                 <td>2技能</td>
                 <td>3技能</td>
@@ -331,7 +355,12 @@
                 <td>消耗理智</td>
               </tr>
               <tr v-for="(operator,index) in stast_result.max" :key="index">
-                <td>{{ operator.name }}</td>
+                <td>
+                  <div class="operator_image_small_wrap" style="margin: auto">
+                    <div :class="getOperatorSprite(operator.charId)"></div>
+                  </div>
+                  <div>{{operator.name}}</div>
+                </td>
                 <td>{{ operator.elite }}</td>
                 <td>{{ operator.skill1 }}级</td>
                 <td>{{ operator.skill2 }}级</td>
@@ -340,42 +369,8 @@
                 <td>{{ operator.modY }}级</td>
                 <td>{{ operator.apCost.toFixed(0) }}</td>
               </tr>
+              </tbody>
             </table>
-            <div v-for="(result,pro) in stast_result" :key="pro" style="width: 100%" v-show="pro!=='max'">
-              <table class="dev_table">
-                <tr>
-                  <td>{{ result.description }}</td>
-                  <td>持有数为:</td>
-                  <td> {{ result.own }}/{{ result.count }}</td>
-                </tr>
-                <tr>
-                  <td
-                      v-for="(count,index) in result.skill" :key="index">
-                    专精{{ 3 - index }}数量为{{ count }}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                      v-for="(count,index) in result.mod" :key="index">
-                    {{ 3 - index }}级模组数量为{{ count }}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                      v-for="(count,index) in result.modX" :key="index">
-                    X模组{{ 3 - index }}级数量为{{ count }}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                      v-for="(count,index) in result.modY" :key="index">
-                    Y模组{{ 3 - index }}级数量为{{ count }}
-                  </td>
-                </tr>
-
-              </table>
-
-            </div>
           </div>
           <div class="control_bar"
                style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
@@ -526,7 +521,6 @@ function getCacheUserData() {
     userData.value = JSON.parse(cacheData);
   }
 
-  initOperatorsList()
 }
 
 /**
@@ -560,14 +554,6 @@ let operator_list = ref(character_list);   //干员列表
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let rarity_dict = [1, 2, 3, 4, 5, 6];  //星级
 
-let show_operator_list = ref({})
-
-/**
- * 初始化干员列表
- */
-function initOperatorsList() {
-
-}
 
 /**
  * 找回填写过的角色信息
@@ -1202,7 +1188,6 @@ function sortCharacterList(property) {
 }
 
 
-
 let item_cost_list = ref([])  //材料消耗数量
 let ap_cost_count = ref(0)  //理智消耗数量
 let item_cost_map = ref({})  //材料消耗数量
@@ -1213,22 +1198,84 @@ function statisticsCollapse() {
 }
 
 
-
 let stast_result = ref({
   max: [],
-  total: {},
-  rarity6: {},
-  rarity5: {},
-  rarity4: {},
-  rarity3: {},
-  rarity2: {},
-  rarity1: {}
+  total: {
+    notOwn: [],
+    count: 0,
+    own: 0,
+    skill: {},
+    mod: {},
+    modX: {},
+    modY: {}
+  },
+  rarity6: {
+    notOwn: [],
+    count: 0,
+    own: 0,
+    skill: {},
+    mod: {},
+    modX: {},
+    modY: {}
+  },
+  rarity5: {
+    notOwn: [],
+    count: 0,
+    own: 0,
+    skill: {},
+    mod: {},
+    modX: {},
+    modY: {}
+  },
+  rarity4: {
+    notOwn: [],
+    count: 0,
+    own: 0,
+    skill: {},
+    mod: {},
+    modX: {},
+    modY: {}
+  },
+  rarity3: {
+    notOwn: [],
+    count: 0,
+    own: 0,
+    skill: {},
+    mod: {},
+    modX: {},
+    modY: {}
+  },
+  rarity2: {
+    notOwn: [],
+    count: 0,
+    own: 0,
+    skill: {},
+    mod: {},
+    modX: {},
+    modY: {}
+  },
+  rarity1: {
+    notOwn: [],
+    count: 0,
+    own: 0,
+    skill: {},
+    mod: {},
+    modX: {},
+    modY: {}
+  }
 })
+
+let stast_detail = ref([stast_result.value.rarity6, stast_result.value.rarity5,
+  stast_result.value.rarity4, stast_result.value.rarity3,
+  stast_result.value.rarity2, stast_result.value.rarity1])
 
 //各种统计
 function statistics() {
   const result = operatorStatistics.calAPCost(operator_list.value);
   stast_result.value = operatorStatistics.operatorStatistics(operator_list.value)
+  stast_detail.value = [stast_result.value.rarity6, stast_result.value.rarity5,
+    stast_result.value.rarity4, stast_result.value.rarity3,
+    stast_result.value.rarity2, stast_result.value.rarity1]
   console.log(stast_result.value)
   item_cost_map.value = result.itemMap;
   item_cost_list.value = result.itemList;
@@ -1333,58 +1380,59 @@ onMounted(() => {
   padding: 8px
 }
 
-.survey_character_page{
+.survey_character_page {
   background-color: var(--c-bg);
   color: var(--c-color);
 }
 
-.skland_url{
-  padding:0 8px 0 8px ;
+.skland_url {
+  padding: 0 8px 0 8px;
   color: dodgerblue;
   cursor: pointer;
 }
 
-.skland_desc{
+.skland_desc {
   margin: 4px;
   padding: 4px;
 }
 
-.skland_input{
+.skland_input {
   margin: 4px;
   height: 20px;
   padding: 4px;
   line-height: 20px;
   width: 230px;
-  border:none;
+  border: none;
   border-bottom: solid black 1px;
   outline: none;
   background-color: var(--c-bg);
   color: black;
 }
 
-.skland_input:hover{
+.skland_input:hover {
   border-bottom: solid rgb(0, 98, 255) 2px;
 }
 
-.skland_import_image{
+.skland_import_image {
   width: 400px;
   display: inline-block;
   margin: auto;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.not_own_operator_wrap{
+.not_own_operator_wrap {
   display: flex;
 }
-.operator_image_small_wrap{
-    width:60px;
-    height: 60px;
-    overflow: hidden;
 
-    position: relative;
+.operator_image_small_wrap {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+
+  position: relative;
 }
 
-.operator_image_small{
+.operator_image_small {
   transform: scale(0.32);
   /* border: 1px solid red; */
   border-radius: 0;
