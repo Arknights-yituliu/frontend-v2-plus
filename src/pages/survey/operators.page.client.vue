@@ -34,7 +34,7 @@
     </div>
   </c-popup>
 
-  <div class="survey_character_page">
+  <div class="survey_character_page theme_light">
     <!-- 常驻条 -->
     <div class="setup_top">
       <c-button :color="'blue'" @click="checkFirstPopup()">填写说明</c-button>
@@ -275,73 +275,107 @@
           <div class="control_bar" v-show="bindAccount">
             <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
               {{ upload_message.userName }} </a> 请登录之前的账号 <br>
-              <div class="skland_login_btn" @click="login(upload_message.userName)">
+              <div class="btn btn_blue_selected" @click="login(upload_message.userName)">
                 请登录用户{{ upload_message.userName }}并刷新网页
               </div>
             </div>
           </div>
           <div class="control_bar">
             <div class="switch_desc"><b>*森空岛导入：</b>请遵循
-              <a class="skland_notice_btn" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
-<!--              如果忘了一图流账号，可输入CRED点击&nbsp; <a class="skland_notice_btn">“根据CRED找回账号”</a> &nbsp;按钮，此时会找回您的一图流账号-->
+              <a class="btn btn_red" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="survey_control_wrap" id="statistics_box_wrap" style="height: 0">
+    <div class="survey_control_wrap" id="statistics_box_wrap">
       <div class="survey_control" id="statistics_box">
         <div class="control_bar_wrap">
 
           <div class="control_bar" style="display: block">
+
+            <p> Dr.{{ userData.userName }}，您一共招募了{{ stast_result.total.own }}位干员,
+              尚未招募到的干员有{{ stast_result.total.count - stast_result.total.own }}位，
+              您还没有招募到的是</p>
+            <div class="not_own_operator_wrap">
+            <div class="operator_image_small_wrap"
+                 v-for="(charId,index) in stast_result.total.notOwn" :key="index">
+              <div :class="getOperatorSprite(charId)"></div>
+            </div>
+            </div>
+            <p>招募详情如下：</p>
+            <table>
+              <tbody>
+                <tr><td>星级</td><td>已招募/未招募</td></tr>
+                <tr><td>6</td><td>{{ stast_result.rarity6.own }}/{{ stast_result.rarity6.count }}</td></tr>
+              </tbody>
+            </table>
+            <p>六星干员招募了{{ stast_result.rarity6.own }}位</p>
+            <p>五星干员招募了{{ stast_result.rarity5.own }}位</p>
+            <p>四星干员招募了{{ stast_result.rarity4.own }}位</p>
+            <p>其中练度最高的十位干员是</p>
 
             <table class="dev_table">
               <tr>
                 <td colspan="9">练度前十干员</td>
               </tr>
               <tr>
-                <td >干员</td><td >精英等级</td><td >1技能</td><td >2技能</td><td >3技能</td><td >X模组</td><td >Y模组</td><td >消耗理智</td>
+                <td>干员</td>
+                <td>精英等级</td>
+                <td>1技能</td>
+                <td>2技能</td>
+                <td>3技能</td>
+                <td>X模组</td>
+                <td>Y模组</td>
+                <td>消耗理智</td>
               </tr>
-              <tr v-for="(operator,index) in operator_statistics_result.max" :key="index">
-                <td >{{ operator.name }}</td><td >{{ operator.elite }}</td><td >{{ operator.skill1 }}级</td>
-                <td >{{ operator.skill2 }}级</td><td >{{ operator.skill3 }}级</td><td >{{ operator.modX }}级</td>
-                <td >{{ operator.modY }}级</td><td >{{ operator.apCost.toFixed(0) }}</td>
+              <tr v-for="(operator,index) in stast_result.max" :key="index">
+                <td>{{ operator.name }}</td>
+                <td>{{ operator.elite }}</td>
+                <td>{{ operator.skill1 }}级</td>
+                <td>{{ operator.skill2 }}级</td>
+                <td>{{ operator.skill3 }}级</td>
+                <td>{{ operator.modX }}级</td>
+                <td>{{ operator.modY }}级</td>
+                <td>{{ operator.apCost.toFixed(0) }}</td>
               </tr>
             </table>
-           <div v-for="(result,pro) in operator_statistics_result" :key="pro" style="width: 100%" v-show="pro!=='max'">
-             <table class="dev_table">
-               <tr>
-                 <td>{{result.description}}</td><td>持有数为:</td><td>  {{result.own}}/{{result.count}}</td>
-               </tr>
-               <tr>
-                 <td
-                     v-for="(count,index) in result.skill" :key="index">
-                   专精{{ 3-index }}数量为{{count}}
-                 </td>
-               </tr>
-               <tr>
-                 <td
-                     v-for="(count,index) in result.mod" :key="index">
-                   {{ 3-index }}级模组数量为{{count}}
-                 </td>
-               </tr>
-               <tr>
-                 <td
-                     v-for="(count,index) in result.modX" :key="index">
-                   X模组{{ 3-index }}级数量为{{count}}
-                 </td>
-               </tr>
-               <tr>
-                 <td
-                     v-for="(count,index) in result.modY" :key="index">
-                   Y模组{{ 3-index }}级数量为{{count}}
-                 </td>
-               </tr>
+            <div v-for="(result,pro) in stast_result" :key="pro" style="width: 100%" v-show="pro!=='max'">
+              <table class="dev_table">
+                <tr>
+                  <td>{{ result.description }}</td>
+                  <td>持有数为:</td>
+                  <td> {{ result.own }}/{{ result.count }}</td>
+                </tr>
+                <tr>
+                  <td
+                      v-for="(count,index) in result.skill" :key="index">
+                    专精{{ 3 - index }}数量为{{ count }}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                      v-for="(count,index) in result.mod" :key="index">
+                    {{ 3 - index }}级模组数量为{{ count }}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                      v-for="(count,index) in result.modX" :key="index">
+                    X模组{{ 3 - index }}级数量为{{ count }}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                      v-for="(count,index) in result.modY" :key="index">
+                    Y模组{{ 3 - index }}级数量为{{ count }}
+                  </td>
+                </tr>
 
-             </table>
+              </table>
 
-           </div>
+            </div>
           </div>
           <div class="control_bar"
                style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
@@ -391,7 +425,7 @@
 
           <!--  -->
           <div :class="surveyTypeClass('elite_wrap')">
-            <div :class="eliteIsSelected(0,operator.elite)"  @click="updateElite(char_index, 0)">
+            <div :class="eliteIsSelected(0,operator.elite)" @click="updateElite(char_index, 0)">
               <div :class="getSprite('elite0', 'elite')"></div>
             </div>
             <div :class="eliteIsSelected(1,operator.elite)" @click="updateElite(char_index, 1)"
@@ -403,7 +437,7 @@
               <div :class="getSprite('elite2', 'elite')"></div>
             </div>
             <!--            <div class="image_elite" :id="char_index + 'level'" @click="updateLevel(char_index)">-->
-            <div class="level_wrap" >
+            <div class="level_wrap">
               <!--              <img class="image_lvMax" src="/image/survey/lvMax.png" alt=""/>-->
               {{ operator.level > 0 ? operator.level : 0 }}
             </div>
@@ -462,7 +496,7 @@
 
 <script setup>
 import {cMessage} from "/src/custom/message.js";
-import { filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import {collapseV2} from '/src/custom/collapse.js'
 
 import operatorStatistics from "/src/pages/survey/operatorStatistics"
@@ -571,7 +605,7 @@ function getOperatorData() {
       }
     }
 
-
+    statisticsCollapse()
     cMessage("导入了 " + list.length + " 条数据");
   });
 }
@@ -898,7 +932,7 @@ function updateOwn(char_index, new_value) {
     }
   } else {
     //点击未拥有时，撤销所有选项
-    let propertyL_list = ["elite", "potential", "skill1", "skill2", "skill3", "modX", "modY", "modD","level"];
+    let propertyL_list = ["elite", "potential", "skill1", "skill2", "skill3", "modX", "modY", "modD", "level"];
     for (let property of propertyL_list) {
       operator_list.value[char_index][property] = 0;
     }
@@ -912,7 +946,7 @@ function updateOwn(char_index, new_value) {
 function batchUpdatesOwn(new_value) {
   for (let index in operator_list.value) {
     if (operator_list.value[index].show) {
-      updateOwn(index,true)
+      updateOwn(index, true)
       selected_index_obj.value[index] = new_value;
     }
   }
@@ -950,8 +984,8 @@ function batchUpdatesElite(new_value) {
   }
 }
 
-function eliteIsSelected(index,value){
-  if(index === value) return "image_elite operator_selected"
+function eliteIsSelected(index, value) {
+  if (index === value) return "image_elite operator_selected"
   return 'image_elite'
 }
 
@@ -990,8 +1024,8 @@ function updateSkillAndMod(char_index, property, new_value) {
 
 }
 
-function skillOrModIsSelected(index,value){
-  if(index === value) return "image_rank operator_selected"
+function skillOrModIsSelected(index, value) {
+  if (index === value) return "image_rank operator_selected"
   return 'image_rank'
 }
 
@@ -1010,7 +1044,7 @@ function batchUpdatesSkillAndMod(property, new_value) {
     }
 
     if ("modX" === property || "modY" === property || "modD" === property) {
-       if(!operator_list.value[index].equip)  continue;
+      if (!operator_list.value[index].equip) continue;
     }
 
     if ("skill3" === property && operator_list.value[index].rarity < 6) {
@@ -1048,8 +1082,8 @@ function updatePotential(char_index, new_value) {
 
 }
 
-function potentialIsSelected(index,value){
-  if(index === value) return "image_potential operator_selected"
+function potentialIsSelected(index, value) {
+  if (index === value) return "image_potential operator_selected"
   return 'image_potential'
 }
 
@@ -1063,8 +1097,6 @@ function updateLevel(char_index) {
   selected_index_obj.value[char_index] = char_index;
 
 }
-
-
 
 
 let surveyTypeText = ref("标准模式");
@@ -1103,7 +1135,6 @@ function surveyTypeClass(classNameHeader) {
 }
 
 
-
 /**
  * 获取干员卡片的样式
  * @returns {string} 卡片样式名
@@ -1121,7 +1152,15 @@ function selectedBtn(property, rule) {
   return "btn btn_white";
 }
 
-let filterCondition = ref({rarity: [6], profession: [], year: [], own: [], equip: [], itemObtainApproach: [], TODO: []});
+let filterCondition = ref({
+  rarity: [6],
+  profession: [],
+  year: [],
+  own: [],
+  equip: [],
+  itemObtainApproach: [],
+  TODO: []
+});
 
 /**
  *  增加筛选规则
@@ -1132,7 +1171,7 @@ let filterCondition = ref({rarity: [6], profession: [], year: [], own: [], equip
 function addFilterCondition(property, condition) {
   console.log(filterCondition.value[property]);
   if (filterCondition.value[property].indexOf(condition) > -1) {
-    filterCondition.value[property] = filterCondition.value[property].filter(e=>e!==condition)
+    filterCondition.value[property] = filterCondition.value[property].filter(e => e !== condition)
     filterCharacterList();
     return;
   }
@@ -1163,7 +1202,7 @@ function sortCharacterList(property) {
 }
 
 
-let operator_statistics_result = ref({})
+
 let item_cost_list = ref([])  //材料消耗数量
 let ap_cost_count = ref(0)  //理智消耗数量
 let item_cost_map = ref({})  //材料消耗数量
@@ -1173,18 +1212,29 @@ function statisticsCollapse() {
   statistics()
 }
 
+
+
+let stast_result = ref({
+  max: [],
+  total: {},
+  rarity6: {},
+  rarity5: {},
+  rarity4: {},
+  rarity3: {},
+  rarity2: {},
+  rarity1: {}
+})
+
 //各种统计
 function statistics() {
-
-
   const result = operatorStatistics.calAPCost(operator_list.value);
-  operator_statistics_result.value = operatorStatistics.operatorStatistics(operator_list.value)
-
+  stast_result.value = operatorStatistics.operatorStatistics(operator_list.value)
+  console.log(stast_result.value)
   item_cost_map.value = result.itemMap;
   item_cost_list.value = result.itemList;
   ap_cost_count.value = result.apCostCount;
-
 }
+
 
 /**
  * 根据材料最大星级对材料进行拆解计算
@@ -1255,28 +1305,91 @@ function toBiliblili() {
   element.click();
 }
 
+function getOperatorSprite(id) {
+  return "bg-" + id + " operator_image_small";
+}
+
+
 onMounted(() => {
   getCacheUserData()
   getOperatorData();
-
 });
 </script>
 
 
 <style scoped>
-.btn{
-  margin:2px;
+.btn {
+  margin: 2px;
 }
 
-.dev_table{
+.dev_table {
   border-collapse: collapse;
   text-align: center;
-  margin:12px 0;
+  margin: 12px 0;
 }
 
-.dev_table td{
- border: 1px solid black;
+.dev_table td {
+  border: 1px solid black;
   padding: 8px
 }
 
+.survey_character_page{
+  background-color: var(--c-bg);
+  color: var(--c-color);
+}
+
+.skland_url{
+  padding:0 8px 0 8px ;
+  color: dodgerblue;
+  cursor: pointer;
+}
+
+.skland_desc{
+  margin: 4px;
+  padding: 4px;
+}
+
+.skland_input{
+  margin: 4px;
+  height: 20px;
+  padding: 4px;
+  line-height: 20px;
+  width: 230px;
+  border:none;
+  border-bottom: solid black 1px;
+  outline: none;
+  background-color: var(--c-bg);
+  color: black;
+}
+
+.skland_input:hover{
+  border-bottom: solid rgb(0, 98, 255) 2px;
+}
+
+.skland_import_image{
+  width: 400px;
+  display: inline-block;
+  margin: auto;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.not_own_operator_wrap{
+  display: flex;
+}
+.operator_image_small_wrap{
+    width:60px;
+    height: 60px;
+    overflow: hidden;
+
+    position: relative;
+}
+
+.operator_image_small{
+  transform: scale(0.32);
+  /* border: 1px solid red; */
+  border-radius: 0;
+  position: absolute;
+  top: -58px;
+  left: -58px;
+}
 </style>

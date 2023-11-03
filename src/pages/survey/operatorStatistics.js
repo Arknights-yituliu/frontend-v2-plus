@@ -362,23 +362,15 @@ function operatorStatistics(list) {
         }
     }
 
-    let initData = {
-        total: {description: '总计干员练度：'},
-        rarity6: {description: '六星干员练度：'},
-        rarity5: {description: '五星干员练度：'},
-        rarity4: {description: '四星干员练度：'},
-        rarity3: {description: '三星干员练度：'},
-        rarity2: {description: '二星干员练度：'},
-        rarity1: {description: '一星计干员练度：'}
-    }
+
 
     let operator_statistics_result = {
         max: []
     }
 
-    for (const key in initData) {
+    for (const key of ['total','rarity6','rarity5','rarity4','rarity3','rarity2','rarity1']) {
         operator_statistics_result[key] = {
-            description: initData[key].description,
+            notOwn:[],
             count: 0,
             own: 0,
             skill: [0, 0, 0],
@@ -394,7 +386,10 @@ function operatorStatistics(list) {
         operator_statistics_result["total"].count += group_by_rarity[rarity].length
         for (const item of group_by_rarity[rarity]) {
 
-            if (!item.own) continue
+            if (!item.own) {
+                operator_statistics_result["total"].notOwn.push(item.charId)
+                continue
+            }
 
             operator_statistics_result[rarity].own++
             operator_statistics_result["total"].own++

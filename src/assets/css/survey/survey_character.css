@@ -364,57 +364,7 @@
   background-color: #ff723d;
 }
 
-.skland_url{
-  padding:0 8px 0 8px ;
-  color: dodgerblue;
-  cursor: pointer;
-}
 
-.skland_login_btn{
-  width: 270px;
-  margin: 8px 0 0 0;
-  padding: 4px;
-  border-radius: 4px;
-  background-color: #b5e6ff;
-  text-align: center;
-  color: #006fe0;
-  cursor: pointer;
-}
-
-.skland_notice_btn{
-  color: #f56c6c;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.skland_desc{
-  margin: 4px;
-  padding: 4px;
-}
-
-.skland_input{
-  margin: 4px;
-  height: 20px;
-  padding: 4px;
-  line-height: 20px;
-  width: 230px;
-  border:none;
-  border-bottom: solid black 1px;
-  outline: none;
-  background-color: white;
-  color: black;
-}
-
-.skland_input:hover{
-  border-bottom: solid rgb(0, 98, 255) 2px;
-}
-
-.skland_import_image{
-  width: 400px;
-  display: inline-block;
-  margin: auto;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-}
 
 .item_cost_card{
   display: flex;

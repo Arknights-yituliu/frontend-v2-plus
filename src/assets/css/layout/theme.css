@@ -1,0 +1,12 @@
+.theme_light{
+    --c-box-shadow:1px 1px 4px #949494;
+    --c-bg:#F0F0F0;
+    --c-color:#0F0F0F;
+}
+
+.theme_dark{
+    --c-box-shadow:1px 1px 4px #949494;
+    --c-bg: #1E1E1E;
+    --c-color: #DCDCDC;
+}
+
