@@ -23,13 +23,13 @@ import { onMounted, ref } from "vue";
 let itemValue = ref({});
 
 async function getItemValue() {
-  await storeApi.findAllItem(0.625).then((response) => {
-    for (const key in response.data) {
-      const id = response.data[key].itemId;
-      const value = response.data[key].itemValueAp;
-      itemValue.value[id] = value;
-    }
-  });
+  // await storeApi.findAllItem(0.625).then((response) => {
+  //   for (const key in response.data) {
+  //     const id = response.data[key].itemId;
+  //     const value = response.data[key].itemValueAp;
+  //     itemValue.value[id] = value;
+  //   }
+  // });
 
   console.log(itemValue.value);
 }

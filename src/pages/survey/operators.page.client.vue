@@ -204,9 +204,9 @@
           <br/>输入之后回车确认
 
           <img src="/image/skland/step1.jpg" class="skland_import_image" alt=""><img>
-          <p><b>step3：</b>此时你可以获得一段神秘的字符，此即为CRED，复制这段CRED，<b>不要带引号</b></p>
+          <p><b>step3：</b>此时你可以获得一段神秘的字符，复制这段字符，<b>不要带引号</b></p>
           <img src="/image/skland/step2.jpg" class="skland_import_image" alt=""><img>
-          <p><b>step4：</b>将 <b>step3</b> 中获得的CRED粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
+          <p><b>step4：</b>将 <b>step3</b> 中获得的这段字符粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
           <img src="/image/skland/step3.jpg" class="skland_import_image" alt=""><img>
         </div>
       </div>
@@ -294,21 +294,22 @@
       <div class="survey_control" id="statistics_box">
         <div class="control_bar_wrap">
 
-          <div class="control_bar" style="display: none">
+          <div class="control_bar" style="display: block">
 
             <table class="dev_table">
               <tr>
                 <td colspan="9">练度前十干员</td>
               </tr>
               <tr>
-                <td >干员</td><td >精英等级</td><td >1技能</td><td >2技能</td><td >3技能</td><td >X模组</td><td >Y模组</td>
+                <td >干员</td><td >精英等级</td><td >1技能</td><td >2技能</td><td >3技能</td><td >X模组</td><td >Y模组</td><td >消耗理智</td>
               </tr>
-              <tr v-for="(operator,index) in operator_statistics_result.score" :key="index">
+              <tr v-for="(operator,index) in operator_statistics_result.max" :key="index">
                 <td >{{ operator.name }}</td><td >{{ operator.elite }}</td><td >{{ operator.skill1 }}级</td>
-                <td >{{ operator.skill2 }}级</td><td >{{ operator.skill3 }}级</td><td >{{ operator.modX }}级</td><td >{{ operator.modY }}级</td>
+                <td >{{ operator.skill2 }}级</td><td >{{ operator.skill3 }}级</td><td >{{ operator.modX }}级</td>
+                <td >{{ operator.modY }}级</td><td >{{ operator.apCost.toFixed(0) }}</td>
               </tr>
             </table>
-           <div v-for="(result,pro) in operator_statistics_result" :key="pro" style="width: 100%" v-show="pro!=='score'">
+           <div v-for="(result,pro) in operator_statistics_result" :key="pro" style="width: 100%" v-show="pro!=='max'">
              <table class="dev_table">
                <tr>
                  <td>{{result.description}}</td><td>持有数为:</td><td>  {{result.own}}/{{result.count}}</td>
@@ -337,6 +338,7 @@
                    Y模组{{ 3-index }}级数量为{{count}}
                  </td>
                </tr>
+
              </table>
 
            </div>
@@ -569,7 +571,7 @@ function getOperatorData() {
       }
     }
 
-    statistics()
+
     cMessage("导入了 " + list.length + " 条数据");
   });
 }
@@ -1167,8 +1169,8 @@ let ap_cost_count = ref(0)  //理智消耗数量
 let item_cost_map = ref({})  //材料消耗数量
 
 function statisticsCollapse() {
-  statistics()
   collapseV2('statistics_box_wrap', 'statistics_box',)
+  statistics()
 }
 
 //各种统计

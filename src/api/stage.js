@@ -86,7 +86,13 @@ export default {
     });
   },
 
-
+  //查询所有材料价值
+  findAllItem(expCoefficient) {
+    return request({
+      url: `/item/value?expCoefficient=${expCoefficient}`,
+      method: "get",
+    });
+  },
 
   /**
    * 获取章节与关卡的映射表
