@@ -877,10 +877,10 @@
                   </div>
                   <div class="gacha_resources_unit" style="width: 234px">
                     <div style="width: 40px" v-show="other.orundum !== 0" :class="getSpriteImg('4003icon', 0)"></div>
-                    <div style="width: 54px" v-show="other.orundum !== 0 && key !== '夏活惊奇墙'">
+                    <div style="width: 54px" v-show="other.orundum !== 0 && key !== '产业洽谈'">
                       {{ other.orundum }}
                     </div>
-                    <div style="width: 54px" v-show="other.orundum !== 0 && key === '夏活惊奇墙'">
+                    <div style="width: 54px" v-show="other.orundum !== 0 && key === '产业洽谈'">
                       {{ other.orundum - poolCountDown * 600 }}
                     </div>
                     <div style="width: 40px" v-show="other.originium !== 0" :class="getSpriteImg('4002icon', 0)"></div>
@@ -888,10 +888,10 @@
                       {{ other.originium }}
                     </div>
                     <div style="width: 40px" v-show="other.permit !== 0" :class="getSpriteImg('7003icon', 0)"></div>
-                    <div style="width: 54px" v-show="other.permit !== 0 && key.indexOf('夏活每日赠送寻访凭证') === -1">
+                    <div style="width: 54px" v-show="other.permit !== 0 && key.indexOf('周年池每日赠送寻访凭证') === -1">
                       {{ other.permit }}
                     </div>
-                    <div style="width: 54px" v-show="other.permit !== 0 && key.indexOf('夏活每日赠送寻访凭证') !== -1">
+                    <div style="width: 54px" v-show="other.permit !== 0 && key.indexOf('周年池每日赠送寻访凭证') !== -1">
                       {{ other.permit - poolCountDown }}
                     </div>
                     <div style="width: 40px" v-show="other.permit10 !== 0" :class="getSpriteImg('7004icon', 0)"></div>
