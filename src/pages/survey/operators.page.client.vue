@@ -360,35 +360,32 @@
 
             <table class="max_operator_table">
               <tbody>
-              <!--              <tr>-->
-              <!--                <td colspan="9">练度前十干员</td>-->
-              <!--              </tr>-->
+
               <tr v-for="(operator,index) in stast_result.max" :key="index">
                 <td>
                   <div class="operator_image_small_wrap" style="margin: auto">
                     <div :class="getOperatorSprite(operator.charId)"></div>
-                    <!--                    <div class="sprite_alt">{{ operator.name }}</div>-->
+                    <div  :class="getEliteSprite(operator.elite)"></div>
                   </div>
 
                 </td>
-                <td>{{ operator.elite }}</td>
+                <td><div class="stats_level"> Lv.{{ operator.level>0?operator.level:0 }}</div></td>
                 <td v-for="(skill,index) in operator.skill" :key="index">
 
                   <div class="stats_skill_image_wrap">
                     <div :class="getSkillSprite(skill.iconId)"></div>
                     <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
-                         v-show="operator[`skill${index+1}`]>1" class="stats_skill_rank">
+                         v-show="operator[`skill${index+1}`]>0" class="stats_skill_rank">
                     <!--                    <div class="sprite_alt"> {{ skill.name }}</div>-->
                   </div>
                 </td>
-                <td v-for="(equip,index) in operator.equip" :key="index" v-show="operator[`mod${equip.typeName2}`]>0">
-
+                <td v-for="(equip,index) in operator.equip" :key="index">
                   <div class="stats_skill_image_wrap">
                     <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>
                     <div class="sprite_alt">{{ `${equip.typeName1}_${equip.typeName2}` }}</div>
                   </div>
                 </td>
-
+                <td v-show="operator.equip.length<2"></td>
                 <td>
                   <div class="stats_skill_image_wrap">
                     <div :class="getItemSprite('AP_GAMEPLAY')"></div>
@@ -1365,11 +1362,16 @@ function getOperatorSprite(id) {
   return "bg-" + id + " operator_image_small";
 }
 
+function getEliteSprite(id){
+  return "bg-elite" + id + " stats_elite_image";
+}
+
 function getSkillSprite(id) {
   return "bg-skill_icon_" + id + " stats_skill_image";
 }
 
 function getEquipSprite(id) {
+  if(id<1) id =0
   return "bg-mod" + id + " stats_equip_image";
 }
 
@@ -1476,12 +1478,27 @@ onMounted(() => {
 }
 
 .operator_image_small {
-  transform: scale(0.3);
+  transform: scale(0.35);
   /* border: 1px solid red; */
   border-radius: 0;
   position: absolute;
-  top: -68px;
+  top: -72px;
   left: -62px;
+}
+
+.stats_elite_image{
+  transform: scale(0.11);
+  position: absolute;
+  top: -60px;
+  left: -84px;
+  background-color: #3f3f3f;
+}
+
+.stats_level{
+  margin-top:-20px;
+  padding: 4px;
+  font-size: 20px;
+  font-weight: 600
 }
 
 .stats_skill_image_wrap {
