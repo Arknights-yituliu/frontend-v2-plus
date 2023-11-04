@@ -579,6 +579,24 @@
         </div>
         <div class="riic_building building_hr">
           <div class="riic_building_title">
+            加工站
+            <el-checkbox
+                style="margin: 2px; background-color: #ffffff80; vertical-align: top"
+                label="补满空位"
+                v-model="switch_processing_plan0_0[1]"
+            ></el-checkbox>
+            <el-checkbox
+                style="margin: 2px; background-color: #ffffff80; vertical-align: top"
+                label="跳过"
+                v-model="switch_processing_plan0_0[2]"
+            ></el-checkbox>
+          </div>
+          <div class="riic_building_operatorArray">
+            <el-input class="operator_inputbox" placeholder="1" v-model="processing_plan0_0[0]"></el-input>
+          </div>
+        </div>
+        <div class="riic_building building_hr">
+          <div class="riic_building_title">
             办公室
             <el-checkbox
               style="margin: 2px; background-color: #ffffff80; vertical-align: top"
@@ -595,6 +613,7 @@
             <el-input class="operator_inputbox" placeholder="1" v-model="hire_plan0_0[0]"></el-input>
           </div>
         </div>
+
         <div class="riic_building building_dormitory">
           <div class="riic_building_title">
             宿舍1
@@ -1171,6 +1190,24 @@
           <div class="riic_building_operatorArray">
             <el-input class="operator_inputbox" placeholder="1" v-model="meeting_plan1_0[0]"></el-input>
             <el-input class="operator_inputbox" placeholder="1" v-model="meeting_plan1_0[1]"></el-input>
+          </div>
+        </div>
+        <div class="riic_building building_hr">
+          <div class="riic_building_title">
+            加工站
+            <el-checkbox
+                style="margin: 2px; background-color: #ffffff80; vertical-align: top"
+                label="补满空位"
+                v-model="switch_processing_plan1_0[1]"
+            ></el-checkbox>
+            <el-checkbox
+                style="margin: 2px; background-color: #ffffff80; vertical-align: top"
+                label="跳过"
+                v-model="switch_processing_plan1_0[2]"
+            ></el-checkbox>
+          </div>
+          <div class="riic_building_operatorArray">
+            <el-input class="operator_inputbox" placeholder="1" v-model="processing_plan1_0[0]"></el-input>
           </div>
         </div>
         <div class="riic_building building_hr">
@@ -1766,6 +1803,24 @@
         </div>
         <div class="riic_building building_hr">
           <div class="riic_building_title">
+            加工站
+            <el-checkbox
+                style="margin: 2px; background-color: #ffffff80; vertical-align: top"
+                label="补满空位"
+                v-model="switch_processing_plan2_0[1]"
+            ></el-checkbox>
+            <el-checkbox
+                style="margin: 2px; background-color: #ffffff80; vertical-align: top"
+                label="跳过"
+                v-model="switch_processing_plan2_0[2]"
+            ></el-checkbox>
+          </div>
+          <div class="riic_building_operatorArray">
+            <el-input class="operator_inputbox" placeholder="1" v-model="processing_plan2_0[0]"></el-input>
+          </div>
+        </div>
+        <div class="riic_building building_hr">
+          <div class="riic_building_title">
             办公室
             <el-checkbox
               style="margin: 2px; background-color: #ffffff80; vertical-align: top"
@@ -1963,6 +2018,8 @@ export default {
       switch_hire_plan0_0: [false, false, false],
       meeting_plan0_0: ["陈", "守林人"],
       switch_meeting_plan0_0: [false, false, false],
+      processing_plan0_0:['瑕光'],
+      switch_processing_plan0_0:[false,false,false],
       dormitory_plan0_0: [],
       dormitory_plan0_1: [],
       dormitory_plan0_2: [],
@@ -2000,6 +2057,8 @@ export default {
       switch_hire_plan1_0: [false, false, false],
       meeting_plan1_0: ["陈", "守林人"],
       switch_meeting_plan1_0: [false, false, false],
+      processing_plan1_0:['九色鹿'],
+      switch_processing_plan1_0:[false,true,false],
       dormitory_plan1_0: [],
       dormitory_plan1_1: [],
       dormitory_plan1_2: [],
@@ -2037,6 +2096,8 @@ export default {
       switch_hire_plan2_0: [false, false, false],
       meeting_plan2_0: ["陈", "守林人"],
       switch_meeting_plan2_0: [false, false, false],
+      processing_plan2_0:['年'],
+      switch_processing_plan2_0:[false,false,true],
       dormitory_plan2_0: [],
       dormitory_plan2_1: [],
       dormitory_plan2_2: [],
@@ -2067,10 +2128,11 @@ export default {
   methods: {
     openNotification() {
       this.$notify({
-        title: "2023-10-23更新",
+        title: "2023-11-04更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong> 干员追加：<br>冰酿" +
-          "<br><br>UI问题：<br>如果遇到不能展开三列排班请收起侧边导航栏或缩小网页比例"                                                                            +
+        message: "<strong> 干员追加：<br>薇薇安娜，折光" +
+            "<br><br><strong> 房间追加：<br>现在可以设置加工站干员了" +
+          "<br><br><strong>UI问题：</strong><br>如果遇到不能展开三列排班请收起侧边导航栏或缩小网页比例"                                                                            +
             "<br><br>BUG相关：<br>如果遇到导入为空的情况可加Q群539600566</strong>",
         duration: 12000,
       });
@@ -2158,6 +2220,7 @@ export default {
           power: [],
           hire: [],
           meeting: [],
+          processing:[],
           dormitory: [],
         },
       };
@@ -2171,6 +2234,7 @@ export default {
           power: [],
           hire: [],
           meeting: [],
+          processing:[],
           dormitory: [],
         },
       };
@@ -2184,6 +2248,7 @@ export default {
           power: [],
           hire: [],
           meeting: [],
+          processing:[],
           dormitory: [],
         },
       };
@@ -2362,11 +2427,23 @@ export default {
 
       plans_0.rooms.hire[0] = hire_planMap0_0;
 
+      let processing_planMap0_0 = {
+        operators:this.getList(this.processing_plan0_0),
+        autofill:this.switch_processing_plan0_0[1]
+      }
+
+      if(this.switch_processing_plan0_0[2]){
+        processing_planMap0_0 = {skip:true}
+      }
+
+      plans_0.rooms.processing[0] = processing_planMap0_0
+
       let meeting_planMap0_0 = {
         operators: this.getList(this.meeting_plan0_0),
         // sort: this.switch_meeting_plan0_0[0],
         autofill: this.switch_meeting_plan0_0[1],
-      };
+      }
+
       if (this.switch_meeting_plan0_0[2]) {
         meeting_planMap0_0 = { skip: true };
       }
@@ -2570,6 +2647,17 @@ export default {
       }
 
       plans_1.rooms.hire[0] = hire_planMap1_0;
+
+      let processing_planMap1_0 = {
+        operators:this.getList(this.processing_plan1_0),
+        autofill:this.switch_processing_plan1_0[1]
+      }
+
+      if(this.switch_processing_plan1_0[2]){
+        processing_planMap1_0 = {skip:true}
+      }
+
+      plans_1.rooms.processing[0] = processing_planMap1_0
 
       let meeting_planMap1_0 = {
         operators: this.getList(this.meeting_plan1_0),
@@ -2778,6 +2866,17 @@ export default {
       }
 
       plans_2.rooms.hire[0] = hire_planMap2_0;
+
+      let processing_planMap2_0 = {
+        operators:this.getList(this.processing_plan2_0),
+        autofill:this.switch_processing_plan2_0[1]
+      }
+
+      if(this.switch_processing_plan2_0[2]){
+        processing_planMap2_0 = {skip:true}
+      }
+
+      plans_2.rooms.processing[0] = processing_planMap2_0
 
       let meeting_planMap2_0 = {
         operators: this.getList(this.meeting_plan2_0),
