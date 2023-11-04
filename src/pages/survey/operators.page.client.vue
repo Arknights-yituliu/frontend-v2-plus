@@ -292,18 +292,37 @@
     <div class="survey_control_wrap" id="statistics_box_wrap">
       <div class="survey_control" id="statistics_box">
         <div class="control_bar_wrap">
+          <div class="control_bar"
+               style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
+            总计消耗{{ ap_cost_count.toFixed(0) }} 理智
+          </div>
+          <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
+          <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
+          <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+          <div class="control_bar item_cost_wrap" v-for="(itemList,type) in item_cost_list"
+               :key="type">
+            <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
+              <div class="image_item_wrap">
+                <div :class="getSprite(item.id,'item')"></div>
+                <div class="item_count">
+                  {{ strShowLength(item.count) }}
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div class="control_bar" style="display: block">
 
             <p> Dr.{{ userData.userName }}，您的BOX情况如下：</p>
             <p> 已招募干员{{ stast_result.total.own }}位，
               未招募干员{{ stast_result.total.count - stast_result.total.own }}位，
-              您还没有招募到的是
+              未没有招募到的干员是以下
             </p>
             <div class="not_own_operator_wrap">
               <div class="operator_image_small_wrap"
-                   v-for="(charId,index) in stast_result.total.notOwn" :key="index">
-                <div :class="getOperatorSprite(charId)"></div>
+                   v-for="(operator,index) in stast_result.total.notOwn" :key="index">
+                <div :class="getOperatorSprite(operator.charId)"></div>
+                <div class="sprite_alt">{{ operator.name }}</div>
               </div>
             </div>
             <p>专三技能：{{ stast_result.total.skill.rank3 }}个，专二技能：{{ stast_result.total.skill.rank2 }}个，
@@ -339,56 +358,46 @@
 
             <p>其中练度最高的十位干员是</p>
 
-            <table class="dev_table">
+            <table class="max_operator_table">
               <tbody>
-              <tr>
-                <td colspan="9">练度前十干员</td>
-              </tr>
-              <tr>
-                <td>干员</td>
-                <td>精英</td>
-                <td>1技能</td>
-                <td>2技能</td>
-                <td>3技能</td>
-                <td>X模组</td>
-                <td>Y模组</td>
-                <td>消耗理智</td>
-              </tr>
+              <!--              <tr>-->
+              <!--                <td colspan="9">练度前十干员</td>-->
+              <!--              </tr>-->
               <tr v-for="(operator,index) in stast_result.max" :key="index">
                 <td>
                   <div class="operator_image_small_wrap" style="margin: auto">
                     <div :class="getOperatorSprite(operator.charId)"></div>
+                    <!--                    <div class="sprite_alt">{{ operator.name }}</div>-->
                   </div>
-                  <div>{{operator.name}}</div>
+
                 </td>
                 <td>{{ operator.elite }}</td>
-                <td>{{ operator.skill1 }}级</td>
-                <td>{{ operator.skill2 }}级</td>
-                <td>{{ operator.skill3 }}级</td>
-                <td>{{ operator.modX }}级</td>
-                <td>{{ operator.modY }}级</td>
-                <td>{{ operator.apCost.toFixed(0) }}</td>
+                <td v-for="(skill,index) in operator.skill" :key="index">
+
+                  <div class="stats_skill_image_wrap">
+                    <div :class="getSkillSprite(skill.iconId)"></div>
+                    <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
+                         v-show="operator[`skill${index+1}`]>1" class="stats_skill_rank">
+                    <!--                    <div class="sprite_alt"> {{ skill.name }}</div>-->
+                  </div>
+                </td>
+                <td v-for="(equip,index) in operator.equip" :key="index" v-show="operator[`mod${equip.typeName2}`]>0">
+
+                  <div class="stats_skill_image_wrap">
+                    <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>
+                    <div class="sprite_alt">{{ `${equip.typeName1}_${equip.typeName2}` }}</div>
+                  </div>
+                </td>
+
+                <td>
+                  <div class="stats_skill_image_wrap">
+                    <div :class="getItemSprite('AP_GAMEPLAY')"></div>
+                    <div class="sprite_alt">{{ operator.apCost.toFixed(0) }}</div>
+                  </div>
+                </td>
               </tr>
               </tbody>
             </table>
-          </div>
-          <div class="control_bar"
-               style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
-            总计消耗{{ ap_cost_count.toFixed(0) }} 理智
-          </div>
-          <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
-          <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
-          <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
-          <div class="control_bar item_cost_wrap" v-for="(itemList,type) in item_cost_list"
-               :key="type">
-            <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
-              <div class="image_item_wrap">
-                <div :class="getSprite(item.id,'item')"></div>
-                <div class="item_count">
-                  {{ strShowLength(item.count) }}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -530,23 +539,6 @@ function getCacheUserData() {
 function checkFirstPopup() {
   intro_popup_visible.value = !intro_popup_visible.value
   localStorage.setItem("first_popup", "done");
-}
-
-/**
- * 获取雪碧图
- * @param id 图片id string
- * @param type 图片类型 string (每类图片对应的css不一样）
- * @returns {string} css样式名
- */
-function getSprite(id, type) {
-  if ("mod" === type) return "bg-" + id + " sprite_mod";
-  if ("mod_rank" === type) return "bg-" + id + " sprite_mod_rank";
-  if ("skill" === type) return "bg-" + id + " sprite_skill";
-  if ("elite" === type) return "bg-" + id + " sprite_elite";
-  if ("potential" === type) return "bg-" + id + " sprite_potential";
-  if ("icon" === type) return "bg-skill_icon_" + id + " sprite_skill_icon";
-  if ("item" === type) return 'bg-' + id + " image_item"
-  return "bg-" + id + " sprite_avatar";
 }
 
 
@@ -1352,10 +1344,38 @@ function toBiliblili() {
   element.click();
 }
 
+/**
+ * 获取雪碧图
+ * @param id 图片id string
+ * @param type 图片类型 string (每类图片对应的css不一样）
+ * @returns {string} css样式名
+ */
+function getSprite(id, type) {
+  if ("mod" === type) return "bg-" + id + " sprite_mod";
+  if ("mod_rank" === type) return "bg-" + id + " sprite_mod_rank";
+  if ("skill" === type) return "bg-" + id + " sprite_skill";
+  if ("elite" === type) return "bg-" + id + " sprite_elite";
+  if ("potential" === type) return "bg-" + id + " sprite_potential";
+  if ("icon" === type) return "bg-skill_icon_" + id + " sprite_skill_icon";
+  if ("item" === type) return 'bg-' + id + " image_item"
+  return "bg-" + id + " sprite_avatar";
+}
+
 function getOperatorSprite(id) {
   return "bg-" + id + " operator_image_small";
 }
 
+function getSkillSprite(id) {
+  return "bg-skill_icon_" + id + " stats_skill_image";
+}
+
+function getEquipSprite(id) {
+  return "bg-mod" + id + " stats_equip_image";
+}
+
+function getItemSprite(id) {
+  return 'bg-' + id + " stats_item_image"
+}
 
 onMounted(() => {
   getCacheUserData()
@@ -1420,24 +1440,91 @@ onMounted(() => {
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.not_own_operator_wrap {
-  display: flex;
+
+.max_operator_table {
+  border-collapse: collapse;
+  text-align: center;
+  margin: 12px 0;
+
 }
 
-.operator_image_small_wrap {
-  width: 60px;
-  height: 60px;
-  overflow: hidden;
+.max_operator_table td {
+  padding: 2px;
+}
 
+.not_own_operator_wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.operator_image_small_wrap {
+  width: 55px;
+  height: 80px;
   position: relative;
 }
 
+.sprite_alt {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 50px;
+  color: #ff6a00;
+  font-weight: 600;
+  padding: 2px;
+  font-size: 14px;
+}
+
 .operator_image_small {
-  transform: scale(0.32);
+  transform: scale(0.3);
   /* border: 1px solid red; */
   border-radius: 0;
   position: absolute;
-  top: -58px;
-  left: -58px;
+  top: -68px;
+  left: -62px;
 }
+
+.stats_skill_image_wrap {
+  width: 50px;
+  height: 80px;
+  position: relative;
+}
+
+.stats_skill_rank {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  width: 18px;
+}
+
+.stats_skill_image {
+  transform: scale(0.39);
+  /* border: 1px solid red; */
+  border-radius: 0;
+  position: absolute;
+  top: -39px;
+  left: -39px;
+  opacity: 0.7;
+}
+
+.stats_equip_image {
+  transform: scale(0.20);
+  /* border: 1px solid red; */
+  border-radius: 0;
+  position: absolute;
+  top: -94px;
+  left: -94px;
+  opacity: 0.7;
+}
+
+.stats_item_image {
+  transform: scale(0.3);
+  /* border: 1px solid red; */
+  border-radius: 0;
+  position: absolute;
+  top: -70px;
+  left: -64px;
+
+}
+
 </style>

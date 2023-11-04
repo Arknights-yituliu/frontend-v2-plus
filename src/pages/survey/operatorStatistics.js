@@ -124,7 +124,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
 
 
 function getItemList(item_cost_count) {
-    let item_list = [[], [], [], [], [], []]
+    let item_list = [[], [], [], [], []]
 
     let ap_cost_count = 0;
 
@@ -134,33 +134,14 @@ function getItemList(item_cost_count) {
         const itemValueAp = item.itemValueAp
         const count = item.count;
         ap_cost_count += (itemValueAp * count)
+        item_list[(5-rarity)].push(item)
 
-        if (rarity === 5) {
-            item_list[1].push(item)
-        }
-        if (rarity === 4) {
-            if ("4001" === itemId || "2003" === itemId) {
-                item_list[0].push(item)
-            } else {
-                item_list[2].push(item)
-            }
-        }
-
-        if (rarity === 3) {
-            item_list[3].push(item)
-        }
-        if (rarity === 2) {
-            item_list[4].push(item)
-        }
-        if (rarity === 1) {
-            item_list[5].push(item)
-        }
 
     }
 
     for (let list of item_list) {
         list.sort((a, b) => {
-            return b.id - a.id
+            return b.count - a.count
         })
     }
 
@@ -387,7 +368,7 @@ function operatorStatistics(list) {
         for (const item of group_by_rarity[rarity]) {
 
             if (!item.own) {
-                operator_statistics_result["total"].notOwn.push(item.charId)
+                operator_statistics_result["total"].notOwn.push(item)
                 continue
             }
 

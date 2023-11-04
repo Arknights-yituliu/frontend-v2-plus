@@ -377,18 +377,18 @@
 }
 
 .image_item_wrap{
-  height:50px;
-  width: 70px;
+  height:40px;
+  width: 50px;
   position: relative;
   /* border: 1px red solid; */
-  margin: 4px;
+  margin:6px 8px;
 }
 
 .image_item{
   transform: scale(0.25);
   position: absolute;
-  left: -66px;
-  top:-66px
+  left: -64px;
+  top:-68px
 }
 
 .item_count{
