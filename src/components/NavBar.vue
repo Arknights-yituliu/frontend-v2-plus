@@ -139,7 +139,7 @@ let pageTitle = ref("");
 function getPageTitle(path) {
   if (path === "/") return (pageTitle.value = "材料一图流");
   
-  if(path.indexOf('tools/maa')) {
+  if(path.indexOf('tools/maa')>-1) {
     aside_collapse()
   }
 
