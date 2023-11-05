@@ -147,6 +147,15 @@
               </div>
             </div>
           </td>
+          <td @click="commonSort('modD','count')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>D模组解锁率</div>
+              <div>
+                <div class="sort_asc_icon" :style="sortIconClass('modD','asc')"></div>
+                <div class="sort_desc_icon" :style="sortIconClass('modD','desc')"></div>
+              </div>
+            </div>
+          </td>
         </tr>
 
 
@@ -196,13 +205,19 @@
             </div>
           </td>
           <td class="rank_table_7">
-            <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'count'), 1) }}</div>
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'count'), 2) }}</div>
             <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modX, 'rank1'), 1) }}</div>-->
             <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modX, 'rank2'), 1) }}</div>-->
             <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modX, 'rank3'), 1) }}</div>-->
           </td>
           <td class="rank_table_8">
-            <div>解锁：{{ getPercentage(getSurveyResult(result.modY, 'count'), 1) }}</div>
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modY, 'count'), 2) }}</div>
+            <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
+            <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
+            <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
+          </td>
+          <td class="rank_table_8">
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modD, 'count'), 2) }}</div>
             <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
             <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
             <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
@@ -237,27 +252,14 @@ function getCharStatisticsResult() {
     const {result,userCount,updateTime} = response.data
     for(const item of result){
       const charId =  item.charId
-      const char_info =  character_table_simple[charId]
-      let rank_info = {
-        charId: charId,
-        name: char_info.name,
-        rarity: char_info.rarity,
-        own: item.own,
-        elite: item.elite,
-        skill1: item.skill1,
-        skill2: item.skill2,
-        skill3: item.skill3,
-        modX: item.modX,
-        modY: item.modY,
-        profession: char_info.profession,
-        itemObtainApproach: char_info.itemObtainApproach,
-        mod: char_info.mod,
-        skill: char_info.skill,
-        show: true,
-      }
-
-      operators_statistics_list.value.push(rank_info)
+      let char_info =  character_table_simple[charId]
+      item.name = char_info.name
+      item.rarity = char_info.rarity
+      item.profession = char_info.profession
+      item.itemObtainApproach = char_info.itemObtainApproach
+      item.skill = char_info.skill
     }
+    operators_statistics_list.value = result
     addFilterCondition('rarity', 6)
     user_count.value = userCount ;
     update_time.value = updateTime;
@@ -401,9 +403,6 @@ function commonSort(property, condition) {
 
   const len = operators_statistics_list.value.length
 
-  for(const item of operators_statistics_list.value){
-    console.log(item.elite.rank2)
-  }
 
   for (let i = 0; i < len - 1; i++) {
     for (let j = 0; j < len - 1 - i; j++) {

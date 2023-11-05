@@ -70,7 +70,7 @@
       <c-button :color="'green'" @click="upload()">手动上传问卷</c-button>
       <!--      <button :class="btnClass('btn_statistics')" @click="clickBtn('btn_statistics');statisticsCollapse()">统计材料消耗 </button>-->
 
-      <c-button :color="'blue'" @click="toBiliblili()">建议与反馈</c-button>
+      <c-button :color="'blue'" @click="feedback()">建议与反馈</c-button>
     </div>
 
 
@@ -1329,13 +1329,11 @@ function clickBtn(btn_id) {
 }
 
 //转跳罗德岛基建Beta
-function toBiliblili() {
+function feedback() {
 
   const excelHref = "https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ"
   const element = document.createElement("a");
   element.style.display = "none";
-  // element.href = bilibiliHref;
-  // element.href = devHerf;
   element.href = excelHref;
   element.click();
 }
