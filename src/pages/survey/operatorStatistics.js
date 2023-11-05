@@ -249,7 +249,7 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
  * 按材料等级拆分材料
  * @param highest_rarity 最高材料等级 int
  * @param item_cost_obj 材料消耗原始数据 obj
- * @returns {*[]} 材料消耗表 arr
+ * @returns {[][]} item_list 材料消耗表 arr
  */
 
 function splitMaterial(highest_rarity, item_cost_obj) {
@@ -265,8 +265,9 @@ function splitMaterial(highest_rarity, item_cost_obj) {
                 const product_id = item.id   //材料id
                 const product_count = item.count; //材料总数
                 if (composite_table[product_id] !== void 0) {
-                    let {item_cost} = composite_table[product_id];//材料的合成列表
-                    for (const cost of item_cost) {
+                    let {itemCost} = composite_table[product_id];//材料的合成列表
+                    console.log(composite_table[product_id])
+                    for (const cost of itemCost) {
                         // const material_name = composite_list_element.name;  //合成原料名称
                         const material_id = cost.id;  //合成原料id
                         const material_count = cost.count;  //合成原料总数
@@ -293,42 +294,10 @@ function splitMaterial(highest_rarity, item_cost_obj) {
         }
     }
 
+    const {item_list} = getItemList(item_count)
 
-    let itemList = [[], [], [], [], [], []]
-    for (const itemId in item_count) {
-        const item = item_count[itemId]
-        const rarity = item.rarity
-        if (item.count > 0) {
-            if ("4001" === itemId || "2003" === itemId) {
-                itemList[0].push(item)
-                continue;
-            }
-            if (rarity === 5) {
-                itemList[1].push(item)
-            }
-            if (rarity === 4) {
-                itemList[2].push(item)
 
-            }
-            if (rarity === 3) {
-                itemList[3].push(item)
-            }
-            if (rarity === 2) {
-                itemList[4].push(item)
-            }
-            if (rarity === 1) {
-                itemList[5].push(item)
-            }
-
-        }
-    }
-
-    for (let list of itemList) {
-        list.sort((a, b) => {
-            return b.id - a.id
-        })
-    }
-    return itemList
+    return item_list
 }
 
 
@@ -416,7 +385,7 @@ function operatorStatistics(list) {
             if (item.rarity === 6) {
                 const item_cost =  getOperatorItemCost(item.charId,item.rarity,zone_ranks,item)
                 const {ap_cost_count} = getItemList(item_cost);
-                console.log(ap_cost_count)
+
                 item.apCost = ap_cost_count
                 operator_statistics_result.max.push(item)
             }
@@ -428,8 +397,9 @@ function operatorStatistics(list) {
     operator_statistics_result.max.sort((a, b) => {
         return b.apCost - a.apCost
     })
+
     operator_statistics_result.max = operator_statistics_result.max.slice(0, 10)
-   console.log(operator_statistics_result)
+
 
     return operator_statistics_result
 

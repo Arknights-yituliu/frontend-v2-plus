@@ -562,7 +562,7 @@ function getOperatorData() {
     let list = response.data; //后端返回的数据
     //转为前端的数据格式
     for (let index in operator_list.value) {
-      for (let e in list) {
+      for (let e of list) {
         if (e.charId === operator_list.value[index].charId) {
           if (!e.own) continue;
           operator_list.value[index].elite = e.elite;
@@ -1171,7 +1171,7 @@ function filterCharacterList() {
  * @param property 干员属性
  */
 function sortCharacterList(property) {
-  console.log(property);
+
   operator_list.value.sort((a, b) => {
     return b[property] - a[property];
   });
@@ -1266,7 +1266,7 @@ function statistics() {
   stast_detail.value = [stast_result.value.rarity6, stast_result.value.rarity5,
     stast_result.value.rarity4, stast_result.value.rarity3,
     stast_result.value.rarity2, stast_result.value.rarity1]
-  console.log(stast_result.value)
+
   item_cost_map.value = result.itemMap;
   item_cost_list.value = result.itemList;
   ap_cost_count.value = result.apCostCount;
@@ -1278,9 +1278,7 @@ function statistics() {
  * @param highest_rarity  材料最大星级
  */
 function splitMaterialByRarity(highest_rarity) {
-  const list = operatorStatistics.splitMaterial(highest_rarity, item_cost_map.value);
-  // console.table(list)
-  item_cost_list.value = list;
+  item_cost_list.value = operatorStatistics.splitMaterial(highest_rarity, item_cost_map.value);
 }
 
 // eslint-disable-next-line

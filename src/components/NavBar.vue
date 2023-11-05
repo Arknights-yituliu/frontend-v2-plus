@@ -17,7 +17,7 @@
 
     <div class="spacer"></div>
     <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
-    <navBar></navBar>
+    <login></login>
 
     <div class="drawer_wrap">
       <div class="drawer" id="drawer114">
@@ -57,7 +57,7 @@ import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
 import toolApi from "/src/api/tool";
 import { usePageContext } from "/src/renderer/usePageContext";
-import navBar from "/src/pages/survey/navBar.vue";
+import login from "/src/pages/survey/login.vue";
 import routesJson from "/src/static/json/routes.json";
 const pageContext = usePageContext();
 
