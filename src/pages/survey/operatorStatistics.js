@@ -69,7 +69,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
     const {elite, level, mainSkill, skill1, skill2, skill3, modX, modY} = target_ranks;
 
 
-    if (operator_item_cost_table[charId] === void 0) return;
+    if (operator_item_cost_table[charId] === void 0) return {};
     const operatorItemCost = operator_item_cost_table[charId];
     const {allSkill, skills} = operator_item_cost_table[charId];
     const levelApCost = getLevelUpCostByRarity(rarity,

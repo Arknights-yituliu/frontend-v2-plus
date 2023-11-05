@@ -259,7 +259,7 @@
               <div class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
             </div>
           </div>
-          <div class="control_bar" v-show="bindingList.length>0">
+          <div class="control_bar" >
             <div class="control_title" style="width: 140px;">导入账号不正确？</div>
             <div class="switch_btn_wrap">
               <div class="skland_desc">选择你想要导入的账号</div>
@@ -365,11 +365,13 @@
                 <td>
                   <div class="operator_image_small_wrap" style="margin: auto">
                     <div :class="getOperatorSprite(operator.charId)"></div>
-                    <div  :class="getEliteSprite(operator.elite)"></div>
+                    <div :class="getEliteSprite(operator.elite)"></div>
                   </div>
 
                 </td>
-                <td><div class="stats_level"> Lv.{{ operator.level>0?operator.level:0 }}</div></td>
+                <td>
+                  <div class="stats_level"> Lv.{{ operator.level > 0 ? operator.level : 0 }}</div>
+                </td>
                 <td v-for="(skill,index) in operator.skill" :key="index">
 
                   <div class="stats_skill_image_wrap">
@@ -385,7 +387,6 @@
                     <div class="sprite_alt">{{ `${equip.typeName1}_${equip.typeName2}` }}</div>
                   </div>
                 </td>
-                <td v-show="operator.equip.length<2"></td>
                 <td>
                   <div class="stats_skill_image_wrap">
                     <div :class="getItemSprite('AP_GAMEPLAY')"></div>
@@ -559,26 +560,26 @@ function getOperatorData() {
   //根据一图流的token查询用户填写的干员数据
   surveyApi.getSurveyOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
-
     //转为前端的数据格式
-    for (let i = 0; i < operator_list.value.length; i++) {
-      // characterList.value[i].own =false;
-      for (let j = 0; j < list.length; j++) {
-        if (list[j].charId === operator_list.value[i].charId) {
-          if (!list[j].own) continue;
-          operator_list.value[i].elite = list[j].elite;
-          operator_list.value[i].level = list[j].level;
-          operator_list.value[i].potential = list[j].potential;
-          operator_list.value[i].mainSkill = list[j].mainSkill;
-          operator_list.value[i].skill1 = list[j].skill1;
-          operator_list.value[i].skill2 = list[j].skill2;
-          operator_list.value[i].skill3 = list[j].skill3;
-          operator_list.value[i].modX = list[j].modX;
-          operator_list.value[i].modY = list[j].modY;
-          operator_list.value[i].own = list[j].own;
+    for (let index in operator_list.value) {
+      for (let e in list) {
+        if (e.charId === operator_list.value[index].charId) {
+          if (!e.own) continue;
+          operator_list.value[index].elite = e.elite;
+          operator_list.value[index].level = e.level;
+          operator_list.value[index].potential = e.potential;
+          operator_list.value[index].mainSkill = e.mainSkill;
+          operator_list.value[index].skill1 = e.skill1;
+          operator_list.value[index].skill2 = e.skill2;
+          operator_list.value[index].skill3 = e.skill3;
+          operator_list.value[index].modX = e.modX;
+          operator_list.value[index].modY = e.modY;
+          operator_list.value[index].modD = e.modD;
+          operator_list.value[index].own = e.own;
         }
       }
     }
+
 
     // statisticsCollapse()
     cMessage("导入了 " + list.length + " 条数据");
@@ -1362,7 +1363,7 @@ function getOperatorSprite(id) {
   return "bg-" + id + " operator_image_small";
 }
 
-function getEliteSprite(id){
+function getEliteSprite(id) {
   return "bg-elite" + id + " stats_elite_image";
 }
 
@@ -1371,7 +1372,7 @@ function getSkillSprite(id) {
 }
 
 function getEquipSprite(id) {
-  if(id<1) id =0
+  if (id < 1) id = 0
   return "bg-mod" + id + " stats_equip_image";
 }
 
@@ -1486,7 +1487,7 @@ onMounted(() => {
   left: -62px;
 }
 
-.stats_elite_image{
+.stats_elite_image {
   transform: scale(0.11);
   position: absolute;
   top: -60px;
@@ -1494,8 +1495,8 @@ onMounted(() => {
   background-color: #3f3f3f;
 }
 
-.stats_level{
-  margin-top:-20px;
+.stats_level {
+  margin-top: -20px;
   padding: 4px;
   font-size: 20px;
   font-weight: 600
