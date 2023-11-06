@@ -1,379 +1,411 @@
-import operatorItemCostTable from "@/static/json/survey/operator_item_cost_table.json";
-import levelCostTable from "@/static/json/survey/level_cost_table.json";
-import compositeTable from "@/static/json/survey/compositeTable.json";
-import itemTable from "@/static/json/survey/item_table.json";
+import operator_item_cost_table from "/src/static/json/survey/operator_item_cost_table.json";
+import level_cost_table from "/src/static/json/survey/level_cost_table.json";
+import composite_table from "/src/static/json/survey/composite_table.json";
+import item_table from "/src/static/json/survey/item_table.json";
 
 
-let itemCountStatistics = {};
+
+
+const zone_ranks = {
+    current_elite: 0,
+    current_level: 0,
+    current_mainSkill: 0,
+    current_skill1: 0,
+    current_skill2: 0,
+    current_skill3: 0,
+    current_modX: 0,
+    current_modY: 0
+}
 
 /**
  * 计算干员消耗材料
- * @param operatorList 干员列表
- * @returns {{apCostCount('理智消耗总量'): number, itemList('材料消耗表'): [], itemMap('材料原始数据'): {}|*}}
+ * @param operator_list 干员列表
+ * @returns {{apCostCount: number, itemList: [], itemMap: {}}} 理智消耗总量，物品列表，物品列表
  */
-function calAPCost(operatorList) {
+function calAPCost(operator_list) {
 
-    itemCountStatistics = {};
+    let item_cost_count = {};
 
-    for (let c in operatorList) {
-        const operator = operatorList[c];
+    // 计算干员的消耗材料
+    for (let operator of operator_list) {
+        const item_cost  =  getOperatorItemCost(operator.charId, operator.rarity, zone_ranks, operator)
 
-        const charId = operator.charId;
-
-        // const name = operator.name;
-        const rarity = operator.rarity;
-        const elite = operator.elite;
-        const level = operator.level;
-        if (operatorItemCostTable[charId] == void 0) continue;
-        const operatorItemCost = operatorItemCostTable[charId];
-        const levelApCost = levelApCostCal(rarity, elite, level);
-
-        for (const itemId in levelApCost) {
-            let count = levelApCost[itemId];
-            updateItemCostMap(itemId, count)
-        }
-
-        for (let i = 1; i <= operator.elite; i++) {
-            for (let itemId in operatorItemCost.elite[i]) {
-                let count = operatorItemCost.elite[i][itemId];
-                updateItemCostMap(itemId, count)
-            }
-        }
-
-        // console.log('基础技能：',operator.mainSkill)
-        for (let i = 0; i < operator.mainSkill; i++) {
-            for (let itemId in operatorItemCost.allSkill[i]) {
-                let count = operatorItemCost.allSkill[i][itemId];
-                updateItemCostMap(itemId, count)
-            }
-        }
-
-        for (let i = 0; i < operator.skill1; i++) {
-            for (let itemId in operatorItemCost.skills[0][i]) {
-                let count = operatorItemCost.skills[0][i][itemId];
-                updateItemCostMap(itemId, count)
-            }
-        }
-
-        for (let i = 0; i < operator.skill2; i++) {
-            for (let itemId in operatorItemCost.skills[1][i]) {
-                let count = operatorItemCost.skills[1][i][itemId];
-                updateItemCostMap(itemId, count)
-            }
-        }
-
-        if(charId==='char_4088_hodrer'){
-          console.log(operatorItemCost.skills[2])
-        }
-        for (let i = 0; i < operator.skill3; i++) {
-            for (let itemId in operatorItemCost.skills[2][i]) {
-                let count = operatorItemCost.skills[2][i][itemId];
-                updateItemCostMap(itemId, count)
-            }
-        }
-
-
-        if (operator.equip != void 0) {
-            for (const mod of operator.equip) {
-                if ('X' == mod.typeName2) {
-                    for (let i = 0; i < operator.modX; i++) {
-                        if (operatorItemCost.modX == void 0) continue;
-                        for (let itemId in operatorItemCost.modX[i]) {
-                            let count = operatorItemCost.modX[i][itemId];
-                            updateItemCostMap(itemId, count)
-                        }
-                    }
-                }
-
-                if ('Y' == mod.typeName2) {
-                    for (let i = 0; i < operator.modY; i++) {
-                        if (operatorItemCost.modY == void 0) continue;
-                        for (let itemId in operatorItemCost.modY[i]) {
-                            let count = operatorItemCost.modY[i][itemId];
-                            updateItemCostMap(itemId, count)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    let itemList = []
-    let rarityEXList = []
-    let rarity5List = []
-    let rarity4List = []
-    let rarity3List = []
-    let rarity2List = []
-    let rarity1List = []
-
-    let apCostCount = 0;
-
-    for (const itemId in itemCountStatistics) {
-        const item = itemCountStatistics[itemId]
-        const rarity = item.rarity;
-        const itemValueAp = item.itemValueAp
-        const count = item.count;
-        apCostCount += (itemValueAp * count)
-
-
-        if (rarity == 5) {
-            rarity5List.push(item)
-        }
-        if (rarity == 4) {
-            if ("4001" == itemId || "2003" == itemId) {
-                rarityEXList.push(item)
-            } else {
-                rarity4List.push(item)
-            }
-        }
-        if (rarity == 3) {
-            rarity3List.push(item)
-        }
-        if (rarity == 2) {
-            rarity2List.push(item)
-        }
-        if (rarity == 1) {
-            rarity1List.push(item)
+        for(let id in item_cost){
+            updateItemCostCount(item_cost_count,id,item_cost[id].count)
         }
 
     }
 
+    //获得消耗材料的明细集合
+    const {item_list, ap_cost_count} = getItemList(item_cost_count)
 
-    rarity5List.sort((a, b) => {
-        return b.id - a.id
-    })
-
-    rarity4List.sort((a, b) => {
-        return b.id - a.id
-    })
-
-    rarity3List.sort((a, b) => {
-        return b.id - a.id
-    })
-
-    itemList.push(rarityEXList)
-    itemList.push(rarity5List)
-    itemList.push(rarity4List)
-    itemList.push(rarity3List)
-    itemList.push(rarity2List)
-    itemList.push(rarity1List)
-
-
-    const result = {
-        itemList: itemList,
-        apCostCount: apCostCount,
-        itemMap: itemCountStatistics
-    }
-    return result;
-}
-
-function updateItemCostMap(id, count) {
-    if (itemTable[id] == void 0) {
-        return;
-    }
-
-    const rarity = itemTable[id].rarity;
-    const name = itemTable[id].name;
-    let itemValueAp = itemTable[id].itemValueAp;
-
-    let item = {
-        id: id,
-        name: name,
-        rarity: rarity,
-        count: count,
-        itemValueAp: itemValueAp
-    }
-
-    if (itemCountStatistics[id] != void 0) {
-        const last_item = itemCountStatistics[id]
-        item.count = count + last_item.count
-        itemCountStatistics[id] = item
-    } else {
-        item.count = count
-        itemCountStatistics[id] = item
+    return {
+        itemList: item_list, apCostCount: ap_cost_count, itemMap: item_cost_count
     }
 }
 
 /**
  *
- * @param rarity 星级
- * @param elite 精英等级
- * @param level 等级
- * @returns {{"4001": number, "2003": number}} 龙门币和经验书的消耗情况
+ * @param charId 干员id
+ * @param rarity 干员星级
+ * @param current_ranks 当前干员练度
+ * @param target_ranks 目标干员练度
+ * @returns {{}}
  */
-function levelApCostCal(rarity, elite, level) {
+function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
 
-    if (rarity == 6) {
-        return getLevelCostByRarity(rarity, elite, level, 49, 79)
+    let item_cost = {}
+    const {
+        current_elite,
+        current_level,
+        current_mainSkill,
+        current_skill1,
+        current_skill2,
+        current_skill3,
+        current_modX,
+        current_modY
+    } = current_ranks;
+
+    const {elite, level, mainSkill, skill1, skill2, skill3, modX, modY} = target_ranks;
+
+
+    if (operator_item_cost_table[charId] === void 0) return {};
+    const operatorItemCost = operator_item_cost_table[charId];
+    const {allSkill, skills} = operator_item_cost_table[charId];
+    const levelApCost = getLevelUpCostByRarity(rarity,
+        {current_elite:current_elite, current_level:current_level},
+        {target_elite:elite, target_level:level});
+
+    for (const itemId in levelApCost) {
+        let count = levelApCost[itemId];
+        updateItemCostCount(item_cost,itemId, count)
     }
 
-    if (rarity == 5) {
-        return getLevelCostByRarity(rarity, elite, level, 49, 69)
+    for (let i = current_elite; i <= elite; i++) {
+        for (let itemId in operatorItemCost.elite[i]) {
+            let count = operatorItemCost.elite[i][itemId];
+            updateItemCostCount(item_cost,itemId, count)
+        }
     }
 
-    if (rarity == 4) {
-        return getLevelCostByRarity(rarity, elite, level, 44, 59)
+    for (let i = current_mainSkill; i < mainSkill; i++) {
+        for (let itemId in allSkill[i]) {
+            let count = allSkill[i][itemId];
+            updateItemCostCount(item_cost,itemId, count)
+        }
     }
 
-    if (rarity == 3) {
-        return getLevelCostByRarity(rarity, elite, level, 39, 54)
+    const current_skill_ranks = [current_skill1, current_skill2, current_skill3]
+    const target_skill_ranks = [skill1, skill2, skill3]
+
+    for (let index in current_skill_ranks) {
+        for (let rank = current_skill_ranks[index]; rank < target_skill_ranks[index]; rank++) {
+            for (let itemId in skills[index][rank]) {
+                let count = skills[index][rank][itemId];
+                updateItemCostCount(item_cost,itemId, count)
+            }
+        }
     }
 
-    if (rarity == 2) {
-        return getLevelCostByRarity(rarity, elite, level, 29, 0)
+    const current_mod_ranks = {"X": current_modX, "Y": current_modY}
+    const target_mod_ranks = {"X": modX, "Y": modY}
+    for (const type in current_mod_ranks) {
+        if (operatorItemCost[`mod${type}`] === void 0) continue;
+        for (let i = current_mod_ranks[type]; i < target_mod_ranks[type]; i++) {
+            for (let itemId in operatorItemCost[`mod${type}`][i]) {
+                let count = operatorItemCost[`mod${type}`][i][itemId];
+                updateItemCostCount(item_cost,itemId, count)
+            }
+        }
     }
 
-    if (rarity == 1) {
-        return getLevelCostByRarity(rarity, elite, level, 29, 0)
-    }
+    return item_cost;
 }
 
 
-function getLevelCostByRarity(rarity, elite, level, elite_0_max_level, elite_1_max_level) {
-    let LMDCost = 0;
-    let EXPCost = 0;
+function getItemList(item_cost_count) {
+    let item_list = [[], [], [], [], []]
 
-    if (elite > 0) {
-        LMDCost += levelCostTable['elite0'][elite_0_max_level].LMDCount
-        EXPCost += levelCostTable['elite0'][elite_0_max_level].EXPCount
-        if (rarity > 2) {
-            LMDCost += (5000 * (rarity - 1))
-        }
+    let ap_cost_count = 0;
+
+    for (const itemId in item_cost_count) {
+        const item = item_cost_count[itemId]
+        const rarity = item.rarity;
+        const itemValueAp = item.itemValueAp
+        const count = item.count;
+        ap_cost_count += (itemValueAp * count)
+        item_list[(5-rarity)].push(item)
+
+
     }
 
-    if (elite > 1) {
-        LMDCost += levelCostTable['elite1'][elite_1_max_level].LMDCount
-        EXPCost += levelCostTable['elite1'][elite_1_max_level].EXPCount
-        if (rarity > 3) {
-            LMDCost += (60000 * (rarity - 3))
-        }
+    for (let list of item_list) {
+        list.sort((a, b) => {
+            return b.count - a.count
+        })
     }
 
-    if (level > 0) {
-        LMDCost += levelCostTable['elite' + elite][level - 1].LMDCount
-        EXPCost += levelCostTable['elite' + elite][level - 1].EXPCount
+    return {item_list, ap_cost_count}
+}
+
+function updateItemCostCount(result,id, count) {
+    if (item_table[id] === void 0) return;
+
+    let item = {
+        id: id,
+        name: item_table[id].name,
+        rarity: item_table[id].rarity,
+        count: count,
+        itemValueAp: item_table[id].itemValueAp
     }
 
+    if (result[id]) {
+        const last_item = result[id]
+        item.count = count + last_item.count
+        result[id] = item
+    } else {
+        item.count = count
+        result[id] = item
+    }
+}
 
+const rarity_level_table = {
+    6: {elite0_max_level: 50, elite1_max_level: 80},
+    5: {elite0_max_level: 50, elite1_max_level: 70},
+    4: {elite0_max_level: 45, elite1_max_level: 60},
+    3: {elite0_max_level: 40, elite1_max_level: 55},
+    2: {elite0_max_level: 30, elite1_max_level: 0},
+    1: {elite0_max_level: 30, elite1_max_level: 0}
+}
 
-    return {
-        "4001": LMDCost,
-        "2003": parseInt(EXPCost / 1000)
+/**
+ *
+ * @param rarity 星级
+ * @param current_elite 当前精英等级
+ * @param current_level 当前等级
+ * @param target_elite 目标精英等级
+ * @param target_level 目标等级
+ * @returns {{"4001": number, "2003": number}|{level_cost: {"4001": number, "2003": number}}}
+ */
+function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_elite, target_level}) {
+
+    let level_cost = {
+        "4001": 0, "2003": 0
+    }
+
+    if (!rarity_level_table[rarity]) return {
+        level_cost
     };
+
+    const {elite0, elite1, elite2} = level_cost_table
+    const {elite0_max_level, elite1_max_level} = rarity_level_table[rarity]
+
+    let current_level_0 = current_elite === 0?current_level:0;
+    let current_level_1  = current_elite === 1?current_level:0;
+    let current_level_2  = current_elite === 2?current_level:0;
+    if(current_elite>0) current_level_0 =  elite0_max_level
+    if(current_elite>1) current_level_1 =  elite1_max_level
+
+    let target_level_0 = target_elite === 0?target_level:0;
+    let target_level_1  = target_elite === 1?target_level:0;
+    let target_level_2  = target_elite === 2?target_level:0;
+    if(target_elite>0) target_level_0 =  elite0_max_level
+    if(target_elite>1) target_level_1 =  elite1_max_level
+
+
+    for (let i = current_level_0; i < target_level_0; i++) {
+        const {gold, exp} = elite0[i];
+        level_cost["4001"] += gold
+        level_cost["2003"] += exp
+    }
+
+    for (let i = current_level_1; i < target_level_1; i++) {
+        const {gold, exp} = elite1[i];
+        level_cost["4001"] += gold
+        level_cost["2003"] += exp
+    }
+
+    for (let i = current_level_2; i < target_level_2; i++) {
+        const {gold, exp} = elite2[i];
+        level_cost["4001"] += gold
+        level_cost["2003"] += exp
+    }
+
+
+    if (rarity > 2 && current_elite < 1 && target_elite > 0) {
+        level_cost["4001"] += (5000 * (rarity - 1))
+    }
+
+    if (rarity > 3 && current_elite < 2 && target_elite > 1) {
+        level_cost["4001"] += (60000 * (rarity - 3))
+    }
+
+
+    level_cost["2003"] = level_cost["2003"]/1000
+    return level_cost;
 }
 
 /**
  * 按材料等级拆分材料
  * @param highest_rarity 最高材料等级 int
  * @param item_cost_obj 材料消耗原始数据 obj
- * @returns {*[]} 材料消耗表 arr
+ * @returns {[][]} item_list 材料消耗表 arr
  */
 
 function splitMaterial(highest_rarity, item_cost_obj) {
 
-    let item_cost_obj_copy = JSON.parse(JSON.stringify(item_cost_obj))
-    let itemList = []
-    let rarityEXList = []
-    let rarity5List = []
-    let rarity4List = []
-    let rarity3List = []
-    let rarity2List = []
-    let rarity1List = []
-
+    let item_count = JSON.parse(JSON.stringify(item_cost_obj))
 
     for (let rarity = 5; rarity > highest_rarity; rarity--) {
-        console.log(rarity)
 
-        for (const itemId in item_cost_obj_copy) {
-            const item = item_cost_obj_copy[itemId]
-            if (item.rarity == rarity) {
+
+        for (const itemId in item_count) {
+            const item = item_count[itemId]
+            if (item.rarity === rarity) {
                 const product_id = item.id   //材料id
-                const product_name = item.name //材料名称
                 const product_count = item.count; //材料总数
-                if (compositeTable[product_name] != void 0) {
-                    let composite_list = compositeTable[product_name]  //材料的合成列表
-                    for (const composite_list_element of composite_list) {
+                if (composite_table[product_id] !== void 0) {
+                    let {itemCost} = composite_table[product_id];//材料的合成列表
+                    console.log(composite_table[product_id])
+                    for (const cost of itemCost) {
                         // const material_name = composite_list_element.name;  //合成原料名称
-                        const material_id = composite_list_element.id;  //合成原料id
-                        const material_count = composite_list_element.count;  //合成原料总数
-                        let new_item = item_cost_obj_copy[material_id];
-                        if(new_item == void 0 ) {
-                           const item =  itemTable[material_id]
-                           new_item = {
-                               count:0,
-                               id:material_id,
-                               itemValueAp:item.itemValueAp,
-                               name:item.name,
-                               rarity:item.rarity
-                           }
+                        const material_id = cost.id;  //合成原料id
+                        const material_count = cost.count;  //合成原料总数
+                        let new_item = item_count[material_id];
+                        // 如果没有这个材料添加一个
+                        if (new_item === void 0) {
+                            const item = item_table[material_id]
+                            new_item = {
+                                count: 0,
+                                id: material_id,
+                                itemValueAp: item.itemValueAp,
+                                name: item.name,
+                                rarity: item.rarity
+                            }
                         }
                         new_item.count = new_item.count + product_count * material_count;
-                        item_cost_obj_copy[material_id] = new_item;
+                        item_count[material_id] = new_item;
                     }
-
-                    let new_item = item_cost_obj_copy[product_id];
+                    let new_item = item_count[product_id];
                     new_item.count = 0;
-                    item_cost_obj_copy[product_id] = new_item;
+                    item_count[product_id] = new_item;
                 }
             }
         }
     }
 
+    const {item_list} = getItemList(item_count)
 
-    // console.log(item_cost_map)
 
-    for (const itemId in item_cost_obj_copy) {
-        const item = item_cost_obj_copy[itemId]
-        const rarity = item.rarity
-        if (item.count > 0) {
-            if (rarity == 5) {
-                rarity5List.push(item)
-            }
-            if (rarity == 4) {
-                if ("4001" == itemId || "2003" == itemId) {
-                    rarityEXList.push(item)
-                } else {
-                    rarity4List.push(item)
-                }
-            }
-            if (rarity == 3) {
-                rarity3List.push(item)
-            }
-            if (rarity == 2) {
-                rarity2List.push(item)
-            }
-            if (rarity == 1) {
-                rarity1List.push(item)
-            }
+    return item_list
+}
 
+
+function operatorStatistics(list) {
+
+    let group_by_rarity = {}
+    for (const item of list) {
+        if (!group_by_rarity[`rarity${item.rarity}`]) {
+            group_by_rarity[`rarity${item.rarity}`] = [item]
+        } else {
+            group_by_rarity[`rarity${item.rarity}`].push(item)
         }
     }
 
-    rarity5List.sort((a, b) => {
-        return b.id - a.id
+
+
+    let operator_statistics_result = {
+        max: []
+    }
+
+    for (const key of ['total','rarity6','rarity5','rarity4','rarity3','rarity2','rarity1']) {
+        operator_statistics_result[key] = {
+            notOwn:[],
+            count: 0,
+            own: 0,
+            skill: {rank1:0,rank2:0,rank3:0},
+            mod: {rank1:0,rank2:0,rank3:0},
+            modX: {rank1:0,rank2:0,rank3:0},
+            modY: {rank1:0,rank2:0,rank3:0},
+        }
+    }
+
+
+    for (const rarity in group_by_rarity) {
+        operator_statistics_result[rarity].count = group_by_rarity[rarity].length
+        operator_statistics_result["total"].count += group_by_rarity[rarity].length
+        for (const item of group_by_rarity[rarity]) {
+
+            if (!item.own) {
+                operator_statistics_result["total"].notOwn.push(item)
+                continue
+            }
+
+            operator_statistics_result[rarity].own++
+            operator_statistics_result["total"].own++
+
+
+            for (const index of [1, 2, 3]) {
+                if (item[`skill${index}`] === 1) {
+                    operator_statistics_result[rarity].skill.rank1++
+                    operator_statistics_result["total"].skill.rank1++
+                }
+                if (item[`skill${index}`] === 2) {
+                    operator_statistics_result[rarity].skill.rank2++
+                    operator_statistics_result["total"].skill.rank2++
+                }
+                if (item[`skill${index}`] === 3) {
+                    operator_statistics_result[rarity].skill.rank3++
+                    operator_statistics_result["total"].skill.rank3++
+                }
+            }
+
+
+            for (const type of ['X', 'Y']) {
+                if (item[`mod${type}`] === 1) {
+                    operator_statistics_result[rarity][`mod${type}`].rank1++
+                    operator_statistics_result[rarity][`mod`].rank1++
+                    operator_statistics_result["total"][`mod${type}`].rank1++
+                    operator_statistics_result["total"][`mod`].rank1++
+                }
+                if (item[`mod${type}`] === 2) {
+                    operator_statistics_result[rarity][`mod${type}`].rank2++
+                    operator_statistics_result[rarity][`mod`].rank2++
+                    operator_statistics_result["total"][`mod${type}`].rank2++
+                    operator_statistics_result["total"][`mod`].rank2++
+                }
+                if (item[`mod${type}`] === 3) {
+                    operator_statistics_result[rarity][`mod${type}`].rank3++
+                    operator_statistics_result[rarity][`mod`].rank3++
+                    operator_statistics_result["total"][`mod${type}`].rank3++
+                    operator_statistics_result["total"][`mod`].rank3++
+                }
+            }
+
+            if (item.rarity === 6) {
+                const item_cost =  getOperatorItemCost(item.charId,item.rarity,zone_ranks,item)
+                const {ap_cost_count} = getItemList(item_cost);
+
+                item.apCost = ap_cost_count
+                operator_statistics_result.max.push(item)
+            }
+            // if (item.modX > 0) operatorStatisticsResult[rarity].modX++
+            // if (item.modY > 0) operatorStatisticsResult[rarity].modY++
+        }
+    }
+
+    operator_statistics_result.max.sort((a, b) => {
+        return b.apCost - a.apCost
     })
 
-    rarity4List.sort((a, b) => {
-        return b.id - a.id
-    })
+    operator_statistics_result.max = operator_statistics_result.max.slice(0, 10)
 
-    rarity3List.sort((a, b) => {
-        return b.id - a.id
-    })
 
-    itemList.push(rarityEXList)
-    itemList.push(rarity5List)
-    itemList.push(rarity4List)
-    itemList.push(rarity3List)
-    itemList.push(rarity2List)
-    itemList.push(rarity1List)
-    // console.table(itemList)
+    return operator_statistics_result
 
-    return itemList
 }
 
 
 export default {
-    calAPCost, splitMaterial
+    calAPCost, splitMaterial, operatorStatistics
 }

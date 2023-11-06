@@ -20,8 +20,8 @@ async function render(pageContext) {
   } else {
     appHtml = `<div id="client_only" style="width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 200px;">
                 <img style="width: 128px;" src="/image/website/icon-large.webp" />
-                <div style="font-size: 32px; font-weight: bold; font-family: sans-serif; margin: 40px 0 10px 0;">${title}</div>
-                <div style="font-size: 32px; font-family: sans-serif;">加载中……</div>
+                <div style="font-size: 32px; font-weight: bold;  margin: 40px 0 10px 0;">${title}</div>
+                <div style="font-size: 32px; ">加载中……</div>
               </div>`;
   }
 

@@ -27,30 +27,31 @@
 
 <script setup>
 //导航
-import "@/assets/css/layout/main.css";
-import "@/assets/css/layout/aside.css";
-import "@/assets/css/layout/navBar.css";
-import "@/assets/css/layout/basic.css";
+import "/src/assets/css/layout/main.css";
+import "/src/assets/css/layout/aside.css";
+import "/src/assets/css/layout/navBar.css";
+import "/src/assets/css/layout/basic.css";
+import "/src/assets/css/layout/theme.css"
 
-
-import "@/assets/css/stage_v2.css";
-import "@/assets/css/store_v2.css";
-import "@/assets/css/sprite_item.css";
-import "@/assets/css/sprite_style.css";
-import "@/assets/css/sprite_icon.css";
-import "@/assets/css/common.css";
+import "/src/assets/css/stage_v2.css";
+import "/src/assets/css/store_v2.css";
+import "/src/assets/css/sprite_item.css";
+import "/src/assets/css/sprite_style.css";
+import "/src/assets/css/sprite_icon.css";
+import "/src/assets/css/common.css";
 import "/src/assets/css/about.css";
 
-import "@/assets/css/stage_v3.css";
+import "/src/assets/css/stage_v3.css";
+
 
 // 旧版css，待修改
-// import "@/assets/css/recruit.css";
+// import "/src/assets/css/recruit.css";
 
-import NavBar from "@/components/NavBar.vue";
-import myfooter from "@/components/myfooter.vue";
-import myaside from "@/components/aside.vue";
+import NavBar from "/src/components/NavBar.vue";
+import myfooter from "/src/components/myfooter.vue";
+import myaside from "/src/components/aside.vue";
 
-import { usePageContext } from "@/renderer/usePageContext";
+import { usePageContext } from "/src/renderer/usePageContext";
 
 const pageContext = usePageContext();
 

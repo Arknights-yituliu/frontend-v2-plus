@@ -113,15 +113,7 @@ export default {
       // console.log('item',theme);
       this.opETextTheme = "op_title_etext_" + theme;
     },
-    findAllItemValue() {
-      storeApi.findAllItem(this.valueVerison).then((response) => {
-        this.itemList = [];
-        // for (let i in response.data) {
-        //   this.itemList.push(response.data[i]);
-        // }
-        this.itemList = response.data;
-      });
-    },
+
 
     //切换价值单位
     switchUnit(index) {

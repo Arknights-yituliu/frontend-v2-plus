@@ -17,7 +17,7 @@
 
     <div class="spacer"></div>
     <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
-    <navBar></navBar>
+    <login></login>
 
     <div class="drawer_wrap">
       <div class="drawer" id="drawer114">
@@ -52,13 +52,13 @@
 </template>
 
 <script setup>
-import {ref, watch, computed, inject, onMounted, onBeforeMount} from "vue";
+import {ref, watch, computed, inject, onMounted} from "vue";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 import cookie from "js-cookie";
-import toolApi from "@/api/tool";
-import { usePageContext } from "@/renderer/usePageContext";
-import navBar from "@/pages/survey/navBar.vue";
-import routesJson from "@/static/json/routes.json";
+import toolApi from "/src/api/tool";
+import { usePageContext } from "/src/renderer/usePageContext";
+import login from "/src/pages/survey/login.vue";
+import routesJson from "/src/static/json/routes.json";
 const pageContext = usePageContext();
 
 const theme = inject("theme");
@@ -137,7 +137,11 @@ const route = computed(() => {
 let pageTitle = ref("");
 
 function getPageTitle(path) {
-  if (path == "/") return (pageTitle.value = "材料一图流");
+  if (path === "/") return (pageTitle.value = "材料一图流");
+  
+  if(path.indexOf('tools/maa')>-1) {
+    aside_collapse()
+  }
 
   for (let i of routes.value) {
     if (i.isChild) {

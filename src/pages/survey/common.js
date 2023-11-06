@@ -71,10 +71,15 @@ function filterByCharacterProperty(filterCondition, characterInfo) {
     for (const property in filterCondition) {
 
         if (property === 'rarity' || property === 'profession' || property === 'own' ||
-            property === 'mod' || property === 'itemObtainApproach') {
+            property === 'itemObtainApproach') {
             const flag = determineProperty(filterCondition, characterInfo, property);
             show = show && flag
         }
+        if(property === 'equip'){
+            const flag = determineHasProperty(filterCondition, characterInfo, property);
+            show = show && flag
+        }
+
         if (property === 'year') {
             const flag = determineYear(filterCondition, characterInfo);
             show = show && flag
@@ -99,6 +104,17 @@ function determineProperty(filterCondition, characterInfo, property) {
         }
     }
     return false;
+}
+
+function determineHasProperty(filterCondition, characterInfo, property) {
+    if (filterCondition[property].length === 0) return true;
+    for (let condition of filterCondition[property]) {
+
+        if (((characterInfo[property] == void 0) == condition)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
@@ -196,7 +212,6 @@ function scoreListInit() {
             date: baseInfo.date,
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
-            mod: baseInfo.mod != void 0,
             show: true,
         };
 
@@ -227,7 +242,6 @@ function rankingListInit() {
             modY: {'rank3': 0},
             profession: baseInfo.profession,
             itemObtainApproach: baseInfo.itemObtainApproach,
-            mod: baseInfo.mod != void 0,
             skill: baseInfo.skill,
             show: true,
         };

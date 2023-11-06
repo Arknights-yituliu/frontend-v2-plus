@@ -2,30 +2,30 @@
     display: flex;
 }
 
-.schedule_control_wrap{
- display: flex;
- flex-wrap: wrap;
+.schedule_control_wrap {
+    display: flex;
+    flex-wrap: wrap;
 
 
 }
 
-.schedule_control{
+.schedule_control {
     margin: 4px;
     padding: 4px;
-    box-shadow: 1px 1px 1px 1px #e5e5e5,-1px -1px 1px 1px #e5e5e5;
+    box-shadow: 1px 1px 1px 1px #e5e5e5, -1px -1px 1px 1px #e5e5e5;
 }
 
-.schedule_control_option{
+.schedule_control_option {
     display: flex;
     align-items: center;
     margin: 8px;
 }
 
-.room_times_wrap{
+.room_times_wrap {
     display: flex;
 }
 
-.room_times{
+.room_times {
 
 }
 
@@ -33,31 +33,31 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    width: 480px;
+    width: 520px;
 }
 
 .room_wrap_center {
     display: flex;
     flex-wrap: wrap;
-    width: 360px;
+    width: 460px;
 }
 
 .room_wrap_right {
     display: flex;
     flex-wrap: wrap;
-    width: 180px;
+    width: 200px;
     align-content: flex-start;
 }
 
 .room_bg {
-    padding: 1px;
+    padding: 4px;
     display: flex;
     justify-content: center;
     margin: 4px;
     border-radius: 3px;
     flex-wrap: wrap;
     font-weight: 600;
-    height: 90px;
+    height: 110px;
     /*height: 58px;*/
 }
 
@@ -65,62 +65,68 @@
 
 }
 
-.room_name{
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
+.room_name {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
 }
 
 .trading {
-    border-left: 4px solid #0288d1;
+
     background-color: #c2e9ff;
     color: #0288d1;
-    width: 200px;
+    width: 240px;
 }
 
 .manufacture {
-    border-left: 4px solid #ffbc00;
+
     background-color: #ffe6b9;
     color: #ff9900;
-    width: 200px;
+    width: 240px;
 }
 
 .power {
-    border-left: 4px solid #43a047;
+
     background-color: #b8ffa4;
     color: #43a047;
     width: 130px;
 }
 
 .control {
-    border-left: 4px solid #1b5e20;
+
     background-color: #b8ffa4;
     color: #1b5e20;
-    width: 390px;
+    width: 500px;
 }
 
 .dormitory {
-    border-left: 4px solid #00cde8;
+
     background-color: #91faea;
     color: #0097e8;
-    width: 390px;
+    width: 460px;
 }
 
 .meeting {
-    border-left: 4px solid #ff8800;
+
     background-color: #ffca87;
-    width: 160px;
+    width: 200px;
     color: #ff8800
 }
 
 .hire {
-    border-left: 4px solid #606060;
+
     background-color: #a9a9a9;
-    width: 160px;
+    width: 200px;
     color: #606060;
 }
 
-.check_image_wrap{
+.room_control {
+    display: flex;
+    align-items: center;
+    margin: 12px;
+}
+
+.check_image_wrap {
     width: 80px;
     height: 80px;
     margin: 4px;
@@ -137,15 +143,20 @@
     transform: scale(0.5);
 }
 
-.selected_operator_wrap{
-    margin:8px;
+.selected_operator_wrap {
+    margin: 8px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     height: 70px;
 }
 
-.selected_room_title{
+.room_popup_wrap {
+    margin: 20px auto;
+
+}
+
+.room_popup_title {
     width: 100%;
     text-align: center;
     font-size: 20px;
@@ -154,41 +165,77 @@
 }
 
 .operator_image_wrap {
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    width: 70px;
     margin: 4px;
     position: relative;
     border-radius: 4px;
     border: 1px solid #858585;
-    background-color: #e5e5e5;
+    background-color: rgba(255, 255, 255, 0.41);
     overflow: hidden;
+}
 
+.show_name {
+    height: 90px;
+    color: black;
+}
+
+.operator_name {
+    position: absolute;
+    top: 72px;
+    text-align: center;
+    width: 100%;
+    font-weight: 600;
 }
 
 .operator_image {
     position: absolute;
-    top: -66px;
-    left: -64px;
-    transform: scale(0.28);
+    top: -56px;
+    left: -56px;
+    transform: scale(0.4);
 }
 
-.operator_check_box{
+.operator_check_box {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-.operator_check_box_option{
+.operator_check_box_option {
     width: 100%;
     display: flex;
     align-items: center;
 }
 
-.building_buff_name{
+.building_buff_name {
     display: inline-block;
     margin: 4px;
 }
 
-.building_buff_description{
+.building_buff_description {
     width: 300px;
+}
+
+
+.product_image_wrap {
+    height: 50px;
+    width: 50px;
+    margin: 4px;
+    position: relative;
+    border-radius: 4px;
+    /*border: 1px solid #858585;*/
+    /*background-color: #e5e5e5;*/
+    overflow: hidden;
+}
+
+.product_image {
+    position: absolute;
+    top: -66px;
+    left: -66px;
+    transform: scale(0.3);
+}
+
+
+.product_image_select {
+    background-color: hotpink;
 }

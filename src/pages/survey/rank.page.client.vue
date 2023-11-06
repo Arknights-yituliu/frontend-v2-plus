@@ -13,11 +13,11 @@
     </div>
 
     <!-- 筛选模块 -->
-    <div class="collapse_item_wrap" id="filter_box_wrap">
-      <div class="collapse_item" id="filter_box">
-        <div class="collapse_bar_wrap">
-          <div class="collapse_bar">
-            <div class="switch_title">职业</div>
+    <div class="survey_control_wrap" id="filter_box_wrap">
+      <div class="survey_control" id="filter_box">
+        <div class="control_bar_wrap">
+          <div class="control_bar">
+            <div class="control_title">职业</div>
             <div class="switch_btn_wrap">
               <div
                   :class="selectedBtn('profession', profession.value)"
@@ -30,8 +30,8 @@
             </div>
           </div>
 
-          <div class="collapse_bar">
-            <div class="switch_title">稀有度</div>
+          <div class="control_bar">
+            <div class="control_title">稀有度</div>
             <div class="switch_btn_wrap">
               <div :class="selectedBtn('rarity', rarity)"
                    v-for="(rarity,index) in rarity_dict" :key="index"
@@ -40,8 +40,8 @@
             </div>
           </div>
 
-          <div class="collapse_bar">
-            <div class="switch_title">其他</div>
+          <div class="control_bar">
+            <div class="control_title">其他</div>
             <div class="switch_btn_wrap">
               <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
               <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
@@ -58,7 +58,7 @@
           </div>
 
           <!-- <div class="collapse_bar">
-            <div class="switch_title">排序</div>
+            <div class="collapse_title">排序</div>
             <div class="switch_btn_wrap">
               <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
               <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
@@ -147,6 +147,15 @@
               </div>
             </div>
           </td>
+          <td @click="commonSort('modD','count')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>D模组解锁率</div>
+              <div>
+                <div class="sort_asc_icon" :style="sortIconClass('modD','asc')"></div>
+                <div class="sort_desc_icon" :style="sortIconClass('modD','desc')"></div>
+              </div>
+            </div>
+          </td>
         </tr>
 
 
@@ -196,13 +205,19 @@
             </div>
           </td>
           <td class="rank_table_7">
-            <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'count'), 1) }}</div>
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'count'), 2) }}</div>
             <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modX, 'rank1'), 1) }}</div>-->
             <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modX, 'rank2'), 1) }}</div>-->
             <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modX, 'rank3'), 1) }}</div>-->
           </td>
           <td class="rank_table_8">
-            <div>解锁：{{ getPercentage(getSurveyResult(result.modY, 'count'), 1) }}</div>
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modY, 'count'), 2) }}</div>
+            <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
+            <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
+            <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
+          </td>
+          <td class="rank_table_8">
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modD, 'count'), 2) }}</div>
             <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
             <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
             <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
@@ -217,7 +232,6 @@
 import "@/assets/css/survey/survey_rank.css";
 import { filterByCharacterProperty, professionDict} from "./common";
 import {collapseV2} from "/src/custom/collapse";
-import '/src/custom/css/collapse.css'
 import {onMounted, ref} from "vue";
 import character_table_simple from "@/static/json/survey/character_table_simple.json";
 
@@ -238,27 +252,14 @@ function getCharStatisticsResult() {
     const {result,userCount,updateTime} = response.data
     for(const item of result){
       const charId =  item.charId
-      const char_info =  character_table_simple[charId]
-      let rank_info = {
-        charId: charId,
-        name: char_info.name,
-        rarity: char_info.rarity,
-        own: item.own,
-        elite: item.elite,
-        skill1: item.skill1,
-        skill2: item.skill2,
-        skill3: item.skill3,
-        modX: item.modX,
-        modY: item.modY,
-        profession: char_info.profession,
-        itemObtainApproach: char_info.itemObtainApproach,
-        mod: char_info.mod,
-        skill: char_info.skill,
-        show: true,
-      }
-
-      operators_statistics_list.value.push(rank_info)
+      let char_info =  character_table_simple[charId]
+      item.name = char_info.name
+      item.rarity = char_info.rarity
+      item.profession = char_info.profession
+      item.itemObtainApproach = char_info.itemObtainApproach
+      item.skill = char_info.skill
     }
+    operators_statistics_list.value = result
     addFilterCondition('rarity', 6)
     user_count.value = userCount ;
     update_time.value = updateTime;
@@ -402,9 +403,6 @@ function commonSort(property, condition) {
 
   const len = operators_statistics_list.value.length
 
-  for(const item of operators_statistics_list.value){
-    console.log(item.elite.rank2)
-  }
 
   for (let i = 0; i < len - 1; i++) {
     for (let j = 0; j < len - 1 - i; j++) {
@@ -437,3 +435,10 @@ onMounted(() => {
   getCharStatisticsResult()
 })
 </script>
+
+
+<style scoped>
+.btn{
+  margin: 4px;
+}
+</style>

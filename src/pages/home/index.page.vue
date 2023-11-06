@@ -31,8 +31,6 @@
 
 <style>
 .riic-bg {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  /* min-height: calc(100vh - 156px); */
   padding: 30px 0;
   display: flex;
   flex-direction: row;

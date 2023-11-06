@@ -2,10 +2,8 @@
   background: white;
   overflow: auto;
   margin: auto;
-  /* border: 1px rgb(0, 0, 0) solid; */
   scrollbar-width: none;
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, sans-serif;
-  /* color: black; */
+
 }
 
 .survey_index_header {
