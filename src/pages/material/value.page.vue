@@ -67,9 +67,7 @@ for (const item of pageContext.pageProps.value) {
   item_value_list.value[item.cardNum - 1].push(item)
 }
 
-function formatNumber(value,item_id){
-   if(item_id ==='4001') return value.toFixed(4)
-}
+
 
 function getSpriteImg(id) {
   return "bg-" + id + " item_image";
