@@ -254,7 +254,7 @@
               <div class="skland_desc">输入CRED</div>
               <div><input class="skland_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
               <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
-              <div class="btn btn_blue" @click="import_popup_visible = !import_popup_visible">森空岛导入说明</div>
+              <div class="btn btn_blue" @click="import_popup_visible = !import_popup_visible">森空岛数据导入流程</div>
               <!--            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
               <div class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
             </div>
@@ -282,7 +282,7 @@
           </div>
           <div class="control_bar">
             <div class="switch_desc"><b>*森空岛导入：</b>请遵循
-              <a class="btn btn_red" @click="import_popup_visible = !import_popup_visible">《森空岛导入说明》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
+              <a class="btn btn_red" @click="import_popup_visible = !import_popup_visible">《森空岛数据导入流程》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
             </div>
           </div>
         </div>
@@ -522,7 +522,7 @@ let userData = ref({userName: "未登录", status: -100, token: void 0});  //用
 function getCacheUserData() {
   let cacheData = localStorage.getItem("globalUserData");
   // localStorage.setItem("globalUserData", cacheData);
-  if (cacheData == "undefined" || cacheData == void 0 || cacheData == null) {
+  if (cacheData === "undefined" || cacheData === void 0 ) {
     // cMessage('未登录或登录失效', 'error')
   } else {
     userData.value = JSON.parse(cacheData);
@@ -550,7 +550,7 @@ let rarity_dict = [1, 2, 3, 4, 5, 6];  //星级
  */
 function getOperatorData() {
   //检查是否登录
-  if (userData.value.token == void 0) {
+  if (userData.value.token === void 0 || userData.value.token === "undefined") {
     // cMessage("未登录", "error");
     return;
   }
