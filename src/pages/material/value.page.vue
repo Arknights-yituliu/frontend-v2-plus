@@ -26,11 +26,11 @@
             <div class="item_value_card"
                  v-for="(item,index) in item_group" :key="index"
                  :style="getItemRarityColor(item.rarity)">
-              <div class="item_sprite_value_wrap">
-                <div :class="getSpriteImg(item.itemId, 'value')"></div>
+              <div class="item_image_wrap">
+                <div :class="getSpriteImg(item.itemId)"></div>
               </div>
               <div class="item_value">
-                {{item[value_unit].toFixed(2)}}
+                {{item[value_unit].toFixed(4)}}
               </div>
             </div>
           </div>
@@ -67,10 +67,12 @@ for (const item of pageContext.pageProps.value) {
   item_value_list.value[item.cardNum - 1].push(item)
 }
 
+function formatNumber(value,item_id){
+   if(item_id ==='4001') return value.toFixed(4)
+}
 
-
-function getSpriteImg(id, type) {
-  return "bg-" + id + " item_sprite_value";
+function getSpriteImg(id) {
+  return "bg-" + id + " item_image";
 }
 
 function getItemRarityColor(rarity) {
@@ -126,7 +128,7 @@ export const documentProps = {
 }
 
 .item_value_card {
-  width: 116px;
+  width: 124px;
   display: flex;
   border-left: 4px solid;
   line-height: 54px;
@@ -144,6 +146,20 @@ export const documentProps = {
   --green: #28cc9e;
   --orange: #ff7f3f;
   --grey: #e6e6e6;
+}
+
+.item_image_wrap {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.item_image {
+  position: absolute;
+  transform: scale(0.278);
+  top: -66px;
+  left: -66px;
+
 }
 
 </style>
