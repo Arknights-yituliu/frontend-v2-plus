@@ -117,7 +117,7 @@ import "@/assets/css/sprite/sprite_rank.css";
 import "@/assets/css/survey/survey_index.css";
 import "@/assets/css/survey/survey_user.css";
 import "@/assets/css/survey/survey_nav.css";
-import AES from 'crypto-js/aes'
+
 
 import {onMounted, ref} from "vue";
 import {cMessage} from "/src/custom/message";
@@ -230,8 +230,8 @@ function logout() {
   }, 1000);
 }
 
-function getSprite(id, type) {
-  type = type == void 0 ? '' : type;
+function getSprite(id) {
+
   return "bg-" + id + " nav_avatar_image";
 }
 
