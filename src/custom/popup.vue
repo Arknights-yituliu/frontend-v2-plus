@@ -17,7 +17,7 @@
 <script setup>
 import {ref, watch} from "vue";
 
-const emit = defineEmits(["update:visible"]);
+const emit = defineEmits(["update:visible","update:modelValue"]);
 const props = defineProps(["modelValue", "visible", "width", "height"]);
 
 const width_style = `width: ${props.width}`;
@@ -27,13 +27,14 @@ const context_height_style = `height:${props.height}`;
 // console.log(props.width)
 
 let popupStyle = ref("display: none;");
-if (props.visible) {
+if (props.visible||props.modelValue) {
   popupStyle.value = "display: block;";
 }
 
 function openAndClose(visible) {
   emit("update:visible", visible);
-  console.log("绑定的值:", visible)
+  emit("update:modelValue",visible)
+  // console.log("绑定的值:", visible)
   if (visible) {
     popupStyle.value = "display: block;";
   } else {
@@ -41,12 +42,24 @@ function openAndClose(visible) {
   }
 }
 
+
 watch(
     () => props.visible,
     (newVal, oldVal) => {
-      console.log('新值：', newVal)
+      // console.log('visible新值：', newVal)
       if (newVal) {
+        popupStyle.value = "display: block;";
+      } else {
+        popupStyle.value = "display: none;";
+      }
+    }
+);
 
+watch(
+    () => props.modelValue,
+    (newVal, oldVal) => {
+      // console.log('modelValue新值：', newVal)
+      if (newVal) {
         popupStyle.value = "display: block;";
       } else {
         popupStyle.value = "display: none;";
@@ -90,7 +103,7 @@ watch(
 
 .popup_context {
   width: 100%;
-  max-height: 500px;
+  max-height: 550px;
   overflow-y: auto;
   overflow-x: hidden;
 }

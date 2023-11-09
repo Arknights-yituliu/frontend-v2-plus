@@ -394,6 +394,10 @@ function operatorStatistics(list) {
         }
     }
 
+    operator_statistics_result.total.notOwn.sort((a, b) => {
+        return b.rarity - a.rarity
+    })
+
     operator_statistics_result.max.sort((a, b) => {
         return b.apCost - a.apCost
     })

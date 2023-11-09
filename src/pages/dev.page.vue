@@ -1,10 +1,10 @@
 <template>
-  <div id="indexDiv" >
-    <newChapter />
+  <div id="indexDiv">
+    <newChapter/>
 
-    <dev />
+    <dev/>
 
-    <foot-component />
+    <foot-component/>
 
 
   </div>
@@ -27,9 +27,7 @@ import FootComponent from "@/components/FootComponent.vue";
 import newChapter from '/src/components/newChapter.vue'
 
 
-import { onMounted } from "vue";
 
-onMounted(() => {});
 </script>
 
 <script>

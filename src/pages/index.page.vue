@@ -38,7 +38,7 @@
 }
 
 
-.code{
+.code {
   font-size: 20px;
   font-weight: 600;
   text-align: center;
@@ -70,11 +70,38 @@
 import stage from "/src/pages/material/stageV2.vue";
 import FootComponent from "@/components/FootComponent.vue";
 
-import {onMounted} from "vue";
+import axios from 'axios'
 
-onMounted(() => {
-});
+const data = {
+  stageId: 'main_01-07',
+  stars: 3,
+  times: 5,
+  drops: [{
+    itemId: '3001',
+    quantity: 2
+  },
+    {
+      itemId: '3002',
+      quantity: 2
+    }, {
+      itemId: '3003',
+      quantity: 2
+    }],
+  server: 'dev',
+  source: 'dev',
+  version: 'dev'
+}
 
+axios.post("http://developer.yituliu.site/stage/drop/upload",
+    data,
+    {
+      headers: {
+        authorization: 'penguin 014801238',
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+  console.log(response.data)
+})
 
 /**
  * 点击复制内容
