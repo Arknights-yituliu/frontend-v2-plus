@@ -1,6 +1,6 @@
 .survey_character_page {
-  background: white;
-  margin: auto auto 100px;
+
+  margin: auto;
 }
 
 .char_forms {
@@ -17,7 +17,6 @@
   width: 570px;
   height: 222px;
   transition: all 0.2s;
-  background-color: rgba(255, 255, 255, 1);
   margin: 8px;
   position: relative;
 }
@@ -123,7 +122,7 @@
   font-weight: 700;
   position: relative;
   top: 120px;
-  background: rgb(230, 230, 230);
+
 }
 
 .card-overlay {

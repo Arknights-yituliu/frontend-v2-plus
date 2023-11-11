@@ -1,25 +1,17 @@
 <template>
-  <!-- <el-container>
-    <el-header class="header" v-if="'/maarecruitdata' != pageContext.urlPathname">
-      <nav-bar />
-    </el-header>
-    <el-main style="z-index: 10; background-color: #808080">
-      <slot></slot>
-    </el-main>
-    <el-footer style="z-index: 100; height: 40px; padding: 0px; background-color: rgb(52, 68, 104)">
-      <myfooter />
-    </el-footer>
-  </el-container> -->
-
-  <div class="container">
+  <div class="container color_var" id="container" :class="theme_type">
     <div class="aside" id="aside114" style="overflow-y: hidden">
-      <myaside></myaside>
+      <my-aside></my-aside>
     </div>
     <div class="container is_vertical">
-      <div class="header"><nav-bar /></div>
+      <div class="header">
+        <nav-bar/>
+      </div>
       <div class="main">
         <slot></slot>
-        <div class="footer"><myfooter></myfooter></div>
+        <div class="footer">
+          <my-footer></my-footer>
+        </div>
       </div>
     </div>
   </div>
@@ -48,17 +40,28 @@ import "/src/assets/css/stage_v3.css";
 // import "/src/assets/css/recruit.css";
 
 import NavBar from "/src/components/NavBar.vue";
-import myfooter from "/src/components/myfooter.vue";
-import myaside from "/src/components/aside.vue";
+import myFooter from "/src/components/myfooter.vue";
+import myAside from "/src/components/aside.vue";
 
-import { usePageContext } from "/src/renderer/usePageContext";
 
-const pageContext = usePageContext();
+import {onBeforeMount, onMounted, ref} from "vue";
 
-import { provide, ref } from "vue";
 
-const theme = ref(pageContext.theme == "dark");
-provide("theme", theme);
+let theme_type = ref("theme_light")
+
+onMounted(() => {
+  localStorage.setItem("theme_v2", 'dark')
+  const theme_v2 = localStorage.getItem("theme_v2");
+  if (theme_v2 === 'dark') {
+    theme_type.value = 'theme_dark'
+  }
+  console.log(theme_type.value)
+})
+
+
+// const theme = ref(pageContext.theme === "dark");
+// provide("theme", theme);
+
 </script>
 
 <style scoped>
@@ -66,6 +69,7 @@ provide("theme", theme);
   padding: 0px;
   overflow: inherit;
 }
+
 .el-header {
   padding: 0px;
   box-shadow: 0 0 10px rgb(0, 0, 0);

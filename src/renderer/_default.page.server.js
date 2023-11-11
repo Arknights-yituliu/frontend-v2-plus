@@ -1,6 +1,6 @@
 export { render };
 // See https://vite-plugin-ssr.com/data-fetching
-export const passToClient = ["pageProps", "urlPathname", "urlParsed", "theme"];
+export const passToClient = ["pageProps", "urlPathname", "urlParsed"];
 
 import { renderToString } from "@vue/server-renderer";
 import { escapeInject, dangerouslySkipEscape } from "vite-plugin-ssr/server";
@@ -26,7 +26,7 @@ async function render(pageContext) {
   }
 
   const documentHtml = escapeInject`<!DOCTYPE html>
-    <html lang="en" class="${pageContext.theme}">
+    <html lang="en" >
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=0.68, maximum-scale=0.68, user-scalable=no" />

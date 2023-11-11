@@ -105,16 +105,6 @@ export default {
     this.changeItemTagColor(1);
   },
   methods: {
-    getCookies() {
-      let theme = cookie.get("theme");
-      if (typeof theme == "undefined" || theme === undefined) {
-        theme = "op_title_etext_light";
-      }
-      // console.log('item',theme);
-      this.opETextTheme = "op_title_etext_" + theme;
-    },
-
-
     //切换价值单位
     switchUnit(index) {
       if (index === 1) {

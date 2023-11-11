@@ -4,16 +4,16 @@
     cursor: pointer;
     min-width: 80px;
     text-align: center;
-    border-radius: 4px;
+    border-radius: 2px;
     box-sizing: border-box;
     height: 28px;
     font-size: 14px;
     line-height: 20px;
+    border:none;
 }
 
 .btn_white{
     background-color: #ffffff;
-    border: 1px solid #cbcbce;
     color: black;
 }
 
@@ -29,7 +29,11 @@
 .btn_blue{
     color: #409EFF;
     background-color: #ecf5ff;
-    border: 1px solid #b3d8ff;
+}
+
+.btn_blue{
+    color: var(--c-btn-color);
+    background-color:var(--c-btn-bg);
 }
 
 .btn_blue:hover{
@@ -45,7 +49,6 @@
 .btn_green{
     color: #67c23a;
     background-color: #f0f9eb;
-    border: 1px solid #67c23a;
 }
 
 .btn_green:hover{
@@ -61,7 +64,6 @@
 .btn_red{
     color: #ff6363;
     background-color: #fef0f0;
-    border: 1px solid #fbc4c4;
 }
 
 .btn_red:hover{

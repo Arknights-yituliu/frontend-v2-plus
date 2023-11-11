@@ -1,9 +1,6 @@
 body {
   margin: 0;
   padding: 0;
-  /* height: 100%;
-  width: 100%; */
-  /* filter:grayscale(1); */
 }
 html {
   height: 100%;
@@ -102,13 +99,12 @@ html {
   display: block;
   font-size: 36px;
   font-weight: 600;
-  /* color: #ffffffdd; */
   -webkit-text-stroke-width: 0;
   height: 38px;
-  /* border-left: 8px solid #6495ed; */
   margin-top: -4px;
   padding-right: 16px;
-  color: var(--op-title-ctext-fg);
+  /*TODO*/
+  color: var(--c-text-color);
 }
 
 .op_title_etext {

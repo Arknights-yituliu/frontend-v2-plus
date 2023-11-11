@@ -163,10 +163,9 @@ export default {
 
 <style scoped>
 #extra {
-  background-color: #dededede;
   margin-top: 8px;
   /* padding: 12px 0px; */
-  color: gray;
+  color: rgb(128, 128, 128);
 }
 
 .extra_popver_p {
@@ -250,6 +249,7 @@ export default {
   box-shadow: 0px 2px 2px 0px rgb(0 0 0 / 20%);
   border-right-width: 0px;
 }
+
 #foot_backEnd {
   display: inline-block;
   margin-left: -2px;
@@ -258,6 +258,7 @@ export default {
   border-top-left-radius: 0px;
   border-left: 1px solid #808080;
 }
+
 .footlist {
   display: inline;
   top: 5px;
@@ -290,7 +291,7 @@ export default {
   width: 178px;
   border-radius: 8px;
   margin: 4px;
-  color: gray;
+  color: rgb(128, 128, 128);
   line-height: 36px;
 }
 
@@ -303,10 +304,5 @@ export default {
   font-size: unset;
 }
 
-.el-card__body {
-  padding: 0px 12px !important;
-}
-.el-collapse-item__content {
-  padding-bottom: 8px !important;
-}
+
 </style>

@@ -10,21 +10,29 @@
     display: flex;
     box-shadow: var(--c-box-shadow);
     margin: 8px;
-    width: 460px;
+    width: 500px;
 }
 
 
-.opr_sprite_bg{
+.opr_sprite_avatar_bg{
     width: 70px;
-    height: 84px;
+    height: 70px;
     position: relative;
     margin: 0 4px;
     /*border: 1px solid red;*/
 }
 
-.opr_sprite_bg_small{
+.opr_sprite_skill_bg{
     width: 52px;
-    height: 84px;
+    height: 52px;
+    position: relative;
+    margin: 0 4px;
+    /*border: 1px solid red;*/
+}
+
+.opr_sprite_mod_bg{
+    width: 52px;
+    height: 72px;
     position: relative;
     margin: 0 4px;
     /*border: 1px solid red;*/
@@ -51,22 +59,38 @@
     left: -54px;
 }
 
-.opr_sprite_elite_bg {
+.elite_bg {
     width: 20px;
     height: 20px;
-    position: absolute;
-    top: 44px;
-    left: 50px;
     background-color: #3f3f3f;
 }
 
 .opr_sprite_elite {
     transform: scale(0.08);
     position: absolute;
-    top: -52px;
+    top: -46px;
     left: -68px;
 }
 
+.opr_level{
+    width: 24px;
+    height: 24px;
+    color: white;
+    background: url("/image/survey/rank/lv-bg.png");
+    background-size:24px ;
+    position: absolute;
+    top:48px;
+    line-height: 26px;
+    text-align: center;
+}
+
+.opr_elite{
+    width: 22px;
+    position: absolute;
+    top: 52px;
+    left: 48px;
+    background-color: black;
+}
 
 .opr_sprite_skill {
     transform: scale(0.375);
@@ -95,12 +119,7 @@
     opacity: 0.7;
 }
 
-.opr_level {
-    margin-top: -20px;
-    padding: 4px;
-    font-size: 20px;
-    font-weight: 600
-}
+
 
 .opr_apCost{
     transform: scale(0.3);
@@ -122,9 +141,15 @@
    box-shadow: var(--c-box-shadow);
 }
 
+.opr_option_title{
+    /*font-size: 18px;*/
+    text-align: center;
+    padding: 4px;
+}
+
 .opr_option_bar{
     display: flex;
-    height: 84px;
+    margin: 4px 0;
 }
 
 .opr_option{
@@ -141,11 +166,12 @@
     background-color: #ff925b;
 }
 
+
 .opr_option_elite{
     transform: scale(0.235);
     position: absolute;
     top: -76px;
-    left: -98px;
+    left: -100px;
 }
 
 .img_skill_rank{

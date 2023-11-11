@@ -1,6 +1,6 @@
 <template>
-  <div id="indexDiv">
-    <div id="pack" name="packPpr">
+  <div >
+    <div id="pack" >
       <!-- 标题区域 -->
       <div class="op_title">
         <div class="op_title_text">
@@ -405,7 +405,7 @@ export default {
     this.initData();
   },
   mounted() {
-    this.getCookies();
+
 
     const url_path = window.location.pathname.split("/")[1];
     if (url_path == "pack") {
@@ -417,14 +417,7 @@ export default {
     }
   },
   methods: {
-    getCookies() {
-      let theme = cookie.get("theme");
-      if (typeof theme == "undefined" || theme === undefined) {
-        theme = "op_title_etext_light";
-      }
-      console.log("pack", theme);
-      this.opETextTheme = "op_title_etext_" + theme;
-    },
+
 
     getBackColor(index) {
       if (index % 2 !== 0) return "pack_simple_tr_back";

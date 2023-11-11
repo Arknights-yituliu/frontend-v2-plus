@@ -216,6 +216,7 @@ function updateEmail() {
   surveyApi.updateUserData(data).then(response => {
     cMessage('邮箱绑定成功')
     user_data.value.status = response.data.status
+    user_data.value.email = response.data.email
     localStorage.setItem("globalUserData", JSON.stringify(user_data.value));
   })
 }
@@ -253,15 +254,15 @@ function hasPermission(status, permission) {
 
 function getCacheUserData() {
   let cacheUserData = localStorage.getItem("globalUserData");
-  if (!(cacheUserData == "undefined" || cacheUserData == void 0 || cacheUserData == null)) {
+  if (cacheUserData !== void 0 ) {
     const parse = JSON.parse(cacheUserData);
     console.table(parse)
     user_data.value.userName = parse.userName;
     user_data.value.code = parse.code;
     user_data.value.status = parse.status;
     user_data.value.token = parse.token;
-    user_data.value.avatar = parse.avatar
-    user_data.value.email = parse['email'] == undefined ? "未绑定1" : parse['email'];
+    user_data.value.avatar = parse.avatar;
+    user_data.value.email = parse.email === undefined ? "未绑定" : parse.email;
   }
 }
 
@@ -293,8 +294,7 @@ function updateAvatar() {
 
 }
 
-function getSprite(id, type) {
-  type = type == void 0 ? '' : type;
+function getSprite(id) {
   return "bg-" + id + " user_avatar_image";
 }
 

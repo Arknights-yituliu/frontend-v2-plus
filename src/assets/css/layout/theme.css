@@ -1,12 +1,34 @@
 .theme_light{
-    --c-box-shadow:1px 1px 4px #c4c4c4;
-    --c-bg:#F0F0F0;
-    --c-color:#0F0F0F;
+    --c-box-shadow:1px 1px 4px #e5e5e5;
+    --c-bg: #ffffff;
+
+    --c-text-color:var(--c-black-2);
+
+    --c-btn-bg:var(--c-blue-4);
+    --c-btn-color:var(--c-white-1);
 }
 
 .theme_dark{
     --c-box-shadow:1px 1px 4px #949494;
     --c-bg: #1E1E1E;
-    --c-color: #DCDCDC;
+    --c-text-color: var(--c-white-2);
+    --c-btn-bg:var(--c-blue-3);
+    --c-btn-color:var(--c-black-2);
 }
 
+
+.color_var{
+    --c-black-1: #000000;
+    --c-black-2: #141414;
+    --c-black-3: #282828;
+
+    --c-white-1: #ffffff;
+    --c-white-2: #dcdcdc;
+
+    --c-blue-1: #F0FFFF;
+    --c-blue-2: #00BFFF;
+    --c-blue-3: #4ab4ef;
+    --c-blue-4: #1E90FF;
+    --c-blue-5: #0000ff;
+    --c-blue-9: #14141a;
+}

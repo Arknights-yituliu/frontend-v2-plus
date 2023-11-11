@@ -1,5 +1,5 @@
 <template>
-  <div id="indexDiv">
+  <div >
     <div class="act_tips_wrap">
       <div class="to_act_wrap">
         <a href="https://ak.hypergryph.com/activity/resonance-of-the-mind">
@@ -14,6 +14,9 @@
         <c-button :color="'blue'" @click="copyCode('02023CELEBRATION')">点击复制兑换码并转跳官网</c-button>
       </div>
     </div>
+
+
+
     <stage/>
 
     <foot-component/>
@@ -76,32 +79,35 @@ const data = {
   stageId: 'main_01-07',
   stars: 3,
   times: 5,
-  drops: [{
-    itemId: '3001',
-    quantity: 2
-  },
-    {
-      itemId: '3002',
-      quantity: 2
-    }, {
-      itemId: '3003',
-      quantity: 2
-    }],
-  server: 'dev',
-  source: 'dev',
-  version: 'dev'
+
+  server: 'TEST',
+  source: 'TEST',
+  version: 'TEST'
 }
 
-axios.post("http://developer.yituliu.site/stage/drop/upload",
-    data,
-    {
-      headers: {
-        authorization: 'penguin 014801238',
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
-  console.log(response.data)
-})
+function sleep(d) {
+  return new Promise((resolve) => setTimeout(resolve, d));
+}
+
+// let testApi = 'https://developer.yituliu.site/stage/drop/upload'
+// let testApi = 'http://127.0.0.1:10020/stage/drop/upload'
+
+// for (let i = 0; i < 5; i++) {
+//   axios.post(testApi,
+//       data,
+//       {
+//         headers: {
+//           authorization: 'penguin 014801238',
+//           'Content-Type': 'application/json'
+//         }
+//       }).then(response => {
+//     console.log(response.data)
+//   })
+//
+//    sleep(5000)
+// }
+
+
 
 /**
  * 点击复制内容

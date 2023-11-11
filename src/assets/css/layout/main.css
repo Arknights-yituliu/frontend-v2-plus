@@ -4,13 +4,13 @@
   /* height: 100%; */
   /* border: 1px solid rgb(0, 119, 255); */
   overflow: hidden;
-  background: white;
+  background: var(--c-bg);
+  color: var(--c-text-color);
   height: 100vh;
 }
 
 .header {
   height: 48px;
-  line-height: 44px;
   background: #262f3e;
 }
 
@@ -54,7 +54,4 @@
     display: none;
   }
 
-  .menu_button_desktop {
-    display: none;
-  }
 }

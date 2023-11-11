@@ -1,5 +1,5 @@
 <template>
-  <div id="indexDiv" style="margin: auto">
+  <div >
 
       <div id="value">
         <!-- 标题区域 -->

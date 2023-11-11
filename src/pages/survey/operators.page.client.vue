@@ -34,7 +34,7 @@
     </div>
   </c-popup>
 
-  <div class="survey_character_page theme_light">
+  <div class="survey_character_page">
     <!-- 常驻条 -->
     <div class="setup_top">
       <c-button :color="'blue'" @click="checkFirstPopup()">填写说明</c-button>
@@ -152,7 +152,7 @@
           </div>
 
           <div class="mdui-divider" style="margin: 8px;"></div>
-          <div class="switch_desc ">
+          <div class="control_tip ">
             <a class="">对所有被筛选出的干员进行操作</a>
           </div>
           <div class="control_bar">
@@ -190,7 +190,7 @@
         <div class="intro_wrap">
           <div class="intro_title">森空岛数据导入流程</div>
 
-          <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="skland_url">https://www.skland.com/</a>进行登录
+          <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="web_url">https://www.skland.com/</a>进行登录
           </p>
           <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
           <a style="color:dodgerblue">
@@ -203,11 +203,11 @@
           </button>
           <br/>输入之后回车确认
 
-          <img src="/image/skland/step1.jpg" class="skland_import_image" alt=""><img>
+          <img src="/image/skland/step1.jpg" class="import_tip_image" alt=""><img>
           <p><b>step3：</b>此时你可以获得一段神秘的字符，复制这段字符，<b>不要带引号</b></p>
-          <img src="/image/skland/step2.jpg" class="skland_import_image" alt=""><img>
+          <img src="/image/skland/step2.jpg" class="import_tip_image" alt=""><img>
           <p><b>step4：</b>将 <b>step3</b> 中获得的这段字符粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
-          <img src="/image/skland/step3.jpg" class="skland_import_image" alt=""><img>
+          <img src="/image/skland/step3.jpg" class="import_tip_image" alt=""><img>
         </div>
       </div>
 
@@ -252,7 +252,7 @@
             <div class="control_title" style="width: 80px;">森空岛导入</div>
             <div class="switch_btn_wrap">
               <div class="skland_desc">输入CRED</div>
-              <div><input class="skland_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
+              <div><input class="control_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
               <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
               <div class="btn btn_blue" @click="import_popup_visible = !import_popup_visible">森空岛数据导入流程</div>
               <!--            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
@@ -273,7 +273,7 @@
           </div>
 
           <div class="control_bar" v-show="bindAccount">
-            <div class="switch_desc">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
+            <div class="control_tip">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
               {{ upload_message.userName }} </a> 请登录之前的账号 <br>
               <div class="btn btn_blue_selected" @click="login(upload_message.userName)">
                 请登录用户{{ upload_message.userName }}并刷新网页
@@ -281,7 +281,7 @@
             </div>
           </div>
           <div class="control_bar">
-            <div class="switch_desc"><b>*森空岛导入：</b>请遵循
+            <div class="control_tip"><b>*森空岛导入：</b>请遵循
               <a class="btn btn_red" @click="import_popup_visible = !import_popup_visible">《森空岛数据导入流程》</a>的指引，导入完如显示有误请手动保存并刷新页面<br>
             </div>
           </div>
@@ -1400,11 +1400,11 @@ onMounted(() => {
 }
 
 .survey_character_page {
-  background-color: var(--c-bg);
-  color: var(--c-color);
+
+  color: var(--c-text-color);
 }
 
-.skland_url {
+.web_url {
   padding: 0 8px 0 8px;
   color: dodgerblue;
   cursor: pointer;
@@ -1415,7 +1415,7 @@ onMounted(() => {
   padding: 4px;
 }
 
-.skland_input {
+.control_input {
   margin: 4px;
   height: 20px;
   padding: 4px;
@@ -1424,15 +1424,15 @@ onMounted(() => {
   border: none;
   border-bottom: solid black 1px;
   outline: none;
-  background-color: var(--c-bg);
+
   color: black;
 }
 
-.skland_input:hover {
+.control_input:hover {
   border-bottom: solid rgb(0, 98, 255) 2px;
 }
 
-.skland_import_image {
+.import_tip_image {
   width: 400px;
   display: inline-block;
   margin: auto;

@@ -1,22 +1,36 @@
 <template>
   <div class="header_wrap">
-    <div class="menu-button" @click="menu_collapse(true)">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <div class="menu_button_desktop" @click="aside_collapse()">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
+    <img src="/image/icon/menu.svg" alt="" class="menu-button" style="width: 32px" @click="menu_collapse(true)">
+    <img src="/image/icon/menu.svg" alt="" class="menu_button_desktop" style="width: 32px" @click="aside_collapse()">
+
+    <!--    <div class="menu-button" >-->
+    <!--      <div></div>-->
+    <!--      <div></div>-->
+    <!--      <div></div>-->
+    <!--    </div>-->
+    <!--    <div class="menu_button_desktop" @click="aside_collapse()">-->
+    <!--      <div></div>-->
+    <!--      <div></div>-->
+    <!--      <div></div>-->
+    <!--    </div>-->
 
     <div class="pageTitle" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
 
     <div class="spacer"></div>
-    <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny" size="large" />
+    <c-popover :menu="'theme_menu'">
+      <template #title>
+        <img style="width: 36px;" src="/image/icon/sun.svg" alt="">
+      </template>
+      <div class="theme_option_wrap" id="theme_menu" >
+        <div class="theme_option" @click="switchTheme('dark')">深色模式</div>
+        <div class="theme_option" @click="switchTheme('light')">浅色模式</div>
+      </div>
+    </c-popover>
+
+<!--    <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny"-->
+<!--               size="large"/>-->
     <login></login>
 
     <div class="drawer_wrap">
@@ -36,7 +50,7 @@
               </div>
             </a>
             <!-- 二级标题组 -->
-            <a :href="c.path" class="nav_href" v-for="c in r.child">
+            <a :href="c.path" class="nav_href" v-for="(c,index) in r.child" :key="index">
               <div class="aside_nav">
                 <div class="aside_menu_child_icon"></div>
                 {{ c.text }}
@@ -46,22 +60,22 @@
           </div>
         </div>
       </div>
-      <div class="menu-mask" id="draweMask514" @click="menu_collapse(false)"></div>
+      <div class="menu-mask" id="drawerMask514" @click="menu_collapse(false)"></div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref, watch, computed, inject, onMounted} from "vue";
-import { Sunny, Moon } from "@element-plus/icons-vue";
-import cookie from "js-cookie";
+import {ref, watch, computed,  onMounted} from "vue";
+import {Sunny, Moon} from "@element-plus/icons-vue";
 import toolApi from "/src/api/tool";
-import { usePageContext } from "/src/renderer/usePageContext";
+import {usePageContext} from "/src/renderer/usePageContext";
 import login from "/src/pages/survey/login.vue";
 import routesJson from "/src/static/json/routes.json";
+
 const pageContext = usePageContext();
 
-const theme = inject("theme");
+// const theme = inject("theme");
 
 let menu_flag = ref(false);
 
@@ -71,11 +85,11 @@ function menu_collapse(flag) {
     setTimeout(function () {
       document.getElementById("drawer114").style.willChange = 'transform'
       document.getElementById("drawer114").style.transform = "translateX(0)";
-      document.getElementById("draweMask514").style.display = "block";
+      document.getElementById("drawerMask514").style.display = "block";
     }, 30);
   } else {
     document.getElementById("drawer114").style.transform = "translateX(-400px) ";
-    document.getElementById("draweMask514").style.display = "none";
+    document.getElementById("drawerMask514").style.display = "none";
     // document.getElementById("drawer114514").className = "nav_collapse";
   }
   // console.log(menu_flag.value);
@@ -97,37 +111,42 @@ function aside_collapse() {
   // console.log(aside_flag.value);
 }
 
-watch(theme, () => {
-  const theme_name = theme.value ? "dark" : "light";
-  const remove_name = theme.value ? "light" : "dark";
-  const root_ele = document.querySelector(":root");
-  if (root_ele.classList.contains(remove_name)) {
-    root_ele.classList.remove(remove_name);
-  }
-  root_ele.classList.add(theme_name);
-  cookie.set("theme", theme_name, { expires: 30 });
-});
+
+function switchTheme(theme){
+  const container = document.getElementById("container");
+  let className = container.className;
+  console.log('旧class：',className)
+  let list = className.split(" ");
+  console.log('旧主题：',list[list.length-1])
+  className = className.replace(list[list.length-1],`theme_${theme}`)
+  console.log('新主题：',`theme_${theme}`)
+  console.log('新class：',className)
+  container.className = className
+
+  document.getElementsByTagName("html").item(0).className=theme;
+
+}
+
+// watch(theme, () => {
+//   const theme_name = theme.value ? "dark" : "light";
+//   const remove_name = theme.value ? "light" : "dark";
+//   const root_ele = document.querySelector(":root");
+//   if (root_ele.classList.contains(remove_name)) {
+//     root_ele.classList.remove(remove_name);
+//   }
+//   root_ele.classList.add(theme_name);
+//   cookie.set("theme", theme_name, {expires: 30});
+// });
 
 
 
-// function navParentSelected(path) {
-//   console.log(path, "==", pathName.value);
-//   if (path == pathName.value) return "aside_nav aside_parent aside_nav_selected";
-//   return "aside_nav aside_parent";
-// }
-//
-// function navChildSelected(path) {
-//   console.log(path, "==", pathName.value);
-//   if (path == pathName.value) return "aside_nav aside_nav_selected";
-//   return "aside_nav";
-// }
 
 const routes = ref(routesJson);
 
 // eslint-disable-next-line no-unused-vars
 const route = computed(() => {
   for (let i of routes.value) {
-    if (i.path == pageContext.urlPathname || i.path + "/" == pageContext.urlPathname) {
+    if (i.path === pageContext.urlPathname || i.path + "/" === pageContext.urlPathname) {
       return i;
     }
   }
@@ -138,8 +157,8 @@ let pageTitle = ref("");
 
 function getPageTitle(path) {
   if (path === "/") return (pageTitle.value = "材料一图流");
-  
-  if(path.indexOf('tools/maa')>-1) {
+
+  if (path.indexOf('tools/maa') > -1) {
     aside_collapse()
   }
 
@@ -169,11 +188,11 @@ function getPageTitle(path) {
 
 function updateVisits(pathName) {
   //访问/直接更新
-  if (pathName == "/") {
+  if (pathName === "/") {
     toolApi.updateVisits(pathName);
     return 1;
   }
-  
+
   pathName = pathName.replace("/src/pages")
   pathName = substrPath(pathName);
   pathName = substrPath(pathName);
@@ -193,7 +212,6 @@ function substrPath(pathName) {
   }
   return pathName
 }
-
 
 
 onMounted(() => {

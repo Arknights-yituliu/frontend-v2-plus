@@ -1,6 +1,8 @@
 
 .setup_top {
     position: sticky;
+    display: flex;
+    flex-wrap: wrap;
     top: 0;
     z-index: 1000;
     /* height: 48px; */
@@ -86,10 +88,9 @@
 }
 
 
-.switch_desc {
-    margin: 4px;
+.control_tip {
+    margin: 4px 0;
     font-style: italic;
-    color: rgb(97, 97, 97);
 }
 
 
@@ -182,10 +183,12 @@
 }
 
 .control_title {
-    margin: 0 12px;
+    margin: 0 12px 0 0 ;
     line-height: 28px;
-    font-weight: 500;
+    font-weight: 600;
     border-radius: 2px;
+    /*font-size: 18px;*/
+
 }
 
 

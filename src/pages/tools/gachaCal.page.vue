@@ -7,7 +7,7 @@
           <el-collapse-item name="0" id="totalTable">
             <template #title>
               <div class="gacha_title_icon" style="background: chocolate"></div>
-              <span class="collapse-item_title" style="color: var(--gacha-total-fg)">
+              <span class="collapse-item_title" >
                 共计{{ toFixedByAcc(gachaTimes_total, 0) }}抽，氪金{{ sellsCount }}元
               </span>
               <span style="font-size: 20px; color: rgb(136 136 136 / 69%); margin-left: 16px">yituliu.site</span>
@@ -484,7 +484,7 @@
 
             <div class="gacha_unit" id="charge">
               <div class="gacha_unit_child_instruction"
-                   style="padding: 4px 16px; font-size: 18px; color: var(--charge-instruction-fg)">
+                   style="padding: 4px 16px; font-size: 18px;">
                 标签内为每抽价格(元)，颜色用于区分性价比<br/>
                 仅计入礼包内抽卡资源，紫色高于648，橙色高于大月卡<br/>
                 <a href="https://yituliu.site/pack">点击跳转礼包完整性价比</a>
@@ -648,7 +648,7 @@
                   </el-checkbox-button>
                 </div>
               </el-checkbox-group>
-              <div id="newbie_info" style="font-size: 12px; padding: 0 8px; color: var(--charge-instruction-fg)">
+              <div id="newbie_info" style="font-size: 12px; padding: 0 8px;">
                 *[新人进阶组合包]内置了一张月卡，这导致攒抽计算需要根据自身情况进行修正<br/>
                 非月卡党：直接选择“新人进阶组合包”，但需减去池子结束前领不到的玉<br/>
                 月卡党：选择“进阶包不含月卡”，如果[当前月卡有效期>池子关闭日期]，需加上提前获得的6源石
@@ -1938,7 +1938,7 @@ export const documentProps = {
   padding: 0px 12px 0px 12px;
   max-width: 1200px;
   margin: auto;
-  background-color: var(--foot-main-bg);
+  background-color: var(--c-bg);
 }
 
 .foot_unit {
@@ -2092,7 +2092,7 @@ export const documentProps = {
 #gacha {
   display: flex;
   justify-content: center;
-  background-color: var(--index-div-bg);
+  background-color: var(--c-bg);
 }
 
 .gacha-row {
@@ -2123,13 +2123,3 @@ export const documentProps = {
 }
 </style>
 
-<style>
-#gacha > div .el-collapse-item {
-  color: white;
-  margin: 12px 0;
-  border-radius: 8px;
-  font-size: 20px;
-  box-shadow: var(--el-box-shadow-light);
-  overflow: hidden;
-}
-</style>
