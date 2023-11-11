@@ -125,6 +125,7 @@ function switchTheme(theme){
 
   document.getElementsByTagName("html").item(0).className=theme;
 
+  localStorage.setItem("theme_v2",theme)
 }
 
 // watch(theme, () => {

@@ -299,9 +299,9 @@ function getSkillName(skill, index) {
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filter_condition.value[attribute].indexOf(rule) > -1) {
-    return "btn btn_white btn_white_selected";
+    return "btn btn_blue";
   }
-  return "btn btn_white";
+  return "btn";
 }
 
 let filter_condition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});

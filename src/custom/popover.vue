@@ -2,7 +2,6 @@
   <div class="popover_wrap">
     <div @click="openOrClose()" class="popover_title">
       <slot name="title">
-
       </slot>
     </div>
     <div class="popover_content" :id="content_wrap">
@@ -18,9 +17,10 @@ let content_wrap = `popover-${props.name}`
 
 function openOrClose() {
   let element = document.getElementById(content_wrap);
-
+  console.log(element)
   const offsetHeight = element.offsetHeight;
-  if (offsetHeight < 1) {
+  console.log(offsetHeight)
+  if (offsetHeight < 5) {
     console.log(props.menu)
     const slotElement = document.getElementById(props.menu);
     const slotHeight = slotElement.offsetHeight;
@@ -53,12 +53,17 @@ function openOrClose() {
 
 .popover_content {
   position: absolute;
+  top: 48px;
   right: 0;
   width: 0;
   height: 0;
   overflow: hidden;
   transition: all 0.3s;
   z-index: 3000;
+  background-color: var(--c-bg);
+  box-shadow: var(--c-box-shadow);
+  border: var(--c-border);
+  border-radius: 4px;
 }
 
 

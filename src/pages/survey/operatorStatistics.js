@@ -54,8 +54,7 @@ function calAPCost(operator_list) {
  */
 function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
 
-    console.log(current_ranks)
-    console.log(target_ranks)
+
 
     let item_cost = {}
     //解构当前练度属性
@@ -91,18 +90,11 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
 
     // 下面的是计算从当前练度到目标练度的消耗
     // 精英化消耗的材料
-    console.log(current_elite,'——',elite)
-    console.log(current_skill1,'——',skill1)
-    console.log(current_skill2,'——',skill2)
-    console.log(current_skill3,'——',skill3)
-    console.log(current_modX,'——',modX)
-    console.log(current_modY,'——',modY)
-
 
     for (let i = current_elite; i <= elite; i++) {
         for (let itemId in operatorItemCost.elite[i]) {
             let count = operatorItemCost.elite[i][itemId];
-            console.log(itemId,count)
+
             updateItemCostCount(item_cost, itemId, count)
         }
     }
@@ -123,7 +115,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
         for (let rank = current_skill_ranks[index]; rank < target_skill_ranks[index]; rank++) {
             for (let itemId in skills[index][rank]) {
                 let count = skills[index][rank][itemId];
-                console.log(itemId,count)
+
                 updateItemCostCount(item_cost, itemId, count)
             }
         }
@@ -137,7 +129,6 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
         for (let i = current_mod_ranks[type]; i < target_mod_ranks[type]; i++) {
             for (let itemId in operatorItemCost[`mod${type}`][i]) {
                 let count = operatorItemCost[`mod${type}`][i][itemId];
-                console.log(itemId,count)
                 updateItemCostCount(item_cost, itemId, count)
             }
         }
@@ -400,8 +391,7 @@ function operatorStatistics(list) {
 
 function operatorPlanCal(operator_data,operator_plan){
 
-    console.log("干员当前练度",operator_data)
-    console.log("干员计划练度",operator_plan)
+
 
     // 更新练度计划的材料明细集合
     let item_cost_count = {};
@@ -444,7 +434,7 @@ function splitMaterial(highest_rarity, item_cost_obj) {
                 const product_count = item.count; //材料总数
                 if (composite_table[product_id] !== void 0) {
                     let {itemCost} = composite_table[product_id];//材料的合成列表
-                    console.log(composite_table[product_id])
+
                     for (const cost of itemCost) {
                         // const material_name = composite_list_element.name;  //合成原料名称
                         const material_id = cost.id;  //合成原料id

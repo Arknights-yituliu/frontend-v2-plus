@@ -44,18 +44,23 @@ import myFooter from "/src/components/myfooter.vue";
 import myAside from "/src/components/aside.vue";
 
 
-import {onBeforeMount, onMounted, ref} from "vue";
+import { onMounted, ref} from "vue";
 
 
 let theme_type = ref("theme_light")
 
 onMounted(() => {
-  localStorage.setItem("theme_v2", 'dark')
   const theme_v2 = localStorage.getItem("theme_v2");
+  console.log(theme_v2)
   if (theme_v2 === 'dark') {
     theme_type.value = 'theme_dark'
   }
-  console.log(theme_type.value)
+
+  document.getElementsByTagName("html")
+      .item(0).className=theme_v2==="dark"?"dark":"light";
+
+
+
 })
 
 

@@ -16,11 +16,11 @@
     padding: 24px;
     margin: 20px 0;
     border-radius: 4px;
-    background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--c-box-shadow);
+    border: var(--c-border);
 }
 
 .user_info_bar {
@@ -61,15 +61,15 @@
 }
 
 .user_input {
-    /*display: block;*/
     outline: none;
     border: none;
-    border-bottom: 2px solid #e1e1e1;
     margin: 4px 4px 4px 0;
     line-height: 28px;
     width: 270px;
     font-weight: 600;
-    background-color: white;
+    color: var(--c-input-text-color);
+    background-color:var(--c-input-bg);
+    border-bottom: var(--c-input-border);
 }
 
 .user_info {

@@ -5,12 +5,12 @@
     flex-wrap: wrap;
     top: 0;
     z-index: 1000;
-    /* height: 48px; */
     max-width: 95%;
-    /*background-color: rgba(255, 255, 255, 0.5);*/
-    box-shadow: 1px 1px 4px #949494;
+    box-shadow: var(--c-box-shadow);
+    border: var(--c-border);
     margin: auto auto 6px;
-    padding: 4px 0px 4px 16px;
+    padding: 4px 0 4px 16px;
+    background-color: var(--c-bg);
 }
 
 .href_black {
@@ -64,10 +64,7 @@
     font-size: 16px;
 }
 
-.btn_blue_selected {
-    background-color: #5fa7f1;
-    color: white;
-}
+
 
 #updateTime {
     padding: 0;
@@ -167,7 +164,8 @@
     max-width: 95%;
     margin: auto auto 6px;
     padding: 4px 0px 4px 16px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--c-box-shadow);
+    border: var(--c-border);
     border-radius: 2px;
 }
 

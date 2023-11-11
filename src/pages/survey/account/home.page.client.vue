@@ -2,10 +2,6 @@
   <div class="survey_user_page">
     <div class="user_info_wrap">
 
-
-
-
-
       <!--    <div class="user_info_card">-->
       <!--      <div class="user_info_title">身份验证</div>-->
       <!--      <div class="user_input_bar">-->
@@ -119,7 +115,7 @@
         </div>
       </div>
       <div class="user_info_card">
-        <button class="btn btn_red btn_red_selected" style="margin: auto" @click="logout()">退出登录</button>
+        <button class="btn btn_red " style="margin: auto" @click="logout()">退出登录</button>
       </div>
     </div>
   </div>
@@ -230,8 +226,8 @@ function updateUserName() {
   }
   surveyApi.updateUserData(data).then(response => {
     cMessage('用户名更改成功')
-    document.getElementById("user_name").innerText = response.data.userName
     user_data.value.userName = response.data.userName
+    console.log(user_data.value.userName)
     localStorage.setItem("globalUserData", JSON.stringify(user_data.value));
   })
 }

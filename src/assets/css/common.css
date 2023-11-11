@@ -9,74 +9,40 @@
     height: 28px;
     font-size: 14px;
     line-height: 20px;
-    border:none;
-}
-
-.btn_white{
-    background-color: #ffffff;
-    color: black;
-}
-
-.btn_white:hover{
-    background-color: #d5d5d5;
-}
-
-.btn_white_selected{
-    background-color: #969696;
-    color: white;
-}
-
-.btn_blue{
-    color: #409EFF;
-    background-color: #ecf5ff;
-}
-
-.btn_blue{
+    border:var(--c-btn-border);
     color: var(--c-btn-color);
-    background-color:var(--c-btn-bg);
+    background-color: var(--c-btn-bg);
+}
+
+
+
+.btn_blue{
+    color: var(--c-btn-text-color);
+    background-color:var(--c-btn-bg-blue);
 }
 
 .btn_blue:hover{
     background-color: #409EFF;
-    color: white;
-}
-
-.btn_blue_selected{
-    background-color: #409EFF;
-    color: white;
 }
 
 .btn_green{
-    color: #67c23a;
-    background-color: #f0f9eb;
+    color: var(--c-btn-text-color);
+    background-color: var(--c-green-dark);
 }
 
 .btn_green:hover{
-    background-color: #67c23a;
-    color: white;
-}
-
-.btn_green_selected{
-    background-color: #67c23a;
-    color: white;
+    background-color: var(--c-green-dark);
 }
 
 .btn_red{
-    color: #ff6363;
-    background-color: #fef0f0;
+    color: var(--c-btn-text-color);
+    background-color: var(--c-btn-bg-red);
 }
 
 .btn_red:hover{
     background-color: #f56c6c;
-    color: white;
-}
-
-.btn_red_selected{
-    background-color: #f56c6c;
-    color: white;
 }
 
 .warning_color{
-    color: #ff6363;
     font-weight: 600;
 }

@@ -12,13 +12,13 @@
 
 .theme_option_wrap{
   width: 100px;
-  background-color: #262f3e;
+
 }
 
 .theme_option{
   width: 100px;
   padding: 8px 4px;
-  color: #e3e3e3;
+  cursor: pointer;
 }
 
 .menu-button {

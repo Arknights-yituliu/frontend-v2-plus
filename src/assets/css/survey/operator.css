@@ -9,6 +9,7 @@
     padding: 4px;
     display: flex;
     box-shadow: var(--c-box-shadow);
+    border:var(--c-border);
     margin: 8px;
     width: 500px;
 }
@@ -99,7 +100,7 @@
     position: absolute;
     top: -38px;
     left: -38px;
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 .opr_skill_rank{
@@ -111,12 +112,10 @@
 
 .opr_equip_rank {
     transform: scale(0.20);
-    /* border: 1px solid red; */
     border-radius: 0;
     position: absolute;
     top: -92px;
     left: -92px;
-    opacity: 0.7;
 }
 
 

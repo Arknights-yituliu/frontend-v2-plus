@@ -2121,5 +2121,10 @@ export const documentProps = {
   min-width: 150px;
   width: 36%;
 }
+
+.el-collapse-item{
+  box-shadow: var(--c-box-shadow);
+  border: var(--c-border);
+}
 </style>
 

@@ -1,34 +1,67 @@
 .theme_light{
-    --c-box-shadow:1px 1px 4px #e5e5e5;
+    --c-box-shadow:1px 1px 4px #a9a9a9;
     --c-bg: #ffffff;
-
     --c-text-color:var(--c-black-2);
 
-    --c-btn-bg:var(--c-blue-4);
-    --c-btn-color:var(--c-white-1);
+    --c-btn-border:1px solid var(--c-black-c);
+    --c-btn-bg:var(--c-white-1);
+    --c-btn-color:var(--c-black-3);
+    --c-btn-text-color:var(--c-white-1);
+    --c-btn-bg-blue:var(--c-blue-light);
+    --c-btn-bg-red:var(--c-red-light);
+    --c-btn-bg-green:var(--c-green-dark);
+
+    --c-input-bg:var(--c-bg);
+    --c-input-border:1px solid var(--c-black-2);
+    --c-input-text-color:var(--c-black-2);
 }
 
 .theme_dark{
-    --c-box-shadow:1px 1px 4px #949494;
+    --c-border:1px solid var(--c-white-2);
     --c-bg: #1E1E1E;
-    --c-text-color: var(--c-white-2);
-    --c-btn-bg:var(--c-blue-3);
-    --c-btn-color:var(--c-black-2);
+    --c-text-color: var(--c-white-3);
+
+    --c-btn-border:1px solid var(--c-white-3);
+    --c-btn-bg:var(--c-black-3);
+    --c-btn-color:var(--c-white-3);
+    --c-btn-text-color:var(--c-black-2);
+    --c-btn-bg-blue:var(--c-blue-dark);
+    --c-btn-bg-red:var(--c-red-dark);
+    --c-btn-bg-green:var(--c-green-dark);
+
+    --c-input-bg:var(--c-bg);
+    --c-input-border:2px solid var(--c-white-2);
+    --c-input-text-color:var(--c-white-2);
+
 }
 
 
 .color_var{
     --c-black-1: #000000;
-    --c-black-2: #141414;
-    --c-black-3: #282828;
+    --c-black-2: #222222;
+    --c-black-3: #333333;
+    --c-black-4: #444444;
+    --c-black-5: #555555;
+    --c-black-6: #666666;
+    --c-black-7: #777777;
+    --c-black-8: #888888;
+    --c-black-9: #999999;
+    --c-black-a: #AAAAAA;
+    --c-black-b: #BBBBBB;
+    --c-black-c: #CCCCCC;
+
 
     --c-white-1: #ffffff;
-    --c-white-2: #dcdcdc;
+    --c-white-2: #EEEEEE;
+    --c-white-3: #DDDDDD;
 
-    --c-blue-1: #F0FFFF;
-    --c-blue-2: #00BFFF;
-    --c-blue-3: #4ab4ef;
-    --c-blue-4: #1E90FF;
-    --c-blue-5: #0000ff;
-    --c-blue-9: #14141a;
+
+    --c-green-light:#67c23a;
+    --c-blue-light: #04a5ff;
+    --c-red-light: #ff6262;
+
+    --c-green-dark:#67c23a;
+    --c-blue-dark: #4ab4ef;
+    --c-red-dark: #fa6f6f;
+
 }
