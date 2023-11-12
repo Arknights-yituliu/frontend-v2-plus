@@ -58,9 +58,9 @@
       <c-button :color="'blue'" :isSelected="btn_status.btn_statistics"
                 @click="clickBtn('btn_statistics');statisticsCollapse()">统计干员练度
       </c-button>
-<!--      <c-button :color="'blue'" :isSelected="btn_status.btn_plan"-->
-<!--                @click="clickBtn('btn_plan');getOperatorPlanItemCost()">练度计划材料消耗统计-->
-<!--      </c-button>-->
+      <!--      <c-button :color="'blue'" :isSelected="btn_status.btn_plan"-->
+      <!--                @click="clickBtn('btn_plan');getOperatorPlanItemCost()">练度计划材料消耗统计-->
+      <!--      </c-button>-->
 
 
     </div>
@@ -142,28 +142,28 @@
           </div>
 
           <div class="mdui-divider" style="margin: 8px;"></div>
-<!--          <div class="control_tip ">-->
-<!--            <a class="">对所有被筛选出的干员进行操作</a>-->
-<!--          </div>-->
-<!--          <div class="control_bar">-->
-<!--            <div class="control_title" style="width: 100px;">-->
-<!--              批量操作-->
-<!--            </div>-->
-<!--            <div class="switch_btn_wrap">-->
-<!--              <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>-->
-<!--              <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>-->
-<!--              <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>-->
-<!--              <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>-->
-<!--              <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>-->
-<!--              <div class="btn">设为满级</div>-->
-<!--              <div class="btn">设为满潜能</div>-->
-<!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>-->
-<!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>-->
-<!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>-->
-<!--              <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>-->
-<!--              <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>-->
-<!--            </div>-->
-<!--          </div>-->
+          <!--          <div class="control_tip ">-->
+          <!--            <a class="">对所有被筛选出的干员进行操作</a>-->
+          <!--          </div>-->
+          <!--          <div class="control_bar">-->
+          <!--            <div class="control_title" style="width: 100px;">-->
+          <!--              批量操作-->
+          <!--            </div>-->
+          <!--            <div class="switch_btn_wrap">-->
+          <!--              <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>-->
+          <!--              <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>-->
+          <!--              <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>-->
+          <!--              <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>-->
+          <!--              <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>-->
+          <!--              <div class="btn">设为满级</div>-->
+          <!--              <div class="btn">设为满潜能</div>-->
+          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>-->
+          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>-->
+          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>-->
+          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>-->
+          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>-->
+          <!--            </div>-->
+          <!--          </div>-->
         </div>
       </div>
     </div>
@@ -222,7 +222,7 @@
             <div class="control_title">导入导出</div>
             <div class="switch_btn_wrap">
               <div class="btn btn_green" @click="exportExcel()">导出为Excel</div>
-                </div>
+            </div>
           </div>
 
 
@@ -263,7 +263,7 @@
           </div>
           <div class="control_bar">
             <div class="control_tip"><b>*森空岛导入：</b>请遵循
-              <b >《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面<br>
+              <b>《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面<br>
             </div>
           </div>
         </div>
@@ -292,78 +292,72 @@
             </div>
           </div>
 
-          <div class="control_bar" style="display: block;margin:20px auto">
-
-            <p> Dr.{{ userData.userName }}，您总计招募了{{ statistics_result.total.own }}位干员，
-              未招募干员{{ statistics_result.total.count - statistics_result.total.own }}位，
-              未招募的干员是
-            </p>
-            <div class="not_own_operator_wrap">
-              <div class="opr_sprite_avatar_bg" style="margin: 0 4px 30px 4px"
-                   v-for="(operator,index) in statistics_result.total.notOwn" :key="index">
-                <div :class="getOperatorSprite(operator.charId)"></div>
-                <div class="sprite_alt" style="top:70px">{{ operator.name }}</div>
-              </div>
-            </div>
-<!--            <p>总计专精了{{-->
-<!--                statistics_result.total.skill.rank3 + statistics_result.total.skill.rank2 + statistics_result.total.skill.rank1-->
-<!--              }}-->
-<!--              个技能，专三技能：{{-->
-<!--                statistics_result.total.skill.rank3-->
-<!--              }}个，专二技能：{{ statistics_result.total.skill.rank2 }}个，-->
-<!--              专一技能：{{ statistics_result.total.skill.rank1 }}个。-->
-<!--              模组解锁了{{-->
-<!--                statistics_result.total.mod.rank3 + statistics_result.total.mod.rank2 + statistics_result.total.mod.rank1-->
-<!--              }}个，-->
-<!--              其中三级模组{{ statistics_result.total.mod.rank3 }}个，其中二级模组{{-->
-<!--                statistics_result.total.mod.rank2-->
-<!--              }}个，-->
-<!--              其中一级模组{{ statistics_result.total.mod.rank1 }}个。详情如下：-->
-<!--            </p>-->
-
-            <table class="dev_table">
-              <tbody>
-              <tr>
-                <td>星级</td>
-                <td>已招募/总数</td>
-                <td>专三技能数</td>
-                <td>3级X模组</td>
-                <td>3级Y模组</td>
-              </tr>
-              <tr v-for="(detail,index) in statistics_detail" :key="index">
-                <td> <img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""> </td>
-                <td>{{ detail.own }}/{{ detail.count }}</td>
-                <td>{{ detail.skill.rank3 }}</td>
-                <td>{{ detail.modX.rank3 }}</td>
-                <td>{{ detail.modY.rank3 }}</td>
-              </tr>
-              </tbody>
-            </table>
-
-            <p>其中练度最高的十位干员是</p>
-
-            <div class="opr_form">
-              <div class="opr_card" v-for="(operator, char_index) in statistics_result.max" :key="char_index"
-                   v-show="operator.show">
-                <div class="opr_sprite_avatar_bg">
+          <div class="control_bar" style="align-items: normal">
+            <div class="control_operator_card">
+              <p> Dr.{{ userData.userName }}，您总计招募了{{ statistics_result.total.own }}位干员，
+                未招募干员{{ statistics_result.total.count - statistics_result.total.own }}位，
+                未招募的干员是
+              </p>
+              <div class="not_own_operator_wrap">
+                <div class="opr_sprite_avatar_bg" style="margin: 0 4px 30px 4px"
+                     v-for="(operator,index) in statistics_result.total.notOwn" :key="index">
                   <div :class="getOperatorSprite(operator.charId)"></div>
-                  <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
-                  <div class="opr_level">
-                    {{ operator.level }}
+                  <div class="sprite_alt" style="top:70px">{{ operator.name }}</div>
+                </div>
+              </div>
+              <table class="dev_table">
+                <tbody>
+                <tr>
+                  <td>星级</td>
+                  <td>已招募/总数</td>
+                  <td>专三数量</td>
+                  <td>3级X模组</td>
+                  <td>3级Y模组</td>
+                </tr>
+                <tr>
+                  <td>总计</td>
+                  <td>{{ statistics_result.total.own }}/{{ statistics_result.total.count }}</td>
+                  <td>{{ statistics_result.total.skill.rank3 }}</td>
+                  <td>{{ statistics_result.total.modX.rank3 }}</td>
+                  <td>{{ statistics_result.total.modY.rank3 }}</td>
+                </tr>
+                <tr v-for="(detail,index) in statistics_detail" :key="index">
+                  <td><img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""></td>
+                  <td>{{ detail.own }}/{{ detail.count }}</td>
+                  <td>{{ detail.skill.rank3 }}</td>
+                  <td>{{ detail.modX.rank3 }}</td>
+                  <td>{{ detail.modY.rank3 }}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="control_operator_card">
+              <p>其中练度最高的十位干员是</p>
+
+              <div class="opr_form">
+                <div class="opr_card" v-for="(operator, char_index) in statistics_result.max" :key="char_index"
+                     v-show="operator.show">
+                  <div class="opr_sprite_avatar_bg">
+                    <div :class="getOperatorSprite(operator.charId)"></div>
+                    <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
+                    <div class="opr_level">
+                      {{ operator.level }}
+                    </div>
                   </div>
-                </div>
-                <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
-                  <div :class="getSkillSprite(skill.iconId)"></div>
-                  <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
-                       v-show="operator[`skill${index+1}`]>0" class="opr_skill_rank">
-                </div>
-                <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_skill_bg">
-                  <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>
-                  <div class="sprite_alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
-                </div>
-                <div class="opr_sprite_skill_bg">
-                  <div :class="getItemSprite('AP_GAMEPLAY')"></div>
-                  <div class="sprite_alt">{{ operator.apCost.toFixed(0) }}</div>
+                  <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
+                    <div :class="getSkillSprite(skill.iconId)"></div>
+                    <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
+                         v-show="operator[`skill${index+1}`]>0" class="opr_skill_rank">
+                  </div>
+                  <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_skill_bg">
+                    <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>
+                    <div class="sprite_alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
+                  </div>
+                  <div class="opr_sprite_skill_bg">
+                    <div :class="getItemSprite('AP_GAMEPLAY')"></div>
+                    <div class="sprite_alt">{{ operator.apCost.toFixed(0) }}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1252,6 +1246,18 @@ onMounted(() => {
 .not_own_operator_wrap {
   display: flex;
   flex-wrap: wrap;
+  margin: auto;
+  width: fit-content;
+}
+
+
+
+.control_operator_card {
+  width: 500px;
+  display: block;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 
