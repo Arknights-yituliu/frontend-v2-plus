@@ -1,9 +1,9 @@
 <template>
   <div class="header_wrap">
-    <i style="font-size: 36px;color: rgb(230,230,230)"
+    <i style="font-size: 24px;color: rgb(230,230,230)"
        class="iconfont icon-menu" id="menu-button" @click="menu_collapse(true)">
     </i>
-    <i style="font-size: 36px;color: rgb(230,230,230)"
+    <i style="font-size: 24px;color: rgb(230,230,230)"
        class="iconfont icon-menu" id="menu_button_desktop" @click="aside_collapse()">
     </i>
     <!--    <c-icon :name="'menu'" :style="'width:40px;height: 40px;fill:rgb(230,230,230)'" id="menu-button"  @click="menu_collapse(true)"></c-icon>-->
@@ -18,8 +18,13 @@
     <div class="spacer"></div>
     <c-popover :name="'theme_menu'">
       <template #title>
-        <c-icon :name="'moon'" :style="'width:40px;height: 40px;fill:rgb(230,230,230)'"></c-icon>
-        <!--        <img style="width: 36px;" src="/image/icon/sun.svg" alt="">-->
+<!--        <i style="font-size: 32px;color: rgb(230,230,230)"-->
+<!--           class="iconfont icon-moon" id="menu_button_desktop" @click="aside_collapse()">-->
+<!--        </i>-->
+        <i style="font-size: 32px;color: rgb(230,230,230)"
+           class="iconfont icon-sun" id="menu_button_desktop" @click="aside_collapse()">
+        </i>
+
       </template>
       <div class="theme_option_wrap" id="theme_menu">
         <div class="theme_option" @click="switchTheme('dark')">深色模式</div>
