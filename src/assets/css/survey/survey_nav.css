@@ -8,23 +8,6 @@
     padding:0 4px 0 32px;
 }
 
-.survey_nav_menu_wrap {
-    /*background-color:red ;*/
-    position: absolute;
-    top: 40px;
-    right: 0;
-    width:0;
-    height: 0;
-    overflow: hidden;
-    transition: all 0.3s;
-    z-index:3000;
-}
-
-@media (max-width: 1080px) {
-    .survey_nav_menu_wrap{
-        top: 66px;
-    }
-}
 
 .survey_nav_bar{
     width: 80px;
@@ -43,32 +26,20 @@
 }
 
 .survey_nav_menu {
-    background-color: #262f3e;
-    position: relative;
-    top: -4px;
-    width: 100px;
+    background-color: var(--c-wrap-bg);
     padding:1px;
     border-radius: 4px;
+    width: fit-content;
 }
-
-
-.survey_nav_bar:hover .survey_nav_menu_wrap{
-    width:120px;
-    height: 120px;
-}
-
-.survey_nav_bar:hover .nav_avatar_image_wrap{
-    transform: scale(1.3);
-}
-
 
 .survey_nav_menu_item{
-    display: flex;
+    display: block;
     height: 28px;
     line-height: 28px;
     margin: 8px;
     border-radius: 4px;
     cursor: pointer;
+    white-space:nowrap;
 }
 
 .survey_nav_menu_item:hover{
@@ -77,7 +48,7 @@
 
 .menu_href{
     text-decoration: none;
-    color :white;
+    color: var(--c-text-color);
 }
 
 .nav_avatar_image_wrap{

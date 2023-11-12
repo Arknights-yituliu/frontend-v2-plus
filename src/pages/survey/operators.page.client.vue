@@ -142,28 +142,28 @@
           </div>
 
           <div class="mdui-divider" style="margin: 8px;"></div>
-          <div class="control_tip ">
-            <a class="">对所有被筛选出的干员进行操作</a>
-          </div>
-          <div class="control_bar">
-            <div class="control_title" style="width: 100px;">
-              批量操作
-            </div>
-            <div class="switch_btn_wrap">
-              <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>
-              <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>
-              <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>
-              <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>
-              <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>
-              <div class="btn">设为满级</div>
-              <div class="btn">设为满潜能</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>
-              <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>
-            </div>
-          </div>
+<!--          <div class="control_tip ">-->
+<!--            <a class="">对所有被筛选出的干员进行操作</a>-->
+<!--          </div>-->
+<!--          <div class="control_bar">-->
+<!--            <div class="control_title" style="width: 100px;">-->
+<!--              批量操作-->
+<!--            </div>-->
+<!--            <div class="switch_btn_wrap">-->
+<!--              <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>-->
+<!--              <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>-->
+<!--              <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>-->
+<!--              <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>-->
+<!--              <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>-->
+<!--              <div class="btn">设为满级</div>-->
+<!--              <div class="btn">设为满潜能</div>-->
+<!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>-->
+<!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>-->
+<!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>-->
+<!--              <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>-->
+<!--              <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
       </div>
     </div>
@@ -292,47 +292,46 @@
             </div>
           </div>
 
-          <div class="control_bar" style="display: block">
+          <div class="control_bar" style="display: block;margin:20px auto">
 
-            <p> Dr.{{ userData.userName }}，您的BOX情况如下：</p>
-            <p> 已招募干员{{ statistics_result.total.own }}位，
+            <p> Dr.{{ userData.userName }}，您总计招募了{{ statistics_result.total.own }}位干员，
               未招募干员{{ statistics_result.total.count - statistics_result.total.own }}位，
-              未没有招募到的干员是以下
+              未招募的干员是
             </p>
             <div class="not_own_operator_wrap">
-              <div class="opr_sprite_avatar_bg"
+              <div class="opr_sprite_avatar_bg" style="margin: 0 4px 30px 4px"
                    v-for="(operator,index) in statistics_result.total.notOwn" :key="index">
                 <div :class="getOperatorSprite(operator.charId)"></div>
-                <div class="sprite_alt">{{ operator.name }}</div>
+                <div class="sprite_alt" style="top:70px">{{ operator.name }}</div>
               </div>
             </div>
-            <p>总计专精了{{
-                statistics_result.total.skill.rank3 + statistics_result.total.skill.rank2 + statistics_result.total.skill.rank1
-              }}
-              个技能，专三技能：{{
-                statistics_result.total.skill.rank3
-              }}个，专二技能：{{ statistics_result.total.skill.rank2 }}个，
-              专一技能：{{ statistics_result.total.skill.rank1 }}个。
-              模组解锁了{{
-                statistics_result.total.mod.rank3 + statistics_result.total.mod.rank2 + statistics_result.total.mod.rank1
-              }}个，
-              其中三级模组{{ statistics_result.total.mod.rank3 }}个，其中二级模组{{
-                statistics_result.total.mod.rank2
-              }}个，
-              其中一级模组{{ statistics_result.total.mod.rank1 }}个。详情如下：
-            </p>
+<!--            <p>总计专精了{{-->
+<!--                statistics_result.total.skill.rank3 + statistics_result.total.skill.rank2 + statistics_result.total.skill.rank1-->
+<!--              }}-->
+<!--              个技能，专三技能：{{-->
+<!--                statistics_result.total.skill.rank3-->
+<!--              }}个，专二技能：{{ statistics_result.total.skill.rank2 }}个，-->
+<!--              专一技能：{{ statistics_result.total.skill.rank1 }}个。-->
+<!--              模组解锁了{{-->
+<!--                statistics_result.total.mod.rank3 + statistics_result.total.mod.rank2 + statistics_result.total.mod.rank1-->
+<!--              }}个，-->
+<!--              其中三级模组{{ statistics_result.total.mod.rank3 }}个，其中二级模组{{-->
+<!--                statistics_result.total.mod.rank2-->
+<!--              }}个，-->
+<!--              其中一级模组{{ statistics_result.total.mod.rank1 }}个。详情如下：-->
+<!--            </p>-->
 
             <table class="dev_table">
               <tbody>
               <tr>
                 <td>星级</td>
-                <td>已招募/全图鉴</td>
+                <td>已招募/总数</td>
                 <td>专三技能数</td>
                 <td>3级X模组</td>
                 <td>3级Y模组</td>
               </tr>
               <tr v-for="(detail,index) in statistics_detail" :key="index">
-                <td>{{ 6 - index }}</td>
+                <td> <img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""> </td>
                 <td>{{ detail.own }}/{{ detail.count }}</td>
                 <td>{{ detail.skill.rank3 }}</td>
                 <td>{{ detail.modX.rank3 }}</td>
@@ -348,8 +347,10 @@
                    v-show="operator.show">
                 <div class="opr_sprite_avatar_bg">
                   <div :class="getOperatorSprite(operator.charId)"></div>
-                  <div class="opr_sprite_elite_bg"></div>
-                  <div :class="getEliteSprite(operator.elite)"></div>
+                  <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
+                  <div class="opr_level">
+                    {{ operator.level }}
+                  </div>
                 </div>
                 <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
                   <div :class="getSkillSprite(skill.iconId)"></div>
@@ -378,7 +379,6 @@
         <div class="opr_sprite_avatar_bg">
           <div :class="getOperatorSprite(operator.charId)"></div>
           <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
-          <!--            <div :class="getEliteSprite(operator.elite)" ></div>-->
           <div class="opr_level">
             {{ operator.level }}
           </div>
@@ -447,7 +447,7 @@
 
         <!--        当前练度-->
         <div class="opr_options">
-          <div class="opr_option_title">当前练度</div>
+          <div class="opr_option_title">修改当前练度</div>
           <div class="opr_option_bar">
             <div v-for="rank in ranks.slice(0,3)" :key="rank"
                  @click="updateOperatorData(operator_popup_data.charId,`elite`,rank)"
@@ -475,7 +475,7 @@
 
         <!--       计划练度-->
         <div class="opr_options">
-          <div class="opr_option_title">计划练度</div>
+          <div class="opr_option_title">设定计划练度</div>
           <div class="opr_option_bar">
             <div v-for="rank in ranks.slice(0,3)" :key="rank"
                  @click="updateOperatorPlan(operator_popup_data.charId,`elite`,rank)"
@@ -1199,7 +1199,7 @@ onMounted(() => {
 .dev_table {
   border-collapse: collapse;
   text-align: center;
-  margin: 12px 0;
+  margin: 12px auto;
 }
 
 .dev_table td {

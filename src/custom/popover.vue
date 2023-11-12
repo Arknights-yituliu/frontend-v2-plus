@@ -1,9 +1,9 @@
 <template>
   <div class="popover_wrap">
-    <div @click="openOrClose()" class="popover_title">
+    <a @click="openOrClose()" class="popover_title">
       <slot name="title">
       </slot>
-    </div>
+    </a>
     <div class="popover_content" :id="content_wrap">
       <slot></slot>
     </div>
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-const props = defineProps(["modelValue", "name", "menu"]);
+const props = defineProps(["modelValue", "name"]);
 
 let content_wrap = `popover-${props.name}`
 
@@ -21,8 +21,8 @@ function openOrClose() {
   const offsetHeight = element.offsetHeight;
   console.log(offsetHeight)
   if (offsetHeight < 5) {
-    console.log(props.menu)
-    const slotElement = document.getElementById(props.menu);
+    console.log(props.name)
+    const slotElement = document.getElementById(props.name);
     const slotHeight = slotElement.offsetHeight;
     const slotWidth = slotElement.offsetWidth;
     console.log(slotHeight, '-', slotWidth)
@@ -45,24 +45,22 @@ function openOrClose() {
 
 
 .popover_title {
-  padding: 4px;
   cursor: pointer;
-  width: fit-content;
+  line-height: normal;
 }
 
 
 .popover_content {
   position: absolute;
   top: 48px;
-  right: 0;
+  right: 20px;
   width: 0;
   height: 0;
   overflow: hidden;
   transition: all 0.3s;
   z-index: 3000;
-  background-color: var(--c-bg);
+  background-color: var(--c-wrap-bg);
   box-shadow: var(--c-box-shadow);
-  border: var(--c-border);
   border-radius: 4px;
 }
 

@@ -4,19 +4,31 @@
       <div class="nav_user_name" id="nav_user_name">登录</div>
     </div>
 
-    <div v-show="user_data.status>0" class="survey_nav_bar">
-      <!--      <div class="nav_user_name" id="nav_user_name">{{ user_data.userName }}</div>-->
-      <div class="nav_avatar_image_wrap">
-        <div :class="getSprite(user_data.avatar)"></div>
-      </div>
-      <div class="survey_nav_menu_wrap">
-        <div class="survey_nav_menu_arrow"></div>
-        <div class="survey_nav_menu">
-          <a class="survey_nav_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>
-          <a class="survey_nav_menu_item menu_href" @click="login_visible=!login_visible"> 退出登录 </a>
+    <c-popover :name="'avatar'" v-show="user_data.status>0">
+      <template #title>
+        <div class="nav_avatar_image_wrap">
+          <div :class="getSprite(user_data.avatar)"></div>
         </div>
-      </div>
-    </div>
+      </template>
+
+        <div class="survey_nav_menu" id="avatar">
+          <a class="survey_nav_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>
+          <a class="survey_nav_menu_item menu_href" @click="login_visible=!login_visible">退出登录 </a>
+        </div>
+    </c-popover>
+    <!--    <div v-show="user_data.status>0" class="survey_nav_bar">-->
+    <!--      &lt;!&ndash;      <div class="nav_user_name" id="nav_user_name">{{ user_data.userName }}</div>&ndash;&gt;-->
+    <!--      <div class="nav_avatar_image_wrap">-->
+    <!--        <div :class="getSprite(user_data.avatar)"></div>-->
+    <!--      </div>-->
+    <!--      <div class="survey_nav_menu_wrap">-->
+    <!--        <div class="survey_nav_menu_arrow"></div>-->
+    <!--        <div class="survey_nav_menu">-->
+    <!--          <a class="survey_nav_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>-->
+    <!--          <a class="survey_nav_menu_item menu_href" @click="login_visible=!login_visible"> 退出登录 </a>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
 
     <c-popup :visible="login_visible" v-model:visible="login_visible">
@@ -24,11 +36,11 @@
       <div class="login_card" v-show="user_data.status<0">
         <div class="login_btn_wrap">
           <div class="btn" :style="accountTypeClass('passWord')"
-                  @click="selectAccountType('passWord')">密码{{ 'register' === registerOrLogin ? '注册' : '登录' }}
+               @click="selectAccountType('passWord')">密码{{ 'register' === registerOrLogin ? '注册' : '登录' }}
           </div>
           <div style="border: 1px solid black;height: 18px"></div>
           <div class="btn" :style="accountTypeClass('emailCode')"
-                  @click="selectAccountType('emailCode')">邮箱{{ 'register' === registerOrLogin ? '注册' : '登录' }}
+               @click="selectAccountType('emailCode')">邮箱{{ 'register' === registerOrLogin ? '注册' : '登录' }}
           </div>
         </div>
 
@@ -85,7 +97,8 @@
           <div class="login_tip ">
             <p> 账号系统更新，老用户直接输入用户名，无需密码即可登录 </p>
             <p> 新用户注册可用账号密码注册和邮箱注册，也可在个人中心进行设置密码和邮箱绑定等操作</p>
-            <p class="warning_color"> *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用</p>
+            <p class="warning_color">
+              *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用</p>
           </div>
         </div>
       </div>
@@ -189,7 +202,6 @@ function selectAccountType(type) {
 function accountTypeClass(type) {
   if (account_type.value === type) return 'color:#409eff;'
 }
-
 
 
 //登录

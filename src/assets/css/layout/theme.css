@@ -1,35 +1,41 @@
 .theme_light{
+    /*基础样式*/
     --c-box-shadow:1px 1px 4px #a9a9a9;
-    --c-bg: #ffffff;
+    --c-bg: var(--c-white-1);
     --c-text-color:var(--c-black-2);
+    --c-wrap-bg:var(--c-white-1);
 
-    --c-btn-border:1px solid var(--c-black-c);
-    --c-btn-bg:var(--c-white-1);
-    --c-btn-color:var(--c-black-3);
+    /*按钮样式*/
+    --c-btn-bg:var(--c-white-2);
+    --c-btn-color:var(--c-black-1);
     --c-btn-text-color:var(--c-white-1);
     --c-btn-bg-blue:var(--c-blue-light);
     --c-btn-bg-red:var(--c-red-light);
-    --c-btn-bg-green:var(--c-green-dark);
+    --c-btn-bg-green:var(--c-green-light);
 
+    /*输入框样式*/
     --c-input-bg:var(--c-bg);
     --c-input-border:1px solid var(--c-black-2);
     --c-input-text-color:var(--c-black-2);
 }
 
 .theme_dark{
-    --c-border:1px solid var(--c-white-2);
-    --c-bg: #1E1E1E;
-    --c-text-color: var(--c-white-3);
+    /*基础样式*/
+    --c-border:1px solid var(--c-white-3);
+    --c-bg: var(--c-black-2);
+    --c-text-color: var(--c-white-2);
+    --c-wrap-bg:var(--c-black-3);
 
-    --c-btn-border:1px solid var(--c-white-3);
-    --c-btn-bg:var(--c-black-3);
-    --c-btn-color:var(--c-white-3);
-    --c-btn-text-color:var(--c-black-2);
+    /*按钮样式*/
+    --c-btn-bg:var(--c-black-5);
+    --c-btn-color:var(--c-white-1);
+    --c-btn-text-color:var(--c-black-1);
     --c-btn-bg-blue:var(--c-blue-dark);
     --c-btn-bg-red:var(--c-red-dark);
     --c-btn-bg-green:var(--c-green-dark);
 
-    --c-input-bg:var(--c-bg);
+    /*输入框样式*/
+    --c-input-bg:var(--c-black-3);
     --c-input-border:2px solid var(--c-white-2);
     --c-input-text-color:var(--c-white-2);
 
@@ -38,29 +44,29 @@
 
 .color_var{
     --c-black-1: #000000;
-    --c-black-2: #222222;
-    --c-black-3: #333333;
-    --c-black-4: #444444;
-    --c-black-5: #555555;
-    --c-black-6: #666666;
-    --c-black-7: #777777;
-    --c-black-8: #888888;
-    --c-black-9: #999999;
-    --c-black-a: #AAAAAA;
-    --c-black-b: #BBBBBB;
-    --c-black-c: #CCCCCC;
+    --c-black-2: #191919;
+    --c-black-3: #323232;
+    --c-black-4: #4b4b4b;
+    --c-black-5: #646464;
+    --c-black-6: #7d7d7d;
+    --c-black-7: #969696;
+
 
 
     --c-white-1: #ffffff;
-    --c-white-2: #EEEEEE;
-    --c-white-3: #DDDDDD;
+    --c-white-2: #e1e1e1;
+    --c-white-3: #cdcdcd;
+    --c-white-4: #b4b4b4;
+    --c-white-5: #BBBBBB;
+    --c-white-6: #DDDDDD;
+    --c-white-7: #ffffff;
 
 
-    --c-green-light:#67c23a;
+    --c-green-light: #43d750;
     --c-blue-light: #04a5ff;
     --c-red-light: #ff6262;
 
-    --c-green-dark:#67c23a;
+    --c-green-dark: #3bb6ac;
     --c-blue-dark: #4ab4ef;
     --c-red-dark: #fa6f6f;
 

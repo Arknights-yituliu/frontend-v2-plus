@@ -3,14 +3,13 @@
     position: sticky;
     display: flex;
     flex-wrap: wrap;
-    top: 0;
+    top: 4px;
     z-index: 1000;
     max-width: 95%;
     box-shadow: var(--c-box-shadow);
-    border: var(--c-border);
+    background-color: var(--c-wrap-bg);
     margin: auto auto 6px;
     padding: 4px 0 4px 16px;
-    background-color: var(--c-bg);
 }
 
 .href_black {
@@ -165,7 +164,7 @@
     margin: auto auto 6px;
     padding: 4px 0px 4px 16px;
     box-shadow: var(--c-box-shadow);
-    border: var(--c-border);
+    background-color: var(--c-wrap-bg);
     border-radius: 2px;
 }
 

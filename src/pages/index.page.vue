@@ -1,19 +1,19 @@
 <template>
   <div >
-    <div class="act_tips_wrap">
-      <div class="to_act_wrap">
-        <a href="https://ak.hypergryph.com/activity/resonance-of-the-mind">
-          <img src="/image/temp/4.5H5小活动.jpg" class="to_h5_image" alt=""/>
-        </a>
-        点击转跳庆典网页小活动
-      </div>
+<!--    <div class="act_tips_wrap">-->
+<!--      <div class="to_act_wrap">-->
+<!--        <a href="https://ak.hypergryph.com/activity/resonance-of-the-mind">-->
+<!--          <img src="/image/temp/4.5H5小活动.jpg" class="to_h5_image" alt=""/>-->
+<!--        </a>-->
+<!--        点击转跳庆典网页小活动-->
+<!--      </div>-->
 
-      <div class="to_act_wrap">
-        <div class="code">直播兑换码——20000龙门币</div>
-        <div class="code">02023CELEBRATION</div>
-        <c-button :color="'blue'" @click="copyCode('02023CELEBRATION')">点击复制兑换码并转跳官网</c-button>
-      </div>
-    </div>
+<!--      <div class="to_act_wrap">-->
+<!--        <div class="code">直播兑换码——20000龙门币</div>-->
+<!--        <div class="code">02023CELEBRATION</div>-->
+<!--        <c-button :color="'blue'" @click="copyCode('02023CELEBRATION')">点击复制兑换码并转跳官网</c-button>-->
+<!--      </div>-->
+<!--    </div>-->
 
 
 

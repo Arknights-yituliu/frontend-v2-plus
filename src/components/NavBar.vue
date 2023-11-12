@@ -1,27 +1,19 @@
 <template>
   <div class="header_wrap">
-    <img src="/image/icon/menu.svg" alt="" class="menu-button" style="width: 32px" @click="menu_collapse(true)">
-    <img src="/image/icon/menu.svg" alt="" class="menu_button_desktop" style="width: 32px" @click="aside_collapse()">
-
-    <!--    <div class="menu-button" >-->
-    <!--      <div></div>-->
-    <!--      <div></div>-->
-    <!--      <div></div>-->
-    <!--    </div>-->
-    <!--    <div class="menu_button_desktop" @click="aside_collapse()">-->
-    <!--      <div></div>-->
-    <!--      <div></div>-->
-    <!--      <div></div>-->
-    <!--    </div>-->
-
-    <div class="pageTitle" @click="aside_collapse()">
+    <c-icon :name="'menu'" :style="'width:40px;height: 40px;fill:rgb(230,230,230)'" id="menu-button"  @click="menu_collapse(true)"></c-icon>
+    <c-icon :name="'menu'" :style="'width:28px;height: 28px;fill:rgb(230,230,230)'" id="menu_button_desktop" @click="aside_collapse()"></c-icon>
+<!--    <img src="/image/icon/menu.svg" alt="" class="menu-button" style="width: 32px" @click="menu_collapse(true)">-->
+<!--    <img src="/image/icon/menu.svg" alt="" class="menu_button_desktop" style="width: 32px" @click="aside_collapse()">-->
+    <div class="page_title" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
 
+
     <div class="spacer"></div>
-    <c-popover :menu="'theme_menu'">
+    <c-popover :name="'theme_menu'">
       <template #title>
-        <img style="width: 36px;" src="/image/icon/sun.svg" alt="">
+        <c-icon :name="'moon'" :style="'width:40px;height: 40px;fill:rgb(230,230,230)'"></c-icon>
+<!--        <img style="width: 36px;" src="/image/icon/sun.svg" alt="">-->
       </template>
       <div class="theme_option_wrap" id="theme_menu" >
         <div class="theme_option" @click="switchTheme('dark')">深色模式</div>
@@ -215,10 +207,12 @@ function substrPath(pathName) {
 }
 
 
+
 onMounted(() => {
   const pathName = window.location.pathname;
   updateVisits(pathName);
   getPageTitle(pathName);
+
 });
 </script>
 

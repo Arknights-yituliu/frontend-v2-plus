@@ -39,6 +39,8 @@ import "/src/assets/css/stage_v3.css";
 // 旧版css，待修改
 // import "/src/assets/css/recruit.css";
 
+
+
 import NavBar from "/src/components/NavBar.vue";
 import myFooter from "/src/components/myfooter.vue";
 import myAside from "/src/components/aside.vue";
@@ -91,6 +93,11 @@ body {
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
   overscroll-behavior: none;
+
+}
+
+svg{
+  fill: var(--c-text-color);
 }
 
 /* .header {
