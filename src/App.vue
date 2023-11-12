@@ -59,9 +59,6 @@ onMounted(() => {
 
   document.getElementsByTagName("html")
       .item(0).className=theme_v2==="dark"?"dark":"light";
-
-
-
 })
 
 
