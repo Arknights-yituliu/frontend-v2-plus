@@ -216,15 +216,16 @@
 
     <!-- 导入导出模块 -->
     <div class="survey_control_wrap" style="height: auto;" id="upload_box_wrap">
+
       <div class="survey_control" id="upload_box">
         <div class="control_bar_wrap">
+
           <div class="control_bar">
             <div class="control_title">导入导出</div>
             <div class="switch_btn_wrap">
               <div class="btn btn_green" @click="exportExcel()">导出为Excel</div>
             </div>
           </div>
-
 
           <div class="divider"></div>
           <div class="control_bar">

@@ -1,9 +1,15 @@
 <template>
   <div class="header_wrap">
-    <c-icon :name="'menu'" :style="'width:40px;height: 40px;fill:rgb(230,230,230)'" id="menu-button"  @click="menu_collapse(true)"></c-icon>
-    <c-icon :name="'menu'" :style="'width:28px;height: 28px;fill:rgb(230,230,230)'" id="menu_button_desktop" @click="aside_collapse()"></c-icon>
-<!--    <img src="/image/icon/menu.svg" alt="" class="menu-button" style="width: 32px" @click="menu_collapse(true)">-->
-<!--    <img src="/image/icon/menu.svg" alt="" class="menu_button_desktop" style="width: 32px" @click="aside_collapse()">-->
+    <i style="font-size: 36px;color: rgb(230,230,230)"
+       class="iconfont icon-menu" id="menu-button" @click="menu_collapse(true)">
+    </i>
+    <i style="font-size: 36px;color: rgb(230,230,230)"
+       class="iconfont icon-menu" id="menu_button_desktop" @click="aside_collapse()">
+    </i>
+    <!--    <c-icon :name="'menu'" :style="'width:40px;height: 40px;fill:rgb(230,230,230)'" id="menu-button"  @click="menu_collapse(true)"></c-icon>-->
+    <!--    <c-icon :name="'menu'" :style="'width:28px;height: 28px;fill:rgb(230,230,230)'" id="menu_button_desktop" @click="aside_collapse()"></c-icon>-->
+    <!--    <img src="/image/icon/menu.svg" alt="" class="menu-button" style="width: 32px" @click="menu_collapse(true)">-->
+    <!--    <img src="/image/icon/menu.svg" alt="" class="menu_button_desktop" style="width: 32px" @click="aside_collapse()">-->
     <div class="page_title" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
@@ -13,16 +19,16 @@
     <c-popover :name="'theme_menu'">
       <template #title>
         <c-icon :name="'moon'" :style="'width:40px;height: 40px;fill:rgb(230,230,230)'"></c-icon>
-<!--        <img style="width: 36px;" src="/image/icon/sun.svg" alt="">-->
+        <!--        <img style="width: 36px;" src="/image/icon/sun.svg" alt="">-->
       </template>
-      <div class="theme_option_wrap" id="theme_menu" >
+      <div class="theme_option_wrap" id="theme_menu">
         <div class="theme_option" @click="switchTheme('dark')">深色模式</div>
         <div class="theme_option" @click="switchTheme('light')">浅色模式</div>
       </div>
     </c-popover>
 
-<!--    <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny"-->
-<!--               size="large"/>-->
+    <!--    <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny"-->
+    <!--               size="large"/>-->
     <login></login>
 
     <div class="drawer_wrap">
@@ -58,7 +64,7 @@
 </template>
 
 <script setup>
-import {ref, watch, computed,  onMounted} from "vue";
+import {ref, watch, computed, onMounted} from "vue";
 import {Sunny, Moon} from "@element-plus/icons-vue";
 import toolApi from "/src/api/tool";
 import {usePageContext} from "/src/renderer/usePageContext";
@@ -104,20 +110,20 @@ function aside_collapse() {
 }
 
 
-function switchTheme(theme){
+function switchTheme(theme) {
   const container = document.getElementById("container");
   let className = container.className;
-  console.log('旧class：',className)
+  console.log('旧class：', className)
   let list = className.split(" ");
-  console.log('旧主题：',list[list.length-1])
-  className = className.replace(list[list.length-1],`theme_${theme}`)
-  console.log('新主题：',`theme_${theme}`)
-  console.log('新class：',className)
+  console.log('旧主题：', list[list.length - 1])
+  className = className.replace(list[list.length - 1], `theme_${theme}`)
+  console.log('新主题：', `theme_${theme}`)
+  console.log('新class：', className)
   container.className = className
 
-  document.getElementsByTagName("html").item(0).className=theme;
+  document.getElementsByTagName("html").item(0).className = theme;
 
-  localStorage.setItem("theme_v2",theme)
+  localStorage.setItem("theme_v2", theme)
 }
 
 // watch(theme, () => {
@@ -130,8 +136,6 @@ function switchTheme(theme){
 //   root_ele.classList.add(theme_name);
 //   cookie.set("theme", theme_name, {expires: 30});
 // });
-
-
 
 
 const routes = ref(routesJson);
@@ -205,7 +209,6 @@ function substrPath(pathName) {
   }
   return pathName
 }
-
 
 
 onMounted(() => {
