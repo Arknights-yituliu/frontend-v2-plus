@@ -34,7 +34,6 @@ if (props.visible||props.modelValue) {
 function openAndClose(visible) {
   emit("update:visible", visible);
   emit("update:modelValue",visible)
-  // console.log("绑定的值:", visible)
   if (visible) {
     popupStyle.value = "display: block;";
   } else {
@@ -45,7 +44,7 @@ function openAndClose(visible) {
 
 watch(
     () => props.visible,
-    (newVal, oldVal) => {
+    (newVal) => {
       // console.log('visible新值：', newVal)
       if (newVal) {
         popupStyle.value = "display: block;";
@@ -57,7 +56,7 @@ watch(
 
 watch(
     () => props.modelValue,
-    (newVal, oldVal) => {
+    (newVal) => {
       // console.log('modelValue新值：', newVal)
       if (newVal) {
         popupStyle.value = "display: block;";

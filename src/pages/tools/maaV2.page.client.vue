@@ -266,31 +266,31 @@ onMounted(() => {
     <div class="schedule_control">
       <div class="schedule_control_option">
         <div> 基建模式</div>
-        <c-button :color="'blue'" :isSelected="'243'===selected_schedule_type" @click="chooseScheduleType('243')">243
+        <c-button :color="'blue'" :status="'243'===selected_schedule_type" @click="chooseScheduleType('243')">243
         </c-button>
-        <c-button :color="'blue'" :isSelected="'153'===selected_schedule_type" @click="chooseScheduleType('153')">153
+        <c-button :color="'blue'" :status="'153'===selected_schedule_type" @click="chooseScheduleType('153')">153
         </c-button>
-        <c-button :color="'blue'" :isSelected="'333'===selected_schedule_type" @click="chooseScheduleType('333')">333
+        <c-button :color="'blue'" :status="'333'===selected_schedule_type" @click="chooseScheduleType('333')">333
         </c-button>
-        <c-button :color="'blue'" :isSelected="'252'===selected_schedule_type" @click="chooseScheduleType('252')">252
+        <c-button :color="'blue'" :status="'252'===selected_schedule_type" @click="chooseScheduleType('252')">252
         </c-button>
       </div>
 
       <div class="schedule_control_option">
         <div> 换班次数</div>
-        <c-button :color="'blue'" :isSelected="2===schedule_type.planTimes.length" @click="choosePlanTimes(2)">2
+        <c-button :color="'blue'" :status="2===schedule_type.planTimes.length" @click="choosePlanTimes(2)">2
         </c-button>
-        <c-button :color="'blue'" :isSelected="3===schedule_type.planTimes.length" @click="choosePlanTimes(3)">3
+        <c-button :color="'blue'" :status="3===schedule_type.planTimes.length" @click="choosePlanTimes(3)">3
         </c-button>
-        <c-button :color="'blue'" :isSelected="4===schedule_type.planTimes.length" @click="choosePlanTimes(4)">4
+        <c-button :color="'blue'" :status="4===schedule_type.planTimes.length" @click="choosePlanTimes(4)">4
         </c-button>
-        <c-button :color="'blue'" :isSelected="5===schedule_type.planTimes.length" @click="choosePlanTimes(5)">5
+        <c-button :color="'blue'" :status="5===schedule_type.planTimes.length" @click="choosePlanTimes(5)">5
         </c-button>
       </div>
 
       <div class="schedule_control_option">
         <div> 当前班次</div>
-        <c-button :color="'blue'" :isSelected="index === selected_plan_index"
+        <c-button :color="'blue'" :status="index === selected_plan_index"
                   v-for="index in schedule_type.planTimes" :key="index"
                   @click="currentPlan(index)" class="room_times">
           第{{ index + 1 }}班
@@ -317,12 +317,12 @@ onMounted(() => {
       <div class="schedule_control_option">
         <div>目标房间</div>
         <c-button :color="'blue'"
-                  :isSelected="'trading' === plans_template[selected_plan_index].drones.room"
+                  :status="'trading' === plans_template[selected_plan_index].drones.room"
                   @click="setDrones('room','trading')">
           贸易站
         </c-button>
         <c-button :color="'blue'"
-                  :isSelected="'manufacture' === plans_template[selected_plan_index].drones.room"
+                  :status="'manufacture' === plans_template[selected_plan_index].drones.room"
                   @click="setDrones('room','manufacture')">
           制造站
         </c-button>
@@ -331,7 +331,7 @@ onMounted(() => {
       <div class="schedule_control_option">
         <div> 目标房间编号</div>
         <c-button :color="'blue'"
-                  :isSelected="index === plans_template[selected_plan_index].drones.index"
+                  :status="index === plans_template[selected_plan_index].drones.index"
                   @click="setDrones('index',index)"
                   v-for="index in index_list.slice(0,5)" :key="index">
           {{ index + 1 }}
@@ -341,12 +341,12 @@ onMounted(() => {
       <div class="schedule_control_option">
         <div> 换班前后</div>
         <c-button :color="'blue'"
-                  :isSelected="'pre' === plans_template[selected_plan_index].drones.order"
+                  :status="'pre' === plans_template[selected_plan_index].drones.order"
                   @click="setDrones('order','pre')">
           换班前
         </c-button>
         <c-button :color="'blue'"
-                  :isSelected="'post' === plans_template[selected_plan_index].drones.order"
+                  :status="'post' === plans_template[selected_plan_index].drones.order"
                   @click="setDrones('order','post')">
           换班后
         </c-button>
@@ -368,7 +368,7 @@ onMounted(() => {
 
       <c-popup v-model:visible="Fiammetta_target_visible">
         <c-button v-for="(menu,index) in room_type_menu" :key="index"
-                  :color="'blue'" :isSelected="menu.value === popup_room_type"
+                  :color="'blue'" :status="menu.value === popup_room_type"
                   @click="popup_room_type=menu.value">
           {{ menu.label }}
         </c-button>
@@ -384,12 +384,12 @@ onMounted(() => {
       <div class="schedule_control_option">
         <div> 换班前后</div>
         <c-button :color="'blue'"
-                  :isSelected="'pre' === plans_template[selected_plan_index].Fiammetta.order"
+                  :status="'pre' === plans_template[selected_plan_index].Fiammetta.order"
                   @click="setFiammetta('order','pre')">
           换班前
         </c-button>
         <c-button :color="'blue'"
-                  :isSelected="'post' === plans_template[selected_plan_index].Fiammetta.order"
+                  :status="'post' === plans_template[selected_plan_index].Fiammetta.order"
                   @click="setFiammetta('order','post')">
           换班后
         </c-button>
@@ -550,7 +550,7 @@ onMounted(() => {
       </div>
 
       <c-button v-for="(menu,index) in room_type_menu" :key="index"
-                :color="'blue'" :isSelected="menu.value === popup_room_type"
+                :color="'blue'" :status="menu.value === popup_room_type"
                 @click="popup_room_type=menu.value">
         {{ menu.label }}
       </c-button>

@@ -6,10 +6,6 @@
     <i style="font-size: 24px;color: rgb(230,230,230)"
        class="iconfont icon-menu" id="menu_button_desktop" @click="aside_collapse()">
     </i>
-    <!--    <c-icon :name="'menu'" :style="'width:40px;height: 40px;fill:rgb(230,230,230)'" id="menu-button"  @click="menu_collapse(true)"></c-icon>-->
-    <!--    <c-icon :name="'menu'" :style="'width:28px;height: 28px;fill:rgb(230,230,230)'" id="menu_button_desktop" @click="aside_collapse()"></c-icon>-->
-    <!--    <img src="/image/icon/menu.svg" alt="" class="menu-button" style="width: 32px" @click="menu_collapse(true)">-->
-    <!--    <img src="/image/icon/menu.svg" alt="" class="menu_button_desktop" style="width: 32px" @click="aside_collapse()">-->
     <div class="page_title" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
@@ -21,8 +17,7 @@
 <!--        <i style="font-size: 32px;color: rgb(230,230,230)"-->
 <!--           class="iconfont icon-moon" id="menu_button_desktop" @click="aside_collapse()">-->
 <!--        </i>-->
-        <i style="font-size: 32px;color: rgb(230,230,230)"
-           class="iconfont icon-sun" id="menu_button_desktop" @click="aside_collapse()">
+        <i style="font-size: 32px;color: rgb(230,230,230)" class="iconfont icon-sun" >
         </i>
       </template>
       <div class="theme_option_wrap" id="theme_menu">

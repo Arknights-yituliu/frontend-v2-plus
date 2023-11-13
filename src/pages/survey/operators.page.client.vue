@@ -41,24 +41,22 @@
     <div class="setup_top">
       <c-button :color="'blue'" @click="checkFirstPopup()">填写说明</c-button>
 
-      <c-button :color="'blue'" :isSelected="btn_status.btn_filter"
-                @click="clickBtn('btn_filter');
-                collapseV2('filter_box_wrap', 'filter_box')">
+      <c-button :color="'blue'" :status="btn_status.btn_filter"
+                @click="clickBtn('btn_filter');collapseFilter()">
         筛选/批量操作
       </c-button>
 
-      <c-button :color="'blue'" :isSelected="btn_status.btn_import"
-                @click="clickBtn('btn_import');
-                collapseV2('upload_box_wrap', 'upload_box')">
+      <c-button :color="'blue'" :status="btn_status.btn_import"
+                @click="clickBtn('btn_import');collapseImport()">
         数据导入导出
       </c-button>
       <c-button :color="'blue'" @click="feedback()">建议与反馈</c-button>
       <div style="width: 60px"></div>
-      <c-button :color="'green'" :isSelected="true" @click="upload()">手动保存练度</c-button>
-      <c-button :color="'blue'" :isSelected="btn_status.btn_statistics"
+      <c-button :color="'green'" :status="true" @click="upload()">手动保存练度</c-button>
+      <c-button :color="'blue'" :status="btn_status.btn_statistics"
                 @click="clickBtn('btn_statistics');statisticsCollapse()">统计干员练度
       </c-button>
-      <!--      <c-button :color="'blue'" :isSelected="btn_status.btn_plan"-->
+      <!--      <c-button :color="'blue'" :status="btn_status.btn_plan"-->
       <!--                @click="clickBtn('btn_plan');getOperatorPlanItemCost()">练度计划材料消耗统计-->
       <!--      </c-button>-->
 
@@ -66,8 +64,7 @@
     </div>
 
     <!-- 筛选模块 -->
-    <div class="survey_control_wrap" id="filter_box_wrap">
-      <div class="survey_control" id="filter_box">
+    <c-collapse-item v-model:visible="collapse_import_filter" :name="'filter'">
         <div class="control_bar_wrap">
           <div class="control_bar">
             <div class="control_title" style="width: 80px;">职业</div>
@@ -165,8 +162,7 @@
           <!--            </div>-->
           <!--          </div>-->
         </div>
-      </div>
-    </div>
+    </c-collapse-item>
 
 
     <c-popup :visible="import_popup_visible" v-model:visible="import_popup_visible">
@@ -215,85 +211,77 @@
     </c-popup>
 
     <!-- 导入导出模块 -->
-    <div class="survey_control_wrap" style="height: auto;" id="upload_box_wrap">
+    <c-collapse-item v-model:visible="collapse_import_visible" :name="'upload'">
+      <div class="control_bar_wrap">
+        <div class="control_bar">
+          <div class="control_title">导入导出</div>
+          <div class="switch_btn_wrap">
+            <div class="btn btn_green" @click="exportExcel()">导出为Excel</div>
+          </div>
+        </div>
 
-      <div class="survey_control" id="upload_box">
-        <div class="control_bar_wrap">
-
-          <div class="control_bar">
-            <div class="control_title">导入导出</div>
-            <div class="switch_btn_wrap">
-              <div class="btn btn_green" @click="exportExcel()">导出为Excel</div>
+        <div class="divider"></div>
+        <div class="control_bar">
+          <div class="control_title" style="width: 100px;">森空岛导入</div>
+          <div class="switch_btn_wrap">
+            <div class="control_desc">输入在控制台获得的字符</div>
+            <div><input class="control_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
+            <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
+            <div class="btn btn_blue" @click="import_popup_visible = !import_popup_visible">
+              森空岛数据导入流程
+            </div>
+            <!--            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
+            <div class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
+          </div>
+        </div>
+        <div class="control_bar" v-show="import_flag">
+          <div class="control_title" style="width: 140px;">导入账号不正确？</div>
+          <div class="switch_btn_wrap">
+            <div class="control_desc">选择你想要导入的账号</div>
+            <div v-for="(binding,index) in bindingList" :key="index"
+                 class="btn btn_blue" :class="chooseUidClass(binding.uid)"
+                 @click="importSKLandOperatorDataByUid(binding.uid)">
+              {{ binding.uid }}
             </div>
           </div>
 
-          <div class="divider"></div>
-          <div class="control_bar">
-            <div class="control_title" style="width: 100px;">森空岛导入</div>
-            <div class="switch_btn_wrap">
-              <div class="control_desc">输入在控制台获得的字符</div>
-              <div><input class="control_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
-              <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
-              <div class="btn btn_blue" @click="import_popup_visible = !import_popup_visible">
-                森空岛数据导入流程
-              </div>
-              <!--            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
-              <div class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
-            </div>
-          </div>
-          <div class="control_bar" v-show="import_flag">
-            <div class="control_title" style="width: 140px;">导入账号不正确？</div>
-            <div class="switch_btn_wrap">
-              <div class="control_desc">选择你想要导入的账号</div>
-              <div v-for="(binding,index) in bindingList" :key="index"
-                   class="btn btn_blue" :class="chooseUidClass(binding.uid)"
-                   @click="importSKLandOperatorDataByUid(binding.uid)">
-                {{ binding.uid }}
-              </div>
-            </div>
+        </div>
 
-          </div>
-
-          <div class="control_bar" v-show="bindAccount">
-            <div class="control_tip">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
-              {{ upload_message.userName }} </a> 请登录之前的账号 <br>
-              <div class="btn btn_blue" @click="login(upload_message.userName)">
-                请登录用户{{ upload_message.userName }}并刷新网页
-              </div>
-            </div>
-          </div>
-          <div class="control_bar">
-            <div class="control_tip"><b>*森空岛导入：</b>请遵循
-              <b>《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面<br>
+        <div class="control_bar" v-show="bindAccount">
+          <div class="control_tip">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
+            {{ upload_message.userName }} </a> 请登录之前的账号 <br>
+            <div class="btn btn_blue" @click="login(upload_message.userName)">
+              请登录用户{{ upload_message.userName }}并刷新网页
             </div>
           </div>
         </div>
+        <div class="control_bar">
+          <div class="control_tip"><b>*森空岛导入：</b>请遵循
+            <b>《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面<br>
+          </div>
+        </div>
+      </div>
+    </c-collapse-item>
+
+  <c-collapse-item>
+    <div class="control_bar_wrap">
+      已制定练度计划的干员：
+      <div class="not_own_operator_wrap">
+        <div class="opr_sprite_avatar_bg" style="margin: 0 4px 30px 4px"
+             v-for="(operator,charId) in operator_plan" :key="charId" v-show="operator.show">
+          <div :class="getOperatorSprite(charId)"></div>
+          <!--              <i style="font-size: 32px;color: rgb(0,0,0);position: absolute;z-index: 1;top: -10px" class="iconfont icon-error" > </i>-->
+          <c-button :color="'red'" :status="true" :style="'position: absolute;top:70px'">取消</c-button>
+        </div>
       </div>
     </div>
+  </c-collapse-item>
 
-    <div class="survey_control_wrap" id="statistics_box_wrap">
-      <div class="survey_control" id="statistics_box">
+<!--    干员统计折叠栏-->
+    <c-collapse-item v-model:visible="collapse_statistics_visible" :name="'statistics'">
         <div class="control_bar_wrap">
-          <div class="control_bar"
-               style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
-            总计消耗{{ ap_cost_count.toFixed(0) }} 理智
-          </div>
-          <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
-          <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
-          <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
-          <div class="control_bar item_cost_wrap" v-for="(itemList,type) in item_cost_list"
-               :key="type">
-            <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
-              <div class="image_item_wrap">
-                <div :class="getSprite(item.id,'item')"></div>
-                <div class="item_count">
-                  {{ strShowLength(item.count) }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="control_bar" style="align-items: normal">
+          <!--          干员统计-->
+          <div class="control_bar" style="align-items: normal;justify-content: space-around;margin: 20px 0">
             <div class="control_operator_card">
               <p> Dr.{{ userData.userName }}，您总计招募了{{ statistics_result.total.own }}位干员，
                 未招募干员{{ statistics_result.total.count - statistics_result.total.own }}位，
@@ -363,9 +351,29 @@
               </div>
             </div>
           </div>
+
+          <!--          材料统计-->
+          <div class="control_bar"
+               style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
+            总计消耗{{ ap_cost_count.toFixed(0) }} 理智
+          </div>
+          <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
+          <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
+          <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+          <div class="control_bar item_cost_wrap" v-for="(itemList,type) in item_cost_list"
+               :key="type">
+            <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
+              <div class="image_item_wrap">
+                <div :class="getSprite(item.id,'item')"></div>
+                <div class="item_count">
+                  {{ strShowLength(item.count) }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </c-collapse-item>
+
 
     <!--   干员表单-->
     <div class="opr_form">
@@ -512,7 +520,6 @@
 <script setup>
 import {cMessage} from "/src/custom/message.js";
 import {filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import {collapseV2} from '/src/custom/collapse.js'
 import operatorStatistics from "/src/pages/survey/operatorStatistics"
 import surveyApi from "/src/api/surveyUser";
 import surveyOperatorApi from "/src/api/surveyOperator"
@@ -525,6 +532,7 @@ import character_list from '/src/static/json/survey/character_list.json'
 
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
+import CollapseItem from "../../custom/collapse-item.vue";
 
 
 let intro_popup_visible = ref(false)
@@ -648,6 +656,12 @@ let defaultUid = ref('')
 
 let import_flag = ref(false)
 
+let collapse_import_visible = ref(true)
+
+function collapseImport(){
+  collapse_import_visible.value = !collapse_import_visible.value
+}
+
 /**
  * 通过cred和secret进行森空岛干员信息导入
  * @returns {Promise<void>}
@@ -689,8 +703,6 @@ async function importSKLandOperatorData() {
     token: userData.value.token,
     data: JSON.stringify(playerInfo)
   })
-
-
 }
 
 /**
@@ -933,6 +945,7 @@ function updateOperatorPopup(index) {
   operator_data.value[char_id] = operator
   if (operator_plan.value[char_id] === void 0) {
     operator_plan.value[char_id] = JSON.parse(JSON.stringify(operator))
+    operator_plan.value[char_id].show = false;
   }
 
 }
@@ -947,7 +960,12 @@ function dataOptionClass(current, char_id, property) {
 }
 
 function updateOperatorPlan(char_id, property, new_value) {
+  if (new_value <= operator_popup_data.value[property]) {
+    cMessage('不能比现有练度低哦')
+    return;
+  }
   operator_plan.value[char_id][property] = new_value
+  operator_plan.value[char_id].show = true
 }
 
 function planOptionClass(current, char_id, property) {
@@ -965,6 +983,8 @@ function selectedBtn(property, rule) {
   return "btn";
 }
 
+let collapse_import_filter = ref(false)
+
 let filterCondition = ref({
   rarity: [6],
   profession: [],
@@ -974,6 +994,10 @@ let filterCondition = ref({
   itemObtainApproach: [],
   TODO: []
 });
+
+function collapseFilter(){
+  collapse_import_filter.value = !collapse_import_filter.value
+}
 
 /**
  *  增加筛选规则
@@ -1021,11 +1045,14 @@ let ap_cost_count = ref(0)
 //材料消耗数量
 let item_cost_map = ref({})
 
+let collapse_statistics_visible = ref(false)
+
 function statisticsCollapse() {
   statistics()
-  collapseV2('statistics_box_wrap', 'statistics_box',)
-
+  collapse_statistics_visible.value = !collapse_statistics_visible.value
 }
+
+
 
 
 let statistics_result = ref({
@@ -1069,7 +1096,6 @@ function splitMaterialByRarity(highest_rarity) {
 }
 
 function getOperatorPlanItemCost() {
-
   const result = operatorStatistics.operatorPlanCal(operator_data.value, operator_plan.value)
   console.log(result)
 }
@@ -1250,7 +1276,6 @@ onMounted(() => {
   margin: auto;
   width: fit-content;
 }
-
 
 
 .control_operator_card {

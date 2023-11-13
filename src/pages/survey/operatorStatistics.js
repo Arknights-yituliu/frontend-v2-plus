@@ -385,6 +385,8 @@ function operatorStatistics(list) {
 
     //选择练度最高的十位
     operator_statistics_result.max = operator_statistics_result.max.slice(0, 10)
+
+
     return operator_statistics_result
 }
 

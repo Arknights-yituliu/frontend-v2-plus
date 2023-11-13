@@ -222,16 +222,15 @@ function userDataCache() {
 
   let cacheData = localStorage.getItem("globalUserData");
 
-  if (cacheData == void 0) {
+  if (cacheData === void 0) {
     return
   }
   cacheData = JSON.parse(cacheData)
-
   user_data.value.userName = cacheData.userName;
   user_data.value.status = cacheData.status;
   user_data.value.token = cacheData.token;
-  user_data.value.avatar = cacheData.avatar == void 0 ? 'char_377_gdglow' : cacheData.avatar;
-  user_data.value.email = cacheData['email'] == undefined ? "未绑定1" : cacheData['email'];
+  user_data.value.avatar = cacheData.avatar === void 0 ? 'char_377_gdglow' : cacheData.avatar;
+  user_data.value.email = cacheData['email'] === undefined ? "未绑定1" : cacheData['email'];
 }
 
 //登出

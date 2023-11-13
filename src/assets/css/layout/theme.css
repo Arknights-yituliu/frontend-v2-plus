@@ -1,3 +1,8 @@
+.theme_init{
+    --c-bg:var(--c-white-4);
+    --c-text-color:var(--c-black-1);
+}
+
 .theme_light{
     /*基础样式*/
     --c-box-shadow:1px 1px 4px #a9a9a9;
@@ -49,17 +54,15 @@
     --c-black-4: #4b4b4b;
     --c-black-5: #646464;
     --c-black-6: #7d7d7d;
-    --c-black-7: #969696;
 
 
 
     --c-white-1: #ffffff;
-    --c-white-2: #e1e1e1;
+    --c-white-2: #e6e6e6;
     --c-white-3: #cdcdcd;
     --c-white-4: #b4b4b4;
-    --c-white-5: #BBBBBB;
-    --c-white-6: #DDDDDD;
-    --c-white-7: #ffffff;
+    --c-white-5: #9b9b9b;
+    --c-white-6: #828282;
 
 
     --c-green-light: #43d750;

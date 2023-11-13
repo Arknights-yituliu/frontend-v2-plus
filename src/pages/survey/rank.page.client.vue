@@ -4,7 +4,7 @@
     <div class="setup_top">
       <!-- <button class="mdui-btn survey_button">说明</button> -->
       <button class="btn btn_blue"
-              @click="collapseV2('filter_box_wrap', 'filter_box')">筛选
+              @click="collapseFilter()">筛选
       </button>
       <div id="updateTime">
         调查人数{{ user_count }}<br/>
@@ -13,9 +13,9 @@
     </div>
 
     <!-- 筛选模块 -->
-    <div class="survey_control_wrap" id="filter_box_wrap">
-      <div class="survey_control" id="filter_box">
-        <div class="control_bar_wrap">
+    <c-collapse-item :name="'filter'" :visible="collapse_filter_visible" >
+
+    <div class="control_bar_wrap">
           <div class="control_bar">
             <div class="control_title">职业</div>
             <div class="switch_btn_wrap">
@@ -66,8 +66,8 @@
             </div>
           </div> -->
         </div>
-      </div>
-    </div>
+
+    </c-collapse-item>
 
     <!--    <div id="rank_table mdui-table-fluid">-->
     <!--      <table class="mdui-table">-->
@@ -231,7 +231,6 @@
 <script setup>
 import "@/assets/css/survey/survey_rank.css";
 import { filterByCharacterProperty, professionDict} from "./common";
-import {collapseV2} from "/src/custom/collapse";
 import {onMounted, ref} from "vue";
 import character_table_simple from "@/static/json/survey/character_table_simple.json";
 
@@ -304,6 +303,12 @@ function selectedBtn(attribute, rule) {
   return "btn";
 }
 
+let collapse_filter_visible = ref(false)
+
+function collapseFilter(){
+  collapse_filter_visible.value = !collapse_filter_visible.value
+}
+
 let filter_condition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
 
 /**
@@ -315,16 +320,6 @@ let filter_condition = ref({rarity: [], profession: [], year: [], own: [], mod: 
  */
 function addFilterCondition(property, condition) {
   console.log(filter_condition.value);
-
-  // let radio_properties = ['itemObtainApproach', 'mod'];
-  // //判断筛选属性是Boolean类型，判断这个属性没有包含传入的条件
-  // if (radio_properties.includes(property) && !filter_condition.value[property].includes(condition)) {
-  //   filter_condition.value[property] = [condition];
-  // } else if (filter_condition.value[property].indexOf(condition) > -1) {
-  //   filter_condition.value[property] = filter_condition.value[property].filter(item => item !== condition);
-  // } else {
-  //   filter_condition.value[property].push(condition);
-  // }
   let filterRulesCopy = [];
   if (filter_condition.value[property].indexOf(condition) > -1) {
     for (let i in filter_condition.value[property]) {

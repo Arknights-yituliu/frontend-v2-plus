@@ -9,8 +9,8 @@
             <div :class="opETextTheme">Material Value</div>
           </div>
           <div class="value_unit_btn_wrap">
-            <c-button :color="'blue'" :isSelected="value_unit==='itemValueAp'" @click="value_unit='itemValueAp'">等效理智</c-button>
-            <c-button :color="'blue'" :isSelected="value_unit==='itemValue'" @click="value_unit='itemValue'">等效绿票</c-button>
+            <c-button :color="'blue'" :status="value_unit==='itemValueAp'" @click="value_unit='itemValueAp'">等效理智</c-button>
+            <c-button :color="'blue'" :status="value_unit==='itemValue'" @click="value_unit='itemValue'">等效绿票</c-button>
             <div class="item_value_down">
               <a style="color: rgb(65, 105, 240)" href="https://backend.yituliu.site/item/export/excel"> 导出Excel</a>
             </div>
