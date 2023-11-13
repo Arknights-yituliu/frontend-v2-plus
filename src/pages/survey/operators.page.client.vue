@@ -65,103 +65,103 @@
 
     <!-- 筛选模块 -->
     <c-collapse-item v-model:visible="collapse_import_filter" :name="'filter'">
-        <div class="control_bar_wrap">
-          <div class="control_bar">
-            <div class="control_title" style="width: 80px;">职业</div>
-            <div class="switch_btn_wrap">
-              <div
-                  :class="selectedBtn('profession', profession.value)"
-                  v-for="(profession,index) in professionDict"
-                  :key="index"
-                  @click="addFilterCondition('profession', profession.value)"
-              >
-                {{ profession.label }}
-              </div>
+      <div class="control_bar_wrap">
+        <div class="control_bar">
+          <div class="control_title" style="width: 80px;">职业</div>
+          <div class="switch_btn_wrap">
+            <div
+                :class="selectedBtn('profession', profession.value)"
+                v-for="(profession,index) in professionDict"
+                :key="index"
+                @click="addFilterCondition('profession', profession.value)"
+            >
+              {{ profession.label }}
             </div>
           </div>
-
-          <div class="control_bar">
-            <div class="control_title" style="width: 80px;">稀有度</div>
-            <div class="switch_btn_wrap">
-              <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in rarity_dict" :key="index"
-                   @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
-              </div>
-            </div>
-          </div>
-
-          <div class="control_bar">
-            <div class="control_title" style="width: 80px;">年份</div>
-            <div class="switch_btn_wrap">
-              <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
-                   @click="addFilterCondition('year', key)">
-                {{ year.label }}
-              </div>
-            </div>
-          </div>
-
-          <div class="control_bar">
-            <div class="control_title" style="width: 80px;">是否拥有</div>
-            <div class="switch_btn_wrap">
-              <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
-              <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
-            </div>
-          </div>
-
-          <div class="control_bar">
-            <div class="control_title" style="width: 80px;">获得方式</div>
-            <div class="switch_btn_wrap">
-              <div :class="selectedBtn('itemObtainApproach', '常驻干员')"
-                   @click="addFilterCondition('itemObtainApproach', '常驻干员')">常驻干员
-              </div>
-              <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
-                   @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员
-              </div>
-              <div :class="selectedBtn('itemObtainApproach', '限定干员')"
-                   @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
-              </div>
-            </div>
-          </div>
-
-          <div class="control_bar">
-            <div class="control_title" style="width: 80px;">模组</div>
-            <div class="switch_btn_wrap">
-              <div :class="selectedBtn('equip', true)" @click="addFilterCondition('equip', true)">模组已实装</div>
-              <div :class="selectedBtn('equip', false)" @click="addFilterCondition('equip', false)">模组未实装</div>
-            </div>
-          </div>
-
-          <div class="control_bar">
-            <div class="control_title" style="width: 80px;">排序</div>
-            <div class="switch_btn_wrap">
-              <div class="btn" @click="sortCharacterList('rarity')">按稀有度</div>
-              <div class="btn" @click="sortCharacterList('date')">按实装顺序</div>
-            </div>
-          </div>
-
-          <div class="mdui-divider" style="margin: 8px;"></div>
-          <!--          <div class="control_tip ">-->
-          <!--            <a class="">对所有被筛选出的干员进行操作</a>-->
-          <!--          </div>-->
-          <!--          <div class="control_bar">-->
-          <!--            <div class="control_title" style="width: 100px;">-->
-          <!--              批量操作-->
-          <!--            </div>-->
-          <!--            <div class="switch_btn_wrap">-->
-          <!--              <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>-->
-          <!--              <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>-->
-          <!--              <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>-->
-          <!--              <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>-->
-          <!--              <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>-->
-          <!--              <div class="btn">设为满级</div>-->
-          <!--              <div class="btn">设为满潜能</div>-->
-          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>-->
-          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>-->
-          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>-->
-          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>-->
-          <!--              <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>-->
-          <!--            </div>-->
-          <!--          </div>-->
         </div>
+
+        <div class="control_bar">
+          <div class="control_title" style="width: 80px;">稀有度</div>
+          <div class="switch_btn_wrap">
+            <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in rarity_dict" :key="index"
+                 @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
+            </div>
+          </div>
+        </div>
+
+        <div class="control_bar">
+          <div class="control_title" style="width: 80px;">年份</div>
+          <div class="switch_btn_wrap">
+            <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
+                 @click="addFilterCondition('year', key)">
+              {{ year.label }}
+            </div>
+          </div>
+        </div>
+
+        <div class="control_bar">
+          <div class="control_title" style="width: 80px;">是否拥有</div>
+          <div class="switch_btn_wrap">
+            <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
+            <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
+          </div>
+        </div>
+
+        <div class="control_bar">
+          <div class="control_title" style="width: 80px;">获得方式</div>
+          <div class="switch_btn_wrap">
+            <div :class="selectedBtn('itemObtainApproach', '常驻干员')"
+                 @click="addFilterCondition('itemObtainApproach', '常驻干员')">常驻干员
+            </div>
+            <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
+                 @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员
+            </div>
+            <div :class="selectedBtn('itemObtainApproach', '限定干员')"
+                 @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
+            </div>
+          </div>
+        </div>
+
+        <div class="control_bar">
+          <div class="control_title" style="width: 80px;">模组</div>
+          <div class="switch_btn_wrap">
+            <div :class="selectedBtn('equip', true)" @click="addFilterCondition('equip', true)">模组已实装</div>
+            <div :class="selectedBtn('equip', false)" @click="addFilterCondition('equip', false)">模组未实装</div>
+          </div>
+        </div>
+
+        <div class="control_bar">
+          <div class="control_title" style="width: 80px;">排序</div>
+          <div class="switch_btn_wrap">
+            <div class="btn" @click="sortCharacterList('rarity')">按稀有度</div>
+            <div class="btn" @click="sortCharacterList('date')">按实装顺序</div>
+          </div>
+        </div>
+
+        <div class="mdui-divider" style="margin: 8px;"></div>
+        <!--          <div class="control_tip ">-->
+        <!--            <a class="">对所有被筛选出的干员进行操作</a>-->
+        <!--          </div>-->
+        <!--          <div class="control_bar">-->
+        <!--            <div class="control_title" style="width: 100px;">-->
+        <!--              批量操作-->
+        <!--            </div>-->
+        <!--            <div class="switch_btn_wrap">-->
+        <!--              <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>-->
+        <!--              <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>-->
+        <!--              <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>-->
+        <!--              <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>-->
+        <!--              <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>-->
+        <!--              <div class="btn">设为满级</div>-->
+        <!--              <div class="btn">设为满潜能</div>-->
+        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>-->
+        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>-->
+        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>-->
+        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>-->
+        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>-->
+        <!--            </div>-->
+        <!--          </div>-->
+      </div>
     </c-collapse-item>
 
 
@@ -263,116 +263,116 @@
       </div>
     </c-collapse-item>
 
-  <c-collapse-item>
-    <div class="control_bar_wrap">
-      已制定练度计划的干员：
-      <div class="not_own_operator_wrap">
-        <div class="opr_sprite_avatar_bg" style="margin: 0 4px 30px 4px"
-             v-for="(operator,charId) in operator_plan" :key="charId" v-show="operator.show">
-          <div :class="getOperatorSprite(charId)"></div>
-          <!--              <i style="font-size: 32px;color: rgb(0,0,0);position: absolute;z-index: 1;top: -10px" class="iconfont icon-error" > </i>-->
-          <c-button :color="'red'" :status="true" :style="'position: absolute;top:70px'">取消</c-button>
+    <c-collapse-item>
+      <div class="control_bar_wrap">
+        已制定练度计划的干员：
+        <div class="not_own_operator_wrap">
+          <div class="opr_sprite_avatar_bg" style="margin: 0 4px 30px 4px"
+               v-for="(operator,charId) in operator_plan" :key="charId" v-show="operator.show">
+            <div :class="getOperatorSprite(charId)"></div>
+            <!--              <i style="font-size: 32px;color: rgb(0,0,0);position: absolute;z-index: 1;top: -10px" class="iconfont icon-error" > </i>-->
+            <c-button :color="'red'" :status="true" :style="'position: absolute;top:70px'">取消</c-button>
+          </div>
         </div>
       </div>
-    </div>
-  </c-collapse-item>
+    </c-collapse-item>
 
-<!--    干员统计折叠栏-->
+    <!--    干员统计折叠栏-->
     <c-collapse-item v-model:visible="collapse_statistics_visible" :name="'statistics'">
-        <div class="control_bar_wrap">
-          <!--          干员统计-->
-          <div class="control_bar" style="align-items: normal;justify-content: space-around;margin: 20px 0">
-            <div class="control_operator_card">
-              <p> Dr.{{ userData.userName }}，您总计招募了{{ statistics_result.total.own }}位干员，
-                未招募干员{{ statistics_result.total.count - statistics_result.total.own }}位，
-                未招募的干员是
-              </p>
-              <div class="not_own_operator_wrap">
-                <div class="opr_sprite_avatar_bg" style="margin: 0 4px 30px 4px"
-                     v-for="(operator,index) in statistics_result.total.notOwn" :key="index">
+      <div class="control_bar_wrap">
+        <!--          干员统计-->
+        <div class="control_bar" style="align-items: normal;justify-content: space-around;margin: 20px 0">
+          <div class="control_operator_card">
+            <p> Dr.{{ userData.userName }}，您总计招募了{{ statistics_result.total.own }}位干员，
+              未招募干员{{ statistics_result.total.count - statistics_result.total.own }}位，
+              未招募的干员是
+            </p>
+            <div class="not_own_operator_wrap">
+              <div class="opr_sprite_avatar_bg" style="margin: 0 4px 30px 4px"
+                   v-for="(operator,index) in statistics_result.total.notOwn" :key="index">
+                <div :class="getOperatorSprite(operator.charId)"></div>
+                <div class="sprite_alt" style="top:70px">{{ operator.name }}</div>
+              </div>
+            </div>
+            <table class="dev_table">
+              <tbody>
+              <tr>
+                <td>星级</td>
+                <td>已招募/总数</td>
+                <td>专三数量</td>
+                <td>3级X模组</td>
+                <td>3级Y模组</td>
+              </tr>
+              <tr>
+                <td>总计</td>
+                <td>{{ statistics_result.total.own }}/{{ statistics_result.total.count }}</td>
+                <td>{{ statistics_result.total.skill.rank3 }}</td>
+                <td>{{ statistics_result.total.modX.rank3 }}</td>
+                <td>{{ statistics_result.total.modY.rank3 }}</td>
+              </tr>
+              <tr v-for="(detail,index) in statistics_detail" :key="index">
+                <td><img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""></td>
+                <td>{{ detail.own }}/{{ detail.count }}</td>
+                <td>{{ detail.skill.rank3 }}</td>
+                <td>{{ detail.modX.rank3 }}</td>
+                <td>{{ detail.modY.rank3 }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="control_operator_card">
+            <p>其中练度最高的十位干员是</p>
+
+            <div class="opr_form">
+              <div class="opr_card" v-for="(operator, char_index) in statistics_result.max" :key="char_index"
+                   v-show="operator.show">
+                <div class="opr_sprite_avatar_bg">
                   <div :class="getOperatorSprite(operator.charId)"></div>
-                  <div class="sprite_alt" style="top:70px">{{ operator.name }}</div>
-                </div>
-              </div>
-              <table class="dev_table">
-                <tbody>
-                <tr>
-                  <td>星级</td>
-                  <td>已招募/总数</td>
-                  <td>专三数量</td>
-                  <td>3级X模组</td>
-                  <td>3级Y模组</td>
-                </tr>
-                <tr>
-                  <td>总计</td>
-                  <td>{{ statistics_result.total.own }}/{{ statistics_result.total.count }}</td>
-                  <td>{{ statistics_result.total.skill.rank3 }}</td>
-                  <td>{{ statistics_result.total.modX.rank3 }}</td>
-                  <td>{{ statistics_result.total.modY.rank3 }}</td>
-                </tr>
-                <tr v-for="(detail,index) in statistics_detail" :key="index">
-                  <td><img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""></td>
-                  <td>{{ detail.own }}/{{ detail.count }}</td>
-                  <td>{{ detail.skill.rank3 }}</td>
-                  <td>{{ detail.modX.rank3 }}</td>
-                  <td>{{ detail.modY.rank3 }}</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="control_operator_card">
-              <p>其中练度最高的十位干员是</p>
-
-              <div class="opr_form">
-                <div class="opr_card" v-for="(operator, char_index) in statistics_result.max" :key="char_index"
-                     v-show="operator.show">
-                  <div class="opr_sprite_avatar_bg">
-                    <div :class="getOperatorSprite(operator.charId)"></div>
-                    <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
-                    <div class="opr_level">
-                      {{ operator.level }}
-                    </div>
-                  </div>
-                  <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
-                    <div :class="getSkillSprite(skill.iconId)"></div>
-                    <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
-                         v-show="operator[`skill${index+1}`]>0" class="opr_skill_rank">
-                  </div>
-                  <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_skill_bg">
-                    <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>
-                    <div class="sprite_alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
-                  </div>
-                  <div class="opr_sprite_skill_bg">
-                    <div :class="getItemSprite('AP_GAMEPLAY')"></div>
-                    <div class="sprite_alt">{{ operator.apCost.toFixed(0) }}</div>
+                  <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
+                  <div class="opr_level">
+                    {{ operator.level }}
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!--          材料统计-->
-          <div class="control_bar"
-               style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
-            总计消耗{{ ap_cost_count.toFixed(0) }} 理智
-          </div>
-          <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
-          <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
-          <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
-          <div class="control_bar item_cost_wrap" v-for="(itemList,type) in item_cost_list"
-               :key="type">
-            <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
-              <div class="image_item_wrap">
-                <div :class="getSprite(item.id,'item')"></div>
-                <div class="item_count">
-                  {{ strShowLength(item.count) }}
+                <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
+                  <div :class="getSkillSprite(skill.iconId)"></div>
+                  <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
+                       v-show="operator[`skill${index+1}`]>0" class="opr_skill_rank">
+                </div>
+                <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_skill_bg">
+                  <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>
+                  <div class="sprite_alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
+                </div>
+                <div class="opr_sprite_skill_bg">
+                  <div :class="getItemSprite('AP_GAMEPLAY')"></div>
+                  <div class="sprite_alt">{{ operator.apCost.toFixed(0) }}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </c-collapse-item>
+
+        <!--          材料统计-->
+        <div class="control_bar"
+             style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
+          总计消耗{{ ap_cost_count.toFixed(0) }} 理智
+        </div>
+        <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
+        <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
+        <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+        <div class="control_bar item_cost_wrap" v-for="(itemList,type) in item_cost_list"
+             :key="type">
+          <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
+            <div class="image_item_wrap">
+              <div :class="getSprite(item.id,'item')"></div>
+              <div class="item_count">
+                {{ strShowLength(item.count) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </c-collapse-item>
 
 
     <!--   干员表单-->
@@ -477,7 +477,7 @@
         </div>
 
         <!--       计划练度-->
-        <div class="opr_options">
+        <div class="opr_options" v-show="false">
           <div class="opr_option_title">设定计划练度</div>
           <div class="opr_option_bar">
             <div v-for="rank in ranks.slice(0,3)" :key="rank"
@@ -532,7 +532,6 @@ import character_list from '/src/static/json/survey/character_list.json'
 
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
-import CollapseItem from "../../custom/collapse-item.vue";
 
 
 let intro_popup_visible = ref(false)
@@ -544,12 +543,21 @@ let userData = ref({userName: "未登录", status: -100, token: void 0});  //用
  */
 function getCacheUserData() {
   let cacheData = localStorage.getItem("globalUserData");
-  // localStorage.setItem("globalUserData", cacheData);
-  if (cacheData === "undefined" || cacheData === void 0) {
+
+  if (cacheData == void 0 || cacheData == 'undefined') {
     // cMessage('未登录或登录失效', 'error')
   } else {
     userData.value = JSON.parse(cacheData);
   }
+}
+
+function checkUserStatus(notice) {
+  if (userData.value.token == void 0 || userData.value.token == 'undefined') {
+    if (notice) cMessage('请先注册或登录一图流账号', 'error')
+    return true;
+  }
+  return false
+
 }
 
 
@@ -573,10 +581,7 @@ let rarity_dict = [1, 2, 3, 4, 5, 6];  //星级
  */
 function getOperatorData() {
   //检查是否登录
-  if (userData.value.token === void 0 || userData.value.token === "undefined") {
-    // cMessage("未登录", "error");
-    return;
-  }
+  if(checkUserStatus(false)) return;
 
   const data = {token: userData.value.token}
 
@@ -658,7 +663,7 @@ let import_flag = ref(false)
 
 let collapse_import_visible = ref(true)
 
-function collapseImport(){
+function collapseImport() {
   collapse_import_visible.value = !collapse_import_visible.value
 }
 
@@ -669,10 +674,8 @@ function collapseImport(){
 // eslint-disable-next-line
 async function importSKLandOperatorData() {
 
-  if (userData.value.token === void 0) {
-    cMessage("请先注册或登录一图流账号", "error");
-    return;
-  }
+  if(checkUserStatus(true)) return;
+
 
   //替换掉cred和secret的引号
   skland_CRED_and_SECRET.value = skland_CRED_and_SECRET.value
@@ -712,10 +715,8 @@ async function importSKLandOperatorData() {
  */
 
 async function importSKLandOperatorDataByUid(uid) {
-  if (userData.value.token === void 0) {
-    cMessage("请先注册或登录一图流账号", "error");
-    return;
-  }
+
+  if(checkUserStatus(true)) return;
 
   skland_CRED_and_SECRET.value = skland_CRED_and_SECRET.value
       .replace(/\s+/g, '')
@@ -943,7 +944,7 @@ function updateOperatorPopup(index) {
   operator_popup_index.value = index
   operator_popup_data.value = operator
   operator_data.value[char_id] = operator
-  if (operator_plan.value[char_id] === void 0) {
+  if (operator_plan.value[char_id] == void 0) {
     operator_plan.value[char_id] = JSON.parse(JSON.stringify(operator))
     operator_plan.value[char_id].show = false;
   }
@@ -969,7 +970,7 @@ function updateOperatorPlan(char_id, property, new_value) {
 }
 
 function planOptionClass(current, char_id, property) {
-  if (operator_plan.value[char_id] === void 0) return 'opr_option'
+  if (operator_plan.value[char_id] == void 0) return 'opr_option'
   if (current === operator_plan.value[char_id][property]) return 'opr_option_selected'
   return 'opr_option'
 }
@@ -995,7 +996,7 @@ let filterCondition = ref({
   TODO: []
 });
 
-function collapseFilter(){
+function collapseFilter() {
   collapse_import_filter.value = !collapse_import_filter.value
 }
 
@@ -1051,8 +1052,6 @@ function statisticsCollapse() {
   statistics()
   collapse_statistics_visible.value = !collapse_statistics_visible.value
 }
-
-
 
 
 let statistics_result = ref({
