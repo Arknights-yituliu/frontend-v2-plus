@@ -477,7 +477,7 @@
         </div>
 
         <!--       计划练度-->
-        <div class="opr_options">
+        <div class="opr_options" v-show="false">
           <div class="opr_option_title">设定计划练度</div>
           <div class="opr_option_bar">
             <div v-for="rank in ranks.slice(0,3)" :key="rank"
