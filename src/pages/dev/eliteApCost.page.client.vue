@@ -44,7 +44,7 @@ async function eliteApCostCal() {
     const name = character.name
     if(rarity <5) continue
     const item_cost = item_cost_table[charId];
-    if(item_cost===void 0) continue
+    if(item_cost==void 0) continue
     for(const eliteRank of item_cost.elite){
       // console.log(eliteRank)
       for(let item_id in eliteRank){

@@ -45,8 +45,8 @@
             <div class="switch_btn_wrap">
               <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
               <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
-              <div :class="selectedBtn('mod', true)" @click="addFilterCondition('mod', true)">模组已实装</div>
-              <div :class="selectedBtn('mod', false)" @click="addFilterCondition('mod', false)">模组未实装</div>
+              <div :class="selectedBtn('equip', true)" @click="addFilterCondition('equip', true)">模组已实装</div>
+              <div :class="selectedBtn('equip', false)" @click="addFilterCondition('equip', false)">模组未实装</div>
               <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
                    @click="addFilterCondition('itemObtainApproach', '赠送干员')">
                 赠送干员
@@ -257,6 +257,7 @@ function getCharStatisticsResult() {
       item.profession = char_info.profession
       item.itemObtainApproach = char_info.itemObtainApproach
       item.skill = char_info.skill
+      item.equip = char_info.equip
     }
     operators_statistics_list.value = result
     addFilterCondition('rarity', 6)
@@ -277,8 +278,8 @@ function getPercentage(value, digit) {
 }
 
 function getSurveyResult(obj, rank) {
-  if (obj === void 0) return '';
-  if (obj[rank] === void 0) return '';
+  if (obj == void 0) return '';
+  if (obj[rank] == void 0) return '';
   return obj[rank];
 }
 
@@ -309,7 +310,7 @@ function collapseFilter(){
   collapse_filter_visible.value = !collapse_filter_visible.value
 }
 
-let filter_condition = ref({rarity: [], profession: [], year: [], own: [], mod: [], itemObtainApproach: [], TODO: []});
+let filter_condition = ref({rarity: [], profession: [], year: [], own: [], equip: [], itemObtainApproach: [], TODO: []});
 
 /**
  * 增加筛选条件

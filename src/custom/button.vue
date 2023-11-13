@@ -8,7 +8,7 @@
 import {ref, watch} from "vue"
 
 const props = defineProps(["modelValue", 'status', "color", "style"]);
-const btn_color = `btn_${props.color === void 0 ? 'white' : props.color}`
+const btn_color = `btn_${props.color == void 0 ? 'white' : props.color}`
 
 let btn_class = ref(`btn`)
 if (props.status !== void 0 && props.status) {

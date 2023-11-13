@@ -27,14 +27,14 @@
           <div class="user_input_label">绑定邮箱</div>
           <div class="user_info">{{ user_data.email }}</div>
         </div>
-        <div class="user_info_bar">
-          <div class="user_input_label">明日方舟昵称</div>
-          <div class="user_info"> {{ user_data.nickName }}</div>
-        </div>
-        <div class="user_info_bar">
-          <div class="user_input_label">明日方舟UID</div>
-          <div class="user_info">{{ user_data.uid }}</div>
-        </div>
+<!--        <div class="user_info_bar">-->
+<!--          <div class="user_input_label">明日方舟昵称</div>-->
+<!--          <div class="user_info"> {{ user_data.nickName }}</div>-->
+<!--        </div>-->
+<!--        <div class="user_info_bar">-->
+<!--          <div class="user_input_label">明日方舟UID</div>-->
+<!--          <div class="user_info">{{ user_data.uid }}</div>-->
+<!--        </div>-->
       </div>
 
       <c-popup :visible="avatar_visible" v-model:visible="avatar_visible">
@@ -250,7 +250,11 @@ function hasPermission(status, permission) {
 
 function getCacheUserData() {
   let cacheUserData = localStorage.getItem("globalUserData");
-  if (cacheUserData !== void 0 ) {
+  if(cacheUserData == void 0 ||cacheUserData == 'undefined' ){
+    cMessage('未登录一图流账号','error')
+    return;
+  }
+
     const parse = JSON.parse(cacheUserData);
     console.table(parse)
     user_data.value.userName = parse.userName;
@@ -259,7 +263,7 @@ function getCacheUserData() {
     user_data.value.token = parse.token;
     user_data.value.avatar = parse.avatar;
     user_data.value.email = parse.email === undefined ? "未绑定" : parse.email;
-  }
+
 }
 
 let avatar_visible = ref(false)

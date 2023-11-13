@@ -72,7 +72,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
     const {elite, level, mainSkill, skill1, skill2, skill3, modX, modY} = target_ranks;
 
     // 查不到干员返回空对象
-    if (operator_item_cost_table[charId] === void 0) return {};
+    if (operator_item_cost_table[charId] == void 0) return {};
     //id对应的干员信息
     const operatorItemCost = operator_item_cost_table[charId];
     //解构出通用技能和专精技能的材料消耗
@@ -125,7 +125,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
     const current_mod_ranks = {"X": current_modX, "Y": current_modY}
     const target_mod_ranks = {"X": modX, "Y": modY}
     for (const type in current_mod_ranks) {
-        if (operatorItemCost[`mod${type}`] === void 0) continue;
+        if (operatorItemCost[`mod${type}`] == void 0) continue;
         for (let i = current_mod_ranks[type]; i < target_mod_ranks[type]; i++) {
             for (let itemId in operatorItemCost[`mod${type}`][i]) {
                 let count = operatorItemCost[`mod${type}`][i][itemId];
@@ -173,7 +173,7 @@ function getItemList(item_cost_count) {
  * @param count 材料消耗总和
  */
 function updateItemCostCount(result, id, count) {
-    if (item_table[id] === void 0) return;
+    if (item_table[id] == void 0) return;
 
     let item = {
         id: id,
@@ -443,7 +443,7 @@ function splitMaterial(highest_rarity, item_cost_obj) {
                         const material_count = cost.count;  //合成原料总数
                         let new_item = item_count[material_id];
                         // 如果没有这个材料添加一个
-                        if (new_item === void 0) {
+                        if (new_item == void 0) {
                             const item = item_table[material_id]
                             new_item = {
                                 count: 0,
