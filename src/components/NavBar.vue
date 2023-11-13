@@ -24,7 +24,6 @@
         <i style="font-size: 32px;color: rgb(230,230,230)"
            class="iconfont icon-sun" id="menu_button_desktop" @click="aside_collapse()">
         </i>
-
       </template>
       <div class="theme_option_wrap" id="theme_menu">
         <div class="theme_option" @click="switchTheme('dark')">深色模式</div>

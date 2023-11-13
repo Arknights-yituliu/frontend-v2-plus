@@ -35,11 +35,9 @@ import "/src/assets/css/about.css";
 
 import "/src/assets/css/stage_v3.css";
 
-import '/src/assets/js/iconfont.css'
+import '/src/assets/svg/iconfont.css'
 // 旧版css，待修改
 // import "/src/assets/css/recruit.css";
-
-
 
 import NavBar from "/src/components/NavBar.vue";
 import myFooter from "/src/components/myfooter.vue";

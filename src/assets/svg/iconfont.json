@@ -1,0 +1,51 @@
+{
+  "id": "4327035",
+  "name": "yituliu",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "278220",
+      "name": "right",
+      "font_class": "right",
+      "unicode": "e66c",
+      "unicode_decimal": 58988
+    },
+    {
+      "icon_id": "1058093",
+      "name": "error",
+      "font_class": "error",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "6605987",
+      "name": "问号",
+      "font_class": "wenhao_huabanfuben",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "11266195",
+      "name": "menu",
+      "font_class": "menu",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "837077",
+      "name": "moon",
+      "font_class": "moon",
+      "unicode": "e791",
+      "unicode_decimal": 59281
+    },
+    {
+      "icon_id": "866531",
+      "name": "sun",
+      "font_class": "sun",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    }
+  ]
+}

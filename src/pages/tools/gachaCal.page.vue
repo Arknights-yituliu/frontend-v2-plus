@@ -1039,7 +1039,7 @@ import "@/assets/css/sprite_gacha.css";
 import "@/assets/css/gacha.css";
 import cookie from "js-cookie";
 import * as echarts from "echarts";
-// import echarts from "static/js/echarts.min.js";
+
 let myChart = "";
 import {ClientOnly} from "@/components/ClientOnly";
 import {usePageContext} from "@/renderer/usePageContext";

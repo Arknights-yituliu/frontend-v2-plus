@@ -3,7 +3,7 @@
 
 如何获取蓝色品质材料的关卡推荐数据
 
-在 src/api路径下新建一个JavaScript文件stage.js，编写api的请求路径、请求类型、请求参数等
+在 src/api路径下新建一个文件stage.js，编写api的请求路径、请求类型、请求参数等
 ```
  import request from "/src/api/request";
  
