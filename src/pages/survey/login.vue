@@ -225,7 +225,7 @@ function userDataCache() {
   if (cacheData === void 0) {
     return
   }
-  cacheData = JSON.parse(cacheData)
+  cacheData = JSON.parse(cacheData) || {}
   user_data.value.userName = cacheData.userName;
   user_data.value.status = cacheData.status;
   user_data.value.token = cacheData.token;

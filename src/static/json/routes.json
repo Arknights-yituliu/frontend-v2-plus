@@ -13,6 +13,10 @@
         "text": "商店性价比"
       },
       {
+        "path": "/material/storeV2",
+        "text": "商店性价比V2"
+      },
+      {
         "path": "/material/pack",
         "text": "礼包性价比"
       },
