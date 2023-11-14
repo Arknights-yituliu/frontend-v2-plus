@@ -533,6 +533,13 @@ import character_list from '/src/static/json/survey/character_list.json'
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
 
+let obj = {}
+
+for(const item of character_list){
+   obj[item.charId] = item.name
+}
+
+console.log(JSON.stringify(obj))
 
 let intro_popup_visible = ref(false)
 let import_popup_visible = ref(false)  //导入弹窗是否显示

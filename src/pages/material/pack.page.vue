@@ -374,9 +374,7 @@
 </template>
 
 <script>
-import cookie from "js-cookie";
 import storeApi from "@/api/store";
-// import foot from "@/components/FootMini.vue";
 import { usePageContext } from "@/renderer/usePageContext";
 
 import { ClientOnly } from "@/components/ClientOnly";

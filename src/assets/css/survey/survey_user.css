@@ -20,7 +20,7 @@
     flex-direction: column;
     justify-content: center;
     box-shadow: var(--c-box-shadow);
-    border: var(--c-border);
+    background-color: var(--c-wrap-bg);
 }
 
 .user_info_bar {
