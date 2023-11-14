@@ -1,10 +1,8 @@
 <template>
   <div class="header_wrap">
-    <i style="font-size: 24px;color: rgb(230,230,230)"
-       class="iconfont icon-menu" id="menu-button" @click="menu_collapse(true)">
+    <i class="menu-button iconfont icon-menu" @click="menu_collapse(true)">
     </i>
-    <i style="font-size: 24px;color: rgb(230,230,230)"
-       class="iconfont icon-menu" id="menu_button_desktop" @click="aside_collapse()">
+    <i  class="menu_button_desktop iconfont icon-menu" @click="aside_collapse()">
     </i>
     <div class="page_title" @click="aside_collapse()">
       {{ pageTitle }}
@@ -14,10 +12,10 @@
     <div class="spacer"></div>
     <c-popover :name="'theme_menu'">
       <template #title>
-<!--        <i style="font-size: 32px;color: rgb(230,230,230)"-->
-<!--           class="iconfont icon-moon" id="menu_button_desktop" @click="aside_collapse()">-->
-<!--        </i>-->
-        <i style="font-size: 32px;color: rgb(230,230,230)" class="iconfont icon-sun" >
+        <!--        <i style="font-size: 32px;color: rgb(230,230,230)"-->
+        <!--           class="iconfont icon-moon" id="menu_button_desktop" @click="aside_collapse()">-->
+        <!--        </i>-->
+        <i class="iconfont icon-sun theme_button">
         </i>
       </template>
       <div class="theme_option_wrap" id="theme_menu">
@@ -219,7 +217,46 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.icon_selected {
-  transform: rotate(180deg);
+.menu-button {
+  display: none;
+
 }
+
+.menu_button_desktop {
+  display: block;
+  font-size:24px;
+  color: rgb(230,230,230);
+}
+
+.theme_button{
+  font-size: 32px;
+  color: rgb(230,230,230);
+}
+
+@media (max-width: 1080px) {
+  .menu-button {
+    display: block;
+    margin: 0 4px 0 20px;
+    font-size: 40px;color: rgb(230,230,230)
+  }
+
+  .menu_button_desktop {
+    display: none;
+  }
+
+  .theme_button{
+    font-size: 50px;
+  }
+
+  .page_title {
+    display: block;
+    font-size: 24px;
+  }
+
+  .header_wrap {
+    height: 72px;
+  }
+
+}
+
 </style>

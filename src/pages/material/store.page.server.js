@@ -1,5 +1,5 @@
 import axios from "axios";
-import { http } from "@/api/baseURL";
+import { http } from "/src/api/baseURL";
 
 function get_perm() {
   return axios.get(http + "store/perm");
@@ -43,6 +43,7 @@ export async function onBeforeRender(pageContext) {
       act.actStoreFormat.push(areaItems)
     })
   })
+
   const pageProps = { actStoreList, storeListFormat };
   return {
     pageContext: {

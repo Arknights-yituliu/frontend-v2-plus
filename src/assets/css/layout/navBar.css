@@ -41,42 +41,19 @@ svg {
   /* margin-left: 20px; */
 }
 
-#menu-button {
+.menu-button {
   display: none;
+  font-size: 24px;color: rgb(230,230,230)
 }
 
-#menu_button_desktop {
+.menu_button_desktop {
   display: block;
+  font-size:46px;
+  color: rgb(230,230,230);
 }
 
 
-@media (max-width: 1080px) {
-  #menu-button {
-    display: block;
-  }
 
-  #menu_button_desktop {
-    display: none;
-  }
-
-  .page-title {
-    display: block;
-    font-size: 24px;
-  }
-
-  .page_title {
-    display: block;
-    font-size: 24px;
-  }
-
-  .header_wrap {
-    height: 72px;
-  }
-
-  .el-switch {
-    transform: scale(1.5);
-  }
-}
 
 
 .spacer {
