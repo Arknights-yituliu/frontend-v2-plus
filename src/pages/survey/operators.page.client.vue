@@ -1,8 +1,5 @@
 <template>
-
-
   <div class="survey_character_page">
-
     <c-popup :visible="intro_popup_visible" v-model:visible="intro_popup_visible">
       <!-- <div class="intro_title">填写流程说明</div> -->
       <div class="intro_wrap">
@@ -257,7 +254,7 @@
         </div>
         <div class="control_bar">
           <div class="control_tip"><b>*森空岛导入：</b>请遵循
-            <b>《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面<br>
+            <b>《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面，如果遇到服务器意外错误，先尝试“清空所有数据”按钮<br>
           </div>
         </div>
       </div>
