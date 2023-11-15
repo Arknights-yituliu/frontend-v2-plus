@@ -1,0 +1,48 @@
+[
+    {
+        "name": "供电桩",
+        "powerCost": 0,
+        "materialCost": [
+            {
+                "material": "晶体外壳粉末",
+                "quantity": 20
+            }
+        ],
+        "deviceType": "world"
+    },
+    {
+        "name": "中继器",
+        "powerCost": 0,
+        "materialCost": [
+            {
+                "material": "晶体外壳粉末",
+                "quantity": 20
+            }
+        ],
+        "deviceType": "world"
+    },
+    {
+        "name": "源石矿机",
+        "powerCost": 0,
+        "materialCost": [
+            {
+                "material": "晶体外壳",
+                "quantity": 10
+            }
+        ],
+        "deviceType": "mine",
+        "formula": [
+            {
+                "name": "开采源矿",
+                "rawMaterials": [],
+                "product": [
+                    {
+                        "material": "源矿",
+                        "quantity": 2
+                    }
+                ],
+                "time": 4
+            }
+        ]
+    }
+]
