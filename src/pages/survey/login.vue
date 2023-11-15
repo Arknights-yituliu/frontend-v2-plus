@@ -147,7 +147,7 @@ let input_data = ref({
   avatar: '',
   mailUsage: 'register'
 }); //用户输入的用户名，用obj没准后期有别的字段
-let user_data = ref({userName: "山桜", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
+let user_data = ref({userName: "", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
 
 let login_visible = ref(false);
 

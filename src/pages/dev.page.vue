@@ -21,7 +21,7 @@
 </style>
 
 <script setup>
-import dev from "@/components/dev.vue";
+
 
 import FootComponent from "@/components/FootComponent.vue";
 import newChapter from '/src/components/newChapter.vue'

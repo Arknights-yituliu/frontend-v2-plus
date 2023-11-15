@@ -1,55 +1,5 @@
 {
-  "4.5周年SS": {
-    "originium": 28,
-    "orundum": 0,
-    "permit": 3,
-    "permit10": 0,
-    "start": "2023/11/01  16:00:00",
-    "end": "2023/11/02  03:58:00",
-    "rewardType": "公共",
-    "module": "act"
-  },
-  "产业洽谈": {
-    "originium": 0,
-    "orundum": 8400,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/11/01  16:00:00",
-    "end": "2023/11/15  03:58:00",
-    "rewardType": "公共",
-    "module": "honeyCake"
-  },
-  "周年池每日赠送寻访凭证": {
-    "originium": 0,
-    "orundum": 0,
-    "permit": 14,
-    "permit10": 0,
-    "start": "2023/11/01  16:00:00",
-    "end": "2023/11/15  03:58:00",
-    "rewardType": "周年限定",
-    "module": "honeyCake"
-  },
-  "周年池专属十连寻访凭证": {
-    "originium": 0,
-    "orundum": 0,
-    "permit": 0,
-    "permit10": 1,
-    "start": "2023/11/01  16:00:00",
-    "end": "2023/11/02  03:58:00",
-    "rewardType": "周年限定",
-    "module": "honeyCake"
-  },
-  "10月剿灭更新": {
-    "originium": 0,
-    "orundum": 1500,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2023/10/22 00:00:00",
-    "end": "2023/10/30 04:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake"
-  },
-  "4.5周年SS(二阶段)": {
+  "4.5周年SS(三阶段)": {
     "originium": 10,
     "orundum": 0,
     "permit": 0,

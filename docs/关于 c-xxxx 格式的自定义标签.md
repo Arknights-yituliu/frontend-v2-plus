@@ -71,7 +71,7 @@ const status = ref(true)
 </c-collapse-item>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ref } from 'vue'
 
 const visible = ref(true)
