@@ -42,10 +42,10 @@
   <div id="deviceCal">
     配平计算器
     <el-table :data="statisticalData" stripe style="width: 100%">
-      <el-table-column prop="device" label="材料" width="120" />
-      <el-table-column prop="formula" label="理论生产速度" width="120" />
-      <el-table-column prop="input" label="理论消耗速度" />
-      <el-table-column prop="spend" label="净产量" />
+      <el-table-column prop="material" label="材料" width="120" />
+      <el-table-column prop="totalProduction" label="理论生产速度" width="120" />
+      <el-table-column prop="totalConsume" label="理论消耗速度" />
+      <el-table-column prop="netProduction" label="净产量" />
     </el-table>
   </div>
 </template>
@@ -79,24 +79,16 @@ const deviceData = [
 ]
 const statisticalData = [
   {
-    device: '精炼炉',
-    formula: '源石-外壳',
-    input: '源石',
-    spend: '30/min',
-    output: '晶体外壳',
-    produce: '30/min',
-    output2: '无',
-    produce2: '0/min',
+    material: '源石',
+    totalProduction: '源石-外壳',
+    totalConsume: '源石',
+    netProduction: '-30/min'
   },
   {
-    device: '精炼炉',
-    formula: '源石-外壳',
-    input: '源石',
-    spend: '30/min',
-    output: '晶体外壳',
-    produce: '30/min',
-    output2: '晶体外壳',
-    produce2: '30/min',
+    material: '外壳',
+    totalProduction: '源石-外壳',
+    totalConsume: '源石',
+    netProduction: '30/min'
   },
 ]
 
