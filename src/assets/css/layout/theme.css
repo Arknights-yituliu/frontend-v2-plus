@@ -9,6 +9,7 @@
     --c-bg: var(--c-white-1);
     --c-text-color:var(--c-black-2);
     --c-wrap-bg:var(--c-white-1);
+    --c-border-bottom:var(--c-white-3);
 
     /*按钮样式*/
     --c-btn-bg:var(--c-white-2);
@@ -22,6 +23,8 @@
     --c-input-bg:var(--c-bg);
     --c-input-border:1px solid var(--c-black-2);
     --c-input-text-color:var(--c-black-2);
+
+
 }
 
 .theme_dark{
@@ -30,6 +33,7 @@
     --c-bg: var(--c-black-2);
     --c-text-color: var(--c-white-2);
     --c-wrap-bg:var(--c-black-3);
+    --c-border-bottom:var(--c-black-4);
 
     /*按钮样式*/
     --c-btn-bg:var(--c-black-5);
