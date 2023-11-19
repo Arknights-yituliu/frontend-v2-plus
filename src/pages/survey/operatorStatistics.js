@@ -69,7 +69,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
     let current_modD = current_ranks.modD
 
     //解构目标练度属性
-    const {elite, level, mainSkill, skill1, skill2, skill3, modX, modY} = target_ranks;
+    const {elite, level, mainSkill, skill1, skill2, skill3, modX, modY,modD} = target_ranks;
 
     // 查不到干员返回空对象
     if (operator_item_cost_table[charId] == void 0) return {};
@@ -91,10 +91,9 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
     // 下面的是计算从当前练度到目标练度的消耗
     // 精英化消耗的材料
 
-    for (let i = current_elite; i <= elite; i++) {
+    for (let i = current_elite; i < elite; i++) {
         for (let itemId in operatorItemCost.elite[i]) {
             let count = operatorItemCost.elite[i][itemId];
-
             updateItemCostCount(item_cost, itemId, count)
         }
     }
@@ -115,15 +114,15 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
         for (let rank = current_skill_ranks[index]; rank < target_skill_ranks[index]; rank++) {
             for (let itemId in skills[index][rank]) {
                 let count = skills[index][rank][itemId];
-
                 updateItemCostCount(item_cost, itemId, count)
+
             }
         }
     }
 
     // 模组升级消耗的材料
-    const current_mod_ranks = {"X": current_modX, "Y": current_modY}
-    const target_mod_ranks = {"X": modX, "Y": modY}
+    const current_mod_ranks = {"X": current_modX, "Y": current_modY,"D":current_modD}
+    const target_mod_ranks = {"X": modX, "Y": modY,"D":modD}
     for (const type in current_mod_ranks) {
         if (operatorItemCost[`mod${type}`] == void 0) continue;
         for (let i = current_mod_ranks[type]; i < target_mod_ranks[type]; i++) {
@@ -393,8 +392,6 @@ function operatorStatistics(list) {
 
 function operatorPlanCal(operator_data,operator_plan){
 
-
-
     // 更新练度计划的材料明细集合
     let item_cost_count = {};
 
@@ -421,7 +418,7 @@ function operatorPlanCal(operator_data,operator_plan){
  * 按材料等级拆分材料
  * @param highest_rarity 最高材料等级 int
  * @param item_cost_obj 材料消耗原始数据 obj
- * @returns {[][]} item_list 材料消耗表 arr
+ * @returns {{}} item_list 材料消耗表 arr
  */
 function splitMaterial(highest_rarity, item_cost_obj) {
 

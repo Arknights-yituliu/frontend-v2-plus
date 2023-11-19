@@ -266,8 +266,7 @@
 import stageApi from '/src/api/stage'
 import {onMounted, ref} from "vue";
 import item_series from '/src/static/json/item_series.json'
-//本地测试数据
-// import stage_api_data from '/src/static/json/stage_api_data.v2.json'
+
 
 // 根据物品系列进行分组的推荐关卡
 let stage_result_group = ref()

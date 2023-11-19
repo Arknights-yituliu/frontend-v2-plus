@@ -423,10 +423,9 @@
           <div class="opr_option_title">练度项</div>
           <div class="opr_option_bar">
             <div class="opr_sprite_skill_bg">
-              <div :class="getOptionEliteSprite(`elite${operator_popup_data.elite}`)"></div>
+              <img :src="`/image/survey/rank/elite${operator_popup_data.elite}.png`" class="img_skill_rank">
             </div>
           </div>
-
           <div class="opr_option_bar" v-for="(skill,index) in operator_popup_data.skill" :key="index">
             <div class="opr_sprite_skill_bg">
               <div :class="getSkillSprite(skill.iconId)"
@@ -530,13 +529,7 @@ import character_list from '/src/static/json/survey/character_list.json'
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
 
-let obj = {}
 
-for(const item of character_list){
-   obj[item.charId] = item.name
-}
-
-console.log(JSON.stringify(obj))
 
 let intro_popup_visible = ref(false)
 let import_popup_visible = ref(false)  //导入弹窗是否显示
@@ -547,7 +540,6 @@ let userData = ref({userName: "未登录", status: -100, token: void 0});  //用
  */
 function getCacheUserData() {
   let cacheData = localStorage.getItem("globalUserData");
-
   if (cacheData == void 0 || cacheData == 'undefined') {
     // cMessage('未登录或登录失效', 'error')
   } else {
@@ -561,7 +553,6 @@ function checkUserStatus(notice) {
     return true;
   }
   return false
-
 }
 
 
@@ -611,8 +602,6 @@ function getOperatorData() {
         }
       }
     }
-
-
     // statisticsCollapse()
     cMessage("导入了 " + list.length + " 条数据");
   });
@@ -1153,7 +1142,6 @@ function clickBtn(btn_id) {
 
 //转跳罗德岛基建Beta
 function feedback() {
-
   const excelHref = "https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ"
   const element = document.createElement("a");
   element.style.display = "none";

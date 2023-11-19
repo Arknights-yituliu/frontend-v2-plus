@@ -2,7 +2,7 @@
   <div class="header_wrap">
     <i class="menu-button iconfont icon-menu" @click="menu_collapse(true)">
     </i>
-    <i  class="menu_button_desktop iconfont icon-menu" @click="aside_collapse()">
+    <i  class="menu_button_desktop iconfont icon-menu"  @click="aside_collapse()">
     </i>
     <div class="page_title" @click="aside_collapse()">
       {{ pageTitle }}

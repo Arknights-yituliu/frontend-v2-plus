@@ -160,12 +160,13 @@
 }
 
 .control_bar_wrap {
-    max-width: 95%;
-    margin: auto auto 6px;
-    padding: 4px 0px 4px 16px;
+    width: 98%;
+    margin: 4px auto;
+    padding: 4px;
     box-shadow: var(--c-box-shadow);
     background-color: var(--c-wrap-bg);
     border-radius: 2px;
+    box-sizing: border-box;
 }
 
 .control_bar {

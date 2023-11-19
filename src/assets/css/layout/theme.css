@@ -20,10 +20,9 @@
     --c-btn-bg-green:var(--c-green-light);
 
     /*输入框样式*/
-    --c-input-bg:var(--c-bg);
-    --c-input-border:1px solid var(--c-black-2);
+    --c-input-bg:'';
+    --c-input-border:1px solid var(--c-black-5);
     --c-input-text-color:var(--c-black-2);
-
 
 }
 
@@ -44,8 +43,8 @@
     --c-btn-bg-green:var(--c-green-dark);
 
     /*输入框样式*/
-    --c-input-bg:var(--c-black-3);
-    --c-input-border:2px solid var(--c-white-2);
+    --c-input-bg:'';
+    --c-input-border:2px solid var(--c-white-4);
     --c-input-text-color:var(--c-white-2);
 
 }
