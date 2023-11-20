@@ -1,4 +1,5 @@
 <template>
+  <div>
     <!-- 活动商店 -->
     <div id="actStore">
       <!-- 标题区域 -->
@@ -80,7 +81,7 @@
         </div>
       </div>
     </div>
-
+  </div>
 </template>
 
 <script setup>
@@ -91,7 +92,6 @@ const pageContext = usePageContext()
 const storeListFormat = ref(pageContext?.pageProps?.storeListFormat) // 常驻商店性价比集合
 const actStoreList = pageContext?.pageProps?.actStoreList || [] // 活动列表
 const opETextTheme = ref('op_title_etext_light')
-
 // 活动商店背景图
 function getBackground(url) {
   return `background: linear-gradient(rgba(144, 164, 174, 0.7), rgba(144, 164, 174, 0.7)), url(${url}) no-repeat 50% 50% /cover;`
