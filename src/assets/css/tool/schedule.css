@@ -5,14 +5,13 @@
 .schedule_control_wrap {
     display: flex;
     flex-wrap: wrap;
-
-
 }
 
 .schedule_control {
     margin: 4px;
     padding: 4px;
-    box-shadow: 1px 1px 1px 1px #e5e5e5, -1px -1px 1px 1px #e5e5e5;
+    box-shadow: var(--c-box-shadow);
+    background-color: var(--c-wrap-bg);
 }
 
 .schedule_control_option {
@@ -72,16 +71,14 @@
 }
 
 .trading {
-
-    background-color: #c2e9ff;
+    background-color: #e0f3ff;
     color: #0288d1;
     width: 240px;
 }
 
 .manufacture {
-
-    background-color: #ffe6b9;
-    color: #ff9900;
+    background-color: #ffedc9;
+    color: #ff7300;
     width: 240px;
 }
 
@@ -100,24 +97,22 @@
 }
 
 .dormitory {
-
-    background-color: #91faea;
-    color: #0097e8;
+    background-color: #aff1e2;
+    color: #006ce8;
     width: 460px;
 }
 
 .meeting {
 
-    background-color: #ffca87;
+    background-color: #ffedc9;
+    color: #323232;
     width: 200px;
-    color: #ff8800
 }
 
 .hire {
-
     background-color: #a9a9a9;
+    color: #323232;
     width: 200px;
-    color: #606060;
 }
 
 .room_control {
@@ -170,8 +165,8 @@
     margin: 4px;
     position: relative;
     border-radius: 4px;
-    border: 1px solid #858585;
-    background-color: rgba(255, 255, 255, 0.41);
+    box-shadow: var(--c-box-shadow);
+    background-color: var(--c-wrap-bg);
     overflow: hidden;
 }
 

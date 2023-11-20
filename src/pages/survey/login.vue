@@ -160,7 +160,7 @@ function sendEmailCodeByRegister() {
     email: input_data.value.email,
   }
   surveyApi.sendEmailCode(data).then(response => {
-    console.log(response)
+
     cMessage("验证码发送成功")
   })
 }
@@ -172,7 +172,7 @@ function sendEmailCodeForLogin() {
     email: input_data.value.email,
   }
   surveyApi.sendEmailCode(data).then(response => {
-    console.log(response)
+
     cMessage("验证码发送成功")
   })
 }
@@ -221,8 +221,6 @@ function login() {
 function userDataCache() {
 
   let cacheData = localStorage.getItem("globalUserData");
-
-  console.log(cacheData)
 
   if (cacheData == void 0||cacheData == 'undefined') {
     return

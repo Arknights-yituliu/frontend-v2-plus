@@ -1129,12 +1129,6 @@ export default {
       pieData: [],
       current_pool_end_time:'',
       schedules: {
-        '感谢庆典(11.15)': {
-          endTime: '2023/11/15  03:58:00',
-          rewardType: "周年限定",
-          daily_permit: true,
-          daily_orundum: true
-        },
         '春节(2.17)': {
           endTime: '2024/02/17  03:58:00',
           rewardType: "春节限定",
@@ -1156,7 +1150,7 @@ export default {
     this.TimeStampFormat();
     this.setPackData();
     this.setFirstRecharge();
-    this.timeSelector = '感谢庆典(11.15)'
+    this.timeSelector = '春节(2.17)'
     this.checkEndDate();
 
 

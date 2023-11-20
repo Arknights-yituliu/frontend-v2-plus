@@ -1,0 +1,233 @@
+[
+  {
+    "name": "精炼炉",
+    "powerCost": 0,
+    "materialCost": [
+      {
+        "material": "晶体外壳",
+        "quantity": 10
+      }
+    ],
+    "deviceType": "mine",
+    "formula": [
+      {
+        "name": "异铁矿-异铁块",
+        "rawMaterials": [
+          {
+            "material": "异铁矿",
+            "quantity": 1
+          }
+        ],
+        "product": [
+          {
+            "material": "异铁块",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      },
+      {
+        "name": "类晶石-类晶纤维",
+        "rawMaterials": [
+          {
+            "material": "异铁矿",
+            "quantity": 1
+          }
+        ],
+        "product": [
+          {
+            "material": "异铁块",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      },
+      {
+        "name": "源矿-晶体外壳",
+        "rawMaterials": [
+          {
+            "material": "源矿",
+            "quantity": 1
+          }
+        ],
+        "product": [
+          {
+            "material": "晶体外壳",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      },
+      {
+        "name": "植物杂质-碳块",
+        "rawMaterials": [
+          {
+            "material": "植物杂质",
+            "quantity": 5
+          }
+        ],
+        "product": [
+          {
+            "material": "碳块",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      }
+    ]
+  },
+  {
+    "name": "粉碎机",
+    "powerCost": 0,
+    "materialCost": [
+      {
+        "material": "晶体外壳",
+        "quantity": 10
+      }
+    ],
+    "deviceType": "mine",
+    "formula": [
+      {
+        "name": "异铁块-异铁粉末",
+        "rawMaterials": [
+          {
+            "material": "异铁块",
+            "quantity": 1
+          }
+        ],
+        "product": [
+          {
+            "material": "异铁粉末",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      },
+      {
+        "name": "类晶纤维-类晶粉末",
+        "rawMaterials": [
+          {
+            "material": "类晶纤维",
+            "quantity": 1
+          }
+        ],
+        "product": [
+          {
+            "material": "类晶粉末",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      },
+      {
+        "name": "源矿-源石粉末",
+        "rawMaterials": [
+          {
+            "material": "源矿",
+            "quantity": 1
+          }
+        ],
+        "product": [
+          {
+            "material": "源石粉末",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      },
+      {
+        "name": "晶体外壳-晶体外壳粉末",
+        "rawMaterials": [
+          {
+            "material": "晶体外壳",
+            "quantity": 1
+          }
+        ],
+        "product": [
+          {
+            "material": "晶体外壳粉末",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      }
+    ]
+  },
+  {
+    "name": "塑形机",
+    "powerCost": 0,
+    "materialCost": [
+      {
+        "material": "晶体外壳",
+        "quantity": 10
+      }
+    ],
+    "deviceType": "mine",
+    "formula": [
+      {
+        "name": "异铁块-异铁瓶",
+        "rawMaterials": [
+          {
+            "material": "异铁块",
+            "quantity": 2
+          }
+        ],
+        "product": [
+          {
+            "material": "异铁瓶",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      },
+      {
+        "name": "类晶纤维-类晶质瓶",
+        "rawMaterials": [
+          {
+            "material": "类晶纤维",
+            "quantity": 2
+          }
+        ],
+        "product": [
+          {
+            "material": "类晶质瓶",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      },
+      {
+        "name": "D32钢-钢质瓶",
+        "rawMaterials": [
+          {
+            "material": "D32钢",
+            "quantity": 2
+          }
+        ],
+        "product": [
+          {
+            "material": "钢质瓶",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      },
+      {
+        "name": "高晶纤维-高晶质瓶",
+        "rawMaterials": [
+          {
+            "material": "高晶纤维",
+            "quantity": 2
+          }
+        ],
+        "product": [
+          {
+            "material": "高晶质瓶",
+            "quantity": 1
+          }
+        ],
+        "time": 4
+      }
+    ]
+  }
+]

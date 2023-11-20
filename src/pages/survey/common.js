@@ -1,4 +1,4 @@
-import characterBasicInfo from "@/static/json/survey/character_table_simple.json";
+import characterBasicInfo from "/src/static/json/survey/character_table_simple.json";
 
 
 let yearDict = [

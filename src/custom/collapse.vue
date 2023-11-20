@@ -47,18 +47,13 @@ function collapse() {
 <style scoped>
 .c_collapse_wrap {
   border-radius: 4px;
-  border: 1px solid #e3e3e3;
-  box-shadow: 0 0 8px #efefef, 0 1px 1px #b6b6b6;
+  box-shadow: var(--c-box-shadow);
+  background-color: var(--c-wrap-bg);
 }
 
 .c_collapse_title {
   cursor: pointer;
   border-bottom: 1px solid #cecece;
-  height: 36px;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 36px;
-  text-align: center;
 }
 
 .c_collapse_item_wrap {
