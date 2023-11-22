@@ -350,23 +350,9 @@ function getItemTableData(index) {
 
   //拼接表格数据,默认按总效率排序
   item_table_data_by_item_id.value = stage_result_list.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
-  console.log(item_table_data_by_item_id.value)
 
   jumpToTable()
 }
-
-//材料表格当前页数据
-let current_page_data = ref([])
-//页大小
-let page_size = ref(8);
-//总页数
-let page_count = ref(0)
-
-
-
-
-
-
 
 
 function jumpToTable() {
@@ -409,8 +395,8 @@ function formatNumber(num, acc) {
 
 
 onMounted(() => {
-  getItemCardData()
-  getItemTableData(8)
+
+
 })
 
 let td_1= ref()
