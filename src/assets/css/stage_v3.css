@@ -139,6 +139,20 @@
   /* display: inline-block; */
 }
 
+#itemDetail{
+  margin: 8px;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  background: rgba(128, 128, 128, 0.1);
+  border-radius: 8px;
+  border: 1px solid #80808020;
+}
+
+#itemDetail div{
+  display: inline-block;
+  min-width: 48%;
+}
+
 .td_1{
  width: 80px
 }
@@ -162,11 +176,8 @@
 
 
 
-.stage_detail_table_3{
-  text-align: center;
-  border-collapse: collapse;
-}
-
-.stage_detail_table_3 td{
-
+#detailTable{
+  border-radius: 8px;
+  flex-grow: 1;
+  border: 1px solid #80808020;
 }
