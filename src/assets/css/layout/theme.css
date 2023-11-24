@@ -8,6 +8,7 @@
     --c-box-shadow:1px 1px 4px #a9a9a9;
     --c-bg: var(--c-white-1);
     --c-text-color:var(--c-black-2);
+    --c-tip-color:var(--c-black-3);
     --c-wrap-bg:var(--c-white-1);
     --c-border-bottom:var(--c-white-3);
 
@@ -31,6 +32,7 @@
     --c-border:1px solid var(--c-white-3);
     --c-bg: var(--c-black-2);
     --c-text-color: var(--c-white-2);
+    --c-tip-color:var(--c-white-3);
     --c-wrap-bg:var(--c-black-3);
     --c-border-bottom:var(--c-black-4);
 

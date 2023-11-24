@@ -24,7 +24,7 @@ import character_table from '/src/static/json/survey/character_table_simple.json
 let item_value_map = ref({});
 
 async function getItemValue() {
-  await stageApi.findAllItem(0.625).then((response) => {
+  await stageApi.getItemValueTable(0.625).then((response) => {
     for (const key in response.data) {
       const id = response.data[key].itemId;
       item_value_map.value[id] = response.data[key].itemValueAp;

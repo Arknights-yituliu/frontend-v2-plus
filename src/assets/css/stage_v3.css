@@ -78,7 +78,7 @@
 }
 
 .stage_card_3_markText{
-  color: rgb(128, 128, 128,0.8);
+  color: var(--c-tip-color);
   /* float: right; */
   font-size: 12px;
   text-align: center;
@@ -125,7 +125,7 @@
 .stage_card_3_line_text{
   font-size: 18px;
   font-weight: 600;
-  color: #263238e0;
+  color: var(--c-text-color);
   width: 60px;
   height: 28px;
   line-height: 32px;
@@ -139,6 +139,35 @@
   /* display: inline-block; */
 }
 
+.table_item_detail_left{
+  display: flex;
+}
+
+.table_item_wrap{
+  width: 170px;
+  height: 50px;
+  position: relative;
+  /*background-color: darkorange;*/
+  font-size: 18px;
+}
+
+.table_item_sprite{
+  transform: scale(.273);
+  position: absolute;
+  top: -67px;
+  left: -67px;
+}
+
+.table_item_text{
+  line-height: 50px;
+  position: absolute;
+  left: 60px;
+  top: 0;
+}
+
+
+
+
 #itemDetail{
   margin: 8px;
   -webkit-transition: 0.3s;
@@ -148,8 +177,7 @@
   border: 1px solid #80808020;
 }
 
-#itemDetail div{
-  display: inline-block;
+#itemDetail {
   min-width: 48%;
 }
 

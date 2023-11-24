@@ -87,7 +87,7 @@ export default {
   },
 
   //查询所有材料价值
-  findAllItem(expCoefficient) {
+  getItemValueTable(expCoefficient) {
     return request({
       url: `/item/value?expCoefficient=${expCoefficient}`,
       method: "get",
