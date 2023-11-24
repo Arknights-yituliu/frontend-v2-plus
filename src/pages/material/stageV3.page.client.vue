@@ -201,59 +201,47 @@
       </div>
       <!-- 材料信息 -->
       <div id="itemDetail">
-        <div  class="table_item_detail_left">
+        <div class="table_item_detail">
           <div class="table_item_wrap">
             <div :class="`bg-${selected_item.itemId} table_item_sprite`"></div>
             <span class="table_item_text">
                 {{ selected_item.itemName }}
               </span>
           </div>
-          <div class="table_item_wrap" style="width: 130px;">
-            <div :class="`bg-AP_GAMEPLAY table_item_sprite`"></div>
-            <span class="table_item_text">
-               {{ formatNumber(selected_item.itemValueAp,2)}}
+
+          <div class="item_value_wrap">
+            <div :class="`bg-AP_GAMEPLAY value_icon`"></div>
+            <span class="item_value_text">
+               {{ formatNumber(selected_item.itemValueAp, 2) }}
             </span>
           </div>
-
-          <div class="table_item_wrap" style="width: 130px;">
-            <div :class="`bg-4005 table_item_sprite`"></div>
-            <span class="table_item_text">
-               {{ formatNumber(0.75,2)}}
-            </span>
+          <div class="activity_wrap">
+            上次up：{{selected_item.lastUp.activityName}}
+          </div>
+          <div class="activity_wrap">
+            即将up：{{selected_item.lastUp.activityName}}
           </div>
 
-          <div class="table_item_wrap" style="width: 130px;">
-            <div :class="`bg-EPGS_COIN table_item_sprite`"></div>
-            <span class="table_item_text">
-               {{ formatNumber(0.75,2)}}
-            </span>
-          </div>
-
-          <div class="table_item_wrap" style="width: 130px;">
-            <div :class="`bg-REP_COIN table_item_sprite`"></div>
-            <span class="table_item_text">
-               {{ formatNumber(0.75,2)}}
-            </span>
-          </div>
-
-          <div class="table_item_wrap" style="width: 130px;">
-            <div :class="`bg-4004 table_item_sprite`"></div>
-            <span class="table_item_text">
-               {{ formatNumber(0.75,2)}}
-            </span>
-          </div>
-
-<!--          上次up（不计复刻）：叙拉古人<br>-->
-<!--          下次up预计：-->
-<!--          查看-->
         </div>
-<!--        <div id="detailRight">-->
-<!--          绿票商店兑换优先级：0.6（低）[蓝材料]<br>-->
-<!--          寻访数据契约商店：0.4（低）/0.3（极低）[蓝/紫材料]<br>-->
-<!--          信用商店：0.4（低）/0.3（极低）[绿/白材料]<br>-->
-<!--          合约商店无限池：0.4（低）/0.3（极低）[蓝材料]<br>-->
-<!--          查看所有商店性价比-->
-<!--        </div>-->
+
+
+        <div class="table_item_detail">
+          <div>
+            <div class="cost_perf_bar" v-for="(costPerf,index) in selected_item.storeCostPerf" :key="index">
+              <div :class="`bg-${costPerf.token} token_icon`"></div>
+              <span class="cost_perf_text">
+               {{ formatNumber(costPerf.costPerf, 2) }}
+            </span>
+            </div>
+          </div>
+        </div>
+        <!--        <div id="detailRight">-->
+        <!--          绿票商店兑换优先级：0.6（低）[蓝材料]<br>-->
+        <!--          寻访数据契约商店：0.4（低）/0.3（极低）[蓝/紫材料]<br>-->
+        <!--          信用商店：0.4（低）/0.3（极低）[绿/白材料]<br>-->
+        <!--          合约商店无限池：0.4（低）/0.3（极低）[蓝材料]<br>-->
+        <!--          查看所有商店性价比-->
+        <!--        </div>-->
       </div>
       <!-- 详情表 -->
       <div style="margin : 8px;">
@@ -423,7 +411,25 @@ let nowTimeStamp = new Date().getTime();
 
 let item_value_obj = ref({})
 
-let selected_item = ref({})
+let selected_item = ref({
+  itemId: '30013',
+  itemValueAp: 17.32,
+  itemName: '固源岩组',
+  lastUp: {
+    activityName: '叙拉古人',
+    date: '2023-12-31'
+  },
+  nextUp: {
+    activityName: '叙拉古人',
+    date: '2023-12-31'
+  },
+  storeCostPerf: [
+    {token: '4005', costPerf: 0.75},
+    {token: 'EPGS_COIN', costPerf: 0.75},
+    {token: 'REP_COIN', costPerf: 0.75},
+    {token: '4004', costPerf: 0.75}
+  ]
+})
 
 // 获取关卡推荐数据
 stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
@@ -438,7 +444,6 @@ stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
     getItemTableData(0)
   })
 })
-
 
 
 /**
@@ -506,7 +511,7 @@ function getItemTableData(index) {
   item_table_data_by_item_id.value = stage_result_list.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
 
   jumpToTable()
-  selected_item.value = item_value_obj.value[recommended_stage.itemSeriesId]
+  // selected_item.value = item_value_obj.value[recommended_stage.itemSeriesId]
   console.log(recommended_stage)
   console.log(item_value_obj)
   console.log('当前选中的材料是：', selected_item.value)
