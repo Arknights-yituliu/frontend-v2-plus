@@ -105,7 +105,7 @@ export const documentProps = {
 };
 </script>
 
-<style>
+<style scoped>
 
 .value_unit_btn_wrap{
   display: flex;
@@ -153,6 +153,8 @@ export const documentProps = {
   position: relative;
   width: 50px;
   height: 50px;
+  left: 0;
+  top: 0;
 }
 
 .item_image {
