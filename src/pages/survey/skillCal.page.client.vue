@@ -2,7 +2,7 @@
 
 
   <div class="control_bar_wrap">
-    搜索干员： <input v-model="operator_name" @input="queryOperator()" class="input">
+    搜索干员： <input v-model="cal_operator_name" @input="queryOperator()" class="input">
     <c-button :color="'blue'" :status="true" @click="planCal()" :style="btn_style">
       开始计算
     </c-button>
@@ -89,7 +89,7 @@
           <td v-for="(count,id) in  plan.cost" :key="id">
             <div class="item_image_wrap_small">
               <div :class="`bg-${id} item_image_small`"></div>
-              <div class="item_count">x{{ count }}</div>
+              <div class="cal_item_count">x{{ count }}</div>
             </div>
 
           </td>
@@ -106,7 +106,7 @@
         <div class="avatar_image_wrap">
           <div :class="getAvatarSprite(operator_popup_data.charId)"></div>
         </div>
-        <div class="operator_name">{{ operator_popup_data.name }}</div>
+        <div class="cal_operator_name">{{ operator_popup_data.name }}</div>
       </div>
       <div class="option_column_wrap">
         <!--      练度项目-->
@@ -297,7 +297,7 @@ function getOperatorData() {
 }
 
 let character_id_menu = ref([])
-let operator_name = ref('')
+let cal_operator_name = ref('')
 let query_result = ref([])
 
 /**
@@ -305,9 +305,9 @@ let query_result = ref([])
  */
 function queryOperator() {
   query_result.value = []
-  if (operator_name.value === '') return;
+  if (cal_operator_name.value === '') return;
   for (const e of character_id_menu.value) {
-    if (e.name.indexOf(operator_name.value) > -1) {
+    if (e.name.indexOf(cal_operator_name.value) > -1) {
       query_result.value.push(e)
     }
   }
@@ -550,251 +550,6 @@ const btn_style = 'margin:2px'
 
 <style>
 
-
-.query_result_wrap {
-
-  display: flex;
-}
-
-.query_result {
-  margin: 4px;
-  height: 76px;
-  width: 100px;
-}
-
-.query_result_name {
-  position: absolute;
-  top: 60px;
-  left: -20px;
-  text-align: center;
-  width: 100px;
-}
-
-.query_result_title {
-  margin: 4px;
-  width: 100%;
-}
-
-
-
-.plan_popup_card {
-  width: 470px;
-  margin: auto;
-}
-
-.plan_popup_title {
-  display: flex;
-  margin: 12px;
-}
-
-.avatar_image_wrap {
-  width: 60px;
-  height: 60px;
-  position: relative;
-  background-color: #b6b6b6;
-}
-
-.avatar_image {
-  transform: scale(0.333);
-  position: absolute;
-  top: -60px;
-  left: -60px;
-}
-
-.selected_avatar_wrap {
-  display: flex;
-  flex-wrap: wrap;
-  width: 95%;
-  margin: 8px auto;
-  box-shadow: var(--c-box-shadow);
-  background-color: var(--c-wrap-bg);
-}
-
-.delete_icon {
-  position: absolute;
-  top: -4px;
-  left: 46px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #3b3b3b;
-  text-align: center;
-}
-
-.plan_detail_title {
-  padding: 8px;
-  font-size: 18px;
-}
-
-.item_image_wrap_small {
-  width: 90px;
-  height: 30px;
-  position: relative;
-}
-
-.item_image_small {
-  transform: scale(0.164);
-  position: absolute;
-  top: -76px;
-  left: -76px;
-}
-
-.item_count {
-  width: 30px;
-  top: 8px;
-  left: 32px;
-  position: absolute;
-}
-
-.operator_name {
-  height: 60px;
-  line-height: 60px;
-  margin: 0 12px;
-  font-size: 20px;
-}
-
-
-.option_column_wrap {
-  display: flex;
-  justify-items: center;
-}
-
-.option_column {
-  margin: 4px;
-  box-shadow: var(--c-box-shadow);
-  background-color: var(--c-wrap-bg);
-  padding: 4px;
-}
-
-.option_row {
-  display: flex;
-  margin: 4px 0;
-}
-
-.option {
-  width: 60px;
-  height: 60px;
-  position: relative;
-  text-align: center;
-  cursor: pointer;
-  line-height: 40px;
-}
-
-.option_small {
-  min-width: 26px;
-  width: auto;
-  height: 30px;
-  line-height: 24px;
-  text-align: center;
-  cursor: pointer;
-
-}
-
-.option_bg_selected {
-  background-color: #ff925b;
-}
-
-.elite_image {
-  transform: scale(0.235);
-  position: absolute;
-  top: -76px;
-  left: -95px;
-}
-
-.skill_icon {
-  transform: scale(0.375);
-  /* border: 1px solid red; */
-  border-radius: 0;
-  position: absolute;
-  top: -38px;
-  left: -33px;
-  opacity: 0.8;
-}
-
-.skill_rank_icon {
-  position: absolute;
-  left: 5px;
-  top: 2px;
-  width: 16px;
-}
-
-.skill_rank {
-  width: 60px;
-}
-
-.mod_rank {
-  width: 48px;
-  margin: 2px 6px;
-}
-
-.item_info_card_wrap {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.item_info_card {
-  width: 240px;
-  display: flex;
-  border-left: 3px solid;
-  margin: 8px;
-  box-shadow: var(--c-box-shadow);
-  background-color: var(--c-wrap-bg);
-}
-
-.item_info_card_left {
-  width: 90px;
-  text-align: center;
-  font-size: 14px;
-}
-
-.item_info_card_right {
-  padding: 4px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.item_image_wrap {
-  width: 60px;
-  height: 60px;
-  position: relative;
-  left: 15px;
-}
-
-
-.item_image {
-  transform: scale(0.327);
-  position: absolute;
-  top: -61px;
-  left: -61px;
-}
-
-.item_name {
-  padding: 8px 0;
-}
-
-
-.rarity_5 {
-  border-color: #ff9900;
-}
-
-.rarity_4 {
-  border-color: #904eee;
-}
-
-.rarity_3 {
-  border-color: #0b73dc;
-}
-
-.rarity_2 {
-  border-color: #179b09;
-}
-
-.rarity_1 {
-  border-color: #d5d5d5;
-}
 
 
 </style>
