@@ -148,12 +148,7 @@ export default {
 
 
 
-  getCharStatisticsResult() {
-    return request({
-      url: `${api_name}/operator/result`,
-      method: "get",
-    })
-  },
+
 
   uploadScore(scoreList, token) {
     return request({
