@@ -81,24 +81,24 @@
 }
 
 .opr_level{
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     color: white;
     background: url("/image/survey/rank/lv-bg.png");
-    background-size:26px ;
+    background-size:22px ;
     position: absolute;
-    top:30px;
-    left: -2px;
-    line-height: 32px;
+    top:34px;
+    font-size: 12px;
+    line-height: 26px;
     text-align: center;
 }
 
 
 
 .opr_elite{
-    width: 26px;
+    width: 22px;
     position: absolute;
-    top: 34px;
+    top: 36px;
     left: 42px;
     filter: drop-shadow(2px 2px 2px #000000)
 }
@@ -115,13 +115,14 @@
 
 .opr_skill_rank{
     position: absolute;
-    left:0;
+    left:-2px;
     top: 2px;
-    width: 16px;
+    width: 20px;
 }
 
 .opr_equip_image{
     height: 44px;
+    max-width: 44px;
     filter: drop-shadow(2px 2px 2px #000000)
 }
 

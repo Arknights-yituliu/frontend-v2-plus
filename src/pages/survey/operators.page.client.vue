@@ -414,6 +414,8 @@
         <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_skill_bg">
 <!--          <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>-->
           <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="opr_equip_image">
+          <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
+               v-show="operator[`mod${equip.typeName2}`]>0" class="opr_skill_rank">
           <div class="sprite_alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
         </div>
       </div>
