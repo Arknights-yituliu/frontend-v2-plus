@@ -21,8 +21,8 @@
         </div>
 
 
-        <div class="item_value_card_wrap color">
-          <div v-for="(item_group,index) in item_value_list" :key="index" class="item_value_card_list">
+        <div class="item_value_card_box color">
+          <div v-for="(item_group,index) in item_value_list" :key="index" class="item_value_card_wrap">
             <div class="item_value_card"
                  v-for="(item,index) in item_group" :key="index"
                  :style="getItemRarityColor(item.rarity)">
@@ -58,12 +58,15 @@ let opETextTheme =  ref("op_title_etext_light")
 
 let value_unit = ref('itemValueAp')
 
-let item_value_list = ref([[], [], [], [], [], [], [], []])
+let item_value_list = ref([])
 
 const pageContext = usePageContext();
 
 for (const item of pageContext.pageProps.value) {
-  if (item.cardNum > 8) continue
+  if (item.cardNum > 90) continue
+  if(!item_value_list.value[item.cardNum - 1]){
+    item_value_list.value[item.cardNum - 1] = []
+  }
   item_value_list.value[item.cardNum - 1].push(item)
 }
 
@@ -102,7 +105,7 @@ export const documentProps = {
 };
 </script>
 
-<style>
+<style scoped>
 
 .value_unit_btn_wrap{
   display: flex;
@@ -114,15 +117,15 @@ export const documentProps = {
   padding: 0 12px;
 }
 
-.item_value_card_wrap {
+.item_value_card_box {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   margin: 4px;
 }
 
-.item_value_card_list{
-  margin: 4px;
+.item_value_card_wrap{
+  margin: 20px 8px;
 }
 
 .item_value_card {
@@ -150,6 +153,8 @@ export const documentProps = {
   position: relative;
   width: 50px;
   height: 50px;
+  left: 0;
+  top: 0;
 }
 
 .item_image {

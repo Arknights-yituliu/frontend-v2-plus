@@ -28,7 +28,8 @@ function calAPCost(operator_list) {
     // 计算已持有干员用掉的材料总和
     for (let operator of operator_list) {
         // 获得每个干员的材料消耗
-        const item_cost = getOperatorItemCost(operator.charId, operator.rarity, zone_ranks, operator)
+        console.log('--------------------------',operator.name)
+        const item_cost = getOperatorItemCost(operator.charId, operator.rarity, zone_ranks, operator,operator.name)
         //将材料消耗情况进行统计
         for (let id in item_cost) {
             updateItemCostCount(item_cost_count, id, item_cost[id].count)
@@ -52,7 +53,7 @@ function calAPCost(operator_list) {
  * @param target_ranks 目标干员练度
  * @returns {{}}
  */
-function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
+function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,name) {
 
 
 
@@ -82,6 +83,9 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
         {current_elite: current_elite, current_level: current_level},
         {target_elite: elite, target_level: level});
 
+
+    // console.log(name,'狗粮：',levelApCost["2003"]*1000,'龙门币：',levelApCost["4001"])
+
     //统计材料消耗
     for (const itemId in levelApCost) {
         let count = levelApCost[itemId];
@@ -95,6 +99,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
         for (let itemId in operatorItemCost.elite[i]) {
             let count = operatorItemCost.elite[i][itemId];
             updateItemCostCount(item_cost, itemId, count)
+            // console.log(name,'精英'+i,"消耗：",itemId+'X.'+count)
         }
     }
 
@@ -103,6 +108,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
         for (let itemId in allSkill[i]) {
             let count = allSkill[i][itemId];
             updateItemCostCount(item_cost, itemId, count)
+            // console.log(name,'技能'+i,"消耗：",itemId+'X.'+count)
         }
     }
 
@@ -115,7 +121,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
             for (let itemId in skills[index][rank]) {
                 let count = skills[index][rank][itemId];
                 updateItemCostCount(item_cost, itemId, count)
-
+                // console.log(name,index+'技能专精'+rank,"消耗：",itemId+'X.'+count)
             }
         }
     }
@@ -128,6 +134,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks,) {
         for (let i = current_mod_ranks[type]; i < target_mod_ranks[type]; i++) {
             for (let itemId in operatorItemCost[`mod${type}`][i]) {
                 let count = operatorItemCost[`mod${type}`][i][itemId];
+                // console.log(name,'模组'+type,'等级',i,"消耗：",itemId+'X.'+count)
                 updateItemCostCount(item_cost, itemId, count)
             }
         }
@@ -174,7 +181,15 @@ function getItemList(item_cost_count) {
 function updateItemCostCount(result, id, count) {
     if (item_table[id] == void 0) return;
 
-    let item = {
+
+
+    if (result[id]){
+        count +=result[id].count
+
+    }
+
+
+    result[id] = {
         id: id,
         name: item_table[id].name,
         rarity: item_table[id].rarity,
@@ -182,14 +197,8 @@ function updateItemCostCount(result, id, count) {
         itemValueAp: item_table[id].itemValueAp
     }
 
-    if (result[id]) {
-        const last_item = result[id]
-        item.count = count + last_item.count
-        result[id] = item
-    } else {
-        item.count = count
-        result[id] = item
-    }
+
+
 }
 
 const rarity_level_table = {

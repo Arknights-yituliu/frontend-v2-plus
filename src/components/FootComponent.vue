@@ -1,5 +1,5 @@
 <template>
-  <div id="extra">
+
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
@@ -127,10 +127,23 @@
                 </tbody>
               </table>
             </el-collapse-item>
+            <el-collapse-item name="5" style="">
+              <template #title>
+                  <span style="font-size: large; display: flex; align-items: center">
+                    <el-icon>
+                      <Warning />
+                    </el-icon><b style="margin-left: 4px">版权声明与许可协议</b>
+                  </span>
+              </template>
+              网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于 Arknights/上海鹰角网络科技有限公司。<br>
+              除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享 署名-非商业性使用 4.0 国际
+              许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和作品链接，且链接需直接指向所引用的页面；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
+              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
+            </el-collapse-item>
           </el-collapse>
         </el-card>
       </div>
-    </div>
+
   </div>
 </template>
 
@@ -162,15 +175,8 @@ export default {
 </script>
 
 <style scoped>
-#extra {
-  margin-top: 8px;
-  /* padding: 12px 0px; */
-  color: rgb(128, 128, 128);
-}
 
-.extra_popver_p {
-  margin: 4px 8px;
-}
+
 
 #al_card {
   margin: 0px;
@@ -195,7 +201,7 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 12px 12px 0px 12px;
+
 }
 
 .foot_unit {

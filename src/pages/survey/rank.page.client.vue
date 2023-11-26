@@ -235,7 +235,7 @@ import {onMounted, ref} from "vue";
 import character_table_simple from "@/static/json/survey/character_table_simple.json";
 
 
-import surveyApi from "/src/api/surveyUser";
+import surveyApi from "/src/api/surveyOperator";
 
 let rarity_dict = [1, 2, 3, 4, 5, 6];
 
