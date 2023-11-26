@@ -68,7 +68,10 @@ for (const item of pageContext.pageProps.value) {
     item_value_list.value[item.cardNum - 1] = []
   }
   item_value_list.value[item.cardNum - 1].push(item)
+
 }
+
+
 
 
 

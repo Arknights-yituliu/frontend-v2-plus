@@ -115,9 +115,9 @@
 
 .opr_skill_rank{
     position: absolute;
-    left:-2px;
+    left:0px;
     top: 2px;
-    width: 20px;
+    width: 16px;
 }
 
 .opr_equip_image{
