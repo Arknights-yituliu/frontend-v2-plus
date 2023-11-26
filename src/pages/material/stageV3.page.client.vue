@@ -386,7 +386,7 @@
         </div>
       </div>
 
-      <foot-v2> </foot-v2>
+      <foot-component></foot-component>
 
     </div>
   </div>
@@ -396,7 +396,7 @@
 import stageApi from '/src/api/stage'
 import {onMounted, ref} from "vue";
 import item_series from '/src/static/json/item_series.json'
-import footV2 from '/src/components/footer.v2.vue'
+import footComponent from "/src/components/FootComponentV3.vue";
 
 // 根据物品系列进行分组的推荐关卡
 let stage_result_group = ref()
