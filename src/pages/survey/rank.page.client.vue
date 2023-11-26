@@ -230,7 +230,7 @@
 
 <script setup>
 import "@/assets/css/survey/survey_rank.css";
-import { filterByCharacterProperty, professionDict} from "./common";
+import { filterByCharacterProperty, professionDict} from "./js/common";
 import {onMounted, ref} from "vue";
 import character_table_simple from "@/static/json/survey/character_table_simple.json";
 

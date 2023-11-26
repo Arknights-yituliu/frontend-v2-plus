@@ -4544,7 +4544,7 @@
         "typeName2": "X",
         "charId": "char_291_aglina",
         "uniEquipIcon": "uniequip_003_aglina",
-        "typeIcon": "dec-X",
+        "typeIcon": "dec-x",
         "uniEquipName": "实验用反重力模块",
         "uniEquipId": "uniequip_003_aglina"
       }
@@ -12269,7 +12269,7 @@
         "typeName2": "Y",
         "charId": "char_4042_lumen",
         "uniEquipIcon": "uniequip_003_lumen",
-        "typeIcon": "WAH-Y",
+        "typeIcon": "wah-y",
         "uniEquipName": "“幸运”",
         "uniEquipId": "uniequip_003_lumen"
       }

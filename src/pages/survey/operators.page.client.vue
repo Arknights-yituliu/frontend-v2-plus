@@ -321,11 +321,13 @@
                   <div class="opr_level">
                     {{ operator.level }}
                   </div>
+                  <span class="sprite_alt_name" >{{ operator.name }}</span>
                 </div>
                 <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
                   <div :class="getSkillSprite(skill.iconId)"></div>
                   <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
                        v-show="operator[`skill${index+1}`]>0" class="opr_skill_rank">
+                  <span class="sprite_alt">{{ skill.name }}</span>
                 </div>
                 <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_skill_bg">
                   <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="opr_equip_image">
@@ -333,7 +335,7 @@
                 </div>
                 <div class="opr_sprite_skill_bg">
                   <div :class="getItemSprite('AP_GAMEPLAY')"></div>
-                  <div class="sprite_alt">{{ operator.apCost.toFixed(0) }}</div>
+                  <span class="sprite_alt">{{ operator.apCost.toFixed(0) }}</span>
                 </div>
               </div>
             </div>
@@ -514,15 +516,15 @@
 
 <script setup>
 import {cMessage} from "/src/custom/message.js";
-import {filterByCharacterProperty, professionDict, yearDict} from "./common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import operatorStatistics from "/src/pages/survey/operatorStatistics"
+import {filterByCharacterProperty, professionDict, yearDict} from "./js/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import operatorStatistics from "/src/pages/survey/js/operatorStatistics"
 import surveyApi from "/src/api/surveyUser";
 import surveyOperatorApi from "/src/api/surveyOperator"
 import sklandApi from '/src/api/skland'
 import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";
 import request from "/src/api/requestBase";
-import operatorRecommend from "/src/pages/survey/operatorRecommend";
+import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
 import character_list from '/src/static/json/survey/character_list.json'
 
 import "/src/assets/css/survey/survey_character.css";

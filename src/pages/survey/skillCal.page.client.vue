@@ -238,7 +238,7 @@ import character_list from '/src/static/json/survey/character_list.json'
 import {onMounted, ref} from "vue";
 import {cMessage} from "../../custom/message";
 import surveyApi from "../../api/surveyUser";
-import operatorStatistics from "/src/pages/survey/operatorStatistics"
+import operatorStatistics from "/src/pages/survey/js/operatorStatistics"
 import operator_cost_table from '/src/static/json/survey/operator_item_cost_table.json'
 
 // 用户数据

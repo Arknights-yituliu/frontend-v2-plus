@@ -222,7 +222,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { scoreListInit, collapse, filterByCharacterProperty, professionDict, yearDict } from "./common";
+import { scoreListInit, collapse, filterByCharacterProperty, professionDict, yearDict } from "./js/common";
 import surveyApi from "@/api/surveyUser";
 import "@/assets/css/survey/survey_score.css";
 import { cMessage } from "@/custom/message.js";
