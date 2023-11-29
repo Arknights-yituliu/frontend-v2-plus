@@ -591,8 +591,23 @@ function getOperatorData() {
   surveyApi.getSurveyOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
     let obj = {}
+    //转为前端的数据格式
     for (const item of list) {
-      obj[item.charId] = item
+      const sCharId = item.charId;
+      obj[sCharId] = item
+      if(oOperatorTable.value[sCharId]){
+        operator_list.value[sCharId].elite = item.elite;
+        operator_list.value[sCharId].level = item.level;
+        operator_list.value[sCharId].potential = item.potential;
+        operator_list.value[sCharId].mainSkill = item.mainSkill;
+        operator_list.value[sCharId].skill1 = item.skill1;
+        operator_list.value[sCharId].skill2 = item.skill2;
+        operator_list.value[sCharId].skill3 = item.skill3;
+        operator_list.value[sCharId].modX = item.modX;
+        operator_list.value[sCharId].modY = item.modY;
+        operator_list.value[sCharId].modD = item.modD;
+        operator_list.value[sCharId].own = item.own;
+      }
     }
     //转为前端的数据格式
     for (let index in operator_list.value) {
@@ -629,6 +644,7 @@ function exportExcel() {
   element.href = export_excel_url;
   element.click();
 }
+
 
 
 let skland_CRED_and_SECRET = ref("");  //森空岛cred
