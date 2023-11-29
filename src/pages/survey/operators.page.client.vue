@@ -528,6 +528,8 @@ import {http} from "/src/api/baseURL";
 import request from "/src/api/requestBase";
 import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
 import character_list from '/src/static/json/survey/character_list.json'
+import character_table from '/src/static/json/survey/character_table_simple.json'
+
 
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
@@ -568,7 +570,10 @@ function checkFirstPopup() {
 }
 
 
+let oOperatorTable = ref(character_table);
+
 let operator_list = ref(character_list);   //干员列表
+
 let ranks = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let rarity_dict = [1, 2, 3, 4, 5, 6];  //星级
 
@@ -585,23 +590,26 @@ function getOperatorData() {
   //根据一图流的token查询用户填写的干员数据
   surveyApi.getSurveyOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
+    let obj = {}
+    for (const item of list) {
+      obj[item.charId] = item
+    }
     //转为前端的数据格式
     for (let index in operator_list.value) {
-      for (let e of list) {
-        if (e.charId === operator_list.value[index].charId) {
-          if (!e.own) continue;
-          operator_list.value[index].elite = e.elite;
-          operator_list.value[index].level = e.level;
-          operator_list.value[index].potential = e.potential;
-          operator_list.value[index].mainSkill = e.mainSkill;
-          operator_list.value[index].skill1 = e.skill1;
-          operator_list.value[index].skill2 = e.skill2;
-          operator_list.value[index].skill3 = e.skill3;
-          operator_list.value[index].modX = e.modX;
-          operator_list.value[index].modY = e.modY;
-          operator_list.value[index].modD = e.modD;
-          operator_list.value[index].own = e.own;
-        }
+      if (obj[operator_list.value[index].charId]) {
+        const e = obj[operator_list.value[index].charId]
+        if (!e.own) continue;
+        operator_list.value[index].elite = e.elite;
+        operator_list.value[index].level = e.level;
+        operator_list.value[index].potential = e.potential;
+        operator_list.value[index].mainSkill = e.mainSkill;
+        operator_list.value[index].skill1 = e.skill1;
+        operator_list.value[index].skill2 = e.skill2;
+        operator_list.value[index].skill3 = e.skill3;
+        operator_list.value[index].modX = e.modX;
+        operator_list.value[index].modY = e.modY;
+        operator_list.value[index].modD = e.modD;
+        operator_list.value[index].own = e.own;
       }
     }
     // statisticsCollapse()
@@ -661,6 +669,8 @@ let collapse_import_visible = ref(true)
 function collapseImport() {
   collapse_import_visible.value = !collapse_import_visible.value
 }
+
+
 
 /**
  * 通过cred和secret进行森空岛干员信息导入
@@ -885,6 +895,8 @@ function uploadDataReduction() {
 
   return upload_list;
 }
+
+
 
 /**
  * Excel文件上传

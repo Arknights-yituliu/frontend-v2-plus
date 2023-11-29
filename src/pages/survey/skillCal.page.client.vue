@@ -272,7 +272,6 @@ function getOperatorData() {
     for (const item of list) {
       obj[item.charId] = item
     }
-
     //转为前端的数据格式
     for (let index in operator_list.value) {
       if (obj[operator_list.value[index].charId]) {
