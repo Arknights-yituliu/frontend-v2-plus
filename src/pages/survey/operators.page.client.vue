@@ -922,7 +922,7 @@ let upload_file_name = ref("上传的文件名");
  */
 function createUploadData() {
   let upload_list = [];
-  console.log(selectedCharId.value);
+
 
   for (const sCharId in selectedCharId.value) {
     const operator = {
@@ -954,7 +954,7 @@ function getUploadFileName() {
   upload_file_name.value = file.files[0].name;
   let formData = new FormData();
   formData.append("file", file.files[0]);
-  console.log(file);
+
   surveyApi.uploadCharacterByExcel(formData, userData.value.token).then((response) => {
     // console.log(response.data);
     cMessage("新增了 " + response.data.insertRows + " 条");

@@ -44,7 +44,7 @@ async function operatorRecommend(operatorList) {
         }
     }
 
-    console.log(recommend)
+
 
    return recommend;
 }

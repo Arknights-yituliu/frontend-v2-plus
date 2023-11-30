@@ -136,7 +136,7 @@ for (const char_id in operator_table_simple) {
   avatar.push(operator)
 }
 
-console.log(avatar)
+
 
 avatar.sort((a, b) => a.time - b.time)
 
@@ -227,7 +227,7 @@ function updateUserName() {
   surveyApi.updateUserData(data).then(response => {
     cMessage('用户名更改成功')
     user_data.value.userName = response.data.userName
-    console.log(user_data.value.userName)
+
     localStorage.setItem("globalUserData", JSON.stringify(user_data.value));
   })
 }
@@ -244,7 +244,7 @@ const HAS_PASSWORD = 1 << 1;
 const HAS_EMAIL = 1 << 2;
 
 function hasPermission(status, permission) {
-  console.log((status & permission) === permission)
+
   return (status & permission) === permission;
 }
 
