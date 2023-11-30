@@ -1082,6 +1082,8 @@ function addFilterCondition(property, condition) {
   filterCharacterList();
 }
 
+import { ElCollapseTransition } from 'element-plus'
+
 /**
  * 过滤干员列表
  */

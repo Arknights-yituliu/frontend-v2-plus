@@ -60,7 +60,7 @@ watch( () =>props.visible, (new_val) => {
 .c_collapse_item_wrap {
   height: 0;
   overflow: hidden;
-  transition: all .3s;
+  transition: height 0.2s linear;
 }
 
 .c_collapse_item {
