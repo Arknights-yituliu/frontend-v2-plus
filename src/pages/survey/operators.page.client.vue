@@ -1082,7 +1082,6 @@ function addFilterCondition(property, condition) {
   filterCharacterList();
 }
 
-import { ElCollapseTransition } from 'element-plus'
 
 /**
  * 过滤干员列表
@@ -1132,7 +1131,10 @@ let collapse_statistics_visible = ref(false)
 
 function statisticsCollapse() {
   statistics()
-  collapse_statistics_visible.value = !collapse_statistics_visible.value
+  setTimeout(function (){
+    collapse_statistics_visible.value = !collapse_statistics_visible.value
+  },500)
+
 }
 
 
@@ -1187,7 +1189,10 @@ let operatorRecommendList = ref([])
 
 async function getOperatorRecommend() {
   operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorTable.value)
-  collapseRecommendVisible.value = !collapseRecommendVisible.value;
+  setTimeout(function (){
+    collapseRecommendVisible.value = !collapseRecommendVisible.value;
+  },500)
+
 }
 
 
