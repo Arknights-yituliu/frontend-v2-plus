@@ -77,7 +77,7 @@ svg {
   width: 380px;
   height: 100vh;
   transform: translateX(-500px);
-  transition: all 0.1s;
+  transition: translate 0.3s linear;
   background-color: #1e222d;
   overflow: auto;
 }
