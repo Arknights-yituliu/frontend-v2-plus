@@ -24,7 +24,7 @@
 
 <script setup>
 import characterBasicInfo from "@/static/json/survey/character_table_simple.json";
-import professionId from "@/static/json/survey/professionId.json";
+import professionId from "/src/static/json/survey/sub_profession_dict.json.json";
 import {onMounted, ref, watch} from "vue";
 import surveyApi from "@/api/surveyUser";
 // import html2canvas from 'html2canvas';
