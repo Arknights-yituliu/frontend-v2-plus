@@ -48,7 +48,7 @@ let theme_type = ref("theme_init")
 
 onMounted(() => {
   const theme_v2 = localStorage.getItem("theme_v2");
-  console.log(theme_v2)
+
   if (theme_v2 === 'dark') {
     theme_type.value = 'theme_dark'
   }else {

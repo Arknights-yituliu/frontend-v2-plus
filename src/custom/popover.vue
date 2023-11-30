@@ -17,15 +17,15 @@ let content_wrap = `popover-${props.name}`
 
 function openOrClose() {
   let element = document.getElementById(content_wrap);
-  console.log(element)
+
   const offsetHeight = element.offsetHeight;
-  console.log(offsetHeight)
+
   if (offsetHeight < 5) {
-    console.log(props.name)
+
     const slotElement = document.getElementById(props.name);
     const slotHeight = slotElement.offsetHeight;
     const slotWidth = slotElement.offsetWidth;
-    console.log(slotHeight, '-', slotWidth)
+
     element.style.height = `${slotHeight}px`
     element.style.width = `${slotWidth}px`
   } else {
@@ -59,7 +59,7 @@ function openOrClose() {
   overflow: hidden;
   transition: all 0.3s;
   z-index: 3000;
-  background-color: var(--c-wrap-bg);
+  background-color: var(--c-bg);
   box-shadow: var(--c-box-shadow);
   border-radius: 4px;
 }

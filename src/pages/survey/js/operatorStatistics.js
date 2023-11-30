@@ -18,15 +18,16 @@ const zone_ranks = {
 
 /**
  * 计算干员消耗材料
- * @param operator_list 干员列表
+ * @param operatorTable 干员列表
  * @returns {{apCostCount: number, itemList: [], itemMap: {}}} 理智消耗总量，物品列表，物品列表
  */
-function calAPCost(operator_list) {
+function calAPCost(operatorTable) {
 
     let item_cost_count = {};
 
     // 计算已持有干员用掉的材料总和
-    for (let operator of operator_list) {
+    for (let charId in operatorTable) {
+        const operator = operatorTable[charId];
         // 获得每个干员的材料消耗
         const item_cost = getOperatorItemCost(operator.charId, operator.rarity, zone_ranks, operator,operator.name)
         //将材料消耗情况进行统计
@@ -272,28 +273,29 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
 
 /**
  * 统计已经持有的干员练度情况
- * @param list 干员练度信息集合
+ * @param operatorTable 干员练度信息集合
  * @returns {{}} 干员统计结果
  */
-function operatorStatistics(list) {
+function operatorStatistics(operatorTable) {
 
-    let group_by_rarity = {}
+    let operatorGroupByRarity = {}
     //将干员根据星级分类
-    for (const item of list) {
-        if (!group_by_rarity[`rarity${item.rarity}`]) {
-            group_by_rarity[`rarity${item.rarity}`] = [item]
+    for (const charId in operatorTable) {
+        const operator = operatorTable[charId];
+        if (!operatorGroupByRarity[`rarity${operator.rarity}`]) {
+            operatorGroupByRarity[`rarity${operator.rarity}`] = [operator]
         } else {
-            group_by_rarity[`rarity${item.rarity}`].push(item)
+            operatorGroupByRarity[`rarity${operator.rarity}`].push(operator)
         }
     }
 
     //初始化一个返回结果的对象
-    let operator_statistics_result = {
+    let operatorStatisticsResult = {
         max: []
     }
 
     for (const key of ['total', 'rarity6', 'rarity5', 'rarity4', 'rarity3', 'rarity2', 'rarity1']) {
-        operator_statistics_result[key] = {
+        operatorStatisticsResult[key] = {
             notOwn: [],
             count: 0,
             own: 0,
@@ -306,61 +308,61 @@ function operatorStatistics(list) {
 
 
     //根据干员星级进行统计练度
-    for (const rarity in group_by_rarity) {
+    for (const rarity in operatorGroupByRarity) {
         //每个星级的干员总和
-        operator_statistics_result[rarity].count = group_by_rarity[rarity].length
+        operatorStatisticsResult[rarity].count = operatorGroupByRarity[rarity].length
         //所有星级的干员总和
-        operator_statistics_result["total"].count += group_by_rarity[rarity].length
+        operatorStatisticsResult["total"].count += operatorGroupByRarity[rarity].length
 
-        for (const item of group_by_rarity[rarity]) {
+        for (const item of operatorGroupByRarity[rarity]) {
 
             //判断是否持有，未持有的干员塞入未持有集合里面并跳出本次循环
             if (!item.own) {
-                operator_statistics_result["total"].notOwn.push(item)
+                operatorStatisticsResult["total"].notOwn.push(item)
                 continue
             }
 
             //每个星级已持有的干员
-            operator_statistics_result[rarity].own++
+            operatorStatisticsResult[rarity].own++
             //所有星级已持有的干员
-            operator_statistics_result["total"].own++
+            operatorStatisticsResult["total"].own++
 
 
             // 统计每个星级干员和全部星级干员的技能专精情况
             for (const index of [1, 2, 3]) {
                 if (item[`skill${index}`] === 1) {
-                    operator_statistics_result[rarity].skill.rank1++
-                    operator_statistics_result["total"].skill.rank1++
+                    operatorStatisticsResult[rarity].skill.rank1++
+                    operatorStatisticsResult["total"].skill.rank1++
                 }
                 if (item[`skill${index}`] === 2) {
-                    operator_statistics_result[rarity].skill.rank2++
-                    operator_statistics_result["total"].skill.rank2++
+                    operatorStatisticsResult[rarity].skill.rank2++
+                    operatorStatisticsResult["total"].skill.rank2++
                 }
                 if (item[`skill${index}`] === 3) {
-                    operator_statistics_result[rarity].skill.rank3++
-                    operator_statistics_result["total"].skill.rank3++
+                    operatorStatisticsResult[rarity].skill.rank3++
+                    operatorStatisticsResult["total"].skill.rank3++
                 }
             }
 
             // 统计每个星级干员和全部星级干员的模组升级情况
             for (const type of ['X', 'Y']) {
                 if (item[`mod${type}`] === 1) {
-                    operator_statistics_result[rarity][`mod${type}`].rank1++
-                    operator_statistics_result[rarity][`mod`].rank1++
-                    operator_statistics_result["total"][`mod${type}`].rank1++
-                    operator_statistics_result["total"][`mod`].rank1++
+                    operatorStatisticsResult[rarity][`mod${type}`].rank1++
+                    operatorStatisticsResult[rarity][`mod`].rank1++
+                    operatorStatisticsResult["total"][`mod${type}`].rank1++
+                    operatorStatisticsResult["total"][`mod`].rank1++
                 }
                 if (item[`mod${type}`] === 2) {
-                    operator_statistics_result[rarity][`mod${type}`].rank2++
-                    operator_statistics_result[rarity][`mod`].rank2++
-                    operator_statistics_result["total"][`mod${type}`].rank2++
-                    operator_statistics_result["total"][`mod`].rank2++
+                    operatorStatisticsResult[rarity][`mod${type}`].rank2++
+                    operatorStatisticsResult[rarity][`mod`].rank2++
+                    operatorStatisticsResult["total"][`mod${type}`].rank2++
+                    operatorStatisticsResult["total"][`mod`].rank2++
                 }
                 if (item[`mod${type}`] === 3) {
-                    operator_statistics_result[rarity][`mod${type}`].rank3++
-                    operator_statistics_result[rarity][`mod`].rank3++
-                    operator_statistics_result["total"][`mod${type}`].rank3++
-                    operator_statistics_result["total"][`mod`].rank3++
+                    operatorStatisticsResult[rarity][`mod${type}`].rank3++
+                    operatorStatisticsResult[rarity][`mod`].rank3++
+                    operatorStatisticsResult["total"][`mod${type}`].rank3++
+                    operatorStatisticsResult["total"][`mod`].rank3++
                 }
             }
 
@@ -369,25 +371,25 @@ function operatorStatistics(list) {
             const item_cost = getOperatorItemCost(item.charId, item.rarity, zone_ranks, item,'')
             const {ap_cost_count} = getItemList(item_cost);
             item.apCost = ap_cost_count
-            operator_statistics_result.max.push(item)
+            operatorStatisticsResult.max.push(item)
         }
     }
 
     //将未持有干员根据星级倒序
-    operator_statistics_result.total.notOwn.sort((a, b) => {
+    operatorStatisticsResult.total.notOwn.sort((a, b) => {
         return b.rarity - a.rarity
     })
 
     //所有干员的消耗理智根据星级倒序
-    operator_statistics_result.max.sort((a, b) => {
+    operatorStatisticsResult.max.sort((a, b) => {
         return b.apCost - a.apCost
     })
 
     //选择练度最高的十位
-    operator_statistics_result.max = operator_statistics_result.max.slice(0, 10)
+    operatorStatisticsResult.max = operatorStatisticsResult.max.slice(0, 10)
 
 
-    return operator_statistics_result
+    return operatorStatisticsResult
 }
 
 

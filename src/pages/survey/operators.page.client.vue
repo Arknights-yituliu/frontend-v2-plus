@@ -1,6 +1,6 @@
 <template>
   <div class="survey_character_page">
-    <c-popup :visible="intro_popup_visible" v-model:visible="intro_popup_visible">
+    <c-popup :visible="introPopupVisible" v-model:visible="introPopupVisible">
       <!-- <div class="intro_title">填写流程说明</div> -->
       <div class="intro_wrap">
         <div class="intro_title">填写方法</div>
@@ -64,7 +64,7 @@
     </div>
 
     <!-- 筛选模块 -->
-    <c-collapse-item v-model:visible="collapse_import_filter" :name="'filter'">
+    <c-collapse-item v-model:visible="collapseImportFilter" :name="'filter'">
       <div class="control_bar_wrap">
         <div class="control_bar">
           <div class="control_title" style="width: 80px;">职业</div>
@@ -83,7 +83,7 @@
         <div class="control_bar">
           <div class="control_title" style="width: 80px;">稀有度</div>
           <div class="switch_btn_wrap">
-            <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in rarity_dict" :key="index"
+            <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in RARITY_TABLE" :key="index"
                  @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
             </div>
           </div>
@@ -133,8 +133,8 @@
         <div class="control_bar">
           <div class="control_title" style="width: 80px;">排序</div>
           <div class="switch_btn_wrap">
-            <div class="btn" @click="sortCharacterList('rarity')">按稀有度</div>
-            <div class="btn" @click="sortCharacterList('date')">按实装顺序</div>
+            <div class="btn" @click="sortOperatorList('rarity')">按稀有度</div>
+            <div class="btn" @click="sortOperatorList('date')">按实装顺序</div>
           </div>
         </div>
 
@@ -165,7 +165,7 @@
     </c-collapse-item>
 
 
-    <c-popup :visible="import_popup_visible" v-model:visible="import_popup_visible">
+    <c-popup :visible="importPopupVisible" v-model:visible="importPopupVisible">
       <div>
         <div class="intro_wrap">
           <div class="intro_title">森空岛CRED的风险声明</div>
@@ -199,19 +199,19 @@
 
     </c-popup>
 
-    <c-popup :visible="reset_popup_visible" v-model:visible="reset_popup_visible">
+    <c-popup :visible="resetPopupVisible" v-model:visible="resetPopupVisible">
       <div class="popup_action_tip">
         此操作将清空一图流账号上保存的所有干员数据，确定要执行操作吗？
       </div>
       <div class="btn_switch_wrap">
         <div class="btn btn_red" @click="operatorDataReset()">确定</div>
-        <div class="btn" @click="reset_popup_visible = !reset_popup_visible">取消</div>
+        <div class="btn" @click="resetPopupVisible = !resetPopupVisible">取消</div>
       </div>
 
     </c-popup>
 
     <!-- 导入导出模块 -->
-    <c-collapse-item v-model:visible="collapse_import_visible" :name="'upload'">
+    <c-collapse-item v-model:visible="collapseImportVisible" :name="'upload'">
       <div class="control_bar_wrap">
         <div class="control_bar">
           <div class="control_title">导入导出</div>
@@ -227,14 +227,14 @@
             <div class="control_desc">输入在控制台获得的字符</div>
             <div><input class="control_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
             <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
-            <div class="btn btn_blue" @click="import_popup_visible = !import_popup_visible">
+            <div class="btn btn_blue" @click="importPopupVisible = !importPopupVisible">
               森空岛数据导入流程
             </div>
             <!--            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
-            <div class="btn btn_red" @click="reset_popup_visible = !reset_popup_visible">清空所有数据</div>
+            <div class="btn btn_red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</div>
           </div>
         </div>
-        <div class="control_bar" v-show="import_flag">
+        <div class="control_bar" v-show="importFlag">
           <div class="control_title" style="width: 140px;">导入账号不正确？</div>
           <div class="switch_btn_wrap">
             <div class="control_desc">选择你想要导入的账号</div>
@@ -264,20 +264,19 @@
     </c-collapse-item>
 
 
-
     <!--    干员统计折叠栏-->
     <c-collapse-item v-model:visible="collapse_statistics_visible" :name="'statistics'">
       <div class="control_bar_wrap">
         <!--          干员统计-->
         <div class="control_bar" style="align-items: normal;justify-content: space-around;margin: 20px 0">
           <div class="control_operator_card">
-            <p> Dr.{{ userData.userName }}，您总计招募了{{ statistics_result.total.own }}位干员，
-              未招募干员{{ statistics_result.total.count - statistics_result.total.own }}位，
+            <p> Dr.{{ userData.userName }}，您总计招募了{{ statisticsResult.total.own }}位干员，
+              未招募干员{{ statisticsResult.total.count - statisticsResult.total.own }}位，
               未招募的干员是
             </p>
             <div class="not_own_operator_wrap">
               <div class="opr_sprite_avatar_bg" style="margin: 0 4px 30px 4px"
-                   v-for="(operator,index) in statistics_result.total.notOwn" :key="index">
+                   v-for="(operator,index) in statisticsResult.total.notOwn" :key="index">
                 <div :class="getOperatorSprite(operator.charId)"></div>
                 <div class="sprite_alt" style="top:70px">{{ operator.name }}</div>
               </div>
@@ -293,10 +292,10 @@
               </tr>
               <tr>
                 <td>总计</td>
-                <td>{{ statistics_result.total.own }}/{{ statistics_result.total.count }}</td>
-                <td>{{ statistics_result.total.skill.rank3 }}</td>
-                <td>{{ statistics_result.total.modX.rank3 }}</td>
-                <td>{{ statistics_result.total.modY.rank3 }}</td>
+                <td>{{ statisticsResult.total.own }}/{{ statisticsResult.total.count }}</td>
+                <td>{{ statisticsResult.total.skill.rank3 }}</td>
+                <td>{{ statisticsResult.total.modX.rank3 }}</td>
+                <td>{{ statisticsResult.total.modY.rank3 }}</td>
               </tr>
               <tr v-for="(detail,index) in statistics_detail" :key="index">
                 <td><img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""></td>
@@ -313,15 +312,15 @@
             <p>其中练度最高的十位干员是</p>
 
             <div class="opr_form">
-              <div class="opr_card" v-for="(operator, char_index) in statistics_result.max" :key="char_index"
-                   v-show="operator.show">
+              <div class="opr_card" v-for="(operator, char_index) in statisticsResult.max" :key="char_index"
+              >
                 <div class="opr_sprite_avatar_bg">
                   <div :class="getOperatorSprite(operator.charId)"></div>
                   <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
                   <div class="opr_level">
                     {{ operator.level }}
                   </div>
-                  <span class="sprite_alt_name" >{{ operator.name }}</span>
+                  <span class="sprite_alt_name">{{ operator.name }}</span>
                 </div>
                 <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
                   <div :class="getSkillSprite(skill.iconId)"></div>
@@ -368,45 +367,45 @@
 
 
     <!--    干员推荐-->
-    <c-collapse-item v-model:visible="collapse_recommend_visible" :name="'recommend'">
+    <c-collapse-item v-model:visible="collapseRecommendVisible" :name="'recommend'">
       <div class="control_bar_wrap">
         <h2>干员练度推荐</h2> <span>（测试）</span>
-      <div class="opr_form">
-            <div class="opr_card" v-for="(recommend,index) in operator_recommend_list" :key="index">
-              <div class="opr_sprite_avatar_bg">
-                <div :class="getOperatorSprite(recommend.charId)"></div>
-                <div class="sprite_alt_name" >{{ recommend.name }}</div>
-              </div>
-              <div v-show="recommend.info.type==='skill'" class="opr_sprite_skill_bg">
-                <div :class="getSkillSprite(recommend.info.iconId)"></div>
-                <div class="sprite_alt">{{ recommend.info.name }}</div>
-              </div>
-              <div v-show="recommend.info.type==='equip'" class="opr_sprite_skill_bg">
-                <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="opr_equip_image">
-                <div class="sprite_alt">{{ recommend.info.iconId }}</div>
-              </div>
-
-              <div class="recommend_text">
-                {{`本站平均练度为${recommend.avg.toFixed(2)}级`}} <br>
-                {{`提升到3级的人占比为${(recommend.ratio*100).toFixed(2)}%`}}
-              </div>
-
+        <div class="opr_form">
+          <div class="opr_card" v-for="(recommend,index) in operatorRecommendList" :key="index">
+            <div class="opr_sprite_avatar_bg">
+              <div :class="getOperatorSprite(recommend.charId)"></div>
+              <div class="sprite_alt_name">{{ recommend.name }}</div>
             </div>
-      </div>
+            <div v-show="recommend.info.type==='skill'" class="opr_sprite_skill_bg">
+              <div :class="getSkillSprite(recommend.info.iconId)"></div>
+              <div class="sprite_alt">{{ recommend.info.name }}</div>
+            </div>
+            <div v-show="recommend.info.type==='equip'" class="opr_sprite_skill_bg">
+              <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="opr_equip_image">
+              <div class="sprite_alt">{{ recommend.info.iconId }}</div>
+            </div>
+
+            <div class="recommend_text">
+              {{ `本站平均练度为${recommend.avg.toFixed(2)}级` }} <br>
+              {{ `提升到3级的人占比为${(recommend.ratio * 100).toFixed(2)}%` }}
+            </div>
+
+          </div>
+        </div>
       </div>
     </c-collapse-item>
 
     <!--   干员表单-->
     <div class="opr_form">
-      <div class="opr_card" v-for="(operator, char_index) in operator_list" :key="char_index"
-           v-show="operator.show" @click="updateOperatorPopup(char_index)">
+      <div class="opr_card" v-for="(operator, char_index) in operatorList" :key="char_index"
+           @click="updateOperatorPopup(char_index)">
         <div class="opr_sprite_avatar_bg">
           <div :class="getOperatorSprite(operator.charId)"></div>
           <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
           <div class="opr_level">
             {{ operator.level }}
           </div>
-          <div class="sprite_alt_name" >{{ operator.name }}</div>
+          <div class="sprite_alt_name">{{ operator.name }}</div>
         </div>
 
         <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
@@ -416,7 +415,7 @@
           <div class="sprite_alt">{{ skill.name }}</div>
         </div>
         <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_skill_bg">
-<!--          <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>-->
+          <!--          <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>-->
           <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="opr_equip_image">
           <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
                v-show="operator[`mod${equip.typeName2}`]>0" class="opr_skill_rank">
@@ -425,24 +424,29 @@
       </div>
     </div>
 
-    <c-popup v-model="operator_popup_visible">
+
+
+
+    <c-popup v-model="operatorPopupVisible">
 
       <div class="opr_card" style="margin:12px auto 0 auto">
         <div class="opr_sprite_avatar_bg">
-          <div :class="getOperatorSprite(operator_popup_data.charId)"></div>
-          <img :src="`/image/survey/rank/elite${operator_popup_data.elite}.png`" class="opr_elite" alt="">
+          <div :class="getOperatorSprite(operatorPopupData.charId)"></div>
+          <img :src="`/image/survey/rank/elite${operatorPopupData.elite}.png`" class="opr_elite" alt="">
           <div class="opr_level">
-            {{ operator_popup_data.level }}
+            {{ operatorPopupData.level }}
           </div>
         </div>
-        <div v-for="(skill,index) in operator_popup_data.skill" :key="index" class="opr_sprite_skill_bg">
+        <div v-for="(skill,index) in operatorPopupData.skill" :key="index" class="opr_sprite_skill_bg">
           <div :class="getSkillSprite(skill.iconId)"></div>
-          <img :src="`/image/survey/skill-rank-${operator_popup_data[`skill${index+1}`]}.jpg`"
-               v-show="operator_popup_data[`skill${index+1}`]>0" class="opr_skill_rank">
+          <img :src="`/image/survey/skill-rank-${operatorPopupData[`skill${index+1}`]}.jpg`"
+               v-show="operatorPopupData[`skill${index+1}`]>0" class="opr_skill_rank">
           <div class="sprite_alt">{{ skill.name }}</div>
         </div>
-        <div v-for="(equip,index) in operator_popup_data.equip" :key="index" class="opr_sprite_skill_bg">
+        <div v-for="(equip,index) in operatorPopupData.equip" :key="index" class="opr_sprite_skill_bg">
           <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="opr_equip_image">
+          <img :src="`/image/survey/skill-rank-${operatorPopupData[`mod${equip.typeName2}`]}.jpg`"
+               v-show="operatorPopupData[`mod${equip.typeName2}`]>0" class="opr_skill_rank">
           <div class="sprite_alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
         </div>
       </div>
@@ -455,22 +459,22 @@
           <div class="opr_option_title">练度项</div>
           <div class="opr_option_bar">
             <div class="opr_sprite_skill_bg">
-              <img :src="`/image/survey/rank/elite${operator_popup_data.elite}.png`" class="img_skill_rank">
+              <img :src="`/image/survey/rank/elite${operatorPopupData.elite}.png`" class="img_skill_rank">
             </div>
           </div>
-          <div class="opr_option_bar" v-for="(skill,index) in operator_popup_data.skill" :key="index">
+          <div class="opr_option_bar" v-for="(skill,index) in operatorPopupData.skill" :key="index">
             <div class="opr_sprite_skill_bg">
               <div :class="getSkillSprite(skill.iconId)"
-                   @click="updateOperatorData(operator_popup_data.charId,`skill${index+1}`,0)"></div>
-              <img :src="`/image/survey/skill-rank-${operator_popup_data[`skill${index+1}`]}.jpg`"
-                   v-show="operator_popup_data[`skill${index+1}`]>0" class="opr_skill_rank">
+                   @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,0)"></div>
+              <img :src="`/image/survey/skill-rank-${operatorPopupData[`skill${index+1}`]}.jpg`"
+                   v-show="operatorPopupData[`skill${index+1}`]>0" class="opr_skill_rank">
             </div>
           </div>
 
-          <div class="opr_option_bar" v-for="(equip,index) in operator_popup_data.equip" :key="index">
+          <div class="opr_option_bar" v-for="(equip,index) in operatorPopupData.equip" :key="index">
             <div class="opr_sprite_mod_bg">
               <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="opr_equip_image"
-                   @click="updateOperatorData(operator_popup_data.charId,`mod${equip.typeName2}`,0)">
+                   @click="updateOperatorData(operatorPopupData.charId,`mod${equip.typeName2}`,0)">
               <div class="sprite_alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
             </div>
           </div>
@@ -480,25 +484,25 @@
         <div class="opr_options">
           <div class="opr_option_title">修改当前练度</div>
           <div class="opr_option_bar">
-            <div v-for="rank in ranks.slice(0,3)" :key="rank"
-                 @click="updateOperatorData(operator_popup_data.charId,`elite`,rank)"
-                 :class="dataOptionClass(rank,operator_popup_data.charId,`elite`)">
+            <div v-for="rank in RANK_TABLE.slice(0,3)" :key="rank"
+                 @click="updateOperatorData(operatorPopupData.charId,`elite`,rank)"
+                 :class="dataOptionClass(operatorPopupData.charId,rank,`elite`)">
               <img :src="`/image/survey/rank/elite${rank}.png`" class="img_skill_rank">
               <!--              <div :class="getOptionEliteSprite(`elite${rank}`)"></div>-->
             </div>
           </div>
 
-          <div class="opr_option_bar" v-for="(skill,index) in operator_popup_data.skill" :key="index">
-            <div v-for="rank in ranks.slice(1,4)" :key="rank"
-                 @click="updateOperatorData(operator_popup_data.charId,`skill${index+1}`,rank)"
-                 :class="dataOptionClass(rank,operator_popup_data.charId,`skill${index+1}`)">
+          <div class="opr_option_bar" v-for="(skill,index) in operatorPopupData.skill" :key="index">
+            <div v-for="rank in RANK_TABLE.slice(1,4)" :key="rank"
+                 @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,rank)"
+                 :class="dataOptionClass(operatorPopupData.charId,rank,`skill${index+1}`)">
               <img :src="`/image/survey/rank/skill-rank-${rank}.png`" class="img_skill_rank"/>
             </div>
           </div>
-          <div class="opr_option_bar" v-for="(equip,index) in operator_popup_data.equip" :key="index">
-            <div v-for="rank in ranks.slice(1,4)" :key="rank"
-                 @click="updateOperatorData(operator_popup_data.charId,`mod${equip.typeName2}`,rank)"
-                 :class="dataOptionClass(rank,operator_popup_data.charId,`mod${equip.typeName2}`)">
+          <div class="opr_option_bar" v-for="(equip,index) in operatorPopupData.equip" :key="index">
+            <div v-for="rank in RANK_TABLE.slice(1,4)" :key="rank"
+                 @click="updateOperatorData(operatorPopupData.charId,`mod${equip.typeName2}`,rank)"
+                 :class="dataOptionClass(operatorPopupData.charId,rank,`mod${equip.typeName2}`)">
               <img :src="`/image/survey/rank/mod-rank-${rank}.png`" class="img_mod_rank"/>
             </div>
           </div>
@@ -527,16 +531,15 @@ import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";
 import request from "/src/api/requestBase";
 import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
-import character_list from '/src/static/json/survey/character_list.json'
 import character_table from '/src/static/json/survey/character_table_simple.json'
 
 
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
 
+let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
+let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
 
-let intro_popup_visible = ref(false)
-let import_popup_visible = ref(false)  //导入弹窗是否显示
 let userData = ref({userName: "未登录", status: -100, token: void 0});  //用户信息
 
 /**
@@ -544,15 +547,20 @@ let userData = ref({userName: "未登录", status: -100, token: void 0});  //用
  */
 function getCacheUserData() {
   let cacheData = localStorage.getItem("globalUserData");
-  if (cacheData == void 0 || cacheData == 'undefined') {
+  if (!cacheData) {
     // cMessage('未登录或登录失效', 'error')
   } else {
     userData.value = JSON.parse(cacheData);
   }
 }
 
+/**
+ * 检查用户状态
+ * @param notice 是否弹出提示
+ * @returns {boolean} 状态
+ */
 function checkUserStatus(notice) {
-  if (userData.value.token == void 0 || userData.value.token == 'undefined') {
+  if (!userData.value.token) {
     if (notice) cMessage('请先注册或登录一图流账号', 'error')
     return true;
   }
@@ -561,29 +569,44 @@ function checkUserStatus(notice) {
 
 
 /**
+ * 找回一图流账号
+ */
+// eslint-disable-next-line no-unused-vars
+async function retrieveAccount() {
+  const data = {
+    cred: skland_CRED_and_SECRET.value
+  }
+
+  surveyApi.retrievalUserAccountByCred(data).then(response => {
+    const userName = response.data.userName;
+    login(userName)
+  })
+}
+
+
+let introPopupVisible = ref(false) //网站教程弹窗显示状态
+
+/**
  * 检查是否是第一次进入页面
  */
-
 function checkFirstPopup() {
-  intro_popup_visible.value = !intro_popup_visible.value
+  introPopupVisible.value = !introPopupVisible.value
   localStorage.setItem("first_popup", "done");
 }
 
 
-let oOperatorTable = ref(character_table);
-
-let operator_list = ref(character_list);   //干员列表
-
-let ranks = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
-let rarity_dict = [1, 2, 3, 4, 5, 6];  //星级
-
+let operatorTable = ref(character_table);
+let operatorList = ref([])  //干员列表
 
 /**
  * 找回填写过的角色信息
  */
 function getOperatorData() {
   //检查是否登录
-  if (checkUserStatus(false)) return;
+  if (checkUserStatus(false)) {
+    segmentedLoading()
+    return;
+  }
 
   const data = {token: userData.value.token}
 
@@ -595,41 +618,77 @@ function getOperatorData() {
     for (const item of list) {
       const sCharId = item.charId;
       obj[sCharId] = item
-      if(oOperatorTable.value[sCharId]){
-        operator_list.value[sCharId].elite = item.elite;
-        operator_list.value[sCharId].level = item.level;
-        operator_list.value[sCharId].potential = item.potential;
-        operator_list.value[sCharId].mainSkill = item.mainSkill;
-        operator_list.value[sCharId].skill1 = item.skill1;
-        operator_list.value[sCharId].skill2 = item.skill2;
-        operator_list.value[sCharId].skill3 = item.skill3;
-        operator_list.value[sCharId].modX = item.modX;
-        operator_list.value[sCharId].modY = item.modY;
-        operator_list.value[sCharId].modD = item.modD;
-        operator_list.value[sCharId].own = item.own;
+      if (operatorTable.value[sCharId]) {
+        operatorTable.value[sCharId].elite = item.elite;
+        operatorTable.value[sCharId].level = item.level;
+        operatorTable.value[sCharId].potential = item.potential;
+        operatorTable.value[sCharId].mainSkill = item.mainSkill;
+        operatorTable.value[sCharId].skill1 = item.skill1;
+        operatorTable.value[sCharId].skill2 = item.skill2;
+        operatorTable.value[sCharId].skill3 = item.skill3;
+        operatorTable.value[sCharId].modX = item.modX;
+        operatorTable.value[sCharId].modY = item.modY;
+        operatorTable.value[sCharId].modD = item.modD;
+        operatorTable.value[sCharId].own = item.own;
       }
     }
     //转为前端的数据格式
-    for (let index in operator_list.value) {
-      if (obj[operator_list.value[index].charId]) {
-        const e = obj[operator_list.value[index].charId]
-        if (!e.own) continue;
-        operator_list.value[index].elite = e.elite;
-        operator_list.value[index].level = e.level;
-        operator_list.value[index].potential = e.potential;
-        operator_list.value[index].mainSkill = e.mainSkill;
-        operator_list.value[index].skill1 = e.skill1;
-        operator_list.value[index].skill2 = e.skill2;
-        operator_list.value[index].skill3 = e.skill3;
-        operator_list.value[index].modX = e.modX;
-        operator_list.value[index].modY = e.modY;
-        operator_list.value[index].modD = e.modD;
-        operator_list.value[index].own = e.own;
-      }
-    }
-    // statisticsCollapse()
+    segmentedLoading()
     cMessage("导入了 " + list.length + " 条数据");
   });
+}
+
+
+
+// let charIdSet = ref({})
+
+// let intersectionObserver  = new IntersectionObserver(
+//     function (entries){
+//       const entry = entries[0]
+//       if(entry.isIntersecting){
+//         for(const charId in operatorTable.value){
+//           const operator =  operatorTable[charId]
+//           if(!charIdSet.value[charId]&&operator.show){
+//            operatorList.value.push(operator)
+//           }
+//
+//           if(operatorList.value.length>=maxOperatorDisplayQuantity) break;
+//         }
+//         console.log('加载更多')
+//       }
+//
+//       maxOperatorDisplayQuantity+=10;
+//     }
+// )
+//
+// let dropdown = document.getElementById('dropdown');
+//
+// intersectionObserver.observe(dropdown)
+
+
+function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve,time))
+}
+
+let maxOperatorDisplayQuantity = 10;
+
+/**
+ * 分段加载干员数据
+ * @returns {Promise<void>}
+ */
+async function segmentedLoading() {
+  operatorList.value = []
+  for (const charId in operatorTable.value) {
+    const operator = operatorTable.value[charId]
+    if (operatorList.value.length >= maxOperatorDisplayQuantity) {
+      await sleep(500)
+
+      maxOperatorDisplayQuantity += 10;
+    }
+    if (operator.show) {
+      operatorList.value.push(operator)
+    }
+  }
 }
 
 
@@ -646,57 +705,28 @@ function exportExcel() {
 }
 
 
-
+let importPopupVisible = ref(false)  //导入教程弹窗显示状态
 let skland_CRED_and_SECRET = ref("");  //森空岛cred
 let bindAccount = ref(false) //玩家uid是否绑定了一图流账号
+let bindingList = ref([])  //绑定列表
+let defaultUid = ref('')  //默认uid
+let importFlag = ref(false) //是否导入
+let collapseImportVisible = ref(true) //导入折叠栏显示状态
 
-/**
- * 找回一图流账号
- */
-// eslint-disable-next-line
-async function retrieveAccount() {
-  // const playerBind = await getPlayerBind(skland_CRED_and_SECRET.value);
-  const data = {
-    cred: skland_CRED_and_SECRET.value
-  }
-
-  surveyApi.retrievalUserAccountByCred(data).then(response => {
-    const userName = response.data.userName;
-    login(userName)
-  })
-}
-
-/**
- * 通过森空岛cred登录
- * @returns {Promise<void>}
- */
-// eslint-disable-next-line
-async function loginByCRED() {
-}
-
-
-let bindingList = ref([])
-let defaultUid = ref('')
-
-let import_flag = ref(false)
-
-let collapse_import_visible = ref(true)
-
+//控制导入折叠栏关闭展开
 function collapseImport() {
-  collapse_import_visible.value = !collapse_import_visible.value
+  collapseImportVisible.value = !collapseImportVisible.value
 }
-
-
 
 /**
  * 通过cred和secret进行森空岛干员信息导入
  * @returns {Promise<void>}
  */
-// eslint-disable-next-line
 async function importSKLandOperatorData() {
 
-  if (checkUserStatus(true)) return;
-
+  if (checkUserStatus(true)) {
+    return;
+  }
 
   //替换掉cred和secret的引号
   skland_CRED_and_SECRET.value = skland_CRED_and_SECRET.value
@@ -721,7 +751,7 @@ async function importSKLandOperatorData() {
       cred,
       playerBinding.uid)
 
-  import_flag.value = true
+  importFlag.value = true
 
   await uploadSKLandData({
     token: userData.value.token,
@@ -734,7 +764,6 @@ async function importSKLandOperatorData() {
  * @param uid 玩家uid
  * @returns {Promise<void>}
  */
-
 async function importSKLandOperatorDataByUid(uid) {
 
   if (checkUserStatus(true)) return;
@@ -795,7 +824,7 @@ function chooseUidClass(uid) {
   if (uid === defaultUid.value) return 'btn_blue'
 }
 
-let reset_popup_visible = ref(false)
+let resetPopupVisible = ref(false) //重置账号提示弹窗显示状态
 
 /**
  * 重置账号数据
@@ -829,7 +858,7 @@ function login(userName) {
 // eslint-disable-next-line
 let last_upload_time_stamp = 1689425013364; //上次上传时间的时间戳
 let upload_message = ref({updateTime: "", affectedRows: 0, registered: false, userName: ''}); //上传APi返回的信息
-let selected_index_obj = ref({}); //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
+let selectedCharId = ref({}); //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
 
 /**
  * 自动上传风评表
@@ -850,13 +879,13 @@ function automaticUpload() {
   // console.log("上传频率：", upload_frequency / 1000, "s");
   //
   // //上传的数据
-  // let upload_list = uploadDataReduction();
+  // let upload_list = createUploadData();
   //
   // last_upload_time_stamp = now_upload_time_stamp;
   //
   // surveyApi.uploadCharacter(upload_list, userData.value.token).then((response) => {
   //   upload_message.value = response.data;
-  //   selected_index_obj.value = {};
+  //   selectedCharId.value = {};
   //   cMessage("自动保存成功");
   // });
 }
@@ -874,12 +903,15 @@ function upload() {
     return;
   }
 
+
+
   upload_limit_data.value = now_time_stamp
-  let uploadList = uploadDataReduction();
+  let uploadList = createUploadData();
+
   surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
     upload_message.value = response.data;
     cMessage("保存成功");
-    selected_index_obj.value = {};
+    selectedCharId.value = {};
   });
 }
 
@@ -888,30 +920,29 @@ let upload_file_name = ref("上传的文件名");
 /**
  * 将需要上传的数据去除无用信息
  */
-function uploadDataReduction() {
+function createUploadData() {
   let upload_list = [];
-  console.log(selected_index_obj.value);
+  console.log(selectedCharId.value);
 
-  for (const i in selected_index_obj.value) {
+  for (const sCharId in selectedCharId.value) {
     const operator = {
-      charId: operator_list.value[i].charId,
-      own: operator_list.value[i].own,
-      rarity: operator_list.value[i].rarity,
-      elite: operator_list.value[i].elite,
-      level: operator_list.value[i].level,
-      potential: operator_list.value[i].potential,
-      skill1: operator_list.value[i].skill1,
-      skill2: operator_list.value[i].skill2,
-      skill3: operator_list.value[i].skill3,
-      modX: operator_list.value[i].modX,
-      modY: operator_list.value[i].modY,
+      charId: operatorTable.value[sCharId].charId,
+      own: operatorTable.value[sCharId].own,
+      rarity: operatorTable.value[sCharId].rarity,
+      elite: operatorTable.value[sCharId].elite,
+      level: operatorTable.value[sCharId].level,
+      potential: operatorTable.value[sCharId].potential,
+      skill1: operatorTable.value[sCharId].skill1,
+      skill2: operatorTable.value[sCharId].skill2,
+      skill3: operatorTable.value[sCharId].skill3,
+      modX: operatorTable.value[sCharId].modX,
+      modY: operatorTable.value[sCharId].modY,
     };
     upload_list.push(operator);
   }
 
   return upload_list;
 }
-
 
 
 /**
@@ -953,29 +984,35 @@ function maaData1() {
 
 }
 
-let operator_popup_visible = ref(false)
-let operator_popup_index = ref(0)
-let operator_popup_data = ref({})
+let operatorPopupVisible = ref(false)
+let operatorPopupData = ref({})
 
-
+/**
+ * 更新修改干员练度弹窗内的干员数据
+ * @param index
+ */
 function updateOperatorPopup(index) {
   // console.log(operator_popup_visible.value)
-  operator_popup_visible.value = true;
-  let operator = operator_list.value[index]
-  operator_popup_index.value = index
-  operator_popup_data.value = operator
+  operatorPopupVisible.value = true;
+  operatorPopupData.value = operatorList.value[index]
 }
 
-function updateOperatorData(char_id, property, new_value) {
-  operator_popup_data.value[property] = new_value
+/**
+ * 修改干员练度
+ * @param charId 干员id
+ * @param property 属性
+ * @param newValue 新值
+ */
+function updateOperatorData(charId, property, newValue) {
+  operatorPopupData.value[property] = newValue
+  operatorTable.value[charId][property] = newValue
+  selectedCharId.value[charId] = charId
 }
 
-function dataOptionClass(current, char_id, property) {
-  if (current === operator_popup_data.value[property]) return 'opr_option_selected'
+function dataOptionClass(charId, current, property) {
+  if (current === operatorPopupData.value[property]) return 'opr_option_selected'
   return 'opr_option'
 }
-
-
 
 
 //判断按钮是否选中
@@ -986,7 +1023,7 @@ function selectedBtn(property, rule) {
   return "btn";
 }
 
-let collapse_import_filter = ref(false)
+let collapseImportFilter = ref(false)
 
 let filterCondition = ref({
   rarity: [6],
@@ -999,7 +1036,7 @@ let filterCondition = ref({
 });
 
 function collapseFilter() {
-  collapse_import_filter.value = !collapse_import_filter.value
+  collapseImportFilter.value = !collapseImportFilter.value
 }
 
 /**
@@ -1024,20 +1061,32 @@ function addFilterCondition(property, condition) {
  * 过滤干员列表
  */
 function filterCharacterList() {
-  for (let i in operator_list.value) {
-    const character = operator_list.value[i];
-    operator_list.value[i].show = filterByCharacterProperty(filterCondition.value, character);
+  operatorList.value = []
+  for (let charId in operatorTable.value) {
+    const operator = operatorTable.value[charId];
+    const show = filterByCharacterProperty(filterCondition.value, operator);
+    operatorTable.value[charId].show = show;
+
+    if (show) {
+      operatorList.value.push(operator)
+    }
   }
 }
 
+
+let sortProperty = ref({})
 /**
  * 干员数组operator_list排序
  * @param property 干员属性
  */
-function sortCharacterList(property) {
-
-  operator_list.value.sort((a, b) => {
-    return b[property] - a[property];
+function sortOperatorList(property) {
+  operatorList.value.sort((a, b) => {
+    sortProperty.value[property] = !sortProperty.value[property]
+    if(sortProperty.value[property]){
+      return a[property] - b[property];
+    }else {
+      return b[property] - a[property];
+    }
   });
 }
 
@@ -1056,7 +1105,7 @@ function statisticsCollapse() {
 }
 
 
-let statistics_result = ref({
+let statisticsResult = ref({
   max: [],
   total: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
   rarity6: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
@@ -1067,23 +1116,23 @@ let statistics_result = ref({
   rarity1: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
 })
 
-let statistics_detail = ref([statistics_result.value.rarity6, statistics_result.value.rarity5,
-  statistics_result.value.rarity4, statistics_result.value.rarity3,
-  statistics_result.value.rarity2, statistics_result.value.rarity1])
+let statistics_detail = ref([statisticsResult.value.rarity6, statisticsResult.value.rarity5,
+  statisticsResult.value.rarity4, statisticsResult.value.rarity3,
+  statisticsResult.value.rarity2, statisticsResult.value.rarity1])
 
 //各种统计
 function statistics() {
-  const result = operatorStatistics.calAPCost(operator_list.value);
+  const result = operatorStatistics.calAPCost(operatorTable.value);
   item_cost_map.value = result.itemMap;
   item_cost_list.value = result.itemList;
   ap_cost_count.value = result.apCostCount;
 
-  statistics_result.value = operatorStatistics.operatorStatistics(operator_list.value)
+  statisticsResult.value = operatorStatistics.operatorStatistics(operatorTable.value)
 
   statistics_detail.value = [
-    statistics_result.value.rarity6, statistics_result.value.rarity5,
-    statistics_result.value.rarity4, statistics_result.value.rarity3,
-    statistics_result.value.rarity2, statistics_result.value.rarity1
+    statisticsResult.value.rarity6, statisticsResult.value.rarity5,
+    statisticsResult.value.rarity4, statisticsResult.value.rarity3,
+    statisticsResult.value.rarity2, statisticsResult.value.rarity1
   ]
 }
 
@@ -1102,13 +1151,12 @@ function toThousands(num) {
   return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
 }
 
-let collapse_recommend_visible = ref(false)
-let operator_recommend_list = ref([])
+let collapseRecommendVisible = ref(false)
+let operatorRecommendList = ref([])
 
 async function getOperatorRecommend() {
-  operator_recommend_list.value = await operatorRecommend.operatorRecommend(operator_list.value)
-
-  collapse_recommend_visible.value = !collapse_recommend_visible.value;
+  operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorList.value)
+  collapseRecommendVisible.value = !collapseRecommendVisible.value;
 }
 
 
@@ -1199,8 +1247,6 @@ function getSkillSprite(id) {
 function getItemSprite(id) {
   return 'bg-' + id + " opr_apCost"
 }
-
-
 
 
 onMounted(() => {

@@ -110,12 +110,11 @@ function aside_collapse() {
 function switchTheme(theme) {
   const container = document.getElementById("container");
   let className = container.className;
-  console.log('旧class：', className)
+
   let list = className.split(" ");
-  console.log('旧主题：', list[list.length - 1])
+
   className = className.replace(list[list.length - 1], `theme_${theme}`)
-  console.log('新主题：', `theme_${theme}`)
-  console.log('新class：', className)
+
   container.className = className
 
   document.getElementsByTagName("html").item(0).className = theme;
