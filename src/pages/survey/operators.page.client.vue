@@ -1184,7 +1184,7 @@ let collapseRecommendVisible = ref(false)
 let operatorRecommendList = ref([])
 
 async function getOperatorRecommend() {
-  operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorList.value)
+  operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorTable.value)
   collapseRecommendVisible.value = !collapseRecommendVisible.value;
 }
 

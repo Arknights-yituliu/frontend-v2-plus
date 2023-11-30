@@ -2,10 +2,10 @@ import surveyApi from '/src/api/surveyOperator'
 
 /**
  *
- * @param operatorList
+ * @param operatorTable
  * @returns {Promise<[]>}
  */
-async function operatorRecommend(operatorList) {
+async function operatorRecommend(operatorTable) {
 
     let recommend = []
 
@@ -24,8 +24,8 @@ async function operatorRecommend(operatorList) {
     })
 
 
-    for (const index in operatorList) {
-        const operator = operatorList[index]
+    for (const index in operatorTable) {
+        const operator = operatorTable[index]
         if (operator.rarity < 6) continue;
         if (!operatorStatisticsResult[operator.charId]) continue;
         const result = operatorStatisticsResult[operator.charId]
