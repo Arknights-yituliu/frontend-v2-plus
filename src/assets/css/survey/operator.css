@@ -207,3 +207,19 @@
     
 }
 
+.opr_load_btn{
+    background-color: #007af5;
+    color: #ffffff;
+    font-weight: 600;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    padding:2px 12px;
+    text-align: center;
+    box-sizing: border-box;
+    line-height: 18px;
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+}
+

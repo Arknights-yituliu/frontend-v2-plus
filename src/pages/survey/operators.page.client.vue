@@ -425,7 +425,7 @@
     </div>
 
 
-
+    <div class="opr_load_btn" @click="loadCompleteData()">加载完整数据</div>
 
     <c-popup v-model="operatorPopupVisible">
 
@@ -604,7 +604,7 @@ let operatorList = ref([])  //干员列表
 function getOperatorData() {
   //检查是否登录
   if (checkUserStatus(false)) {
-    segmentedLoading()
+    loadDisplayData()
     return;
   }
 
@@ -633,7 +633,7 @@ function getOperatorData() {
       }
     }
     //转为前端的数据格式
-    segmentedLoading()
+    loadDisplayData()
     cMessage("导入了 " + list.length + " 条数据");
   });
 }
@@ -691,6 +691,31 @@ async function segmentedLoading() {
   }
 }
 
+function loadDisplayData(){
+  operatorList.value = []
+  for (const charId in operatorTable.value) {
+    const operator = operatorTable.value[charId]
+    if (operatorList.value.length >= 12) {
+     break;
+    }
+    if (operator.show) {
+      operatorList.value.push(operator)
+    }
+  }
+}
+
+let isCompleteData = ref(false)
+
+function loadCompleteData(){
+  operatorList.value = []
+  for (const charId in operatorTable.value) {
+    const operator = operatorTable.value[charId]
+    if (operator.show) {
+      operatorList.value.push(operator)
+    }
+  }
+  isCompleteData.value = true
+}
 
 /**
  * 导出评分表的excel
@@ -1080,8 +1105,12 @@ let sortProperty = ref({})
  * @param property 干员属性
  */
 function sortOperatorList(property) {
+
+  if(!isCompleteData.value){
+    loadCompleteData()
+  }
+  sortProperty.value[property] = !sortProperty.value[property]
   operatorList.value.sort((a, b) => {
-    sortProperty.value[property] = !sortProperty.value[property]
     if(sortProperty.value[property]){
       return a[property] - b[property];
     }else {
