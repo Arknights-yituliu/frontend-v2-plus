@@ -7,6 +7,7 @@
   left: 0;
   transition: all 0.3s linear;
   width: 250px;
+  background-color: #1e222d;
 }
 
 .nav_href {

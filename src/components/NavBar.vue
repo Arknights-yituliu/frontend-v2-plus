@@ -97,7 +97,6 @@ function aside_collapse() {
   let aside = document.getElementById("aside114")
   let container = document.getElementById("container")
   if (aside_flag.value) {
-
     aside.style.transform = "translateX(0)";
     aside.style.width = "250px";
     container.style.paddingLeft = "250px";
