@@ -38,22 +38,22 @@
     <div class="setup_top">
       <c-button :color="'blue'" @click="checkFirstPopup()">填写说明</c-button>
 
-      <c-button :color="'blue'" :status="btn_status.btn_filter"
+      <c-button :color="'blue'" :status="btnStatus.btn_filter"
                 @click="clickBtn('btn_filter');collapseFilter()">
         筛选/批量操作
       </c-button>
 
-      <c-button :color="'blue'" :status="btn_status.btn_import"
+      <c-button :color="'blue'" :status="btnStatus.btn_import"
                 @click="clickBtn('btn_import');collapseImport()">
         数据导入导出
       </c-button>
       <c-button :color="'blue'" @click="feedback()">建议与反馈</c-button>
       <div style="width: 60px"></div>
       <c-button :color="'green'" :status="true" @click="upload()">手动保存练度</c-button>
-      <c-button :color="'blue'" :status="btn_status.btn_statistics"
+      <c-button :color="'blue'" :status="btnStatus.btn_statistics"
                 @click="clickBtn('btn_statistics');statisticsCollapse()">统计干员练度
       </c-button>
-      <c-button :color="'blue'" :status="btn_status.btn_recommend"
+      <c-button :color="'blue'" :status="btnStatus.btn_recommend"
                 @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）
       </c-button>
       <!--      <c-button :color="'blue'" :status="btn_status.btn_plan"-->
@@ -176,7 +176,7 @@
         <div class="intro_wrap">
           <div class="intro_title">森空岛数据导入流程</div>
 
-          <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSkland()" class="web_url">https://www.skland.com/</a>进行登录
+          <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSKLand()" class="web_url">https://www.skland.com/</a>进行登录
           </p>
           <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
           <a style="color:dodgerblue">
@@ -225,7 +225,7 @@
           <div class="control_title" style="width: 100px;">森空岛导入</div>
           <div class="switch_btn_wrap">
             <div class="control_desc">输入在控制台获得的字符</div>
-            <div><input class="control_input" type="text" v-model="skland_CRED_and_SECRET"/></div>
+            <div><input class="control_input" type="text" v-model="SKlandCREDAndSECRET"/></div>
             <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
             <div class="btn btn_blue" @click="importPopupVisible = !importPopupVisible">
               森空岛数据导入流程
@@ -249,9 +249,9 @@
 
         <div class="control_bar" v-show="bindAccount">
           <div class="control_tip">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
-            {{ upload_message.userName }} </a> 请登录之前的账号 <br>
-            <div class="btn btn_blue" @click="login(upload_message.userName)">
-              请登录用户{{ upload_message.userName }}并刷新网页
+            {{ uploadMessage.userName }} </a> 请登录之前的账号 <br>
+            <div class="btn btn_blue" @click="login(uploadMessage.userName)">
+              请登录用户{{ uploadMessage.userName }}并刷新网页
             </div>
           </div>
         </div>
@@ -265,7 +265,7 @@
 
 
     <!--    干员统计折叠栏-->
-    <c-collapse-item v-model:visible="collapse_statistics_visible" :name="'statistics'">
+    <c-collapse-item v-model:visible="collapseStatisticsVisible" :name="'statistics'">
       <div class="control_bar_wrap">
         <!--          干员统计-->
         <div class="control_bar" style="align-items: normal;justify-content: space-around;margin: 20px 0">
@@ -297,7 +297,7 @@
                 <td>{{ statisticsResult.total.modX.rank3 }}</td>
                 <td>{{ statisticsResult.total.modY.rank3 }}</td>
               </tr>
-              <tr v-for="(detail,index) in statistics_detail" :key="index">
+              <tr v-for="(detail,index) in statisticsDetail" :key="index">
                 <td><img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""></td>
                 <td>{{ detail.own }}/{{ detail.count }}</td>
                 <td>{{ detail.skill.rank3 }}</td>
@@ -346,16 +346,16 @@
         <!--          材料统计-->
         <div class="control_bar"
              style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
-          总计消耗{{ ap_cost_count.toFixed(0) }} 理智
+          总计消耗{{ apCostCount.toFixed(0) }} 理智
         </div>
         <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
         <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
         <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
-        <div class="control_bar item_cost_wrap" v-for="(itemList,type) in item_cost_list"
+        <div class="control_bar item_cost_wrap" v-for="(itemList,type) in itemCostList"
              :key="type">
           <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
             <div class="image_item_wrap">
-              <div :class="getSprite(item.id,'item')"></div>
+              <div :class="getItemCostSprite(item.id,'item')"></div>
               <div class="item_count">
                 {{ strShowLength(item.count) }}
               </div>
@@ -531,7 +531,7 @@ import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";
 import request from "/src/api/requestBase";
 import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
-import character_table from '/src/static/json/survey/character_table_simple.json'
+import characterTable from '/src/static/json/survey/character_table_simple.json'
 
 
 import "/src/assets/css/survey/survey_character.css";
@@ -575,7 +575,7 @@ function checkUserStatus(notice) {
 // eslint-disable-next-line no-unused-vars
 async function retrieveAccount() {
   const data = {
-    cred: skland_CRED_and_SECRET.value
+    cred: SKlandCREDAndSECRET.value
   }
 
   surveyApi.retrievalUserAccountByCred(data).then(response => {
@@ -596,7 +596,7 @@ function checkFirstPopup() {
 }
 
 
-let operatorTable = ref(character_table);
+let operatorTable = ref(characterTable);
 let operatorList = ref([])  //干员列表
 
 /**
@@ -712,7 +712,7 @@ function loadDisplayData() {
 
 let isCompleteData = ref(false)
 
-let begin = new Date()
+let begin = new Date() - 5000
 
 function loadCompleteData() {
 
@@ -727,7 +727,7 @@ function loadCompleteData() {
       }
     }
     isCompleteData.value = true;
-  },begin,2000)
+  },begin,5000)
   throttle()
 
 }
@@ -738,17 +738,17 @@ function loadCompleteData() {
  * 导出评分表的excel
  */
 function exportExcel() {
-  const export_excel_url = http + "survey/operator/export?token=" + userData.value.token;
+  const exportExcelLink = http + "survey/operator/export?token=" + userData.value.token;
   const element = document.createElement("a");
   element.download = "form.xlsx";
   element.style.display = "none";
-  element.href = export_excel_url;
+  element.href = exportExcelLink;
   element.click();
 }
 
 
 let importPopupVisible = ref(false)  //导入教程弹窗显示状态
-let skland_CRED_and_SECRET = ref("");  //森空岛cred
+let SKlandCREDAndSECRET = ref("");  //森空岛cred
 let bindAccount = ref(false) //玩家uid是否绑定了一图流账号
 let bindingList = ref([])  //绑定列表
 let defaultUid = ref('')  //默认uid
@@ -771,12 +771,12 @@ async function importSKLandOperatorData() {
   }
 
   //替换掉cred和secret的引号
-  skland_CRED_and_SECRET.value = skland_CRED_and_SECRET.value
+  SKlandCREDAndSECRET.value = SKlandCREDAndSECRET.value
       .replace(/\s+/g, '')
       .replace(/["']/g, '')
 
   //将cred和secret分开
-  const textArr = skland_CRED_and_SECRET.value.split(',')
+  const textArr = SKlandCREDAndSECRET.value.split(',')
   const cred = textArr[0]
   const secret = textArr[1]
 
@@ -810,11 +810,11 @@ async function importSKLandOperatorDataByUid(uid) {
 
   if (checkUserStatus(true)) return;
 
-  skland_CRED_and_SECRET.value = skland_CRED_and_SECRET.value
+  SKlandCREDAndSECRET.value = SKlandCREDAndSECRET.value
       .replace(/\s+/g, '')
       .replace(/["']/g, '')
 
-  const textArr = skland_CRED_and_SECRET.value.split(',')
+  const textArr = SKlandCREDAndSECRET.value.split(',')
 
   const cred = textArr[0]
   const secret = textArr[1]
@@ -826,7 +826,7 @@ async function importSKLandOperatorDataByUid(uid) {
       cred,
       uid)
   await uploadSKLandData({
-    token: userData.value.token.toString(),
+    token: userData.value.token.tostring(),
     data: JSON.stringify(playerInfo)
   })
 }
@@ -844,7 +844,7 @@ async function uploadSKLandData({token, data}) {
     data: {token, data}
   }).then(response => {
     response = response.data
-    upload_message.value = response.data;
+    uploadMessage.value = response.data;
     if (response.code === 20004) {
       cMessage("您已经注册导入过了", "error");
       bindAccount.value = true;
@@ -897,72 +897,37 @@ function login(userName) {
 }
 
 
-// eslint-disable-next-line
-let last_upload_time_stamp = 1689425013364; //上次上传时间的时间戳
-let upload_message = ref({updateTime: "", affectedRows: 0, registered: false, userName: ''}); //上传APi返回的信息
+
+let uploadMessage = ref({updateTime: "", affectedRows: 0, registered: false, userName: ''}); //上传APi返回的信息
 let selectedCharId = ref({}); //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
 
-/**
- * 自动上传风评表
- */
-function automaticUpload() {
-  //方法触发时的时间戳
-  // const now_upload_time_stamp = Date.parse(new Date().toString());
-  // //与上一次自动上传时间的间隔
-  // let upload_frequency = now_upload_time_stamp - last_upload_time_stamp;
-  // // 检查用户是否登录
-  // if (userData.value.token == void 0) {
-  //   console.log(userData.value.token == void 0);
-  //   cMessage("未登录", "error");
-  //   return;
-  // }
-  // //上传间隔小于30s退出方法
-  // if (upload_frequency < 30000) return;
-  // console.log("上传频率：", upload_frequency / 1000, "s");
-  //
-  // //上传的数据
-  // let upload_list = createUploadData();
-  //
-  // last_upload_time_stamp = now_upload_time_stamp;
-  //
-  // surveyApi.uploadCharacter(upload_list, userData.value.token).then((response) => {
-  //   upload_message.value = response.data;
-  //   selectedCharId.value = {};
-  //   cMessage("自动保存成功");
-  // });
-}
 
-let upload_limit_data = ref(1699515633566)
+
+let uploadBegin = new Date()  //上传的开始时间
 
 /**
  * 手动上传
  */
 function upload() {
-  let now_time_stamp = Date.now();
-
-  if ((now_time_stamp - upload_limit_data.value) < 5000) {
-    console.log('保存过于频繁')
-    return;
-  }
-
-
-  upload_limit_data.value = now_time_stamp
-  let uploadList = createUploadData();
-
-  surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
-    upload_message.value = response.data;
-    cMessage("保存成功");
-    selectedCharId.value = {};
-  });
+  const throttle =  utils.throttle(()=>{
+    let uploadList = createUploadData();
+    uploadBegin = new Date()
+    surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
+      uploadMessage.value = response.data;
+      cMessage("保存成功");
+      selectedCharId.value = {};
+    });
+  },uploadBegin,5000)
+  throttle()
 }
 
-let upload_file_name = ref("上传的文件名");
+let uploadFileName = ref("上传的文件名");
 
 /**
  * 将需要上传的数据去除无用信息
  */
 function createUploadData() {
-  let upload_list = [];
+  let uploadList = [];
   for (const sCharId in selectedCharId.value) {
     const operator = {
       charId: operatorTable.value[sCharId].charId,
@@ -977,10 +942,10 @@ function createUploadData() {
       modX: operatorTable.value[sCharId].modX,
       modY: operatorTable.value[sCharId].modY,
     };
-    upload_list.push(operator);
+    uploadList.push(operator);
   }
 
-  return upload_list;
+  return uploadList;
 }
 
 
@@ -990,7 +955,7 @@ function createUploadData() {
 // eslint-disable-next-line
 function getUploadFileName() {
   const file = document.getElementById("uploadInput");
-  upload_file_name.value = file.files[0].name;
+  uploadFileName.value = file.files[0].name;
   let formData = new FormData();
   formData.append("file", file.files[0]);
 
@@ -1023,24 +988,23 @@ function maaData1() {
 
 }
 
-let operatorPopupVisible = ref(false)
-let operatorPopupData = ref({})
+let operatorPopupVisible = ref(false) //干员弹窗的显示状态
+let operatorPopupData = ref({})   //干员弹窗内的干员数据
 
 /**
  * 更新修改干员练度弹窗内的干员数据
- * @param index
+ * @param {number} index 列表索引
  */
 function updateOperatorPopup(index) {
-  // console.log(operator_popup_visible.value)
   operatorPopupVisible.value = true;
   operatorPopupData.value = operatorList.value[index]
 }
 
 /**
  * 修改干员练度
- * @param {String} charId 干员id
- * @param {String} property 属性
- * @param {String} newValue 新值
+ * @param {string} charId 干员id
+ * @param {string} property 属性
+ * @param {string} newValue 新值
  */
 function updateOperatorData(charId, property, newValue) {
   operatorPopupData.value[property] = newValue
@@ -1050,10 +1014,10 @@ function updateOperatorData(charId, property, newValue) {
 
 /**
  * 返回干员的属性选项是否选中样式
- * @param {String} charId 干员id
- * @param {String} current 干员属性值
- * @param {String} property 干员属性名
- * @returns {String} class css样式
+ * @param {string} charId 干员id
+ * @param {string} current 干员属性值
+ * @param {string} property 干员属性名
+ * @returns {string} class css样式
  */
 function dataOptionClass(charId, current, property) {
   if (current === operatorPopupData.value[property]) return 'opr_option_selected'
@@ -1063,9 +1027,9 @@ function dataOptionClass(charId, current, property) {
 
 /**
  * 返回筛选按钮是否选中的样式
- * @param {String} property 干员属性名
- * @param {String} rule 筛选规则
- * @returns {String} class 按钮样式
+ * @param {string} property 干员属性名
+ * @param {string} rule 筛选规则
+ * @returns {string} class 按钮样式
  */
 function selectedBtn(property, rule) {
   if (filterCondition.value[property].indexOf(rule) > -1) {
@@ -1074,9 +1038,9 @@ function selectedBtn(property, rule) {
   return "btn";
 }
 
-let collapseImportFilter = ref(false)
+let collapseImportFilter = ref(false)  //干员筛选条件折叠栏的展开状态
 
-let filterCondition = ref({
+let filterCondition = ref({   //干员筛选条件
   rarity: [6],
   profession: [],
   year: [],
@@ -1086,14 +1050,17 @@ let filterCondition = ref({
   TODO: []
 });
 
+/**
+ * 控制干员筛选条件折叠栏展开状态
+ */
 function collapseFilter() {
   collapseImportFilter.value = !collapseImportFilter.value
 }
 
 /**
  *  增加筛选规则
- * @param {String} property  干员属性
- * @param {String} condition 筛选条件
+ * @param {string} property  干员属性
+ * @param {string} condition 筛选条件
  */
 function addFilterCondition(property, condition) {
   console.log(filterCondition.value[property]);
@@ -1129,7 +1096,7 @@ let sortProperty = ref({})
 
 /**
  * 干员数组operator_list根据干员属性排序
- * @param {String} property 干员属性
+ * @param {string} property 干员属性
  */
 function sortOperatorList(property) {
 
@@ -1146,24 +1113,23 @@ function sortOperatorList(property) {
   });
 }
 
-//材料消耗数量
-let item_cost_list = ref([])
-//理智消耗数量
-let ap_cost_count = ref(0)
-//材料消耗数量
-let item_cost_map = ref({})
 
-let collapse_statistics_visible = ref(false)
+let itemCostList = ref([]) //材料消耗数量
+let apCostCount = ref(0) //理智消耗数量
+let itemCostTable = ref({}) //材料消耗数量
+let collapseStatisticsVisible = ref(false) //干员练度折叠栏的展开状态
 
+/**
+ * 控制干员练度折叠栏的展开状态
+ */
 function statisticsCollapse() {
   statistics()
   setTimeout(function () {
-    collapse_statistics_visible.value = !collapse_statistics_visible.value
-  }, 500)
-
+    collapseStatisticsVisible.value = !collapseStatisticsVisible.value
+  }, 20)
 }
 
-
+//干员练度统计结果
 let statisticsResult = ref({
   max: [],
   total: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
@@ -1175,20 +1141,20 @@ let statisticsResult = ref({
   rarity1: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
 })
 
-let statistics_detail = ref([statisticsResult.value.rarity6, statisticsResult.value.rarity5,
+let statisticsDetail = ref([statisticsResult.value.rarity6, statisticsResult.value.rarity5,
   statisticsResult.value.rarity4, statisticsResult.value.rarity3,
   statisticsResult.value.rarity2, statisticsResult.value.rarity1])
 
 //各种统计
 function statistics() {
   const result = operatorStatistics.calAPCost(operatorTable.value);
-  item_cost_map.value = result.itemMap;
-  item_cost_list.value = result.itemList;
-  ap_cost_count.value = result.apCostCount;
+  itemCostTable.value = result.itemMap;
+  itemCostList.value = result.itemList;
+  apCostCount.value = result.apCostCount;
 
   statisticsResult.value = operatorStatistics.operatorStatistics(operatorTable.value)
 
-  statistics_detail.value = [
+  statisticsDetail.value = [
     statisticsResult.value.rarity6, statisticsResult.value.rarity5,
     statisticsResult.value.rarity4, statisticsResult.value.rarity3,
     statisticsResult.value.rarity2, statisticsResult.value.rarity1
@@ -1198,21 +1164,19 @@ function statistics() {
 
 /**
  * 根据材料最大星级对材料进行拆解计算
- * @param highest_rarity  材料最大星级
+ * @param highestRarity  材料最大星级
  */
-function splitMaterialByRarity(highest_rarity) {
-  item_cost_list.value = operatorStatistics.splitMaterial(highest_rarity, item_cost_map.value);
+function splitMaterialByRarity(highestRarity) {
+  itemCostList.value = operatorStatistics.splitMaterial(highestRarity, itemCostTable.value);
 }
 
 
-// eslint-disable-next-line
-function toThousands(num) {
-  return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
-}
+let collapseRecommendVisible = ref(false)  //干员练度推荐折叠栏的显示状态
+let operatorRecommendList = ref([]) //干员练度推荐列表
 
-let collapseRecommendVisible = ref(false)
-let operatorRecommendList = ref([])
-
+/**
+ * 控制干员练度推荐折叠栏的显示状态
+ */
 async function getOperatorRecommend() {
   operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorTable.value)
   setTimeout(function () {
@@ -1238,7 +1202,7 @@ function strShowLength(num) {
 }
 
 
-function toSkland() {
+function toSKLand() {
   window.open("https://www.skland.com");
 }
 
@@ -1254,7 +1218,7 @@ function copyCode(text) {
   elementInput.remove()
 }
 
-let btn_status = ref({
+let btnStatus = ref({
   btn_import: true,
   btn_filter: false,
   btn_statistics: false,
@@ -1264,10 +1228,10 @@ let btn_status = ref({
 
 /**
  * 点击按钮改变按钮状态
- * @param btn_id 按钮id
+ * @param btnId 按钮id
  */
-function clickBtn(btn_id) {
-  btn_status.value[btn_id] = !btn_status.value[btn_id]
+function clickBtn(btnId) {
+  btnStatus.value[btnId] = !btnStatus.value[btnId]
 }
 
 //转跳罗德岛基建Beta
@@ -1282,21 +1246,12 @@ function feedback() {
 
 /**
  * 获取雪碧图
- * @param id 图片id string
- * @param type 图片类型 string (每类图片对应的css不一样）
+ * @param {string} id 图片id
  * @returns {string} css样式名
  */
-function getSprite(id, type) {
-  if ("mod" === type) return "bg-" + id + " sprite_mod";
-  if ("mod_rank" === type) return "bg-" + id + " sprite_mod_rank";
-  if ("skill" === type) return "bg-" + id + " sprite_skill";
-  if ("elite" === type) return "bg-" + id + " sprite_elite";
-  if ("potential" === type) return "bg-" + id + " sprite_potential";
-  if ("icon" === type) return "bg-skill_icon_" + id + " sprite_skill_icon";
-  if ("item" === type) return 'bg-' + id + " image_item"
-  return "bg-" + id + " sprite_avatar";
+function getItemCostSprite(id){
+  return 'bg-' + id + " image_item"
 }
-
 
 function getOperatorSprite(id) {
   return "bg-" + id + " opr_sprite_avatar";
