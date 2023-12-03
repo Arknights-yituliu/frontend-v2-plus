@@ -536,6 +536,7 @@ import character_table from '/src/static/json/survey/character_table_simple.json
 
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
+import utils from "/src/pages/utils/utils";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
@@ -639,7 +640,6 @@ function getOperatorData() {
 }
 
 
-
 // let charIdSet = ref({})
 
 // let intersectionObserver  = new IntersectionObserver(
@@ -667,7 +667,7 @@ function getOperatorData() {
 
 
 function sleep(time) {
-  return new Promise((resolve) => setTimeout(resolve,time))
+  return new Promise((resolve) => setTimeout(resolve, time))
 }
 
 let maxOperatorDisplayQuantity = 10;
@@ -691,31 +691,48 @@ async function segmentedLoading() {
   }
 }
 
-function loadDisplayData(){
+
+/**
+ * 加载完整干员列表
+ */
+function loadDisplayData() {
   operatorList.value = []
   for (const charId in operatorTable.value) {
     const operator = operatorTable.value[charId]
-    if (operatorList.value.length >= 12) {
-     break;
+    if (operatorList.value.length >= 18) {
+      break;
     }
     if (operator.show) {
       operatorList.value.push(operator)
     }
   }
+
 }
+
 
 let isCompleteData = ref(false)
 
-function loadCompleteData(){
-  operatorList.value = []
-  for (const charId in operatorTable.value) {
-    const operator = operatorTable.value[charId]
-    if (operator.show) {
-      operatorList.value.push(operator)
+let begin = new Date()
+
+function loadCompleteData() {
+
+  const throttle =  utils.throttle(() => {
+    console.log("运行？")
+    begin = new Date()
+    operatorList.value = []
+    for (const charId in operatorTable.value) {
+      const operator = operatorTable.value[charId]
+      if (operator.show) {
+        operatorList.value.push(operator)
+      }
     }
-  }
-  isCompleteData.value = true
+    isCompleteData.value = true;
+  },begin,2000)
+  throttle()
+
 }
+
+
 
 /**
  * 导出评分表的excel
@@ -929,7 +946,6 @@ function upload() {
   }
 
 
-
   upload_limit_data.value = now_time_stamp
   let uploadList = createUploadData();
 
@@ -947,8 +963,6 @@ let upload_file_name = ref("上传的文件名");
  */
 function createUploadData() {
   let upload_list = [];
-
-
   for (const sCharId in selectedCharId.value) {
     const operator = {
       charId: operatorTable.value[sCharId].charId,
@@ -1024,9 +1038,9 @@ function updateOperatorPopup(index) {
 
 /**
  * 修改干员练度
- * @param charId 干员id
- * @param property 属性
- * @param newValue 新值
+ * @param {String} charId 干员id
+ * @param {String} property 属性
+ * @param {String} newValue 新值
  */
 function updateOperatorData(charId, property, newValue) {
   operatorPopupData.value[property] = newValue
@@ -1034,13 +1048,25 @@ function updateOperatorData(charId, property, newValue) {
   selectedCharId.value[charId] = charId
 }
 
+/**
+ * 返回干员的属性选项是否选中样式
+ * @param {String} charId 干员id
+ * @param {String} current 干员属性值
+ * @param {String} property 干员属性名
+ * @returns {String} class css样式
+ */
 function dataOptionClass(charId, current, property) {
   if (current === operatorPopupData.value[property]) return 'opr_option_selected'
   return 'opr_option'
 }
 
 
-//判断按钮是否选中
+/**
+ * 返回筛选按钮是否选中的样式
+ * @param {String} property 干员属性名
+ * @param {String} rule 筛选规则
+ * @returns {String} class 按钮样式
+ */
 function selectedBtn(property, rule) {
   if (filterCondition.value[property].indexOf(rule) > -1) {
     return "btn btn_blue";
@@ -1066,10 +1092,9 @@ function collapseFilter() {
 
 /**
  *  增加筛选规则
- * @param property  干员属性
- * @param condition 筛选条件
+ * @param {String} property  干员属性
+ * @param {String} condition 筛选条件
  */
-
 function addFilterCondition(property, condition) {
   console.log(filterCondition.value[property]);
   if (filterCondition.value[property].indexOf(condition) > -1) {
@@ -1101,20 +1126,21 @@ function filterCharacterList() {
 
 
 let sortProperty = ref({})
+
 /**
- * 干员数组operator_list排序
- * @param property 干员属性
+ * 干员数组operator_list根据干员属性排序
+ * @param {String} property 干员属性
  */
 function sortOperatorList(property) {
 
-  if(!isCompleteData.value){
+  if (!isCompleteData.value) {
     loadCompleteData()
   }
   sortProperty.value[property] = !sortProperty.value[property]
   operatorList.value.sort((a, b) => {
-    if(sortProperty.value[property]){
+    if (sortProperty.value[property]) {
       return a[property] - b[property];
-    }else {
+    } else {
       return b[property] - a[property];
     }
   });
@@ -1131,9 +1157,9 @@ let collapse_statistics_visible = ref(false)
 
 function statisticsCollapse() {
   statistics()
-  setTimeout(function (){
+  setTimeout(function () {
     collapse_statistics_visible.value = !collapse_statistics_visible.value
-  },500)
+  }, 500)
 
 }
 
@@ -1189,9 +1215,9 @@ let operatorRecommendList = ref([])
 
 async function getOperatorRecommend() {
   operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorTable.value)
-  setTimeout(function (){
+  setTimeout(function () {
     collapseRecommendVisible.value = !collapseRecommendVisible.value;
-  },500)
+  }, 500)
 
 }
 
