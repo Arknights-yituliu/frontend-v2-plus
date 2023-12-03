@@ -1,7 +1,14 @@
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  overscroll-behavior: none;
 }
+
+
+
 html {
   height: 100%;
   padding: 0;

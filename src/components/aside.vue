@@ -1,5 +1,5 @@
 <template>
-  <div class="aside_table">
+  <div class="aside_table" id="aside114">
     <!-- 标题区 -->
     <a href="https://yituliu.site/" style="text-decoration: none; color: white">
       <div class="aside_title">明日方舟一图流</div>
@@ -14,7 +14,7 @@
         </div>
       </a>
       <!-- 二级标题组 -->
-      <a :href="c.path" class="nav_href" v-for="c in r.child">
+      <a :href="c.path" class="nav_href" v-for="(c,index) in r.child" :key="index">
         <div :class="navChildSelected(c.path)">
           <div class="aside_menu_child_icon"></div>
           {{ c.text }}

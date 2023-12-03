@@ -2,7 +2,7 @@
   <div class="header_wrap">
     <i class="menu-button iconfont icon-menu" @click="menu_collapse(true)">
     </i>
-    <i  class="menu_button_desktop iconfont icon-menu"  @click="aside_collapse()">
+    <i class="menu_button_desktop iconfont icon-menu" @click="aside_collapse()">
     </i>
     <div class="page_title" @click="aside_collapse()">
       {{ pageTitle }}
@@ -94,14 +94,21 @@ let aside_flag = ref(true);
 
 function aside_collapse() {
   aside_flag.value = !aside_flag.value;
+  let aside = document.getElementById("aside114")
+  let container = document.getElementById("container")
   if (aside_flag.value) {
-    setTimeout(function () {
-      document.getElementById("aside114").style.transform = "translateX(0)";
-      document.getElementById("aside114").style.width = "250px";
-    }, 30);
+
+    aside.style.transform = "translateX(0)";
+    aside.style.width = "250px";
+    container.style.paddingLeft = "250px";
+
   } else {
-    document.getElementById("aside114").style.transform = "translateX(-400px)";
+    document.getElementById("aside114").style.transform = "translateX(-300px)";
     document.getElementById("aside114").style.width = "0px";
+    container.style.paddingLeft = "0px";
+    setTimeout(function () {
+
+    }, 200);
   }
   // console.log(aside_flag.value);
 }
@@ -223,27 +230,28 @@ onMounted(() => {
 
 .menu_button_desktop {
   display: block;
-  font-size:24px;
-  color: rgb(230,230,230);
+  font-size: 24px;
+  color: rgb(230, 230, 230);
 }
 
-.theme_button{
+.theme_button {
   font-size: 32px;
-  color: rgb(230,230,230);
+  color: rgb(230, 230, 230);
 }
 
 @media (max-width: 1080px) {
   .menu-button {
     display: block;
     margin: 0 4px 0 20px;
-    font-size: 40px;color: rgb(230,230,230)
+    font-size: 40px;
+    color: rgb(230, 230, 230)
   }
 
   .menu_button_desktop {
     display: none;
   }
 
-  .theme_button{
+  .theme_button {
     font-size: 50px;
   }
 

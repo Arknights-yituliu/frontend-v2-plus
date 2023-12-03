@@ -46,13 +46,30 @@
   background-color: rgb(52, 68, 104);
 }
 
+.container-v1 {
+  height: 100%;
+  width: 100%;
+  background-color: var(--c-bg);
+  color: var(--c-text-color);
+  transition: background-color 0.3s;
+  box-sizing: border-box;
+  padding-left: 250px;
+  /*background-color: red;*/
+}
+
 @media (max-width: 1080px) {
   .header {
     height: 72px;
   }
 
-  .aside {
+  .aside_table {
     display: none;
   }
 
+  .container-v1{
+    padding-left: 0;
+  }
+
 }
+
+

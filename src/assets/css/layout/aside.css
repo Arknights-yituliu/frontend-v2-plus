@@ -1,8 +1,12 @@
 .aside_table {
   color: white;
-  margin-bottom: 50px;
   height: 100%;
   overflow-y: scroll;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: all 0.3s linear;
+  width: 250px;
 }
 
 .nav_href {

@@ -1,20 +1,12 @@
 <template>
-  <div class="container color_var" id="container" :class="theme_type">
-    <div class="aside" id="aside114" style="overflow-y: hidden">
-      <my-aside></my-aside>
+  <div class="container-v1 color_var" id="container" :class="theme_type">
+    <my-aside></my-aside>
+    <div class="header">
+      <nav-bar/>
     </div>
-    <div class="container is_vertical">
-      <div class="header">
-        <nav-bar/>
-      </div>
-      <div class="main">
-        <slot></slot>
-        <div class="footer">
-          <my-footer></my-footer>
-        </div>
-      </div>
-    </div>
+    <slot></slot>
   </div>
+
 </template>
 
 <script setup>
@@ -42,7 +34,7 @@ import NavBar from "/src/components/NavBar.vue";
 import myFooter from "/src/components/myfooter.vue";
 import myAside from "/src/components/aside.vue";
 
-import { onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 
 let theme_type = ref("theme_init")
 
@@ -51,11 +43,11 @@ onMounted(() => {
 
   if (theme_v2 === 'dark') {
     theme_type.value = 'theme_dark'
-  }else {
+  } else {
     theme_type.value = 'theme_light'
   }
 
-  document.getElementsByTagName("html").item(0).className=theme_v2==="dark"?"dark":"light";
+  document.getElementsByTagName("html").item(0).className = theme_v2 === "dark" ? "dark" : "light";
 })
 
 
@@ -83,15 +75,8 @@ onMounted(() => {
   z-index: auto;
 }
 
-body {
-  overflow-x: hidden;
-  text-size-adjust: none;
-  -webkit-text-size-adjust: none;
-  overscroll-behavior: none;
 
-}
-
-svg{
+svg {
   fill: var(--c-text-color);
 }
 
