@@ -712,13 +712,15 @@ function loadDisplayData() {
 
 let isCompleteData = ref(false)
 
-let begin = new Date() - 5000
+let loadBegin = new Date() - 5000
 
+/**
+ * 加载完整数据
+ */
 function loadCompleteData() {
-
   const throttle =  utils.throttle(() => {
     console.log("运行？")
-    begin = new Date()
+    loadBegin = new Date()
     operatorList.value = []
     for (const charId in operatorTable.value) {
       const operator = operatorTable.value[charId]
@@ -727,7 +729,7 @@ function loadCompleteData() {
       }
     }
     isCompleteData.value = true;
-  },begin,5000)
+  },loadBegin,5000)
   throttle()
 
 }
