@@ -2128,9 +2128,9 @@ export default {
   methods: {
     openNotification() {
       this.$notify({
-        title: "2023-11-04更新",
+        title: "2023-12-05更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong> 干员追加：<br>薇薇安娜，折光" +
+        message: "<strong> 干员追加：<br>锏，烈夏" +
             "<br><br><strong> 房间追加：<br>现在可以设置加工站干员了" +
           "<br><br><strong>UI问题：</strong><br>如果遇到不能展开三列排班请收起侧边导航栏或缩小网页比例"                                                                            +
             "<br><br>BUG相关：<br>如果遇到导入为空的情况可加Q群539600566</strong>",
