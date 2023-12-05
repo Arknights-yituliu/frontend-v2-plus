@@ -486,6 +486,10 @@ function getStageDataByProperty(stageList, property) {
   for (const index in stageList) {
     const stage = stageList[index]
     if (stage.endTime < nowTimeStamp) continue;
+    let zoneName  =  stage.zoneName
+    if(typeof zoneName === "undefined"){
+      zoneName = '未知活动'
+    }
     return {
       stage_code: stage.stageCode,
       efficiency: stage[property] * 100,
