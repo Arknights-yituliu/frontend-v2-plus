@@ -13,7 +13,7 @@ function debounce(func, duration = 500) {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             func.apply(this, args);
-            console.log('最终执行')
+
         }, duration);
     };
 }
@@ -29,10 +29,10 @@ function debounce(func, duration = 500) {
 function throttle(func,begin, delay = 500,message = '操作过于频繁') {
     const current = new Date();
     return function (...args) {
-        console.log(current - begin )
+
         if(current - begin >=delay){
             func.apply(this, args);
-            console.log('最终执行')
+
         }else {
             cMessage(message)
         }
