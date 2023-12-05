@@ -390,11 +390,14 @@ function getFontSize(eff) {
 
 function judgeActive(index) {
   let showFlag = false;
-  for (let i = 0; i < stageRankT3[index].length > 3 ? 3 : stageRankT3[index].length; ++i) {
-    if (stageRankT3[index][i].stageColor < 0) {
+  let stageResultList = stageRankT3[index].stageResultList
+  let num = 0;
+  for(let stageResult of stageResultList){
+    if(stageResult.stageColor<0){
       showFlag = true;
-      break;
     }
+    if(num>3) break;
+    num++
   }
   if (showFlag) return "";
   return "display:none";
