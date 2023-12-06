@@ -216,10 +216,10 @@
             </span>
           </div>
           <div class="activity_wrap">
-            上次up：{{selected_item.lastUp.activityName}}
+            上次up：{{ selected_item.lastUp.activityName }}
           </div>
           <div class="activity_wrap">
-            即将up：{{selected_item.lastUp.activityName}}
+            即将up：{{ selected_item.lastUp.activityName }}
           </div>
 
         </div>
@@ -386,6 +386,24 @@
         </div>
       </div>
 
+      <table class="act-table">
+        <tbody>
+        <tr>
+          <td>活动名称</td>
+          <td v-for="(itemId,index) in itemIdList" :key="index">
+            <img :src="`/image/items/${itemId}.png`" alt="" style="height: 36px">
+          </td>
+        </tr>
+        <tr v-for="(act,index) in historyActStageList" :key="index" v-show="act.zoneName.indexOf('rep')<0">
+          <td class="act-name">{{act.zoneName}}</td>
+          <td v-for="(itemId,index) in itemIdList" :key="index" >
+            <img :src="`/image/items/${itemId}.png`" alt="" style="height: 36px"
+                 v-show="isUp(act.actStageList,itemId)">
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
       <foot-component></foot-component>
 
     </div>
@@ -395,7 +413,7 @@
 <script setup>
 import stageApi from '/src/api/stage'
 import {onMounted, ref} from "vue";
-import item_series from '/src/static/json/item_series.json'
+import item_series from '/src/static/json/material/item_series.json'
 import footComponent from "/src/components/FootComponentV3.vue";
 
 // 根据物品系列进行分组的推荐关卡
@@ -512,9 +530,9 @@ function getItemTableData(index) {
 
   jumpToTable()
   // selected_item.value = item_value_obj.value[recommended_stage.itemSeriesId]
-  console.log(recommended_stage)
-  console.log(item_value_obj)
-  console.log('当前选中的材料是：', selected_item.value)
+  // console.log(recommended_stage)
+  // console.log(item_value_obj)
+  // console.log('当前选中的材料是：', selected_item.value)
 }
 
 
@@ -558,7 +576,6 @@ function formatNumber(num, acc) {
 }
 
 
-
 onMounted(() => {
 
 })
@@ -587,6 +604,31 @@ window.addEventListener("resize", function () {
     td_6.value = ''
   }
 })
+
+
+let actUpItemTable = ref({})
+
+let itemIdList = []
+for (const itemId in item_series) {
+  itemIdList.push(itemId)
+
+}
+
+let historyActStageList = ref([])
+
+stageApi.getHistoryActStage(0.625, 300).then(response => {
+  historyActStageList.value = response.data
+})
+
+function isUp(list,itemId){
+  for(const stage of list){
+    if(stage.itemId===itemId){
+      return true;
+    }
+  }
+
+  return false;
+}
 
 
 // for(let id in item_series){

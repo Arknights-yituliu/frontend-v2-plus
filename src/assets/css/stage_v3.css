@@ -230,31 +230,24 @@
   min-width: 48%;
 }
 
-.td_1{
- width: 80px
-}
-
-.td_2{
-
-}
-
-.td_3{
-
-}
-
-.td_4{
-
-}
-
-@media (min-width: 800px) {
-
-}
-
-
-
-
 #detailTable{
   border-radius: 8px;
   flex-grow: 1;
   border: 1px solid #80808020;
+}
+
+
+.act-table{
+  margin: 20px;
+  border-collapse: collapse;
+}
+
+.act-table td{
+  border: 1px solid #323232;
+}
+
+.act-name{
+  max-width: 90px;
+  overflow: hidden;
+
 }
