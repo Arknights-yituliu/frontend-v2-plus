@@ -821,7 +821,7 @@ async function importSKLandOperatorDataByUid(uid) {
       cred,
       uid)
   await uploadSKLandData({
-    token: userData.value.token.tostring(),
+    token: userData.value.token,
     data: JSON.stringify(playerInfo)
   })
 }

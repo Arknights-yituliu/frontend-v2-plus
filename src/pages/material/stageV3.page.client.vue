@@ -558,8 +558,8 @@ function formatNumber(num, acc) {
 }
 
 
-onMounted(() => {
 
+onMounted(() => {
 
 })
 
