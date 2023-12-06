@@ -536,7 +536,7 @@ import characterTable from '/src/static/json/survey/character_table_simple.json'
 
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
-import utils from "/src/pages/utils/utils";
+import { debounce } from "/src/pages/utils/utils";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
@@ -712,15 +712,11 @@ function loadDisplayData() {
 
 let isCompleteData = ref(false)
 
-let loadBegin = new Date() - 5000
 
 /**
  * 加载完整数据
  */
-function loadCompleteData() {
-  const throttle =  utils.throttle(() => {
-    console.log("运行？")
-    loadBegin = new Date()
+const loadCompleteData =  debounce(() => {
     operatorList.value = []
     for (const charId in operatorTable.value) {
       const operator = operatorTable.value[charId]
@@ -728,12 +724,9 @@ function loadCompleteData() {
         operatorList.value.push(operator)
       }
     }
+    console.log('执行了')
     isCompleteData.value = true;
-  },loadBegin,5000)
-  throttle()
-
-}
-
+  },3000)
 
 
 /**
@@ -905,23 +898,18 @@ let selectedCharId = ref({}); //每次点击操作记录下被更新的干员的
 
 
 
-let uploadBegin = new Date()  //上传的开始时间
 
 /**
  * 手动上传
  */
-function upload() {
-  const throttle =  utils.throttle(()=>{
+const upload = debounce(()=>{
     let uploadList = createUploadData();
-    uploadBegin = new Date()
     surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
       uploadMessage.value = response.data;
       cMessage("保存成功");
       selectedCharId.value = {};
     });
-  },uploadBegin,5000)
-  throttle()
-}
+  },5000)
 
 let uploadFileName = ref("上传的文件名");
 
