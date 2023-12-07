@@ -606,12 +606,10 @@ window.addEventListener("resize", function () {
 })
 
 
-let actUpItemTable = ref({})
 
 let itemIdList = []
 for (const itemId in item_series) {
   itemIdList.push(itemId)
-
 }
 
 let historyActStageList = ref([])

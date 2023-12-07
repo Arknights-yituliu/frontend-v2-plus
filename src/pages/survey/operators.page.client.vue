@@ -765,15 +765,7 @@ async function importSKLandOperatorData() {
     return;
   }
 
-  //替换掉cred和secret的引号
-  SKlandCREDAndSECRET.value = SKlandCREDAndSECRET.value
-      .replace(/\s+/g, '')
-      .replace(/["']/g, '')
-
-  //将cred和secret分开
-  const textArr = SKlandCREDAndSECRET.value.split(',')
-  const cred = textArr[0]
-  const secret = textArr[1]
+  const {cred,secret} =  getCredAndSecret(SKlandCREDAndSECRET.value)
 
   //获取绑定信息
   const playerBinding = await sklandApi.getPlayBinding('/api/v1/game/player/binding', '', secret, cred);
@@ -804,15 +796,7 @@ async function importSKLandOperatorData() {
 async function importSKLandOperatorDataByUid(uid) {
 
   if (checkUserStatus(true)) return;
-
-  SKlandCREDAndSECRET.value = SKlandCREDAndSECRET.value
-      .replace(/\s+/g, '')
-      .replace(/["']/g, '')
-
-  const textArr = SKlandCREDAndSECRET.value.split(',')
-
-  const cred = textArr[0]
-  const secret = textArr[1]
+  const {cred,secret} =  getCredAndSecret(SKlandCREDAndSECRET.value)
 
   const playerInfo = await sklandApi.getPlayerInfo(
       '/api/v1/game/player/info',
@@ -824,6 +808,26 @@ async function importSKLandOperatorDataByUid(uid) {
     token: userData.value.token,
     data: JSON.stringify(playerInfo)
   })
+}
+
+/**
+ * 获取cred和secret
+ * @param text 用户输入的字符串
+ * @return {{cred: *, secret: *}}  cred和secret
+ */
+function getCredAndSecret(text){
+
+  if(!text.includes(',')){
+    cMessage('输入格式不正确,应是一个中间包含逗号的一串字母','error')
+  }
+  text = text.replace(/\s+/g, '')
+      .replace(/["']/g, '')
+
+  const textArr = text.split(',')
+  const cred =  textArr[0]
+  const secret =  textArr[1]
+  return {cred,secret}
+
 }
 
 /**
