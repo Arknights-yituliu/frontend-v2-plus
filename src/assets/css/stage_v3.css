@@ -240,6 +240,7 @@
 .act-table{
   margin: 20px;
   border-collapse: collapse;
+  text-align: center;
 }
 
 .act-table td{
@@ -247,7 +248,11 @@
 }
 
 .act-name{
-  max-width: 90px;
+  width: 90px;
   overflow: hidden;
+}
 
+.act-item-sprite{
+   width: 50px;
+   height: 50px;
 }

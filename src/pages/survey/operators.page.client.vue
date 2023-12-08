@@ -322,19 +322,19 @@
                   </div>
                   <span class="sprite_alt_name">{{ operator.name }}</span>
                 </div>
-                <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
+                <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_icon_bg">
                   <div :class="getSkillSprite(skill.iconId)"></div>
                   <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
                        v-show="operator[`skill${index+1}`]>0" class="opr_skill_rank">
                   <span class="sprite_alt">{{ skill.name }}</span>
                 </div>
-                <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_skill_bg">
+                <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_icon_bg">
                   <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="opr_equip_image">
                   <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
                        v-show="operator[`mod${equip.typeName2}`]>0" class="opr_skill_rank">
                   <div class="sprite_alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
                 </div>
-                <div class="opr_sprite_skill_bg">
+                <div class="opr_sprite_icon_bg">
                   <div :class="getItemSprite('AP_GAMEPLAY')"></div>
                   <span class="sprite_alt">{{ operator.apCost.toFixed(0) }}</span>
                 </div>
@@ -376,11 +376,11 @@
               <div :class="getOperatorSprite(recommend.charId)"></div>
               <div class="sprite_alt_name">{{ recommend.name }}</div>
             </div>
-            <div v-show="recommend.info.type==='skill'" class="opr_sprite_skill_bg">
+            <div v-show="recommend.info.type==='skill'" class="opr_sprite_icon_bg">
               <div :class="getSkillSprite(recommend.info.iconId)"></div>
               <div class="sprite_alt">{{ recommend.info.name }}</div>
             </div>
-            <div v-show="recommend.info.type==='equip'" class="opr_sprite_skill_bg">
+            <div v-show="recommend.info.type==='equip'" class="opr_sprite_icon_bg">
               <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="opr_equip_image">
               <div class="sprite_alt">{{ recommend.info.iconId }}</div>
             </div>
@@ -398,23 +398,25 @@
     <!--   干员表单-->
     <div class="opr_form">
       <div class="opr_card" v-for="(operator, char_index) in operatorList" :key="char_index"
-           @click="updateOperatorPopup(char_index)">
+           @click="updateOperatorPopup(char_index)" style="width: 400px">
         <div class="opr_sprite_avatar_bg">
           <div :class="getOperatorSprite(operator.charId)"></div>
-          <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
           <div class="opr_level">
             {{ operator.level }}
           </div>
+          <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="opr_elite" alt="">
+          <img :src="`/image/survey/rank/potential${operator.potential}.png`" class="opr_potential" alt="">
+
           <div class="sprite_alt_name">{{ operator.name }}</div>
         </div>
 
-        <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_skill_bg">
+        <div v-for="(skill,index) in operator.skill" :key="index" class="opr_sprite_icon_bg">
           <div :class="getSkillSprite(skill.iconId)"></div>
           <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
                v-show="operator[`skill${index+1}`]>0" class="opr_skill_rank">
           <div class="sprite_alt">{{ skill.name }}</div>
         </div>
-        <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_skill_bg">
+        <div v-for="(equip,index) in operator.equip" :key="index" class="opr_sprite_icon_bg">
           <!--          <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>-->
           <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="opr_equip_image">
           <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
@@ -437,13 +439,13 @@
             {{ operatorPopupData.level }}
           </div>
         </div>
-        <div v-for="(skill,index) in operatorPopupData.skill" :key="index" class="opr_sprite_skill_bg">
+        <div v-for="(skill,index) in operatorPopupData.skill" :key="index" class="opr_sprite_icon_bg">
           <div :class="getSkillSprite(skill.iconId)"></div>
           <img :src="`/image/survey/skill-rank-${operatorPopupData[`skill${index+1}`]}.jpg`"
                v-show="operatorPopupData[`skill${index+1}`]>0" class="opr_skill_rank">
           <div class="sprite_alt">{{ skill.name }}</div>
         </div>
-        <div v-for="(equip,index) in operatorPopupData.equip" :key="index" class="opr_sprite_skill_bg">
+        <div v-for="(equip,index) in operatorPopupData.equip" :key="index" class="opr_sprite_icon_bg">
           <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="opr_equip_image">
           <img :src="`/image/survey/skill-rank-${operatorPopupData[`mod${equip.typeName2}`]}.jpg`"
                v-show="operatorPopupData[`mod${equip.typeName2}`]>0" class="opr_skill_rank">
@@ -458,12 +460,12 @@
         <div class="opr_options">
           <div class="opr_option_title">练度项</div>
           <div class="opr_option_bar">
-            <div class="opr_sprite_skill_bg">
+            <div class="opr_sprite_icon_bg">
               <img :src="`/image/survey/rank/elite${operatorPopupData.elite}.png`" class="img_skill_rank">
             </div>
           </div>
           <div class="opr_option_bar" v-for="(skill,index) in operatorPopupData.skill" :key="index">
-            <div class="opr_sprite_skill_bg">
+            <div class="opr_sprite_icon_bg">
               <div :class="getSkillSprite(skill.iconId)"
                    @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,0)"></div>
               <img :src="`/image/survey/skill-rank-${operatorPopupData[`skill${index+1}`]}.jpg`"

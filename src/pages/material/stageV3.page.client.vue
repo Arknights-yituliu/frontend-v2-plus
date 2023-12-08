@@ -128,11 +128,13 @@
       <!-- 卡片区域 -->
       <div id="stage_3">
         <!-- 正式卡片 -->
-        <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index" @click="getItemTableData(index)">
+        <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
+             @click="getItemTableData(index)">
           <!-- 长期最优 -->
           <div class="stage_card_3_left">
             <div class="img_wrap" style="position: relative;">
-              <div class="stage_card_3_mainImg" :class="getSpriteImg(stage.series.r3, 't3')" style="transform: scale(1);">
+              <div class="stage_card_3_mainImg" :class="getSpriteImg(stage.series.r3, 't3')"
+                   style="transform: scale(1);">
                 <!-- <img :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 96px"> -->
                 <div class="stage_card_3_cover"></div>
                 <div class="stage_card_3_best">
@@ -148,31 +150,31 @@
             <div class="stage_card_3_list">
               <div class="stage_card_3_line">
                 <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r4}.png`" alt=""
-                    style="height: 32px"></div>
+                                                   style="height: 32px"></div>
                 <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
                 <div class="stage_card_3_line_text">{{
-                  formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1)
-                }}%
+                    formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1)
+                  }}%
                 </div>
 
               </div>
               <div class="stage_card_3_line">
                 <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r3}.png`" alt=""
-                    style="height: 32px"></div>
+                                                   style="height: 32px"></div>
                 <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
                 <div class="stage_card_3_line_text">{{
-                  formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1)
-                }}%
+                    formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1)
+                  }}%
                 </div>
 
               </div>
               <div class="stage_card_3_line" v-show="stage.series.r2">
                 <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r2}.png`" alt=""
-                    style="height: 32px"></div>
+                                                   style="height: 32px"></div>
                 <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
                 <div class="stage_card_3_line_text">{{
-                  formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1)
-                }}%
+                    formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1)
+                  }}%
                 </div>
 
               </div>
@@ -267,7 +269,7 @@
               {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
             </template>
           </el-table-column>
-          <el-table-column prop="spm" label="SPM" :width="td_4" sortable />
+          <el-table-column prop="spm" label="SPM" :width="td_4" sortable/>
           <el-table-column prop="leT5Efficiency" label="T4效率" :width="td_4" sortable>
             <template #default="scope">
               {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
@@ -378,68 +380,25 @@
           <div class="op_tag_0">列表版</div>
           <div class="op_tag_0">表格版</div>
         </div>
-
-
       </div>
-      <el-table id="historyTable" stripe :data="item_table_data_by_item_id" max-height="450">
-        <el-table-column fixed prop="stageCode" label="关卡名" :width="td_6" sortable>
-          <template #default="scope">
-            <div>
-              <span style="font-size: 10px;line-height: 8px;">{{ scope.row.zoneName }}</span><br>
-              {{ scope.row.stageCode }}
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="primary" label="主产品" :width="td_1">
-          <template #default="scope">
-            <img :src="`/image/items/${scope.row.itemId}.png`" alt="" style="height: 36px">
-          </template>
-        </el-table-column>
-        <el-table-column prop="secondary" label="副产品" :width="td_1">
-          <template #default="scope">
-            <img :src="`/image/items/${scope.row.secondaryItemId}.png`" alt="" style="height: 36px">
-          </template>
-        </el-table-column>
-        <el-table-column prop="eff" label="综合效率" :width="td_5" sortable>
-          <template #default="scope">
-            {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
-          </template>
-        </el-table-column>
-        <el-table-column prop="spm" label="SPM" :width="td_4" sortable />
-        <el-table-column prop="leT5Efficiency" label="T4效率" :width="td_4" sortable>
-          <template #default="scope">
-            {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
-          </template>
-        </el-table-column>
-        <el-table-column prop="leT4Efficiency" label="T3效率" :width="td_4" sortable>
-          <template #default="scope">
-            {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
-          </template>
-        </el-table-column>
-        <el-table-column prop="leT3Efficiency" label="T2效率" :width="td_4" sortable>
-          <template #default="scope">
-            {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
-          </template>
-        </el-table-column>
-      </el-table>
-      {{ testjson }}
-      1234
-      {{ historyActStageList[0] }}
+
+
+
+
       <table class="act-table">
         <tbody>
-          <tr>
-            <td>活动名称</td>
-            <td v-for="(itemId, index) in itemIdList" :key="index">
-              <img :src="`/image/items/${itemId}.png`" alt="" style="height: 36px">
-            </td>
-          </tr>
-          <tr v-for="(act, index) in historyActStageList" :key="index" v-show="act.zoneName.indexOf('rep') < 0">
-            <td class="act-name">{{ act.zoneName }}</td>
-            <td v-for="(itemId, index) in itemIdList" :key="index">
-              <img :src="`/image/items/${itemId}.png`" alt="" style="height: 36px"
-                v-show="isUp(act.actStageList, itemId)">
-            </td>
-          </tr>
+        <tr>
+          <td>活动名称</td>
+          <td v-for="(item, index) in itemIdList" :key="index" >
+            <img :src="`/image/items/${item.id}.png`" alt="" style="height: 36px" >
+          </td>
+        </tr>
+        <tr v-for="(act, index) in historyActItemTable" :key="index" >
+          <td class="act-name">{{ act.zoneName }}</td>
+          <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)" class="act-item-sprite">
+            <img :src="`/image/items/${item.itemId}.png`" alt="" style="height: 36px" v-show="item.isUp">
+          </td>
+        </tr>
         </tbody>
       </table>
       <!-- 常见问题 -->
@@ -462,7 +421,7 @@
 
 <script setup>
 import stageApi from '/src/api/stage'
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import item_series from '/src/static/json/material/item_series.json'
 import footComponent from "/src/components/FootComponentV3.vue";
 
@@ -491,10 +450,10 @@ let selected_item = ref({
     date: '2023-12-31'
   },
   storeCostPerf: [
-    { token: '4005', costPerf: 0.75 },
-    { token: 'EPGS_COIN', costPerf: 0.75 },
-    { token: 'REP_COIN', costPerf: 0.75 },
-    { token: '4004', costPerf: 0.75 }
+    {token: '4005', costPerf: 0.75},
+    {token: 'EPGS_COIN', costPerf: 0.75},
+    {token: 'REP_COIN', costPerf: 0.75},
+    {token: '4004', costPerf: 0.75}
   ]
 })
 
@@ -529,11 +488,11 @@ function getItemCardData() {
       leT5MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT5Efficiency'),
       leT4MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT4Efficiency'),
       leT3MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT3Efficiency'),
-      series: { r4: '', r3: '', r2: '', r1: '' }
+      series: {r4: '', r3: '', r2: '', r1: ''}
     }
 
     //获得该材料系列的上下级材料的物品id
-    item_recommend_stage.series = item_series[recommended_stage.itemSeriesId]
+    item_recommend_stage.series = item_series[recommended_stage.itemSeriesId].series
 
     item_card_data.value.push(item_recommend_stage)
     // console.log(item_recommend_stage)
@@ -652,61 +611,74 @@ window.addEventListener("resize", function () {
   }
 })
 
+
 let itemIdList = []
-for (const itemId in item_series) {
-  itemIdList.push(itemId)
-}
+let historyActItemTable = ref([])
 
 // 获取历史信息
 let historyActStageList = ref([])
 stageApi.getHistoryActStage(0.625, 300).then(response => {
+
+  for (const itemId in item_series) {
+    const item = item_series[itemId]
+    itemIdList.push({
+      id:item.id,
+      name:item.name,
+      lastUp:false
+    })
+  }
   historyActStageList.value = response.data
+  for (const index in response.data) {
+    const act = response.data[index]
+    if(act.zoneName.indexOf('复刻')>-1) {
+      continue;
+    }
+    const rowData = {
+      zoneName: act.zoneName,
+      itemList: []
+    }
+    for (const itemIndex in itemIdList) {
+      const item = itemIdList[itemIndex]
+
+      let cellBgColor = false;
+      let isUpFlag = false;
+      for (const stage of act.actStageList) {
+        if (stage.itemId === item.id) {
+          isUpFlag = true
+
+          break
+        }
+      }
+
+      if(!itemIdList[itemIndex].lastUp){
+        cellBgColor = true;
+      }
+
+      if(isUpFlag){
+        itemIdList[itemIndex].lastUp = true;
+      }
+
+      rowData.itemList.push({
+        itemId: item.id,
+        isUp: isUpFlag,
+        cellBgColor: cellBgColor,
+      })
+
+
+    }
+    historyActItemTable.value.push(rowData)
+  }
+
+  console.log( historyActItemTable.value)
 })
 
-let materialState = [
-  { 'material': '固源岩组', state: 1 },
-  { 'material': '糖组', state: 1 },
-  { 'material': '聚酸酯组', state: 1 },
-  { 'material': '异铁组', state: 1 },
-  { 'material': '酮凝集组', state: 1 },
-  { 'material': '全新装置', state: 1 },
-  { 'material': '扭转醇', state: 1 },
-  { 'material': '轻锰矿', state: 1 },
-  { 'material': '研磨石', state: 1 },
-  { 'material': 'RMA70-12', state: 1 },
-  { 'material': '凝胶', state: 1 },
-  { 'material': '炽合金', state: 1 },
-  { 'material': '晶体元件', state: 1 },
-  { 'material': '半自然溶剂', state: 1 },
-  { 'material': '化合切削液', state: 1 },
-  { 'material': '转质盐组', state: 1 },
-  { 'material': '褐素纤维', state: 1 },
-  { 'material': '环烃聚质', state: 1 }
-]
-let testjson = [];
-for (let i = 0; i < historyActStageList.length; i++) {
-  //编写每一行的数据
-  let activityData = [];
-  activityData.zoneName = historyActStageList[i].zoneName;
-  //遍历每一种材料，如果未找到，则引用materialState中的值，如果找到，则
-  for (let j = 0; j < materialState.length; j++) {
-    let materialFlag = 0;
-    for (let k = 0; k < historyActStageList[i].actStageList; k++) {
-      if (historyActStageList[i].actStageList[k].itemName === materialState[j].material) {
-        materialFlag = 1;
-      }
-    }
-  }
-  testjson.push(activityData);
-}
 
-function isUp(list, itemId) {
-  for (const stage of list) {
-    if (stage.itemId === itemId) {
-      return true;
-    }
+function getCellBgColor(flag) {
+  console.log(flag)
+  if(flag) {
+    return 'background-color: #167bff'
   }
-  return false;
+  return ''
 }
 
 
