@@ -612,13 +612,12 @@ window.addEventListener("resize", function () {
 })
 
 
-let itemIdList = []
-let historyActItemTable = ref([])
+let itemIdList = [] // 材料表
+let historyActItemTable = ref([]) // 历史活动up材料表
 
-// 获取历史信息
-let historyActStageList = ref([])
+// 获取历史活动up材料信息
 stageApi.getHistoryActStage(0.625, 300).then(response => {
-
+  // 先把材料系列表转为一个集合
   for (const itemId in item_series) {
     const item = item_series[itemId]
     itemIdList.push({
@@ -627,33 +626,35 @@ stageApi.getHistoryActStage(0.625, 300).then(response => {
       lastUp:false
     })
   }
-  historyActStageList.value = response.data
+  // 循环历史活动数据
   for (const index in response.data) {
     const act = response.data[index]
-    if(act.zoneName.indexOf('复刻')>-1) {
-      continue;
-    }
+    //复刻不计入
+    // if(act.zoneName.indexOf('复刻')>-1) {
+    //   continue;
+    // }
+    //每行数据
     const rowData = {
-      zoneName: act.zoneName,
-      itemList: []
+      zoneName: act.zoneName, //活动名
+      itemList: [] //材料up情况
     }
     for (const itemIndex in itemIdList) {
       const item = itemIdList[itemIndex]
-
-      let cellBgColor = false;
-      let isUpFlag = false;
+      let cellBgColor = false; //格子背景颜色
+      let isUpFlag = false; //材料up标记
+      // 循环每个活动up的蓝材料
       for (const stage of act.actStageList) {
+        //up了材料则标记已经up
         if (stage.itemId === item.id) {
           isUpFlag = true
-
           break
         }
       }
-
+      //如果这个up上个活动没up则将格子标记为true，添加背景色
       if(!itemIdList[itemIndex].lastUp){
         cellBgColor = true;
       }
-
+      //如果这个材料已经up了，则将这个材料的上次up标记为true
       if(isUpFlag){
         itemIdList[itemIndex].lastUp = true;
       }
@@ -663,8 +664,6 @@ stageApi.getHistoryActStage(0.625, 300).then(response => {
         isUp: isUpFlag,
         cellBgColor: cellBgColor,
       })
-
-
     }
     historyActItemTable.value.push(rowData)
   }
