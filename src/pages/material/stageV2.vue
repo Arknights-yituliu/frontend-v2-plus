@@ -293,25 +293,27 @@ import {onMounted, ref} from 'vue'
 import {usePageContext} from "@/renderer/usePageContext";
 
 const pageContext = usePageContext();
-const stageRankT3 = pageContext.pageProps.t3;
+let stageRankT3 = [];
 const stageRankT2 = pageContext.pageProps.t2; //T2材料关卡推荐数据
 const stageRankOrundum = pageContext.pageProps.orundum; //搓玉推荐关卡数据
 const stageActHistory = pageContext.pageProps.closed; //历史关卡数据
-let updateTime = ref('')
+let updateTime = pageContext.pageProps.t3.updateTime
 
+if(pageContext.pageProps.t3.recommendedStageList){
+  stageRankT3 = pageContext.pageProps.t3.recommendedStageList
+}else {
+  stageRankT3 = pageContext.pageProps.t3
+}
 let popupData = ref([])
 
-async function getUrlParm() {
+async function getUrlParam() {
   const item = pageContext.urlParsed.search.item;
-  if (item == void 0) return;
-  if (item != undefined) console.log("要展示的材料：", item);
-
+  if (typeof item === "undefined") return;
   for (const index in stageRankT3) {
-    if (stageRankT3[index][0].itemType == item) {
+    if (stageRankT3[index][0].itemType === item) {
       showT3Popup(index);
     }
   }
-
   if ("Orundum" === item) showOrundumPopup();
 }
 
@@ -419,7 +421,7 @@ function showNowActive() {
 }
 
 onMounted(() => {
-  // showT3Popup(1)
+  getUrlParam()
 })
 
 </script>
