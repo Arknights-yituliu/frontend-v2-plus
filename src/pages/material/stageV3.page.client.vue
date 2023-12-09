@@ -440,7 +440,7 @@ let selected_item = ref({
 
 // 获取关卡推荐数据
 stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
-  stage_result_group.value = response.data.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+  stage_result_group.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
   //将后端返回的数据组装为卡片需要的数据格式
   getItemCardData()
   //获取材料价值数据
