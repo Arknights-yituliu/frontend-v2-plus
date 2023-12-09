@@ -204,7 +204,7 @@
         此操作将清空一图流账号上保存的所有干员数据，确定要执行操作吗？
       </div>
       <div class="btn_switch_wrap">
-        <div class="btn btn_red" @click="operatorDataReset()">确定</div>
+        <div class="btn btn-red" @click="operatorDataReset()">确定</div>
         <div class="btn" @click="resetPopupVisible = !resetPopupVisible">取消</div>
       </div>
 
@@ -216,7 +216,7 @@
         <div class="control_bar">
           <div class="control_title">导入导出</div>
           <div class="switch_btn_wrap">
-            <div class="btn btn_green" @click="exportExcel()">导出为Excel</div>
+            <div class="btn btn-green" @click="exportExcel()">导出为Excel</div>
           </div>
         </div>
 
@@ -231,7 +231,7 @@
               森空岛数据导入流程
             </div>
             <!--            <div class="btn btn-blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
-            <div class="btn btn_red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</div>
+            <div class="btn btn-red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</div>
           </div>
         </div>
         <div class="control_bar" v-show="importFlag">
@@ -248,7 +248,7 @@
         </div>
 
         <div class="control_bar" v-show="bindAccount">
-          <div class="control_tip">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
+          <div class="control_tip">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning-color">
             {{ uploadMessage.userName }} </a> 请登录之前的账号 <br>
             <div class="btn btn-blue" @click="login(uploadMessage.userName)">
               请登录用户{{ uploadMessage.userName }}并刷新网页

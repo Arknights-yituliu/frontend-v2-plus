@@ -97,7 +97,7 @@
           <div class="login_tip ">
             <p> 账号系统更新，老用户直接输入用户名，无需密码即可登录 </p>
             <p> 新用户注册可用账号密码注册和邮箱注册，也可在个人中心进行设置密码和邮箱绑定等操作</p>
-            <p class="warning_color">
+            <p class="warning-color">
               *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用</p>
           </div>
         </div>
@@ -107,7 +107,7 @@
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
           <button class="btn btn-blue logout_btn" @click="logout()">确定</button>
-          <button class="btn btn_red logout_btn" @click="login_visible = !login_visible">取消</button>
+          <button class="btn btn-red logout_btn" @click="login_visible = !login_visible">取消</button>
         </div>
       </div>
     </c-popup>

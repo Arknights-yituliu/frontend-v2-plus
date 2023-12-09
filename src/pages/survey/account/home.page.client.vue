@@ -44,7 +44,7 @@
           <div class="user_avatar_image_wrap">
             <div :class="getSprite(selected_avatar)"></div>
           </div>
-          <button class="btn btn_green user_avatar_btn" @click="updateAvatar()"> 保存修改</button>
+          <button class="btn btn-green user_avatar_btn" @click="updateAvatar()"> 保存修改</button>
         </div>
 
         <div class="user_avatar_popup_wrap">
@@ -90,7 +90,7 @@
           <input class="user_input" type="password" v-model="inputData.confirmPassWord"/>
           <a v-show="inputData.confirmPassWord.length>0">{{ inputData.confirmPassWord.length }}/20</a>
           <button class="btn btn-blue btn_position" @click="updatePassWord()">更新密码</button>
-          <div class="warning_color">{{ checkPassWord() }}</div>
+          <div class="warning-color">{{ checkPassWord() }}</div>
         </div>
       </div>
 
@@ -115,7 +115,7 @@
         </div>
       </div>
       <div class="user_info_card">
-        <button class="btn btn_red " style="margin: auto" @click="logout()">退出登录</button>
+        <button class="btn btn-red " style="margin: auto" @click="logout()">退出登录</button>
       </div>
     </div>
   </div>

@@ -24,17 +24,17 @@
 
 
 
-.btn_green{
+.btn-green{
     color: var(--c-btn-text-color);
     background-color: var(--c-btn-bg-green);
 }
 
-.btn_red{
+.btn-red{
     color: var(--c-btn-text-color);
     background-color: var(--c-btn-bg-red);
 }
 
-.warning_color{
+.warning-color{
     font-weight: 600;
 }
 
