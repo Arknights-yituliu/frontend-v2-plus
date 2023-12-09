@@ -7,9 +7,9 @@ import '/src/assets/css/sprite/sprite_avatar_5.css'
 import '/src/assets/css/sprite/sprite_avatar_4.css'
 import building_data from '/src/static/json/build/buildingData.json'
 import {cMessage} from '/src/custom/message.js'
-import plan from '/src/pages/tools/plans_templte'
+// import plan from '/src/pages/tools/plans_templte'
 
-let index_list = [0, 1, 2, 3, 4, 5];
+let index_list = [0, 1, 2, 3, 4, 5, 6];
 
 
 const room_type_menu = [
@@ -25,7 +25,6 @@ const room_type_menu = [
 ]
 
 let characterIdAndName = {}
-
 for (const key in building_data) {
   const obj = building_data[key]
   for (const id in obj) {
@@ -33,11 +32,9 @@ for (const key in building_data) {
   }
 }
 
-console.log(characterIdAndName)
+let selectedScheduleType = ref('243')
 
-let selected_schedule_type = ref('243')
-
-let schedule_type = ref({
+let scheduleType = ref({
   planTimes: [0, 1, 2],
   trading: [0, 1],
   manufacture: [0, 1, 2, 3],
@@ -49,15 +46,15 @@ let schedule_type = ref({
 })
 
 function chooseScheduleType(type) {
-  selected_schedule_type.value = type
-  schedule_type.value.trading = index_list.slice(0, parseInt(type.substring(0, 1)))
-  schedule_type.value.manufacture = index_list.slice(0, parseInt(type.substring(1, 2)))
-  schedule_type.value.power = index_list.slice(0, parseInt(type.substring(2, 3)))
+  selectedScheduleType.value = type
+  scheduleType.value.trading = index_list.slice(0, parseInt(type.substring(0, 1)))
+  scheduleType.value.manufacture = index_list.slice(0, parseInt(type.substring(1, 2)))
+  scheduleType.value.power = index_list.slice(0, parseInt(type.substring(2, 3)))
 }
 
 
 function choosePlanTimes(num) {
-  schedule_type.value.planTimes = index_list.slice(0, num)
+  scheduleType.value.planTimes = index_list.slice(0, num)
 }
 
 let room_max_operator_num = {
@@ -75,7 +72,12 @@ function getAvatar(name) {
   return `bg-${name} operator-image`
 }
 
-function getItem(name) {
+function getItemSpriteByProductName(name) {
+  name = getItemIdByProductName(name)
+  return `bg-${name} room-product`
+}
+
+function getItemSprite(name) {
   return `bg-${name} product-image`
 }
 
@@ -113,7 +115,7 @@ function openPopup(type, index) {
   room_visible.value = true
 
   if ('trading' === type || 'manufacture' === type) {
-    selected_product.value = getProductId(plans_template.value[selected_plan_index.value]
+    selected_product.value = getItemIdByProductName(plans_template.value[selected_plan_index.value]
         .room[selected_room_type.value][selected_room_index.value].product)
   }
 
@@ -161,11 +163,11 @@ let selected_product = ref("")
 
 function setProduct(product) {
   plans_template.value[selected_plan_index.value].room[selected_room_type.value][selected_room_index.value].product = product
-  selected_product.value = getProductId(plans_template.value[selected_plan_index.value]
+  selected_product.value = getItemIdByProductName(plans_template.value[selected_plan_index.value]
       .room[selected_room_type.value][selected_room_index.value].product)
 }
 
-function getProductId(label) {
+function getItemIdByProductName(label) {
   if (label === "LMD") return "4001";
   if (label === "Orundum") return "4003";
   if (label === "Battle Record") return "2003";
@@ -216,17 +218,17 @@ function createScheduleJsonFile() {
 
   let plans = []
 
-  for (let index in schedule_type.value.planTimes) {
+  for (let index in scheduleType.value.planTimes) {
     plans.push({
       name: plans_template.value[index].name,
       description: plans_template.value[index].description,
       Fiammetta: plans_template.value[index].Fiammetta,
       drones: plans_template.value[index].drones,
       room: {
-        trading: plans_template.value[index].room.trading.slice(0, schedule_type.value.trading.length),
-        manufacture: plans_template.value[index].room.manufacture.slice(0, schedule_type.value.manufacture.length),
-        power: plans_template.value[index].room.power.slice(0, schedule_type.value.power.length),
-        dormitory: plans_template.value[index].room.dormitory.slice(0, schedule_type.value.dormitory.length),
+        trading: plans_template.value[index].room.trading.slice(0, scheduleType.value.trading.length),
+        manufacture: plans_template.value[index].room.manufacture.slice(0, scheduleType.value.manufacture.length),
+        power: plans_template.value[index].room.power.slice(0, scheduleType.value.power.length),
+        dormitory: plans_template.value[index].room.dormitory.slice(0, scheduleType.value.dormitory.length),
         control: plans_template.value[index].room.control,
         meeting: plans_template.value[index].room.meeting,
         hire: plans_template.value[index].room.hire,
@@ -266,32 +268,43 @@ onMounted(() => {
     <div class="schedule-control">
       <div class="schedule-control-option">
         <div> 基建模式</div>
-        <c-button :color="'blue'" :status="'243'===selected_schedule_type" @click="chooseScheduleType('243')">243
+        <c-button :color="'blue'" :status="'243'===selectedScheduleType"
+                  @click="chooseScheduleType('243')">243
         </c-button>
-        <c-button :color="'blue'" :status="'153'===selected_schedule_type" @click="chooseScheduleType('153')">153
+        <c-button :color="'blue'" :status="'153'===selectedScheduleType"
+                  @click="chooseScheduleType('153')">153
         </c-button>
-        <c-button :color="'blue'" :status="'333'===selected_schedule_type" @click="chooseScheduleType('333')">333
+        <c-button :color="'blue'" :status="'333'===selectedScheduleType"
+                  @click="chooseScheduleType('333')">333
         </c-button>
-        <c-button :color="'blue'" :status="'252'===selected_schedule_type" @click="chooseScheduleType('252')">252
+        <c-button :color="'blue'" :status="'252'===selectedScheduleType"
+                  @click="chooseScheduleType('252')">252
         </c-button>
       </div>
 
       <div class="schedule-control-option">
         <div> 换班次数</div>
-        <c-button :color="'blue'" :status="2===schedule_type.planTimes.length" @click="choosePlanTimes(2)">2
+        <c-button :color="'blue'" :status="2===scheduleType.planTimes.length"
+                  @click="choosePlanTimes(2)">2
         </c-button>
-        <c-button :color="'blue'" :status="3===schedule_type.planTimes.length" @click="choosePlanTimes(3)">3
+        <c-button :color="'blue'" :status="3===scheduleType.planTimes.length"
+                  @click="choosePlanTimes(3)">3
         </c-button>
-        <c-button :color="'blue'" :status="4===schedule_type.planTimes.length" @click="choosePlanTimes(4)">4
+        <c-button :color="'blue'" :status="4===scheduleType.planTimes.length"
+                  @click="choosePlanTimes(4)">4
         </c-button>
-        <c-button :color="'blue'" :status="5===schedule_type.planTimes.length" @click="choosePlanTimes(5)">5
+        <c-button :color="'blue'" :status="5===scheduleType.planTimes.length"
+                  @click="choosePlanTimes(5)">5
+        </c-button>
+        <c-button :color="'blue'" :status="6===scheduleType.planTimes.length"
+                  @click="choosePlanTimes(6)">6
         </c-button>
       </div>
 
       <div class="schedule-control-option">
         <div> 当前班次</div>
         <c-button :color="'blue'" :status="index === selected_plan_index"
-                  v-for="index in schedule_type.planTimes" :key="index"
+                  v-for="index in scheduleType.planTimes" :key="index"
                   @click="currentPlan(index)" class="room_times">
           第{{ index + 1 }}班
         </c-button>
@@ -329,7 +342,7 @@ onMounted(() => {
 
       </div>
       <div class="schedule-control-option">
-        <div> 目标房间编号</div>
+        <div>房间编号</div>
         <c-button :color="'blue'"
                   :status="index === plans_template[selected_plan_index].drones.index"
                   @click="setDrones('index',index)"
@@ -401,25 +414,39 @@ onMounted(() => {
   <div class="room-wrap">
     <!--  左边站点-->
     <div class="room-wrap-left">
-
+      <div class="room-bg-null" style=" width: 230px;"></div>
+      <div class="room-bg-null" style=" width: 230px;"></div>
       <!--    贸易站-->
-      <div class="room_bg trading" v-for="trading_index in schedule_type.trading" :key="trading_index"
-           @click="openPopup('trading',trading_index)">
-        <div class="rroom-name"> 贸易站</div>
+      <div class="room_bg trading" v-for="tradingIndex in scheduleType.trading" :key="tradingIndex"
+           @click="openPopup('trading',tradingIndex)">
+        <div class="room-name"> 贸易站#{{ tradingIndex + 1 }}</div>
         <div class="operator-image-wrap"
-             v-for="(charName,index) in plans_template[selected_plan_index].room.trading[trading_index].operators"
+             v-for="(charName,index) in plans_template[selected_plan_index].room.trading[tradingIndex].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
-
+        </div>
+        <div class="room-info">
+          <div class="room-product-wrap">
+            <div
+                :class="getItemSpriteByProductName(plans_template[selected_plan_index].room.trading[tradingIndex].product)"></div>
+          </div>
+          <div class="room-set-wrap">
+            <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].skip"
+                      :label="'跳过房间'"></c-status>
+            <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].sort"
+                      :label="'顺序入驻'"></c-status>
+            <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].autofill"
+                      :label="'补满空位'"></c-status>
+          </div>
         </div>
       </div>
 
       <!--  制造站-->
-      <div class="room_bg manufacture" v-for="manufacture_index in schedule_type.manufacture" :key="manufacture_index"
-           @click="openPopup('manufacture',manufacture_index)">
-        <div class="rroom-name"> 制造站</div>
+      <div class="room_bg manufacture" v-for="manufactureIndex in scheduleType.manufacture" :key="manufactureIndex"
+           @click="openPopup('manufacture',manufactureIndex)">
+        <div class="room-name"> 制造站#{{ manufactureIndex + 1 }}</div>
         <div class="operator-image-wrap"
-             v-for="(charName,index) in plans_template[selected_plan_index].room.manufacture[manufacture_index].operators"
+             v-for="(charName,index) in plans_template[selected_plan_index].room.manufacture[manufactureIndex].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
 
@@ -427,11 +454,11 @@ onMounted(() => {
       </div>
 
       <!--  发电站-->
-      <div class="room_bg power" v-for="power_index in schedule_type.power" :key="power_index"
-           @click="openPopup('power',power_index)">
-        <div class="rroom-name"> 发电站</div>
+      <div class="room_bg power" v-for="powerIndex in scheduleType.power" :key="powerIndex"
+           @click="openPopup('power',powerIndex)">
+        <div class="room-name"> 发电站#{{ powerIndex + 1 }}</div>
         <div class="operator-image-wrap"
-             v-for="(charName,index) in plans_template[selected_plan_index].room.power[power_index].operators"
+             v-for="(charName,index) in plans_template[selected_plan_index].room.power[powerIndex].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
 
@@ -443,7 +470,7 @@ onMounted(() => {
     <div class="room-wrap-center">
       <!--     控制中枢-->
       <div class="room_bg control" @click="openPopup('control',0)">
-        <div class="rroom-name"> 控制中枢</div>
+        <div class="room-name"> 控制中枢</div>
         <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.control[0].operators"
              :key="index">
@@ -452,11 +479,11 @@ onMounted(() => {
         </div>
       </div>
       <!--     宿舍-->
-      <div class="room_bg dormitory" v-for="dormitory_index in index_list.slice(0,4)" :key="dormitory_index"
-           @click="openPopup('dormitory',dormitory_index)">
-        <div class="rroom-name"> 宿舍</div>
+      <div class="room_bg dormitory" v-for="dormitoryIndex in index_list.slice(0,4)" :key="dormitoryIndex"
+           @click="openPopup('dormitory',dormitoryIndex)">
+        <div class="room-name"> 宿舍#{{ dormitoryIndex + 1 }}</div>
         <div class="operator-image-wrap"
-             v-for="(charName,index) in plans_template[selected_plan_index].room.dormitory[dormitory_index].operators"
+             v-for="(charName,index) in plans_template[selected_plan_index].room.dormitory[dormitoryIndex].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
         </div>
@@ -465,20 +492,19 @@ onMounted(() => {
 
 
     <div class="room-wrap-right">
+      <div class="room-bg-null" style="width: 100px;"></div>
       <!--     会客室-->
       <div class="room_bg meeting" @click="openPopup('meeting',0)">
-        <div class="rroom-name"> 会客室</div>
+        <div class="room-name"> 会客室</div>
         <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.meeting[0].operators" :key="index">
           <div :class="getAvatar(charName)"></div>
 
         </div>
       </div>
-
-
       <!--      加工站-->
       <div class="room_bg hire" @click="openPopup('processing',0)">
-        <div class="rroom-name"> 加工站</div>
+        <div class="room-name"> 加工站</div>
         <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.processing[0].operators" :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -487,7 +513,7 @@ onMounted(() => {
 
       <!--     办公室 -->
       <div class="room_bg hire" @click="openPopup('hire',0)">
-        <div class="rroom-name"> 办公室</div>
+        <div class="room-name"> 办公室</div>
         <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.hire[0].operators" :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -510,33 +536,33 @@ onMounted(() => {
       <div class="room-control" v-show="selected_room_type === 'trading'">
         <div>选择产物</div>
         <div class="product-image-wrap" @click="setProduct('LMD')">
-          <div :class="getItem(4001)"></div>
+          <div :class="getItemSprite(4001)"></div>
         </div>
         <div class="product-image-wrap" @click="setProduct('Orundum')">
-          <div :class="getItem(4003)"></div>
+          <div :class="getItemSprite(4003)"></div>
         </div>
 
         <div>已选择产物</div>
         <div class="product-image-wrap">
-          <div :class="getItem(selected_product)"></div>
+          <div :class="getItemSprite(selected_product)"></div>
         </div>
       </div>
 
       <div class="room-control" v-show="selected_room_type === 'manufacture'">
         选择产物
         <div class="product-image-wrap" @click="setProduct('Battle Record')">
-          <div :class="getItem(2003)"></div>
+          <div :class="getItemSprite(2003)"></div>
         </div>
         <div class="product-image-wrap" @click="setProduct('Pure Gold')">
-          <div :class="getItem(3003)"></div>
+          <div :class="getItemSprite(3003)"></div>
         </div>
         <div class="product-image-wrap" @click="setProduct('Originium Shard')">
-          <div :class="getItem(3141)"></div>
+          <div :class="getItemSprite(3141)"></div>
         </div>
 
         <div>已选择产物</div>
         <div class="product-image-wrap">
-          <div :class="getItem(selected_product)"></div>
+          <div :class="getItemSprite(selected_product)"></div>
         </div>
       </div>
 
@@ -582,7 +608,7 @@ onMounted(() => {
 
 <style scoped>
 .btn {
-  margin: 4px;
+  margin: 2px;
   min-width: 50px;
 }
 </style>

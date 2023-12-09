@@ -3,10 +3,8 @@
 <!--    <div :class="switch_left_class"></div>-->
 <!--    <div :class="switch_right_class"></div>-->
     <div class="switch_left" :class="switch_left_class">
-
     </div>
     <div class="switch_right" :class="switch_right_class">
-
     </div>
   </div>
 </template>
@@ -21,8 +19,6 @@ const props = defineProps(["modelValue"]);
 if (typeof props.modelValue != "boolean") {
   // console.log("测试", props.modelValue === undefined);
 }
-
-
 
 let switch_bg = ref( props.modelValue ? "switch_true" : "switch_false");
 let switch_left_class = ref( props.modelValue ? "" : "switch_bg");

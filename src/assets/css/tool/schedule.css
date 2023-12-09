@@ -1,5 +1,6 @@
 .room-wrap {
     display: flex;
+    width: 1200px;
 }
 
 .schedule-control-wrap {
@@ -31,6 +32,7 @@
 .room-wrap-left {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-end;
     justify-content: center;
     width: 520px;
 }
@@ -38,7 +40,7 @@
 .room-wrap-center {
     display: flex;
     flex-wrap: wrap;
-    width: 460px;
+    width: 430px;
 }
 
 .room-wrap-right {
@@ -46,6 +48,17 @@
     flex-wrap: wrap;
     width: 200px;
     align-content: flex-start;
+}
+
+.room-bg-null{
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    margin: 4px;
+    border-radius: 3px;
+    flex-wrap: wrap;
+    font-weight: 600;
+    height: 140px;
 }
 
 .room_bg {
@@ -56,16 +69,34 @@
     border-radius: 3px;
     flex-wrap: wrap;
     font-weight: 600;
-    height: 110px;
+    height: 140px;
     box-shadow: 1px 1px 1px #eaeaea;
     /*height: 58px;*/
 }
 
-.room-btn-wrap {
-
+.room-product-wrap{
+    width: 40px;
+    height: 40px;
+    position: relative;
 }
 
-.rroom-name {
+.room-product {
+    position: absolute;
+    top: -72px;
+    left: -72px;
+    transform: scale(.219);
+}
+
+.room-info{
+    display: flex;
+    align-items: center;
+}
+
+.room-set-wrap{
+  width: 185px;
+}
+
+.room-name {
     width: 100%;
     text-align: center;
     font-size: 18px;
@@ -86,32 +117,34 @@
 .power {
     background-color: #eeffe8;
     color: #43a047;
-    width: 130px;
+    width: 110px;
 }
 
 .control {
-    background-color: #e9fde0;
+    background-color: #f2fff3;
     color: #1b5e20;
-    width: 500px;
+    width: 420px;
 }
 
 .dormitory {
-    background-color: #c6e7e7;
+    background-color: #f0f0f0;
     color: #006ce8;
-    width: 460px;
+    width: 420px;
 }
 
 .meeting {
-    background-color: #fff9eb;
+    background-color: #f0f0f0;
     color: #323232;
     width: 200px;
 }
 
 .hire {
-    background-color: #e6e6e6;
+    background-color: #f0f0f0;
     color: #323232;
     width: 200px;
 }
+
+
 
 .room-control {
     display: flex;
