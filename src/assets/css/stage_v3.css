@@ -54,6 +54,12 @@
   /*background-color: bisque;*/
 }
 
+.item_series_sprite{
+  transform: scale(1.0);
+  position: absolute;
+  top: -50px;
+}
+
 .stage_card_3_cover{
   height: 110px;
   background-color: #dfdfdf4f;
@@ -132,60 +138,72 @@
   padding: 0 0px 0 4px ;
   /* display: inline-block; */
 }
+
 .stage_card_3_img{
   height: 28px;
   width: 28px;
-  /*background-color: chocolate;*/
-  /* display: inline-block; */
+  position: relative;
 }
 
-.table_item_detail{
-  width: 48%;
+.item_t3_sprite{
+  transform: scale(.153);
+  position: absolute;
+  top: -77px;
+  left: -78px;
+}
+
+.item_detail_bar{
+  width: 300px;
   display: flex;
   flex-wrap: wrap;
 }
 
-.table_item_wrap{
+.detail_bar_item_wrap{
   width: 170px;
   height: 50px;
   position: relative;
-  /*background-color: darkorange;*/
   font-size: 18px;
 }
 
-.table_item_sprite{
+.detail_bar_item_sprite{
   transform: scale(.273);
   position: absolute;
   top: -67px;
   left: -67px;
 }
 
-.table_item_text{
+.detail_bar_item_text{
   line-height: 50px;
   position: absolute;
   left: 60px;
   top: 0;
 }
 
-.item_value_wrap{
-  width: 110px;
-  height: 50px;
-  position: relative;
-  font-size: 18px;
-}
-
 .value_icon{
   transform: scale(.164);
   position: absolute;
   top: -68px;
-  left: -74px;
+  left: 100px;
 }
 
 .item_value_text{
-  line-height: 50px;
+  line-height: 48px;
   position: absolute;
-  left: 40px;
+  left: 210px;
   top: 0;
+}
+
+.detail_table_item_wrap{
+   width: 40px;
+   height: 40px;
+   position: relative;
+}
+
+.table_item_sprite{
+  transform: scale(.2185);
+  position: absolute;
+  top: -71px;
+  left: -71px;
 }
 
 .activity_wrap{
@@ -257,18 +275,35 @@
 
 .act-table td{
   border: 1px solid #e6e6e6;
+
 }
 
 .act-name{
   min-width: 100px;
   max-width: 100px;
   font-weight: 600;
-
 }
 
-.act-item-sprite{
-   width: 50px;
-   height: 50px;
+.act-table-item-wrap{
+   width: 54px;
+   height: 54px;
+   font-size: 14px;
+   position: relative;
+}
+
+.act-table-item-sprite{
+  transform: scale(.1967);
+  position: absolute;
+  top: -74px;
+  left: -67px;
+}
+
+.act-stage-efficiency{
+  position: absolute;
+  top: 36px;
+  text-align: center;
+  width: 54px;
+  left: 0;
 }
 
 .act-table-simple-wrap{
@@ -293,6 +328,20 @@
 .act-name-simple{
    color: var(--c-text-blue);
   font-weight: 600;
+}
+
+.act-table-simple-item-wrap{
+  width: 50px;
+  height: 50px;
+  font-size: 14px;
+  position: relative;
+}
+
+.act-table-simple-item-sprite{
+  transform: scale(.273);
+  position: absolute;
+  top: -66px;
+  left: -66px;
 }
 
 .act-drop-table{

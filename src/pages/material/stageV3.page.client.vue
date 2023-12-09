@@ -85,42 +85,6 @@
                 只需要某系的蓝、绿、白材料:<br>
                 选择T3效率最高的关卡，以此类推
               </div>
-              <!-- <div class="stage_card_3_line">
-                <div class="stage_card_3_line_text" style="font-size: 12px;width:48px;">综合最优</div>
-                <div class="stage_card_3_line_text" style="font-size: 12px;font-weight:500;width:180px;">
-                  该关卡所有掉落物的<b>总价值</b>最高 </div>
-              </div>
-              <div class="stage_card_3_line">
-                <div class="stage_card_3_img"><img :src="`/image/items/30014.png`" style="height: 28px;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30013.png`" style="height: 28px;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30012.png`" style="height: 28px;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30041.png`" style="height: 28px;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30051.png`" style="height: 28px;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30061.png`" style="height: 28px;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30023.png`" style="height: 28px;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30033.png`" style="height: 28px;"></div>
-              </div>
-              <div class="stage_card_3_line">
-                <div class="stage_card_3_line_text" style="font-size: 12px;width:48px;">T3效率</div>
-                <div class="stage_card_3_line_text" style="font-size: 12px;font-weight:500;width:180px;">
-                  T3+T2+T1材料总价值/理智消耗 </div>
-              </div>
-              <div class="stage_card_3_line">
-                <div class="stage_card_3_img"><img :src="`/image/items/30014.png`"
-                    style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30013.png`" style="height: 28px;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30012.png`" style="height: 28px;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30041.png`"
-                    style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30051.png`"
-                    style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30061.png`"
-                    style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30023.png`"
-                    style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
-                <div class="stage_card_3_img"><img :src="`/image/items/30033.png`"
-                    style="height: 28px;filter: grayscale(1);opacity:0.7;"></div>
-              </div> -->
             </div>
           </div>
         </div>
@@ -133,9 +97,7 @@
           <!-- 长期最优 -->
           <div class="stage_card_3_left">
             <div class="img_wrap" style="position: relative;">
-              <div class="stage_card_3_mainImg" :class="getSpriteImg(stage.series.r3, 't3')"
-                   style="transform: scale(1);">
-                <!-- <img :src="`/image/items/${stage.series.r3}.png`" alt="" style="height: 96px"> -->
+              <div class="stage_card_3_mainImg" :class="getItemSeriesSprite(stage.series.r3)">
                 <div class="stage_card_3_cover"></div>
                 <div class="stage_card_3_best">
                   <div class="stage_card_3_best_chapter">{{ stage.maxEfficiencyStage.zoneName }}</div>
@@ -149,8 +111,9 @@
           <div class="stage_card_3_right">
             <div class="stage_card_3_list">
               <div class="stage_card_3_line">
-                <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r4}.png`" alt=""
-                                                   style="height: 32px"></div>
+                <div class="stage_card_3_img">
+                  <div :class="getItemT3Sprite(stage.series.r4)"></div>
+                </div>
                 <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
                 <div class="stage_card_3_line_text">{{
                     formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1)
@@ -159,8 +122,9 @@
 
               </div>
               <div class="stage_card_3_line">
-                <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r3}.png`" alt=""
-                                                   style="height: 32px"></div>
+                <div class="stage_card_3_img">
+                  <div :class="getItemT3Sprite(stage.series.r3)"></div>
+                </div>
                 <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
                 <div class="stage_card_3_line_text">{{
                     formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1)
@@ -169,8 +133,9 @@
 
               </div>
               <div class="stage_card_3_line" v-show="stage.series.r2">
-                <div class="stage_card_3_img"><img :src="`/image/items/${stage.series.r2}.png`" alt=""
-                                                   style="height: 32px"></div>
+                <div class="stage_card_3_img">
+                  <div :class="getItemT3Sprite(stage.series.r2)"></div>
+                </div>
                 <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
                 <div class="stage_card_3_line_text">{{
                     formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1)
@@ -201,20 +166,20 @@
       </div>
       <!-- 材料信息 -->
       <div id="itemDetail">
-        <div class="table_item_detail">
-          <div class="table_item_wrap">
-            <div :class="`bg-${selected_item.itemId} table_item_sprite`"></div>
-            <span class="table_item_text">
+        <div class="item_detail_bar">
+          <div class="detail_bar_item_wrap">
+            <div :class="getDetailTableHeaderItemSprite(selected_item.itemId)"></div>
+            <span class="detail_bar_item_text">
               {{ selected_item.itemName }}
             </span>
-          </div>
 
-          <div class="item_value_wrap">
             <div :class="`bg-AP_GAMEPLAY value_icon`"></div>
             <span class="item_value_text">
               {{ formatNumber(selected_item.itemValueAp, 2) }}
             </span>
           </div>
+
+
           <div class="activity_wrap">
             上次up：{{ selected_item.lastUp.activityName }}
           </div>
@@ -225,7 +190,7 @@
         </div>
 
 
-        <div class="table_item_detail">
+        <div class="item_detail_bar">
           <div>
             <div class="cost_perf_bar" v-for="(costPerf, index) in selected_item.storeCostPerf" :key="index">
               <div :class="`bg-${costPerf.token} token_icon`"></div>
@@ -256,12 +221,16 @@
           </el-table-column>
           <el-table-column prop="primary" label="主产品" :width="td_1">
             <template #default="scope">
-              <img :src="`/image/items/${scope.row.itemId}.png`" alt="" style="height: 36px">
+              <div class="detail_table_item_wrap">
+                <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
+              </div>
             </template>
           </el-table-column>
           <el-table-column prop="secondary" label="副产品" :width="td_1">
             <template #default="scope">
-              <img :src="`/image/items/${scope.row.secondaryItemId}.png`" alt="" style="height: 36px">
+              <div class="detail_table_item_wrap">
+                <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
+              </div>
             </template>
           </el-table-column>
           <el-table-column prop="eff" label="综合效率" :width="td_5" sortable>
@@ -353,34 +322,42 @@
         <tr>
           <td class="act-name">活动名称</td>
           <td v-for="(item, index) in itemIdList" :key="index">
+            <div></div>
             <img :src="`/image/items/${item.id}.png`" alt="" style="height: 36px">
           </td>
         </tr>
         <tr v-for="(act, index) in historyActItemTable" :key="index">
           <td class="act-name">{{ act.zoneName }}</td>
-          <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)"
-              class="act-item-sprite">
-            <img :src="`/image/items/${item.itemId}.png`" alt="" style="height: 36px" v-show="item.isUp">
+          <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
+            <div class="act-table-item-wrap" v-if="item.isUp">
+             <div :class="getActTableItemSprite(item.itemId)"></div>
+              <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
+              {{ formatNumber(item.stageEfficiency, 2)}}%
+            </span>
+            </div>
+
           </td>
         </tr>
         </tbody>
       </table>
 
       <div class="act-table-simple-wrap">
-      <table class="act-table-simple">
-        <tr v-for="(act,index) in historyActItemList" :key="index">
-          <td class="act-name-simple">{{ act.zoneName }}</td>
-          <td v-for="(stage,index) in  act.actStageList" :key="index">
-            <div class="act-drop-table">
-              <img :src="`/image/items/${stage.itemId}.png`" alt="" style="height: 50px">
-              <span class="act-drop-detail">
+        <table class="act-table-simple">
+          <tr v-for="(act,index) in historyActItemList" :key="index">
+            <td class="act-name-simple">{{ act.zoneName }}</td>
+            <td v-for="(stage,index) in  act.actStageList" :key="index">
+              <div class="act-drop-table">
+                <div class="act-table-simple-item-wrap">
+                  <div :class="getActTableSimpleItemSprite(stage.itemId)"></div>
+                </div>
+                <span class="act-drop-detail">
               {{ stage.stageCode }} <br>
-              {{ stage.stageEfficiency.toFixed(2) }}%
+              {{ formatNumber(stage.stageEfficiency, 2) }}%
               </span>
-            </div>
-          </td>
-        </tr>
-      </table>
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
       <!-- 常见问题 -->
       <div class="op_title">
@@ -532,24 +509,28 @@ function jumpToTable() {
   })
 }
 
-/**
- * 获取雪碧图样式
- * @param id 图片id
- * @param type 图片类型,对应着一个css
- * @returns {string} 样式
- */
-function getSpriteImg(id, type) {
-  // if (id === "30012" && type === "t3") id = "30013";
-  // if (id === "30012" && this.popupRank === 3 && "popup" === type) id = "30013";
-  if ("t3" === type) return "bg-" + id + " stage_sprite_t3";
-  if ("sec" === type) return "bg-" + id + " stage_sprite_sec";
-  if ("t2" === type) return "bg-" + id + " stage_sprite_t2";
-  if ("popup" === type) return "bg-" + id + " stage_sprite_popup";
-  if ("closed" === type) return "bg-" + id + " stage_sprite_closed";
-  if (type === "icon_small") return "bg-" + id + "_icon sprite_icon_small";
-  if (type === "up") return "bg-" + id + "_icon sprite_icon_up";
-  if (type === "el") return "bg-" + id + "_icon sprite_icon_el";
-  // return "bg-" + id;
+function getItemSeriesSprite(id) {
+  return "bg-" + id + " item_series_sprite";
+}
+
+function getItemT3Sprite(id) {
+  return "bg-" + id + " item_t3_sprite";
+}
+
+function getDetailTableHeaderItemSprite(id){
+  return "bg-" + id + " detail_bar_item_sprite";
+}
+
+function getDetailTableItemSprite(id){
+  return "bg-" + id + " table_item_sprite";
+}
+
+function getActTableItemSprite(id){
+  return "bg-" + id + " act-table-item-sprite";
+}
+
+function getActTableSimpleItemSprite(id){
+  return "bg-" + id + " act-table-simple-item-sprite";
 }
 
 /**
@@ -560,6 +541,7 @@ function getSpriteImg(id, type) {
  */
 function formatNumber(num, acc) {
   acc = typeof acc !== "undefined" ? acc : 2;
+  if (typeof num === "undefined") return ''
   return parseFloat(num).toFixed(acc);
 }
 
@@ -626,9 +608,11 @@ stageApi.getHistoryActStage(0.625, 300).then(response => {
       let cellBgColor = false; //格子背景颜色
       let isUpFlag = false; //材料up标记
       // 循环每个活动up的蓝材料
+      let stageEfficiency = void 0
       for (const stage of act.actStageList) {
         //up了材料则标记已经up
         if (stage.itemId === item.id) {
+          stageEfficiency = stage.stageEfficiency * 100
           isUpFlag = true
           break
         }
@@ -644,6 +628,7 @@ stageApi.getHistoryActStage(0.625, 300).then(response => {
 
       rowData.itemList.push({
         itemId: item.id,
+        stageEfficiency: stageEfficiency,
         isUp: isUpFlag,
         cellBgColor: cellBgColor,
       })

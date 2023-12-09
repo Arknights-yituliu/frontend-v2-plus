@@ -201,10 +201,10 @@
       </div>
       <!-- 材料信息 -->
       <div id="itemDetail">
-        <div class="table_item_detail">
-          <div class="table_item_wrap">
+        <div class="item_detail_bar">
+          <div class="detail_bar_item_wrap">
             <div :class="`bg-${selected_item.itemId} table_item_sprite`"></div>
-            <span class="table_item_text">
+            <span class="detail_bar_item_text">
                 {{ selected_item.itemName }}
               </span>
           </div>
@@ -225,7 +225,7 @@
         </div>
 
 
-        <div class="table_item_detail">
+        <div class="item_detail_bar">
           <div>
             <div class="cost_perf_bar" v-for="(costPerf,index) in selected_item.storeCostPerf" :key="index">
               <div :class="`bg-${costPerf.token} token_icon`"></div>
