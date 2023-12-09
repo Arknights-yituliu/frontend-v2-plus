@@ -183,7 +183,7 @@
             localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage<br>.getItem('SK_TOKEN_CACHE_KEY')
           </a>
 
-          <button class="btn btn_blue"
+          <button class="btn btn-blue"
                   @click="copyCode('localStorage.getItem(\'SK_OAUTH_CRED_KEY\')+\',\'+localStorage.getItem(\'SK_TOKEN_CACHE_KEY\')')">
             复制命令
           </button>
@@ -226,11 +226,11 @@
           <div class="switch_btn_wrap">
             <div class="control_desc">输入在控制台获得的字符</div>
             <div><input class="control_input" type="text" v-model="SKlandCREDAndSECRET"/></div>
-            <div class="btn btn_blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
-            <div class="btn btn_blue" @click="importPopupVisible = !importPopupVisible">
+            <div class="btn btn-blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
+            <div class="btn btn-blue" @click="importPopupVisible = !importPopupVisible">
               森空岛数据导入流程
             </div>
-            <!--            <div class="btn btn_blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
+            <!--            <div class="btn btn-blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
             <div class="btn btn_red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</div>
           </div>
         </div>
@@ -239,7 +239,7 @@
           <div class="switch_btn_wrap">
             <div class="control_desc">选择你想要导入的账号</div>
             <div v-for="(binding,index) in bindingList" :key="index"
-                 class="btn btn_blue" :class="chooseUidClass(binding.uid)"
+                 class="btn btn-blue" :class="chooseUidClass(binding.uid)"
                  @click="importSKLandOperatorDataByUid(binding.uid)">
               {{ binding.uid }}
             </div>
@@ -250,7 +250,7 @@
         <div class="control_bar" v-show="bindAccount">
           <div class="control_tip">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning_color">
             {{ uploadMessage.userName }} </a> 请登录之前的账号 <br>
-            <div class="btn btn_blue" @click="login(uploadMessage.userName)">
+            <div class="btn btn-blue" @click="login(uploadMessage.userName)">
               请登录用户{{ uploadMessage.userName }}并刷新网页
             </div>
           </div>
@@ -348,9 +348,9 @@
              style="line-height: 32px;font-weight: 600;font-size: 24px;padding: 12px 12px 12px 12px;">
           总计消耗{{ apCostCount.toFixed(0) }} 理智
         </div>
-        <button class="btn btn_blue" @click="splitMaterialByRarity(5)">不拆分</button>
-        <button class="btn btn_blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
-        <button class="btn btn_blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+        <button class="btn btn-blue" @click="splitMaterialByRarity(5)">不拆分</button>
+        <button class="btn btn-blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
+        <button class="btn btn-blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
         <div class="control_bar item_cost_wrap" v-for="(itemList,type) in itemCostList"
              :key="type">
           <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
@@ -864,7 +864,7 @@ async function uploadSKLandData({token, data}) {
 
 //选择导入uid的按钮样式
 function chooseUidClass(uid) {
-  if (uid === defaultUid.value) return 'btn_blue'
+  if (uid === defaultUid.value) return 'btn-blue'
 }
 
 let resetPopupVisible = ref(false) //重置账号提示弹窗显示状态
@@ -1029,7 +1029,7 @@ function dataOptionClass(charId, current, property) {
  */
 function selectedBtn(property, rule) {
   if (filterCondition.value[property].indexOf(rule) > -1) {
-    return "btn btn_blue";
+    return "btn btn-blue";
   }
   return "btn";
 }

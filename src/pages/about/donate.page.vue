@@ -22,49 +22,49 @@
     <div class="mdui-typo" id="dev_join_us">
       <div class="card-wrap" id="dev_github">
         <a class="href_black" href="https://space.bilibili.com/688411531">
-          <div class="mdui-card dev_card">
-            <img class="dev_card_icon" src="/image/website/beta_logo_yw.webp" alt="" />
-            <div class="dev_card_text">
-              <div class="dev_card_text_title">罗德岛基建BETA</div>
-              <div class="dev_card_text_content">B站官方信息发布号</div>
+          <div class="mdui-card dev-card">
+            <img class="dev-card-icon" src="/image/website/beta_logo_yw.webp" alt="" />
+            <div class="dev-card-text">
+              <div class="dev-card-text-title">罗德岛基建BETA</div>
+              <div class="dev-card-text-content">B站官方信息发布号</div>
             </div>
           </div>
         </a>
 
         <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
-          <div class="mdui-card dev_card">
-            <img class="dev_card_icon" src="/image/website/qq.webp" alt="" />
-            <div class="dev_card_text">
-              <div class="dev_card_text_title">开发群</div>
-              <div class="dev_card_text_content">938710832</div>
+          <div class="mdui-card dev-card">
+            <img class="dev-card-icon" src="/image/website/qq.webp" alt="" />
+            <div class="dev-card-text">
+              <div class="dev-card-text-title">开发群</div>
+              <div class="dev-card-text-content">938710832</div>
             </div>
           </div>
         </a>
 
         <a class="href_black" href="https://github.com/Arknights-yituliu/">
-          <div class="mdui-card dev_card">
-            <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
-            <div class="dev_card_text">
-              <div class="dev_card_text_title">项目仓库</div>
-              <div class="dev_card_text_content">包括前后端以及其它项目</div>
+          <div class="mdui-card dev-card">
+            <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
+            <div class="dev-card-text">
+              <div class="dev-card-text-title">项目仓库</div>
+              <div class="dev-card-text-content">包括前后端以及其它项目</div>
             </div>
           </div>
         </a>
         <a class="href_black" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
-          <div class="mdui-card dev_card">
-            <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
-            <div class="dev_card_text">
-              <div class="dev_card_text_title">前端仓库</div>
-              <div class="dev_card_text_content">数据可视化</div>
+          <div class="mdui-card dev-card">
+            <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
+            <div class="dev-card-text">
+              <div class="dev-card-text-title">前端仓库</div>
+              <div class="dev-card-text-content">数据可视化</div>
             </div>
           </div>
         </a>
         <a class="href_black" href="https://github.com/Arknights-yituliu/BackEndV3">
-          <div class="mdui-card dev_card">
-            <img class="dev_card_icon" src="/image/website/GitHub.webp" alt="" />
-            <div class="dev_card_text">
-              <div class="dev_card_text_title">后端仓库</div>
-              <div class="dev_card_text_content">数据统计，数据处理</div>
+          <div class="mdui-card dev-card">
+            <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
+            <div class="dev-card-text">
+              <div class="dev-card-text-title">后端仓库</div>
+              <div class="dev-card-text-content">数据统计，数据处理</div>
             </div>
           </div>
         </a>

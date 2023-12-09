@@ -72,11 +72,11 @@ let room_max_operator_num = {
 
 function getAvatar(name) {
   name = characterIdAndName[name]
-  return `bg-${name} operator_image`
+  return `bg-${name} operator-image`
 }
 
 function getItem(name) {
-  return `bg-${name} product_image`
+  return `bg-${name} product-image`
 }
 
 //控制选择房间内干员的弹窗展开的属性
@@ -262,9 +262,9 @@ onMounted(() => {
 
 <template>
 
-  <div class="schedule_control_wrap">
-    <div class="schedule_control">
-      <div class="schedule_control_option">
+  <div class="schedule-control-wrap">
+    <div class="schedule-control">
+      <div class="schedule-control-option">
         <div> 基建模式</div>
         <c-button :color="'blue'" :status="'243'===selected_schedule_type" @click="chooseScheduleType('243')">243
         </c-button>
@@ -276,7 +276,7 @@ onMounted(() => {
         </c-button>
       </div>
 
-      <div class="schedule_control_option">
+      <div class="schedule-control-option">
         <div> 换班次数</div>
         <c-button :color="'blue'" :status="2===schedule_type.planTimes.length" @click="choosePlanTimes(2)">2
         </c-button>
@@ -288,7 +288,7 @@ onMounted(() => {
         </c-button>
       </div>
 
-      <div class="schedule_control_option">
+      <div class="schedule-control-option">
         <div> 当前班次</div>
         <c-button :color="'blue'" :status="index === selected_plan_index"
                   v-for="index in schedule_type.planTimes" :key="index"
@@ -297,24 +297,24 @@ onMounted(() => {
         </c-button>
       </div>
 
-      <div class="schedule_control_option">
+      <div class="schedule-control-option">
         <div> 班次名称</div>
         <input v-model="plans_template[selected_plan_index].name"/>
       </div>
 
-      <div class="schedule_control_option">
+      <div class="schedule-control-option">
         <div> 班次描述</div>
         <input v-model="plans_template[selected_plan_index].description"/>
       </div>
     </div>
 
-    <div class="schedule_control">
-      <div class="schedule_control_option">
+    <div class="schedule-control">
+      <div class="schedule-control-option">
         <div> 第{{ selected_plan_index + 1 }}班是否使用无人机</div>
         <c-switch v-model="plans_template[selected_plan_index].drones.enable"></c-switch>
       </div>
 
-      <div class="schedule_control_option">
+      <div class="schedule-control-option">
         <div>目标房间</div>
         <c-button :color="'blue'"
                   :status="'trading' === plans_template[selected_plan_index].drones.room"
@@ -328,7 +328,7 @@ onMounted(() => {
         </c-button>
 
       </div>
-      <div class="schedule_control_option">
+      <div class="schedule-control-option">
         <div> 目标房间编号</div>
         <c-button :color="'blue'"
                   :status="index === plans_template[selected_plan_index].drones.index"
@@ -338,7 +338,7 @@ onMounted(() => {
         </c-button>
       </div>
 
-      <div class="schedule_control_option">
+      <div class="schedule-control-option">
         <div> 换班前后</div>
         <c-button :color="'blue'"
                   :status="'pre' === plans_template[selected_plan_index].drones.order"
@@ -353,15 +353,15 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="schedule_control">
-      <div class="schedule_control_option">
+    <div class="schedule-control">
+      <div class="schedule-control-option">
         <div> 第{{ selected_plan_index + 1 }}班是否使用菲亚梅塔</div>
         <c-switch v-model="plans_template[selected_plan_index].Fiammetta.enable"></c-switch>
       </div>
 
-      <div class="schedule_control_option">
+      <div class="schedule-control-option">
         <div> 恢复目标</div>
-        <div class="operator_image_wrap" @click="Fiammetta_target_visible=true">
+        <div class="operator-image-wrap" @click="Fiammetta_target_visible=true">
           <div :class="getAvatar(plans_template[selected_plan_index].Fiammetta.target)"></div>
         </div>
       </div>
@@ -372,8 +372,8 @@ onMounted(() => {
                   @click="popup_room_type=menu.value">
           {{ menu.label }}
         </c-button>
-        <div class="operator_check_box">
-          <div class="operator_image_wrap"
+        <div class="operator-check-box">
+          <div class="operator-image-wrap"
                v-for="(name,charId) in building_data[popup_room_type]"
                :key="charId" @click="setFiammetta('target',name)">
             <div :class="getAvatar(name)"></div>
@@ -381,7 +381,7 @@ onMounted(() => {
         </div>
       </c-popup>
 
-      <div class="schedule_control_option">
+      <div class="schedule-control-option">
         <div> 换班前后</div>
         <c-button :color="'blue'"
                   :status="'pre' === plans_template[selected_plan_index].Fiammetta.order"
@@ -398,15 +398,15 @@ onMounted(() => {
   </div>
   <c-button :color="'blue'" @click="createScheduleJsonFile()">创建排班文件</c-button>
 
-  <div class="room_wrap">
+  <div class="room-wrap">
     <!--  左边站点-->
-    <div class="room_wrap_left">
+    <div class="room-wrap-left">
 
       <!--    贸易站-->
       <div class="room_bg trading" v-for="trading_index in schedule_type.trading" :key="trading_index"
            @click="openPopup('trading',trading_index)">
-        <div class="room_name"> 贸易站</div>
-        <div class="operator_image_wrap"
+        <div class="rroom-name"> 贸易站</div>
+        <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.trading[trading_index].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -417,8 +417,8 @@ onMounted(() => {
       <!--  制造站-->
       <div class="room_bg manufacture" v-for="manufacture_index in schedule_type.manufacture" :key="manufacture_index"
            @click="openPopup('manufacture',manufacture_index)">
-        <div class="room_name"> 制造站</div>
-        <div class="operator_image_wrap"
+        <div class="rroom-name"> 制造站</div>
+        <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.manufacture[manufacture_index].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -429,8 +429,8 @@ onMounted(() => {
       <!--  发电站-->
       <div class="room_bg power" v-for="power_index in schedule_type.power" :key="power_index"
            @click="openPopup('power',power_index)">
-        <div class="room_name"> 发电站</div>
-        <div class="operator_image_wrap"
+        <div class="rroom-name"> 发电站</div>
+        <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.power[power_index].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -440,11 +440,11 @@ onMounted(() => {
 
     </div>
 
-    <div class="room_wrap_center">
+    <div class="room-wrap-center">
       <!--     控制中枢-->
       <div class="room_bg control" @click="openPopup('control',0)">
-        <div class="room_name"> 控制中枢</div>
-        <div class="operator_image_wrap"
+        <div class="rroom-name"> 控制中枢</div>
+        <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.control[0].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -454,8 +454,8 @@ onMounted(() => {
       <!--     宿舍-->
       <div class="room_bg dormitory" v-for="dormitory_index in index_list.slice(0,4)" :key="dormitory_index"
            @click="openPopup('dormitory',dormitory_index)">
-        <div class="room_name"> 宿舍</div>
-        <div class="operator_image_wrap"
+        <div class="rroom-name"> 宿舍</div>
+        <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.dormitory[dormitory_index].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -464,11 +464,11 @@ onMounted(() => {
     </div>
 
 
-    <div class="room_wrap_right">
+    <div class="room-wrap-right">
       <!--     会客室-->
       <div class="room_bg meeting" @click="openPopup('meeting',0)">
-        <div class="room_name"> 会客室</div>
-        <div class="operator_image_wrap"
+        <div class="rroom-name"> 会客室</div>
+        <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.meeting[0].operators" :key="index">
           <div :class="getAvatar(charName)"></div>
 
@@ -478,8 +478,8 @@ onMounted(() => {
 
       <!--      加工站-->
       <div class="room_bg hire" @click="openPopup('processing',0)">
-        <div class="room_name"> 加工站</div>
-        <div class="operator_image_wrap"
+        <div class="rroom-name"> 加工站</div>
+        <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.processing[0].operators" :key="index">
           <div :class="getAvatar(charName)"></div>
         </div>
@@ -487,8 +487,8 @@ onMounted(() => {
 
       <!--     办公室 -->
       <div class="room_bg hire" @click="openPopup('hire',0)">
-        <div class="room_name"> 办公室</div>
-        <div class="operator_image_wrap"
+        <div class="rroom-name"> 办公室</div>
+        <div class="operator-image-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.hire[0].operators" :key="index">
           <div :class="getAvatar(charName)"></div>
         </div>
@@ -501,47 +501,47 @@ onMounted(() => {
 
   <c-popup v-model:visible="room_visible">
 
-    <div class="room_popup_wrap">
-      <div class="room_popup_title">第{{ selected_plan_index + 1 }}班—第{{
+    <div class="room-popup-wrap">
+      <div class="room-popup-title">第{{ selected_plan_index + 1 }}班—第{{
           selected_room_index + 1
         }}个{{ selected_room_type }}选中的干员
       </div>
 
-      <div class="room_control" v-show="selected_room_type === 'trading'">
+      <div class="room-control" v-show="selected_room_type === 'trading'">
         <div>选择产物</div>
-        <div class="product_image_wrap" @click="setProduct('LMD')">
+        <div class="product-image-wrap" @click="setProduct('LMD')">
           <div :class="getItem(4001)"></div>
         </div>
-        <div class="product_image_wrap" @click="setProduct('Orundum')">
+        <div class="product-image-wrap" @click="setProduct('Orundum')">
           <div :class="getItem(4003)"></div>
         </div>
 
         <div>已选择产物</div>
-        <div class="product_image_wrap">
+        <div class="product-image-wrap">
           <div :class="getItem(selected_product)"></div>
         </div>
       </div>
 
-      <div class="room_control" v-show="selected_room_type === 'manufacture'">
+      <div class="room-control" v-show="selected_room_type === 'manufacture'">
         选择产物
-        <div class="product_image_wrap" @click="setProduct('Battle Record')">
+        <div class="product-image-wrap" @click="setProduct('Battle Record')">
           <div :class="getItem(2003)"></div>
         </div>
-        <div class="product_image_wrap" @click="setProduct('Pure Gold')">
+        <div class="product-image-wrap" @click="setProduct('Pure Gold')">
           <div :class="getItem(3003)"></div>
         </div>
-        <div class="product_image_wrap" @click="setProduct('Originium Shard')">
+        <div class="product-image-wrap" @click="setProduct('Originium Shard')">
           <div :class="getItem(3141)"></div>
         </div>
 
         <div>已选择产物</div>
-        <div class="product_image_wrap">
+        <div class="product-image-wrap">
           <div :class="getItem(selected_product)"></div>
         </div>
       </div>
 
 
-      <div class="room_control">
+      <div class="room-control">
         <div>是否按顺序入驻</div>
         <c-switch
             v-model="plans_template[selected_plan_index].room[selected_room_type][selected_room_index].sort"></c-switch>
@@ -553,8 +553,8 @@ onMounted(() => {
             v-model="plans_template[selected_plan_index].room[selected_room_type][selected_room_index].skip"></c-switch>
       </div>
 
-      <div class="selected_operator_wrap">
-        <div class="operator_image_wrap"
+      <div class="selected-operator-wrap">
+        <div class="operator-image-wrap"
              v-for="(charId,index) in plans_template[selected_plan_index].room[selected_room_type][selected_room_index].operators"
              :key="index"
              @click="deleteOperator(charId)">
@@ -567,12 +567,12 @@ onMounted(() => {
                 @click="popup_room_type=menu.value">
         {{ menu.label }}
       </c-button>
-      <div class="operator_check_box">
-        <div class="operator_image_wrap show_name"
+      <div class="operator-check-box">
+        <div class="operator-image-wrap show-name"
              v-for="(name,charId) in building_data[popup_room_type]"
              :key="charId" @click="chooseOperator(name)">
           <div :class="getAvatar(name)"></div>
-          <div class="operator_name">{{ name }}</div>
+          <div class="operator-name">{{ name }}</div>
         </div>
       </div>
     </div>

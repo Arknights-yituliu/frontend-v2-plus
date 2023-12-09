@@ -1,10 +1,10 @@
-.label_wrap {
+.label-wrap {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
 }
 
-.dev_card {
+.dev-card {
     width: 288px;
     height: 96px;
     /* display: flex; */
@@ -15,34 +15,34 @@
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
-.dev_card_member {
+.dev-card-member {
     height: 120px;
 }
 
-.dev_card_member_ref {
+.dev-card-member-ref {
     height: 120px;
     width: 360px;
 }
 
-.dev_card_member .dev_card_icon {
+.dev-card-member .dev-card-icon {
     margin-top: 36px;
 }
 
-.dev_card_member_ref .dev_card_icon {
+.dev-card-member-ref .dev-card-icon {
     margin-top: 36px;
 }
-.dev_card_icon {
+.dev-card-icon {
     float: left;
     width: 48px;
     margin: 24px;
     border-radius: 36px;
 }
 
-.dev_card_text {
+.dev-card-text {
     margin: 8px 8px 8px 48px;
 }
 
-.dev_card_text_title {
+.dev-card-text-title {
     font-weight: 700;
     font-size: 20px;
     height: auto;
@@ -50,42 +50,42 @@
     line-height: 32px;
 }
 
-.dev_card_text_content {
+.dev-card-text-content {
     color: rgb(94, 94, 94);
     font-size: 16px;
     line-height: 28px;
 }
 
-.label_content {
+.label-content {
     display: flex;
 }
 
-.label_name {
+.label-name {
     font-weight: 700;
     font-size: 18px;
     height: auto;
     margin-top: 6px;
 }
 
-.label_desc {
+.label-desc {
     color: rgb(94, 94, 94);
     font-size: 16px;
 }
 
-.label_icon_wrap {
+.label-icon-wrap {
     width: 70px;
     height: 70px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
-.label_icon {
+.label-icon {
     width: 55px;
     margin: 5px;
     border-radius: 50%;
 }
 
-.label_work {
+.label-work {
     margin-top: 10px;
     margin-bottom: 5px;
     font-weight: 700;
