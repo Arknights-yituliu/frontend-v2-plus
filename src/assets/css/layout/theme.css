@@ -12,6 +12,8 @@
     --c-wrap-bg:var(--c-white-filter);
     --c-border-bottom:var(--c-white-3);
 
+    --c-text-blue:var(--c-blue-light);
+
     /*按钮样式*/
     --c-btn-bg:var(--c-white-1);
     --c-btn-border:1px solid var(--c-white-4);
@@ -37,6 +39,8 @@
     --c-tip-color:var(--c-white-3);
     --c-wrap-bg:var(--c-white-filter);
     --c-border-bottom:var(--c-black-4);
+
+    --c-text-blue:var(--c-blue-dark);
 
     /*按钮样式*/
     --c-btn-bg:var(--c-black-5);

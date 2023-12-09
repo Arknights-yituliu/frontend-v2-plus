@@ -309,8 +309,8 @@
       </div>
 
       <el-table :data="orundumRecommendedStage" stripe style="width: 100%;height: 400px">
-        <el-table-column prop="stageCode" label="关卡名"  />
-        <el-table-column  label="每理智可搓玉"  >
+        <el-table-column prop="stageCode" label="关卡名"/>
+        <el-table-column label="每理智可搓玉">
           <template #default="scope">
             <div style="display: flex; align-items: center">
               <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>
@@ -320,7 +320,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column  label="每搓1抽消耗" >
+        <el-table-column label="每搓1抽消耗">
           <template #default="scope">
             <div style="display: flex; align-items: center">
               <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
@@ -330,8 +330,8 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
-        <el-table-column prop="stageEfficiency" label="关卡效率" />
+        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率"/>
+        <el-table-column prop="stageEfficiency" label="关卡效率"/>
       </el-table>
 
       <!-- 历史活动 -->
@@ -348,41 +348,15 @@
       </div>
 
 
-      <el-table :data="orundumRecommendedStage" style="width: 100%;height: 600px">
-        <el-table-column prop="stageCode" label="关卡名"  />
-        <el-table-column  label="每理智可搓玉"  >
-          <template #default="scope">
-            <div style="display: flex; align-items: center">
-              <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>
-              <div class="orundum-table-icon">
-                <div class="bg-4003_icon sprite-icon"></div>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column  label="每搓1抽消耗" >
-          <template #default="scope">
-            <div style="display: flex; align-items: center">
-              <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
-              <div class="orundum-table-icon">
-                <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
-        <el-table-column prop="stageEfficiency" label="关卡效率" />
-      </el-table>
-
       <table class="act-table">
         <tbody>
         <tr>
-          <td>活动名称</td>
-          <td v-for="(item, index) in itemIdList" :key="index" >
-            <img :src="`/image/items/${item.id}.png`" alt="" style="height: 36px" >
+          <td class="act-name">活动名称</td>
+          <td v-for="(item, index) in itemIdList" :key="index">
+            <img :src="`/image/items/${item.id}.png`" alt="" style="height: 36px">
           </td>
         </tr>
-        <tr v-for="(act, index) in historyActItemTable" :key="index" >
+        <tr v-for="(act, index) in historyActItemTable" :key="index">
           <td class="act-name">{{ act.zoneName }}</td>
           <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)"
               class="act-item-sprite">
@@ -391,6 +365,23 @@
         </tr>
         </tbody>
       </table>
+
+      <div class="act-table-simple-wrap">
+      <table class="act-table-simple">
+        <tr v-for="(act,index) in historyActItemList" :key="index">
+          <td class="act-name-simple">{{ act.zoneName }}</td>
+          <td v-for="(stage,index) in  act.actStageList" :key="index">
+            <div class="act-drop-table">
+              <img :src="`/image/items/${stage.itemId}.png`" alt="" style="height: 50px">
+              <span class="act-drop-detail">
+              {{ stage.stageCode }} <br>
+              {{ stage.stageEfficiency.toFixed(2) }}%
+              </span>
+            </div>
+          </td>
+        </tr>
+      </table>
+      </div>
       <!-- 常见问题 -->
       <div class="op_title">
         <div class="op_title_text">
@@ -604,6 +595,7 @@ window.addEventListener("resize", function () {
 
 let itemIdList = [] // 材料表
 let historyActItemTable = ref([]) // 历史活动up材料表
+let historyActItemList = ref([])
 
 // 获取历史活动up材料信息
 stageApi.getHistoryActStage(0.625, 300).then(response => {
@@ -611,11 +603,12 @@ stageApi.getHistoryActStage(0.625, 300).then(response => {
   for (const itemId in item_series) {
     const item = item_series[itemId]
     itemIdList.push({
-      id:item.id,
-      name:item.name,
-      lastUp:false
+      id: item.id,
+      name: item.name,
+      lastUp: false
     })
   }
+  historyActItemList.value = response.data
   // 循环历史活动数据
   for (const index in response.data) {
     const act = response.data[index]
@@ -641,11 +634,11 @@ stageApi.getHistoryActStage(0.625, 300).then(response => {
         }
       }
       //如果这个up上个活动没up则将格子标记为true，添加背景色
-      if(!itemIdList[itemIndex].lastUp){
+      if (!itemIdList[itemIndex].lastUp) {
         cellBgColor = true;
       }
       //如果这个材料已经up了，则将这个材料的上次up标记为true
-      if(isUpFlag){
+      if (isUpFlag) {
         itemIdList[itemIndex].lastUp = true;
       }
 
@@ -658,14 +651,14 @@ stageApi.getHistoryActStage(0.625, 300).then(response => {
     historyActItemTable.value.push(rowData)
   }
 
-  console.log( historyActItemTable.value)
+  console.log(historyActItemTable.value)
 })
 
 
 function getCellBgColor(flag) {
   console.log(flag)
-  if(flag) {
-    return 'background-color: #167bff'
+  if (flag) {
+    return 'background-color: #82beff'
   }
   return ''
 }
@@ -673,16 +666,16 @@ function getCellBgColor(flag) {
 
 let orundumRecommendedStage = ref([])
 
-stageApi.getOrundumRecommendedStage().then(response=>{
-    for(const stage of response.data){
-      orundumRecommendedStage.value.push({
-        stageCode:stage.stageCode,
-        orundumPerAp:stage.orundumPerAp.toFixed(2),
-        lmdcost:stage.lmdcost.toFixed(2)+'w',
-        orundumPerApEfficiency:(stage.orundumPerApEfficiency*100).toFixed(2)+'%',
-        stageEfficiency:(stage.stageEfficiency*100).toFixed(2)+'%',
-      })
-    }
+stageApi.getOrundumRecommendedStage().then(response => {
+  for (const stage of response.data) {
+    orundumRecommendedStage.value.push({
+      stageCode: stage.stageCode,
+      orundumPerAp: stage.orundumPerAp.toFixed(2),
+      lmdcost: stage.lmdcost.toFixed(2) + 'w',
+      orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
+      stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
+    })
+  }
 
 })
 
