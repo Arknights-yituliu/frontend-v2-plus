@@ -293,69 +293,7 @@
           <div class="tab_text">*T4/T3/T2效率：</div>
         </div>
       </div>
-      <!-- <table class="stage_detail_table_3">
-        <tr>
-          <td style="width: 150px;">
-            关卡名
-          </td>
-          <td>
-            主掉落物
-          </td>
-          <td>
-            副掉落物
-          </td>
-          <td>
-            t4效率
-          </td>
-          <td>
-            t3效率
-          </td>
-          <td>
-            t2效率
-          </td>
-          <td>
-            总效率
-          </td>
-          <td>
-            spm
-          </td>
-        </tr>
-        <tr v-for="(stage, index) in current_page_data" :key="index">
-          <td>
-            <div> {{ stage.stageCode }} </div>
-            <div class="zone_name"> {{ stage.zoneName }} </div>
-                       <div class="zone_name"> {{ stage.stageId.indexOf("LMD")>0?'计入商店龙门币':'' }} </div>
-          </td>
-          <td>
-            <img :src="`/image/items/${stage.itemId}.png`" alt="" style="height: 36px">
-          </td>
-          <td>
-            <img :src="`/image/items/${stage.secondaryItemId}.png`" alt="" style="height: 36px">
-          </td>
 
-          <td>
-            {{ formatNumber(stage.leT5Efficiency * 100, 1) }}%
-          </td>
-          <td>
-            {{ formatNumber(stage.leT4Efficiency * 100, 1) }}%
-          </td>
-          <td>
-            {{ formatNumber(stage.leT3Efficiency * 100, 1) }}%
-          </td>
-          <td>
-            {{ formatNumber(stage.stageEfficiency * 100, 1) }}%
-          </td>
-          <td>
-            {{ formatNumber(stage.spm, 2) }}
-          </td>
-        </tr>
-      </table> -->
-
-      <!-- <div style="display: flex;justify-content: center">
-        <div style="margin: 12px"> page to</div>
-        <div @click="currentPage(index - 1)" style="margin: 12px" v-for="index in page_count" :key="index">{{ index }}
-        </div>
-      </div> -->
       <!-- 搓玉 -->
       <div class="op_title">
         <div class="op_title_text">
@@ -369,6 +307,33 @@
           <div class="tab_text">*简略版仅包括活动关</div>
         </div>
       </div>
+
+      <el-table :data="orundumRecommendedStage" stripe style="width: 100%;height: 400px">
+        <el-table-column prop="stageCode" label="关卡名"  />
+        <el-table-column  label="每理智可搓玉"  >
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>
+              <div class="orundum-table-icon">
+                <div class="bg-4003_icon sprite-icon"></div>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column  label="每搓1抽消耗" >
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
+              <div class="orundum-table-icon">
+                <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
+        <el-table-column prop="stageEfficiency" label="关卡效率" />
+      </el-table>
+
       <!-- 历史活动 -->
       <div class="op_title">
         <div class="op_title_text">
@@ -383,7 +348,31 @@
       </div>
 
 
-
+      <el-table :data="orundumRecommendedStage" style="width: 100%;height: 600px">
+        <el-table-column prop="stageCode" label="关卡名"  />
+        <el-table-column  label="每理智可搓玉"  >
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>
+              <div class="orundum-table-icon">
+                <div class="bg-4003_icon sprite-icon"></div>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column  label="每搓1抽消耗" >
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
+              <div class="orundum-table-icon">
+                <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
+        <el-table-column prop="stageEfficiency" label="关卡效率" />
+      </el-table>
 
       <table class="act-table">
         <tbody>
@@ -395,7 +384,8 @@
         </tr>
         <tr v-for="(act, index) in historyActItemTable" :key="index" >
           <td class="act-name">{{ act.zoneName }}</td>
-          <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)" class="act-item-sprite">
+          <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)"
+              class="act-item-sprite">
             <img :src="`/image/items/${item.itemId}.png`" alt="" style="height: 36px" v-show="item.isUp">
           </td>
         </tr>
@@ -680,6 +670,21 @@ function getCellBgColor(flag) {
   return ''
 }
 
+
+let orundumRecommendedStage = ref([])
+
+stageApi.getOrundumRecommendedStage().then(response=>{
+    for(const stage of response.data){
+      orundumRecommendedStage.value.push({
+        stageCode:stage.stageCode,
+        orundumPerAp:stage.orundumPerAp.toFixed(2),
+        lmdcost:stage.lmdcost.toFixed(2)+'w',
+        orundumPerApEfficiency:(stage.orundumPerApEfficiency*100).toFixed(2)+'%',
+        stageEfficiency:(stage.stageEfficiency*100).toFixed(2)+'%',
+      })
+    }
+
+})
 
 // for(let id in item_series){
 //   item_series[id] =  {

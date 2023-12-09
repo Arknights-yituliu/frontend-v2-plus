@@ -236,6 +236,18 @@
   border: 1px solid #80808020;
 }
 
+.orundum-table-icon{
+  width: 18px;
+  height: 18px;
+  position: relative;
+}
+
+.sprite-icon{
+  transform: scale(0.5);
+  position: absolute;
+  top: -14px;
+  left: -10px;
+}
 
 .act-table{
   margin: 20px;
@@ -244,11 +256,12 @@
 }
 
 .act-table td{
-  border: 1px solid #323232;
+  border: 1px solid #9b9b9b;
 }
 
 .act-name{
-  width: 90px;
+  min-width: 90px;
+  max-width: 90px;
   overflow: hidden;
 }
 
