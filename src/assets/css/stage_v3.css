@@ -140,7 +140,7 @@
 }
 
 .table_item_detail{
-  width: 400px;
+  width: 48%;
   display: flex;
   flex-wrap: wrap;
 }
