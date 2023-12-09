@@ -172,35 +172,35 @@
       </div>
       <!-- 材料信息 -->
       <div id="itemDetail">
-        <div class="item_detail_bar">
-          <div class="detail_bar_item_wrap">
+        <div class="item-detail-bar">
+          <div class="detail-bar-item-wrap">
             <div :class="getDetailTableHeaderItemSprite(selected_item.itemId)"></div>
-            <span class="detail_bar_item_text">
+            <span class="detail-bar-item-text">
               {{ selected_item.itemName }}
             </span>
 
-            <div :class="`bg-AP_GAMEPLAY value_icon`"></div>
-            <span class="item_value_text">
+            <div :class="`bg-AP_GAMEPLAY value-icon`"></div>
+            <span class="item-value-text">
               {{ formatNumber(selected_item.itemValueAp, 2) }}
             </span>
           </div>
 
 
-          <div class="activity_wrap">
+          <div class="activity-wrap">
             上次up：{{ selected_item.lastUp.activityName }}
           </div>
-          <div class="activity_wrap">
+          <div class="activity-wrap">
             即将up：{{ selected_item.lastUp.activityName }}
           </div>
 
         </div>
 
 
-        <div class="item_detail_bar">
+        <div class="item-detail-bar">
           <div>
-            <div class="cost_perf_bar" v-for="(costPerf, index) in selected_item.storeCostPerf" :key="index">
-              <div :class="`bg-${costPerf.token} token_icon`"></div>
-              <span class="cost_perf_text">
+            <div class="cost-perf-bar" v-for="(costPerf, index) in selected_item.storeCostPerf" :key="index">
+              <div :class="`bg-${costPerf.token} token-icon`"></div>
+              <span class="cost-perf-text">
                 {{ formatNumber(costPerf.costPerf, 2) }}
               </span>
             </div>
@@ -227,14 +227,14 @@
           </el-table-column>
           <el-table-column prop="primary" label="主产品" :width="td_1">
             <template #default="scope">
-              <div class="detail_table_item_wrap">
+              <div class="detail-table-item-wrap">
                 <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
               </div>
             </template>
           </el-table-column>
           <el-table-column prop="secondary" label="副产品" :width="td_1">
             <template #default="scope">
-              <div class="detail_table_item_wrap">
+              <div class="detail-table-item-wrap">
                 <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
               </div>
             </template>
@@ -520,15 +520,15 @@ function getItemSeriesSprite(id) {
 }
 
 function getItemT3Sprite(id) {
-  return "bg-" + id + " item_t3_sprite";
+  return "bg-" + id + " item-t3-sprite";
 }
 
 function getDetailTableHeaderItemSprite(id) {
-  return "bg-" + id + " detail_bar_item_sprite";
+  return "bg-" + id + " detail-bar-item-sprite";
 }
 
 function getDetailTableItemSprite(id) {
-  return "bg-" + id + " table_item_sprite";
+  return "bg-" + id + " table-item-sprite";
 }
 
 function getActTableItemSprite(id) {

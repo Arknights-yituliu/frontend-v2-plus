@@ -201,35 +201,35 @@
       </div>
       <!-- 材料信息 -->
       <div id="itemDetail">
-        <div class="item_detail_bar">
-          <div class="detail_bar_item_wrap">
-            <div :class="`bg-${selected_item.itemId} table_item_sprite`"></div>
-            <span class="detail_bar_item_text">
+        <div class="item-detail-bar">
+          <div class="detail-bar-item-wrap">
+            <div :class="`bg-${selected_item.itemId} table-item-sprite`"></div>
+            <span class="detail-bar-item-text">
                 {{ selected_item.itemName }}
               </span>
           </div>
 
           <div class="item_value_wrap">
-            <div :class="`bg-AP_GAMEPLAY value_icon`"></div>
-            <span class="item_value_text">
+            <div :class="`bg-AP_GAMEPLAY value-icon`"></div>
+            <span class="item-value-text">
                {{ formatNumber(selected_item.itemValueAp, 2) }}
             </span>
           </div>
-          <div class="activity_wrap">
+          <div class="activity-wrap">
             上次up：{{selected_item.lastUp.activityName}}
           </div>
-          <div class="activity_wrap">
+          <div class="activity-wrap">
             即将up：{{selected_item.lastUp.activityName}}
           </div>
 
         </div>
 
 
-        <div class="item_detail_bar">
+        <div class="item-detail-bar">
           <div>
-            <div class="cost_perf_bar" v-for="(costPerf,index) in selected_item.storeCostPerf" :key="index">
-              <div :class="`bg-${costPerf.token} token_icon`"></div>
-              <span class="cost_perf_text">
+            <div class="cost-perf-bar" v-for="(costPerf,index) in selected_item.storeCostPerf" :key="index">
+              <div :class="`bg-${costPerf.token} token-icon`"></div>
+              <span class="cost-perf-text">
                {{ formatNumber(costPerf.costPerf, 2) }}
             </span>
             </div>
