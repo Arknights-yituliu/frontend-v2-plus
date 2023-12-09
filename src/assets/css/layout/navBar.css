@@ -1,4 +1,4 @@
-.header_wrap {
+.header-wrap {
   display: flex;
   flex-direction: row;
   height: 48px;
@@ -10,7 +10,7 @@
   padding: 0 10px 0 10px;
 }
 
-.theme_option_wrap{
+.theme-option-wrap{
   width: 100px;
 }
 
@@ -18,22 +18,14 @@ svg {
   fill: red;
 }
 
-.theme_option{
+.theme-option{
   padding: 8px 4px;
   cursor: pointer;
   margin: 2px;
 }
 
 
-
 .page-title {
-  color: white;
-  font-size: 28px;
-  display: none;
-  padding-left: 24px;
-}
-
-.page_title {
   color: white;
   font-size: 16px;
   font-weight: 400;
@@ -46,7 +38,7 @@ svg {
   font-size: 24px;color: rgb(230,230,230)
 }
 
-.menu_button_desktop {
+.menu-button-desktop {
   display: block;
   font-size:46px;
   color: rgb(230,230,230);

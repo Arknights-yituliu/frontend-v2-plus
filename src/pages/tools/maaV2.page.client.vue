@@ -7,7 +7,8 @@ import '/src/assets/css/sprite/sprite_avatar_5.css'
 import '/src/assets/css/sprite/sprite_avatar_4.css'
 import building_data from '/src/static/json/build/buildingData.json'
 import {cMessage} from '/src/custom/message.js'
-// import plan from '/src/pages/tools/plans_templte'
+import plan from '/src/pages/tools/plans_templte'
+
 let index_list = [0, 1, 2, 3, 4, 5];
 
 
@@ -217,8 +218,8 @@ function createScheduleJsonFile() {
 
   for (let index in schedule_type.value.planTimes) {
     plans.push({
-      name:plans_template.value[index].name,
-      description:plans_template.value[index].description,
+      name: plans_template.value[index].name,
+      description: plans_template.value[index].description,
       Fiammetta: plans_template.value[index].Fiammetta,
       drones: plans_template.value[index].drones,
       room: {
@@ -248,9 +249,8 @@ function createScheduleJsonFile() {
 }
 
 
-const ScheduleCache = localStorage.getItem("ScheduleCache");
-if(ScheduleCache)  plans_template.value =  JSON.parse(ScheduleCache)
-
+// const ScheduleCache = localStorage.getItem("ScheduleCache");
+// if (ScheduleCache) plans_template.value = JSON.parse(ScheduleCache)
 
 
 onMounted(() => {
@@ -299,12 +299,12 @@ onMounted(() => {
 
       <div class="schedule_control_option">
         <div> 班次名称</div>
-        <input v-model="plans_template[selected_plan_index].name" />
+        <input v-model="plans_template[selected_plan_index].name"/>
       </div>
 
       <div class="schedule_control_option">
         <div> 班次描述</div>
-        <input v-model="plans_template[selected_plan_index].description" />
+        <input v-model="plans_template[selected_plan_index].description"/>
       </div>
     </div>
 
@@ -401,16 +401,7 @@ onMounted(() => {
   <div class="room_wrap">
     <!--  左边站点-->
     <div class="room_wrap_left">
-      <!--     控制中枢-->
-      <div class="room_bg control" @click="openPopup('control',0)">
-        <div class="room_name"> 控制中枢</div>
-        <div class="operator_image_wrap"
-             v-for="(charName,index) in plans_template[selected_plan_index].room.control[0].operators"
-             :key="index">
-          <div :class="getAvatar(charName)"></div>
 
-        </div>
-      </div>
       <!--    贸易站-->
       <div class="room_bg trading" v-for="trading_index in schedule_type.trading" :key="trading_index"
            @click="openPopup('trading',trading_index)">
@@ -450,9 +441,18 @@ onMounted(() => {
     </div>
 
     <div class="room_wrap_center">
+      <!--     控制中枢-->
+      <div class="room_bg control" @click="openPopup('control',0)">
+        <div class="room_name"> 控制中枢</div>
+        <div class="operator_image_wrap"
+             v-for="(charName,index) in plans_template[selected_plan_index].room.control[0].operators"
+             :key="index">
+          <div :class="getAvatar(charName)"></div>
 
+        </div>
+      </div>
       <!--     宿舍-->
-      <div class="room_bg dormitory" v-for="dormitory_index in index_list.slice(0,5)" :key="dormitory_index"
+      <div class="room_bg dormitory" v-for="dormitory_index in index_list.slice(0,4)" :key="dormitory_index"
            @click="openPopup('dormitory',dormitory_index)">
         <div class="room_name"> 宿舍</div>
         <div class="operator_image_wrap"
@@ -474,6 +474,17 @@ onMounted(() => {
 
         </div>
       </div>
+
+
+      <!--      加工站-->
+      <div class="room_bg hire" @click="openPopup('processing',0)">
+        <div class="room_name"> 加工站</div>
+        <div class="operator_image_wrap"
+             v-for="(charName,index) in plans_template[selected_plan_index].room.processing[0].operators" :key="index">
+          <div :class="getAvatar(charName)"></div>
+        </div>
+      </div>
+
       <!--     办公室 -->
       <div class="room_bg hire" @click="openPopup('hire',0)">
         <div class="room_name"> 办公室</div>
@@ -482,6 +493,8 @@ onMounted(() => {
           <div :class="getAvatar(charName)"></div>
         </div>
       </div>
+
+
     </div>
   </div>
 

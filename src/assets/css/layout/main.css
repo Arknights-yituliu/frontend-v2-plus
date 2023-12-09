@@ -1,5 +1,5 @@
 
-.container-v1 {
+.container {
   height: 100%;
   width: 100%;
   background-color: var(--c-bg);
@@ -35,11 +35,11 @@
     height: 72px;
   }
 
-  .aside_table {
+  .aside-table {
     display: none;
   }
 
-  .container-v1{
+  .container{
     padding-left: 0;
   }
 

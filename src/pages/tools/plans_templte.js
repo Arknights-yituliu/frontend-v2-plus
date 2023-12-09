@@ -1,26 +1,31 @@
-
 let plans = []
-for (let index in [0, 1, 2, 3, 4, 5]) {
+for (let index in [0, 1, 2, 3, 4, 5, 6]) {
 
     let rooms = {
         trading: [],
         manufacture: [],
         power: [],
         dormitory: [],
+        processing: [{
+            skip: false,
+            operators: [],
+            sort: false,
+            autofill: false
+        }],
         control: [{
-            skip:false,
+            skip: false,
             operators: [],
             sort: false,
             autofill: false
         }],
         hire: [{
-            skip:false,
+            skip: false,
             operators: [],
             sort: false,
             autofill: false
         }],
         meeting: [{
-            skip:false,
+            skip: false,
             operators: [],
             sort: false,
             autofill: false
@@ -30,7 +35,7 @@ for (let index in [0, 1, 2, 3, 4, 5]) {
     for (let r in [0, 1, 2, 3, 4]) {
 
         rooms.trading.push({
-            skip:false,
+            skip: false,
             product: 'LMD',
             operators: [],
             sort: false,
@@ -38,22 +43,27 @@ for (let index in [0, 1, 2, 3, 4, 5]) {
         })
 
         rooms.manufacture.push({
-            skip:false,
+            skip: false,
             product: 'Battle Record',
             operators: [],
             sort: false,
             autofill: false
         })
 
+    }
+
+    for (let r in [0, 1, 2]) {
         rooms.power.push({
-            skip:false,
+            skip: false,
             operators: [],
             sort: false,
             autofill: false
         })
+    }
 
+    for (let r in [0, 1, 2, 3]) {
         rooms.dormitory.push({
-            skip:false,
+            skip: false,
             operators: [],
             sort: false,
             autofill: false
@@ -61,10 +71,10 @@ for (let index in [0, 1, 2, 3, 4, 5]) {
     }
 
     const plan = {
-        name:`第${index+1}班`,
-        description:`第${index+1}班的描述`,
-        period:['00:00','00:00'],
-        room:rooms,
+        name: `第${index + 1}班`,
+        description: `第${index + 1}班的描述`,
+        period: ['00:00', '00:00'],
+        room: rooms,
         Fiammetta: {
             enable: false,
             target: "",
@@ -80,7 +90,6 @@ for (let index in [0, 1, 2, 3, 4, 5]) {
 
     plans.push(plan)
 }
-
 
 
 console.log(JSON.stringify(plans))

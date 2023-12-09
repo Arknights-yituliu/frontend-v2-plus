@@ -1,10 +1,10 @@
 <template>
-  <div class="header_wrap">
+  <div class="header-wrap">
     <i class="menu-button iconfont icon-menu" @click="menu_collapse(true)">
     </i>
-    <i class="menu_button_desktop iconfont icon-menu" @click="aside_collapse()">
+    <i class="menu-button-desktop iconfont icon-menu" @click="aside_collapse()">
     </i>
-    <div class="page_title" @click="aside_collapse()">
+    <div class="page-title" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
 
@@ -13,14 +13,14 @@
     <c-popover :name="'theme_menu'">
       <template #title>
         <!--        <i style="font-size: 32px;color: rgb(230,230,230)"-->
-        <!--           class="iconfont icon-moon" id="menu_button_desktop" @click="aside_collapse()">-->
+        <!--           class="iconfont icon-moon" id="menu-button-desktop" @click="aside_collapse()">-->
         <!--        </i>-->
         <i class="iconfont icon-sun theme_button">
         </i>
       </template>
-      <div class="theme_option_wrap" id="theme_menu">
-        <div class="theme_option" @click="switchTheme('dark')">深色模式</div>
-        <div class="theme_option" @click="switchTheme('light')">浅色模式</div>
+      <div class="theme-option-wrap" id="theme_menu">
+        <div class="theme-option" @click="switchTheme('dark')">深色模式</div>
+        <div class="theme-option" @click="switchTheme('light')">浅色模式</div>
       </div>
     </c-popover>
 
@@ -33,25 +33,25 @@
         <div class="menu_table">
           <!-- 标题区 -->
           <a href="https://yituliu.site/" style="text-decoration: none; color: white">
-            <div class="aside_title">明日方舟一图流</div>
+            <div class="aside-title">明日方舟一图流</div>
           </a>
           <!-- 导航菜单 -->
           <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
             <!-- 一级标题 -->
-            <a class="aside_menu_parent nav_href" :href="r.path">
-              <div class="aside_nav aside_parent" v-show="r.isChild">
-                <div class="aside_menu_parent_icon"></div>
+            <a class="aside_menu_parent nav-href" :href="r.path">
+              <div class="aside-nav aside_parent" v-show="r.isChild">
+                <div class="aside-menu-parent-icon"></div>
                 {{ r.text }}
               </div>
             </a>
             <!-- 二级标题组 -->
-            <a :href="c.path" class="nav_href" v-for="(c,index) in r.child" :key="index">
-              <div class="aside_nav">
-                <div class="aside_menu_child_icon"></div>
+            <a :href="c.path" class="nav-href" v-for="(c,index) in r.child" :key="index">
+              <div class="aside-nav">
+                <div class="aside-menu-child-icon"></div>
                 {{ c.text }}
               </div>
             </a>
-            <div class="aside_divider"></div>
+            <div class="aside-divider"></div>
           </div>
         </div>
       </div>
@@ -227,7 +227,7 @@ onMounted(() => {
 
 }
 
-.menu_button_desktop {
+.menu-button-desktop {
   display: block;
   font-size: 24px;
   color: rgb(230, 230, 230);
@@ -246,7 +246,7 @@ onMounted(() => {
     color: rgb(230, 230, 230)
   }
 
-  .menu_button_desktop {
+  .menu-button-desktop {
     display: none;
   }
 
@@ -254,12 +254,12 @@ onMounted(() => {
     font-size: 50px;
   }
 
-  .page_title {
+  .page-title {
     display: block;
     font-size: 24px;
   }
 
-  .header_wrap {
+  .header-wrap {
     height: 72px;
   }
 

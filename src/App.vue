@@ -1,5 +1,5 @@
 <template>
-  <div class="container-v1 color_var" id="container" :class="theme_type">
+  <div class="container color_var" id="container" :class="theme_type">
     <my-aside></my-aside>
     <div class="header">
       <nav-bar/>

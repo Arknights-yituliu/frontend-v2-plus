@@ -57,6 +57,7 @@
     flex-wrap: wrap;
     font-weight: 600;
     height: 110px;
+    box-shadow: 1px 1px 1px #eaeaea;
     /*height: 58px;*/
 }
 
@@ -77,40 +78,37 @@
 }
 
 .manufacture {
-    background-color: #ffedc9;
+    background-color: #fff2e5;
     color: #ff7300;
     width: 240px;
 }
 
 .power {
-
-    background-color: #b8ffa4;
+    background-color: #eeffe8;
     color: #43a047;
     width: 130px;
 }
 
 .control {
-
-    background-color: #b8ffa4;
+    background-color: #e9fde0;
     color: #1b5e20;
     width: 500px;
 }
 
 .dormitory {
-    background-color: #aff1e2;
+    background-color: #c6e7e7;
     color: #006ce8;
     width: 460px;
 }
 
 .meeting {
-
-    background-color: #ffedc9;
+    background-color: #fff9eb;
     color: #323232;
     width: 200px;
 }
 
 .hire {
-    background-color: #a9a9a9;
+    background-color: #e6e6e6;
     color: #323232;
     width: 200px;
 }

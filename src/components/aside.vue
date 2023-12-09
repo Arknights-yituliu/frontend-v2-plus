@@ -1,26 +1,26 @@
 <template>
-  <div class="aside_table" id="aside114">
+  <div class="aside-table" id="aside114">
     <!-- 标题区 -->
     <a href="https://yituliu.site/" style="text-decoration: none; color: white">
-      <div class="aside_title">明日方舟一图流</div>
+      <div class="aside-title">明日方舟一图流</div>
     </a>
     <!-- 导航菜单 -->
     <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
       <!-- 一级标题 -->
-      <a class="nav_href" :href="r.path">
+      <a class="nav-href" :href="r.path">
         <div :class="navParentSelected(r.path)" v-show="r.isChild">
-          <div class="aside_menu_parent_icon"></div>
+          <div class="aside-menu-parent-icon"></div>
           {{ r.text }}
         </div>
       </a>
       <!-- 二级标题组 -->
-      <a :href="c.path" class="nav_href" v-for="(c,index) in r.child" :key="index">
+      <a :href="c.path" class="nav-href" v-for="(c,index) in r.child" :key="index">
         <div :class="navChildSelected(c.path)">
-          <div class="aside_menu_child_icon"></div>
+          <div class="aside-menu-child-icon"></div>
           {{ c.text }}
         </div>
       </a>
-      <!-- <div class="aside_divider"></div> -->
+      <!-- <div class="aside-divider"></div> -->
     </div>
   </div>
 </template>
@@ -59,14 +59,14 @@ function getPathName(path) {
 
 function navParentSelected(path) {
   // console.log(path, "==", pathName.value);
-  if (path == pathName.value) return "aside_nav aside_parent aside_nav_selected";
-  return "aside_nav aside_parent";
+  if (path == pathName.value) return "aside-nav aside_parent aside-nav_selected";
+  return "aside-nav aside_parent";
 }
 
 function navChildSelected(path) {
   // console.log(path, "==", pathName.value);
-  if (path == pathName.value) return "aside_nav aside_nav_selected";
-  return "aside_nav";
+  if (path == pathName.value) return "aside-nav aside-nav_selected";
+  return "aside-nav";
 }
 
 

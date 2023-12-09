@@ -66,7 +66,7 @@
           {{ plan.name }}
         </div>
         <div class="delete_icon" @click="deletePlan(charId)">
-          <i class="menu_button_desktop iconfont icon-error" style="color: white;font-size: 20px"></i>
+          <i class="menu-button-desktop iconfont icon-error" style="color: white;font-size: 20px"></i>
         </div>
       </div>
     </div>
