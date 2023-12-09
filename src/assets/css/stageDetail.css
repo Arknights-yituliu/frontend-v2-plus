@@ -4,11 +4,12 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  background: rgb(255, 255, 255);
+
 }
 
 .checkBox {
   width: 510px;
+
 }
 
 .stage_detail_title {
@@ -55,9 +56,15 @@
   justify-content: center;
 }
 
-.stage_table_wrap{
+.btn_zone{
   margin: 2px;
 }
+
+.stage_table_wrap{
+  margin: 2px;
+  width: 490px;
+}
+
 
 .stage_table{
   display: flex;

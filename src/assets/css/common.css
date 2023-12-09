@@ -13,6 +13,7 @@
     border:none;
     color: var(--c-btn-color);
     background-color: var(--c-btn-bg);
+    border: var(--c-btn-border);
 }
 
 
