@@ -16,7 +16,7 @@
 
     /*按钮样式*/
     --c-btn-bg:var(--c-white-1);
-    --c-btn-border:1px solid var(--c-white-4);
+    --c-btn-border:1px solid var(--c-white-2);
     --c-btn-color:var(--c-black-1);
     --c-btn-text-color:var(--c-white-1);
     --c-btn-bg-blue:var(--c-btn-blue-light);

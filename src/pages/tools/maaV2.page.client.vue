@@ -69,7 +69,7 @@ let room_max_operator_num = {
 
 function getAvatar(name) {
   name = characterIdAndName[name]
-  return `bg-${name} operator-image`
+  return `bg-${name} room-avatar-sprite`
 }
 
 function getItemSpriteByProductName(name) {
@@ -374,7 +374,7 @@ onMounted(() => {
 
       <div class="schedule-control-option">
         <div> 恢复目标</div>
-        <div class="operator-image-wrap" @click="Fiammetta_target_visible=true">
+        <div class="room-avatar-sprite-wrap" @click="Fiammetta_target_visible=true">
           <div :class="getAvatar(plans_template[selected_plan_index].Fiammetta.target)"></div>
         </div>
       </div>
@@ -386,7 +386,7 @@ onMounted(() => {
           {{ menu.label }}
         </c-button>
         <div class="operator-check-box">
-          <div class="operator-image-wrap"
+          <div class="room-avatar-sprite-wrap"
                v-for="(name,charId) in building_data[popup_room_type]"
                :key="charId" @click="setFiammetta('target',name)">
             <div :class="getAvatar(name)"></div>
@@ -414,42 +414,59 @@ onMounted(() => {
   <div class="room-wrap">
     <!--  左边站点-->
     <div class="room-wrap-left">
-      <div class="room-bg-null" style=" width: 230px;"></div>
-      <div class="room-bg-null" style=" width: 230px;"></div>
       <!--    贸易站-->
       <div class="room_bg trading" v-for="tradingIndex in scheduleType.trading" :key="tradingIndex"
            @click="openPopup('trading',tradingIndex)">
-        <div class="room-name"> 贸易站#{{ tradingIndex + 1 }}</div>
-        <div class="operator-image-wrap"
-             v-for="(charName,index) in plans_template[selected_plan_index].room.trading[tradingIndex].operators"
-             :key="index">
-          <div :class="getAvatar(charName)"></div>
-        </div>
-        <div class="room-info">
+        <div class="room-name">
+          <span>贸易站#{{ tradingIndex + 1 }}</span>
           <div class="room-product-wrap">
             <div
-                :class="getItemSpriteByProductName(plans_template[selected_plan_index].room.trading[tradingIndex].product)"></div>
+                :class="getItemSpriteByProductName(plans_template[selected_plan_index].room.trading[tradingIndex].product)">
+            </div>
           </div>
-          <div class="room-set-wrap">
-            <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].skip"
-                      :label="'跳过房间'"></c-status>
-            <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].sort"
-                      :label="'顺序入驻'"></c-status>
-            <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].autofill"
-                      :label="'补满空位'"></c-status>
+        </div>
+        <div class="settlement_operator">
+          <div class="room-avatar-sprite-wrap"
+               v-for="(charName,index) in plans_template[selected_plan_index].room.trading[tradingIndex].operators"
+               :key="index">
+            <div :class="getAvatar(charName)"></div>
           </div>
+        </div>
+        <div class="room-set-wrap">
+          <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].skip"
+                    :label="'跳过房间'"></c-status>
+          <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].sort"
+                    :label="'顺序入驻'"></c-status>
+          <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].autofill"
+                    :label="'补满空位'"></c-status>
         </div>
       </div>
 
       <!--  制造站-->
       <div class="room_bg manufacture" v-for="manufactureIndex in scheduleType.manufacture" :key="manufactureIndex"
            @click="openPopup('manufacture',manufactureIndex)">
-        <div class="room-name"> 制造站#{{ manufactureIndex + 1 }}</div>
-        <div class="operator-image-wrap"
-             v-for="(charName,index) in plans_template[selected_plan_index].room.manufacture[manufactureIndex].operators"
-             :key="index">
-          <div :class="getAvatar(charName)"></div>
-
+        <div class="room-name">
+          <span> 制造站#{{ manufactureIndex + 1 }}</span>
+          <div class="room-product-wrap">
+            <div
+                :class="getItemSpriteByProductName(plans_template[selected_plan_index].room.manufacture[manufactureIndex].product)">
+            </div>
+          </div>
+        </div>
+        <div class="settlement_operator">
+          <div class="room-avatar-sprite-wrap"
+               v-for="(charName,index) in plans_template[selected_plan_index].room.manufacture[manufactureIndex].operators"
+               :key="index">
+            <div :class="getAvatar(charName)"></div>
+          </div>
+        </div>
+        <div class="room-set-wrap">
+          <c-status v-model="plans_template[selected_plan_index].room.manufacture[manufactureIndex].skip"
+                    :label="'跳过房间'"></c-status>
+          <c-status v-model="plans_template[selected_plan_index].room.manufacture[manufactureIndex].sort"
+                    :label="'顺序入驻'"></c-status>
+          <c-status v-model="plans_template[selected_plan_index].room.manufacture[manufactureIndex].autofill"
+                    :label="'补满空位'"></c-status>
         </div>
       </div>
 
@@ -457,7 +474,7 @@ onMounted(() => {
       <div class="room_bg power" v-for="powerIndex in scheduleType.power" :key="powerIndex"
            @click="openPopup('power',powerIndex)">
         <div class="room-name"> 发电站#{{ powerIndex + 1 }}</div>
-        <div class="operator-image-wrap"
+        <div class="room-avatar-sprite-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.power[powerIndex].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -471,7 +488,7 @@ onMounted(() => {
       <!--     控制中枢-->
       <div class="room_bg control" @click="openPopup('control',0)">
         <div class="room-name"> 控制中枢</div>
-        <div class="operator-image-wrap"
+        <div class="room-avatar-sprite-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.control[0].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -482,7 +499,7 @@ onMounted(() => {
       <div class="room_bg dormitory" v-for="dormitoryIndex in index_list.slice(0,4)" :key="dormitoryIndex"
            @click="openPopup('dormitory',dormitoryIndex)">
         <div class="room-name"> 宿舍#{{ dormitoryIndex + 1 }}</div>
-        <div class="operator-image-wrap"
+        <div class="room-avatar-sprite-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.dormitory[dormitoryIndex].operators"
              :key="index">
           <div :class="getAvatar(charName)"></div>
@@ -496,7 +513,7 @@ onMounted(() => {
       <!--     会客室-->
       <div class="room_bg meeting" @click="openPopup('meeting',0)">
         <div class="room-name"> 会客室</div>
-        <div class="operator-image-wrap"
+        <div class="room-avatar-sprite-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.meeting[0].operators" :key="index">
           <div :class="getAvatar(charName)"></div>
 
@@ -505,7 +522,7 @@ onMounted(() => {
       <!--      加工站-->
       <div class="room_bg hire" @click="openPopup('processing',0)">
         <div class="room-name"> 加工站</div>
-        <div class="operator-image-wrap"
+        <div class="room-avatar-sprite-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.processing[0].operators" :key="index">
           <div :class="getAvatar(charName)"></div>
         </div>
@@ -514,7 +531,7 @@ onMounted(() => {
       <!--     办公室 -->
       <div class="room_bg hire" @click="openPopup('hire',0)">
         <div class="room-name"> 办公室</div>
-        <div class="operator-image-wrap"
+        <div class="room-avatar-sprite-wrap"
              v-for="(charName,index) in plans_template[selected_plan_index].room.hire[0].operators" :key="index">
           <div :class="getAvatar(charName)"></div>
         </div>
@@ -580,7 +597,7 @@ onMounted(() => {
       </div>
 
       <div class="selected-operator-wrap">
-        <div class="operator-image-wrap"
+        <div class="room-avatar-sprite-wrap"
              v-for="(charId,index) in plans_template[selected_plan_index].room[selected_room_type][selected_room_index].operators"
              :key="index"
              @click="deleteOperator(charId)">
@@ -594,7 +611,7 @@ onMounted(() => {
         {{ menu.label }}
       </c-button>
       <div class="operator-check-box">
-        <div class="operator-image-wrap show-name"
+        <div class="room-avatar-sprite-wrap show-name"
              v-for="(name,charId) in building_data[popup_room_type]"
              :key="charId" @click="chooseOperator(name)">
           <div :class="getAvatar(name)"></div>

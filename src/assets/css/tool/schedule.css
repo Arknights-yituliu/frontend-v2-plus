@@ -34,7 +34,7 @@
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: center;
-    width: 520px;
+    width: 560px;
 }
 
 .room-wrap-center {
@@ -58,7 +58,7 @@
     border-radius: 3px;
     flex-wrap: wrap;
     font-weight: 600;
-    height: 140px;
+    height: 124px;
 }
 
 .room_bg {
@@ -69,22 +69,22 @@
     border-radius: 3px;
     flex-wrap: wrap;
     font-weight: 600;
-    height: 140px;
+    height: 124px;
     box-shadow: 1px 1px 1px #eaeaea;
     /*height: 58px;*/
 }
 
 .room-product-wrap{
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     position: relative;
 }
 
 .room-product {
     position: absolute;
-    top: -72px;
-    left: -72px;
-    transform: scale(.219);
+    top: -76px;
+    left: -56px;
+    transform: scale(.163);
 }
 
 .room-info{
@@ -93,31 +93,33 @@
 }
 
 .room-set-wrap{
-  width: 185px;
 }
 
 .room-name {
     width: 100%;
-    text-align: center;
-    font-size: 18px;
+    height: 30px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .trading {
     background-color: #e0f3ff;
     color: #0288d1;
-    width: 240px;
+    width: 260px;
 }
 
 .manufacture {
     background-color: #fff2e5;
     color: #ff7300;
-    width: 240px;
+    width: 260px;
 }
 
 .power {
     background-color: #eeffe8;
     color: #43a047;
-    width: 110px;
+    width: 260px;
 }
 
 .control {
@@ -190,15 +192,36 @@
 
 }
 
-.operator-image-wrap {
+.settlement_operator{
+    display: flex;
+    height: 74px;
+    width: 100%;
+    justify-content: center;
+}
+
+
+.room-avatar-sprite-wrap {
     height: 70px;
     width: 70px;
-    margin: 4px;
+    margin: 2px;
     position: relative;
     border-radius: 4px;
     box-shadow: var(--c-box-shadow);
     background-color: var(--c-wrap-bg);
     overflow: hidden;
+}
+
+.room-avatar-sprite {
+    position: absolute;
+    top: -56px;
+    left: -56px;
+    transform: scale(0.4);
+}
+
+.room-avatar-sprite-null {
+    height: 70px;
+    width: 1px;
+    margin: 4px;
 }
 
 .show-name {
@@ -214,12 +237,7 @@
     font-weight: 600;
 }
 
-.operator-image {
-    position: absolute;
-    top: -56px;
-    left: -56px;
-    transform: scale(0.4);
-}
+
 
 .operator-check-box {
     display: flex;

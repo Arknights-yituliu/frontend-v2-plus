@@ -21,7 +21,7 @@ const props = defineProps(["modelValue",'label',"style"]);
 
 .status-error{
   color: #ffffff;
-  background-color: #fa4141;
+  background-color: #8c8c8c;
   border-radius: 1000px;
   margin: 2px 2px -2px;
 }
