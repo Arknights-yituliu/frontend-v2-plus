@@ -33,7 +33,7 @@
           <!-- 长期最优 -->
           <div class="stage_card_3_left">
             <div class="img_wrap" style="position: relative;">
-              <div class="stage_card_3_mainImg bg-30013 stage_sprite_t3" style="transform: scale(1);">
+              <div class="stage_card_3_mainImg" :class="getItemSeriesSprite('30013')">
                 <div class="stage_card_3_cover" style="height:114px;"></div>
                 <div class="stage_card_3_best" style="font-size: 16px;">
                   <div class="stage_card_3_best_chapter">关卡所在区域</div>
@@ -47,19 +47,25 @@
           <div class="stage_card_3_right">
             <div class="stage_card_3_list" style="width:144px;">
               <div class="stage_card_3_line">
-                <div class="stage_card_3_img"><img :src="`/image/items/30014.png`" alt="" style="height: 32px"></div>
+                <div class="stage_card_3_img">
+                  <div :class="getItemT3Sprite(30014)"></div>
+                </div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T4最优关</div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T4效率</div>
 
               </div>
               <div class="stage_card_3_line">
-                <div class="stage_card_3_img"><img :src="`/image/items/30013.png`" alt="" style="height: 32px"></div>
+                <div class="stage_card_3_img">
+                  <div :class="getItemT3Sprite(30013)"></div>
+                </div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T3最优关</div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T3效率</div>
 
               </div>
               <div class="stage_card_3_line">
-                <div class="stage_card_3_img"><img :src="`/image/items/30012.png`" alt="" style="height: 32px"></div>
+                <div class="stage_card_3_img">
+                  <div :class="getItemT3Sprite(30012)"></div>
+                </div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T2最优关</div>
                 <div class="stage_card_3_line_text" style="font-size: 12px;">T2效率</div>
 
@@ -321,21 +327,21 @@
         <tbody>
         <tr>
           <td class="act-name">活动名称</td>
-          <td v-for="(item, index) in itemIdList" :key="index">
-            <div></div>
-            <img :src="`/image/items/${item.id}.png`" alt="" style="height: 36px">
+          <td v-for="(item, index) in itemIdList" :key="index" >
+            <div class="act-table-item-wrap" style="height: 36px">
+              <div :class="getActTableItemSprite(item.id)"></div>
+            </div>
           </td>
         </tr>
         <tr v-for="(act, index) in historyActItemTable" :key="index">
           <td class="act-name">{{ act.zoneName }}</td>
           <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
             <div class="act-table-item-wrap" v-if="item.isUp">
-             <div :class="getActTableItemSprite(item.itemId)"></div>
+              <div :class="getActTableItemSprite(item.itemId)"></div>
               <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
-              {{ formatNumber(item.stageEfficiency, 2)}}%
+              {{ formatNumber(item.stageEfficiency, 2) }}%
             </span>
             </div>
-
           </td>
         </tr>
         </tbody>
@@ -517,19 +523,19 @@ function getItemT3Sprite(id) {
   return "bg-" + id + " item_t3_sprite";
 }
 
-function getDetailTableHeaderItemSprite(id){
+function getDetailTableHeaderItemSprite(id) {
   return "bg-" + id + " detail_bar_item_sprite";
 }
 
-function getDetailTableItemSprite(id){
+function getDetailTableItemSprite(id) {
   return "bg-" + id + " table_item_sprite";
 }
 
-function getActTableItemSprite(id){
+function getActTableItemSprite(id) {
   return "bg-" + id + " act-table-item-sprite";
 }
 
-function getActTableSimpleItemSprite(id){
+function getActTableSimpleItemSprite(id) {
   return "bg-" + id + " act-table-simple-item-sprite";
 }
 

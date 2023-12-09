@@ -146,10 +146,10 @@
 }
 
 .item_t3_sprite{
-  transform: scale(.153);
+  transform: scale(.18);
   position: absolute;
   top: -77px;
-  left: -78px;
+  left: -82px;
 }
 
 .item_detail_bar{
@@ -295,7 +295,7 @@
   transform: scale(.1967);
   position: absolute;
   top: -74px;
-  left: -67px;
+  left: -66px;
 }
 
 .act-stage-efficiency{
