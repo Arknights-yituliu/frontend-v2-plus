@@ -39,7 +39,7 @@ let scheduleType = ref({
   trading: [0, 1],
   manufacture: [0, 1, 2, 3],
   power: [0, 1, 2],
-  dormitory: [0],
+  dormitory: [0, 1, 2, 3],
   control: [0],
   meeting: [0],
   hire: [0],
@@ -120,6 +120,9 @@ function openPopup(type, index) {
   }
 
 }
+
+
+const roomPopupStyle = "width:800px"
 
 /**
  * 选择该房间入驻干员
@@ -411,6 +414,7 @@ onMounted(() => {
   </div>
   <c-button :color="'blue'" @click="createScheduleJsonFile()">创建排班文件</c-button>
 
+
   <div class="room-wrap">
     <!--  左边站点-->
     <div class="room-wrap-left">
@@ -419,11 +423,11 @@ onMounted(() => {
            @click="openPopup('trading',tradingIndex)">
         <div class="room-name">
           <span>贸易站#{{ tradingIndex + 1 }}</span>
-          <div class="room-product-wrap">
-            <div
-                :class="getItemSpriteByProductName(plans_template[selected_plan_index].room.trading[tradingIndex].product)">
-            </div>
-          </div>
+          <!--          <div class="room-product-wrap">-->
+          <!--            <div-->
+          <!--                :class="getItemSpriteByProductName(plans_template[selected_plan_index].room.trading[tradingIndex].product)">-->
+          <!--            </div>-->
+          <!--          </div>-->
         </div>
         <div class="settlement_operator">
           <div class="room-avatar-sprite-wrap"
@@ -432,14 +436,6 @@ onMounted(() => {
             <div :class="getAvatar(charName)"></div>
           </div>
         </div>
-        <div class="room-set-wrap">
-          <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].skip"
-                    :label="'跳过房间'"></c-status>
-          <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].sort"
-                    :label="'顺序入驻'"></c-status>
-          <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].autofill"
-                    :label="'补满空位'"></c-status>
-        </div>
       </div>
 
       <!--  制造站-->
@@ -447,11 +443,11 @@ onMounted(() => {
            @click="openPopup('manufacture',manufactureIndex)">
         <div class="room-name">
           <span> 制造站#{{ manufactureIndex + 1 }}</span>
-          <div class="room-product-wrap">
-            <div
-                :class="getItemSpriteByProductName(plans_template[selected_plan_index].room.manufacture[manufactureIndex].product)">
-            </div>
-          </div>
+          <!--          <div class="room-product-wrap">-->
+          <!--            <div-->
+          <!--                :class="getItemSpriteByProductName(plans_template[selected_plan_index].room.manufacture[manufactureIndex].product)">-->
+          <!--            </div>-->
+          <!--          </div>-->
         </div>
         <div class="settlement_operator">
           <div class="room-avatar-sprite-wrap"
@@ -460,14 +456,15 @@ onMounted(() => {
             <div :class="getAvatar(charName)"></div>
           </div>
         </div>
-        <div class="room-set-wrap">
-          <c-status v-model="plans_template[selected_plan_index].room.manufacture[manufactureIndex].skip"
-                    :label="'跳过房间'"></c-status>
-          <c-status v-model="plans_template[selected_plan_index].room.manufacture[manufactureIndex].sort"
-                    :label="'顺序入驻'"></c-status>
-          <c-status v-model="plans_template[selected_plan_index].room.manufacture[manufactureIndex].autofill"
-                    :label="'补满空位'"></c-status>
-        </div>
+
+        <!--        <div class="room-set-wrap">-->
+        <!--          <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].skip"-->
+        <!--                    :label="'跳过房间'"></c-status>-->
+        <!--          <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].sort"-->
+        <!--                    :label="'顺序入驻'"></c-status>-->
+        <!--          <c-status v-model="plans_template[selected_plan_index].room.trading[tradingIndex].autofill"-->
+        <!--                    :label="'补满空位'"></c-status>-->
+        <!--        </div>-->
       </div>
 
       <!--  发电站-->
@@ -496,7 +493,7 @@ onMounted(() => {
         </div>
       </div>
       <!--     宿舍-->
-      <div class="room_bg dormitory" v-for="dormitoryIndex in index_list.slice(0,4)" :key="dormitoryIndex"
+      <div class="room_bg dormitory" v-for="dormitoryIndex in scheduleType.dormitory" :key="dormitoryIndex"
            @click="openPopup('dormitory',dormitoryIndex)">
         <div class="room-name"> 宿舍#{{ dormitoryIndex + 1 }}</div>
         <div class="room-avatar-sprite-wrap"
@@ -542,7 +539,7 @@ onMounted(() => {
   </div>
 
 
-  <c-popup v-model:visible="room_visible">
+  <c-popup v-model:visible="room_visible" :style="roomPopupStyle" >
 
     <div class="room-popup-wrap">
       <div class="room-popup-title">第{{ selected_plan_index + 1 }}班—第{{

@@ -5,6 +5,7 @@
       <nav-bar/>
     </div>
     <slot></slot>
+    <my-footer></my-footer>
   </div>
 
 </template>
@@ -22,7 +23,7 @@ import "/src/assets/css/store_v2.css";
 import "/src/assets/css/sprite_item.css";
 import "/src/assets/css/sprite_style.css";
 import "/src/assets/css/sprite_icon.css";
-import "/src/assets/css/common.css";
+import "/src/custom/css/btn.css";
 import "/src/assets/css/about.css";
 
 import "/src/assets/css/stage_v3.css";

@@ -1,6 +1,7 @@
 .room-wrap {
     display: flex;
-    width: 1200px;
+    width: 1300px;
+    margin: auto;
 }
 
 .schedule-control-wrap {
@@ -34,7 +35,8 @@
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: center;
-    width: 560px;
+    width: 700px;
+    padding: 110px 0;
 }
 
 .room-wrap-center {
@@ -58,7 +60,7 @@
     border-radius: 3px;
     flex-wrap: wrap;
     font-weight: 600;
-    height: 124px;
+    height: 94px;
 }
 
 .room_bg {
@@ -69,7 +71,7 @@
     border-radius: 3px;
     flex-wrap: wrap;
     font-weight: 600;
-    height: 124px;
+    height: 94px;
     box-shadow: 1px 1px 1px #eaeaea;
     /*height: 58px;*/
 }
@@ -107,31 +109,31 @@
 .trading {
     background-color: #e0f3ff;
     color: #0288d1;
-    width: 260px;
+    width: 210px;
 }
 
 .manufacture {
-    background-color: #fff2e5;
-    color: #ff7300;
-    width: 260px;
+    background-color: #FF5A0034;
+    color: #ff5a00;
+    width: 210px;
 }
 
 .power {
     background-color: #eeffe8;
     color: #43a047;
-    width: 260px;
+    width: 210px;
 }
 
 .control {
     background-color: #f2fff3;
     color: #1b5e20;
-    width: 420px;
+    width: 400px;
 }
 
 .dormitory {
     background-color: #f0f0f0;
     color: #006ce8;
-    width: 420px;
+    width: 400px;
 }
 
 .meeting {
@@ -201,9 +203,9 @@
 
 
 .room-avatar-sprite-wrap {
-    height: 70px;
-    width: 70px;
-    margin: 2px;
+    height: 60px;
+    width: 60px;
+    margin: 4px;
     position: relative;
     border-radius: 4px;
     box-shadow: var(--c-box-shadow);
@@ -213,9 +215,9 @@
 
 .room-avatar-sprite {
     position: absolute;
-    top: -56px;
-    left: -56px;
-    transform: scale(0.4);
+    top: calc((60px - 180px) / 2);
+    left: calc((60px - 180px) / 2);
+    transform: scale(calc(60 / 183));
 }
 
 .room-avatar-sprite-null {

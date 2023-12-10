@@ -1,11 +1,11 @@
 <template>
-  <div :style="popupStyle" class="popup_page">
+  <div :style="popupStyle" class="popup-wrap">
     <div class="popup_mask" @click="openAndClose(false)">
     </div>
 
     <div class="popup" :style="width_style">
       <slot name="header"></slot>
-      <div class="popup_context" :style="context_height_style">
+      <div class="popup-context" :style="context_height_style">
         <slot></slot>
       </div>
       <slot name="footer"></slot>
@@ -16,11 +16,10 @@
 
 <script setup>
 import {ref, watch} from "vue";
-
 const emit = defineEmits(["update:visible","update:modelValue"]);
-const props = defineProps(["modelValue", "visible", "width", "height"]);
+const props = defineProps(["modelValue", "visible", "width", "height",'style']);
 
-const width_style = `width: ${props.width}`;
+const width_style = props.style?props.style:`width: ${props.width}`;
 const context_height_style = `height:${props.height}`;
 
 // console.log(props.visible)
@@ -68,7 +67,7 @@ watch(
 </script>
 
 <style scoped>
-.popup_page {
+.popup-wrap {
   position: fixed;
   top: 0;
   left: 0;
@@ -100,7 +99,7 @@ watch(
   box-sizing: border-box;
 }
 
-.popup_context {
+.popup-context {
   width: 100%;
   max-height: 550px;
   overflow-y: auto;
