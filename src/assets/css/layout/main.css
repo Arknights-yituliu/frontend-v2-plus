@@ -1,12 +1,11 @@
 
 .container {
-  height: 100%;
-  width: 100%;
   background-color: var(--c-bg);
   color: var(--c-text-color);
   transition: all 0.3s;
   box-sizing: border-box;
-  padding-left: 300px;
+  padding-left: 250px;
+  position: absolute;
   /*background-color: red;*/
 }
 
