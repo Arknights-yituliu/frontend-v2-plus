@@ -2,10 +2,15 @@ a {
   text-decoration: none;
 }
 
+.maa-recruit-poster-wrap{
+
+}
+
 #maa_recruit_poster {
+  width: 100%;
   background: url("/image/website/立绘_梓兰_1.png") 0 110% / cover no-repeat, #444444;
   background-size: 500px;
-  background-attachment: fixed;
+  background-attachment: fixed
 }
 
 .bg {
@@ -14,7 +19,7 @@ a {
   width: 80%;
   max-width: 640px;
   opacity: 0.1;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 #maa_recruit_poster_main {

@@ -84,6 +84,7 @@ watch(
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 2001;
+
   /* display: none; */
 }
 
@@ -94,9 +95,11 @@ watch(
   margin: 10vh auto auto;
   width: 500px;
   background-color: var(--popup-card-bg);
-  border-radius: 4px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+  border-radius: 6px;
   box-sizing: border-box;
+  box-shadow: var(--c-box-shadow);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 
 .popup-context {

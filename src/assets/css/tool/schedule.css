@@ -4,7 +4,7 @@
 
 .room-wrap {
     display: flex;
-    width: 1200px;
+    flex-wrap: wrap;
     margin: auto;
 }
 
@@ -17,16 +17,25 @@
 
 .schedule-control-card {
     margin: 4px;
-    padding: 4px;
     border-radius: 4px;
     box-shadow: var(--c-box-shadow);
     background-color: var(--c-wrap-bg);
 }
 
+.schedule-control-header {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding:4px 0;
+    font-size: 20px;
+    font-weight: 600;
+    border-bottom: var(--c-border);
+}
+
 .schedule-control-option {
     display: flex;
     align-items: center;
-    padding: 8px 0;
+    padding: 4px 0;
 }
 
 .schedule-control-tip{
@@ -55,17 +64,16 @@
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: center;
-    width: 600px;
-    /*background-color: #0b73dc;*/
+    width: 590px;
+    /*background-color: red;*/
 }
 
 .room-wrap-center {
-    margin: 0 4px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     width: 320px;
-    /*background-color: #0b73dc;*/
+    /*background-color: red;*/
 }
 
 .room-wrap-right {
@@ -73,7 +81,7 @@
     flex-direction: column;
     justify-content: center;
     width: 200px;
-    /*background-color: #0b73dc;*/
+    /*background-color: red;*/
 }
 
 

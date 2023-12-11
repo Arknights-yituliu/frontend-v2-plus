@@ -1,5 +1,6 @@
 
 .container {
+  width: 100%;
   background-color: var(--c-bg);
   color: var(--c-text-color);
   transition: all 0.3s;

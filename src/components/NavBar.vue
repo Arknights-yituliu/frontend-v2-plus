@@ -62,7 +62,6 @@
 
 <script setup>
 import {ref, watch, computed, onMounted} from "vue";
-import {Sunny, Moon} from "@element-plus/icons-vue";
 import toolApi from "/src/api/tool";
 import {usePageContext} from "/src/renderer/usePageContext";
 import login from "/src/pages/survey/login.vue";

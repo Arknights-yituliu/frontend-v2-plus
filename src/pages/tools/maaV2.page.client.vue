@@ -277,7 +277,7 @@ onMounted(() => {
   <div class="maa-schedule-v2">
     <div class="schedule-control-wrap">
       <div class="schedule-control-card">
-
+        <div class="schedule-control-header">基建类型</div>
         <div class="schedule-control-option">
           <span>班次名称</span>
           <input class="input-base" v-model="plans_template[selected_plan_index].name"/>
