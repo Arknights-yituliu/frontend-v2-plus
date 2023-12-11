@@ -33,7 +33,9 @@
 }
 
 .stage_card_3_left{
-  width: 102px;
+  min-width: 84px;
+  width: 36%;
+  max-width: 120px;
   height: 100%;
   padding: 0 0;
   box-shadow: 2px 0 8px 4px #80808040;
@@ -58,6 +60,7 @@
   transform: scale(1.0);
   position: absolute;
   top: -50px;
+  left: calc(50% - 90px);
 }
 
 .stage_card_3_cover{
@@ -69,7 +72,7 @@
   color: #ff8438;
   font-size: 20px;
   font-weight: 600;
-  width: 100%;
+  width: 98%;
   height: 64px;
   vertical-align: bottom;
   text-align: center;
