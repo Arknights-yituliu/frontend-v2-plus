@@ -23,12 +23,18 @@ import "/src/assets/css/store_v2.css";
 import "/src/assets/css/sprite_item.css";
 import "/src/assets/css/sprite_style.css";
 import "/src/assets/css/sprite_icon.css";
-import "/src/custom/css/btn.css";
 import "/src/assets/css/about.css";
-
 import "/src/assets/css/stage_v3.css";
 
+// 通用样式
+import "/src/custom/css/btn.css";
+import "/src/custom/css/input.css";
+
+// svg字体
 import '/src/assets/svg/iconfont.css'
+
+
+
 // 旧版css，待修改
 
 import NavBar from "/src/components/NavBar.vue";
