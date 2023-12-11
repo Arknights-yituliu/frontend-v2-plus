@@ -109,9 +109,9 @@
 
 
 .stage_card_3_right{
-  /* width: 62%; */
+  width: 64%;
   height: 100%;
-  padding: 0 0px;
+  margin-left: 36%;
   /*background-color: rgb(112, 165, 42);*/
 }
 
@@ -120,7 +120,7 @@
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-evenly;
-  width: 144px;
+  width: 156px;
   height: 105px;
   margin: 0px auto;
   /*background-color: bisque;*/
@@ -129,30 +129,46 @@
 .stage_card_3_line{
   height: 28px;
   /*background-color: cadetblue;*/
-  display: flex;
+  /* display: flex; */
+  padding-left: 12px;
+  width: 144px;
 }
+
 .stage_card_3_line_text{
   font-size: 18px;
   font-weight: 600;
   color: var(--c-text-color);
-  width: 60px;
+  width: 56px;
   height: 28px;
   line-height: 32px;
-  padding: 0 0px 0 4px ;
-  /* display: inline-block; */
+  margin: 0 0px 0 4px ;
+  display: inline-block;
 }
 
 .stage_card_3_img{
   height: 28px;
-  width: 28px;
-  position: relative;
+  width: 20px;
+  float: left;
+  /* position: absolute; */
+}
+.stage_card_3_data{
+  width: 132px;
+  margin-left: 12px;
+  /* background-color: #389fff; */
+}
+.stage_card_3_line_bar{
+  background-color: #ff8438;
+  height: 4px;
 }
 
 .item-t3-sprite{
   transform: scale(.18);
-  position: absolute;
-  top: -77px;
-  left: -82px;
+  /* position: absolute; */
+  /* top: -77px; */
+  /* left: -82px; */
+  position: relative;
+  top: -72px;
+  left: -84px;
 }
 
 .item-detail-bar{

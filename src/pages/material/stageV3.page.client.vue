@@ -120,34 +120,31 @@
                 <div class="stage_card_3_img">
                   <div :class="getItemT3Sprite(stage.series.r4)"></div>
                 </div>
-                <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
-                <div class="stage_card_3_line_text">{{
-                    formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1)
-                  }}%
+                <div class="stage_card_3_data">
+                  <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
+                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%</div>
+                  <div class="stage_card_3_line_bar"></div>
                 </div>
-
               </div>
               <div class="stage_card_3_line">
                 <div class="stage_card_3_img">
                   <div :class="getItemT3Sprite(stage.series.r3)"></div>
                 </div>
-                <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
-                <div class="stage_card_3_line_text">{{
-                    formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1)
-                  }}%
+                <div class="stage_card_3_data">
+                  <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
+                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%</div>
+                  <div class="stage_card_3_line_bar"></div>
                 </div>
-
               </div>
               <div class="stage_card_3_line" v-show="stage.series.r2">
                 <div class="stage_card_3_img">
                   <div :class="getItemT3Sprite(stage.series.r2)"></div>
                 </div>
-                <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
-                <div class="stage_card_3_line_text">{{
-                    formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1)
-                  }}%
+                <div class="stage_card_3_data">
+                  <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
+                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%</div>
+                  <div class="stage_card_3_line_bar"></div>
                 </div>
-
               </div>
             </div>
             <div class="stage_card_3_markText">短期最优</div>
