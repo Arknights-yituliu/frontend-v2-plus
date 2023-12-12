@@ -7,7 +7,7 @@
     z-index: 1000;
     max-width: 95%;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-wrap-bg);
+    background-color: var(--c-bg-transparent-white);
     margin: auto auto 6px;
     padding: 4px 0 4px 16px;
 }
@@ -164,7 +164,7 @@
     margin: 4px auto;
     padding: 4px;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-wrap-bg);
+    background-color: var(--c-bg-transparent-white);
     border-radius: 2px;
     box-sizing: border-box;
 }

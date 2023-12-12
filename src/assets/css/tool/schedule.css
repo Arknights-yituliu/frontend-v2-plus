@@ -1,5 +1,22 @@
-.maa-schedule-v2{
+.maa-schedule-v2 {
+}
+
+.schedule-header {
     width: 100%;
+    height: 50px;
+    display: flex;
+    border-bottom: var(--c-border);
+    align-items: center;
+}
+
+.schedule-header-title {
+    padding: 8px;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.btn-desc {
+    padding: 0 8px;
 }
 
 .room-wrap {
@@ -16,20 +33,20 @@
 }
 
 .schedule-control-card {
-    margin: 4px;
+    margin: 8px;
     border-radius: 4px;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-wrap-bg);
+    background-color: var(--c-bg-transparent-white);
 }
 
-.schedule-control-header {
+.schedule-control-card-header {
     display: block;
-    width: 100%;
-    text-align: center;
-    padding:4px 0;
-    font-size: 20px;
-    font-weight: 600;
+    padding: 8px;
     border-bottom: var(--c-border);
+}
+
+.schedule-control-card-body {
+    padding: 4px;
 }
 
 .schedule-control-option {
@@ -38,17 +55,15 @@
     padding: 4px 0;
 }
 
-.schedule-control-tip{
+.schedule-control-tip {
     padding: 0 12px;
     margin: 4px 0;
     color: grey;
     font-style: italic;
 }
 
-.schedule-control-option span{
-    padding:2px 8px 2px 4px;
-    font-size: 16px;
-    font-weight: bolder;
+.schedule-control-option span {
+    padding: 2px 8px 2px 4px;
 }
 
 .room-times-wrap {
@@ -85,7 +100,6 @@
 }
 
 
-
 .room-template {
     padding: 4px;
     display: flex;
@@ -96,15 +110,15 @@
     font-weight: 600;
     height: 84px;
     box-shadow: var(--c-box-shadow);
-    --room-operator-short:180px;
-    --room-operator-long:300px;
+    --room-operator-short: 180px;
+    --room-operator-long: 300px;
 }
 
-.blank{
+.blank {
     box-shadow: none;
 }
 
-.room-product-wrap{
+.room-product-wrap {
     width: 30px;
     height: 30px;
     position: relative;
@@ -117,12 +131,12 @@
     transform: scale(.163);
 }
 
-.room-info{
+.room-info {
     display: flex;
     align-items: center;
 }
 
-.room-set-wrap{
+.room-set-wrap {
 }
 
 .room-name {
@@ -183,7 +197,7 @@
     position: relative;
     border-radius: 4px;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-wrap-bg);
+    background-color: var(--c-bg-transparent-white);
 }
 
 .room-avatar-sprite {
@@ -214,10 +228,10 @@
     justify-content: flex-start;
 }
 
-.room-set span{
-    padding:2px 8px 2px 4px;
+.room-set span {
+    padding: 2px 8px 2px 4px;
     font-size: 16px;
-    font-weight: bolder;
+
 }
 
 .check-image-wrap {
@@ -247,10 +261,10 @@
     border: var(--c-border);
 }
 
-.selected-operator-wrap span{
-    padding:2px 8px 2px 4px;
+.selected-operator-wrap span {
+    padding: 2px 8px 2px 4px;
     font-size: 16px;
-    font-weight: bolder;
+
 }
 
 .room-popup-wrap {
@@ -262,10 +276,10 @@
     text-align: center;
     font-size: 20px;
     font-weight: 600;
-    margin-bottom:12px;
+    margin-bottom: 12px;
 }
 
-.settlement_operator{
+.settlement_operator {
     display: flex;
     height: 74px;
     width: 100%;

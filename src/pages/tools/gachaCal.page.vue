@@ -2118,7 +2118,7 @@ export const documentProps = {
 
 .el-collapse-item{
   box-shadow: var(--c-box-shadow);
-  background-color: var(--c-wrap-bg);
+  background-color: var(--c-bg-transparent-white);
 }
 </style>
 

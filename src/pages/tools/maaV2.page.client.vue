@@ -25,13 +25,12 @@ const roomTypeMenu = [
 ]
 
 function getRoomLabel(type) {
-  for(const room of roomTypeMenu){
-     if(room.value===type){
-       return room.label
-     }
+  for (const room of roomTypeMenu) {
+    if (room.value === type) {
+      return room.label
+    }
   }
 }
-
 
 
 let characterIdAndName = {}
@@ -274,138 +273,145 @@ onMounted(() => {
 
 
 <template>
+  <div class="schedule-header">
+    <span class="schedule-header-title">排班生成器</span>
+    <c-button :color="'blue'" >保存排班文件</c-button>
+    <c-button :color="'blue'"  @click="createScheduleJsonFile()">导出排班文件</c-button>
+    <span class="btn-desc">输入文件ID导入排班文件</span>
+    <input class="input-base" v-model="plans_template.id"/>
+  </div>
   <div class="maa-schedule-v2">
     <div class="schedule-control-wrap">
       <div class="schedule-control-card">
-        <div class="schedule-control-header">基建类型</div>
-        <div class="schedule-control-option">
-          <span>班次名称</span>
-          <input class="input-base" v-model="plans_template[selected_plan_index].name"/>
-          <span>班次描述</span>
-          <input class="input-base" v-model="plans_template[selected_plan_index].description"/>
-        </div>
+        <div class="schedule-control-card-header">基建类型</div>
+        <div class="schedule-control-card-body">
+          <div class="schedule-control-option">
+            <span>班次名称</span>
+            <input class="input-base" v-model="plans_template[selected_plan_index].name"/>
+            <span>班次描述</span>
+            <input class="input-base" v-model="plans_template[selected_plan_index].description"/>
+          </div>
 
-        <div class="schedule-control-option">
-          <span>基建模式</span>
-          <c-button :color="'blue'" :status="menu.label===selectedScheduleType.label" @click="chooseScheduleType(menu)"
-                    v-for="(menu,index) in schedule_menu" :key="index">{{ menu.label }}
-          </c-button>
-        </div>
+          <div class="schedule-control-option">
+            <span>基建模式</span>
+            <c-button :color="'blue'" :status="menu.label===selectedScheduleType.label"
+                      @click="chooseScheduleType(menu)"
+                      v-for="(menu,index) in schedule_menu" :key="index">{{ menu.label }}
+            </c-button>
+          </div>
 
-        <div class="schedule-control-option">
-          <span>换班次数</span>
-          <c-button :color="'blue'" :status="(index+1)===scheduleType.planTimes.length"
-                    @click="choosePlanTimes(index)"
-                    v-for="index in indexList.slice(1)" :key="index">{{ index + 1 }}
-          </c-button>
-        </div>
-        <div class="schedule-control-option">
-          <span>当前班次</span>
-          <c-button :color="'blue'" :status="index === selected_plan_index"
-                    v-for="index in scheduleType.planTimes" :key="index"
-                    @click="currentPlan(index)" class="room_times">
-            第{{ index + 1 }}班
-          </c-button>
-        </div>
-      </div>
-
-      <div class="schedule-control-card">
-        <div class="schedule-control-option">
-          <span>第{{ selected_plan_index + 1 }}班是否使用无人机</span>
-          <c-switch v-model="plans_template[selected_plan_index].drones.enable"></c-switch>
-        </div>
-
-        <div class="schedule-control-option">
-          <span>目标房间</span>
-          <c-button :color="'blue'"
-                    :status="'trading' === plans_template[selected_plan_index].drones.room"
-                    @click="setDrones('room','trading')">
-            贸易站
-          </c-button>
-          <c-button :color="'blue'"
-                    :status="'manufacture' === plans_template[selected_plan_index].drones.room"
-                    @click="setDrones('room','manufacture')">
-            制造站
-          </c-button>
-        </div>
-        <div class="schedule-control-option">
-          <span>房间编号</span>
-          <c-button :color="'blue'"
-                    :status="index === plans_template[selected_plan_index].drones.index"
-                    @click="setDrones('index',index)"
-                    v-for="index in indexList.slice(0,5)" :key="index">
-            {{ index + 1 }}
-          </c-button>
-        </div>
-
-        <div class="schedule-control-option">
-          <span>换班前后</span>
-          <c-button :color="'blue'"
-                    :status="'pre' === plans_template[selected_plan_index].drones.order"
-                    @click="setDrones('order','pre')">
-            换班前
-          </c-button>
-          <c-button :color="'blue'"
-                    :status="'post' === plans_template[selected_plan_index].drones.order"
-                    @click="setDrones('order','post')">
-            换班后
-          </c-button>
-        </div>
-      </div>
-
-      <div class="schedule-control-card">
-        <div class="schedule-control-option">
-          <span>第{{ selected_plan_index + 1 }}班是否使用菲亚梅塔</span>
-          <c-switch v-model="plans_template[selected_plan_index].Fiammetta.enable"></c-switch>
-        </div>
-
-        <div class="schedule-control-option">
-          <span>恢复目标</span>
-          <div class="room-avatar-sprite-wrap" @click="Fiammetta_target_visible=true">
-            <div :class="getAvatar(plans_template[selected_plan_index].Fiammetta.target)"></div>
+          <div class="schedule-control-option">
+            <span>换班次数</span>
+            <c-button :color="'blue'" :status="(index+1)===scheduleType.planTimes.length"
+                      @click="choosePlanTimes((index+1))"
+                      v-for="index in indexList.slice(1)" :key="index">{{ index + 1 }}
+            </c-button>
+          </div>
+          <div class="schedule-control-option">
+            <span>当前班次</span>
+            <c-button :color="'blue'" :status="index === selected_plan_index"
+                      v-for="index in scheduleType.planTimes" :key="index"
+                      @click="currentPlan(index)" class="room_times">
+              第{{ index + 1 }}班
+            </c-button>
           </div>
         </div>
+      </div>
 
-        <div class="schedule-control-option">
-          <span>换班前后</span>
-          <c-button :color="'blue'"
-                    :status="'pre' === plans_template[selected_plan_index].Fiammetta.order"
-                    @click="setFiammetta('order','pre')">
-            换班前
-          </c-button>
-          <c-button :color="'blue'"
-                    :status="'post' === plans_template[selected_plan_index].Fiammetta.order"
-                    @click="setFiammetta('order','post')">
-            换班后
-          </c-button>
+      <div class="schedule-control-card">
+        <div class="schedule-control-card-header">无人机使用设置</div>
+        <div class="schedule-control-card-body">
+          <div class="schedule-control-option">
+            <span>第{{ selected_plan_index + 1 }}班是否使用无人机</span>
+            <c-switch v-model="plans_template[selected_plan_index].drones.enable"></c-switch>
+          </div>
+
+          <div class="schedule-control-option">
+            <span>目标房间</span>
+            <c-button :color="'blue'"
+                      :status="'trading' === plans_template[selected_plan_index].drones.room"
+                      @click="setDrones('room','trading')">
+              贸易站
+            </c-button>
+            <c-button :color="'blue'"
+                      :status="'manufacture' === plans_template[selected_plan_index].drones.room"
+                      @click="setDrones('room','manufacture')">
+              制造站
+            </c-button>
+          </div>
+          <div class="schedule-control-option">
+            <span>房间编号</span>
+            <c-button :color="'blue'"
+                      :status="(index+1) === plans_template[selected_plan_index].drones.index"
+                      @click="setDrones('index',(index+1))"
+                      v-for="index in indexList.slice(0,5)" :key="index">
+              {{ index + 1 }}
+            </c-button>
+          </div>
+
+          <div class="schedule-control-option">
+            <span>换班前后</span>
+            <c-button :color="'blue'"
+                      :status="'pre' === plans_template[selected_plan_index].drones.order"
+                      @click="setDrones('order','pre')">
+              换班前
+            </c-button>
+            <c-button :color="'blue'"
+                      :status="'post' === plans_template[selected_plan_index].drones.order"
+                      @click="setDrones('order','post')">
+              换班后
+            </c-button>
+          </div>
         </div>
       </div>
 
       <div class="schedule-control-card">
-        <div class="schedule-control-option">
-          <span>作业名称</span>
-          <input class="input-base" v-model="scheduleInfo.title"/>
-        </div>
-        <div class="schedule-control-option">
-          <span>描述(非必填)</span>
-          <input class="input-base" v-model="scheduleInfo.description"/>
-        </div>
-        <div class="schedule-control-option">
-          <span>作者(非必填)</span>
-          <input class="input-base" v-model="scheduleInfo.author"/>
-        </div>
-        <div class="schedule-control-option">
-          <span>保存导出</span>
-          <c-button :color="'blue'" :status="true">保存排班文件</c-button>
-          <c-button :color="'blue'" :status="true" @click="createScheduleJsonFile()">导出排班文件</c-button>
-        </div>
-        <p class="schedule-control-tip">*导出ID为：{{ scheduleInfo.id }}</p>
-        <div class="schedule-control-option">
-          <span>导入排班文件</span>
-          <input class="input-base" v-model="plans_template[selected_plan_index].name"/>
-        </div>
-        <p class="schedule-control-tip">*导出的文件名即为id</p>
+        <div class="schedule-control-card-header">菲亚梅塔设置</div>
+        <div class="schedule-control-card-body">
+          <div class="schedule-control-option">
+            <span>第{{ selected_plan_index + 1 }}班是否使用菲亚梅塔</span>
+            <c-switch v-model="plans_template[selected_plan_index].Fiammetta.enable"></c-switch>
+          </div>
 
+          <div class="schedule-control-option">
+            <span>恢复目标</span>
+            <div class="room-avatar-sprite-wrap" @click="Fiammetta_target_visible=true">
+              <div :class="getAvatar(plans_template[selected_plan_index].Fiammetta.target)"></div>
+            </div>
+          </div>
+
+          <div class="schedule-control-option">
+            <span>换班前后</span>
+            <c-button :color="'blue'"
+                      :status="'pre' === plans_template[selected_plan_index].Fiammetta.order"
+                      @click="setFiammetta('order','pre')">
+              换班前
+            </c-button>
+            <c-button :color="'blue'"
+                      :status="'post' === plans_template[selected_plan_index].Fiammetta.order"
+                      @click="setFiammetta('order','post')">
+              换班后
+            </c-button>
+          </div>
+        </div>
+      </div>
+
+      <div class="schedule-control-card">
+        <div class="schedule-control-card-header">排班表信息</div>
+        <div class="schedule-control-card-body">
+          <div class="schedule-control-option">
+            <span>作业名称&emsp;&emsp;</span>
+            <input class="input-base" v-model="scheduleInfo.title"/>
+          </div>
+          <div class="schedule-control-option">
+            <span>描述（选填）</span>
+            <input class="input-base" v-model="scheduleInfo.description"/>
+          </div>
+          <div class="schedule-control-option">
+            <span>作者（选填）</span>
+            <input class="input-base" v-model="scheduleInfo.author"/>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -598,7 +604,8 @@ onMounted(() => {
           <c-switch v-model="plans_template[selected_plan_index].room[selected_room_type][selected_room_index].sort">
           </c-switch>
           <span>是否补满空位</span>
-          <c-switch v-model="plans_template[selected_plan_index].room[selected_room_type][selected_room_index].autofill">
+          <c-switch
+              v-model="plans_template[selected_plan_index].room[selected_room_type][selected_room_index].autofill">
           </c-switch>
           <span> 是否跳过房间</span>
           <c-switch v-model="plans_template[selected_plan_index].room[selected_room_type][selected_room_index].skip">

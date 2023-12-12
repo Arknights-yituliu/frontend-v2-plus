@@ -9,7 +9,7 @@
     padding: 4px;
     display: flex;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-wrap-bg);
+    background-color: var(--c-bg-transparent-white);
     margin: 4px;
     width: 500px;
 }
