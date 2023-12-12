@@ -97,9 +97,9 @@
       </div>
       <!-- 卡片区域 -->
       <div id="stage_3">
+        {{ item_card_data[1] }}
         <!-- 正式卡片 -->
-        <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
-             @click="getItemTableData(index)">
+        <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index" @click="getItemTableData(index)">
           <!-- 长期最优 -->
           <div class="stage_card_3_left">
             <div class="img_wrap" style="position: relative;">
@@ -122,8 +122,10 @@
                 </div>
                 <div class="stage_card_3_data">
                   <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%</div>
-                  <div class="stage_card_3_line_bar"></div>
+                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%
+                  </div>
+                  <div class="stage_card_3_line_bar"
+                    :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, 1.1)"></div>
                 </div>
               </div>
               <div class="stage_card_3_line">
@@ -132,8 +134,10 @@
                 </div>
                 <div class="stage_card_3_data">
                   <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%</div>
-                  <div class="stage_card_3_line_bar"></div>
+                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%
+                  </div>
+                  <div class="stage_card_3_line_bar"
+                    :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, 0.95)"></div>
                 </div>
               </div>
               <div class="stage_card_3_line" v-show="stage.series.r2">
@@ -142,8 +146,10 @@
                 </div>
                 <div class="stage_card_3_data">
                   <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%</div>
-                  <div class="stage_card_3_line_bar"></div>
+                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
+                  </div>
+                  <div class="stage_card_3_line_bar"
+                    :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, 0.90)"></div>
                 </div>
               </div>
             </div>
@@ -241,7 +247,7 @@
               {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
             </template>
           </el-table-column>
-          <el-table-column prop="spm" label="SPM" :width="td_4" sortable/>
+          <el-table-column prop="spm" label="SPM" :width="td_4" sortable />
           <el-table-column prop="leT5Efficiency" label="T4效率" :width="td_4" sortable>
             <template #default="scope">
               {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
@@ -281,7 +287,7 @@
       </div>
 
       <el-table :data="orundumRecommendedStage" stripe style="width: 100%;height: 400px">
-        <el-table-column prop="stageCode" label="关卡名"/>
+        <el-table-column prop="stageCode" label="关卡名" />
         <el-table-column label="每理智可搓玉">
           <template #default="scope">
             <div style="display: flex; align-items: center">
@@ -302,8 +308,8 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率"/>
-        <el-table-column prop="stageEfficiency" label="关卡效率"/>
+        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
+        <el-table-column prop="stageEfficiency" label="关卡效率" />
       </el-table>
 
       <!-- 历史活动 -->
@@ -322,41 +328,41 @@
 
       <table class="act-table">
         <tbody>
-        <tr>
-          <td class="act-name">活动名称</td>
-          <td v-for="(item, index) in itemIdList" :key="index" >
-            <div class="act-table-item-wrap" style="height: 36px">
-              <div :class="getActTableItemSprite(item.id)"></div>
-            </div>
-          </td>
-        </tr>
-        <tr v-for="(act, index) in historyActItemTable" :key="index">
-          <td class="act-name">{{ act.zoneName }}</td>
-          <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
-            <div class="act-table-item-wrap" v-if="item.isUp">
-              <div :class="getActTableItemSprite(item.itemId)"></div>
-              <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
-              {{ formatNumber(item.stageEfficiency, 2) }}%
-            </span>
-            </div>
-          </td>
-        </tr>
+          <tr>
+            <td class="act-name">活动名称</td>
+            <td v-for="(item, index) in itemIdList" :key="index">
+              <div class="act-table-item-wrap" style="height: 36px">
+                <div :class="getActTableItemSprite(item.id)"></div>
+              </div>
+            </td>
+          </tr>
+          <tr v-for="(act, index) in historyActItemTable" :key="index">
+            <td class="act-name">{{ act.zoneName }}</td>
+            <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
+              <div class="act-table-item-wrap" v-if="item.isUp">
+                <div :class="getActTableItemSprite(item.itemId)"></div>
+                <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
+                  {{ formatNumber(item.stageEfficiency, 2) }}%
+                </span>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
 
       <div class="act-table-simple-wrap">
         <table class="act-table-simple">
-          <tr v-for="(act,index) in historyActItemList" :key="index">
+          <tr v-for="(act, index) in historyActItemList" :key="index">
             <td class="act-name-simple">{{ act.zoneName }}</td>
-            <td v-for="(stage,index) in  act.actStageList" :key="index">
+            <td v-for="(stage, index) in  act.actStageList" :key="index">
               <div class="act-drop-table">
                 <div class="act-table-simple-item-wrap">
                   <div :class="getActTableSimpleItemSprite(stage.itemId)"></div>
                 </div>
                 <span class="act-drop-detail">
-              {{ stage.stageCode }} <br>
-              {{ formatNumber(stage.stageEfficiency, 2) }}%
-              </span>
+                  {{ stage.stageCode }} <br>
+                  {{ formatNumber(stage.stageEfficiency, 2) }}%
+                </span>
               </div>
             </td>
           </tr>
@@ -382,7 +388,7 @@
 
 <script setup>
 import stageApi from '/src/api/stage'
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import item_series from '/src/static/json/material/item_series.json'
 import footComponent from "/src/components/FootComponentV3.vue";
 
@@ -411,10 +417,10 @@ let selected_item = ref({
     date: '2023-12-31'
   },
   storeCostPerf: [
-    {token: '4005', costPerf: 0.75},
-    {token: 'EPGS_COIN', costPerf: 0.75},
-    {token: 'REP_COIN', costPerf: 0.75},
-    {token: '4004', costPerf: 0.75}
+    { token: '4005', costPerf: 0.75 },
+    { token: 'EPGS_COIN', costPerf: 0.75 },
+    { token: 'REP_COIN', costPerf: 0.75 },
+    { token: '4004', costPerf: 0.75 }
   ]
 })
 
@@ -449,7 +455,7 @@ function getItemCardData() {
       leT5MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT5Efficiency'),
       leT4MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT4Efficiency'),
       leT3MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT3Efficiency'),
-      series: {r4: '', r3: '', r2: '', r1: ''}
+      series: { r4: '', r3: '', r2: '', r1: '' }
     }
 
     //获得该材料系列的上下级材料的物品id
@@ -534,6 +540,72 @@ function getActTableItemSprite(id) {
 
 function getActTableSimpleItemSprite(id) {
   return "bg-" + id + " act-table-simple-item-sprite";
+}
+
+function getLineBarLength(T2eff, T3eff, T4eff, stageEff) {
+  // 暂时是单层的，所以代码看起来可能比较乱
+  let T2Color = "#00a2a2 ";
+  let T3Color = "#168afa ";
+  let T4Color = "#7446ff ";
+  let T5Color = "#e85d06";
+  if (T2eff > 0.1) {
+    T4Color = T2Color;
+    T4eff = T2eff;
+  }
+  if (T3eff > 0.1) {
+    T4Color = T3Color;
+    T4eff = T3eff;
+  }
+  let stageEffColor = "rgba(0, 0, 0, 0.3) ";
+  let standardColor = "rgba(0, 0, 0, 0.1) ";
+  let T4Layer = "linear-gradient(to right ,";
+  // Tx效率层
+  if (T4eff < 0.2) {
+    T4Layer = T4Layer + T4Color + T4eff * 83.33 + "%,rgba(0, 255, 0, 0) " + T4eff * 83.33 + "%)"
+  } else {
+    T4Layer = T4Layer + T4Color + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ,"
+    if (T4eff < 0.4) {
+      T4Layer = T4Layer + T4Color + 0.2 * 83.33 + "% " + T4eff * 83.33 + "%,rgba(0, 255, 0, 0) " + T4eff * 83.33 + "%)"
+    } else {
+      T4Layer = T4Layer + T4Color + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ,"
+      if (T4eff < 0.6) {
+        T4Layer = T4Layer + T4Color + 0.4 * 83.33 + "% " + T4eff * 83.33 + "%,rgba(0, 255, 0, 0) " + T4eff * 83.33 + "%)"
+      } else {
+        T4Layer = T4Layer + T4Color + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ,"
+        if (T4eff < 0.8) {
+          T4Layer = T4Layer + T4Color + 0.6 * 83.33 + "% " + T4eff * 83.33 + "%,rgba(0, 255, 0, 0) " + T4eff * 83.33 + "%)"
+        } else {
+          T4Layer = T4Layer + T4Color + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ,"
+          if (T4eff < 1) {
+            T4Layer = T4Layer + T4Color + 0.8 * 83.33 + "% " + T4eff * 83.33 + "%,rgba(0, 255, 0, 0) " + T4eff * 83.33 + "%)"
+          } else {
+            T4Layer = T4Layer + T4Color + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.99 * 83.33 + "% " + 1 * 83.33 + "% ,"
+            T4Layer = T4Layer + T5Color + 1 * 83.33 + "% " + T4eff * 83.33 + "%,rgba(0, 255, 0, 0) " + T4eff * 83.33 + "%)"
+          }
+        }
+      }
+    }
+  }
+  // 关卡效率层
+  let stageLayer = "linear-gradient(to right ," + stageEffColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ," + stageEffColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ," + stageEffColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ,";
+  if (stageEff < 0.8) {
+    stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+  } else {
+    stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ,"
+    if (T4eff < 1) {
+      stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+    } else {
+      stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.99 * 83.33 + "% " + 1 * 83.33 + "% ,"
+      stageLayer = stageLayer + stageEffColor + 1 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+    }
+  }
+
+
+  // 默认显示5个格子
+  // let standardLayer = "linear-gradient(to right ," + standardColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ," + standardColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ," + standardColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ," + standardColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ," + standardColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.99 * 83.33 + "% " + 83.33 + "% ," + standardColor + 83.33 + "% 101%)";
+  let standardLayer = "linear-gradient(to right ," + standardColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ," + standardColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ," + standardColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ," + standardColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ," + standardColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 83.33 + "% 101%)";
+  // return "background:" +  stageLayer + ";"
+  return "background:" + T4Layer +"," + stageLayer + "," + standardLayer + ";";
 }
 
 /**
