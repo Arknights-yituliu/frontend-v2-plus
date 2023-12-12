@@ -149,7 +149,7 @@
                   <div class="stage_card_3_line_text">{{ formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, 0.90)"></div>
+                    :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, 0.85)"></div>
                 </div>
               </div>
             </div>
@@ -541,7 +541,7 @@ function getActTableItemSprite(id) {
 function getActTableSimpleItemSprite(id) {
   return "bg-" + id + " act-table-simple-item-sprite";
 }
-
+let debug = "";
 function getLineBarLength(T2eff, T3eff, T4eff, stageEff) {
   // 暂时是单层的，所以代码看起来可能比较乱
   let T2Color = "#00a2a2 ";
@@ -592,7 +592,7 @@ function getLineBarLength(T2eff, T3eff, T4eff, stageEff) {
     stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
   } else {
     stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ,"
-    if (T4eff < 1) {
+    if (stageEff < 1) {
       stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
     } else {
       stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.99 * 83.33 + "% " + 1 * 83.33 + "% ,"
@@ -604,7 +604,6 @@ function getLineBarLength(T2eff, T3eff, T4eff, stageEff) {
   // 默认显示5个格子
   // let standardLayer = "linear-gradient(to right ," + standardColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ," + standardColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ," + standardColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ," + standardColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ," + standardColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.99 * 83.33 + "% " + 83.33 + "% ," + standardColor + 83.33 + "% 101%)";
   let standardLayer = "linear-gradient(to right ," + standardColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ," + standardColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ," + standardColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ," + standardColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ," + standardColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 83.33 + "% 101%)";
-  // return "background:" +  stageLayer + ";"
   return "background:" + T4Layer +"," + stageLayer + "," + standardLayer + ";";
 }
 
