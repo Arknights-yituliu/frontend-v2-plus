@@ -4,7 +4,7 @@
       <a class="">查看其他产物详情</a>
       <el-switch @click="changePie()" v-model="byProductFlag"></el-switch>
       <br/>
-      <a class="">{{ selectedStageCode }}的理智转化效率是{{ stageEfficiency }}%</a>
+      <a class="">{{ selectedStageCode }}的理智转化效率是{{ stageEfficiency.toFixed(2) }}%</a>
     </div>
     <div class="zone_table_wrap">
       <div class="stage_type">

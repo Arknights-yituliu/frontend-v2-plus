@@ -1,97 +1,108 @@
 <template>
-  <div id="maa_recruit_poster">
-    <div id="maa_recruit_poster_main">
-      <div id="poster_title">
-        <div id="poster_title_main">公开招募大数据</div>
-        <div id="poster_title_sub">
-          Recruit Big Data
-          <a style="font-size: 15px">更新时间：{{ updateTime }}</a>
-        </div>
-      </div>
-
-      <div id="poster_content">
-        <div class="poster_block" style="margin-top: 0vw">
-          <div class="poster_block_number">1</div>
-          <div class="poster_block_title" style="margin-top: 0">各稀有度Tag<span class="text_special">出现的概率</span></div>
-          <div class="poster_block_content pie_all" id="chart2" ref="chart"></div>
-          <div class="probabilityDescribe">
-            <table>
-              <tr>
-                <td>六星：{{ getProbability(maaData.topOperator, maaData.maaTagsDataCount) }}%</td>
-                <td>五星：{{ getProbability(maaData.seniorOperatorCount, maaData.maaTagsDataCount) }}%</td>
-              </tr>
-              <tr>
-                <td>四星：{{ getProbability(maaData.rareOperatorCount, maaData.maaTagsDataCount) }}%</td>
-                <td>三星：{{ getProbability(maaData.commonOperatorCount, maaData.maaTagsDataCount) }}%</td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <div class="poster_block">
-          <div class="poster_block_number">2</div>
-          <div class="poster_block_title">
-            所有的<span class="text_special">{{ maaData.maaTagsDataCount }}条</span>数据中
-          </div>
-          <div class="poster_block_content">
-            <div class="poster_block_p1">
-              有<span class="text_special">{{ maaData.topOperator }}次</span>高级资深干员
-            </div>
-            <div class="poster_block_p1"></div>
-            <div class="poster_block_p2">你是欧罗巴的贵族，</div>
-            <div class="poster_block_p2">还是乌干达的酋长？</div>
-          </div>
-        </div>
-        <div class="poster_block">
-          <div class="poster_block_number">3</div>
-          <div class="poster_block_title">
-            火神仅出现了<span class="text_special">{{ maaData.vulcan }}次</span>
-          </div>
-          <div class="poster_block_content">
-            <div class="poster_block_p1">
-              占到了5星tag的<span class="text_special">{{ getProbability(maaData.vulcan, maaData.seniorOperatorCount) }}%</span>
-            </div>
-            <div class="poster_block_p1"></div>
-            <div class="poster_block_p2">那因陀罗呢？</div>
-          </div>
-        </div>
-        <div class="poster_block">
-          <div class="poster_block_number">4</div>
-          <div class="poster_block_title">
-            在<span class="text_special">{{ maaData.seniorOperator }}次</span>资深干员中
-          </div>
-          <div class="poster_block_content">
-            <div class="poster_block_p1">
-              出现了<span class="text_special">{{ maaData.topAndSeniorOperator }}次</span>高级资深干员
-            </div>
-            <div class="poster_block_p1"></div>
-            <div class="poster_block_p2">我的黄票！<br />这俩TAG能不能拆开用啊！</div>
+  <div class="maa-recruit-poster-wrap">
+    <div id="maa_recruit_poster">
+      <div id="maa_recruit_poster_main">
+        <div id="poster_title">
+          <div id="poster_title_main">公开招募大数据</div>
+          <div id="poster_title_sub">
+            Recruit Big Data
+            <a style="font-size: 15px">更新时间：{{ updateTime }}</a>
           </div>
         </div>
 
-        <div class="poster_block">
-          <div class="poster_block_number">5</div>
-          <div class="poster_block_title">
-            小车的出率有<span class="text_special">{{ getProbability(maaData.robot, maaData.maaTagsDataCount) }}%</span>
-          </div>
-          <div class="poster_block_content">
-            <div class="poster_block_p1">
-              但其中<span class="text_special">{{ getProbability(maaData.robotChoice, maaData.robot) }}%</span>面临黄票的诱惑
+        <div id="poster_content">
+          <div class="poster_block" style="margin-top: 0vw">
+            <div class="poster_block_number">1</div>
+            <div class="poster_block_title" style="margin-top: 0">各稀有度Tag<span
+                class="text_special">出现的概率</span></div>
+            <div class="poster_block_content pie_all" id="chart2" ref="chart"></div>
+            <div class="probabilityDescribe">
+              <table>
+                <tr>
+                  <td>六星：{{ getProbability(maaData.topOperator, maaData.maaTagsDataCount) }}%</td>
+                  <td>五星：{{ getProbability(maaData.seniorOperatorCount, maaData.maaTagsDataCount) }}%</td>
+                </tr>
+                <tr>
+                  <td>四星：{{ getProbability(maaData.rareOperatorCount, maaData.maaTagsDataCount) }}%</td>
+                  <td>三星：{{ getProbability(maaData.commonOperatorCount, maaData.maaTagsDataCount) }}%</td>
+                </tr>
+              </table>
             </div>
-            <div class="poster_block_p1"></div>
-            <div class="poster_block_p2">Robot or certificates,</div>
-            <div class="poster_block_p2">that is the question.</div>
+          </div>
+          <div class="poster_block">
+            <div class="poster_block_number">2</div>
+            <div class="poster_block_title">
+              所有的<span class="text_special">{{ maaData.maaTagsDataCount }}条</span>数据中
+            </div>
+            <div class="poster_block_content">
+              <div class="poster_block_p1">
+                有<span class="text_special">{{ maaData.topOperator }}次</span>高级资深干员
+              </div>
+              <div class="poster_block_p1"></div>
+              <div class="poster_block_p2">你是欧罗巴的贵族，</div>
+              <div class="poster_block_p2">还是乌干达的酋长？</div>
+            </div>
+          </div>
+          <div class="poster_block">
+            <div class="poster_block_number">3</div>
+            <div class="poster_block_title">
+              火神仅出现了<span class="text_special">{{ maaData.vulcan }}次</span>
+            </div>
+            <div class="poster_block_content">
+              <div class="poster_block_p1">
+                占到了5星tag的<span class="text_special">{{
+                  getProbability(maaData.vulcan, maaData.seniorOperatorCount)
+                }}%</span>
+              </div>
+              <div class="poster_block_p1"></div>
+              <div class="poster_block_p2">那因陀罗呢？</div>
+            </div>
+          </div>
+          <div class="poster_block">
+            <div class="poster_block_number">4</div>
+            <div class="poster_block_title">
+              在<span class="text_special">{{ maaData.seniorOperator }}次</span>资深干员中
+            </div>
+            <div class="poster_block_content">
+              <div class="poster_block_p1">
+                出现了<span class="text_special">{{ maaData.topAndSeniorOperator }}次</span>高级资深干员
+              </div>
+              <div class="poster_block_p1"></div>
+              <div class="poster_block_p2">我的黄票！<br/>这俩TAG能不能拆开用啊！</div>
+            </div>
+          </div>
+
+          <div class="poster_block">
+            <div class="poster_block_number">5</div>
+            <div class="poster_block_title">
+              小车的出率有<span class="text_special">{{
+                getProbability(maaData.robot, maaData.maaTagsDataCount)
+              }}%</span>
+            </div>
+            <div class="poster_block_content">
+              <div class="poster_block_p1">
+                但其中<span class="text_special">{{ getProbability(maaData.robotChoice, maaData.robot) }}%</span>面临黄票的诱惑
+              </div>
+              <div class="poster_block_p1"></div>
+              <div class="poster_block_p2">Robot or certificates,</div>
+              <div class="poster_block_p2">that is the question.</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div id="poster_foot">
-        <a href="https://maa.plus"
-          ><div class="poster_button" style="width: 270px; margin-right: 0px">
-            {{ maaData.maaTagsDataCount }}条数据 来自
-            <span style="color: orange">MaaAssistantArknights</span>
-          </div></a
-        >
-        <a href="https://yituliu.site"><div class="poster_button" style="width: 64px; text-align: center">返回主站</div></a>
+        <div id="poster_foot">
+          <a href="https://maa.plus"
+          >
+            <div class="poster_button" style="width: 270px; margin-right: 0px">
+              {{ maaData.maaTagsDataCount }}条数据 来自
+              <span style="color: orange">MaaAssistantArknights</span>
+            </div>
+          </a
+          >
+          <a href="https://yituliu.site">
+            <div class="poster_button" style="width: 64px; text-align: center">返回主站</div>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -100,7 +111,7 @@
 <script>
 import toolApi from "@/api/tool";
 import * as echarts from "echarts";
-import "@/assets/css/poster.css";
+import "/src/assets/css/poster.css";
 
 export default {
   layout: "poster",
@@ -108,10 +119,10 @@ export default {
   data() {
     return {
       pieData: [
-        { value: 0, name: "六星" },
-        { value: 0, name: "五星" },
-        { value: 0, name: "四星" },
-        { value: 0, name: "三星" },
+        {value: 0, name: "六星"},
+        {value: 0, name: "五星"},
+        {value: 0, name: "四星"},
+        {value: 0, name: "三星"},
       ],
       maaData: [],
       xData: [],
@@ -124,7 +135,7 @@ export default {
   methods: {
     // 设置饼图
     getRecruitResult() {
-     
+
       toolApi.getRecruitResult().then((response) => {
         this.maaData = response.data;
         if (this.maaData.maaTagsDataCount == null) this.maaData.maaTagsDataCount = this.maaData.maaRecruitDataCount;
@@ -210,7 +221,7 @@ export default {
               normal: {
                 label: {
                   show: true,
-                  textStyle: { color: "#ffffff", fontSize: "16" },
+                  textStyle: {color: "#ffffff", fontSize: "16"},
                   formatter: function (val) {
                     //让series 中的文字进行换行
                     return val.name.split("-").join("\n");
@@ -218,7 +229,7 @@ export default {
                 }, //饼图图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。可以与itemStyle属性同级，具体看文档
                 labelLine: {
                   show: true,
-                  lineStyle: { color: "#3c4858" },
+                  lineStyle: {color: "#3c4858"},
                 }, //线条颜色
               }, //基本样式
               emphasis: {

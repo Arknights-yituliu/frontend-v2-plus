@@ -6,6 +6,7 @@
 .theme_light{
     /*基础样式*/
     --c-box-shadow:1px 1px 3px #c8c8c8;
+    --c-border:1px solid var(--c-white-2);
     --c-bg: var(--c-white-1);
     --c-text-color:var(--c-black-2);
     --c-tip-color:var(--c-black-3);
@@ -79,7 +80,7 @@
     --c-text-blue-light:#04a5ff;
     --c-text-white-light:var(--c-white-2);
 
-    --c-btn-green-light: #43d750;
+    --c-btn-green-light: #13CE66FF;
     --c-btn-blue-light: #04a5ff;
     --c-btn-red-light: #ff6262;
 

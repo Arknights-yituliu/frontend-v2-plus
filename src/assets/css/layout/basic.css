@@ -1,18 +1,13 @@
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
   overscroll-behavior: none;
 }
 
+html{
 
-
-html {
-  height: 100%;
-  padding: 0;
-  margin: 0;
 }
 
 .el-menu--horizontal > .el-menu-item {
