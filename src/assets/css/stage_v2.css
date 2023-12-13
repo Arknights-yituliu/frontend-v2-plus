@@ -296,12 +296,12 @@
 }
 
 .popup_header {
-  margin: 0px;
   vertical-align: middle;
   display: flex;
   font-size: 24px;
   font-weight: 600;
   height: 66px;
+  align-items: center;
 }
 
 .popup_header_text {
@@ -313,14 +313,13 @@
 
 .popup_header_penguin {
   display: flex;
-  margin: 20px;
-  padding: 4px 4px 4px 8px;
   font-size: 18px;
   font-weight: 500;
-
   border-radius: 4px;
   color: var(--popup-header-penguin-fg);
   position: relative;
+  top: 24px;
+  left: 80px;
 }
 
 .popup_img {
@@ -476,8 +475,7 @@
 }
 
 .stage_sprite_popup_wrap {
-  position: relative;
-  width: 76px;
+  width: 86px;
   height: 66px;
 }
 

@@ -1,0 +1,54 @@
+.btn{
+    font-family: 'black', SimHei, sans-serif;
+    padding:4px 12px;
+    cursor: pointer;
+    min-width: 80px;
+    text-align: center;
+    border-radius: 3px;
+    box-sizing: border-box;
+    height: 28px;
+    font-size: 18px;
+    line-height: 20px;
+    border:none;
+    color: var(--c-btn-color);
+    background-color: var(--c-btn-bg);
+    border: var(--c-btn-border);
+}
+
+/*.btn:hover{*/
+/*    border: 1px solid var(--c-btn-bg-green);*/
+/*    color: var(--c-btn-bg-green);;*/
+/*}*/
+
+.btn-blue{
+    color: var(--c-btn-text-color);
+    background-color:var(--c-btn-bg-blue);
+}
+
+/*.btn-blue:hover{*/
+/*    color: var(--c-btn-bg-blue);*/
+/*    background-color:var(--c-btn-text-color);*/
+/*    border: 1px solid var(--c-btn-bg-blue);*/
+/*}*/
+
+.btn-green{
+    color: var(--c-btn-text-color);
+    background-color: var(--c-btn-bg-green);
+}
+
+.btn-red{
+    color: var(--c-btn-text-color);
+    background-color: var(--c-btn-bg-red);
+}
+
+.warning-color{
+    font-weight: 600;
+}
+
+.input{
+    border: none;
+    outline: none;
+    color: var(--c-input-text-color);
+    border-bottom: var(--c-input-border);
+    background-color: var(--c-input-bg);
+}

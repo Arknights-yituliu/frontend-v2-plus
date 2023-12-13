@@ -49,7 +49,7 @@ watch( () =>props.visible, (new_val) => {
       document.getElementById(collapse_wrap_id).style.height = 0 + "px";
     }, 50);
   }
-   console.log(new_val)
+
   emit("update:visible", new_val);
 })
 
@@ -60,7 +60,7 @@ watch( () =>props.visible, (new_val) => {
 .c_collapse_item_wrap {
   height: 0;
   overflow: hidden;
-  transition: all .3s;
+  transition: height 0.2s linear;
 }
 
 .c_collapse_item {

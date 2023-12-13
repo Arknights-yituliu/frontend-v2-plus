@@ -3,7 +3,7 @@
     <!-- 常驻条 -->
     <div class="setup_top">
       <!-- <button class="mdui-btn survey_button">说明</button> -->
-      <button class="btn btn_blue"
+      <button class="btn btn-blue"
               @click="collapseFilter()">筛选
       </button>
       <div id="updateTime">
@@ -230,12 +230,12 @@
 
 <script setup>
 import "@/assets/css/survey/survey_rank.css";
-import { filterByCharacterProperty, professionDict} from "./common";
+import { filterByCharacterProperty, professionDict} from "./js/common";
 import {onMounted, ref} from "vue";
 import character_table_simple from "@/static/json/survey/character_table_simple.json";
 
 
-import surveyApi from "/src/api/surveyUser";
+import surveyApi from "/src/api/surveyOperator";
 
 let rarity_dict = [1, 2, 3, 4, 5, 6];
 
@@ -299,7 +299,7 @@ function getSkillName(skill, index) {
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filter_condition.value[attribute].indexOf(rule) > -1) {
-    return "btn btn_blue";
+    return "btn btn-blue";
   }
   return "btn";
 }

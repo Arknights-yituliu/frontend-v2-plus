@@ -1,5 +1,5 @@
 <template>
-  <button :class="btn_class" :style="props.style">
+  <button :class="btnClass" :style="props.style">
     <slot></slot>
   </button>
 </template>
@@ -8,20 +8,20 @@
 import {ref, watch} from "vue"
 
 const props = defineProps(["modelValue", 'status', "color", "style"]);
-const btn_color = `btn_${props.color == void 0 ? 'white' : props.color}`
+const btnColor = `btn-${typeof props.color === "undefined" ? '' : props.color}`
 
-let btn_class = ref(`btn`)
+let btnClass = ref(`btn`)
 if (props.status !== void 0 && props.status) {
-  btn_class.value = `btn ${btn_color}`
+  btnClass.value = `btn ${btnColor}`
 }
 
 
 watch(() => props.status, (newVal) => {
   // console.log(newVal)
   if (props.status !== void 0 && newVal) {
-    btn_class.value = `btn ${btn_color}`
+    btnClass.value = `btn ${btnColor}`
   } else {
-    btn_class.value = `btn`
+    btnClass.value = `btn`
   }
 })
 

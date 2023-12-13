@@ -145,7 +145,7 @@
     </div>
     <!-- 地图效率End -->
 
-    <c-popup :visible="popup_t3" :width="'550px'" @openAndClose="popupAction()">
+    <c-popup :visible="popup_t3" :width="'500px'" @openAndClose="popupAction()">
       <div class="popup_card"  id="popup_card">
         <div class="popup_header">
           <div class="stage_sprite_popup_wrap">

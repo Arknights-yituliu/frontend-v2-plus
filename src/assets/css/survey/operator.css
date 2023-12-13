@@ -1,37 +1,59 @@
 
-.opr_form{
+.operator-form{
  display: flex;
  flex-wrap: wrap;
  justify-content: center;
 }
 
-.opr_card{
+.operator-card{
     padding: 4px;
     display: flex;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-wrap-bg);
-    margin: 8px;
+    background-color: var(--c-bg-transparent-white);
+    margin: 4px;
     width: 500px;
 }
 
 
-.opr_sprite_avatar_bg{
-    width: 70px;
-    height: 70px;
+.operator-sprite-avatar-bg{
+    width: 90px;
+    height: 90px;
     position: relative;
-    margin: 0 4px;
-    /*border: 1px solid red;*/
+    margin: 0 4px 0 0;
 }
 
-.opr_sprite_skill_bg{
+.operator-sprite-avatar {
+    transform: scale(0.32);
+    border-radius: 0;
+    position: absolute;
+    top: -64px;
+    left: -55px;
+}
+
+.sprite-alt-name{
+    width: 90px;
+    position: absolute;
+    text-align: center;
+    top: 58px;
+    font-size: 14px;
+    left: -10px;
+    color: darkorange;
+}
+
+
+
+.operator-sprite-icon-bg{
     width: 52px;
     height: 52px;
     position: relative;
     margin: 0 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     /*border: 1px solid red;*/
 }
 
-.opr_sprite_mod_bg{
+.operator-sprite-mod-bg{
     width: 52px;
     height: 72px;
     position: relative;
@@ -39,90 +61,73 @@
     /*border: 1px solid red;*/
 }
 
-.sprite_alt_name{
-    width: 120px;
-    position: absolute;
-    top: 72px;
-}
 
-.sprite_alt {
-    width: 100%;
+.sprite-alt {
+    width: 60px;
     text-align: center;
     position: absolute;
-    top: 56px;
+    top: 58px;
     color: darkorange;
+    /*background-color: red;*/
     font-size: 14px;
 }
 
-.opr_sprite_avatar {
-    transform: scale(0.388);
-    border-radius: 0;
-    position: absolute;
-    top: -58px;
-    left: -54px;
-}
 
-.elite_bg {
-    width: 20px;
-    height: 20px;
-    background-color: #3f3f3f;
-}
-
-.opr_sprite_elite {
-    transform: scale(0.08);
-    position: absolute;
-    top: -46px;
-    left: -68px;
-}
-
-.opr_level{
-    width: 24px;
-    height: 24px;
+.operator-level{
+    width: 22px;
+    height: 22px;
     color: white;
     background: url("/image/survey/rank/lv-bg.png");
-    background-size:24px ;
+    background-size:22px ;
     position: absolute;
-    top:48px;
+    top:0;
+    right: 0;
+    font-size: 12px;
     line-height: 26px;
     text-align: center;
 }
 
-.opr_elite{
+.operator_potential{
     width: 22px;
     position: absolute;
-    top: 52px;
-    left: 48px;
-    background-color: black;
+    top: 22px;
+    right: 0;
+    filter: drop-shadow(2px 2px 2px #000000)
 }
 
-.opr_sprite_skill {
+.operator-elite{
+    width: 22px;
+    position: absolute;
+    top: 44px;
+    right: 0;
+    filter: drop-shadow(2px 2px 2px #000000)
+}
+
+.operator-sprite-skill {
     transform: scale(0.375);
     /* border: 1px solid red; */
     border-radius: 0;
     position: absolute;
-    top: -38px;
+    top: -34px;
     left: -38px;
     opacity: 0.8;
 }
 
-.opr_skill_rank{
+.operator-skill-rank{
     position: absolute;
-    left:0;
+    left:0px;
     top: 2px;
     width: 16px;
 }
 
-.opr_equip_rank {
-    transform: scale(0.20);
-    border-radius: 0;
-    position: absolute;
-    top: -92px;
-    left: -92px;
+.operator-equip-image{
+    height: 44px;
+    max-width: 44px;
+    filter: drop-shadow(2px 2px 2px #000000)
 }
 
 
-
-.opr_apCost{
+.operator-ap-cost{
     transform: scale(0.3);
     /* border: 1px solid red; */
     border-radius: 0;
@@ -131,36 +136,36 @@
     left: -64px;
 }
 
-.opr_option_bar_wrap{
+.operator-option-bar-wrap{
     display: flex;
     padding: 4px;
     justify-content: center;
 }
 
-.opr_options{
+.operator-options{
    margin: 8px;
    box-shadow: var(--c-box-shadow);
 }
 
-.opr_option_title{
+.operator-option-title{
     /*font-size: 18px;*/
     text-align: center;
     padding: 4px;
 }
 
-.opr_option_bar{
+.operator-option-bar{
     display: flex;
     margin: 4px 0;
 }
 
-.opr_option{
+.operator-option{
     width: 60px;
     height: 52px;
     position: relative;
 
 }
 
-.opr_option_selected{
+.operator-option-selected{
     width: 60px;
     height: 52px;
     position: relative;
@@ -168,25 +173,37 @@
 }
 
 
-.opr_option_elite{
-    transform: scale(0.235);
-    position: absolute;
-    top: -76px;
-    left: -100px;
-}
-
-.img_skill_rank{
+.image-skill-rank{
     width: 60px;
 }
 
-.img_mod_rank{
+.image-mod-rank{
     width: 48px;
     margin:2px 6px;
 }
 
-
-
-.survey_operator_plan_wrap{
-    
+.recommend-text{
+    line-height: 40px;
+    margin: 0 12px;
 }
+
+
+.opr-loading-btn{
+    background-color: #007af5;
+    color: #ffffff;
+    font-weight: 600;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    padding:8px 14px;
+    text-align: center;
+    box-sizing: border-box;
+    line-height: 18px;
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    cursor: pointer;
+    box-shadow: var(--c-box-shadow);
+}
+
 

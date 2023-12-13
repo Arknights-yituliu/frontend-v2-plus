@@ -40,6 +40,13 @@ export default {
             method: "post",
             data: data,
         })
-    }
+    },
+
+    getCharStatisticsResult() {
+        return request({
+            url: `${api_name}/operator/result`,
+            method: "get",
+        })
+    },
 
 }

@@ -1,0 +1,42 @@
+[
+  {
+    "label": 243,
+    "room": {
+      "trading": 2,
+      "manufacture": 4,
+      "power": 3
+    }
+  },
+  {
+    "label": 153,
+    "room": {
+      "trading": 1,
+      "manufacture": 5,
+      "power": 3
+    }
+  },
+  {
+    "label": 333,
+    "room": {
+      "trading": 3,
+      "manufacture": 3,
+      "power": 3
+    }
+  },
+  {
+    "label": 252,
+    "room": {
+      "trading": 2,
+      "manufacture": 5,
+      "power": 2
+    }
+  },
+  {
+    "label": 342,
+    "room": {
+      "trading": 3,
+      "manufacture": 4,
+      "power": 2
+    }
+  }
+]

@@ -150,7 +150,7 @@
     <!--    给:visible前面加上v-model可以接收弹窗隐藏后的返回值-->
     <!--    <template #header> </template> 是组件的头部-->
     <!--    <template #footer> </template> 是组件的尾部-->
-    <c-popup v-model:visible="popup_t3" :width="'550px'" :height="'380px'">
+    <c-popup v-model:visible="popup_t3" :width="'500px'" :height="'380px'">
       <template #header>
         <div class="popup_header_v2">
           <div class="stage_sprite_popup_wrap">
@@ -222,7 +222,7 @@
     </c-popup>
 
 <!--    搓玉-->
-    <c-popup v-model:visible="popup_orundum" :width="'550px'" >
+    <c-popup v-model:visible="popup_orundum" :width="'500px'" >
       <table class="popup_table" style="padding-top: 6px">
         <tbody style="font-size: 20px">
         <tr class="popup_table_title" style="height: 36px">
@@ -263,7 +263,7 @@
     </c-popup>
 
 
-    <c-popup v-model:visible="popup_act" :width="'550px'">
+    <c-popup v-model:visible="popup_act" :width="'500px'">
       <div v-for="(actStageVo, index) in stageActHistory" :key="index" class="popup_act_card">
         <div class="popup_act_card_left">
 
@@ -293,25 +293,27 @@ import {onMounted, ref} from 'vue'
 import {usePageContext} from "@/renderer/usePageContext";
 
 const pageContext = usePageContext();
-const stageRankT3 = pageContext.pageProps.t3;
+let stageRankT3 = [];
 const stageRankT2 = pageContext.pageProps.t2; //T2材料关卡推荐数据
 const stageRankOrundum = pageContext.pageProps.orundum; //搓玉推荐关卡数据
 const stageActHistory = pageContext.pageProps.closed; //历史关卡数据
-let updateTime = ref('')
+let updateTime = pageContext.pageProps.t3.updateTime
 
+if(pageContext.pageProps.t3.recommendedStageList){
+  stageRankT3 = pageContext.pageProps.t3.recommendedStageList
+}else {
+  stageRankT3 = pageContext.pageProps.t3
+}
 let popupData = ref([])
 
-async function getUrlParm() {
+async function getUrlParam() {
   const item = pageContext.urlParsed.search.item;
-  if (item == void 0) return;
-  if (item != undefined) console.log("要展示的材料：", item);
-
+  if (typeof item === "undefined") return;
   for (const index in stageRankT3) {
-    if (stageRankT3[index][0].itemType == item) {
+    if (stageRankT3[index][0].itemType === item) {
       showT3Popup(index);
     }
   }
-
   if ("Orundum" === item) showOrundumPopup();
 }
 
@@ -390,11 +392,14 @@ function getFontSize(eff) {
 
 function judgeActive(index) {
   let showFlag = false;
-  for (let i = 0; i < stageRankT3[index].length > 3 ? 3 : stageRankT3[index].length; ++i) {
-    if (stageRankT3[index][i].stageColor < 0) {
+  let stageResultList = stageRankT3[index].stageResultList
+  let num = 0;
+  for(let stageResult of stageResultList){
+    if(stageResult.stageColor<0){
       showFlag = true;
-      break;
     }
+    if(num>3) break;
+    num++
   }
   if (showFlag) return "";
   return "display:none";
@@ -416,7 +421,7 @@ function showNowActive() {
 }
 
 onMounted(() => {
-  // showT3Popup(1)
+  getUrlParam()
 })
 
 </script>
@@ -427,7 +432,7 @@ onMounted(() => {
 .popup_header_v2 {
   width: 100%;
   display: flex;
-  border-bottom: 1px solid dodgerblue;
+  border-bottom: var(--c-border);
   margin: auto auto 8px;
 
 }
@@ -447,6 +452,7 @@ onMounted(() => {
 }
 
 .popup_tip_v2 {
+  border-top: var(--c-border);
   color:var(--popup-text-fg);
   padding: 8px;
 }

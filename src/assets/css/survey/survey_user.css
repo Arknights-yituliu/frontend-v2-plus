@@ -20,7 +20,7 @@
     flex-direction: column;
     justify-content: center;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-wrap-bg);
+    background-color: var(--c-bg-transparent-white);
 }
 
 .user_info_bar {
@@ -47,7 +47,7 @@
 }
 
 .user_input_label {
-    color: #006fe0;
+    color: #4192f3;
     font-weight: 600;
 }
 

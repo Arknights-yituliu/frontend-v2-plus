@@ -1,10 +1,10 @@
 <template>
-  <div class="header_wrap">
+  <div class="header-wrap">
     <i class="menu-button iconfont icon-menu" @click="menu_collapse(true)">
     </i>
-    <i  class="menu_button_desktop iconfont icon-menu"  @click="aside_collapse()">
+    <i class="menu-button-desktop iconfont icon-menu" @click="aside_collapse()">
     </i>
-    <div class="page_title" @click="aside_collapse()">
+    <div class="page-title" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
 
@@ -13,14 +13,14 @@
     <c-popover :name="'theme_menu'">
       <template #title>
         <!--        <i style="font-size: 32px;color: rgb(230,230,230)"-->
-        <!--           class="iconfont icon-moon" id="menu_button_desktop" @click="aside_collapse()">-->
+        <!--           class="iconfont icon-moon" id="menu-button-desktop" @click="aside_collapse()">-->
         <!--        </i>-->
         <i class="iconfont icon-sun theme_button">
         </i>
       </template>
-      <div class="theme_option_wrap" id="theme_menu">
-        <div class="theme_option" @click="switchTheme('dark')">深色模式</div>
-        <div class="theme_option" @click="switchTheme('light')">浅色模式</div>
+      <div class="theme-option-wrap" id="theme_menu">
+        <div class="theme-option" @click="switchTheme('dark')">深色模式</div>
+        <div class="theme-option" @click="switchTheme('light')">浅色模式</div>
       </div>
     </c-popover>
 
@@ -33,25 +33,25 @@
         <div class="menu_table">
           <!-- 标题区 -->
           <a href="https://yituliu.site/" style="text-decoration: none; color: white">
-            <div class="aside_title">明日方舟一图流</div>
+            <div class="aside-title">明日方舟一图流</div>
           </a>
           <!-- 导航菜单 -->
           <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
             <!-- 一级标题 -->
-            <a class="aside_menu_parent nav_href" :href="r.path">
-              <div class="aside_nav aside_parent" v-show="r.isChild">
-                <div class="aside_menu_parent_icon"></div>
+            <a class="aside_menu_parent nav-href" :href="r.path">
+              <div class="aside-nav aside_parent" v-show="r.isChild">
+                <div class="aside-menu-parent-icon"></div>
                 {{ r.text }}
               </div>
             </a>
             <!-- 二级标题组 -->
-            <a :href="c.path" class="nav_href" v-for="(c,index) in r.child" :key="index">
-              <div class="aside_nav">
-                <div class="aside_menu_child_icon"></div>
+            <a :href="c.path" class="nav-href" v-for="(c,index) in r.child" :key="index">
+              <div class="aside-nav">
+                <div class="aside-menu-child-icon"></div>
                 {{ c.text }}
               </div>
             </a>
-            <div class="aside_divider"></div>
+            <div class="aside-divider"></div>
           </div>
         </div>
       </div>
@@ -62,7 +62,6 @@
 
 <script setup>
 import {ref, watch, computed, onMounted} from "vue";
-import {Sunny, Moon} from "@element-plus/icons-vue";
 import toolApi from "/src/api/tool";
 import {usePageContext} from "/src/renderer/usePageContext";
 import login from "/src/pages/survey/login.vue";
@@ -94,14 +93,20 @@ let aside_flag = ref(true);
 
 function aside_collapse() {
   aside_flag.value = !aside_flag.value;
+  let aside = document.getElementById("aside114")
+  let container = document.getElementById("container")
   if (aside_flag.value) {
-    setTimeout(function () {
-      document.getElementById("aside114").style.transform = "translateX(0)";
-      document.getElementById("aside114").style.width = "250px";
-    }, 30);
+    aside.style.transform = "translateX(0)";
+    aside.style.width = "250px";
+    container.style.paddingLeft = "250px";
+
   } else {
-    document.getElementById("aside114").style.transform = "translateX(-400px)";
+    document.getElementById("aside114").style.transform = "translateX(-300px)";
     document.getElementById("aside114").style.width = "0px";
+    container.style.paddingLeft = "0px";
+    setTimeout(function () {
+
+    }, 200);
   }
   // console.log(aside_flag.value);
 }
@@ -110,12 +115,11 @@ function aside_collapse() {
 function switchTheme(theme) {
   const container = document.getElementById("container");
   let className = container.className;
-  console.log('旧class：', className)
+
   let list = className.split(" ");
-  console.log('旧主题：', list[list.length - 1])
+
   className = className.replace(list[list.length - 1], `theme_${theme}`)
-  console.log('新主题：', `theme_${theme}`)
-  console.log('新class：', className)
+
   container.className = className
 
   document.getElementsByTagName("html").item(0).className = theme;
@@ -222,38 +226,39 @@ onMounted(() => {
 
 }
 
-.menu_button_desktop {
+.menu-button-desktop {
   display: block;
-  font-size:24px;
-  color: rgb(230,230,230);
+  font-size: 24px;
+  color: rgb(230, 230, 230);
 }
 
-.theme_button{
+.theme_button {
   font-size: 32px;
-  color: rgb(230,230,230);
+  color: rgb(230, 230, 230);
 }
 
 @media (max-width: 1080px) {
   .menu-button {
     display: block;
     margin: 0 4px 0 20px;
-    font-size: 40px;color: rgb(230,230,230)
+    font-size: 40px;
+    color: rgb(230, 230, 230)
   }
 
-  .menu_button_desktop {
+  .menu-button-desktop {
     display: none;
   }
 
-  .theme_button{
+  .theme_button {
     font-size: 50px;
   }
 
-  .page_title {
+  .page-title {
     display: block;
     font-size: 24px;
   }
 
-  .header_wrap {
+  .header-wrap {
     height: 72px;
   }
 

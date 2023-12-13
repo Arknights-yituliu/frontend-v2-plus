@@ -1,0 +1,756 @@
+{
+  "4004": [
+    {
+      "itemId": "30064",
+      "quantity": 1,
+      "price": 20.0,
+      "name": "改量装置"
+    },
+    {
+      "itemId": "30014",
+      "quantity": 1,
+      "price": 10.0,
+      "name": "提纯源岩"
+    },
+    {
+      "itemId": "30054",
+      "quantity": 1,
+      "price": 15.0,
+      "name": "酮阵列"
+    },
+    {
+      "itemId": "30024",
+      "quantity": 1,
+      "price": 10.0,
+      "name": "糖聚块"
+    },
+    {
+      "itemId": "30044",
+      "quantity": 1,
+      "price": 15.0,
+      "name": "异铁块"
+    },
+    {
+      "itemId": "30034",
+      "quantity": 1,
+      "price": 10.0,
+      "name": "聚酸酯块"
+    },
+    {
+      "itemId": "30094",
+      "quantity": 1,
+      "price": 10.0,
+      "name": "五水研磨石"
+    },
+    {
+      "itemId": "30084",
+      "quantity": 1,
+      "price": 10.0,
+      "name": "三水锰矿"
+    },
+    {
+      "itemId": "31024",
+      "quantity": 1,
+      "price": 15.0,
+      "name": "炽合金块"
+    },
+    {
+      "itemId": "31014",
+      "quantity": 1,
+      "price": 15.0,
+      "name": "聚合凝胶"
+    },
+    {
+      "itemId": "30104",
+      "quantity": 1,
+      "price": 15.0,
+      "name": "RMA70-24"
+    },
+    {
+      "itemId": "31034",
+      "quantity": 1,
+      "price": 15.0,
+      "name": "晶体电路"
+    },
+    {
+      "itemId": "30074",
+      "quantity": 1,
+      "price": 10.0,
+      "name": "白马醇"
+    },
+    {
+      "itemId": "mod_unlock_token",
+      "quantity": 1,
+      "price": 20.0,
+      "name": "模组数据块"
+    },
+    {
+      "itemId": "32001",
+      "quantity": 1,
+      "price": 15.0,
+      "name": "芯片助剂"
+    }
+  ],
+  "4005": [
+    {
+      "itemId": "30083",
+      "quantity": 1,
+      "price": 35.0,
+      "name": "轻锰矿"
+    },
+    {
+      "itemId": "30103",
+      "quantity": 1,
+      "price": 45.0,
+      "name": "RMA70-12"
+    },
+    {
+      "itemId": "30093",
+      "quantity": 1,
+      "price": 40.0,
+      "name": "研磨石"
+    },
+    {
+      "itemId": "30073",
+      "quantity": 1,
+      "price": 30.0,
+      "name": "扭转醇"
+    },
+    {
+      "itemId": "30063",
+      "quantity": 1,
+      "price": 45.0,
+      "name": "全新装置"
+    },
+    {
+      "itemId": "30053",
+      "quantity": 1,
+      "price": 35.0,
+      "name": "酮凝集组"
+    },
+    {
+      "itemId": "30033",
+      "quantity": 1,
+      "price": 30.0,
+      "name": "聚酸酯组"
+    },
+    {
+      "itemId": "30043",
+      "quantity": 1,
+      "price": 35.0,
+      "name": "异铁组"
+    },
+    {
+      "itemId": "30023",
+      "quantity": 1,
+      "price": 30.0,
+      "name": "糖组"
+    },
+    {
+      "itemId": "30013",
+      "quantity": 1,
+      "price": 25.0,
+      "name": "固源岩组"
+    },
+    {
+      "itemId": "31043",
+      "quantity": 1,
+      "price": 40.0,
+      "name": "半自然溶剂"
+    },
+    {
+      "itemId": "31053",
+      "quantity": 1,
+      "price": 40.0,
+      "name": "化合切削液"
+    },
+    {
+      "itemId": "31013",
+      "quantity": 1,
+      "price": 40.0,
+      "name": "凝胶"
+    },
+    {
+      "itemId": "31023",
+      "quantity": 1,
+      "price": 35.0,
+      "name": "炽合金"
+    },
+    {
+      "itemId": "31033",
+      "quantity": 1,
+      "price": 30.0,
+      "name": "晶体元件"
+    },
+    {
+      "itemId": "31063",
+      "quantity": 1,
+      "price": 45.0,
+      "name": "转质盐组"
+    },
+    {
+      "itemId": "31073",
+      "quantity": 1,
+      "price": 40.0,
+      "name": "褐素纤维"
+    },
+    {
+      "itemId": "31083",
+      "quantity": 1,
+      "price": 45.0,
+      "name": "环烃聚质"
+    },
+    {
+      "itemId": "7001",
+      "quantity": 1,
+      "price": 15.0,
+      "name": "招聘许可"
+    },
+    {
+      "itemId": "7003",
+      "quantity": 1,
+      "price": 450.0,
+      "name": "寻访凭证"
+    }
+  ],
+  "SOCIAL_PT": [
+    {
+      "itemId": "4001",
+      "quantity": 1800,
+      "price": 100.0,
+      "name": "龙门币"
+    },
+    {
+      "itemId": "2001",
+      "quantity": 9,
+      "price": 100.0,
+      "name": "基础作战记录"
+    },
+    {
+      "itemId": "2002",
+      "quantity": 9,
+      "price": 200.0,
+      "name": "初级作战记录"
+    },
+    {
+      "itemId": "7001",
+      "quantity": 1,
+      "price": 160.0,
+      "name": "招聘许可"
+    },
+    {
+      "itemId": "3003",
+      "quantity": 6,
+      "price": 160.0,
+      "name": "赤金"
+    },
+    {
+      "itemId": "3301",
+      "quantity": 5,
+      "price": 160.0,
+      "name": "技巧概要·卷1"
+    },
+    {
+      "itemId": "3302",
+      "quantity": 3,
+      "price": 200.0,
+      "name": "技巧概要·卷2"
+    },
+    {
+      "itemId": "30011",
+      "quantity": 2,
+      "price": 80.0,
+      "name": "源岩"
+    },
+    {
+      "itemId": "30021",
+      "quantity": 2,
+      "price": 100.0,
+      "name": "代糖"
+    },
+    {
+      "itemId": "30031",
+      "quantity": 2,
+      "price": 100.0,
+      "name": "酯原料"
+    },
+    {
+      "itemId": "30041",
+      "quantity": 2,
+      "price": 120.0,
+      "name": "异铁碎片"
+    },
+    {
+      "itemId": "30051",
+      "quantity": 2,
+      "price": 120.0,
+      "name": "双酮"
+    },
+    {
+      "itemId": "30061",
+      "quantity": 1,
+      "price": 80.0,
+      "name": "破损装置"
+    },
+    {
+      "itemId": "30012",
+      "quantity": 3,
+      "price": 200.0,
+      "name": "固源岩"
+    },
+    {
+      "itemId": "30022",
+      "quantity": 2,
+      "price": 200.0,
+      "name": "糖"
+    },
+    {
+      "itemId": "30032",
+      "quantity": 2,
+      "price": 200.0,
+      "name": "聚酸酯"
+    },
+    {
+      "itemId": "30042",
+      "quantity": 2,
+      "price": 240.0,
+      "name": "异铁"
+    },
+    {
+      "itemId": "30052",
+      "quantity": 2,
+      "price": 240.0,
+      "name": "酮凝集"
+    },
+    {
+      "itemId": "30062",
+      "quantity": 1,
+      "price": 160.0,
+      "name": "装置"
+    },
+    {
+      "itemId": "3112",
+      "quantity": 5,
+      "price": 160.0,
+      "name": "碳"
+    },
+    {
+      "itemId": "3113",
+      "quantity": 3,
+      "price": 200.0,
+      "name": "碳素"
+    }
+  ],
+  "EPGS_COIN": [
+    {
+      "itemId": "30104",
+      "quantity": 1,
+      "price": 80.0,
+      "name": "RMA70-24"
+    },
+    {
+      "itemId": "30094",
+      "quantity": 1,
+      "price": 75.0,
+      "name": "五水研磨石"
+    },
+    {
+      "itemId": "30084",
+      "quantity": 1,
+      "price": 80.0,
+      "name": "三水锰矿"
+    },
+    {
+      "itemId": "30074",
+      "quantity": 1,
+      "price": 65.0,
+      "name": "白马醇"
+    },
+    {
+      "itemId": "30064",
+      "quantity": 1,
+      "price": 85.0,
+      "name": "改量装置"
+    },
+    {
+      "itemId": "30054",
+      "quantity": 1,
+      "price": 85.0,
+      "name": "酮阵列"
+    },
+    {
+      "itemId": "30034",
+      "quantity": 1,
+      "price": 80.0,
+      "name": "聚酸酯块"
+    },
+    {
+      "itemId": "30044",
+      "quantity": 1,
+      "price": 90.0,
+      "name": "异铁块"
+    },
+    {
+      "itemId": "30024",
+      "quantity": 1,
+      "price": 75.0,
+      "name": "糖聚块"
+    },
+    {
+      "itemId": "30014",
+      "quantity": 1,
+      "price": 60.0,
+      "name": "提纯源岩"
+    },
+    {
+      "itemId": "31014",
+      "quantity": 1,
+      "price": 65.0,
+      "name": "聚合凝胶"
+    },
+    {
+      "itemId": "31024",
+      "quantity": 1,
+      "price": 75.0,
+      "name": "炽合金块"
+    },
+    {
+      "itemId": "31034",
+      "quantity": 1,
+      "price": 90.0,
+      "name": "晶体电路"
+    },
+    {
+      "itemId": "31044",
+      "quantity": 1,
+      "price": 70.0,
+      "name": "精炼溶剂"
+    },
+    {
+      "itemId": "31054",
+      "quantity": 1,
+      "price": 70.0,
+      "name": "切削原液"
+    },
+    {
+      "itemId": "31064",
+      "quantity": 1,
+      "price": 70.0,
+      "name": "转质盐聚块"
+    },
+    {
+      "itemId": "30083",
+      "quantity": 2,
+      "price": 45.0,
+      "name": "轻锰矿"
+    },
+    {
+      "itemId": "30103",
+      "quantity": 2,
+      "price": 60.0,
+      "name": "RMA70-12"
+    },
+    {
+      "itemId": "30093",
+      "quantity": 2,
+      "price": 50.0,
+      "name": "研磨石"
+    },
+    {
+      "itemId": "30073",
+      "quantity": 2,
+      "price": 40.0,
+      "name": "扭转醇"
+    },
+    {
+      "itemId": "30063",
+      "quantity": 2,
+      "price": 60.0,
+      "name": "全新装置"
+    },
+    {
+      "itemId": "30053",
+      "quantity": 2,
+      "price": 45.0,
+      "name": "酮凝集组"
+    },
+    {
+      "itemId": "30033",
+      "quantity": 2,
+      "price": 35.0,
+      "name": "聚酸酯组"
+    },
+    {
+      "itemId": "30043",
+      "quantity": 2,
+      "price": 45.0,
+      "name": "异铁组"
+    },
+    {
+      "itemId": "30023",
+      "quantity": 2,
+      "price": 35.0,
+      "name": "糖组"
+    },
+    {
+      "itemId": "30013",
+      "quantity": 2,
+      "price": 30.0,
+      "name": "固源岩组"
+    },
+    {
+      "itemId": "31013",
+      "quantity": 2,
+      "price": 50.0,
+      "name": "凝胶"
+    },
+    {
+      "itemId": "31023",
+      "quantity": 2,
+      "price": 40.0,
+      "name": "炽合金"
+    },
+    {
+      "itemId": "31033",
+      "quantity": 2,
+      "price": 40.0,
+      "name": "晶体元件"
+    },
+    {
+      "itemId": "31043",
+      "quantity": 2,
+      "price": 50.0,
+      "name": "半自然溶剂"
+    },
+    {
+      "itemId": "31053",
+      "quantity": 2,
+      "price": 50.0,
+      "name": "化合切削液"
+    },
+    {
+      "itemId": "31063",
+      "quantity": 2,
+      "price": 55.0,
+      "name": "转质盐组"
+    },
+    {
+      "itemId": "30062",
+      "quantity": 4,
+      "price": 40.0,
+      "name": "装置"
+    },
+    {
+      "itemId": "30052",
+      "quantity": 4,
+      "price": 30.0,
+      "name": "酮凝集"
+    },
+    {
+      "itemId": "30042",
+      "quantity": 4,
+      "price": 30.0,
+      "name": "异铁"
+    },
+    {
+      "itemId": "30032",
+      "quantity": 4,
+      "price": 25.0,
+      "name": "聚酸酯"
+    },
+    {
+      "itemId": "30022",
+      "quantity": 4,
+      "price": 25.0,
+      "name": "糖"
+    },
+    {
+      "itemId": "30012",
+      "quantity": 4,
+      "price": 15.0,
+      "name": "固源岩"
+    },
+    {
+      "itemId": "30061",
+      "quantity": 8,
+      "price": 40.0,
+      "name": "破损装置"
+    },
+    {
+      "itemId": "30051",
+      "quantity": 8,
+      "price": 30.0,
+      "name": "双酮"
+    },
+    {
+      "itemId": "30041",
+      "quantity": 8,
+      "price": 30.0,
+      "name": "异铁碎片"
+    },
+    {
+      "itemId": "30021",
+      "quantity": 8,
+      "price": 25.0,
+      "name": "代糖"
+    },
+    {
+      "itemId": "30031",
+      "quantity": 8,
+      "price": 25.0,
+      "name": "酯原料"
+    },
+    {
+      "itemId": "30011",
+      "quantity": 8,
+      "price": 15.0,
+      "name": "源岩"
+    },
+    {
+      "itemId": "31073",
+      "quantity": 2,
+      "price": 55.0,
+      "name": "褐素纤维"
+    },
+    {
+      "itemId": "31083",
+      "quantity": 2,
+      "price": 60.0,
+      "name": "环烃聚质"
+    },
+    {
+      "itemId": "31074",
+      "quantity": 1,
+      "price": 70.0,
+      "name": "固化纤维板"
+    },
+    {
+      "itemId": "31084",
+      "quantity": 1,
+      "price": 80.0,
+      "name": "环烃预制体"
+    }
+  ],
+  "REP_COIN": [
+    {
+      "itemId": "4003",
+      "quantity": 100,
+      "price": 20.0,
+      "name": "合成玉"
+    },
+    {
+      "itemId": "30064",
+      "quantity": 1,
+      "price": 85.0,
+      "name": "改量装置"
+    },
+    {
+      "itemId": "30014",
+      "quantity": 1,
+      "price": 50.0,
+      "name": "提纯源岩"
+    },
+    {
+      "itemId": "30054",
+      "quantity": 1,
+      "price": 65.0,
+      "name": "酮阵列"
+    },
+    {
+      "itemId": "30024",
+      "quantity": 1,
+      "price": 60.0,
+      "name": "糖聚块"
+    },
+    {
+      "itemId": "30044",
+      "quantity": 1,
+      "price": 70.0,
+      "name": "异铁块"
+    },
+    {
+      "itemId": "30034",
+      "quantity": 1,
+      "price": 60.0,
+      "name": "聚酸酯块"
+    },
+    {
+      "itemId": "30094",
+      "quantity": 1,
+      "price": 60.0,
+      "name": "五水研磨石"
+    },
+    {
+      "itemId": "30084",
+      "quantity": 1,
+      "price": 60.0,
+      "name": "三水锰矿"
+    },
+    {
+      "itemId": "31024",
+      "quantity": 1,
+      "price": 60.0,
+      "name": "炽合金块"
+    },
+    {
+      "itemId": "31014",
+      "quantity": 1,
+      "price": 50.0,
+      "name": "聚合凝胶"
+    },
+    {
+      "itemId": "31034",
+      "quantity": 1,
+      "price": 70.0,
+      "name": "晶体电路"
+    },
+    {
+      "itemId": "30104",
+      "quantity": 1,
+      "price": 65.0,
+      "name": "RMA70-24"
+    },
+    {
+      "itemId": "30074",
+      "quantity": 1,
+      "price": 50.0,
+      "name": "白马醇"
+    },
+    {
+      "itemId": "4001",
+      "quantity": 2000,
+      "price": 15.0,
+      "name": "龙门币"
+    },
+    {
+      "itemId": "31044",
+      "quantity": 1,
+      "price": 55.0,
+      "name": "精炼溶剂"
+    },
+    {
+      "itemId": "31054",
+      "quantity": 1,
+      "price": 55.0,
+      "name": "切削原液"
+    },
+    {
+      "itemId": "2004",
+      "quantity": 1,
+      "price": 15.0,
+      "name": "高级作战记录"
+    },
+    {
+      "itemId": "3303",
+      "quantity": 1,
+      "price": 20.0,
+      "name": "技巧概要·卷3"
+    },
+    {
+      "itemId": "31064",
+      "quantity": 1,
+      "price": 55.0,
+      "name": "转质盐聚块"
+    }
+  ]
+}
