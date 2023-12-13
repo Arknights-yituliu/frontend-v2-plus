@@ -153,7 +153,7 @@ onMounted(() => {
 .elite-page {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 30px);
+  height: calc(100vh - 68px);
 
   p {
     margin: 0;
