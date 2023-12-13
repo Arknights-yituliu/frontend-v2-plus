@@ -35,14 +35,14 @@ let yearDict = [
 ];
 
 let professionDict = [
-    {label: "狙击", value: "SNIPER"},
+    {label: "先锋", value: "PIONEER"},
     {label: "近卫", value: "WARRIOR"},
-    {label: "特种", value: "SPECIAL"},
+    {label: "重装", value: "TANK"},
+    {label: "狙击", value: "SNIPER"},
+    {label: "术师", value: "CASTER"},
     {label: "医疗", value: "MEDIC"},
     {label: "辅助", value: "SUPPORT"},
-    {label: "先锋", value: "PIONEER"},
-    {label: "重装", value: "TANK"},
-    {label: "术师", value: "CASTER"},
+    {label: "特种", value: "SPECIAL"},
 ];
 
 function getProfession(str) {

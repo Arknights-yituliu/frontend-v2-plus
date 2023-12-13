@@ -1,0 +1,294 @@
+[
+  {
+    "value": "PIONEER",
+    "label": "先锋",
+    "children": [
+      {
+        "value": "charger",
+        "label": "冲锋手"
+      },
+      {
+        "value": "pioneer",
+        "label": "尖兵"
+      },
+      {
+        "value": "agent",
+        "label": "情报官"
+      },
+      {
+        "value": "tactician",
+        "label": "战术家"
+      },
+      {
+        "value": "bearer",
+        "label": "执旗手"
+      }
+    ]
+  },
+  {
+    "value": "WARRIOR",
+    "label": "近卫",
+    "children": [
+      {
+        "value": "sword",
+        "label": "剑豪"
+      },
+      {
+        "value": "centurion",
+        "label": "强攻手"
+      },
+      {
+        "value": "reaper",
+        "label": "收割者"
+      },
+      {
+        "value": "instructor",
+        "label": "教官"
+      },
+      {
+        "value": "fighter",
+        "label": "斗士"
+      },
+      {
+        "value": "fearless",
+        "label": "无畏者"
+      },
+      {
+        "value": "artsfghter",
+        "label": "术战者"
+      },
+      {
+        "value": "musha",
+        "label": "武者"
+      },
+      {
+        "value": "librator",
+        "label": "解放者"
+      },
+      {
+        "value": "crusher",
+        "label": "重剑手"
+      },
+      {
+        "value": "lord",
+        "label": "领主"
+      }
+    ]
+  },
+  {
+    "value": "TANK",
+    "label": "重装",
+    "children": [
+      {
+        "value": "unyield",
+        "label": "不屈者"
+      },
+      {
+        "value": "duelist",
+        "label": "决战者"
+      },
+      {
+        "value": "shotprotector",
+        "label": "哨戒铁卫"
+      },
+      {
+        "value": "guardian",
+        "label": "守护者"
+      },
+      {
+        "value": "fortress",
+        "label": "要塞"
+      },
+      {
+        "value": "protector",
+        "label": "铁卫"
+      },
+      {
+        "value": "artsprotector",
+        "label": "驭法铁卫"
+      }
+    ]
+  },
+  {
+    "value": "SNIPER",
+    "label": "狙击",
+    "children": [
+      {
+        "value": "bombarder",
+        "label": "投掷手"
+      },
+      {
+        "value": "siegesniper",
+        "label": "攻城手"
+      },
+      {
+        "value": "reaperrange",
+        "label": "散射手"
+      },
+      {
+        "value": "aoesniper",
+        "label": "炮手"
+      },
+      {
+        "value": "longrange",
+        "label": "神射手"
+      },
+      {
+        "value": "fastshot",
+        "label": "速射手"
+      },
+      {
+        "value": "closerange",
+        "label": "重射手"
+      },
+      {
+        "value": "hunter",
+        "label": "猎手"
+      },
+      {
+        "value": "loopshooter",
+        "label": "回环射手"
+      }
+    ]
+  },
+  {
+    "value": "CASTER",
+    "label": "术师",
+    "children": [
+      {
+        "value": "corecaster",
+        "label": "中坚术师"
+      },
+      {
+        "value": "splashcaster",
+        "label": "扩散术师"
+      },
+      {
+        "value": "mystic",
+        "label": "秘术师"
+      },
+      {
+        "value": "blastcaster",
+        "label": "轰击术师"
+      },
+      {
+        "value": "chain",
+        "label": "链术师"
+      },
+      {
+        "value": "phalanx",
+        "label": "阵法术师"
+      },
+      {
+        "value": "funnel",
+        "label": "驭械术师"
+      },
+      {
+        "value": "primcaster",
+        "label": "本源术师"
+      }
+    ]
+  },
+  {
+    "value": "MEDIC",
+    "label": "医疗",
+    "children": [
+      {
+        "value": "physician",
+        "label": "医师"
+      },
+      {
+        "value": "incantationmedic",
+        "label": "咒愈师"
+      },
+      {
+        "value": "healer",
+        "label": "疗养师"
+      },
+      {
+        "value": "ringhealer",
+        "label": "群愈师"
+      },
+      {
+        "value": "wandermedic",
+        "label": "行医"
+      },
+      {
+        "value": "chainhealer",
+        "label": "链愈师"
+      }
+    ]
+  },
+  {
+    "value": "SUPPORT",
+    "label": "辅助",
+    "children": [
+      {
+        "value": "slower",
+        "label": "凝滞师"
+      },
+      {
+        "value": "underminer",
+        "label": "削弱者"
+      },
+      {
+        "value": "summoner",
+        "label": "召唤师"
+      },
+      {
+        "value": "bard",
+        "label": "吟游者"
+      },
+      {
+        "value": "craftsman",
+        "label": "工匠"
+      },
+      {
+        "value": "blessing",
+        "label": "护佑者"
+      },
+      {
+        "value": "ritualist",
+        "label": "巫役"
+      }
+    ]
+  },
+  {
+    "value": "SPECIAL",
+    "label": "特种",
+    "children": [
+      {
+        "value": "stalker",
+        "label": "伏击客"
+      },
+      {
+        "value": "dollkeeper",
+        "label": "傀儡师"
+      },
+      {
+        "value": "executor",
+        "label": "处决者"
+      },
+      {
+        "value": "geek",
+        "label": "怪杰"
+      },
+      {
+        "value": "pusher",
+        "label": "推击手"
+      },
+      {
+        "value": "merchant",
+        "label": "行商"
+      },
+      {
+        "value": "hookmaster",
+        "label": "钩索师"
+      },
+      {
+        "value": "traper",
+        "label": "陷阱师"
+      }
+    ]
+  }
+]
