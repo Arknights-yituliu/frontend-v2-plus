@@ -142,7 +142,7 @@
                     formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, 1.1)"></div>
+                    :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, stage.stageEfficiency)"></div>
                 </div>
               </div>
               <div class="stage_card_3_line">
@@ -155,7 +155,7 @@
                     formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, 0.95)"></div>
+                    :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, stage.stageEfficiency)"></div>
                 </div>
               </div>
               <div class="stage_card_3_line" v-show="stage.series.r2">
@@ -168,7 +168,7 @@
                     formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, 0.85)"></div>
+                    :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, stage.stageEfficiency)"></div>
                 </div>
               </div>
             </div>
