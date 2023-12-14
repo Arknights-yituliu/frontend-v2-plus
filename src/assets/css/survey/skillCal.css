@@ -54,7 +54,7 @@
     width: 95%;
     margin: 8px auto;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-bg-transparent-white);
+    background-color: var(--c-background-white-transparent);
 }
 
 .delete_icon {
@@ -110,7 +110,7 @@
 .option_column {
     margin: 4px;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-bg-transparent-white);
+    background-color: var(--c-background-white-transparent);
     padding: 4px;
 }
 
@@ -187,7 +187,7 @@
     border-left: 3px solid;
     margin: 8px;
     box-shadow: var(--c-box-shadow);
-    background-color: var(--c-bg-transparent-white);
+    background-color: var(--c-background-white-transparent);
 }
 
 .item_info_card_left {

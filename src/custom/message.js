@@ -1,39 +1,74 @@
-import "@/custom/css/message.css";
+
+
+const style = {
+    minWidth: '240px',
+    borderRadius: '2px',
+    lineHeight: '32px',
+    height: '32px',
+    textAlign: 'center',
+    position: 'fixed',
+    top: '0px',
+    left: '50%',
+    fontWeight: '600',
+    zIndex: '2000',
+    transition: 'all 0.3s',
+    transform: 'translate(-50%, 0)'
+}
+
+const colorStyle = {
+    success: {
+        color: '#3A973AFF',
+        background: '#F5FDF3FF'
+    },
+    error: {
+        color: '#FF4E4EFF',
+        background: '#F7E3E3FF'
+    }
+
+}
+
+
 
 let send = 1;
 let messageBars = [];
-function cMessage(text, type, duration) {
-  // let message_wrap = document.createElement("div");
-  // message_wrap.className = "message_wrap";
-  // message_wrap.id = "message_wrap";
-  send++;
-  let messageBar = document.createElement("div");
-  messageBar.className = "messageBar";
-  messageBar.id = "messageBar" + send;
-  messageBars.push("messageBar" + send);
 
-  const textElement = document.createTextNode(text);
-  messageBar.appendChild(textElement);
-  document.body.appendChild(messageBar);
+function cMessage(text, type = 'success', duration= 4000) {
+    send++;
+    let messageBar = document.createElement("div");
 
-  type = type == void 0 ? "success" : type;
-  setTimeout(function () {
-    for (let i in messageBars) {
-      document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
+    for (const property in style) {
+        messageBar.style.overflow = 'hidden'
+        messageBar.style[property] = style[property]
     }
-    messageBar.className = "messageBar_" + type;
-  }, 500);
 
-  if (duration == void 0) duration = 4000;
+    messageBar.id = "messageBar" + send;
+    messageBars.push("messageBar" + send);
 
-  setTimeout(function () {
-    messageBar.remove();
-    messageBars = messageBars.splice(1);
-    // console.log(messageBars)
-    for (let i in messageBars) {
-      document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
+    // const textElement = document.createTextNode(text);
+    // messageBar.appendChild(textElement);
+    messageBar.textContent = text
+    document.body.appendChild(messageBar);
+    console.log(messageBar)
+
+    for (const property in colorStyle[type]) {
+        messageBar.style[property] = colorStyle[type][property]
     }
-  }, duration);
+
+    setTimeout(function () {
+        for (let i in messageBars) {
+            document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
+        }
+    }, 16);
+
+
+    setTimeout(function () {
+        messageBar.remove();
+        messageBars = messageBars.splice(1);
+        // console.log(messageBars)
+        for (let i in messageBars) {
+            document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
+        }
+    }, duration);
 }
 
-export { cMessage };
+export {cMessage};

@@ -48,7 +48,7 @@ function collapse() {
 .c_collapse_wrap {
   border-radius: 4px;
   box-shadow: var(--c-box-shadow);
-  background-color: var(--c-bg-transparent-white);
+  background-color: var(--c-background-white-transparent);
 }
 
 .c_collapse_title {

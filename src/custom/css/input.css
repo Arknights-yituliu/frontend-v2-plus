@@ -7,3 +7,8 @@
     border-bottom: var(--c-input-border);
     background-color: var(--c-input-bg);
 }
+
+.input-tip{
+    position: relative;
+
+}

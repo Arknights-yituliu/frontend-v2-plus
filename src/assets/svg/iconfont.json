@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "31919321",
+      "name": "时间",
+      "font_class": "bell",
+      "unicode": "e658",
+      "unicode_decimal": 58968
+    },
+    {
       "icon_id": "278220",
       "name": "right",
       "font_class": "right",

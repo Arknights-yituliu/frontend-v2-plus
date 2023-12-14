@@ -496,6 +496,7 @@ function getStageDataByProperty(stageList, property) {
     return {
       stage_code: stage.stageCode,
       efficiency: stage[property] * 100,
+      stageEfficiency:stage.stageEfficiency,
       zoneName: stage.zoneName.replace(" (标准)", "")
     }
   }
