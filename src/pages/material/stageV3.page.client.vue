@@ -10,8 +10,8 @@
         </div>
         <div class="op_title_tag">
           <!-- <div class="op_tag_0">图例</div> -->
-          <div class="op_tag_0">搓玉版</div>
-          <div class="op_tag_0">往期活动效率</div>
+          <div class="op_tag_0">搓玉数据</div>
+          <div class="op_tag_0">往期活动</div>
           <div class="op_tag_0">常见问题</div>
           <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
           <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
@@ -19,12 +19,11 @@
 
           <div class="tab_text">*点击卡片查看详情</div>
         </div>
-        <div class="op_title_tag" style="height: 24px">
+        <!-- <div class="op_title_tag" style="height: 24px">
           <div class="tab_text">
-            <!-- *更新时间{{stageActHistory}} -->
-            <!--            *更新时间 {{ updateTime }}-->
+            占位
           </div>
-        </div>
+        </div> -->
       </div>
       <!-- 说明区域 -->
       <div id="stage_3_intro">
@@ -100,8 +99,8 @@
                   <div style="font-size: 12px;"></div>
                 </div>
                 <div class="intro_effBar" style="height: 24px;margin-right: 8px;text-align: right;">
-                  <el-button type="primary" size="small" :icon="Delete" >看看细节</el-button>
-                  <el-button type="primary" size="small" :icon="Delete" >不再显示</el-button>
+                  <el-button type="primary" size="small" :icon="Delete">看看细节</el-button>
+                  <el-button type="primary" size="small" :icon="Delete">不再显示</el-button>
                 </div>
               </div>
             </div>
@@ -188,7 +187,6 @@
           <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
           <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
           <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
-
           <div class="tab_text">*表格可拖动查看</div>
         </div>
       </div>
@@ -207,16 +205,13 @@
             </span>
           </div>
 
-
           <div class="activity-wrap">
             上次up：{{ selected_item.lastUp.activityName }}
           </div>
           <div class="activity-wrap">
             即将up：{{ selected_item.lastUp.activityName }}
           </div>
-
         </div>
-
 
         <div class="item-detail-bar">
           <div>
