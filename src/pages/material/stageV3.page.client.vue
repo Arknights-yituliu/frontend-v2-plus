@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 地图效率Start -->
-    <div id="stage">
+    <div id="stage" style="font-family: Arial, Helvetica, sans-serif;">
       <!-- 标题区域 -->
       <div class="op_title">
         <div class="op_title_text">
@@ -29,75 +29,91 @@
       <!-- 说明区域 -->
       <div id="stage_3_intro">
         <!-- 说明卡片1 -->
-        <div class="stage_card_3">
+        <div class="stage_card_3" style="max-width: 630px;">
           <!-- 长期最优 -->
-          <div class="stage_card_3_left">
+          <div class="stage_card_3_intro_left">
             <div class="img_wrap" style="position: relative;">
-              <div class="stage_card_3_mainImg" :class="getItemSeriesSprite('30013')">
+              <div class="stage_card_3_mainImg" :class="getItemSeriesSprite('31013')">
                 <div class="stage_card_3_cover" style="height:114px;"></div>
                 <div class="stage_card_3_best" style="font-size: 16px;">
-                  <div class="stage_card_3_best_chapter">关卡所在区域</div>
-                  综合最优关卡
+                  <div class="stage_card_3_best_chapter" style="font-size: 12px;"><b
+                      style="font-weight: 600;">所有材料</b>都有需求</div>
+                  刷这个
                   <div class="stage_card_3_markText_l">综合最优</div>
                 </div>
               </div>
             </div>
           </div>
           <!-- 短期最优 -->
-          <div class="stage_card_3_right">
-            <div class="stage_card_3_list" style="width:144px;">
-              <div class="stage_card_3_line">
-                <div class="stage_card_3_img">
-                  <div :class="getItemT3Sprite(30014)"></div>
+          <div class="stage_card_3_intro_right">
+            <!-- 数值图例 -->
+            <div id="stage_card_3_intro_block_1">
+              <div class="stage_card_3_list" style="width:168px;height: 105px;font-size: 12px;line-height: 24px;">
+                <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;">
+                  <div class="stage_card_3_img">
+                    <div :class="getItemT3Sprite(31014)"></div>
+                  </div>
+                  <div class="stage_card_3_line_text"
+                    style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">只需求<span
+                      style="color: blueviolet;">紫材料</span><br>刷这个</div>
+                  <div class="stage_card_3_line_text"
+                    style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T4效率值</div>
                 </div>
-                <div class="stage_card_3_line_text" style="font-size: 12px;">T4最优关</div>
-                <div class="stage_card_3_line_text" style="font-size: 12px;">T4效率</div>
-
+                <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
+                  <div class="stage_card_3_img">
+                    <div :class="getItemT3Sprite(31013)"></div>
+                  </div>
+                  <div class="stage_card_3_line_text"
+                    style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">只需求<span
+                      style="color:rgb(0, 125, 167);">蓝材料</span><br>刷这个</div>
+                  <div class="stage_card_3_line_text"
+                    style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T3效率值</div>
+                </div>
+                <div class="intro_effBar" style="width: 168px;height: 20px;">
+                  <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
+                    :style="getLineBarLength(0, 0, 0.7, 0.9)"></div>
+                  <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;">效率指示条</div>
+                </div>
               </div>
-              <div class="stage_card_3_line">
-                <div class="stage_card_3_img">
-                  <div :class="getItemT3Sprite(30013)"></div>
+              <div class="stage_card_3_markText">短期最优</div>
+            </div>
+            <!-- 图表图例 -->
+            <div id="stage_card_3_intro_block_2" style="width: 54%;font-size: 12px;border-left: 1px solid;">
+              <div class="stage_card_3_list" style="width:210px;height: 108px;line-height: 24px;margin: 8px auto;">
+                <div class="intro_effBar" style="height: 32px;">
+                  <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
+                    :style="getLineBarLength(0, 0, 0, 0)"></div>
+                  <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
+                    每格代表20%的效率</div>
                 </div>
-                <div class="stage_card_3_line_text" style="font-size: 12px;">T3最优关</div>
-                <div class="stage_card_3_line_text" style="font-size: 12px;">T3效率</div>
-
-              </div>
-              <div class="stage_card_3_line">
-                <div class="stage_card_3_img">
-                  <div :class="getItemT3Sprite(30012)"></div>
+                <div class="intro_effBar" style="height: 32px;">
+                  <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
+                    :style="getLineBarLength(0, 0, 0, 0.9)"></div>
+                  <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
+                    所有掉落物的总效率</div>
                 </div>
-                <div class="stage_card_3_line_text" style="font-size: 12px;">T2最优关</div>
-                <div class="stage_card_3_line_text" style="font-size: 12px;">T2效率</div>
-
+                <div class="intro_effBar" style="height: 32px;">
+                  <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
+                    :style="getLineBarLength(0, 0, 0.7, 0.7)"></div>
+                  <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
+                    T4/T3/T2材料的效率</div>
+                  <div style="font-size: 12px;"></div>
+                </div>
+                <div class="intro_effBar" style="height: 24px;margin-right: 8px;text-align: right;">
+                  <el-button type="primary" size="small" :icon="Delete" >看看细节</el-button>
+                  <el-button type="primary" size="small" :icon="Delete" >不再显示</el-button>
+                </div>
               </div>
             </div>
-            <div class="stage_card_3_markText">短期最优</div>
-          </div>
-        </div>
-        <!-- 说明卡片2 -->
-        <div class="stage_card_3">
-          <div>
-            <div class="stage_card_3_list" style="width:244px;">
-              <div class="stage_card_3_line">
-                对所有材料有长期需求：<br>
-                选择综合最优关卡
-              </div>
-              <div class="stage_card_3_line">
-                只需要某系的紫、蓝、绿、白材料:<br>
-                选择T4效率最高的关卡
-              </div>
-
-              <div class="stage_card_3_line">
-                只需要某系的蓝、绿、白材料:<br>
-                选择T3效率最高的关卡，以此类推
-              </div>
-            </div>
+            <!-- 操作区域 -->
+            <!-- <div class="stage_card_3_intro_block" style="width: 15%;">
+            </div> -->
           </div>
         </div>
       </div>
       <!-- 卡片区域 -->
       <div id="stage_3">
-        {{ item_card_data[1] }}
+        <!-- {{ item_card_data[10] }} -->
         <!-- 正式卡片 -->
         <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index" @click="getItemTableData(index)">
           <!-- 长期最优 -->
@@ -122,7 +138,8 @@
                 </div>
                 <div class="stage_card_3_data">
                   <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%
+                  <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
+                    formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
                     :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, 1.1)"></div>
@@ -134,7 +151,8 @@
                 </div>
                 <div class="stage_card_3_data">
                   <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%
+                  <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
+                    formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
                     :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, 0.95)"></div>
@@ -146,7 +164,8 @@
                 </div>
                 <div class="stage_card_3_data">
                   <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text">{{ formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
+                  <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
+                    formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
                     :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, 0.85)"></div>
@@ -558,8 +577,8 @@ function getLineBarLength(T2eff, T3eff, T4eff, stageEff) {
   }
   let stageEffColor = "rgba(0, 0, 0, 0.3) ";
   let standardColor = "rgba(0, 0, 0, 0.1) ";
-  let T4Layer = "linear-gradient(to right ,";
   // Tx效率层
+  let T4Layer = "linear-gradient(to right ,";
   if (T4eff < 0.2) {
     T4Layer = T4Layer + T4Color + T4eff * 83.33 + "%,rgba(0, 255, 0, 0) " + T4eff * 83.33 + "%)"
   } else {
@@ -586,25 +605,53 @@ function getLineBarLength(T2eff, T3eff, T4eff, stageEff) {
       }
     }
   }
-  // 关卡效率层
-  let stageLayer = "linear-gradient(to right ," + stageEffColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ," + stageEffColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ," + stageEffColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ,";
-  if (stageEff < 0.8) {
-    stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+  // Tx效率层
+  let stageLayer = "linear-gradient(to right ,";
+  if (stageEff < 0.2) {
+    stageLayer = stageLayer + stageEffColor + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
   } else {
-    stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ,"
-    if (stageEff < 1) {
-      stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+    stageLayer = stageLayer + stageEffColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ,"
+    if (stageEff < 0.4) {
+      stageLayer = stageLayer + stageEffColor + 0.2 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
     } else {
-      stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.99 * 83.33 + "% " + 1 * 83.33 + "% ,"
-      stageLayer = stageLayer + stageEffColor + 1 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+      stageLayer = stageLayer + stageEffColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ,"
+      if (stageEff < 0.6) {
+        stageLayer = stageLayer + stageEffColor + 0.4 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+      } else {
+        stageLayer = stageLayer + stageEffColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ,"
+        if (stageEff < 0.8) {
+          stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+        } else {
+          stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ,"
+          if (stageEff < 1) {
+            stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+          } else {
+            stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.99 * 83.33 + "% " + 1 * 83.33 + "% ,"
+            stageLayer = stageLayer + stageEffColor + 1 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+          }
+        }
+      }
     }
   }
+  // 关卡效率层
+  // let stageLayer = "linear-gradient(to right ," + stageEffColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ," + stageEffColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ," + stageEffColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ,";
+  // if (stageEff < 0.8) {
+  //   stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+  // } else {
+  //   stageLayer = stageLayer + stageEffColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ,"
+  //   if (stageEff < 1) {
+  //     stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+  //   } else {
+  //     stageLayer = stageLayer + stageEffColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.99 * 83.33 + "% " + 1 * 83.33 + "% ,"
+  //     stageLayer = stageLayer + stageEffColor + 1 * 83.33 + "% " + stageEff * 83.33 + "%,rgba(0, 255, 0, 0) " + stageEff * 83.33 + "%)"
+  //   }
+  // }
 
 
   // 默认显示5个格子
   // let standardLayer = "linear-gradient(to right ," + standardColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ," + standardColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ," + standardColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ," + standardColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ," + standardColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.99 * 83.33 + "% " + 83.33 + "% ," + standardColor + 83.33 + "% 101%)";
   let standardLayer = "linear-gradient(to right ," + standardColor + 0.19 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.19 * 83.33 + "% " + 0.2 * 83.33 + "% ," + standardColor + 0.2 * 83.33 + "% " + 0.39 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.39 * 83.33 + "% " + 0.4 * 83.33 + "% ," + standardColor + 0.4 * 83.33 + "% " + 0.59 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.59 * 83.33 + "% " + 0.6 * 83.33 + "% ," + standardColor + 0.6 * 83.33 + "% " + 0.79 * 83.33 + "%,rgba(0, 255, 0, 0) " + 0.79 * 83.33 + "% " + 0.8 * 83.33 + "% ," + standardColor + 0.8 * 83.33 + "% " + 0.99 * 83.33 + "%,rgba(0, 255, 0, 0) " + 83.33 + "% 101%)";
-  return "background:" + T4Layer +"," + stageLayer + "," + standardLayer + ";";
+  return "background:" + T4Layer + "," + stageLayer + "," + standardLayer + ";";
 }
 
 /**
