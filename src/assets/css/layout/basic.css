@@ -199,12 +199,13 @@ html{
 }
 
 .tab_text {
+  line-height: 24px;
   margin-left: 12px;
   display: inline-block;
   font-style: italic;
   color: skyblue;
   font-size: 14px;
-  vertical-align: middle;
+  vertical-align: bottom;
 }
 
 .op_content {
