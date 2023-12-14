@@ -74,7 +74,7 @@ for (let index in [0, 1, 2, 3, 4, 5, 6]) {
         name: `第${index + 1}班`,
         description: `第${index + 1}班的描述`,
         period: ['00:00', '00:00'],
-        room: rooms,
+        rooms: rooms,
         Fiammetta: {
             enable: false,
             target: "",

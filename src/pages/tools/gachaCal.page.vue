@@ -1932,7 +1932,7 @@ export const documentProps = {
   padding: 0px 12px 0px 12px;
   max-width: 1200px;
   margin: auto;
-  background-color: var(--c-bg);
+  background-color: var(--c-background-color);
 }
 
 .foot_unit {
@@ -2086,7 +2086,7 @@ export const documentProps = {
 #gacha {
   display: flex;
   justify-content: center;
-  background-color: var(--c-bg);
+  background-color: var(--c-background-color);
 }
 
 .gacha-row {
@@ -2118,7 +2118,7 @@ export const documentProps = {
 
 .el-collapse-item{
   box-shadow: var(--c-box-shadow);
-  background-color: var(--c-bg-transparent-white);
+  background-color: var(--c-background-white-transparent);
 }
 </style>
 

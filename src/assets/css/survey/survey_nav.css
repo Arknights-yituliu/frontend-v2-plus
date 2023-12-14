@@ -26,7 +26,7 @@
 }
 
 .survey_nav_menu {
-    background-color: var(--c-bg-transparent-white);
+    background-color: var(--c-background-white-transparent);
     padding:1px;
     border-radius: 4px;
     width: fit-content;

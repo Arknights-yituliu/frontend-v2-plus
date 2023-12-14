@@ -59,7 +59,7 @@ function openOrClose() {
   overflow: hidden;
   transition: all 0.3s;
   z-index: 3000;
-  background-color: var(--c-bg);
+  background-color: var(--c-background-color);
   box-shadow: var(--c-box-shadow);
   border-radius: 4px;
 }

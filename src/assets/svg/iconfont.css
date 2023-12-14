@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4327035 */
-  src: url('iconfont.woff2?t=1699847228431') format('woff2'),
-       url('iconfont.woff?t=1699847228431') format('woff'),
-       url('iconfont.ttf?t=1699847228431') format('truetype');
+  src: url('iconfont.woff2?t=1702368213643') format('woff2'),
+       url('iconfont.woff?t=1702368213643') format('woff'),
+       url('iconfont.ttf?t=1702368213643') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bell:before {
+  content: "\e658";
 }
 
 .icon-right:before {
