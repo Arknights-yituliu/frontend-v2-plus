@@ -141,7 +141,8 @@
                     formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, stage.stageEfficiency)"></div>
+                    :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, stage.leT5MaxEfficiencyStage.stageEfficiency)">
+                  </div>
                 </div>
               </div>
               <div class="stage_card_3_line">
@@ -154,7 +155,8 @@
                     formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, stage.stageEfficiency)"></div>
+                    :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, stage.leT4MaxEfficiencyStage.stageEfficiency )">
+                  </div>{{ stage.stageEfficiency }}
                 </div>
               </div>
               <div class="stage_card_3_line" v-show="stage.series.r2">
@@ -167,11 +169,12 @@
                     formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
                   </div>
                   <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, stage.stageEfficiency)"></div>
+                    :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, stage.leT3MaxEfficiencyStage.stageEfficiency)">
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="stage_card_3_markText">短期最优</div>
+            <div class="stage_card_3_markText">短期最优 {{ stage.stageEfficiency }}</div>
           </div>
         </div>
         <div class="stage_card_3 " v-for="index in 4" :key="index" style="height: 0; margin-bottom: 0;opacity: 0;">
@@ -496,7 +499,7 @@ function getStageDataByProperty(stageList, property) {
     return {
       stage_code: stage.stageCode,
       efficiency: stage[property] * 100,
-      stageEfficiency:stage.stageEfficiency,
+      stageEfficiency: stage.stageEfficiency,
       zoneName: stage.zoneName.replace(" (标准)", "")
     }
   }
