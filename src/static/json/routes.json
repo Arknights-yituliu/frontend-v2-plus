@@ -19,6 +19,10 @@
       {
         "path": "/material/value",
         "text": "物品价值表"
+      },
+      {
+        "path": "/material/elite",
+        "text": "五星六星精二性价比"
       }
     ]
   },
