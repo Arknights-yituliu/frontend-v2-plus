@@ -1,405 +1,403 @@
 <template>
-  <div>
-    <!-- 地图效率Start -->
-    <div id="stage" style="font-family: Arial, Helvetica, sans-serif;">
-      <!-- 标题区域 -->
-      <div class="op_title">
-        <div class="op_title_text">
-          <div class="op_title_ctext">推荐关卡</div>
-          <div class="op_title_etext_light">Best Stages</div>
-        </div>
-        <div class="op_title_tag">
-          <!-- <div class="op_tag_0">图例</div> -->
-          <div class="op_tag_0">搓玉数据</div>
-          <div class="op_tag_0">往期活动</div>
-          <div class="op_tag_0">常见问题</div>
-          <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
-          <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
-          <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
+  <!-- 地图效率Start -->
+  <div id="stage" style="font-family: Arial, Helvetica, sans-serif;">
+    <!-- 标题区域 -->
+    <div class="op_title">
+      <div class="op_title_text">
+        <div class="op_title_ctext">推荐关卡</div>
+        <div class="op_title_etext_light">Best Stages</div>
+      </div>
+      <div class="op_title_tag">
+        <!-- <div class="op_tag_0">图例</div> -->
+        <div class="op_tag_0">搓玉数据</div>
+        <div class="op_tag_0">往期活动</div>
+        <div class="op_tag_0">常见问题</div>
+        <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
+        <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
+        <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
 
-          <div class="tab_text">*点击卡片查看详情</div>
-        </div>
-        <!-- <div class="op_title_tag" style="height: 24px">
+        <div class="tab_text">*点击卡片查看详情</div>
+      </div>
+      <!-- <div class="op_title_tag" style="height: 24px">
           <div class="tab_text">
             占位
           </div>
         </div> -->
-      </div>
-      <!-- 说明区域 -->
-      <div id="stage_3_intro">
-        <!-- 说明卡片1 -->
-        <div class="stage_card_3" style="max-width: 630px;">
-          <!-- 长期最优 -->
-          <div class="stage_card_3_intro_left">
-            <div class="img_wrap" style="position: relative;">
-              <div class="stage_card_3_mainImg" :class="getItemSeriesSprite('31013')">
-                <div class="stage_card_3_cover" style="height:114px;"></div>
-                <div class="stage_card_3_best" style="font-size: 16px;">
-                  <div class="stage_card_3_best_chapter" style="font-size: 12px;"><b
-                      style="font-weight: 600;">所有材料</b>都有需求</div>
-                  刷这个
-                  <div class="stage_card_3_markText_l">综合最优</div>
+    </div>
+    <!-- 说明区域 -->
+    <div id="stage_3_intro">
+      <!-- 说明卡片1 -->
+      <div class="stage_card_3" style="max-width: 630px;">
+        <!-- 长期最优 -->
+        <div class="stage_card_3_intro_left">
+          <div class="img_wrap" style="position: relative;">
+            <div class="stage_card_3_mainImg" :class="getItemSeriesSprite('31013')">
+              <div class="stage_card_3_cover" style="height:114px;"></div>
+              <div class="stage_card_3_best" style="font-size: 16px;">
+                <div class="stage_card_3_best_chapter" style="font-size: 12px;"><b style="font-weight: 600;">所有材料</b>都有需求
                 </div>
+                刷这个
+                <div class="stage_card_3_markText_l">综合最优</div>
               </div>
             </div>
           </div>
-          <!-- 短期最优 -->
-          <div class="stage_card_3_intro_right">
-            <!-- 数值图例 -->
-            <div id="stage_card_3_intro_block_1">
-              <div class="stage_card_3_list" style="width:168px;height: 105px;font-size: 12px;line-height: 24px;">
-                <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;">
-                  <div class="stage_card_3_img">
-                    <div :class="getItemT3Sprite(31014)"></div>
-                  </div>
-                  <div class="stage_card_3_line_text"
-                    style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">只需求<span
-                      style="color: blueviolet;">紫材料</span><br>刷这个</div>
-                  <div class="stage_card_3_line_text"
-                    style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T4效率值</div>
+        </div>
+        <!-- 短期最优 -->
+        <div class="stage_card_3_intro_right">
+          <!-- 数值图例 -->
+          <div id="stage_card_3_intro_block_1">
+            <div class="stage_card_3_list" style="width:168px;height: 105px;font-size: 12px;line-height: 24px;">
+              <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;">
+                <div class="stage_card_3_img">
+                  <div :class="getItemT3Sprite(31014)"></div>
                 </div>
-                <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
-                  <div class="stage_card_3_img">
-                    <div :class="getItemT3Sprite(31013)"></div>
-                  </div>
-                  <div class="stage_card_3_line_text"
-                    style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">只需求<span
-                      style="color:rgb(0, 125, 167);">蓝材料</span><br>刷这个</div>
-                  <div class="stage_card_3_line_text"
-                    style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T3效率值</div>
-                </div>
-                <div class="intro_effBar" style="width: 168px;height: 20px;">
-                  <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                    :style="getLineBarLength(0, 0, 0.7, 0.9)"></div>
-                  <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;">效率指示条</div>
-                </div>
+                <div class="stage_card_3_line_text"
+                  style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">只需求<span
+                    style="color: blueviolet;">紫材料</span><br>刷这个</div>
+                <div class="stage_card_3_line_text"
+                  style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T4效率值</div>
               </div>
-              <div class="stage_card_3_markText">短期最优</div>
-            </div>
-            <!-- 图表图例 -->
-            <div id="stage_card_3_intro_block_2" style="width: 54%;font-size: 12px;border-left: 1px solid;">
-              <div class="stage_card_3_list" style="width:210px;height: 108px;line-height: 24px;margin: 8px auto;">
-                <div class="intro_effBar" style="height: 32px;">
-                  <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                    :style="getLineBarLength(0, 0, 0, 0)"></div>
-                  <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
-                    每格代表20%的效率</div>
+              <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
+                <div class="stage_card_3_img">
+                  <div :class="getItemT3Sprite(31013)"></div>
                 </div>
-                <div class="intro_effBar" style="height: 32px;">
-                  <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                    :style="getLineBarLength(0, 0, 0, 0.9)"></div>
-                  <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
-                    所有掉落物的总效率</div>
-                </div>
-                <div class="intro_effBar" style="height: 32px;">
-                  <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                    :style="getLineBarLength(0, 0, 0.7, 0.7)"></div>
-                  <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
-                    T4/T3/T2材料的效率</div>
-                  <div style="font-size: 12px;"></div>
-                </div>
-                <div class="intro_effBar" style="height: 24px;margin-right: 8px;text-align: right;">
-                  <el-button type="primary" size="small" :icon="Delete">看看细节</el-button>
-                  <el-button type="primary" size="small" :icon="Delete">不再显示</el-button>
-                </div>
+                <div class="stage_card_3_line_text"
+                  style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">只需求<span
+                    style="color:rgb(0, 125, 167);">蓝材料</span><br>刷这个</div>
+                <div class="stage_card_3_line_text"
+                  style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T3效率值</div>
+              </div>
+              <div class="intro_effBar" style="width: 168px;height: 20px;">
+                <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
+                  :style="getLineBarLength(0, 0, 0.7, 0.9)"></div>
+                <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;">效率指示条</div>
               </div>
             </div>
-            <!-- 操作区域 -->
-            <!-- <div class="stage_card_3_intro_block" style="width: 15%;">
+            <div class="stage_card_3_markText">短期最优</div>
+          </div>
+          <!-- 图表图例 -->
+          <div id="stage_card_3_intro_block_2" style="width: 54%;font-size: 12px;border-left: 1px solid;">
+            <div class="stage_card_3_list" style="width:210px;height: 108px;line-height: 24px;margin: 8px auto;">
+              <div class="intro_effBar" style="height: 32px;">
+                <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
+                  :style="getLineBarLength(0, 0, 0, 0)"></div>
+                <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
+                  每格代表20%的效率</div>
+              </div>
+              <div class="intro_effBar" style="height: 32px;">
+                <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
+                  :style="getLineBarLength(0, 0, 0, 0.9)"></div>
+                <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
+                  所有掉落物的总效率</div>
+              </div>
+              <div class="intro_effBar" style="height: 32px;">
+                <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
+                  :style="getLineBarLength(0, 0, 0.7, 0.7)"></div>
+                <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
+                  T4/T3/T2材料的效率</div>
+                <div style="font-size: 12px;"></div>
+              </div>
+              <div class="intro_effBar" style="height: 24px;margin-right: 8px;text-align: right;">
+                <el-button type="primary" size="small" :icon="Delete">看看细节</el-button>
+                <el-button type="primary" size="small" :icon="Delete">不再显示</el-button>
+              </div>
+            </div>
+          </div>
+          <!-- 操作区域 -->
+          <!-- <div class="stage_card_3_intro_block" style="width: 15%;">
             </div> -->
-          </div>
         </div>
       </div>
-      <!-- 卡片区域 -->
-      <div id="stage_3">
-        <!-- {{ item_card_data[10] }} -->
-        <!-- 正式卡片 -->
-        <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index" @click="getItemTableData(index)">
-          <!-- 长期最优 -->
-          <div class="stage_card_3_left">
-            <div class="img_wrap" style="position: relative;">
-              <div class="stage_card_3_mainImg" :class="getItemSeriesSprite(stage.series.r3)">
-                <div class="stage_card_3_cover"></div>
-                <div class="stage_card_3_best">
-                  <div class="stage_card_3_best_chapter">{{ stage.maxEfficiencyStage.zoneName }}</div>
-                  {{ stage.maxEfficiencyStage.stage_code }}
-                  <div class="stage_card_3_markText_l">综合最优</div>
+    </div>
+    <!-- 卡片区域 -->
+    <div id="stage_3">
+      <!-- {{ item_card_data[10] }} -->
+      <!-- 正式卡片 -->
+      <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index" @click="getItemTableData(index)">
+        <!-- 长期最优 -->
+        <div class="stage_card_3_left">
+          <div class="img_wrap" style="position: relative;">
+            <div class="stage_card_3_mainImg" :class="getItemSeriesSprite(stage.series.r3)">
+              <div class="stage_card_3_cover"></div>
+              <div class="stage_card_3_best">
+                <div class="stage_card_3_best_chapter">{{ stage.maxEfficiencyStage.zoneName }}</div>
+                {{ stage.maxEfficiencyStage.stage_code }}
+                <div class="stage_card_3_markText_l">综合最优</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 短期最优 -->
+        <div class="stage_card_3_right">
+          <div class="stage_card_3_list">
+            <div class="stage_card_3_line">
+              <div class="stage_card_3_img">
+                <div :class="getItemT3Sprite(stage.series.r4)"></div>
+              </div>
+              <div class="stage_card_3_data">
+                <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
+                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
+                  formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%
+                </div>
+                <div class="stage_card_3_line_bar"
+                  :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, stage.leT5MaxEfficiencyStage.stageEfficiency)">
+                </div>
+              </div>
+            </div>
+            <div class="stage_card_3_line">
+              <div class="stage_card_3_img">
+                <div :class="getItemT3Sprite(stage.series.r3)"></div>
+              </div>
+              <div class="stage_card_3_data">
+                <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
+                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
+                  formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%
+                </div>
+                <div class="stage_card_3_line_bar"
+                  :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, stage.leT4MaxEfficiencyStage.stageEfficiency)">
+                </div>{{ stage.stageEfficiency }}
+              </div>
+            </div>
+            <div class="stage_card_3_line" v-show="stage.series.r2">
+              <div class="stage_card_3_img">
+                <div :class="getItemT3Sprite(stage.series.r2)"></div>
+              </div>
+              <div class="stage_card_3_data">
+                <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
+                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
+                  formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
+                </div>
+                <div class="stage_card_3_line_bar"
+                  :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, stage.leT3MaxEfficiencyStage.stageEfficiency)">
                 </div>
               </div>
             </div>
           </div>
-          <!-- 短期最优 -->
-          <div class="stage_card_3_right">
-            <div class="stage_card_3_list">
-              <div class="stage_card_3_line">
-                <div class="stage_card_3_img">
-                  <div :class="getItemT3Sprite(stage.series.r4)"></div>
-                </div>
-                <div class="stage_card_3_data">
-                  <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
-                    formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%
-                  </div>
-                  <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, stage.leT5MaxEfficiencyStage.stageEfficiency)">
-                  </div>
-                </div>
-              </div>
-              <div class="stage_card_3_line">
-                <div class="stage_card_3_img">
-                  <div :class="getItemT3Sprite(stage.series.r3)"></div>
-                </div>
-                <div class="stage_card_3_data">
-                  <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
-                    formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%
-                  </div>
-                  <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, stage.leT4MaxEfficiencyStage.stageEfficiency )">
-                  </div>{{ stage.stageEfficiency }}
-                </div>
-              </div>
-              <div class="stage_card_3_line" v-show="stage.series.r2">
-                <div class="stage_card_3_img">
-                  <div :class="getItemT3Sprite(stage.series.r2)"></div>
-                </div>
-                <div class="stage_card_3_data">
-                  <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
-                  <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
-                    formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
-                  </div>
-                  <div class="stage_card_3_line_bar"
-                    :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, stage.leT3MaxEfficiencyStage.stageEfficiency)">
-                  </div>
-                </div>
-              </div>
+          <div class="stage_card_3_markText">短期最优 {{ stage.stageEfficiency }}</div>
+        </div>
+      </div>
+      <div class="stage_card_3 " v-for="index in 4" :key="index" style="height: 0; margin-bottom: 0;opacity: 0;">
+      </div>
+    </div>
+    <!-- 材料情报卡 -->
+    <div class="op_title">
+      <div class="op_title_text">
+        <div class="op_title_ctext">材料详情</div>
+        <div class="op_title_etext_light">Item Info</div>
+      </div>
+      <div class="op_title_tag">
+        <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
+        <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
+        <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
+        <div class="tab_text">*表格可拖动查看</div>
+      </div>
+    </div>
+    <!-- 材料信息 -->
+    <div id="itemDetail">
+      <div class="item-detail-bar">
+        <div class="detail-bar-item-wrap">
+          <div :class="getDetailTableHeaderItemSprite(selected_item.itemId)"></div>
+          <span class="detail-bar-item-text">
+            {{ selected_item.itemName }}
+          </span>
+
+          <div :class="`bg-AP_GAMEPLAY value-icon`"></div>
+          <span class="item-value-text">
+            {{ formatNumber(selected_item.itemValueAp, 2) }}
+          </span>
+        </div>
+
+        <div class="activity-wrap">
+          上次up：{{ selected_item.lastUp.activityName }}
+        </div>
+        <div class="activity-wrap">
+          即将up：{{ selected_item.lastUp.activityName }}
+        </div>
+      </div>
+
+      <div class="item-detail-bar">
+        <div>
+          <div class="cost-perf-bar" v-for="(costPerf, index) in selected_item.storeCostPerf" :key="index">
+            <div :class="`bg-${costPerf.token} token-icon`"></div>
+            <span class="cost-perf-text">
+              {{ formatNumber(costPerf.costPerf, 2) }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <!--        <div id="detailRight">-->
+      <!--          绿票商店兑换优先级：0.6（低）[蓝材料]<br>-->
+      <!--          寻访数据契约商店：0.4（低）/0.3（极低）[蓝/紫材料]<br>-->
+      <!--          信用商店：0.4（低）/0.3（极低）[绿/白材料]<br>-->
+      <!--          合约商店无限池：0.4（低）/0.3（极低）[蓝材料]<br>-->
+      <!--          查看所有商店性价比-->
+      <!--        </div>-->
+    </div>
+    <!-- 详情表 -->
+    <div style="margin : 8px;">
+      <el-table id="detailTable" stripe :data="item_table_data_by_item_id" max-height="450">
+        <el-table-column fixed prop="stageCode" label="关卡名" :width="td_6" sortable>
+          <template #default="scope">
+            <div>
+              <span style="font-size: 10px;line-height: 8px;">{{ scope.row.zoneName }}</span><br>
+              {{ scope.row.stageCode }}
             </div>
-            <div class="stage_card_3_markText">短期最优 {{ stage.stageEfficiency }}</div>
-          </div>
-        </div>
-        <div class="stage_card_3 " v-for="index in 4" :key="index" style="height: 0; margin-bottom: 0;opacity: 0;">
-        </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="primary" label="主产品" :width="td_1">
+          <template #default="scope">
+            <div class="detail-table-item-wrap">
+              <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="secondary" label="副产品" :width="td_1">
+          <template #default="scope">
+            <div class="detail-table-item-wrap">
+              <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="eff" label="综合效率" :width="td_5" sortable>
+          <template #default="scope">
+            {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
+          </template>
+        </el-table-column>
+        <el-table-column prop="spm" label="SPM" :width="td_4" sortable />
+        <el-table-column prop="leT5Efficiency" label="T4效率" :width="td_4" sortable>
+          <template #default="scope">
+            {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
+          </template>
+        </el-table-column>
+        <el-table-column prop="leT4Efficiency" label="T3效率" :width="td_4" sortable>
+          <template #default="scope">
+            {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
+          </template>
+        </el-table-column>
+        <el-table-column prop="leT3Efficiency" label="T2效率" :width="td_4" sortable>
+          <template #default="scope">
+            {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="op_title_tag">
+        <div class="tab_text">*副产品：</div>
+        <div class="tab_text">*综合效率：</div>
+        <div class="tab_text">*SPM：</div>
+        <div class="tab_text">*T4/T3/T2效率：</div>
       </div>
-      <!-- 材料情报卡 -->
-      <div class="op_title">
-        <div class="op_title_text">
-          <div class="op_title_ctext">材料详情</div>
-          <div class="op_title_etext_light">Item Info</div>
-        </div>
-        <div class="op_title_tag">
-          <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
-          <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
-          <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
-          <div class="tab_text">*表格可拖动查看</div>
-        </div>
+    </div>
+
+    <!-- 搓玉 -->
+    <div class="op_title">
+      <div class="op_title_text">
+        <div class="op_title_ctext">搓玉数据表</div>
+        <div class="op_title_etext_light">Orundum</div>
       </div>
-      <!-- 材料信息 -->
-      <div id="itemDetail">
-        <div class="item-detail-bar">
-          <div class="detail-bar-item-wrap">
-            <div :class="getDetailTableHeaderItemSprite(selected_item.itemId)"></div>
-            <span class="detail-bar-item-text">
-              {{ selected_item.itemName }}
-            </span>
+      <div class="op_title_tag">
+        <!-- <div class="op_tag_0">图例</div> -->
+        <div class="op_tag_0">简略版</div>
+        <div class="op_tag_0">完整版</div>
+        <div class="tab_text">*简略版仅包括活动关</div>
+      </div>
+    </div>
 
-            <div :class="`bg-AP_GAMEPLAY value-icon`"></div>
-            <span class="item-value-text">
-              {{ formatNumber(selected_item.itemValueAp, 2) }}
-            </span>
+    <el-table :data="orundumRecommendedStage" stripe style="width: 100%;height: 400px">
+      <el-table-column prop="stageCode" label="关卡名" />
+      <el-table-column label="每理智可搓玉">
+        <template #default="scope">
+          <div style="display: flex; align-items: center">
+            <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>
+            <div class="orundum-table-icon">
+              <div class="bg-4003_icon sprite-icon"></div>
+            </div>
           </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="每搓1抽消耗">
+        <template #default="scope">
+          <div style="display: flex; align-items: center">
+            <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
+            <div class="orundum-table-icon">
+              <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
+      <el-table-column prop="stageEfficiency" label="关卡效率" />
+    </el-table>
 
-          <div class="activity-wrap">
-            上次up：{{ selected_item.lastUp.activityName }}
-          </div>
-          <div class="activity-wrap">
-            即将up：{{ selected_item.lastUp.activityName }}
-          </div>
-        </div>
+    <!-- 历史活动 -->
+    <div class="op_title">
+      <div class="op_title_text">
+        <div class="op_title_ctext">往期活动数据</div>
+        <div class="op_title_etext_light">History Event</div>
+      </div>
+      <div class="op_title_tag">
+        <!-- <div class="op_tag_0">图例</div> -->
+        <div class="op_tag_0">列表版</div>
+        <div class="op_tag_0">表格版</div>
+      </div>
+    </div>
 
-        <div class="item-detail-bar">
-          <div>
-            <div class="cost-perf-bar" v-for="(costPerf, index) in selected_item.storeCostPerf" :key="index">
-              <div :class="`bg-${costPerf.token} token-icon`"></div>
-              <span class="cost-perf-text">
-                {{ formatNumber(costPerf.costPerf, 2) }}
+
+    <table class="act-table">
+      <tbody>
+        <tr>
+          <td class="act-name">活动名称</td>
+          <td v-for="(item, index) in itemIdList" :key="index">
+            <div class="act-table-item-wrap" style="height: 36px">
+              <div :class="getActTableItemSprite(item.id)"></div>
+            </div>
+          </td>
+        </tr>
+        <tr v-for="(act, index) in historyActItemTable" :key="index">
+          <td class="act-name">{{ act.zoneName }}</td>
+          <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
+            <div class="act-table-item-wrap" v-if="item.isUp">
+              <div :class="getActTableItemSprite(item.itemId)"></div>
+              <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
+                {{ formatNumber(item.stageEfficiency, 2) }}%
               </span>
             </div>
-          </div>
-        </div>
-        <!--        <div id="detailRight">-->
-        <!--          绿票商店兑换优先级：0.6（低）[蓝材料]<br>-->
-        <!--          寻访数据契约商店：0.4（低）/0.3（极低）[蓝/紫材料]<br>-->
-        <!--          信用商店：0.4（低）/0.3（极低）[绿/白材料]<br>-->
-        <!--          合约商店无限池：0.4（低）/0.3（极低）[蓝材料]<br>-->
-        <!--          查看所有商店性价比-->
-        <!--        </div>-->
-      </div>
-      <!-- 详情表 -->
-      <div style="margin : 8px;">
-        <el-table id="detailTable" stripe :data="item_table_data_by_item_id" max-height="450">
-          <el-table-column fixed prop="stageCode" label="关卡名" :width="td_6" sortable>
-            <template #default="scope">
-              <div>
-                <span style="font-size: 10px;line-height: 8px;">{{ scope.row.zoneName }}</span><br>
-                {{ scope.row.stageCode }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="primary" label="主产品" :width="td_1">
-            <template #default="scope">
-              <div class="detail-table-item-wrap">
-                <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="secondary" label="副产品" :width="td_1">
-            <template #default="scope">
-              <div class="detail-table-item-wrap">
-                <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="eff" label="综合效率" :width="td_5" sortable>
-            <template #default="scope">
-              {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
-            </template>
-          </el-table-column>
-          <el-table-column prop="spm" label="SPM" :width="td_4" sortable />
-          <el-table-column prop="leT5Efficiency" label="T4效率" :width="td_4" sortable>
-            <template #default="scope">
-              {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
-            </template>
-          </el-table-column>
-          <el-table-column prop="leT4Efficiency" label="T3效率" :width="td_4" sortable>
-            <template #default="scope">
-              {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
-            </template>
-          </el-table-column>
-          <el-table-column prop="leT3Efficiency" label="T2效率" :width="td_4" sortable>
-            <template #default="scope">
-              {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="op_title_tag">
-          <div class="tab_text">*副产品：</div>
-          <div class="tab_text">*综合效率：</div>
-          <div class="tab_text">*SPM：</div>
-          <div class="tab_text">*T4/T3/T2效率：</div>
-        </div>
-      </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-      <!-- 搓玉 -->
-      <div class="op_title">
-        <div class="op_title_text">
-          <div class="op_title_ctext">搓玉数据表</div>
-          <div class="op_title_etext_light">Orundum</div>
-        </div>
-        <div class="op_title_tag">
-          <!-- <div class="op_tag_0">图例</div> -->
-          <div class="op_tag_0">简略版</div>
-          <div class="op_tag_0">完整版</div>
-          <div class="tab_text">*简略版仅包括活动关</div>
-        </div>
-      </div>
-
-      <el-table :data="orundumRecommendedStage" stripe style="width: 100%;height: 400px">
-        <el-table-column prop="stageCode" label="关卡名" />
-        <el-table-column label="每理智可搓玉">
-          <template #default="scope">
-            <div style="display: flex; align-items: center">
-              <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>
-              <div class="orundum-table-icon">
-                <div class="bg-4003_icon sprite-icon"></div>
+    <div class="act-table-simple-wrap">
+      <table class="act-table-simple">
+        <tr v-for="(act, index) in historyActItemList" :key="index">
+          <td class="act-name-simple">{{ act.zoneName }}</td>
+          <td v-for="(stage, index) in  act.actStageList" :key="index">
+            <div class="act-drop-table">
+              <div class="act-table-simple-item-wrap">
+                <div :class="getActTableSimpleItemSprite(stage.itemId)"></div>
               </div>
+              <span class="act-drop-detail">
+                {{ stage.stageCode }} <br>
+                {{ formatNumber(stage.stageEfficiency, 2) }}%
+              </span>
             </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="每搓1抽消耗">
-          <template #default="scope">
-            <div style="display: flex; align-items: center">
-              <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
-              <div class="orundum-table-icon">
-                <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
-        <el-table-column prop="stageEfficiency" label="关卡效率" />
-      </el-table>
-
-      <!-- 历史活动 -->
-      <div class="op_title">
-        <div class="op_title_text">
-          <div class="op_title_ctext">往期活动数据</div>
-          <div class="op_title_etext_light">History Event</div>
-        </div>
-        <div class="op_title_tag">
-          <!-- <div class="op_tag_0">图例</div> -->
-          <div class="op_tag_0">列表版</div>
-          <div class="op_tag_0">表格版</div>
-        </div>
-      </div>
-
-
-      <table class="act-table">
-        <tbody>
-          <tr>
-            <td class="act-name">活动名称</td>
-            <td v-for="(item, index) in itemIdList" :key="index">
-              <div class="act-table-item-wrap" style="height: 36px">
-                <div :class="getActTableItemSprite(item.id)"></div>
-              </div>
-            </td>
-          </tr>
-          <tr v-for="(act, index) in historyActItemTable" :key="index">
-            <td class="act-name">{{ act.zoneName }}</td>
-            <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
-              <div class="act-table-item-wrap" v-if="item.isUp">
-                <div :class="getActTableItemSprite(item.itemId)"></div>
-                <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
-                  {{ formatNumber(item.stageEfficiency, 2) }}%
-                </span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+          </td>
+        </tr>
       </table>
-
-      <div class="act-table-simple-wrap">
-        <table class="act-table-simple">
-          <tr v-for="(act, index) in historyActItemList" :key="index">
-            <td class="act-name-simple">{{ act.zoneName }}</td>
-            <td v-for="(stage, index) in  act.actStageList" :key="index">
-              <div class="act-drop-table">
-                <div class="act-table-simple-item-wrap">
-                  <div :class="getActTableSimpleItemSprite(stage.itemId)"></div>
-                </div>
-                <span class="act-drop-detail">
-                  {{ stage.stageCode }} <br>
-                  {{ formatNumber(stage.stageEfficiency, 2) }}%
-                </span>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <!-- 常见问题 -->
-      <div class="op_title">
-        <div class="op_title_text">
-          <div class="op_title_ctext">常见问题</div>
-          <div class="op_title_etext_light">FAQ</div>
-        </div>
-        <div class="op_title_tag" style="height: 24px">
-          <div class="tab_text">
-          </div>
-        </div>
-      </div>
-
-      <foot-component></foot-component>
-
     </div>
+    <!-- 常见问题 -->
+    <div class="op_title">
+      <div class="op_title_text">
+        <div class="op_title_ctext">常见问题</div>
+        <div class="op_title_etext_light">FAQ</div>
+      </div>
+      <div class="op_title_tag" style="height: 24px">
+        <div class="tab_text">
+        </div>
+      </div>
+    </div>
+
+    <foot-component></foot-component>
+
   </div>
 </template>
 
