@@ -193,7 +193,7 @@
       </div>
     </div>
     <!-- 材料信息 -->
-    <div id="itemDetail">
+    <!-- <div id="itemDetail">
       <div class="item-detail-bar">
         <div class="detail-bar-item-wrap">
           <div :class="getDetailTableHeaderItemSprite(selected_item.itemId)"></div>
@@ -225,14 +225,14 @@
           </div>
         </div>
       </div>
-      <!--        <div id="detailRight">-->
-      <!--          绿票商店兑换优先级：0.6（低）[蓝材料]<br>-->
-      <!--          寻访数据契约商店：0.4（低）/0.3（极低）[蓝/紫材料]<br>-->
-      <!--          信用商店：0.4（低）/0.3（极低）[绿/白材料]<br>-->
-      <!--          合约商店无限池：0.4（低）/0.3（极低）[蓝材料]<br>-->
-      <!--          查看所有商店性价比-->
-      <!--        </div>-->
-    </div>
+      <div id="detailRight">
+        绿票商店兑换优先级：0.6（低）[蓝材料]<br>
+        寻访数据契约商店：0.4（低）/0.3（极低）[蓝/紫材料]<br>
+        信用商店：0.4（低）/0.3（极低）[绿/白材料]<br>
+        合约商店无限池：0.4（低）/0.3（极低）[蓝材料]<br>
+        查看所有商店性价比
+      </div>
+    </div> -->
     <!-- 详情表 -->
     <div style="margin : 8px;">
       <el-table id="detailTable" stripe :data="item_table_data_by_item_id" max-height="450">
