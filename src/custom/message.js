@@ -3,8 +3,8 @@
 const style = {
     minWidth: '240px',
     borderRadius: '2px',
-    lineHeight: '32px',
-    height: '32px',
+    lineHeight: '28px',
+    // height: '28px',
     textAlign: 'center',
     position: 'fixed',
     top: '0px',
@@ -18,7 +18,7 @@ const style = {
 const colorStyle = {
     success: {
         color: '#3A973AFF',
-        background: '#F5FDF3FF'
+        background: '#e2ffdb'
     },
     error: {
         color: '#FF4E4EFF',
@@ -37,7 +37,7 @@ function cMessage(text, type = 'success', duration= 4000) {
     let messageBar = document.createElement("div");
 
     for (const property in style) {
-        messageBar.style.overflow = 'hidden'
+        // messageBar.style.overflow = 'hidden'
         messageBar.style[property] = style[property]
     }
 
@@ -48,7 +48,7 @@ function cMessage(text, type = 'success', duration= 4000) {
     // messageBar.appendChild(textElement);
     messageBar.textContent = text
     document.body.appendChild(messageBar);
-    console.log(messageBar)
+
 
     for (const property in colorStyle[type]) {
         messageBar.style[property] = colorStyle[type][property]

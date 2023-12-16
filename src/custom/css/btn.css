@@ -1,17 +1,16 @@
 .btn{
     font-family: 'black', SimHei, sans-serif;
-    padding:4px 12px;
+    padding:4px 16px;
     cursor: pointer;
     min-width: 80px;
     text-align: center;
     border-radius: 3px;
     box-sizing: border-box;
     height: 28px;
-    font-size: 18px;
     line-height: 20px;
     border:none;
     color: var(--c-btn-color);
-    background-color: var(--c-btn-bg);
+    background-color: var(--c-background-color);
     border: var(--c-btn-border);
 }
 
@@ -23,6 +22,7 @@
 .btn-blue{
     color: var(--c-btn-text-color);
     background-color:var(--c-btn-bg-blue);
+    border: none;
 }
 
 /*.btn-blue:hover{*/
@@ -34,11 +34,13 @@
 .btn-green{
     color: var(--c-btn-text-color);
     background-color: var(--c-btn-bg-green);
+    border: none;
 }
 
 .btn-red{
     color: var(--c-btn-text-color);
     background-color: var(--c-btn-bg-red);
+    border: none;
 }
 
 .warning-color{

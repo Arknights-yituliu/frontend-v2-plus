@@ -56,42 +56,47 @@ async function getPlayBinding(path, requestParam, secret,cred){
             nickName: nickName
     }
 
-    await request({
-        url: url,
-        headers: headers,
-        method: "get",
-    }).then(response => {
-        response = response.data
-        // console.log(response)
-        if (response.code !== 0) {
-            cMessage("森空岛CRED错误或失效")
-        } else {
-            const list = response.data.list
+    try {
+        await request({
+            url: url,
+            headers: headers,
+            method: "get",
+        }).then(response => {
+            console.log(response)
+            response = response.data
+            // console.log(response)
+            if (response.code !== 0) {
+                cMessage("森空岛CRED错误或失效")
+            } else {
+                const list = response.data.list
 
-            const bindingList = list[0].bindingList;
+                const bindingList = list[0].bindingList;
 
-            for (const binding of bindingList) {
-                if (binding.isOfficial) {
-                    uid = binding.uid;
-                    nickName = binding.nickName;
+                for (const binding of bindingList) {
+                    if (binding.isOfficial) {
+                        uid = binding.uid;
+                        nickName = binding.nickName;
+                    }
                 }
+
+                if (uid == void 0) {
+                    uid = list[0].bindingList[0].uid;
+                    nickName = list[0].bindingList[0].nickName;
+                }
+
+                if (uid == void 0) {
+                    cMessage("未能成功获取数据")
+                }
+
+                bindingData.bindingList = bindingList;
+                bindingData.nickName = nickName;
+                bindingData.uid = uid;
+
             }
-
-            if (uid == void 0) {
-                uid = list[0].bindingList[0].uid;
-                nickName = list[0].bindingList[0].nickName;
-            }
-
-            if (uid == void 0) {
-                cMessage("未能成功获取数据")
-            }
-
-            bindingData.bindingList = bindingList;
-            bindingData.nickName = nickName;
-            bindingData.uid = uid;
-
-        }
-    })
+        })
+    } catch (e) {
+        cMessage(e.response.data.message,'error')
+    }
     return bindingData;
 }
 

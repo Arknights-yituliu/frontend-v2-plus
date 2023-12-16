@@ -1,4 +1,5 @@
 .maa-schedule-v2 {
+
 }
 
 .schedule-header {
@@ -30,10 +31,18 @@
     float: left;
 }
 
+.input-wrap{
+    position: relative;
+}
 
-.btn-desc {
-    padding-left: 20px;
-    padding-right: 8px;
+.input-type-file{
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 150px;
+    height: 28px;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .schedule-set-wrap {

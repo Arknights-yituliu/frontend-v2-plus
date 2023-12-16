@@ -3,12 +3,19 @@
     line-height: 20px;
     border: none;
     outline: none;
+    padding: 2px;
+    box-sizing: border-box;
     color: var(--c-input-text-color);
     border-bottom: var(--c-input-border);
     background-color: var(--c-input-bg);
 }
 
+.input-base:focus {
+
+    border-bottom:2px solid var(--c-blue);
+}
+
+
 .input-tip{
     position: relative;
-
 }
