@@ -12,7 +12,7 @@
         <div class="op_tag_0">搓玉数据</div>
         <div class="op_tag_0">往期活动</div>
         <div class="op_tag_0">常见问题</div>
-        <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
+        <!-- <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div> -->
         <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
 
@@ -189,11 +189,11 @@
         <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
         <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
-        <div class="tab_text">*表格可拖动查看</div>
+        <div class="tab_text">*表格可左右拖动查看</div>
       </div>
     </div>
     <!-- 材料信息 -->
-    <div id="itemDetail">
+    <!-- <div id="itemDetail">
       <div class="item-detail-bar">
         <div class="detail-bar-item-wrap">
           <div :class="getDetailTableHeaderItemSprite(selected_item.itemId)"></div>
@@ -225,16 +225,16 @@
           </div>
         </div>
       </div>
-      <!--        <div id="detailRight">-->
-      <!--          绿票商店兑换优先级：0.6（低）[蓝材料]<br>-->
-      <!--          寻访数据契约商店：0.4（低）/0.3（极低）[蓝/紫材料]<br>-->
-      <!--          信用商店：0.4（低）/0.3（极低）[绿/白材料]<br>-->
-      <!--          合约商店无限池：0.4（低）/0.3（极低）[蓝材料]<br>-->
-      <!--          查看所有商店性价比-->
-      <!--        </div>-->
-    </div>
+      <div id="detailRight">
+        绿票商店兑换优先级：0.6（低）[蓝材料]<br>
+        寻访数据契约商店：0.4（低）/0.3（极低）[蓝/紫材料]<br>
+        信用商店：0.4（低）/0.3（极低）[绿/白材料]<br>
+        合约商店无限池：0.4（低）/0.3（极低）[蓝材料]<br>
+        查看所有商店性价比
+      </div>
+    </div> -->
     <!-- 详情表 -->
-    <div style="margin : 8px;">
+    <div class="tableArea" style="margin : 8px;max-width: 1080px;">
       <el-table id="detailTable" stripe :data="item_table_data_by_item_id" max-height="450">
         <el-table-column fixed prop="stageCode" label="关卡名" :width="td_6" sortable>
           <template #default="scope">
@@ -244,14 +244,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="主产品" :width="td_1">
+        <el-table-column prop="primary" label="主产物" :width="td_1">
           <template #default="scope">
             <div class="detail-table-item-wrap">
               <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="secondary" label="副产品" :width="td_1">
+        <el-table-column prop="secondary" label="副产物" :width="td_1">
           <template #default="scope">
             <div class="detail-table-item-wrap">
               <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
@@ -281,10 +281,12 @@
         </el-table-column>
       </el-table>
       <div class="op_title_tag">
-        <div class="tab_text">*副产品：</div>
-        <div class="tab_text">*综合效率：</div>
-        <div class="tab_text">*SPM：</div>
-        <div class="tab_text">*T4/T3/T2效率：</div>
+        <div class="tab_text">*主产物/副产物：价值占比最高/第二高的产物</div><br>
+        <div class="tab_text">*综合效率：产物的总价值 / 关卡理智消耗，长期囤材料建议以这个为参考依据</div><br>
+        <div class="tab_text">*T4效率 = (对应紫材料价值+对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗</div><br>
+        <div class="tab_text">*T3效率 = (对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗</div><br>
+        <div class="tab_text">*T2效率 = (对应绿材料价值+对应白材料价值) / 关卡理智消耗</div><br>
+        <div class="tab_text">*SPM：1倍速下每分钟消耗的理智，假设所有敌人均被秒杀，实际可能略大于该值</div>
       </div>
     </div>
 
@@ -296,38 +298,36 @@
       </div>
       <div class="op_title_tag">
         <!-- <div class="op_tag_0">图例</div> -->
-        <div class="op_tag_0">简略版</div>
-        <div class="op_tag_0">完整版</div>
-        <div class="tab_text">*简略版仅包括活动关</div>
+        <div class="op_tag_0">仅显示活动关</div>
       </div>
     </div>
-
-    <el-table :data="orundumRecommendedStage" stripe style="width: 100%;height: 400px">
-      <el-table-column prop="stageCode" label="关卡名" />
-      <el-table-column label="每理智可搓玉">
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>
-            <div class="orundum-table-icon">
-              <div class="bg-4003_icon sprite-icon"></div>
+    <div class="tableArea" style="margin : 8px;max-width: 720px;">
+      <el-table :data="orundumRecommendedStage" stripe style="width: 100%;height: 400px">
+        <el-table-column prop="stageCode" label="关卡名" />
+        <el-table-column label="每理智可搓玉">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>
+              <div class="orundum-table-icon">
+                <div class="bg-4003_icon sprite-icon"></div>
+              </div>
             </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="每搓1抽消耗">
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
-            <div class="orundum-table-icon">
-              <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
+          </template>
+        </el-table-column>
+        <el-table-column label="每搓1抽消耗">
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
+              <div class="orundum-table-icon">
+                <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
+              </div>
             </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
-      <el-table-column prop="stageEfficiency" label="关卡效率" />
-    </el-table>
-
+          </template>
+        </el-table-column>
+        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
+        <el-table-column prop="stageEfficiency" label="关卡效率" />
+      </el-table>
+    </div>
     <!-- 历史活动 -->
     <div class="op_title">
       <div class="op_title_text">
@@ -336,8 +336,8 @@
       </div>
       <div class="op_title_tag">
         <!-- <div class="op_tag_0">图例</div> -->
-        <div class="op_tag_0">列表版</div>
-        <div class="op_tag_0">表格版</div>
+        <div class="op_tag_0">紧密模式</div>
+        <div class="op_tag_1">表格模式</div>
       </div>
     </div>
 
@@ -347,7 +347,7 @@
         <tr>
           <td class="act-name">活动名称</td>
           <td v-for="(item, index) in itemIdList" :key="index">
-            <div class="act-table-item-wrap" style="height: 36px">
+            <div class="act-table-item-wrap" style="height: 42px;margin-top: 8px;">
               <div :class="getActTableItemSprite(item.id)"></div>
             </div>
           </td>
@@ -761,7 +761,7 @@ stageApi.getHistoryActStage(0.625, 300).then(response => {
 function getCellBgColor(flag) {
   console.log(flag)
   if (flag) {
-    return 'background-color: #82beff'
+    return 'background-color: #82beff80'
   }
   return ''
 }
