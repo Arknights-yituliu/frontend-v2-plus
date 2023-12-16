@@ -9,9 +9,9 @@
       </div>
       <div class="op_title_tag">
         <!-- <div class="op_tag_0">图例</div> -->
-        <div class="op_tag_0">搓玉数据</div>
-        <div class="op_tag_0">往期活动</div>
-        <div class="op_tag_0">常见问题</div>
+        <div class="op_tag_0" @click="scrollToOrundumTable()">搓玉数据</div>
+        <div class="op_tag_0" @click="scrollToHistoryStageTable()">往期活动</div>
+        <div class="op_tag_0" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>
         <!-- <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div> -->
         <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
@@ -25,7 +25,7 @@
         </div> -->
     </div>
     <!-- 说明区域 -->
-    <div id="stage_3_intro">
+    <div id="stage_3_intro" :style="`display:${legendStyle} `">
       <!-- 说明卡片1 -->
       <div class="stage_card_3" style="max-width: 630px;">
         <!-- 长期最优 -->
@@ -34,7 +34,8 @@
             <div class="stage_card_3_mainImg" :class="getItemSeriesSprite('31013')">
               <div class="stage_card_3_cover" style="height:114px;"></div>
               <div class="stage_card_3_best" style="font-size: 16px;">
-                <div class="stage_card_3_best_chapter" style="font-size: 12px;"><b style="font-weight: 600;">所有材料</b>都有需求
+                <div class="stage_card_3_best_chapter" style="font-size: 12px;"><b
+                    style="font-weight: 600;">所有材料</b>都有需求
                 </div>
                 刷这个
                 <div class="stage_card_3_markText_l">综合最优</div>
@@ -52,24 +53,30 @@
                   <div :class="getItemT3Sprite(31014)"></div>
                 </div>
                 <div class="stage_card_3_line_text"
-                  style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">只需求<span
-                    style="color: blueviolet;">紫材料</span><br>刷这个</div>
+                     style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">
+                  只需求<span
+                    style="color: blueviolet;">紫材料</span><br>刷这个
+                </div>
                 <div class="stage_card_3_line_text"
-                  style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T4效率值</div>
+                     style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T4效率值
+                </div>
               </div>
               <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
                 <div class="stage_card_3_img">
                   <div :class="getItemT3Sprite(31013)"></div>
                 </div>
                 <div class="stage_card_3_line_text"
-                  style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">只需求<span
-                    style="color:rgb(0, 125, 167);">蓝材料</span><br>刷这个</div>
+                     style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">
+                  只需求<span
+                    style="color:rgb(0, 125, 167);">蓝材料</span><br>刷这个
+                </div>
                 <div class="stage_card_3_line_text"
-                  style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T3效率值</div>
+                     style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T3效率值
+                </div>
               </div>
               <div class="intro_effBar" style="width: 168px;height: 20px;">
                 <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                  :style="getLineBarLength(0, 0, 0.7, 0.9)"></div>
+                     :style="getLineBarLength(0, 0, 0.7, 0.9)"></div>
                 <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;">效率指示条</div>
               </div>
             </div>
@@ -80,26 +87,33 @@
             <div class="stage_card_3_list" style="width:210px;height: 108px;line-height: 24px;margin: 8px auto;">
               <div class="intro_effBar" style="height: 32px;">
                 <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                  :style="getLineBarLength(0, 0, 0, 0)"></div>
+                     :style="getLineBarLength(0, 0, 0, 0)"></div>
                 <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
-                  每格代表20%的效率</div>
+                  每格代表20%的效率
+                </div>
               </div>
               <div class="intro_effBar" style="height: 32px;">
                 <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                  :style="getLineBarLength(0, 0, 0, 0.9)"></div>
+                     :style="getLineBarLength(0, 0, 0, 0.9)"></div>
                 <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
-                  所有掉落物的总效率</div>
+                  所有掉落物的总效率
+                </div>
               </div>
               <div class="intro_effBar" style="height: 32px;">
                 <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                  :style="getLineBarLength(0, 0, 0.7, 0.7)"></div>
+                     :style="getLineBarLength(0, 0, 0.7, 0.7)"></div>
                 <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;margin-left: -16px;">
-                  T4/T3/T2材料的效率</div>
+                  T4/T3/T2材料的效率
+                </div>
                 <div style="font-size: 12px;"></div>
               </div>
               <div class="intro_effBar" style="height: 24px;margin-right: 8px;text-align: right;">
-                <el-button type="primary" size="small" :icon="Delete">看看细节</el-button>
-                <el-button type="primary" size="small" :icon="Delete">不再显示</el-button>
+                <el-button type="primary" size="small" @click="scrollToLegendDescription">
+                  看看细节
+                </el-button>
+                <el-button type="primary" size="small" @click="hiddenLegend()">
+                  不再显示
+                </el-button>
               </div>
             </div>
           </div>
@@ -113,7 +127,8 @@
     <div id="stage_3">
       <!-- {{ item_card_data[10] }} -->
       <!-- 正式卡片 -->
-      <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index" @click="getItemTableData(index)">
+      <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
+           @click="getItemTableData(index,true)">
         <!-- 长期最优 -->
         <div class="stage_card_3_left">
           <div class="img_wrap" style="position: relative;">
@@ -137,10 +152,11 @@
               <div class="stage_card_3_data">
                 <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
                 <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
-                  formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1) }}%
+                    formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1)
+                  }}%
                 </div>
                 <div class="stage_card_3_line_bar"
-                  :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, stage.leT5MaxEfficiencyStage.stageEfficiency)">
+                     :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, stage.leT5MaxEfficiencyStage.stageEfficiency)">
                 </div>
               </div>
             </div>
@@ -151,11 +167,13 @@
               <div class="stage_card_3_data">
                 <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
                 <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
-                  formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1) }}%
+                    formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1)
+                  }}%
                 </div>
                 <div class="stage_card_3_line_bar"
-                  :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, stage.leT4MaxEfficiencyStage.stageEfficiency)">
-                </div>{{ stage.stageEfficiency }}
+                     :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, stage.leT4MaxEfficiencyStage.stageEfficiency)">
+                </div>
+                {{ stage.stageEfficiency }}
               </div>
             </div>
             <div class="stage_card_3_line" v-show="stage.series.r2">
@@ -165,10 +183,11 @@
               <div class="stage_card_3_data">
                 <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
                 <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
-                  formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
+                    formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1)
+                  }}%
                 </div>
                 <div class="stage_card_3_line_bar"
-                  :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, stage.leT3MaxEfficiencyStage.stageEfficiency)">
+                     :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, stage.leT3MaxEfficiencyStage.stageEfficiency)">
                 </div>
               </div>
             </div>
@@ -234,7 +253,7 @@
       </div>
     </div> -->
     <!-- 详情表 -->
-    <div class="tableArea" style="margin : 8px;max-width: 1080px;">
+    <div class="tableArea" style="margin : 8px;max-width: 1080px;" id="detail-table">
       <el-table id="detailTable" stripe :data="item_table_data_by_item_id" max-height="450">
         <el-table-column fixed prop="stageCode" label="关卡名" :width="td_6" sortable>
           <template #default="scope">
@@ -263,7 +282,7 @@
             {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="spm" label="SPM" :width="td_4" sortable />
+        <el-table-column prop="spm" label="SPM" :width="td_4" sortable/>
         <el-table-column prop="leT5Efficiency" label="T4效率" :width="td_4" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT5Efficiency * 100, 1) }}%
@@ -280,30 +299,36 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="op_title_tag">
-        <div class="tab_text">*主产物/副产物：价值占比最高/第二高的产物</div><br>
-        <div class="tab_text">*综合效率：产物的总价值 / 关卡理智消耗，长期囤材料建议以这个为参考依据</div><br>
-        <div class="tab_text">*T4效率 = (对应紫材料价值+对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗</div><br>
-        <div class="tab_text">*T3效率 = (对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗</div><br>
-        <div class="tab_text">*T2效率 = (对应绿材料价值+对应白材料价值) / 关卡理智消耗</div><br>
+      <div class="op_title_tag" id="description">
+        <div class="tab_text">*主产物/副产物：价值占比最高/第二高的产物</div>
+        <br>
+        <div class="tab_text">*综合效率：产物的总价值 / 关卡理智消耗，长期囤材料建议以这个为参考依据</div>
+        <br>
+        <div class="tab_text">*T4效率 = (对应紫材料价值+对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗
+        </div>
+        <br>
+        <div class="tab_text">*T3效率 = (对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗</div>
+        <br>
+        <div class="tab_text">*T2效率 = (对应绿材料价值+对应白材料价值) / 关卡理智消耗</div>
+        <br>
         <div class="tab_text">*SPM：1倍速下每分钟消耗的理智，假设所有敌人均被秒杀，实际可能略大于该值</div>
       </div>
     </div>
 
     <!-- 搓玉 -->
-    <div class="op_title">
+    <div class="op_title" id="orundum-table">
       <div class="op_title_text">
         <div class="op_title_ctext">搓玉数据表</div>
         <div class="op_title_etext_light">Orundum</div>
       </div>
-      <div class="op_title_tag">
+      <div class="op_title_tag" >
         <!-- <div class="op_tag_0">图例</div> -->
-        <div class="op_tag_0">仅显示活动关</div>
+        <div class="op_tag_0" @click="filterOrundumStage()">仅显示活动关</div>
       </div>
     </div>
     <div class="tableArea" style="margin : 8px;max-width: 720px;">
-      <el-table :data="orundumRecommendedStage" stripe style="width: 100%;height: 400px">
-        <el-table-column prop="stageCode" label="关卡名" />
+      <el-table :data="displayOrundumRecommendedStage" stripe style="width: 100%;height: 400px">
+        <el-table-column prop="stageCode" label="关卡名"/>
         <el-table-column label="每理智可搓玉">
           <template #default="scope">
             <div style="display: flex; align-items: center">
@@ -324,49 +349,49 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率" />
-        <el-table-column prop="stageEfficiency" label="关卡效率" />
+        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率"/>
+        <el-table-column prop="stageEfficiency" label="关卡效率"/>
       </el-table>
     </div>
     <!-- 历史活动 -->
-    <div class="op_title">
+    <div class="op_title" id="history-stage-table">
       <div class="op_title_text">
         <div class="op_title_ctext">往期活动数据</div>
         <div class="op_title_etext_light">History Event</div>
       </div>
       <div class="op_title_tag">
         <!-- <div class="op_tag_0">图例</div> -->
-        <div class="op_tag_0">紧密模式</div>
-        <div class="op_tag_1">表格模式</div>
+        <div class="op_tag_0" @click="chooseHistoryActDevice('phone')">紧密模式</div>
+        <div class="op_tag_1" @click="chooseHistoryActDevice('pc')">表格模式</div>
       </div>
     </div>
 
 
-    <table class="act-table">
+    <table class="act-table" id="act-table-pc">
       <tbody>
-        <tr>
-          <td class="act-name">活动名称</td>
-          <td v-for="(item, index) in itemIdList" :key="index">
-            <div class="act-table-item-wrap" style="height: 42px;margin-top: 8px;">
-              <div :class="getActTableItemSprite(item.id)"></div>
-            </div>
-          </td>
-        </tr>
-        <tr v-for="(act, index) in historyActItemTable" :key="index">
-          <td class="act-name">{{ act.zoneName }}</td>
-          <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
-            <div class="act-table-item-wrap" v-if="item.isUp">
-              <div :class="getActTableItemSprite(item.itemId)"></div>
-              <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
+      <tr>
+        <td class="act-name">活动名称</td>
+        <td v-for="(item, index) in itemIdList" :key="index">
+          <div class="act-table-item-wrap" style="height: 42px;margin-top: 8px;">
+            <div :class="getActTableItemSprite(item.id)"></div>
+          </div>
+        </td>
+      </tr>
+      <tr v-for="(act, index) in historyActItemTable" :key="index">
+        <td class="act-name">{{ act.zoneName }}</td>
+        <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
+          <div class="act-table-item-wrap" v-if="item.isUp">
+            <div :class="getActTableItemSprite(item.itemId)"></div>
+            <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
                 {{ formatNumber(item.stageEfficiency, 2) }}%
               </span>
-            </div>
-          </td>
-        </tr>
+          </div>
+        </td>
+      </tr>
       </tbody>
     </table>
 
-    <div class="act-table-simple-wrap">
+    <div class="act-table-simple-wrap" id="act-table-phone">
       <table class="act-table-simple">
         <tr v-for="(act, index) in historyActItemList" :key="index">
           <td class="act-name-simple">{{ act.zoneName }}</td>
@@ -385,7 +410,7 @@
       </table>
     </div>
     <!-- 常见问题 -->
-    <div class="op_title">
+    <div class="op_title" id="frequently-asked-question">
       <div class="op_title_text">
         <div class="op_title_ctext">常见问题</div>
         <div class="op_title_etext_light">FAQ</div>
@@ -403,7 +428,7 @@
 
 <script setup>
 import stageApi from '/src/api/stage'
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import item_series from '/src/static/json/material/item_series.json'
 import footComponent from "/src/components/FootComponentV3.vue";
 
@@ -432,10 +457,10 @@ let selected_item = ref({
     date: '2023-12-31'
   },
   storeCostPerf: [
-    { token: '4005', costPerf: 0.75 },
-    { token: 'EPGS_COIN', costPerf: 0.75 },
-    { token: 'REP_COIN', costPerf: 0.75 },
-    { token: '4004', costPerf: 0.75 }
+    {token: '4005', costPerf: 0.75},
+    {token: 'EPGS_COIN', costPerf: 0.75},
+    {token: 'REP_COIN', costPerf: 0.75},
+    {token: '4004', costPerf: 0.75}
   ]
 })
 
@@ -449,7 +474,7 @@ stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
     for (const item of response.data) {
       item_value_obj.value[item.itemId] = item;
     }
-    getItemTableData(0)
+    getItemTableData(0,false)
   })
 })
 
@@ -470,7 +495,7 @@ function getItemCardData() {
       leT5MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT5Efficiency'),
       leT4MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT4Efficiency'),
       leT3MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT3Efficiency'),
-      series: { r4: '', r3: '', r2: '', r1: '' }
+      series: {r4: '', r3: '', r2: '', r1: ''}
     }
 
     //获得该材料系列的上下级材料的物品id
@@ -508,31 +533,64 @@ let item_table_data_by_item_id = ref([])
 
 /**
  * 根据索引获得对应材料系列的所有推荐关卡
- * @param index 集合索引,卡片展示的材料和索引对应  简单例子[0:xxx材料的所有数据]
+ * @param {number} index 集合索引,卡片展示的材料和索引对应  简单例子[0:xxx材料的所有数据]
+ * @param {boolean} isJump 是否跳转到表格位置
  */
-function getItemTableData(index) {
+function getItemTableData(index,isJump) {
   //当前材料系列的推荐关卡
   let recommended_stage = stage_result_group.value[index];
   //推荐关卡集合
   let stage_result_list = recommended_stage.stageResultList;
-
   //拼接表格数据,默认按总效率排序
   item_table_data_by_item_id.value = stage_result_list.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
 
-  jumpToTable()
-  // selected_item.value = item_value_obj.value[recommended_stage.itemSeriesId]
-  // console.log(recommended_stage)
-  // console.log(item_value_obj)
-  // console.log('当前选中的材料是：', selected_item.value)
+  if(isJump){
+    document.getElementById('detail-table').scrollIntoView({behavior: 'smooth', block: 'center'})
+  }
+}
+
+let legendStyle = ref('')
+onMounted(()=>{
+  legendStyle.value = localStorage.getItem('itemLegend')?localStorage.getItem('itemLegend'):''
+})
+
+/**
+ * 隐藏图例
+ */
+function hiddenLegend(){
+    legendStyle.value = 'none'
+    localStorage.setItem('itemLegend','none')
+}
+
+/**
+ * 滚动到图例说明
+ */
+function scrollToLegendDescription() {
+  document.getElementById('description').scrollIntoView({behavior: 'smooth'})
+}
+
+/**
+ * 滚动到搓玉关卡表
+ */
+function scrollToOrundumTable() {
+  document.getElementById('orundum-table').scrollIntoView({behavior: 'smooth'})
+}
+
+/**
+ * 滚动到历史活动关卡表
+ */
+function scrollToHistoryStageTable() {
+  document.getElementById('history-stage-table').scrollIntoView({behavior: 'smooth'})
+}
+
+/**
+ * 滚动到常见问题
+ */
+function scrollToFrequentlyAskedQuestion() {
+  document.getElementById('frequently-asked-question').scrollIntoView({behavior: 'smooth'})
 }
 
 
-function jumpToTable() {
-  window.scrollTo({
-    top: 100,
-    behavior: 'smooth'
-  })
-}
 
 function getItemSeriesSprite(id) {
   return "bg-" + id + " item_series_sprite";
@@ -557,7 +615,9 @@ function getActTableItemSprite(id) {
 function getActTableSimpleItemSprite(id) {
   return "bg-" + id + " act-table-simple-item-sprite";
 }
+
 let debug = "";
+
 function getLineBarLength(T2eff, T3eff, T4eff, stageEff) {
   // 暂时是单层的，所以代码看起来可能比较乱
   let T2Color = "#00a2a2 ";
@@ -651,16 +711,17 @@ function getLineBarLength(T2eff, T3eff, T4eff, stageEff) {
   return "background:" + T4Layer + "," + stageLayer + "," + standardLayer + ";";
 }
 
+
 /**
  * 格式化数字
- * @param num 数字
- * @param acc 位数
+ * @param {number} num 数字
+ * @param {number} acc 位数
  * @returns {string} 格式化后的数字
  */
 function formatNumber(num, acc) {
   acc = typeof acc !== "undefined" ? acc : 2;
   if (typeof num === "undefined") return ''
-  return parseFloat(num).toFixed(acc);
+  return parseFloat(num.toString()).toFixed(acc);
 }
 
 onMounted(() => {
@@ -696,6 +757,28 @@ window.addEventListener("resize", function () {
 let itemIdList = [] // 材料表
 let historyActItemTable = ref([]) // 历史活动up材料表
 let historyActItemList = ref([])
+
+let historyActDevice = ref('')
+
+/**
+ * 传入一个设备类型，将其赋值给 historyActDevice 按钮通过 historyActDevice 进行判断是什么模式
+ * @param {string} device 
+ */
+function chooseHistoryActDevice(device){
+  historyActDevice.value = device
+  const pcElement =  document.getElementById('act-table-pc')
+  const phoneElement =  document.getElementById('act-table-phone')
+  if(device === 'pc'){
+    pcElement.style.display = 'block'
+    phoneElement.style.display = 'none'
+  }else if(device === 'phone'){
+    pcElement.style.display = 'none'
+    phoneElement.style.display = 'block'
+  }
+   
+}
+
+
 
 // 获取历史活动up材料信息
 stageApi.getHistoryActStage(0.625, 300).then(response => {
@@ -754,12 +837,12 @@ stageApi.getHistoryActStage(0.625, 300).then(response => {
     historyActItemTable.value.push(rowData)
   }
 
-  console.log(historyActItemTable.value)
+
 })
 
 
 function getCellBgColor(flag) {
-  console.log(flag)
+
   if (flag) {
     return 'background-color: #82beff80'
   }
@@ -768,6 +851,25 @@ function getCellBgColor(flag) {
 
 
 let orundumRecommendedStage = ref([])
+let displayOrundumRecommendedStage = ref([])
+let onlyShowActStage = ref(false)
+
+/**
+ * 过滤搓玉推荐关卡，只显示1-7，CW-6和当前活动关
+ */
+function filterOrundumStage() {
+  onlyShowActStage.value = !onlyShowActStage.value
+  if (onlyShowActStage.value) {
+    displayOrundumRecommendedStage.value = []
+    for (const stage of orundumRecommendedStage.value) {
+      if (stage.stageCode === '1-7' || stage.stageCode === 'CW-6' || stage.stageType === 'ACT') {
+        displayOrundumRecommendedStage.value.push(stage)
+      }
+    }
+  } else {
+    displayOrundumRecommendedStage.value = orundumRecommendedStage.value
+  }
+}
 
 stageApi.getOrundumRecommendedStage().then(response => {
   for (const stage of response.data) {
@@ -779,7 +881,7 @@ stageApi.getOrundumRecommendedStage().then(response => {
       stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
     })
   }
-
+  displayOrundumRecommendedStage.value = orundumRecommendedStage.value
 })
 
 // for(let id in item_series){
