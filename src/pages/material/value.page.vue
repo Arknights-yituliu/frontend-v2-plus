@@ -34,7 +34,7 @@
       <div class="op_title">
         <div class="op_title_text">
           <div class="op_title_ctext">定价算法</div>
-          <div :class="opETextTheme">Material Value</div>
+          <div :class="opETextTheme">Algorithm</div>
         </div>
       </div>
       <div id="foot_main">
