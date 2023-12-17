@@ -13,7 +13,8 @@
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
     --c-border-bottom:var(--c-white-3);
 
-    --c-text-blue:var(--c-text-blue-light);
+    --c-blue:var(--c-blue-light);
+    --c-red:var(--c-red-light);
 
     /*按钮样式*/
     --c-btn-bg:var(--c-white-1);
@@ -41,10 +42,12 @@
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
     --c-border-bottom:var(--c-black-4);
 
-    --c-text-blue:var(--c-text-blue-dark);
+    --c-blue:var(--c-blue-dark);
+    --c-red:var(--c-red-dark);
 
     /*按钮样式*/
-    --c-btn-bg:var(--c-black-5);
+    --c-btn-bg:'';
+    --c-btn-border:1px solid var(--c-white-3);
     --c-btn-color:var(--c-white-1);
     --c-btn-text-color:var(--c-black-1);
     --c-btn-bg-blue:var(--c-btn-blue-dark);
@@ -77,16 +80,16 @@
     --c-wrap-white-transparent-bg: rgba(255, 255, 255, 0.1);
 
     /*亮色颜色*/
-    --c-text-blue-light:#04a5ff;
-    --c-text-white-light:var(--c-white-2);
+    --c-blue-light:#04a5ff;
+    --c-red-light: #ff6262;
 
     --c-btn-green-light: #04c504;
-    --c-btn-blue-light: #00b2ff;
+    --c-btn-blue-light: #00a1d6;
     --c-btn-red-light: #ff6262;
 
     /*暗色颜色*/
-    --c-text-blue-dark: #56b7ff;
-    --c-text-white-dark:var(--c-white-1);
+    --c-blue-dark: #56b7ff;
+    --c-red-dark: #fa6f6f;
 
     --c-btn-green-dark: #3bb6ac;
     --c-btn-blue-dark: #4ab4ef;
