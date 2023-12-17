@@ -428,7 +428,7 @@
                   </el-icon><b style="margin-left: 4px">网站反馈</b>
                 </span>
               </template>
-              <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">点击此处</a>通过问卷反馈问题/提供建议。
+              <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">点击此处</a>通过问卷反馈问题/提供建议，<a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">点击此处</a>加入粉丝群。
             </el-collapse-item>
             <el-collapse-item name="2" style="">
               <template #title>
