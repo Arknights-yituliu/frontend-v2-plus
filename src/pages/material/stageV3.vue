@@ -129,7 +129,7 @@
             <div class="stage_card_3_mainImg" :class="getItemSeriesSprite(stage.series.r3)">
               <div class="stage_card_3_cover"></div>
               <div class="stage_card_3_best">
-                <div class="stage_card_3_best_chapter">{{ stage.maxEfficiencyStage.zoneName }}</div>
+                <div class="stage_card_3_best_chapter">{{ replaceZoneName(stage.maxEfficiencyStage.zoneName) }}</div>
                 {{ stage.maxEfficiencyStage.stage_code }}
                 <div class="stage_card_3_markText_l">综合最优</div>
               </div>
@@ -252,7 +252,7 @@
         <el-table-column fixed prop="stageCode" label="关卡名" :width="td_6" sortable>
           <template #default="scope">
             <div>
-              <span style="font-size: 10px;line-height: 8px;">{{ scope.row.zoneName }}</span><br>
+              <span style="font-size: 10px;line-height: 8px;">{{ replaceZoneName(scope.row.zoneName) }}</span><br>
               {{ scope.row.stageCode }}
             </div>
           </template>
@@ -262,6 +262,11 @@
             <div class="detail-table-item-wrap">
               <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
             </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="primary" label="主产物掉率" :width="td_1">
+          <template #default="scope">
+              {{ formatNumber(scope.row.knockRating * 100, 1) }}%
           </template>
         </el-table-column>
         <el-table-column prop="secondary" label="副产物" :width="td_1">
@@ -691,7 +696,7 @@ function getStageDataByProperty(stageList, property) {
       stage_code: stage.stageCode,
       efficiency: stage[property] * 100,
       stageEfficiency: stage.stageEfficiency,
-      zoneName: stage.zoneName.replace(" (标准)", "")
+      zoneName: stage.zoneName
     }
   }
 }
@@ -715,6 +720,11 @@ function getItemTableData(index, isJump) {
   if (isJump) {
     document.getElementById('detail-table').scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
+}
+
+function replaceZoneName(str){
+  if(typeof str === "undefined") return''
+  return  str.replace("(标准)",'')
 }
 
 let legendStyle = ref('')
