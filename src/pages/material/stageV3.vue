@@ -903,23 +903,7 @@ let td_4 = ref()
 let td_5 = ref()
 let td_6 = ref()
 
-window.addEventListener("resize", function () {
-  if (window.innerWidth < 800) {
-    td_1.value = 70
-    td_2.value = 80
-    td_3.value = 90
-    td_4.value = 100
-    td_5.value = 110
-    td_6.value = 120
-  } else {
-    td_1.value = ''
-    td_2.value = ''
-    td_3.value = ''
-    td_4.value = ''
-    td_5.value = ''
-    td_6.value = ''
-  }
-})
+
 
 
 let itemIdList = [] // 材料表
@@ -1060,6 +1044,26 @@ stageApi.getOrundumRecommendedStage().then(response => {
 //     t1:id.substring(0,4)+'1',
 //   }
 // }
+
+onMounted(()=>{
+  window.addEventListener("resize", function () {
+    if (window.innerWidth < 800) {
+      td_1.value = 70
+      td_2.value = 80
+      td_3.value = 90
+      td_4.value = 100
+      td_5.value = 110
+      td_6.value = 120
+    } else {
+      td_1.value = ''
+      td_2.value = ''
+      td_3.value = ''
+      td_4.value = ''
+      td_5.value = ''
+      td_6.value = ''
+    }
+  })
+})
 </script>
 
 
