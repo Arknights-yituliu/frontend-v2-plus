@@ -48,7 +48,7 @@
       <div class="op_content" id="stage_t3_content">
         <!-- 基础卡 -->
         <div v-for="(materialRankT3, indexAll) in stageRankT3" :key="indexAll" class="stage_card_t3 uni_shadow_2"
-             @click="showT3Popup(indexAll)">
+          @click="showT3Popup(indexAll)">
           <div class="stage_sprite_t3_wrap">
             <div :class="getSpriteImg(materialRankT3.itemTypeId, 't3')"></div>
           </div>
@@ -56,23 +56,19 @@
           <div class="stage_card_t3_table">
             <table>
               <tbody>
-              <tr
-                  :class="getColor(stage.stageColor)"
-                  class="stage_table_r"
-                  :style="getFontSize(stage.stageEfficiency*100)"
-                  v-for="(stage, index) in materialRankT3.stageResultList.slice(0, 3)"
-                  :key="index"
-              >
-                <td class="stage_table_c1">{{ stage.stageCode }}</td>
+                <tr :class="getColor(stage.stageColor)" class="stage_table_r"
+                  :style="getFontSize(stage.stageEfficiency * 100)"
+                  v-for="(stage, index) in materialRankT3.stageResultList.slice(0, 3)" :key="index">
+                  <td class="stage_table_c1">{{ stage.stageCode }}</td>
 
-                <td>
-                  <div class="stage_sprite_sec_wrap">
-                    <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
-                  </div>
-                </td>
-                <td class="stage_table_c3">{{ formatNumber(stage.stageEfficiency * 100, 1) }}%</td>
+                  <td>
+                    <div class="stage_sprite_sec_wrap">
+                      <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
+                    </div>
+                  </td>
+                  <td class="stage_table_c3">{{ formatNumber(stage.stageEfficiency * 100, 1) }}%</td>
 
-              </tr>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -89,13 +85,8 @@
       </div>
       <!-- 扩展卡 -->
       <div class="op_content" id="stage_t3_content_plus" style="display: none">
-        <div
-            v-for="(materialRankT3, index) in stageRankT3"
-            :key="index"
-            class="stage_card_t3 uni_shadow_2"
-            :style="judgeActive(index)"
-            @click="showT3Popup(index)"
-        >
+        <div v-for="(materialRankT3, index) in stageRankT3" :key="index" class="stage_card_t3 uni_shadow_2"
+          :style="judgeActive(index)" @click="showT3Popup(index)">
           <div class="stage_sprite_t3_wrap">
             <div :class="getSpriteImg(materialRankT3.itemTypeId, 't3')"></div>
           </div>
@@ -103,23 +94,19 @@
           <div class="stage_card_t3_table">
             <table>
               <tbody>
-              <tr
-                  :class="getColor(stage.stageColor)"
-                  class="stage_table_r"
-                  :style="getFontSize(stage.stageEfficiency*100)"
-                  v-for="(stage, index) in materialRankT3.stageResultList.slice(0, 3)"
-                  :key="index"
-              >
-                <td class="stage_table_c1">{{ stage.stageCode }}</td>
+                <tr :class="getColor(stage.stageColor)" class="stage_table_r"
+                  :style="getFontSize(stage.stageEfficiency * 100)"
+                  v-for="(stage, index) in materialRankT3.stageResultList.slice(0, 3)" :key="index">
+                  <td class="stage_table_c1">{{ stage.stageCode }}</td>
 
-                <td>
-                  <div class="stage_sprite_sec_wrap">
-                    <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
-                  </div>
-                </td>
-                <td class="stage_table_c3">{{ formatNumber(stage.stageEfficiency * 100, 1) }}%</td>
+                  <td>
+                    <div class="stage_sprite_sec_wrap">
+                      <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
+                    </div>
+                  </td>
+                  <td class="stage_table_c3">{{ formatNumber(stage.stageEfficiency * 100, 1) }}%</td>
 
-              </tr>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -135,7 +122,7 @@
       <div class="op_content" id="stage_t2_content">
         <div class="stage_card_t2 uni_shadow_2">
           <div v-for="(materialRankT2, index) in stageRankT2.slice(0, 6)" :key="index" class="stage_card_t2_img"
-               @click="showT2Popup(index)">
+            @click="showT2Popup(index)">
             <div class="stage_sprite_t3_wrap">
               <div :class="getSpriteImg(materialRankT2.itemTypeId, 't2')"></div>
             </div>
@@ -165,37 +152,37 @@
       </template>
       <table class="popup_table_v2">
         <tbody>
-        <tr class="popup_table_title">
-          <td class="popup_table_c1" style="width: 60px">关卡名</td>
-          <td class="popup_table_c2" style="width: 60px">样本数<br/>(置信度)</td>
-          <td class="popup_table_c3" style="width: 40px">SPM</td>
-          <td class="popup_table_c4" style="width: 50px" colspan="1">副产品</td>
-          <td class="popup_table_c5" style="width: 80px">主产物掉率</td>
-          <td class="popup_table_c6" style="width: 80px">主产物期望</td>
-          <!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>-->
-          <!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>-->
-          <td class="popup_table_c7" style="width: 70px">总效率</td>
-        </tr>
-        <tr v-for="(stage, index) in popupData.stageResultList" :key="index" :class="getColor(stage.stageColor)"
+          <tr class="popup_table_title">
+            <td class="popup_table_c1" style="width: 60px">关卡名</td>
+            <td class="popup_table_c2" style="width: 60px">样本数<br />(置信度)</td>
+            <td class="popup_table_c3" style="width: 40px">SPM</td>
+            <td class="popup_table_c4" style="width: 50px" colspan="1">副产品</td>
+            <td class="popup_table_c5" style="width: 80px">主产物掉率</td>
+            <td class="popup_table_c6" style="width: 80px">主产物期望</td>
+            <!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T4效率</td>-->
+            <!--            <td class="popup_table_c7" style="width: 70px; width: 80px">T3效率</td>-->
+            <td class="popup_table_c7" style="width: 70px">总效率</td>
+          </tr>
+          <tr v-for="(stage, index) in popupData.stageResultList" :key="index" :class="getColor(stage.stageColor)"
             class="stage_table_r">
-          <td class="popup_table_c1">
-            {{ stage.stageCode }}
-          </td>
-          <td class="popup_table_c2" style="font-size: 14px">{{shrinkTimes(stage.sampleSize)}}
-            <br/>({{ formatNumber(stage.sampleConfidence, 1) }}%)
-          </td>
-          <td class="popup_table_c3">{{ formatNumber(stage.spm, 1) }}</td>
-          <td style="padding-left: 20px">
-            <div class="stage_sprite_sec_wrap">
-              <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
-            </div>
-          </td>
-          <td class="popup_table_c5">{{ formatNumber(stage.knockRating * 100, 1) }}%</td>
-          <td class="popup_table_c6">{{ formatNumber(stage.apExpect) }}</td>
-          <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency * 100, 1) }}%</td>-->
-          <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency * 100, 1) }}%</td>-->
-          <td class="popup_table_c7">{{ formatNumber(stage.stageEfficiency * 100, 2) }}%</td>
-        </tr>
+            <td class="popup_table_c1">
+              {{ stage.stageCode }}
+            </td>
+            <td class="popup_table_c2" style="font-size: 14px">{{ shrinkTimes(stage.sampleSize) }}
+              <br />({{ formatNumber(stage.sampleConfidence, 1) }}%)
+            </td>
+            <td class="popup_table_c3">{{ formatNumber(stage.spm, 1) }}</td>
+            <td style="padding-left: 20px">
+              <div class="stage_sprite_sec_wrap">
+                <div :class="getSpriteImg(stage.secondaryItemId, 'sec')"></div>
+              </div>
+            </td>
+            <td class="popup_table_c5">{{ formatNumber(stage.knockRating * 100, 1) }}%</td>
+            <td class="popup_table_c6">{{ formatNumber(stage.apExpect) }}</td>
+            <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT5Efficiency * 100, 1) }}%</td>-->
+            <!--            <td class="popup_table_c7">{{ formatNumber(stage.leT4Efficiency * 100, 1) }}%</td>-->
+            <td class="popup_table_c7">{{ formatNumber(stage.stageEfficiency * 100, 2) }}%</td>
+          </tr>
         </tbody>
       </table>
       <!-- 数据表End -->
@@ -221,43 +208,38 @@
       </template>
     </c-popup>
 
-<!--    搓玉-->
-    <c-popup v-model:visible="popup_orundum" :width="'500px'" >
+    <!--    搓玉-->
+    <c-popup v-model:visible="popup_orundum" :width="'500px'">
       <table class="popup_table" style="padding-top: 6px">
         <tbody style="font-size: 20px">
-        <tr class="popup_table_title" style="height: 36px">
-          <td class="popup_table_c1" style="width: 85px">关卡名</td>
-          <td class="popup_table_c2" style="width: 80px">每理智可搓玉</td>
-          <td class="popup_table_c3" style="width: 120px">每搓1抽消耗</td>
-          <td class="popup_table_c5" style="width: 95px">关卡效率</td>
-          <td class="popup_table_c6" style="width: 95px">搓玉效率</td>
-        </tr>
-        <tr
-            style="height: 36px"
-            v-for="(stage, index) in stageRankOrundum"
-            :key="index"
-            :class="getColor(stage.stageEfficiency*100, 90, 20)"
-            class="stage_table_r"
-        >
-          <td class="popup_table_c1" style="width: 85px">
-            {{ stage.stageCode }}
-          </td>
-          <td class="popup_orundum_c2" style="width: 120px">
-            <!-- <div>1</div> -->
-            <!-- <div :class="getSpriteImg('AP_GAMEPLAY', 5)" ></div> -->
-            <div>{{ formatNumber(stage.orundumPerAp) }}</div>
-            <div style="margin-bottom: -15px" :class="getSpriteImg(4003, 'icon_small')"></div>
-          </td>
-          <td class="popup_orundum_c3" style="width: 120px">
-            <div>{{ formatNumber(stage.lmdcost) }}w</div>
-            <div style="margin-bottom: -8px" :class="getSpriteImg(4001, 'icon_small')"></div>
-          </td>
-          <td class="popup_table_c5" style="width: 95px">{{ formatNumber(stage.stageEfficiency * 100) }}%</td>
-          <td class="popup_table_c6" style="width: 95px">{{
+          <tr class="popup_table_title" style="height: 36px">
+            <td class="popup_table_c1" style="width: 85px">关卡名</td>
+            <td class="popup_table_c2" style="width: 80px">每理智可搓玉</td>
+            <td class="popup_table_c3" style="width: 120px">每搓1抽消耗</td>
+            <td class="popup_table_c5" style="width: 95px">关卡效率</td>
+            <td class="popup_table_c6" style="width: 95px">搓玉效率</td>
+          </tr>
+          <tr style="height: 36px" v-for="(stage, index) in stageRankOrundum" :key="index"
+            :class="getColor(stage.stageEfficiency * 100, 90, 20)" class="stage_table_r">
+            <td class="popup_table_c1" style="width: 85px">
+              {{ stage.stageCode }}
+            </td>
+            <td class="popup_orundum_c2" style="width: 120px">
+              <!-- <div>1</div> -->
+              <!-- <div :class="getSpriteImg('AP_GAMEPLAY', 5)" ></div> -->
+              <div>{{ formatNumber(stage.orundumPerAp) }}</div>
+              <div style="margin-bottom: -15px" :class="getSpriteImg(4003, 'icon_small')"></div>
+            </td>
+            <td class="popup_orundum_c3" style="width: 120px">
+              <div>{{ formatNumber(stage.lmdcost) }}w</div>
+              <div style="margin-bottom: -8px" :class="getSpriteImg(4001, 'icon_small')"></div>
+            </td>
+            <td class="popup_table_c5" style="width: 95px">{{ formatNumber(stage.stageEfficiency * 100) }}%</td>
+            <td class="popup_table_c6" style="width: 95px">{{
               formatNumber(stage.orundumPerApEfficiency * 100)
             }}%
-          </td>
-        </tr>
+            </td>
+          </tr>
         </tbody>
       </table>
     </c-popup>
@@ -267,17 +249,17 @@
       <div v-for="(actStageVo, index) in stageActHistory" :key="index" class="popup_act_card">
         <div class="popup_act_card_left">
 
-           {{ actStageVo.zoneName }}
-<!--          <div> {{ actStageVo.endTime }}</div>-->
+          {{ actStageVo.zoneName }}
+          <!--          <div> {{ actStageVo.endTime }}</div>-->
         </div>
         <div class="popup_act_stages">
           <div v-for="(stage, index) in actStageVo.actStageList" :key="index" class="history_stage">
             <div class="stage_sprite_closed_wrap">
               <div :class="getSpriteImg(stage.itemId, 'closed')"></div>
             </div>
-            <div class="history_stage_table">{{ stage.stageCode }}<br/>{{
-                formatNumber(stage.stageEfficiency * 100)
-              }}%
+            <div class="history_stage_table">{{ stage.stageCode }}<br />{{
+              formatNumber(stage.stageEfficiency * 100)
+            }}%
             </div>
           </div>
         </div>
@@ -289,8 +271,8 @@
   </div>
 </template>
 <script setup>
-import {onMounted, ref} from 'vue'
-import {usePageContext} from "@/renderer/usePageContext";
+import { onMounted, ref } from 'vue'
+import { usePageContext } from "@/renderer/usePageContext";
 
 const pageContext = usePageContext();
 let stageRankT3 = [];
@@ -299,9 +281,9 @@ const stageRankOrundum = pageContext.pageProps.orundum; //搓玉推荐关卡数�
 const stageActHistory = pageContext.pageProps.closed; //历史关卡数据
 let updateTime = pageContext.pageProps.t3.updateTime
 
-if(pageContext.pageProps.t3.recommendedStageList){
+if (pageContext.pageProps.t3.recommendedStageList) {
   stageRankT3 = pageContext.pageProps.t3.recommendedStageList
-}else {
+} else {
   stageRankT3 = pageContext.pageProps.t3
 }
 let popupData = ref([])
@@ -335,7 +317,7 @@ function showT2Popup(index) {
 let popup_orundum = ref(false)
 
 function showOrundumPopup() {
-   popup_orundum.value = !popup_orundum.value
+  popup_orundum.value = !popup_orundum.value
 }
 
 let popup_act = ref(false)
@@ -394,11 +376,11 @@ function judgeActive(index) {
   let showFlag = false;
   let stageResultList = stageRankT3[index].stageResultList
   let num = 0;
-  for(let stageResult of stageResultList){
-    if(stageResult.stageColor<0){
+  for (let stageResult of stageResultList) {
+    if (stageResult.stageColor < 0) {
       showFlag = true;
     }
-    if(num>3) break;
+    if (num > 3) break;
     num++
   }
   if (showFlag) return "";
@@ -427,8 +409,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
-
 .popup_header_v2 {
   width: 100%;
   display: flex;
@@ -453,22 +433,22 @@ onMounted(() => {
 
 .popup_tip_v2 {
   border-top: var(--c-border);
-  color:var(--popup-text-fg);
+  color: var(--popup-text-fg);
   padding: 8px;
 }
 
-.popup_act_card{
+.popup_act_card {
   display: flex;
   align-items: center;
   margin: 8px 0;
   border-bottom: 1px solid #939393;
 }
 
-.popup_act_image{
+.popup_act_image {
   width: 150px;
 }
 
-.popup_act_card_left{
+.popup_act_card_left {
   width: 200px;
   text-align: center;
   font-size: 20px;
@@ -478,8 +458,7 @@ onMounted(() => {
 }
 
 
-.popup_act_stages{
-   display: flex;
+.popup_act_stages {
+  display: flex;
 }
-
 </style>
