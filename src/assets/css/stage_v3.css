@@ -344,7 +344,7 @@
 }
 
 .act-table td {
-  border: 1px solid #e6e6e6;
+  border: var(--c-border);
 }
 
 .act-name {
