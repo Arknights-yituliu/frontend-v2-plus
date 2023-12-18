@@ -310,12 +310,7 @@
   min-width: 48%;
 }
 
-.detailTable {
-  border-radius: 8px;
-  flex-grow: 1;
-  border: 1px solid #80808020;
-  box-shadow: 0px 0px 8px #00000040;
-}
+
 
 .orundum-table-icon {
   width: 18px;
@@ -330,15 +325,26 @@
   left: -10px;
 }
 
+.act-table-wrap{
+  width: 98%;
+  margin: auto;
+  overflow-x: auto;
+  border-radius: 8px;
+  flex-grow: 1;
+  border: 1px solid #80808020;
+  box-shadow: 0px 0px 8px #00000040;
+}
+
 .act-table {
-  margin: 20px;
+  width: 100%;
   border-collapse: collapse;
   text-align: center;
+  /*margin: -1px;*/
+  padding: -1px;
 }
 
 .act-table td {
   border: 1px solid #e6e6e6;
-
 }
 
 .act-name {
