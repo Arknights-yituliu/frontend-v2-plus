@@ -402,7 +402,7 @@
               </div>
               <span class="act-drop-detail">
                 {{ stage.stageCode }} <br>
-                {{ formatNumber(stage.stageEfficiency, 2) }}%
+                {{ formatNumber(stage.stageEfficiency *100, 2) }}%
               </span>
             </div>
           </td>
