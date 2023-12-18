@@ -19,7 +19,7 @@
 
     <stage/>
 
-    <foot-component/>
+    <!-- <foot-component/> -->
 
   </div>
 </template>
@@ -70,7 +70,7 @@
 </style>
 
 <script setup>
-import stage from "/src/pages/material/stageV2.vue";
+import stage from "/src/pages/material/stageV3.page.client.vue";
 import FootComponent from "@/components/FootComponent.vue";
 
 import axios from 'axios'
