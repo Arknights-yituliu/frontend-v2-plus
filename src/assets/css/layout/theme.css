@@ -35,7 +35,7 @@
 .theme_dark{
     /*基础样式*/
     --c-box-shadow:1px 1px 8px var(--c-black-1);
-    --c-border:1px solid var(--c-white-6);
+    --c-border:1px solid var(--c-black-4);
     --c-background-color: var(--c-black-2);
     --c-text-color: var(--c-white-2);
     --c-tip-color:var(--c-white-3);

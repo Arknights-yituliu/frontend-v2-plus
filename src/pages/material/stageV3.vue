@@ -368,7 +368,7 @@
 
     <div class="act-table-wrap">
       <!-- pc端大表格 -->
-      <table class="act-table detailTable" id="act-table-pc">
+      <table class="act-table" id="act-table-pc">
         <tbody>
         <tr>
           <td class="act-name">活动名称</td>
