@@ -360,9 +360,9 @@
       </div>
       <div class="op_title_tag">
         <!-- <div class="op_tag_0">图例</div> -->
-        <div class="op_tag_0" :class="device = 'pc' ? tag_1 : ''" @click="chooseHistoryActDevice('phone')">紧密模式
+        <div :class="historyActDeviceBtnClass('phone')" @click="chooseHistoryActDevice('phone')">紧密模式
         </div>
-        <div class="op_tag_1" @click="chooseHistoryActDevice('pc')">表格模式</div>
+        <div :class="historyActDeviceBtnClass('pc')" @click="chooseHistoryActDevice('pc')">表格模式</div>
       </div>
     </div>
 
@@ -454,7 +454,7 @@
               </ul>
               <b>图例</b>
               <hr/>
-              <div class="stage_3_intro" :style="`display:${legendStyle} `">
+              <div class="stage_3_intro" >
                 <!-- 长期最优 -->
                 <div class="stage_card_3_intro_left">
                   <div class="img_wrap" style="position: relative;">
@@ -729,6 +729,8 @@ function getItemTableData(index, isJump) {
   if (isJump) {
     document.getElementById('detail-table').scrollIntoView({behavior: 'smooth', block: 'center'})
   }
+
+
 }
 
 function replaceZoneName(str) {
@@ -946,6 +948,15 @@ function chooseHistoryActDevice(device) {
 
 }
 
+
+function historyActDeviceBtnClass(device){
+  if (device === historyActDevice.value) {
+   return 'op_tag_1'
+  }
+
+  return 'op_tag_0'
+
+}
 
 // 获取历史活动up材料信息
 stageApi.getHistoryActStage(0.625, 300).then(response => {
