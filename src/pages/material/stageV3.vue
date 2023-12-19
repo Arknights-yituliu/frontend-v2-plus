@@ -12,6 +12,8 @@
         <div class="op_tag_0" @click="scrollToOrundumTable()">搓玉数据</div>
         <div class="op_tag_0" @click="scrollToHistoryStageTable()">往期活动</div>
         <div class="op_tag_0" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>
+        <div class="op_tag_0" @click="displaySingleOrCompleteEfficiency('single')">单一材料效率</div>
+        <div class="op_tag_0" @click="displaySingleOrCompleteEfficiency('complete')">关卡综合效率</div>
         <!-- <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div> -->
         <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
@@ -144,13 +146,17 @@
                 <div :class="getItemT3Sprite(stage.series.r4)"></div>
               </div>
               <div class="stage_card_3_data">
-                <div class="stage_card_3_line_text">{{ stage.leT5MaxEfficiencyStage.stage_code }}</div>
-                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
-                    formatNumber(stage.leT5MaxEfficiencyStage.efficiency, 1)
-                  }}%
+                <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
+                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;" 
+                     v-show="efficiencyType==='single'">
+                  {{formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1)}}%
+                </div>
+                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
+                     v-show="efficiencyType==='complete'">
+                  {{formatNumber(stage.leT4MaxEfficiencyStage.stageEfficiency, 1)}}%
                 </div>
                 <div class="stage_card_3_line_bar"
-                     :style="getLineBarLength(0, 0, stage.leT5MaxEfficiencyStage.efficiency / 100, stage.leT5MaxEfficiencyStage.stageEfficiency)">
+                     :style="getLineBarLength(0, 0, stage.leT4MaxEfficiencyStage.efficiency , stage.leT4MaxEfficiencyStage.stageEfficiency)">
                 </div>
               </div>
             </div>
@@ -159,13 +165,17 @@
                 <div :class="getItemT3Sprite(stage.series.r3)"></div>
               </div>
               <div class="stage_card_3_data">
-                <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stage_code }}</div>
-                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
-                    formatNumber(stage.leT4MaxEfficiencyStage.efficiency, 1)
-                  }}%
+                <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
+                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
+                     v-show="efficiencyType==='single'">
+                  {{ formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1) }}%
+                </div>
+                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
+                     v-show="efficiencyType==='complete'">
+                  {{ formatNumber(stage.leT3MaxEfficiencyStage.stageEfficiency, 1) }}%
                 </div>
                 <div class="stage_card_3_line_bar"
-                     :style="getLineBarLength(0, stage.leT4MaxEfficiencyStage.efficiency / 100, 0, stage.leT4MaxEfficiencyStage.stageEfficiency)">
+                     :style="getLineBarLength(0, stage.leT3MaxEfficiencyStage.efficiency, 0, stage.leT3MaxEfficiencyStage.stageEfficiency)">
                 </div>
                 {{ stage.stageEfficiency }}
               </div>
@@ -175,13 +185,17 @@
                 <div :class="getItemT3Sprite(stage.series.r2)"></div>
               </div>
               <div class="stage_card_3_data">
-                <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stage_code }}</div>
-                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;">{{
-                    formatNumber(stage.leT3MaxEfficiencyStage.efficiency, 1)
-                  }}%
+                <div class="stage_card_3_line_text">{{ stage.leT2MaxEfficiencyStage.stage_code }}</div>
+                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
+                     v-show="efficiencyType==='single'">
+                  {{formatNumber(stage.leT2MaxEfficiencyStage.efficiency, 1)}}%
+                </div>
+                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
+                     v-show="efficiencyType==='complete'">
+                  {{formatNumber(stage.leT2MaxEfficiencyStage.stageEfficiency, 1)}}%
                 </div>
                 <div class="stage_card_3_line_bar"
-                     :style="getLineBarLength(stage.leT3MaxEfficiencyStage.efficiency / 100, 0, 0, stage.leT3MaxEfficiencyStage.stageEfficiency)">
+                     :style="getLineBarLength(stage.leT2MaxEfficiencyStage.efficiency , 0, 0, stage.leT2MaxEfficiencyStage.stageEfficiency)">
                 </div>
               </div>
             </div>
@@ -674,9 +688,9 @@ function getItemCardData() {
     //获得每种评价标准的最优关和效率
     const item_recommend_stage = {
       maxEfficiencyStage: getStageDataByProperty(stage_result_list, 'stageEfficiency'),
-      leT5MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT5Efficiency'),
-      leT4MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT4Efficiency'),
-      leT3MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT3Efficiency'),
+      leT4MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT5Efficiency'),
+      leT3MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT4Efficiency'),
+      leT2MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT3Efficiency'),
       series: {r4: '', r3: '', r2: '', r1: ''}
     }
 
@@ -686,6 +700,14 @@ function getItemCardData() {
     item_card_data.value.push(item_recommend_stage)
     // console.log(item_recommend_stage)
   }
+}
+
+let efficiencyType = ref('single')
+/**
+ * 显示单一材料效率或关卡综合效率
+ */
+function displaySingleOrCompleteEfficiency(type){
+     efficiencyType.value = type
 }
 
 /**
@@ -704,7 +726,7 @@ function getStageDataByProperty(stageList, property) {
     return {
       stage_code: stage.stageCode,
       efficiency: stage[property] * 100,
-      stageEfficiency: stage.stageEfficiency,
+      stageEfficiency: stage.stageEfficiency * 100,
       zoneName: stage.zoneName
     }
   }
@@ -729,9 +751,9 @@ function getItemTableData(index, isJump) {
   if (isJump) {
     document.getElementById('detail-table').scrollIntoView({behavior: 'smooth', block: 'center'})
   }
-
-
 }
+
+
 
 function replaceZoneName(str) {
   if (typeof str === "undefined") return ''
