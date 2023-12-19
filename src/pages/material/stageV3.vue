@@ -202,7 +202,7 @@
         <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
         <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
-        <div class="tab_text">*表格可左右拖动查看</div>
+        <div class="tab_text">*移动端可左右拖动查看</div>
       </div>
     </div>
     <!-- 材料信息 -->
