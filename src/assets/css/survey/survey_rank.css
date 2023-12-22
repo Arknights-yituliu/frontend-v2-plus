@@ -1,6 +1,10 @@
 .survey_rank_page {
+  width: 100%;
   height: auto;
-  margin: auto;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  box-sizing: border-box;
+  padding: 2px;
 }
 
 .sort_desc_icon{
@@ -49,7 +53,6 @@
 .rank_table_title{
     display: flex;
     line-height: 28px;
-    
     text-align: center;
     justify-content: center;
 }
