@@ -1,5 +1,5 @@
 import axios from "axios";
-import { http } from "@/api/baseURL";
+import { http } from "/src/api/baseURL";
 
 // 创建axios实例
 const service = axios.create({

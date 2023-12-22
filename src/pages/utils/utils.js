@@ -47,8 +47,6 @@ function fileRead(file){
         reader.onerror = () =>{
             reject(reader.error)
         }
-
-
         reader.readAsText(file,'UTF-8')
     })
 }

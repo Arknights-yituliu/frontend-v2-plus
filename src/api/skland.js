@@ -1,6 +1,6 @@
 import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
-import request from "@/api/requestBase";
+import request from "/src/api/requestBase";
 import {cMessage} from "/src/custom/message";
 
 const host = "https://zonai.skland.com";
@@ -56,6 +56,7 @@ async function getPlayBinding(path, requestParam, secret,cred){
             nickName: nickName
     }
 
+
     try {
         await request({
             url: url,
@@ -79,13 +80,9 @@ async function getPlayBinding(path, requestParam, secret,cred){
                     }
                 }
 
-                if (uid == void 0) {
+                if (typeof uid === "undefined") {
                     uid = list[0].bindingList[0].uid;
                     nickName = list[0].bindingList[0].nickName;
-                }
-
-                if (uid == void 0) {
-                    cMessage("未能成功获取数据")
                 }
 
                 bindingData.bindingList = bindingList;
@@ -95,7 +92,7 @@ async function getPlayBinding(path, requestParam, secret,cred){
             }
         })
     } catch (e) {
-        cMessage(e.response.data.message,'error')
+        cMessage('森空岛：'+e.response.data.message,'error')
     }
     return bindingData;
 }
