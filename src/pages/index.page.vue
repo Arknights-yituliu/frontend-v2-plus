@@ -1,3 +1,56 @@
+<script setup>
+import stage from "/src/pages/material/stageV3.vue";
+import FootComponent from "@/components/FootComponent.vue";
+
+import axios from 'axios'
+
+const data = {
+  stageId: 'main_01-07',
+  stars: 3,
+  times: 5,
+
+  server: 'TEST',
+  source: 'TEST',
+  version: 'TEST'
+}
+
+function sleep(d) {
+  return new Promise((resolve) => setTimeout(resolve, d));
+}
+
+// let testApi = 'https://developer.yituliu.site/stage/drop/upload'
+// let testApi = 'http://127.0.0.1:10020/stage/drop/upload'
+
+// for (let i = 0; i < 5; i++) {
+//   axios.post(testApi,
+//       data,
+//       {
+//         headers: {
+//           authorization: 'penguin 014801238',
+//           'Content-Type': 'application/json'
+//         }
+//       }).then(response => {
+//     console.log(response.data)
+//   })
+//
+//    sleep(5000)
+// }
+
+
+
+/**
+ * 点击复制内容
+ */
+function copyCode(text) {
+  let elementInput = document.createElement('input');
+  elementInput.value = text
+  document.body.appendChild(elementInput)
+  elementInput.select()
+  document.execCommand("Copy");
+  elementInput.remove()
+  window.open('https://ak.hypergryph.com')
+}
+</script>
 <template>
   <div >
 <!--    <div class="act_tips_wrap">-->
@@ -69,59 +122,7 @@
 }
 </style>
 
-<script setup>
-import stage from "/src/pages/material/stageV3.vue";
-import FootComponent from "@/components/FootComponent.vue";
 
-import axios from 'axios'
-
-const data = {
-  stageId: 'main_01-07',
-  stars: 3,
-  times: 5,
-
-  server: 'TEST',
-  source: 'TEST',
-  version: 'TEST'
-}
-
-function sleep(d) {
-  return new Promise((resolve) => setTimeout(resolve, d));
-}
-
-// let testApi = 'https://developer.yituliu.site/stage/drop/upload'
-// let testApi = 'http://127.0.0.1:10020/stage/drop/upload'
-
-// for (let i = 0; i < 5; i++) {
-//   axios.post(testApi,
-//       data,
-//       {
-//         headers: {
-//           authorization: 'penguin 014801238',
-//           'Content-Type': 'application/json'
-//         }
-//       }).then(response => {
-//     console.log(response.data)
-//   })
-//
-//    sleep(5000)
-// }
-
-
-
-/**
- * 点击复制内容
- */
-function copyCode(text) {
-  let elementInput = document.createElement('input');
-  elementInput.value = text
-  document.body.appendChild(elementInput)
-  elementInput.select()
-  document.execCommand("Copy");
-  elementInput.remove()
-  window.open('https://ak.hypergryph.com')
-}
-</script>
 
 <script>
 export const documentProps = {
