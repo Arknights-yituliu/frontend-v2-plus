@@ -164,9 +164,29 @@ const operatorFilterConditionTable = {
                 func: (operator) => {
                     return operator.description.indexOf('人间烟火') > -1
                 }
+            },
+            {
+                label: "赤金生产线",
+                func: (operator) => {
+                    return operator.description.indexOf('生产线') > -1
+                }
+            },
+            {
+                label: "红松骑士团",
+                func: (operator) => {
+                    return operator.buffName.indexOf('红松') > -1
+                }
+            },
+            {
+                label: "莱茵科技",
+                func: (operator) => {
+                    return operator.buffName.indexOf('莱茵科技') > -1
+                }
             }
         ]
     },
 }
+
+
 
 export {operatorFilterConditionTable}
