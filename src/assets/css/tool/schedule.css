@@ -497,7 +497,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding-bottom: 12px;
+    padding: 16px 0;
     justify-content: flex-start;
 }
 
