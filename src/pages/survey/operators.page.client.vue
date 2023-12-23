@@ -672,27 +672,6 @@ function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
 
-let maxOperatorDisplayQuantity = 10;
-
-/**
- * 分段加载干员数据
- * @returns {Promise<void>}
- */
-async function segmentedLoading() {
-  operatorList.value = []
-  for (const charId in operatorTable.value) {
-    const operator = operatorTable.value[charId]
-    if (operatorList.value.length >= maxOperatorDisplayQuantity) {
-      await sleep(500)
-
-      maxOperatorDisplayQuantity += 10;
-    }
-    if (operator.show) {
-      operatorList.value.push(operator)
-    }
-  }
-}
-
 
 /**
  * 加载完整干员列表
@@ -701,7 +680,7 @@ function loadDisplayData() {
   operatorList.value = []
   for (const charId in operatorTable.value) {
     const operator = operatorTable.value[charId]
-    if (operatorList.value.length >= 18) {
+    if (operatorList.value.length >= 32) {
       break;
     }
     if (operator.show) {

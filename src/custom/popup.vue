@@ -94,7 +94,7 @@ watch(
   z-index: 2100;
   margin: 10vh auto auto;
   width: 500px;
-  background-color: var(--popup-card-bg);
+  background-color: var(--c-background-color);
   border-radius: 6px;
   box-sizing: border-box;
   box-shadow: var(--c-box-shadow);

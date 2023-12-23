@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import {ref, watch, computed, onMounted} from "vue";
+import {ref,computed,  onMounted} from "vue";
 import toolApi from "/src/api/tool";
 import {usePageContext} from "/src/renderer/usePageContext";
 import login from "/src/pages/survey/login.vue";
@@ -141,15 +141,6 @@ function switchTheme(theme) {
 
 const routes = ref(routesJson);
 
-// eslint-disable-next-line no-unused-vars
-const route = computed(() => {
-  for (let i of routes.value) {
-    if (i.path === pageContext.urlPathname || i.path + "/" === pageContext.urlPathname) {
-      return i;
-    }
-  }
-  return {};
-});
 
 let pageTitle = ref("");
 

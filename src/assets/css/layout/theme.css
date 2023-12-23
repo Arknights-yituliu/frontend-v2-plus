@@ -27,14 +27,15 @@
 
     /*输入框样式*/
     --c-input-bg:'';
-    --c-input-border:1px solid var(--c-black-5);
+    --c-input-border:1px solid var(--c-white-3);
+    --c-input-border-focus:1px solid #6ec3ff;
     --c-input-text-color:var(--c-black-2);
 
 }
 
 .theme_dark{
     /*基础样式*/
-    --c-box-shadow:1px 1px 8px var(--c-black-1);
+    --c-box-shadow:1px 1px 4px var(--c-black-1);
     --c-border:1px solid var(--c-black-4);
     --c-background-color: var(--c-black-2);
     --c-text-color: var(--c-white-2);
@@ -56,7 +57,8 @@
 
     /*输入框样式*/
     --c-input-bg:'';
-    --c-input-border:2px solid var(--c-white-4);
+    --c-input-border:1px solid var(--c-black-4);
+    --c-input-border-focus:1px solid #6ec3ff;
     --c-input-text-color:var(--c-white-2);
 
 }

@@ -1,5 +1,5 @@
 <script setup>
-import buildingData from '/src/static/json/build/buildingData1.json'
+import buildingData from '/src/static/json/build/building_table.json'
 </script>
 <template>
   <div v-for="(list,type) in buildingData" :key="type">

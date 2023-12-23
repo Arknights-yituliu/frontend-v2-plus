@@ -1,18 +1,19 @@
 .input-base {
-    height: 20px;
-    line-height: 20px;
+    font-size: 16px;
+    height: 28px;
+    line-height: 1;
     border: none;
     outline: none;
-    padding: 2px;
+    padding: 6px;
     box-sizing: border-box;
+    border-radius: 3px;
     color: var(--c-input-text-color);
-    border-bottom: var(--c-input-border);
+    border: var(--c-input-border);
     background-color: var(--c-input-bg);
 }
 
 .input-base:focus {
-
-    border-bottom:2px solid var(--c-blue);
+    border:var(--c-input-border-focus);
 }
 
 
