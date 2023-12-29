@@ -1,5 +1,5 @@
 <script setup>
-import stage from "/src/pages/material/stageV3.vue";
+import stage from "/src/pages/material/stageV3.page.client.vue";
 import FootComponent from "@/components/FootComponent.vue";
 
 import axios from 'axios'

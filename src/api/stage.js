@@ -7,7 +7,6 @@ export default {
    * @param sampleSize 样本量
    * @returns {*}
    */
-
   getT3RecommendedStage(expCoefficient, sampleSize) {
     return request({
       url: `/stage/t3?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,

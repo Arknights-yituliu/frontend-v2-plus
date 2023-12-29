@@ -531,11 +531,11 @@ onMounted(() => {
       <!--      <span class="schedule-header-title">排班生成器</span>-->
     </div>
     <div class="schedule-header-right">
-      <div>
-        <input class="input-base" v-model="importFileId" placeholder=""/>
-        <span class="input-desc"></span>
-      </div>
-      <c-button :color="COLOR.BLUE" @click="importScheduleById()">通过id导入排班</c-button>
+<!--      <div>-->
+<!--        <input class="input-base" v-model="importFileId" placeholder=""/>-->
+<!--        <span class="input-desc"></span>-->
+<!--      </div>-->
+<!--      <c-button :color="COLOR.BLUE" @click="importScheduleById()">通过id导入排班</c-button>-->
       <!--      <input class="input-base" v-model="importFileContent" placeholder=""/>-->
       <div class="input-wrap">
         <input class="input-type-file" type="file"
@@ -543,7 +543,7 @@ onMounted(() => {
                @change="importScheduleByFile()">
         <c-button :color="COLOR.BLUE" :status="true">选择文件导入排班</c-button>
       </div>
-      <c-button :color="COLOR.BLUE">保存排班文件</c-button>
+<!--      <c-button :color="COLOR.BLUE">保存排班文件</c-button>-->
       <c-button :color="COLOR.BLUE" @click="createScheduleJsonFile()">导出排班文件</c-button>
 
     </div>

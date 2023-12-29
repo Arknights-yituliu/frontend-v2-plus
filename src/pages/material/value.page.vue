@@ -174,6 +174,7 @@
 import { usePageContext } from "/src/renderer/usePageContext";
 import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
+import stageApi from "../../api/stage";
 
 let opETextTheme = ref("op_title_etext_light")
 
@@ -207,6 +208,7 @@ function getItemRarityColor(rarity) {
   if (rarity === 4) return 'border-color: var(--purple)'
   if (rarity === 5) return 'border-color: var(--orange)'
 }
+
 
 onMounted(() => {
   const url_path = window.location.pathname.split("/")[1];

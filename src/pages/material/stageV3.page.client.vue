@@ -663,18 +663,22 @@ let selected_item = ref({
 })
 
 // 获取关卡推荐数据
-stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
-  stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
-  //将后端返回的数据组装为卡片需要的数据格式
-  getItemCardData()
-  //获取材料价值数据
-  stageApi.getItemValueTable(0.625).then(response => {
-    for (const item of response.data) {
-      item_value_obj.value[item.itemId] = item;
-    }
-    getItemTableData(0, false)
+function getStageResult(){
+  stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
+    console.log(response)
+    stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+    //将后端返回的数据组装为卡片需要的数据格式
+    getItemCardData()
+    //获取材料价值数据
+    stageApi.getItemValueTable(0.625).then(response => {
+      for (const item of response.data) {
+        item_value_obj.value[item.itemId] = item;
+      }
+      getItemTableData(0, false)
+    })
   })
-})
+}
+
 
 
 /**
@@ -696,7 +700,7 @@ function getItemCardData() {
 
       const {stageEfficiency, leT4Efficiency, leT3Efficiency, leT2Efficiency} = stage
 
-      console.log(leT4MaxEfficiencyStage.leT4Efficiency, '<' ,leT4Efficiency ,'---', leT4MaxEfficiencyStage.leT4Efficiency < leT4Efficiency  )
+      // console.log(leT4MaxEfficiencyStage.leT4Efficiency, '<' ,leT4Efficiency ,'---', leT4MaxEfficiencyStage.leT4Efficiency < leT4Efficiency  )
 
       if (maxEfficiencyStage.stageEfficiency < stageEfficiency) {
         maxEfficiencyStage = stage
@@ -1022,65 +1026,69 @@ function historyActDeviceBtnClass(device) {
   return 'op_tag_0'
 }
 
-// 获取历史活动up材料信息
-stageApi.getHistoryActStage(0.625, 300).then(response => {
-  // 先把材料系列表转为一个集合
-  for (const itemId in item_series) {
-    const item = item_series[itemId]
-    itemIdList.push({
-      id: item.id,
-      name: item.name,
-      lastUp: false
-    })
-  }
-  historyActItemList.value = response.data
-  // 循环历史活动数据
-  for (const index in response.data) {
-    const act = response.data[index]
-    //复刻不计入
-    // if(act.zoneName.indexOf('复刻')>-1) {
-    //   continue;
-    // }
-    //每行数据
-    const rowData = {
-      zoneName: act.zoneName, //活动名
-      itemList: [] //材料up情况
-    }
-    for (const itemIndex in itemIdList) {
-      const item = itemIdList[itemIndex]
-      let cellBgColor = false; //格子背景颜色
-      let isUpFlag = false; //材料up标记
-      // 循环每个活动up的蓝材料
-      let stageEfficiency = void 0
-      for (const stage of act.actStageList) {
-        //up了材料则标记已经up
-        if (stage.itemId === item.id) {
-          stageEfficiency = stage.stageEfficiency * 100
-          isUpFlag = true
-          break
-        }
-      }
-      //如果这个up上个活动没up则将格子标记为true，添加背景色
-      if (!itemIdList[itemIndex].lastUp) {
-        cellBgColor = true;
-      }
-      //如果这个材料已经up了，则将这个材料的上次up标记为true
-      if (isUpFlag) {
-        itemIdList[itemIndex].lastUp = true;
-      }
-
-      rowData.itemList.push({
-        itemId: item.id,
-        stageEfficiency: stageEfficiency,
-        isUp: isUpFlag,
-        cellBgColor: cellBgColor,
+function getHistoryActStage(){
+  // 获取历史活动up材料信息
+  stageApi.getHistoryActStage(0.625, 300).then(response => {
+    // 先把材料系列表转为一个集合
+    for (const itemId in item_series) {
+      const item = item_series[itemId]
+      itemIdList.push({
+        id: item.id,
+        name: item.name,
+        lastUp: false
       })
     }
-    historyActItemTable.value.push(rowData)
-  }
+    historyActItemList.value = response.data
+    // 循环历史活动数据
+    for (const index in response.data) {
+      const act = response.data[index]
+      //复刻不计入
+      // if(act.zoneName.indexOf('复刻')>-1) {
+      //   continue;
+      // }
+      //每行数据
+      const rowData = {
+        zoneName: act.zoneName, //活动名
+        itemList: [] //材料up情况
+      }
+      for (const itemIndex in itemIdList) {
+        const item = itemIdList[itemIndex]
+        let cellBgColor = false; //格子背景颜色
+        let isUpFlag = false; //材料up标记
+        // 循环每个活动up的蓝材料
+        let stageEfficiency = void 0
+        for (const stage of act.actStageList) {
+          //up了材料则标记已经up
+          if (stage.itemId === item.id) {
+            stageEfficiency = stage.stageEfficiency * 100
+            isUpFlag = true
+            break
+          }
+        }
+        //如果这个up上个活动没up则将格子标记为true，添加背景色
+        if (!itemIdList[itemIndex].lastUp) {
+          cellBgColor = true;
+        }
+        //如果这个材料已经up了，则将这个材料的上次up标记为true
+        if (isUpFlag) {
+          itemIdList[itemIndex].lastUp = true;
+        }
+
+        rowData.itemList.push({
+          itemId: item.id,
+          stageEfficiency: stageEfficiency,
+          isUp: isUpFlag,
+          cellBgColor: cellBgColor,
+        })
+      }
+      historyActItemTable.value.push(rowData)
+    }
 
 
-})
+  })
+}
+
+
 
 
 function getCellBgColor(flag) {
@@ -1113,18 +1121,22 @@ function filterOrundumStage() {
   }
 }
 
-stageApi.getOrundumRecommendedStage().then(response => {
-  for (const stage of response.data) {
-    orundumRecommendedStage.value.push({
-      stageCode: stage.stageCode,
-      orundumPerAp: stage.orundumPerAp.toFixed(2),
-      lmdcost: stage.lmdcost.toFixed(2) + 'w',
-      orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
-      stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
-    })
-  }
-  displayOrundumRecommendedStage.value = orundumRecommendedStage.value
-})
+function getOrundumRecommendedStage(){
+  stageApi.getOrundumRecommendedStage().then(response => {
+    for (const stage of response.data) {
+      orundumRecommendedStage.value.push({
+        stageCode: stage.stageCode,
+        orundumPerAp: stage.orundumPerAp.toFixed(2),
+        lmdcost: stage.lmdcost.toFixed(2) + 'w',
+        orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
+        stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
+      })
+    }
+    displayOrundumRecommendedStage.value = orundumRecommendedStage.value
+  })
+}
+
+
 
 // for(let id in item_series){
 //   item_series[id] =  {
@@ -1153,6 +1165,9 @@ onMounted(() => {
       td_6.value = ''
     }
   })
+  getOrundumRecommendedStage()
+  getHistoryActStage()
+  getStageResult()
 })
 </script>
 
