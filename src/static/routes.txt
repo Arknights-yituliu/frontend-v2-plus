@@ -1,3 +1,15 @@
+
+{
+        "path": "/about/dev",
+        "text": "一图流开放平台",
+        "isChild": false
+      },
+      {
+        "path": "/about/api",
+        "text": "API文档",
+        "isChild": false
+      },
+
 {
     "path": "/survey",
     "text": "调查与统计",

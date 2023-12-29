@@ -54,16 +54,7 @@
     "text": "其它信息",
     "isChild": true,
     "child": [
-      {
-        "path": "/about/dev",
-        "text": "一图流开放平台",
-        "isChild": false
-      },
-      {
-        "path": "/about/api",
-        "text": "API文档",
-        "isChild": false
-      },
+
       {
         "path": "/about/donate",
         "text": "支持我们",
