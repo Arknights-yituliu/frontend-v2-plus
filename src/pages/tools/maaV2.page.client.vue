@@ -276,7 +276,7 @@ function chooseOperator(charId) {
  * @param {string} operator_id 干员id
  */
 function deleteOperator(operator_id) {
-
+   console.log(operator_id)
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
       plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
         return e !== operator_id
@@ -874,10 +874,8 @@ onMounted(() => {
       <div class="room-set">
         <span>当前班次入驻的干员</span>
         <div class="selected-operator-wrap">
-          <div class="room-avatar-sprite-wrap" style="margin: 0 4px"
-               v-for="(charId,index) in getRoomOperators(selectedRoomType,selectedRoomIndex)"
-               :key="index"
-               @click="deleteOperator(charId)">
+          <div class="room-avatar-sprite-wrap" style="margin: 0 20px 0 0"
+               v-for="(charId,index) in getRoomOperators(selectedRoomType,selectedRoomIndex)" :key="index" >
             <div :class="getAvatar(charId)"></div>
             <i class="iconfont icon-error operator-delete-icon"  @click="deleteOperator(charId)">
             </i>
@@ -886,7 +884,7 @@ onMounted(() => {
         <c-button @click="copyOperatorList()">复制</c-button>
         <c-button @click="pasteOperatorList()">粘贴</c-button>
 
-        <span>当前复制干员组</span>
+        <span>当前复制的干员组</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap" style="margin: 0 4px"
                v-for="(charId,index) in tmpOperatorList"
