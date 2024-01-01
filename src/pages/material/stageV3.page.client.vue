@@ -267,7 +267,7 @@
     <!-- 详情表 -->
     <div class="tableArea" style="margin : 8px;max-width: 1080px;" id="detail-table">
       <el-table class="detailTable" stripe :data="item_table_data_by_item_id" max-height="450">
-        <el-table-column fixed prop="stageCode" label="关卡名" :width="td_6" sortable>
+        <el-table-column fixed prop="stageCode" label="关卡名" :width="120" sortable>
           <template #default="scope">
             <div>
               <span style="font-size: 10px;line-height: 8px;">{{ replaceZoneName(scope.row.zoneName) }}</span><br>
@@ -275,42 +275,42 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="主产物" :width="td_1">
+        <el-table-column prop="primary" label="主产物" :width="70">
           <template #default="scope">
             <div class="detail-table-item-wrap">
               <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="主产物掉率" :width="td_1">
+        <el-table-column prop="primary" label="主产物掉率" :width="70">
           <template #default="scope">
             {{ formatNumber(scope.row.knockRating * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="secondary" label="副产物" :width="td_1">
+        <el-table-column prop="secondary" label="副产物" :width="70">
           <template #default="scope">
             <div class="detail-table-item-wrap">
               <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="eff" label="综合效率" :width="td_5" sortable>
+        <el-table-column prop="eff" label="综合效率" :width="110" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="spm" label="SPM" :width="td_4" sortable/>
-        <el-table-column prop="leT5Efficiency" label="T4效率" :width="td_4" sortable>
+        <el-table-column prop="spm" label="SPM" :width="110" sortable/>
+        <el-table-column prop="leT5Efficiency" label="T4效率" :width="110" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="leT4Efficiency" label="T3效率" :width="td_4" sortable>
+        <el-table-column prop="leT4Efficiency" label="T3效率" :width="100" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="leT3Efficiency" label="T2效率" :width="td_4" sortable>
+        <el-table-column prop="leT3Efficiency" label="T2效率" :width="100" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT2Efficiency * 100, 1) }}%
           </template>
@@ -986,11 +986,7 @@ onMounted(() => {
 
 })
 
-let td_1 = ref()
-let td_2 = ref()
-let td_3 = ref()
-let td_4 = ref()
-let td_5 = ref()
+
 let td_6 = ref()
 
 
@@ -1148,23 +1144,7 @@ function getOrundumRecommendedStage(){
 // }
 
 onMounted(() => {
-  window.addEventListener("resize", function () {
-    if (window.innerWidth < 800) {
-      td_1.value = 70
-      td_2.value = 80
-      td_3.value = 90
-      td_4.value = 100
-      td_5.value = 110
-      td_6.value = 120
-    } else {
-      td_1.value = ''
-      td_2.value = ''
-      td_3.value = ''
-      td_4.value = ''
-      td_5.value = ''
-      td_6.value = ''
-    }
-  })
+
   getOrundumRecommendedStage()
   getHistoryActStage()
   getStageResult()

@@ -178,6 +178,12 @@ const operatorFilterConditionTable = {
                 }
             },
             {
+                label: "自动化",
+                func: (operator) => {
+                    return (operator.description.indexOf('发电站') > -1 && operator.description.indexOf('归零') > -1)
+                }
+            },
+            {
                 label: "莱茵科技",
                 func: (operator) => {
                     return operator.buffName.indexOf('莱茵科技') > -1

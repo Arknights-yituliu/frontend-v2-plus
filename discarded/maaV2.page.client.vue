@@ -11,7 +11,7 @@ import schedule_menu from '/src/static/json/build/schedule_menu.json'
 import {fileRead} from '/src/pages/utils/utils'
 import buildingTable from '/src/static/json/build/building_table.json'
 // import plan from '/src/pages/tools/plans_template.js'
-import {operatorFilterConditionTable} from '/src/pages/tools/maa.js'
+import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
 
 const COLOR = {BLUE: 'blue'}
 

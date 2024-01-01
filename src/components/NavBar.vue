@@ -32,7 +32,7 @@
       <div class="drawer" id="drawer114">
         <div class="menu_table">
           <!-- 标题区 -->
-          <a href="https://yituliu.site/" style="text-decoration: none; color: white">
+          <a href="/" style="text-decoration: none; color: white">
             <div class="aside-title">明日方舟一图流</div>
           </a>
           <!-- 导航菜单 -->

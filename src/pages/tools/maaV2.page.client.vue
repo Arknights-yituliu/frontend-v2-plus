@@ -5,13 +5,13 @@ import '/src/assets/css/tool/schedule.css'
 import '/src/assets/css/sprite/sprite_avatar_6.css'
 import '/src/assets/css/sprite/sprite_avatar_5.css'
 import '/src/assets/css/sprite/sprite_avatar_4.css'
-import building_data from '/src/static/json/build/buildingData.json'
+import character_table from '/src/static/json/survey/character_table_simple.json'
 import {cMessage} from '/src/custom/message.js'
 import schedule_menu from '/src/static/json/build/schedule_menu.json'
 import {fileRead} from '/src/pages/utils/utils'
 import buildingTable from '/src/static/json/build/building_table.json'
 // import plan from '/src/pages/tools/plans_template.js'
-import {operatorFilterConditionTable} from '/src/pages/tools/maa.js'
+import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
 
 const COLOR = {BLUE: 'blue'}
 
@@ -25,7 +25,6 @@ for (let i = 0; i < 7; i++) {
 
 let isPeriod = ref(false)
 
-let indexList = [0, 1, 2, 3, 4, 5, 6];
 
 const roomTypeMenu = [
   {label: "贸易站", value: "trading"},
@@ -66,11 +65,8 @@ const productTable = {
 }
 
 let characterIdAndName = {}
-for (const key in building_data) {
-  const obj = building_data[key]
-  for (const id in obj) {
-    characterIdAndName[obj[id]] = id
-  }
+for (const key in character_table) {
+  characterIdAndName[character_table[key].name] = key
 }
 
 let selectedScheduleType = ref(schedule_menu[0])
