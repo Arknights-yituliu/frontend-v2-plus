@@ -137,7 +137,7 @@ const operatorFilterConditionTable = {
             {
                 label: "生产力",
                 func: (operator) => {
-                    return operator.roomType === 'control' && operator.description.indexOf('所有制造站生产力') > -1
+                    return operator.roomType === 'control' && operator.description.indexOf('生产力') > -1
                 }
             },
             {

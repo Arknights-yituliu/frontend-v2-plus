@@ -9,7 +9,7 @@ import character_table from '/src/static/json/survey/character_table_simple.json
 import {cMessage} from '/src/custom/message.js'
 import schedule_menu from '/src/static/json/build/schedule_menu.json'
 import {fileRead} from '/src/pages/utils/utils'
-import buildingTable from '/src/static/json/build/building_table.json'
+import building_table from '/src/static/json/build/building_table.json'
 // import plan from '/src/pages/tools/plans_template.js'
 import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
 
@@ -233,7 +233,7 @@ function filterOperatorList(condition, key) {
   console.log(condition)
   selectBtnKey.value = `${key}+${condition.label}`
   popupOperatorList.value = {}
-  for (const operator of buildingTable) {
+  for (const operator of building_table) {
     if (condition.func(operator))
       popupOperatorList.value[operator.charId] = operator
   }
