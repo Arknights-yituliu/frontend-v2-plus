@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div class="footer" style="display: none">
 
       <img src="/image/website/备案图标.png" style="width: 20px; height: 20px" alt=""/>
       <a style="color: #ffffff" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12011502000732"

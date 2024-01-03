@@ -426,7 +426,7 @@
 }
 
 @media screen and (max-width: 900px) {
-  .act-table {
+  .act-table-wrap {
     display: none;
   }
 

@@ -137,7 +137,7 @@ const operatorFilterConditionTable = {
             {
                 label: "生产力",
                 func: (operator) => {
-                    return operator.roomType === 'control' && operator.description.indexOf('所有制造站生产力') > -1
+                    return operator.roomType === 'control' && operator.description.indexOf('生产力') > -1
                 }
             },
             {
@@ -175,6 +175,12 @@ const operatorFilterConditionTable = {
                 label: "红松骑士团",
                 func: (operator) => {
                     return operator.buffName.indexOf('红松') > -1
+                }
+            },
+            {
+                label: "自动化",
+                func: (operator) => {
+                    return (operator.description.indexOf('发电站') > -1 && operator.description.indexOf('归零') > -1)
                 }
             },
             {

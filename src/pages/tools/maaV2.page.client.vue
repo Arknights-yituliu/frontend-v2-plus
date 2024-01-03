@@ -5,13 +5,13 @@ import '/src/assets/css/tool/schedule.css'
 import '/src/assets/css/sprite/sprite_avatar_6.css'
 import '/src/assets/css/sprite/sprite_avatar_5.css'
 import '/src/assets/css/sprite/sprite_avatar_4.css'
-import building_data from '/src/static/json/build/buildingData.json'
+import character_table from '/src/static/json/survey/character_table_simple.json'
 import {cMessage} from '/src/custom/message.js'
 import schedule_menu from '/src/static/json/build/schedule_menu.json'
 import {fileRead} from '/src/pages/utils/utils'
-import buildingTable from '/src/static/json/build/building_table.json'
+import building_table from '/src/static/json/build/building_table.json'
 // import plan from '/src/pages/tools/plans_template.js'
-import {operatorFilterConditionTable} from '/src/pages/tools/maa.js'
+import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
 
 const COLOR = {BLUE: 'blue'}
 
@@ -25,7 +25,6 @@ for (let i = 0; i < 7; i++) {
 
 let isPeriod = ref(false)
 
-let indexList = [0, 1, 2, 3, 4, 5, 6];
 
 const roomTypeMenu = [
   {label: "贸易站", value: "trading"},
@@ -66,11 +65,8 @@ const productTable = {
 }
 
 let characterIdAndName = {}
-for (const key in building_data) {
-  const obj = building_data[key]
-  for (const id in obj) {
-    characterIdAndName[obj[id]] = id
-  }
+for (const key in character_table) {
+  characterIdAndName[character_table[key].name] = key
 }
 
 let selectedScheduleType = ref(schedule_menu[0])
@@ -237,7 +233,7 @@ function filterOperatorList(condition, key) {
   console.log(condition)
   selectBtnKey.value = `${key}+${condition.label}`
   popupOperatorList.value = {}
-  for (const operator of buildingTable) {
+  for (const operator of building_table) {
     if (condition.func(operator))
       popupOperatorList.value[operator.charId] = operator
   }
@@ -276,7 +272,7 @@ function chooseOperator(charId) {
  * @param {string} operator_id 干员id
  */
 function deleteOperator(operator_id) {
-
+   console.log(operator_id)
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
       plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
         return e !== operator_id
@@ -874,10 +870,8 @@ onMounted(() => {
       <div class="room-set">
         <span>当前班次入驻的干员</span>
         <div class="selected-operator-wrap">
-          <div class="room-avatar-sprite-wrap" style="margin: 0 4px"
-               v-for="(charId,index) in getRoomOperators(selectedRoomType,selectedRoomIndex)"
-               :key="index"
-               @click="deleteOperator(charId)">
+          <div class="room-avatar-sprite-wrap" style="margin: 0 20px 0 0"
+               v-for="(charId,index) in getRoomOperators(selectedRoomType,selectedRoomIndex)" :key="index" >
             <div :class="getAvatar(charId)"></div>
             <i class="iconfont icon-error operator-delete-icon"  @click="deleteOperator(charId)">
             </i>
@@ -886,7 +880,7 @@ onMounted(() => {
         <c-button @click="copyOperatorList()">复制</c-button>
         <c-button @click="pasteOperatorList()">粘贴</c-button>
 
-        <span>当前复制干员组</span>
+        <span>当前复制的干员组</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap" style="margin: 0 4px"
                v-for="(charId,index) in tmpOperatorList"
