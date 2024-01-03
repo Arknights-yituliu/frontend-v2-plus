@@ -1,7 +1,7 @@
 # 明日方舟一图流 网站前端
 
-原域名<https://yituliu.site>因政策原因已被公安拿下
-暂时可通过：<https://ytl.viktorlab.cn>访问
+原域名<https://yituliu.site>因政策原因已被公安拿下<br>
+暂时可通过：<https://ytl.viktorlab.cn>访问<br>
 新域名：<https://yituliu.cn>正在备案中
 
 
