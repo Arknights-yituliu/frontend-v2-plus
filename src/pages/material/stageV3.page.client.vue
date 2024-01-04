@@ -848,7 +848,7 @@ function getActTableSimpleItemSprite(id) {
   return "bg-" + id + " act-table-simple-item-sprite";
 }
 
-let debug = "";
+
 
 function getLineBarLength(T2eff, T3eff, T4eff, stageEff) {
   // 暂时是单层的，所以代码看起来可能比较乱
