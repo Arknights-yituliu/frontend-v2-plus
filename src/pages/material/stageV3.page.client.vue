@@ -719,17 +719,7 @@ function getItemCardData() {
         leT2MaxEfficiencyStage = stage
       }
 
-
     }
-
-    //获得每种评价标准的最优关和效率
-    // const item_recommend_stage = {
-    //   maxEfficiencyStage: getStageDataByProperty(stage_result_list, 'stageEfficiency'),
-    //   leT4MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT5Efficiency'),
-    //   leT3MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT4Efficiency'),
-    //   leT2MaxEfficiencyStage: getStageDataByProperty(stage_result_list, 'leT3Efficiency'),
-    //   series: {r4: '', r3: '', r2: '', r1: ''}
-    // }
 
     const item_recommend_stage = {
       maxEfficiencyStage: maxEfficiencyStage,
@@ -763,27 +753,7 @@ function efficiencyTypeBtnClass(device) {
   return 'op_tag_0'
 }
 
-/**
- * 根据传入的对象属性进行倒序排序,获得该属性最优关卡
- * @param stageList 推荐关卡集合
- * @param property 要排序的属性
- * @returns {{efficiency, stageCode}} 该属性最优关卡效率和关卡名称
- */
-function getStageDataByProperty(stageList, property) {
-  stageList.sort((a, b) => {
-    return b[property] - a[property]
-  })
-  for (const index in stageList) {
-    const stage = stageList[index]
-    if (stage.endTime < nowTimeStamp) continue;
-    return {
-      stageCode: stage.stageCode,
-      efficiency: stage[property],
-      stageEfficiency: stage.stageEfficiency,
-      zoneName: stage.zoneName
-    }
-  }
-}
+
 
 //根据物品id获得对应的关卡推荐数据集合
 let item_table_data_by_item_id = ref([])
