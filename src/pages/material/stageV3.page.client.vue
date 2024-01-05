@@ -2,7 +2,7 @@
   <!-- 地图效率Start -->
   <div id="stage" style="font-family: Arial, Helvetica, sans-serif;">
     <!-- 标题区域 -->
-    <a href="https://space.bilibili.com/688411531" style="text-decoration:none;color: #000;">
+    <a href="https://space.bilibili.com/688411531" style="text-decoration:none;color:inherit">
       <div id="RIICbeta" class="stage_3_intro" style="max-width:600px; font-size: 24px;font-family: Arial, Helvetica, sans-serif;text-align: center;margin: 8px auto;border: 2px solid #ff0000;line-height: 28px;padding-top:8px;">
         您现在正在通过<b style="color: rgb(255,94,66);">临时域名</b>访问本站<br>新域名(ark.yituliu.cn)正在备案中<br>
         建议关注 <b style="color: rgb(255,94,66);">罗德岛基建BETA@bilibili</b> 获取最新动态<br>点击本卡片即可跳转
