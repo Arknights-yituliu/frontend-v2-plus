@@ -65,8 +65,17 @@ const productTable = {
 }
 
 let characterIdAndName = {}
+
 for (const key in character_table) {
-  characterIdAndName[character_table[key].name] = key
+
+  characterIdAndName[character_table[key].name] = replaceCharId(key)
+}
+
+function replaceCharId(string){
+  if(string==='char_1001_amiya2'){
+    return  'char_002_amiya'
+  }
+  return string
 }
 
 let selectedScheduleType = ref(schedule_menu[0])
