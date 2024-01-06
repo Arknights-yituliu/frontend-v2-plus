@@ -13,7 +13,7 @@ import building_table from '/src/static/json/build/building_table.json'
 // import plan from '/src/pages/tools/plans_template.js'
 import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
 
-const COLOR = {BLUE: 'blue'}
+const COLOR = {BLUE: 'blue',ORANGE:'orange'}
 
 
 let plansTemplate = ref(schedule_template_json)
@@ -523,6 +523,10 @@ function importSchedule(schedule) {
 // if (ScheduleCache) plans_template.value = JSON.parse(ScheduleCache)
 
 
+function feedback(){
+  window.open('https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill')
+}
+
 onMounted(() => {
   filterOperatorList(operatorFilterConditionTable.room.conditions[0], 'room')
 })
@@ -550,7 +554,7 @@ onMounted(() => {
       </div>
 <!--      <c-button :color="COLOR.BLUE">保存排班文件</c-button>-->
       <c-button :color="COLOR.BLUE" @click="createScheduleJsonFile()">导出排班文件</c-button>
-
+      <c-button :color="COLOR.ORANGE" :status="true" @click="feedback()">排班生成器问题反馈</c-button>
     </div>
   </div>
 

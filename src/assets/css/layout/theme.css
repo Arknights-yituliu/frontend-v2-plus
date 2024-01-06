@@ -55,6 +55,7 @@
     --c-btn-bg-blue:var(--c-btn-blue-dark);
     --c-btn-bg-red:var(--c-btn-red-dark);
     --c-btn-bg-green:var(--c-btn-green-dark);
+    --c-btn-bg-orange:var(--c-btn-orange-dark);
 
     /*输入框样式*/
     --c-input-bg:'';
@@ -89,7 +90,7 @@
     --c-btn-green-light: #04c504;
     --c-btn-blue-light: #00a1d6;
     --c-btn-red-light: #ff6262;
-    --c-btn-orange-light: #ffa300;
+    --c-btn-orange-light: #ffaf00;
 
     /*暗色颜色*/
     --c-blue-dark: #56b7ff;
@@ -98,5 +99,5 @@
     --c-btn-green-dark: #3bb6ac;
     --c-btn-blue-dark: #4ab4ef;
     --c-btn-red-dark: #fa6f6f;
-
+    --c-btn-orange-dark: #ff9b00;
 }
