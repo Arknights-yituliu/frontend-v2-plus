@@ -14,10 +14,6 @@
     border: var(--c-btn-border);
 }
 
-/*.btn:hover{*/
-/*    border: 1px solid var(--c-btn-bg-green);*/
-/*    color: var(--c-btn-bg-green);;*/
-/*}*/
 
 .btn-blue{
     color: var(--c-btn-text-color);
@@ -25,11 +21,11 @@
     border: none;
 }
 
-/*.btn-blue:hover{*/
-/*    color: var(--c-btn-bg-blue);*/
-/*    background-color:var(--c-btn-text-color);*/
-/*    border: 1px solid var(--c-btn-bg-blue);*/
-/*}*/
+.btn-orange{
+    color: var(--c-btn-text-color);
+    background-color:var(--c-btn-bg-orange);
+    border: none;
+}
 
 .btn-green{
     color: var(--c-btn-text-color);

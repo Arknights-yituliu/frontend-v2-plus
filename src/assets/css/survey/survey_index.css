@@ -48,7 +48,7 @@
 .login_card {
   width: 450px;
   height: auto;
-  border-radius: 10px;
+  border-radius: 6px;
   margin: auto;
   padding: 20px;
   /* padding: 10px; */
@@ -58,7 +58,7 @@
 .login_input_wrap{
   margin: auto;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 4px;
   width: 400px;
   font-weight: 600;
 }
@@ -90,10 +90,9 @@
   /*margin: 0 0 0 4px;*/
 }
 
-.login_btn{
+.login-btn{
   width: 170px;
   margin: 8px 20px 8px 0;
-  border-radius: 8px;
 }
 
 .login_btn_tip{

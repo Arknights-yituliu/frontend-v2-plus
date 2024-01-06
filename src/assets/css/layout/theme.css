@@ -24,6 +24,7 @@
     --c-btn-bg-blue:var(--c-btn-blue-light);
     --c-btn-bg-red:var(--c-btn-red-light);
     --c-btn-bg-green:var(--c-btn-green-light);
+    --c-btn-bg-orange:var(--c-btn-orange-light);
 
     /*输入框样式*/
     --c-input-bg:'';
@@ -88,6 +89,7 @@
     --c-btn-green-light: #04c504;
     --c-btn-blue-light: #00a1d6;
     --c-btn-red-light: #ff6262;
+    --c-btn-orange-light: #ffa300;
 
     /*暗色颜色*/
     --c-blue-dark: #56b7ff;
