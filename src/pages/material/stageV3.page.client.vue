@@ -58,7 +58,7 @@
               </div>
               <div class="stage_card_3_line_text"
                    style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">
-                只需求<span style="color: blueviolet;">紫材料</span><br>刷这个
+                只需求<span style="color: #e600ff;">紫材料</span><br>刷这个
               </div>
               <div class="stage_card_3_line_text"
                    style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T4效率值
@@ -70,7 +70,7 @@
               </div>
               <div class="stage_card_3_line_text"
                    style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">
-                只需求<span style="color:rgb(0, 125, 167);">蓝材料</span><br>刷这个
+                只需求<span style="color:#0084ff;">蓝材料</span><br>刷这个
               </div>
               <div class="stage_card_3_line_text"
                    style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T3效率值
@@ -886,8 +886,8 @@ function getEfficiencyBar(singleStageEff, stageEff, rank) {
   let singleStageEffDecimal = parseFloat(`0.${singleStageEffSplit[1]}`)
 
   let backgroundGrey = 'var(--material-grey)'
-  let backgroundDarkgrey = 'var(--material-darkgrey)'
-  
+  let backgroundDarkgrey = '#ffa600'
+
   //根据主产物最高等级赋予颜色
   let barColor = {
     integer: 'var(--material-grey)',
@@ -909,7 +909,7 @@ function getEfficiencyBar(singleStageEff, stageEff, rank) {
       decimal: '#82dcb8'
     }
   }
-  
+
   let styleList = []
 
 
