@@ -127,6 +127,14 @@
   font-weight: 600;
 }
 
+.proportion-bar-wrap{
+  height: 12px;
+  display: flex;
+  align-items: center;
+  width: 112px;
+  justify-content: space-between;
+}
+
 .rarity_6{
   background: linear-gradient(to right, #ff581a,#ffffffff);
 }
