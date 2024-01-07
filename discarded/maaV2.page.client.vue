@@ -8,7 +8,7 @@ import '/src/assets/css/sprite/sprite_avatar_4.css'
 import building_data from '/src/static/json/build/buildingData.json'
 import {cMessage} from '/src/custom/message.js'
 import schedule_menu from '/src/static/json/build/schedule_menu.json'
-import {fileRead} from '/src/pages/utils/fileRead.js'
+import {fileRead} from '/src/utils/fileRead.js'
 
 import buildingTable from '/src/static/json/build/building_table.json'
 // import plan from '/src/pages/tools/plans_template.js'

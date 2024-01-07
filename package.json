@@ -34,6 +34,7 @@
     "vite": "^4.2.1",
     "vite-plugin-ssr": "^0.4.99",
     "vue": "^3.2.47",
+    "xlsx": "^0.18.5",
     "xterm": "^5.2.1"
   },
   "devDependencies": {

@@ -538,7 +538,7 @@ import characterTable from '/src/static/json/survey/character_table_simple.json'
 
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
-import { debounce } from "/src/pages/utils/utils";
+import { debounce } from "/src/utils/utils";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级

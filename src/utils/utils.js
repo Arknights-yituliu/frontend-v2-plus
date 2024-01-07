@@ -1,4 +1,4 @@
-import {cMessage} from "../../custom/message";
+import {cMessage} from "../custom/message";
 
 /**
  * 函数防抖

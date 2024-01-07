@@ -8,13 +8,15 @@
       </div>
       <div class="value_unit_btn_wrap">
         <c-button :color="'blue'" :status="value_unit === 'itemValueAp'"
-          @click="value_unit = 'itemValueAp'">等效理智</c-button>
-        <c-button :color="'blue'" :status="value_unit === 'itemValue'" @click="value_unit = 'itemValue'">等效绿票</c-button>
+                  @click="value_unit = 'itemValueAp'">等效理智
+        </c-button>
+        <c-button :color="'blue'" :status="value_unit === 'itemValue'" @click="value_unit = 'itemValue'">等效绿票
+        </c-button>
         <div class="item_value_down">
-          <a style="color: rgb(65, 105, 240)" href="https://backend.yituliu.site/item/export/excel"> 导出Excel</a>
+          <a style="color: rgb(65, 105, 240)" @click="exportItemValueExcel()"> 导出Excel</a>
         </div>
         <div class="item_value_down">
-          <a style="color: rgb(65, 105, 240)" href="https://backend.yituliu.site/item/export/json"> 导出Json</a>
+          <a style="color: rgb(65, 105, 240)" @click="exportItemValueJson()"> 导出Json</a>
         </div>
       </div>
     </div>
@@ -22,7 +24,7 @@
     <div class="item_value_card_box color">
       <div v-for="(item_group, index) in item_value_list" :key="index" class="item_value_card_wrap">
         <div class="item_value_card" v-for="(item, index) in item_group" :key="index"
-          :style="getItemRarityColor(item.rarity)">
+             :style="getItemRarityColor(item.rarity)">
           <div class="item_image_wrap">
             <div :class="getSpriteImg(item.itemId)"></div>
           </div>
@@ -43,32 +45,36 @@
         <el-card class="box-card">
           <el-collapse>
             <el-collapse-item name="1" style="">
-            <template #title>
+              <template #title>
               <span style="font-size: large; display: flex; align-items: center">
                 <el-icon>
-                  <Comment />
+                  <Comment/>
                 </el-icon><b style="margin-left: 4px">问题反馈</b>
               </span>
-            </template>
-            <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">点击此处</a>通过问卷反馈问题/提供建议，<a href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">点击此处</a>加入粉丝群，<a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">点击此处</a>加入开发群。
-          </el-collapse-item>
+              </template>
+              <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">点击此处</a>通过问卷反馈问题/提供建议，<a
+                href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">点击此处</a>加入粉丝群，<a
+                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">点击此处</a>加入开发群。
+            </el-collapse-item>
             <el-collapse-item name="2" style="">
               <template #title>
                 <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <TrendCharts />
+                    <TrendCharts/>
                   </el-icon><b style="margin-left: 4px">动态平衡算法简述</b></span>
               </template>
               <b>算法核心思路为“掉率越高，则价值越低”且“物品价值仅受获取成本影响”</b>
-              <hr />
+              <hr/>
               <ul style="padding-left: 2em">
                 <li>第1步：取所有<b>常驻关卡</b>的掉率，以材料价格计算关卡效率</li>
                 <li>第2步：以关卡效率修正材料价格</li>
-                <li>第3步：重复操作(1)(2)，直至材料价格和关卡效率收敛于误差小于万分之一，实现动态平衡，此时得出<b>关卡效率</b>和<b>材料价值</b></li>
+                <li>
+                  第3步：重复操作(1)(2)，直至材料价格和关卡效率收敛于误差小于万分之一，实现动态平衡，此时得出<b>关卡效率</b>和<b>材料价值</b>
+                </li>
                 <li>第4步：根据商店售价和物品价值，计算常驻商店和活动商店性价比</li>
               </ul>
 
               <b>FAQ</b>
-              <hr />
+              <hr/>
               <ul style="padding-left: 2em">
                 <li>Q：你怎么知道数列是收敛的？</li>
                 <li><b>A：如果不收敛网站就崩了，你也看不到这句话了。</b></li>
@@ -85,11 +91,12 @@
             <el-collapse-item name="3" style="">
               <template #title>
                 <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <Opportunity />
+                    <Opportunity/>
                   </el-icon><b style="margin-left: 4px">计算细节</b></span>
               </template>
               <ul style="padding-left: 2em">
-                <li>数据选择范围为<a href="https://penguin-stats.cn/">企鹅物流</a>中的<b>常驻关卡</b>以保证价值的稳定性。</li>
+                <li>数据选择范围为<a href="https://penguin-stats.cn/">企鹅物流</a>中的<b>常驻关卡</b>以保证价值的稳定性。
+                </li>
                 <li>定价时考虑加工站副产物，副产物掉率假设为20%。</li>
                 <li>考虑到实际情况，芯片的价值略作调整，分为强势芯片、均势芯片和弱势芯片。</li>
                 <li>假设重装/医疗芯片和近卫/特种芯片需求比为2:1，狙击/术师和先锋/辅助需求比为1:1。</li>
@@ -100,7 +107,8 @@
                 <li>碳以九色鹿为基准进行定价。</li>
                 <li>理论上寻访凭证=600合成玉=3.33石=450理智，但不碎石刷图的情况下该等式无意义，仅列出以供参考。</li>
                 <li>同时列出的还有以搓玉路径为计算依据的合成玉价值，价值为(2固源岩+1600龙门币+40无人机)/10。</li>
-                <li>招募凭证的价值由<a href="http://localhost:3000/survey/maarecruitdata/">公招tag统计</a>得出，仅供参考。</li>
+                <li>招募凭证的价值由<a href="http://localhost:3000/survey/maarecruitdata/">公招tag统计</a>得出，仅供参考。
+                </li>
                 <li>物资箱价值取<a href="https://penguin-stats.cn/">企鹅物流</a>中的以往数据进行估算。</li>
                 <li>若源岩系材料的主要来源是1-7以外的关卡，则源岩系材料价值<a class="popover_color">+6%</a>。</li>
                 <li>绿票理智换算关系：<b>1理智=1.25绿票</b>。</li>
@@ -109,37 +117,37 @@
             <el-collapse-item name="4" style="">
               <template #title>
                 <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <Checked />
+                    <Checked/>
                   </el-icon><b style="margin-left: 4px">算法公示卡</b></span>
               </template>
               <table id="al_card">
                 <tbody>
-                  <tr>
-                    <td>算法代号</td>
-                    <td>一图流_标准 v6.0</td>
-                    <td>更新时间</td>
-                    <td>
-                      <!-- {{ updateTime }} -->
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>数据源</td>
-                    <td>企鹅物流</td>
-                    <td>基准</td>
-                    <td>常驻关卡</td>
-                  </tr>
-                  <tr>
-                    <td>计算引擎</td>
-                    <td>yituliuBackEnd</td>
-                    <td>样本阈值</td>
-                    <td>300</td>
-                  </tr>
-                  <tr>
-                    <td>需求目标</td>
-                    <td>无限需求</td>
-                    <td>EXP系数</td>
-                    <td>0.625</td>
-                  </tr>
+                <tr>
+                  <td>算法代号</td>
+                  <td>一图流_标准 v6.0</td>
+                  <td>更新时间</td>
+                  <td>
+                    <!-- {{ updateTime }} -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>数据源</td>
+                  <td>企鹅物流</td>
+                  <td>基准</td>
+                  <td>常驻关卡</td>
+                </tr>
+                <tr>
+                  <td>计算引擎</td>
+                  <td>yituliuBackEnd</td>
+                  <td>样本阈值</td>
+                  <td>300</td>
+                </tr>
+                <tr>
+                  <td>需求目标</td>
+                  <td>无限需求</td>
+                  <td>EXP系数</td>
+                  <td>0.625</td>
+                </tr>
                 </tbody>
               </table>
             </el-collapse-item>
@@ -147,14 +155,17 @@
               <template #title>
                 <span style="font-size: large; display: flex; align-items: center">
                   <el-icon>
-                    <Warning />
+                    <Warning/>
                   </el-icon><b style="margin-left: 4px">版权声明与许可协议</b>
                 </span>
               </template>
-              网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于 Arknights/上海鹰角网络科技有限公司。<br>
-              除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享 署名-非商业性使用 4.0 国际
-                许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
-              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
+              网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于
+              Arknights/上海鹰角网络科技有限公司。<br>
+              除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享
+              署名-非商业性使用 4.0 国际
+              许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
+              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a
+                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
             </el-collapse-item>
           </el-collapse>
         </el-card>
@@ -171,10 +182,10 @@
 </style>
 
 <script setup>
-import { usePageContext } from "/src/renderer/usePageContext";
-import { ref, onMounted } from "vue";
-import { ElMessage } from "element-plus";
-import stageApi from "../../api/stage";
+import {usePageContext} from "/src/renderer/usePageContext";
+import {ref, onMounted} from "vue";
+import {ElMessage} from "element-plus";
+import {exportExcel} from "/src/utils/exportExcel";
 
 let opETextTheme = ref("op_title_etext_light")
 
@@ -193,7 +204,42 @@ for (const item of pageContext.pageProps.value) {
 
 }
 
+function exportItemValueJson() {
+  let itemList = []
+  for (const item of pageContext.pageProps.value) {
+    itemList.push({
+      id: item.itemId,
+      name: item.itemName,
+      apValue: item.itemValueAp,
+      certValue: item.itemValue,
+      rarity: item.rarity
+    })
+  }
+  let link = document.createElement('a')
+  link.download = `item_value_table.json`
+  link.href = 'data:text/plain,' + JSON.stringify(itemList)
+  link.click()
+}
 
+function exportItemValueExcel() {
+  let itemList = [[
+    '物品id', '物品名称', '等效理智', '等效绿票', '物品稀有度'
+  ]]
+  for (const item of pageContext.pageProps.value) {
+    itemList.push([
+      item.itemId,
+      item.itemName,
+      item.itemValueAp,
+      item.itemValue,
+      item.rarity
+    ])
+  }
+  exportExcel('物品价值表',itemList)
+  let link = document.createElement('a')
+  link.download = `item_value_table.json`
+  link.href = 'data:text/plain,' + JSON.stringify(itemList)
+  link.click()
+}
 
 
 
@@ -221,7 +267,6 @@ onMounted(() => {
   }
 });
 </script>
-
 
 
 <script>

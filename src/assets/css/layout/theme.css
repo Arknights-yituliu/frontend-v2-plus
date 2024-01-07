@@ -26,6 +26,10 @@
     --c-btn-bg-green:var(--c-btn-green-light);
     --c-btn-bg-orange:var(--c-btn-orange-light);
 
+    --stage-card-background-color:var(--c-white-2);
+    --material-grey: #939393;
+    --material-darkgrey: #ff9100;
+
     /*输入框样式*/
     --c-input-bg:'';
     --c-input-border:1px solid var(--c-white-3);
@@ -56,6 +60,10 @@
     --c-btn-bg-red:var(--c-btn-red-dark);
     --c-btn-bg-green:var(--c-btn-green-dark);
     --c-btn-bg-orange:var(--c-btn-orange-dark);
+
+    --stage-card-background-color: #3d3d3d;
+    --material-grey: #cdcdcd;
+    --material-darkgrey: #ffa600;
 
     /*输入框样式*/
     --c-input-bg:'';

@@ -5,11 +5,10 @@
 }
 
 .stage_3_intro {
-  max-width: 1260px;
   overflow: hidden;
   -webkit-transition: 0.3s;
   transition: 0.3s;
-  background: rgba(128, 128, 128, 0.1);
+  background: var(--stage-card-background-color);
   max-width: 630px;
   height: 120px;
   margin: 6px;
@@ -18,6 +17,8 @@
   border: 1px solid #80808020;
   min-width: 248px;
 }
+
+
 
 #stage_card_3_intro_block_1 {
   width: 44%;
@@ -40,7 +41,7 @@
   overflow: hidden;
   -webkit-transition: 0.3s;
   transition: 0.3s;
-  background: rgba(128, 128, 128, 0.1);
+  background: var(--stage-card-background-color);
   height: 120px;
   width: 240px;
   max-width: 330px;
@@ -70,6 +71,7 @@
   /* background-color: rgb(112, 165, 42); */
   display: flex;
   justify-content: space-evenly;
+   /*color: #b2b2b2;*/
 }
 
 .stage_card_3_left {
@@ -184,6 +186,39 @@
   line-height: 32px;
   margin: 0 0px 0 4px;
   display: inline-block;
+}
+
+.stage-efficiency-bar-wrap{
+   margin-left:8px;
+   display: flex;
+   width: 106px;
+   justify-content: space-between;
+   height: 4px;
+}
+
+.stage-efficiency-bar-wrap div{
+  width: 20px;
+  height: 4px;
+}
+
+.material-purple{
+  background-color: #7b13cb;
+}
+
+.material-blue{
+  background-color: #0084ff;
+}
+
+.material-green{
+  background-color: #10b650;
+}
+
+.material-darkgrey {
+  background-color: var(--material-darkgrey)
+}
+
+.material-grey{
+  background-color: var(--material-grey)
 }
 
 .stage_card_3_img {
