@@ -78,9 +78,9 @@
             </div>
             <div class="intro_effBar" style="width: 172px;height: 20px;display: flex;align-items: center;">
               <div class="stage-efficiency-bar-wrap" style="width: 96px;margin-right: 6px">
-                                <div v-for="(style,index) in getEfficiencyBar(0.6,0.8,4)"
-                                     :key="index"
-                                     :style="style" style="width: 18px"></div>
+                <div v-for="(style,index) in getEfficiencyBar(0.6,0.8,4)"
+                     :key="index"
+                     :style="style" style="width: 18px"></div>
               </div>
               <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;">效率指示条</div>
             </div>
@@ -93,9 +93,9 @@
             <div class="intro_effBar"
                  style="height: 32px;display: flex;align-items: center;justify-content: space-between">
               <div class="stage-efficiency-bar-wrap" style="width: 87px;">
-                                <div v-for="(style,index) in getEfficiencyBar(0.0,0.0,0)"
-                                     :key="index"
-                                     :style="style" style="width: 16px"></div>
+                <div v-for="(style,index) in getEfficiencyBar(0.0,0.0,0)"
+                     :key="index"
+                     :style="style" style="width: 16px"></div>
               </div>
               <div class="intro_effBar_intro" style="font-weight: 600;">
                 每格代表20%的效率
@@ -104,15 +104,16 @@
             <div class="intro_effBar"
                  style="height: 32px;display: flex;align-items: center;justify-content: space-between">
               <div class="stage-efficiency-bar-wrap" style="width: 87px;">
-                                <div v-for="(style,index) in getEfficiencyBar(0.0,0.9,0)"
-                                     :key="index"
-                                     :style="style" style="width: 16px"></div>
+                <div v-for="(style,index) in getEfficiencyBar(0.0,0.9,0)"
+                     :key="index"
+                     :style="style" style="width: 16px"></div>
               </div>
               <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600">
                 所有掉落物的总效率
               </div>
             </div>
-            <div class="intro_effBar" style="height: 32px;display: flex;align-items: center;justify-content: space-between">
+            <div class="intro_effBar"
+                 style="height: 32px;display: flex;align-items: center;justify-content: space-between">
               <div class="stage-efficiency-bar-wrap" style="width: 87px;">
                 <div v-for="(style,index) in getEfficiencyBar(0.6,0.6,4)"
                      :key="index"
@@ -344,19 +345,13 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="op_title_tag" id="description">
-        <div class="tab_text">*主产物/副产物：价值占比最高/第二高的产物</div>
-        <br>
-        <div class="tab_text">*综合效率：产物的总价值 / 关卡理智消耗，长期囤材料建议以这个为参考依据</div>
-        <br>
-        <div class="tab_text">*T4效率 = (对应紫材料价值+对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗
-        </div>
-        <br>
-        <div class="tab_text">*T3效率 = (对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗</div>
-        <br>
-        <div class="tab_text">*T2效率 = (对应绿材料价值+对应白材料价值) / 关卡理智消耗</div>
-        <br>
-        <div class="tab_text">*SPM：1倍速下每分钟消耗的理智，假设所有敌人均被秒杀，实际可能略大于该值</div>
+      <div class="stage-legend-description" id="description" >
+        <span class="tab_text">*主产物/副产物：价值占比最高/第二高的产物</span>
+        <span class="tab_text">*综合效率：产物的总价值 / 关卡理智消耗，长期囤材料建议以这个为参考依据</span>
+        <span class="tab_text">*T4效率 = (对应紫材料价值+对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗 </span>
+        <span class="tab_text">*T3效率 = (对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗</span>
+        <span class="tab_text">*T2效率 = (对应绿材料价值+对应白材料价值) / 关卡理智消耗</span>
+        <span class="tab_text">*SPM：1倍速下每分钟消耗的理智，假设所有敌人均被秒杀，实际可能略大于该值</span>
       </div>
     </div>
 
@@ -922,11 +917,11 @@ function getEfficiencyBar(singleStageEff, stageEff, rank) {
   //判断关卡效率/0.2得到的值和主产物效率的不完整格子的渐变比例是否小于0，小于则超出一个格子，即关卡效率加主产物效率/0.2的小数部分x0.2>0.2，此时渐变格子为(主产物效率比例，关卡效率比例）
   if ((1 - singleStageEffDecimal - stageEff / 0.2) < 0) {
     //根据主产物效率的不完整格子的渐变比例设置渐变格子为(主产物效率比例，关卡效率比例），,因为可能有计算误差，判断是否大于0.01
-    if(singleStageEffDecimal>0.01){
+    if (singleStageEffDecimal > 0.01) {
       styleList.push(`background: linear-gradient(to right ,${barColor.integer} ${singleStageEffDecimal * 100}% ,${backgroundDarkgrey} ${(1 - singleStageEffDecimal) * 100}%)`)
     }
     //扣除在上个渐变格子中使用过的关卡效率的值 （1-不完整格子的渐变比例）x 单个格子的效率值0.2
-    const usedStageEff = singleStageEffDecimal>0?(1-singleStageEffDecimal)*0.2:0
+    const usedStageEff = singleStageEffDecimal > 0 ? (1 - singleStageEffDecimal) * 0.2 : 0
     //关卡效率减去主产物效率和使用过的关卡效率的值，计算还能设置几个完整格子和不完整格子的渐变比例
     const stageEffSplit = ((stageEff - singleStageEff - usedStageEff) / 0.2).toString().split('.')
     //关卡效率完整格子个数
@@ -947,11 +942,11 @@ function getEfficiencyBar(singleStageEff, stageEff, rank) {
     //判断关卡效率/0.2得到的值和主产物效率的不完整格子的渐变比例是否小于0，即关卡效率加主产物效率/0.2的小数部分x0.2<0.2，此时渐变格子为(主产物效率比例，关卡效率比例，浪费的体力效率比例）
     const stageEffDecimalRatio = (stageEff - singleStageEff) / 0.2
     const wasteRatio = 1 - singleStageEffDecimal - stageEffDecimalRatio
-    if(wasteRatio<0.5){
+    if (wasteRatio < 0.5) {
       styleList.push(`background: linear-gradient(to right , ${barColor.decimal} ${singleStageEffDecimal * 100}% ,${backgroundDarkgrey} ${(stageEffDecimalRatio) * 100}% ,${backgroundGrey} ${(wasteRatio) * 100}%)`)
     }
   }
-  
+
   //如果不足5个格子，则额外插入格子
   for (let i = styleList.length; i < 5; i++) {
     styleList.push(`background: ${backgroundGrey}`)

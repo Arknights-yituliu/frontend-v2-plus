@@ -213,8 +213,6 @@
   background-color: #10b650;
 }
 
-
-
 .material-grey{
   background-color: var(--c-material-grey)
 }
@@ -326,7 +324,9 @@
   top: 0;
 }
 
-
+.stage-legend-description span{
+  padding: 2px;
+}
 
 #itemDetail {
   margin: 8px;
