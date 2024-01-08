@@ -37,8 +37,8 @@ function getCharStatisticsResult() {
 }
 
 const rank3Color = '#f5a14d'
-const rank2Color = '#d669e7'
-const rank1Color = '#0084ff'
+const rank2Color = '#d4a8dc'
+const rank1Color = '#80b5e7'
 const rank0Color = '#bebebe'
 
 
@@ -366,7 +366,7 @@ onMounted(() => {
               </div>
             </div>
           </td>
-          <td @click="commonSort('modX','count')">
+          <td @click="commonSort('modX','rank3')">
             <div class="rank_table_title">
               <div>X模组</div>
               <div>
@@ -375,7 +375,7 @@ onMounted(() => {
               </div>
             </div>
           </td>
-          <td @click="commonSort('modY','count')">
+          <td @click="commonSort('modY','rank3')">
             <div class="rank_table_title">
               <div>Y模组</div>
               <div>
@@ -384,7 +384,7 @@ onMounted(() => {
               </div>
             </div>
           </td>
-          <td @click="commonSort('modD','count')">
+          <td @click="commonSort('modD','rank3')">
             <div class="rank_table_title">
               <div>D模组</div>
               <div>

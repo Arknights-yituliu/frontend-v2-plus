@@ -109,6 +109,8 @@
 
 .rank_table_avatar {
     display: flex;
+    height: 72px;
+    align-items: center;
 }
 
 .rank-avatar-wrap {
@@ -134,7 +136,7 @@
     font-size: 14px;
     font-weight: 600;
     color: black;
-    margin-top:22px;
+    margin-top: 12px;
     margin-left:-12px;
     box-sizing: border-box;
 }
@@ -204,6 +206,7 @@
 .rank-mod-type-icon{
     height: 36px;
     width: 36px;
+    filter: drop-shadow(2px 2px 2px #000000)
 }
 
 
