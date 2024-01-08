@@ -36,18 +36,6 @@ function getCharStatisticsResult() {
   });
 }
 
-function getProportionalBar(proportion){
-    const {rank0,rank1,rank2,rank3} = proportion
-    const styleList = []
-
-    styleList.push(`width: ${rank3*100}px;height: 12px;background:#ffa600`)
-    styleList.push(`width: ${rank2*100}px;height: 12px;background:#e600ff`)
-    styleList.push(`width: ${rank1*100}px;height: 12px;background:#0084ff`)
-    styleList.push(`width: ${rank0*100}px;height: 12px;background:#bebebe`)
-
-    return styleList
-}
-
 function getSprite(id, type) {
   if ("elite" === type) return "bg-" + id + " rank_sprite_elite";
   return "bg-" + id + " rank_avatar";
@@ -418,9 +406,6 @@ onMounted(() => {
             </div>
           </td>
           <td class="rank_table_7">
-<!--             <div class="proportion-bar-wrap">-->
-<!--               <div v-for="(style,index) in getProportionalBar(result.modX)" :key="index" :style="style"></div>-->
-<!--             </div>-->
             <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'count'), 2) }}</div>
 <!--            &lt;!&ndash;            <div>一级：{{ getPercentage(getSurveyResult(result.modX, 'rank1'), 1) }}</div>&ndash;&gt;-->
 <!--            &lt;!&ndash;            <div>二级：{{ getPercentage(getSurveyResult(result.modX, 'rank2'), 1) }}</div>&ndash;&gt;-->
