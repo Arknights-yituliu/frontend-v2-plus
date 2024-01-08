@@ -6,12 +6,14 @@
 .theme_light{
     /*基础样式*/
     --c-box-shadow:1px 1px 10px rgba(0, 0, 0, 0.12);
+    --c-box-shadow-color:rgba(0, 0, 0, 0.12);
     --c-border:1px solid var(--c-white-2);
+    --c-border-color:var(--c-white-3);
     --c-background-color: var(--c-white-1);
     --c-text-color:var(--c-black-2);
     --c-tip-color:var(--c-black-3);
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
-    --c-border-bottom:var(--c-white-3);
+
 
     --c-blue:var(--c-blue-light);
     --c-red:var(--c-red-light);
@@ -26,10 +28,12 @@
     --c-btn-bg-green:var(--c-btn-green-light);
     --c-btn-bg-orange:var(--c-btn-orange-light);
 
-    --c-stage-card-background-color:var(--c-white-2);
+    --c-stage-card-background-color: #f7f7f7;
     --c-material-grey: #939393;
 
     --c-table-tr-background-color: #f6f6f6;
+
+    --c-schedule-arrow-color: #c4c4c4;
 
     /*输入框样式*/
     --c-input-bg:'';
@@ -47,7 +51,7 @@
     --c-text-color: var(--c-white-2);
     --c-tip-color:var(--c-white-3);
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
-    --c-border-bottom:var(--c-black-4);
+    --c-border-color:var(--c-black-4);
 
     --c-blue:var(--c-blue-dark);
     --c-red:var(--c-red-dark);
@@ -66,6 +70,8 @@
     --c-material-grey: #cdcdcd;
 
     --c-table-tr-background-color: #282828;
+
+    --c-schedule-arrow-color: #757575;
 
     /*输入框样式*/
     --c-input-bg:'';

@@ -232,7 +232,7 @@ function statistical() {
 }
 
 .device_table tr {
-  border-bottom: 1px solid var(--c-border-bottom);
+  border-bottom: 1px solid var(--c-border-color);
 }
 
 
