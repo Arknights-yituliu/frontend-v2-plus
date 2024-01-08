@@ -885,13 +885,13 @@ function getEfficiencyBar(singleStageEff, stageEff, rank) {
   //不完整格子的渐变比例
   let singleStageEffDecimal = parseFloat(`0.${singleStageEffSplit[1]}`)
 
-  let backgroundGrey = 'var(--material-grey)'
+  let backgroundGrey = 'var(--c-material-grey)'
   let backgroundDarkgrey = '#ffa600'
 
   //根据主产物最高等级赋予颜色
   let barColor = {
-    integer: 'var(--material-grey)',
-    decimal: 'var(--material-grey)'
+    integer: 'var(--c-material-grey)',
+    decimal: 'var(--c-material-grey)'
   }
   if (rank === 4) {
     barColor = {
