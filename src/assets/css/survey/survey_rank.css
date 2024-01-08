@@ -26,6 +26,38 @@
     margin: 4px;
 }
 
+.rank-table-legend{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+    margin:12px auto;
+}
+
+.rank-legend{
+    height: 6px;
+    width: 50px;
+}
+
+.rank-legend-3{
+    background-color: #f5a14d;
+}
+
+.rank-legend-2{
+    background-color: #d4a8dc;
+}
+
+.rank-legend-1{
+    background-color: #80b5e7;
+}
+
+.rank-legend-0{
+    background-color: #bebebe;
+}
+
+.legend-description{
+    padding: 0 8px;
+}
 
 .rank_table {
     /*min-width:700px;*/
@@ -39,7 +71,7 @@
 }
 
 .rank_table td {
-    padding: 0;
+    padding: 0 4px;
     margin: 0;
 }
 
@@ -52,21 +84,16 @@
 
 .rank-table-1 {
     width: 160px;
-
 }
 
 .rank_table_2 {
     width: 80px;
     text-align: center !important;
-    margin: 0;
-
 }
 
 .rank_table_3 {
     width: 80px;
-
     text-align: center !important;
-    margin: 0;
 }
 
 .rank-table-skill {
@@ -74,42 +101,11 @@
     align-items: center;
 }
 
-.rank_table_4 {
-    width: 150px;
-    /*padding: 8px !important;*/
-    box-sizing: border-box;
-    margin: 0;
-}
 
-.rank_table_5 {
-    width: 150px;
-    /*padding: 8px !important;*/
-
-}
-
-.rank_table_6 {
-    width: 150px;
-    /*padding: 8px !important;*/
-
-}
-
-.rank_table_7 {
-    min-width: 96px;
-    /*padding: 8px !important;*/
-
-    text-align: center !important;
-}
-
-.rank_table_8 {
-    min-width: 96px;
-    /*padding: 8px !important;*/
-
-    text-align: center !important;
-}
 
 .rank_table_avatar {
     display: flex;
-    height: 72px;
+    height: 80px;
     align-items: center;
 }
 
@@ -142,13 +138,20 @@
 }
 
 .proportion-bar-wrap {
-    width: 102px;
-    height: 44px;
+    font-size: 12px;
+    width: 120px;
+    margin:0 8px;
 }
 
-.proportion-bar-wrap div{
-    margin: 4px;
-    height: 6px;
+.proportion-bar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2px 0;
+}
+
+.proportion-bar div{
+    height: 8px;
 }
 
 .rarity_6 {

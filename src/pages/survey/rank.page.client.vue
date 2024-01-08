@@ -44,14 +44,26 @@ const rank0Color = '#bebebe'
 
 function getProportionalBar(proportion) {
   const {rank0, rank1, rank2, rank3} = proportion
-  const styleList = []
+  const barList = []
 
-  styleList.push(`width: ${rank3 * 80}px;background:${rank3Color}`)
-  styleList.push(`width: ${rank2 * 80}px;background:${rank2Color}`)
-  styleList.push(`width: ${rank1 * 80}px;background:${rank1Color}`)
-  styleList.push(`width: ${rank0 * 80}px;background:${rank0Color}`)
+  barList.push({
+    style: `width: ${rank3 * 80}px;background:${rank3Color}`,
+    proportion: (rank3 * 100).toFixed(1),
+    color: `color:${rank3Color}`
+  })
+  barList.push({
+    style: `width: ${rank2 * 80}px;background:${rank2Color}`,
+    proportion: (rank2 * 100).toFixed(1),
+    color: `color:${rank2Color}`
+  })
+  barList.push({
+    style: `width: ${rank1 * 80}px;background:${rank1Color}`,
+    proportion: (rank1 * 100).toFixed(1),
+    color: `color:${rank1Color}`
+  })
+  // barList.push({style:`width: ${rank0 * 80}px;background:${rank0Color}`,proportion:(rank0*100).toFixed(1),color:`color:${rank0Color}`})
 
-  return styleList
+  return barList
 }
 
 function getSprite(id, type) {
@@ -312,6 +324,16 @@ onMounted(() => {
     <!--    <div id="rank_table mdui-table-fluid">-->
     <!--      <table class="mdui-table">-->
 
+    <div class="rank-table-legend">
+      <div class="rank-legend rank-legend-3"></div>
+      <span class="legend-description">等级3</span>
+      <div class="rank-legend rank-legend-2"></div>
+      <span class="legend-description">等级2</span>
+      <div class="rank-legend rank-legend-1"></div>
+      <span class="legend-description">等级1</span>
+      <div class="rank-legend rank-legend-0"></div>
+      <span class="legend-description">未专精/开启</span>
+    </div>
 
     <div id="rank_table">
       <table class="rank_table">
@@ -414,7 +436,10 @@ onMounted(() => {
                 <div :class="getSkillSpriteIcon(result.skill, 0)"></div>
               </div>
               <div class="proportion-bar-wrap">
-                <div v-for="(style,index) in getProportionalBar(result.skill1)" :key="index" :style="style"></div>
+                <div v-for="(bar,index) in getProportionalBar(result.skill1)" :key="index" class="proportion-bar">
+                  <div :style="bar.style"></div>
+                  <span :style="bar.color">{{ bar.proportion }}%</span>
+                </div>
               </div>
             </div>
 
@@ -425,7 +450,10 @@ onMounted(() => {
                 <div :class="getSkillSpriteIcon(result.skill, 1)"></div>
               </div>
               <div class="proportion-bar-wrap">
-                <div v-for="(style,index) in getProportionalBar(result.skill2)" :key="index" :style="style"></div>
+                <div v-for="(bar,index) in getProportionalBar(result.skill2)" :key="index" class="proportion-bar">
+                  <div :style="bar.style"></div>
+                  <span :style="bar.color">{{ bar.proportion }}%</span>
+                </div>
               </div>
             </div>
 
@@ -436,32 +464,44 @@ onMounted(() => {
                 <div :class="getSkillSpriteIcon(result.skill, 2)"></div>
               </div>
               <div class="proportion-bar-wrap">
-                <div v-for="(style,index) in getProportionalBar(result.skill3)" :key="index" :style="style"></div>
+                <div v-for="(bar,index) in getProportionalBar(result.skill3)" :key="index" class="proportion-bar">
+                  <div :style="bar.style"></div>
+                  <span :style="bar.color">{{ bar.proportion }}%</span>
+                </div>
               </div>
             </div>
           </td>
           <td class="rank_table_7">
             <div class="rank-table-skill">
-              <img :src="getModTypeIcon(result.equip,'X')" alt="" class="rank-mod-type-icon" >
+              <img :src="getModTypeIcon(result.equip,'X')" alt="" class="rank-mod-type-icon">
               <div class="proportion-bar-wrap">
-                <div v-for="(style,index) in getProportionalBar(result.modX)" :key="index" :style="style"></div>
+                <div v-for="(bar,index) in getProportionalBar(result.modX)" :key="index" class="proportion-bar">
+                  <div :style="bar.style"></div>
+                  <span :style="bar.color">{{ bar.proportion }}%</span>
+                </div>
               </div>
             </div>
           </td>
           <td class="rank_table_8">
             <div class="rank-table-skill">
               <img :src="getModTypeIcon(result.equip,'Y')" alt="" class="rank-mod-type-icon">
-            <div class="proportion-bar-wrap">
-              <div v-for="(style,index) in getProportionalBar(result.modY)" :key="index" :style="style"></div>
-            </div>
+              <div class="proportion-bar-wrap">
+                <div v-for="(bar,index) in getProportionalBar(result.modY)" :key="index" class="proportion-bar">
+                  <div :style="bar.style"></div>
+                  <span :style="bar.color">{{ bar.proportion }}%</span>
+                </div>
+              </div>
             </div>
           </td>
           <td class="rank_table_8">
             <div class="rank-table-skill">
               <img :src="getModTypeIcon(result.equip,'D')" alt="" class="rank-mod-type-icon">
-            <div class="proportion-bar-wrap">
-              <div v-for="(style,index) in getProportionalBar(result.modD)" :key="index" :style="style"></div>
-            </div>
+              <div class="proportion-bar-wrap">
+                <div v-for="(bar,index) in getProportionalBar(result.modD)" :key="index" class="proportion-bar">
+                  <div :style="bar.style"></div>
+                  <span :style="bar.color">{{ bar.proportion }}%</span>
+                </div>
+              </div>
             </div>
           </td>
         </tr>
