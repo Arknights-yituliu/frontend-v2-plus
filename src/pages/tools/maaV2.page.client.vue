@@ -1,5 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue"
+import buildingApi from '/src/api/building'
 import schedule_template_json from '/src/static/json/build/plans_template.json'
 import '/src/assets/css/tool/schedule.css'
 import '/src/assets/css/sprite/sprite_avatar_6.css'
@@ -401,7 +402,7 @@ let scheduleInfo = ref({
 /**
  * 创建排班文件
  */
-function createScheduleJsonFile() {
+function createSchedule() {
 
   console.log('开始创建')
   let plans = []
@@ -431,16 +432,34 @@ function createScheduleJsonFile() {
   scheduleInfo.value.scheduleType = scheduleTypeV2.value
   localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 
+
+}
+
+function downloadScheduleFile(){
+  createSchedule()
   let link = document.createElement('a')
   link.download = `测试排班.json`
   link.href = 'data:text/plain,' + JSON.stringify(scheduleInfo.value)
   link.click()
 }
 
-let importFileId = ref('')
+let scheduleId = ref('')
+
+function saveSchedule(){
+  createSchedule()
+  buildingApi.saveSchedule(scheduleInfo.value,1111).then(response=>{
+    scheduleId.value =  response.data.scheduleId
+    cMessage(`生成的排班文件ID为：${response.data.scheduleId}`)
+  })
+}
+
+let  scheduleImportId = ref('')
 
 function importScheduleById() {
-
+  buildingApi.retrieveSchedule(scheduleImportId.value).then(response=>{
+    console.log(response.data.schedule)
+    importSchedule(response.data.schedule)
+  })
 }
 
 /**
@@ -523,6 +542,7 @@ function importSchedule(schedule) {
         for (const roomIndex in roomList) {
           const room = roomList[roomIndex]
           for (const property in roomList[roomIndex]) {
+            console.log(plansTemplate.value[index].rooms[roomType][roomIndex][property])
             plansTemplate.value[index].rooms[roomType][roomIndex][property] = room[property]
           }
         }
@@ -554,12 +574,11 @@ onMounted(() => {
     </div>
     <div class="schedule-header-right">
       <c-button @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">选择基建类型</c-button>
-      <!--      <div>-->
-      <!--        <input class="input-base" v-model="importFileId" placeholder=""/>-->
-      <!--        <span class="input-desc"></span>-->
-      <!--      </div>-->
-      <!--      <c-button :color="COLOR.BLUE" @click="importScheduleById()">通过id导入排班</c-button>-->
-      <!--      <input class="input-base" v-model="importFileContent" placeholder=""/>-->
+            <div>
+              <input class="input-base" v-model="scheduleImportId" placeholder=""/>
+              <span class="input-desc"></span>
+            </div>
+            <c-button :color="COLOR.BLUE" @click="importScheduleById()">通过id导入排班</c-button>
 
       <div class="input-wrap">
         <input class="input-type-file" type="file"
@@ -567,8 +586,8 @@ onMounted(() => {
                @change="importScheduleByFile()">
         <c-button :color="COLOR.BLUE" :status="true">选择文件导入排班</c-button>
       </div>
-      <!--      <c-button :color="COLOR.BLUE">保存排班文件</c-button>-->
-      <c-button :color="COLOR.BLUE" :status="true" @click="createScheduleJsonFile()">导出排班文件</c-button>
+      <c-button :color="COLOR.BLUE" @click="saveSchedule()">保存排班文件</c-button>
+      <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">导出排班文件</c-button>
       <c-button :color="COLOR.ORANGE" :status="true" @click="feedback()">排班生成器问题反馈</c-button>
     </div>
   </div>

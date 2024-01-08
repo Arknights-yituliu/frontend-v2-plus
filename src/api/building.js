@@ -4,7 +4,7 @@ const api_name = `/maa`;
 
 export default {
   //保存排班
-  maaBuildingJsonCreated(data, id) {
+  saveSchedule(data, id) {
     return request({
       url: `${api_name}/schedule/save?schedule_id=${id}`,
       method: "post",
