@@ -1,201 +1,215 @@
 .survey_rank_page {
-  width: 100%;
-  height: auto;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  box-sizing: border-box;
-  padding: 2px;
+    width: 100%;
+    height: auto;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    box-sizing: border-box;
+    padding: 2px;
 }
 
-.sort_desc_icon{
-  width: 0;
-  height: 0;
-  color: #2692fd;
-  border-top: 8px solid #c4c4c4;
-  border-right: 8px solid transparent;
-  border-left: 8px solid transparent;
-  margin: 4px;
+.sort_desc_icon {
+    width: 0;
+    height: 0;
+    color: #2692fd;
+    border-top: 8px solid #c4c4c4;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    margin: 4px;
 }
 
-.sort_asc_icon{
-  width: 0;
-  height: 0;
-  border-bottom: 8px solid #c4c4c4;
-  border-right: 8px solid transparent;
-  border-left: 8px solid transparent;
-  margin: 4px;
+.sort_asc_icon {
+    width: 0;
+    height: 0;
+    border-bottom: 8px solid #c4c4c4;
+    border-right: 8px solid transparent;
+    border-left: 8px solid transparent;
+    margin: 4px;
 }
 
-/*.rank_table_tr{*/
-/*  height: 96px;*/
-/*}*/
-
-/*.rank_table_tr td{*/
-/*  padding: 0px !important;*/
-/*}*/
-
-.rank_table{
-  /*min-width:700px;*/
-  border-collapse: separate;
-  border-spacing: 0;
-  margin:auto;
+.rank-table-legend{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+    margin:12px auto;
 }
 
-.rank_table_tr td{
-   border-bottom: 1px #9d9d9d solid;
+.rank-legend{
+    height: 6px;
+    width: 50px;
 }
 
-.rank_table td{
-  padding: 0;
-  margin: 0;
+.rank-legend-3{
+    background-color: #f5a14d;
 }
 
-.rank_table_title{
+.rank-legend-2{
+    background-color: #d4a8dc;
+}
+
+.rank-legend-1{
+    background-color: #80b5e7;
+}
+
+.rank-legend-0{
+    background-color: #bebebe;
+}
+
+.legend-description{
+    padding: 0 8px;
+}
+
+.rank_table {
+    /*min-width:700px;*/
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: auto;
+}
+
+.rank_table_tr td {
+    border-bottom: 1px #9d9d9d solid;
+}
+
+.rank_table td {
+    padding: 0 4px;
+    margin: 0;
+}
+
+.rank_table_title {
     display: flex;
     line-height: 28px;
     text-align: center;
     justify-content: center;
 }
 
-.rank_table_1{
-  width: 216px;
-
-}
-.rank_table_2{
-  width: 80px;
-  text-align: center !important;
-  margin: 0;
-
-}
-.rank_table_3{
-  width: 80px;
-
-  text-align: center !important;
-  margin: 0;
+.rank-table-1 {
+    width: 160px;
 }
 
-.rank_table_skill{
-  display: flex;
+.rank_table_2 {
+    width: 80px;
+    text-align: center !important;
 }
 
-.rank_table_4{
-  width: 150px;
-  /*padding: 8px !important;*/
-  
-  box-sizing: border-box;
-  margin: 0;
-}
-.rank_table_5{
-  width: 150px;
-  /*padding: 8px !important;*/
-  
-}
-.rank_table_6{
-  width: 150px;
-  /*padding: 8px !important;*/
-  
-}
-.rank_table_7{
-  min-width: 96px;
-  /*padding: 8px !important;*/
-  
-  text-align: center !important;
-}
-.rank_table_8{
-  min-width: 96px;
-  /*padding: 8px !important;*/
-  
-  text-align: center !important;
-}
-.rank_table_avatar{
-  /*width: 240px;*/
-  height: 96px;
+.rank_table_3 {
+    width: 80px;
+    text-align: center !important;
 }
 
-.rank_operator_name{
-  /* z-index: 1; */
-  text-align: left;
-  display: inline-block;
-  background: linear-gradient(to right,#3f51b580,#ffffffff);
-  vertical-align: top;
-  margin:48px 0 0 -36px;
-  padding-left: 32px;
-  width: 118px;
-  height: 32px;
-  line-height: 32px;
-  font-size: 16px;
-  font-weight: 600;
+.rank-table-skill {
+    display: flex;
+    align-items: center;
 }
 
-.proportion-bar-wrap{
-  height: 12px;
-  display: flex;
-  align-items: center;
-  width: 112px;
-  justify-content: space-between;
+
+
+.rank_table_avatar {
+    display: flex;
+    height: 80px;
+    align-items: center;
 }
 
-.rarity_6{
-  background: linear-gradient(to right, #ff581a,#ffffffff);
-}
-.rarity_5{
-  background: linear-gradient(to right, #ffaf00,#ffffffff);
-}
-.rarity_4{
-  background: linear-gradient(to right, #752eff,#ffffffff);
-}
-.rarity_3{
-  background: linear-gradient(to right, #4d67ff,#ffffffff);
+.rank-avatar-wrap {
+    height: 60px;
+    width: 60px;
 }
 
-.rank_avatar_wrap {
-  height: 80px;
-  width: 80px;
-  /* border-radius: 50%; */
-  /* border: 1px rgb(231, 231, 231) solid; */
-  margin: 8px;
-  overflow: hidden;
-  display: inline-block;
-  /* background-color: gray; */
-  /* z-index: 2; */
+.rank-avatar {
+    transform: scale(0.333);
+    position: relative;
+    top: -60px;
+    left: -60px;
+    /* border-radius: 50%; */
 }
 
-.rank_avatar {
-  transform: scale(0.46);
-  position: relative;
-  top: -51px;
-  left: -50px;
-  /* border-radius: 50%; */
+.rank-operator-name {
+    text-align: left;
+    background: linear-gradient(to right, #3f51b580 70%, #ffffffff);
+    width: 106px;
+    height: 24px;
+    padding-left: 16px;
+    line-height: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: black;
+    margin-top: 12px;
+    margin-left:-12px;
+    box-sizing: border-box;
 }
+
+.proportion-bar-wrap {
+    font-size: 12px;
+    width: 120px;
+    margin:0 8px;
+}
+
+.proportion-bar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2px 0;
+}
+
+.proportion-bar div{
+    height: 8px;
+}
+
+.rarity_6 {
+    background: linear-gradient(to right, #ff581a, #ffffffff);
+}
+
+.rarity_5 {
+    background: linear-gradient(to right, #ffaf00, #ffffffff);
+}
+
+.rarity_4 {
+    background: linear-gradient(to right, #752eff, #ffffffff);
+}
+
+.rarity_3 {
+    background: linear-gradient(to right, #4d67ff, #ffffffff);
+}
+
+
 
 
 .rank_image_skill_wrap {
-  height: 60px;
-  width: 60px;
-  display: inline-block;
-  /* border: 1px red solid; */
+    height: 36px;
+    width: 36px;
+    background-color: #0b73dc;
+    /* border: 1px red solid; */
 }
 
 .rank_sprite_skill {
-  transform: scale(0.39);
-  position: relative;
-  top: -32px;
-  left: -24px;
-  /*  */
+    transform: scale(0.281);
+    position: relative;
+    top: -46px;
+    left: -46px;
+    /*  */
 }
 
-.rank_table_skill_text{
-  display: inline-block;
-  text-align: left;
-  vertical-align: top;
-  margin: 6px 0px 0px 12px;
+.skill-name {
+    font-size: 14px;
+    padding-left: 4px;
+    line-height: 36px;
 }
 
-.rank_table_skill_text :first-child{
-  font-size: 12px;
-  line-height: 16px;
+.rank_table_skill_text {
+    display: inline-block;
+    text-align: left;
+    vertical-align: top;
+    margin: 6px 0px 0px 12px;
 }
 
+.rank_table_skill_text :first-child {
+    font-size: 12px;
+    line-height: 16px;
+}
 
+.rank-mod-type-icon{
+    height: 36px;
+    width: 36px;
+    filter: drop-shadow(2px 2px 2px #000000)
+}
 
 
