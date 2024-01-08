@@ -1,6 +1,6 @@
 <script setup>
-import "/src/assets/css/survey/survey_rank.css";
-import {filterByCharacterProperty, professionDict} from "./js/common";
+import "/src/assets/css/survey/rank.css";
+import { filterByCharacterProperty, professionDict} from "./js/common";
 import {onMounted, ref} from "vue";
 import character_table_simple from "/src/static/json/survey/character_table_simple.json";
 
@@ -18,10 +18,10 @@ let update_time = ref("2023-05-01");
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
-    const {result, userCount, updateTime} = response.data
-    for (const item of result) {
-      const charId = item.charId
-      let char_info = character_table_simple[charId]
+    const {result,userCount,updateTime} = response.data
+    for(const item of result){
+      const charId =  item.charId
+      let char_info =  character_table_simple[charId]
       item.name = char_info.name
       item.rarity = char_info.rarity
       item.profession = char_info.profession
@@ -31,39 +31,9 @@ function getCharStatisticsResult() {
     }
     operators_statistics_list.value = result
     addFilterCondition('rarity', 6)
-    user_count.value = userCount;
+    user_count.value = userCount ;
     update_time.value = updateTime;
   });
-}
-
-const rank3Color = '#f5a14d'
-const rank2Color = '#d4a8dc'
-const rank1Color = '#80b5e7'
-const rank0Color = '#bebebe'
-
-
-function getProportionalBar(proportion) {
-  const {rank0, rank1, rank2, rank3} = proportion
-  const barList = []
-
-  barList.push({
-    style: `width: ${rank3 * 80}px;background:${rank3Color}`,
-    proportion: (rank3 * 100).toFixed(1),
-    color: `color:${rank3Color}`
-  })
-  barList.push({
-    style: `width: ${rank2 * 80}px;background:${rank2Color}`,
-    proportion: (rank2 * 100).toFixed(1),
-    color: `color:${rank2Color}`
-  })
-  barList.push({
-    style: `width: ${rank1 * 80}px;background:${rank1Color}`,
-    proportion: (rank1 * 100).toFixed(1),
-    color: `color:${rank1Color}`
-  })
-  // barList.push({style:`width: ${rank0 * 80}px;background:${rank0Color}`,proportion:(rank0*100).toFixed(1),color:`color:${rank0Color}`})
-
-  return barList
 }
 
 function getSprite(id, type) {
@@ -82,25 +52,11 @@ function getSurveyResult(obj, rank) {
   return obj[rank];
 }
 
-function getSkillSpriteIcon(skill, index) {
+function getSpriteIcon(skill, index) {
   if (skill.length < index + 1) return "";
   const iconId = skill[index].iconId;
+  // console.log(iconId);
   return "bg-skill_icon_" + iconId + " rank_sprite_skill";
-}
-
-function getAvatarSprite(id) {
-  return "bg-" + id + " rank-avatar";
-}
-
-function getModTypeIcon(equip, type) {
-  if (typeof equip === 'undefined' || equip === null) return `/image/survey/mod-icon/empty.png`
-  for (const item of equip) {
-    if (item.typeName2 === type) {
-      return `/image/survey/mod-icon/${item.typeIcon}.png`
-    }
-  }
-
-  return `/image/survey/mod-icon/empty.png`
 }
 
 function getSkillName(skill, index) {
@@ -119,19 +75,11 @@ function selectedBtn(attribute, rule) {
 
 let collapse_filter_visible = ref(false)
 
-function collapseFilter() {
+function collapseFilter(){
   collapse_filter_visible.value = !collapse_filter_visible.value
 }
 
-let filter_condition = ref({
-  rarity: [],
-  profession: [],
-  year: [],
-  own: [],
-  equip: [],
-  itemObtainApproach: [],
-  TODO: []
-});
+let filter_condition = ref({rarity: [], profession: [], year: [], own: [], equip: [], itemObtainApproach: [], TODO: []});
 
 /**
  * 增加筛选条件
@@ -168,6 +116,7 @@ function filterCharacterList() {
 
 let last_property = ref('')
 let desc_or_asc = ref(1)
+
 
 
 //按条件排序
@@ -265,7 +214,7 @@ onMounted(() => {
     </div>
 
     <!-- 筛选模块 -->
-    <c-collapse-item :name="'filter'" :visible="collapse_filter_visible">
+    <c-collapse-item :name="'filter'" :visible="collapse_filter_visible" >
 
       <div class="control_bar_wrap">
         <div class="control_bar">
@@ -324,25 +273,15 @@ onMounted(() => {
     <!--    <div id="rank_table mdui-table-fluid">-->
     <!--      <table class="mdui-table">-->
 
-    <div class="rank-table-legend">
-      <div class="rank-legend rank-legend-3"></div>
-      <span class="legend-description">等级3</span>
-      <div class="rank-legend rank-legend-2"></div>
-      <span class="legend-description">等级2</span>
-      <div class="rank-legend rank-legend-1"></div>
-      <span class="legend-description">等级1</span>
-      <div class="rank-legend rank-legend-0"></div>
-      <span class="legend-description">未专精/开启</span>
-    </div>
 
     <div id="rank_table">
       <table class="rank_table">
         <tr>
           <td>
-            <div class="rank_table_title">代号</div>
+            <div class="rank_table_title" style="width: 220px">代号</div>
           </td>
           <td @click="sortRank('own')">
-            <div class="rank_table_title">
+            <div class="rank_table_title" style="width: 80px">
               <div>持有率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('own','asc')"></div>
@@ -351,26 +290,28 @@ onMounted(() => {
             </div>
           </td>
           <td @click="commonSort('elite','rank2')">
-            <div class="rank_table_title">
+            <div class="rank_table_title" style="width: 80px">
               <div>精二率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('elite','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('elite','desc')"></div>
+
               </div>
             </div>
           </td>
           <td @click="commonSort('skill1','rank3')">
-            <div class="rank_table_title">
-              <div>一技能</div>
+            <div class="rank_table_title" style="width: 150px">
+              <div>一技能专三率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('skill1','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('skill1','desc')"></div>
+
               </div>
             </div>
           </td>
           <td @click="commonSort('skill2','rank3')">
-            <div class="rank_table_title">
-              <div>二技能</div>
+            <div class="rank_table_title" style="width: 150px">
+              <div>二技能专三率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('skill2','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('skill2','desc')"></div>
@@ -379,8 +320,8 @@ onMounted(() => {
             </div>
           </td>
           <td @click="commonSort('skill3','rank3')">
-            <div class="rank_table_title">
-              <div>三技能</div>
+            <div class="rank_table_title" style="width: 150px">
+              <div>三技能专三率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('skill3','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('skill3','desc')"></div>
@@ -388,27 +329,28 @@ onMounted(() => {
               </div>
             </div>
           </td>
-          <td @click="commonSort('modX','rank3')">
-            <div class="rank_table_title">
-              <div>X模组</div>
+          <td @click="commonSort('modX','count')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>X模组解锁率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('modX','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('modX','desc')"></div>
+
               </div>
             </div>
           </td>
-          <td @click="commonSort('modY','rank3')">
-            <div class="rank_table_title">
-              <div>Y模组</div>
+          <td @click="commonSort('modY','count')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>Y模组解锁率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('modY','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('modY','desc')"></div>
               </div>
             </div>
           </td>
-          <td @click="commonSort('modD','rank3')">
-            <div class="rank_table_title">
-              <div>D模组</div>
+          <td @click="commonSort('modD','count')">
+            <div class="rank_table_title" style="width: 150px">
+              <div>D模组解锁率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('modD','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('modD','desc')"></div>
@@ -420,89 +362,66 @@ onMounted(() => {
 
         <tr v-for="(result, index) in operators_statistics_list" :key="index" v-show="result.show"
             class="rank_table_tr">
-          <td class="rank-table-1">
+          <td class="rank_table_1 rank_table_text">
             <div class="rank_table_avatar">
-              <div class="rank-avatar-wrap">
-                <div :class="getAvatarSprite(result.charId)"></div>
+              <div class="rank_avatar_wrap">
+                <div :class="getSprite(result.charId)"></div>
               </div>
-              <div class="rank-operator-name" :class="'rarity_'+result.rarity">{{ result.name }}</div>
+              <div class="rank_operator_name" :class="'rarity_'+result.rarity">{{ result.name }}</div>
             </div>
           </td>
-          <td class="rank_table_2">{{ getPercentage(result.own, 1) }}</td>
-          <td class="rank_table_3">{{ getPercentage(getSurveyResult(result.elite, 'rank2'), 1) }}</td>
-          <td class="rank_table_4">
-            <div class="rank-table-skill">
+          <td class="rank_table_2 rank_table_text">{{ getPercentage(result.own, 1) }}</td>
+          <td class="rank_table_3 rank_table_text">{{ getPercentage(getSurveyResult(result.elite, 'rank2'), 1) }}</td>
+          <td class="rank_table_4 rank_table_text">
+            <div class="rank_table_skill">
               <div class="rank_image_skill_wrap">
-                <div :class="getSkillSpriteIcon(result.skill, 0)"></div>
+                <div :class="getSpriteIcon(result.skill, 0)"></div>
               </div>
-              <div class="proportion-bar-wrap">
-                <div v-for="(bar,index) in getProportionalBar(result.skill1)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
-                  <span :style="bar.color">{{ bar.proportion }}%</span>
-                </div>
+              <div class="rank_table_skill_text">
+                <div class="rank_ratio">{{ getSkillName(result.skill, 0) }}</div>
+                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill1, "rank3"), 1) }}</div>
               </div>
             </div>
-
           </td>
-          <td class="rank_table_5">
-            <div class="rank-table-skill">
+          <td class="rank_table_5 rank_table_text">
+            <div class="rank_table_skill">
               <div class="rank_image_skill_wrap">
-                <div :class="getSkillSpriteIcon(result.skill, 1)"></div>
+                <div :class="getSpriteIcon(result.skill, 1)"></div>
               </div>
-              <div class="proportion-bar-wrap">
-                <div v-for="(bar,index) in getProportionalBar(result.skill2)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
-                  <span :style="bar.color">{{ bar.proportion }}%</span>
-                </div>
+              <div class="rank_table_skill_text">
+                <div class="rank_ratio"> {{ getSkillName(result.skill, 1) }}</div>
+                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill2, "rank3"), 1) }}</div>
               </div>
             </div>
-
           </td>
-          <td class="rank_table_6">
-            <div class="rank-table-skill">
+          <td class="rank_table_6 rank_table_text">
+            <div class="rank_table_skill">
               <div class="rank_image_skill_wrap">
-                <div :class="getSkillSpriteIcon(result.skill, 2)"></div>
+                <div :class="getSpriteIcon(result.skill, 2)"></div>
               </div>
-              <div class="proportion-bar-wrap">
-                <div v-for="(bar,index) in getProportionalBar(result.skill3)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
-                  <span :style="bar.color">{{ bar.proportion }}%</span>
-                </div>
+              <div class="rank_table_skill_text">
+                <div class="rank_ratio"> {{ getSkillName(result.skill, 2) }}</div>
+                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}</div>
               </div>
             </div>
           </td>
           <td class="rank_table_7">
-            <div class="rank-table-skill">
-              <img :src="getModTypeIcon(result.equip,'X')" alt="" class="rank-mod-type-icon">
-              <div class="proportion-bar-wrap">
-                <div v-for="(bar,index) in getProportionalBar(result.modX)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
-                  <span :style="bar.color">{{ bar.proportion }}%</span>
-                </div>
-              </div>
-            </div>
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'count'), 2) }}</div>
+            <!--            &lt;!&ndash;            <div>一级：{{ getPercentage(getSurveyResult(result.modX, 'rank1'), 1) }}</div>&ndash;&gt;-->
+            <!--            &lt;!&ndash;            <div>二级：{{ getPercentage(getSurveyResult(result.modX, 'rank2'), 1) }}</div>&ndash;&gt;-->
+            <!--            &lt;!&ndash;            <div>三级：{{ getPercentage(getSurveyResult(result.modX, 'rank3'), 1) }}</div>&ndash;&gt;-->
           </td>
           <td class="rank_table_8">
-            <div class="rank-table-skill">
-              <img :src="getModTypeIcon(result.equip,'Y')" alt="" class="rank-mod-type-icon">
-              <div class="proportion-bar-wrap">
-                <div v-for="(bar,index) in getProportionalBar(result.modY)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
-                  <span :style="bar.color">{{ bar.proportion }}%</span>
-                </div>
-              </div>
-            </div>
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modY, 'count'), 2) }}</div>
+            <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
+            <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
+            <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
           </td>
           <td class="rank_table_8">
-            <div class="rank-table-skill">
-              <img :src="getModTypeIcon(result.equip,'D')" alt="" class="rank-mod-type-icon">
-              <div class="proportion-bar-wrap">
-                <div v-for="(bar,index) in getProportionalBar(result.modD)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
-                  <span :style="bar.color">{{ bar.proportion }}%</span>
-                </div>
-              </div>
-            </div>
+            <div>解锁：{{ getPercentage(getSurveyResult(result.modD, 'count'), 2) }}</div>
+            <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
+            <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
+            <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
           </td>
         </tr>
       </table>
@@ -511,8 +430,10 @@ onMounted(() => {
 </template>
 
 
+
+
 <style scoped>
-.btn {
+.btn{
   margin: 4px;
 }
 </style>
