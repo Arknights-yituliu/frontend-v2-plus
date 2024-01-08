@@ -26,9 +26,10 @@
     --c-btn-bg-green:var(--c-btn-green-light);
     --c-btn-bg-orange:var(--c-btn-orange-light);
 
-    --stage-card-background-color:var(--c-white-2);
-    --material-grey: #939393;
-    --material-darkgrey: #ff9100;
+    --c-stage-card-background-color:var(--c-white-2);
+    --c-material-grey: #939393;
+
+    --c-table-tr-background-color: #f6f6f6;
 
     /*输入框样式*/
     --c-input-bg:'';
@@ -61,9 +62,10 @@
     --c-btn-bg-green:var(--c-btn-green-dark);
     --c-btn-bg-orange:var(--c-btn-orange-dark);
 
-    --stage-card-background-color: #3d3d3d;
-    --material-grey: #cdcdcd;
-    --material-darkgrey: #ffa600;
+    --c-stage-card-background-color: #3d3d3d;
+    --c-material-grey: #cdcdcd;
+
+    --c-table-tr-background-color: #282828;
 
     /*输入框样式*/
     --c-input-bg:'';

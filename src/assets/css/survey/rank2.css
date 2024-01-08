@@ -1,7 +1,5 @@
 .survey_rank_page {
     width: 100%;
-    height: auto;
-    overflow-x: scroll;
     overflow-y: hidden;
     box-sizing: border-box;
     padding: 2px;
@@ -60,40 +58,45 @@
 }
 
 .rank_table {
-    /*min-width:700px;*/
+    min-width:1200px;
     border-collapse: separate;
     border-spacing: 0;
     margin: auto;
 }
 
 .rank_table_tr td {
-    border-bottom: 1px #9d9d9d solid;
+    /*border-bottom: 1px #9d9d9d solid;*/
 }
 
 .rank_table td {
-    padding: 0 4px;
+    padding: 0 12px;
     margin: 0;
+    text-align: center;
+}
+
+.tr-background{
+    background-color: var(--c-table-tr-background-color);
 }
 
 .rank_table_title {
     display: flex;
-    line-height: 28px;
+    line-height: 40px;
+    height: 40px;
     text-align: center;
+    align-items: center;
     justify-content: center;
 }
 
 .rank-table-1 {
-    width: 160px;
+
 }
 
 .rank_table_2 {
-    width: 80px;
-    text-align: center !important;
+
 }
 
 .rank_table_3 {
-    width: 80px;
-    text-align: center !important;
+
 }
 
 .rank-table-skill {
@@ -104,14 +107,15 @@
 
 
 .rank_table_avatar {
-    display: flex;
-    height: 80px;
-    align-items: center;
+    height: 90px;
+    padding: 8px;
+    box-sizing: border-box;
 }
 
 .rank-avatar-wrap {
     height: 60px;
     width: 60px;
+    margin: auto;
 }
 
 .rank-avatar {
@@ -123,35 +127,30 @@
 }
 
 .rank-operator-name {
-    text-align: left;
-    background: linear-gradient(to right, #3f51b580 70%, #ffffffff);
-    width: 106px;
-    height: 24px;
-    padding-left: 16px;
-    line-height: 24px;
-    font-size: 14px;
-    font-weight: 600;
-    color: black;
-    margin-top: 12px;
-    margin-left:-12px;
-    box-sizing: border-box;
+    text-align: center;
+    padding: 4px 0;
+    font-weight: bolder;
 }
 
 .proportion-bar-wrap {
     font-size: 12px;
-    width: 120px;
+    width: 86px;
     margin:0 8px;
 }
 
 .proportion-bar{
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin: 2px 0;
+    /*justify-content: space-between;*/
+    margin: 4px 0;
 }
 
 .proportion-bar div{
     height: 8px;
+}
+
+.proportion-bar span{
+    width: 40px;
 }
 
 .rarity_6 {

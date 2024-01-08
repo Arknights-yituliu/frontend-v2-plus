@@ -7,14 +7,15 @@ import character_table_simple from "/src/static/json/survey/character_table_simp
 
 import surveyApi from "/src/api/surveyOperator";
 
-let rarity_dict = [1, 2, 3, 4, 5, 6];
+let rarityDict = [1, 2, 3, 4, 5, 6];
 
-let operators_statistics_list = ref([]);
+let operatorsStatisticsResult = ref([]);
 
 
-let user_count = ref(0);
-let update_time = ref("2023-05-01");
+let userCount = ref(0);
+let updateTime = ref("2023-05-01");
 
+let displayOperatorList = ref([])
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
@@ -29,12 +30,13 @@ function getCharStatisticsResult() {
       item.skill = char_info.skill
       item.equip = char_info.equip
     }
-    operators_statistics_list.value = result
+    operatorsStatisticsResult.value = result
     addFilterCondition('rarity', 6)
-    user_count.value = userCount;
-    update_time.value = updateTime;
+    userCount.value = userCount;
+    updateTime.value = updateTime;
   });
 }
+
 
 const rank3Color = '#f5a14d'
 const rank2Color = '#d4a8dc'
@@ -92,7 +94,7 @@ function getAvatarSprite(id) {
   return "bg-" + id + " rank-avatar";
 }
 
-function hasModType(equip, type){
+function hasModType(equip, type) {
   if (typeof equip === 'undefined' || equip === null) return false
   for (const item of equip) {
     if (item.typeName2 === type) {
@@ -120,19 +122,20 @@ function getSkillName(skill, index) {
 
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
-  if (filter_condition.value[attribute].indexOf(rule) > -1) {
+  if (filterCondition.value[attribute].indexOf(rule) > -1) {
     return "btn btn-blue";
   }
   return "btn";
 }
 
-let collapse_filter_visible = ref(false)
+let collapseFilterVisible = ref(false)
 
 function collapseFilter() {
-  collapse_filter_visible.value = !collapse_filter_visible.value
+  collapseFilterVisible.value = !collapseFilterVisible.value
 }
 
-let filter_condition = ref({
+
+let filterCondition = ref({
   rarity: [],
   profession: [],
   year: [],
@@ -150,65 +153,69 @@ let filter_condition = ref({
  * @param condition 属性的条件
  */
 function addFilterCondition(property, condition) {
-  console.log(filter_condition.value);
+  console.log(filterCondition.value);
   let filterRulesCopy = [];
-  if (filter_condition.value[property].indexOf(condition) > -1) {
-    for (let i in filter_condition.value[property]) {
-      if (condition !== filter_condition.value[property][i]) {
-        filterRulesCopy.push(filter_condition.value[property][i]);
+  if (filterCondition.value[property].indexOf(condition) > -1) {
+    for (let i in filterCondition.value[property]) {
+      if (condition !== filterCondition.value[property][i]) {
+        filterRulesCopy.push(filterCondition.value[property][i]);
       }
     }
-    filter_condition.value[property] = filterRulesCopy;
+    filterCondition.value[property] = filterRulesCopy;
     filterCharacterList();
     return;
   }
 
-  filter_condition.value[property].push(condition);
+  filterCondition.value[property].push(condition);
   filterCharacterList();
 }
 
 //筛选
 function filterCharacterList() {
-  for (let i in operators_statistics_list.value) {
-    const character = operators_statistics_list.value[i];
-    operators_statistics_list.value[i].show = filterByCharacterProperty(filter_condition.value, character);
+  displayOperatorList.value = []
+  for (let i in operatorsStatisticsResult.value) {
+    const character = operatorsStatisticsResult.value[i];
+    if (filterByCharacterProperty(filterCondition.value, character)) {
+      displayOperatorList.value.push(character)
+    }
   }
 }
 
-let last_property = ref('')
-let desc_or_asc = ref(1)
+
+let lastProperty = ref('')
+let descOrAsc = ref(1)
 
 
 //按条件排序
 function sortRank(property) {
-  if (last_property.value === property) {
-    desc_or_asc.value++;
+  if (lastProperty.value === property) {
+    descOrAsc.value++;
   } else {
-    desc_or_asc.value = 1;
+    descOrAsc.value = 1;
   }
-  operators_statistics_list.value.sort((a, b) => {
-    if (desc_or_asc.value % 2 !== 0) {
+  displayOperatorList.value.sort((a, b) => {
+    if (descOrAsc.value % 2 !== 0) {
       return b[property] - a[property];
     }
 
-    if (desc_or_asc.value % 2 === 0) {
+    if (descOrAsc.value % 2 === 0) {
       return a[property] - b[property];
     }
 
   });
 
-  last_property.value = property;
+  lastProperty.value = property;
 }
 
 function sortIconClass(property, descOrAsc) {
   // console.log(property,descOrAsc)
-  if (last_property.value === property) {
-    if (desc_or_asc.value % 2 !== 0 && 'desc' === descOrAsc) {
+  if (lastProperty.value === property) {
+    if (descOrAsc.value % 2 !== 0 && 'desc' === descOrAsc) {
       // console.log('降序')
       return 'border-top: 8px solid #2692fd'
     }
 
-    if (desc_or_asc.value % 2 === 0 && 'asc' === descOrAsc) {
+    if (descOrAsc.value % 2 === 0 && 'asc' === descOrAsc) {
       // console.log('升序')
       return 'border-bottom: 8px solid #2692fd'
     }
@@ -218,44 +225,53 @@ function sortIconClass(property, descOrAsc) {
 
 
 function commonSort(property, condition) {
-  if (last_property.value === property) {
-    desc_or_asc.value++;
+  if (lastProperty.value === property) {
+    descOrAsc.value++;
   } else {
-    desc_or_asc.value = 1;
+    descOrAsc.value = 1;
   }
 
-  const len = operators_statistics_list.value.length
+  const len = displayOperatorList.value.length
 
 
   for (let i = 0; i < len - 1; i++) {
     for (let j = 0; j < len - 1 - i; j++) {
-      if (desc_or_asc.value % 2 !== 0) {
+      if (descOrAsc.value % 2 !== 0) {
         // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
-        if (operators_statistics_list.value[j][property][condition] < operators_statistics_list.value[j + 1][property][condition]) {
-          const temp = operators_statistics_list.value[j]
-          operators_statistics_list.value[j] = operators_statistics_list.value[j + 1]
-          operators_statistics_list.value[j + 1] = temp;
+        if (displayOperatorList.value[j][property][condition] < displayOperatorList.value[j + 1][property][condition]) {
+          const temp = displayOperatorList.value[j]
+          displayOperatorList.value[j] = displayOperatorList.value[j + 1]
+          displayOperatorList.value[j + 1] = temp;
         }
       }
 
-      if (desc_or_asc.value % 2 === 0) {
+      if (descOrAsc.value % 2 === 0) {
         // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
-        if (operators_statistics_list.value[j][property][condition] > operators_statistics_list.value[j + 1][property][condition]) {
-          const temp = operators_statistics_list.value[j]
-          operators_statistics_list.value[j] = operators_statistics_list.value[j + 1]
-          operators_statistics_list.value[j + 1] = temp;
+        if (displayOperatorList.value[j][property][condition] > displayOperatorList.value[j + 1][property][condition]) {
+          const temp = displayOperatorList.value[j]
+          displayOperatorList.value[j] = displayOperatorList.value[j + 1]
+          displayOperatorList.value[j + 1] = temp;
         }
       }
     }
   }
 
-  last_property.value = property;
+  lastProperty.value = property;
 }
 
+
+function getTrBackground(index) {
+  if (index % 2 === 0) {
+    return 'tr-background'
+  }
+
+  return ''
+}
 
 onMounted(() => {
 
   getCharStatisticsResult()
+
 })
 </script>
 
@@ -268,13 +284,13 @@ onMounted(() => {
               @click="collapseFilter()">筛选
       </button>
       <div id="updateTime">
-        调查人数{{ user_count }}<br/>
-        更新时间{{ update_time }}
+        调查人数{{ userCount }}<br/>
+        更新时间{{ updateTime }}
       </div>
     </div>
 
     <!-- 筛选模块 -->
-    <c-collapse-item :name="'filter'" :visible="collapse_filter_visible">
+    <c-collapse-item :name="'filter'" :visible="collapseFilterVisible">
 
       <div class="control_bar_wrap">
         <div class="control_bar">
@@ -295,7 +311,7 @@ onMounted(() => {
           <div class="control_title">稀有度</div>
           <div class="switch_btn_wrap">
             <div :class="selectedBtn('rarity', rarity)"
-                 v-for="(rarity,index) in rarity_dict" :key="index"
+                 v-for="(rarity,index) in rarityDict" :key="index"
                  @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
             </div>
           </div>
@@ -340,8 +356,8 @@ onMounted(() => {
       <span class="legend-description">等级2</span>
       <div class="rank-legend rank-legend-1"></div>
       <span class="legend-description">等级1</span>
-      <div class="rank-legend rank-legend-0"></div>
-      <span class="legend-description">未专精/开启</span>
+<!--      <div class="rank-legend rank-legend-0"></div>-->
+<!--      <span class="legend-description">未专精/开启</span>-->
     </div>
 
     <div id="rank_table">
@@ -427,88 +443,94 @@ onMounted(() => {
         </tr>
 
 
-        <tr v-for="(result, index) in operators_statistics_list" :key="index" v-show="result.show"
+        <tr v-for="(result, index) in displayOperatorList" :key="index" :class="getTrBackground(index)"
             class="rank_table_tr">
           <td class="rank-table-1">
             <div class="rank_table_avatar">
               <div class="rank-avatar-wrap">
                 <div :class="getAvatarSprite(result.charId)"></div>
               </div>
-              <div class="rank-operator-name" :class="'rarity_'+result.rarity">{{ result.name }}</div>
+              <div class="rank-operator-name">{{ result.name }}</div>
             </div>
           </td>
           <td class="rank_table_2">{{ getPercentage(result.own, 1) }}</td>
-          <td class="rank_table_3">{{ getPercentage(getSurveyResult(result.elite, 'rank2'), 1) }}</td>
-          <td class="rank_table_4">
+          <td class="rank_table_2">{{ getPercentage(getSurveyResult(result.elite, 'rank2'), 1) }}</td>
+          <td class="rank_table_3">
             <div class="rank-table-skill">
               <div class="rank_image_skill_wrap">
                 <div :class="getSkillSpriteIcon(result.skill, 0)"></div>
               </div>
               <div class="proportion-bar-wrap">
                 <div v-for="(bar,index) in getProportionalBar(result.skill1)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
                   <span :style="bar.color">{{ bar.proportion }}%</span>
+                  <div :style="bar.style"></div>
+
                 </div>
               </div>
             </div>
 
           </td>
-          <td class="rank_table_5">
+          <td class="rank_table_3">
             <div class="rank-table-skill">
               <div class="rank_image_skill_wrap">
                 <div :class="getSkillSpriteIcon(result.skill, 1)"></div>
               </div>
               <div class="proportion-bar-wrap">
                 <div v-for="(bar,index) in getProportionalBar(result.skill2)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
                   <span :style="bar.color">{{ bar.proportion }}%</span>
+                  <div :style="bar.style"></div>
+
                 </div>
               </div>
             </div>
 
           </td>
-          <td class="rank_table_6">
+          <td class="rank_table_3">
             <div class="rank-table-skill">
               <div class="rank_image_skill_wrap">
                 <div :class="getSkillSpriteIcon(result.skill, 2)"></div>
               </div>
               <div class="proportion-bar-wrap">
                 <div v-for="(bar,index) in getProportionalBar(result.skill3)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
                   <span :style="bar.color">{{ bar.proportion }}%</span>
+                  <div :style="bar.style"></div>
+
                 </div>
               </div>
             </div>
           </td>
-          <td class="rank_table_7">
+          <td class="rank_table_3">
             <div class="rank-table-skill" v-show="hasModType(result.equip,'X')">
               <img :src="getModTypeIcon(result.equip,'X')" alt="" class="rank-mod-type-icon">
               <div class="proportion-bar-wrap">
                 <div v-for="(bar,index) in getProportionalBar(result.modX)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
                   <span :style="bar.color">{{ bar.proportion }}%</span>
+                  <div :style="bar.style"></div>
+
                 </div>
               </div>
             </div>
           </td>
-          <td class="rank_table_8">
+          <td class="rank_table_3">
             <div class="rank-table-skill" v-show="hasModType(result.equip,'Y')">
               <img :src="getModTypeIcon(result.equip,'Y')" alt="" class="rank-mod-type-icon">
               <div class="proportion-bar-wrap">
                 <div v-for="(bar,index) in getProportionalBar(result.modY)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
                   <span :style="bar.color">{{ bar.proportion }}%</span>
+                  <div :style="bar.style"></div>
+
                 </div>
               </div>
             </div>
           </td>
-          <td class="rank_table_8">
+          <td class="rank_table_3">
             <div class="rank-table-skill" v-show="hasModType(result.equip,'D')">
               <img :src="getModTypeIcon(result.equip,'D')" alt="" class="rank-mod-type-icon">
               <div class="proportion-bar-wrap">
                 <div v-for="(bar,index) in getProportionalBar(result.modD)" :key="index" class="proportion-bar">
-                  <div :style="bar.style"></div>
                   <span :style="bar.color">{{ bar.proportion }}%</span>
+                  <div :style="bar.style"></div>
+
                 </div>
               </div>
             </div>
@@ -524,4 +546,6 @@ onMounted(() => {
 .btn {
   margin: 4px;
 }
+
+
 </style>
