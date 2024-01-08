@@ -20,6 +20,10 @@ const colorStyle = {
         color: '#3A973AFF',
         background: '#e2ffdb'
     },
+    warn: {
+        color: '#fc7303',
+        background: '#fcf6ed'
+    },
     error: {
         color: '#FF4E4EFF',
         background: '#F7E3E3FF'

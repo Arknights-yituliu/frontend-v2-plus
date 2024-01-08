@@ -17,7 +17,8 @@ import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
 const COLOR = {BLUE: 'blue', ORANGE: 'orange', GREEN: 'green'}
 
 
-let plansTemplate = ref(schedule_template_json)
+let plansTemplate = ref('')
+plansTemplate.value = schedule_template_json
 
 let executionTimeList = ref([])
 for (let i = 0; i < 7; i++) {
@@ -280,6 +281,9 @@ function chooseOperator(charId) {
 
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charId)
 
+  if(selectedRoomType.value === 'dormitory'){
+    fillOperatorConflict(selectedRoomIndex.value)
+  }
 
   localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 }
@@ -348,6 +352,14 @@ function getRoomProduct(roomType, index) {
   console.log(product)
   const itemId = getItemIdByProductName(product)
   return `bg-${itemId} room-product`
+}
+
+function fillOperatorConflict(index){
+   if(plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].autofill){
+     if(plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].operators){
+       cMessage('宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致其他宿舍冲突!','warn')
+     }
+   }
 }
 
 /**
@@ -452,14 +464,8 @@ function downloadScheduleFile() {
 
 let scheduleId = ref('')
 
-function saveSchedule() {
-  createSchedule()
-
-
-}
 
 let scheduleImportId = ref('')
-
 function importScheduleById() {
   buildingApi.retrieveSchedule(scheduleImportId.value).then(response => {
     console.log(response.data.schedule)
