@@ -145,7 +145,7 @@
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: center;
-    width: 590px;
+    width: 594px;
     /*background-color: red;*/
 }
 
@@ -177,6 +177,7 @@
     height: 70px;
     --room-operator-short: 180px;
     --room-operator-long: 300px;
+    border:1px solid var(--c-background-color);
 }
 
 
@@ -277,17 +278,17 @@
 
 .meeting-selected {
     background-color: transparent;
-    border: 1px solid #7e7e7e15;
+    border: 1px solid #7e7e7e;
 }
 
 .processing-selected {
     background-color: transparent;
-    border: 1px solid #7e7e7e15;
+    border: 1px solid #7e7e7e;
 }
 
 .hire-selected {
     background-color: transparent;
-    border: 1px solid #7e7e7e15;
+    border: 1px solid #7e7e7e;
 }
 
 

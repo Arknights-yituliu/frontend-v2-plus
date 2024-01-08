@@ -909,7 +909,7 @@ onMounted(() => {
 
 
       <div class="room-set">
-        <span class="room-set-description">当前班次入驻的干员</span>
+        <span class="room-set-description">入驻的干员</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap" style="margin: 0 20px 0 0"
                v-for="(charId,index) in getRoomOperators(selectedRoomType,selectedRoomIndex)" :key="index">
@@ -921,7 +921,7 @@ onMounted(() => {
         <c-button @click="copyOperatorList()">复制</c-button>
         <c-button @click="pasteOperatorList()">粘贴</c-button>
 
-        <span class="room-set-description">当前复制的干员组</span>
+        <span class="room-set-description">复制的干员</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap" style="margin: 0 4px"
                v-for="(charId,index) in tmpOperatorList"
