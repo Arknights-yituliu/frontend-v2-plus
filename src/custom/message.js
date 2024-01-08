@@ -4,7 +4,7 @@ const style = {
     minWidth: '240px',
     borderRadius: '2px',
     lineHeight: '28px',
-    // height: '28px',
+    padding:'4px 8px',
     textAlign: 'center',
     position: 'fixed',
     top: '0px',

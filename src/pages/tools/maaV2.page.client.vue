@@ -116,6 +116,7 @@ function getRoomOperators(room, index) {
 
 let scheduleTypePopupVisible = ref(false)
 let scheduleTypePopupStyle = 'width:500px;padding:24px'
+
 /**
  * 选择基建类型
  * @param {{}} type
@@ -142,12 +143,12 @@ function choosePlanTimes(num) {
   scheduleTypeV2.value.planTimes = num
 }
 
-function lastOrNextPlanTimes(index){
-   if(index<0||index>=scheduleTypeV2.value.planTimes) {
-     cMessage(`错误的班次索引：第${index+1}班`,'error')
-   } else {
-     selectedPlanIndex.value = index
-   }
+function lastOrNextPlanTimes(index) {
+  if (index < 0 || index >= scheduleTypeV2.value.planTimes) {
+    cMessage(`错误的班次索引：第${index + 1}班`, 'error')
+  } else {
+    selectedPlanIndex.value = index
+  }
 }
 
 let roomSettlementOperatorMaxQuantity = {
@@ -342,10 +343,10 @@ function getItemIdByProductName(product) {
   if (product === "Originium Shard") return "3141";
 }
 
-function getRoomProduct(roomType,index){
+function getRoomProduct(roomType, index) {
   const product = plansTemplate.value[selectedPlanIndex.value].rooms[roomType][index].product
   console.log(product)
-  const itemId =  getItemIdByProductName(product)
+  const itemId = getItemIdByProductName(product)
   return `bg-${itemId} room-product`
 }
 
@@ -435,28 +436,32 @@ function createSchedule() {
 
 }
 
-function downloadScheduleFile(){
+function downloadScheduleFile() {
   createSchedule()
-  let link = document.createElement('a')
-  link.download = `测试排班.json`
-  link.href = 'data:text/plain,' + JSON.stringify(scheduleInfo.value)
-  link.click()
+  buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
+    scheduleId.value = response.data.scheduleId
+    scheduleInfo.value.scheduleId = scheduleId.value
+    let link = document.createElement('a')
+    link.download = `${scheduleId.value}.json`
+    link.href = 'data:text/plain,' + JSON.stringify(scheduleInfo.value)
+    link.click()
+
+    cMessage(`生成的排班文件ID为：${scheduleId.value}`)
+  })
 }
 
 let scheduleId = ref('')
 
-function saveSchedule(){
+function saveSchedule() {
   createSchedule()
-  buildingApi.saveSchedule(scheduleInfo.value,1111).then(response=>{
-    scheduleId.value =  response.data.scheduleId
-    cMessage(`生成的排班文件ID为：${response.data.scheduleId}`)
-  })
+
+
 }
 
-let  scheduleImportId = ref('')
+let scheduleImportId = ref('')
 
 function importScheduleById() {
-  buildingApi.retrieveSchedule(scheduleImportId.value).then(response=>{
+  buildingApi.retrieveSchedule(scheduleImportId.value).then(response => {
     console.log(response.data.schedule)
     importSchedule(response.data.schedule)
   })
@@ -574,11 +579,11 @@ onMounted(() => {
     </div>
     <div class="schedule-header-right">
       <c-button @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">选择基建类型</c-button>
-            <div>
-              <input class="input-base" v-model="scheduleImportId" placeholder=""/>
-              <span class="input-desc"></span>
-            </div>
-            <c-button :color="COLOR.BLUE" @click="importScheduleById()">通过id导入排班</c-button>
+      <div>
+        <input class="input-base" v-model="scheduleImportId" placeholder=""/>
+        <span class="input-desc"></span>
+      </div>
+      <c-button :color="COLOR.BLUE" @click="importScheduleById()">通过id导入排班</c-button>
 
       <div class="input-wrap">
         <input class="input-type-file" type="file"
@@ -586,7 +591,6 @@ onMounted(() => {
                @change="importScheduleByFile()">
         <c-button :color="COLOR.BLUE" :status="true">选择文件导入排班</c-button>
       </div>
-      <c-button :color="COLOR.BLUE" @click="saveSchedule()">保存排班文件</c-button>
       <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">导出排班文件</c-button>
       <c-button :color="COLOR.ORANGE" :status="true" @click="feedback()">排班生成器问题反馈</c-button>
     </div>
@@ -782,9 +786,10 @@ onMounted(() => {
     </c-popup>
 
 
-
     <div class="room-wrap">
-      <div class="room-arrow-wrap" @click="lastOrNextPlanTimes(selectedPlanIndex-1)"> <i class="iconfont icon-arrow-left" style="font-size: 48px"></i></div>
+      <div class="room-arrow-wrap" @click="lastOrNextPlanTimes(selectedPlanIndex-1)"><i class="iconfont icon-arrow-left"
+                                                                                        style="font-size: 48px"></i>
+      </div>
       <!--  左边站点-->
       <div class="room-wrap-left">
         <div class="room-template blank" style="width: 180px;" v-for="index in 3" :key="index"></div>
@@ -794,7 +799,7 @@ onMounted(() => {
              @click="chooseRoom('trading',tradingIndex)">
           <div class="room-name">
             <span>贸易站#{{ num }}</span>
-              <div :class="getRoomProduct('trading',tradingIndex)"> </div>
+            <div :class="getRoomProduct('trading',tradingIndex)"></div>
           </div>
           <div class="settlement_operator">
             <div class="room-avatar-sprite-wrap"
@@ -812,7 +817,7 @@ onMounted(() => {
              @click="chooseRoom('manufacture',manufactureIndex)">
           <div class="room-name">
             <span>制造站#{{ num }}</span>
-            <div :class="getRoomProduct('manufacture',manufactureIndex)"> </div>
+            <div :class="getRoomProduct('manufacture',manufactureIndex)"></div>
           </div>
           <div class="settlement_operator">
             <div class="room-avatar-sprite-wrap"
@@ -909,7 +914,8 @@ onMounted(() => {
         <div class="room-template blank" style="width: 100px;"></div>
       </div>
 
-      <div class="room-arrow-wrap" @click="lastOrNextPlanTimes(selectedPlanIndex+1)"> <i class="iconfont icon-arrow-right" style="font-size: 48px"></i></div>
+      <div class="room-arrow-wrap" @click="lastOrNextPlanTimes(selectedPlanIndex+1)"><i
+          class="iconfont icon-arrow-right" style="font-size: 48px"></i></div>
     </div>
 
 
@@ -917,14 +923,12 @@ onMounted(() => {
 
 
     <div class="room-set-wrap">
-<!--      <div class="room-set">-->
-<!--        <span style="font-size: 18px;font-weight: 600;">-->
-<!--          第{{ selectedPlanIndex + 1 }}班 —-->
-<!--        {{ getRoomLabel(selectedRoomType) }}#{{ selectedRoomIndex + 1 }}的房间入驻设置-->
-<!--        </span>-->
-<!--      </div>-->
-
-
+      <!--      <div class="room-set">-->
+      <!--        <span style="font-size: 18px;font-weight: 600;">-->
+      <!--          第{{ selectedPlanIndex + 1 }}班 —-->
+      <!--        {{ getRoomLabel(selectedRoomType) }}#{{ selectedRoomIndex + 1 }}的房间入驻设置-->
+      <!--        </span>-->
+      <!--      </div>-->
 
 
       <div class="room-set">
