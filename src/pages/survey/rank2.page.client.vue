@@ -92,6 +92,16 @@ function getAvatarSprite(id) {
   return "bg-" + id + " rank-avatar";
 }
 
+function hasModType(equip, type){
+  if (typeof equip === 'undefined' || equip === null) return false
+  for (const item of equip) {
+    if (item.typeName2 === type) {
+      return true
+    }
+  }
+  return false
+}
+
 function getModTypeIcon(equip, type) {
   if (typeof equip === 'undefined' || equip === null) return `/image/survey/mod-icon/empty.png`
   for (const item of equip) {
@@ -99,7 +109,6 @@ function getModTypeIcon(equip, type) {
       return `/image/survey/mod-icon/${item.typeIcon}.png`
     }
   }
-
   return `/image/survey/mod-icon/empty.png`
 }
 
@@ -472,7 +481,7 @@ onMounted(() => {
             </div>
           </td>
           <td class="rank_table_7">
-            <div class="rank-table-skill">
+            <div class="rank-table-skill" v-show="hasModType(result.equip,'X')">
               <img :src="getModTypeIcon(result.equip,'X')" alt="" class="rank-mod-type-icon">
               <div class="proportion-bar-wrap">
                 <div v-for="(bar,index) in getProportionalBar(result.modX)" :key="index" class="proportion-bar">
@@ -483,7 +492,7 @@ onMounted(() => {
             </div>
           </td>
           <td class="rank_table_8">
-            <div class="rank-table-skill">
+            <div class="rank-table-skill" v-show="hasModType(result.equip,'Y')">
               <img :src="getModTypeIcon(result.equip,'Y')" alt="" class="rank-mod-type-icon">
               <div class="proportion-bar-wrap">
                 <div v-for="(bar,index) in getProportionalBar(result.modY)" :key="index" class="proportion-bar">
@@ -494,7 +503,7 @@ onMounted(() => {
             </div>
           </td>
           <td class="rank_table_8">
-            <div class="rank-table-skill">
+            <div class="rank-table-skill" v-show="hasModType(result.equip,'D')">
               <img :src="getModTypeIcon(result.equip,'D')" alt="" class="rank-mod-type-icon">
               <div class="proportion-bar-wrap">
                 <div v-for="(bar,index) in getProportionalBar(result.modD)" :key="index" class="proportion-bar">
