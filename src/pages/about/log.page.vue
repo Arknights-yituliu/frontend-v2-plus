@@ -10,7 +10,7 @@ import logTable from '/src/static/json/log.json'
     <div class="log-item" v-for="({date,logs},index) in logTable" :key="index">
       <h2>{{ date }}</h2>
       <ul>
-        <li class="log-content" v-for="(log,index) in logs" :key="index">{{`【${log.tag}】`}}&emsp;{{log.text}}</li>
+        <li class="log-content" v-for="(log,index) in logs" :key="index">{{`【${log.tag}】`}}&emsp;{{log.text}}&emsp;@{{log.author}}</li>
       </ul>
     </div>
   </div>
