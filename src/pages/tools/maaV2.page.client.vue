@@ -465,7 +465,7 @@ function saveAndDownloadScheduleFile() {
 function downloadScheduleFile() {
   createSchedule()
   let link = document.createElement('a')
-  link.download = `${scheduleId.value}.json`
+  link.download = `自定义排班.json`
   link.href = 'data:text/plain,' + JSON.stringify(scheduleInfo.value)
   link.click()
 }
