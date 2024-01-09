@@ -357,7 +357,7 @@ function getRoomProduct(roomType, index) {
 function fillOperatorConflict(index){
    if(plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].autofill){
      if(plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].operators){
-       cMessage('宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致其他宿舍冲突!','warn')
+       cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍干员冲突!','warn')
      }
    }
 }
