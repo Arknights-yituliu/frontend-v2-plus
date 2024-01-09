@@ -178,12 +178,12 @@ function register() {
   input_data.value.accountType = account_type.value
   surveyApi.register(input_data.value).then(response => {
     response = response.data
-    localStorage.setItem("globalUserData", JSON.stringify(response.data));
+    localStorage.setItem("globalUserData", JSON.stringify(response));
     cMessage("注册成功");
     user_data.value.userName = response.userName;
     user_data.value.status = response.status;
     user_data.value.token = response.token;
-    user_data.value.avatar = response.avatar == void 0 ? 'char_377_gdglow' : response.avatar;
+    user_data.value.avatar = response.avatar ?response.avatar:'char_377_gdglow' ;
     login_visible.value = !login_visible.value;
 
   })

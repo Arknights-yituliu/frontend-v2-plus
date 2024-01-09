@@ -446,7 +446,7 @@ onMounted(() => {
         <tr v-for="(result, index) in displayOperatorList" :key="index" :class="getTrBackground(index)"
             class="rank_table_tr">
           <td class="rank-table-1">
-            <div class="rank_table_avatar">
+            <div class="rank_table_avatar-v2">
               <div class="rank-avatar-wrap">
                 <div :class="getAvatarSprite(result.charId)"></div>
               </div>
