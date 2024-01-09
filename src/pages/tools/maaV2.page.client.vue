@@ -281,7 +281,7 @@ function chooseOperator(charId) {
 
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charId)
 
-  if(selectedRoomType.value === 'dormitory'){
+  if (selectedRoomType.value === 'dormitory') {
     fillOperatorConflict(selectedRoomIndex.value)
   }
 
@@ -354,12 +354,12 @@ function getRoomProduct(roomType, index) {
   return `bg-${itemId} room-product`
 }
 
-function fillOperatorConflict(index){
-   if(plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].autofill){
-     if(plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].operators){
-       cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍干员冲突!','warn')
-     }
-   }
+function fillOperatorConflict(index) {
+  if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].autofill) {
+    if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].operators) {
+      cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍干员冲突!', 'warn')
+    }
+  }
 }
 
 /**
@@ -448,7 +448,7 @@ function createSchedule() {
 
 }
 
-function downloadScheduleFile() {
+function saveAndDownloadScheduleFile() {
   createSchedule()
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
@@ -462,10 +462,19 @@ function downloadScheduleFile() {
   })
 }
 
+function downloadScheduleFile() {
+  createSchedule()
+  let link = document.createElement('a')
+  link.download = `${scheduleId.value}.json`
+  link.href = 'data:text/plain,' + JSON.stringify(scheduleInfo.value)
+  link.click()
+}
+
 let scheduleId = ref('')
 
 
 let scheduleImportId = ref('')
+
 function importScheduleById() {
   buildingApi.retrieveSchedule(scheduleImportId.value).then(response => {
     console.log(response.data.schedule)
@@ -597,7 +606,8 @@ onMounted(() => {
                @change="importScheduleByFile()">
         <c-button :color="COLOR.BLUE" :status="true">选择文件导入排班</c-button>
       </div>
-      <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">导出排班文件</c-button>
+      <c-button :color="COLOR.BLUE" :status="true" @click="saveAndDownloadScheduleFile()">保存和导出排班文件</c-button>
+      <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">仅导出排班文件</c-button>
       <c-button :color="COLOR.ORANGE" :status="true" @click="feedback()">排班生成器问题反馈</c-button>
     </div>
   </div>
