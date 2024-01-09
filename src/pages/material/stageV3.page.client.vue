@@ -329,17 +329,17 @@
           </template>
         </el-table-column>
         <el-table-column prop="spm" label="SPM" :width="110" sortable/>
-        <el-table-column prop="leT5Efficiency" label="T4效率" :width="110" sortable>
+        <el-table-column prop="leT4Efficiency" label="T4效率" :width="110" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="leT4Efficiency" label="T3效率" :width="100" sortable>
+        <el-table-column prop="leT3Efficiency" label="T3效率" :width="100" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="leT3Efficiency" label="T2效率" :width="100" sortable>
+        <el-table-column prop="leT2Efficiency" label="T2效率" :width="100" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.leT2Efficiency * 100, 1) }}%
           </template>
