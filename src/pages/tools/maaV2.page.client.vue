@@ -293,7 +293,7 @@ function chooseOperator(charId) {
  * @param {string} operator_id 干员id
  */
 function deleteOperator(operator_id) {
-  console.log(operator_id)
+
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
       plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
         return e !== operator_id
@@ -349,7 +349,7 @@ function getItemIdByProductName(product) {
 
 function getRoomProduct(roomType, index) {
   const product = plansTemplate.value[selectedPlanIndex.value].rooms[roomType][index].product
-  console.log(product)
+
   const itemId = getItemIdByProductName(product)
   return `bg-${itemId} room-product`
 }
@@ -477,7 +477,7 @@ let scheduleImportId = ref('')
 
 function importScheduleById() {
   buildingApi.retrieveSchedule(scheduleImportId.value).then(response => {
-    console.log(response.data.schedule)
+
     importSchedule(response.data.schedule)
   })
 }
@@ -562,7 +562,7 @@ function importSchedule(schedule) {
         for (const roomIndex in roomList) {
           const room = roomList[roomIndex]
           for (const property in roomList[roomIndex]) {
-            console.log(plansTemplate.value[index].rooms[roomType][roomIndex][property])
+            // console.log(plansTemplate.value[index].rooms[roomType][roomIndex][property])
             plansTemplate.value[index].rooms[roomType][roomIndex][property] = room[property]
           }
         }
