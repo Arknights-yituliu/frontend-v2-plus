@@ -80,7 +80,11 @@
     "text": "其它信息",
     "isChild": true,
     "child": [
-
+      {
+        "path": "/about/log",
+        "text": "更新日志",
+        "isChild": false
+      },
       {
         "path": "/about/donate",
         "text": "支持我们",

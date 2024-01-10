@@ -4,7 +4,7 @@ const style = {
     minWidth: '240px',
     borderRadius: '2px',
     lineHeight: '28px',
-    // height: '28px',
+    padding:'4px 8px',
     textAlign: 'center',
     position: 'fixed',
     top: '0px',
@@ -19,6 +19,10 @@ const colorStyle = {
     success: {
         color: '#3A973AFF',
         background: '#e2ffdb'
+    },
+    warn: {
+        color: '#fc7303',
+        background: '#fcf6ed'
     },
     error: {
         color: '#FF4E4EFF',

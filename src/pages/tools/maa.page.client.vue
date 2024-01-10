@@ -1985,7 +1985,7 @@
 </template>
 
 <script>
-import buildingApi from "@/api/building";
+import buildingApi from "/src/api/building";
 import TRADINGJson from "@/static/json/build/TRADING.json";
 import MANUFACTUREJson from "@/static/json/build/MANUFACTURE.json";
 import CONTROLJson from "@/static/json/build/CONTROL.json";
@@ -2210,7 +2210,7 @@ export default {
 
     maaBuildingJsonCreated() {
       this.setJson();
-      buildingApi.maaBuildingJsonCreated(this.scheduleJson, this.scheduleId).then((response) => {
+      buildingApi.saveSchedule(this.scheduleJson, this.scheduleId).then((response) => {
         this.$message({
           message: response.data.message + "作业id为：" + response.data.scheduleId,
           type: "success",

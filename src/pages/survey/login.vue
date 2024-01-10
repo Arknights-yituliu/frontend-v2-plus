@@ -35,11 +35,11 @@
 
       <div class="login_card" v-show="user_data.status<0">
         <div class="login_btn_wrap">
-          <div class="btn" :style="accountTypeClass('passWord')"
+          <div class="btn login-type-btn" :style="accountTypeClass('passWord')"
                @click="selectAccountType('passWord')">密码{{ 'register' === registerOrLogin ? '注册' : '登录' }}
           </div>
           <div style="border: 1px solid black;height: 18px"></div>
-          <div class="btn" :style="accountTypeClass('emailCode')"
+          <div class="btn login-type-btn" :style="accountTypeClass('emailCode')"
                @click="selectAccountType('emailCode')">邮箱{{ 'register' === registerOrLogin ? '注册' : '登录' }}
           </div>
         </div>
@@ -74,18 +74,18 @@
 
         <div class="login_btn_wrap">
           <div @click="registerOrLogin='register'" v-show="'login'===registerOrLogin"
-               class="btn btn_white login_btn">
+               class="btn btn_white login-btn">
             没有账号请先注册
           </div>
           <div @click="registerOrLogin='login'" v-show="'register'===registerOrLogin"
-               class="btn btn_white login_btn">
+               class="btn btn_white login-btn">
             已注册过直接登录
           </div>
-          <button class="btn btn-blue btn_blue_selected login_btn" @click="register()"
+          <button class="btn btn-blue btn_blue_selected login-btn" @click="register()"
                   v-show="'register'===registerOrLogin">
             注册
           </button>
-          <button class="btn btn-blue btn_blue_selected login_btn" @click="login()"
+          <button class="btn btn-blue btn_blue_selected login-btn" @click="login()"
                   v-show="'login'===registerOrLogin">
             登录
           </button>
@@ -117,15 +117,15 @@
 </template>
 
 <script setup>
-import "@/assets/css/survey/survey_common.css";
-import "@/assets/css/sprite/sprite_avatar_5.css";
-import "@/assets/css/sprite/sprite_avatar_4.css";
-import "@/assets/css/sprite/sprite_avatar_6.css";
-import "@/assets/css/sprite/sprite_skill.css";
-import "@/assets/css/sprite/sprite_rank.css";
-import "@/assets/css/survey/survey_index.css";
-import "@/assets/css/survey/survey_user.css";
-import "@/assets/css/survey/survey_nav.css";
+import "/src/assets/css/survey/survey_common.css";
+import "/src/assets/css/sprite/sprite_avatar_5.css";
+import "/src/assets/css/sprite/sprite_avatar_4.css";
+import "/src/assets/css/sprite/sprite_avatar_6.css";
+import "/src/assets/css/sprite/sprite_skill.css";
+import "/src/assets/css/sprite/sprite_rank.css";
+import "/src/assets/css/survey/survey_index.css";
+import "/src/assets/css/survey/survey_user.css";
+import "/src/assets/css/survey/survey_nav.css";
 
 
 import {onMounted, ref} from "vue";
@@ -178,12 +178,12 @@ function register() {
   input_data.value.accountType = account_type.value
   surveyApi.register(input_data.value).then(response => {
     response = response.data
-    localStorage.setItem("globalUserData", JSON.stringify(response.data));
+    localStorage.setItem("globalUserData", JSON.stringify(response));
     cMessage("注册成功");
     user_data.value.userName = response.userName;
     user_data.value.status = response.status;
     user_data.value.token = response.token;
-    user_data.value.avatar = response.avatar == void 0 ? 'char_377_gdglow' : response.avatar;
+    user_data.value.avatar = response.avatar ?response.avatar:'char_377_gdglow' ;
     login_visible.value = !login_visible.value;
 
   })
@@ -218,7 +218,7 @@ function userDataCache() {
 
   let cacheData = localStorage.getItem("globalUserData");
 
-  if (cacheData == void 0||cacheData == 'undefined') {
+  if (!cacheData||cacheData === 'undefined') {
     return
   }
 
@@ -226,7 +226,7 @@ function userDataCache() {
   user_data.value.userName = cacheData.userName;
   user_data.value.status = cacheData.status;
   user_data.value.token = cacheData.token;
-  user_data.value.avatar = cacheData.avatar == void 0 ? 'char_377_gdglow' : cacheData.avatar;
+  user_data.value.avatar = cacheData.avatar ? cacheData.avatar:'char_377_gdglow';
   user_data.value.email = cacheData['email'] === undefined ? "未绑定1" : cacheData['email'];
 }
 
@@ -249,6 +249,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.btn_survey_white {
+.login-type-btn{
+  border: none;
 }
 </style>

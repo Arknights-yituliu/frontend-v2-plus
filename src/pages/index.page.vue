@@ -2,41 +2,6 @@
 import stage from "/src/pages/material/stageV3.page.client.vue";
 import FootComponent from "@/components/FootComponent.vue";
 
-import axios from 'axios'
-
-const data = {
-  stageId: 'main_01-07',
-  stars: 3,
-  times: 5,
-
-  server: 'TEST',
-  source: 'TEST',
-  version: 'TEST'
-}
-
-function sleep(d) {
-  return new Promise((resolve) => setTimeout(resolve, d));
-}
-
-// let testApi = 'https://developer.yituliu.site/stage/drop/upload'
-// let testApi = 'http://127.0.0.1:10020/stage/drop/upload'
-
-// for (let i = 0; i < 5; i++) {
-//   axios.post(testApi,
-//       data,
-//       {
-//         headers: {
-//           authorization: 'penguin 014801238',
-//           'Content-Type': 'application/json'
-//         }
-//       }).then(response => {
-//     console.log(response.data)
-//   })
-//
-//    sleep(5000)
-// }
-
-
 
 /**
  * 点击复制内容
@@ -50,29 +15,39 @@ function copyCode(text) {
   elementInput.remove()
   window.open('https://ak.hypergryph.com')
 }
+
+function officialLink() {
+  window.open('https://space.bilibili.com/688411531')
+}
+
 </script>
 <template>
-  <div >
-<!--    <div class="act_tips_wrap">-->
-<!--      <div class="to_act_wrap">-->
-<!--        <a href="https://ak.hypergryph.com/activity/resonance-of-the-mind">-->
-<!--          <img src="/image/temp/4.5H5小活动.jpg" class="to_h5_image" alt=""/>-->
-<!--        </a>-->
-<!--        点击转跳庆典网页小活动-->
-<!--      </div>-->
+  <div>
+    <!--    <div class="act_tips_wrap">-->
+    <!--      <div class="to_act_wrap">-->
+    <!--        <a href="https://ak.hypergryph.com/activity/resonance-of-the-mind">-->
+    <!--          <img src="/image/temp/4.5H5小活动.jpg" class="to_h5_image" alt=""/>-->
+    <!--        </a>-->
+    <!--        点击转跳庆典网页小活动-->
+    <!--      </div>-->
 
-<!--      <div class="to_act_wrap">-->
-<!--        <div class="code">直播兑换码——20000龙门币</div>-->
-<!--        <div class="code">02023CELEBRATION</div>-->
-<!--        <c-button :color="'blue'" @click="copyCode('02023CELEBRATION')">点击复制兑换码并转跳官网</c-button>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--      <div class="to_act_wrap">-->
+    <!--        <div class="code">直播兑换码——20000龙门币</div>-->
+    <!--        <div class="code">02023CELEBRATION</div>-->
+    <!--        <c-button :color="'blue'" @click="copyCode('02023CELEBRATION')">点击复制兑换码并转跳官网</c-button>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
+
+    <div id="RIICbeta" class="stage_3_intro to_official_card" @click="officialLink()">
+      您现在正在通过<b style="color: rgb(255,94,66);">临时域名</b>访问本站<br>新域名(ark.yituliu.cn)正在备案中<br>
+      建议关注 <b style="color: rgb(255,94,66);">bilibili@罗德岛基建BETA</b> 获取最新动态<br>点击本卡片即可跳转
+    </div>
 
 
     <stage/>
 
-<!--     <foot-component/>-->
+    <!--     <foot-component/>-->
 
   </div>
 </template>
@@ -120,8 +95,20 @@ function copyCode(text) {
 .to_h5_image {
   width: 400px;
 }
-</style>
 
+.to_official_card {
+  max-width: 600px;
+  font-size: 24px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  margin: 8px auto;
+  border: 2px solid #ff0000;
+  line-height: 28px;
+  padding-top: 8px;
+  cursor: pointer;
+}
+
+</style>
 
 
 <script>

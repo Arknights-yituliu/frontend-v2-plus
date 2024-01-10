@@ -16,14 +16,9 @@ export default {
         })
     },
 
-    /**
-     * 到入森空岛数据
-     * @param data
-     * @returns {*} 是否成功的状态
-     */
-    importSKLandOperatorData(data){
+    importSkLandOperatorData(data){
         return request({
-            url: `${api_name}/operator/retrieval/uid`,
+            url: `${api_name}/operator/import/skland/v2`,
             method: "post",
             data: data,
         })

@@ -1,5 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue"
+import buildingApi from '/src/api/building'
 import schedule_template_json from '/src/static/json/build/plans_template.json'
 import '/src/assets/css/tool/schedule.css'
 import '/src/assets/css/sprite/sprite_avatar_6.css'
@@ -8,15 +9,16 @@ import '/src/assets/css/sprite/sprite_avatar_4.css'
 import character_table from '/src/static/json/survey/character_table_simple.json'
 import {cMessage} from '/src/custom/message.js'
 import schedule_menu from '/src/static/json/build/schedule_menu.json'
-import {fileRead} from '/src/pages/utils/utils'
+import {fileRead} from '/src/utils/fileRead'
 import building_table from '/src/static/json/build/building_table.json'
 // import plan from '/src/pages/tools/plans_template.js'
 import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
 
-const COLOR = {BLUE: 'blue'}
+const COLOR = {BLUE: 'blue', ORANGE: 'orange', GREEN: 'green'}
 
 
-let plansTemplate = ref(schedule_template_json)
+let plansTemplate = ref('')
+plansTemplate.value = schedule_template_json
 
 let executionTimeList = ref([])
 for (let i = 0; i < 7; i++) {
@@ -65,8 +67,17 @@ const productTable = {
 }
 
 let characterIdAndName = {}
+
 for (const key in character_table) {
-  characterIdAndName[character_table[key].name] = key
+
+  characterIdAndName[character_table[key].name] = replaceCharId(key)
+}
+
+function replaceCharId(string) {
+  if (string === 'char_1001_amiya2') {
+    return 'char_002_amiya'
+  }
+  return string
 }
 
 let selectedScheduleType = ref(schedule_menu[0])
@@ -103,6 +114,10 @@ function getRoomOperators(room, index) {
   return plansTemplate.value[selectedPlanIndex.value].rooms[room][index].operators
 }
 
+
+let scheduleTypePopupVisible = ref(false)
+let scheduleTypePopupStyle = 'width:500px;padding:24px'
+
 /**
  * 选择基建类型
  * @param {{}} type
@@ -127,7 +142,14 @@ function chooseScheduleType(type) {
  */
 function choosePlanTimes(num) {
   scheduleTypeV2.value.planTimes = num
+}
 
+function lastOrNextPlanTimes(index) {
+  if (index < 0 || index >= scheduleTypeV2.value.planTimes) {
+    cMessage(`错误的班次索引：第${index + 1}班`, 'error')
+  } else {
+    selectedPlanIndex.value = index
+  }
 }
 
 let roomSettlementOperatorMaxQuantity = {
@@ -190,7 +212,6 @@ function currentPlan(index) {
   selectedPlanIndex.value = index
 }
 
-
 function roomSelectedClass(roomType, roomIndex) {
   if (selectedRoomType.value === roomType && selectedRoomIndex.value === roomIndex) {
     return `${roomType}-selected`
@@ -212,9 +233,7 @@ function chooseRoom(roomType, index) {
     selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedPlanIndex.value]
         .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
   }
-
 }
-
 
 let selectBtnKey = ref({})
 let popupOperatorList = ref({})
@@ -230,7 +249,6 @@ function filterBtnStatus(key, label) {
  * @param key 选项的分类名
  */
 function filterOperatorList(condition, key) {
-  console.log(condition)
   selectBtnKey.value = `${key}+${condition.label}`
   popupOperatorList.value = {}
   for (const operator of building_table) {
@@ -263,6 +281,9 @@ function chooseOperator(charId) {
 
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charId)
 
+  if (selectedRoomType.value === 'dormitory') {
+    fillOperatorConflict(selectedRoomIndex.value)
+  }
 
   localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 }
@@ -272,7 +293,7 @@ function chooseOperator(charId) {
  * @param {string} operator_id 干员id
  */
 function deleteOperator(operator_id) {
-   console.log(operator_id)
+  console.log(operator_id)
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
       plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
         return e !== operator_id
@@ -326,6 +347,21 @@ function getItemIdByProductName(product) {
   if (product === "Originium Shard") return "3141";
 }
 
+function getRoomProduct(roomType, index) {
+  const product = plansTemplate.value[selectedPlanIndex.value].rooms[roomType][index].product
+  console.log(product)
+  const itemId = getItemIdByProductName(product)
+  return `bg-${itemId} room-product`
+}
+
+function fillOperatorConflict(index) {
+  if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].autofill) {
+    if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].operators) {
+      cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍干员冲突!', 'warn')
+    }
+  }
+}
+
 /**
  * 写入无人机使用设置
  * @param {string} property 无人机设置参数 如enable等
@@ -337,7 +373,7 @@ function setDrones(property, value) {
 }
 
 
-let Fiammetta_target_visible = ref(false)
+let FiammettaTargetVisible = ref(false)
 
 /**
  * 写入菲亚梅塔使用设置
@@ -379,7 +415,7 @@ let scheduleInfo = ref({
 /**
  * 创建排班文件
  */
-function createScheduleJsonFile() {
+function createSchedule() {
 
   console.log('开始创建')
   let plans = []
@@ -409,16 +445,41 @@ function createScheduleJsonFile() {
   scheduleInfo.value.scheduleType = scheduleTypeV2.value
   localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 
+
+}
+
+function saveAndDownloadScheduleFile() {
+  createSchedule()
+  buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
+    scheduleId.value = response.data.scheduleId
+    scheduleInfo.value.scheduleId = scheduleId.value
+    let link = document.createElement('a')
+    link.download = `${scheduleId.value}.json`
+    link.href = 'data:text/plain,' + JSON.stringify(scheduleInfo.value)
+    link.click()
+
+    cMessage(`生成的排班文件ID为：${scheduleId.value}`)
+  })
+}
+
+function downloadScheduleFile() {
+  createSchedule()
   let link = document.createElement('a')
-  link.download = `测试排班.json`
+  link.download = `自定义排班.json`
   link.href = 'data:text/plain,' + JSON.stringify(scheduleInfo.value)
   link.click()
 }
 
-let importFileId = ref('')
+let scheduleId = ref('')
+
+
+let scheduleImportId = ref('')
 
 function importScheduleById() {
-
+  buildingApi.retrieveSchedule(scheduleImportId.value).then(response => {
+    console.log(response.data.schedule)
+    importSchedule(response.data.schedule)
+  })
 }
 
 /**
@@ -501,6 +562,7 @@ function importSchedule(schedule) {
         for (const roomIndex in roomList) {
           const room = roomList[roomIndex]
           for (const property in roomList[roomIndex]) {
+            console.log(plansTemplate.value[index].rooms[roomType][roomIndex][property])
             plansTemplate.value[index].rooms[roomType][roomIndex][property] = room[property]
           }
         }
@@ -513,6 +575,10 @@ function importSchedule(schedule) {
 // const ScheduleCache = localStorage.getItem("ScheduleCache");
 // if (ScheduleCache) plans_template.value = JSON.parse(ScheduleCache)
 
+
+function feedback() {
+  window.open('https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill')
+}
 
 onMounted(() => {
   filterOperatorList(operatorFilterConditionTable.room.conditions[0], 'room')
@@ -527,37 +593,41 @@ onMounted(() => {
       <!--      <span class="schedule-header-title">排班生成器</span>-->
     </div>
     <div class="schedule-header-right">
-<!--      <div>-->
-<!--        <input class="input-base" v-model="importFileId" placeholder=""/>-->
-<!--        <span class="input-desc"></span>-->
-<!--      </div>-->
-<!--      <c-button :color="COLOR.BLUE" @click="importScheduleById()">通过id导入排班</c-button>-->
-      <!--      <input class="input-base" v-model="importFileContent" placeholder=""/>-->
+      <c-button @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">选择基建类型</c-button>
+      <div>
+        <input class="input-base" v-model="scheduleImportId" placeholder=""/>
+        <span class="input-desc"></span>
+      </div>
+      <c-button :color="COLOR.BLUE" @click="importScheduleById()">通过id导入排班</c-button>
+
       <div class="input-wrap">
         <input class="input-type-file" type="file"
                id="scheduleFile"
                @change="importScheduleByFile()">
         <c-button :color="COLOR.BLUE" :status="true">选择文件导入排班</c-button>
       </div>
-<!--      <c-button :color="COLOR.BLUE">保存排班文件</c-button>-->
-      <c-button :color="COLOR.BLUE" @click="createScheduleJsonFile()">导出排班文件</c-button>
-
+      <c-button :color="COLOR.BLUE" :status="true" @click="saveAndDownloadScheduleFile()">保存和导出排班文件</c-button>
+      <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">仅导出排班文件</c-button>
+      <c-button :color="COLOR.ORANGE" :status="true" @click="feedback()">排班生成器问题反馈</c-button>
     </div>
   </div>
 
-  <div class="maa-schedule-v2">
-
+  <c-popup v-model:visible="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
     <div class="schedule-set-wrap">
-
       <div class="schedule-set-bar">
         <span>作业名称</span>
         <div><input class="input-base" v-model="scheduleInfo.title"/></div>
+      </div>
+
+      <div class="schedule-set-bar">
         <span>描述</span>
         <div><input class="input-base" v-model="scheduleInfo.description"/></div>
+      </div>
+
+      <div class="schedule-set-bar">
         <span>作者</span>
         <div><input class="input-base" v-model="scheduleInfo.author"/></div>
       </div>
-
 
       <div class="schedule-set-bar">
         <span>基建模式</span>
@@ -568,6 +638,9 @@ onMounted(() => {
             {{ menu.label }}
           </c-button>
         </div>
+      </div>
+
+      <div class="schedule-set-bar">
         <span>换班次数</span>
         <div>
           <c-button :color="COLOR.BLUE" :status="num===scheduleTypeV2.planTimes"
@@ -576,9 +649,12 @@ onMounted(() => {
             {{ num }}
           </c-button>
         </div>
-
       </div>
+    </div>
+  </c-popup>
 
+  <div class="maa-schedule-v2">
+    <div class="schedule-set-wrap">
       <div class="schedule-set-bar">
         <span>当前班次</span>
         <div>
@@ -662,14 +738,35 @@ onMounted(() => {
           <!--          <div :class="getAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
           <!--        </div>-->
 
-          <div class="option-avatar-sprite-wrap" @click="Fiammetta_target_visible=true">
+          <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible=true">
             <div :class="getOptionAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>
           </div>
         </div>
       </div>
 
       <div class="schedule-set-bar-short">
-        <span>定时换班</span>
+        <span class="room-set-description">按顺序入驻</span>
+        <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
+        </c-switch>
+
+        <span class="room-set-description">补满空位</span>
+        <c-switch
+            v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
+        </c-switch>
+        <i class="iconfont icon-question schedule-question">
+          <span class="schedule-tip">使用补满空位功能后，后续的宿舍可能无法使用指定干员功能</span>
+        </i>
+
+        <span class="room-set-description">跳过房间</span>
+        <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
+        </c-switch>
+        <span class="room-set-description">选择产物</span>
+        <div class="product-image-wrap" @click="setProduct(product.value)"
+             v-for="(product,index) in productTable[selectedRoomType]" :key="index">
+          <div :class="getItemSprite(product.id)"></div>
+        </div>
+
+        <span class="room-set-description">定时换班</span>
         <c-switch v-model="isPeriod"></c-switch>
         &emsp;*不选择则按班次顺序执行
       </div>
@@ -683,7 +780,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <c-popup v-model:visible="Fiammetta_target_visible" :style="roomPopupStyle">
+    <c-popup v-model:visible="FiammettaTargetVisible" :style="roomPopupStyle">
       <div class="filter-condition-box">
         <div class="condition-bar" v-for="(room,key) in operatorFilterConditionTable" v-show="room.display" :key="key">
           <span :style="`color:${room.color}`">{{ room.name }}</span>
@@ -704,7 +801,11 @@ onMounted(() => {
       </div>
     </c-popup>
 
+
     <div class="room-wrap">
+      <div class="room-arrow-wrap" @click="lastOrNextPlanTimes(selectedPlanIndex-1)"><i class="iconfont icon-arrow-left"
+                                                                                        style="font-size: 48px"></i>
+      </div>
       <!--  左边站点-->
       <div class="room-wrap-left">
         <div class="room-template blank" style="width: 180px;" v-for="index in 3" :key="index"></div>
@@ -714,6 +815,7 @@ onMounted(() => {
              @click="chooseRoom('trading',tradingIndex)">
           <div class="room-name">
             <span>贸易站#{{ num }}</span>
+            <div :class="getRoomProduct('trading',tradingIndex)"></div>
           </div>
           <div class="settlement_operator">
             <div class="room-avatar-sprite-wrap"
@@ -731,6 +833,7 @@ onMounted(() => {
              @click="chooseRoom('manufacture',manufactureIndex)">
           <div class="room-name">
             <span>制造站#{{ num }}</span>
+            <div :class="getRoomProduct('manufacture',manufactureIndex)"></div>
           </div>
           <div class="settlement_operator">
             <div class="room-avatar-sprite-wrap"
@@ -826,6 +929,9 @@ onMounted(() => {
 
         <div class="room-template blank" style="width: 100px;"></div>
       </div>
+
+      <div class="room-arrow-wrap" @click="lastOrNextPlanTimes(selectedPlanIndex+1)"><i
+          class="iconfont icon-arrow-right" style="font-size: 48px"></i></div>
     </div>
 
 
@@ -833,54 +939,28 @@ onMounted(() => {
 
 
     <div class="room-set-wrap">
-      <div class="room-set">
-
-        <span style="font-size: 18px;font-weight: 600;">
-          第{{ selectedPlanIndex + 1 }}班 —
-        {{ getRoomLabel(selectedRoomType) }}#{{ selectedRoomIndex + 1 }}的房间入驻设置
-        </span>
-
-
-      </div>
+      <!--      <div class="room-set">-->
+      <!--        <span style="font-size: 18px;font-weight: 600;">-->
+      <!--          第{{ selectedPlanIndex + 1 }}班 —-->
+      <!--        {{ getRoomLabel(selectedRoomType) }}#{{ selectedRoomIndex + 1 }}的房间入驻设置-->
+      <!--        </span>-->
+      <!--      </div>-->
 
 
       <div class="room-set">
-        <span>按顺序入驻</span>
-        <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
-        </c-switch>
-        <span>补满空位</span>
-        <c-switch
-            v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
-        </c-switch>
-        <span>跳过房间</span>
-        <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
-        </c-switch>
-        <span>选择产物</span>
-        <div class="product-image-wrap" @click="setProduct(product.value)"
-             v-for="(product,index) in productTable[selectedRoomType]" :key="index">
-          <div :class="getItemSprite(product.id)"></div>
-        </div>
-
-        <span v-show="selectedRoomType==='manufacture'||selectedRoomType==='trading'">已选择产物</span>
-        <div class="product-image-wrap" v-show="selectedRoomType==='manufacture'||selectedRoomType==='trading'">
-          <div :class="getItemSprite(selectedProduct)"></div>
-        </div>
-      </div>
-
-      <div class="room-set">
-        <span>当前班次入驻的干员</span>
+        <span class="room-set-description">入驻的干员</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap" style="margin: 0 20px 0 0"
-               v-for="(charId,index) in getRoomOperators(selectedRoomType,selectedRoomIndex)" :key="index" >
+               v-for="(charId,index) in getRoomOperators(selectedRoomType,selectedRoomIndex)" :key="index">
             <div :class="getAvatar(charId)"></div>
-            <i class="iconfont icon-error operator-delete-icon"  @click="deleteOperator(charId)">
+            <i class="iconfont icon-error operator-delete-icon" @click="deleteOperator(charId)">
             </i>
           </div>
         </div>
         <c-button @click="copyOperatorList()">复制</c-button>
         <c-button @click="pasteOperatorList()">粘贴</c-button>
 
-        <span>当前复制的干员组</span>
+        <span class="room-set-description">复制的干员</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap" style="margin: 0 4px"
                v-for="(charId,index) in tmpOperatorList"
@@ -925,4 +1005,31 @@ onMounted(() => {
   margin: 2px;
   min-width: 0;
 }
+
+.schedule-question {
+  font-size: 20px;
+  padding: 0 4px;
+  position: relative;
+}
+
+.schedule-tip {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: none;
+  width: 100px;
+  font-size: 14px;
+  padding: 8px;
+  line-height: 24px;
+  font-weight: 600;
+  background-color: var(--c-background-color);
+  box-shadow: var(--c-box-shadow);
+}
+
+.schedule-question:hover {
+  .schedule-tip {
+    display: block;
+  }
+}
+
 </style>

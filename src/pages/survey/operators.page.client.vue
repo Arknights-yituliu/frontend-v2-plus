@@ -247,17 +247,9 @@
 
         </div>
 
-        <div class="control_bar" v-show="bindAccount">
-          <div class="control_tip">您已经导入过该账号的练度数据，已注册的一图流账号为：<a class="warning-color">
-            {{ uploadMessage.userName }} </a> 请登录之前的账号 <br>
-            <div class="btn btn-blue" @click="login(uploadMessage.userName)">
-              请登录用户{{ uploadMessage.userName }}并刷新网页
-            </div>
-          </div>
-        </div>
         <div class="control_bar">
-          <div class="control_tip"><b>*森空岛导入：</b>请遵循
-            <b>《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面，如果遇到服务器意外错误，先尝试“清空所有数据”按钮<br>
+          <div class="control_tip">*森空岛导入：请遵循
+            <b >《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面，如果遇到服务器意外错误，先尝试“清空所有数据”按钮<br>
           </div>
         </div>
       </div>
@@ -538,7 +530,7 @@ import characterTable from '/src/static/json/survey/character_table_simple.json'
 
 import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.css";
-import { debounce } from "/src/pages/utils/utils";
+import {debounce} from "/src/utils/utils";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
@@ -550,11 +542,14 @@ let userData = ref({userName: "未登录", status: -100, token: void 0});  //用
  */
 function getCacheUserData() {
   let cacheData = localStorage.getItem("globalUserData");
-  if (!cacheData) {
+  if (!cacheData || cacheData === "undefined") {
     // cMessage('未登录或登录失效', 'error')
-  } else {
-    userData.value = JSON.parse(cacheData);
+
+    return;
   }
+
+  userData.value = JSON.parse(cacheData);
+
 }
 
 /**
@@ -564,7 +559,9 @@ function getCacheUserData() {
  */
 function checkUserStatus(notice) {
   if (!userData.value.token) {
-    if (notice) cMessage('请先注册或登录一图流账号', 'error')
+    if (notice) {
+      cMessage('请先注册或登录一图流账号', 'error')
+    }
     return true;
   }
   return false
@@ -697,17 +694,17 @@ let isCompleteData = ref(false)
 /**
  * 加载完整数据
  */
-const loadCompleteData =  debounce(() => {
-    operatorList.value = []
-    for (const charId in operatorTable.value) {
-      const operator = operatorTable.value[charId]
-      if (operator.show) {
-        operatorList.value.push(operator)
-      }
+const loadCompleteData = debounce(() => {
+  operatorList.value = []
+  for (const charId in operatorTable.value) {
+    const operator = operatorTable.value[charId]
+    if (operator.show) {
+      operatorList.value.push(operator)
     }
-    console.log('执行了')
-    isCompleteData.value = true;
-  },3000)
+  }
+  console.log('执行了')
+  isCompleteData.value = true;
+}, 3000)
 
 
 /**
@@ -746,7 +743,7 @@ async function importSKLandOperatorData() {
     return;
   }
 
-  const {cred,secret} =  getCredAndSecret(SKlandCREDAndSECRET.value)
+  const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
 
   //获取绑定信息
   const playerBinding = await sklandApi.getPlayBinding('/api/v1/game/player/binding', '', secret, cred);
@@ -777,7 +774,7 @@ async function importSKLandOperatorData() {
 async function importSKLandOperatorDataByUid(uid) {
 
   if (checkUserStatus(true)) return;
-  const {cred,secret} =  getCredAndSecret(SKlandCREDAndSECRET.value)
+  const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
 
   const playerInfo = await sklandApi.getPlayerInfo(
       '/api/v1/game/player/info',
@@ -796,18 +793,18 @@ async function importSKLandOperatorDataByUid(uid) {
  * @param text 用户输入的字符串
  * @return {{cred: *, secret: *}}  cred和secret
  */
-function getCredAndSecret(text){
+function getCredAndSecret(text) {
 
-  if(!text.includes(',')){
-    cMessage('输入格式不正确,应是一个中间包含逗号的一串字母','error')
+  if (!text.includes(',')) {
+    cMessage('输入格式不正确,应是一个中间包含逗号的一串字母', 'error')
   }
   text = text.replace(/\s+/g, '')
       .replace(/["']/g, '')
 
   const textArr = text.split(',')
-  const cred =  textArr[0]
-  const secret =  textArr[1]
-  return {cred,secret}
+  const cred = textArr[0]
+  const secret = textArr[1]
+  return {cred, secret}
 
 }
 
@@ -818,27 +815,14 @@ function getCredAndSecret(text){
  * @returns {Promise<void>}
  */
 async function uploadSKLandData({token, data}) {
-  await request({
-    url: 'survey/operator/import/skland/v2',
-    method: "post",
-    data: {token, data}
-  }).then(response => {
-    response = response.data
-    uploadMessage.value = response.data;
-    if (response.code === 20004) {
-      cMessage("您已经注册导入过了", "error");
-      bindAccount.value = true;
-      return;
-    }
 
-    if (response.code === 200) {
-      cMessage("森空岛数据导入成功");
-      bindAccount.value = false;
-      getOperatorData()
-    } else {
-      cMessage(response.msg, "error");
-    }
-  })
+  surveyOperatorApi.importSkLandOperatorData({token, data})
+      .then(response => {
+        uploadMessage.value = response.data;
+        cMessage("森空岛数据导入成功");
+        bindAccount.value = false;
+        getOperatorData()
+      })
 }
 
 //选择导入uid的按钮样式
@@ -876,25 +860,23 @@ function login(userName) {
   })
 }
 
-
-
-let uploadMessage = ref({updateTime: "", affectedRows: 0, registered: false, userName: ''}); //上传APi返回的信息
-let selectedCharId = ref({}); //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
-
-
+//上传APi返回的信息
+let uploadMessage = ref({updateTime: "", affectedRows: 0, registered: false, userName: ''});
+//每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
+let selectedCharId = ref({});
 
 
 /**
  * 手动上传
  */
-const upload = debounce(()=>{
-    let uploadList = createUploadData();
-    surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
-      uploadMessage.value = response.data;
-      cMessage("保存成功");
-      selectedCharId.value = {};
-    });
-  },5000)
+const upload = debounce(() => {
+  let uploadList = createUploadData();
+  surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
+    uploadMessage.value = response.data;
+    cMessage("保存成功");
+    selectedCharId.value = {};
+  });
+}, 5000)
 
 let uploadFileName = ref("上传的文件名");
 
@@ -1224,7 +1206,7 @@ function feedback() {
  * @param {string} id 图片id
  * @returns {string} css样式名
  */
-function getItemCostSprite(id){
+function getItemCostSprite(id) {
   return 'bg-' + id + " image_item"
 }
 
@@ -1263,7 +1245,6 @@ onMounted(() => {
   border: 1px solid black;
   padding: 8px
 }
-
 
 
 .web_url {
