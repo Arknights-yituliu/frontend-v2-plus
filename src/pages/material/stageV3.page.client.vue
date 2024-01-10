@@ -418,13 +418,15 @@
             </div>
           </td>
         </tr>
-        <tr v-for="(act, index) in historyActItemTable" :key="index">
+        <tr v-for="(act, actIndex) in historyActItemTable" :key="actIndex">
           <td class="act-name">{{ act.zoneName }}</td>
-          <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
-            <div class="act-table-item-wrap" v-if="item.isUp">
-              <div :class="getActTableItemSprite(item.itemId)"></div>
-              <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
-                  {{ formatNumber(item.stageEfficiency, 2) }}%
+          <td v-for="(item, index) in itemIdList" :key="index" :style="getCellBgColor(actIndex<item.lastUpInterval)">
+            <div class="act-table-item-wrap" v-if="act.itemList[item.id]">
+
+              <div :class="getActTableItemSprite(item.id)"></div>
+              <span class="act-stage-efficiency">
+                {{}}
+                  {{ formatNumber(act.itemList[item.id].stageEfficiency, 2) }}%
                 </span>
             </div>
           </td>
@@ -1103,6 +1105,9 @@ function historyActDeviceBtnClass(device) {
 }
 
 function getHistoryActStage() {
+  historyActItemTable.value = []
+
+
   // 获取历史活动up材料信息
   stageApi.getHistoryActStage(0.625, 300).then(response => {
     // 先把材料系列表转为一个集合
@@ -1111,54 +1116,64 @@ function getHistoryActStage() {
       itemIdList.push({
         id: item.id,
         name: item.name,
-        lastUp: false
+        lastUp: false,
+        lastUpInterval:0
       })
     }
+
     historyActItemList.value = response.data
     // 循环历史活动数据
+    let lastUpInterval = 0;
+
     for (const index in response.data) {
       const act = response.data[index]
+      if(act.zoneName === '落叶逐火') {
+        continue
+      }
+
+      lastUpInterval++
       //复刻不计入
       // if(act.zoneName.indexOf('复刻')>-1) {
       //   continue;
       // }
       //每行数据
-      const rowData = {
+      let rowData = {
         zoneName: act.zoneName, //活动名
-        itemList: [] //材料up情况
+        itemList: {} //材料up情况
       }
+
+      for (const stage of act.actStageList) {
+        rowData.itemList[stage.itemId] = {
+          itemId:stage.itemId,
+          stageEfficiency:stage.stageEfficiency * 100,
+          stageCode:stage.stageCode
+        }
+      }
+
       for (const itemIndex in itemIdList) {
         const item = itemIdList[itemIndex]
-        let cellBgColor = false; //格子背景颜色
-        let isUpFlag = false; //材料up标记
-        // 循环每个活动up的蓝材料
-        let stageEfficiency = void 0
-        for (const stage of act.actStageList) {
-          //up了材料则标记已经up
-          if (stage.itemId === item.id) {
-            stageEfficiency = stage.stageEfficiency * 100
-            isUpFlag = true
-            break
-          }
+        //材料up标记
+        let isUpFlag = false;
+
+        if(rowData.itemList[item.id]){
+          isUpFlag = true
         }
+
         //如果这个up上个活动没up则将格子标记为true，添加背景色
         if (!itemIdList[itemIndex].lastUp) {
-          cellBgColor = true;
+          itemIdList[itemIndex].lastUpInterval = lastUpInterval;
         }
+
         //如果这个材料已经up了，则将这个材料的上次up标记为true
         if (isUpFlag) {
           itemIdList[itemIndex].lastUp = true;
         }
 
-        rowData.itemList.push({
-          itemId: item.id,
-          stageEfficiency: stageEfficiency,
-          isUp: isUpFlag,
-          cellBgColor: cellBgColor,
-        })
       }
       historyActItemTable.value.push(rowData)
     }
+
+    itemIdList.sort((a,b)=>a.lastUpInterval-b.lastUpInterval)
 
 
   })
