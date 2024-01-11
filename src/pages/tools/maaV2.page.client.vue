@@ -575,9 +575,24 @@ function importSchedule(schedule) {
 // const ScheduleCache = localStorage.getItem("ScheduleCache");
 // if (ScheduleCache) plans_template.value = JSON.parse(ScheduleCache)
 
+let feedbackPopupVisible = ref(false)
 
-function feedback() {
+let feedbackPopupStyle = 'width:600px;'
+
+function openQQDocsPage() {
   window.open('https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill')
+}
+
+function openQQPage() {
+  window.open('https://jq.qq.com/?_wv=1027&k=q1z3p9Yj')
+}
+
+function openOfficialAccountPage() {
+  window.open('https://space.bilibili.com/688411531')
+}
+
+function openGithubIssuesPage() {
+  window.open('https://github.com/Arknights-yituliu/frontend-v2-plus/issues')
 }
 
 onMounted(() => {
@@ -608,9 +623,57 @@ onMounted(() => {
       </div>
       <c-button :color="COLOR.BLUE" :status="true" @click="saveAndDownloadScheduleFile()">保存和导出排班文件</c-button>
       <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">仅导出排班文件</c-button>
-      <c-button :color="COLOR.ORANGE" :status="true" @click="feedback()">排班生成器问题反馈</c-button>
+      <c-button :color="COLOR.ORANGE" :status="true" @click="feedbackPopupVisible = !feedbackPopupVisible">问题反馈
+      </c-button>
     </div>
   </div>
+
+  <c-popup v-model:visible="feedbackPopupVisible" :style="feedbackPopupStyle">
+    <table class="feedback-table">
+      <tbody>
+      <tr>
+        <td>反馈方式</td>
+        <td>转跳</td>
+        <td>反馈流程（越靠前越推荐）</td>
+      </tr>
+      <tr>
+        <td>Github issues</td>
+        <td>
+          <c-button :color="COLOR.GREEN" :status="true" @click="openGithubIssuesPage()">点击前往</c-button>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>粉丝群539600566</td>
+        <td>
+          <c-button :color="COLOR.GREEN" :status="true" @click="openQQPage()">点击前往</c-button>
+        </td>
+        <td>进群@山桜反馈，如果不在找管理员</td>
+      </tr>
+      <tr>
+        <td>开发群938710832</td>
+        <td>
+<!--          <c-button :color="COLOR.GREEN" :status="true" @click="openQQPage()">点击前往</c-button>-->
+        </td>
+        <td>如果想参与开发或提出优化建议请加开发群</td>
+      </tr>
+      <tr>
+        <td>B站@罗德岛基建BETA</td>
+        <td>
+          <c-button :color="COLOR.GREEN" :status="true" @click="openOfficialAccountPage()">点击前往</c-button>
+        </td>
+        <td>直接私信反馈</td>
+      </tr>
+      <tr>
+        <td>QQ问卷</td>
+        <td>
+          <c-button :color="COLOR.GREEN" :status="true" @click="openQQDocsPage()">点击前往</c-button>
+        </td>
+        <td>无法交流，只能处理简单的问题（例如错字）</td>
+      </tr>
+      </tbody>
+    </table>
+  </c-popup>
 
   <c-popup v-model:visible="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
     <div class="schedule-set-wrap">
