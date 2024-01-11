@@ -47,7 +47,7 @@
                 @click="clickBtn('btn_import');collapseImport()">
         数据导入导出
       </c-button>
-      <c-button :color="'blue'" @click="feedback()">建议与反馈</c-button>
+      <feed-back/>
       <div style="width: 60px"></div>
       <c-button :color="'green'" :status="true" @click="upload()">手动保存练度</c-button>
       <c-button :color="'blue'" :status="btnStatus.btn_statistics"
@@ -523,9 +523,9 @@ import surveyOperatorApi from "/src/api/surveyOperator"
 import sklandApi from '/src/api/skland'
 import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";
-import request from "/src/api/requestBase";
 import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
+import feedBack from '/src/components/feedBack.vue';
 
 
 import "/src/assets/css/survey/survey_character.css";
