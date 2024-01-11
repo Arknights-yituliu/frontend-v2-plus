@@ -4,6 +4,17 @@
     overflow-y: hidden;
 }
 
+.feedback-table{
+    margin:20px auto;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.feedback-table td{
+   padding: 4px;
+    border: 1px solid var(--c-border-color);
+}
+
 .schedule-header {
     width: 100%;
     display: flex;
