@@ -575,7 +575,7 @@ function importSchedule(schedule) {
 // const ScheduleCache = localStorage.getItem("ScheduleCache");
 // if (ScheduleCache) plans_template.value = JSON.parse(ScheduleCache)
 
-let feedbackPopupVisible = ref(true)
+let feedbackPopupVisible = ref(false)
 
 let feedbackPopupStyle = 'width:600px;'
 
@@ -669,7 +669,7 @@ onMounted(() => {
         <td>
           <c-button :color="COLOR.GREEN" :status="true" @click="openQQDocsPage()">点击前往</c-button>
         </td>
-        <td>因为无法交流导致可能无法定位问题</td>
+        <td>无法交流，只能处理简单的问题（例如错字）</td>
       </tr>
       </tbody>
     </table>
