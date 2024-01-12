@@ -148,14 +148,15 @@
         <div :class="getItemT3Sprite(stage.series.r3)" class="stage_card_icon"></div>
         <div class="stage_card_3s_list">
           <div class="stage_card_3_line">
-            <div class="stage_card_3_1">
-              综合最优
+            <div class="stage_card_3_0" style="float: left;">
+              <div :class="getItemT3Sprite('AP_GAMEPLAY')" style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -80px;opacity: 1;"></div>
             </div>
+            <div class="stage_card_3_1"></div>
             <div class="stage_card_3_2" style="display: none;">
-              {{ stage.leT4MaxEfficiencyStage.zoneName }}
+              {{ stage.maxEfficiencyStage.zoneName }}
             </div>
             <div class="stage_card_3_3 stage_card_3_line_text">
-              {{ stage.leT4MaxEfficiencyStage.stageCode }}
+              {{ stage.maxEfficiencyStage.stageCode }}
             </div>
             <div class="stage_card_3_4">
               {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
@@ -172,11 +173,9 @@
           </div>
           <div class="stage_card_3_line">
             <div class="stage_card_3_0" style="float: left;">
-              <div :class="getItemT3Sprite(stage.series.r4)" style="scale: 1;position: absolute;display: inline-block;top: -72px;left: -80px;"></div>
+              <div :class="getItemT3Sprite(stage.series.r4)" style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -80px;opacity: 1;"></div>
             </div>
-            <div class="stage_card_3_1" style="margin-left: 36px;width: 32px;">
-              最优
-            </div>
+            <div class="stage_card_3_1"></div>
             <div class="stage_card_3_2" style="display: none;">
               第一章
             </div>
@@ -192,11 +191,9 @@
           </div>
           <div class="stage_card_3_line">
             <div class="stage_card_3_0" style="float: left;">
-              <div :class="getItemT3Sprite(stage.series.r3)" style="scale: 1;position: absolute;display: inline-block;top: -72px;left: -80px;"></div>
+              <div :class="getItemT3Sprite(stage.series.r3)" style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -80px;opacity: 1;"></div>
             </div>
-            <div class="stage_card_3_1" style="margin-left: 36px;width: 32px;">
-              最优
-            </div>
+            <div class="stage_card_3_1"></div>
             <div class="stage_card_3_2" style="display: none;">
               第一章
             </div>
@@ -212,11 +209,9 @@
           </div>
           <div class="stage_card_3_line" v-show="stage.series.r2">
             <div class="stage_card_3_0" style="float: left;">
-              <div :class="getItemT3Sprite(stage.series.r2)" style="scale: 1;position: absolute;display: inline-block;top: -72px;left: -80px;"></div>
+              <div :class="getItemT3Sprite(stage.series.r2)" style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -80px;opacity: 1;"></div>
             </div>
-            <div class="stage_card_3_1" style="margin-left: 36px;width: 32px;">
-              最优
-            </div>
+            <div class="stage_card_3_1"></div>
             <div class="stage_card_3_2" style="display: none;">
               第一章
             </div>

@@ -60,9 +60,9 @@
   -webkit-transition: 0.3s;
   transition: 0.3s;
   background: var(--c-stage-card-background-color);
-  height: 144px;
+  height: 132px;
   width: 240px;
-  max-width: 430px;
+  max-width: 300px;
   margin: 6px;
   /* display: flex; */
   border-radius: 8px;
@@ -86,9 +86,10 @@
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-evenly;
-  width: 288px;
-  height: 132px;
-  margin: 0px 0px 0px 88px;
+  width: calc(100% - 40px);
+  height: 130px;
+  margin: 0px 0px 0px 40px;
+  backdrop-filter: blur(4px);
   /*background-color: bisque;*/
 }
 
@@ -212,26 +213,29 @@
 
 .stage_card_3_line {
   height: 28px;
-  /*background-color: cadetblue;*/
-  /* display: flex; */
-  padding-left: 12px;
-  width: 388px;
+  line-height: 32px;
+  /* background-color: cadetblue; */
+  display: flex;
+  justify-content: space-evenly;
+  vertical-align: middle;
+  padding-left: 4px;
   position: relative;
 }
 
 .stage_card_3_line div{
   display: inline-block;
-  margin: 0px 4px;
+  margin: 0px 2px;
   position: relative;
 }
 
 .stage_card_3_1{
   height: 100%;
-  width: 64px;
+  width: 24px;
   top: 0px;
   /* background-color: #10b650; */
 }
 .stage_card_3_3{
+  font-size: 20px;
   height: 100%;
   width: 60px;
   top: 0px;
@@ -239,26 +243,27 @@
 }
 .stage_card_3_4{
   height: 100%;
-  width: 60px;
+  width: 56px;
   top: 0px;
   text-align: center;
 }
 .stage_card_3_5{
   height: 100%;
-  width: 60px;
+  width: 56px;
   top: 0px;
   text-align: center;
 }
 
 .stage_card_3_line_text {
-  font-size: 18px;
+  /* font-size: 18px; */
   font-weight: 600;
+  line-height: 28px;
   color: var(--c-text-color);
-  width: 56px;
-  height: 28px;
-  line-height: 32px;
-  margin: 0 0px 0 4px;
-  display: inline-block;
+  /* width: 56px; */
+  /* height: 28px; */
+  /* line-height: 32px; */
+  /* margin: 0 0px 0 4px; */
+  /* display: inline-block; */
 }
 
 .stage-efficiency-bar-wrap {
@@ -309,16 +314,11 @@
 }
 
 .item-t3-sprite {
-  transform: scale(.18);
-  /* position: absolute; */
-  /* top: -77px; */
-  /* left: -82px; */
-  /* position: relative; */
-  /* top: -72px; */
-  /* left: -84px; */
+  transform: scale(.2);
   float: left;
-  top: -20px;
-  left: -36px;
+  top: -24px;
+  left: -88px;
+  opacity: 0.7;
 }
 
 .item-detail-bar {
