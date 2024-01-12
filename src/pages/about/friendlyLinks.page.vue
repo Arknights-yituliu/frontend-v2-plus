@@ -18,6 +18,8 @@
         </div>
         <div class="friend_link"><a href="https://penguin-stats.cn">penguin-stats.cn</a></div>
       </div>
+
+
       <div class="friend_card">
         <div class="friend_title">
           <div class="friend_image_wrap">
@@ -34,6 +36,24 @@
           </div>
         </div>
         <div class="friend_link"><a href="https://viktorlab.cn/akdata/">viktorlab.cn/akdata</a></div>
+      </div>
+
+      <div class="friend_card">
+        <div class="friend_title">
+          <div class="friend_image_wrap">
+            <a href="https://viktorlab.cn/akdata/"> <img class="friend_image" src="/image/website/ceobecanteen.png" /></a>
+          </div>
+          <div class="friend_name">小刻食堂</div>
+        </div>
+        <div class="friend_tag_wrap">
+          <div class="friend_tag_list">
+            <div class="friend_tag">24小时蹲饼</div>
+            <div class="friend_tag">活动资源提示</div>
+            <div class="friend_tag">活动攻略在线推送</div>
+            <div class="friend_tag">各类常用工具便捷使用</div>
+          </div>
+        </div>
+        <div class="friend_link"><a href="https://ceobecanteen.top/">ceobecanteen.top</a></div>
       </div>
 
       <div class="friend_card">
@@ -208,13 +228,12 @@
   color: white;
 }
 
-.href {
-}
+
 
 .friend_link {
-  margin: auto;
+  margin:0 5px;
   min-width: 200px;
-  padding: 0px 24px;
+  padding: 0 24px;
   border-radius: 20px;
   text-align: center;
   background: rgb(40, 40, 40);
