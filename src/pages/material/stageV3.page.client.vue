@@ -397,9 +397,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="主产物掉率" :width="70">
+        <el-table-column prop="primary" label="主产物掉率" :width="110">
           <template #default="scope">
             {{ formatNumber(scope.row.knockRating * 100, 1) }}%
+          </template>
+        </el-table-column>
+        <el-table-column prop="primary" label="期望理智" :width="110" sortable>
+          <template #default="scope">
+            {{ formatNumber(scope.row.apExpect , 1) }}
           </template>
         </el-table-column>
         <el-table-column prop="secondary" label="副产物" :width="70">
