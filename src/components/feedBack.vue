@@ -35,7 +35,7 @@ function openGithubIssuesPage() {
       <tbody>
       <tr>
         <td>反馈方式</td>
-        <td >转跳</td>
+        <td style="width: 100px">转跳</td>
         <td >反馈流程（越靠前越推荐）</td>
       </tr>
       <tr>
