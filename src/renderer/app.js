@@ -1,9 +1,11 @@
 import {createSSRApp, createApp, h} from "vue";
 import ElementPlus, {ID_INJECTION_KEY} from "element-plus";
+import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import App from "/src/App.vue";
 import {setPageContext} from "./usePageContext";
 import "element-plus/theme-chalk/dark/css-vars.css";
+
 
 
 export {createVPSApp};
