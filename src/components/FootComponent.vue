@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import cookie from "js-cookie";
+
 
 export default {
   layout: "poster",
@@ -167,7 +167,7 @@ export default {
     async getUpdateTime() {
       for (let i = 0; i < 20; i++) {
         await this.sleep(500);
-        this.updateTime = cookie.get("updateTime");
+
       }
     },
   },

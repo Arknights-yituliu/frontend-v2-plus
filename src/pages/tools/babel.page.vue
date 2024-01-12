@@ -1037,7 +1037,7 @@ import gacha_potentialJson from "@/static/json/gacha_potential.json"; //常驻�
 import gacha_honeyCakeJson from "@/static/json/gacha_honeyCakeNew.json"; //其他奖励数据
 import "@/assets/css/sprite_gacha.css";
 import "@/assets/css/gacha.css";
-import cookie from "js-cookie";
+
 import * as echarts from "echarts";
 
 let myChart = "";

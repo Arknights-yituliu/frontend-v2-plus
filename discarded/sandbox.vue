@@ -61,7 +61,7 @@
 
 <script>
 import storeApi from "@/api/store";
-import cookie from "js-cookie";
+
 // import storeJson from "static/json-video/store.json";
 import { usePageContext } from "@/renderer/usePageContext";
 
@@ -82,7 +82,7 @@ export default {
   },
   mounted() {
     // this.findPermStorePer();
-    this.getCookies();
+    // this.getCookies();
     // this.findActStorePer();
   },
   methods: {
@@ -92,35 +92,6 @@ export default {
       if (index == 2) return "bg-" + id + " sprite_store_act";
       if (index == 3) return "bg-" + id + " sprite_secondary";
       return "bg-" + id;
-    },
-    getCookies() {
-      if (cookie.get("store_0") == 0) {
-        this.tagColor[0] = "uni_gray";
-        this.storeVisiable[0] = "display:none;";
-      }
-      if (cookie.get("store_1") == 0) {
-        this.tagColor[1] = "uni_gray";
-        this.storeVisiable[1] = "display:none;";
-      }
-      if (cookie.get("store_2") == 0) {
-        this.tagColor[2] = "uni_gray";
-        this.storeVisiable[2] = "display:none;";
-      }
-      if (cookie.get("store_3") == 0) {
-        this.tagColor[3] = "uni_gray";
-        this.storeVisiable[3] = "display:none;";
-      }
-      if (cookie.get("store_4") == 0) {
-        this.tagColor[4] = "uni_gray";
-        this.storeVisiable[4] = "display:none;";
-      }
-
-      let theme = cookie.get("theme");
-      if (typeof theme == "undefined" || theme == undefined) {
-        theme = "op_title_etext_light";
-      }
-      // console.log('store',theme);
-      this.opETextTheme = "op_title_etext_" + theme;
     },
 
     getImgUrl(img, source) {
@@ -173,11 +144,11 @@ export default {
       if (document.getElementById("store_tag_" + index.toString()).className == "n") {
         document.getElementById("store_" + index.toString()).style.display = "none";
         document.getElementById("store_tag_" + index.toString()).className = "uni_gray";
-        cookie.set("store_" + index, 0, { expires: 30 });
+
       } else {
         document.getElementById("store_" + index.toString()).style.display = "flex";
         document.getElementById("store_tag_" + index.toString()).className = "n";
-        cookie.set("store_" + index, 1, { expires: 30 });
+
       }
     },
 
