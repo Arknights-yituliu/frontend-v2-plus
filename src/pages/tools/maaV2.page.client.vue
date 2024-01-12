@@ -541,7 +541,7 @@ function importSchedule(schedule) {
 
   for (const index in plans) {
     const plan = plans[index]
-    const {name, description, Fiammetta, drones, rooms} = plan
+    const {name, description, Fiammetta, drones, rooms, period} = plan
     plansTemplate.value[index].name = name
     plansTemplate.value[index].description = description
 
@@ -569,6 +569,36 @@ function importSchedule(schedule) {
         }
       }
     }
+
+    if(period){
+      isPeriod.value = true
+      if(period.length===1){
+        let executionTime = {start:new Date(),end:new Date()}
+        for(const dateIndex in period[0]){
+          const dateSplit =  period[0][dateIndex].split(":")
+          const hour =   parseInt(dateSplit[0])
+          const minute = parseInt(dateSplit[1])
+          console.log(hour,':',minute)
+
+          if(dateIndex === '0'){
+            executionTime.start.setHours(hour)
+            executionTime.start.setMinutes(minute)
+
+          }
+          if(dateIndex === '1'){
+            executionTime.end.setHours(hour)
+            executionTime.end.setMinutes(minute)
+             console.log(executionTimeList.value[index].end)
+          }
+
+          executionTimeList.value[index] = executionTime
+        }
+
+
+
+      }
+    }
+
   }
 
 }
@@ -576,25 +606,7 @@ function importSchedule(schedule) {
 // const ScheduleCache = localStorage.getItem("ScheduleCache");
 // if (ScheduleCache) plans_template.value = JSON.parse(ScheduleCache)
 
-let feedbackPopupVisible = ref(false)
 
-let feedbackPopupStyle = 'width:600px;'
-
-function openQQDocsPage() {
-  window.open('https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill')
-}
-
-function openQQPage() {
-  window.open('https://jq.qq.com/?_wv=1027&k=q1z3p9Yj')
-}
-
-function openOfficialAccountPage() {
-  window.open('https://space.bilibili.com/688411531')
-}
-
-function openGithubIssuesPage() {
-  window.open('https://github.com/Arknights-yituliu/frontend-v2-plus/issues')
-}
 
 onMounted(() => {
   filterOperatorList(operatorFilterConditionTable.room.conditions[0], 'room')
