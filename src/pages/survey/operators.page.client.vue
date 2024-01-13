@@ -249,7 +249,7 @@
 
         <div class="control_bar">
           <div class="control_tip">*森空岛导入：请遵循
-            <b >《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面，如果遇到服务器意外错误，先尝试“清空所有数据”按钮<br>
+            <b>《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面，如果遇到服务器意外错误，先尝试“清空所有数据”按钮<br>
           </div>
         </div>
       </div>
@@ -357,35 +357,34 @@
       </div>
     </c-collapse-item>
 
-
     <!--    干员推荐-->
-    <c-collapse-item v-model:visible="collapseRecommendVisible" :name="'recommend'">
-      <div class="control_bar_wrap">
-        <h2>干员练度推荐</h2> <span>（测试）</span>
-        <div class="operator-form">
-          <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
-            <div class="operator-recommend-avatar-wrap">
-              <div :class="getAvatarUseInRecommend(recommend.charId)"></div>
-              <div class="recommend-operator-name">{{ recommend.name }}</div>
-            </div>
-            <div v-show="recommend.info.type==='skill'" class="operator-sprite-icon-bg">
-              <div :class="getSkillSprite(recommend.info.iconId)"></div>
-              <div class="sprite-alt">{{ recommend.info.name }}</div>
-            </div>
-            <div v-show="recommend.info.type==='equip'" class="operator-sprite-icon-bg">
-              <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="operator-equip-image">
-              <div class="sprite-alt">{{ recommend.info.iconId }}</div>
-            </div>
+        <c-collapse-item v-model:visible="collapseRecommendVisible" :name="'recommend'">
+          <div class="control_bar_wrap">
+            <h3>干员练度推荐</h3>
+            <div class="operator-form">
+              <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
+                <div class="operator-recommend-avatar-wrap">
+                  <div :class="getAvatarUseInRecommend(recommend.charId)"></div>
+                  <div class="recommend-operator-name">{{ recommend.name }}</div>
+                </div>
+                <div v-show="recommend.info.type==='skill'" class="operator-sprite-icon-bg">
+                  <div :class="getSkillSprite(recommend.info.iconId)"></div>
+                  <div class="sprite-alt">{{ recommend.info.name }}</div>
+                </div>
+                <div v-show="recommend.info.type==='equip'" class="operator-sprite-icon-bg">
+                  <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="operator-equip-image">
+                  <div class="sprite-alt">{{ recommend.info.iconId }}</div>
+                </div>
 
-            <div class="recommend-text">
-              {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>
-              {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}
-            </div>
+                <div class="recommend-text">
+                  {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>
+                  {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}
+                </div>
 
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </c-collapse-item>
+        </c-collapse-item>
 
     <!--   干员表单-->
     <div class="operator-form">
@@ -1131,14 +1130,14 @@ function splitMaterialByRarity(highestRarity) {
 let collapseRecommendVisible = ref(false)  //干员练度推荐折叠栏的显示状态
 let operatorRecommendList = ref([]) //干员练度推荐列表
 
+
 /**
  * 控制干员练度推荐折叠栏的显示状态
  */
 async function getOperatorRecommend() {
   operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorTable.value)
-  setTimeout(function () {
-    collapseRecommendVisible.value = !collapseRecommendVisible.value;
-  }, 500)
+  collapseRecommendVisible.value = !collapseRecommendVisible.value;
+
 
 }
 
