@@ -269,7 +269,7 @@
             <div class="not_own_operator_wrap">
               <div class="operator-sprite-avatar-bg" style="margin: 0 4px 30px 4px"
                    v-for="(operator,index) in statisticsResult.total.notOwn" :key="index">
-                <div :class="getOperatorSprite(operator.charId)"></div>
+                <div :class="getAvatarUseInDisplayCard(operator.charId)"></div>
                 <div class="sprite-alt" style="top:70px">{{ operator.name }}</div>
               </div>
             </div>
@@ -307,7 +307,7 @@
               <div class="operator-card" v-for="(operator, char_index) in statisticsResult.max" :key="char_index"
               >
                 <div class="operator-sprite-avatar-bg">
-                  <div :class="getOperatorSprite(operator.charId)"></div>
+                  <div :class="getAvatarUseInDisplayCard(operator.charId)"></div>
                   <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite" alt="">
                   <div class="operator-level">
                     {{ operator.level }}
@@ -365,7 +365,7 @@
         <div class="operator-form">
           <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
             <div class="operator-recommend-avatar-wrap">
-              <div :class="getAvatarForrecommend(recommend.charId)"></div>
+              <div :class="getAvatarUseInRecommend(recommend.charId)"></div>
               <div class="recommend-operator-name">{{ recommend.name }}</div>
             </div>
             <div v-show="recommend.info.type==='skill'" class="operator-sprite-icon-bg">
@@ -392,7 +392,7 @@
       <div class="operator-card" v-for="(operator, char_index) in operatorList" :key="char_index"
            @click="updateOperatorPopup(char_index)" style="width: 400px">
         <div class="operator-sprite-avatar-bg">
-          <div :class="getOperatorSprite(operator.charId)"></div>
+          <div :class="getAvatarUseInDisplayCard(operator.charId)"></div>
           <div class="operator-level">
             {{ operator.level }}
           </div>
@@ -425,7 +425,7 @@
 
       <div class="operator-card" style="margin:12px auto 0 auto">
         <div class="operator-sprite-avatar-bg">
-          <div :class="getOperatorSprite(operatorPopupData.charId)"></div>
+          <div :class="getAvatarUseInDisplayCard(operatorPopupData.charId)"></div>
           <img :src="`/image/survey/rank/elite${operatorPopupData.elite}.png`" class="operator-elite" alt="">
           <div class="operator-level">
             {{ operatorPopupData.level }}
@@ -1210,7 +1210,7 @@ function getItemCostSprite(id) {
   return 'bg-' + id + " image_item"
 }
 
-function getOperatorSprite(id) {
+function getAvatarUseInDisplayCard(id) {
   return "bg-" + id + " operator-sprite-avatar";
 }
 
@@ -1222,7 +1222,7 @@ function getItemSprite(id) {
   return 'bg-' + id + " operator-ap-cost"
 }
 
-function getAvatarForrecommend(id) {
+function getAvatarUseInRecommend(id) {
   return "bg-" + id + " operator-recommend-avatar";
 }
 
