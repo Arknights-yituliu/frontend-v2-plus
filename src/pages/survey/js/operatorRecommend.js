@@ -28,6 +28,7 @@ async function operatorRecommend(operatorTable) {
         const operator = operatorTable[index]
         if (operator.rarity < 6) continue;
         if (!operatorStatisticsResult[operator.charId]) continue;
+        if (!operator.own) continue;
         const result = operatorStatisticsResult[operator.charId]
         for (const property in result) {
             const single = result[property]

@@ -317,7 +317,7 @@
                 <div v-for="(skill,index) in operator.skill" :key="index" class="operator-sprite-icon-bg">
                   <div :class="getSkillSprite(skill.iconId)"></div>
                   <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
-                       v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank">
+                       v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
                   <span class="sprite-alt">{{ skill.name }}</span>
                 </div>
                 <div v-for="(equip,index) in operator.equip" :key="index" class="operator-sprite-icon-bg">
@@ -347,7 +347,7 @@
              :key="type">
           <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
             <div class="image_item_wrap">
-              <div :class="getItemCostSprite(item.id,'item')"></div>
+              <div :class="getItemCostSprite(item.id)"></div>
               <div class="item_count">
                 {{ strShowLength(item.count) }}
               </div>
@@ -405,14 +405,14 @@
         <div v-for="(skill,index) in operator.skill" :key="index" class="operator-sprite-icon-bg">
           <div :class="getSkillSprite(skill.iconId)"></div>
           <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
-               v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank">
+               v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
           <div class="sprite-alt">{{ skill.name }}</div>
         </div>
         <div v-for="(equip,index) in operator.equip" :key="index" class="operator-sprite-icon-bg">
           <!--          <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>-->
           <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
           <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
-               v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
+               v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank" alt="">
           <div class="sprite-alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
         </div>
       </div>
@@ -434,13 +434,13 @@
         <div v-for="(skill,index) in operatorPopupData.skill" :key="index" class="operator-sprite-icon-bg">
           <div :class="getSkillSprite(skill.iconId)"></div>
           <img :src="`/image/survey/skill-rank-${operatorPopupData[`skill${index+1}`]}.jpg`"
-               v-show="operatorPopupData[`skill${index+1}`]>0" class="operator-skill-rank">
+               v-show="operatorPopupData[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
           <div class="sprite-alt">{{ skill.name }}</div>
         </div>
         <div v-for="(equip,index) in operatorPopupData.equip" :key="index" class="operator-sprite-icon-bg">
           <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
           <img :src="`/image/survey/skill-rank-${operatorPopupData[`mod${equip.typeName2}`]}.jpg`"
-               v-show="operatorPopupData[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
+               v-show="operatorPopupData[`mod${equip.typeName2}`]>0" class="operator-skill-rank" alt="">
           <div class="sprite-alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
         </div>
       </div>
@@ -481,7 +481,7 @@
             <div v-for="rank in RANK_TABLE.slice(0,3)" :key="rank"
                  @click="updateOperatorData(operatorPopupData.charId,`elite`,rank)"
                  :class="dataOptionClass(operatorPopupData.charId,rank,`elite`)">
-              <img :src="`/image/survey/rank/elite${rank}.png`" class="image-skill-rank">
+              <img :src="`/image/survey/rank/elite${rank}.png`" class="image-skill-rank" alt="">
               <!--              <div :class="getOptionEliteSprite(`elite${rank}`)"></div>-->
             </div>
           </div>
@@ -490,14 +490,14 @@
             <div v-for="rank in RANK_TABLE.slice(1,4)" :key="rank"
                  @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,rank)"
                  :class="dataOptionClass(operatorPopupData.charId,rank,`skill${index+1}`)">
-              <img :src="`/image/survey/rank/skill-rank-${rank}.png`" class="image-skill-rank"/>
+              <img :src="`/image/survey/rank/skill-rank-${rank}.png`" class="image-skill-rank" alt=""/>
             </div>
           </div>
           <div class="operator-option-bar" v-for="(equip,index) in operatorPopupData.equip" :key="index">
             <div v-for="rank in RANK_TABLE.slice(1,4)" :key="rank"
                  @click="updateOperatorData(operatorPopupData.charId,`mod${equip.typeName2}`,rank)"
                  :class="dataOptionClass(operatorPopupData.charId,rank,`mod${equip.typeName2}`)">
-              <img :src="`/image/survey/rank/mod-rank-${rank}.png`" class="image-mod-rank"/>
+              <img :src="`/image/survey/rank/mod-rank-${rank}.png`" class="image-mod-rank" alt=""/>
             </div>
           </div>
         </div>
