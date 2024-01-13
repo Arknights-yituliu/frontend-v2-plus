@@ -32,7 +32,7 @@ async function operatorRecommend(operatorTable) {
         for (const property in result) {
             const single = result[property]
 
-            if (operator[property] < single.avg && single.avg>1.2) {
+            if (operator[property] < single.avg && single.avg>1.4) {
                 recommend.push({
                     name:operator.name,
                     charId: operator.charId,
