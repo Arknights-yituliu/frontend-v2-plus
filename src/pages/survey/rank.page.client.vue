@@ -7,17 +7,18 @@ import character_table_simple from "/src/static/json/survey/character_table_simp
 
 import surveyApi from "/src/api/surveyOperator";
 
-let rarity_dict = [1, 2, 3, 4, 5, 6];
+let rarityDict = [1, 2, 3, 4, 5, 6];
 
-let operators_statistics_list = ref([]);
+let operatorsStatisticsList = ref([]);
 
 
-let user_count = ref(0);
-let update_time = ref("2023-05-01");
+let userCountText = ref(0);
+let updateTimeText = ref("2023-05-01");
 
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
+
     const {result,userCount,updateTime} = response.data
     for(const item of result){
       const charId =  item.charId
@@ -29,10 +30,11 @@ function getCharStatisticsResult() {
       item.skill = char_info.skill
       item.equip = char_info.equip
     }
-    operators_statistics_list.value = result
+
+    operatorsStatisticsList.value = result
     addFilterCondition('rarity', 6)
-    user_count.value = userCount ;
-    update_time.value = updateTime;
+    userCountText.value = userCount;
+    updateTimeText.value = updateTime;
   });
 }
 
@@ -108,9 +110,9 @@ function addFilterCondition(property, condition) {
 
 //筛选
 function filterCharacterList() {
-  for (let i in operators_statistics_list.value) {
-    const character = operators_statistics_list.value[i];
-    operators_statistics_list.value[i].show = filterByCharacterProperty(filter_condition.value, character);
+  for (let i in operatorsStatisticsList.value) {
+    const character = operatorsStatisticsList.value[i];
+    operatorsStatisticsList.value[i].show = filterByCharacterProperty(filter_condition.value, character);
   }
 }
 
@@ -126,7 +128,7 @@ function sortRank(property) {
   } else {
     desc_or_asc.value = 1;
   }
-  operators_statistics_list.value.sort((a, b) => {
+  operatorsStatisticsList.value.sort((a, b) => {
     if (desc_or_asc.value % 2 !== 0) {
       return b[property] - a[property];
     }
@@ -164,26 +166,26 @@ function commonSort(property, condition) {
     desc_or_asc.value = 1;
   }
 
-  const len = operators_statistics_list.value.length
+  const len = operatorsStatisticsList.value.length
 
 
   for (let i = 0; i < len - 1; i++) {
     for (let j = 0; j < len - 1 - i; j++) {
       if (desc_or_asc.value % 2 !== 0) {
         // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
-        if (operators_statistics_list.value[j][property][condition] < operators_statistics_list.value[j + 1][property][condition]) {
-          const temp = operators_statistics_list.value[j]
-          operators_statistics_list.value[j] = operators_statistics_list.value[j + 1]
-          operators_statistics_list.value[j + 1] = temp;
+        if (operatorsStatisticsList.value[j][property][condition] < operatorsStatisticsList.value[j + 1][property][condition]) {
+          const temp = operatorsStatisticsList.value[j]
+          operatorsStatisticsList.value[j] = operatorsStatisticsList.value[j + 1]
+          operatorsStatisticsList.value[j + 1] = temp;
         }
       }
 
       if (desc_or_asc.value % 2 === 0) {
         // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
-        if (operators_statistics_list.value[j][property][condition] > operators_statistics_list.value[j + 1][property][condition]) {
-          const temp = operators_statistics_list.value[j]
-          operators_statistics_list.value[j] = operators_statistics_list.value[j + 1]
-          operators_statistics_list.value[j + 1] = temp;
+        if (operatorsStatisticsList.value[j][property][condition] > operatorsStatisticsList.value[j + 1][property][condition]) {
+          const temp = operatorsStatisticsList.value[j]
+          operatorsStatisticsList.value[j] = operatorsStatisticsList.value[j + 1]
+          operatorsStatisticsList.value[j + 1] = temp;
         }
       }
     }
@@ -208,8 +210,8 @@ onMounted(() => {
               @click="collapseFilter()">筛选
       </button>
       <div id="updateTime">
-        调查人数{{ user_count }}<br/>
-        更新时间{{ update_time }}
+        调查人数{{ userCountText }}<br/>
+        更新时间{{ updateTimeText }}
       </div>
     </div>
 
@@ -235,7 +237,7 @@ onMounted(() => {
           <div class="control_title">稀有度</div>
           <div class="switch_btn_wrap">
             <div :class="selectedBtn('rarity', rarity)"
-                 v-for="(rarity,index) in rarity_dict" :key="index"
+                 v-for="(rarity,index) in rarityDict" :key="index"
                  @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
             </div>
           </div>
@@ -360,7 +362,7 @@ onMounted(() => {
         </tr>
 
 
-        <tr v-for="(result, index) in operators_statistics_list" :key="index" v-show="result.show"
+        <tr v-for="(result, index) in operatorsStatisticsList" :key="index" v-show="result.show"
             class="rank_table_tr">
           <td class="rank_table_1 rank_table_text">
             <div class="rank_table_avatar">
