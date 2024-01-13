@@ -363,10 +363,10 @@
       <div class="control_bar_wrap">
         <h2>干员练度推荐</h2> <span>（测试）</span>
         <div class="operator-form">
-          <div class="operator-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
-            <div class="operator-sprite-avatar-bg">
-              <div :class="getOperatorSprite(recommend.charId)"></div>
-              <div class="sprite-alt-name">{{ recommend.name }}</div>
+          <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
+            <div class="operator-recommend-avatar-wrap">
+              <div :class="getAvatarForrecommend(recommend.charId)"></div>
+              <div class="recommend-operator-name">{{ recommend.name }}</div>
             </div>
             <div v-show="recommend.info.type==='skill'" class="operator-sprite-icon-bg">
               <div :class="getSkillSprite(recommend.info.iconId)"></div>
@@ -378,8 +378,8 @@
             </div>
 
             <div class="recommend-text">
-              {{ `本站平均练度为${recommend.avg.toFixed(2)}级` }} <br>
-              {{ `提升到3级的人占比为${(recommend.ratio * 100).toFixed(2)}%` }}
+              {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>
+              {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}
             </div>
 
           </div>
@@ -1220,6 +1220,10 @@ function getSkillSprite(id) {
 
 function getItemSprite(id) {
   return 'bg-' + id + " operator-ap-cost"
+}
+
+function getAvatarForrecommend(id) {
+  return "bg-" + id + " operator-recommend-avatar";
 }
 
 
