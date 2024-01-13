@@ -19,7 +19,7 @@
               <el-radio-group size="small" style="width: 90%; margin: 6px 5%" v-model="timeSelector"
                               @change="checkEndDate(timeSelector)">
                 <el-radio-button v-for="(schedule,name) in schedules" :key="name"
-                                 :label="name" style="width: 33%" v-show="name.indexOf('彩六')===-1">
+                                 :label="name" style="width: 33%" v-show="schedule.display">
                 </el-radio-button>
 
                 <!--                <el-radio-button label="感谢庆典(11.15)" style="width: 33%"></el-radio-button>-->
@@ -1041,8 +1041,8 @@ import cookie from "js-cookie";
 import * as echarts from "echarts";
 
 let myChart = "";
-import {ClientOnly} from "@/components/ClientOnly";
-import {usePageContext} from "@/renderer/usePageContext";
+import {ClientOnly} from "/src/components/ClientOnly";
+import {usePageContext} from "/src/renderer/usePageContext";
 import {ElMessage} from "element-plus";
 
 export default {
@@ -1129,13 +1129,15 @@ export default {
       pieData: [],
       current_pool_end_time:'',
       schedules: {
-        '春节(2.17)': {
-          endTime: '2024/02/17  03:58:00',
+        '春节(2.15)': {
+          display:true,
+          endTime: '2024/02/15  03:58:00',
           rewardType: "春节限定",
           daily_permit: false,
           daily_orundum: true
         },
         '彩六二期联动': {
+          display:true,
           endTime: '2024/03/26  03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
@@ -1150,7 +1152,7 @@ export default {
     this.TimeStampFormat();
     this.setPackData();
     this.setFirstRecharge();
-    this.timeSelector = '春节(2.17)'
+    this.timeSelector = '春节(2.15)'
     this.checkEndDate();
 
 
