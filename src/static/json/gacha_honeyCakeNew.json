@@ -1,44 +1,4 @@
 {
-  "照我以火复刻(源石)": {
-    "originium": 29,
-    "orundum": 0,
-    "permit": 3,
-    "permit10": 0,
-    "start": "2023/12/21  16:00:00",
-    "end": "2023/12/22  03:58:00",
-    "rewardType": "公共",
-    "module": "actRe"
-  },
-  "照我以火复刻(紫票)": {
-    "originium": 0,
-    "orundum": 2000,
-    "permit": 3,
-    "permit10": 0,
-    "start": "2023/12/21  16:00:00",
-    "end": "2023/12/22  03:58:00",
-    "rewardType": "公共",
-    "module": "actRe"
-  },
-  "元旦签到": {
-    "originium": 0,
-    "orundum": 200,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2024/01/01  16:00:00",
-    "end": "2024/01/02  03:58:00",
-    "rewardType": "公共",
-    "module": "honeyCake"
-  },
-  "雷姆必拓故事集": {
-    "originium": 16,
-    "orundum": 0,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2024/01/09  16:00:00",
-    "end": "2024/01/09  03:58:00",
-    "rewardType": "公共",
-    "module": "act"
-  },
   "登临意复刻(源石)": {
     "originium": 29,
     "orundum": 0,
@@ -97,16 +57,6 @@
     "start": "2024/02/03  16:00:00",
     "end": "2024/02/04  03:58:00",
     "rewardType": "春节限定",
-    "module": "honeyCake"
-  },
-    "24年1月剿灭更新": {
-    "originium": 0,
-    "orundum": 1500,
-    "permit": 0,
-    "permit10": 0,
-    "start": "2024/1/22 00:00:00",
-    "end": "2024/1/30 04:00:00",
-    "rewardType": "公共",
     "module": "honeyCake"
   },
   "源石尘复刻(源石)": {
