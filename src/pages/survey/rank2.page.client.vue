@@ -12,13 +12,14 @@ let rarityDict = [1, 2, 3, 4, 5, 6];
 let operatorsStatisticsResult = ref([]);
 
 
-let userCount = ref(0);
-let updateTime = ref("2023-05-01");
+let userCountText = ref(0);
+let updateTimeText = ref("2023-05-01");
 
 let displayOperatorList = ref([])
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
+    console.log(response.data)
     const {result, userCount, updateTime} = response.data
     for (const item of result) {
       const charId = item.charId
@@ -32,8 +33,8 @@ function getCharStatisticsResult() {
     }
     operatorsStatisticsResult.value = result
     addFilterCondition('rarity', 6)
-    userCount.value = userCount;
-    updateTime.value = updateTime;
+    userCountText.value = userCount
+    updateTimeText.value = updateTime
   });
 }
 
@@ -284,8 +285,8 @@ onMounted(() => {
               @click="collapseFilter()">筛选
       </button>
       <div id="updateTime">
-        调查人数{{ userCount }}<br/>
-        更新时间{{ updateTime }}
+        调查人数{{ userCountText }}<br/>
+        更新时间{{ updateTimeText }}
       </div>
     </div>
 
