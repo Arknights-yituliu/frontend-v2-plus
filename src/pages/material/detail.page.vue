@@ -105,34 +105,40 @@ function getStageDetailByStageId(stage_id) {
   stageEfficiency.value = stage_result_detail.stageEfficiency*100
   let extra_ratio = 100
   selectedStageCode.value = stage_result_detail.stageCode
+
   const drop_detail_list = stage_result_detail.dropDetailList
   for (const element of drop_detail_list) {
-    const ratio = formatNumber(element.ratio * 100, 1); //占比
+    const ratio = formatNumber(element.ratio * stage_result_detail.stageEfficiency * 100, 1); //占比
 
     let description = element.itemName;
     if (ratio > 10) {
       //产出占比大于10%视为主要产出
+      // console.log(element.itemName,'——',ratio,'%')
       description = description + "\n占" + ratio + "%"; //echart上的描述
       setPieChartObj("inside", ratio, description); //设置echart的数据
       extra_ratio -= ratio;
     }
     //产出占比小于10%视为次要产出
     if (ratio < 10) {
+      // console.log(element.itemName,'——',ratio,'%')
       description = description + "\n占" + ratio + "%";
       setPieChartObj("outside", ratio, description);
     }
   }
 
-  extra_ratio = formatNumber(extra_ratio, 1)
-  setPieChartObj("inside", extra_ratio, "其他产物\n占" + extra_ratio + "%");
-
   if (stageEfficiency.value < 100) {
     let waste_ratio = formatNumber(100 - stageEfficiency.value, 1)
+    extra_ratio -= waste_ratio
     setPieChartObj("inside", waste_ratio, "浪费的理智\n占" + waste_ratio + "%");
   }
 
-  console.log(pieDataMain.value)
-  console.log(pieDataExtra.value)
+  extra_ratio = formatNumber(extra_ratio, 1)
+  setPieChartObj("inside", extra_ratio, "其他产物\n占" + extra_ratio + "%");
+
+
+
+  // console.log(pieDataMain.value)
+  // console.log(pieDataExtra.value)
   pieChart(pieDataMain.value);
 }
 
