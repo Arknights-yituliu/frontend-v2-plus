@@ -1,11 +1,11 @@
 
-.operator-form{
- display: flex;
- flex-wrap: wrap;
- justify-content: center;
+.operator-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-.operator-card{
+.operator-card {
     padding: 4px;
     display: flex;
     box-shadow: var(--c-box-shadow);
@@ -15,12 +15,16 @@
 }
 
 
-.operator-sprite-avatar-bg{
+
+
+.operator-sprite-avatar-bg {
     width: 90px;
     height: 90px;
     position: relative;
     margin: 0 4px 0 0;
 }
+
+
 
 .operator-sprite-avatar {
     transform: scale(0.32);
@@ -30,19 +34,18 @@
     left: -55px;
 }
 
-.sprite-alt-name{
+.sprite-alt-name {
     width: 90px;
     position: absolute;
     text-align: center;
     top: 58px;
-    font-size: 14px;
+    font-size: 12px;
     left: -10px;
     color: darkorange;
 }
 
 
-
-.operator-sprite-icon-bg{
+.operator-sprite-icon-bg {
     width: 52px;
     height: 52px;
     position: relative;
@@ -53,7 +56,7 @@
     /*border: 1px solid red;*/
 }
 
-.operator-sprite-mod-bg{
+.operator-sprite-mod-bg {
     width: 52px;
     height: 72px;
     position: relative;
@@ -63,31 +66,31 @@
 
 
 .sprite-alt {
-    width: 60px;
+    width: 50px;
     text-align: center;
     position: absolute;
     top: 58px;
     color: darkorange;
     /*background-color: red;*/
-    font-size: 14px;
+    font-size: 12px;
 }
 
 
-.operator-level{
+.operator-level {
     width: 22px;
     height: 22px;
     color: white;
     background: url("/image/survey/rank/lv-bg.png");
-    background-size:22px ;
+    background-size: 22px;
     position: absolute;
-    top:0;
+    top: 0;
     right: 0;
     font-size: 12px;
     line-height: 26px;
     text-align: center;
 }
 
-.operator_potential{
+.operator_potential {
     width: 22px;
     position: absolute;
     top: 22px;
@@ -95,7 +98,7 @@
     filter: drop-shadow(2px 2px 2px #000000)
 }
 
-.operator-elite{
+.operator-elite {
     width: 22px;
     position: absolute;
     top: 44px;
@@ -113,21 +116,21 @@
     opacity: 0.8;
 }
 
-.operator-skill-rank{
+.operator-skill-rank {
     position: absolute;
-    left:0px;
+    left: 0px;
     top: 2px;
     width: 16px;
 }
 
-.operator-equip-image{
+.operator-equip-image {
     height: 44px;
     max-width: 44px;
     filter: drop-shadow(2px 2px 2px #000000)
 }
 
 
-.operator-ap-cost{
+.operator-ap-cost {
     transform: scale(0.3);
     /* border: 1px solid red; */
     border-radius: 0;
@@ -136,36 +139,36 @@
     left: -64px;
 }
 
-.operator-option-bar-wrap{
+.operator-option-bar-wrap {
     display: flex;
     padding: 4px;
     justify-content: center;
 }
 
-.operator-options{
-   margin: 8px;
-   box-shadow: var(--c-box-shadow);
+.operator-options {
+    margin: 8px;
+    box-shadow: var(--c-box-shadow);
 }
 
-.operator-option-title{
+.operator-option-title {
     /*font-size: 18px;*/
     text-align: center;
     padding: 4px;
 }
 
-.operator-option-bar{
+.operator-option-bar {
     display: flex;
     margin: 4px 0;
 }
 
-.operator-option{
+.operator-option {
     width: 60px;
     height: 52px;
     position: relative;
 
 }
 
-.operator-option-selected{
+.operator-option-selected {
     width: 60px;
     height: 52px;
     position: relative;
@@ -173,29 +176,65 @@
 }
 
 
-.image-skill-rank{
+.image-skill-rank {
     width: 60px;
 }
 
-.image-mod-rank{
+.image-mod-rank {
     width: 48px;
-    margin:2px 6px;
+    margin: 2px 6px;
 }
 
-.recommend-text{
+
+.operator-recommend-card{
+    padding: 4px;
+    display: flex;
+    box-shadow: var(--c-box-shadow);
+    background-color: var(--c-background-white-transparent);
+    margin: 4px;
+    width: 270px;
+}
+
+.operator-recommend-avatar-wrap {
+    width: 66px;
+    height: 90px;
+    position: relative;
+    /*background-color: #b3e19d;*/
+}
+
+.operator-recommend-avatar {
+    transform: scale(0.32);
+    border-radius: 0;
+    position: absolute;
+    top: -60px;
+    left: -58px;
+}
+
+.recommend-operator-name {
+    width: 90px;
+    position: absolute;
+    text-align: center;
+    top: 64px;
+    font-size: 12px;
+    left: -12px;
+    color: darkorange;
+}
+
+.recommend-text {
+    font-size: 14px;
     line-height: 40px;
     margin: 0 12px;
 }
 
 
-.opr-loading-btn{
+.opr-loading-btn {
     background-color: #007af5;
     color: #ffffff;
     font-weight: 600;
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    padding:8px 14px;
+    padding: 8px 14px;
     text-align: center;
     box-sizing: border-box;
     line-height: 18px;
