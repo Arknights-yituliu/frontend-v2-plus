@@ -102,6 +102,11 @@
                   </div>
                 </div>
               </div>
+              <el-divider></el-divider>
+              <div class="gacha_unit_child" style="display: flex;margin-top: 4px;margin-bottom: 4px;">
+                <a href="https://www.skland.com/act/vote-campaign"
+                   style="font-size: 16px;text-decoration: none;margin: 0px auto;text-align: center;height: 8px;">在森空岛投票支持'罗德岛基建BETA'，助力计算器的开发工作！</a>
+              </div>
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -1165,7 +1170,7 @@ export default {
     if (url_path === "gachaCal") {
       ElMessage({
         dangerouslyUseHTMLString: true,
-        message: '此页面已迁移至<a href="/tools/gachaCal">https://yituliu.site/tools/gachaCal</a>',
+        message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
         type: "warning",
       });
     }
