@@ -1142,7 +1142,7 @@ export default {
           daily_orundum: true
         },
         '彩六二期联动': {
-          display:true,
+          display:false,
           endTime: '2024/03/26  03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
