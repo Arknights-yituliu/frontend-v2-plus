@@ -506,12 +506,12 @@ function mouseUp() {
 
 .rougeCal-page{
   position: relative;
+  height: 1200px;
 }
 
 .background {
   background-image: url('/public/rouge/images/pure-background.jpg');
   background-size: cover;
-  height: 100vh;
   justify-content: center;
   align-items: center;
 }
@@ -523,7 +523,6 @@ function mouseUp() {
   transform: translateX(-50%);
   background: transparent;
   width: 1275px;
-  height: 100%;
 }
 
 .rounded-rectangle {
