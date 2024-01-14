@@ -160,7 +160,7 @@ function choiceChange2() {
   specialChoice.disabled = true;
   choiceBlock.innerHTML = "";
   choiceBlock.disabled = false;
-  const list = battleNames[choice];
+  list = battleNames[choice];
   for (let i = 0; i < list.length; i++)
     choiceBlock.add(new Option(list[i], "${i}"));
   choiceBlock.selectedIndex = -1;
@@ -173,7 +173,7 @@ function choiceChange3() {
   specialChoice.innerHTML = "";
   if (text in specialExtraName) {
     specialChoice.disabled = false;
-    const list = specialExtraName[text];
+    list = specialExtraName[text];
     for (let i = 0; i < list.length; i++)
       specialChoice.add(new Option(list[i], "${i}"));
   } else {
@@ -211,13 +211,12 @@ function bossBtnClicked(event) {
       bossSelected[7] = 1;
     }
   }
-  calc();
   resetBossBtn();
 }
 
 function resetBossBtn() {
   for (let i = 0; i < 12; i++) {
-    const button = document.getElementById("bossBtn" + i);
+    button = document.getElementById("bossBtn" + i);
     if (bossSelected[i] == 1)
       button.style.opacity = 1;
     else
@@ -324,9 +323,9 @@ function mouseUp() {
   <div class="rougeCal-page">
     <div class="background">
       <div class="transparent-panel" id="panel">
-        <img style="position:absolute; left:1172px; top: 205px" src="/public/rouge/images/delete.png" alt="delete"
+        <img style="position:absolute; left:1172px; top: 205px" src="/public/RougeCalc/images/delete.png" alt="delete"
              @click="removeBattle()">
-        <img style="position:absolute; left:45px; top: 60px" src="/public/rouge/images/logo.png" alt="logo">
+        <img style="position:absolute; left:45px; top: 60px" src="/public/RougeCalc/images/logo.png" alt="logo">
 
         <div class="rounded-rectangle" style="left: 40px; top: 240px; width: 350px; height: 255px;"></div>
         <div class="title-text" style="left: 40px; top: 192px;">挑战分数</div>
@@ -338,61 +337,61 @@ function mouseUp() {
         <div class="normal-text" style="left: 67px; top: 421px;">全程未取过钱</div>
         <div class="normal-text" style="left: 67px; top: 453px;">全程未进入树篱之途</div>
         <input type="number" style="left: 313px; top: 259px;" class="custom-input" id="inputField1" placeholder="0"
-               @input="calc()">
+               oninput="calc()">
         <input type="number" style="left: 313px; top: 291px;" class="custom-input" id="inputField2" placeholder="0"
-               @input="calc()">
+               oninput="calc()">
         <input type="number" style="left: 313px; top: 323px;" class="custom-input" id="inputField3" placeholder="0"
-               @input="calc()">
+               oninput="calc()">
         <input type="number" style="left: 313px; top: 355px;" class="custom-input" id="inputField4" placeholder="0"
-               @input="calc()">
+               oninput="calc()">
         <input type="number" style="left: 313px; top: 387px;" class="custom-input" id="inputField5" placeholder="0"
-               @input="calc()">
-        <select style="left: 313px; top: 419px;" class="custom-dropdown" id="choice1" @change="calc()">
+               oninput="calc()">
+        <select style="left: 313px; top: 419px;" class="custom-dropdown" id="choice1" onchange="calc()">
           <option value="0">是</option>
           <option value="1" selected>否</option>
         </select>
-        <select style="left: 313px; top: 451px;" class="custom-dropdown" id="choice2" @change="calc()">
+        <select style="left: 313px; top: 451px;" class="custom-dropdown" id="choice2" onchange="calc()">
           <option value="0">是</option>
           <option value="1" selected>否</option>
         </select>
 
         <div class="rounded-rectangle" style="left: 40px; top: 570px; width: 350px; height: 225px;"></div>
         <div class="title-text" style="left: 40px; top: 522px;">结局分数</div>
-        <button class="boss-button" style="left: 69px; top: 584px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/b-7-b.png" id="bossBtn0" style="opacity: 0.5">
+        <button class="boss-button" style="left: 69px; top: 584px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/b-7-b.png" id="bossBtn0" style="opacity: 0.5">
         </button>
-        <button class="boss-button" style="left: 141px; top: 584px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/b-6-b.png" id="bossBtn1" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 141px; top: 584px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/b-6-b.png" id="bossBtn1" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 213px; top: 584px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/b-5-b.png" id="bossBtn2" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 213px; top: 584px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/b-5-b.png" id="bossBtn2" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 285px; top: 584px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/b-4-b.png" id="bossBtn3" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 285px; top: 584px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/b-4-b.png" id="bossBtn3" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 69px; top: 651px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/b-7.png" id="bossBtn4" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 69px; top: 651px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/b-7.png" id="bossBtn4" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 141px; top: 651px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/b-6.png" id="bossBtn5" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 141px; top: 651px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/b-6.png" id="bossBtn5" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 213px; top: 651px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/b-5.png" id="bossBtn6" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 213px; top: 651px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/b-5.png" id="bossBtn6" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 285px; top: 651px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/r-1.png" id="bossBtn7" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 285px; top: 651px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/r-1.png" id="bossBtn7" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 69px; top: 718px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/r-2.png" id="bossBtn8" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 69px; top: 718px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/r-2.png" id="bossBtn8" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 141px; top: 718px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/r-3.png" id="bossBtn9" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 141px; top: 718px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/r-3.png" id="bossBtn9" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 213px; top: 718px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/r-4.png" id="bossBtn10" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 213px; top: 718px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/r-4.png" id="bossBtn10" style="opacity: 0.5;">
         </button>
-        <button class="boss-button" style="left: 285px; top: 718px;" @click="bossBtnClicked">
-          <img src="/public/rouge/images/r-5.png" id="bossBtn11" style="opacity: 0.5;">
+        <button class="boss-button" style="left: 285px; top: 718px;" @click="bossBtnClicked(event)">
+          <img src="/public/RougeCalc/images/r-5.png" id="bossBtn11" style="opacity: 0.5;">
         </button>
 
         <div class="rounded-rectangle" style="left: 450px; top: 240px; width: 350px; height: 295px;"></div>
@@ -404,15 +403,15 @@ function mouseUp() {
         <div class="normal-text" style="left: 477px; top: 389px;">是否持有路网</div>
         <div class="normal-text" style="left: 477px; top: 421px;">是否有捕猎惩罚</div>
         <div class="normal-text" style="left: 477px; top: 453px;">特殊加分</div>
-        <select style="left: 643px; top: 259px;" class="custom-dropdown-2" id="choice-bat-0" @change="choiceChange1()">
+        <select style="left: 643px; top: 259px;" class="custom-dropdown-2" id="choice-bat-0" onchange="choiceChange1()">
           <option value="banned" disabled selected hidden></option>
           <option value="0">紧急作战</option>
           <option value="1">特殊作战</option>
         </select>
         <select style="left: 643px; top: 291px;" class="custom-dropdown-2" id="choice-bat-1" disabled
-                @change="choiceChange2()"></select>
+                onchange="choiceChange2()"></select>
         <select style="left: 643px; top: 323px;" class="custom-dropdown-2" id="choice-bat-2" disabled
-                @change="choiceChange3()"></select>
+                onchange="choiceChange3()"></select>
         <select style="left: 643px; top: 355px;" class="custom-dropdown-2" id="choice-bat-3">
           <option value="0">是</option>
           <option value="1" selected>否</option>
@@ -429,10 +428,10 @@ function mouseUp() {
         <button style="left: 475px; top: 483px;" class="add-button" @click="add()">添加</button>
 
         <div class="title-text" style="left: 450px; top: 554px;">结算分数</div>
-        <input type="number" class="final-input" id="finalInputField" placeholder="0" @input="calc()">
+        <input type="number" class="final-input" id="finalInputField" placeholder="0" oninput="calc()">
 
         <div class="rounded-rectangle" style="left: 450px; top: 640px; width: 350px; height: 155px;"
-             @mouseenter="mouseEnter()" @mouseleave="mouseLeave()" @mousedown="mouseDown()" @mouseup="mouseUp()">
+             onmouseenter="mouseEnter()" onmouseleave="mouseLeave()" onmousedown="mouseDown()" onmouseup="mouseUp()">
           <p class="result-text" id="result">0</p>
           <p class="result-unit" id="resultUnit"></p>
           <div class="normal-text" style="left: 160px; top: 35px;"><b>总分！</b></div>
@@ -444,27 +443,27 @@ function mouseUp() {
         <table id="scoreList" class="custom-table"></table>
 
         <input type="checkbox" style="position: absolute; left: 1035px; top: 80px;" id="customUnitBox"
-               @change="checkboxChanged()">
+               onchange="checkboxChanged()">
         <div class="normal-text" style="left: 1065px; top: 80px;">使用自定义分数单位</div>
         <div class="normal-text" style="left: 983px; top: 120px;">{{}}</div>
         <input class="unit-input" style="left: 1002px; top: 111px;" id="unitName" placeholder="输入文字" disabled
-               @change="calc()">
+               onchange="calc()">
         <input type="number" class="unit-input" style="left: 1104px; top: 111px;" id="unitScore" placeholder="0"
                disabled
-               @change="calc()">
+               onchange="calc()">
 
         <div class="title-text" style="left: 40px; top: 850px;">友情链接</div>
         <a href="https://tomimi.cyou/zh/sami">
-          <img style="position: absolute; left: 40px; top: 900px;" src="/public/rouge/images/tomimi.png" alt="tomimi">
+          <img style="position: absolute; left: 40px; top: 900px;" src="/public/RougeCalc/images/tomimi.png" alt="tomimi">
           <div class="central-text" style="left: 105px; top: 1035px;">TOMIMI</div>
         </a>
         <a href="https://viktorlab.cn/akdata/dps/">
-          <img style="position: absolute; left: 220px; top: 900px;" src="/public/rouge/images/dpscalc.png"
+          <img style="position: absolute; left: 220px; top: 900px;" src="/public/RougeCalc/images/dpscalc.png"
                alt="dpscalc">
           <div class="central-text" style="left: 285px; top: 1035px;">DPS计算器</div>
         </a>
         <a href="https://mapcn.ark-nights.com/areas/rogue_3">
-          <img style="position: absolute; left: 400px; top: 900px;" src="/public/rouge/images/prtsmap.png" alt="tomimi">
+          <img style="position: absolute; left: 400px; top: 900px;" src="/public/RougeCalc/images/prtsmap.png" alt="tomimi">
           <div class="central-text" style="left: 465px; top: 1035px;">PRTS.Maps</div>
         </a>
         <div class="title-text" style="left: 700px; top: 850px;">相关链接</div>
@@ -491,17 +490,17 @@ function mouseUp() {
 <style scoped>
 @font-face {
   font-family: 'Novecento Wide Medium';
-  src: url('/public/rouge/font/Novecento WideMedium.otf');
+  src: url('/public/RougeCalc/font/Novecento WideMedium.otf');
 }
 
 @font-face {
   font-family: '标小智无界黑';
-  src: url('/public/rouge/font/标小智无界黑.TTF');
+  src: url('/public/RougeCalc/font/标小智无界黑.TTF');
 }
 
 @font-face {
   font-family: 'HarmonyOS Sans SC';
-  src: url('/public/rouge/font/HARMONYOS_SANS_SC_REGULAR.TTF');
+  src: url('/public/RougeCalc/font/HARMONYOS_SANS_SC_REGULAR.TTF');
 }
 
 .rougeCal-page{
@@ -510,7 +509,7 @@ function mouseUp() {
 }
 
 .background {
-  background-image: url('/public/rouge/images/pure-background.jpg');
+  background-image: url('/public/RougeCalc/images/pure-background.jpg');
   background-size: cover;
   justify-content: center;
   align-items: center;
