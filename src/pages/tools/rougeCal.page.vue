@@ -3,8 +3,8 @@
   <div class="background" >
     <p style="opacity: 0.5; position:fixed; right: 10px; bottom: 10px">版本号：v{{ version }}</p>
     <div class="transparent-panel" id="panel">
-      <img style="position:absolute; left:1172px; top: 205px" src="/public/RougeCalc/images/delete.png" alt="delete" @click="removeBattle()">
-      <img style="position:absolute; left:45px; top: 60px" src="/public/RougeCalc/images/logo.png" alt="logo">
+      <img style="position:absolute; left:1172px; top: 205px" src="/RougeCalc/images/delete.png" alt="delete" @click="removeBattle()">
+      <img style="position:absolute; left:45px; top: 60px" src="/RougeCalc/images/logo.png" alt="logo">
 
       <div class="title-text" style="left: 40px; top: 192px;">挑战分数</div>
       <div class="rounded-rectangle" style="left: 40px; top: 240px; width: 350px; height: 255px;">
@@ -112,15 +112,15 @@
 
       <div class="title-text" style="left: 40px; top: 850px;">友情链接</div>
       <a href="https://tomimi.cyou/zh/sami">
-        <img style="position: absolute; left: 40px; top: 900px;" src="/public/RougeCalc/images/tomimi.png" alt="tomimi">
+        <img style="position: absolute; left: 40px; top: 900px;" src="/RougeCalc/images/tomimi.png" alt="tomimi">
         <div class="central-text" style="left: 105px; top: 1035px;">TOMIMI</div>
       </a>
       <a href="https://viktorlab.cn/akdata/dps/">
-        <img style="position: absolute; left: 220px; top: 900px;" src="/public/RougeCalc/images/dpscalc.png" alt="dpscalc">
+        <img style="position: absolute; left: 220px; top: 900px;" src="/RougeCalc/images/dpscalc.png" alt="dpscalc">
         <div class="central-text" style="left: 285px; top: 1035px;">DPS计算器</div>
       </a>
       <a href="https://mapcn.ark-nights.com/areas/rogue_3">
-        <img style="position: absolute; left: 400px; top: 900px;" src="/public/RougeCalc/images/prtsmap.png" alt="tomimi">
+        <img style="position: absolute; left: 400px; top: 900px;" src="/RougeCalc/images/prtsmap.png" alt="tomimi">
         <div class="central-text" style="left: 465px; top: 1035px;">PRTS.Maps</div>
       </a>
       <div class="title-text" style="left: 700px; top: 850px;">相关链接</div>
@@ -162,18 +162,18 @@ export default {
         "全程未进入树篱之途"
       ],
       bossSrc: [
-        "/public/RougeCalc/images/b-7-b.png",
-        "/public/RougeCalc/images/b-6-b.png",
-        "/public/RougeCalc/images/b-5-b.png",
-        "/public/RougeCalc/images/b-4-b.png",
-        "/public/RougeCalc/images/b-7.png",
-        "/public/RougeCalc/images/b-6.png",
-        "/public/RougeCalc/images/b-5.png",
-        "/public/RougeCalc/images/r-1.png",
-        "/public/RougeCalc/images/r-2.png",
-        "/public/RougeCalc/images/r-3.png",
-        "/public/RougeCalc/images/r-4.png",
-        "/public/RougeCalc/images/r-5.png"
+        "/RougeCalc/images/b-7-b.png",
+        "/RougeCalc/images/b-6-b.png",
+        "/RougeCalc/images/b-5-b.png",
+        "/RougeCalc/images/b-4-b.png",
+        "/RougeCalc/images/b-7.png",
+        "/RougeCalc/images/b-6.png",
+        "/RougeCalc/images/b-5.png",
+        "/RougeCalc/images/r-1.png",
+        "/RougeCalc/images/r-2.png",
+        "/RougeCalc/images/r-3.png",
+        "/RougeCalc/images/r-4.png",
+        "/RougeCalc/images/r-5.png"
       ],
       battleText: [
         "关卡类型",
@@ -523,17 +523,17 @@ export default {
 
 @font-face {
   font-family: 'Novecento Wide Medium';
-  src: url('/public/RougeCalc/font/Novecento WideMedium.otf');
+  src: url('/RougeCalc/font/Novecento WideMedium.otf');
 }
 
 @font-face {
   font-family: '标小智无界黑';
-  src: url('/public/RougeCalc/font/标小智无界黑.TTF');
+  src: url('/RougeCalc/font/标小智无界黑.TTF');
 }
 
 @font-face {
   font-family: 'HarmonyOS Sans SC';
-  src: url('/public/RougeCalc/font/HARMONYOS_SANS_SC_REGULAR.TTF');
+  src: url('/RougeCalc/font/HARMONYOS_SANS_SC_REGULAR.TTF');
 }
 
 .rougeCal-page{
@@ -542,7 +542,7 @@ export default {
 }
 
 .background {
-  background-image: url('/public/RougeCalc/images/pure-background.jpg');
+  background-image: url('/RougeCalc/images/pure-background.jpg');
   background-size: cover;
   justify-content: center;
   align-items: center;
