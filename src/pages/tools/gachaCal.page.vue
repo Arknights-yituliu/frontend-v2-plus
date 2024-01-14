@@ -102,11 +102,6 @@
                   </div>
                 </div>
               </div>
-              <el-divider></el-divider>
-              <div class="gacha_unit_child" style="display: flex;margin-top: 4px;margin-bottom: 4px;">
-                <a href="https://www.skland.com/act/vote-campaign"
-                   style="font-size: 16px;text-decoration: none;margin: 0px auto;text-align: center;">在森空岛投票支持'罗德岛基建BETA'，助力计算器的开发工作！</a>
-              </div>
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -1142,12 +1137,13 @@ export default {
           daily_orundum: true
         },
         '彩六二期联动': {
-          display:false,
+          display:true,
           endTime: '2024/03/26  03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
           orundumCountDown: true
         }
+
       }
       // pack_data: this.pageContext.pageProps.pack_data,
     };
