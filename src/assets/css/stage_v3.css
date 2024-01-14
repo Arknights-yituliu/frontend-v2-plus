@@ -9,7 +9,7 @@
   -webkit-transition: 0.3s;
   transition: 0.3s;
   background: var(--c-stage-card-background-color);
-  max-width: 630px;
+  max-width: 616px;
   height: 120px;
   margin: 6px;
   border-radius: 8px;
@@ -68,7 +68,7 @@
   border-radius: 8px;
   flex-grow: 1;
   border: 1px solid #80808020;
-  min-width: 248px;
+  min-width: 261px;
   position: relative;
 }
 
@@ -246,12 +246,14 @@
   width: 56px;
   top: 0px;
   text-align: center;
+  font-style: italic;
 }
 .stage_card_3_5{
   height: 100%;
   width: 56px;
   top: 0px;
   text-align: center;
+  font-style: italic;
 }
 
 .stage_card_3_line_text {

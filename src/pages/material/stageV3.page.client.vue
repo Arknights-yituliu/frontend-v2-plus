@@ -10,15 +10,15 @@
       </div>
       <div class="op_title_tag">
         <!-- <div class="op_tag_0">图例</div> -->
-        <div :class="efficiencyTypeBtnClass('single')" @click="displaySingleOrCompleteEfficiency('single')">
+        <!-- <div :class="efficiencyTypeBtnClass('single')" @click="displaySingleOrCompleteEfficiency('single')">
           单一材料效率
-        </div>
-        <div :class="efficiencyTypeBtnClass('complete')" @click="displaySingleOrCompleteEfficiency('complete')">
+        </div> -->
+        <!-- <div :class="efficiencyTypeBtnClass('complete')" @click="displaySingleOrCompleteEfficiency('complete')">
           关卡综合效率
-        </div>
-        <div class="op_tag_0" @click="scrollToOrundumTable()">搓玉数据</div>
-        <div class="op_tag_0" @click="scrollToHistoryStageTable()">往期活动</div>
-        <div class="op_tag_0" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>
+        </div> -->
+        <div class="op_tag_1" @click="scrollToOrundumTable()">搓玉数据</div>
+        <div class="op_tag_1" @click="scrollToHistoryStageTable()">往期活动</div>
+        <div class="op_tag_1" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>
         <!-- <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div> -->
         <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
@@ -140,16 +140,74 @@
             </div> -->
       </div>
     </div>
+    <div class="stage_3_intro" style="height: 162px;">
+      <div class="stage_card_3s_list" style="margin: 0px 0px 0px 32px;height: 162px; ">
+        <div class="stage_card_3_line">
+          <div class="stage_card_3_0" style="float: left;">
+            <div :class="getItemT3Sprite('AP_GAMEPLAY')"
+              style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -108px;opacity: 1;"></div>
+          </div>
+          <div class="stage_card_3_1" style="width: 168px;">综合最优关</div>
+          <div class="stage_card_3_2" style="display: none;">
+          </div>
+          <div class="stage_card_3_3 stage_card_3_line_text" style="width: 80px;">
+            10-10
+          </div>
+          <div class="stage_card_3_4" style="width: 258px;line-height: 16px;">
+            综合效率<br>所有掉落物的价值之和/理智消耗
+          </div>
+          <div class="stage_card_3_5" style="width: 90px;line-height: 32px;">
+            综合效率
+          </div>
+        </div>
+        <div class="stage_card_3_line">
+          <div class="stage_card_3_0" style="float: left;">
+            <div :class="getItemT3Sprite('30024')"
+              style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -108px;opacity: 1;"></div>
+          </div>
+          <div class="stage_card_3_1" style="width: 168px;">需要<span style="color: #CA71C3;">紫材料</span>的最速关</div>
+          <div class="stage_card_3_2" style="display: none;">
+          </div>
+          <div class="stage_card_3_3 stage_card_3_line_text" style="width: 80px;">
+            LE-5
+          </div>
+          <div class="stage_card_3_4" style="width: 258px;line-height: 16px;">
+            <span style="color: #CA71C3;">T4</span>效率<br><span style="color: #CA71C3;">紫</span><span style="color: #98A2e6;">蓝</span><span style="color: #E8E0A2;">绿</span>白糖价值之和/理智消耗
+          </div>
+          <div class="stage_card_3_5" style="width: 90px;line-height: 32px;">
+            综合效率
+          </div>
+        </div>
+        <div class="stage_card_3_line">
+          <div class="stage_card_3_0" style="float: left;">
+            <div :class="getItemT3Sprite('30023')"
+              style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -108px;opacity: 1;"></div>
+          </div>
+          <div class="stage_card_3_1" style="width: 168px;">需要<span style="color: #98A2e6;">蓝材料</span>的最速关</div>
+          <div class="stage_card_3_2" style="display: none;">
+          </div>
+          <div class="stage_card_3_3 stage_card_3_line_text" style="width: 80px;">
+            MB-6
+          </div>
+          <div class="stage_card_3_4" style="width: 258px;line-height: 16px;">
+            <span style="color: #98A2e6;">T3</span>效率<br><span style="color: #98A2e6;">蓝</span><span style="color:#E8E0A2;">绿</span>白糖价值之和/理智消耗
+          </div>
+          <div class="stage_card_3_5" style="width: 90px;line-height: 32px;">
+            综合效率
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- 卡片区域 -->
     <div id="stage" style="display: flex;flex-wrap: wrap;font-size: 16px;">
       <div class="stage_card_3s" v-for="(stage, index) in item_card_data" :key="index"
         @click="getItemTableData(index, true)">
-        <!-- {{ stage }} -->
         <div :class="getItemT3Sprite(stage.series.r3)" class="stage_card_icon"></div>
         <div class="stage_card_3s_list">
           <div class="stage_card_3_line">
             <div class="stage_card_3_0" style="float: left;">
-              <div :class="getItemT3Sprite('AP_GAMEPLAY')" style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -80px;opacity: 1;"></div>
+              <div :class="getItemT3Sprite('AP_GAMEPLAY')"
+                style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -78px;opacity: 1;"></div>
             </div>
             <div class="stage_card_3_1"></div>
             <div class="stage_card_3_2" style="display: none;">
@@ -164,16 +222,11 @@
             <div class="stage_card_3_5">
               {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>
-            <!-- <div class="stage-efficiency-bar-wrap" style="display: block;">
-              <div
-                v-for="(style, index) in getEfficiencyBar(stage.leT3MaxEfficiencyStage.leT3Efficiency, stage.leT3MaxEfficiencyStage.stageEfficiency, 3)"
-                :key="index" :style="style">
-              </div>
-            </div> -->
           </div>
           <div class="stage_card_3_line">
             <div class="stage_card_3_0" style="float: left;">
-              <div :class="getItemT3Sprite(stage.series.r4)" style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -80px;opacity: 1;"></div>
+              <div :class="getItemT3Sprite(stage.series.r4)"
+                style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -78px;opacity: 1;"></div>
             </div>
             <div class="stage_card_3_1"></div>
             <div class="stage_card_3_2" style="display: none;">
@@ -191,7 +244,8 @@
           </div>
           <div class="stage_card_3_line">
             <div class="stage_card_3_0" style="float: left;">
-              <div :class="getItemT3Sprite(stage.series.r3)" style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -80px;opacity: 1;"></div>
+              <div :class="getItemT3Sprite(stage.series.r3)"
+                style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -78px;opacity: 1;"></div>
             </div>
             <div class="stage_card_3_1"></div>
             <div class="stage_card_3_2" style="display: none;">
@@ -209,7 +263,8 @@
           </div>
           <div class="stage_card_3_line" v-show="stage.series.r2">
             <div class="stage_card_3_0" style="float: left;">
-              <div :class="getItemT3Sprite(stage.series.r2)" style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -80px;opacity: 1;"></div>
+              <div :class="getItemT3Sprite(stage.series.r2)"
+                style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -78px;opacity: 1;"></div>
             </div>
             <div class="stage_card_3_1"></div>
             <div class="stage_card_3_2" style="display: none;">
@@ -229,8 +284,7 @@
       </div>
     </div>
 
-    <div id="stage_3">
-      <!-- {{ item_card_data[10] }} -->
+    <div id="stage_3" style="display:none;">
       <!-- 正式卡片 -->
       <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
         @click="getItemTableData(index, true)">
@@ -404,7 +458,7 @@
         </el-table-column>
         <el-table-column prop="primary" label="期望理智" :width="110" sortable>
           <template #default="scope">
-            {{ formatNumber(scope.row.apExpect , 1) }}
+            {{ formatNumber(scope.row.apExpect, 1) }}
           </template>
         </el-table-column>
         <el-table-column prop="secondary" label="副产物" :width="70">
