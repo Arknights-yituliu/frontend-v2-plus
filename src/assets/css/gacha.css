@@ -1,4 +1,5 @@
 #gacha {
+  overflow: hidden;
   margin: auto;
   padding: 0 12px;
   transform-style: preserve-3d;
