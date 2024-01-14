@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <div class="background">
+        <div class="transparent-panel" id="panel">
+            <img style="position:absolute; left:1172px; top: 205px" src="./images/delete.png" alt="delete" onclick="removeBattle()">
+            <img style="position:absolute; left:45px; top: 60px" src="./images/logo.png" alt="logo">
+
+            <div class="rounded-rectangle" style="left: 40px; top: 240px; width: 350px; height: 255px;"></div>
+            <div class="title-text" style="left: 40px; top: 192px;">挑战分数</div>
+            <div class="normal-text" style="left: 67px; top: 261px;">隐藏敌人（鸭、熊、狗）</div>
+            <div class="normal-text" style="left: 67px; top: 293px;">四层失与得紧急作战</div>
+            <div class="normal-text" style="left: 67px; top: 325px;">五层失与得紧急作战</div>
+            <div class="normal-text" style="left: 67px; top: 357px;">黑色足迹紧急作战</div>
+            <div class="normal-text" style="left: 67px; top: 389px;">未抓取软ban干员数量</div>
+            <div class="normal-text" style="left: 67px; top: 421px;">全程未取过钱</div>
+            <div class="normal-text" style="left: 67px; top: 453px;">全程未进入树篱之途</div>
+            <input type="number" style="left: 313px; top: 259px;" class="custom-input" id="inputField1" placeholder="0" oninput="calc()">
+            <input type="number" style="left: 313px; top: 291px;" class="custom-input" id="inputField2" placeholder="0" oninput="calc()">
+            <input type="number" style="left: 313px; top: 323px;" class="custom-input" id="inputField3" placeholder="0" oninput="calc()">
+            <input type="number" style="left: 313px; top: 355px;" class="custom-input" id="inputField4" placeholder="0" oninput="calc()">
+            <input type="number" style="left: 313px; top: 387px;" class="custom-input" id="inputField5" placeholder="0" oninput="calc()">
+            <select style="left: 313px; top: 419px;" class="custom-dropdown" id="choice1" onchange="calc()">
+                <option value="0">是</option>
+                <option value="1" selected>否</option>
+            </select>
+            <select style="left: 313px; top: 451px;" class="custom-dropdown" id="choice2" onchange="calc()">
+                <option value="0">是</option>
+                <option value="1" selected>否</option>
+            </select>
+
+            <div class="rounded-rectangle" style="left: 40px; top: 570px; width: 350px; height: 225px;"></div>
+            <div class="title-text" style="left: 40px; top: 522px;">结局分数</div>
+            <button class="boss-button" style="left: 69px; top: 584px;" onclick="bossBtnClicked(event)">
+                <img src="./images/b-7-b.png" id="bossBtn0" style="opacity: 0.5"></img>
+            </button>
+            <button class="boss-button" style="left: 141px; top: 584px;" onclick="bossBtnClicked(event)">
+                <img src="./images/b-6-b.png" id="bossBtn1" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 213px; top: 584px;" onclick="bossBtnClicked(event)">
+                <img src="./images/b-5-b.png" id="bossBtn2" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 285px; top: 584px;" onclick="bossBtnClicked(event)">
+                <img src="./images/b-4-b.png" id="bossBtn3" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 69px; top: 651px;" onclick="bossBtnClicked(event)">
+                <img src="./images/b-7.png" id="bossBtn4" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 141px; top: 651px;" onclick="bossBtnClicked(event)">
+                <img src="./images/b-6.png" id="bossBtn5" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 213px; top: 651px;" onclick="bossBtnClicked(event)">
+                <img src="./images/b-5.png" id="bossBtn6" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 285px; top: 651px;" onclick="bossBtnClicked(event)">
+                <img src="./images/r-1.png" id="bossBtn7" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 69px; top: 718px;" onclick="bossBtnClicked(event)">
+                <img src="./images/r-2.png" id="bossBtn8" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 141px; top: 718px;" onclick="bossBtnClicked(event)">
+                <img src="./images/r-3.png" id="bossBtn9" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 213px; top: 718px;" onclick="bossBtnClicked(event)">
+                <img src="./images/r-4.png" id="bossBtn10" style="opacity: 0.5;"></img>
+            </button>
+            <button class="boss-button" style="left: 285px; top: 718px;" onclick="bossBtnClicked(event)">
+                <img src="./images/r-5.png" id="bossBtn11" style="opacity: 0.5;"></img>
+            </button>
+
+            <div class="rounded-rectangle" style="left: 450px; top: 240px; width: 350px; height: 295px;"></div>
+            <div class="title-text" style="left: 450px; top: 192px;">关卡分数</div>
+            <div class="normal-text" style="left: 477px; top: 261px;">关卡类型</div>
+            <div class="normal-text" style="left: 477px; top: 293px;">关卡层数</div>
+            <div class="normal-text" style="left: 477px; top: 325px;">关卡名称</div>
+            <div class="normal-text" style="left: 477px; top: 357px;">是否无漏</div>
+            <div class="normal-text" style="left: 477px; top: 389px;">是否持有路网</div>
+            <div class="normal-text" style="left: 477px; top: 421px;">是否有捕猎惩罚</div>
+            <div class="normal-text" style="left: 477px; top: 453px;">特殊加分</div>
+            <select style="left: 643px; top: 259px;" class="custom-dropdown-2" id="choice-bat-0" onchange="choiceChange1()">
+                <option value="banned" disabled selected hidden></option>
+                <option value="0">紧急作战</option>
+                <option value="1">特殊作战</option>
+            </select>
+            <select style="left: 643px; top: 291px;" class="custom-dropdown-2" id="choice-bat-1" disabled onchange="choiceChange2()"></select>
+            <select style="left: 643px; top: 323px;" class="custom-dropdown-2" id="choice-bat-2" disabled onchange="choiceChange3()"></select>
+            <select style="left: 643px; top: 355px;" class="custom-dropdown-2" id="choice-bat-3">
+                <option value="0">是</option>
+                <option value="1" selected>否</option>
+            </select>
+            <select style="left: 643px; top: 387px;" class="custom-dropdown-2" id="choice-bat-4" disabled>
+                <option value="0">是</option>
+                <option value="1" selected>否</option>
+            </select>
+            <select style="left: 643px; top: 419px;" class="custom-dropdown-2" id="choice-bat-5" disabled>
+                <option value="0">是</option>
+                <option value="1" selected>否</option>
+            </select>
+            <select style="left: 643px; top: 451px;" class="custom-dropdown-2" id="choice-bat-6" disabled></select>
+            <button style="left: 475px; top: 483px;" class="add-button" onclick="add()">添加</button>
+            
+            <div class="title-text" style="left: 450px; top: 554px;">结算分数</div>
+            <input type="number" class="final-input" id="finalInputField" placeholder="0" oninput="calc()">
+
+            <div class="rounded-rectangle" style="left: 450px; top: 640px; width: 350px; height: 155px;" onmouseenter="mouseEnter()" onmouseleave="mouseLeave()" onmousedown="mouseDown()" onmouseup="mouseUp()">
+                <p class="result-text" id="result">0</p>
+                <p class="result-unit" id="resultUnit"></p>
+                <div class="normal-text" style="left: 160px; top: 35px;"><b>总分！</b></div>
+                <p class="normal-text" style="left: 10px; top: 115px;" id="hint" hidden>长按重置</p>
+            </div>
+
+            <div class="rounded-rectangle" style="left: 860px; top: 240px; width: 350px; height: 555px;"></div>
+            <div class="title-text" style="left: 860px; top: 192px;">关卡分数一览</div>
+            <table id="scoreList" class="custom-table"></table>
+
+            <input type="checkbox" style="position: absolute; left: 1035px; top: 80px;" id="customUnitBox" onchange="checkboxChanged()">
+            <div class="normal-text" style="left: 1065px; top: 80px;">使用自定义分数单位</div>
+            <div class="normal-text" style="left: 983px; top: 120px;">1　　　　　　=　　　　　　分</div>
+            <input class="unit-input" style="left: 1002px; top: 111px;" id="unitName" placeholder="输入文字" disabled onchange="calc()"></input>
+            <input type="number" class="unit-input" style="left: 1104px; top: 111px;" id="unitScore" placeholder="0" disabled onchange="calc()"></input>
+
+            <div class="title-text" style="left: 40px; top: 850px;">友情链接</div>
+            <a href="https://tomimi.cyou/zh/sami">
+                <img style="position: absolute; left: 40px; top: 900px;" src="./images/tomimi.png" alt="tomimi">
+                <div class="central-text" style="left: 105px; top: 1035px;">TOMIMI</div>
+            </a>
+            <a href="https://viktorlab.cn/akdata/dps/">
+                <img style="position: absolute; left: 220px; top: 900px;" src="./images/dpscalc.png" alt="dpscalc">
+                <div class="central-text" style="left: 285px; top: 1035px;">DPS计算器</div>
+            </a>
+            <a href="https://mapcn.ark-nights.com/areas/rogue_3">
+                <img style="position: absolute; left: 400px; top: 900px;" src="./images/prtsmap.png" alt="tomimi">
+                <div class="central-text" style="left: 465px; top: 1035px;">PRTS.Maps</div>
+            </a>
+            <div class="title-text" style="left: 700px; top: 850px;">相关链接</div>
+            <a href="https://live.bilibili.com/22476160">
+                <div class="link-text" style="left: 700px; top: 905px;">比赛直播间</div>
+            </a>
+            <div class="title-text" style="left: 700px; top: 1020px;">制作人员</div>
+            <div class="normal-text" style="left: 700px; top: 1075px;">程序：</div>
+            <a href="https://space.bilibili.com/22275485">
+                <div class="link-text" style="left: 750px; top: 1075px;">_noname</div>
+            </a>
+            <div class="normal-text" style="left: 700px; top: 1105px;">美术：</div>
+            <a href="https://space.bilibili.com/1684845011">
+                <div class="link-text" style="left: 750px; top: 1105px;">里雪りあ</div>
+            </a>
+            <a href="https://space.bilibili.com/12786648">
+                <div class="link-text" style="left: 750px; top: 1135px;">無冕Crownless</div>
+            </a>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
