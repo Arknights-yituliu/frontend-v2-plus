@@ -10,7 +10,7 @@
               <span class="collapse-item_title">
                 共计{{ toFixedByAcc(gachaTimes_total, 0) }}抽，氪金{{ sellsCount }}元
               </span>
-              <span style="font-size: 20px; color: rgb(136 136 136 / 69%); margin-left: 16px">yituliu.site</span>
+              <span style="font-size: 20px; color: rgb(136 136 136 / 69%); margin-left: 16px">ytl.viktorlab.cn</span>
             </template>
             <!-- <el-divider></el-divider> -->
             <div class="gacha_unit" id="total">
@@ -18,13 +18,14 @@
 
               <el-radio-group size="small" style="width: 90%; margin: 6px 5%" v-model="timeSelector"
                 @change="checkEndDate(timeSelector)">
-                <el-radio-button v-for="(schedule, name) in schedules" :key="name" :label="name" style="width: 33%"
-                  v-show="schedule.display">
+                <!-- <el-radio-button v-for="(schedule, name) in schedules" :key="name" :label="name" style="width: 33%"
+                  v-show="schedule.display"> -->
+                  <el-radio-button v-for="(schedule, name) in schedules" :key="name" :label="name" style="width: 25%">
                 </el-radio-button>
 
                 <!--                <el-radio-button label="感谢庆典(11.15)" style="width: 33%"></el-radio-button>-->
                 <!--                <el-radio-button label="春节(2.17)" type="primary" style="width: 33%"></el-radio-button>-->
-                <el-radio-button label="敬请期待" type="primary" style="width: 33%" disabled></el-radio-button>
+                <!-- <el-radio-button label="敬请期待" type="primary" style="width: 33%" disabled></el-radio-button> -->
                 <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
               </el-radio-group>
               <!-- <el-divider></el-divider> -->
@@ -429,7 +430,7 @@
               <div class="gacha_unit_child_instruction" style="padding: 4px 16px; font-size: 18px;">
                 标签内为每抽价格(元)，颜色用于区分性价比<br />
                 仅计入礼包内抽卡资源，紫色高于648，橙色高于大月卡<br />
-                <a href="https://yituliu.site/pack">点击跳转礼包完整性价比</a>
+                <a href="https://ytl.viktorlab.cn/pack">点击跳转礼包完整性价比</a>
               </div>
               <!-- 月常礼包 -->
               <div class="gacha_unit_fold">
@@ -899,7 +900,7 @@
                       <img class="foot_unit_pic" src="/image/website/prts.webp" alt="" />PRTS
                     </div>
                   </a>
-                  <a href="https://yituliu.site/">
+                  <a href="https://ytl.viktorlab.cn/">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: rgb(128,128,128)">
                       <img class="foot_unit_pic" src="/image/website/ico64.png" alt="" />一图流主站
                     </div>
@@ -1050,7 +1051,21 @@ export default {
           daily_permit: false,
           daily_orundum: true
         },
-        '彩六二期联动': {
+        '彩六联动二期 A(3.19)': {
+          display: false,
+          endTime: '2024/03/26  03:58:00',
+          rewardType: "联动限定",
+          permitCountDown: false,
+          orundumCountDown: true
+        },
+        '彩六联动二期 B(3.26)': {
+          display: false,
+          endTime: '2024/03/26  03:58:00',
+          rewardType: "联动限定",
+          permitCountDown: false,
+          orundumCountDown: true
+        },
+        '彩六联动二期 C(4.02)': {
           display: false,
           endTime: '2024/03/26  03:58:00',
           rewardType: "联动限定",
@@ -1079,7 +1094,7 @@ export default {
     if (url_path === "gachaCal") {
       ElMessage({
         dangerouslyUseHTMLString: true,
-        message: '此页面已迁移至<a href="/tools/gachaCal">https://yituliu.site/tools/gachaCal</a>',
+        message: '此页面已迁移至<a href="/tools/gachaCal">https://ytl.viktorlab.cn/tools/gachaCal</a>',
         type: "warning",
       });
     }
