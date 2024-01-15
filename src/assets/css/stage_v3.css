@@ -469,6 +469,7 @@
   height: 54px;
   font-size: 14px;
   position: relative;
+  margin: auto;
 }
 
 .act-table-item-sprite {
