@@ -284,6 +284,10 @@
           </div>
         </div>
       </div>
+      <div class="stage_card_3s" style="height: 0px;border: 0px;"></div>
+      <div class="stage_card_3s" style="height: 0px;border: 0px;"></div>
+      <div class="stage_card_3s" style="height: 0px;border: 0px;"></div>
+      <div class="stage_card_3s" style="height: 0px;border: 0px;"></div>
     </div>
 
     <div id="stage_3" style="display:none;">
