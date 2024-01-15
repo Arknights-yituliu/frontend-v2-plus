@@ -394,7 +394,9 @@ function getPeriod(index) {
   const executionTime = executionTimeList.value[index]
   const start = executionTime.start.getHours().toString().padStart(2, '0') + ':' + executionTime.start.getMinutes().toString().padStart(2, '0')
   const end = executionTime.end.getHours().toString().padStart(2, '0') + ':' + executionTime.end.getMinutes().toString().padStart(2, '0')
-  if (executionTime.start > executionTime.end) {
+
+
+  if (executionTime.start.getHours() > executionTime.end.getHours()) {
     return [[start, '23:59'], ['00:00', end]]
   }
 
