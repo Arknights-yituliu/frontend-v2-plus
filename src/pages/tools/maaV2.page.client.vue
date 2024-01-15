@@ -237,44 +237,26 @@ function chooseRoom(roomType, index) {
 }
 
 let selectBtnKey = ref({})
-let filterOperatorList = ref({})
+let popupOperatorList = ref({})
 
 
 function filterBtnStatus(key, label) {
   return selectBtnKey.value === `${key}+${label}`
 }
 
-let filterCondition = ref({
-  func: () => {
-  }
-})
-
 /**
  * 筛选干员
  * @param condition
  * @param key 选项的分类名
  */
-function filterOperatorByTag(condition, key) {
-
-  //清空干员列表
-  filterOperatorList.value = {}
-
-  const btnKey = `${key}+${condition.label}`
-  //判断按钮是否已经选中，已经选中则清空暂存的筛选函数和按钮key，撤销选中状态
-  if (selectBtnKey.value === btnKey) {
-    selectBtnKey.value = ''
-    filterCondition.value = ''
-  } else {
-    //暂存筛选函数和按钮key
-    selectBtnKey.value = btnKey
-    filterCondition.value = condition;
+function filterOperatorList(condition, key) {
+  selectBtnKey.value = `${key}+${condition.label}`
+  popupOperatorList.value = {}
+  for (const operator of building_table) {
+    if (condition.func(operator))
+      popupOperatorList.value[operator.charId] = operator
   }
-
-
-  //筛选干员
-  commonFilterOperator()
 }
-
 
 //干员搜索输入框
 let searchInputText = ref('')
@@ -282,42 +264,17 @@ let searchInputText = ref('')
  * 根据输入的名称和技能描述搜索干员
  */
 const searchOperatorDebounce = debounce(() => {
-  //清空干员列表
-  filterOperatorList.value = {}
-  //筛选干员
-  commonFilterOperator()
+  if (searchInputText.value === '') return
+  const date = new Date()
+  popupOperatorList.value = {}
+  console.log(date.getHours(), '-', date.getMinutes())
+  for (const operator of building_table) {
+    if (operator.name.indexOf(searchInputText.value) > -1 ||
+        operator.description.indexOf(searchInputText.value) > -1)
+      popupOperatorList.value[operator.charId] = operator
+  }
 }, 500)
 
-/**
- * 通用的筛选干员逻辑
- */
-function commonFilterOperator() {
-  for (const operator of building_table) {
-    // 当按钮key有值时通过暂存的筛选函数进行筛选
-    if (selectBtnKey.value && !filterCondition.value.func(operator)) {
-      continue;
-    }
-    //通过输入关键词筛选
-    if (searchInputText.value && !operatorHasKeyword(operator)) {
-      continue;
-    }
-    if (!selectBtnKey.value && !searchInputText.value) {
-      continue
-    }
-    filterOperatorList.value[operator.charId] = operator
-  }
-}
-
-/**
- * 判断干员的干员名称、技能名称、技能描述是否包含输入的搜索关键词
- * @param operator 干员信息
- * @return {boolean} 是否包含关键词
- */
-function operatorHasKeyword(operator) {
-  return operator.name.indexOf(searchInputText.value) > -1 ||
-      operator.description.indexOf(searchInputText.value) > -1 ||
-      operator.buffName.indexOf(searchInputText.value) > -1
-}
 
 const roomPopupStyle = "width:75%"
 
@@ -670,7 +627,7 @@ function importSchedule(schedule) {
 
 
 onMounted(() => {
-  filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], 'room')
+  filterOperatorList(operatorFilterConditionTable.room.conditions[0], 'room')
 })
 
 </script>
@@ -876,7 +833,7 @@ onMounted(() => {
           <span :style="`color:${room.color}`">{{ room.name }}</span>
           <c-button v-for="(condition,index) in room.conditions" :key="index"
                     :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
-                    @click="filterOperatorByTag(condition,key)">
+                    @click="filterOperatorList(condition,key)">
             {{ condition.label }}
           </c-button>
         </div>
@@ -884,7 +841,7 @@ onMounted(() => {
 
       <div class="operator-check-box">
         <div class="option-avatar-sprite-wrap"
-             v-for="(operator,charId) in filterOperatorList"
+             v-for="(operator,charId) in popupOperatorList"
              :key="charId" @click="setFiammetta('target',operator.name)">
           <div :class="getOptionAvatar(operator.charId)"></div>
         </div>
@@ -1065,7 +1022,7 @@ onMounted(() => {
           <span :style="`color:${room.color}`">{{ room.name }}</span>
           <c-button v-for="(condition,index) in room.conditions" :key="index"
                     :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
-                    @click="filterOperatorByTag(condition,key)">
+                    @click="filterOperatorList(condition,key)">
             {{ condition.label }}
           </c-button>
         </div>
@@ -1073,13 +1030,13 @@ onMounted(() => {
 
       <div class="schedule-operator-search-input-box">
         <span style="padding:0 20px">搜索干员
-          <span style="font-style: italic;font-size: 12px">（可输入干员名、技能描述，与条件筛选不可同时生效)</span>
+          <span style="font-style: italic;font-size: 12px">（可输入干员名、技能描述，与条件筛选同时只生效其中一个)</span>
         </span>
         <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
       </div>
       <div class="operator-check-box">
         <div class="option-avatar-sprite-wrap"
-             v-for="(operator,charId) in filterOperatorList"
+             v-for="(operator,charId) in popupOperatorList"
              :key="charId" @click="chooseOperator(operator.name)">
           <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>
           <div class="option-operator-name">{{ operator.name }}</div>
