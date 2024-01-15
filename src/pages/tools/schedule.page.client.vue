@@ -1072,10 +1072,9 @@ onMounted(() => {
       </div>
 
       <div class="schedule-operator-search-input-box">
-        <span style="padding:0 20px">搜索干员
-          <span style="font-style: italic;font-size: 12px">（可输入干员名、技能描述，与条件筛选不可同时生效)</span>
-        </span>
+        <span style="padding:0 16px">搜索干员</span>
         <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
+        <span style="font-style: italic;font-size: 14px">（搜索栏可输入干员名、技能描述，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>
       </div>
       <div class="operator-check-box">
         <div class="option-avatar-sprite-wrap"
