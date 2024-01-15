@@ -258,21 +258,22 @@ function filterOperatorList(condition, key) {
   }
 }
 
+//干员搜索输入框
 let searchInputText = ref('')
-
-const searchOperatorDebounce = debounce(()=>{
-  if(searchInputText.value === '') return
-  const date =  new Date()
+/**
+ * 根据输入的名称和技能描述搜索干员
+ */
+const searchOperatorDebounce = debounce(() => {
+  if (searchInputText.value === '') return
+  const date = new Date()
   popupOperatorList.value = {}
-  console.log(date.getHours(),'-',date.getMinutes())
+  console.log(date.getHours(), '-', date.getMinutes())
   for (const operator of building_table) {
-    if (operator.name.indexOf(searchInputText.value)>-1||
-        operator.description.indexOf(searchInputText.value)>-1)
+    if (operator.name.indexOf(searchInputText.value) > -1 ||
+        operator.description.indexOf(searchInputText.value) > -1)
       popupOperatorList.value[operator.charId] = operator
   }
-},500)
-
-
+}, 500)
 
 
 const roomPopupStyle = "width:75%"
@@ -1028,7 +1029,9 @@ onMounted(() => {
       </div>
 
       <div class="schedule-operator-search-input-box">
-        <span style="padding:0 20px">搜索干员（可输入干员名、技能描述）</span>
+        <span style="padding:0 20px">搜索干员
+          <span style="font-style: italic;font-size: 12px">（可输入干员名、技能描述，与条件筛选同时只生效其中一个)</span>
+        </span>
         <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
       </div>
       <div class="operator-check-box">
