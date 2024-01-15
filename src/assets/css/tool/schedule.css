@@ -5,7 +5,6 @@
 }
 
 
-
 .schedule-header {
     width: 100%;
     display: flex;
@@ -16,10 +15,10 @@
     justify-content: space-between;
 }
 
-.schedule-divider{
+.schedule-divider {
     width: 100%;
     height: 1px;
-    border-bottom:1px solid var(--c-border-color)
+    border-bottom: 1px solid var(--c-border-color)
 }
 
 .schedule-header-left {
@@ -131,7 +130,7 @@
     justify-content: center;
 }
 
-.room-arrow-wrap{
+.room-arrow-wrap {
     width: 50px;
     display: flex;
     align-items: center;
@@ -139,7 +138,6 @@
     justify-content: center;
     color: var(--c-schedule-arrow-color);
 }
-
 
 
 .room-wrap-left {
@@ -179,14 +177,13 @@
     height: 70px;
     --room-operator-short: 180px;
     --room-operator-long: 300px;
-    border:1px solid var(--c-background-color);
+    border: 1px solid var(--c-background-color);
 }
 
 
 .blank {
     box-shadow: none;
 }
-
 
 
 .room-product {
@@ -392,7 +389,7 @@
     align-items: center;
     flex-wrap: wrap;
     height: 50px;
-    min-width: 300px;
+    min-width: 274px;
     border: var(--c-border);
 }
 
@@ -431,9 +428,15 @@
     box-shadow: var(--c-box-shadow);
 }
 
+.schedule-operator-search-input-box {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+}
+
 .operator-check-box {
     width: 1240px;
-    margin: 20px auto;
+    margin: 10px auto 100px;
     height: 300px;
     display: flex;
     flex-wrap: wrap;
@@ -443,13 +446,11 @@
 
 
 .option-avatar-sprite-wrap {
-    margin: 2px;
+    margin: 2px 8px 20px;
     position: relative;
     font-size: 15px;
     width: 60px;
     height: 60px;
-    --option-position: calc((60px - 180px) / 2);
-    --option-scale: scale(calc(60 / 183));
     box-shadow: var(--c-box-shadow);
     /*background-color: #0b73dc;*/
 }
@@ -457,9 +458,18 @@
 
 .option-avatar-sprite {
     position: absolute;
-    top: var(--option-position);
-    left: var(--option-position);
-    transform: var(--option-scale);
+    top: -60px;
+    left: -60px;
+    transform: scale(0.328);
+}
+
+.option-operator-name {
+    width: 80px;
+    position: absolute;
+    top: 62px;
+    left: -10px;
+    font-size: 12px;
+    text-align: center;
 }
 
 /*.option-avatar-name {*/

@@ -10,6 +10,7 @@ import character_table from '/src/static/json/survey/character_table_simple.json
 import {cMessage} from '/src/custom/message.js'
 import schedule_menu from '/src/static/json/build/schedule_menu.json'
 import {fileRead} from '/src/utils/fileRead'
+import {debounce} from "/src/utils/debounce";
 import building_table from '/src/static/json/build/building_table.json'
 import feedBack from '/src/components/feedBack.vue';
 import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
@@ -256,6 +257,22 @@ function filterOperatorList(condition, key) {
       popupOperatorList.value[operator.charId] = operator
   }
 }
+
+let searchInputText = ref('')
+
+const searchOperatorDebounce = debounce(()=>{
+  if(searchInputText.value === '') return
+  const date =  new Date()
+  popupOperatorList.value = {}
+  console.log(date.getHours(),'-',date.getMinutes())
+  for (const operator of building_table) {
+    if (operator.name.indexOf(searchInputText.value)>-1||
+        operator.description.indexOf(searchInputText.value)>-1)
+      popupOperatorList.value[operator.charId] = operator
+  }
+},500)
+
+
 
 
 const roomPopupStyle = "width:75%"
@@ -572,30 +589,29 @@ function importSchedule(schedule) {
       }
     }
 
-    if(period){
+    if (period) {
       isPeriod.value = true
-      if(period.length===1){
-        let executionTime = {start:new Date(),end:new Date()}
-        for(const dateIndex in period[0]){
-          const dateSplit =  period[0][dateIndex].split(":")
-          const hour =   parseInt(dateSplit[0])
+      if (period.length === 1) {
+        let executionTime = {start: new Date(), end: new Date()}
+        for (const dateIndex in period[0]) {
+          const dateSplit = period[0][dateIndex].split(":")
+          const hour = parseInt(dateSplit[0])
           const minute = parseInt(dateSplit[1])
-          console.log(hour,':',minute)
+          console.log(hour, ':', minute)
 
-          if(dateIndex === '0'){
+          if (dateIndex === '0') {
             executionTime.start.setHours(hour)
             executionTime.start.setMinutes(minute)
 
           }
-          if(dateIndex === '1'){
+          if (dateIndex === '1') {
             executionTime.end.setHours(hour)
             executionTime.end.setMinutes(minute)
-             console.log(executionTimeList.value[index].end)
+            console.log(executionTimeList.value[index].end)
           }
 
           executionTimeList.value[index] = executionTime
         }
-
 
 
       }
@@ -607,7 +623,6 @@ function importSchedule(schedule) {
 
 // const ScheduleCache = localStorage.getItem("ScheduleCache");
 // if (ScheduleCache) plans_template.value = JSON.parse(ScheduleCache)
-
 
 
 onMounted(() => {
@@ -641,7 +656,6 @@ onMounted(() => {
       <feed-back/>
     </div>
   </div>
-
 
 
   <c-popup v-model:visible="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
@@ -982,7 +996,7 @@ onMounted(() => {
       <div class="room-set">
         <span class="room-set-description">入驻的干员</span>
         <div class="selected-operator-wrap">
-          <div class="room-avatar-sprite-wrap" style="margin: 0 20px 0 0"
+          <div class="room-avatar-sprite-wrap"
                v-for="(charId,index) in getRoomOperators(selectedRoomType,selectedRoomIndex)" :key="index">
             <div :class="getAvatar(charId)"></div>
             <i class="iconfont icon-error operator-delete-icon" @click="deleteOperator(charId)">
@@ -994,7 +1008,7 @@ onMounted(() => {
 
         <span class="room-set-description">复制的干员</span>
         <div class="selected-operator-wrap">
-          <div class="room-avatar-sprite-wrap" style="margin: 0 4px"
+          <div class="room-avatar-sprite-wrap"
                v-for="(charId,index) in tmpOperatorList"
                :key="index">
             <div :class="getAvatar(charId)"></div>
@@ -1013,12 +1027,16 @@ onMounted(() => {
         </div>
       </div>
 
+      <div class="schedule-operator-search-input-box">
+        <span style="padding:0 20px">搜索干员（可输入干员名、技能描述）</span>
+        <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
+      </div>
       <div class="operator-check-box">
         <div class="option-avatar-sprite-wrap"
              v-for="(operator,charId) in popupOperatorList"
              :key="charId" @click="chooseOperator(operator.name)">
           <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>
-          <!--        <div class="option-avatar-name">{{ operator.name }}</div>-->
+          <div class="option-operator-name">{{ operator.name }}</div>
         </div>
       </div>
     </div>

@@ -75,7 +75,7 @@
 
     /*输入框样式*/
     --c-input-bg:'';
-    --c-input-border:1px solid var(--c-black-4);
+    --c-input-border:1px solid var(--c-black-6);
     --c-input-border-focus:1px solid #6ec3ff;
     --c-input-text-color:var(--c-white-2);
 
