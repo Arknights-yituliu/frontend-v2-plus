@@ -3,13 +3,13 @@ import {cMessage} from "../custom/message";
 /**
  * 函数防抖
  * @param {function(...[*])} func 传入一个函数
- * @param {number} duration  防抖间隔时间
+ * @param {number} duration  防抖间隔时间 单位ms
  * @returns {(function(...[*]): void)|*} 返回一个参数可空的函数
  */
 function debounce(func, duration = 1000) {
     let timeout = 0;
     return function (...args) {
-        console.log(timeout)
+
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             func.apply(this, args);
