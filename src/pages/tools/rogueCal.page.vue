@@ -1,5 +1,5 @@
 <template>
-  <div class="rougeCal-page">
+  <div class="rogueCal-page">
   <div class="background" >
     <p style="opacity: 0.5; position:fixed; right: 10px; bottom: 10px">版本号：v{{ version }}</p>
     <div class="transparent-panel" id="panel">
@@ -41,13 +41,13 @@
             v-for="(imgSrc, index) in bossSrc"
             :key="index"
             class="boss-button"
-            :style="{ left: (index % 4) * 78 + 19 + 'px', top: Math.floor(index / 4) * 68 + 14 + 'px' }"
+            :style="{ left: (index % 4) * 80 + 18 + 'px', top: Math.floor(index / 4) * 99 + 19 + 'px' }"
             @click="bossBtnClicked(index)">
           <img :src="imgSrc" :style="{ opacity: imgOpacity[index] }">
         </button>
       </div>
 
-      <div class="title-text" style="left: 450px; top: 192px;">关卡分数</div>
+      <div class="title-text" style="left: 450px; top: 192px;">关卡额外分数</div>
       <div class="rounded-rectangle" style="left: 450px; top: 240px; width: 350px; height: 295px;">
         <div
             v-for="(text, index) in battleText"
@@ -87,16 +87,20 @@
         <p class="normal-text" style="left: 10px; top: 115px;" id="hint" hidden>长按重置</p>
       </div>
 
-      <div class="title-text" style="left: 860px; top: 192px;">关卡分数一览</div>
+      <div class="title-text" style="left: 860px; top: 192px;">关卡额外分数一览</div>
       <div class="rounded-rectangle" style="left: 860px; top: 240px; width: 350px; height: 555px;">
         <table class="custom-table">
           <tr
-              v-for="(row, rowIndex) in scoreList"
-              :key="rowIndex"
-              :class="{ highlighted: rowIndex === highlightedRow }"
-              @click="battleRowClicked(rowIndex)">
-            <td v-for="(cell, cellIndex) in row" :key="cellIndex">
-              {{ cell }}
+            v-for="(row, rowIndex) in scoreList"
+            :key="rowIndex"
+            :class="{ highlighted: rowIndex === highlightedRow }"
+            @click="battleRowClicked(rowIndex)">
+            <td>
+              <div class="normal-text" :style="{ top: (rowIndex * 50 + 5) + 'px', left: '10px' }">{{ row[0][0] }}</div>
+              <div class="small-text" :style="{ top: (rowIndex * 50 + 27) + 'px', left: '10px' }">{{ row[0][1] }}</div>
+            </td>
+            <td>
+              <div class="normal-text" :style="{ top: (rowIndex * 50 + 5) + 'px', right: '10px' }">{{ row[1][isEndingThreeDone? 0 : 1] }}</div>
             </td>
           </tr>
         </table>
@@ -157,7 +161,7 @@ export default {
         "四层失与得紧急作战",
         "五层失与得紧急作战",
         "黑色足迹紧急作战",
-        "未抓取软ban干员数量",
+        "阵容补偿干员数",
         "全程未取过钱",
         "全程未进入树篱之途"
       ],
@@ -170,10 +174,6 @@ export default {
         "/RougeCalc/images/b-6.png",
         "/RougeCalc/images/b-5.png",
         "/RougeCalc/images/r-1.png",
-        "/RougeCalc/images/r-2.png",
-        "/RougeCalc/images/r-3.png",
-        "/RougeCalc/images/r-4.png",
-        "/RougeCalc/images/r-5.png"
       ],
       battleText: [
         "关卡类型",
@@ -181,22 +181,22 @@ export default {
         "关卡名称",
         "是否无漏",
         "是否持有路网",
-        "是否有捕猎惩罚",
+        "捕猎平衡是否生效",
         "特殊加分"
       ],
-      version: "1.1"
+      version: "1.2"
     };
   },
   setup() {
     const challengeScore = [10, 30, 80, 30, 25, 66, 200];
     const challengeCount = ref(["", "", "", "", ""]);
     const challengeSelect = ref([1, 1]);
-    const bossScore = [230, 360, 220, 170, 180, 10, 160, 30, 30, 20, 20, 10];
+    const bossScore = [230, 360, 220, 170, 180, 10, 160, 30];
     const twoEnding = 200;
     const threeEnding = 100;
     const bothThreeFourEnding = 100;
-    const imgOpacity = ref(Array(12).fill(0.5));
-    const bossSelected = ref(Array(12).fill(0));
+    const imgOpacity = ref(Array(8).fill(0.5));
+    const bossSelected = ref(Array(8).fill(0));
     const battleDropdowns = ref([
       {
         options: [{ value: "2", text: "", disabled: true }, { value: "0", text: "紧急作战" }, { value: "1", text: "特殊作战" }],
@@ -245,7 +245,7 @@ export default {
       "狡兽九窟": 30,
       "坍缩体的午后": 40,
       "公司纠葛": 40,
-      "人造物狂欢节": 90,
+      "人造物狂欢节": 100,
       "乐理之灾": 60,
       "亡者行军": 60,
       "本能污染": 60,
@@ -254,7 +254,7 @@ export default {
       "何处无山海": 50,
       "生人勿近": 40,
       "霜与沙": 50,
-      "生灵的终点": 90
+      "生灵的终点": 80
     };
     const battleSpecialName = ["呼吸", "大地醒转", "夺树者", "黄沙幻境", "天途半道", "惩罚", "豪华车队", "英雄无名", "正义使者", "亘古仇敌"];
     const battleSpecialScore = {
@@ -295,6 +295,7 @@ export default {
     const unitName = ref("");
     const unitScore = ref("");
     const scoreList = ref([]);
+    const isEndingThreeDone = ref(false);
 
     const unit = computed(() => {
       if (useCustomUnit.value && unitName.value != "" && unitScore.value != "" && unitScore.value != "0") {
@@ -311,8 +312,7 @@ export default {
         return total;
       }, 0);
 
-      for (let i = 0; i < 12; i++)
-        total += bossScore[i] * bossSelected.value[i];
+      total += bossSelected.value.reduce((total, num, index) => total + num * bossScore[index], 0);
       var bossCnt = 0;
       for (let i = 0; i < 7; i++)
         if (bossSelected.value[i] > 0)
@@ -323,7 +323,7 @@ export default {
 
       total += parseInt(settlementScore.value) || 0;
 
-      total += scoreList.value.reduce((total, row) => total + (parseInt(row[1]) || 0), 0);
+      total += scoreList.value.reduce((total, row) => total + (parseInt(row[1][isEndingThreeDone.value? 0 : 1]) || 0), 0);
 
       if (unit.value != "") {
         return (total * 1.0 / parseInt(unitScore.value)).toFixed(2);
@@ -336,6 +336,7 @@ export default {
 
     const resetBossBtn = () => {
       for (let i = 0; i < 12; i++) imgOpacity.value[i] = bossSelected.value[i] == 1? 1 : 0.5;
+      isEndingThreeDone.value = bossSelected.value[7] > 0;
     };
 
     const mouseEnter = () => {
@@ -354,6 +355,8 @@ export default {
         challengeCount.value = challengeCount.value.map(() => "");
         challengeSelect.value = challengeSelect.value.map(() => 1);
         bossSelected.value = bossSelected.value.map(() => 0);
+        settlementScore.value = "";
+        scoreList.value = [];
         resetBossBtn();
       }, 1000);
     }
@@ -374,14 +377,6 @@ export default {
       if (id == 4 && bossSelected.value[4] != 0) bossSelected.value[0] = 0;
       if (id == 1 && bossSelected.value[1] != 0) bossSelected.value[5] = 0;
       if (id == 5 && bossSelected.value[5] != 0) bossSelected.value[1] = 0;
-      if (bossSelected.value[0] + bossSelected.value[4] > 0 && bossSelected.value[8] == 0) {
-        if (id == 8) {
-          bossSelected.value[0] = 0;
-          bossSelected.value[4] = 0;
-        } else {
-          bossSelected.value[8] = 1;
-        }
-      }
       if (bossSelected.value[1] + bossSelected.value[5] > 0 && bossSelected.value[7] == 0) {
         if (id == 7) {
           bossSelected.value[1] = 0;
@@ -430,6 +425,7 @@ export default {
         battleDropdowns.value[2].disabled = false;
         var lev = parseInt(battleDropdowns.value[1].selectedValue) || 0;
         battleDropdowns.value[2].options = [];
+        battleDropdowns.value[2].selectedValue = -1;
         for (let i = 0; i < battleNames[lev].length; i++)
           battleDropdowns.value[2].options.push({ value: "" + i, text: battleNames[lev][i] });
       } else if (id == 2) {
@@ -451,22 +447,51 @@ export default {
       var type = battleDropdowns.value[0].selectedValue;
       var name = getSelectedText(battleDropdowns.value[2]);
       var total = 0;
+      var totalWithoutRoadnet = 0;
       var times = 1.0;
+      var extra = "";
+      var roadnet = false;
       if (type == "0") {
         if (name in battleScore) total += battleScore[name];
-        if (battleDropdowns.value[4].selectedValue == "0") total += 20;
-        if (battleDropdowns.value[3].selectedValue == "0") times += 0.2;
-        if (battleDropdowns.value[5].selectedValue == "0") times -= 0.7;
+        totalWithoutRoadnet = total;
+        if (battleDropdowns.value[4].selectedValue == "0") {
+          total += 20;
+          if (extra != "") extra += "，";
+          extra += "路网";
+          roadnet = true;
+        }
+        if (battleDropdowns.value[5].selectedValue == "0") {
+          times -= 0.7;
+          if (extra != "") extra += "，";
+          extra += "捕猎";
+        }
+        if (battleDropdowns.value[3].selectedValue == "0") {
+          times += 0.2;
+          if (extra != "") extra += "，";
+          extra += "无漏";
+        }
+        name = "紧急" + name;
       } else if (type == "1") {
         total = battleSpecialScore[name][parseInt(battleDropdowns.value[3].selectedValue) || 0];
+        totalWithoutRoadnet = total;
+        if (battleDropdowns.value[3].selectedValue == "0") {
+          if (extra != "") extra += "，";
+          extra += "无漏";
+        }
       } else {
         return;
       }
       var sp = getSelectedText(battleDropdowns.value[6]);
-      if (sp in specialExtraScore) total += specialExtraScore[sp];
-      total *= times;
+      if (sp in specialExtraScore) {
+        total += specialExtraScore[sp];
+        totalWithoutRoadnet += specialExtraScore[sp];
+        if (extra != "") extra += "，";
+        extra += sp;
+      }
+      total = Math.round(total * times);
+      totalWithoutRoadnet = Math.round(totalWithoutRoadnet * times);
       if (total > 0) {
-        scoreList.value.push([name, total]);
+        scoreList.value.push([[name, extra, roadnet], [total, totalWithoutRoadnet]]);
         console.log("新增战斗：" + name + "，得分为" + total);
       }
     };
@@ -478,7 +503,6 @@ export default {
     };
 
     const removeBattle = () => {
-      console.log("remove, scoreList.value.size="+scoreList.value.length);
       if (highlightedRow.value >= 0 && highlightedRow.value < scoreList.value.length) {
         scoreList.value.splice(highlightedRow.value, 1);
         highlightedRow.value = -1;
@@ -486,7 +510,7 @@ export default {
     };
 
     return { challengeCount, challengeSelect, imgOpacity, bossSelected, battleDropdowns, settlementScore, useCustomUnit, scoreList,
-      sum, unit, unitLeft, unitName, unitScore, highlightedRow,
+      sum, unit, unitLeft, unitName, unitScore, highlightedRow, isEndingThreeDone,
       mouseEnter, mouseLeave, mouseDown, mouseUp, bossBtnClicked, battleChoiceChange, addBattle, battleRowClicked, removeBattle };
   },
   methods: {
@@ -536,7 +560,7 @@ export default {
   src: url('/RougeCalc/font/HARMONYOS_SANS_SC_REGULAR.TTF');
 }
 
-.rougeCal-page{
+.rogueCal-page {
   position: relative;
   height: 1200px;
 }
@@ -574,6 +598,13 @@ export default {
 .normal-text {
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 16px;
+  color: #000;
+  position: absolute;
+}
+
+.small-text {
+  font-family: 'HarmonyOS Sans SC', sans-serif;
+  font-size: 13px;
   color: #000;
   position: absolute;
 }
@@ -716,14 +747,12 @@ export default {
 .boss-button {
   background-color: transparent;
   border: transparent;
-  width: 64px;
-  height: 64px;
+  width: 70px;
+  height: 90px;
   position: absolute;
 }
 
 .custom-table {
-  font-family: 'HarmonyOS Sans SC', sans-serif;
-  font-size: 16px;
   background-color: transparent;
   border: transparent;
   left: 10px;
@@ -734,16 +763,8 @@ export default {
   table-layout: fixed;
 }
 
-.custom-table td:nth-child(1) {
-  text-align: left;
-}
-
-.custom-table td:nth-child(2) {
-  text-align: right;
-}
-
 .custom-table tr {
-  height: 30px;
+  height: 50px;
 }
 
 .highlighted {
