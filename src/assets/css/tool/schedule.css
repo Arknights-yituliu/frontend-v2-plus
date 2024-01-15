@@ -437,7 +437,7 @@
 
 .operator-check-box {
     width: 1240px;
-    margin: 10px auto 100px;
+    margin: 10px auto;
     height: 300px;
     display: flex;
     flex-wrap: wrap;
