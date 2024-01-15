@@ -93,31 +93,36 @@ let pageTitle = ref("");
 function getPageTitle(path) {
   if (path === "/") return (pageTitle.value = "材料一图流");
 
-  if (path.indexOf('tools/maa') > -1) {
-    aside_collapse()
-  }
-
   for (let i of routes.value) {
     if (i.isChild) {
       // console.log(path, " ", i.path);
       if (i.path.indexOf(path) > -1) {
         pageTitle.value = i.text;
-        break;
+
       }
       for (let c of i.child) {
         // console.log(path, " ", c.path);
         if (c.path.indexOf(path) > -1) {
           pageTitle.value = c.text;
-          break;
+
         }
       }
     } else {
       // console.log(path, " ", i.path);
       if (i.path.indexOf(path) > -1) {
         pageTitle.value = i.text;
-        break;
+
       }
     }
+  }
+
+  if (path.indexOf('tools/schedule') > -1) {
+    aside_collapse()
+  }
+
+  if (path.indexOf('tools/maa') > -1) {
+    aside_collapse()
+    pageTitle.value = "排班生成器旧版-已停止维护,请使用新版生成器"
   }
 }
 
