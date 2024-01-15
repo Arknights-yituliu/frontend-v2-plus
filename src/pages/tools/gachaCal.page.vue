@@ -229,15 +229,16 @@
                 绿票商店第三层
               </div>
               <div class="gacha_unit_child">
-              现有绿票数<input class="gacha_unit_child_inputbox" type="text" @change="compute()" v-model.number="orundum_green"
-                oninput="value=value.replace(/[^0-9-]+/g, '')" />，有x绿票可换
+                现有绿票数<input class="gacha_unit_child_inputbox" type="text" @change="compute()"
+                  v-model.number="orundum_green_x"
+                  oninput="value=value.replace(/[^0-9-]+/g, '')" />，有{{ orundum_green_y }}绿票可换
                 <div class="gacha_resources_unit" style="width: 174px">
                   <div :class="getSpriteImg('4003icon')"></div>
-                  <div style="width: 75px">{{ dailyRewards }}</div>
+                  <div style="width: 75px">{{ orundum_green }}</div>
                 </div>
               </div>
-                <div class="gacha_unit_info">现有绿票数 - 第一层共需1490绿票 - 第二层共需10100绿票 = 可用于换玉的绿票数</div>
-                <div class="gacha_unit_info">鉴于第二层有不少性价比较低的物品，建议囤够2w以上绿票再考虑绿票换玉</div>
+              <div class="gacha_unit_info">现有绿票数 - 第一层共需1490绿票 - 第二层共需10100绿票 = 可用于换玉的绿票数</div>
+              <div class="gacha_unit_info">鉴于第二层有不少性价比较低的物品，建议囤够2w以上绿票再考虑绿票换玉</div>
             </div>
           </el-collapse-item>
           <!-- 日常积累 -->
@@ -996,6 +997,9 @@ export default {
       annihilation: 0, //未通过剿灭个数
       orundum_ap: 0, //用于搓玉的理智数量
       orundum_rate: 1.09, //搓玉系数
+      orundum_green: 0, //现有绿票数
+      orundum_green_x: 0, //可用于换玉的绿票数 
+      orundum_green_y: 0, //绿票换出的玉
       item_30012: 0,
       item_30062: 0,
       orundumByManufacture: 0,
@@ -1292,10 +1296,16 @@ export default {
       if (this.storeFlag) {
         this.storeValue = 1;
       }
+      //计算绿票商店
+      if (this.orundum_green_x > 11590) {
+        this.orundum_green_y=this.orundum_green_x - 11590;
+      }else{
+        this.orundum_green_y=0;
+      }
+      this.orundum_green = parseInt(this.orundum_green_y / 50)*30;
 
       //  计算自定义合成玉和搓玉
-      let custom_exist = this.customValue + this.orundum_ap * this.orundum_rate + this.item_30012 * 5 + this.item_30062 * 10;
-
+      let custom_exist = this.customValue + this.orundum_ap * this.orundum_rate + this.item_30012 * 5 + this.item_30062 * 10 + this.orundum_green_y;
       this.orundumByManufacture = this.item_30012 * 5 + this.item_30062 * 10;
       this.LMDCost = this.item_30012 * 800 + this.item_30062 * 1000;
 
@@ -1613,6 +1623,9 @@ export default {
       if (this.originium_6 === "") this.originium_6 = 0;
       if (this.customValue === "") this.customValue = 0;
       if (this.orundum_ap === "") this.orundum_ap = 0;
+      if (this.orundum_green === "") this.orundum_green = 0;
+      if (this.orundum_green_x === "") this.orundum_green_x = 0;
+      if (this.orundum_green_y === "") this.orundum_green_y = 0;
       if (this.orundum_rate === "") this.orundum_rate = 0;
 
       this.paradox = parseInt(this.paradox);
@@ -1625,6 +1638,10 @@ export default {
       this.originium_6 = parseInt(this.originium_6);
       this.customValue = parseInt(this.customValue);
       this.orundum_ap = parseInt(this.orundum_ap);
+      this.orundum_green = parseInt(this.orundum_green);
+      this.orundum_green_x = parseInt(this.orundum_green_x);
+      this.orundum_green_y = parseInt(this.orundum_green_y);
+
       this.orundum_rate = parseFloat(this.orundum_rate);
 
       this.calResults.originium_exist = parseInt(this.calResults.originium_exist);
