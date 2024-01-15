@@ -1,5 +1,11 @@
 
 {
+        "path": "/tools/maa",
+        "text": "排班表生成器",
+        "isChild": false
+      },
+
+{
         "path": "/about/dev",
         "text": "一图流开放平台",
         "isChild": false

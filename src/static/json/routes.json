@@ -37,13 +37,8 @@
         "isChild": false
       },
       {
-        "path": "/tools/maa",
-        "text": "排班表生成器",
-        "isChild": false
-      },
-      {
         "path": "/tools/maaV2",
-        "text": "排班表生成器V2-测试版",
+        "text": "排班表生成器V2",
         "isChild": false
       }
     ]
