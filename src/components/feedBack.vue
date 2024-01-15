@@ -5,20 +5,15 @@ let feedbackPopupVisible = ref(false)
 
 let feedbackPopupStyle = 'width:550px;'
 
-function openQQDocsPage() {
-  window.open('https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill')
+const feedbackLinkList = {
+  "GitHubIssues":'https://github.com/Arknights-yituliu/frontend-v2-plus/issues',
+  "OfficialAccount":'https://space.bilibili.com/688411531',
+  "QQFan":'https://jq.qq.com/?_wv=1027&k=q1z3p9Yj',
+  "QQDocs":'https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill'
 }
 
-function openQQPage() {
-  window.open('https://jq.qq.com/?_wv=1027&k=q1z3p9Yj')
-}
-
-function openOfficialAccountPage() {
-  window.open('https://space.bilibili.com/688411531')
-}
-
-function openGithubIssuesPage() {
-  window.open('https://github.com/Arknights-yituliu/frontend-v2-plus/issues')
+function openNewPage(url){
+  window.open(url)
 }
 
 </script>
@@ -41,14 +36,14 @@ function openGithubIssuesPage() {
       <tr>
         <td>Github issues</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openGithubIssuesPage()">点击前往</c-button>
+          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往</c-button>
         </td>
-        <td></td>
+        <td>国内访问体验稍差一点</td>
       </tr>
       <tr>
         <td>粉丝群539600566</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openQQPage()">点击前往</c-button>
+          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</c-button>
         </td>
         <td>进群@山桜反馈，如果不在找管理员</td>
       </tr>
@@ -62,14 +57,14 @@ function openGithubIssuesPage() {
       <tr>
         <td>B站@罗德岛基建BETA</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openOfficialAccountPage()">点击前往</c-button>
+          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往</c-button>
         </td>
         <td>直接私信反馈</td>
       </tr>
       <tr>
         <td>QQ问卷</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openQQDocsPage()">点击前往</c-button>
+          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.QQDocs)">点击前往</c-button>
         </td>
         <td>无法交流，只能处理简单的问题（例如错字）</td>
       </tr>
