@@ -129,7 +129,7 @@
 
       <a class="href_black" href="https://github.com/yamasakura">
         <div class="mdui-card dev-card dev-card-member">
-          <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/84258011" alt="" />
+          <img class="dev-card-icon" src="/image/website/anon.jpg" alt="" />
           <div class="dev-card-text">
             <div class="dev-card-text-title">山桜</div>
             <div class="dev-card-text-content" style="font-style: italic">站长</div>
