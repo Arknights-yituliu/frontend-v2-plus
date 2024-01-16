@@ -1051,21 +1051,21 @@ export default {
           daily_permit: false,
           daily_orundum: true
         },
-        '彩六联动二期 A(3.19)': {
+        '彩六联动二期(3.19)': {
           display: false,
           endTime: '2024/03/26  03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
           orundumCountDown: true
         },
-        '彩六联动二期 B(3.26)': {
+        '彩六联动二期(3.26)': {
           display: false,
           endTime: '2024/03/26  03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
           orundumCountDown: true
         },
-        '彩六联动二期 C(4.02)': {
+        '彩六联动二期(4.02)': {
           display: false,
           endTime: '2024/03/26  03:58:00',
           rewardType: "联动限定",
