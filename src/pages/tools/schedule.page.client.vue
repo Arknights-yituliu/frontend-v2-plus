@@ -643,8 +643,8 @@ function importSchedule(schedule) {
           executionTime.start.setMinutes(start.minute)
 
           const end = getHourAndMinute(period[0][1])
-          executionTime.start.setHours(end.hour)
-          executionTime.start.setMinutes(end.minute)
+          executionTime.end.setHours(end.hour)
+          executionTime.end.setMinutes(end.minute)
         }
       }
 
@@ -655,8 +655,8 @@ function importSchedule(schedule) {
           executionTime.start.setMinutes(start.minute)
 
           const end = getHourAndMinute(period[1][1])
-          executionTime.start.setHours(end.hour)
-          executionTime.start.setMinutes(end.minute)
+          executionTime.end.setHours(end.hour)
+          executionTime.end.setMinutes(end.minute)
         }
       }
 
