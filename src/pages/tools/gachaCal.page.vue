@@ -28,6 +28,7 @@
                 <!-- <el-radio-button label="敬请期待" type="primary" style="width: 33%" disabled></el-radio-button> -->
                 <!-- <el-radio-button label="????" disabled style="width:32%;"></el-radio-button> -->
               </el-radio-group>
+              <div class="gacha_unit_info">彩六联动二期的排期尚不明确，3.26的可能性较大，请自行斟酌</div>
               <!-- <el-divider></el-divider> -->
               <div id="gacha_total_chart">
                 <div id="gacha_total_pie" ref="gacha_total_pie"
