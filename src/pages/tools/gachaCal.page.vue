@@ -1106,8 +1106,8 @@ export default {
       this.$notify({
         title: "2023.10.26更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong>1.更新了春节池攒抽排期<br></strong>",
-        // message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
+        // message: "<strong>1.更新了春节池攒抽排期<br></strong>",
+        message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
         duration: 6000,
       });
     },
