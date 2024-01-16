@@ -82,7 +82,7 @@
 
       <div class="rounded-rectangle" style="left: 450px; top: 640px; width: 350px; height: 155px;" @mouseenter="mouseEnter()" @mouseleave="mouseLeave()" @mousedown="mouseDown()" @mouseup="mouseUp()">
         <p class="result-text" ref="sumText">{{ sum }}</p>
-        <p class="result-unit" :style="{ left: unitLeft + 'px' }">{{ unit }}</p>
+        <p class="result-unit" :style="{ left: 250 + 'px' }">{{ unit }}</p>
         <div class="normal-text" style="left: 160px; top: 35px;"><b>总分！</b></div>
         <p class="normal-text" style="left: 10px; top: 115px;" id="hint" hidden>长按重置</p>
       </div>
