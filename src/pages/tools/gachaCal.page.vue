@@ -1053,7 +1053,7 @@ export default {
         },
         '彩六联动二期(3.19)': {
           display: false,
-          endTime: '2024/03/26  03:58:00',
+          endTime: '2024/03/19  03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
           orundumCountDown: true
@@ -1067,7 +1067,7 @@ export default {
         },
         '彩六联动二期(4.02)': {
           display: false,
-          endTime: '2024/03/26  03:58:00',
+          endTime: '2024/04/02  03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
           orundumCountDown: true
