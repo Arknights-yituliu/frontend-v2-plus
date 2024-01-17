@@ -45,6 +45,11 @@
         "path": "/tools/maa",
         "text": "排班表生成器旧版",
         "isChild": false
+      },
+      {
+        "path": "/tools/miniTools",
+        "text": "迷你工具箱",
+        "isChild": false
       }
     ]
   },
