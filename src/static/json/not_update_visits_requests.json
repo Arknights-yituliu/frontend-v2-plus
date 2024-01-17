@@ -1,0 +1,11 @@
+[
+  {
+    "path": "/tools/miniTools",
+    "text": "迷你工具箱",
+    "hasFather": true,
+    "father": {
+      "fatherPath": "/tools",
+      "fatherText": "一图流工具箱"
+    }
+  }
+]

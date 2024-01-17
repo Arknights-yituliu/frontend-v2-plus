@@ -4,6 +4,7 @@ import toolApi from "/src/api/tool";
 import {usePageContext} from "/src/renderer/usePageContext";
 import login from "/src/pages/survey/login.vue";
 import routesJson from "/src/static/json/routes.json";
+import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
 
 const pageContext = usePageContext();
 
@@ -54,7 +55,7 @@ let themeV2 = ref('')
 function switchTheme() {
   console.log(themeV2.value)
 
-  themeV2.value = themeV2.value === 'dark'?'light':'dark'
+  themeV2.value = themeV2.value === 'dark' ? 'light' : 'dark'
 
   const container = document.getElementById("container");
   let className = container.className;
@@ -70,7 +71,7 @@ function switchTheme() {
   localStorage.setItem("theme_v2", themeV2.value)
 }
 
-function getThemeIcon(){
+function getThemeIcon() {
 }
 
 // watch(theme, () => {
@@ -86,6 +87,7 @@ function getThemeIcon(){
 
 
 const routes = ref(routesJson);
+const noUpVi = ref(notUpdateVisitsRequestsJson);
 
 
 let pageTitle = ref("");
@@ -127,19 +129,38 @@ function getPageTitle(path) {
 }
 
 function updateVisits(pathName) {
-  //访问/直接更新
+  //访问"/"直接更新
   if (pathName === "/") {
-    toolApi.updateVisits(pathName);
+    console.log("访问的是首页");
     return 1;
   }
 
-  pathName = pathName.replace("/src/pages")
-  pathName = substrPath(pathName);
-  pathName = substrPath(pathName);
+  //过滤掉不需要更新访问的路径
+  let isUp = true
+  for (let i of noUpVi.value) {
+    if (i.path === pathName)
+      isUp = false
+  }
 
-  console.log("访问的页面是：", pathName);
-  toolApi.updateVisits(pathName);
+  if (isUp) {
+    pathName = removeTrailingSlash(pathName, 2);
+    console.log("访问的页面是：", pathName);
+    toolApi.updateVisits(pathName);
+  } else {
+    pathName = removeTrailingSlash(pathName, 2); //剔除两次
+    console.log("访问的页面是：", pathName);
+  }
   return 1;
+}
+
+//剔除末尾“/”
+function removeTrailingSlash(path, substrCount) {
+  // substrCount 剔除次数
+  let devPath = path.replace("/src/pages", "");
+  for (let i = 0; i < substrCount; i++) {
+    devPath = substrPath(devPath);
+  }
+  return devPath;
 }
 
 function substrPath(pathName) {
@@ -158,7 +179,7 @@ onMounted(() => {
   const pathName = window.location.pathname;
   updateVisits(pathName);
   getPageTitle(pathName);
-  themeV2.value =  localStorage.getItem('theme_v2')==='dark'?'dark':'light'
+  themeV2.value = localStorage.getItem('theme_v2') === 'dark' ? 'dark' : 'light'
   console.log(themeV2.value)
 });
 </script>
@@ -177,19 +198,19 @@ onMounted(() => {
 
     <div class="spacer"></div>
     <i class="iconfont theme_button" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
-<!--    <c-popover :name="'theme_menu'">-->
-<!--      <template #title>-->
-<!--        &lt;!&ndash;        <i style="font-size: 32px;color: rgb(230,230,230)"&ndash;&gt;-->
-<!--        &lt;!&ndash;           class="iconfont icon-moon" id="menu-button-desktop" @click="aside_collapse()">&ndash;&gt;-->
-<!--        &lt;!&ndash;        </i>&ndash;&gt;-->
-<!--        <i class="iconfont icon-sun theme_button">-->
-<!--        </i>-->
-<!--      </template>-->
-<!--      <div class="theme-option-wrap" id="theme_menu">-->
-<!--        <div class="theme-option" @click="switchTheme('dark')">深色模式</div>-->
-<!--        <div class="theme-option" @click="switchTheme('light')">浅色模式</div>-->
-<!--      </div>-->
-<!--    </c-popover>-->
+    <!--    <c-popover :name="'theme_menu'">-->
+    <!--      <template #title>-->
+    <!--        &lt;!&ndash;        <i style="font-size: 32px;color: rgb(230,230,230)"&ndash;&gt;-->
+    <!--        &lt;!&ndash;           class="iconfont icon-moon" id="menu-button-desktop" @click="aside_collapse()">&ndash;&gt;-->
+    <!--        &lt;!&ndash;        </i>&ndash;&gt;-->
+    <!--        <i class="iconfont icon-sun theme_button">-->
+    <!--        </i>-->
+    <!--      </template>-->
+    <!--      <div class="theme-option-wrap" id="theme_menu">-->
+    <!--        <div class="theme-option" @click="switchTheme('dark')">深色模式</div>-->
+    <!--        <div class="theme-option" @click="switchTheme('light')">浅色模式</div>-->
+    <!--      </div>-->
+    <!--    </c-popover>-->
 
     <!--    <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny"-->
     <!--               size="large"/>-->
@@ -226,7 +247,6 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
 
 
 <style scoped>
