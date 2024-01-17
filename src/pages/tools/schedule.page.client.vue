@@ -635,33 +635,46 @@ function importSchedule(schedule) {
 
     if (period) {
       isPeriod.value = true
+      let executionTime = {start: new Date(), end: new Date()}
       if (period.length === 1) {
-        let executionTime = {start: new Date(), end: new Date()}
-        for (const dateIndex in period[0]) {
-          const dateSplit = period[0][dateIndex].split(":")
-          const hour = parseInt(dateSplit[0])
-          const minute = parseInt(dateSplit[1])
-          console.log(hour, ':', minute)
+        if (period[0].length === 2) {
+          const start = getHourAndMinute(period[0][0])
+          executionTime.start.setHours(start.hour)
+          executionTime.start.setMinutes(start.minute)
 
-          if (dateIndex === '0') {
-            executionTime.start.setHours(hour)
-            executionTime.start.setMinutes(minute)
-
-          }
-          if (dateIndex === '1') {
-            executionTime.end.setHours(hour)
-            executionTime.end.setMinutes(minute)
-            console.log(executionTimeList.value[index].end)
-          }
-
-          executionTimeList.value[index] = executionTime
+          const end = getHourAndMinute(period[0][1])
+          executionTime.end.setHours(end.hour)
+          executionTime.end.setMinutes(end.minute)
         }
-
-
       }
-    }
 
+      if (period.length === 2) {
+        if (period[0].length === 2 && period[1].length === 2) {
+          const start = getHourAndMinute(period[0][0])
+          executionTime.start.setHours(start.hour)
+          executionTime.start.setMinutes(start.minute)
+
+          const end = getHourAndMinute(period[1][1])
+          executionTime.end.setHours(end.hour)
+          executionTime.end.setMinutes(end.minute)
+        }
+      }
+
+      executionTimeList.value[index] = executionTime
+    }
   }
+
+  function getHourAndMinute(str) {
+    if (str.indexOf(":") < 0) {
+      cMessage('自动换班时间格式不正确', 'error')
+    }
+    const strSplit = str.split(":")
+    return {
+      hour: parseInt(strSplit[0]),
+      minute: parseInt(strSplit[1])
+    }
+  }
+
 
 }
 
@@ -701,6 +714,7 @@ onMounted(() => {
     </div>
   </div>
 
+  <span class="schedule-version">V1.1.1</span>
 
   <c-popup v-model:visible="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
     <div class="schedule-set-wrap">
@@ -1074,7 +1088,8 @@ onMounted(() => {
       <div class="schedule-operator-search-input-box">
         <span style="padding:0 16px">搜索干员</span>
         <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
-        <span style="font-style: italic;font-size: 14px">（搜索栏可输入干员名、技能描述，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>
+        <span
+            style="font-style: italic;font-size: 14px">（搜索栏可输入干员名、技能描述，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>
       </div>
       <div class="operator-check-box">
         <div class="option-avatar-sprite-wrap"

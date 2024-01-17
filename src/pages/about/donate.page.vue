@@ -82,7 +82,7 @@
     </div>
     <div>
       <div class="donate_bill">
-        <a class="href" href="https://shimo.im/sheets/dPkpKP1zQmc1PvqO/7mSBe">
+        <a class="href" href="https://docs.qq.com/sheet/DRVJ6UlBDb3NWYmxF?tab=hlop1l">
           <div class="">
             查看收支一览 <el-icon :size="24"><Link class="donate_bill_icon" /></el-icon>
           </div>

@@ -3,8 +3,8 @@
   <div class="background" >
     <p style="opacity: 0.5; position:fixed; right: 10px; bottom: 10px">版本号：v{{ version }}</p>
     <div class="transparent-panel" id="panel">
-      <img style="position:absolute; left:1172px; top: 205px" src="/RougeCalc/images/delete.png" alt="delete" @click="removeBattle()">
-      <img style="position:absolute; left:45px; top: 60px" src="/RougeCalc/images/logo.png" alt="logo">
+      <img style="position:absolute; left:1172px; top: 205px" src="/RougeCalcV1/images/delete.png" alt="delete" @click="removeBattle()">
+      <img style="position:absolute; left:45px; top: 60px" src="/RougeCalcV1/images/logo.png" alt="logo">
 
       <div class="title-text" style="left: 40px; top: 192px;">挑战分数</div>
       <div class="rounded-rectangle" style="left: 40px; top: 240px; width: 350px; height: 255px;">
@@ -82,7 +82,7 @@
 
       <div class="rounded-rectangle" style="left: 450px; top: 640px; width: 350px; height: 155px;" @mouseenter="mouseEnter()" @mouseleave="mouseLeave()" @mousedown="mouseDown()" @mouseup="mouseUp()">
         <p class="result-text" ref="sumText">{{ sum }}</p>
-        <p class="result-unit" :style="{ left: unitLeft + 'px' }">{{ unit }}</p>
+        <p class="result-unit" :style="{ left: 250 + 'px' }">{{ unit }}</p>
         <div class="normal-text" style="left: 160px; top: 35px;"><b>总分！</b></div>
         <p class="normal-text" style="left: 10px; top: 115px;" id="hint" hidden>长按重置</p>
       </div>
@@ -116,15 +116,15 @@
 
       <div class="title-text" style="left: 40px; top: 850px;">友情链接</div>
       <a href="https://tomimi.cyou/zh/sami">
-        <img style="position: absolute; left: 40px; top: 900px;" src="/RougeCalc/images/tomimi.png" alt="tomimi">
+        <img style="position: absolute; left: 40px; top: 900px;" src="/RougeCalcV1/images/tomimi.png" alt="tomimi">
         <div class="central-text" style="left: 105px; top: 1035px;">TOMIMI</div>
       </a>
       <a href="https://viktorlab.cn/akdata/dps/">
-        <img style="position: absolute; left: 220px; top: 900px;" src="/RougeCalc/images/dpscalc.png" alt="dpscalc">
+        <img style="position: absolute; left: 220px; top: 900px;" src="/RougeCalcV1/images/dpscalc.png" alt="dpscalc">
         <div class="central-text" style="left: 285px; top: 1035px;">DPS计算器</div>
       </a>
       <a href="https://mapcn.ark-nights.com/areas/rogue_3">
-        <img style="position: absolute; left: 400px; top: 900px;" src="/RougeCalc/images/prtsmap.png" alt="tomimi">
+        <img style="position: absolute; left: 400px; top: 900px;" src="/RougeCalcV1/images/prtsmap.png" alt="tomimi">
         <div class="central-text" style="left: 465px; top: 1035px;">PRTS.Maps</div>
       </a>
       <div class="title-text" style="left: 700px; top: 850px;">相关链接</div>
@@ -166,14 +166,14 @@ export default {
         "全程未进入树篱之途"
       ],
       bossSrc: [
-        "/RougeCalc/images/b-7-b.png",
-        "/RougeCalc/images/b-6-b.png",
-        "/RougeCalc/images/b-5-b.png",
-        "/RougeCalc/images/b-4-b.png",
-        "/RougeCalc/images/b-7.png",
-        "/RougeCalc/images/b-6.png",
-        "/RougeCalc/images/b-5.png",
-        "/RougeCalc/images/r-1.png",
+        "/RougeCalcV1/images/b-7-b.png",
+        "/RougeCalcV1/images/b-6-b.png",
+        "/RougeCalcV1/images/b-5-b.png",
+        "/RougeCalcV1/images/b-4-b.png",
+        "/RougeCalcV1/images/b-7.png",
+        "/RougeCalcV1/images/b-6.png",
+        "/RougeCalcV1/images/b-5.png",
+        "/RougeCalcV1/images/r-1.png",
       ],
       battleText: [
         "关卡类型",
@@ -536,37 +536,35 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: var(--c-text-color);
 
-}
 
 @font-face {
   font-family: 'Novecento Wide Medium';
-  src: url('/RougeCalc/font/Novecento WideMedium.otf');
+  src: url('/RougeCalcV1/font/Novecento WideMedium.otf');
 }
 
 @font-face {
   font-family: '标小智无界黑';
-  src: url('/RougeCalc/font/标小智无界黑.TTF');
+  src: url('/RougeCalcV1/font/标小智无界黑.TTF');
 }
 
 @font-face {
   font-family: 'HarmonyOS Sans SC';
-  src: url('/RougeCalc/font/HARMONYOS_SANS_SC_REGULAR.TTF');
+  src: url('/RougeCalcV1/font/HARMONYOS_SANS_SC_REGULAR.TTF');
 }
 
 .rogueCal-page {
   position: relative;
   height: 1200px;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: var(--c-text-color);
 }
 
 .background {
-  background-image: url('/RougeCalc/images/pure-background.jpg');
+  background-image: url('/RougeCalcV1/images/pure-background.jpg');
   background-size: cover;
   justify-content: center;
   align-items: center;
