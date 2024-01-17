@@ -183,7 +183,7 @@ onMounted(() => {
 <template>
   <div class="time-picker-popup-mask" @click="popupVisible('')" v-show="popupStyle.indexOf('height')>-1"></div>
   <div class="time-picker">
-    <i class="iconfont icon-bell"></i>
+    <i class="iconfont icon-time"></i>
     <span @click="popupVisible(popupStyleValue,'start')" class="time-text">
       {{ modelValue.start.getHours().toString().padStart(2, "0") }}:{{
         modelValue.start.getMinutes().toString().padStart(2, "0")
