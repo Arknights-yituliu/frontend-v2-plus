@@ -5,6 +5,11 @@
     overflow-y: hidden;
 }
 
+.schedule-version{
+    position: absolute;
+    top: 100px;
+    left: 20px;
+}
 
 .schedule-header {
     width: 100%;

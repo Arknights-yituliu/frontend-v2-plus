@@ -45,21 +45,12 @@ function popupVisible(style, val) {
 
 function hourScrollIntoView() {
   const hour = props.modelValue[order.value].getHours()
-
-  const hourElement = document.getElementById(`${hourId}-${hour}`)
-
-  if (hourElement) {
-    hourElement.scrollIntoView({behavior: 'smooth', block: 'center'})
-  }
+  hourHandleElement.scrollTop = hour * 24
 }
 
 function minuteScrollIntoView() {
   const minute = props.modelValue[order.value].getMinutes()
-
-  const minuteElement = document.getElementById(`${minuteId}-${minute}`)
-  if (minuteElement) {
-    minuteElement.scrollIntoView({behavior: 'smooth', block: 'center'})
-  }
+  minuteHandleElement.scrollTop = minute * 24
 }
 
 function secondScrollIntoView() {
@@ -89,6 +80,7 @@ function setSeconds(second) {
 }
 
 function highlight(option, val) {
+
   if (option === val) {
     return 'highlight'
   }
@@ -96,33 +88,23 @@ function highlight(option, val) {
 }
 
 function hourHandleWheel(event) {
-  event.preventDefault()
-  const delta = event.deltaY
-  if (delta < 0) {
-    setHours(props.modelValue[order.value].getHours() - 1)
-  } else if (delta > 0) {
-    setHours(props.modelValue[order.value].getHours() + 1)
-  }
+  const delta = event.deltaY < 0 ? -1 : 1;
+  setHours(props.modelValue[order.value].getHours() + delta)
 
-  hourScrollIntoView()
+  hourScrollIntoView(delta)
+  event.preventDefault()
 }
 
 function minuteHandleWheel(event) {
-  event.preventDefault()
-  const delta = event.deltaY
-  if (delta < 0) {
-    setMinutes(props.modelValue[order.value].getMinutes() - 1)
-  } else if (delta > 0) {
-    setMinutes(props.modelValue[order.value].getMinutes() + 1)
-  }
 
-
+  const delta = event.deltaY < 0 ? -1 : 1;
+  setMinutes(props.modelValue[order.value].getMinutes() + delta)
   minuteScrollIntoView()
-
+  event.preventDefault()
 }
 
 
-function hourMoveHandle(event) {
+function hourMoveHandle() {
   // event.preventDefault();
 
   const hour = parseInt((hourHandleElement.scrollTop / hourOptionElement.clientHeight * hourOptionElement.childElementCount).toString())
@@ -130,7 +112,7 @@ function hourMoveHandle(event) {
   setHours(hour)
 }
 
-function minuteMoveHandle(event) {
+function minuteMoveHandle() {
   // event.preventDefault();
   const minute = parseInt((minuteHandleElement.scrollTop / minuteOptionElement.clientHeight * minuteOptionElement.childElementCount).toString())
   setMinutes(minute)
@@ -152,19 +134,19 @@ function stopMoveHandle() {
 
 onMounted(() => {
 
+  const container = document.getElementById(`time-picker-popup-${containerId}`)
 
-  const popupElementList = document.getElementsByClassName('time-picker-popup')
-  for (let dom of popupElementList) {
-    if (dom.addEventListener) {
-      dom.addEventListener('wheel', (event) => {
-        event.preventDefault()
-      }, false)
-    } else if (dom.attachEvent) {
-      dom.attachEvent('wheel', (event) => {
-        event.preventDefault()
-      }, false)
-    }
+  if (container.addEventListener) {
+    container.addEventListener('wheel', (event) => {
+      event.preventDefault()
+    }, false)
+  } else if (container.attachEvent) {
+    container.attachEvent('wheel', (event) => {
+      event.preventDefault()
+    }, false)
   }
+
+
 
   hourScrollBarElement = document.getElementById(`scroll-bar-wrap-${hourId}`)
   hourHandleElement = document.getElementById(`scroll-bar-${hourId}`)
@@ -187,10 +169,12 @@ onMounted(() => {
     minuteScrollBarElement.attachEvent('wheel', minuteHandleWheel, false)
   }
 
-  const container = document.getElementById(`time-picker-popup-${containerId}`)
+
   container.addEventListener('touchmove', hourMoveHandle);
   container.addEventListener('touchmove', minuteMoveHandle);
   // window.addEventListener('mouseup', stopMoveHandle);
+
+
 
 })
 
@@ -200,16 +184,16 @@ onMounted(() => {
   <div class="time-picker-popup-mask" @click="popupVisible('')" v-show="popupStyle.indexOf('height')>-1"></div>
   <div class="time-picker">
     <i class="iconfont icon-bell"></i>
-    <span @click="popupVisible(popupStyleValue,'start')">
-      {{
-        modelValue.start.getHours().toString().padStart(2, "0")
-      }}:{{ modelValue.start.getMinutes().toString().padStart(2, "0") }}
+    <span @click="popupVisible(popupStyleValue,'start')" class="time-text">
+      {{ modelValue.start.getHours().toString().padStart(2, "0") }}:{{
+        modelValue.start.getMinutes().toString().padStart(2, "0")
+      }}
     </span>
     <span>至</span>
-    <span @click="popupVisible(popupStyleValue,'end')">
-      {{
-        modelValue.end.getHours().toString().padStart(2, "0")
-      }}:{{ modelValue.end.getMinutes().toString().padStart(2, "0") }}
+    <span @click="popupVisible(popupStyleValue,'end')" class="time-text">
+      {{ modelValue.end.getHours().toString().padStart(2, "0") }}:{{
+        modelValue.end.getMinutes().toString().padStart(2, "0")
+      }}
     </span>
 
     <div class="time-picker-popup" :style="popupStyle" :id="`time-picker-popup-${containerId}`">
@@ -262,6 +246,10 @@ onMounted(() => {
   font-size: 16px;
 }
 
+.time-text {
+  cursor: pointer;
+}
+
 .time-picker-popup-mask {
   position: fixed;
   width: 100%;
@@ -289,8 +277,8 @@ onMounted(() => {
 
 .time-selection-bar {
   position: absolute;
-  top: 62px;
-  height: 26px;
+  top: 54px;
+  height: 24px;
   width: 150px;
   border-top: var(--c-border);
   border-bottom: var(--c-border);
@@ -304,24 +292,23 @@ onMounted(() => {
 
 .time-scroll-bar-wrap {
   padding: 8px 0;
-  height: 136px;
   width: 43px;
   overflow: hidden;
   z-index: 1100;
 }
 
 .time-scroll-bar {
-  height: 140px;
+  height: 120px;
   width: 60px;
+  padding: 48px 0;
   overflow-y: scroll;
-  padding: 100px 0;
   box-sizing: border-box;
 }
 
 .time-option {
   cursor: pointer;
-  padding: 4px;
-  padding-left: 4px;
+  height: 24px;
+  line-height: 24px;
 }
 
 .time-picker span {
