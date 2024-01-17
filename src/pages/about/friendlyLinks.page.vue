@@ -41,7 +41,7 @@
       <div class="friend_card">
         <div class="friend_title">
           <div class="friend_image_wrap">
-            <a href="https://viktorlab.cn/akdata/"> <img class="friend_image" src="/image/website/ceobecanteen.png" /></a>
+            <a href="https://www.ceobecanteen.top/"> <img class="friend_image" src="/image/website/ceobecanteen.png" /></a>
           </div>
           <div class="friend_name">小刻食堂</div>
         </div>
@@ -53,7 +53,7 @@
             <div class="friend_tag">各类常用工具便捷使用</div>
           </div>
         </div>
-        <div class="friend_link"><a href="https://ceobecanteen.top/">ceobecanteen.top</a></div>
+        <div class="friend_link"><a href="https://www.ceobecanteen.top/">ceobecanteen.top</a></div>
       </div>
 
       <div class="friend_card">
