@@ -714,6 +714,7 @@ onMounted(() => {
     </div>
   </div>
 
+  <span class="schedule-version">V1.1.1</span>
 
   <c-popup v-model:visible="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
     <div class="schedule-set-wrap">
