@@ -12,25 +12,28 @@ const style = {
     zIndex: '2000',
     transition: 'opacity 0.3s, top 0.5s',
     transform: 'translate(-50%, 0)',
+    border:'1px solid #a8ffc1'
 }
 
 const colorStyle = {
     success: {
         color: '#3A973AFF',
         background: '#e2ffdb',
-        border: '1px solid #2c7a59' // 深绿色
+        borderColor: '#a8ffc1' // 深绿色
     },
     warn: {
         color: '#fc7303',
         background: '#fcf6ed',
-        border: '1px solid #c56c02' // 深橙色
+        borderColor: '#c56c02' // 深橙色
     },
     error: {
         color: '#FF4E4EFF',
         background: '#F7E3E3FF',
-        border: '1px solid #b33a3a' // 深红色
+        borderColor: '#ffa6a6' // 深红色
     }
 };
+
+// const color = '#a8ffc1'
 
 
 
