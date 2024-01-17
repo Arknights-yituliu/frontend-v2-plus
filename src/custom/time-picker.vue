@@ -184,17 +184,16 @@ onMounted(() => {
   <div class="time-picker-popup-mask" @click="popupVisible('')" v-show="popupStyle.indexOf('height')>-1"></div>
   <div class="time-picker">
     <i class="iconfont icon-time"></i>
-    <span @click="popupVisible(popupStyleValue,'start')" class="time-text">
-      {{ modelValue.start.getHours().toString().padStart(2, "0") }}:{{
-        modelValue.start.getMinutes().toString().padStart(2, "0")
-      }}
-    </span>
+    <div @click="popupVisible(popupStyleValue,'start')" class="time-text">
+      {{ modelValue.start.getHours().toString().padStart(2, "0") }}:
+      {{modelValue.start.getMinutes().toString().padStart(2, "0")}}
+    </div>
     <span>至</span>
-    <span @click="popupVisible(popupStyleValue,'end')" class="time-text">
+    <div @click="popupVisible(popupStyleValue,'end')" class="time-text">
       {{ modelValue.end.getHours().toString().padStart(2, "0") }}:{{
         modelValue.end.getMinutes().toString().padStart(2, "0")
       }}
-    </span>
+    </div>
 
     <div class="time-picker-popup" :style="popupStyle" :id="`time-picker-popup-${containerId}`">
       <div class="time-selection-bar"></div>
@@ -238,6 +237,8 @@ onMounted(() => {
 <style>
 .time-picker {
   position: relative;
+  display: flex;
+  align-items: center;
   width: 180px;
   padding: 4px;
   border-radius: 3px;
@@ -302,6 +303,7 @@ onMounted(() => {
   width: 60px;
   padding: 48px 0;
   overflow-y: scroll;
+  scroll-behavior: smooth;
   box-sizing: border-box;
 }
 
