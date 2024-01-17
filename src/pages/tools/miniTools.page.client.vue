@@ -123,4 +123,7 @@ function calculateTime() {
 </template>
 
 <style scoped>
+.el-collapse {
+  height: 93vh; /* 暂时先设这个值 */
+}
 </style>
