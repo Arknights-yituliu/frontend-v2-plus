@@ -241,7 +241,7 @@
         </div>
       </a>
 
-      <a class="href_black" href="https://github.com/Ks-luow">
+      <a class="href_black" href="https://github.com/ZFengMo/ZFengMo">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/45513885" alt="" />
           <div class="dev-card-text">
@@ -252,7 +252,7 @@
         </div>
       </a>
 
-      <a class="href_black" href="https://github.com/Ks-luow">
+      <a class="href_black" href="https://github.com/qianxuu">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/62287903" alt="" />
           <div class="dev-card-text">
