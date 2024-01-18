@@ -329,14 +329,14 @@ function chooseOperator(charId) {
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.includes(charId)) {
-    cMessage('不要选择同一干员')
+    cMessage('不要选择同一干员', 'error')
     return;
   }
 
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
-    cMessage('当前房间干员数量已达上限')
+    cMessage('当前房间干员数量已达上限', 'error')
     return;
   }
 

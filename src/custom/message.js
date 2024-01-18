@@ -1,42 +1,43 @@
-
-
 const style = {
+    opacity: '0',
     minWidth: '240px',
-    borderRadius: '2px',
+    borderRadius: '4px',
     lineHeight: '28px',
-    padding:'4px 8px',
+    padding: '4px 8px',
     textAlign: 'center',
     position: 'fixed',
     top: '0px',
     left: '50%',
     fontWeight: '600',
     zIndex: '2000',
-    transition: 'all 0.3s',
-    transform: 'translate(-50%, 0)'
+    transition: 'opacity 0.3s, top 0.5s',
+    transform: 'translate(-50%, 0)',
 }
 
 const colorStyle = {
     success: {
         color: '#3A973AFF',
-        background: '#e2ffdb'
+        background: '#e2ffdb',
+        border: '1px solid #2c7a59' // 深绿色
     },
     warn: {
         color: '#fc7303',
-        background: '#fcf6ed'
+        background: '#fcf6ed',
+        border: '1px solid #c56c02' // 深橙色
     },
     error: {
         color: '#FF4E4EFF',
-        background: '#F7E3E3FF'
+        background: '#F7E3E3FF',
+        border: '1px solid #b33a3a' // 深红色
     }
-
-}
+};
 
 
 
 let send = 1;
 let messageBars = [];
 
-function cMessage(text, type = 'success', duration= 4000) {
+function cMessage(text, type = 'success', duration = 4000) {
     send++;
     let messageBar = document.createElement("div");
 
@@ -59,11 +60,16 @@ function cMessage(text, type = 'success', duration= 4000) {
     }
 
     setTimeout(function () {
+        messageBar.style.opacity = '1'; //淡入
         for (let i in messageBars) {
             document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
         }
     }, 16);
 
+    // 淡出
+    setTimeout(function () {
+        messageBar.style.opacity = '0';
+    }, duration - 300); // 在消息消失前300ms开始淡出，与transition保持一致
 
     setTimeout(function () {
         messageBar.remove();
@@ -73,6 +79,8 @@ function cMessage(text, type = 'success', duration= 4000) {
             document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
         }
     }, duration);
+
+
 }
 
 export {cMessage};
