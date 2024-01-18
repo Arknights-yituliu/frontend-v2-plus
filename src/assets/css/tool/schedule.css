@@ -6,9 +6,10 @@
 }
 
 .schedule-version{
-    position: absolute;
-    top: 100px;
-    left: 20px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-weight: bold;
 }
 
 .schedule-header {
@@ -499,7 +500,8 @@
 .product-image-wrap {
     height: 40px;
     width: 40px;
-    margin-left: 12px;
+    margin-right: 12px;
+    margin-left: 4px;
     position: relative;
     border-radius: 4px;
     overflow: hidden;
@@ -546,7 +548,6 @@
 
 .schedule-set-bar-short {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     padding-bottom: 12px;
     justify-content: flex-start;
