@@ -49,6 +49,7 @@ function cMessage(text, type = 'success', duration = 4000) {
         messageBar.style[property] = style[property]
     }
 
+
     messageBar.id = "messageBar" + send;
     messageBars.push("messageBar" + send);
 
