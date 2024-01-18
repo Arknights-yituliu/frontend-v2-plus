@@ -5,32 +5,38 @@
       {
         "tag": "网站公告",
         "text": "修复公告在错误的域名展示的问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "自定义组件",
-        "text": "修改消息弹窗样式",
-        "author": "山桜"
+        "text": "优化消息弹窗样式",
+        "author": "山桜",
+        "type": "优化"
       },
       {
         "tag": "自定义组件",
-        "text": "修改消息弹窗样式",
-        "author": "MilkWind"
+        "text": "优化消息弹窗样式",
+        "author": "MilkWind",
+        "type": "优化"
       },
       {
         "tag": "材料刷取推荐",
         "text": "修复搓玉推荐关卡表格不能单独展示复刻活动关卡",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "排班生成器",
-        "text": "修改部分提示弹窗类型",
-        "author": "MilkWind"
+        "text": "调整部分提示弹窗类型",
+        "author": "MilkWind",
+        "type": "调整"
       },
       {
         "tag": "网站文档",
         "text": "修复错误的友情链接",
-        "author": "Zirun-wang"
+        "author": "Zirun-wang",
+        "type": "修复"
       }
     ]
   },
@@ -40,27 +46,32 @@
       {
         "tag": "迷你工具箱",
         "text": "新增换艾丽妮专精时间点计算器",
-        "author": "MilkWind"
+        "author": "MilkWind",
+        "type": "新增"
       },
       {
         "tag": "肉鸽得分计算器",
         "text": "新增打包的exe文件",
-        "author": "noname512"
+        "author": "noname512",
+        "type": "新增"
       },
       {
         "tag": "肉鸽得分计算器",
-        "text": "修复不符预期的样式",
-        "author": "noname512"
+        "text": "修复样式不符预期的问题",
+        "author": "noname512",
+        "type": "修复"
       },
       {
         "tag": "排班生成器",
         "text": "修复时间选择器在部分浏览器无法使用的问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "网站文档",
-        "text": "替换收支一览",
-        "author": "山桜"
+        "text": "修改收支一览链接",
+        "author": "山桜",
+        "type": "修改"
       }
     ]
   },
@@ -70,37 +81,44 @@
       {
         "tag": "排班生成器",
         "text": "修复导入跨天排班错误的问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "攒抽计算器",
-        "text": "修改公告内容",
-        "author": "山桜"
+        "text": "更新公告内容",
+        "author": "山桜",
+        "type": "更新"
       },
       {
         "tag": "网站布局",
-        "text": "修改样式",
-        "author": "山桜"
+        "text": "调整样式",
+        "author": "山桜",
+        "type": "调整"
       },
       {
         "tag": "肉鸽得分计算器",
-        "text": "修改计分规则",
-        "author": "noname512"
+        "text": "更新计分规则",
+        "author": "noname512",
+        "type": "更新"
       },
       {
         "tag": "攒抽计算器",
-        "text": "修改联动活动排期",
-        "author": "Zirun-wang"
+        "text": "更新联动活动排期",
+        "author": "Zirun-wang",
+        "type": "更新"
       },
       {
         "tag": "攒抽计算器",
         "text": "新增绿票换玉计算",
-        "author": "Zirun-wang"
+        "author": "Zirun-wang",
+        "type": "新增"
       },
       {
         "tag": "攒抽计算器",
-        "text": "修改部分提示说明",
-        "author": "Zirun-wang"
+        "text": "更新部分提示说明",
+        "author": "Zirun-wang",
+        "type": "更新"
       }
     ]
   },
@@ -110,32 +128,38 @@
       {
         "tag": "肉鸽得分计算器",
         "text": "新增了一个新页面",
-        "author": "Zirun-wang"
+        "author": "Zirun-wang",
+        "type": "新增"
       },
       {
         "tag": "排班生成器",
         "text": "修复跨天排班时生成的时间段错误问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "往期关卡表格样式调整,更换图例",
-        "author": "Zirun-wang"
+        "text": "调整往期关卡表格样式,更换图例",
+        "author": "Zirun-wang",
+        "type": "调整"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "材料卡片布局调整",
-        "author": "Zirun-wang"
+        "text": "优化材料卡片布局",
+        "author": "Zirun-wang",
+        "type": "优化"
       },
       {
         "tag": "排班生成器",
         "text": "新增了干员搜索功能",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "新增"
       },
       {
         "tag": "排班生成器",
         "text": "修复干员搜索功能与预设tag筛选的冲突问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       }
     ]
   },
@@ -145,12 +169,14 @@
       {
         "tag": "肉鸽得分计算器",
         "text": "测试有无bug",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "测试"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "材料卡片样式重置",
-        "author": "Zirun-wang"
+        "text": "重构材料卡片样式",
+        "author": "Zirun-wang",
+        "type": "重构"
       }
     ]
   },
@@ -159,33 +185,39 @@
     "logs": [
       {
         "tag": "干员练度调查",
-        "text": "将干员练度推荐中玩家未持有的干员隐藏",
-        "author": "山桜"
+        "text": "修复干员练度推荐中推荐玩家未持有的干员",
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "干员练度调查",
-        "text": "修改干员练度推荐样式",
-        "author": "山桜"
+        "text": "调整干员练度推荐样式",
+        "author": "山桜",
+        "type": "调整"
       },
       {
         "tag": "攒抽计算器",
-        "text": "部分资源预载",
-        "author": "山桜"
+        "text": "更新部分资源",
+        "author": "山桜",
+        "type": "更新"
       },
       {
         "tag": "攒抽计算器",
         "text": "新增森空岛年度作者投票链接",
-        "author": "Zirun-wang"
+        "author": "Zirun-wang",
+        "type": "新增"
       },
       {
         "tag": "肉鸽得分计算器",
-        "text": "将原html中的原生js转为vue语法的js",
-        "author": "noname"
+        "text": "重构原html中的原生js转为vue语法",
+        "author": "noname",
+        "type": "重构"
       },
       {
         "tag": "肉鸽得分计算器",
-        "text": "将原html中的原生js转为vue语法的js",
-        "author": "Chor"
+        "text": "重构原html中的原生js转为vue语法",
+        "author": "Chor",
+        "type": "重构"
       }
     ]
   },
@@ -194,28 +226,33 @@
     "logs": [
       {
         "tag": "用户访问体验优化",
-        "text": "将部分使用第三方链接引入的cdn改为本地打包",
-        "author": "山桜"
+        "text": "替换部分第三方链接引入的cdn为本地打包",
+        "author": "山桜",
+        "type": "替换"
       },
       {
         "tag": "排班生成器V2",
         "text": "修复导出文件加工站属性未写入的问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "排班生成器V2",
-        "text": "实现排班文件导入时导入换班时间段",
-        "author": "山桜"
+        "text": "新增排班文件导入时导入换班时间段功能",
+        "author": "山桜",
+        "type": "新增"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "关卡详情表格增加期望理智属性",
-        "author": "山桜"
+        "text": "新增关卡详情表格的期望理智指标",
+        "author": "山桜",
+        "type": "新增"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "材料关卡UI优化",
-        "author": "Zirun-wang"
+        "text": "优化材料关卡UI",
+        "author": "Zirun-wang",
+        "type": "优化"
       }
     ]
   },
@@ -225,17 +262,20 @@
       {
         "tag": "排班生成器V2",
         "text": "优化时间选择器",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "优化"
       },
       {
         "tag": "排班生成器V2",
         "text": "优化反馈渠道的描述",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "优化"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "材料关卡UI优化",
-        "author": "Zirun-wang"
+        "text": "优化材料关卡UI",
+        "author": "Zirun-wang",
+        "type": "优化"
       }
     ]
   },
@@ -244,8 +284,9 @@
     "logs": [
       {
         "tag": "材料刷取推荐",
-        "text": "修改历史UP材料表格的排序",
-        "author": "山桜"
+        "text": "优化历史UP材料表格的排序",
+        "author": "山桜",
+        "type": "优化"
       }
     ]
   },
@@ -254,28 +295,33 @@
     "logs": [
       {
         "tag": "干员练度调查",
-        "text": "修改导入森空岛干员数据的导入限制",
-        "author": "山桜"
+        "text": "调整导入森空岛干员数据的导入限制",
+        "author": "山桜",
+        "type": "调整"
       },
       {
         "tag": "干员练度调查",
-        "text": "修改用户注册时无法立刻在本地保存用户凭证的问题",
-        "author": "山桜"
+        "text": "修复用户注册时无法立刻在本地保存用户凭证的问题",
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "干员练度调查",
-        "text": "修改新活动“去咧嘴谷”干员数据",
-        "author": "山桜"
+        "text": "更新新活动“去咧嘴谷”干员数据",
+        "author": "山桜",
+        "type": "更新"
       },
       {
         "tag": "排班生成器",
-        "text": "修改新活动“去咧嘴谷”干员数据",
-        "author": "山桜"
+        "text": "更新新活动“去咧嘴谷”干员数据",
+        "author": "山桜",
+        "type": "更新"
       },
       {
         "tag": "材料刷取推荐",
         "text": "修复表格显示数据错误和排序错误的问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       }
     ]
   },
@@ -284,23 +330,27 @@
     "logs": [
       {
         "tag": "干员练度调查",
-        "text": "干员练度调查结果表样式调整",
-        "author": "山桜"
+        "text": "调整干员练度调查结果表样式",
+        "author": "山桜",
+        "type": "调整"
       },
       {
         "tag": "排班生成器V2",
         "text": "新增从服务器导入排班功能",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "新增"
       },
       {
         "tag": "排班生成器V2",
         "text": "新增宿舍设置冲突时的提示",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "新增"
       },
       {
         "tag": "排班生成器V2",
-        "text": "修改布局",
-        "author": "山桜"
+        "text": "调整布局",
+        "author": "山桜",
+        "type": "调整"
       }
     ]
   },
@@ -309,13 +359,15 @@
     "logs": [
       {
         "tag": "材料刷取推荐",
-        "text": "修改材料推荐关卡效率条样式",
-        "author": "山桜"
+        "text": "调整材料推荐关卡效率条样式",
+        "author": "山桜",
+        "type": "调整"
       },
       {
         "tag": "网站首页维护公告",
-        "text": "修改样式",
-        "author": "山桜"
+        "text": "调整样式",
+        "author": "山桜",
+        "type": "调整"
       }
     ]
   },
@@ -324,8 +376,9 @@
     "logs": [
       {
         "tag": "网站基础功能",
-        "text": "修改夜间模式的用户点击操作",
-        "author": "山桜"
+        "text": "优化夜间模式的用户点击操作",
+        "author": "山桜",
+        "type": "优化"
       }
     ]
   },
@@ -334,8 +387,9 @@
     "logs": [
       {
         "tag": "排班生成器V2",
-        "text": "补上缺失的四星干员头像",
-        "author": "山桜"
+        "text": "修复缺失四星干员头像问题",
+        "author": "山桜",
+        "type": "修复"
       }
     ]
   },
@@ -345,7 +399,8 @@
       {
         "tag": "网站首页维护公告",
         "text": "说明一下网站最近的问题",
-        "author": "Zirun-wang"
+        "author": "Zirun-wang",
+        "type": "其他"
       }
     ]
   },
@@ -354,8 +409,9 @@
     "logs": [
       {
         "tag": "干员练度调查",
-        "text": "恢复因域名注销瘫痪的服务",
-        "author": "山桜"
+        "text": "修复因域名注销瘫痪的服务",
+        "author": "山桜",
+        "type": "修复"
       }
     ]
   },
@@ -365,12 +421,14 @@
       {
         "tag": "材料刷取推荐",
         "text": "修复页面抖动问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "排班生成器V2",
         "text": "修复部分干员导入时头像没有正确显示的问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       }
     ]
   },
@@ -380,12 +438,14 @@
       {
         "tag": "材料刷取推荐",
         "text": "修复部分关卡的效率显示异常",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "网站维护",
-        "text": "替换API的域名",
-        "author": "山桜"
+        "text": "调整API的域名",
+        "author": "山桜",
+        "type": "调整"
       }
     ]
   },
@@ -394,13 +454,15 @@
     "logs": [
       {
         "tag": "材料刷取推荐",
-        "text": "材料推荐卡更换为新版卡片布局",
-        "author": "山桜"
+        "text": "更新材料推荐卡为新版卡片布局",
+        "author": "山桜",
+        "type": "更新"
       },
       {
         "tag": "排班生成器V2",
         "text": "测试版本上线，布局参考了mower排班生成器",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "测试"
       }
     ]
   },
@@ -410,22 +472,26 @@
       {
         "tag": "材料刷取推荐",
         "text": "新增关卡效率类型切换",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "新增"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "修改API字段",
-        "author": "山桜"
+        "text": "调整API字段",
+        "author": "山桜",
+        "type": "调整"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "修改往期活动UP材料表格的样式",
-        "author": "Zirun-wang"
+        "text": "调整往期活动UP材料表格的样式",
+        "author": "Zirun-wang",
+        "type": "调整"
       },
       {
         "tag": "干员练度调查",
         "text": "新增森空岛导入干员信息失败时的错误弹窗提示",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "新增"
       }
     ]
   },
@@ -435,12 +501,14 @@
       {
         "tag": "材料刷取推荐",
         "text": "修复材料推荐卡片点击后无法滑动到关卡详情表格的问题",
-        "author": "山桜"
+        "author": "山桜",
+        "type": "修复"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "图例说明文案调整",
-        "author": "Zirun-wang"
+        "text": "优化图例说明文案",
+        "author": "Zirun-wang",
+        "type": "优化"
       }
     ]
   },
@@ -449,18 +517,21 @@
     "logs": [
       {
         "tag": "礼包性价比",
-        "text": "修改新礼包数据和图片资源",
-        "author": "Zirun-wang"
+        "text": "调整新礼包数据和图片资源",
+        "author": "Zirun-wang",
+        "type": "调整"
       },
       {
         "tag": "材料刷取推荐",
         "text": "修复部分数据显示异常",
-        "author": "Zirun-wang"
+        "author": "Zirun-wang",
+        "type": "修复"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "修改关卡详情表格布局",
-        "author": "山桜"
+        "text": "调整关卡详情表格布局",
+        "author": "山桜",
+        "type": "调整"
       }
     ]
   },
@@ -469,20 +540,22 @@
     "logs": [
       {
         "tag": "礼包性价比",
-        "text": "修改新礼包数据和图片资源",
-        "author": "Zirun-wang"
+        "text": "调整新礼包数据和图片资源",
+        "author": "Zirun-wang",
+        "type": "调整"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "页面大量重置",
-        "author": "Zirun-wang"
+        "text": "重构页面",
+        "author": "Zirun-wang",
+        "type": "重构"
       },
       {
         "tag": "材料刷取推荐",
-        "text": "修改关卡详情表格布局",
-        "author": "山桜"
+        "text": "调整关卡详情表格布局",
+        "author": "山桜",
+        "type": "调整"
       }
     ]
   }
 ]
-
