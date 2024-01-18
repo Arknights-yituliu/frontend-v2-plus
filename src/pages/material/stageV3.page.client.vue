@@ -1417,7 +1417,7 @@ function filterOrundumStage() {
   if (onlyShowActStage.value) {
     displayOrundumRecommendedStage.value = []
     for (const stage of orundumRecommendedStage.value) {
-      if (stage.stageCode === '1-7' || stage.stageCode === 'CW-6' || stage.stageType === 'ACT') {
+      if (stage.stageCode === '1-7' || stage.stageCode === 'CW-6' || stage.stageType === 'ACT' || stage.stageType === 'ACT_REP') {
         displayOrundumRecommendedStage.value.push(stage)
       }
     }
