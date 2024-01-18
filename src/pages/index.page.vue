@@ -1,7 +1,7 @@
 <script setup>
 import stage from "/src/pages/material/stageV3.page.client.vue";
 import FootComponent from "@/components/FootComponent.vue";
-
+import {ref} from "vue";
 
 /**
  * 点击复制内容
@@ -16,8 +16,11 @@ function copyCode(text) {
   window.open('https://ak.hypergryph.com')
 }
 
+let tipVisible = ref(false)
+
 function officialLink() {
   window.open('https://space.bilibili.com/688411531')
+  if(window.location.hostname.indexOf("ytl")>-1) tipVisible.value = true
 }
 
 </script>
@@ -39,7 +42,7 @@ function officialLink() {
     <!--    </div>-->
 
 
-    <div id="RIICbeta" class="stage_3_intro to_official_card" @click="officialLink()">
+    <div id="RIICbeta" class="stage_3_intro to_official_card" @click="officialLink()" v-show="tipVisible">
       您现在正在通过<b style="color: rgb(255,94,66);">临时域名</b>访问本站<br>新域名(ark.yituliu.cn)正在备案中<br>
       建议关注 <b style="color: rgb(255,94,66);">bilibili@罗德岛基建BETA</b> 获取最新动态<br>点击本卡片即可跳转
     </div>
