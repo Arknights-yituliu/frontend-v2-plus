@@ -42,13 +42,18 @@
         "isChild": false
       },
       {
-        "path": "/tools/maa",
-        "text": "排班表生成器旧版",
+        "path": "/tools/rogueCal",
+        "text": "肉鸽得分计算器",
         "isChild": false
       },
       {
         "path": "/tools/miniTools",
         "text": "迷你工具箱",
+        "isChild": false
+      },
+      {
+        "path": "/tools/maa",
+        "text": "排班表生成器旧版",
         "isChild": false
       }
     ]
