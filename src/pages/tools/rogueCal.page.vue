@@ -1,7 +1,8 @@
 <template>
   <div class="rogueCal-page">
   <div class="background" >
-    <p style="opacity: 0.5; position:fixed; right: 10px; bottom: 10px">版本号：v{{ version }}</p>
+    <el-button  style="opacity: 0.7; position:fixed; right: 10px; bottom: 60px;z-index:3000" @click="downloadCalcExe()"> exe版计算器下载 </el-button>
+    <p style="opacity: 0.5; position:fixed; right: 30px; bottom: 10px">版本号：v{{ version }}</p>
     <div class="transparent-panel" id="panel">
       <img style="position:absolute; left:1172px; top: 205px" src="/RougeCalcV1/images/delete.png" alt="delete" @click="removeBattle()">
       <img style="position:absolute; left:45px; top: 60px" src="/RougeCalcV1/images/logo.png" alt="logo">
@@ -520,6 +521,9 @@ export default {
         const sumRect = sumElement.getBoundingClientRect();
         this.unitLeft = sumRect.right - 515;
       }
+    },
+    downloadCalcExe(){
+       window.open('/RougeCalcV1/rogueCalc.exe')
     }
   },
   mounted() {
@@ -596,14 +600,14 @@ export default {
 .normal-text {
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 16px;
-  color: #000;
+  
   position: absolute;
 }
 
 .small-text {
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 13px;
-  color: #000;
+  
   position: absolute;
 }
 
@@ -628,7 +632,7 @@ export default {
 .bold-text {
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 18px;
-  color: #000;
+  
   position: absolute;
 }
 
