@@ -1,7 +1,7 @@
 <template>
   <div class="rogueCal-page">
   <div class="background" >
-    <el-button  style="opacity: 0.7; position:fixed; right: 10px; bottom: 60px;z-index:3000" @click="downloadCalcExe()"> exe版计算器下载 </el-button>
+    <el-button  style=" position:fixed; right: 10px; bottom: 60px;z-index:3000" @click="downloadCalcExe()"> exe版计算器下载 </el-button>
     <p style="opacity: 0.5; position:fixed; right: 30px; bottom: 10px">版本号：v{{ version }}</p>
     <div class="transparent-panel" id="panel">
       <img style="position:absolute; left:1172px; top: 205px" src="/RougeCalcV1/images/delete.png" alt="delete" @click="removeBattle()">
@@ -664,13 +664,13 @@ export default {
   -moz-appearance: textfield;
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 16px;
-  background-color: #EFEFEF;
   border: transparent;
   position: absolute;
   width: 50px;
   height: 26px;
   text-align: center;
   appearance: none;
+  border: 1px solid var(--c-border-color);
 }
 
 .final-input::-webkit-inner-spin-button,
@@ -714,7 +714,7 @@ export default {
 }
 
 .custom-dropdown {
-  background-color: #EFEFEF;
+
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -725,7 +725,7 @@ export default {
 }
 
 .custom-dropdown-2 {
-  background-color: #EFEFEF;
+
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -736,7 +736,7 @@ export default {
 }
 
 .add-button {
-  background-color: #EFEFEF;
+
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 18px;
   border: 1px solid #ccc;
