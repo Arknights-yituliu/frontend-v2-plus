@@ -125,24 +125,31 @@
         <div class="central-text" style="left: 285px; top: 1035px;">DPS计算器</div>
       </a>
       <a href="https://mapcn.ark-nights.com/areas/rogue_3">
-        <img style="position: absolute; left: 400px; top: 900px;" src="/RougeCalcV1/images/prtsmap.png" alt="tomimi">
+        <img style="position: absolute; left: 400px; top: 900px;" src="/RougeCalcV1/images/prtsmap.png" alt="prtsmap">
         <div class="central-text" style="left: 465px; top: 1035px;">PRTS.Maps</div>
       </a>
-      <div class="title-text" style="left: 700px; top: 850px;">相关链接</div>
+      <a href="https://ark.yituliu.cn">
+        <img style="position: absolute; left: 580px; top: 900px;" src="/RougeCalcV1/images/yituliu.png" alt="yituliu">
+        <div class="central-text" style="left: 645px; top: 1035px;">明日方舟一图流</div>
+      </a>
+      <div class="title-text" style="left: 850px; top: 850px;">相关链接</div>
+      <a href="https://www.bilibili.com/opus/887498186491428869">
+        <div class="link-text" style="left: 850px; top: 905px;">激励计划动态</div>
+      </a>
       <a href="https://live.bilibili.com/22476160">
-        <div class="link-text" style="left: 700px; top: 905px;">比赛直播间</div>
+        <div class="link-text" style="left: 850px; top: 935px;">比赛直播间</div>
       </a>
-      <div class="title-text" style="left: 700px; top: 1020px;">制作人员</div>
-      <div class="normal-text" style="left: 700px; top: 1075px;">程序：</div>
+      <div class="title-text" style="left: 850px; top: 1000px;">制作人员</div>
+      <div class="normal-text" style="left: 850px; top: 1055px;">程序：</div>
       <a href="https://space.bilibili.com/22275485">
-        <div class="link-text" style="left: 750px; top: 1075px;">_noname</div>
+        <div class="link-text" style="left: 900px; top: 1055px;">_noname</div>
       </a>
-      <div class="normal-text" style="left: 700px; top: 1105px;">美术：</div>
+      <div class="normal-text" style="left: 850px; top: 1085px;">美术：</div>
       <a href="https://space.bilibili.com/1684845011">
-        <div class="link-text" style="left: 750px; top: 1105px;">里雪りあ</div>
+        <div class="link-text" style="left: 900px; top: 1085px;">里雪りあ</div>
       </a>
       <a href="https://space.bilibili.com/12786648">
-        <div class="link-text" style="left: 750px; top: 1135px;">無冕Crownless</div>
+        <div class="link-text" style="left: 900px; top: 1115px;">無冕Crownless</div>
       </a>
     </div>
   </div>
@@ -185,14 +192,14 @@ export default {
         "捕猎平衡是否生效",
         "特殊加分"
       ],
-      version: "1.2"
+      version: "1.3"
     };
   },
   setup() {
-    const challengeScore = [10, 30, 80, 30, 25, 66, 200];
+    const challengeScore = [10, 30, 80, 30, 25, 66, 300];
     const challengeCount = ref(["", "", "", "", ""]);
     const challengeSelect = ref([1, 1]);
-    const bossScore = [230, 360, 220, 170, 180, 10, 160, 30];
+    const bossScore = [240, 340, 220, 180, 200, 10, 160, 50];
     const twoEnding = 200;
     const threeEnding = 100;
     const bothThreeFourEnding = 100;
@@ -262,7 +269,7 @@ export default {
       "呼吸": [48, 40],
       "大地醒转": [48, 40],
       "夺树者": [48, 40],
-      "黄沙幻境": [10, 0],
+      "黄沙幻境": [20, 0],
       "天途半道": [20, 0],
       "惩罚": [20, 0],
       "豪华车队": [30, 0],
