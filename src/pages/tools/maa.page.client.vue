@@ -1998,7 +1998,7 @@ export default {
   components: {FeedBack},
   data() {
     return {
-      exportUrl: "https://backend.yituliu.site/maa/schedule/export?schedule_id=1664632307607024",
+      exportUrl: "https://ark.yituliu.cn/backend/maa/schedule/export?schedule_id=1664632307607024",
       maaUrl: "maa://infra.yituliu/1664632307607024",
       scheduleId: 12345,
       importId: "",
@@ -2156,7 +2156,7 @@ export default {
     if (url_path == "riicCal") {
       ElMessage({
         dangerouslyUseHTMLString: true,
-        message: '此页面已迁移至<a href="/tools/maa">https://yituliu.site/tools/maa</a>',
+        message: '此页面已迁移至<a href="/tools/maa">https://ark.yituliu.cn/tools/maa</a>',
         type: "warning",
       });
     }
@@ -2185,7 +2185,7 @@ export default {
 
 
     setExportUrl() {
-      this.exportUrl = "https://backend.yituliu.site/maa/schedule/export?schedule_id=" + this.scheduleId;
+      this.exportUrl = "https://ark.yituliu.cn/backend/maa/schedule/export?schedule_id=" + this.scheduleId;
       // this.exportUrl = "http://127.0.0.1:10013/maa/schedule/export?schedule_id=" + this.scheduleId;
       this.maaUrl = "maa://infra.yituliu/" + this.scheduleId;
     },
