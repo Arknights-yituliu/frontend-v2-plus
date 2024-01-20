@@ -110,7 +110,7 @@ function determineHasProperty(filterCondition, characterInfo, property) {
     if (filterCondition[property].length === 0) return true;
     for (let condition of filterCondition[property]) {
 
-        if (((characterInfo[property] == void 0) == condition)) {
+        if (((characterInfo[property] === void 0) === condition)) {
             return false;
         }
     }
