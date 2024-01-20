@@ -452,7 +452,7 @@ watch(()=>plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.va
      if(newVal && selectedRoomType.value === 'dormitory') {
        if( plansTemplate.value[selectedPlanIndex.value].rooms
            [selectedRoomType.value][selectedRoomIndex.value].operators.length >0){
-         cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干预入驻功能异常!', 'warn')
+         cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干员入驻功能异常!', 'warn')
        }
      }
 })
