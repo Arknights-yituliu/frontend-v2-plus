@@ -47,8 +47,13 @@
         "isChild": false
       },
       {
+        "path": "/tools/buildingSkill",
+        "text": "基建技能一览",
+        "isChild": false
+      },
+      {
         "path": "/tools/Irene",
-        "text": "迷你工具箱",
+        "text": "艾丽妮专精计算器",
         "isChild": false
       },
       {
