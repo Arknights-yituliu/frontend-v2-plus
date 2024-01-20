@@ -3,10 +3,10 @@
   width: 100%;
   background-color: var(--c-background-color);
   color: var(--c-text-color);
-  transition: all 0.3s;
   box-sizing: border-box;
   padding-left: 250px;
   overflow-x: hidden;
+  transition:padding-left .3s ease-in-out;
   /*background-color: red;*/
 }
 
