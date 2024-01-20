@@ -14,7 +14,7 @@ for (const operator of building_table) {
   buildingTable[operator.charId].push(operator)
 }
 
-const COLOR = {BLUE: 'blue'}
+const COLOR = {BLUE: 'blue',ORANGE:'orange'}
 
 let selectBtnKey = ref('')
 let filterOperatorList = ref([])
@@ -69,7 +69,7 @@ const searchOperatorDebounce = debounce(() => {
 }, 500)
 
 
-let hideIrrelevantSkillsFlag = ref(false)
+let hideIrrelevantSkillsFlag = ref(true)
 
 let skillRowCount = ref({})
 
@@ -143,7 +143,7 @@ function getUnlock(phase, level) {
     return `精${phase}`
   }
 
-  if (level > 0) {
+  if (level > 1) {
     return `30级`
   }
 
