@@ -47,11 +47,13 @@
     /*基础样式*/
     --c-box-shadow:1px 1px 4px var(--c-black-1);
     --c-border:1px solid var(--c-black-4);
-    --c-background-color: var(--c-black-2);
+    --c-box-shadow-color:rgba(0, 0, 0);
+    --c-border-color:var(--c-black-4);
+    --c-background-color: #1e1e1e;
     --c-text-color: var(--c-white-2);
     --c-tip-color:var(--c-white-3);
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
-    --c-border-color:var(--c-black-4);
+
 
     --c-blue:var(--c-blue-dark);
     --c-red:var(--c-red-dark);
