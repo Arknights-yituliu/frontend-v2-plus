@@ -530,7 +530,7 @@ export default {
       }
     },
     downloadCalcExe(){
-       window.open('/RogueCalcV1/demo.exe')
+       window.open('/RogueCalcV1/formalCalc.exe')
     }
   },
   mounted() {
