@@ -10,7 +10,6 @@
               <span class="collapse-item_title">
                 共计{{ toFixedByAcc(gachaTimes_total, 0) }}抽，氪金{{ sellsCount }}元
               </span>
-              <span style="font-size: 20px; color: rgb(136 136 136 / 69%); margin-left: 16px">ytl.viktorlab.cn</span>
             </template>
             <!-- <el-divider></el-divider> -->
             <div class="gacha_unit" id="total">
@@ -432,7 +431,7 @@
               <div class="gacha_unit_child_instruction" style="padding: 4px 16px; font-size: 18px;">
                 标签内为每抽价格(元)，颜色用于区分性价比<br/>
                 仅计入礼包内抽卡资源，紫色高于648，橙色高于大月卡<br/>
-                <a href="https://ytl.viktorlab.cn/pack">点击跳转礼包完整性价比</a>
+                <a href="https://ark.yituliu.cn/material/pack">点击跳转礼包完整性价比</a>
               </div>
               <!-- 月常礼包 -->
               <div class="gacha_unit_fold">
@@ -914,7 +913,7 @@
                       <img class="foot_unit_pic" src="/image/website/prts.webp" alt=""/>PRTS
                     </div>
                   </a>
-                  <a href="https://ytl.viktorlab.cn/">
+                  <a href="https://ark.yituliu.cn/">
                     <div class="foot_unit_button uni_shadow_2" style="vertical-align: middle; color: rgb(128,128,128)">
                       <img class="foot_unit_pic" src="/image/website/ico64.png" alt=""/>一图流主站
                     </div>
@@ -1108,7 +1107,7 @@ export default {
     if (url_path === "gachaCal") {
       ElMessage({
         dangerouslyUseHTMLString: true,
-        message: '此页面已迁移至<a href="/tools/gachaCal">https://ytl.viktorlab.cn/tools/gachaCal</a>',
+        message: '此页面已迁移至<a href="/tools/gachaCal">https://ark.yituliu.cn/tools/gachaCal</a>',
         type: "warning",
       });
     }

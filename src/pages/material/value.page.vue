@@ -261,7 +261,7 @@ onMounted(() => {
   if (url_path === "value") {
     ElMessage({
       dangerouslyUseHTMLString: true,
-      message: '此页面已迁移至<a href="/material/value">https://yituliu.site/material/value</a>',
+      message: '此页面已迁移至<a href="/material/value">https://ark.yituliu.cn/material/value</a>',
       type: "warning",
     });
   }

@@ -2,7 +2,7 @@
   <div class="bot_act_page">
     <div class="bot_act_title">
       <div>数据来源：penguin-stats.cn</div>
-      <div>效率计算：yituliu.site</div>
+      <div>效率计算：ark.yituliu.cn</div>
       <div>以下理智转化率对比对象为主线为对应掉落材料的主线最优关</div>
     </div>
     <div v-for="(act,index) in actList" :key="index" class="bot_act_card" v-show="act.zoneName.indexOf('复刻')<0">

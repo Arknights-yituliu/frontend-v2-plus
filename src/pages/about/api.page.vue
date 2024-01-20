@@ -184,7 +184,7 @@ let APIList = ref(apiJson);
 let language = ref("cn");
 
 // var origin = window.location.origin
-var origin = "https://backend.yituliu.site";
+var origin = "https://ark.yituliu.cn/backend";
 
 function parse(obj) {
   return JSON.stringify(obj, null, 4);

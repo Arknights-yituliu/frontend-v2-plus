@@ -180,7 +180,7 @@
           <div class="ep12_support_role">数据收集</div>
         </div>
       </a>
-      <a class="ep12_support" href="https://yituliu.site/">
+      <a class="ep12_support" href="https://ark.yituliu.cn/">
         <img class="ep12_support_img" src="/image/website/ico64.png" />
         <div class="ep12_support_text">
           <div class="ep12_support_org">明日方舟一图流</div>
