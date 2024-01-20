@@ -70,7 +70,7 @@ function chooseAnnouncement(index) {
       </div>
 
       <div id="RIICbeta" class="announcement-card" @click="openNewPage('https://www.bilibili.com/opus/887498186491428869')" style="position: relative">
-        <img src="/RougeCalcV1/roguebanner.jpg" alt="" style="width: 400px;position: absolute;top:-10px;left:0">
+        <img src="/RogueCalcV1/roguebanner.jpg" alt="" style="width: 400px;position: absolute;top:-10px;left:0">
         <span style="position: absolute;top:100px;left:0;text-align: center;width: 400px;font-weight: bold">
           通天联赛#0附加赛激励计划
         </span>
