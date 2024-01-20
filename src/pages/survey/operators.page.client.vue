@@ -360,7 +360,6 @@
     <!--    干员推荐-->
         <c-collapse-item v-model:visible="collapseRecommendVisible" :name="'recommend'">
           <div class="control_bar_wrap">
-            <h3>干员练度推荐</h3>
             <div class="operator-form">
               <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
                 <div class="operator-recommend-avatar-wrap">
@@ -1062,6 +1061,7 @@ function sortOperatorList(property) {
   sortProperty.value[property] = !sortProperty.value[property]
   operatorList.value.sort((a, b) => {
     if (sortProperty.value[property]) {
+      console.log(a.name,'-',a[property],b.name,'-',b[property])
       return a[property] - b[property];
     } else {
       return b[property] - a[property];
@@ -1136,8 +1136,9 @@ let operatorRecommendList = ref([]) //干员练度推荐列表
  */
 async function getOperatorRecommend() {
   operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorTable.value)
-  collapseRecommendVisible.value = !collapseRecommendVisible.value;
-
+  setTimeout(function() {
+    collapseRecommendVisible.value = !collapseRecommendVisible.value;
+  }, 100);
 
 }
 

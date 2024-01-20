@@ -1,7 +1,95 @@
-.skill-card{
-    display: flex;
+.building-skill-table {
+    text-align: center;
+    border-collapse: collapse;
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);
+    margin: 12px auto;
+    width: 95%;
+    border-radius: 4px;
 }
 
-.building-operator-name{
-    width: 140px;
+.b-filter-condition-box {
+    width: 97%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.b-condition-bar {
+    margin-top: 4px;
+}
+
+.b-condition-bar span {
+    padding-left: 16px;
+    padding-right: 2px;
+    font-weight: 600;
+}
+
+.building-skill-table td {
+    border-bottom: 1px solid var(--c-border-color);
+}
+
+.building-operator-avatar- {
+    height: 90px;
+    width: 110px;
+    position: relative;
+}
+
+.building-operator-avatar- span {
+    position: absolute;
+    top: 64px;
+    left: 5px;
+    width: 110px;
+
+}
+
+.building-operator-avatar {
+    transform: scale(.27777);
+    position: absolute;
+    top: -56px;
+    left: -35px;
+}
+
+.building-operator-avatar-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.building-skill-card div {
+    border: 1px solid var(--c-border-color);
+}
+
+.b-building-skill-name {
+    padding: 2px;
+    font-size: 14px;
+}
+
+.b-building-search-wrap{
+    width: 97%;
+    margin:12px auto;
+    display: flex;
+    align-items: center;
+}
+
+.cc-base{
+    color: #e77351;
+
+}
+
+.cc-vup{
+    color: #e77351;
+
+}
+
+.cc-vdown{
+    color: red;
+
+}
+
+.cc-rem{
+    font-weight: bold;
+}
+
+.cc-kw{
+    color: #00bbff;
+
 }
