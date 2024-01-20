@@ -18,19 +18,19 @@
 .btn-blue{
     color: var(--c-btn-text-color);
     background-color:var(--c-btn-bg-blue);
-    border: none;
+    border: 1px solid transparent;
 }
 
 .btn-orange{
     color: var(--c-btn-text-color);
     background-color:var(--c-btn-bg-orange);
-    border: none;
+    border: 1px solid transparent;
 }
 
 .btn-green{
     color: var(--c-btn-text-color);
     background-color: var(--c-btn-bg-green);
-    border: none;
+    border: 1px solid transparent;
 }
 
 .btn-red{
