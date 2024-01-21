@@ -1,6 +1,5 @@
 .building-skill-page{
     min-height: 100vh;
-    overflow-y: scroll;
 }
 .building-skill-table {
     text-align: center;
@@ -56,20 +55,16 @@
 .building-operator-avatar {
     transform: scale(.2222);
     position: absolute;
-    top: -70px;
+    top: -65px;
     left: -34px;
 }
 
 .building-operator-avatar- span {
     position: absolute;
-    top: 50px;
+    top: 45px;
     width: 100%;
     text-align: center;
 }
-
-
-
-
 
 
 @media screen and ( max-width: 800px) {
@@ -79,7 +74,7 @@
     }
 
     .building-operator-avatar- span {
-        top: 50px;
+        top: 62px;
         left: 0;
         width: 110px;
         text-align: center;
