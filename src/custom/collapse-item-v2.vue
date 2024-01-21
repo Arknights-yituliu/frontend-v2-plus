@@ -40,15 +40,19 @@ function collapse(flag) {
   let contentElement = document.getElementById(collapseItemId);
   let height = contentElement.clientHeight;
   console.log(height)
+
+  let ratio = 1.0
   const animate = () => {
 
     const elapsed = Date.now() - start;
-    const progress = Math.min(elapsed / 100, 1)
+
+    const progress = Math.min(elapsed / 200, 1) *ratio
+
     const heightStep = flag ? height * progress : height * (1 - progress)
 
     wrapElement.style.height = `${heightStep}px`
-
-    console.log(progress, '高度步进', heightStep)
+    ratio+=0.1
+    // console.log(progress, '高度步进', heightStep)
     if (progress < 1) {
       requestAnimationFrame(animate)
     } else {
@@ -73,7 +77,7 @@ watch(() => props.visible, (new_val) => {
 .c_collapse_item_wrap {
   height: 0;
   overflow: hidden;
-  transition: height 0.2s linear;
+  //transition: height 0.2s ease;
 }
 
 .c_collapse_item {

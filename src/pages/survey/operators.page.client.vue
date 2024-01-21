@@ -64,7 +64,7 @@
     </div>
 
     <!-- 筛选模块 -->
-    <c-collapse-item v-model:visible="collapseImportFilter" :name="'filter'">
+    <c-collapse-item-v2 v-model:visible="collapseImportFilter" :name="'filter'">
       <div class="control_bar_wrap">
         <div class="control_bar">
           <div class="control_title" style="width: 80px;">职业</div>
@@ -162,7 +162,7 @@
         <!--            </div>-->
         <!--          </div>-->
       </div>
-    </c-collapse-item>
+    </c-collapse-item-v2>
 
 
     <c-popup :visible="importPopupVisible" v-model:visible="importPopupVisible">
@@ -257,7 +257,7 @@
 
 
     <!--    干员统计折叠栏-->
-    <c-collapse-item v-model:visible="collapseStatisticsVisible" :name="'statistics'">
+    <c-collapse-item-v2 v-model:visible="collapseStatisticsVisible" :name="'statistics'">
       <div class="control_bar_wrap">
         <!--          干员统计-->
         <div class="control_bar" style="align-items: normal;justify-content: space-around;margin: 20px 0">
@@ -355,10 +355,10 @@
           </div>
         </div>
       </div>
-    </c-collapse-item>
+    </c-collapse-item-v2>
 
     <!--    干员推荐-->
-        <c-collapse-item v-model:visible="collapseRecommendVisible" :name="'recommend'">
+        <c-collapse-item-v2 v-model:visible="collapseRecommendVisible" :name="'recommend'">
           <div class="control_bar_wrap">
             <div class="operator-form">
               <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
@@ -383,7 +383,7 @@
               </div>
             </div>
           </div>
-        </c-collapse-item>
+        </c-collapse-item-v2>
 
     <!--   干员表单-->
     <div class="operator-form">
