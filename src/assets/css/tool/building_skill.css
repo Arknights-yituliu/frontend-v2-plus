@@ -45,7 +45,7 @@
 }
 
 .building-operator-avatar- {
-    height: 65px;
+    height: 75px;
     width: 110px;
     position: relative;
     display: flex;
@@ -56,40 +56,15 @@
 .building-operator-avatar {
     transform: scale(.2222);
     position: absolute;
-    top: -70px;
+    top: -64px;
     left: -34px;
 }
 
 .building-operator-avatar- span {
     position: absolute;
-    top: 50px;
+    top: 53px;
     width: 100%;
     text-align: center;
-}
-
-
-
-
-
-
-@media screen and ( max-width: 800px) {
-    .building-operator-avatar- {
-        height: 80px;
-        width: 110px;
-    }
-
-    .building-operator-avatar- span {
-        top: 50px;
-        left: 0;
-        width: 110px;
-        text-align: center;
-    }
-
-    .building-operator-avatar {
-        transform: scale(.27777);
-        top: -60px;
-        left: -35px;
-    }
 }
 
 .building-skill-card div {
@@ -100,6 +75,7 @@
     padding: 4px;
     font-size: 14px;
     border-radius: 2px;
+    line-height: 1.9;
 }
 
 .b-building-search-wrap {
