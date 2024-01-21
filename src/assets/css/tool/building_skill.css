@@ -47,7 +47,6 @@
     height: 48px;
     width: 150px;
     position: relative;
-    background-color: #00a1d6;
 }
 
 .building-operator-avatar {
@@ -74,7 +73,7 @@
     }
 
     .building-operator-avatar- span {
-        top: 44px;
+        top: 46px;
         left: 0;
         width: 110px;
         text-align: center;
@@ -82,7 +81,7 @@
 
     .building-operator-avatar {
         transform: scale(.27777);
-        top: -60px;
+        top: -58px;
         left: -35px;
     }
 }
