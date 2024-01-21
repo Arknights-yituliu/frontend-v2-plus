@@ -1,5 +1,6 @@
 .building-skill-page{
     min-height: 100vh;
+    overflow-y: scroll;
 }
 .building-skill-table {
     text-align: center;
@@ -44,25 +45,26 @@
 }
 
 .building-operator-avatar- {
-    height: 60px;
-    width: 174px;
+    height: 65px;
+    width: 110px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .building-operator-avatar {
     transform: scale(.2222);
     position: absolute;
-    top: -60px;
-    left: -60px;
+    top: -70px;
+    left: -34px;
 }
 
 .building-operator-avatar- span {
     position: absolute;
-    top: 0;
-    line-height: 60px;
-    left: 64px;
-    width: 110px;
-    text-align: left;
+    top: 50px;
+    width: 100%;
+    text-align: center;
 }
 
 
@@ -97,6 +99,7 @@
 .b-building-skill-name {
     padding: 4px;
     font-size: 14px;
+    border-radius: 2px;
 }
 
 .b-building-search-wrap {
