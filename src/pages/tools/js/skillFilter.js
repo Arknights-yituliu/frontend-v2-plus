@@ -125,7 +125,7 @@ const operatorFilterConditionTable = {
     },
     control: {
         name: "控制中枢",
-        color:'#00e734',
+        color:'#007e1d',
         display: true,
         conditions: [
             {
