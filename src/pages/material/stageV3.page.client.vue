@@ -621,7 +621,7 @@ import {onMounted, ref} from "vue";
 import item_series from '/src/static/json/material/item_series.json'
 
 // 根据物品系列进行分组的推荐关卡
-let stageResultGroup = ref()
+let stageResultGroup = {}
 // let stage_result_group = ref(stage_api_data.data.recommendedStage.sort((a,b)=>a.itemSeriesId-b.itemSeriesId))
 
 //材料卡片数据
@@ -656,7 +656,7 @@ let selected_item = ref({
 function getStageResult() {
   stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
 
-    stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+    stageResultGroup = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
     getItemCardData()
     //获取材料价值数据
@@ -674,9 +674,9 @@ function getStageResult() {
  * 拼接材料卡片的数据
  */
 function getItemCardData() {
-  for (let index in stageResultGroup.value) {
+  for (let index in stageResultGroup) {
     //每一种材料系列的推荐关卡
-    let recommended_stage = stageResultGroup.value[index]
+    let recommended_stage = stageResultGroup[index]
     //推荐关卡集合
     let stageResultList = recommended_stage.stageResultList;
 
@@ -749,7 +749,7 @@ let item_table_data_by_item_id = ref([])
  */
 function getItemTableData(index, isJump) {
   //当前材料系列的推荐关卡
-  let recommended_stage = stageResultGroup.value[index];
+  let recommended_stage = stageResultGroup[index];
   //推荐关卡集合
   let stage_result_list = recommended_stage.stageResultList;
   //拼接表格数据,默认按总效率排序
@@ -1046,12 +1046,10 @@ onMounted(() => {
 })
 
 
-let td_6 = ref()
-
 
 let itemIdList = [] // 材料表
-let historyActItemTable = ref([]) // 历史活动up材料表
-let historyActItemList = ref([])
+let historyActItemTable = [] // 历史活动up材料表
+let historyActItemList = []
 
 let historyActDevice = ref('')
 
@@ -1082,7 +1080,7 @@ function historyActDeviceBtnClass(device) {
 }
 
 function getHistoryActStage() {
-  historyActItemTable.value = []
+  historyActItemTable = []
 
 
   // 获取历史活动up材料信息
@@ -1098,7 +1096,7 @@ function getHistoryActStage() {
       })
     }
 
-    historyActItemList.value = response.data
+    historyActItemList = response.data
     // 循环历史活动数据
     let lastUpInterval = 0;
 
@@ -1147,7 +1145,7 @@ function getHistoryActStage() {
         }
 
       }
-      historyActItemTable.value.push(rowData)
+      historyActItemTable.push(rowData)
     }
 
     itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
