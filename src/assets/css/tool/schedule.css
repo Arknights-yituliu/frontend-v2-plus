@@ -115,6 +115,7 @@
 }
 
 .execution-time-wrap {
+
 }
 
 .execution-time {
@@ -187,6 +188,14 @@
     border: 1px solid var(--c-background-color);
 }
 
+.copy-btn-wrap{
+    padding: 4px;
+    margin: 4px;
+    height: 70px;
+    width: 500px;
+    border: 1px solid var(--c-background-color);
+    /*background-color: #d0d0d0;*/
+}
 
 .blank {
     box-shadow: none;
@@ -437,8 +446,9 @@
 
 .schedule-operator-search-input-box {
     display: flex;
-    align-items: center;
     margin: 8px 0;
+    height: 50px;
+    /*background-color: #00a1d6;*/
 }
 
 .operator-check-box {
