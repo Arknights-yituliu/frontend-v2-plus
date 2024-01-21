@@ -233,13 +233,13 @@ onMounted(() => {
         </td>
         <td>{{ getUnlock(operator.phase, operator.level) }}</td>
         <td>{{ getRoomLabel(operator.roomType) }}</td>
-        <td>
+        <td style="width: 140px">
         <span :style="`background:${operator.buffColor};color:${operator.textColor}`"
               class="b-building-skill-name">
           {{ operator.buffName }}
         </span>
         </td>
-        <td style="height: 36px">
+        <td style="height: 36px;padding-inline: 20px">
           <span style="line-height: 24px;" v-html="operator.description"></span>
         </td>
       </tr>
