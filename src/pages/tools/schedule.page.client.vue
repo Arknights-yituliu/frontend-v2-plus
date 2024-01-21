@@ -412,7 +412,7 @@ function pasteOperatorList() {
   }
 }
 
-let tmpPlanData = ref({index: void 0, plan: ''})
+let tmpPlanData = ref({index: 0, plan: ''})
 
 function copyPlan() {
   tmpPlanData.value.plan = JSON.stringify(plansTemplate.value[selectedPlanIndex.value])
@@ -971,10 +971,6 @@ onMounted(() => {
 <!--             v-for="index in 3" :key="index">-->
 <!--        </div>-->
         <div class="copy-btn-wrap">
-          <c-button :color="COLOR.BLUE" :status="true" @click="copyPlan()">复制当前班次</c-button>
-          <c-button :color="COLOR.BLUE" :status="true" @click="pastePlan()">粘贴当前班次</c-button>
-          <br>
-          <span >当前复制的班次为# {{tmpPlanData.index}} 班次</span>
         </div>
         <!--    贸易站-->
         <div class="room-template trading"
@@ -1033,7 +1029,11 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="room-template blank" style="width: 180px;" v-for="index in 3" :key="index"></div>
+        <div class="copy-btn-wrap">
+          <span>被复制的班次：#{{tmpPlanData.index}} 班</span>
+          <c-button :color="COLOR.BLUE" :status="true" @click="copyPlan()">复制班次</c-button>
+          <c-button :color="COLOR.BLUE" :status="true" @click="pastePlan()">粘贴班次</c-button>
+        </div>
       </div>
 
       <div class="room-wrap-center">
@@ -1125,8 +1125,8 @@ onMounted(() => {
             </i>
           </div>
         </div>
-        <c-button @click="pasteOperatorList()">粘贴</c-button>
-        <c-button @click="copyOperatorList()">复制</c-button>
+        <c-button :color="COLOR.BLUE" :status="true" @click="pasteOperatorList()">粘贴</c-button>
+        <c-button :color="COLOR.BLUE" :status="true" @click="copyOperatorList()">复制</c-button>
         <span class="room-set-description">复制的干员</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap"

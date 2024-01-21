@@ -194,7 +194,16 @@
     height: 70px;
     width: 500px;
     border: 1px solid var(--c-background-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     /*background-color: #d0d0d0;*/
+}
+
+.copy-btn-wrap span{
+    font-weight: bold;
+    line-height: 24px;
+    margin-right: 12px;
 }
 
 .blank {
@@ -446,7 +455,7 @@
 
 .schedule-operator-search-input-box {
     display: flex;
-    margin: 8px 0;
+    margin: 8px 0 0 16px;
     height: 50px;
     /*background-color: #00a1d6;*/
 }
