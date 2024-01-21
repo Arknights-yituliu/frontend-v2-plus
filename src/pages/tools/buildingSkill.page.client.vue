@@ -1,7 +1,7 @@
 <script setup>
 import '/src/assets/css/tool/building_skill.css'
 
-import {operatorFilterConditionTable} from "/src/pages/tools/skillFilter";
+import {operatorFilterConditionTable} from "/src/pages/tools/js/skillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import {onMounted, ref} from "vue";
 import {debounce} from "../../utils/debounce";
@@ -14,7 +14,7 @@ for (const operator of building_table) {
   buildingTable[operator.charId].push(operator)
 }
 
-const COLOR = {BLUE: 'blue',ORANGE:'orange'}
+const COLOR = {BLUE: 'blue', ORANGE: 'orange'}
 
 let selectBtnKey = ref('')
 let filterOperatorList = ref([])
@@ -187,63 +187,63 @@ onMounted(() => {
 </script>
 
 <template>
-
-  <div class="b-filter-condition-box">
-    <div class="b-condition-bar" v-for="(room,key) in operatorFilterConditionTable" v-show="room.display" :key="key">
-      <span :style="`color:${room.color}`">{{ room.name }}</span>
-      <c-button v-for="(condition,index) in room.conditions" :key="index" style="margin: 2px"
-                :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
-                @click="filterOperatorByTag(condition,key)">
-        {{ condition.label }}
-      </c-button>
+  <div class="building-skill-page">
+    <div class="b-filter-condition-box">
+      <div class="b-condition-bar" v-for="(room,key) in operatorFilterConditionTable" v-show="room.display" :key="key">
+        <span class="b-room-type-text" :style="`color:${room.color}`">{{ room.name }}</span>
+        <c-button v-for="(condition,index) in room.conditions" :key="index" style="margin: 2px"
+                  :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
+                  @click="filterOperatorByTag(condition,key)">
+          {{ condition.label }}
+        </c-button>
+      </div>
     </div>
-  </div>
 
-  <div class="b-building-search-wrap">
-    <span style="padding:0 16px">搜索干员</span>
-    <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
-    <c-button :status="hideIrrelevantSkillsFlag" :color="COLOR.ORANGE"
-              style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
-    </c-button>
-    <!--  <span-->
-    <!--      style="font-style: italic;font-size: 14px">（搜索栏可输入干员名、技能描述，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>-->
+    <div class="b-building-search-wrap">
+      <span style="padding:0 16px">搜索干员</span>
+      <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
+      <c-button :status="hideIrrelevantSkillsFlag" :color="COLOR.ORANGE"
+                style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
+      </c-button>
+      <!--  <span-->
+      <!--      style="font-style: italic;font-size: 14px">（搜索栏可输入干员名、技能描述，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>-->
 
-  </div>
+    </div>
 
-  <table class="building-skill-table">
-    <tbody>
-    <tr style="line-height: 42px;">
-      <td style="width:120px">干员</td>
-      <td style="width:50px">解锁</td>
-      <td style="width:70px">设施</td>
-      <td style="width:100px">技能</td>
-      <td>描述</td>
-    </tr>
+    <table class="building-skill-table">
+      <tbody>
+      <tr style="line-height: 42px;">
+        <td>干员</td>
+        <td style="width:50px">解锁</td>
+        <td style="width:70px">设施</td>
+        <td style="width:100px">技能</td>
+        <td>描述</td>
+      </tr>
 
-    <tr v-for="(operator,index) in filterOperatorList" :key="index">
-      <td :rowspan="mergeRow(operator.charId,index).rowCount"
-          v-if="mergeRow(operator.charId,index).index===index">
-        <div class="building-operator-avatar-wrap">
-          <div class="building-operator-avatar-">
-            <div :class="getAvatar(operator.charId)"></div>
-            <span>{{ operator.name }}</span>
+      <tr v-for="(operator,index) in filterOperatorList" :key="index">
+        <td :rowspan="mergeRow(operator.charId,index).rowCount"
+            v-if="mergeRow(operator.charId,index).index===index">
+          <div class="building-operator-avatar-wrap">
+            <div class="building-operator-avatar-">
+              <div :class="getAvatar(operator.charId)"></div>
+              <span>{{ operator.name }}</span>
+            </div>
           </div>
-        </div>
-      </td>
-      <td>{{ getUnlock(operator.phase, operator.level) }}</td>
-      <td>{{ getRoomLabel(operator.roomType) }}</td>
-      <td>
+        </td>
+        <td>{{ getUnlock(operator.phase, operator.level) }}</td>
+        <td>{{ getRoomLabel(operator.roomType) }}</td>
+        <td>
         <span :style="`background:${operator.buffColor};color:${operator.textColor}`" class="b-building-skill-name">
           {{ operator.buffName }}
         </span>
-      </td>
-      <td>
-        <span style="line-height: 36px" v-html="operator.description"></span>
-      </td>
-    </tr>
+        </td>
+        <td>
+          <span style="line-height: 40px;" v-html="operator.description"></span>
+        </td>
+      </tr>
 
-    </tbody>
-  </table>
-
+      </tbody>
+    </table>
+  </div>
 
 </template>

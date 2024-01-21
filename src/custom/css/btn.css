@@ -22,7 +22,7 @@
 }
 
 .btn-orange{
-    color: black;
+    color: white;
     background-color:var(--c-btn-bg-orange);
     border: 1px solid transparent;
 }
