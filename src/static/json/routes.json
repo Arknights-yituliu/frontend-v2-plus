@@ -42,13 +42,23 @@
         "isChild": false
       },
       {
-        "path": "/tools/maa",
-        "text": "排班表生成器旧版",
+        "path": "/tools/rogueCal",
+        "text": "肉鸽得分计算器",
         "isChild": false
       },
       {
-        "path": "/tools/miniTools",
-        "text": "迷你工具箱",
+        "path": "/tools/buildingSkill",
+        "text": "基建技能一览",
+        "isChild": false
+      },
+      {
+        "path": "/tools/Irene",
+        "text": "艾丽妮专精计算器",
+        "isChild": false
+      },
+      {
+        "path": "/tools/maa",
+        "text": "排班表生成器旧版",
         "isChild": false
       }
     ]
@@ -96,7 +106,7 @@
         "isChild": false
       },
       {
-        "path": "/about/friendlyLinks",
+        "path": "/about/links",
         "text": "友情链接",
         "isChild": false
       }

@@ -1,7 +1,140 @@
-.skill-card{
-    display: flex;
+.building-skill-page{
+    min-height: 100vh;
+}
+.building-skill-table {
+    text-align: center;
+    border-collapse: collapse;
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);
+    margin: 12px auto;
+    width: 95%;
+    border-radius: 4px;
 }
 
-.building-operator-name{
-    width: 140px;
+.b-filter-condition-box {
+    width: 97%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.b-condition-bar {
+    margin: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.b-room-type-text {
+    width: 80px;
+    padding-right: 8px;
+    padding-left: 2px;
+    font-size: 16px;
+}
+
+
+.building-skill-table td {
+    border-bottom: 1px solid var(--c-border-color);
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.building-operator-avatar-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.building-operator-avatar- {
+    height: 60px;
+    width: 174px;
+    position: relative;
+}
+
+.building-operator-avatar {
+    transform: scale(.2222);
+    position: absolute;
+    top: -60px;
+    left: -60px;
+}
+
+.building-operator-avatar- span {
+    position: absolute;
+    top: 0;
+    line-height: 60px;
+    left: 64px;
+    width: 110px;
+    text-align: left;
+}
+
+
+
+
+
+
+@media screen and ( max-width: 800px) {
+    .building-operator-avatar- {
+        height: 80px;
+        width: 110px;
+    }
+
+    .building-operator-avatar- span {
+        top: 50px;
+        left: 0;
+        width: 110px;
+        text-align: center;
+    }
+
+    .building-operator-avatar {
+        transform: scale(.27777);
+        top: -60px;
+        left: -35px;
+    }
+}
+
+.building-skill-card div {
+    border: 1px solid var(--c-border-color);
+}
+
+.b-building-skill-name {
+    padding: 4px;
+    font-size: 14px;
+}
+
+.b-building-search-wrap {
+    width: 97%;
+    margin: 12px auto 36px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 0 0 12px;
+}
+
+.b-building-search-tip {
+    position: absolute;
+    top: 36px;
+    left: 12px;
+    font-style: italic;
+    font-size: 12px;
+}
+
+.cc-base {
+    color: #e77351;
+
+}
+
+.cc-vup {
+    color: #e77351;
+
+}
+
+.cc-vdown {
+    color: red;
+
+}
+
+.cc-rem {
+    font-weight: bold;
+}
+
+.cc-kw {
+    color: #00bbff;
 }

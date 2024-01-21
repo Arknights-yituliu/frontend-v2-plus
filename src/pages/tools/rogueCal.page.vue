@@ -1,10 +1,11 @@
 <template>
   <div class="rogueCal-page">
   <div class="background" >
-    <p style="opacity: 0.5; position:fixed; right: 10px; bottom: 10px">版本号：v{{ version }}</p>
+    <el-button  style=" position:fixed; right: 10px; bottom: 60px;z-index:3000" @click="downloadCalcExe()"> exe版计算器下载 </el-button>
+    <p style="opacity: 0.5; position:fixed; right: 30px; bottom: 10px">版本号：v{{ version }}</p>
     <div class="transparent-panel" id="panel">
-      <img style="position:absolute; left:1172px; top: 205px" src="/RougeCalcV1/images/delete.png" alt="delete" @click="removeBattle()">
-      <img style="position:absolute; left:45px; top: 60px" src="/RougeCalcV1/images/logo.png" alt="logo">
+      <img style="position:absolute; left:1172px; top: 205px" src="/RogueCalcV1/images/delete.png" alt="delete" @click="removeBattle()">
+      <img style="position:absolute; left:45px; top: 60px" src="/RogueCalcV1/images/logo.png" alt="logo">
 
       <div class="title-text" style="left: 40px; top: 192px;">挑战分数</div>
       <div class="rounded-rectangle" style="left: 40px; top: 240px; width: 350px; height: 255px;">
@@ -88,7 +89,7 @@
       </div>
 
       <div class="title-text" style="left: 860px; top: 192px;">关卡额外分数一览</div>
-      <div class="rounded-rectangle" style="left: 860px; top: 240px; width: 350px; height: 555px;">
+      <div class="rounded-rectangle" style="left: 860px; top: 240px; width: 360px; height: 555px;overflow-y: auto;overflow-x: hidden">
         <table class="custom-table">
           <tr
             v-for="(row, rowIndex) in scoreList"
@@ -116,32 +117,39 @@
 
       <div class="title-text" style="left: 40px; top: 850px;">友情链接</div>
       <a href="https://tomimi.cyou/zh/sami">
-        <img style="position: absolute; left: 40px; top: 900px;" src="/RougeCalcV1/images/tomimi.png" alt="tomimi">
+        <img style="position: absolute; left: 40px; top: 900px;" src="/RogueCalcV1/images/tomimi.png" alt="tomimi">
         <div class="central-text" style="left: 105px; top: 1035px;">TOMIMI</div>
       </a>
       <a href="https://viktorlab.cn/akdata/dps/">
-        <img style="position: absolute; left: 220px; top: 900px;" src="/RougeCalcV1/images/dpscalc.png" alt="dpscalc">
+        <img style="position: absolute; left: 220px; top: 900px;" src="/RogueCalcV1/images/dpscalc.png" alt="dpscalc">
         <div class="central-text" style="left: 285px; top: 1035px;">DPS计算器</div>
       </a>
       <a href="https://mapcn.ark-nights.com/areas/rogue_3">
-        <img style="position: absolute; left: 400px; top: 900px;" src="/RougeCalcV1/images/prtsmap.png" alt="tomimi">
+        <img style="position: absolute; left: 400px; top: 900px;" src="/RogueCalcV1/images/prtsmap.png" alt="prtsmap">
         <div class="central-text" style="left: 465px; top: 1035px;">PRTS.Maps</div>
       </a>
-      <div class="title-text" style="left: 700px; top: 850px;">相关链接</div>
+      <a href="https://ark.yituliu.cn">
+        <img style="position: absolute; left: 580px; top: 900px;" src="/RogueCalcV1/images/yituliu.png" alt="yituliu">
+        <div class="central-text" style="left: 645px; top: 1035px;">明日方舟一图流</div>
+      </a>
+      <div class="title-text" style="left: 850px; top: 850px;">相关链接</div>
+      <a href="https://www.bilibili.com/opus/887498186491428869">
+        <div class="link-text" style="left: 850px; top: 905px;">激励计划动态</div>
+      </a>
       <a href="https://live.bilibili.com/22476160">
-        <div class="link-text" style="left: 700px; top: 905px;">比赛直播间</div>
+        <div class="link-text" style="left: 850px; top: 935px;">比赛直播间</div>
       </a>
-      <div class="title-text" style="left: 700px; top: 1020px;">制作人员</div>
-      <div class="normal-text" style="left: 700px; top: 1075px;">程序：</div>
+      <div class="title-text" style="left: 850px; top: 1000px;">制作人员</div>
+      <div class="normal-text" style="left: 850px; top: 1055px;">程序：</div>
       <a href="https://space.bilibili.com/22275485">
-        <div class="link-text" style="left: 750px; top: 1075px;">_noname</div>
+        <div class="link-text" style="left: 900px; top: 1055px;">_noname</div>
       </a>
-      <div class="normal-text" style="left: 700px; top: 1105px;">美术：</div>
+      <div class="normal-text" style="left: 850px; top: 1085px;">美术：</div>
       <a href="https://space.bilibili.com/1684845011">
-        <div class="link-text" style="left: 750px; top: 1105px;">里雪りあ</div>
+        <div class="link-text" style="left: 900px; top: 1085px;">里雪りあ</div>
       </a>
       <a href="https://space.bilibili.com/12786648">
-        <div class="link-text" style="left: 750px; top: 1135px;">無冕Crownless</div>
+        <div class="link-text" style="left: 900px; top: 1115px;">無冕Crownless</div>
       </a>
     </div>
   </div>
@@ -166,14 +174,14 @@ export default {
         "全程未进入树篱之途"
       ],
       bossSrc: [
-        "/RougeCalcV1/images/b-7-b.png",
-        "/RougeCalcV1/images/b-6-b.png",
-        "/RougeCalcV1/images/b-5-b.png",
-        "/RougeCalcV1/images/b-4-b.png",
-        "/RougeCalcV1/images/b-7.png",
-        "/RougeCalcV1/images/b-6.png",
-        "/RougeCalcV1/images/b-5.png",
-        "/RougeCalcV1/images/r-1.png",
+        "/RogueCalcV1/images/b-7-b.png",
+        "/RogueCalcV1/images/b-6-b.png",
+        "/RogueCalcV1/images/b-5-b.png",
+        "/RogueCalcV1/images/b-4-b.png",
+        "/RogueCalcV1/images/b-7.png",
+        "/RogueCalcV1/images/b-6.png",
+        "/RogueCalcV1/images/b-5.png",
+        "/RogueCalcV1/images/r-1.png",
       ],
       battleText: [
         "关卡类型",
@@ -184,14 +192,14 @@ export default {
         "捕猎平衡是否生效",
         "特殊加分"
       ],
-      version: "1.2"
+      version: "1.3"
     };
   },
   setup() {
-    const challengeScore = [10, 30, 80, 30, 25, 66, 200];
+    const challengeScore = [10, 30, 80, 30, 25, 66, 300];
     const challengeCount = ref(["", "", "", "", ""]);
     const challengeSelect = ref([1, 1]);
-    const bossScore = [230, 360, 220, 170, 180, 10, 160, 30];
+    const bossScore = [240, 340, 220, 180, 200, 10, 160, 50];
     const twoEnding = 200;
     const threeEnding = 100;
     const bothThreeFourEnding = 100;
@@ -261,7 +269,7 @@ export default {
       "呼吸": [48, 40],
       "大地醒转": [48, 40],
       "夺树者": [48, 40],
-      "黄沙幻境": [10, 0],
+      "黄沙幻境": [20, 0],
       "天途半道": [20, 0],
       "惩罚": [20, 0],
       "豪华车队": [30, 0],
@@ -520,6 +528,9 @@ export default {
         const sumRect = sumElement.getBoundingClientRect();
         this.unitLeft = sumRect.right - 515;
       }
+    },
+    downloadCalcExe(){
+       window.open('/RogueCalcV1/formalCalc.exe')
     }
   },
   mounted() {
@@ -540,17 +551,17 @@ export default {
 
 @font-face {
   font-family: 'Novecento Wide Medium';
-  src: url('/RougeCalcV1/font/Novecento WideMedium.otf');
+  src: url('/RogueCalcV1/font/Novecento WideMedium.otf');
 }
 
 @font-face {
   font-family: '标小智无界黑';
-  src: url('/RougeCalcV1/font/标小智无界黑.TTF');
+  src: url('/RogueCalcV1/font/标小智无界黑.TTF');
 }
 
 @font-face {
   font-family: 'HarmonyOS Sans SC';
-  src: url('/RougeCalcV1/font/HARMONYOS_SANS_SC_REGULAR.TTF');
+  src: url('/RogueCalcV1/font/HARMONYOS_SANS_SC_REGULAR.TTF');
 }
 
 .rogueCal-page {
@@ -564,7 +575,7 @@ export default {
 }
 
 .background {
-  background-image: url('/RougeCalcV1/images/pure-background.jpg');
+  background-image: url('/RogueCalcV1/images/pure-background.jpg');
   background-size: cover;
   justify-content: center;
   align-items: center;
@@ -596,14 +607,14 @@ export default {
 .normal-text {
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 16px;
-  color: #000;
+  
   position: absolute;
 }
 
 .small-text {
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 13px;
-  color: #000;
+  
   position: absolute;
 }
 
@@ -628,7 +639,7 @@ export default {
 .bold-text {
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 18px;
-  color: #000;
+  
   position: absolute;
 }
 
@@ -660,13 +671,13 @@ export default {
   -moz-appearance: textfield;
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 16px;
-  background-color: #EFEFEF;
   border: transparent;
   position: absolute;
   width: 50px;
   height: 26px;
   text-align: center;
   appearance: none;
+  border: 1px solid var(--c-border-color);
 }
 
 .final-input::-webkit-inner-spin-button,
@@ -710,7 +721,7 @@ export default {
 }
 
 .custom-dropdown {
-  background-color: #EFEFEF;
+
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -721,7 +732,7 @@ export default {
 }
 
 .custom-dropdown-2 {
-  background-color: #EFEFEF;
+
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -732,7 +743,7 @@ export default {
 }
 
 .add-button {
-  background-color: #EFEFEF;
+
   font-family: 'HarmonyOS Sans SC', sans-serif;
   font-size: 18px;
   border: 1px solid #ccc;
@@ -755,7 +766,7 @@ export default {
   border: transparent;
   left: 10px;
   top: 10px;
-  width: 330px;
+  width: 320px;
   position: absolute;
   border-collapse: collapse;
   table-layout: fixed;

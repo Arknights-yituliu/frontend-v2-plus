@@ -136,59 +136,59 @@
   line-height: 36px;
 }
 
-.el-collapse-item__content {
-  padding-bottom: 0px;
-}
+/*.el-collapse-item__content {*/
+/*  padding-bottom: 0px;*/
+/*}*/
 
-.el-input_wrap {
-  display: flex;
-  margin-top: 12px;
-  flex-wrap: wrap;
-}
+/*.el-input_wrap {*/
+/*  display: flex;*/
+/*  margin-top: 12px;*/
+/*  flex-wrap: wrap;*/
+/*}*/
 
-.el-input_text {
-  height: 32px;
-  line-height: 32px;
-  margin-left: 16px;
-  margin-right: 12px;
-}
+/*.el-input_text {*/
+/*  height: 32px;*/
+/*  line-height: 32px;*/
+/*  margin-left: 16px;*/
+/*  margin-right: 12px;*/
+/*}*/
 
-.el-collapse-item__wrap {
-  /* margin: 1px; */
-  vertical-align: middle;
-  will-change: height;
-  border-bottom: 0px;
-  /* background-color: #e8e8e8; */
-  /* border-radius: 0px 0px 10px 10px; */
-  border-top: 1px solid #dfdfdf;
-}
+/*.el-collapse-item__wrap {*/
+/*  !* margin: 1px; *!*/
+/*  vertical-align: middle;*/
+/*  will-change: height;*/
+/*  border-bottom: 0px;*/
+/*  !* background-color: #e8e8e8; *!*/
+/*  !* border-radius: 0px 0px 10px 10px; *!*/
+/*  border-top: 1px solid #dfdfdf;*/
+/*}*/
 
-.el-collapse-item__header {
-  /* background-color: #d8d8d8; */
-  border-bottom: 0px;
-  /* border-radius: 10px; */
-}
+/*.el-collapse-item__header {*/
+/*  !* background-color: #d8d8d8; *!*/
+/*  border-bottom: 0px;*/
+/*  !* border-radius: 10px; *!*/
+/*}*/
 
-.el-switch__core {
-  margin-bottom: 2px;
-}
+/*.el-switch__core {*/
+/*  margin-bottom: 2px;*/
+/*}*/
 
-.el-radio-button__inner {
-  width: 100%;
-}
+/*.el-radio-button__inner {*/
+/*  width: 100%;*/
+/*}*/
 
-.el-radio-button--small .el-radio-button__inner {
-  padding: 9px 0px;
-}
+/*.el-radio-button--small .el-radio-button__inner {*/
+/*  padding: 9px 0px;*/
+/*}*/
 
-.el-checkbox-button__inner {
-  padding: 2px;
-}
-.el-checkbox-button:last-child .el-checkbox-button__inner {
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-.el-checkbox-button:first-child .el-checkbox-button__inner {
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-}
+/*.el-checkbox-button__inner {*/
+/*  padding: 2px;*/
+/*}*/
+/*.el-checkbox-button:last-child .el-checkbox-button__inner {*/
+/*  border-top-right-radius: 6px;*/
+/*  border-bottom-right-radius: 6px;*/
+/*}*/
+/*.el-checkbox-button:first-child .el-checkbox-button__inner {*/
+/*  border-top-left-radius: 6px;*/
+/*  border-bottom-left-radius: 6px;*/
+/*}*/

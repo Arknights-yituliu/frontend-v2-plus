@@ -122,6 +122,10 @@ function getPageTitle(path) {
     aside_collapse()
   }
 
+  if (path.indexOf('tools/rogueCal') > -1) {
+    aside_collapse()
+  }
+
   if (path.indexOf('tools/maa') > -1) {
     aside_collapse()
     pageTitle.value = "排班生成器旧版-已停止维护,请使用新版生成器"

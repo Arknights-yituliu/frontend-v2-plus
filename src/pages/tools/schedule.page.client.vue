@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue"
+import {onMounted, ref, watch} from "vue"
 import buildingApi from '/src/api/building'
 import schedule_template_json from '/src/static/json/build/plans_template.json'
 import '/src/assets/css/tool/schedule.css'
@@ -13,7 +13,7 @@ import {fileRead} from '/src/utils/fileRead'
 import {debounce} from "/src/utils/debounce";
 import building_table from '/src/static/json/build/building_table.json'
 import feedBack from '/src/components/feedBack.vue';
-import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
+import {operatorFilterConditionTable} from '/src/pages/tools/js/skillFilter.js'
 
 const COLOR = {BLUE: 'blue', ORANGE: 'orange', GREEN: 'green'}
 
@@ -329,14 +329,14 @@ function chooseOperator(charId) {
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.includes(charId)) {
-    cMessage('不要选择同一干员')
+    cMessage('不要选择同一干员', 'error')
     return;
   }
 
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
-    cMessage('当前房间干员数量已达上限')
+    cMessage('当前房间干员数量已达上限', 'error')
     return;
   }
 
@@ -418,7 +418,7 @@ function getRoomProduct(roomType, index) {
 function fillOperatorConflict(index) {
   if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].autofill) {
     if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].operators) {
-      cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍干员冲突!', 'warn')
+      cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干预入驻功能异常!', 'warn')
     }
   }
 }
@@ -445,6 +445,18 @@ function setFiammetta(property, value) {
   plansTemplate.value[selectedPlanIndex.value].Fiammetta[property] = value
   localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 }
+
+watch(()=>plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
+    (newVal)=>{
+  console.log(newVal)
+     if(newVal && selectedRoomType.value === 'dormitory') {
+       if( plansTemplate.value[selectedPlanIndex.value].rooms
+           [selectedRoomType.value][selectedRoomIndex.value].operators.length >0){
+         cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干员入驻功能异常!', 'warn')
+       }
+     }
+})
+
 
 /**
  * 获得排班执行时间间隔
@@ -714,7 +726,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <span class="schedule-version">V1.1.1</span>
+  <span class="schedule-version">V1.1.2</span>
 
   <c-popup v-model:visible="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
     <div class="schedule-set-wrap">
@@ -848,7 +860,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="schedule-set-bar-short">
+      <div class="schedule-set-bar-short" style="height: 60px;">
         <span class="room-set-description">按顺序入驻</span>
         <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
         </c-switch>
@@ -856,7 +868,7 @@ onMounted(() => {
         <span class="room-set-description">补满空位</span>
         <c-switch
             v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
-        </c-switch>
+        </c-switch >
         <i class="iconfont icon-question schedule-question">
           <span class="schedule-tip">使用补满空位功能后，后续的宿舍可能无法使用指定干员功能</span>
         </i>
@@ -1124,6 +1136,7 @@ onMounted(() => {
 
 .schedule-tip {
   position: absolute;
+  z-index: 3000;
   top: 20px;
   left: 20px;
   display: none;

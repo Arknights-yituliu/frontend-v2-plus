@@ -2,7 +2,7 @@
   <div class="debt-collapse">
     <div class="gacha_title_icon"></div>
     <span class="collapse-item_title"> 仅需{{ calResult.weeks.toFixed(0) }}周即可还清欠款！ </span>
-    <span class="collapse-item_title_url">yituliu.site</span>
+    <span class="collapse-item_title_url">ark.yituliu.cn</span>
 
     <hr />
     <div class="universal_module">

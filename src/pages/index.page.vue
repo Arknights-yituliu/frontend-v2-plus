@@ -1,7 +1,7 @@
 <script setup>
 import stage from "/src/pages/material/stageV3.page.client.vue";
 import FootComponent from "@/components/FootComponent.vue";
-
+import {onMounted, ref} from "vue";
 
 /**
  * 点击复制内容
@@ -16,8 +16,33 @@ function copyCode(text) {
   window.open('https://ak.hypergryph.com')
 }
 
-function officialLink() {
-  window.open('https://space.bilibili.com/688411531')
+let tipVisible = ref(true)
+
+function openNewPage(url) {
+  window.open(url)
+
+}
+
+let announcementQuantity = ref(1)
+let currentAnnouncementIndex = ref(0)
+
+function announcementBtnStyle(index) {
+  if (currentAnnouncementIndex.value == index) {
+    return 'background-color: #9d9d9d'
+  }
+}
+
+onMounted(() => {
+  const announcementList = document.getElementsByClassName('announcement-card')
+  announcementQuantity.value = announcementList.length
+
+  if (window.location.hostname.indexOf("ytl") > -1){
+    tipVisible.value = true
+  }
+})
+
+function chooseAnnouncement(index) {
+
 }
 
 </script>
@@ -38,11 +63,31 @@ function officialLink() {
     <!--      </div>-->
     <!--    </div>-->
 
+    <div style="display:flex;flex-wrap:wrap;justify-content: center">
+      <div id="RIICbeta" class="announcement-card" @click="openNewPage('https://ark.yituliu.cn')" v-show="tipVisible">
+        您现在正在通过<b style="color: rgb(255,94,66);">临时域名</b>访问本站<br>新域名(ark.yituliu.cn)正在备案中<br>
+        建议关注 <b style="color: rgb(255,94,66);">bilibili@罗德岛基建BETA</b> 获取最新动态<br>点击本卡片即可跳转新域名
+      </div>
 
-    <div id="RIICbeta" class="stage_3_intro to_official_card" @click="officialLink()">
-      您现在正在通过<b style="color: rgb(255,94,66);">临时域名</b>访问本站<br>新域名(ark.yituliu.cn)正在备案中<br>
-      建议关注 <b style="color: rgb(255,94,66);">bilibili@罗德岛基建BETA</b> 获取最新动态<br>点击本卡片即可跳转
+      <div id="RIICbeta" class="announcement-card" @click="openNewPage('/tools/rogueCal')" style="position: relative">
+        <img src="/RogueCalcV1/roguebanner.jpg" alt="" style="width: 400px;position: absolute;top:-10px;left:0">
+        <span style="position: absolute;top:100px;left:0;text-align: center;width: 400px;font-weight: bold">
+          通天联赛#0附加赛激励计划
+        </span>
+        <span style="position: absolute;top:128px;left:25px;text-align: center;width: 350px;font-style: italic ;font-size: 14px;line-height: 20px">
+          通天联赛#0附加赛正在如火如荼地进行中，在观看比赛的同时，我们也欢迎您一同挑战，获得丰厚奖金
+        </span>
+      </div>
     </div>
+    <!--    <div class="announcement-card-wrap">-->
+    <!--      <div class="announcement-card-list">-->
+    <!--        -->
+    <!--      </div>-->
+    <!--      <div class="announcement-btn-wrap">-->
+    <!--        <div v-for="(num,index) in announcementQuantity" :key="index" class="announcement-btn"-->
+    <!--        :style="announcementBtnStyle(index)"> </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
 
     <stage/>
@@ -96,17 +141,51 @@ function officialLink() {
   width: 400px;
 }
 
-.to_official_card {
-  max-width: 600px;
-  font-size: 24px;
+.announcement-card-wrap {
+  display: flex;
+  margin: auto;
+  width: 500px;
+  height: 140px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 2px 2px 4px var(--c-box-shadow-color), -2px -2px 4px var(--c-box-shadow-color);
+}
+
+.announcement-card-list {
+  display: flex;
+  transition: .3s ease-in-out;
+  transform: translateX(-500px);
+}
+
+.announcement-card {
+  min-width: 400px;
+  font-size: 18px;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-  margin: 8px auto;
-  border: 2px solid #ff0000;
   line-height: 28px;
   padding-top: 8px;
   cursor: pointer;
+  margin:4px 24px;
+  height: 160px;
+  overflow: hidden;
+  box-shadow: 2px 2px 4px var(--c-box-shadow-color), -2px -2px 4px var(--c-box-shadow-color);
 }
+
+.announcement-btn-wrap {
+  position: absolute;
+  width: 500px;
+  top: 125px;
+  display: flex;
+  justify-content: center;
+}
+
+.announcement-btn {
+  width: 40px;
+  height: 8px;
+  margin: 0 8px;
+  background-color: #d0d0d0;
+}
+
 
 </style>
 

@@ -5,9 +5,10 @@
   position: fixed;
   top: 0;
   left: 0;
-  transition: all 0.3s linear;
+  transition: all 0.3s ease-in-out;
   width: 250px;
   background-color: #1e222d;
+  padding-bottom: 200px;
 }
 
 .nav-href {
