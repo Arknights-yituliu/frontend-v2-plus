@@ -101,9 +101,19 @@
 
 .b-building-search-wrap {
     width: 97%;
-    margin: 12px auto;
+    margin: 12px auto 36px;
     display: flex;
     align-items: center;
+    position: relative;
+    padding: 0 0 0 12px;
+}
+
+.b-building-search-tip {
+    position: absolute;
+    top: 36px;
+    left: 12px;
+    font-style: italic;
+    font-size: 12px;
 }
 
 .cc-base {

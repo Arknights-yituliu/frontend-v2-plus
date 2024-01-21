@@ -200,13 +200,14 @@ onMounted(() => {
     </div>
 
     <div class="b-building-search-wrap">
-      <span style="padding:0 16px">搜索干员</span>
+
       <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
       <c-button :status="hideIrrelevantSkillsFlag" :color="COLOR.ORANGE"
                 style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
       </c-button>
+      <span class="b-building-search-tip">输入干员名、技能名称、技能描述搜索</span>
       <!--  <span-->
-      <!--      style="font-style: italic;font-size: 14px">（搜索栏可输入干员名、技能描述，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>-->
+      <!--      style="font-style: italic;font-size: 14px">（搜索栏可，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>-->
 
     </div>
 
