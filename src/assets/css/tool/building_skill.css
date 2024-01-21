@@ -44,37 +44,37 @@
 }
 
 .building-operator-avatar- {
-    height: 65px;
-    width: 110px;
+    height: 48px;
+    width: 150px;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    background-color: #00a1d6;
 }
 
 .building-operator-avatar {
     transform: scale(.2222);
     position: absolute;
-    top: -65px;
-    left: -34px;
+    top: -70px;
+    left: -70px;
 }
 
 .building-operator-avatar- span {
     position: absolute;
-    top: 45px;
+    top: 0;
+    left: 44px;
+    line-height: 48px;
     width: 100%;
-    text-align: center;
+    text-align: left;
 }
 
 
-@media screen and ( max-width: 800px) {
+@media screen and ( max-width: 1000px) {
     .building-operator-avatar- {
         height: 80px;
         width: 110px;
     }
 
     .building-operator-avatar- span {
-        top: 62px;
+        top: 44px;
         left: 0;
         width: 110px;
         text-align: center;
