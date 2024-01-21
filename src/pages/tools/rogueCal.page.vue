@@ -89,7 +89,7 @@
       </div>
 
       <div class="title-text" style="left: 860px; top: 192px;">关卡额外分数一览</div>
-      <div class="rounded-rectangle" style="left: 860px; top: 240px; width: 350px; height: 555px;">
+      <div class="rounded-rectangle" style="left: 860px; top: 240px; width: 360px; height: 555px;overflow-y: auto;overflow-x: hidden">
         <table class="custom-table">
           <tr
             v-for="(row, rowIndex) in scoreList"
@@ -766,7 +766,7 @@ export default {
   border: transparent;
   left: 10px;
   top: 10px;
-  width: 330px;
+  width: 320px;
   position: absolute;
   border-collapse: collapse;
   table-layout: fixed;
