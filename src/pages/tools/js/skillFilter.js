@@ -2,7 +2,7 @@ const operatorFilterConditionTable = {
     room: {
         name: "工作场所",
         display: true,
-        color:'#595959',
+        color:'inherit',
         conditions: [
             {
                 label: "贸易站",
@@ -62,7 +62,7 @@ const operatorFilterConditionTable = {
     },
     manufacture: {
         name: "制造站",
-        color:'#ffb500',
+        color:'#ff641e',
         display: true,
         conditions: [
             {
@@ -125,7 +125,7 @@ const operatorFilterConditionTable = {
     },
     control: {
         name: "控制中枢",
-        color:'#00b605',
+        color:'#00e734',
         display: true,
         conditions: [
             {

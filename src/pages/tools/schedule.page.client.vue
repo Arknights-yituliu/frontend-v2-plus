@@ -13,7 +13,7 @@ import {fileRead} from '/src/utils/fileRead'
 import {debounce} from "/src/utils/debounce";
 import building_table from '/src/static/json/build/building_table.json'
 import feedBack from '/src/components/feedBack.vue';
-import {operatorFilterConditionTable} from '/src/pages/tools/skillFilter.js'
+import {operatorFilterConditionTable} from '/src/pages/tools/js/skillFilter.js'
 
 const COLOR = {BLUE: 'blue', ORANGE: 'orange', GREEN: 'green'}
 
