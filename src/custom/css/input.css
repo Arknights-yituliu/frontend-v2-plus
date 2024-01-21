@@ -12,6 +12,19 @@
     background-color: var(--c-input-bg);
 }
 
+.input-group{
+    position: relative;
+}
+
+.input-group-text{
+    position: absolute;
+    top: 30px;
+    left: 2px;
+    font-style: italic;
+    font-size: 14px;
+    color:grey;
+}
+
 .input-base:focus {
     border:var(--c-input-border-focus);
 }

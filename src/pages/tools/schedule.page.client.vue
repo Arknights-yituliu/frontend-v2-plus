@@ -326,17 +326,23 @@ const roomPopupStyle = "width:75%"
  * @param {string} charId 干员id
  */
 function chooseOperator(charId) {
+
+  if(!checkDuplicateOperator(selectedPlanIndex.value,charId,true)){
+    cMessage('请勿在同一班次入驻两个同名干员','error')
+    return;
+  }
+
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.includes(charId)) {
-    cMessage('不要选择同一干员')
+    cMessage('不要选择同一干员', 'error')
     return;
   }
 
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
-    cMessage('当前房间干员数量已达上限')
+    cMessage('当前房间干员数量已达上限', 'error')
     return;
   }
 
@@ -351,18 +357,41 @@ function chooseOperator(charId) {
 
 /**
  * 删除该房间中选中的干员
- * @param {string} operator_id 干员id
+ * @param {string} charId 干员id
  */
-function deleteOperator(operator_id) {
+function deleteOperator(charId) {
+
+  checkDuplicateOperator(selectedPlanIndex.value,charId,false)
 
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
       plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
-        return e !== operator_id
+        return e !== charId
       })
 
   localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 }
 
+let duplicateOperatorTable = ref([])
+
+/**
+ * 检查当前班次是否有同名干员
+ * @param index 班次
+ * @param charId 干员id
+ * @param status 干员入驻true或删除false
+ */
+function checkDuplicateOperator(index,charId,status){
+   //当前班次非空判断
+   if(!duplicateOperatorTable.value[index]){
+     duplicateOperatorTable.value[index] = {}
+   }
+  //如果是入驻干员并且检查表里干员状态是已经入驻，弹出警告
+   if(duplicateOperatorTable.value[index][charId] && status){
+      return false;
+   }
+  // 更新检查表里干员状态
+  duplicateOperatorTable.value[index][charId] = status
+  return true;
+}
 
 let tmpOperatorList = ref([])
 
@@ -381,6 +410,17 @@ function pasteOperatorList() {
   for (const charId of tmpOperatorList.value) {
     chooseOperator(charId)
   }
+}
+
+let tmpPlanData = ref({index: 0, plan: ''})
+
+function copyPlan() {
+  tmpPlanData.value.plan = JSON.stringify(plansTemplate.value[selectedPlanIndex.value])
+  tmpPlanData.value.index = selectedPlanIndex.value+1
+}
+
+function pastePlan() {
+  plansTemplate.value[selectedPlanIndex.value] = JSON.parse(tmpPlanData.value.plan)
 }
 
 let selectedProduct = ref("")
@@ -446,16 +486,16 @@ function setFiammetta(property, value) {
   localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 }
 
-watch(()=>plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
-    (newVal)=>{
-  console.log(newVal)
-     if(newVal && selectedRoomType.value === 'dormitory') {
-       if( plansTemplate.value[selectedPlanIndex.value].rooms
-           [selectedRoomType.value][selectedRoomIndex.value].operators.length >0){
-         cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干员入驻功能异常!', 'warn')
-       }
-     }
-})
+watch(() => plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
+    (newVal) => {
+      console.log(newVal)
+      if (newVal && selectedRoomType.value === 'dormitory') {
+        if (plansTemplate.value[selectedPlanIndex.value].rooms
+            [selectedRoomType.value][selectedRoomIndex.value].operators.length > 0) {
+          cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干员入驻功能异常!', 'warn')
+        }
+      }
+    })
 
 
 /**
@@ -868,7 +908,7 @@ onMounted(() => {
         <span class="room-set-description">补满空位</span>
         <c-switch
             v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
-        </c-switch >
+        </c-switch>
         <i class="iconfont icon-question schedule-question">
           <span class="schedule-tip">使用补满空位功能后，后续的宿舍可能无法使用指定干员功能</span>
         </i>
@@ -919,14 +959,22 @@ onMounted(() => {
 
 
     <div class="room-wrap">
-      <div class="room-arrow-wrap" @click="lastOrNextPlanTimes(selectedPlanIndex-1)"><i class="iconfont icon-arrow-left"
-                                                                                        style="font-size: 48px"></i>
+      <div class="room-arrow-wrap"
+           @click="lastOrNextPlanTimes(selectedPlanIndex-1)">
+        <i class="iconfont icon-arrow-left"
+           style="font-size: 48px">
+        </i>
       </div>
       <!--  左边站点-->
       <div class="room-wrap-left">
-        <div class="room-template blank" style="width: 180px;" v-for="index in 3" :key="index"></div>
+<!--        <div class="room-template blank" style="width: 180px;" -->
+<!--             v-for="index in 3" :key="index">-->
+<!--        </div>-->
+        <div class="copy-btn-wrap">
+        </div>
         <!--    贸易站-->
-        <div class="room-template trading" :class="roomSelectedClass('trading',tradingIndex)"
+        <div class="room-template trading"
+             :class="roomSelectedClass('trading',tradingIndex)"
              v-for="(num,tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
              @click="chooseRoom('trading',tradingIndex)">
           <div class="room-name">
@@ -981,7 +1029,11 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="room-template blank" style="width: 180px;" v-for="index in 3" :key="index"></div>
+        <div class="copy-btn-wrap">
+          <span>被复制的班次：#{{tmpPlanData.index}} 班</span>
+          <c-button :color="COLOR.BLUE" :status="true" @click="copyPlan()">复制班次</c-button>
+          <c-button :color="COLOR.BLUE" :status="true" @click="pastePlan()">粘贴班次</c-button>
+        </div>
       </div>
 
       <div class="room-wrap-center">
@@ -1073,9 +1125,8 @@ onMounted(() => {
             </i>
           </div>
         </div>
-        <c-button @click="copyOperatorList()">复制</c-button>
-        <c-button @click="pasteOperatorList()">粘贴</c-button>
-
+        <c-button :color="COLOR.BLUE" :status="true" @click="pasteOperatorList()">粘贴</c-button>
+        <c-button :color="COLOR.BLUE" :status="true" @click="copyOperatorList()">复制</c-button>
         <span class="room-set-description">复制的干员</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap"
@@ -1098,10 +1149,11 @@ onMounted(() => {
       </div>
 
       <div class="schedule-operator-search-input-box">
-        <span style="padding:0 16px">搜索干员</span>
-        <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
-        <span
-            style="font-style: italic;font-size: 14px">（搜索栏可输入干员名、技能描述，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>
+        <div class="input-group">
+          <input class="input-base" id="input-id" style="width:500px" @input="searchOperatorDebounce()"
+                 v-model="searchInputText">
+          <span class="input-group-text">输入干员名、技能名称、技能描述搜索</span>
+        </div>
       </div>
       <div class="operator-check-box">
         <div class="option-avatar-sprite-wrap"

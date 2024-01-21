@@ -115,6 +115,7 @@
 }
 
 .execution-time-wrap {
+
 }
 
 .execution-time {
@@ -187,6 +188,23 @@
     border: 1px solid var(--c-background-color);
 }
 
+.copy-btn-wrap{
+    padding: 4px;
+    margin: 4px;
+    height: 70px;
+    width: 500px;
+    border: 1px solid var(--c-background-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*background-color: #d0d0d0;*/
+}
+
+.copy-btn-wrap span{
+    font-weight: bold;
+    line-height: 24px;
+    margin-right: 12px;
+}
 
 .blank {
     box-shadow: none;
@@ -437,8 +455,9 @@
 
 .schedule-operator-search-input-box {
     display: flex;
-    align-items: center;
-    margin: 8px 0;
+    margin: 8px 0 0 16px;
+    height: 50px;
+    /*background-color: #00a1d6;*/
 }
 
 .operator-check-box {

@@ -10,15 +10,15 @@
       </div>
       <div class="op_title_tag">
         <!-- <div class="op_tag_0">图例</div> -->
-        <div :class="efficiencyTypeBtnClass('single')" @click="displaySingleOrCompleteEfficiency('single')">
+        <!-- <div :class="efficiencyTypeBtnClass('single')" @click="displaySingleOrCompleteEfficiency('single')">
           单一材料效率
-        </div>
-        <div :class="efficiencyTypeBtnClass('complete')" @click="displaySingleOrCompleteEfficiency('complete')">
+        </div> -->
+        <!-- <div :class="efficiencyTypeBtnClass('complete')" @click="displaySingleOrCompleteEfficiency('complete')">
           关卡综合效率
-        </div>
-        <div class="op_tag_0" @click="scrollToOrundumTable()">搓玉数据</div>
-        <div class="op_tag_0" @click="scrollToHistoryStageTable()">往期活动</div>
-        <div class="op_tag_0" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>
+        </div> -->
+        <div class="op_tag_1" @click="scrollToOrundumTable()">搓玉数据</div>
+        <div class="op_tag_1" @click="scrollToHistoryStageTable()">往期活动</div>
+        <div class="op_tag_1" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>
         <!-- <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div> -->
         <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
@@ -31,214 +31,180 @@
           </div>
         </div> -->
     </div>
+
     <!-- 说明区域 -->
-    <div class="stage_3_intro" :style="`display:${legendStyle} `">
-      <!-- 长期最优 -->
-      <div class="stage_card_3_intro_left">
-        <div class="img_wrap" style="position: relative;">
-          <div class="stage_card_3_mainImg" :class="getItemSeriesSprite('31013')">
-            <div class="stage_card_3_cover" style="height:114px;"></div>
-            <div class="stage_card_3_best" style="font-size: 16px;">
-              <div class="stage_card_3_best_chapter" style="font-size: 12px;"><b style="font-weight: 600;">所有材料</b>都有需求
-              </div>
-              刷这个
-              <div class="stage_card_3_markText_l">综合最优</div>
+
+    <!-- 图例3.0 -->
+    <div class="s-stage-legend">
+      <table class="s-stage-legend-table">
+        <tbody>
+        <tr>
+          <td>
+            <div class="s-stage-legend-sprite-wrap">
+              <div :class="getLegendSprite('AP_GAMEPLAY')"></div>
             </div>
-          </div>
-        </div>
-      </div>
-      <!-- 短期最优 -->
-      <div class="stage_card_3_intro_right">
-        <!-- 数值图例 -->
-        <div id="stage_card_3_intro_block_1">
-          <div class="stage_card_3_list" style="width:168px;height: 105px;font-size: 12px;line-height: 24px;">
-            <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;">
-              <div class="stage_card_3_img">
-                <div :class="getItemT3Sprite(31014)"></div>
-              </div>
-              <div class="stage_card_3_line_text"
-                   style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">
-                只需求<span style="color: #e600ff;">紫材料</span><br>刷这个
-              </div>
-              <div class="stage_card_3_line_text"
-                   style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T4效率值
-              </div>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-1">需要所有材料→</span>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-2">10-10</span>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-3">[综合效率]<br>所有掉落物的价值之和/理智消耗</span>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-4">[综合效率]</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="s-stage-legend-sprite-wrap">
+              <div :class="getLegendSprite('30024')"></div>
             </div>
-            <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
-              <div class="stage_card_3_img">
-                <div :class="getItemT3Sprite(31013)"></div>
-              </div>
-              <div class="stage_card_3_line_text"
-                   style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">
-                只需求<span style="color:#0084ff;">蓝材料</span><br>刷这个
-              </div>
-              <div class="stage_card_3_line_text"
-                   style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T3效率值
-              </div>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-1">
+              需要<span style="color: #c01dd7;font-weight: bold">紫材料→</span>
+              </span>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-2">LE-5</span>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-3">
+              [<span style="color: #c01dd7;font-weight: bold">T4</span>效率]<br>
+              <span style="color: #c01dd7;font-weight: bold">紫</span>
+              <span style="color: #0276f8;font-weight: bold">蓝</span>
+              <span style="color: #01c028;font-weight: bold">绿</span>白糖价值之和/理智消耗
+            </span>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-4">[综合效率]</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="s-stage-legend-sprite-wrap">
+              <div :class="getLegendSprite('30023')"></div>
             </div>
-            <div class="intro_effBar" style="width: 172px;height: 20px;display: flex;align-items: center;">
-              <div class="stage-efficiency-bar-wrap" style="width: 96px;margin-right: 6px">
-                <div v-for="(style,index) in getEfficiencyBar(0.6,0.8,4)"
-                     :key="index"
-                     :style="style" style="width: 18px"></div>
-              </div>
-              <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;">效率指示条</div>
-            </div>
-          </div>
-          <div class="stage_card_3_markText">短期最优</div>
-        </div>
-        <!-- 图表图例 -->
-        <div id="stage_card_3_intro_block_2" style="width: 54%;font-size: 12px;border-left: 1px solid;">
-          <div class="stage_card_3_list" style="width:210px;height: 108px;line-height: 24px;margin: 8px auto;">
-            <div class="intro_effBar"
-                 style="height: 32px;display: flex;align-items: center;justify-content: space-between">
-              <div class="stage-efficiency-bar-wrap" style="width: 87px;">
-                <div v-for="(style,index) in getEfficiencyBar(0.0,0.0,0)"
-                     :key="index"
-                     :style="style" style="width: 16px"></div>
-              </div>
-              <div class="intro_effBar_intro" style="font-weight: 600;">
-                每格代表20%的效率
-              </div>
-            </div>
-            <div class="intro_effBar"
-                 style="height: 32px;display: flex;align-items: center;justify-content: space-between">
-              <div class="stage-efficiency-bar-wrap" style="width: 87px;">
-                <div v-for="(style,index) in getEfficiencyBar(0.0,0.9,0)"
-                     :key="index"
-                     :style="style" style="width: 16px"></div>
-              </div>
-              <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600">
-                所有掉落物的总效率
-              </div>
-            </div>
-            <div class="intro_effBar"
-                 style="height: 32px;display: flex;align-items: center;justify-content: space-between">
-              <div class="stage-efficiency-bar-wrap" style="width: 87px;">
-                <div v-for="(style,index) in getEfficiencyBar(0.6,0.6,4)"
-                     :key="index"
-                     :style="style" style="width: 16px"></div>
-              </div>
-              <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600">
-                T4/T3/T2材料的效率
-              </div>
-              <div style="font-size: 12px;"></div>
-            </div>
-            <div class="intro_effBar" style="height: 24px;margin-right: 8px;text-align: right;">
-              <el-button type="primary" size="small" @click="scrollToLegendDescription">
-                看看细节
-              </el-button>
-              <el-button type="primary" size="small" @click="hiddenLegend()">
-                不再显示
-              </el-button>
-            </div>
-          </div>
-        </div>
-        <!-- 操作区域 -->
-        <!-- <div class="stage_card_3_intro_block" style="width: 15%;">
-            </div> -->
-      </div>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-1">
+              需要<span style="color: #0276f8;font-weight: bold">蓝材料→</span>
+              </span>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-2">LE-5</span>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-3">
+              [<span style="color: #0276f8;font-weight: bold">T3</span>效率]<br>
+              <span style="color: #0276f8;font-weight: bold">蓝</span>
+              <span style="color: #01c028;font-weight: bold">绿</span>白糖价值之和/理智消耗
+            </span>
+          </td>
+          <td>
+            <span class="s-stage-legend-text-4">[综合效率]</span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            <el-button type="primary" size="small" style="margin-left: 350px"
+                       @click="scrollToLegendDescription">
+              看看细节
+            </el-button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
     </div>
+
+
     <!-- 卡片区域 -->
-    <div id="stage_3">
-      <!-- {{ item_card_data[10] }} -->
-      <!-- 正式卡片 -->
-      <div class="stage_card_3" v-for="(stage, index) in item_card_data" :key="index"
+    <div id="stage" style="display: flex;flex-wrap: wrap;font-size: 16px;">
+      <div class="stage_card_3s" v-for="(stage, index) in item_card_data" :key="index"
            @click="getItemTableData(index, true)">
-        <!-- 长期最优 -->
-        <div class="stage_card_3_left">
-          <div class="img_wrap" style="position: relative;">
-            <div class="stage_card_3_mainImg" :class="getItemSeriesSprite(stage.series.r3)">
-              <div class="stage_card_3_cover"></div>
-              <div class="stage_card_3_best">
-                <div class="stage_card_3_best_chapter">{{ replaceZoneName(stage.maxEfficiencyStage.zoneName) }}</div>
-                {{ stage.maxEfficiencyStage.stageCode }}
-                <div class="stage_card_3_markText_l">综合最优</div>
-              </div>
+        <div :class="getCardBgSprite(stage.series.r3)"></div>
+        <div class="stage_card_3s_list">
+          <div class="stage_card_3_line">
+            <div class="s-stage-card-icon-wrap" >
+              <div :class="getCardIconSprite('AP_GAMEPLAY')"></div>
+            </div>
+            <div class="stage_card_3_2" style="display: none;">
+              {{ stage.maxEfficiencyStage.zoneName }}
+            </div>
+            <div class="stage_card_3_3 stage_card_3_line_text">
+              {{ stage.maxEfficiencyStage.stageCode }}
+            </div>
+            <div class="stage_card_3_4">
+              {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
+            </div>
+            <div class="stage_card_3_5">
+              {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
+            </div>
+          </div>
+          <div class="stage_card_3_line">
+            <div class="s-stage-card-icon-wrap">
+              <div :class="getCardIconSprite(stage.series.r4)"></div>
+            </div>
+            <div class="stage_card_3_2" style="display: none;">
+              第一章
+            </div>
+            <div class="stage_card_3_3 stage_card_3_line_text">
+              {{ stage.leT4MaxEfficiencyStage.stageCode }}
+            </div>
+            <div class="stage_card_3_4">
+              {{ formatNumber(stage.leT4MaxEfficiencyStage.leT4Efficiency * 100, 1) }}%
+            </div>
+            <div class="stage_card_3_5">
+              {{ formatNumber(stage.leT4MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
+            </div>
+          </div>
+          <div class="stage_card_3_line">
+            <div class="s-stage-card-icon-wrap" >
+              <div :class="getCardIconSprite(stage.series.r3)"></div>
+            </div>
+            <div class="stage_card_3_2" style="display: none;">
+              第一章
+            </div>
+            <div class="stage_card_3_3 stage_card_3_line_text">
+              {{ stage.leT3MaxEfficiencyStage.stageCode }}
+            </div>
+            <div class="stage_card_3_4">
+              {{ formatNumber(stage.leT3MaxEfficiencyStage.leT3Efficiency * 100, 1) }}%
+            </div>
+            <div class="stage_card_3_5">
+              {{ formatNumber(stage.leT3MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
+            </div>
+          </div>
+          <div class="stage_card_3_line" v-show="stage.series.r2">
+            <div class="s-stage-card-icon-wrap" >
+              <div :class="getCardIconSprite(stage.series.r2)"></div>
+            </div>
+            <div class="stage_card_3_2" style="display: none;">
+              第一章
+            </div>
+            <div class="stage_card_3_3 stage_card_3_line_text">
+              {{ stage.leT2MaxEfficiencyStage.stageCode }}
+            </div>
+            <div class="stage_card_3_4">
+              {{ formatNumber(stage.leT2MaxEfficiencyStage.leT2Efficiency * 100, 1) }}%
+            </div>
+            <div class="stage_card_3_5">
+              {{ formatNumber(stage.leT2MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>
           </div>
         </div>
-        <!-- 短期最优 -->
-        <div class="stage_card_3_right">
-          <div class="stage_card_3_list">
-            <div class="stage_card_3_line">
-              <div class="stage_card_3_img">
-                <div :class="getItemT3Sprite(stage.series.r4)"></div>
-              </div>
-              <div class="stage_card_3_data">
-                <div class="stage_card_3_line_text">{{ stage.leT4MaxEfficiencyStage.stageCode }}</div>
-                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
-                     v-show="efficiencyType === 'single'">
-                  {{ formatNumber(stage.leT4MaxEfficiencyStage.leT4Efficiency * 100, 1) }}%
-                </div>
-                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
-                     v-show="efficiencyType === 'complete'">
-                  {{ formatNumber(stage.leT4MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
-                </div>
-                <!--                <div class="stage_card_3_line_bar"-->
-                <!--                  :style="getLineBarLength(0, 0, stage.leT4MaxEfficiencyStage.leT4Efficiency, stage.leT4MaxEfficiencyStage.stageEfficiency)">-->
-                <!--                </div>-->
-                <div class="stage-efficiency-bar-wrap">
-                  <div
-                      v-for="(style,index) in getEfficiencyBar(stage.leT4MaxEfficiencyStage.leT4Efficiency,stage.leT4MaxEfficiencyStage.stageEfficiency,4)"
-                      :key="index"
-                      :style="style"></div>
-                </div>
-              </div>
-            </div>
-            <div class="stage_card_3_line">
-              <div class="stage_card_3_img">
-                <div :class="getItemT3Sprite(stage.series.r3)"></div>
-              </div>
-              <div class="stage_card_3_data">
-                <div class="stage_card_3_line_text">{{ stage.leT3MaxEfficiencyStage.stageCode }}</div>
-                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
-                     v-show="efficiencyType === 'single'">
-                  {{ formatNumber(stage.leT3MaxEfficiencyStage.leT3Efficiency * 100, 1) }}%
-                </div>
-                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
-                     v-show="efficiencyType === 'complete'">
-                  {{ formatNumber(stage.leT3MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
-                </div>
-                <div class="stage-efficiency-bar-wrap">
-                  <div
-                      v-for="(style,index) in getEfficiencyBar(stage.leT3MaxEfficiencyStage.leT3Efficiency,stage.leT3MaxEfficiencyStage.stageEfficiency,3)"
-                      :key="index"
-                      :style="style">
-                  </div>
-                </div>
-                {{ stage.stageEfficiency }}
-              </div>
-            </div>
-            <div class="stage_card_3_line" v-show="stage.series.r2">
-              <div class="stage_card_3_img">
-                <div :class="getItemT3Sprite(stage.series.r2)"></div>
-              </div>
-              <div class="stage_card_3_data">
-                <div class="stage_card_3_line_text">{{ stage.leT2MaxEfficiencyStage.stageCode }}</div>
-                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
-                     v-show="efficiencyType === 'single'">
-                  {{ formatNumber(stage.leT2MaxEfficiencyStage.leT2Efficiency * 100, 1) }}%
-                </div>
-                <div class="stage_card_3_line_text" style="font-style: italic;font-weight: 400;font-size: 15px;"
-                     v-show="efficiencyType === 'complete'">
-                  {{ formatNumber(stage.leT2MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
-                </div>
-                <div class="stage-efficiency-bar-wrap">
-                  <div
-                      v-for="(style,index) in getEfficiencyBar(stage.leT2MaxEfficiencyStage.leT2Efficiency,stage.leT2MaxEfficiencyStage.stageEfficiency,2)"
-                      :key="index"
-                      :style="style"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="stage_card_3_markText">短期最优 {{ stage.stageEfficiency }}</div>
-        </div>
       </div>
-      <div class="stage_card_3 " v-for="index in 4" :key="index" style="height: 0; margin-bottom: 0;opacity: 0;">
-      </div>
+      <div class="stage_card_3s" style="height: 0px;border: 1px;flex-grow: 1;"></div>
+      <div class="stage_card_3s" style="height: 0px;border: 1px;flex-grow: 1;"></div>
     </div>
+
+
     <!-- 材料情报卡 -->
     <div class="op_title">
       <div class="op_title_text">
@@ -311,14 +277,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="主产物掉率" :width="100">
+        <el-table-column prop="primary" label="主产物掉率" :width="110">
           <template #default="scope">
             {{ formatNumber(scope.row.knockRating * 100, 1) }}%
           </template>
         </el-table-column>
         <el-table-column prop="primary" label="期望理智" :width="110" sortable>
           <template #default="scope">
-            {{ formatNumber(scope.row.apExpect , 1) }}
+            {{ formatNumber(scope.row.apExpect, 1) }}
           </template>
         </el-table-column>
         <el-table-column prop="secondary" label="副产物" :width="70">
@@ -350,10 +316,11 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="stage-legend-description" id="description" >
+      <div class="stage-legend-description" id="description">
         <span class="tab_text">*主产物/副产物：价值占比最高/第二高的产物</span>
         <span class="tab_text">*综合效率：产物的总价值 / 关卡理智消耗，长期囤材料建议以这个为参考依据</span>
-        <span class="tab_text">*T4效率 = (对应紫材料价值+对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗 </span>
+        <span
+            class="tab_text">*T4效率 = (对应紫材料价值+对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗 </span>
         <span class="tab_text">*T3效率 = (对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗</span>
         <span class="tab_text">*T2效率 = (对应绿材料价值+对应白材料价值) / 关卡理智消耗</span>
         <span class="tab_text">*SPM：1倍速下每分钟消耗的理智，假设所有敌人均被秒杀，实际可能略大于该值</span>
@@ -418,19 +385,19 @@
         <tr>
           <td class="act-name">活动名称</td>
           <td v-for="(item, index) in itemIdList" :key="index">
-            <div class="act-table-item-wrap" style="height: 42px;margin-top: 8px;">
+            <div class="act-table-item-wrap" style="height: 42px;margin: 8px auto 0px auto;">
               <div :class="getActTableItemSprite(item.id)"></div>
             </div>
           </td>
         </tr>
         <tr v-for="(act, actIndex) in historyActItemTable" :key="actIndex">
           <td class="act-name">{{ act.zoneName }}</td>
-          <td v-for="(item, index) in itemIdList" :key="index" :style="getCellBgColor(actIndex<item.lastUpInterval)">
+          <td v-for="(item, index) in itemIdList" :key="index" :style="getCellBgColor(actIndex < item.lastUpInterval)">
             <div class="act-table-item-wrap" v-if="act.itemList[item.id]">
 
               <div :class="getActTableItemSprite(item.id)"></div>
               <span class="act-stage-efficiency">
-                {{}}
+                  {{}}
                   {{ formatNumber(act.itemList[item.id].stageEfficiency, 2) }}%
                 </span>
             </div>
@@ -501,97 +468,90 @@
               </ul>
               <b>图例</b>
               <hr/>
-              <div class="stage_3_intro">
-                <!-- 长期最优 -->
-                <div class="stage_card_3_intro_left">
-                  <div class="img_wrap" style="position: relative;">
-                    <div class="stage_card_3_mainImg" :class="getItemSeriesSprite('31013')">
-                      <div class="stage_card_3_cover" style="height:114px;"></div>
-                      <div class="stage_card_3_best" style="font-size: 16px;">
-                        <div class="stage_card_3_best_chapter" style="font-size: 12px;"><b
-                            style="font-weight: 600;">所有材料</b>都有需求
-                        </div>
-                        刷这个
-                        <div class="stage_card_3_markText_l">综合最优</div>
+              <div class="s-stage-legend">
+                <table class="s-stage-legend-table">
+                  <tbody>
+                  <tr>
+                    <td>
+                      <div class="s-stage-legend-sprite-wrap">
+                        <div :class="getLegendSprite('AP_GAMEPLAY')"></div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- 短期最优 -->
-                <div class="stage_card_3_intro_right">
-                  <!-- 数值图例 -->
-                  <div id="stage_card_3_intro_block_1">
-                    <div class="stage_card_3_list" style="width:168px;height: 105px;font-size: 12px;line-height: 24px;">
-                      <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;">
-                        <div class="stage_card_3_img">
-                          <div :class="getItemT3Sprite(31014)"></div>
-                        </div>
-                        <div class="stage_card_3_line_text"
-                             style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">
-                          只需求<span style="color: blueviolet;">紫材料</span><br>刷这个
-                        </div>
-                        <div class="stage_card_3_line_text"
-                             style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">
-                          T4效率值
-                        </div>
+                    </td>
+                    <td>
+                      <span class="s-stage-legend-text-1">需要所有材料→</span>
+                    </td>
+                    <td>
+                      <span class="s-stage-legend-text-2">10-10</span>
+                    </td>
+                    <td>
+                      <span class="s-stage-legend-text-3">[综合效率]<br>所有掉落物的价值之和/理智消耗</span>
+                    </td>
+                    <td>
+                      <span class="s-stage-legend-text-4">[综合效率]</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <div class="s-stage-legend-sprite-wrap">
+                        <div :class="getLegendSprite('30024')"></div>
                       </div>
-                      <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
-                        <div class="stage_card_3_img">
-                          <div :class="getItemT3Sprite(31013)"></div>
-                        </div>
-                        <div class="stage_card_3_line_text"
-                             style="font-size: 12px;width: 75px;line-height: 16px;text-align: center;margin-top: 4px;">
-                          只需求<span style="color:rgb(0, 125, 167);">蓝材料</span><br>刷这个
-                        </div>
-                        <div class="stage_card_3_line_text"
-                             style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">
-                          T3效率值
-                        </div>
+                    </td>
+                    <td>
+            <span class="s-stage-legend-text-1">
+              需要<span style="color: #c01dd7;font-weight: bold">紫材料→</span>
+              </span>
+                    </td>
+                    <td>
+                      <span class="s-stage-legend-text-2">LE-5</span>
+                    </td>
+                    <td>
+            <span class="s-stage-legend-text-3">
+              [<span style="color: #c01dd7;font-weight: bold">T4</span>效率]<br>
+              <span style="color: #c01dd7;font-weight: bold">紫</span>
+              <span style="color: #0276f8;font-weight: bold">蓝</span>
+              <span style="color: #01c028;font-weight: bold">绿</span>白糖价值之和/理智消耗
+            </span>
+                    </td>
+                    <td>
+                      <span class="s-stage-legend-text-4">[综合效率]</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <div class="s-stage-legend-sprite-wrap">
+                        <div :class="getLegendSprite('30023')"></div>
                       </div>
-                      <div class="intro_effBar" style="width: 168px;height: 20px;">
-                        <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                             :style="getLineBarLength(0, 0, 0.7, 0.9)"></div>
-                        <div class="intro_effBar_intro" style="display: inline-block;font-weight: 600;">效率指示条</div>
-                      </div>
-                    </div>
-                    <div class="stage_card_3_markText">短期最优</div>
-                  </div>
-                  <!-- 图表图例 -->
-                  <div id="stage_card_3_intro_block_2" style="width: 54%;font-size: 12px;border-left: 1px solid;">
-                    <div class="stage_card_3_list"
-                         style="width:210px;height: 108px;line-height: 24px;margin: 8px auto;">
-                      <div class="intro_effBar" style="height: 32px;">
-                        <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                             :style="getLineBarLength(0, 0, 0, 0)"></div>
-                        <div class="intro_effBar_intro"
-                             style="display: inline-block;font-weight: 600;margin-left: -16px;">
-                          每格代表20%的效率
-                        </div>
-                      </div>
-                      <div class="intro_effBar" style="height: 32px;">
-                        <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                             :style="getLineBarLength(0, 0, 0, 0.9)"></div>
-                        <div class="intro_effBar_intro"
-                             style="display: inline-block;font-weight: 600;margin-left: -16px;">
-                          所有掉落物的总效率
-                        </div>
-                      </div>
-                      <div class="intro_effBar" style="height: 32px;">
-                        <div class="stage_card_3_line_bar" style="width: 96px;display: inline-block;margin: 2px 6px;"
-                             :style="getLineBarLength(0, 0, 0.7, 0.7)"></div>
-                        <div class="intro_effBar_intro"
-                             style="display: inline-block;font-weight: 600;margin-left: -16px;">
-                          T4/T3/T2材料的效率
-                        </div>
-                        <div style="font-size: 12px;"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- 操作区域 -->
-                  <!-- <div class="stage_card_3_intro_block" style="width: 15%;">
-            </div> -->
-                </div>
+                    </td>
+                    <td>
+            <span class="s-stage-legend-text-1">
+              需要<span style="color: #0276f8;font-weight: bold">蓝材料→</span>
+              </span>
+                    </td>
+                    <td>
+                      <span class="s-stage-legend-text-2">LE-5</span>
+                    </td>
+                    <td>
+            <span class="s-stage-legend-text-3">
+              [<span style="color: #0276f8;font-weight: bold">T3</span>效率]<br>
+              <span style="color: #0276f8;font-weight: bold">蓝</span>
+              <span style="color: #01c028;font-weight: bold">绿</span>白糖价值之和/理智消耗
+            </span>
+                    </td>
+                    <td>
+                      <span class="s-stage-legend-text-4">[综合效率]</span>
+                    </td>
+                  </tr>
+                  <tr>
+
+                  </tr>
+                  </tbody>
+                </table>
+
               </div>
+
+
             </el-collapse-item>
             <el-collapse-item name="3" style="">
               <template #title>
@@ -661,7 +621,7 @@ import {onMounted, ref} from "vue";
 import item_series from '/src/static/json/material/item_series.json'
 
 // 根据物品系列进行分组的推荐关卡
-let stageResultGroup = ref()
+let stageResultGroup = {}
 // let stage_result_group = ref(stage_api_data.data.recommendedStage.sort((a,b)=>a.itemSeriesId-b.itemSeriesId))
 
 //材料卡片数据
@@ -696,7 +656,7 @@ let selected_item = ref({
 function getStageResult() {
   stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
 
-    stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+    stageResultGroup = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
     getItemCardData()
     //获取材料价值数据
@@ -714,9 +674,9 @@ function getStageResult() {
  * 拼接材料卡片的数据
  */
 function getItemCardData() {
-  for (let index in stageResultGroup.value) {
+  for (let index in stageResultGroup) {
     //每一种材料系列的推荐关卡
-    let recommended_stage = stageResultGroup.value[index]
+    let recommended_stage = stageResultGroup[index]
     //推荐关卡集合
     let stageResultList = recommended_stage.stageResultList;
 
@@ -789,7 +749,7 @@ let item_table_data_by_item_id = ref([])
  */
 function getItemTableData(index, isJump) {
   //当前材料系列的推荐关卡
-  let recommended_stage = stageResultGroup.value[index];
+  let recommended_stage = stageResultGroup[index];
   //推荐关卡集合
   let stage_result_list = recommended_stage.stageResultList;
   //拼接表格数据,默认按总效率排序
@@ -848,13 +808,25 @@ function scrollToFrequentlyAskedQuestion() {
 }
 
 
-function getItemSeriesSprite(id) {
-  return "bg-" + id + " item_series_sprite";
-}
-
 function getItemT3Sprite(id) {
   return "bg-" + id + " item-t3-sprite";
 }
+
+function getLegendSprite(id) {
+  return "bg-" + id + " s-stage-legend-sprite";
+}
+
+function getCardBgSprite(id) {
+  return "bg-" + id + " s-stage-card-bg-sprite";
+}
+
+function getCardIconSprite(id){
+  return "bg-" + id + " s-stage-card-icon-sprite";
+}
+
+// function getItemT3SpriteSmall(id) {
+//   return "bgs-" + id;
+// }
 
 function getDetailTableHeaderItemSprite(id) {
   return "bg-" + id + " detail-bar-item-sprite";
@@ -1074,12 +1046,10 @@ onMounted(() => {
 })
 
 
-let td_6 = ref()
-
 
 let itemIdList = [] // 材料表
-let historyActItemTable = ref([]) // 历史活动up材料表
-let historyActItemList = ref([])
+let historyActItemTable = [] // 历史活动up材料表
+let historyActItemList = []
 
 let historyActDevice = ref('')
 
@@ -1110,7 +1080,7 @@ function historyActDeviceBtnClass(device) {
 }
 
 function getHistoryActStage() {
-  historyActItemTable.value = []
+  historyActItemTable = []
 
 
   // 获取历史活动up材料信息
@@ -1122,17 +1092,17 @@ function getHistoryActStage() {
         id: item.id,
         name: item.name,
         lastUp: false,
-        lastUpInterval:0
+        lastUpInterval: 0
       })
     }
 
-    historyActItemList.value = response.data
+    historyActItemList = response.data
     // 循环历史活动数据
     let lastUpInterval = 0;
 
     for (const index in response.data) {
       const act = response.data[index]
-      if(act.zoneName === '落叶逐火') {
+      if (act.zoneName === '落叶逐火') {
         continue
       }
 
@@ -1149,9 +1119,9 @@ function getHistoryActStage() {
 
       for (const stage of act.actStageList) {
         rowData.itemList[stage.itemId] = {
-          itemId:stage.itemId,
-          stageEfficiency:stage.stageEfficiency * 100,
-          stageCode:stage.stageCode
+          itemId: stage.itemId,
+          stageEfficiency: stage.stageEfficiency * 100,
+          stageCode: stage.stageCode
         }
       }
 
@@ -1160,7 +1130,7 @@ function getHistoryActStage() {
         //材料up标记
         let isUpFlag = false;
 
-        if(rowData.itemList[item.id]){
+        if (rowData.itemList[item.id]) {
           isUpFlag = true
         }
 
@@ -1175,10 +1145,10 @@ function getHistoryActStage() {
         }
 
       }
-      historyActItemTable.value.push(rowData)
+      historyActItemTable.push(rowData)
     }
 
-    itemIdList.sort((a,b)=>a.lastUpInterval-b.lastUpInterval)
+    itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
 
 
   })
@@ -1206,7 +1176,9 @@ function filterOrundumStage() {
   if (onlyShowActStage.value) {
     displayOrundumRecommendedStage.value = []
     for (const stage of orundumRecommendedStage.value) {
-      if (stage.stageCode === '1-7' || stage.stageCode === 'CW-6' || stage.stageType === 'ACT' || stage.stageType === 'ACT_REP') {
+      const {stageCode,stageType} = stage
+      console.log(stageType)
+      if (stageCode === '1-7' || stageCode === 'CW-6' || stageType === 'ACT' || stageType === 'ACT_REP') {
         displayOrundumRecommendedStage.value.push(stage)
       }
     }
@@ -1224,6 +1196,7 @@ function getOrundumRecommendedStage() {
         lmdcost: stage.lmdcost.toFixed(2) + 'w',
         orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
         stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
+        stageType:stage.stageType?stage.stageType:''
       })
     }
     displayOrundumRecommendedStage.value = orundumRecommendedStage.value
@@ -1247,5 +1220,84 @@ onMounted(() => {
   getStageResult()
 })
 </script>
+
+
+<style>
+
+.s-stage-legend-table {
+  border-collapse: collapse;
+}
+
+.s-stage-legend {
+  position: relative;
+  margin: 8px;
+  width: 520px;
+  height: 160px;
+  border-radius: 4px;
+  border: 1px solid var(--c-border-color);
+  background: var(--c-stage-card-background-color);
+}
+
+.s-stage-legend-sprite-wrap {
+  width: 30px;
+  height: 40px;
+  position: relative;
+}
+
+.s-stage-legend-sprite {
+  transform: scale(.177);
+  position: absolute;
+  display: inline-block;
+  top: -70px;
+  left: -77px;
+  opacity: 1;
+}
+
+.s-stage-legend-text-1 {
+  line-height: 40px;
+}
+
+.s-stage-legend-text-2 {
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 40px;
+}
+
+.s-stage-legend-text-3 {
+  display: block;
+  text-align: center;
+  font-style: italic;
+  line-height: 15px;
+}
+
+.s-stage-legend-text-4 {
+  padding: 8px;
+  font-style: italic;
+  line-height: 40px;
+}
+
+.s-stage-card-bg-sprite {
+   position: absolute;
+   opacity: 0.6;
+   transform: scale(0.6);
+   left: -80px;
+   top: -25px;
+}
+
+.s-stage-card-icon-wrap{
+  width: 30px;
+  height: 30px;
+}
+
+.s-stage-card-icon-sprite{
+  transform: scale(.16);
+  position: absolute;
+  display: inline-block;
+  top: -77px;
+  left: -77px;
+  opacity: 1;
+}
+
+</style>
 
 
