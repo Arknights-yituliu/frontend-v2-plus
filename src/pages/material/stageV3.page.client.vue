@@ -1176,7 +1176,9 @@ function filterOrundumStage() {
   if (onlyShowActStage.value) {
     displayOrundumRecommendedStage.value = []
     for (const stage of orundumRecommendedStage.value) {
-      if (stage.stageCode === '1-7' || stage.stageCode === 'CW-6' || stage.stageType === 'ACT' || stage.stageType === 'ACT_REP') {
+      const {stageCode,stageType} = stage
+      console.log(stageType)
+      if (stageCode === '1-7' || stageCode === 'CW-6' || stageType === 'ACT' || stageType === 'ACT_REP') {
         displayOrundumRecommendedStage.value.push(stage)
       }
     }
@@ -1194,6 +1196,7 @@ function getOrundumRecommendedStage() {
         lmdcost: stage.lmdcost.toFixed(2) + 'w',
         orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
         stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
+        stageType:stage.stageType?stage.stageType:''
       })
     }
     displayOrundumRecommendedStage.value = orundumRecommendedStage.value
