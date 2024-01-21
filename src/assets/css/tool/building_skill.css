@@ -99,8 +99,7 @@
 .b-building-skill-name {
     padding: 4px;
     font-size: 14px;
-    border: #cbcbcb solid 1px;
-    border-radius: 5px;
+    border-radius: 2px;
 }
 
 .b-building-search-wrap {
