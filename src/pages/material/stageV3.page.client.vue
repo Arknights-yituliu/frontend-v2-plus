@@ -140,24 +140,25 @@
             </div> -->
       </div>
     </div>
-    <div class="stage_3_intro" style="height: 162px;">
-      <div class="stage_card_3s_list" style="margin: 0px 0px 0px 32px;height: 162px; ">
+    <!-- 图例2.0 -->
+    <div class="stage_3_intro" style="height: 174px;">
+      <div class="stage_card_3s_list" style="margin: 0px 0px 0px 32px;height: 180px; ">
         <div class="stage_card_3_line">
           <div class="stage_card_3_0" style="float: left;">
             <div :class="getItemT3Sprite('AP_GAMEPLAY')"
               style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -108px;opacity: 1;"></div>
           </div>
-          <div class="stage_card_3_1" style="width: 168px;">综合最优关</div>
+          <div class="stage_card_3_1" style="width: 128px;">需要所有材料→</div>
           <div class="stage_card_3_2" style="display: none;">
           </div>
           <div class="stage_card_3_3 stage_card_3_line_text" style="width: 80px;">
             10-10
           </div>
           <div class="stage_card_3_4" style="width: 258px;line-height: 16px;">
-            综合效率<br>所有掉落物的价值之和/理智消耗
+            [综合效率]<br>所有掉落物的价值之和/理智消耗
           </div>
           <div class="stage_card_3_5" style="width: 90px;line-height: 32px;">
-            综合效率
+            [综合效率]
           </div>
         </div>
         <div class="stage_card_3_line">
@@ -165,18 +166,18 @@
             <div :class="getItemT3Sprite('30024')"
               style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -108px;opacity: 1;"></div>
           </div>
-          <div class="stage_card_3_1" style="width: 168px;">需要<span style="color: #CA71C3;">紫材料</span>的最速关</div>
+          <div class="stage_card_3_1" style="width: 128px;">需要<span style="color: #CA71C3;">紫材料</span>→</div>
           <div class="stage_card_3_2" style="display: none;">
           </div>
           <div class="stage_card_3_3 stage_card_3_line_text" style="width: 80px;">
             LE-5
           </div>
           <div class="stage_card_3_4" style="width: 258px;line-height: 16px;">
-            <span style="color: #CA71C3;">T4</span>效率<br><span style="color: #CA71C3;">紫</span><span
+            <span style="color: #CA71C3;">[T4</span>效率]<br><span style="color: #CA71C3;">紫</span><span
               style="color: #98A2e6;">蓝</span><span style="color: #E8E0A2;">绿</span>白糖价值之和/理智消耗
           </div>
           <div class="stage_card_3_5" style="width: 90px;line-height: 32px;">
-            综合效率
+            [综合效率]
           </div>
         </div>
         <div class="stage_card_3_line">
@@ -184,20 +185,28 @@
             <div :class="getItemT3Sprite('30023')"
               style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -108px;opacity: 1;"></div>
           </div>
-          <div class="stage_card_3_1" style="width: 168px;">需要<span style="color: #98A2e6;">蓝材料</span>的最速关</div>
+          <div class="stage_card_3_1" style="width: 128px;">需要<span style="color: #98A2e6;">蓝材料</span>→</div>
           <div class="stage_card_3_2" style="display: none;">
           </div>
           <div class="stage_card_3_3 stage_card_3_line_text" style="width: 80px;">
             MB-6
           </div>
           <div class="stage_card_3_4" style="width: 258px;line-height: 16px;">
-            <span style="color: #98A2e6;">T3</span>效率<br><span style="color: #98A2e6;">蓝</span><span
+            <span style="color: #98A2e6;">[T3</span>效率]<br><span style="color: #98A2e6;">蓝</span><span
               style="color:#E8E0A2;">绿</span>白糖价值之和/理智消耗
           </div>
           <div class="stage_card_3_5" style="width: 90px;line-height: 32px;">
-            综合效率
+            [综合效率]
           </div>
         </div>
+        <div class="intro_effBar" style="height: 24px;margin-right: 8px;text-align: right;">
+              <el-button type="primary" size="small" @click="scrollToLegendDescription">
+                看看细节
+              </el-button>
+              <el-button type="primary" size="small" @click="hiddenLegend()">
+                不再显示
+              </el-button>
+            </div>
       </div>
     </div>
     <!-- 卡片区域 -->
@@ -284,10 +293,8 @@
           </div>
         </div>
       </div>
-      <div class="stage_card_3s" style="height: 0px;border: 0px;"></div>
-      <div class="stage_card_3s" style="height: 0px;border: 0px;"></div>
-      <div class="stage_card_3s" style="height: 0px;border: 0px;"></div>
-      <div class="stage_card_3s" style="height: 0px;border: 0px;"></div>
+      <div class="stage_card_3s" style="height: 0px;border: 1px;flex-grow: 1;"></div>
+      <div class="stage_card_3s" style="height: 0px;border: 1px;flex-grow: 1;"></div>
     </div>
 
     <div id="stage_3" style="display:none;">
@@ -655,7 +662,7 @@
                         style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -108px;opacity: 1;">
                       </div>
                     </div>
-                    <div class="stage_card_3_1" style="width: 168px;">综合最优关</div>
+                    <div class="stage_card_3_1" style="width: 128px;">需要所有材料→</div>
                     <div class="stage_card_3_2" style="display: none;">
                     </div>
                     <div class="stage_card_3_3 stage_card_3_line_text" style="width: 80px;">
@@ -674,7 +681,7 @@
                         style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -108px;opacity: 1;">
                       </div>
                     </div>
-                    <div class="stage_card_3_1" style="width: 168px;">需要<span style="color: #CA71C3;">紫材料</span>的最速关</div>
+                    <div class="stage_card_3_1" style="width: 128px;">需要<span style="color: #CA71C3;">紫材料</span>→</div>
                     <div class="stage_card_3_2" style="display: none;">
                     </div>
                     <div class="stage_card_3_3 stage_card_3_line_text" style="width: 80px;">
@@ -694,7 +701,7 @@
                         style="scale: 0.8;position: absolute;display: inline-block;top: -76px;left: -108px;opacity: 1;">
                       </div>
                     </div>
-                    <div class="stage_card_3_1" style="width: 168px;">需要<span style="color: #98A2e6;">蓝材料</span>的最速关</div>
+                    <div class="stage_card_3_1" style="width: 128px;">需要<span style="color: #98A2e6;">蓝材料</span>→</div>
                     <div class="stage_card_3_2" style="display: none;">
                     </div>
                     <div class="stage_card_3_3 stage_card_3_line_text" style="width: 80px;">
