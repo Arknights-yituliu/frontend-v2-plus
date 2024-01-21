@@ -197,8 +197,26 @@
           </div>
         </div>
       </a>
-
-
+      <a class="href_black" href="https://github.com/tanch-p">
+        <div class="mdui-card dev-card dev-card-member">
+          <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/97508567?v=4" alt="" />
+          <div class="dev-card-text">
+            <div class="dev-card-text-title">tanch-p</div>
+            <div class="dev-card-text-content" style="font-style: italic">开发</div>
+            <div class="dev-card-text-content">肉鸽得分计算器</div>
+          </div>
+        </div>
+      </a>
+      <a class="href_black" href="https://github.com/noname512">
+        <div class="mdui-card dev-card dev-card-member">
+          <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/16851703?v=4" alt="" />
+          <div class="dev-card-text">
+            <div class="dev-card-text-title">noname512</div>
+            <div class="dev-card-text-content" style="font-style: italic">开发</div>
+            <div class="dev-card-text-content">肉鸽得分计算器</div>
+          </div>
+        </div>
+      </a>
 
       <a class="href_black" href="https://github.com/Yanstory">
         <div class="mdui-card dev-card dev-card-member">
@@ -210,6 +228,7 @@
           </div>
         </div>
       </a>
+
       <a class="href_black" href="https://space.bilibili.com/12786648">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="/image/website/wmm.webp" alt="" />
