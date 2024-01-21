@@ -44,47 +44,48 @@
 }
 
 .building-operator-avatar- {
-    height: 48px;
-    width: 160px;
+    height: 80px;
+    width: 110px;
     position: relative;
+
 }
 
 .building-operator-avatar {
-    transform: scale(.2222);
+    transform: scale(.3);
     position: absolute;
-    top: -70px;
-    left: -60px;
+    top: -56px;
+    left: -33px;
 }
 
 .building-operator-avatar- span {
     position: absolute;
-    top: 0;
-    left: 60px;
-    line-height: 48px;
+    top: 62px;
+    left: 0;
     width: 100%;
-    text-align: left;
+    text-align: center;
+
 }
 
 
-@media screen and ( max-width: 1000px) {
-    .building-operator-avatar- {
-        height: 80px;
-        width: 110px;
-    }
+/*@media screen and ( max-width: 1000px) {*/
+/*    .building-operator-avatar- {*/
+/*        height: 80px;*/
+/*        width: 110px;*/
+/*    }*/
 
-    .building-operator-avatar- span {
-        top: 46px;
-        left: 0;
-        width: 110px;
-        text-align: center;
-    }
+/*    .building-operator-avatar- span {*/
+/*        top: 46px;*/
+/*        left: 0;*/
+/*        width: 110px;*/
+/*        text-align: center;*/
+/*    }*/
 
-    .building-operator-avatar {
-        transform: scale(.27777);
-        top: -58px;
-        left: -35px;
-    }
-}
+/*    .building-operator-avatar {*/
+/*        transform: scale(.27777);*/
+/*        top: -58px;*/
+/*        left: -35px;*/
+/*    }*/
+/*}*/
 
 .building-skill-card div {
     border: 1px solid var(--c-border-color);
