@@ -1,7 +1,7 @@
 <script setup>
 import '/src/assets/css/tool/building_skill.css'
 
-import {operatorFilterConditionTable} from "/src/pages/tools/js/skillFilter";
+import {operatorFilterConditionTable} from "/src/pages/tools/js/SkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import {onMounted, ref} from "vue";
 import {debounce} from "../../utils/debounce";
@@ -83,11 +83,12 @@ function hideIrrelevantSkills() {
  */
 function commonFilterOperator() {
 
+  let list = []
+
   for (const charId in buildingTable) {
     const skills = buildingTable[charId]
-
     let rowCount = 0;
-    let rowIndex = filterOperatorList.value.length
+    let rowIndex = list.length
     if (!skillRowCount.value[charId]) {
       skillRowCount.value[charId] = {}
     }
@@ -102,23 +103,22 @@ function commonFilterOperator() {
         continue;
       }
 
-
       if (!hideIrrelevantSkillsFlag.value) {
         for (const operator1 of skills) {
-          filterOperatorList.value.push(operator1)
+          list.push(operator1)
           rowCount++
         }
         break
       }
 
-      filterOperatorList.value.push(skill)
+      list.push(skill)
       rowCount++
     }
 
     skillRowCount.value[charId] = {index: rowIndex, rowCount: rowCount}
   }
 
-
+  filterOperatorList.value = list
 }
 
 function mergeRow(id, index) {

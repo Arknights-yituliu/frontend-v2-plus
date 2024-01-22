@@ -1,3 +1,5 @@
+
+//干员基建技能筛选表，筛选类型：{name：筛选类型名称,color:筛选类型名称字体颜色,conditions:[{label:筛选条件描述,func:筛选函数,传入干员信息进行筛选}]}
 const operatorFilterConditionTable = {
     room: {
         name: "工作场所",
@@ -149,14 +151,14 @@ const operatorFilterConditionTable = {
         ]
     },
     combo: {
-        name: "联动技能",
+        name: "可联动技能",
         color:'#ff761d',
         display: true,
         conditions: [
             {
                 label: "感知信息",
                 func: (operator) => {
-                    return operator.description.indexOf('感知信息') > -1
+                    return operator.description.indexOf('感知信息') > -1||operator.description.indexOf('无声共鸣') > -1||RosemaryUniverse.includes(operator.name)
                 }
             },
             {
@@ -168,31 +170,35 @@ const operatorFilterConditionTable = {
             {
                 label: "赤金生产线",
                 func: (operator) => {
-                    return operator.description.indexOf('生产线') > -1
+                    return operator.description.indexOf('生产线') > -1 || GoldProductionLine.includes(operator.name)
                 }
             },
             {
                 label: "红松骑士团",
                 func: (operator) => {
-                    return operator.buffName.indexOf('红松') > -1
+                    return operator.buffName.indexOf('红松') > -1 || Knight.includes(operator.name)
                 }
             },
             {
                 label: "自动化",
                 func: (operator) => {
-                    return (operator.description.indexOf('发电站') > -1 && operator.description.indexOf('归零') > -1)
+                    return (operator.description.indexOf('发电站') > -1 && operator.description.indexOf('归零') > -1) || Automation.includes(operator.name)
                 }
             },
             {
                 label: "莱茵科技",
                 func: (operator) => {
-                    return operator.buffName.indexOf('莱茵科技') > -1
+                    return Rhine.includes(operator.name)
                 }
             }
         ]
     },
 }
 
-
+const RosemaryUniverse = ['琴柳']
+const GoldProductionLine = ['桃金娘','杜林','褐果','至简']
+const Knight = ['砾','薇薇安娜']
+const Automation = ['清流','Lancet-2']
+const Rhine = ['缪尔赛思','淬羽赫默','多萝西','星源','赫默','白面鸮']
 
 export {operatorFilterConditionTable}

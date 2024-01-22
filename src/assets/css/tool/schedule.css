@@ -5,7 +5,7 @@
     overflow-y: hidden;
 }
 
-.schedule-version{
+.schedule-version {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -188,7 +188,7 @@
     border: 1px solid var(--c-background-color);
 }
 
-.copy-btn-wrap{
+.copy-btn-wrap {
     padding: 4px;
     margin: 4px;
     height: 70px;
@@ -200,7 +200,7 @@
     /*background-color: #d0d0d0;*/
 }
 
-.copy-btn-wrap span{
+.copy-btn-wrap span {
     font-weight: bold;
     line-height: 24px;
     margin-right: 12px;
@@ -383,6 +383,12 @@
 
 .condition-bar {
     margin-top: 4px;
+}
+
+.condition-tip {
+    font-style: italic;
+    font-size: 14px;
+    padding: 11px;
 }
 
 .condition-bar span {

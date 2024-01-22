@@ -13,7 +13,7 @@ import {fileRead} from '/src/utils/fileRead'
 import {debounce} from "/src/utils/debounce";
 import building_table from '/src/static/json/build/building_table.json'
 import feedBack from '/src/components/feedBack.vue';
-import {operatorFilterConditionTable} from '/src/pages/tools/js/skillFilter.js'
+import {operatorFilterConditionTable} from '/src/pages/tools/js/SkillFilter.js'
 
 const COLOR = {BLUE: 'blue', ORANGE: 'orange', GREEN: 'green'}
 
@@ -766,7 +766,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <span class="schedule-version">V1.1.2</span>
+  <span class="schedule-version">V1.2.1</span>
 
   <c-popup v-model:visible="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
     <div class="schedule-set-wrap">
@@ -1138,14 +1138,15 @@ onMounted(() => {
       </div>
 
       <div class="filter-condition-box">
-        <div class="condition-bar" v-for="(room,key) in operatorFilterConditionTable" v-show="room.display" :key="key">
-          <span :style="`color:${room.color}`">{{ room.name }}</span>
-          <c-button v-for="(condition,index) in room.conditions" :key="index"
+        <div class="condition-bar" v-for="(condition,key) in operatorFilterConditionTable" v-show="condition.display" :key="key">
+          <span :style="`color:${condition.color}`">{{ condition.name }}</span>
+          <c-button v-for="(condition,index) in condition.conditions" :key="index"
                     :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
                     @click="filterOperatorByTag(condition,key)">
             {{ condition.label }}
           </c-button>
         </div>
+        <span class="condition-tip">*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
       </div>
 
       <div class="schedule-operator-search-input-box">
