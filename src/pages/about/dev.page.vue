@@ -193,7 +193,7 @@
           <div class="dev-card-text">
             <div class="dev-card-text-title">天潭小助</div>
             <div class="dev-card-text-content" style="font-style: italic">开发</div>
-            <div class="dev-card-text-content">前端</div>
+            <div class="dev-card-text-content">前端 UI</div>
           </div>
         </div>
       </a>

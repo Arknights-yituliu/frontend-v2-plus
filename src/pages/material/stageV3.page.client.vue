@@ -722,21 +722,7 @@ function getItemCardData() {
   }
 }
 
-let efficiencyType = ref('single')
 
-/**
- * 显示单一材料效率或关卡综合效率
- */
-function displaySingleOrCompleteEfficiency(type) {
-  efficiencyType.value = type
-}
-
-function efficiencyTypeBtnClass(device) {
-  if (device === efficiencyType.value) {
-    return 'op_tag_1'
-  }
-  return 'op_tag_0'
-}
 
 
 //根据物品id获得对应的关卡推荐数据集合
@@ -774,10 +760,10 @@ onMounted(() => {
 /**
  * 隐藏图例
  */
-function hiddenLegend() {
-  legendStyle.value = 'none'
-  localStorage.setItem('itemLegend', 'none')
-}
+// function hiddenLegend() {
+//   legendStyle.value = 'none'
+//   localStorage.setItem('itemLegend', 'none')
+// }
 
 /**
  * 滚动到图例说明
@@ -808,9 +794,6 @@ function scrollToFrequentlyAskedQuestion() {
 }
 
 
-function getItemT3Sprite(id) {
-  return "bg-" + id + " item-t3-sprite";
-}
 
 function getLegendSprite(id) {
   return "bg-" + id + " s-stage-legend-sprite";
@@ -824,13 +807,7 @@ function getCardIconSprite(id){
   return "bg-" + id + " s-stage-card-icon-sprite";
 }
 
-// function getItemT3SpriteSmall(id) {
-//   return "bgs-" + id;
-// }
 
-function getDetailTableHeaderItemSprite(id) {
-  return "bg-" + id + " detail-bar-item-sprite";
-}
 
 function getDetailTableItemSprite(id) {
   return "bg-" + id + " table-item-sprite";
