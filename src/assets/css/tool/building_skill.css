@@ -25,6 +25,12 @@
     align-items: center;
 }
 
+.b-condition-tip{
+    font-style: italic;
+    font-size: 14px;
+    padding: 11px;
+}
+
 .b-room-type-text {
     width: 80px;
     padding-right: 8px;

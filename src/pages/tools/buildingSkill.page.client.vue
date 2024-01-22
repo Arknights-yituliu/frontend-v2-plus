@@ -205,7 +205,7 @@ onMounted(() => {
       <c-button :status="hideIrrelevantSkillsFlag" :color="COLOR.ORANGE"
                 style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
       </c-button>
-      <span class="b-building-search-tip">输入干员名、技能名称、技能描述搜索</span>
+      <span class="b-building-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
       <!--  <span-->
       <!--      style="font-style: italic;font-size: 14px">（搜索栏可，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>-->
 
