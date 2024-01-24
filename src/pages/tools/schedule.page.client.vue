@@ -54,7 +54,7 @@ function getRoomLabel(type) {
   }
 }
 
-
+//maa的产物id和游戏内物品id的对照表
 const productTable = {
   manufacture: [
     {id: '2003', value: 'Battle Record'},
@@ -70,7 +70,6 @@ const productTable = {
 let characterIdAndName = {}
 
 for (const key in character_table) {
-
   characterIdAndName[character_table[key].name] = replaceCharId(key)
 }
 
@@ -133,8 +132,6 @@ function chooseScheduleType(type) {
   scheduleTypeV2.value.trading = trading
   scheduleTypeV2.value.manufacture = manufacture
   scheduleTypeV2.value.power = power
-
-
 }
 
 /**
@@ -145,7 +142,11 @@ function choosePlanTimes(num) {
   scheduleTypeV2.value.planTimes = num
 }
 
-function lastOrNextPlanTimes(index) {
+/**
+ * 点击切换上一班或者下一班
+ * @param index 班次的索引
+ */
+function toNextPlan(index) {
   if (index < 0 || index >= scheduleTypeV2.value.planTimes) {
     cMessage(`错误的班次索引：第${index + 1}班`, 'error')
   } else {
@@ -213,6 +214,12 @@ function currentPlan(index) {
   selectedPlanIndex.value = index
 }
 
+/**
+ *
+ * @param roomType
+ * @param roomIndex
+ * @returns {string}
+ */
 function roomSelectedClass(roomType, roomIndex) {
   if (selectedRoomType.value === roomType && selectedRoomIndex.value === roomIndex) {
     return `${roomType}-selected`
@@ -327,10 +334,7 @@ const roomPopupStyle = "width:75%"
  */
 function chooseOperator(charId) {
 
-  if(!checkDuplicateOperator(selectedPlanIndex.value,charId,true)){
-    cMessage('请勿在同一班次入驻两个同名干员','error')
-    return;
-  }
+
 
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
@@ -346,13 +350,17 @@ function chooseOperator(charId) {
     return;
   }
 
+  if(!checkDuplicateOperator(selectedPlanIndex.value,charId,true)){
+    cMessage('请勿在同一班次入驻两个同名干员','error')
+    return;
+  }
+
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charId)
 
   if (selectedRoomType.value === 'dormitory') {
     fillOperatorConflict(selectedRoomIndex.value)
   }
 
-  localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 }
 
 /**
@@ -361,14 +369,15 @@ function chooseOperator(charId) {
  */
 function deleteOperator(charId) {
 
-  checkDuplicateOperator(selectedPlanIndex.value,charId,false)
+
 
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
       plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
         return e !== charId
       })
 
-  localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
+  checkDuplicateOperator(selectedPlanIndex.value,charId,false)
+
 }
 
 let duplicateOperatorTable = ref([])
@@ -470,7 +479,7 @@ function fillOperatorConflict(index) {
  */
 function setDrones(property, value) {
   plansTemplate.value[selectedPlanIndex.value].drones[property] = value
-  localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
+
 }
 
 
@@ -483,7 +492,6 @@ let FiammettaTargetVisible = ref(false)
  */
 function setFiammetta(property, value) {
   plansTemplate.value[selectedPlanIndex.value].Fiammetta[property] = value
-  localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 }
 
 watch(() => plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
@@ -559,7 +567,6 @@ function createSchedule() {
 
   scheduleInfo.value.plans = plans
   scheduleInfo.value.scheduleType = scheduleTypeV2.value
-  localStorage.setItem("ScheduleCache", JSON.stringify(plansTemplate.value))
 
 
 }
@@ -727,11 +734,7 @@ function importSchedule(schedule) {
     }
   }
 
-
 }
-
-// const ScheduleCache = localStorage.getItem("ScheduleCache");
-// if (ScheduleCache) plans_template.value = JSON.parse(ScheduleCache)
 
 
 onMounted(() => {
@@ -960,7 +963,7 @@ onMounted(() => {
 
     <div class="room-wrap">
       <div class="room-arrow-wrap"
-           @click="lastOrNextPlanTimes(selectedPlanIndex-1)">
+           @click="toNextPlan(selectedPlanIndex-1)">
         <i class="iconfont icon-arrow-left"
            style="font-size: 48px">
         </i>
@@ -1098,7 +1101,7 @@ onMounted(() => {
         <div class="room-template blank" style="width: 100px;"></div>
       </div>
 
-      <div class="room-arrow-wrap" @click="lastOrNextPlanTimes(selectedPlanIndex+1)"><i
+      <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex+1)"><i
           class="iconfont icon-arrow-right" style="font-size: 48px"></i></div>
     </div>
 
