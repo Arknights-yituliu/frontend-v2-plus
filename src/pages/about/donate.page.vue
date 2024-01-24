@@ -5,14 +5,35 @@
         本项目为无偿开源项目，如果想要支持一图流可以对我们进行捐助，目前服务器的运营支出大部分源自热心玩家捐助， 感谢每一位捐助者的支持。
       </div>
     </div>
-    <div class="donate_image_wrap">
-      <div class="donate_card">
-        <img class="donate_image" src="/image/website/zfb.png" alt="" />
-        <div class="donate_image_desc">支付宝</div>
+<!--    <div class="donate_image_wrap">-->
+<!--      <div class="donate_card">-->
+<!--        <img class="donate_image" src="/image/website/zfb.png" alt="" />-->
+<!--        <div class="donate_image_desc">支付宝</div>-->
+<!--      </div>-->
+<!--      <div class="donate_card">-->
+<!--        <img class="donate_image" src="/image/website/wx.png" alt="1" />-->
+<!--        <div class="donate_image_desc">微信</div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+
+    <div>
+      <div class="donate_bill">
+        <a class="href" href="https://docs.qq.com/sheet/DRVJ6UlBDb3NWYmxF?tab=hlop1l">
+          <div class="">
+            查看收支一览 <el-icon :size="24"><Link class="donate_bill_icon" /></el-icon>
+          </div>
+        </a>
       </div>
-      <div class="donate_card">
-        <img class="donate_image" src="/image/website/wx.png" alt="1" />
-        <div class="donate_image_desc">微信</div>
+    </div>
+
+    <div>
+      <div class="donate_content">
+        <ul>
+          <li>资助者的资金将全部用于一图流网站的运营开支，所有收支细节都将会公示</li>
+          <li>收支情况将在当月底或次月初进行统一记录，</li>
+          <li>如果对收支情况产生疑问或者您的资助未被公示，可在开发群938710832联系@山桜</li>
+        </ul>
       </div>
     </div>
 
@@ -71,24 +92,7 @@
       </div>
     </div>
 
-    <div>
-      <div class="donate_content">
-        <ul>
-          <li>资助者的资金将全部用于一图流网站的运营开支，所有收支细节都将会公示</li>
-          <li>收支情况将在当月底或次月初进行统一记录，</li>
-          <li>如果对收支情况产生疑问或者您的资助未被公示，可在开发群938710832联系@山桜</li>
-        </ul>
-      </div>
-    </div>
-    <div>
-      <div class="donate_bill">
-        <a class="href" href="https://docs.qq.com/sheet/DRVJ6UlBDb3NWYmxF?tab=hlop1l">
-          <div class="">
-            查看收支一览 <el-icon :size="24"><Link class="donate_bill_icon" /></el-icon>
-          </div>
-        </a>
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -155,3 +159,5 @@
   top: 4px;
 }
 </style>
+<script setup lang="ts">
+</script>
