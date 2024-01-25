@@ -55,6 +55,11 @@
         "path": "/tools/Irene",
         "text": "艾丽妮专精计算器",
         "isChild": false
+      },
+      {
+        "path": "/tools/maa",
+        "text": "排班表生成器旧版",
+        "isChild": false
       }
     ]
   },
