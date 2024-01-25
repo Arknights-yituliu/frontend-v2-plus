@@ -328,34 +328,27 @@ function operatorHasKeyword(operator) {
 
 const roomPopupStyle = "width:75%"
 
+
+
 /**
  * 选择该房间入驻干员
- * @param {string} charId 干员id
+ * @param {string} charName 干员id
  */
-function chooseOperator(charId) {
+function chooseOperator(charName) {
 
 
-
-  if (plansTemplate.value[selectedPlanIndex.value]
-      .rooms[selectedRoomType.value][selectedRoomIndex.value]
-      .operators.includes(charId)) {
-    cMessage('不要选择同一干员', 'error')
+  if(!checkRoomDuplicateOperator(charName)){
     return;
   }
 
-  if (plansTemplate.value[selectedPlanIndex.value]
-      .rooms[selectedRoomType.value][selectedRoomIndex.value]
-      .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
-    cMessage('当前房间干员数量已达上限', 'error')
+  if(!checkRoomMaximum()){
     return;
   }
 
-  if(!checkDuplicateOperator(selectedPlanIndex.value,charId,true)){
-    cMessage('请勿在同一班次入驻两个同名干员','error')
-    return;
-  }
+  checkPlanDuplicateOperator(selectedPlanIndex.value,charName,true)
 
-  plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charId)
+
+  plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charName)
 
   if (selectedRoomType.value === 'dormitory') {
     fillOperatorConflict(selectedRoomIndex.value)
@@ -364,19 +357,49 @@ function chooseOperator(charId) {
 }
 
 /**
- * 删除该房间中选中的干员
- * @param {string} charId 干员id
+ * 检查房间内是否有同一干员
+ * @param charName 干员名称
+ * @returns {boolean}
  */
-function deleteOperator(charId) {
+function checkRoomDuplicateOperator(charName){
+  if (plansTemplate.value[selectedPlanIndex.value]
+      .rooms[selectedRoomType.value][selectedRoomIndex.value]
+      .operators.includes(charName)) {
+    cMessage('不要选择同一干员', 'error')
+    return false;
+  }
 
+  return true;
 
+}
+
+/**
+ * 检查房间入驻人数是否达到上限
+ * @returns {boolean}
+ */
+function checkRoomMaximum(){
+  if (plansTemplate.value[selectedPlanIndex.value]
+      .rooms[selectedRoomType.value][selectedRoomIndex.value]
+      .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
+    cMessage('当前房间干员数量已达上限', 'error')
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * 删除该房间中选中的干员
+ * @param {string} charName 干员id
+ */
+function deleteOperator(charName) {
 
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
       plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
-        return e !== charId
+        return e !== charName
       })
 
-  checkDuplicateOperator(selectedPlanIndex.value,charId,false)
+  checkPlanDuplicateOperator(selectedPlanIndex.value,charName,false)
 
 }
 
@@ -385,20 +408,23 @@ let duplicateOperatorTable = ref([])
 /**
  * 检查当前班次是否有同名干员
  * @param index 班次
- * @param charId 干员id
+ * @param charName 干员id
  * @param status 干员入驻true或删除false
  */
-function checkDuplicateOperator(index,charId,status){
+function checkPlanDuplicateOperator(index,charName,status){
+
    //当前班次非空判断
    if(!duplicateOperatorTable.value[index]){
      duplicateOperatorTable.value[index] = {}
    }
   //如果是入驻干员并且检查表里干员状态是已经入驻，弹出警告
-   if(duplicateOperatorTable.value[index][charId] && status){
+   if(duplicateOperatorTable.value[index][charName] && status){
+
+     cMessage('请勿在同一班次入驻两个同名干员','error')
       return false;
    }
   // 更新检查表里干员状态
-  duplicateOperatorTable.value[index][charId] = status
+  duplicateOperatorTable.value[index][charName] = status
   return true;
 }
 
@@ -408,16 +434,27 @@ let tmpOperatorList = ref([])
  * 复制干员组
  */
 function copyOperatorList() {
-  tmpOperatorList.value = plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators
+  tmpOperatorList.value =
+      plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators
 }
 
 /**
  * 粘贴干员组
  */
 function pasteOperatorList() {
-  plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators = []
+  for(const charName of plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators){
+    deleteOperator(charName)
+  }
+
   for (const charId of tmpOperatorList.value) {
-    chooseOperator(charId)
+
+
+    if(!checkRoomMaximum()){
+      return;
+    }
+    plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charId)
+
+    checkPlanDuplicateOperator(selectedPlanIndex.value,charId,true)
   }
 }
 
@@ -430,6 +467,7 @@ function copyPlan() {
 
 function pastePlan() {
   plansTemplate.value[selectedPlanIndex.value] = JSON.parse(tmpPlanData.value.plan)
+  duplicateOperatorTable.value[selectedPlanIndex.value] = {}
 }
 
 let selectedProduct = ref("")
