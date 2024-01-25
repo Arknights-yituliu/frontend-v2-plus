@@ -530,7 +530,7 @@ export default {
       }
     },
     downloadCalcExe(){
-       window.open('/RogueCalcV1/formalCalc.exe')
+       window.open('/RogueCalcV1/通天联赛#0计算器v1.0.0.exe')
     }
   },
   mounted() {
