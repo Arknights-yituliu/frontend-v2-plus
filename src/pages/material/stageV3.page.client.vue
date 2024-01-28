@@ -35,7 +35,7 @@
     <!-- 说明区域 -->
 
     <!-- 图例3.0 -->
-    <div class="s-stage-legend">
+    <div class="s-stage-legend" @click="scrollToLegendDescription">
       <table class="s-stage-legend-table">
         <tbody>
         <tr>
@@ -110,17 +110,8 @@
             <span class="s-stage-legend-text-4">[综合效率]</span>
           </td>
         </tr>
-        <tr>
-          <td colspan="5">
-            <el-button type="primary" size="small" style="margin-left: 350px"
-                       @click="scrollToLegendDescription">
-              看看细节
-            </el-button>
-          </td>
-        </tr>
         </tbody>
       </table>
-
     </div>
 
 
@@ -131,7 +122,7 @@
         <div :class="getCardBgSprite(stage.series.r3)"></div>
         <div class="stage_card_3s_list">
           <div class="stage_card_3_line">
-            <div class="s-stage-card-icon-wrap" >
+            <div class="s-stage-card-icon-wrap">
               <div :class="getCardIconSprite('AP_GAMEPLAY')"></div>
             </div>
             <div class="stage_card_3_2" style="display: none;">
@@ -165,7 +156,7 @@
             </div>
           </div>
           <div class="stage_card_3_line">
-            <div class="s-stage-card-icon-wrap" >
+            <div class="s-stage-card-icon-wrap">
               <div :class="getCardIconSprite(stage.series.r3)"></div>
             </div>
             <div class="stage_card_3_2" style="display: none;">
@@ -182,7 +173,7 @@
             </div>
           </div>
           <div class="stage_card_3_line" v-show="stage.series.r2">
-            <div class="s-stage-card-icon-wrap" >
+            <div class="s-stage-card-icon-wrap">
               <div :class="getCardIconSprite(stage.series.r2)"></div>
             </div>
             <div class="stage_card_3_2" style="display: none;">
@@ -723,8 +714,6 @@ function getItemCardData() {
 }
 
 
-
-
 //根据物品id获得对应的关卡推荐数据集合
 let item_table_data_by_item_id = ref([])
 
@@ -794,7 +783,6 @@ function scrollToFrequentlyAskedQuestion() {
 }
 
 
-
 function getLegendSprite(id) {
   return "bg-" + id + " s-stage-legend-sprite";
 }
@@ -803,10 +791,9 @@ function getCardBgSprite(id) {
   return "bg-" + id + " s-stage-card-bg-sprite";
 }
 
-function getCardIconSprite(id){
+function getCardIconSprite(id) {
   return "bg-" + id + " s-stage-card-icon-sprite";
 }
-
 
 
 function getDetailTableItemSprite(id) {
@@ -1023,7 +1010,6 @@ onMounted(() => {
 })
 
 
-
 let itemIdList = [] // 材料表
 let historyActItemTable = [] // 历史活动up材料表
 let historyActItemList = []
@@ -1153,7 +1139,7 @@ function filterOrundumStage() {
   if (onlyShowActStage.value) {
     displayOrundumRecommendedStage.value = []
     for (const stage of orundumRecommendedStage.value) {
-      const {stageCode,stageType} = stage
+      const {stageCode, stageType} = stage
       console.log(stageType)
       if (stageCode === '1-7' || stageCode === 'CW-6' || stageType === 'ACT' || stageType === 'ACT_REP') {
         displayOrundumRecommendedStage.value.push(stage)
@@ -1173,7 +1159,7 @@ function getOrundumRecommendedStage() {
         lmdcost: stage.lmdcost.toFixed(2) + 'w',
         orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
         stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
-        stageType:stage.stageType?stage.stageType:''
+        stageType: stage.stageType ? stage.stageType : ''
       })
     }
     displayOrundumRecommendedStage.value = orundumRecommendedStage.value
@@ -1205,10 +1191,15 @@ onMounted(() => {
   border-collapse: collapse;
 }
 
+.s-stage-legend-table td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 .s-stage-legend {
   position: relative;
   margin: 8px;
-  width: 520px;
+  width: 530px;
   height: 160px;
   border-radius: 4px;
   border: 1px solid var(--c-border-color);
@@ -1244,7 +1235,8 @@ onMounted(() => {
   display: block;
   text-align: center;
   font-style: italic;
-  line-height: 15px;
+  line-height: 20px;
+  margin: auto 10px;
 }
 
 .s-stage-legend-text-4 {
@@ -1254,19 +1246,19 @@ onMounted(() => {
 }
 
 .s-stage-card-bg-sprite {
-   position: absolute;
-   opacity: 0.6;
-   transform: scale(0.6);
-   left: -80px;
-   top: -25px;
+  position: absolute;
+  opacity: 0.6;
+  transform: scale(0.6);
+  left: -80px;
+  top: -25px;
 }
 
-.s-stage-card-icon-wrap{
+.s-stage-card-icon-wrap {
   width: 30px;
   height: 30px;
 }
 
-.s-stage-card-icon-sprite{
+.s-stage-card-icon-sprite {
   transform: scale(.16);
   position: absolute;
   display: inline-block;
