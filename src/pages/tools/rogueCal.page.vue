@@ -196,7 +196,7 @@ export default {
     };
   },
   setup() {
-    const challengeScore = [10, 30, 80, 30, 25, 66, 300];
+    const challengeScore = [10, 30, 80, 30, 20, 66, 300];
     const challengeCount = ref(["", "", "", "", ""]);
     const challengeSelect = ref([1, 1]);
     const bossScore = [240, 340, 220, 180, 200, 10, 160, 50];
