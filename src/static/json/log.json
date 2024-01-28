@@ -7,6 +7,18 @@
         "text": "优化表格视觉效果",
         "author": "MilkWind",
         "type": "优化"
+      },
+      {
+        "tag": "自定义组件",
+        "text": "新增屏幕右侧的固钉导航组件",
+        "author": "MilkWind",
+        "type": "新增"
+      },
+      {
+        "tag": "刷图推荐",
+        "text": "新增漫游式导航引导",
+        "author": "MilkWind",
+        "type": "新增"
       }
     ]
   },

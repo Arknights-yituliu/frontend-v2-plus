@@ -7,7 +7,6 @@
     <slot></slot>
     <my-footer></my-footer>
   </div>
-
 </template>
 
 <script setup>
