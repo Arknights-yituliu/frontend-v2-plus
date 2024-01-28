@@ -1,8 +1,8 @@
 <template>
   <!--
-  固钉导航栏，若要使用该组件，直接<fixed-nav/>引入就行，该导航栏会自动抓取引入组件中class为“op_title_ctext”的div作为链接
+  固钉导航栏，若要使用该组件，直接<fixed-nav/>引入就行，该导航栏会自动抓取引入组件中class为“op_title_ctext”的元素作为链接
   引入时，尽量在<template>末尾引入，避免页面元素将导航栏给遮住
-  需要注意的是，若class为“op_title_ctext”的div数量不多于1个，则该组件不显示
+  需要注意的是，若class为“op_title_ctext”的元素数量不多于1个，则该组件不显示
   -->
   <div v-if="sections.length > 1" class="fixed-nav">
     <div class="nav-content">
