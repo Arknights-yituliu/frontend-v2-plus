@@ -16,7 +16,7 @@
               <!-- 如果有4个选项则修改为 style="width:98%;margin:0 1%;"，子项宽度25% -->
 
               <div style="display: flex;justify-content: center;margin: 8px 0">
-                <el-radio-group  v-model="timeSelector"
+                <el-radio-group v-model="timeSelector"
                                 @change="checkEndDate(timeSelector)">
                   <!-- <el-radio-button v-for="(schedule, name) in schedules" :key="name" :label="name" style="width: 33%"
                     v-show="schedule.display"> -->
@@ -421,7 +421,7 @@
             </div>
           </el-collapse-item>
           <!-- 氪金资源 -->
-          <el-collapse-item class="collapse-item" name="4" style="margin:8px">
+          <el-collapse-item class="collapse-item" name="pack" style="margin:8px">
             <template #title>
               <div class="gacha_title_icon"></div>
               <span class="collapse-item_title">氪金资源 {{ toFixedByAcc(calResults.gachaTimes_gacha, 0) }}抽</span>
@@ -452,39 +452,38 @@
                 （每张月卡可预支6石）
               </div>
               <el-checkbox-group v-model="gacha_storePacksList">
-                <div v-for="(singlePack, index) in gacha_storePacks" :key="index" v-show="singlePack.packType === 'monthly' &&
-                  singlePack.packRmbPerDraw > 0 &&
-                  checkExpiration(singlePack.start, singlePack.end, singlePack.rewardType)
-                  " class="gacha_unit_child" @change="compute(singlePack.packName)">
+                <div v-for="(singlePack, index) in gacha_storePacks" :key="index" v-show="singlePack.type === 'monthly' &&
+                  singlePack.eachDrawPrice > 0
+                  " class="gacha_unit_child" @change="compute(singlePack.name)">
                   <el-checkbox-button :label="index">
-                    <div class="gacha_packPpr" :class="getPprLabel(singlePack.packRmbPerDraw)">
-                      {{ toFixedByAcc(singlePack.packRmbPerDraw, 2) }}
+                    <div class="gacha_packPpr" :class="getPprLabel(singlePack.eachDrawPrice)">
+                      {{ toFixedByAcc(singlePack.eachDrawPrice, 2) }}
                     </div>
                     <div class="gacha_unit_child_title" style="width: 168px">
-                      {{ singlePack.packName }}
+                      {{ singlePack.name }}
                     </div>
                     <div class="gacha_resources_unit" style="width: 192px">
-                      <div style="width: 40px" v-show="singlePack.gachaOrundum !== 0" :class="getSpriteImg('4003icon')">
+                      <div style="width: 40px" v-show="singlePack.orundum !== 0" :class="getSpriteImg('4003icon')">
                       </div>
-                      <div style="width: 54px" v-show="singlePack.gachaOrundum !== 0">
-                        {{ singlePack.gachaOrundum }}
+                      <div style="width: 54px" v-show="singlePack.orundum !== 0">
+                        {{ singlePack.orundum }}
                       </div>
-                      <div style="width: 40px" v-show="singlePack.gachaOriginium !== 0"
+                      <div style="width: 40px" v-show="singlePack.originium !== 0"
                            :class="getSpriteImg('4002icon')">
                       </div>
-                      <div style="width: 54px" v-show="singlePack.gachaOriginium !== 0">
-                        {{ singlePack.gachaOriginium }}
+                      <div style="width: 54px" v-show="singlePack.originium !== 0">
+                        {{ singlePack.originium }}
                       </div>
-                      <div style="width: 40px" v-show="singlePack.gachaPermit !== 0" :class="getSpriteImg('7003icon')">
+                      <div style="width: 40px" v-show="singlePack.ticketGacha !== 0" :class="getSpriteImg('7003icon')">
                       </div>
-                      <div style="width: 54px" v-show="singlePack.gachaPermit !== 0">
-                        {{ singlePack.gachaPermit }}
+                      <div style="width: 54px" v-show="singlePack.ticketGacha !== 0">
+                        {{ singlePack.ticketGacha }}
                       </div>
-                      <div style="width: 40px" v-show="singlePack.gachaPermit10 !== 0"
+                      <div style="width: 40px" v-show="singlePack.ticketGacha10 !== 0"
                            :class="getSpriteImg('7004icon')">
                       </div>
-                      <div style="width: 54px" v-show="singlePack.gachaPermit10 !== 0">
-                        {{ singlePack.gachaPermit10 }}
+                      <div style="width: 54px" v-show="singlePack.ticketGacha10 !== 0">
+                        {{ singlePack.ticketGacha10 }}
                       </div>
                     </div>
                   </el-checkbox-button>
@@ -496,41 +495,39 @@
                 限时礼包
               </div>
               <el-checkbox-group v-model="gacha_storePacksList" class="">
-                <div v-for="(singlePack, index) in gacha_storePacks" :key="index" v-show="singlePack.packType == 'limited' &&
-                  1 == singlePack.packState &&
-                  singlePack.packRmbPerDraw > 0 &&
-                  checkExpiration(singlePack.start, singlePack.end, singlePack.rewardType)
-                  " class="gacha_unit_child" @change="compute(singlePack.packName)">
+                <div v-for="(singlePack, index) in gacha_storePacks" :key="index" v-show="singlePack.type == 'limited' &&
+                  1 == singlePack.state && singlePack.eachDrawPrice > 0
+                  " class="gacha_unit_child" @change="compute(singlePack.name)">
                   <el-checkbox-button :label="index">
-                    <div class="gacha_packPpr" :class="getPprLabel(singlePack.packRmbPerDraw)">
-                      {{ toFixedByAcc(singlePack.packRmbPerDraw, 2) }}
+                    <div class="gacha_packPpr" :class="getPprLabel(singlePack.eachDrawPrice)">
+                      {{ toFixedByAcc(singlePack.eachDrawPrice, 2) }}
                     </div>
                     <div class="gacha_unit_child_title" style="width: 168px">
-                      {{ singlePack.packName }}
+                      {{ singlePack.name }}
                     </div>
                     <!-- 一个通用的资源显示模块 -->
                     <div class="gacha_resources_unit" style="width: 279px">
-                      <div style="width: 40px" v-show="singlePack.gachaOrundum > 0.1" :class="getSpriteImg('4003icon')">
+                      <div style="width: 40px" v-show="singlePack.orundum > 0.1" :class="getSpriteImg('4003icon')">
                       </div>
-                      <div style="width: 54px" v-show="singlePack.gachaOrundum > 0.1">
-                        {{ singlePack.gachaOrundum }}
+                      <div style="width: 54px" v-show="singlePack.orundum > 0.1">
+                        {{ singlePack.orundum }}
                       </div>
-                      <div style="width: 40px" v-show="singlePack.gachaOriginium > 0.1"
+                      <div style="width: 40px" v-show="singlePack.originium > 0.1"
                            :class="getSpriteImg('4002icon')">
                       </div>
-                      <div style="width: 54px" v-show="singlePack.gachaOriginium > 0.1">
-                        {{ singlePack.gachaOriginium }}
+                      <div style="width: 54px" v-show="singlePack.originium > 0.1">
+                        {{ singlePack.originium }}
                       </div>
-                      <div style="width: 40px" v-show="singlePack.gachaPermit > 0.1" :class="getSpriteImg('7003icon')">
+                      <div style="width: 40px" v-show="singlePack.ticketGacha > 0.1" :class="getSpriteImg('7003icon')">
                       </div>
-                      <div style="width: 54px" v-show="singlePack.gachaPermit > 0.1">
-                        {{ singlePack.gachaPermit }}
+                      <div style="width: 54px" v-show="singlePack.ticketGacha > 0.1">
+                        {{ singlePack.ticketGacha }}
                       </div>
-                      <div style="width: 40px" v-show="singlePack.gachaPermit10 > 0.1"
+                      <div style="width: 40px" v-show="singlePack.ticketGacha10 > 0.1"
                            :class="getSpriteImg('7004icon')">
                       </div>
-                      <div style="width: 54px" v-show="singlePack.gachaPermit10 > 0.1">
-                        {{ singlePack.gachaPermit10 }}
+                      <div style="width: 54px" v-show="singlePack.ticketGacha10 > 0.1">
+                        {{ singlePack.ticketGacha10 }}
                       </div>
                     </div>
                   </el-checkbox-button>
@@ -543,35 +540,35 @@
               </div>
               <el-checkbox-group v-model="gacha_storePacksList" class="">
                 <div v-for="(singlePack, index) in gacha_storePacks" :key="index"
-                     v-show="singlePack.packType === 'once'"
-                     class="gacha_unit_child" @change="compute(singlePack.packName)">
+                     v-show="singlePack.type === 'once'&& singlePack.eachDrawPrice > 0"
+                     class="gacha_unit_child" @change="compute(singlePack.name)">
                   <el-checkbox-button :label="index">
-                    <div class="gacha_packPpr" :class="getPprLabel(singlePack.packRmbPerDraw)">
-                      {{ toFixedByAcc(singlePack.packRmbPerDraw, 2) }}
+                    <div class="gacha_packPpr" :class="getPprLabel(singlePack.eachDrawPrice)">
+                      {{ toFixedByAcc(singlePack.eachDrawPrice, 2) }}
                     </div>
                     <div class="gacha_unit_child_title" style="width: 168px">
-                      {{ singlePack.packName }}
+                      {{ singlePack.name }}
                     </div>
                     <!-- 一个通用的资源显示模块 -->
                     <div class="gacha_resources_unit" style="width: 279px">
-                      <div style="width: 40px" v-show="singlePack.gachaOrundum > 0.1"
+                      <div style="width: 40px" v-show="singlePack.orundum > 0.1"
                            :class="getSpriteImg('4003icon')"/>
-                      <div style="width: 54px" v-show="singlePack.gachaOrundum > 0.1">
-                        {{ singlePack.gachaOrundum }}
+                      <div style="width: 54px" v-show="singlePack.orundum > 0.1">
+                        {{ singlePack.orundum }}
                       </div>
-                      <div style="width: 40px" v-show="singlePack.gachaOriginium > 0.1"
+                      <div style="width: 40px" v-show="singlePack.originium > 0.1"
                            :class="getSpriteImg('4002icon')"/>
-                      <div style="width: 54px" v-show="singlePack.gachaOriginium > 0.1">
-                        {{ singlePack.gachaOriginium }}
+                      <div style="width: 54px" v-show="singlePack.originium > 0.1">
+                        {{ singlePack.originium }}
                       </div>
-                      <div style="width: 40px" v-show="singlePack.gachaPermit > 0.1" :class="getSpriteImg('7003icon')"/>
-                      <div style="width: 54px" v-show="singlePack.gachaPermit > 0.1">
-                        {{ singlePack.gachaPermit }}
+                      <div style="width: 40px" v-show="singlePack.ticketGacha > 0.1" :class="getSpriteImg('7003icon')"/>
+                      <div style="width: 54px" v-show="singlePack.ticketGacha > 0.1">
+                        {{ singlePack.ticketGacha }}
                       </div>
-                      <div style="width: 40px" v-show="singlePack.gachaPermit10 > 0.1"
+                      <div style="width: 40px" v-show="singlePack.ticketGacha10 > 0.1"
                            :class="getSpriteImg('7004icon')"/>
-                      <div style="width: 54px" v-show="singlePack.gachaPermit10 > 0.1">
-                        {{ singlePack.gachaPermit10 }}
+                      <div style="width: 54px" v-show="singlePack.ticketGacha10 > 0.1">
+                        {{ singlePack.ticketGacha10 }}
                       </div>
                     </div>
                   </el-checkbox-button>
@@ -958,29 +955,27 @@
 </template>
 
 <script>
-import gacha_potentialJson from "@/static/json/gacha_potential.json"; //常驻活动和主线数据
-import gacha_honeyCakeJson from "@/static/json/gacha_honeyCakeNew.json"; //其他奖励数据
-import "@/assets/css/sprite_gacha.css";
-import "@/assets/css/gacha.css";
+import gacha_potentialJson from "/src/static/json/gacha_potential.json"; //常驻活动和主线数据
+import gacha_honeyCakeJson from "/src/static/json/gacha_honeyCakeNew.json"; //其他奖励数据
+import "/src/assets/css/sprite_gacha.css";
+import "/src/assets/css/gacha.css";
 import cookie from "js-cookie";
 import * as echarts from "echarts";
 
+import pack_table from '/src/static/json/tools/gacha_pack_table.json'
+
 let myChart = "";
 import {ClientOnly} from "/src/components/ClientOnly";
-import {usePageContext} from "/src/renderer/usePageContext";
 import {ElMessage} from "element-plus";
 
 export default {
   components: {ClientOnly},
-  setup() {
-    const pageContext = usePageContext();
-    return {pageContext};
-  },
+
   data() {
     return {
       itemList: [],
       checkBox1: ["0"],
-      checkBox: ["1", "2", "5", "6"], //折叠栏绑定数组
+      checkBox: ["1", "2", "5", "6", "pack"], //折叠栏绑定数组
       // checkBox: ["1","7"],
       rewardType: "限定", //奖励的类型
       startTime: "", //开始时间
@@ -991,7 +986,7 @@ export default {
       gacha_potential: gacha_potentialJson, //常驻活动和主线
       gacha_potentialList: [],
       // gacha_storePacks: gacha_storePacksJson.data,
-      gacha_storePacks: this.pageContext.pageProps.pack_data, //商店礼包
+      gacha_storePacks: [], //商店礼包
       gacha_storePacksList: [],
       gacha_store258: [], //黄票兑换38抽
       gacha_store258List: [],
@@ -1061,31 +1056,23 @@ export default {
           display: true,
           endTime: '2024/02/15  03:58:00',
           rewardType: "春节限定",
-          daily_permit: false,
+          daily_permit: true,
           daily_orundum: true
         },
-        '彩六二期(3.19)': {
+        '彩六二期(3.21)': {
           display: true,
-          endTime: '2024/03/19  03:58:00',
+          endTime: '2024/03/21  03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
           orundumCountDown: true
         },
-        '彩六二期(3.26)': {
-          display: true,
-          endTime: '2024/03/26  03:58:00',
-          rewardType: "联动限定",
-          permitCountDown: false,
-          orundumCountDown: true
-        },
-        '彩六二期(4.02)': {
-          display: true,
-          endTime: '2024/04/02  03:58:00',
-          rewardType: "联动限定",
+        '周年(5.1)': {
+          display: false,
+          endTime: '2024/05/01  03:58:00',
+          rewardType: "周年限定",
           permitCountDown: false,
           orundumCountDown: true
         }
-
       }
       // pack_data: this.pageContext.pageProps.pack_data,
     };
@@ -1118,8 +1105,8 @@ export default {
       this.$notify({
         title: "2023.10.26更新",
         dangerouslyUseHTMLString: true,
-        // message: "<strong>1.更新了春节池攒抽排期<br></strong>",
-        message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
+        message: "<strong>1.更新了春节池攒抽排期<br></strong>",
+        // message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
         duration: 6000,
       });
     },
@@ -1213,7 +1200,7 @@ export default {
       let year_next = year_now;
       this.gacha_store258 = [];
       this.gacha_storePacks = [];
-      this.gacha_storePacks = this.pageContext.pageProps.pack_data;
+      this.gacha_storePacks = pack_table;
 
       for (var i = moon_now; i <= moon_max; i++) {
         var moon_now_str = moon_now.toString().padStart(2, "0");
@@ -1389,38 +1376,41 @@ export default {
       // index是被选中的商店礼包json的索引
       this.gacha_storePacksList.forEach((index) => {
         //月卡单独判断
-        var packItem = this.gacha_storePacks[index];
-        if (this.checkExpiration(packItem.start, packItem.end, packItem.rewardType, packItem.packName)) {
+        const packItem = this.gacha_storePacks[index];
+
+        const start = Date.parse(new Date(packItem.start).toString())
+        const end = Date.parse(new Date(packItem.end).toString())
+        if (this.checkExpiration(start, end, '公共', packItem.name)) {
           if ("月卡" === packItem.packName) {
             // console.log("买的月卡个数", Math.ceil(this.remainingDays / 30));
-            packItem.gachaOrundum = parseInt(this.remainingDays) * 200; //重新给商店礼包json的月卡的相关属性赋值
-            packItem.gachaOriginium = Math.ceil(this.remainingDays / 30) * 6; //重新给商店礼包json的月卡的相关属性赋值
+            packItem.orundum = parseInt(this.remainingDays) * 200; //重新给商店礼包json的月卡的相关属性赋值
+            packItem.originium = Math.ceil(this.remainingDays / 30) * 6; //重新给商店礼包json的月卡的相关属性赋值
 
             this.sellsCount += Math.ceil(this.remainingDays / 30) * 30; //计算售价
             this.calResults.orundum_gacha += parseInt(this.remainingDays) * 200; //根据天数计算月卡的合成玉
             this.calResults.originium_gacha += Math.ceil(this.remainingDays / 30) * 6; //根据天数/30 计算月卡的源石
             if (this.monthlyFlag) {
-              packItem.gachaOriginium = packItem.gachaOriginium - 6;
+              packItem.gachaOriginium = packItem.originium - 6;
               this.calResults.originium_gacha -= 6;
             }
 
             if (this.monthlyCardExtra > 2) {
               this.$message.error("月卡限制最多购买90天");
-              packItem.gachaOriginium += 12;
+              packItem.originium += 12;
               this.calResults.originium_gacha += 12;
               this.sellsCount += 60; //计算售价
             } else {
-              packItem.gachaOriginium += parseInt(this.monthlyCardExtra) * 6;
+              packItem.originium += parseInt(this.monthlyCardExtra) * 6;
               this.calResults.originium_gacha += parseInt(this.monthlyCardExtra) * 6;
               this.sellsCount += parseInt(this.monthlyCardExtra) * 30; //计算售价
             }
           } else {
-            this.sellsCount += parseInt(packItem.packPrice); //计算售价
-            this.calResults.orundum_gacha += parseInt(packItem.gachaOrundum);
-            this.calResults.originium_gacha += parseInt(packItem.gachaOriginium);
+            this.sellsCount += parseInt(packItem.price); //计算售价
+            this.calResults.orundum_gacha += parseInt(packItem.orundum);
+            this.calResults.originium_gacha += parseInt(packItem.originium);
 
-            this.calResults.permit_gacha += parseInt(packItem.gachaPermit);
-            this.calResults.permit10_gacha += parseInt(packItem.gachaPermit10);
+            this.calResults.permit_gacha += parseInt(packItem.ticketGacha);
+            this.calResults.permit10_gacha += parseInt(packItem.ticketGacha10);
           }
         }
       });
@@ -1460,7 +1450,7 @@ export default {
             //循环list<list>， list为[奖励名称,奖励内容]
             if ("honeyCake" === list[1].module) {
               //这里是计算其他奖励
-              console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
+              // console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
 
               this.calResults.originium_other += list[1].originium; //xxxxx_other格式的属性  其他奖励的的各项奖励数量，下同
               this.calResults.orundum_other += list[1].orundum;
@@ -1476,17 +1466,17 @@ export default {
             }
           });
 
-      console.log(
-          "预测资源，",
-          "源石:",
-          this.calResults.originium_other,
-          "合成玉:",
-          this.calResults.orundum_other,
-          "寻访凭证:",
-          this.calResults.permit_other,
-          "十连凭证:",
-          this.calResults.permit10_other
-      );
+      // console.log(
+      //     "预测资源，",
+      //     "源石:",
+      //     this.calResults.originium_other,
+      //     "合成玉:",
+      //     this.calResults.orundum_other,
+      //     "寻访凭证:",
+      //     this.calResults.permit_other,
+      //     "十连凭证:",
+      //     this.calResults.permit10_other
+      // );
 
       this.gacha_actReList.forEach((key) => {
         //循环UI上绑定的复刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
