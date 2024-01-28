@@ -16,16 +16,13 @@
               <!-- 如果有4个选项则修改为 style="width:98%;margin:0 1%;"，子项宽度25% -->
 
               <div style="display: flex;justify-content: center;margin: 8px 0">
-                <el-radio-group v-model="timeSelector"
-                                @change="checkEndDate(timeSelector)">
-                  <!-- <el-radio-button v-for="(schedule, name) in schedules" :key="name" :label="name" style="width: 33%"
-                    v-show="schedule.display"> -->
-                  <el-radio-button v-for="(schedule, name) in schedules" :key="name" :label="name">
+                <el-radio-group v-model="timeSelector" @change="checkEndDate(timeSelector)">
+                  <el-radio-button v-for="(schedule, name) in schedules" v-show="schedule.display" :key="name" :label="name" >
                   </el-radio-button>
                 </el-radio-group>
               </div>
 
-              <div class="gacha_unit_info">彩六联动二期的排期尚不明确，3.26的可能性较大，请自行斟酌</div>
+<!--              <div class="gacha_unit_info">彩六联动二期的排期尚不明确，3.26的可能性较大，请自行斟酌</div>-->
               <!-- <el-divider></el-divider> -->
               <div id="gacha_total_chart">
                 <div id="gacha_total_pie" ref="gacha_total_pie"
@@ -99,10 +96,10 @@
                 </div>
               </div>
               <el-divider></el-divider>
-              <div class="gacha_unit_child" style="display: flex;margin-top: 4px;margin-bottom: 4px;">
-                <a href="https://www.skland.com/act/vote-campaign"
-                   style="font-size: 16px;text-decoration: none;margin: 0px auto;text-align: center;">在森空岛投票支持'罗德岛基建BETA'，助力计算器的开发工作！</a>
-              </div>
+<!--              <div class="gacha_unit_child" style="display: flex;margin-top: 4px;margin-bottom: 4px;">-->
+<!--                <a href="https://www.skland.com/act/vote-campaign"-->
+<!--                   style="font-size: 16px;text-decoration: none;margin: 0px auto;text-align: center;">在森空岛投票支持'罗德岛基建BETA'，助力计算器的开发工作！</a>-->
+<!--              </div>-->
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -2072,7 +2069,7 @@ export const documentProps = {
 }
 
 .el-collapse-item__content {
-  padding-bottom: 0px;
+  padding-bottom: 0;
 }
 
 .el-input_wrap {
@@ -2088,6 +2085,10 @@ export const documentProps = {
   margin-right: 12px;
 }
 
+
+.el-radio-button__inner{
+  width: 100%;
+}
 
 </style>
 
