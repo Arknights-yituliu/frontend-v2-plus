@@ -178,12 +178,14 @@
       </div>
     </div>
   </div>
+  <fixed-nav/>
 </template>
 
 <script setup>
 import cookie from 'js-cookie'
 import { usePageContext } from '@/renderer/usePageContext'
 import { onMounted, ref } from 'vue'
+import FixedNav from "../../components/FixedNav.vue";
 const pageContext = usePageContext()
 const storeListFormat = ref(pageContext?.pageProps?.storeListFormat) // 常驻商店性价比集合
 const actStoreList = pageContext?.pageProps?.actStoreList || [] // 活动列表

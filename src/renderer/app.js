@@ -5,6 +5,7 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import App from "/src/App.vue";
 import {setPageContext} from "./usePageContext";
 import "element-plus/theme-chalk/dark/css-vars.css";
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 
 
@@ -36,7 +37,9 @@ function createVPSApp(pageContext, clientOnly) {
     }
 
 
-    app.use(ElementPlus);
+    app.use(ElementPlus, {
+        locale: zhCn,
+    });
     if (!clientOnly) {
         app.provide(ID_INJECTION_KEY, {
             prefix: 1024,

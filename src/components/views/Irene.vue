@@ -199,7 +199,8 @@ function calculateTime() {
 }
 
 .code-block {
-  background-color: #f4f4f4;
+  background-color: var(--c-background-color);
+  color: var(--c-text-color);
   padding: 10px;
   border-radius: 5px;
 }
