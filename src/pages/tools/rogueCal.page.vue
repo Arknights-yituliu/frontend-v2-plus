@@ -192,7 +192,7 @@ export default {
         "捕猎平衡是否生效",
         "特殊加分"
       ],
-      version: "1.3"
+      version: "1.3.2"
     };
   },
   setup() {
