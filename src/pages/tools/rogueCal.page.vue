@@ -403,6 +403,7 @@ export default {
 
     const battleChoiceChange = (id) => {
       //当选择了特殊作战的英雄无名时，只有特殊加分为击杀6个时，才能选择无漏，否则无法选择
+      battleDropdowns.value[3].disabled = false
       if(battleDropdowns.value[0].selectedValue=='1'){
         if(battleDropdowns.value[2].selectedValue == '7'){
           battleDropdowns.value[3].disabled = battleDropdowns.value[6].selectedValue != '6';
