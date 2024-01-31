@@ -1100,9 +1100,9 @@ export default {
     //公告通知
     openNotification() {
       this.$notify({
-        title: "2023.10.26更新",
+        title: "2024.01.27更新",
         dangerouslyUseHTMLString: true,
-        message: "<strong>1.更新了春节池攒抽排期<br></strong>",
+        message: "<strong>1.更新了彩六联动二期攒抽<br></strong>",
         // message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
         duration: 6000,
       });
@@ -1373,21 +1373,22 @@ export default {
       // index是被选中的商店礼包json的索引
       this.gacha_storePacksList.forEach((index) => {
         //月卡单独判断
-        const packItem = this.gacha_storePacks[index];
+        let packItem = this.gacha_storePacks[index];
 
         const start = Date.parse(new Date(packItem.start).toString())
         const end = Date.parse(new Date(packItem.end).toString())
         if (this.checkExpiration(start, end, '公共', packItem.name)) {
-          if ("月卡" === packItem.packName) {
+          if ("月卡" === packItem.name) {
             // console.log("买的月卡个数", Math.ceil(this.remainingDays / 30));
             packItem.orundum = parseInt(this.remainingDays) * 200; //重新给商店礼包json的月卡的相关属性赋值
             packItem.originium = Math.ceil(this.remainingDays / 30) * 6; //重新给商店礼包json的月卡的相关属性赋值
 
             this.sellsCount += Math.ceil(this.remainingDays / 30) * 30; //计算售价
             this.calResults.orundum_gacha += parseInt(this.remainingDays) * 200; //根据天数计算月卡的合成玉
+            console.log(parseInt(this.remainingDays) * 200)
             this.calResults.originium_gacha += Math.ceil(this.remainingDays / 30) * 6; //根据天数/30 计算月卡的源石
             if (this.monthlyFlag) {
-              packItem.gachaOriginium = packItem.originium - 6;
+              packItem.originium = packItem.originium - 6;
               this.calResults.originium_gacha -= 6;
             }
 

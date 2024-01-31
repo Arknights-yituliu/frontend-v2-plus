@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import toolApi from "@/api/tool";
+import toolApi from "/src/api/tool";
 import * as echarts from "echarts";
 import "/src/assets/css/poster.css";
 

@@ -1,6 +1,6 @@
 <script setup>
 import {reactive, ref, onMounted} from "vue"
-import {convertToSeconds, secondsToTimeString, getSecondsSinceMidnight} from "@/utils/dataHanding"
+import {convertToSeconds, secondsToTimeString, getSecondsSinceMidnight} from "/src/utils/dataHanding"
 import {Clock} from "@element-plus/icons-vue";
 
 let drawerVisible = ref(false)

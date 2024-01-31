@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { http } from "@/api/baseURL";
+import { http } from "/src/api/baseURL";
 
 function get_newChapter() {
   return axios.get(http + "stage/chapter?expCoefficient=0.625&zone=13-");

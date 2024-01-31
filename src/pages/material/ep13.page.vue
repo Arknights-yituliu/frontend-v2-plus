@@ -206,7 +206,7 @@
 </template>
 
 <script setup>
-import { usePageContext } from "@/renderer/usePageContext";
+import { usePageContext } from "/src/renderer/usePageContext";
 import { ref } from "vue";
 const show_secondary = ref(true);
 const pageContext = usePageContext();

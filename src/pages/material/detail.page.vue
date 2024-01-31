@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import "@/assets/css/stageDetail.css";
+import "/src/assets/css/stageDetail.css";
 import stageApi from "/src/api/stage";
 import * as echarts from "echarts";
 import {onMounted, ref} from "vue";

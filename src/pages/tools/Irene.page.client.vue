@@ -1,5 +1,5 @@
 <script setup>
-import Irene from "@/components/views/Irene.vue";
+import Irene from "/src/components/views/Irene.vue";
 </script>
 
 <template>

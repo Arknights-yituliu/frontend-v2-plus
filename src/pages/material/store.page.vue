@@ -183,7 +183,7 @@
 
 <script setup>
 import cookie from 'js-cookie'
-import { usePageContext } from '@/renderer/usePageContext'
+import { usePageContext } from '/src/renderer/usePageContext'
 import { onMounted, ref } from 'vue'
 import FixedNav from "../../components/FixedNav.vue";
 const pageContext = usePageContext()

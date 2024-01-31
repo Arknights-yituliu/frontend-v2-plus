@@ -277,7 +277,7 @@
         <el-table-column fixed prop="stageCode" label="关卡名" :width="120" sortable>
           <template #default="scope">
             <div>
-              <span style="font-size: 10px;line-height: 8px;">{{ replaceZoneName(scope.row.zoneName) }}</span><br>
+              <span style="font-size: 10px;line-height: 8px;">{{ replaceZoneName(scope) }}</span><br>
               {{ scope.row.stageCode }}
             </div>
           </template>
@@ -671,7 +671,7 @@ let selected_item = ref({
 // 获取关卡推荐数据
 function getStageResult() {
   stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
-
+    console.log(response.data)
     stageResultGroup = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
     getItemCardData()
@@ -763,6 +763,7 @@ function getItemTableData(index, isJump) {
 
 function replaceZoneName(str) {
   if (typeof str === "undefined") return ''
+  str = str.row.zoneName
   return str.replace("(标准)", '')
 }
 

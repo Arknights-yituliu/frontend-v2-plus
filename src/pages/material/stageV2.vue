@@ -272,7 +272,7 @@
 </template>
 <script setup>
 import { onMounted, ref } from 'vue'
-import { usePageContext } from "@/renderer/usePageContext";
+import { usePageContext } from "/src/renderer/usePageContext";
 
 const pageContext = usePageContext();
 let stageRankT3 = [];

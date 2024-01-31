@@ -192,7 +192,7 @@ export default {
         "捕猎平衡是否生效",
         "特殊加分"
       ],
-      version: "1.3"
+      version: "1.3.2"
     };
   },
   setup() {
@@ -290,12 +290,12 @@ export default {
       "2个突击动力甲" : 20,
       "4个小提琴家" : 10,
       "东/南风向" : 10,
-      "击杀1个" : 15,
-      "击杀2个" : 30,
-      "击杀3个" : 45,
-      "击杀4个" : 60,
-      "击杀5个" : 75,
-      "击杀6个" : 90
+      "击杀1个" : 10,
+      "击杀2个" : 20,
+      "击杀3个" : 30,
+      "击杀4个" : 40,
+      "击杀5个" : 50,
+      "击杀6个" : 60
     };
     const settlementScore = ref("");
     const useCustomUnit = ref(false);
@@ -402,6 +402,14 @@ export default {
     };
 
     const battleChoiceChange = (id) => {
+      //当选择了特殊作战的英雄无名时，只有特殊加分为击杀6个时，才能选择无漏，否则无法选择
+      battleDropdowns.value[3].disabled = false
+      if(battleDropdowns.value[0].selectedValue=='1'){
+        if(battleDropdowns.value[2].selectedValue == '7'){
+          battleDropdowns.value[3].disabled = battleDropdowns.value[6].selectedValue != '6';
+        }
+      }
+
       if (id == 0) {
         battleDropdowns.value[6].options = [];
         battleDropdowns.value[6].disabled = true;
@@ -530,7 +538,7 @@ export default {
       }
     },
     downloadCalcExe(){
-       window.open('/RogueCalcV1/通天联赛计算器v1.0.0.exe')
+       window.open('/RogueCalcV1/通天联赛计算器v1.0.1.exe')
     }
   },
   mounted() {
