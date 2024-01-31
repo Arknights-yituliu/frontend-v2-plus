@@ -9,7 +9,7 @@ import '/src/assets/css/sprite/sprite_avatar_4.css'
 import character_table from '/src/static/json/survey/character_table_simple.json'
 import {cMessage} from '/src/custom/message.js'
 import schedule_menu from '/src/static/json/build/schedule_menu.json'
-import {fileRead} from '/src/utils/fileRead'
+import {getText} from '/src/utils/fileRead'
 import {debounce} from "/src/utils/debounce";
 import building_table from '/src/static/json/build/building_table.json'
 import feedBack from '/src/components/feedBack.vue';
@@ -652,7 +652,7 @@ async function importScheduleByFile() {
   const inputElement = document.getElementById('scheduleFile')
   let fileContent = ')'
   if (inputElement.files) {
-    fileContent = await fileRead(inputElement.files[0])
+    fileContent = await getText(inputElement.files[0])
   }
 
   let schedule = ''
@@ -661,8 +661,6 @@ async function importScheduleByFile() {
   } catch (e) {
     return cMessage(e.toString(), 'error')
   }
-
-
   importSchedule(schedule)
 }
 

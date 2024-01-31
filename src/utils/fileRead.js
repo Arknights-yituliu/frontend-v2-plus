@@ -1,4 +1,4 @@
-function fileRead(file){
+function getText(file){
     return new Promise((resolve,reject)=>{
         const reader = new FileReader()
         reader.onload = () =>{
@@ -12,4 +12,19 @@ function fileRead(file){
     })
 }
 
-export { fileRead }
+function getDataUrl(file){
+    return new Promise((resolve,reject)=>{
+        const reader = new FileReader()
+        reader.onload = () =>{
+            resolve(reader.result)
+        }
+        reader.onerror = () =>{
+            reject(reader.error)
+        }
+        reader.readAsDataURL(file)
+    })
+}
+
+
+
+export { getText , getDataUrl }
