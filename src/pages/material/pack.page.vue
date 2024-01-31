@@ -498,6 +498,14 @@ export default {
         type: "warning",
       });
     }
+
+    this.$notify({
+      title: "2024.01.31更新",
+      dangerouslyUseHTMLString: true,
+      message: "<strong>本页面维护中<br></strong>",
+      // message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
+      duration: 6000,
+    });
   },
   methods: {
 
