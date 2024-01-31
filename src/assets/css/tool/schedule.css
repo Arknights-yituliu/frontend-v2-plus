@@ -226,7 +226,7 @@
     position: relative;
 }
 
-
+/* 设施样式 */
 .trading {
     background-color: #0288d115;
     color: #0288d1;
@@ -313,6 +313,73 @@
 .hire-selected {
     background-color: transparent;
     border: 1px solid #7e7e7e;
+}
+
+.trading, .manufacture, .power, .control, .dormitory, .meeting, .processing, .hire {
+    transition: background-color 0.3s;
+}
+
+/* 悬停时的背景颜色变化 */
+.trading:hover {
+    background-color: #d0e9ff;
+}
+
+.manufacture:hover {
+    background-color: #ffebd0;
+}
+
+.power:hover {
+    background-color: #ceffd3;
+}
+
+.control:hover {
+    background-color: #d8ffdd;
+}
+
+.dormitory:hover {
+    background-color: #d4f1ff;
+}
+
+.meeting:hover {
+    background-color: #dedede;
+}
+
+.processing:hover {
+    background-color: #dedede;
+}
+
+.hire:hover {
+    background-color: #dedede;
+}
+
+.trading, .manufacture, .power, .control, .dormitory, .meeting, .processing, .hire {
+    position: relative;
+    overflow: hidden;
+}
+
+/* 添加涟漪效果 */
+.trading::after, .manufacture::after, .power::after, .control::after, .dormitory::after, .meeting::after, .processing::after, .hire::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #d3d3d3 10%, transparent 15%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform 0.5s, opacity 1s;
+}
+
+/* 点击时激活 */
+.trading:active::after, .manufacture:active::after, .power:active::after, .control:active::after, .dormitory:active::after, .meeting:active::after, .processing:active::after, .hire:active::after {
+    transform: scale(0, 0);
+    opacity: 0.2;
+    transition: 0s;
 }
 
 
