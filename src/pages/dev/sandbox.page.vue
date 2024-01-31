@@ -8,10 +8,10 @@ asdfg
 <script setup>
 
 import { ref } from "vue";
-import stageApi from "@/api/stage";
+import stageApi from "/src/api/stage";
 
 
-import { usePageContext } from "@/renderer/usePageContext";
+import { usePageContext } from "/src/renderer/usePageContext";
 
 </script>
 

@@ -458,10 +458,10 @@
 </template>
 
 <script>
-import storeApi from "@/api/store";
-import {usePageContext} from "@/renderer/usePageContext";
+import storeApi from "/src/api/store";
+import {usePageContext} from "/src/renderer/usePageContext";
 
-import {ClientOnly} from "@/components/ClientOnly";
+import {ClientOnly} from "/src/components/ClientOnly";
 import {ElMessage} from "element-plus";
 
 export default {

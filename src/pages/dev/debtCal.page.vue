@@ -51,7 +51,7 @@
 
 <script setup>
 import { onMounted, ref, watch } from "vue";
-import "@/assets/css/debt.css";
+import "/src/assets/css/debt.css";
 
 let calResult = ref({
   weeks: 0, //要多少周还清

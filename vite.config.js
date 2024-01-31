@@ -1,4 +1,3 @@
-import {fileURLToPath, URL} from "node:url";
 import {defineConfig} from "vite";
 import vue from "@vitejs/plugin-vue";
 import ssr from "vite-plugin-ssr/plugin";
@@ -9,11 +8,6 @@ import externalGlobals from "rollup-plugin-external-globals";
 export default defineConfig(({command, mode, ssrBuild}) => {
     const config = {
         plugins: [vue(), ssr()],
-        resolve: {
-            alias: {
-                "@": fileURLToPath(new URL("./src", import.meta.url)),
-            },
-        },
         build: {
             target: "es2015",
             cssTarget: "chrome61",

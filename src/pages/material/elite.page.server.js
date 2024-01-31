@@ -1,8 +1,8 @@
 import axios from "axios";
 import { http } from "/src/api/baseURL";
-import skillJSON from "@/static/json/survey/operator_item_cost_table.json";
-import characterJSON from "@/static/json/survey/character_table_simple.json"
-import professionDictJSON from "@/static/json/survey/profession_dict.json";
+import skillJSON from "/src/static/json/survey/operator_item_cost_table.json";
+import characterJSON from "/src/static/json/survey/character_table_simple.json"
+import professionDictJSON from "/src/static/json/survey/profession_dict.json";
 
 const params = {
   expCoefficient: 0.625,

@@ -31,7 +31,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import routesJson from "@/static/json/routes.json";
+import routesJson from "/src/static/json/routes.json";
 
 let pathName = ref("/");
 

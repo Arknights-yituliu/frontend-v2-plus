@@ -1,6 +1,6 @@
 <script setup>
 import "/src/assets/css/sprite_item.css";
-import NaviCards from "@/components/NaviCards.vue";
+import NaviCards from "/src/components/NaviCards.vue";
 import collapse from '/src/custom/collapse.vue'
 
 const navi_data = [

@@ -1,5 +1,5 @@
 <script setup>
-import NaviCards2 from "@/components/NaviCards2.vue";
+import NaviCards2 from "/src/components/NaviCards2.vue";
 
 const navi_data = [
   {

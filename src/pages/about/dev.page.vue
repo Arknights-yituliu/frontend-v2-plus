@@ -355,7 +355,7 @@
 <script setup>
 
 
-import "@/assets/css/sprite_item.css";
+import "/src/assets/css/sprite_item.css";
 
 </script>
 

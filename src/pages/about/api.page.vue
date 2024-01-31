@@ -174,8 +174,8 @@
 
 <script setup>
 import { ref } from "vue";
-import apiJson from "@/static/json/api.json";
-import { cMessage } from "@/custom/message";
+import apiJson from "/src/static/json/api.json";
+import { cMessage } from "/src/custom/message";
 
 let visibleList = ref([0, 1, 2, 3, 4, 5, 6, 7]);
 // let visibleList = ref([])

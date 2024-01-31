@@ -164,8 +164,8 @@
 </template>
 
 <script setup>
-import "@/assets/css/survey/survey_index.css";
-import "@/assets/css/survey/survey_common.css";
+import "/src/assets/css/survey/survey_index.css";
+import "/src/assets/css/survey/survey_common.css";
 import { onMounted, ref } from "vue";
 
 
