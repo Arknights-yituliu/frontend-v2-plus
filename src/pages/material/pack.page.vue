@@ -472,7 +472,8 @@ export default {
   data() {
     return {
       opETextTheme: "op_title_etext_light",
-      packPPRResponse: this.pageContext.pageProps.data, //原始数据
+      // packPPRResponse: this.pageContext.pageProps.data, //原始数据
+      packPPRResponse:[],
       packsPPRData: [], //页面直接调用的数据
       packsPPRDataSort: [], //排序缓存数据
       packFilter: 11,
