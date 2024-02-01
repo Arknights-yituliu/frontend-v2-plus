@@ -325,13 +325,13 @@
                      @change="compute(store258.packName)">
                   <el-checkbox-button :label="index">
                     <div class="gacha_unit_child_title" style="width: 150px">
-                      {{ store258.packName }}
+                      {{ store258.name }}
                     </div>
                     <div class="gacha_resources_unit">
                       <div style="width: 40px" :class="getSpriteImg('7004icon')"></div>
-                      <div style="width: 32px">{{ store258.gachaPermit10 }}</div>
+                      <div style="width: 32px">{{ store258.ticketGacha10 }}</div>
                       <div style="width: 40px" :class="getSpriteImg('7003icon')"></div>
-                      <div style="width: 32px">{{ store258.gachaPermit }}</div>
+                      <div style="width: 32px">{{ store258.ticketGacha }}</div>
                     </div>
                   </el-checkbox-button>
                 </div>
@@ -452,7 +452,8 @@
               <el-checkbox-group v-model="gacha_storePacksList">
                 <div v-for="(singlePack, index) in gacha_storePacks" :key="index" :id="singlePack.name"
                      v-show="singlePack.type === 'monthly' && singlePack.eachDrawPrice > 0
-                  " class="gacha_unit_child" @change="compute(singlePack.name)">
+                             && checkExpiration(singlePack.start,singlePack.end,'公共',singlePack.name)"
+                     class="gacha_unit_child" @change="compute(singlePack.name)">
                   <el-checkbox-button :label="index">
                     <div class="gacha_packPpr" :class="getPprLabel(singlePack.eachDrawPrice)">
                       {{ toFixedByAcc(singlePack.eachDrawPrice, 2) }}
