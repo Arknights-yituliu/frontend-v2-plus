@@ -125,7 +125,7 @@
 
             <!-- 图片部分 -->
             <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)"
-              @click="switchPackContent(pack2.id, 'draw')">
+              @click="switchPackContent1(pack2.id, 'draw')">
               <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.packPrice }}</div>
 
               <!-- 角标部分 -->
@@ -205,7 +205,7 @@
             </div>
 
             <!-- 详情部分 -->
-            <div class="pack_contents" :id="getContentId(pack2.id, 'draw')" style="display: none">
+            <div class="pack_contents" :id="getContentId1(pack2.id, 'draw')" style="display: none">
               <div class="pack_content_unit0" style="width: 112px">
                 <div style="width: 56px">源石</div>
                 <div style="width: 56px">x{{ pack2.originium }}</div>
@@ -250,7 +250,7 @@
 
             <!-- 图片部分 -->
             <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)"
-              @click="switchPackContent(pack2.id, 'draw')">
+              @click="switchPackContent2(pack2.id, 'draw')">
               <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.packPrice }}</div>
 
               <!-- 角标部分 -->
@@ -330,7 +330,7 @@
             </div>
 
             <!-- 详情部分 -->
-            <div class="pack_contents" :id="getContentId(pack2.id, 'draw')" style="display: none">
+            <div class="pack_contents" :id="getContentId2(pack2.id, 'draw')" style="display: none">
               <div class="pack_content_unit0" style="width: 112px">
                 <div style="width: 56px">源石</div>
                 <div style="width: 56px">x{{ pack2.originium }}</div>
@@ -376,7 +376,7 @@
 
             <!-- 图片部分 -->
             <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)"
-              @click="switchPackContent(pack2.id, 'draw')">
+              @click="switchPackContent3(pack2.id, 'draw')">
               <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.packPrice }}</div>
 
               <!-- 角标部分 -->
@@ -456,7 +456,7 @@
             </div>
 
             <!-- 详情部分 -->
-            <div class="pack_contents" :id="getContentId(pack2.id, 'draw')" style="display: none">
+            <div class="pack_contents" :id="getContentId3(pack2.id, 'draw')" style="display: none">
               <div class="pack_content_unit0" style="width: 112px">
                 <div style="width: 56px">源石</div>
                 <div style="width: 56px">x{{ pack2.originium }}</div>
@@ -1048,9 +1048,33 @@ export default {
       return type + "_" + id;
     },
 
+    getContentId1(id, type) {
+      return type + "_1_" + id;
+    },
+    getContentId2(id, type) {
+      return type + "_2_" + id;
+    },
+    getContentId3(id, type) {
+      return type + "_3_" + id;
+    },
+
+
     switchPackContent(id, type) {
       if (document.getElementById(type + "_" + id).style.display == "none") document.getElementById(type + "_" + id).style.display = "flex";
       else document.getElementById(type + "_" + id).style.display = "none";
+    },
+
+    switchPackContent1(id, type) {
+      if (document.getElementById(type + "_1_" + id).style.display == "none") document.getElementById(type + "_1_" + id).style.display = "flex";
+      else document.getElementById(type + "_1_" + id).style.display = "none";
+    },
+    switchPackContent2(id, type) {
+      if (document.getElementById(type + "_2_" + id).style.display == "none") document.getElementById(type + "_2_" + id).style.display = "flex";
+      else document.getElementById(type + "_2_" + id).style.display = "none";
+    },
+    switchPackContent3(id, type) {
+      if (document.getElementById(type + "_3_" + id).style.display == "none") document.getElementById(type + "_3_" + id).style.display = "flex";
+      else document.getElementById(type + "_3_" + id).style.display = "none";
     },
   },
 };
