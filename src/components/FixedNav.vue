@@ -65,7 +65,7 @@ onUnmounted(() => {
   border-radius: 5px;
   padding: 10px;
   transition: transform 0.3s;
-  transform: translateX(105%);
+  transform: translateX(105%); /* 当鼠标悬停在fixed-nav上时显示 */
 }
 
 .fixed-nav:hover .nav-content {
