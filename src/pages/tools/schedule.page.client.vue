@@ -1204,12 +1204,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
   </div>
-
-
-  <!--    <c-log v-model="logs"></c-log>-->
-
 
 </template>
 
