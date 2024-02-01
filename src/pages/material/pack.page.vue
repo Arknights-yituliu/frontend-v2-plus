@@ -125,7 +125,7 @@
 
           <!-- 图片部分 -->
           <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)" @click="switchPackContent1(pack2.id, 'draw')">
-            <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.packPrice }}</div>
+            <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
             <div class="pack_corner corner_new" v-show="pack2.type == 'limited'">New!</div>
@@ -249,7 +249,7 @@
 
           <!-- 图片部分 -->
           <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)" @click="switchPackContent2(pack2.id, 'draw')">
-            <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.packPrice }}</div>
+            <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
             <div class="pack_corner corner_new" v-show="pack2.type == 'limited'">New!</div>
@@ -373,7 +373,7 @@
           :style="getPackList(pack2.type, pack2.state, 'once', 'return')">
           <!-- 图片部分 -->
           <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)" @click="switchPackContent3(pack2.id, 'draw')">
-            <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.packPrice }}</div>
+            <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
             <!-- 角标部分 -->
             <div class="pack_corner corner_new" v-show="pack2.type == 'limited'">New!</div>
             <div class="pack_corner corner_monthly" v-show="pack2.type == 'monthly'">每月</div>
@@ -485,7 +485,7 @@
               <!== 图片部分 ==>
               <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)"
                 @click="switchPackContent(pack2.id, 'draw')">
-                <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.packPrice }}</div>
+                <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
                 <!== 角标部分 ==>
                 <div class="pack_corner corner_new" v-show="pack2.type == 'limited'">New!</div>
@@ -826,7 +826,7 @@ export default {
       }
     },
 
-    getDisplayStateDrawOnly(packState, packType, packPrice, packFilter, packPPRDraw) {
+    getDisplayStateDrawOnly(packState, packType, price, packFilter, packPPRDraw) {
       if (packState == 0 || packPPRDraw < 0.1) {
         return "display: none;"; //状态不对一票否决
       } else {
@@ -835,7 +835,7 @@ export default {
         } else if (packFilter == 10) {
           //隐藏源石
           if (packType == "year" || packType == "permanent") {
-            if (packPrice == 648 && packType == "permanent") {
+            if (price == 648 && packType == "permanent") {
               return "";
             }
             return "display: none;";
@@ -848,7 +848,7 @@ export default {
         } else if (packFilter == 0) {
           //都隐藏
           if (packType == "year" || packType == "permanent" || packType == "once") {
-            if (packPrice == 648 && packType == "permanent") {
+            if (price == 648 && packType == "permanent") {
               return "";
             }
             return "display: none;";
@@ -873,7 +873,7 @@ export default {
       return "display: none;";
     },
 
-    getDisplayState(packState, packType, packPrice, packFilter) {
+    getDisplayState(packState, packType, price, packFilter) {
       if (packState == 0) {
         return "display: none;"; //状态不对一票否决
       } else {
@@ -882,7 +882,7 @@ export default {
         } else if (packFilter == 10) {
           //隐藏源石
           if (packType == "year" || packType == "permanent") {
-            if (packPrice == 648 && packType == "permanent") {
+            if (price == 648 && packType == "permanent") {
               return "";
             }
             return "display: none;";
@@ -895,7 +895,7 @@ export default {
         } else if (packFilter == 0) {
           //都隐藏
           if (packType == "year" || packType == "permanent" || packType == "once") {
-            if (packPrice == 648 && packType == "permanent") {
+            if (price == 648 && packType == "permanent") {
               return "";
             }
             return "display: none;";
