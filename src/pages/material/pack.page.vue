@@ -121,7 +121,7 @@
       <div class="pack_all" style="margin-top: -8px">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.promotionRatioForMoney)"> -->
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-          :style="getPackList(pack2.type, 'Limited', 'Limited')">
+          :style="getPackList(pack2.type,pack2.state, 'limited', 'limited', 'limited')">
 
             <!-- 图片部分 -->
             <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)"
@@ -246,7 +246,7 @@
       <div class="pack_all" style="margin-top: -8px">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.promotionRatioForMoney)"> -->
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-          :style="getPackList(pack2.type,'weekly','monthly','chips')">
+          :style="getPackList(pack2.type,pack2.state,'weekly','monthly','chips')">
 
             <!-- 图片部分 -->
             <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)"
@@ -372,7 +372,7 @@
       <div class="pack_all" style="margin-top: -8px">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.promotionRatioForMoney)"> -->
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-          :style="getPackList(pack2.type,'once','return')">
+          :style="getPackList(pack2.type,pack2.state,'once','return')">
 
             <!-- 图片部分 -->
             <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)"
@@ -862,7 +862,10 @@ export default {
       }
     },
 
-    getPackList(packType, type1, type2, type3) {
+    getPackList(packType,packState, type1, type2, type3) {
+      if (packState < 0.5) {
+        return "display: none;";
+      }
       if (packType == type1) {
         return "";
       }
