@@ -88,7 +88,7 @@
         </div>
       </client-only>
 
-      <div class="op_title_tag">
+      <!-- <div class="op_title_tag">
         <div id="pack_sort_by_type" class="op_tag_1" @click="sortPackByType()">礼包类型排序</div>
         <div id="pack_sort_by_drawPpr" class="op_tag_0" @click="sortPackByPPRPerDraw()">抽卡性价比</div>
         <div id="pack_sort_by_oriPpr" class="op_tag_0" @click="sortPackByPPRPerOri()">总价值性价比</div>
@@ -96,11 +96,11 @@
         <div style="margin-top: 8px; display: inline-block">
           <div id="pack_show_once" class="op_tag_0" @click="switchPacks('once')">隐藏一次性礼包</div>
           <div id="pack_show_ori" class="op_tag_0" @click="switchPacks('ori')">源石只显示648</div>
-          <!-- <div class="tab_text">
+          <!== <div class="tab_text">
             *点击图片查看礼包内容
-          </div> -->
+          </div> ==>
         </div>
-      </div>
+      </div> -->
       <div class="stage_hint">
         <div class="stage_hint_t5">点击图片可查看礼包内容，注意区分"仅抽卡"/"折合成源石"</div>
         <div class="stage_hint_t5">“折合成源石”即将材料的理智价值按135：1换算成源石</div>
