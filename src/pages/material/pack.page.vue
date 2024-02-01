@@ -124,7 +124,7 @@
           :style="getPackList(pack2.type, pack2.state, 'limited', 'limited', 'limited')">
 
           <!-- 图片部分 -->
-          <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)" @click="switchPackContent1(pack2.id, 'draw')">
+          <div class="pack_img" :style="getPackPic(pack2.name, pack2.fileName)" @click="switchPackContent1(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
@@ -248,7 +248,7 @@
           :style="getPackList(pack2.type, pack2.state, 'weekly', 'monthly', 'chips')">
 
           <!-- 图片部分 -->
-          <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)" @click="switchPackContent2(pack2.id, 'draw')">
+          <div class="pack_img" :style="getPackPic(pack2.name, pack2.fileName)" @click="switchPackContent2(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
@@ -372,7 +372,7 @@
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
           :style="getPackList(pack2.type, pack2.state, 'once', 'return')">
           <!-- 图片部分 -->
-          <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)" @click="switchPackContent3(pack2.id, 'draw')">
+          <div class="pack_img" :style="getPackPic(pack2.name, pack2.fileName)" @click="switchPackContent3(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
             <!-- 角标部分 -->
             <div class="pack_corner corner_new" v-show="pack2.type == 'limited'">New!</div>
@@ -483,7 +483,7 @@
             :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.promotionRatioForMoney)">
 
               <!== 图片部分 ==>
-              <div class="pack_img" :style="getPackPic(pack2.name, pack2.type)"
+              <div class="pack_img" :style="getPackPic(pack2.name, pack2.fileName)"
                 @click="switchPackContent(pack2.id, 'draw')">
                 <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
@@ -1034,10 +1034,15 @@ export default {
       return "/image/packs/" + img + ".png";
     },
 
-    getPackPic(img, type) {
-      // if(true ===this.showFlag) return '';
-      // console.log(true ===this.showFlag);
-      return "background:url(https://ark.yituliu.cn/static/image/store/" + img + ".jpg) 0% 0% / cover no-repeat,#444444;";
+    getPackPic(img, fileName) {
+      if(!fileName){
+        fileName = img+'.jpg'
+      }
+
+      return `background:url(https://ark.yituliu.cn/static/image/store/${fileName}) 0% 0% / cover no-repeat,#444444;`
+
+
+
     },
     getContentId(id, type) {
       return type + "_" + id;
