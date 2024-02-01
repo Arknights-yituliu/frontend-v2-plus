@@ -17,12 +17,13 @@
 
               <div style="display: flex;justify-content: center;margin: 8px 0">
                 <el-radio-group v-model="timeSelector" @change="checkEndDate(timeSelector)">
-                  <el-radio-button v-for="(schedule, name) in schedules" v-show="schedule.display" :key="name" :label="name" >
+                  <el-radio-button v-for="(schedule, name) in schedules" v-show="schedule.display" :key="name"
+                                   :label="name">
                   </el-radio-button>
                 </el-radio-group>
               </div>
 
-<!--              <div class="gacha_unit_info">彩六联动二期的排期尚不明确，3.26的可能性较大，请自行斟酌</div>-->
+              <!--              <div class="gacha_unit_info">彩六联动二期的排期尚不明确，3.26的可能性较大，请自行斟酌</div>-->
               <!-- <el-divider></el-divider> -->
               <div id="gacha_total_chart">
                 <div id="gacha_total_pie" ref="gacha_total_pie"
@@ -96,10 +97,10 @@
                 </div>
               </div>
               <el-divider></el-divider>
-<!--              <div class="gacha_unit_child" style="display: flex;margin-top: 4px;margin-bottom: 4px;">-->
-<!--                <a href="https://www.skland.com/act/vote-campaign"-->
-<!--                   style="font-size: 16px;text-decoration: none;margin: 0px auto;text-align: center;">在森空岛投票支持'罗德岛基建BETA'，助力计算器的开发工作！</a>-->
-<!--              </div>-->
+              <!--              <div class="gacha_unit_child" style="display: flex;margin-top: 4px;margin-bottom: 4px;">-->
+              <!--                <a href="https://www.skland.com/act/vote-campaign"-->
+              <!--                   style="font-size: 16px;text-decoration: none;margin: 0px auto;text-align: center;">在森空岛投票支持'罗德岛基建BETA'，助力计算器的开发工作！</a>-->
+              <!--              </div>-->
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -449,8 +450,8 @@
                 （每张月卡可预支6石）
               </div>
               <el-checkbox-group v-model="gacha_storePacksList">
-                <div v-for="(singlePack, index) in gacha_storePacks" :key="index" v-show="singlePack.type === 'monthly' &&
-                  singlePack.eachDrawPrice > 0
+                <div v-for="(singlePack, index) in gacha_storePacks" :key="index" :id="singlePack.name"
+                     v-show="singlePack.type === 'monthly' && singlePack.eachDrawPrice > 0
                   " class="gacha_unit_child" @change="compute(singlePack.name)">
                   <el-checkbox-button :label="index">
                     <div class="gacha_packPpr" :class="getPprLabel(singlePack.eachDrawPrice)">
@@ -500,7 +501,7 @@
                       {{ toFixedByAcc(singlePack.eachDrawPrice, 2) }}
                     </div>
                     <div class="gacha_unit_child_title" style="width: 168px">
-                      {{ singlePack.name }}
+                      {{ singlePack.displayName }}
                     </div>
                     <!-- 一个通用的资源显示模块 -->
                     <div class="gacha_resources_unit" style="width: 279px">
@@ -958,6 +959,7 @@ import "/src/assets/css/sprite_gacha.css";
 import "/src/assets/css/gacha.css";
 import cookie from "js-cookie";
 import * as echarts from "echarts";
+import storeAPI from '/src/api/store'
 
 import pack_table from '/src/static/json/tools/gacha_pack_table.json'
 
@@ -1076,12 +1078,13 @@ export default {
   },
 
   mounted() {
-    this.TimeStampFormat();
-    this.setPackData();
-    this.setFirstRecharge();
-    this.timeSelector = '春节(2.15)'
-    this.checkEndDate();
 
+
+    this.TimeStampFormat();
+
+    this.timeSelector = '春节(2.15)'
+    this.getPackDataList()
+    this.checkEndDate();
 
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
@@ -1097,6 +1100,26 @@ export default {
     }
   },
   methods: {
+
+    getPackDataList() {
+      storeAPI.findPackStore().then(response => {
+        this.gacha_storePacks = [];
+        for (const pack of response.data) {
+          const {name, eachDrawPrice, } = pack
+          if (name === '每月寻访组合包'||name.indexOf('源石')>-1) {
+            continue
+          }
+          if (eachDrawPrice > 0) {
+            this.gacha_storePacks.push(pack)
+          }
+        }
+
+        this.setPackData();
+        this.setFirstRecharge();
+
+      })
+    },
+
     //公告通知
     openNotification() {
       this.$notify({
@@ -1190,60 +1213,58 @@ export default {
 
     // 设置258黄票商店兑换抽卡券
     setPackData() {
-      var moon_now = new Date().getMonth() + 1; //月
+      let currentMonth = new Date().getMonth() + 1; //月
 
-      var moon_max = 18;
-      let year_now = new Date().getFullYear();
-      let year_next = year_now;
+      let currentYear = new Date().getFullYear();
+      let nextYear = currentYear;
       this.gacha_store258 = [];
-      this.gacha_storePacks = [];
-      this.gacha_storePacks = pack_table;
+      for (let i = 0; i <= 12; i++) {
+        const currentMonthText = currentMonth.toString().padStart(2, "0");
 
-      for (var i = moon_now; i <= moon_max; i++) {
-        var moon_now_str = moon_now.toString().padStart(2, "0");
-
-        var moon_next = moon_now + 1;
-        if (moon_next > 12) {
-          moon_next = 1;
-          year_next++;
+        let nextMonth = currentMonth + 1;
+        if (nextMonth > 12) {
+          nextMonth = 1;
+          nextYear++;
         }
 
-        var moon_next_str = moon_next.toString().padStart(2, "0");
+        const nextMoonText = nextMonth.toString().padStart(2, "0");
 
         this.gacha_store258.push({
-          packName: moon_now + "月黄票换抽",
-          packPrice: 0,
-          gachaOriginium: 0,
-          gachaOrundum: 0,
-          gachaPermit: 8,
-          gachaPermit10: 3,
-          packType: "store",
-          start: Date.parse(new Date(year_now + "/" + moon_now_str + "/01 00:00:00")),
-          end: Date.parse(new Date(year_next + "/" + moon_next_str + "/01 04:00:00")),
+          name: currentMonth + "月黄票换抽",
+          price: 0,
+          originium: 0,
+          orundum: 0,
+          ticketGacha: 8,
+          ticketGacha10: 3,
+          type: "store",
+          start: Date.parse(new Date(currentYear + "/" + currentMonthText + "/01 00:00:00").toString()),
+          end: Date.parse(new Date(nextYear + "/" + nextMoonText + "/01 04:00:00").toString()),
           rewardType: "公共",
         });
 
         this.gacha_storePacks.push({
-          packName: moon_now + "月大月卡",
-          packPrice: 168,
-          gachaOriginium: 42,
-          gachaOrundum: 0,
-          gachaPermit: 0,
-          gachaPermit10: 1,
-          packType: "monthly",
-          packRmbPerDraw: 7.4,
-          start: Date.parse(new Date(year_now + "/" + moon_now_str + "/01 00:00:00")),
-          end: Date.parse(new Date(year_next + "/" + moon_next_str + "/01 04:00:00")),
+          name: currentMonth + "月大月卡",
+          price: 168,
+          originium: 42,
+          orundum: 0,
+          ticketGacha: 0,
+          ticketGacha10: 1,
+          type: "monthly",
+          eachDrawPrice: 7.4,
+          start: Date.parse(new Date(currentYear + "/" + currentMonthText + "/01 00:00:00").toString()),
+          end: Date.parse(new Date(nextYear + "/" + nextMoonText + "/01 04:00:00").toString()),
           rewardType: "公共",
         });
+
+
 
         // console.log('start——', year_now + "/" + moon_now_str + "/01 00:00:00");
         // console.log('end——',year_next + "/" + moon_next_str + "/01 04:00:00");
 
-        moon_now++;
-        if (moon_now > 12) {
-          moon_now = 1;
-          year_now++;
+        currentMonth++;
+        if (currentMonth > 12) {
+          currentMonth = 1;
+          currentYear++;
         }
       }
     },
@@ -1344,10 +1365,10 @@ export default {
 
       //黄票商店38抽计算
       for (let i = 0; i < this.gacha_store258List.length; i++) {
-        var store258 = this.gacha_store258[this.gacha_store258List[i]];
+        const store258 = this.gacha_store258[this.gacha_store258List[i]];
         if (this.checkExpiration(store258.start, store258.end, store258.rewardType, store258.packName)) {
-          this.calResults.permit_daily += parseInt(store258.gachaPermit);
-          this.calResults.permit10_daily += parseInt(store258.gachaPermit10);
+          this.calResults.permit_daily += parseInt(store258.ticketGacha);
+          this.calResults.permit10_daily += parseInt(store258.ticketGacha10);
         }
       }
 
@@ -1769,8 +1790,8 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 6.67,
-        start: Date.parse(new Date("2022/05/01 00:00:00")),
-        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
+        end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
       });
       this.gacha_storePacks.push({
@@ -1782,8 +1803,8 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 8.33,
-        start: Date.parse(new Date("2022/05/01 00:00:00")),
-        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
+        end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
       });
       this.gacha_storePacks.push({
@@ -1795,8 +1816,8 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 8.23,
-        start: Date.parse(new Date("2022/05/01 00:00:00")),
-        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
+        end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
       });
       this.gacha_storePacks.push({
@@ -1808,8 +1829,8 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 8.25,
-        start: Date.parse(new Date("2022/05/01 00:00:00")),
-        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
+        end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
       });
       this.gacha_storePacks.push({
@@ -1821,8 +1842,8 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 8.28,
-        start: Date.parse(new Date("2022/05/01 00:00:00")),
-        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
+        end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
       });
       this.gacha_storePacks.push({
@@ -1834,8 +1855,8 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 8.31,
-        start: Date.parse(new Date("2022/05/01 00:00:00")),
-        end: Date.parse(new Date("2023/04/30 00:00:00")),
+        start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
+        end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
       });
     },
@@ -2087,7 +2108,7 @@ export const documentProps = {
 }
 
 
-.el-radio-button__inner{
+.el-radio-button__inner {
   width: 100%;
 }
 
