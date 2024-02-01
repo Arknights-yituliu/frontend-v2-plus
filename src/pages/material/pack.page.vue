@@ -1164,7 +1164,7 @@ export const documentProps = {
   width: 100px;
   padding: 8px 0px 0px 0px;
   height: 108px;
-  font-size: 18px;
+  font-size: 15px;
   text-align: center;
   font-weight: 600;
   color: #6ed7ff;
