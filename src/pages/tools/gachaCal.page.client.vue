@@ -4,14 +4,14 @@
       <el-col :xs="24" :sm="16" :md="12" class="col-1">
         <el-collapse v-model="checkBox1" @change="handleChange" class="top-collapse">
           <!-- 总计 -->
-          <el-collapse-item name="0" id="totalTable" style="margin:8px">
+          <el-collapse-item name="total-table" id="totalTable" style="margin:8px">
             <template #title>
               <div class="gacha_title_icon" style="background: chocolate"></div>
               <span class="collapse-item_title">
                 共计{{ toFixedByAcc(gachaTimes_total, 0) }}抽，氪金{{ sellsCount }}元
               </span>
             </template>
-            <!-- <el-divider></el-divider> -->
+            <el-divider></el-divider>
             <div class="gacha_unit" id="total">
               <!-- 如果有4个选项则修改为 style="width:98%;margin:0 1%;"，子项宽度25% -->
 
@@ -102,10 +102,6 @@
               <!--                   style="font-size: 16px;text-decoration: none;margin: 0px auto;text-align: center;">在森空岛投票支持'罗德岛基建BETA'，助力计算器的开发工作！</a>-->
               <!--              </div>-->
 
-              <div v-for="index in selectedPacks" :key="index">
-                 {{index}}：
-<!--                {{ storePackList[index].name}}-->
-              </div>
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -113,7 +109,7 @@
       <el-col :xs="24" :sm="16" :md="12">
         <el-collapse v-model="checkBox">
           <!-- 现有库存 -->
-          <el-collapse-item name="1" style="margin:8px">
+          <el-collapse-item name="exist" style="margin:8px">
             <template #title>
               <div class="gacha_title_icon"></div>
               <span class="collapse-item_title">库存/预留/搓玉 {{
@@ -246,7 +242,7 @@
             </div>
           </el-collapse-item>
           <!-- 日常积累 -->
-          <el-collapse-item class="collapse-item" name="2" style="margin:8px">
+          <el-collapse-item class="collapse-item" name="daily" style="margin:8px">
             <template #title>
               <div class="gacha_title_icon"></div>
               <span class="collapse-item_title">日常积累 {{ toFixedByAcc(calcResult.gachaTimes_daily, 0) }}抽</span>
@@ -344,7 +340,7 @@
             </div>
           </el-collapse-item>
           <!-- 潜在资源 -->
-          <el-collapse-item class="collapse-item" name="3" style="margin:8px">
+          <el-collapse-item class="collapse-item" name="potential" style="margin:8px">
             <template #title>
               <div class="gacha_title_icon"></div>
               <span class="collapse-item_title">潜在资源 {{ toFixedByAcc(calcResult.gachaTimes_potential, 0) }}抽</span>
@@ -499,7 +495,7 @@
               </div>
               <el-checkbox-group v-model="selectedPacks" class="">
                 <div v-for="(singlePack, index) in limitedPackList" :key="index"
-                      class="gacha_unit_child" @change="compute(singlePack.name)">
+                     class="gacha_unit_child" @change="compute(singlePack.name)">
                   <el-checkbox-button :label="singlePack.parentIndex">
                     <div class="gacha_packPpr" :class="getPprLabel(singlePack.eachDrawPrice)">
                       {{ toFixedByAcc(singlePack.eachDrawPrice, 2) }}
@@ -685,7 +681,7 @@
             </div>
           </el-collapse-item>
           <!-- 活动获得（估算） -->
-          <el-collapse-item class="collapse-item" name="5" style="margin:8px">
+          <el-collapse-item class="collapse-item" name="activity" style="margin:8px">
             <template #title>
               <div class="gacha_title_icon"></div>
               <span class="collapse-item_title">活动获得（估算）{{ toFixedByAcc(calcResult.gachaTimes_act, 0) }}抽</span>
@@ -760,7 +756,7 @@
           </el-collapse-item>
 
           <!-- 其它资源（估算） -->
-          <el-collapse-item class="collapse-item" name="6" style="margin:8px">
+          <el-collapse-item class="collapse-item" name="other" style="margin:8px">
             <template #title>
               <div class="gacha_title_icon"></div>
               <span class="collapse-item_title">其它资源（估算）{{
@@ -828,7 +824,7 @@
             </div>
           </el-collapse-item>
           <!-- 致谢 -->
-          <el-collapse-item class="collapse-item" name="7" style="margin:8px">
+          <el-collapse-item class="collapse-item" name="develop" style="margin:8px">
             <template #title>
               <div class="gacha_title_icon" style="background: #337fcb"></div>
               <span class="collapse-item_title">开发信息</span>
@@ -973,9 +969,8 @@ export default {
   data() {
     return {
       itemList: [],
-      checkBox1: ["0"],
-      checkBox: ["1", "2", "5", "6", "pack"], //折叠栏绑定数组
-      // checkBox: ["1","7"],
+      checkBox1: ["total-table"],
+      checkBox: ["exist","daily", "activity", "other", 'develop'], //折叠栏绑定数组
       rewardType: "限定", //奖励的类型
       startTime: "", //开始时间
       endTime: "", //结束时间
@@ -997,8 +992,8 @@ export default {
       selectedLimitedPackList: [],
       disposablePackList: [],
       selectedDisposablePackList: [],
-      doubleOriginiumList:[],
-      selectedDoubleOriginiumList:[],
+      doubleOriginiumList: [],
+      selectedDoubleOriginiumList: [],
 
       originium: 0, //源石
       orundum: 0, //合成玉
@@ -1130,11 +1125,11 @@ export default {
             this.doubleOriginiumList.push(pack)
           }
 
-          if(pack.type === 'monthly'){
+          if (pack.type === 'monthly') {
             this.monthlyPackList.push(pack)
           }
 
-          if(pack.type === 'limited'){
+          if (pack.type === 'limited') {
             this.limitedPackList.push(pack)
           }
 
@@ -1282,7 +1277,7 @@ export default {
           ticketGacha10: 1,
           type: "monthly",
           eachDrawPrice: 7.4,
-          parentIndex:index,
+          parentIndex: index,
           start: Date.parse(new Date(currentYear + "/" + currentMonthText + "/01 00:00:00").toString()),
           end: Date.parse(new Date(nextYear + "/" + nextMoonText + "/01 04:00:00").toString()),
           rewardType: "公共",
@@ -1430,7 +1425,7 @@ export default {
       this.selectedPacks.forEach((index) => {
         //月卡单独判断
         let packItem = this.storePackList[index];
-        console.log('选中的礼包：',packItem.name)
+        console.log('选中的礼包：', packItem.name)
         const start = Date.parse(new Date(packItem.start).toString())
         const end = Date.parse(new Date(packItem.end).toString())
         if (this.checkExpiration(start, end, '公共', packItem.name)) {
@@ -1642,11 +1637,11 @@ export default {
       }
     },
 
-    resourceCalculation(originium,orundum,permit,permit10){
-      this.originium+=originium
-      this.orundum+=orundum
-      this.permit+=permit
-      this.permit10+=permit10
+    resourceCalculation(originium, orundum, permit, permit10) {
+      this.originium += originium
+      this.orundum += orundum
+      this.permit += permit
+      this.permit10 += permit10
     },
 
     setPieData(gachaTimes, describption) {
@@ -1842,7 +1837,7 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 6.67,
-        parentIndex:index,
+        parentIndex: index,
         start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
         end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
@@ -1856,7 +1851,7 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 8.33,
-        parentIndex:index+1,
+        parentIndex: index + 1,
         start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
         end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
@@ -1870,7 +1865,7 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 8.23,
-        parentIndex:index+2,
+        parentIndex: index + 2,
         start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
         end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
@@ -1884,7 +1879,7 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 8.25,
-        parentIndex:index+3,
+        parentIndex: index + 3,
         start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
         end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
@@ -1898,7 +1893,7 @@ export default {
         gachaPermit10: 0,
         packType: "year",
         packRmbPerDraw: 8.28,
-        parentIndex:index+4,
+        parentIndex: index + 4,
         start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
         end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
         rewardType: "公共",
@@ -1911,7 +1906,7 @@ export default {
         gachaPermit: 0,
         gachaPermit10: 0,
         packType: "year",
-        parentIndex:index+5,
+        parentIndex: index + 5,
         packRmbPerDraw: 8.31,
         start: Date.parse(new Date("2022/05/01 00:00:00").toString()),
         end: Date.parse(new Date("2099/04/30 00:00:00").toString()),
