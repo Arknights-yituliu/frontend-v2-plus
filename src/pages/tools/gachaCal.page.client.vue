@@ -103,7 +103,8 @@
               <!--              </div>-->
 
               <div v-for="index in selectedPacks" :key="index">
-                 {{index}}：{{ storePackList[index].name}}
+                 {{index}}：
+<!--                {{ storePackList[index].name}}-->
               </div>
             </div>
           </el-collapse-item>
@@ -457,7 +458,7 @@
                 <div v-for="(singlePack, index) in monthlyPackList" :key="index" :id="singlePack.name"
                      v-show="checkExpiration(singlePack.start,singlePack.end,'公共',singlePack.name)"
                      class="gacha_unit_child" @change="compute(singlePack.name)">
-                  <el-checkbox-button :label="index">
+                  <el-checkbox-button :label="singlePack.parentIndex">
                     <div class="gacha_packPpr" :class="getPprLabel(singlePack.eachDrawPrice)">
                       {{ toFixedByAcc(singlePack.eachDrawPrice, 2) }}
                     </div>
@@ -1129,6 +1130,10 @@ export default {
             this.doubleOriginiumList.push(pack)
           }
 
+          if(pack.type === 'monthly'){
+            this.monthlyPackList.push(pack)
+          }
+
           if(pack.type === 'limited'){
             this.limitedPackList.push(pack)
           }
@@ -1268,7 +1273,7 @@ export default {
         });
 
 
-        this.storePackList.push({
+        const monthlyPack = {
           name: currentMonth + "月大月卡",
           price: 168,
           originium: 42,
@@ -1281,7 +1286,10 @@ export default {
           start: Date.parse(new Date(currentYear + "/" + currentMonthText + "/01 00:00:00").toString()),
           end: Date.parse(new Date(nextYear + "/" + nextMoonText + "/01 04:00:00").toString()),
           rewardType: "公共",
-        });
+        }
+
+        this.storePackList.push(monthlyPack);
+        this.monthlyPackList.push(monthlyPack)
 
         index++
 
