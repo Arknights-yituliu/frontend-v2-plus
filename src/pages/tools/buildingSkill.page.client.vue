@@ -1,7 +1,7 @@
 <script setup>
 import '/src/assets/css/tool/building_skill.css'
 
-import {operatorFilterConditionTable} from "/src/pages/tools/js/SkillFilter";
+import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import {onMounted, ref} from "vue";
 import {debounce} from "../../utils/debounce";
