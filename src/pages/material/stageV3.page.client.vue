@@ -1,22 +1,23 @@
 <template>
-  <!--漫游导航指引-->
-  <el-tour v-model="guideOpen" :target-area-clickable="false">
-    <el-tour-step
-        target="#sStageLegend"
-        title="效率详情"
-        description="点击这个卡片可查看相对应的效率计算信息哦">
-    </el-tour-step>
-    <el-tour-step
-        target="#c-0"
-        title="材料详情"
-        description="点击这里的卡片可以查看相对应的材料掉落信息哦">
-    </el-tour-step>
-    <el-tour-step
-        target="#fixedNav"
-        title="标题导航栏"
-        description="将光标悬停至此处可唤出该页面的标题导航栏，其它页面也可能会有哦=w="
-    />
-  </el-tour>
+  <!--漫游导航指引，先停用-->
+  <!--  <el-tour v-model="guideOpen" :target-area-clickable="false">-->
+  <!--    <el-tour-step-->
+  <!--        target="#sStageLegend"-->
+  <!--        title="效率详情"-->
+  <!--        description="点击这个卡片可查看相对应的效率计算信息哦">-->
+  <!--    </el-tour-step>-->
+  <!--    <el-tour-step-->
+  <!--        target="#c-0"-->
+  <!--        title="材料详情"-->
+  <!--        description="点击这里的卡片可以查看相对应的材料掉落信息哦">-->
+  <!--    </el-tour-step>-->
+  <!--    <el-tour-step-->
+  <!--        target="#fixedNav"-->
+  <!--        title="标题导航栏"-->
+  <!--        description="将光标悬停至此处可唤出该页面的标题导航栏，其它页面也可能会有哦=w="-->
+  <!--    />-->
+  <!--  </el-tour>-->
+  <tour-guide v-if="guideOpen" @close="guideOpen=false" :s1="`#sStageLegend`" :s2="`#c-0`" :s3="`#fixedNav`"/>
 
   <!-- 地图效率Start -->
   <div id="stage" style="font-family: Arial, Helvetica, sans-serif;">
@@ -42,6 +43,7 @@
         <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
 
+        <!--        <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>-->
         <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>
       </div>
       <!-- <div class="op_title_tag" style="height: 24px">
@@ -632,6 +634,7 @@ import stageApi from '/src/api/stage'
 import {onMounted, ref} from "vue";
 import item_series from '/src/static/json/material/item_series.json'
 import FixedNav from "../../components/FixedNav.vue";
+import TourGuide from "../../components/TourGuide.vue";
 
 //漫游导航指引
 const guideOpen = ref(false)
