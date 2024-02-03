@@ -6,7 +6,7 @@
           <!-- 总计 -->
           <el-collapse-item name="total-table" id="totalTable" style="margin:8px">
             <template #title>
-              <div class="gacha_title_icon" style="background: chocolate"></div>
+              <div class="g-calc-collpase-title-icon" style="background: chocolate"></div>
               <span class="collapse-item_title">
                 共计{{ toFixedByAcc(gachaTimes_total, 0) }}抽，氪金{{ sellsCount }}元
               </span>
@@ -111,7 +111,7 @@
           <!-- 现有库存 -->
           <el-collapse-item name="exist" style="margin:8px">
             <template #title>
-              <div class="gacha_title_icon"></div>
+              <div class="g-calc-collpase-title-icon"></div>
               <span class="collapse-item_title">库存/预留/搓玉 {{
                   toFixedByAcc(calcResult.gachaTimes_exist, 0)
                 }}抽</span>
@@ -244,7 +244,7 @@
           <!-- 日常积累 -->
           <el-collapse-item class="collapse-item" name="daily" style="margin:8px">
             <template #title>
-              <div class="gacha_title_icon"></div>
+              <div class="g-calc-collpase-title-icon"></div>
               <span class="collapse-item_title">日常积累 {{ toFixedByAcc(calcResult.gachaTimes_daily, 0) }}抽</span>
             </template>
             <div class="gacha_unit" id="daily">
@@ -342,7 +342,7 @@
           <!-- 潜在资源 -->
           <el-collapse-item class="collapse-item" name="potential" style="margin:8px">
             <template #title>
-              <div class="gacha_title_icon"></div>
+              <div class="g-calc-collpase-title-icon"></div>
               <span class="collapse-item_title">潜在资源 {{ toFixedByAcc(calcResult.gachaTimes_potential, 0) }}抽</span>
             </template>
 
@@ -422,7 +422,7 @@
           <!-- 氪金资源 -->
           <el-collapse-item class="collapse-item" name="pack" style="margin:8px">
             <template #title>
-              <div class="gacha_title_icon"></div>
+              <div class="g-calc-collpase-title-icon"></div>
               <span class="collapse-item_title">氪金资源 {{ toFixedByAcc(calcResult.gachaTimes_gacha, 0) }}抽</span>
             </template>
 
@@ -683,7 +683,7 @@
           <!-- 活动获得（估算） -->
           <el-collapse-item class="collapse-item" name="activity" style="margin:8px">
             <template #title>
-              <div class="gacha_title_icon"></div>
+              <div class="g-calc-collpase-title-icon"></div>
               <span class="collapse-item_title">活动获得（估算）{{ toFixedByAcc(calcResult.gachaTimes_act, 0) }}抽</span>
             </template>
 
@@ -758,7 +758,7 @@
           <!-- 其它资源（估算） -->
           <el-collapse-item class="collapse-item" name="other" style="margin:8px">
             <template #title>
-              <div class="gacha_title_icon"></div>
+              <div class="g-calc-collpase-title-icon"></div>
               <span class="collapse-item_title">其它资源（估算）{{
                   toFixedByAcc(calcResult.gachaTimes_other, 0)
                 }}抽</span>
@@ -826,7 +826,7 @@
           <!-- 致谢 -->
           <el-collapse-item class="collapse-item" name="develop" style="margin:8px">
             <template #title>
-              <div class="gacha_title_icon" style="background: #337fcb"></div>
+              <div class="g-calc-collpase-title-icon" style="background: #337fcb"></div>
               <span class="collapse-item_title">开发信息</span>
             </template>
             <div id="extra" style="max-width: 1080px; margin: auto">

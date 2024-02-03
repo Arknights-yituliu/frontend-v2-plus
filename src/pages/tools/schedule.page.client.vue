@@ -329,7 +329,6 @@ function operatorHasKeyword(operator) {
 const roomPopupStyle = "width:75%"
 
 
-
 /**
  * 选择该房间入驻干员
  * @param {string} charName 干员id
@@ -337,15 +336,15 @@ const roomPopupStyle = "width:75%"
 function chooseOperator(charName) {
 
 
-  if(!checkRoomDuplicateOperator(charName)){
+  if (!checkRoomDuplicateOperator(charName)) {
     return;
   }
 
-  if(!checkRoomMaximum()){
+  if (!checkRoomMaximum()) {
     return;
   }
 
-  checkPlanDuplicateOperator(selectedPlanIndex.value,charName,true)
+  checkPlanDuplicateOperator(selectedPlanIndex.value, charName, true)
 
 
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charName)
@@ -361,7 +360,7 @@ function chooseOperator(charName) {
  * @param charName 干员名称
  * @returns {boolean}
  */
-function checkRoomDuplicateOperator(charName){
+function checkRoomDuplicateOperator(charName) {
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.includes(charName)) {
@@ -377,7 +376,7 @@ function checkRoomDuplicateOperator(charName){
  * 检查房间入驻人数是否达到上限
  * @returns {boolean}
  */
-function checkRoomMaximum(){
+function checkRoomMaximum() {
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
@@ -399,7 +398,7 @@ function deleteOperator(charName) {
         return e !== charName
       })
 
-  checkPlanDuplicateOperator(selectedPlanIndex.value,charName,false)
+  checkPlanDuplicateOperator(selectedPlanIndex.value, charName, false)
 
 }
 
@@ -411,18 +410,18 @@ let duplicateOperatorTable = ref([])
  * @param charName 干员id
  * @param status 干员入驻true或删除false
  */
-function checkPlanDuplicateOperator(index,charName,status){
+function checkPlanDuplicateOperator(index, charName, status) {
 
-   //当前班次非空判断
-   if(!duplicateOperatorTable.value[index]){
-     duplicateOperatorTable.value[index] = {}
-   }
+  //当前班次非空判断
+  if (!duplicateOperatorTable.value[index]) {
+    duplicateOperatorTable.value[index] = {}
+  }
   //如果是入驻干员并且检查表里干员状态是已经入驻，弹出警告
-   if(duplicateOperatorTable.value[index][charName] && status){
+  if (duplicateOperatorTable.value[index][charName] && status) {
 
-     cMessage('请勿在同一班次入驻两个同名干员','error')
-      return false;
-   }
+    cMessage('请勿在同一班次入驻两个同名干员', 'error')
+    return false;
+  }
   // 更新检查表里干员状态
   duplicateOperatorTable.value[index][charName] = status
   return true;
@@ -442,19 +441,19 @@ function copyOperatorList() {
  * 粘贴干员组
  */
 function pasteOperatorList() {
-  for(const charName of plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators){
+  for (const charName of plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators) {
     deleteOperator(charName)
   }
 
   for (const charId of tmpOperatorList.value) {
 
 
-    if(!checkRoomMaximum()){
+    if (!checkRoomMaximum()) {
       return;
     }
     plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charId)
 
-    checkPlanDuplicateOperator(selectedPlanIndex.value,charId,true)
+    checkPlanDuplicateOperator(selectedPlanIndex.value, charId, true)
   }
 }
 
@@ -462,7 +461,7 @@ let tmpPlanData = ref({index: 0, plan: ''})
 
 function copyPlan() {
   tmpPlanData.value.plan = JSON.stringify(plansTemplate.value[selectedPlanIndex.value])
-  tmpPlanData.value.index = selectedPlanIndex.value+1
+  tmpPlanData.value.index = selectedPlanIndex.value + 1
 }
 
 function pastePlan() {
@@ -563,10 +562,10 @@ function getPeriod(index) {
 }
 
 let scheduleInfo = ref({
-  "author": "一图流",
-  "description": "这是个顶配243排班协议演示",
+  "author": "文字作者",
+  "description": "文件描述",
   "id": 1702203342688921,
-  "title": "243极限",
+  "title": "文件标题",
   "buildingType": selectedScheduleType.value.label,
   "planTimes": `${scheduleTypeV2.value.planTimes}班`,
   "plans": [],
@@ -616,9 +615,9 @@ function saveAndDownloadScheduleFile() {
     scheduleInfo.value.scheduleId = scheduleId.value
     let link = document.createElement('a')
     link.download = `${scheduleId.value}.json`
-    link.href = 'data:text/plain,' + JSON.stringify(scheduleInfo.value)
+    link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scheduleInfo.value, null, 2))
     link.click()
-
+    link.remove()
     cMessage(`生成的排班文件ID为：${scheduleId.value}`)
   })
 }
@@ -627,8 +626,9 @@ function downloadScheduleFile() {
   createSchedule()
   let link = document.createElement('a')
   link.download = `自定义排班.json`
-  link.href = 'data:text/plain,' + JSON.stringify(scheduleInfo.value)
+  link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scheduleInfo.value, null, 2))
   link.click()
+  link.remove()
 }
 
 let scheduleId = ref('')
@@ -1006,9 +1006,9 @@ onMounted(() => {
       </div>
       <!--  左边站点-->
       <div class="room-wrap-left">
-<!--        <div class="room-template blank" style="width: 180px;" -->
-<!--             v-for="index in 3" :key="index">-->
-<!--        </div>-->
+        <!--        <div class="room-template blank" style="width: 180px;" -->
+        <!--             v-for="index in 3" :key="index">-->
+        <!--        </div>-->
         <div class="copy-btn-wrap">
         </div>
         <!--    贸易站-->
@@ -1069,7 +1069,7 @@ onMounted(() => {
         </div>
 
         <div class="copy-btn-wrap">
-          <span>被复制的班次：#{{tmpPlanData.index}} 班</span>
+          <span>被复制的班次：#{{ tmpPlanData.index }} 班</span>
           <c-button :color="COLOR.BLUE" :status="true" @click="copyPlan()">复制班次</c-button>
           <c-button :color="COLOR.BLUE" :status="true" @click="pastePlan()">粘贴班次</c-button>
         </div>
@@ -1177,7 +1177,8 @@ onMounted(() => {
       </div>
 
       <div class="filter-condition-box">
-        <div class="condition-bar" v-for="(condition,key) in operatorFilterConditionTable" v-show="condition.display" :key="key">
+        <div class="condition-bar" v-for="(condition,key) in operatorFilterConditionTable" v-show="condition.display"
+             :key="key">
           <span :style="`color:${condition.color}`">{{ condition.name }}</span>
           <c-button v-for="(condition,index) in condition.conditions" :key="index"
                     :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
