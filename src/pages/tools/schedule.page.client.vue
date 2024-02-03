@@ -13,7 +13,7 @@ import {getText} from '/src/utils/fileRead'
 import {debounce} from "/src/utils/debounce";
 import building_table from '/src/static/json/build/building_table.json'
 import feedBack from '/src/components/feedBack.vue';
-import {operatorFilterConditionTable} from '/src/pages/tools/js/SkillFilter.js'
+import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
 
 const COLOR = {BLUE: 'blue', ORANGE: 'orange', GREEN: 'green'}
 
@@ -1204,12 +1204,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
   </div>
-
-
-  <!--    <c-log v-model="logs"></c-log>-->
-
 
 </template>
 
