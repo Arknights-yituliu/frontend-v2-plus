@@ -135,6 +135,7 @@
           <div class="switch_btn_wrap">
             <div class="btn" @click="sortOperatorList('rarity')">按稀有度</div>
             <div class="btn" @click="sortOperatorList('date')">按实装顺序</div>
+            <div class="btn" @click="sortOperatorList('level')">按干员等级</div>
           </div>
         </div>
 
@@ -702,7 +703,7 @@ const loadCompleteData = debounce(() => {
   }
   console.log('执行了')
   isCompleteData.value = true;
-}, 3000)
+}, 1000)
 
 
 /**
@@ -1058,10 +1059,11 @@ function sortOperatorList(property) {
   if (!isCompleteData.value) {
     loadCompleteData()
   }
+
   sortProperty.value[property] = !sortProperty.value[property]
   operatorList.value.sort((a, b) => {
     if (sortProperty.value[property]) {
-      console.log(a.name,'-',a[property],b.name,'-',b[property])
+      // console.log(a.name,'-',a[property],b.name,'-',b[property])
       return a[property] - b[property];
     } else {
       return b[property] - a[property];
