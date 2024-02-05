@@ -1032,7 +1032,8 @@ onMounted(() => {
         <div class="room-template trading"
              :class="roomSelectedClass('trading',tradingIndex)"
              v-for="(num,tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
-             @click="chooseRoom('trading',tradingIndex)">
+             @click="chooseRoom('trading',tradingIndex)"
+             tabindex="0">
           <div class="room-name">
             <span>贸易站#{{ num }}</span>
             <div :class="getRoomProduct('trading',tradingIndex)"></div>
@@ -1050,7 +1051,8 @@ onMounted(() => {
         <div class="room-template manufacture" :class="roomSelectedClass('manufacture',manufactureIndex)"
              v-for="(num,manufactureIndex) in scheduleTypeV2.manufacture"
              :key="manufactureIndex"
-             @click="chooseRoom('manufacture',manufactureIndex)">
+             @click="chooseRoom('manufacture',manufactureIndex)"
+             tabindex="0">
           <div class="room-name">
             <span>制造站#{{ num }}</span>
             <div :class="getRoomProduct('manufacture',manufactureIndex)"></div>
@@ -1076,7 +1078,8 @@ onMounted(() => {
         <!--  发电站-->
         <div class="room-template power" :class="roomSelectedClass('power',powerIndex)"
              v-for="(num,powerIndex) in scheduleTypeV2.power" :key="powerIndex"
-             @click="chooseRoom('power',powerIndex)">
+             @click="chooseRoom('power',powerIndex)"
+             tabindex="0">
           <div class="room-name"> 发电站#{{ num }}</div>
           <div class="room-avatar-sprite-wrap"
                v-for="(charName,index) in getRoomOperators('power',powerIndex)"
@@ -1095,7 +1098,8 @@ onMounted(() => {
       <div class="room-wrap-center">
         <!--     控制中枢-->
         <div class="room-template control" :class="roomSelectedClass('control',0)"
-             @click="chooseRoom('control',0)">
+             @click="chooseRoom('control',0)"
+             tabindex="0">
           <div class="room-name"> 控制中枢</div>
           <div class="room-avatar-sprite-wrap"
                v-for="(charName,index) in getRoomOperators('control',0)"
@@ -1107,7 +1111,8 @@ onMounted(() => {
         <!--     宿舍-->
         <div class="room-template dormitory" :class="roomSelectedClass('dormitory',dormitoryIndex)"
              v-for="(num,dormitoryIndex) in scheduleTypeV2.dormitory" :key="dormitoryIndex"
-             @click="chooseRoom('dormitory',dormitoryIndex)">
+             @click="chooseRoom('dormitory',dormitoryIndex)"
+             tabindex="0">
           <div class="room-name"> 宿舍#{{ num }}</div>
           <div class="room-avatar-sprite-wrap"
                v-for="(charName,index) in getRoomOperators('dormitory',dormitoryIndex)"
@@ -1122,7 +1127,8 @@ onMounted(() => {
         <div class="room-template blank" style="width: 100px;"></div>
         <!--     会客室-->
         <div class="room-template meeting" :class="roomSelectedClass('meeting',0)"
-             @click="chooseRoom('meeting',0)">
+             @click="chooseRoom('meeting',0)"
+             tabindex="0">
           <div class="room-name">会客室</div>
           <div class="room-avatar-sprite-wrap"
                v-for="(charName,index) in getRoomOperators('meeting',0)" :key="index">
@@ -1132,7 +1138,8 @@ onMounted(() => {
         </div>
         <!--      加工站-->
         <div class="room-template processing" :class="roomSelectedClass('processing',0)"
-             @click="chooseRoom('processing',0)">
+             @click="chooseRoom('processing',0)"
+             tabindex="0">
           <div class="room-name">加工站</div>
           <div class="room-avatar-sprite-wrap"
                v-for="(charName,index) in getRoomOperators('processing',0)"
@@ -1143,7 +1150,8 @@ onMounted(() => {
 
         <!--     办公室 -->
         <div class="room-template hire" :class="roomSelectedClass('hire',0)"
-             @click="chooseRoom('hire',0)">
+             @click="chooseRoom('hire',0)"
+             tabindex="0">
           <div class="room-name">办公室</div>
           <div class="room-avatar-sprite-wrap"
                v-for="(charName,index) in getRoomOperators('hire',0)" :key="index">

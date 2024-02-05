@@ -43,7 +43,6 @@
         <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
 
-        <!--        <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>-->
         <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>
       </div>
       <!-- <div class="op_title_tag" style="height: 24px">
