@@ -23,7 +23,8 @@ plansTemplate.value = schedule_template_json
 
 let executionTimeList = ref([])
 for (let i = 0; i < 7; i++) {
-  executionTimeList.value.push({start: new Date(), end: new Date()})
+  // executionTimeList.value.push({start: new Date(), end: new Date()})
+  executionTimeList.value.push([new Date(),new Date()])
 }
 
 let isPeriod = ref(false)
@@ -558,11 +559,12 @@ watch(() => plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.
  */
 function getPeriod(index) {
   const executionTime = executionTimeList.value[index]
-  const start = executionTime.start.getHours().toString().padStart(2, '0') + ':' + executionTime.start.getMinutes().toString().padStart(2, '0')
-  const end = executionTime.end.getHours().toString().padStart(2, '0') + ':' + executionTime.end.getMinutes().toString().padStart(2, '0')
+  // const start = executionTime.start.getHours().toString().padStart(2, '0') + ':' + executionTime.start.getMinutes().toString().padStart(2, '0')
+  // const end = executionTime.end.getHours().toString().padStart(2, '0') + ':' + executionTime.end.getMinutes().toString().padStart(2, '0')
+  const start = executionTime[0].getHours().toString().padStart(2, '0') + ':' + executionTime[0].getMinutes().toString().padStart(2, '0')
+  const end = executionTime[1].getHours().toString().padStart(2, '0') + ':' + executionTime[1].getMinutes().toString().padStart(2, '0')
 
-
-  if (executionTime.start.getHours() > executionTime.end.getHours()) {
+  if (executionTime[0].getHours() > executionTime[1].getHours()) {
     return [[start, '23:59'], ['00:00', end]]
   }
 
@@ -738,28 +740,28 @@ function importSchedule(schedule) {
 
     if (period) {
       isPeriod.value = true
-      let executionTime = {start: new Date(), end: new Date()}
+      let executionTime = [new Date(),new Date()]
       if (period.length === 1) {
         if (period[0].length === 2) {
           const start = getHourAndMinute(period[0][0])
-          executionTime.start.setHours(start.hour)
-          executionTime.start.setMinutes(start.minute)
+          executionTime[0].setHours(start.hour)
+          executionTime[0].setMinutes(start.minute)
 
           const end = getHourAndMinute(period[0][1])
-          executionTime.end.setHours(end.hour)
-          executionTime.end.setMinutes(end.minute)
+          executionTime[1].setHours(end.hour)
+          executionTime[1].setMinutes(end.minute)
         }
       }
 
       if (period.length === 2) {
         if (period[0].length === 2 && period[1].length === 2) {
           const start = getHourAndMinute(period[0][0])
-          executionTime.start.setHours(start.hour)
-          executionTime.start.setMinutes(start.minute)
+          executionTime[0].setHours(start.hour)
+          executionTime[0].setMinutes(start.minute)
 
           const end = getHourAndMinute(period[1][1])
-          executionTime.end.setHours(end.hour)
-          executionTime.end.setMinutes(end.minute)
+          executionTime[1].setHours(end.hour)
+          executionTime[1].setMinutes(end.minute)
         }
       }
 
@@ -975,11 +977,17 @@ onMounted(() => {
         &emsp;*不选择则按班次顺序执行
       </div>
 
-      <div class="schedule-set-bar-short" v-show="isPeriod">
+      <div class="schedule-set-bar-short" style="flex-wrap:wrap" v-show="isPeriod">
         <div class="execution-time" v-for="(num,index) in scheduleTypeV2.planTimes" :key="index">
           <span>第&nbsp;{{ num }}&nbsp;班</span>
-          <c-time-picker v-model="executionTimeList[index]">
-          </c-time-picker>
+          <el-time-picker
+              v-model="executionTimeList[index]"
+              is-range
+              range-separator="To"
+              start-placeholder="Start time"
+              end-placeholder="End time"
+              style="width: 240px"
+          />
         </div>
       </div>
     </div>
