@@ -32,6 +32,11 @@ let yearDict = [
         start: 1672502400000,
         end: 1703952000000
     },
+    {
+        label: "2024",
+        start: 1704038400000,
+        end: 1735660799000
+    }
 ];
 
 let professionDict = [

@@ -16,7 +16,7 @@ function copyCode(text) {
   window.open('https://ak.hypergryph.com')
 }
 
-let tipVisible = ref(true)
+let tipVisible = ref(false)
 
 function openNewPage(url) {
   window.open(url)

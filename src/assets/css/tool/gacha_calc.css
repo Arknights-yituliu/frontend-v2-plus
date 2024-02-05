@@ -1,0 +1,14 @@
+.custom-radio-button-style{
+    width: 160px;
+
+}
+
+.custom-radio-button-style span{
+    width: 160px;
+}
+
+.gc-collapse-item{
+    margin: 8px;
+    box-shadow: 1px 1px 8px var(--c-box-shadow-color);
+}
+

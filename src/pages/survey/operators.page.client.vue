@@ -135,6 +135,7 @@
           <div class="switch_btn_wrap">
             <div class="btn" @click="sortOperatorList('rarity')">按稀有度</div>
             <div class="btn" @click="sortOperatorList('date')">按实装顺序</div>
+            <div class="btn" @click="sortOperatorListByLevel('level')">按干员等级</div>
           </div>
         </div>
 
@@ -358,32 +359,32 @@
     </c-collapse-item-v2>
 
     <!--    干员推荐-->
-        <c-collapse-item-v2 v-model:visible="collapseRecommendVisible" :name="'recommend'">
-          <div class="control_bar_wrap">
-            <div class="operator-form">
-              <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
-                <div class="operator-recommend-avatar-wrap">
-                  <div :class="getAvatarUseInRecommend(recommend.charId)"></div>
-                  <div class="recommend-operator-name">{{ recommend.name }}</div>
-                </div>
-                <div v-show="recommend.info.type==='skill'" class="operator-sprite-icon-bg">
-                  <div :class="getSkillSprite(recommend.info.iconId)"></div>
-                  <div class="sprite-alt">{{ recommend.info.name }}</div>
-                </div>
-                <div v-show="recommend.info.type==='equip'" class="operator-sprite-icon-bg">
-                  <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="operator-equip-image">
-                  <div class="sprite-alt">{{ recommend.info.iconId }}</div>
-                </div>
-
-                <div class="recommend-text">
-                  {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>
-                  {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}
-                </div>
-
-              </div>
+    <c-collapse-item-v2 v-model:visible="collapseRecommendVisible" :name="'recommend'">
+      <div class="control_bar_wrap">
+        <div class="operator-form">
+          <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
+            <div class="operator-recommend-avatar-wrap">
+              <div :class="getAvatarUseInRecommend(recommend.charId)"></div>
+              <div class="recommend-operator-name">{{ recommend.name }}</div>
             </div>
+            <div v-show="recommend.info.type==='skill'" class="operator-sprite-icon-bg">
+              <div :class="getSkillSprite(recommend.info.iconId)"></div>
+              <div class="sprite-alt">{{ recommend.info.name }}</div>
+            </div>
+            <div v-show="recommend.info.type==='equip'" class="operator-sprite-icon-bg">
+              <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="operator-equip-image">
+              <div class="sprite-alt">{{ recommend.info.iconId }}</div>
+            </div>
+
+            <div class="recommend-text">
+              {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>
+              {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}
+            </div>
+
           </div>
-        </c-collapse-item-v2>
+        </div>
+      </div>
+    </c-collapse-item-v2>
 
     <!--   干员表单-->
     <div class="operator-form">
@@ -417,7 +418,7 @@
     </div>
 
 
-    <div class="opr-loading-btn" @click="loadCompleteData()">加载完整数据</div>
+    <div class="opr-loading-btn" @click="loadCompleteData()">加载所有干员</div>
 
     <c-popup v-model="operatorPopupVisible">
 
@@ -702,7 +703,7 @@ const loadCompleteData = debounce(() => {
   }
   console.log('执行了')
   isCompleteData.value = true;
-}, 3000)
+}, 1000)
 
 
 /**
@@ -999,7 +1000,7 @@ let filterCondition = ref({   //干员筛选条件
   rarity: [6],
   profession: [],
   year: [],
-  own: [],
+  own: [true],
   equip: [],
   itemObtainApproach: [],
   TODO: []
@@ -1055,13 +1056,13 @@ let sortProperty = ref({})
  */
 function sortOperatorList(property) {
 
-  if (!isCompleteData.value) {
-    loadCompleteData()
-  }
+  // if (!isCompleteData.value) {
+  //   loadCompleteData()
+  // }
+
   sortProperty.value[property] = !sortProperty.value[property]
   operatorList.value.sort((a, b) => {
     if (sortProperty.value[property]) {
-      console.log(a.name,'-',a[property],b.name,'-',b[property])
       return a[property] - b[property];
     } else {
       return b[property] - a[property];
@@ -1069,6 +1070,18 @@ function sortOperatorList(property) {
   });
 }
 
+function sortOperatorListByLevel(property) {
+  sortProperty.value[property] = !sortProperty.value[property]
+  operatorList.value.sort((a, b) => {
+    let difference = 0;
+    if (a.elite !== b.elite) {
+      difference = b.elite - a.elite
+    } else {
+      difference = b.level - a.level
+    }
+    return sortProperty.value[property]?difference:-difference;
+  });
+}
 
 let itemCostList = ref([]) //材料消耗数量
 let apCostCount = ref(0) //理智消耗数量
@@ -1136,7 +1149,7 @@ let operatorRecommendList = ref([]) //干员练度推荐列表
  */
 async function getOperatorRecommend() {
   operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorTable.value)
-  setTimeout(function() {
+  setTimeout(function () {
     collapseRecommendVisible.value = !collapseRecommendVisible.value;
   }, 100);
 

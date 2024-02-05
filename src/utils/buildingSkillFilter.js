@@ -151,8 +151,8 @@ const operatorFilterConditionTable = {
         ]
     },
     combo: {
-        name: "可联动技能",
-        color:'#ff761d',
+        name: "特殊技能",
+        color:'#b476ff',
         display: true,
         conditions: [
             {
