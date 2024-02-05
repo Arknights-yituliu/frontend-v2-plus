@@ -188,6 +188,16 @@
     border: 1px solid var(--c-background-color);
 }
 
+.room-operators-skill-description {
+    width: 200px;
+    height: 300px;
+}
+
+.room-template:hover {
+
+}
+
+
 .copy-btn-wrap {
     padding: 4px;
     margin: 4px;
@@ -533,7 +543,7 @@
     /*background-color: #00a1d6;*/
 }
 
-.operator-check-box {
+.operator-check-box-group {
     width: 1240px;
     margin: 10px auto;
     height: 300px;
@@ -544,25 +554,34 @@
 }
 
 
-.option-avatar-sprite-wrap {
+.operator-check-box {
     margin: 2px 8px 20px;
     position: relative;
     font-size: 15px;
     width: 60px;
     height: 60px;
     box-shadow: var(--c-box-shadow);
-    /*background-color: #0b73dc;*/
 }
 
-
-.option-avatar-sprite {
+.operator-check-box-description{
     position: absolute;
-    top: -60px;
-    left: -60px;
-    transform: scale(0.328);
+    bottom: 70px;
+    width: 200px;
+    display: none;
+    line-height: 22px;
+    background-color: var(--c-background-color);
+    z-index: 2000;
+    padding: 8px;
+    box-shadow: 1px 1px 4px var(--c-box-shadow-color);
 }
 
-.option-operator-name {
+.operator-check-box:hover {
+   .operator-check-box-description{
+       display: block;
+   }
+}
+
+.operator-check-label {
     width: 80px;
     position: absolute;
     top: 62px;
@@ -571,21 +590,46 @@
     text-align: center;
 }
 
-/*.option-avatar-name {*/
-/*    position: absolute;*/
-/*    text-align: center;*/
-/*    width: 90px;*/
-/*    top: 82px;*/
-/*}*/
-
-
-.building-buff-name {
-    display: inline-block;
-    margin: 4px;
+.option-avatar-sprite-wrap {
+    margin: 2px 8px 20px;
+    position: relative;
+    font-size: 15px;
+    width: 60px;
+    height: 60px;
+    box-shadow: var(--c-box-shadow);
 }
 
-.building-buff-description {
-    width: 300px;
+
+.operator-building-skill-description{
+    position: absolute;
+    bottom: 70px;
+    width: 200px;
+    display: none;
+    line-height: 22px;
+    background-color: var(--c-background-color);
+    z-index: 2000;
+    padding: 8px;
+    box-shadow: 1px 1px 4px var(--c-box-shadow-color);
+}
+
+.operator-check-box:hover {
+    .operator-building-skill-description{
+        display: block;
+    }
+}
+
+.option-avatar-sprite-wrap:hover {
+    .operator-building-skill-description{
+        display: block;
+    }
+}
+
+
+.option-avatar-sprite {
+    position: absolute;
+    top: -60px;
+    left: -60px;
+    transform: scale(0.328);
 }
 
 
@@ -626,7 +670,7 @@
 }
 
 .schedule-set-bar span {
-    width: 80px;
+    min-width: 80px;
     padding-left: 4px;
     padding-right: 4px;
     font-size: 16px;

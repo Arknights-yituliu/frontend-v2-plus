@@ -14,7 +14,7 @@ import {debounce} from "/src/utils/debounce";
 import building_table from '/src/static/json/build/building_table.json'
 import feedBack from '/src/components/feedBack.vue';
 import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
-
+import '/src/assets/css/tool/building_skill_font_color.css'
 const COLOR = {BLUE: 'blue', ORANGE: 'orange', GREEN: 'green'}
 
 
@@ -283,8 +283,9 @@ function filterOperatorByTag(condition, key) {
 }
 
 
-//干员搜索输入框
+//干员搜索输入框输入内容
 let searchInputText = ref('')
+
 /**
  * 根据输入的名称和技能描述搜索干员
  */
@@ -352,6 +353,13 @@ function chooseOperator(charName) {
   if (selectedRoomType.value === 'dormitory') {
     fillOperatorConflict(selectedRoomIndex.value)
   }
+}
+
+let selectedOperator = ref({})
+
+
+function displayOperatorDescription(id){
+  const element =  document.getElementById('')
 
 }
 
@@ -786,7 +794,7 @@ onMounted(() => {
       <!--      <span class="schedule-header-title">排班生成器</span>-->
     </div>
     <div class="schedule-header-right">
-      <c-button @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">选择基建类型</c-button>
+      <c-button @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">选择基建布局</c-button>
       <div>
         <input class="input-base" v-model="scheduleImportId" placeholder=""/>
         <span class="input-desc"></span>
@@ -809,6 +817,7 @@ onMounted(() => {
 
   <c-popup v-model:visible="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
     <div class="schedule-set-wrap">
+
       <div class="schedule-set-bar">
         <span>作业名称</span>
         <div><input class="input-base" v-model="scheduleInfo.title"/></div>
@@ -825,7 +834,7 @@ onMounted(() => {
       </div>
 
       <div class="schedule-set-bar">
-        <span>基建模式</span>
+        <span>基建房间布局</span>
         <div>
           <c-button :color="COLOR.BLUE" :status="menu.label===selectedScheduleType.label"
                     @click="chooseScheduleType(menu)"
@@ -987,7 +996,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="operator-check-box">
+      <div class="operator-check-box-group">
         <div class="option-avatar-sprite-wrap"
              v-for="(operator,charId) in filterOperatorList"
              :key="charId" @click="setFiammetta('target',operator.name)">
@@ -1196,12 +1205,13 @@ onMounted(() => {
           <span class="input-group-text">输入干员名、技能名称、技能描述搜索</span>
         </div>
       </div>
-      <div class="operator-check-box">
-        <div class="option-avatar-sprite-wrap"
+      <div class="operator-check-box-group">
+        <div class="operator-check-box"
              v-for="(operator,charId) in filterOperatorList"
              :key="charId" @click="chooseOperator(operator.name)">
           <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>
-          <div class="option-operator-name">{{ operator.name }}</div>
+          <div class="operator-check-label">{{ operator.name }}</div>
+          <span class="operator-building-skill-description" v-html="operator.description"></span>
         </div>
       </div>
     </div>
