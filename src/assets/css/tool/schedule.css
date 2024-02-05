@@ -186,6 +186,7 @@
     --room-operator-short: 180px;
     --room-operator-long: 300px;
     border: 1px solid var(--c-background-color);
+    user-select: none;
 }
 
 .room-operators-skill-description {
@@ -423,7 +424,7 @@
 /*    transition: transform 0.5s, opacity 1s;*/
 /*}*/
 
-/*!* 点击时激活 *!*/
+/* 点击时激活 */
 /*.trading:active::after, .manufacture:active::after, .power:active::after, .control:active::after, .dormitory:active::after, .meeting:active::after, .processing:active::after, .hire:active::after {*/
 /*    transform: scale(0, 0);*/
 /*    opacity: 0.2;*/
