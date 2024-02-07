@@ -15,6 +15,7 @@ import building_table from '/src/static/json/build/building_table.json'
 import feedBack from '/src/components/feedBack.vue';
 import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
 import '/src/assets/css/tool/building_skill_font_color.css'
+
 const COLOR = {BLUE: 'blue', ORANGE: 'orange', GREEN: 'green'}
 
 
@@ -24,7 +25,7 @@ plansTemplate.value = schedule_template_json
 let executionTimeList = ref([])
 for (let i = 0; i < 7; i++) {
   // executionTimeList.value.push({start: new Date(), end: new Date()})
-  executionTimeList.value.push([new Date(),new Date()])
+  executionTimeList.value.push([new Date(), new Date()])
 }
 
 let isPeriod = ref(false)
@@ -313,8 +314,16 @@ function commonFilterOperator() {
     if (!selectBtnKey.value && !searchInputText.value) {
       continue
     }
-    filterOperatorList.value[operator.charId] = operator
+
+    if (filterOperatorList.value[operator.charId]) {
+      operator.description = filterOperatorList.value[operator.charId].description + '<br><br>' + operator.description
+      filterOperatorList.value[operator.charId] = operator
+    } else {
+      filterOperatorList.value[operator.charId] = operator
+    }
   }
+
+
 }
 
 /**
@@ -359,8 +368,8 @@ function chooseOperator(charName) {
 let selectedOperator = ref({})
 
 
-function displayOperatorDescription(id){
-  const element =  document.getElementById('')
+function displayOperatorDescription(id) {
+  const element = document.getElementById('')
 
 }
 
@@ -740,7 +749,7 @@ function importSchedule(schedule) {
 
     if (period) {
       isPeriod.value = true
-      let executionTime = [new Date(),new Date()]
+      let executionTime = [new Date(), new Date()]
       if (period.length === 1) {
         if (period[0].length === 2) {
           const start = getHourAndMinute(period[0][0])
@@ -782,6 +791,24 @@ function importSchedule(schedule) {
 
 }
 
+
+function setPosition(){
+  for (const charId in filterOperatorList.value) {
+    const parentElement = document.getElementById(charId)
+    if(!parentElement){
+      continue
+    }
+    const childElement = document.getElementById(`${charId}-description`)
+    const parentTop = parentElement.offsetTop;
+    const parentLeft = parentElement.offsetLeft;
+    childElement.style.top = `${parentTop}px`;
+    if (parentLeft > 700) {
+      childElement.style.left = `100px`
+    } else {
+      childElement.style.left = `700px`
+    }
+  }
+}
 
 onMounted(() => {
   filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], 'room')
@@ -981,15 +1008,15 @@ onMounted(() => {
         <div class="execution-time" v-for="(num,index) in scheduleTypeV2.planTimes" :key="index">
           <span>第&nbsp;{{ num }}&nbsp;班</span>
           <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>
-<!--           <input type="time" v-model="executionTimeList[index][0]">-->
-<!--          <span>至</span>-->
-<!--          <input type="time" v-model="executionTimeList[index][1]">-->
+          <!--           <input type="time" v-model="executionTimeList[index][0]">-->
+          <!--          <span>至</span>-->
+          <!--          <input type="time" v-model="executionTimeList[index][1]">-->
 
         </div>
       </div>
     </div>
 
-<!--    <c-time-checkbox v-model="executionTimeList[0]"></c-time-checkbox>-->
+    <!--    <c-time-checkbox v-model="executionTimeList[0]"></c-time-checkbox>-->
 
     <c-popup v-model:visible="FiammettaTargetVisible" :style="roomPopupStyle">
       <div class="filter-condition-box">
@@ -1222,15 +1249,18 @@ onMounted(() => {
         </div>
       </div>
       <div class="operator-check-box-group">
-        <div class="operator-check-box-option"
-             v-for="(operator,charId) in filterOperatorList"
-             :key="charId" @click="chooseOperator(operator.name)">
-          <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>
-          <div class="operator-check-label">{{ operator.name }}</div>
-          <span class="operator-building-skill-description" v-html="operator.description"></span>
-        </div>
-      </div>
+
+          <div v-for="(operator,charId) in filterOperatorList"
+               :key="charId" @click="chooseOperator(operator.name)"
+               :id="operator.charId"
+               class="operator-check-box-option">
+            <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>
+            <div class="operator-check-label">{{ operator.name }}</div>
+            <span class="operator-building-skill-description" :id="`${operator.charId}-description`"
+                  v-html="operator.description"></span>
+          </div>
     </div>
+  </div>
   </div>
 
 </template>

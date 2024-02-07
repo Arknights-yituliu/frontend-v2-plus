@@ -643,7 +643,8 @@
 .operator-building-skill-description{
     position: absolute;
     bottom: 70px;
-    width: 200px;
+    left: -100px;
+    width: 300px;
     display: none;
     line-height: 22px;
     background-color: var(--c-background-color);
