@@ -3,7 +3,7 @@
     <div class="popup_mask" @click="openAndClose(false)">
     </div>
 
-    <div class="popup" :style="width_style">
+    <div class="popup" :style="style">
       <slot name="header"></slot>
       <div class="popup-context" :style="context_height_style">
         <slot></slot>

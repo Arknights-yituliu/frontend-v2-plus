@@ -328,7 +328,7 @@ function operatorHasKeyword(operator) {
       operator.buffName.indexOf(searchInputText.value) > -1
 }
 
-const roomPopupStyle = "width:75%"
+const roomPopupStyle = "width:550px;"
 
 
 /**
@@ -798,7 +798,7 @@ onMounted(() => {
     <div class="schedule-header-right">
       <c-button @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">选择基建布局</c-button>
       <div>
-        <input class="input-base" v-model="scheduleImportId" placeholder=""/>
+        <input class="input-base" v-model="scheduleImportId" placeholder="id为文件名或在文件内找id"/>
         <span class="input-desc"></span>
       </div>
       <c-button :color="COLOR.BLUE" @click="importScheduleById()">通过id导入排班</c-button>
@@ -980,14 +980,12 @@ onMounted(() => {
       <div class="schedule-set-bar-short" style="flex-wrap:wrap" v-show="isPeriod">
         <div class="execution-time" v-for="(num,index) in scheduleTypeV2.planTimes" :key="index">
           <span>第&nbsp;{{ num }}&nbsp;班</span>
-          <el-time-picker
-              v-model="executionTimeList[index]"
-              is-range
-              range-separator="To"
-              start-placeholder="Start time"
-              end-placeholder="End time"
-              style="width: 240px"
-          />
+          <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>
+<!--           <input type="time" v-model="executionTimeList[index][0]">-->
+<!--          <span>至</span>-->
+<!--          <input type="time" v-model="executionTimeList[index][1]">-->
+
+
         </div>
       </div>
     </div>
@@ -1004,11 +1002,12 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="operator-check-box-group">
-        <div class="option-avatar-sprite-wrap"
+      <div class="operator-check-box-group" style="width: 550px">
+        <div class="operator-check-box-option"
              v-for="(operator,charId) in filterOperatorList"
              :key="charId" @click="setFiammetta('target',operator.name)">
           <div :class="getOptionAvatar(operator.charId)"></div>
+          <div class="operator-check-label">{{ operator.name }}</div>
         </div>
       </div>
     </c-popup>
@@ -1222,7 +1221,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="operator-check-box-group">
-        <div class="operator-check-box"
+        <div class="operator-check-box-option"
              v-for="(operator,charId) in filterOperatorList"
              :key="charId" @click="chooseOperator(operator.name)">
           <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>

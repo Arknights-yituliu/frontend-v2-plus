@@ -496,6 +496,7 @@
 .filter-condition-box {
     display: flex;
     flex-wrap: wrap;
+    padding: 12px;
 }
 
 .condition-bar {
@@ -593,8 +594,7 @@
     justify-content: flex-start;
 }
 
-
-.operator-check-box {
+.operator-check-box-option {
     margin: 2px 8px 20px;
     position: relative;
     font-size: 15px;
@@ -615,7 +615,7 @@
     box-shadow: 1px 1px 4px var(--c-box-shadow-color);
 }
 
-.operator-check-box:hover {
+.operator-check-box-option:hover {
    .operator-check-box-description{
        display: block;
    }
@@ -652,7 +652,7 @@
     box-shadow: 1px 1px 4px var(--c-box-shadow-color);
 }
 
-.operator-check-box:hover {
+.operator-check-box-option:hover {
     .operator-building-skill-description{
         display: block;
     }
