@@ -984,11 +984,13 @@ onMounted(() => {
 <!--           <input type="time" v-model="executionTimeList[index][0]">-->
 <!--          <span>至</span>-->
 <!--          <input type="time" v-model="executionTimeList[index][1]">-->
-
+     {{executionTimeList[index][0].getHours()}}:{{executionTimeList[index][0].getMinutes()}}
 
         </div>
       </div>
     </div>
+
+<!--    <c-time-checkbox v-model="executionTimeList[0]"></c-time-checkbox>-->
 
     <c-popup v-model:visible="FiammettaTargetVisible" :style="roomPopupStyle">
       <div class="filter-condition-box">

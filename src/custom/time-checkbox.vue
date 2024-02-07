@@ -11,6 +11,9 @@ function getId() {
   return text
 }
 
+const timeCheckboxId = getId()
+const timeCheckboxPopupId = getId()
+
 let minuteAndSecondOptions = []
 let hourOptions = []
 for (let i = 0; i < 60; i++) {
@@ -46,6 +49,7 @@ function chooseTimeType(value) {
 }
 
 function chooseOption(value) {
+
   selectedOption.value[selectedTimeType.value] = value
   if (selectedTimeType.value === 'hour') {
     props.modelValue[startOrEnd.value].setHours(value)
@@ -54,21 +58,39 @@ function chooseOption(value) {
   } else if (selectedTimeType.value === 'second') {
     props.modelValue[startOrEnd.value].setSeconds(value)
   }
+
+  emit('update:modelValue', [props.modelValue[0],props.modelValue[1]])
+
 }
 
 
 let popupClass = ref('')
 
+let popupEelemet = void 0
+let checkboxEelemet = void 0
+
+onMounted(()=>{
+  checkboxEelemet = document.getElementById(timeCheckboxId)
+  popupEelemet = document.getElementById(timeCheckboxPopupId)
+})
+
 function openPopup() {
-  popupClass.value = 'c-time-checkbox-popup-display'
+
+  const offsetTop = checkboxEelemet.offsetTop+36
+  const offsetLeft = checkboxEelemet.offsetLeft-20
+  popupEelemet.style.top=`${offsetTop}px`
+  popupEelemet.style.left=`${offsetLeft}px`
+  popupEelemet.style.height = '280px'
+  popupEelemet.style.opacity = '1'
 }
 
 function closePopup() {
-  popupClass.value = ''
+  popupEelemet.style.height = '0px'
+  popupEelemet.style.opacity = '0'
 }
 
 function getTimeTextClass(value) {
-  return startOrEnd.value===value?'c-time-checkbox-selected':''
+  return startOrEnd.value === value ? 'c-time-checkbox-selected' : ''
 }
 
 function getTimeTypeClass(value) {
@@ -88,50 +110,51 @@ function getOptionClass(value) {
 </script>
 
 <template>
-  <div class="c-time-checkbox">
+  <div class="c-time-checkbox" :id="timeCheckboxId">
     <i class="iconfont icon-time" style="padding: 8px"></i>
     <span @click="chooseStartOrEnd(0);openPopup()"
-           :class="getTimeTextClass(0)">{{ getTime(modelValue[0]) }}</span>
+          :class="getTimeTextClass(0)">{{ getTime(modelValue[0]) }}</span>
     <span>至</span>
     <span @click="chooseStartOrEnd(1);openPopup()"
           :class="getTimeTextClass(1)">{{ getTime(modelValue[1]) }}</span>
-
-    <div class="c-time-checkbox-popup" :class="popupClass">
-      <div class="c-time-checkbox-type">
-        <div style="width: 30px" class="c-time-checkbox-selected">
-          {{ startOrEnd === 1 ? 'end' : 'start' }}
-        </div>
-        <div :class="getTimeTypeClass('hour')"
-             @click="chooseTimeType('hour')">时
-        </div>
-        <div :class="getTimeTypeClass('minute')"
-             @click="chooseTimeType('minute')">分
-        </div>
-        <div :class="getTimeTypeClass('second')"
-             @click="chooseTimeType('second')">秒
-        </div>
-        <div style="width: 30px;height: 2px"></div>
-      </div>
-      <div class="c-time-checkbox-options" v-show="selectedTimeType === 'hour'">
-        <div v-for="(option,index) in hourOptions" :key="index"
-             :class="getOptionClass(index)" @click="chooseOption(index)">
-          {{ option }}
-        </div>
-      </div>
-
-      <div class="c-time-checkbox-options" v-show="selectedTimeType !== 'hour'">
-        <div v-for="(option,index) in minuteAndSecondOptions" :key="index"
-             :class="getOptionClass(index)" @click="chooseOption(index)">
-          {{ option }}
-        </div>
-      </div>
-
-      <div class="c-time-checkbox-popup-btn">
-        <span style="color: #e74f4f" @click="closePopup()">close</span>
-      </div>
-    </div>
   </div>
 
+  <div class="c-time-checkbox-popup" :id="timeCheckboxPopupId">
+    <div class="c-time-checkbox-type">
+      <div style="width: 30px" class="c-time-checkbox-selected">
+        {{ startOrEnd === 1 ? 'end' : 'start' }}
+      </div>
+      <div :class="getTimeTypeClass('hour')"
+           @click="chooseTimeType('hour')">时
+      </div>
+      <div :class="getTimeTypeClass('minute')"
+           @click="chooseTimeType('minute')">分
+      </div>
+      <div :class="getTimeTypeClass('second')"
+           @click="chooseTimeType('second')">秒
+      </div>
+      <div style="width: 30px;height: 2px"></div>
+    </div>
+
+
+    <div class="c-time-checkbox-options" v-if="selectedTimeType === 'hour'">
+      <div v-for="(option,index) in hourOptions" :key="index"
+           :class="getOptionClass(index)" @click="chooseOption(index)">
+        {{ option }}
+      </div>
+    </div>
+
+    <div class="c-time-checkbox-options" v-if="selectedTimeType !== 'hour'">
+      <div v-for="(option,index) in minuteAndSecondOptions" :key="index"
+           :class="getOptionClass(index)" @click="chooseOption(index)">
+        {{ option }}
+      </div>
+    </div>
+
+    <div class="c-time-checkbox-popup-btn">
+      <span style="color: #e74f4f" @click="closePopup()">close</span>
+    </div>
+  </div>
 
 </template>
 
@@ -142,8 +165,6 @@ function getOptionClass(value) {
   width: 250px;
   box-sizing: border-box;
   cursor: pointer;
-  position: relative;
-
 }
 
 .c-time-checkbox span {
@@ -153,7 +174,7 @@ function getOptionClass(value) {
 }
 
 .c-time-checkbox-popup {
-  width: 296px;
+  width: 288px;
   height: 0;
   padding: 12px 4px;
   text-align: center;
@@ -163,12 +184,13 @@ function getOptionClass(value) {
   box-shadow: 1px 1px 8px var(--c-box-shadow-color);
   background-color: var(--c-background-color);
   overflow: hidden;
-  z-index: 2000;
+  z-index: 3000;
+  background-color: #e2fdea;
   opacity: 0;
-  transition: height .2s,opacity .8s ;
+  transition: height .2s, opacity .8s;
 }
 
-.c-time-checkbox-popup-display {
+.c-time-checkbox-popup-visible {
   height: 280px;
   opacity: 1;
 }
@@ -177,13 +199,16 @@ function getOptionClass(value) {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  background-color: #ffc4c4;
+  align-items: center;
+  height: 28px;
+  margin-bottom: 8px ;
 }
 
 .c-time-checkbox-type div {
-  padding-left: 12px;
-  padding-right: 12px;
-  padding-bottom: 8px;
   cursor: pointer;
+  line-height: 24px;
+  width: 50px;
 }
 
 .c-time-checkbox-options {
@@ -191,11 +216,15 @@ function getOptionClass(value) {
   flex-wrap: wrap;
   align-content: flex-start;
   height: 230px;
+  background-color: #a7e3fc;
 }
 
 .c-time-checkbox-options div {
-  padding: 8px;
+  width: 32px;
+  line-height: 32px;
+  text-align: center;
   cursor: pointer;
+  background-color: #43c0f6;
 }
 
 .c-time-checkbox-selected {
@@ -203,11 +232,11 @@ function getOptionClass(value) {
   font-weight: bolder;
 }
 
-.c-time-checkbox-popup-btn{
+.c-time-checkbox-popup-btn {
   text-align: right;
 }
 
-.c-time-checkbox-popup-btn span{
+.c-time-checkbox-popup-btn span {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-right: 20px;
