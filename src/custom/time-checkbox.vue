@@ -36,12 +36,21 @@ function getTime(date) {
   return `${hour}:${minute}:${second}`
 }
 
-let startOrEnd = ref(1)
+let startOrEnd = ref(3)
 let selectedTimeType = ref('hour')
 let selectedOption = ref({hour: 12, minute: 0, second: 0})
 
 function chooseStartOrEnd(value) {
   startOrEnd.value = value
+  // if(startOrEnd.value>=props.modelValue.length){
+  //   return;
+  // }
+  const date = props.modelValue[startOrEnd.value]
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  const second = date.getSeconds()
+  selectedOption.value = {hour: hour, minute: minute, second: second}
+  console.log(selectedOption.value)
 }
 
 function chooseTimeType(value) {
@@ -176,7 +185,7 @@ function getOptionClass(value) {
 .c-time-checkbox-popup {
   width: 288px;
   height: 0;
-  padding: 12px 4px;
+  padding: 12px 0;
   text-align: center;
   position: absolute;
   top: 28px;
@@ -185,9 +194,8 @@ function getOptionClass(value) {
   background-color: var(--c-background-color);
   overflow: hidden;
   z-index: 3000;
-  background-color: #e2fdea;
   opacity: 0;
-  transition: height .2s, opacity .8s;
+  transition: height .2s, opacity .5s;
 }
 
 .c-time-checkbox-popup-visible {
@@ -199,10 +207,9 @@ function getOptionClass(value) {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  background-color: #ffc4c4;
   align-items: center;
   height: 28px;
-  margin-bottom: 8px ;
+  border-bottom: 1px solid var(--c-border-color);
 }
 
 .c-time-checkbox-type div {
@@ -216,7 +223,6 @@ function getOptionClass(value) {
   flex-wrap: wrap;
   align-content: flex-start;
   height: 230px;
-  background-color: #a7e3fc;
 }
 
 .c-time-checkbox-options div {
@@ -224,7 +230,6 @@ function getOptionClass(value) {
   line-height: 32px;
   text-align: center;
   cursor: pointer;
-  background-color: #43c0f6;
 }
 
 .c-time-checkbox-selected {
@@ -240,6 +245,7 @@ function getOptionClass(value) {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-right: 20px;
+  cursor: pointer;
 }
 
 </style>
