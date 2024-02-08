@@ -235,6 +235,7 @@ function getOptionClass(value) {
   overflow: hidden;
   z-index: 3000;
   opacity: 0;
+  display: none;
   top: 100%;
   transition: opacity .5s;
 }
