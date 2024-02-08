@@ -95,10 +95,7 @@ function openPopup() {
 
   for (const element of elements) {
     if (element.id !== timeCheckboxPopupId) {
-      // element.style.height = '0px'
-      element.style.opacity = '0'
-      popupElement.style.display = 'none'
-      // startOrEnd.value = 3
+      closePopup()
     }
   }
 }
