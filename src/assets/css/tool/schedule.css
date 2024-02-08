@@ -1,8 +1,7 @@
 .maa-schedule-v2 {
-    width: 100%;
+    width:1400px;
     height: 1400px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 .schedule-version {

@@ -8,7 +8,7 @@
     --c-box-shadow:1px 1px 10px rgba(0, 0, 0, 0.12);
     --c-box-shadow-color:rgba(0, 0, 0, 0.2);
     --c-border:1px solid var(--c-white-2);
-    --c-border-color: #80808020;
+    --c-border-color: rgba(0, 0, 0, 0.2);
     --c-background-color: var(--c-white-1);
     --c-text-color:var(--c-black-2);
     --c-tip-color:var(--c-black-3);

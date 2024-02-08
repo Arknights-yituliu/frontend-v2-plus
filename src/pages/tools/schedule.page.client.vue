@@ -1004,7 +1004,7 @@ onMounted(() => {
         &emsp;*不选择则按班次顺序执行
       </div>
 
-      <div class="schedule-set-bar-short" style="flex-wrap:wrap" v-show="isPeriod">
+      <div class="schedule-set-bar-short" style="flex-wrap:wrap" >
         <div class="execution-time" v-for="(num,index) in scheduleTypeV2.planTimes" :key="index">
           <span>第&nbsp;{{ num }}&nbsp;班</span>
           <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>
@@ -1015,8 +1015,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
-    <!--    <c-time-checkbox v-model="executionTimeList[0]"></c-time-checkbox>-->
 
     <c-popup v-model:visible="FiammettaTargetVisible" :style="roomPopupStyle">
       <div class="filter-condition-box">
@@ -1198,12 +1196,7 @@ onMounted(() => {
 
 
     <div class="room-set-wrap">
-      <!--      <div class="room-set">-->
-      <!--        <span style="font-size: 18px;font-weight: 600;">-->
-      <!--          第{{ selectedPlanIndex + 1 }}班 —-->
-      <!--        {{ getRoomLabel(selectedRoomType) }}#{{ selectedRoomIndex + 1 }}的房间入驻设置-->
-      <!--        </span>-->
-      <!--      </div>-->
+
 
 
       <div class="room-set">

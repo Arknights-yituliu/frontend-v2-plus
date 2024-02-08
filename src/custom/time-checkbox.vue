@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 
 function getId() {
   const chars = '01234567890qwertyuiopasdfghjklzxcvbnm'.split('')
@@ -50,7 +50,7 @@ function chooseStartOrEnd(value) {
   const minute = date.getMinutes()
   const second = date.getSeconds()
   selectedOption.value = {hour: hour, minute: minute, second: second}
-  console.log(selectedOption.value)
+
 }
 
 function chooseTimeType(value) {
@@ -68,34 +68,73 @@ function chooseOption(value) {
     props.modelValue[startOrEnd.value].setSeconds(value)
   }
 
-  emit('update:modelValue', [props.modelValue[0],props.modelValue[1]])
+  emit('update:modelValue', [props.modelValue[0], props.modelValue[1]])
 
 }
 
 
 let popupClass = ref('')
 
-let popupEelemet = void 0
-let checkboxEelemet = void 0
 
-onMounted(()=>{
-  checkboxEelemet = document.getElementById(timeCheckboxId)
-  popupEelemet = document.getElementById(timeCheckboxPopupId)
+
+onMounted(() => {
+
 })
 
 function openPopup() {
 
-  const offsetTop = checkboxEelemet.offsetTop+36
-  const offsetLeft = checkboxEelemet.offsetLeft-20
-  popupEelemet.style.top=`${offsetTop}px`
-  popupEelemet.style.left=`${offsetLeft}px`
-  popupEelemet.style.height = '280px'
-  popupEelemet.style.opacity = '1'
+  const popupElement = document.getElementById(timeCheckboxPopupId)
+
+  setInset()
+
+
+  // popupElement.style.height = '280px'
+  popupElement.style.opacity = '1'
+
+  const elements = document.querySelectorAll('.c-time-checkbox-popup')
+
+  for (const element of elements) {
+    if (element.id !== timeCheckboxPopupId) {
+      // element.style.height = '0px'
+      element.style.opacity = '0'
+      // startOrEnd.value = 3
+    }
+  }
 }
 
+import {debounce} from "../utils/debounce";
+
+const setInsetDebounce = debounce(setInset,500)
+
+function setInset(){
+  const checkboxElement = document.getElementById(timeCheckboxId)
+  const popupElement = document.getElementById(timeCheckboxPopupId)
+  const boundingClientRect = checkboxElement.getBoundingClientRect();
+  const top = checkboxElement.offsetTop + 40
+  popupElement.style.top = `${top}px`
+  let left = boundingClientRect.left
+  let right = boundingClientRect.right
+  let clientWidth = checkboxElement.clientWidth
+  const innerWidth = window.innerWidth-50;
+  if(popupElement.clientHeight<100){
+    return;
+  }
+
+  // console.log(timeCheckboxPopupId,'弹窗左：',left,'，右：',right,'，窗口宽度：',innerWidth)
+  // console.log('设置的左：',left,'设置的右：',right)
+  popupElement.style.left = `${left}px`
+  // popupElement.style.right = `${right}px`
+}
+
+window.addEventListener('scroll', setInsetDebounce)
+window.addEventListener('resize', setInsetDebounce)
+
+
 function closePopup() {
-  popupEelemet.style.height = '0px'
-  popupEelemet.style.opacity = '0'
+  const popupElement = document.getElementById(timeCheckboxPopupId)
+  // popupElement.style.height = '0px'
+  popupElement.style.opacity = '0'
+  // startOrEnd.value = 3
 }
 
 function getTimeTextClass(value) {
@@ -116,6 +155,9 @@ function getOptionClass(value) {
   return ''
 }
 
+
+
+
 </script>
 
 <template>
@@ -126,6 +168,7 @@ function getOptionClass(value) {
     <span>至</span>
     <span @click="chooseStartOrEnd(1);openPopup()"
           :class="getTimeTextClass(1)">{{ getTime(modelValue[1]) }}</span>
+    <!--    <span @click="getLeft()">get</span>-->
   </div>
 
   <div class="c-time-checkbox-popup" :id="timeCheckboxPopupId">
@@ -184,18 +227,17 @@ function getOptionClass(value) {
 
 .c-time-checkbox-popup {
   width: 288px;
-  height: 0;
+  height: 280px;
   padding: 12px 0;
   text-align: center;
   position: absolute;
-  top: 28px;
-  left: -34px;
   box-shadow: 1px 1px 8px var(--c-box-shadow-color);
   background-color: var(--c-background-color);
   overflow: hidden;
   z-index: 3000;
   opacity: 0;
-  transition: height .2s, opacity .5s;
+  top: 100%;
+  transition: opacity .5s;
 }
 
 .c-time-checkbox-popup-visible {
@@ -223,6 +265,7 @@ function getOptionClass(value) {
   flex-wrap: wrap;
   align-content: flex-start;
   height: 230px;
+  border-bottom: 1px solid var(--c-border-color);
 }
 
 .c-time-checkbox-options div {
