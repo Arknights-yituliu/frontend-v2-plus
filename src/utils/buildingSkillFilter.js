@@ -195,6 +195,7 @@ const operatorFilterConditionTable = {
     },
 }
 
+// Official english name is "Rosmontis"
 const RosemaryUniverse = ['琴柳']
 const GoldProductionLine = ['桃金娘','杜林','褐果','至简']
 const Knight = ['砾','薇薇安娜']
