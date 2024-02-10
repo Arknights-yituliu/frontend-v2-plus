@@ -87,15 +87,19 @@ function openPopup() {
 
   setInset()
 
-  popupElement.style.display = 'block'
-  // popupElement.style.height = '280px'
+  // popupElement.style.display = 'block'
+  popupElement.style.height = '294px'
   popupElement.style.opacity = '1'
 
   const elements = document.querySelectorAll('.c-time-checkbox-popup')
 
+  console.log(popupElement)
+
   for (const element of elements) {
     if (element.id !== timeCheckboxPopupId) {
-      closePopup()
+      // element.style.display = 'none'
+      element.style.height = 0
+      element.style.opacity = 0
     }
   }
 }
@@ -109,19 +113,16 @@ function setInset(){
   const popupElement = document.getElementById(timeCheckboxPopupId)
   const boundingClientRect = checkboxElement.getBoundingClientRect();
   const top = checkboxElement.offsetTop + 40
-  popupElement.style.top = `${top}px`
   let left = boundingClientRect.left
   let right = boundingClientRect.right
-  let clientWidth = checkboxElement.clientWidth
+  const checkboxElementClientWidth = checkboxElement.clientWidth
   const innerWidth = window.innerWidth-50;
-  if(popupElement.clientHeight<100){
-    return;
-  }
+  const popupElementClientWidth = popupElement.clientWidth
 
-  // console.log(timeCheckboxPopupId,'弹窗左：',left,'，右：',right,'，窗口宽度：',innerWidth)
-  // console.log('设置的左：',left,'设置的右：',right)
-  popupElement.style.left = `${left}px`
-  // popupElement.style.right = `${right}px`
+  popupElement.style.top = `${top}px`
+  console.log(checkboxElementClientWidth,'-',popupElementClientWidth,'=')
+  const leftOffset = (checkboxElementClientWidth - popupElementClientWidth)/2
+  popupElement.style.left = `${left + leftOffset}px`
 }
 
 window.addEventListener('scroll', setInsetDebounce)
@@ -130,9 +131,9 @@ window.addEventListener('resize', setInsetDebounce)
 
 function closePopup() {
   const popupElement = document.getElementById(timeCheckboxPopupId)
-  // popupElement.style.height = '0px'
+  popupElement.style.height = '0'
   popupElement.style.opacity = '0'
-  popupElement.style.display = 'none'
+  // popupElement.style.display = 'none'
   // startOrEnd.value = 3
 }
 
@@ -172,8 +173,8 @@ function getOptionClass(value) {
 
   <div class="c-time-checkbox-popup" :id="timeCheckboxPopupId">
     <div class="c-time-checkbox-type">
-      <div style="width: 30px" class="c-time-checkbox-selected">
-        {{ startOrEnd === 1 ? 'end' : 'start' }}
+      <div style="width: 70px" class="c-time-checkbox-selected">
+        {{ startOrEnd === 1 ? '结束' : '起始' }}
       </div>
       <div :class="getTimeTypeClass('hour')"
            @click="chooseTimeType('hour')">时
@@ -184,7 +185,7 @@ function getOptionClass(value) {
       <div :class="getTimeTypeClass('second')"
            @click="chooseTimeType('second')">秒
       </div>
-      <div style="width: 30px;height: 2px"></div>
+<!--      <div style="width: 10px;height: 2px"></div>-->
     </div>
 
 
@@ -225,9 +226,9 @@ function getOptionClass(value) {
 }
 
 .c-time-checkbox-popup {
-  width: 288px;
-  height: 280px;
-  padding: 12px 0;
+  width: 290px;
+  padding: 8px 0;
+  box-sizing: border-box;
   text-align: center;
   position: absolute;
   box-shadow: 1px 1px 8px var(--c-box-shadow-color);
@@ -235,7 +236,6 @@ function getOptionClass(value) {
   overflow: hidden;
   z-index: 3000;
   opacity: 0;
-  display: none;
   top: 100%;
   transition: opacity .5s;
 }
@@ -248,7 +248,6 @@ function getOptionClass(value) {
 .c-time-checkbox-type {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
   height: 28px;
   border-bottom: 1px solid var(--c-border-color);
@@ -289,6 +288,7 @@ function getOptionClass(value) {
   padding-bottom: 8px;
   padding-right: 20px;
   cursor: pointer;
+  line-height: 24px;
 }
 
 </style>
