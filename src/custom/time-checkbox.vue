@@ -86,6 +86,7 @@ function openPopup() {
 
   // popupElement.style.display = 'block'
   popupElement.style.height = '294px'
+  popupElement.style.width = '290px'
   popupElement.style.opacity = '1'
 
   const elements = document.querySelectorAll('.c-time-checkbox-popup')
@@ -95,8 +96,9 @@ function openPopup() {
   for (const element of elements) {
     if (element.id !== timeCheckboxPopupId) {
       // element.style.display = 'none'
-      element.style.height = 0
-      element.style.opacity = 0
+      element.style.height = '0'
+      element.style.width = '0'
+      element.style.opacity = '0'
     }
   }
 }
@@ -130,6 +132,7 @@ function closePopup() {
   const popupElement = document.getElementById(timeCheckboxPopupId)
   popupElement.style.height = '0'
   popupElement.style.opacity = '0'
+  popupElement.style.width = '0'
   // popupElement.style.display = 'none'
   // startOrEnd.value = 3
 }
@@ -223,7 +226,8 @@ function getOptionClass(value) {
 }
 
 .c-time-checkbox-popup {
-  width: 290px;
+  width: 0;
+  height: 0;
   padding: 8px 0;
   box-sizing: border-box;
   text-align: center;
