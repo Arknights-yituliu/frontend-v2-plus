@@ -93,7 +93,7 @@ function openPopup() {
 
   const elements = document.querySelectorAll('.c-time-checkbox-popup')
 
-  console.log(popupElement)
+  // console.log(popupElement)
 
   for (const element of elements) {
     if (element.id !== timeCheckboxPopupId) {
@@ -120,7 +120,7 @@ function setInset(){
   const popupElementClientWidth = popupElement.clientWidth
 
   popupElement.style.top = `${top}px`
-  console.log(checkboxElementClientWidth,'-',popupElementClientWidth,'=')
+  // console.log(checkboxElementClientWidth,'-',popupElementClientWidth,'=')
   const leftOffset = (checkboxElementClientWidth - popupElementClientWidth)/2
   popupElement.style.left = `${left + leftOffset}px`
 }
