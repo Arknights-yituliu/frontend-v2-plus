@@ -73,9 +73,6 @@ function chooseOption(value) {
 }
 
 
-let popupClass = ref('')
-
-
 
 onMounted(() => {
 
@@ -114,9 +111,9 @@ function setInset(){
   const boundingClientRect = checkboxElement.getBoundingClientRect();
   const top = checkboxElement.offsetTop + 40
   let left = boundingClientRect.left
-  let right = boundingClientRect.right
+  // let right = boundingClientRect.right
   const checkboxElementClientWidth = checkboxElement.clientWidth
-  const innerWidth = window.innerWidth-50;
+  // const innerWidth = window.innerWidth-50;
   const popupElementClientWidth = popupElement.clientWidth
 
   popupElement.style.top = `${top}px`
