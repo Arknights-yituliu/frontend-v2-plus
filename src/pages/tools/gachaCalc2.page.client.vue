@@ -3,8 +3,8 @@ import {onMounted, ref} from "vue";
 import '/src/assets/css/tool/gacha_calc.css'
 import * as echarts from "echarts";
 import '/src/assets/css/sprite_gacha.css'
-import potentialTable from '/src/static/json/gacha_potential.json'
-import HONEY_CAKE_TABLE from '/src/static/json/gacha_honeyCakeNew.json'
+import potentialTable from '/src/static/json/tools/potentialGachaResources.json'
+import HONEY_CAKE_TABLE from '/src/static/json/tools/activityScheduleByHoneycake.json'
 
 let honeyCakeTable = ref([])
 for (const name in HONEY_CAKE_TABLE) {

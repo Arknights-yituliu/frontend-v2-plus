@@ -951,8 +951,8 @@
 </template>
 
 <script>
-import gacha_potentialJson from "/src/static/json/gacha_potential.json"; //常驻活动和主线数据
-import gacha_honeyCakeJson from "/src/static/json/gacha_honeyCakeNew.json"; //其他奖励数据
+import gacha_potentialJson from "/src/static/json/tools/potentialGachaResources.json"; //常驻活动和主线数据
+import gacha_honeyCakeJson from "/src/static/json/tools/activityScheduleByHoneycake.json"; //其他奖励数据
 import "/src/assets/css/sprite_gacha.css";
 import "/src/assets/css/gacha.css";
 import cookie from "js-cookie";
