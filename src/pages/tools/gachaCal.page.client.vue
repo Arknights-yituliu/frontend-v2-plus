@@ -1069,8 +1069,8 @@ export default {
           orundumCountDown: true
         },
         '周年(5.1)': {
-          display: false,
-          endTime: '2024/05/01  03:58:00',
+          display: true,
+          endTime: '2024/05/15  04:01:00',
           rewardType: "周年限定",
           permitCountDown: false,
           orundumCountDown: true
@@ -1162,9 +1162,9 @@ export default {
         //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.rewardType = schedule.rewardType;
         //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.permitCountDown = schedule.daily_permit;
+        this.permitCountDown = schedule.orundumCountDown;
         //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.orundumCountDown = schedule.daily_orundum;
+        this.orundumCountDown = schedule.permitCountDown;
 
         this.getTodayDate();
         this.getInterval();
@@ -1508,7 +1508,7 @@ export default {
             //循环list<list>， list为[奖励名称,奖励内容]
             if ("honeyCake" === list[1].module) {
               //这里是计算其他奖励
-              // console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
+              console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
 
               this.calcResult.originium_other += list[1].originium; //xxxxx_other格式的属性  其他奖励的的各项奖励数量，下同
               this.calcResult.orundum_other += list[1].orundum;
@@ -1516,7 +1516,7 @@ export default {
               this.calcResult.permit10_other += list[1].permit10;
             } else if ("act" === list[1].module) {
               //这里是计算活动奖励
-              // console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
+              console.log(list[0], "源石:", list[1].originium, "合成玉:", list[1].orundum, "寻访凭证:", list[1].permit, "十连凭证:", list[1].permit10);
               this.calcResult.originium_act += list[1].originium; //xxxx_act格式的属性 活动奖励的各项奖励数量，下同
               this.calcResult.orundum_act += list[1].orundum;
               this.calcResult.permit_act += list[1].permit;
@@ -1524,17 +1524,17 @@ export default {
             }
           });
 
-      // console.log(
-      //     "预测资源，",
-      //     "源石:",
-      //     this.calResults.originium_other,
-      //     "合成玉:",
-      //     this.calResults.orundum_other,
-      //     "寻访凭证:",
-      //     this.calResults.permit_other,
-      //     "十连凭证:",
-      //     this.calResults.permit10_other
-      // );
+      console.log(
+          "预测资源，",
+          "源石:",
+          this.calcResult.originium_other,
+          "合成玉:",
+          this.calcResult.orundum_other,
+          "寻访凭证:",
+          this.calcResult.permit_other,
+          "十连凭证:",
+          this.calcResult.permit10_other
+      );
 
       this.selectedActivityReList.forEach((key) => {
         //循环UI上绑定的复刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
@@ -2091,7 +2091,7 @@ export const documentProps = {
 
 @media (min-width: 992px) {
   .col-1 {
-    height: 370px;
+    height: 420px;
   }
 }
 
