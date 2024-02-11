@@ -84,7 +84,7 @@ let cabronFlag = ref(true); //判断是否拆碳
 
 function cal() {
   calResult.value = {
-    weeks: 0,
+    weeklyTask: 0,
     apCost: 0,
     dailyTaskCarbon: 0,
     dailyTaskParts: 0,
