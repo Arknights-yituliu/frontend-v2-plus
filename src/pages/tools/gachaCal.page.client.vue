@@ -1058,8 +1058,8 @@ export default {
           display: true,
           endTime: '2024/02/15  03:58:00',
           rewardType: "春节限定",
-          daily_permit: true,
-          daily_orundum: true
+          permitCountDown: true,
+          orundumCountDown: true
         },
         '彩六二期(3.21)': {
           display: true,
@@ -1161,10 +1161,11 @@ export default {
         this.endTime = schedule.endTime;
         //这里是切换奖励类型，具体看下面的注释，搜索 奖励类型
         this.rewardType = schedule.rewardType;
+        console.log(schedule)
         //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.permitCountDown = schedule.orundumCountDown;
+        this.permitCountDown = schedule.permitCountDown;
         //是否要计算限定池倒计时（主要用于计算每日赠送合成玉和单抽）
-        this.orundumCountDown = schedule.permitCountDown;
+        this.orundumCountDown = schedule.orundumCountDown;
 
         this.getTodayDate();
         this.getInterval();
@@ -1524,17 +1525,7 @@ export default {
             }
           });
 
-      console.log(
-          "预测资源，",
-          "源石:",
-          this.calcResult.originium_other,
-          "合成玉:",
-          this.calcResult.orundum_other,
-          "寻访凭证:",
-          this.calcResult.permit_other,
-          "十连凭证:",
-          this.calcResult.permit10_other
-      );
+
 
       this.selectedActivityReList.forEach((key) => {
         //循环UI上绑定的复刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
@@ -1555,6 +1546,7 @@ export default {
 
       //自动扣除部分 ↓
       //减去红包墙/矿区已经赠送过的合成玉
+      console.log(this.orundumCountDown,this.permitCountDown)
       if (this.orundumCountDown) {
         console.log('合成玉扣除', parseInt(this.poolCountDown) * 600)
         this.calcResult.orundum_other -= parseInt(this.poolCountDown) * 600;
@@ -1565,6 +1557,19 @@ export default {
         console.log('单抽扣除', parseInt(this.poolCountDown))
         this.calcResult.permit_other -= parseInt(this.poolCountDown);
       }
+
+
+      console.log(
+          "预测资源，",
+          "源石:",
+          this.calcResult.originium_other,
+          "合成玉:",
+          this.calcResult.orundum_other,
+          "寻访凭证:",
+          this.calcResult.permit_other,
+          "十连凭证:",
+          this.calcResult.permit10_other
+      );
 
       // if (this.timeSelector === "夏活(8.15)") {
       //   this.calResults.orundum_other += parseInt(this.customValue_slider);
