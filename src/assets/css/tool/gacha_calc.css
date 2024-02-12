@@ -1,19 +1,235 @@
-/*.el-radio-button__inner{*/
-/*    width: 160px;*/
-/*}*/
+/*为避免css打包冲突问题，本页面的css将使用“页面名-样式名”的格式命名，例如：gacha-calc-container*/
+/*考虑命名过长，gacha-calc-将简写为gc-*/
 
-.custom-radio-button-style{
-    width: 160px;
+.gc-collapse-item {
+    margin: 8px;
+    box-shadow: 1px 1px 8px var(--c-box-shadow-color);
+}
+
+.gc-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .el-radio-button__inner {
+        width: 160px;
+    }
+
+    .el-collapse-item__content {
+        padding-bottom: 8px;
+    }
+
+    .el-collapse-item__header {
+        border-bottom: 1px solid var(--c-border-color);
+    }
+
+    .el-checkbox-button__inner {
+        padding: 2px;
+        border: var(--el-border);
+        border-radius: 6px;
+    }
+}
+
+.gc-el-checkbox-button {
+    margin: 4px;
+}
+
+/*折叠栏的外容器*/
+.gc-collapse-wrap {
+    width: 520px;
+}
+
+#result-box {
+    position: sticky;
+    top: 10px;
+    height: 410px;
+    background-color: var(--c-background-color);
+    z-index: 2100;
+}
+
+#resources-box {
 
 }
 
-/*.custom-radio-button-style span{*/
-/*    width: 160px;*/
-/*}*/
+/*折叠面板的header的标志*/
+.gc-collapse-title-icon {
+    padding: 12px;
+    margin: 12px;
+    border-radius: 4px;
+}
 
-.gc-collapse-item{
-    margin: 8px;
-    box-shadow: 1px 1px 8px var(--c-box-shadow-color);
+/*折叠面板的header的字体样式*/
+.gc-collapse-title-font {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/*活动时间单选框的外容器*/
+.gc-radio-group-wrap {
+    width: 480px;
+    margin: 8px auto;
+}
+
+.gc-divider {
+    width: 100%;
+    border-bottom: 1px solid var(--c-border-color);
+    height: 1px;
+}
+
+/*攒抽计算的结果内容*/
+.gc-calc-result-content {
+    display: flex;
+    padding: 8px;
+    justify-content: space-around;
+}
+
+.gc-calc-result-table {
+    width: 200px;
+    font-size: 18px;
+    font-weight: bolder;
+    text-align: center;
+}
+
+/*攒抽计算结果的四项氪金资源的条状容器*/
+.gc-calc-result-resources-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8px;
+    padding: 4px;
+    border-top: 1px solid var(--c-border-color);
+}
+
+/*攒抽计算结果的四项氪金资源的条状容器内的文字样式*/
+.gc-calc-result-resources-bar span {
+    width: 80px;
+    font-size: 18px;
+    font-weight: bolder;
+    text-align: left;
+    padding-left: 8px;
+}
+
+/*雪碧图的容器，容器相对定位，内部雪碧图绝对定位，通过这种方式让图片展示的大小和外容器大小一致*/
+.gc-image-sprite {
+    width: 40px;
+    height: 36px;
+    position: relative;
+}
+
+/*雪碧图的缩放*/
+.gc-image-sprite div {
+    position: absolute;
+    left: 0px;
+}
+
+
+.gc-switch-wrap {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.gc-switch-wrap span {
+    font-size: 18px;
+    padding: 0 12px;
+}
+
+/*折叠面板内的副标题*/
+.gc-collapse-content-subheading {
+    background-color: rgba(196, 196, 196, 0.5);
+    height: 32px;
+    width: 100%;
+    line-height: 32px;
+    font-size: 18px;
+    padding: 0 32px;
+    position: relative;
+}
+
+/*折叠面板内的副标题的图标*/
+.gc-collapse-content-subheading span {
+    border-left: 12px solid transparent;
+    border-top: 16px solid rgb(255, 255, 255);
+    border-bottom: 4px solid transparent;
+    border-right: 12px solid transparent;
+    position: absolute;
+    top: 8px;
+    left: 4px;
+}
+
+
+.gc-resources-bar {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    padding: 4px;
+    margin: 4px 0;
+}
+
+
+.gc-resources-bar-title {
+    width: 110px;
+}
+
+.gc-resources-bar-content {
+    display: flex;
+    width: 200px;
+}
+
+.gc-resources-bar-content span {
+    font-weight: bolder;
+    font-size: 20px;
+    padding-left: 4px;
+    width: 70px;
+}
+
+.gc-resources-bar input {
+    width: 70px;
+    margin: 0 8px;
+}
+
+
+.gc-tip {
+    font-style: italic;
+    display: block;
+    color: #599dff;
+    margin: 4px;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+
+.gc-pack-bar {
+    /*width: 200px;*/
+    display: flex;
+    font-size: 18px;
+    align-items: center;
+}
+
+.gc-pack-bar-draw-efficiency {
+    margin-left: 4px;
+    margin-right: 8px;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    width: 40px;
+}
+
+.gc-pack-bar-title {
+    width: 150px;
+    text-align: left;
+}
+
+.gc-pack-bar-content {
+    display: flex;
+    align-items: center;
+}
+
+.gc-pack-bar-content span {
+    font-weight: bolder;
+    font-size: 20px;
+    padding-left: 2px;
+    width: 50px;
+    text-align: left;
 }
 
 
