@@ -11,11 +11,10 @@
                 共计{{ toFixedByAcc(gachaTimes_total, 0) }}抽，氪金{{ sellsCount }}元
               </span>
             </template>
-            <el-divider></el-divider>
             <div class="gacha_unit" id="total">
               <!-- 如果有4个选项则修改为 style="width:98%;margin:0 1%;"，子项宽度25% -->
 
-              <div style="display: flex;justify-content: center;margin: 8px 0">
+              <div class="el-radio-group-wrap">
                 <el-radio-group v-model="timeSelector" @change="checkEndDate(timeSelector)">
                   <el-radio-button v-for="(schedule, name) in schedules" v-show="schedule.display" :key="name"
                                    :label="name">
@@ -96,7 +95,7 @@
                   </div>
                 </div>
               </div>
-              <el-divider></el-divider>
+<!--              <el-divider></el-divider>-->
               <!--              <div class="gacha_unit_child" style="display: flex;margin-top: 4px;margin-bottom: 4px;">-->
               <!--                <a href="https://www.skland.com/act/vote-campaign"-->
               <!--                   style="font-size: 16px;text-decoration: none;margin: 0px auto;text-align: center;">在森空岛投票支持'罗德岛基建BETA'，助力计算器的开发工作！</a>-->
@@ -970,7 +969,7 @@ export default {
     return {
       itemList: [],
       checkBox1: ["total-table"],
-      checkBox: ["exist","daily", "activity", "other", 'develop'], //折叠栏绑定数组
+      checkBox: ["exist", "daily", "activity", "other", 'develop'], //折叠栏绑定数组
       rewardType: "限定", //奖励的类型
       startTime: "", //开始时间
       endTime: "", //结束时间
@@ -1526,7 +1525,6 @@ export default {
           });
 
 
-
       this.selectedActivityReList.forEach((key) => {
         //循环UI上绑定的复刻多选框的选项集合，集合内为[奖励名称,奖励名称,奖励名称], key为奖励名称
         //这里是计算活动复刻奖励,通过key获得gacha_honeyCake内的奖励内容
@@ -1546,7 +1544,7 @@ export default {
 
       //自动扣除部分 ↓
       //减去红包墙/矿区已经赠送过的合成玉
-      console.log(this.orundumCountDown,this.permitCountDown)
+      console.log(this.orundumCountDown, this.permitCountDown)
       if (this.orundumCountDown) {
         console.log('合成玉扣除', parseInt(this.poolCountDown) * 600)
         this.calcResult.orundum_other -= parseInt(this.poolCountDown) * 600;
@@ -1928,6 +1926,67 @@ export const documentProps = {
 </script>
 
 <style scoped>
+
+.el-radio-group-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin:8px 0;
+  :deep(.el-radio-button__inner) {
+    min-width: 160px;
+    line-height: 20px;
+  }
+}
+
+#gacha {
+  :deep(.el-collapse-item__content) {
+    padding-bottom: 0;
+  }
+
+  :deep(.el-input_wrap) {
+    display: flex;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  :deep(.el-input_text ) {
+    height: 32px;
+    line-height: 32px;
+    margin-left: 16px;
+    margin-right: 12px;
+  }
+
+  :deep(.el-collapse-item__wrap) {
+    vertical-align: middle;
+    will-change: height;
+    border-bottom: 0;
+    border-radius: 0 0 10px 10px;
+    border-top: 1px solid #dfdfdf;
+  }
+
+  :deep(.el-collapse-item__header) {
+    border-bottom: 0;
+  }
+
+  :deep(el-switch__core) {
+    margin-bottom: 2px
+  }
+
+  :deep(.el-checkbox-button__inner) {
+    padding: 2px;
+  }
+
+  :deep(.el-checkbox-button:last-child .el-checkbox-button__inner) {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  :deep(.el-checkbox-button:first-child .el-checkbox-button__inner) {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+
+}
+
 .foot_unit {
   font-size: 16px;
 }
@@ -2165,10 +2224,6 @@ export const documentProps = {
   margin-right: 12px;
 }
 
-
-.el-radio-button__inner {
-  width: 100%;
-}
 
 </style>
 

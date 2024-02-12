@@ -745,11 +745,17 @@ const handleChange = (val) => {
 
 <!--因css命名过长，将下面的gacha-calc简写为gc-->
 <style scoped>
+
 .gc-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  :deep(.el-radio-button__inner){
+    width: 160px;
+  }
 }
+
+
 
 #total-table {
 
@@ -912,5 +918,14 @@ const handleChange = (val) => {
   display: flex;
   width: 250px;
 }
+
+
+.el-checkbox-button__inner{
+  border: var(--el-border);
+  margin: 4px;
+  background-color: red;
+}
+
+
 
 </style>
