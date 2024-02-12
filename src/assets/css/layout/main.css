@@ -5,7 +5,6 @@
   color: var(--c-text-color);
   box-sizing: border-box;
   padding-left: 250px;
-  overflow-x: hidden;
   transition:padding-left .2s;
   /*background-color: red;*/
 }
