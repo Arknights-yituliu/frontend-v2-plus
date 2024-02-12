@@ -30,6 +30,13 @@ let packGroupByMonthly = ref([])
 let packGroupByLimited = ref([])
 
 function getPackData() {
+
+  for (let i = 0; i < 6; i++) {
+         packGroupByMonthly.value.push({
+
+         })
+  }
+
   storeAPI.findPackStore().then(response => {
     let index = 0;
     for (let pack of response.data) {
@@ -63,6 +70,7 @@ function getPackData() {
     }
   })
 }
+
 
 
 function getPackPriority(drawEfficiency) {
@@ -350,8 +358,8 @@ function compute() {
   function activityCalculate() {
     let totalDraw = 0
     for (const name of selectedActivityName.value) {
-      const acitvity = activityList.value[name]
-      totalDraw += (acitvity.orundum / 600 + acitvity.originium * 0.3 + acitvity.permit + acitvity.permit10 * 10)
+      const activity = activityList.value[name]
+      totalDraw += (activity.orundum / 600 + activity.originium * 0.3 + activity.permit + activity.permit10 * 10)
     }
     calculationResult.value.activityTotalDraw = Math.floor(totalDraw)
   }
