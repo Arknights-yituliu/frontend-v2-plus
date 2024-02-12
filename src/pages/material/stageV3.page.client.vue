@@ -44,6 +44,7 @@
         <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
 
         <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>
+        <span class="tab_text" >更新时间：{{updateTime}}</span>
       </div>
       <!-- <div class="op_title_tag" style="height: 24px">
           <div class="tab_text">
@@ -670,10 +671,12 @@ let selected_item = ref({
   ]
 })
 
+
+let updateTime = ref('')
 // 获取关卡推荐数据
 function getStageResult() {
   stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
-    console.log(response.data)
+    updateTime.value = response.data.updateTime
     stageResultGroup = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
     getItemCardData()
@@ -1168,7 +1171,7 @@ function filterOrundumStage() {
     displayOrundumRecommendedStage.value = []
     for (const stage of orundumRecommendedStage.value) {
       const {stageCode, stageType} = stage
-      console.log(stageType)
+
       if (stageCode === '1-7' || stageCode === 'CW-6' || stageType === 'ACT' || stageType === 'ACT_REP') {
         displayOrundumRecommendedStage.value.push(stage)
       }
