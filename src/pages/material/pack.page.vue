@@ -20,8 +20,8 @@
       <client-only>
         <div class="pack-table-wrapper">
           <el-table :data="packPPRResponse" class="pack-table" stripe table-layout="auto"
-            :default-sort="{ prop: 'promotionRatioForComprehensive', order: 'descending' }" border>
-            <el-table-column sortable prop="name" label="名称" :sort-by="(row, index) => {
+            :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
+            <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {
               return row.displayName;
             }
               " min-width="154" fixed />
@@ -33,7 +33,7 @@
                 year: '每年',
                 permanent: '常驻',
                 limited: '限时',
-              }[row.type];
+              }[row.saleType];
             }
               " :filters="[
     { value: 'once', text: '一次性' },
@@ -43,10 +43,10 @@
     { value: 'permanent', text: '常驻' },
     { value: 'limited', text: '限时' },
   ]" :filter-method="(value, row, column) => {
-  return row.type == value;
+  return row.saleType == value;
 }
   " :filtered-value="['once', 'monthly', 'weekly', 'year', 'permanent', 'limited']" :sort-by="(row, index) => {
-    return row.type;
+    return row.saleType;
   }
     " min-width="92" />
             <el-table-column sortable label="售价" :formatter="(row, col) => {
@@ -57,10 +57,10 @@
   }
     " min-width="80" />
             <el-table-column sortable label="抽数" :formatter="(row, col) => {
-              return row.drawCount.toFixed(2);
+              return row.draws.toFixed(2);
             }
               " :sort-by="(row, index) => {
-    return row.drawCount;
+    return row.draws;
   }
     " min-width="80" />
             <el-table-column sortable label="源石" :formatter="(row, col) => {
@@ -71,17 +71,17 @@
   }
     " min-width="80" />
             <el-table-column sortable label="抽卡性价比" :formatter="(row, col) => {
-              return row.promotionRatioForMoney.toFixed(2);
+              return row.drawEfficiency.toFixed(2);
             }
               " :sort-by="(row, index) => {
-    return row.promotionRatioForMoney;
+    return row.drawEfficiency;
   }
     " min-width="120" />
-            <el-table-column sortable label="综合性价比" prop="promotionRatioForComprehensive" :formatter="(row, col) => {
-              return row.promotionRatioForComprehensive.toFixed(2);
+            <el-table-column sortable label="综合性价比" prop="packEfficiency" :formatter="(row, col) => {
+              return row.packEfficiency.toFixed(2);
             }
               " :sort-by="(row, index) => {
-    return row.promotionRatioForComprehensive;
+    return row.packEfficiency;
   }
     " min-width="120" />
           </el-table>
@@ -119,45 +119,45 @@
       </div>
       <!-- all -->
       <div class="pack_all" style="margin-top: -8px">
-        <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.promotionRatioForMoney)"> -->
+        <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-          :style="getPackList(pack2.type, pack2.state, 'limited', 'limited', 'limited')">
+          :style="getPackList(pack2.saleType, pack2.saleStatus, 'limited', 'limited', 'limited')">
 
           <!-- 图片部分 -->
-          <div class="pack_img" :style="getPackPic(pack2.name, pack2.fileName)" @click="switchPackContent1(pack2.id, 'draw')">
+          <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)" @click="switchPackContent1(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
-            <div class="pack_corner corner_new" v-show="pack2.type == 'limited'">New!</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.type == 'monthly'">每月</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.type == 'weekly'">每周</div>
-            <div class="pack_corner corner_once" v-show="pack2.type == 'once'">一次</div>
-            <div class="pack_corner corner_once" v-show="pack2.type == 'year'">双倍</div>
+            <div class="pack_corner corner_new" v-show="pack2.saleType == 'limited'">New!</div>
+            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'monthly'">每月</div>
+            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'weekly'">每周</div>
+            <div class="pack_corner corner_once" v-show="pack2.saleType == 'once'">一次</div>
+            <div class="pack_corner corner_once" v-show="pack2.saleType == 'year'">双倍</div>
           </div>
           <!-- 表格部分 -->
           <div class="pack_info">
             <div class="pack_info_text" style="color: #ffb46e">
-              <div class="pack_info_text_line" style="height: 12px;">折合{{ getFixed(pack2.equivalentOriginium, 1) }}石
+              <div class="pack_info_text_line" style="height: 12px;">折合{{ getFixed(pack2.packedOriginium, 1) }}石
               </div>
-              <div class="pack_info_text_line">￥{{ getFixed(pack2.eachOriginiumPrice, 1) }}/石 </div>
-              <div class="pack_info_text_line" style="height: 12px;color: #ff6d6d;">共{{ getFixed(pack2.drawCount, 1) }}抽
+              <div class="pack_info_text_line">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石 </div>
+              <div class="pack_info_text_line" style="height: 12px;color: #ff6d6d;">共{{ getFixed(pack2.draws, 1) }}抽
               </div>
-              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.eachDrawPrice, 1) }}/抽 </div>
+              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽 </div>
             </div>
 
             <div class="pack_chart">
               <!-- 超过大月卡 -->
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForComprehensive >= 1.57">
+              <div class="pack_chart_unit" v-show="pack2.packEfficiency >= 1.57">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.promotionRatioForComprehensive * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForComprehensive * 100, 0) }}%
+                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForMoney >= 1.57">
+              <div class="pack_chart_unit" v-show="pack2.drawEfficiency >= 1.57">
                 <div class="pack_chart_unit_text">仅抽卡</div>
-                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                 </div>
               </div>
               <!-- 大月卡 -->
@@ -166,18 +166,18 @@
                 <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.promotionRatioForComprehensive < 1.57 && pack2.promotionRatioForComprehensive >= 1">
+                v-show="pack2.packEfficiency < 1.57 && pack2.packEfficiency >= 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.promotionRatioForComprehensive * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForComprehensive * 100, 0) }}%
+                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.promotionRatioForMoney < 1.57 && pack2.promotionRatioForMoney >= 1">
+                v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
                 <div class="pack_chart_unit_text">仅抽卡</div>
-                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                 </div>
               </div>
               <!-- 648 -->
@@ -185,17 +185,17 @@
                 <div class="pack_chart_unit_text">648源石</div>
                 <div class="pack_chart_unit_ppr" :style="getWidth(100, 0.75)">100%</div>
               </div>
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForComprehensive < 1">
+              <div class="pack_chart_unit" v-show="pack2.packEfficiency < 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.promotionRatioForComprehensive * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForComprehensive * 100, 0) }}%
+                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForMoney < 1">
+              <div class="pack_chart_unit" v-show="pack2.drawEfficiency < 1">
                 <div class="pack_chart_unit_text">仅抽卡</div>
-                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                 </div>
               </div>
             </div>
@@ -215,11 +215,11 @@
             </div>
             <div class="pack_content_unit0">
               <div style="width: 56px">单抽</div>
-              <div style="width: 60px">x{{ pack2.ticketGacha }}</div>
+              <div style="width: 60px">x{{ pack2.gachaTicket }}</div>
             </div>
             <div class="pack_content_unit0">
               <div style="width: 56px">十连</div>
-              <div style="width: 60px">x{{ pack2.ticketGacha10 }}</div>
+              <div style="width: 60px">x{{ pack2.tenGachaTicket }}</div>
             </div>
             <div v-for="(packItem, index) in pack2.packContent" :key="index" class="pack_content_unit">
               <div style="width: 135px">{{ packItem.itemName }}</div>
@@ -243,45 +243,45 @@
       </div>
       <!-- all -->
       <div class="pack_all" style="margin-top: -8px">
-        <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.promotionRatioForMoney)"> -->
+        <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-          :style="getPackList(pack2.type, pack2.state, 'weekly', 'monthly', 'chips')">
+          :style="getPackList(pack2.saleType, pack2.saleStatus, 'weekly', 'monthly', 'chips')">
 
           <!-- 图片部分 -->
-          <div class="pack_img" :style="getPackPic(pack2.name, pack2.fileName)" @click="switchPackContent2(pack2.id, 'draw')">
+          <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)" @click="switchPackContent2(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
-            <div class="pack_corner corner_new" v-show="pack2.type == 'limited'">New!</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.type == 'monthly'">每月</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.type == 'weekly'">每周</div>
-            <div class="pack_corner corner_once" v-show="pack2.type == 'once'">一次</div>
-            <div class="pack_corner corner_once" v-show="pack2.type == 'year'">双倍</div>
+            <div class="pack_corner corner_new" v-show="pack2.saleType == 'limited'">New!</div>
+            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'monthly'">每月</div>
+            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'weekly'">每周</div>
+            <div class="pack_corner corner_once" v-show="pack2.saleType == 'once'">一次</div>
+            <div class="pack_corner corner_once" v-show="pack2.saleType == 'year'">双倍</div>
           </div>
           <!-- 表格部分 -->
           <div class="pack_info">
             <div class="pack_info_text" style="color: #ffb46e">
-              <div class="pack_info_text_line" style="height: 12px;">折合{{ getFixed(pack2.equivalentOriginium, 1) }}石
+              <div class="pack_info_text_line" style="height: 12px;">折合{{ getFixed(pack2.packedOriginium, 1) }}石
               </div>
-              <div class="pack_info_text_line">￥{{ getFixed(pack2.eachOriginiumPrice, 1) }}/石 </div>
-              <div class="pack_info_text_line" style="height: 12px;color: #ff6d6d;">共{{ getFixed(pack2.drawCount, 1) }}抽
+              <div class="pack_info_text_line">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石 </div>
+              <div class="pack_info_text_line" style="height: 12px;color: #ff6d6d;">共{{ getFixed(pack2.draws, 1) }}抽
               </div>
-              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.eachDrawPrice, 1) }}/抽 </div>
+              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽 </div>
             </div>
 
             <div class="pack_chart">
               <!-- 超过大月卡 -->
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForComprehensive >= 1.57">
+              <div class="pack_chart_unit" v-show="pack2.packEfficiency >= 1.57">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.promotionRatioForComprehensive * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForComprehensive * 100, 0) }}%
+                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForMoney >= 1.57">
+              <div class="pack_chart_unit" v-show="pack2.drawEfficiency >= 1.57">
                 <div class="pack_chart_unit_text">仅抽卡</div>
-                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                 </div>
               </div>
               <!-- 大月卡 -->
@@ -290,18 +290,18 @@
                 <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.promotionRatioForComprehensive < 1.57 && pack2.promotionRatioForComprehensive >= 1">
+                v-show="pack2.packEfficiency < 1.57 && pack2.packEfficiency >= 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.promotionRatioForComprehensive * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForComprehensive * 100, 0) }}%
+                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.promotionRatioForMoney < 1.57 && pack2.promotionRatioForMoney >= 1">
+                v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
                 <div class="pack_chart_unit_text">仅抽卡</div>
-                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                 </div>
               </div>
               <!-- 648 -->
@@ -309,17 +309,17 @@
                 <div class="pack_chart_unit_text">648源石</div>
                 <div class="pack_chart_unit_ppr" :style="getWidth(100, 0.75)">100%</div>
               </div>
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForComprehensive < 1">
+              <div class="pack_chart_unit" v-show="pack2.packEfficiency < 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.promotionRatioForComprehensive * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForComprehensive * 100, 0) }}%
+                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForMoney < 1">
+              <div class="pack_chart_unit" v-show="pack2.drawEfficiency < 1">
                 <div class="pack_chart_unit_text">仅抽卡</div>
-                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                 </div>
               </div>
             </div>
@@ -339,11 +339,11 @@
             </div>
             <div class="pack_content_unit0">
               <div style="width: 56px">单抽</div>
-              <div style="width: 60px">x{{ pack2.ticketGacha }}</div>
+              <div style="width: 60px">x{{ pack2.gachaTicket }}</div>
             </div>
             <div class="pack_content_unit0">
               <div style="width: 56px">十连</div>
-              <div style="width: 60px">x{{ pack2.ticketGacha10 }}</div>
+              <div style="width: 60px">x{{ pack2.tenGachaTicket }}</div>
             </div>
             <div v-for="(packItem, index) in pack2.packContent" :key="index" class="pack_content_unit">
               <div style="width: 135px">{{ packItem.itemName }}</div>
@@ -368,43 +368,43 @@
       </div>
       <!-- all -->
       <div class="pack_all" style="margin-top: -8px">
-        <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.promotionRatioForMoney)"> -->
+        <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-          :style="getPackList(pack2.type, pack2.state, 'once', 'return')">
+          :style="getPackList(pack2.saleType, pack2.saleStatus, 'once', 'return')">
           <!-- 图片部分 -->
-          <div class="pack_img" :style="getPackPic(pack2.name, pack2.fileName)" @click="switchPackContent3(pack2.id, 'draw')">
+          <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)" @click="switchPackContent3(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
             <!-- 角标部分 -->
-            <div class="pack_corner corner_new" v-show="pack2.type == 'limited'">New!</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.type == 'monthly'">每月</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.type == 'weekly'">每周</div>
-            <div class="pack_corner corner_once" v-show="pack2.type == 'once'">一次</div>
-            <div class="pack_corner corner_once" v-show="pack2.type == 'year'">双倍</div>
+            <div class="pack_corner corner_new" v-show="pack2.saleType == 'limited'">New!</div>
+            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'monthly'">每月</div>
+            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'weekly'">每周</div>
+            <div class="pack_corner corner_once" v-show="pack2.saleType == 'once'">一次</div>
+            <div class="pack_corner corner_once" v-show="pack2.saleType == 'year'">双倍</div>
           </div>
           <!-- 表格部分 -->
           <div class="pack_info">
             <div class="pack_info_text" style="color: #ffb46e">
-              <div class="pack_info_text_line" style="height: 12px;">折合{{ getFixed(pack2.equivalentOriginium, 1) }}石
+              <div class="pack_info_text_line" style="height: 12px;">折合{{ getFixed(pack2.packedOriginium, 1) }}石
               </div>
-              <div class="pack_info_text_line">￥{{ getFixed(pack2.eachOriginiumPrice, 1) }}/石 </div>
-              <div class="pack_info_text_line" style="height: 12px;color: #ff6d6d;">共{{ getFixed(pack2.drawCount, 1) }}抽
+              <div class="pack_info_text_line">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石 </div>
+              <div class="pack_info_text_line" style="height: 12px;color: #ff6d6d;">共{{ getFixed(pack2.draws, 1) }}抽
               </div>
-              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.eachDrawPrice, 1) }}/抽 </div>
+              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽 </div>
             </div>
 
             <div class="pack_chart">
               <!-- 超过大月卡 -->
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForComprehensive >= 1.57">
+              <div class="pack_chart_unit" v-show="pack2.packEfficiency >= 1.57">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.promotionRatioForComprehensive * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForComprehensive * 100, 0) }}%
+                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForMoney >= 1.57">
+              <div class="pack_chart_unit" v-show="pack2.drawEfficiency >= 1.57">
                 <div class="pack_chart_unit_text">仅抽卡</div>
-                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                 </div>
               </div>
               <!-- 大月卡 -->
@@ -413,18 +413,18 @@
                 <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.promotionRatioForComprehensive < 1.57 && pack2.promotionRatioForComprehensive >= 1">
+                v-show="pack2.packEfficiency < 1.57 && pack2.packEfficiency >= 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.promotionRatioForComprehensive * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForComprehensive * 100, 0) }}%
+                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.promotionRatioForMoney < 1.57 && pack2.promotionRatioForMoney >= 1">
+                v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
                 <div class="pack_chart_unit_text">仅抽卡</div>
-                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                 </div>
               </div>
               <!-- 648 -->
@@ -432,17 +432,17 @@
                 <div class="pack_chart_unit_text">648源石</div>
                 <div class="pack_chart_unit_ppr" :style="getWidth(100, 0.75)">100%</div>
               </div>
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForComprehensive < 1">
+              <div class="pack_chart_unit" v-show="pack2.packEfficiency < 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.promotionRatioForComprehensive * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForComprehensive * 100, 0) }}%
+                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
-              <div class="pack_chart_unit" v-show="pack2.promotionRatioForMoney < 1">
+              <div class="pack_chart_unit" v-show="pack2.drawEfficiency < 1">
                 <div class="pack_chart_unit_text">仅抽卡</div>
-                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                  {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                  {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                 </div>
               </div>
             </div>
@@ -462,11 +462,11 @@
             </div>
             <div class="pack_content_unit0">
               <div style="width: 56px">单抽</div>
-              <div style="width: 60px">x{{ pack2.ticketGacha }}</div>
+              <div style="width: 60px">x{{ pack2.gachaTicket }}</div>
             </div>
             <div class="pack_content_unit0">
               <div style="width: 56px">十连</div>
-              <div style="width: 60px">x{{ pack2.ticketGacha10 }}</div>
+              <div style="width: 60px">x{{ pack2.tenGachaTicket }}</div>
             </div>
             <div v-for="(packItem, index) in pack2.packContent" :key="index" class="pack_content_unit">
               <div style="width: 135px">{{ packItem.itemName }}</div>
@@ -480,7 +480,7 @@
         <!== 仅计抽卡 ==>
         <div id="pack_left" style="margin-top: -8px">
           <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-            :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.promotionRatioForMoney)">
+            :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)">
 
               <!== 图片部分 ==>
               <div class="pack_img" :style="getPackPic(pack2.name, pack2.fileName)"
@@ -496,14 +496,14 @@
               </div>
               <!== 表格部分 ==>
               <div class="pack_info">
-                <div class="pack_info_text">共{{ getFixed(pack2.drawCount, 1) }}抽
-                  <br />￥{{ getFixed(pack2.eachDrawPrice, 1) }}/抽
+                <div class="pack_info_text">共{{ getFixed(pack2.draws, 1) }}抽
+                  <br />￥{{ getFixed(pack2.drawPrice, 1) }}/抽
                 </div>
                 <div class="pack_chart">
                   <div class="pack_chart_unit" v-show="pack2.packPPRDraw >= 1.57">
                     <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                      {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                      {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                     </div>
                   </div>
                   <div class="pack_chart_unit">
@@ -511,20 +511,20 @@
                     <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
                   </div>
                   <div class="pack_chart_unit"
-                    v-show="pack2.promotionRatioForMoney < 1.57 && pack2.promotionRatioForMoney >= 1">
+                    v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
                     <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                      {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                      {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                     </div>
                   </div>
                   <div class="pack_chart_unit">
                     <div class="pack_chart_unit_text">648源石</div>
                     <div class="pack_chart_unit_ppr" :style="getWidth(100, 0.75)">100%</div>
                   </div>
-                  <div class="pack_chart_unit" v-show="pack2.promotionRatioForMoney < 1">
+                  <div class="pack_chart_unit" v-show="pack2.drawEfficiency < 1">
                     <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.promotionRatioForMoney * 100, 0.75)">
-                      {{ getFixed(pack2.promotionRatioForMoney * 100, 0) }}%
+                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
+                      {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
                     </div>
                   </div>
                 </div>
@@ -544,11 +544,11 @@
                 </div>
                 <div class="pack_content_unit0">
                   <div style="width: 56px">单抽</div>
-                  <div style="width: 60px">x{{ pack2.ticketGacha }}</div>
+                  <div style="width: 60px">x{{ pack2.gachaTicket }}</div>
                 </div>
                 <div class="pack_content_unit0">
                   <div style="width: 56px">十连</div>
-                  <div style="width: 60px">x{{ pack2.ticketGacha10 }}</div>
+                  <div style="width: 60px">x{{ pack2.tenGachaTicket }}</div>
                 </div>
                 <div v-for="(packItem, index) in pack2.packContent" :key="index" class="pack_content_unit">
                   <div style="width: 135px">{{ packItem.itemName }}</div>
@@ -580,15 +580,15 @@
               <!== 表格部分 ==>
               <div class="pack_info">
                 <div class="pack_info_text" style="color: #ff8f6e">
-                  {{ getFixed(pack3.equivalentOriginium, 1) }}源石 <br />￥{{ getFixed(pack3.eachOriginiumPrice, 1) }}/石
+                  {{ getFixed(pack3.packedOriginium, 1) }}源石 <br />￥{{ getFixed(pack3.packedOriginiumPrice, 1) }}/石
                 </div>
 
                 <div class="pack_chart">
-                  <div class="pack_chart_unit" v-show="pack3.promotionRatioForComprehensive >= 1.57">
+                  <div class="pack_chart_unit" v-show="pack3.packEfficiency >= 1.57">
                     <div class="pack_chart_unit_text">本礼包</div>
                     <div class="pack_chart_unit_ppr bg_red"
-                      :style="getWidth(pack3.promotionRatioForComprehensive * 100, 0.75)">
-                      {{ getFixed(pack3.promotionRatioForComprehensive * 100, 0) }}%
+                      :style="getWidth(pack3.packEfficiency * 100, 0.75)">
+                      {{ getFixed(pack3.packEfficiency * 100, 0) }}%
                     </div>
                   </div>
                   <div class="pack_chart_unit">
@@ -596,22 +596,22 @@
                     <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
                   </div>
                   <div class="pack_chart_unit"
-                    v-show="pack3.promotionRatioForComprehensive < 1.57 && pack3.promotionRatioForComprehensive >= 1">
+                    v-show="pack3.packEfficiency < 1.57 && pack3.packEfficiency >= 1">
                     <div class="pack_chart_unit_text">本礼包</div>
                     <div class="pack_chart_unit_ppr bg_red"
-                      :style="getWidth(pack3.promotionRatioForComprehensive * 100, 0.75)">
-                      {{ getFixed(pack3.promotionRatioForComprehensive * 100, 0) }}%
+                      :style="getWidth(pack3.packEfficiency * 100, 0.75)">
+                      {{ getFixed(pack3.packEfficiency * 100, 0) }}%
                     </div>
                   </div>
                   <div class="pack_chart_unit">
                     <div class="pack_chart_unit_text">648源石</div>
                     <div class="pack_chart_unit_ppr" :style="getWidth(100, 0.75)">100%</div>
                   </div>
-                  <div class="pack_chart_unit" v-show="pack3.promotionRatioForComprehensive < 1">
+                  <div class="pack_chart_unit" v-show="pack3.packEfficiency < 1">
                     <div class="pack_chart_unit_text">本礼包</div>
                     <div class="pack_chart_unit_ppr bg_red"
-                      :style="getWidth(pack3.promotionRatioForComprehensive * 100, 0.75)">
-                      {{ getFixed(pack3.promotionRatioForComprehensive * 100, 0) }}%
+                      :style="getWidth(pack3.packEfficiency * 100, 0.75)">
+                      {{ getFixed(pack3.packEfficiency * 100, 0) }}%
                     </div>
                   </div>
                 </div>
@@ -633,11 +633,11 @@
                 </div>
                 <div class="pack_content_unit0">
                   <div style="width: 56px">单抽</div>
-                  <div style="width: 60px">x{{ pack3.ticketGacha }}</div>
+                  <div style="width: 60px">x{{ pack3.gachaTicket }}</div>
                 </div>
                 <div class="pack_content_unit0">
                   <div style="width: 56px">十连</div>
-                  <div style="width: 60px">x{{ pack3.ticketGacha10 }}</div>
+                  <div style="width: 60px">x{{ pack3.tenGachaTicket }}</div>
                 </div>
                 <div v-for="(packItem, index) in pack3.packContent" :key="index" class="pack_content_unit">
                   <div style="width: 135px">{{ packItem.itemName }}</div>

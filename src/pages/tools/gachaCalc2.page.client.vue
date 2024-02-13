@@ -110,8 +110,8 @@ let optionsCollapseActiveNames = ref(['exist', 'custom', 'daily', 'potential',
 
 let monthlyShopExchangeGachaTicket = ref({
   '2月黄票兑换': {
+    displayName: '2月黄票兑换',
     name: '2月黄票兑换',
-    display: '2月黄票兑换',
     originium: 0,
     orundum: 0,
     gachaTicket: 8,
@@ -359,7 +359,7 @@ function compute() {
     let totalDraw = 0
     for (const name of selectedActivityName.value) {
       const activity = activityList.value[name]
-      totalDraw += (activity.orundum / 600 + activity.originium * 0.3 + activity.permit + activity.permit10 * 10)
+      totalDraw += (activity.orundum / 600 + activity.originium * 0.3 + activity.gachaTicket + activity.gachaTicket * 10)
     }
     calculationResult.value.activityTotalDraw = Math.floor(totalDraw)
   }
@@ -374,7 +374,7 @@ function compute() {
       if (!checkRewardStatus(honeyCake)) {
         continue
       }
-      totalDraw += (honeyCake.orundum / 600 + honeyCake.originium * 0.3 + honeyCake.permit + honeyCake.permit10 * 10)
+      totalDraw += (honeyCake.orundum / 600 + honeyCake.originium * 0.3 + honeyCake.gachaTicket + honeyCake.gachaTicket * 10)
     }
     console.log(totalDraw)
     calculationResult.value.otherTotalDraw = Math.floor(totalDraw)
@@ -1033,15 +1033,15 @@ const handleChange = (val) => {
                   </div>
                   <span v-show="activity.orundum>0">{{ activity.orundum }}</span>
                   <!--抽卡券-->
-                  <div class="gc-image-sprite" v-show="activity.permit>0">
+                  <div class="gc-image-sprite" v-show="activity.gachaTicket>0">
                     <div :class="getIconByItemId('7003')"></div>
                   </div>
-                  <span v-show="activity.permit>0">{{ activity.permit }}</span>
+                  <span v-show="activity.gachaTicket>0">{{ activity.gachaTicket }}</span>
                   <!--十连券-->
-                  <div class="gc-image-sprite" v-show="activity.permit10>0">
+                  <div class="gc-image-sprite" v-show="activity.tenGachaTicket>0">
                     <div :class="getIconByItemId('7004')"></div>
                   </div>
-                  <span v-show="activity.permit10>0">{{ activity.permit10 }}</span>
+                  <span v-show="activity.tenGachaTicket>0">{{ activity.tenGachaTicket }}</span>
                 </div>
               </div>
             </el-checkbox-button>
@@ -1068,15 +1068,15 @@ const handleChange = (val) => {
                   </div>
                   <span v-show="activity.orundum>0">{{ activity.orundum }}</span>
                   <!--抽卡券-->
-                  <div class="gc-image-sprite" v-show="activity.permit>0">
+                  <div class="gc-image-sprite" v-show="activity.gachaTicket>0">
                     <div :class="getIconByItemId('7003')"></div>
                   </div>
-                  <span v-show="activity.permit>0">{{ activity.permit }}</span>
+                  <span v-show="activity.gachaTicket>0">{{ activity.gachaTicket }}</span>
                   <!--十连券-->
-                  <div class="gc-image-sprite" v-show="activity.permit10>0">
+                  <div class="gc-image-sprite" v-show="activity.tenGachaTicket>0">
                     <div :class="getIconByItemId('7004')"></div>
                   </div>
-                  <span v-show="activity.permit10>0">{{ activity.permit10 }}</span>
+                  <span v-show="activity.tenGachaTicket>0">{{ activity.tenGachaTicket }}</span>
                 </div>
               </div>
             </el-checkbox-button>
@@ -1104,14 +1104,14 @@ const handleChange = (val) => {
                 <div :class="getIconByItemId('4003')"></div>
               </div>
               <span v-show="honeyCake.orundum>0">{{ honeyCake.orundum }}</span>
-              <div class="gc-image-sprite" v-show="honeyCake.permit>0">
+              <div class="gc-image-sprite" v-show="honeyCake.gachaTicket>0">
                 <div :class="getIconByItemId('7003')"></div>
               </div>
-              <span v-show="honeyCake.permit>0">{{ honeyCake.permit }}</span>
-              <div class="gc-image-sprite" v-show="honeyCake.permit10>0">
+              <span v-show="honeyCake.gachaTicket>0">{{ honeyCake.gachaTicket }}</span>
+              <div class="gc-image-sprite" v-show="honeyCake.tenGachaTicket>0">
                 <div :class="getIconByItemId('7004')"></div>
               </div>
-              <span v-show="honeyCake.permit10>0">{{ honeyCake.permit10 }}</span>
+              <span v-show="honeyCake.tenGachaTicket>0">{{ honeyCake.tenGachaTicket }}</span>
             </div>
           </div>
         </el-collapse-item>
