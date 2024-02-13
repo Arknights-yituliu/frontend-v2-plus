@@ -1062,12 +1062,12 @@ export default {
         },
         '彩六二期(3.21)': {
           display: true,
-          endTime: '2024/03/21  03:58:00',
+          endTime: '2024/04/04  03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
           orundumCountDown: true
         },
-        '周年(5.1)': {
+        '周年(5.15)': {
           display: true,
           endTime: '2024/05/15  04:01:00',
           rewardType: "周年限定",

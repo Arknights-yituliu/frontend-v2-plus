@@ -19,13 +19,23 @@
     "rewardType": "公共",
     "module": "act"
   },
-  "新年签到红包": {
+  "新年签到红包(初五)": {
     "originium": 0,
-    "orundum": 1000,
+    "orundum": 500,
     "permit": 0,
     "permit10": 0,
-    "start": "2024/02/01 16:00:00",
+    "start": "2024/02/14 16:00:00",
     "end": "2024/02/15 03:58:00",
+    "rewardType": "公共",
+    "module": "honeyCake"
+  },
+  "新年签到红包(初久)": {
+    "originium": 0,
+    "orundum": 500,
+    "permit": 0,
+    "permit10": 0,
+    "start": "2024/02/18 16:00:00",
+    "end": "2024/02/19 03:58:00",
     "rewardType": "公共",
     "module": "honeyCake"
   },
@@ -164,7 +174,7 @@
     "orundum": 800,
     "permit": 0,
     "permit10": 0,
-    "start": "2024/02/01 00:00:00",
+    "start": "2024/02/15 00:00:00",
     "end": "2024/02/27 00:00:00",
     "rewardType": "公共",
     "module": "honeyCake"
@@ -194,7 +204,7 @@
     "orundum": 800,
     "permit": 0,
     "permit10": 0,
-    "start": "2024/03/01 00:00:00",
+    "start": "2024/03/15 00:00:00",
     "end": "2024/03/30 00:00:00",
     "rewardType": "公共",
     "module": "honeyCake"
@@ -224,7 +234,7 @@
     "orundum": 800,
     "permit": 0,
     "permit10": 0,
-    "start": "2024/04/01 00:00:00",
+    "start": "2024/04/15 00:00:00",
     "end": "2024/04/30 00:00:00",
     "rewardType": "公共",
     "module": "honeyCake"
@@ -254,7 +264,7 @@
     "orundum": 800,
     "permit": 0,
     "permit10": 0,
-    "start": "2024/05/01 00:00:00",
+    "start": "2024/05/15 00:00:00",
     "end": "2024/05/30 00:00:00",
     "rewardType": "公共",
     "module": "honeyCake"
