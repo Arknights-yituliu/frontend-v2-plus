@@ -1430,7 +1430,7 @@ export default {
         const end = Date.parse(new Date(packItem.end).toString())
         if (this.checkExpiration(start, end, '公共', packItem.name)) {
 
-          if ("月卡" === packItem.name) {
+          if ("月卡" === packItem.displayName) {
             // console.log("买的月卡个数", Math.ceil(this.remainingDays / 30));
             packItem.orundum = parseInt(this.remainingDays) * 200; //重新给商店礼包json的月卡的相关属性赋值
             packItem.originium = Math.ceil(this.remainingDays / 30) * 6; //重新给商店礼包json的月卡的相关属性赋值
