@@ -10,7 +10,7 @@ import storeAPI from '/src/api/store'
 // 罗德岛蜜饼工坊预测的其他奖励排期
 let honeyCakeTable = ref([])
 // 罗德岛蜜饼工坊预测的活动排期
-let activityList = ref({})
+let activitySchedules = ref({})
 
 for (const name in HONEY_CAKE_TABLE) {
   let honeyCake = HONEY_CAKE_TABLE[name]
@@ -20,7 +20,7 @@ for (const name in HONEY_CAKE_TABLE) {
   if (honeyCake.module === 'honeyCake') {
     honeyCakeTable.value.push(honeyCake)
   } else {
-    activityList.value[name] = honeyCake
+    activitySchedules.value[name] = honeyCake
   }
 }
 
@@ -28,49 +28,91 @@ let packGroupByOnce = ref([])
 let packGroupByYear = ref([])
 let packGroupByMonthly = ref([])
 let packGroupByLimited = ref([])
+let packData = ref([])
+let thirtyEightGachaTicketFromTheStore = ref([])
 
 function getPackData() {
 
-  for (let i = 0; i < 6; i++) {
-         packGroupByMonthly.value.push({
+  const date = new Date();
+  let month = date.getMonth() + 1
+  let year = date.getFullYear();
 
-         })
+  let index = 0;
+
+  for (let i = 0; i < 8; i++) {
+
+    const lastDay = new Date(year, month, 0).getDate().toString().padStart(2, '');
+    const pack = {
+      "displayName": `${month}月寻访组合包`,
+      "gachaTicket": 0,
+      "tenGachaTicket": 1,
+      "originium": 42,
+      "orundum": 0,
+      "parentIndex": index,
+      "drawPrice": 7.43362831858407,
+      "drawEfficiency": 1.570656370656371,
+      "start": new Date(`${year}/${month.toString().padStart(2, "0")}/01 00:00:00`),
+      "end": new Date(`${year}/${month.toString().padStart(2, "0")}/${lastDay} 23:59:59`)
+    }
+
+    const thirtyEightGachaTicket = {
+      "displayName": `${month}月黄票兑换寻访凭证`,
+      "gachaTicket": 8,
+      "tenGachaTicket": 3,
+      "originium": 0,
+      "orundum": 0,
+      "start": new Date(`${year}/${month.toString().padStart(2, "0")}/01 00:00:00`),
+      "end": new Date(`${year}/${month.toString().padStart(2, "0")}/${lastDay} 23:59:59`)
+    }
+
+    thirtyEightGachaTicketFromTheStore.value.push(thirtyEightGachaTicket)
+
+    packGroupByMonthly.value.push(pack)
+    packData.value.push(pack)
+    if (month > 12) {
+      month = 1
+      year++
+    } else {
+      month++
+    }
+    index++
   }
 
+
   storeAPI.findPackStore().then(response => {
-    let index = 0;
+
     for (let pack of response.data) {
-      if (!(pack.eachDrawPrice > 0)) {
+      if (!(pack.drawPrice > 0)) {
         continue;
       }
 
-      if (pack.name === '每月寻访组合包' || pack.name.indexOf('普通源石') > -1) {
+      if (pack.officialName === '每月寻访组合包' || pack.officialName.indexOf('普通源石') > -1) {
         continue
       }
 
       pack.parentIndex = index
 
-      if (pack.type === 'once') {
+      if (pack.saleType === 'once') {
         packGroupByOnce.value.push(pack)
       }
 
-      if (pack.type === 'year') {
+      if (pack.saleType === 'year') {
         packGroupByYear.value.push(pack)
       }
 
-      if (pack.type === 'monthly') {
+      if (pack.saleType === 'monthly') {
         packGroupByMonthly.value.push(pack)
       }
 
-      if (pack.type === 'limited') {
+      if (pack.saleType === 'limited') {
         packGroupByLimited.value.push(pack)
       }
 
+      packData.value.push(pack)
       index++
     }
   })
 }
-
 
 
 function getPackPriority(drawEfficiency) {
@@ -86,40 +128,49 @@ function getPackPriority(drawEfficiency) {
 }
 
 //活动列表，包含活动的名称，开启和结束时间
-let schedules = ref([
+let scheduleOptions = [
   {
-    name: '春节(2.15)'
+    name: '春节(2.15)',
+    start: new Date('2024/02/01 16:00:00'),
+    end: new Date('2024/02/15 04:01:00')
   },
   {
-    name: '彩六二期联动(3.21)'
+    name: '彩六二期联动(3.21)',
+    start: new Date('2024/03/07 16:00:00'),
+    end: new Date('2024/03/21 04:01:00')
   },
   {
-    name: '敬请期待'
+    name: '周年限定(5.15)',
+    start: new Date('2024/05/01 16:00:00'),
+    end: new Date('2024/05/15 04:01:00')
   }
-])
+]
 
-//选中的活动名称
-let selectedSchedule = ref('春节(2.15)')
+//用户选择的活动的结束时间
+let endDate = ref(new Date(1711008000000))
+let selectedScheduleName = ref('春节(2.15)')
+let selectedSchedule = ref({})
 
-//通过name控制折叠面板的展开，如果集合中有面板的name，面板会默认展开，当点击展开面板时，
-//面板组件也会将面板组件的name赋予这个集合
+/**
+ * 用户点击单选框选择排期
+ * @param index
+ */
+function updateScheduleOption(index) {
+
+  const schedule = scheduleOptions[index]
+
+  selectedScheduleName.value = schedule.name
+  selectedSchedule.value = schedule
+  endDate.value = schedule.end
+  compute()
+}
+
+
+//折叠面板绑定的集合，如果集合中有折叠面板的name，面板会默认展开，当点击展开面板时，
+//面板组件也会将面板组件的name赋值给这个集合
 let resultCollapseActiveNames = ref(['calculationResult'])
 let optionsCollapseActiveNames = ref(['exist', 'custom', 'daily', 'potential',
   'recharge', 'activity', 'other'])
-
-
-let monthlyShopExchangeGachaTicket = ref({
-  '2月黄票兑换': {
-    displayName: '2月黄票兑换',
-    name: '2月黄票兑换',
-    originium: 0,
-    orundum: 0,
-    gachaTicket: 8,
-    tenGachaTicket: 3,
-    start: 1000,
-    end: 1000,
-  }
-})
 
 
 let existResources = ref({
@@ -192,22 +243,23 @@ let calculationResult = ref({
 
 //当前时间
 const currentTimestamp = new Date().getTime();
-//用户选择的活动的结束时间
-let endTimestamp = ref(1711008000000)
 
-let selectedStore258Name = ref([])
+let selectedThirtyEightGachaTicket = ref([])
 let selectedPotentialName = ref([])
-let selectedOncePack = ref([])
-let selectedMonthlyPack = ref([])
-let selectedLimitedPack = ref([])
-let selectedYearPack = ref([])
 let selectedActivityName = ref([])
+let selectedPack = ref([])
 
 function compute() {
 
-  existCalculate()
-  honeyCakeCalculate()
+  calculationResult.value.orundum = 0
+  calculationResult.value.originium = 0
+  calculationResult.value.gachaTicket = 0
+  calculationResult.value.tenGachaTicket = 0
+
   dailyRewardCalculate()
+  existCalculate()
+  thirtyEightGachaTicketCalculate()
+  honeyCakeCalculate()
   packCalculate()
   activityCalculate()
 
@@ -221,7 +273,7 @@ function compute() {
     let checkInTimes = 0 //多少次签到
     let shopTimes = 0 //可以买几次绿票商店
     let startDate = new Date() //当前时间
-    let endDate = new Date(endTimestamp.value) //结束时间
+    let endDate = new Date() //结束时间
     //如果今天不是周一，星期一总数加1，因为有可能不在周一打剿
     if (startDate.getDay() !== 1) {
       mondayCount++
@@ -264,33 +316,41 @@ function compute() {
       shopTimes = shopTimes > 0 ? shopTimes - 1 : shopTimes
     }
     //对日常资源计算结果对象进行赋值
-    dailyReward.value.dailyTask = days
-    dailyReward.value.dailyTaskOrundum = days * 100
-    dailyReward.value.weeklyTask = weeks;
-    dailyReward.value.weeklyTaskOrundum = weeks * 500
-    dailyReward.value.checkIn = checkInTimes
-    dailyReward.value.checkInGachaTicket = checkInTimes
-    dailyReward.value.certificateStoreF2 = shopTimes
-    dailyReward.value.certificateStoreF2Orundum = shopTimes * 600
-    dailyReward.value.certificateStoreF2GachaTicket = shopTimes * 4
-    dailyReward.value.annihilation = annihilationTimes
-    dailyReward.value.annihilationOrundum = annihilationTimes * 1800
+    dailyReward.value.dailyTask = days //离目标卡池结束还有多少天
+    dailyReward.value.dailyTaskOrundum = days * 100 //日常奖励
+    dailyReward.value.weeklyTask = weeks; //离目标卡池结束还有多少周
+    dailyReward.value.weeklyTaskOrundum = weeks * 500 //周常奖励
+    dailyReward.value.checkIn = checkInTimes  //离目标卡池结束还有多少次签到
+    dailyReward.value.checkInGachaTicket = checkInTimes //签到奖励
+    dailyReward.value.certificateStoreF2 = shopTimes  //距离卡池结束还能兑换多少次绿票商店前两层
+    dailyReward.value.certificateStoreF2Orundum = shopTimes * 600 //绿票商店前两层的抽卡资源
+    dailyReward.value.certificateStoreF2GachaTicket = shopTimes * 4 //绿票商店前两层的抽卡资源
+    dailyReward.value.annihilation = annihilationTimes //距离目标卡池结束还能打几次剿
+    dailyReward.value.annihilationOrundum = annihilationTimes * 1800 //剿灭奖励
 
-    const orundum = days * 100 + weeks * 500 + shopTimes * 600 + annihilationTimes * 1800
-    const originium = 0
-    const gachaTicket = checkInTimes + shopTimes * 4
-    const tenGachaTicket = 0
+    let orundum = days * 100 + weeks * 500 + shopTimes * 600 + annihilationTimes * 1800
+    let originium = 0
+    let gachaTicket = checkInTimes + shopTimes * 4
+    let tenGachaTicket = 0
 
-    calculationResult.value.orundum = orundum
-    calculationResult.value.originium = originium
-    calculationResult.value.gachaTicket = gachaTicket
-    calculationResult.value.tenGachaTicket = tenGachaTicket
+    //计算用户选择兑换几次黄票商店的38抽
+    for (const i of selectedThirtyEightGachaTicket.value) {
+      const item = thirtyEightGachaTicketFromTheStore.value[i]
+      gachaTicket += item.gachaTicket
+      tenGachaTicket += item.tenGachaTicket
+    }
+
+    calculationResult.value.orundum += orundum
+    calculationResult.value.originium += originium
+    calculationResult.value.gachaTicket += gachaTicket
+    calculationResult.value.tenGachaTicket += tenGachaTicket
 
     calculationResult.value.dailyTotalDraw = Math.floor(orundum / 600 + gachaTicket)
 
-
     return {}
   }
+
+
 
   /**
    * 计算用户库存抽卡次数
@@ -301,10 +361,10 @@ function compute() {
     const gachaTicket = parseInt(existResources.value.gachaTicket)
     const tenGachaTicket = parseInt(existResources.value.tenGachaTicket)
 
-    calculationResult.value.orundum = orundum
-    calculationResult.value.originium = originium
-    calculationResult.value.gachaTicket = gachaTicket
-    calculationResult.value.tenGachaTicket = tenGachaTicket
+    calculationResult.value.orundum += orundum
+    calculationResult.value.originium += originium
+    calculationResult.value.gachaTicket += gachaTicket
+    calculationResult.value.tenGachaTicket += tenGachaTicket
 
     calculationResult.value.existTotalDraw =
         Math.floor(orundum / 600 + originium * 0.3 + gachaTicket + tenGachaTicket * 10)
@@ -318,36 +378,26 @@ function compute() {
   function packCalculate() {
     let totalDraw = 0
 
-    packCalculateSeparately(selectedMonthlyPack.value, packGroupByMonthly.value)
-    packCalculateSeparately(selectedOncePack.value, packGroupByOnce.value)
-    packCalculateSeparately(selectedLimitedPack.value, packGroupByLimited.value)
-    packCalculateSeparately(selectedYearPack.value, packGroupByYear.value)
-
     let orundum = 0
     let originium = 0
     let gachaTicket = 0
     let tenGachaTicket = 0
 
-    /**
-     * 分别计算不同类型的礼包
-     * @param selectedPack 用户选中的礼包
-     * @param packs 对应类型的所有礼包
-     */
-    function packCalculateSeparately(selectedPack, packs) {
-      for (const m of selectedPack) {
-        const pack = packs[m]
-        orundum += pack.orundum
-        originium += pack.originium
-        gachaTicket += pack.ticketGacha
-        tenGachaTicket += pack.ticketGacha10
-        totalDraw += (pack.orundum / 600 + pack.originium * 0.3 + pack.ticketGacha + pack.ticketGacha10 * 10)
-      }
+
+    for (const i of selectedPack.value) {
+      const pack = packData.value[i]
+      orundum += pack.orundum
+      originium += pack.originium
+      gachaTicket += pack.gachaTicket
+      tenGachaTicket += pack.tenGachaTicket
+      totalDraw += (pack.orundum / 600 + pack.originium * 0.3 +
+          pack.gachaTicket + pack.tenGachaTicket * 10)
     }
 
-    calculationResult.value.orundum = orundum
-    calculationResult.value.originium = originium
-    calculationResult.value.gachaTicket = gachaTicket
-    calculationResult.value.tenGachaTicket = tenGachaTicket
+    calculationResult.value.orundum += orundum
+    calculationResult.value.originium += originium
+    calculationResult.value.gachaTicket += gachaTicket
+    calculationResult.value.tenGachaTicket += tenGachaTicket
 
     calculationResult.value.rechargeTotalDraw = Math.floor(totalDraw)
   }
@@ -357,10 +407,31 @@ function compute() {
    */
   function activityCalculate() {
     let totalDraw = 0
+
+    let orundum = 0
+    let originium = 0
+    let gachaTicket = 0
+    let tenGachaTicket = 0
+
     for (const name of selectedActivityName.value) {
-      const activity = activityList.value[name]
-      totalDraw += (activity.orundum / 600 + activity.originium * 0.3 + activity.gachaTicket + activity.gachaTicket * 10)
+      const activity = activitySchedules.value[name]
+      if (!itemIsExpired(activity)) {
+        continue
+      }
+
+      orundum+=activity.orundum
+      originium+=activity.originium
+      gachaTicket+=activity.gachaTicket
+      tenGachaTicket+=activity.tenGachaTicket
+
+      totalDraw += (orundum / 600 + originium * 0.3 +
+          gachaTicket + tenGachaTicket * 10)
     }
+
+    calculationResult.value.orundum += orundum
+    calculationResult.value.originium += originium
+    calculationResult.value.gachaTicket += gachaTicket
+    calculationResult.value.tenGachaTicket += tenGachaTicket
     calculationResult.value.activityTotalDraw = Math.floor(totalDraw)
   }
 
@@ -371,18 +442,23 @@ function compute() {
   function honeyCakeCalculate() {
     let totalDraw = 0
     for (const honeyCake of honeyCakeTable.value) {
-      if (!checkRewardStatus(honeyCake)) {
+      if (!itemIsExpired(honeyCake)) {
         continue
       }
-      totalDraw += (honeyCake.orundum / 600 + honeyCake.originium * 0.3 + honeyCake.gachaTicket + honeyCake.gachaTicket * 10)
+
+      totalDraw += (honeyCake.orundum / 600 + honeyCake.originium * 0.3 +
+          honeyCake.gachaTicket + honeyCake.tenGachaTicket * 10)
     }
-    console.log(totalDraw)
+
+
+
     calculationResult.value.otherTotalDraw = Math.floor(totalDraw)
   }
 
-  calculationResult.value.totalDraw = calculationResult.value.existTotalDraw + calculationResult.value.dailyTotalDraw +
-      calculationResult.value.potentialTotalDraw + calculationResult.value.rechargeTotalDraw +
-      calculationResult.value.activityTotalDraw + calculationResult.value.otherTotalDraw
+  calculationResult.value.totalDraw = calculationResult.value.existTotalDraw +
+      calculationResult.value.dailyTotalDraw + calculationResult.value.potentialTotalDraw +
+      calculationResult.value.rechargeTotalDraw + calculationResult.value.activityTotalDraw +
+      calculationResult.value.otherTotalDraw
 
   console.log(calculationResult.value)
 }
@@ -390,18 +466,18 @@ function compute() {
 let activityType = ref('春节限定') //活动类型
 
 /**
- * 检查奖励是否可以被计入攒抽结果中
+ * 判断这个奖励或礼包是否过期
  * @param reward 奖励的信息
  * @returns {boolean} 是否可计入
  */
-function checkRewardStatus(reward) {
+function itemIsExpired(reward) {
 
   //活动结束时间在当前时间之前，活动已结束
   if (reward.end < currentTimestamp) {
     return false
   }
   //活动开始时间在选择的结束时间节点之后，活动未开启
-  if (reward.start > endTimestamp.value) {
+  if (reward.start > endDate.value.getTime()) {
     return false
   }
   //判断是否当前奖励的类型是否可以被计入
@@ -409,6 +485,8 @@ function checkRewardStatus(reward) {
   if (reward.rewardType) {
     return reward.rewardType === '公共' || reward.rewardType === activityType.value;
   }
+
+  return true
 }
 
 let myChart = void 0;
@@ -445,7 +523,7 @@ function setPieChart(data) {
       },
     ],
   };
-  // console.log(option);
+
   myChart.setOption(option);
 }
 
@@ -454,7 +532,8 @@ onMounted(() => {
   getPackData()
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
   setPieChart(pieChartData.value)
-  compute()
+  updateScheduleOption(0)
+
 })
 
 function keepTheDecimalPoint(num, decimalPlaces) {
@@ -490,8 +569,9 @@ const handleChange = (val) => {
 
           <!--选择攒到某个活动的单选框-->
           <div class="gc-radio-group-wrap">
-            <el-radio-group v-model="selectedSchedule" size="large">
-              <el-radio-button v-for="(activity,index) in schedules" :key="index" :label="activity.name"/>
+            <el-radio-group v-model="selectedScheduleName" size="large">
+              <el-radio-button v-for="(activity,index) in scheduleOptions" :key="index" :label="activity.name"
+                               @change="updateScheduleOption(index)"/>
             </el-radio-group>
           </div>
 
@@ -734,8 +814,8 @@ const handleChange = (val) => {
             </div>
           </div>
           <div class="gc-divider"></div>
-          <el-checkbox-group v-model="selectedStore258Name" style="margin: 4px">
-            <el-checkbox-button v-for="(pack,name) in monthlyShopExchangeGachaTicket"
+          <el-checkbox-group v-model="selectedThirtyEightGachaTicket" style="margin: 4px">
+            <el-checkbox-button v-for="(pack,name) in thirtyEightGachaTicketFromTheStore"
                                 :key="name" :label="name">
               <div class="gc-pack-bar">
                 <span class="gc-pack-bar-title">{{ name }}</span>
@@ -847,16 +927,17 @@ const handleChange = (val) => {
           <span>额外购买</span>
           <el-input-number></el-input-number>
           <span>张月卡（每张月卡可预支6石）</span>
-          <el-checkbox-group v-model="selectedMonthlyPack" style="margin: 4px" @change="compute">
+          <el-checkbox-group v-model="selectedPack" style="margin: 4px" @change="compute">
             <el-checkbox-button v-for="(pack,index) in packGroupByMonthly"
-                                :key="index" :label="index"
-                                class="gc-el-checkbox-button">
+                                :key="index" :label="pack.parentIndex"
+                                class="gc-el-checkbox-button"
+                                v-show="itemIsExpired(pack)">
               <div class="gc-pack-bar">
-                <span class="gc-pack-bar-draw-efficiency"
-                      :style="getPackPriority(pack.promotionRatioForMoney)">
-                  {{ keepTheDecimalPoint(pack.eachDrawPrice) }}
+               <span class="gc-pack-bar-draw-efficiency"
+                     :style="getPackPriority(pack.drawEfficiency)">
+                  {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
-                <span class="gc-pack-bar-title">{{ pack.name }}</span>
+                <span class="gc-pack-bar-title">{{ pack.displayName }}</span>
                 <div class="gc-pack-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="pack.originium>0">
@@ -869,15 +950,15 @@ const handleChange = (val) => {
                   </div>
                   <span v-show="pack.orundum>0">{{ pack.orundum }}</span>
                   <!--抽卡券-->
-                  <div class="gc-image-sprite" v-show="pack.ticketGacha>0">
+                  <div class="gc-image-sprite" v-show="pack.gachaTicket>0">
                     <div :class="getIconByItemId('7003')"></div>
                   </div>
-                  <span v-show="pack.ticketGacha>0">{{ pack.ticketGacha }}</span>
+                  <span v-show="pack.gachaTicket>0">{{ pack.gachaTicket }}</span>
                   <!--十连券-->
-                  <div class="gc-image-sprite" v-show="pack.ticketGacha10>0">
+                  <div class="gc-image-sprite" v-show="pack.tenGachaTicket>0">
                     <div :class="getIconByItemId('7004')"></div>
                   </div>
-                  <span v-show="pack.ticketGacha10>0">{{ pack.ticketGacha10 }}</span>
+                  <span v-show="pack.tenGachaTicket>0">{{ pack.tenGachaTicket }}</span>
                 </div>
               </div>
             </el-checkbox-button>
@@ -887,16 +968,16 @@ const handleChange = (val) => {
           <div class="gc-collapse-content-subheading">
             <span></span> 限时礼包
           </div>
-          <el-checkbox-group v-model="selectedLimitedPack" style="margin: 4px" @change="compute">
+          <el-checkbox-group v-model="selectedPack" style="margin: 4px" @change="compute">
             <el-checkbox-button v-for="(pack,index) in packGroupByLimited"
-                                :key="index" :label="index"
+                                :key="index" :label="pack.parentIndex"
                                 class="gc-el-checkbox-button">
               <div class="gc-pack-bar">
                  <span class="gc-pack-bar-draw-efficiency"
-                       :style="getPackPriority(pack.promotionRatioForMoney)">
-                  {{ keepTheDecimalPoint(pack.eachDrawPrice) }}
+                       :style="getPackPriority(pack.drawEfficiency)">
+                  {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
-                <span class="gc-pack-bar-title">{{ pack.name }}</span>
+                <span class="gc-pack-bar-title">{{ pack.displayName }}</span>
                 <div class="gc-pack-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="pack.originium>0">
@@ -909,15 +990,15 @@ const handleChange = (val) => {
                   </div>
                   <span v-show="pack.orundum>0">{{ pack.orundum }}</span>
                   <!--抽卡券-->
-                  <div class="gc-image-sprite" v-show="pack.ticketGacha>0">
+                  <div class="gc-image-sprite" v-show="pack.gachaTicket>0">
                     <div :class="getIconByItemId('7003')"></div>
                   </div>
-                  <span v-show="pack.ticketGacha>0">{{ pack.ticketGacha }}</span>
+                  <span v-show="pack.gachaTicket>0">{{ pack.gachaTicket }}</span>
                   <!--十连券-->
-                  <div class="gc-image-sprite" v-show="pack.ticketGacha10>0">
+                  <div class="gc-image-sprite" v-show="pack.tenGachaTicket>0">
                     <div :class="getIconByItemId('7004')"></div>
                   </div>
-                  <span v-show="pack.ticketGacha10>0">{{ pack.ticketGacha10 }}</span>
+                  <span v-show="pack.tenGachaTicket>0">{{ pack.tenGachaTicket }}</span>
                 </div>
               </div>
             </el-checkbox-button>
@@ -926,16 +1007,16 @@ const handleChange = (val) => {
           <div class="gc-collapse-content-subheading">
             <span></span> 新人礼包
           </div>
-          <el-checkbox-group v-model="selectedOncePack" style="margin: 4px" @change="compute">
+          <el-checkbox-group v-model="selectedPack" style="margin: 4px" @change="compute">
             <el-checkbox-button v-for="(pack,index) in packGroupByOnce"
-                                :key="index" :label="index"
+                                :key="index" :label="pack.parentIndex"
                                 class="gc-el-checkbox-button">
               <div class="gc-pack-bar">
                  <span class="gc-pack-bar-draw-efficiency"
-                       :style="getPackPriority(pack.promotionRatioForMoney)">
-                  {{ keepTheDecimalPoint(pack.eachDrawPrice) }}
+                       :style="getPackPriority(pack.drawEfficiency)">
+                  {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
-                <span class="gc-pack-bar-title">{{ pack.name }}</span>
+                <span class="gc-pack-bar-title">{{ pack.displayName }}</span>
                 <div class="gc-pack-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="pack.originium>0">
@@ -948,15 +1029,15 @@ const handleChange = (val) => {
                   </div>
                   <span v-show="pack.orundum>0">{{ pack.orundum }}</span>
                   <!--抽卡券-->
-                  <div class="gc-image-sprite" v-show="pack.ticketGacha>0">
+                  <div class="gc-image-sprite" v-show="pack.gachaTicket>0">
                     <div :class="getIconByItemId('7003')"></div>
                   </div>
-                  <span v-show="pack.ticketGacha>0">{{ pack.ticketGacha }}</span>
+                  <span v-show="pack.gachaTicket>0">{{ pack.gachaTicket }}</span>
                   <!--十连券-->
-                  <div class="gc-image-sprite" v-show="pack.ticketGacha10>0">
+                  <div class="gc-image-sprite" v-show="pack.tenGachaTicket>0">
                     <div :class="getIconByItemId('7004')"></div>
                   </div>
-                  <span v-show="pack.ticketGacha10>0">{{ pack.ticketGacha10 }}</span>
+                  <span v-show="pack.tenGachaTicket>0">{{ pack.tenGachaTicket }}</span>
                 </div>
               </div>
             </el-checkbox-button>
@@ -966,16 +1047,16 @@ const handleChange = (val) => {
           <div class="gc-collapse-content-subheading">
             <span></span> 首次充值源石
           </div>
-          <el-checkbox-group v-model="selectedYearPack" style="margin: 4px" @change="compute">
+          <el-checkbox-group v-model="selectedPack" style="margin: 4px" @change="compute">
             <el-checkbox-button v-for="(pack,index) in packGroupByYear"
-                                :key="index" :label="index"
+                                :key="index" :label="pack.parentIndex"
                                 class="gc-el-checkbox-button">
               <div class="gc-pack-bar">
                  <span class="gc-pack-bar-draw-efficiency"
-                       :style="getPackPriority(pack.promotionRatioForMoney)">
-                  {{ keepTheDecimalPoint(pack.eachDrawPrice) }}
+                       :style="getPackPriority(pack.drawEfficiency)">
+                  {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
-                <span class="gc-pack-bar-title">{{ pack.name }}</span>
+                <span class="gc-pack-bar-title">{{ pack.displayName }}</span>
                 <div class="gc-pack-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="pack.originium>0">
@@ -988,15 +1069,15 @@ const handleChange = (val) => {
                   </div>
                   <span v-show="pack.orundum>0">{{ pack.orundum }}</span>
                   <!--抽卡券-->
-                  <div class="gc-image-sprite" v-show="pack.ticketGacha>0">
+                  <div class="gc-image-sprite" v-show="pack.gachaTicket>0">
                     <div :class="getIconByItemId('7003')"></div>
                   </div>
-                  <span v-show="pack.ticketGacha>0">{{ pack.ticketGacha }}</span>
+                  <span v-show="pack.gachaTicket>0">{{ pack.gachaTicket }}</span>
                   <!--十连券-->
-                  <div class="gc-image-sprite" v-show="pack.ticketGacha10>0">
+                  <div class="gc-image-sprite" v-show="pack.tenGachaTicket>0">
                     <div :class="getIconByItemId('7004')"></div>
                   </div>
-                  <span v-show="pack.ticketGacha10>0">{{ pack.ticketGacha10 }}</span>
+                  <span v-show="pack.tenGachaTicket>0">{{ pack.tenGachaTicket }}</span>
                 </div>
               </div>
             </el-checkbox-button>
@@ -1016,7 +1097,7 @@ const handleChange = (val) => {
             <span></span> 复刻活动
           </div>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="compute">
-            <el-checkbox-button v-for="(activity,name) in activityList"
+            <el-checkbox-button v-for="(activity,name) in activitySchedules"
                                 :key="name" :label="name" v-show="activity.module==='actRe'"
                                 class="gc-el-checkbox-button">
               <div class="gc-pack-bar">
@@ -1051,7 +1132,7 @@ const handleChange = (val) => {
             <span></span> 未来活动
           </div>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="compute">
-            <el-checkbox-button v-for="(activity,name) in activityList"
+            <el-checkbox-button v-for="(activity,name) in activitySchedules"
                                 :key="name" :label="name" v-show="activity.module==='act'"
                                 class="gc-el-checkbox-button">
               <div class="gc-pack-bar">
@@ -1093,7 +1174,7 @@ const handleChange = (val) => {
           </template>
 
           <div class="gc-resources-bar" v-for="(honeyCake,label) in honeyCakeTable" :key="label"
-               v-show="checkRewardStatus(honeyCake)">
+               v-show="itemIsExpired(honeyCake)">
             <span class="gc-resources-bar-title" style="width: 240px">{{ honeyCake.name }}</span>
             <div class="gc-resources-bar-content">
               <div class="gc-image-sprite" v-show="honeyCake.originium>0">
