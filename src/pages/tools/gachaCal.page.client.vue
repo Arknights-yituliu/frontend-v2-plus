@@ -1055,21 +1055,21 @@ export default {
       schedules: {
         '春节(2.15)': {
           display: true,
-          endTime: '2024/02/15  03:58:00',
+          endTime: '2024/02/15 03:58:00',
           rewardType: "春节限定",
           permitCountDown: true,
           orundumCountDown: true
         },
-        '彩六二期(3.21)': {
+        '彩六二期(4.4)': {
           display: true,
-          endTime: '2024/04/04  03:58:00',
+          endTime: '2024/04/04 03:58:00',
           rewardType: "联动限定",
           permitCountDown: false,
           orundumCountDown: true
         },
         '周年(5.15)': {
           display: true,
-          endTime: '2024/05/15  04:01:00',
+          endTime: '2024/05/15 04:01:00',
           rewardType: "周年限定",
           permitCountDown: false,
           orundumCountDown: true
