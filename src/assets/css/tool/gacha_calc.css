@@ -160,7 +160,8 @@
 .gc-resources-bar {
     display: flex;
     align-items: center;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: bolder;
     padding: 4px;
     margin: 4px 0;
 }
@@ -197,15 +198,16 @@
     line-height: 24px;
 }
 
-
-.gc-pack-bar {
+/*多选盒的按钮内容条*/
+.gc-checkbox-button-bar {
     /*width: 200px;*/
     display: flex;
     font-size: 18px;
     align-items: center;
 }
 
-.gc-pack-bar-draw-efficiency {
+/*礼包的单次抽卡价格*/
+.gc-draw-efficiency {
     margin-left: 4px;
     margin-right: 8px;
     font-size: 14px;
@@ -214,17 +216,19 @@
     width: 40px;
 }
 
-.gc-pack-bar-title {
+/*多选盒的按钮的描述*/
+.gc-checkbox-button-bar-label {
     width: 150px;
     text-align: left;
 }
 
-.gc-pack-bar-content {
+/*多选盒的按钮的内容*/
+.gc-checkbox-button-bar-content {
     display: flex;
     align-items: center;
 }
 
-.gc-pack-bar-content span {
+.gc-checkbox-button-bar-content span {
     font-weight: bolder;
     font-size: 20px;
     padding-left: 2px;

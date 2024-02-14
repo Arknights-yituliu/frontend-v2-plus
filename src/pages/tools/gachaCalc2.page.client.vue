@@ -203,12 +203,16 @@ let dailyReward = ref({
 let produceOrundum = ref({
   ap: 0,
   coefficient: 0,
-  output: 0,
+  outputByAp: 0,
+  'itemId30012': 0,
+  'itemId30062': 0,
+  'itemId4001': 0,
+  outputByItem: 0,
 })
 
 let certificateStoreF3 = ref({
-  certificate: 0,
-  disposableCertificate: 0,
+  certificates: 0,
+  remainingCertificates: 0,
   orundum: 0
 })
 
@@ -235,6 +239,7 @@ let calculationResult = ref({
   rechargeTotalDraw: 0,
   activityTotalDraw: 0,
   otherTotalDraw: 0,
+  produceOrundumTotalDraw: 0,
   originium: 0,
   orundum: 0,
   gachaTicket: 0,
@@ -258,7 +263,7 @@ function compute() {
 
   dailyRewardCalculate()
   existCalculate()
-  thirtyEightGachaTicketCalculate()
+  produceOrundumCalculate()
   honeyCakeCalculate()
   packCalculate()
   activityCalculate()
@@ -351,15 +356,20 @@ function compute() {
   }
 
 
-
   /**
    * 计算用户库存抽卡次数
    */
   function existCalculate() {
-    const orundum = parseInt(existResources.value.orundum)
-    const originium = parseInt(existResources.value.originium)
-    const gachaTicket = parseInt(existResources.value.gachaTicket)
-    const tenGachaTicket = parseInt(existResources.value.tenGachaTicket)
+    let orundum = parseInt(existResources.value.orundum.toString())
+    let originium = parseInt(existResources.value.originium.toString())
+    const gachaTicket = parseInt(existResources.value.gachaTicket.toString())
+    const tenGachaTicket = parseInt(existResources.value.tenGachaTicket.toString())
+
+    //计算用户自定义修正的合成玉
+    orundum += parseInt(existResources.value.correctOrundum.toString())
+    //计算用户预留给皮肤的源石
+    originium -= parseInt(existResources.value.skinBudget.toString()) * 18
+
 
     calculationResult.value.orundum += orundum
     calculationResult.value.originium += originium
@@ -371,6 +381,32 @@ function compute() {
 
   }
 
+
+  function produceOrundumCalculate() {
+    //计算用理智产出的合成玉数量
+    produceOrundum.value.outputByAp = parseInt(produceOrundum.value.ap.toString()) * parseInt(produceOrundum.value.coefficient.toString())
+    //计算用材料产出的合成玉数量
+    produceOrundum.value.outputByItem = parseInt(produceOrundum.value.itemId30012.toString()) * 5 +
+        parseInt(produceOrundum.value.itemId30062.toString()) * 10
+    //计算用材料产出合成玉时的龙门币消耗
+    produceOrundum.value.itemId4001 = parseInt(produceOrundum.value.itemId30012.toString()) * 800 +
+        parseInt(produceOrundum.value.itemId30062.toString()) * 1000
+
+    //可用于兑换商店第三层的凭证数量
+    let certificates = parseInt(certificateStoreF3.value.certificates.toString())
+    //如果凭证数量大于11590(搬空前两层的凭证消耗量),曾可以兑换合成玉
+    if(certificates>11590){
+      //扣除11590凭证之后剩余的凭证数量
+      certificateStoreF3.value.remainingCertificates = certificates - 11590
+      //可兑换多少合成玉
+      certificateStoreF3.value.orundum =  Math.floor((certificateStoreF3.value.remainingCertificates/50) * 30)
+    }
+
+    const orundum = produceOrundum.value.outputByAp+produceOrundum.value.outputByItem+certificateStoreF3.value.orundum
+
+    calculationResult.value.produceOrundumTotalDraw = Math.floor(orundum / 600)
+
+  }
 
   /**
    * 计算用户选择的礼包总计多少抽
@@ -419,10 +455,10 @@ function compute() {
         continue
       }
 
-      orundum+=activity.orundum
-      originium+=activity.originium
-      gachaTicket+=activity.gachaTicket
-      tenGachaTicket+=activity.tenGachaTicket
+      orundum += activity.orundum
+      originium += activity.originium
+      gachaTicket += activity.gachaTicket
+      tenGachaTicket += activity.tenGachaTicket
 
       totalDraw += (orundum / 600 + originium * 0.3 +
           gachaTicket + tenGachaTicket * 10)
@@ -449,7 +485,6 @@ function compute() {
       totalDraw += (honeyCake.orundum / 600 + honeyCake.originium * 0.3 +
           honeyCake.gachaTicket + honeyCake.tenGachaTicket * 10)
     }
-
 
 
     calculationResult.value.otherTotalDraw = Math.floor(totalDraw)
@@ -708,7 +743,7 @@ const handleChange = (val) => {
             <input v-model.number="produceOrundum.coefficient">
             <span>搓玉系数 = </span>
             <div :class="getIconByItemId('4003')"></div>
-            <span>{{ produceOrundum.output }}</span>
+            <span>{{ produceOrundum.outputByAp }}</span>
           </div>
           <span class="gc-tip">搓玉系数：1理智可搓多少玉，1-7搓玉系数1.09</span>
 
@@ -718,7 +753,7 @@ const handleChange = (val) => {
 
           <div class="gc-resources-bar">
             <span>现有绿票</span>
-            <input v-model.number="certificateStoreF3.certificate">
+            <input v-model.number="certificateStoreF3.certificates">
             <span>
               ，有{{ certificateStoreF3.disposableCertificate }}绿票可换
             </span>
@@ -816,10 +851,11 @@ const handleChange = (val) => {
           <div class="gc-divider"></div>
           <el-checkbox-group v-model="selectedThirtyEightGachaTicket" style="margin: 4px">
             <el-checkbox-button v-for="(pack,name) in thirtyEightGachaTicketFromTheStore"
-                                :key="name" :label="name">
-              <div class="gc-pack-bar">
-                <span class="gc-pack-bar-title">{{ name }}</span>
-                <div class="gc-pack-bar-content">
+                                :key="name" :label="name" style="margin: 4px"
+                                v-show="itemIsExpired(pack)">
+              <div class="gc-checkbox-button-bar">
+                <span class="gc-checkbox-button-bar-label" style="width: 200px">{{ pack.displayName }}</span>
+                <div class="gc-checkbox-button-bar-content">
                   <div class="gc-image-sprite">
                     <div :class="getIconByItemId('7003')"></div>
                   </div>
@@ -835,6 +871,7 @@ const handleChange = (val) => {
 
         </el-collapse-item>
 
+        <!--        潜在资源-->
         <el-collapse-item name="potential" class="gc-collapse-item">
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
@@ -869,12 +906,12 @@ const handleChange = (val) => {
             <el-checkbox-button v-for="(potential,index) in potentialTable"
                                 :key="index" :label="index" v-show="potential.packType==='main'"
                                 class="gc-el-checkbox-button" :border="true">
-              <div class="gc-pack-bar">
-                <span class="gc-pack-bar-title"
+              <div class="gc-checkbox-button-bar">
+                <span class="gc-checkbox-button-bar-label"
                       :style="potential.packName.length<4?'width:60px':'width:170px'">
                   {{ potential.packName }}
                 </span>
-                <div class="gc-pack-bar-content">
+                <div class="gc-checkbox-button-bar-content">
                   <div class="gc-image-sprite">
                     <div :class="getIconByItemId('4002')"></div>
                   </div>
@@ -892,9 +929,9 @@ const handleChange = (val) => {
             <el-checkbox-button v-for="(potential,index) in potentialTable" :border="true"
                                 :key="index" :label="index" v-show="potential.packType==='activity'"
                                 class="gc-el-checkbox-button">
-              <div class="gc-pack-bar">
-                <span class="gc-pack-bar-title" style="width: 140px">{{ potential.packName }}</span>
-                <div class="gc-pack-bar-content">
+              <div class="gc-checkbox-button-bar">
+                <span class="gc-checkbox-button-bar-label" style="width: 140px">{{ potential.packName }}</span>
+                <div class="gc-checkbox-button-bar-content">
                   <div class="gc-image-sprite">
                     <div :class="getIconByItemId('4002')"></div>
                   </div>
@@ -905,6 +942,7 @@ const handleChange = (val) => {
           </el-checkbox-group>
         </el-collapse-item>
 
+        <!--氪金资源-->
         <el-collapse-item name="recharge" class="gc-collapse-item">
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
@@ -916,7 +954,7 @@ const handleChange = (val) => {
           <span class="gc-tip">标签内为每抽价格(元)，颜色用于区分性价比</span>
           <span class="gc-tip">仅计入礼包内抽卡资源，紫色高于648，橙色高于大月卡</span>
           <span class="gc-tip"><a href="/material/pack">点击跳转礼包完整性价比</a></span>
-
+          <!--月常礼包-->
           <div class="gc-collapse-content-subheading">
             <span></span> 月常礼包
           </div>
@@ -932,13 +970,13 @@ const handleChange = (val) => {
                                 :key="index" :label="pack.parentIndex"
                                 class="gc-el-checkbox-button"
                                 v-show="itemIsExpired(pack)">
-              <div class="gc-pack-bar">
-               <span class="gc-pack-bar-draw-efficiency"
+              <div class="gc-checkbox-button-bar">
+               <span class="gc-draw-efficiency"
                      :style="getPackPriority(pack.drawEfficiency)">
                   {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
-                <span class="gc-pack-bar-title">{{ pack.displayName }}</span>
-                <div class="gc-pack-bar-content" style="width:200px">
+                <span class="gc-checkbox-button-bar-label">{{ pack.displayName }}</span>
+                <div class="gc-checkbox-button-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="pack.originium>0">
                     <div :class="getIconByItemId('4002')"></div>
@@ -964,7 +1002,7 @@ const handleChange = (val) => {
             </el-checkbox-button>
           </el-checkbox-group>
 
-
+          <!--限时礼包-->
           <div class="gc-collapse-content-subheading">
             <span></span> 限时礼包
           </div>
@@ -972,13 +1010,13 @@ const handleChange = (val) => {
             <el-checkbox-button v-for="(pack,index) in packGroupByLimited"
                                 :key="index" :label="pack.parentIndex"
                                 class="gc-el-checkbox-button">
-              <div class="gc-pack-bar">
-                 <span class="gc-pack-bar-draw-efficiency"
+              <div class="gc-checkbox-button-bar">
+                 <span class="gc-draw-efficiency"
                        :style="getPackPriority(pack.drawEfficiency)">
                   {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
-                <span class="gc-pack-bar-title">{{ pack.displayName }}</span>
-                <div class="gc-pack-bar-content" style="width:200px">
+                <span class="gc-checkbox-button-bar-label">{{ pack.displayName }}</span>
+                <div class="gc-checkbox-button-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="pack.originium>0">
                     <div :class="getIconByItemId('4002')"></div>
@@ -1004,6 +1042,7 @@ const handleChange = (val) => {
             </el-checkbox-button>
           </el-checkbox-group>
 
+          <!--新人礼包-->
           <div class="gc-collapse-content-subheading">
             <span></span> 新人礼包
           </div>
@@ -1011,13 +1050,13 @@ const handleChange = (val) => {
             <el-checkbox-button v-for="(pack,index) in packGroupByOnce"
                                 :key="index" :label="pack.parentIndex"
                                 class="gc-el-checkbox-button">
-              <div class="gc-pack-bar">
-                 <span class="gc-pack-bar-draw-efficiency"
+              <div class="gc-checkbox-button-bar">
+                 <span class="gc-draw-efficiency"
                        :style="getPackPriority(pack.drawEfficiency)">
                   {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
-                <span class="gc-pack-bar-title">{{ pack.displayName }}</span>
-                <div class="gc-pack-bar-content" style="width:200px">
+                <span class="gc-checkbox-button-bar-label">{{ pack.displayName }}</span>
+                <div class="gc-checkbox-button-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="pack.originium>0">
                     <div :class="getIconByItemId('4002')"></div>
@@ -1043,7 +1082,7 @@ const handleChange = (val) => {
             </el-checkbox-button>
           </el-checkbox-group>
 
-
+          <!--首次充值源石-->
           <div class="gc-collapse-content-subheading">
             <span></span> 首次充值源石
           </div>
@@ -1051,13 +1090,13 @@ const handleChange = (val) => {
             <el-checkbox-button v-for="(pack,index) in packGroupByYear"
                                 :key="index" :label="pack.parentIndex"
                                 class="gc-el-checkbox-button">
-              <div class="gc-pack-bar">
-                 <span class="gc-pack-bar-draw-efficiency"
+              <div class="gc-checkbox-button-bar">
+                 <span class="gc-draw-efficiency"
                        :style="getPackPriority(pack.drawEfficiency)">
                   {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
-                <span class="gc-pack-bar-title">{{ pack.displayName }}</span>
-                <div class="gc-pack-bar-content" style="width:200px">
+                <span class="gc-checkbox-button-bar-label">{{ pack.displayName }}</span>
+                <div class="gc-checkbox-button-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="pack.originium>0">
                     <div :class="getIconByItemId('4002')"></div>
@@ -1085,6 +1124,7 @@ const handleChange = (val) => {
 
         </el-collapse-item>
 
+        <!--活动获得(估算)-->
         <el-collapse-item name="activity" class="gc-collapse-item">
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
@@ -1092,7 +1132,7 @@ const handleChange = (val) => {
                活动获得（估算）&emsp;{{ calculationResult.activityTotalDraw }}抽
               </span>
           </template>
-
+          <!--复刻活动-->
           <div class="gc-collapse-content-subheading">
             <span></span> 复刻活动
           </div>
@@ -1100,9 +1140,9 @@ const handleChange = (val) => {
             <el-checkbox-button v-for="(activity,name) in activitySchedules"
                                 :key="name" :label="name" v-show="activity.module==='actRe'"
                                 class="gc-el-checkbox-button">
-              <div class="gc-pack-bar">
-                <span class="gc-pack-bar-title">{{ activity.name }}</span>
-                <div class="gc-pack-bar-content" style="width:200px">
+              <div class="gc-checkbox-button-bar">
+                <span class="gc-checkbox-button-bar-label">{{ activity.name }}</span>
+                <div class="gc-checkbox-button-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="activity.originium>0">
                     <div :class="getIconByItemId('4002')"></div>
@@ -1128,6 +1168,7 @@ const handleChange = (val) => {
             </el-checkbox-button>
           </el-checkbox-group>
 
+          <!-- 未来活动 -->
           <div class="gc-collapse-content-subheading">
             <span></span> 未来活动
           </div>
@@ -1135,9 +1176,9 @@ const handleChange = (val) => {
             <el-checkbox-button v-for="(activity,name) in activitySchedules"
                                 :key="name" :label="name" v-show="activity.module==='act'"
                                 class="gc-el-checkbox-button">
-              <div class="gc-pack-bar">
-                <span class="gc-pack-bar-title">{{ activity.name }}</span>
-                <div class="gc-pack-bar-content" style="width:200px">
+              <div class="gc-checkbox-button-bar">
+                <span class="gc-checkbox-button-bar-label">{{ activity.name }}</span>
+                <div class="gc-checkbox-button-bar-content" style="width:200px">
                   <!--源石-->
                   <div class="gc-image-sprite" v-show="activity.originium>0">
                     <div :class="getIconByItemId('4002')"></div>
