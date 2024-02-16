@@ -1053,25 +1053,25 @@ export default {
       pieData: [],
       current_pool_end_time: '',
       schedules: {
-        '春节(2.15)': {
-          display: true,
-          endTime: '2024/02/15 03:58:00',
-          rewardType: "春节限定",
-          permitCountDown: true,
-          orundumCountDown: true
-        },
         '彩六二期(3.21)': {
           display: true,
           endTime: '2024/03/21 03:58:00',
           rewardType: "联动限定",
-          permitCountDown: false,
+          permitCountDown: true,
           orundumCountDown: true
         },
         '周年(5.15)': {
           display: true,
           endTime: '2024/05/15 04:01:00',
           rewardType: "周年限定",
-          permitCountDown: false,
+          permitCountDown: true,
+          orundumCountDown: true
+        },
+        '敬请期待': {
+          display: true,
+          endTime: '2024/05/15 04:01:00',
+          rewardType: "周年限定",
+          permitCountDown: true,
           orundumCountDown: true
         }
       }
@@ -1081,7 +1081,7 @@ export default {
 
   mounted() {
     this.TimeStampFormat();
-    this.timeSelector = '春节(2.15)'
+    this.timeSelector = '彩六二期(3.21)'
     this.getPackDataList()
     this.checkEndDate();
 
@@ -1368,7 +1368,7 @@ export default {
       this.orundum_green = parseInt(this.orundum_green_y / 50) * 30;
 
       //  计算自定义合成玉和搓玉
-      let custom_exist = this.customValue + this.orundum_ap * this.orundum_rate + this.item_30012 * 5 + this.item_30062 * 10 + this.orundum_green_y;
+      let custom_exist = this.customValue + this.orundum_ap * this.orundum_rate + this.item_30012 * 5 + this.item_30062 * 10 + this.orundum_green;
       this.orundumByManufacture = this.item_30012 * 5 + this.item_30062 * 10;
       this.LMDCost = this.item_30012 * 800 + this.item_30062 * 1000;
 
