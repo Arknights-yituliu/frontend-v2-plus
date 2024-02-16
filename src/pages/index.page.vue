@@ -69,15 +69,15 @@ function chooseAnnouncement(index) {
         建议关注 <b style="color: rgb(255,94,66);">bilibili@罗德岛基建BETA</b> 获取最新动态<br>点击本卡片即可跳转新域名
       </div>
 
-      <div id="RIICbeta" class="announcement-card" @click="openNewPage('/tools/rogueCal')" style="position: relative">
-        <img src="/RogueCalcV1/roguebanner.jpg" alt="" style="width: 400px;position: absolute;top:-10px;left:0">
-        <span style="position: absolute;top:100px;left:0;text-align: center;width: 400px;font-weight: bold">
-          通天联赛#0附加赛激励计划
-        </span>
-        <span style="position: absolute;top:128px;left:25px;text-align: center;width: 350px;font-style: italic ;font-size: 14px;line-height: 20px">
-          通天联赛#0附加赛正在如火如荼地进行中，在观看比赛的同时，我们也欢迎您一同挑战，获得丰厚奖金
-        </span>
-      </div>
+<!--      <div id="RIICbeta" class="announcement-card" @click="openNewPage('/tools/rogueCal')" style="position: relative">-->
+<!--        <img src="/RogueCalcV1/roguebanner.jpg" alt="" style="width: 400px;position: absolute;top:-10px;left:0">-->
+<!--        <span style="position: absolute;top:100px;left:0;text-align: center;width: 400px;font-weight: bold">-->
+<!--          通天联赛#0附加赛激励计划-->
+<!--        </span>-->
+<!--        <span style="position: absolute;top:128px;left:25px;text-align: center;width: 350px;font-style: italic ;font-size: 14px;line-height: 20px">-->
+<!--          通天联赛#0附加赛正在如火如荼地进行中，在观看比赛的同时，我们也欢迎您一同挑战，获得丰厚奖金-->
+<!--        </span>-->
+<!--      </div>-->
     </div>
     <!--    <div class="announcement-card-wrap">-->
     <!--      <div class="announcement-card-list">-->
