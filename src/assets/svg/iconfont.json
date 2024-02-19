@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "36737795",
+      "name": "language",
+      "font_class": "language",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "5875526",
+      "name": "delete",
+      "font_class": "delete",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "1725633",
+      "name": "菜单",
+      "font_class": "menu1",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "12550617",
+      "name": "菜单",
+      "font_class": "menu2",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
       "icon_id": "13123939",
       "name": "icon-arrow-right",
       "font_class": "arrow-right",
@@ -46,20 +74,6 @@
       "font_class": "error",
       "unicode": "e65c",
       "unicode_decimal": 58972
-    },
-    {
-      "icon_id": "6605987",
-      "name": "问号",
-      "font_class": "wenhao_huabanfuben",
-      "unicode": "e631",
-      "unicode_decimal": 58929
-    },
-    {
-      "icon_id": "11266195",
-      "name": "menu",
-      "font_class": "menu",
-      "unicode": "e620",
-      "unicode_decimal": 58912
     },
     {
       "icon_id": "837077",

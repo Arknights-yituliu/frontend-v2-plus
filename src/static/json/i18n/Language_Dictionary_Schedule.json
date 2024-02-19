@@ -1,0 +1,290 @@
+{
+  "schedule": {
+    "InfrastructureLayout": {
+      "cn": "选择基建布局",
+      "en": "Infrastructure layout"
+    },
+    "EnterScheduleId": {
+      "cn": "id为文件名或在文件内找id",
+      "en": "Enter schedule id"
+    },
+    "ImportScheduleById": {
+      "cn": "根据id导入排班",
+      "en": "Import schedule by id"
+    },
+    "ImportScheduleFile": {
+      "cn": "导入排班文件",
+      "en": "Import schedule file"
+    },
+    "SaveAndExportScheduleFile": {
+      "cn": "保存和导出排班文件",
+      "en": "Save and export schedule file"
+    },
+    "SaveScheduleFile": {
+      "cn": "保存排班文件",
+      "en": "Save schedule file"
+    },
+    "ScheduleTitle": {
+      "cn": "排班表名称",
+      "en": "Title"
+    },
+    "ScheduleDescription": {
+      "cn": "排班表描述",
+      "en": "Schedule"
+    },
+    "Author": {
+      "cn": "排班表作者",
+      "en": "Author"
+    },
+    "BaseLayout": {
+      "cn": "基建布局",
+      "en": "Base layout"
+    },
+    "ShiftNumber": {
+      "cn": "换班次数",
+      "en": "Shift number"
+    },
+    "CurrentShift": {
+      "cn": "当前班次",
+      "en": "Current Shift"
+    },
+    "ShiftName": {
+      "cn": "班次名称",
+      "en": "Shift Name"
+    },
+    "ShiftDescription": {
+      "cn": "班次描述",
+      "en": "Shift Description"
+    },
+    "UseDrones": {
+      "cn": "是否使用无人机",
+      "en": "Use Drones"
+    },
+    "Usage": {
+      "cn": "换班前后",
+      "en": "Usage"
+    },
+    "PreShift": {
+      "cn": "换班前",
+      "en": "Pre-shift"
+    },
+    "PostShift": {
+      "cn": "换班后",
+      "en": "Post-shift"
+    },
+    "TargetRoom": {
+      "cn": "目标房间",
+      "en": "Target Room"
+    },
+    "TradingPost": {
+      "cn": "贸易站",
+      "en": "Trading Post"
+    },
+    "Factory": {
+      "cn": "制造站",
+      "en": "Factory"
+    },
+    "PowerPlant": {
+      "cn": "发电站",
+      "en": "Power Plant"
+    },
+    "ControlCenter": {
+      "cn": "控制中枢",
+      "en": "Control Center"
+    },
+    "Dormitory": {
+      "cn": "宿舍",
+      "en": "Dormitory"
+    },
+    "ReceptionRoom": {
+      "cn": "会客室",
+      "en": "Reception Room"
+    },
+    "Workshop": {
+      "cn": "加工站",
+      "en": "Workshop"
+    },
+    "Office": {
+      "cn": "办公室",
+      "en": "Office"
+    },
+    "RoomNumber": {
+      "cn": "房间编号",
+      "en": "Room Number"
+    },
+    "UseFiammetta": {
+      "cn": "是否使用菲亚梅塔",
+      "en": "Use Fiammetta"
+    },
+    "RecoveryTarget": {
+      "cn": "恢复目标",
+      "en": "RecoveryTarget"
+    },
+    "ShiftChange": {
+      "cn": "按顺序入驻",
+      "en": "Shift Change"
+    },
+    "Autofill": {
+      "cn": "补满空位",
+      "en": "Autofill"
+    },
+    "SkipRoom": {
+      "cn": "跳过房间",
+      "en": "Skip Room"
+    },
+    "SkipRoomTip": {
+      "cn": "使用补满空位功能后，后续的宿舍可能无法使用指定干员功能",
+      "en": "Using Autofill together with manual selection, may lead to unexpected issues"
+    },
+    "ProductSelection": {
+      "cn": "选择产物",
+      "en": "Product Selection"
+    },
+    "TimedShiftChange": {
+      "cn": "定时换班",
+      "en": "Timed Shift Change"
+    },
+    "TimedShiftChangeTip": {
+      "cn": "*不选择则按班次顺序执行",
+      "en": "*If not selected, it will be executed in shift order"
+    },
+    "TimedShiftNumber": {
+      "cn": "班次",
+      "en": "Shift"
+    },
+    "OperatorsStationed": {
+      "cn": "入驻的干员",
+      "en": "Operators Stationed"
+    },
+    "OperatorsClipboard": {
+      "cn": "复制的干员",
+      "en": "Operators Clipboard"
+    },
+    "Copy": {
+      "cn": "粘贴",
+      "en": "Copy"
+    },
+    "Paste": {
+      "cn": "粘贴",
+      "en": "Paste"
+    },
+    "searchInputTip": {
+      "cn": "输入干员名、技能名称、技能描述搜索干员",
+      "en": "Enter operator name, skill name, skill description to search operator"
+    },
+    "developerTip": {
+      "cn": "*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改",
+      "en": "*Development level and staff are limited. If there are issues, please give feedback or commit directly on GitHub"
+    }
+  },
+  "buildSkillFilter": {
+    "RoomType": {
+      "cn": "工作场所",
+      "en": "Room Type"
+    },
+    "Trading": {
+      "cn": "贸易站",
+      "en": "Trading"
+    },
+    "Factory": {
+      "cn": "制造站",
+      "en": "Factory"
+    },
+    "Office": {
+      "cn": "办公室",
+      "en": "Office"
+    },
+    "Workshop": {
+      "cn": "加工站",
+      "en": "Workshop"
+    },
+    "Dormitory": {
+      "cn": "宿舍",
+      "en": "Dormitory"
+    },
+    "Control": {
+      "cn": "控制中枢",
+      "en": "Control"
+    },
+    "Power": {
+      "cn": "发电站",
+      "en": "Power"
+    },
+    "Reception": {
+      "cn": "会客室",
+      "en": "Reception"
+    },
+    "Training": {
+      "cn": "训练室",
+      "en": "Training"
+    },
+    "GeneralWokers": {
+      "cn": "生产力",
+      "en": "General Wokers"
+    },
+    "GoldWorkers": {
+      "cn": "贵金属",
+      "en": "Gold Workers"
+    },
+    "EXPWorkersRecord": {
+      "cn": "作战记录",
+      "en": "EXP Workers Record"
+    },
+    "OrundumWorkers": {
+      "cn": "源石",
+      "en": "Orundum Workers"
+    },
+    "CAPLimitWokers": {
+      "cn": "仓库容量上限",
+      "en": "CAP Limit Wokers"
+    },
+    "OrderAcquisitionEfficiency": {
+      "cn": "订单获取效率",
+      "en": "Order Acquisition Efficiency"
+    },
+    "OrderLimit": {
+      "cn": "订单上限",
+      "en": "Order Limit"
+    },
+    "BetterOrders": {
+      "cn": "高品质",
+      "en": "Better Orders"
+    },
+    "ProductionEfficiency": {
+      "cn": "生产力",
+      "en": "Production Efficiency"
+    },
+    "MoraleDrain/Restore": {
+      "cn": "心情消耗/恢复",
+      "en": "Morale Drain/Restore"
+    },
+    "Special": {
+      "cn": "特殊技能",
+      "en": "Special"
+    },
+    "PerceptionInformation": {
+      "cn": "感知信息",
+      "en": "Perception Information"
+    },
+    "Wordly Plight": {
+      "cn": "人间烟火",
+      "en": "WordlyPlight"
+    },
+    "GoldProductionLine": {
+      "cn": "赤金生产线",
+      "en": "Gold Production Line"
+    },
+    "PinusSylvestrisKnightsTeam": {
+      "cn": "红松骑士团",
+      "en": "Pinus Sylvestris Knights Team"
+    },
+    "AutomationTeam": {
+      "cn": "自动化",
+      "en": "Automation Team"
+    },
+    "RhineTechTeam": {
+      "cn": "莱茵科技",
+      "en": "Rhine Tech Team"
+    }
+  }
+}

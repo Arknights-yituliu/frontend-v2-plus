@@ -1125,7 +1125,7 @@ onMounted(() => {
         <div class="room-template control" :class="roomSelectedClass('control',0)"
              @click="chooseRoom('control',0)"
              tabindex="0">
-          <div class="room-name"> Control Center</div>
+          <div class="room-name">Control Center</div>
           <div class="room-avatar-sprite-wrap"
                v-for="(charName,index) in getRoomOperators('control',0)"
                :key="index">
@@ -1196,9 +1196,6 @@ onMounted(() => {
 
 
     <div class="room-set-wrap">
-
-
-
       <div class="room-set">
         <span class="room-set-description">Operators Stationed</span>
         <div class="selected-operator-wrap">

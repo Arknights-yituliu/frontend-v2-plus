@@ -6,6 +6,7 @@ import login from "/src/pages/survey/login.vue";
 import routesJson from "/src/static/json/routes.json";
 import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
 
+
 const pageContext = usePageContext();
 
 // const theme = inject("theme");
@@ -186,6 +187,7 @@ onMounted(() => {
   themeV2.value = localStorage.getItem('theme_v2') === 'dark' ? 'dark' : 'light'
   console.log(themeV2.value)
 });
+import {language} from '/src/utils/i18n.js'
 </script>
 
 
@@ -219,6 +221,18 @@ onMounted(() => {
     <!--    <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny"-->
     <!--               size="large"/>-->
     <login></login>
+
+    <c-popover :name="'language'" >
+      <template #title>
+       <i class="iconfont icon-language" style="font-size: 32px;padding: 0 8px"></i>
+      </template>
+
+      <div class="language-options" id="language">
+        <span @click="language='cn'">中文</span>
+        <span @click="language='en'">英文</span>
+      </div>
+    </c-popover>
+
 
     <div class="drawer_wrap">
       <div class="drawer" id="drawer114">
@@ -295,6 +309,18 @@ onMounted(() => {
     height: 72px;
   }
 
+}
+
+.language-options{
+}
+
+.language-options span{
+  display: block;
+  padding: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100px;
+  box-sizing: border-box;
 }
 
 </style>
