@@ -4,8 +4,10 @@
       <slot name="title">
       </slot>
     </a>
-    <div class="popover_content" :id="content_wrap">
-      <slot></slot>
+    <div class="popover_content" :id="contentElement">
+
+        <slot></slot>
+
     </div>
   </div>
 </template>
@@ -13,15 +15,14 @@
 <script setup>
 const props = defineProps(["modelValue", "name"]);
 
-let content_wrap = `popover-${props.name}`
+let contentElement = `popover-${props.name}`
 
 function openOrClose() {
-  let element = document.getElementById(content_wrap);
+  let element = document.getElementById(contentElement);
 
   const offsetHeight = element.offsetHeight;
 
   if (offsetHeight < 5) {
-
     const slotElement = document.getElementById(props.name);
     const slotHeight = slotElement.offsetHeight;
     const slotWidth = slotElement.offsetWidth;
@@ -39,7 +40,7 @@ function openOrClose() {
 
 <style scoped>
 
-.popover_wrap{
+.popover_wrap {
   position: relative;
 }
 

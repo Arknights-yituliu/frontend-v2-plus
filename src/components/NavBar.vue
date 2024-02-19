@@ -312,6 +312,7 @@ import {language} from '/src/utils/i18n.js'
 }
 
 .language-options{
+  width: 100px;
 }
 
 .language-options span{
