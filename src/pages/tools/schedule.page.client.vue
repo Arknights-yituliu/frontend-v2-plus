@@ -110,11 +110,11 @@ function getRoomOperators(room, index) {
     return []
   }
   if (!plansTemplate.value[selectedPlanIndex.value].rooms[room]) {
-    cMessage(room + '-设施类型不存在', 'error')
+    cMessage(room + '-' + translate('schedule', 'FacilityNotExist'), 'error')
     return []
   }
   if (!plansTemplate.value[selectedPlanIndex.value].rooms[room][index]) {
-    cMessage(index + '-设施内的干员索引越界', 'error')
+    cMessage(index + '-' + translate('schedule','OperatorIndexOutOfBounds'), 'error')
     return []
   }
 
@@ -155,7 +155,7 @@ function choosePlanTimes(num) {
  */
 function toNextPlan(index) {
   if (index < 0 || index >= scheduleTypeV2.value.planTimes) {
-    cMessage(`错误的班次索引：第${index + 1}班`, 'error')
+    cMessage(translate('schedule', 'schedule.IncorrectShiftIndex') + (index + 1), 'error')
   } else {
     selectedPlanIndex.value = index
   }
@@ -387,7 +387,7 @@ function checkRoomDuplicateOperator(charName) {
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.includes(charName)) {
-    cMessage('不要选择同一干员', 'error')
+    cMessage(translate('schedule', 'schedule.OperatorAlreadyStationed'), 'error')
     return false;
   }
 
@@ -403,7 +403,7 @@ function checkRoomMaximum() {
   if (plansTemplate.value[selectedPlanIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
-    cMessage('当前房间干员数量已达上限', 'error')
+    cMessage(translate('schedule', 'schedule.FacilityFull'), 'error')
     return false;
   }
 
@@ -442,7 +442,7 @@ function checkPlanDuplicateOperator(index, charName, status) {
   //如果是入驻干员并且检查表里干员状态是已经入驻，弹出警告
   if (duplicateOperatorTable.value[index][charName] && status) {
 
-    cMessage('请勿在同一班次入驻两个同名干员', 'error')
+    cMessage(translate('schedule', 'schedule.OperatorStationedDifferent'), 'error')
     return false;
   }
   // 更新检查表里干员状态
@@ -527,7 +527,7 @@ function getRoomProduct(roomType, index) {
 function fillOperatorConflict(index) {
   if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].autofill) {
     if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].operators) {
-      cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干预入驻功能异常!', 'warn')
+      cMessage(translate('schedule', 'schedule.AutofillDormTip'), 'warn')
     }
   }
 }
@@ -560,7 +560,7 @@ watch(() => plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.
       if (newVal && selectedRoomType.value === 'dormitory') {
         if (plansTemplate.value[selectedPlanIndex.value].rooms
             [selectedRoomType.value][selectedRoomIndex.value].operators.length > 0) {
-          cMessage('当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干员入驻功能异常!', 'warn')
+          cMessage(translate('schedule', 'schedule.AutofillDormTip'), 'warn')
         }
       }
     })
@@ -786,7 +786,7 @@ function importSchedule(schedule) {
 
   function getHourAndMinute(str) {
     if (str.indexOf(":") < 0) {
-      cMessage('自动换班时间格式不正确', 'error')
+      cMessage(translate('schedule', 'schedule.ShiftTimesError'), 'error')
     }
     const strSplit = str.split(":")
     return {
@@ -831,19 +831,19 @@ onMounted(() => {
     <div class="schedule-header-right">
       <c-button @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">{{ translate('schedule','schedule.InfrastructureLayout') }}</c-button>
       <div>
-        <input class="input-base" v-model="scheduleImportId" placeholder="id为文件名或在文件内找id"/>
+        <input class="input-base" style="width: 200px" v-model="scheduleImportId" :placeholder="[[translate('schedule','schedule.IdPlaceholder')]]"/>
         <span class="input-desc"></span>
       </div>
-      <c-button :color="COLOR.BLUE" @click="importScheduleById()">{{ translate('schedule','schedule.InfrastructureLayout') }}</c-button>
+      <c-button :color="COLOR.BLUE" @click="importScheduleById()">{{ translate('schedule','schedule.ImportScheduleById') }}</c-button>
 
       <div class="input-wrap">
         <input class="input-type-file" type="file"
                id="scheduleFile"
                @change="importScheduleByFile()">
-        <c-button :color="COLOR.BLUE" :status="true">{{ translate('schedule','schedule.ImportScheduleById') }}</c-button>
+        <c-button :color="COLOR.BLUE" :status="true">{{ translate('schedule','schedule.ImportScheduleFile') }}</c-button>
       </div>
-      <c-button :color="COLOR.BLUE" :status="true" @click="saveAndDownloadScheduleFile()">{{ translate('schedule','schedule.SaveAndExportScheduleFile') }}</c-button>
-      <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">{{ translate('schedule','schedule.SaveScheduleFile') }}</c-button>
+      <c-button :color="COLOR.BLUE" :status="true" @click="saveAndDownloadScheduleFile()">{{ translate('schedule','schedule.SaveAndDownloadScheduleFile') }}</c-button>
+      <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">{{ translate('schedule','schedule.DownloadScheduleFile') }}</c-button>
       <feed-back/>
 
     </div>
@@ -929,7 +929,7 @@ onMounted(() => {
           </c-button>
         </div>
         <span>{{ translate('schedule','schedule.TargetRoom') }}</span>
-        <div style="width: 166px">
+        <div style="width: 200px">
           <c-button :color="COLOR.BLUE"
                     :status="'trading' === plansTemplate[selectedPlanIndex].drones.room"
                     @click="setDrones('room','trading')">
@@ -1025,11 +1025,11 @@ onMounted(() => {
     <c-popup v-model:visible="FiammettaTargetVisible" :style="roomPopupStyle">
       <div class="filter-condition-box">
         <div class="condition-bar" v-for="(room,key) in operatorFilterConditionTable" v-show="room.display" :key="key">
-          <span :style="`color:${room.color}`">{{ room.name }}</span>
+          <span :style="`color:${room.color}`">{{ translate('schedule', room.name) }}</span>
           <c-button v-for="(condition,index) in room.conditions" :key="index"
                     :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
                     @click="filterOperatorByTag(condition,key)">
-            {{ condition.label }}
+            {{ translate('schedule', condition.label) }}
           </c-button>
         </div>
       </div>
@@ -1120,9 +1120,9 @@ onMounted(() => {
         </div>
 
         <div class="copy-btn-wrap">
-          <span>被复制的班次：#{{ tmpPlanData.index }} 班</span>
-          <c-button :color="COLOR.BLUE" :status="true" @click="copyPlan()">复制班次</c-button>
-          <c-button :color="COLOR.BLUE" :status="true" @click="pastePlan()">粘贴班次</c-button>
+          <span>{{ translate('schedule', 'schedule.TempPlan') }}{{ tmpPlanData.index }} </span>
+          <c-button :color="COLOR.BLUE" :status="true" @click="copyPlan()">{{ translate('schedule', 'schedule.CopyPlan') }}</c-button>
+          <c-button :color="COLOR.BLUE" :status="true" @click="pastePlan()">{{ translate('schedule', 'schedule.PastePlan') }}</c-button>
         </div>
       </div>
 

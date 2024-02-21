@@ -1,5 +1,41 @@
 {
   "schedule": {
+    "FacilityNotExist": {
+      "cn": "设施类型不存在",
+      "en": " Facility type does not exist"
+    },
+    "OperatorIndexOutOfBounds": {
+      "cn": "设施内的干员索引越界",
+      "en": " Operator index out of bounds in this facility"
+    },
+    "IncorrectShiftIndex": {
+      "cn": "错误的班次索引：第班",
+      "en": "Incorrect shift index：Shift "
+    },
+    "OperatorAlreadyStationed": {
+      "cn": "不要选择同一干员",
+      "en": "Operator already stationed in this facility"
+    },
+    "FacilityFull": {
+      "cn": "当前房间干员数量已达上限",
+      "en": "This facility is full"
+    },
+    "OperatorStationedDifferent": {
+      "cn": "请勿在同一班次入驻两个同名干员",
+      "en": "Operator already stationed in a different facility"
+    },
+    "AutofillDormTip": {
+      "cn": "当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干员入驻功能异常!",
+      "en": "Using \"Autofill\" together with manual selection in this dormitory, may lead to issues with subsequent dormitories"
+    },
+    "ShiftTimesError": {
+      "cn": "自动换班时间格式不正确",
+      "en": "Shift times: incorrect format"
+    },
+    "IdPlaceholder": {
+      "cn": "id为文件名或在文件内找id",
+      "en": "Enter schedule id"
+    },
     "InfrastructureLayout": {
       "cn": "选择基建布局",
       "en": "Infrastructure layout"
@@ -14,15 +50,15 @@
     },
     "ImportScheduleFile": {
       "cn": "导入排班文件",
-      "en": "Import schedule file"
+      "en": "Import schedule by file"
     },
-    "SaveAndExportScheduleFile": {
+    "SaveAndDownloadScheduleFile": {
       "cn": "保存和导出排班文件",
-      "en": "Save and export schedule file"
+      "en": "Save and download schedule file"
     },
-    "SaveScheduleFile": {
+    "DownloadScheduleFile": {
       "cn": "保存排班文件",
-      "en": "Save schedule file"
+      "en": "Download schedule file"
     },
     "ScheduleTitle": {
       "cn": "排班表名称",
@@ -118,7 +154,7 @@
     },
     "RecoveryTarget": {
       "cn": "恢复目标",
-      "en": "RecoveryTarget"
+      "en": "Recovery Target"
     },
     "ShiftChange": {
       "cn": "按顺序入驻",
@@ -159,6 +195,18 @@
     "OperatorsClipboard": {
       "cn": "复制的干员",
       "en": "Operators Clipboard"
+    },
+    "TempPlan": {
+      "cn": "被复制的班次：班#",
+      "en": "Shift Clipboard: Plan #"
+    },
+    "CopyPlan": {
+      "cn": "复制班次",
+      "en": "Copy Plan"
+    },
+    "PastePlan": {
+      "cn": "粘贴班次",
+      "en": "Paste Plan"
     },
     "Copy": {
       "cn": "粘贴",
@@ -266,9 +314,9 @@
       "cn": "感知信息",
       "en": "Perception Information"
     },
-    "Wordly Plight": {
+    "WordlyPlight": {
       "cn": "人间烟火",
-      "en": "WordlyPlight"
+      "en": "Wordly Plight"
     },
     "GoldProductionLine": {
       "cn": "赤金生产线",
