@@ -30,7 +30,7 @@ function menu_collapse(flag) {
 }
 
 let aside_flag = ref(true);
-
+let asideIcon = ref('icon-menuoff')
 function aside_collapse() {
   aside_flag.value = !aside_flag.value;
   let aside = document.getElementById("aside114")
@@ -39,11 +39,12 @@ function aside_collapse() {
     aside.style.transform = "translateX(0)";
     aside.style.width = "250px";
     container.style.paddingLeft = "250px";
-
+    asideIcon.value = 'icon-menuoff'
   } else {
     document.getElementById("aside114").style.transform = "translateX(-300px)";
     document.getElementById("aside114").style.width = "0px";
     container.style.paddingLeft = "0px";
+    asideIcon.value = 'icon-menuon'
     setTimeout(function () {
 
     }, 200);
@@ -192,9 +193,9 @@ import {language} from '/src/utils/i18n.js'
 
 <template>
   <div class="header-wrap">
-    <i class="menu-button iconfont icon-menu" @click="menu_collapse(true)">
+    <i class="menu-button iconfont" :class="asideIcon" @click="menu_collapse(true)">
     </i>
-    <i class="menu-button-desktop iconfont icon-menu" @click="aside_collapse()">
+    <i class="menu-button-desktop iconfont" :class="asideIcon" @click="aside_collapse()">
     </i>
     <div class="page-title" @click="aside_collapse()">
       {{ pageTitle }}
