@@ -229,7 +229,7 @@ import {language} from '/src/utils/i18n.js'
 
       <div class="language-options" id="language">
         <span @click="language='cn'">中文</span>
-        <span @click="language='en'">英文</span>
+        <span @click="language='en'">English</span>
       </div>
     </c-popover>
 
