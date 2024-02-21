@@ -179,7 +179,6 @@ function substrPath(pathName) {
   return pathName
 }
 
-
 onMounted(() => {
   const pathName = window.location.pathname;
   updateVisits(pathName);
@@ -222,7 +221,7 @@ import {language} from '/src/utils/i18n.js'
     <!--               size="large"/>-->
     <login></login>
 
-    <c-popover :name="'language'" >
+    <c-popover :name="'language'" v-show="pageTitle.indexOf('schedule')">
       <template #title>
        <i class="iconfont icon-language" style="font-size: 32px;padding: 0 8px"></i>
       </template>
