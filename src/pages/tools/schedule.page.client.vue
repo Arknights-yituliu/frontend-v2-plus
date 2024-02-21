@@ -834,13 +834,13 @@ onMounted(() => {
         <input class="input-base" v-model="scheduleImportId" placeholder="id为文件名或在文件内找id"/>
         <span class="input-desc"></span>
       </div>
-      <c-button :color="COLOR.BLUE" @click="importScheduleById()">{{ translate('schedule','schedule.InfrastructureLayout') }}</c-button>
+      <c-button :color="COLOR.BLUE" @click="importScheduleById()">{{ translate('schedule','schedule.ImportScheduleById') }}</c-button>
 
       <div class="input-wrap">
         <input class="input-type-file" type="file"
                id="scheduleFile"
                @change="importScheduleByFile()">
-        <c-button :color="COLOR.BLUE" :status="true">{{ translate('schedule','schedule.ImportScheduleById') }}</c-button>
+        <c-button :color="COLOR.BLUE" :status="true">{{ translate('schedule','schedule.ImportScheduleFile') }}</c-button>
       </div>
       <c-button :color="COLOR.BLUE" :status="true" @click="saveAndDownloadScheduleFile()">{{ translate('schedule','schedule.SaveAndExportScheduleFile') }}</c-button>
       <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">{{ translate('schedule','schedule.SaveScheduleFile') }}</c-button>
