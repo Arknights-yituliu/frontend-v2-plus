@@ -224,7 +224,7 @@ import {language} from '/src/utils/i18n.js'
 
     <c-popover :name="'language'" v-show="pageTitle.indexOf('排班')>-1">
       <template #title>
-       <i class="iconfont icon-language" style="font-size: 32px;padding: 0 8px"></i>
+       <i class="iconfont icon-language" style="font-size: 32px;padding: 0 8px;color:white"></i>
       </template>
 
       <div class="language-options" id="language">
