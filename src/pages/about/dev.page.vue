@@ -157,16 +157,16 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://zhaozuohong.vip">
-        <div class="mdui-card dev-card dev-card-member">
-          <img class="dev-card-icon" src="https://zhaozuohong.vip/avatar.png" alt="" />
-          <div class="dev-card-text">
-            <div class="dev-card-text-title">ZhaoZuohong</div>
-            <div class="dev-card-text-content" style="font-style: italic">开发</div>
-            <div class="dev-card-text-content">后端 前端 UI</div>
-          </div>
-        </div>
-      </a>
+<!--      <a class="href_black" href="https://zhaozuohong.vip">-->
+<!--        <div class="mdui-card dev-card dev-card-member">-->
+<!--          <img class="dev-card-icon" src="https://zhaozuohong.vip/avatar.png" alt="" />-->
+<!--          <div class="dev-card-text">-->
+<!--            <div class="dev-card-text-title">ZhaoZuohong</div>-->
+<!--            <div class="dev-card-text-content" style="font-style: italic">开发</div>-->
+<!--            <div class="dev-card-text-content">后端 前端 UI</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </a>-->
       <a class="href_black" href="https://github.com/hguandl">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="/image/website/shaobing.webp" alt="" />
@@ -277,6 +277,17 @@
           <div class="dev-card-text">
             <div class="dev-card-text-title">qianxuu</div>
             <div class="dev-card-text-content" style="font-style: italic">开发</div>
+            <div class="dev-card-text-content">前端</div>
+          </div>
+        </div>
+      </a>
+
+      <a class="href_black" href="https://github.com/Constrat">
+        <div class="mdui-card dev-card dev-card-member">
+          <img class="dev-card-icon" src="/image/website/Constrat.png" alt="" />
+          <div class="dev-card-text">
+            <div class="dev-card-text-title">Constrat</div>
+            <div class="dev-card-text-content" style="font-style: italic">国际化</div>
             <div class="dev-card-text-content">前端</div>
           </div>
         </div>
