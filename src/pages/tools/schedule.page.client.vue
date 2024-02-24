@@ -1215,8 +1215,8 @@ onMounted(() => {
             </i>
           </div>
         </div>
-        <c-button :color="COLOR.BLUE" :status="true" @click="pasteOperatorList()">{{ translate('schedule','schedule.Paste') }}</c-button>
         <c-button :color="COLOR.BLUE" :status="true" @click="copyOperatorList()">{{ translate('schedule','schedule.Copy') }}</c-button>
+        <c-button :color="COLOR.BLUE" :status="true" @click="pasteOperatorList()">{{ translate('schedule','schedule.Paste') }}</c-button>
         <span class="room-set-description">{{ translate('schedule','schedule.OperatorsClipboard') }}</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap"
