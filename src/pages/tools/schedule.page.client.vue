@@ -1037,7 +1037,7 @@ onMounted(() => {
       <div class="operator-check-box-group" style="width: 550px">
         <div class="operator-check-box-option"
              v-for="(operator,charId) in filterOperatorList"
-             :key="charId" @click="setFiammetta('target',operator.name)">
+             :key="charId" @click="setFiammetta('target',operator.name);FiammettaTargetVisible=false">
           <div :class="getOptionAvatar(operator.charId)"></div>
           <div class="operator-check-label">{{ operator.name }}</div>
         </div>
