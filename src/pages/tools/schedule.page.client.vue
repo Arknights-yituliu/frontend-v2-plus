@@ -1010,7 +1010,7 @@ onMounted(() => {
         &emsp;{{ translate('schedule','schedule.TimedShiftChangeTip') }}
       </div>
 
-      <div class="schedule-set-bar-short" style="flex-wrap:wrap" >
+      <div class="schedule-set-bar-short" style="flex-wrap:wrap;padding-bottom: 20px" >
         <div class="execution-time" v-for="(num,index) in scheduleTypeV2.planTimes" :key="index">
           <span>{{ translate('schedule','schedule.TimedShiftNumber') }}&nbsp;{{ num }}&nbsp;</span>
           <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>
