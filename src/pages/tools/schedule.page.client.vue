@@ -972,7 +972,7 @@ onMounted(() => {
           </c-button>
         </div>
         <span>{{ translate('schedule','schedule.RecoveryTarget') }}</span>
-        <div style="width: 180px">
+        <div style="height: 65px">
           <!--        <div class="room-avatar-sprite-wrap" @click="Fiammetta_target_visible=true">-->
           <!--          <div :class="getAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
           <!--        </div>-->
@@ -983,7 +983,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="schedule-set-bar-short" style="height: 60px;">
+      <div class="schedule-set-bar-short">
         <span class="room-set-description">{{ translate('schedule','schedule.ShiftChange') }}</span>
         <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
         </c-switch>
