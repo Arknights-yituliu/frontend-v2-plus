@@ -9,7 +9,7 @@
       "en": " Operator index out of bounds in this facility"
     },
     "IncorrectShiftIndex": {
-      "cn": "错误的班次索引：第班",
+      "cn": "超出设定的换班次数",
       "en": "Incorrect shift index：Shift "
     },
     "OperatorAlreadyStationed": {
@@ -21,7 +21,7 @@
       "en": "This facility is full"
     },
     "OperatorStationedDifferent": {
-      "cn": "请勿在同一班次入驻两个同名干员",
+      "cn": "请勿在同一换班表入驻两个同名干员",
       "en": "Operator already stationed in a different facility"
     },
     "AutofillDormTip": {
@@ -81,15 +81,19 @@
       "en": "Shift number"
     },
     "CurrentShift": {
-      "cn": "当前班次",
+      "cn": "当前换班表",
       "en": "Current Shift"
     },
+    "Shift": {
+      "cn": "换班表#",
+      "en": "Shift"
+    },
     "ShiftName": {
-      "cn": "班次名称",
+      "cn": "当前换班表名称",
       "en": "Shift Name"
     },
     "ShiftDescription": {
-      "cn": "班次描述",
+      "cn": "当前换班表描述",
       "en": "Shift Description"
     },
     "UseDrones": {
@@ -185,7 +189,7 @@
       "en": "*If not selected, it will be executed in shift order"
     },
     "TimedShiftNumber": {
-      "cn": "班次",
+      "cn": "换班表#",
       "en": "Shift"
     },
     "OperatorsStationed": {
@@ -197,15 +201,15 @@
       "en": "Operators Clipboard"
     },
     "TempPlan": {
-      "cn": "被复制的班次：班#",
+      "cn": "被复制的换班表：换班表#",
       "en": "Shift Clipboard: Plan #"
     },
     "CopyPlan": {
-      "cn": "复制班次",
+      "cn": "复制换班表",
       "en": "Copy Plan"
     },
     "PastePlan": {
-      "cn": "粘贴班次",
+      "cn": "粘贴换班表",
       "en": "Paste Plan"
     },
     "Copy": {

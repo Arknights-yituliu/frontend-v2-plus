@@ -896,14 +896,7 @@ onMounted(() => {
   <div class="maa-schedule-v2">
     <div class="schedule-set-wrap">
       <div class="schedule-set-bar">
-        <span>{{ translate('schedule','schedule.CurrentShift') }}</span>
-        <div>
-          <c-button :color="COLOR.BLUE" :status="index === selectedPlanIndex"
-                    v-for="(num,index) in scheduleTypeV2.planTimes" :key="index"
-                    @click="currentPlan(index)" class="room_times">
-            {{ num }}
-          </c-button>
-        </div>
+
         <span>{{ translate('schedule','schedule.ShiftName') }}</span>
         <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].name"/></div>
         <span>{{ translate('schedule','schedule.ShiftDescription') }}</span>
@@ -1013,11 +1006,10 @@ onMounted(() => {
       <div class="schedule-set-bar-short" style="flex-wrap:wrap;padding-bottom: 20px" >
         <div class="execution-time" v-for="(num,index) in scheduleTypeV2.planTimes" :key="index">
           <span>{{ translate('schedule','schedule.TimedShiftNumber') }}&nbsp;{{ num }}&nbsp;</span>
-          <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>
-          <!--           <input type="time" v-model="executionTimeList[index][0]">-->
-          <!--          <span>至</span>-->
-          <!--          <input type="time" v-model="executionTimeList[index][1]">-->
-
+<!--          <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>-->
+          <el-time-picker v-model="executionTimeList[index][0]" placeholder="Arbitrary time" style="width: 140px" />
+          <span>to</span>
+          <el-time-picker v-model="executionTimeList[index][1]" placeholder="Arbitrary time" style="width: 140px"/>
         </div>
       </div>
     </div>
@@ -1198,13 +1190,19 @@ onMounted(() => {
     </div>
 
 
-    <div></div>
+
+    <div class="schedule-set-bar" style="justify-content: center">
+        <span>{{ translate('schedule','schedule.CurrentShift') }}</span>
+        <c-button :color="COLOR.BLUE" :status="index === selectedPlanIndex"
+                  v-for="(num,index) in scheduleTypeV2.planTimes" :key="index"
+                  @click="currentPlan(index)" class="room_times"
+                  style="margin: 0 8px">
+          {{ translate('schedule','schedule.Shift') }}{{ num }}
+        </c-button>
+    </div>
 
 
     <div class="room-set-wrap">
-
-
-
       <div class="room-set">
         <span class="room-set-description">{{ translate('schedule','schedule.OperatorsStationed') }}</span>
         <div class="selected-operator-wrap">
