@@ -706,7 +706,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 16px 0;
+    height: 60px;
     justify-content: flex-start;
 }
 
@@ -725,8 +725,9 @@
 
 .schedule-set-bar-short {
     display: flex;
+    flex: wrap;
     align-items: center;
-    padding-bottom: 12px;
+    height: 60px;
     justify-content: flex-start;
 }
 

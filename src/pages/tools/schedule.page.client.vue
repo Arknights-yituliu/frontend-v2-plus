@@ -972,7 +972,7 @@ onMounted(() => {
           </c-button>
         </div>
         <span>{{ translate('schedule','schedule.RecoveryTarget') }}</span>
-        <div style="width: 180px">
+        <div style="height: 65px">
           <!--        <div class="room-avatar-sprite-wrap" @click="Fiammetta_target_visible=true">-->
           <!--          <div :class="getAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
           <!--        </div>-->
@@ -983,7 +983,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="schedule-set-bar-short" style="height: 60px;">
+      <div class="schedule-set-bar-short">
         <span class="room-set-description">{{ translate('schedule','schedule.ShiftChange') }}</span>
         <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
         </c-switch>
@@ -1010,7 +1010,7 @@ onMounted(() => {
         &emsp;{{ translate('schedule','schedule.TimedShiftChangeTip') }}
       </div>
 
-      <div class="schedule-set-bar-short" style="flex-wrap:wrap" >
+      <div class="schedule-set-bar-short" style="flex-wrap:wrap;padding-bottom: 20px" >
         <div class="execution-time" v-for="(num,index) in scheduleTypeV2.planTimes" :key="index">
           <span>{{ translate('schedule','schedule.TimedShiftNumber') }}&nbsp;{{ num }}&nbsp;</span>
           <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>
@@ -1037,7 +1037,7 @@ onMounted(() => {
       <div class="operator-check-box-group" style="width: 550px">
         <div class="operator-check-box-option"
              v-for="(operator,charId) in filterOperatorList"
-             :key="charId" @click="setFiammetta('target',operator.name)">
+             :key="charId" @click="setFiammetta('target',operator.name);FiammettaTargetVisible=false">
           <div :class="getOptionAvatar(operator.charId)"></div>
           <div class="operator-check-label">{{ operator.name }}</div>
         </div>
@@ -1215,8 +1215,8 @@ onMounted(() => {
             </i>
           </div>
         </div>
-        <c-button :color="COLOR.BLUE" :status="true" @click="pasteOperatorList()">{{ translate('schedule','schedule.Paste') }}</c-button>
         <c-button :color="COLOR.BLUE" :status="true" @click="copyOperatorList()">{{ translate('schedule','schedule.Copy') }}</c-button>
+        <c-button :color="COLOR.BLUE" :status="true" @click="pasteOperatorList()">{{ translate('schedule','schedule.Paste') }}</c-button>
         <span class="room-set-description">{{ translate('schedule','schedule.OperatorsClipboard') }}</span>
         <div class="selected-operator-wrap">
           <div class="room-avatar-sprite-wrap"
