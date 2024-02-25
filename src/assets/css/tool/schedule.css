@@ -1,3 +1,7 @@
+.maa-schedule-wrap-v2{
+    width: 100%;
+    overflow: auto;
+}
 .maa-schedule-v2 {
     width:1400px;
     height: 1400px;
