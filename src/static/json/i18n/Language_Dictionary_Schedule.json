@@ -86,7 +86,7 @@
     },
     "Shift": {
       "cn": "换班表#",
-      "en": "Shift"
+      "en": "Shift #"
     },
     "ShiftName": {
       "cn": "当前换班表名称",
@@ -185,12 +185,8 @@
       "en": "Timed Shift Change"
     },
     "TimedShiftChangeTip": {
-      "cn": "*不选择则按班次顺序执行",
-      "en": "*If not selected, it will be executed in shift order"
-    },
-    "TimedShiftNumber": {
-      "cn": "换班表#",
-      "en": "Shift"
+      "cn": "不选择则按班次顺序执行",
+      "en": "If not selected, it will be executed in shift order"
     },
     "OperatorsStationed": {
       "cn": "入驻的干员",
@@ -201,8 +197,8 @@
       "en": "Operators Clipboard"
     },
     "TempPlan": {
-      "cn": "被复制的换班表：换班表#",
-      "en": "Shift Clipboard: Plan #"
+      "cn": "被复制的换班表:",
+      "en": "Shift Clipboard:"
     },
     "CopyPlan": {
       "cn": "复制换班表",
@@ -225,8 +221,8 @@
       "en": "Enter operator name, skill name, skill description to search operator"
     },
     "developerTip": {
-      "cn": "*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改",
-      "en": "*Development level and staff are limited. If there are issues, please give feedback or commit directly on GitHub"
+      "cn": "开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改",
+      "en": "Development level and staff are limited. If there are issues, please give feedback or commit directly on GitHub"
     }
   },
   "buildSkillFilter": {
