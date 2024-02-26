@@ -3,7 +3,7 @@
     <div class="popup_mask" @click="openAndClose(false)">
     </div>
 
-    <div class="popup" :style="style">
+    <div class="popup-box" :style="style">
       <slot name="header"></slot>
       <div class="popup-context" :style="context_height_style">
         <slot></slot>
@@ -18,12 +18,7 @@
 import {ref, watch} from "vue";
 const emit = defineEmits(["update:visible","update:modelValue"]);
 const props = defineProps(["modelValue", "visible", "width", "height",'style']);
-
-const width_style = props.style?props.style:`width: ${props.width}`;
 const context_height_style = `height:${props.height}`;
-
-// console.log(props.visible)
-// console.log(props.width)
 
 let popupStyle = ref("display: none;");
 if (props.visible||props.modelValue) {
@@ -88,23 +83,22 @@ watch(
   /* display: none; */
 }
 
-.popup {
+.popup-box {
   /* display: none; */
   position: relative;
   z-index: 2100;
-  margin: 10vh auto auto;
-  width: 500px;
+  margin: 80px auto;
   background-color: var(--c-background-color);
   border-radius: 6px;
   box-sizing: border-box;
   box-shadow: var(--c-box-shadow);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
+  width: fit-content;
 }
 
 .popup-context {
-  width: 100%;
-  max-height: 550px;
+  max-height: 80vh;
   overflow-y: auto;
   overflow-x: hidden;
 }

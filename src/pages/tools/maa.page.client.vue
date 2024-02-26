@@ -1992,7 +1992,7 @@ import CONTROLJson from "/src/static/json/build/CONTROL.json";
 import POWERJson from "/src/static/json/build/POWER.json";
 import "/src/assets/css/riicCal.css";
 import {ElMessage} from "element-plus";
-import FeedBack from "/src/components/feedBack.vue";
+import FeedBack from "/src/components/feed-back.vue";
 
 export default {
   components: {FeedBack},

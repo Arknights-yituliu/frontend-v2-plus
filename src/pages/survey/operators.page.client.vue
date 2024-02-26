@@ -1,5 +1,5 @@
 <template>
-  <div class="survey_character_page">
+  <div class="survey_character_page o-sprite-scale">
     <c-popup :visible="introPopupVisible" v-model:visible="introPopupVisible">
       <!-- <div class="intro_title">填写流程说明</div> -->
       <div class="intro_wrap">
@@ -51,7 +51,7 @@
       <div style="width: 60px"></div>
       <c-button :color="'green'" :status="true" @click="upload()">手动保存练度</c-button>
       <c-button :color="'blue'" :status="btnStatus.btn_statistics"
-                @click="clickBtn('btn_statistics');statisticsCollapse()">统计干员练度
+                @click="clickBtn('btn_statistics');statisticsPopup()">统计干员练度
       </c-button>
       <c-button :color="'blue'" :status="btnStatus.btn_recommend"
                 @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）
@@ -257,84 +257,89 @@
     </c-collapse-item>
 
 
-    <!--    干员统计折叠栏-->
-    <c-collapse-item-v2 v-model:visible="collapseStatisticsVisible" :name="'statistics'">
-      <div class="control_bar_wrap">
-        <!--          干员统计-->
-        <div class="control_bar" style="align-items: normal;justify-content: space-around;margin: 20px 0">
-          <div class="control_operator_card">
-            <p> Dr.{{ userData.userName }}，您总计招募了{{ statisticsResult.total.own }}位干员，
-              未招募干员{{ statisticsResult.total.count - statisticsResult.total.own }}位，
-              未招募的干员是
-            </p>
-            <div class="not_own_operator_wrap">
-              <div class="operator-sprite-avatar-bg" style="margin: 0 4px 30px 4px"
-                   v-for="(operator,index) in statisticsResult.total.notOwn" :key="index">
-                <div :class="getAvatarUseInDisplayCard(operator.charId)"></div>
-                <div class="sprite-alt" style="top:70px">{{ operator.name }}</div>
-              </div>
+    <!--    干员统计弹窗-->
+    <c-popup :visible="statisticalPopupVisible">
+      <!--          干员统计-->
+      <div class="o-statistical-card-wrap">
+        <div class="o-statistical-card">
+          <h3>博士招募情况</h3>
+          <div class="o-statistical-card-label"> Dr.{{ userData.userName }}，您总计招募了{{ statisticsResult.total.own }}位干员，
+            <span v-show="statisticsResult.total.count - statisticsResult.total.own>0"> 未招募干员{{ statisticsResult.total.count - statisticsResult.total.own }}位</span>
+          </div>
+          <div v-show="statisticsResult.total.count - statisticsResult.total.own>0"
+               style="text-align: center"
+               class="o-statistical-card-label">
+            未招募的干员是：
+          </div>
+          <div class="not_own_operator_wrap">
+            <div class="o-not-own-avatar-sprite"
+                 style="margin: 8px"
+                 v-for="(operator,index) in statisticsResult.total.notOwn" :key="index">
+              <div :class="getAvatarSprite(operator.charId)" ></div>
+<!--              <span class="sprite-alt" style="top:70px">{{ operator.name }}</span>-->
             </div>
-            <table class="dev_table">
-              <tbody>
-              <tr>
-                <td>星级</td>
-                <td>已招募/总数</td>
-                <td>专三数量</td>
-                <td>3级X模组</td>
-                <td>3级Y模组</td>
-              </tr>
-              <tr>
-                <td>总计</td>
-                <td>{{ statisticsResult.total.own }}/{{ statisticsResult.total.count }}</td>
-                <td>{{ statisticsResult.total.skill.rank3 }}</td>
-                <td>{{ statisticsResult.total.modX.rank3 }}</td>
-                <td>{{ statisticsResult.total.modY.rank3 }}</td>
-              </tr>
-              <tr v-for="(detail,index) in statisticsDetail" :key="index">
-                <td><img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""></td>
-                <td>{{ detail.own }}/{{ detail.count }}</td>
-                <td>{{ detail.skill.rank3 }}</td>
-                <td>{{ detail.modX.rank3 }}</td>
-                <td>{{ detail.modY.rank3 }}</td>
-              </tr>
-              </tbody>
-            </table>
           </div>
 
-          <div class="control_operator_card">
-            <p>其中练度最高的十位干员是</p>
+          <table class="o-statistical-table">
+            <tbody>
+            <tr>
+              <td>星级</td>
+              <td>已招募/总数</td>
+              <td>专三数量</td>
+              <td>3级X模组</td>
+              <td>3级Y模组</td>
+            </tr>
+            <tr>
+              <td>总计</td>
+              <td>{{ statisticsResult.total.own }}/{{ statisticsResult.total.count }}</td>
+              <td>{{ statisticsResult.total.skill.rank3 }}</td>
+              <td>{{ statisticsResult.total.modX.rank3 }}</td>
+              <td>{{ statisticsResult.total.modY.rank3 }}</td>
+            </tr>
+            <tr v-for="(detail,index) in statisticsDetail" :key="index">
+              <td><img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""></td>
+              <td>{{ detail.own }}/{{ detail.count }}</td>
+              <td>{{ detail.skill.rank3 }}</td>
+              <td>{{ detail.modX.rank3 }}</td>
+              <td>{{ detail.modY.rank3 }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
 
-            <div class="operator-form">
-              <div class="operator-card" v-for="(operator, char_index) in statisticsResult.max" :key="char_index"
-              >
-                <div class="operator-sprite-avatar-bg">
-                  <div :class="getAvatarUseInDisplayCard(operator.charId)"></div>
-                  <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite" alt="">
-                  <div class="operator-level">
-                    {{ operator.level }}
-                  </div>
-                  <span class="sprite-alt-name">{{ operator.name }}</span>
+        <div class="o-statistical-card">
+          <h3>其中练度最高的十位干员是</h3>
+          <div class="o-statistical-ap-rank-form">
+            <div class="operator-card" v-for="(operator, char_index) in statisticsResult.max" :key="char_index"
+            >
+              <div class="operator-sprite-avatar-bg">
+                <div :class="getAvatarUseInDisplayCard(operator.charId)"></div>
+                <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite" alt="">
+                <div class="operator-level">
+                  {{ operator.level }}
                 </div>
-                <div v-for="(skill,index) in operator.skill" :key="index" class="operator-sprite-icon-bg">
-                  <div :class="getSkillSprite(skill.iconId)"></div>
-                  <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
-                       v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
-                  <span class="sprite-alt">{{ skill.name }}</span>
-                </div>
-                <div v-for="(equip,index) in operator.equip" :key="index" class="operator-sprite-icon-bg">
-                  <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
-                  <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
-                       v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
-                  <div class="sprite-alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
-                </div>
-                <div class="operator-sprite-icon-bg">
-                  <div :class="getItemSprite('AP_GAMEPLAY')"></div>
-                  <span class="sprite-alt">{{ operator.apCost.toFixed(0) }}</span>
-                </div>
+                <span class="sprite-alt-name">{{ operator.name }}</span>
+              </div>
+              <div v-for="(skill,index) in operator.skill" :key="index" class="operator-sprite-icon-bg">
+                <div :class="getSkillSprite(skill.iconId)"></div>
+                <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
+                     v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
+                <span class="sprite-alt">{{ skill.name }}</span>
+              </div>
+              <div v-for="(equip,index) in operator.equip" :key="index" class="operator-sprite-icon-bg">
+                <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
+                <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
+                     v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
+                <div class="sprite-alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
+              </div>
+              <div class="operator-sprite-icon-bg">
+                <div :class="getItemSprite('AP_GAMEPLAY')"></div>
+                <span class="sprite-alt">{{ operator.apCost.toFixed(0) }}</span>
               </div>
             </div>
           </div>
         </div>
+
 
         <!--          材料统计-->
         <div class="control_bar"
@@ -355,8 +360,12 @@
             </div>
           </div>
         </div>
+
       </div>
-    </c-collapse-item-v2>
+    </c-popup>
+
+
+
 
     <!--    干员推荐-->
     <c-collapse-item-v2 v-model:visible="collapseRecommendVisible" :name="'recommend'">
@@ -524,7 +533,7 @@ import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";
 import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
-import feedBack from '/src/components/feedBack.vue';
+import feedBack from '/src/components/feed-back.vue';
 
 
 import "/src/assets/css/survey/survey_character.css";
@@ -1088,6 +1097,15 @@ let apCostCount = ref(0) //理智消耗数量
 let itemCostTable = ref({}) //材料消耗数量
 let collapseStatisticsVisible = ref(false) //干员练度折叠栏的展开状态
 
+let statisticalPopupVisible = ref(false)
+
+function statisticsPopup(){
+  statistics()
+  setTimeout(function () {
+    statisticalPopupVisible.value = !statisticalPopupVisible.value
+  }, 20)
+}
+
 /**
  * 控制干员练度折叠栏的展开状态
  */
@@ -1214,6 +1232,12 @@ function feedback() {
 }
 
 
+function getAvatarSprite(id){
+
+  return "bg-" + id;
+
+}
+
 /**
  * 获取雪碧图
  * @param {string} id 图片id
@@ -1243,6 +1267,8 @@ function getAvatarUseInRecommend(id) {
 onMounted(() => {
   getCacheUserData()
   getOperatorData();
+
+
 });
 </script>
 

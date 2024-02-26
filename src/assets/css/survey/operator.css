@@ -14,17 +14,12 @@
     width: 500px;
 }
 
-
-
-
 .operator-sprite-avatar-bg {
     width: 90px;
     height: 90px;
     position: relative;
     margin: 0 4px 0 0;
 }
-
-
 
 .operator-sprite-avatar {
     transform: scale(0.32);
@@ -246,3 +241,53 @@
 }
 
 
+.o-sprite-scale{
+    --not-own-avatar:calc(50 / 180);
+    --not-own-avatar-position:calc((50px - 180px) / 2);
+}
+
+.o-not-own-avatar-sprite{
+    width: 50px;
+    height: 50px;
+    position: relative;
+}
+
+.o-not-own-avatar-sprite div{
+    transform: scale(var(--not-own-avatar));
+    position: absolute;
+    top: var(--not-own-avatar-position);
+    left: var(--not-own-avatar-position);
+}
+
+.o-statistical-card-wrap{
+    padding: 12px;
+    max-width: 1080px;
+}
+
+.o-statistical-card{
+
+}
+
+.o-statistical-card-label{
+    font-size: 18px;
+    box-sizing: border-box;
+    padding: 8px;
+    text-align: center;
+}
+
+.o-statistical-ap-rank-form{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.o-statistical-table{
+  border-collapse: collapse;
+  margin: 4px auto;
+  text-align: center;
+}
+.o-statistical-table td{
+    padding: 8px;
+    border: 1px solid var(--c-border-color);
+}
