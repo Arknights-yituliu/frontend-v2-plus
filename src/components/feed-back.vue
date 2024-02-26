@@ -3,7 +3,7 @@ import {ref} from "vue";
 
 let feedbackPopupVisible = ref(false)
 
-let feedbackPopupStyle = 'width:550px;'
+let feedbackPopupStyle = 'width:500px;'
 
 const feedbackLinkList = {
   "GitHubIssues":'https://github.com/Arknights-yituliu/frontend-v2-plus/issues',
@@ -30,43 +30,36 @@ function openNewPage(url){
       <tbody>
       <tr>
         <td>反馈方式</td>
-        <td style="width: 100px">转跳</td>
         <td >反馈流程（越靠前越推荐）</td>
+        <td style="width: 100px">点击转跳</td>
       </tr>
       <tr>
         <td>Github issues</td>
+        <td>国内访问体验稍差一点</td>
         <td>
           <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往</c-button>
         </td>
-        <td>国内访问体验稍差一点</td>
       </tr>
       <tr>
         <td>粉丝群539600566</td>
+        <td>进群@山桜反馈，如果不在找管理员</td>
         <td>
           <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</c-button>
         </td>
-        <td>进群@山桜反馈，如果不在找管理员</td>
-      </tr>
-      <tr>
-        <td>开发群938710832</td>
-        <td>
-          <!--          <c-button :color="`green`" :status="true" @click="openQQPage()">点击前往</c-button>-->
-        </td>
-        <td>如果想参与开发或提出优化建议请加开发群</td>
       </tr>
       <tr>
         <td>B站@罗德岛基建BETA</td>
+        <td>直接私信反馈</td>
         <td>
           <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往</c-button>
         </td>
-        <td>直接私信反馈</td>
       </tr>
       <tr>
-        <td>QQ问卷</td>
+        <td>开发群938710832</td>
+        <td>如果有能力自己解决问题，可以加开发群</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.QQDocs)">点击前往</c-button>
+          <!--          <c-button :color="`green`" :status="true" @click="openQQPage()">点击前往</c-button>-->
         </td>
-        <td>无法交流，只能处理简单的问题（例如错字）</td>
       </tr>
       </tbody>
     </table>
@@ -76,14 +69,16 @@ function openNewPage(url){
 
 <style scoped>
 .feedback-table{
-  margin:10px auto;
+  margin:12px;
   border-collapse: collapse;
   text-align: center;
 }
 
+
 .feedback-table td{
-  padding: 4px;
-  border: 1px solid var(--c-border-color);
+  padding: 12px ;
+  line-height: 24px;
+  border-bottom: 1px solid var(--c-border-color);
 }
 
 </style>
