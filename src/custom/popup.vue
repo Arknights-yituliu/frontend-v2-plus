@@ -1,9 +1,9 @@
 <template>
-  <div :style="popupStyle" class="popup-wrap">
-    <div class="popup_mask" @click="openAndClose(false)">
+  <div  class="popup-wrap" v-show="visible||modelValue">
+    <div class="popup_mask" @click="openAndClose(false)" >
     </div>
 
-    <div class="popup-box" :style="style">
+    <div class="popup-box" :style="style" >
       <slot name="header"></slot>
       <div class="popup-context" :style="context_height_style">
         <slot></slot>
@@ -15,50 +15,23 @@
 </template>
 
 <script setup>
-import {ref, watch} from "vue";
+import {ref} from "vue";
 const emit = defineEmits(["update:visible","update:modelValue"]);
 const props = defineProps(["modelValue", "visible", "width", "height",'style']);
 const context_height_style = `height:${props.height}`;
 
-let popupStyle = ref("display: none;");
-if (props.visible||props.modelValue) {
-  popupStyle.value = "display: block;";
-}
 
 function openAndClose(visible) {
   emit("update:visible", visible);
   emit("update:modelValue",visible)
-  if (visible) {
-    popupStyle.value = "display: block;";
-  } else {
-    popupStyle.value = "display: none;";
-  }
+  console.log(visible)
+  // if (visible) {
+  //   popupStyle.value = "display: block;";
+  // } else {
+  //   popupStyle.value = "display: none;";
+  // }
 }
 
-
-watch(
-    () => props.visible,
-    (newVal) => {
-      // console.log('visible新值：', newVal)
-      if (newVal) {
-        popupStyle.value = "display: block;";
-      } else {
-        popupStyle.value = "display: none;";
-      }
-    }
-);
-
-watch(
-    () => props.modelValue,
-    (newVal) => {
-      // console.log('modelValue新值：', newVal)
-      if (newVal) {
-        popupStyle.value = "display: block;";
-      } else {
-        popupStyle.value = "display: none;";
-      }
-    }
-);
 </script>
 
 <style scoped>
@@ -87,7 +60,7 @@ watch(
   /* display: none; */
   position: relative;
   z-index: 2100;
-  margin: 80px auto;
+  margin: 10vh auto;
   background-color: var(--c-background-color);
   border-radius: 6px;
   box-sizing: border-box;
