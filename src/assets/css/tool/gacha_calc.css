@@ -6,29 +6,7 @@
     box-shadow: 1px 1px 8px var(--c-box-shadow-color);
 }
 
-.gc-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
 
-    .el-radio-button__inner {
-        width: 160px;
-    }
-
-    .el-collapse-item__content {
-        padding-bottom: 8px;
-    }
-
-    .el-collapse-item__header {
-        border-bottom: 1px solid var(--c-border-color);
-    }
-
-    .el-checkbox-button__inner {
-        padding: 2px;
-        border: var(--el-border);
-        border-radius: 6px;
-    }
-}
 
 .gc-el-checkbox-button {
     margin: 4px;
@@ -102,7 +80,7 @@
 
 /*攒抽计算结果的四项氪金资源的条状容器内的文字样式*/
 .gc-calc-result-resources-bar span {
-    width: 80px;
+    width: 90px;
     font-size: 18px;
     font-weight: bolder;
     text-align: left;
@@ -111,7 +89,7 @@
 
 /*雪碧图的容器，容器相对定位，内部雪碧图绝对定位，通过这种方式让图片展示的大小和外容器大小一致*/
 .gc-image-sprite {
-    width: 40px;
+    width: 36px;
     height: 36px;
     position: relative;
 }
