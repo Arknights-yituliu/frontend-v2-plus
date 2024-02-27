@@ -797,7 +797,7 @@ function importSchedule(schedule) {
 
 }
 
-let guidePopup = ref(true)
+let guidePopup = ref(false)
 
 function setPosition() {
   for (const charId in filterOperatorList.value) {
@@ -859,7 +859,7 @@ onMounted(() => {
 <!--      </c-button>-->
       <feed-back/>
 
-      <c-button :color="COLOR.GREEN" :status="true">
+      <c-button :color="COLOR.GREEN" :status="true" @click="guidePopup=true">
         操作指引
       </c-button>
 
