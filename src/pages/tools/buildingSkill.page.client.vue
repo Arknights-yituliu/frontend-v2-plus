@@ -4,6 +4,7 @@ import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import {onMounted, ref} from "vue";
 import {debounce} from "../../utils/debounce";
+import {translate} from "/src/utils/i18n";
 
 let buildingTable = {}
 for (const operator of building_table) {
@@ -188,12 +189,12 @@ onMounted(() => {
 <template>
   <div class="building-skill-page">
     <div class="b-filter-condition-box">
-      <div class="b-condition-bar" v-for="(room,key) in operatorFilterConditionTable" v-show="room.display" :key="key">
-        <span class="b-room-type-text" :style="`color:${room.color}`">{{ room.name }}</span>
-        <c-button v-for="(condition,index) in room.conditions" :key="index" style="margin: 2px"
+      <div class="b-condition-bar" v-for="(conditionType,key) in operatorFilterConditionTable" v-show="conditionType.display" :key="key">
+        <span class="b-room-type-text" :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
+        <c-button v-for="(condition,index) in conditionType.conditions" :key="index" style="margin: 2px"
                   :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
                   @click="filterOperatorByTag(condition,key)">
-          {{ condition.label }}
+          {{ translate('schedule', condition.label) }}
         </c-button>
       </div>
     </div>

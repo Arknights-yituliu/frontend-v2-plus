@@ -1247,10 +1247,10 @@ onMounted(() => {
         </div>
 
         <div class="filter-condition-box">
-          <div class="condition-bar" v-for="(condition,key) in operatorFilterConditionTable" v-show="condition.display"
+          <div class="condition-bar" v-for="(conditionType,key) in operatorFilterConditionTable" v-show="conditionType.display"
                :key="key">
-            <span :style="`color:${condition.color}`">{{ translate('schedule', condition.name) }}</span>
-            <c-button v-for="(condition,index) in condition.conditions" :key="index"
+            <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
+            <c-button v-for="(condition,index) in conditionType.conditions" :key="index"
                       :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
                       @click="filterOperatorByTag(condition,key)">
               {{ translate('schedule', condition.label) }}

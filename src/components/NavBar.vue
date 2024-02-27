@@ -11,6 +11,11 @@ const pageContext = usePageContext();
 
 // const theme = inject("theme");
 
+const languagelabel = {
+  cn:'中文',
+  en:'English'
+}
+
 let menu_flag = ref(false);
 
 function menu_collapse(flag) {
@@ -31,6 +36,7 @@ function menu_collapse(flag) {
 
 let aside_flag = ref(true);
 let asideIcon = ref('icon-menuoff')
+
 function aside_collapse() {
   aside_flag.value = !aside_flag.value;
   let aside = document.getElementById("aside114")
@@ -134,6 +140,22 @@ function getPageTitle(path) {
   }
 }
 
+let i18nButtonVisible = ref(false)
+
+const displayMenu = ['buildingSkill', 'schedule']
+
+function i18nButtonDisplay() {
+  i18nButtonVisible.value = false
+  const url = window.location.href;
+  for (const path of displayMenu) {
+    if (url.indexOf(path) > -1) {
+      i18nButtonVisible.value = true
+      break
+    }
+  }
+
+}
+
 function updateVisits(pathName) {
   //访问"/"直接更新
   if (pathName === "/") {
@@ -185,6 +207,7 @@ onMounted(() => {
   updateVisits(pathName);
   getPageTitle(pathName);
   themeV2.value = localStorage.getItem('theme_v2') === 'dark' ? 'dark' : 'light'
+  i18nButtonDisplay()
   console.log(themeV2.value)
 });
 import {language} from '/src/utils/i18n.js'
@@ -204,27 +227,12 @@ import {language} from '/src/utils/i18n.js'
 
     <div class="spacer"></div>
     <i class="iconfont theme_button" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
-    <!--    <c-popover :name="'theme_menu'">-->
-    <!--      <template #title>-->
-    <!--        &lt;!&ndash;        <i style="font-size: 32px;color: rgb(230,230,230)"&ndash;&gt;-->
-    <!--        &lt;!&ndash;           class="iconfont icon-moon" id="menu-button-desktop" @click="aside_collapse()">&ndash;&gt;-->
-    <!--        &lt;!&ndash;        </i>&ndash;&gt;-->
-    <!--        <i class="iconfont icon-sun theme_button">-->
-    <!--        </i>-->
-    <!--      </template>-->
-    <!--      <div class="theme-option-wrap" id="theme_menu">-->
-    <!--        <div class="theme-option" @click="switchTheme('dark')">深色模式</div>-->
-    <!--        <div class="theme-option" @click="switchTheme('light')">浅色模式</div>-->
-    <!--      </div>-->
-    <!--    </c-popover>-->
-
-    <!--    <el-switch class="navbar-switch" inline-prompt v-model="theme" :active-icon="Moon" :inactive-icon="Sunny"-->
-    <!--               size="large"/>-->
-    <login></login>
-
-    <c-popover :name="'language'" v-show="pageTitle.indexOf('排班')>-1">
+    <c-popover :name="'language'" v-show="i18nButtonVisible">
       <template #title>
-       <i class="iconfont icon-language" style="font-size: 32px;padding: 0 8px;color:white"></i>
+        <div style="display: flex;align-items: center">
+          <i class="iconfont icon-language" style="font-size: 24px;padding: 0 4px;color:white"></i>
+          <span style="font-size: 18px;color: white;">{{ languagelabel[language] }}</span>
+        </div>
       </template>
 
       <div class="language-options" id="language">
@@ -232,6 +240,7 @@ import {language} from '/src/utils/i18n.js'
         <span @click="language='en'">English</span>
       </div>
     </c-popover>
+    <login></login>
 
 
     <div class="drawer_wrap">
@@ -311,11 +320,11 @@ import {language} from '/src/utils/i18n.js'
 
 }
 
-.language-options{
+.language-options {
   width: 100px;
 }
 
-.language-options span{
+.language-options span {
   display: block;
   padding: 8px;
   font-size: 16px;
