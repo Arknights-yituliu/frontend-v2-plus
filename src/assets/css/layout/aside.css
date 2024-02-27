@@ -101,9 +101,16 @@
     line-height: 80px;
   }
 
-  .menu-bar {
-    margin-top: 16px;
+  .menu-child {
     font-size: 20px;
+  }
+
+  .menu-parent {
+    font-size: 24px;
+  }
+
+  .menu-bar {
+    width: 300px;
   }
 
 }

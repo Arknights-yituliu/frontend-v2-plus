@@ -255,7 +255,7 @@ function openNewPage(url) {
               {{ r.text }}
             </a>
             <!-- 二级标题组 -->
-            <a :href="c.path" class="menu-bar" v-for="(c,index) in r.child" :key="index">
+            <a :href="c.path" class="menu-bar menu-child" v-for="(c,index) in r.child" :key="index">
                 <i class="iconfont menu-icon" :class="`icon-${c.icon}`"></i>
                  {{ c.text }}
             </a>
