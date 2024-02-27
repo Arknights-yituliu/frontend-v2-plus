@@ -1,19 +1,14 @@
 <script setup>
 import {ref, onMounted} from "vue";
 import toolApi from "/src/api/tool";
-import {usePageContext} from "/src/renderer/usePageContext";
 import login from "/src/pages/survey/login.vue";
 import routesJson from "/src/static/json/routes.json";
 import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
+import {language} from '/src/utils/i18n.js'
 
-
-const pageContext = usePageContext();
-
-// const theme = inject("theme");
-
-const languagelabel = {
-  cn:'中文',
-  en:'English'
+const LanguageLabel = {
+  cn: '中文',
+  en: 'English'
 }
 
 let menu_flag = ref(false);
@@ -79,24 +74,8 @@ function switchTheme() {
   localStorage.setItem("theme_v2", themeV2.value)
 }
 
-function getThemeIcon() {
-}
-
-// watch(theme, () => {
-//   const theme_name = theme.value ? "dark" : "light";
-//   const remove_name = theme.value ? "light" : "dark";
-//   const root_ele = document.querySelector(":root");
-//   if (root_ele.classList.contains(remove_name)) {
-//     root_ele.classList.remove(remove_name);
-//   }
-//   root_ele.classList.add(theme_name);
-//   cookie.set("theme", theme_name, {expires: 30});
-// });
-
-
 const routes = ref(routesJson);
 const noUpVi = ref(notUpdateVisitsRequestsJson);
-
 
 let pageTitle = ref("");
 
@@ -210,7 +189,22 @@ onMounted(() => {
   i18nButtonDisplay()
   console.log(themeV2.value)
 });
-import {language} from '/src/utils/i18n.js'
+
+let feedbackPopupVisible = ref(false)
+
+let feedbackPopupStyle = 'width:500px;'
+
+const feedbackLinkList = {
+  "GitHubIssues":'https://github.com/Arknights-yituliu/frontend-v2-plus/issues',
+  "OfficialAccount":'https://space.bilibili.com/688411531',
+  "QQFan":'https://jq.qq.com/?_wv=1027&k=q1z3p9Yj',
+  "QQDocs":'https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill'
+}
+
+function openNewPage(url){
+  window.open(url)
+}
+
 </script>
 
 
@@ -226,15 +220,18 @@ import {language} from '/src/utils/i18n.js'
 
 
     <div class="spacer"></div>
-    <i class="iconfont theme_button" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
+    <i class="iconfont icon-theme-style" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
+    <div class="icon-button"  @click="feedbackPopupVisible = !feedbackPopupVisible">
+      <i class="iconfont icon-survey icon-feed-back-style"></i>
+      <span style="font-size: 14px;color: white;">反馈</span>
+    </div>
     <c-popover :name="'language'" v-show="i18nButtonVisible">
       <template #title>
-        <div style="display: flex;align-items: center">
-          <i class="iconfont icon-language" style="font-size: 24px;padding: 0 4px;color:white"></i>
-          <span style="font-size: 18px;color: white;">{{ languagelabel[language] }}</span>
+        <div class="icon-button">
+          <i class="iconfont icon-language icon-language-style"></i>
+          <span style="font-size: 14px;color: white;">{{ LanguageLabel[language] }}</span>
         </div>
       </template>
-
       <div class="language-options" id="language">
         <span @click="language='cn'">中文</span>
         <span @click="language='en'">English</span>
@@ -273,6 +270,50 @@ import {language} from '/src/utils/i18n.js'
       <div class="menu-mask" id="drawerMask514" @click="menu_collapse(false)"></div>
     </div>
   </div>
+
+
+  <c-popup v-model:visible="feedbackPopupVisible" :style="feedbackPopupStyle">
+    <table class="feedback-table">
+      <tbody>
+      <tr>
+        <td>反馈方式</td>
+        <td >反馈流程（越靠前越推荐）</td>
+        <td style="width: 100px">点击转跳</td>
+      </tr>
+      <tr>
+        <td>Github issues</td>
+        <td>国内访问体验稍差一点</td>
+        <td>
+          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往</c-button>
+        </td>
+      </tr>
+      <tr>
+        <td>粉丝群539600566</td>
+        <td>进群@山桜反馈，如果不在找管理员</td>
+        <td>
+          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</c-button>
+        </td>
+      </tr>
+      <tr>
+        <td>B站@罗德岛基建BETA</td>
+        <td>直接私信反馈</td>
+        <td>
+          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往</c-button>
+        </td>
+      </tr>
+      <tr>
+        <td>开发群938710832</td>
+        <td>如果有能力自己解决问题，可以加开发群</td>
+        <td>
+          <!--          <c-button :color="`green`" :status="true" @click="openQQPage()">点击前往</c-button>-->
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </c-popup>
+
+
+
 </template>
 
 
@@ -288,9 +329,32 @@ import {language} from '/src/utils/i18n.js'
   color: rgb(230, 230, 230);
 }
 
-.theme_button {
-  font-size: 32px;
-  color: rgb(230, 230, 230);
+.icon-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.icon-theme-style {
+  font-size: 24px;
+  font-weight: bolder;
+  padding-right: 4px;
+  color: rgb(255, 255, 255);
+}
+
+.icon-language-style {
+  font-size: 24px;
+  color: white;
+  padding-right: 4px;
+  font-weight: bolder;
+}
+
+.icon-feed-back-style {
+  font-size: 24px;
+  color: white;
+  padding-right: 4px;
+  font-weight: bolder;
 }
 
 @media (max-width: 1080px) {
@@ -305,8 +369,16 @@ import {language} from '/src/utils/i18n.js'
     display: none;
   }
 
-  .theme_button {
-    font-size: 50px;
+  .icon-theme-style {
+    font-size: 36px;
+  }
+
+  .icon-language-style {
+    font-size: 36px;
+  }
+
+  .icon-feed-back-style {
+    font-size: 36px;
   }
 
   .page-title {
@@ -331,6 +403,20 @@ import {language} from '/src/utils/i18n.js'
   cursor: pointer;
   width: 100px;
   box-sizing: border-box;
+}
+
+
+.feedback-table{
+  margin-top: 12px;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+
+.feedback-table td{
+  padding: 12px ;
+  line-height: 24px;
+  border-bottom: 1px solid var(--c-border-color);
 }
 
 </style>

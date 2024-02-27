@@ -5,7 +5,6 @@ import schedule_template_json from '/src/static/json/build/plans_template.json'
 import character_table from '/src/static/json/survey/character_table_simple.json'
 import schedule_menu from '/src/static/json/build/schedule_menu.json'
 import building_table from '/src/static/json/build/building_table.json'
-import feedBack from '/src/components/feed-back.vue';
 
 import buildingApi from '/src/api/building.js'
 import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
@@ -857,7 +856,7 @@ onMounted(() => {
 <!--      <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">-->
 <!--        {{ translate('schedule', 'schedule.DownloadScheduleFile') }}-->
 <!--      </c-button>-->
-      <feed-back/>
+
 
       <c-button :color="COLOR.GREEN" :status="true" @click="guidePopup=true">
         操作指引

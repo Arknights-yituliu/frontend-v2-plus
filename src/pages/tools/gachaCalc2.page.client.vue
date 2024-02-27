@@ -7,6 +7,7 @@ import potentialTable from '/src/static/json/tools/potentialGachaResources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/activityScheduleByHoneycake.json'
 import storeAPI from '/src/api/store'
 
+
 // 罗德岛蜜饼工坊预测的其他奖励排期
 let honeyCakeTable = ref([])
 // 罗德岛蜜饼工坊预测的活动排期
@@ -667,7 +668,8 @@ const handleChange = (val) => {
           <template #title>
             <div class="gc-collapse-title-icon" style="background: #ec8338"></div>
             <span class="gc-collapse-title-font">
-                共计{{ calculationResult.totalDraw }}抽，氪金{{ calculationResult.totalAmountOfRecharge }}元
+                共计{{ calculationResult.totalDraw }}抽，
+              氪金{{ keepTheDecimalPoint(calculationResult.totalAmountOfRecharge,0) }}元
               </span>
           </template>
 
@@ -737,6 +739,7 @@ const handleChange = (val) => {
             <span>{{ calculationResult.tenGachaTicket }}</span>
           </div>
 
+
         </el-collapse-item>
       </el-collapse>
     </div>
@@ -747,7 +750,7 @@ const handleChange = (val) => {
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
             <span class="gc-collapse-title-font">
-               库存/预留&emsp;{{ calculationResult.existTotalDraw }}抽
+               库存/预留&emsp;{{ keepTheDecimalPoint(calculationResult.existTotalDraw,0) }}抽
               </span>
           </template>
           <div class="gc-collapse-content-subheading">
@@ -799,7 +802,7 @@ const handleChange = (val) => {
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
             <span class="gc-collapse-title-font">
-               搓玉/绿票商店&emsp;{{ calculationResult.produceOrundumTotalDraw }}抽
+               搓玉/绿票商店&emsp;{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw,0) }}抽
               </span>
           </template>
           <div class="gc-collapse-content-subheading">
@@ -837,7 +840,7 @@ const handleChange = (val) => {
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
             <span class="gc-collapse-title-font">
-               日常积累&emsp;{{ calculationResult.dailyTotalDraw }}抽
+               日常积累&emsp;{{ keepTheDecimalPoint(calculationResult.dailyTotalDraw,0) }}抽
               </span>
           </template>
 
@@ -945,7 +948,7 @@ const handleChange = (val) => {
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
             <span class="gc-collapse-title-font">
-               潜在资源&emsp;{{ calculationResult.potentialTotalDraw }}抽
+               潜在资源&emsp;{{ keepTheDecimalPoint(calculationResult.potentialTotalDraw,0) }}抽
               </span>
           </template>
           <div class="gc-collapse-content-subheading">
@@ -1017,7 +1020,7 @@ const handleChange = (val) => {
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
             <span class="gc-collapse-title-font">
-               氪金资源&emsp;{{ calculationResult.rechargeTotalDraw }}抽
+               氪金资源&emsp;{{ keepTheDecimalPoint(calculationResult.rechargeTotalDraw,0) }}抽
               </span>
           </template>
 
@@ -1202,7 +1205,7 @@ const handleChange = (val) => {
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
             <span class="gc-collapse-title-font">
-               活动获得（估算）&emsp;{{ calculationResult.activityTotalDraw }}抽
+               活动获得（估算）&emsp;{{ keepTheDecimalPoint(calculationResult.activityTotalDraw,0) }}抽
               </span>
           </template>
           <!--复刻活动-->
@@ -1283,7 +1286,7 @@ const handleChange = (val) => {
           <template #title>
             <div class="gc-collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
             <span class="gc-collapse-title-font">
-               其他资源（估算）&emsp;{{ calculationResult.otherTotalDraw }}抽
+               其他资源（估算）&emsp;{{ keepTheDecimalPoint(calculationResult.otherTotalDraw,0) }}抽
               </span>
           </template>
 
