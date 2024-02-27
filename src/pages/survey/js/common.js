@@ -77,7 +77,7 @@ function filterByCharacterProperty(filterCondition, characterInfo) {
 
         if (property === 'rarity' || property === 'profession' || property === 'own' ||
             property === 'itemObtainApproach') {
-            const flag = determineProperty(filterCondition, characterInfo, property);
+            const flag = hasProperty(filterCondition, characterInfo, property);
             show = show && flag
         }
         if(property === 'equip'){
@@ -101,7 +101,7 @@ function filterByCharacterProperty(filterCondition, characterInfo) {
  * @param property  角色属性
  * @returns {boolean}  筛选结果
  */
-function determineProperty(filterCondition, characterInfo, property) {
+function hasProperty(filterCondition, characterInfo, property) {
     if (filterCondition[property].length === 0) return true;
     for (let condition of filterCondition[property]) {
         if (characterInfo[property] === condition) {
@@ -111,11 +111,11 @@ function determineProperty(filterCondition, characterInfo, property) {
     return false;
 }
 
+
 function determineHasProperty(filterCondition, characterInfo, property) {
     if (filterCondition[property].length === 0) return true;
     for (let condition of filterCondition[property]) {
-
-        if (((characterInfo[property] === void 0) === condition)) {
+        if ((!characterInfo[property])=== condition) {
             return false;
         }
     }
