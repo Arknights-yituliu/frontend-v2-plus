@@ -797,6 +797,7 @@ function importSchedule(schedule) {
 
 }
 
+let guidePopup = ref(true)
 
 function setPosition() {
   for (const charId in filterOperatorList.value) {
@@ -851,15 +852,42 @@ onMounted(() => {
         </c-button>
       </div>
       <c-button :color="COLOR.BLUE" :status="true" @click="saveAndDownloadScheduleFile()">
-        {{ translate('schedule', 'schedule.SaveAndDownloadScheduleFile') }}
-      </c-button>
-      <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">
         {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
       </c-button>
+<!--      <c-button :color="COLOR.BLUE" :status="true" @click="downloadScheduleFile()">-->
+<!--        {{ translate('schedule', 'schedule.DownloadScheduleFile') }}-->
+<!--      </c-button>-->
       <feed-back/>
+
+      <c-button :color="COLOR.GREEN" :status="true">
+        操作指引
+      </c-button>
+
 
     </div>
   </div>
+
+  <c-popup v-model:visible="guidePopup">
+    <div class="guide-box">
+      <h1 style="text-align: center">排班生成器使用说明</h1>
+      <h2>修改贸易站、制造站数量及换班次数</h2>
+      <p>点击顶栏的<span class="guide-keynote">“选择基建类型”</span>按钮</p>
+      <h2>通过Id导入排班</h2>
+      <p>打开排班文件内，查看文件内的<span class="guide-keynote">id属性</span>，复制id，填入输入框，点击根据id导入排班</p>
+      <h2>通过文件导入排班</h2>
+      <p>点击<span class="guide-keynote">“导入排班文件”</span>按钮，选择你要导入的文件，即可导入</p>
+      <h2>使用无人机的房间编号</h2>
+      <p>房间编号为下图中的编号</p>
+      <img src="/image/schedule/房间编号.jpg"  alt="" class="guide-image">
+      <h2>定时换班</h2>
+      <p>不打开定时换班设置，MAA将默认按照排班的顺序执行排班，打开后将按照时间段执行排班</p>
+      <h2>基建布局上的房间编号</h2>
+      <img src="/image/schedule/基建布局.jpg"  alt="" class="guide-image">
+      <p>布局的房间位置不影响换班，MAA执行排班时会根据房间编号进行换班，制造站#1对应下图的01房间</p>
+      <img src="/image/schedule/房间编号.jpg"  alt="" class="guide-image">
+
+    </div>
+  </c-popup>
 
   <span class="schedule-version">V1.3.1</span>
 
