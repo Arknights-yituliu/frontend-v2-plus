@@ -195,13 +195,13 @@ let feedbackPopupVisible = ref(false)
 let feedbackPopupStyle = 'width:500px;'
 
 const feedbackLinkList = {
-  "GitHubIssues":'https://github.com/Arknights-yituliu/frontend-v2-plus/issues',
-  "OfficialAccount":'https://space.bilibili.com/688411531',
-  "QQFan":'https://jq.qq.com/?_wv=1027&k=q1z3p9Yj',
-  "QQDocs":'https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill'
+  "GitHubIssues": 'https://github.com/Arknights-yituliu/frontend-v2-plus/issues',
+  "OfficialAccount": 'https://space.bilibili.com/688411531',
+  "QQFan": 'https://jq.qq.com/?_wv=1027&k=q1z3p9Yj',
+  "QQDocs": 'https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill'
 }
 
-function openNewPage(url){
+function openNewPage(url) {
   window.open(url)
 }
 
@@ -221,7 +221,7 @@ function openNewPage(url){
 
     <div class="spacer"></div>
     <i class="iconfont icon-theme-style" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
-    <div class="icon-button"  @click="feedbackPopupVisible = !feedbackPopupVisible">
+    <div class="icon-button" @click="feedbackPopupVisible = !feedbackPopupVisible">
       <i class="iconfont icon-survey icon-feed-back-style"></i>
       <span style="font-size: 14px;color: white;">反馈</span>
     </div>
@@ -245,23 +245,19 @@ function openNewPage(url){
         <div class="menu_table">
           <!-- 标题区 -->
           <a href="/" style="text-decoration: none; color: white">
-            <div class="aside-title">明日方舟一图流</div>
+            <div class="menu-label">明日方舟一图流</div>
           </a>
           <!-- 导航菜单 -->
           <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
             <!-- 一级标题 -->
-            <a class="aside_menu_parent nav-href" :href="r.path">
-              <div class="aside-nav aside_parent" v-show="r.isChild">
-                <div class="aside-menu-parent-icon"></div>
-                {{ r.text }}
-              </div>
+            <a class="menu-bar menu-parent" :href="r.path" v-show="r.isChild">
+              <div class="menu-parent-icon"></div>
+              {{ r.text }}
             </a>
             <!-- 二级标题组 -->
-            <a :href="c.path" class="nav-href" v-for="(c,index) in r.child" :key="index">
-              <div class="aside-nav">
-                <div class="aside-menu-child-icon"></div>
-                {{ c.text }}
-              </div>
+            <a :href="c.path" class="menu-bar" v-for="(c,index) in r.child" :key="index">
+                <i class="iconfont menu-icon" :class="`icon-${c.icon}`"></i>
+                 {{ c.text }}
             </a>
             <div class="aside-divider"></div>
           </div>
@@ -277,14 +273,15 @@ function openNewPage(url){
       <tbody>
       <tr>
         <td>反馈方式</td>
-        <td >反馈流程（越靠前越推荐）</td>
+        <td>反馈流程（越靠前越推荐）</td>
         <td style="width: 100px">点击转跳</td>
       </tr>
       <tr>
         <td>Github issues</td>
         <td>国内访问体验稍差一点</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往</c-button>
+          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往
+          </c-button>
         </td>
       </tr>
       <tr>
@@ -298,7 +295,8 @@ function openNewPage(url){
         <td>B站@罗德岛基建BETA</td>
         <td>直接私信反馈</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往</c-button>
+          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往
+          </c-button>
         </td>
       </tr>
       <tr>
@@ -311,7 +309,6 @@ function openNewPage(url){
       </tbody>
     </table>
   </c-popup>
-
 
 
 </template>
@@ -355,6 +352,12 @@ function openNewPage(url){
   color: white;
   padding-right: 4px;
   font-weight: bolder;
+}
+
+.menu-icon{
+  font-size: 16px;
+  padding: 0 8px;
+
 }
 
 @media (max-width: 1080px) {
@@ -406,15 +409,15 @@ function openNewPage(url){
 }
 
 
-.feedback-table{
+.feedback-table {
   margin-top: 12px;
   border-collapse: collapse;
   text-align: center;
 }
 
 
-.feedback-table td{
-  padding: 12px ;
+.feedback-table td {
+  padding: 12px;
   line-height: 24px;
   border-bottom: 1px solid var(--c-border-color);
 }

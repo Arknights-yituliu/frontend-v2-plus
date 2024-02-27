@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4327035 */
-  src: url('iconfont.woff2?t=1709029246083') format('woff2'),
-       url('iconfont.woff?t=1709029246083') format('woff'),
-       url('iconfont.ttf?t=1709029246083') format('truetype');
+  src: url('iconfont.woff2?t=1709032800579') format('woff2'),
+       url('iconfont.woff?t=1709032800579') format('woff'),
+       url('iconfont.ttf?t=1709032800579') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,74 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-encourage:before {
+  content: "\eb33";
+}
+
+.icon-developer:before {
+  content: "\e636";
+}
+
+.icon-shop:before {
+  content: "\e8bb";
+}
+
+.icon-tool:before {
+  content: "\e601";
+}
+
+.icon-user:before {
+  content: "\e616";
+}
+
+.icon-item:before {
+  content: "\e6ce";
+}
+
+.icon-develop:before {
+  content: "\e7c2";
+}
+
+.icon-calculator:before {
+  content: "\e8b4";
+}
+
+.icon-materials:before {
+  content: "\e68a";
+}
+
+.icon-log:before {
+  content: "\e69d";
+}
+
+.icon-survey2:before {
+  content: "\e61c";
+}
+
+.icon-schedule:before {
+  content: "\e649";
+}
+
+.icon-pack:before {
+  content: "\e707";
+}
+
+.icon-rank:before {
+  content: "\e60a";
+}
+
+.icon-logistics:before {
+  content: "\e913";
+}
+
+.icon-elite:before {
+  content: "\e600";
+}
+
+.icon-link:before {
+  content: "\e60b";
 }
 
 .icon-feed-back:before {
