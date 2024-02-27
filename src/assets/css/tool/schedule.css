@@ -1,11 +1,14 @@
-.maa-schedule-wrap-v2{
+.maa-schedule-wrap-v2 {
     width: 100%;
     overflow: auto;
 }
+
+
 .maa-schedule-v2 {
-    width:1400px;
-    height: 1400px;
+    width: 1400px;
+    height: auto;
     overflow: hidden;
+    padding-bottom: 100px;
 }
 
 .schedule-version {
@@ -13,7 +16,31 @@
     bottom: 20px;
     right: 20px;
     font-weight: bold;
+}
 
+.guide-box {
+    max-width: 800px;
+    min-width: 350px;
+    padding: 24px;
+}
+
+.guide-box h2{
+    margin-top: 60px;
+}
+
+.guide-box p {
+    /*font-weight: bold;*/
+    padding: 8px 0;
+}
+
+.guide-keynote {
+    color: #1673ff;
+
+}
+
+.guide-image{
+    width: 70%;
+    box-shadow: 1px 1px 8px var(--c-box-shadow-color);
 }
 
 .schedule-header {
@@ -608,7 +635,7 @@
     box-shadow: var(--c-box-shadow);
 }
 
-.operator-check-box-description{
+.operator-check-box-description {
     position: absolute;
     bottom: 70px;
     width: 200px;
@@ -621,9 +648,9 @@
 }
 
 .operator-check-box-option:hover {
-   .operator-check-box-description{
-       display: block;
-   }
+    .operator-check-box-description {
+        display: block;
+    }
 }
 
 .operator-check-label {
@@ -645,7 +672,7 @@
 }
 
 
-.operator-building-skill-description{
+.operator-building-skill-description {
     position: absolute;
     bottom: 70px;
     left: -100px;
@@ -659,13 +686,13 @@
 }
 
 .operator-check-box-option:hover {
-    .operator-building-skill-description{
+    .operator-building-skill-description {
         display: block;
     }
 }
 
 .option-avatar-sprite-wrap:hover {
-    .operator-building-skill-description{
+    .operator-building-skill-description {
         display: block;
     }
 }
