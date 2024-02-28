@@ -1045,7 +1045,7 @@ onMounted(() => {
 
         <div class="schedule-set-bar-short" style="flex-wrap:wrap;padding-bottom: 20px">
           <div class="execution-time" v-for="(num,index) in scheduleTypeV2.planTimes" :key="index">
-            <span>{{ translate('schedule', 'schedule.TimedShiftNumber') }}&nbsp;{{ num }}&nbsp;</span>
+            <span>{{ translate('schedule', 'schedule.Shift') }}{{ num }}</span>
             <!--          <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>-->
             <el-time-picker v-model="executionTimeList[index][0]" placeholder="Arbitrary time" style="width: 140px"/>
             <span>to</span>
@@ -1153,7 +1153,7 @@ onMounted(() => {
           </div>
 
           <div class="copy-btn-wrap">
-            <span>{{ translate('schedule', 'schedule.TempPlan') }}{{ tmpPlanData.index }} </span>
+            <span>{{ translate('schedule', 'schedule.TempPlan') }}&nbsp;{{ translate('schedule', 'schedule.Shift') }}{{ tmpPlanData.index }} </span>
             <c-button :color="COLOR.BLUE" :status="true" @click="copyPlan()">
               {{ translate('schedule', 'schedule.CopyPlan') }}
             </c-button>

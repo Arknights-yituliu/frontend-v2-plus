@@ -4,6 +4,7 @@
 }
 
 
+
 .maa-schedule-v2 {
     width: 1400px;
     height: auto;
@@ -146,9 +147,7 @@
     padding: 2px 8px 2px 4px;
 }
 
-.execution-time-wrap {
-
-}
+.execution-time-wrap {}
 
 .execution-time {
     display: flex;
@@ -227,9 +226,7 @@
     height: 300px;
 }
 
-.room-template:hover {
-
-}
+.room-template:hover {}
 
 
 .copy-btn-wrap {
@@ -359,7 +356,14 @@
     border: 1px solid #7e7e7e;
 }
 
-.trading, .manufacture, .power, .control, .dormitory, .meeting, .processing, .hire {
+.trading,
+.manufacture,
+.power,
+.control,
+.dormitory,
+.meeting,
+.processing,
+.hire {
     transition: background-color 0.3s;
 }
 
@@ -396,7 +400,14 @@
     background-color: #dedede;
 }
 
-.trading, .manufacture, .power, .control, .dormitory, .meeting, .processing, .hire {
+.trading,
+.manufacture,
+.power,
+.control,
+.dormitory,
+.meeting,
+.processing,
+.hire {
     position: relative;
     overflow: hidden;
 }
@@ -414,7 +425,8 @@
     --ripple-color: 255, 181, 0;
 }
 
-.power:focus, .control:focus {
+.power:focus,
+.control:focus {
     --ripple-color: 67, 160, 71;
 }
 
@@ -422,11 +434,20 @@
     --ripple-color: 0, 159, 180;
 }
 
-.meeting:focus, .processing:focus, .hire:focus {
+.meeting:focus,
+.processing:focus,
+.hire:focus {
     --ripple-color: 126, 126, 126;
 }
 
-.trading:focus, .manufacture:focus, .power:focus, .control:focus, .dormitory:focus, .meeting:focus, .processing:focus, .hire:focus {
+.trading:focus,
+.manufacture:focus,
+.power:focus,
+.control:focus,
+.dormitory:focus,
+.meeting:focus,
+.processing:focus,
+.hire:focus {
     animation: ripple 1s;
 }
 
@@ -434,6 +455,7 @@
     0% {
         box-shadow: 0 0 0 0 rgba(var(--ripple-color), 1);
     }
+
     100% {
         box-shadow: 0 0 0 5px rgba(var(--ripple-color), 0);
     }
@@ -507,14 +529,13 @@
 .room-set-wrap {
     width: 1280px;
     margin: auto;
-
 }
 
 .room-set {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding-bottom: 12px;
+    margin-bottom: 12px;
     justify-content: flex-start;
 }
 
@@ -526,9 +547,8 @@
 }
 
 .filter-condition-box {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 12px;
+    display: inline-block;
+    padding: 12px 12px 6px;
 }
 
 .condition-bar {
@@ -536,14 +556,16 @@
 }
 
 .condition-tip {
+    display: inline-block;
     font-style: italic;
-    font-size: 14px;
-    padding: 11px;
+    font-size: 12px;
+    margin-top: 6px;
+    margin-left: 16px;
 }
 
 .condition-bar span {
     padding-left: 16px;
-    padding-right: 2px;
+    padding-right: 5px;
     font-weight: 600;
 }
 
@@ -577,7 +599,6 @@
 .selected-operator-wrap span {
     padding: 2px 8px 2px 4px;
     font-size: 16px;
-
 }
 
 .room-popup-wrap {
@@ -611,15 +632,15 @@
 
 .schedule-operator-search-input-box {
     display: flex;
-    margin: 8px 0 0 16px;
+    margin: 8px 16px;
     height: 50px;
     /*background-color: #00a1d6;*/
 }
 
 .operator-check-box-group {
     width: 1240px;
-    margin: 10px auto;
-    height: 300px;
+    min-height: 360px;
+    margin: auto;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
@@ -627,12 +648,13 @@
 }
 
 .operator-check-box-option {
-    margin: 2px 8px 20px;
+    cursor: pointer;
+    margin: 0 4px 29px;
     position: relative;
     font-size: 15px;
     width: 60px;
     height: 60px;
-    box-shadow: var(--c-box-shadow);
+    box-shadow: var(--c-box-shadow)
 }
 
 .operator-check-box-description {
@@ -654,10 +676,10 @@
 }
 
 .operator-check-label {
-    width: 80px;
+    width: 60px;
     position: absolute;
-    top: 62px;
-    left: -10px;
+    top: 60px;
+    padding-top: 1px;
     font-size: 12px;
     text-align: center;
 }
@@ -675,7 +697,7 @@
 .operator-building-skill-description {
     position: absolute;
     bottom: 70px;
-    left: -100px;
+    left: -80px;
     width: 300px;
     display: none;
     line-height: 22px;
@@ -735,6 +757,8 @@
 }
 
 .schedule-set-bar {
+    margin: auto;
+    width: 1280px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -769,5 +793,3 @@
     font-size: 16px;
     font-weight: 600;
 }
-
-
