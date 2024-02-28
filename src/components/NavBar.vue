@@ -1,7 +1,7 @@
 <script setup>
 import {ref, onMounted} from "vue";
 import toolApi from "/src/api/tool";
-import login from "/src/pages/survey/login.vue";
+import login from "/src/pages/survey/account/login.vue";
 import routesJson from "/src/static/json/routes.json";
 import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
 import {language} from '/src/utils/i18n.js'

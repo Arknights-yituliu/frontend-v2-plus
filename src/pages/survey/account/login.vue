@@ -16,19 +16,7 @@
           <a class="survey_nav_menu_item menu_href" @click="login_visible=!login_visible">退出登录 </a>
         </div>
     </c-popover>
-    <!--    <div v-show="user_data.status>0" class="survey_nav_bar">-->
-    <!--      &lt;!&ndash;      <div class="nav_user_name" id="nav_user_name">{{ user_data.userName }}</div>&ndash;&gt;-->
-    <!--      <div class="nav_avatar_image_wrap">-->
-    <!--        <div :class="getSprite(user_data.avatar)"></div>-->
-    <!--      </div>-->
-    <!--      <div class="survey_nav_menu_wrap">-->
-    <!--        <div class="survey_nav_menu_arrow"></div>-->
-    <!--        <div class="survey_nav_menu">-->
-    <!--          <a class="survey_nav_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>-->
-    <!--          <a class="survey_nav_menu_item menu_href" @click="login_visible=!login_visible"> 退出登录 </a>-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
+
 
 
     <c-popup :visible="login_visible" v-model:visible="login_visible">

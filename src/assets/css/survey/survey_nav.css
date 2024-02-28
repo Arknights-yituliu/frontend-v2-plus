@@ -43,7 +43,7 @@
 }
 
 .survey_nav_menu_item:hover{
-    background-color:grey;
+    background-color: rgba(0, 111, 255, 0.3);
 }
 
 .menu_href{

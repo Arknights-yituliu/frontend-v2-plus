@@ -635,7 +635,7 @@ function saveAndDownloadScheduleFile() {
   createSchedule()
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
-    scheduleInfo.value.scheduleId = scheduleId.value
+    scheduleInfo.value.id = scheduleId.value
     cMessage(`生成的排班文件ID为：${scheduleId.value}`)
     let link = document.createElement('a')
     link.download = `${scheduleId.value}.json`
@@ -949,7 +949,7 @@ onMounted(() => {
             <c-switch v-model="plansTemplate[selectedPlanIndex].drones.enable"></c-switch>
           </div>
           <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
-          <div style="width: 180px">
+          <div style="width: 200px">
             <c-button :color="COLOR.BLUE"
                       :status="'pre' === plansTemplate[selectedPlanIndex].drones.order"
                       @click="setDrones('order','pre')">
@@ -962,7 +962,7 @@ onMounted(() => {
             </c-button>
           </div>
           <span>{{ translate('schedule', 'schedule.TargetRoom') }}</span>
-          <div style="width: 200px">
+          <div style="width: 220px">
             <c-button :color="COLOR.BLUE"
                       :status="'trading' === plansTemplate[selectedPlanIndex].drones.room"
                       @click="setDrones('room','trading')">
@@ -983,7 +983,6 @@ onMounted(() => {
               {{ index }}
             </c-button>
           </div>
-
         </div>
 
         <div class="schedule-set-bar-short">
@@ -992,7 +991,7 @@ onMounted(() => {
             <c-switch v-model="plansTemplate[selectedPlanIndex].Fiammetta.enable"></c-switch>
           </div>
           <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
-          <div style="width: 180px">
+          <div style="width: 200px">
             <c-button :color="COLOR.BLUE"
                       :status="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order"
                       @click="setFiammetta('order','pre')">
