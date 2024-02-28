@@ -865,7 +865,7 @@ onMounted(() => {
 
     </div>
   </div>
-
+  <!-- TODO separate various paragraphs and translate them -->
   <c-popup v-model:visible="guidePopup">
     <div class="guide-box">
       <h1 style="text-align: center">排班生成器使用说明</h1>
