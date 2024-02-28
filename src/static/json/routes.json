@@ -3,26 +3,32 @@
     "path": "/material",
     "text": "材料收益相关",
     "isChild": true,
+    "icon": "materials",
     "child": [
       {
         "path": "/",
-        "text": "刷图推荐"
+        "text": "刷图推荐",
+        "icon": "item"
       },
       {
         "path": "/material/store",
-        "text": "商店性价比"
+        "text": "商店性价比",
+        "icon": "shop"
       },
       {
         "path": "/material/pack",
-        "text": "礼包性价比"
+        "text": "礼包性价比",
+        "icon": "pack"
       },
       {
         "path": "/material/value",
-        "text": "物品价值表"
+        "text": "物品价值表",
+        "icon": "materials"
       },
       {
         "path": "/material/elite",
-        "text": "精二性价比"
+        "text": "精二性价比",
+        "icon": "elite"
       }
     ]
   },
@@ -30,36 +36,43 @@
     "path": "/tools",
     "text": "一图流工具箱",
     "isChild": true,
+    "icon": "tool",
     "child": [
       {
         "path": "/tools/gachaCal",
         "text": "攒抽计算器",
-        "isChild": false
+        "isChild": false,
+        "icon": "calculator"
       },
       {
         "path": "/tools/schedule",
         "text": "排班表生成器",
-        "isChild": false
+        "isChild": false,
+        "icon": "schedule"
       },
       {
         "path": "/tools/rogueCal",
         "text": "肉鸽得分计算器",
-        "isChild": false
+        "isChild": false,
+        "icon": "calculator"
       },
       {
         "path": "/tools/buildingSkill",
         "text": "基建技能一览",
-        "isChild": false
+        "isChild": false,
+        "icon": "logistics"
       },
       {
         "path": "/tools/Irene",
         "text": "艾丽妮专精计算器",
-        "isChild": false
+        "isChild": false,
+        "icon": "calculator"
       },
       {
         "path": "/tools/maa",
         "text": "排班表生成器旧版",
-        "isChild": false
+        "isChild": false,
+        "icon": "schedule"
       }
     ]
   },
@@ -67,26 +80,31 @@
     "path": "/survey",
     "text": "调查与统计",
     "isChild": true,
+    "icon": "survey",
     "child": [
       {
         "path": "/survey/account/home",
         "text": "用户中心",
-        "isChild": false
+        "isChild": false,
+        "icon": "user"
       },
       {
         "path": "/survey/operators",
         "text": "干员练度调查",
-        "isChild": false
+        "isChild": false,
+        "icon": "survey2"
       },
       {
         "path": "/survey/rank",
         "text": "练度统计",
-        "isChild": false
+        "isChild": false,
+        "icon": "rank"
       },
       {
         "path": "/survey/maarecruitdata",
         "text": "公招tag统计",
-        "isChild": false
+        "isChild": false,
+        "icon": "survey2"
       }
     ]
   },
@@ -94,26 +112,31 @@
     "path": "/about",
     "text": "其它信息",
     "isChild": true,
+    "icon": "develop",
     "child": [
       {
         "path": "/about/dev",
         "text": "开发相关",
-        "isChild": false
+        "isChild": false,
+        "icon": "developer"
       },
       {
         "path": "/about/log",
         "text": "更新日志",
-        "isChild": false
+        "isChild": false,
+        "icon": "log"
       },
       {
         "path": "/about/donate",
         "text": "支持我们",
-        "isChild": false
+        "isChild": false,
+        "icon": "encourage"
       },
       {
         "path": "/about/links",
         "text": "友情链接",
-        "isChild": false
+        "isChild": false,
+        "icon": "link"
       }
     ]
   }

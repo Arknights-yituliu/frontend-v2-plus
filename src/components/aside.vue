@@ -2,23 +2,22 @@
   <div class="aside-table" id="aside114">
     <!-- 标题区 -->
     <a href="/" style="text-decoration: none; color: white">
-      <div class="aside-title">明日方舟一图流</div>
+      <div class="menu-label">明日方舟一图流</div>
     </a>
     <!-- 导航菜单 -->
     <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
       <!-- 一级标题 -->
-      <a class="nav-href" :href="r.path">
-        <div :class="navParentSelected(r.path)" v-show="r.isChild">
-          <div class="aside-menu-parent-icon"></div>
-          {{ r.text }}
-        </div>
+      <a class="menu-bar menu-parent" :href="r.path" :class="navParentSelected(r.path)"
+         v-show="r.isChild">
+        <div class="menu-parent-icon"></div>
+<!--        <i class="iconfont menu-icon-large" :class="`icon-${r.icon}`"></i>-->
+        <h3> {{ r.text }}</h3>
       </a>
       <!-- 二级标题组 -->
-      <a :href="c.path" class="nav-href" v-for="(c,index) in r.child" :key="index">
-        <div :class="navChildSelected(c.path)">
-          <div class="aside-menu-child-icon"></div>
-          {{ c.text }}
-        </div>
+      <a :href="c.path" class="menu-bar menu-child" :class="navChildSelected(c.path)"
+         v-for="(c,index) in r.child" :key="index">
+        <i class="iconfont menu-icon" :class="`icon-${c.icon}`"></i>
+        <span>{{ c.text }}</span>
       </a>
 
       <!-- <div class="aside-divider"></div> -->
@@ -30,7 +29,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import routesJson from "/src/static/json/routes.json";
 
 let pathName = ref("/");
@@ -63,16 +62,15 @@ function getPathName(path) {
 
 function navParentSelected(path) {
   // console.log(path, "==", pathName.value);
-  if (path == pathName.value) return "aside-nav aside_parent aside-nav_selected";
-  return "aside-nav aside_parent";
+  if (path == pathName.value) return " menu-selected";
+  return "";
 }
 
 function navChildSelected(path) {
   // console.log(path, "==", pathName.value);
-  if (path == pathName.value) return "aside-nav aside-nav_selected";
-  return "aside-nav";
+  if (path == pathName.value) return "menu-selected";
+  return "";
 }
-
 
 
 const routes = ref(routesJson);
@@ -85,3 +83,15 @@ onMounted(() => {
 
 });
 </script>
+
+<style scoped>
+.menu-icon {
+  font-size: 18px;
+  padding-right: 4px;
+}
+
+.menu-icon-large {
+  font-size: 20px;
+  padding-right:4px;
+}
+</style>

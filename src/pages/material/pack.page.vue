@@ -17,76 +17,6 @@
         </div>
       </div>
 
-      <client-only>
-        <div class="pack-table-wrapper">
-          <el-table :data="packPPRResponse" class="pack-table" stripe table-layout="auto"
-            :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
-            <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {
-              return row.displayName;
-            }
-              " min-width="154" fixed />
-            <el-table-column sortable label="类型" :formatter="(row, col) => {
-              return {
-                once: '一次性',
-                monthly: '每月',
-                weekly: '每周',
-                year: '每年',
-                permanent: '常驻',
-                limited: '限时',
-              }[row.saleType];
-            }
-              " :filters="[
-    { value: 'once', text: '一次性' },
-    { value: 'monthly', text: '每月' },
-    { value: 'weekly', text: '每周' },
-    { value: 'year', text: '每年' },
-    { value: 'permanent', text: '常驻' },
-    { value: 'limited', text: '限时' },
-  ]" :filter-method="(value, row, column) => {
-  return row.saleType == value;
-}
-  " :filtered-value="['once', 'monthly', 'weekly', 'year', 'permanent', 'limited']" :sort-by="(row, index) => {
-    return row.saleType;
-  }
-    " min-width="92" />
-            <el-table-column sortable label="售价" :formatter="(row, col) => {
-              return row.price + '元';
-            }
-              " :sort-by="(row, index) => {
-    return row.price;
-  }
-    " min-width="80" />
-            <el-table-column sortable label="抽数" :formatter="(row, col) => {
-              return row.draws.toFixed(2);
-            }
-              " :sort-by="(row, index) => {
-    return row.draws;
-  }
-    " min-width="80" />
-            <el-table-column sortable label="源石" :formatter="(row, col) => {
-              return row.originium;
-            }
-              " :sort-by="(row, index) => {
-    return row.originium;
-  }
-    " min-width="80" />
-            <el-table-column sortable label="抽卡性价比" :formatter="(row, col) => {
-              return row.drawEfficiency.toFixed(2);
-            }
-              " :sort-by="(row, index) => {
-    return row.drawEfficiency;
-  }
-    " min-width="120" />
-            <el-table-column sortable label="综合性价比" prop="packEfficiency" :formatter="(row, col) => {
-              return row.packEfficiency.toFixed(2);
-            }
-              " :sort-by="(row, index) => {
-    return row.packEfficiency;
-  }
-    " min-width="120" />
-          </el-table>
-        </div>
-      </client-only>
 
       <!-- <div class="op_title_tag">
         <div id="pack_sort_by_type" class="op_tag_1" @click="sortPackByType()">礼包类型排序</div>
@@ -648,6 +578,79 @@
           </div>
         </div>
       </div> -->
+
+      <client-only>
+        <div class="pack-table-wrapper">
+          <el-table :data="packPPRResponse" class="pack-table" stripe table-layout="auto"
+                    :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
+            <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {
+              return row.displayName;
+            }
+              " min-width="154" fixed />
+            <el-table-column sortable label="类型" :formatter="(row, col) => {
+              return {
+                once: '一次性',
+                monthly: '每月',
+                weekly: '每周',
+                year: '每年',
+                permanent: '常驻',
+                limited: '限时',
+              }[row.saleType];
+            }
+              " :filters="[
+    { value: 'once', text: '一次性' },
+    { value: 'monthly', text: '每月' },
+    { value: 'weekly', text: '每周' },
+    { value: 'year', text: '每年' },
+    { value: 'permanent', text: '常驻' },
+    { value: 'limited', text: '限时' },
+  ]" :filter-method="(value, row, column) => {
+  return row.saleType == value;
+}
+  " :filtered-value="['once', 'monthly', 'weekly', 'year', 'permanent', 'limited']" :sort-by="(row, index) => {
+    return row.saleType;
+  }
+    " min-width="92" />
+            <el-table-column sortable label="售价" :formatter="(row, col) => {
+              return row.price + '元';
+            }
+              " :sort-by="(row, index) => {
+    return row.price;
+  }
+    " min-width="80" />
+            <el-table-column sortable label="抽数" :formatter="(row, col) => {
+              return row.draws.toFixed(2);
+            }
+              " :sort-by="(row, index) => {
+    return row.draws;
+  }
+    " min-width="80" />
+            <el-table-column sortable label="源石" :formatter="(row, col) => {
+              return row.originium;
+            }
+              " :sort-by="(row, index) => {
+    return row.originium;
+  }
+    " min-width="80" />
+            <el-table-column sortable label="抽卡性价比" :formatter="(row, col) => {
+              return row.drawEfficiency.toFixed(2);
+            }
+              " :sort-by="(row, index) => {
+    return row.drawEfficiency;
+  }
+    " min-width="120" />
+            <el-table-column sortable label="综合性价比" prop="packEfficiency" :formatter="(row, col) => {
+              return row.packEfficiency.toFixed(2);
+            }
+              " :sort-by="(row, index) => {
+    return row.packEfficiency;
+  }
+    " min-width="120" />
+          </el-table>
+        </div>
+      </client-only>
+
+
     </div>
     <div class="op_title">
       <div class="op_title_text">
@@ -791,13 +794,13 @@ export default {
       });
     }
 
-    this.$notify({
-      title: "2024.01.31更新",
-      dangerouslyUseHTMLString: true,
-      message: "<strong>本页面维护中<br></strong>",
-      // message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
-      duration: 6000,
-    });
+    // this.$notify({
+    //   title: "2024.01.31更新",
+    //   dangerouslyUseHTMLString: true,
+    //   message: "<strong>本页面维护中<br></strong>",
+    //   // message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
+    //   duration: 6000,
+    // });
   },
   methods: {
 

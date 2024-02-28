@@ -276,7 +276,7 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
  * @param operatorTable 干员练度信息集合
  * @returns {{}} 干员统计结果
  */
-function operatorStatistics(operatorTable) {
+function operatorStatistical(operatorTable) {
 
     let operatorGroupByRarity = {}
     //将干员根据星级分类
@@ -386,7 +386,7 @@ function operatorStatistics(operatorTable) {
     })
 
     //选择练度最高的十位
-    operatorStatisticsResult.max = operatorStatisticsResult.max.slice(0, 10)
+    operatorStatisticsResult.max = operatorStatisticsResult.max.slice(0, 15)
 
 
     return operatorStatisticsResult
@@ -471,5 +471,5 @@ function splitMaterial(highest_rarity, item_cost_obj) {
 }
 
 export default {
-    calAPCost, splitMaterial, operatorStatistics , operatorPlanCal
+    calAPCost, splitMaterial, operatorStatistical , operatorPlanCal
 }

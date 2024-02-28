@@ -5,7 +5,7 @@
 
 .theme_light{
     /*基础样式*/
-    --c-box-shadow:1px 1px 10px rgba(0, 0, 0, 0.12);
+    --c-box-shadow:1px 1px 6px rgba(0, 0, 0, 0.12);
     --c-box-shadow-color:rgba(0, 0, 0, 0.2);
     --c-border:1px solid var(--c-white-2);
     --c-border-color: rgba(0, 0, 0, 0.2);
@@ -23,10 +23,15 @@
     --c-btn-border:1px solid var(--c-white-3);
     --c-btn-color:var(--c-black-1);
     --c-btn-text-color:var(--c-white-1);
-    --c-btn-bg-blue:var(--c-btn-blue-light);
-    --c-btn-bg-red:var(--c-btn-red-light);
-    --c-btn-bg-green:var(--c-btn-green-light);
-    --c-btn-bg-orange:var(--c-btn-orange-light);
+
+    --c-btn-color-blue: #2973ff;
+    --c-btn-border-blue:#2973ff;
+    --c-btn-color-red: #ff3e24;
+    --c-btn-border-red:#ff3e24;
+    --c-btn-color-green: #2ec4b6;
+    --c-btn-border-green:#2ec4b6;
+    --c-btn-color-orange: #ff8a52;
+    --c-btn-border-orange:#ff8a52;
 
     --c-stage-card-background-color: #f7f7f7;
     --c-material-grey: #939393;
@@ -105,7 +110,7 @@
     --c-blue-light:#04a5ff;
     --c-red-light: #ff6262;
 
-    --c-btn-green-light: #04c504;
+    --c-btn-green-light: #30da96;
     --c-btn-blue-light: #00a1d6;
     --c-btn-red-light: #ff6262;
     --c-btn-orange-light: #ff641e;

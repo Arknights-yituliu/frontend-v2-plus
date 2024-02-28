@@ -20,6 +20,9 @@ let language = ref('cn')
  * 将会去引入的Language_Dictionary_Schedule.json中查找schedule属性的InfrastructureLayout属性中对应的语言翻译
  */
 function translate(dictionaryName,keyText) {
+    if(!keyText){
+        return 'key is undefined'
+    }
     // 将key根据'.'分隔
     let keys = keyText.split('.')
     //翻译文本

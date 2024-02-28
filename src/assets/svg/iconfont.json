@@ -6,6 +6,139 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7596896",
+      "name": "encourage",
+      "font_class": "encourage",
+      "unicode": "eb33",
+      "unicode_decimal": 60211
+    },
+    {
+      "icon_id": "6061398",
+      "name": "developer",
+      "font_class": "developer",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "18166279",
+      "name": "shop",
+      "font_class": "shop",
+      "unicode": "e8bb",
+      "unicode_decimal": 59579
+    },
+    {
+      "icon_id": "30525089",
+      "name": "tool",
+      "font_class": "tool",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "5270862",
+      "name": "user",
+      "font_class": "user",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "593342",
+      "name": "item",
+      "font_class": "item",
+      "unicode": "e6ce",
+      "unicode_decimal": 59086
+    },
+    {
+      "icon_id": "1723005",
+      "name": "develop",
+      "font_class": "develop",
+      "unicode": "e7c2",
+      "unicode_decimal": 59330
+    },
+    {
+      "icon_id": "1727411",
+      "name": "calculator",
+      "font_class": "calculator",
+      "unicode": "e8b4",
+      "unicode_decimal": 59572
+    },
+    {
+      "icon_id": "2468467",
+      "name": "materials",
+      "font_class": "materials",
+      "unicode": "e68a",
+      "unicode_decimal": 59018
+    },
+    {
+      "icon_id": "2546498",
+      "name": "log",
+      "font_class": "log",
+      "unicode": "e69d",
+      "unicode_decimal": 59037
+    },
+    {
+      "icon_id": "4423489",
+      "name": "survey2",
+      "font_class": "survey2",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "12837792",
+      "name": "schedule",
+      "font_class": "schedule",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "13479193",
+      "name": "pack",
+      "font_class": "pack",
+      "unicode": "e707",
+      "unicode_decimal": 59143
+    },
+    {
+      "icon_id": "21924074",
+      "name": "rank",
+      "font_class": "rank",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "23838417",
+      "name": "logistics",
+      "font_class": "logistics",
+      "unicode": "e913",
+      "unicode_decimal": 59667
+    },
+    {
+      "icon_id": "29322942",
+      "name": "elite",
+      "font_class": "elite",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "30045010",
+      "name": "link",
+      "font_class": "link",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "1219788",
+      "name": "feed-back",
+      "font_class": "feed-back",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "39363754",
+      "name": "survey",
+      "font_class": "survey",
+      "unicode": "e792",
+      "unicode_decimal": 59282
+    },
+    {
       "icon_id": "1053877",
       "name": "menu off",
       "font_class": "menuoff",

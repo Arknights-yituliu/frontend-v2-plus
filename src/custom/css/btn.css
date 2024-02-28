@@ -1,5 +1,4 @@
 .btn{
-    font-family: 'black', SimHei, sans-serif;
     padding:4px 12px;
     cursor: pointer;
     min-width: 80px;
@@ -9,6 +8,7 @@
     height: 28px;
     line-height: 20px;
     border:none;
+    font-weight: bold;
     color: var(--c-btn-color);
     background-color: var(--c-background-color);
     border: var(--c-btn-border);
@@ -16,27 +16,27 @@
 
 
 .btn-blue{
-    color: var(--c-btn-text-color);
-    background-color:var(--c-btn-bg-blue);
-    border: 1px solid transparent;
+    color: var(--c-btn-color-blue);
+    border: 1px solid var(--c-btn-border-blue);
+    /*background-color:var(--c-btn-bg-blue);*/
 }
 
 .btn-orange{
-    color: white;
-    background-color:var(--c-btn-bg-orange);
-    border: 1px solid transparent;
+    color: var(--c-btn-color-orange);
+    border: 1px solid var(--c-btn-border-orange);
+    /*background-color:var(--c-btn-bg-blue);*/
 }
 
 .btn-green{
-    color: var(--c-btn-text-color);
-    background-color: var(--c-btn-bg-green);
-    border: 1px solid transparent;
+    color: var(--c-btn-color-green);
+    border: 1px solid var(--c-btn-border-green);
+    /*background-color:var(--c-btn-bg-blue);*/
 }
 
 .btn-red{
-    color: var(--c-btn-text-color);
-    background-color: var(--c-btn-bg-red);
-    border: none;
+    color: var(--c-btn-color-red);
+    border: 1px solid var(--c-btn-border-red);
+    /*background-color:var(--c-btn-bg-blue);*/
 }
 
 .warning-color{

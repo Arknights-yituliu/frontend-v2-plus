@@ -200,6 +200,6 @@ const RosmontisUniverse = ['琴柳']
 const GoldProductionLine = ['桃金娘','杜林','褐果','至简']
 const Knight = ['砾','薇薇安娜']
 const Automation = ['清流','Lancet-2']
-const Rhine = ['缪尔赛思','淬羽赫默','多萝西','星源','赫默','白面鸮']
+const Rhine = ['淬羽赫默','多萝西','星源','赫默','白面鸮']
 
 export {operatorFilterConditionTable}

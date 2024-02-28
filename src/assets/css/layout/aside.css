@@ -11,12 +11,6 @@
   padding-bottom: 200px;
 }
 
-.nav-href {
-  color: white;
-  text-decoration: none;
-  background-color: pink;
-  /* display: flex; */
-}
 
 .aside-table::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
@@ -33,7 +27,7 @@
   border-radius: 2px;
 }
 
-.aside-title {
+.menu-label {
   font-size: 24px;
   height: 60px;
   line-height: 60px;
@@ -42,30 +36,30 @@
   transition: background-color 0.2s;
 }
 
-.aside-title:hover {
+.menu-label:hover {
   background-color: dimgray;
 }
 
-.aside-nav {
-  margin-top: 8px;
-  margin-left: 10px;
-  margin-right: 12px;
-  display: flex;
+.menu-bar {
+  margin: 8px 12px;
   height: 32px;
   line-height: 32px;
   padding-left: 4px;
   border-radius: 4px;
   transition: background-color 0.2s;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  width: 190px;
 }
 
-.aside-nav:hover {
+.menu-bar:hover {
   background-color: dimgray;
 }
 
-.aside-nav_selected {
-  /* color: #ffd04b; */
+.menu-selected {
   background-color: rgba(255, 255, 255, 0.2);
-  /* border-left: 2px solid #ffd04b; */
 }
 
 .aside-divider {
@@ -74,14 +68,20 @@
   margin: 10px auto auto;
 }
 
-.aside_parent {
+.menu-parent {
   color: #ffd257;
+  font-size: 18px;
 }
 
-.aside-menu-parent-icon {
-  width: 16px;
-  height: 16px;
-  margin: 8px 20px 8px 8px;
+.menu-child {
+  margin-left: 32px;
+}
+
+.menu-parent-icon {
+  width: 18px;
+  height: 18px;
+  margin-left: 4px;
+  margin-right: 8px;
   display: inline-block;
   background-color: #ffd04b;
   border-radius: 6px;
@@ -95,15 +95,22 @@
 }
 
 @media (max-width: 1080px) {
-  .aside-title {
+  .menu-label {
     font-size: 28px;
     height: 80px;
     line-height: 80px;
   }
 
-  .aside-nav {
-    margin-top: 16px;
+  .menu-child {
     font-size: 20px;
+  }
+
+  .menu-parent {
+    font-size: 24px;
+  }
+
+  .menu-bar {
+    width: 300px;
   }
 
 }
