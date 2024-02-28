@@ -859,7 +859,7 @@ onMounted(() => {
 
 
       <c-button :color="COLOR.GREEN" :status="true" @click="guidePopup=true">
-        操作指引
+        {{translate('schedule', 'schedule.GuidePopup')}}
       </c-button>
 
 
@@ -1016,7 +1016,7 @@ onMounted(() => {
         </div>
 
         <div class="schedule-set-bar-short">
-          <span class="room-set-description">{{ translate('schedule', 'schedule.ShiftChange') }}</span>
+          <span class="room-set-description">{{ translate('schedule', 'schedule.OrderedStationing') }}</span>
           <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
           </c-switch>
 

@@ -60,6 +60,10 @@
       "cn": "下载排班文件",
       "en": "Download schedule file"
     },
+    "GuidePopup": {
+      "cn": "操作指引",
+      "en": "Help"
+    },
     "ScheduleTitle": {
       "cn": "排班表名称",
       "en": "Title"
@@ -160,9 +164,9 @@
       "cn": "恢复目标",
       "en": "Recovery Target"
     },
-    "ShiftChange": {
+    "OrderedStationing": {
       "cn": "按顺序入驻",
-      "en": "Shift Change"
+      "en": "Station in order"
     },
     "Autofill": {
       "cn": "补满空位",
