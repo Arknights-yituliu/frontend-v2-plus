@@ -153,11 +153,17 @@ function choosePlanTimes(num) {
  * @param index 班次的索引
  */
 function toNextPlan(index) {
-  if (index < 0 || index >= scheduleTypeV2.value.planTimes) {
-    cMessage(translate('schedule', 'schedule.IncorrectShiftIndex') + (index + 1), 'error')
-  } else {
+  if (index < 0) 
+    selectedPlanIndex.value = scheduleTypeV2.value.planTimes - 1
+  else if (index >= scheduleTypeV2.value.planTimes) 
+    selectedPlanIndex.value = 0
+  else 
     selectedPlanIndex.value = index
-  }
+
+  /**
+   * ! not used anymore as there is no way this will ever be triggered
+   * cMessage(translate('schedule', 'schedule.IncorrectShiftIndex') + (index + 1), 'error')
+   */
 }
 
 let roomSettlementOperatorMaxQuantity = {
