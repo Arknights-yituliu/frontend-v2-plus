@@ -1,42 +1,6 @@
 <template>
   <div>
     <div id="pack">
-      <!-- 标题区域 -->
-      <div class="op_title">
-        <div class="op_title_text">
-          <div class="op_title_ctext">礼包性价比</div>
-          <div :class="opETextTheme">Packs Value</div>
-        </div>
-      </div>
-      <div class="stage_hint">
-        <div class="stage_hint_t5">性价比基准为648￥源石，移动端可左右滑动表格</div>
-      </div>
-      <div class="stage_hint">
-        <div class="stage_hint_t0">
-          由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
-        </div>
-      </div>
-
-
-      <!-- <div class="op_title_tag">
-        <div id="pack_sort_by_type" class="op_tag_1" @click="sortPackByType()">礼包类型排序</div>
-        <div id="pack_sort_by_drawPpr" class="op_tag_0" @click="sortPackByPPRPerDraw()">抽卡性价比</div>
-        <div id="pack_sort_by_oriPpr" class="op_tag_0" @click="sortPackByPPRPerOri()">总价值性价比</div>
-        <div class="op_tag_0" style="padding: 1px"></div>
-        <div style="margin-top: 8px; display: inline-block">
-          <div id="pack_show_once" class="op_tag_0" @click="switchPacks('once')">隐藏一次性礼包</div>
-          <div id="pack_show_ori" class="op_tag_0" @click="switchPacks('ori')">源石只显示648</div>
-          <!== <div class="tab_text">
-            *点击图片查看礼包内容
-          </div> ==>
-        </div>
-      </div> -->
-      <div class="stage_hint">
-        <div class="stage_hint_t5">点击图片可查看礼包内容，注意区分"仅抽卡"/"折合成源石"</div>
-        <div class="stage_hint_t5">“折合成源石”即将材料的理智价值按135：1换算成源石</div>
-      </div>
-      <!-- 标题区域end -->
-
       <!-- 当季礼包 标题区域 -->
       <div class="op_title">
         <div class="op_title_text">
@@ -46,6 +10,8 @@
       </div>
       <div class="stage_hint">
         <div class="stage_hint_t5">发售中/即将发售的礼包</div>
+        <div class="stage_hint_t5">点击图片可查看礼包内容，注意区分"仅抽卡"/"折合成源石"</div>
+        <div class="stage_hint_t5">“折合成源石”即将材料的理智价值按135：1换算成源石</div>
       </div>
       <!-- all -->
       <div class="pack_all" style="margin-top: -8px">
@@ -406,179 +372,19 @@
 
         </div>
       </div>
-      <!-- <div id="pack_content" style="display: flex">
-        <!== 仅计抽卡 ==>
-        <div id="pack_left" style="margin-top: -8px">
-          <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-            :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)">
 
-              <!== 图片部分 ==>
-              <div class="pack_img" :style="getPackPic(pack2.name, pack2.fileName)"
-                @click="switchPackContent(pack2.id, 'draw')">
-                <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
-
-                <!== 角标部分 ==>
-                <div class="pack_corner corner_new" v-show="pack2.type == 'limited'">New!</div>
-                <div class="pack_corner corner_monthly" v-show="pack2.type == 'monthly'">每月</div>
-                <div class="pack_corner corner_monthly" v-show="pack2.type == 'weekly'">每周</div>
-                <div class="pack_corner corner_once" v-show="pack2.type == 'once'">一次</div>
-                <div class="pack_corner corner_once" v-show="pack2.type == 'year'">双倍</div>
-              </div>
-              <!== 表格部分 ==>
-              <div class="pack_info">
-                <div class="pack_info_text">共{{ getFixed(pack2.draws, 1) }}抽
-                  <br />￥{{ getFixed(pack2.drawPrice, 1) }}/抽
-                </div>
-                <div class="pack_chart">
-                  <div class="pack_chart_unit" v-show="pack2.packPPRDraw >= 1.57">
-                    <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
-                      {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
-                    </div>
-                  </div>
-                  <div class="pack_chart_unit">
-                    <div class="pack_chart_unit_text">大月卡</div>
-                    <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
-                  </div>
-                  <div class="pack_chart_unit"
-                    v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
-                    <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
-                      {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
-                    </div>
-                  </div>
-                  <div class="pack_chart_unit">
-                    <div class="pack_chart_unit_text">648源石</div>
-                    <div class="pack_chart_unit_ppr" :style="getWidth(100, 0.75)">100%</div>
-                  </div>
-                  <div class="pack_chart_unit" v-show="pack2.drawEfficiency < 1">
-                    <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
-                      {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
-                    </div>
-                  </div>
-                </div>
-                <!== 说明 ==>
-                <div class="pack_type">仅计抽卡</div>
-              </div>
-
-              <!== 详情部分 ==>
-              <div class="pack_contents" :id="getContentId(pack2.id, 'draw')" style="display: none">
-                <div class="pack_content_unit0" style="width: 112px">
-                  <div style="width: 56px">源石</div>
-                  <div style="width: 56px">x{{ pack2.originium }}</div>
-                </div>
-                <div class="pack_content_unit0" style="width: 120px">
-                  <div style="width: 60px">合成玉</div>
-                  <div style="width: 60px">x{{ pack2.orundum }}</div>
-                </div>
-                <div class="pack_content_unit0">
-                  <div style="width: 56px">单抽</div>
-                  <div style="width: 60px">x{{ pack2.gachaTicket }}</div>
-                </div>
-                <div class="pack_content_unit0">
-                  <div style="width: 56px">十连</div>
-                  <div style="width: 60px">x{{ pack2.tenGachaTicket }}</div>
-                </div>
-                <div v-for="(packItem, index) in pack2.packContent" :key="index" class="pack_content_unit">
-                  <div style="width: 135px">{{ packItem.itemName }}</div>
-                  <div style="width: 90px">x{{ packItem.quantity }}</div>
-                </div>
-              </div>
-
-          </div>
+      <div class="op_title">
+        <div class="op_title_text">
+          <div class="op_title_ctext">礼包性价比总表</div>
+          <div :class="opETextTheme">Packs Value</div>
         </div>
-
-        <!== 材料折合源石 ==>
-        <div id="pack_right" style="margin-top: -8px">
-          <div v-for="(pack3, index) in packsPPRData" :key="index" class="pack_unit"
-            :style="getDisplayState(pack3.state, pack3.type, pack3.price, packFilter)">
-            <!== <div v-for="(pack3, index) in packsPPRData" :key="index" class="pack_unit"> ==>
-            <div v-show="pack3.state == 1" class="pack_unit">
-              <!== 图片部分 ==>
-              <div class="pack_img" :style="getPackPic(pack3.name, pack3.type)"
-                @click="switchPackContent(pack3.id, 'all')">
-                <div class="pack_img_text1">{{ pack3.displayName }} ￥{{ pack3.price }}</div>
-                <!== 角标部分 ==>
-                <div class="pack_corner corner_new" v-show="pack3.type == 'limited'">New!</div>
-                <div class="pack_corner corner_monthly" v-show="pack3.type == 'monthly'">每月</div>
-                <div class="pack_corner corner_monthly" v-show="pack3.type == 'weekly'">每周</div>
-                <div class="pack_corner corner_once" v-show="pack3.type == 'once'">一次</div>
-                <div class="pack_corner corner_once" v-show="pack3.type == 'year'">双倍</div>
-              </div>
-
-              <!== 表格部分 ==>
-              <div class="pack_info">
-                <div class="pack_info_text" style="color: #ff8f6e">
-                  {{ getFixed(pack3.packedOriginium, 1) }}源石 <br />￥{{ getFixed(pack3.packedOriginiumPrice, 1) }}/石
-                </div>
-
-                <div class="pack_chart">
-                  <div class="pack_chart_unit" v-show="pack3.packEfficiency >= 1.57">
-                    <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red"
-                      :style="getWidth(pack3.packEfficiency * 100, 0.75)">
-                      {{ getFixed(pack3.packEfficiency * 100, 0) }}%
-                    </div>
-                  </div>
-                  <div class="pack_chart_unit">
-                    <div class="pack_chart_unit_text">大月卡</div>
-                    <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
-                  </div>
-                  <div class="pack_chart_unit"
-                    v-show="pack3.packEfficiency < 1.57 && pack3.packEfficiency >= 1">
-                    <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red"
-                      :style="getWidth(pack3.packEfficiency * 100, 0.75)">
-                      {{ getFixed(pack3.packEfficiency * 100, 0) }}%
-                    </div>
-                  </div>
-                  <div class="pack_chart_unit">
-                    <div class="pack_chart_unit_text">648源石</div>
-                    <div class="pack_chart_unit_ppr" :style="getWidth(100, 0.75)">100%</div>
-                  </div>
-                  <div class="pack_chart_unit" v-show="pack3.packEfficiency < 1">
-                    <div class="pack_chart_unit_text">本礼包</div>
-                    <div class="pack_chart_unit_ppr bg_red"
-                      :style="getWidth(pack3.packEfficiency * 100, 0.75)">
-                      {{ getFixed(pack3.packEfficiency * 100, 0) }}%
-                    </div>
-                  </div>
-                </div>
-                <div class="pack_info_alert" v-show="!pack3.packTag == ''">含难以估价内容，点击图片查看</div>
-                <!== 说明 ==>
-                <div class="pack_type">材料折合源石</div>
-              </div>
-
-              <!== 详情部分 ==>
-              <div class="pack_contents" :id="getContentId(pack3.id, 'all')" style="display: none">
-                <div class="pack_contents_note">{{ pack3.packTag }}</div>
-                <div class="pack_content_unit0" style="width: 112px">
-                  <div style="width: 56px">源石</div>
-                  <div style="width: 56px">x{{ pack3.originium }}</div>
-                </div>
-                <div class="pack_content_unit0" style="width: 120px">
-                  <div style="width: 60px">合成玉</div>
-                  <div style="width: 60px">x{{ pack3.orundum }}</div>
-                </div>
-                <div class="pack_content_unit0">
-                  <div style="width: 56px">单抽</div>
-                  <div style="width: 60px">x{{ pack3.gachaTicket }}</div>
-                </div>
-                <div class="pack_content_unit0">
-                  <div style="width: 56px">十连</div>
-                  <div style="width: 60px">x{{ pack3.tenGachaTicket }}</div>
-                </div>
-                <div v-for="(packItem, index) in pack3.packContent" :key="index" class="pack_content_unit">
-                  <div style="width: 135px">{{ packItem.itemName }}</div>
-                  <div style="width: 90px">x{{ packItem.quantity }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
+      </div>
+      <div class="stage_hint">
+        <div class="stage_hint_t5">性价比基准为648￥源石，移动端可左右滑动表格</div>
+        <div class="stage_hint_t0">
+          由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
         </div>
-      </div> -->
-
+      </div>
       <client-only>
         <div class="pack-table-wrapper">
           <el-table :data="packPPRResponse" class="pack-table" stripe table-layout="auto"
