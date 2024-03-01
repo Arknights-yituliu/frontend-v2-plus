@@ -1,17 +1,16 @@
 
-.nav_user_name {
-    font-size: 20px;
+.login-btn-text {
+    font-size: 16px;
     line-height: 40px;
     height: 40px;
     color: white;
     cursor: pointer;
-    padding:0 4px 0 32px;
+    padding:0 4px 0 8px;
 }
 
 
-.survey_nav_bar{
-    width: 80px;
-
+.survey-login-btn{
+    width: 50px;
 }
 
 .survey_nav_menu_arrow{

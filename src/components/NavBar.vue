@@ -223,13 +223,13 @@ function openNewPage(url) {
     <i class="iconfont icon-theme-style" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
     <div class="icon-button" @click="feedbackPopupVisible = !feedbackPopupVisible">
       <i class="iconfont icon-survey icon-feed-back-style"></i>
-      <span style="font-size: 14px;color: white;">反馈</span>
+      <span style="font-size: 16px;color: white;">反馈</span>
     </div>
     <c-popover :name="'language'" v-show="i18nButtonVisible">
       <template #title>
         <div class="icon-button">
           <i class="iconfont icon-language icon-language-style"></i>
-          <span style="font-size: 14px;color: white;">{{ LanguageLabel[language] }}</span>
+          <span style="font-size: 16px;color: white;">{{ LanguageLabel[language] }}</span>
         </div>
       </template>
       <div class="language-options" id="language">
@@ -330,7 +330,7 @@ function openNewPage(url) {
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 0 8px;
+  padding: 0 4px;
 }
 
 .icon-theme-style {
@@ -370,23 +370,6 @@ function openNewPage(url) {
 
   .menu-button-desktop {
     display: none;
-  }
-
-  .icon-theme-style {
-    font-size: 36px;
-  }
-
-  .icon-language-style {
-    font-size: 36px;
-  }
-
-  .icon-feed-back-style {
-    font-size: 36px;
-  }
-
-  .page-title {
-    display: block;
-    font-size: 24px;
   }
 
   .header-wrap {

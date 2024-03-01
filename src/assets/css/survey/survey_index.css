@@ -36,11 +36,10 @@
   cursor: pointer;
 }
 
-.survey_nav_page {
+.survey-login-btn-wrap {
   width: auto;
   display: flex;
   justify-content: flex-end;
-
 }
 
 

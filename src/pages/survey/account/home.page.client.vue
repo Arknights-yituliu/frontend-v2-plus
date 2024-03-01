@@ -101,7 +101,7 @@
             绑定邮箱后也可通过邮箱作为账号登录
           </div>
           <div class="user_input_tip" v-show="hasPermission(user_data.status,HAS_EMAIL)">
-            需修改邮箱请输入新邮箱点击发送，将向您的旧邮箱发送验证码
+            需修改邮箱请输入新邮箱点击发送，将向您的新邮箱发送验证码
           </div>
           <div class="user_input_label">输入新邮箱</div>
           <input class="user_input" v-model="inputData.email"/>
@@ -192,8 +192,9 @@ function sendEmailCode() {
   const data = {
     token: user_data.value.token,
     email: inputData.value.email,
-    mailUsage: 'changeEmail'
+    mailUsage: 'UpdateEmail'
   }
+
 
   // eslint-disable-next-line no-unused-vars
   surveyApi.sendEmailCode(data).then(response => {
@@ -256,7 +257,7 @@ function getCacheUserData() {
   }
 
     const parse = JSON.parse(cacheUserData);
-    console.table(parse)
+
     user_data.value.userName = parse.userName;
     user_data.value.code = parse.code;
     user_data.value.status = parse.status;

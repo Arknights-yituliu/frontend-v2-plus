@@ -1,27 +1,28 @@
 <template>
-  <div class="survey_nav_page">
-    <div class="survey_nav_bar" @click="login_visible = !login_visible" v-show="user_data.status<0">
-      <div class="nav_user_name" id="nav_user_name">登录</div>
+  <div class="survey-login-btn-wrap">
+    <div class="survey-login-btn" @click="loginVisible = !loginVisible" v-show="userData.status<0">
+      <span class="login-btn-text" id="nav_user_name">登录</span>
     </div>
 
-    <c-popover :name="'avatar'" v-show="user_data.status>0">
+    <div v-show="userData.status>0">
+    <c-popover :name="'avatar'" >
       <template #title>
         <div class="nav_avatar_image_wrap">
-          <div :class="getSprite(user_data.avatar)"></div>
+          <div :class="getSprite(userData.avatar)"></div>
         </div>
       </template>
 
         <div class="survey_nav_menu" id="avatar">
           <a class="survey_nav_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>
-          <a class="survey_nav_menu_item menu_href" @click="login_visible=!login_visible">退出登录 </a>
+          <a class="survey_nav_menu_item menu_href" @click="loginVisible=!loginVisible">退出登录 </a>
         </div>
     </c-popover>
+    </div>
 
 
+    <c-popup :visible="loginVisible" v-model:visible="loginVisible">
 
-    <c-popup :visible="login_visible" v-model:visible="login_visible">
-
-      <div class="login_card" v-show="user_data.status<0">
+      <div class="login_card" v-show="userData.status<0">
         <div class="login_btn_wrap">
           <div class="btn login-type-btn" :style="accountTypeClass('passWord')"
                @click="selectAccountType('passWord')">密码{{ 'register' === registerOrLogin ? '注册' : '登录' }}
@@ -91,11 +92,11 @@
         </div>
       </div>
 
-      <div class="login_card" v-show="user_data.status>0">
+      <div class="login_card" v-show="userData.status>0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
           <button class="btn btn-blue logout_btn" @click="logout()">确定</button>
-          <button class="btn btn-red logout_btn" @click="login_visible = !login_visible">取消</button>
+          <button class="btn btn-red logout_btn" @click="loginVisible = !loginVisible">取消</button>
         </div>
       </div>
     </c-popup>
@@ -131,9 +132,9 @@ let input_data = ref({
   avatar: '',
   mailUsage: 'register'
 }); //用户输入的用户名，用obj没准后期有别的字段
-let user_data = ref({userName: "", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
+let userData = ref({userName: "", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
 
-let login_visible = ref(false);
+let loginVisible = ref(false);
 
 let registerOrLogin = ref('login')
 
@@ -168,11 +169,11 @@ function register() {
     response = response.data
     localStorage.setItem("globalUserData", JSON.stringify(response));
     cMessage("注册成功");
-    user_data.value.userName = response.userName;
-    user_data.value.status = response.status;
-    user_data.value.token = response.token;
-    user_data.value.avatar = response.avatar ?response.avatar:'char_377_gdglow' ;
-    login_visible.value = !login_visible.value;
+    userData.value.userName = response.userName;
+    userData.value.status = response.status;
+    userData.value.token = response.token;
+    userData.value.avatar = response.avatar ?response.avatar:'char_377_gdglow' ;
+    loginVisible.value = !loginVisible.value;
 
   })
 }
@@ -211,11 +212,11 @@ function userDataCache() {
   }
 
   cacheData = JSON.parse(cacheData)
-  user_data.value.userName = cacheData.userName;
-  user_data.value.status = cacheData.status;
-  user_data.value.token = cacheData.token;
-  user_data.value.avatar = cacheData.avatar ? cacheData.avatar:'char_377_gdglow';
-  user_data.value.email = cacheData['email'] === undefined ? "未绑定1" : cacheData['email'];
+  userData.value.userName = cacheData.userName;
+  userData.value.status = cacheData.status;
+  userData.value.token = cacheData.token;
+  userData.value.avatar = cacheData.avatar ? cacheData.avatar:'char_377_gdglow';
+  userData.value.email = cacheData['email'] === undefined ? "未绑定1" : cacheData['email'];
 }
 
 //登出
