@@ -71,7 +71,14 @@ async function getPlayBinding(path, requestParam, secret,cred){
             } else {
                 const list = response.data.list
 
-                const bindingList = list[0].bindingList;
+                let bindingList = []
+
+                for(const item of list){
+                   if(item.appCode === 'arknights'){
+                       bindingList = item.bindingList
+                       break
+                   }
+                }
 
                 for (const binding of bindingList) {
                     if (binding.isOfficial) {

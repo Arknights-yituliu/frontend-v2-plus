@@ -557,7 +557,7 @@ import {filterByCharacterProperty, professionDict, yearDict} from "./js/common";
 import operatorStatistical from "/src/pages/survey/js/operatorStatistical"
 import surveyApi from "/src/api/surveyUser";
 import surveyOperatorApi from "/src/api/surveyOperator"
-import sklandApi from '/src/api/skland'
+import sklandApi from '/src/pages/survey/js/skland'
 import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";
 import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
