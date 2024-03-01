@@ -941,8 +941,10 @@
                 本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来开发群一叙。
               </div>
               <div>设备宽度：{{deviceInfo.screenWidth}}；设备高度：{{deviceInfo.screenHeight}}</div>
-              <div>视口高度：{{deviceInfo.width}}；视口高度：{{deviceInfo.height}}</div>
+              <div>视口宽度：{{deviceInfo.width}}；视口高度：{{deviceInfo.height}}</div>
+              <el-button @click="getDeviceInfo" type="primary">刷新信息</el-button>
             </div>
+
           </el-collapse-item>
         </el-collapse>
         <!-- <foot></foot> -->
@@ -1089,11 +1091,8 @@ export default {
     this.getPackDataList()
     this.checkEndDate();
 
-    this.deviceInfo.height = window.innerHeight
-    this.deviceInfo.width = window.innerWidth
-    this.deviceInfo.screenHeight = window.screen.height
-    this.deviceInfo.screenWidth = window.screen.width;
 
+    this.getDeviceInfo()
 
     myChart = echarts.init(document.getElementById("gacha_total_pie"));
     this.pieChart(this.pieData);
@@ -1109,6 +1108,13 @@ export default {
     }
   },
   methods: {
+
+    getDeviceInfo(){
+      this.deviceInfo.height = window.innerHeight
+      this.deviceInfo.width = window.innerWidth
+      this.deviceInfo.screenHeight = window.screen.height
+      this.deviceInfo.screenWidth = window.screen.width;
+    },
 
     getPackDataList() {
       storeAPI.findPackStore().then(response => {
