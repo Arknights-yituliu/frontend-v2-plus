@@ -592,9 +592,10 @@
     margin: 8px;
     display: flex;
     align-items: center;
+    vertical-align: center;
     flex-wrap: wrap;
-    height: 50px;
-    min-width: 274px;
+    height: 52px;
+    width: 260px;
     border: var(--c-border);
 }
 
@@ -623,12 +624,13 @@
 }
 
 .operator-delete-icon {
+    cursor: pointer;
     font-weight: 600;
-    position: absolute;
+    position: relative;
     left: 32px;
-    top: -2px;
+    top: -3px;
     background-color: var(--c-background-color);
-    border-radius: 1000px;
+    border-radius: 10px;
     box-shadow: var(--c-box-shadow);
 }
 
