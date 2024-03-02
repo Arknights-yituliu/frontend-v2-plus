@@ -7,7 +7,6 @@
     width: 1400px;
     height: auto;
     overflow: hidden;
-    padding-bottom: 100px;
 }
 
 .schedule-version {
@@ -120,9 +119,7 @@
 }
 
 .schedule-set-tip {
-    padding: 0 12px;
-    margin: 4px 0;
-    color: grey;
+    font-size: 12px;
     font-style: italic;
 }
 

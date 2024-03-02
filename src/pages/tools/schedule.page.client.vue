@@ -1029,7 +1029,7 @@ onMounted(() => {
 
           <span class="room-set-description">{{ translate('schedule', 'schedule.TimedShiftChange') }}</span>
           <c-switch v-model="isPeriod"></c-switch>
-          &emsp;{{ translate('schedule', 'schedule.TimedShiftChangeTip') }}
+          <div class="schedule-set-tip">&emsp;{{ translate('schedule', 'schedule.TimedShiftChangeTip') }}</div>
         </div>
 
         <div class="schedule-set-bar-short" style="flex-wrap:wrap;padding-bottom: 20px">
