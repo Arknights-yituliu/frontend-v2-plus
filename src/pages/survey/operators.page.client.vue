@@ -49,7 +49,7 @@
 
     <!-- 常驻条 -->
     <div class="setup_top">
-      <c-button :color="'blue'" @click="checkFirstPopup()">操作指引</c-button>
+      <c-button :color="'blue'" :status="true" @click="checkFirstPopup()">操作指引</c-button>
 
       <c-button :color="'blue'" :status="btnStatus.btn_filter"
                 @click="clickBtn('btn_filter');collapseFilter()">
