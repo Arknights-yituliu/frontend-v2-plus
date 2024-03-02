@@ -25,7 +25,7 @@
     padding: 24px;
 }
 
-.guide-box h2{
+.guide-box h2 {
     margin-top: 60px;
 }
 
@@ -39,7 +39,7 @@
 
 }
 
-.guide-image{
+.guide-image {
     width: 70%;
     box-shadow: 1px 1px 8px var(--c-box-shadow-color);
 }
@@ -492,10 +492,12 @@
     width: 44px;
     margin: 4px;
     position: relative;
-    border-radius: 4px;
+    --base-border-radius: 4px;
+    --avatar-border-radius: calc(var(--base-border-radius)*4);
+    --avatar-position: calc((44px - 180px) / 2);
+    --avatar-scale: scale(calc(44 / 180));
+    border-radius: var(--base-border-radius);
     box-shadow: var(--c-box-shadow);
-    --avatar-position: calc((44px - 182px) / 2);
-    --avatar-scale: scale(calc(44 / 183));
     background-color: var(--c-background-white-transparent);
 }
 

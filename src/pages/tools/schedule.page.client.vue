@@ -1178,7 +1178,6 @@ onMounted(() => {
                  v-for="(charName,index) in getRoomOperators('control',0)"
                  :key="index">
               <div :class="getAvatar(charName)"></div>
-
             </div>
           </div>
           <!--     宿舍-->
