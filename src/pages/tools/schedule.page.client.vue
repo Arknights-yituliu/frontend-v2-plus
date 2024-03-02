@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch} from "vue"
+import { onMounted, ref, watch } from "vue"
 
 import schedule_template_json from '/src/static/json/build/plans_template.json'
 import character_table from '/src/static/json/survey/character_table_simple.json'
@@ -7,11 +7,11 @@ import schedule_menu from '/src/static/json/build/schedule_menu.json'
 import building_table from '/src/static/json/build/building_table.json'
 
 import buildingApi from '/src/api/building.js'
-import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
-import {translate} from '/src/utils/i18n.js'
-import {getText} from '/src/utils/fileRead.js'
-import {debounce} from "/src/utils/debounce.js";
-import {cMessage} from '/src/custom/message.js'
+import { operatorFilterConditionTable } from '/src/utils/buildingSkillFilter.js'
+import { translate } from '/src/utils/i18n.js'
+import { getText } from '/src/utils/fileRead.js'
+import { debounce } from "/src/utils/debounce.js";
+import { cMessage } from '/src/custom/message.js'
 
 import '/src/assets/css/tool/schedule.css'
 import '/src/assets/css/sprite/sprite_avatar_6.css'
@@ -20,7 +20,7 @@ import '/src/assets/css/sprite/sprite_avatar_4.css'
 import '/src/assets/css/tool/building_skill_font_color.css'
 
 
-const COLOR = {BLUE: 'blue', ORANGE: 'orange', GREEN: 'green'}
+const COLOR = { BLUE: 'blue', ORANGE: 'orange', GREEN: 'green' }
 
 
 let plansTemplate = ref('')
@@ -36,15 +36,15 @@ let isPeriod = ref(false)
 
 
 const roomTypeMenu = [
-  {label: "贸易站", value: "trading"},
-  {label: "制造站", value: "manufacture"},
-  {label: "办公室", value: "hire"},
-  {label: "加工站", value: "workshop"},
-  {label: "宿舍", value: "dormitory"},
-  {label: "控制中枢", value: "control"},
-  {label: "发电站", value: "power"},
-  {label: "会客室", value: "meeting"},
-  {label: "训练室", value: "training"}
+  { label: "贸易站", value: "trading" },
+  { label: "制造站", value: "manufacture" },
+  { label: "办公室", value: "hire" },
+  { label: "加工站", value: "workshop" },
+  { label: "宿舍", value: "dormitory" },
+  { label: "控制中枢", value: "control" },
+  { label: "发电站", value: "power" },
+  { label: "会客室", value: "meeting" },
+  { label: "训练室", value: "training" }
 ]
 
 /**
@@ -63,13 +63,13 @@ function getRoomLabel(type) {
 //maa的产物id和游戏内物品id的对照表
 const productTable = {
   manufacture: [
-    {id: '2003', value: 'Battle Record'},
-    {id: '3003', value: 'Pure Gold'},
-    {id: '3141', value: 'Originium Shard'}
+    { id: '2003', value: 'Battle Record' },
+    { id: '3003', value: 'Pure Gold' },
+    { id: '3141', value: 'Originium Shard' }
   ],
   trading: [
-    {id: '4001', value: 'LMD'},
-    {id: '4003', value: 'Orundum'}
+    { id: '4001', value: 'LMD' },
+    { id: '4003', value: 'Orundum' }
   ]
 }
 
@@ -153,11 +153,11 @@ function choosePlanTimes(num) {
  * @param index 班次的索引
  */
 function toNextPlan(index) {
-  if (index < 0) 
+  if (index < 0)
     selectedPlanIndex.value = scheduleTypeV2.value.planTimes - 1
-  else if (index >= scheduleTypeV2.value.planTimes) 
+  else if (index >= scheduleTypeV2.value.planTimes)
     selectedPlanIndex.value = 0
-  else 
+  else
     selectedPlanIndex.value = index
 
   /**
@@ -251,7 +251,7 @@ function chooseRoom(roomType, index) {
 
   if ('trading' === roomType || 'manufacture' === roomType) {
     selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedPlanIndex.value]
-        .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
+      .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
   }
 }
 
@@ -343,8 +343,8 @@ function commonFilterOperator() {
  */
 function operatorHasKeyword(operator) {
   return operator.name.indexOf(searchInputText.value) > -1 ||
-      operator.description.indexOf(searchInputText.value) > -1 ||
-      operator.buffName.indexOf(searchInputText.value) > -1
+    operator.description.indexOf(searchInputText.value) > -1 ||
+    operator.buffName.indexOf(searchInputText.value) > -1
 }
 
 const roomPopupStyle = "width:550px;"
@@ -390,8 +390,8 @@ function displayOperatorDescription(id) {
  */
 function checkRoomDuplicateOperator(charName) {
   if (plansTemplate.value[selectedPlanIndex.value]
-      .rooms[selectedRoomType.value][selectedRoomIndex.value]
-      .operators.includes(charName)) {
+    .rooms[selectedRoomType.value][selectedRoomIndex.value]
+    .operators.includes(charName)) {
     cMessage(translate('schedule', 'schedule.OperatorAlreadyStationed'), 'error')
     return false;
   }
@@ -406,8 +406,8 @@ function checkRoomDuplicateOperator(charName) {
  */
 function checkRoomMaximum() {
   if (plansTemplate.value[selectedPlanIndex.value]
-      .rooms[selectedRoomType.value][selectedRoomIndex.value]
-      .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
+    .rooms[selectedRoomType.value][selectedRoomIndex.value]
+    .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
     cMessage(translate('schedule', 'schedule.FacilityFull'), 'error')
     return false;
   }
@@ -422,9 +422,9 @@ function checkRoomMaximum() {
 function deleteOperator(charName) {
 
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
-      plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
-        return e !== charName
-      })
+    plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
+      return e !== charName
+    })
 
   checkPlanDuplicateOperator(selectedPlanIndex.value, charName, false)
 
@@ -462,7 +462,7 @@ let tmpOperatorList = ref([])
  */
 function copyOperatorList() {
   tmpOperatorList.value =
-      plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators
+    plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators
 }
 
 /**
@@ -485,7 +485,7 @@ function pasteOperatorList() {
   }
 }
 
-let tmpPlanData = ref({index: 0, plan: ''})
+let tmpPlanData = ref({ index: 0, plan: '' })
 
 function copyPlan() {
   tmpPlanData.value.plan = JSON.stringify(plansTemplate.value[selectedPlanIndex.value])
@@ -506,7 +506,7 @@ let selectedProduct = ref("")
 function setProduct(product) {
   plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].product = product
   selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedPlanIndex.value]
-      .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
+    .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
 }
 
 /**
@@ -560,15 +560,15 @@ function setFiammetta(property, value) {
 }
 
 watch(() => plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
-    (newVal) => {
-      console.log(newVal)
-      if (newVal && selectedRoomType.value === 'dormitory') {
-        if (plansTemplate.value[selectedPlanIndex.value].rooms
-            [selectedRoomType.value][selectedRoomIndex.value].operators.length > 0) {
-          cMessage(translate('schedule', 'schedule.AutofillDormTip'), 'warn')
-        }
+  (newVal) => {
+    console.log(newVal)
+    if (newVal && selectedRoomType.value === 'dormitory') {
+      if (plansTemplate.value[selectedPlanIndex.value].rooms
+      [selectedRoomType.value][selectedRoomIndex.value].operators.length > 0) {
+        cMessage(translate('schedule', 'schedule.AutofillDormTip'), 'warn')
       }
-    })
+    }
+  })
 
 
 /**
@@ -642,7 +642,7 @@ function saveAndDownloadScheduleFile() {
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
-    cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage')+scheduleId.value)
+    cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value)
     let link = document.createElement('a')
     link.download = `${scheduleId.value}.json`
     link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scheduleInfo.value, null, 2))
@@ -732,7 +732,7 @@ function importSchedule(schedule) {
 
   for (const index in plans) {
     const plan = plans[index]
-    const {name, description, Fiammetta, drones, rooms, period} = plan
+    const { name, description, Fiammetta, drones, rooms, period } = plan
     plansTemplate.value[index].name = name
     plansTemplate.value[index].description = description
 
@@ -843,7 +843,7 @@ onMounted(() => {
       </c-button>
       <div>
         <input class="input-base" style="width: 200px" v-model="scheduleImportId"
-          :placeholder="[[translate('schedule','schedule.IdPlaceholder')]]"/>
+          :placeholder="[[translate('schedule', 'schedule.IdPlaceholder')]]" />
         <span class="input-desc"></span>
       </div>
       <c-button :color="COLOR.BLUE" @click="importScheduleById()">
@@ -912,8 +912,8 @@ onMounted(() => {
       <div class="schedule-set-bar">
         <span>{{ translate('schedule', 'schedule.BaseLayout') }}</span>
         <div>
-          <c-button :color="COLOR.BLUE" :status="menu.label===selectedScheduleType.label"
-            @click="chooseScheduleType(menu)" v-for="(menu,index) in schedule_menu" :key="index">
+          <c-button :color="COLOR.BLUE" :status="menu.label === selectedScheduleType.label"
+            @click="chooseScheduleType(menu)" v-for="(menu, index) in schedule_menu" :key="index">
             {{ menu.label }}
           </c-button>
         </div>
@@ -922,7 +922,7 @@ onMounted(() => {
       <div class="schedule-set-bar">
         <span>{{ translate('schedule', 'schedule.ShiftNumber') }}</span>
         <div>
-          <c-button :color="COLOR.BLUE" :status="num===scheduleTypeV2.planTimes" v-for="(num,index) in 6" :key="index"
+          <c-button :color="COLOR.BLUE" :status="num === scheduleTypeV2.planTimes" v-for="(num, index) in 6" :key="index"
             @click="choosePlanTimes(num)">
             {{ num }}
           </c-button>
@@ -950,29 +950,29 @@ onMounted(() => {
           <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
           <div style="width: 200px">
             <c-button :color="COLOR.BLUE" :status="'pre' === plansTemplate[selectedPlanIndex].drones.order"
-              @click="setDrones('order','pre')">
+              @click="setDrones('order', 'pre')">
               {{ translate('schedule', 'schedule.PreShift') }}
             </c-button>
             <c-button :color="COLOR.BLUE" :status="'post' === plansTemplate[selectedPlanIndex].drones.order"
-              @click="setDrones('order','post')">
+              @click="setDrones('order', 'post')">
               {{ translate('schedule', 'schedule.PostShift') }}
             </c-button>
           </div>
           <span>{{ translate('schedule', 'schedule.TargetRoom') }}</span>
           <div style="width: 220px">
             <c-button :color="COLOR.BLUE" :status="'trading' === plansTemplate[selectedPlanIndex].drones.room"
-              @click="setDrones('room','trading')">
+              @click="setDrones('room', 'trading')">
               {{ translate('schedule', 'schedule.TradingPost') }}
             </c-button>
             <c-button :color="COLOR.BLUE" :status="'manufacture' === plansTemplate[selectedPlanIndex].drones.room"
-              @click="setDrones('room','manufacture')">
+              @click="setDrones('room', 'manufacture')">
               {{ translate('schedule', 'schedule.Factory') }}
             </c-button>
           </div>
           <span>{{ translate('schedule', 'schedule.RoomNumber') }}</span>
           <div>
             <c-button :color="COLOR.BLUE" :status="(index) === plansTemplate[selectedPlanIndex].drones.index"
-              @click="setDrones('index',(index))" v-for="index in 5" :key="index">
+              @click="setDrones('index', (index))" v-for="index in 5" :key="index">
               {{ index }}
             </c-button>
           </div>
@@ -986,11 +986,11 @@ onMounted(() => {
           <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
           <div style="width: 200px">
             <c-button :color="COLOR.BLUE" :status="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order"
-              @click="setFiammetta('order','pre')">
+              @click="setFiammetta('order', 'pre')">
               {{ translate('schedule', 'schedule.PreShift') }}
             </c-button>
             <c-button :color="COLOR.BLUE" :status="'post' === plansTemplate[selectedPlanIndex].Fiammetta.order"
-              @click="setFiammetta('order','post')">
+              @click="setFiammetta('order', 'post')">
               {{ translate('schedule', 'schedule.PostShift') }}
             </c-button>
           </div>
@@ -1000,7 +1000,7 @@ onMounted(() => {
             <!--          <div :class="getAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
             <!--        </div>-->
 
-            <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible=true">
+            <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible = true">
               <div :class="getOptionAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>
             </div>
           </div>
@@ -1023,7 +1023,7 @@ onMounted(() => {
           </c-switch>
           <span class="room-set-description">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
           <div class="product-image-wrap" @click="setProduct(product.value)"
-            v-for="(product,index) in productTable[selectedRoomType]" :key="index">
+            v-for="(product, index) in productTable[selectedRoomType]" :key="index">
             <div :class="getItemSprite(product.id)"></div>
           </div>
 
@@ -1033,7 +1033,7 @@ onMounted(() => {
         </div>
 
         <div class="schedule-set-bar-short" style="flex-wrap:wrap;padding-bottom: 20px">
-          <div class="execution-time" v-for="(num,index) in scheduleTypeV2.planTimes" :key="index">
+          <div class="execution-time" v-for="(num, index) in scheduleTypeV2.planTimes" :key="index">
             <span>{{ translate('schedule', 'schedule.Shift') }}{{ num }}</span>
             <!--          <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>-->
             <el-time-picker v-model="executionTimeList[index][0]" placeholder="Arbitrary time" style="width: 140px" />
@@ -1045,19 +1045,19 @@ onMounted(() => {
 
       <c-popup v-model:visible="FiammettaTargetVisible" :style="roomPopupStyle">
         <div class="filter-condition-box">
-          <div class="condition-bar" v-for="(room,key) in operatorFilterConditionTable" v-show="room.display"
+          <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable" v-show="room.display"
             :key="key">
             <span :style="`color:${room.color}`">{{ translate('schedule', room.name) }}</span>
-            <c-button v-for="(condition,index) in room.conditions" :key="index" :color="COLOR.BLUE"
-              :status="filterBtnStatus(key,condition.label)" @click="filterOperatorByTag(condition,key)">
+            <c-button v-for="(condition, index) in room.conditions" :key="index" :color="COLOR.BLUE"
+              :status="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
               {{ translate('schedule', condition.label) }}
             </c-button>
           </div>
         </div>
 
         <div class="operator-check-box-group" style="width: 550px">
-          <div class="operator-check-box-option" v-for="(operator,charId) in filterOperatorList" :key="charId"
-            @click="setFiammetta('target',operator.name);FiammettaTargetVisible=false">
+          <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"
+            @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
             <div :class="getOptionAvatar(operator.charId)"></div>
             <div class="operator-check-label">{{ operator.name }}</div>
           </div>
@@ -1066,7 +1066,7 @@ onMounted(() => {
 
 
       <div class="room-wrap">
-        <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex-1)">
+        <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex - 1)">
           <i class="iconfont icon-arrow-left" style="font-size: 48px">
           </i>
         </div>
@@ -1078,15 +1078,15 @@ onMounted(() => {
           <div class="copy-btn-wrap">
           </div>
           <!--    贸易站-->
-          <div class="room-template trading" :class="roomSelectedClass('trading',tradingIndex)"
-            v-for="(num,tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
-            @click="chooseRoom('trading',tradingIndex)" tabindex="0">
+          <div class="room-template trading" :class="roomSelectedClass('trading', tradingIndex)"
+            v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
+            @click="chooseRoom('trading', tradingIndex)" tabindex="0">
             <div class="room-name">
               <span>{{ translate('schedule', 'schedule.TradingPost') }}#{{ num }}</span>
-              <div :class="getRoomProduct('trading',tradingIndex)"></div>
+              <div :class="getRoomProduct('trading', tradingIndex)"></div>
             </div>
             <div class="settlement_operator">
-              <div class="room-avatar-sprite-wrap" v-for="(charName,index) in getRoomOperators('trading',tradingIndex)"
+              <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('trading', tradingIndex)"
                 :key="index">
                 <div :class="getAvatar(charName)"></div>
               </div>
@@ -1094,16 +1094,16 @@ onMounted(() => {
           </div>
 
           <!--  制造站-->
-          <div class="room-template manufacture" :class="roomSelectedClass('manufacture',manufactureIndex)"
-            v-for="(num,manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"
-            @click="chooseRoom('manufacture',manufactureIndex)" tabindex="0">
+          <div class="room-template manufacture" :class="roomSelectedClass('manufacture', manufactureIndex)"
+            v-for="(num, manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"
+            @click="chooseRoom('manufacture', manufactureIndex)" tabindex="0">
             <div class="room-name">
               <span>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</span>
-              <div :class="getRoomProduct('manufacture',manufactureIndex)"></div>
+              <div :class="getRoomProduct('manufacture', manufactureIndex)"></div>
             </div>
             <div class="settlement_operator">
               <div class="room-avatar-sprite-wrap"
-                v-for="(charName,index) in getRoomOperators('manufacture',manufactureIndex)" :key="index">
+                v-for="(charName, index) in getRoomOperators('manufacture', manufactureIndex)" :key="index">
                 <div :class="getAvatar(charName)"></div>
               </div>
             </div>
@@ -1119,11 +1119,11 @@ onMounted(() => {
           </div>
 
           <!--  发电站-->
-          <div class="room-template power" :class="roomSelectedClass('power',powerIndex)"
-            v-for="(num,powerIndex) in scheduleTypeV2.power" :key="powerIndex" @click="chooseRoom('power',powerIndex)"
+          <div class="room-template power" :class="roomSelectedClass('power', powerIndex)"
+            v-for="(num, powerIndex) in scheduleTypeV2.power" :key="powerIndex" @click="chooseRoom('power', powerIndex)"
             tabindex="0">
             <div class="room-name">{{ translate('schedule', 'schedule.PowerPlant') }}#{{ num }}</div>
-            <div class="room-avatar-sprite-wrap" v-for="(charName,index) in getRoomOperators('power',powerIndex)"
+            <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('power', powerIndex)"
               :key="index">
               <div :class="getAvatar(charName)"></div>
             </div>
@@ -1131,7 +1131,7 @@ onMounted(() => {
 
           <div class="copy-btn-wrap">
             <span>{{ translate('schedule', 'schedule.TempPlan') }}&nbsp;{{ translate('schedule', 'schedule.Shift') }}{{
-              tmpPlanData.index }} </span>
+        tmpPlanData.index }} </span>
             <c-button :color="COLOR.BLUE" :status="true" @click="copyPlan()">
               {{ translate('schedule', 'schedule.CopyPlan') }}
             </c-button>
@@ -1143,20 +1143,20 @@ onMounted(() => {
 
         <div class="room-wrap-center">
           <!--     控制中枢-->
-          <div class="room-template control" :class="roomSelectedClass('control',0)" @click="chooseRoom('control',0)"
+          <div class="room-template control" :class="roomSelectedClass('control', 0)" @click="chooseRoom('control', 0)"
             tabindex="0">
             <div class="room-name">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
-            <div class="room-avatar-sprite-wrap" v-for="(charName,index) in getRoomOperators('control',0)" :key="index">
+            <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('control', 0)" :key="index">
               <div :class="getAvatar(charName)"></div>
             </div>
           </div>
           <!--     宿舍-->
-          <div class="room-template dormitory" :class="roomSelectedClass('dormitory',dormitoryIndex)"
-            v-for="(num,dormitoryIndex) in scheduleTypeV2.dormitory" :key="dormitoryIndex"
-            @click="chooseRoom('dormitory',dormitoryIndex)" tabindex="0">
+          <div class="room-template dormitory" :class="roomSelectedClass('dormitory', dormitoryIndex)"
+            v-for="(num, dormitoryIndex) in scheduleTypeV2.dormitory" :key="dormitoryIndex"
+            @click="chooseRoom('dormitory', dormitoryIndex)" tabindex="0">
             <div class="room-name">{{ translate('schedule', 'schedule.Dormitory') }}#{{ num }}</div>
             <div class="room-avatar-sprite-wrap"
-              v-for="(charName,index) in getRoomOperators('dormitory',dormitoryIndex)" :key="index">
+              v-for="(charName, index) in getRoomOperators('dormitory', dormitoryIndex)" :key="index">
               <div :class="getAvatar(charName)"></div>
             </div>
           </div>
@@ -1165,29 +1165,29 @@ onMounted(() => {
         <div class="room-wrap-right">
           <div class="room-template blank" style="width: 100px;"></div>
           <!--     会客室-->
-          <div class="room-template meeting" :class="roomSelectedClass('meeting',0)" @click="chooseRoom('meeting',0)"
+          <div class="room-template meeting" :class="roomSelectedClass('meeting', 0)" @click="chooseRoom('meeting', 0)"
             tabindex="0">
             <div class="room-name">{{ translate('schedule', 'schedule.ReceptionRoom') }}</div>
-            <div class="room-avatar-sprite-wrap" v-for="(charName,index) in getRoomOperators('meeting',0)" :key="index">
+            <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('meeting', 0)" :key="index">
               <div :class="getAvatar(charName)"></div>
 
             </div>
           </div>
           <!--      加工站-->
-          <div class="room-template processing" :class="roomSelectedClass('processing',0)"
-            @click="chooseRoom('processing',0)" tabindex="0">
+          <div class="room-template processing" :class="roomSelectedClass('processing', 0)"
+            @click="chooseRoom('processing', 0)" tabindex="0">
             <div class="room-name">{{ translate('schedule', 'schedule.Workshop') }}</div>
-            <div class="room-avatar-sprite-wrap" v-for="(charName,index) in getRoomOperators('processing',0)"
+            <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('processing', 0)"
               :key="index">
               <div :class="getAvatar(charName)"></div>
             </div>
           </div>
 
           <!--     办公室 -->
-          <div class="room-template hire" :class="roomSelectedClass('hire',0)" @click="chooseRoom('hire',0)"
+          <div class="room-template hire" :class="roomSelectedClass('hire', 0)" @click="chooseRoom('hire', 0)"
             tabindex="0">
             <div class="room-name">{{ translate('schedule', 'schedule.Office') }}</div>
-            <div class="room-avatar-sprite-wrap" v-for="(charName,index) in getRoomOperators('hire',0)" :key="index">
+            <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('hire', 0)" :key="index">
               <div :class="getAvatar(charName)"></div>
             </div>
           </div>
@@ -1195,14 +1195,14 @@ onMounted(() => {
           <div class="room-template blank" style="width: 100px;"></div>
         </div>
 
-        <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex+1)"><i class="iconfont icon-arrow-right"
+        <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex + 1)"><i class="iconfont icon-arrow-right"
             style="font-size: 48px"></i></div>
       </div>
 
       <div class="schedule-set-bar" style="justify-content: center">
         <span>{{ translate('schedule', 'schedule.CurrentShift') }}</span>
         <c-button :color="COLOR.BLUE" :status="index === selectedPlanIndex"
-          v-for="(num,index) in scheduleTypeV2.planTimes" :key="index" @click="currentPlan(index)" class="room_times"
+          v-for="(num, index) in scheduleTypeV2.planTimes" :key="index" @click="currentPlan(index)" class="room_times"
           style="margin: 0 8px">
           {{ translate('schedule', 'schedule.Shift') }}{{ num }}
         </c-button>
@@ -1213,7 +1213,7 @@ onMounted(() => {
           <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsStationed') }}</span>
           <div class="selected-operator-wrap">
             <div class="room-avatar-sprite-wrap"
-              v-for="(charId,index) in getRoomOperators(selectedRoomType,selectedRoomIndex)" :key="index">
+              v-for="(charId, index) in getRoomOperators(selectedRoomType, selectedRoomIndex)" :key="index">
               <div :class="getAvatar(charId)"></div>
               <i class="iconfont icon-error operator-delete-icon" @click="deleteOperator(charId)">
               </i>
@@ -1227,18 +1227,18 @@ onMounted(() => {
           </c-button>
           <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsClipboard') }}</span>
           <div class="selected-operator-wrap">
-            <div class="room-avatar-sprite-wrap" v-for="(charId,index) in tmpOperatorList" :key="index">
+            <div class="room-avatar-sprite-wrap" v-for="(charId, index) in tmpOperatorList" :key="index">
               <div :class="getAvatar(charId)"></div>
             </div>
           </div>
         </div>
 
         <div class="filter-condition-box">
-          <div class="condition-bar" v-for="(conditionType,key) in operatorFilterConditionTable"
+          <div class="condition-bar" v-for="(conditionType, key) in operatorFilterConditionTable"
             v-show="conditionType.display" :key="key">
             <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-            <c-button v-for="(condition,index) in conditionType.conditions" :key="index" :color="COLOR.BLUE"
-              :status="filterBtnStatus(key,condition.label)" @click="filterOperatorByTag(condition,key)">
+            <c-button v-for="(condition, index) in conditionType.conditions" :key="index" :color="COLOR.BLUE"
+              :status="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
               {{ translate('schedule', condition.label) }}
             </c-button>
           </div>
@@ -1253,7 +1253,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="operator-check-box-group">
-          <div v-for="(operator,charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"
+          <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"
             :id="operator.charId" class="operator-check-box-option">
             <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>
             <div class="operator-check-label">{{ operator.name }}</div>
