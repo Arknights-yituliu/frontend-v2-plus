@@ -42,6 +42,8 @@
         <p>点击干员卡片，打开弹窗，可进行干员技能模组等级的设置，设置完成后点击
           顶部<span class="info">“手动保存练度”</span>按钮，
           手动填写建议修改完几个干员就进行保存，防止因网页刷新等原因丢失填写进度</p>
+        <p>因森空岛的干员数据不完整，无法区分1级模组和未开启模组（在森空岛的干员数据中，以上两种情况均标注为1级），
+          请用手动填写功能进行修改，手动填写的模组等级在再次导入时，以手动填写的模组等级优先，数据不会被覆盖</p>
       </div>
 
 
@@ -49,7 +51,7 @@
 
     <!-- 常驻条 -->
     <div class="setup_top">
-      <c-button :color="'blue'" @click="checkFirstPopup()">操作指引</c-button>
+      <c-button :color="'blue'" :status="true" @click="checkFirstPopup()">操作指引</c-button>
 
       <c-button :color="'blue'" :status="btnStatus.btn_filter"
                 @click="clickBtn('btn_filter');collapseFilter()">
