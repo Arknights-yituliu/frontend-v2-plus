@@ -1,11 +1,31 @@
 [
-
   {
-    "author": "yamazakura",
+    "author": "山桜",
+    "type": "fix",
+    "module": "干员调查",
+    "date": "2024.03.01",
+    "description": "修复导入森空岛数据时无法正确获取明日方舟绑定列表"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "网站布局",
+    "date": "2024.03.01",
+    "description": "修复导航栏移动端按钮堆挤问题"
+  },
+  {
+    "author": "Constrat",
+    "type": "feat",
+    "module": "排班生成器",
+    "date": "2024.03.01",
+    "description": "arrow shift looping"
+  },
+  {
+    "author": "山桜",
     "type": "i18n",
     "module": "排班生成器",
     "date": "2024.02.29",
-    "description": " translating new help guide"
+    "description": "translating new help guide"
   },
   {
     "author": "Zirun-wang",
@@ -19,10 +39,10 @@
     "type": "i18n",
     "module": "排班生成器",
     "date": "2024.02.28",
-    "description": " GuidePopup icon translation"
+    "description": "GuidePopup icon translation"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "排班生成器",
     "date": "2024.02.28",
@@ -33,10 +53,10 @@
     "type": "style",
     "module": "排班生成器",
     "date": "2024.02.28",
-    "description": " various spacings / indentations CSS"
+    "description": "various spacings / indentations CSS"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "网站布局",
     "date": "2024.02.27",
@@ -50,49 +70,49 @@
     "description": "莱茵科技类技能干员列表"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "网站布局",
     "date": "2024.02.27",
     "description": "顶部导航栏增加反馈按钮"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "排班生成器",
     "date": "2024.02.27",
     "description": "排班生成器增加引导"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "fix",
     "module": "排班生成器",
     "date": "2024.02.27",
     "description": "基建技能页面未添加切换语言按钮"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "fix",
     "module": "干员调查",
     "date": "2024.02.27",
     "description": "干员调查页面的根据模组是否实装筛选结果错误"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "refactor",
     "module": "干员调查",
     "date": "2024.02.26",
     "description": "干员调查干员练度推荐功能"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "refactor",
     "module": "干员调查",
     "date": "2024.02.26",
     "description": "干员调查统计结果功能"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "杂项",
     "date": "2024.02.26",
@@ -103,73 +123,73 @@
     "type": "chore",
     "module": "排班生成器",
     "date": "2024.02.25",
-    "description": " removed redundant CSS instructions"
+    "description": "removed redundant CSS instructions"
   },
   {
     "author": "Constrat",
     "type": "style",
     "module": "排班生成器",
     "date": "2024.02.25",
-    "description": " spacing + indenting + alignment + margins"
+    "description": "spacing + indenting + alignment + margins"
   },
   {
     "author": "Constrat",
     "type": "style",
     "module": "排班生成器",
     "date": "2024.02.25",
-    "description": " number format changes"
+    "description": "number format changes"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "排班生成器",
     "date": "2024.02.25",
     "description": "调整排班生成器布局"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat/fix",
     "module": "排班生成器",
     "date": "2024.02.25",
-    "description": " spacing + small i18n"
+    "description": "spacing + small i18n"
   },
   {
     "author": "Constrat",
     "type": "fix",
     "module": "排班生成器",
     "date": "2024.02.24",
-    "description": " wrong CN i18n \"粘贴\" -> \"复制\""
+    "description": "wrong CN i18n \"粘贴\"-> \"复制\""
   },
   {
     "author": "Constrat",
     "type": "chore",
     "module": "排班生成器",
     "date": "2024.02.24",
-    "description": " standardized copy -> paste"
+    "description": "standardized copy -> paste"
   },
   {
     "author": "Constrat",
     "type": "fix",
     "module": "排班生成器",
     "date": "2024.02.24",
-    "description": " overlap in shift times and control center"
+    "description": "overlap in shift times and control center"
   },
   {
     "author": "Constrat",
     "type": "feat",
     "module": "排班生成器",
     "date": "2024.02.24",
-    "description": " selecting fiammetta avatar closes popup"
+    "description": "selecting fiammetta avatar closes popup"
   },
   {
     "author": "Constrat",
     "type": "style",
     "module": "排班生成器",
     "date": "2024.02.24",
-    "description": " spacing consistency"
+    "description": "spacing consistency"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "fix",
     "module": "排班生成器",
     "date": "2024.02.21",
@@ -180,129 +200,129 @@
     "type": "fix",
     "module": "排班生成器",
     "date": "2024.02.21",
-    "description": " error messages i18n + import/export + fiammetta avatar selection + spacing"
+    "description": "error messages i18n + import/export + fiammetta avatar selection + spacing"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "fix",
     "module": "排班生成器",
     "date": "2024.02.21",
     "description": "语言设置在亮色下字体颜色不正常"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "update",
     "module": "网站布局",
     "date": "2024.02.21",
     "description": "修改导航icon"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "排班生成器",
     "date": "2024.02.21",
     "description": "仅在打开排班生成器页面时显示多语言选择设置"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "fix",
     "module": "排班生成器",
     "date": "2024.02.19",
     "description": "排班生成器的en翻译无法正常显示"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "排班生成器",
     "date": "2024.02.19",
     "description": "排班生成器en翻译 @Constrat"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "i18n",
     "module": "排班生成器",
     "date": "2024.02.19",
-    "description": " Infrast schedule EN translation"
+    "description": "Infrast schedule EN translation"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "update",
     "module": "攒抽计算器",
     "date": "2024.02.16",
     "description": "下线春节攒抽"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "攒抽计算器",
     "date": "2024.02.13",
     "description": "攒抽计算器月卡计算错误"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "攒抽计算器",
     "date": "2024.02.13",
     "description": "攒抽计算器月卡计算错误"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "攒抽计算器",
     "date": "2024.02.13",
     "description": "攒抽计算器追加剿灭作战更新排期"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "fix",
     "module": "攒抽计算器",
     "date": "2024.02.13",
     "description": "攒抽计算器活动排期调整"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "刷图推荐",
     "date": "2024.02.12",
     "description": "增加刷图推荐数据的更新时间"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "fix",
     "module": "攒抽计算器",
     "date": "2024.02.12",
     "description": "解决position：sticky因与overflow-x冲突失效"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "chore",
     "module": "静态资源",
     "date": "2024.02.12",
     "description": "删除无用图片资源"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "fix",
     "module": "网站布局",
     "date": "2024.02.12",
     "description": "使用深度选择器防止某些页面的自定义样式污染其他页面的element组件样式"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "fix",
     "module": "攒抽计算器",
     "date": "2024.02.12",
     "description": "攒抽计算器未正确扣除已过期抽卡资源"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "feat",
     "module": "攒抽计算器",
     "date": "2024.02.11",
     "description": "攒抽计算器周年资源预载"
   },
   {
-    "author": "yamazakura",
+    "author": "山桜",
     "type": "refactor",
     "module": "攒抽计算器",
     "date": "2024.02.11",

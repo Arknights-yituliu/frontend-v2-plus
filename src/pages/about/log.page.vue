@@ -54,7 +54,7 @@ for (const log of logTable) {
       <ul>
         <li class="log-content" v-for="(log,index) in logs" :key="index">
           <span>{{ `${log.type}:` }}</span>
-          <span>{{ `${log.module}` }}</span>
+          <span>【{{ `${log.module}` }}】</span>
           <span>{{ log.description }}</span>
           <span>@{{ log.author }}</span>
         </li>

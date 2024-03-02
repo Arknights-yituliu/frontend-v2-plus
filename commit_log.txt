@@ -1,3 +1,55 @@
+commit 9f4710aed5ac98a0452a1c8a1544d2a2babd054d
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 1 18:07:59 2024 +0800
+
+    refactor:日志页面使用git commit_log 生成log
+
+commit 67fd3c4c492b68132112e887d5ddf092a23e970f
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 1 14:34:21 2024 +0800
+
+    fix:修复导入森空岛数据时无法正确获取明日方舟绑定列表
+
+commit 6af0bccec513c8eb1207cc69ac2b8d8cb25bec0c
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 1 12:08:23 2024 +0800
+
+    feat:打印设备信息
+
+commit 244062451c0068859d9bc757dc7a5f7938134fe1
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 1 11:46:15 2024 +0800
+
+    feat:打印设备信息
+
+commit 9acdfcd93c6676f9f74814cf8bd7a009996c5b16
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 1 11:45:30 2024 +0800
+
+    fix:修复导航栏移动端按钮堆挤问题
+
+commit be0b3e8fe11c87132c0b6257156c887919b45d1a
+Merge: 0a583ad 3db8b6a
+Author: yamazakura <84258011+yamasakura@users.noreply.github.com>
+Date:   Fri Mar 1 10:02:55 2024 +0800
+
+    Merge pull request #44 from Constrat/dev
+    
+    feat: arrow shift looping
+
+commit 3db8b6a5e652b34d57aa8a423054065b08a1445a
+Author: Constrat <56174894+Constrat@users.noreply.github.com>
+Date:   Thu Feb 29 22:06:24 2024 +0100
+
+    feat: arrow shift looping
+    fix #42
+
+commit 0a583ad5855f38c98ea2fc587a318725586348ae
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Feb 29 18:27:23 2024 +0800
+
+    chore:commit类型规范
+
 commit f11b4fe8c3f2dd591c350f4f9980fdaaa9e824ac
 Author: yamazakura <1969314158@qq.com>
 Date:   Thu Feb 29 16:47:26 2024 +0800
