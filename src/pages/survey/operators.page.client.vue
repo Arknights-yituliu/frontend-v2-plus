@@ -49,7 +49,7 @@
 
     <!-- 常驻条 -->
     <div class="setup_top">
-      <c-button :color="'blue'" @click="checkFirstPopup()">填写说明</c-button>
+      <c-button :color="'blue'" @click="checkFirstPopup()">操作指引</c-button>
 
       <c-button :color="'blue'" :status="btnStatus.btn_filter"
                 @click="clickBtn('btn_filter');collapseFilter()">
@@ -60,7 +60,7 @@
                 @click="clickBtn('btn_import');collapseImport()">
         数据导入导出
       </c-button>
-      <feed-back/>
+
       <div style="width: 60px"></div>
       <c-button :color="'green'" :status="true" @click="upload()">手动保存练度</c-button>
       <c-button :color="'blue'" :status="statisticalPopupVisible"
@@ -575,7 +575,6 @@ import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";
 import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
-import feedBack from '/src/components/feed-back.vue';
 
 
 import "/src/assets/css/survey/survey_character.css";
