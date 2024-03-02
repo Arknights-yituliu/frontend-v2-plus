@@ -3,8 +3,6 @@
     overflow: auto;
 }
 
-
-
 .maa-schedule-v2 {
     width: 1400px;
     height: auto;
@@ -36,7 +34,6 @@
 
 .guide-keynote {
     color: #1673ff;
-
 }
 
 .guide-image {
@@ -78,20 +75,6 @@
     font-size: 28px;
     font-weight: 500;
     float: left;
-}
-
-.input-wrap {
-    position: relative;
-}
-
-.input-type-file {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 150px;
-    height: 28px;
-    opacity: 0;
-    cursor: pointer;
 }
 
 .schedule-set-form {
