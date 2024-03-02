@@ -42,6 +42,8 @@ function openAndClose(visible) {
   width: 100%;
   height: 100%;
   z-index: 2000;
+  padding: 30px;
+  box-sizing: border-box;
 }
 
 .popup_mask {
@@ -71,7 +73,7 @@ function openAndClose(visible) {
 }
 
 .popup-context {
-  max-height: 80vh;
+  max-height: 70vh;
   overflow-y: auto;
   overflow-x: hidden;
 }

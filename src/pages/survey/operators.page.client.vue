@@ -2,36 +2,49 @@
   <div class="survey_character_page o-sprite-scale">
     <c-popup :visible="introPopupVisible" v-model:visible="introPopupVisible">
       <!-- <div class="intro_title">填写流程说明</div> -->
-      <div class="intro_wrap">
-        <div class="intro_title">填写方法</div>
-        <b>填写前请在右上角注册并登录一个账号，以方便在不同设备间同步</b><br>
-        默认干员未拥有,卡片显示为灰色(除头像外),点击头像设置为拥有此干员
-        <br/>点击选择精英化、专精、模组等级，再次点击则可以取消
+
+      <div class="o-guide-content-container">
+        <h1>填写流程</h1>
+        <h2>注册账号</h2>
+        <p> 新用户注册可用账号密码注册和邮箱注册，也可在个人中心进行设置密码和邮箱绑定等操作</p>
+        <p class="tip">
+          *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
+        </p>
+        <h2>数据填写</h2>
+        <h3>由森空岛导入</h3>
+
+        <label class="warn">森空岛CRED的风险声明：森空岛CRED与鹰角网络通行证的Token并不通用，
+          目前仅可获取森空岛内展示的游戏数据，（仅通过官网实验不通用，不能完全确定，一图流不会保存任何CRED信息</label>
+
+        <p><b>step1：</b>使用PC打开森空岛官网<span @click="toSKLand()" class="info">https://www.skland.com/</span>进行登录
+        </p>
+        <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
+        <p class="info">
+          localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage .getItem('SK_TOKEN_CACHE_KEY')
+        </p>
+
+        <p>
+          <button class="btn btn-blue"
+                  @click="copyCode('localStorage.getItem(\'SK_OAUTH_CRED_KEY\')+\',\'+localStorage.getItem(\'SK_TOKEN_CACHE_KEY\')')">
+            复制命令
+          </button>
+        </p>
+
+        <img src="/image/skland/step1.jpg" alt=""/>
+        <p><b>step3：</b>输入之后回车确认</p>
+        <img src="/image/skland/step2.jpg" alt=""/>
+        <p><b>step4：</b>此时你可以获得一段神秘的字符，复制这段字符，<b>不要带引号</b></p>
+        <img src="/image/skland/step3.jpg" alt=""/>
+        <p><b>step5：</b>将 <b>step4</b> 中获得的这段字符粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
+
+
+        <h3>手动填写</h3>
+        <p>点击干员卡片，打开弹窗，可进行干员技能模组等级的设置，设置完成后点击
+          顶部<span class="info">“手动保存练度”</span>按钮，
+          手动填写建议修改完几个干员就进行保存，防止因网页刷新等原因丢失填写进度</p>
       </div>
 
-      <div class="intro_wrap">
-        <div class="intro_title">保存机制</div>
-        填写的时候可以多点点保存，如不慎误操作，可以刷新页面从服务器上重新拉取数据
-      </div>
 
-      <div class="intro_wrap">
-        <div class="intro_title">三种填写模式</div>
-        极简模式：是否持有<br/>
-        标准模式：是否持有、精英化程度、专精、模组<br/>
-        完整模式：是否持有、精英化程度、专精、模组、潜能<br/>
-        建议填的详细一些，以后会基于这些数据推出新功能
-      </div>
-
-      <div class="intro_wrap">
-        <div class="intro_title">批量操作</div>
-        批量操作：先筛选，再应用于全部筛选出的干员<br/>
-        除“全部设为已拥有”和“全部设为未拥有”外，都仅对已拥有的干员生效
-      </div>
-
-      <div class="intro_wrap">
-        <div class="intro_title">导入和导出</div>
-        数据导入/导出：目前支持Excel的导入导出和森空岛CRED导入，json导出等功能还在开发中
-      </div>
     </c-popup>
 
     <!-- 常驻条 -->
@@ -167,36 +180,36 @@
 
 
     <c-popup v-model="importPopupVisible">
-      <div>
-        <div class="intro_wrap">
-          <div class="intro_title">森空岛CRED的风险声明</div>
-          森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
-          一图流不会保存任何CRED信息<br/>
-          <a style="color: #fa5e5e">*请妥善保管此CRED</a>
-        </div>
-        <div class="intro_wrap">
-          <div class="intro_title">森空岛数据导入流程</div>
 
-          <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSKLand()" class="web_url">https://www.skland.com/</a>进行登录
-          </p>
-          <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
-          <a style="color:dodgerblue">
-            localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage<br>.getItem('SK_TOKEN_CACHE_KEY')
-          </a>
+      <div class="intro_wrap">
+        <div class="intro_title">森空岛CRED的风险声明</div>
+        森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
+        一图流不会保存任何CRED信息<br/>
+        <a style="color: #fa5e5e">*请妥善保管此CRED</a>
+      </div>
+      <div class="intro_wrap">
+        <div class="intro_title">森空岛数据导入流程</div>
 
+        <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSKLand()" class="web_url">https://www.skland.com/</a>进行登录
+        </p>
+        <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
+        <p style="color:dodgerblue">
+          localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage .getItem('SK_TOKEN_CACHE_KEY')
+        </p>
+        <div>
           <button class="btn btn-blue"
                   @click="copyCode('localStorage.getItem(\'SK_OAUTH_CRED_KEY\')+\',\'+localStorage.getItem(\'SK_TOKEN_CACHE_KEY\')')">
             复制命令
           </button>
-          <br/>输入之后回车确认
-
-          <img src="/image/skland/step1.jpg" class="import_tip_image" alt=""/>
-          <p><b>step3：</b>此时你可以获得一段神秘的字符，复制这段字符，<b>不要带引号</b></p>
-          <img src="/image/skland/step2.jpg" class="import_tip_image" alt=""/>
-          <p><b>step4：</b>将 <b>step3</b> 中获得的这段字符粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
-          <img src="/image/skland/step3.jpg" class="import_tip_image" alt=""/>
         </div>
+        <img src="/image/skland/step1.jpg" class="import_tip_image" alt=""/>
+        <p>输入之后回车确认</p>
+        <img src="/image/skland/step2.jpg" class="import_tip_image" alt=""/>
+        <p><b>step3：</b>此时你可以获得一段神秘的字符，复制这段字符，<b>不要带引号</b></p>
+        <img src="/image/skland/step3.jpg" class="import_tip_image" alt=""/>
+        <p><b>step4：</b>将 <b>step3</b> 中获得的这段字符粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
       </div>
+      <div style="width: 90%;height: 200px"></div>
 
     </c-popup>
 
@@ -260,7 +273,7 @@
     <!--    干员统计弹窗-->
     <c-popup v-model="statisticalPopupVisible">
       <!--          干员统计-->
-      <div class="o-statistical-card-wrap">
+      <div class="o-statistical-popup-context">
         <div class="o-statistical-card">
           <h2>博士招募情况</h2>
           <span class="o-statistical-card-label"> Dr.{{ userData.userName }}，您总计招募了{{

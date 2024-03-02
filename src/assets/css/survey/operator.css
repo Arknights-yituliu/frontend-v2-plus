@@ -1,4 +1,3 @@
-
 .operator-form {
     display: flex;
     flex-wrap: wrap;
@@ -241,6 +240,51 @@
 }
 
 
+.o-guide-content-container{
+    padding: 16px;
+    max-width: 800px;
+
+    h1{
+        margin: 12px 0;
+    }
+
+    h2{
+        margin-top: 40px;
+    }
+
+    p{
+        line-height: 24px;
+        padding: 0 32px;
+    }
+
+    .tip{
+        font-style: italic;
+        color: grey;
+    }
+
+    .warn{
+        font-style: italic;
+        color: #ff3d3d;
+        font-size: 14px;
+    }
+
+    .info{
+        color: #148bff;
+        cursor:pointer;
+    }
+
+    img{
+        width: 500px;
+        margin: 0 32px;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+
+
+
+}
+
+/*头像雪碧图的缩放样式*/
 .o-sprite-scale{
     --not-own-avatar:calc(50 / 180);
     --not-own-avatar-position:calc((50px - 180px) / 2);
@@ -259,7 +303,9 @@
     left: var(--not-own-avatar-position);
 }
 
-.o-statistical-card-wrap{
+
+/*干员统计弹窗卡片样式*/
+.o-statistical-popup-context{
     padding: 12px;
     max-width: 1080px;
 }
@@ -296,6 +342,7 @@
     border: 1px solid var(--c-border-color);
 }
 
+/*干员推荐弹窗卡片样式*/
 .o-recommend-popup-container{
     padding: 12px;
     max-width: 900px;
@@ -307,3 +354,7 @@
     flex-wrap: wrap;
     justify-content: center;
 }
+
+
+
+
