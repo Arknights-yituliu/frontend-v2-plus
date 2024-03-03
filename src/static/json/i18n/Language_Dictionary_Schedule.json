@@ -56,6 +56,10 @@
       "cn": "保存和导出排班文件",
       "en": "Save and download schedule file"
     },
+    "SavedScheduleIDMessage": {
+      "cn": "生成的排班文件ID为: ",
+      "en": "Generated schedule id: "
+    },
     "DownloadScheduleFile": {
       "cn": "下载排班文件",
       "en": "Download schedule file"
