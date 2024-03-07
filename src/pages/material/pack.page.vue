@@ -1,7 +1,8 @@
 <script setup>
 import storeAPI from "/src/api/store";
-import {ElMessage} from "element-plus";
 import {onMounted, ref} from "vue";
+
+import '/src/assets/css/material/pack.css'
 
 let opETextTheme = "op_title_etext_light"
 
@@ -33,29 +34,47 @@ function initData() {
   packsPPRDataSort.value = [];
 
   for (let i = 0; i < packPPRResponse.value.length; i += 1) {
-    if (0 === packPPRResponse.value[i].packState) {
-      //下架礼包跳过
+    let pack = packPPRResponse.value[i]
+    //下架礼包跳过
+    if (0 == pack.packState) {
       // console.log('弹出：',this.packPPRResponse[i].packName);
       continue;
     }
+
+    pack.lineChartData = getLineChartData(pack)
     //  console.log('正常：',this.packPPRResponse[i].packName);
-    if (packPPRResponse.value[i].packRmbPerDraw === null) {
-      //性价比空的设置为0
-      packPPRResponse.value[i].packRmbPerDraw = 0;
+    //性价比位置的为强制为0
+    if (!pack.packRmbPerDraw) {
+      pack.packRmbPerDraw = 0;
     }
 
-    if ("limited" === packPPRResponse.value[i].packType) {
-      packsPPRData.value.unshift(packPPRResponse.value[i]);
-    } else {
-      packsPPRData.value.push(packPPRResponse.value[i]);
-    }
 
-    packsPPRDataSort.value.push(packPPRResponse.value[i]);
+    packsPPRData.value.push(pack);
+
   }
 
   // this.sortPackByPPRPerDraw();
 }
 
+const drawEfficiencyStandard = 157
+const packEfficiencyStandard = 100
+
+function getLineChartData(pack) {
+
+  const drawEfficiency = getFixed(pack.drawEfficiency * 100, 0)
+  const packEfficiency = getFixed(pack.packEfficiency * 100, 0)
+
+  let lineChartData = [
+    {label: '大月卡', value: 157, color: 'rgb(65,147,220)'},
+    {label: '648源石', value: 100, color: 'rgb(65,147,220)'},
+    {label: '仅抽卡', value: drawEfficiency, color: 'rgb(255, 135, 55)'},
+    {label: '本礼包', value: packEfficiency, color: 'rgb(250, 83, 83)'}
+  ]
+
+  lineChartData.sort((a, b) => b.value - a.value)
+
+  return lineChartData
+}
 
 function getWidth(num, scale) {
   return "width:" + num * scale + "px";
@@ -140,15 +159,78 @@ onMounted(() => {
           <div :class="opETextTheme">New Packs</div>
         </div>
       </div>
-      <div class="stage_hint">
-        <div class="stage_hint_t5">发售中/即将发售的礼包</div>
-        <div class="stage_hint_t5">点击图片可查看礼包内容，注意区分"仅抽卡"/"折合成源石"</div>
-        <div class="stage_hint_t5">“折合成源石”即将材料的理智价值按135：1换算成源石</div>
+
+      <div class="c-module-header">
+        <div class="c-module-title">
+          <h1>当季新礼包</h1>
+          <h4>New Packs</h4>
+        </div>
       </div>
+
+      <div class="tag-group">
+        <span class="tag-rank-5">
+        发售中/即将发售的礼包
+        </span>
+        <span class="tag-rank-5">
+        点击图片可查看礼包内容，注意区分"仅抽卡"/"折合成源石"
+        </span>
+        <span class="tag-rank-5">
+        “折合成源石”即将材料的理智价值按135：1换算成源石
+        </span>
+      </div>
+
+      <!--      <div class="stage_hint">-->
+      <!--        <div class="stage_hint_t5">发售中/即将发售的礼包</div>-->
+      <!--        <div class="stage_hint_t5">点击图片可查看礼包内容，注意区分"仅抽卡"/"折合成源石"</div>-->
+      <!--        <div class="stage_hint_t5">“折合成源石”即将材料的理智价值按135：1换算成源石</div>-->
+      <!--      </div>-->
       <!-- all -->
-      <div class="pack_all" style="margin-top: -8px">
+
+      <div v-for="(pack2, index) in packsPPRData.slice(0,1)" :key="index" class="pack-card">
+        <div class="pack-card-part-left">
+          <img :src="`https://ark.yituliu.cn/static/image/store/高级资深干员特训礼包.jpg`" alt="" class="pack-image">
+          <span class="pack-display-name">
+         {{ pack2.displayName }} ￥{{ pack2.price }}
+        </span>
+          <!-- 角标部分 -->
+          <div class="pack-corner corner-new" v-show="pack2.saleType == 'limited'">New!</div>
+          <div class="pack-corner corner-monthly" v-show="pack2.saleType == 'monthly'">每月</div>
+          <div class="pack-corner corner-monthly" v-show="pack2.saleType == 'weekly'">每周</div>
+          <div class="pack-corner corner-once" v-show="pack2.saleType == 'once'">一次</div>
+          <div class="pack-corner corner-once" v-show="pack2.saleType == 'year'">双倍</div>
+        </div>
+
+
+        <!-- 表格部分 -->
+        <div class="pack-info">
+          <div class="pack-info-text">
+            <span style="color: #ffb46e">折合{{ getFixed(pack2.packedOriginium, 1) }}石</span>
+            <span style="color: #ffb46e">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石</span>
+            <span style="height: 12px"></span>
+            <span style="color: #ff6d6d;">共{{ getFixed(pack2.draws, 1) }}抽</span>
+            <span style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽</span>
+          </div>
+
+          <div class="pack-chart-line">
+            <div class="pack-chart-line-item" v-for="(line,index) in pack2.lineChartData">
+              <span style="min-width: 60px;text-align: center">{{ line.label }}</span>
+              <div class="pack-line-bar" :style="`width: ${line.value}px;background-color: ${line.color}`">
+                <span>{{ line.value }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pack-content">
+          <div class="">
+             <span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pack-card-container">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
-        <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
+        <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack-card"
              :style="getPackList(pack2.saleType, pack2.saleStatus, 'limited', 'limited', 'limited')">
 
           <!-- 图片部分 -->
@@ -157,12 +239,14 @@ onMounted(() => {
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
-            <div class="pack_corner corner_new" v-show="pack2.saleType == 'limited'">New!</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'monthly'">每月</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'weekly'">每周</div>
-            <div class="pack_corner corner_once" v-show="pack2.saleType == 'once'">一次</div>
-            <div class="pack_corner corner_once" v-show="pack2.saleType == 'year'">双倍</div>
+            <div class="pack_corner corner-new" v-show="pack2.saleType == 'limited'">New!</div>
+            <div class="pack_corner corner-monthly" v-show="pack2.saleType == 'monthly'">每月</div>
+            <div class="pack_corner corner-monthly" v-show="pack2.saleType == 'weekly'">每周</div>
+            <div class="pack_corner corner-once" v-show="pack2.saleType == 'once'">一次</div>
+            <div class="pack_corner corner-once" v-show="pack2.saleType == 'year'">双倍</div>
           </div>
+
+
           <!-- 表格部分 -->
           <div class="pack_info">
             <div class="pack_info_text" style="color: #ffb46e">
@@ -271,9 +355,9 @@ onMounted(() => {
         <div class="stage_hint_t5">月卡、每周养成包、随活动售卖的芯片包</div>
       </div>
       <!-- all -->
-      <div class="pack_all" style="margin-top: -8px">
+      <div class="pack-card-container" style="margin-top: -8px">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
-        <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
+        <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack-card"
              :style="getPackList(pack2.saleType, pack2.saleStatus, 'weekly', 'monthly', 'chips')">
 
           <!-- 图片部分 -->
@@ -282,11 +366,11 @@ onMounted(() => {
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
-            <div class="pack_corner corner_new" v-show="pack2.saleType == 'limited'">New!</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'monthly'">每月</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'weekly'">每周</div>
-            <div class="pack_corner corner_once" v-show="pack2.saleType == 'once'">一次</div>
-            <div class="pack_corner corner_once" v-show="pack2.saleType == 'year'">双倍</div>
+            <div class="pack_corner corner-new" v-show="pack2.saleType == 'limited'">New!</div>
+            <div class="pack_corner corner-monthly" v-show="pack2.saleType == 'monthly'">每月</div>
+            <div class="pack_corner corner-monthly" v-show="pack2.saleType == 'weekly'">每周</div>
+            <div class="pack_corner corner-once" v-show="pack2.saleType == 'once'">一次</div>
+            <div class="pack_corner corner-once" v-show="pack2.saleType == 'year'">双倍</div>
           </div>
           <!-- 表格部分 -->
           <div class="pack_info">
@@ -397,20 +481,20 @@ onMounted(() => {
         </div>
       </div>
       <!-- all -->
-      <div class="pack_all" style="margin-top: -8px">
+      <div class="pack-card-container" style="margin-top: -8px">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
-        <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
+        <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack-card"
              :style="getPackList(pack2.saleType, pack2.saleStatus, 'once', 'return')">
           <!-- 图片部分 -->
           <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)"
                @click="switchPackContent3(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
             <!-- 角标部分 -->
-            <div class="pack_corner corner_new" v-show="pack2.saleType == 'limited'">New!</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'monthly'">每月</div>
-            <div class="pack_corner corner_monthly" v-show="pack2.saleType == 'weekly'">每周</div>
-            <div class="pack_corner corner_once" v-show="pack2.saleType == 'once'">一次</div>
-            <div class="pack_corner corner_once" v-show="pack2.saleType == 'year'">双倍</div>
+            <div class="pack_corner corner-new" v-show="pack2.saleType == 'limited'">New!</div>
+            <div class="pack_corner corner-monthly" v-show="pack2.saleType == 'monthly'">每月</div>
+            <div class="pack_corner corner-monthly" v-show="pack2.saleType == 'weekly'">每周</div>
+            <div class="pack_corner corner-once" v-show="pack2.saleType == 'once'">一次</div>
+            <div class="pack_corner corner-once" v-show="pack2.saleType == 'year'">双倍</div>
           </div>
           <!-- 表格部分 -->
           <div class="pack_info">
@@ -678,336 +762,6 @@ onMounted(() => {
   </div>
 </template>
 
-<!--<script>-->
-<!--import storeAPI from "/src/api/store";-->
-<!--import {ElMessage} from "element-plus";-->
-
-<!--export default {-->
-
-<!--  data() {-->
-<!--    return {-->
-<!--      opETextTheme: "op_title_etext_light",-->
-<!--      packPPRResponse: [], //原始数据-->
-<!--      // packPPRResponse:[],-->
-<!--      packsPPRData: [], //页面直接调用的数据-->
-<!--      packsPPRDataSort: [], //排序缓存数据-->
-<!--      packFilter: 11,-->
-<!--      showFlag: false,-->
-<!--    };-->
-<!--  },-->
-
-<!--  created() {-->
-<!--    storeAPI.getActStore().then(response => {-->
-<!--      console.log(response.data)-->
-<!--      this.packPPRResponse = response.data-->
-<!--      this.initData();-->
-<!--    })-->
-
-<!--  },-->
-<!--  mounted() {-->
-
-
-<!--    const url_path = window.location.pathname.split("/")[1];-->
-<!--    if (url_path == "pack") {-->
-<!--      ElMessage({-->
-<!--        dangerouslyUseHTMLString: true,-->
-<!--        message: '此页面已迁移至<a href="/material/pack">https://ark.yituliu.cn/material/pack</a>',-->
-<!--        type: "warning",-->
-<!--      });-->
-<!--    }-->
-
-<!--    // this.$notify({-->
-<!--    //   title: "2024.01.31更新",-->
-<!--    //   dangerouslyUseHTMLString: true,-->
-<!--    //   message: "<strong>本页面维护中<br></strong>",-->
-<!--    //   // message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",-->
-<!--    //   duration: 6000,-->
-<!--    // });-->
-<!--  },-->
-<!--  methods: {-->
-
-
-<!--    getBackColor(index) {-->
-<!--      if (index % 2 !== 0) return "pack_simple_tr_back";-->
-<!--    },-->
-
-<!--    switchPacks(packs) {-->
-<!--      if (packs == "once") {-->
-<!--        if (this.packFilter < 5) {-->
-<!--          this.packFilter = this.packFilter + 10;-->
-<!--          document.getElementById("pack_show_once").className = "op_tag_0";-->
-<!--        } else {-->
-<!--          this.packFilter = this.packFilter - 10;-->
-<!--          document.getElementById("pack_show_once").className = "op_tag_1";-->
-<!--        }-->
-<!--      } else {-->
-<!--        if (this.packFilter == 10 || this.packFilter == 0) {-->
-<!--          this.packFilter = this.packFilter + 1;-->
-<!--          document.getElementById("pack_show_ori").className = "op_tag_0";-->
-<!--        } else {-->
-<!--          this.packFilter = this.packFilter - 1;-->
-<!--          document.getElementById("pack_show_ori").className = "op_tag_1";-->
-<!--        }-->
-<!--      }-->
-<!--    },-->
-
-<!--    getDisplayStateDrawOnly(packState, packType, price, packFilter, packPPRDraw) {-->
-<!--      if (packState == 0 || packPPRDraw < 0.1) {-->
-<!--        return "display: none;"; //状态不对一票否决-->
-<!--      } else {-->
-<!--        if (packFilter == 11) {-->
-<!--          return ""; //都显示-->
-<!--        } else if (packFilter == 10) {-->
-<!--          //隐藏源石-->
-<!--          if (packType == "year" || packType == "permanent") {-->
-<!--            if (price == 648 && packType == "permanent") {-->
-<!--              return "";-->
-<!--            }-->
-<!--            return "display: none;";-->
-<!--          }-->
-<!--        } else if (packFilter == 1) {-->
-<!--          //隐藏一次性-->
-<!--          if (packType == "once") {-->
-<!--            return "display: none;";-->
-<!--          }-->
-<!--        } else if (packFilter == 0) {-->
-<!--          //都隐藏-->
-<!--          if (packType == "year" || packType == "permanent" || packType == "once") {-->
-<!--            if (price == 648 && packType == "permanent") {-->
-<!--              return "";-->
-<!--            }-->
-<!--            return "display: none;";-->
-<!--          }-->
-<!--        }-->
-<!--      }-->
-<!--    },-->
-
-<!--    getPackList(packType, packState, type1, type2, type3) {-->
-<!--      if (packState < 0.5) {-->
-<!--        return "display: none;";-->
-<!--      }-->
-<!--      if (packType == type1) {-->
-<!--        return "";-->
-<!--      }-->
-<!--      if (packType == type2) {-->
-<!--        return "";-->
-<!--      }-->
-<!--      if (packType == type3) {-->
-<!--        return "";-->
-<!--      }-->
-<!--      return "display: none;";-->
-<!--    },-->
-
-<!--    getDisplayState(packState, packType, price, packFilter) {-->
-<!--      if (packState == 0) {-->
-<!--        return "display: none;"; //状态不对一票否决-->
-<!--      } else {-->
-<!--        if (packFilter == 11) {-->
-<!--          return ""; //都显示-->
-<!--        } else if (packFilter == 10) {-->
-<!--          //隐藏源石-->
-<!--          if (packType == "year" || packType == "permanent") {-->
-<!--            if (price == 648 && packType == "permanent") {-->
-<!--              return "";-->
-<!--            }-->
-<!--            return "display: none;";-->
-<!--          }-->
-<!--        } else if (packFilter == 1) {-->
-<!--          //隐藏一次性-->
-<!--          if (packType == "once") {-->
-<!--            return "display: none;";-->
-<!--          }-->
-<!--        } else if (packFilter == 0) {-->
-<!--          //都隐藏-->
-<!--          if (packType == "year" || packType == "permanent" || packType == "once") {-->
-<!--            if (price == 648 && packType == "permanent") {-->
-<!--              return "";-->
-<!--            }-->
-<!--            return "display: none;";-->
-<!--          }-->
-<!--        }-->
-<!--      }-->
-<!--    },-->
-
-<!--    getStorePackData() {-->
-<!--      storeAPI.getPackStore().then((response) => {-->
-<!--        this.packPPRResponse = response.data;-->
-<!--        //  console.log(this.packPPRData.length);-->
-<!--        this.initData();-->
-<!--      });-->
-<!--    },-->
-
-<!--    initData() {-->
-<!--      this.packsPPRData = [];-->
-<!--      this.packsPPRDataSort = [];-->
-
-<!--      for (let i = 0; i < this.packPPRResponse.length; i += 1) {-->
-<!--        if (0 === this.packPPRResponse[i].packState) {-->
-<!--          //下架礼包跳过-->
-<!--          // console.log('弹出：',this.packPPRResponse[i].packName);-->
-<!--          continue;-->
-<!--        }-->
-<!--        //  console.log('正常：',this.packPPRResponse[i].packName);-->
-<!--        if (this.packPPRResponse[i].packRmbPerDraw === null) {-->
-<!--          //性价比空的设置为0-->
-<!--          this.packPPRResponse[i].packRmbPerDraw = 0;-->
-<!--        }-->
-
-<!--        if ("limited" === this.packPPRResponse[i].packType) {-->
-<!--          this.packsPPRData.unshift(this.packPPRResponse[i]);-->
-<!--        } else {-->
-<!--          this.packsPPRData.push(this.packPPRResponse[i]);-->
-<!--        }-->
-
-<!--        this.packsPPRDataSort.push(this.packPPRResponse[i]);-->
-<!--      }-->
-
-<!--      // this.sortPackByPPRPerDraw();-->
-<!--    },-->
-
-<!--    sortPackByType() {-->
-<!--      this.initData();-->
-<!--      document.getElementById("pack_left").style.display = "block";-->
-<!--      document.getElementById("pack_right").style.display = "block";-->
-
-<!--      document.getElementById("pack_sort_by_type").className = "op_tag_1";-->
-<!--      document.getElementById("pack_sort_by_drawPpr").className = "op_tag_0";-->
-<!--      document.getElementById("pack_sort_by_oriPpr").className = "op_tag_0";-->
-<!--    },-->
-
-<!--    sortPackByPPRPerDraw() {-->
-<!--      this.initData();-->
-<!--      document.getElementById("pack_left").style.display = "block";-->
-<!--      document.getElementById("pack_right").style.display = "none";-->
-
-<!--      document.getElementById("pack_sort_by_type").className = "op_tag_0";-->
-<!--      document.getElementById("pack_sort_by_drawPpr").className = "op_tag_1";-->
-<!--      document.getElementById("pack_sort_by_oriPpr").className = "op_tag_0";-->
-<!--      for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {-->
-<!--        for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {-->
-<!--          console.log(this.packsPPRDataSort[j].packName, this.packsPPRDataSort[j].packRmbPerDraw, this.packsPPRDataSort[j].packRmbPerDraw != "null");-->
-<!--          // console.log(this.packsPPRDataSort[j+1].packName,this.packsPPRDataSort[j+1].packRmbPerDraw)-->
-<!--          if (this.packsPPRDataSort[j].packRmbPerDraw > this.packsPPRDataSort[j + 1].packRmbPerDraw) {-->
-<!--            const temp = this.packsPPRDataSort[j];-->
-<!--            this.packsPPRDataSort[j] = this.packsPPRDataSort[j + 1];-->
-<!--            this.packsPPRDataSort[j + 1] = temp;-->
-<!--          }-->
-<!--        }-->
-<!--      }-->
-
-<!--      this.packsPPRData = [];-->
-<!--      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {-->
-<!--        if (this.packsPPRDataSort[i].packRmbPerDraw === 0) continue;-->
-<!--        this.packsPPRData.push(this.packsPPRDataSort[i]);-->
-<!--      }-->
-
-<!--      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {-->
-<!--        if (this.packsPPRDataSort[i].packRmbPerDraw !== 0) break;-->
-<!--        this.packsPPRData.push(this.packsPPRDataSort[i]);-->
-<!--      }-->
-<!--    },-->
-
-<!--    sortPackByPPRPerOri() {-->
-<!--      this.initData();-->
-<!--      document.getElementById("pack_left").style.display = "none";-->
-<!--      document.getElementById("pack_right").style.display = "block";-->
-
-<!--      document.getElementById("pack_sort_by_type").className = "op_tag_0";-->
-<!--      document.getElementById("pack_sort_by_drawPpr").className = "op_tag_0";-->
-<!--      document.getElementById("pack_sort_by_oriPpr").className = "op_tag_1";-->
-<!--      for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {-->
-<!--        for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {-->
-<!--          if (this.packsPPRDataSort[j].packRmbPerOriginium > this.packsPPRDataSort[j + 1].packRmbPerOriginium) {-->
-<!--            const temp = this.packsPPRDataSort[j];-->
-<!--            this.packsPPRDataSort[j] = this.packsPPRDataSort[j + 1];-->
-<!--            this.packsPPRDataSort[j + 1] = temp;-->
-<!--          }-->
-<!--        }-->
-<!--      }-->
-
-<!--      this.packsPPRData = [];-->
-<!--      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {-->
-<!--        this.packsPPRData.push(this.packsPPRDataSort[i]);-->
-<!--      }-->
-<!--    },-->
-
-<!--    sortPackById() {-->
-<!--      for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {-->
-<!--        for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {-->
-<!--          if (this.packsPPRDataSort[j].packID > this.packsPPRDataSort[j + 1].packID) {-->
-<!--            const temp = this.packsPPRDataSort[j];-->
-<!--            this.packsPPRDataSort[j] = this.packsPPRDataSort[j + 1];-->
-<!--            this.packsPPRDataSort[j + 1] = temp;-->
-<!--          }-->
-<!--        }-->
-<!--      }-->
-
-<!--      this.packsPPRData = [];-->
-<!--      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {-->
-<!--        this.packsPPRData.push(this.packsPPRDataSort[i]);-->
-<!--      }-->
-<!--    },-->
-
-<!--    getWidth(num, scale) {-->
-<!--      return "width:" + num * scale + "px";-->
-<!--    },-->
-<!--    getFixed(num, acc) {-->
-<!--      acc = typeof acc !== "undefined" ? acc : 2;-->
-<!--      return parseFloat(num).toFixed(acc);-->
-<!--    },-->
-<!--    getPackImgUrl(img) {-->
-<!--      return "/image/packs/" + img + ".png";-->
-<!--    },-->
-
-<!--    getPackPic(img, fileName) {-->
-<!--      if (!fileName) {-->
-<!--        fileName = img + '.jpg'-->
-<!--      }-->
-
-<!--      return `background:url(https://ark.yituliu.cn/static/image/store/${fileName}) 0% 0% / cover no-repeat,#444444;`-->
-
-
-<!--    },-->
-<!--    getContentId(id, type) {-->
-<!--      return type + "_" + id;-->
-<!--    },-->
-
-<!--    getContentId1(id, type) {-->
-<!--      return type + "_1_" + id;-->
-<!--    },-->
-<!--    getContentId2(id, type) {-->
-<!--      return type + "_2_" + id;-->
-<!--    },-->
-<!--    getContentId3(id, type) {-->
-<!--      return type + "_3_" + id;-->
-<!--    },-->
-
-
-<!--    switchPackContent(id, type) {-->
-<!--      if (document.getElementById(type + "_" + id).style.display == "none") document.getElementById(type + "_" + id).style.display = "flex";-->
-<!--      else document.getElementById(type + "_" + id).style.display = "none";-->
-<!--    },-->
-
-<!--    switchPackContent1(id, type) {-->
-<!--      if (document.getElementById(type + "_1_" + id).style.display == "none") document.getElementById(type + "_1_" + id).style.display = "flex";-->
-<!--      else document.getElementById(type + "_1_" + id).style.display = "none";-->
-<!--    },-->
-<!--    switchPackContent2(id, type) {-->
-<!--      if (document.getElementById(type + "_2_" + id).style.display == "none") document.getElementById(type + "_2_" + id).style.display = "flex";-->
-<!--      else document.getElementById(type + "_2_" + id).style.display = "none";-->
-<!--    },-->
-<!--    switchPackContent3(id, type) {-->
-<!--      if (document.getElementById(type + "_3_" + id).style.display == "none") document.getElementById(type + "_3_" + id).style.display = "flex";-->
-<!--      else document.getElementById(type + "_3_" + id).style.display = "none";-->
-<!--    },-->
-<!--  },-->
-<!--};-->
-<!--export const documentProps = {-->
-<!--  title: "一图流 - 礼包性价比",-->
-<!--  description: "明日方舟一图流，礼包性价比，礼包内容，氪金规划",-->
-<!--};-->
-<!--</script>-->
-
 <style>
 #pack {
   /* background-color: #eeeeee; */
@@ -1023,231 +777,5 @@ onMounted(() => {
   justify-content: space-around;
 }
 
-.pack_all {
-  display: flex;
-  flex-wrap: wrap;
-}
 
-.pack_unit {
-  margin: 12px 12px;
-  width: 522px;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.pack_img {
-  width: 160px;
-  height: 120px;
-  border-radius: 8px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  z-index: 11;
-}
-
-.pack_img_text1 {
-  position: relative;
-  top: 93px;
-  width: 160px;
-  height: 24px;
-  background-color: rgba(0, 0, 0, 0.6902);
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  text-align: center;
-  padding-top: 3px;
-  border-radius: 0px 0px 8px 8px;
-}
-
-.pack_corner {
-  transform: rotate(-35deg);
-  width: 96px;
-  top: -18px;
-  left: -28px;
-  position: relative;
-  color: white;
-  text-align: center;
-  font-size: 14px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.pack_info {
-  z-index: 10;
-  height: 114px;
-  width: 360px;
-  background-color: #000000cc;
-  /* margin: 6px 0px 6px 156px; */
-  margin-top: 3px;
-  margin-left: -4px;
-  border-radius: 4px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  position: relative;
-  display: flex;
-}
-
-.pack_info_text {
-  width: 100px;
-  padding: 8px 0px 0px 0px;
-  height: 108px;
-  font-size: 15px;
-  text-align: center;
-  font-weight: 600;
-  color: #6ed7ff;
-  display: flex;
-  line-height: 16px;
-  vertical-align: top;
-  flex-wrap: wrap;
-  align-content: space-around;
-  justify-content: center;
-}
-
-.pack_info_text_line {
-  height: 24px;
-}
-
-.pack_info_alert {
-  position: absolute;
-  color: white;
-  /* margin-top: -14px;
-  margin-left: 14px; */
-  background: chocolate;
-  border-radius: 21px;
-  padding: 2px 6px;
-  width: 240px;
-  top: 96px;
-  /* display: none; */
-}
-
-.t1 {
-  color: #c59447;
-}
-
-.pack_chart {
-  display: flex;
-  margin-top: 8px;
-  width: 240px;
-  border-left: 1px solid #d0d0d0;
-  white-space: nowrap;
-  overflow: hidden;
-  flex-wrap: wrap;
-  align-content: space-around;
-}
-
-.pack_chart_unit {
-  width: 214px;
-}
-
-.pack_chart_unit_text {
-  display: inline-block;
-  padding: 0px 2px;
-  width: 66px;
-  /* background-color: burlywood; */
-  border-radius: 6px;
-  vertical-align: middle;
-  text-align: center;
-  font-size: 16px;
-  color: wheat;
-  height: 24px;
-}
-
-.pack_chart_unit_ppr {
-  display: inline-block;
-  background-color: rgb(56, 112, 161);
-  color: white;
-  font-size: 12px;
-  border-radius: 16px;
-  padding: 0px 8px;
-  vertical-align: top;
-}
-
-.pack_type {
-  display: inline-block;
-  color: rgb(128, 128, 128);
-  position: absolute;
-  /* text-align: right; */
-  float: right;
-  right: 8px;
-  top: 82px;
-  font-size: 14px;
-}
-
-.pack_contents {
-  display: flex;
-  width: 474px;
-  flex-direction: row;
-  flex-wrap: wrap;
-  background: rgba(34, 34, 34, 0.13333);
-  padding: 16px 0px 4px 16px;
-  margin: -12px 0px 0px 12px;
-  font-size: 18px;
-  border-radius: 4px;
-  box-shadow: 1px 1px 4px rgb(0 0 0 / 30%);
-  vertical-align: bottom;
-}
-
-.pack_contents_note {
-  display: block;
-  width: 100%;
-  line-height: 32px;
-}
-
-.pack_content_unit0 {
-  width: 116px;
-  height: 32px;
-  display: flex;
-  font-weight: 600;
-}
-
-.pack_content_unit {
-  width: 232px;
-  height: 28px;
-  display: flex;
-}
-
-.corner_new {
-  background: brown;
-}
-
-.corner_monthly {
-  background: indigo;
-}
-
-.corner_once {
-  background: #bf7c00;
-}
-
-.bg_red {
-  background-color: rgb(250, 83, 83);
-}
-
-.bg_orange {
-  background-color: rgb(255, 135, 55);
-}
-
-.pack_simple {
-  width: 100%;
-}
-
-.pack_simple table {
-  width: 100%;
-  font-size: 24px;
-  text-align: center;
-  border-collapse: collapse;
-}
-
-.pack_simple_tr_back {
-  background: rgb(213, 219, 224);
-}
-
-.pack_simple_tr_title {
-  font-weight: 700;
-}
-
-.pack-table-wrapper {
-  padding: 18px 14px 0;
-}
-
-.pack-table {
-  box-shadow: var(--el-box-shadow-light);
-  width: 100%;
-}
 </style>
