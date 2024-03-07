@@ -240,7 +240,7 @@ onMounted(() => {
         </span>
         </td>
         <td style="height: 36px;padding-inline: 20px">
-          <span style="line-height: 24px;" v-html="operator.description"></span>
+          <span style="line-height: 28px;" v-html="operator.description"></span>
         </td>
       </tr>
 

@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6415223",
+      "name": "copyright",
+      "font_class": "copyright",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
+      "icon_id": "11501361",
+      "name": "legend",
+      "font_class": "legend",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "22422647",
+      "name": "publicity",
+      "font_class": "publicity",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "1263374",
+      "name": "survey2",
+      "font_class": "survey2",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
       "icon_id": "7596896",
       "name": "encourage",
       "font_class": "encourage",
@@ -74,13 +102,6 @@
       "font_class": "log",
       "unicode": "e69d",
       "unicode_decimal": 59037
-    },
-    {
-      "icon_id": "4423489",
-      "name": "survey2",
-      "font_class": "survey2",
-      "unicode": "e61c",
-      "unicode_decimal": 58908
     },
     {
       "icon_id": "12837792",

@@ -46,7 +46,7 @@ async function render(pageContext) {
         <script defer src="https://cdn.staticfile.org/axios/1.3.4/axios.min.js"></script>
         <script defer src="https://cdn.staticfile.org/js-cookie/3.0.1/js.cookie.min.js"></script>
         <script defer src="https://cdn.staticfile.org/echarts/5.4.2/echarts.min.js"></script>
-         <script defer src="https://cdn.staticfile.org/mdui/1.0.2/js/mdui.min.js"></script>
+        <script defer src="https://cdn.staticfile.org/mdui/1.0.2/js/mdui.min.js"></script>
    
       </head>
       <body>
