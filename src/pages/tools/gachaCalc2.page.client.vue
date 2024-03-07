@@ -105,7 +105,7 @@ function getPackData() {
   }
 
 
-  storeAPI.findPackStore().then(response => {
+  storeAPI.getPackStore().then(response => {
 
     for (let pack of response.data) {
       if (!(pack.drawPrice > 0)) {

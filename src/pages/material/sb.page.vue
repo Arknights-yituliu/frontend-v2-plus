@@ -35,15 +35,15 @@
             <!-- 短期最优 -->
             <div class="stage_card_3_right">
               <div class="stage_card_3_list">
-                <div class="stage_card_3_line">
+                <div class="stage-card-bar">
                   <div class="stage_card_3_line_text">9-10</div>
                   <div class="stage_card_3_img"></div>
                   <div class="stage_card_3_img"></div>
                 </div>
-                <div class="stage_card_3_line">
+                <div class="stage-card-bar">
 
                 </div>
-                <div class="stage_card_3_line">
+                <div class="stage-card-bar">
 
                 </div>
               </div>
@@ -78,7 +78,7 @@
 <script setup>
 
 import { ref } from "vue";
-import stageApi from "/src/api/stage";
+import stageApi from "/src/api/material";
 
 
 import { usePageContext } from "/src/renderer/usePageContext";

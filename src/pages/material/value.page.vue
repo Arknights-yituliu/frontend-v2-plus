@@ -183,11 +183,12 @@
 </style>
 
 <script setup>
-import {usePageContext} from "/src/renderer/usePageContext";
 import {ref, onMounted} from "vue";
 import {ElMessage} from "element-plus";
 import {exportExcel} from "/src/utils/exportExcel";
 import FixedNav from "../../components/FixedNav.vue";
+import materialAPI from "/src/api/material.js";
+
 
 let opETextTheme = ref("op_title_etext_light")
 
@@ -195,16 +196,8 @@ let value_unit = ref('itemValueAp')
 
 let item_value_list = ref([])
 
-const pageContext = usePageContext();
 
-for (const item of pageContext.pageProps.value) {
-  if (item.cardNum > 90) continue
-  if (!item_value_list.value[item.cardNum - 1]) {
-    item_value_list.value[item.cardNum - 1] = []
-  }
-  item_value_list.value[item.cardNum - 1].push(item)
 
-}
 
 function exportItemValueJson() {
   let itemList = []
@@ -259,14 +252,17 @@ function getItemRarityColor(rarity) {
 
 
 onMounted(() => {
-  const url_path = window.location.pathname.split("/")[1];
-  if (url_path === "value") {
-    ElMessage({
-      dangerouslyUseHTMLString: true,
-      message: '此页面已迁移至<a href="/material/value">https://ark.yituliu.cn/material/value</a>',
-      type: "warning",
-    });
-  }
+
+  materialAPI.getItemValueTable(0.625).then(response=>{
+    for (const item of response.data) {
+      if (item.cardNum > 90) continue
+      if (!item_value_list.value[item.cardNum - 1]) {
+        item_value_list.value[item.cardNum - 1] = []
+      }
+      item_value_list.value[item.cardNum - 1].push(item)
+
+    }
+  })
 });
 </script>
 

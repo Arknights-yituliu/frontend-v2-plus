@@ -63,7 +63,7 @@ function calculateTime() {
 </script>
 
 <template>
-  <el-collapse-item name="1">
+  <el-collapse-item name="Irene">
     <template #title>
       <Clock style="width: 13px;margin-inline: 8px"/>
       <el-text tag="b" size="large">换艾丽妮专精时间点计算</el-text>

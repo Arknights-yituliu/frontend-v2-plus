@@ -10,10 +10,7 @@
   /*background-color: red;*/
 }
 
-.header {
-  height: 48px;
-  background: #262f3e;
-}
+
 
 .main {
   box-sizing: border-box;
@@ -31,11 +28,7 @@
 
 
 @media (max-width: 1080px) {
-  .header {
-    height: 72px;
-  }
-
-  .aside-table {
+  .side-navigation-container {
     display: none;
   }
 

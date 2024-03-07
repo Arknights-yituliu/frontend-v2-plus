@@ -1,5 +1,5 @@
 <template>
-  <div class="drawer_wrap" id="drawer_wrap">
+  <div class="drawer-container" id="drawer_wrap">
     <div class="drawer-collapse" id="drawer">
       <slot></slot>
     </div>
@@ -36,7 +36,7 @@ watch(
 );
 </script>
 <style scoped>
-.drawer_wrap {
+.drawer-container {
   height: 100%;
   width: 0px;
 }

@@ -2,20 +2,7 @@
   margin: 0px 4px;
 }
 
-.store_content {
-  display: flex;
-  margin: 8px;
-  margin-left: 16px;
-  margin-right: 16px;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-content: flex-start;
-  padding: 8px;
-  border: 1px solid #fbc02d;
-  border-left-width: 1px;
-  border-radius: 4px;
-}
+
 
 #store_0 {
   border: 1px solid rgb(0, 162, 162);
@@ -33,18 +20,7 @@
   border: 1px solid rgb(160, 160, 160);
 }
 
-.store_unit {
-  text-align: center;
-  vertical-align: middle;
-  border-collapse: collapse;
-  border: none;
-  height: 75px;
-  width: 80px;
-  margin: 4px;
-  margin-top: 8px;
-  margin-bottom: 12px;
-  flex-grow: 1;
-}
+
 
 .store_unit_first_icon {
   position: relative;

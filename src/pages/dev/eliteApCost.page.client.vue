@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import stageApi from "/src/api/stage";
+import stageApi from "/src/api/material";
 import {onMounted, ref} from "vue";
 import item_cost_table from '/src/static/json/survey/operator_item_cost_table.json'
 import character_table from '/src/static/json/survey/character_table_simple.json'

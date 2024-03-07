@@ -1,3 +1,135 @@
+<script setup>
+import storeAPI from "/src/api/store";
+import {ElMessage} from "element-plus";
+import {onMounted, ref} from "vue";
+
+let opETextTheme = "op_title_etext_light"
+
+let packPPRResponse = ref([])
+let packsPPRData = ref([])
+let packsPPRDataSort = ref([])
+let packFilter = ref(11)
+let showFlag = ref(false)
+
+
+function getPackList(packType, packState, type1, type2, type3) {
+  if (packState < 0.5) {
+    return "display: none;";
+  }
+  if (packType == type1) {
+    return "";
+  }
+  if (packType == type2) {
+    return "";
+  }
+  if (packType == type3) {
+    return "";
+  }
+  return "display: none;";
+}
+
+function initData() {
+  packsPPRData.value = [];
+  packsPPRDataSort.value = [];
+
+  for (let i = 0; i < packPPRResponse.value.length; i += 1) {
+    if (0 === packPPRResponse.value[i].packState) {
+      //下架礼包跳过
+      // console.log('弹出：',this.packPPRResponse[i].packName);
+      continue;
+    }
+    //  console.log('正常：',this.packPPRResponse[i].packName);
+    if (packPPRResponse.value[i].packRmbPerDraw === null) {
+      //性价比空的设置为0
+      packPPRResponse.value[i].packRmbPerDraw = 0;
+    }
+
+    if ("limited" === packPPRResponse.value[i].packType) {
+      packsPPRData.value.unshift(packPPRResponse.value[i]);
+    } else {
+      packsPPRData.value.push(packPPRResponse.value[i]);
+    }
+
+    packsPPRDataSort.value.push(packPPRResponse.value[i]);
+  }
+
+  // this.sortPackByPPRPerDraw();
+}
+
+
+function getWidth(num, scale) {
+  return "width:" + num * scale + "px";
+}
+
+function getFixed(num, acc) {
+  acc = typeof acc !== "undefined" ? acc : 2;
+  return parseFloat(num).toFixed(acc);
+}
+
+function getPackImgUrl(img) {
+  return "/image/packs/" + img + ".png";
+}
+
+function getPackPic(img, fileName) {
+  if (!fileName) {
+    fileName = img + '.jpg'
+  }
+  return `background:url(https://ark.yituliu.cn/static/image/store/${fileName}) 0% 0% / cover no-repeat,#444444;`
+
+}
+
+function getContentId(id, type) {
+  return type + "_" + id;
+}
+
+function getContentId1(id, type) {
+  return type + "_1_" + id;
+}
+
+function getContentId2(id, type) {
+  return type + "_2_" + id;
+}
+
+function getContentId3(id, type) {
+  return type + "_3_" + id;
+}
+
+
+function switchPackContent(id, type) {
+  if (document.getElementById(type + "_" + id).style.display == "none") {
+    document.getElementById(type + "_" + id).style.display = "flex";
+  } else document.getElementById(type + "_" + id).style.display = "none";
+}
+
+function switchPackContent1(id, type) {
+  if (document.getElementById(type + "_1_" + id).style.display == "none") {
+    document.getElementById(type + "_1_" + id).style.display = "flex";
+  } else document.getElementById(type + "_1_" + id).style.display = "none";
+}
+
+function switchPackContent2(id, type) {
+  if (document.getElementById(type + "_2_" + id).style.display == "none") {
+    document.getElementById(type + "_2_" + id).style.display = "flex";
+  } else document.getElementById(type + "_2_" + id).style.display = "none";
+}
+
+function switchPackContent3(id, type) {
+  if (document.getElementById(type + "_3_" + id).style.display == "none") {
+    document.getElementById(type + "_3_" + id).style.display = "flex";
+  } else document.getElementById(type + "_3_" + id).style.display = "none";
+}
+
+onMounted(() => {
+  storeAPI.getPackStore().then(response => {
+    console.log(response)
+    packPPRResponse.value = response.data
+    initData();
+  })
+
+
+})
+
+</script>
 <template>
   <div>
     <div id="pack">
@@ -17,10 +149,11 @@
       <div class="pack_all" style="margin-top: -8px">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-          :style="getPackList(pack2.saleType, pack2.saleStatus, 'limited', 'limited', 'limited')">
+             :style="getPackList(pack2.saleType, pack2.saleStatus, 'limited', 'limited', 'limited')">
 
           <!-- 图片部分 -->
-          <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)" @click="switchPackContent1(pack2.id, 'draw')">
+          <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)"
+               @click="switchPackContent1(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
@@ -35,10 +168,10 @@
             <div class="pack_info_text" style="color: #ffb46e">
               <div class="pack_info_text_line" style="height: 12px;">折合{{ getFixed(pack2.packedOriginium, 1) }}石
               </div>
-              <div class="pack_info_text_line">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石 </div>
+              <div class="pack_info_text_line">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石</div>
               <div class="pack_info_text_line" style="height: 12px;color: #ff6d6d;">共{{ getFixed(pack2.draws, 1) }}抽
               </div>
-              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽 </div>
+              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽</div>
             </div>
 
             <div class="pack_chart">
@@ -46,7 +179,7 @@
               <div class="pack_chart_unit" v-show="pack2.packEfficiency >= 1.57">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                     :style="getWidth(pack2.packEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
@@ -62,15 +195,15 @@
                 <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.packEfficiency < 1.57 && pack2.packEfficiency >= 1">
+                   v-show="pack2.packEfficiency < 1.57 && pack2.packEfficiency >= 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                     :style="getWidth(pack2.packEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
+                   v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
                 <div class="pack_chart_unit_text">仅抽卡</div>
                 <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
@@ -84,7 +217,7 @@
               <div class="pack_chart_unit" v-show="pack2.packEfficiency < 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                     :style="getWidth(pack2.packEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
@@ -141,10 +274,11 @@
       <div class="pack_all" style="margin-top: -8px">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-          :style="getPackList(pack2.saleType, pack2.saleStatus, 'weekly', 'monthly', 'chips')">
+             :style="getPackList(pack2.saleType, pack2.saleStatus, 'weekly', 'monthly', 'chips')">
 
           <!-- 图片部分 -->
-          <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)" @click="switchPackContent2(pack2.id, 'draw')">
+          <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)"
+               @click="switchPackContent2(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
 
             <!-- 角标部分 -->
@@ -159,10 +293,10 @@
             <div class="pack_info_text" style="color: #ffb46e">
               <div class="pack_info_text_line" style="height: 12px;">折合{{ getFixed(pack2.packedOriginium, 1) }}石
               </div>
-              <div class="pack_info_text_line">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石 </div>
+              <div class="pack_info_text_line">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石</div>
               <div class="pack_info_text_line" style="height: 12px;color: #ff6d6d;">共{{ getFixed(pack2.draws, 1) }}抽
               </div>
-              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽 </div>
+              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽</div>
             </div>
 
             <div class="pack_chart">
@@ -170,7 +304,7 @@
               <div class="pack_chart_unit" v-show="pack2.packEfficiency >= 1.57">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                     :style="getWidth(pack2.packEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
@@ -186,15 +320,15 @@
                 <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.packEfficiency < 1.57 && pack2.packEfficiency >= 1">
+                   v-show="pack2.packEfficiency < 1.57 && pack2.packEfficiency >= 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                     :style="getWidth(pack2.packEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
+                   v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
                 <div class="pack_chart_unit_text">仅抽卡</div>
                 <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
@@ -208,7 +342,7 @@
               <div class="pack_chart_unit" v-show="pack2.packEfficiency < 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                     :style="getWidth(pack2.packEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
@@ -266,9 +400,10 @@
       <div class="pack_all" style="margin-top: -8px">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
         <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit"
-          :style="getPackList(pack2.saleType, pack2.saleStatus, 'once', 'return')">
+             :style="getPackList(pack2.saleType, pack2.saleStatus, 'once', 'return')">
           <!-- 图片部分 -->
-          <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)" @click="switchPackContent3(pack2.id, 'draw')">
+          <div class="pack_img" :style="getPackPic(pack2.officialName, pack2.imageName)"
+               @click="switchPackContent3(pack2.id, 'draw')">
             <div class="pack_img_text1">{{ pack2.displayName }} ￥{{ pack2.price }}</div>
             <!-- 角标部分 -->
             <div class="pack_corner corner_new" v-show="pack2.saleType == 'limited'">New!</div>
@@ -282,10 +417,10 @@
             <div class="pack_info_text" style="color: #ffb46e">
               <div class="pack_info_text_line" style="height: 12px;">折合{{ getFixed(pack2.packedOriginium, 1) }}石
               </div>
-              <div class="pack_info_text_line">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石 </div>
+              <div class="pack_info_text_line">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石</div>
               <div class="pack_info_text_line" style="height: 12px;color: #ff6d6d;">共{{ getFixed(pack2.draws, 1) }}抽
               </div>
-              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽 </div>
+              <div class="pack_info_text_line" style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽</div>
             </div>
 
             <div class="pack_chart">
@@ -293,7 +428,7 @@
               <div class="pack_chart_unit" v-show="pack2.packEfficiency >= 1.57">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                     :style="getWidth(pack2.packEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
@@ -309,15 +444,15 @@
                 <div class="pack_chart_unit_ppr" :style="getWidth(157, 0.75)">157%</div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.packEfficiency < 1.57 && pack2.packEfficiency >= 1">
+                   v-show="pack2.packEfficiency < 1.57 && pack2.packEfficiency >= 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                     :style="getWidth(pack2.packEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
               <div class="pack_chart_unit"
-                v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
+                   v-show="pack2.drawEfficiency < 1.57 && pack2.drawEfficiency >= 1">
                 <div class="pack_chart_unit_text">仅抽卡</div>
                 <div class="pack_chart_unit_ppr bg_red" :style="getWidth(pack2.drawEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.drawEfficiency * 100, 0) }}%
@@ -331,7 +466,7 @@
               <div class="pack_chart_unit" v-show="pack2.packEfficiency < 1">
                 <div class="pack_chart_unit_text">本礼包</div>
                 <div class="pack_chart_unit_ppr bg_orange"
-                  :style="getWidth(pack2.packEfficiency * 100, 0.75)">
+                     :style="getWidth(pack2.packEfficiency * 100, 0.75)">
                   {{ getFixed(pack2.packEfficiency * 100, 0) }}%
                 </div>
               </div>
@@ -385,15 +520,15 @@
           由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
         </div>
       </div>
-      <client-only>
-        <div class="pack-table-wrapper">
-          <el-table :data="packPPRResponse" class="pack-table" stripe table-layout="auto"
-                    :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
-            <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {
+
+      <div class="pack-table-wrapper">
+        <el-table :data="packPPRResponse" class="pack-table" stripe table-layout="auto"
+                  :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
+          <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {
               return row.displayName;
             }
-              " min-width="154" fixed />
-            <el-table-column sortable label="类型" :formatter="(row, col) => {
+              " min-width="154" fixed/>
+          <el-table-column sortable label="类型" :formatter="(row, col) => {
               return {
                 once: '一次性',
                 monthly: '每月',
@@ -416,45 +551,44 @@
   " :filtered-value="['once', 'monthly', 'weekly', 'year', 'permanent', 'limited']" :sort-by="(row, index) => {
     return row.saleType;
   }
-    " min-width="92" />
-            <el-table-column sortable label="售价" :formatter="(row, col) => {
+    " min-width="92"/>
+          <el-table-column sortable label="售价" :formatter="(row, col) => {
               return row.price + '元';
             }
               " :sort-by="(row, index) => {
     return row.price;
   }
-    " min-width="80" />
-            <el-table-column sortable label="抽数" :formatter="(row, col) => {
+    " min-width="80"/>
+          <el-table-column sortable label="抽数" :formatter="(row, col) => {
               return row.draws.toFixed(2);
             }
               " :sort-by="(row, index) => {
     return row.draws;
   }
-    " min-width="80" />
-            <el-table-column sortable label="源石" :formatter="(row, col) => {
+    " min-width="80"/>
+          <el-table-column sortable label="源石" :formatter="(row, col) => {
               return row.originium;
             }
               " :sort-by="(row, index) => {
     return row.originium;
   }
-    " min-width="80" />
-            <el-table-column sortable label="抽卡性价比" :formatter="(row, col) => {
+    " min-width="80"/>
+          <el-table-column sortable label="抽卡性价比" :formatter="(row, col) => {
               return row.drawEfficiency.toFixed(2);
             }
               " :sort-by="(row, index) => {
     return row.drawEfficiency;
   }
-    " min-width="120" />
-            <el-table-column sortable label="综合性价比" prop="packEfficiency" :formatter="(row, col) => {
+    " min-width="120"/>
+          <el-table-column sortable label="综合性价比" prop="packEfficiency" :formatter="(row, col) => {
               return row.packEfficiency.toFixed(2);
             }
               " :sort-by="(row, index) => {
     return row.packEfficiency;
   }
-    " min-width="120" />
-          </el-table>
-        </div>
-      </client-only>
+    " min-width="120"/>
+        </el-table>
+      </div>
 
 
     </div>
@@ -468,22 +602,10 @@
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
           <el-collapse>
-            <el-collapse-item name="1" style="">
-              <template #title>
-                <span style="font-size: large; display: flex; align-items: center">
-                  <el-icon>
-                    <Comment />
-                  </el-icon><b style="margin-left: 4px">问题反馈</b>
-                </span>
-              </template>
-              <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">点击此处</a>通过问卷反馈问题/提供建议，<a
-                href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">点击此处</a>加入粉丝群。
-            </el-collapse-item>
             <el-collapse-item name="2" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <Opportunity />
-                  </el-icon><b style="margin-left: 4px">计算方式</b></span>
+                <span style="font-size: large; display: flex; align-items: center">
+                  <i class="iconfont icon-calculator"></i><b style="margin-left: 4px">计算方式</b></span>
               </template>
 
               <ul style="padding-left: 2em">
@@ -500,55 +622,53 @@
             </el-collapse-item>
             <el-collapse-item name="4" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <Checked />
-                  </el-icon><b style="margin-left: 4px">算法公示卡</b></span>
+                <span style="font-size: large; display: flex; align-items: center"><i
+                    class="iconfont icon-publicity"></i><b style="margin-left: 4px">算法公示卡</b></span>
               </template>
               <table id="al_card">
                 <tbody>
-                  <tr>
-                    <td>算法代号</td>
-                    <td>一图流_标准 v6.0</td>
-                    <td>更新时间</td>
-                    <td>
-                      <!-- {{ updateTime }} -->
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>数据源</td>
-                    <td>企鹅物流</td>
-                    <td>基准</td>
-                    <td>常驻关卡</td>
-                  </tr>
-                  <tr>
-                    <td>计算引擎</td>
-                    <td>yituliuBackEnd</td>
-                    <td>样本阈值</td>
-                    <td>300</td>
-                  </tr>
-                  <tr>
-                    <td>需求目标</td>
-                    <td>无限需求</td>
-                    <td>EXP系数</td>
-                    <td>0.625</td>
-                  </tr>
+                <tr>
+                  <td>算法代号</td>
+                  <td>一图流_标准 v6.0</td>
+                  <td>更新时间</td>
+                  <td>
+                    <!-- {{ updateTime }} -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>数据源</td>
+                  <td>企鹅物流</td>
+                  <td>基准</td>
+                  <td>常驻关卡</td>
+                </tr>
+                <tr>
+                  <td>计算引擎</td>
+                  <td>yituliuBackEnd</td>
+                  <td>样本阈值</td>
+                  <td>300</td>
+                </tr>
+                <tr>
+                  <td>需求目标</td>
+                  <td>无限需求</td>
+                  <td>EXP系数</td>
+                  <td>0.625</td>
+                </tr>
                 </tbody>
               </table>
             </el-collapse-item>
             <el-collapse-item name="5" style="">
               <template #title>
                 <span style="font-size: large; display: flex; align-items: center">
-                  <el-icon>
-                    <Warning />
-                  </el-icon><b style="margin-left: 4px">版权声明与许可协议</b>
+                  <i class="iconfont icon-copyright"></i><b style="margin-left: 4px">版权声明与许可协议</b>
                 </span>
               </template>
               网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于
               Arknights/上海鹰角网络科技有限公司。<br>
               除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享
-                署名-非商业性使用 4.0 国际
-                许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
-              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
+              署名-非商业性使用 4.0 国际
+              许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
+              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a
+                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
             </el-collapse-item>
           </el-collapse>
         </el-card>
@@ -558,340 +678,335 @@
   </div>
 </template>
 
-<script>
-import storeApi from "/src/api/store";
-import { usePageContext } from "/src/renderer/usePageContext";
+<!--<script>-->
+<!--import storeAPI from "/src/api/store";-->
+<!--import {ElMessage} from "element-plus";-->
 
-import { ClientOnly } from "/src/components/ClientOnly";
-import { ElMessage } from "element-plus";
+<!--export default {-->
 
-export default {
-  setup() {
-    const pageContext = usePageContext();
-    return { pageContext };
-  },
-  data() {
-    return {
-      opETextTheme: "op_title_etext_light",
-      packPPRResponse: this.pageContext.pageProps.data, //原始数据
-      // packPPRResponse:[],
-      packsPPRData: [], //页面直接调用的数据
-      packsPPRDataSort: [], //排序缓存数据
-      packFilter: 11,
-      showFlag: false,
-    };
-  },
-  components: {
-    // foot,
-    ClientOnly,
-  },
-  created() {
-    this.initData();
-  },
-  mounted() {
+<!--  data() {-->
+<!--    return {-->
+<!--      opETextTheme: "op_title_etext_light",-->
+<!--      packPPRResponse: [], //原始数据-->
+<!--      // packPPRResponse:[],-->
+<!--      packsPPRData: [], //页面直接调用的数据-->
+<!--      packsPPRDataSort: [], //排序缓存数据-->
+<!--      packFilter: 11,-->
+<!--      showFlag: false,-->
+<!--    };-->
+<!--  },-->
+
+<!--  created() {-->
+<!--    storeAPI.getActStore().then(response => {-->
+<!--      console.log(response.data)-->
+<!--      this.packPPRResponse = response.data-->
+<!--      this.initData();-->
+<!--    })-->
+
+<!--  },-->
+<!--  mounted() {-->
 
 
-    const url_path = window.location.pathname.split("/")[1];
-    if (url_path == "pack") {
-      ElMessage({
-        dangerouslyUseHTMLString: true,
-        message: '此页面已迁移至<a href="/material/pack">https://ark.yituliu.cn/material/pack</a>',
-        type: "warning",
-      });
-    }
+<!--    const url_path = window.location.pathname.split("/")[1];-->
+<!--    if (url_path == "pack") {-->
+<!--      ElMessage({-->
+<!--        dangerouslyUseHTMLString: true,-->
+<!--        message: '此页面已迁移至<a href="/material/pack">https://ark.yituliu.cn/material/pack</a>',-->
+<!--        type: "warning",-->
+<!--      });-->
+<!--    }-->
 
-    // this.$notify({
-    //   title: "2024.01.31更新",
-    //   dangerouslyUseHTMLString: true,
-    //   message: "<strong>本页面维护中<br></strong>",
-    //   // message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",
-    //   duration: 6000,
-    // });
-  },
-  methods: {
-
-
-    getBackColor(index) {
-      if (index % 2 !== 0) return "pack_simple_tr_back";
-    },
-
-    switchPacks(packs) {
-      if (packs == "once") {
-        if (this.packFilter < 5) {
-          this.packFilter = this.packFilter + 10;
-          document.getElementById("pack_show_once").className = "op_tag_0";
-        } else {
-          this.packFilter = this.packFilter - 10;
-          document.getElementById("pack_show_once").className = "op_tag_1";
-        }
-      } else {
-        if (this.packFilter == 10 || this.packFilter == 0) {
-          this.packFilter = this.packFilter + 1;
-          document.getElementById("pack_show_ori").className = "op_tag_0";
-        } else {
-          this.packFilter = this.packFilter - 1;
-          document.getElementById("pack_show_ori").className = "op_tag_1";
-        }
-      }
-    },
-
-    getDisplayStateDrawOnly(packState, packType, price, packFilter, packPPRDraw) {
-      if (packState == 0 || packPPRDraw < 0.1) {
-        return "display: none;"; //状态不对一票否决
-      } else {
-        if (packFilter == 11) {
-          return ""; //都显示
-        } else if (packFilter == 10) {
-          //隐藏源石
-          if (packType == "year" || packType == "permanent") {
-            if (price == 648 && packType == "permanent") {
-              return "";
-            }
-            return "display: none;";
-          }
-        } else if (packFilter == 1) {
-          //隐藏一次性
-          if (packType == "once") {
-            return "display: none;";
-          }
-        } else if (packFilter == 0) {
-          //都隐藏
-          if (packType == "year" || packType == "permanent" || packType == "once") {
-            if (price == 648 && packType == "permanent") {
-              return "";
-            }
-            return "display: none;";
-          }
-        }
-      }
-    },
-
-    getPackList(packType, packState, type1, type2, type3) {
-      if (packState < 0.5) {
-        return "display: none;";
-      }
-      if (packType == type1) {
-        return "";
-      }
-      if (packType == type2) {
-        return "";
-      }
-      if (packType == type3) {
-        return "";
-      }
-      return "display: none;";
-    },
-
-    getDisplayState(packState, packType, price, packFilter) {
-      if (packState == 0) {
-        return "display: none;"; //状态不对一票否决
-      } else {
-        if (packFilter == 11) {
-          return ""; //都显示
-        } else if (packFilter == 10) {
-          //隐藏源石
-          if (packType == "year" || packType == "permanent") {
-            if (price == 648 && packType == "permanent") {
-              return "";
-            }
-            return "display: none;";
-          }
-        } else if (packFilter == 1) {
-          //隐藏一次性
-          if (packType == "once") {
-            return "display: none;";
-          }
-        } else if (packFilter == 0) {
-          //都隐藏
-          if (packType == "year" || packType == "permanent" || packType == "once") {
-            if (price == 648 && packType == "permanent") {
-              return "";
-            }
-            return "display: none;";
-          }
-        }
-      }
-    },
-
-    getStorePackData() {
-      storeApi.findPackStore().then((response) => {
-        this.packPPRResponse = response.data;
-        //  console.log(this.packPPRData.length);
-        this.initData();
-      });
-    },
-
-    initData() {
-      this.packsPPRData = [];
-      this.packsPPRDataSort = [];
-
-      for (let i = 0; i < this.packPPRResponse.length; i += 1) {
-        if (0 === this.packPPRResponse[i].packState) {
-          //下架礼包跳过
-          // console.log('弹出：',this.packPPRResponse[i].packName);
-          continue;
-        }
-        //  console.log('正常：',this.packPPRResponse[i].packName);
-        if (this.packPPRResponse[i].packRmbPerDraw === null) {
-          //性价比空的设置为0
-          this.packPPRResponse[i].packRmbPerDraw = 0;
-        }
-
-        if ("limited" === this.packPPRResponse[i].packType) {
-          this.packsPPRData.unshift(this.packPPRResponse[i]);
-        } else {
-          this.packsPPRData.push(this.packPPRResponse[i]);
-        }
-
-        this.packsPPRDataSort.push(this.packPPRResponse[i]);
-      }
-
-      // this.sortPackByPPRPerDraw();
-    },
-
-    sortPackByType() {
-      this.initData();
-      document.getElementById("pack_left").style.display = "block";
-      document.getElementById("pack_right").style.display = "block";
-
-      document.getElementById("pack_sort_by_type").className = "op_tag_1";
-      document.getElementById("pack_sort_by_drawPpr").className = "op_tag_0";
-      document.getElementById("pack_sort_by_oriPpr").className = "op_tag_0";
-    },
-
-    sortPackByPPRPerDraw() {
-      this.initData();
-      document.getElementById("pack_left").style.display = "block";
-      document.getElementById("pack_right").style.display = "none";
-
-      document.getElementById("pack_sort_by_type").className = "op_tag_0";
-      document.getElementById("pack_sort_by_drawPpr").className = "op_tag_1";
-      document.getElementById("pack_sort_by_oriPpr").className = "op_tag_0";
-      for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {
-        for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {
-          console.log(this.packsPPRDataSort[j].packName, this.packsPPRDataSort[j].packRmbPerDraw, this.packsPPRDataSort[j].packRmbPerDraw != "null");
-          // console.log(this.packsPPRDataSort[j+1].packName,this.packsPPRDataSort[j+1].packRmbPerDraw)
-          if (this.packsPPRDataSort[j].packRmbPerDraw > this.packsPPRDataSort[j + 1].packRmbPerDraw) {
-            const temp = this.packsPPRDataSort[j];
-            this.packsPPRDataSort[j] = this.packsPPRDataSort[j + 1];
-            this.packsPPRDataSort[j + 1] = temp;
-          }
-        }
-      }
-
-      this.packsPPRData = [];
-      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {
-        if (this.packsPPRDataSort[i].packRmbPerDraw === 0) continue;
-        this.packsPPRData.push(this.packsPPRDataSort[i]);
-      }
-
-      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {
-        if (this.packsPPRDataSort[i].packRmbPerDraw !== 0) break;
-        this.packsPPRData.push(this.packsPPRDataSort[i]);
-      }
-    },
-
-    sortPackByPPRPerOri() {
-      this.initData();
-      document.getElementById("pack_left").style.display = "none";
-      document.getElementById("pack_right").style.display = "block";
-
-      document.getElementById("pack_sort_by_type").className = "op_tag_0";
-      document.getElementById("pack_sort_by_drawPpr").className = "op_tag_0";
-      document.getElementById("pack_sort_by_oriPpr").className = "op_tag_1";
-      for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {
-        for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {
-          if (this.packsPPRDataSort[j].packRmbPerOriginium > this.packsPPRDataSort[j + 1].packRmbPerOriginium) {
-            const temp = this.packsPPRDataSort[j];
-            this.packsPPRDataSort[j] = this.packsPPRDataSort[j + 1];
-            this.packsPPRDataSort[j + 1] = temp;
-          }
-        }
-      }
-
-      this.packsPPRData = [];
-      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {
-        this.packsPPRData.push(this.packsPPRDataSort[i]);
-      }
-    },
-
-    sortPackById() {
-      for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {
-        for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {
-          if (this.packsPPRDataSort[j].packID > this.packsPPRDataSort[j + 1].packID) {
-            const temp = this.packsPPRDataSort[j];
-            this.packsPPRDataSort[j] = this.packsPPRDataSort[j + 1];
-            this.packsPPRDataSort[j + 1] = temp;
-          }
-        }
-      }
-
-      this.packsPPRData = [];
-      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {
-        this.packsPPRData.push(this.packsPPRDataSort[i]);
-      }
-    },
-
-    getWidth(num, scale) {
-      return "width:" + num * scale + "px";
-    },
-    getFixed(num, acc) {
-      acc = typeof acc !== "undefined" ? acc : 2;
-      return parseFloat(num).toFixed(acc);
-    },
-    getPackImgUrl(img) {
-      return "/image/packs/" + img + ".png";
-    },
-
-    getPackPic(img, fileName) {
-      if(!fileName){
-        fileName = img+'.jpg'
-      }
-
-      return `background:url(https://ark.yituliu.cn/static/image/store/${fileName}) 0% 0% / cover no-repeat,#444444;`
+<!--    // this.$notify({-->
+<!--    //   title: "2024.01.31更新",-->
+<!--    //   dangerouslyUseHTMLString: true,-->
+<!--    //   message: "<strong>本页面维护中<br></strong>",-->
+<!--    //   // message: "<strong>1.更新了彩六联动二期攒抽<br>2.请在森空岛投票支持一下'罗德岛基建BETA'!'谢谢大家!</strong>",-->
+<!--    //   duration: 6000,-->
+<!--    // });-->
+<!--  },-->
+<!--  methods: {-->
 
 
+<!--    getBackColor(index) {-->
+<!--      if (index % 2 !== 0) return "pack_simple_tr_back";-->
+<!--    },-->
 
-    },
-    getContentId(id, type) {
-      return type + "_" + id;
-    },
+<!--    switchPacks(packs) {-->
+<!--      if (packs == "once") {-->
+<!--        if (this.packFilter < 5) {-->
+<!--          this.packFilter = this.packFilter + 10;-->
+<!--          document.getElementById("pack_show_once").className = "op_tag_0";-->
+<!--        } else {-->
+<!--          this.packFilter = this.packFilter - 10;-->
+<!--          document.getElementById("pack_show_once").className = "op_tag_1";-->
+<!--        }-->
+<!--      } else {-->
+<!--        if (this.packFilter == 10 || this.packFilter == 0) {-->
+<!--          this.packFilter = this.packFilter + 1;-->
+<!--          document.getElementById("pack_show_ori").className = "op_tag_0";-->
+<!--        } else {-->
+<!--          this.packFilter = this.packFilter - 1;-->
+<!--          document.getElementById("pack_show_ori").className = "op_tag_1";-->
+<!--        }-->
+<!--      }-->
+<!--    },-->
 
-    getContentId1(id, type) {
-      return type + "_1_" + id;
-    },
-    getContentId2(id, type) {
-      return type + "_2_" + id;
-    },
-    getContentId3(id, type) {
-      return type + "_3_" + id;
-    },
+<!--    getDisplayStateDrawOnly(packState, packType, price, packFilter, packPPRDraw) {-->
+<!--      if (packState == 0 || packPPRDraw < 0.1) {-->
+<!--        return "display: none;"; //状态不对一票否决-->
+<!--      } else {-->
+<!--        if (packFilter == 11) {-->
+<!--          return ""; //都显示-->
+<!--        } else if (packFilter == 10) {-->
+<!--          //隐藏源石-->
+<!--          if (packType == "year" || packType == "permanent") {-->
+<!--            if (price == 648 && packType == "permanent") {-->
+<!--              return "";-->
+<!--            }-->
+<!--            return "display: none;";-->
+<!--          }-->
+<!--        } else if (packFilter == 1) {-->
+<!--          //隐藏一次性-->
+<!--          if (packType == "once") {-->
+<!--            return "display: none;";-->
+<!--          }-->
+<!--        } else if (packFilter == 0) {-->
+<!--          //都隐藏-->
+<!--          if (packType == "year" || packType == "permanent" || packType == "once") {-->
+<!--            if (price == 648 && packType == "permanent") {-->
+<!--              return "";-->
+<!--            }-->
+<!--            return "display: none;";-->
+<!--          }-->
+<!--        }-->
+<!--      }-->
+<!--    },-->
+
+<!--    getPackList(packType, packState, type1, type2, type3) {-->
+<!--      if (packState < 0.5) {-->
+<!--        return "display: none;";-->
+<!--      }-->
+<!--      if (packType == type1) {-->
+<!--        return "";-->
+<!--      }-->
+<!--      if (packType == type2) {-->
+<!--        return "";-->
+<!--      }-->
+<!--      if (packType == type3) {-->
+<!--        return "";-->
+<!--      }-->
+<!--      return "display: none;";-->
+<!--    },-->
+
+<!--    getDisplayState(packState, packType, price, packFilter) {-->
+<!--      if (packState == 0) {-->
+<!--        return "display: none;"; //状态不对一票否决-->
+<!--      } else {-->
+<!--        if (packFilter == 11) {-->
+<!--          return ""; //都显示-->
+<!--        } else if (packFilter == 10) {-->
+<!--          //隐藏源石-->
+<!--          if (packType == "year" || packType == "permanent") {-->
+<!--            if (price == 648 && packType == "permanent") {-->
+<!--              return "";-->
+<!--            }-->
+<!--            return "display: none;";-->
+<!--          }-->
+<!--        } else if (packFilter == 1) {-->
+<!--          //隐藏一次性-->
+<!--          if (packType == "once") {-->
+<!--            return "display: none;";-->
+<!--          }-->
+<!--        } else if (packFilter == 0) {-->
+<!--          //都隐藏-->
+<!--          if (packType == "year" || packType == "permanent" || packType == "once") {-->
+<!--            if (price == 648 && packType == "permanent") {-->
+<!--              return "";-->
+<!--            }-->
+<!--            return "display: none;";-->
+<!--          }-->
+<!--        }-->
+<!--      }-->
+<!--    },-->
+
+<!--    getStorePackData() {-->
+<!--      storeAPI.getPackStore().then((response) => {-->
+<!--        this.packPPRResponse = response.data;-->
+<!--        //  console.log(this.packPPRData.length);-->
+<!--        this.initData();-->
+<!--      });-->
+<!--    },-->
+
+<!--    initData() {-->
+<!--      this.packsPPRData = [];-->
+<!--      this.packsPPRDataSort = [];-->
+
+<!--      for (let i = 0; i < this.packPPRResponse.length; i += 1) {-->
+<!--        if (0 === this.packPPRResponse[i].packState) {-->
+<!--          //下架礼包跳过-->
+<!--          // console.log('弹出：',this.packPPRResponse[i].packName);-->
+<!--          continue;-->
+<!--        }-->
+<!--        //  console.log('正常：',this.packPPRResponse[i].packName);-->
+<!--        if (this.packPPRResponse[i].packRmbPerDraw === null) {-->
+<!--          //性价比空的设置为0-->
+<!--          this.packPPRResponse[i].packRmbPerDraw = 0;-->
+<!--        }-->
+
+<!--        if ("limited" === this.packPPRResponse[i].packType) {-->
+<!--          this.packsPPRData.unshift(this.packPPRResponse[i]);-->
+<!--        } else {-->
+<!--          this.packsPPRData.push(this.packPPRResponse[i]);-->
+<!--        }-->
+
+<!--        this.packsPPRDataSort.push(this.packPPRResponse[i]);-->
+<!--      }-->
+
+<!--      // this.sortPackByPPRPerDraw();-->
+<!--    },-->
+
+<!--    sortPackByType() {-->
+<!--      this.initData();-->
+<!--      document.getElementById("pack_left").style.display = "block";-->
+<!--      document.getElementById("pack_right").style.display = "block";-->
+
+<!--      document.getElementById("pack_sort_by_type").className = "op_tag_1";-->
+<!--      document.getElementById("pack_sort_by_drawPpr").className = "op_tag_0";-->
+<!--      document.getElementById("pack_sort_by_oriPpr").className = "op_tag_0";-->
+<!--    },-->
+
+<!--    sortPackByPPRPerDraw() {-->
+<!--      this.initData();-->
+<!--      document.getElementById("pack_left").style.display = "block";-->
+<!--      document.getElementById("pack_right").style.display = "none";-->
+
+<!--      document.getElementById("pack_sort_by_type").className = "op_tag_0";-->
+<!--      document.getElementById("pack_sort_by_drawPpr").className = "op_tag_1";-->
+<!--      document.getElementById("pack_sort_by_oriPpr").className = "op_tag_0";-->
+<!--      for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {-->
+<!--        for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {-->
+<!--          console.log(this.packsPPRDataSort[j].packName, this.packsPPRDataSort[j].packRmbPerDraw, this.packsPPRDataSort[j].packRmbPerDraw != "null");-->
+<!--          // console.log(this.packsPPRDataSort[j+1].packName,this.packsPPRDataSort[j+1].packRmbPerDraw)-->
+<!--          if (this.packsPPRDataSort[j].packRmbPerDraw > this.packsPPRDataSort[j + 1].packRmbPerDraw) {-->
+<!--            const temp = this.packsPPRDataSort[j];-->
+<!--            this.packsPPRDataSort[j] = this.packsPPRDataSort[j + 1];-->
+<!--            this.packsPPRDataSort[j + 1] = temp;-->
+<!--          }-->
+<!--        }-->
+<!--      }-->
+
+<!--      this.packsPPRData = [];-->
+<!--      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {-->
+<!--        if (this.packsPPRDataSort[i].packRmbPerDraw === 0) continue;-->
+<!--        this.packsPPRData.push(this.packsPPRDataSort[i]);-->
+<!--      }-->
+
+<!--      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {-->
+<!--        if (this.packsPPRDataSort[i].packRmbPerDraw !== 0) break;-->
+<!--        this.packsPPRData.push(this.packsPPRDataSort[i]);-->
+<!--      }-->
+<!--    },-->
+
+<!--    sortPackByPPRPerOri() {-->
+<!--      this.initData();-->
+<!--      document.getElementById("pack_left").style.display = "none";-->
+<!--      document.getElementById("pack_right").style.display = "block";-->
+
+<!--      document.getElementById("pack_sort_by_type").className = "op_tag_0";-->
+<!--      document.getElementById("pack_sort_by_drawPpr").className = "op_tag_0";-->
+<!--      document.getElementById("pack_sort_by_oriPpr").className = "op_tag_1";-->
+<!--      for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {-->
+<!--        for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {-->
+<!--          if (this.packsPPRDataSort[j].packRmbPerOriginium > this.packsPPRDataSort[j + 1].packRmbPerOriginium) {-->
+<!--            const temp = this.packsPPRDataSort[j];-->
+<!--            this.packsPPRDataSort[j] = this.packsPPRDataSort[j + 1];-->
+<!--            this.packsPPRDataSort[j + 1] = temp;-->
+<!--          }-->
+<!--        }-->
+<!--      }-->
+
+<!--      this.packsPPRData = [];-->
+<!--      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {-->
+<!--        this.packsPPRData.push(this.packsPPRDataSort[i]);-->
+<!--      }-->
+<!--    },-->
+
+<!--    sortPackById() {-->
+<!--      for (let i = 0; i < this.packsPPRDataSort.length - 1; i += 1) {-->
+<!--        for (let j = 0; j < this.packsPPRDataSort.length - 1 - i; j += 1) {-->
+<!--          if (this.packsPPRDataSort[j].packID > this.packsPPRDataSort[j + 1].packID) {-->
+<!--            const temp = this.packsPPRDataSort[j];-->
+<!--            this.packsPPRDataSort[j] = this.packsPPRDataSort[j + 1];-->
+<!--            this.packsPPRDataSort[j + 1] = temp;-->
+<!--          }-->
+<!--        }-->
+<!--      }-->
+
+<!--      this.packsPPRData = [];-->
+<!--      for (let i = 0; i < this.packsPPRDataSort.length; i += 1) {-->
+<!--        this.packsPPRData.push(this.packsPPRDataSort[i]);-->
+<!--      }-->
+<!--    },-->
+
+<!--    getWidth(num, scale) {-->
+<!--      return "width:" + num * scale + "px";-->
+<!--    },-->
+<!--    getFixed(num, acc) {-->
+<!--      acc = typeof acc !== "undefined" ? acc : 2;-->
+<!--      return parseFloat(num).toFixed(acc);-->
+<!--    },-->
+<!--    getPackImgUrl(img) {-->
+<!--      return "/image/packs/" + img + ".png";-->
+<!--    },-->
+
+<!--    getPackPic(img, fileName) {-->
+<!--      if (!fileName) {-->
+<!--        fileName = img + '.jpg'-->
+<!--      }-->
+
+<!--      return `background:url(https://ark.yituliu.cn/static/image/store/${fileName}) 0% 0% / cover no-repeat,#444444;`-->
 
 
-    switchPackContent(id, type) {
-      if (document.getElementById(type + "_" + id).style.display == "none") document.getElementById(type + "_" + id).style.display = "flex";
-      else document.getElementById(type + "_" + id).style.display = "none";
-    },
+<!--    },-->
+<!--    getContentId(id, type) {-->
+<!--      return type + "_" + id;-->
+<!--    },-->
 
-    switchPackContent1(id, type) {
-      if (document.getElementById(type + "_1_" + id).style.display == "none") document.getElementById(type + "_1_" + id).style.display = "flex";
-      else document.getElementById(type + "_1_" + id).style.display = "none";
-    },
-    switchPackContent2(id, type) {
-      if (document.getElementById(type + "_2_" + id).style.display == "none") document.getElementById(type + "_2_" + id).style.display = "flex";
-      else document.getElementById(type + "_2_" + id).style.display = "none";
-    },
-    switchPackContent3(id, type) {
-      if (document.getElementById(type + "_3_" + id).style.display == "none") document.getElementById(type + "_3_" + id).style.display = "flex";
-      else document.getElementById(type + "_3_" + id).style.display = "none";
-    },
-  },
-};
-export const documentProps = {
-  title: "一图流 - 礼包性价比",
-  description: "明日方舟一图流，礼包性价比，礼包内容，氪金规划",
-};
-</script>
+<!--    getContentId1(id, type) {-->
+<!--      return type + "_1_" + id;-->
+<!--    },-->
+<!--    getContentId2(id, type) {-->
+<!--      return type + "_2_" + id;-->
+<!--    },-->
+<!--    getContentId3(id, type) {-->
+<!--      return type + "_3_" + id;-->
+<!--    },-->
+
+
+<!--    switchPackContent(id, type) {-->
+<!--      if (document.getElementById(type + "_" + id).style.display == "none") document.getElementById(type + "_" + id).style.display = "flex";-->
+<!--      else document.getElementById(type + "_" + id).style.display = "none";-->
+<!--    },-->
+
+<!--    switchPackContent1(id, type) {-->
+<!--      if (document.getElementById(type + "_1_" + id).style.display == "none") document.getElementById(type + "_1_" + id).style.display = "flex";-->
+<!--      else document.getElementById(type + "_1_" + id).style.display = "none";-->
+<!--    },-->
+<!--    switchPackContent2(id, type) {-->
+<!--      if (document.getElementById(type + "_2_" + id).style.display == "none") document.getElementById(type + "_2_" + id).style.display = "flex";-->
+<!--      else document.getElementById(type + "_2_" + id).style.display = "none";-->
+<!--    },-->
+<!--    switchPackContent3(id, type) {-->
+<!--      if (document.getElementById(type + "_3_" + id).style.display == "none") document.getElementById(type + "_3_" + id).style.display = "flex";-->
+<!--      else document.getElementById(type + "_3_" + id).style.display = "none";-->
+<!--    },-->
+<!--  },-->
+<!--};-->
+<!--export const documentProps = {-->
+<!--  title: "一图流 - 礼包性价比",-->
+<!--  description: "明日方舟一图流，礼包性价比，礼包内容，氪金规划",-->
+<!--};-->
+<!--</script>-->
 
 <style>
 #pack {

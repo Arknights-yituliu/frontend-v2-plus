@@ -1,12 +1,14 @@
 <template>
-  <div class="popover-mask" v-show="maskVisible" @click="openOrClose()"></div>
-  <div class="popover-wrap">
-    <a @click="openOrClose()" class="popover_title">
-      <slot name="title">
-      </slot>
-    </a>
-    <div class="popover-content" :id="contentElement" >
+  <div>
+    <div class="popover-mask" v-show="maskVisible" @click="openOrClose()"></div>
+    <div class="popover-wrap">
+      <a @click="openOrClose()" class="popover_title">
+        <slot name="title">
+        </slot>
+      </a>
+      <div class="popover-content" :id="contentElement">
         <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -17,6 +19,7 @@ import {ref} from "vue";
 const props = defineProps(["modelValue", "name"]);
 let contentElement = `popover-${props.name}`
 let maskVisible = ref(false)
+
 function openOrClose() {
   let element = document.getElementById(contentElement);
   const offsetHeight = element.offsetHeight;
@@ -63,7 +66,7 @@ function openOrClose() {
   border-radius: 4px;
 }
 
-.popover-mask{
+.popover-mask {
   width: 100%;
   height: 100%;
   position: fixed;

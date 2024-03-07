@@ -765,7 +765,7 @@
 
 .schedule-set-bar-short {
     display: flex;
-    flex: wrap;
+    flex-wrap: wrap;
     align-items: center;
     height: 60px;
     justify-content: flex-start;

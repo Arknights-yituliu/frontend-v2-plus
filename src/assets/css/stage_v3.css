@@ -31,44 +31,34 @@
     border-image-repeat: stretch;
 }
 
-.stage_card_wrap_3 {
-    display: flex;
-    flex-wrap: wrap;
-}
+
 
 .stage_card_3 {
     overflow: hidden;
-    -webkit-transition: 0.3s;
-    transition: 0.3s;
     background: var(--c-stage-card-background-color);
-    height: 120px;
     width: 240px;
-    max-width: 330px;
     margin: 6px;
-    /* display: flex; */
     border-radius: 8px;
     flex-grow: 1;
     border: 1px solid #80808020;
     min-width: 248px;
-    /* box-shadow:1px 0px 4px 2px #80808040; */
-    /* background-color: aquamarine; */
 }
 
-.stage_card_3s {
-    overflow: hidden;
-    -webkit-transition: 0.3s;
-    transition: 0.3s;
-    background: var(--c-stage-card-background-color);
-    height: 132px;
-    width: 240px;
-    max-width: 300px;
-    margin: 6px;
-    /* display: flex; */
-    border-radius: 8px;
-    flex-grow: 1;
-    border: 1px solid #80808020;
-    min-width: 250px;
-    position: relative;
+
+
+
+.s-stage-card-icon-wrap {
+    width: 30px;
+    height: 30px;
+}
+
+.s-stage-card-icon-sprite {
+    transform: scale(.16);
+    position: absolute;
+    display: inline-block;
+    top: -77px;
+    left: -77px;
+    opacity: 1;
 }
 
 .stage_card_icon {
@@ -80,17 +70,7 @@
     position: absolute;
 }
 
-.stage_card_3s_list {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: space-evenly;
-    width: calc(100% - 40px);
-    height: 130px;
-    margin: 0px 0px 0px 40px;
-    backdrop-filter: blur(4px);
-    /*background-color: bisque;*/
-}
+
 
 .stage_card_3_1_img {
     transform: scale(1);
@@ -210,37 +190,9 @@
     /*background-color: bisque;*/
 }
 
-.stage_card_3_line {
-    height: 28px;
-    line-height: 32px;
-    /* background-color: cadetblue; */
-    display: flex;
-    justify-content: space-evenly;
-    vertical-align: middle;
-    padding-left: 4px;
-    position: relative;
-}
 
-.stage_card_3_line div {
-    display: inline-block;
-    margin: 0px 2px;
-    position: relative;
-}
 
-.stage_card_3_1 {
-    height: 100%;
-    width: 24px;
-    top: 0px;
-    /* background-color: #10b650; */
-}
 
-.stage_card_3_3 {
-    font-size: 20px;
-    height: 100%;
-    width: 60px;
-    top: 0px;
-    text-align: center;
-}
 
 .stage_card_3_4 {
     height: 100%;
@@ -326,7 +278,6 @@
 }
 
 
-
 .item-legend-sprite {
     transform: scale(.22);
     position: absolute;
@@ -377,11 +328,7 @@
     top: 0;
 }
 
-.detail-table-item-wrap {
-    width: 40px;
-    height: 40px;
-    position: relative;
-}
+
 
 .table-item-sprite {
     transform: scale(.2185);
@@ -448,41 +395,7 @@
     left: -10px;
 }
 
-.act-table-wrap {
-    width: 98%;
-    margin: 8px;
-    overflow-x: auto;
-    border-radius: 8px;
-    flex-grow: 1;
-    border: 1px solid #80808020;
-    box-shadow: 0px 0px 8px #00000040;
-}
 
-.act-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
-    /*margin: -1px;*/
-    padding: -1px;
-}
-
-.act-table td {
-    border: var(--c-border);
-}
-
-.act-name {
-    min-width: 100px;
-    max-width: 100px;
-    font-weight: 600;
-}
-
-.act-table-item-wrap {
-    width: 54px;
-    height: 54px;
-    font-size: 14px;
-    position: relative;
-    margin: auto;
-}
 
 .act-table-item-sprite {
     transform: scale(.1967);
@@ -491,46 +404,8 @@
     left: -66px;
 }
 
-.act-stage-efficiency {
-    position: absolute;
-    top: 36px;
-    text-align: center;
-    width: 54px;
-    left: 0;
-}
 
-.act-table-simple-wrap {
-    display: none;
-    margin: 8px;
-    width: 100%;
-    height: 400px;
-    overflow-y: scroll;
-    border-radius: 8px;
-    box-shadow: 0px 0px 8px #00000040;
-}
 
-.act-table-simple {
-    border-collapse: collapse;
-    width: 100%;
-    box-shadow: var(--c-box-shadow);
-}
-
-.act-table-simple tr {
-    border-bottom: 1px solid #e6e6e6;
-    height: 60px;
-}
-
-.act-name-simple {
-    color: var(--c-blue);
-    font-weight: 600;
-}
-
-.act-table-simple-item-wrap {
-    width: 50px;
-    height: 50px;
-    font-size: 14px;
-    position: relative;
-}
 
 .act-table-simple-item-sprite {
     transform: scale(.273);
@@ -539,22 +414,15 @@
     left: -66px;
 }
 
-.act-drop-table {
-    display: flex;
-}
-
-.act-drop-detail {
-    padding: 0 4px;
-    line-height: 25px;
-    font-weight: 600;
-}
-
 @media screen and (max-width: 900px) {
-    .act-table-wrap {
-        display: none;
-    }
 
-    .act-table-simple-wrap {
-        display: block;
-    }
+
+
 }
+
+
+
+
+
+
+

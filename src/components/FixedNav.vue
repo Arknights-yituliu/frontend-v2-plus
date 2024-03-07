@@ -77,5 +77,13 @@ onUnmounted(() => {
   padding: 5px;
   text-decoration: none; /* 去除下划线 */
 }
+
+
+@media screen and (max-width: 600px) {
+  .fixed-nav{
+    display: none;
+  }
+}
+
 </style>
 
