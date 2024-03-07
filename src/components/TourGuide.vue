@@ -19,7 +19,6 @@
 </template>
 
 <script setup>
-import {ref, defineProps, onMounted, defineEmits} from 'vue';
 
 const props = defineProps({
   s1: String,

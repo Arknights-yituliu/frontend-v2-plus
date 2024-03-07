@@ -13,9 +13,9 @@
       <!-- 内容区域 -->
       <div v-for="(singleAct, index) in actStoreList" :key="index">
         <!-- banner -->
-        <div class="act_banner_background" :style="getBackground(singleAct.actImgUrl)">
+        <div class="act_banner_background" :style="getBackground(singleAct.imageLink)">
           <div class="act_banner_img">
-            <img class="act_img" :src="singleAct.actImgUrl" :alt="singleAct.actName" />
+            <img class="act_img" :src="singleAct.imageLink" :alt="singleAct.actName" />
           </div>
         </div>
 
