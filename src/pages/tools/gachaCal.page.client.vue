@@ -21,9 +21,11 @@
                   </el-radio-button>
                 </el-radio-group>
               </div>
-
+              <div style="font-size: 16px;font-style: italic;color: #74b9ff;text-align: center;"
+              >按钮的日期为卡池关闭时间</div>
+                <!--                   style="font-size: 16px;text-decoration: none;margin: 0px auto;text-align: center;">在森空岛投票支持'罗德岛基建BETA'，助力计算器的开发工作！</a>-->
               <!--              <div class="gacha_unit_info">彩六联动二期的排期尚不明确，3.26的可能性较大，请自行斟酌</div>-->
-              <!-- <el-divider></el-divider> -->
+
               <div id="gacha_total_chart">
                 <div id="gacha_total_pie" ref="gacha_total_pie"
                      style="vertical-align: top; height: 200px; width: 280px; display: inline-block; top: 10px"></div>
@@ -1063,8 +1065,8 @@ export default {
           display: true,
           endTime: '2024/03/21 03:58:00',
           rewardType: "联动限定",
-          permitCountDown: true,
-          orundumCountDown: true
+          permitCountDown: false,
+          orundumCountDown: false
         },
         '周年(5.15)': {
           display: true,
