@@ -1,16 +1,16 @@
-.c-module-header {
+.module-header {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     margin: 12px 0;
 }
 
-.c-module-title {
+.module-title {
     width: fit-content;
     height: 60px;
 }
 
-.c-module-title h1 {
+.module-title h1 {
     padding-right: 16px;
     padding-left: 2px;
     line-height: 1;
@@ -19,23 +19,25 @@
     margin-top: 0;
 }
 
-.c-module-title h4 {
+.module-title h4 {
     line-height: 1.5;
     margin-top: -28px;
-    padding-top: 4px;
+    padding-top: 6px;
     padding-left: 2px;
     padding-right: 4px;
     background-color: #888888;
     color: #ffffff;
     border-left: 8px solid #6495ed;
     z-index: 1;
+    font-size: 14px;
 }
 
-.c-module-tip {
+.module-tip {
     padding: 4px;
     font-style: italic;
     color: #00a1d6;
     font-size: 14px;
+    line-height: 16px;
 }
 
 .tag-group span{
@@ -88,27 +90,56 @@
     color: #919191;
 }
 
+.tag-button{
+    margin:0 2px;
+    padding: 4px 12px;
+    font-size: 16px;
+    line-height: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(146, 193, 252, 0.75);
+    display: inline-block;
+    color: #286ebd;
+    font-weight: 600;
+    vertical-align: middle;
+    background-color: rgba(238, 247, 255);
+    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
 
 @media screen and (max-width: 600px) {
 
-    .c-module-title {
+    .module-title {
         height: 40px;
     }
 
-    .c-module-title h1 {
+    .module-title h1 {
         font-size: 24px;
     }
 
-    .c-module-title h4 {
+    .module-title h4 {
         font-size: 10px;
         margin-top: -20px;
         z-index: 1;
     }
 
-    .c-module-tip {
+    .module-tip {
         padding: 4px;
         font-style: italic;
         color: #00a1d6;
         font-size: 8px;
+    }
+
+    .tag-group span{
+        padding: 4px 16px;
+        font-size: 12px;
+        line-height: 14px;
+        margin: 2px 4px;
+    }
+
+    .tag-button{
+        font-size: 14px;
+        line-height: 14px;
+        padding: 2px 8px;
     }
 }

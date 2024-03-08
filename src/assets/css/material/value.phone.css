@@ -1,0 +1,23 @@
+@media screen and (max-width: 600px){
+    .item-value-cell {
+        width: 90px;
+        border-left: 3px solid;
+        line-height: 36px;
+        margin: 4px 0;
+        font-size: 12px;
+    }
+
+    .item-value-sprite {
+        position: relative;
+        width: 36px;
+        height: 36px;
+    }
+
+    .item-value-sprite div{
+        transform: scale(calc(36 / 183));
+        position: absolute;
+        top: calc((-183px + 36px) / 2);
+        left: calc((-183px + 36px) / 2);
+        opacity: 0.9;
+    }
+}

@@ -122,7 +122,7 @@ onMounted(() => {
       <!--          <div :class="opETextTheme">Event Store</div>-->
       <!--        </div>-->
       <!--      </div>-->
-      <div class="c-module-title">
+      <div class="module-title">
         <h1>活动商店</h1>
         <h4>Event Store</h4>
       </div>
@@ -170,8 +170,8 @@ onMounted(() => {
     <!-- 采购中心 -->
     <div id="store">
       <!-- 标题区域 -->
-      <div class="c-module-header">
-        <div class="c-module-title">
+      <div class="module-header">
+        <div class="module-title">
           <h1>采购中心</h1>
           <h4>Store Ranking</h4>
         </div>
@@ -181,7 +181,7 @@ onMounted(() => {
              <div class="" :class="`bg-icon_${item.iconId}`"></div>
           </div>
         </div>
-        <label class="c-module-tip">*点击图标切换</label>
+        <span class="module-tip">*点击图标切换</span>
       </div>
 
 <!--      <div class="op_title">-->
@@ -223,8 +223,8 @@ onMounted(() => {
 <!--        <div :class="opETextTheme">Algorithm</div>-->
 <!--      </div>-->
 <!--    </div>-->
-    <div class="c-module-header">
-      <div class="c-module-title">
+    <div class="module-header">
+      <div class="module-title">
         <h1>算法说明</h1>
         <h4>Algorithm</h4>
       </div>

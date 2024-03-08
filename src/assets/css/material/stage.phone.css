@@ -1,9 +1,9 @@
 @media screen and (max-width: 600px) {
 
     .stage-legend {
-        width: 330px;
-        font-size: 10px;
-        line-height: 12px;
+        width: 280px;
+        font-size: 8px;
+        line-height: 10px;
     }
 
     .stage-legend-sprite {
@@ -24,20 +24,20 @@
 
     .stage-legend-text-2 {
         font-weight: bold;
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .stage-legend-text-3 {
         font-style: italic;
-        line-height: 18px;
+        line-height: 12px;
     }
 
-    .stage-legend-bold {
+    .stage-legend-text-bold {
         font-weight: bold;
-        font-size: 14px;
+        font-size: 12px;
     }
 
-    .stage-legend-border-bottom {
+    .stage-legend-text-underline {
         border-bottom: 1px solid var(--c-border-color);
         line-height: 16px;
     }

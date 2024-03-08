@@ -1,6 +1,7 @@
 .pack-card-container {
     display: flex;
     flex-wrap: wrap;
+
 }
 
 .pack-card {
@@ -8,22 +9,23 @@
     width: 530px;
     display: flex;
     flex-wrap: wrap;
-    position: relative;
+
 }
 
-.pack-card-part-left{
+.pack-card-part-left {
     width: 160px;
     height: 120px;
     position: relative;
+    border-radius: 8px;
     overflow: hidden;
+    z-index: 11;
 }
 
 .pack-image {
     width: 160px;
     height: 120px;
-    border-radius: 8px;
+
     box-shadow: 2px 2px 4px var(--c-box-shadow-color);
-    z-index: 11;
 }
 
 .pack-corner {
@@ -44,7 +46,6 @@
     top: 92px;
     left: 0;
     width: 160px;
-    height: 24px;
     background-color: rgba(0, 0, 0, 0.6902);
     font-size: 14px;
     font-weight: 600;
@@ -52,7 +53,7 @@
     text-align: center;
     padding-top: 3px;
     border-radius: 0px 0px 8px 8px;
-    z-index: 12;
+    z-index: 13;
 }
 
 .pack-info {
@@ -90,22 +91,28 @@
     display: flex;
     width: 240px;
     border-left: 1px solid #d0d0d0;
+    flex-direction: column;
     white-space: nowrap;
-
     flex-wrap: wrap;
-    justify-content: center;
-    align-content: space-around;
+    justify-content: space-around;
+    align-content: flex-start;
     color: wheat;
-
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .pack-chart-line-item {
-    overflow: hidden;
-    width: 220px;
     font-size: 15px;
     line-height: 1;
     display: flex;
     align-items: center;
+
+}
+
+.pack-chart-line-label{
+    display: block;
+    width: 80px;
+    text-align: center
 }
 
 .pack-line-bar {
@@ -119,10 +126,6 @@
     padding: 0 8px;
 }
 
-
-.pack_info_text_line {
-    height: 24px;
-}
 
 .pack_corner {
     transform: rotate(-35deg);
@@ -148,24 +151,54 @@
     background: #bf7c00;
 }
 
-.pack-content{
+.pack-content {
     margin-left: 20px;
     margin-top: -20px;
-    padding: 20px 8px;
+    padding-top: 20px;
+    padding-left: 8px;
+    padding-right: 8px;
     width: 490px;
+    display: none;
     flex-wrap: wrap;
-    transition: top .3s;
-    background: rgba(34,34,34,.13333);
-    font-size: 18px;
+    background: rgba(34, 34, 34, .13333);
+    font-size: 16px;
     border-radius: 4px;
-    box-shadow: 1px 1px 4px rgba(0,0,0,.3);
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, .3);
     box-sizing: border-box;
+    overflow: hidden;
+
 }
 
 .pack-content-gacha{
-
+    width: 100%;
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    box-sizing: border-box;
 }
 
+.pack-content-gacha span {
+    display: block;
+    width: 12%;
+}
+
+.pack-content-material{
+    padding: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.pack-content-material-item{
+    width: 48%;
+    display: flex;
+}
+
+.pack-content-material-item span {
+    display: block;
+}
 
 .pack_info {
     z-index: 10;

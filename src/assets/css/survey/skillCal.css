@@ -203,7 +203,7 @@
     justify-content: space-between;
 }
 
-.item_image_wrap {
+.item-value-sprite {
     width: 60px;
     height: 60px;
     position: relative;

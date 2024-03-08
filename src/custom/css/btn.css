@@ -1,12 +1,13 @@
 .btn{
-    padding:4px 12px;
+    padding:0 12px;
     cursor: pointer;
     min-width: 80px;
     text-align: center;
     border-radius: 3px;
     box-sizing: border-box;
     height: 28px;
-    line-height: 20px;
+    line-height: 24px;
+    font-size: 16px;
     border:none;
     font-weight: bold;
     color: var(--c-btn-color);
@@ -49,4 +50,15 @@
     color: var(--c-input-text-color);
     border-bottom: var(--c-input-border);
     background-color: var(--c-input-bg);
+}
+
+
+@media screen and (max-width: 600px){
+    .btn{
+        padding:0 8px;
+        min-width: 70px;
+        height: 22px;
+        line-height: 20px;
+        font-size: 12px;
+    }
 }

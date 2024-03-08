@@ -1,39 +1,48 @@
 <template>
   <div id="value">
     <!-- 标题区域 -->
-    <div class="op_title">
-      <div class="op_title_text">
-        <div class="op_title_ctext">价值一览</div>
-        <div :class="opETextTheme">Material Value</div>
-      </div>
-      <div class="value_unit_btn_wrap">
-        <c-button :color="'blue'" :status="value_unit === 'itemValueAp'"
-                  @click="value_unit = 'itemValueAp'">等效理智
-        </c-button>
-        <c-button :color="'blue'" :status="value_unit === 'itemValue'" @click="value_unit = 'itemValue'">等效绿票
-        </c-button>
-        <div class="item_value_down">
-          <a style="color: rgb(65, 105, 240)" @click="exportItemValueExcel()"> 导出Excel</a>
-        </div>
-        <div class="item_value_down">
-          <a style="color: rgb(65, 105, 240)" @click="exportItemValueJson()"> 导出Json</a>
-        </div>
+    <div class="module-header">
+      <!--      <div class="op_title_text">-->
+      <!--        <div class="op_title_ctext">价值一览</div>-->
+      <!--        <div :class="opETextTheme">Material Value</div>-->
+      <!--      </div>-->
+
+      <div class="module-title">
+        <h1>价值一览</h1>
+        <h4>Material Value</h4>
       </div>
     </div>
 
-    <div class="item_value_card_box color">
-      <div v-for="(item_group, index) in item_value_list" :key="index" class="item_value_card_wrap">
-        <div class="item_value_card" v-for="(item, index) in item_group" :key="index"
+    <div class="btn-wrap">
+      <c-button style="margin: 4px" :color="'blue'" :status="value_unit === 'itemValueAp'"
+                @click="value_unit = 'itemValueAp'">等效理智
+      </c-button>
+      <c-button style="margin: 4px" :color="'blue'" :status="value_unit === 'itemValue'"
+                @click="value_unit = 'itemValue'">等效绿票
+      </c-button>
+      <c-button style="margin: 4px" :color="'blue'"
+                @click="exportItemValueExcel">导出Excel
+      </c-button>
+      <c-button style="margin: 4px" :color="'blue'"
+                @click="exportItemValueJson">导出Json
+      </c-button>
+    </div>
+
+    <div class="item-value-table-wrap color">
+      <div v-for="(item_group, index) in item_value_list" :key="index" class="item-value-list">
+        <div class="item-value-cell" v-for="(item, index) in item_group" :key="index"
              :style="getItemRarityColor(item.rarity)">
-          <div class="item_image_wrap">
-            <div :class="getSpriteImg(item.itemId)"></div>
+          <div class="item-value-sprite">
+            <div :class="`bg-${item.itemId}`"></div>
           </div>
-          <div class="item_value">
+          <div class="item-value">
             {{ item[value_unit].toFixed(4) }}
           </div>
         </div>
       </div>
     </div>
+
+
     <div class="op_title">
       <div class="op_title_text">
         <div class="op_title_ctext">定价算法</div>
@@ -44,18 +53,6 @@
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
           <el-collapse>
-            <el-collapse-item name="1" style="">
-              <template #title>
-              <span style="font-size: large; display: flex; align-items: center">
-                <el-icon>
-                  <Comment/>
-                </el-icon><b style="margin-left: 4px">问题反馈</b>
-              </span>
-              </template>
-              <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">点击此处</a>通过问卷反馈问题/提供建议，<a
-                href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">点击此处</a>加入粉丝群，<a
-                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">点击此处</a>加入开发群。
-            </el-collapse-item>
             <el-collapse-item name="2" style="">
               <template #title>
                 <span style="font-size: large; display: flex; align-items: center"><el-icon>
@@ -184,19 +181,17 @@
 
 <script setup>
 import {ref, onMounted} from "vue";
-import {ElMessage} from "element-plus";
 import {exportExcel} from "/src/utils/exportExcel";
 import FixedNav from "../../components/FixedNav.vue";
 import materialAPI from "/src/api/material.js";
-
+import '/src/assets/css/material/value.css'
+import '/src/assets/css/material/value.phone.css'
 
 let opETextTheme = ref("op_title_etext_light")
 
 let value_unit = ref('itemValueAp')
 
 let item_value_list = ref([])
-
-
 
 
 function exportItemValueJson() {
@@ -229,13 +224,12 @@ function exportItemValueExcel() {
       item.rarity
     ])
   }
-  exportExcel('物品价值表',itemList)
+  exportExcel('物品价值表', itemList)
   let link = document.createElement('a')
   link.download = `item_value_table.json`
   link.href = 'data:text/plain,' + JSON.stringify(itemList)
   link.click()
 }
-
 
 
 function getSpriteImg(id) {
@@ -253,7 +247,7 @@ function getItemRarityColor(rarity) {
 
 onMounted(() => {
 
-  materialAPI.getItemValueTable(0.625).then(response=>{
+  materialAPI.getItemValueTable(0.625).then(response => {
     for (const item of response.data) {
       if (item.cardNum > 90) continue
       if (!item_value_list.value[item.cardNum - 1]) {
@@ -275,61 +269,5 @@ export const documentProps = {
 </script>
 
 <style scoped>
-.value_unit_btn_wrap {
-  display: flex;
-  padding: 12px 0 0 12px;
-}
 
-.item_value_down {
-  line-height: 36px;
-  padding: 0 12px;
-}
-
-.item_value_card_box {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  margin: 4px;
-}
-
-.item_value_card_wrap {
-  margin: 20px 8px;
-}
-
-.item_value_card {
-  width: 124px;
-  display: flex;
-  border-left: 4px solid;
-  line-height: 54px;
-  margin: 2px;
-}
-
-.item_value {
-  padding: 0 4px;
-}
-
-.color {
-  --purple: #7F3C8D;
-  --red: #E74C3C;
-  --blue: #4A90E2;
-  --green: #28cc9e;
-  --orange: #ff7f3f;
-  --grey: #e6e6e6;
-}
-
-.item_image_wrap {
-  position: relative;
-  width: 50px;
-  height: 50px;
-  left: 0;
-  top: 0;
-}
-
-.item_image {
-  position: absolute;
-  transform: scale(0.278);
-  top: -66px;
-  left: -66px;
-
-}
 </style>

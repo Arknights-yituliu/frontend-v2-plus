@@ -13,8 +13,8 @@
         <h2>数据填写</h2>
         <h3>由森空岛导入</h3>
 
-        <label class="warn">森空岛CRED的风险声明：森空岛CRED与鹰角网络通行证的Token并不通用，
-          目前仅可获取森空岛内展示的游戏数据，（仅通过官网实验不通用，不能完全确定，一图流不会保存任何CRED信息</label>
+        <span class="warn">森空岛CRED的风险声明：森空岛CRED与鹰角网络通行证的Token并不通用，
+          目前仅可获取森空岛内展示的游戏数据，（仅通过官网实验不通用，不能完全确定，一图流不会保存任何CRED信息</span>
 
         <p><b>step1：</b>使用PC打开森空岛官网<span @click="toSKLand()" class="info">https://www.skland.com/</span>进行登录
         </p>

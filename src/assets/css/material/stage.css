@@ -55,12 +55,12 @@
     padding: 4px;
 }
 
-.stage-legend-bold {
+.stage-legend-text-bold {
     font-weight: bold;
     font-size: 14px;
 }
 
-.stage-legend-border-bottom {
+.stage-legend-text-underline {
     border-bottom: 2px solid var(--c-border-color);
     line-height: 16px;
 }

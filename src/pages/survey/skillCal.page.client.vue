@@ -214,7 +214,7 @@
     <div class="item_info_card" v-for="(item,index) in item_info" :key="index"
          :class="`rarity_${item.rarity}`" v-show="item.show">
       <div class="item_info_card_left">
-        <div class="item_image_wrap">
+        <div class="item-value-sprite">
           <div :class="getItemSprite(item.id)">
           </div>
         </div>

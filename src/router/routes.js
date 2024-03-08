@@ -55,6 +55,15 @@ const routes = [
         component: () => import('/src/pages/tools/gachaCal.page.vue')
     },
     {
+        path: '/tools/gachaCalc2',
+        text: '攒抽计算器(重构版)',
+        name: 'GachaCalculator',
+        display: true,
+        module: 'tools',
+        icon: "calculator",
+        component: () => import('/src/pages/tools/gachaCalc2.page.vue')
+    },
+    {
         path: '/tools/schedule',
         text: '排班表生成器',
         name: 'Schedule',

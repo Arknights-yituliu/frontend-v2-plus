@@ -118,9 +118,10 @@ onMounted(() => {
   materialAPI.getItemValueTable(0.625).then(response=>{
     const itemList = response.data
     initData(itemList)
+    load();
   })
 
-  load();
+
 });
 </script>
 

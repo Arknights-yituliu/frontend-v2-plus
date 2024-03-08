@@ -190,7 +190,7 @@ function getLegendSprite(id) {
 }
 
 function getCardBgSprite(id) {
-  return "bg-" + id ;
+  return "bg-" + id;
 }
 
 function getCardIconSprite(id) {
@@ -255,9 +255,9 @@ function chooseHistoryActDevice(device) {
 
 function historyActDeviceBtnClass(device) {
   if (device === historyActDevice.value) {
-    return 'op_tag_1'
+    // return 'op_tag_1'
   }
-  return 'op_tag_0'
+  // return 'op_tag_0'
 }
 
 function getHistoryActStage() {
@@ -429,35 +429,36 @@ onMounted(() => {
   <div id="stage" class="s-stage-page">
     <!-- 标题区域 -->
 
-    <div class="op_title">
-      <div class="op_title_text">
-        <div class="op_title_ctext">推荐关卡</div>
-        <div class="op_title_etext_light">Best Stages</div>
+    <div class="module-header">
+      <div class="module-title">
+        <h1>推荐关卡</h1>
+        <h4>Best Stages</h4>
       </div>
-      <div class="op_title_tag">
-        <!-- <div class="op_tag_0">图例</div> -->
-        <!-- <div :class="efficiencyTypeBtnClass('single')" @click="displaySingleOrCompleteEfficiency('single')">
-          单一材料效率
-        </div> -->
-        <!-- <div :class="efficiencyTypeBtnClass('complete')" @click="displaySingleOrCompleteEfficiency('complete')">
-          关卡综合效率
-        </div> -->
-        <div class="op_tag_1" @click="scrollToOrundumTable()">搓玉数据</div>
-        <div class="op_tag_1" @click="scrollToHistoryStageTable()">往期活动</div>
-        <div class="op_tag_1" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>
-        <!-- <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div> -->
-        <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
-        <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
-
-        <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>
-        <span class="tab_text">更新时间：{{ updateTime }}</span>
-      </div>
+      <button class="tag-button" @click="scrollToOrundumTable()">搓玉数据</button>
+      <button class="tag-button" @click="scrollToHistoryStageTable()">往期活动</button>
+      <button class="tag-button" @click="scrollToFrequentlyAskedQuestion()">常见问题</button>
+<!--      <button class="tag-button" @click="guideOpen=true">*点我查看操作指引</button>-->
+<!--      <span class="c-module-tip"></span>-->
+      <span class="module-tip">更新时间：{{ updateTime }}</span>
+    </div>
+<!--    <div class="op_title">-->
+<!--      <div class="op_title_text">-->
+<!--        <div class="op_title_ctext">推荐关卡</div>-->
+<!--        <div class="op_title_etext_light">Best Stages</div>-->
+<!--      </div>-->
+<!--      <div class="op_title_tag">-->
+<!--        <div class="op_tag_1" @click="scrollToOrundumTable()">搓玉数据</div>-->
+<!--        <div class="op_tag_1" @click="scrollToHistoryStageTable()">往期活动</div>-->
+<!--        <div class="op_tag_1" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>-->
+<!--        <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>-->
+<!--        <span class="tab_text">更新时间：{{ updateTime }}</span>-->
+<!--      </div>-->
       <!-- <div class="op_title_tag" style="height: 24px">
           <div class="tab_text">
             占位
           </div>
         </div> -->
-    </div>
+<!--    </div>-->
 
     <!-- 说明区域 -->
 
@@ -478,9 +479,9 @@ onMounted(() => {
             <span>10-10</span>
           </td>
           <td class="stage-legend-text-3">
-            <span class="stage-legend-bold">[综合效率]</span>
+            <span class="stage-legend-text-bold">[综合效率]</span>
             <br>
-            <span class="stage-legend-border-bottom">
+            <span class="stage-legend-text-underline">
                 所有掉落物的价值之和
             </span>
             <br>
@@ -506,9 +507,9 @@ onMounted(() => {
             <span>LE-5</span>
           </td>
           <td class="stage-legend-text-3">
-            <span class="stage-legend-bold" style="color: #c01dd7;">[T4效率]</span>
+            <span class="stage-legend-text-bold" style="color: #c01dd7;">[T4效率]</span>
             <br>
-            <span class="stage-legend-border-bottom">
+            <span class="stage-legend-text-underline">
               <span style="color: #c01dd7;font-weight: bold">紫</span>
               <span style="color: #0276f8;font-weight: bold">蓝</span>
               <span style="color: #01c028;font-weight: bold">绿</span>
@@ -538,9 +539,9 @@ onMounted(() => {
             <span>LE-5</span>
           </td>
           <td class="stage-legend-text-3">
-            <span class="stage-legend-bold" style="color: #0276f8;">[T3效率]</span>
+            <span class="stage-legend-text-bold" style="color: #0276f8;">[T3效率]</span>
             <br>
-            <span class="stage-legend-border-bottom">
+            <span class="stage-legend-text-underline">
               <span style="color: #0276f8;font-weight: bold">蓝</span>
               <span style="color: #01c028;font-weight: bold">绿</span>
               <span>白糖价值之和 </span>
@@ -633,18 +634,25 @@ onMounted(() => {
 
 
     <!-- 材料情报卡 -->
-    <div class="op_title">
-      <div class="op_title_text">
-        <div class="op_title_ctext">材料详情</div>
-        <div class="op_title_etext_light">Item Info</div>
+    <div class="module-header">
+      <div class="module-title">
+        <h1>材料详情</h1>
+        <h4>Item Info</h4>
       </div>
-      <div class="op_title_tag">
-        <!--          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>-->
-        <!--          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>-->
-        <!--          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>-->
-        <div class="tab_text">*移动端可左右拖动查看</div>
-      </div>
+      <span class="module-tip">*移动端可左右拖动查看</span>
     </div>
+<!--    <div class="op_title">-->
+<!--      <div class="op_title_text">-->
+<!--        <div class="op_title_ctext">材料详情</div>-->
+<!--        <div class="op_title_etext_light">Item Info</div>-->
+<!--      </div>-->
+<!--      <div class="op_title_tag">-->
+<!--        &lt;!&ndash;          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>&ndash;&gt;-->
+<!--        &lt;!&ndash;          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>&ndash;&gt;-->
+<!--        &lt;!&ndash;          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>&ndash;&gt;-->
+<!--        <div class="tab_text">*移动端可左右拖动查看</div>-->
+<!--      </div>-->
+<!--    </div>-->
     <!-- 材料信息 -->
     <!-- <div id="itemDetail">
       <div class="item-detail-bar">
@@ -754,16 +762,24 @@ onMounted(() => {
     </div>
 
     <!-- 搓玉 -->
-    <div class="op_title" id="orundum-table">
-      <div class="op_title_text">
-        <div class="op_title_ctext">搓玉数据表</div>
-        <div class="op_title_etext_light">Orundum</div>
+<!--    <div class="op_title" id="orundum-table">-->
+<!--      <div class="op_title_text">-->
+<!--        <div class="op_title_ctext">搓玉数据表</div>-->
+<!--        <div class="op_title_etext_light">Orundum</div>-->
+<!--      </div>-->
+<!--      <div class="op_title_tag">-->
+<!--        &lt;!&ndash; <div class="op_tag_0">图例</div> &ndash;&gt;-->
+<!--        <div class="op_tag_0" @click="filterOrundumStage()">仅显示活动关</div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="module-header" id="orundum-table">
+      <div class="module-title">
+        <h1>搓玉数据表</h1>
+        <h4>Orundum</h4>
       </div>
-      <div class="op_title_tag">
-        <!-- <div class="op_tag_0">图例</div> -->
-        <div class="op_tag_0" @click="filterOrundumStage()">仅显示活动关</div>
-      </div>
+      <button class="tag-button" @click="filterOrundumStage()">仅显示活动关</button>
     </div>
+
     <div class="tableArea" style="margin : 8px;max-width: 720px;">
       <el-table class="detailTable" :data="displayOrundumRecommendedStage" stripe style="width: 100%;height: 400px;">
         <el-table-column prop="stageCode" label="关卡名"/>
@@ -792,18 +808,28 @@ onMounted(() => {
       </el-table>
     </div>
     <!-- 历史活动 -->
-    <div class="op_title" id="history-stage-table">
-      <div class="op_title_text">
-        <div class="op_title_ctext">往期活动数据</div>
-        <div class="op_title_etext_light">History Event</div>
+    <div class="module-header" id="history-stage-table">
+      <div class="module-title">
+        <h1>往期活动数据</h1>
+        <h4>History Event</h4>
       </div>
-      <div class="op_title_tag">
-        <!-- <div class="op_tag_0">图例</div> -->
-        <div :class="historyActDeviceBtnClass('phone')" @click="chooseHistoryActDevice('phone')">紧密模式
-        </div>
-        <div :class="historyActDeviceBtnClass('pc')" @click="chooseHistoryActDevice('pc')">表格模式</div>
-      </div>
+      <button class="tag-button" @click="chooseHistoryActDevice('phone')">手机版表格
+      </button>
+      <button class="tag-button" @click="chooseHistoryActDevice('pc')">电脑版表格</button>
     </div>
+
+<!--    <div class="op_title" id="history-stage-table">-->
+<!--      <div class="op_title_text">-->
+<!--        <div class="op_title_ctext">往期活动数据</div>-->
+<!--        <div class="op_title_etext_light">History Event</div>-->
+<!--      </div>-->
+<!--      <div class="op_title_tag">-->
+<!--        &lt;!&ndash; <div class="op_tag_0">图例</div> &ndash;&gt;-->
+<!--        <div :class="historyActDeviceBtnClass('phone')" @click="chooseHistoryActDevice('phone')">紧密模式-->
+<!--        </div>-->
+<!--        <div :class="historyActDeviceBtnClass('pc')" @click="chooseHistoryActDevice('pc')">表格模式</div>-->
+<!--      </div>-->
+<!--    </div>-->
     <!-- pc端大表格 -->
     <div class="activity-table-pc-container" id="act-table-pc">
       <table class="activity-table-pc">
@@ -850,16 +876,22 @@ onMounted(() => {
       </table>
     </div>
     <!-- 常见问题 -->
-    <div class="op_title" id="frequently-asked-question">
-      <div class="op_title_text">
-        <div class="op_title_ctext">常见问题</div>
-        <div class="op_title_etext_light">FAQ</div>
-      </div>
-      <div class="op_title_tag" style="height: 24px">
-        <div class="tab_text">
-        </div>
+    <div class="module-header" id="frequently-asked-question">
+      <div class="module-title">
+        <h1>常见问题</h1>
+        <h4>FAQ</h4>
       </div>
     </div>
+<!--    <div class="op_title" id="frequently-asked-question">-->
+<!--      <div class="op_title_text">-->
+<!--        <div class="op_title_ctext">常见问题</div>-->
+<!--        <div class="op_title_etext_light">FAQ</div>-->
+<!--      </div>-->
+<!--      <div class="op_title_tag" style="height: 24px">-->
+<!--        <div class="tab_text">-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">
