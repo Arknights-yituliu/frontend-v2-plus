@@ -1,0 +1,57 @@
+#gachaCalculate {
+  @media screen and (max-width: 600px) {
+
+    .collapse-wrap {
+      width: 350px;
+    }
+
+    .gachaResourcesChartPie{
+      width: 170px;
+      height: 150px
+    }
+
+     //抽卡资源统计表格样式
+    .gacha-resources-table {
+      width: 170px;
+      font-size: 12px;
+      line-height: 12px;
+    }
+
+    .gacha-resources-table-title{
+      width: 70px;
+    }
+
+    .gacha-resources-table-quantity{
+      width: 60px;
+    }
+
+
+    //攒抽计算结果的四项氪金资源的条状容器
+    .resources-result-bar {
+      margin-top: 6px;
+      padding: 4px 8px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    //攒抽计算结果的四项氪金资源的条状容器内的文字样式
+    .resources-result-bar span {
+      font-size: 12px;
+      padding-left: 8px;
+      width: 60px;
+    }
+
+    //雪碧图的容器，容器相对定位，内部雪碧图绝对定位，通过这种方式让图片展示的大小和外容器大小一致
+    .image-sprite {
+      width: 18px;
+      height: 18px;
+    }
+
+    //雪碧图的缩放
+    .image-sprite div {
+      transform: scale(calc(30 / 44));
+      top: calc((-44px + 18px) / 2);
+      left: calc((-44px + 18px) / 2);
+    }
+
+  }
+}

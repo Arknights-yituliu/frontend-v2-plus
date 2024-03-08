@@ -4,6 +4,7 @@
 }
 
 
+
 .bg-icon_4002 {
     width: 44px; height: 44px;
     background: url('/image/sprite/plane-icon.png') -74px -10px;
@@ -39,21 +40,35 @@
 
 
 
-.bg-icon_EPGS_COIN {
+.bg-icon_7003 {
     width: 44px; height: 44px;
     background: url('/image/sprite/plane-icon.png') -10px -138px;
 }
 
 
 
-.bg-icon_REP_COIN {
+.bg-icon_7004 {
     width: 44px; height: 44px;
     background: url('/image/sprite/plane-icon.png') -74px -138px;
 }
 
 
 
-.bg-icon_SOCIAL_PT {
+.bg-icon_EPGS_COIN {
     width: 44px; height: 44px;
     background: url('/image/sprite/plane-icon.png') -138px -138px;
+}
+
+
+
+.bg-icon_REP_COIN {
+    width: 44px; height: 44px;
+    background: url('/image/sprite/plane-icon.png') -202px -10px;
+}
+
+
+
+.bg-icon_SOCIAL_PT {
+    width: 44px; height: 44px;
+    background: url('/image/sprite/plane-icon.png') -202px -74px;
 }

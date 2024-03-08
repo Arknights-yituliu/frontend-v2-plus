@@ -57,7 +57,7 @@ const routes = [
     {
         path: '/tools/gachaCalc2',
         text: '攒抽计算器(重构版)',
-        name: 'GachaCalculator',
+        name: 'GachaCalculator2',
         display: true,
         module: 'tools',
         icon: "calculator",
