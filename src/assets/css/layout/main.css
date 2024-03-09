@@ -1,6 +1,5 @@
 
 .container {
-  font-family: "Microsoft YaHei", 微软雅黑, "Microsoft JhengHei", 华文细黑, STHeiti, MingLiu, serif;
   width: 100%;
   background-color: var(--c-background-color);
   color: var(--c-text-color);

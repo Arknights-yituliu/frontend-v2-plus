@@ -29,7 +29,7 @@
     </div>
 
     <div class="item-value-table-wrap color">
-      <div v-for="(item_group, index) in item_value_list" :key="index" class="item-value-list">
+      <div v-for="(item_group, index) in itemValueCollect" :key="index" class="item-value-list">
         <div class="item-value-cell" v-for="(item, index) in item_group" :key="index"
              :style="getItemRarityColor(item.rarity)">
           <div class="item-value-sprite">
@@ -191,12 +191,13 @@ let opETextTheme = ref("op_title_etext_light")
 
 let value_unit = ref('itemValueAp')
 
-let item_value_list = ref([])
+let itemValueCollect = ref([])
 
+let itemValueList = ref([])
 
 function exportItemValueJson() {
   let itemList = []
-  for (const item of pageContext.pageProps.value) {
+  for (const item of itemValueList.value) {
     itemList.push({
       id: item.itemId,
       name: item.itemName,
@@ -215,7 +216,7 @@ function exportItemValueExcel() {
   let itemList = [[
     '物品id', '物品名称', '等效理智', '等效绿票', '物品稀有度'
   ]]
-  for (const item of pageContext.pageProps.value) {
+  for (const item of itemValueList.value) {
     itemList.push([
       item.itemId,
       item.itemName,
@@ -248,12 +249,13 @@ function getItemRarityColor(rarity) {
 onMounted(() => {
 
   materialAPI.getItemValueTable(0.625).then(response => {
+    itemValueList.value = response.data
     for (const item of response.data) {
       if (item.cardNum > 90) continue
-      if (!item_value_list.value[item.cardNum - 1]) {
-        item_value_list.value[item.cardNum - 1] = []
+      if (!itemValueCollect.value[item.cardNum - 1]) {
+        itemValueCollect.value[item.cardNum - 1] = []
       }
-      item_value_list.value[item.cardNum - 1].push(item)
+      itemValueCollect.value[item.cardNum - 1].push(item)
 
     }
   })

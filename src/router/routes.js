@@ -82,13 +82,13 @@ const routes = [
         component: () => import('/src/pages/tools/rogueCal.page.vue')
     },
     {
-        path: '/tools/buildingSkill',
+        path: '/tools/logistics',
         text: '基建技能一览',
-        name: 'BuildingSkill',
+        name: 'Logistics',
         display: true,
         module: 'tools',
         icon: "logistics",
-        component: () => import('/src/pages/tools/buildingSkill.page.vue')
+        component: () => import('/src/pages/tools/logistics.vue')
     },
     {
         path: '/tools/Irene',

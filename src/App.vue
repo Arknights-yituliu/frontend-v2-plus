@@ -65,8 +65,28 @@ onMounted(() => {
 </script>
 
 <style>
+@font-face {
+  font-family: 'HarmonyOS_Sans_Regular';
+  src: url('/fonts/HarmonyOS_Sans_Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Roboto_Regular_14';
+  src: url('/fonts/Roboto_Regular_14.ttf');
+}
+
+@font-face {
+  font-family: 'SourceHanSansSC_Regular_2';
+  src: url('/fonts/SourceHanSansSC_Regular_2.otf');
+}
+
+@font-face {
+  font-family: 'MiSans_Regular';
+  src: url('/fonts/MiSans_Regular.otf');
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto_Regular_14',sans-serif ;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;

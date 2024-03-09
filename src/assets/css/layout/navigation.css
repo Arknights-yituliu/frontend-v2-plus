@@ -82,6 +82,7 @@
     width: 250px;
     background-color: #1e222d;
     padding-bottom: 200px;
+
 }
 
 
@@ -122,7 +123,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 2000;
+    z-index: 3000;
 }
 
 .drawer {
@@ -131,7 +132,7 @@
     width: 260px;
     height: 100vh;
     transform: translateX(-500px);
-    transition: translate 0.3s linear;
+    transition: all 0.3s ease-in-out;
     background-color: #1e222d;
     overflow: auto;
     z-index:2001

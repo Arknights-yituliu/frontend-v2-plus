@@ -20,7 +20,7 @@
   <tour-guide v-if="guideOpen" @close="guideOpen=false" :s1="`#sStageLegend`" :s2="`#c-0`" :s3="`#fixedNav`"/>
 
   <!-- 地图效率Start -->
-  <div id="stage" style="font-family: Arial, Helvetica, sans-serif;">
+  <div id="stage" >
     <!-- 标题区域 -->
 
     <div class="op_title">
