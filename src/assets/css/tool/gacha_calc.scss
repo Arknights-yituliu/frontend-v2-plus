@@ -1,7 +1,37 @@
 /*为避免css打包冲突问题，本页面的css将使用“页面名-样式名”的格式命名，例如：gacha-calc-container*/
 /*考虑命名过长，gacha-calc-将简写为gc-*/
 
+.gacha-calculation-page {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 100vh;
+}
+
 #gachaCalculate {
+  .el-radio-button__inner {
+    width: 186px;
+  }
+
+  .el-collapse-item__content {
+    padding-bottom: 8px;
+  }
+
+  .el-collapse-item {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .el-collapse-item__header {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .el-checkbox-button__inner {
+    padding: 2px;
+    border: var(--el-border);
+    border-radius: 6px;
+  }
+
   .collapse-item {
     margin: 8px;
     box-shadow: 1px 1px 8px var(--c-box-shadow-color);
@@ -15,7 +45,7 @@
   /*折叠栏的外容器*/
 
   .collapse-wrap {
-    width: 520px;
+    width: 600px;
   }
 
   .result-box {
@@ -23,20 +53,22 @@
     top: 10px;
     background-color: var(--c-background-color);
     z-index: 2100;
+    height: 400px;
   }
 
-  #resources-box {
-
+  /*卡池时间单选框的外容器*/
+  .radio-group-wrap {
+    width: 560px;
+    margin: 8px auto;
   }
 
-  .gachaResourcesChartPie{
-    width: 260px;height: 220px
+  .gachaResourcesChartPie {
+    width: 300px;
+    height: 220px
   }
-
 
 
   /*折叠面板的header的标志*/
-
   .collapse-title-icon {
     padding: 12px;
     margin: 12px;
@@ -44,18 +76,12 @@
   }
 
   /*折叠面板的header的字体样式*/
-
   .collapse-title-font {
     font-size: 24px;
     font-weight: 600;
   }
 
-  /*活动时间单选框的外容器*/
 
-  .radio-group-wrap {
-    width: 480px;
-    margin: 8px auto;
-  }
 
   .divider {
     width: 100%;
@@ -79,11 +105,11 @@
     text-align: center;
   }
 
-  .gacha-resources-table-title{
+  .gacha-resources-table-title {
     width: 90px;
   }
 
-  .gacha-resources-table-quantity{
+  .gacha-resources-table-quantity {
     width: 80px;
   }
 
@@ -100,7 +126,7 @@
 
   /*攒抽计算结果的四项氪金资源的条状容器内的文字样式*/
 
-  .resources-result-bar span {
+  .resources-result-bar > span {
     width: 90px;
     display: block;
     font-size: 18px;
@@ -117,7 +143,7 @@
   }
 
   /*雪碧图的缩放*/
-  .image-sprite div {
+  .image-sprite > div {
     position: absolute;
     transform: scale(calc(36 / 44));
     top: calc((-44px + 36px) / 2);
@@ -131,13 +157,12 @@
     align-items: center;
   }
 
-  .switch-wrap span {
+  .switch-wrap > span {
     font-size: 18px;
     padding: 0 12px;
   }
 
   /*折叠面板内的副标题*/
-
   .collapse-content-subheading {
     background-color: rgba(196, 196, 196, 0.5);
     height: 32px;
@@ -149,8 +174,7 @@
   }
 
   /*折叠面板内的副标题的图标*/
-
-  .collapse-content-subheading span {
+  .collapse-content-subheading > span {
     border-left: 12px solid transparent;
     border-top: 16px solid rgb(255, 255, 255);
     border-bottom: 4px solid transparent;
@@ -161,39 +185,45 @@
   }
 
 
-  .resources-bar {
+  .resources-line {
     display: flex;
     align-items: center;
     font-size: 16px;
-    font-weight: bolder;
+    //font-weight: bolder;
     padding: 4px;
     margin: 4px 0;
   }
 
 
-  .resources-bar-title {
+  .resources-line-label {
     width: 110px;
   }
 
-  .resources-bar-content {
+  .resources-line-content {
     display: flex;
+    align-content: center;
     width: 200px;
+    line-height: 36px;
   }
 
-  .resources-bar-content span {
+  .resources-line-content > span {
     font-weight: bolder;
-    font-size: 20px;
     padding-left: 4px;
     width: 70px;
   }
 
-  .resources-bar input {
+  .resources-line > input {
     width: 70px;
-    margin: 0 8px;
+    line-height: 22px;
+    font-size: 18px;
+    font-weight: bold;
+    box-sizing: border-box;
+    padding: 0 4px;
+    margin:0 4px;
   }
 
 
-  .gc-tip {
+  .tip {
     font-style: italic;
     display: block;
     color: #599dff;
@@ -202,17 +232,15 @@
     line-height: 24px;
   }
 
-  /*多选盒的按钮内容条*/
-
-  .checkbox-button-bar {
-    /*width: 200px;*/
+  /*多选盒的按钮外部包围*/
+  .checkbox-button-content {
     display: flex;
-    font-size: 18px;
+    font-size: 16px;
     align-items: center;
+    text-align: left;
   }
 
   /*礼包的单次抽卡价格*/
-
   .draw-efficiency {
     margin-left: 4px;
     margin-right: 8px;
@@ -224,23 +252,43 @@
 
   /*多选盒的按钮的描述*/
 
-  .checkbox-button-bar-label {
-    width: 150px;
-    text-align: left;
+  .checkbox-button-label {
+    width: 120px;
   }
 
-  /*多选盒的按钮的内容*/
+  .checkbox-button-zone-label-short{
+    width: 80px;
+  }
 
-  .checkbox-button-bar-content {
+  .checkbox-button-zone-label-long{
+    width: 180px;
+  }
+
+  .checkbox-button-zone-label{
+    width: 140px;
+  }
+
+  .checkbox-button-pack-label{
+    width: 150px;
+  }
+
+  /*多选框的氪金资源外部容器样式*/
+  .button-gacha-resources {
     display: flex;
     align-items: center;
   }
 
-  .checkbox-button-bar-content span {
+  .button-gacha-resources > span {
     font-weight: bolder;
-    font-size: 20px;
     padding-left: 2px;
     width: 50px;
     text-align: left;
   }
+
+  .button-gacha-resources-pack{
+    width: 280px;
+  }
+
+
+
 }

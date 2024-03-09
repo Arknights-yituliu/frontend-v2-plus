@@ -93,7 +93,7 @@
 
 .divider {
     width: 100%;
-    background-color: rgb(179, 179, 179);
+    border-bottom: 1px solid #f0f0f0;
     height: 1px;
     margin-top: 12px;
     margin-bottom: 12px;
