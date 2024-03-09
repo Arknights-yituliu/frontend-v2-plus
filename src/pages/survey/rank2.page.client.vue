@@ -293,10 +293,10 @@ onMounted(() => {
     <!-- 筛选模块 -->
     <c-collapse-item :name="'filter'" :visible="collapseFilterVisible">
 
-      <div class="control_bar_wrap">
-        <div class="control_bar">
-          <div class="control_title">职业</div>
-          <div class="switch_btn_wrap">
+      <div class="control-box">
+        <div class="control-line">
+          <div class="control-line-label">职业</div>
+          <div class="control-checkbox">
             <div
                 :class="selectedBtn('profession', profession.value)"
                 v-for="(profession,index) in professionDict"
@@ -308,9 +308,9 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="control_bar">
-          <div class="control_title">稀有度</div>
-          <div class="switch_btn_wrap">
+        <div class="control-line">
+          <div class="control-line-label">稀有度</div>
+          <div class="control-checkbox">
             <div :class="selectedBtn('rarity', rarity)"
                  v-for="(rarity,index) in rarityDict" :key="index"
                  @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
@@ -318,9 +318,9 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="control_bar">
-          <div class="control_title">其他</div>
-          <div class="switch_btn_wrap">
+        <div class="control-line">
+          <div class="control-line-label">其他</div>
+          <div class="control-checkbox">
             <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
             <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
             <div :class="selectedBtn('equip', true)" @click="addFilterCondition('equip', true)">模组已实装</div>

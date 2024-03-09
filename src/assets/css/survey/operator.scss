@@ -1,0 +1,400 @@
+.survey_character_page {
+
+
+  .operator-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .operator-card {
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--c-box-shadow);
+    background-color: var(--c-background-white-transparent);
+    margin: 4px;
+    width: 520px;
+  }
+
+
+  .operator-level {
+    width: 30px;
+    height: 30px;
+    color: white;
+    background: url("/image/survey/rank/lv-bg.png");
+    background-size: 30px;
+    font-size: 12px;
+    padding: 8px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .operator_potential {
+    width: 22px;
+    position: absolute;
+    top: 22px;
+    right: 0;
+    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+  }
+
+  .operator-elite {
+    width: 30px;
+    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+  }
+
+  .operator-sprite-skill {
+    transform: scale(0.375);
+    /* border: 1px solid red; */
+    border-radius: 0;
+    position: absolute;
+    top: -34px;
+    left: -38px;
+    opacity: 0.8;
+  }
+
+
+  .operator-ap-cost {
+    transform: scale(0.3);
+    /* border: 1px solid red; */
+    border-radius: 0;
+    position: absolute;
+    top: -70px;
+    left: -64px;
+  }
+
+  .operator-option-bar-wrap {
+    display: flex;
+    padding: 4px;
+    justify-content: center;
+  }
+
+
+  .operator-option-title {
+    /*font-size: 18px;*/
+    text-align: center;
+    padding: 4px;
+  }
+
+  .operator-option-bar {
+    display: flex;
+    margin: 4px 0;
+  }
+
+  .operator-option {
+    width: 60px;
+    height: 52px;
+    position: relative;
+
+  }
+
+  .operator-option-selected {
+    width: 60px;
+    height: 52px;
+    position: relative;
+    background-color: #ff925b;
+  }
+
+
+  .image-skill-rank {
+    width: 60px;
+  }
+
+  .image-mod-rank {
+    width: 48px;
+    margin: 2px 6px;
+  }
+
+
+  .opr-loading-btn {
+    background-color: #007af5;
+    color: #ffffff;
+    font-weight: 600;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    padding: 8px 14px;
+    text-align: center;
+    box-sizing: border-box;
+    line-height: 18px;
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    cursor: pointer;
+    box-shadow: var(--c-box-shadow);
+  }
+
+
+  .survey-guide-content-container {
+    padding: 16px;
+    box-sizing: border-box;
+    max-width: 800px;
+
+    h1 {
+      margin: 12px 0;
+    }
+
+    h2 {
+      margin-top: 40px;
+    }
+
+    p {
+      line-height: 24px;
+      padding: 0 32px;
+    }
+
+    .tip {
+      font-style: italic;
+      color: grey;
+    }
+
+    .warn {
+      font-style: italic;
+      color: #ff3d3d;
+      font-size: 14px;
+    }
+
+    .info {
+      color: #148bff;
+      cursor: pointer;
+    }
+
+    img {
+      width: 80%;
+      margin: 0 32px;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+
+  }
+
+  /*干员统计弹窗卡片样式*/
+  .statistical-popup-context {
+    padding: 12px;
+    max-width: 800px;
+    font-size: 16px;
+  }
+
+  /*头像雪碧图的缩放样式*/
+  .not-own-avatar-sprite-variables {
+    --not-own-avatar-transform: scale(calc(50 / 180));
+    --not-own-avatar-position: calc((50px - 180px) / 2);
+  }
+
+  .not-own-avatar-sprite {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    margin: 8px;
+    box-shadow: 1px 1px 8px var(--c-box-shadow-color);
+  }
+
+  .not-own-avatar-sprite div {
+    position: absolute;
+    transform: var(--not-own-avatar-transform);
+    top: var(--not-own-avatar-position);
+    left: var(--not-own-avatar-position);
+  }
+
+  .statistical-module-text {
+    box-sizing: border-box;
+    line-height: 20px;
+  }
+
+  .statistical-ap-rank-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .operator-statistical-table {
+    border-collapse: collapse;
+    margin: 4px auto;
+    text-align: center;
+  }
+
+  .operator-statistical-table td {
+    padding: 8px;
+    border: 1px solid var(--c-border-color);
+  }
+
+  /*干员推荐弹窗卡片样式*/
+  .operator-recommend-popup-container {
+    padding: 12px;
+    max-width: 800px;
+    box-sizing: border-box;
+  }
+
+  .operator-recommend-card-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .operator-recommend-card {
+    padding: 4px;
+    display: flex;
+    box-shadow: var(--c-box-shadow);
+    background-color: var(--c-background-white-transparent);
+    margin: 4px;
+    width: 340px;
+  }
+
+  .operator-avatar-wrap {
+    width: 80px;
+  }
+
+  .operator-avatar {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    margin: auto;
+    margin-bottom: 4px;
+  }
+
+  .operator-avatar div {
+    position: absolute;
+    transform: scale(calc(50 / 180));
+    top: calc((50px - 180px) / 2);
+    left: calc((50px - 180px) / 2);
+  }
+
+  .operator-name {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    //color: darkorange;
+  }
+
+
+  .operator-skill-icon-sprite-wrap {
+    width: 60px;
+  }
+
+  .operator-skill-icon-sprite {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin: auto;
+  }
+
+  .operator-skill-icon-sprite div {
+    position: absolute;
+    transform: scale(calc(40 / 128));
+    top: calc((40px - 128px) / 2);
+    left: calc((40px - 128px) / 2);
+  }
+
+  .operator-skill-rank {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16px;
+    box-shadow: 1px 1px 2px white;
+  }
+
+  .skill-name {
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .operator-equip-image-wrap {
+    width: 60px;
+    position: relative;
+  }
+
+  .operator-equip-image {
+    height: 40px;
+    width: 40px;
+    display: block;
+    margin: auto;
+    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+  }
+
+  .equip-name {
+    text-align: center;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .operator-equip-rank {
+    position: absolute;
+    left: 10px;
+    top: 0;
+    width: 16px;
+  }
+
+  .recommend-text {
+    font-size: 14px;
+    line-height: 32px;
+  }
+
+  .item-ap-sprite {
+    width: 40px;
+    height: 40px;
+    margin: 8px auto 6px;
+    position: relative;
+  }
+
+  .item-ap-sprite div {
+    position: absolute;
+    transform: scale(calc(40 / 183));
+    top: calc((40px - 183px) / 2);
+    left: calc((40px - 183px) / 2);
+  }
+
+  .item-ap-cost {
+    text-align: center;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .updateOperatorPopup{
+    padding: 12px;
+  }
+
+  .operator-own-switch-wrap {
+    display: flex;
+    align-items: center;
+  }
+
+  .operator-own-switch-wrap span {
+    padding:0 12px;
+  }
+
+  .operator-rank-checkbox {
+    margin-top: 12px;
+    width: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: var(--c-box-shadow);
+  }
+
+  .operator-rank-checkbox-button-group {
+    display: flex;
+    width: 200px;
+  }
+
+  .is-selected {
+    background-color: #cde3ff;
+  }
+
+  .operator-rank-checkbox-button {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    margin: 0 10px;
+  }
+
+  .operator-rank-checkbox-button-icon {
+    display: block;
+    height: 36px;
+    margin: 2px 0;
+  }
+
+
+}

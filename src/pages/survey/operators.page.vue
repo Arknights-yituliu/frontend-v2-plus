@@ -1,9 +1,9 @@
 <template>
-  <div class="survey_character_page o-sprite-scale">
+  <div class="survey_character_page not-own-avatar-sprite-variables">
     <c-popup :visible="introPopupVisible" v-model:visible="introPopupVisible">
       <!-- <div class="intro_title">填写流程说明</div> -->
 
-      <div class="o-guide-content-container">
+      <div class="survey-guide-content-container">
         <h1>填写流程</h1>
         <h2>注册账号</h2>
         <p> 新用户注册可用账号密码注册和邮箱注册，也可在个人中心进行设置密码和邮箱绑定等操作</p>
@@ -63,7 +63,7 @@
         数据导入导出
       </c-button>
 
-      <div style="width: 60px"></div>
+      <!--      <div style="width: 60px"></div>-->
       <c-button :color="'green'" :status="true" @click="upload()">手动保存练度</c-button>
       <c-button :color="'blue'" :status="statisticalPopupVisible"
                 @click="clickBtn('btn_statistics');getOperatorStatisticalResult()">统计干员练度
@@ -80,33 +80,31 @@
 
     <!-- 筛选模块 -->
     <c-collapse-item-v2 v-model:visible="collapseImportFilter" :name="'filter'">
-      <div class="control_bar_wrap">
-        <div class="control_bar">
-          <div class="control_title" style="width: 80px;">职业</div>
-          <div class="switch_btn_wrap">
-            <div
-                :class="selectedBtn('profession', profession.value)"
+      <div class="control-box">
+        <div class="control-line">
+          <span class="control-line-label" style="width: 80px;">职业</span>
+          <div class="control-checkbox">
+            <div :class="selectedBtn('profession', profession.value)"
                 v-for="(profession,index) in professionDict"
                 :key="index"
-                @click="addFilterCondition('profession', profession.value)"
-            >
+                @click="addFilterCondition('profession', profession.value)">
               {{ profession.label }}
             </div>
           </div>
         </div>
 
-        <div class="control_bar">
-          <div class="control_title" style="width: 80px;">稀有度</div>
-          <div class="switch_btn_wrap">
+        <div class="control-line">
+          <span class="control-line-label" style="width: 80px;">稀有度</span>
+          <div class="control-checkbox">
             <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in RARITY_TABLE" :key="index"
                  @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
             </div>
           </div>
         </div>
 
-        <div class="control_bar">
-          <div class="control_title" style="width: 80px;">年份</div>
-          <div class="switch_btn_wrap">
+        <div class="control-line">
+          <span class="control-line-label" style="width: 80px;">年份</span>
+          <div class="control-checkbox">
             <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
                  @click="addFilterCondition('year', key)">
               {{ year.label }}
@@ -114,17 +112,17 @@
           </div>
         </div>
 
-        <div class="control_bar">
-          <div class="control_title" style="width: 80px;">是否拥有</div>
-          <div class="switch_btn_wrap">
+        <div class="control-line">
+          <span class="control-line-label" style="width: 80px;">是否拥有</span>
+          <div class="control-checkbox">
             <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
             <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
           </div>
         </div>
 
-        <div class="control_bar">
-          <div class="control_title" style="width: 80px;">获得方式</div>
-          <div class="switch_btn_wrap">
+        <div class="control-line">
+          <span class="control-line-label" style="width: 80px;">获得方式</span>
+          <div class="control-checkbox">
             <div :class="selectedBtn('itemObtainApproach', '常驻干员')"
                  @click="addFilterCondition('itemObtainApproach', '常驻干员')">常驻干员
             </div>
@@ -137,24 +135,23 @@
           </div>
         </div>
 
-        <div class="control_bar">
-          <div class="control_title" style="width: 80px;">模组</div>
-          <div class="switch_btn_wrap">
+        <div class="control-line">
+          <span class="control-line-label" style="width: 80px;">模组</span>
+          <div class="control-checkbox">
             <div :class="selectedBtn('equip', true)" @click="addFilterCondition('equip', true)">模组已实装</div>
             <div :class="selectedBtn('equip', false)" @click="addFilterCondition('equip', false)">模组未实装</div>
           </div>
         </div>
 
-        <div class="control_bar">
-          <div class="control_title" style="width: 80px;">排序</div>
-          <div class="switch_btn_wrap">
+        <div class="control-line">
+          <span class="control-line-label" style="width: 80px;">排序</span>
+          <div class="control-checkbox">
             <div class="btn" @click="sortOperatorList('rarity')">按稀有度</div>
             <div class="btn" @click="sortOperatorList('date')">按实装顺序</div>
             <div class="btn" @click="sortOperatorListByLevel('level')">按干员等级</div>
           </div>
         </div>
 
-        <div class="mdui-divider" style="margin: 8px;"></div>
         <!--          <div class="control_tip ">-->
         <!--            <a class="">对所有被筛选出的干员进行操作</a>-->
         <!--          </div>-->
@@ -212,7 +209,6 @@
         <p><b>step4：</b>将 <b>step3</b> 中获得的这段字符粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
       </div>
       <div style="width: 90%;height: 200px"></div>
-
     </c-popup>
 
     <c-popup :visible="resetPopupVisible" v-model:visible="resetPopupVisible">
@@ -223,37 +219,35 @@
         <div class="btn btn-red" @click="operatorDataReset()">确定</div>
         <div class="btn" @click="resetPopupVisible = !resetPopupVisible">取消</div>
       </div>
-
     </c-popup>
 
     <!-- 导入导出模块 -->
     <c-collapse-item v-model:visible="collapseImportVisible" :name="'upload'">
-      <div class="control_bar_wrap">
-        <div class="control_bar">
-          <div class="control_title">导入导出</div>
-          <div class="switch_btn_wrap">
-            <div class="btn btn-green" @click="exportExcel()">导出为Excel</div>
+      <div class="control-box">
+        <div class="control-line-label">导入导出</div>
+        <div class="control-line">
+          <div class="control-checkbox">
+            <button class="btn btn-green" @click="exportExcel()">导出为Excel</button>
           </div>
         </div>
 
         <div class="divider"></div>
-        <div class="control_bar">
-          <div class="control_title" style="width: 100px;">森空岛导入</div>
-          <div class="switch_btn_wrap">
-            <div class="control_desc">输入在控制台获得的字符</div>
-            <div><input class="control_input" type="text" v-model="SKlandCREDAndSECRET"/></div>
-            <div class="btn btn-blue" @click="importSKLandOperatorData()">导入森空岛数据</div>
-            <div class="btn btn-blue" @click="importPopupVisible = !importPopupVisible">
-              森空岛数据导入流程
-            </div>
-            <!--            <div class="btn btn-blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
-            <div class="btn btn-red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</div>
-          </div>
+        <div class="control-line-label">森空岛导入</div>
+        <div class="control-line">
+          <span>输入在控制台获得的字符</span>
+          <div><input class="control_input" type="text" v-model="SKlandCREDAndSECRET"/></div>
+          <button class="btn btn-blue" @click="importSKLandOperatorData()">导入森空岛数据</button>
+          <button class="btn btn-blue" @click="importPopupVisible = !importPopupVisible">
+            森空岛数据导入流程
+          </button>
+          <!--            <div class="btn btn-blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
+          <button class="btn btn-red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</button>
+
         </div>
-        <div class="control_bar" v-show="importFlag">
-          <div class="control_title" style="width: 140px;">导入账号不正确？</div>
-          <div class="switch_btn_wrap">
-            <div class="control_desc">选择你想要导入的账号</div>
+        <div class="control-line" v-show="importFlag">
+          <div class="control-line-label" style="width: 140px;">导入账号不正确？</div>
+          <div class="control-checkbox">
+            <div class="control-line-tip">选择你想要导入的账号</div>
             <div v-for="(binding,index) in bindingList" :key="index"
                  class="btn btn-blue" :class="chooseUidClass(binding.uid)"
                  @click="importSKLandOperatorDataByUid(binding.uid)">
@@ -263,8 +257,8 @@
 
         </div>
 
-        <div class="control_bar">
-          <div class="control_tip">*森空岛导入：请遵循
+        <div class="control-line">
+          <div class="control-line-tip">*森空岛导入：请遵循
             <b>《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面，如果遇到服务器意外错误，先尝试“清空所有数据”按钮<br>
           </div>
         </div>
@@ -275,31 +269,30 @@
     <!--    干员统计弹窗-->
     <c-popup v-model="statisticalPopupVisible">
       <!--          干员统计-->
-      <div class="o-statistical-popup-context">
+      <div class="statistical-popup-context not-own-avatar-sprite-variables">
         <div class="o-statistical-card">
           <h2>博士招募情况</h2>
-          <span class="o-statistical-card-label"> Dr.{{ userData.userName }}，您总计招募了{{
+          <span class="statistical-module-text"> Dr.{{ userData.userName }}，您总计招募了{{
               statisticalResult.total.own
             }}位干员，
             <span v-show="statisticalResult.total.count - statisticalResult.total.own>0"
-                  class="o-statistical-card-label"> 未招募干员{{
+                  class="statistical-module-text"> 未招募干员{{
                 statisticalResult.total.count - statisticalResult.total.own
               }}位</span>
           </span>
           <div v-show="statisticalResult.total.count - statisticalResult.total.own>0"
-               class="o-statistical-card-label">
+               class="statistical-module-text">
             未招募的干员是：
           </div>
           <div class="not_own_operator_wrap">
-            <div class="o-not-own-avatar-sprite"
-                 style="margin: 8px"
+            <div class="not-own-avatar-sprite"
                  v-for="(operator,index) in statisticalResult.total.notOwn" :key="index">
               <div :class="getAvatarSprite(operator.charId)"></div>
               <!--              <span class="sprite-alt" style="top:70px">{{ operator.name }}</span>-->
             </div>
           </div>
 
-          <table class="o-statistical-table">
+          <table class="operator-statistical-table">
             <tbody>
             <tr>
               <td>星级</td>
@@ -328,33 +321,47 @@
 
         <div class="o-statistical-card">
           <h2>干员理智投入排行</h2>
-          <div class="o-statistical-ap-rank-form">
+          <div class="statistical-ap-rank-list">
             <div class="operator-card" v-for="(operator, char_index) in statisticalResult.max" :key="char_index"
             >
-              <div class="operator-sprite-avatar-bg">
-                <div :class="getAvatarUseInDisplayCard(operator.charId)"></div>
+              <div class="operator-avatar-wrap">
+                <div class="operator-avatar">
+                  <div :class="getAvatar(operator.charId)"></div>
+                </div>
+                <span class="operator-name">{{ operator.name }}</span>
+              </div>
+              <div>
                 <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite" alt="">
                 <div class="operator-level">
                   {{ operator.level }}
                 </div>
-                <span class="sprite-alt-name">{{ operator.name }}</span>
               </div>
-              <div v-for="(skill,index) in operator.skill" :key="index" class="operator-sprite-icon-bg">
-                <div :class="getSkillSprite(skill.iconId)"></div>
-                <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
-                     v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
-                <span class="sprite-alt">{{ skill.name }}</span>
+
+              <div class="operator-skill-icon-sprite-wrap" v-for="(skill,index) in operator.skill" :key="index">
+                <div class="operator-skill-icon-sprite">
+                  <div :class="getSkillSprite(skill.iconId)"></div>
+                  <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
+                       v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
+                </div>
+                <div class="skill-name">{{ skill.name }}</div>
               </div>
-              <div v-for="(equip,index) in operator.equip" :key="index" class="operator-sprite-icon-bg">
-                <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
-                <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
-                     v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
-                <div class="sprite-alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
+
+              <div class="operator-equip-image-wrap" v-for="(equip,index) in operator.equip" :key="index">
+                <div class="operator-skill-icon-sprite">
+                  <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
+                  <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
+                       v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
+                </div>
+                <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
               </div>
-              <div class="operator-sprite-icon-bg">
-                <div :class="getItemSprite('AP_GAMEPLAY')"></div>
-                <span class="sprite-alt">{{ operator.apCost.toFixed(0) }}</span>
+
+              <div class="operator-equip-image-wrap">
+                <div class="item-ap-sprite">
+                  <div :class="getItem('AP_GAMEPLAY')"></div>
+                </div>
+                <div class="item-ap-cost">{{ operator.apCost.toFixed(0) }}</div>
               </div>
+
             </div>
           </div>
         </div>
@@ -367,7 +374,7 @@
           <button class="btn btn-blue" @click="splitMaterialByRarity(5)">不拆分</button>
           <button class="btn btn-blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
           <button class="btn btn-blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
-          <div class="control_bar item_cost_wrap" v-for="(itemList,type) in itemCostList"
+          <div class="control-line item_cost_wrap" v-for="(itemList,type) in itemCostList"
                :key="type">
             <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
               <div class="image_item_wrap">
@@ -384,20 +391,28 @@
 
 
     <c-popup v-model="recommendPopupVisible">
-      <div class="o-recommend-popup-container">
-        <div class="o-recommend-card-wrap">
-          <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
-            <div class="operator-recommend-avatar-wrap">
-              <div :class="getAvatarUseInRecommend(recommend.charId)"></div>
-              <div class="recommend-operator-name">{{ recommend.name }}</div>
+      <div class="operator-recommend-popup-container operator-recommend-avatar-variables">
+        <div class="operator-recommend-card-wrap">
+          <div class="operator-recommend-card"
+               v-for="(recommend,index) in operatorRecommendList" :key="index">
+            <div class="operator-avatar-wrap">
+              <div class="operator-avatar">
+                <div :class="getAvatar(recommend.charId)"></div>
+              </div>
+              <span class="operator-name">{{ recommend.name }}</span>
             </div>
-            <div v-show="recommend.info.type==='skill'" class="operator-sprite-icon-bg">
-              <div :class="getSkillSprite(recommend.info.iconId)"></div>
-              <div class="sprite-alt">{{ recommend.info.name }}</div>
+
+            <div class="operator-skill-icon-sprite-wrap"
+                 v-show="recommend.info.type==='skill'">
+              <div class="operator-skill-icon-sprite">
+                <div :class="getSkillSprite(recommend.info.iconId)"></div>
+              </div>
+              <!--              <div class="skill-name">{{ recommend.info.name }}</div>-->
             </div>
-            <div v-show="recommend.info.type==='equip'" class="operator-sprite-icon-bg">
-              <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="operator-equip-image">
-              <div class="sprite-alt">{{ recommend.info.iconId }}</div>
+            <div v-show="recommend.info.type==='equip'" class="operator-equip-image-wrap">
+              <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt=""
+                   class="operator-equip-image">
+              <div class="equip-name">{{ recommend.info.iconId }}</div>
             </div>
 
             <div class="recommend-text">
@@ -413,18 +428,18 @@
 
     <!--    干员推荐-->
     <c-collapse-item-v2 v-model:visible="collapseRecommendVisible" :name="'recommend'">
-      <div class="control_bar_wrap">
+      <div class="control-box">
         <div class="operator-form">
           <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
-            <div class="operator-recommend-avatar-wrap">
-              <div :class="getAvatarUseInRecommend(recommend.charId)"></div>
-              <div class="recommend-operator-name">{{ recommend.name }}</div>
+            <div class="operator-avatar">
+              <div :class="getAvatar(recommend.charId)"></div>
+              <div class="operator-name">{{ recommend.name }}</div>
             </div>
-            <div v-show="recommend.info.type==='skill'" class="operator-sprite-icon-bg">
+            <div v-show="recommend.info.type==='skill'" class="operator-skill-icon-sprite">
               <div :class="getSkillSprite(recommend.info.iconId)"></div>
               <div class="sprite-alt">{{ recommend.info.name }}</div>
             </div>
-            <div v-show="recommend.info.type==='equip'" class="operator-sprite-icon-bg">
+            <div v-show="recommend.info.type==='equip'" class="operator-skill-icon-sprite">
               <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="operator-equip-image">
               <div class="sprite-alt">{{ recommend.info.iconId }}</div>
             </div>
@@ -443,30 +458,37 @@
     <div class="operator-form">
       <div class="operator-card" v-for="(operator, char_index) in operatorList" :key="char_index"
            @click="updateOperatorPopup(char_index)" style="width: 400px">
-        <div class="operator-sprite-avatar-bg">
-          <div :class="getAvatarUseInDisplayCard(operator.charId)"></div>
+        <div class="operator-avatar-wrap">
+          <div class="operator-avatar">
+            <div :class="getAvatar(operator.charId)"></div>
+          </div>
+          <span class="operator-name">{{ operator.name }}</span>
+        </div>
+        <div>
+          <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite" alt="">
           <div class="operator-level">
             {{ operator.level }}
           </div>
-          <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite" alt="">
-          <img :src="`/image/survey/rank/potential${operator.potential}.png`" class="operator_potential" alt="">
-
-          <div class="sprite-alt-name">{{ operator.name }}</div>
         </div>
 
-        <div v-for="(skill,index) in operator.skill" :key="index" class="operator-sprite-icon-bg">
-          <div :class="getSkillSprite(skill.iconId)"></div>
-          <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
-               v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
-          <div class="sprite-alt">{{ skill.name }}</div>
+        <div class="operator-skill-icon-sprite-wrap" v-for="(skill,index) in operator.skill" :key="index">
+          <div class="operator-skill-icon-sprite">
+            <div :class="getSkillSprite(skill.iconId)"></div>
+            <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
+                 v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
+          </div>
+          <!--          <div class="skill-name">{{ skill.name }}</div>-->
         </div>
-        <div v-for="(equip,index) in operator.equip" :key="index" class="operator-sprite-icon-bg">
-          <!--          <div :class="getEquipSprite(operator[`mod${equip.typeName2}`])"></div>-->
-          <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
-          <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
-               v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank" alt="">
-          <div class="sprite-alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
+
+        <div class="operator-equip-image-wrap" v-for="(equip,index) in operator.equip" :key="index">
+          <div class="operator-skill-icon-sprite">
+            <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
+            <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
+                 v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
+          </div>
+          <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
         </div>
+
       </div>
     </div>
 
@@ -475,85 +497,72 @@
 
     <c-popup v-model="operatorPopupVisible">
 
-      <div class="operator-card" style="margin:12px auto 0 auto">
-        <div class="operator-sprite-avatar-bg">
-          <div :class="getAvatarUseInDisplayCard(operatorPopupData.charId)"></div>
-          <img :src="`/image/survey/rank/elite${operatorPopupData.elite}.png`" class="operator-elite" alt="">
-          <div class="operator-level">
-            {{ operatorPopupData.level }}
+      <div class="updateOperatorPopup">
+        <div class="operator-own-switch-wrap">
+          <div class="operator-avatar" style="margin: 0 4px">
+            <div :class="getAvatar(operatorPopupData.charId)"></div>
           </div>
+          <span>是否持有</span>
+          <el-switch v-model="operatorPopupData.own">
+          </el-switch>
         </div>
-        <div v-for="(skill,index) in operatorPopupData.skill" :key="index" class="operator-sprite-icon-bg">
-          <div :class="getSkillSprite(skill.iconId)"></div>
-          <img :src="`/image/survey/skill-rank-${operatorPopupData[`skill${index+1}`]}.jpg`"
-               v-show="operatorPopupData[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
-          <div class="sprite-alt">{{ skill.name }}</div>
-        </div>
-        <div v-for="(equip,index) in operatorPopupData.equip" :key="index" class="operator-sprite-icon-bg">
-          <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
-          <img :src="`/image/survey/skill-rank-${operatorPopupData[`mod${equip.typeName2}`]}.jpg`"
-               v-show="operatorPopupData[`mod${equip.typeName2}`]>0" class="operator-skill-rank" alt="">
-          <div class="sprite-alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
-        </div>
-      </div>
-
-
-      <div class="operator-option-bar-wrap">
-
-        <!--        选项-->
-        <div class="operator-options">
-          <div class="operator-option-title">练度项</div>
-          <div class="operator-option-bar">
-            <div class="operator-sprite-icon-bg">
-              <img :src="`/image/survey/rank/elite${operatorPopupData.elite}.png`" class="image-skill-rank">
-            </div>
+        <div class="operator-rank-checkbox">
+          <div class="operator-equip-image-wrap">
+            <img :src="`/image/survey/rank/elite${operatorPopupData.elite}.png`" class="operator-equip-image" alt="">
           </div>
-          <div class="operator-option-bar" v-for="(skill,index) in operatorPopupData.skill" :key="index">
-            <div class="operator-sprite-icon-bg">
-              <div :class="getSkillSprite(skill.iconId)"
-                   @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,0)"></div>
-              <img :src="`/image/survey/skill-rank-${operatorPopupData[`skill${index+1}`]}.jpg`"
-                   v-show="operatorPopupData[`skill${index+1}`]>0" class="operator-skill-rank">
-            </div>
-          </div>
-
-          <div class="operator-option-bar" v-for="(equip,index) in operatorPopupData.equip" :key="index">
-            <div class="operator-sprite-mod-bg">
-              <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image"
-                   @click="updateOperatorData(operatorPopupData.charId,`mod${equip.typeName2}`,0)">
-              <div class="sprite-alt">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
-            </div>
-          </div>
-        </div>
-
-        <!--        当前练度-->
-        <div class="operator-options">
-          <div class="operator-option-title">修改当前练度</div>
-          <div class="operator-option-bar">
+          <div class="operator-rank-checkbox-button-group">
             <div v-for="rank in RANK_TABLE.slice(0,3)" :key="rank"
                  @click="updateOperatorData(operatorPopupData.charId,`elite`,rank)"
+                 class="operator-rank-checkbox-button"
                  :class="dataOptionClass(operatorPopupData.charId,rank,`elite`)">
-              <img :src="`/image/survey/rank/elite${rank}.png`" class="image-skill-rank" alt="">
+              <img :src="`/image/survey/rank/elite${rank}.png`"
+                   class="operator-rank-checkbox-button-icon" alt="">
               <!--              <div :class="getOptionEliteSprite(`elite${rank}`)"></div>-->
             </div>
           </div>
+        </div>
 
-          <div class="operator-option-bar" v-for="(skill,index) in operatorPopupData.skill" :key="index">
-            <div v-for="rank in RANK_TABLE.slice(1,4)" :key="rank"
-                 @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,rank)"
-                 :class="dataOptionClass(operatorPopupData.charId,rank,`skill${index+1}`)">
-              <img :src="`/image/survey/rank/skill-rank-${rank}.png`" class="image-skill-rank" alt=""/>
+        <div class="operator-rank-checkbox" v-for="(skill,index) in operatorPopupData.skill" :key="index">
+          <div class="operator-skill-icon-sprite-wrap"
+               @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,0)">
+            <div class="operator-skill-icon-sprite">
+              <div :class="getSkillSprite(skill.iconId)"></div>
+              <img :src="`/image/survey/skill-rank-${operatorPopupData[`skill${index+1}`]}.jpg`"
+                   v-show="operatorPopupData[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
             </div>
           </div>
-          <div class="operator-option-bar" v-for="(equip,index) in operatorPopupData.equip" :key="index">
+
+          <div class="operator-rank-checkbox-button-group">
             <div v-for="rank in RANK_TABLE.slice(1,4)" :key="rank"
-                 @click="updateOperatorData(operatorPopupData.charId,`mod${equip.typeName2}`,rank)"
-                 :class="dataOptionClass(operatorPopupData.charId,rank,`mod${equip.typeName2}`)">
-              <img :src="`/image/survey/rank/mod-rank-${rank}.png`" class="image-mod-rank" alt=""/>
+                 class="operator-rank-checkbox-button"
+                 @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,rank)"
+                 :class="dataOptionClass(operatorPopupData.charId,rank,`skill${index+1}`)">
+              <img :src="`/image/survey/rank/skill-rank-${rank}.png`" class="operator-rank-checkbox-button-icon"
+                   alt=""/>
             </div>
           </div>
         </div>
 
+        <div class="operator-rank-checkbox"
+             v-for="(equip,index) in operatorPopupData.equip" :key="index">
+          <div class="operator-equip-image-wrap"
+               @click="updateOperatorData(operatorPopupData.charId,`mod${equip.typeName2}`,0)">
+            <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
+            <img :src="`/image/survey/skill-rank-${operatorPopupData[`mod${equip.typeName2}`]}.jpg`"
+                 v-show="operatorPopupData[`mod${equip.typeName2}`]>0" class="operator-equip-rank">
+            <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
+          </div>
+
+          <div class="operator-rank-checkbox-button-group">
+            <button v-for="rank in RANK_TABLE.slice(1,4)" :key="rank"
+                    class="operator-rank-checkbox-button"
+                    @click="updateOperatorData(operatorPopupData.charId,`mod${equip.typeName2}`,rank)"
+                    :class="dataOptionClass(operatorPopupData.charId,rank,`mod${equip.typeName2}`)">
+              <img :src="`/image/survey/rank/mod-rank-${rank}.png`" class="operator-rank-checkbox-button-icon" alt=""/>
+            </button>
+          </div>
+
+        </div>
       </div>
     </c-popup>
 
@@ -580,7 +589,7 @@ import characterTable from '/src/static/json/survey/character_table_simple.json'
 
 
 import "/src/assets/css/survey/survey_character.css";
-import "/src/assets/css/survey/operator.css";
+import "/src/assets/css/survey/operator.scss";
 import {debounce} from "/src/utils/debounce";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
@@ -1021,7 +1030,7 @@ function updateOperatorPopup(index) {
  * 修改干员练度
  * @param {string} charId 干员id
  * @param {string} property 属性
- * @param {string} newValue 新值
+ * @param {number} newValue 新值
  */
 function updateOperatorData(charId, property, newValue) {
   operatorPopupData.value[property] = newValue
@@ -1037,8 +1046,10 @@ function updateOperatorData(charId, property, newValue) {
  * @returns {string} class css样式
  */
 function dataOptionClass(charId, current, property) {
-  if (current === operatorPopupData.value[property]) return 'operator-option-selected'
-  return 'operator-option'
+  if (current === operatorPopupData.value[property]) {
+    return 'is-selected'
+  }
+
 }
 
 
@@ -1278,20 +1289,16 @@ function getItemCostSprite(id) {
   return 'bg-' + id + " image_item"
 }
 
-function getAvatarUseInDisplayCard(id) {
-  return "bg-" + id + " operator-sprite-avatar";
+function getAvatar(id) {
+  return "bg-" + id;
 }
 
 function getSkillSprite(id) {
-  return "bg-skill_icon_" + id + " operator-sprite-skill";
+  return "bg-skill_icon_" + id;
 }
 
-function getItemSprite(id) {
-  return 'bg-' + id + " operator-ap-cost"
-}
-
-function getAvatarUseInRecommend(id) {
-  return "bg-" + id + " operator-recommend-avatar";
+function getItem(id) {
+  return 'bg-' + id
 }
 
 
@@ -1325,12 +1332,6 @@ onMounted(() => {
   padding: 0 8px 0 8px;
   color: dodgerblue;
   cursor: pointer;
-}
-
-.control_desc {
-  margin: 2px 0;
-  line-height: 28px;
-
 }
 
 

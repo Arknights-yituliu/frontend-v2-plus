@@ -66,36 +66,30 @@ onMounted(() => {
 
 <style>
 @font-face {
-  font-family: 'HarmonyOS_Sans_Regular';
-  src: url('/fonts/HarmonyOS_Sans_Regular.ttf');
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto_Regular.ttf') format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-  font-family: 'Roboto_Regular_14';
-  src: url('/fonts/Roboto_Regular_14.ttf');
-}
-
-@font-face {
-  font-family: 'SourceHanSansSC_Regular_2';
-  src: url('/fonts/SourceHanSansSC_Regular_2.otf');
-}
-
-@font-face {
-  font-family: 'MiSans_Regular';
-  src: url('/fonts/MiSans_Regular.otf');
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto_Italic.ttf') format("truetype");
+  font-weight: normal;
+  font-style: italic;
 }
 
 :root {
-  font-family: 'Roboto_Regular_14',sans-serif ;
   line-height: 1.5;
   font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  //font-synthesis: none;
+  //text-rendering: optimizeLegibility;
+  //-webkit-font-smoothing: antialiased;
+  //-moz-osx-font-smoothing: grayscale;
 }
 
 body {
+  font-family: 'Roboto',sans-serif ;
   margin: 0;
   width:100%;
   height: 100vh;

@@ -8,7 +8,7 @@
     --c-box-shadow:1px 1px 6px rgba(0, 0, 0, 0.12);
     --c-box-shadow-color:rgba(0, 0, 0, 0.2);
     --c-border:1px solid var(--c-white-2);
-    --c-border-color: rgba(0, 0, 0, 0.4);
+    --c-border-color: var(--c-white-2);
     --c-background-color: var(--c-white-1);
     --c-text-color:var(--c-black-2);
     --c-tip-color:var(--c-black-3);
@@ -24,14 +24,14 @@
     --c-btn-color:var(--c-black-1);
     --c-btn-text-color:var(--c-white-1);
 
-    --c-btn-color-blue: #2973ff;
-    --c-btn-border-blue:#2973ff;
+    --c-btn-color-blue: #1f88ff;
+    --c-btn-border-blue: rgba(31, 136, 255, 0.5);
     --c-btn-color-red: #ff3e24;
-    --c-btn-border-red:#ff3e24;
-    --c-btn-color-green: #52b788;
-    --c-btn-border-green:#52b788;
+    --c-btn-border-red: rgba(255, 62, 36, 0.3);
+    --c-btn-color-green: #00b28a;
+    --c-btn-border-green: rgba(0, 178, 138, 0.5);
     --c-btn-color-orange: #ff8a52;
-    --c-btn-border-orange:#ff8a52;
+    --c-btn-border-orange: rgba(255, 138, 82, 0.5);
 
     --c-stage-card-background-color: #f7f7f7;
     --c-material-grey: #939393;

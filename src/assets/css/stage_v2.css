@@ -243,7 +243,6 @@
 
 #popup_background {
   z-index: 128;
-  /* max-width: 1080px; */
   display: none;
   position: fixed;
   top: 0;
@@ -256,7 +255,6 @@
 }
 
 #popup_content {
-  /* max-width: 1080px; */
   display: none;
   position: fixed;
   top: 100px;

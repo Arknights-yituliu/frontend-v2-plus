@@ -1,0 +1,126 @@
+.account-home-page {
+  padding: 20px 0;
+  width: 99%;
+  box-sizing: border-box;
+
+  .user-info-card-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+  }
+
+  .user-info-card {
+    width: 450px;
+    padding:12px 24px;
+    margin-top: 20px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    display: flex;
+    font-size: 16px;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: var(--c-box-shadow);
+    background-color: var(--c-background-white-transparent);
+
+    h2{
+      padding: 0;
+      margin: 8px 0;
+    }
+
+    h4{
+      padding: 0;
+      margin: 4px 0;
+    }
+  }
+
+  .user-info-card-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+  }
+
+  .user-info-card-input-line {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 98%;
+    margin-top: 8px;
+  }
+
+  .user-info-card-line-label {
+    //color: #4192f3;
+    width: 50%;
+    display: block;
+    font-weight: 600;
+  }
+
+  .user_input_br {
+    width: 99%;
+    height: 8px;
+  }
+
+  .user-info-card-tip {
+    font-style: italic;
+    color: grey;
+    padding: 4px 0 4px 0;
+    font-size: 14px;
+    line-height: 20px;
+    height: 20px;
+  }
+
+  .user-info-card-input {
+    outline: none;
+    border: none;
+    margin: 4px 4px 4px 0;
+    line-height: 28px;
+    width: 270px;
+    font-weight: 600;
+    color: var(--c-input-text-color);
+    background-color: var(--c-input-bg);
+    border-bottom: var(--c-input-border);
+  }
+
+  .update-avatar-popup{
+    max-width: 800px;
+  }
+
+  .user-now-avatar-wrap {
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin: auto;
+  }
+
+  .user_avatar_popup_wrap {
+    border-top: 1px solid #dedede;
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .user-avatar-sprite {
+    height: 50px;
+    width: 50px;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #d2d2d2;
+  }
+
+  .user-avatar-sprite div{
+    position: absolute;
+    transform: scale(calc(50 / 180));
+    top: calc((-180px + 50px) / 2);
+    left: calc((-180px + 50px) / 2);
+  }
+
+}
+

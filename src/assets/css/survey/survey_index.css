@@ -36,63 +36,21 @@
   cursor: pointer;
 }
 
-.survey-login-btn-wrap {
-  width: auto;
-  display: flex;
-  justify-content: flex-end;
-}
 
 
 
-.login_card {
-  width: 450px;
-  height: auto;
-  border-radius: 6px;
-  margin: auto;
-  padding: 20px;
-  /* padding: 10px; */
-}
 
-
-.login_input_wrap{
-  margin: auto;
-  border: 1px solid #dcdcdc;
-  border-radius: 4px;
-  width: 400px;
-  font-weight: 600;
-}
-
-.login_form{
-  display: flex;
-  padding: 8px 0 8px 20px;
-}
 
 .login_form_divider{
   border-top: 1px solid #dcdcdc;
 }
 
 
-.input_label{
-   line-height: 32px;
-   min-width: 60px;
-}
 
-.login_input {
-  width: 200px;
-  border: 0;
-  outline: none;
-  /*border-bottom: 1px black solid;*/
-  display: block;
-  height: 30px;
-  line-height: 30px;
-  /*font-size: 18px;*/
-  /*margin: 0 0 0 4px;*/
-}
 
-.login-btn{
-  width: 170px;
-  margin: 8px 20px 8px 0;
-}
+
+
+
 
 .login_btn_tip{
   text-align: center;
@@ -100,23 +58,9 @@
   cursor: pointer;
 }
 
-.login_btn_wrap{
-  width: 400px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  margin: auto;
-}
 
-.login_tip_wrap {
-  margin: 28px 0 0 0 ;
-}
 
-.login_tip {
-  margin:8px;
-  line-height: 28px;
-}
+
 
 .login_tip_warn {
   color: #d72a2a;
@@ -181,7 +125,7 @@
   margin-bottom: 18px;
 }
 
-@media screen and (max-width: 1080px) {
+@media screen and (max-width: 600px) {
   .index_card_wrap {
     width: 98%;
   }

@@ -2,7 +2,7 @@
   <div class="survey_index_page">
     <c-popup :visible="loginVisible" v-model:visible="loginVisible" :width="'400px'">
       <div class="login_card" v-show="globalUserData.status < 0">
-        <input class="login_input" placeholder="您的用户ID" v-model="inputData.userName" />
+        <input class="login-form-input" placeholder="您的用户ID" v-model="inputData.userName" />
         <div style="display: flex">
           <div class="login-btn" @click="register()">注册</div>
           <div class="login-btn" @click="login()">登录</div>

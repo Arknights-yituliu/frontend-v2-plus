@@ -268,13 +268,13 @@ function openNewPage(url) {
   </div>
 
 
-  <c-popup v-model:visible="feedbackPopupVisible" :style="feedbackPopupStyle">
+  <c-popup v-model:visible="feedbackPopupVisible">
     <table class="feedback-table">
       <tbody>
       <tr>
         <td>反馈方式</td>
-        <td>反馈流程（越靠前越推荐）</td>
-        <td style="width: 100px">点击转跳</td>
+        <td>反馈流程(越靠前越推荐)</td>
+        <td>点击转跳</td>
       </tr>
       <tr>
         <td>Github issues</td>

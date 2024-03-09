@@ -1,0 +1,45 @@
+.control-box {
+  width: 95%;
+  margin: 4px auto;
+  padding:4px 12px;
+  box-shadow: var(--c-box-shadow);
+  background-color: var(--c-background-white-transparent);
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.control-line {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.control-line-label {
+  line-height: 16px;
+  font-weight: 600;
+  border-radius: 2px;
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.control-checkbox {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.control-line-tip {
+  margin: 2px 0;
+  line-height: 12px;
+  font-size: 12px;
+  font-style: italic;
+  color: rgb(101, 101, 101);
+}
+
+.divider {
+  width: 100%;
+  border-bottom: 1px solid #f0f0f0;
+  height: 1px;
+  margin: 4px 0;
+}
