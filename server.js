@@ -1,17 +1,33 @@
-import pkg from 'express'
-import history  from 'connect-history-api-fallback' 
+import history  from 'connect-history-api-fallback'
+import { createSSRApp } from 'vue'
+import { renderToString } from 'vue/server-renderer'
+import express from "express";
 
-const { Express } = pkg
+const server = express()
 const port = 3000
 
-const app = pkg()
+import stage from '/src/pages/material/stageV3.page.vue'
 
-app.use(history())
+server.get('/', (req, res) => {
+    const app = createSSRApp(stage)
 
-app.use(pkg.static('dist'))
-
-app.all(function (req, res, next) {
-  // Your 404 logic here
+    renderToString(app).then((html) => {
+        res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>Vue SSR Example</title>
+      </head>
+      <body>
+        <div id="app">${html}</div>
+      </body>
+    </html>
+    `)
+    })
 })
 
-app.listen(port, () => console.log(`服务于端口 ${port} 开启成功!`))
+
+server.use(history())
+server.use(express.static('dist'))
+
+server.listen(port, () => console.log(`服务于端口 ${port} 开启成功!`))
