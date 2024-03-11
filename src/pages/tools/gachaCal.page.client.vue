@@ -1072,15 +1072,15 @@ export default {
           display: true,
           endTime: '2024/05/15 04:01:00',
           rewardType: "周年限定",
-          permitCountDown: true,
-          orundumCountDown: true
+          permitCountDown: false,
+          orundumCountDown: false
         },
         '敬请期待': {
           display: true,
           endTime: '2024/05/15 04:01:00',
           rewardType: "周年限定",
-          permitCountDown: true,
-          orundumCountDown: true
+          permitCountDown: false,
+          orundumCountDown: false
         }
       }
       // pack_data: this.pageContext.pageProps.pack_data,
