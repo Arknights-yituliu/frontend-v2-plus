@@ -1291,7 +1291,7 @@ onMounted(() => {
   line-height: 24px;
   font-weight: 600;
   background-color: var(--c-background-color);
-  box-shadow: var(--c-box-shadow);
+  box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
 }
 
 .schedule-question:hover {

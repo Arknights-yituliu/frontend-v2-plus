@@ -82,11 +82,11 @@
         </div>
 
 
-        <div class="login-tips">
+
           <p class="login-tip"> 新用户注册可用账号密码注册和邮箱注册，也可在个人中心进行设置密码和邮箱绑定等操作</p>
           <p class="login-tip" style="color: #ff4b4b">
             *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用</p>
-        </div>
+
       </div>
 
       <div class="login_card" v-show="userData.status>0">
@@ -113,6 +113,7 @@ import "/src/assets/css/sprite/sprite_skill.css";
 import "/src/assets/css/sprite/sprite_rank.css";
 import "/src/assets/css/survey/survey_index.css";
 import "/src/assets/css/survey/login.scss"
+import "/src/assets/css/survey/login.phone.scss"
 
 import "/src/assets/css/survey/survey_nav.css";
 

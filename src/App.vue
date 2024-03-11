@@ -4,7 +4,11 @@
     <div class="header">
       <my-header/>
     </div>
-    <router-view></router-view>
+    <router-view v-slot="{ Component }">
+      <transition>
+        <component :is="Component" />
+      </transition>
+    </router-view>
     <my-footer></my-footer>
   </div>
 </template>
@@ -76,6 +80,13 @@ onMounted(() => {
   font-family: 'Roboto';
   src: url('/fonts/Roboto_Italic.ttf') format("truetype");
   font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto_Bold.ttf') format("truetype");
+  font-weight: bold;
   font-style: italic;
 }
 

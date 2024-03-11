@@ -63,7 +63,7 @@ function openAndClose(visible) {
   background-color: var(--c-background-color);
   border-radius: 6px;
   box-sizing: border-box;
-  box-shadow: var(--c-box-shadow);
+  box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   width: fit-content;

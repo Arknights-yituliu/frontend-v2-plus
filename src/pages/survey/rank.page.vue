@@ -204,7 +204,7 @@ onMounted(() => {
 <template>
   <div class="survey_rank_page">
     <!-- 常驻条 -->
-    <div class="setup_top">
+    <div class="control-header">
       <!-- <button class="mdui-btn survey_button">说明</button> -->
       <button class="btn btn-blue"
               @click="collapseFilter()">筛选

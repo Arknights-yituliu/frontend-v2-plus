@@ -53,7 +53,7 @@
     flex-wrap: wrap;
     width: 95%;
     margin: 8px auto;
-    box-shadow: var(--c-box-shadow);
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
     background-color: var(--c-background-white-transparent);
 }
 
@@ -109,7 +109,7 @@
 
 .option_column {
     margin: 4px;
-    box-shadow: var(--c-box-shadow);
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
     background-color: var(--c-background-white-transparent);
     padding: 4px;
 }
@@ -186,7 +186,7 @@
     display: flex;
     border-left: 3px solid;
     margin: 8px;
-    box-shadow: var(--c-box-shadow);
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
     background-color: var(--c-background-white-transparent);
 }
 

@@ -98,7 +98,7 @@
 .schedule-set-card {
     margin: 4px;
     border-radius: 4px;
-    box-shadow: var(--c-box-shadow);
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
     background-color: var(--c-background-white-transparent);
 }
 
@@ -477,7 +477,7 @@
     --avatar-position: calc((44px - 180px) / 2);
     --avatar-scale: scale(calc(44 / 180));
     border-radius: var(--base-border-radius);
-    box-shadow: var(--c-box-shadow);
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
     background-color: var(--c-background-white-transparent);
 }
 
@@ -611,7 +611,7 @@
     top: -3px;
     background-color: var(--c-background-color);
     border-radius: 10px;
-    box-shadow: var(--c-box-shadow);
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
 }
 
 .schedule-operator-search-input-box {
@@ -638,7 +638,7 @@
     font-size: 15px;
     width: 60px;
     height: 60px;
-    box-shadow: var(--c-box-shadow)
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);
 }
 
 .operator-check-box-description {
@@ -674,7 +674,7 @@
     font-size: 15px;
     width: 60px;
     height: 60px;
-    box-shadow: var(--c-box-shadow);
+    box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
 }
 
 

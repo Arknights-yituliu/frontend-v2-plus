@@ -1,0 +1,103 @@
+@media screen and (max-width: 600px) {
+  .survey-operator-page {
+    .operator-card {
+      width: 99%;
+    }
+
+    .operator-level-image {
+      width: 20px;
+      height: 20px;
+      background-size: 20px;
+      font-size: 8px;
+      line-height: 8px;
+      padding-top: 10px;
+      overflow: hidden;
+    }
+
+    .operator-elite-image {
+      width: 20px;
+    }
+
+    .operator-avatar-wrap {
+      width: 40px;
+    }
+
+    .operator-avatar {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 2px;
+    }
+
+    .operator-avatar div {
+      position: absolute;
+      transform: scale(calc(36 / 180));
+      top: calc((36px - 180px) / 2);
+      left: calc((36px - 180px) / 2);
+    }
+
+    .operator-name {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 6px;
+      //color: darkorange;
+    }
+
+    .operator-skill-icon-sprite-wrap {
+      width: 40px;
+      height: 40px;
+    }
+
+    .operator-skill-icon-sprite {
+      width: 28px;
+      height: 28px;
+    }
+
+    .operator-skill-icon-sprite div {
+      position: absolute;
+      transform: scale(calc(28 / 128));
+      top: calc((28px - 128px) / 2);
+      left: calc((28px - 128px) / 2);
+    }
+
+    .operator-skill-rank {
+      position: absolute;
+      left: -2px;
+      top: -2px;
+      width: 14px;
+      box-shadow: 1px 1px 2px white;
+    }
+
+    .skill-name {
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .operator-equip-image-wrap {
+      width: 40px;
+      position: relative;
+    }
+
+    .operator-equip-image {
+      height: 30px;
+      width: 30px;
+      display: block;
+      margin: auto;
+      filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+    }
+
+    .equip-name {
+      text-align: center;
+      font-size: 10px;
+      line-height: 18px;
+    }
+
+    .operator-equip-rank {
+      position: absolute;
+      left: 10px;
+      top: 0;
+      width: 16px;
+    }
+
+  }
+}

@@ -69,7 +69,7 @@
           </ul>
 
           <div class="mdui-typo" id="dev_feedback">
-            <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
+            <a class="href-black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
               <div class="mdui-card dev-card">
                 <img class="dev-card-icon" src="/image/website/qq.webp" alt="" />
                 <div class="dev-card-text">
@@ -78,7 +78,7 @@
                 </div>
               </div>
             </a>
-            <a class="href_black" href="https://github.com/Arknights-yituliu/">
+            <a class="href-black" href="https://github.com/Arknights-yituliu/">
               <div class="mdui-card dev-card">
                 <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
                 <div class="dev-card-text">
@@ -87,7 +87,7 @@
                 </div>
               </div>
             </a>
-            <a class="href_black" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
+            <a class="href-black" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
               <div class="mdui-card dev-card">
                 <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
                 <div class="dev-card-text">
@@ -96,7 +96,7 @@
                 </div>
               </div>
             </a>
-            <a class="href_black" href="https://github.com/Arknights-yituliu/BackEndV3">
+            <a class="href-black" href="https://github.com/Arknights-yituliu/BackEndV3">
               <div class="mdui-card dev-card">
                 <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
                 <div class="dev-card-text">
@@ -113,7 +113,7 @@
         <div class="index_card_title">反馈方式</div>
         <div class="card_content">
           <div class="mdui-typo" id="dev_feedback">
-            <a class="href_black" href="https://github.com/Arknights-yituliu/">
+            <a class="href-black" href="https://github.com/Arknights-yituliu/">
               <div class="mdui-card dev-card">
                 <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
                 <div class="dev-card-text">
@@ -122,7 +122,7 @@
                 </div>
               </div>
             </a>
-            <a class="href_black" href="https://space.bilibili.com/688411531">
+            <a class="href-black" href="https://space.bilibili.com/688411531">
               <div class="mdui-card dev-card">
                 <img class="dev-card-icon" src="/image/website/beta_logo_yw.webp" alt="" />
                 <div class="dev-card-text">
@@ -131,7 +131,7 @@
                 </div>
               </div>
             </a>
-            <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
+            <a class="href-black" href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
               <div class="mdui-card dev-card">
                 <img class="dev-card-icon" src="/image/website/qq.webp" alt="" />
                 <div class="dev-card-text">

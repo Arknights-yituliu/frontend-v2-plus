@@ -62,7 +62,7 @@ function openOrClose() {
   transition: all 0.3s;
   z-index: 3000;
   background-color: var(--c-background-color);
-  box-shadow: var(--c-box-shadow);
+  box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
   border-radius: 4px;
 }
 

@@ -25,7 +25,7 @@
 
 
     <!-- 常驻条 -->
-    <div class="setup_top">
+    <div class="control-header">
       <button class="mdui-btn survey_button" @click="firstPopupClose()">填写说明</button>
       <button class="mdui-btn survey_button" @click="collapse('collapse_bar filter', 'switch_filter_wrap','switch_filter_box')">筛选干员</button>
       <button class="mdui-btn survey_button" @click="feedback()">建议与反馈</button>

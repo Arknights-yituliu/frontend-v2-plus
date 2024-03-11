@@ -6,6 +6,7 @@ import FixedNav from "../../components/FixedNav.vue";
 import TourGuide from "../../components/TourGuide.vue";
 import '/src/assets/css/material/stage.css'
 import '/src/assets/css/material/stage.phone.css'
+import {timeFormat} from '/src/utils/dateUtil.js'
 //漫游导航指引
 const guideOpen = ref(false)
 
@@ -260,13 +261,28 @@ function historyActDeviceBtnClass(device) {
   // return 'op_tag_0'
 }
 
+// 未来复刻的活动
+const reprintActivityList = [
+  {activityName: '源石尘行动', startTime: '预计2024/03', itemList: {}},
+  {activityName: '孤星', startTime: '预计2024/05', itemList: {}},
+  {activityName: '空想花庭', startTime: '预计2024/06', itemList: {}},
+  {activityName: '火山旅梦', startTime: '预计2024/07', itemList: {}},
+  {activityName: '不义之财', startTime: '预计2024/08', itemList: {}},
+  {activityName: '崔林特尔梅之金', startTime: '预计2024/09', itemList: {}},
+  {activityName: '银心湖列车', startTime: '预计2024/10', itemList: {}},
+  {activityName: '怀黍离', startTime: '预计2025/01', itemList: {}}
+]
+
+
+/**
+ * 获取历史活动关卡数据
+ */
 function getHistoryActStage() {
   historyActItemTable = []
 
-
   // 获取历史活动up材料信息
   stageApi.getHistoryActStage(0.625, 300).then(response => {
-    // 先把材料系列表转为一个集合
+    // 先把当作表头的材料表转为一个集合
     for (const itemId in itemSeries) {
       const item = itemSeries[itemId]
       itemIdList.push({
@@ -277,16 +293,17 @@ function getHistoryActStage() {
       })
     }
 
+    // 历史活动数据
     historyActItemList = response.data
-    // 循环历史活动数据
+
+    // 每种材料距离上次up间隔
     let lastUpInterval = 0;
 
-    for (const index in response.data) {
-      const act = response.data[index]
+    // 循环历史活动数据
+    for (const act of response.data) {
       if (act.zoneName === '落叶逐火') {
         continue
       }
-
       lastUpInterval++
       //复刻不计入
       // if(act.zoneName.indexOf('复刻')>-1) {
@@ -294,9 +311,11 @@ function getHistoryActStage() {
       // }
       //每行数据
       let rowData = {
-        zoneName: act.zoneName, //活动名
+        activityName: act.zoneName, //活动名
+        startTime: timeFormat(new Date(act.endTime), 'yyyy/MM'),
         itemList: {} //材料up情况
       }
+
 
       for (const stage of act.actStageList) {
         rowData.itemList[stage.itemId] = {
@@ -311,13 +330,9 @@ function getHistoryActStage() {
         //材料up标记
         let isUpFlag = false;
 
+        //如果当前材料up了,将标记记为true
         if (rowData.itemList[item.id]) {
           isUpFlag = true
-        }
-
-        //如果这个up上个活动没up则将格子标记为true，添加背景色
-        if (!itemIdList[itemIndex].lastUp) {
-          itemIdList[itemIndex].lastUpInterval = lastUpInterval;
         }
 
         //如果这个材料已经up了，则将这个材料的上次up标记为true
@@ -325,20 +340,39 @@ function getHistoryActStage() {
           itemIdList[itemIndex].lastUp = true;
         }
 
+        //如果这个材料这个活动没up,更新up间隔次数,表格根据这个间隔进行背景色的渲染
+        if (!itemIdList[itemIndex].lastUp) {
+          itemIdList[itemIndex].lastUpInterval = lastUpInterval;
+        }
       }
+
+      for (const reprintActivity of reprintActivityList) {
+        if (reprintActivity.activityName === rowData.activityName) {
+          reprintActivity.itemList = rowData.itemList
+        }
+      }
+
       historyActItemTable.push(rowData)
     }
 
+    for (const reprintActivity of reprintActivityList) {
+      historyActItemTable.unshift(reprintActivity)
+    }
+
+    console.log(historyActItemTable)
     itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
-
-
   })
 }
 
 
-function getCellBgColor(flag) {
+function getCellBgColor(rowIndex, maxIndex) {
 
-  if (flag) {
+  if (rowIndex < reprintActivityList.length) {
+    return ''
+  }
+
+  // console.log((rowIndex - reprintActivityList.length), '<', maxIndex)
+  if ((rowIndex - reprintActivityList.length) < maxIndex) {
     return 'background-color: #82beff80'
   }
   return ''
@@ -384,15 +418,9 @@ function getOrundumRecommendedStage() {
   })
 }
 
+function getFormatDate() {
 
-// for(let id in item_series){
-//   item_series[id] =  {
-//     t4:id.substring(0,4)+'4',
-//     t3:id.substring(0,4)+'3',
-//     t2:id.substring(0,4)+'2',
-//     t1:id.substring(0,4)+'1',
-//   }
-// }
+}
 
 onMounted(() => {
 
@@ -437,28 +465,28 @@ onMounted(() => {
       <button class="tag-button" @click="scrollToOrundumTable()">搓玉数据</button>
       <button class="tag-button" @click="scrollToHistoryStageTable()">往期活动</button>
       <button class="tag-button" @click="scrollToFrequentlyAskedQuestion()">常见问题</button>
-<!--      <button class="tag-button" @click="guideOpen=true">*点我查看操作指引</button>-->
-<!--      <span class="c-module-tip"></span>-->
+      <!--      <button class="tag-button" @click="guideOpen=true">*点我查看操作指引</button>-->
+      <!--      <span class="c-module-tip"></span>-->
       <span class="module-tip">更新时间：{{ updateTime }}</span>
     </div>
-<!--    <div class="op_title">-->
-<!--      <div class="op_title_text">-->
-<!--        <div class="op_title_ctext">推荐关卡</div>-->
-<!--        <div class="op_title_etext_light">Best Stages</div>-->
-<!--      </div>-->
-<!--      <div class="op_title_tag">-->
-<!--        <div class="op_tag_1" @click="scrollToOrundumTable()">搓玉数据</div>-->
-<!--        <div class="op_tag_1" @click="scrollToHistoryStageTable()">往期活动</div>-->
-<!--        <div class="op_tag_1" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>-->
-<!--        <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>-->
-<!--        <span class="tab_text">更新时间：{{ updateTime }}</span>-->
-<!--      </div>-->
-      <!-- <div class="op_title_tag" style="height: 24px">
-          <div class="tab_text">
-            占位
-          </div>
-        </div> -->
-<!--    </div>-->
+    <!--    <div class="op_title">-->
+    <!--      <div class="op_title_text">-->
+    <!--        <div class="op_title_ctext">推荐关卡</div>-->
+    <!--        <div class="op_title_etext_light">Best Stages</div>-->
+    <!--      </div>-->
+    <!--      <div class="op_title_tag">-->
+    <!--        <div class="op_tag_1" @click="scrollToOrundumTable()">搓玉数据</div>-->
+    <!--        <div class="op_tag_1" @click="scrollToHistoryStageTable()">往期活动</div>-->
+    <!--        <div class="op_tag_1" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>-->
+    <!--        <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>-->
+    <!--        <span class="tab_text">更新时间：{{ updateTime }}</span>-->
+    <!--      </div>-->
+    <!-- <div class="op_title_tag" style="height: 24px">
+        <div class="tab_text">
+          占位
+        </div>
+      </div> -->
+    <!--    </div>-->
 
     <!-- 说明区域 -->
 
@@ -641,18 +669,18 @@ onMounted(() => {
       </div>
       <span class="module-tip">*移动端可左右拖动查看</span>
     </div>
-<!--    <div class="op_title">-->
-<!--      <div class="op_title_text">-->
-<!--        <div class="op_title_ctext">材料详情</div>-->
-<!--        <div class="op_title_etext_light">Item Info</div>-->
-<!--      </div>-->
-<!--      <div class="op_title_tag">-->
-<!--        &lt;!&ndash;          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>&ndash;&gt;-->
-<!--        &lt;!&ndash;          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>&ndash;&gt;-->
-<!--        &lt;!&ndash;          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>&ndash;&gt;-->
-<!--        <div class="tab_text">*移动端可左右拖动查看</div>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div class="op_title">-->
+    <!--      <div class="op_title_text">-->
+    <!--        <div class="op_title_ctext">材料详情</div>-->
+    <!--        <div class="op_title_etext_light">Item Info</div>-->
+    <!--      </div>-->
+    <!--      <div class="op_title_tag">-->
+    <!--        &lt;!&ndash;          <div id="upStageKey" class="op_tag_0" @click="showNowActive()">只显示up</div>&ndash;&gt;-->
+    <!--        &lt;!&ndash;          <div id="orundumStageKey" class="op_tag_0" @click="showOrundumPopup()">搓玉版</div>&ndash;&gt;-->
+    <!--        &lt;!&ndash;          <div id="historyStageKey" class="op_tag_0" @click="showHistoryPopup()">往期活动效率</div>&ndash;&gt;-->
+    <!--        <div class="tab_text">*移动端可左右拖动查看</div>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <!-- 材料信息 -->
     <!-- <div id="itemDetail">
       <div class="item-detail-bar">
@@ -762,16 +790,16 @@ onMounted(() => {
     </div>
 
     <!-- 搓玉 -->
-<!--    <div class="op_title" id="orundum-table">-->
-<!--      <div class="op_title_text">-->
-<!--        <div class="op_title_ctext">搓玉数据表</div>-->
-<!--        <div class="op_title_etext_light">Orundum</div>-->
-<!--      </div>-->
-<!--      <div class="op_title_tag">-->
-<!--        &lt;!&ndash; <div class="op_tag_0">图例</div> &ndash;&gt;-->
-<!--        <div class="op_tag_0" @click="filterOrundumStage()">仅显示活动关</div>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div class="op_title" id="orundum-table">-->
+    <!--      <div class="op_title_text">-->
+    <!--        <div class="op_title_ctext">搓玉数据表</div>-->
+    <!--        <div class="op_title_etext_light">Orundum</div>-->
+    <!--      </div>-->
+    <!--      <div class="op_title_tag">-->
+    <!--        &lt;!&ndash; <div class="op_tag_0">图例</div> &ndash;&gt;-->
+    <!--        <div class="op_tag_0" @click="filterOrundumStage()">仅显示活动关</div>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <div class="module-header" id="orundum-table">
       <div class="module-title">
         <h1>搓玉数据表</h1>
@@ -818,18 +846,18 @@ onMounted(() => {
       <button class="tag-button" @click="chooseHistoryActDevice('pc')">电脑版表格</button>
     </div>
 
-<!--    <div class="op_title" id="history-stage-table">-->
-<!--      <div class="op_title_text">-->
-<!--        <div class="op_title_ctext">往期活动数据</div>-->
-<!--        <div class="op_title_etext_light">History Event</div>-->
-<!--      </div>-->
-<!--      <div class="op_title_tag">-->
-<!--        &lt;!&ndash; <div class="op_tag_0">图例</div> &ndash;&gt;-->
-<!--        <div :class="historyActDeviceBtnClass('phone')" @click="chooseHistoryActDevice('phone')">紧密模式-->
-<!--        </div>-->
-<!--        <div :class="historyActDeviceBtnClass('pc')" @click="chooseHistoryActDevice('pc')">表格模式</div>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div class="op_title" id="history-stage-table">-->
+    <!--      <div class="op_title_text">-->
+    <!--        <div class="op_title_ctext">往期活动数据</div>-->
+    <!--        <div class="op_title_etext_light">History Event</div>-->
+    <!--      </div>-->
+    <!--      <div class="op_title_tag">-->
+    <!--        &lt;!&ndash; <div class="op_tag_0">图例</div> &ndash;&gt;-->
+    <!--        <div :class="historyActDeviceBtnClass('phone')" @click="chooseHistoryActDevice('phone')">紧密模式-->
+    <!--        </div>-->
+    <!--        <div :class="historyActDeviceBtnClass('pc')" @click="chooseHistoryActDevice('pc')">表格模式</div>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <!-- pc端大表格 -->
     <div class="activity-table-pc-container" id="act-table-pc">
       <table class="activity-table-pc">
@@ -842,9 +870,13 @@ onMounted(() => {
             </div>
           </td>
         </tr>
-        <tr v-for="(act, actIndex) in historyActItemTable" :key="actIndex">
-          <td class="activity-name-pc">{{ act.zoneName }}</td>
-          <td v-for="(item, index) in itemIdList" :key="index" :style="getCellBgColor(actIndex < item.lastUpInterval)">
+        <tr v-for="(act, rowIndex) in historyActItemTable" :key="rowIndex">
+          <td class="activity-name-pc">
+            {{ act.activityName }} <br>
+            {{ act.startTime }}
+          </td>
+          <td v-for="(item, index) in itemIdList" :key="index"
+              :style="getCellBgColor(rowIndex , item.lastUpInterval)">
             <div class="activity-pickup-item-pc" v-if="act.itemList[item.id]">
               <div :class="getActTableItemSprite(item.id)"></div>
             </div>
@@ -860,7 +892,7 @@ onMounted(() => {
     <div class="activity-table-phone-container" id="act-table-phone">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActItemList" :key="index">
-          <td class="s-activity-name-phone">{{ act.zoneName }}</td>
+          <td class="s-activity-name-phone">{{ act.activityName }}</td>
           <td v-for="(stage, index) in  act.actStageList" :key="index">
             <div class="s-activity-drop">
               <div class="activity-pickup-item">
@@ -882,16 +914,16 @@ onMounted(() => {
         <h4>FAQ</h4>
       </div>
     </div>
-<!--    <div class="op_title" id="frequently-asked-question">-->
-<!--      <div class="op_title_text">-->
-<!--        <div class="op_title_ctext">常见问题</div>-->
-<!--        <div class="op_title_etext_light">FAQ</div>-->
-<!--      </div>-->
-<!--      <div class="op_title_tag" style="height: 24px">-->
-<!--        <div class="tab_text">-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div class="op_title" id="frequently-asked-question">-->
+    <!--      <div class="op_title_text">-->
+    <!--        <div class="op_title_ctext">常见问题</div>-->
+    <!--        <div class="op_title_etext_light">FAQ</div>-->
+    <!--      </div>-->
+    <!--      <div class="op_title_tag" style="height: 24px">-->
+    <!--        <div class="tab_text">-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">

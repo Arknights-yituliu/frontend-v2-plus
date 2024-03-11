@@ -4,11 +4,12 @@
   justify-content: flex-end;
 
   .login_card {
-    width: 450px;
+    width: 550px;
     height: auto;
     border-radius: 6px;
     margin: auto;
-    padding: 20px;
+    padding: 24px 12px;
+    box-sizing: border-box;
   }
 
   .login-checkbox {
@@ -23,8 +24,8 @@
   .login-form{
     margin: auto;
     border: 1px solid #dcdcdc;
+    width: 450px;
     border-radius: 4px;
-    width: 400px;
     font-weight: 600;
     font-size: 16px;
   }
@@ -32,7 +33,8 @@
   .login-form-item{
     display: flex;
     align-items: center;
-    padding: 8px 0 8px 20px;
+    padding: 8px 12px;
+    box-sizing: border-box;
   }
 
   .input-label{
@@ -50,18 +52,19 @@
 
   .login-btn{
     width: 170px;
-    margin: 8px 20px 8px 0;
+    margin: 8px;
   }
 
-  .login-tips {
-    margin: 8px 28px;
-    font-size: 14px;
-    font-style: italic;
-  }
+
 
   .login-tip {
-    margin:8px;
-    line-height: 28px;
+    font-size: 14px;
+    font-style: italic;
+    margin:12px;
+    line-height: 20px;
   }
+
+
+
 
 }

@@ -11,7 +11,7 @@
     --c-border-color: var(--c-white-2);
     --c-background-color: var(--c-white-1);
     --c-text-color:var(--c-black-2);
-    --c-tip-color:var(--c-black-3);
+    --c-tip-color: #505050;
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
 
 
@@ -54,9 +54,9 @@
     --c-border:1px solid var(--c-black-4);
     --c-box-shadow-color:rgba(0, 0, 0);
     --c-border-color:var(--c-black-4);
-    --c-background-color: #1e1e1e;
+    --c-background-color: #2d2d2d;
     --c-text-color: var(--c-white-2);
-    --c-tip-color:var(--c-white-3);
+    --c-tip-color: #c0c0c0;
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
 
 
@@ -71,11 +71,11 @@
 
 
     --c-btn-color-blue: #6ebeff;
-    --c-btn-border-blue: #6ebeff;
-    --c-btn-color-red: #ff6245;
-    --c-btn-border-red:#ff6245;
+    --c-btn-border-blue: #badfff;
+    --c-btn-color-red: #ff7962;
+    --c-btn-border-red: #ffb0a4;
     --c-btn-color-green: #2ec4b6;
-    --c-btn-border-green:#2ec4b6;
+    --c-btn-border-green: #93e0d6;
     --c-btn-color-orange: #ff8a52;
     --c-btn-border-orange:#ff8a52;
 

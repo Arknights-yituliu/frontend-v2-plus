@@ -1,5 +1,5 @@
 <template>
-  <div class="survey_character_page not-own-avatar-sprite-variables">
+  <div class="survey-operator-page">
     <c-popup :visible="introPopupVisible" v-model:visible="introPopupVisible">
       <!-- <div class="intro_title">填写流程说明</div> -->
 
@@ -50,28 +50,28 @@
     </c-popup>
 
     <!-- 常驻条 -->
-    <div class="setup_top">
-      <c-button :color="'blue'" :status="true" @click="checkFirstPopup()">操作指引</c-button>
+    <div class="control-header">
+      <c-button color="blue" :status="true" @click="checkFirstPopup()">操作指引</c-button>
 
-      <c-button :color="'blue'" :status="btnStatus.btn_filter"
+      <c-button color="blue" :status="btnStatus.btn_filter"
                 @click="clickBtn('btn_filter');collapseFilter()">
         筛选/批量操作
       </c-button>
 
-      <c-button :color="'blue'" :status="btnStatus.btn_import"
+      <c-button color="blue" :status="btnStatus.btn_import"
                 @click="clickBtn('btn_import');collapseImport()">
         数据导入导出
       </c-button>
 
       <!--      <div style="width: 60px"></div>-->
       <c-button :color="'green'" :status="true" @click="upload()">手动保存练度</c-button>
-      <c-button :color="'blue'" :status="statisticalPopupVisible"
+      <c-button color="blue" :status="statisticalPopupVisible"
                 @click="clickBtn('btn_statistics');getOperatorStatisticalResult()">统计干员练度
       </c-button>
-      <c-button :color="'blue'" :status="recommendPopupVisible"
+      <c-button color="blue" :status="recommendPopupVisible"
                 @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）
       </c-button>
-      <!--      <c-button :color="'blue'" :status="btn_status.btn_plan"-->
+      <!--      <c-button color="blue" :status="btn_status.btn_plan"-->
       <!--                @click="clickBtn('btn_plan');getOperatorPlanItemCost()">练度计划材料消耗统计-->
       <!--      </c-button>-->
 
@@ -215,7 +215,7 @@
       <div class="popup_action_tip">
         此操作将清空一图流账号上保存的所有干员数据，确定要执行操作吗？
       </div>
-      <div class="btn_switch_wrap">
+      <div class="control-checkbox">
         <div class="btn btn-red" @click="operatorDataReset()">确定</div>
         <div class="btn" @click="resetPopupVisible = !resetPopupVisible">取消</div>
       </div>
@@ -331,8 +331,8 @@
                 <span class="operator-name">{{ operator.name }}</span>
               </div>
               <div>
-                <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite" alt="">
-                <div class="operator-level">
+                <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite-image" alt="">
+                <div class="operator-level-image">
                   {{ operator.level }}
                 </div>
               </div>
@@ -457,7 +457,7 @@
     <!--   干员表单-->
     <div class="operator-form">
       <div class="operator-card" v-for="(operator, char_index) in operatorList" :key="char_index"
-           @click="updateOperatorPopup(char_index)" style="width: 400px">
+           @click="updateOperatorPopup(char_index)">
         <div class="operator-avatar-wrap">
           <div class="operator-avatar">
             <div :class="getAvatar(operator.charId)"></div>
@@ -465,8 +465,8 @@
           <span class="operator-name">{{ operator.name }}</span>
         </div>
         <div>
-          <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite" alt="">
-          <div class="operator-level">
+          <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite-image" alt="">
+          <div class="operator-level-image">
             {{ operator.level }}
           </div>
         </div>
@@ -588,8 +588,9 @@ import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
 
 
-import "/src/assets/css/survey/survey_character.css";
+// import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.scss";
+import "/src/assets/css/survey/operator.phone.scss";
 import {debounce} from "/src/utils/debounce";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
