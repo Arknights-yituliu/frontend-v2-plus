@@ -7,6 +7,7 @@ import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requ
 import {language} from '/src/utils/i18n.js'
 import {LinkedTable} from "../../router/routes.js";
 
+
 const LanguageLabel = {
   cn: '中文',
   en: 'English'
@@ -133,8 +134,9 @@ function i18nButtonDisplay() {
       break
     }
   }
-
 }
+
+
 
 function updateVisits(pathName) {
   //访问"/"直接更新

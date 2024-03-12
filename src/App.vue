@@ -4,13 +4,12 @@
     <div class="header">
       <my-header/>
     </div>
-    <router-view v-slot="{ Component }">
-      <transition>
-        <component :is="Component" />
-      </transition>
+    <loading v-show="loading"></loading>
+    <router-view>
     </router-view>
     <my-footer></my-footer>
   </div>
+
 </template>
 
 <script setup>
@@ -45,8 +44,11 @@ import "/src/custom/css/input.css";
 import myHeader from "/src/pages/layout/myheader.vue";
 import myFooter from "/src/pages/layout/myfooter.vue";
 import myAside from "/src/pages/layout/aside.vue";
-
+import loading from '/src/pages/layout/loading.vue'
 import {onMounted, ref} from "vue";
+import { onBeforeRouteUpdate, useRouter } from 'vue-router'
+
+
 
 let theme_type = ref("theme_init")
 

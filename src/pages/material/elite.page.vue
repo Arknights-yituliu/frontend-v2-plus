@@ -139,7 +139,7 @@ onMounted(() => {
     <!-- 内容区域 -->
     <div class="option">
       <el-checkbox-group v-model="rarityCheckList" size="large" @change="reset">
-        <el-checkbox-button v-for="item in 6" :key="item" :label="item">★{{ item }}</el-checkbox-button>
+        <el-checkbox-button v-for="item in 6" :key="item" :value="item">★{{ item }}</el-checkbox-button>
       </el-checkbox-group>
       <div class="right">
         <el-input v-model="searchKey" placeholder="干员名称" @input="reset"></el-input>

@@ -544,7 +544,7 @@ onMounted(() => {
               <span>白糖价值之和 </span>
             </span>
             <br>
-            <span>理智消耗</span>
+            <span >理智消耗</span>
 
           </td>
           <td class="stage-legend-text-4">

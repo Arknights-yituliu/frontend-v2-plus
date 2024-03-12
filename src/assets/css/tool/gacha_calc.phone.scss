@@ -94,15 +94,15 @@
 
     //雪碧图的容器，容器相对定位，内部雪碧图绝对定位，通过这种方式让图片展示的大小和外容器大小一致
     .image-sprite {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
     }
 
     //雪碧图的缩放
     .image-sprite > div {
-      transform: scale(calc(28 / 44));
-      top: calc((-44px + 28px) / 2);
-      left: calc((-44px + 28px) / 2);
+      transform: scale(calc(32 / 44));
+      top: calc((-44px + 32px) / 2);
+      left: calc((-44px + 32px) / 2);
     }
 
 
@@ -136,10 +136,24 @@
       top: 6px;
     }
 
+    .exist-resources-input-wrap{
+      flex-wrap: wrap;
+    }
+
+    .exist-resources-input {
+      justify-content: center;
+    }
+
+    .exist-resources-input input {
+      width: 126px;
+      height: 26px;
+      font-size: 16px;
+    }
+
     .resources-line {
       display: flex;
       align-items: center;
-      font-size: 10px;
+      font-size: 12px;
       font-weight: bolder;
       padding: 4px;
       margin: 4px 0;
@@ -147,13 +161,12 @@
 
 
     .resources-line-label {
-      width: 80px;
+      width: 70px;
     }
 
     .resources-line-content {
       display: flex;
       width: 150px;
-      line-height: 28px;
     }
 
     .resources-line-content > span {
@@ -163,13 +176,10 @@
     }
 
     .resources-line > input {
-      width: 50px;
-      line-height: 18px;
-      height: 18px;
+      width: 60px;
+      height: 24px;
       margin: 0 2px;
       font-size: 14px;
-      font-weight: bold;
-      box-sizing: border-box;
       padding: 0 4px;
     }
 
@@ -195,15 +205,15 @@
     }
 
     .checkbox-button-zone-label-short{
-      width: 44px;
+      width: 40px;
     }
 
     .checkbox-button-zone-label-long{
-      width: 110px;
+      width: 100px;
     }
 
     .checkbox-button-zone-label{
-      width: 76px;
+      width: 74px;
     }
 
     .checkbox-button-pack-label{

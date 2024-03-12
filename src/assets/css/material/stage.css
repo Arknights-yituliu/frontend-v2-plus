@@ -47,6 +47,7 @@
     font-style: italic;
     text-align: center;
     padding: 4px;
+    font-size: 12px;
 }
 
 .stage-legend-text-4 {
@@ -60,7 +61,7 @@
 }
 
 .stage-legend-text-underline {
-    border-bottom: 2px solid var(--c-border-color);
+    border-bottom: 1px solid var(--c-border-color);
     line-height: 16px;
 }
 
@@ -85,6 +86,7 @@
     position: relative;
     font-size: 16px;
     text-align: center;
+    cursor: pointer;
 }
 
 .stage-card-item-icon {

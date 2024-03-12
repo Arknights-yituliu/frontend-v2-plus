@@ -904,24 +904,27 @@ const handleChange = (val) => {
             <span></span> 当前库存
           </div>
 
-          <div class="resources-line">
-            <div class="image-sprite">
-              <div class="bg-icon_4002"></div>
+          <div class="exist-resources-input-wrap">
+            <div class="exist-resources-input">
+              <div class="image-sprite">
+                <div class="bg-icon_4002"></div>
+              </div>
+              <input @change="gachaResourcesCalculation" v-model.number="existResources.originium">
+              <div class="image-sprite">
+                <div class="bg-icon_4003"></div>
+              </div>
+              <input @change="gachaResourcesCalculation" v-model.number="existResources.orundum">
             </div>
-            <input @change="gachaResourcesCalculation" v-model.number="existResources.originium">
-            <div class="image-sprite">
-              <div class="bg-icon_4003"></div>
+            <div class="exist-resources-input">
+              <div class="image-sprite">
+                <div class="bg-icon_7003"></div>
+              </div>
+              <input @change="gachaResourcesCalculation" v-model.number="existResources.gachaTicket">
+              <div class="image-sprite">
+                <div class="bg-icon_7004"></div>
+              </div>
+              <input @change="gachaResourcesCalculation" v-model.number="existResources.tenGachaTicket">
             </div>
-            <input @change="gachaResourcesCalculation" v-model.number="existResources.orundum">
-
-            <div class="image-sprite">
-              <div class="bg-icon_7003"></div>
-            </div>
-            <input @change="gachaResourcesCalculation" v-model.number="existResources.gachaTicket">
-            <div class="image-sprite">
-              <div class="bg-icon_7004"></div>
-            </div>
-            <input @change="gachaResourcesCalculation" v-model.number="existResources.tenGachaTicket">
           </div>
 
           <div class="switch-wrap">

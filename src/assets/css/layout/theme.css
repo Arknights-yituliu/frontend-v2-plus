@@ -8,7 +8,7 @@
     --c-box-shadow:1px 1px 6px rgba(0, 0, 0, 0.12);
     --c-box-shadow-color:rgba(0, 0, 0, 0.2);
     --c-border:1px solid var(--c-white-2);
-    --c-border-color: var(--c-white-2);
+    --c-border-color: #adadad;
     --c-background-color: var(--c-white-1);
     --c-text-color:var(--c-black-2);
     --c-tip-color: #505050;
@@ -52,8 +52,8 @@
     /*基础样式*/
     --c-box-shadow:1px 1px 4px var(--c-black-1);
     --c-border:1px solid var(--c-black-4);
-    --c-box-shadow-color:rgba(0, 0, 0);
-    --c-border-color:var(--c-black-4);
+    --c-box-shadow-color: rgb(0, 0, 0);
+    --c-border-color: #b6b6b6;
     --c-background-color: #2d2d2d;
     --c-text-color: var(--c-white-2);
     --c-tip-color: #c0c0c0;

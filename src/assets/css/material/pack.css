@@ -5,11 +5,10 @@
 }
 
 .pack-card {
-    margin: 12px;
+    margin: 8px;
     width: 530px;
     display: flex;
     flex-wrap: wrap;
-
 }
 
 .pack-card-part-left {
@@ -160,10 +159,10 @@
     width: 490px;
     display: none;
     flex-wrap: wrap;
-    background: rgba(34, 34, 34, .13333);
+    background: var(--c-background-color);
     font-size: 16px;
     border-radius: 4px;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, .3);
+    box-shadow: 1px 1px 4px var(--c-box-shadow-color);
     box-sizing: border-box;
     overflow: hidden;
 
@@ -173,31 +172,44 @@
     width: 100%;
     padding: 4px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     font-weight: bold;
     box-sizing: border-box;
 }
 
 .pack-content-gacha span {
     display: block;
-    width: 12%;
+    width: 13%;
 }
 
 .pack-content-material{
     padding: 4px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     box-sizing: border-box;
+    font-size: 14px;
 }
 
 .pack-content-material-item{
-    width: 48%;
+    width: 230px;
+
     display: flex;
 }
 
 .pack-content-material-item span {
+    padding: 4px 0;
     display: block;
+}
+
+.pack-content-material-item-name{
+    overflow: hidden;
+    /*height: 16px;*/
+    width:160px;
+}
+
+.pack-content-material-item-quantity{
+    width:80px;
 }
 
 .pack_info {

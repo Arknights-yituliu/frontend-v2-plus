@@ -82,7 +82,6 @@
   }
 
 
-
   .divider {
     width: 100%;
     border-bottom: 1px solid #f0f0f0;
@@ -184,6 +183,25 @@
     left: 4px;
   }
 
+  .exist-resources-input-wrap{
+    display: flex;
+    align-items: center;
+  }
+
+  .exist-resources-input {
+    display: flex;
+    align-items: center;
+  }
+
+  .exist-resources-input input {
+    width: 100px;
+    height: 32px;
+    font-size: 18px;
+    font-weight: bold;
+    box-sizing: border-box;
+    padding: 0 4px;
+    margin: 0 4px;
+  }
 
   .resources-line {
     display: flex;
@@ -219,7 +237,7 @@
     font-weight: bold;
     box-sizing: border-box;
     padding: 0 4px;
-    margin:0 4px;
+    margin: 0 4px;
   }
 
 
@@ -256,19 +274,19 @@
     width: 120px;
   }
 
-  .checkbox-button-zone-label-short{
+  .checkbox-button-zone-label-short {
     width: 80px;
   }
 
-  .checkbox-button-zone-label-long{
+  .checkbox-button-zone-label-long {
     width: 180px;
   }
 
-  .checkbox-button-zone-label{
+  .checkbox-button-zone-label {
     width: 140px;
   }
 
-  .checkbox-button-pack-label{
+  .checkbox-button-pack-label {
     width: 150px;
   }
 
@@ -285,10 +303,9 @@
     text-align: left;
   }
 
-  .button-gacha-resources-pack{
+  .button-gacha-resources-pack {
     width: 280px;
   }
-
 
 
 }

@@ -82,12 +82,12 @@ let screenWidth = ref(1080)
 function getLineBarStyle(lineData) {
 
    let barWidth = 80
-  console.log(screenWidth.value)
+
   if (screenWidth.value < 600 || !screenWidth.value) {
     barWidth = 50
   }
   const width = barWidth * lineData.value
-  console.log(width)
+ 
   return `width: ${width}px;background-color: ${lineData.color}`
 }
 
@@ -261,8 +261,8 @@ onMounted(() => {
             <div class="pack-content-material">
               <div class="pack-content-material-item"
                    v-for="(item,index) in pack2.packContent" :key="index">
-                <span style="width: 60%">{{ item.itemName }}</span>
-                <span style="width: 36%">X{{ item.quantity }}</span>
+                <span class="pack-content-material-item-name">{{ item.itemName }}</span>
+                <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
               </div>
             </div>
           </div>
@@ -344,8 +344,8 @@ onMounted(() => {
             <div class="pack-content-material">
               <div class="pack-content-material-item"
                    v-for="(item,index) in pack2.packContent" :key="index">
-                <span style="width: 60%">{{ item.itemName }}</span>
-                <span style="width: 36%">X{{ item.quantity }}</span>
+                <span class="pack-content-material-item-name">{{ item.itemName }}</span>
+                <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
               </div>
             </div>
           </div>
@@ -428,8 +428,8 @@ onMounted(() => {
             <div class="pack-content-material">
               <div class="pack-content-material-item"
                    v-for="(item,index) in pack2.packContent" :key="index">
-                <span style="width: 60%">{{ item.itemName }}</span>
-                <span style="width: 36%">X{{ item.quantity }}</span>
+                <span class="pack-content-material-item-name">{{ item.itemName }}</span>
+                <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
               </div>
             </div>
           </div>
