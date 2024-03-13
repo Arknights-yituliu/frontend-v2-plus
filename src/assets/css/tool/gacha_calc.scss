@@ -274,15 +274,15 @@
     width: 120px;
   }
 
-  .checkbox-button-zone-label-short {
+  .checkbox-button-label-short-zone {
     width: 80px;
   }
 
-  .checkbox-button-zone-label-long {
+  .checkbox-button-label-long-zone {
     width: 180px;
   }
 
-  .checkbox-button-zone-label {
+  .checkbox-button-label-zone {
     width: 140px;
   }
 
@@ -291,19 +291,19 @@
   }
 
   /*多选框的氪金资源外部容器样式*/
-  .button-gacha-resources {
+  .gacha-resources-button {
     display: flex;
     align-items: center;
   }
 
-  .button-gacha-resources > span {
+  .gacha-resources-button > span {
     font-weight: bolder;
     padding-left: 2px;
     width: 50px;
     text-align: left;
   }
 
-  .button-gacha-resources-pack {
+  .pack-gacha-resources-button {
     width: 280px;
   }
 

@@ -1085,7 +1085,7 @@ const handleChange = (val) => {
                                 v-show="itemIsExpired(pack)">
               <div class="checkbox-button-content">
                 <span class="checkbox-button-pack-label" style="width: 200px">{{ pack.displayName }}</span>
-                <div class="button-gacha-resources">
+                <div class="gacha-resources-button">
                   <div class="image-sprite">
                     <div class="bg-icon_7003"></div>
                   </div>
@@ -1142,7 +1142,7 @@ const handleChange = (val) => {
                     :class="potential.packName.length<4?'checkbox-button-zone-label-short':'checkbox-button-zone-label-long'">
                   {{ potential.packName }}
                 </span>
-                <div class="button-gacha-resources">
+                <div class="gacha-resources-button">
                   <div class="image-sprite">
                     <div class="bg-icon_4002"></div>
                   </div>
@@ -1161,8 +1161,8 @@ const handleChange = (val) => {
                                 :key="index" :value="potential.packName" v-show="potential.packType==='activity'"
                                 class="el-checkbox-button">
               <div class="checkbox-button-content">
-                <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
-                <div class="button-gacha-resources">
+                <span class="checkbox-button-label-zone">{{ potential.packName }}</span>
+                <div class="gacha-resources-button">
                   <div class="image-sprite">
                     <div class="bg-icon_4002"></div>
                   </div>
@@ -1210,7 +1210,7 @@ const handleChange = (val) => {
                   {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
                 <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="button-gacha-resources button-gacha-resources-pack">
+                <div class="gacha-resources-button pack-gacha-resources-button">
                   <!--源石-->
                   <div class="image-sprite" v-show="pack.originium>0">
                     <div class="bg-icon_4002"></div>
@@ -1250,7 +1250,7 @@ const handleChange = (val) => {
                   {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
                 <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="button-gacha-resources button-gacha-resources-pack">
+                <div class="gacha-resources-button pack-gacha-resources-button">
                   <!--源石-->
                   <div class="image-sprite" v-show="pack.originium>0">
                     <div class="bg-icon_4002"></div>
@@ -1290,7 +1290,7 @@ const handleChange = (val) => {
                   {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
                 <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="button-gacha-resources button-gacha-resources-pack">
+                <div class="gacha-resources-button pack-gacha-resources-button">
                   <!--源石-->
                   <div class="image-sprite" v-show="pack.originium>0">
                     <div class="bg-icon_4002"></div>
@@ -1330,7 +1330,7 @@ const handleChange = (val) => {
                   {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
                 <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="button-gacha-resources button-gacha-resources-pack">
+                <div class="gacha-resources-button pack-gacha-resources-button">
                   <!--源石-->
                   <div class="image-sprite" v-show="pack.originium>0">
                     <div class="bg-icon_4002"></div>
@@ -1376,7 +1376,7 @@ const handleChange = (val) => {
                                 class="el-checkbox-button">
               <div class="checkbox-button-content">
                 <span class="checkbox-button-pack-label">{{ activity.name }}</span>
-                <div class="button-gacha-resources button-gacha-resources-pack">
+                <div class="gacha-resources-button pack-gacha-resources-button">
                   <!--源石-->
                   <div class="image-sprite" v-show="activity.originium>0">
                     <div class="bg-icon_4002"></div>

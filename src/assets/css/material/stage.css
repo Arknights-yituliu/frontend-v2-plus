@@ -39,15 +39,14 @@
 
 .stage-legend-text-2 {
     font-weight: bold;
-    font-size: 20px;
-    padding: 4px;
+    font-size: 18px;
+    padding: 8px;
 }
 
 .stage-legend-text-3 {
     font-style: italic;
     text-align: center;
     padding: 4px;
-    font-size: 12px;
 }
 
 .stage-legend-text-4 {
@@ -57,7 +56,6 @@
 
 .stage-legend-text-bold {
     font-weight: bold;
-    font-size: 14px;
 }
 
 .stage-legend-text-underline {

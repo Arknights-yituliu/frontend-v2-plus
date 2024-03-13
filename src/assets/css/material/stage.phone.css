@@ -1,7 +1,7 @@
 @media screen and (max-width: 600px) {
 
     .stage-legend {
-        width: 280px;
+        width: 90%;
         font-size: 8px;
         line-height: 10px;
     }
@@ -23,8 +23,8 @@
     }
 
     .stage-legend-text-2 {
-        font-weight: bold;
         font-size: 12px;
+        font-weight: bold;
     }
 
     .stage-legend-text-3 {
