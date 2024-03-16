@@ -140,6 +140,7 @@ function updateVisits(pathName) {
   if (pathName === "/") {
     console.log("访问的是首页");
     toolApi.updateVisits(pathName);
+    return ;
   }
 
   //过滤掉不需要更新访问的路径
