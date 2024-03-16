@@ -138,7 +138,7 @@ function i18nButtonDisplay() {
 function updateVisits(pathName) {
   //访问"/"直接更新
   if (pathName === "/") {
-    console.log("访问的是首页");
+    console.log("访问的页面是：", pathName);
     toolApi.updateVisits(pathName);
     return ;
   }
