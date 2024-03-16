@@ -173,8 +173,6 @@ function getPackPriority(drawEfficiency) {
 function updateScheduleOption(index) {
 
   const schedule = scheduleOptions[index]
-  console.log(schedule)
-
   selectedScheduleName.value = schedule.name
   selectedSchedule.value = schedule
   endDate.value = schedule.end

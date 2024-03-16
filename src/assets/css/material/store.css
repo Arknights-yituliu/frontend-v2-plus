@@ -26,7 +26,7 @@
 
 .permanent-store-icon div {
     position: absolute;
-    transform: scale(1);
+    transform: scale(0.8);
     top: -24px;
     left: -24px;
     filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5))

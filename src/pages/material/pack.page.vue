@@ -170,7 +170,6 @@ function switchPackContent3(id, type) {
 
 onMounted(() => {
   storeAPI.getPackStore().then(response => {
-    console.log(response)
     packPPRResponse.value = response.data
     initData();
   })
