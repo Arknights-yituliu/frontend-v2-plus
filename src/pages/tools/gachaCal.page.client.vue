@@ -1089,7 +1089,7 @@ export default {
 
   mounted() {
     this.TimeStampFormat();
-    this.timeSelector = '彩六二期(3.21)'
+    this.timeSelector = '周年(5.15)'
     this.getPackDataList()
     this.checkEndDate();
 

@@ -125,9 +125,9 @@ const displayMenu = ['buildingSkill', 'schedule']
 
 function i18nButtonDisplay() {
   i18nButtonVisible.value = false
-  const url = window.location.href;
-  for (const path of displayMenu) {
-    if (url.indexOf(path) > -1) {
+  for (const menu of displayMenu) {
+    if (currentPath.value.indexOf(menu) > -1) {
+      console.log(currentPath.value.indexOf(menu))
       i18nButtonVisible.value = true
       break
     }
@@ -182,10 +182,12 @@ function substrPath(pathName) {
   return pathName
 }
 
+let currentPath = ref('')
+
 onMounted(() => {
-  const pathName = window.location.pathname;
-  updateVisits(pathName);
-  getPageTitle(pathName);
+  currentPath.value = window.location.pathname;
+  updateVisits(currentPath.value);
+  getPageTitle(currentPath.value);
   themeV2.value = localStorage.getItem('theme_v2') === 'dark' ? 'dark' : 'light'
   i18nButtonDisplay()
   console.log(themeV2.value)
@@ -226,7 +228,8 @@ function openNewPage(url) {
       <i class="iconfont icon-survey icon-feed-back-style"></i>
       <span style="font-size: 16px;color: white;">反馈</span>
     </div>
-    <c-popover :name="'language'" v-show="i18nButtonVisible">
+    <div v-show="i18nButtonVisible">
+    <c-popover :name="'language'" >
       <template #title>
         <div class="icon-button">
           <i class="iconfont icon-language icon-language-style"></i>
@@ -238,6 +241,7 @@ function openNewPage(url) {
         <span @click="language='en'">English</span>
       </div>
     </c-popover>
+    </div>
     <login></login>
 
 
