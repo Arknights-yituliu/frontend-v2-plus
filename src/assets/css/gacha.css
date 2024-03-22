@@ -57,14 +57,14 @@
 } */
 
 .gacha_unit_child {
-    margin: 8px;
+    margin: 4px;
     margin-left: 12px;
     vertical-align: top;
     line-height: 36px;
 }
 
 .gacha_unit_info {
-    margin-left: 12px;
+    margin: 4px 12px;
     vertical-align: top;
     line-height: 20px;
     font-style: italic;
