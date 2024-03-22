@@ -18,7 +18,7 @@ const logType = {
 let logCollect = []
 
 for (const log of logTable) {
-  let logItem = logCollect[logCollect.length-1]
+  let logItem = logCollect[logCollect.length - 1]
   if (logItem) {
     if (logItem.date !== log.date) {
       logItem = {
@@ -29,7 +29,7 @@ for (const log of logTable) {
       logCollect.push(logItem)
     } else {
       logItem.logs.push(log)
-      logCollect[logCollect.length-1] = logItem
+      logCollect[logCollect.length - 1] = logItem
     }
   } else {
     logItem = {
@@ -40,7 +40,6 @@ for (const log of logTable) {
     logCollect.push(logItem)
   }
 }
-
 
 
 </script>
@@ -55,19 +54,20 @@ for (const log of logTable) {
       <div v-for="(log,index) in logs" :key="index" class="log-content">
         <span class="log-type">{{ `${log.type}:` }}</span>
         <span class="log-module">【{{ `${log.module}` }}】</span>
+        <span class="log-author-phone">@{{ log.author }}</span>
         <span class="log-description">{{ log.description }}</span>
         <span class="log-author">@{{ log.author }}</span>
       </div>
 
 
-<!--      <ul>-->
-<!--        <li class="log-content" v-for="(log,index) in logs" :key="index">-->
-<!--          <span>{{ `${log.type}:` }}</span>-->
-<!--          <span>【{{ `${log.module}` }}】</span>-->
-<!--          <span>{{ log.description }}</span>-->
-<!--          <span>@{{ log.author }}</span>-->
-<!--        </li>-->
-<!--      </ul>-->
+      <!--      <ul>-->
+      <!--        <li class="log-content" v-for="(log,index) in logs" :key="index">-->
+      <!--          <span>{{ `${log.type}:` }}</span>-->
+      <!--          <span>【{{ `${log.module}` }}】</span>-->
+      <!--          <span>{{ log.description }}</span>-->
+      <!--          <span>@{{ log.author }}</span>-->
+      <!--        </li>-->
+      <!--      </ul>-->
     </div>
   </div>
 </template>
@@ -81,22 +81,22 @@ for (const log of logTable) {
 .log-content {
   padding: 4px;
   display: flex;
-  text-align: center;
+  flex-wrap: wrap;
+  font-weight: bold;
+  font-size: 16px;
 }
 
-.log-type{
+
+.log-type {
   display: block;
   width: 60px;
 }
 
-.log-module{
+.log-module {
   display: block;
   width: 200px;
 }
 
-.log-content span {
-  padding: 0 8px;
-}
 
 .log-description {
   display: block;
@@ -108,8 +108,32 @@ for (const log of logTable) {
   width: 200px;
 }
 
+.log-author-phone {
+  display: none;
+}
 
+@media screen and (max-width: 600px) {
+  .log-content {
+    font-size: 12px;
+  }
 
+  .log-type {
+    width: 50px;
+  }
+
+  .log-module {
+    width: 120px;
+  }
+
+  .log-author {
+    display: none;
+  }
+
+  .log-author-phone {
+    display: block;
+  }
+
+}
 
 
 </style>

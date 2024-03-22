@@ -31,12 +31,12 @@ function getStoreData() {
     }
   })
 
-  storeAPI.getActStore().then(response=>{
-    actStoreList.value =  response.data
+  storeAPI.getActStore().then(response => {
+    actStoreList.value = response.data
     // 遍历活动列表
     actStoreList.value.forEach(act => {
       // 格式化活动商店材料
-      if (!act.actStoreFormat){
+      if (!act.actStoreFormat) {
         act.actStoreFormat = []
       }
       // 商店区域(通常为三个区域)
@@ -112,7 +112,7 @@ onMounted(() => {
   <div class="store-page">
     <div style="width: 359px;background-color: #00a1d6;height: 4px"></div>
     <!-- 活动商店 -->
-    <div id="actStore" >
+    <div id="actStore">
 
 
       <!-- 标题区域 -->
@@ -130,31 +130,38 @@ onMounted(() => {
       <!-- 内容区域 -->
       <div v-for="(singleAct, index) in actStoreList" :key="index">
         <!-- banner -->
-        <div class="act_banner_background" :style="getBackground(singleAct.actImgUrl)">
+        <div class="act_banner_background" :style="getBackground(singleAct.imageLink)">
           <div class="act_banner_img">
-            <img class="act_img" :src="singleAct.actImgUrl" :alt="singleAct.actName"/>
+            <img class="act_img" :src="singleAct.imageLink" :alt="singleAct.actName"/>
           </div>
         </div>
 
         <!-- tag -->
-        <div class="stage_hint">
-          <div v-for="(singleTag, index) in singleAct.actTagArea" :key="index" :class="getTagClass(singleTag.tagRank)">
-            {{ singleTag.tagText }}
-          </div>
+
+        <div class="tag-group">
+          <span :class="`tag-rank-${singleTag.tagRank}`" v-for="(singleTag, index) in singleAct.actTagArea" :key="index">
+           {{ singleTag.tagText }}
+          </span>
         </div>
+
+        <!-- <div class="stage_hint">-->
+        <!--          <div v-for="(singleTag, index) in singleAct.actTagArea" :key="index" :class="getTagClass(singleTag.tagRank)">-->
+        <!--            {{ singleTag.tagText }}-->
+        <!--          </div>-->
+        <!--        </div>-->
 
         <!-- Area -->
         <div class="activity-store-content" v-for="(singleArea, index) in singleAct.actStoreFormat" :key="index">
           <div class="activity-store-good"
-              :class="`activity-store-good-area-${index}`"
+               :class="`activity-store-good-area-${index}`"
                v-for="(singleItem, i) in singleArea" :key="i">
             <div class="activity-store-good-sprite">
-             <div :class="`bg-${singleItem.itemId}`"></div>
+              <div :class="`bg-${singleItem.itemId}`"></div>
             </div>
             <div class="activity-store-good-info">
               <span class="activity-store-good-name">{{ singleItem.itemName }}</span>
               <span class="activity-store-good-efficiency"
-                 :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)">{{
+                    :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)">{{
                   getEfficiency(singleItem.itemPPR)
                 }}</span>
               <span class="activity-store-good-price">{{ singleItem.itemPrice }}代币</span>
@@ -178,25 +185,25 @@ onMounted(() => {
         <div class="permanent-store-checkbox">
           <div class="permanent-store-checkbox-button" v-for="(item, index) in storeListFormat" :key="index"
                :style="item.hide?'':'filter: none;'" @click="switchStore(item)">
-             <div class="" :class="`bg-icon_${item.iconId}`"></div>
+            <div class="" :class="`bg-icon_${item.iconId}`"></div>
           </div>
         </div>
         <span class="module-tip">*点击图标切换</span>
       </div>
 
-<!--      <div class="op_title">-->
-<!--        <div class="op_title_text">-->
-<!--          <div class="op_title_ctext">采购中心</div>-->
-<!--          <div :class="opETextTheme">Store Ranking</div>-->
-<!--        </div>-->
-<!--        <div class="op_title_tag">-->
-<!--          <div class="op_title_tag_item" :class="[{ hide: item.hide }]" v-for="(item, index) in storeListFormat"-->
-<!--               :key="index" @click="switchStore(item)">-->
-<!--            <div style="margin: 3px" :class="getSpriteImg(item.iconId, 'icon')"></div>-->
-<!--          </div>-->
-<!--          <div class="tab_text">*点击图标切换</div>-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--      <div class="op_title">-->
+      <!--        <div class="op_title_text">-->
+      <!--          <div class="op_title_ctext">采购中心</div>-->
+      <!--          <div :class="opETextTheme">Store Ranking</div>-->
+      <!--        </div>-->
+      <!--        <div class="op_title_tag">-->
+      <!--          <div class="op_title_tag_item" :class="[{ hide: item.hide }]" v-for="(item, index) in storeListFormat"-->
+      <!--               :key="index" @click="switchStore(item)">-->
+      <!--            <div style="margin: 3px" :class="getSpriteImg(item.iconId, 'icon')"></div>-->
+      <!--          </div>-->
+      <!--          <div class="tab_text">*点击图标切换</div>-->
+      <!--        </div>-->
+      <!--      </div>-->
       <!-- 标题区域end -->
       <!-- 内容区域 -->
       <div v-show="!item.hide"
@@ -217,12 +224,12 @@ onMounted(() => {
       </div>
     </div>
 
-<!--    <div class="op_title">-->
-<!--      <div class="op_title_text">-->
-<!--        <div class="op_title_ctext">算法说明</div>-->
-<!--        <div :class="opETextTheme">Algorithm</div>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div class="op_title">-->
+    <!--      <div class="op_title_text">-->
+    <!--        <div class="op_title_ctext">算法说明</div>-->
+    <!--        <div :class="opETextTheme">Algorithm</div>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <div class="module-header">
       <div class="module-title">
         <h1>算法说明</h1>
@@ -235,7 +242,8 @@ onMounted(() => {
           <el-collapse>
             <el-collapse-item name="2" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><b style="margin-left: 4px">计算方式</b></span>
+                <span style="font-size: large; display: flex; align-items: center"><b
+                    style="margin-left: 4px">计算方式</b></span>
               </template>
 
               单位：理智/各货币
@@ -251,7 +259,8 @@ onMounted(() => {
             </el-collapse-item>
             <el-collapse-item name="4" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><b style="margin-left: 4px">算法公示卡</b></span>
+                <span style="font-size: large; display: flex; align-items: center"><b
+                    style="margin-left: 4px">算法公示卡</b></span>
               </template>
               <table id="al_card">
                 <tbody>
@@ -286,7 +295,8 @@ onMounted(() => {
             </el-collapse-item>
             <el-collapse-item name="5" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><b style="margin-left: 4px">版权声明与许可协议</b>
+                <span style="font-size: large; display: flex; align-items: center"><b
+                    style="margin-left: 4px">版权声明与许可协议</b>
                 </span>
               </template>
               网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于

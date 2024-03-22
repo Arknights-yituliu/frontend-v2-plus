@@ -51,7 +51,7 @@
             <div class="input-label">邮箱：</div>
             <input class="login-form-input" placeholder="请输入" v-model="input_data.email"/>
             <div style="border: 1px solid #d9d9d9;height: 32px;margin: 0 4px"></div>
-            <div class="input-label" @click="sendEmailCodeByRegister()" style="cursor: pointer">获取验证码</div>
+            <div class="input-btn" @click="sendEmailCodeByRegister()" style="cursor: pointer">获取验证码</div>
           </div>
           <div class="login_form_divider"></div>
           <div class="login-form-item">

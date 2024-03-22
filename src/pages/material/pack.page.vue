@@ -30,9 +30,17 @@ function getPackList(packType, packState, type1, type2, type3) {
   return "display: none;";
 }
 
+
+let limitedPack = []
+let periodicPack = []
+let newbiePack = []
+
 function initData() {
-  packsPPRData.value = [];
-  packsPPRDataSort.value = [];
+  // packsPPRData.value = [];
+  // packsPPRDataSort.value = [];
+  const limitedType = ['limited']
+  const periodicType = ['weekly', 'monthly', 'chips']
+  const newbieType = ['once', 'return']
 
   for (let i = 0; i < packPPRResponse.value.length; i += 1) {
     let pack = packPPRResponse.value[i]
@@ -44,14 +52,23 @@ function initData() {
 
     pack.lineChartData = getLineChartData(pack)
     //  console.log('正常：',this.packPPRResponse[i].packName);
-    //性价比位置的为强制为0
+    //性价比位置的为空的强制赋0
     if (!pack.packRmbPerDraw) {
       pack.packRmbPerDraw = 0;
     }
 
+    if(limitedType.includes(pack.saleType)){
+      limitedPack.push(pack)
+    }
+    if(periodicType.includes(pack.saleType)){
+      periodicPack.push(pack)
+    }
+    if(newbieType.includes(pack.saleType)){
+      newbiePack.push(pack)
+    }
 
-    packsPPRData.value.push(pack);
 
+    // packsPPRData.value.push(pack);
   }
 
   // this.sortPackByPPRPerDraw();
@@ -137,6 +154,7 @@ function getContentId3(id, type) {
 
 function displayPackContent(id) {
   const element = document.getElementById(id)
+  console.log(element)
   if ('flex' === element.style.display) {
     element.style.display = 'none'
   } else {
@@ -212,13 +230,12 @@ onMounted(() => {
 
       <div class="pack-card-container">
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
-        <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack-card"
-             :style="getPackList(pack2.saleType, pack2.saleStatus, 'limited', 'limited', 'limited')">
-
+        <div v-for="(pack2, index) in limitedPack" :key="index" class="pack-card"
+             @click="displayPackContent(pack2.id)">
           <!-- 图片部分 -->
           <div class="pack-card-part-left">
             <img :src="getPackImageLink(pack2.officialName, pack2.imageName)" alt=""
-                 class="pack-image" @click="displayPackContent(pack2.id)">
+                 class="pack-image" >
             <span class="pack-display-name">
          {{ pack2.displayName }} ￥{{ pack2.price }}
         </span>
@@ -293,15 +310,14 @@ onMounted(() => {
       </div>
 
       <!-- all -->
-      <div class="pack-card-container" style="margin-top: -8px">
+      <div class="pack-card-container" >
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
-        <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack-card"
-             :style="getPackList(pack2.saleType, pack2.saleStatus, 'weekly', 'monthly', 'chips')">
-
+        <div v-for="(pack2, index) in periodicPack" :key="index" class="pack-card"
+             @click="displayPackContent(pack2.id)">
           <!-- 图片部分 -->
           <div class="pack-card-part-left">
             <img :src="getPackImageLink(pack2.officialName, pack2.imageName)" alt=""
-                 class="pack-image" @click="displayPackContent(pack2.id)">
+                 class="pack-image">
             <span class="pack-display-name">
          {{ pack2.displayName }} ￥{{ pack2.price }}
         </span>
@@ -378,14 +394,15 @@ onMounted(() => {
       </div>
 
       <!-- all -->
-      <div class="pack-card-container" style="margin-top: -8px">
+      <div class="pack-card-container" >
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
-        <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack-card"
-             :style="getPackList(pack2.saleType, pack2.saleStatus, 'once', 'return')">
+        <div v-for="(pack2, index) in newbiePack" :key="index" class="pack-card"
+             :style="getPackList(pack2.saleType, pack2.saleStatus, 'once', 'return')"
+             @click="displayPackContent(pack2.id)">
           <!-- 图片部分 -->
           <div class="pack-card-part-left">
             <img :src="getPackImageLink(pack2.officialName, pack2.imageName)" alt=""
-                 class="pack-image" @click="displayPackContent(pack2.id)">
+                 class="pack-image" >
             <span class="pack-display-name">
          {{ pack2.displayName }} ￥{{ pack2.price }}
         </span>

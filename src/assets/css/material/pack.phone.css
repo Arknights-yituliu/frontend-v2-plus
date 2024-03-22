@@ -5,7 +5,7 @@
     }
 
     .pack-card{
-        width: 98%;
+        width: 350px;
     }
 
     .pack-card-part-left{
@@ -66,6 +66,17 @@
         font-size: 8px;
         line-height: 12px;
     }
+
+    .pack-content{
+        width: 310px;
+        margin-left: 10px;
+        margin-top: -20px;
+        padding-top: 20px;
+        padding-left: 4px;
+        padding-right: 4px;
+        font-size: 10px;
+    }
+
 
 
 }

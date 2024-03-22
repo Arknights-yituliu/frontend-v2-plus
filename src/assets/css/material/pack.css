@@ -160,12 +160,11 @@
     display: none;
     flex-wrap: wrap;
     background: var(--c-background-color);
-    font-size: 16px;
+    font-size: 14px;
     border-radius: 4px;
     box-shadow: 1px 1px 4px var(--c-box-shadow-color);
     box-sizing: border-box;
     overflow: hidden;
-
 }
 
 .pack-content-gacha{
@@ -188,7 +187,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     box-sizing: border-box;
-    font-size: 14px;
+
 }
 
 .pack-content-material-item{

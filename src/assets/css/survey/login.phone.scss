@@ -12,8 +12,20 @@
     }
 
     .login-form{
-      width: 280px;
-      font-size: 14px;
+      width: 300px;
+      font-size: 12px;
+    }
+
+    .login-form-item{
+      padding: 4px 8px;
+    }
+
+    .input-label{
+      width: 50px;
+    }
+
+    .input-btn{
+      width: 60px;
     }
 
     .login-form-item{
@@ -21,7 +33,9 @@
     }
 
     .login-form-input {
-      width: 120px;
+      width: 160px;
+      height: 24px;
+      line-height: 24px;
     }
 
     .login-btn{

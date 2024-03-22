@@ -38,16 +38,24 @@
   }
 
   .input-label{
-    min-width: 60px;
+    display: block;
+    width: 70px;
+  }
+
+  .input-btn{
+    width: 80px;
   }
 
   .login-form-input {
-    width: 200px;
+    width: 240px;
     border: 0;
     outline: none;
     display: block;
-    height: 30px;
-    line-height: 30px;
+    height: 32px;
+    line-height: 32px;
+    background-color: var(--c-background-color);
+    color: var(--c-text-color);
+
   }
 
   .login-btn{

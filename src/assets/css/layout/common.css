@@ -40,8 +40,14 @@
     line-height: 16px;
 }
 
+.tag-group{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
 .tag-group span{
-    display: inline-flex;
+    display: block;
     border-radius: 4px;
     padding: 2px 20px;
     font-size: 14px;
