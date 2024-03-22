@@ -1,3 +1,5 @@
+import Error404 from "/src/pages/layout/Error404.vue";
+
 const routes = [
     {
         path: '/',
@@ -170,6 +172,11 @@ const routes = [
         module: 'about',
         icon: "link",
         component: () => import('/src/pages/about/links.page.vue')
+    },
+    {
+        path: '/:catchAll(.*)',
+        display: false,
+        component: Error404
     }
 ]
 
@@ -197,7 +204,10 @@ const LinkedTable = {
 }
 
 for (const route of routes) {
-    LinkedTable[route.module].child.push(route)
+    if(route.module){
+        LinkedTable[route.module].child.push(route)
+    }
+
 }
 
 export {
