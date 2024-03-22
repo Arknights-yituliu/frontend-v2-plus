@@ -892,7 +892,7 @@ onMounted(() => {
     <div class="activity-table-phone-container" id="act-table-phone">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActItemList" :key="index">
-          <td class="s-activity-name-phone">{{ act.activityName }}</td>
+          <td class="s-activity-name-phone">{{ act.zoneName }}</td>
           <td v-for="(stage, index) in  act.actStageList" :key="index">
             <div class="s-activity-drop">
               <div class="activity-pickup-item">

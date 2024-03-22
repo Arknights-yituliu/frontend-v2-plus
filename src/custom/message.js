@@ -9,7 +9,7 @@ const style = {
     top: '0px',
     left: '50%',
     fontWeight: '600',
-    zIndex: '2000',
+    zIndex: '3000',
     transition: 'opacity 0.3s, top 0.5s',
     transform: 'translate(-50%, 0)',
     border:'1px solid #a8ffc1'

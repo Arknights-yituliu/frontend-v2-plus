@@ -6,8 +6,9 @@ import '/src/assets/css/tool/gacha_calc.phone.scss'
 import * as echarts from "echarts";
 
 import potentialTable from '/src/static/json/tools/potentialGachaResources.json'
-import HONEY_CAKE_TABLE from '/src/static/json/tools/activityScheduleByHoneycake.json'
+import HONEY_CAKE_TABLE from '/src/static/json/tools/scheduleByHoneycake.json'
 import storeAPI from '/src/api/store'
+import {cMessage} from "../../custom/message.js";
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
@@ -41,7 +42,7 @@ let scheduleOptions = [
     start: new Date('2024/05/01 16:00:00'),
     end: new Date('2024/05/15 04:01:00'),
     activityType: '周年限定',
-    disabled:false,
+    disabled: false,
     dailyDrawResources: false
   },
   {
@@ -49,14 +50,14 @@ let scheduleOptions = [
     start: new Date('2024/05/01 16:00:00'),
     end: new Date('2024/05/15 04:01:00'),
     activityType: '周年限定',
-    disabled:true,
+    disabled: true,
     dailyGiftResources: true
-  },{
+  }, {
     name: '敬请期待 ',
     start: new Date('2024/05/01 16:00:00'),
     end: new Date('2024/05/15 04:01:00'),
     activityType: '周年限定',
-    disabled:true,
+    disabled: true,
     dailyGiftResources: false
   }
 ]
@@ -94,7 +95,7 @@ function getPackData() {
     }
 
     const monthlyCertificateExchange = {
-      "displayName": `${month}月黄票兑换寻访凭证`,
+      "displayName": `${month}月黄票兑换单抽`,
       "gachaTicket": 8,
       "tenGachaTicket": 3,
       "originium": 0,
@@ -461,7 +462,7 @@ function gachaResourcesCalculation() {
 
   function produceOrundumCalculate() {
     //计算用理智产出的合成玉数量
-    if(produceOrundum.value.ap&&produceOrundum.value.coefficient){
+    if (produceOrundum.value.ap && produceOrundum.value.coefficient) {
       produceOrundum.value.outputByAp = parseInt(produceOrundum.value.ap.toString()) * parseInt(produceOrundum.value.coefficient.toString())
     }
     //计算用材料产出的合成玉数量
@@ -479,7 +480,7 @@ function gachaResourcesCalculation() {
       certificateStoreF3.value.remainingCertificates = certificates - 11590
       //可兑换多少合成玉
       certificateStoreF3.value.orundum = Math.floor((certificateStoreF3.value.remainingCertificates / 50) * 30)
-    }else {
+    } else {
       certificateStoreF3.value.remainingCertificates = 0
       certificateStoreF3.value.orundum = 0
     }
@@ -508,11 +509,8 @@ function gachaResourcesCalculation() {
 
     //计算选中的常驻章节或活动的资源
     if (selectedPermanentZoneName.value) {
-      for (const potential of potentialTable) {
-        //当前活动不在选中的活动集合中，跳过
-        if (!selectedPermanentZoneName.value.includes(potential.packName)) {
-          continue
-        }
+      for (const index of selectedPermanentZoneName.value) {
+        const potential = potentialTable[index]
         originium += parseInt(potential.gachaOriginium)
       }
     }
@@ -555,14 +553,21 @@ function gachaResourcesCalculation() {
         packData.value[i].orundum = dailyReward.value.dailyTask * 200
         //卡池结束前可以购买月卡的数量
         let purchaseQuantity = Math.ceil(dailyReward.value.dailyTask / 30)
-        //加上额外购买的月卡数量
-        purchaseQuantity += rechargeCalculationResult.value.additionalMonthlyCardPurchase
-        packData.value[i].originium = purchaseQuantity * 6
+        //加上额外购买的月卡数量,判断是否额外购买了超过3个月
+        if(rechargeCalculationResult.value.additionalMonthlyCardPurchase>3){
+          cMessage('月卡一次性只能最大购买90天','error')
+        }else {
+          purchaseQuantity += rechargeCalculationResult.value.additionalMonthlyCardPurchase
+          packData.value[i].originium = purchaseQuantity * 6
+        }
+
+
         //月卡的价格=购买月卡的数量*30
         packData.value[i].price = purchaseQuantity * 30
         //当月月卡已购买源石-6
         if (rechargeCalculationResult.value.monthlyCardPurchasedThisMonth) {
           packData.value[i].originium -= 6
+          totalAmountOfRecharge -= 30
         }
       }
 
@@ -611,7 +616,7 @@ function gachaResourcesCalculation() {
 
     for (const activityName in activitySchedules.value) {
       const activity = activitySchedules.value[activityName]
-      if (!itemIsExpired(activity)) {
+      if (!rewardIsExpired(activity)) {
         continue
       }
 
@@ -661,7 +666,7 @@ function gachaResourcesCalculation() {
     let gachaTicket = 0
     let tenGachaTicket = 0
     for (const honeyCake of honeyCakeTable.value) {
-      if (!itemIsExpired(honeyCake)) {
+      if (!rewardIsExpired(honeyCake)) {
         continue
       }
 
@@ -724,7 +729,7 @@ function gachaResourcesCalculation() {
  * @param reward 奖励的信息
  * @returns {boolean} 是否可计入
  */
-function itemIsExpired(reward) {
+function rewardIsExpired(reward) {
 
   //活动结束时间在当前时间之前，活动已结束
   if (reward.end < currentTimestamp) {
@@ -762,7 +767,7 @@ function setPieChart(data) {
         itemStyle: {},
         label: {
           show: true,
-          textStyle: {color: "rgb(255,69,0)", fontSize: "14"},
+          textStyle: {color: "rgb(255,69,0)", fontSize: "12"},
         },
         labelLine: {
           length: 4,
@@ -1086,9 +1091,9 @@ const handleChange = (val) => {
                              @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack,name) in monthlyCertificateExchangeList"
                                 :key="name" :value="name" style="margin: 4px"
-                                v-show="itemIsExpired(pack)">
+                                v-show="rewardIsExpired(pack)">
               <div class="checkbox-button">
-                <span class="checkbox-button-pack-label" >{{ pack.displayName }}</span>
+                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
                 <div class="checkbox-button-pack-gacha-resources">
                   <div class="image-sprite">
                     <div class="bg-icon_7003"></div>
@@ -1139,7 +1144,7 @@ const handleChange = (val) => {
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
                              @change="gachaResourcesCalculation" size="small">
             <el-checkbox-button v-for="(potential,index) in potentialTable"
-                                :key="index" :value="potential.packName" v-show="potential.packType==='main'"
+                                :key="index" :value="index" v-show="potential.packType==='main'"
                                 class="el-checkbox-button" :border="true">
               <div class="checkbox-button">
                 <span
@@ -1162,7 +1167,7 @@ const handleChange = (val) => {
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
                              @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(potential,index) in potentialTable" :border="true"
-                                :key="index" :value="potential.packName" v-show="potential.packType==='activity'"
+                                :key="index" :value="index" v-show="potential.packType==='activity'"
                                 class="el-checkbox-button">
               <div class="checkbox-button">
                 <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
@@ -1207,7 +1212,7 @@ const handleChange = (val) => {
             <el-checkbox-button v-for="(pack,index) in packGroupByMonthly"
                                 :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button"
-                                v-show="itemIsExpired(pack)">
+                                v-show="rewardIsExpired(pack)">
               <div class="checkbox-button">
                <span class="draw-efficiency"
                      :style="getPackPriority(pack.drawEfficiency)">
@@ -1376,7 +1381,7 @@ const handleChange = (val) => {
           </div>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(activity,name) in activitySchedules"
-                                :key="name" :value="name" v-show="activity.module==='actRe'"
+                                :key="name" :value="name" v-show="activity.module==='actRe'&&rewardIsExpired(activity)"
                                 class="el-checkbox-button">
               <div class="checkbox-button">
                 <span class="checkbox-button-pack-label">{{ activity.name }}</span>
@@ -1411,8 +1416,8 @@ const handleChange = (val) => {
             <span></span> 未来活动
           </div>
           <div class="checkbox-button" v-for="(activity,name) in activitySchedules"
-               :key="name" v-show="activity.module==='act'&&itemIsExpired(activity)">
-            <span class="checkbox-button-pack-label" >{{ activity.name }}</span>
+               :key="name" v-show="activity.module==='act'&&rewardIsExpired(activity)">
+            <span class="checkbox-button-pack-label">{{ activity.name }}</span>
             <div class="checkbox-button-gacha-resources">
               <div class="image-sprite" v-show="activity.originium>0">
                 <div class="bg-icon_4002"></div>
@@ -1443,7 +1448,7 @@ const handleChange = (val) => {
           </template>
 
           <div class="resources-line" v-for="(honeyCake,label) in honeyCakeTable" :key="label"
-               v-show="itemIsExpired(honeyCake)">
+               v-show="rewardIsExpired(honeyCake)">
             <span class="resources-line-label" style="width: 240px">{{ honeyCake.name }}</span>
             <div class="resources-line-content">
               <div class="image-sprite" v-show="honeyCake.originium>0">

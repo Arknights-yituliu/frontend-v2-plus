@@ -956,7 +956,7 @@
 
 <script>
 import potentialTable from "/src/static/json/tools/potentialGachaResources.json"; //常驻活动和主线数据
-import activityList from "/src/static/json/tools/activityScheduleByHoneycake.json"; //其他奖励数据
+import activityList from "/src/static/json/tools/scheduleByHoneycake.json"; //其他奖励数据
 import "/src/assets/css/sprite_gacha.css";
 import "/src/assets/css/gacha.css";
 import cookie from "js-cookie";
