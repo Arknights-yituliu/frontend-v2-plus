@@ -16,7 +16,8 @@ router.beforeEach( (to, from) => {
 // 可选地，在导航完成时重置加载状态
 router.afterEach(() => {
     const element = document.getElementById('loading')
-    setTimeout(() => element.style.display = 'none', 500)
+    element.style.display = 'none'
+    // setTimeout(() => element.style.display = 'none', 100)
 })
 
 
