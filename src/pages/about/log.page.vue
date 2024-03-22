@@ -49,16 +49,25 @@ for (const log of logTable) {
 
   <div class="log-list">
     <h1>网站维护日志</h1>
+
     <div class="log-item" v-for="({date,logs},index) in logCollect" :key="index">
       <h2>{{ date }}</h2>
-      <ul>
-        <li class="log-content" v-for="(log,index) in logs" :key="index">
-          <span>{{ `${log.type}:` }}</span>
-          <span>【{{ `${log.module}` }}】</span>
-          <span>{{ log.description }}</span>
-          <span>@{{ log.author }}</span>
-        </li>
-      </ul>
+      <div v-for="(log,index) in logs" :key="index" class="log-content">
+        <span class="log-type">{{ `${log.type}:` }}</span>
+        <span class="log-module">【{{ `${log.module}` }}】</span>
+        <span class="log-description">{{ log.description }}</span>
+        <span class="log-author">@{{ log.author }}</span>
+      </div>
+
+
+<!--      <ul>-->
+<!--        <li class="log-content" v-for="(log,index) in logs" :key="index">-->
+<!--          <span>{{ `${log.type}:` }}</span>-->
+<!--          <span>【{{ `${log.module}` }}】</span>-->
+<!--          <span>{{ log.description }}</span>-->
+<!--          <span>@{{ log.author }}</span>-->
+<!--        </li>-->
+<!--      </ul>-->
     </div>
   </div>
 </template>
@@ -72,27 +81,35 @@ for (const log of logTable) {
 .log-content {
   padding: 4px;
   display: flex;
+  text-align: center;
+}
+
+.log-type{
+  display: block;
+  width: 60px;
+}
+
+.log-module{
+  display: block;
+  width: 200px;
 }
 
 .log-content span {
   padding: 0 8px;
 }
 
-.log-item {
-
-}
-
-.log-tag {
-  width: 200px;
-}
-
-.log-text {
-  width: 200px;
+.log-description {
+  display: block;
+  width: 400px;
 }
 
 .log-author {
+  display: block;
   width: 200px;
 }
+
+
+
 
 
 </style>

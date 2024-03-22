@@ -27,13 +27,7 @@
 
 
 @media (max-width: 600px) {
-  .side-navigation-container {
-    display: none;
-  }
 
-  .container{
-    padding-left: 0;
-  }
 
 }
 

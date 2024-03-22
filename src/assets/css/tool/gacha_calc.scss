@@ -195,7 +195,7 @@
 
   .exist-resources-input input {
     width: 100px;
-    height: 32px;
+    height: 28px;
     font-size: 18px;
     font-weight: bold;
     box-sizing: border-box;
@@ -251,7 +251,7 @@
   }
 
   /*多选盒的按钮外部包围*/
-  .checkbox-button-content {
+  .checkbox-button {
     display: flex;
     font-size: 16px;
     align-items: center;
@@ -274,38 +274,46 @@
     width: 120px;
   }
 
-  .checkbox-button-label-short-zone {
+  .checkbox-button-zone-label-short {
     width: 80px;
   }
 
-  .checkbox-button-label-long-zone {
+  .checkbox-button-zone-label-long {
     width: 180px;
   }
 
-  .checkbox-button-label-zone {
-    width: 140px;
+  .checkbox-button-zone-label {
+    width: 180px;
   }
 
   .checkbox-button-pack-label {
-    width: 150px;
+    width: 200px;
   }
 
   /*多选框的氪金资源外部容器样式*/
-  .gacha-resources-button {
+  .checkbox-button-gacha-resources {
     display: flex;
     align-items: center;
   }
 
-  .gacha-resources-button > span {
+  .checkbox-button-gacha-resources > span {
     font-weight: bolder;
     padding-left: 2px;
     width: 50px;
     text-align: left;
   }
 
-  .pack-gacha-resources-button {
+  .checkbox-button-pack-gacha-resources {
     width: 280px;
+    display: flex;
+    align-items: center;
   }
 
+  .checkbox-button-pack-gacha-resources > span {
+    font-weight: bolder;
+    padding-left: 2px;
+    width: 50px;
+    text-align: left;
+  }
 
 }

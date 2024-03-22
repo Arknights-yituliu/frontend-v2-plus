@@ -146,7 +146,7 @@
 
     .exist-resources-input input {
       width: 126px;
-      height: 26px;
+      height: 22px;
       font-size: 16px;
     }
 
@@ -177,7 +177,7 @@
 
     .resources-line > input {
       width: 60px;
-      height: 24px;
+      height: 22px;
       margin: 0 2px;
       font-size: 14px;
       padding: 0 4px;
@@ -188,7 +188,7 @@
       line-height: 12px;
     }
 
-    .checkbox-button-content {
+    .checkbox-button {
       display: flex;
       font-size: 12px;
       align-items: center;
@@ -204,37 +204,39 @@
       width: 30px;
     }
 
-    .checkbox-button-label-short-zone{
+    .checkbox-button-zone-label-short{
       width: 40px;
     }
 
-    .checkbox-button-label-long-zone{
+    .checkbox-button-zone-label-long{
       width: 100px;
     }
 
-    .checkbox-button-label-zone{
+    .checkbox-button-zone-label{
       width: 74px;
     }
 
     .checkbox-button-pack-label{
-      width: 100px;
+      width: 120px;
     }
 
     /*多选盒的按钮的内容*/
-    .gacha-resources-button {
+    .checkbox-button-gacha-resources {
       display: flex;
       align-items: center;
     }
 
-    .gacha-resources-button > span {
+    .checkbox-button-gacha-resources > span {
       font-weight: bolder;
       padding-left: 2px;
       width: 40px;
       text-align: left;
     }
 
-    .pack-gacha-resources-button{
+    .checkbox-button-pack-gacha-resources{
       width: 180px;
+      display: flex;
+      align-items: center;
     }
 
   }

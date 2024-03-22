@@ -241,7 +241,15 @@
     border-bottom: 1px solid var(--c-border-color);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
+
+    .side-navigation-container {
+        display: none;
+    }
+
+    .container{
+        padding-left: 0;
+    }
 
     .feedback-table {
         width: 340px;
