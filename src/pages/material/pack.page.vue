@@ -2,8 +2,8 @@
 import storeAPI from "/src/api/store";
 import {onMounted, ref} from "vue";
 
-import '/src/assets/css/material/pack.css'
-import '/src/assets/css/material/pack.phone.css'
+import '/src/assets/css/material/pack.scss'
+import '/src/assets/css/material/pack.phone.scss'
 
 let opETextTheme = "op_title_etext_light"
 
@@ -200,7 +200,7 @@ onMounted(() => {
 </script>
 <template>
   <div>
-    <div id="pack">
+    <div id="pack" class="pack-efficiency-page">
       <!-- 当季礼包 标题区域 -->
       <!--      <div class="op_title">-->
       <!--        <div class="op_title_text">-->

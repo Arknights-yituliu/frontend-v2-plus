@@ -184,8 +184,8 @@ import {ref, onMounted} from "vue";
 import {exportExcel} from "/src/utils/exportExcel";
 import FixedNav from "../../components/FixedNav.vue";
 import materialAPI from "/src/api/material.js";
-import '/src/assets/css/material/value.css'
-import '/src/assets/css/material/value.phone.css'
+import '/src/assets/css/material/value.scss'
+import '/src/assets/css/material/value.phone.scss'
 
 let opETextTheme = ref("op_title_etext_light")
 

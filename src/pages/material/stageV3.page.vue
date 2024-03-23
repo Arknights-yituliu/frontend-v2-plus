@@ -4,8 +4,8 @@ import {onMounted, ref} from "vue";
 import itemSeries from '/src/static/json/material/item_series.json'
 import FixedNav from "../../components/FixedNav.vue";
 import TourGuide from "../../components/TourGuide.vue";
-import '/src/assets/css/material/stage.css'
-import '/src/assets/css/material/stage.phone.css'
+import '/src/assets/css/material/stage.scss'
+import '/src/assets/css/material/stage.phone.scss'
 import {timeFormat} from '/src/utils/dateUtil.js'
 //漫游导航指引
 const guideOpen = ref(false)

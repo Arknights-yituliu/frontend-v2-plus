@@ -3,8 +3,8 @@ import cookie from 'js-cookie'
 import {onMounted, ref} from 'vue'
 import FixedNav from "../../components/FixedNav.vue";
 import storeAPI from '/src/api/store.js'
-import '/src/assets/css/material/store.css'
-import '/src/assets/css/material/store.phone.css'
+import '/src/assets/css/material/store.scss'
+import '/src/assets/css/material/store.phone.scss'
 import '/src/assets/css/sprite/sprite_plane_icon.css'
 
 let storeListFormat = ref([]) // 常驻商店性价比集合
@@ -110,9 +110,8 @@ onMounted(() => {
 
 <template>
   <div class="store-page">
-    <div style="width: 359px;background-color: #00a1d6;height: 4px"></div>
     <!-- 活动商店 -->
-    <div id="actStore">
+    <div id="actStore" >
 
 
       <!-- 标题区域 -->
