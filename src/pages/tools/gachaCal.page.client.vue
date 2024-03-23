@@ -532,7 +532,7 @@
                 <div class="triangle"></div>
                 往年限时礼包
               </div>
-              <div class="gacha_unit_info">注意！下列礼包是去年同期的礼包，届时不能保证这些礼包会按时上架，仅作氪金规划的参考，新礼包公布之后会移除该区域</div>
+              <div class="gacha_unit_info">注意！下列礼包是去年同期的礼包，届时不能保证这些礼包会按时上架，仅作氪金规划的参考，新礼包公布之后这里会移除相应的礼包</div>
               <el-checkbox-group v-model="selectedPacks" class="">
                 <div v-for="(singlePack, index) in limitedPackList" :key="index" class="gacha_unit_child"
                   @change="compute(singlePack.name)">
