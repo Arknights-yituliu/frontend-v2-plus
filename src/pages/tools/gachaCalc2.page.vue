@@ -142,7 +142,7 @@ function getAndSortPackData() {
     index++
   }
 
-   //从服务器获取礼包数据，将其进行分类
+  //从服务器获取礼包数据，将其进行分类
   storeAPI.getPackStore().then(response => {
     for (let pack of response.data) {
       //没有抽卡资源不写入
@@ -345,10 +345,20 @@ let calculationResult = ref({
   tenGachaTicket: 0,
 })
 
+let singleResourceDraws = ref({
+  originium: 0,
+  //合成玉
+  orundum: 0,
+  //抽卡券
+  gachaTicket: 0,
+  //十连券
+  tenGachaTicket: 0,
+})
+
 //当前时间戳
 const currentTimestamp = new Date().getTime();
 //选中的黄票兑换抽卡券
-let selectedCertificatePack = ref([]) 
+let selectedCertificatePack = ref([])
 //选中的潜在章节
 let selectedPermanentZoneName = ref([])
 //选中的活动名称
@@ -786,6 +796,7 @@ function gachaResourcesCalculation() {
     calculationResult.value.gachaTicket += gachaTicket
     calculationResult.value.tenGachaTicket += tenGachaTicket
 
+
     calculationResult.value.otherTotalDraw = Math.floor(orundum / 600 + originium * 0.3 +
         gachaTicket + tenGachaTicket * 10)
 
@@ -804,6 +815,11 @@ function gachaResourcesCalculation() {
   calculationResult.value.totalDraw = Math.floor(calculationResult.value.orundum / 600 +
       calculationResult.value.gachaTicket + calculationResult.value.tenGachaTicket * 10)
 
+  singleResourceDraws.value.orundum = Math.floor(calculationResult.value.orundum / 600)
+  singleResourceDraws.value.gachaTicket = calculationResult.value.gachaTicket
+  singleResourceDraws.value.tenGachaTicket = Math.floor(calculationResult.value.tenGachaTicket * 10)
+
+
   pieChartData.value = pieChartDataTmp
 
   logs.push({key: "计算源石前", value: calculationResult.value.totalDraw})
@@ -811,6 +827,8 @@ function gachaResourcesCalculation() {
   if (originiumIsUsed.value) {
     calculationResult.value.totalDraw = Math.floor(calculationResult.value.totalDraw +
         calculationResult.value.originium * 0.3)
+    singleResourceDraws.value.originium = Math.floor(calculationResult.value.originium * 0.3)
+
   }
 
 
@@ -910,6 +928,8 @@ const handleChange = (val) => {
 </script>
 
 <template>
+
+<!--  <img src="/public/顶部.jpg" alt="" style="width: 600px;position: absolute;top: 50px;left: 360px;z-index:3000;opacity: 0.3" >-->
   <div class="gacha-calculation-page" id="gachaCalculate">
     <!--计算结果-->
     <div class="collapse-wrap result-box" id="result-box">
@@ -925,25 +945,26 @@ const handleChange = (val) => {
 
           <!--选择攒到某个活动的单选框-->
           <div class="radio-group-wrap">
-            <el-radio-group v-model="selectedScheduleName" size="large">
+            <el-radio-group v-model="selectedScheduleName" size="large" style="margin: auto">
               <el-radio-button v-for="(activity,index) in scheduleOptions" :key="index" :value="activity.name"
                                :label="activity.name" :disabled="activity.disabled"
                                @change="updateScheduleOption(index)"/>
             </el-radio-group>
+
           </div>
+
+          <span class="tip" style="text-align: center">日期为卡池结束日期</span>
 
           <div class="result-content">
             <!--饼状图-->
-            <div class="gachaResourcesChartPie" id="calculationResultPieChart">
+            <div class="gacha-resources-chart-pie" id="calculationResultPieChart">
             </div>
             <!--抽卡次数总览-->
             <table class="gacha-resources-table">
               <tbody>
               <tr>
                 <td class="gacha-resources-table-title">现有</td>
-                <td class="gacha-resources-table-quantity">{{
-                    keepTheDecimalPoint(calculationResult.existTotalDraw, 0)
-                  }}
+                <td class="gacha-resources-table-quantity">{{keepTheDecimalPoint(calculationResult.existTotalDraw, 0) }}
                 </td>
                 <td>抽</td>
               </tr>
@@ -978,22 +999,34 @@ const handleChange = (val) => {
           </div>
           <!--抽卡资源总览-->
           <div class="resources-result-bar">
-            <div class="image-sprite">
-              <div class="bg-icon_4002"></div>
+            <div class="resources-result-single">
+              <div class="image-sprite">
+                <div class="bg-icon_4002"></div>
+              </div>
+              <span class="resources-quantity">{{ calculationResult.originium }}</span>
+              <span class="resources-quantity-small">({{ singleResourceDraws.originium }})</span>
             </div>
-            <span>{{ calculationResult.originium }}</span>
-            <div class="image-sprite">
-              <div class="bg-icon_4003"></div>
+            <div class="resources-result-single">
+              <div class="image-sprite">
+                <div class="bg-icon_4003"></div>
+              </div>
+              <span class="resources-quantity">{{ calculationResult.orundum }}</span>
+              <span class="resources-quantity-small">({{ singleResourceDraws.orundum }})</span>
             </div>
-            <span>{{ calculationResult.orundum }}</span>
-            <div class="image-sprite">
-              <div class="bg-icon_7003"></div>
+            <div class="resources-result-single">
+              <div class="image-sprite">
+                <div class="bg-icon_7003"></div>
+              </div>
+              <span class="resources-quantity">{{ calculationResult.gachaTicket }}</span>
+              <span class="resources-quantity-small">({{ singleResourceDraws.gachaTicket }})</span>
             </div>
-            <span>{{ calculationResult.gachaTicket }}</span>
-            <div class="image-sprite">
-              <div class="bg-icon_7004"></div>
+            <div class="resources-result-single">
+              <div class="image-sprite">
+                <div class="bg-icon_7004"></div>
+              </div>
+              <span class="resources-quantity">{{ calculationResult.tenGachaTicket }}</span>
+              <span class="resources-quantity-small">({{ singleResourceDraws.tenGachaTicket }})</span>
             </div>
-            <span>{{ calculationResult.tenGachaTicket }}</span>
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -1573,6 +1606,7 @@ const handleChange = (val) => {
       </el-collapse>
     </div>
   </div>
+
 </template>
 
 

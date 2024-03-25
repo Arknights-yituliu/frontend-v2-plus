@@ -2,13 +2,29 @@
   @media screen and (max-width: 600px) {
 
     .collapse-wrap {
-      width: 350px;
+      width: 360px;
+    }
+
+    .collapse-item {
+      margin: 8px 2px;
+      box-shadow: 1px 1px 8px var(--c-box-shadow-color);
+    }
+
+    /*卡池时间单选框的外容器*/
+    .radio-group-wrap {
+      width: 100%;
+      margin: 4px auto;
     }
 
     .el-radio-button__inner {
-      width: 110px;
+      width: 116px;
       font-size: 10px;
+      box-sizing: border-box;
       padding: 8px;
+    }
+
+    .el-checkbox-button {
+      margin: 2px;
     }
 
     .el-switch{
@@ -44,7 +60,7 @@
       height: auto;
     }
 
-    .gachaResourcesChartPie {
+    .gacha-resources-chart-pie {
       width: 300px;
       height: 120px;
     }
@@ -79,16 +95,29 @@
 
     //攒抽计算结果的四项氪金资源的条状容器
     .resources-result-bar {
-      margin-top: 6px;
-      padding: 4px 8px;
+      padding: 2px 6px;
       border-top: 1px solid #f0f0f0;
     }
 
-    //攒抽计算结果的四项氪金资源的条状容器内的文字样式
-    .resources-result-bar > span {
-      font-size: 12px;
-      padding-left: 8px;
-      width: 60px;
+    //资源条状容器内的每个单项
+    .resources-result-single {
+      width: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    /*攒抽计算结果的四项氪金资源的条状容器内的文字样式*/
+    .resources-quantity {
+      font-size: 14px;
+      font-weight: bolder;
+      text-align: left;
+    }
+
+    .resources-quantity-small {
+      font-size: 10px;
+      font-weight: bolder;
+      text-align: left;
+
     }
 
     //雪碧图的容器，容器相对定位，内部雪碧图绝对定位，通过这种方式让图片展示的大小和外容器大小一致
@@ -137,16 +166,23 @@
 
     .exist-resources-input-wrap{
       flex-wrap: wrap;
+
     }
 
     .exist-resources-input {
+      width: 100%;
       justify-content: center;
+
     }
 
     .exist-resources-input input {
-      width: 126px;
-      height: 22px;
+      width: 120px;
+      height: 24px;
       font-size: 16px;
+      margin: 0 16px 0 4px;
+      background-color: var(--c-background-color);
+      color: var(--c-text-color);
+      border-color: var(--c-border-color);
     }
 
     .resources-line {
@@ -183,8 +219,8 @@
     }
 
     .tip {
-      font-size: 10px;
-      line-height: 12px;
+      font-size: 12px;
+      line-height: 16px;
     }
 
     .checkbox-button {
@@ -204,19 +240,19 @@
     }
 
     .checkbox-button-zone-label-short{
-      width: 40px;
+      width: 60px;
     }
 
     .checkbox-button-zone-label-long{
-      width: 100px;
+      width: 120px;
     }
 
     .checkbox-button-zone-label{
-      width: 74px;
+      width: 90px;
     }
 
     .checkbox-button-pack-label{
-      width: 100px;
+      width: 120px;
     }
 
     /*多选盒的按钮的内容*/
