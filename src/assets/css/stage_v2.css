@@ -36,7 +36,6 @@
 
 .stage_hint_t0 {
   background-color: #f0f9eb;
-
   color: #e80008;
 }
 
@@ -244,7 +243,6 @@
 
 #popup_background {
   z-index: 128;
-  /* max-width: 1080px; */
   display: none;
   position: fixed;
   top: 0;
@@ -257,7 +255,6 @@
 }
 
 #popup_content {
-  /* max-width: 1080px; */
   display: none;
   position: fixed;
   top: 100px;
@@ -504,11 +501,7 @@
   right:  140px; */
 }
 
-.store_sprite_perm_wrap {
-  position: relative;
-  width: 60px;
-  height: 60px;
-}
+
 
 .store_sprite_perm {
   position: absolute;

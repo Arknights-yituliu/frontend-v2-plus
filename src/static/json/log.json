@@ -21,7 +21,7 @@
     "description": "arrow shift looping"
   },
   {
-    "author": "山桜",
+    "author": "Constrat",
     "type": "i18n",
     "module": "排班生成器",
     "date": "2024.02.29",
@@ -364,6 +364,7 @@
     "date": "2024.02.05"
   },
   {
+    "type": "update",
     "author": "山桜",
     "module": "网站维护",
     "description": "更新图片资源",
@@ -447,6 +448,7 @@
     "date": "2024.01.30"
   },
   {
+    "type": "update",
     "author": "山桜",
     "module": "网站维护",
     "description": "图片资源更新",
@@ -929,6 +931,7 @@
     "date": "2024.01.05"
   },
   {
+    "type": "feat",
     "author": "Zirun-wang",
     "module": "网站首页维护公告",
     "description": "说明一下网站最近的问题",

@@ -8,10 +8,10 @@
     --c-box-shadow:1px 1px 6px rgba(0, 0, 0, 0.12);
     --c-box-shadow-color:rgba(0, 0, 0, 0.2);
     --c-border:1px solid var(--c-white-2);
-    --c-border-color: rgba(0, 0, 0, 0.2);
+    --c-border-color: #adadad;
     --c-background-color: var(--c-white-1);
     --c-text-color:var(--c-black-2);
-    --c-tip-color:var(--c-black-3);
+    --c-tip-color: #505050;
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
 
 
@@ -24,14 +24,14 @@
     --c-btn-color:var(--c-black-1);
     --c-btn-text-color:var(--c-white-1);
 
-    --c-btn-color-blue: #2973ff;
-    --c-btn-border-blue:#2973ff;
+    --c-btn-color-blue: #1f88ff;
+    --c-btn-border-blue: rgba(31, 136, 255, 0.5);
     --c-btn-color-red: #ff3e24;
-    --c-btn-border-red:#ff3e24;
-    --c-btn-color-green: #52b788;
-    --c-btn-border-green:#52b788;
+    --c-btn-border-red: rgba(255, 62, 36, 0.3);
+    --c-btn-color-green: #00b28a;
+    --c-btn-border-green: rgba(0, 178, 138, 0.5);
     --c-btn-color-orange: #ff8a52;
-    --c-btn-border-orange:#ff8a52;
+    --c-btn-border-orange: rgba(255, 138, 82, 0.5);
 
     --c-stage-card-background-color: #f7f7f7;
     --c-material-grey: #939393;
@@ -52,11 +52,11 @@
     /*基础样式*/
     --c-box-shadow:1px 1px 4px var(--c-black-1);
     --c-border:1px solid var(--c-black-4);
-    --c-box-shadow-color:rgba(0, 0, 0);
-    --c-border-color:var(--c-black-4);
-    --c-background-color: #1e1e1e;
+    --c-box-shadow-color: rgb(0, 0, 0);
+    --c-border-color: #b6b6b6;
+    --c-background-color: #2d2d2d;
     --c-text-color: var(--c-white-2);
-    --c-tip-color:var(--c-white-3);
+    --c-tip-color: #c0c0c0;
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
 
 
@@ -71,11 +71,11 @@
 
 
     --c-btn-color-blue: #6ebeff;
-    --c-btn-border-blue: #6ebeff;
-    --c-btn-color-red: #ff6245;
-    --c-btn-border-red:#ff6245;
+    --c-btn-border-blue: #badfff;
+    --c-btn-color-red: #ff7962;
+    --c-btn-border-red: #ffb0a4;
     --c-btn-color-green: #2ec4b6;
-    --c-btn-border-green:#2ec4b6;
+    --c-btn-border-green: #93e0d6;
     --c-btn-color-orange: #ff8a52;
     --c-btn-border-orange:#ff8a52;
 

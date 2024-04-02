@@ -1,0 +1,53 @@
+.btn-wrap {
+    display: flex;
+    padding:0 8px;
+}
+
+.item-value-table-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 4px;
+}
+
+.item-value-list {
+    margin: 8px;
+}
+
+.item-value-cell {
+    width: 120px;
+    display: flex;
+    border-left: 4px solid;
+    line-height: 50px;
+    margin: 4px 0;
+    font-size: 16px;
+}
+
+.item-value {
+    padding: 0 4px;
+}
+
+.color {
+    --purple: #7F3C8D;
+    --red: #E74C3C;
+    --blue: #4A90E2;
+    --green: #28cc9e;
+    --orange: #ff7f3f;
+    --grey: #e6e6e6;
+}
+
+.item-value-sprite {
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+.item-value-sprite div{
+    transform: scale(calc(50 / 183));
+    position: absolute;
+    top: calc((-183px + 50px) / 2);
+    left: calc((-183px + 50px) / 2);
+    opacity: 0.9;
+}
+
+

@@ -8,7 +8,7 @@ const host = "https://zonai.skland.com";
 // const playerBindingAPI = '/api/v1/game/player/binding'
 
 function getSign(path, requestParam, secret) {
-    const timestamp = Math.floor(new Date().getTime() / 1000 - 1).toString();
+    const timestamp = Math.floor((new Date().getTime()-500) / 1000).toString();
 
     const headers = {
         platform: '3',

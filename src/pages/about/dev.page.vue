@@ -16,7 +16,7 @@
       <h2>Github</h2>
 
       <div class="card-wrap" id="dev_github">
-        <a class="href_black" href="https://github.com/Arknights-yituliu/">
+        <a class="href-black" href="https://github.com/Arknights-yituliu/">
           <div class="mdui-card dev-card">
             <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
             <div class="dev-card-text">
@@ -25,7 +25,7 @@
             </div>
           </div>
         </a>
-        <a class="href_black" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
+        <a class="href-black" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
           <div class="mdui-card dev-card">
             <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
             <div class="dev-card-text">
@@ -34,7 +34,7 @@
             </div>
           </div>
         </a>
-        <a class="href_black" href="https://github.com/Arknights-yituliu/BackEndV3">
+        <a class="href-black" href="https://github.com/Arknights-yituliu/BackEndV3">
           <div class="mdui-card dev-card">
             <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
             <div class="dev-card-text">
@@ -45,7 +45,7 @@
         </a>
       </div>
       <h2>开发群</h2>
-      <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
+      <a class="href-black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
         <div class="mdui-card dev-card">
           <img class="dev-card-icon" src="/image/website/qq.webp" alt="" />
           <div class="dev-card-text">
@@ -64,7 +64,7 @@
     <div class="mdui-typo" id="dev_feedback">
       <h1>信息发布/问题反馈</h1>
       <h2>信息发布</h2>
-      <a class="href_black" href="https://space.bilibili.com/688411531">
+      <a class="href-black" href="https://space.bilibili.com/688411531">
         <div class="mdui-card dev-card">
           <img class="dev-card-icon" src="/image/website/beta_logo_yw.webp" alt="" />
           <div class="dev-card-text">
@@ -73,7 +73,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
+      <a class="href-black" href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
         <div class="mdui-card dev-card">
           <img class="dev-card-icon" src="/image/website/qq.webp" alt="" />
           <div class="dev-card-text">
@@ -84,7 +84,7 @@
       </a>
 
       <h2>问题反馈</h2>
-      <a class="href_black" href="https://github.com/Arknights-yituliu/">
+      <a class="href-black" href="https://github.com/Arknights-yituliu/">
         <div class="mdui-card dev-card">
           <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
           <div class="dev-card-text">
@@ -93,7 +93,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://space.bilibili.com/688411531">
+      <a class="href-black" href="https://space.bilibili.com/688411531">
         <div class="mdui-card dev-card">
           <img class="dev-card-icon" src="/image/website/beta_logo_yw.webp" alt="" />
           <div class="dev-card-text">
@@ -102,7 +102,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
+      <a class="href-black" href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">
         <div class="mdui-card dev-card">
           <img class="dev-card-icon" src="/image/website/qq.webp" alt="" />
           <div class="dev-card-text">
@@ -111,7 +111,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">
+      <a class="href-black" href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">
         <div class="mdui-card dev-card">
           <img class="dev-card-icon" src="/image/website/qq.webp" alt="" />
           <div class="dev-card-text">
@@ -127,7 +127,7 @@
       <h1>团队成员</h1>
       <h4> 明日方舟一图流开发者和贡献者</h4>
 
-      <a class="href_black" href="https://github.com/yamasakura">
+      <a class="href-black" href="https://github.com/yamasakura">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="/image/website/anon.jpg" alt="" />
           <div class="dev-card-text">
@@ -137,7 +137,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://space.bilibili.com/10057492">
+      <a class="href-black" href="https://space.bilibili.com/10057492">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/84625349" alt="" />
           <div class="dev-card-text">
@@ -147,7 +147,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://github.com/hguandl">
+      <a class="href-black" href="https://github.com/hguandl">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/10684225" alt="" />
           <div class="dev-card-text">
@@ -167,7 +167,7 @@
 <!--          </div>-->
 <!--        </div>-->
 <!--      </a>-->
-      <a class="href_black" href="https://github.com/hguandl">
+      <a class="href-black" href="https://github.com/hguandl">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="/image/website/shaobing.webp" alt="" />
           <div class="dev-card-text">
@@ -177,7 +177,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://github.com/lethefrost">
+      <a class="href-black" href="https://github.com/lethefrost">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="/image/website/寒上词.jpg" alt="" />
           <div class="dev-card-text">
@@ -187,7 +187,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://github.com/MilkWind">
+      <a class="href-black" href="https://github.com/MilkWind">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="/image/website/MilkWind.jpg" alt=""/>
           <div class="dev-card-text">
@@ -197,7 +197,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://github.com/tanch-p">
+      <a class="href-black" href="https://github.com/tanch-p">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/97508567?v=4" alt="" />
           <div class="dev-card-text">
@@ -207,7 +207,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://github.com/noname512">
+      <a class="href-black" href="https://github.com/noname512">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/16851703?v=4" alt="" />
           <div class="dev-card-text">
@@ -218,7 +218,7 @@
         </div>
       </a>
 
-      <a class="href_black" href="https://github.com/Yanstory">
+      <a class="href-black" href="https://github.com/Yanstory">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/5153875" alt="" />
           <div class="dev-card-text">
@@ -229,7 +229,7 @@
         </div>
       </a>
 
-      <a class="href_black" href="https://space.bilibili.com/12786648">
+      <a class="href-black" href="https://space.bilibili.com/12786648">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="/image/website/wmm.webp" alt="" />
           <div class="dev-card-text">
@@ -239,7 +239,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://github.com/youcai922">
+      <a class="href-black" href="https://github.com/youcai922">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/64458943" alt="" />
           <div class="dev-card-text">
@@ -249,7 +249,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://github.com/Ks-luow">
+      <a class="href-black" href="https://github.com/Ks-luow">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/64978950" alt="" />
           <div class="dev-card-text">
@@ -260,7 +260,7 @@
         </div>
       </a>
 
-      <a class="href_black" href="https://github.com/ZFengMo/ZFengMo">
+      <a class="href-black" href="https://github.com/ZFengMo/ZFengMo">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/45513885" alt="" />
           <div class="dev-card-text">
@@ -271,7 +271,7 @@
         </div>
       </a>
 
-      <a class="href_black" href="https://github.com/qianxuu">
+      <a class="href-black" href="https://github.com/qianxuu">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/62287903" alt="" />
           <div class="dev-card-text">
@@ -282,7 +282,7 @@
         </div>
       </a>
 
-      <a class="href_black" href="https://github.com/Constrat">
+      <a class="href-black" href="https://github.com/Constrat">
         <div class="mdui-card dev-card dev-card-member">
           <img class="dev-card-icon" src="/image/website/Constrat.png" alt="" />
           <div class="dev-card-text">
@@ -297,7 +297,7 @@
 
     <div class="mdui-typo" id="dev_refer">
       <h1>数据和素材来源</h1>
-      <a class="href_black" href="https://ak.hypergryph.com/">
+      <a class="href-black" href="https://ak.hypergryph.com/">
         <div class="mdui-card dev-card dev-card-member-ref">
           <img class="dev-card-icon" src="/image/website/ark.png" alt="" />
           <div class="dev-card-text">
@@ -307,7 +307,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://penguin-stats.cn">
+      <a class="href-black" href="https://penguin-stats.cn">
         <div class="mdui-card dev-card dev-card-member-ref">
           <img class="dev-card-icon" src="/image/website/penguin_stats_logo.webp" alt="" />
           <div class="dev-card-text">
@@ -317,7 +317,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://github.com/yuanyan3060/ArknightsGameResource">
+      <a class="href-black" href="https://github.com/yuanyan3060/ArknightsGameResource">
         <div class="mdui-card dev-card dev-card-member-ref">
           <img class="dev-card-icon" src="https://avatars.githubusercontent.com/u/58114805" alt="" />
           <div class="dev-card-text">
@@ -327,7 +327,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
+      <a class="href-black" href="https://prts.wiki/w/%E9%A6%96%E9%A1%B5">
         <div class="mdui-card dev-card dev-card-member-ref">
           <img class="dev-card-icon" src="/image/website/prts.webp" alt="" />
           <div class="dev-card-text">
@@ -337,7 +337,7 @@
           </div>
         </div>
       </a>
-      <a class="href_black" href="https://space.bilibili.com/8412516">
+      <a class="href-black" href="https://space.bilibili.com/8412516">
         <div class="mdui-card dev-card dev-card-member-ref">
           <img class="dev-card-icon" src="/image/website/honeycake.webp" alt="" />
           <div class="dev-card-text">
@@ -375,7 +375,7 @@ import "/src/assets/css/sprite_item.css";
   margin-left: 12px;
 }
 
-.href_black {
+.href-black {
   text-decoration: none;
   color: rgb(57, 57, 57);
 }

@@ -559,17 +559,17 @@ export default {
 
 @font-face {
   font-family: 'Novecento Wide Medium';
-  src: url('/RogueCalcV1/font/Novecento WideMedium.otf');
+  src: url('/fonts/Novecento WideMedium.otf');
 }
 
 @font-face {
   font-family: '标小智无界黑';
-  src: url('/RogueCalcV1/font/标小智无界黑.TTF');
+  src: url('/fonts/标小智无界黑.TTF');
 }
 
 @font-face {
   font-family: 'HarmonyOS Sans SC';
-  src: url('/RogueCalcV1/font/HARMONYOS_SANS_SC_REGULAR.TTF');
+  src: url('/fonts/HARMONYOS_SANS_SC_REGULAR.TTF');
 }
 
 .rogueCal-page {

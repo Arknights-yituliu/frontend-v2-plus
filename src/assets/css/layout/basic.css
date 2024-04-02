@@ -138,15 +138,6 @@ html{
 .op_title_etext_light {
   background-color: #888888;
   color: #ffffff;
-  /* -webkit-text-fill-color: transparent;
-    font-size: 30px;
-    font-weight: 600;
-    display: inline-block;
-    color: #0000ffdd; */
-  /* position: absolute;
-    margin-top: -36px;
-    margin-left: 36px;
-    -webkit-text-stroke: 0.6px black; */
   border-left: 8px solid #6495ed;
 }
 

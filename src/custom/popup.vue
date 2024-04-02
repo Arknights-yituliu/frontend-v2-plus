@@ -41,8 +41,7 @@ function openAndClose(visible) {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2000;
-  padding: 30px;
+  z-index: 3000;
   box-sizing: border-box;
 }
 
@@ -54,8 +53,6 @@ function openAndClose(visible) {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 2001;
-
-  /* display: none; */
 }
 
 .popup-box {
@@ -66,13 +63,14 @@ function openAndClose(visible) {
   background-color: var(--c-background-color);
   border-radius: 6px;
   box-sizing: border-box;
-  box-shadow: var(--c-box-shadow);
+  box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   width: fit-content;
 }
 
 .popup-context {
+
   max-height: 70vh;
   overflow-y: auto;
   overflow-x: hidden;

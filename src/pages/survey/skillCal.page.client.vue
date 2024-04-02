@@ -1,7 +1,7 @@
 <template>
 
 
-  <div class="control_bar_wrap">
+  <div class="control-box">
     搜索干员： <input v-model="cal_operator_name" @input="queryOperator()" class="input">
     <c-button :color="'blue'" :status="true" @click="planCal()" :style="btn_style">
       开始计算
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div class="control_bar_wrap">
+  <div class="control-box">
     筛选材料
     <c-button :color="'blue'" :status="itemFilterCondition.unused" :style="btn_style"
               @click="addItemFilterCondition('unused')">
@@ -57,7 +57,7 @@
     </c-button>
   </div>
 
-  <div class="control_bar_wrap">
+  <div class="control-box">
     <div class="query_result_title"> 已选择干员</div>
     <div v-for="(plan,charId) in operator_plan" :key="charId" class="query_result">
       <div class="avatar_image_wrap" style="left: 20px">
@@ -214,7 +214,7 @@
     <div class="item_info_card" v-for="(item,index) in item_info" :key="index"
          :class="`rarity_${item.rarity}`" v-show="item.show">
       <div class="item_info_card_left">
-        <div class="item_image_wrap">
+        <div class="item-value-sprite">
           <div :class="getItemSprite(item.id)">
           </div>
         </div>

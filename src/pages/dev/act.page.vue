@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import stageApi from '/src/api/stage'
+import stageApi from '/src/api/material'
 import {ref} from "vue";
 
 let actList = ref([])

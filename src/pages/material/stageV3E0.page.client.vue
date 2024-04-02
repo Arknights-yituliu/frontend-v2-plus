@@ -45,7 +45,7 @@
         <!-- 数值图例 -->
         <div id="stage_card_3_intro_block_1">
           <div class="stage_card_3_list" style="width:168px;height: 105px;font-size: 12px;line-height: 24px;">
-            <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;">
+            <div class="stage-card-bar" style="width:168px;height: 32px;display: flex;">
               <div class="stage_card_3_img">
                 <div :class="getItemT3Sprite(31014)"></div>
               </div>
@@ -57,7 +57,7 @@
                 style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T4效率值
               </div>
             </div>
-            <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
+            <div class="stage-card-bar" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
               <div class="stage_card_3_img">
                 <div :class="getItemT3Sprite(31013)"></div>
               </div>
@@ -139,7 +139,7 @@
         <!-- 短期最优 -->
         <div class="stage_card_3_right">
           <div class="stage_card_3_list">
-            <div class="stage_card_3_line">
+            <div class="stage-card-bar">
               <div class="stage_card_3_img">
                 <div :class="getItemT3Sprite(stage.series.r4)"></div>
               </div>
@@ -154,7 +154,7 @@
                 </div>
               </div>
             </div>
-            <div class="stage_card_3_line">
+            <div class="stage-card-bar">
               <div class="stage_card_3_img">
                 <div :class="getItemT3Sprite(stage.series.r3)"></div>
               </div>
@@ -170,7 +170,7 @@
                 {{ stage.stageEfficiency }}
               </div>
             </div>
-            <div class="stage_card_3_line" v-show="stage.series.r2">
+            <div class="stage-card-bar" v-show="stage.series.r2">
               <div class="stage_card_3_img">
                 <div :class="getItemT3Sprite(stage.series.r2)"></div>
               </div>
@@ -259,14 +259,14 @@
         </el-table-column>
         <el-table-column prop="primary" label="主产物" :width="td_1">
           <template #default="scope">
-            <div class="detail-table-item-wrap">
+            <div class="stage-detail-table-item-icon">
               <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="secondary" label="副产物" :width="td_1">
           <template #default="scope">
-            <div class="detail-table-item-wrap">
+            <div class="stage-detail-table-item-icon">
               <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
             </div>
           </template>
@@ -361,22 +361,22 @@
     </div>
 
     <!-- pc端大表格 -->
-    <table class="act-table detailTable" id="act-table-pc">
+    <table class="activity-table-pc detailTable" id="act-table-pc">
       <tbody>
         <tr>
-          <td class="act-name">活动名称</td>
+          <td class="activity-name-pc">活动名称</td>
           <td v-for="(item, index) in itemIdList" :key="index">
-            <div class="act-table-item-wrap" style="height: 42px;margin-top: 8px;">
+            <div class="activity-pickup-item-pc" style="height: 42px;margin-top: 8px;">
               <div :class="getActTableItemSprite(item.id)"></div>
             </div>
           </td>
         </tr>
         <tr v-for="(act, index) in historyActItemTable" :key="index">
-          <td class="act-name">{{ act.zoneName }}</td>
+          <td class="activity-name-pc">{{ act.zoneName }}</td>
           <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
-            <div class="act-table-item-wrap" v-if="item.isUp">
+            <div class="activity-pickup-item-pc" v-if="item.isUp">
               <div :class="getActTableItemSprite(item.itemId)"></div>
-              <span v-show="typeof item.stageEfficiency !== 'undefined'" class="act-stage-efficiency">
+              <span v-show="typeof item.stageEfficiency !== 'undefined'" class="s-activity-stage-efficiency-pc">
                 {{ formatNumber(item.stageEfficiency, 2) }}%
               </span>
             </div>
@@ -386,16 +386,16 @@
     </table>
 
     <!-- 移动端小列表 -->
-    <div class="act-table-simple-wrap detailTable" id="act-table-phone" style="max-width: 600px;">
-      <table class="act-table-simple">
+    <div class="activity-table-phone-container detailTable" id="act-table-phone" style="max-width: 600px;">
+      <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActItemList" :key="index">
-          <td class="act-name-simple">{{ act.zoneName }}</td>
+          <td class="s-activity-name-phone">{{ act.zoneName }}</td>
           <td v-for="(stage, index) in  act.actStageList" :key="index">
-            <div class="act-drop-table">
-              <div class="act-table-simple-item-wrap">
+            <div class="s-activity-drop">
+              <div class="activity-pickup-item">
                 <div :class="getActTableSimpleItemSprite(stage.itemId)"></div>
               </div>
-              <span class="act-drop-detail">
+              <span class="activity-drop-detail">
                 {{ stage.stageCode }} <br>
                 {{ formatNumber(stage.stageEfficiency, 2) }}%
               </span>
@@ -467,7 +467,7 @@
                   <!-- 数值图例 -->
                   <div id="stage_card_3_intro_block_1">
                     <div class="stage_card_3_list" style="width:168px;height: 105px;font-size: 12px;line-height: 24px;">
-                      <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;">
+                      <div class="stage-card-bar" style="width:168px;height: 32px;display: flex;">
                         <div class="stage_card_3_img">
                           <div :class="getItemT3Sprite(31014)"></div>
                         </div>
@@ -479,7 +479,7 @@
                           style="font-size: 12px;width: 54px;font-style: italic;margin-left: 8px;font-weight: 400;">T4效率值
                         </div>
                       </div>
-                      <div class="stage_card_3_line" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
+                      <div class="stage-card-bar" style="width:168px;height: 32px;display: flex;flex-wrap: wrap;">
                         <div class="stage_card_3_img">
                           <div :class="getItemT3Sprite(31013)"></div>
                         </div>
@@ -595,7 +595,7 @@
 </template>
 
 <script setup>
-import stageApi from '/src/api/stage'
+import stageApi from '/src/api/material'
 import { onMounted, ref } from "vue";
 import item_series from '/src/static/json/material/item_series.json'
 import footComponent from "/src/components/FootComponentV3.vue";

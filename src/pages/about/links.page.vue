@@ -70,12 +70,16 @@ function openNewPage(url) {
 
   <div class="f-link-card-wrap">
     <div class="f-link-card" v-for="(link,index) in links" :key="index">
-      <img :src="`/image/website/${link.avatar}`" alt="" class="f-link-avatar" @click="openNewPage(link.link)">
-      <span class="f-link-name">{{ link.name }}</span>
-      <div class="f-link-tag-wrap">
+      <div class="f-link-card-content">
+        <div class="f-link-card-header">
+          <img :src="`/image/website/${link.avatar}`" alt="" class="f-link-avatar" @click="openNewPage(link.link)">
+          <span class="f-link-name">{{ link.name }}</span>
+        </div>
+        <div class="f-link-tag-wrap">
            <span class="f-link-tag" v-for="(tag,index) in link.tags" :key="index">
              {{ tag }}
            </span>
+        </div>
       </div>
       <a :href="link.link" class="f-link">{{ link.linkText }}</a>
     </div>
@@ -87,15 +91,15 @@ function openNewPage(url) {
 .f-link-card-wrap {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
+  padding-bottom: 200px;
 }
 
 .f-link-card {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  position: relative;
-  width: 270px;
+  width: 280px;
   height: 240px;
   margin: 10px;
   border-radius: 4px;
@@ -103,22 +107,27 @@ function openNewPage(url) {
   box-shadow: 1px 1px 10px var(--c-box-shadow-color)
 }
 
+.f-link-card-header {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 8px;
+}
+
+.f-link-card-content {
+  height: 190px;
+}
+
 .f-link-avatar {
   width: 40px;
   height: 40px;
   border-radius: 100px;
-  position: absolute;
-  top: 8px;
-  left: 8px;
   cursor: pointer;
 }
 
 .f-link-name {
   display: block;
   line-height: 40px;
-  position: absolute;
-  top: 8px;
-  left: 60px;
   font-weight: bold;
 
 }
@@ -126,9 +135,6 @@ function openNewPage(url) {
 .f-link-tag-wrap {
   display: flex;
   flex-wrap: wrap;
-  position: absolute;
-  top: 60px;
-  left: 8px;
 }
 
 .f-link-tag {
@@ -142,7 +148,7 @@ function openNewPage(url) {
 }
 
 .f-link {
-  width: 240px;
+  width: 280px;
   border-radius: 20px;
   text-align: center;
   overflow: hidden;
@@ -151,10 +157,7 @@ function openNewPage(url) {
   height: 30px;
   line-height: 30px;
   font-size: 14px;
-  position: absolute;
   font-weight: bold;
-  top: 200px;
-  left: 15px;
   cursor: pointer;
 }
 

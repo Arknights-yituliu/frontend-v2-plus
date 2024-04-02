@@ -1,0 +1,78 @@
+.survey-login-page {
+  width: auto;
+  display: flex;
+  justify-content: flex-end;
+
+  .login_card {
+    width: 550px;
+    height: auto;
+    border-radius: 6px;
+    margin: auto;
+    padding: 24px 12px;
+    box-sizing: border-box;
+  }
+
+  .login-checkbox {
+    width: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+  }
+
+  .login-form{
+    margin: auto;
+    border: 1px solid #dcdcdc;
+    width: 450px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .login-form-item{
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    box-sizing: border-box;
+  }
+
+  .input-label{
+    display: block;
+    width: 70px;
+  }
+
+  .input-btn{
+    width: 80px;
+  }
+
+  .login-form-input {
+    width: 240px;
+    border: 0;
+    outline: none;
+    display: block;
+    height: 32px;
+    line-height: 32px;
+    background-color: var(--c-background-color);
+    color: var(--c-text-color);
+
+  }
+
+  .login-btn{
+    width: 170px;
+    margin: 8px;
+  }
+
+
+
+  .login-tip {
+    font-size: 14px;
+    font-style: italic;
+    margin:12px;
+    line-height: 20px;
+  }
+
+
+
+
+}

@@ -34,7 +34,7 @@
 
 <script setup>
 import "/src/assets/css/stageDetail.css";
-import stageApi from "/src/api/stage";
+import stageApi from "/src/api/material";
 import * as echarts from "echarts";
 import {onMounted, ref} from "vue";
 import {cMessage} from '/src/custom/message'

@@ -270,7 +270,7 @@ onMounted(() => {
   justify-content: space-between;
   overflow: hidden;
   transition: all 200ms linear;
-  box-shadow: var(--c-box-shadow);
+  box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
   background: var(--c-background-color);
   z-index: 3000;
 }

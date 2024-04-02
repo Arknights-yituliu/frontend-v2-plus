@@ -1,0 +1,151 @@
+.module-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin: 12px 0;
+}
+
+.module-title {
+    width: fit-content;
+    height: 60px;
+}
+
+.module-title h1 {
+    padding-right: 16px;
+    padding-left: 2px;
+    line-height: 1;
+    font-size: 36px;
+    font-weight: bolder;
+    margin-top: 0;
+}
+
+.module-title h4 {
+    line-height: 1.5;
+    margin-top: -28px;
+    padding-top: 6px;
+    padding-left: 2px;
+    padding-right: 4px;
+    background-color: #888888;
+    color: #ffffff;
+    border-left: 8px solid #6495ed;
+    z-index: 1;
+    font-size: 14px;
+}
+
+.module-tip {
+    padding: 4px;
+    font-style: italic;
+    color: #00a1d6;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.tag-group{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.tag-group span{
+    display: block;
+    border-radius: 4px;
+    padding: 2px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 22px;
+    margin: 4px 8px;
+}
+
+.tag {
+    display: inline-flex;
+    border-radius: 4px;
+    padding: 2px 12px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 22px;
+    margin: 4px 8px;
+}
+
+.tag-rank-6 {
+    background-color: #ffeeee;
+    color: #ff1a23;
+}
+
+.tag-rank-5 {
+    background-color: #fde9df;
+    color: #ff6d12;
+}
+
+.tag-rank-4 {
+    background-color: #efe9fc;
+    color: #a335ee;
+}
+
+.tag-rank-3 {
+    background-color: #e3f1ff;
+    color: #0180ff;
+}
+
+.tag-rank-2 {
+    background-color: #f0f9eb;
+    color: #00a2a2;
+}
+
+.tag-rank-1 {
+    background-color: #f3f3f3;
+    color: #919191;
+}
+
+.tag-button{
+    margin:0 2px;
+    padding: 4px 12px;
+    font-size: 16px;
+    line-height: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(146, 193, 252, 0.75);
+    display: inline-block;
+    color: #286ebd;
+    font-weight: 600;
+    vertical-align: middle;
+    background-color: rgba(238, 247, 255);
+    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+
+@media screen and (max-width: 600px) {
+
+    .module-title {
+        height: 40px;
+    }
+
+    .module-title h1 {
+        font-size: 24px;
+    }
+
+    .module-title h4 {
+        font-size: 10px;
+        margin-top: -20px;
+        z-index: 1;
+    }
+
+    .module-tip {
+        padding: 4px;
+        font-style: italic;
+        color: #00a1d6;
+        font-size: 8px;
+    }
+
+    .tag-group span{
+        padding: 4px 16px;
+        font-size: 12px;
+        line-height: 14px;
+        margin: 2px 4px;
+    }
+
+    .tag-button{
+        font-size: 14px;
+        line-height: 14px;
+        padding: 2px 8px;
+    }
+}

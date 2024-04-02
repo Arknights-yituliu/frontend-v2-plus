@@ -1,0 +1,184 @@
+.store-page {
+  .permanent-store-checkbox {
+    display: flex;
+  }
+
+  .permanent-store-checkbox-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.3);
+    margin: 0 8px;
+    filter: grayscale(100%);
+    position: relative;
+  }
+
+  .permanent-store-checkbox-button div {
+    position: absolute;
+    transform: scale(calc(28 / 40));
+    top: -2px;
+    left: -2px;
+  }
+
+  .permanent-store-icon {
+    position: relative;
+  }
+
+  .permanent-store-icon div {
+    position: absolute;
+    transform: scale(0.8);
+    top: -24px;
+    left: -24px;
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5))
+  }
+
+  .permanent-store-content {
+    display: flex;
+    margin: 16px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    padding: 8px;
+
+    border: 1px solid #fbc02d;
+    border-left-width: 1px;
+    border-radius: 4px;
+  }
+
+  .permanent-store-good {
+    text-align: center;
+    border-collapse: collapse;
+    border: none;
+    height: 75px;
+    width: 80px;
+    margin: 4px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+  }
+
+  .permanent-store-good-sprite {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin: auto;
+  }
+
+  .permanent-store-good-sprite div {
+    position: absolute;
+    transform: scale(calc(60 / 183));
+    top: calc((-183px + 60px) / 2);
+    left: calc((-183px + 60px) / 2);
+  }
+
+  .permanent-store-good-text {
+    background-color: rgba(112, 112, 112, 0.3);
+    border-radius: 25px;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 2px;
+  }
+
+  .store_sprite_perm_wrap {
+    position: relative;
+    width: 60px;
+    height: 60px;
+  }
+
+  .activity-store-content {
+    display: flex;
+    margin: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+  }
+
+  .activity-store-good {
+    border-radius: 8px;
+    border: 0px solid rgb(235, 238, 245);
+    background-color: rgba(255, 253, 253, 0.08);
+    overflow: hidden;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    margin: 3px;
+    width: 180px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    border-left-width: 4px;
+    border-left-style: solid;
+    box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .activity-store-good-sprite {
+    width: 90px;
+    height: 90px;
+    position: relative;
+  }
+
+  .activity-store-good-sprite div {
+    position: absolute;
+    transform: scale(calc(90 / 183));
+    top: calc((-183px + 90px) / 2);
+    left: calc((-183px + 90px) / 2);
+  }
+
+  .activity-store-good-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    height: 100%;
+    width: 90px;
+    text-align: center;
+    box-sizing: border-box;
+
+  }
+
+  .activity-store-good-name,
+  .activity-store-good-price {
+    color: gray;
+    font-size: 12px;
+    display: block;
+    width: 100%;
+  }
+
+  .activity-store-good-efficiency {
+    font-size: 28px;
+    font-weight: bolder;
+    line-height: 28px;
+  }
+
+  .activity-store-good-area-0 {
+    border-left-color: #ff0000;
+  }
+
+  .activity-store-good-area-1 {
+    border-left-color: #e85d06;
+  }
+
+  .activity-store-good-area-2 {
+    border-left-color: #a335ee;
+  }
+
+  .activity-store-good-area-3 {
+    border-left-color: #0070dd;
+  }
+
+  .activity-store-good-area-4 {
+    border-left-color: #00a2a2;
+  }
+
+  .activity-store-good-area-5 {
+    border-left-color: #a0a0a0;
+  }
+
+}
+
+
+
+
+

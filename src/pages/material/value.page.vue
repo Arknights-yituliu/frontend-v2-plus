@@ -1,39 +1,48 @@
 <template>
   <div id="value">
     <!-- 标题区域 -->
-    <div class="op_title">
-      <div class="op_title_text">
-        <div class="op_title_ctext">价值一览</div>
-        <div :class="opETextTheme">Material Value</div>
-      </div>
-      <div class="value_unit_btn_wrap">
-        <c-button :color="'blue'" :status="value_unit === 'itemValueAp'"
-                  @click="value_unit = 'itemValueAp'">等效理智
-        </c-button>
-        <c-button :color="'blue'" :status="value_unit === 'itemValue'" @click="value_unit = 'itemValue'">等效绿票
-        </c-button>
-        <div class="item_value_down">
-          <a style="color: rgb(65, 105, 240)" @click="exportItemValueExcel()"> 导出Excel</a>
-        </div>
-        <div class="item_value_down">
-          <a style="color: rgb(65, 105, 240)" @click="exportItemValueJson()"> 导出Json</a>
-        </div>
+    <div class="module-header">
+      <!--      <div class="op_title_text">-->
+      <!--        <div class="op_title_ctext">价值一览</div>-->
+      <!--        <div :class="opETextTheme">Material Value</div>-->
+      <!--      </div>-->
+
+      <div class="module-title">
+        <h1>价值一览</h1>
+        <h4>Material Value</h4>
       </div>
     </div>
 
-    <div class="item_value_card_box color">
-      <div v-for="(item_group, index) in item_value_list" :key="index" class="item_value_card_wrap">
-        <div class="item_value_card" v-for="(item, index) in item_group" :key="index"
+    <div class="btn-wrap">
+      <c-button style="margin: 4px" :color="'blue'" :status="value_unit === 'itemValueAp'"
+                @click="value_unit = 'itemValueAp'">等效理智
+      </c-button>
+      <c-button style="margin: 4px" :color="'blue'" :status="value_unit === 'itemValue'"
+                @click="value_unit = 'itemValue'">等效绿票
+      </c-button>
+      <c-button style="margin: 4px" :color="'blue'"
+                @click="exportItemValueExcel">导出Excel
+      </c-button>
+      <c-button style="margin: 4px" :color="'blue'"
+                @click="exportItemValueJson">导出Json
+      </c-button>
+    </div>
+
+    <div class="item-value-table-wrap color">
+      <div v-for="(item_group, index) in itemValueCollect" :key="index" class="item-value-list">
+        <div class="item-value-cell" v-for="(item, index) in item_group" :key="index"
              :style="getItemRarityColor(item.rarity)">
-          <div class="item_image_wrap">
-            <div :class="getSpriteImg(item.itemId)"></div>
+          <div class="item-value-sprite">
+            <div :class="`bg-${item.itemId}`"></div>
           </div>
-          <div class="item_value">
+          <div class="item-value">
             {{ item[value_unit].toFixed(4) }}
           </div>
         </div>
       </div>
     </div>
+
+
     <div class="op_title">
       <div class="op_title_text">
         <div class="op_title_ctext">定价算法</div>
@@ -44,23 +53,11 @@
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
           <el-collapse>
-            <el-collapse-item name="1" style="">
-              <template #title>
-              <span style="font-size: large; display: flex; align-items: center">
-                <el-icon>
-                  <Comment/>
-                </el-icon><b style="margin-left: 4px">问题反馈</b>
-              </span>
-              </template>
-              <a href="https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ">点击此处</a>通过问卷反馈问题/提供建议，<a
-                href="https://jq.qq.com/?_wv=1027&k=q1z3p9Yj">点击此处</a>加入粉丝群，<a
-                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">点击此处</a>加入开发群。
-            </el-collapse-item>
             <el-collapse-item name="2" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <TrendCharts/>
-                  </el-icon><b style="margin-left: 4px">动态平衡算法简述</b></span>
+                <span style="font-size: large; display: flex; align-items: center">
+                  <i class="iconfont icon-calculator"></i>
+                  <b style="margin-left: 4px">动态平衡算法简述</b></span>
               </template>
               <b>算法核心思路为“掉率越高，则价值越低”且“物品价值仅受获取成本影响”</b>
               <hr/>
@@ -90,9 +87,7 @@
             </el-collapse-item>
             <el-collapse-item name="3" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <Opportunity/>
-                  </el-icon><b style="margin-left: 4px">计算细节</b></span>
+                <span style="font-size: large; display: flex; align-items: center"><i class="iconfont icon-calculator"></i><b style="margin-left: 4px">计算细节</b></span>
               </template>
               <ul style="padding-left: 2em">
                 <li>数据选择范围为<a href="https://penguin-stats.cn/">企鹅物流</a>中的<b>常驻关卡</b>以保证价值的稳定性。
@@ -116,9 +111,7 @@
             </el-collapse-item>
             <el-collapse-item name="4" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <Checked/>
-                  </el-icon><b style="margin-left: 4px">算法公示卡</b></span>
+                <span style="font-size: large; display: flex; align-items: center"><i class="iconfont icon-publicity"></i><b style="margin-left: 4px">算法公示卡</b></span>
               </template>
               <table id="al_card">
                 <tbody>
@@ -154,9 +147,7 @@
             <el-collapse-item name="5" style="">
               <template #title>
                 <span style="font-size: large; display: flex; align-items: center">
-                  <el-icon>
-                    <Warning/>
-                  </el-icon><b style="margin-left: 4px">版权声明与许可协议</b>
+                   <i class="iconfont icon-copyright"></i><b style="margin-left: 4px">版权声明与许可协议</b>
                 </span>
               </template>
               网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于
@@ -183,32 +174,24 @@
 </style>
 
 <script setup>
-import {usePageContext} from "/src/renderer/usePageContext";
 import {ref, onMounted} from "vue";
-import {ElMessage} from "element-plus";
 import {exportExcel} from "/src/utils/exportExcel";
 import FixedNav from "../../components/FixedNav.vue";
+import materialAPI from "/src/api/material.js";
+import '/src/assets/css/material/value.scss'
+import '/src/assets/css/material/value.phone.scss'
 
 let opETextTheme = ref("op_title_etext_light")
 
 let value_unit = ref('itemValueAp')
 
-let item_value_list = ref([])
+let itemValueCollect = ref([])
 
-const pageContext = usePageContext();
-
-for (const item of pageContext.pageProps.value) {
-  if (item.cardNum > 90) continue
-  if (!item_value_list.value[item.cardNum - 1]) {
-    item_value_list.value[item.cardNum - 1] = []
-  }
-  item_value_list.value[item.cardNum - 1].push(item)
-
-}
+let itemValueList = ref([])
 
 function exportItemValueJson() {
   let itemList = []
-  for (const item of pageContext.pageProps.value) {
+  for (const item of itemValueList.value) {
     itemList.push({
       id: item.itemId,
       name: item.itemName,
@@ -227,7 +210,7 @@ function exportItemValueExcel() {
   let itemList = [[
     '物品id', '物品名称', '等效理智', '等效绿票', '物品稀有度'
   ]]
-  for (const item of pageContext.pageProps.value) {
+  for (const item of itemValueList.value) {
     itemList.push([
       item.itemId,
       item.itemName,
@@ -236,13 +219,12 @@ function exportItemValueExcel() {
       item.rarity
     ])
   }
-  exportExcel('物品价值表',itemList)
+  exportExcel('物品价值表', itemList)
   let link = document.createElement('a')
   link.download = `item_value_table.json`
   link.href = 'data:text/plain,' + JSON.stringify(itemList)
   link.click()
 }
-
 
 
 function getSpriteImg(id) {
@@ -259,14 +241,18 @@ function getItemRarityColor(rarity) {
 
 
 onMounted(() => {
-  const url_path = window.location.pathname.split("/")[1];
-  if (url_path === "value") {
-    ElMessage({
-      dangerouslyUseHTMLString: true,
-      message: '此页面已迁移至<a href="/material/value">https://ark.yituliu.cn/material/value</a>',
-      type: "warning",
-    });
-  }
+
+  materialAPI.getItemValueTable(0.625).then(response => {
+    itemValueList.value = response.data
+    for (const item of response.data) {
+      if (item.cardNum > 90) continue
+      if (!itemValueCollect.value[item.cardNum - 1]) {
+        itemValueCollect.value[item.cardNum - 1] = []
+      }
+      itemValueCollect.value[item.cardNum - 1].push(item)
+
+    }
+  })
 });
 </script>
 
@@ -279,61 +265,5 @@ export const documentProps = {
 </script>
 
 <style scoped>
-.value_unit_btn_wrap {
-  display: flex;
-  padding: 12px 0 0 12px;
-}
 
-.item_value_down {
-  line-height: 36px;
-  padding: 0 12px;
-}
-
-.item_value_card_box {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  margin: 4px;
-}
-
-.item_value_card_wrap {
-  margin: 20px 8px;
-}
-
-.item_value_card {
-  width: 124px;
-  display: flex;
-  border-left: 4px solid;
-  line-height: 54px;
-  margin: 2px;
-}
-
-.item_value {
-  padding: 0 4px;
-}
-
-.color {
-  --purple: #7F3C8D;
-  --red: #E74C3C;
-  --blue: #4A90E2;
-  --green: #28cc9e;
-  --orange: #ff7f3f;
-  --grey: #e6e6e6;
-}
-
-.item_image_wrap {
-  position: relative;
-  width: 50px;
-  height: 50px;
-  left: 0;
-  top: 0;
-}
-
-.item_image {
-  position: absolute;
-  transform: scale(0.278);
-  top: -66px;
-  left: -66px;
-
-}
 </style>
