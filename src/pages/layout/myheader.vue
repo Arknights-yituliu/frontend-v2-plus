@@ -5,6 +5,8 @@ import login from "/src/pages/survey/account/login.vue";
 import routesJson from "/src/static/json/routes.json";
 import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
 import {language} from '/src/utils/i18n.js'
+import {LinkedTable} from "../../router/routeList.js";
+
 
 const LanguageLabel = {
   cn: '中文',
@@ -125,69 +127,22 @@ const displayMenu = ['buildingSkill', 'schedule']
 
 function i18nButtonDisplay() {
   i18nButtonVisible.value = false
-  for (const menu of displayMenu) {
-    if (currentPath.value.indexOf(menu) > -1) {
-      console.log(currentPath.value.indexOf(menu))
+  const url = window.location.href;
+  for (const path of displayMenu) {
+    if (url.indexOf(path) > -1) {
       i18nButtonVisible.value = true
       break
     }
   }
-
 }
 
-function updateVisits(pathName) {
-  //访问"/"直接更新
-  if (pathName === "/") {
-    console.log("访问的页面是：", pathName);
-    toolApi.updateVisits(pathName);
-    return ;
-  }
 
-  //过滤掉不需要更新访问的路径
-  let isUp = true
-  for (let i of noUpVi.value) {
-    if (i.path === pathName)
-      isUp = false
-  }
 
-  if (isUp) {
-    pathName = removeTrailingSlash(pathName, 2);
-    console.log("访问的页面是：", pathName);
-    toolApi.updateVisits(pathName);
-  } else {
-    pathName = removeTrailingSlash(pathName, 2); //剔除两次
-    console.log("访问的页面是：", pathName);
-  }
-  return 1;
-}
 
-//剔除末尾“/”
-function removeTrailingSlash(path, substrCount) {
-  // substrCount 剔除次数
-  let devPath = path.replace("/src/pages", "");
-  for (let i = 0; i < substrCount; i++) {
-    devPath = substrPath(devPath);
-  }
-  return devPath;
-}
-
-function substrPath(pathName) {
-  let strLength = pathName.length;
-  const lastStr = pathName.substr(strLength - 1, strLength);
-  if (lastStr === "/") {
-    pathName = pathName.substr(0, strLength - 1);
-    console.log("路径以“/”结尾，被截取后路径：", pathName);
-    return pathName;
-  }
-  return pathName
-}
-
-let currentPath = ref('')
 
 onMounted(() => {
-  currentPath.value = window.location.pathname;
-  updateVisits(currentPath.value);
-  getPageTitle(currentPath.value);
+  const pathName = window.location.pathname;
+  getPageTitle(pathName);
   themeV2.value = localStorage.getItem('theme_v2') === 'dark' ? 'dark' : 'light'
   i18nButtonDisplay()
   console.log(themeV2.value)
@@ -212,24 +167,21 @@ function openNewPage(url) {
 
 
 <template>
-  <div class="header-wrap">
-    <i class="menu-button iconfont" :class="asideIcon" @click="menu_collapse(true)">
+  <div class="header-bar">
+    <i class="iconfont menu-button" :class="asideIcon" @click="menu_collapse(true)">
     </i>
-    <i class="menu-button-desktop iconfont" :class="asideIcon" @click="aside_collapse()">
+    <i class="iconfont menu-button-desktop" :class="asideIcon" @click="aside_collapse()">
     </i>
-    <div class="page-title" @click="aside_collapse()">
+    <div class="current-page-title" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
-
-
     <div class="spacer"></div>
     <i class="iconfont icon-theme-style" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
     <div class="icon-button" @click="feedbackPopupVisible = !feedbackPopupVisible">
       <i class="iconfont icon-survey icon-feed-back-style"></i>
       <span style="font-size: 16px;color: white;">反馈</span>
     </div>
-    <div v-show="i18nButtonVisible">
-    <c-popover :name="'language'" >
+    <c-popover name="language">
       <template #title>
         <div class="icon-button">
           <i class="iconfont icon-language icon-language-style"></i>
@@ -241,45 +193,45 @@ function openNewPage(url) {
         <span @click="language='en'">English</span>
       </div>
     </c-popover>
-    </div>
     <login></login>
 
 
-    <div class="drawer_wrap">
+    <div class="drawer-container">
       <div class="drawer" id="drawer114">
-        <div class="menu_table">
+        <div class="navigation-container">
           <!-- 标题区 -->
           <a href="/" style="text-decoration: none; color: white">
-            <div class="menu-label">明日方舟一图流</div>
+            <div class="side-website-title">明日方舟一图流</div>
           </a>
           <!-- 导航菜单 -->
-          <div class="aside_menu_set" v-for="(r, index) in routes" :key="index">
+          <div class="aside_menu_set" v-for="(parent, index) in LinkedTable" :key="index">
             <!-- 一级标题 -->
-            <a class="menu-bar menu-parent" :href="r.path" v-show="r.isChild">
-              <div class="menu-parent-icon"></div>
-              {{ r.text }}
-            </a>
+            <router-link :to="parent.path"  class="nav-bar nav-bar-parent">
+              <div class="nav-bar-parent-icon"></div>
+              <h3> {{ parent.text }}</h3>
+            </router-link>
+
             <!-- 二级标题组 -->
-            <a :href="c.path" class="menu-bar menu-child" v-for="(c,index) in r.child" :key="index">
-                <i class="iconfont menu-icon" :class="`icon-${c.icon}`"></i>
-                 {{ c.text }}
-            </a>
-            <div class="aside-divider"></div>
+            <router-link :to="child.path" :href="child.path" class="nav-bar nav-bar-child"
+                         v-for="(child,index) in parent.child" :key="index">
+              <i class="iconfont menu-icon" :class="`icon-${child.icon}`"></i>
+              <span>{{ child.text }}</span>
+            </router-link>
           </div>
         </div>
       </div>
-      <div class="menu-mask" id="drawerMask514" @click="menu_collapse(false)"></div>
+      <div class="drawer-mask" id="drawerMask514" @click="menu_collapse(false)"></div>
     </div>
   </div>
 
 
-  <c-popup v-model:visible="feedbackPopupVisible" :style="feedbackPopupStyle">
+  <c-popup v-model:visible="feedbackPopupVisible">
     <table class="feedback-table">
       <tbody>
       <tr>
         <td>反馈方式</td>
-        <td>反馈流程（越靠前越推荐）</td>
-        <td style="width: 100px">点击转跳</td>
+        <td>反馈流程(越靠前越推荐)</td>
+        <td>点击转跳</td>
       </tr>
       <tr>
         <td>Github issues</td>
@@ -320,94 +272,9 @@ function openNewPage(url) {
 
 
 <style scoped>
-.menu-button {
-  display: none;
-
-}
-
-.menu-button-desktop {
-  display: block;
-  font-size: 24px;
-  color: rgb(230, 230, 230);
-}
-
-.icon-button {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 0 4px;
-}
-
-.icon-theme-style {
-  font-size: 24px;
-  font-weight: bolder;
-  padding-right: 4px;
-  color: rgb(255, 255, 255);
-}
-
-.icon-language-style {
-  font-size: 24px;
-  color: white;
-  padding-right: 4px;
-  font-weight: bolder;
-}
-
-.icon-feed-back-style {
-  font-size: 24px;
-  color: white;
-  padding-right: 4px;
-  font-weight: bolder;
-}
-
-.menu-icon{
-  font-size: 16px;
-  padding: 0 8px;
-
-}
-
-@media (max-width: 1080px) {
-  .menu-button {
-    display: block;
-    margin: 0 4px 0 20px;
-    font-size: 40px;
-    color: rgb(230, 230, 230)
-  }
-
-  .menu-button-desktop {
-    display: none;
-  }
-
-  .header-wrap {
-    height: 72px;
-  }
-
-}
-
-.language-options {
-  width: 100px;
-}
-
-.language-options span {
-  display: block;
-  padding: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  width: 100px;
-  box-sizing: border-box;
-}
 
 
-.feedback-table {
-  margin-top: 12px;
-  border-collapse: collapse;
-  text-align: center;
-}
 
 
-.feedback-table td {
-  padding: 12px;
-  line-height: 24px;
-  border-bottom: 1px solid var(--c-border-color);
-}
 
 </style>

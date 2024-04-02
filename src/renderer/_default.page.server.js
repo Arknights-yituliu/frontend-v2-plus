@@ -32,7 +32,6 @@ async function render(pageContext) {
         <meta name="viewport" content="width=device-width, initial-scale=0.68, maximum-scale=0.68, user-scalable=no" />
         <meta name="description" content="${desc}" />
         <meta name="keywords" content="素材获取,一图流,明日方舟,攒抽计算器,公招招募计算,基建排班生成器,刷图推荐,性价比,公开招募,掉率" />
-        <meta name="baidu-site-verification" content="codeva-dWMFefxqPu" />
         <title>${title}</title>
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
        
