@@ -138,55 +138,10 @@ function i18nButtonDisplay() {
 
 
 
-function updateVisits(pathName) {
-  //访问"/"直接更新
-  if (pathName === "/") {
-    console.log("访问的是首页");
-    toolApi.updateVisits(pathName);
-  }
 
-  //过滤掉不需要更新访问的路径
-  let isUp = true
-  for (let i of noUpVi.value) {
-    if (i.path === pathName)
-      isUp = false
-  }
-
-  if (isUp) {
-    pathName = removeTrailingSlash(pathName, 2);
-    console.log("访问的页面是：", pathName);
-    toolApi.updateVisits(pathName);
-  } else {
-    pathName = removeTrailingSlash(pathName, 2); //剔除两次
-    console.log("访问的页面是：", pathName);
-  }
-  return 1;
-}
-
-//剔除末尾“/”
-function removeTrailingSlash(path, substrCount) {
-  // substrCount 剔除次数
-  let devPath = path.replace("/src/pages", "");
-  for (let i = 0; i < substrCount; i++) {
-    devPath = substrPath(devPath);
-  }
-  return devPath;
-}
-
-function substrPath(pathName) {
-  let strLength = pathName.length;
-  const lastStr = pathName.substr(strLength - 1, strLength);
-  if (lastStr === "/") {
-    pathName = pathName.substr(0, strLength - 1);
-    console.log("路径以“/”结尾，被截取后路径：", pathName);
-    return pathName;
-  }
-  return pathName
-}
 
 onMounted(() => {
   const pathName = window.location.pathname;
-  updateVisits(pathName);
   getPageTitle(pathName);
   themeV2.value = localStorage.getItem('theme_v2') === 'dark' ? 'dark' : 'light'
   i18nButtonDisplay()
@@ -226,7 +181,7 @@ function openNewPage(url) {
       <i class="iconfont icon-survey icon-feed-back-style"></i>
       <span style="font-size: 16px;color: white;">反馈</span>
     </div>
-    <c-popover name="language" v-show="i18nButtonVisible">
+    <c-popover name="language">
       <template #title>
         <div class="icon-button">
           <i class="iconfont icon-language icon-language-style"></i>

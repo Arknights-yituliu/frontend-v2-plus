@@ -1,4 +1,6 @@
-import Error404 from "/src/pages/layout/Error404.vue";
+import Error404 from "/src/pages/layout/error404.vue";
+import StageRecommendation from '/src/pages/material/stageV3.page.vue'
+import GachaCalculator from '/src/pages/tools/gachaCalc2.page.vue'
 
 const routes = [
     {
@@ -8,7 +10,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "item",
-        component: () => import('/src/pages/material/stageV3.page.vue')
+        component: StageRecommendation
     },
     {
         path: '/material/store',
@@ -54,16 +56,7 @@ const routes = [
         display: true,
         module: 'tools',
         icon: "calculator",
-        component: () => import('/src/pages/tools/gachaCal.page.vue')
-    },
-    {
-        path: '/tools/gachaCalc2',
-        text: '攒抽计算器(重构版)',
-        name: 'GachaCalculator2',
-        display: true,
-        module: 'tools',
-        icon: "calculator",
-        component: () => import('/src/pages/tools/gachaCalc2.page.vue')
+        component: GachaCalculator
     },
     {
         path: '/tools/schedule',
@@ -73,15 +66,6 @@ const routes = [
         module: 'tools',
         icon: "schedule",
         component: () => import('/src/pages/tools/schedule.page.vue')
-    },
-    {
-        path: '/tools/rogueCal',
-        text: '肉鸽得分计算器',
-        name: 'RogueCalculator',
-        display: true,
-        module: 'tools',
-        icon: "calculator",
-        component: () => import('/src/pages/tools/rogueCal.page.vue')
     },
     {
         path: '/tools/logistics',
@@ -172,6 +156,18 @@ const routes = [
         module: 'about',
         icon: "link",
         component: () => import('/src/pages/about/links.page.vue')
+    },
+    {
+        path: '/font',
+        text: '字体测试',
+        display: false,
+        component: () => import('/src/pages/font.vue')
+    },
+    {
+        path: '/material/detail',
+        text: '关卡详情',
+        display: false,
+        component: () => import('/src/pages/material/detail.page.vue')
     },
     {
         path: '/:catchAll(.*)',

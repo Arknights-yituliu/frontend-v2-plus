@@ -152,7 +152,7 @@ onMounted(() => {
         <!-- Area -->
         <div class="activity-store-content" v-for="(singleArea, index) in singleAct.actStoreFormat" :key="index">
           <div class="activity-store-good"
-               :class="`activity-store-good-area-${index}`"
+               :class="`activity-store-good-area-${index+1}`"
                v-for="(singleItem, i) in singleArea" :key="i">
             <div class="activity-store-good-sprite">
               <div :class="`bg-${singleItem.itemId}`"></div>
@@ -241,8 +241,10 @@ onMounted(() => {
           <el-collapse>
             <el-collapse-item name="2" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><b
-                    style="margin-left: 4px">计算方式</b></span>
+
+                <span style="font-size: large; display: flex; align-items: center">
+                  <i class="iconfont icon-calculator"></i>
+                  <b style="margin-left: 4px">计算方式</b></span>
               </template>
 
               单位：理智/各货币
@@ -258,8 +260,9 @@ onMounted(() => {
             </el-collapse-item>
             <el-collapse-item name="4" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><b
-                    style="margin-left: 4px">算法公示卡</b></span>
+                <span style="font-size: large; display: flex; align-items: center">
+                  <i class="iconfont icon-publicity"></i>
+                  <b style="margin-left: 4px">算法公示卡</b></span>
               </template>
               <table id="al_card">
                 <tbody>
@@ -294,8 +297,8 @@ onMounted(() => {
             </el-collapse-item>
             <el-collapse-item name="5" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><b
-                    style="margin-left: 4px">版权声明与许可协议</b>
+                <span style="font-size: large; display: flex; align-items: center"> <i class="iconfont icon-copyright"></i>
+                  <b style="margin-left: 4px">版权声明与许可协议</b>
                 </span>
               </template>
               网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于

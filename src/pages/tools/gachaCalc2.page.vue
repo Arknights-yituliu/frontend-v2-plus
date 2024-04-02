@@ -1,3 +1,5 @@
+<!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
+
 <script setup>
 import {onMounted, ref} from "vue";
 import '/src/assets/css/tool/gacha_calc.scss'
@@ -16,17 +18,60 @@ let honeyCakeTable = ref([])
 // 罗德岛蜜饼工坊预测的活动排期
 let activitySchedules = ref({})
 
+//将预测活动排期分类
 for (const name in HONEY_CAKE_TABLE) {
   let honeyCake = HONEY_CAKE_TABLE[name]
+  //将活动排期的日期统一转为时间戳
   honeyCake.start = new Date(honeyCake.start).getTime()
   honeyCake.end = new Date(honeyCake.end).getTime()
   honeyCake.name = name
+  //分为其他和活动两组数据
   if (honeyCake.module === 'honeyCake') {
     honeyCakeTable.value.push(honeyCake)
   } else {
     activitySchedules.value[name] = honeyCake
   }
 }
+
+/**
+ * 批量生成服务器维护奖励列表，以10天为一个时间段生成，每个时间段有400合成玉
+ */
+function batchGenerationServerMaintenanceRewards() {
+  const date = new Date();
+  let month = date.getMonth() + 1
+  let year = date.getFullYear()
+  for (let i = 0; i < 12; i++) {
+    let reward = {
+      name: `游戏维护(${month}月)`,
+      originium: 0,
+      orundum: 1200,
+      gachaTicket: 0,
+      tenGachaTicket: 0,
+      start: new Date(`${year}/0${month}/01 00:00:00`).getTime(),
+      end: month === 2 ? new Date(`${year}/0${month}/27 23:00:00`).getTime() : new Date(`${year}/0${month}/30 23:00:00`).getTime(),
+      rewardType: "公共",
+      module: "honeyCake",
+      probability: ""
+    }
+
+    if (i === 0) {
+      const day = date.getDate();
+      reward.orundum = Math.floor((30 - day) / 5) * 200
+    }
+
+    if (reward.orundum > 200) {
+      honeyCakeTable.value.push(reward)
+    }
+
+    month++
+    if (month > 12) {
+      month = 1
+      year++
+    }
+  }
+}
+
+batchGenerationServerMaintenanceRewards()
 
 //用户选择的活动
 let selectedScheduleName = ref('周年限定(5.15)')
@@ -54,21 +99,22 @@ let scheduleOptions = [
     dailyDrawResources: false
   },
   {
-    name: '敬请期待',
-    start: new Date('2024/05/01 16:00:00'),
-    end: new Date('2024/05/15 04:01:00'),
-    activityType: '周年限定',
-    disabled: true,
+    name: '夏活(8.21)',
+    start: new Date('2024/08/01 16:00:00'),
+    end: new Date('2024/08/21 04:01:00'),
+    activityType: '夏活限定',
+    disabled: false,
     dailyGiftResources: true
   }, {
-    name: '敬请期待 ',
-    start: new Date('2024/05/01 16:00:00'),
-    end: new Date('2024/05/15 04:01:00'),
+    name: '夏活(8.27)',
+    start: new Date('2024/08/27 16:00:00'),
+    end: new Date('2024/08/27 04:01:00'),
     activityType: '周年限定',
-    disabled: true,
+    disabled: false,
     dailyGiftResources: false
   }
 ]
+
 
 //新人礼包集合
 let packListGroupByOnce = ref([])
@@ -87,14 +133,62 @@ let certificatePackList = ref([])
  * 获取和分类礼包数据
  */
 function getAndSortPackData() {
+  //礼包唯一索引
+  let index = 0;
+
+  //从服务器获取礼包数据，将其进行分类
+  storeAPI.getPackStore().then(response => {
+    for (let pack of response.data) {
+      //没有抽卡资源不写入
+      if (!(pack.drawPrice > 0)) {
+        continue;
+      }
+      //如果是每月寻访礼包或者源石不写入
+      if (pack.officialName === '每月寻访组合包' || pack.officialName.indexOf('普通源石') > -1) {
+        continue
+      }
+
+      pack.parentIndex = index
+
+      //根据礼包类型进行分类
+      if (pack.saleType === 'once') {
+        packListGroupByOnce.value.push(pack)
+      }
+
+      if (pack.saleType === 'year') {
+        packListGroupByYear.value.push(pack)
+      }
+
+      if (pack.saleType === 'monthly') {
+        packListGroupByMonthly.value.push(pack)
+      }
+
+      if (pack.saleType === 'limited') {
+        packListGroupByLimited.value.push(pack)
+      }
+
+      //将礼包写入全部礼包集合
+      packList.value.push(pack)
+      //礼包索引递增
+      index++
+    }
+    batchGenerationMonthlyPack(index)
+
+    updateScheduleOption(0)
+  })
+}
+
+/**
+ * 批量生成月常礼包
+ * @param index 礼包唯一索引
+ */
+function batchGenerationMonthlyPack(index) {
   //获取当前时间
   const date = new Date();
   //获取当前月份
   let month = date.getMonth() + 1
   //获取当前年份
   let year = date.getFullYear();
-  //礼包唯一索引
-  let index = 0;
 
   // 预生成8个月的每月寻访组合包和每月黄票兑换单抽
   for (let i = 0; i < 8; i++) {
@@ -141,46 +235,6 @@ function getAndSortPackData() {
     //礼包索引递增
     index++
   }
-
-  //从服务器获取礼包数据，将其进行分类
-  storeAPI.getPackStore().then(response => {
-    for (let pack of response.data) {
-      //没有抽卡资源不写入
-      if (!(pack.drawPrice > 0)) {
-        continue;
-      }
-      //如果是每月寻访礼包或者源石不写入
-      if (pack.officialName === '每月寻访组合包' || pack.officialName.indexOf('普通源石') > -1) {
-        continue
-      }
-
-      pack.parentIndex = index
-
-      //根据礼包类型进行分类
-      if (pack.saleType === 'once') {
-        packListGroupByOnce.value.push(pack)
-      }
-
-      if (pack.saleType === 'year') {
-        packListGroupByYear.value.push(pack)
-      }
-
-      if (pack.saleType === 'monthly') {
-        packListGroupByMonthly.value.push(pack)
-      }
-
-      if (pack.saleType === 'limited') {
-        packListGroupByLimited.value.push(pack)
-      }
-
-      //将礼包写入全部礼包集合
-      packList.value.push(pack)
-      //礼包索引递增
-      index++
-    }
-
-    updateScheduleOption(0)
-  })
 }
 
 
@@ -216,11 +270,11 @@ function updateScheduleOption(index) {
 }
 
 
-//折叠面板绑定的集合，如果集合中有折叠面板的name，面板会默认展开，当点击展开面板时，
-//面板组件也会将面板组件的name赋值给这个集合
+//折叠面板绑定的集合，如果集合中有折叠面板的name，面板会默认展开，当点击展开面板时，面板组件也会将面板组件的name赋值给这个集合
+// 值有'exist', 'custom', 'daily', 'potential','recharge', 'activity', 'other'
 let resultCollapseActiveNames = ref(['calculationResult'])
-let optionsCollapseActiveNames = ref(['exist', 'custom', 'daily', 'potential',
-  'recharge', 'activity', 'other'])
+let optionsCollapseActiveNames = ref(['exist', 'daily',
+  'activity', 'other'])
 
 //库存资源
 let existResources = ref({
@@ -283,6 +337,7 @@ let produceOrundum = ref({
   'itemId30012': 0,
   'itemId30062': 0,
   'itemId4001': 0,
+  //材料产出合成玉数量
   outputByItem: 0,
 })
 
@@ -505,20 +560,29 @@ function gachaResourcesCalculation() {
    * @param value 数字的字符串
    * @return {number} 转换后的数字
    */
-  function inputValueFormat(value) {
+  function stringToNumber(value) {
 
     const regex = /^[-+]?\d*\.?\d+$/
     //判断传入值是否是整数或浮点数
-    if (regex.test(value)) {
-      //判断是否为空
-      if (value) {
-        return parseInt(value)
-      } else {
-        return 0
-      }
-    } else {
+    if (!regex.test(value)) {
       return 0
     }
+
+    //判断是空字符串，返回0，虽然0也是false，但是因为返回的是0，无视这个问题
+    if (!value) {
+      return 0
+    }
+
+
+    // 判断输入的字符串是否含有小数点
+    if (value.toString().indexOf('.') > -1) {
+      console.log(parseFloat(value))
+      return parseFloat(value)
+    }
+
+    return Math.ceil(value)
+
+
   }
 
 
@@ -527,15 +591,15 @@ function gachaResourcesCalculation() {
    */
   function existCalculate() {
 
-    let orundum = inputValueFormat(existResources.value.orundum)
-    let originium = inputValueFormat(existResources.value.originium)
-    const gachaTicket = inputValueFormat(existResources.value.gachaTicket)
-    const tenGachaTicket = inputValueFormat(existResources.value.tenGachaTicket)
+    let orundum = stringToNumber(existResources.value.orundum)
+    let originium = stringToNumber(existResources.value.originium)
+    const gachaTicket = stringToNumber(existResources.value.gachaTicket)
+    const tenGachaTicket = stringToNumber(existResources.value.tenGachaTicket)
 
     //计算用户自定义修正的合成玉
-    orundum += inputValueFormat(existResources.value.correctOrundum.toString())
+    orundum += stringToNumber(existResources.value.correctOrundum.toString())
     //计算用户预留给皮肤的源石
-    originium -= inputValueFormat(existResources.value.skinBudget.toString()) * 18
+    originium -= stringToNumber(existResources.value.skinBudget.toString()) * 18
 
     if (!originiumIsUsed.value) {
       originium = 0
@@ -564,16 +628,16 @@ function gachaResourcesCalculation() {
   function produceOrundumCalculate() {
     //计算用理智产出的合成玉数量
     if (produceOrundum.value.ap && produceOrundum.value.coefficient) {
-      produceOrundum.value.outputByAp = parseInt(produceOrundum.value.ap.toString()) * parseInt(produceOrundum.value.coefficient.toString())
+      produceOrundum.value.outputByAp = Math.ceil(stringToNumber(produceOrundum.value.ap) * stringToNumber(produceOrundum.value.coefficient))
     }
     //计算用材料产出的合成玉数量
-    produceOrundum.value.outputByItem = parseInt(produceOrundum.value.itemId30012.toString()) * 5 +
-        parseInt(produceOrundum.value.itemId30062.toString()) * 10
+    produceOrundum.value.outputByItem = Math.ceil(stringToNumber(produceOrundum.value.itemId30012) * 5 +
+        stringToNumber(produceOrundum.value.itemId30062) * 10)
     //计算用材料产出合成玉时的龙门币消耗
-    produceOrundum.value.itemId4001 = parseInt(produceOrundum.value.itemId30012.toString()) * 800 +
-        parseInt(produceOrundum.value.itemId30062.toString()) * 1000
+    produceOrundum.value.itemId4001 = stringToNumber(produceOrundum.value.itemId30012) * 800 +
+        stringToNumber(produceOrundum.value.itemId30062) * 1000
     //可用于兑换商店第三层的凭证数量
-    let certificates = parseInt(certificateStoreF3.value.certificates.toString())
+    let certificates = stringToNumber(certificateStoreF3.value.certificates)
     //如果凭证数量大于11590(搬空前两层的凭证消耗量),曾可以兑换合成玉
     if (certificates > 11590) {
       //扣除11590凭证之后剩余的凭证数量
@@ -921,15 +985,27 @@ function getIconByItemId(id) {
   return `bg-${id}icon `
 }
 
-const handleChange = (val) => {
 
+// 创建一个窗口尺寸变化的监听器
+window.addEventListener('resize', handleResize);
+
+
+// 定义尺寸变化处理函数
+function handleResize() {
+  console.log(window.innerWidth)
+  //判断是否是移动设备或PC端将窗口缩小，如果是就对chart画布进行尺寸重设
+  if (window.innerWidth < 590) {
+    myChart.resize()
+  }else {
+    myChart.resize()
+  }
 }
 
 </script>
 
 <template>
 
-<!--  <img src="/public/顶部.jpg" alt="" style="width: 600px;position: absolute;top: 50px;left: 360px;z-index:3000;opacity: 0.3" >-->
+  <!--  <img src="/public/顶部.jpg" alt="" style="width: 600px;position: absolute;top: 50px;left: 360px;z-index:3000;opacity: 0.3" >-->
   <div class="gacha-calculation-page" id="gachaCalculate">
     <!--计算结果-->
     <div class="collapse-wrap result-box" id="result-box">
@@ -953,7 +1029,7 @@ const handleChange = (val) => {
 
           </div>
 
-          <span class="tip" style="text-align: center">日期为卡池结束日期</span>
+          <span class="tip" style="text-align: center">日期为卡池结束日期，夏活日期待定，不是准确日期</span>
 
           <div class="result-content">
             <!--饼状图-->
@@ -964,13 +1040,20 @@ const handleChange = (val) => {
               <tbody>
               <tr>
                 <td class="gacha-resources-table-title">现有</td>
-                <td class="gacha-resources-table-quantity">{{keepTheDecimalPoint(calculationResult.existTotalDraw, 0) }}
+                <td class="gacha-resources-table-quantity">{{
+                    keepTheDecimalPoint(calculationResult.existTotalDraw, 0)
+                  }}
                 </td>
                 <td>抽</td>
               </tr>
               <tr>
                 <td>日常</td>
                 <td>{{ keepTheDecimalPoint(calculationResult.dailyTotalDraw, 0) }}</td>
+                <td>抽</td>
+              </tr>
+              <tr>
+                <td>搓玉</td>
+                <td>{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw, 0) }}</td>
                 <td>抽</td>
               </tr>
               <tr>
@@ -1051,21 +1134,21 @@ const handleChange = (val) => {
               <div class="image-sprite">
                 <div class="bg-icon_4002"></div>
               </div>
-              <input @change="gachaResourcesCalculation" v-model.number="existResources.originium">
+              <input @change="gachaResourcesCalculation" v-model="existResources.originium">
               <div class="image-sprite">
                 <div class="bg-icon_4003"></div>
               </div>
-              <input @change="gachaResourcesCalculation" v-model.number="existResources.orundum">
+              <input @change="gachaResourcesCalculation" v-model="existResources.orundum">
             </div>
             <div class="exist-resources-input">
               <div class="image-sprite">
                 <div class="bg-icon_7003"></div>
               </div>
-              <input @change="gachaResourcesCalculation" v-model.number="existResources.gachaTicket">
+              <input @change="gachaResourcesCalculation" v-model="existResources.gachaTicket">
               <div class="image-sprite">
                 <div class="bg-icon_7004"></div>
               </div>
-              <input @change="gachaResourcesCalculation" v-model.number="existResources.tenGachaTicket">
+              <input @change="gachaResourcesCalculation" v-model="existResources.tenGachaTicket">
             </div>
           </div>
 
@@ -1078,7 +1161,7 @@ const handleChange = (val) => {
             <span></span> 预留，自定义修正
           </div>
           <div class="resources-line">
-            <input v-model.number="existResources.correctOrundum" @input="gachaResourcesCalculation">
+            <input v-model="existResources.correctOrundum" @input="gachaResourcesCalculation">
             <span>合成玉自定义修正</span>
             <div class="image-sprite">
               <div class="bg-icon_4003"></div>
@@ -1086,53 +1169,12 @@ const handleChange = (val) => {
             <span>{{ existResources.correctOrundum }}</span>
           </div>
           <span class="tip"> 例如给轮换池预留、其它来源等，可填负数</span>
-          <el-slider v-model.number="existResources.skinBudget" :step="1" :min="0" :max="10"
+          <el-slider v-model="existResources.skinBudget" :step="1" :min="0" :max="10"
                      show-stops show-input @change="gachaResourcesCalculation()" style="width: 90%;margin: 0 5%">
           </el-slider>
           <span class="tip">预留皮肤（18石/件）</span>
         </el-collapse-item>
-        <!--搓玉资源-->
-        <el-collapse-item name="custom" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-               搓玉/绿票商店&emsp;{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw, 0) }}抽
-              </span>
-          </template>
-          <div class="collapse-content-subheading">
-            <span></span>搓玉计算
-          </div>
 
-          <div class="resources-line">
-            <input v-model.number="produceOrundum.ap" @input="gachaResourcesCalculation">
-            <span>用于搓玉的理智 x </span>
-            <input v-model.number="produceOrundum.coefficient" @input="gachaResourcesCalculation">
-            <span>搓玉系数 = </span>
-            <div class="image-sprite">
-              <div class="bg-icon_4003"></div>
-            </div>
-            <span>{{ produceOrundum.outputByAp }}</span>
-          </div>
-          <span class="tip">搓玉系数：1理智可搓多少玉，1-7搓玉系数1.09</span>
-
-          <div class="collapse-content-subheading">
-            <span></span> 绿票商店第三层
-          </div>
-
-          <div class="resources-line">
-            <span>现有绿票</span>
-            <input v-model.number="certificateStoreF3.certificates" @input="gachaResourcesCalculation">
-            <span>
-              ，有{{ certificateStoreF3.disposableCertificate }}绿票可换
-            </span>
-            <div class="image-sprite">
-              <div class="bg-icon_4003"></div>
-            </div>
-            <span>{{ certificateStoreF3.orundum }}</span>
-          </div>
-          <span class="tip">现有绿票数 - 第一层共需1490绿票 - 第二层共需10100绿票 = 可用于换玉的绿票数</span>
-          <span class="tip">鉴于第二层有不少性价比较低的物品，建议囤够2w以上绿票再考虑绿票换玉</span>
-        </el-collapse-item>
 
         <el-collapse-item name="daily" class="collapse-item">
           <template #title>
@@ -1241,6 +1283,63 @@ const handleChange = (val) => {
             </el-checkbox-button>
           </el-checkbox-group>
 
+        </el-collapse-item>
+
+
+        <!--搓玉资源-->
+        <el-collapse-item name="custom" class="collapse-item">
+          <template #title>
+            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
+            <span class="collapse-title-font">
+               搓玉/绿票商店&emsp;{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw, 0) }}抽
+              </span>
+          </template>
+          <div class="collapse-content-subheading">
+            <span></span>搓玉计算
+          </div>
+
+          <div class="resources-line">
+            <input v-model="produceOrundum.ap" @input="gachaResourcesCalculation">
+            <span>用于搓玉的理智 x </span>
+            <input v-model="produceOrundum.coefficient" @input="gachaResourcesCalculation">
+            <span>搓玉系数 = </span>
+            <div class="image-sprite">
+              <div class="bg-icon_4003"></div>
+            </div>
+            <span>{{ produceOrundum.outputByAp }}</span>
+          </div>
+
+          <span class="tip">搓玉系数：1理智可搓多少玉，1-7搓玉系数1.09</span>
+
+          <div class="resources-line">
+            <input v-model="produceOrundum.itemId30012" @input="gachaResourcesCalculation">
+            <span>个固源岩 + </span>
+            <input v-model="produceOrundum.itemId30062" @input="gachaResourcesCalculation">
+            <span>个装置 + </span>
+            <span> {{ produceOrundum.itemId4001 }}龙门币 = </span>
+            <div class="image-sprite">
+              <div class="bg-icon_4003"></div>
+            </div>
+            <span>{{ produceOrundum.outputByItem }}</span>
+          </div>
+
+          <div class="collapse-content-subheading">
+            <span></span> 绿票商店第三层
+          </div>
+
+          <div class="resources-line">
+            <span>现有绿票</span>
+            <input v-model="certificateStoreF3.certificates" @input="gachaResourcesCalculation">
+            <span>
+              ，有{{ certificateStoreF3.disposableCertificate }}绿票可换
+            </span>
+            <div class="image-sprite">
+              <div class="bg-icon_4003"></div>
+            </div>
+            <span>{{ certificateStoreF3.orundum }}</span>
+          </div>
+          <span class="tip">现有绿票数 - 第一层共需1490绿票 - 第二层共需10100绿票 = 可用于换玉的绿票数</span>
+          <span class="tip">鉴于第二层有不少性价比较低的物品，建议囤够2w以上绿票再考虑绿票换玉</span>
         </el-collapse-item>
 
         <!--        潜在资源-->
@@ -1548,10 +1647,10 @@ const handleChange = (val) => {
           <div class="collapse-content-subheading">
             <span></span> 未来活动
           </div>
-          <div class="checkbox-button" v-for="(activity,name) in activitySchedules"
+          <div class="resources-line" v-for="(activity,name) in activitySchedules"
                :key="name" v-show="activity.module==='act'&&rewardIsExpired(activity)">
-            <span class="checkbox-button-pack-label">{{ activity.name }}</span>
-            <div class="checkbox-button-gacha-resources">
+            <span class="resources-line-label">{{ activity.name }}</span>
+            <div class="resources-line-content">
               <div class="image-sprite" v-show="activity.originium>0">
                 <div class="bg-icon_4002"></div>
               </div>

@@ -1,15 +1,13 @@
-
 .container {
   width: 100%;
   background-color: var(--c-background-color);
   color: var(--c-text-color);
   box-sizing: border-box;
   padding-left: 250px;
-  transition:padding-left .2s;
+  transition:padding-left .2s,background-color .5s;
+
   /*background-color: red;*/
 }
-
-
 
 .main {
   box-sizing: border-box;
@@ -26,9 +24,305 @@
 
 
 
-@media (max-width: 600px) {
+.header {
+  height: 48px;
+  background: #262f3e;
+}
 
+.header-bar {
+  display: flex;
+  flex-direction: row;
+  height: 48px;
+  align-items: center;
+  z-index: 100;
+  box-shadow: none;
+  gap: 8px;
+  padding: 0 10px 0 10px;
+}
+
+
+.menu-button {
+  display: none;
+}
+
+.menu-button-desktop {
+  display: block;
+  font-size: 28px;
+  color: rgb(230, 230, 230);
+}
+
+.current-page-title {
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 0 8px;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.icon-theme-style {
+  font-size: 24px;
+  font-weight: bolder;
+  padding-right: 4px;
+  color: rgb(255, 255, 255);
+}
+
+.icon-language-style {
+  font-size: 24px;
+  color: white;
+  padding-right: 4px;
+  font-weight: bolder;
+}
+
+.icon-feed-back-style {
+  font-size: 24px;
+  color: white;
+  padding-right: 4px;
+  font-weight: bolder;
+}
+
+.menu-icon {
+  font-size: 16px;
+  padding: 0 8px;
 
 }
+
+.spacer {
+  flex-grow: 1;
+}
+
+/*侧边导航样式*/
+.side-navigation-container {
+  color: white;
+  height: 100%;
+  overflow-y: scroll;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: all 0.2s ease-out;
+  width: 250px;
+  background-color: #1e222d;
+  padding-bottom: 200px;
+
+}
+
+
+.side-navigation-container::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  background-color: #94b9ff;
+}
+
+.side-navigation-container::-webkit-scrollbar {
+  width: 4px;
+  background-color: #0059ff;
+}
+
+.side-navigation-container::-webkit-scrollbar-thumb {
+  background-color: #ebebeb;
+  border-radius: 2px;
+}
+
+.side-website-title {
+  font-size: 24px;
+  height: 60px;
+  line-height: 60px;
+  font-weight: 900;
+  padding-left: 20px;
+  transition: background-color 0.2s;
+}
+
+.side-website-title:hover {
+  background-color: dimgray;
+}
+
+
+/*抽屉式导航样式*/
+.drawer-container {
+  display: flex;
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3000;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  width: 260px;
+  height: 100vh;
+  transform: translateX(-500px);
+  transition: all 0.3s ease-in-out;
+  background-color: #1e222d;
+  overflow: auto;
+  z-index: 2001
+}
+
+.drawer-mask {
+  position: fixed;
+  top: 0;
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100vh;
+  display: none;
+  z-index: 2000
+}
+
+.navigation-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+  margin-bottom: 100px;
+}
+
+
+.nav-bar {
+  margin: 8px 12px;
+  height: 32px;
+  line-height: 32px;
+  padding-left: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  width: 190px;
+}
+
+.nav-bar:hover {
+  background-color: dimgray;
+}
+
+.nav-bar-selected {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+.nav-bar-parent {
+  color: #ffd257;
+  font-size: 18px;
+}
+
+.nav-bar-child {
+  margin-left: 32px;
+}
+
+.nav-bar-parent-icon {
+  width: 18px;
+  height: 18px;
+  margin-left: 4px;
+  margin-right: 8px;
+  display: inline-block;
+  background-color: #ffd04b;
+  border-radius: 6px;
+}
+
+.nav-bar-child-icon {
+  width: 32px;
+  height: 32px;
+  margin: 0px 12px 0px 0px;
+  display: inline-block;
+}
+
+.language-options span {
+  display: block;
+  padding: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100px;
+  box-sizing: border-box;
+}
+
+
+.feedback-table {
+  margin: 12px 4px;
+  border-collapse: collapse;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+
+.feedback-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--c-border-color);
+}
+
+
+@media (max-width: 1000px) {
+
+  .side-navigation-container {
+    display: none;
+  }
+
+  .container{
+    padding-left: 0;
+  }
+
+  .feedback-table {
+    width: 340px;
+    font-size: 12px;
+  }
+
+  .feedback-table td {
+    padding: 4px;
+  }
+
+
+
+  .header {
+    height: 60px;
+  }
+
+  .header-bar {
+    height: 60px;
+  }
+
+  .menu-button {
+    display: block;
+    font-size: 24px;
+    color: rgb(230, 230, 230)
+  }
+
+  .menu-button-desktop {
+    display: none;
+  }
+
+  .current-page-title{
+    display: none;
+  }
+
+  .nav-bar {
+    height: 28px;
+    line-height: 28px;
+  }
+
+  .nav-bar-parent {
+    font-size: 20px;
+  }
+
+  .nav-bar-child {
+    font-size: 14px;
+  }
+
+}
+
+.language-options {
+  width: 100px;
+}
+
+
+
+
+
+
+
 
 

@@ -1,10 +1,10 @@
 <template>
   <div class="container color_var" id="container" :class="theme_type">
     <my-aside></my-aside>
+    <loading ></loading>
     <div class="header">
       <my-header/>
     </div>
-    <loading v-show="loading"></loading>
     <router-view>
     </router-view>
     <my-footer></my-footer>

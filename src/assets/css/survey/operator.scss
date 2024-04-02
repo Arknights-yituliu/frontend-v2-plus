@@ -30,6 +30,7 @@
     text-align: center;
   }
 
+
   .operator-elite-image {
     width: 28px;
     filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
@@ -193,6 +194,35 @@
     border: 1px solid var(--c-border-color);
   }
 
+
+  .item-used-image {
+    height: 40px;
+    width: 40px;
+    position: relative;
+    /* border: 1px red solid; */
+    margin: 8px 12px;
+  }
+
+  .item-used-image div {
+    transform: scale(calc(40 / 183));
+    top: calc((40px - 183px) / 2);
+    left: calc((40px - 183px) / 2);
+    position: absolute;
+  }
+
+  .item-used-count {
+    position: absolute;
+    top: 32px;
+    font-size: 16px;
+    display: block;
+    left: -10px;
+    background: #595959;
+    width: 60px;
+    color: white;
+    line-height: 20px;
+    text-align: center;
+  }
+
   /*干员推荐弹窗卡片样式*/
   .operator-recommend-popup-container {
     padding: 12px;
@@ -214,8 +244,6 @@
     margin: 4px;
     width: 340px;
   }
-
-
 
 
   .recommend-text {
@@ -299,7 +327,7 @@
     }
 
     h2 {
-      margin-top: 40px;
+      margin-top: 24px;
     }
 
     p {

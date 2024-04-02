@@ -358,7 +358,6 @@ function getHistoryActStage() {
       historyActItemTable.unshift(reprintActivity)
     }
 
-    console.log(historyActItemTable)
     itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
   })
 }

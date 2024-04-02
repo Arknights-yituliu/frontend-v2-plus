@@ -377,11 +377,11 @@
           <div class="control-line item_cost_wrap" v-for="(itemList,type) in itemCostList"
                :key="type">
             <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
-              <div class="image_item_wrap">
+              <div class="item-used-image">
                 <div :class="getItemCostSprite(item.id)"></div>
-                <div class="item_count">
+                <span class="item-used-count">
                   {{ strShowLength(item.count) }}
-                </div>
+                </span>
               </div>
             </div>
           </div>
@@ -1287,7 +1287,7 @@ function getAvatarSprite(id) {
  * @returns {string} css样式名
  */
 function getItemCostSprite(id) {
-  return 'bg-' + id + " image_item"
+  return 'bg-' + id
 }
 
 function getAvatar(id) {

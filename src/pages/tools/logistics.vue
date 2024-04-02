@@ -110,7 +110,7 @@ function commonFilterOperator() {
           list.push(operator1)
           rowCount++
         }
-        break
+        break;
       }
 
       list.push(skill)

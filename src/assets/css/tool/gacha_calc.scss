@@ -33,7 +33,7 @@
   }
 
   .collapse-item {
-    margin: 8px;
+    margin: 16px 8px;
     box-shadow: 1px 1px 8px var(--c-box-shadow-color);
   }
 
@@ -53,7 +53,7 @@
     top: 10px;
     background-color: var(--c-background-color);
     z-index: 2001;
-    height: 400px;
+    margin-bottom: 20px;
   }
 
   /*卡池时间单选框的外容器*/
@@ -64,7 +64,7 @@
 
   .gacha-resources-chart-pie {
     width: 300px;
-    height: 220px
+    height: 240px
   }
 
 
@@ -98,7 +98,7 @@
 
   .gacha-resources-table {
     width: 200px;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 18px;
     font-weight: 900;
     text-align: center;
@@ -208,7 +208,13 @@
     box-sizing: border-box;
     padding: 0 4px;
     margin: 0 4px;
+    outline: none;
+    border: 1px solid var(--c-border-color);
+    background-color: var(--c-background-color);
+    color: var(--c-text-color);
+    box-shadow: none;
   }
+
 
   .resources-line {
     display: flex;

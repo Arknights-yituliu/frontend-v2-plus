@@ -55,9 +55,9 @@
           <el-collapse>
             <el-collapse-item name="2" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <TrendCharts/>
-                  </el-icon><b style="margin-left: 4px">动态平衡算法简述</b></span>
+                <span style="font-size: large; display: flex; align-items: center">
+                  <i class="iconfont icon-calculator"></i>
+                  <b style="margin-left: 4px">动态平衡算法简述</b></span>
               </template>
               <b>算法核心思路为“掉率越高，则价值越低”且“物品价值仅受获取成本影响”</b>
               <hr/>
@@ -87,9 +87,7 @@
             </el-collapse-item>
             <el-collapse-item name="3" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <Opportunity/>
-                  </el-icon><b style="margin-left: 4px">计算细节</b></span>
+                <span style="font-size: large; display: flex; align-items: center"><i class="iconfont icon-calculator"></i><b style="margin-left: 4px">计算细节</b></span>
               </template>
               <ul style="padding-left: 2em">
                 <li>数据选择范围为<a href="https://penguin-stats.cn/">企鹅物流</a>中的<b>常驻关卡</b>以保证价值的稳定性。
@@ -113,9 +111,7 @@
             </el-collapse-item>
             <el-collapse-item name="4" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><el-icon>
-                    <Checked/>
-                  </el-icon><b style="margin-left: 4px">算法公示卡</b></span>
+                <span style="font-size: large; display: flex; align-items: center"><i class="iconfont icon-publicity"></i><b style="margin-left: 4px">算法公示卡</b></span>
               </template>
               <table id="al_card">
                 <tbody>
@@ -151,9 +147,7 @@
             <el-collapse-item name="5" style="">
               <template #title>
                 <span style="font-size: large; display: flex; align-items: center">
-                  <el-icon>
-                    <Warning/>
-                  </el-icon><b style="margin-left: 4px">版权声明与许可协议</b>
+                   <i class="iconfont icon-copyright"></i><b style="margin-left: 4px">版权声明与许可协议</b>
                 </span>
               </template>
               网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于

@@ -48,7 +48,7 @@
         height: 36px;
         line-height: 36px;
         font-weight: bold;
-        color: rgba(0, 0, 0, 0.5);
+
     }
 
     .logistics-table-title-1{
@@ -67,7 +67,7 @@
     .logistics-table td {
         border-bottom: 1px solid var(--c-border-color);
         box-sizing: border-box;
-        padding: 0;
+        padding: 4px 0;
 
     }
 
@@ -99,7 +99,8 @@
     .logistics-skill-name {
         padding: 4px;
         border-radius: 2px;
-        line-height: 1.9;
+        font-size: 12px;
+        line-height: 2;
     }
 
     .logistics-search-line {

@@ -10,7 +10,7 @@ let loadingText = ref('加载中')
 
 const intervalId = setInterval(() => {
   if(loadingText.value.length>9){
-    loadingText.value = '加载'
+    loadingText.value = '加载中'
   }else {
     loadingText.value = loadingText.value + '·'
   }
@@ -30,20 +30,21 @@ const intervalId = setInterval(() => {
   </div>
 
 </template>
+
 <style>
 .loading {
   width: 100%;
-  height: calc(100vh - 40px);
+  height: calc(100vh);
   background-color: var(--c-background-color);
   z-index: 3000;
   //font-size: 18px;
   display: flex;
+  position: fixed;
   justify-content: center;
   align-items: center;
 }
 
 @media screen and (max-width: 600px){
-
 
 
 }

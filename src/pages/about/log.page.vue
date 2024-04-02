@@ -115,6 +115,7 @@ for (const log of logTable) {
 @media screen and (max-width: 600px) {
   .log-content {
     font-size: 12px;
+    padding: 12px 0;
   }
 
   .log-type {
@@ -131,6 +132,10 @@ for (const log of logTable) {
 
   .log-author-phone {
     display: block;
+  }
+
+  .log-description {
+    padding: 0px 0 0 0;
   }
 
 }

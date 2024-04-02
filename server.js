@@ -2,12 +2,12 @@ import history  from 'connect-history-api-fallback'
 import express from "express";
 
 const server = express()
-const port = 3000
-
-
-server.use(express.static('dist'))
+const port = 4000
 
 server.use(history())
+server.use(express.static('dist'))
+
+
 
 
 
