@@ -131,13 +131,13 @@
     "module": "actRe",
     "probability": ""
   },
-  "Side Story": {
-    "originium": 28,
+  "「巴别塔」": {
+    "originium": 38,
     "orundum": 0,
     "gachaTicket": 3,
     "tenGachaTicket": 0,
     "start": "2024/04/03 16:00:00",
-    "end": "2024/04/04 03:58:00",
+    "end": "2024/04/11 15:58:00",
     "rewardType": "公共",
     "module": "act",
     "probability": ""
