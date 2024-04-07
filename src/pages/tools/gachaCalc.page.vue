@@ -142,6 +142,11 @@ function getAndSortPackData() {
   //从服务器获取礼包数据，将其进行分类
   storeAPI.getPackStore().then(response => {
     for (let pack of response.data) {
+
+      if (pack.officialName.indexOf('如死亦终') > -1) {
+        continue
+      }
+
       //没有抽卡资源不写入
       if (!(pack.drawPrice > 0)) {
         continue;
@@ -157,7 +162,7 @@ function getAndSortPackData() {
       //礼包索引递增
       index++
 
-      if(pack.saleStatus<0){
+      if (pack.saleStatus < 0) {
         packListGroupByHistorical.value.push(pack)
         continue;
       }
@@ -909,6 +914,21 @@ function gachaResourcesCalculation() {
 
   // console.table(logs)
 
+  const lastSettings = {
+    existOrundum: existResources.value.orundum,
+    existOriginium: existResources.value.originium,
+    existGachaTicket: existResources.value.gachaTicket,
+    existTenGachaTicket: existResources.value.tenGachaTicket,
+    originiumIsUsed: originiumIsUsed.value,
+    weeklyTaskCompleted: dailyReward.value.weeklyTaskCompleted,
+    certificateStoreCompleted: dailyReward.value.certificateStoreCompleted,
+    annihilationCompleted: dailyReward.value.annihilationCompleted,
+    paradox: potentialResources.value.paradox,
+    annihilation: potentialResources.value.annihilation
+  }
+
+  localStorage.setItem('LastSettings', JSON.stringify(lastSettings))
+
   setPieChart(pieChartData.value)
 
   // console.log(calculationResult.value)
@@ -975,8 +995,36 @@ function setPieChart(data) {
   myChart.setOption(option);
 }
 
+//从本地存储读取上次用户的攒抽设置
+function readLastSettings() {
+  let lastSettings = localStorage.getItem('LastSettings');
+  if(!lastSettings){
+    return
+  }
+
+  try {
+    lastSettings = JSON.parse(lastSettings)
+  }catch (error){
+    console.log(error)
+    return;
+  }
+
+
+  existResources.value.orundum = lastSettings.existOrundum?lastSettings.existOrundum:0
+  existResources.value.originium = lastSettings.existOriginium?lastSettings.existOriginium:0
+  existResources.value.gachaTicket = lastSettings.existGachaTicket?lastSettings.existGachaTicket:0
+  existResources.value.tenGachaTicket = lastSettings.existTenGachaTicket?lastSettings.existTenGachaTicket:0
+  originiumIsUsed.value = lastSettings.originiumIsUsed
+  dailyReward.value.weeklyTaskCompleted = lastSettings.weeklyTaskCompleted
+  dailyReward.value.certificateStoreCompleted = lastSettings.certificateStoreCompleted
+  dailyReward.value.annihilationCompleted = lastSettings.annihilationCompleted
+  potentialResources.value.paradox = lastSettings.paradox?lastSettings.paradox:0
+  potentialResources.value.annihilation = lastSettings.annihilation?lastSettings.annihilation:0
+
+}
 
 onMounted(() => {
+  readLastSettings()
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
   updateScheduleOption(0)
   getAndSortPackData()
@@ -1006,7 +1054,7 @@ function handleResize() {
   //判断是否是移动设备或PC端将窗口缩小，如果是就对chart画布进行尺寸重设
   if (window.innerWidth < 590) {
     myChart.resize()
-  }else {
+  } else {
     myChart.resize()
   }
 }
@@ -1018,8 +1066,8 @@ function handleResize() {
   <!--  <img src="/public/顶部.jpg" alt="" style="width: 600px;position: absolute;top: 50px;left: 360px;z-index:3000;opacity: 0.3" >-->
   <div class="gacha-calculation-page" id="gachaCalculate">
     <!--计算结果-->
-    <div class="collapse-wrap result-box" id="result-box">
-      <el-collapse v-model="resultCollapseActiveNames" @change="handleChange" style="border: none">
+    <div class="collapse-wrap " id="result-box">
+      <el-collapse v-model="resultCollapseActiveNames" class="result-box"   style="border: none">
         <el-collapse-item name="calculationResult" class="collapse-item">
           <template #title>
             <div class="collapse-title-icon" style="background: #ec8338"></div>
@@ -1039,7 +1087,7 @@ function handleResize() {
 
           </div>
 
-          <span class="tip" style="text-align: center">日期为卡池结束日期，夏活日期待定，不是准确日期</span>
+          <span class="tip" style="text-align: center">日期为卡池结束日期，夏活日期待定，仅参考</span>
 
           <div class="result-content">
             <!--饼状图-->
@@ -1126,7 +1174,7 @@ function handleResize() {
     </div>
 
     <div class="collapse-wrap" id="resources-box">
-      <el-collapse v-model="optionsCollapseActiveNames" @change="handleChange" style="border: none">
+      <el-collapse v-model="optionsCollapseActiveNames"  style="border: none">
         <!--库存资源-->
         <el-collapse-item name="exist" class="collapse-item">
           <template #title>
@@ -1458,46 +1506,6 @@ function handleResize() {
               <div class="checkbox-button">
                <span class="draw-efficiency"
                      :style="getPackPriorityColor(pack.drawEfficiency)">
-                  {{ keepTheDecimalPoint(pack.drawPrice) }}
-                </span>
-                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="checkbox-button-pack-gacha-resources">
-                  <!--源石-->
-                  <div class="image-sprite" v-show="pack.originium>0">
-                    <div class="bg-icon_4002"></div>
-                  </div>
-                  <span v-show="pack.originium>0">{{ pack.originium }}</span>
-                  <!--合成玉-->
-                  <div class="image-sprite" v-show="pack.orundum>0">
-                    <div class="bg-icon_4003"></div>
-                  </div>
-                  <span v-show="pack.orundum>0">{{ pack.orundum }}</span>
-                  <!--抽卡券-->
-                  <div class="image-sprite" v-show="pack.gachaTicket>0">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span v-show="pack.gachaTicket>0">{{ pack.gachaTicket }}</span>
-                  <!--十连券-->
-                  <div class="image-sprite" v-show="pack.tenGachaTicket>0">
-                    <div class="bg-icon_7004"></div>
-                  </div>
-                  <span v-show="pack.tenGachaTicket>0">{{ pack.tenGachaTicket }}</span>
-                </div>
-              </div>
-            </el-checkbox-button>
-          </el-checkbox-group>
-
-          <!--限时礼包-->
-          <div class="collapse-content-subheading">
-            <span></span> 历史礼包
-          </div>
-          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack,index) in packListGroupByLimited"
-                                :key="index" :value="pack.parentIndex"
-                                class="el-checkbox-button">
-              <div class="checkbox-button">
-                 <span class="draw-efficiency"
-                       :style="getPackPriorityColor(pack.drawEfficiency)">
                   {{ keepTheDecimalPoint(pack.drawPrice) }}
                 </span>
                 <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>

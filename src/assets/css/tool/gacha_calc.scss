@@ -51,9 +51,9 @@
   .result-box {
     position: sticky;
     top: 10px;
-    background-color: var(--c-background-color);
     z-index: 2001;
     height: 1px;
+    margin-bottom: 10px;
   }
 
   /*卡池时间单选框的外容器*/
