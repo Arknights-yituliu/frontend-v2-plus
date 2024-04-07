@@ -5,7 +5,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 90%;
 }
 
 #gachaCalculate {
@@ -53,7 +53,7 @@
     top: 10px;
     background-color: var(--c-background-color);
     z-index: 2001;
-    margin-bottom: 20px;
+    height: 1px;
   }
 
   /*卡池时间单选框的外容器*/

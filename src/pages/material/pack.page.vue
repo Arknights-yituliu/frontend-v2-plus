@@ -40,7 +40,7 @@ function initData() {
   // packsPPRDataSort.value = [];
   const limitedType = ['limited']
   const periodicType = ['weekly', 'monthly', 'chips']
-  const newbieType = ['once', 'return']
+  const newbieType = ['chip', 'newbie']
 
   for (let i = 0; i < packPPRResponse.value.length; i += 1) {
     let pack = packPPRResponse.value[i]
@@ -57,14 +57,21 @@ function initData() {
       pack.packRmbPerDraw = 0;
     }
 
+    if(pack.saleStatus<0){
+      continue
+    }
+
     if(limitedType.includes(pack.saleType)){
       limitedPack.push(pack)
+      continue
     }
     if(periodicType.includes(pack.saleType)){
       periodicPack.push(pack)
+      continue
     }
     if(newbieType.includes(pack.saleType)){
       newbiePack.push(pack)
+
     }
 
 
@@ -397,7 +404,6 @@ onMounted(() => {
       <div class="pack-card-container" >
         <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
         <div v-for="(pack2, index) in newbiePack" :key="index" class="pack-card"
-             :style="getPackList(pack2.saleType, pack2.saleStatus, 'once', 'return')"
              @click="displayPackContent(pack2.id)">
           <!-- 图片部分 -->
           <div class="pack-card-part-left">

@@ -1,6 +1,6 @@
 import Error404 from "/src/pages/layout/error404.vue";
 import StageRecommendation from '/src/pages/material/stageV3.page.vue'
-import GachaCalculator from '/src/pages/tools/gachaCalc2.page.vue'
+import GachaCalculator from '/src/pages/tools/gachaCalc.page.vue'
 
 const routes = [
     {
@@ -48,9 +48,15 @@ const routes = [
         icon: "elite",
         component: () => import('/src/pages/material/elite.page.vue')
     },
-
     {
         path: '/tools/gachaCal',
+        text: '攒抽计算器',
+        name: 'GachaCalculator1',
+        display: false,
+        component: GachaCalculator
+    },
+    {
+        path: '/tools/gachaCalc',
         text: '攒抽计算器',
         name: 'GachaCalculator',
         display: true,

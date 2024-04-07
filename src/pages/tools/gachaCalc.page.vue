@@ -124,6 +124,9 @@ let packListGroupByYear = ref([])
 let packListGroupByMonthly = ref([])
 //限时礼包集合
 let packListGroupByLimited = ref([])
+
+let packListGroupByHistorical = ref([])
+
 //全部礼包集合
 let packList = ref([])
 //每月黄票兑换抽卡券(视为礼包)集合
@@ -149,9 +152,18 @@ function getAndSortPackData() {
       }
 
       pack.parentIndex = index
+      //将礼包写入全部礼包集合
+      packList.value.push(pack)
+      //礼包索引递增
+      index++
+
+      if(pack.saleStatus<0){
+        packListGroupByHistorical.value.push(pack)
+        continue;
+      }
 
       //根据礼包类型进行分类
-      if (pack.saleType === 'once') {
+      if (pack.saleType === 'newbie') {
         packListGroupByOnce.value.push(pack)
       }
 
@@ -167,14 +179,11 @@ function getAndSortPackData() {
         packListGroupByLimited.value.push(pack)
       }
 
-      //将礼包写入全部礼包集合
-      packList.value.push(pack)
-      //礼包索引递增
-      index++
+
     }
     batchGenerationMonthlyPack(index)
 
-    updateScheduleOption(0)
+
   })
 }
 
@@ -969,6 +978,7 @@ function setPieChart(data) {
 
 onMounted(() => {
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
+  updateScheduleOption(0)
   getAndSortPackData()
 })
 
@@ -1479,6 +1489,46 @@ function handleResize() {
 
           <!--限时礼包-->
           <div class="collapse-content-subheading">
+            <span></span> 历史礼包
+          </div>
+          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(pack,index) in packListGroupByLimited"
+                                :key="index" :value="pack.parentIndex"
+                                class="el-checkbox-button">
+              <div class="checkbox-button">
+                 <span class="draw-efficiency"
+                       :style="getPackPriorityColor(pack.drawEfficiency)">
+                  {{ keepTheDecimalPoint(pack.drawPrice) }}
+                </span>
+                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
+                <div class="checkbox-button-pack-gacha-resources">
+                  <!--源石-->
+                  <div class="image-sprite" v-show="pack.originium>0">
+                    <div class="bg-icon_4002"></div>
+                  </div>
+                  <span v-show="pack.originium>0">{{ pack.originium }}</span>
+                  <!--合成玉-->
+                  <div class="image-sprite" v-show="pack.orundum>0">
+                    <div class="bg-icon_4003"></div>
+                  </div>
+                  <span v-show="pack.orundum>0">{{ pack.orundum }}</span>
+                  <!--抽卡券-->
+                  <div class="image-sprite" v-show="pack.gachaTicket>0">
+                    <div class="bg-icon_7003"></div>
+                  </div>
+                  <span v-show="pack.gachaTicket>0">{{ pack.gachaTicket }}</span>
+                  <!--十连券-->
+                  <div class="image-sprite" v-show="pack.tenGachaTicket>0">
+                    <div class="bg-icon_7004"></div>
+                  </div>
+                  <span v-show="pack.tenGachaTicket>0">{{ pack.tenGachaTicket }}</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
+
+          <!--限时礼包-->
+          <div class="collapse-content-subheading">
             <span></span> 限时礼包
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
@@ -1564,6 +1614,47 @@ function handleResize() {
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack,index) in packListGroupByYear"
                                 :key="index" :value="pack.parentIndex"
+                                class="el-checkbox-button">
+              <div class="checkbox-button">
+                 <span class="draw-efficiency"
+                       :style="getPackPriorityColor(pack.drawEfficiency)">
+                  {{ keepTheDecimalPoint(pack.drawPrice) }}
+                </span>
+                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
+                <div class="checkbox-button-pack-gacha-resources">
+                  <!--源石-->
+                  <div class="image-sprite" v-show="pack.originium>0">
+                    <div class="bg-icon_4002"></div>
+                  </div>
+                  <span v-show="pack.originium>0">{{ pack.originium }}</span>
+                  <!--合成玉-->
+                  <div class="image-sprite" v-show="pack.orundum>0">
+                    <div class="bg-icon_4003"></div>
+                  </div>
+                  <span v-show="pack.orundum>0">{{ pack.orundum }}</span>
+                  <!--抽卡券-->
+                  <div class="image-sprite" v-show="pack.gachaTicket>0">
+                    <div class="bg-icon_7003"></div>
+                  </div>
+                  <span v-show="pack.gachaTicket>0">{{ pack.gachaTicket }}</span>
+                  <!--十连券-->
+                  <div class="image-sprite" v-show="pack.tenGachaTicket>0">
+                    <div class="bg-icon_7004"></div>
+                  </div>
+                  <span v-show="pack.tenGachaTicket>0">{{ pack.tenGachaTicket }}</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
+
+
+          <div class="collapse-content-subheading">
+            <span></span> 往年礼包
+          </div>
+          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(pack,index) in packListGroupByHistorical"
+                                :key="index" :value="pack.parentIndex"
+                                v-show="rewardIsExpired(pack)"
                                 class="el-checkbox-button">
               <div class="checkbox-button">
                  <span class="draw-efficiency"
