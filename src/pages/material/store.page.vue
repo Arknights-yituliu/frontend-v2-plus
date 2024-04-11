@@ -127,7 +127,7 @@ onMounted(() => {
       </div>
       <!-- 标题区域end -->
       <!-- 内容区域 -->
-      <div v-for="(singleAct, index) in actStoreList" :key="index">
+      <div v-for="(singleAct, index) in actStoreList" :key="index" class="act_store_block">
         <!-- banner -->
         <div class="act_banner_background" :style="getBackground(singleAct.imageLink)">
           <div class="act_banner_img">
