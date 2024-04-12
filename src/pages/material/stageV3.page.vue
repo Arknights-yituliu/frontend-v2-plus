@@ -721,9 +721,9 @@ onMounted(() => {
       </div>
     </div> -->
     <!-- 详情表 -->
-    <div id="detail-table">
+    <div id="detail-table" style="margin:0px 8px;max-width: 1260px;border: 1px solid #00000040;border-radius: 8px;">
       <el-table stripe :data="item_table_data_by_item_id" max-height="500" class="stage-detail-table">
-        <el-table-column fixed prop="stageCode" label="关卡名" sortable width="110px">
+        <el-table-column fixed prop="stageCode" label="关卡名" sortable>
           <template #default="scope">
             <div>
               <span style="font-size: 10px;line-height: 8px;">{{ replaceZoneName(scope) }}</span><br>
@@ -731,7 +731,7 @@ onMounted(() => {
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="主产物">
+        <el-table-column prop="primary" label="主产物" width="88px">
           <template #default="scope">
             <div class="stage-detail-table-item-icon">
               <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
@@ -743,19 +743,19 @@ onMounted(() => {
             {{ formatNumber(scope.row.knockRating * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="期望理智" sortable width="100px">
+        <el-table-column prop="primary" label="期望理智" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.apExpect, 1) }}
           </template>
         </el-table-column>
-        <el-table-column prop="secondary" label="副产物">
+        <el-table-column prop="secondary" label="副产物" width="88px">
           <template #default="scope">
             <div class="stage-detail-table-item-icon">
               <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="eff" label="综合效率" sortable width="120px">
+        <el-table-column prop="eff" label="综合效率" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
           </template>
@@ -803,10 +803,10 @@ onMounted(() => {
         <h1>搓玉数据表</h1>
         <h4>Orundum</h4>
       </div>
-      <button class="tag-button" @click="filterOrundumStage()">仅显示活动关</button>
+      <button class="tag-button" @click="filterOrundumStage()">仅显示1-7、CW-6和活动关</button>
     </div>
 
-    <div class="tableArea" style="margin : 8px;max-width: 720px;">
+    <div class="tableArea" style="margin:0px 8px;max-width: 720px;border: 1px solid #00000040;border-radius: 8px;">
       <el-table class="detailTable" :data="displayOrundumRecommendedStage" stripe style="width: 100%;height: 400px;">
         <el-table-column prop="stageCode" label="关卡名"/>
         <el-table-column label="每理智可搓玉">
@@ -839,9 +839,9 @@ onMounted(() => {
         <h1>往期活动数据</h1>
         <h4>History Event</h4>
       </div>
-      <button class="tag-button" @click="chooseHistoryActDevice('phone')">手机版表格
+      <button class="tag-button" @click="chooseHistoryActDevice('phone')">列表模式
       </button>
-      <button class="tag-button" @click="chooseHistoryActDevice('pc')">电脑版表格</button>
+      <button class="tag-button" @click="chooseHistoryActDevice('pc')">表格模式</button>
     </div>
 
     <!--    <div class="op_title" id="history-stage-table">-->
