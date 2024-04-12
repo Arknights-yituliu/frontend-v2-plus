@@ -875,8 +875,8 @@ function gachaResourcesCalculation() {
     calculationResult.value.tenGachaTicket += tenGachaTicket
 
 
-    calculationResult.value.otherTotalDraw = Math.floor(orundum / 600 + originium * 0.3 +
-        gachaTicket + tenGachaTicket * 10)
+    calculationResult.value.otherTotalDraw = orundum / 600 + originium * 0.3 +
+        gachaTicket + tenGachaTicket * 10
 
     logs.push({key: "预测-合成玉", value: orundum})
     logs.push({key: "预测-源石", value: originium})
@@ -895,7 +895,7 @@ function gachaResourcesCalculation() {
 
   singleResourceDraws.value.orundum = Math.floor(calculationResult.value.orundum / 600)
   singleResourceDraws.value.gachaTicket = calculationResult.value.gachaTicket
-  singleResourceDraws.value.tenGachaTicket = Math.floor(calculationResult.value.tenGachaTicket * 10)
+  singleResourceDraws.value.tenGachaTicket = calculationResult.value.tenGachaTicket * 10
 
 
   pieChartData.value = pieChartDataTmp
@@ -903,16 +903,15 @@ function gachaResourcesCalculation() {
   logs.push({key: "计算源石前", value: calculationResult.value.totalDraw})
 
   if (originiumIsUsed.value) {
-    calculationResult.value.totalDraw = Math.floor(calculationResult.value.totalDraw +
+    calculationResult.value.totalDraw =calculationResult.value.totalDraw + Math.floor(
         calculationResult.value.originium * 0.3)
     singleResourceDraws.value.originium = Math.floor(calculationResult.value.originium * 0.3)
-
   }
 
 
   logs.push({key: "计算源石后", value: calculationResult.value.totalDraw})
 
-  // console.table(logs)
+  console.table(logs)
 
   const lastSettings = {
     existOrundum: existResources.value.orundum,
@@ -998,28 +997,28 @@ function setPieChart(data) {
 //从本地存储读取上次用户的攒抽设置
 function readLastSettings() {
   let lastSettings = localStorage.getItem('LastSettings');
-  if(!lastSettings){
+  if (!lastSettings) {
     return
   }
 
   try {
     lastSettings = JSON.parse(lastSettings)
-  }catch (error){
+  } catch (error) {
     console.log(error)
     return;
   }
 
 
-  existResources.value.orundum = lastSettings.existOrundum?lastSettings.existOrundum:0
-  existResources.value.originium = lastSettings.existOriginium?lastSettings.existOriginium:0
-  existResources.value.gachaTicket = lastSettings.existGachaTicket?lastSettings.existGachaTicket:0
-  existResources.value.tenGachaTicket = lastSettings.existTenGachaTicket?lastSettings.existTenGachaTicket:0
+  existResources.value.orundum = lastSettings.existOrundum ? lastSettings.existOrundum : 0
+  existResources.value.originium = lastSettings.existOriginium ? lastSettings.existOriginium : 0
+  existResources.value.gachaTicket = lastSettings.existGachaTicket ? lastSettings.existGachaTicket : 0
+  existResources.value.tenGachaTicket = lastSettings.existTenGachaTicket ? lastSettings.existTenGachaTicket : 0
   originiumIsUsed.value = lastSettings.originiumIsUsed
   dailyReward.value.weeklyTaskCompleted = lastSettings.weeklyTaskCompleted
   dailyReward.value.certificateStoreCompleted = lastSettings.certificateStoreCompleted
   dailyReward.value.annihilationCompleted = lastSettings.annihilationCompleted
-  potentialResources.value.paradox = lastSettings.paradox?lastSettings.paradox:0
-  potentialResources.value.annihilation = lastSettings.annihilation?lastSettings.annihilation:0
+  potentialResources.value.paradox = lastSettings.paradox ? lastSettings.paradox : 0
+  potentialResources.value.annihilation = lastSettings.annihilation ? lastSettings.annihilation : 0
 
 }
 
@@ -1066,115 +1065,117 @@ function handleResize() {
   <!--  <img src="/public/顶部.jpg" alt="" style="width: 600px;position: absolute;top: 50px;left: 360px;z-index:3000;opacity: 0.3" >-->
   <div class="gacha-calculation-page" id="gachaCalculate">
     <!--计算结果-->
-    <div class="collapse-wrap " id="result-box">
-      <el-collapse v-model="resultCollapseActiveNames" class="result-box"   style="border: none">
-        <el-collapse-item name="calculationResult" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: #ec8338"></div>
-            <span class="collapse-title-font">
+    <div class="collapse-group1" id="result-box">
+      <div class="collapse-group-content">
+        <el-collapse v-model="resultCollapseActiveNames" class="" style="border: none">
+          <el-collapse-item name="calculationResult" class="collapse-item">
+            <template #title>
+              <div class="collapse-title-icon" style="background: #ec8338"></div>
+              <span class="collapse-title-font">
                 共计{{ calculationResult.totalDraw }}抽，
               氪金{{ keepTheDecimalPoint(calculationResult.totalAmountOfRecharge, 0) }}元
               </span>
-          </template>
+            </template>
 
-          <!--选择攒到某个活动的单选框-->
-          <div class="radio-group-wrap">
-            <el-radio-group v-model="selectedScheduleName" size="large" style="margin: auto">
-              <el-radio-button v-for="(activity,index) in scheduleOptions" :key="index" :value="activity.name"
-                               :label="activity.name" :disabled="activity.disabled"
-                               @change="updateScheduleOption(index)"/>
-            </el-radio-group>
+            <!--选择攒到某个活动的单选框-->
+            <div class="radio-group-wrap">
+              <el-radio-group v-model="selectedScheduleName" size="large" style="margin: auto">
+                <el-radio-button v-for="(activity,index) in scheduleOptions" :key="index" :value="activity.name"
+                                 :label="activity.name" :disabled="activity.disabled"
+                                 @change="updateScheduleOption(index)"/>
+              </el-radio-group>
 
-          </div>
+            </div>
 
-          <span class="tip" style="text-align: center">日期为卡池结束日期，夏活日期待定，仅参考</span>
+            <span class="tip" style="text-align: center">日期为卡池结束日期，夏活日期待定，仅参考</span>
 
-          <div class="result-content">
-            <!--饼状图-->
-            <div class="gacha-resources-chart-pie" id="calculationResultPieChart">
-            </div>
-            <!--抽卡次数总览-->
-            <table class="gacha-resources-table">
-              <tbody>
-              <tr>
-                <td class="gacha-resources-table-title">现有</td>
-                <td class="gacha-resources-table-quantity">{{
-                    keepTheDecimalPoint(calculationResult.existTotalDraw, 0)
-                  }}
-                </td>
-                <td>抽</td>
-              </tr>
-              <tr>
-                <td>日常</td>
-                <td>{{ keepTheDecimalPoint(calculationResult.dailyTotalDraw, 0) }}</td>
-                <td>抽</td>
-              </tr>
-              <tr>
-                <td>搓玉</td>
-                <td>{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw, 0) }}</td>
-                <td>抽</td>
-              </tr>
-              <tr>
-                <td>潜在</td>
-                <td>{{ keepTheDecimalPoint(calculationResult.potentialTotalDraw, 0) }}</td>
-                <td>抽
-                </td>
-              </tr>
-              <tr>
-                <td>氪金</td>
-                <td>{{ keepTheDecimalPoint(calculationResult.rechargeTotalDraw, 0) }}</td>
-                <td>抽</td>
-              </tr>
-              <tr>
-                <td>活动(估算)</td>
-                <td>{{ keepTheDecimalPoint(calculationResult.activityTotalDraw, 0) }}</td>
-                <td>抽</td>
-              </tr>
-              <tr>
-                <td>其它(估算)</td>
-                <td>{{ keepTheDecimalPoint(calculationResult.otherTotalDraw, 0) }}</td>
-                <td>抽</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <!--抽卡资源总览-->
-          <div class="resources-result-bar">
-            <div class="resources-result-single">
-              <div class="image-sprite">
-                <div class="bg-icon_4002"></div>
+            <div class="result-content">
+              <!--饼状图-->
+              <div class="gacha-resources-chart-pie" id="calculationResultPieChart">
               </div>
-              <span class="resources-quantity">{{ calculationResult.originium }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.originium }})</span>
+              <!--抽卡次数总览-->
+              <table class="gacha-resources-table">
+                <tbody>
+                <tr>
+                  <td class="gacha-resources-table-title">现有</td>
+                  <td class="gacha-resources-table-quantity">{{
+                      keepTheDecimalPoint(calculationResult.existTotalDraw, 0)
+                    }}
+                  </td>
+                  <td>抽</td>
+                </tr>
+                <tr>
+                  <td>日常</td>
+                  <td>{{ keepTheDecimalPoint(calculationResult.dailyTotalDraw, 0) }}</td>
+                  <td>抽</td>
+                </tr>
+                <tr>
+                  <td>搓玉</td>
+                  <td>{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw, 0) }}</td>
+                  <td>抽</td>
+                </tr>
+                <tr>
+                  <td>潜在</td>
+                  <td>{{ keepTheDecimalPoint(calculationResult.potentialTotalDraw, 0) }}</td>
+                  <td>抽
+                  </td>
+                </tr>
+                <tr>
+                  <td>氪金</td>
+                  <td>{{ keepTheDecimalPoint(calculationResult.rechargeTotalDraw, 0) }}</td>
+                  <td>抽</td>
+                </tr>
+                <tr>
+                  <td>活动(估算)</td>
+                  <td>{{ keepTheDecimalPoint(calculationResult.activityTotalDraw, 0) }}</td>
+                  <td>抽</td>
+                </tr>
+                <tr>
+                  <td>其它(估算)</td>
+                  <td>{{ keepTheDecimalPoint(calculationResult.otherTotalDraw, 0) }}</td>
+                  <td>抽</td>
+                </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="resources-result-single">
-              <div class="image-sprite">
-                <div class="bg-icon_4003"></div>
+            <!--抽卡资源总览-->
+            <div class="resources-result-bar">
+              <div class="resources-result-single">
+                <div class="image-sprite">
+                  <div class="bg-icon_4002"></div>
+                </div>
+                <span class="resources-quantity">{{ calculationResult.originium }}</span>
+                <span class="resources-quantity-small">({{ singleResourceDraws.originium }})</span>
               </div>
-              <span class="resources-quantity">{{ calculationResult.orundum }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.orundum }})</span>
-            </div>
-            <div class="resources-result-single">
-              <div class="image-sprite">
-                <div class="bg-icon_7003"></div>
+              <div class="resources-result-single">
+                <div class="image-sprite">
+                  <div class="bg-icon_4003"></div>
+                </div>
+                <span class="resources-quantity">{{ calculationResult.orundum }}</span>
+                <span class="resources-quantity-small">({{ singleResourceDraws.orundum }})</span>
               </div>
-              <span class="resources-quantity">{{ calculationResult.gachaTicket }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.gachaTicket }})</span>
-            </div>
-            <div class="resources-result-single">
-              <div class="image-sprite">
-                <div class="bg-icon_7004"></div>
+              <div class="resources-result-single">
+                <div class="image-sprite">
+                  <div class="bg-icon_7003"></div>
+                </div>
+                <span class="resources-quantity">{{ calculationResult.gachaTicket }}</span>
+                <span class="resources-quantity-small">({{ singleResourceDraws.gachaTicket }})</span>
               </div>
-              <span class="resources-quantity">{{ calculationResult.tenGachaTicket }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.tenGachaTicket }})</span>
+              <div class="resources-result-single">
+                <div class="image-sprite">
+                  <div class="bg-icon_7004"></div>
+                </div>
+                <span class="resources-quantity">{{ calculationResult.tenGachaTicket }}</span>
+                <span class="resources-quantity-small">({{ singleResourceDraws.tenGachaTicket }})</span>
+              </div>
             </div>
-          </div>
-        </el-collapse-item>
-      </el-collapse>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
     </div>
 
-    <div class="collapse-wrap" id="resources-box">
-      <el-collapse v-model="optionsCollapseActiveNames"  style="border: none">
+    <div class="collapse-group2" id="resources-box">
+      <el-collapse v-model="optionsCollapseActiveNames" style="border: none">
         <!--库存资源-->
         <el-collapse-item name="exist" class="collapse-item">
           <template #title>

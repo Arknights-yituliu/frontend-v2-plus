@@ -186,13 +186,24 @@
     "module": "honeyCake",
     "probability": ""
   },
-  "剿灭作战更新(4.29)": {
+  "剿灭作战更新1": {
     "originium": 0,
     "orundum": 1500,
     "gachaTicket": 0,
     "tenGachaTicket": 0,
     "start": "2024/04/29 16:00:00",
     "end": "2024/04/30 03:58:00",
+    "rewardType": "公共",
+    "module": "honeyCake",
+    "probability": ""
+  },
+  "剿灭作战更新2": {
+    "originium": 0,
+    "orundum": 1500,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/06/23 16:00:00",
+    "end": "2024/06/24 03:58:00",
     "rewardType": "公共",
     "module": "honeyCake",
     "probability": ""

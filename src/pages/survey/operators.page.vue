@@ -297,23 +297,23 @@
             <tr>
               <td>星级</td>
               <td>已招募/总数</td>
+              <td>精二数量</td>
               <td>专三数量</td>
-              <td>3级X模组</td>
-              <td>3级Y模组</td>
+              <td>3级模组</td>
             </tr>
             <tr>
               <td>总计</td>
               <td>{{ statisticalResult.total.own }}/{{ statisticalResult.total.count }}</td>
+              <td>{{ statisticalResult.total.elite.rank2 }}</td>
               <td>{{ statisticalResult.total.skill.rank3 }}</td>
-              <td>{{ statisticalResult.total.modX.rank3 }}</td>
-              <td>{{ statisticalResult.total.modY.rank3 }}</td>
+              <td>{{ statisticalResult.total.mod.rank3 }}</td>
             </tr>
             <tr v-for="(detail,index) in statisticsDetail" :key="index">
               <td><img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""></td>
               <td>{{ detail.own }}/{{ detail.count }}</td>
+              <td>{{ detail.elite.rank2 }}</td>
               <td>{{ detail.skill.rank3 }}</td>
-              <td>{{ detail.modX.rank3 }}</td>
-              <td>{{ detail.modY.rank3 }}</td>
+              <td>{{ detail.mod.rank3 }}</td>
             </tr>
             </tbody>
           </table>
@@ -328,7 +328,6 @@
                 <div class="operator-avatar">
                   <div :class="getAvatar(operator.charId)"></div>
                 </div>
-                <span class="operator-name">{{ operator.name }}</span>
               </div>
               <div>
                 <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite-image" alt="">
@@ -1169,13 +1168,13 @@ function getOperatorStatisticalResult() {
 //干员练度统计结果
 let statisticalResult = ref({
   max: [],
-  total: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity6: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity5: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity4: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity3: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity2: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity1: {notOwn: [], count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  total: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity6: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity5: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity4: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity3: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity2: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity1: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
 })
 
 let statisticsDetail = ref([statisticalResult.value.rarity6, statisticalResult.value.rarity5,

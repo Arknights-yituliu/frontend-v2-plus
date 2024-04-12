@@ -1,7 +1,12 @@
 #gachaCalculate {
   @media screen and (max-width: 600px) {
 
-    .collapse-wrap {
+
+    .collapse-group1{
+      width: 360px;
+    }
+
+    .collapse-group2{
       width: 360px;
     }
 
@@ -55,10 +60,6 @@
       border-radius: 6px;
     }
 
-    .result-box {
-      position: static;
-      height: auto;
-    }
 
     .gacha-resources-chart-pie {
       width: 300px;

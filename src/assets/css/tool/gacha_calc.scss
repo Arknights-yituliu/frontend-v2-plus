@@ -3,12 +3,15 @@
 
 .gacha-calculation-page {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   justify-content: center;
-  min-height: 90%;
+  flex-wrap: wrap;
 }
 
+
 #gachaCalculate {
+
+
   .el-radio-button__inner {
     width: 184px;
   }
@@ -35,6 +38,7 @@
   .collapse-item {
     margin: 16px 8px;
     box-shadow: 1px 1px 8px var(--c-box-shadow-color);
+
   }
 
 
@@ -44,17 +48,25 @@
 
   /*折叠栏的外容器*/
 
-  .collapse-wrap {
+
+  .collapse-group1 {
+    position: sticky;
+    top: 20px;
+    width: 600px;
+    max-height: 500px;
+    z-index: 3004;
+  }
+
+  .collapse-group2 {
     width: 600px;
   }
 
-  .result-box {
-    position: sticky;
-    top: 10px;
-    z-index: 2001;
-    height: 1px;
-    margin-bottom: 10px;
+  .collapse-group-content{
+    position: relative;
+    background-color: var(--c-background-color);
+
   }
+
 
   /*卡池时间单选框的外容器*/
   .radio-group-wrap {
@@ -328,5 +340,17 @@
     width: 50px;
     text-align: left;
   }
+
+
+}
+
+
+@media screen and (max-width: 1200px) {
+  //.gacha-calculation-page {
+  //  display: grid;
+  //  grid-template-rows: auto 1fr; /* 第一组高度自适应，第二组占据剩余空间 */
+  //}
+
+
 
 }

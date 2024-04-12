@@ -176,11 +176,19 @@ const routes = [
         component: () => import('/src/pages/material/detail.page.vue')
     },
     {
+        path: '/dev',
+        text: '关卡详情',
+        display: false,
+        component: () => import('/src/pages/dev.page.vue')
+    },
+    {
         path: '/:catchAll(.*)',
         display: false,
         component: Error404
     }
 ]
+
+
 
 const LinkedTable = {
     material: {
@@ -207,7 +215,10 @@ const LinkedTable = {
 
 for (const route of routes) {
     if(route.module){
-        LinkedTable[route.module].child.push(route)
+        if(LinkedTable[route.module]){
+            LinkedTable[route.module].child.push(route)
+        }
+
     }
 
 }

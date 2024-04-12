@@ -171,7 +171,7 @@ onMounted(() => {
                     <div
                       v-for="(item, index) in row.eliteFormat[num - 1]"
                       :key="index"
-                      class="store_sprite_perm_wrap"
+                      class="elite-material"
                     >
                       <div :class="getSpriteImg(item.itemId, 'perm')"></div>
                       <span class="num">{{ item.num }}</span>
@@ -288,5 +288,23 @@ onMounted(() => {
   .el-cascader-menu__wrap.el-scrollbar__wrap {
     height: 285px;
   }
+
+  .elite-material{
+    width: 60px;
+    height: 60px;
+    position: relative;
+
+    .div{
+      transform: scale(calc(60 / 183));
+      left: calc((60px - 183px)/2);
+      top: calc((60px - 183px)/2);
+      position: absolute;
+    }
+  }
+
+
+
+
+
 }
 </style>
