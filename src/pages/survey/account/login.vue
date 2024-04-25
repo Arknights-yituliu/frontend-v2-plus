@@ -36,27 +36,27 @@
         <div class="login-form" v-show="'passWord'===account_type">
           <div class="login-form-item">
             <span class="input-label">账号：</span>
-            <input class="login-form-input" type="text" placeholder="请输入" v-model="input_data.userName"/>
+            <input class="login-form-input" type="text" placeholder="请输入" v-model="inputData.userName"/>
           </div>
 
           <div class="login_form_divider"></div>
           <div class="login-form-item">
             <span class="input-label">密码：</span>
-            <input class="login-form-input" type="password" placeholder="请输入" v-model="input_data.passWord"/>
+            <input class="login-form-input" type="password" placeholder="请输入" v-model="inputData.passWord"/>
           </div>
         </div>
 
         <div class="login-form" v-show="'emailCode'===account_type">
           <div class="login-form-item">
             <div class="input-label">邮箱：</div>
-            <input class="login-form-input" placeholder="请输入" v-model="input_data.email"/>
+            <input class="login-form-input" placeholder="请输入" v-model="inputData.email"/>
             <div style="border: 1px solid #d9d9d9;height: 32px;margin: 0 4px"></div>
             <div class="input-btn" @click="sendEmailCodeByRegister()" style="cursor: pointer">获取验证码</div>
           </div>
           <div class="login_form_divider"></div>
           <div class="login-form-item">
             <div class="input-label">验证码：</div>
-            <input class="login-form-input" placeholder="请输入" v-model="input_data.emailCode"/>
+            <input class="login-form-input" placeholder="请输入" v-model="inputData.emailCode"/>
           </div>
         </div>
 
@@ -121,9 +121,10 @@ import "/src/assets/css/survey/survey_nav.css";
 import {onMounted, ref} from "vue";
 import {cMessage} from "/src/custom/message";
 
-import surveyApi from "/src/api/surveyUser";
+import surveyApi from "/src/api/userInfo";
+import {getUserInfo} from "/src/pages/survey/js/userData.js";
 
-let input_data = ref({
+let inputData = ref({
   userName: '',
   passWord: '',
   cred: '',
@@ -143,7 +144,7 @@ let registerOrLogin = ref('login')
 function sendEmailCodeByRegister() {
   const data = {
     mailUsage: registerOrLogin.value,
-    email: input_data.value.email,
+    email: inputData.value.email,
   }
   surveyApi.sendEmailCode(data).then(response => {
 
@@ -155,7 +156,7 @@ function sendEmailCodeByRegister() {
 function sendEmailCodeForLogin() {
   const data = {
     mailUsage: 'login',
-    email: input_data.value.email,
+    email: inputData.value.email,
   }
   surveyApi.sendEmailCode(data).then(response => {
 
@@ -165,15 +166,12 @@ function sendEmailCodeForLogin() {
 
 //注册
 function register() {
-  input_data.value.accountType = account_type.value
-  surveyApi.register(input_data.value).then(response => {
+  inputData.value.accountType = account_type.value
+  surveyApi.register(inputData.value).then(response => {
     response = response.data
-    localStorage.setItem("globalUserData", JSON.stringify(response));
+    localStorage.setItem("USER_TOKEN", response.data.token.toString());
     cMessage("注册成功");
-    userData.value.userName = response.userName;
-    userData.value.status = response.status;
-    userData.value.token = response.token;
-    userData.value.avatar = response.avatar ? response.avatar : 'char_377_gdglow';
+    userData.value = response
     loginVisible.value = !loginVisible.value;
 
   })
@@ -192,37 +190,26 @@ function accountTypeClass(type) {
 
 //登录
 function login() {
-  input_data.value.accountType = account_type.value
+  inputData.value.accountType = account_type.value
 
-  surveyApi.login(input_data.value).then(response => {
+  surveyApi.login(inputData.value).then(response => {
     if (response.data.status > 0) {
 
-      localStorage.setItem("globalUserData", JSON.stringify(response.data));
+      localStorage.setItem("USER_TOKEN", response.data.token.toString());
       // 登录成功刷新
       location.reload()
     }
   })
 }
 
-function userDataCache() {
+async function userDataCache() {
 
-  let cacheData = localStorage.getItem("globalUserData");
-
-  if (!cacheData || cacheData === 'undefined') {
-    return
-  }
-
-  cacheData = JSON.parse(cacheData)
-  userData.value.userName = cacheData.userName;
-  userData.value.status = cacheData.status;
-  userData.value.token = cacheData.token;
-  userData.value.avatar = cacheData.avatar ? cacheData.avatar : 'char_377_gdglow';
-  userData.value.email = cacheData['email'] === undefined ? "未绑定1" : cacheData['email'];
+  userData.value = await getUserInfo()
 }
 
 //登出
 function logout() {
-  localStorage.removeItem('globalUserData')
+  localStorage.removeItem('USER_TOKEN')
   setTimeout(() => {
     location.reload()
   }, 1000);

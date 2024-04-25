@@ -10,13 +10,13 @@ export default {
      */
     retrievalOperatorDataByUid(data){
         return request({
-            url: `${api_name}/operator/retrieval/uid`,
+            url: `${api_name}/operator/table`,
             method: "post",
             data: data,
         })
     },
 
-    importSkLandOperatorData(data){
+    uoloadSkLandOperatorData(data){
         return request({
             url: `${api_name}/operator/import/skland/v2`,
             method: "post",

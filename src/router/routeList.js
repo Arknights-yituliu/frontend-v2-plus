@@ -1,6 +1,7 @@
 import Error404 from "/src/pages/layout/error404.vue";
 import StageRecommendation from '/src/pages/material/stageV3.page.vue'
 import GachaCalculator from '/src/pages/tools/gachaCalc.page.vue'
+import Notice from '/src/pages/layout/notice.vue'
 
 const routes = [
     {
@@ -95,10 +96,11 @@ const routes = [
         path: '/survey/account/home',
         text: '用户中心',
         name: 'User',
-        display: true,
+        display: false,
         module: 'survey',
         icon: "user",
-        component: () => import('/src/pages/survey/account/home.page.vue')
+        // component: () => import('/src/pages/survey/account/home.page.vue')
+        component: Notice
     },
     {
         path: '/survey/operators',
@@ -108,15 +110,17 @@ const routes = [
         module: 'survey',
         icon: "survey2",
         component: () => import('/src/pages/survey/operators.page.vue')
+        // component: Notice
     },
     {
         path: '/survey/rank',
         text: '干员练度调查结果',
         name: 'OperatorRank',
-        display: true,
+        display: false,
         module: 'survey',
         icon: "rank",
-        component: () => import('/src/pages/survey/rank.page.vue')
+        // component: () => import('/src/pages/survey/rank.page.vue')
+        component: Notice
     },
     {
         path: '/survey/maarecruitdata',
@@ -125,7 +129,8 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "survey2",
-        component: () => import('/src/pages/survey/maarecruitdata.page.vue')
+        // component: () => import('/src/pages/survey/maarecruitdata.page.vue')
+        component: Notice
     },
     {
         path: '/about/dev',
@@ -189,7 +194,6 @@ const routes = [
 ]
 
 
-
 const LinkedTable = {
     material: {
         path: '/',
@@ -214,11 +218,11 @@ const LinkedTable = {
 }
 
 for (const route of routes) {
-    if(route.module){
-        if(LinkedTable[route.module]){
-            LinkedTable[route.module].child.push(route)
-        }
-
+    if(!route.display){
+        continue
+    }
+    if (route.module) {
+        LinkedTable[route.module].child.push(route)
     }
 
 }

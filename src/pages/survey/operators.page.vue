@@ -250,8 +250,8 @@
             <div class="control-line-tip">选择你想要导入的账号</div>
             <div v-for="(binding,index) in bindingList" :key="index"
                  class="btn btn-blue" :class="chooseUidClass(binding.uid)"
-                 @click="importSKLandOperatorDataByUid(binding.uid)">
-              {{ binding.uid }}
+                 @click="importSKLandOperatorDataByUid(binding)">
+              {{ `${binding.channelName}-${binding.nickName}-${binding.uid}`}}
             </div>
           </div>
 
@@ -578,7 +578,7 @@
 import {cMessage} from "/src/custom/message.js";
 import {filterByCharacterProperty, professionDict, yearDict} from "./js/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import operatorStatistical from "/src/pages/survey/js/operatorStatistical"
-import surveyApi from "/src/api/surveyUser";
+import surveyApi from "/src/api/userInfo";
 import surveyOperatorApi from "/src/api/surveyOperator"
 import sklandApi from '/src/pages/survey/js/skland'
 import {onMounted, ref} from "vue";
@@ -591,25 +591,20 @@ import characterTable from '/src/static/json/survey/character_table_simple.json'
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
 import {debounce} from "/src/utils/debounce";
+import {getUserInfo} from "/src/pages/survey/js/userData.js";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
 
-let userData = ref({userName: "未登录", status: -100, token: void 0});  //用户信息
+let userData = ref({uid:0,userName: "未登录",akUid:"0", status: -100, token: void 0});  //用户信息
 
 /**
  * 获取本地缓存的用户信息
  */
-function getCacheUserData() {
-  let cacheData = localStorage.getItem("globalUserData");
-  if (!cacheData || cacheData === "undefined") {
-    // cMessage('未登录或登录失效', 'error')
+async function getUserInfoAndOperatorData() {
 
-    return;
-  }
-
-  userData.value = JSON.parse(cacheData);
-
+  userData.value = await getUserInfo()
+  getOperatorData()
 }
 
 /**
@@ -664,7 +659,8 @@ let operatorList = ref([])  //干员列表
 function getOperatorData() {
   //检查是否登录
   if (checkUserStatus(false)) {
-    importData()
+    console.log("未登录")
+
     return;
   }
 
@@ -692,7 +688,6 @@ function getOperatorData() {
         operatorTable.value[sCharId].own = item.own;
       }
     }
-    importData()
     //转为前端的数据格式
     // loadDisplayData()
     cMessage("导入了 " + list.length + " 条数据");
@@ -793,7 +788,7 @@ let importPopupVisible = ref(false)  //导入教程弹窗显示状态
 let SKlandCREDAndSECRET = ref("");  //森空岛cred
 let bindAccount = ref(false) //玩家uid是否绑定了一图流账号
 let bindingList = ref([])  //绑定列表
-let defaultUid = ref('')  //默认uid
+let currentUid = ref('')  //默认uid
 let importFlag = ref(false) //是否导入
 let collapseImportVisible = ref(true) //导入折叠栏显示状态
 
@@ -801,6 +796,7 @@ let collapseImportVisible = ref(true) //导入折叠栏显示状态
 function collapseImport() {
   collapseImportVisible.value = !collapseImportVisible.value
 }
+
 
 /**
  * 通过cred和secret进行森空岛干员信息导入
@@ -812,49 +808,94 @@ async function importSKLandOperatorData() {
     return;
   }
 
+
+  //获取凭证和密匙
   const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
+  //方舟uid
+  let akUid = "0"
+  let akNickName = ""
 
   //获取绑定信息
-  const playerBinding = await sklandApi.getPlayBinding('/api/v1/game/player/binding', '', secret, cred);
+  const playerBinding = await sklandApi.getPlayBinding(userData.value.akUid,'', secret, cred);
 
+  if(!playerBinding){
+    return
+  }
+
+  //森空岛账号下绑定的所有方舟uid
   bindingList.value = playerBinding.bindingList
-  defaultUid.value = playerBinding.uid
-
-  const playerInfo = await sklandApi.getPlayerInfo(
-      '/api/v1/game/player/info',
-      `uid=${playerBinding.uid}`,
-      secret,
-      cred,
-      playerBinding.uid)
-
   importFlag.value = true
 
-  await uploadSKLandData({
-    token: userData.value.token,
-    data: JSON.stringify(playerInfo)
-  })
+  //当前导入的方舟uid
+  currentUid.value = playerBinding.uid
+
+  await importSKLandOperatorDataByUid(playerBinding)
 }
 
 /**
  * 如果导入错误可以自己选择uid进行导入
- * @param uid 玩家uid
+ * @param akPlayerBinding 玩家账号绑定信息
  * @returns {Promise<void>}
  */
-async function importSKLandOperatorDataByUid(uid) {
+async function importSKLandOperatorDataByUid(akPlayerBinding) {
+  const {uid,nickName,channelName,channelMasterId} = akPlayerBinding
 
-  if (checkUserStatus(true)) return;
+  if (checkUserStatus(true)) {
+    return;
+  }
+
   const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
 
-  const playerInfo = await sklandApi.getPlayerInfo(
-      '/api/v1/game/player/info',
-      `uid=${uid}`,
-      secret,
-      cred,
-      uid)
+  const params = {
+    requestUrl:'/api/v1/game/player/info',
+    requestParam:`uid=${uid}`,
+    secret:secret,
+    cred:cred,
+    akUid:uid,
+    akNickName:nickName,
+    channelMasterId:channelMasterId,
+    channelName:channelName,
+  }
+
+  const playerInfo = await sklandApi.getPlayerInfo(params)
+
+
+  if(!playerInfo){
+    return
+  }
+
   await uploadSKLandData({
     token: userData.value.token,
     data: JSON.stringify(playerInfo)
   })
+
+
+}
+
+
+async function getSklandOperatorData(akUid,akNickName){
+  if (checkUserStatus(true)) {
+    return;
+  }
+
+  const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
+
+  const params = {
+    requestUrl:'/api/v1/game/player/info',
+    requestParam:`uid=${akUid}`,
+    secret:secret,
+    cred:cred,
+    akUid:akUid,
+    akNickName:akNickName
+  }
+
+  const playerInfo = await sklandApi.getPlayerInfo(params)
+
+  await uploadSKLandData({
+    token: userData.value.token,
+    data: JSON.stringify(playerInfo)
+  })
+
 }
 
 /**
@@ -885,18 +926,18 @@ function getCredAndSecret(text) {
  */
 async function uploadSKLandData({token, data}) {
 
-  surveyOperatorApi.importSkLandOperatorData({token, data})
+  surveyOperatorApi.uoloadSkLandOperatorData({token, data})
       .then(response => {
         uploadMessage.value = response.data;
         cMessage("森空岛数据导入成功");
         bindAccount.value = false;
-        getOperatorData()
+        getUserInfoAndOperatorData()
       })
 }
 
 //选择导入uid的按钮样式
 function chooseUidClass(uid) {
-  if (uid === defaultUid.value) return 'btn-blue'
+  if (uid === currentUid.value) return 'btn-blue'
 }
 
 let resetPopupVisible = ref(false) //重置账号提示弹窗显示状态
@@ -974,36 +1015,6 @@ function createUploadData() {
   return uploadList;
 }
 
-
-/**
- * Excel文件上传
- */
-// eslint-disable-next-line
-function getUploadFileName() {
-  const file = document.getElementById("uploadInput");
-  uploadFileName.value = file.files[0].name;
-  let formData = new FormData();
-  formData.append("file", file.files[0]);
-
-  surveyApi.uploadCharacterByExcel(formData, userData.value.token).then((response) => {
-    // console.log(response.data);
-    cMessage("新增了 " + response.data.insertRows + " 条");
-    cMessage("更新了 " + response.data.updateRows + " 条");
-  });
-}
-
-//通过excel上传
-// function uploadByExcel() {
-//   const file = document.getElementById("uploadInput");
-//   let formData = new FormData();
-//   formData.append("file", file.files[0]);
-//   console.log(file);
-//   surveyApi.uploadCharacterByExcel(formData, userData.value.token).then((response) => {
-//     // console.log(response.data);
-//     cMessage("新增了 " + response.data.insertRows + " 条");
-//     cMessage("更新了 " + response.data.updateRows + " 条");
-//   });
-// }
 
 // eslint-disable-next-line no-unused-vars
 let maaData = ref([{}]);
@@ -1303,8 +1314,8 @@ function getItem(id) {
 
 
 onMounted(() => {
-  getCacheUserData()
-  getOperatorData();
+  importData()
+  getUserInfoAndOperatorData()
 
 
 });

@@ -1,3 +1,380 @@
+commit 3791b84e37d5bbd529ce10959d85ce77d86a36af
+Merge: f2a74ff 990b84c
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Apr 12 14:48:57 2024 +0800
+
+    Merge remote-tracking branch 'origin/dev' into dev
+
+commit f2a74ffbd937b61300227dfa7e067dc6fa6adae0
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Apr 12 14:48:38 2024 +0800
+
+    feat(静态资源):干员数据更新
+
+commit 990b84c1bb9a12ff2444379f29c7fe70d60f5a54
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Fri Apr 12 07:14:57 2024 +0800
+
+    feat:添加一些用于快速出视频的css
+
+commit 184a819c15b5fc9feec29c7e44383b65350bd4fa
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Fri Apr 12 06:03:02 2024 +0800
+
+    fix:优化stage页面布局细节
+
+commit 3f08e8db903686b06dc945ffb43dac3692142bcc
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Apr 7 22:51:07 2024 +0800
+
+    fix(项目):用户攒抽设置不能保存在本地
+
+commit df60431dc86955a5f88a2472e433f1a1dc7d5394
+Merge: ca12769 79882e1
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Apr 7 11:04:04 2024 +0800
+
+    Merge remote-tracking branch 'origin/dev' into dev
+    
+    # Conflicts:
+    #       src/static/json/tools/scheduleByHoneycake.json
+
+commit ca127698738b08790b8ad8ed73f11315db7014d4
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Apr 7 11:03:33 2024 +0800
+
+    fix(项目):活动排期错误
+
+commit 79882e1f1500c5f7412296865ad2c13c5f985457
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sun Apr 7 10:57:56 2024 +0800
+
+    fix:修正巴别塔ss的名称和石头数
+
+commit 70a4db6358e99f7445f68a6e1c079fdde0a23d7c
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Apr 2 18:15:00 2024 +0800
+
+    refactor(项目):将移动端适配重构
+
+commit 2cc2f39ffc1ec93a948b38d99eb9396f3e9f4f10
+Merge: cea0abf e47a76f
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Apr 2 18:09:20 2024 +0800
+
+    Merge branch 'feature' into dev
+    
+    # Conflicts:
+    #       src/components/TourGuide.vue
+    #       src/pages/layout/myheader.vue
+    #       src/pages/material/store.page.vue
+    #       src/pages/tools/gachaCal.page.vue
+
+commit e47a76f205e7e0299b6ec74ee7756192c27effe8
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Apr 2 09:16:32 2024 +0800
+
+    feat(移动端适配):细节修正
+
+commit 3ad063e8db9af5719c80472ec9caf5241523482c
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Mar 25 17:50:26 2024 +0800
+
+    feat(移动端适配):细节修正
+
+commit 8b2d01f893b11fa0b0f4bc3c017f2e00da4c9993
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 23 23:52:47 2024 +0800
+
+    feat(移动端适配):细节修正
+
+commit cea0abf894f1b48e926851eb1c1a8493c0e837de
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sat Mar 23 10:34:13 2024 +0800
+
+    fix:文字修正
+
+commit d9861fc1b776a8aea7f1949fefbb9b5494dcca1c
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 22 18:10:13 2024 +0800
+
+    feat(移动端适配):细节修正
+
+commit a4c47311b7f5eeaaf9748b3dc7d4b85eee5ec2ea
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 22 17:04:58 2024 +0800
+
+    feat(移动端适配):细节修正
+
+commit 152009ec0c017562920a93bd26c8e2499b43051b
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Fri Mar 22 12:36:14 2024 +0800
+
+    feat:新增往年限时礼包估算
+    style:样式微调
+
+commit 6f8469338c7ff453fba73858a8fcb50a557b5a7d
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 22 12:17:16 2024 +0800
+
+    feat(移动端适配):继续适配
+
+commit d685cc226b7bd54caaa78f22cbf1ca126bc93aad
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 22 12:16:45 2024 +0800
+
+    feat(导航):增加404页面
+
+commit 54e52bc8dc60afff53d9346eef2837d6981bf43b
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 22 10:10:59 2024 +0800
+
+    fix:页面转跳过渡
+
+commit 4435cbd8b2ee1e57629581b2f1457f8a45a1225a
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Mar 21 15:53:27 2024 +0800
+
+    update(攒抽计算器):更新排期
+
+commit 3e4453b2808b07a78de6d9e49605c5ca2aa734b9
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Mar 21 15:30:31 2024 +0800
+
+    update(攒抽计算器):更新排期
+
+commit 2eb3e43d9ccbdb695ff7b558c88c523a9e1c3e35
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 16 18:42:44 2024 +0800
+
+    fix:修复访问路径获取不正常的问题
+
+commit 84be5565bb94806bd55c17849bbf50b2084b6853
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 16 18:42:23 2024 +0800
+
+    fix:修复访问路径获取不正常的问题
+
+commit 4b1a96ab80a8306d9c09ac61a91d918743b1eb6f
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 16 18:38:12 2024 +0800
+
+    fix:修复部分限定干员被标记为常驻干员的错误
+
+commit e1d78d2e76f34682e2d62bd9a856301b6662d9cb
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 16 18:29:56 2024 +0800
+
+    fix:修复部分限定干员被标记为常驻干员的错误
+
+commit c255429029fba041aecc34863d7489b9e8eb5118
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 16 18:21:27 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit 2c8610c6934f1575dd8ea9b57a7290124e685fea
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Mar 14 17:09:06 2024 +0800
+
+    fix(攒抽计算器):修复了部分抽卡资源计算错误
+
+commit e77f7804ced60a49e2bcceccc04a658f33366e6f
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Mar 14 17:04:39 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit 083b8426f290cf48dae18983b396941f48087ee8
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Mar 13 11:28:11 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit d9e04da72c5fa155ce3bb3bd85d4a1a4cbee3a47
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Mar 12 11:59:42 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit b9a998cfffc9a1c45a4b90713c55facdf17b9a33
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Mar 11 17:30:50 2024 +0800
+
+    feat(百度搜索):添加百度搜索验证HTML标签
+
+commit 63c39fbb1d1ef76b6370e2c463a17195c74b5020
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Mar 11 16:16:06 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit 32d30ede0fc5654ea54f7e53308c391342d7e27d
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Mar 11 15:29:05 2024 +0800
+
+    fix(攒抽计算器):错误扣除抽卡资源
+
+commit dcf377e046bb55e058456aaa8cd74b73dca11380
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Mar 11 15:18:03 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit c8f35ba27a5df39cd51453a23326a2d115a8b3a4
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Mar 11 15:17:43 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit 0ab5d0f5b5716a70d77ca1432d284e700ce215b5
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Mar 10 00:29:48 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit 173c28bfe6c178d69646b11e9377fe0a936c7643
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 9 20:17:32 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit 3b69859fb8b501049dff45676267792521ef7818
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 9 16:50:29 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit 88787b20f5c63a42c6ef388cdef05a9a871b2e8f
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 8 18:34:27 2024 +0800
+
+    refactor(全页面):移动端适配
+
+commit ed0fc1d32ad31d4284b64824e931159906a164b1
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 8 10:54:58 2024 +0800
+
+    fix:攒抽计算器资源计算错误
+
+commit 8a4caa47562873072b1f6d90963837788c2e9470
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Mar 8 10:47:25 2024 +0800
+
+    refactor:移动端适配
+
+commit d6c44d11b5a1f973b335637317b6eb4c26b28428
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Mar 7 17:22:18 2024 +0800
+
+    fix:活动商店背景图字段名错误
+
+commit 300e840c4b746f76bedbff71ec33be7aede1003a
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Mar 7 17:10:49 2024 +0800
+
+    refactor:礼包页面的移动端适配
+
+commit 3df3d6df57af9ed526d2ea3311d441e9bce0e625
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Mar 7 11:48:47 2024 +0800
+
+    refactor:重构为单页面应用
+
+commit ed114b2b4ad970fd3d1ab8c3d30ca2a56f7bd4f0
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Mar 7 11:26:30 2024 +0800
+
+    update:更新彩六联动二期干员数据
+
+commit 209f348051b6391953be4289f8a23d07c40acc46
+Merge: 4f4ed05 09ee69a
+Author: yamazakura <84258011+yamasakura@users.noreply.github.com>
+Date:   Sun Mar 3 15:27:45 2024 +0800
+
+    Merge pull request #45 from Constrat/dev
+    
+    feat: centered operators sprite + fixed file input + more i18n
+
+commit 09ee69a3ddf9aa97ec82f5bf2a4e9fed3f2115fc
+Merge: 9025ea4 4f4ed05
+Author: David <56174894+Constrat@users.noreply.github.com>
+Date:   Sat Mar 2 22:40:59 2024 +0100
+
+    Merge branch 'Arknights-yituliu:dev' into dev
+
+commit 9025ea43bf0e93807f52872440400469cdb2f3d9
+Author: Constrat <56174894+Constrat@users.noreply.github.com>
+Date:   Sat Mar 2 17:55:04 2024 +0100
+
+    style: bottom margins + timed tip
+
+commit 64edb9376a56a5b642e04d2fdb138340d0094365
+Author: Constrat <56174894+Constrat@users.noreply.github.com>
+Date:   Sat Mar 2 17:28:47 2024 +0100
+
+    refactor: general vue formatting
+
+commit abda7ca1607e7bea7e681b7cb250ac6f70906456
+Author: Constrat <56174894+Constrat@users.noreply.github.com>
+Date:   Sat Mar 2 17:25:47 2024 +0100
+
+    fix: input by file + translated generated it message
+
+commit ffa659ee4039a0fe325427da9c03d93b632252de
+Author: Constrat <56174894+Constrat@users.noreply.github.com>
+Date:   Sat Mar 2 15:05:00 2024 +0100
+
+    style: centered "selected operator" + delete icon cursor
+
+commit 5f3ee77ea00d2dbbffb45f0da107857f1e09b8bf
+Author: Constrat <56174894+Constrat@users.noreply.github.com>
+Date:   Sat Mar 2 13:59:45 2024 +0100
+
+    chore: implemented border radius for avatars + formatting
+
+commit a8cbcf253507b9a0e1f18c0a3e882634a912119b
+Author: Constrat <56174894+Constrat@users.noreply.github.com>
+Date:   Sat Mar 2 13:59:19 2024 +0100
+
+    style: centered room avatar sprite + added border radius
+
+commit 4f4ed052dc34f3a0477271b471a350e6fd098a8b
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 2 19:58:12 2024 +0800
+
+    update:干员调查操作流程
+
+commit 950a7674391937423374768a84b16998a6de6581
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 2 19:49:50 2024 +0800
+
+    chore:调整部分颜色
+
+commit 749499365e8de1b17ccfe98f16158d08c232da42
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 2 19:48:41 2024 +0800
+
+    chore:调整部分颜色
+
+commit 4ef59bee5056fc9ac05b8b08a097992a0e62568b
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 2 18:42:46 2024 +0800
+
+    refactor:干员调查引导流程
+
+commit 213371b8b23d084a4009f68381022f093457c98d
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 2 18:41:21 2024 +0800
+
+    refactor:干员调查引导流程
+
+commit f089daf1c42efbad429c5e3bf73febf48909f329
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Mar 2 11:26:34 2024 +0800
+
+    log:例行更新
+
 commit 9f4710aed5ac98a0452a1c8a1544d2a2babd054d
 Author: yamazakura <1969314158@qq.com>
 Date:   Fri Mar 1 18:07:59 2024 +0800
