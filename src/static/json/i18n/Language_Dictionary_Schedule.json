@@ -104,6 +104,10 @@
       "cn": "当前换班表描述",
       "en": "Shift Description"
     },
+    "ShiftDescriptionPost": {
+      "cn": "当前换班表完成后的描述",
+      "en": "Shift Description upon Completion"
+    },
     "UseDrones": {
       "cn": "是否使用无人机",
       "en": "Use Drones"
