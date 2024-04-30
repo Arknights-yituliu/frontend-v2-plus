@@ -1,5 +1,4 @@
 <!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
-
 <script setup>
 import {onMounted, ref} from "vue";
 import '/src/assets/css/tool/gacha_calc.scss'
@@ -11,6 +10,7 @@ import potentialTable from '/src/static/json/tools/potentialGachaResources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/scheduleByHoneycake.json'
 import storeAPI from '/src/api/store'
 import {cMessage} from "../../custom/message.js";
+import {dateDiff} from '/src/utils/dateUtil.js'
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
@@ -437,6 +437,10 @@ let selectedPackIndex = ref([])
 
 let logs = []
 
+let officialMonthlyCardReward = ref(0)
+const officialMonthlyCardEndDate = new Date('2024/05/27 03:58:00')
+let officialMonthlyCardRemainingDays = ref(0)
+
 /**
  * 计算抽卡资源
  */
@@ -485,6 +489,7 @@ function gachaResourcesCalculation() {
       ShoppingTimes++
     }
 
+
     //循环计算当前时间到活动结束时间
     while (startDate <= endDate.value) {
       //如果是星期一，星期一总数加1
@@ -503,8 +508,9 @@ function gachaResourcesCalculation() {
       days++
       //将当前日期加1天
       startDate.setDate(startDate.getDate() + 1)
-
     }
+
+
     let weeks = mondayCount  //总周数
     let annihilationTimes = mondayCount //打剿次数
     //如果本周周常已经做完则周数减1
@@ -543,6 +549,16 @@ function gachaResourcesCalculation() {
       gachaTicket += item.gachaTicket
       tenGachaTicket += item.tenGachaTicket
     }
+
+    if (endDate.value < officialMonthlyCardEndDate) {
+      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value) -1
+    } else {
+      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), officialMonthlyCardEndDate) -1
+    }
+
+
+    officialMonthlyCardReward.value = officialMonthlyCardRemainingDays.value * 200
+    orundum += officialMonthlyCardReward.value
 
     //判断源石是否用于抽卡
     if (!originiumIsUsed.value) {
@@ -903,7 +919,7 @@ function gachaResourcesCalculation() {
   logs.push({key: "计算源石前", value: calculationResult.value.totalDraw})
 
   if (originiumIsUsed.value) {
-    calculationResult.value.totalDraw =calculationResult.value.totalDraw + Math.floor(
+    calculationResult.value.totalDraw = calculationResult.value.totalDraw + Math.floor(
         calculationResult.value.originium * 0.3)
     singleResourceDraws.value.originium = Math.floor(calculationResult.value.originium * 0.3)
   }
@@ -1252,6 +1268,17 @@ function handleResize() {
                 <div class="bg-icon_4003"></div>
               </div>
               <span>{{ dailyReward.dailyOrundumReward }}</span>
+            </div>
+          </div>
+          <div class="resources-line">
+              <span class="resources-line-label">
+                官方月卡{{ officialMonthlyCardRemainingDays }}次
+              </span>
+            <div class="resources-line-content">
+              <div class="image-sprite">
+                <div class="bg-icon_4003"></div>
+              </div>
+              <span>{{ officialMonthlyCardReward }}</span>
             </div>
           </div>
           <!--          <el-divider></el-divider>-->
