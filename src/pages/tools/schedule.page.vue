@@ -612,6 +612,7 @@ function createSchedule() {
     let plan = {
       name: plansTemplate.value[i].name,
       description: plansTemplate.value[i].description,
+      description_post: plansTemplate.value[i].description_post,
       Fiammetta: plansTemplate.value[i].Fiammetta,
       drones: plansTemplate.value[i].drones,
       rooms: {
@@ -732,9 +733,10 @@ function importSchedule(schedule) {
 
   for (const index in plans) {
     const plan = plans[index]
-    const { name, description, Fiammetta, drones, rooms, period } = plan
+    const { name, description, description_post, Fiammetta, drones, rooms, period } = plan
     plansTemplate.value[index].name = name
     plansTemplate.value[index].description = description
+    plansTemplate.value[index].description_post = description_post
 
     if (Fiammetta) {
       for (const property in Fiammetta) {
@@ -940,6 +942,8 @@ onMounted(() => {
           <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].name" /></div>
           <span>{{ translate('schedule', 'schedule.ShiftDescription') }}</span>
           <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].description" /></div>
+          <span>{{ translate('schedule', 'schedule.ShiftDescriptionPost') }}</span>
+          <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].description_post" /></div>
         </div>
 
         <div class="schedule-set-bar-short">
