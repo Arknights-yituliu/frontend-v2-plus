@@ -136,7 +136,7 @@ import surveyApi from "/src/api/userInfo"
 import operator_table_simple from '/src/static/json/survey/character_table_simple.json'
 import "/src/assets/css/survey/home.scss";
 import "/src/assets/css/survey/home.phone.scss";
-
+import {getUserInfo} from '/src/pages/survey/js/userData.js'
 
 let avatar = []
 for (const char_id in operator_table_simple) {
@@ -259,22 +259,8 @@ function hasPermission(status, permission) {
   return (status & permission) === permission;
 }
 
-function getCacheUserData() {
-  let cacheUserData = localStorage.getItem("globalUserData");
-  if (cacheUserData == void 0 || cacheUserData == 'undefined') {
-    cMessage('未登录一图流账号', 'error')
-    return;
-  }
-
-  const parse = JSON.parse(cacheUserData);
-
-  userData.value.userName = parse.userName;
-  userData.value.code = parse.code;
-  userData.value.status = parse.status;
-  userData.value.token = parse.token;
-  userData.value.avatar = parse.avatar;
-  userData.value.email = parse.email === undefined ? "未绑定" : parse.email;
-
+async function getCacheUserData() {
+  userData.value = await getUserInfo()
 }
 
 let avatar_visible = ref(false)

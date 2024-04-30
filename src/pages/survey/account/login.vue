@@ -168,12 +168,13 @@ function sendEmailCodeForLogin() {
 function register() {
   inputData.value.accountType = account_type.value
   surveyApi.register(inputData.value).then(response => {
+
     response = response.data
-    localStorage.setItem("USER_TOKEN", response.data.token.toString());
+    localStorage.setItem("USER_TOKEN", response.token.toString());
     cMessage("注册成功");
     userData.value = response
-    loginVisible.value = !loginVisible.value;
-
+    loginVisible.value = false;
+    location.reload()
   })
 }
 
@@ -193,16 +194,16 @@ function login() {
   inputData.value.accountType = account_type.value
 
   surveyApi.login(inputData.value).then(response => {
-    if (response.data.status > 0) {
-
-      localStorage.setItem("USER_TOKEN", response.data.token.toString());
+    response = response.data
+    if (response.status > 0) {
+      localStorage.setItem("USER_TOKEN", response.token.toString());
       // 登录成功刷新
       location.reload()
     }
   })
 }
 
-async function userDataCache() {
+async function getUserInfoByToken() {
 
   userData.value = await getUserInfo()
 }
@@ -221,7 +222,7 @@ function getSprite(id) {
 }
 
 onMounted(() => {
-  userDataCache()
+  getUserInfoByToken()
 });
 </script>
 

@@ -96,11 +96,11 @@ const routes = [
         path: '/survey/account/home',
         text: '用户中心',
         name: 'User',
-        display: false,
+        display: true,
         module: 'survey',
         icon: "user",
-        // component: () => import('/src/pages/survey/account/home.page.vue')
-        component: Notice
+        component: () => import('/src/pages/survey/account/home.page.vue')
+        // component: Notice
     },
     {
         path: '/survey/operators',
@@ -116,11 +116,11 @@ const routes = [
         path: '/survey/rank',
         text: '干员练度调查结果',
         name: 'OperatorRank',
-        display: false,
+        display: true,
         module: 'survey',
         icon: "rank",
-        // component: () => import('/src/pages/survey/rank.page.vue')
-        component: Notice
+        component: () => import('/src/pages/survey/rank.page.vue')
+        // component: Notice
     },
     {
         path: '/survey/maarecruitdata',
@@ -129,8 +129,8 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "survey2",
-        // component: () => import('/src/pages/survey/maarecruitdata.page.vue')
-        component: Notice
+        component: () => import('/src/pages/survey/maarecruitdata.page.vue')
+        // component: Notice
     },
     {
         path: '/about/dev',
