@@ -1,3 +1,38 @@
+commit 94558b6c230cbd017a6df870aa764818968fb532
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Apr 30 11:18:49 2024 +0800
+
+    feat(攒抽计算器):增加官方免费月卡的计算项目
+
+commit 964f26625724ef415ba4d184f8a80d91026255d7
+Merge: 0080431 e26bac0
+Author: yamazakura <84258011+yamasakura@users.noreply.github.com>
+Date:   Tue Apr 30 10:45:06 2024 +0800
+
+    Merge pull request #53 from bodayw/dev
+    
+    feat:排班表生成器支持排班协议 description_post 字段
+
+commit 0080431495465498c7412755ed216fb9ac99f48c
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Apr 30 10:42:07 2024 +0800
+
+    fix(干员调查):修复了无法注册账号的问题
+
+commit e26bac09693a7ac3da5626ba2437fa5d85d76445
+Author: bodayw <8195684+bodayw@users.noreply.github.com>
+Date:   Thu Apr 25 15:29:59 2024 +0800
+
+    feat:排班表生成器支持排班协议 description_post 字段
+    
+    maa 在执行完当前一班计划后会在日志中打印该字段内容，主要是用于提醒用户下一班的换班时间。感觉这个还是有支持一下的必要。
+
+commit 845fea5c937a5686e16f3d0dd729d31790abf95e
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Apr 25 13:31:08 2024 +0800
+
+    feat(干员调查):支持一个账号可以导入多个方舟账号的干员数据
+
 commit 3791b84e37d5bbd529ce10959d85ce77d86a36af
 Merge: f2a74ff 990b84c
 Author: yamazakura <1969314158@qq.com>

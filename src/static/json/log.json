@@ -1,5 +1,243 @@
 [
   {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "攒抽计算器",
+    "date": "2024.04.30",
+    "description": "增加官方免费月卡的计算网站"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "干员调查",
+    "date": "2024.04.30",
+    "description": "修复了无法注册账号的问题"
+  },
+  {
+    "author": "bodayw",
+    "type": "feat",
+    "module": "排班表生成器",
+    "date": "2024.04.25",
+    "description": "排班表生成器支持排班协议 description_post 字段"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "干员调查",
+    "date": "2024.04.25",
+    "description": "支持一个账号可以导入多个方舟账号的干员数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "静态资源",
+    "date": "2024.04.12",
+    "description": "干员数据更新"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "材料推荐",
+    "date": "2024.04.12",
+    "description": "优化stage页面布局细节"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.04.07",
+    "description": "用户攒抽设置不能保存在本地"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.04.07",
+    "description": "活动排期错误"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.04.07",
+    "description": "修正巴别塔ss的名称和石头数"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "其他",
+    "date": "2024.04.02",
+    "description": "适配森空岛内置浏览器"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "其他",
+    "date": "2024.03.23",
+    "description": "文字修正"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "style",
+    "module": "其他",
+    "date": "2024.03.22",
+    "description": "样式微调"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "其他",
+    "date": "2024.03.22",
+    "description": "页面转跳过渡"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "攒抽计算器",
+    "date": "2024.03.21",
+    "description": "更新排期"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "其他",
+    "date": "2024.03.16",
+    "description": "修复访问路径获取不正常的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "干员调查",
+    "date": "2024.03.16",
+    "description": "修复部分限定干员被标记为常驻干员的错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.03.14",
+    "description": "修复了部分抽卡资源计算错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.03.11",
+    "description": "错误扣除抽卡资源"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.03.08",
+    "description": "攒抽计算器资源计算错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "商店性价比",
+    "date": "2024.03.07",
+    "description": "活动商店背景图字段名错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "其他",
+    "date": "2024.03.07",
+    "description": "礼包页面的移动端适配"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "其他",
+    "date": "2024.03.07",
+    "description": "重构为单页面应用"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "干员调查",
+    "date": "2024.03.07",
+    "description": "更新彩六联动二期干员数据"
+  },
+  {
+    "author": "David",
+    "type": "feat",
+    "module": "排班表生成器",
+    "date": "2024.03.03",
+    "description": " centered operators sprite + fixed file input + more i18n"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班表生成器",
+    "date": "2024.03.03",
+    "description": " bottom margins + timed tip"
+  },
+  {
+    "author": "Constrat",
+    "type": "refactor",
+    "module": "排班表生成器",
+    "date": "2024.03.03",
+    "description": " general vue formatting"
+  },
+  {
+    "author": "Constrat",
+    "type": "fix",
+    "module": "排班表生成器",
+    "date": "2024.03.03",
+    "description": " input by file + translated generated it message"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班表生成器",
+    "date": "2024.03.02",
+    "description": " centered \"selected operator\" + delete icon cursor"
+  },
+  {
+    "author": "Constrat",
+    "type": "chore",
+    "module": "排班表生成器",
+    "date": "2024.03.02",
+    "description": " implemented border radius for avatars + formatting"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班表生成器",
+    "date": "2024.03.02",
+    "description": " centered room avatar sprite + added border radius"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "干员调查",
+    "date": "2024.03.02",
+    "description": "干员调查操作流程"
+  },
+  {
+    "author": "yamazakura",
+    "type": "chore",
+    "module": "其他",
+    "date": "2024.03.02",
+    "description": "调整部分颜色"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员调查",
+    "date": "2024.03.02",
+    "description": "干员调查引导流程"
+  },
+  {
+    "author": "yamazakura",
+    "type": "log",
+    "module": "其他",
+    "date": "2024.03.02",
+    "description": "例行更新"
+  },
+  {
     "author": "山桜",
     "type": "fix",
     "module": "干员调查",
@@ -528,7 +766,7 @@
     "type": "update",
     "author": "山桜",
     "module": "肉鸽计算器",
-    "description": "修复得分项目过多溢出盒子的问题",
+    "description": "修复得分网站过多溢出盒子的问题",
     "date": "2024.01.21"
   },
   {
