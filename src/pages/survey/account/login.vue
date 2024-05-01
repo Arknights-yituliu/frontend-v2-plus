@@ -106,9 +106,6 @@
 import "/src/assets/css/survey/survey_common.css";
 import "/src/assets/css/survey/common.scss"
 import "/src/assets/css/survey/common.phone.scss"
-import "/src/assets/css/sprite/sprite_avatar_5.css";
-import "/src/assets/css/sprite/sprite_avatar_4.css";
-import "/src/assets/css/sprite/sprite_avatar_6.css";
 import "/src/assets/css/sprite/sprite_skill.css";
 import "/src/assets/css/sprite/sprite_rank.css";
 import "/src/assets/css/survey/survey_index.css";

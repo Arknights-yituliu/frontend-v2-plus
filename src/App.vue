@@ -30,6 +30,7 @@ import "/src/assets/css/sprite_style.css";
 import "/src/assets/css/sprite_icon.css";
 import "/src/assets/css/about.css";
 import "/src/assets/css/elite.css";
+import '/src/assets/css/sprite/sprite_avatar.css'
 
 import "/src/assets/css/stage_v3.css";
 

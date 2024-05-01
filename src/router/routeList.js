@@ -181,10 +181,10 @@ const routes = [
         component: () => import('/src/pages/material/detail.page.vue')
     },
     {
-        path: '/dev',
-        text: '关卡详情',
+        path: '/dev/skland',
+        text: '测试森空岛',
         display: false,
-        component: () => import('/src/pages/dev.page.vue')
+        component: () => import('/src/pages/dev/sklandTest.vue')
     },
     {
         path: '/:catchAll(.*)',

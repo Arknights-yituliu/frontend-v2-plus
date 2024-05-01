@@ -14,9 +14,7 @@ import { debounce } from "/src/utils/debounce.js";
 import { cMessage } from '/src/custom/message.js'
 
 import '/src/assets/css/tool/schedule.css'
-import '/src/assets/css/sprite/sprite_avatar_6.css'
-import '/src/assets/css/sprite/sprite_avatar_5.css'
-import '/src/assets/css/sprite/sprite_avatar_4.css'
+
 import '/src/assets/css/tool/building_skill_font_color.css'
 
 

@@ -2,16 +2,17 @@ import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
 import request from "/src/api/requestBase";
 import {cMessage} from "/src/custom/message";
-import surveyOperatorApi from "/src/api/surveyOperator"
-import {ref} from "vue";
+
 
 const domain = "https://zonai.skland.com";
 const playerInfoAPI = '/api/v1/game/player/info'
-const playerBindingAPI = '/api/v1/game/player/binding'
+const PLAYER_BINDING_URL = '/api/v1/game/player/binding'
+const OAUTH2_URL = "https://as.hypergryph.com/user/oauth2/v2/grant";
+const GENERATE_CRED_BY_CODE_URL = "https://zonai.skland.com/api/v1/user/auth/generate_cred_by_code";
+
 
 function getSign(path, requestParam, secret) {
-    const timestamp = Math.floor((new Date().getTime() - 500) / 1000).toString();
-
+    let timestamp = Math.floor((new Date().getTime() - 500) / 1000).toString();
     const headers = {
         platform: '3',
         timestamp: timestamp,
@@ -20,13 +21,11 @@ function getSign(path, requestParam, secret) {
     }
     requestParam = requestParam ? requestParam : ''
     let message = path + requestParam + timestamp + JSON.stringify(headers);
-    // console.log('message',message);
+
     const sign = md5(hmacSHA256(message, secret).toString()).toString()
-    // console.log('sign',sign)
+
     return {timestamp, sign}
 }
-
-
 
 
 async function getPlayBinding(defaultAkUid, requestParam, secret, cred) {
@@ -37,7 +36,7 @@ async function getPlayBinding(defaultAkUid, requestParam, secret, cred) {
     secret = secret.replace(/\s+/g, '')
     secret = secret.replace(/["']/g, '')
 
-    const {timestamp, sign} = getSign(playerBindingAPI, requestParam, secret);
+    const {timestamp, sign} = getSign(PLAYER_BINDING_URL, requestParam, secret);
 
     let uid = '0'
     let nickName = ""
@@ -45,7 +44,7 @@ async function getPlayBinding(defaultAkUid, requestParam, secret, cred) {
     let channelName = '默认'
     let channelMasterId = -1
 
-    const url = `${domain}${playerBindingAPI}`
+    const url = `${domain}${PLAYER_BINDING_URL}`
     // console.log(url)
     const headers = {
         "platform": '3',
@@ -71,7 +70,7 @@ async function getPlayBinding(defaultAkUid, requestParam, secret, cred) {
         headers: headers,
         method: "get",
     }).then(response => {
-        console.log(response)
+
         response = response.data
         // console.log(response)
         if (response.code !== 0) {
@@ -89,8 +88,8 @@ async function getPlayBinding(defaultAkUid, requestParam, secret, cred) {
             }
 
             for (const binding of akBindingList) {
-                if(defaultAkUid!=='0'){
-                    if(binding.uid===defaultAkUid){
+                if (defaultAkUid !== '0') {
+                    if (binding.uid === defaultAkUid) {
                         uid = binding.uid;
                         nickName = binding.nickName;
                         channelName = binding.channelName
@@ -111,7 +110,7 @@ async function getPlayBinding(defaultAkUid, requestParam, secret, cred) {
             if (typeof uid === "undefined") {
                 const binding = list[0].bindingList[0]
                 uid = binding.uid;
-                nickName =binding.nickName;
+                nickName = binding.nickName;
                 channelName = binding.channelName
                 channelMasterId = binding.channelMasterId
             }
@@ -133,7 +132,7 @@ async function getPlayBinding(defaultAkUid, requestParam, secret, cred) {
 
 async function getPlayerInfo(params, characterTable) {
 
-    const {requestUrl, requestParam, secret, cred,akUid,akNickName,channelName,channelMasterId} = params
+    const {requestUrl, requestParam, secret, cred, akUid, akNickName, channelName, channelMasterId} = params
 
     const {timestamp, sign} = getSign(requestUrl, requestParam, secret);
     const url = `${domain}${requestUrl}?${requestParam}`
@@ -163,11 +162,13 @@ async function getPlayerInfo(params, characterTable) {
             const chars = data.chars;
             const charInfoMap = data.charInfoMap;
 
+            FormattingOperatorData(chars,characterTable)
+
             uploadData = {
                 akNickName: akNickName,
                 akUid: akUid,
-                channelMasterId:channelMasterId,
-                channelName:channelName,
+                channelMasterId: channelMasterId,
+                channelName: channelName,
                 chars: chars,
                 charInfoMap: charInfoMap
             }
@@ -179,21 +180,41 @@ async function getPlayerInfo(params, characterTable) {
     })
 
     return uploadData
-
 }
 
+let equipDict = new Map()
 
-function FormattingOperatorData(characters, charInfoMap, characterTable) {
+
+function FormattingOperatorData(characterList, characterTable) {
+
+    if (equipDict.size < 100) {
+        for (const charId in characterTable) {
+            const characterInfo = characterTable[charId]
+            if (characterInfo.equip) {
+                for (const equip of characterInfo.equip) {
+                    equipDict.set(equip.uniEquipId, equip.typeName2)
+                }
+            }
+        }
+    }
+
 
     let operatorList = []
 
-    for (const character of characters) {
-        const charId = characters.charId
-        const level = characters.level
-        const elite = characters.evolvePhase
-        const potential = Math.ceil(characters.potentialRank + 1)
-        const mainSkill = characters.mainSkillLvl
-        const rarity = Math.ceil(characters.rarity + 1)
+    for (const character of characterList) {
+        const charId = character.charId
+        let rarity = 0;
+        if (characterTable[charId]) {
+            rarity = characterTable[charId].rarity
+        } else {
+            continue
+        }
+
+
+        const level = character.level
+        const elite = character.evolvePhase
+        const potential = Math.ceil(character.potentialRank + 1)
+        const mainSkill = character.mainSkillLvl
 
 
         let operator = {
@@ -213,19 +234,40 @@ function FormattingOperatorData(characters, charInfoMap, characterTable) {
         }
 
 
-        // const skills = characters.skills
-        // for (let s = 0; s < skills.length; s++) {
-        //     const specializeLevel = parseInt(skills[s].specializeLevel.toString())
-        //     if(s==0)
-        // }
+        const skills = character.skills
+        if (skills) {
+            for (let s = 0; s < skills.length; s++) {
+                operator[`skill${s}`] = parseInt(skills[s].specializeLevel.toString())
+            }
+        }
+
+
+        const equips = character.equip
+        const defaultEquipId = character.defaultEquipId
+        if (equips) {
+            for (const equip of equips) {
+                const equipType = equipDict.get(equip.id)
+                if (equipType) {
+                    if (defaultEquipId === equip.id) {
+                        operator[`mod${equipType}`] = equip.level
+                    }
+                    if (equipType > 1) {
+                        operator[`mod${equipType}`] = equip.level
+                    }
+                }
+            }
+        }
+
 
         operatorList.push(operator)
     }
 
+    console.table(operatorList)
+    return operatorList
 
 }
 
 export default {
     getPlayBinding,
-    getPlayerInfo
+    getPlayerInfo,
 }

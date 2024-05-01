@@ -1,6 +1,6 @@
 <!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
 <script setup>
-import {onMounted, ref} from "vue";
+import {h, onMounted, ref} from "vue";
 import '/src/assets/css/tool/gacha_calc.scss'
 import '/src/assets/css/sprite/sprite_plane_icon.css'
 import '/src/assets/css/tool/gacha_calc.phone.scss'
@@ -11,6 +11,7 @@ import HONEY_CAKE_TABLE from '/src/static/json/tools/scheduleByHoneycake.json'
 import storeAPI from '/src/api/store'
 import {cMessage} from "../../custom/message.js";
 import {dateDiff} from '/src/utils/dateUtil.js'
+import {ElNotification} from "element-plus";
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
@@ -912,7 +913,7 @@ function gachaResourcesCalculation() {
   singleResourceDraws.value.orundum = Math.floor(calculationResult.value.orundum / 600)
   singleResourceDraws.value.gachaTicket = calculationResult.value.gachaTicket
   singleResourceDraws.value.tenGachaTicket = calculationResult.value.tenGachaTicket * 10
-
+  singleResourceDraws.value.originium = 0
 
   pieChartData.value = pieChartDataTmp
 
@@ -1043,6 +1044,11 @@ onMounted(() => {
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
   updateScheduleOption(0)
   getAndSortPackData()
+
+  ElNotification({
+    title: '2024.4.30',
+    message: h('i', { style: 'color: teal' }, '增加了官方免费月卡奖励项目'),
+  })
 })
 
 function keepTheDecimalPoint(num, decimalPlaces) {
