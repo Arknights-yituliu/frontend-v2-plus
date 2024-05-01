@@ -84,13 +84,13 @@ const routes = [
         component: () => import('/src/pages/tools/logistics.vue')
     },
     {
-        path: '/tools/Irene',
-        text: '艾丽妮专精计算器',
-        name: 'Irene',
+        path: '/tools/specializationTimeCalculate',
+        text: '专精时间减半计算器',
+        name: 'HalfOperatorCalculate',
         display: true,
         module: 'tools',
         icon: "calculator",
-        component: () => import('/src/pages/tools/Irene.page.vue')
+        component: () => import('/src/pages/tools/specializationTimeCalculate.page.vue')
     },
     {
         path: '/survey/account/home',
@@ -180,12 +180,12 @@ const routes = [
         display: false,
         component: () => import('/src/pages/material/detail.page.vue')
     },
-    {
-        path: '/dev/skland',
-        text: '测试森空岛',
-        display: false,
-        component: () => import('/src/pages/dev/sklandTest.vue')
-    },
+    // {
+    //     path: '/dev/skland',
+    //     text: '测试森空岛',
+    //     display: false,
+    //     component: () => import('/src/pages/dev/sklandTest.vue')
+    // },
     {
         path: '/:catchAll(.*)',
         display: false,
