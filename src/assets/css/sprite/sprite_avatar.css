@@ -1,0 +1,2370 @@
+.bg-char_002_amiya {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -10px;
+}
+
+
+
+.bg-char_101_sora {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -10px;
+}
+
+
+
+.bg-char_102_texas {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -210px;
+}
+
+
+
+.bg-char_106_franka {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -210px;
+}
+
+
+
+.bg-char_107_liskam {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -10px;
+}
+
+
+
+.bg-char_108_silent {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -210px;
+}
+
+
+
+.bg-char_115_headbr {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -410px;
+}
+
+
+
+.bg-char_128_plosis {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -410px;
+}
+
+
+
+.bg-char_129_bluep {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -410px;
+}
+
+
+
+.bg-char_131_flameb {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -10px;
+}
+
+
+
+.bg-char_135_halo {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -210px;
+}
+
+
+
+.bg-char_140_whitew {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -410px;
+}
+
+
+
+.bg-char_143_ghost {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -610px;
+}
+
+
+
+.bg-char_144_red {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -610px;
+}
+
+
+
+.bg-char_145_prove {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -610px;
+}
+
+
+
+.bg-char_148_nearl {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -610px;
+}
+
+
+
+.bg-char_154_morgan {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -10px;
+}
+
+
+
+.bg-char_155_tiger {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -210px;
+}
+
+
+
+.bg-char_157_dagda {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -410px;
+}
+
+
+
+.bg-char_158_milu {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -610px;
+}
+
+
+
+.bg-char_163_hpsts {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -810px;
+}
+
+
+
+.bg-char_164_nightm {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -810px;
+}
+
+
+
+.bg-char_166_skfire {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -810px;
+}
+
+
+
+.bg-char_171_bldsk {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -810px;
+}
+
+
+
+.bg-char_173_slchan {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -810px;
+}
+
+
+
+.bg-char_174_slbell {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -10px;
+}
+
+
+
+.bg-char_194_leto {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -210px;
+}
+
+
+
+.bg-char_195_glassb {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -410px;
+}
+
+
+
+.bg-char_201_moeshd {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -610px;
+}
+
+
+
+.bg-char_204_platnm {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -810px;
+}
+
+
+
+.bg-char_214_kafka {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -1010px;
+}
+
+
+
+.bg-char_218_cuttle {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -1010px;
+}
+
+
+
+.bg-char_219_meteo {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -1010px;
+}
+
+
+
+.bg-char_220_grani {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -1010px;
+}
+
+
+
+.bg-char_226_hmau {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -1010px;
+}
+
+
+
+.bg-char_230_savage {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -1010px;
+}
+
+
+
+.bg-char_241_panda {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -10px;
+}
+
+
+
+.bg-char_242_otter {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -210px;
+}
+
+
+
+.bg-char_243_waaifu {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -410px;
+}
+
+
+
+.bg-char_252_bibeak {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -610px;
+}
+
+
+
+.bg-char_254_vodfox {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -810px;
+}
+
+
+
+.bg-char_261_sddrag {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -1010px;
+}
+
+
+
+.bg-char_265_sophia {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -1210px;
+}
+
+
+
+.bg-char_274_astesi {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -1210px;
+}
+
+
+
+.bg-char_275_breeze {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -1210px;
+}
+
+
+
+.bg-char_279_excu {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -1210px;
+}
+
+
+
+.bg-char_294_ayer {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -1210px;
+}
+
+
+
+.bg-char_297_hamoni {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -1210px;
+}
+
+
+
+.bg-char_304_zebra {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -1210px;
+}
+
+
+
+.bg-char_308_swire {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -10px;
+}
+
+
+
+.bg-char_325_bison {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -210px;
+}
+
+
+
+.bg-char_326_glacus {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -410px;
+}
+
+
+
+.bg-char_333_sidero {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -610px;
+}
+
+
+
+.bg-char_336_folivo {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -810px;
+}
+
+
+
+.bg-char_338_iris {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -1010px;
+}
+
+
+
+.bg-char_341_sntlla {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -1210px;
+}
+
+
+
+.bg-char_343_tknogi {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -1410px;
+}
+
+
+
+.bg-char_344_beewax {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -1410px;
+}
+
+
+
+.bg-char_345_folnic {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -1410px;
+}
+
+
+
+.bg-char_346_aosta {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -1410px;
+}
+
+
+
+.bg-char_348_ceylon {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -1410px;
+}
+
+
+
+.bg-char_349_chiave {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -1410px;
+}
+
+
+
+.bg-char_356_broca {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -1410px;
+}
+
+
+
+.bg-char_363_toddi {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -1410px;
+}
+
+
+
+.bg-char_365_aprl {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -10px;
+}
+
+
+
+.bg-char_367_swllow {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -210px;
+}
+
+
+
+.bg-char_369_bena {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -410px;
+}
+
+
+
+.bg-char_373_lionhd {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -610px;
+}
+
+
+
+.bg-char_378_asbest {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -810px;
+}
+
+
+
+.bg-char_379_sesa {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -1010px;
+}
+
+
+
+.bg-char_383_snsant {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -1210px;
+}
+
+
+
+.bg-char_388_mint {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -1410px;
+}
+
+
+
+.bg-char_401_elysm {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -1610px;
+}
+
+
+
+.bg-char_402_tuye {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -1610px;
+}
+
+
+
+.bg-char_405_absin {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -1610px;
+}
+
+
+
+.bg-char_411_tomimi {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -1610px;
+}
+
+
+
+.bg-char_415_flint {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -1610px;
+}
+
+
+
+.bg-char_421_crow {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -1610px;
+}
+
+
+
+.bg-char_422_aurora {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -1610px;
+}
+
+
+
+.bg-char_433_windft {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -1610px;
+}
+
+
+
+.bg-char_436_whispr {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -1610px;
+}
+
+
+
+.bg-char_446_aroma {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -10px;
+}
+
+
+
+.bg-char_449_glider {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -210px;
+}
+
+
+
+.bg-char_451_robin {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -410px;
+}
+
+
+
+.bg-char_455_nothin {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -610px;
+}
+
+
+
+.bg-char_457_blitz {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -810px;
+}
+
+
+
+.bg-char_458_rfrost {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -1010px;
+}
+
+
+
+.bg-char_459_tachak {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -1210px;
+}
+
+
+
+.bg-char_464_cement {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -1410px;
+}
+
+
+
+.bg-char_466_qanik {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -1610px;
+}
+
+
+
+.bg-char_473_mberry {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -1810px;
+}
+
+
+
+.bg-char_476_blkngt {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -1810px;
+}
+
+
+
+.bg-char_478_kirara {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -1810px;
+}
+
+
+
+.bg-char_486_takila {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -1810px;
+}
+
+
+
+.bg-char_488_buildr {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -1810px;
+}
+
+
+
+.bg-char_489_serum {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -1810px;
+}
+
+
+
+.bg-char_492_quercu {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -1810px;
+}
+
+
+
+.bg-char_493_firwhl {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -1810px;
+}
+
+
+
+.bg-char_494_vendla {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -1810px;
+}
+
+
+
+.bg-char_497_ctable {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -1810px;
+}
+
+
+
+.bg-char_498_inside {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -10px;
+}
+
+
+
+.bg-char_499_kaitou {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -210px;
+}
+
+
+
+.bg-char_508_aguard {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -410px;
+}
+
+
+
+.bg-char_509_acast {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -610px;
+}
+
+
+
+.bg-char_510_amedic {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -810px;
+}
+
+
+
+.bg-char_511_asnipe {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -1010px;
+}
+
+
+
+.bg-char_512_aprot {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -1210px;
+}
+
+
+
+.bg-char_513_apionr {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -1410px;
+}
+
+
+
+.bg-char_4025_aprot2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -1610px;
+}
+
+
+
+.bg-char_1011_lava2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -1810px;
+}
+
+
+
+.bg-char_1021_kroos2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -2010px;
+}
+
+
+
+.bg-char_1024_hbisc2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -2010px;
+}
+
+
+
+.bg-char_1027_greyy2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -2010px;
+}
+
+
+
+.bg-char_1030_noirc2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -2010px;
+}
+
+
+
+.bg-char_1036_fang2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -2010px;
+}
+
+
+
+.bg-char_4006_melnte {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -2010px;
+}
+
+
+
+.bg-char_4013_kjera {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -2010px;
+}
+
+
+
+.bg-char_4014_lunacu {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -2010px;
+}
+
+
+
+.bg-char_4015_spuria {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -2010px;
+}
+
+
+
+.bg-char_4016_kazema {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -2010px;
+}
+
+
+
+.bg-char_4017_puzzle {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -2010px;
+}
+
+
+
+.bg-char_4019_ncdeer {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -10px;
+}
+
+
+
+.bg-char_4023_rfalcn {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -210px;
+}
+
+
+
+.bg-char_4032_provs {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -410px;
+}
+
+
+
+.bg-char_4036_forcer {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -610px;
+}
+
+
+
+.bg-char_4040_rockr {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -810px;
+}
+
+
+
+.bg-char_4043_erato {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -1010px;
+}
+
+
+
+.bg-char_4045_heidi {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -1210px;
+}
+
+
+
+.bg-char_4047_pianst {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -1410px;
+}
+
+
+
+.bg-char_4054_malist {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -1610px;
+}
+
+
+
+.bg-char_4066_highmo {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -1810px;
+}
+
+
+
+.bg-char_4071_peper {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -2010px;
+}
+
+
+
+.bg-char_4078_bdhkgt {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -2210px;
+}
+
+
+
+.bg-char_4081_warmy {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -2210px;
+}
+
+
+
+.bg-char_4083_chimes {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -2210px;
+}
+
+
+
+.bg-char_4102_threye {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -2210px;
+}
+
+
+
+.bg-char_4105_almond {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -2210px;
+}
+
+
+
+.bg-char_4106_bryota {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -2210px;
+}
+
+
+
+.bg-char_4109_baslin {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -2210px;
+}
+
+
+
+.bg-char_4110_delphn {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -2210px;
+}
+
+
+
+.bg-char_4119_wanqin {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -2210px;
+}
+
+
+
+.bg-char_4122_grabds {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -2210px;
+}
+
+
+
+.bg-char_4124_iana {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -2210px;
+}
+
+
+
+.bg-char_4125_rdoc {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -2210px;
+}
+
+
+
+.bg-char_4126_fuze {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -10px;
+}
+
+
+
+.bg-char_4131_odda {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -210px;
+}
+
+
+
+.bg-char_215_mantic {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -410px;
+}
+
+
+
+.bg-char_306_leizi {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -610px;
+}
+
+
+
+.bg-char_431_ashlok {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -810px;
+}
+
+
+
+.bg-char_475_akafyu {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -1010px;
+}
+
+
+
+.bg-char_496_wildmn {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -1210px;
+}
+
+
+
+.bg-char_4104_coldst {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -1410px;
+}
+
+
+
+.bg-char_4114_harold {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -1610px;
+}
+
+
+
+.bg-char_003_kalts {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -1810px;
+}
+
+
+
+.bg-char_010_chen {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -2010px;
+}
+
+
+
+.bg-char_017_huang {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -2210px;
+}
+
+
+
+.bg-char_103_angel {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -2410px;
+}
+
+
+
+.bg-char_113_cqbw {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -2410px;
+}
+
+
+
+.bg-char_134_ifrit {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -2410px;
+}
+
+
+
+.bg-char_136_hsguma {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -2410px;
+}
+
+
+
+.bg-char_147_shining {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -2410px;
+}
+
+
+
+.bg-char_172_svrash {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -2410px;
+}
+
+
+
+.bg-char_179_cgbird {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -2410px;
+}
+
+
+
+.bg-char_180_amgoat {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -2410px;
+}
+
+
+
+.bg-char_188_helage {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -2410px;
+}
+
+
+
+.bg-char_197_poca {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -2410px;
+}
+
+
+
+.bg-char_202_demkni {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -2410px;
+}
+
+
+
+.bg-char_206_gnosis {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -2410px;
+}
+
+
+
+.bg-char_213_mostma {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -2410px;
+}
+
+
+
+.bg-char_222_bpipe {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -10px;
+}
+
+
+
+.bg-char_225_haak {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -210px;
+}
+
+
+
+.bg-char_245_cello {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -410px;
+}
+
+
+
+.bg-char_112_siege {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -610px;
+}
+
+
+
+.bg-char_248_mgllan {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -810px;
+}
+
+
+
+.bg-char_249_mlyss {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -1010px;
+}
+
+
+
+.bg-char_250_phatom {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -1210px;
+}
+
+
+
+.bg-char_263_skadi {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -1410px;
+}
+
+
+
+.bg-char_264_f12yin {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -1610px;
+}
+
+
+
+.bg-char_291_aglina {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -1810px;
+}
+
+
+
+.bg-char_293_thorns {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -2010px;
+}
+
+
+
+.bg-char_300_phenxi {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -2210px;
+}
+
+
+
+.bg-char_311_mudrok {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -2410px;
+}
+
+
+
+.bg-char_322_lmlee {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -2610px;
+}
+
+
+
+.bg-char_332_archet {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -2610px;
+}
+
+
+
+.bg-char_340_shwaz {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -2610px;
+}
+
+
+
+.bg-char_350_surtr {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -2610px;
+}
+
+
+
+.bg-char_358_lisa {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -2610px;
+}
+
+
+
+.bg-char_362_saga {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -2610px;
+}
+
+
+
+.bg-char_377_gdglow {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -2610px;
+}
+
+
+
+.bg-char_400_weedy {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -2610px;
+}
+
+
+
+.bg-char_416_zumama {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -2610px;
+}
+
+
+
+.bg-char_426_billro {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -2610px;
+}
+
+
+
+.bg-char_430_fartth {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -2610px;
+}
+
+
+
+.bg-char_437_mizuki {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -2610px;
+}
+
+
+
+.bg-char_456_ash {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -2610px;
+}
+
+
+
+.bg-char_472_pasngr {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -2610px;
+}
+
+
+
+.bg-char_474_glady {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -10px;
+}
+
+
+
+.bg-char_479_sleach {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -210px;
+}
+
+
+
+.bg-char_485_pallas {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -410px;
+}
+
+
+
+.bg-char_1012_skadi2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -610px;
+}
+
+
+
+.bg-char_1013_chen2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -810px;
+}
+
+
+
+.bg-char_1014_nearl2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -1010px;
+}
+
+
+
+.bg-char_1016_agoat2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -1210px;
+}
+
+
+
+.bg-char_1020_reed2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -1410px;
+}
+
+
+
+.bg-char_1023_ghost2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -1610px;
+}
+
+
+
+.bg-char_1026_gvial2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -1810px;
+}
+
+
+
+.bg-char_1028_texas2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -2010px;
+}
+
+
+
+.bg-char_1031_slent2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -2210px;
+}
+
+
+
+.bg-char_1032_excu2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -2410px;
+}
+
+
+
+.bg-char_1033_swire2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -2610px;
+}
+
+
+
+.bg-char_2013_cerber {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -2810px;
+}
+
+
+
+.bg-char_2014_nian {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -2810px;
+}
+
+
+
+.bg-char_2015_dusk {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -2810px;
+}
+
+
+
+.bg-char_2023_ling {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -2810px;
+}
+
+
+
+.bg-char_2024_chyue {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -2810px;
+}
+
+
+
+.bg-char_2025_shu {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -2810px;
+}
+
+
+
+.bg-char_4009_irene {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -2810px;
+}
+
+
+
+.bg-char_4011_lessng {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -2810px;
+}
+
+
+
+.bg-char_4027_heyak {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -2810px;
+}
+
+
+
+.bg-char_4039_horn {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -2810px;
+}
+
+
+
+.bg-char_4042_lumen {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -2810px;
+}
+
+
+
+.bg-char_4046_ebnhlz {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -2810px;
+}
+
+
+
+.bg-char_4048_doroth {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -2810px;
+}
+
+
+
+.bg-char_4055_bgsnow {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -2810px;
+}
+
+
+
+.bg-char_4064_mlynar {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -2810px;
+}
+
+
+
+.bg-char_4065_judge {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -10px;
+}
+
+
+
+.bg-char_4072_ironmn {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -210px;
+}
+
+
+
+.bg-char_4080_lin {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -410px;
+}
+
+
+
+.bg-char_4082_qiubai {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -610px;
+}
+
+
+
+.bg-char_4087_ines {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -810px;
+}
+
+
+
+.bg-char_4088_hodrer {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -1010px;
+}
+
+
+
+.bg-char_4116_blkkgt {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -1210px;
+}
+
+
+
+.bg-char_4117_ray {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -1410px;
+}
+
+
+
+.bg-char_4121_zuole {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -1610px;
+}
+
+
+
+.bg-char_4123_ela {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -1810px;
+}
+
+
+
+.bg-char_4133_logos {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -2010px;
+}
+
+
+
+.bg-char_4134_cetsyr {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -2210px;
+}
+
+
+
+.bg-char_391_rosmon {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -2410px;
+}
+
+
+
+.bg-char_420_flamtl {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -2610px;
+}
+
+
+
+.bg-char_423_blemsh {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -2810px;
+}
+
+
+
+.bg-char_427_vigil {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -3010px;
+}
+
+
+
+.bg-char_1029_yato2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -3010px;
+}
+
+
+
+.bg-char_1034_jesca2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -3010px;
+}
+
+
+
+.bg-char_1035_wisdel {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -3010px;
+}
+
+
+
+.bg-char_2012_typhon {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -3010px;
+}
+
+
+
+.bg-char_4098_vvana {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -3010px;
+}
+
+
+
+.bg-char_4132_ascln {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -3010px;
+}
+
+
+
+.bg-char_009_12fce {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -3010px;
+}
+
+
+
+.bg-char_109_fmout {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -3010px;
+}
+
+
+
+.bg-char_110_deepcl {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -3010px;
+}
+
+
+
+.bg-char_117_myrrh {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -3010px;
+}
+
+
+
+.bg-char_118_yuki {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -3010px;
+}
+
+
+
+.bg-char_120_hibisc {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -3010px;
+}
+
+
+
+.bg-char_121_lava {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -3010px;
+}
+
+
+
+.bg-char_122_beagle {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -3010px;
+}
+
+
+
+.bg-char_123_fang {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -3010px;
+}
+
+
+
+.bg-char_124_kroos {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -10px;
+}
+
+
+
+.bg-char_126_shotst {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -210px;
+}
+
+
+
+.bg-char_130_doberm {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -410px;
+}
+
+
+
+.bg-char_133_mm {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -610px;
+}
+
+
+
+.bg-char_137_brownb {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -810px;
+}
+
+
+
+.bg-char_141_nights {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -1010px;
+}
+
+
+
+.bg-char_149_scave {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -1210px;
+}
+
+
+
+.bg-char_150_snakek {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -1410px;
+}
+
+
+
+.bg-char_151_myrtle {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -1610px;
+}
+
+
+
+.bg-char_159_peacok {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -1810px;
+}
+
+
+
+.bg-char_181_flower {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -2010px;
+}
+
+
+
+.bg-char_183_skgoat {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -2210px;
+}
+
+
+
+.bg-char_185_frncat {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -2410px;
+}
+
+
+
+.bg-char_187_ccheal {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -2610px;
+}
+
+
+
+.bg-char_190_clour {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -2810px;
+}
+
+
+
+.bg-char_192_falco {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -3010px;
+}
+
+
+
+.bg-char_193_frostl {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -3210px;
+}
+
+
+
+.bg-char_196_sunbr {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -3210px;
+}
+
+
+
+.bg-char_198_blackd {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -3210px;
+}
+
+
+
+.bg-char_199_yak {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -3210px;
+}
+
+
+
+.bg-char_208_melan {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -3210px;
+}
+
+
+
+.bg-char_209_ardign {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -3210px;
+}
+
+
+
+.bg-char_210_stward {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -3210px;
+}
+
+
+
+.bg-char_211_adnach {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -3210px;
+}
+
+
+
+.bg-char_212_ansel {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -3210px;
+}
+
+
+
+.bg-char_235_jesica {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -3210px;
+}
+
+
+
+.bg-char_236_rope {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -3210px;
+}
+
+
+
+.bg-char_237_gravel {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -3210px;
+}
+
+
+
+.bg-char_240_wyvern {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -3210px;
+}
+
+
+
+.bg-char_253_greyy {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -3210px;
+}
+
+
+
+.bg-char_258_podego {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -3210px;
+}
+
+
+
+.bg-char_260_durnar {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -3210px;
+}
+
+
+
+.bg-char_271_spikes {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -3210px;
+}
+
+
+
+.bg-char_272_strong {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -10px;
+}
+
+
+
+.bg-char_277_sqrrel {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -210px;
+}
+
+
+
+.bg-char_278_orchid {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -410px;
+}
+
+
+
+.bg-char_281_popka {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -610px;
+}
+
+
+
+.bg-char_282_catap {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -810px;
+}
+
+
+
+.bg-char_283_midn {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -1010px;
+}
+
+
+
+.bg-char_284_spot {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -1210px;
+}
+
+
+
+.bg-char_285_medic2 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -1410px;
+}
+
+
+
+.bg-char_286_cast3 {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -1610px;
+}
+
+
+
+.bg-char_290_vigna {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -1810px;
+}
+
+
+
+.bg-char_298_susuro {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -2010px;
+}
+
+
+
+.bg-char_301_cutter {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -2210px;
+}
+
+
+
+.bg-char_302_glaze {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -2410px;
+}
+
+
+
+.bg-char_328_cammou {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -2610px;
+}
+
+
+
+.bg-char_337_utage {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -2810px;
+}
+
+
+
+.bg-char_347_jaksel {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -3010px;
+}
+
+
+
+.bg-char_355_ethan {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -3210px;
+}
+
+
+
+.bg-char_366_acdrop {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -10px -3410px;
+}
+
+
+
+.bg-char_376_therex {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -210px -3410px;
+}
+
+
+
+.bg-char_381_bubble {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -410px -3410px;
+}
+
+
+
+.bg-char_385_finlpp {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -610px -3410px;
+}
+
+
+
+.bg-char_440_pinecn {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -810px -3410px;
+}
+
+
+
+.bg-char_452_bstalk {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1010px -3410px;
+}
+
+
+
+.bg-char_469_indigo {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1210px -3410px;
+}
+
+
+
+.bg-char_484_robrta {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1410px -3410px;
+}
+
+
+
+.bg-char_500_noirc {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1610px -3410px;
+}
+
+
+
+.bg-char_501_durin {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -1810px -3410px;
+}
+
+
+
+.bg-char_502_nblade {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2010px -3410px;
+}
+
+
+
+.bg-char_503_rang {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2210px -3410px;
+}
+
+
+
+.bg-char_504_rguard {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2410px -3410px;
+}
+
+
+
+.bg-char_505_rcast {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2610px -3410px;
+}
+
+
+
+.bg-char_506_rmedic {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -2810px -3410px;
+}
+
+
+
+.bg-char_507_rsnipe {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3010px -3410px;
+}
+
+
+
+.bg-char_514_rdfend {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3210px -3410px;
+}
+
+
+
+.bg-char_4000_jnight {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3410px -3410px;
+}
+
+
+
+.bg-char_4004_pudd {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -10px;
+}
+
+
+
+.bg-char_4041_chnut {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -210px;
+}
+
+
+
+.bg-char_4062_totter {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -410px;
+}
+
+
+
+.bg-char_4063_quartz {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -610px;
+}
+
+
+
+.bg-char_4067_lolxh {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -810px;
+}
+
+
+
+.bg-char_4077_palico {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -1010px;
+}
+
+
+
+.bg-char_4091_ulika {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -1210px;
+}
+
+
+
+.bg-char_4093_frston {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -1410px;
+}
+
+
+
+.bg-char_4100_caper {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -1610px;
+}
+
+
+
+.bg-char_4107_vrdant {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -1810px;
+}
+
+
+
+.bg-char_4130_luton {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -2010px;
+}
+
+
+
+.bg-char_4136_phonor {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -2210px;
+}
+
+
+
+.bg-char_127_estell {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -2410px;
+}
+
+
+
+.bg-char_289_gyuki {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -2610px;
+}
+
+
+
+.bg-char_491_humus {
+    width: 180px; height: 180px;
+    background: url('/image/sprite/avatar-2024-05-01.webp') -3610px -2810px;
+}
