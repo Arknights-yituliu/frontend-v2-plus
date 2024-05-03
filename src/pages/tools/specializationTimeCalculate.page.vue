@@ -1,14 +1,14 @@
 <script setup>
-import Irene from "/src/components/Irene.vue";
 import {ref} from "vue";
+import HalfOperatorCalculate from "../../components/HalfOperatorCalculate.vue";
 
-let collapseVisible = ref(['Irene'])
+let collapseVisible = ref(['HalfOperatorCalculate'])
 
 </script>
 
 <template>
   <el-collapse style="max-width: 90%;margin: auto" v-model="collapseVisible" accordion>
-    <irene/>
+      <half-operator-calculate/>
   </el-collapse>
 </template>
 

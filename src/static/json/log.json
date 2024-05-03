@@ -1,5 +1,11 @@
 [
   {
+    "author": "Milkwind",
+    "type": "update",
+    "module": "自定义组件",
+    "date": "2024.05.01",
+    "description": "[换艾丽妮专精时间点计算器]更名为[专精时间减半计算器]，新增自定义减半干员效率，重构排版"
+  },{
     "author": "yamazakura",
     "type": "feat",
     "module": "攒抽计算器",
