@@ -1,14 +1,14 @@
 <script setup>
 import {reactive, ref, onMounted} from "vue"
 import {convertToSeconds, secondsToTimeString, getSecondsSinceMidnight} from "/src/utils/dataHanding"
-import {Clock} from "@element-plus/icons-vue";
+import {Clock,QuestionFilled} from "@element-plus/icons-vue";
 
 let drawerVisible = ref(false)
 
 // 换减半干员专精
 const halfOperatorParams = reactive({
   efficiency: null, //当前专精助手干员提供的效率
-  isFit: false, //是否享受分支专精效率加成
+  isFit: false, //是否享受职业专精效率加成
   halfOperatorAddition: 0.3, //减半干员专精效率加成
   remainder: null, //当前显示的剩余时间
   leadTime: 5, //默认提前五分钟提醒
@@ -67,7 +67,7 @@ function calculateTime() {
   <el-collapse-item name="HalfOperatorCalculate">
     <template #title>
       <Clock style="width: 13px;margin-inline: 8px"/>
-      <el-text tag="b" size="large">换专精减半干员的专精时间点计算</el-text>
+      <el-text tag="b" size="large">换专精时间减半干员的专精时间点计算</el-text>
     </template>
     <el-form :model="halfOperatorParams">
       <transition-group name="list" tag="ul">
@@ -86,24 +86,30 @@ function calculateTime() {
           </el-form-item>
         </li>
         <li>
-          <el-form-item label="是否可触发分支效率加成">
+          <el-form-item label="是否可触发职业效率加成">
             <el-switch
                 v-model="halfOperatorParams.isFit"
                 @change="calculateTime"
             />
           </el-form-item>
         </li>
-        <li v-if="halfOperatorParams.isFit">
-          <el-form-item label="减半干员分支效率加成">
-            <el-input-number
-                v-model="halfOperatorParams.halfOperatorAddition"
-                :min="0"
-                :step="0.01"
-                :value-on-clear="0"
-                controls-position="right"
-                @change="calculateTime"
-            />
-          </el-form-item>
+        <li v-if="halfOperatorParams.isFit" style="display: inline-block">
+          <el-tooltip
+              effect="light"
+              content="艾丽妮-30% 覆盖近卫/狙击职业；逻各斯-30% 覆盖术师/辅助职业"
+              placement="right"
+          >
+            <el-form-item label="减半干员职业效率加成">
+              <el-input-number
+                  v-model="halfOperatorParams.halfOperatorAddition"
+                  :min="0"
+                  :step="0.01"
+                  :value-on-clear="0"
+                  controls-position="right"
+                  @change="calculateTime"
+              />
+            </el-form-item>
+          </el-tooltip>
         </li>
         <li>
           <el-form-item label="专精剩余时间">
@@ -146,7 +152,7 @@ function calculateTime() {
         <h2>算法中用到的各个变量</h2>
         <ul>
           <li><b>efficiency</b>: 当前专精助手干员提供的效率。</li>
-          <li><b>isFit</b>: 目标是否享受分支专精效率加成。</li>
+          <li><b>isFit</b>: 目标是否享受职业专精效率加成。</li>
           <li><b>remainder</b>: 当前显示的剩余时间。</li>
           <li><b>leadTime</b>: 提前提醒的分钟数，默认提前五分钟提醒。</li>
           <li><b>remainSeconds</b>: 当前显示的剩余时间的等价秒数。</li>
