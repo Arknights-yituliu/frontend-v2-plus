@@ -175,7 +175,7 @@ async function getPlayerInfo(params, characterTable) {
         }
     }).catch(error => {
         console.log(error)
-        cMessage('森空岛：' + error.response.data.message, 'error')
+        cMessage('森空岛：' + error, 'error')
         return void 0
     })
 

@@ -488,6 +488,55 @@ onMounted(() => {
 
     <!-- 说明区域 -->
 
+    <div class="recommendation-table-wrap" style="display: none">
+      <h1>活动期间刷图推荐</h1>
+
+      <table class="recommendation-table">
+        <tbody>
+        <tr>
+          <td>材料</td>
+          <td>推荐关卡</td>
+          <td>关卡效率</td>
+        </tr>
+        <tr>
+          <td>全新装置</td>
+          <td>14-12、14-16 ···</td>
+          <td>125%(副本掉率提升+理智小样)</td>
+        </tr>
+        <tr>
+          <td>酮凝集组</td>
+          <td>14-20、14-14 ···</td>
+          <td>125%(副本掉率提升+理智小样)</td>
+        </tr>
+        <tr>
+          <td>化合切削液</td>
+          <td>12-17</td>
+          <td>112%(仅理智小样)</td>
+        </tr>
+        <tr>
+          <td>固源岩系</td>
+          <td>1-7</td>
+          <td>112%(仅理智小样)</td>
+        </tr>
+        <tr>
+          <td> 其他精英材料</td>
+          <td>对应的主线最优关</td>
+          <td>112%(仅理智小样)</td>
+        </tr>
+        <tr>
+          <td>资源本<br>龙门币/芯片/红票等</td>
+          <td>对应的最高级资源关</td>
+          <td> 112%(仅理智小样)</td>
+        </tr>
+        </tbody>
+      </table>
+      <span>*关卡效率：关卡掉落物品的总价值 / 关卡理智消耗。数值越大越推荐刷</span>
+      <span>代币仅在第14章掉落，优先搬空商店。<br>效率计算：明日方舟一图流 https://ark.yituliu.cn<br>掉落数据：企鹅物流数据统计 https://penguin-stats.cn<br></span>
+
+<!--      <span style="text-align: right;margin: 20px 0 8px">数据收集时间：&emsp;2024.5.2 18:00<br>制图：&emsp;B站@罗德岛基建BETA</span>-->
+    </div>
+
+
     <!-- 图例3.0 -->
     <div class="stage-legend" @click="scrollToLegendDescription" id="sStageLegend">
       <table class="s-stage-legend-table">
@@ -542,7 +591,7 @@ onMounted(() => {
               <span>白糖价值之和 </span>
             </span>
             <br>
-            <span >理智消耗</span>
+            <span>理智消耗</span>
 
           </td>
           <td class="stage-legend-text-4">

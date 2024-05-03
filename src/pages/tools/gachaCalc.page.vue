@@ -89,7 +89,7 @@ let activityType = ref('联动限定')
 // end: Date 结束时间
 // disabled: boolean 是否禁用选项
 // activityType: string 活动类型
-// dailyDrawResources: boolean 活动是否赠送每日抽卡资源
+// dailyGiftResources: boolean 活动是否赠送每日抽卡资源
 let scheduleOptions = [
   {
     name: '周年限定(5.15)',
@@ -97,7 +97,7 @@ let scheduleOptions = [
     end: new Date('2024/05/15 04:01:00'),
     activityType: '周年限定',
     disabled: false,
-    dailyDrawResources: false
+    dailyGiftResources: true
   },
   {
     name: '夏活(8.21)',
@@ -607,7 +607,7 @@ function gachaResourcesCalculation() {
 
     // 判断输入的字符串是否含有小数点
     if (value.toString().indexOf('.') > -1) {
-      console.log(parseFloat(value))
+
       return parseFloat(value)
     }
 
@@ -868,13 +868,31 @@ function gachaResourcesCalculation() {
     let originium = 0
     let gachaTicket = 0
     let tenGachaTicket = 0
-
+    const remainingDays = Math.floor((endDate.value.getTime() - new Date().getTime())/86400000)
+    console.log("离限定池结束还有"+remainingDays+"天")
+    const currentMonth = endDate.value.getMonth()+1
+    const MaintenanceTimes = endDate.value.getDate() - new Date().getDate()
     //循环预测奖励排期
     for (const honeyCake of honeyCakeTable.value) {
       // 判断奖励是否在当前选择的时间段内
       if (!rewardIsExpired(honeyCake)) {
         continue
       }
+
+      if(selectedSchedule.value.dailyGiftResources){
+
+          if(honeyCake.name.indexOf("每日赠送")>-1){
+               honeyCake.gachaTicket = remainingDays
+          }
+          if(honeyCake.name.indexOf("矿区")>-1||honeyCake.name.indexOf("红包群")>-1){
+               honeyCake.orundum = remainingDays*600
+          }
+      }
+
+      if(honeyCake.name.indexOf(`游戏维护(${currentMonth}月)`)>-1){
+            honeyCake.orundum = Math.floor(MaintenanceTimes/5)*200
+      }
+
       originium += honeyCake.originium
       orundum += honeyCake.orundum
       gachaTicket += honeyCake.gachaTicket
@@ -903,8 +921,9 @@ function gachaResourcesCalculation() {
     if (calculationResult.value.otherTotalDraw > 0) {
       pieChartDataTmp.push({value: calculationResult.value.otherTotalDraw, name: "其他"})
     }
-
   }
+
+
 
 
   calculationResult.value.totalDraw = Math.floor(calculationResult.value.orundum / 600 +
@@ -928,7 +947,7 @@ function gachaResourcesCalculation() {
 
   logs.push({key: "计算源石后", value: calculationResult.value.totalDraw})
 
-  console.table(logs)
+  // console.table(logs)
 
   const lastSettings = {
     existOrundum: existResources.value.orundum,
@@ -1071,7 +1090,7 @@ window.addEventListener('resize', handleResize);
 
 // 定义尺寸变化处理函数
 function handleResize() {
-  console.log(window.innerWidth)
+
   //判断是否是移动设备或PC端将窗口缩小，如果是就对chart画布进行尺寸重设
   if (window.innerWidth < 590) {
     myChart.resize()

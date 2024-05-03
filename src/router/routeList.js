@@ -187,6 +187,12 @@ const routes = [
         component: () => import('/src/pages/dev/sklandTest.vue')
     },
     {
+        path: '/material/ep14',
+        text: 'EP14',
+        display: false,
+        component: () => import('/src/pages/material/ep13.page.vue')
+    },
+    {
         path: '/:catchAll(.*)',
         display: false,
         component: Error404

@@ -857,7 +857,7 @@ async function importSKLandOperatorDataByUid(akPlayerBinding) {
     channelName:channelName,
   }
 
-  const playerInfo = await sklandApi.getPlayerInfo(params)
+  const playerInfo = await sklandApi.getPlayerInfo(params,characterTable)
 
 
   if(!playerInfo){

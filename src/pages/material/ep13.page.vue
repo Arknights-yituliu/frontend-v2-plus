@@ -134,7 +134,7 @@
           <td style="width: 100px"> 长草期 </td>
           <td style="width: 100px"> Side Story</td>
           <td style="width: 100px"> 故事集</td>
-          <td style="width: 100px">战备支援</td>
+          <td style="width: 100px">战备物资</td>
         </tr>
         <tr>
           <td> 固源岩系<br>(1-7) </td>
@@ -144,7 +144,7 @@
           <td rowspan="4" > 125%<br>(需通关12-20)  </td>
         </tr>
         <tr>
-          <td> 晶体元件<br>(R8-11) <br>化合切削液<br>(12-17)  </td>
+          <td>晶体元件<br>(R8-11) <br>化合切削液<br>(12-17)  </td>
           <td> 92% <br> 活动关卡 </td>
 
         </tr>
@@ -156,11 +156,7 @@
         <tr>
           <td> 其他精英材料 </td>
           <td> 110%-120% </td>
-
         </tr>
-
-
-
       </table>
     </div>
 
@@ -206,11 +202,11 @@
 </template>
 
 <script setup>
-import { usePageContext } from "/src/renderer/usePageContext";
+
 import { ref } from "vue";
 const show_secondary = ref(true);
-const pageContext = usePageContext();
-const table_data = ref(pageContext.pageProps.newChapter);
+
+const table_data = ref([]);
 
 function sampleConfidenceFormat(confidence,digit){
   digit = digit==void 0?1:digit;

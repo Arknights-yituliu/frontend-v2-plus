@@ -271,4 +271,33 @@
     left: calc((-183px + 50px) / 2);
   }
 
+  .recommendation-table-wrap{
+    text-align: center;
+    flex-direction: column;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 20px;
+    color: antiquewhite;
+  }
+
+  .recommendation-table{
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  .recommendation-table tr:first-child{
+    font-size: 20px;
+    font-weight: bolder;
+  }
+
+  .recommendation-table tr:nth-child(2n+1) {
+    background-color: #464646; /* 或你希望的背景色 */
+  }
+
+  .recommendation-table td{
+    border: 1px solid black;
+    padding: 12px 0;
+  }
 }
