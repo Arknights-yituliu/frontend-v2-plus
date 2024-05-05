@@ -8,10 +8,7 @@ import '/src/assets/css/material/pack.phone.scss'
 let opETextTheme = "op_title_etext_light"
 
 let packPPRResponse = ref([])
-let packsPPRData = ref([])
-let packsPPRDataSort = ref([])
-let packFilter = ref(11)
-let showFlag = ref(false)
+let packPPRInfoList = ref([])
 
 
 function getPackList(packType, packState, type1, type2, type3) {
@@ -31,9 +28,9 @@ function getPackList(packType, packState, type1, type2, type3) {
 }
 
 
-let limitedPack = []
-let periodicPack = []
-let newbiePack = []
+let limitedPack = ref([])
+let periodicPack = ref([])
+let newbiePack = ref([])
 
 function initData() {
   // packsPPRData.value = [];
@@ -61,17 +58,19 @@ function initData() {
       continue
     }
 
+
+    packPPRInfoList.value.push(pack)
+
     if(limitedType.includes(pack.saleType)){
-      limitedPack.push(pack)
+      limitedPack.value.push(pack)
       continue
     }
     if(periodicType.includes(pack.saleType)){
-      periodicPack.push(pack)
+      periodicPack.value.push(pack)
       continue
     }
     if(newbieType.includes(pack.saleType)){
-      newbiePack.push(pack)
-
+      newbiePack.value.push(pack)
     }
 
 
@@ -489,7 +488,7 @@ onMounted(() => {
       <!--      </div>-->
 
       <div class="pack-table-wrapper">
-        <el-table :data="packPPRResponse" class="pack-table" stripe table-layout="auto"
+        <el-table :data="packPPRInfoList" class="pack-table" stripe table-layout="auto"
                   :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
           <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {
               return row.displayName;

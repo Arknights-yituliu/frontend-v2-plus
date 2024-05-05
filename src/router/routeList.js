@@ -180,12 +180,12 @@ const routes = [
         display: false,
         component: () => import('/src/pages/material/detail.page.vue')
     },
-    // {
-    //     path: '/dev/skland',
-    //     text: '测试森空岛',
-    //     display: false,
-    //     component: () => import('/src/pages/dev/sklandTest.vue')
-    // },
+    {
+        path: '/dev',
+        text: '测试页面',
+        display: false,
+        component: () => import('/src/pages/dev.vue')
+    },
     {
         path: '/material/ep14',
         text: 'EP14',

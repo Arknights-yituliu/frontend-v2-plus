@@ -282,9 +282,14 @@
     color: antiquewhite;
   }
 
+  .recommendation-table-wrap span{
+    line-height: 2;
+  }
+
   .recommendation-table{
     border-collapse: collapse;
     text-align: center;
+
   }
 
   .recommendation-table tr:first-child{

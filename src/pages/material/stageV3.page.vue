@@ -500,12 +500,12 @@ onMounted(() => {
         </tr>
         <tr>
           <td>全新装置</td>
-          <td>14-12、14-16 ···</td>
+          <td>14-16、14-8、14-12、14-19</td>
           <td>125%(副本掉率提升+理智小样)</td>
         </tr>
         <tr>
           <td>酮凝集组</td>
-          <td>14-20、14-14 ···</td>
+          <td>14-20、14-14、14-6、14-9、14-17</td>
           <td>125%(副本掉率提升+理智小样)</td>
         </tr>
         <tr>
@@ -530,10 +530,11 @@ onMounted(() => {
         </tr>
         </tbody>
       </table>
-      <span>*关卡效率：关卡掉落物品的总价值 / 关卡理智消耗。数值越大越推荐刷</span>
+      <span >*关卡效率：关卡掉落物品的总价值 / 关卡理智消耗，数值越大越推荐刷。<br>图上数据非最终结论，仅供参考，其他材料up关卡未必差。后续可查看一图流网站实时更新的材料一图流</span>
       <span>代币仅在第14章掉落，优先搬空商店。<br>效率计算：明日方舟一图流 https://ark.yituliu.cn<br>掉落数据：企鹅物流数据统计 https://penguin-stats.cn<br></span>
 
-<!--      <span style="text-align: right;margin: 20px 0 8px">数据收集时间：&emsp;2024.5.2 18:00<br>制图：&emsp;B站@罗德岛基建BETA</span>-->
+<!--      <span style="text-align: right;">制图：&emsp;B站@罗德岛基建BETA</span>-->
+      <span style="text-align: right;">数据收集时间：&emsp;2024.5.3 09:00</span>
     </div>
 
 

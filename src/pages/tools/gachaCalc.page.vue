@@ -110,7 +110,7 @@ let scheduleOptions = [
     name: '夏活(8.27)',
     start: new Date('2024/08/27 16:00:00'),
     end: new Date('2024/08/27 04:01:00'),
-    activityType: '周年限定',
+    activityType: '夏活限定',
     disabled: false,
     dailyGiftResources: false
   }
@@ -552,9 +552,9 @@ function gachaResourcesCalculation() {
     }
 
     if (endDate.value < officialMonthlyCardEndDate) {
-      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value) -1
+      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value) - 1
     } else {
-      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), officialMonthlyCardEndDate) -1
+      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), officialMonthlyCardEndDate) - 1
     }
 
 
@@ -581,7 +581,7 @@ function gachaResourcesCalculation() {
 
     //向饼图数据中写入日常的抽卡次数
     if (calculationResult.value.dailyTotalDraw > 0) {
-      pieChartDataTmp.push({value: calculationResult.value.dailyTotalDraw, name: "日常"})
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.dailyTotalDraw), name: "日常"})
     }
 
   }
@@ -650,7 +650,7 @@ function gachaResourcesCalculation() {
     logs.push({key: "库存-十连", value: tenGachaTicket})
 
     if (calculationResult.value.existTotalDraw > 0) {
-      pieChartDataTmp.push({value: calculationResult.value.existTotalDraw, name: "库存"})
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.existTotalDraw), name: "库存"})
     }
 
   }
@@ -687,7 +687,7 @@ function gachaResourcesCalculation() {
     calculationResult.value.produceOrundumTotalDraw = orundum / 600
 
     if (calculationResult.value.produceOrundumTotalDraw > 0) {
-      pieChartDataTmp.push({value: calculationResult.value.produceOrundumTotalDraw, name: "搓玉"})
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.produceOrundumTotalDraw), name: "搓玉"})
     }
 
   }
@@ -726,7 +726,7 @@ function gachaResourcesCalculation() {
     logs.push({key: "潜在-源石", value: originium})
 
     if (calculationResult.value.potentialTotalDraw > 0) {
-      pieChartDataTmp.push({value: calculationResult.value.potentialTotalDraw, name: "潜在"})
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.potentialTotalDraw), name: "潜在"})
     }
   }
 
@@ -798,7 +798,7 @@ function gachaResourcesCalculation() {
 
 
     if (calculationResult.value.rechargeTotalDraw > 0) {
-      pieChartDataTmp.push({value: calculationResult.value.rechargeTotalDraw, name: "氪金"})
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.rechargeTotalDraw), name: "氪金"})
     }
 
   }
@@ -854,7 +854,7 @@ function gachaResourcesCalculation() {
     logs.push({key: "活动-十连", value: tenGachaTicket})
 
     if (calculationResult.value.activityTotalDraw > 0) {
-      pieChartDataTmp.push({value: calculationResult.value.activityTotalDraw, name: "活动"})
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.activityTotalDraw), name: "活动"})
     }
   }
 
@@ -868,9 +868,10 @@ function gachaResourcesCalculation() {
     let originium = 0
     let gachaTicket = 0
     let tenGachaTicket = 0
-    const remainingDays = Math.floor((endDate.value.getTime() - new Date().getTime())/86400000)
-    console.log("离限定池结束还有"+remainingDays+"天")
-    const currentMonth = endDate.value.getMonth()+1
+
+
+
+    const currentMonth = endDate.value.getMonth() + 1
     const MaintenanceTimes = endDate.value.getDate() - new Date().getDate()
     //循环预测奖励排期
     for (const honeyCake of honeyCakeTable.value) {
@@ -879,19 +880,19 @@ function gachaResourcesCalculation() {
         continue
       }
 
-      if(selectedSchedule.value.dailyGiftResources){
-
-          if(honeyCake.name.indexOf("每日赠送")>-1){
-               honeyCake.gachaTicket = remainingDays
-          }
-          if(honeyCake.name.indexOf("矿区")>-1||honeyCake.name.indexOf("红包群")>-1){
-               honeyCake.orundum = remainingDays*600
-          }
+      if (selectedSchedule.value.dailyGiftResources) {
+        if (honeyCake.name.indexOf("每日赠送") > -1) {
+          honeyCake.gachaTicket = getPoolRemainingDays(honeyCake.end)
+        }
+        if (honeyCake.name.indexOf("矿区") > -1 || honeyCake.name.indexOf("红包墙") > -1) {
+          const remainingDays = getPoolRemainingDays(honeyCake.end)
+          honeyCake.orundum = remainingDays * 600
+        }
       }
 
-      if(honeyCake.name.indexOf(`游戏维护(${currentMonth}月)`)>-1){
-            honeyCake.orundum = Math.floor(MaintenanceTimes/5)*200
-      }
+      // if(honeyCake.name.indexOf(`游戏维护(${currentMonth}月)`)>-1){
+      //       honeyCake.orundum = Math.floor(MaintenanceTimes/5)*200
+      // }
 
       originium += honeyCake.originium
       orundum += honeyCake.orundum
@@ -919,11 +920,19 @@ function gachaResourcesCalculation() {
     logs.push({key: "预测-十连", value: tenGachaTicket})
 
     if (calculationResult.value.otherTotalDraw > 0) {
-      pieChartDataTmp.push({value: calculationResult.value.otherTotalDraw, name: "其他"})
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.otherTotalDraw), name: "其他"})
     }
   }
 
-
+  function getPoolRemainingDays(endDate) {
+    console.log(endDate)
+    let remainingDays = Math.floor((endDate - new Date().getTime()) / 86400000)
+    if (remainingDays > 14) {
+      remainingDays = 14
+    }
+    console.log("离限定池结束还有" + remainingDays + "天")
+    return remainingDays
+  }
 
 
   calculationResult.value.totalDraw = Math.floor(calculationResult.value.orundum / 600 +
@@ -1066,7 +1075,7 @@ onMounted(() => {
 
   ElNotification({
     title: '2024.4.30',
-    message: h('i', { style: 'color: teal' }, '增加了官方免费月卡奖励项目'),
+    message: h('i', {style: 'color: teal'}, '增加了官方免费月卡奖励项目'),
   })
 })
 

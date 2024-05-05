@@ -6,28 +6,13 @@
 
 
 <template>
-  <div class="container1">
-
-    <div class="group1">
-
-      <div class="a">a
-      <div>1</div>
-        <div>1</div>
-        <div>1</div> <div>1</div>
-
-      </div>
-
-    </div>
-
-    <div class="group2">
-
-      <div class="b">b</div>
-
-      <div class="c">c</div>
-
-    </div>
+  <div>
 
   </div>
+  <div>
+
+  </div>
+
 </template>
 
 <style scoped>
