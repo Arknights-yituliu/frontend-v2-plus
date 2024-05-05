@@ -44,4 +44,12 @@ export default {
         })
     },
 
+    uploadQuestionnaireInfo(data){
+        return request({
+            url:`${api_name}/questionnaire/upload`,
+            method:'post',
+            data:data
+        })
+    }
+
 }

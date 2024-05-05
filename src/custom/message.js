@@ -19,17 +19,17 @@ const colorStyle = {
     success: {
         color: '#3A973AFF',
         background: '#e2ffdb',
-        borderColor: '#a8ffc1' // 深绿色
+        borderColor: '#dbffe4' // 深绿色
     },
     warn: {
         color: '#fc7303',
         background: '#fcf6ed',
-        borderColor: '#c56c02' // 深橙色
+        borderColor: '#ffc885' // 深橙色
     },
     error: {
         color: '#FF4E4EFF',
         background: '#F7E3E3FF',
-        borderColor: '#ffa6a6' // 深红色
+        borderColor: '#ffc5c5' // 深红色
     }
 };
 

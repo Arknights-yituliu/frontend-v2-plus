@@ -579,7 +579,7 @@ import {cMessage} from "/src/custom/message.js";
 import {filterByCharacterProperty, professionDict, yearDict} from "./js/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import operatorStatistical from "/src/pages/survey/js/operatorStatistical"
 import surveyApi from "/src/api/userInfo";
-import surveyOperatorApi from "/src/api/surveyOperator"
+import surveyOperatorApi from "/src/api/survey"
 import sklandApi from '/src/pages/survey/js/skland'
 import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";

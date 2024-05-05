@@ -47,7 +47,11 @@ function initData(itemList){
     }
     const profession = professionDictJSON.find(t => t.value === agent.profession)
     agent.professionName = profession.label // 职业名称
-    agent.subProfessionName = profession.children.find(t => t.value === agent.subProfessionId).label // 分支名称
+    const professionChildInfo = profession.children.find(t => t.value === agent.subProfessionId);
+    if(professionChildInfo){
+      agent.subProfessionName = professionChildInfo.label // 分支名称
+    }
+
     agent.cost = agent.cost.toFixed(2) // 材料消耗格式化
     agentList.value.push(agent)
   }

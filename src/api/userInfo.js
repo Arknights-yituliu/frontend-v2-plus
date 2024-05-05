@@ -3,30 +3,6 @@ import request from "/src/api/request"
 const api_name = `/survey`
 
 export default {
-  manualUploadOperatorBox(data) {
-    return request({
-      headers: {
-        "Content-Type": "application/json",
-      },
-      url: `maa/upload/operBox/manual`,
-      method: "post",
-      data: data,
-    })
-  },
-
-  getOperatorDataResult() {
-    return request({
-      url: `maa/operator/result`,
-      method: "get",
-    })
-  },
-
-  maaStatistical() {
-    return request({
-      url: `maa/recruit/statistical`,
-      method: "get",
-    })
-  },
 
   /**
    * 注册
@@ -95,18 +71,6 @@ export default {
     })
   },
 
-  /**
-   * 通过cred找回账号
-   * @param data
-   * @returns {*}
-   */
-  loginByCred(data){
-    return request({
-      url: `${api_name}/user/login/cred`,
-      method: "post",
-      data: data,
-    })
-  },
 
   /**
    * 找回用户填写的干员数据
@@ -129,32 +93,5 @@ export default {
     })
   },
 
-  uploadCharacterByExcel(file, token) {
-    return request({
-      url: `${api_name}/character/import/excel?token=${token}`,
-      method: "post",
-      data: file,
-    })
-  },
 
-
-  uploadCharacterBySKLand(data){
-    return request({
-      url: `${api_name}/character/import/skland`,
-      method: "post",
-      data: data,
-    })
-  },
-
-
-
-
-
-  uploadScore(scoreList, token) {
-    return request({
-      url: `${api_name}/score/upload?token=${token}`,
-      method: "post",
-      data: scoreList,
-    })
-  },
 }

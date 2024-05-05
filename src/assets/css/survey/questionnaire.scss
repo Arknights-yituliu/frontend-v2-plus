@@ -1,0 +1,57 @@
+.questionnaire-page{
+
+  .question{
+    width: 80%;
+    margin: auto;
+  }
+
+  .operator-team{
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
+
+  }
+
+  .operator-team-item{
+    margin: 4px;
+    text-align: center;
+    font-size: 14px;
+    box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
+  }
+
+  .profession-checkbox{
+    margin:20px 0;
+  }
+
+  .operator-checkbox{
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .operator-option{
+    width: 96px;
+    margin: 8px;
+    text-align: center;
+    font-size: 14px;
+    box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
+    //border: 1px solid red;
+  }
+
+  .operator-avatar{
+    width: 80px;
+    height: 80px;
+    margin: auto;
+    position: relative;
+  }
+
+  .operator-option span{
+    display: block;
+  }
+
+  .operator-avatar div{
+    position: absolute;
+    transform: scale(0.44444);
+    top: -50px;
+    left: -50px;
+  }
+}

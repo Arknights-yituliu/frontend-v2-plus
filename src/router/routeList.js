@@ -113,6 +113,15 @@ const routes = [
         // component: Notice
     },
     {
+        path: '/survey/questionnaire',
+        text: '干员携带率问卷',
+        name: 'Questionnaire',
+        display: true,
+        module: 'survey',
+        icon: "survey2",
+        component: () => import('/src/pages/survey/questionnaire.vue')
+    },
+    {
         path: '/survey/rank',
         text: '干员练度调查结果',
         name: 'OperatorRank',
