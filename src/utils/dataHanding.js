@@ -11,6 +11,16 @@ function timeStringToSeconds(timeString) {
     return hours * 3600 + minutes * 60 + seconds
 }
 
+// 最多保留2位小数
+function retainUpToTwoDecimalPlaces(number) {
+    // 将数值转换为字符串
+    let numString = number.toString();
+    // 使用正则表达式匹配整数和最多两位小数
+    let matched = numString.match(/^-?\d+(\.\d{0,2})?/);
+    // 将匹配到的内容转换回数值
+    return parseFloat(matched ? matched[0] : 0);
+}
+
 //提取Date对象的时分秒并转换为总秒数
 function convertToSeconds(date) {
     const hours = date.getHours();
@@ -44,4 +54,4 @@ function getSecondsSinceMidnight() {
     return secondsSinceMidnight;
 }
 
-export {timeStringToSeconds, convertToSeconds, secondsToTimeString, getSecondsSinceMidnight}
+export {timeStringToSeconds, convertToSeconds, secondsToTimeString, getSecondsSinceMidnight, retainUpToTwoDecimalPlaces}
