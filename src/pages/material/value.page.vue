@@ -222,10 +222,7 @@ function exportItemValueExcel() {
     ])
   }
   exportExcel('物品价值表', itemList)
-  let link = document.createElement('a')
-  link.download = `item_value_table.json`
-  link.href = 'data:text/plain,' + JSON.stringify(itemList)
-  link.click()
+
 }
 
 
