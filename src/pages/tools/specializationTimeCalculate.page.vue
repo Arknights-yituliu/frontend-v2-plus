@@ -8,7 +8,7 @@ let collapseVisible = ref(['HalfOperatorCalculate'])
 
 <template>
   <el-collapse style="max-width: 90%;margin: auto" v-model="collapseVisible" accordion>
-      <half-operator-calculate/>
+    <half-operator-calculate/>
   </el-collapse>
 </template>
 

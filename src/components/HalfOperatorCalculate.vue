@@ -1,24 +1,32 @@
 <script setup>
 import {reactive, ref, onMounted} from "vue"
-import {convertToSeconds, secondsToTimeString, getSecondsSinceMidnight} from "/src/utils/dataHanding"
-import {Clock,QuestionFilled} from "@element-plus/icons-vue";
+import {
+  convertToSeconds,
+  secondsToTimeString,
+  getSecondsSinceMidnight,
+} from "/src/utils/dataHanding"
+import {Clock} from "@element-plus/icons-vue";
 
-let drawerVisible = ref(false)
+const algorithmVisible = ref(false) //算法标识
+const usageGuideVisible = ref(false) //使用指南
 
 // 换减半干员专精
 const halfOperatorParams = reactive({
   efficiency: null, //当前专精助手干员提供的效率
   isFit: false, //是否享受职业专精效率加成
   halfOperatorAddition: 0.3, //减半干员专精效率加成
+  hasAscalon: false, //控制中枢入驻阿斯卡纶
   remainder: null, //当前显示的剩余时间
   leadTime: 5, //默认提前五分钟提醒
   textShowType: null //提醒文字展示类型
 })
+let nowEfficiency = ref(0) //当前效率
+let extraEfficiency = 0 //额外效率
 let state = ref("info") /*倒计时提醒状态标签*/
 let remainSeconds //当前显示剩余的总秒数
 let zeroEffRemainSeconds //实际剩余总秒数
 let zeroEffNeedTime //零效率下，减半干员的减半效果触发所需秒数
-let halfOperatorEfficiency //减半干员的实际效率
+let halfOperatorEfficiency = ref(0) //减半干员的实际效率
 let timeDifference //极限触发时差，当前显示剩余时间等价秒数 和 到换减半干员专精时间点时显示时间等价秒数 的差
 let ampleTime //余裕时间
 let remindTime //提醒时间字符串
@@ -29,14 +37,18 @@ onMounted(() => {
 })
 
 function calculateTime() {
+  //额外效率，已包含训练室基础效率、阿斯卡纶中枢效率
+  extraEfficiency = 0.05 + (halfOperatorParams.hasAscalon ? 0.05 : 0)
+  //当前效率
+  nowEfficiency.value = 1 + halfOperatorParams.efficiency + extraEfficiency
+  //减半干员效率
+  halfOperatorEfficiency.value = halfOperatorParams.isFit ? 1 + halfOperatorParams.halfOperatorAddition + extraEfficiency : 1 + extraEfficiency;
   if (halfOperatorParams.efficiency != null && halfOperatorParams.remainder != null) {
     remainSeconds = convertToSeconds(halfOperatorParams.remainder) //获取当前显示剩余时间的总秒数
-    zeroEffRemainSeconds = remainSeconds * (1 + halfOperatorParams.efficiency + 0.05) //计算零效率下，当前剩余的秒数，考虑到训练室自带的5%加成
-    //判断减半干员的效率
-    halfOperatorEfficiency = halfOperatorParams.isFit ? 1 + halfOperatorParams.halfOperatorAddition + 0.05 : 1 + 0.05;
-    zeroEffNeedTime = halfOperatorEfficiency * 5 * 60 * 60 //零效率下减半干员需要的秒数
+    zeroEffRemainSeconds = remainSeconds * nowEfficiency.value //计算零效率下，当前剩余的秒数，考虑额外加成
+    zeroEffNeedTime = halfOperatorEfficiency.value * 5 * 60 * 60 //零效率下减半干员需要的秒数
     timeDifference = zeroEffRemainSeconds - zeroEffNeedTime //同效率秒差
-    timeDifference /= (1 + halfOperatorParams.efficiency + 0.05) //补上已有的效率加成条件
+    timeDifference /= nowEfficiency.value //补上已有的效率加成条件
     ampleTime = timeDifference - halfOperatorParams.leadTime * 60 //计算余裕时间秒数
     if (ampleTime > 0) {
       //早于余裕时间点
@@ -71,8 +83,8 @@ function calculateTime() {
     </template>
     <el-form :model="halfOperatorParams">
       <transition-group name="list" tag="ul">
-        <li>
-          <el-form-item label="已入驻的专精助手效率">
+        <li :key="1">
+          <el-form-item label="当前已入驻的专精助手干员提供的效率">
             <el-input-number
                 v-model="halfOperatorParams.efficiency"
                 :min="0"
@@ -85,21 +97,29 @@ function calculateTime() {
             />
           </el-form-item>
         </li>
-        <li>
-          <el-form-item label="是否可触发职业效率加成">
+        <li :key="2">
+          <el-form-item label="阿斯卡纶是否入驻控制中枢">
+            <el-switch
+                v-model="halfOperatorParams.hasAscalon"
+                @change="calculateTime"
+            />
+          </el-form-item>
+        </li>
+        <li :key="3">
+          <el-form-item label="减半干员是否可对专精干员触发职业效率加成">
             <el-switch
                 v-model="halfOperatorParams.isFit"
                 @change="calculateTime"
             />
           </el-form-item>
         </li>
-        <li v-if="halfOperatorParams.isFit" style="display: inline-block">
+        <li :key="4" v-if="halfOperatorParams.isFit" style="display: inline-block">
           <el-tooltip
               effect="light"
-              content="艾丽妮-30% 覆盖近卫/狙击职业；逻各斯-30% 覆盖术师/辅助职业"
+              content="示例数据：艾丽妮-30% 覆盖近卫/狙击职业；逻各斯-30% 覆盖术师/辅助职业"
               placement="right"
           >
-            <el-form-item label="减半干员职业效率加成">
+            <el-form-item label="减半干员提供的职业效率加成">
               <el-input-number
                   v-model="halfOperatorParams.halfOperatorAddition"
                   :min="0"
@@ -111,8 +131,8 @@ function calculateTime() {
             </el-form-item>
           </el-tooltip>
         </li>
-        <li>
-          <el-form-item label="专精剩余时间">
+        <li :key="5">
+          <el-form-item label="当前显示的专精剩余时间">
             <el-time-picker
                 v-model="halfOperatorParams.remainder"
                 format="HH:mm:ss"
@@ -121,7 +141,7 @@ function calculateTime() {
             />
           </el-form-item>
         </li>
-        <li>
+        <li :key="6">
           <el-form-item label="提前提醒（分钟）">
             <el-input-number
                 v-model="halfOperatorParams.leadTime"
@@ -132,25 +152,31 @@ function calculateTime() {
             />
           </el-form-item>
         </li>
-        <li>
+        <li :key="7">
           <el-text :type="state">{{ remindText }}</el-text>
         </li>
-        <li>
+        <li :key="8">
           <el-link type="primary" :underline="false" style="float: right; color: blue;margin-right: 10px"
-                   @click="drawerVisible = true">算法标注
+                   @click="algorithmVisible = true">算法标注
+          </el-link>
+          <el-link type="primary" :underline="false" style="float: right; color: blue;margin-right: 10px"
+                   @click="usageGuideVisible = true">使用指南
           </el-link>
         </li>
       </transition-group>
     </el-form>
     <el-drawer
         title="换专精减半干员的专精时间点算法"
-        v-model="drawerVisible"
+        v-model="algorithmVisible"
         direction="rtl"
         size="70%"
     >
       <div class="algorithm-content">
         <h2>算法中用到的各个变量</h2>
         <ul>
+          <li><b>extraEfficiency</b>: 训练时附带的额外效率，包含训练室基础效率和非入驻训练室干员提供的效率。</li>
+          <li><b>nowEfficiency</b>: 未换减半干员之前具有的总效率。</li>
+          <li><b>halfOperatorEfficiency</b>: 换减半干员之后具有的总效率。</li>
           <li><b>efficiency</b>: 当前专精助手干员提供的效率。</li>
           <li><b>isFit</b>: 目标是否享受职业专精效率加成。</li>
           <li><b>remainder</b>: 当前显示的剩余时间。</li>
@@ -178,14 +204,18 @@ function calculateTime() {
         <h2>算法代码</h2>
         <pre class="code-block">
 function calculateTime() {
+  //额外效率，已包含训练室基础效率、阿斯卡纶中枢效率
+  extraEfficiency = 0.05 + (halfOperatorParams.hasAscalon ? 0.05 : 0)
+  //当前效率
+  nowEfficiency.value = 1 + halfOperatorParams.efficiency + extraEfficiency
+  //减半干员效率
+  halfOperatorEfficiency.value = halfOperatorParams.isFit ? 1 + halfOperatorParams.halfOperatorAddition + extraEfficiency : 1 + extraEfficiency;
   if (halfOperatorParams.efficiency != null && halfOperatorParams.remainder != null) {
     remainSeconds = convertToSeconds(halfOperatorParams.remainder) //获取当前显示剩余时间的总秒数
-    zeroEffRemainSeconds = remainSeconds * (1 + halfOperatorParams.efficiency + 0.05) //计算零效率下，当前剩余的秒数，考虑到训练室自带的5%加成
-    //判断减半干员的效率
-    halfOperatorEfficiency = halfOperatorParams.isFit ? 1 + halfOperatorParams.halfOperatorAddition + 0.05 : 1 + 0.05;
-    zeroEffNeedTime = halfOperatorEfficiency * 5 * 60 * 60 //零效率下减半干员需要的秒数
+    zeroEffRemainSeconds = remainSeconds * nowEfficiency.value //计算零效率下，当前剩余的秒数，考虑额外加成
+    zeroEffNeedTime = halfOperatorEfficiency.value * 5 * 60 * 60 //零效率下减半干员需要的秒数
     timeDifference = zeroEffRemainSeconds - zeroEffNeedTime //同效率秒差
-    timeDifference /= (1 + halfOperatorParams.efficiency + 0.05) //补上已有的效率加成条件
+    timeDifference /= nowEfficiency.value //补上已有的效率加成条件
     ampleTime = timeDifference - halfOperatorParams.leadTime * 60 //计算余裕时间秒数
     if (ampleTime > 0) {
       //早于余裕时间点
@@ -206,6 +236,41 @@ function calculateTime() {
     </pre>
         <el-text tag="sub" size="small" class="tip-text">感谢网友“一般路过魔界人”的提醒(・∀・)</el-text>
       </div>
+    </el-drawer>
+    <el-drawer
+        title="使用指南"
+        v-model="usageGuideVisible"
+        direction="rtl"
+        size="70%"
+    >
+      <img style="width: 100%;" src="/image/specialization/introduce.png"/>
+      <ol style="font-size:medium">
+        <li>
+          点击查看并记录专精剩余时间，填入“当前显示的专精剩余时间”栏中，如04:50:28
+        </li>
+        <li>
+          以小数形式将先手干员的专精效率填入“当前已入驻的专精助手干员提供的效率”栏中，如0.6
+        </li>
+        <li>
+          根据专精干员职业情况，选择是否启用“减半干员是否可对专精干员触发职业效率加成”，如艾丽妮对近卫、狙击职业有0.3加成，逻各斯对术士、辅助职业有0.3加成
+        </li>
+        <li>
+          <el-tooltip
+              effect="light"
+              content="若有阿斯卡纶等训练室外提供额外专精效率的干员，则额外效率补充至先手干员和减半干员的效率中，如0.6→0.65，0.3→0.35"
+              placement="top"
+          >
+            若控制中枢入驻了阿斯卡纶，则启用“阿斯卡纶是否入驻控制中枢”
+          </el-tooltip>
+        </li>
+        <li>
+          提前提醒（分钟）默认为5分钟，对应结果文本“可以制定XX:XX:XX时间点的闹钟”
+        </li>
+        <li>
+          填写完成即可自动计算输出结果，提示需要替换减半干员（艾丽妮/逻各斯）的时间点，或者提示期望余裕时间不足，亦或者已无法触发减半效果
+        </li>
+      </ol>
+<!--      <el-text tag="sub" size="small" class="tip-text">感谢网友“一般路过魔界人”的提醒(・∀・)</el-text>-->
     </el-drawer>
   </el-collapse-item>
 </template>
@@ -232,12 +297,12 @@ function calculateTime() {
   color: lightgray;
 }
 
-ul{
+ul {
   padding-left: 1vw;
-}
 
-li {
-  list-style: none;
+  li {
+    list-style: none;
+  }
 }
 
 .list-move,
