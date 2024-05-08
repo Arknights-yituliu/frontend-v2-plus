@@ -3,6 +3,13 @@
     "author": "Milkwind",
     "type": "update",
     "module": "自定义组件",
+    "date": "2024.05.08",
+    "description": "[专精时间减半计算器]新增使用指南"
+  },
+  {
+    "author": "Milkwind",
+    "type": "update",
+    "module": "自定义组件",
     "date": "2024.05.07",
     "description": "[专精时间减半计算器]新增阿斯卡纶中枢参数"
   },
