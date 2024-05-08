@@ -87,7 +87,8 @@
             </el-collapse-item>
             <el-collapse-item name="3" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><i class="iconfont icon-calculator"></i><b style="margin-left: 4px">计算细节</b></span>
+                <span style="font-size: large; display: flex; align-items: center"><i
+                    class="iconfont icon-calculator"></i><b style="margin-left: 4px">计算细节</b></span>
               </template>
               <ul style="padding-left: 2em">
                 <li>数据选择范围为<a href="https://penguin-stats.cn/">企鹅物流</a>中的<b>常驻关卡</b>以保证价值的稳定性。
@@ -111,7 +112,8 @@
             </el-collapse-item>
             <el-collapse-item name="4" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><i class="iconfont icon-publicity"></i><b style="margin-left: 4px">算法公示卡</b></span>
+                <span style="font-size: large; display: flex; align-items: center"><i
+                    class="iconfont icon-publicity"></i><b style="margin-left: 4px">算法公示卡</b></span>
               </template>
               <table id="al_card">
                 <tbody>
@@ -220,10 +222,7 @@ function exportItemValueExcel() {
     ])
   }
   exportExcel('物品价值表', itemList)
-  let link = document.createElement('a')
-  link.download = `item_value_table.json`
-  link.href = 'data:text/plain,' + JSON.stringify(itemList)
-  link.click()
+
 }
 
 
@@ -239,29 +238,48 @@ function getItemRarityColor(rarity) {
   if (rarity === 5) return 'border-color: var(--orange)'
 }
 
+function formattedItemDisplayList(itemList) {
+
+}
+
 
 onMounted(() => {
 
   materialAPI.getItemValueTable(0.625).then(response => {
     itemValueList.value = response.data
+    let tmpList = []
     for (const item of response.data) {
-      if (item.cardNum > 90) continue
-      if (!itemValueCollect.value[item.cardNum - 1]) {
-        itemValueCollect.value[item.cardNum - 1] = []
+      const sortId = item.cardNum
+      if (sortId > 90) {
+        continue
       }
-      itemValueCollect.value[item.cardNum - 1].push(item)
+      let list = tmpList[sortId]
+      if (list) {
+        list.push(item)
+      } else {
+        list = [item]
+      }
+      tmpList[sortId] = list
+    }
+
+    const index = 0
+    for(const list of tmpList){
+      console.log(list)
+      if(list&&list.length>0){
+        if(list.length<9){
+          itemValueCollect.value.push(list)
+        }else {
+          itemValueCollect.value.push(list.slice(0,9))
+          itemValueCollect.value.push(list.slice(9))
+        }
+
+      }
 
     }
   })
 });
-</script>
 
 
-<script>
-export const documentProps = {
-  title: "一图流 - 物品价值一览",
-  description: "明日方舟物品价值一览,价值表",
-};
 </script>
 
 <style scoped>
