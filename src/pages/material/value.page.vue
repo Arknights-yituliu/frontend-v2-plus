@@ -245,23 +245,20 @@ onMounted(() => {
   materialAPI.getItemValueTable(0.625).then(response => {
     itemValueList.value = response.data
     for (const item of response.data) {
-      if (item.cardNum > 90) continue
+
+      if (item.cardNum > 90) {
+        continue
+      }
+
       if (!itemValueCollect.value[item.cardNum - 1]) {
         itemValueCollect.value[item.cardNum - 1] = []
       }
+
       itemValueCollect.value[item.cardNum - 1].push(item)
 
     }
   })
 });
-</script>
-
-
-<script>
-export const documentProps = {
-  title: "一图流 - 物品价值一览",
-  description: "明日方舟物品价值一览,价值表",
-};
 </script>
 
 <style scoped>
