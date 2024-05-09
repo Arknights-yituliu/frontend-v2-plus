@@ -73,6 +73,11 @@ function calculateTime() {
   }
 }
 
+//使用指南作者彩蛋
+function revealAuthor(){
+  window.open('https://space.bilibili.com/22606843?spm_id_from=333.337.0.0', '_blank');
+}
+
 </script>
 
 <template>
@@ -243,34 +248,38 @@ function calculateTime() {
         direction="rtl"
         size="70%"
     >
-      <img style="width: 100%;" src="/image/specialization/introduce.png"/>
-      <ol style="font-size:medium">
-        <li>
-          点击查看并记录专精剩余时间，填入“当前显示的专精剩余时间”栏中，如04:50:28
-        </li>
-        <li>
-          以小数形式将先手干员的专精效率填入“当前已入驻的专精助手干员提供的效率”栏中，如0.6
-        </li>
-        <li>
-          根据专精干员职业情况，选择是否启用“减半干员是否可对专精干员触发职业效率加成”，如艾丽妮对近卫、狙击职业有0.3加成，逻各斯对术士、辅助职业有0.3加成
-        </li>
-        <li>
-          <el-tooltip
-              effect="light"
-              content="若有阿斯卡纶等训练室外提供额外专精效率的干员，则额外效率补充至先手干员和减半干员的效率中，如0.6→0.65，0.3→0.35"
-              placement="top"
-          >
-            若控制中枢入驻了阿斯卡纶，则启用“阿斯卡纶是否入驻控制中枢”
-          </el-tooltip>
-        </li>
-        <li>
-          提前提醒（分钟）默认为5分钟，对应结果文本“可以制定XX:XX:XX时间点的闹钟”
-        </li>
-        <li>
-          填写完成即可自动计算输出结果，提示需要替换减半干员（艾丽妮/逻各斯）的时间点，或者提示期望余裕时间不足，亦或者已无法触发减半效果
-        </li>
-      </ol>
-<!--      <el-text tag="sub" size="small" class="tip-text">感谢网友“一般路过魔界人”的提醒(・∀・)</el-text>-->
+      <div style="position: relative">
+        <img style="width: 100%;" src="/image/specialization/introduce.png"/>
+        <ol style="font-size:medium">
+          <li>
+            点击查看并记录专精剩余时间，填入“当前显示的专精剩余时间”栏中，如04:50:28
+          </li>
+          <li>
+            以小数形式将先手干员的专精效率填入“当前已入驻的专精助手干员提供的效率”栏中，如0.6
+          </li>
+          <li>
+            根据专精干员职业情况，选择是否启用“减半干员是否可对专精干员触发职业效率加成”，如艾丽妮对近卫、狙击职业有0.3加成，逻各斯对术士、辅助职业有0.3加成
+          </li>
+          <li>
+            <el-tooltip
+                effect="light"
+                content="若有阿斯卡纶等训练室外提供额外专精效率的干员，则额外效率补充至先手干员和减半干员的效率中，如0.6→0.65，0.3→0.35"
+                placement="top"
+            >
+              若控制中枢入驻了阿斯卡纶，则启用“阿斯卡纶是否入驻控制中枢”
+            </el-tooltip>
+          </li>
+          <li>
+            提前提醒（分钟）默认为5分钟，对应结果文本“可以制定XX:XX:XX时间点的闹钟”
+          </li>
+          <li>
+            填写完成即可自动计算输出结果，提示需要替换减半干员（艾丽妮/逻各斯）的时间点，或者提示期望余裕时间不足，亦或者已无法触发减半效果
+          </li>
+        </ol>
+        <el-text tag="sub" size="small" class="easterEgg-text" @click="revealAuthor">
+          本文档由一位不愿透露名称的热心网友提供(⁎˃ᴗ˂⁎)
+        </el-text>
+      </div>
     </el-drawer>
   </el-collapse-item>
 </template>
@@ -295,6 +304,16 @@ function calculateTime() {
   right: 0;
   font-style: italic;
   color: lightgray;
+  user-select: none;
+}
+
+.easterEgg-text {
+  position: absolute;
+  bottom: -25px;
+  right: 0;
+  font-style: italic;
+  color: lightgray;
+  user-select: none;
 }
 
 ul {
