@@ -3,6 +3,17 @@ import StageRecommendation from '/src/pages/material/stageV3.page.vue'
 import GachaCalculator from '/src/pages/tools/gachaCalc.page.vue'
 import Notice from '/src/pages/layout/notice.vue'
 
+// {
+//     path: '/',  访问路径
+//     text: '关卡推荐',  导航展示的文本
+//     name: 'StageRecommendation',  路由名称
+//     display: true,   是否展示在导航栏
+//     module: 'material',  在导航栏中所属的模块
+//     icon: "item", 导航栏上的图标
+//     component: StageRecommendation  //引入对应的页面①
+//     component: () => import('/src/pages/material/store.page.vue') //引入对应的页面② 这种引入在不访问对应路径时，不会加载js
+// },
+
 const routes = [
     {
         path: '/',
