@@ -13,6 +13,9 @@ import {cMessage} from "../../custom/message.js";
 import {dateDiff} from '/src/utils/dateUtil.js'
 import {ElNotification} from "element-plus";
 
+import { useNotification } from "naive-ui";
+
+
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
 let honeyCakeTable = ref([])
@@ -89,30 +92,31 @@ let activityType = ref('联动限定')
 // end: Date 结束时间
 // disabled: boolean 是否禁用选项
 // activityType: string 活动类型
-// dailyGiftResources: boolean 活动是否赠送每日抽卡资源
+// dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
   {
-    name: '周年限定(5.15)',
-    start: new Date('2024/05/01 16:00:00'),
-    end: new Date('2024/05/15 04:01:00'),
-    activityType: '周年限定',
+    name: '夏活(8.15)',
+    start: new Date('2024/08/01 16:00:00'),
+    end: new Date('2024/08/15 04:01:00'),
+    activityType: '夏活限定',
     disabled: false,
     dailyGiftResources: true
   },
   {
-    name: '夏活(8.21)',
-    start: new Date('2024/08/01 16:00:00'),
-    end: new Date('2024/08/21 04:01:00'),
+    name: '周年(11.1)',
+    start: new Date('2024/11/01 16:00:00'),
+    end: new Date('2024/11/15 04:01:00'),
     activityType: '夏活限定',
-    disabled: false,
+    disabled: true,
     dailyGiftResources: true
-  }, {
-    name: '夏活(8.27)',
+  },
+  {
+    name: '新春',
     start: new Date('2024/08/27 16:00:00'),
     end: new Date('2024/08/27 04:01:00'),
     activityType: '夏活限定',
-    disabled: false,
-    dailyGiftResources: false
+    disabled: true,
+    dailyGiftResources: true
   }
 ]
 
@@ -870,7 +874,6 @@ function gachaResourcesCalculation() {
     let tenGachaTicket = 0
 
 
-
     const currentMonth = endDate.value.getMonth() + 1
     const MaintenanceTimes = endDate.value.getDate() - new Date().getDate()
     //循环预测奖励排期
@@ -1074,9 +1077,11 @@ onMounted(() => {
   getAndSortPackData()
 
   ElNotification({
-    title: '2024.4.30',
-    message: h('i', {style: 'color: teal'}, '增加了官方免费月卡奖励项目'),
+    title: '2024.5.15',
+    message: h('i', {style: 'color: teal'}, '更新了夏活攒抽排期 @罗德岛蜜饼工坊'),
   })
+
+
 })
 
 function keepTheDecimalPoint(num, decimalPlaces) {
