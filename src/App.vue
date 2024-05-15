@@ -1,13 +1,16 @@
 <template>
-  <div class="container color_var" id="container" :class="theme_type">
-    <my-aside></my-aside>
-    <loading ></loading>
-    <div class="header">
-      <my-header/>
-    </div>
-    <router-view>
-    </router-view>
-    <my-footer></my-footer>
+
+    <div class="container color_var" id="container" :class="theme_type">
+      <my-aside></my-aside>
+      <loading></loading>
+      <div class="header">
+        <my-header/>
+      </div>
+      <div class="main">
+        <router-view>
+        </router-view>
+      </div>
+      <my-footer></my-footer>
   </div>
 
 </template>
@@ -47,8 +50,7 @@ import myFooter from "/src/pages/layout/myfooter.vue";
 import myAside from "/src/pages/layout/aside.vue";
 import loading from '/src/pages/layout/loading.vue'
 import {onMounted, ref} from "vue";
-import { onBeforeRouteUpdate, useRouter } from 'vue-router'
-
+import {onBeforeRouteUpdate, useRouter} from 'vue-router'
 
 
 let theme_type = ref("theme_init")
@@ -103,9 +105,9 @@ onMounted(() => {
 }
 
 body {
-  font-family: 'Roboto',sans-serif ;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
-  width:100%;
+  width: 100%;
   height: 100vh;
 }
 </style>

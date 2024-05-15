@@ -149,18 +149,47 @@
 
 
   /*干员统计弹窗卡片样式*/
-  .statistical-popup-context {
-    padding: 12px;
-    max-width: 800px;
+  .statistical-popup-container {
+    padding: 8px;
+    max-width: 500px;
     font-size: 16px;
+    background-color: #ebebeb;
+
+    .detail-card {
+      padding: 4px;
+      background-color: white;
+      border-radius: 3px;
+      box-shadow: 1px 1px 1px var(--c-box-shadow-color);
+
+    }
+
+    .card-h2{
+       margin: 8px 0;
+    }
+    
+    .card-h3{
+      margin: 8px 0;
+    }
+
   }
 
+
+  .not-own-operator {
+    width: 60px;
+    height: 74px;
+    text-align: center;
+  }
+
+  .not-own-operator-name {
+    font-size: 12px;
+    line-height: 12px;
+  }
 
   .not-own-avatar-sprite {
     width: 50px;
     height: 50px;
+    margin: 0 auto;
     position: relative;
-    margin: 8px;
     box-shadow: 1px 1px 8px var(--c-box-shadow-color);
   }
 

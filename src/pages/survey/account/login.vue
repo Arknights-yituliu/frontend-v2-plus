@@ -119,7 +119,7 @@ import {onMounted, ref} from "vue";
 import {cMessage} from "/src/custom/message";
 
 import surveyApi from "/src/api/userInfo";
-import {getUserInfo} from "/src/pages/survey/js/userData.js";
+import {getUserInfo} from "/src/pages/survey/service/userData.js";
 
 let inputData = ref({
   userName: '',

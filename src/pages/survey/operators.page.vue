@@ -85,9 +85,9 @@
           <span class="control-line-label" style="width: 80px;">职业</span>
           <div class="control-checkbox">
             <div :class="selectedBtn('profession', profession.value)"
-                v-for="(profession,index) in professionDict"
-                :key="index"
-                @click="addFilterCondition('profession', profession.value)">
+                 v-for="(profession,index) in professionDict"
+                 :key="index"
+                 @click="addFilterCondition('profession', profession.value)">
               {{ profession.label }}
             </div>
           </div>
@@ -227,7 +227,7 @@
         <div class="control-line-label">导入导出</div>
         <div class="control-line">
           <div class="control-checkbox">
-            <button class="btn btn-green" @click="exportExcel()">导出为Excel</button>
+            <button class="btn btn-green" @click="exportOperatorExcel()">导出为Excel</button>
           </div>
         </div>
 
@@ -251,7 +251,7 @@
             <div v-for="(binding,index) in bindingList" :key="index"
                  class="btn btn-blue" :class="chooseUidClass(binding.uid)"
                  @click="importSKLandOperatorDataByUid(binding)">
-              {{ `${binding.channelName}-${binding.nickName}-${binding.uid}`}}
+              {{ `${binding.channelName}-${binding.nickName}-${binding.uid}` }}
             </div>
           </div>
 
@@ -269,7 +269,26 @@
     <!--    干员统计弹窗-->
     <c-popup v-model="statisticalPopupVisible">
       <!--          干员统计-->
-      <div class="statistical-popup-context not-own-avatar-sprite-variables">
+      <div class="statistical-popup-container not-own-avatar-sprite-variables">
+        <!--        <div class="detail-card">-->
+        <!--          <h2 class="card-h2">博士招募情况</h2>-->
+        <!--          <span> Dr.{{ userData.userName }}，您的招募干员情况为-->
+        <!--            {{ statisticalResultV2.own }}/{{ statisticalResultV2.count }}-->
+        <!--          </span>-->
+        <!--          <div v-show="statisticalResultV2.count-statisticalResultV2.own>0">-->
+        <!--            <h3>未招募干员如下</h3>-->
+        <!--            <div class="not-own-operator-wrap">-->
+        <!--              <div class="not-own-operator" v-for="(operator,index) in statisticalResultV2.notOwn" :key="index">-->
+        <!--                <div class="not-own-avatar-sprite">-->
+        <!--                  <div :class="getAvatarSprite(operator.charId)"></div>-->
+        <!--                  &lt;!&ndash;              <span class="sprite-alt" style="top:70px">{{ operator.name }}</span>&ndash;&gt;-->
+        <!--                </div>-->
+        <!--                <span class="not-own-operator-name">{{operator.name}}</span>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+
         <div class="o-statistical-card">
           <h2>博士招募情况</h2>
           <span class="statistical-module-text"> Dr.{{ userData.userName }}，您总计招募了{{
@@ -284,7 +303,7 @@
                class="statistical-module-text">
             未招募的干员是：
           </div>
-          <div class="not_own_operator_wrap">
+          <div class="not-own-operator-wrap">
             <div class="not-own-avatar-sprite"
                  v-for="(operator,index) in statisticalResult.total.notOwn" :key="index">
               <div :class="getAvatarSprite(operator.charId)"></div>
@@ -576,27 +595,28 @@
 
 <script setup>
 import {cMessage} from "/src/custom/message.js";
-import {filterByCharacterProperty, professionDict, yearDict} from "./js/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import operatorStatistical from "/src/pages/survey/js/operatorStatistical"
+import {filterByCharacterProperty, professionDict, yearDict} from "./service/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
 import surveyApi from "/src/api/userInfo";
 import surveyOperatorApi from "/src/api/survey"
-import sklandApi from '/src/pages/survey/js/skland'
+import sklandApi from '/src/pages/survey/service/skland'
 import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";
-import operatorRecommend from "/src/pages/survey/js/operatorRecommend";
+import operatorRecommend from "/src/pages/survey/service/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
+import {exportExcel} from '/src/utils/exportExcel.js'
 
 
 // import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
 import {debounce} from "/src/utils/debounce";
-import {getUserInfo} from "/src/pages/survey/js/userData.js";
+import {getUserInfo} from "/src/pages/survey/service/userData.js";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
 
-let userData = ref({uid:0,userName: "未登录",akUid:"0", status: -100, token: void 0});  //用户信息
+let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});  //用户信息
 
 /**
  * 获取本地缓存的用户信息
@@ -670,6 +690,7 @@ function getOperatorData() {
   surveyApi.getSurveyOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
     let obj = {}
+    operatorTable.value = characterTable
     //转为前端的数据格式
     for (const item of list) {
       const sCharId = item.charId;
@@ -774,13 +795,30 @@ function importData() {
 /**
  * 导出评分表的excel
  */
-function exportExcel() {
-  const exportExcelLink = http + "survey/operator/export?token=" + userData.value.token;
-  const element = document.createElement("a");
-  element.download = "form.xlsx";
-  element.style.display = "none";
-  element.href = exportExcelLink;
-  element.click();
+function exportOperatorExcel() {
+  let list = [[
+    '干员名称', '是否已招募', '等级', '精英化等级', '潜能等级', '通用技能等级', '1技能专精等级',
+    '2技能专精等级', '3技能专精等级', 'X模组等级', 'Y模组等级', 'D模组等级'
+  ]]
+  for (const charId in operatorTable.value) {
+    const operator = operatorTable.value[charId]
+    list.push([
+      operator.name,
+      operator.own,
+      operator.level,
+      operator.elite,
+      operator.potential,
+      operator.mainSkill,
+      operator.skill1,
+      operator.skill2,
+      operator.skill3,
+      operator.modX,
+      operator.modY,
+      operator.modD,
+    ])
+  }
+
+  exportExcel('干员练度表',list)
 }
 
 
@@ -816,9 +854,9 @@ async function importSKLandOperatorData() {
   let akNickName = ""
 
   //获取绑定信息
-  const playerBinding = await sklandApi.getPlayBinding(userData.value.akUid,'', secret, cred);
+  const playerBinding = await sklandApi.getPlayBinding(userData.value.akUid, '', secret, cred);
 
-  if(!playerBinding){
+  if (!playerBinding) {
     return
   }
 
@@ -838,7 +876,7 @@ async function importSKLandOperatorData() {
  * @returns {Promise<void>}
  */
 async function importSKLandOperatorDataByUid(akPlayerBinding) {
-  const {uid,nickName,channelName,channelMasterId} = akPlayerBinding
+  const {uid, nickName, channelName, channelMasterId} = akPlayerBinding
 
   if (checkUserStatus(true)) {
     return;
@@ -847,20 +885,20 @@ async function importSKLandOperatorDataByUid(akPlayerBinding) {
   const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
 
   const params = {
-    requestUrl:'/api/v1/game/player/info',
-    requestParam:`uid=${uid}`,
-    secret:secret,
-    cred:cred,
-    akUid:uid,
-    akNickName:nickName,
-    channelMasterId:channelMasterId,
-    channelName:channelName,
+    requestUrl: '/api/v1/game/player/info',
+    requestParam: `uid=${uid}`,
+    secret: secret,
+    cred: cred,
+    akUid: uid,
+    akNickName: nickName,
+    channelMasterId: channelMasterId,
+    channelName: channelName,
   }
 
-  const playerInfo = await sklandApi.getPlayerInfo(params,characterTable)
+  const playerInfo = await sklandApi.getPlayerInfo(params, characterTable)
 
 
-  if(!playerInfo){
+  if (!playerInfo) {
     return
   }
 
@@ -873,7 +911,7 @@ async function importSKLandOperatorDataByUid(akPlayerBinding) {
 }
 
 
-async function getSklandOperatorData(akUid,akNickName){
+async function getSklandOperatorData(akUid, akNickName) {
   if (checkUserStatus(true)) {
     return;
   }
@@ -881,12 +919,12 @@ async function getSklandOperatorData(akUid,akNickName){
   const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
 
   const params = {
-    requestUrl:'/api/v1/game/player/info',
-    requestParam:`uid=${akUid}`,
-    secret:secret,
-    cred:cred,
-    akUid:akUid,
-    akNickName:akNickName
+    requestUrl: '/api/v1/game/player/info',
+    requestParam: `uid=${akUid}`,
+    secret: secret,
+    cred: cred,
+    akUid: akUid,
+    akNickName: akNickName
   }
 
   const playerInfo = await sklandApi.getPlayerInfo(params)
@@ -1179,14 +1217,16 @@ function getOperatorStatisticalResult() {
 //干员练度统计结果
 let statisticalResult = ref({
   max: [],
-  total: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity6: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity5: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity4: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity3: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity2: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity1: {notOwn: [],elite:0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  total: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity6: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity5: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity4: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity3: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity2: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
+  rarity1: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
 })
+
+let statisticalResultV2 = ref({})
 
 let statisticsDetail = ref([statisticalResult.value.rarity6, statisticalResult.value.rarity5,
   statisticalResult.value.rarity4, statisticalResult.value.rarity3,
@@ -1201,6 +1241,8 @@ function statistics() {
 
   statisticalResult.value = operatorStatistical.operatorStatistical(operatorTable.value)
 
+  statisticalResultV2.value = operatorStatistical.operatorStatisticalV2(operatorTable.value)
+  console.log(statisticalResultV2)
   statisticsDetail.value = [
     statisticalResult.value.rarity6, statisticalResult.value.rarity5,
     statisticalResult.value.rarity4, statisticalResult.value.rarity3,
@@ -1327,11 +1369,6 @@ onMounted(() => {
   margin: 2px;
 }
 
-.dev_table {
-  border-collapse: collapse;
-  text-align: center;
-  margin: 12px auto;
-}
 
 .dev_table td {
   border: 1px solid black;
@@ -1370,7 +1407,7 @@ onMounted(() => {
 }
 
 
-.not_own_operator_wrap {
+.not-own-operator-wrap {
   display: flex;
   flex-wrap: wrap;
   margin: auto;

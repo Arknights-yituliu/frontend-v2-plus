@@ -136,7 +136,7 @@ import surveyApi from "/src/api/userInfo"
 import operator_table_simple from '/src/static/json/survey/character_table_simple.json'
 import "/src/assets/css/survey/home.scss";
 import "/src/assets/css/survey/home.phone.scss";
-import {getUserInfo} from '/src/pages/survey/js/userData.js'
+import {getUserInfo} from '/src/pages/survey/service/userData.js'
 
 let avatar = []
 for (const char_id in operator_table_simple) {

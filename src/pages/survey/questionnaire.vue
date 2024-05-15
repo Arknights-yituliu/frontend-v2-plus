@@ -1,5 +1,5 @@
 <script setup>
-import {professionDict} from '/src/pages/survey/js/common.js'
+import {professionDict} from '/src/pages/survey/service/common.js'
 import characterTable from '/src/static/json/survey/character_table_simple.json'
 import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'

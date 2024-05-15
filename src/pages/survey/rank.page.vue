@@ -1,6 +1,6 @@
 <script setup>
 import "/src/assets/css/survey/rank.css";
-import { filterByCharacterProperty, professionDict} from "./js/common";
+import { filterByCharacterProperty, professionDict} from "./service/common";
 import {onMounted, ref} from "vue";
 import character_table_simple from "/src/static/json/survey/character_table_simple.json";
 

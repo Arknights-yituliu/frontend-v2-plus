@@ -642,7 +642,7 @@ function saveAndDownloadScheduleFile() {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
     cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value)
-    let link = document.createElement('a')
+    const link = document.createElement('a')
     link.download = `${scheduleId.value}.json`
     link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scheduleInfo.value, null, 2))
     link.click()

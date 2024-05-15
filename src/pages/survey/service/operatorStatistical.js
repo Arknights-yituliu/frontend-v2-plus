@@ -23,7 +23,7 @@ const zone_ranks = {
  */
 function calAPCost(operatorTable) {
 
-    let item_cost_count = {};
+    let itemCostCount = {};
 
     // 计算已持有干员用掉的材料总和
     for (let charId in operatorTable) {
@@ -32,16 +32,16 @@ function calAPCost(operatorTable) {
         const item_cost = getOperatorItemCost(operator.charId, operator.rarity, zone_ranks, operator, operator.name)
         //将材料消耗情况进行统计
         for (let id in item_cost) {
-            updateItemCostCount(item_cost_count, id, item_cost[id].count)
+            updateItemCostCount(itemCostCount, id, item_cost[id].count)
         }
 
     }
 
     //计算已持有干员用掉的材料明细集合
-    const {item_list, ap_cost_count} = getItemList(item_cost_count)
+    const {itemList, apCost} = getItemList(itemCostCount)
 
     return {
-        itemList: item_list, apCostCount: ap_cost_count, itemMap: item_cost_count
+        itemList: itemList, apCostCount: apCost, itemMap: itemCostCount
     }
 }
 
@@ -56,7 +56,7 @@ function calAPCost(operatorTable) {
 function getOperatorItemCost(charId, rarity, current_ranks, target_ranks, name) {
 
 
-    let item_cost = {}
+    let itemCost = {}
     //解构当前练度属性
     let current_elite = current_ranks.elite
     let current_level = current_ranks.level
@@ -88,7 +88,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks, name) 
     //统计材料消耗
     for (const itemId in levelApCost) {
         let count = levelApCost[itemId];
-        updateItemCostCount(item_cost, itemId, count)
+        updateItemCostCount(itemCost, itemId, count)
     }
 
     // 下面的是计算从当前练度到目标练度的消耗
@@ -97,7 +97,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks, name) 
     for (let i = current_elite; i < elite; i++) {
         for (let itemId in operatorItemCost.elite[i]) {
             let count = operatorItemCost.elite[i][itemId];
-            updateItemCostCount(item_cost, itemId, count)
+            updateItemCostCount(itemCost, itemId, count)
             // console.log(name,'精英'+i,"消耗：",itemId+'X.'+count)
         }
     }
@@ -106,7 +106,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks, name) 
     for (let i = current_mainSkill; i < mainSkill; i++) {
         for (let itemId in allSkill[i]) {
             let count = allSkill[i][itemId];
-            updateItemCostCount(item_cost, itemId, count)
+            updateItemCostCount(itemCost, itemId, count)
             // console.log(name,'技能'+i,"消耗：",itemId+'X.'+count)
         }
     }
@@ -119,7 +119,7 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks, name) 
         for (let rank = current_skill_ranks[index]; rank < target_skill_ranks[index]; rank++) {
             for (let itemId in skills[index][rank]) {
                 let count = skills[index][rank][itemId];
-                updateItemCostCount(item_cost, itemId, count)
+                updateItemCostCount(itemCost, itemId, count)
                 // console.log(name,index+'技能专精'+rank,"消耗：",itemId+'X.'+count)
             }
         }
@@ -134,40 +134,40 @@ function getOperatorItemCost(charId, rarity, current_ranks, target_ranks, name) 
             for (let itemId in operatorItemCost[`mod${type}`][i]) {
                 let count = operatorItemCost[`mod${type}`][i][itemId];
                 // console.log(name,'模组'+type,'等级',i,"消耗：",itemId+'X.'+count)
-                updateItemCostCount(item_cost, itemId, count)
+                updateItemCostCount(itemCost, itemId, count)
             }
         }
     }
 
-    return item_cost;
+    return itemCost;
 }
 
 /**
  * 将材料消耗情况转为根据材料等级分类的集合
- * @param item_cost_count 材料效率总和
- * @returns {{ap_cost_count: number, item_list: *[][]}}  总材料消耗，根据材料等级分类的集合
+ * @param itemCost 材料效率总和
+ * @returns {{itemList:*[][], apCost: number }}  总材料消耗，根据材料等级分类的集合
  */
-function getItemList(item_cost_count) {
-    let item_list = [[], [], [], [], []]
+function getItemList(itemCost) {
+    let itemList = [[], [], [], [], []]
 
-    let ap_cost_count = 0;
+    let apCost = 0;
 
-    for (const itemId in item_cost_count) {
-        const item = item_cost_count[itemId]
+    for (const itemId in itemCost) {
+        const item = itemCost[itemId]
         const rarity = item.rarity;
         const itemValueAp = item.itemValueAp
         const count = item.count;
-        ap_cost_count += (itemValueAp * count)
-        item_list[(5 - rarity)].push(item)
+        apCost += (itemValueAp * count)
+        itemList[(5 - rarity)].push(item)
     }
 
-    for (let list of item_list) {
+    for (let list of itemList) {
         list.sort((a, b) => {
             return b.count - a.count
         })
     }
 
-    return {item_list, ap_cost_count}
+    return {itemList, apCost}
 }
 
 
@@ -293,6 +293,9 @@ function operatorStatistical(operatorTable) {
         max: []
     }
 
+
+    let operator
+
     for (const key of ['total', 'rarity6', 'rarity5', 'rarity4', 'rarity3', 'rarity2', 'rarity1']) {
         operatorStatisticsResult[key] = {
             notOwn: [],
@@ -349,9 +352,9 @@ function operatorStatistical(operatorTable) {
                 continue
             }
 
-            const item_cost = getOperatorItemCost(operator.charId, operator.rarity, zone_ranks, operator, '')
-            const {ap_cost_count} = getItemList(item_cost);
-            operator.apCost = ap_cost_count
+            const itemCost = getOperatorItemCost(operator.charId, operator.rarity, zone_ranks, operator, '')
+            const {itemList, apCost} = getItemList(itemCost);
+            operator.apCost = apCost
             operatorStatisticsResult.max.push(operator)
         }
     }
@@ -374,10 +377,76 @@ function operatorStatistical(operatorTable) {
 }
 
 
+function operatorStatisticalV2(operatorList){
+
+    console.log(operatorList)
+
+    let operatorStatisticsResult = {
+        own: 0,
+        notOwn:[],
+        count:0,
+        elite:{rank0: 0, rank1: 0, rank2: 0},
+        skill: {rank1: 0, rank2: 0, rank3: 0},
+        mod: {rank1: 0, rank2: 0, rank3: 0},
+        apCostRanking:[],
+        itemCostDetail:[],
+        totalApCost:[]
+    }
+
+    for(const charId in operatorList){
+        const operator = operatorList[charId];
+        operatorStatisticsResult.count++
+        if(!operator.own){
+            operatorStatisticsResult.notOwn.push(operator)
+            continue
+        }
+        operatorStatisticsResult.own++
+
+        // 统计每个星级干员和全部星级干员的技能专精情况
+        const skills = [operator.skill1,operator.skill2,operator.skill3]
+        for(const rank of skills){
+            operatorStatisticsResult.skill[`rank${rank}`]++
+        }
+        // 统计每个星级干员和全部星级干员的模组升级情况
+        const equips = [operator.modX,operator.modY,operator.modD]
+        for(const rank of equips){
+            operatorStatisticsResult.mod[`rank${rank}`]++
+        }
+        operatorStatisticsResult.elite[`rank${operator.elite}`]++
+
+        //统计干员练度消耗理智情况
+        if (operator.rarity < 5) {
+            continue
+        }
+
+        const itemCost = getOperatorItemCost(operator.charId, operator.rarity, zone_ranks, operator, '')
+        const {itemList, apCost} = getItemList(itemCost);
+        operator.apCost = apCost
+        operatorStatisticsResult.apCostRanking.push(operator)
+    }
+
+
+    //将未持有干员根据星级倒序
+    operatorStatisticsResult.notOwn.sort((a, b) => {
+        return b.rarity - a.rarity
+    })
+
+    //所有干员的消耗理智根据星级倒序
+    operatorStatisticsResult.apCostRanking.sort((a, b) => {
+        return b.apCost - a.apCost
+    })
+
+
+    //选择练度最高的十位
+    operatorStatisticsResult.apCostRanking = operatorStatisticsResult.apCostRanking.slice(0, 15)
+
+    return operatorStatisticsResult
+}
+
 function operatorPlanCal(operator_data, operator_plan) {
 
     // 更新练度计划的材料明细集合
-    let item_cost_count = {};
+    let itemCostDetail = {};
 
     //计算练度计划的材料消耗
     for (const char_id in operator_plan) {
@@ -386,15 +455,15 @@ function operatorPlanCal(operator_data, operator_plan) {
             operator_data[char_id], operator_plan[char_id])
         // 更新练度计划的材料明细集合
         for (let id in item_cost) {
-            updateItemCostCount(item_cost_count, id, item_cost[id].count)
+            updateItemCostCount(itemCostDetail, id, item_cost[id].count)
         }
     }
 
     //计算练度计划的材料明细集合
-    const {item_list, ap_cost_count} = getItemList(item_cost_count)
+    const {itemList, apCost} = getItemList(itemCostDetail)
 
     return {
-        itemList: item_list, apCostCount: ap_cost_count, itemMap: item_cost_count
+        itemList: itemList, apCostCount: apCost, itemMap: itemCostDetail
     }
 }
 
@@ -445,12 +514,12 @@ function splitMaterial(highest_rarity, item_cost_obj) {
         }
     }
 
-    const {item_list} = getItemList(item_count)
+    const {itemList, apCost} = getItemList(item_count)
 
 
-    return item_list
+    return itemList
 }
 
 export default {
-    calAPCost, splitMaterial, operatorStatistical, operatorPlanCal
+    calAPCost, splitMaterial, operatorStatistical, operatorPlanCal , operatorStatisticalV2
 }
