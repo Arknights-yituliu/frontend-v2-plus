@@ -38,10 +38,13 @@ function chooseOperator(operator) {
       return
     }
   }
-
   operatorTeam.value.push(operator)
 }
 
+
+function removeOperator(operator){
+  operatorTeam.value = operatorTeam.value.filter(e => e.charId !== operator.charId)
+}
 
 chooseOperatorProfession('SNIPER')
 
@@ -76,8 +79,9 @@ function uploadSubmitContent() {
       <div class="operator-team">
         <div v-for="(operator,index) of operatorTeam" :key="index"
              class="operator-team-item">
-          <div class="operator-avatar">
+          <div class="team-operator-avatar" @click="removeOperator(operator)">
             <div :class="`bg-${operator.charId}`"></div>
+            <img src="/image/icon/cancel.png" alt="" class="cancel-icon">
           </div>
         </div>
       </div>

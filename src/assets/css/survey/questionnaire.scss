@@ -54,4 +54,28 @@
     top: -50px;
     left: -50px;
   }
+
+
+  .team-operator-avatar{
+    width: 80px;
+    height: 80px;
+    margin: auto;
+    position: relative;
+
+    .cancel-icon{
+      width: 20px;
+      position: absolute;
+      top: -5px;
+      left: 65px;
+    }
+
+  }
+
+  .team-operator-avatar div{
+    position: absolute;
+    transform: scale(0.44444);
+    top: -50px;
+    left: -50px;
+  }
+
 }
