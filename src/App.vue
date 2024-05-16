@@ -6,8 +6,8 @@
       <div class="header">
         <my-header/>
       </div>
-      <div>您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况</div>
       <div class="main">
+        <div v-show="devVer">您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况</div>
         <router-view>
         </router-view>
       </div>
