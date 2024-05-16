@@ -30,3 +30,11 @@ jobs:
           secret_key: ${{ secrets.COS_SECRET_KEY }}
           bucket: ${{ secrets.COS_BUCKET }}
           region: ap-beijing
+
+      - name: Refresh Tencent Cloud CDN Purge Cache
+        uses: keithnull/tencent-cloud-cdn-purge-cache@v1.0
+        env:
+          SECRET_ID: ${{ secrets.SECRET_ID}}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          PATHS: "https://dev.yituliu.cn/"
+          FLUSH_TYPE: "flush" # optional
