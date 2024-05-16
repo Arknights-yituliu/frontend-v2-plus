@@ -6,6 +6,7 @@
       <div class="header">
         <my-header/>
       </div>
+      <div>您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况</div>
       <div class="main">
         <router-view>
         </router-view>
@@ -55,6 +56,9 @@ import {onBeforeRouteUpdate, useRouter} from 'vue-router'
 
 let theme_type = ref("theme_init")
 
+
+let devVer = ref(false)
+
 onMounted(() => {
   const theme_v2 = localStorage.getItem("theme_v2");
 
@@ -62,6 +66,11 @@ onMounted(() => {
     theme_type.value = 'theme_dark'
   } else {
     theme_type.value = 'theme_light'
+  }
+
+  const currentDomain = window.location.hostname;
+  if(currentDomain.indexOf('dev')>-1){
+    devVer.value = true
   }
 
   document.getElementsByTagName("html").item(0).className = theme_v2 === "dark" ? "dark" : "light";

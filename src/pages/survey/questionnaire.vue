@@ -12,7 +12,7 @@ for (const charId in characterTable) {
   const character = characterTable[charId]
   const {profession, rarity} = character
   console.log(profession)
-  if (rarity < 6) continue
+  // if (rarity < 6) continue
   let list = operatorGroupByProfession.get(profession);
   if (list) {
     list.push(character)
@@ -22,6 +22,9 @@ for (const charId in characterTable) {
   }
 }
 
+operatorGroupByProfession.forEach((v,k)=>{
+  v.sort((a,b)=>b.rarity-a.rarity)
+})
 
 let operatorListByProfession = ref([])
 let operatorTeam = ref([])
@@ -75,7 +78,7 @@ function uploadSubmitContent() {
 
     <div class="question">
 
-      <h1>攻略新地图时，你会选择哪12位干员？</h1>
+      <div class="question-title">攻略新地图时，你会选择哪些干员？</div>
       <div class="operator-team">
         <div v-for="(operator,index) of operatorTeam" :key="index"
              class="operator-team-item">
