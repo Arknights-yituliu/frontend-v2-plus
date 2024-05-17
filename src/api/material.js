@@ -67,7 +67,7 @@ export default {
    */
   getNewChapterStage(){
     return request({
-      url: `stage/chapter?expCoefficient=0.625&sampleSize=300&zone=13-`,
+      url: `stage/chapter?expCoefficient=0.625&sampleSize=300&zoneCode=14-`,
       method: "get",
     });
   },

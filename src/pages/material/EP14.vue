@@ -4,13 +4,13 @@
     <div style="height: 210px"></div>
     <!-- 标题 -->
     <div style="text-align: center; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
-      <img src="/image/website/ico64.png" style="padding: 4px 0px 0px 0px; border-radius: 8px" />
+      <img src="/image/website/ico64.png" style="padding: 4px 0px 0px 0px; border-radius: 8px"  alt=""/>
       <div style="font-size: 32px; vertical-align: top; margin: 12px; display: inline-block">明日方舟一图流 EP13专题页面</div>
     </div>
     <!-- 简单说明 -->
     <div style="padding: 8px 16px; font-style: italic; line-height: 32px; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
-      上半页集中展示新章节<b>掉落数据</b><br />
-      下半页为战备支援的<b>刷图攻略</b>
+<!--      上半页集中展示新章节<b>掉落数据</b><br />-->
+<!--      下半页为战备支援的<b>刷图攻略</b>-->
       <div style="font-size: 14px">*转载本页内容需注明来源</div>
     </div>
     <!-- 数据补全计划 -->
@@ -41,7 +41,7 @@
             <td class="popup_table_c7" style="width: 96px">原始数据</td>
             <!-- <td class="popup_table_c7" style="width:64px;">小样提升<br>(理论值)</td> -->
           </tr>
-          <tr v-for="(stage, index) in table_data" :key="index" class="stage_table_r">
+          <tr v-for="(stage, index) in tableData" :key="index" class="stage_table_r">
             <td>
               {{ stage.stageCode }}
             </td>
@@ -85,7 +85,7 @@
 <!--    </div>-->
     <!-- 推荐表-占位 -->
 
-    <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center">
+    <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center;display: none">
       <div style="text-align: center; font-size: 24px; font-weight: 600; padding: 12px 0px">不同主线进度收益率</div>
       <table style="margin: auto; padding: 8px" class="table_tip">
         <tr>
@@ -126,7 +126,7 @@
       </table>
     </div>
 
-    <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center">
+    <div style="background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px; text-align: center;display: none">
       <div style="text-align: center; font-size: 24px; font-weight: 600; padding: 12px 0px">不同活动刷图效率对比</div>
       <table style="margin: auto; padding: 8px" class="table_tip">
         <tr>
@@ -203,10 +203,18 @@
 
 <script setup>
 
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 const show_secondary = ref(true);
 
-const table_data = ref([]);
+import materialAPI from  '/src/api/material.js'
+
+onMounted(()=>{
+  materialAPI.getNewChapterStage().then(response=>{
+    tableData.value = response.data
+  })
+})
+
+const tableData = ref([]);
 
 function sampleConfidenceFormat(confidence,digit){
   digit = digit==void 0?1:digit;
@@ -230,7 +238,7 @@ a {
   /* background-color: rgb(0, 162, 255); */
   max-width: 720px;
   margin: auto;
-  background-image: url(/image/temp/ep13_bg.webp);
+  background-image: url(/image/temp/EP14.png);
   background-size: 100%;
   color: antiquewhite;
 }

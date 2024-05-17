@@ -210,7 +210,7 @@ const routes = [
         path: '/material/ep14',
         text: 'EP14',
         display: false,
-        component: () => import('/src/pages/material/ep13.page.vue')
+        component: () => import('/src/pages/material/EP14.vue')
     },
     {
         path: '/:catchAll(.*)',
