@@ -5,7 +5,7 @@
     <!-- 标题 -->
     <div style="text-align: center; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
       <img src="/image/website/ico64.png" style="padding: 4px 0px 0px 0px; border-radius: 8px"  alt=""/>
-      <div style="font-size: 32px; vertical-align: top; margin: 12px; display: inline-block">明日方舟一图流 EP13专题页面</div>
+      <div style="font-size: 32px; vertical-align: top; margin: 12px; display: inline-block">明日方舟一图流 EP14专题页面</div>
     </div>
     <!-- 简单说明 -->
     <div style="padding: 8px 16px; font-style: italic; line-height: 32px; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
@@ -166,7 +166,7 @@
         <img class="ep12_support_img" src="/image/temp/babel.jpg" />
         <div class="ep12_support_text">
           <div class="ep12_support_org">巴别塔攻略组</div>
-          <div class="ep12_support_role">数据提供</div>
+          <div class="ep12_support_role">数据补全</div>
         </div>
       </a>
       <a class="ep12_support" href="https://penguin-stats.cn/">
