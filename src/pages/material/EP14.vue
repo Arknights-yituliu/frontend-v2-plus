@@ -238,7 +238,7 @@ a {
   /* background-color: rgb(0, 162, 255); */
   max-width: 720px;
   margin: auto;
-  background-image: url(/image/temp/EP14.png);
+  background-image: url(/image/temp/EP14.jpg);
   background-size: 100%;
   color: antiquewhite;
 }
