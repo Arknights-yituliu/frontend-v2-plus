@@ -3,8 +3,8 @@
     <!-- 占位 -->
     <div class="placeholder"></div>
     <!-- 标题 -->
-    <div style="text-align: center; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
-      <img src="/image/website/ico64.png" style="padding: 4px 0px 0px 0px; border-radius: 8px" alt=""/>
+    <div class="page-title-wrap">
+      <img src="/image/website/ico64.png" class="web-icon" alt=""/>
       <div class="page-title">明日方舟一图流 EP14专题页面</div>
     </div>
     <!-- 简单说明 -->
@@ -254,6 +254,20 @@ a {
   background-size: 100%;
   color: antiquewhite;
 
+  .web-icon {
+    padding: 4px 0px 0px 0px;
+    border-radius: 8px
+  }
+
+  .page-title-wrap {
+    text-align: center;
+    background-color: #ffffff0f;
+    backdrop-filter: blur(8px);
+    margin: 12px;
+    display: flex;
+    align-items: center;
+  }
+
   .page-title {
     font-size: 32px;
     vertical-align: top;
@@ -261,7 +275,7 @@ a {
     display: inline-block
   }
 
-  .placeholder{
+  .placeholder {
     height: 210px;
   }
 
@@ -329,10 +343,6 @@ a {
   }
 
 
-
-
-
-
   .table_tip {
     border-collapse: collapse;
   }
@@ -352,7 +362,11 @@ a {
     background-size: 100%;
     color: antiquewhite;
 
-    .placeholder{
+    .web-icon {
+      width: 28px;
+    }
+
+    .placeholder {
       height: 90px;
     }
 
@@ -392,14 +406,14 @@ a {
       left: -80px;
     }
 
-    .ep12_support{
+    .ep12_support {
       margin: 4px;
       width: 160px;
       height: 48px;
     }
 
     .ep12_support_img {
-      width:48px;
+      width: 48px;
     }
 
     .ep12_support_text {
