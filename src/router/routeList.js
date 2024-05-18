@@ -25,6 +25,15 @@ const routes = [
         component: StageRecommendation
     },
     {
+        path: '/material/ep14',
+        text: 'EP14',
+        name: 'EP14',
+        display: false,
+        module: 'material',
+        icon: "item",
+        component: () => import('/src/pages/material/EP14.vue')
+    },
+    {
         path: '/material/store',
         text: '商店性价比',
         name: 'MaterialStore',
@@ -127,7 +136,7 @@ const routes = [
         path: '/survey/questionnaire',
         text: '干员携带率问卷',
         name: 'Questionnaire',
-        display: true,
+        display: false,
         module: 'survey',
         icon: "survey2",
         component: () => import('/src/pages/survey/questionnaire.vue')
@@ -206,12 +215,7 @@ const routes = [
         display: false,
         component: () => import('/src/pages/dev.vue')
     },
-    {
-        path: '/material/ep14',
-        text: 'EP14',
-        display: false,
-        component: () => import('/src/pages/material/EP14.vue')
-    },
+
     {
         path: '/:catchAll(.*)',
         display: false,
