@@ -26,9 +26,9 @@ const routes = [
     },
     {
         path: '/material/ep14',
-        text: 'EP14',
+        text: 'EP14专题',
         name: 'EP14',
-        display: false,
+        display: true,
         module: 'material',
         icon: "item",
         component: () => import('/src/pages/material/EP14.vue')
@@ -136,7 +136,7 @@ const routes = [
         path: '/survey/questionnaire',
         text: '干员携带率问卷',
         name: 'Questionnaire',
-        display: false,
+        display: true,
         module: 'survey',
         icon: "survey2",
         component: () => import('/src/pages/survey/questionnaire.vue')
@@ -247,10 +247,14 @@ const LinkedTable = {
     }
 }
 
+const devRoute = ['/survey/questionnaire']
+
 for (const route of routes) {
     if(!route.display){
         continue
     }
+
+
     if (route.module) {
         LinkedTable[route.module].child.push(route)
     }
