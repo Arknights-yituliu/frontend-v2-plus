@@ -31,6 +31,14 @@ export default {
     })
   },
 
+  loginV3(userData) {
+    return request({
+      url: `${api_name}/login/v3`,
+      method: "post",
+      data: userData,
+    })
+  },
+
   /**
    * 发送邮件验证码
    * @param userData  内部数据包括邮件用途，邮箱等

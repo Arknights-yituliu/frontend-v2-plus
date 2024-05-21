@@ -20,20 +20,45 @@
     </div>
 
 
-    <c-popup :visible="loginVisible" v-model:visible="loginVisible">
+    <c-popup :visible="loginVisible" v-model:visible="loginVisible" >
 
-      <div class="login_card" v-show="userData.status<0">
+      <div class="login-card" v-show="userData.status<0">
         <div class="login-checkbox">
-          <button class="btn login-type-btn" :style="accountTypeClass('passWord')"
-                  @click="selectAccountType('passWord')">密码{{ 'register' === registerOrLogin ? '注册' : '登录' }}
+          <button class="btn login-type-btn" :style="accountTypeClass('hgToken')"
+                  @click="selectAccountType('hgToken')">token登录
           </button>
           <div style="border-left: 2px solid rgba(0,0,0,0.5);height: 18px"></div>
           <button class="btn login-type-btn" :style="accountTypeClass('emailCode')"
-                  @click="selectAccountType('emailCode')">邮箱{{ 'register' === registerOrLogin ? '注册' : '登录' }}
+                  @click="selectAccountType('emailCode')">邮箱登录
+          </button>
+          <div style="border-left: 2px solid rgba(0,0,0,0.5);height: 18px"></div>
+          <button class="btn login-type-btn" :style="accountTypeClass('passWord')"
+                  @click="selectAccountType('passWord')">密码登录
           </button>
         </div>
 
-        <div class="login-form" v-show="'passWord'===account_type">
+        <div class="login-form" v-show="'hgToken'===accountType">
+          <div class="login-form-item">
+            <span class="input-label">token：</span>
+            <input class="login-form-input" type="text" placeholder="请输入" v-model="inputData.hgToken"/>
+          </div>
+        </div>
+
+        <div class="login-form" v-show="'emailCode'===accountType">
+          <div class="login-form-item">
+            <div class="input-label">邮箱：</div>
+            <input class="login-form-input" placeholder="请输入" v-model="inputData.email"/>
+            <div style="border: 1px solid #d9d9d9;height: 32px;margin: 0 4px"></div>
+            <div class="input-btn" @click="sendEmailCode()" style="cursor: pointer">获取验证码</div>
+          </div>
+          <div class="login_form_divider"></div>
+          <div class="login-form-item">
+            <div class="input-label">验证码：</div>
+            <input class="login-form-input" placeholder="请输入" v-model="inputData.emailCode"/>
+          </div>
+        </div>
+
+        <div class="login-form" v-show="'passWord'===accountType">
           <div class="login-form-item">
             <span class="input-label">账号：</span>
             <input class="login-form-input" type="text" placeholder="请输入" v-model="inputData.userName"/>
@@ -46,50 +71,26 @@
           </div>
         </div>
 
-        <div class="login-form" v-show="'emailCode'===account_type">
-          <div class="login-form-item">
-            <div class="input-label">邮箱：</div>
-            <input class="login-form-input" placeholder="请输入" v-model="inputData.email"/>
-            <div style="border: 1px solid #d9d9d9;height: 32px;margin: 0 4px"></div>
-            <div class="input-btn" @click="sendEmailCodeByRegister()" style="cursor: pointer">获取验证码</div>
-          </div>
-          <div class="login_form_divider"></div>
-          <div class="login-form-item">
-            <div class="input-label">验证码：</div>
-            <input class="login-form-input" placeholder="请输入" v-model="inputData.emailCode"/>
-          </div>
-        </div>
-
-
         <div class="login-checkbox">
-          <div @click="registerOrLogin='register'" v-show="'login'===registerOrLogin"
-               class="btn btn_white login-btn">
-            没有账号请先注册
-          </div>
-          <div @click="registerOrLogin='login'" v-show="'register'===registerOrLogin"
-               class="btn btn_white login-btn">
-            已注册过直接登录
-          </div>
-          <button class="btn btn-blue login-btn" @click="register()"
-                  v-show="'register'===registerOrLogin">
-            注册
-          </button>
-          <button class="btn btn-blue login-btn" @click="login()"
-                  v-show="'login'===registerOrLogin">
+          <button class="btn btn-blue login-btn" @click="login()">
             登录
           </button>
-
         </div>
 
 
-
-          <p class="login-tip"> 新用户注册可用账号密码注册和邮箱注册，也可在个人中心进行设置密码和邮箱绑定等操作</p>
-          <p class="login-tip" style="color: #ff4b4b">
-            *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用</p>
-
+        <div class="login-card-notice">
+          <h3>登录须知</h3>
+          <span style="color: #1f88ff" class="title">*为简化注册流程和优化使用体验，现作出如下改动：</span>
+          <span>&emsp;&emsp;1.账号密码登录方式停止注册，旧账号密码仍可登录</span> <br>
+          <span>&emsp;&emsp;2.邮箱登录方式输入验证码即可注册或登录</span><br>
+          <span>&emsp;&emsp;3.增加官网token登录方式，输入官网token即可完成注册和导入干员数据</span>
+          <span style="color: #ff4b4b" class="title">
+            *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
+          </span>
+        </div>
       </div>
 
-      <div class="login_card" v-show="userData.status>0">
+      <div class="login-card" v-show="userData.status>0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
           <button class="btn btn-blue logout_btn" @click="logout()">确定</button>
@@ -129,8 +130,10 @@ let inputData = ref({
   emailCode: '',
   accountType: '',
   avatar: '',
+  hgToken: '',
   mailUsage: 'register'
-}); //用户输入的用户名，用obj没准后期有别的字段
+});
+//用户输入的用户名，用obj没准后期有别的字段
 let userData = ref({userName: "", status: -100, token: void 0, code: 0}); //用户信息(用户名，用户id，用户状态)
 
 let loginVisible = ref(false);
@@ -138,13 +141,12 @@ let loginVisible = ref(false);
 let registerOrLogin = ref('login')
 
 
-function sendEmailCodeByRegister() {
+function sendEmailCode() {
   const data = {
     mailUsage: registerOrLogin.value,
     email: inputData.value.email,
   }
   surveyApi.sendEmailCode(data).then(response => {
-
     cMessage("验证码发送成功")
   })
 }
@@ -161,42 +163,51 @@ function sendEmailCodeForLogin() {
   })
 }
 
-//注册
-function register() {
-  inputData.value.accountType = account_type.value
-  surveyApi.register(inputData.value).then(response => {
 
-    response = response.data
-    localStorage.setItem("USER_TOKEN", response.token.toString());
-    cMessage("注册成功");
-    userData.value = response
-    loginVisible.value = false;
-    location.reload()
-  })
-}
-
-let account_type = ref('passWord')
+let accountType = ref('passWord')
 
 function selectAccountType(type) {
-  account_type.value = type
+  accountType.value = type
 }
 
 function accountTypeClass(type) {
-  if (account_type.value === type) return 'color:#409eff;'
+  if (accountType.value === type) return 'color:#409eff;'
 }
 
+function getLoginParams() {
+
+  if ('hgToken' === accountType.value) {
+    return {
+      accountType: 'hgToken',
+      hgToken: inputData.value.hgToken
+    }
+  }
+  if ('emailCode' === accountType.value) {
+    return {
+      accountType: 'email',
+      email: inputData.value.email,
+      emailCode: inputData.value.emailCode,
+    }
+  }
+  if ('passWord' === accountType.value) {
+    return {
+      accountType: 'passWord',
+      userName: inputData.value.userName,
+      passWord: inputData.value.passWord,
+    }
+  }
+
+
+}
 
 //登录
 function login() {
-  inputData.value.accountType = account_type.value
-
-  surveyApi.login(inputData.value).then(response => {
+  const loginParams = getLoginParams();
+  surveyApi.loginV3(loginParams).then(response => {
     response = response.data
-    if (response.status > 0) {
-      localStorage.setItem("USER_TOKEN", response.token.toString());
-      // 登录成功刷新
-      location.reload()
-    }
+    localStorage.setItem("USER_TOKEN", response.token.toString());
+    // 登录成功刷新
+    location.reload()
   })
 }
 
