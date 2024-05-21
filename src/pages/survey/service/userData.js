@@ -6,9 +6,10 @@ let userData = ref(); //用户信息(用户名，用户id，用户状态)
 
 
 async function getUserInfo() {
-    const USER_TOKEN = localStorage.getItem("USER_TOKEN")
+    let USER_TOKEN = localStorage.getItem("USER_TOKEN")
 
    let userInfo = {uid:0,userName: "未登录",akUid:"0", status: -100, token: void 0}
+    USER_TOKEN = encodeURIComponent(USER_TOKEN);
    await axios.get(`${http}survey/user/info?token=${USER_TOKEN}`)
         .then(response => {
             if(response.data.code===200){
