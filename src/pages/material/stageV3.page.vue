@@ -648,6 +648,7 @@ onMounted(() => {
               <div :class="getCardIconSprite('AP_GAMEPLAY')"></div>
             </div>
             <div class="stage_card_3_2" style="display: none;">
+
               {{ stage.maxEfficiencyStage.zoneName }}
             </div>
             <div class="stage-card-bar-stage-code">
