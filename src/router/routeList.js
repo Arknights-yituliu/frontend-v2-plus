@@ -136,7 +136,7 @@ const routes = [
         path: '/survey/questionnaire',
         text: '干员携带率问卷',
         name: 'Questionnaire',
-        display: true,
+        display: false,
         module: 'survey',
         icon: "survey2",
         component: () => import('/src/pages/survey/questionnaire.vue')
