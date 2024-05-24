@@ -44,13 +44,8 @@
     font-weight: 600;
 }
 
-.input{
-    border: none;
-    outline: none;
-    color: var(--c-input-text-color);
-    border-bottom: var(--c-input-border);
-    background-color: var(--c-input-bg);
-}
+
+
 
 
 @media screen and (max-width: 600px){

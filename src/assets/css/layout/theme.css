@@ -11,7 +11,7 @@
     --c-border-color: #adadad;
     --c-background-color: var(--c-white-1);
     --c-text-color:var(--c-black-2);
-    --c-tip-color: #505050;
+    --c-text-tip-color: #aaaaaa;
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
 
 
@@ -56,7 +56,7 @@
     --c-border-color: #b6b6b6;
     --c-background-color: #2d2d2d;
     --c-text-color: var(--c-white-2);
-    --c-tip-color: #c0c0c0;
+    --c-text-tip-color: #c0c0c0;
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
 
 

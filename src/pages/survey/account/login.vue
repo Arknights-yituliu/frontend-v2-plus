@@ -24,15 +24,15 @@
 
       <div class="login-card" v-show="userData.status<0">
         <div class="login-checkbox">
-          <button class="btn login-type-btn" :style="accountTypeClass('hgToken')"
+          <button class="btn checkbox-btn" :style="accountTypeClass('hgToken')"
                   @click="selectAccountType('hgToken')">token登录
           </button>
           <div style="border-left: 2px solid rgba(0,0,0,0.5);height: 18px"></div>
-          <button class="btn login-type-btn" :style="accountTypeClass('emailCode')"
+          <button class="btn checkbox-btn" :style="accountTypeClass('emailCode')"
                   @click="selectAccountType('emailCode')">邮箱登录
           </button>
           <div style="border-left: 2px solid rgba(0,0,0,0.5);height: 18px"></div>
-          <button class="btn login-type-btn" :style="accountTypeClass('passWord')"
+          <button class="btn checkbox-btn" :style="accountTypeClass('passWord')"
                   @click="selectAccountType('passWord')">密码登录
           </button>
         </div>
@@ -80,10 +80,10 @@
 
         <div class="login-card-notice">
           <h3>登录须知</h3>
-          <span style="color: #1f88ff" class="title">*为简化注册流程和优化使用体验，现作出如下改动：</span>
+          <span style="color: #1f88ff" class="title">*为简化注册流程，现作出如下改动：</span>
           <span>&emsp;&emsp;1.账号密码登录方式停止注册，旧账号密码仍可登录</span> <br>
-          <span>&emsp;&emsp;2.邮箱登录方式输入验证码即可注册或登录</span><br>
-          <span>&emsp;&emsp;3.增加官网token登录方式，输入官网token即可完成注册和导入干员数据</span>
+          <span>&emsp;&emsp;2.邮箱登录输入验证码即可注册/登录</span><br>
+          <span>&emsp;&emsp;3.增加官网token登录方式，输入官网token即可完成注册/登录，并完成导入干员数据</span>
           <span style="color: #ff4b4b" class="title">
             *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
           </span>
@@ -235,7 +235,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.login-type-btn {
+.checkbox-btn {
   border: none;
 }
 </style>

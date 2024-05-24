@@ -1,0 +1,214 @@
+<script setup>
+
+import {onMounted, ref} from "vue";
+
+let registerType = ref('')
+
+function optionLineClass(type) {
+  if (type === registerType.value) {
+    return 'option-line-active'
+  } else {
+    return 'option-line'
+  }
+}
+
+let inputContent = ref({
+  userName: '',
+  password: '',
+  confirmPassword: '',
+  email:'',
+  verificationCode:'',
+  hgToken:''
+})
+
+function optionBtnColor(type){
+  if (type === registerType.value) {
+    return 'color:#1f88ff'
+  } else {
+    return ''
+  }
+}
+
+function inputTipDisplay(inputValue) {
+  console.log(!inputValue)
+  return !inputValue;
+}
+
+
+onMounted(()=>{
+  registerType.value = 'password'
+})
+
+</script>
+
+<template>
+  <div class="login-page">
+    <div class="login-form">
+      <div class="checkbox login-checkbox" >
+        <div class="checkbox-option">
+          <button class="checkbox-btn" :style="optionBtnColor('password')"
+                  @click="registerType='password'">账号密码注册</button>
+          <div :class="optionLineClass('password')"></div>
+        </div>
+        <div class="checkbox-option">
+          <button class="checkbox-btn" :style="optionBtnColor('email')"
+                  @click="registerType='email'">邮件注册</button>
+          <div :class="optionLineClass('email')"></div>
+        </div>
+      </div>
+
+      <div class="login-form-content" v-show="'password'===registerType">
+        <div class="login-form-content-item">
+          <input class="login-form-input" v-model="inputContent.userName">
+          <span class="login-form-content-item-label">用户名</span>
+          <span class="login-form-content-item-tip"
+                v-show="inputTipDisplay(inputContent.userName)">请输入用户名</span>
+        </div>
+        <div class="login-form-content-item">
+          <input class="login-form-input" type="password" v-model="inputContent.password">
+          <span class="login-form-content-item-label">登录密码</span>
+          <span class="login-form-content-item-tip"
+                v-show="inputTipDisplay(inputContent.password)">请输入登录密码</span>
+        </div>
+        <div class="login-form-content-item">
+          <input class="login-form-input" type="password" v-model="inputContent.confirmPassword">
+          <span class="login-form-content-item-label">确认密码</span>
+          <span class="login-form-content-item-tip"
+                v-show="inputTipDisplay(inputContent.confirmPassword)">请再次输入登录密码</span>
+        </div>
+        <div class="login-form-content-item">
+          <input class="login-form-input" type="password" v-model="inputContent.confirmPassword">
+          <span class="login-form-content-item-label">绑定邮箱(选填)</span>
+          <span class="login-form-content-item-tip"
+                v-show="inputTipDisplay(inputContent.confirmPassword)">请输入邮箱</span>
+        </div>
+      </div>
+
+      <div class="login-form-content" v-show="'email'===registerType">
+        <div class="login-form-content-item">
+          <input class="login-form-input" v-model="inputContent.userName">
+          <span class="login-form-content-item-label">邮箱</span>
+          <span class="login-form-content-item-tip"
+                v-show="inputTipDisplay(inputContent.userName)">请输入邮箱</span>
+        </div>
+        <div class="login-form-content-item">
+          <input class="login-form-input" type="password" v-model="inputContent.password">
+          <span class="login-form-content-item-label">验证码</span>
+          <span class="login-form-content-item-tip"
+                v-show="inputTipDisplay(inputContent.password)">请输入验证码</span>
+          <button class="login-form-btn-send" >发送验证码</button>
+        </div>
+      </div>
+
+      <button class="btn btn-blue" style="display: block;margin:0 auto">注册账号</button>
+      <div class="login-form-notice">
+        <p style="color: #1f88ff" class="title">*一图流账号系统改动说明：</p>
+        <p>
+          1.选择账号密码注册时，如果在注册时输入了绑定邮箱或后续在个人中心绑定了邮箱，也可将邮箱作为账号通过账号密码方式登录。
+        </p>
+        <p>
+          2.新增官方token注册方式，输入官网token即可完成注册，并同时完成导入干员数据。
+        </p>
+        <p>
+          3.如注册过一图流账号，并导入过干员数据，使用token注册/登录，会根据您上次导入的uid直接登录您先前注册的账号。
+        </p>
+        <p style="color: #ff4b4b" class="title">
+          *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
+        </p>
+        <p style="color: #ff4b4b" class="title">
+          *请妥善保管好您的官方token和森空岛token
+        </p>
+      </div>
+    </div>
+
+
+  </div>
+</template>
+
+<style>
+.login-page {
+  padding: 1px;
+
+  .login-form {
+    width: 500px;
+    height: 100%;
+    margin: 20px auto;
+    box-shadow: 0px 2px 15px var(--c-box-shadow-color);
+    padding: 1px;
+    font-weight: 500;
+  }
+
+  .login-checkbox{
+    width: 360px;
+    margin: 20px auto 0;
+  }
+
+  .checkbox-option-login{
+    margin: 0 20px 0 0;
+  }
+
+  .login-form-content {
+    margin: 50px auto 20px;
+  }
+
+  .login-form-content-item {
+    position: relative;
+    width: 360px;
+    margin: 40px auto;
+    display: flex;
+  }
+
+  .login-form-content-item-label {
+    position: absolute;
+    font-size: 18px;
+    top: -20px;
+  }
+
+  .login-form-content-item-tip {
+    position: absolute;
+    font-size: 14px;
+    color: var(--c-text-tip-color);
+    font-style: italic;
+    top: 16px;
+  }
+
+  .login-form-input {
+    outline: none;
+    border: none;
+    width: 360px;
+    line-height: 36px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+    background-color: transparent;
+    font-size: 18px;
+    z-index: 3;
+  }
+
+  .login-form-input:focus{
+    border-bottom: 2px solid rgb(147, 180, 255);
+  }
+
+  .login-form-btn-send{
+    border: 0;
+    background-color: transparent;
+    position: absolute;
+    right: 12px;
+    font-size: 16px;
+    border-left: 1px solid rgba(0, 0, 0, 0.3);
+    top: 8px;
+    z-index:4;
+  }
+
+  .login-form-notice {
+    width: 450px;
+    margin: 30px auto;
+    font-size: 14px;
+    .title {
+      font-weight: bold;
+      margin: 8px 0;
+    }
+  }
+
+
+}
+</style>

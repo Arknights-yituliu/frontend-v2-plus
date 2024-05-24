@@ -1,7 +1,10 @@
 import Error404 from "/src/pages/layout/error404.vue";
-import StageRecommendation from '/src/pages/material/stageV3.page.vue'
-import GachaCalculator from '/src/pages/tools/gachaCalc.page.vue'
+import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.page.vue'
+import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.page.vue'
 import Notice from '/src/pages/layout/notice.vue'
+import REGISTER from  '/src/pages/survey/account/register.vue'
+import LOGIN_V2 from '/src/pages/survey/account/loginv2.vue'
+import IMPORT_BY_SKLAND from '/src/pages/survey/account/importbyskland.vue'
 
 // {
 //     path: '/',  访问路径
@@ -22,7 +25,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "item",
-        component: StageRecommendation
+        component: STAGE_RECOMMENDATION_REGISTER
     },
     {
         path: '/material/ep14',
@@ -74,7 +77,7 @@ const routes = [
         text: '攒抽计算器',
         name: 'GachaCalculator1',
         display: false,
-        component: GachaCalculator
+        component: GACHA_CALCULATOR
     },
     {
         path: '/tools/gachaCalc',
@@ -83,7 +86,7 @@ const routes = [
         display: true,
         module: 'tools',
         icon: "calculator",
-        component: GachaCalculator
+        component: GACHA_CALCULATOR
     },
     {
         path: '/tools/schedule',
@@ -123,6 +126,25 @@ const routes = [
         // component: Notice
     },
     {
+        path: '/survey/account/register',
+        text: '用户中心',
+        name: 'REGISTER',
+        component: REGISTER
+    },
+    {
+        path: '/survey/account/loginV2',
+        text: '用户中心',
+        name: 'LOGIN_V2',
+        display: false,
+        component: LOGIN_V2
+    },
+    {
+        path: '/survey/account/importbyskland',
+        text: '导入流程',
+        name: 'IMPORT_BY_SKLAND',
+        component: IMPORT_BY_SKLAND
+    },
+    {
         path: '/survey/operators',
         text: '干员调查',
         name: 'OperatorSurvey',
@@ -130,7 +152,6 @@ const routes = [
         module: 'survey',
         icon: "survey2",
         component: () => import('/src/pages/survey/operators.page.vue')
-        // component: Notice
     },
     {
         path: '/survey/questionnaire',
