@@ -1,12 +1,12 @@
 <script setup>
-import {ref, onMounted} from "vue";
+import {ref, onMounted,  watchEffect} from "vue";
 import toolApi from "/src/api/tool";
 import login from "/src/pages/survey/account/login.vue";
 import routesJson from "/src/static/json/routes.json";
 import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
 import {language} from '/src/utils/i18n.js'
 import {LinkedTable} from "../../router/routeList.js";
-
+import { useRoute } from 'vue-router';
 
 const LanguageLabel = {
   cn: '中文',
@@ -102,23 +102,24 @@ function getPageTitle(path) {
       // console.log(path, " ", i.path);
       if (i.path.indexOf(path) > -1) {
         pageTitle.value = i.text;
-
       }
     }
   }
 
-  if (path.indexOf('tools/schedule') > -1) {
-    aside_collapse()
-  }
 
-  if (path.indexOf('tools/rogueCal') > -1) {
-    aside_collapse()
-  }
 
-  if (path.indexOf('tools/maa') > -1) {
-    aside_collapse()
-    pageTitle.value = "排班生成器旧版-已停止维护,请使用新版生成器"
-  }
+  // if (path.indexOf('tools/schedule') > -1) {
+  //   aside_collapse()
+  // }
+  //
+  // if (path.indexOf('tools/rogueCal') > -1) {
+  //   aside_collapse()
+  // }
+  //
+  // if (path.indexOf('tools/maa') > -1) {
+  //   aside_collapse()
+  //   pageTitle.value = "排班生成器旧版-已停止维护,请使用新版生成器"
+  // }
 }
 
 let i18nButtonVisible = ref(false)
@@ -136,7 +137,11 @@ function i18nButtonDisplay() {
   }
 }
 
+const route = useRoute();
 
+watchEffect(() => {
+  getPageTitle(route.path)
+});
 
 
 
