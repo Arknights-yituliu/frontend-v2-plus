@@ -16,12 +16,12 @@ let inputContent = ref({
   userName: '',
   password: '',
   confirmPassword: '',
-  email:'',
-  verificationCode:'',
-  hgToken:''
+  email: '',
+  verificationCode: '',
+  hgToken: ''
 })
 
-function optionBtnColor(type){
+function optionBtnColor(type) {
   if (type === registerType.value) {
     return 'color:#1f88ff'
   } else {
@@ -35,9 +35,7 @@ function inputTipDisplay(inputValue) {
 }
 
 
-
-
-onMounted(()=>{
+onMounted(() => {
   registerType.value = 'password'
 })
 
@@ -46,15 +44,17 @@ onMounted(()=>{
 <template>
   <div class="login-page">
     <div class="login-form">
-      <div class="checkbox login-checkbox" >
+      <div class="checkbox login-checkbox">
         <div class="checkbox-option">
           <button class="checkbox-btn" :style="optionBtnColor('password')"
-                  @click="registerType='password'">账号密码注册</button>
+                  @click="registerType='password'">账号密码登录
+          </button>
           <div :class="optionLineClass('password')"></div>
         </div>
         <div class="checkbox-option">
           <button class="checkbox-btn" :style="optionBtnColor('email')"
-                  @click="registerType='email'">邮件注册</button>
+                  @click="registerType='email'">邮件登录
+          </button>
           <div :class="optionLineClass('email')"></div>
         </div>
       </div>
@@ -78,12 +78,6 @@ onMounted(()=>{
           <span class="login-form-content-item-tip"
                 v-show="inputTipDisplay(inputContent.confirmPassword)">请再次输入登录密码</span>
         </div>
-        <div class="login-form-content-item">
-          <input class="login-form-input" type="password" v-model="inputContent.email">
-          <span class="login-form-content-item-label">绑定邮箱(选填)</span>
-          <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.confirmPassword)">请输入邮箱</span>
-        </div>
       </div>
 
       <div class="login-form-content" v-show="'email'===registerType">
@@ -98,21 +92,28 @@ onMounted(()=>{
           <span class="login-form-content-item-label">验证码</span>
           <span class="login-form-content-item-tip"
                 v-show="inputTipDisplay(inputContent.password)">请输入验证码</span>
-          <button class="login-form-btn-send" >发送验证码</button>
+          <button class="login-form-btn-send">发送验证码</button>
         </div>
       </div>
 
-      <button class="btn btn-blue" style="display: block;margin:0 auto">注册账号</button>
+      <button class="btn btn-blue" style="display: block;width: 200px;margin:0 auto">登录</button>
+      <span class="login-form-content-tip-btn">忘记密码？</span>
       <div class="login-form-notice">
-        <p style="color: #1f88ff" class="title">*账号系统改动说明：</p>
+        <p style="color: #1f88ff" class="title">*一图流账号系统改动说明：</p>
         <p>
           1.选择账号密码注册时，如果在注册时输入了绑定邮箱或后续在个人中心绑定了邮箱，也可将邮箱作为账号通过账号密码方式登录。
+        </p>
+        <p>
+          2.新增官方token注册方式，输入官网token即可完成注册，并同时完成导入干员数据。
+        </p>
+        <p>
+          3.如注册过一图流账号，并导入过干员数据，使用token注册/登录，会根据您上次导入的uid直接登录您先前注册的账号。
         </p>
         <p style="color: #ff4b4b" class="title">
           *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
         </p>
         <p style="color: #ff4b4b" class="title">
-          *请妥善保管好您的官网token和森空岛token
+          *请妥善保管好您的官方token和森空岛token
         </p>
       </div>
     </div>
@@ -135,12 +136,12 @@ onMounted(()=>{
     font-weight: 500;
   }
 
-  .login-checkbox{
+  .login-checkbox {
     width: 360px;
     margin: 20px auto 0;
   }
 
-  .checkbox-option-login{
+  .checkbox-option-login {
     margin: 0 20px 0 0;
   }
 
@@ -181,11 +182,11 @@ onMounted(()=>{
     z-index: 3;
   }
 
-  .login-form-input:focus{
+  .login-form-input:focus {
     border-bottom: 2px solid rgb(147, 180, 255);
   }
 
-  .login-form-btn-send{
+  .login-form-btn-send {
     border: 0;
     background-color: transparent;
     position: absolute;
@@ -193,13 +194,21 @@ onMounted(()=>{
     font-size: 16px;
     border-left: 1px solid rgba(0, 0, 0, 0.3);
     top: 8px;
-    z-index:4;
+    z-index: 4;
+  }
+
+  .login-form-content-tip-btn {
+    display: block;
+    width:95%;
+    text-align: right;
+    cursor: pointer;
   }
 
   .login-form-notice {
     width: 450px;
     margin: 30px auto;
     font-size: 14px;
+
     .title {
       font-weight: bold;
       margin: 8px 0;
