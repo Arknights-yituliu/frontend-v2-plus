@@ -174,7 +174,7 @@ function uploadSubmitContent() {
             <img src="/image/survey/bg/SNIPER.png" width="24px">
             <div class="survey_result_info_profession" style="display: inline-block;vertical-align: top;padding: 2px 4px;font-size: 16px;">SNIPER</div>
             <div class="survey_result_info_name" style="font-size: 24px;line-height: 22px;">
-              这里是刚好七字
+              这是七字干员名
             </div>
             <img src="/image/survey/bg/rarity-6.png" height="20px" style="position: relative;left: -2px;padding-top: 2px;">
           </div>
@@ -186,9 +186,30 @@ function uploadSubmitContent() {
         </div>
       </div>
       <!-- 全站结果展示模块 -->
-      <div id="survey_result_allUsers">
-        <div class=operator>
-          <div class="bg-char_103_angel"></div>
+      这里是使用率最高的前50名干员
+      <!-- 先大概看下统计结果，然后看看怎么划段分级 -->
+      <div id="survey_result_all">
+        <div class="survey_result_all_tier" style="height: 72px;">
+          <div class="tier_title" style="width: 96px;height: 96px;display: inline-block;">>15%</div>
+          <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
+            <div class="bg-char_103_angel" style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
+            </div>
+          </div> 
+          <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
+            <div class="bg-char_103_angel" style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
+            </div>
+          </div>
+        </div>
+        <div class="survey_result_all_tier" style="height: 72px;">
+          <div class="tier_title" style="width: 96px;height: 96px;display: inline-block;">>10%</div>
+          <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
+            <div class="bg-char_103_angel" style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
+            </div>
+          </div> 
+          <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
+            <div class="bg-char_103_angel" style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
+            </div>
+          </div>
         </div>
       </div>
     </div>
