@@ -111,6 +111,9 @@ function uploadSubmitContent() {
       <el-button type="primary" disabled>选好了！</el-button>
       <el-button type="primary">选好了！</el-button>
       <el-button type="primary">修改编队</el-button>
+      <br>
+      <el-checkbox  label="只显示已有干员" border />
+      <el-checkbox  label="只显示已精二干员" border />
       <!-- <button @click="uploadSubmitContent()">上传</button> -->
       <!-- 这里塞一个筛选器 -->
       <div id="profession_filter" style="display: flex;">
@@ -261,7 +264,7 @@ function uploadSubmitContent() {
         </div>
       </div>
       <!-- 全站结果展示模块 -->
-      这里是使用率最高的前50名干员
+      这里是使用率最高的前50名干员，可以用tier maker的形式
       <!-- 先大概看下统计结果，然后看看怎么划段分级 -->
       <div id="survey_result_all">
         <div class="survey_result_all_tier" style="height: 72px;">
