@@ -1,91 +1,145 @@
-.questionnaire-page{
+.questionnaire-page {
 
   padding: 0;
   margin: 0;
 
-  .question{
+  .question {
     width: 80%;
     margin: auto;
   }
 
-  .question-title{
+  .question-title {
     font-size: 30px;
     font-weight: bolder;
     padding: 12px 0;
   }
 
-  .operator-team{
+  .team_area {
+    // border: 1px solid #00000080;
+    display: inline-block;
+    background-color: #505050;
+    color: white;
+    font-weight: 600;
+    vertical-align: top;
+    padding: 8px;
+  }
+
+  .teams_area :first-child {}
+
+  .operator-team {
     display: flex;
     flex-wrap: wrap;
-    box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
-
+    height: 200px;
+    overflow: hidden;
+    flex-direction: column;
+    align-content: flex-start;
+    // background-color: aqua;
+    // box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
   }
 
-  .operator-team-item{
-    margin: 4px;
-    text-align: center;
-    font-size: 14px;
-    box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
+  #team12 {
+    width: 576px;
   }
 
-  .profession-checkbox{
-    margin:20px 0;
+  #team4 {
+    width: 192px;
   }
 
-  .operator-checkbox{
-    display: flex;
-    flex-wrap: wrap;
-
-    box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
-  }
-
-  .operator-option{
-    width: 96px;
+  .operator-team-item {
     margin: 8px;
     text-align: center;
     font-size: 14px;
+    box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
+  }
 
+  .profession-checkbox {
+    margin: 20px 0;
+  }
+
+  .operator-checkbox {
+    display: flex;
+    flex-wrap: wrap;
+    // box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
+  }
+
+  .operator-option {
+    width: 96px;
+    height: 135px;
+    margin: 8px;
+    border-radius: 4px;
+    box-shadow: 2px 2px 2px #80808080;
+    text-align: center;
+    font-size: 14px;
+    background-color: #505050;
+    color: whitesmoke;
+    overflow: hidden;
     //border: 1px solid red;
   }
 
-  .operator-avatar{
-    width: 80px;
-    height: 80px;
+  .operator_selected{
+    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(127, 97, 63, 0.8) 3%,#505050 40%);
+  }
+
+  .operator_name_shell {
+    // vertical-align: middle;
+    height: 30px;
+    align-items: center; //子元素垂直居中
+    display: -webkit-flex;
+  }
+
+  .operator_name {
+    margin: auto 4px;
+    vertical-align: middle;
+    line-height: 16px;
+    width: 100%;
+  }
+
+  .operator-avatar {
+    width: 100px;
+    height: 100px;
     margin: auto;
     position: relative;
   }
 
-  .operator-option span{
+  .operator-option span {
     display: block;
     height: 18px;
     overflow: hidden;
     font-size: 14px;
   }
 
-  .operator-avatar div{
+  .operator-avatar div {
     position: absolute;
     transform: scale(0.44444);
-    top: -50px;
-    left: -50px;
+    transform: scale(0.53);
+    top: -42px;
+    left: -42px;
   }
 
+  .item_placeholder {
+    height: 80px;
+    width: 80px;
+    background-color: blue;
+    color: aliceblue;
+    font-size: 12px;
+  }
 
-  .team-operator-avatar{
+  .team-operator-avatar {
     width: 80px;
     height: 80px;
     margin: auto;
     position: relative;
 
-    .cancel-icon{
+    .cancel-icon {
       width: 20px;
       position: absolute;
-      top: -5px;
-      left: 65px;
+      top: -4px;
+      left: 66px;
     }
 
   }
 
-  .team-operator-avatar div{
+  .team-operator-avatar div {
     position: absolute;
     transform: scale(0.44444);
     top: -50px;
