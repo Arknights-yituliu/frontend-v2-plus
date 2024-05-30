@@ -44,7 +44,7 @@ onMounted(()=>{
 </script>
 
 <template>
-  <div class="login-page">
+  <div class="register-page">
     <div class="login-form">
       <div class="checkbox login-checkbox" >
         <div class="checkbox-option">
@@ -61,26 +61,26 @@ onMounted(()=>{
 
       <div class="login-form-content" v-show="'password'===registerType">
         <div class="login-form-content-item">
-          <input class="login-form-input" v-model="inputContent.userName">
           <span class="login-form-content-item-label">用户名</span>
+          <input class="login-form-input" v-model="inputContent.userName">
           <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.userName)">请输入用户名</span>
+                v-show="inputTipDisplay(inputContent.userName)">请输入用户名，仅可由汉字、英文、数字组成</span>
         </div>
         <div class="login-form-content-item">
-          <input class="login-form-input" type="password" v-model="inputContent.password">
           <span class="login-form-content-item-label">登录密码</span>
+          <input class="login-form-input" type="password" v-model="inputContent.password">
           <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.password)">请输入登录密码</span>
+                v-show="inputTipDisplay(inputContent.password)">请输入登录密码，仅可由英文、数字组成</span>
         </div>
         <div class="login-form-content-item">
-          <input class="login-form-input" type="password" v-model="inputContent.confirmPassword">
           <span class="login-form-content-item-label">确认密码</span>
+          <input class="login-form-input" type="password" v-model="inputContent.confirmPassword">
           <span class="login-form-content-item-tip"
                 v-show="inputTipDisplay(inputContent.confirmPassword)">请再次输入登录密码</span>
         </div>
         <div class="login-form-content-item">
-          <input class="login-form-input" type="password" v-model="inputContent.email">
           <span class="login-form-content-item-label">绑定邮箱(选填)</span>
+          <input class="login-form-input" type="password" v-model="inputContent.email">
           <span class="login-form-content-item-tip"
                 v-show="inputTipDisplay(inputContent.confirmPassword)">请输入邮箱</span>
         </div>
@@ -88,14 +88,14 @@ onMounted(()=>{
 
       <div class="login-form-content" v-show="'email'===registerType">
         <div class="login-form-content-item">
-          <input class="login-form-input" v-model="inputContent.userName">
           <span class="login-form-content-item-label">邮箱</span>
+          <input class="login-form-input" v-model="inputContent.userName">
           <span class="login-form-content-item-tip"
                 v-show="inputTipDisplay(inputContent.userName)">请输入邮箱</span>
         </div>
         <div class="login-form-content-item">
-          <input class="login-form-input" type="password" v-model="inputContent.password">
           <span class="login-form-content-item-label">验证码</span>
+          <input class="login-form-input"  v-model="inputContent.password">
           <span class="login-form-content-item-tip"
                 v-show="inputTipDisplay(inputContent.password)">请输入验证码</span>
           <button class="login-form-btn-send" >发送验证码</button>
@@ -122,7 +122,7 @@ onMounted(()=>{
 </template>
 
 <style>
-.login-page {
+.register-page {
   padding: 1px;
   min-height: 95vh;
 
@@ -145,20 +145,20 @@ onMounted(()=>{
   }
 
   .login-form-content {
-    margin: 50px auto 20px;
+    margin: 30px auto 20px;
+    height: 300px;
   }
 
   .login-form-content-item {
     position: relative;
     width: 360px;
-    margin: 40px auto;
-    display: flex;
+    margin: 12px auto;
   }
 
   .login-form-content-item-label {
-    position: absolute;
+    display: block;
     font-size: 18px;
-    top: -20px;
+    padding: 4px 0;
   }
 
   .login-form-content-item-tip {
@@ -166,14 +166,15 @@ onMounted(()=>{
     font-size: 14px;
     color: var(--c-text-tip-color);
     font-style: italic;
-    top: 16px;
+    top: 32px;
+    left: 0;
   }
 
   .login-form-input {
     outline: none;
     border: none;
     width: 360px;
-    line-height: 36px;
+    line-height: 20px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     position: relative;
     background-color: transparent;

@@ -10,7 +10,9 @@
 
 
 .survey-login-btn{
-    width: 50px;
+    width: 80px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .survey_nav_menu_arrow{

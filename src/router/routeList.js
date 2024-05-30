@@ -3,7 +3,7 @@ import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.page.vue'
 import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.page.vue'
 import Notice from '/src/pages/layout/notice.vue'
 import REGISTER from  '/src/pages/survey/account/register.vue'
-import LOGIN_V2 from '/src/pages/survey/account/loginv2.vue'
+import LOGIN from '/src/pages/survey/account/login.vue'
 import IMPORT_BY_SKLAND from '/src/pages/survey/account/importbyskland.vue'
 
 // {
@@ -132,11 +132,11 @@ const routes = [
         component: REGISTER
     },
     {
-        path: '/survey/account/loginV2',
+        path: '/survey/account/login',
         text: '用户中心',
-        name: 'LOGIN_V2',
+        name: 'LOGIN',
         display: false,
-        component: LOGIN_V2
+        component: LOGIN
     },
     {
         path: '/survey/account/importbyskland',

@@ -42,7 +42,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="login-page">
+  <div class="register-page">
     <div class="login-form">
       <div class="checkbox login-checkbox">
         <div class="checkbox-option">
@@ -123,7 +123,7 @@ onMounted(() => {
 </template>
 
 <style>
-.login-page {
+.register-page {
   padding: 1px;
   min-height: 95vh;
 

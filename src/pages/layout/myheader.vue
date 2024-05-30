@@ -1,7 +1,7 @@
 <script setup>
 import {ref, onMounted} from "vue";
 import toolApi from "/src/api/tool";
-import login from "/src/pages/survey/account/login.vue";
+import user from "/src/pages/survey/account/user.vue";
 import routesJson from "/src/static/json/routes.json";
 import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
 import {language} from '/src/utils/i18n.js'
@@ -179,22 +179,21 @@ function openNewPage(url) {
     <i class="iconfont icon-theme-style" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
     <div class="icon-button" @click="feedbackPopupVisible = !feedbackPopupVisible">
       <i class="iconfont icon-survey icon-feed-back-style"></i>
-      <span style="font-size: 16px;color: white;">反馈</span>
+      <span class="header-button-label">反馈</span>
     </div>
     <c-popover name="language">
       <template #title>
         <div class="icon-button">
           <i class="iconfont icon-language icon-language-style"></i>
-          <span style="font-size: 16px;color: white;">{{ LanguageLabel[language] }}</span>
+          <span class="header-button-label">{{ LanguageLabel[language] }}</span>
         </div>
       </template>
       <div class="language-options" id="language">
-        <span @click="language='cn'">中文</span>
-        <span @click="language='en'">English</span>
+        <span @click="language='cn'" >中文</span>
+        <span @click="language='en'" >English</span>
       </div>
     </c-popover>
-    <login></login>
-
+    <user></user>
 
     <div class="drawer-container">
       <div class="drawer" id="drawer114">
