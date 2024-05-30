@@ -17,11 +17,12 @@
   .team_area {
     // border: 1px solid #00000080;
     display: inline-block;
-    background-color: #505050;
+    background-color: #505050b0;
     color: white;
     font-weight: 600;
     vertical-align: top;
     padding: 8px;
+    text-shadow: 1px 1px 2px #505050;
   }
 
   .teams_area :first-child {}
@@ -29,7 +30,7 @@
   .operator-team {
     display: flex;
     flex-wrap: wrap;
-    height: 200px;
+    height: 192px;
     overflow: hidden;
     flex-direction: column;
     align-content: flex-start;
@@ -50,6 +51,31 @@
     text-align: center;
     font-size: 14px;
     box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
+  }
+
+  .profession_filter_single {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    background-color: black;
+    padding: 4px 10px 0px 10px;
+  }
+
+  .profession_mask {
+    height: 100%;
+    width: 68px;
+    background: linear-gradient(to top, rgb(127, 127, 255) 5%, rgba(63, 63, 127, 0.8) 5%, rgba(0, 0, 0, 0) 40%);
+    position: absolute;
+    bottom: 0px;
+    right: 6px
+  }
+
+  .profession_count {
+    color: white;
+    position: absolute;
+    bottom: 2px;
+    right: 12px;
+    background-color: rgba(0, 0, 0, 0);
   }
 
   .profession-checkbox {
@@ -76,8 +102,8 @@
     //border: 1px solid red;
   }
 
-  .operator_selected{
-    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(127, 97, 63, 0.8) 3%,#505050 40%);
+  .operator_selected {
+    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(127, 97, 63, 0.8) 3%, #505050 40%);
   }
 
   .operator_name_shell {
@@ -137,6 +163,15 @@
       left: 66px;
     }
 
+  }
+
+  .survey_result_operator {
+    border: 1px solid #00000040;
+    border-radius: 16px;
+    height: 96px;
+    width: 480px;
+    min-width: 480px;
+    margin: 8px;
   }
 
   .team-operator-avatar div {
