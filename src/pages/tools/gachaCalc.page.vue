@@ -245,7 +245,7 @@ function batchGenerationMonthlyPack(index) {
     packList.value.push(pack)
 
     //月份大于12，年数加1
-    if (month > 12) {
+    if (month >= 12) {
       month = 1
       year++
     } else {
