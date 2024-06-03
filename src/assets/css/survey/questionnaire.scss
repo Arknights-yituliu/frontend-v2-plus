@@ -1,7 +1,8 @@
 .questionnaire-page {
 
-  padding: 0;
-  margin: 0;
+  width: 1200px;
+  margin: auto;
+  padding: 12px;
 
   .question {
     width: 80%;
@@ -14,7 +15,7 @@
     padding: 12px 0;
   }
 
-  .team_area {
+  .team-box {
     // border: 1px solid #00000080;
     display: inline-block;
     background-color: #505050b0;
@@ -25,7 +26,8 @@
     text-shadow: 1px 1px 2px #505050;
   }
 
-  .teams_area :first-child {}
+  .teams-area :first-child {
+  }
 
   .operator-team {
     display: flex;
@@ -53,28 +55,28 @@
     box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
   }
 
-  .profession_filter_single {
-    width: 60px;
-    height: 60px;
+  .profession-filter-single {
+    width: 50px;
+    height: 50px;
     position: relative;
     background-color: black;
     padding: 4px 10px 0px 10px;
   }
 
-  .profession_mask {
+  .profession-mask {
     height: 100%;
-    width: 68px;
+    width: 66px;
     background: linear-gradient(to top, rgb(127, 127, 255) 5%, rgba(63, 63, 127, 0.8) 5%, rgba(0, 0, 0, 0) 40%);
     position: absolute;
     bottom: 0px;
-    right: 6px
+    right: 2px
   }
 
-  .profession_count {
+  .profession-count {
     color: white;
     position: absolute;
-    bottom: 2px;
-    right: 12px;
+    bottom: -2px;
+    right: 6px;
     background-color: rgba(0, 0, 0, 0);
   }
 
@@ -85,12 +87,14 @@
   .operator-checkbox {
     display: flex;
     flex-wrap: wrap;
+    border: 1px solid #505050;
+    max-width: 1160px;
     // box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
   }
 
   .operator-option {
-    width: 96px;
-    height: 135px;
+    width: 80px;
+    height: 106px;
     margin: 8px;
     border-radius: 4px;
     box-shadow: 2px 2px 2px #80808080;
@@ -102,27 +106,26 @@
     //border: 1px solid red;
   }
 
-  .operator_selected {
+  .operator-selected {
     background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(127, 97, 63, 0.8) 3%, #505050 40%);
+
   }
 
   .operator_name_shell {
-    // vertical-align: middle;
     height: 30px;
-    align-items: center; //子元素垂直居中
-    display: -webkit-flex;
   }
 
-  .operator_name {
-    margin: auto 4px;
-    vertical-align: middle;
+  .operator-name {
+    padding: 4px 0;
+    text-align: center;
+    font-size: 14px;
     line-height: 16px;
     width: 100%;
   }
 
   .operator-avatar {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     margin: auto;
     position: relative;
   }
@@ -137,12 +140,12 @@
   .operator-avatar div {
     position: absolute;
     transform: scale(0.44444);
-    transform: scale(0.53);
-    top: -42px;
-    left: -42px;
+    //transform: scale(0.53);
+    top: -50px;
+    left: -50px;
   }
 
-  .item_placeholder {
+  .item-placeholder {
     height: 80px;
     width: 80px;
     background-color: blue;
