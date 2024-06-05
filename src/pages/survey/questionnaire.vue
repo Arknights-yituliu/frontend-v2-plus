@@ -297,9 +297,9 @@ function selectedOperatorClass(charId) {
       </div>
     </div>
     <!-- 全站结果展示模块 -->
-    这里是使用率最高的前50名干员，可以用tier maker的形式
+<!--    这里是使用率最高的前50名干员，可以用tier maker的形式-->
     <!-- 先大概看下统计结果，然后看看怎么划段分级 -->
-    <div id="survey_result_all">
+    <div id="survey_result_all"  style="display: none">
       <div class="survey_result_all_tier" style="height: 72px;">
         <div class="tier_title" style="width: 96px;height: 96px;display: inline-block;">>15%</div>
         <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
