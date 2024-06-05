@@ -338,7 +338,7 @@ onMounted(() => {
 
 
     <!-- 个人结果展示模块 -->
-    <div id="survey_result_personal" class="survey-result-personal">
+    <div id="survey_result_personal" class="survey-result-personal" >
       <div class="survey-result-operator" v-for="(operator,index) in listOperators.slice(0,12)" :key="index">
         <div class="survey-result-avatar" style="">
           <div :class="`bg-${operator.charId}`">
@@ -368,7 +368,7 @@ onMounted(() => {
     <!-- 先大概看下统计结果，然后看看怎么划段分级 -->
 
 
-    <div class="survey-ranking-table">
+    <div class="survey-ranking-table" style="display: none">
       <div v-for="(group,index) in listOperatorGroupByAttendance" :key="index" class="survey-ranking-tier">
         <div class="survey-ranking-tier-interval" :style="`background-color: ${colorList[index]}`">
           {{ group.interval }}
