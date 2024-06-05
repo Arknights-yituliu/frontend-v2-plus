@@ -302,17 +302,16 @@ onMounted(() => {
             </div>
           </td>
           <td @click="commonSort('skill1','rank3')">
-            <div class="rank_table_title" style="width: 150px">
+            <div class="rank_table_title" style="width: 80px">
               <div>一技能专三率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('skill1','asc')"></div>
                 <div class="sort_desc_icon" :style="sortIconClass('skill1','desc')"></div>
-
               </div>
             </div>
           </td>
           <td @click="commonSort('skill2','rank3')">
-            <div class="rank_table_title" style="width: 150px">
+            <div class="rank_table_title" style="width: 80px">
               <div>二技能专三率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('skill2','asc')"></div>
@@ -322,7 +321,7 @@ onMounted(() => {
             </div>
           </td>
           <td @click="commonSort('skill3','rank3')">
-            <div class="rank_table_title" style="width: 150px">
+            <div class="rank_table_title" style="width: 80px">
               <div>三技能专三率</div>
               <div>
                 <div class="sort_asc_icon" :style="sortIconClass('skill3','asc')"></div>
@@ -374,38 +373,42 @@ onMounted(() => {
           </td>
           <td class="rank_table_2 rank_table_text">{{ getPercentage(result.own, 1) }}</td>
           <td class="rank_table_3 rank_table_text">{{ getPercentage(getSurveyResult(result.elite, 'rank2'), 1) }}</td>
-          <td class="rank_table_4 rank_table_text">
-            <div class="rank_table_skill">
-              <div class="rank_image_skill_wrap">
-                <div :class="getSpriteIcon(result.skill, 0)"></div>
-              </div>
-              <div class="rank_table_skill_text">
-                <div class="rank_ratio">{{ getSkillName(result.skill, 0) }}</div>
-                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill1, "rank3"), 1) }}</div>
-              </div>
-            </div>
+          <td class="rank_table_3 rank_table_text">
+<!--            <div class="rank_table_skill">-->
+<!--              <div class="rank_image_skill_wrap">-->
+<!--                <div :class="getSpriteIcon(result.skill, 0)"></div>-->
+<!--              </div>-->
+<!--              <div class="rank_table_skill_text">-->
+<!--                <div class="rank_ratio">{{ getSkillName(result.skill, 0) }}</div>-->
+<!--                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill1, "rank3"), 1) }}</div>-->
+<!--              </div>-->
+<!--            </div>-->
+
+            {{ getPercentage(getSurveyResult(result.skill1, "rank3"), 1) }}
           </td>
-          <td class="rank_table_5 rank_table_text">
-            <div class="rank_table_skill">
-              <div class="rank_image_skill_wrap">
-                <div :class="getSpriteIcon(result.skill, 1)"></div>
-              </div>
-              <div class="rank_table_skill_text">
-                <div class="rank_ratio"> {{ getSkillName(result.skill, 1) }}</div>
-                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill2, "rank3"), 1) }}</div>
-              </div>
-            </div>
+          <td class="rank_table_3 rank_table_text">
+<!--            <div class="rank_table_skill">-->
+<!--              <div class="rank_image_skill_wrap">-->
+<!--                <div :class="getSpriteIcon(result.skill, 1)"></div>-->
+<!--              </div>-->
+<!--              <div class="rank_table_skill_text">-->
+<!--                <div class="rank_ratio"> {{ getSkillName(result.skill, 1) }}</div>-->
+<!--                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill2, "rank3"), 1) }}</div>-->
+<!--              </div>-->
+<!--            </div>-->
+            {{ getPercentage(getSurveyResult(result.skill2, "rank3"), 1) }}
           </td>
-          <td class="rank_table_6 rank_table_text">
-            <div class="rank_table_skill">
-              <div class="rank_image_skill_wrap">
-                <div :class="getSpriteIcon(result.skill, 2)"></div>
-              </div>
-              <div class="rank_table_skill_text">
-                <div class="rank_ratio"> {{ getSkillName(result.skill, 2) }}</div>
-                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}</div>
-              </div>
-            </div>
+          <td class="rank_table_3 rank_table_text">
+<!--            <div class="rank_table_skill">-->
+<!--              <div class="rank_image_skill_wrap">-->
+<!--                <div :class="getSpriteIcon(result.skill, 2)"></div>-->
+<!--              </div>-->
+<!--              <div class="rank_table_skill_text">-->
+<!--                <div class="rank_ratio"> {{ getSkillName(result.skill, 2) }}</div>-->
+<!--                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}</div>-->
+<!--              </div>-->
+<!--            </div>-->
+            {{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}
           </td>
           <td class="rank_table_7">
             <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'count'), 2) }}</div>

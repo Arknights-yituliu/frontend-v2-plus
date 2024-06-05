@@ -5,14 +5,14 @@ import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
 import {cMessage} from "../../custom/message.js";
 import surveyApi from '/src/api/survey.js'
-
+import character_table_simple from "../../static/json/survey/character_table_simple.json";
 
 let operatorGroupByProfession = new Map()
 
 for (const charId in characterTable) {
   const character = characterTable[charId]
   const {profession, rarity} = character
-  console.log(profession)
+
   // if (rarity < 6) continue
   let list = operatorGroupByProfession.get(profession);
   if (list) {
@@ -40,8 +40,9 @@ function chooseOperatorProfession(profession) {
 function chooseOperator(operator) {
   if (operatorTeam.value.length > 11) {
     cMessage('不能选择超过12位干员', 'error')
+    return;
   }
-  console.log(operatorTeam.value)
+
   for (const o of operatorTeam.value) {
     if (o.name === operator.name) {
       removeOperator(operator)
@@ -84,7 +85,7 @@ function getCharIdList() {
     {count: 0, value: "SPECIAL"},
   ]
 
-  for (const {charId,profession} of operatorTeam.value) {
+  for (const {charId, profession} of operatorTeam.value) {
 
     list.push(charId)
   }
@@ -110,6 +111,87 @@ function selectedOperatorClass(charId) {
   }
 }
 
+let listOperatorSlice = ref([]);
+let listOperators = ref([])
+
+const colorList = [
+  '#ff8c00',
+  '#ffb400',
+  '#ffdc00',
+  '#ffff00',
+  '#00ff64',
+  '#ffffff',
+]
+
+function getCharStatisticsResult() {
+  surveyApi.getCharStatisticsResult().then((response) => {
+    let {result, userCount, updateTime} = response.data
+    for (const item of result) {
+      const charId = item.charId
+      let char_info = character_table_simple[charId]
+      item.name = char_info.name
+      item.rarity = char_info.rarity
+      item.profession = char_info.profession
+      item.itemObtainApproach = char_info.itemObtainApproach
+      item.skill = char_info.skill
+      item.equip = char_info.equip
+
+      if (item.rarity < 6) {
+        item.appearanceRate = Math.floor(Math.random() * 41)
+      } else {
+        item.appearanceRate = Math.floor(Math.random() * 100)
+      }
+    }
+
+    result = result.filter(e => e.rarity === 6).sort((a, b) => {
+      return b.appearanceRate - a.appearanceRate
+    })
+
+    listOperatorGroupByAttendance.value = operatorsGroupByAttendance(result, 17)
+
+    const sliceLength = Math.ceil(result.length / 2)
+
+    listOperators.value = result
+    listOperatorSlice.value.push(result.slice(0, sliceLength))
+    listOperatorSlice.value.push(result.slice(sliceLength))
+    console.log(listOperatorSlice.value)
+  });
+}
+
+let listOperatorGroupByAttendance = ref([])
+
+function operatorsGroupByAttendance(list, interval) {
+
+
+  // 初始化分组结果数组
+  let listResult = [];
+
+  // 计算总共需要的分组数
+  let totalGroups = Math.ceil(100 / interval);
+
+  // 从最大值开始，向最小值遍历创建分组
+
+  for (const item of list) {
+    const quotient = Math.floor(item.appearanceRate / interval)
+    const index = totalGroups - quotient - 1
+    if (!listResult[index]) {
+      listResult[index] = {
+        interval: `T${index}`,
+        list: []
+      }
+    }
+
+    listResult[index].list.push(item)
+
+  }
+
+  console.log(listResult)
+  return listResult
+}
+
+onMounted(() => {
+  getCharStatisticsResult()
+})
 
 </script>
 
@@ -217,117 +299,87 @@ function selectedOperatorClass(charId) {
       </div>
     </div>
 
+    <!--    <div class="survey-result-table">-->
+    <!--      <div class="survey-result-table-title">-->
+    <!--        <div class="survey-result-table-tr">-->
+    <!--          <div class="survey-result-table-operator-name" >干员名称</div>-->
+    <!--          <div class="w-100">开荒上场率</div>-->
+    <!--          <div class="w-110">开荒平均练度</div>-->
+    <!--          <div class="w-100">干员持有率</div>-->
+    <!--        </div>-->
+    <!--        <div class="survey-result-table-tr">-->
+    <!--          <div class="survey-result-table-operator-name" >干员名称</div>-->
+    <!--          <div class="w-100">开荒上场率</div>-->
+    <!--          <div class="w-110">开荒平均练度</div>-->
+    <!--          <div class="w-100">干员持有率</div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--      <div class="survey-result-table-content">-->
+    <!--        <div class="survey-result-table-content-item" v-for="(list,index) in listOperatorSlice" :key="index">-->
+    <!--          <div v-for="(operator,index) in list" :key="index" class="survey-result-table-tr">-->
+    <!--            <div class="survey-result-table-operator-name"  style="">-->
+    <!--              <div class="survey-result-table-avatar">-->
+    <!--                <div :class="`bg-${operator.charId}`"></div>-->
+    <!--                <img :src="`/image/survey/bg/${operator.profession}.png`"-->
+    <!--                     class="profession-icon-w-20" alt="" >-->
+    <!--                <span>-->
+    <!--                 {{operator.name}}-->
+    <!--              </span>-->
+    <!--              </div>-->
+
+    <!--            </div>-->
+    <!--            <div class="w-100">{{ operator.appearanceRate.toFixed(1) }} %</div>-->
+    <!--            <div class="w-110">精英2 Lv.30</div>-->
+    <!--            <div class="w-100">{{ (operator.own * 100).toFixed(1) }} %</div>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+
+
     <!-- 个人结果展示模块 -->
-    <div id="survey_result_personal" style="display: flex;flex-wrap: wrap;">
-      <div class="survey_result_operator" style="display: none;">
-        <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
-          <div class="bg-char_103_angel"
-               style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
+    <div id="survey_result_personal" class="survey-result-personal">
+      <div class="survey-result-operator" v-for="(operator,index) in listOperators.slice(0,12)" :key="index">
+        <div class="survey-result-avatar" style="">
+          <div :class="`bg-${operator.charId}`">
           </div>
         </div>
-        <div class="survey_result_info"
-             style="display: inline-block;vertical-align: top;position: relative;left: 0px;top: 12px;width: 180px;">
-          <img src="/image/survey/bg/SNIPER.png" width="24px" alt="">
-          <div class="survey_result_info_profession"
-               style="display: inline-block;vertical-align: top;padding: 2px 4px;font-size: 16px;">SNIPER
+        <div class="survey-result-info"
+             style="">
+          <img src="/image/survey/bg/SNIPER.png" alt="" class="survey-result-info-profession-icon">
+          <div class="survey-result-info-profession"
+               style="">SNIPER
           </div>
-          <div class="survey_result_info_name" style="font-size: 24px;line-height: 22px;">
-            这是七字干员名
+          <div class="survey-result-info-name" style="">
+            {{ operator.name }}
           </div>
-          <img src="/image/survey/bg/rarity-6.png" height="20px"
-               style="position: relative;left: -2px;padding-top: 2px;">
+          <img :src="`/image/survey/bg/rarity-${operator.rarity}.png`" class="survey-result-rarity-icon" alt="">
         </div>
-        <div class="survey_result_set"
-             style="height:72px;display: inline-block;vertical-align: top;position: relative;left: 0px;top: 12px;border-left: 1px dashed #00000020;padding-left: 8px;">
-          <div class="survey_result_text_line">开荒上场率：10%</div>
-          <div class="survey_result_text_line">开荒平均练度：精二 Lv.60</div>
-          <div class="survey_result_text_line">干员持有率：90%</div>
-        </div>
-      </div>
-      <div class="survey_result_operator">
-        <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
-          <div class="bg-char_103_angel"
-               style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
-          </div>
-        </div>
-        <div class="survey_result_info"
-             style="display: inline-block;vertical-align: top;position: relative;left: 0px;top: 12px;width: 180px;">
-          <img src="/image/survey/bg/SNIPER.png" width="24px">
-          <div class="survey_result_info_profession"
-               style="display: inline-block;vertical-align: top;padding: 2px 4px;font-size: 16px;">SNIPER
-          </div>
-          <div class="survey_result_info_name" style="font-size: 24px;line-height: 22px;">
-            这是七字干员名
-          </div>
-          <img src="/image/survey/bg/rarity-6.png" height="20px"
-               style="position: relative;left: -2px;padding-top: 2px;">
-        </div>
-        <div class="survey_result_set"
-             style="height:72px;display: inline-block;vertical-align: top;position: relative;left: 0px;top: 12px;border-left: 1px dashed #00000020;padding-left: 8px;">
-          <div class="survey_result_text_line">开荒上场率：10%</div>
-          <div class="survey_result_text_line">开荒平均练度：精二 Lv.60</div>
-          <div class="survey_result_text_line">干员持有率：90%</div>
-        </div>
-      </div>
-      <div class="survey_result_operator"
-           style="border: 1px solid #00000040;border-radius: 16px;height: 96px;width: 480px;">
-        <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
-          <div class="bg-char_103_angel"
-               style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
-          </div>
-        </div>
-        <div class="survey_result_info"
-             style="display: inline-block;vertical-align: top;position: relative;left: 0px;top: 12px;width: 180px;">
-          <img src="/image/survey/bg/SNIPER.png" width="24px">
-          <div class="survey_result_info_profession"
-               style="display: inline-block;vertical-align: top;padding: 2px 4px;font-size: 16px;">SNIPER
-          </div>
-          <div class="survey_result_info_name" style="font-size: 24px;line-height: 22px;">
-            这是七字干员名
-          </div>
-          <img src="/image/survey/bg/rarity-6.png" height="20px"
-               style="position: relative;left: -2px;padding-top: 2px;">
-        </div>
-        <div class="survey_result_set"
-             style="height:72px;display: inline-block;vertical-align: top;position: relative;left: 0px;top: 12px;border-left: 1px dashed #00000020;padding-left: 8px;">
-          <div class="survey_result_text_line">开荒上场率：10%</div>
+        <div class="survey-result-data"
+             style="">
+          <div class="survey_result_text_line">开荒上场率：{{ operator.appearanceRate.toFixed(1) }}%</div>
           <div class="survey_result_text_line">开荒平均练度：精二 Lv.60</div>
           <div class="survey_result_text_line">干员持有率：90%</div>
         </div>
       </div>
     </div>
     <!-- 全站结果展示模块 -->
-    这里是使用率最高的前50名干员，可以用tier maker的形式
+    <!--    这里是使用率最高的前50名干员，可以用tier maker的形式-->
     <!-- 先大概看下统计结果，然后看看怎么划段分级 -->
-    <div id="survey_result_all">
-      <div class="survey_result_all_tier" style="height: 72px;">
-        <div class="tier_title" style="width: 96px;height: 96px;display: inline-block;">>15%</div>
-        <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
-          <div class="bg-char_103_angel"
-               style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
-          </div>
+
+
+    <div class="survey-ranking-table">
+      <div v-for="(group,index) in listOperatorGroupByAttendance" :key="index" class="survey-ranking-tier">
+        <div class="survey-ranking-tier-interval" :style="`background-color: ${colorList[index]}`">
+          {{ group.interval }}
         </div>
-        <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
-          <div class="bg-char_103_angel"
-               style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
-          </div>
-        </div>
-      </div>
-      <div class="survey_result_all_tier" style="height: 72px;">
-        <div class="tier_title" style="width: 96px;height: 96px;display: inline-block;">>10%</div>
-        <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
-          <div class="bg-char_103_angel"
-               style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
-          </div>
-        </div>
-        <div class="survey_result_avatar" style="width: 96px;height: 96px;display: inline-block;">
-          <div class="bg-char_103_angel"
-               style="background-color:chocolate;border-radius: 20px;scale: 0.4;position: relative;top: -42px;left: -42px;display: inline-block;">
+        <div class="survey-ranking-tier-operators">
+          <div v-for="(operator,index) in group.list" :key="index" class="survey-ranking-tier-avatar">
+            <div :class="`bg-${operator.charId}`"></div>
           </div>
         </div>
       </div>
     </div>
-
 
   </div>
 

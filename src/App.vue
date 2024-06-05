@@ -26,7 +26,7 @@ import "/src/assets/css/layout/navigation.css";
 import "/src/assets/css/layout/basic.css";
 import "/src/assets/css/layout/theme.css"
 import "/src/assets/css/layout/common.css"
-
+import '/src/assets/css/layout/atom.css'
 import "/src/assets/css/stage_v2.css";
 import "/src/assets/css/store_v2.css";
 import "/src/assets/css/sprite_item.css";
