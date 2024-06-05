@@ -9,9 +9,9 @@ export default {
    * @param userData 账号密码或邮箱验证码
    * @returns {*} 用户信息
    */
-  register(userData) {
+  registerV3(userData) {
     return request({
-      url: `${api_name}/register/v2`,
+      url: `${api_name}/register/v3`,
       method: "post",
       data: userData,
     })
@@ -22,18 +22,23 @@ export default {
    * @param userData 账号密码或邮箱验证码
    * @returns {*} 用户信息
    */
-
-  login(userData) {
+  loginV3(userData) {
     return request({
-      url: `${api_name}/login/v2`,
+      url: `${api_name}/login/v3`,
       method: "post",
       data: userData,
     })
   },
 
-  loginV3(userData) {
+
+  /**
+   * 发送邮件验证码
+   * @param userData  内部数据包括邮件用途，邮箱等
+   * @returns {*}  成功信息
+   */
+  sendVerificationCodeV2(userData){
     return request({
-      url: `${api_name}/login/v3`,
+      url: `${api_name}/verificationCode`,
       method: "post",
       data: userData,
     })
@@ -44,7 +49,7 @@ export default {
    * @param userData  内部数据包括邮件用途，邮箱等
    * @returns {*}  成功信息
    */
-  sendEmailCode(userData){
+  sendVerificationCode(userData){
     return request({
       url: `${api_name}/user/emailCode`,
       method: "post",
@@ -98,6 +103,35 @@ export default {
       url: `${api_name}/character/upload?token=${token}`,
       method: "post",
       data: characterList,
+    })
+  },
+
+
+
+
+  /**
+   * 注册
+   * @param userData 账号密码或邮箱验证码
+   * @returns {*} 用户信息
+   */
+  register(userData) {
+    return request({
+      url: `${api_name}/register/v2`,
+      method: "post",
+      data: userData,
+    })
+  },
+
+  /**
+   * 调查站登录
+   * @param userData 账号密码或邮箱验证码
+   * @returns {*} 用户信息
+   */
+  login(userData) {
+    return request({
+      url: `${api_name}/login/v2`,
+      method: "post",
+      data: userData,
     })
   },
 

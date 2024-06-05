@@ -207,7 +207,7 @@ function sendEmailCode() {
 
 
   // eslint-disable-next-line no-unused-vars
-  surveyApi.sendEmailCode(data).then(response => {
+  surveyApi.sendVerificationCode(data).then(response => {
     cMessage('验证码已发送')
   })
 
