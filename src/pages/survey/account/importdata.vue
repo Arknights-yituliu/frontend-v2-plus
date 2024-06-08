@@ -37,23 +37,36 @@ let inputText = ref('')
 let playBindingInfo = ref({})
 let playBindingList = ref([])
 
-async function importBySkland() {
-  const playBinding = await SklandAPI.getPlayBindingV2(defaultAkUid.value, '', inputText.value)
-  console.log(playBinding)
-  playBindingInfo.value = playBinding
-  playBindingList.value = playBinding.bindingList
+
+
+function getPlayerBindingByHgToken(){
+
+  const obj = canBeParsedAsObject(inputText.value);
+  const token = obj.data.content
+
+  surveyAPI.getPlayBindingListByHgToken({token:token}).then(response=>{
+    playBindingList.value = response.data.playerBindingList
+  })
+
 }
+
 
 function canBeParsedAsObject(str) {
   try {
     return JSON.parse(str); // 如果没有抛出错误，说明字符串可以被解析为JS对象
   } catch (e) {
+    console.error(str)
     cMessage("内容没有复制完整或格式不正确",'error')
     return false; // 捕获到错误，说明字符串不能被解析为JS对象
   }
 }
 
-
+async function getPlayerBindingBySkland() {
+  const playBinding = await SklandAPI.getPlayBindingV2(defaultAkUid.value, '', inputText.value)
+  console.log(playBinding)
+  playBindingInfo.value = playBinding
+  playBindingList.value = playBinding.bindingList
+}
 
 
 async function getOperatorDataByPlayerBinding(akPlayerBinding){
@@ -198,13 +211,23 @@ function checkUserStatus(notice) {
       <div class="import-step-item">
         <div class="import-step-item-title">第三步</div>
         <p>输入复制的内容</p>
-        <input class="input" style="display: block;width: 300px;margin: 0 auto 20px">
-        <button class="btn btn-blue">导入数据</button>
+        <input class="input" style="display: block;width: 300px;margin: 0 auto 20px" v-model="inputText">
+        <button class="btn btn-blue" @click="getPlayerBindingByHgToken()">导入数据</button>
       </div>
 
       <div class="import-step-item">
         <div class="import-step-item-title">第四步</div>
-        <p>为了账号安全，导入后会强制退出官网登录，可以再次进入官网检查登录状态</p>
+        <p>选择你的账号进行导入</p>
+        <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"
+                v-for="(binding,index) in playBindingList" :key="index"
+                @click="getOperatorDataByPlayerBinding(binding)">
+          <span> 昵称：{{binding.nickName}} 区服：{{binding.channelName}} uid：{{binding.uid}}</span>
+        </button>
+      </div>
+
+      <div class="import-step-item">
+        <div class="import-step-item-title">第四步</div>
+        <p>为了您的账号安全，导入后会强制退出官网登录，可以再次进入官网检查登录状态</p>
         <button class="btn btn-blue" @click="openLinkOnNewPage(HYPERGRYPH_LINK)">官网链接</button>
       </div>
     </div>
@@ -233,7 +256,7 @@ function checkUserStatus(notice) {
         <img src="/image/skland/step2.jpg" alt="" class="import-step-image">
         <p>此时你可以获得一段神秘的字符，复制这段字符<b>（*不要带引号）</b>，输入到下面的输入框中</p>
         <input class="input" style="display: block;width: 300px;margin: 0 auto 20px" v-model="inputText">
-        <button class="btn btn-blue" @click="importBySkland">获取森空岛信息</button>
+        <button class="btn btn-blue" @click="getPlayerBindingBySkland">获取森空岛信息</button>
       </div>
 
       <div class="import-step-item">

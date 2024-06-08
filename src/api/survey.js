@@ -24,6 +24,15 @@ export default {
         })
     },
 
+
+    getPlayBindingListByHgToken(data){
+        return request({
+            url: `${api_name}/hg/player-binding`,
+            method: "post",
+            data: data,
+        })
+    },
+
     /**
      * 重置干员练度数据
      * @param data
