@@ -97,6 +97,18 @@ const operatorFilterConditionTable = {
                 func: (operator) => {
                     return operator.roomType === 'manufacture' && operator.description.indexOf('仓库容量上限') > -1
                 }
+            },
+            {
+                label: "buildSkillFilter.StandardizationTeam",
+                func: (operator) => {
+                    operator.buffName.indexOf('标准化') > -1 && operator.description.indexOf('标准化') > -1
+                }
+            },
+            {
+                label: "buildSkillFilter.RhineTechTeam",
+                func: (operator) => {
+                    operator.buffName.indexOf('莱茵科技') > -1
+                }
             }
         ]
     },
@@ -147,6 +159,12 @@ const operatorFilterConditionTable = {
                 func: (operator) => {
                     return operator.roomType === 'control' && operator.description.indexOf('心情') > -1
                 }
+            },
+            {
+                label: "buildSkillFilter.TeamRainbowTeam",
+                func: (operator) => {
+                    operator.buffName.indexOf('彩虹小队') > -1
+                }
             }
         ]
     },
@@ -174,7 +192,7 @@ const operatorFilterConditionTable = {
                 }
             },
             {
-                label: "buildSkillFilter.PinusSylvestrisKnightsTeam",
+                label: "buildSkillFilter.KnightsTeam",
                 func: (operator) => {
                     return operator.buffName.indexOf('红松') > -1 || Knight.includes(operator.name)
                 }
@@ -186,9 +204,33 @@ const operatorFilterConditionTable = {
                 }
             },
             {
-                label: "buildSkillFilter.RhineTechTeam",
+                label: "buildSkillFilter.RhineLabTeam",
                 func: (operator) => {
-                    return Rhine.includes(operator.name)
+                    return RhineLab.includes(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.AbyssalHuntersTeam",
+                func: (operator) => {
+                    return AbyssalHunters.includes(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.BlacksteelTeam",
+                func: (operator) => {
+                    return Blacksteel.includes(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.GlasgowTeam",
+                func: (operator) => {
+                    return Glasgow.includes(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.KarianTradeTeam",
+                func: (operator) => {
+                    return KarianTrade.includes(operator.name)
                 }
             }
         ]
@@ -198,8 +240,12 @@ const operatorFilterConditionTable = {
 // Official english name is "Rosmontis"
 const RosmontisUniverse = ['琴柳']
 const GoldProductionLine = ['桃金娘','杜林','褐果','至简']
-const Knight = ['砾','薇薇安娜']
-const Automation = ['清流','Lancet-2']
-const Rhine = ['淬羽赫默','多萝西','星源','赫默','白面鸮']
+const Knight = ['砾','薇薇安娜','正义骑士号']
+const Automation = ['清流','承曦格雷伊','Lancet-2']
+const RhineLab = ['赫默','伊芙利特','塞雷娅','白面鸮','梅尔','麦哲伦','多萝西','星源','缪尔赛思']
+const AbyssalHunters = ['歌蕾蒂娅','斯卡蒂','幽灵鲨','安哲拉','乌尔比安']
+const Blacksteel = ['雷蛇','芙兰卡','杰西卡','香草','杏仁','涤火杰西卡']
+const Glasgow = ['推进之王','摩根','达格达','因陀罗','戴菲恩']
+const KarianTrade = ['银灰','灵知','初雪','崖心','角峰','讯使','耶拉','极光','锏']
 
 export {operatorFilterConditionTable}

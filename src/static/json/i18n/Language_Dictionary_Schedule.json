@@ -307,7 +307,7 @@
       "en": "Order Limit"
     },
     "BetterOrders": {
-      "cn": "高品质",
+      "cn": "高品质订单",
       "en": "Better Orders"
     },
     "ProductionEfficiency": {
@@ -319,8 +319,8 @@
       "en": "Morale Drain/Restore"
     },
     "Special": {
-      "cn": "特殊技能",
-      "en": "Special"
+      "cn": "特殊组合",
+      "en": "Special Combo"
     },
     "PerceptionInformation": {
       "cn": "感知信息",
@@ -334,17 +334,45 @@
       "cn": "赤金生产线",
       "en": "Gold Production Line"
     },
-    "PinusSylvestrisKnightsTeam": {
-      "cn": "红松骑士团",
-      "en": "Pinus Sylvestris Knights Team"
+    "KnightsTeam": {
+      "cn": "骑士",
+      "en": "Knights Team"
     },
     "AutomationTeam": {
       "cn": "自动化",
       "en": "Automation Team"
     },
+    "StandardizationTeam": {
+      "cn": "标准化",
+      "en": "Standardization Team"
+    },
     "RhineTechTeam": {
       "cn": "莱茵科技",
       "en": "Rhine Tech Team"
+    },
+    "RhineLabTeam": {
+      "cn": "莱茵生命",
+      "en": "Rhine Lab Team"
+    },
+    "AbyssalHuntersTeam": {
+      "cn": "深海猎人",
+      "en": "Abyssal Hunters Team"
+    },
+    "BlacksteelTeam": {
+      "cn": "黑钢国际",
+      "en": "Blacksteel Team"
+    },
+    "GlasgowTeam": {
+      "cn": "格拉斯哥帮",
+      "en": "Glasgow Team"
+    },
+    "KarianTradeTeam": {
+      "cn": "咯兰贸易",
+      "en": "Karian Trade Team"
+    },
+    "TeamRainbowTeam": {
+      "cn": "彩虹小队",
+      "en": "Team Rainbow Team"
     }
   }
 }
