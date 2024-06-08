@@ -1,7 +1,7 @@
 <template>
   <div class="survey_index_page">
     <c-popup :visible="loginVisible" v-model:visible="loginVisible" :width="'400px'">
-      <div class="login_card" v-show="globalUserData.status < 0">
+      <div class="login-card" v-show="globalUserData.status < 0">
         <input class="login-form-input" placeholder="您的用户ID" v-model="inputData.userName" />
         <div style="display: flex">
           <div class="login-btn" @click="register()">注册</div>
@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <div class="login_card" v-show="globalUserData.status > 0">
+      <div class="login-card" v-show="globalUserData.status > 0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
           <div class="login-btn" @click="logout()">确定</div>

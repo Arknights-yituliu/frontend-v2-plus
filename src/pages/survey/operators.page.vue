@@ -597,8 +597,8 @@
 import {cMessage} from "/src/custom/message.js";
 import {filterByCharacterProperty, professionDict, yearDict} from "./service/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
-import surveyApi from "/src/api/userInfo";
-import surveyOperatorApi from "/src/api/survey"
+import userAPI from "/src/api/userInfo";
+import surveyAPI from "/src/api/survey.js"
 import sklandApi from '/src/pages/survey/service/skland'
 import {onMounted, ref} from "vue";
 import {http} from "/src/api/baseURL";
@@ -652,7 +652,7 @@ async function retrieveAccount() {
     cred: SKlandCREDAndSECRET.value
   }
 
-  surveyApi.retrievalUserAccountByCred(data).then(response => {
+  userAPI.retrievalUserAccountByCred(data).then(response => {
     const userName = response.data.userName;
     login(userName)
   })
@@ -687,7 +687,7 @@ function getOperatorData() {
   const data = {token: userData.value.token}
 
   //根据一图流的token查询用户填写的干员数据
-  surveyApi.getSurveyOperatorData(data).then((response) => {
+  userAPI.getSurveyOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
     let obj = {}
     operatorTable.value = characterTable
@@ -964,7 +964,7 @@ function getCredAndSecret(text) {
  */
 async function uploadSKLandData({token, data}) {
 
-  surveyOperatorApi.uoloadSkLandOperatorData({token, data})
+  surveyAPI.uploadSkLandOperatorData({token, data})
       .then(response => {
         uploadMessage.value = response.data;
         cMessage("森空岛数据导入成功");
@@ -988,7 +988,7 @@ function operatorDataReset() {
   let data = {
     token: userData.value.token,
   }
-  surveyOperatorApi.resetOperatorData(data).then(response => {
+  surveyAPI.resetOperatorData(data).then(response => {
     cMessage(response.data)
   })
 }
@@ -999,7 +999,7 @@ function operatorDataReset() {
  */
 function login(userName) {
   let data = {userName: userName}
-  surveyApi.login(data).then(response => {
+  userAPI.login(data).then(response => {
     if (response.data.status > 0) {
       localStorage.setItem("globalUserData", JSON.stringify(response.data));
       // 登录成功刷新
@@ -1019,7 +1019,7 @@ let selectedCharId = ref({});
  */
 const upload = debounce(() => {
   let uploadList = createUploadData();
-  surveyApi.uploadCharacter(uploadList, userData.value.token).then((response) => {
+  userAPI.uploadCharacter(uploadList, userData.value.token).then((response) => {
     uploadMessage.value = response.data;
     cMessage("保存成功");
     selectedCharId.value = {};

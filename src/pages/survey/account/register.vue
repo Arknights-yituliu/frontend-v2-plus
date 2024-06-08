@@ -1,9 +1,9 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/survey/login.v2.scss'
+import userAPI from '/src/api/userInfo.js'
 import {cMessage} from "../../../custom/message.js";
-import {useRouter} from "vue-router";
+
 
 
 function optionLineClass(type) {
@@ -33,30 +33,29 @@ function optionBtnColor(type) {
 }
 
 function inputTipDisplay(inputValue) {
-
+  console.log(!inputValue)
   return !inputValue;
 }
 
-function toLogin(){
+function toRegister() {
+  userAPI.registerV3(inputContent.value).then(response => {
+    localStorage.setItem("USER_TOKEN", response.data.token.toString());
 
-   userAPI.loginV3(inputContent.value).then(response=>{
-     localStorage.setItem("USER_TOKEN", response.data.token.toString());
-     router.push({name:"OperatorSurvey"})
-     cMessage('登录成功')
-   })
+    cMessage('注册成功')
+  })
 }
-
-const router = useRouter()
 
 function sendVerificationCode(){
   const data = {
-    mailUsage:'login',
+    mailUsage:'register',
     email:inputContent.value.email
   }
   userAPI.sendVerificationCodeV2(data).then(response=>{
+
     cMessage('验证码发送成功')
   })
 }
+
 
 onMounted(() => {
   inputContent.value.accountType = 'password'
@@ -70,30 +69,42 @@ onMounted(() => {
       <div class="checkbox login-checkbox">
         <div class="checkbox-option">
           <button class="checkbox-btn" :style="optionBtnColor('password')"
-                  @click="inputContent.accountType='password'">密码登录
+                  @click="inputContent.accountType='password'">账号密码注册
           </button>
           <div :class="optionLineClass('password')"></div>
         </div>
         <div class="checkbox-option">
           <button class="checkbox-btn" :style="optionBtnColor('email')"
-                  @click="inputContent.accountType='email'">邮件登录
+                  @click="inputContent.accountType='email'">邮件注册
           </button>
           <div :class="optionLineClass('email')"></div>
         </div>
       </div>
 
-      <div class="login-form-content-1" v-show="'password'===inputContent.accountType">
+      <div class="login-form-content" v-show="'password'===inputContent.accountType">
         <div class="login-form-content-item">
           <span class="login-form-content-item-label">用户名</span>
           <input class="login-form-input" v-model="inputContent.userName">
           <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.userName)">请输入用户名</span>
+                v-show="inputTipDisplay(inputContent.userName)">请输入用户名，仅可由汉字、英文、数字组成</span>
         </div>
         <div class="login-form-content-item">
           <span class="login-form-content-item-label">登录密码</span>
           <input class="login-form-input" type="password" v-model="inputContent.password">
           <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.password)">请输入登录密码</span>
+                v-show="inputTipDisplay(inputContent.password)">请输入登录密码，仅可由英文、数字组成</span>
+        </div>
+        <div class="login-form-content-item">
+          <span class="login-form-content-item-label">确认密码</span>
+          <input class="login-form-input" type="password" v-model="inputContent.confirmPassword">
+          <span class="login-form-content-item-tip"
+                v-show="inputTipDisplay(inputContent.confirmPassword)">请再次输入登录密码</span>
+        </div>
+        <div class="login-form-content-item">
+          <span class="login-form-content-item-label">绑定邮箱(选填)</span>
+          <input class="login-form-input" type="password" v-model="inputContent.email">
+          <span class="login-form-content-item-tip"
+                v-show="inputTipDisplay(inputContent.confirmPassword)">请输入邮箱</span>
         </div>
       </div>
 
@@ -106,20 +117,20 @@ onMounted(() => {
         </div>
         <div class="login-form-content-item">
           <span class="login-form-content-item-label">验证码</span>
-          <input class="login-form-input" type="password" v-model="inputContent.verificationCode">
+          <input class="login-form-input" v-model="inputContent.verificationCode">
           <span class="login-form-content-item-tip"
                 v-show="inputTipDisplay(inputContent.verificationCode)">请输入验证码</span>
-          <button class="login-form-btn-send" @click="sendVerificationCode">发送验证码</button>
+          <button class="login-form-btn-send" @click="sendVerificationCode()">发送验证码</button>
         </div>
       </div>
 
-      <button class="btn btn-blue" style="display: block;width: 200px;margin:0 auto"
-      @click="toLogin">登录</button>
-      <span class="login-form-content-tip-btn" v-show="'password'===inputContent.accountType">忘记密码？</span>
+      <button class="btn btn-blue"
+              style="display: block;margin:0 auto"
+              @click="toRegister()">注册账号</button>
       <div class="login-form-notice">
-        <p style="color: #1f88ff" class="title">*账号系统改动说明：</p>
+        <p style="color: #6eb0ff" class="title">*账号系统改动说明：</p>
         <p>
-          选择密码登录时，如果绑定了邮箱，也可将邮箱作为账号进行登录。
+          1.选择账号密码注册时，如果在注册时输入了绑定邮箱或后续在个人中心绑定了邮箱，也可将邮箱作为账号通过账号密码方式登录。
         </p>
         <p style="color: #ff4b4b" class="title">
           *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
@@ -134,6 +145,3 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
-
-</style>

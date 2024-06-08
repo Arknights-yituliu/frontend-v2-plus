@@ -150,7 +150,7 @@
 }
 
 .stage_card_3_markText {
-    color: var(--c-tip-color);
+    color: var(--c-text-tip-color);
     /* float: right; */
     font-size: 12px;
     text-align: center;

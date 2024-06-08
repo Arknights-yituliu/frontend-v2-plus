@@ -16,9 +16,18 @@ export default {
         })
     },
 
-    uoloadSkLandOperatorData(data){
+    uploadSkLandOperatorData(data){
         return request({
             url: `${api_name}/operator/import/skland/v2`,
+            method: "post",
+            data: data,
+        })
+    },
+
+
+    getPlayBindingListByHgToken(data){
+        return request({
+            url: `${api_name}/hg/player-binding`,
             method: "post",
             data: data,
         })

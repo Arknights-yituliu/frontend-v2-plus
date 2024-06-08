@@ -10,7 +10,9 @@
 
 
 .survey-login-btn{
-    width: 50px;
+    width: 80px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .survey_nav_menu_arrow{
@@ -50,7 +52,7 @@
     color: var(--c-text-color);
 }
 
-.nav_avatar_image_wrap{
+.nav-avatar-image-wrap{
     height: 42px;
     width: 42px;
     position: relative;
@@ -59,7 +61,14 @@
     background-color: white;
     border: 1px solid #d2d2d2;
     margin: 0 4px;
-    transition: all 0.3s;
+
+}
+
+.nav-user-name{
+    font-size: 14px;
+    position: absolute;
+    left: 44px;
+    line-height: 42px;
 }
 
 .nav_avatar_image {

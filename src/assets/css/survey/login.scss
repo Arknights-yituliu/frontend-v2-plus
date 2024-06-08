@@ -3,13 +3,22 @@
   display: flex;
   justify-content: flex-end;
 
-  .login_card {
+  .login-card {
     width: 550px;
     height: auto;
     border-radius: 6px;
     margin: auto;
     padding: 24px 12px;
     box-sizing: border-box;
+  }
+
+  .login-card-notice{
+    padding:4px 24px;
+
+    .title{
+      display: block;
+      margin: 12px 0;
+    }
   }
 
   .login-checkbox {
@@ -67,7 +76,6 @@
 
   .login-tip {
     font-size: 14px;
-    font-style: italic;
     margin:12px;
     line-height: 20px;
   }
