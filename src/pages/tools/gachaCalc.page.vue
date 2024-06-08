@@ -188,12 +188,8 @@ function getAndSortPackData() {
       if (pack.saleType === 'limited') {
         packListGroupByLimited.value.push(pack)
       }
-
-
     }
-    batchGenerationMonthlyPack(index)
-
-
+    batchGenerationMonthlyPack(114)
   })
 }
 
@@ -1075,7 +1071,8 @@ onMounted(() => {
   readLastSettings()
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
   updateScheduleOption(0)
-  getAndSortPackData()
+  // getAndSortPackData()
+  batchGenerationMonthlyPack(index)
 
   ElNotification({
     title: '2024.5.15',
