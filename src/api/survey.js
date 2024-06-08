@@ -16,7 +16,7 @@ export default {
         })
     },
 
-    uoloadSkLandOperatorData(data){
+    uploadSkLandOperatorData(data){
         return request({
             url: `${api_name}/operator/import/skland/v2`,
             method: "post",

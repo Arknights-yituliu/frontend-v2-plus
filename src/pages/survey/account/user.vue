@@ -26,6 +26,15 @@
     </div>
 
 
+    <c-popup :visible="loginVisible" v-model:visible="loginVisible" >
+      <div class="login-card" v-show="userData.status>0">
+        <div class="logout_text">确定登出当前用户？</div>
+        <div class="logout_btn_wrap">
+          <button class="btn btn-blue logout_btn" @click="logout()">确定</button>
+          <button class="btn btn-red logout_btn" @click="loginVisible = !loginVisible">取消</button>
+        </div>
+      </div>
+    </c-popup>
   </div>
 </template>
 
@@ -42,15 +51,17 @@ import "/src/assets/css/survey/login.phone.scss"
 import "/src/assets/css/survey/survey_nav.css";
 
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {cMessage} from "/src/custom/message";
 
 import surveyApi from "/src/api/userInfo";
 import {getUserInfo} from "/src/pages/survey/service/userData.js";
+import {useRoute} from "vue-router";
+
 
 let loginStatus = ref('')
 
-
+let loginVisible = ref(false);
 
 
 
@@ -122,6 +133,14 @@ function getSprite(id) {
 onMounted(() => {
   getUserInfoByToken()
 });
+
+const route = useRoute();
+
+watch(()=>route.fullPath,(newVal,oldValue)=>{
+  console.log(newVal,oldValue)
+  getUserInfoByToken()
+})
+
 </script>
 
 <style scoped>

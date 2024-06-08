@@ -11,7 +11,7 @@ export default {
    */
   registerV3(userData) {
     return request({
-      url: `${api_name}/register/v3`,
+      url: `user/register/v3`,
       method: "post",
       data: userData,
     })
@@ -24,12 +24,19 @@ export default {
    */
   loginV3(userData) {
     return request({
-      url: `${api_name}/login/v3`,
+      url: `user/login/v3`,
       method: "post",
       data: userData,
     })
   },
 
+
+  getUserInfo(token){
+    return request({
+      url: `user/info?token=${token}`,
+      method: "get",
+    })
+  },
 
   /**
    * 发送邮件验证码
@@ -38,11 +45,54 @@ export default {
    */
   sendVerificationCodeV2(userData){
     return request({
-      url: `${api_name}/verificationCode`,
+      url: `user/verificationCode`,
       method: "post",
       data: userData,
     })
   },
+
+  /**
+   * 更新用户信息
+   * @param data
+   * @returns {*}
+   */
+  updateUserDataV2(data) {
+    return request({
+      url: `user/update/v2`,
+      method: "post",
+      data: data,
+    })
+  },
+
+  /**
+   * 找回用户信息
+   * @param data
+   * @returns {*}
+   */
+  retrieveAuthentication(data) {
+    return request({
+      url: `user/retrieve/auth`,
+      method: "post",
+      data: data,
+    })
+  },
+
+  resetPassword(data) {
+    return request({
+      url: `user/reset/password`,
+      method: "post",
+      data: data,
+    })
+  },
+
+
+
+
+
+
+
+
+
 
   /**
    * 发送邮件验证码
@@ -134,6 +184,7 @@ export default {
       data: userData,
     })
   },
+
 
 
 }

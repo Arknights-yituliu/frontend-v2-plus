@@ -1,8 +1,12 @@
 <script setup>
-
 import {ref} from "vue";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
 import SklandAPI from '/src/pages/survey/service/skland.js'
+import {userData} from "/src/pages/survey/service/userData.js";
+import {cMessage} from "/src/custom/message.js";
+import sklandApi from "../service/skland.js";
+import characterTable from "/src/static/json/survey/character_table_simple.json";
+import surveyAPI from '/src/api/survey.js'
 
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
 const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'
@@ -32,11 +36,92 @@ let defaultAkUid = ref('')
 let inputText = ref('')
 let playBindingInfo = ref({})
 let playBindingList = ref([])
+
 async function importBySkland() {
   const playBinding = await SklandAPI.getPlayBindingV2(defaultAkUid.value, '', inputText.value)
   console.log(playBinding)
   playBindingInfo.value = playBinding
   playBindingList.value = playBinding.bindingList
+}
+
+function canBeParsedAsObject(str) {
+  try {
+    return JSON.parse(str); // 如果没有抛出错误，说明字符串可以被解析为JS对象
+  } catch (e) {
+    cMessage("内容没有复制完整或格式不正确",'error')
+    return false; // 捕获到错误，说明字符串不能被解析为JS对象
+  }
+}
+
+
+
+
+async function getOperatorDataByPlayerBinding(akPlayerBinding){
+  const {uid, nickName, channelName, channelMasterId} = akPlayerBinding
+
+  if (checkUserStatus(true)) {
+    return;
+  }
+
+  const {cred, secret} = getCredAndSecret(inputText.value)
+
+  const params = {
+    requestUrl: '/api/v1/game/player/info',
+    requestParam: `uid=${uid}`,
+    secret: secret,
+    cred: cred,
+    akUid: uid,
+    akNickName: nickName,
+    channelMasterId: channelMasterId,
+    channelName: channelName,
+  }
+
+  const playerInfo = await sklandApi.getPlayerInfo(params, characterTable)
+
+
+  if (!playerInfo) {
+    return
+  }
+
+  await uploadSKLandData({
+    token: userData.value.token,
+    data: JSON.stringify(playerInfo)
+  })
+}
+
+
+/**
+ * 上传获取到的森空岛干员数据
+ * @param token 用户凭证
+ * @param data 干员数据
+ * @returns {Promise<void>}
+ */
+async function uploadSKLandData({token, data}) {
+
+  surveyAPI.uploadSkLandOperatorData({token, data})
+      .then(response => {
+        cMessage("森空岛数据导入成功");
+      })
+}
+
+/**
+ * 获取cred和secret
+ * @param text 用户输入的字符串
+ * @return {{cred: *, secret: *}}  cred和secret
+ */
+function getCredAndSecret(text) {
+
+  if (!text.includes(',')) {
+    cMessage('输入格式不正确,应是一个中间包含逗号的一串字母', 'error')
+  }
+  text = text.replace(/\s+/g, '')
+      .replace(/["']/g, '')
+
+  const textArr = text.split(',')
+  const cred = textArr[0]
+  const secret = textArr[1]
+  return {cred, secret}
+
 }
 
 function defaultBindUidBtnClass(uid){
@@ -53,6 +138,24 @@ function optionBtnColor(type) {
   }
 }
 
+
+/**
+ * 检查用户状态
+ * @param notice 是否弹出提示
+ * @returns {boolean} 状态
+ */
+function checkUserStatus(notice) {
+  if (!userData.value.token) {
+    if (notice) {
+      cMessage('请先注册或登录一图流账号', 'error')
+    }
+    return true;
+  }
+  return false
+}
+
+
+
 </script>
 
 <template>
@@ -60,13 +163,13 @@ function optionBtnColor(type) {
 
     <div class="checkbox">
       <div class="checkbox-option ">
-        <button class="checkbox-btn" :style="optionBtnColor('hg')"
+        <button class="checkbox-btn btn-import-data" :style="optionBtnColor('hg')"
                 @click="selectedOption='hg'">从官网导入
         </button>
         <div :class="optionLineClass('hg')"></div>
       </div>
       <div class="checkbox-option">
-        <button class="checkbox-btn" :style="optionBtnColor('skland')"
+        <button class="checkbox-btn btn-import-data" :style="optionBtnColor('skland')"
                 @click="selectedOption='skland'">从森空岛导入
         </button>
         <div :class="optionLineClass('skland')"></div>
@@ -84,9 +187,12 @@ function optionBtnColor(type) {
         <div class="import-step-item-title">第二步</div>
         <img src="/image/skland/hgAPI.jpg" alt="" class="import-step-image">
         <p>点击对应的服务器链接，将会返回如上图所示的一段数据，将其全部复制</p>
-        <button class="btn btn-blue" style="margin: 0 12px" @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
+
+        <button class="btn btn-blue login-btn-line"  @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
         </button>
-        <button class="btn btn-red" style="margin: 0 12px" @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服</button>
+
+        <button class="btn btn-red login-btn-line"  @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服
+        </button>
       </div>
 
       <div class="import-step-item">
@@ -133,7 +239,9 @@ function optionBtnColor(type) {
       <div class="import-step-item">
         <div class="import-step-item-title">第四步</div>
         <p>选择你的账号进行导入</p>
-        <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)" v-for="(binding,index) in playBindingList" :key="index" >
+        <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"
+                v-for="(binding,index) in playBindingList" :key="index"
+                @click="getOperatorDataByPlayerBinding(binding)">
           <span> 昵称：{{binding.nickName}} 区服：{{binding.channelName}} uid：{{binding.uid}}</span>
         </button>
       </div>
@@ -149,8 +257,10 @@ function optionBtnColor(type) {
   padding: 1px;
   min-height: 95vh;
 
+
+
   .checkbox {
-    width: 210px;
+    width: 300px;
     margin: 8px auto;
   }
 

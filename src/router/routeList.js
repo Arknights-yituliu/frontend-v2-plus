@@ -2,9 +2,10 @@ import Error404 from "/src/pages/layout/error404.vue";
 import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.page.vue'
 import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.page.vue'
 import Notice from '/src/pages/layout/notice.vue'
-import REGISTER from  '/src/pages/survey/account/register.vue'
+import REGISTER from '/src/pages/survey/account/register.vue'
 import LOGIN from '/src/pages/survey/account/login.vue'
-import IMPORT_BY_SKLAND from '/src/pages/survey/account/importbyskland.vue'
+import RETRIEVE from '/src/pages/survey/account/retrieve.vue'
+import IMPORT_BY_SKLAND from '/src/pages/survey/account/importdata.vue'
 
 // {
 //     path: '/',  访问路径
@@ -118,7 +119,7 @@ const routes = [
     {
         path: '/survey/account/home',
         text: '用户中心',
-        name: 'User',
+        name: 'AccountHome',
         display: true,
         module: 'survey',
         icon: "user",
@@ -127,16 +128,24 @@ const routes = [
     },
     {
         path: '/survey/account/register',
-        text: '用户中心',
+        text: '注册账号',
         name: 'REGISTER',
+        display: true,
         component: REGISTER
     },
     {
         path: '/survey/account/login',
-        text: '用户中心',
+        text: '登录账号',
         name: 'LOGIN',
         display: false,
         component: LOGIN
+    },
+    {
+        path: '/survey/account/retrieve',
+        text: '找回账号',
+        name: 'RETRIEVE',
+        display: false,
+        component: RETRIEVE
     },
     {
         path: '/survey/account/importbyskland',
@@ -265,20 +274,30 @@ const LinkedTable = {
         path: '/',
         text: "其他信息",
         child: []
+    },
+    backend: {
+        path: '/',
+        text: "后台导航",
+        child: []
     }
 }
 
 const devRoute = ['/survey/questionnaire']
 
 for (const route of routes) {
-    if(!route.display){
+
+    if (!route.display) {
+        LinkedTable.backend.child.push(route)
         continue
     }
 
-
-    if (route.module) {
-        LinkedTable[route.module].child.push(route)
+    if (!route.module) {
+        LinkedTable.backend.child.push(route)
+        continue
     }
+
+    LinkedTable[route.module].child.push(route)
+
 
 }
 
