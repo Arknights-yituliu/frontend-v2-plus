@@ -1,27 +1,40 @@
-name: ci
+name: build & publish
 
 on:
   push:
-    branches:
-      - "main"
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Build and push
-        uses: docker/build-push-action@v4
+          node-version: 16.20.1
+
+
+      - name: Build
+        run: |
+          npm install
+          npm run build
+
+      - name: Upload COS
+        uses: zkqiang/tencent-cos-action@v0.1.0
         with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/yituliu-frontend-v2-plus:latest
+          args: delete -r -f / && upload -r ./dist/ /
+          secret_id: ${{ secrets.COS_SECRET_ID }}
+          secret_key: ${{ secrets.COS_SECRET_KEY }}
+          bucket: ${{ secrets.COS_BUCKET_PROD }}
+          region: ap-beijing
+
+      - name: Refresh Tencent Cloud CDN Purge Cache
+        uses: keithnull/tencent-cloud-cdn-purge-cache@v1.0
+        env:
+          SECRET_ID: ${{ secrets.COS_SECRET_ID}}
+          SECRET_KEY: ${{ secrets.COS_SECRET_KEY }}
+          PATHS: "https://ark.yituliu.cn/"
+          FLUSH_TYPE: "flush" # optional

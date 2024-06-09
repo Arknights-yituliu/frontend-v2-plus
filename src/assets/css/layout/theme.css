@@ -11,7 +11,7 @@
     --c-border-color: #adadad;
     --c-background-color: var(--c-white-1);
     --c-text-color:var(--c-black-2);
-    --c-tip-color: #505050;
+    --c-text-tip-color: #aaaaaa;
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
 
 
@@ -43,9 +43,11 @@
     /*输入框样式*/
     --c-input-bg:'';
     --c-input-border:1px solid var(--c-white-3);
+
     --c-input-border-focus:1px solid #6ec3ff;
     --c-input-text-color:var(--c-black-2);
-
+    --c-input-border-color:rgba(0, 0, 0, 0.3);
+    --c-input-border-focus-color:rgb(73, 179, 255);
 }
 
 .theme_dark{
@@ -56,7 +58,7 @@
     --c-border-color: #b6b6b6;
     --c-background-color: #2d2d2d;
     --c-text-color: var(--c-white-2);
-    --c-tip-color: #c0c0c0;
+    --c-text-tip-color: #c0c0c0;
     --c-background-white-transparent:var(--c-wrap-white-transparent-bg);
 
 
@@ -93,7 +95,8 @@
     --c-input-border:1px solid var(--c-black-6);
     --c-input-border-focus:1px solid #6ec3ff;
     --c-input-text-color:var(--c-white-2);
-
+    --c-input-border-color: rgb(255, 255, 255);
+    --c-input-border-focus-color: rgb(255, 83, 30);
 }
 
 

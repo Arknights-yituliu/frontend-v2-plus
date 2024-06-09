@@ -7,7 +7,9 @@
         <my-header/>
       </div>
       <div class="main">
-        <div v-show="devVer">您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况</div>
+        <div class="dev-tip" v-show="devVer">您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况，
+          请访问正式域名<a href="https://ark.yituliu.cn/">https://ark.yituliu.cn/</a></div>
+        <div class="dev-tip" >一图流服务器目前疑似遭到攻击，目前依赖后端的服务均不可用，恢复时间待定</div>
         <router-view>
         </router-view>
       </div>
@@ -20,7 +22,7 @@
 //导航
 import "/src/assets/css/layout/main.css";
 import '/src/assets/svg/iconfont.css'
-
+import '/src/assets/css/common/common.css'
 
 import "/src/assets/css/layout/navigation.css";
 import "/src/assets/css/layout/basic.css";
@@ -119,6 +121,17 @@ body {
   width: 100%;
   height: 100vh;
 }
+
+
+.dev-tip{
+   text-align: center;
+   padding: 8px 0;
+   color: #ff2d76;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+
 </style>
 
 

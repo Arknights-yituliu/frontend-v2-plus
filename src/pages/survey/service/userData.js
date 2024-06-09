@@ -1,6 +1,7 @@
 import axios from "axios";
 import {ref} from "vue";
 import {http} from '/src/api/baseURL.js'
+import {cMessage} from "../../../custom/message.js";
 
 let userData = ref(); //用户信息(用户名，用户id，用户状态)
 
@@ -14,6 +15,9 @@ async function getUserInfo() {
         .then(response => {
             if(response.data.code===200){
                 userInfo =  response.data.data
+                userData.value = response.data.data
+            }else {
+                // cMessage('未登录','error')
             }
         })
         .catch((error) => {
@@ -23,4 +27,4 @@ async function getUserInfo() {
    return userInfo
 }
 
-export {getUserInfo}
+export {getUserInfo,userData}

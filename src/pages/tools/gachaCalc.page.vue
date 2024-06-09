@@ -188,12 +188,8 @@ function getAndSortPackData() {
       if (pack.saleType === 'limited') {
         packListGroupByLimited.value.push(pack)
       }
-
-
     }
-    batchGenerationMonthlyPack(index)
-
-
+    batchGenerationMonthlyPack(114)
   })
 }
 
@@ -442,9 +438,9 @@ let selectedPackIndex = ref([])
 
 let logs = []
 
-let officialMonthlyCardReward = ref(0)
-const officialMonthlyCardEndDate = new Date('2024/05/27 03:58:00')
-let officialMonthlyCardRemainingDays = ref(0)
+// let officialMonthlyCardReward = ref(0)
+// const officialMonthlyCardEndDate = new Date('2024/05/27 03:58:00')
+// let officialMonthlyCardRemainingDays = ref(0)
 
 /**
  * 计算抽卡资源
@@ -555,15 +551,16 @@ function gachaResourcesCalculation() {
       tenGachaTicket += item.tenGachaTicket
     }
 
-    if (endDate.value < officialMonthlyCardEndDate) {
-      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value) - 1
-    } else {
-      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), officialMonthlyCardEndDate) - 1
-    }
+    //计算官方月卡
+    // if (endDate.value < officialMonthlyCardEndDate) {
+    //   officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value) - 1
+    // } else {
+    //   officialMonthlyCardRemainingDays.value = dateDiff(new Date(), officialMonthlyCardEndDate) - 1
+    // }
 
 
-    officialMonthlyCardReward.value = officialMonthlyCardRemainingDays.value * 200
-    orundum += officialMonthlyCardReward.value
+    // officialMonthlyCardReward.value = officialMonthlyCardRemainingDays.value * 200
+    // orundum += officialMonthlyCardReward.value
 
     //判断源石是否用于抽卡
     if (!originiumIsUsed.value) {
@@ -1074,7 +1071,8 @@ onMounted(() => {
   readLastSettings()
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
   updateScheduleOption(0)
-  getAndSortPackData()
+  // getAndSortPackData()
+  batchGenerationMonthlyPack(114)
 
   ElNotification({
     title: '2024.5.15',
@@ -1309,17 +1307,17 @@ function handleResize() {
               <span>{{ dailyReward.dailyOrundumReward }}</span>
             </div>
           </div>
-          <div class="resources-line">
-              <span class="resources-line-label">
-                官方月卡{{ officialMonthlyCardRemainingDays }}次
-              </span>
-            <div class="resources-line-content">
-              <div class="image-sprite">
-                <div class="bg-icon_4003"></div>
-              </div>
-              <span>{{ officialMonthlyCardReward }}</span>
-            </div>
-          </div>
+<!--          <div class="resources-line">-->
+<!--              <span class="resources-line-label">-->
+<!--                官方月卡{{ officialMonthlyCardRemainingDays }}次-->
+<!--              </span>-->
+<!--            <div class="resources-line-content">-->
+<!--              <div class="image-sprite">-->
+<!--                <div class="bg-icon_4003"></div>-->
+<!--              </div>-->
+<!--              <span>{{ officialMonthlyCardReward }}</span>-->
+<!--            </div>-->
+<!--          </div>-->
           <!--          <el-divider></el-divider>-->
           <div class="divider"></div>
           <div class="resources-line">

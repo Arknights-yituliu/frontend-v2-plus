@@ -28,6 +28,124 @@ function getSign(path, requestParam, secret) {
 }
 
 
+async function getPlayBindingV2(defaultAkUid, requestParam,text) {
+
+    const {cred, secret} = getCredAndSecret(text)
+
+    const {timestamp, sign} = getSign(PLAYER_BINDING_URL, requestParam, secret);
+
+    let uid = '0'
+    let nickName = ""
+
+    let channelName = '默认'
+    let channelMasterId = -1
+
+    const url = `${domain}${PLAYER_BINDING_URL}`
+    // console.log(url)
+    const headers = {
+        "platform": '3',
+        "timestamp": timestamp,
+        "dId": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
+        "vName": '1.2.0',
+        "cred": cred,
+        "sign": sign
+    }
+    // console.table(headers)
+
+    let bindingData = {
+        bindingList: [],
+        uid: uid,
+        nickName: nickName,
+        channelName: '官服',
+        channelMasterId: 1
+    }
+
+
+    await request({
+        url: url,
+        headers: headers,
+        method: "get",
+    }).then(response => {
+
+        response = response.data
+        // console.log(response)
+        if (response.code !== 0) {
+            cMessage("森空岛CRED错误或失效")
+        } else {
+            const list = response.data.list
+
+            let akBindingList = []
+
+            for (const item of list) {
+                if (item.appCode === 'arknights') {
+                    akBindingList = item.bindingList
+                    break
+                }
+            }
+
+            for (const binding of akBindingList) {
+                if (defaultAkUid !== '0') {
+                    if (binding.uid === defaultAkUid) {
+                        uid = binding.uid;
+                        nickName = binding.nickName;
+                        channelName = binding.channelName
+                        channelMasterId = binding.channelMasterId
+                        break;
+                    }
+                }
+
+                if (binding.isOfficial) {
+                    uid = binding.uid;
+                    nickName = binding.nickName;
+                    channelName = binding.channelName
+                    channelMasterId = binding.channelMasterId
+                    break;
+                }
+            }
+
+            if (typeof uid === "undefined") {
+                const binding = list[0].bindingList[0]
+                uid = binding.uid;
+                nickName = binding.nickName;
+                channelName = binding.channelName
+                channelMasterId = binding.channelMasterId
+            }
+
+            bindingData.bindingList = akBindingList;
+            bindingData.nickName = nickName;
+            bindingData.uid = uid;
+            bindingData.channelName = channelName
+            bindingData.channelMasterId = channelMasterId
+        }
+    }).catch(error => {
+        cMessage('森空岛：' + error.response.data.message, 'error')
+        return void 0
+    })
+
+    return bindingData;
+}
+
+
+/**
+ * 获取cred和secret
+ * @param text 用户输入的字符串
+ * @return {{cred: *, secret: *}}  cred和secret
+ */
+function getCredAndSecret(text) {
+
+    if (!text.includes(',')) {
+        cMessage('输入格式不正确,应是一个中间包含逗号的一串字母', 'error')
+    }
+    text = text.replace(/\s+/g, '')
+        .replace(/["']/g, '')
+
+    const textArr = text.split(',')
+    const cred = textArr[0]
+    const secret = textArr[1]
+    return {cred, secret}
+
+}
+
 async function getPlayBinding(defaultAkUid, requestParam, secret, cred) {
 
     cred = cred.replace(/\s+/g, '')
@@ -269,5 +387,6 @@ function FormattingOperatorData(characterList, characterTable) {
 
 export default {
     getPlayBinding,
+    getPlayBindingV2,
     getPlayerInfo,
 }

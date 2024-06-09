@@ -1,7 +1,7 @@
 <script setup>
 import {ref, onMounted,  watchEffect} from "vue";
 import toolApi from "/src/api/tool";
-import login from "/src/pages/survey/account/login.vue";
+import user from "/src/pages/survey/account/user.vue";
 import routesJson from "/src/static/json/routes.json";
 import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
 import {language} from '/src/utils/i18n.js'
@@ -184,22 +184,21 @@ function openNewPage(url) {
     <i class="iconfont icon-theme-style" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
     <div class="icon-button" @click="feedbackPopupVisible = !feedbackPopupVisible">
       <i class="iconfont icon-survey icon-feed-back-style"></i>
-      <span style="font-size: 16px;color: white;">反馈</span>
+      <span class="header-button-label">反馈</span>
     </div>
     <c-popover name="language">
       <template #title>
         <div class="icon-button">
           <i class="iconfont icon-language icon-language-style"></i>
-          <span style="font-size: 16px;color: white;">{{ LanguageLabel[language] }}</span>
+          <span class="header-button-label">{{ LanguageLabel[language] }}</span>
         </div>
       </template>
       <div class="language-options" id="language">
-        <span @click="language='cn'">中文</span>
-        <span @click="language='en'">English</span>
+        <span @click="language='cn'" >中文</span>
+        <span @click="language='en'" >English</span>
       </div>
     </c-popover>
-    <login></login>
-
+    <user></user>
 
     <div class="drawer-container">
       <div class="drawer" id="drawer114">
@@ -209,7 +208,7 @@ function openNewPage(url) {
             <div class="side-website-title">明日方舟一图流</div>
           </a>
           <!-- 导航菜单 -->
-          <div class="aside_menu_set" v-for="(parent, index) in LinkedTable" :key="index">
+          <div class="aside_menu_set" v-for="(parent, index) in LinkedTable" :key="index" v-show="parent.display">
             <!-- 一级标题 -->
             <router-link :to="parent.path"  class="nav-bar nav-bar-parent">
               <div class="nav-bar-parent-icon"></div>
@@ -219,6 +218,7 @@ function openNewPage(url) {
             <!-- 二级标题组 -->
             <router-link :to="child.path" :href="child.path" class="nav-bar nav-bar-child"
                          v-for="(child,index) in parent.child" :key="index">
+
               <i class="iconfont menu-icon" :class="`icon-${child.icon}`"></i>
               <span>{{ child.text }}</span>
             </router-link>
