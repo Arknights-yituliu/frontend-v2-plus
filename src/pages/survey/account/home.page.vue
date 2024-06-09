@@ -62,8 +62,7 @@ function updatePassWord() {
 
   surveyApi.updateUserDataV2(data).then(response => {
     cMessage('修改密码成功')
-    userData.value.status = response.data.status
-    localStorage.setItem("globalUserData", JSON.stringify(userData.value));
+    getUserInfoByToken()
   })
 }
 
@@ -91,9 +90,7 @@ function updateEmail() {
   }
   surveyApi.updateUserDataV2(data).then(response => {
     cMessage('邮箱绑定成功')
-    userData.value.status = response.data.status
-    userData.value.email = response.data.email
-    localStorage.setItem("globalUserData", JSON.stringify(userData.value));
+    getUserInfoByToken()
   })
 }
 
@@ -122,7 +119,7 @@ function logout() {
 
 
 
-async function getCacheUserData() {
+async function getUserInfoByToken() {
   userData.value = await getUserInfo()
 }
 
@@ -159,7 +156,7 @@ function getSprite(id) {
 }
 
 onMounted(() => {
-  getCacheUserData()
+  getUserInfoByToken()
 
 
 })
@@ -238,9 +235,8 @@ onMounted(() => {
         <div class="user-info-card-input-line">
           <input class="user-info-card-input" v-model="inputData.userName"/>
           <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>
-          <button class="btn btn-blue btn_position" @click="updateUserName()">更新昵称</button>
+          <button class="btn btn-blue btn_position" @click="updateUserName()">更新用户名</button>
         </div>
-        <span class="user-info-card-tip">设置密码后可更换不带后缀数字的用户名</span>
       </div>
 
       <div class="user-info-card">

@@ -33,7 +33,6 @@ function optionBtnColor(type) {
 }
 
 function inputTipDisplay(inputValue) {
-
   return !inputValue;
 }
 
@@ -41,8 +40,11 @@ function toLogin(){
 
    userAPI.loginV3(inputContent.value).then(response=>{
      localStorage.setItem("USER_TOKEN", response.data.token.toString());
-     router.push({name:"OperatorSurvey"})
-     cMessage('登录成功')
+     cMessage('登录成功，即将转跳到个人信息页面')
+     setTimeout(() => {
+       router.push({name:"AccountHome"})
+     }, 3000)
+
    })
 }
 

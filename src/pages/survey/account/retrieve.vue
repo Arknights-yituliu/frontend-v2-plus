@@ -62,12 +62,11 @@ function sendVerificationCode() {
 }
 
 function checkPassword() {
-  if (inputContent.value.confirmPassword.length > 5) {
+  if (inputContent.value.confirmPassword.length > 2) {
     if (inputContent.value.password !== inputContent.value.confirmPassword) {
       return '两次密码不一致'
     }
   }
-
 }
 
 let recoveryProgress = ref('left:0px')
@@ -161,7 +160,7 @@ onMounted(() => {
               <span class="login-form-content-item-label">确认密码</span>
               <input class="login-form-input" type="password" v-model="inputContent.confirmPassword">
               <span class="login-form-content-item-tip"
-                    v-show="inputTipDisplay(inputContent.confirmPassword)">请再次输入新密码</span>
+                    v-show="inputTipDisplay(inputContent.confirmPassword)">请再次输入新密码，仅可由英文、数字组成</span>
               <span class="login-form-content-item-warn">
                   {{ checkPassword() }}
               </span>
