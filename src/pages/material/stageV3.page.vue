@@ -7,6 +7,12 @@ import TourGuide from "../../components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import {timeFormat} from '/src/utils/dateUtil.js'
+import stageT3 from '/src/static/json/tmp/t3.json'
+import stageOrundum from '/src/static/json/tmp/orundum.json'
+import stageItem from '/src/static/json/tmp/item.json'
+import stageAct from '/src/static/json/tmp/act.json'
+
+
 //漫游导航指引
 const guideOpen = ref(false)
 
@@ -47,19 +53,27 @@ let updateTime = ref('')
 
 // 获取关卡推荐数据
 function getStageResult() {
-  stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
-    updateTime.value = response.data.updateTime
-    stageResultGroup = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
-    //将后端返回的数据组装为卡片需要的数据格式
-    getItemCardData()
-    //获取材料价值数据
-    stageApi.getItemValueTable(0.625).then(response => {
-      for (const item of response.data) {
-        item_value_obj.value[item.itemId] = item;
-      }
-      getItemTableData(0, false)
-    })
-  })
+  // stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
+  //   updateTime.value = response.data.updateTime
+  //   stageResultGroup = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+  //   //将后端返回的数据组装为卡片需要的数据格式
+  //   getItemCardData()
+  //   //获取材料价值数据
+  //   stageApi.getItemValueTable(0.625).then(response => {
+  //     for (const item of response.data) {
+  //       item_value_obj.value[item.itemId] = item;
+  //     }
+  //     getItemTableData(0, false)
+  //   })
+  // })
+
+  stageResultGroup = stageT3.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+  getItemCardData()
+  for (const item of stageItem.data) {
+    item_value_obj.value[item.itemId] = item;
+  }
+  getItemTableData(0, false)
+
 }
 
 
@@ -279,87 +293,166 @@ const reprintActivityList = [
 function getHistoryActStage() {
   historyActItemTable = []
 
-  // 获取历史活动up材料信息
-  stageApi.getHistoryActStage(0.625, 300).then(response => {
-    // 先把当作表头的材料表转为一个集合
-    for (const itemId in itemSeries) {
-      const item = itemSeries[itemId]
-      itemIdList.push({
-        id: item.id,
-        name: item.name,
-        lastUp: false,
-        lastUpInterval: 0
-      })
+  // 先把当作表头的材料表转为一个集合
+  for (const itemId in itemSeries) {
+    const item = itemSeries[itemId]
+    itemIdList.push({
+      id: item.id,
+      name: item.name,
+      lastUp: false,
+      lastUpInterval: 0
+    })
+  }
+
+  // 历史活动数据
+  historyActItemList = stageAct.data
+
+  // 每种材料距离上次up间隔
+  let lastUpInterval = 0;
+
+  // 循环历史活动数据
+  for (const act of historyActItemList) {
+    if (act.zoneName === '落叶逐火') {
+      continue
+    }
+    lastUpInterval++
+    //复刻不计入
+    // if(act.zoneName.indexOf('复刻')>-1) {
+    //   continue;
+    // }
+    //每行数据
+    let rowData = {
+      activityName: act.zoneName, //活动名
+      startTime: timeFormat(new Date(act.endTime), 'yyyy/MM'),
+      itemList: {} //材料up情况
     }
 
-    // 历史活动数据
-    historyActItemList = response.data
 
-    // 每种材料距离上次up间隔
-    let lastUpInterval = 0;
-
-    // 循环历史活动数据
-    for (const act of response.data) {
-      if (act.zoneName === '落叶逐火') {
-        continue
+    for (const stage of act.actStageList) {
+      rowData.itemList[stage.itemId] = {
+        itemId: stage.itemId,
+        stageEfficiency: stage.stageEfficiency * 100,
+        stageCode: stage.stageCode
       }
-      lastUpInterval++
-      //复刻不计入
-      // if(act.zoneName.indexOf('复刻')>-1) {
-      //   continue;
-      // }
-      //每行数据
-      let rowData = {
-        activityName: act.zoneName, //活动名
-        startTime: timeFormat(new Date(act.endTime), 'yyyy/MM'),
-        itemList: {} //材料up情况
+    }
+
+    for (const itemIndex in itemIdList) {
+      const item = itemIdList[itemIndex]
+      //材料up标记
+      let isUpFlag = false;
+
+      //如果当前材料up了,将标记记为true
+      if (rowData.itemList[item.id]) {
+        isUpFlag = true
       }
 
-
-      for (const stage of act.actStageList) {
-        rowData.itemList[stage.itemId] = {
-          itemId: stage.itemId,
-          stageEfficiency: stage.stageEfficiency * 100,
-          stageCode: stage.stageCode
-        }
+      //如果这个材料已经up了，则将这个材料的上次up标记为true
+      if (isUpFlag) {
+        itemIdList[itemIndex].lastUp = true;
       }
 
-      for (const itemIndex in itemIdList) {
-        const item = itemIdList[itemIndex]
-        //材料up标记
-        let isUpFlag = false;
-
-        //如果当前材料up了,将标记记为true
-        if (rowData.itemList[item.id]) {
-          isUpFlag = true
-        }
-
-        //如果这个材料已经up了，则将这个材料的上次up标记为true
-        if (isUpFlag) {
-          itemIdList[itemIndex].lastUp = true;
-        }
-
-        //如果这个材料这个活动没up,更新up间隔次数,表格根据这个间隔进行背景色的渲染
-        if (!itemIdList[itemIndex].lastUp) {
-          itemIdList[itemIndex].lastUpInterval = lastUpInterval;
-        }
+      //如果这个材料这个活动没up,更新up间隔次数,表格根据这个间隔进行背景色的渲染
+      if (!itemIdList[itemIndex].lastUp) {
+        itemIdList[itemIndex].lastUpInterval = lastUpInterval;
       }
-
-      for (const reprintActivity of reprintActivityList) {
-        if (reprintActivity.activityName === rowData.activityName) {
-          reprintActivity.itemList = rowData.itemList
-        }
-      }
-
-      historyActItemTable.push(rowData)
     }
 
     for (const reprintActivity of reprintActivityList) {
-      historyActItemTable.unshift(reprintActivity)
+      if (reprintActivity.activityName === rowData.activityName) {
+        reprintActivity.itemList = rowData.itemList
+      }
     }
 
-    itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
-  })
+    historyActItemTable.push(rowData)
+  }
+
+  for (const reprintActivity of reprintActivityList) {
+    historyActItemTable.unshift(reprintActivity)
+  }
+
+  itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
+
+  // 获取历史活动up材料信息
+  // stageApi.getHistoryActStage(0.625, 300).then(response => {
+  //   // 先把当作表头的材料表转为一个集合
+  //   for (const itemId in itemSeries) {
+  //     const item = itemSeries[itemId]
+  //     itemIdList.push({
+  //       id: item.id,
+  //       name: item.name,
+  //       lastUp: false,
+  //       lastUpInterval: 0
+  //     })
+  //   }
+  //
+  //   // 历史活动数据
+  //   historyActItemList = response.data
+  //
+  //   // 每种材料距离上次up间隔
+  //   let lastUpInterval = 0;
+  //
+  //   // 循环历史活动数据
+  //   for (const act of historyActItemList) {
+  //     if (act.zoneName === '落叶逐火') {
+  //       continue
+  //     }
+  //     lastUpInterval++
+  //     //复刻不计入
+  //     // if(act.zoneName.indexOf('复刻')>-1) {
+  //     //   continue;
+  //     // }
+  //     //每行数据
+  //     let rowData = {
+  //       activityName: act.zoneName, //活动名
+  //       startTime: timeFormat(new Date(act.endTime), 'yyyy/MM'),
+  //       itemList: {} //材料up情况
+  //     }
+  //
+  //
+  //     for (const stage of act.actStageList) {
+  //       rowData.itemList[stage.itemId] = {
+  //         itemId: stage.itemId,
+  //         stageEfficiency: stage.stageEfficiency * 100,
+  //         stageCode: stage.stageCode
+  //       }
+  //     }
+  //
+  //     for (const itemIndex in itemIdList) {
+  //       const item = itemIdList[itemIndex]
+  //       //材料up标记
+  //       let isUpFlag = false;
+  //
+  //       //如果当前材料up了,将标记记为true
+  //       if (rowData.itemList[item.id]) {
+  //         isUpFlag = true
+  //       }
+  //
+  //       //如果这个材料已经up了，则将这个材料的上次up标记为true
+  //       if (isUpFlag) {
+  //         itemIdList[itemIndex].lastUp = true;
+  //       }
+  //
+  //       //如果这个材料这个活动没up,更新up间隔次数,表格根据这个间隔进行背景色的渲染
+  //       if (!itemIdList[itemIndex].lastUp) {
+  //         itemIdList[itemIndex].lastUpInterval = lastUpInterval;
+  //       }
+  //     }
+  //
+  //     for (const reprintActivity of reprintActivityList) {
+  //       if (reprintActivity.activityName === rowData.activityName) {
+  //         reprintActivity.itemList = rowData.itemList
+  //       }
+  //     }
+  //
+  //     historyActItemTable.push(rowData)
+  //   }
+  //
+  //   for (const reprintActivity of reprintActivityList) {
+  //     historyActItemTable.unshift(reprintActivity)
+  //   }
+  //
+  //   itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
+  // })
 }
 
 
@@ -530,10 +623,10 @@ onMounted(() => {
         </tr>
         </tbody>
       </table>
-      <span >*关卡效率：关卡掉落物品的总价值 / 关卡理智消耗，数值越大越推荐刷。<br>图上数据非最终结论，仅供参考，其他材料up关卡未必差。后续可查看一图流网站实时更新的材料一图流</span>
+      <span>*关卡效率：关卡掉落物品的总价值 / 关卡理智消耗，数值越大越推荐刷。<br>图上数据非最终结论，仅供参考，其他材料up关卡未必差。后续可查看一图流网站实时更新的材料一图流</span>
       <span>代币仅在第14章掉落，优先搬空商店。<br>效率计算：明日方舟一图流 https://ark.yituliu.cn<br>掉落数据：企鹅物流数据统计 https://penguin-stats.cn<br></span>
 
-<!--      <span style="text-align: right;">制图：&emsp;B站@罗德岛基建BETA</span>-->
+      <!--      <span style="text-align: right;">制图：&emsp;B站@罗德岛基建BETA</span>-->
       <span style="text-align: right;">数据收集时间：&emsp;2024.5.3 09:00</span>
     </div>
 

@@ -182,6 +182,7 @@ import FixedNav from "../../components/FixedNav.vue";
 import materialAPI from "/src/api/material.js";
 import '/src/assets/css/material/value.scss'
 import '/src/assets/css/material/value.phone.scss'
+import itemTable from '/src/static/json/tmp/item.json'
 
 let opETextTheme = ref("op_title_etext_light")
 
@@ -245,38 +246,69 @@ function formattedItemDisplayList(itemList) {
 
 onMounted(() => {
 
-  materialAPI.getItemValueTable(0.625).then(response => {
-    itemValueList.value = response.data
-    let tmpList = []
-    for (const item of response.data) {
-      const sortId = item.cardNum
-      if (sortId > 90) {
-        continue
-      }
-      let list = tmpList[sortId]
-      if (list) {
-        list.push(item)
-      } else {
-        list = [item]
-      }
-      tmpList[sortId] = list
+  itemValueList.value = itemTable.data
+  let tmpList = []
+  for (const item of itemTable.data) {
+    const sortId = item.cardNum
+    if (sortId > 90) {
+      continue
     }
+    let list = tmpList[sortId]
+    if (list) {
+      list.push(item)
+    } else {
+      list = [item]
+    }
+    tmpList[sortId] = list
+  }
 
-    const index = 0
-    for(const list of tmpList){
-      console.log(list)
-      if(list&&list.length>0){
-        if(list.length<9){
-          itemValueCollect.value.push(list)
-        }else {
-          itemValueCollect.value.push(list.slice(0,9))
-          itemValueCollect.value.push(list.slice(9))
-        }
-
+  const index = 0
+  for(const list of tmpList){
+    console.log(list)
+    if(list&&list.length>0){
+      if(list.length<9){
+        itemValueCollect.value.push(list)
+      }else {
+        itemValueCollect.value.push(list.slice(0,9))
+        itemValueCollect.value.push(list.slice(9))
       }
 
     }
-  })
+
+  }
+
+  // materialAPI.getItemValueTable(0.625).then(response => {
+  //   itemValueList.value = response.data
+  //   let tmpList = []
+  //   for (const item of response.data) {
+  //     const sortId = item.cardNum
+  //     if (sortId > 90) {
+  //       continue
+  //     }
+  //     let list = tmpList[sortId]
+  //     if (list) {
+  //       list.push(item)
+  //     } else {
+  //       list = [item]
+  //     }
+  //     tmpList[sortId] = list
+  //   }
+  //
+  //   const index = 0
+  //   for(const list of tmpList){
+  //     console.log(list)
+  //     if(list&&list.length>0){
+  //       if(list.length<9){
+  //         itemValueCollect.value.push(list)
+  //       }else {
+  //         itemValueCollect.value.push(list.slice(0,9))
+  //         itemValueCollect.value.push(list.slice(9))
+  //       }
+  //
+  //     }
+  //
+  //   }
+  // })
 });
 
 
