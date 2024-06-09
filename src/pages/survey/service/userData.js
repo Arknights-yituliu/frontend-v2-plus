@@ -17,7 +17,7 @@ async function getUserInfo() {
                 userInfo =  response.data.data
                 userData.value = response.data.data
             }else {
-                cMessage('未登录','error')
+                // cMessage('未登录','error')
             }
         })
         .catch((error) => {

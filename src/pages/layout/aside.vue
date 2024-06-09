@@ -63,7 +63,7 @@ onMounted(() => {
       <div class="side-website-title">明日方舟一图流</div>
     </a>
     <!-- 导航菜单 -->
-    <div class="aside_menu_set" v-for="(parent, index) in LinkedTable" :key="index" v-show="index!=='backend'">
+    <div class="aside_menu_set" v-for="(parent, index) in LinkedTable" :key="index" v-show="parent.display">
       <!-- 一级标题 -->
       <router-link :to="parent.path"  class="nav-bar nav-bar-parent">
         <div class="nav-bar-parent-icon"></div>

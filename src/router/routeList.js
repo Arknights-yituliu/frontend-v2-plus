@@ -155,7 +155,7 @@ const routes = [
     },
     {
         path: '/survey/operators',
-        text: '干员调查',
+        text: '干员练度调查',
         name: 'OperatorSurvey',
         display: true,
         module: 'survey',
@@ -258,26 +258,31 @@ const LinkedTable = {
     material: {
         path: '/',
         text: "材料收益",
+        display:true,
         child: []
     },
     tools: {
         path: '/',
         text: "一图流工具箱",
+        display:true,
         child: []
     },
     survey: {
         path: '/',
         text: "调查与统计",
+        display:false,
         child: []
     },
     about: {
         path: '/',
         text: "其他信息",
+        display:true,
         child: []
     },
     backend: {
         path: '/',
         text: "后台导航",
+        display:false,
         child: []
     }
 }
