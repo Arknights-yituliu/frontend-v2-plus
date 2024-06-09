@@ -215,7 +215,24 @@ const routes = [
         display: false,
         component: () => import('/src/pages/dev.vue')
     },
-
+    {
+        path: '/material/sssl',
+        text: '收益速览做图用',
+        display: false,
+        component: () => import('/src/pages/material/sssl.vue')
+    },
+    {
+        path: '/material/sssl2',
+        text: '收益速览做图用',
+        display: false,
+        component: () => import('/src/pages/material/sssl2.vue')
+    },
+    {
+        path: '/material/sssl3',
+        text: '收益速览做图用',
+        display: false,
+        component: () => import('/src/pages/material/stageV3E0.page.vue')
+    },
     {
         path: '/:catchAll(.*)',
         display: false,
