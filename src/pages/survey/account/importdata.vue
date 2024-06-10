@@ -7,6 +7,7 @@ import {cMessage} from "/src/custom/message.js";
 import sklandApi from "../service/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";
 import surveyAPI from '/src/api/survey.js'
+import {useRouter} from "vue-router";
 
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
 const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'
@@ -38,13 +39,12 @@ let playBindingInfo = ref({})
 let playBindingList = ref([])
 
 
-
-function getPlayerBindingByHgToken(){
+function getPlayerBindingByHgToken() {
 
   const obj = canBeParsedAsObject(inputText.value);
   const token = obj.data.content
 
-  surveyAPI.getPlayBindingListByHgToken({token:token}).then(response=>{
+  surveyAPI.getPlayBindingListByHgToken({token: token}).then(response => {
     playBindingList.value = response.data.playerBindingList
   })
 
@@ -56,7 +56,7 @@ function canBeParsedAsObject(str) {
     return JSON.parse(str); // 如果没有抛出错误，说明字符串可以被解析为JS对象
   } catch (e) {
     console.error(str)
-    cMessage("内容没有复制完整或格式不正确",'error')
+    cMessage("内容没有复制完整或格式不正确", 'error')
     return false; // 捕获到错误，说明字符串不能被解析为JS对象
   }
 }
@@ -69,7 +69,7 @@ async function getPlayerBindingBySkland() {
 }
 
 
-async function getOperatorDataByPlayerBinding(akPlayerBinding){
+async function getOperatorDataByPlayerBinding(akPlayerBinding) {
   const {uid, nickName, channelName, channelMasterId} = akPlayerBinding
 
   if (checkUserStatus(true)) {
@@ -102,6 +102,7 @@ async function getOperatorDataByPlayerBinding(akPlayerBinding){
   })
 }
 
+const router = useRouter();
 
 /**
  * 上传获取到的森空岛干员数据
@@ -113,7 +114,10 @@ async function uploadSKLandData({token, data}) {
 
   surveyAPI.uploadSkLandOperatorData({token, data})
       .then(response => {
-        cMessage("森空岛数据导入成功");
+        cMessage("森空岛数据导入成功，即将专挑到干员调查页面");
+        setTimeout(() => {
+          router.push('OperatorSurvey')
+        }, 3000)
       })
 }
 
@@ -137,10 +141,10 @@ function getCredAndSecret(text) {
 
 }
 
-function defaultBindUidBtnClass(uid){
-     if(defaultAkUid.value===uid){
-       return 'btn-blue'
-     }
+function defaultBindUidBtnClass(uid) {
+  if (defaultAkUid.value === uid) {
+    return 'btn-blue'
+  }
 }
 
 function optionBtnColor(type) {
@@ -168,14 +172,13 @@ function checkUserStatus(notice) {
 }
 
 
-
 </script>
 
 <template>
   <div class="import-page">
 
     <div class="checkbox">
-      <div class="checkbox-option ">
+      <div class="checkbox-option">
         <button class="checkbox-btn btn-import-data" :style="optionBtnColor('hg')"
                 @click="selectedOption='hg'">从官网导入
         </button>
@@ -201,10 +204,10 @@ function checkUserStatus(notice) {
         <img src="/image/skland/hgAPI.jpg" alt="" class="import-step-image">
         <p>点击对应的服务器链接，将会返回如上图所示的一段数据，将其全部复制</p>
 
-        <button class="btn btn-blue login-btn-line"  @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
+        <button class="btn btn-blue login-btn-line" @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
         </button>
 
-        <button class="btn btn-red login-btn-line"  @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服
+        <button class="btn btn-red login-btn-line" @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服
         </button>
       </div>
 
@@ -217,16 +220,16 @@ function checkUserStatus(notice) {
 
       <div class="import-step-item">
         <div class="import-step-item-title">第四步</div>
-        <p>选择你的账号进行导入</p>
+        <p>等待上一步获取绑定的uid，选择想导入的uid进行导入</p>
         <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"
                 v-for="(binding,index) in playBindingList" :key="index"
                 @click="getOperatorDataByPlayerBinding(binding)">
-          <span> 昵称：{{binding.nickName}} 区服：{{binding.channelName}} uid：{{binding.uid}}</span>
+          <span> 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>
         </button>
       </div>
 
       <div class="import-step-item">
-        <div class="import-step-item-title">第四步</div>
+        <div class="import-step-item-title">第五步</div>
         <p>为了您的账号安全，导入后会强制退出官网登录，可以再次进入官网检查登录状态</p>
         <button class="btn btn-blue" @click="openLinkOnNewPage(HYPERGRYPH_LINK)">官网链接</button>
       </div>
@@ -261,11 +264,11 @@ function checkUserStatus(notice) {
 
       <div class="import-step-item">
         <div class="import-step-item-title">第四步</div>
-        <p>选择你的账号进行导入</p>
+        <p>等待上一步获取绑定的uid，选择想导入的uid进行导入</p>
         <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"
                 v-for="(binding,index) in playBindingList" :key="index"
                 @click="getOperatorDataByPlayerBinding(binding)">
-          <span> 昵称：{{binding.nickName}} 区服：{{binding.channelName}} uid：{{binding.uid}}</span>
+          <span> 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>
         </button>
       </div>
 
@@ -279,7 +282,6 @@ function checkUserStatus(notice) {
 .import-page {
   padding: 1px;
   min-height: 95vh;
-
 
 
   .checkbox {
@@ -297,19 +299,29 @@ function checkUserStatus(notice) {
     padding: 12px 16px;
     box-sizing: border-box;
     width: 400px;
-    margin: 20px auto;
+    margin: 8px auto;
     box-shadow: 1px 1px 2px var(--c-box-shadow-color), -1px -1px 2px var(--c-box-shadow-color);
   }
 
-  .import-step-item-title{
+  .import-step-item-title {
     font-size: 20px;
     font-weight: bold;
   }
 
   .import-step-image {
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
   }
+
+
+  @media screen and (max-width: 600px){
+    .import-step-item {
+      width: 350px;
+      font-size: 14px;
+    }
+  }
+
+
 }
 
 

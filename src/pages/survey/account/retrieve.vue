@@ -71,17 +71,23 @@ function checkPassword() {
 
 let recoveryProgress = ref('left:0px')
 
-function toRetrieveAuthentication(progress) {
+function setRecoveryProgress(step){
+  const width = - document.getElementsByClassName("retrieve-form-scroll-item")[0].getBoundingClientRect().width
+  recoveryProgress.value = `left:${step * width}px`
+}
+
+function toRetrieveAuthentication(step) {
   userAPI.retrieveAuthentication(inputContent.value).then(response => {
-    recoveryProgress.value = `left:${progress*-400}px`
-    inputContent.value.token = response.data.token
+    setRecoveryProgress(step)
+    inputContent.value.token = response.data.tmpToken
+    inputContent.value.userName = response.data.userName
     cMessage('请在10分钟内修改您的密码')
   })
 }
 
-function toResetPassword(progress) {
+function toResetPassword(step) {
   userAPI.resetPassword(inputContent.value).then(response => {
-    recoveryProgress.value = `left:${progress*-400}px`
+    setRecoveryProgress(step)
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
     setTimeout(() => {
       router.push({name: "AccountHome"})
@@ -123,7 +129,7 @@ onMounted(() => {
       <div class="retrieve-form-scroll-wrap">
         <div class="retrieve-form-scroll" v-show="'email'===inputContent.accountType"
              :style="recoveryProgress">
-          <div class="retrieve-form-scroll-item">
+          <div class="retrieve-form-scroll-item" >
             <div class="login-form-content-item">
               <span class="login-form-content-item-label">邮箱</span>
               <input class="login-form-input" v-model="inputContent.email">
@@ -132,7 +138,7 @@ onMounted(() => {
             </div>
             <div class="login-form-content-item">
               <span class="login-form-content-item-label">验证码</span>
-              <input class="login-form-input" type="password" v-model="inputContent.verificationCode">
+              <input class="login-form-input"  v-model="inputContent.verificationCode">
               <span class="login-form-content-item-tip"
                     v-show="inputTipDisplay(inputContent.verificationCode)">请输入验证码</span>
               <button class="login-form-btn-send" @click="sendVerificationCode">发送验证码</button>
@@ -145,10 +151,10 @@ onMounted(() => {
 
           <div class="retrieve-form-scroll-item" v-show="'email'===inputContent.accountType">
             <div class="login-form-content-item">
-              <span class="login-form-content-item-label">账号</span>
+              <span class="login-form-content-item-label">这是您的用户名，无需再输入</span>
               <input class="login-form-input" v-model="inputContent.userName">
               <span class="login-form-content-item-tip"
-                    v-show="inputTipDisplay(inputContent.userName)">请输入新密码</span>
+                    v-show="inputTipDisplay(inputContent.userName)">无需输入用户名</span>
             </div>
             <div class="login-form-content-item">
               <span class="login-form-content-item-label">新密码</span>
@@ -187,7 +193,7 @@ onMounted(() => {
             </button>
 
             <button class="btn btn-blue login-btn"
-                    @click="recoveryProgress='left:-400px'">已登录官网，前往下一步
+                    @click="setRecoveryProgress(1)">已登录官网，前往下一步
             </button>
 
           </div>
