@@ -6,6 +6,7 @@ import REGISTER from '/src/pages/survey/account/register.vue'
 import LOGIN from '/src/pages/survey/account/login.vue'
 import RETRIEVE from '/src/pages/survey/account/retrieve.vue'
 import IMPORT_BY_SKLAND from '/src/pages/survey/account/importdata.vue'
+import SURVEY_OPERATOR from  '/src/pages/survey/operators.v2.vue'
 
 // {
 //     path: '/',  访问路径
@@ -169,7 +170,7 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "survey2",
-        component: () => import('/src/pages/survey/operators.page.vue')
+        component: SURVEY_OPERATOR
     },
     {
         path: '/survey/questionnaire',
@@ -311,15 +312,17 @@ const devRoute = ['/survey/questionnaire']
 
 for (const route of routes) {
 
+    if (!route.module) {
+        LinkedTable.backend.child.push(route)
+        continue
+    }
+
     if (!route.display) {
         LinkedTable.backend.child.push(route)
         continue
     }
 
-    if (!route.module) {
-        LinkedTable.backend.child.push(route)
-        continue
-    }
+
 
     LinkedTable[route.module].child.push(route)
 

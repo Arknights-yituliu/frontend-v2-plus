@@ -70,12 +70,12 @@ function sendEmailCode() {
   const data = {
     token: userData.value.token,
     email: inputData.value.email,
-    mailUsage: 'UpdateEmail'
+    mailUsage: 'updateEmail'
   }
 
 
   // eslint-disable-next-line no-unused-vars
-  surveyApi.sendVerificationCode(data).then(response => {
+  surveyApi.sendVerificationCodeV2(data).then(response => {
     cMessage('验证码已发送')
   })
 
@@ -105,7 +105,6 @@ function updateUserName() {
     cMessage('用户名更改成功')
     userData.value.userName = response.data.userName
 
-    localStorage.setItem("globalUserData", JSON.stringify(userData.value));
   })
 }
 
@@ -146,7 +145,7 @@ function updateAvatar() {
   surveyApi.updateUserDataV2(data).then(response => {
     cMessage('头像更新成功')
     userData.value.avatar = response.data.avatar
-    localStorage.setItem("globalUserData", JSON.stringify(userData.value));
+
   })
 
 }

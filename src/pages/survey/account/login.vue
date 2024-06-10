@@ -84,7 +84,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="login-form-content-1" v-show="'password'===inputContent.accountType">
+      <div class="login-form-content" v-show="'password'===inputContent.accountType">
         <div class="login-form-content-item">
           <span class="login-form-content-item-label">用户名</span>
           <input class="login-form-input" v-model="inputContent.userName">
