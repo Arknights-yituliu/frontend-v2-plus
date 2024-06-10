@@ -56,6 +56,15 @@ const routes = [
         component: () => import('/src/pages/material/pack.page.vue')
     },
     {
+        path: '/material/pack2',
+        text: '礼包性价比',
+        name: 'Pack2Efficiency',
+        display: true,
+        module: 'material',
+        icon: "pack",
+        component: () => import('/src/pages/material/pack2.page.vue')
+    },
+    {
         path: '/material/value',
         text: '物品价值表',
         name: 'MaterialValue',
@@ -256,12 +265,6 @@ const routes = [
         text: '收益速览做图用',
         display: false,
         component: () => import('/src/pages/material/sssl2.vue')
-    },
-    {
-        path: '/material/sssl3',
-        text: '收益速览做图用',
-        display: false,
-        component: () => import('/src/pages/material/stageV3E0.page.vue')
     },
     {
         path: '/:catchAll(.*)',
