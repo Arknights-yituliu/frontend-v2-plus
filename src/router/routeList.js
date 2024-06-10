@@ -300,7 +300,7 @@ const LinkedTable = {
     backend: {
         path: '/',
         text: "后台导航",
-        display:true,
+        display:false,
         child: []
     }
 }
