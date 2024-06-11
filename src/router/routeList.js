@@ -7,6 +7,7 @@ import LOGIN from '/src/pages/survey/account/login.vue'
 import RETRIEVE from '/src/pages/survey/account/retrieve.vue'
 import IMPORT_BY_SKLAND from '/src/pages/survey/account/importdata.vue'
 import SURVEY_OPERATOR from  '/src/pages/survey/operators.v2.vue'
+import USER_HOME from '/src/pages/survey/account/home.vue'
 
 // {
 //     path: '/',  访问路径
@@ -133,7 +134,7 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "user",
-        component: () => import('/src/pages/survey/account/home.page.vue')
+        component: USER_HOME
         // component: Notice
     },
     {
