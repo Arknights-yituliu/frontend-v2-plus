@@ -140,7 +140,7 @@ onMounted(() => {
         </div>
         <div class="login-form-content-item">
           <span class="login-form-content-item-label">绑定邮箱(选填)</span>
-          <input class="login-form-input" type="password" v-model="inputContent.email">
+          <input class="login-form-input" v-model="inputContent.email">
           <span class="login-form-content-item-tip"
                 v-show="inputTipDisplay(inputContent.confirmPassword)">请输入邮箱</span>
         </div>
