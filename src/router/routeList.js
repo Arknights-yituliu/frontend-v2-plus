@@ -292,7 +292,7 @@ const LinkedTable = {
     survey: {
         path: '/',
         text: "调查与统计",
-        display:false,
+        display:true,
         child: []
     },
     about: {
