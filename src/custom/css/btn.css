@@ -44,7 +44,10 @@
     font-weight: 600;
 }
 
-
+[data-color='green'] {
+    color: var(--c-btn-color-green);
+    border: 1px solid var(--c-btn-border-green);
+}
 
 
 
