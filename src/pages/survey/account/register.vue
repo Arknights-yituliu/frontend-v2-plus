@@ -167,15 +167,11 @@ onMounted(() => {
               @click="toRegister()">注册账号
       </button>
       <div class="login-form-notice">
-        <p style="color: #6eb0ff" class="title">*账号系统改动说明：</p>
         <p>
-          1.选择账号密码注册时，如果在注册时输入了绑定邮箱或后续在个人中心绑定了邮箱，也可将邮箱作为账号通过账号密码方式登录。
+          邮箱是找回一图流账号密码的途径之一，强烈建议绑定邮箱，绑定后也作为账号用于登录
         </p>
         <p style="color: #ff4b4b" class="title">
           *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
-        </p>
-        <p style="color: #ff4b4b" class="title">
-          *请妥善保管好您的官网token和森空岛token
         </p>
       </div>
     </div>
