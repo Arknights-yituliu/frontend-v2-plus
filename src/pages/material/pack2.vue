@@ -2,8 +2,11 @@
 import storeAPI from "/src/api/store";
 import { onMounted, ref } from "vue";
 
+import packCardContainer from '/src/components/pack-card-container.vue'
+
 import '/src/assets/css/material/pack.scss'
 import '/src/assets/css/material/pack.phone.scss'
+
 
 let opETextTheme = "op_title_etext_light"
 
@@ -35,7 +38,7 @@ let newbiePack = ref([])
 function initData() {
   // packsPPRData.value = [];
   // packsPPRDataSort.value = [];
-  const limitedType = ['limited']
+  const limitedType = ['activity']
   const periodicType = ['weekly', 'monthly', 'chips']
   const newbieType = ['chip', 'newbie']
 
@@ -198,9 +201,7 @@ onMounted(() => {
     initData();
   })
 
-
   screenWidth.value = window.screen.width
-
 })
 
 </script>
@@ -224,59 +225,9 @@ onMounted(() => {
         </span>
       </div>
 
-      <div class="pack-card-container">
-        <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
-        <div v-for="(pack2, index) in limitedPack" :key="index" class="pack-card" @click="displayPackContent(pack2.id)">
-          <!-- 图片部分 -->
-          <div class="pack-card-part-left">
-            <img :src="getPackImageLink(pack2.officialName, pack2.imageName)" alt="" class="pack-image">
-            <span class="pack-display-name">
-              {{ pack2.displayName }} ￥{{ pack2.price }}
-            </span>
-            <!-- 角标部分 -->
-            <div class="pack-corner corner-new" v-show="pack2.saleType == 'limited'">New!</div>
-            <div class="pack-corner corner-monthly" v-show="pack2.saleType == 'monthly'">每月</div>
-            <div class="pack-corner corner-monthly" v-show="pack2.saleType == 'weekly'">每周</div>
-            <div class="pack-corner corner-once" v-show="pack2.saleType == 'once'">一次</div>
-            <div class="pack-corner corner-once" v-show="pack2.saleType == 'year'">双倍</div>
-          </div>
+      <pack-card-container v-model="limitedPack">
 
-          <!-- 表格部分 -->
-          <div class="pack-info">
-            <div class="pack-info-text">
-              <span style="color: #ffb46e">折合{{ getFixed(pack2.packedOriginium, 1) }}石</span>
-              <span style="color: #ffb46e">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石</span>
-              <span style="height: 12px"></span>
-              <span style="color: #ff6d6d;">共{{ getFixed(pack2.draws, 1) }}抽</span>
-              <span style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽</span>
-            </div>
-
-            <div class="pack-chart-line">
-              <div class="pack-chart-line-item" v-for="(line, index) in pack2.lineChartData">
-                <span class="pack-chart-line-label">{{ line.label }}</span>
-                <div class="pack-line-bar" :style="getLineBarStyle(line)">
-                  <span>{{ getFixed(line.value * 100, 0) }}%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- 详情部分 -->
-          <div class="pack-content" :id="pack2.id">
-            <div class="pack-content-gacha">
-              <span>源石</span><span>X{{ pack2.originium }}</span>
-              <span>合成玉</span><span>X{{ pack2.orundum }}</span>
-              <span>单抽</span><span>X{{ pack2.gachaTicket }}</span>
-              <span>十连</span><span>X{{ pack2.tenGachaTicket }}</span>
-            </div>
-            <div class="pack-content-material">
-              <div class="pack-content-material-item" v-for="(item, index) in pack2.packContent" :key="index">
-                <span class="pack-content-material-item-name">{{ item.itemName }}</span>
-                <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </pack-card-container>
 
       <div class="module-header">
         <div class="module-title">
@@ -287,6 +238,11 @@ onMounted(() => {
       </div>
 
       <h2>每月/每周礼包</h2>
+
+      <pack-card-container v-model="periodicPack">
+
+      </pack-card-container>
+
       <h2>新人/回归礼包</h2>
       <div class="tag-group">
         <span class="tag-rank-6">
@@ -294,6 +250,9 @@ onMounted(() => {
         </span>
       </div>
 
+      <pack-card-container v-model="newbiePack">
+
+      </pack-card-container>
 
       <h2>源石/首充源石</h2>
       <div class="tag-group">
@@ -302,60 +261,9 @@ onMounted(() => {
         </span>
       </div>
       <!-- all -->
-      <div class="pack-card-container">
-        <!-- <div v-for="(pack2, index) in packsPPRData" :key="index" class="pack_unit" :style="getDisplayStateDrawOnly(pack2.state, pack2.type, pack2.price, packFilter, pack2.drawEfficiency)"> -->
-        <div v-for="(pack2, index) in periodicPack" :key="index" class="pack-card"
-          @click="displayPackContent(pack2.id)">
-          <!-- 图片部分 -->
-          <div class="pack-card-part-left">
-            <img :src="getPackImageLink(pack2.officialName, pack2.imageName)" alt="" class="pack-image">
-            <span class="pack-display-name">
-              {{ pack2.displayName }} ￥{{ pack2.price }}
-            </span>
-            <!-- 角标部分 -->
-            <div class="pack-corner corner-new" v-show="pack2.saleType == 'limited'">New!</div>
-            <div class="pack-corner corner-monthly" v-show="pack2.saleType == 'monthly'">每月</div>
-            <div class="pack-corner corner-monthly" v-show="pack2.saleType == 'weekly'">每周</div>
-            <div class="pack-corner corner-once" v-show="pack2.saleType == 'once'">一次</div>
-            <div class="pack-corner corner-once" v-show="pack2.saleType == 'year'">双倍</div>
-          </div>
+      <pack-card-container v-model="newbiePack">
 
-          <!-- 表格部分 -->
-          <div class="pack-info">
-            <div class="pack-info-text">
-              <span style="color: #ffb46e">折合{{ getFixed(pack2.packedOriginium, 1) }}石</span>
-              <span style="color: #ffb46e">￥{{ getFixed(pack2.packedOriginiumPrice, 1) }}/石</span>
-              <span style="height: 12px"></span>
-              <span style="color: #ff6d6d;">共{{ getFixed(pack2.draws, 1) }}抽</span>
-              <span style="color: #ff6d6d;">￥{{ getFixed(pack2.drawPrice, 1) }}/抽</span>
-            </div>
-
-            <div class="pack-chart-line">
-              <div class="pack-chart-line-item" v-for="(line, index) in pack2.lineChartData">
-                <span class="pack-chart-line-label">{{ line.label }}</span>
-                <div class="pack-line-bar" :style="getLineBarStyle(line)">
-                  <span>{{ getFixed(line.value * 100, 0) }}%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- 详情部分 -->
-          <div class="pack-content" :id="pack2.id">
-            <div class="pack-content-gacha">
-              <span>源石</span><span>X{{ pack2.originium }}</span>
-              <span>合成玉</span><span>X{{ pack2.orundum }}</span>
-              <span>单抽</span><span>X{{ pack2.gachaTicket }}</span>
-              <span>十连</span><span>X{{ pack2.tenGachaTicket }}</span>
-            </div>
-            <div class="pack-content-material">
-              <div class="pack-content-material-item" v-for="(item, index) in pack2.packContent" :key="index">
-                <span class="pack-content-material-item-name">{{ item.itemName }}</span>
-                <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </pack-card-container>
 
       <div class="module-header">
         <div class="module-title">
