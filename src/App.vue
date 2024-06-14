@@ -7,9 +7,9 @@
         <my-header/>
       </div>
       <div class="main">
-        <div class="dev-tip" v-show="devVer">您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况，
+        <div class="dev-tip tip-color-warn" v-show="devVer">您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况，
           请访问正式域名<a href="https://ark.yituliu.cn/">https://ark.yituliu.cn/</a></div>
-        <div class="dev-tip" >一图流服务器目前疑似遭到攻击，目前依赖后端的服务均不可用，恢复时间待定</div>
+        <div class="dev-tip tip-color-warn" >一图流服务器目前疑似遭到攻击，目前依赖后端的服务均不可用，恢复时间待定</div>
         <router-view>
         </router-view>
       </div>
@@ -20,14 +20,10 @@
 
 <script setup>
 //导航
-import "/src/assets/css/layout/main.css";
 import '/src/assets/svg/iconfont.css'
-import '/src/assets/css/common/common.css'
 
-import "/src/assets/css/layout/navigation.css";
-import "/src/assets/css/layout/basic.css";
-import "/src/assets/css/layout/theme.css"
-import "/src/assets/css/layout/common.css"
+
+
 import '/src/assets/css/layout/atom.css'
 import "/src/assets/css/stage_v2.css";
 import "/src/assets/css/store_v2.css";
@@ -39,6 +35,18 @@ import "/src/assets/css/elite.css";
 import '/src/assets/css/sprite/sprite_avatar.css'
 
 import "/src/assets/css/stage_v3.css";
+
+
+import '/src/assets/css/common/checkbox.css'
+import "/src/assets/css/common/title_and_tag.css"
+import "/src/assets/css/common/tip.css"
+
+
+import "/src/assets/css/layout/navigation.css";
+import "/src/assets/css/layout/basic.css";
+import "/src/assets/css/layout/theme.css"
+import "/src/assets/css/layout/main.css";
+
 
 // 通用样式
 import "/src/custom/css/btn.css";
@@ -53,7 +61,7 @@ import myFooter from "/src/pages/layout/myfooter.vue";
 import myAside from "/src/pages/layout/aside.vue";
 import loading from '/src/pages/layout/loading.vue'
 import {onMounted, ref} from "vue";
-import {onBeforeRouteUpdate, useRouter} from 'vue-router'
+import { useRouter} from 'vue-router'
 
 
 let theme_type = ref("theme_init")
@@ -126,9 +134,8 @@ body {
 .dev-tip{
    text-align: center;
    padding: 8px 0;
-   color: #ff2d76;
-  font-size: 14px;
-  font-weight: bold;
+   font-size: 14px;
+   font-weight: bold;
 }
 
 

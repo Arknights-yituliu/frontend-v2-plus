@@ -6,14 +6,6 @@ import userAPI from '/src/api/userInfo.js'
 import {cMessage} from "../../../custom/message.js";
 import {useRouter} from "vue-router";
 
-function optionLineClass(type) {
-  if (type === inputContent.value.accountType) {
-    return 'option-line-active'
-  } else {
-    return 'option-line'
-  }
-}
-
 function getParam(method) {
   let param = {
     accountType: inputContent.value.accountType
@@ -46,13 +38,7 @@ let inputContent = ref({
   accountType: '',
 })
 
-function optionBtnColor(type) {
-  if (type === inputContent.value.accountType) {
-    return 'color:#1f88ff'
-  } else {
-    return ''
-  }
-}
+
 
 function checkPassword() {
   if (inputContent.value.confirmPassword.length > 2) {
@@ -102,18 +88,14 @@ onMounted(() => {
   <div class="login-page">
     <div class="login-form">
       <div class="checkbox login-checkbox">
-        <div class="checkbox-option">
-          <button class="checkbox-btn" :style="optionBtnColor('password')"
-                  @click="inputContent.accountType='password'">账号密码注册
-          </button>
-          <div :class="optionLineClass('password')"></div>
-        </div>
-        <div class="checkbox-option">
-          <button class="checkbox-btn" :style="optionBtnColor('email')"
-                  @click="inputContent.accountType='email'">邮件注册
-          </button>
-          <div :class="optionLineClass('email')"></div>
-        </div>
+        <c-checkbox-option :value="inputContent.accountType" label="password"
+                           @click="inputContent.accountType='password'">
+          账号密码注册
+        </c-checkbox-option>
+        <c-checkbox-option :value="inputContent.accountType" label="email"
+                           @click="inputContent.accountType='email'">
+          邮箱注册
+        </c-checkbox-option>
       </div>
 
       <div class="login-form-content" v-show="'password'===inputContent.accountType">
@@ -170,7 +152,7 @@ onMounted(() => {
         <p>
           邮箱是找回一图流账号密码的途径之一，强烈建议绑定邮箱，绑定后也作为账号用于登录
         </p>
-        <p style="color: #ff4b4b" class="title">
+        <p class="tip-color-warn">
           *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
         </p>
       </div>

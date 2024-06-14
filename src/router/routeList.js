@@ -55,16 +55,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "pack",
-        component: () => import('/src/pages/material/pack.page.vue')
-    },
-    {
-        path: '/material/pack2',
-        text: '礼包性价比',
-        name: 'Pack2Efficiency',
-        display: true,
-        module: 'material',
-        icon: "pack",
-        component: () => import('/src/pages/material/pack2.page.vue')
+        component: () => import('/src/pages/material/pack2.vue')
     },
     {
         path: '/material/value',

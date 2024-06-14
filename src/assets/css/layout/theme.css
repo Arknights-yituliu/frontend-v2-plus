@@ -43,11 +43,16 @@
     /*输入框样式*/
     --c-input-bg:'';
     --c-input-border:1px solid var(--c-white-3);
-
     --c-input-border-focus:1px solid #6ec3ff;
     --c-input-text-color:var(--c-black-2);
     --c-input-border-color:rgba(0, 0, 0, 0.3);
     --c-input-border-focus-color:rgb(73, 179, 255);
+
+
+    --c-checkbox-color:rgb(31, 136, 255);
+
+
+    --c-warn-color: #ff0000;
 }
 
 .theme_dark{
@@ -81,8 +86,6 @@
     --c-btn-color-orange: #ff8a52;
     --c-btn-border-orange:#ff8a52;
 
-
-
     --c-stage-card-background-color: #3d3d3d;
     --c-material-grey: #cdcdcd;
 
@@ -97,6 +100,11 @@
     --c-input-text-color:var(--c-white-2);
     --c-input-border-color: rgb(255, 255, 255);
     --c-input-border-focus-color: rgb(255, 83, 30);
+
+
+    --c-checkbox-color:#6ec3ff;
+
+    --c-warn-color: #ff6d6d;
 }
 
 

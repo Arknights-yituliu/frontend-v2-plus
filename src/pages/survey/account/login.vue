@@ -70,18 +70,14 @@ onMounted(() => {
   <div class="login-page">
     <div class="login-form">
       <div class="checkbox login-checkbox">
-        <div class="checkbox-option">
-          <button class="checkbox-btn" :style="optionBtnColor('password')"
-                  @click="inputContent.accountType='password'">密码登录
-          </button>
-          <div :class="optionLineClass('password')"></div>
-        </div>
-        <div class="checkbox-option">
-          <button class="checkbox-btn" :style="optionBtnColor('email')"
-                  @click="inputContent.accountType='email'">邮件登录
-          </button>
-          <div :class="optionLineClass('email')"></div>
-        </div>
+        <c-checkbox-option :value="inputContent.accountType" label="password"
+                           @click="inputContent.accountType='password'">
+          账号密码登录
+        </c-checkbox-option>
+        <c-checkbox-option :value="inputContent.accountType" label="email"
+                           @click="inputContent.accountType='email'">
+          邮箱登录
+        </c-checkbox-option>
       </div>
 
       <div class="login-form-content" v-show="'password'===inputContent.accountType">

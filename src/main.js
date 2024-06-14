@@ -14,6 +14,7 @@ const app = createApp(App)
 const files = import.meta.glob('/src/custom/*.vue', {eager: true})
 for (let index in files) {
     const name = files[index].default.__name
+    console.log('c-' + name)
     app.component('c-' + name, files[index].default)
 }
 

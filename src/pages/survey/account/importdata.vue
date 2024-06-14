@@ -178,18 +178,14 @@ function checkUserStatus(notice) {
   <div class="import-page">
 
     <div class="checkbox">
-      <div class="checkbox-option">
-        <button class="checkbox-btn btn-import-data" :style="optionBtnColor('hg')"
-                @click="selectedOption='hg'">从官网导入
-        </button>
-        <div :class="optionLineClass('hg')"></div>
-      </div>
-      <div class="checkbox-option">
-        <button class="checkbox-btn btn-import-data" :style="optionBtnColor('skland')"
-                @click="selectedOption='skland'">从森空岛导入
-        </button>
-        <div :class="optionLineClass('skland')"></div>
-      </div>
+      <c-checkbox-option :value="selectedOption" label="hg"
+                         @click="selectedOption='hg'">
+        从官网导入
+      </c-checkbox-option>
+      <c-checkbox-option :value="selectedOption" label="skland"
+                         @click="selectedOption='skland'">
+        从森空岛导入
+      </c-checkbox-option>
     </div>
 
     <div class="import-step" v-show="'hg'===selectedOption">

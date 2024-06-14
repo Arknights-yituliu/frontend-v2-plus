@@ -19,17 +19,7 @@ for (const char_id in operator_table_simple) {
 
 avatar.sort((a, b) => a.time - b.time)
 
-let userData = ref({
-  userName: "未登录",
-  emailCode: 0,
-  status: -100,
-  nickName: '未导入',
-  uid: '未导入',
-  email: '未绑定',
-  token: undefined,
-  cred: "",
-  avatar: 'char_010_chen'
-});
+let userData = ref({});
 
 
 let inputData = ref({
@@ -120,6 +110,7 @@ function logout() {
 
 async function getUserInfoByToken() {
   userData.value = await getUserInfo()
+  inputData.value.userName = userData.value.userName
 }
 
 let avatar_visible = ref(false)
@@ -179,15 +170,20 @@ onMounted(() => {
 
       <div class="user-info-card">
         <h2 class="user-info-card-title">用户信息</h2>
+        <h4>头像</h4>
         <div class="user-info-card-line">
-          <span>头像</span>
-          <div class="user-avatar-sprite">
-            <div :class="getSprite(userData.avatar)"></div>
+           <span>点击头像修改</span>
+          <div class="user-avatar-sprite" @click="avatarPopupVisible()">
+            <div :class="getSprite(userData.avatar)" ></div>
           </div>
         </div>
+
+        <h4>用户名</h4>
         <div class="user-info-card-line">
-          <span>用户名</span>
-          <span>{{ userData.userName }}</span>
+
+          <input class="user-info-card-input" v-model="inputData.userName"/>
+          <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>
+          <button class="btn btn-blue btn_position" @click="updateUserName()">更新用户名</button>
         </div>
         <div class="user-info-card-line">
           <span>绑定邮箱</span>
@@ -215,28 +211,13 @@ onMounted(() => {
           </div>
           <div class="user_avatar_popup_wrap">
             <div class="user-avatar-sprite" style="margin: 8px" v-for="(avatar,index) in avatar" :key="index">
-              <div :class="getSprite(avatar.charId)" @click="chooseAvatar(avatar.charId)"></div>
+              <div :class="getSprite(avatar.charId)" ></div>
             </div>
           </div>
         </div>
       </c-popup>
 
-      <div class="user-info-card">
-        <h2 class="user-info-card-title">修改用户信息</h2>
-        <h4>头像</h4>
-        <div class="user-info-card-input-line">
-          <div class="user-avatar-sprite">
-            <div :class="getSprite(selected_avatar)"></div>
-          </div>
-          <button class="btn btn-blue btn_position" @click="avatarPopupVisible()">更换头像</button>
-        </div>
-        <h4>用户名</h4>
-        <div class="user-info-card-input-line">
-          <input class="user-info-card-input" v-model="inputData.userName"/>
-          <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>
-          <button class="btn btn-blue btn_position" @click="updateUserName()">更新用户名</button>
-        </div>
-      </div>
+
 
       <div class="user-info-card">
         <h2 class="user-info-card-title">修改密码</h2>
