@@ -230,12 +230,6 @@ const routes = [
         component: () => import('/src/pages/about/links.page.vue')
     },
     {
-        path: '/font',
-        text: '字体测试',
-        display: false,
-        component: () => import('/src/pages/font.vue')
-    },
-    {
         path: '/material/detail',
         text: '关卡详情',
         display: false,
