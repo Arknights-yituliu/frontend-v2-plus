@@ -8,7 +8,7 @@ function getPackImageLink(officialName, fileName) {
     fileName = officialName + '.jpg'
   }
 
-  return `https://ark.yituliu.cn/static/image/store/${fileName}`
+  return `https://ark.yituliu.cn/static${fileName}`
 }
 
 function displayPackContent(id) {
@@ -57,11 +57,11 @@ watch(()=>window.screen.width,(newVal)=>{
               {{ pack2.displayName }} ￥{{ pack2.price }}
             </span>
         <!-- 角标部分 -->
-        <div class="pack-corner corner-new" v-show="pack2.saleType == 'limited'">New!</div>
-        <div class="pack-corner corner-monthly" v-show="pack2.saleType == 'monthly'">每月</div>
-        <div class="pack-corner corner-monthly" v-show="pack2.saleType == 'weekly'">每周</div>
-        <div class="pack-corner corner-once" v-show="pack2.saleType == 'once'">一次</div>
-        <div class="pack-corner corner-once" v-show="pack2.saleType == 'year'">双倍</div>
+        <div class="pack-corner corner-new" v-show="pack2.saleType === 'limited'">New!</div>
+        <div class="pack-corner corner-monthly" v-show="pack2.saleType === 'monthly'">每月</div>
+        <div class="pack-corner corner-monthly" v-show="pack2.saleType === 'weekly'">每周</div>
+        <div class="pack-corner corner-once" v-show="pack2.saleType === 'once'">一次</div>
+        <div class="pack-corner corner-once" v-show="pack2.saleType === 'year'">双倍</div>
       </div>
 
       <!-- 表格部分 -->
