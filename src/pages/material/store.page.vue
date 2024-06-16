@@ -6,7 +6,6 @@ import storeAPI from '/src/api/store.js'
 import '/src/assets/css/material/store.scss'
 import '/src/assets/css/material/store.phone.scss'
 import '/src/assets/css/sprite/sprite_plane_icon.css'
-import storePerm from '/src/static/json/tmp/perm.json'
 
 let storeListFormat = ref([]) // 常驻商店性价比集合
 let actStoreList = ref([]) // 活动列表
@@ -21,43 +20,36 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 
 function getStoreData() {
   // 遍历常驻商店格式化数据
-  for (let i = 0; i < storeTypeList.length; i++) {
-    const item = storeTypeList[i]
-    storeListFormat.value.push({
-      ...item,
-      itemList: storePerm.data[item.typeName]
+
+  storeAPI.getPermStore().then(response => {
+    const perm = response.data
+    for (let i = 0; i < storeTypeList.length; i++) {
+      const item = storeTypeList[i]
+      storeListFormat.value.push({
+        ...item,
+        itemList: perm[item.typeName]
+      })
+    }
+  })
+
+  storeAPI.getActStore().then(response => {
+    actStoreList.value = response.data
+    // 遍历活动列表
+    actStoreList.value.forEach(act => {
+      // 格式化活动商店材料
+      if (!act.actStoreFormat) {
+        act.actStoreFormat = []
+      }
+      // 商店区域(通常为三个区域)
+      const areas = [...new Set(act.actStore.map(t => t.itemArea))].sort()
+      // 每个区域独立数组
+      areas.forEach(areaNo => {
+        const areaItems = act.actStore.filter(item => item.itemArea === areaNo)
+        act.actStoreFormat.push(areaItems)
+      })
     })
-  }
 
-  // storeAPI.getPermStore().then(response => {
-  //   const perm = response.data
-  //   for (let i = 0; i < storeTypeList.length; i++) {
-  //     const item = storeTypeList[i]
-  //     storeListFormat.value.push({
-  //       ...item,
-  //       itemList: perm[item.typeName]
-  //     })
-  //   }
-  // })
-
-  // storeAPI.getActStore().then(response => {
-  //   actStoreList.value = response.data
-  //   // 遍历活动列表
-  //   actStoreList.value.forEach(act => {
-  //     // 格式化活动商店材料
-  //     if (!act.actStoreFormat) {
-  //       act.actStoreFormat = []
-  //     }
-  //     // 商店区域(通常为三个区域)
-  //     const areas = [...new Set(act.actStore.map(t => t.itemArea))].sort()
-  //     // 每个区域独立数组
-  //     areas.forEach(areaNo => {
-  //       const areaItems = act.actStore.filter(item => item.itemArea === areaNo)
-  //       act.actStoreFormat.push(areaItems)
-  //     })
-  //   })
-  //
-  // })
+  })
 
 
 }
