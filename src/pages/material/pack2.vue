@@ -244,13 +244,13 @@ onMounted(() => {
         <span class="module-tip">*每月/每周礼包、新人/回归礼包、源石</span>
       </div>
 
-      <h2>每月/每周礼包</h2>
+      <h2 style="margin: 12px;">每月/每周礼包</h2>
 
       <pack-card-container v-model="periodicPackInfoList">
 
       </pack-card-container>
 
-      <h2>新人/回归礼包</h2>
+      <h2 style="margin: 12px;">新人/回归礼包</h2>
       <div class="tag-group">
         <span class="tag-rank-6">
           由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
@@ -261,7 +261,7 @@ onMounted(() => {
 
       </pack-card-container>
 
-      <h2>源石/首充源石</h2>
+      <h2 style="margin: 12px;">源石/首充源石</h2>
       <div class="tag-group">
         <span class="tag-rank-2">
           每年周年庆会重置源石首充
@@ -278,7 +278,7 @@ onMounted(() => {
         <span class="module-tip">*内容较为固定，规律较为明确的礼包</span>
       </div>
 
-      <h2 style="margin: 12px 8px;">职业芯片礼包</h2>
+      <h2 style="margin: 12px;">职业芯片礼包</h2>
       <!-- <div class="tag-group">
         <span class="tag-rank-2">
           芯片礼包价值有差异的原因见此处
@@ -288,7 +288,7 @@ onMounted(() => {
 
       </pack-card-container>
 
-      <!-- <h2>龙门币补给包</h2> -->
+      <!-- <h2 style="margin: 12px;">龙门币补给包</h2> -->
       <!-- <pack-card-container v-model="lmdPackInfoList"> -->
       <!-- </pack-card-container> -->
       <!-- all -->
@@ -323,14 +323,14 @@ onMounted(() => {
 <!--        <el-button type="primary"> &gt; 200 RMB</el-button>-->
 <!--      </el-button-group>-->
 
-<!--      <h2>2024</h2>-->
-<!--      <h2>2023</h2>-->
-<!--      <h2>2022</h2>-->
-<!--      <h2>2021</h2>-->
-<!--      <h2>2020</h2>-->
+<!--      <h2 style="margin: 12px;">2024</h2>-->
+<!--      <h2 style="margin: 12px;">2023</h2>-->
+<!--      <h2 style="margin: 12px;">2022</h2>-->
+<!--      <h2 style="margin: 12px;">2021</h2>-->
+<!--      <h2 style="margin: 12px;">2020</h2>-->
 
 
-<!--      <h2>龙门币补给包</h2>-->
+<!--      <h2 style="margin: 12px;">龙门币补给包</h2>-->
 
 <!--      <div class="module-header">-->
 <!--        <div class="module-title">-->
