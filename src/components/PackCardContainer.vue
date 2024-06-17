@@ -98,6 +98,10 @@ watch(()=>window.screen.width,(newVal)=>{
           </div>
         </div>
       </div>
+      <!-- 说明部分 -->
+      <div class="pack-note">
+        {{ pack2.note }}        
+      </div>
     </div>
   </div>
 </template>

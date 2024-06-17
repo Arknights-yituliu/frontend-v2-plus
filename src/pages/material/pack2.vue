@@ -217,7 +217,7 @@ onMounted(() => {
     <div id="pack" class="pack-efficiency-page">
       <div class="module-header">
         <div class="module-title">
-          <h1>在售礼包</h1>
+          <h1>在售/即将开售的礼包</h1>
           <h4>New Packs</h4>
         </div>
         <span class="module-tip">*当前在售的限时礼包，不包括常驻礼包和源石</span>
@@ -278,7 +278,7 @@ onMounted(() => {
         <span class="module-tip">*内容较为固定，规律较为明确的礼包</span>
       </div>
 
-      <h2>职业芯片礼包</h2>
+      <h2 style="margin: 12px 8px;">职业芯片礼包</h2>
       <div class="tag-group">
         <span class="tag-rank-2">
           芯片礼包价值有差异的原因见此处
@@ -288,10 +288,9 @@ onMounted(() => {
 
       </pack-card-container>
 
-      <h2>龙门币补给包</h2>
-      <pack-card-container v-model="lmdPackInfoList">
-
-      </pack-card-container>
+      <!-- <h2>龙门币补给包</h2> -->
+      <!-- <pack-card-container v-model="lmdPackInfoList"> -->
+      <!-- </pack-card-container> -->
       <!-- all -->
 
 

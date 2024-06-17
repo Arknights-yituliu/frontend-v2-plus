@@ -2,7 +2,6 @@
   .pack-card-container {
     display: flex;
     flex-wrap: wrap;
-
   }
 
   .pack-card {
@@ -24,7 +23,6 @@
   .pack-image {
     width: 160px;
     height: 120px;
-
     box-shadow: 2px 2px 4px var(--c-box-shadow-color);
   }
 
@@ -43,7 +41,7 @@
 
   .pack-display-name {
     position: absolute;
-    top: 92px;
+    top: 96px;
     left: 0;
     width: 160px;
     background-color: rgba(0, 0, 0, 0.6902);
@@ -86,7 +84,6 @@
     font-weight: bold;
   }
 
-
   .pack-chart-line {
     display: flex;
     width: 240px;
@@ -106,7 +103,6 @@
     line-height: 1;
     display: flex;
     align-items: center;
-
   }
 
   .pack-chart-line-label {
@@ -125,7 +121,6 @@
     box-sizing: border-box;
     padding: 0 8px;
   }
-
 
   .pack_corner {
     transform: rotate(-35deg);
@@ -364,7 +359,13 @@
     height: 28px;
     display: flex;
   }
-
+  
+  .pack-note {
+    width: 100%;
+    margin: 0px 24px;
+    text-align: right;
+    font-style: italic
+  }
 
   .bg_red {
     background-color: rgb(250, 83, 83);

@@ -288,6 +288,10 @@ onMounted(() => {
               </div>
             </div>
           </div>
+          <!-- 备注部分 -->
+          <div class="pack-note">
+            {{pack2.note}}  
+          </div>
         </div>
       </div>
 
