@@ -41,6 +41,16 @@
     margin:auto;
 }
 
+#rank_table {
+    height: calc(100vh - 186px);
+    overflow-y: auto;
+}
+
+.rank_table > thead {
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
 .rank_table_tr td{
     border-bottom: 1px #9d9d9d solid;
 }
