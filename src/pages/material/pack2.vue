@@ -279,11 +279,11 @@ onMounted(() => {
       </div>
 
       <h2 style="margin: 12px 8px;">职业芯片礼包</h2>
-      <div class="tag-group">
+      <!-- <div class="tag-group">
         <span class="tag-rank-2">
           芯片礼包价值有差异的原因见此处
         </span>
-      </div>
+      </div> -->
       <pack-card-container v-model="chipPackInfoList">
 
       </pack-card-container>
