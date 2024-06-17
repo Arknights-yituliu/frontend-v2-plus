@@ -278,6 +278,7 @@ onMounted(() => {
 
     <div id="rank_table">
       <table class="rank_table">
+        <thead>
         <tr>
           <td>
             <div class="rank_table_title" style="width: 220px">代号</div>
@@ -359,8 +360,9 @@ onMounted(() => {
             </div>
           </td>
         </tr>
+      </thead>
 
-
+      <tbody>
         <tr v-for="(result, index) in operatorsStatisticsList" :key="index" v-show="result.show"
             class="rank_table_tr">
           <td class="rank_table_1 rank_table_text">
@@ -429,6 +431,7 @@ onMounted(() => {
             <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
           </td>
         </tr>
+      </tbody>
       </table>
     </div>
   </div>
