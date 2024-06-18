@@ -115,7 +115,9 @@ onMounted(() => {
       @click="toLogin">登录</button>
       <span class="login-form-content-tip-btn" v-show="'password'===inputContent.accountType">忘记密码？</span>
       <div class="login-form-notice">
-        <p style="color: #1f88ff" class="title">*账号系统改动说明：</p>
+        <p>
+          因服务器被攻击，数据库部分数据无法恢复，请尽量重新注册账号
+        </p>
         <p>
           选择密码登录时，如果绑定了邮箱，也可将邮箱作为账号进行登录。
         </p>

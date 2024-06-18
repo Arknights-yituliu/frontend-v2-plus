@@ -150,6 +150,9 @@ onMounted(() => {
       </button>
       <div class="login-form-notice">
         <p>
+          因服务器被攻击，数据库部分数据无法恢复，请尽量重新注册账号
+        </p>
+        <p>
           邮箱是找回一图流账号密码的途径之一，强烈建议绑定邮箱，绑定后也作为账号用于登录
         </p>
         <p class="tip-color-warn">
