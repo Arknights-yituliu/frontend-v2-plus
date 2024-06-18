@@ -124,11 +124,11 @@ let scheduleOptions = [
 //新人礼包集合
 let packListGroupByOnce = ref([])
 //每年重置的礼包集合
-let packListGroupByYear = ref([])
+let packListGroupByrOiginium = ref([])
 //每月重置的礼包集合
 let packListGroupByMonthly = ref([])
 //限时礼包集合
-let packListGroupByLimited = ref([])
+let packListGroupByActivity = ref([])
 
 let packListGroupByHistorical = ref([])
 
@@ -143,6 +143,8 @@ let certificatePackList = ref([])
 function getAndSortPackData() {
   //礼包唯一索引
   let index = 0;
+
+  const currentTimeStamp = new Date().getTime()
 
   //从服务器获取礼包数据，将其进行分类
   storeAPI.getPackStore().then(response => {
@@ -167,9 +169,8 @@ function getAndSortPackData() {
       //礼包索引递增
       index++
 
-      if (pack.saleStatus < 0) {
-        packListGroupByHistorical.value.push(pack)
-        continue;
+      if(pack.end<currentTimeStamp){
+        continue
       }
 
       //根据礼包类型进行分类
@@ -177,16 +178,16 @@ function getAndSortPackData() {
         packListGroupByOnce.value.push(pack)
       }
 
-      if (pack.saleType === 'year') {
-        packListGroupByYear.value.push(pack)
+      if (pack.saleType === 'originium2') {
+        packListGroupByrOiginium.value.push(pack)
       }
 
       if (pack.saleType === 'monthly') {
         packListGroupByMonthly.value.push(pack)
       }
 
-      if (pack.saleType === 'limited') {
-        packListGroupByLimited.value.push(pack)
+      if (pack.saleType === 'activity') {
+        packListGroupByActivity.value.push(pack)
       }
     }
     batchGenerationMonthlyPack(114)
@@ -1071,8 +1072,7 @@ onMounted(() => {
   readLastSettings()
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
   updateScheduleOption(0)
-  // getAndSortPackData()
-  batchGenerationMonthlyPack(114)
+  getAndSortPackData()
 
   ElNotification({
     title: '2024.5.15',
@@ -1605,7 +1605,7 @@ function handleResize() {
             <span></span> 限时礼包
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack,index) in packListGroupByLimited"
+            <el-checkbox-button v-for="(pack,index) in packListGroupByActivity"
                                 :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
               <div class="checkbox-button">
@@ -1685,7 +1685,7 @@ function handleResize() {
             <span></span> 首次充值源石
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack,index) in packListGroupByYear"
+            <el-checkbox-button v-for="(pack,index) in packListGroupByrOiginium"
                                 :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
               <div class="checkbox-button">
