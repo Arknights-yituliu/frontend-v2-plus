@@ -54,14 +54,10 @@ watch(()=>window.screen.width,(newVal)=>{
       <div class="pack-card-part-left">
         <img :src="getPackImageLink(pack2.officialName, pack2.imageName)" alt="" class="pack-image">
         <span class="pack-display-name">
-              {{ pack2.displayName }} ￥{{ pack2.price }}
+              {{ pack2.displayName }}
             </span>
         <!-- 角标部分 -->
-        <div class="pack-corner corner-new" v-show="pack2.saleType === 'limited'">New!</div>
-        <div class="pack-corner corner-monthly" v-show="pack2.saleType === 'monthly'">每月</div>
-        <div class="pack-corner corner-monthly" v-show="pack2.saleType === 'weekly'">每周</div>
-        <div class="pack-corner corner-once" v-show="pack2.saleType === 'once'">一次</div>
-        <div class="pack-corner corner-once" v-show="pack2.saleType === 'year'">双倍</div>
+        <div class="pack-corner corner-orange" > ￥{{ pack2.price }}</div>
       </div>
 
       <!-- 表格部分 -->

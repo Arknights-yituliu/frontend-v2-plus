@@ -123,7 +123,7 @@
   }
 
   .pack_corner {
-    transform: rotate(-35deg);
+    transform: rotate(-25deg);
     width: 96px;
     top: -18px;
     left: -28px;
@@ -144,6 +144,10 @@
 
   .corner-once {
     background: #bf7c00;
+  }
+
+  .corner-orange {
+    background: #004aff;
   }
 
   .pack-content {
