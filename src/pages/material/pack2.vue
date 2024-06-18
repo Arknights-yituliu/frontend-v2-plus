@@ -36,6 +36,7 @@ let periodicPackInfoList = ref([])
 let newbiePackInfoList = ref([])
 let chipPackInfoList = ref([])
 let lmdPackInfoList = ref([])
+let originiumPackInfoList = ref([])
 
 function initData() {
 
@@ -60,6 +61,11 @@ function initData() {
 
     if ('lmd' === pack.saleType) {
       lmdPackInfoList.value.push(pack)
+      continue
+    }
+
+    if ('originium' === pack.saleType) {
+      originiumPackInfoList.value.push(pack)
       continue
     }
 
@@ -269,7 +275,9 @@ onMounted(() => {
           每年周年庆会重置源石首充
         </span>
       </div>
-      <!-- all -->
+      <pack-card-container v-model="originiumPackInfoList">
+
+      </pack-card-container>
 
 
       <div class="module-header">
