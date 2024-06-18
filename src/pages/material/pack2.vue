@@ -44,12 +44,10 @@ function initData() {
   for (let i = 0; i < packPPRResponse.value.length; i += 1) {
     let pack = packPPRResponse.value[i]
     //下架礼包跳过
-    if (0 == pack.packState) {
-      // console.log('弹出：',this.packPPRResponse[i].packName);
-      continue;
-    }
+
 
     pack.lineChartData = getLineChartData(pack)
+
     //  console.log('正常：',this.packPPRResponse[i].packName);
     //性价比位置的为空的强制赋0
     if (!pack.packRmbPerDraw) {
@@ -60,6 +58,10 @@ function initData() {
         continue
     }
 
+    if ('lmd' === pack.saleType) {
+      lmdPackInfoList.value.push(pack)
+      continue
+    }
 
     packPPRInfoList.value.push(pack)
 
@@ -67,22 +69,22 @@ function initData() {
       limitedPackInfoList.value.push(pack)
       continue
     }
+
     if ('weekly' === pack.saleType || 'monthly' === pack.saleType || 'monthly' === pack.saleType) {
       periodicPackInfoList.value.push(pack)
       continue
     }
+
     if ('newbie' === pack.saleType) {
       newbiePackInfoList.value.push(pack)
       continue
     }
+
     if ('chip' === pack.saleType) {
       chipPackInfoList.value.push(pack)
       continue
     }
-    if (pack.tags && pack.tags.includes('lmd')) {
-      lmdPackInfoList.value.push(pack)
-      continue
-    }
+
 
     // packsPPRData.value.push(pack);
   }
@@ -288,10 +290,10 @@ onMounted(() => {
 
       </pack-card-container>
 
-      <!-- <h2 style="margin: 12px;">龙门币补给包</h2> -->
-      <!-- <pack-card-container v-model="lmdPackInfoList"> -->
-      <!-- </pack-card-container> -->
-      <!-- all -->
+       <h2 style="margin: 12px;">龙门币补给包</h2>
+       <pack-card-container v-model="lmdPackInfoList">
+       </pack-card-container>
+
 
 
 <!--      <div class="module-header">-->
