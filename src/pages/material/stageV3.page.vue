@@ -269,7 +269,6 @@ function historyActDeviceBtnClass(device) {
 
 // 未来复刻的活动
 const reprintActivityList = [
-  {activityName: '孤星', startTime: '预计2024/05', itemList: {}},
   {activityName: '空想花庭', startTime: '预计2024/06', itemList: {}},
   {activityName: '火山旅梦', startTime: '预计2024/07', itemList: {}},
   {activityName: '不义之财', startTime: '预计2024/08', itemList: {}},
