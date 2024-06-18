@@ -1,5 +1,530 @@
 [
   {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.18",
+    "description": "修复无法获取礼包数据的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "账号服务",
+    "date": "2024.06.18",
+    "description": "注册登录提示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "刷图推荐",
+    "date": "2024.06.18",
+    "description": "删除活动关卡表的孤星复刻"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "礼包性价比",
+    "date": "2024.06.18",
+    "description": "修改礼包左上角为价格"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "礼包性价比",
+    "date": "2024.06.18",
+    "description": "增加源石礼包分区"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "礼包性价比",
+    "date": "2024.06.18",
+    "description": "增加龙门币礼包分区"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.18",
+    "description": "细节调整"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.18",
+    "description": "暂时注释未写的说明"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.18",
+    "description": "新增礼包note显示功能"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "练度调查结果",
+    "date": "2024.06.17",
+    "description": " 表格首行冻结吸附显示"
+  },
+  {
+    "author": "Nyaasu66",
+    "type": "feat",
+    "module": "练度调查结果",
+    "date": "2024.06.17",
+    "description": " 表格首行冻结吸附显示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料模块",
+    "date": "2024.06.16",
+    "description": "恢复为从API获取数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "礼包性价比",
+    "date": "2024.06.15",
+    "description": "复原部分礼包"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "静态资源",
+    "date": "2024.06.14",
+    "description": "更新模组分支图标"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "静态资源",
+    "date": "2024.06.14",
+    "description": "删除部分无用资源"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "图片",
+    "date": "2024.06.14",
+    "description": "删除部分图片"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "通用组件",
+    "date": "2024.06.14",
+    "description": "将部分组件的颜色替换为变量"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "礼包性价比",
+    "date": "2024.06.14",
+    "description": "更新礼包图片"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "礼包性价比",
+    "date": "2024.06.14",
+    "description": "将礼包卡片重构为组件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "账号系统",
+    "date": "2024.06.12",
+    "description": "修改部分提示文本"
+  },
+  {
+    "author": "yamazakura",
+    "type": "test",
+    "module": "干员练度调查",
+    "date": "2024.06.11",
+    "description": "测试新账号系统"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员练度调查",
+    "date": "2024.06.11",
+    "description": "将导入森空岛变成为单独导入页面"
+  },
+  {
+    "author": "yamazakura",
+    "type": null,
+    "module": "",
+    "date": "2024.06.11",
+    "description": "排班表编辑器干员筛选功能补充和调整"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员练度调查",
+    "date": "2024.06.11",
+    "description": "将导入森空岛变成为单独导入页面"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.10",
+    "description": "礼包页面重写"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "移动端适配",
+    "date": "2024.06.10",
+    "description": "适配新增的账号页面"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.09",
+    "description": "add graphic pages"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "临时修复",
+    "date": "2024.06.09",
+    "description": "维护公告"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "临时修复",
+    "date": "2024.06.09",
+    "description": "将部分API替换为本地数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.06.09",
+    "description": "重构登录流程"
+  },
+  {
+    "author": "bodayw",
+    "type": null,
+    "module": "",
+    "date": "2024.06.09",
+    "description": "排班表编辑器干员筛选功能补充和调整"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "导航",
+    "date": "2024.06.08",
+    "description": "修复顶栏显示的页面名称某些情况下不显示的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "静态资源",
+    "date": "2024.06.08",
+    "description": "干员头像和技能图标"
+  },
+  {
+    "author": "yamazakura",
+    "type": "ci",
+    "module": "自动部署",
+    "date": "2024.06.08",
+    "description": "修改main分支自动部署"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员调查",
+    "date": "2024.06.08",
+    "description": "从森空岛导入干员数据流程"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.06",
+    "description": "去除官方月卡奖励"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "调查问卷",
+    "date": "2024.06.05",
+    "description": "因雪碧图原始高度导致页面底部渲染异常的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.06.05",
+    "description": "导入流程重构"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.05",
+    "description": "优化暗色模式下活动商店紫色不明显的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "携带率调查问卷",
+    "date": "2024.06.05",
+    "description": "用生成的数据暂时先实现了部分功能的模拟情况"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员专精率",
+    "date": "2024.06.05",
+    "description": "列表中去除技能图标，减少宽度"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "干员数据",
+    "date": "2024.06.05",
+    "description": "更新干员数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "调查问卷",
+    "date": "2024.06.03",
+    "description": "实现填写功能"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.06.01",
+    "description": "提交格式"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.01",
+    "description": "每月黄票兑换月份错误"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.30",
+    "description": "问卷用element重构"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.05.30",
+    "description": "重构注册、登录、导入功能"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.29",
+    "description": "问卷新增组件"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.29",
+    "description": "调查问卷补充新组件"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.28",
+    "description": "开荒文件组件补充"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.28",
+    "description": " 添加开荒问卷UI组件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.05.27",
+    "description": "重构注册、登录、导入功能"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "导航",
+    "date": "2024.05.26",
+    "description": "页面标题未能正确显示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料推荐",
+    "date": "2024.05.24",
+    "description": "关卡名称宽度溢出"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.05.24",
+    "description": "重构注册登录导入功能"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "账号系统",
+    "date": "2024.05.21",
+    "description": "因url编码问题导致无法获取用户信息"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.05.21",
+    "description": "优化登录流程和导入流程"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "导航",
+    "date": "2024.05.19",
+    "description": "增加EP专题页面导航"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "导航",
+    "date": "2024.05.18",
+    "description": "增加EP专题页面导航"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "EP14专题页面",
+    "date": "2024.05.18",
+    "description": "增加移动端样式"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "EP14专题页面",
+    "date": "2024.05.18",
+    "description": "增加移动端样式"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.18",
+    "description": " 文本修正"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "EP14专题页面",
+    "date": "2024.05.17",
+    "description": "优化图片大小"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "EP14专题页面",
+    "date": "2024.05.17",
+    "description": "展示EP14关卡数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "网站公告",
+    "date": "2024.05.16",
+    "description": "开发版域名提示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "网站公告",
+    "date": "2024.05.16",
+    "description": "开发版域名提示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "图片",
+    "date": "2024.05.16",
+    "description": "增加图片"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "携带率问卷",
+    "date": "2024.05.16",
+    "description": "实现移除已选选项"
+  },
+  {
+    "author": "yamazakura",
+    "type": "ci",
+    "module": "自动部署",
+    "date": "2024.05.16",
+    "description": "dev分支自动部署到cos存储桶"
+  },
+  {
+    "author": "yamazakura",
+    "type": "style",
+    "module": "攒抽计算器",
+    "date": "2024.05.15",
+    "description": "干员调查重命名部分包名"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "攒抽计算器",
+    "date": "2024.05.15",
+    "description": "更新排期"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "文档",
+    "date": "2024.05.09",
+    "description": "更新内容"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料价值",
+    "date": "2024.05.08",
+    "description": "导出excel同时会错误的触发导出json"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料价值",
+    "date": "2024.05.08",
+    "description": "未能正常按价值倒叙进行展示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料价值",
+    "date": "2024.05.08",
+    "description": "未能正常按价值倒叙进行展示"
+  },
+  {
     "author": "Milkwind",
     "type": "update",
     "module": "自定义组件",
