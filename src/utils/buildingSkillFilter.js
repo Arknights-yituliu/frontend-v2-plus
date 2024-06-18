@@ -101,13 +101,13 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.StandardizationTeam",
                 func: (operator) => {
-                    operator.buffName.indexOf('标准化') > -1 && operator.description.indexOf('标准化') > -1
+                    return operator.buffName.indexOf('标准化') > -1 && operator.description.indexOf('标准化') > -1
                 }
             },
             {
                 label: "buildSkillFilter.RhineTechTeam",
                 func: (operator) => {
-                    operator.buffName.indexOf('莱茵科技') > -1
+                    return operator.buffName.indexOf('莱茵科技') > -1
                 }
             }
         ]
@@ -163,7 +163,7 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.TeamRainbowTeam",
                 func: (operator) => {
-                    operator.buffName.indexOf('彩虹小队') > -1
+                    return operator.buffName.indexOf('彩虹小队') > -1
                 }
             }
         ]
