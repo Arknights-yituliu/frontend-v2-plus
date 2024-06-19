@@ -11,7 +11,7 @@ import HONEY_CAKE_TABLE from '/src/static/json/tools/scheduleByHoneycake.json'
 import storeAPI from '/src/api/store'
 import {cMessage} from "../../custom/message.js";
 import {dateDiff} from '/src/utils/dateUtil.js'
-import {ElNotification} from "element-plus";
+import {ElNotification,ElMessage} from "element-plus";
 
 import { useNotification } from "naive-ui";
 
@@ -746,7 +746,9 @@ function gachaResourcesCalculation() {
 
     //循环选中的礼包索引，获得对应的礼包
     for (const i of selectedPackIndex.value) {
-      const pack = packList.value[i]
+      //! 这里应该用parentIndex去查找对应礼包(大月卡id不等于i)
+      const pack = packList.value.find(v=>v.parentIndex == i)
+      !pack && ElMessage.error({message:"未能获取到礼包详情"})
 
       //月卡单独处理
       if (pack.displayName === '月卡') {
