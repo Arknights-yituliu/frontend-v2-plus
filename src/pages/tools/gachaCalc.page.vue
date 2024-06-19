@@ -190,7 +190,9 @@ function getAndSortPackData() {
         packListGroupByActivity.value.push(pack)
       }
     }
-    batchGenerationMonthlyPack(114)
+
+    batchGenerationMonthlyPack(index)
+
   })
 }
 
@@ -251,6 +253,8 @@ function batchGenerationMonthlyPack(index) {
     //礼包索引递增
     index++
   }
+
+  console.log(packList.value)
 }
 
 
@@ -748,6 +752,7 @@ function gachaResourcesCalculation() {
     for (const i of selectedPackIndex.value) {
       const pack = packList.value[i]
 
+
       //月卡单独处理
       if (pack.displayName === '月卡') {
         //计算卡池结束前月卡可以拿到多少合成玉
@@ -926,12 +931,12 @@ function gachaResourcesCalculation() {
   }
 
   function getPoolRemainingDays(endDate) {
-    console.log(endDate)
+
     let remainingDays = Math.floor((endDate - new Date().getTime()) / 86400000)
     if (remainingDays > 14) {
       remainingDays = 14
     }
-    console.log("离限定池结束还有" + remainingDays + "天")
+    // console.log("离限定池结束还有" + remainingDays + "天")
     return remainingDays
   }
 
