@@ -4,11 +4,7 @@ import storeAPI from "../api/store.js";
 
 const props = defineProps(["modelValue"]);
 function getPackImageLink(officialName, fileName) {
-  if (!fileName) {
-    fileName = officialName + '.jpg'
-  }
-
-  return `https://ark.yituliu.cn/static${fileName}`
+  return `https://cos.yituliu.cn/static${fileName}`
 }
 
 function displayPackContent(id) {

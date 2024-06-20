@@ -30,15 +30,15 @@ const routes = [
         icon: "item",
         component: STAGE_RECOMMENDATION_REGISTER
     },
-    {
-        path: '/material/ep14',
-        text: 'EP14专题',
-        name: 'EP14',
-        display: true,
-        module: 'material',
-        icon: "item",
-        component: () => import('/src/pages/material/EP14.vue')
-    },
+    // {
+    //     path: '/material/ep14',
+    //     text: 'EP14专题',
+    //     name: 'EP14',
+    //     display: true,
+    //     module: 'material',
+    //     icon: "item",
+    //     component: () => import('/src/pages/material/EP14.vue')
+    // },
     {
         path: '/material/store',
         text: '商店性价比',
