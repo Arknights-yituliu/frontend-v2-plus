@@ -7,6 +7,7 @@ function getPackImageLink(link) {
   return `https://cos.yituliu.cn/${link}`
 }
 
+
 function displayPackContent(id) {
   const element = document.getElementById(id)
   if ('flex' === element.style.display) {
