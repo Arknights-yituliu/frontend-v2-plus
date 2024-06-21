@@ -26,7 +26,7 @@ import '/src/assets/svg/iconfont.css'
 
 
 
-import '/src/assets/css/layout/atom.css'
+
 import "/src/assets/css/stage_v2.css";
 import "/src/assets/css/store_v2.css";
 import "/src/assets/css/sprite_item.css";
@@ -38,21 +38,16 @@ import '/src/assets/css/sprite/sprite_avatar.css'
 
 import "/src/assets/css/stage_v3.css";
 
-
-import '/src/assets/css/common/checkbox.css'
-import "/src/assets/css/common/title_and_tag.css"
-import "/src/assets/css/common/tip.css"
-
-
-import "/src/assets/css/layout/navigation.css";
-import "/src/assets/css/layout/basic.css";
-import "/src/assets/css/layout/theme.css"
-import "/src/assets/css/layout/main.css";
-
-
 // 通用样式
-import "/src/custom/css/btn.css";
-import "/src/custom/css/input.css";
+import '/src/assets/css/common/common.scss'
+
+
+
+import "/src/assets/css/layout/layout.scss";
+
+
+
+
 
 // svg字体
 

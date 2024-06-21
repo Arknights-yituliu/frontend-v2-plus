@@ -120,95 +120,12 @@ function getLineChartData(pack) {
 
 let screenWidth = ref(1080)
 
-function getLineBarStyle(lineData) {
-
-  let barWidth = 80
-
-  if (screenWidth.value < 600 || !screenWidth.value) {
-    barWidth = 50
-  }
-  const width = barWidth * lineData.value
-
-  return `width: ${width}px;background-color: ${lineData.color}`
-}
-
-function getWidth(num, scale) {
-  return "width:" + num * scale + "px";
-}
 
 function getFixed(num, acc) {
   acc = typeof acc !== "undefined" ? acc : 2;
   return parseFloat(num).toFixed(acc);
 }
 
-function getPackImgUrl(img) {
-  return "/image/packs/" + img + ".png";
-}
-
-function getPackPic(img, fileName) {
-  if (!fileName) {
-    fileName = img + '.jpg'
-  }
-  return `background:url(https://ark.yituliu.cn/static/image/store/${fileName}) 0% 0% / cover no-repeat,#444444;`
-}
-
-function getPackImageLink(officialName, fileName) {
-  if (!fileName) {
-    fileName = officialName + '.jpg'
-  }
-
-  return `https://ark.yituliu.cn/static/image/store/${fileName}`
-}
-
-function getContentId(id, type) {
-  return type + "_" + id;
-}
-
-function getContentId1(id, type) {
-  return type + "_1_" + id;
-}
-
-function getContentId2(id, type) {
-  return type + "_2_" + id;
-}
-
-function getContentId3(id, type) {
-  return type + "_3_" + id;
-}
-
-function displayPackContent(id) {
-  const element = document.getElementById(id)
-  console.log(element)
-  if ('flex' === element.style.display) {
-    element.style.display = 'none'
-  } else {
-    element.style.display = 'flex'
-  }
-}
-
-function switchPackContent(id, type) {
-  if (document.getElementById(type + "_" + id).style.display == "none") {
-    document.getElementById(type + "_" + id).style.display = "flex";
-  } else document.getElementById(type + "_" + id).style.display = "none";
-}
-
-function switchPackContent1(id, type) {
-  if (document.getElementById(type + "_1_" + id).style.display == "none") {
-    document.getElementById(type + "_1_" + id).style.display = "flex";
-  } else document.getElementById(type + "_1_" + id).style.display = "none";
-}
-
-function switchPackContent2(id, type) {
-  if (document.getElementById(type + "_2_" + id).style.display == "none") {
-    document.getElementById(type + "_2_" + id).style.display = "flex";
-  } else document.getElementById(type + "_2_" + id).style.display = "none";
-}
-
-function switchPackContent3(id, type) {
-  if (document.getElementById(type + "_3_" + id).style.display == "none") {
-    document.getElementById(type + "_3_" + id).style.display = "flex";
-  } else document.getElementById(type + "_3_" + id).style.display = "none";
-}
 
 onMounted(() => {
   storeAPI.getPackStore().then(response => {
