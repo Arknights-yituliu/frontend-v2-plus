@@ -262,35 +262,35 @@ onMounted(() => {
       <pack-card-container v-model="lmdPackInfoList">
       </pack-card-container>
 
-      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']">
+<!--      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']">-->
 
-      </module-header>
+<!--      </module-header>-->
 
-      <div>
-        售卖类型：
-        <button class="btn btn-red" >重置筛选</button>
-        <button class="btn">芯片礼包</button>
-        <button class="btn">龙门币礼包</button>
-        <button class="btn">包含特殊物品的纪念礼包</button>
-        <button class="btn">五星/六星特训礼包</button>
-        <button class="btn">包含模组块的礼包</button>
-        <button class="btn">其它礼包</button>
-      </div>
-      <div>
-        售卖年份：
-        <button class="btn">2024</button>
-        <button class="btn">2023</button>
-        <button class="btn">2022</button>
-        <button class="btn">2021</button>
-        <button class="btn">2020</button>
-        <button class="btn">2019</button>
-      </div>
-      <div>
-        售卖价格：
-        <button class="btn">0-100RMB</button>
-        <button class="btn">100-200RMB</button>
-        <button class="btn">200-648RMB</button>
-      </div>
+<!--      <div>-->
+<!--        售卖类型：-->
+<!--        <button class="btn btn-red" >重置筛选</button>-->
+<!--        <button class="btn">芯片礼包</button>-->
+<!--        <button class="btn">龙门币礼包</button>-->
+<!--        <button class="btn">包含特殊物品的纪念礼包</button>-->
+<!--        <button class="btn">五星/六星特训礼包</button>-->
+<!--        <button class="btn">包含模组块的礼包</button>-->
+<!--        <button class="btn">其它礼包</button>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        售卖年份：-->
+<!--        <button class="btn">2024</button>-->
+<!--        <button class="btn">2023</button>-->
+<!--        <button class="btn">2022</button>-->
+<!--        <button class="btn">2021</button>-->
+<!--        <button class="btn">2020</button>-->
+<!--        <button class="btn">2019</button>-->
+<!--      </div>-->
+<!--      <div>-->
+<!--        售卖价格：-->
+<!--        <button class="btn">0-100RMB</button>-->
+<!--        <button class="btn">100-200RMB</button>-->
+<!--        <button class="btn">200-648RMB</button>-->
+<!--      </div>-->
 
 <!--      <el-button color="#626aef" :dark="isDark">重置筛选</el-button>-->
 <!--      <el-button plain type="primary">芯片礼包</el-button>-->
@@ -314,15 +314,13 @@ onMounted(() => {
 <!--        <el-button type="primary"> &gt; 200 RMB</el-button>-->
 <!--      </el-button-group>-->
 
-      <h2 style="margin: 12px;">2024年</h2>
-      <pack-card-container v-model="packInfoListGroupByYear['2024']">
-      </pack-card-container>
+<!--      <h2 style="margin: 12px;">2024年</h2>-->
+<!--      <pack-card-container v-model="packInfoListGroupByYear['2024']">-->
+<!--      </pack-card-container>-->
 
 
-      <module-header title="礼包性价比总表" title-en="Packs Value">
 
-      </module-header>
-
+      <module-header title="礼包性价比总表" title-en="Packs Value"></module-header>
       <div class="tag-group">
          <span class="tag-rank-5">
                 性价比基准为648￥源石，移动端可左右滑动表格
@@ -331,7 +329,6 @@ onMounted(() => {
                 由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
               </span>
       </div>
-
 
       <div class="pack-table-wrapper">
         <el-table :data="currentPackInfoList" class="pack-table" stripe table-layout="auto"
