@@ -1,5 +1,5 @@
 import Error404 from "/src/pages/layout/error404.vue";
-import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.page.vue'
+import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
 import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.page.vue'
 import Notice from '/src/pages/layout/notice.vue'
 import REGISTER from '/src/pages/survey/account/register.vue'
@@ -55,7 +55,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "pack",
-        component: () => import('/src/pages/material/pack2.vue')
+        component: () => import('/src/pages/material/pack.vue')
     },
     {
         path: '/material/value',
@@ -233,7 +233,7 @@ const routes = [
         path: '/material/detail',
         text: '关卡详情',
         display: false,
-        component: () => import('/src/pages/material/detail.page.vue')
+        component: () => import('/src/pages/video-material/detail.page.vue')
     },
     {
         path: '/dev',
@@ -245,13 +245,13 @@ const routes = [
         path: '/material/sssl',
         text: '收益速览做图用',
         display: false,
-        component: () => import('/src/pages/material/sssl.vue')
+        component: () => import('/src/pages/video-material/sssl.vue')
     },
     {
         path: '/material/sssl2',
         text: '收益速览做图用',
         display: false,
-        component: () => import('/src/pages/material/sssl2.vue')
+        component: () => import('/src/pages/video-material/sssl2.vue')
     },
     {
         path: '/:catchAll(.*)',
