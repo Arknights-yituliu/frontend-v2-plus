@@ -1,6 +1,6 @@
 <script setup>
 import storeAPI from "/src/api/store";
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 
 import packCardContainer from '/src/components/PackCardContainer.vue'
 
@@ -107,10 +107,10 @@ function getLineChartData(pack) {
   const packEfficiency = getFixed(pack.packEfficiency * 100, 0)
 
   let lineChartData = [
-    {label: '大月卡', value: 1.57, color: 'rgb(65,147,220)'},
-    {label: '648源石', value: 1.00, color: 'rgb(65,147,220)'},
-    {label: '仅抽卡', value: pack.drawEfficiency, color: 'rgb(255, 135, 55)'},
-    {label: '本礼包', value: pack.packEfficiency, color: 'rgb(250, 83, 83)'}
+    { label: '大月卡', value: 1.57, color: 'rgb(65,147,220)' },
+    { label: '648源石', value: 1.00, color: 'rgb(65,147,220)' },
+    { label: '仅抽卡', value: pack.drawEfficiency, color: 'rgb(255, 135, 55)' },
+    { label: '本礼包', value: pack.packEfficiency, color: 'rgb(250, 83, 83)' }
   ]
 
   lineChartData.sort((a, b) => b.value - a.value)
@@ -120,40 +120,95 @@ function getLineChartData(pack) {
 
 let screenWidth = ref(1080)
 
+function getLineBarStyle(lineData) {
+
+  let barWidth = 80
+
+  if (screenWidth.value < 600 || !screenWidth.value) {
+    barWidth = 50
+  }
+  const width = barWidth * lineData.value
+
+  return `width: ${width}px;background-color: ${lineData.color}`
+}
+
+function getWidth(num, scale) {
+  return "width:" + num * scale + "px";
+}
 
 function getFixed(num, acc) {
   acc = typeof acc !== "undefined" ? acc : 2;
   return parseFloat(num).toFixed(acc);
 }
 
-
-const filtersTable = [
-  { value: 'newbie', text: '新人' },
-  { value: 'monthly', text: '每月重置' },
-  { value: 'weekly', text: '每周重置' },
-  { value: 'elite', text: '直升礼包' },
-  { value: 'chip', text: '芯片' },
-  { value: 'lmd', text: '龙门币' },
-  { value: 'activity', text: '活动礼包' },
-  { value: 'originium', text: '非双倍源石' },
-  { value: 'originium2', text: '双倍源石' },
-]
-
-const formatterSaleType = (row, col) => {
-  return {
-    newbie: '新人',
-    monthly: '每月重置',
-    weekly: '每周重置',
-    elite: '直升礼包',
-    chip: '芯片',
-    lmd: '龙门币',
-    activity: '活动礼包',
-    originium: '非双倍源石',
-    originium2: '双倍源石',
-  }[row.saleType]
+function getPackImgUrl(img) {
+  return "/image/packs/" + img + ".png";
 }
 
+function getPackPic(img, fileName) {
+  if (!fileName) {
+    fileName = img + '.jpg'
+  }
+  return `background:url(https://ark.yituliu.cn/static/image/store/${fileName}) 0% 0% / cover no-repeat,#444444;`
+}
 
+function getPackImageLink(officialName, fileName) {
+  if (!fileName) {
+    fileName = officialName + '.jpg'
+  }
+
+  return `https://ark.yituliu.cn/static/image/store/${fileName}`
+}
+
+function getContentId(id, type) {
+  return type + "_" + id;
+}
+
+function getContentId1(id, type) {
+  return type + "_1_" + id;
+}
+
+function getContentId2(id, type) {
+  return type + "_2_" + id;
+}
+
+function getContentId3(id, type) {
+  return type + "_3_" + id;
+}
+
+function displayPackContent(id) {
+  const element = document.getElementById(id)
+  console.log(element)
+  if ('flex' === element.style.display) {
+    element.style.display = 'none'
+  } else {
+    element.style.display = 'flex'
+  }
+}
+
+function switchPackContent(id, type) {
+  if (document.getElementById(type + "_" + id).style.display == "none") {
+    document.getElementById(type + "_" + id).style.display = "flex";
+  } else document.getElementById(type + "_" + id).style.display = "none";
+}
+
+function switchPackContent1(id, type) {
+  if (document.getElementById(type + "_1_" + id).style.display == "none") {
+    document.getElementById(type + "_1_" + id).style.display = "flex";
+  } else document.getElementById(type + "_1_" + id).style.display = "none";
+}
+
+function switchPackContent2(id, type) {
+  if (document.getElementById(type + "_2_" + id).style.display == "none") {
+    document.getElementById(type + "_2_" + id).style.display = "flex";
+  } else document.getElementById(type + "_2_" + id).style.display = "none";
+}
+
+function switchPackContent3(id, type) {
+  if (document.getElementById(type + "_3_" + id).style.display == "none") {
+    document.getElementById(type + "_3_" + id).style.display = "flex";
+  } else document.getElementById(type + "_3_" + id).style.display = "none";
+}
 
 onMounted(() => {
   storeAPI.getPackStore().then(response => {
@@ -248,6 +303,7 @@ onMounted(() => {
       </pack-card-container>
 
 
+
       <div class="module-header">
         <div class="module-title">
           <h1>历史礼包</h1>
@@ -255,31 +311,30 @@ onMounted(() => {
         </div>
         <span class="module-tip">*历史礼包存档</span>
       </div>
-      <el-button-group style="margin: 12px;">
+      <el-button-group>
         <el-button color="#626aef" :dark="isDark">所有礼包</el-button>
-        <el-button type="primary">被选中的样式</el-button>
         <el-button plain type="primary">芯片礼包</el-button>
         <el-button plain type="primary">龙门币礼包</el-button>
         <el-button plain type="primary">包含特殊物品的纪念礼包</el-button>
         <el-button plain type="primary">五星/六星特训礼包</el-button>
         <el-button plain type="primary">包含模组块的礼包</el-button>
-        <el-button plain type="primary">其它礼包</el-button>
+        <el-button type="primary">其它礼包</el-button>
       </el-button-group>
       <br>
-      <el-button-group style="margin: 12px;">
-        <el-button color="#626aef" :dark="isDark">不限</el-button>
-        <el-button plain type="primary">2024</el-button>
-        <el-button plain type="primary">2023</el-button>
-        <el-button plain type="primary">2022</el-button>
-        <el-button plain type="primary">2021</el-button>
-        <el-button plain type="primary">2020</el-button>
+      <el-button-group>
+        <el-button type="primary">不限</el-button>
+        <el-button type="primary">2024</el-button>
+        <el-button type="primary">2023</el-button>
+        <el-button type="primary">2022</el-button>
+        <el-button type="primary">2021</el-button>
+        <el-button type="primary">2020</el-button>
       </el-button-group>
 
-      <el-button-group style="margin: 12px;">
-        <el-button color="#626aef" :dark="isDark">不限</el-button>
-        <el-button plain type="primary"> &lt; 100 RMB</el-button>
-        <el-button plain type="primary">100-200 RMB</el-button>
-        <el-button plain type="primary"> &gt; 200 RMB</el-button>
+      <el-button-group>
+        <el-button type="primary">不限</el-button>
+        <el-button type="primary"> &lt; 100 RMB</el-button>
+        <el-button type="primary">100-200 RMB</el-button>
+        <el-button type="primary"> &gt; 200 RMB</el-button>
       </el-button-group>
 
       <h2 style="margin: 12px;">2024</h2>
@@ -289,60 +344,89 @@ onMounted(() => {
       <h2 style="margin: 12px;">2020</h2>
 
 
+      <div class="module-header">
+        <div class="module-title">
+          <h1>礼包性价比总表</h1>
+          <h4>Packs Value</h4>
+        </div>
+      </div>
 
-      <!--      <h2 style="margin: 12px;">龙门币补给包</h2>-->
-
-      <!--      <div class="module-header">-->
-      <!--        <div class="module-title">-->
-      <!--          <h1>礼包性价比总表</h1>-->
-      <!--          <h4>Packs Value</h4>-->
-      <!--        </div>-->
-      <!--      </div>-->
-
-      <!--      <div class="tag-group">-->
-      <!--        <span class="tag-rank-5">-->
-      <!--          性价比基准为648￥源石，移动端可左右滑动表格-->
-      <!--        </span>-->
-      <!--        <span class="tag-rank-6">-->
-      <!--          由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。-->
-      <!--        </span>-->
-      <!--      </div>-->
+      <div class="tag-group">
+        <span class="tag-rank-5">
+          性价比基准为648￥源石，移动端可左右滑动表格
+        </span>
+        <span class="tag-rank-6">
+          由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
+        </span>
+      </div>
 
 
-      <div class="pack-table-wrapper">
+      <div class="pack-table-wrapper" style="display: none">
         <el-table :data="packPPRInfoList" class="pack-table" stripe table-layout="auto"
-                  :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
-          <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {return row.displayName;}"
-                           min-width="154" fixed/>
-          <el-table-column sortable label="类型" :formatter=formatterSaleType :filters=filtersTable
-           :filter-method="(value, row, column) => {return row.saleType === value;}"
-           :filtered-value="['newbie', 'monthly', 'weekly', 'elite', 'chip', 'lmd', 'activity', 'originium', 'originium2']"
-           :sort-by="(row, index) => {return row.saleType;}" min-width="92"/>
-          <el-table-column sortable label="售价" :formatter="(row, col) => {return row.price + '元';}"
-                           :sort-by="(row, index) => {return row.price;}" min-width="80"/>
-          <el-table-column sortable label="抽数" :formatter="(row, col) => {return row.draws.toFixed(2);}"
-           :sort-by="(row, index) => { return row.draws;}" min-width="80"/>
+          :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
+          <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {
+        return row.displayName;
+      }
+        " min-width="154" fixed />
+          <el-table-column sortable label="类型" :formatter="(row, col) => {
+        return {
+          once: '一次性',
+          monthly: '每月',
+          weekly: '每周',
+          year: '每年',
+          permanent: '常驻',
+          limited: '限时',
+        }[row.saleType];
+      }
+        " :filters="[
+        { value: 'once', text: '一次性' },
+        { value: 'monthly', text: '每月' },
+        { value: 'weekly', text: '每周' },
+        { value: 'year', text: '每年' },
+        { value: 'permanent', text: '常驻' },
+        { value: 'limited', text: '限时' },
+      ]" :filter-method="(value, row, column) => {
+        return row.saleType == value;
+      }
+        " :filtered-value="['once', 'monthly', 'weekly', 'year', 'permanent', 'limited']" :sort-by="(row, index) => {
+        return row.saleType;
+      }
+        " min-width="92" />
+          <el-table-column sortable label="售价" :formatter="(row, col) => {
+        return row.price + '元';
+      }
+        " :sort-by="(row, index) => {
+        return row.price;
+      }
+        " min-width="80" />
+          <el-table-column sortable label="抽数" :formatter="(row, col) => {
+        return row.draws.toFixed(2);
+      }
+        " :sort-by="(row, index) => {
+        return row.draws;
+      }
+        " min-width="80" />
           <el-table-column sortable label="源石" :formatter="(row, col) => {
-          return row.originium;
-        }
-          " :sort-by="(row, index) => {
-          return row.originium;
-        }
-          " min-width="80"/>
+        return row.originium;
+      }
+        " :sort-by="(row, index) => {
+        return row.originium;
+      }
+        " min-width="80" />
           <el-table-column sortable label="抽卡性价比" :formatter="(row, col) => {
-          return row.drawEfficiency.toFixed(2);
-        }
-          " :sort-by="(row, index) => {
-          return row.drawEfficiency;
-        }
-          " min-width="120"/>
+        return row.drawEfficiency.toFixed(2);
+      }
+        " :sort-by="(row, index) => {
+        return row.drawEfficiency;
+      }
+        " min-width="120" />
           <el-table-column sortable label="综合性价比" prop="packEfficiency" :formatter="(row, col) => {
-          return row.packEfficiency.toFixed(2);
-        }
-          " :sort-by="(row, index) => {
-          return row.packEfficiency;
-        }
-          " min-width="120"/>
+        return row.packEfficiency.toFixed(2);
+      }
+        " :sort-by="(row, index) => {
+        return row.packEfficiency;
+      }
+        " min-width="120" />
         </el-table>
       </div>
 
@@ -383,32 +467,32 @@ onMounted(() => {
               </template>
               <table id="al_card">
                 <tbody>
-                <tr>
-                  <td>算法代号</td>
-                  <td>一图流_标准 v6.0</td>
-                  <td>更新时间</td>
-                  <td>
-                    <!-- {{ updateTime }} -->
-                  </td>
-                </tr>
-                <tr>
-                  <td>数据源</td>
-                  <td>企鹅物流</td>
-                  <td>基准</td>
-                  <td>常驻关卡</td>
-                </tr>
-                <tr>
-                  <td>计算引擎</td>
-                  <td>yituliuBackEnd</td>
-                  <td>样本阈值</td>
-                  <td>300</td>
-                </tr>
-                <tr>
-                  <td>需求目标</td>
-                  <td>无限需求</td>
-                  <td>EXP系数</td>
-                  <td>0.625</td>
-                </tr>
+                  <tr>
+                    <td>算法代号</td>
+                    <td>一图流_标准 v6.0</td>
+                    <td>更新时间</td>
+                    <td>
+                      <!-- {{ updateTime }} -->
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>数据源</td>
+                    <td>企鹅物流</td>
+                    <td>基准</td>
+                    <td>常驻关卡</td>
+                  </tr>
+                  <tr>
+                    <td>计算引擎</td>
+                    <td>yituliuBackEnd</td>
+                    <td>样本阈值</td>
+                    <td>300</td>
+                  </tr>
+                  <tr>
+                    <td>需求目标</td>
+                    <td>无限需求</td>
+                    <td>EXP系数</td>
+                    <td>0.625</td>
+                  </tr>
                 </tbody>
               </table>
             </el-collapse-item>
@@ -421,10 +505,9 @@ onMounted(() => {
               网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于
               Arknights/上海鹰角网络科技有限公司。<br>
               除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享
-              署名-非商业性使用 4.0 国际
-              许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
-              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a
-                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
+                署名-非商业性使用 4.0 国际
+                许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
+              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
             </el-collapse-item>
           </el-collapse>
         </el-card>
