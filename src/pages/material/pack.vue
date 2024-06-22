@@ -55,8 +55,8 @@ function initData() {
       pack.packRmbPerDraw = 0;
     }
 
-    if(pack.end<currentTimeStamp){
-        continue
+    if (pack.end < currentTimeStamp) {
+      continue
     }
 
     if ('lmd' === pack.saleType) {
@@ -125,6 +125,34 @@ function getFixed(num, acc) {
   acc = typeof acc !== "undefined" ? acc : 2;
   return parseFloat(num).toFixed(acc);
 }
+
+
+const filtersTable = [
+  { value: 'newbie', text: '新人' },
+  { value: 'monthly', text: '每月重置' },
+  { value: 'weekly', text: '每周重置' },
+  { value: 'elite', text: '直升礼包' },
+  { value: 'chip', text: '芯片' },
+  { value: 'lmd', text: '龙门币' },
+  { value: 'activity', text: '活动礼包' },
+  { value: 'originium', text: '非双倍源石' },
+  { value: 'originium2', text: '双倍源石' },
+]
+
+const formatterSaleType = (row, col) => {
+  return {
+    newbie: '新人',
+    monthly: '每月重置',
+    weekly: '每周重置',
+    elite: '直升礼包',
+    chip: '芯片',
+    lmd: '龙门币',
+    activity: '活动礼包',
+    originium: '非双倍源石',
+    originium2: '双倍源石',
+  }[row.saleType]
+}
+
 
 
 onMounted(() => {
@@ -215,112 +243,79 @@ onMounted(() => {
 
       </pack-card-container>
 
-       <h2 style="margin: 12px;">龙门币补给包</h2>
-       <pack-card-container v-model="lmdPackInfoList">
-       </pack-card-container>
+      <h2 style="margin: 12px;">龙门币补给包</h2>
+      <pack-card-container v-model="lmdPackInfoList">
+      </pack-card-container>
 
 
+      <!--      <div class="module-header">-->
+      <!--        <div class="module-title">-->
+      <!--          <h1>历史礼包</h1>-->
+      <!--          <h4>Packs History</h4>-->
+      <!--        </div>-->
+      <!--        <span class="module-tip">*历史礼包存档</span>-->
+      <!--      </div>-->
+      <!--      <el-button color="#626aef" :dark="isDark">重置筛选</el-button>-->
+      <!--      <el-button plain type="primary">芯片礼包</el-button>-->
+      <!--      <el-button plain type="primary">龙门币礼包</el-button>-->
+      <!--      <el-button plain type="primary">包含特殊物品的纪念礼包</el-button>-->
+      <!--      <el-button plain type="primary">五星/六星特训礼包</el-button>-->
+      <!--      <el-button plain type="primary">包含模组块的礼包</el-button>-->
+      <!--      <el-button type="primary">其它礼包</el-button>-->
+      <!--      <br>-->
+      <!--      <el-button-group>-->
+      <!--        <el-button type="primary">2024</el-button>-->
+      <!--        <el-button type="primary">2023</el-button>-->
+      <!--        <el-button type="primary">2022</el-button>-->
+      <!--        <el-button type="primary">2021</el-button>-->
+      <!--        <el-button type="primary">2020</el-button>-->
+      <!--      </el-button-group>-->
 
-<!--      <div class="module-header">-->
-<!--        <div class="module-title">-->
-<!--          <h1>历史礼包</h1>-->
-<!--          <h4>Packs History</h4>-->
-<!--        </div>-->
-<!--        <span class="module-tip">*历史礼包存档</span>-->
-<!--      </div>-->
-<!--      <el-button color="#626aef" :dark="isDark">重置筛选</el-button>-->
-<!--      <el-button plain type="primary">芯片礼包</el-button>-->
-<!--      <el-button plain type="primary">龙门币礼包</el-button>-->
-<!--      <el-button plain type="primary">包含特殊物品的纪念礼包</el-button>-->
-<!--      <el-button plain type="primary">五星/六星特训礼包</el-button>-->
-<!--      <el-button plain type="primary">包含模组块的礼包</el-button>-->
-<!--      <el-button type="primary">其它礼包</el-button>-->
-<!--      <br>-->
-<!--      <el-button-group>-->
-<!--        <el-button type="primary">2024</el-button>-->
-<!--        <el-button type="primary">2023</el-button>-->
-<!--        <el-button type="primary">2022</el-button>-->
-<!--        <el-button type="primary">2021</el-button>-->
-<!--        <el-button type="primary">2020</el-button>-->
-<!--      </el-button-group>-->
+      <!--      <el-button-group>-->
+      <!--        <el-button type="primary"> &lt; 100 RMB</el-button>-->
+      <!--        <el-button type="primary">100-200 RMB</el-button>-->
+      <!--        <el-button type="primary"> &gt; 200 RMB</el-button>-->
+      <!--      </el-button-group>-->
 
-<!--      <el-button-group>-->
-<!--        <el-button type="primary"> &lt; 100 RMB</el-button>-->
-<!--        <el-button type="primary">100-200 RMB</el-button>-->
-<!--        <el-button type="primary"> &gt; 200 RMB</el-button>-->
-<!--      </el-button-group>-->
-
-<!--      <h2 style="margin: 12px;">2024</h2>-->
-<!--      <h2 style="margin: 12px;">2023</h2>-->
-<!--      <h2 style="margin: 12px;">2022</h2>-->
-<!--      <h2 style="margin: 12px;">2021</h2>-->
-<!--      <h2 style="margin: 12px;">2020</h2>-->
-
-
-<!--      <h2 style="margin: 12px;">龙门币补给包</h2>-->
-
-<!--      <div class="module-header">-->
-<!--        <div class="module-title">-->
-<!--          <h1>礼包性价比总表</h1>-->
-<!--          <h4>Packs Value</h4>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--      <div class="tag-group">-->
-<!--        <span class="tag-rank-5">-->
-<!--          性价比基准为648￥源石，移动端可左右滑动表格-->
-<!--        </span>-->
-<!--        <span class="tag-rank-6">-->
-<!--          由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。-->
-<!--        </span>-->
-<!--      </div>-->
+      <!--      <h2 style="margin: 12px;">2024</h2>-->
+      <!--      <h2 style="margin: 12px;">2023</h2>-->
+      <!--      <h2 style="margin: 12px;">2022</h2>-->
+      <!--      <h2 style="margin: 12px;">2021</h2>-->
+      <!--      <h2 style="margin: 12px;">2020</h2>-->
 
 
-      <div class="pack-table-wrapper" style="display: none">
+      <!--      <h2 style="margin: 12px;">龙门币补给包</h2>-->
+
+      <!--      <div class="module-header">-->
+      <!--        <div class="module-title">-->
+      <!--          <h1>礼包性价比总表</h1>-->
+      <!--          <h4>Packs Value</h4>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <!--      <div class="tag-group">-->
+      <!--        <span class="tag-rank-5">-->
+      <!--          性价比基准为648￥源石，移动端可左右滑动表格-->
+      <!--        </span>-->
+      <!--        <span class="tag-rank-6">-->
+      <!--          由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。-->
+      <!--        </span>-->
+      <!--      </div>-->
+
+
+      <div class="pack-table-wrapper">
         <el-table :data="packPPRInfoList" class="pack-table" stripe table-layout="auto"
                   :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
-          <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {
-          return row.displayName;
-        }
-          " min-width="154" fixed/>
-          <el-table-column sortable label="类型" :formatter="(row, col) => {
-          return {
-            once: '一次性',
-            monthly: '每月',
-            weekly: '每周',
-            year: '每年',
-            permanent: '常驻',
-            limited: '限时',
-          }[row.saleType];
-        }
-          " :filters="[
-          { value: 'once', text: '一次性' },
-          { value: 'monthly', text: '每月' },
-          { value: 'weekly', text: '每周' },
-          { value: 'year', text: '每年' },
-          { value: 'permanent', text: '常驻' },
-          { value: 'limited', text: '限时' },
-        ]" :filter-method="(value, row, column) => {
-          return row.saleType == value;
-        }
-          " :filtered-value="['once', 'monthly', 'weekly', 'year', 'permanent', 'limited']" :sort-by="(row, index) => {
-          return row.saleType;
-        }
-          " min-width="92"/>
-          <el-table-column sortable label="售价" :formatter="(row, col) => {
-          return row.price + '元';
-        }
-          " :sort-by="(row, index) => {
-          return row.price;
-        }
-          " min-width="80"/>
-          <el-table-column sortable label="抽数" :formatter="(row, col) => {
-          return row.draws.toFixed(2);
-        }
-          " :sort-by="(row, index) => {
-          return row.draws;
-        }
-          " min-width="80"/>
+          <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {return row.displayName;}"
+                           min-width="154" fixed/>
+          <el-table-column sortable label="类型" :formatter=formatterSaleType :filters=filtersTable
+           :filter-method="(value, row, column) => {return row.saleType === value;}"
+           :filtered-value="['newbie', 'monthly', 'weekly', 'elite', 'chip', 'lmd', 'activity', 'originium', 'originium2']"
+           :sort-by="(row, index) => {return row.saleType;}" min-width="92"/>
+          <el-table-column sortable label="售价" :formatter="(row, col) => {return row.price + '元';}"
+                           :sort-by="(row, index) => {return row.price;}" min-width="80"/>
+          <el-table-column sortable label="抽数" :formatter="(row, col) => {return row.draws.toFixed(2);}"
+           :sort-by="(row, index) => { return row.draws;}" min-width="80"/>
           <el-table-column sortable label="源石" :formatter="(row, col) => {
           return row.originium;
         }
