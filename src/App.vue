@@ -50,11 +50,11 @@ import '/src/assets/css/common/title_and_tag.scss'
 import '/src/assets/css/layout/aside.scss'
 import '/src/assets/css/layout/atom.scss'
 import '/src/assets/css/layout/basic.scss'
-import '/src/assets/css/layout/main.scss'
+
 import '/src/assets/css/layout/navigation.scss'
 import '/src/assets/css/layout/theme.scss'
 
-
+import '/src/assets/css/layout/main.scss'
 
 
 
