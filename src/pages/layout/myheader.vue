@@ -13,22 +13,24 @@ const LanguageLabel = {
   en: 'English'
 }
 
-let menu_flag = ref(false);
+let menuFlag = ref(false);
 
 function menu_collapse(flag) {
-  menu_flag.value = flag;
-  if (menu_flag.value) {
+  menuFlag.value = flag;
+  if (menuFlag.value) {
     setTimeout(function () {
       document.getElementById("drawer114").style.willChange = 'transform'
       document.getElementById("drawer114").style.transform = "translateX(0)";
       document.getElementById("drawerMask514").style.display = "block";
+      console.log(document.getElementById("drawer114"))
     }, 30);
   } else {
     document.getElementById("drawer114").style.transform = "translateX(-400px) ";
     document.getElementById("drawerMask514").style.display = "none";
     // document.getElementById("drawer114514").className = "nav_collapse";
   }
-  // console.log(menu_flag.value);
+
+  console.log(menuFlag.value);
 }
 
 let aside_flag = ref(true);

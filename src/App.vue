@@ -39,11 +39,20 @@ import '/src/assets/css/sprite/sprite_avatar.css'
 import "/src/assets/css/stage_v3.css";
 
 // 通用样式
-import '/src/assets/css/common/common.scss'
+import '/src/assets/css/common/btn.scss'
+import '/src/assets/css/common/checkbox.scss'
+import '/src/assets/css/common/input.scss'
+import '/src/assets/css/common/tip.scss'
+import '/src/assets/css/common/title_and_tag.scss'
 
 
 
-import "/src/assets/css/layout/layout.scss";
+import '/src/assets/css/layout/aside.scss'
+import '/src/assets/css/layout/atom.scss'
+import '/src/assets/css/layout/basic.scss'
+import '/src/assets/css/layout/main.scss'
+import '/src/assets/css/layout/navigation.scss'
+import '/src/assets/css/layout/theme.scss'
 
 
 

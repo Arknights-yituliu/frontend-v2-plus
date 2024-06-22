@@ -1,6 +1,6 @@
 <script setup>
-import {onMounted, ref, watch} from "vue"
-import storeAPI from "../api/store.js";
+import { ref, watch} from "vue"
+
 
 const props = defineProps(["modelValue"]);
 function getPackImageLink(link) {
