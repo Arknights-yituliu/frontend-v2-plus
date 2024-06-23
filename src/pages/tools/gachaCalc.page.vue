@@ -253,7 +253,7 @@ function batchGenerationMonthlyPack(index) {
     index++
   }
 
-  console.log(packList.value)
+
 }
 
 
@@ -512,7 +512,7 @@ function gachaResourcesCalculation() {
     if (endDate.value.getDate() === 1) {
       shoppingTimes++
     }
-    console.log(shoppingTimes)
+
 
     //循环计算当前时间到活动结束时间
     while (startDate <= endDate.value) {
@@ -907,10 +907,12 @@ function gachaResourcesCalculation() {
 
       if (selectedSchedule.value.dailyGiftResources) {
         if (honeyCake.name.indexOf("每日赠送") > -1) {
-          honeyCake.gachaTicket = getPoolRemainingDays(honeyCake.end)
+          honeyCake.gachaTicket = getPoolRemainingDays(endDate.value.getTime(),honeyCake.start)
         }
         if (honeyCake.name.indexOf("矿区") > -1 || honeyCake.name.indexOf("红包墙") > -1) {
-          const remainingDays = getPoolRemainingDays(honeyCake.end)
+          console.log(honeyCake.end)
+          console.log(endDate.value.getTime())
+          const remainingDays = getPoolRemainingDays(endDate.value.getTime(),honeyCake.start)
           honeyCake.orundum = remainingDays * 600
         }
       }
@@ -949,13 +951,17 @@ function gachaResourcesCalculation() {
     }
   }
 
-  function getPoolRemainingDays(endDate) {
+  function getPoolRemainingDays(endTime,startTime) {
 
-    let remainingDays = Math.floor((endDate - new Date().getTime()) / 86400000)
+    let remainingDays = Math.floor((endTime - new Date().getTime()) / 86400000)
     if (remainingDays > 14) {
       remainingDays = 14
     }
-    console.log("离限定池结束还有" + remainingDays + "天")
+    if(endTime-startTime<8640000){
+      remainingDays = 1
+    }
+
+    // console.log("离限定池结束还有" + remainingDays + "天")
     return remainingDays
   }
 
