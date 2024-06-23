@@ -52,11 +52,9 @@ import '/src/assets/css/layout/atom.scss'
 import '/src/assets/css/layout/basic.scss'
 
 import '/src/assets/css/layout/navigation.scss'
-import '/src/assets/css/layout/theme.scss'
 
 import '/src/assets/css/layout/main.scss'
-
-
+import '/src/assets/css/layout/theme.scss'
 
 // svg字体
 
@@ -120,21 +118,6 @@ onMounted(() => {
   font-style: italic;
 }
 
-:root {
-  line-height: 1.5;
-  font-weight: 400;
-  //font-synthesis: none;
-  //text-rendering: optimizeLegibility;
-  //-webkit-font-smoothing: antialiased;
-  //-moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  font-family: 'Roboto', sans-serif;
-  margin: 0;
-  width: 100%;
-  height: 100vh;
-}
 
 
 .dev-tip{
