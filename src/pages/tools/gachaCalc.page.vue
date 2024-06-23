@@ -1086,8 +1086,8 @@ onMounted(() => {
   getAndSortPackData()
 
   ElNotification({
-    title: '2024.5.15',
-    message: h('i', { style: 'color: teal' }, '更新了夏活攒抽排期 @罗德岛蜜饼工坊'),
+    title: '2024.6.23',
+    message: h('i', { style: 'color: teal' }, '新增计算卡池当天抽数的功能'),
   })
 
 
