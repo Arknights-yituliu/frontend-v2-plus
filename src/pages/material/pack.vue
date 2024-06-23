@@ -366,15 +366,9 @@ onMounted(() => {
           " min-width="120"/>
         </el-table>
       </div>
-
-
     </div>
-    <div class="op_title">
-      <div class="op_title_text">
-        <div class="op_title_ctext">算法说明</div>
-        <div :class="opETextTheme">Algorithm</div>
-      </div>
-    </div>
+
+    <module-header title="算法说明" title-en="Algorithm"></module-header>
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
