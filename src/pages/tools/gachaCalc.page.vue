@@ -955,7 +955,7 @@ function gachaResourcesCalculation() {
     if (remainingDays > 14) {
       remainingDays = 14
     }
-    // console.log("离限定池结束还有" + remainingDays + "天")
+    console.log("离限定池结束还有" + remainingDays + "天")
     return remainingDays
   }
 

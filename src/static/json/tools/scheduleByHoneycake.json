@@ -114,8 +114,8 @@
     "orundum": 8400,
     "gachaTicket": 0,
     "tenGachaTicket": 0,
-    "start": "2024/07/01 16:00:00",
-    "end": "2024/07/01 03:58:00",
+    "start": "2024/08/01 16:00:00",
+    "end": "2024/08/15 03:58:00",
     "rewardType": "公共",
     "module": "honeyCake",
     "probability": ""
@@ -125,8 +125,8 @@
     "orundum": 0,
     "gachaTicket": 14,
     "tenGachaTicket": 0,
-    "start": "2024/07/01 16:00:00",
-    "end": "2024/07/01 03:58:00",
+    "start": "2024/08/01 16:00:00",
+    "end": "2024/08/15 03:58:00",
     "rewardType": "夏活限定",
     "module": "honeyCake",
     "probability": ""
@@ -136,8 +136,8 @@
     "orundum": 0,
     "gachaTicket": 0,
     "tenGachaTicket": 1,
-    "start": "2024/07/01 16:00:00",
-    "end": "2024/07/01 03:58:00",
+    "start": "2024/08/01 16:00:00",
+    "end": "2024/08/15 03:58:00",
     "rewardType": "夏活限定",
     "module": "honeyCake",
     "probability": ""
