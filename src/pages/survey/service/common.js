@@ -179,9 +179,6 @@ function characterListInit() {
             equip:baseData.equip,
             show: default_show
         };
-
-
-
         characterList.push(character);
     }
 

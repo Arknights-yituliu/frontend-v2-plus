@@ -117,19 +117,19 @@ let avatar_visible = ref(false)
 
 function avatarPopupVisible() {
   avatar_visible.value = !avatar_visible.value
-  selected_avatar.value = userData.value.avatar
+  selectedAvatar.value = userData.value.avatar
 }
 
-let selected_avatar = ref(userData.value.avatar)
+let selectedAvatar = ref(userData.value.avatar)
 
 function chooseAvatar(avatar) {
-  selected_avatar.value = avatar
+  selectedAvatar.value = avatar
 }
 
 function updateAvatar() {
   const data = {
     token: userData.value.token,
-    avatar: selected_avatar.value,
+    avatar: selectedAvatar.value,
     property: "avatar"
   }
 
@@ -205,12 +205,12 @@ onMounted(() => {
           <div class="user-now-avatar-wrap">
             <span>当前头像</span>
             <div class="user-avatar-sprite">
-              <div :class="getSprite(selected_avatar)"></div>
+              <div :class="getSprite(selectedAvatar)"></div>
             </div>
             <button class="btn btn-green" @click="updateAvatar()"> 保存修改</button>
           </div>
-          <div class="user_avatar_popup_wrap">
-            <div class="user-avatar-sprite" style="margin: 8px" v-for="(avatar,index) in avatar" :key="index">
+          <div class="user_avatar_popup_wrap" >
+            <div class="user-avatar-sprite" style="margin: 8px" v-for="(avatar,index) in avatar" :key="index" @click="chooseAvatar(avatar.charId)">
               <div :class="getSprite(avatar.charId)" ></div>
             </div>
           </div>

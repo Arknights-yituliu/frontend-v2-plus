@@ -601,7 +601,7 @@ import userAPI from "/src/api/userInfo";
 import surveyAPI from "/src/api/survey.js"
 import sklandApi from '/src/pages/survey/service/skland'
 import {onMounted, ref} from "vue";
-import {http} from "/src/api/baseURL";
+import {DOMAIN} from "/src/api/baseURL";
 import operatorRecommend from "/src/pages/survey/service/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
 import {exportExcel} from '/src/utils/exportExcel.js'
@@ -854,7 +854,7 @@ async function importSKLandOperatorData() {
   let akNickName = ""
 
   //获取绑定信息
-  const playerBinding = await sklandApi.getPlayBinding(userData.value.akUid, '', secret, cred);
+  const playerBinding = await sklandApi.getPlayBindingV2(userData.value.akUid, '', secret, cred);
 
   if (!playerBinding) {
     return
@@ -911,30 +911,7 @@ async function importSKLandOperatorDataByUid(akPlayerBinding) {
 }
 
 
-async function getSklandOperatorData(akUid, akNickName) {
-  if (checkUserStatus(true)) {
-    return;
-  }
 
-  const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
-
-  const params = {
-    requestUrl: '/api/v1/game/player/info',
-    requestParam: `uid=${akUid}`,
-    secret: secret,
-    cred: cred,
-    akUid: akUid,
-    akNickName: akNickName
-  }
-
-  const playerInfo = await sklandApi.getPlayerInfo(params)
-
-  await uploadSKLandData({
-    token: userData.value.token,
-    data: JSON.stringify(playerInfo)
-  })
-
-}
 
 /**
  * 获取cred和secret

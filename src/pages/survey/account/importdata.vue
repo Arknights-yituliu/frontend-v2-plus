@@ -2,7 +2,7 @@
 import {ref} from "vue";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
 import SklandAPI from '/src/pages/survey/service/skland.js'
-import {userData} from "/src/pages/survey/service/userData.js";
+import {getUserInfo} from "/src/pages/survey/service/userData.js";
 import {cMessage} from "/src/custom/message.js";
 import sklandApi from "../service/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";
@@ -21,6 +21,8 @@ function openLinkOnNewPage(url) {
 
 let selectedOption = ref('skland')
 
+const userInfo = ref({})
+
 function optionLineClass(type) {
   if (type === selectedOption.value) {
     return 'option-line-active'
@@ -37,7 +39,8 @@ let defaultAkUid = ref('')
 let inputText = ref('')
 let playBindingInfo = ref({})
 let playBindingList = ref([])
-
+let sklandCred = ref('')
+let sklandToken = ref('')
 
 function getPlayerBindingByHgToken() {
 
@@ -45,7 +48,10 @@ function getPlayerBindingByHgToken() {
   const token = obj.data.content
 
   surveyAPI.getPlayBindingListByHgToken({token: token}).then(response => {
-    playBindingList.value = response.data.playerBindingList
+    const {cred,token,playerBindingList} = response.data
+    playBindingList.value = playerBindingList
+    sklandCred.value = cred
+    sklandToken.value = token
   })
 
 }
@@ -62,8 +68,13 @@ function canBeParsedAsObject(str) {
 }
 
 async function getPlayerBindingBySkland() {
-  const playBinding = await SklandAPI.getPlayBindingV2(defaultAkUid.value, '', inputText.value)
-  console.log(playBinding)
+  const {cred, token} = getCredAndSecret(inputText.value)
+  sklandCred.value = cred
+  sklandToken.value = token
+  console.log(cred)
+  console.log(token)
+  const playBinding = await SklandAPI.getPlayBindingV2(defaultAkUid.value, '', cred, token)
+
   playBindingInfo.value = playBinding
   playBindingList.value = playBinding.bindingList
 }
@@ -72,17 +83,15 @@ async function getPlayerBindingBySkland() {
 async function getOperatorDataByPlayerBinding(akPlayerBinding) {
   const {uid, nickName, channelName, channelMasterId} = akPlayerBinding
 
-  if (checkUserStatus(true)) {
-    return;
-  }
+  userInfo.value = await getUserInfo()
 
-  const {cred, secret} = getCredAndSecret(inputText.value)
+  checkUserStatus(true)
 
   const params = {
     requestUrl: '/api/v1/game/player/info',
     requestParam: `uid=${uid}`,
-    secret: secret,
-    cred: cred,
+    token: sklandToken.value,
+    cred: sklandCred.value,
     akUid: uid,
     akNickName: nickName,
     channelMasterId: channelMasterId,
@@ -91,13 +100,12 @@ async function getOperatorDataByPlayerBinding(akPlayerBinding) {
 
   const playerInfo = await sklandApi.getPlayerInfo(params, characterTable)
 
-
   if (!playerInfo) {
     return
   }
 
   await uploadSKLandData({
-    token: userData.value.token,
+    token: userInfo.value.token,
     data: JSON.stringify(playerInfo)
   })
 }
@@ -114,7 +122,7 @@ async function uploadSKLandData({token, data}) {
 
   surveyAPI.uploadSkLandOperatorData({token, data})
       .then(response => {
-        cMessage("森空岛数据导入成功，即将专挑到干员调查页面");
+        cMessage("森空岛数据导入成功，即将转跳到干员调查页面");
         setTimeout(() => {
           router.push({name:'OperatorSurvey'})
         }, 3000)
@@ -136,8 +144,8 @@ function getCredAndSecret(text) {
 
   const textArr = text.split(',')
   const cred = textArr[0]
-  const secret = textArr[1]
-  return {cred, secret}
+  const token = textArr[1]
+  return {cred, token}
 
 }
 
@@ -162,14 +170,18 @@ function optionBtnColor(type) {
  * @returns {boolean} 状态
  */
 function checkUserStatus(notice) {
-  if (!userData.value.token) {
+
+  if (!userInfo.value.token) {
     if (notice) {
       cMessage('请先注册或登录一图流账号', 'error')
     }
     return true;
   }
-  return false
+
+  return false;
 }
+
+
 
 
 </script>
@@ -220,7 +232,7 @@ function checkUserStatus(notice) {
         <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"
                 v-for="(binding,index) in playBindingList" :key="index"
                 @click="getOperatorDataByPlayerBinding(binding)">
-          <span> 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>
+          <span > 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>
         </button>
       </div>
 

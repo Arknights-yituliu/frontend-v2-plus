@@ -116,7 +116,7 @@ const routes = [
         display: true,
         module: 'tools',
         icon: "calculator",
-        component: () => import('/src/pages/tools/specializationTimeCalculate.page.vue')
+        component: () => import('/src/pages/tools/specializationTimeCalculate.vue')
     },
     {
         path: '/survey/account/home',

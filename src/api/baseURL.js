@@ -1,4 +1,4 @@
-const http = "https://backend.yituliu.cn/";
-// const http = "http://127.0.0.1:10010/";
+// const DOMAIN = "https://backend.yituliu.cn/";
+const DOMAIN = "http://127.0.0.1:10010/";
 
-export { http };
+export { DOMAIN };
