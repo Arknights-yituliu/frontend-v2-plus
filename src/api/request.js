@@ -1,10 +1,10 @@
 import axios from "axios";
 import {cMessage} from "/src/custom/message.js";
-import {http} from "/src/api/baseURL";
+import {DOMAIN} from "/src/api/baseURL";
 
 // 创建axios实例
 const service = axios.create({
-    baseURL: http,
+    baseURL: DOMAIN,
     timeout: 150000, // 请求超时时间
 });
 

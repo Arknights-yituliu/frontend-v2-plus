@@ -2,7 +2,7 @@ import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
 import request from "/src/api/requestBase";
 import {cMessage} from "/src/custom/message";
-
+import logService from '/src/api/log.js'
 
 const domain = "https://zonai.skland.com";
 const playerInfoAPI = '/api/v1/game/player/info'
@@ -28,9 +28,9 @@ function getSign(path, requestParam, secret) {
 }
 
 
-async function getPlayBindingV2(defaultAkUid, requestParam,text) {
+async function getPlayBindingV2(defaultAkUid, requestParam, cred, secret) {
 
-    const {cred, secret} = getCredAndSecret(text)
+
 
     const {timestamp, sign} = getSign(PLAYER_BINDING_URL, requestParam, secret);
 
@@ -118,6 +118,13 @@ async function getPlayBindingV2(defaultAkUid, requestParam,text) {
             bindingData.channelMasterId = channelMasterId
         }
     }).catch(error => {
+        const log = {
+            message: JSON.stringify(error.response),
+            apiPath: PLAYER_BINDING_URL,
+            logType:'error'
+        }
+        logService.collectLog(log)
+        console.log(error)
         cMessage('森空岛：' + error.response.data.message, 'error')
         return void 0
     })
@@ -146,113 +153,13 @@ function getCredAndSecret(text) {
 
 }
 
-async function getPlayBinding(defaultAkUid, requestParam, secret, cred) {
-
-    cred = cred.replace(/\s+/g, '')
-    cred = cred.replace(/["']/g, '')
-
-    secret = secret.replace(/\s+/g, '')
-    secret = secret.replace(/["']/g, '')
-
-    const {timestamp, sign} = getSign(PLAYER_BINDING_URL, requestParam, secret);
-
-    let uid = '0'
-    let nickName = ""
-
-    let channelName = '默认'
-    let channelMasterId = -1
-
-    const url = `${domain}${PLAYER_BINDING_URL}`
-    // console.log(url)
-    const headers = {
-        "platform": '3',
-        "timestamp": timestamp,
-        "dId": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
-        "vName": '1.2.0',
-        "cred": cred,
-        "sign": sign
-    }
-    // console.table(headers)
-
-    let bindingData = {
-        bindingList: [],
-        uid: uid,
-        nickName: nickName,
-        channelName: '官服',
-        channelMasterId: 1
-    }
-
-
-    await request({
-        url: url,
-        headers: headers,
-        method: "get",
-    }).then(response => {
-
-        response = response.data
-        // console.log(response)
-        if (response.code !== 0) {
-            cMessage("森空岛CRED错误或失效")
-        } else {
-            const list = response.data.list
-
-            let akBindingList = []
-
-            for (const item of list) {
-                if (item.appCode === 'arknights') {
-                    akBindingList = item.bindingList
-                    break
-                }
-            }
-
-            for (const binding of akBindingList) {
-                if (defaultAkUid !== '0') {
-                    if (binding.uid === defaultAkUid) {
-                        uid = binding.uid;
-                        nickName = binding.nickName;
-                        channelName = binding.channelName
-                        channelMasterId = binding.channelMasterId
-                        break;
-                    }
-                }
-
-                if (binding.isOfficial) {
-                    uid = binding.uid;
-                    nickName = binding.nickName;
-                    channelName = binding.channelName
-                    channelMasterId = binding.channelMasterId
-                    break;
-                }
-            }
-
-            if (typeof uid === "undefined") {
-                const binding = list[0].bindingList[0]
-                uid = binding.uid;
-                nickName = binding.nickName;
-                channelName = binding.channelName
-                channelMasterId = binding.channelMasterId
-            }
-
-            bindingData.bindingList = akBindingList;
-            bindingData.nickName = nickName;
-            bindingData.uid = uid;
-            bindingData.channelName = channelName
-            bindingData.channelMasterId = channelMasterId
-        }
-    }).catch(error => {
-        cMessage('森空岛：' + error.response.data.message, 'error')
-        return void 0
-    })
-
-    return bindingData;
-}
 
 
 async function getPlayerInfo(params, characterTable) {
 
-    const {requestUrl, requestParam, secret, cred, akUid, akNickName, channelName, channelMasterId} = params
+    const {requestUrl, requestParam, token, cred, akUid, akNickName, channelName, channelMasterId} = params
 
-    const {timestamp, sign} = getSign(requestUrl, requestParam, secret);
+    const {timestamp, sign} = getSign(requestUrl, requestParam, token);
     const url = `${domain}${requestUrl}?${requestParam}`
     // console.log(url)
     const headers = {
@@ -280,7 +187,7 @@ async function getPlayerInfo(params, characterTable) {
             const chars = data.chars;
             const charInfoMap = data.charInfoMap;
 
-            FormattingOperatorData(chars,characterTable)
+            FormattingOperatorData(chars, characterTable)
 
             uploadData = {
                 akNickName: akNickName,
@@ -292,7 +199,12 @@ async function getPlayerInfo(params, characterTable) {
             }
         }
     }).catch(error => {
-        console.log(error)
+        const log = {
+            message: JSON.stringify(error.response),
+            apiPath: playerInfoAPI,
+            logType:'error'
+        }
+        logService.collectLog(log)
         cMessage('森空岛：' + error, 'error')
         return void 0
     })
@@ -386,7 +298,7 @@ function FormattingOperatorData(characterList, characterTable) {
 }
 
 export default {
-    getPlayBinding,
+
     getPlayBindingV2,
     getPlayerInfo,
 }
