@@ -6,7 +6,7 @@
 
 
 欢迎加入开发群（QQ）交流讨论：938710832
-
+*本项目谢绝Gitcode搬运
 ---
 
 此项目从前端的 [v2 版本](https://github.com/Arknights-yituliu/frontend-v2) 发展而来，保留大部分原有代码时，升级了工具链。在 v2-plus 中，主要用到了以下的库或工具：
