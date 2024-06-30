@@ -793,7 +793,6 @@ function gachaResourcesCalculation() {
     let totalAmountOfRecharge = 0
 
 
-    console.log(selectedHistoryPackIndex.value)
     for(const index of selectedHistoryPackIndex.value){
       const pack = packListGroupByHistory.value[index]
       if(!pack){
