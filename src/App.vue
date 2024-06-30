@@ -65,7 +65,8 @@ import myFooter from "/src/pages/layout/myfooter.vue";
 import myAside from "/src/pages/layout/aside.vue";
 import loading from '/src/pages/layout/loading.vue'
 import {onMounted, ref} from "vue";
-import { useRouter} from 'vue-router'
+
+
 
 
 let theme_type = ref("theme_init")
@@ -125,6 +126,7 @@ onMounted(() => {
    padding: 8px 0;
    font-size: 14px;
    font-weight: bold;
+
 }
 
 
