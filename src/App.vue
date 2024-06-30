@@ -9,7 +9,7 @@
       <div class="main">
         <div class="dev-tip tip-color-warn" v-show="devVer">您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况，
           请访问正式域名<a href="https://ark.yituliu.cn/">https://ark.yituliu.cn/</a></div>
-        <div class="dev-tip tip-color-warn" >服务器正在恢复中，如有问题请反馈</div>
+
 
 
         <router-view>
@@ -126,7 +126,6 @@ onMounted(() => {
    padding: 8px 0;
    font-size: 14px;
    font-weight: bold;
-
 }
 
 
