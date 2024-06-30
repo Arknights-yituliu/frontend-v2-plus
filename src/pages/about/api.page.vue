@@ -1,42 +1,38 @@
 <template>
-  <div class="api_page mdui-typo">
+  <div class="api-page">
     <h1><b>一图流API文档</b></h1>
-    <p>HTTP GET</p>
     <h2><b>一图流API请求说明</b></h2>
-    <div class="mdui-table-fluid">
-      <table class="mdui-table mdui-table-hoverable">
-        <thead>
-          <tr>
-            <th style="width: 100px">注意事项</th>
-            <th style="width: 600px">说明</th>
-          </tr>
-        </thead>
+    <h3>HTTP GET</h3>
+    <div class="">
+      <table class="api-table">
         <tbody>
-          <tr>
-            <td>请求 URL</td>
-            <td>/API路径?参数名=参数值&参数名=参数值......</td>
-          </tr>
+        <tr>
+          <td>注意事项</td>
+          <td>说明</td>
+        </tr>
+        <tr>
+          <td>请求 URL</td>
+          <td>/API路径?参数名=参数值&参数名=参数值......</td>
+        </tr>
         </tbody>
       </table>
     </div>
-    <p>HTTP POST</p>
-    <div class="mdui-table-fluid">
-      <table class="mdui-table mdui-table-hoverable">
-        <thead>
-          <tr>
-            <th style="width: 100px">注意事项</th>
-            <th style="width: 600px">说明</th>
-          </tr>
-        </thead>
+    <h3>HTTP POST</h3>
+    <div class="">
+      <table class="api-table">
         <tbody>
-          <tr>
-            <td>请求 URL</td>
-            <td>/API路径</td>
-          </tr>
-          <tr>
-            <td>请求体</td>
-            <td>请求体可以使用 JSON 也可以使用 Form 表单，一般为json</td>
-          </tr>
+        <tr>
+          <td>注意事项</td>
+          <td>说明</td>
+        </tr>
+        <tr>
+          <td>请求 URL</td>
+          <td>/API路径</td>
+        </tr>
+        <tr>
+          <td>请求体</td>
+          <td>请求体可以使用 JSON 也可以使用 Form 表单，一般为json</td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -45,137 +41,109 @@
 
     <p>一般情况下API无论GET、POST或其他请求，调用成功后返回的都是统一格式，格式如下</p>
     <pre class="response">{{ parse(apiResponseDemo) }}</pre>
-    <p>统一响应格式字段说明</p>
-    <div class="mdui-table-fluid">
-      <table class="mdui-table mdui-table-hoverable">
-        <thead>
-          <tr>
-            <th>参数名</th>
-            <th>类型</th>
-            <th>参数说明</th>
-          </tr>
-        </thead>
+    <h3>统一响应格式字段说明</h3>
+    <div>
+      <table class="api-table">
         <tbody>
-          <tr>
-            <td>code</td>
-            <td>int</td>
-            <td>响应状态值</td>
-          </tr>
-          <tr>
-            <td>msg</td>
-            <td>string</td>
-            <td>响应信息</td>
-          </tr>
-          <tr>
-            <td>data</td>
-            <td>object</td>
-            <td>返回数据</td>
-          </tr>
+        <tr>
+          <td>参数名</td>
+          <td>类型</td>
+          <td>参数说明</td>
+        </tr>
+        <tr>
+          <td>code</td>
+          <td>int</td>
+          <td>响应状态值</td>
+        </tr>
+        <tr>
+          <td>msg</td>
+          <td>string</td>
+          <td>响应信息</td>
+        </tr>
+        <tr>
+          <td>data</td>
+          <td>object</td>
+          <td>返回数据</td>
+        </tr>
         </tbody>
       </table>
     </div>
     <p>因此文档后续除特殊情况外，只说明data（返回数据）内字段</p>
 
-    <h1><b>公开的API</b></h1>
+    <h1>可调用的API</h1>
 
-    <div class="mdui-panel mdui-panel-gapless api_wrap" mdui-panel v-for="(api, index) in APIList" :key="index" :id="api.path">
-      <div class="mdui-panel-item mdui-panel-item-open">
-        <div class="mdui-panel-item-header api-header">
-          <h2>
-            <b>#&nbsp;{{ api.apiContent }} &emsp;{{ api.requestMethod }}</b> <br />
-            <div class="api_wrap_divider"></div>
-          </h2>
+    <div class="api-card" v-for="(api, index) in APIList" :key="index" :id="api.path">
+      <div class="">
+        <h2>#&nbsp;{{ api.title }} &emsp;{{ api.method }}</h2>
+        <p>{{ api.description }}</p>
+        <h3> API路径</h3>
+        <div class="requestURL"> {{ api.path }}</div>
+        <h3> 请求参数</h3>
+        <div v-show="!api.params">无参数</div>
 
-          <p>{{ api.description }}</p>
+        <div class="" v-show="api.params">
+          <table class="api-table">
+            <tbody>
+            <tr>
+              <td>参数名</td>
+              <td>参数类型</td>
+              <td>参数说明</td>
+              <td>参数值</td>
+            </tr>
+            <tr v-for="(param, index) in api.params" :key="index">
+              <td>{{ param.name }}</td>
+              <td>{{ param.type }}</td>
+              <td>{{ param.description }}</td>
+              <td>
+                <div class="">
+                  <input class="" type="text" :placeholder="param.value" v-model="param.value"/>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
 
-        <div class="mdui-panel-item-body">
-          <h3><b> API路径</b></h3>
+        <h3><b> 请求格式示例</b></h3>
 
-          <div class="requestURL">
-            {{ api.path }}
-          </div>
-
-          <h3><b> 请求参数</b></h3>
-
-          <div v-show="api.requestParms === undefined">无参数</div>
-
-          <div class="mdui-table-fluid" v-show="api.requestParms !== undefined">
-            <table class="mdui-table mdui-table-hoverable">
-              <thead>
-                <tr>
-                  <th>参数名</th>
-                  <th>参数类型</th>
-                  <th>参数说明</th>
-                  <th>参数值</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr v-for="(parm, index) in api.requestParms" :key="index">
-                  <td>{{ parm.name }}</td>
-                  <td>{{ parm.type }}</td>
-                  <td>{{ parm.description }}</td>
-                  <td>
-                    <div class="mdui-textfield">
-                      <input class="mdui-textfield-input" type="text" :placeholder="parm.value" v-model="parm.value" />
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3><b> 请求格式示例</b></h3>
-
-          <div class="requestURL">
-            {{ requestURL(index) }}
-          </div>
-
-          <h3><b> 返回字段说明</b></h3>
-
-          <div class="api_response_table" v-for="(model, index) in api.model" :key="index">
-            <p class="table_header">{{ model.description }}</p>
-
-            <table class="mdui-table mdui-table-hoverable">
-              <thead>
-                <tr>
-                  <th>参数名</th>
-                  <th>参数类型</th>
-                  <th>参数说明</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr v-for="(value, index) in model.value" :key="index">
-                  <td>{{ value.name }}</td>
-                  <td>{{ value.type }}</td>
-                  <td>{{ value.description }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <button class="mdui-btn mdui-color-blue-accent mdui-ripple tryBtn" @click="tryBtn(index)">尝试一下</button>
-
-          <h3><b> 服务响应结果</b></h3>
-
-          <div class="response_body">
-            <div>返回消息体</div>
-            <pre class="response">{{ parse(apiResponse) }}</pre>
-          </div>
-
-          <div class="nullblock"></div>
+        <div class="requestURL">
+          {{ requestURL(index) }}
         </div>
+
+        <h3><b> 返回字段说明</b></h3>
+
+        <div v-for="(model, index) in api.response" :key="index">
+          <p class="model-description">{{model.property}}：{{ model.description }}</p>
+          <table class="api-table">
+            <tbody>
+            <tr>
+              <td>参数名</td>
+              <td>参数类型</td>
+              <td>参数说明</td>
+            </tr>
+            <tr v-for="(value, index) in model.value" :key="index">
+              <td>{{ value.name }}</td>
+              <td>{{ value.type }}</td>
+              <td>{{ value.description }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <button class="btn btn-blue" @click="tryBtn(index)">尝试一下</button>
+        <h3><b> 服务响应结果</b></h3>
+        <pre class="response">{{ parse(apiResponse) }}</pre>
+
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 import apiJson from "/src/static/json/api.json";
-import { cMessage } from "/src/custom/message";
+import {cMessage} from "/src/custom/message";
+import '/src/assets/css/api.scss'
 
 let visibleList = ref([0, 1, 2, 3, 4, 5, 6, 7]);
 // let visibleList = ref([])
@@ -213,14 +181,14 @@ let apiResponse = ref({
 
 function tryBtn(index) {
   axios.get(requestURL(index)).then(
-    (response) => {
-      cMessage("调用成功");
-      // console.log(response.data)
-      apiResponse.value = response.data;
-    },
-    (response) => {
-      console.log("error");
-    }
+      (response) => {
+        cMessage("调用成功");
+        // console.log(response.data)
+        apiResponse.value = response.data;
+      },
+      (response) => {
+        console.log("error");
+      }
   );
 }
 
@@ -228,18 +196,23 @@ let menu_index = ref(0);
 </script>
 
 <style scoped lang="scss">
+
+
 .title1 {
   font-size: 32px;
   font-weight: 700;
 }
+
 .title2 {
   font-size: 28px;
   font-weight: 600;
 }
+
 .title3 {
   font-size: 24px;
   font-weight: 600;
 }
+
 .title4 {
   font-size: 20px;
   font-weight: 600;
@@ -258,14 +231,11 @@ let menu_index = ref(0);
   display: block;
 }
 
-.api_page {
+.api-page {
   width: 800px;
   margin: auto;
 }
 
-.api_wrap {
-  margin-bottom: 24px;
-}
 
 .api-header {
   height: 96px;

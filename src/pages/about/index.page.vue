@@ -9,7 +9,7 @@ const navi_data = [
     link: "/about/dev",
   },
   {
-    title: "API文档",
+    title: "API文档.md",
     desc: ["调用一图流提供的接口", "获取关卡推荐", "获取商店性价比", "获取材料价值"],
     icon: "/image/icon/头像_装置_伏击电路芯片.png",
     link: "/about/api",
