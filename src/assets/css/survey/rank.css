@@ -42,7 +42,7 @@
 }
 
 #rank_table {
-    height: calc(100vh - 186px);
+    height: calc(100vh - 180px);
     overflow-y: auto;
 }
 
@@ -119,8 +119,10 @@
     text-align: center !important;
 }
 .rank_table_avatar{
+    display: flex;
+    padding: 4px;
     /*width: 240px;*/
-    height: 96px;
+    height:70px;
 }
 
 .rank_operator_name{
@@ -129,11 +131,11 @@
     display: inline-block;
     background: linear-gradient(to right,#3f51b580,#ffffffff);
     vertical-align: top;
-    margin:48px 0 0 -36px;
+    margin:36px 0 0 -20px;
     padding-left: 32px;
     width: 118px;
-    height: 32px;
-    line-height: 32px;
+    height: 28px;
+    line-height: 28px;
     font-size: 16px;
     font-weight: 600;
 }

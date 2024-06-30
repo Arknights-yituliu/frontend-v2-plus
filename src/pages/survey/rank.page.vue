@@ -6,6 +6,7 @@ import character_table_simple from "/src/static/json/survey/character_table_simp
 
 
 import surveyApi from "/src/api/survey";
+import SpriteAvatar from "/src/components/SpriteAvatar.vue";
 
 let rarityDict = [1, 2, 3, 4, 5, 6];
 
@@ -367,9 +368,7 @@ onMounted(() => {
             class="rank_table_tr">
           <td class="rank_table_1 rank_table_text">
             <div class="rank_table_avatar">
-              <div class="rank_avatar_wrap">
-                <div :class="getSprite(result.charId)"></div>
-              </div>
+             <sprite-avatar :name="result.charId" size="70"></sprite-avatar>
               <div class="rank_operator_name" :class="'rarity_'+result.rarity">{{ result.name }}</div>
             </div>
           </td>
