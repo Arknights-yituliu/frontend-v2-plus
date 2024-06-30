@@ -1,0 +1,23 @@
+.api-page{
+
+  .api-table{
+    border-collapse: collapse;
+  }
+
+  .api-table td{
+    padding: 6px;
+    border: 1px solid var(--c-border-color);
+  }
+
+  .api-card {
+    width: 600px;
+    padding:0 12px;
+    margin-bottom: 60px;
+    border-bottom: 3px solid var(--c-border-color);
+  }
+
+  .model-description{
+    font-weight: bolder;
+  }
+
+}

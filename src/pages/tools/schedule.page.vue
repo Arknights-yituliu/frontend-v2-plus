@@ -638,18 +638,16 @@ function createSchedule() {
 
 function saveAndDownloadScheduleFile() {
   createSchedule()
-  const link = document.createElement('a')
-  link.download = `排班表.json`
-  link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scheduleInfo.value, null, 2))
-  link.click()
-  link.remove()
-
-
-  // buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
-  //   scheduleId.value = response.data.scheduleId
-  //   scheduleInfo.value.id = scheduleId.value
-  //   cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value)
-  // })
+  buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
+    scheduleId.value = response.data.scheduleId
+    scheduleInfo.value.id = scheduleId.value
+    const link = document.createElement('a')
+    link.download = `${scheduleId.value}.json`
+    link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scheduleInfo.value, null, 2))
+    link.click()
+    link.remove()
+    cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value)
+  })
 }
 
 function downloadScheduleFile() {
