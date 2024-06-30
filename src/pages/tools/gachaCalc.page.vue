@@ -471,6 +471,8 @@ let selectedActivityName = ref([])
 //选择的礼包索引
 let selectedPackIndex = ref([])
 
+let selectedHistoryPackIndex = ref([])
+
 let logs = []
 
 // let officialMonthlyCardReward = ref(0)
@@ -790,11 +792,27 @@ function gachaResourcesCalculation() {
     let tenGachaTicket = 0
     let totalAmountOfRecharge = 0
 
+
+    console.log(selectedHistoryPackIndex.value)
+    for(const index of selectedHistoryPackIndex.value){
+      const pack = packListGroupByHistory.value[index]
+      if(!pack){
+        continue
+      }
+
+      orundum += pack.orundum
+      originium += pack.originium
+      gachaTicket += pack.gachaTicket
+      tenGachaTicket += pack.tenGachaTicket
+      totalAmountOfRecharge += pack.price
+    }
+
     //循环选中的礼包索引，获得对应的礼包
     for (const i of selectedPackIndex.value) {
       const pack = packList.value[i]
-
-
+      if(!pack){
+        continue
+      }
       //月卡单独处理
       if (pack.displayName === '月卡') {
         //计算卡池结束前月卡可以拿到多少合成玉
@@ -1660,9 +1678,9 @@ function handleResize() {
           <div class="collapse-content-subheading">
             <span></span> 往年礼包
           </div>
-          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
+          <el-checkbox-group v-model="selectedHistoryPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByHistory" :key="index"
-                                :value="pack.parentIndex" class="el-checkbox-button">
+                                :value="index" class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
             </el-checkbox-button>
