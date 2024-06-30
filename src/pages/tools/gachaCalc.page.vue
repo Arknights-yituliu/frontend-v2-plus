@@ -13,7 +13,9 @@ import {cMessage} from "../../custom/message.js";
 import {dateDiff} from '/src/utils/dateUtil.js'
 import {ElNotification} from "element-plus";
 
-import {useNotification} from "naive-ui";
+
+import PackButtonContent from "../../components/PackButtonContent.vue";
+import ActivityGachaResources from "../../components/ActivityGachaResources.vue";
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
@@ -129,12 +131,14 @@ let packListGroupByMonthly = ref([])
 //限时礼包集合
 let packListGroupByActivity = ref([])
 
-let packListGroupByHistorical = ref([])
+let packListGroupByHistory = ref([])
 
 //全部礼包集合
 let packList = ref([])
 //每月黄票兑换抽卡券(视为礼包)集合
 let certificatePackList = ref([])
+
+let packInfoInitList = ref([])
 
 /**
  * 获取和分类礼包数据
@@ -147,7 +151,8 @@ function getAndSortPackData() {
 
   //从服务器获取礼包数据，将其进行分类
   storeAPI.getPackStore().then(response => {
-    for (let pack of response.data) {
+    packInfoInitList.value = response.data
+    for (let pack of packInfoInitList.value) {
 
       if (pack.officialName.indexOf('如死亦终') > -1) {
         continue
@@ -157,8 +162,13 @@ function getAndSortPackData() {
       if (!(pack.drawPrice > 0)) {
         continue;
       }
+
       //如果是每月寻访礼包或者源石不写入
       if (pack.officialName === '每月寻访组合包' || pack.officialName.indexOf('普通源石') > -1) {
+        continue
+      }
+
+      if (pack.end < currentTimeStamp) {
         continue
       }
 
@@ -167,10 +177,6 @@ function getAndSortPackData() {
       packList.value.push(pack)
       //礼包索引递增
       index++
-
-      if (pack.end < currentTimeStamp) {
-        continue
-      }
 
       //根据礼包类型进行分类
       if (pack.saleType === 'newbie') {
@@ -189,10 +195,32 @@ function getAndSortPackData() {
         packListGroupByActivity.value.push(pack)
       }
     }
-
+    getHistoryPackInfo()
     batchGenerationMonthlyPack(index)
 
   })
+}
+
+function getHistoryPackInfo() {
+  const currentScheduleMonth = endDate.value.getMonth()
+  const minTimeStamp = new Date().getTime() - 60*60*24*400*1000
+  let list = []
+  for (let pack of packInfoInitList.value) {
+    const {start,saleType} = pack
+    console.log(pack.displayName,saleType,!'activity'===saleType)
+    if('activity'!==saleType){
+      continue
+    }
+
+
+    const month = new Date(start).getMonth()
+    if(month===currentScheduleMonth){
+      list.push(pack)
+    }
+  }
+
+  console.log(list)
+  packListGroupByHistory.value = list
 }
 
 /**
@@ -252,8 +280,6 @@ function batchGenerationMonthlyPack(index) {
     //礼包索引递增
     index++
   }
-
-
 }
 
 
@@ -284,7 +310,6 @@ function updateScheduleOption(index) {
   selectedScheduleName.value = schedule.name
   selectedSchedule.value = schedule
   endDate.value = schedule.end
-
 
 
   activityType.value = schedule.activityType
@@ -460,7 +485,7 @@ function gachaResourcesCalculation() {
 
   if (calPoolStart.value) {
     endDate.value = selectedSchedule.value.start
-  }else {
+  } else {
     endDate.value = selectedSchedule.value.end
   }
 
@@ -479,8 +504,6 @@ function gachaResourcesCalculation() {
   honeyCakeCalculate()
   packCalculate()
   activityCalculate()
-
-
 
 
   /**
@@ -907,12 +930,11 @@ function gachaResourcesCalculation() {
 
       if (selectedSchedule.value.dailyGiftResources) {
         if (honeyCake.name.indexOf("每日赠送") > -1) {
-          honeyCake.gachaTicket = getPoolRemainingDays(endDate.value.getTime(),honeyCake.start)
+          honeyCake.gachaTicket = getPoolRemainingDays(endDate.value.getTime(), honeyCake.start)
         }
         if (honeyCake.name.indexOf("矿区") > -1 || honeyCake.name.indexOf("红包墙") > -1) {
-          console.log(honeyCake.end)
-          console.log(endDate.value.getTime())
-          const remainingDays = getPoolRemainingDays(endDate.value.getTime(),honeyCake.start)
+
+          const remainingDays = getPoolRemainingDays(endDate.value.getTime(), honeyCake.start)
           honeyCake.orundum = remainingDays * 600
         }
       }
@@ -951,13 +973,13 @@ function gachaResourcesCalculation() {
     }
   }
 
-  function getPoolRemainingDays(endTime,startTime) {
+  function getPoolRemainingDays(endTime, startTime) {
 
     let remainingDays = Math.floor((endTime - new Date().getTime()) / 86400000)
     if (remainingDays > 14) {
       remainingDays = 14
     }
-    if(endTime-startTime<8640000){
+    if (endTime - startTime < 8640000) {
       remainingDays = 1
     }
 
@@ -1594,34 +1616,8 @@ function handleResize() {
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByMonthly" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button" v-show="rewardIsExpired(pack)">
-              <div class="checkbox-button">
-                <span class="draw-efficiency" :style="getPackPriorityColor(pack.drawEfficiency)">
-                  {{ keepTheDecimalPoint(pack.drawPrice) }}
-                </span>
-                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="checkbox-button-pack-gacha-resources">
-                  <!--源石-->
-                  <div class="image-sprite" v-show="pack.originium > 0">
-                    <div class="bg-icon_4002"></div>
-                  </div>
-                  <span v-show="pack.originium > 0">{{ pack.originium }}</span>
-                  <!--合成玉-->
-                  <div class="image-sprite" v-show="pack.orundum > 0">
-                    <div class="bg-icon_4003"></div>
-                  </div>
-                  <span v-show="pack.orundum > 0">{{ pack.orundum }}</span>
-                  <!--抽卡券-->
-                  <div class="image-sprite" v-show="pack.gachaTicket > 0">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span v-show="pack.gachaTicket > 0">{{ pack.gachaTicket }}</span>
-                  <!--十连券-->
-                  <div class="image-sprite" v-show="pack.tenGachaTicket > 0">
-                    <div class="bg-icon_7004"></div>
-                  </div>
-                  <span v-show="pack.tenGachaTicket > 0">{{ pack.tenGachaTicket }}</span>
-                </div>
-              </div>
+              <pack-button-content :data="pack">
+              </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -1632,34 +1628,8 @@ function handleResize() {
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByActivity" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
-              <div class="checkbox-button">
-                <span class="draw-efficiency" :style="getPackPriorityColor(pack.drawEfficiency)">
-                  {{ keepTheDecimalPoint(pack.drawPrice) }}
-                </span>
-                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="checkbox-button-pack-gacha-resources">
-                  <!--源石-->
-                  <div class="image-sprite" v-show="pack.originium > 0">
-                    <div class="bg-icon_4002"></div>
-                  </div>
-                  <span v-show="pack.originium > 0">{{ pack.originium }}</span>
-                  <!--合成玉-->
-                  <div class="image-sprite" v-show="pack.orundum > 0">
-                    <div class="bg-icon_4003"></div>
-                  </div>
-                  <span v-show="pack.orundum > 0">{{ pack.orundum }}</span>
-                  <!--抽卡券-->
-                  <div class="image-sprite" v-show="pack.gachaTicket > 0">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span v-show="pack.gachaTicket > 0">{{ pack.gachaTicket }}</span>
-                  <!--十连券-->
-                  <div class="image-sprite" v-show="pack.tenGachaTicket > 0">
-                    <div class="bg-icon_7004"></div>
-                  </div>
-                  <span v-show="pack.tenGachaTicket > 0">{{ pack.tenGachaTicket }}</span>
-                </div>
-              </div>
+              <pack-button-content :data="pack">
+              </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -1670,34 +1640,8 @@ function handleResize() {
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByOnce" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
-              <div class="checkbox-button">
-                <span class="draw-efficiency" :style="getPackPriorityColor(pack.drawEfficiency)">
-                  {{ keepTheDecimalPoint(pack.drawPrice) }}
-                </span>
-                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="checkbox-button-pack-gacha-resources">
-                  <!--源石-->
-                  <div class="image-sprite" v-show="pack.originium > 0">
-                    <div class="bg-icon_4002"></div>
-                  </div>
-                  <span v-show="pack.originium > 0">{{ pack.originium }}</span>
-                  <!--合成玉-->
-                  <div class="image-sprite" v-show="pack.orundum > 0">
-                    <div class="bg-icon_4003"></div>
-                  </div>
-                  <span v-show="pack.orundum > 0">{{ pack.orundum }}</span>
-                  <!--抽卡券-->
-                  <div class="image-sprite" v-show="pack.gachaTicket > 0">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span v-show="pack.gachaTicket > 0">{{ pack.gachaTicket }}</span>
-                  <!--十连券-->
-                  <div class="image-sprite" v-show="pack.tenGachaTicket > 0">
-                    <div class="bg-icon_7004"></div>
-                  </div>
-                  <span v-show="pack.tenGachaTicket > 0">{{ pack.tenGachaTicket }}</span>
-                </div>
-              </div>
+              <pack-button-content :data="pack">
+              </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -1708,73 +1652,19 @@ function handleResize() {
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByrOiginium" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
-              <div class="checkbox-button">
-                <span class="draw-efficiency" :style="getPackPriorityColor(pack.drawEfficiency)">
-                  {{ keepTheDecimalPoint(pack.drawPrice) }}
-                </span>
-                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="checkbox-button-pack-gacha-resources">
-                  <!--源石-->
-                  <div class="image-sprite" v-show="pack.originium > 0">
-                    <div class="bg-icon_4002"></div>
-                  </div>
-                  <span v-show="pack.originium > 0">{{ pack.originium }}</span>
-                  <!--合成玉-->
-                  <div class="image-sprite" v-show="pack.orundum > 0">
-                    <div class="bg-icon_4003"></div>
-                  </div>
-                  <span v-show="pack.orundum > 0">{{ pack.orundum }}</span>
-                  <!--抽卡券-->
-                  <div class="image-sprite" v-show="pack.gachaTicket > 0">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span v-show="pack.gachaTicket > 0">{{ pack.gachaTicket }}</span>
-                  <!--十连券-->
-                  <div class="image-sprite" v-show="pack.tenGachaTicket > 0">
-                    <div class="bg-icon_7004"></div>
-                  </div>
-                  <span v-show="pack.tenGachaTicket > 0">{{ pack.tenGachaTicket }}</span>
-                </div>
-              </div>
+              <pack-button-content :data="pack">
+              </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
-
 
           <div class="collapse-content-subheading">
             <span></span> 往年礼包
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByHistorical" :key="index"
-                                :value="pack.parentIndex"
-                                v-show="rewardIsExpired(pack)" class="el-checkbox-button">
-              <div class="checkbox-button">
-                <span class="draw-efficiency" :style="getPackPriorityColor(pack.drawEfficiency)">
-                  {{ keepTheDecimalPoint(pack.drawPrice) }}
-                </span>
-                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="checkbox-button-pack-gacha-resources">
-                  <!--源石-->
-                  <div class="image-sprite" v-show="pack.originium > 0">
-                    <div class="bg-icon_4002"></div>
-                  </div>
-                  <span v-show="pack.originium > 0">{{ pack.originium }}</span>
-                  <!--合成玉-->
-                  <div class="image-sprite" v-show="pack.orundum > 0">
-                    <div class="bg-icon_4003"></div>
-                  </div>
-                  <span v-show="pack.orundum > 0">{{ pack.orundum }}</span>
-                  <!--抽卡券-->
-                  <div class="image-sprite" v-show="pack.gachaTicket > 0">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span v-show="pack.gachaTicket > 0">{{ pack.gachaTicket }}</span>
-                  <!--十连券-->
-                  <div class="image-sprite" v-show="pack.tenGachaTicket > 0">
-                    <div class="bg-icon_7004"></div>
-                  </div>
-                  <span v-show="pack.tenGachaTicket > 0">{{ pack.tenGachaTicket }}</span>
-                </div>
-              </div>
+            <el-checkbox-button v-for="(pack, index) in packListGroupByHistory" :key="index"
+                                :value="pack.parentIndex" class="el-checkbox-button">
+              <pack-button-content :data="pack">
+              </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -1796,31 +1686,8 @@ function handleResize() {
             <el-checkbox-button v-for="(activity, name) in activitySchedules" :key="name" :value="name"
                                 v-show="activity.module === 'actRe' && rewardIsExpired(activity)"
                                 class="el-checkbox-button">
-              <div class="checkbox-button">
-                <span class="checkbox-button-pack-label">{{ activity.name }}</span>
-                <div class="checkbox-button-pack-gacha-resources">
-                  <!--源石-->
-                  <div class="image-sprite" v-show="activity.originium > 0">
-                    <div class="bg-icon_4002"></div>
-                  </div>
-                  <span v-show="activity.originium > 0">{{ activity.originium }}</span>
-                  <!--合成玉-->
-                  <div class="image-sprite" v-show="activity.orundum > 0">
-                    <div class="bg-icon_4003"></div>
-                  </div>
-                  <span v-show="activity.orundum > 0">{{ activity.orundum }}</span>
-                  <!--抽卡券-->
-                  <div class="image-sprite" v-show="activity.gachaTicket > 0">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span v-show="activity.gachaTicket > 0">{{ activity.gachaTicket }}</span>
-                  <!--十连券-->
-                  <div class="image-sprite" v-show="activity.tenGachaTicket > 0">
-                    <div class="bg-icon_7004"></div>
-                  </div>
-                  <span v-show="activity.tenGachaTicket > 0">{{ activity.tenGachaTicket }}</span>
-                </div>
-              </div>
+              <pack-button-content :data="activity">
+              </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -1828,28 +1695,9 @@ function handleResize() {
           <div class="collapse-content-subheading">
             <span></span> 未来活动
           </div>
-          <div class="resources-line" v-for="(activity, name) in activitySchedules" :key="name"
-               v-show="activity.module === 'act' && rewardIsExpired(activity)">
-            <span class="resources-line-label">{{ activity.name }}</span>
-            <div class="resources-line-content">
-              <div class="image-sprite" v-show="activity.originium > 0">
-                <div class="bg-icon_4002"></div>
-              </div>
-              <span v-show="activity.originium > 0">{{ activity.originium }}</span>
-              <div class="image-sprite" v-show="activity.orundum > 0">
-                <div class="bg-icon_4003"></div>
-              </div>
-              <span v-show="activity.orundum > 0">{{ activity.orundum }}</span>
-              <div class="image-sprite" v-show="activity.gachaTicket > 0">
-                <div class="bg-icon_7003"></div>
-              </div>
-              <span v-show="activity.gachaTicket > 0">{{ activity.gachaTicket }}</span>
-              <div class="image-sprite" v-show="activity.tenGachaTicket > 0">
-                <div class="bg-icon_7004"></div>
-              </div>
-              <span v-show="activity.tenGachaTicket > 0">{{ activity.tenGachaTicket }}</span>
-            </div>
-          </div>
+          <activity-gacha-resources v-for="(activity, name) in activitySchedules" :key="name" :info="activity"
+                                    v-show="activity.module === 'act' && rewardIsExpired(activity)">
+          </activity-gacha-resources>
         </el-collapse-item>
 
         <el-collapse-item name="other" class="collapse-item">
@@ -1859,29 +1707,8 @@ function handleResize() {
               其他资源（估算）&emsp;{{ keepTheDecimalPoint(calculationResult.otherTotalDraw, 0) }}抽
             </span>
           </template>
-
-          <div class="resources-line" v-for="(honeyCake, label) in honeyCakeTable" :key="label"
-               v-show="rewardIsExpired(honeyCake)">
-            <span class="resources-line-label" style="width: 240px">{{ honeyCake.name }}</span>
-            <div class="resources-line-content">
-              <div class="image-sprite" v-show="honeyCake.originium > 0">
-                <div class="bg-icon_4002"></div>
-              </div>
-              <span v-show="honeyCake.originium > 0">{{ honeyCake.originium }}</span>
-              <div class="image-sprite" v-show="honeyCake.orundum > 0">
-                <div class="bg-icon_4003"></div>
-              </div>
-              <span v-show="honeyCake.orundum > 0">{{ honeyCake.orundum }}</span>
-              <div class="image-sprite" v-show="honeyCake.gachaTicket > 0">
-                <div class="bg-icon_7003"></div>
-              </div>
-              <span v-show="honeyCake.gachaTicket > 0">{{ honeyCake.gachaTicket }}</span>
-              <div class="image-sprite" v-show="honeyCake.tenGachaTicket > 0">
-                <div class="bg-icon_7004"></div>
-              </div>
-              <span v-show="honeyCake.tenGachaTicket > 0">{{ honeyCake.tenGachaTicket }}</span>
-            </div>
-          </div>
+          <activity-gacha-resources v-for="(honeyCake, label) in honeyCakeTable" :key="label" :info="honeyCake" v-show="rewardIsExpired(honeyCake)">
+          </activity-gacha-resources>
         </el-collapse-item>
       </el-collapse>
     </div>
