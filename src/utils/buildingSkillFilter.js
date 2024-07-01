@@ -5,6 +5,7 @@ const operatorFilterConditionTable = {
         name: "buildSkillFilter.RoomType",
         display: true,
         color:'inherit',
+        buttonColor:'blue',
         conditions: [
             {
                 label: "buildSkillFilter.Trading",
@@ -66,6 +67,7 @@ const operatorFilterConditionTable = {
         name: "buildSkillFilter.Factory",
         color:'#ff641e',
         display: true,
+        buttonColor:'orange',
         conditions: [
             {
                 label: "buildSkillFilter.GeneralWokers",
@@ -116,6 +118,7 @@ const operatorFilterConditionTable = {
         name: "buildSkillFilter.Trading",
         color:'#00a9f6',
         display: true,
+        buttonColor:'blue',
         conditions: [
             {
                 label: "buildSkillFilter.OrderAcquisitionEfficiency",
@@ -141,6 +144,7 @@ const operatorFilterConditionTable = {
         name: "buildSkillFilter.Control",
         color:'#007e1d',
         display: true,
+        buttonColor:'green',
         conditions: [
             {
                 label: "buildSkillFilter.OrderAcquisitionEfficiency",
@@ -172,6 +176,7 @@ const operatorFilterConditionTable = {
         name: "buildSkillFilter.Special",
         color:'#b476ff',
         display: true,
+        buttonColor:'purple',
         conditions: [
             {
                 label: "buildSkillFilter.PerceptionInformation",

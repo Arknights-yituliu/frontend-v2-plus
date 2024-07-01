@@ -1,5 +1,5 @@
 import {ref} from "vue";
-import Language_Dictionary_Schedule from '/src/static/json/i18n/Language_Dictionary_Schedule.json' //排班生成器页面的字典
+import Language_Dictionary_Schedule from '/src/static/json/i18n/language_dictionary_schedule.json' //排班生成器页面的字典
 
 //字典表  引入对应页面的翻译文件写入字典表
 const Language_Dictionary_Table = {
