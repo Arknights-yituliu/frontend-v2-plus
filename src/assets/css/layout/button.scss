@@ -1,0 +1,176 @@
+.theme_light {
+  --c-button-white: rgb(255, 255, 255);
+
+  --c-button-blue-background: var(--c-blue-primary);
+  --c-button-blue-hover: var(--c-blue-primary-light);
+  --c-button-blue-border: var(--c-blue-primary-light);
+  --c-button-blue-text: var(--c-blue-primary);
+
+  --c-button-orange-background: var(--c-orange-primary);
+  --c-button-orange-hover: var(--c-orange-primary-light);
+  --c-button-orange-border: var(--c-orange-primary-light);
+  --c-button-orange-text: var(--c-orange-primary);
+
+  --c-button-green-background: var(--c-green-primary);
+  --c-button-green-hover: var(--c-green-primary-light);
+  --c-button-green-border: var(--c-green-primary-light);
+  --c-button-green-text: var(--c-green-primary);
+
+  --c-button-red-background: var(--c-red-primary);
+  --c-button-red-hover: var(--c-red-primary-light);
+  --c-button-red-border: var(--c-red-primary-light);
+  --c-button-red-text: var(--c-red-primary);
+
+  --c-button-purple-background: var(--c-purple-primary);
+  --c-button-purple-hover: var(--c-purple-primary-light);
+  --c-button-purple-border: var(--c-purple-primary-light);
+  --c-button-purple-text: var(--c-purple-primary);
+
+  --c-button-cyan-background: var(--c-cyan-primary);
+  --c-button-cyan-hover: var(--c-cyan-primary-light);
+  --c-button-cyan-border: var(--c-cyan-primary-light);
+  --c-button-cyan-text: var(--c-cyan-primary);
+}
+
+.theme_dark {
+  --c-button-white: rgb(255, 255, 255);
+
+  --c-button-blue-background: var(--c-blue-primary);
+  --c-button-blue-hover: var(--c-blue-primary-light);
+  --c-button-blue-border: var(--c-blue-primary-light);
+  --c-button-blue-text: var(--c-blue-primary-light);
+
+  --c-button-orange-background: var(--c-orange-primary);
+  --c-button-orange-hover: var(--c-orange-primary-light);
+  --c-button-orange-border: var(--c-orange-primary-light);
+  --c-button-orange-text: var(--c-orange-primary-light);
+
+  --c-button-green-background: var(--c-green-primary);
+  --c-button-green-hover: var(--c-green-primary-light);
+  --c-button-green-border: var(--c-green-primary-light);
+  --c-button-green-text: var(--c-green-primary-light);
+
+  --c-button-red-background: var(--c-red-primary);
+  --c-button-red-hover: var(--c-red-primary-light);
+  --c-button-red-border: var(--c-red-primary-light);
+  --c-button-red-text: var(--c-red-primary-light);
+
+  --c-button-purple-background: var(--c-purple-primary);
+  --c-button-purple-hover: var(--c-purple-primary-light);
+  --c-button-purple-border: var(--c-purple-primary-light);
+  --c-button-purple-text: var(--c-purple-primary-light);
+
+  --c-button-cyan-background: var(--c-cyan-primary);
+  --c-button-cyan-hover: var(--c-cyan-primary-light);
+  --c-button-cyan-border: var(--c-cyan-primary-light);
+  --c-button-cyan-text: var(--c-cyan-primary-light);
+}
+
+
+// 定义颜色变量
+
+$button-colors: (
+
+        'blue': (
+                background: var(--c-button-blue-background),
+                hover:var(--c-button-blue-hover),
+                border: var(--c-button-blue-border),
+                text:var(--c-button-blue-text),
+        ),
+
+        'orange': (
+                background: var(--c-button-orange-background),
+                hover:var(--c-button-orange-hover),
+                border: var(--c-button-orange-border),
+                text:var(--c-button-orange-text),
+        ),
+
+        'green': (
+                background: var(--c-button-green-background),
+                hover:var(--c-button-green-hover),
+                border: var(--c-button-green-border),
+                text:var(--c-button-green-text),
+        ),
+
+        'red': (
+                background: var(--c-button-red-background),
+                hover:var(--c-button-red-hover),
+                border: var(--c-button-red-border),
+                text:var(--c-button-red-text),
+        ),
+
+        'purple': (
+                background: var(--c-button-purple-background),
+                hover:var(--c-button-purple-hover),
+                border: var(--c-button-purple-border),
+                text:var(--c-button-purple-text),
+        ),
+
+        'cyan': (
+                background: var(--c-button-cyan-background),
+                hover:var(--c-button-cyan-hover),
+                border: var(--c-button-cyan-border),
+                text:var(--c-button-cyan-text),
+        ),
+);
+
+
+.my-button {
+  //padding: 0 12px;
+  //cursor: pointer;
+  //min-width: 60px;
+  //text-align: center;
+  //border-radius: 2px;
+  //line-height: 28px;
+  //font-size: 15px;
+  //margin: 0;
+  //color: var(--c-btn-color);
+  //background-color: var(--c-background-color);
+  //border: 1px solid var(--c-border-color);
+  //font-family: 'SourceHanSans', serif;
+
+
+  font-size: 15px;
+  line-height: 2;
+  border-radius: 4px;
+  padding: 0 16px;
+  height: 32px;
+  min-width: 88px;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  background-color: var(--c-background-color);
+  border: 1px solid var(--c-border-color);
+
+  @each $color-name, $color-values in $button-colors {
+    &[data-color="#{$color-name}"] {
+      color: map-get($color-values, text);
+      border-color: map-get($color-values, border);
+
+      &[data-status="on"] {
+        background-color: map-get($color-values, background);
+        color: var(--c-button-white);
+      }
+
+      &:hover[data-status="off"] {
+        background-color: map-get($color-values, hover);
+        color: map-get($color-values, background);
+      }
+    }
+
+    &[data-width-auto]{
+      width: fit-content;
+      min-width: initial;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .my-button {
+    padding: 0 8px;
+    min-width: 70px;
+    height: 22px;
+    line-height: 20px;
+    font-size: 12px;
+  }
+}

@@ -1,3 +1,6 @@
+@import "button";
+
+
 .theme_init{
     --c-background-color:var(--c-white-4);
     --c-text-color:var(--c-black-1);
@@ -47,11 +50,7 @@
     --c-input-text-color:var(--c-black-2);
     --c-input-border-color:rgba(0, 0, 0, 0.3);
     --c-input-border-focus-color:rgb(73, 179, 255);
-
-
     --c-checkbox-color:rgb(31, 136, 255);
-
-
     --c-warn-color: #ff0000;
 }
 
@@ -107,6 +106,43 @@
     --c-warn-color: #ff6d6d;
 }
 
+:root{
+    --c-blue-accent: rgb(13, 71, 161);
+    --c-blue-primary-dark: rgb(25, 118, 210);
+    --c-blue-primary: rgb(33, 150, 243);
+    --c-blue-primary-light: rgb(187, 221, 251);
+    --c-blue-secondary: rgb(100, 181, 246);
+
+    --c-orange-accent: rgb(255, 87, 34);
+    --c-orange-primary-dark: rgb(245, 124, 50);
+    --c-orange-primary: rgb(255, 111, 62);
+    --c-orange-primary-light: rgb(255, 189, 135);
+    --c-orange-secondary: rgb(255, 183, 77);
+
+    --c-purple-accent: rgb(Accent Amethyst);
+    --c-purple-primary-dark: rgb(106, 27, 154);
+    --c-purple-primary: rgb(156, 39, 176);
+    --c-purple-primary-light: rgb(228, 196, 231);
+    --c-purple-secondary: rgb(186, 104, 200);
+
+    --c-green-accent: rgb(46, 125, 50);
+    --c-green-primary-dark: rgb(56, 142, 60);
+    --c-green-primary: rgb(76, 175, 80);
+    --c-green-primary-light: rgb(200, 230, 201);
+    --c-green-secondary: rgb(139, 195, 74);
+
+    --c-red-accent: rgb(183, 28, 28);
+    --c-red-primary-dark: rgb(198, 40, 40);
+    --c-red-primary: rgb(244, 67, 54);
+    --c-red-primary-light: rgb(255, 205, 210);
+    --c-red-secondary: rgb(255, 87, 34);
+
+    --c-cyan-accent: rgb(0, 151, 167);
+    --c-cyan-primary-dark: rgb(0, 150, 136);
+    --c-cyan-primary: rgb(0, 188, 212);
+    --c-cyan-primary-light: rgb(178, 235, 242);
+    --c-cyan-secondary: rgb(130, 177, 255);
+}
 
 .color_var{
     --c-black-1: #000000;
@@ -142,4 +178,7 @@
     --c-btn-blue-dark: #4ab4ef;
     --c-btn-red-dark: #fa6f6f;
     --c-btn-orange-dark: #ff641e;
+
+
+
 }
