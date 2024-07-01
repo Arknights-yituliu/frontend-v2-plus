@@ -7,7 +7,7 @@ import packCardContainer from '/src/components/PackCardGroup.vue'
 import '/src/assets/css/material/pack.scss'
 import '/src/assets/css/material/pack.phone.scss'
 import ModuleHeader from "../../components/ModuleHeader.vue";
-
+import MyButton from '/src/components/Button.vue'
 
 let opETextTheme = "op_title_etext_light"
 
@@ -128,7 +128,7 @@ function getFixed(num, acc) {
 }
 
 
-const filtersTable = [
+const filterConditions = [
   {value: 'newbie', text: '新人'},
   {value: 'monthly', text: '每月重置'},
   {value: 'weekly', text: '每周重置'},
@@ -139,6 +139,7 @@ const filtersTable = [
   {value: 'originium', text: '非双倍源石'},
   {value: 'originium2', text: '双倍源石'},
 ]
+
 
 const formatterSaleType = (row, col) => {
   return {
@@ -155,9 +156,170 @@ const formatterSaleType = (row, col) => {
 }
 
 
-function filterPackInfo() {
-  packInfoGroupByYear(packInfoList.value)
+function buttonActive(value){
+   if(selectedPackTag.value.indexOf(value)>-1){
+     return true
+   }
+  if(selectedPackSaleDate.value.indexOf(value)>-1){
+    return true
+  }
+  if(selectedPackSalePrice.value.indexOf(value)>-1){
+    return true
+  }
+  return false
 }
+
+
+const packTagTable = [
+  {label: "新人", value: "newbie"},
+  {label: "含有模组块", value: "mod"},
+  {label: "芯片", value: "chip"},
+  {label: "活动礼包", value: "activity"},
+  {label: "周期性礼包", value: "periodically"},
+  {label: "绝版礼包", value: "event"},
+  {label: "含有无法计价之物品", value: "special"},
+  {label: "直升礼包", value: "elite"},
+  {label: "龙门币礼包", value: "lmd"},
+  {label: "定向抽卡类礼包", value: "operator"},
+]
+
+const packSaleDateObject = {
+  '2024年': function (start) {
+    return 2024 === new Date(start).getFullYear()
+  },
+  '2023年': function (start) {
+    return 2023 === new Date(start).getFullYear()
+  },
+  '2022年': function (start) {
+    return 2022 === new Date(start).getFullYear()
+  },
+  '2021年': function (start) {
+    return 2021 === new Date(start).getFullYear()
+  },
+  '2020年': function (start) {
+    return 2020 === new Date(start).getFullYear()
+  },
+  '2019年': function (start) {
+    return 2019 === new Date(start).getFullYear()
+  }
+};
+
+const packSalePriceObject = {
+  '0-100RMB': function (price) {
+    return price < 100
+  },
+  '100-200RMB': function (price) {
+    return price < 200 && price >= 100
+  },
+  '200-648RMB': function (price) {
+    return price < 649 && price >= 200
+  }
+}
+
+
+function resetPackFilterOption(){
+    selectedPackTag.value = []
+  selectedPackSaleDate.value = []
+  selectedPackSalePrice.value = []
+  filterPack()
+
+}
+
+let selectedPackTag = ref([])
+
+function choosePackTagOption(tag) {
+  const index = selectedPackTag.value.indexOf(tag);
+  if (index > -1) {
+    selectedPackTag.value.splice(index, 1)
+  } else {
+    selectedPackTag.value.push(tag)
+  }
+  filterPack()
+}
+
+let selectedPackSaleDate = ref([])
+
+function choosePackSaleDateOption(saleDate) {
+  const index = selectedPackSaleDate.value.indexOf(saleDate);
+  if (index > -1) {
+    selectedPackSaleDate.value.splice(index, 1)
+  } else {
+    selectedPackSaleDate.value.push(saleDate)
+  }
+  filterPack()
+}
+
+let selectedPackSalePrice = ref([])
+
+function choosePackSalePriceOption(saleDate) {
+  const index = selectedPackSalePrice.value.indexOf(saleDate);
+  if (index > -1) {
+    selectedPackSalePrice.value.splice(index, 1)
+  } else {
+    selectedPackSalePrice.value.push(saleDate)
+  }
+  filterPack()
+}
+
+let packInfoDisplayList = ref([])
+
+function filterPack() {
+  let list = []
+  for(const packInfo of packInfoList.value){
+    if(filterPackByTags(packInfo)){
+      list.push(packInfo)
+      continue
+    }
+    if(filterPackBySaleDate(packInfo)){
+      list.push(packInfo)
+      continue
+    }
+    if(filterPackBySalePrice(packInfo)){
+      list.push(packInfo)
+
+    }
+  }
+
+  packInfoDisplayList.value = list
+  packInfoGroupByYear(packInfoDisplayList.value)
+}
+
+function filterPackByTags(packInfo) {
+  if(!packInfo.tags){
+    return false
+  }
+  const tags = packInfo.tags.toString().split(",")
+
+  for(const tag of tags){
+    if(selectedPackTag.value.indexOf(tag)>-1){
+      return true
+    }
+  }
+  return  false
+}
+
+function filterPackBySaleDate(packInfo) {
+  for(const funcName of selectedPackSaleDate.value){
+        const func = packSaleDateObject[funcName];
+        if(func(packInfo.start)){
+          return true
+        }
+  }
+  return  false
+}
+
+
+function filterPackBySalePrice(packInfo) {
+  for(const funcName of selectedPackSalePrice.value){
+    const func = packSalePriceObject[funcName];
+    if(func(packInfo.price)){
+      return true
+    }
+  }
+  return  false
+}
+
+
 
 let packInfoListGroupByYear = ref({})
 
@@ -173,12 +335,11 @@ function packInfoGroupByYear(packInfoList) {
   }
   for (const packInfo of packInfoList) {
     const year = new Date(packInfo.start).getFullYear();
-    console.log(year)
-    console.log(packInfo)
+
     list[year].push(packInfo)
   }
   packInfoListGroupByYear.value = list
-  console.log(packInfoListGroupByYear.value)
+
 }
 
 
@@ -188,7 +349,6 @@ onMounted(() => {
     initData();
     filterPackInfo()
   })
-
   screenWidth.value = window.screen.width
 })
 
@@ -262,62 +422,84 @@ onMounted(() => {
       <pack-card-container v-model="lmdPackInfoList">
       </pack-card-container>
 
-<!--      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']">-->
+      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']">
 
-<!--      </module-header>-->
+      </module-header>
 
-<!--      <div>-->
-<!--        售卖类型：-->
-<!--        <button class="btn btn-red" >重置筛选</button>-->
-<!--        <button class="btn">芯片礼包</button>-->
-<!--        <button class="btn">龙门币礼包</button>-->
-<!--        <button class="btn">包含特殊物品的纪念礼包</button>-->
-<!--        <button class="btn">五星/六星特训礼包</button>-->
-<!--        <button class="btn">包含模组块的礼包</button>-->
-<!--        <button class="btn">其它礼包</button>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        售卖年份：-->
-<!--        <button class="btn">2024</button>-->
-<!--        <button class="btn">2023</button>-->
-<!--        <button class="btn">2022</button>-->
-<!--        <button class="btn">2021</button>-->
-<!--        <button class="btn">2020</button>-->
-<!--        <button class="btn">2019</button>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        售卖价格：-->
-<!--        <button class="btn">0-100RMB</button>-->
-<!--        <button class="btn">100-200RMB</button>-->
-<!--        <button class="btn">200-648RMB</button>-->
-<!--      </div>-->
+      <div class="pack-checkbox-btn-group">
+        售卖类型：
+        <my-button data-color="blue" v-for="(tag,index) in packTagTable" :key="index"
+                   :active="buttonActive(tag.value)"
+                   @click="choosePackTagOption(tag.value)">
+          {{ tag.label }}
+        </my-button>
+      </div>
+      <div class="pack-checkbox-btn-group">
+        售卖年份：
+        <my-button data-color="blue" v-for="(obj,name) in packSaleDateObject" :key="name"
+                   :active="buttonActive(name)"
+                   @click="choosePackSaleDateOption(name)">
+          {{ name }}
+        </my-button>
+      </div>
+      <div class="pack-checkbox-btn-group">
+        售卖价格：
+        <my-button data-color="blue" v-for="(obj,name) in packSalePriceObject" :key="name"
+                   :active="buttonActive(name)"
+                   @click="choosePackSalePriceOption(name)">
+          {{ name }}
+        </my-button>
+      </div>
 
-<!--      <el-button color="#626aef" :dark="isDark">重置筛选</el-button>-->
-<!--      <el-button plain type="primary">芯片礼包</el-button>-->
-<!--      <el-button plain type="primary">龙门币礼包</el-button>-->
-<!--      <el-button plain type="primary">包含特殊物品的纪念礼包</el-button>-->
-<!--      <el-button plain type="primary">五星/六星特训礼包</el-button>-->
-<!--      <el-button plain type="primary">包含模组块的礼包</el-button>-->
-<!--      <el-button type="primary">其它礼包</el-button>-->
-<!--      <br>-->
-<!--      <el-button-group>-->
-<!--        <el-button type="primary">2024</el-button>-->
-<!--        <el-button type="primary">2023</el-button>-->
-<!--        <el-button type="primary">2022</el-button>-->
-<!--        <el-button type="primary">2021</el-button>-->
-<!--        <el-button type="primary">2020</el-button>-->
-<!--      </el-button-group>-->
+      <div>
+        <button class="btn btn-red">重置筛选</button>
+      </div>
 
-<!--      <el-button-group>-->
-<!--        <el-button type="primary"> &lt; 100 RMB</el-button>-->
-<!--        <el-button type="primary">100-200 RMB</el-button>-->
-<!--        <el-button type="primary"> &gt; 200 RMB</el-button>-->
-<!--      </el-button-group>-->
+      <!--      <el-button color="#626aef" :dark="isDark">重置筛选</el-button>-->
+      <!--      <el-button plain type="primary">芯片礼包</el-button>-->
+      <!--      <el-button plain type="primary">龙门币礼包</el-button>-->
+      <!--      <el-button plain type="primary">包含特殊物品的纪念礼包</el-button>-->
+      <!--      <el-button plain type="primary">五星/六星特训礼包</el-button>-->
+      <!--      <el-button plain type="primary">包含模组块的礼包</el-button>-->
+      <!--      <el-button type="primary">其它礼包</el-button>-->
+      <!--      <br>-->
+      <!--      <el-button-group>-->
+      <!--        <el-button type="primary">2024</el-button>-->
+      <!--        <el-button type="primary">2023</el-button>-->
+      <!--        <el-button type="primary">2022</el-button>-->
+      <!--        <el-button type="primary">2021</el-button>-->
+      <!--        <el-button type="primary">2020</el-button>-->
+      <!--      </el-button-group>-->
 
-<!--      <h2 style="margin: 12px;">2024年</h2>-->
-<!--      <pack-card-container v-model="packInfoListGroupByYear['2024']">-->
-<!--      </pack-card-container>-->
+      <!--      <el-button-group>-->
+      <!--        <el-button type="primary"> &lt; 100 RMB</el-button>-->
+      <!--        <el-button type="primary">100-200 RMB</el-button>-->
+      <!--        <el-button type="primary"> &gt; 200 RMB</el-button>-->
+      <!--      </el-button-group>-->
 
+      <h2 style="margin: 12px;">2024年</h2>
+      <pack-card-container v-model="packInfoListGroupByYear['2024']">
+      </pack-card-container>
+
+      <h2 style="margin: 12px;">2023年</h2>
+      <pack-card-container v-model="packInfoListGroupByYear['2023']">
+      </pack-card-container>
+
+      <h2 style="margin: 12px;">2022年</h2>
+      <pack-card-container v-model="packInfoListGroupByYear['2022']">
+      </pack-card-container>
+
+      <h2 style="margin: 12px;">2021年</h2>
+      <pack-card-container v-model="packInfoListGroupByYear['2021']">
+      </pack-card-container>
+
+      <h2 style="margin: 12px;">2020年</h2>
+      <pack-card-container v-model="packInfoListGroupByYear['2020']">
+      </pack-card-container>
+
+      <h2 style="margin: 12px;">2019年</h2>
+      <pack-card-container v-model="packInfoListGroupByYear['2019']">
+      </pack-card-container>
 
 
       <module-header title="礼包性价比总表" title-en="Packs Value"></module-header>
@@ -335,7 +517,7 @@ onMounted(() => {
                   :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
           <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {return row.displayName;}"
                            min-width="154" fixed/>
-          <el-table-column sortable label="类型" :formatter=formatterSaleType :filters=filtersTable
+          <el-table-column sortable label="类型" :formatter=formatterSaleType :filters=filterConditions
                            :filter-method="(value, row, column) => {return row.saleType === value;}"
                            :filtered-value="['newbie', 'monthly', 'weekly', 'elite', 'chip', 'lmd', 'activity', 'originium', 'originium2']"
                            :sort-by="(row, index) => {return row.saleType;}" min-width="92"/>

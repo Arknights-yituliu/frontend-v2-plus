@@ -379,24 +379,6 @@
     background-color: rgb(255, 135, 55);
   }
 
-  .pack_simple {
-    width: 100%;
-  }
-
-  .pack_simple table {
-    width: 100%;
-    font-size: 24px;
-    text-align: center;
-    border-collapse: collapse;
-  }
-
-  .pack_simple_tr_back {
-    background: rgb(213, 219, 224);
-  }
-
-  .pack_simple_tr_title {
-    font-weight: 700;
-  }
 
   .pack-table-wrapper {
     padding: 18px 14px 0;
@@ -406,4 +388,14 @@
     box-shadow: var(--el-box-shadow-light);
     width: 100%;
   }
+
+
+  //归档礼包筛选栏
+  .pack-checkbox-btn-group{
+    margin: 4px;
+  }
+  .pack-checkbox-btn-group button{
+    margin: 2px;
+  }
+
 }
