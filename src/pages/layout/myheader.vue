@@ -182,7 +182,7 @@ function openNewPage(url) {
     <div class="current-page-title" @click="aside_collapse()">
       {{ pageTitle }}
     </div>
-    <div class="spacer"><span style="color: white">服务器正在恢复中，如有问题请反馈</span></div>
+    <div class="spacer"></div>
     <i class="iconfont icon-theme-style" :class="themeV2==='dark'?'icon-moon':'icon-sun'" @click="switchTheme()"></i>
     <div class="icon-button" @click="feedbackPopupVisible = !feedbackPopupVisible">
       <i class="iconfont icon-survey icon-feed-back-style"></i>
