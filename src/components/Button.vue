@@ -10,6 +10,10 @@ const props = defineProps(
         type: Boolean,
         default: false
       },
+      active: {
+        type: Boolean,
+        default: false
+      },
       color: {
         type: String,
         default: '',
@@ -24,7 +28,7 @@ const props = defineProps(
 
 
 <template>
-  <button class="my-button" :data-status="props.status?'on':'off'">
+  <button class="my-button" :data-status="props.active?'on':'off'">
     <slot></slot>
   </button>
 </template>

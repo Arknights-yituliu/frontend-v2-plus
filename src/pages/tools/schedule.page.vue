@@ -860,7 +860,7 @@ onMounted(() => {
         <my-button data-color="blue" @click="saveAndDownloadScheduleFile()">
           {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
         </my-button>
-        <!--      <my-button data-color='blue' :status="true" @click="downloadScheduleFile()">-->
+        <!--      <my-button data-color='blue' :active="true" @click="downloadScheduleFile()">-->
         <!--        {{ translate('schedule', 'schedule.DownloadScheduleFile') }}-->
         <!--      </my-button>-->
 
@@ -914,7 +914,7 @@ onMounted(() => {
         <div class="schedule-set-bar">
           <span>{{ translate('schedule', 'schedule.BaseLayout') }}</span>
           <div>
-            <my-button data-color='blue' :status="menu.label === selectedScheduleType.label"
+            <my-button data-color='blue' :active="menu.label === selectedScheduleType.label"
                        @click="chooseScheduleType(menu)" v-for="(menu, index) in schedule_menu" :key="index">
               {{ menu.label }}
             </my-button>
@@ -924,7 +924,7 @@ onMounted(() => {
         <div class="schedule-set-bar">
           <span>{{ translate('schedule', 'schedule.ShiftNumber') }}</span>
           <div>
-            <my-button data-color='blue' :status="num === scheduleTypeV2.planTimes" v-for="(num, index) in 6"
+            <my-button data-color='blue' :active="num === scheduleTypeV2.planTimes" v-for="(num, index) in 6"
                        :key="index"
                        @click="choosePlanTimes(num)">
               {{ num }}
@@ -954,29 +954,29 @@ onMounted(() => {
             </div>
             <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
             <div style="width: 200px">
-              <my-button data-color='blue' :status="'pre' === plansTemplate[selectedPlanIndex].drones.order"
+              <my-button data-color='blue' :active="'pre' === plansTemplate[selectedPlanIndex].drones.order"
                          @click="setDrones('order', 'pre')">
                 {{ translate('schedule', 'schedule.PreShift') }}
               </my-button>
-              <my-button data-color='blue' :status="'post' === plansTemplate[selectedPlanIndex].drones.order"
+              <my-button data-color='blue' :active="'post' === plansTemplate[selectedPlanIndex].drones.order"
                          @click="setDrones('order', 'post')">
                 {{ translate('schedule', 'schedule.PostShift') }}
               </my-button>
             </div>
             <span>{{ translate('schedule', 'schedule.TargetRoom') }}</span>
             <div style="width: 220px">
-              <my-button data-color='blue' :status="'trading' === plansTemplate[selectedPlanIndex].drones.room"
+              <my-button data-color='blue' :active="'trading' === plansTemplate[selectedPlanIndex].drones.room"
                          @click="setDrones('room', 'trading')">
                 {{ translate('schedule', 'schedule.TradingPost') }}
               </my-button>
-              <my-button data-color='blue' :status="'manufacture' === plansTemplate[selectedPlanIndex].drones.room"
+              <my-button data-color='blue' :active="'manufacture' === plansTemplate[selectedPlanIndex].drones.room"
                          @click="setDrones('room', 'manufacture')">
                 {{ translate('schedule', 'schedule.Factory') }}
               </my-button>
             </div>
             <span>{{ translate('schedule', 'schedule.RoomNumber') }}</span>
             <div>
-              <my-button data-width-auto data-color='blue' :status="(index) === plansTemplate[selectedPlanIndex].drones.index"
+              <my-button data-width-auto data-color='blue' :active="(index) === plansTemplate[selectedPlanIndex].drones.index"
                          @click="setDrones('index', (index))" v-for="index in 5" :key="index">
                 {{ index }}
               </my-button>
@@ -990,11 +990,11 @@ onMounted(() => {
             </div>
             <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
             <div style="width: 200px">
-              <my-button data-color='blue' :status="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order"
+              <my-button data-color='blue' :active="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order"
                          @click="setFiammetta('order', 'pre')">
                 {{ translate('schedule', 'schedule.PreShift') }}
               </my-button>
-              <my-button data-color='blue' :status="'post' === plansTemplate[selectedPlanIndex].Fiammetta.order"
+              <my-button data-color='blue' :active="'post' === plansTemplate[selectedPlanIndex].Fiammetta.order"
                          @click="setFiammetta('order', 'post')">
                 {{ translate('schedule', 'schedule.PostShift') }}
               </my-button>
@@ -1054,7 +1054,7 @@ onMounted(() => {
                  :key="key">
               <span :style="`color:${room.color}`">{{ translate('schedule', room.name) }}</span>
               <my-button v-for="(condition, index) in room.conditions" :key="index" data-color='blue'
-                         :status="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
+                         :active="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
                 {{ translate('schedule', condition.label) }}
               </my-button>
             </div>
@@ -1140,10 +1140,10 @@ onMounted(() => {
             <span>{{ translate('schedule', 'schedule.TempPlan') }}&nbsp;{{ translate('schedule', 'schedule.Shift') }}{{
                 tmpPlanData.index
               }} </span>
-              <my-button data-color='blue' :status="true" @click="copyPlan()">
+              <my-button data-color='blue' :active="true" @click="copyPlan()">
                 {{ translate('schedule', 'schedule.CopyPlan') }}
               </my-button>
-              <my-button data-color='blue' :status="true" @click="pastePlan()">
+              <my-button data-color='blue' :active="true" @click="pastePlan()">
                 {{ translate('schedule', 'schedule.PastePlan') }}
               </my-button>
             </div>
@@ -1214,7 +1214,7 @@ onMounted(() => {
 
         <div class="schedule-set-bar" style="justify-content: center">
           <span>{{ translate('schedule', 'schedule.CurrentShift') }}</span>
-          <my-button data-color='blue' :status="index === selectedPlanIndex"
+          <my-button data-color='blue' :active="index === selectedPlanIndex"
                      v-for="(num, index) in scheduleTypeV2.planTimes" :key="index" @click="currentPlan(index)"
                      class="room_times"
                      style="margin: 0 8px">
@@ -1233,10 +1233,10 @@ onMounted(() => {
                 </i>
               </div>
             </div>
-            <my-button data-color='blue' :status="true" @click="copyOperatorList()">
+            <my-button data-color='blue' :active="true" @click="copyOperatorList()">
               {{ translate('schedule', 'schedule.Copy') }}
             </my-button>
-            <my-button data-color='blue' :status="true" @click="pasteOperatorList()">
+            <my-button data-color='blue' :active="true" @click="pasteOperatorList()">
               {{ translate('schedule', 'schedule.Paste') }}
             </my-button>
             <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsClipboard') }}</span>
@@ -1253,7 +1253,7 @@ onMounted(() => {
                  v-show="conditionType.display" :key="key">
               <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
               <my-button v-for="(condition, index) in conditionType.conditions" :key="index" :data-color='conditionType.buttonColor'
-                         :status="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
+                         :active="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
                 {{ translate('schedule', condition.label) }}
               </my-button>
             </div>
