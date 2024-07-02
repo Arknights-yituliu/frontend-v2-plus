@@ -1,3 +1,111 @@
+<script setup>
+import {ref, onMounted} from "vue";
+import {exportExcel} from "/src/utils/exportExcel";
+import FixedNav from "../../components/FixedNav.vue";
+import materialAPI from "/src/api/material.js";
+import '/src/assets/css/material/value.scss'
+import '/src/assets/css/material/value.phone.scss'
+import MyButton from '/src/components/Button.vue'
+import Button from "../../components/Button.vue";
+
+let opETextTheme = ref("op_title_etext_light")
+
+let value_unit = ref('itemValueAp')
+
+let itemValueCollect = ref([])
+
+let itemValueList = ref([])
+
+function exportItemValueJson() {
+  let itemList = []
+  for (const item of itemValueList.value) {
+    itemList.push({
+      id: item.itemId,
+      name: item.itemName,
+      apValue: item.itemValueAp,
+      certValue: item.itemValue,
+      rarity: item.rarity
+    })
+  }
+  let link = document.createElement('a')
+  link.download = `item_value_table.json`
+  link.href = 'data:text/plain,' + JSON.stringify(itemList)
+  link.click()
+}
+
+function exportItemValueExcel() {
+  let itemList = [[
+    '物品id', '物品名称', '等效理智', '等效绿票', '物品稀有度'
+  ]]
+  for (const item of itemValueList.value) {
+    itemList.push([
+      item.itemId,
+      item.itemName,
+      item.itemValueAp,
+      item.itemValue,
+      item.rarity
+    ])
+  }
+  exportExcel('物品价值表', itemList)
+
+}
+
+
+function getSpriteImg(id) {
+  return "bg-" + id + " item_image";
+}
+
+function getItemRarityColor(rarity) {
+  if (rarity === 1) return 'border-color: var(--grey)'
+  if (rarity === 2) return 'border-color: var(--green)'
+  if (rarity === 3) return 'border-color: var(--blue)'
+  if (rarity === 4) return 'border-color: var(--purple)'
+  if (rarity === 5) return 'border-color: var(--orange)'
+}
+
+function formattedItemDisplayList(itemList) {
+
+}
+
+
+onMounted(() => {
+  materialAPI.getItemValueTable(0.625).then(response => {
+    itemValueList.value = response.data
+    let tmpList = []
+    for (const item of response.data) {
+      const sortId = item.cardNum
+      if (sortId > 90) {
+        continue
+      }
+      let list = tmpList[sortId]
+      if (list) {
+        list.push(item)
+      } else {
+        list = [item]
+      }
+      tmpList[sortId] = list
+    }
+
+    const index = 0
+    for(const list of tmpList){
+      console.log(list)
+      if(list&&list.length>0){
+        if(list.length<9){
+          itemValueCollect.value.push(list)
+        }else {
+          itemValueCollect.value.push(list.slice(0,9))
+          itemValueCollect.value.push(list.slice(9))
+        }
+
+      }
+
+    }
+  })
+});
+
+
+</script>
+
 <template>
   <div id="value">
     <!-- 标题区域 -->
@@ -13,19 +121,19 @@
       </div>
     </div>
 
-    <div class="btn-wrap">
-      <c-button style="margin: 4px" :color="'blue'" :status="value_unit === 'itemValueAp'"
+    <div class="value-button-group">
+      <my-button data-color='blue'  :active="value_unit === 'itemValueAp'"
                 @click="value_unit = 'itemValueAp'">等效理智
-      </c-button>
-      <c-button style="margin: 4px" :color="'blue'" :status="value_unit === 'itemValue'"
+      </my-button>
+      <my-button data-color='blue'  :active="value_unit === 'itemValue'"
                 @click="value_unit = 'itemValue'">等效绿票
-      </c-button>
-      <c-button style="margin: 4px" :color="'blue'"
+      </my-button>
+      <my-button data-color='blue' 
                 @click="exportItemValueExcel">导出Excel
-      </c-button>
-      <c-button style="margin: 4px" :color="'blue'"
+      </my-button>
+      <my-button data-color='blue' 
                 @click="exportItemValueJson">导出Json
-      </c-button>
+      </my-button>
     </div>
 
     <div class="item-value-table-wrap color">
@@ -169,118 +277,9 @@
 </template>
 
 <style scoped>
-#indexDiv {
-  color: var(--index-div-fg);
-  background-color: var(--index-div-bg);
+.value-button-group button{
+   margin: 4px;
 }
 </style>
 
-<script setup>
-import {ref, onMounted} from "vue";
-import {exportExcel} from "/src/utils/exportExcel";
-import FixedNav from "../../components/FixedNav.vue";
-import materialAPI from "/src/api/material.js";
-import '/src/assets/css/material/value.scss'
-import '/src/assets/css/material/value.phone.scss'
 
-let opETextTheme = ref("op_title_etext_light")
-
-let value_unit = ref('itemValueAp')
-
-let itemValueCollect = ref([])
-
-let itemValueList = ref([])
-
-function exportItemValueJson() {
-  let itemList = []
-  for (const item of itemValueList.value) {
-    itemList.push({
-      id: item.itemId,
-      name: item.itemName,
-      apValue: item.itemValueAp,
-      certValue: item.itemValue,
-      rarity: item.rarity
-    })
-  }
-  let link = document.createElement('a')
-  link.download = `item_value_table.json`
-  link.href = 'data:text/plain,' + JSON.stringify(itemList)
-  link.click()
-}
-
-function exportItemValueExcel() {
-  let itemList = [[
-    '物品id', '物品名称', '等效理智', '等效绿票', '物品稀有度'
-  ]]
-  for (const item of itemValueList.value) {
-    itemList.push([
-      item.itemId,
-      item.itemName,
-      item.itemValueAp,
-      item.itemValue,
-      item.rarity
-    ])
-  }
-  exportExcel('物品价值表', itemList)
-
-}
-
-
-function getSpriteImg(id) {
-  return "bg-" + id + " item_image";
-}
-
-function getItemRarityColor(rarity) {
-  if (rarity === 1) return 'border-color: var(--grey)'
-  if (rarity === 2) return 'border-color: var(--green)'
-  if (rarity === 3) return 'border-color: var(--blue)'
-  if (rarity === 4) return 'border-color: var(--purple)'
-  if (rarity === 5) return 'border-color: var(--orange)'
-}
-
-function formattedItemDisplayList(itemList) {
-
-}
-
-
-onMounted(() => {
-  materialAPI.getItemValueTable(0.625).then(response => {
-    itemValueList.value = response.data
-    let tmpList = []
-    for (const item of response.data) {
-      const sortId = item.cardNum
-      if (sortId > 90) {
-        continue
-      }
-      let list = tmpList[sortId]
-      if (list) {
-        list.push(item)
-      } else {
-        list = [item]
-      }
-      tmpList[sortId] = list
-    }
-
-    const index = 0
-    for(const list of tmpList){
-      console.log(list)
-      if(list&&list.length>0){
-        if(list.length<9){
-          itemValueCollect.value.push(list)
-        }else {
-          itemValueCollect.value.push(list.slice(0,9))
-          itemValueCollect.value.push(list.slice(9))
-        }
-
-      }
-
-    }
-  })
-});
-
-
-</script>
-
-<style scoped>
-
-</style>
