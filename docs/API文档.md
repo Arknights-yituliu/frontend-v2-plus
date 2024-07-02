@@ -228,6 +228,7 @@ param1=value&param2=value
 | expCoefficient | double | 0.625 | 认为经验书的价值为龙门币价值x0.625 |
 |   sampleSize   |  int   |  300  | 样本量                  |
 
+### 响应数据：
 ```json5
 {
   //状态码
@@ -252,6 +253,104 @@ param1=value&param2=value
       "cardNum": 12,
       "version": "v2-0.625-300",
       "weight": 0
+    }
+  ]
+}
+```
+
+
+## 获取礼包性价比数据 GET
+
+### 路径：
+
+```
+/store/pack
+```
+
+### 参数：
+```
+本API无参数
+```
+
+### 响应数据：
+```json5
+{
+  //状态码
+  "code": 200,
+  //返回信息描述
+  "msg": "操作成功",
+  //返回值
+  "data": [
+    {
+      "id": 1615957244980109,
+      //礼包的游戏官方名称
+      "officialName": "罗德岛周年组合包2024",
+      //礼包的前端展示名称
+      "displayName": "罗德岛周年组合包2024",
+      //售价
+      "price": 328,
+      //售卖类型
+      "saleType": "activity",
+      //礼包标签
+      "tags": "activity,module,special",
+      //礼包图片链接
+      "imageLink": "image/pack/罗德岛周年组合包2024.jpg",
+      //单抽
+      "gachaTicket": 0,
+      //十连
+      "tenGachaTicket": 1,
+      //源石
+      "originium": 90,
+      //合成玉
+      "orundum": 0,
+      //礼包抽数
+      "draws": 37,
+      //每抽价格
+      "drawPrice": 8.864864864864865,
+      //礼包全部内容等效多少源石
+      "packedOriginium": 139.72865185185185,
+      //每颗等效源石的价格
+      "packedOriginiumPrice": 2.3474068893741564,
+      //抽卡性价比
+      "drawEfficiency": 1.3170731707317074,
+      //礼包综合性价比
+      "packEfficiency": 1.4921583124588003,
+      //礼包内容
+      "packContent": [
+        {
+          "id": 1615957244980111,
+          //物品名称
+          "itemName": "龙门币",
+          //物品id
+          "itemId": "4001",
+          //物品数量
+          "quantity": 260000
+        },
+        {
+          "id": 1615957244980112,
+          "itemName": "高级作战记录",
+          "itemId": "2004",
+          "quantity": 30
+        },
+        {
+          "id": 1615957244980113,
+          "itemName": "芯片助剂",
+          "itemId": "32001",
+          "quantity": 4
+        },
+        {
+          "id": 1615957244980114,
+          "itemName": "模组数据块",
+          "itemId": "mod_unlock_token",
+          "quantity": 4
+        }
+      ],
+      //上架日期
+      "start": 1714492800000,
+      //下架日期
+      "end": 1714492800000,
+      //礼包描述
+      "note": "含模组数据块"
     }
   ]
 }
