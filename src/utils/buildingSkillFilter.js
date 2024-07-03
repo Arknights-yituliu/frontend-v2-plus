@@ -103,13 +103,14 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.StandardizationTeam",
                 func: (operator) => {
-                    return operator.buffName.indexOf('标准化') > -1 && operator.description.indexOf('标准化') > -1
+                    return operator.roomType === 'manufacture' &&
+                        (operator.buffName.indexOf('标准化') > -1 || operator.description.indexOf('标准化') > -1)
                 }
             },
             {
                 label: "buildSkillFilter.RhineTechTeam",
                 func: (operator) => {
-                    return operator.buffName.indexOf('莱茵科技') > -1
+                    return operator.roomType === 'manufacture' && operator.buffName.indexOf('莱茵科技') > -1
                 }
             }
         ]
@@ -123,7 +124,8 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.OrderAcquisitionEfficiency",
                 func: (operator) => {
-                    return operator.roomType === 'trading' && operator.description.indexOf('订单') > -1 && operator.description.indexOf('效率') > -1
+                    return operator.roomType === 'trading' && operator.description.indexOf('订单') > -1 &&
+                        operator.description.indexOf('效率') > -1
                 }
             },
             {
@@ -149,7 +151,8 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.OrderAcquisitionEfficiency",
                 func: (operator) => {
-                    return operator.roomType === 'control' && operator.description.indexOf('订单') > -1 && operator.description.indexOf('效率') > -1
+                    return operator.roomType === 'control' && operator.description.indexOf('订单') > -1 &&
+                        operator.description.indexOf('效率') > -1
                 }
             },
             {
@@ -167,7 +170,7 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.TeamRainbowTeam",
                 func: (operator) => {
-                    return operator.buffName.indexOf('彩虹小队') > -1
+                    return operator.roomType === 'control' && operator.buffName.indexOf('彩虹小队') > -1
                 }
             }
         ]
@@ -181,11 +184,12 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.PerceptionInformation",
                 func: (operator) => {
-                    return operator.description.indexOf('感知信息') > -1||operator.description.indexOf('无声共鸣') > -1||RosmontisUniverse.includes(operator.name)
+                    return operator.description.indexOf('感知信息') > -1 || operator.description.indexOf('无声共鸣') > -1 ||
+                        RosmontisUniverse.includes(operator.name)
                 }
             },
             {
-                label: "buildSkillFilter.WordlyPlight",
+                label: "buildSkillFilter.WorldlyPlight",
                 func: (operator) => {
                     return operator.description.indexOf('人间烟火') > -1
                 }
@@ -193,7 +197,7 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.GoldProductionLine",
                 func: (operator) => {
-                    return operator.description.indexOf('生产线') > -1 || GoldProductionLine.includes(operator.name)
+                    return operator.description.indexOf('赤金生产线') > -1 || GoldProductionLine.includes(operator.name)
                 }
             },
             {
@@ -205,7 +209,8 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.AutomationTeam",
                 func: (operator) => {
-                    return (operator.description.indexOf('发电站') > -1 && operator.description.indexOf('归零') > -1) || Automation.includes(operator.name)
+                    return (operator.description.indexOf('发电站') > -1 && operator.description.indexOf('归零') > -1) ||
+                        Automation.includes(operator.name)
                 }
             },
             {
