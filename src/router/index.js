@@ -1,5 +1,5 @@
 import {onBeforeRouteUpdate, useRouter, createRouter, createWebHistory} from "vue-router";
-import {routes} from "./routeList.js";
+import {routes} from "./routes.js";
 import toolApi from "../api/tool.js";
 
 const router = createRouter({
