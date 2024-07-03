@@ -601,7 +601,7 @@ import userAPI from "/src/api/userInfo";
 import surveyAPI from "/src/api/survey.js"
 import sklandApi from '/src/pages/survey/service/skland'
 import {onMounted, ref} from "vue";
-import {DOMAIN} from "/src/api/baseURL";
+import {DOMAIN} from "/src/api/BASE_URL";
 import operatorRecommend from "/src/pages/survey/service/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
 import {exportExcel} from '/src/utils/exportExcel.js'

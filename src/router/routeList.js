@@ -252,6 +252,12 @@ const routes = [
         component: () => import('/src/pages/video-material/sssl.vue')
     },
     {
+        path: '/skill-rank',
+        text: '收益速览做图用',
+        display: false,
+        component: () => import('/src/pages/material/skill-rank.vue')
+    },
+    {
         path: '/material/sssl2',
         text: '收益速览做图用',
         display: false,

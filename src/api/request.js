@@ -1,6 +1,6 @@
 import axios from "axios";
 import {cMessage} from "/src/custom/message.js";
-import {DOMAIN} from "/src/api/baseURL";
+import {DOMAIN} from "/src/api/BASE_URL";
 
 // 创建axios实例
 const service = axios.create({

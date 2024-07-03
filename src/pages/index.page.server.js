@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DOMAIN } from "/src/api/baseURL";
+import { DOMAIN } from "/src/api/BASE_URL";
 
 
 const expCoefficient = 0.625
