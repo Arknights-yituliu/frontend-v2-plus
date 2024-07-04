@@ -63,7 +63,7 @@ onMounted(() => {
 
         }
 
-        // skillCostRankList.value.sort((a,b)=>{return b.apCost-a.apCost})
+        skillCostRankList.value.sort((a,b)=>{return b.apCost-a.apCost})
 
       }
   )
