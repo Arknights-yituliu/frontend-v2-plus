@@ -1,6 +1,6 @@
 <script setup>
 import storeAPI from "/src/api/store";
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 
 import packCardContainer from '/src/components/PackCardGroup.vue'
 
@@ -108,10 +108,10 @@ function getLineChartData(pack) {
   const packEfficiency = getFixed(pack.packEfficiency * 100, 0)
 
   let lineChartData = [
-    {label: '大月卡', value: 1.57, color: 'rgb(65,147,220)'},
-    {label: '648源石', value: 1.00, color: 'rgb(65,147,220)'},
-    {label: '仅抽卡', value: pack.drawEfficiency, color: 'rgb(255, 135, 55)'},
-    {label: '本礼包', value: pack.packEfficiency, color: 'rgb(250, 83, 83)'}
+    { label: '大月卡', value: 1.57, color: 'rgb(65,147,220)' },
+    { label: '648源石', value: 1.00, color: 'rgb(65,147,220)' },
+    { label: '仅抽卡', value: pack.drawEfficiency, color: 'rgb(255, 135, 55)' },
+    { label: '本礼包', value: pack.packEfficiency, color: 'rgb(250, 83, 83)' }
   ]
 
   lineChartData.sort((a, b) => b.value - a.value)
@@ -129,15 +129,15 @@ function getFixed(num, acc) {
 
 
 const filterConditions = [
-  {value: 'newbie', text: '新人'},
-  {value: 'monthly', text: '每月重置'},
-  {value: 'weekly', text: '每周重置'},
-  {value: 'elite', text: '直升礼包'},
-  {value: 'chip', text: '芯片'},
-  {value: 'lmd', text: '龙门币'},
-  {value: 'activity', text: '活动礼包'},
-  {value: 'originium', text: '非双倍源石'},
-  {value: 'originium2', text: '双倍源石'},
+  { value: 'newbie', text: '新人' },
+  { value: 'monthly', text: '每月重置' },
+  { value: 'weekly', text: '每周重置' },
+  { value: 'elite', text: '直升礼包' },
+  { value: 'chip', text: '芯片' },
+  { value: 'lmd', text: '龙门币' },
+  { value: 'activity', text: '活动礼包' },
+  { value: 'originium', text: '非双倍源石' },
+  { value: 'originium2', text: '双倍源石' },
 ]
 
 
@@ -156,14 +156,14 @@ const formatterSaleType = (row, col) => {
 }
 
 
-function buttonActive(value){
-   if(selectedPackTag.value.indexOf(value)>-1){
-     return true
-   }
-  if(selectedPackSaleDate.value.indexOf(value)>-1){
+function buttonActive(value) {
+  if (selectedPackTag.value.indexOf(value) > -1) {
     return true
   }
-  if(selectedPackSalePrice.value.indexOf(value)>-1){
+  if (selectedPackSaleDate.value.indexOf(value) > -1) {
+    return true
+  }
+  if (selectedPackSalePrice.value.indexOf(value) > -1) {
     return true
   }
   return false
@@ -171,16 +171,16 @@ function buttonActive(value){
 
 
 const packTagTable = [
-  {label: "新人", value: "newbie"},
-  {label: "含有模组块", value: "mod"},
-  {label: "芯片", value: "chip"},
-  {label: "活动礼包", value: "activity"},
-  {label: "周期性礼包", value: "periodically"},
-  {label: "绝版礼包", value: "event"},
-  {label: "含有无法计价之物品", value: "special"},
-  {label: "直升礼包", value: "elite"},
-  {label: "龙门币礼包", value: "lmd"},
-  {label: "定向抽卡类礼包", value: "operator"},
+  { label: "新人", value: "newbie" },
+  { label: "含有模组块", value: "mod" },
+  { label: "芯片", value: "chip" },
+  { label: "活动礼包", value: "activity" },
+  { label: "周期性礼包", value: "periodically" },
+  { label: "绝版礼包", value: "event" },
+  { label: "含有无法计价之物品", value: "special" },
+  { label: "直升礼包", value: "elite" },
+  { label: "龙门币礼包", value: "lmd" },
+  { label: "定向抽卡类礼包", value: "operator" },
 ]
 
 const packSaleDateObject = {
@@ -217,8 +217,8 @@ const packSalePriceObject = {
 }
 
 
-function resetPackFilterOption(){
-    selectedPackTag.value = []
+function resetPackFilterOption() {
+  selectedPackTag.value = []
   selectedPackSaleDate.value = []
   selectedPackSalePrice.value = []
   filterPack()
@@ -265,16 +265,16 @@ let packInfoDisplayList = ref([])
 
 function filterPack() {
   let list = []
-  for(const packInfo of packInfoList.value){
-    if(filterPackByTags(packInfo)){
+  for (const packInfo of packInfoList.value) {
+    if (filterPackByTags(packInfo)) {
       list.push(packInfo)
       continue
     }
-    if(filterPackBySaleDate(packInfo)){
+    if (filterPackBySaleDate(packInfo)) {
       list.push(packInfo)
       continue
     }
-    if(filterPackBySalePrice(packInfo)){
+    if (filterPackBySalePrice(packInfo)) {
       list.push(packInfo)
 
     }
@@ -285,38 +285,38 @@ function filterPack() {
 }
 
 function filterPackByTags(packInfo) {
-  if(!packInfo.tags){
+  if (!packInfo.tags) {
     return false
   }
   const tags = packInfo.tags.toString().split(",")
 
-  for(const tag of tags){
-    if(selectedPackTag.value.indexOf(tag)>-1){
+  for (const tag of tags) {
+    if (selectedPackTag.value.indexOf(tag) > -1) {
       return true
     }
   }
-  return  false
+  return false
 }
 
 function filterPackBySaleDate(packInfo) {
-  for(const funcName of selectedPackSaleDate.value){
-        const func = packSaleDateObject[funcName];
-        if(func(packInfo.start)){
-          return true
-        }
+  for (const funcName of selectedPackSaleDate.value) {
+    const func = packSaleDateObject[funcName];
+    if (func(packInfo.start)) {
+      return true
+    }
   }
-  return  false
+  return false
 }
 
 
 function filterPackBySalePrice(packInfo) {
-  for(const funcName of selectedPackSalePrice.value){
+  for (const funcName of selectedPackSalePrice.value) {
     const func = packSalePriceObject[funcName];
-    if(func(packInfo.price)){
+    if (func(packInfo.price)) {
       return true
     }
   }
-  return  false
+  return false
 }
 
 
@@ -356,8 +356,7 @@ onMounted(() => {
 <template>
   <div>
     <div id="pack" class="pack-efficiency-page">
-      <module-header title="在售/即将开售的礼包" title-en="New Packs"
-                     :tips="['*当前在售的限时礼包，不包括常驻礼包和源石']">
+      <module-header title="在售/即将开售的礼包" title-en="New Packs" :tips="['*当前在售的限时礼包，不包括常驻礼包和源石']">
       </module-header>
 
       <div class="tag-group">
@@ -372,14 +371,29 @@ onMounted(() => {
       <pack-card-container v-model="limitedPackInfoList">
       </pack-card-container>
 
-      <module-header title="常驻/周期性礼包" title-en="Monthly & Weekly & Orundum"
-                     :tips="['*每月/每周礼包、新人/回归礼包、源石']">
+
+      <module-header title="半常驻礼包" title-en="Chips Packs & LMD Packs" :tips="['*内容较为固定，规律较为明确的礼包']">
+      </module-header>
+
+      <h2 style="margin: 12px;">职业芯片礼包</h2>
+      <!-- <div class="tag-group">
+        <span class="tag-rank-2">
+          芯片礼包价值有差异的原因见此处
+        </span>
+      </div> -->
+      <pack-card-container v-model="chipPackInfoList">
+      </pack-card-container>
+
+      <h2 style="margin: 12px;">龙门币补给包</h2>
+      <pack-card-container v-model="lmdPackInfoList">
+      </pack-card-container>
+
+
+      <module-header title="常驻/周期性礼包" title-en="Monthly & Weekly & Orundum" :tips="['*每月/每周礼包、新人/回归礼包、源石']">
       </module-header>
 
       <h2 style="margin: 12px;">每月/每周礼包</h2>
-
       <pack-card-container v-model="periodicPackInfoList">
-
       </pack-card-container>
 
       <h2 style="margin: 12px;">新人/回归礼包</h2>
@@ -390,7 +404,6 @@ onMounted(() => {
       </div>
 
       <pack-card-container v-model="newbiePackInfoList">
-
       </pack-card-container>
 
       <h2 style="margin: 12px;">源石/首充源石</h2>
@@ -404,23 +417,7 @@ onMounted(() => {
       </pack-card-container>
 
 
-      <module-header title="半常驻礼包" title-en="Chips Packs & LMD Packs" :tips="['*内容较为固定，规律较为明确的礼包']">
 
-      </module-header>
-
-      <h2 style="margin: 12px;">职业芯片礼包</h2>
-      <!-- <div class="tag-group">
-        <span class="tag-rank-2">
-          芯片礼包价值有差异的原因见此处
-        </span>
-      </div> -->
-      <pack-card-container v-model="chipPackInfoList">
-
-      </pack-card-container>
-
-      <h2 style="margin: 12px;">龙门币补给包</h2>
-      <pack-card-container v-model="lmdPackInfoList">
-      </pack-card-container>
 
       <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']">
 
@@ -428,25 +425,22 @@ onMounted(() => {
 
       <div class="pack-checkbox-btn-group">
         售卖类型：
-        <my-button data-color="blue" v-for="(tag,index) in packTagTable" :key="index"
-                   :active="buttonActive(tag.value)"
-                   @click="choosePackTagOption(tag.value)">
+        <my-button data-color="blue" v-for="(tag, index) in packTagTable" :key="index" :active="buttonActive(tag.value)"
+          @click="choosePackTagOption(tag.value)">
           {{ tag.label }}
         </my-button>
       </div>
       <div class="pack-checkbox-btn-group">
         售卖年份：
-        <my-button data-color="blue" v-for="(obj,name) in packSaleDateObject" :key="name"
-                   :active="buttonActive(name)"
-                   @click="choosePackSaleDateOption(name)">
+        <my-button data-color="blue" v-for="(obj, name) in packSaleDateObject" :key="name" :active="buttonActive(name)"
+          @click="choosePackSaleDateOption(name)">
           {{ name }}
         </my-button>
       </div>
       <div class="pack-checkbox-btn-group">
         售卖价格：
-        <my-button data-color="blue" v-for="(obj,name) in packSalePriceObject" :key="name"
-                   :active="buttonActive(name)"
-                   @click="choosePackSalePriceOption(name)">
+        <my-button data-color="blue" v-for="(obj, name) in packSalePriceObject" :key="name" :active="buttonActive(name)"
+          @click="choosePackSalePriceOption(name)">
           {{ name }}
         </my-button>
       </div>
@@ -504,48 +498,48 @@ onMounted(() => {
 
       <module-header title="礼包性价比总表" title-en="Packs Value"></module-header>
       <div class="tag-group">
-         <span class="tag-rank-5">
-                性价比基准为648￥源石，移动端可左右滑动表格
-              </span>
+        <span class="tag-rank-5">
+          性价比基准为648￥源石，移动端可左右滑动表格
+        </span>
         <span class="tag-rank-6">
-                由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
-              </span>
+          由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
+        </span>
       </div>
 
       <div class="pack-table-wrapper">
         <el-table :data="currentPackInfoList" class="pack-table" stripe table-layout="auto"
-                  :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
-          <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => {return row.displayName;}"
-                           min-width="154" fixed/>
+          :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
+          <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => { return row.displayName; }"
+            min-width="154" fixed />
           <el-table-column sortable label="类型" :formatter=formatterSaleType :filters=filterConditions
-                           :filter-method="(value, row, column) => {return row.saleType === value;}"
-                           :filtered-value="['newbie', 'monthly', 'weekly', 'elite', 'chip', 'lmd', 'activity', 'originium', 'originium2']"
-                           :sort-by="(row, index) => {return row.saleType;}" min-width="92"/>
-          <el-table-column sortable label="售价" :formatter="(row, col) => {return row.price + '元';}"
-                           :sort-by="(row, index) => {return row.price;}" min-width="80"/>
-          <el-table-column sortable label="抽数" :formatter="(row, col) => {return row.draws.toFixed(2);}"
-                           :sort-by="(row, index) => { return row.draws;}" min-width="80"/>
+            :filter-method="(value, row, column) => { return row.saleType === value; }"
+            :filtered-value="['newbie', 'monthly', 'weekly', 'elite', 'chip', 'lmd', 'activity', 'originium', 'originium2']"
+            :sort-by="(row, index) => { return row.saleType; }" min-width="92" />
+          <el-table-column sortable label="售价" :formatter="(row, col) => { return row.price + '元'; }"
+            :sort-by="(row, index) => { return row.price; }" min-width="80" />
+          <el-table-column sortable label="抽数" :formatter="(row, col) => { return row.draws.toFixed(2); }"
+            :sort-by="(row, index) => { return row.draws; }" min-width="80" />
           <el-table-column sortable label="源石" :formatter="(row, col) => {
-          return row.originium;
-        }
-          " :sort-by="(row, index) => {
-          return row.originium;
-        }
-          " min-width="80"/>
+        return row.originium;
+      }
+        " :sort-by="(row, index) => {
+        return row.originium;
+      }
+        " min-width="80" />
           <el-table-column sortable label="抽卡性价比" :formatter="(row, col) => {
-          return row.drawEfficiency.toFixed(2);
-        }
-          " :sort-by="(row, index) => {
-          return row.drawEfficiency;
-        }
-          " min-width="120"/>
+        return row.drawEfficiency.toFixed(2);
+      }
+        " :sort-by="(row, index) => {
+        return row.drawEfficiency;
+      }
+        " min-width="120" />
           <el-table-column sortable label="综合性价比" prop="packEfficiency" :formatter="(row, col) => {
-          return row.packEfficiency.toFixed(2);
-        }
-          " :sort-by="(row, index) => {
-          return row.packEfficiency;
-        }
-          " min-width="120"/>
+        return row.packEfficiency.toFixed(2);
+      }
+        " :sort-by="(row, index) => {
+        return row.packEfficiency;
+      }
+        " min-width="120" />
         </el-table>
       </div>
     </div>
@@ -580,32 +574,32 @@ onMounted(() => {
               </template>
               <table id="al_card">
                 <tbody>
-                <tr>
-                  <td>算法代号</td>
-                  <td>一图流_标准 v6.0</td>
-                  <td>更新时间</td>
-                  <td>
-                    <!-- {{ updateTime }} -->
-                  </td>
-                </tr>
-                <tr>
-                  <td>数据源</td>
-                  <td>企鹅物流</td>
-                  <td>基准</td>
-                  <td>常驻关卡</td>
-                </tr>
-                <tr>
-                  <td>计算引擎</td>
-                  <td>yituliuBackEnd</td>
-                  <td>样本阈值</td>
-                  <td>300</td>
-                </tr>
-                <tr>
-                  <td>需求目标</td>
-                  <td>无限需求</td>
-                  <td>EXP系数</td>
-                  <td>0.625</td>
-                </tr>
+                  <tr>
+                    <td>算法代号</td>
+                    <td>一图流_标准 v6.0</td>
+                    <td>更新时间</td>
+                    <td>
+                      <!-- {{ updateTime }} -->
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>数据源</td>
+                    <td>企鹅物流</td>
+                    <td>基准</td>
+                    <td>常驻关卡</td>
+                  </tr>
+                  <tr>
+                    <td>计算引擎</td>
+                    <td>yituliuBackEnd</td>
+                    <td>样本阈值</td>
+                    <td>300</td>
+                  </tr>
+                  <tr>
+                    <td>需求目标</td>
+                    <td>无限需求</td>
+                    <td>EXP系数</td>
+                    <td>0.625</td>
+                  </tr>
                 </tbody>
               </table>
             </el-collapse-item>
@@ -618,10 +612,9 @@ onMounted(() => {
               网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于
               Arknights/上海鹰角网络科技有限公司。<br>
               除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享
-              署名-非商业性使用 4.0 国际
-              许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
-              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a
-                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
+                署名-非商业性使用 4.0 国际
+                许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
+              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
             </el-collapse-item>
           </el-collapse>
         </el-card>
