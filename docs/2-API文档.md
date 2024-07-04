@@ -258,6 +258,109 @@ param1=value&param2=value
 }
 ```
 
+## 获取常驻材料商店性价比数据 GET
+
+### 路径：
+
+```
+/store/perm
+```
+
+### 参数：
+```
+本API无参数
+```
+
+### 响应数据：
+```json5
+ {
+  //状态码
+  "code": 200,
+  //返回信息描述
+  "msg": "操作成功",
+  //返回值
+  "data": {
+    //以商店货币颜色为分类
+    "orange": [
+      {
+        "id": 28,
+        //商店货币颜色
+        "storeType": "orange",
+        //材料名称
+        "itemName": "炽合金",
+        //材料id
+        "itemId": "31023",
+        //消耗理智
+        "cost": 40,
+        //性价比
+        "costPer": 1.291,
+        "quantity": 2,
+        //材料等级
+        "rarity": 3
+      }
+    ]
+  }
+}
+```
+
+## 获取常驻材料商店性价比数据 GET
+
+### 路径：
+
+```
+/store/act
+```
+
+### 响应数据：
+```json5
+ {
+  //状态码
+  "code": 200,
+  //返回信息描述
+  "msg": "操作成功",
+  //返回值
+  "data": [
+    {
+      //商店结束日期
+      "endTime": 1720454400000,
+      //前端展示的标签
+      "actTagArea": [
+        {
+          //标签内容
+          "tagText": "来源：明日方舟一图流 ark.yituliu.cn 转载需保留本提示",
+          //标签等级
+          "tagRank": "5"
+        }
+      ],
+      //图片链接
+      "imageLink": "https://cos.yituliu.cn/image/store/1626290215840100.jpg",
+      //商店性价比分级基准
+      "actPPRBase": 2.5,
+      //每一级的性价比区间
+      "actPPRStair": 0.5,
+      //活动名称
+      "actName": "空想花庭复刻",
+      //商品信息
+      "actStore": [
+        {
+          //商店分区
+          "itemArea": 1,
+          //材料id
+          "itemId": "30145",
+          //材料名称
+          "itemName": "晶体电子单元",
+          //材料性价比
+          "itemPPR": 3.23015308,
+          //材料售价
+          "itemPrice": 100,
+          //材料数量
+          "itemQuantity": 1,
+        }
+      ]
+    }
+  ]
+}
+```
 
 ## 获取礼包性价比数据 GET
 
