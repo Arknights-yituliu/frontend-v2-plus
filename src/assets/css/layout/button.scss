@@ -141,6 +141,7 @@ $button-colors: (
   cursor: pointer;
   background-color: var(--c-background-color);
   border: 1px solid var(--c-border-color);
+  outline: none;
 
   @each $color-name, $color-values in $button-colors {
     &[data-color="#{$color-name}"] {
@@ -163,6 +164,10 @@ $button-colors: (
       min-width: initial;
     }
   }
+}
+
+.my-button:focus{
+  outline: none;
 }
 
 @media screen and (max-width: 600px) {

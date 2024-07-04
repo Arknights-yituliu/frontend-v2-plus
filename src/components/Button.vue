@@ -1,5 +1,4 @@
 <script setup>
-import {ref, watch} from "vue"
 
 const props = defineProps(
     {
@@ -28,6 +27,7 @@ const props = defineProps(
 
 
 <template>
+  <div></div>
   <button class="my-button" :data-status="props.active?'on':'off'">
     <slot></slot>
   </button>
