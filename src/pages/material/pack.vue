@@ -425,7 +425,7 @@ onMounted(() => {
 
       <div class="pack-checkbox-btn-group">
         售卖类型：
-        <my-button data-color="blue" v-for="(tag, index) in packTagTable" :key="index" :active="buttonActive(tag.value)"
+        <el-button type="primary">新人</el-button><my-button data-color="blue" v-for="(tag, index) in packTagTable" :key="index" :active="buttonActive(tag.value)"
           @click="choosePackTagOption(tag.value)">
           {{ tag.label }}
         </my-button>
@@ -443,6 +443,7 @@ onMounted(() => {
           @click="choosePackSalePriceOption(name)">
           {{ name }}
         </my-button>
+
       </div>
 
       <div>

@@ -16,17 +16,19 @@ let buttonColorsMap = []
 for (const color of colors) {
   buttonLightStyle +=
       `
-      --c-button-${color}-background: var(--c-${color}-primary);
-      --c-button-${color}-hover: var(--c-${color}-primary-light);
-      --c-button-${color}-border: var(--c-${color}-primary-light);
-      --c-button-${color}-text: var(--c-${color}-primary);
+      --c-button-${color}-background: var(--c-${color}-1);
+      --c-button-${color}-hover: var(--c-${color}-2);
+      --c-button-${color}-border: var(--c-${color}-5);
+      --c-button-${color}-text: var(--c-${color}-5);
+      --c-button-${color}-background-active: var(--c-${color}-5);
       `
   buttonDarkStyle +=
       `
-      --c-button-${color}-background: var(--c-${color}-primary);
-      --c-button-${color}-hover: var(--c-${color}-primary-light);
-      --c-button-${color}-border: var(--c-${color}-primary-light);
-      --c-button-${color}-text: var(--c-${color}-primary-light);
+      --c-button-${color}-background: var(--c-${color}-9);
+      --c-button-${color}-hover: var(--c-${color}-5);
+      --c-button-${color}-border: var(--c-${color}-3);
+      --c-button-${color}-text: var(--c-${color}-3);
+      --c-button-${color}-background-active: var(--c-${color}-5);
       `
   buttonColorsMap +=
       `
@@ -35,6 +37,7 @@ for (const color of colors) {
                 hover:var(--c-button-${color}-hover),
                 border: var(--c-button-${color}-border),
                 text:var(--c-button-${color}-text),
+                background-active:var(--c-button-${color}-background-active),
         ),
       `
 }
@@ -45,50 +48,25 @@ console.log(buttonDarkStyle)
 console.log('按钮颜色变量')
 console.log(buttonColorsMap)
 
+
+
+
 </script>
 
 <template>
 
   <div class="components-page">
-    <my-button data-color="blue">
-      11111
-    </my-button>
-
-    <my-button data-color="blue" :status="status" @click="status=!status">
-      {{ status }}
-    </my-button>
-
-    <my-button data-color="orange">
-      11111
-    </my-button>
-
-    <my-button data-color="orange" :status="status" @click="status=!status">
-      {{ status }}
-    </my-button>
-
-    <my-button data-color="green">
-      11111
-    </my-button>
-
-    <my-button data-color="green" :status="status" @click="status=!status">
-      {{ status }}
-    </my-button>
-
-    <my-button data-color="red">
-      11111
-    </my-button>
-
-    <my-button data-color="red" :status="status" @click="status=!status">
-      {{ status }}
-    </my-button>
-
-    <my-button data-color="purple">
-      11111
-    </my-button>
-
-    <my-button data-color="purple" :status="status" @click="status=!status">
-      {{ status }}
-    </my-button>
+    <div v-for="(color,index) in colors" >
+      <my-button :data-color="color" >
+        默认
+      </my-button>
+<!--      <my-button :data-color="color" data-hover >-->
+<!--        悬停-->
+<!--      </my-button>-->
+      <my-button :data-color="color" :active="true" >
+        触发
+      </my-button>
+    </div>
   </div>
 </template>
 

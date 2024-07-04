@@ -2,29 +2,29 @@
   <div class="survey-operator-page">
     <!-- 常驻条 -->
     <div class="control-header">
-      <!--      <c-button color="blue" :status="true" @click="checkFirstPopup()">操作指引</c-button>-->
+      <!--      <my-button data-color='blue' :active="true" @click="checkFirstPopup()">操作指引</my-button>-->
 
-      <c-button color="blue" :status="btnStatus.btn_filter"
+      <my-button data-color='blue' :active="btnStatus.btn_filter"
                 @click="clickBtn('btn_filter');collapseFilter()">
         筛选/批量操作
-      </c-button>
+      </my-button>
 
-      <c-button color="blue" :status="btnStatus.btn_import"
+      <my-button data-color='blue' :active="btnStatus.btn_import"
                 @click="clickBtn('btn_import');collapseImport()">
         数据导入导出
-      </c-button>
+      </my-button>
 
       <!--      <div style="width: 60px"></div>-->
-      <c-button :color="'green'" :status="true" @click="upload()">手动保存练度</c-button>
-      <c-button color="blue" :status="statisticalPopupVisible"
+      <my-button data-color='green' :active="true" @click="upload()">手动保存练度</my-button>
+      <my-button data-color='blue' :active="statisticalPopupVisible"
                 @click="clickBtn('btn_statistics');getOperatorStatisticalResult()">统计干员练度
-      </c-button>
-      <c-button color="blue" :status="recommendPopupVisible"
+      </my-button>
+      <my-button data-color='blue' :active="recommendPopupVisible"
                 @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）
-      </c-button>
-      <!--      <c-button color="blue" :status="btn_status.btn_plan"-->
+      </my-button>
+      <!--      <my-button data-color='blue' :active="btn_status.btn_plan"-->
       <!--                @click="clickBtn('btn_plan');getOperatorPlanItemCost()">练度计划材料消耗统计-->
-      <!--      </c-button>-->
+      <!--      </my-button>-->
 
 
     </div>
@@ -35,62 +35,74 @@
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">职业</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('profession', profession.value)"
-                 v-for="(profession,index) in professionDict"
-                 :key="index"
-                 @click="addFilterCondition('profession', profession.value)">
+            <my-button data-color="blue" :active="selectedBtn('profession', profession.value)"
+                       v-for="(profession,index) in professionDict"
+                       :key="index"
+                       @click="addFilterCondition('profession', profession.value)">
               {{ profession.label }}
-            </div>
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">稀有度</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in RARITY_TABLE" :key="index"
-                 @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
-            </div>
+            <my-button data-color="blue" :active="selectedBtn('rarity', rarity)"
+                       v-for="(rarity,index) in RARITY_TABLE" :key="index"
+                       @click="addFilterCondition('rarity', rarity)">
+              {{ rarity }}★
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">年份</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
-                 @click="addFilterCondition('year', key)">
+            <my-button data-color="blue" :active="selectedBtn('year',key)"
+                       v-for="(year, key) in yearDict" :key="key"
+                       @click="addFilterCondition('year', key)">
               {{ year.label }}
-            </div>
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">是否拥有</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
-            <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
+            <my-button data-color="blue" :active="selectedBtn('own',false)"
+                       @click="addFilterCondition('own', false)">
+              已拥有
+            </my-button >
+            <my-button data-color="blue" :active="selectedBtn('own',true)"
+                       @click="addFilterCondition('own', true)">
+              未拥有
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">获得方式</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('itemObtainApproach', '常驻干员')"
-                 @click="addFilterCondition('itemObtainApproach', '常驻干员')">常驻干员
-            </div>
-            <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
-                 @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员
-            </div>
-            <div :class="selectedBtn('itemObtainApproach', '限定干员')"
-                 @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
-            </div>
+            <my-button data-color="blue" :active="selectedBtn('itemObtainApproach',type)"
+                       v-for="(type,index) in itemObtainApproachType" :key="index"
+                       @click="addFilterCondition('itemObtainApproach', type)">
+              {{ type }}
+            </my-button>
+
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">模组</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('equip', true)" @click="addFilterCondition('equip', true)">模组已实装</div>
-            <div :class="selectedBtn('equip', false)" @click="addFilterCondition('equip', false)">模组未实装</div>
+            <my-button data-color="blue" :active="selectedBtn('equip', true)"
+                       @click="addFilterCondition('equip', true)">
+              模组已实装
+            </my-button >
+            <my-button data-color="blue" :active="selectedBtn('equip', false)"
+                       @click="addFilterCondition('equip', false)">
+              模组未实装
+            </my-button>
           </div>
         </div>
 
@@ -505,8 +517,11 @@ import {debounce} from "/src/utils/debounce";
 import {getUserInfo} from "/src/pages/survey/service/userData.js";
 import {useRouter} from "vue-router";
 
+import MyButton from '/src/components/Button.vue'
+
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
+let itemObtainApproachType = ['常驻干员','赠送干员','限定干员']
 
 let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});  //用户信息
 
@@ -761,14 +776,11 @@ function dataOptionClass(charId, current, property) {
 /**
  * 返回筛选按钮是否选中的样式
  * @param {string} property 干员属性名
- * @param {string} rule 筛选规则
- * @returns {string} class 按钮样式
+ * @param {string|number|boolean} rule 筛选规则
+ * @returns {boolean} class 按钮样式
  */
 function selectedBtn(property, rule) {
-  if (filterCondition.value[property].indexOf(rule) > -1) {
-    return "btn btn-blue";
-  }
-  return "btn";
+  return filterCondition.value[property].indexOf(rule) > -1;
 }
 
 let collapseImportFilter = ref(false)  //干员筛选条件折叠栏的展开状态
@@ -793,10 +805,11 @@ function collapseFilter() {
 /**
  *  增加筛选规则
  * @param {string} property  干员属性
- * @param {string} condition 筛选条件
+ * @param {string|number|boolean} condition 筛选条件
  */
 function addFilterCondition(property, condition) {
-  console.log(filterCondition.value[property]);
+
+  console.log(filterCondition.value);
   if (filterCondition.value[property].indexOf(condition) > -1) {
     filterCondition.value[property] = filterCondition.value[property].filter(e => e !== condition)
     filterCharacterList();
@@ -1019,9 +1032,7 @@ onMounted(() => {
 
 
 <style scoped>
-.btn {
-  margin: 2px;
-}
+
 
 
 .dev_table td {

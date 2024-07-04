@@ -1,81 +1,94 @@
 .theme_light {
   --c-button-white: rgb(255, 255, 255);
 
-  --c-button-blue-background: var(--c-blue-primary);
-  --c-button-blue-hover: var(--c-blue-primary-light);
-  --c-button-blue-border: var(--c-blue-primary);
-  --c-button-blue-text: var(--c-blue-primary);
+  --c-button-blue-background: var(--c-blue-1);
+  --c-button-blue-hover: var(--c-blue-2);
+  --c-button-blue-border: var(--c-blue-5);
+  --c-button-blue-text: var(--c-blue-5);
+  --c-button-blue-background-active: var(--c-blue-5);
 
-  --c-button-orange-background: var(--c-orange-primary);
-  --c-button-orange-hover: var(--c-orange-primary-light);
-  --c-button-orange-border: var(--c-orange-primary);
-  --c-button-orange-text: var(--c-orange-primary);
+  --c-button-orange-background: var(--c-orange-1);
+  --c-button-orange-hover: var(--c-orange-2);
+  --c-button-orange-border: var(--c-orange-5);
+  --c-button-orange-text: var(--c-orange-5);
+  --c-button-orange-background-active: var(--c-orange-5);
 
-  --c-button-green-background: var(--c-green-primary);
-  --c-button-green-hover: var(--c-green-primary-light);
-  --c-button-green-border: var(--c-green-primary);
-  --c-button-green-text: var(--c-green-primary);
+  --c-button-green-background: var(--c-green-1);
+  --c-button-green-hover: var(--c-green-2);
+  --c-button-green-border: var(--c-green-5);
+  --c-button-green-text: var(--c-green-5);
+  --c-button-green-background-active: var(--c-green-5);
 
-  --c-button-red-background: var(--c-red-primary);
-  --c-button-red-hover: var(--c-red-primary-light);
-  --c-button-red-border: var(--c-red-primary-light);
-  --c-button-red-text: var(--c-red-primary);
+  --c-button-red-background: var(--c-red-1);
+  --c-button-red-hover: var(--c-red-2);
+  --c-button-red-border: var(--c-red-5);
+  --c-button-red-text: var(--c-red-5);
+  --c-button-red-background-active: var(--c-red-5);
 
-  --c-button-purple-background: var(--c-purple-primary);
-  --c-button-purple-hover: var(--c-purple-primary-light);
-  --c-button-purple-border: var(--c-purple-primary);
-  --c-button-purple-text: var(--c-purple-primary);
+  --c-button-purple-background: var(--c-purple-1);
+  --c-button-purple-hover: var(--c-purple-2);
+  --c-button-purple-border: var(--c-purple-5);
+  --c-button-purple-text: var(--c-purple-5);
+  --c-button-purple-background-active: var(--c-purple-5);
 
-  --c-button-cyan-background: var(--c-cyan-primary);
-  --c-button-cyan-hover: var(--c-cyan-primary-light);
-  --c-button-cyan-border: var(--c-cyan-primary);
-  --c-button-cyan-text: var(--c-cyan-primary);
+  --c-button-cyan-background: var(--c-cyan-1);
+  --c-button-cyan-hover: var(--c-cyan-2);
+  --c-button-cyan-border: var(--c-cyan-5);
+  --c-button-cyan-text: var(--c-cyan-5);
+  --c-button-cyan-background-active: var(--c-cyan-5);
 }
 
 .theme_dark {
   --c-button-white: rgb(255, 255, 255);
 
-  --c-button-blue-background: var(--c-blue-primary);
-  --c-button-blue-hover: var(--c-blue-primary-light);
-  --c-button-blue-border: var(--c-blue-primary);
-  --c-button-blue-text: var(--c-blue-primary-light);
 
-  --c-button-orange-background: var(--c-orange-primary);
-  --c-button-orange-hover: var(--c-orange-primary-light);
-  --c-button-orange-border: var(--c-orange-primary);
-  --c-button-orange-text: var(--c-orange-primary-light);
+  --c-button-blue-background: var(--c-blue-9);
+  --c-button-blue-hover: var(--c-blue-5);
+  --c-button-blue-border: var(--c-blue-4);
+  --c-button-blue-text: var(--c-blue-4);
+  --c-button-blue-background-active: var(--c-blue-5);
 
-  --c-button-green-background: var(--c-green-primary);
-  --c-button-green-hover: var(--c-green-primary-light);
-  --c-button-green-border: var(--c-green-primary);
-  --c-button-green-text: var(--c-green-primary-light);
+  --c-button-orange-background: var(--c-orange-9);
+  --c-button-orange-hover: var(--c-orange-5);
+  --c-button-orange-border: var(--c-orange-4);
+  --c-button-orange-text: var(--c-orange-4);
+  --c-button-orange-background-active: var(--c-orange-5);
 
-  --c-button-red-background: var(--c-red-primary);
-  --c-button-red-hover: var(--c-red-primary-light);
-  --c-button-red-border: var(--c-red-primary-light);
-  --c-button-red-text: var(--c-red-primary-light);
+  --c-button-green-background: var(--c-green-9);
+  --c-button-green-hover: var(--c-green-5);
+  --c-button-green-border: var(--c-green-4);
+  --c-button-green-text: var(--c-green-4);
+  --c-button-green-background-active: var(--c-green-5);
 
-  --c-button-purple-background: var(--c-purple-primary);
-  --c-button-purple-hover: var(--c-purple-primary-light);
-  --c-button-purple-border: var(--c-purple-primary);
-  --c-button-purple-text: var(--c-purple-primary-light);
+  --c-button-red-background: var(--c-red-9);
+  --c-button-red-hover: var(--c-red-5);
+  --c-button-red-border: var(--c-red-4);
+  --c-button-red-text: var(--c-red-4);
+  --c-button-red-background-active: var(--c-red-5);
 
-  --c-button-cyan-background: var(--c-cyan-primary);
-  --c-button-cyan-hover: var(--c-cyan-primary-light);
-  --c-button-cyan-border: var(--c-cyan-primary);
-  --c-button-cyan-text: var(--c-cyan-primary-light);
+  --c-button-purple-background: var(--c-purple-9);
+  --c-button-purple-hover: var(--c-purple-5);
+  --c-button-purple-border: var(--c-purple-4);
+  --c-button-purple-text: var(--c-purple-4);
+  --c-button-purple-background-active: var(--c-purple-5);
+
+  --c-button-cyan-background: var(--c-cyan-9);
+  --c-button-cyan-hover: var(--c-cyan-5);
+  --c-button-cyan-border: var(--c-cyan-4);
+  --c-button-cyan-text: var(--c-cyan-4);
+  --c-button-cyan-background-active: var(--c-cyan-5);
 }
 
 
 // 定义颜色变量
 
 $button-colors: (
-
         'blue': (
                 background: var(--c-button-blue-background),
                 hover:var(--c-button-blue-hover),
                 border: var(--c-button-blue-border),
                 text:var(--c-button-blue-text),
+                background-active:var(--c-button-blue-background-active),
         ),
 
         'orange': (
@@ -83,6 +96,7 @@ $button-colors: (
                 hover:var(--c-button-orange-hover),
                 border: var(--c-button-orange-border),
                 text:var(--c-button-orange-text),
+                background-active:var(--c-button-orange-background-active),
         ),
 
         'green': (
@@ -90,6 +104,7 @@ $button-colors: (
                 hover:var(--c-button-green-hover),
                 border: var(--c-button-green-border),
                 text:var(--c-button-green-text),
+                background-active:var(--c-button-green-background-active),
         ),
 
         'red': (
@@ -97,6 +112,7 @@ $button-colors: (
                 hover:var(--c-button-red-hover),
                 border: var(--c-button-red-border),
                 text:var(--c-button-red-text),
+                background-active:var(--c-button-red-background-active),
         ),
 
         'purple': (
@@ -104,6 +120,7 @@ $button-colors: (
                 hover:var(--c-button-purple-hover),
                 border: var(--c-button-purple-border),
                 text:var(--c-button-purple-text),
+                background-active:var(--c-button-purple-background-active),
         ),
 
         'cyan': (
@@ -111,30 +128,17 @@ $button-colors: (
                 hover:var(--c-button-cyan-hover),
                 border: var(--c-button-cyan-border),
                 text:var(--c-button-cyan-text),
+                background-active:var(--c-button-cyan-background-active),
         ),
 );
 
 
 .my-button {
-  //padding: 0 12px;
-  //cursor: pointer;
-  //min-width: 60px;
-  //text-align: center;
-  //border-radius: 2px;
-  //line-height: 28px;
-  //font-size: 15px;
-  //margin: 0;
-  //color: var(--c-btn-color);
-  //background-color: var(--c-background-color);
-  //border: 1px solid var(--c-border-color);
-  //font-family: 'SourceHanSans', serif;
-
-
-  font-size: 15px;
-  line-height: 2;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 14px;
   border-radius: 4px;
-  padding: 0 16px;
-  height: 32px;
+  padding: 8px 16px;
   min-width: 88px;
   box-sizing: border-box;
   transition: background-color 0.2s;
@@ -142,23 +146,32 @@ $button-colors: (
   background-color: var(--c-background-color);
   border: 1px solid var(--c-border-color);
   outline: none;
-  font-weight: 600;
+  font-weight: 500;
 
   @each $color-name, $color-values in $button-colors {
     &[data-color="#{$color-name}"] {
       color: map-get($color-values, text);
       border-color: map-get($color-values, border);
+      background-color: map-get($color-values,background);
 
       &[data-status="on"] {
-        background-color: map-get($color-values, background);
+        background-color: map-get($color-values, background-active);
+        border-color: map-get($color-values, background-active);
         color: var(--c-button-white);
       }
 
       &:hover[data-status="off"] {
-        background-color: map-get($color-values, hover);
-        color: map-get($color-values, background);
+        background-color: map-get($color-values, background-active);
+        color: var(--c-button-white);
+      }
+
+      &[data-hover]{
+        background-color: map-get($color-values, background-active);
+        color: var(--c-button-white);
       }
     }
+
+
 
     &[data-width-auto]{
       width: fit-content;
