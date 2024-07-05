@@ -1,13 +1,13 @@
 # API
 
-## 请求说明
-
-### 请求域名
+## 请求域名
 ```
 https://backend.yituliu.cn
 ```
 
-### HTTP GET
+## 请求格式示例
+
+### HTTP GET 
 
 
 |  名称   | 说明                              |
