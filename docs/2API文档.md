@@ -1,10 +1,5 @@
 # API
 
-## 请求域名
-```
-https://backend.yituliu.cn
-```
-
 ## 请求格式示例
 
 ### HTTP GET 
@@ -44,10 +39,11 @@ param1=value&param2=value
 ### 路径：
 
 ```
-/stage/t3
+https://backend.yituliu.cn/stage/t3
 ```
 
 ### 参数：
+非必须
 
 |      字段名       |  数据类型  |  默认值  | 数据类型                 |
 |:--------------:|:------:|:-----:|:---------------------|
@@ -127,7 +123,7 @@ param1=value&param2=value
 ### 路径：
 
 ```
-/stage/orundum
+https://backend.yituliu.cn/stage/orundum
 ```
 
 ### 参数：
@@ -170,7 +166,7 @@ param1=value&param2=value
 ### 路径：
 
 ```
-/stage/act
+https://backend.yituliu.cn/stage/act
 ```
 
 ### 参数：
@@ -223,10 +219,11 @@ param1=value&param2=value
 ### 路径：
 
 ```
-/item/value
+https://backend.yituliu.cn/item/value
 ```
 
 ### 参数：
+非必须
 
 |      字段名       |  数据类型  |  默认值  | 数据类型                 |
 |:--------------:|:------:|:-----:|:---------------------|
@@ -268,7 +265,7 @@ param1=value&param2=value
 ### 路径：
 
 ```
-/store/perm
+https://backend.yituliu.cn/store/perm
 ```
 
 ### 参数：
@@ -313,7 +310,7 @@ param1=value&param2=value
 ### 路径：
 
 ```
-/store/act
+https://backend.yituliu.cn/store/act
 ```
 
 ### 响应数据：
@@ -372,7 +369,7 @@ param1=value&param2=value
 ### 路径：
 
 ```
-/store/pack
+https://backend.yituliu.cn/store/pack
 ```
 
 ### 参数：
@@ -473,7 +470,7 @@ param1=value&param2=value
 ### 路径：
 
 ```
-/survey/operator/table
+https://backend.yituliu.cn/survey/operator/table
 ```
 
 ### 参数：
@@ -525,12 +522,12 @@ param1=value&param2=value
 ```
 
 
-## 获取用户的干员练度信息 POST
+## 获取用户的干员练度信息 GET
 
 ### 路径：
 
 ```
-/survey/operator/result
+https://backend.yituliu.cn/survey/operator/result
 ```
 
 ### 参数：
