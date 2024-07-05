@@ -28,7 +28,7 @@ const props = defineProps(
 
 <template>
   <button class="my-button" :data-status="props.active?'on':'off'">
-    <slot></slot>
+    <span style="max-height: 16px"> <slot>  </slot></span>
   </button>
 </template>
 

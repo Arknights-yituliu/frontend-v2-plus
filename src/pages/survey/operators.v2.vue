@@ -109,9 +109,9 @@
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">排序</span>
           <div class="control-checkbox">
-            <div class="btn" @click="sortOperatorList('rarity')">按稀有度</div>
-            <div class="btn" @click="sortOperatorList('date')">按实装顺序</div>
-            <div class="btn" @click="sortOperatorListByLevel('level')">按干员等级</div>
+            <my-button data-color="blue" @click="sortOperatorList('rarity')"> 按稀有度</my-button>
+            <my-button data-color="blue" @click="sortOperatorList('date')"> 按实装顺序</my-button>
+            <my-button data-color="blue" @click="sortOperatorListByLevel('level')"> 按干员等级</my-button>
           </div>
         </div>
 
@@ -147,9 +147,9 @@
         <div class="control-line-label">导入导出</div>
         <div class="control-line">
           <div class="control-checkbox">
-            <button class="btn btn-green" @click="importDataBySkland()">从森空岛导入</button>
-            <button class="btn btn-green"  @click="exportOperatorExcel()">导出为Excel</button>
-            <button class="btn btn-red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</button>
+            <my-button data-color="green" @click="importDataBySkland()">从森空岛导入</my-button>
+            <my-button data-color="green" @click="exportOperatorExcel()">导出为Excel</my-button>
+            <my-button data-color="red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</my-button>
           </div>
         </div>
         <div class="control-line">
@@ -294,10 +294,9 @@
           <h2>理智消耗情况</h2>
           <p style="">总计消耗{{ apCostCount.toFixed(0) }} 理智</p>
           <!--          材料统计-->
-
-          <button class="btn btn-blue" @click="splitMaterialByRarity(5)">不拆分</button>
-          <button class="btn btn-blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
-          <button class="btn btn-blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+          <my-button data-color="orange" @click="splitMaterialByRarity(5)">不拆分</my-button>
+          <my-button data-color="purple" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</my-button>
+          <my-button data-color="blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</my-button>
           <div class="control-line item_cost_wrap" v-for="(itemList,type) in itemCostList"
                :key="type">
             <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">

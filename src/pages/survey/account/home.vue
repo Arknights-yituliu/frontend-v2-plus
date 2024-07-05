@@ -6,6 +6,7 @@ import operator_table_simple from '/src/static/json/survey/character_table_simpl
 import "/src/assets/css/survey/home.scss";
 import "/src/assets/css/survey/home.phone.scss";
 import {getUserInfo} from '/src/pages/survey/service/userData.js'
+import MyButton from '/src/components/Button.vue'
 
 let avatar = []
 for (const char_id in operator_table_simple) {
@@ -159,15 +160,6 @@ onMounted(() => {
   <div class="account-home-page">
     <div class="user-info-card-container">
 
-      <!--    <div class="user_info_card">-->
-      <!--      <div class="user_info_title">身份验证</div>-->
-      <!--      <div class="user_input_bar">-->
-      <!--        <div class="user_input_label">请输入森空岛CRED</div>-->
-      <!--        <input class="user_input" v-model="inputData.cred"/>-->
-      <!--        <button class="btn btn-blue" @click="authentication()">验证身份</button>-->
-      <!--      </div>-->
-      <!--    </div>-->
-
       <div class="user-info-card">
         <h2 class="user-info-card-title">用户信息</h2>
         <h4>头像</h4>
@@ -183,7 +175,7 @@ onMounted(() => {
 
           <input class="user-info-card-input" v-model="inputData.userName"/>
           <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>
-          <button class="btn btn-blue btn_position" @click="updateUserName()">更新用户名</button>
+          <my-button data-color="blue"  @click="updateUserName()">更新用户名</my-button>
         </div>
         <div class="user-info-card-line">
           <span>绑定邮箱</span>
@@ -207,7 +199,7 @@ onMounted(() => {
             <div class="user-avatar-sprite">
               <div :class="getSprite(selectedAvatar)"></div>
             </div>
-            <button class="btn btn-green" @click="updateAvatar()"> 保存修改</button>
+            <my-button data-color="blue" @click="updateAvatar()"> 保存修改</my-button>
           </div>
           <div class="user_avatar_popup_wrap" >
             <div class="user-avatar-sprite" style="margin: 8px" v-for="(avatar,index) in avatar" :key="index" @click="chooseAvatar(avatar.charId)">
@@ -242,7 +234,7 @@ onMounted(() => {
         <div class="user-info-card-input-line">
           <input class="user-info-card-input" type="password" v-model="inputData.confirmPassWord"/>
           <!--          <span v-show="inputData.confirmPassWord.length>0">{{ inputData.confirmPassWord.length }}/20</span>-->
-          <button class="btn btn-blue btn_position" @click="updatePassWord()">更新密码</button>
+          <my-button data-color="blue" @click="updatePassWord()">更新密码</my-button>
         </div>
         <div class="user-info-card-tip" style="color: #f83333">{{ checkPassWord() }}</div>
       </div>
@@ -259,17 +251,17 @@ onMounted(() => {
         <h4>输入新邮箱</h4>
         <div class="user-info-card-input-line">
           <input class="user-info-card-input" v-model="inputData.email"/>
-          <button class="btn btn-blue btn_position" @click="sendEmailCode()">发送验证码</button>
+          <my-button data-color="blue"  @click="sendEmailCode()">发送验证码</my-button>
         </div>
 
         <h4>输入邮件验证码</h4>
         <div class="user-info-card-input-line">
           <input class="user-info-card-input" v-model="inputData.emailCode"/>
-          <button class="btn btn-blue btn_position" @click="updateEmail()">修改邮箱</button>
+          <my-button data-color="blue"  @click="updateEmail()">修改邮箱</my-button>
         </div>
       </div>
       <div class="user-info-card">
-        <button class="btn btn-red " style="margin: auto" @click="logout()">退出登录</button>
+        <my-button data-color="blue" style="margin: auto" @click="logout()">退出登录</my-button>
       </div>
     </div>
   </div>

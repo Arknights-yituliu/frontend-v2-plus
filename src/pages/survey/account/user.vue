@@ -30,8 +30,8 @@
       <div class="login-card" v-show="userData.status>0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
-          <button class="btn btn-blue logout_btn" @click="logout()">确定</button>
-          <button class="btn btn-red logout_btn" @click="loginVisible = !loginVisible">取消</button>
+          <my-button data-color="blue" :active="true" @click="logout()">确定</my-button>
+          <my-button data-color="red" :active="true" @click="loginVisible = !loginVisible">取消</my-button>
         </div>
       </div>
     </c-popup>
@@ -49,7 +49,7 @@ import "/src/assets/css/survey/login.scss"
 import "/src/assets/css/survey/login.phone.scss"
 
 import "/src/assets/css/survey/survey_nav.css";
-
+import MyButton from '/src/components/Button.vue'
 
 import {onMounted, ref, watch} from "vue";
 import {cMessage} from "/src/custom/message";

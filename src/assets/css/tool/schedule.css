@@ -221,7 +221,7 @@
     /*background-color: #d0d0d0;*/
 }
 
-.copy-btn-wrap span {
+.copy-btn-wrap>span {
     font-weight: bold;
     line-height: 24px;
     margin-right: 12px;
@@ -545,7 +545,7 @@
     margin-left: 16px;
 }
 
-.condition-bar span {
+.condition-bar>span {
     padding-left: 16px;
     padding-right: 5px;
     font-weight: 600;
@@ -750,7 +750,7 @@
     justify-content: flex-start;
 }
 
-.schedule-set-bar span {
+.schedule-set-bar>span {
     min-width: 80px;
     padding-left: 4px;
     padding-right: 4px;
@@ -771,7 +771,7 @@
     justify-content: flex-start;
 }
 
-.schedule-set-bar-short span {
+.schedule-set-bar-short>span {
     padding-left: 4px;
     padding-right: 4px;
     font-size: 16px;

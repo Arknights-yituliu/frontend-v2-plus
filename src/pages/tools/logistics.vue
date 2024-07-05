@@ -7,6 +7,7 @@ import building_table from '/src/static/json/build/building_table.json'
 import {onMounted, ref} from "vue";
 import {debounce} from "../../utils/debounce";
 import {translate} from "/src/utils/i18n";
+import MyButton from '/src/components/Button.vue'
 
 let buildingTable = {}
 for (const operator of building_table) {
@@ -196,20 +197,20 @@ onMounted(() => {
            v-show="conditionType.display" :key="key">
           <span class="checkbox-button-label"
                 :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-        <c-button v-for="(condition,index) in conditionType.conditions" :key="index" style="margin: 2px"
-                  :color="COLOR.BLUE" :status="filterBtnStatus(key,condition.label)"
+        <my-button :data-color="conditionType.buttonColor" v-for="(condition,index) in conditionType.conditions" :key="index" style="margin: 2px"
+                  :color="COLOR.BLUE" :active="filterBtnStatus(key,condition.label)"
                   @click="filterOperatorByTag(condition,key)">
           {{ translate('schedule', condition.label) }}
-        </c-button>
+        </my-button>
       </div>
     </div>
 
     <div class="logistics-search-line">
 
       <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
-      <c-button :status="hideIrrelevantSkillsFlag" :color="COLOR.ORANGE"
+      <my-button :active="hideIrrelevantSkillsFlag" data-color="green"
                 style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
-      </c-button>
+      </my-button>
       <span
           class="logistics-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
       <!--  <span-->

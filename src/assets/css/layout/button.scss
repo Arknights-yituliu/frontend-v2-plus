@@ -3,13 +3,13 @@
 
   --c-button-blue-background: var(--c-blue-1);
   --c-button-blue-hover: var(--c-blue-2);
-  --c-button-blue-border: var(--c-blue-5);
+  --c-button-blue-border: var(--c-blue-4);
   --c-button-blue-text: var(--c-blue-5);
   --c-button-blue-background-active: var(--c-blue-5);
 
   --c-button-orange-background: var(--c-orange-1);
   --c-button-orange-hover: var(--c-orange-2);
-  --c-button-orange-border: var(--c-orange-5);
+  --c-button-orange-border: var(--c-orange-4);
   --c-button-orange-text: var(--c-orange-5);
   --c-button-orange-background-active: var(--c-orange-5);
 
@@ -21,26 +21,25 @@
 
   --c-button-red-background: var(--c-red-1);
   --c-button-red-hover: var(--c-red-2);
-  --c-button-red-border: var(--c-red-5);
+  --c-button-red-border: var(--c-red-4);
   --c-button-red-text: var(--c-red-5);
   --c-button-red-background-active: var(--c-red-5);
 
   --c-button-purple-background: var(--c-purple-1);
   --c-button-purple-hover: var(--c-purple-2);
-  --c-button-purple-border: var(--c-purple-5);
+  --c-button-purple-border: var(--c-purple-4);
   --c-button-purple-text: var(--c-purple-5);
   --c-button-purple-background-active: var(--c-purple-5);
 
   --c-button-cyan-background: var(--c-cyan-1);
   --c-button-cyan-hover: var(--c-cyan-2);
-  --c-button-cyan-border: var(--c-cyan-5);
+  --c-button-cyan-border: var(--c-cyan-4);
   --c-button-cyan-text: var(--c-cyan-5);
   --c-button-cyan-background-active: var(--c-cyan-5);
 }
 
 .theme_dark {
   --c-button-white: rgb(255, 255, 255);
-
 
   --c-button-blue-background: var(--c-blue-9);
   --c-button-blue-hover: var(--c-blue-5);
@@ -136,6 +135,7 @@ $button-colors: (
 .my-button {
   font-family: inherit;
   font-size: 14px;
+  height: 32px;
   line-height: 14px;
   border-radius: 4px;
   padding: 8px 16px;

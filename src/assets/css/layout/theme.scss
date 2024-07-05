@@ -15,7 +15,7 @@
   --c-background-color: var(--c-white-1);
   --c-text-color: var(--c-black-2);
   --c-text-tip-color: #858585;
-  --c-background-white-transparent: var(--c-wrap-white-transparent-bg);
+  --c-background-white-transparent: var(--c-white-transparent);
 
 
   --c-blue: var(--c-blue-1);
@@ -63,7 +63,7 @@
   --c-background-color: #2d2d2d;
   --c-text-color: var(--c-white-2);
   --c-text-tip-color: #c0c0c0;
-  --c-background-white-transparent: var(--c-wrap-white-transparent-bg);
+  --c-background-white-transparent: var(--c-white-transparent);
 
 
   --c-blue: var(--c-blue-dark);
@@ -107,17 +107,15 @@
 }
 
 :root {
-  --c-blue-1: rgb(235,245,255);
-  --c-blue-2: rgb(185,220,255);
-  --c-blue-3: rgb(135,195,255);
-  --c-blue-4: rgb(85,170,255);
-  --c-blue-5: rgb(35, 145, 255); /* 标准MD蓝色 */
-  --c-blue-6: rgb(32,115,205);
-  --c-blue-7: rgb(29,85,155);
-  --c-blue-8: rgb(26,55,105);
-  --c-blue-9: rgb(24, 34, 44);
-
-
+  --c-blue-1: rgb(250, 250, 255);
+  --c-blue-2: rgb(212, 232, 255); 
+  --c-blue-3: rgb(174, 190, 255); 
+  --c-blue-4: rgb(135, 165, 255); 
+  --c-blue-5: rgb(35, 145, 255);
+  --c-blue-6: rgb(64, 125, 205); 
+  --c-blue-7: rgb(93, 105, 175); 
+  --c-blue-8: rgb(122, 85, 145); 
+  --c-blue-9: rgb(24, 25, 40);
 
   --c-orange-1: rgb(255, 245, 235);
   --c-orange-2: rgb(255, 220, 185);
@@ -133,17 +131,17 @@
   --c-purple-2: rgb(223, 187, 255);
   --c-purple-3: rgb(200, 138, 255);
   --c-purple-4: rgb(178, 90, 255);
-  --c-purple-5: rgb(155, 40, 175); /* 标准MD紫色 */
+  --c-purple-5: rgb(155, 40, 175);
   --c-purple-6: rgb(125, 35, 140);
   --c-purple-7: rgb(95, 30, 105);
   --c-purple-8: rgb(65, 25, 70);
   --c-purple-9: rgb(35, 21, 35);
 
-  --c-green-1: rgb(245, 255, 245);
+  --c-green-1: rgb(250, 255, 250);
   --c-green-2: rgb(204, 255, 204);
   --c-green-3: rgb(162, 255, 162);
   --c-green-4: rgb(120, 255, 120);
-  --c-green-5: rgb(76, 175, 80); /* 标准MD绿色 */
+  --c-green-5: rgb(76, 175, 80);
   --c-green-6: rgb(56, 147, 60);
   --c-green-7: rgb(36, 119, 40);
   --c-green-8: rgb(16, 81, 20);
@@ -171,12 +169,6 @@
   --c-cyan-8: rgb(0, 55, 105);
   --c-cyan-9: rgb(0, 34, 44);
 
-
-  font-family: Roboto, Noto Sans SC, PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, "Microsoft Sans Serif", WenQuanYi Micro Hei, sans-serif
-
-}
-
-.color_var {
   --c-black-1: #000000;
   --c-black-2: #191919;
   --c-black-3: #323232;
@@ -191,7 +183,16 @@
   --c-white-5: #9b9b9b;
   --c-white-6: #828282;
 
-  --c-wrap-white-transparent-bg: rgba(255, 255, 255, 0.1);
+  --c-white-transparent: rgba(255, 255, 255, 0.1);
+
+  font-family: Roboto, Noto Sans SC, PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, "Microsoft Sans Serif", WenQuanYi Micro Hei, sans-serif
+
+}
+
+.color_var {
+
+
+
 
   /*亮色颜色*/
 

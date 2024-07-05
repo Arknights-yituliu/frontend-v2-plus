@@ -1041,9 +1041,9 @@ onMounted(() => {
             <div class="execution-time" v-for="(num, index) in scheduleTypeV2.planTimes" :key="index">
               <span>{{ translate('schedule', 'schedule.Shift') }}{{ num }}</span>
               <!--          <c-time-checkbox v-model="executionTimeList[index]"></c-time-checkbox>-->
-              <el-time-picker v-model="executionTimeList[index][0]" placeholder="Arbitrary time" style="width: 140px"/>
+              <el-time-picker v-model="executionTimeList[index][0]" placeholder="Arbitrary time" style="width: 180px"/>
               <span>to</span>
-              <el-time-picker v-model="executionTimeList[index][1]" placeholder="Arbitrary time" style="width: 140px"/>
+              <el-time-picker v-model="executionTimeList[index][1]" placeholder="Arbitrary time" style="width: 180px"/>
             </div>
           </div>
         </div>
