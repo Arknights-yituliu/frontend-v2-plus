@@ -1210,7 +1210,7 @@ function handleResize() {
 
             <span class="tip" style="text-align: center">日期为卡池结束日期，夏活日期待定，仅参考</span>
             <div class="switch-wrap">
-              <span>计算开卡池开放当天的抽数</span>
+              <span>只计算到卡池开放当天</span>
               <el-switch v-model="calPoolStart" @click="gachaResourcesCalculation"></el-switch>
             </div>
             <div class="result-content">
