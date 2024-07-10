@@ -6,10 +6,9 @@ import {cMessage} from "../custom/message";
  * @param {number} duration  防抖间隔时间 单位ms
  * @returns {(function(...[*]): void)|*} 返回一个参数可空的函数
  */
-function debounce(func, duration = 1000) {
+function debounce(func, duration = 500) {
     let timeout = 0;
     return function (...args) {
-
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             func.apply(this, args);

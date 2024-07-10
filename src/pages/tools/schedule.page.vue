@@ -1,6 +1,9 @@
 <script setup>
 import {onMounted, ref, watch} from "vue"
 
+import '/src/assets/css/tool/schedule.css'
+import '/src/assets/css/tool/building_skill_font_color.css'
+
 import schedule_template_json from '/src/static/json/build/plans_template.json'
 import character_table from '/src/static/json/survey/character_table_simple.json'
 import schedule_menu from '/src/static/json/build/schedule_menu.json'
@@ -12,12 +15,9 @@ import {translate} from '/src/utils/i18n.js'
 import {getText} from '/src/utils/fileRead.js'
 import {debounce} from "/src/utils/debounce.js";
 import {cMessage} from '/src/custom/message.js'
+import {popoverOnOpen, createPopover} from "/src/utils/popover.js";
 
 import MyButton from '/src/components/Button.vue'
-
-import '/src/assets/css/tool/schedule.css'
-
-import '/src/assets/css/tool/building_skill_font_color.css'
 
 
 let plansTemplate = ref('')
@@ -250,6 +250,8 @@ function chooseRoom(roomType, index) {
     selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedPlanIndex.value]
         .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
   }
+
+  popoverOnOpen(`${roomType}#${index}`,'room-set')
 }
 
 let selectBtnKey = ref({})
@@ -828,6 +830,7 @@ function setPosition() {
 
 onMounted(() => {
   filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], 'room')
+  createPopover('room-set',`auto`)
 })
 
 </script>
@@ -976,7 +979,8 @@ onMounted(() => {
             </div>
             <span>{{ translate('schedule', 'schedule.RoomNumber') }}</span>
             <div>
-              <my-button data-width-auto data-color='blue' :active="(index) === plansTemplate[selectedPlanIndex].drones.index"
+              <my-button data-width-auto data-color='blue'
+                         :active="(index) === plansTemplate[selectedPlanIndex].drones.index"
                          @click="setDrones('index', (index))" v-for="index in 5" :key="index">
                 {{ index }}
               </my-button>
@@ -1012,25 +1016,25 @@ onMounted(() => {
           </div>
 
           <div class="schedule-set-bar-short">
-            <span class="room-set-description">{{ translate('schedule', 'schedule.OrderedStationing') }}</span>
-            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
-            </c-switch>
+            <!--            <span class="room-set-description">{{ translate('schedule', 'schedule.OrderedStationing') }}</span>-->
+            <!--            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">-->
+            <!--            </c-switch>-->
 
-            <span class="room-set-description">{{ translate('schedule', 'schedule.Autofill') }}</span>
-            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
-            </c-switch>
-            <i class="iconfont icon-question schedule-question">
-              <span class="schedule-tip">{{ translate('schedule', 'schedule.SkipRoomTip') }}</span>
-            </i>
+            <!--            <span class="room-set-description">{{ translate('schedule', 'schedule.Autofill') }}</span>-->
+            <!--            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">-->
+            <!--            </c-switch>-->
+            <!--            <i class="iconfont icon-question schedule-question">-->
+            <!--              <span class="schedule-tip">{{ translate('schedule', 'schedule.SkipRoomTip') }}</span>-->
+            <!--            </i>-->
 
-            <span class="room-set-description">{{ translate('schedule', 'schedule.SkipRoom') }}</span>
-            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
-            </c-switch>
-            <span class="room-set-description">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
-            <div class="product-image-wrap" @click="setProduct(product.value)"
-                 v-for="(product, index) in productTable[selectedRoomType]" :key="index">
-              <div :class="getItemSprite(product.id)"></div>
-            </div>
+            <!--            <span class="room-set-description">{{ translate('schedule', 'schedule.SkipRoom') }}</span>-->
+            <!--            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">-->
+            <!--            </c-switch>-->
+            <!--            <span class="room-set-description">{{ translate('schedule', 'schedule.ProductSelection') }}</span>-->
+            <!--            <div class="product-image-wrap" @click="setProduct(product.value)"-->
+            <!--                 v-for="(product, index) in productTable[selectedRoomType]" :key="index">-->
+            <!--              <div :class="getItemSprite(product.id)"></div>-->
+            <!--            </div>-->
 
             <span class="room-set-description">{{ translate('schedule', 'schedule.TimedShiftChange') }}</span>
             <c-switch v-model="isPeriod"></c-switch>
@@ -1070,6 +1074,31 @@ onMounted(() => {
         </c-popup>
 
 
+        <div id="room-set">
+
+          <div class="schedule-set-bar-short">
+            <span class="room-set-description">{{ translate('schedule', 'schedule.OrderedStationing') }}</span>
+            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
+            </c-switch>
+            <span class="room-set-description">{{ translate('schedule', 'schedule.Autofill') }}</span>
+            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
+            </c-switch>
+            <i class="iconfont icon-question schedule-question">
+              <span class="schedule-tip">{{ translate('schedule', 'schedule.SkipRoomTip') }}</span>
+            </i>
+          </div>
+          <div class="schedule-set-bar-short">
+          <span class="room-set-description">{{ translate('schedule', 'schedule.SkipRoom') }}</span>
+          <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
+          </c-switch>
+            <span class="room-set-description">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
+            <div class="product-image-wrap" @click="setProduct(product.value)"
+                 v-for="(product, index) in productTable[selectedRoomType]" :key="index">
+              <div :class="getItemSprite(product.id)"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="room-wrap">
           <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex - 1)">
             <i class="iconfont icon-arrow-left" style="font-size: 48px">
@@ -1083,16 +1112,17 @@ onMounted(() => {
             <div class="copy-btn-wrap">
             </div>
             <!--    贸易站-->
-            <div class="room-template trading" :class="roomSelectedClass('trading', tradingIndex)"
-                 v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
-                 @click="chooseRoom('trading', tradingIndex)" tabindex="0">
+            <div class="room-template trading"  :id="`trading#${index}`"
+                 :class="roomSelectedClass('trading', index)"
+                 v-for="(num, index) in scheduleTypeV2.trading" :key="index"
+                 @click="chooseRoom('trading', index)">
               <div class="room-name">
                 <span>{{ translate('schedule', 'schedule.TradingPost') }}#{{ num }}</span>
-                <div :class="getRoomProduct('trading', tradingIndex)"></div>
+                <div :class="getRoomProduct('trading', index)"></div>
               </div>
               <div class="settlement_operator">
                 <div class="room-avatar-sprite-wrap"
-                     v-for="(charName, index) in getRoomOperators('trading', tradingIndex)"
+                     v-for="(charName, index) in getRoomOperators('trading', index)"
                      :key="index">
                   <div :class="getAvatar(charName)"></div>
                 </div>
@@ -1100,16 +1130,17 @@ onMounted(() => {
             </div>
 
             <!--  制造站-->
-            <div class="room-template manufacture" :class="roomSelectedClass('manufacture', manufactureIndex)"
-                 v-for="(num, manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"
-                 @click="chooseRoom('manufacture', manufactureIndex)" tabindex="0">
+            <div class="room-template manufacture" :id="`manufacture#${index}`"
+                 :class="roomSelectedClass('manufacture', index)"
+                 v-for="(num, index) in scheduleTypeV2.manufacture" :key="index"
+                 @click="chooseRoom('manufacture', index)" >
               <div class="room-name">
                 <span>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</span>
-                <div :class="getRoomProduct('manufacture', manufactureIndex)"></div>
+                <div :class="getRoomProduct('manufacture', index)"></div>
               </div>
               <div class="settlement_operator">
                 <div class="room-avatar-sprite-wrap"
-                     v-for="(charName, index) in getRoomOperators('manufacture', manufactureIndex)" :key="index">
+                     v-for="(charName, index) in getRoomOperators('manufacture', index)" :key="index">
                   <div :class="getAvatar(charName)"></div>
                 </div>
               </div>
@@ -1125,12 +1156,13 @@ onMounted(() => {
             </div>
 
             <!--  发电站-->
-            <div class="room-template power" :class="roomSelectedClass('power', powerIndex)"
-                 v-for="(num, powerIndex) in scheduleTypeV2.power" :key="powerIndex"
-                 @click="chooseRoom('power', powerIndex)"
-                 tabindex="0">
+            <div class="room-template power" :id="`power#${index}`"
+                 :class="roomSelectedClass('power', index)"
+                 v-for="(num, index) in scheduleTypeV2.power" :key="index"
+                 @click="chooseRoom('power', index)"
+                 >
               <div class="room-name">{{ translate('schedule', 'schedule.PowerPlant') }}#{{ num }}</div>
-              <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('power', powerIndex)"
+              <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('power', index)"
                    :key="index">
                 <div :class="getAvatar(charName)"></div>
               </div>
@@ -1151,9 +1183,10 @@ onMounted(() => {
 
           <div class="room-wrap-center">
             <!--     控制中枢-->
-            <div class="room-template control" :class="roomSelectedClass('control', 0)"
+            <div class="room-template control" :id="`control#0`"
+                 :class="roomSelectedClass('control', 0)"
                  @click="chooseRoom('control', 0)"
-                 tabindex="0">
+                 >
               <div class="room-name">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
               <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('control', 0)"
                    :key="index">
@@ -1161,12 +1194,13 @@ onMounted(() => {
               </div>
             </div>
             <!--     宿舍-->
-            <div class="room-template dormitory" :class="roomSelectedClass('dormitory', dormitoryIndex)"
-                 v-for="(num, dormitoryIndex) in scheduleTypeV2.dormitory" :key="dormitoryIndex"
-                 @click="chooseRoom('dormitory', dormitoryIndex)" tabindex="0">
+            <div class="room-template dormitory" :id="`dormitory#${index}`"
+                 :class="roomSelectedClass('dormitory', index)"
+                 v-for="(num, index) in scheduleTypeV2.dormitory" :key="index"
+                 @click="chooseRoom('dormitory', index)" >
               <div class="room-name">{{ translate('schedule', 'schedule.Dormitory') }}#{{ num }}</div>
               <div class="room-avatar-sprite-wrap"
-                   v-for="(charName, index) in getRoomOperators('dormitory', dormitoryIndex)" :key="index">
+                   v-for="(charName, index) in getRoomOperators('dormitory', index)" :key="index">
                 <div :class="getAvatar(charName)"></div>
               </div>
             </div>
@@ -1175,9 +1209,10 @@ onMounted(() => {
           <div class="room-wrap-right">
             <div class="room-template blank" style="width: 100px;"></div>
             <!--     会客室-->
-            <div class="room-template meeting" :class="roomSelectedClass('meeting', 0)"
+            <div class="room-template meeting" :id="`meeting#0`"
+                 :class="roomSelectedClass('meeting', 0)"
                  @click="chooseRoom('meeting', 0)"
-                 tabindex="0">
+                 >
               <div class="room-name">{{ translate('schedule', 'schedule.ReceptionRoom') }}</div>
               <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('meeting', 0)"
                    :key="index">
@@ -1186,8 +1221,9 @@ onMounted(() => {
               </div>
             </div>
             <!--      加工站-->
-            <div class="room-template processing" :class="roomSelectedClass('processing', 0)"
-                 @click="chooseRoom('processing', 0)" tabindex="0">
+            <div class="room-template processing" :id="`processing#0`"
+                 :class="roomSelectedClass('processing', 0)"
+                 @click="chooseRoom('processing', 0)" >
               <div class="room-name">{{ translate('schedule', 'schedule.Workshop') }}</div>
               <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('processing', 0)"
                    :key="index">
@@ -1196,8 +1232,9 @@ onMounted(() => {
             </div>
 
             <!--     办公室 -->
-            <div class="room-template hire" :class="roomSelectedClass('hire', 0)" @click="chooseRoom('hire', 0)"
-                 tabindex="0">
+            <div class="room-template hire" :id="`hire#0`"
+                 :class="roomSelectedClass('hire', 0)" @click="chooseRoom('hire', 0)"
+                 >
               <div class="room-name">{{ translate('schedule', 'schedule.Office') }}</div>
               <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('hire', 0)"
                    :key="index">
@@ -1221,6 +1258,7 @@ onMounted(() => {
             {{ translate('schedule', 'schedule.Shift') }}{{ num }}
           </my-button>
         </div>
+
 
         <div class="room-set-wrap">
           <div class="room-set">
@@ -1252,7 +1290,8 @@ onMounted(() => {
             <div class="condition-bar" v-for="(conditionType, key) in operatorFilterConditionTable"
                  v-show="conditionType.display" :key="key">
               <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-              <my-button v-for="(condition, index) in conditionType.conditions" :key="index" :data-color='conditionType.buttonColor'
+              <my-button v-for="(condition, index) in conditionType.conditions" :key="index"
+                         :data-color='conditionType.buttonColor'
                          :active="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
                 {{ translate('schedule', condition.label) }}
               </my-button>
@@ -1284,8 +1323,8 @@ onMounted(() => {
 
 <style scoped>
 
-.schedule-page{
-  .my-button{
+.schedule-page {
+  .my-button {
     margin: 4px;
   }
 }

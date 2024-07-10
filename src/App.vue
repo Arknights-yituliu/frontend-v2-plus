@@ -1,21 +1,26 @@
 <template>
 
-    <div class="container color_var" id="container" :class="theme_type">
-      <my-aside></my-aside>
-      <loading></loading>
-      <div class="header">
-        <my-header/>
+  <div class="container color_var" id="container" :class="theme_type">
+    <my-aside></my-aside>
+    <loading></loading>
+    <div class="header">
+      <my-header/>
+    </div>
+    <div class="main">
+      <div class="dev-tip tip-color-warn" v-show="devVer">您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况，
+        请访问正式域名<a href="https://ark.yituliu.cn/">https://ark.yituliu.cn/</a></div>
+      <div class="dev-tip" @click="tipDisplay=false" v-show="tipDisplay">
+        <div style="position: relative">
+          <span>服务器正在恢复中，如有问题请反馈</span>
+          <i class="iconfont icon-error dev-tip-icon"></i>
+        </div>
       </div>
-      <div class="main">
-        <div class="dev-tip tip-color-warn" v-show="devVer">您正在访问的是开发版域名，此域名提供的服务可能存在不稳定的情况，
-          请访问正式域名<a href="https://ark.yituliu.cn/">https://ark.yituliu.cn/</a></div>
-        <div class="dev-tip tip-color-warn" ><span >服务器正在恢复中，如有问题请反馈</span></div>
+      <router-view>
+      </router-view>
+    </div>
 
-
-        <router-view>
-        </router-view>
-      </div>
-      <my-footer></my-footer>
+    <components-container></components-container>
+    <my-footer></my-footer>
   </div>
 
 </template>
@@ -23,9 +28,6 @@
 <script setup>
 //导航
 import '/src/assets/svg/iconfont.css'
-
-
-
 
 import "/src/assets/css/stage_v2.css";
 import "/src/assets/css/store_v2.css";
@@ -44,7 +46,7 @@ import '/src/assets/css/common/checkbox.scss'
 import '/src/assets/css/common/input.scss'
 import '/src/assets/css/common/tip.scss'
 import '/src/assets/css/common/title_and_tag.scss'
-
+import '/src/assets/css/common/popover.scss'
 
 
 import '/src/assets/css/layout/aside.scss'
@@ -64,15 +66,15 @@ import myHeader from "/src/pages/layout/myheader.vue";
 import myFooter from "/src/pages/layout/myfooter.vue";
 import myAside from "/src/pages/layout/aside.vue";
 import loading from '/src/pages/layout/loading.vue'
+import ComponentsContainer from "/src/components/ComponentsContainer.vue";
 import {onMounted, ref} from "vue";
 
-
-
-
 let theme_type = ref("theme_init")
-
-
 let devVer = ref(false)
+
+let tipDisplay = ref(true)
+
+let componentsContainerId = 114514
 
 onMounted(() => {
   const theme_v2 = localStorage.getItem("theme_v2");
@@ -84,9 +86,10 @@ onMounted(() => {
   }
 
   const currentDomain = window.location.hostname;
-  if(currentDomain.indexOf('dev')>-1){
+  if (currentDomain.indexOf('dev') > -1) {
     devVer.value = true
   }
+
 
   document.getElementsByTagName("html").item(0).className = theme_v2 === "dark" ? "dark" : "light";
 })
@@ -120,11 +123,24 @@ onMounted(() => {
 }
 
 
-.dev-tip{
-   text-align: center;
-   padding: 8px 0;
-   font-size: 14px;
-   font-weight: bold;
+.dev-tip {
+  text-align: center;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+  width: 270px;
+  background-color: var(--c-background-color);
+  box-shadow: 1px 1px 4px 1px var(--c-box-shadow-color), -1px -1px 4px 1px var(--c-box-shadow-color);
+  left: 50%;
+  right: 50%;
+  top: 40px;
+}
+
+.dev-tip-icon{
+  position: absolute;
+  right: -4px;
+  font-size: 18px;
 }
 
 

@@ -67,10 +67,19 @@ console.log(buttonColorsMap)
         触发
       </my-button>
     </div>
+
+
+    <div class="components-page-module">
+      <div class="my-popover" >
+
+        <div class="my-popover-arrow"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style>
+
 .components-page {
   min-height: 95vh;
   padding: 12px;
@@ -79,4 +88,11 @@ console.log(buttonColorsMap)
 .components-page button {
   margin: 4px;
 }
+
+.components-page-module{
+  margin: 12px;
+}
+
+
+
 </style>
