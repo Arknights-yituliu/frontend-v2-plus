@@ -5,6 +5,17 @@
     overflow-y: hidden;
     box-sizing: border-box;
     padding: 2px;
+
+    .control-checkbox{
+        .my-button{
+            margin: 2px;
+        }
+    }
+    .control-header{
+        .my-button{
+            margin:2px 4px;
+        }
+    }
 }
 
 .sort_desc_icon{
@@ -42,8 +53,13 @@
 }
 
 #rank_table {
-    height: calc(100vh - 180px);
-    overflow-y: auto;
+
+}
+
+@media screen and (max-width: 600px){
+    #rank_table {
+      overflow: scroll;
+    }
 }
 
 .rank_table > thead {

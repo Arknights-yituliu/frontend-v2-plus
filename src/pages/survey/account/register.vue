@@ -5,6 +5,8 @@ import '/src/assets/css/survey/login.v2.phone.scss'
 import userAPI from '/src/api/userInfo.js'
 import {cMessage} from "../../../custom/message.js";
 import {useRouter} from "vue-router";
+import MyButton from '/src/components/Button.vue'
+
 
 function getParam(method) {
   let param = {
@@ -144,10 +146,10 @@ onMounted(() => {
         </div>
       </div>
 
-      <button class="btn btn-blue"
-              style="display: block;margin:0 auto"
-              @click="toRegister()">注册账号
-      </button>
+
+      <my-button data-color="blue" class="my-button-login" @click="toRegister()">
+        注册账号
+      </my-button>
       <div class="login-form-notice">
         <p>
           因服务器被攻击，数据库部分数据无法恢复，请尽量重新注册账号

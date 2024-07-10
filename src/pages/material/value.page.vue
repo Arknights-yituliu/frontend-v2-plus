@@ -1,12 +1,12 @@
 <script setup>
 import {ref, onMounted} from "vue";
 import {exportExcel} from "/src/utils/exportExcel";
-import FixedNav from "../../components/FixedNav.vue";
+import FixedNav from "/src/components/FixedNav.vue";
 import materialAPI from "/src/api/material.js";
 import '/src/assets/css/material/value.scss'
 import '/src/assets/css/material/value.phone.scss'
 import MyButton from '/src/components/Button.vue'
-import Button from "../../components/Button.vue";
+import Button from "/src/components/Button.vue";
 
 let opETextTheme = ref("op_title_etext_light")
 

@@ -6,7 +6,7 @@ import packCardContainer from '/src/components/PackCardGroup.vue'
 
 import '/src/assets/css/material/pack.scss'
 import '/src/assets/css/material/pack.phone.scss'
-import ModuleHeader from "../../components/ModuleHeader.vue";
+import ModuleHeader from "/src/components/ModuleHeader.vue";
 import MyButton from '/src/components/Button.vue'
 
 let opETextTheme = "op_title_etext_light"

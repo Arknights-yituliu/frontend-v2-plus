@@ -199,9 +199,9 @@
           <h2>博士招募情况</h2>
           <span class="statistical-module-text"> Dr.{{ userData.userName }}，您总计招募了{{
               statisticalResult.total.own
-            }}位干员，
+            }}位干员
             <span v-show="statisticalResult.total.count - statisticalResult.total.own>0"
-                  class="statistical-module-text"> 未招募干员{{
+                  class="statistical-module-text"> ，未招募干员{{
                 statisticalResult.total.count - statisticalResult.total.own
               }}位</span>
           </span>
@@ -210,11 +210,8 @@
             未招募的干员是：
           </div>
           <div class="not-own-operator-wrap">
-            <div class="not-own-avatar-sprite"
-                 v-for="(operator,index) in statisticalResult.total.notOwn" :key="index">
-              <div :class="getAvatarSprite(operator.charId)"></div>
-              <!--              <span class="sprite-alt" style="top:70px">{{ operator.name }}</span>-->
-            </div>
+            <sprite-avatar :name="operator.charId" size="60" style="margin: 4px"
+                           v-for="(operator,index) in statisticalResult.total.notOwn" :key="index"></sprite-avatar>
           </div>
 
           <table class="operator-statistical-table">
@@ -517,6 +514,7 @@ import {getUserInfo} from "/src/pages/survey/service/userData.js";
 import {useRouter} from "vue-router";
 
 import MyButton from '/src/components/Button.vue'
+import SpriteAvatar from "/src/components/SpriteAvatar.vue";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级

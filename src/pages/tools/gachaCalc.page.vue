@@ -14,8 +14,8 @@ import {dateDiff} from '/src/utils/dateUtil.js'
 import {ElNotification} from "element-plus";
 
 
-import PackButtonContent from "../../components/PackButtonContent.vue";
-import ActivityGachaResources from "../../components/ActivityGachaResources.vue";
+import PackButtonContent from "/src/components/PackButtonContent.vue";
+import ActivityGachaResources from "/src/components/ActivityGachaResources.vue";
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期

@@ -1,8 +1,16 @@
 .survey-operator-page {
 
-  .my-button{
-    margin: 4px;
+  .control-checkbox{
+    .my-button{
+      margin: 2px;
+    }
   }
+  .control-header{
+    .my-button{
+      margin:2px 4px;
+    }
+  }
+
 
   .operator-form {
     display: flex;
