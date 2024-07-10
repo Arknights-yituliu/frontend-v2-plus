@@ -1,3 +1,594 @@
+commit 67bc58dbf65573a51c475dfaa715958c3871029a
+Merge: e425a14f f33c4f71
+Author: Zirun-wang <84625349+Zirun-wang@users.noreply.github.com>
+Date:   Wed Jul 10 10:46:10 2024 +0800
+
+    Merge pull request #71 from FlyingBlazer/dev
+    
+    fix(干员练度调查结果):干员信息不存在时页面脚本报错
+
+commit e425a14f1daf0e1fa0bbef534e3c30dc1a64aa7d
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Jul 10 10:45:37 2024 +0800
+
+    update(干员调查):更新干员基础数据
+
+commit f33c4f71c1b46e58e2b0b6282d6439767da8e980
+Author: yuzhan <me@yuzhan.info>
+Date:   Wed Jul 10 10:25:45 2024 +0800
+
+    fix(干员练度调查结果):干员信息不存在时页面脚本报错
+
+commit a1f6c0f3f96da9aff3d697b945927ca4ded058c6
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Tue Jul 9 11:02:46 2024 +0800
+
+    fix:修正故事集源石数
+
+commit 8830566f8e851fb781d50db7ea643cdfb3b5faa1
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Tue Jul 9 10:57:31 2024 +0800
+
+    fix:修正故事集攒抽数据
+
+commit 863eae7238ec3ac4cbb510fd5b51463007a9ef4c
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Jul 5 23:58:45 2024 +0800
+
+    docs(文档):更新文档
+
+commit 0dd088d86574db223148bb574e388444916016c4
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Jul 5 23:01:02 2024 +0800
+
+    docs(文档):更新文档
+
+commit 53407347bb0044dbfbab5e39fc2255e9e9df8c28
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Jul 5 19:52:56 2024 +0800
+
+    docs(文档):更新文档
+
+commit c7899a3c24bf3d9031a09334356f088e2be07760
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Jul 5 19:12:44 2024 +0800
+
+    docs(文档):更新文档
+
+commit 7898c9b488a2a3e69026e26c8e3bc6f9bd156fec
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Jul 5 19:12:17 2024 +0800
+
+    chore(组件):替换部分按钮组件
+
+commit 309b7b9f3df1f1f5e798bf314268f468f0412bd5
+Merge: 4f3674a1 014afed7
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jul 4 19:52:59 2024 +0800
+
+    Merge remote-tracking branch 'origin/dev' into dev
+
+commit 4f3674a122776d9e715aae7316709642b00de64d
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jul 4 19:52:45 2024 +0800
+
+    css(组件):按钮样式更新
+
+commit 014afed79425b4db9800991ce0a8f4c2cfc3f6ab
+Merge: 2b630c9c b462debc
+Author: Zirun-wang <84625349+Zirun-wang@users.noreply.github.com>
+Date:   Thu Jul 4 18:27:31 2024 +0800
+
+    Merge pull request #70 from bodayw/dev
+    
+    fix(排班表生成器):修正一处技能筛选bug和一处typo
+
+commit 2b630c9c69a9ea8d9078e7fad7cf4f3b54306aa3
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jul 4 16:50:03 2024 +0800
+
+    css(组件):样式更新
+
+commit 9a015d9355a98f55a90980036d10afbaae18007c
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jul 4 16:45:29 2024 +0800
+
+    css(组件):样式更新
+
+commit 9e2bdaa3c810095d33bdf18d6f59287bfe9a8295
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jul 4 16:40:32 2024 +0800
+
+    resources(干员数据):日常更新
+
+commit f56d4b71b1109d58d5208dcc26d6ae786cf59ea5
+Merge: a0326698 b41faae3
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jul 4 16:39:09 2024 +0800
+
+    Merge remote-tracking branch 'origin/dev' into dev
+
+commit a03266981d9e5d07aa9b04e8a12d46745896e5f3
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jul 4 16:38:55 2024 +0800
+
+    docs(文档):更新文档
+
+commit b41faae387359351c2bb3ae40fa24fcb3a02ef79
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Thu Jul 4 09:21:24 2024 +0800
+
+    chore:调整半常驻礼包的位置
+
+commit b462debcbbd77c74ce388486dd0dc66c95467385
+Author: bodayw <8195684+bodayw@users.noreply.github.com>
+Date:   Thu Jul 4 03:56:44 2024 +0800
+
+    fix(排班表生成器):修正一处技能筛选bug和一处typo
+    
+    - 修正“标准化”的筛选条件（之前把 OR 写错成 AND 了）
+    - 修正“人间烟火”的英文 typo
+    - 改进几处的筛选条件，理论上会更 robust 一点
+    - 添加了若干换行，避免代码过宽
+
+commit b8a57abe52223bd0d8633f077200bf413fda7b85
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Jul 3 19:04:22 2024 +0800
+
+    docs(文档):更新文档
+
+commit 4c2d415894f9b93a5e27c0f69206dd16984bb497
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Jul 3 18:48:05 2024 +0800
+
+    refactor(重命名文件):重命名根域名所在文件的文件名
+
+commit adff4a025971237bf056eefa4ed322bbee5cd649
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Jul 3 18:47:44 2024 +0800
+
+    refactor(重命名文件):重命名根域名所在文件的文件名
+
+commit 49c0039f3434990240ea6a2c6cd9638238fcfe5f
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Jul 2 19:18:01 2024 +0800
+
+    docs(文档):更新文档
+
+commit c0ea5db0f5540290ba285e2adb4c3bfa34fa8c36
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Jul 2 19:17:43 2024 +0800
+
+    docs(文档):更新文档
+
+commit 315c4c3d0a749110cef230c40f4f4aa554761afd
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Jul 2 18:37:11 2024 +0800
+
+    update(组件):替换一些页面的按钮为新的MD风格按钮
+
+commit 2f1bb9b46d46098d000722c9ff044980805502b5
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Jul 2 18:36:44 2024 +0800
+
+    docs(文档):更新文档
+
+commit dab83aff18f526ccd8db77e14b5165950ca33057
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Jul 2 10:26:05 2024 +0800
+
+    docs(文档):更新文档
+
+commit d1aa74666d7895cc7eb7eedcd6df8c13d21b9ace
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Jul 2 10:14:17 2024 +0800
+
+    docs(文档):更新文档
+
+commit 6e4d475ab6527cdeffda29b9db20769e08c8e031
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Jul 1 20:23:35 2024 +0800
+
+    build
+
+commit 8d7a7877912a312559269f0886e406d950d6c15a
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Jul 1 19:54:22 2024 +0800
+
+    build
+
+commit 1d2dfcf6de6cac8d608d7db496b5cf4ff175ff68
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Jul 1 19:52:25 2024 +0800
+
+    feat(礼包性价比):归档礼包筛选功能
+
+commit 1f1845db0d339f9e09478f13ec8c2e2bc8c583b1
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Jul 1 19:51:14 2024 +0800
+
+    refactor(组件):修改按钮的部分属性
+
+commit e4603b216d2cce669abacaa5dd342f1c3dac6c02
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Jul 1 18:04:00 2024 +0800
+
+    update(i18n):重命名一些文件
+
+commit c4167383a82096e73a433f19754778892437c2ca
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Jul 1 18:02:52 2024 +0800
+
+    docs(文档):文档移动
+
+commit a5f426ef520831ac457373b7154b6c082881530b
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Jul 1 18:00:02 2024 +0800
+
+    update(排班生成器):替换按钮为新的MD风格按钮
+
+commit e7718c698ba2f393e5b7ed99d724ae6f7039289b
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Jul 1 17:55:58 2024 +0800
+
+    feat(组件):增加一个MD风格的按钮组件
+
+commit d470401d9184dc78415d5c79f9323514c344c32a
+Author: yamazakura <1969314158@qq.com>
+Date:   Mon Jul 1 17:55:30 2024 +0800
+
+    feat(组件):增加一个MD风格的按钮组件
+
+commit 12bff4b7d87d5dc2a27be11dcdb8cc934dc147c1
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 30 19:01:25 2024 +0800
+
+    build
+
+commit eacc7cd624b297dff9e84f4f2e5d4d6e35ae504e
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 30 18:26:15 2024 +0800
+
+    build
+
+commit cac51adcf6309ea6ac415c618e38e5ee3b8484b9
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 30 18:25:35 2024 +0800
+
+    fix(攒抽计算器):往年礼包无法选中
+
+commit 4bf68f2abd15cde169fa724ac280d460261cca82
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 30 18:11:54 2024 +0800
+
+    refactor(干员调查榜单):将干员头像替换为组件
+
+commit 75246581c06b883a0b4ea47550542d2ae3ec9413
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 30 18:11:04 2024 +0800
+
+    feat(组件):将攒抽计算器部分代码抽离为组件
+
+commit 01256f6cfd2b8ee05c5b80d9aa6cb7496029434e
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 30 18:10:42 2024 +0800
+
+    feat(攒抽计算器):新增往年礼包的氪金选项
+
+commit 93f7a065b75b48b394b9e83634a970dc19111a8b
+Merge: f6e94f3e dc5672c1
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sun Jun 30 12:37:53 2024 +0800
+
+    Merge branch 'dev' of https://github.com/Arknights-yituliu/frontend-v2-plus into dev
+
+commit f6e94f3ed15d6c65565dbcbf5aea03497e229d86
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sun Jun 30 12:37:49 2024 +0800
+
+    chore:更新排班表干员
+
+commit dc5672c15b2cef3dcd3f3be17ee4277549fbf8dd
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 30 12:07:56 2024 +0800
+
+    fix(排班生成器):无法将排班上传到服务器
+
+commit 106e5bd6472ffca0b7a2d9b05b941c62e6b62500
+Merge: 5cf08cb3 27eb4c92
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 30 11:19:27 2024 +0800
+
+    Merge remote-tracking branch 'origin/dev' into dev
+
+commit 5cf08cb3efd2305698fdb4ddd3ae0cdf6186d4db
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 30 11:19:04 2024 +0800
+
+    docs(文档):文档重写
+
+commit 27eb4c92d55ae08a5d9403a7b75b8c14726d67ba
+Author: Zirun-wang <84625349+Zirun-wang@users.noreply.github.com>
+Date:   Fri Jun 28 23:28:15 2024 +0800
+
+    更新 README.md
+    
+    更新防Gitcode补丁
+
+commit 205a63cbc25b6ab3105fc208ce380be11f3ea643
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Jun 26 17:08:04 2024 +0800
+
+    fix(干员调查):修复无法从鹰角网络通行证导入的问题
+
+commit 5adff38d23087244dc3121f49775e0be512ec84f
+Merge: 180bb6fd e91adc47
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Jun 26 17:07:03 2024 +0800
+
+    Merge branch 'dev'
+
+commit e91adc477f76fe2ed06f07ab6e9e4001a9660967
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Jun 26 17:06:46 2024 +0800
+
+    fix(干员调查):修复无法从鹰角网络通行证导入的问题
+
+commit 180bb6fd4fdd86990bdcbdcec80616474ffb4e3c
+Merge: d068a59d fbef25b7
+Author: Zirun-wang <84625349+Zirun-wang@users.noreply.github.com>
+Date:   Mon Jun 24 19:27:57 2024 +0800
+
+    Merge pull request #69 from Arknights-yituliu/dev
+    
+    fix:调整火山旅梦复刻排期
+
+commit fbef25b79ac5d470f089f5160d51162bf789a0df
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Mon Jun 24 19:20:44 2024 +0800
+
+    fix:调整火山旅梦复刻排期
+
+commit d068a59d1887027a8c27cf4ca0a346becada0c31
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 23 21:26:07 2024 +0800
+
+    fix(攒抽计算器):每日赠送一抽计算错误
+
+commit 440a2b976e04eeccdc683cb95785fe6c14d569c4
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 23 21:19:27 2024 +0800
+
+    fix(攒抽计算器):每日赠送一抽计算错误
+
+commit 125c3d7905bce080080b6db3de74e71d27e3b70e
+Merge: 5909f2c0 537244d7
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 23 17:35:38 2024 +0800
+
+    Merge remote-tracking branch 'origin/dev' into dev
+    
+    # Conflicts:
+    #       src/pages/tools/gachaCalc.page.vue
+
+commit 5909f2c06c7c87e81f16599bbb98814305e365c5
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 23 17:33:49 2024 +0800
+
+    feat(攒抽计算器):增加计算开卡池开放当天的抽数选项
+
+commit 537244d7377653401e9146b527bdde3e073c5b17
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sun Jun 23 17:23:20 2024 +0800
+
+    fix:更新日志
+
+commit d356ada0c0b14a55273797a7dd0c3a5e3b3af4dd
+Merge: 61e164ea cf010a1e
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sun Jun 23 17:00:55 2024 +0800
+
+    Merge branch 'dev' of https://github.com/Arknights-yituliu/frontend-v2-plus into dev
+
+commit 61e164eaffdd337aa38eefe548ea560908bbd441
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sun Jun 23 17:00:50 2024 +0800
+
+    feat:尝试添加计算卡池开放当天的数据
+
+commit cf010a1e468183e38354e68f80d87497603b4484
+Merge: 2e51e537 e9e89890
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 23 16:59:27 2024 +0800
+
+    Merge remote-tracking branch 'origin/main'
+
+commit 2e51e537099eea6bf2e5ace09ac89f5dcd2219b3
+Author: yamazakura <1969314158@qq.com>
+Date:   Sun Jun 23 16:59:02 2024 +0800
+
+    fix(css):将部分未正常生效的css重新分别引入
+
+commit e9e898903991f81665b56d9af5608a085e40fb8f
+Merge: 8afb0c87 ca6efa07
+Author: Zirun-wang <84625349+Zirun-wang@users.noreply.github.com>
+Date:   Sun Jun 23 13:33:51 2024 +0800
+
+    Merge pull request #68 from Arknights-yituliu/dev
+    
+    fix:攒抽排期修复空想花亭复刻
+
+commit ca6efa070fbb0d03d218c58d4204754919d97578
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sun Jun 23 13:26:59 2024 +0800
+
+    fix:攒抽排期修复空想花亭复刻
+
+commit 8afb0c878a5654cdf30597503d67311fababa977
+Merge: 2008238a 0c0642b1
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Jun 22 18:18:39 2024 +0800
+
+    Merge branch 'dev'
+
+commit 0c0642b1fc3f02c81bc9c20342349fff81699b44
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Jun 22 18:18:21 2024 +0800
+
+    fix(css):统一引入的css无法生效
+
+commit 2008238a0fbaf7b35b4ea6e584d96947b23b2ca7
+Merge: 61349cac 1062734e
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Jun 22 18:12:15 2024 +0800
+
+    Merge branch 'dev'
+
+commit 1062734e9b0aae46b87f6eafa8f7cb8ccda8a3a8
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Jun 22 18:11:59 2024 +0800
+
+    fix(css):统一引入的css无法生效
+
+commit f5434ac828cf8f539484783381919b7d8d7b6adc
+Merge: 8d227c51 f7d32662
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Jun 22 18:10:04 2024 +0800
+
+    Merge remote-tracking branch 'origin/dev' into dev
+    
+    # Conflicts:
+    #       src/pages/material/pack.vue
+
+commit 8d227c51c254e84ff5ffe1aeaef37d478c4cfb37
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Jun 22 18:08:45 2024 +0800
+
+    fix(css):统一引入的css无法生效
+
+commit f7d326628311e5829144db0aa84e4a18e567a6bc
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sat Jun 22 12:59:26 2024 +0800
+
+    fix:移除pack2
+
+commit ffb9074e3e7b8f6238737580b4896a2a47791c68
+Author: Zirun-wang <zirunwang.g@gmail.com>
+Date:   Sat Jun 22 12:36:23 2024 +0800
+
+    feat: 优化礼包筛选
+
+commit 6cf397fa3f9800bcebb36dc3a6f8407827aa2532
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Jun 22 11:14:33 2024 +0800
+
+    style(项目目录):调整了部分文件的目录
+
+commit 61349cac8e746cfecd28e0b67015325164b490fa
+Merge: 3d94974e 514c2768
+Author: yamazakura <1969314158@qq.com>
+Date:   Sat Jun 22 10:50:37 2024 +0800
+
+    Merge branch 'dev'
+
+commit 514c2768bdbf56c05aa689822f4f44ab965cb0af
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jun 20 16:44:22 2024 +0800
+
+    自动部署
+
+commit f94e0378ac686b8a06408a751e07ffbeb0691c26
+Merge: 200ccd7b 58cce11f
+Author: yamazakura <84258011+yamasakura@users.noreply.github.com>
+Date:   Fri Jun 21 16:13:51 2024 +0800
+
+    Merge pull request #66 from bodayw/dev
+    
+    fix:基建排班表技能筛选typo
+
+commit 3d94974e58c27c14b105c753a81960885da8573c
+Merge: 06ea68a3 200ccd7b
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Jun 21 16:11:47 2024 +0800
+
+    Merge branch 'dev'
+
+commit 200ccd7b3d7c3fbe78575d741d8ae4c65000559e
+Author: yamazakura <1969314158@qq.com>
+Date:   Fri Jun 21 16:11:29 2024 +0800
+
+    update(礼包性价比):更新图片链接域名
+
+commit 06ea68a3960b34516caeb039ab1b9108956def3e
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jun 20 16:44:22 2024 +0800
+
+    自动部署
+
+commit d7f693d5fae2df9e55f72d58adeca25395484385
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jun 20 16:00:40 2024 +0800
+
+    feat(图片资源):替换为单独的静态资源域名
+
+commit 4d5b0221625955392616bb822bfd75f52d171d66
+Merge: 15fbcf78 f4030aae
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jun 20 12:16:58 2024 +0800
+
+    Merge branch 'dev'
+
+commit f4030aaea8903629ee3b5b607e26260379d70a82
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jun 20 12:16:28 2024 +0800
+
+    update(路由):去除EP14专题页面
+
+commit 5cb37878f6e449bcf8bcbbeb6dc51b674ba4c485
+Author: yamazakura <1969314158@qq.com>
+Date:   Thu Jun 20 12:14:51 2024 +0800
+
+    feat(图片资源):替换为单独的静态资源域名
+
+commit 15fbcf78f40be17c8a0ea59b7c63ef135ff20d2e
+Merge: c492b871 8d13bbf4
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Jun 19 20:31:38 2024 +0800
+
+    Merge branch 'dev'
+
+commit 8d13bbf43d410a8f7cceff4bc32df410278e03b5
+Author: yamazakura <1969314158@qq.com>
+Date:   Wed Jun 19 20:29:54 2024 +0800
+
+    fix(攒抽计算器):修复大月卡选中后无法计算抽数的问题
+
+commit 58cce11f8cee9a14a60dfd176e45b09844d60479
+Author: bodayw <8195684+bodayw@users.noreply.github.com>
+Date:   Wed Jun 19 06:06:20 2024 +0800
+
+    fix:基建排班表技能筛选typo
+    
+    离谱的手滑……
+
+commit c492b8718779ac56ca154220c5efcc6c931a345a
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Jun 18 23:35:41 2024 +0800
+
+    revert(撤销):main回滚
+
+commit 79020401a3e2df8212ac929f8c7ba99da621c048
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Jun 18 23:26:55 2024 +0800
+
+    revert(撤销):dev回滚
+
+commit 9f07de0e4d63581d934bdb1975b4613a0bd34a9d
+Author: yamazakura <1969314158@qq.com>
+Date:   Tue Jun 18 23:13:24 2024 +0800
+
+    update(更新日志):更新
+
 commit c1a5022460ed1658df41bb58cea5d0d5eea4ec2d
 Author: yamazakura <1969314158@qq.com>
 Date:   Tue Jun 18 23:05:14 2024 +0800

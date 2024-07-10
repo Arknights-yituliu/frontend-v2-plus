@@ -40,56 +40,18 @@
     <div>
       <div class="donate_content">除了资助也可以通过其他方式支持一图流，例如：关注我们的信息发布号、参与一图流开发</div>
     </div>
-    <div class="mdui-typo" id="dev_join_us">
-      <div class="card-wrap" id="dev_github">
-        <a class="href-black" href="https://space.bilibili.com/688411531">
-          <div class="mdui-card dev-card">
-            <img class="dev-card-icon" src="/image/website/beta_logo_yw.webp" alt="" />
-            <div class="dev-card-text">
-              <div class="dev-card-text-title">罗德岛基建BETA</div>
-              <div class="dev-card-text-content">B站官方信息发布号</div>
-            </div>
-          </div>
-        </a>
 
-        <a class="href-black" href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">
-          <div class="mdui-card dev-card">
-            <img class="dev-card-icon" src="/image/website/qq.webp" alt="" />
-            <div class="dev-card-text">
-              <div class="dev-card-text-title">开发群</div>
-              <div class="dev-card-text-content">938710832</div>
-            </div>
-          </div>
-        </a>
+    <div class="card-module">
+      <dev-card v-for="(data,index) in developmentRelated" :key="index" :data="data">
 
-        <a class="href-black" href="https://github.com/Arknights-yituliu/">
-          <div class="mdui-card dev-card">
-            <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
-            <div class="dev-card-text">
-              <div class="dev-card-text-title">项目仓库</div>
-              <div class="dev-card-text-content">包括前后端以及其它项目</div>
-            </div>
-          </div>
-        </a>
-        <a class="href-black" href="https://github.com/Arknights-yituliu/frontend-v2-plus">
-          <div class="mdui-card dev-card">
-            <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
-            <div class="dev-card-text">
-              <div class="dev-card-text-title">前端仓库</div>
-              <div class="dev-card-text-content">数据可视化</div>
-            </div>
-          </div>
-        </a>
-        <a class="href-black" href="https://github.com/Arknights-yituliu/BackEndV3">
-          <div class="mdui-card dev-card">
-            <img class="dev-card-icon" src="/image/website/GitHub.webp" alt="" />
-            <div class="dev-card-text">
-              <div class="dev-card-text-title">后端仓库</div>
-              <div class="dev-card-text-content">数据统计，数据处理</div>
-            </div>
-          </div>
-        </a>
-      </div>
+      </dev-card>
+      <dev-card v-for="(data,index) in developmentChat" :key="index" :data="data">
+
+      </dev-card>
+      <dev-card v-for="(data,index) in informationRelease" :key="index" :data="data">
+
+      </dev-card>
+
     </div>
 
 
@@ -158,6 +120,18 @@
   position: relative;
   top: 4px;
 }
+
+.card-module {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 </style>
-<script setup lang="ts">
+<script setup>
+import developmentRelated from "/src/static/json/about/developmentRelated.json";
+import informationRelease from "/src/static/json/about/informationRelease.json";
+import developmentChat from "/src/static/json/about/developmentChat.json";
+
+import DevCard from "/src/components/DevCard.vue";
 </script>

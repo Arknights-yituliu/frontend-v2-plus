@@ -3,7 +3,7 @@
 
 import MyButton from "/src/components/Button.vue";
 import {ref} from "vue";
-import Button from "../../components/Button.vue";
+import Button from "/src/components/Button.vue";
 
 let status = ref(true)
 
