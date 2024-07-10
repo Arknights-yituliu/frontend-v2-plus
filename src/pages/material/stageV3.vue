@@ -269,11 +269,10 @@ function historyActDeviceBtnClass(device) {
 
 // 未来复刻的活动
 const reprintActivityList = [
-  {activityName: '空想花庭', startTime: '预计2024/06', itemList: {}},
-  {activityName: '火山旅梦', startTime: '预计2024/07', itemList: {}},
-  {activityName: '不义之财', startTime: '预计2024/08', itemList: {}},
-  {activityName: '崔林特尔梅之金', startTime: '预计2024/09', itemList: {}},
-  {activityName: '银心湖列车', startTime: '预计2024/10', itemList: {}},
+  {activityName: '火山旅梦', startTime: '预计2024/08', itemList: {}},
+  {activityName: '不义之财', startTime: '预计2024/09', itemList: {}},
+  {activityName: '崔林特尔梅之金', startTime: '预计2024/10', itemList: {}},
+  {activityName: '银心湖列车', startTime: '预计2024/11', itemList: {}},
   {activityName: '怀黍离', startTime: '预计2025/01', itemList: {}}
 ]
 
