@@ -19,18 +19,22 @@ let updateTimeText = ref("2023-05-01");
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
-
-    const {result,userCount,updateTime} = response.data
+    let {result,userCount,updateTime} = response.data
     for(const item of result){
-      const charId =  item.charId
-      let char_info =  character_table_simple[charId]
-      item.name = char_info.name
-      item.rarity = char_info.rarity
-      item.profession = char_info.profession
-      item.itemObtainApproach = char_info.itemObtainApproach
-      item.skill = char_info.skill
-      item.equip = char_info.equip
+      let char_info = character_table_simple[item.charId]
+      if (char_info) {
+        item.name = char_info.name
+        item.rarity = char_info.rarity
+        item.profession = char_info.profession
+        item.itemObtainApproach = char_info.itemObtainApproach
+        item.skill = char_info.skill
+        item.equip = char_info.equip
+        item.available = true
+      } else {
+        item.available = false
+      }
     }
+    result = result.filter(e => e.name)
 
     operatorsStatisticsList.value = result
     addFilterCondition('rarity', 6)
