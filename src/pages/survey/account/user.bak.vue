@@ -122,7 +122,7 @@ import "/src/assets/css/survey/survey_nav.css";
 
 
 import {onMounted, ref} from "vue";
-import {cMessage} from "/src/custom/message";
+import {cMessage} from "/src/utils/message";
 
 import surveyApi from "/src/api/userInfo";
 import {getUserInfo} from "/src/pages/survey/service/userData.js";

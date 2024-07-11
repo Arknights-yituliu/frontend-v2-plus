@@ -14,7 +14,7 @@ import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
 import {translate} from '/src/utils/i18n.js'
 import {getText} from '/src/utils/fileRead.js'
 import {debounce} from "/src/utils/debounce.js";
-import {cMessage} from '/src/custom/message.js'
+import {cMessage} from '/src/utils/message.js'
 import {popoverOnOpen, createPopover} from "/src/utils/popover.js";
 
 import MyButton from '/src/components/Button.vue'

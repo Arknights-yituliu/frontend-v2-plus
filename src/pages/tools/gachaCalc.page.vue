@@ -9,7 +9,7 @@ import * as echarts from "echarts";
 import potentialTable from '/src/static/json/tools/potentialGachaResources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/scheduleByHoneycake.json'
 import storeAPI from '/src/api/store'
-import {cMessage} from "../../custom/message.js";
+import {cMessage} from "../../utils/message.js";
 import {dateDiff} from '/src/utils/dateUtil.js'
 import {ElNotification} from "element-plus";
 

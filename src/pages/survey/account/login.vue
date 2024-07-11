@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/survey/login.v2.scss'
-import {cMessage} from "../../../custom/message.js";
+import {cMessage} from "../../../utils/message.js";
 import {useRouter} from "vue-router";
 import MyButton from '/src/components/Button.vue'
 
@@ -46,6 +46,10 @@ function toLogin() {
     }, 3000)
 
   })
+}
+
+function toRetrieve(){
+  router.push({name:"RETRIEVE"})
 }
 
 const router = useRouter()
@@ -112,10 +116,17 @@ onMounted(() => {
       </div>
 
 
-      <my-button data-color="blue" class="my-button-login" @click="toLogin">登录</my-button>
+
+        <my-button data-color="blue" class="my-button-login"
+                   @click="toLogin">
+          登录
+        </my-button>
 
 
-      <span class="login-form-content-tip-btn" v-show="'password'===inputContent.accountType">忘记密码？</span>
+
+
+      <span class="login-form-content-tip-btn" v-show="'password'===inputContent.accountType" @click="toRetrieve()">忘记密码？</span>
+
       <div class="login-form-notice">
         <p>
           因服务器被攻击，数据库部分数据无法恢复，请尽量重新注册账号
