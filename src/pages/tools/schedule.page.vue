@@ -119,7 +119,7 @@ function getRoomOperators(room, index) {
 
 
 let scheduleTypePopupVisible = ref(false)
-let scheduleTypePopupStyle = 'width:500px;padding:24px'
+let scheduleTypePopupStyle = 'width:600px;padding:12px'
 
 /**
  * 选择基建类型
@@ -921,8 +921,8 @@ onMounted(() => {
         <div class="schedule-set-bar">
           <span>{{ translate('schedule', 'schedule.ShiftNumber') }}</span>
           <div>
-            <my-button data-color='blue' :active="num === scheduleTypeV2.planTimes" v-for="(num, index) in 6"
-                       :key="index"
+            <my-button data-color='blue' :active="num === scheduleTypeV2.planTimes" style="min-width: 40px"
+                       v-for="(num, index) in 6" :key="index"
                        @click="choosePlanTimes(num)">
               {{ num }}
             </my-button>
