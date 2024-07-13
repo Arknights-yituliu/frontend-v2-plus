@@ -31,7 +31,7 @@ onMounted(()=>{
 
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 .notice-board-page {
 
