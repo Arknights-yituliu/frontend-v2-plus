@@ -1,14 +1,16 @@
 <script setup>
 
-const props = defineProps(["modelValue", 'name', 'size','roundedCorner']);
+const props = defineProps(["modelValue", 'name', 'size', 'roundedCorner']);
+
+const size = props.size ? props.size : 40;
 
 const wrapStyle = `position: relative;
-width: ${props.size}px;
-height: ${props.size}px;
+width: ${size}px;
+height: ${size}px;
 overflow: hidden;`
 
-const spriteStyle = `position: absolute;transform: scale(${props.size / 180});
-top: ${(props.size-180)/2}px;left: ${(props.size-180)/2}px;`
+const spriteStyle = `position: absolute;transform: scale(${size / 180});
+top: ${(size - 180) / 2}px;left: ${(size - 180) / 2}px;`
 
 </script>
 
