@@ -42,7 +42,6 @@ onMounted(()=>{
   padding: 2px;
   font-size: 14px;
   font-weight: bold;
-  width: 100%;
   //background-color: var(--c-background-color);
   //box-shadow: 1px 1px 4px 1px var(--c-box-shadow-color), -1px -1px 4px 1px var(--c-box-shadow-color);
   z-index: 4000;
