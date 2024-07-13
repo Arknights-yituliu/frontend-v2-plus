@@ -9,7 +9,7 @@ onMounted(()=>{
   if (currentDomain.indexOf('dev') > -1) {
     devVer.value = true
   }
-  devVer.value = true
+
 })
 
 </script>
