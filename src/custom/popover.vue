@@ -39,7 +39,7 @@ function openOrClose() {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 .popover-wrap {
   position: relative;

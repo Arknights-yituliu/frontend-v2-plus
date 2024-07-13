@@ -147,4 +147,7 @@ watch(()=>route.fullPath,(newVal,oldValue)=>{
 .checkbox-btn {
   border: none;
 }
+.survey-login-page a {
+  text-decoration: none;
+}
 </style>
