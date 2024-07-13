@@ -37,11 +37,9 @@ let filterCondition = ref({
  * @param condition
  * @param key 选项的分类名
  */
-function filterOperatorByTag(condition, key) {
-
+const  filterOperatorByTag = debounce((condition, key)=> {
   //清空干员列表
   filterOperatorList.value = []
-
   const btnKey = `${key}+${condition.label}`
   //判断按钮是否已经选中，已经选中则清空暂存的筛选函数和按钮key，撤销选中状态
   if (selectBtnKey.value === btnKey) {
@@ -53,10 +51,9 @@ function filterOperatorByTag(condition, key) {
     filterCondition.value = condition;
   }
 
-
   //筛选干员
   commonFilterOperator()
-}
+},500)
 
 
 //干员搜索输入框

@@ -9,13 +9,13 @@ import * as echarts from "echarts";
 import potentialTable from '/src/static/json/tools/potentialGachaResources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/scheduleByHoneycake.json'
 import storeAPI from '/src/api/store'
-import {cMessage} from "../../custom/message.js";
+import {cMessage} from "../../utils/message.js";
 import {dateDiff} from '/src/utils/dateUtil.js'
 import {ElNotification} from "element-plus";
 
 
-import PackButtonContent from "../../components/PackButtonContent.vue";
-import ActivityGachaResources from "../../components/ActivityGachaResources.vue";
+import PackButtonContent from "/src/components/PackButtonContent.vue";
+import ActivityGachaResources from "/src/components/ActivityGachaResources.vue";
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
@@ -1210,7 +1210,7 @@ function handleResize() {
 
             <span class="tip" style="text-align: center">日期为卡池结束日期，夏活日期待定，仅参考</span>
             <div class="switch-wrap">
-              <span>计算开卡池开放当天的抽数</span>
+              <span>只计算到卡池开放当天</span>
               <el-switch v-model="calPoolStart" @click="gachaResourcesCalculation"></el-switch>
             </div>
             <div class="result-content">

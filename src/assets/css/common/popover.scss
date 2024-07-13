@@ -1,0 +1,24 @@
+.my-popover{
+  width: 200px;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 8px 1px var(--c-box-shadow-color),-1px -1px 8px 1px var(--c-box-shadow-color);
+  position: absolute;
+  background-color: var(--c-background-color);
+  padding: 8px;
+  display: none;
+}
+
+.my-popover-title{
+
+}
+
+.my-popover-arrow{
+  width: 10px;
+  height: 10px;
+  display: block;
+  position: absolute;
+  background-color: var(--c-background-color);
+  left: 90px;
+  bottom: -5px;
+  transform: rotate(45deg);
+}

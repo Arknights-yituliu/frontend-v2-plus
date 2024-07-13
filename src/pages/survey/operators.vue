@@ -594,7 +594,7 @@
 </template>
 
 <script setup>
-import {cMessage} from "/src/custom/message.js";
+import {cMessage} from "/src/utils/message.js";
 import {filterByCharacterProperty, professionDict, yearDict} from "./service/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
 import userAPI from "/src/api/userInfo";

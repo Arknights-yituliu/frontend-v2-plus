@@ -1,12 +1,12 @@
 <script setup>
-import "/src/assets/css/survey/rank.css";
+import "/src/assets/css/survey/rank.scss";
 import { filterByCharacterProperty, professionDict} from "./service/common";
 import {onMounted, ref} from "vue";
 import character_table_simple from "/src/static/json/survey/character_table_simple.json";
-
+import MyButton from '/src/components/Button.vue'
+import SpriteAvatar from "/src/components/SpriteAvatar.vue";
 
 import surveyApi from "/src/api/survey";
-import SpriteAvatar from "/src/components/SpriteAvatar.vue";
 
 let rarityDict = [1, 2, 3, 4, 5, 6];
 
@@ -19,18 +19,22 @@ let updateTimeText = ref("2023-05-01");
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
-
-    const {result,userCount,updateTime} = response.data
+    let {result,userCount,updateTime} = response.data
     for(const item of result){
-      const charId =  item.charId
-      let char_info =  character_table_simple[charId]
-      item.name = char_info.name
-      item.rarity = char_info.rarity
-      item.profession = char_info.profession
-      item.itemObtainApproach = char_info.itemObtainApproach
-      item.skill = char_info.skill
-      item.equip = char_info.equip
+      let char_info = character_table_simple[item.charId]
+      if (char_info) {
+        item.name = char_info.name
+        item.rarity = char_info.rarity
+        item.profession = char_info.profession
+        item.itemObtainApproach = char_info.itemObtainApproach
+        item.skill = char_info.skill
+        item.equip = char_info.equip
+        item.available = true
+      } else {
+        item.available = false
+      }
     }
+    result = result.filter(e => e.name)
 
     operatorsStatisticsList.value = result
     addFilterCondition('rarity', 6)
@@ -71,9 +75,9 @@ function getSkillName(skill, index) {
 //判断按钮是否选择赋予样式
 function selectedBtn(attribute, rule) {
   if (filter_condition.value[attribute].indexOf(rule) > -1) {
-    return "btn btn-blue";
+    return true;
   }
-  return "btn";
+  return false;
 }
 
 let collapse_filter_visible = ref(false)
@@ -206,10 +210,9 @@ onMounted(() => {
   <div class="survey_rank_page">
     <!-- 常驻条 -->
     <div class="control-header">
-      <!-- <button class="mdui-btn survey_button">说明</button> -->
-      <button class="btn btn-blue"
-              @click="collapseFilter()">筛选
-      </button>
+      <my-button data-color="blue"  @click="collapseFilter()">
+        筛选
+      </my-button>
       <div id="updateTime">
         调查人数{{ userCountText }}<br/>
         更新时间{{ updateTimeText }}
@@ -223,41 +226,46 @@ onMounted(() => {
         <div class="control-line">
           <div class="control-line-label">职业</div>
           <div class="control-checkbox">
-            <div
-                :class="selectedBtn('profession', profession.value)"
-                v-for="(profession,index) in professionDict"
-                :key="index"
-                @click="addFilterCondition('profession', profession.value)"
-            >
+            <my-button data-color="blue"
+                       v-for="(profession,index) in professionDict" :key="index"
+                       :active="selectedBtn('profession', profession.value)"
+                       @click="addFilterCondition('profession', profession.value)">
               {{ profession.label }}
-            </div>
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <div class="control-line-label">稀有度</div>
           <div class="control-checkbox">
-            <div :class="selectedBtn('rarity', rarity)"
-                 v-for="(rarity,index) in rarityDict" :key="index"
-                 @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
-            </div>
+            <my-button data-color="orange"
+                       v-for="(rarity,index) in rarityDict" :key="index"
+                       :active="selectedBtn('rarity', rarity)"
+                       @click="addFilterCondition('rarity', rarity)">
+              {{ rarity }}★
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <div class="control-line-label">其他</div>
           <div class="control-checkbox">
-            <!-- <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div> -->
-            <!-- <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div> -->
-            <div :class="selectedBtn('equip', true)" @click="addFilterCondition('equip', true)">模组已实装</div>
-            <div :class="selectedBtn('equip', false)" @click="addFilterCondition('equip', false)">模组未实装</div>
-            <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
-                 @click="addFilterCondition('itemObtainApproach', '赠送干员')">
+            <my-button data-color="green" :active="selectedBtn('equip', true)"
+                       @click="addFilterCondition('equip', true)">
+              模组已实装
+            </my-button>
+            <my-button data-color="green" :active="selectedBtn('equip', false)"
+                       @click="addFilterCondition('equip', false)">
+              模组未实装
+            </my-button>
+            <my-button data-color="green" :active="selectedBtn('itemObtainApproach', '赠送干员')"
+                       @click="addFilterCondition('itemObtainApproach', '赠送干员')">
               赠送干员
-            </div>
-            <div :class="selectedBtn('itemObtainApproach', '限定干员')"
-                 @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
-            </div>
+            </my-button>
+            <my-button data-color="green" :active="selectedBtn('itemObtainApproach', '限定干员')"
+                       @click="addFilterCondition('itemObtainApproach', '限定干员')">
+              赠送干员
+            </my-button>
           </div>
         </div>
 

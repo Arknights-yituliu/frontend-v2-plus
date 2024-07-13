@@ -2,8 +2,10 @@
 import {onMounted, ref} from "vue";
 import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/survey/login.v2.scss'
-import {cMessage} from "../../../custom/message.js";
+import {cMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
+
+import MyButton from '/src/components/Button.vue'
 
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
 const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'
@@ -72,8 +74,9 @@ function checkPassword() {
 let recoveryProgress = ref('left:0px')
 
 function setRecoveryProgress(step){
-  const width = - document.getElementsByClassName("retrieve-form-scroll-item")[0].getBoundingClientRect().width
+  const width = - document.getElementById("retrieve-form-scroll-item").offsetWidth
   recoveryProgress.value = `left:${step * width}px`
+  console.log(recoveryProgress.value)
 }
 
 function toRetrieveAuthentication(step) {
@@ -106,25 +109,17 @@ onMounted(() => {
   <div class="login-page">
     <div class="login-form">
       <div class="checkbox login-checkbox">
-        <div class="checkbox-option">
-          <button class="checkbox-btn" :style="optionBtnColor('email')"
-                  @click="inputContent.accountType='email'">邮件找回
-          </button>
-          <div :class="optionLineClass('email')"></div>
-        </div>
-        <!--        <div class="checkbox-option">-->
-        <!--          <button class="checkbox-btn" :style="optionBtnColor('skland')"-->
-        <!--                  @click="inputContent.accountType='skland'">森空岛找回-->
-        <!--          </button>-->
-        <!--          <div :class="optionLineClass('skland')"></div>-->
-        <!--        </div>-->
-        <div class="checkbox-option">
-          <button class="checkbox-btn" :style="optionBtnColor('hgToken')"
-                  @click="inputContent.accountType='hgToken'">通行证找回
-          </button>
-          <div :class="optionLineClass('hgToken')"></div>
-        </div>
+        <c-checkbox-option :value="inputContent.accountType" label="email"
+                           @click="inputContent.accountType='email'">
+          邮件找回
+        </c-checkbox-option>
+        <c-checkbox-option :value="inputContent.accountType" label="hgToken"
+                           @click="inputContent.accountType='hgToken'">
+          通行证找回
+        </c-checkbox-option>
       </div>
+
+      <div class="retrieve-form-scroll-item" id="retrieve-form-scroll-item" style="height: 0"></div>
 
       <div class="retrieve-form-scroll-wrap">
         <div class="retrieve-form-scroll" v-show="'email'===inputContent.accountType"
@@ -143,10 +138,14 @@ onMounted(() => {
                     v-show="inputTipDisplay(inputContent.verificationCode)">请输入验证码</span>
               <button class="login-form-btn-send" @click="sendVerificationCode">发送验证码</button>
             </div>
+           <div class="">
 
-            <button class="btn btn-blue" style="display: block;width: 200px;margin:0 auto"
-                    @click="toRetrieveAuthentication(1)">找回账号
-            </button>
+           </div>
+            <my-button data-color="blue" class="my-button-login"
+                       @click="toRetrieveAuthentication(1)">
+              找回账号
+            </my-button>
+
           </div>
 
           <div class="retrieve-form-scroll-item" v-show="'email'===inputContent.accountType">
@@ -172,9 +171,10 @@ onMounted(() => {
               </span>
             </div>
 
-            <button class="btn btn-blue login-btn"
-                    @click="toResetPassword(2)">修改密码
-            </button>
+            <my-button data-color="blue" class="my-button-login"
+                       @click="toResetPassword(2)">
+              找回账号
+            </my-button>
           </div>
 
           <div class="retrieve-form-scroll-item" v-show="'email'===inputContent.accountType">
@@ -188,13 +188,14 @@ onMounted(() => {
              :style="recoveryProgress">
           <div class="retrieve-form-scroll-item">
             <div style="margin: 10px auto;text-align: center">登录明日方舟官网</div>
-            <button class="btn btn-blue login-btn"
-                    @click="openLinkOnNewPage(HYPERGRYPH_LINK)">点击前往官网
-            </button>
-
-            <button class="btn btn-blue login-btn"
-                    @click="setRecoveryProgress(1)">已登录官网，前往下一步
-            </button>
+            <my-button data-color="blue" class="my-button-login"
+                       @click="openLinkOnNewPage(HYPERGRYPH_LINK)">
+              点击前往官网
+            </my-button>
+            <my-button data-color="blue" class="my-button-login"
+                       @click="setRecoveryProgress(1)">
+              已登录官网，前往下一步
+            </my-button>
 
           </div>
 
@@ -202,15 +203,14 @@ onMounted(() => {
             <img alt="" src="/image/skland/hgAPI.jpg" style="width: 100%;">
             <p>点击对应的服务器链接，将会返回如上图所示的一段数据，将其全部复制</p>
 
-              <button class="btn btn-blue login-btn-line" @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
-              </button>
-              <button class="btn btn-red login-btn-line" @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服
-              </button>
+            <my-button data-color="blue"  @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
+            </my-button>
+            <my-button data-color="red" @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服
+            </my-button>
 
-
-            <button class="btn btn-blue login-btn"
-                    @click="recoveryProgress='left:-800px'">我已复刻，前往下一步
-            </button>
+            <my-button data-color="blue" class="my-button-login" @click="recoveryProgress='left:-800px'">
+              我已复刻，前往下一步
+            </my-button>
 
           </div>
 
@@ -222,9 +222,10 @@ onMounted(() => {
                     v-show="inputTipDisplay(inputContent.hgToken)">请输入token</span>
             </div>
 
-            <button class="btn btn-blue" style="display: block;width: 200px;margin:0 auto"
-                    @click="toRetrieveAuthentication(3)">找回账号
-            </button>
+            <my-button data-color="blue" class="my-button-login" @click="toRetrieveAuthentication(3)">
+              找回账号
+            </my-button>
+
           </div>
 
           <div class="retrieve-form-scroll-item" >
@@ -250,9 +251,9 @@ onMounted(() => {
               </span>
             </div>
 
-            <button class="btn btn-blue" style="display: block;width: 200px;margin:0 auto"
-                    @click="toResetPassword(4)">修改密码
-            </button>
+            <my-button data-color="blue" class="my-button-login" @click="toResetPassword(4)">
+              修改密码
+            </my-button>
           </div>
 
           <div class="retrieve-form-scroll-item" >

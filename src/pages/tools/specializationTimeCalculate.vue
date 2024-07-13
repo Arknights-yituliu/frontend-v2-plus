@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from "vue";
-import HalfOperatorCalculate from "../../components/HalfOperatorCalculate.vue";
+import HalfOperatorCalculate from "/src/components/HalfOperatorCalculate.vue";
 
 let collapseVisible = ref(['HalfOperatorCalculate'])
 

@@ -2,6 +2,13 @@
   padding: 1px;
   min-height: 95vh;
 
+   .my-button-login{
+     width: fit-content;
+     margin:8px auto;
+     display: block;
+
+   }
+
   .login-form {
     width: 500px;
     height: 100%;
@@ -84,6 +91,7 @@
   }
 
   .login-form-content-tip-btn {
+    margin-top: 20px;
     display: block;
     width: 95%;
     text-align: right;

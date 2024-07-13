@@ -3,7 +3,7 @@ import {ref} from "vue";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
 import SklandAPI from '/src/pages/survey/service/skland.js'
 import {getUserInfo} from "/src/pages/survey/service/userData.js";
-import {cMessage} from "/src/custom/message.js";
+import {cMessage} from "/src/utils/message.js";
 import sklandApi from "../service/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";
 import surveyAPI from '/src/api/survey.js'

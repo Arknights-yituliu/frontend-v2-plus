@@ -1,0 +1,23 @@
+[
+  {
+    "link": "https://github.com/Arknights-yituliu",
+    "avatar": "/image/website/GitHub.webp",
+    "title": "项目仓库",
+    "description": "包括前后端以及其它项目",
+    "tags": []
+  },
+  {
+    "link": "https://github.com/Arknights-yituliu/frontend-v2-plus",
+    "avatar": "/image/website/GitHub.webp",
+    "title": "前端仓库",
+    "description": "数据可视化",
+    "tags": []
+  },
+  {
+    "link": "https://github.com/Arknights-yituliu/BackEndV3",
+    "avatar": "/image/website/GitHub.webp",
+    "title": "后端仓库",
+    "description": "数据统计，数据处理",
+    "tags": []
+  }
+]

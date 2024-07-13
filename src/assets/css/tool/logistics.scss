@@ -18,6 +18,10 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+
+        .my-button{
+            margin: 2px;
+        }
     }
 
     .checkbox-button-tip {

@@ -2,9 +2,9 @@
 import {onMounted, ref} from "vue";
 import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/survey/login.v2.scss'
-import {cMessage} from "../../../custom/message.js";
+import {cMessage} from "../../../utils/message.js";
 import {useRouter} from "vue-router";
-
+import MyButton from '/src/components/Button.vue'
 
 function optionLineClass(type) {
   if (type === inputContent.value.accountType) {
@@ -21,7 +21,7 @@ let inputContent = ref({
   email: '',
   verificationCode: '',
   hgToken: '',
-  accountType:'',
+  accountType: '',
 })
 
 function optionBtnColor(type) {
@@ -36,26 +36,30 @@ function inputTipDisplay(inputValue) {
   return !inputValue;
 }
 
-function toLogin(){
+function toLogin() {
 
-   userAPI.loginV3(inputContent.value).then(response=>{
-     localStorage.setItem("USER_TOKEN", response.data.token.toString());
-     cMessage('登录成功，即将转跳到个人信息页面')
-     setTimeout(() => {
-       router.push({name:"AccountHome"})
-     }, 3000)
+  userAPI.loginV3(inputContent.value).then(response => {
+    localStorage.setItem("USER_TOKEN", response.data.token.toString());
+    cMessage('登录成功，即将转跳到个人信息页面')
+    setTimeout(() => {
+      router.push({name: "AccountHome"})
+    }, 3000)
 
-   })
+  })
+}
+
+function toRetrieve(){
+  router.push({name:"RETRIEVE"})
 }
 
 const router = useRouter()
 
-function sendVerificationCode(){
+function sendVerificationCode() {
   const data = {
-    mailUsage:'login',
-    email:inputContent.value.email
+    mailUsage: 'login',
+    email: inputContent.value.email
   }
-  userAPI.sendVerificationCodeV2(data).then(response=>{
+  userAPI.sendVerificationCodeV2(data).then(response => {
     cMessage('验证码发送成功')
   })
 }
@@ -111,9 +115,18 @@ onMounted(() => {
         </div>
       </div>
 
-      <button class="btn btn-blue" style="display: block;width: 200px;margin:0 auto"
-      @click="toLogin">登录</button>
-      <span class="login-form-content-tip-btn" v-show="'password'===inputContent.accountType">忘记密码？</span>
+
+
+        <my-button data-color="blue" class="my-button-login"
+                   @click="toLogin">
+          登录
+        </my-button>
+
+
+
+
+      <span class="login-form-content-tip-btn" v-show="'password'===inputContent.accountType" @click="toRetrieve()">忘记密码？</span>
+
       <div class="login-form-notice">
         <p>
           因服务器被攻击，数据库部分数据无法恢复，请尽量重新注册账号
@@ -135,5 +148,6 @@ onMounted(() => {
 </template>
 
 <style>
+
 
 </style>
