@@ -264,6 +264,18 @@ const routes = [
         component: () => import('/src/pages/video-material/sssl2.vue')
     },
     {
+        path: '/material/sssl3',
+        text: '收益速览做图用',
+        display: false,
+        component: () => import('/src/pages/video-material/pack.page.vue')
+    },
+    {
+        path: '/test/sandbox',
+        text: '收益速览做图用',
+        display: false,
+        component: () => import('/src/pages/sandbox/sb.page.vue')
+    },
+    {
         path: '/:catchAll(.*)',
         display: false,
         component: Error404
