@@ -796,7 +796,7 @@ onMounted(() => {
             {{ formatNumber(scope.row.knockRating * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="期望理智" sortable>
+        <el-table-column  prop="apExpect" label="期望理智" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.apExpect, 1) }}
           </template>
