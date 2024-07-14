@@ -3,8 +3,8 @@ import { onMounted, ref, computed } from "vue";
 import skillJSON from "/src/static/json/survey/operator_item_cost_table.json";
 import characterJSON from "/src/static/json/survey/character_table_simple.json"
 import professionDictJSON from "/src/static/json/survey/profession_dict.json";
-import materialAPI from "../../api/material.js";  // 职业字典
-import surveyAPI from "../../api/survey.js";  // 干员练度调查结果
+import materialAPI from "/src/api/material.js";  // 职业字典
+import surveyAPI from "/src/api/operator-data.js";  // 干员练度调查结果
 
 const characterRarityEliteCostMap = new Map([
   [3, { elite1: 10000 }],

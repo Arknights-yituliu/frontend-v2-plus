@@ -53,6 +53,19 @@ export default {
         })
     },
 
+    /**
+     * 找回用户填写的干员数据
+     * @param data
+     * @returns {*}
+     */
+    getSurveyOperatorData(data) {
+        return request({
+            url: `${api_name}/operator/table`,
+            method: "post",
+            data:data
+        })
+    },
+
     uploadQuestionnaireInfo(data){
         return request({
             url:`${api_name}/questionnaire/upload`,

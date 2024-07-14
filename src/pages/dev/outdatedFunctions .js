@@ -1,5 +1,5 @@
 import {ref} from "vue";
-import surveyOperatorApi from "../../api/survey.js";
+import surveyOperatorApi from "/src/api/operator-data.js";
 
 let player_uid = ref('')  //玩家uid
 /**

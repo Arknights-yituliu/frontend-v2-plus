@@ -3,8 +3,8 @@ import {professionDict} from '/src/pages/survey/service/common.js'
 import characterTable from '/src/static/json/survey/character_table_simple.json'
 import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
-import {cMessage} from "../../utils/message.js";
-import surveyApi from '/src/api/survey.js'
+import {cMessage} from "/src/utils/message.js";
+import surveyApi from '/src/api/operator-data.js'
 import character_table_simple from "../../static/json/survey/character_table_simple.json";
 
 let operatorGroupByProfession = new Map()

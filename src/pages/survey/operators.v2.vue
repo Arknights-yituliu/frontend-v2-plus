@@ -500,7 +500,7 @@ import {cMessage} from "/src/utils/message.js";
 import {filterByCharacterProperty, professionDict, yearDict} from "./service/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
 import userAPI from "/src/api/userInfo";
-import surveyAPI from "/src/api/survey.js"
+import operatorDataAPI from "/src/api/operator-data.js"
 import sklandApi from '/src/pages/survey/service/skland'
 import {onMounted, ref} from "vue";
 import operatorRecommend from "/src/pages/survey/service/operatorRecommend";
@@ -575,7 +575,7 @@ function getOperatorData() {
   const data = {token: userData.value.token}
 
   //根据一图流的token查询用户填写的干员数据
-  userAPI.getSurveyOperatorData(data).then((response) => {
+  operatorDataAPI.getSurveyOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
     let obj = {}
     operatorTable.value = characterTable
@@ -673,7 +673,7 @@ function operatorDataReset() {
   let data = {
     token: userData.value.token,
   }
-  surveyAPI.resetOperatorData(data).then(response => {
+  operatorDataAPI.resetOperatorData(data).then(response => {
     cMessage(response.data)
   })
 }

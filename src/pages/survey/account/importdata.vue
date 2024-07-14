@@ -6,7 +6,7 @@ import {getUserInfo} from "/src/pages/survey/service/userData.js";
 import {cMessage} from "/src/utils/message.js";
 import sklandApi from "../service/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";
-import surveyAPI from '/src/api/survey.js'
+import surveyAPI from '/src/api/operator-data.js'
 import {useRouter} from "vue-router";
 
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'

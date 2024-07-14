@@ -2,9 +2,9 @@
 import ITEM_COST_TABLE from '/src/static/json/survey/operator_item_cost_table.json'
 import OPERATOR_TABLE from '/src/static/json/survey/character_list.json'
 import materialAPI from '/src/api/material.js'
-import operatorAPI from '/src/api/survey.js'
+import operatorAPI from '/src/api/operator-data.js'
 import {onMounted, ref} from "vue";
-import {timeFormat} from "../../utils/dateUtil.js";
+import {timeFormat} from "/src/utils/dateUtil.js";
 import SpriteAvatar from "../../components/SpriteAvatar.vue";
 
 const operatorMap = new Map()
