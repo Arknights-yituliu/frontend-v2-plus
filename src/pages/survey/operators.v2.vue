@@ -575,7 +575,7 @@ function getOperatorData() {
   const data = {token: userData.value.token}
 
   //根据一图流的token查询用户填写的干员数据
-  operatorDataAPI.getSurveyOperatorData(data).then((response) => {
+  operatorDataAPI.getOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
     let obj = {}
     operatorTable.value = characterTable

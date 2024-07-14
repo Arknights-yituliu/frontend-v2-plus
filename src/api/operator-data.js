@@ -58,7 +58,7 @@ export default {
      * @param data
      * @returns {*}
      */
-    getSurveyOperatorData(data) {
+    getOperatorData(data) {
         return request({
             url: `${api_name}/operator/table`,
             method: "post",

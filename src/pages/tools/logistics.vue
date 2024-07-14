@@ -8,7 +8,6 @@ import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce";
 import {translate} from "/src/utils/i18n";
 import MyButton from '/src/components/Button.vue'
-import operatorDataAPI from '/src/api/operator-data.js'
 
 let buildingTable = {}
 for (const operator of building_table) {
@@ -181,10 +180,7 @@ function getAvatar(id) {
   return `bg-${id}`
 }
 
-function getOperatorDataByAccount(){
-  operatorDataAPI.
 
-}
 
 onMounted(() => {
   searchOperatorDebounce()

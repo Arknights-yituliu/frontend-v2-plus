@@ -10,15 +10,31 @@ import schedule_menu from '/src/static/json/build/schedule_menu.json'
 import building_table from '/src/static/json/build/building_table.json'
 
 import buildingApi from '/src/api/building.js'
+import operatorDataAPI from '/src/api/operator-data.js'
 import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
 import {translate} from '/src/utils/i18n.js'
 import {getText} from '/src/utils/fileRead.js'
 import {debounce} from "/src/utils/debounce.js";
 import {cMessage} from '/src/utils/message.js'
 import {popoverOnOpen, createPopover} from "/src/utils/popover.js";
+import userAPI from "/src/api/user.js";
 
 import MyButton from '/src/components/Button.vue'
 
+let operatorOwnMap = new Map()
+
+async function getOperatorDataByAccount() {
+
+  const userInfo = await userAPI.getUserInfo()
+   const data = {
+    token:userInfo.token
+   }
+  operatorDataAPI.getOperatorData(data).then(response=>{
+    for(const operator of response.data){
+      operatorOwnMap.set(operator.charId,operator.own)
+    }
+  })
+}
 
 let plansTemplate = ref('')
 plansTemplate.value = schedule_template_json
@@ -251,12 +267,12 @@ function chooseRoom(roomType, index) {
         .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
   }
 
-  popoverOnOpen(`${roomType}#${index}`,'room-set')
+  popoverOnOpen(`${roomType}#${index}`, 'room-set')
 }
 
 let selectBtnKey = ref({})
 let filterOperatorList = ref({})
-
+let filterNotOwnOperator = ref(false)
 
 function filterBtnStatus(key, label) {
   return selectBtnKey.value === `${key}+${label}`
@@ -272,9 +288,9 @@ let filterCondition = ref({
  * @param condition
  * @param key 选项的分类名
  */
-const filterOperatorByTag = debounce((condition, key)=>{
+const filterOperatorByTag = debounce((condition, key) => {
   //清空干员列表
-  filterOperatorList.value = {}
+
   const btnKey = `${key}+${condition.label}`
   //判断按钮是否已经选中，已经选中则清空暂存的筛选函数和按钮key，撤销选中状态
   if (selectBtnKey.value === btnKey) {
@@ -287,7 +303,7 @@ const filterOperatorByTag = debounce((condition, key)=>{
   }
   //筛选干员
   commonFilterOperator()
-},500)
+}, 500)
 
 
 //干员搜索输入框输入内容
@@ -297,8 +313,7 @@ let searchInputText = ref('')
  * 根据输入的名称和技能描述搜索干员
  */
 const searchOperatorDebounce = debounce(() => {
-  //清空干员列表
-  filterOperatorList.value = {}
+
   //筛选干员
   commonFilterOperator()
 }, 500)
@@ -307,6 +322,8 @@ const searchOperatorDebounce = debounce(() => {
  * 通用的筛选干员逻辑
  */
 function commonFilterOperator() {
+  //清空干员列表
+  filterOperatorList.value = {}
   for (const operator of building_table) {
     // 当按钮key有值时通过暂存的筛选函数进行筛选
     if (selectBtnKey.value && !filterCondition.value.func(operator)) {
@@ -321,6 +338,14 @@ function commonFilterOperator() {
     if (!selectBtnKey.value && !searchInputText.value) {
       continue
     }
+
+    if(filterNotOwnOperator.value){
+      if(!operatorOwnMap.get(operator.charId)){
+        continue
+      }
+    }
+
+    console.log(operator.charId)
 
     if (filterOperatorList.value[operator.charId]) {
       operator.description = filterOperatorList.value[operator.charId].description + '<br><br>' + operator.description
@@ -344,6 +369,11 @@ function operatorHasKeyword(operator) {
 
 const roomPopupStyle = "width:550px;"
 
+
+const filterOperatorByOwn = debounce( ()=>{
+  filterNotOwnOperator.value = !filterNotOwnOperator.value
+  commonFilterOperator()
+},200)
 
 /**
  * 选择该房间入驻干员
@@ -824,7 +854,8 @@ function setPosition() {
 
 onMounted(() => {
   filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], 'room')
-  createPopover('room-set',`auto`)
+  createPopover('room-set', `auto`)
+  getOperatorDataByAccount()
 })
 
 </script>
@@ -1082,9 +1113,9 @@ onMounted(() => {
             </i>
           </div>
           <div class="schedule-set-bar-short">
-          <span class="room-set-description">{{ translate('schedule', 'schedule.SkipRoom') }}</span>
-          <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
-          </c-switch>
+            <span class="room-set-description">{{ translate('schedule', 'schedule.SkipRoom') }}</span>
+            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
+            </c-switch>
             <span class="room-set-description">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
             <div class="product-image-wrap" @click="setProduct(product.value)"
                  v-for="(product, index) in productTable[selectedRoomType]" :key="index">
@@ -1106,7 +1137,7 @@ onMounted(() => {
             <div class="copy-btn-wrap">
             </div>
             <!--    贸易站-->
-            <div class="room-template trading"  :id="`trading#${index}`"
+            <div class="room-template trading" :id="`trading#${index}`"
                  :class="roomSelectedClass('trading', index)"
                  v-for="(num, index) in scheduleTypeV2.trading" :key="index"
                  @click="chooseRoom('trading', index)">
@@ -1127,7 +1158,7 @@ onMounted(() => {
             <div class="room-template manufacture" :id="`manufacture#${index}`"
                  :class="roomSelectedClass('manufacture', index)"
                  v-for="(num, index) in scheduleTypeV2.manufacture" :key="index"
-                 @click="chooseRoom('manufacture', index)" >
+                 @click="chooseRoom('manufacture', index)">
               <div class="room-name">
                 <span>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</span>
                 <div :class="getRoomProduct('manufacture', index)"></div>
@@ -1154,7 +1185,7 @@ onMounted(() => {
                  :class="roomSelectedClass('power', index)"
                  v-for="(num, index) in scheduleTypeV2.power" :key="index"
                  @click="chooseRoom('power', index)"
-                 >
+            >
               <div class="room-name">{{ translate('schedule', 'schedule.PowerPlant') }}#{{ num }}</div>
               <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('power', index)"
                    :key="index">
@@ -1180,7 +1211,7 @@ onMounted(() => {
             <div class="room-template control" :id="`control#0`"
                  :class="roomSelectedClass('control', 0)"
                  @click="chooseRoom('control', 0)"
-                 >
+            >
               <div class="room-name">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
               <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('control', 0)"
                    :key="index">
@@ -1191,7 +1222,7 @@ onMounted(() => {
             <div class="room-template dormitory" :id="`dormitory#${index}`"
                  :class="roomSelectedClass('dormitory', index)"
                  v-for="(num, index) in scheduleTypeV2.dormitory" :key="index"
-                 @click="chooseRoom('dormitory', index)" >
+                 @click="chooseRoom('dormitory', index)">
               <div class="room-name">{{ translate('schedule', 'schedule.Dormitory') }}#{{ num }}</div>
               <div class="room-avatar-sprite-wrap"
                    v-for="(charName, index) in getRoomOperators('dormitory', index)" :key="index">
@@ -1206,7 +1237,7 @@ onMounted(() => {
             <div class="room-template meeting" :id="`meeting#0`"
                  :class="roomSelectedClass('meeting', 0)"
                  @click="chooseRoom('meeting', 0)"
-                 >
+            >
               <div class="room-name">{{ translate('schedule', 'schedule.ReceptionRoom') }}</div>
               <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('meeting', 0)"
                    :key="index">
@@ -1217,7 +1248,7 @@ onMounted(() => {
             <!--      加工站-->
             <div class="room-template processing" :id="`processing#0`"
                  :class="roomSelectedClass('processing', 0)"
-                 @click="chooseRoom('processing', 0)" >
+                 @click="chooseRoom('processing', 0)">
               <div class="room-name">{{ translate('schedule', 'schedule.Workshop') }}</div>
               <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('processing', 0)"
                    :key="index">
@@ -1227,15 +1258,13 @@ onMounted(() => {
 
             <!--     办公室 -->
             <div class="room-template hire" :id="`hire#0`"
-                 :class="roomSelectedClass('hire', 0)" @click="chooseRoom('hire', 0)"
-                 >
+                 :class="roomSelectedClass('hire', 0)" @click="chooseRoom('hire', 0)">
               <div class="room-name">{{ translate('schedule', 'schedule.Office') }}</div>
               <div class="room-avatar-sprite-wrap" v-for="(charName, index) in getRoomOperators('hire', 0)"
                    :key="index">
                 <div :class="getAvatar(charName)"></div>
               </div>
             </div>
-
             <div class="room-template blank" style="width: 100px;"></div>
           </div>
 
@@ -1299,6 +1328,7 @@ onMounted(() => {
                      v-model="searchInputText">
               <span class="input-group-text">{{ translate('schedule', 'schedule.searchInputTip') }}</span>
             </div>
+            <my-button data-color="blue" :active="filterNotOwnOperator" @click="filterOperatorByOwn">隐藏未招募干员</my-button>
           </div>
           <div class="operator-check-box-group">
             <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"
@@ -1316,7 +1346,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 
 
 .schedule-question {

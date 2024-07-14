@@ -2,7 +2,7 @@ import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
 import request from "/src/api/requestBase";
 import {cMessage} from "/src/utils/message";
-import logService from '/src/api/log.js'
+import toolAPI from '/src/api/tool.js'
 
 const domain = "https://zonai.skland.com";
 const playerInfoAPI = '/api/v1/game/player/info'
@@ -123,7 +123,7 @@ async function getPlayBindingV2(defaultAkUid, requestParam, cred, secret) {
             apiPath: PLAYER_BINDING_URL,
             logType:'error'
         }
-        logService.collectLog(log)
+        toolAPI.collectLog(log)
         console.log(error)
         cMessage('森空岛：' + error.response.data.message, 'error')
         return void 0
@@ -204,7 +204,7 @@ async function getPlayerInfo(params, characterTable) {
             apiPath: playerInfoAPI,
             logType:'error'
         }
-        logService.collectLog(log)
+        toolAPI.collectLog(log)
         cMessage('森空岛：' + error, 'error')
         return void 0
     })
