@@ -1,79 +1,30 @@
 <template>
   <div class="survey-operator-page">
-    <c-popup :visible="introPopupVisible" v-model:visible="introPopupVisible">
-      <!-- <div class="intro_title">填写流程说明</div> -->
-
-      <div class="survey-guide-content-container">
-        <h1>填写流程</h1>
-        <h2>注册账号</h2>
-        <p> 新用户注册可用账号密码注册和邮箱注册，也可在个人中心进行设置密码和邮箱绑定等操作</p>
-        <p class="tip">
-          *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
-        </p>
-        <h2>数据填写</h2>
-        <h3>由森空岛导入</h3>
-
-        <label class="warn">森空岛CRED的风险声明：森空岛CRED与鹰角网络通行证的Token并不通用，
-          目前仅可获取森空岛内展示的游戏数据，（仅通过官网实验不通用，不能完全确定，一图流不会保存任何CRED信息</label>
-
-        <p><b>step1：</b>使用PC打开森空岛官网<span @click="toSKLand()" class="info">https://www.skland.com/</span>进行登录
-        </p>
-        <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
-        <p class="info">
-          localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage .getItem('SK_TOKEN_CACHE_KEY')
-        </p>
-
-        <p>
-          <button class="btn btn-blue"
-                  @click="copyCode('localStorage.getItem(\'SK_OAUTH_CRED_KEY\')+\',\'+localStorage.getItem(\'SK_TOKEN_CACHE_KEY\')')">
-            复制命令
-          </button>
-        </p>
-
-        <img src="/image/skland/step1.jpg" alt=""/>
-        <p><b>step3：</b>输入之后回车确认</p>
-        <img src="/image/skland/step2.jpg" alt=""/>
-        <p><b>step4：</b>此时你可以获得一段神秘的字符，复制这段字符，<b>不要带引号</b></p>
-        <img src="/image/skland/step3.jpg" alt=""/>
-        <p><b>step5：</b>将 <b>step4</b> 中获得的这段字符粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
-
-
-        <h3>手动填写</h3>
-        <p>点击干员卡片，打开弹窗，可进行干员技能模组等级的设置，设置完成后点击
-          顶部<span class="info">“手动保存练度”</span>按钮，
-          手动填写建议修改完几个干员就进行保存，防止因网页刷新等原因丢失填写进度</p>
-        <p>因森空岛的干员数据不完整，无法区分1级模组和未开启模组（在森空岛的干员数据中，以上两种情况均标注为1级），
-          请用手动填写功能进行修改，手动填写的模组等级在再次导入时，以手动填写的模组等级优先，数据不会被覆盖</p>
-      </div>
-
-
-    </c-popup>
-
     <!-- 常驻条 -->
     <div class="control-header">
-      <c-button color="blue" :status="true" @click="checkFirstPopup()">操作指引</c-button>
+      <!--      <my-button data-color='blue' :active="true" @click="checkFirstPopup()">操作指引</my-button>-->
 
-      <c-button color="blue" :status="btnStatus.btn_filter"
+      <my-button data-color='blue' :active="btnStatus.btn_filter"
                 @click="clickBtn('btn_filter');collapseFilter()">
         筛选/批量操作
-      </c-button>
+      </my-button>
 
-      <c-button color="blue" :status="btnStatus.btn_import"
+      <my-button data-color='blue' :active="btnStatus.btn_import"
                 @click="clickBtn('btn_import');collapseImport()">
         数据导入导出
-      </c-button>
+      </my-button>
 
       <!--      <div style="width: 60px"></div>-->
-      <c-button :color="'green'" :status="true" @click="upload()">手动保存练度</c-button>
-      <c-button color="blue" :status="statisticalPopupVisible"
+      <my-button data-color='green' :active="true" @click="upload()">手动保存练度</my-button>
+      <my-button data-color='blue' :active="statisticalPopupVisible"
                 @click="clickBtn('btn_statistics');getOperatorStatisticalResult()">统计干员练度
-      </c-button>
-      <c-button color="blue" :status="recommendPopupVisible"
+      </my-button>
+      <my-button data-color='blue' :active="recommendPopupVisible"
                 @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）
-      </c-button>
-      <!--      <c-button color="blue" :status="btn_status.btn_plan"-->
+      </my-button>
+      <!--      <my-button data-color='blue' :active="btn_status.btn_plan"-->
       <!--                @click="clickBtn('btn_plan');getOperatorPlanItemCost()">练度计划材料消耗统计-->
-      <!--      </c-button>-->
+      <!--      </my-button>-->
 
 
     </div>
@@ -84,71 +35,83 @@
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">职业</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('profession', profession.value)"
-                 v-for="(profession,index) in professionDict"
-                 :key="index"
-                 @click="addFilterCondition('profession', profession.value)">
+            <my-button data-color="blue" :active="selectedBtn('profession', profession.value)"
+                       v-for="(profession,index) in professionDict"
+                       :key="index"
+                       @click="addFilterCondition('profession', profession.value)">
               {{ profession.label }}
-            </div>
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">稀有度</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('rarity', rarity)" v-for="(rarity,index) in RARITY_TABLE" :key="index"
-                 @click="addFilterCondition('rarity', rarity)">{{ rarity }}★
-            </div>
+            <my-button data-color="blue" :active="selectedBtn('rarity', rarity)"
+                       v-for="(rarity,index) in RARITY_TABLE" :key="index"
+                       @click="addFilterCondition('rarity', rarity)">
+              {{ rarity }}★
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">年份</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('year', key)" v-for="(year, key) in yearDict" :key="key"
-                 @click="addFilterCondition('year', key)">
+            <my-button data-color="blue" :active="selectedBtn('year',key)"
+                       v-for="(year, key) in yearDict" :key="key"
+                       @click="addFilterCondition('year', key)">
               {{ year.label }}
-            </div>
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">是否拥有</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('own', true)" @click="addFilterCondition('own', true)">已拥有</div>
-            <div :class="selectedBtn('own', false)" @click="addFilterCondition('own', false)">未拥有</div>
+            <my-button data-color="blue" :active="selectedBtn('own',false)"
+                       @click="addFilterCondition('own', false)">
+              已拥有
+            </my-button >
+            <my-button data-color="blue" :active="selectedBtn('own',true)"
+                       @click="addFilterCondition('own', true)">
+              未拥有
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">获得方式</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('itemObtainApproach', '常驻干员')"
-                 @click="addFilterCondition('itemObtainApproach', '常驻干员')">常驻干员
-            </div>
-            <div :class="selectedBtn('itemObtainApproach', '赠送干员')"
-                 @click="addFilterCondition('itemObtainApproach', '赠送干员')">赠送干员
-            </div>
-            <div :class="selectedBtn('itemObtainApproach', '限定干员')"
-                 @click="addFilterCondition('itemObtainApproach', '限定干员')">限定干员
-            </div>
+            <my-button data-color="blue" :active="selectedBtn('itemObtainApproach',type)"
+                       v-for="(type,index) in itemObtainApproachType" :key="index"
+                       @click="addFilterCondition('itemObtainApproach', type)">
+              {{ type }}
+            </my-button>
+
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">模组</span>
           <div class="control-checkbox">
-            <div :class="selectedBtn('equip', true)" @click="addFilterCondition('equip', true)">模组已实装</div>
-            <div :class="selectedBtn('equip', false)" @click="addFilterCondition('equip', false)">模组未实装</div>
+            <my-button data-color="blue" :active="selectedBtn('equip', true)"
+                       @click="addFilterCondition('equip', true)">
+              模组已实装
+            </my-button >
+            <my-button data-color="blue" :active="selectedBtn('equip', false)"
+                       @click="addFilterCondition('equip', false)">
+              模组未实装
+            </my-button>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">排序</span>
           <div class="control-checkbox">
-            <div class="btn" @click="sortOperatorList('rarity')">按稀有度</div>
-            <div class="btn" @click="sortOperatorList('date')">按实装顺序</div>
-            <div class="btn" @click="sortOperatorListByLevel('level')">按干员等级</div>
+            <my-button data-color="blue" @click="sortOperatorList('rarity')"> 按稀有度</my-button>
+            <my-button data-color="blue" @click="sortOperatorList('date')"> 按实装顺序</my-button>
+            <my-button data-color="blue" @click="sortOperatorListByLevel('level')"> 按干员等级</my-button>
           </div>
         </div>
 
@@ -178,38 +141,24 @@
     </c-collapse-item-v2>
 
 
-    <c-popup v-model="importPopupVisible">
-
-      <div class="intro_wrap">
-        <div class="intro_title">森空岛CRED的风险声明</div>
-        森空岛CRED与鹰角网络通行证的Token并不通用（仅通过官网实验不通用，不能完全确定），目前仅可获取森空岛内展示的游戏数据<br/>
-        一图流不会保存任何CRED信息<br/>
-        <a style="color: #fa5e5e">*请妥善保管此CRED</a>
-      </div>
-      <div class="intro_wrap">
-        <div class="intro_title">森空岛数据导入流程</div>
-
-        <p><b>step1：</b>使用PC打开森空岛官网<a @click="toSKLand()" class="web_url">https://www.skland.com/</a>进行登录
-        </p>
-        <p><b>step2：</b>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
-        <p style="color:dodgerblue">
-          localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage .getItem('SK_TOKEN_CACHE_KEY')
-        </p>
-        <div>
-          <button class="btn btn-blue"
-                  @click="copyCode('localStorage.getItem(\'SK_OAUTH_CRED_KEY\')+\',\'+localStorage.getItem(\'SK_TOKEN_CACHE_KEY\')')">
-            复制命令
-          </button>
+    <!-- 导入导出模块 -->
+    <c-collapse-item v-model:visible="collapseImportVisible" :name="'upload'">
+      <div class="control-box">
+        <div class="control-line-label">导入导出</div>
+        <div class="control-line">
+          <div class="control-checkbox">
+            <my-button data-color="green" :active="true" @click="importDataBySkland()">从森空岛导入</my-button>
+            <my-button data-color="green" :active="true" @click="exportOperatorExcel()">导出为Excel</my-button>
+<!--            <my-button data-color="red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</my-button>-->
+          </div>
         </div>
-        <img src="/image/skland/step1.jpg" class="import_tip_image" alt=""/>
-        <p>输入之后回车确认</p>
-        <img src="/image/skland/step2.jpg" class="import_tip_image" alt=""/>
-        <p><b>step3：</b>此时你可以获得一段神秘的字符，复制这段字符，<b>不要带引号</b></p>
-        <img src="/image/skland/step3.jpg" class="import_tip_image" alt=""/>
-        <p><b>step4：</b>将 <b>step3</b> 中获得的这段字符粘贴到输入栏中，点击“导入森空岛数据”即可完成导入</p>
+        <div class="control-line">
+          <div class="control-line-tip">如果遇到不正常干员练度信息，可尝试使用“清空所有数据”按钮，清空导入的数据，再次导入<br>
+          </div>
+        </div>
       </div>
-      <div style="width: 90%;height: 200px"></div>
-    </c-popup>
+    </c-collapse-item>
+
 
     <c-popup :visible="resetPopupVisible" v-model:visible="resetPopupVisible">
       <div class="popup_action_tip">
@@ -217,53 +166,10 @@
       </div>
       <div class="control-checkbox">
         <div class="btn btn-red" @click="operatorDataReset()">确定</div>
+        <div style="width: 80px;height: 50px"></div>
         <div class="btn" @click="resetPopupVisible = !resetPopupVisible">取消</div>
       </div>
     </c-popup>
-
-    <!-- 导入导出模块 -->
-    <c-collapse-item v-model:visible="collapseImportVisible" :name="'upload'">
-      <div class="control-box">
-        <div class="control-line-label">导入导出</div>
-        <div class="control-line">
-          <div class="control-checkbox">
-            <button class="btn btn-green" @click="exportOperatorExcel()">导出为Excel</button>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-        <div class="control-line-label">森空岛导入</div>
-        <div class="control-line">
-          <span>输入在控制台获得的字符</span>
-          <div><input class="control_input" type="text" v-model="SKlandCREDAndSECRET"/></div>
-          <button class="btn btn-blue" @click="importSKLandOperatorData()">导入森空岛数据</button>
-          <button class="btn btn-blue" @click="importPopupVisible = !importPopupVisible">
-            森空岛数据导入流程
-          </button>
-          <!--            <div class="btn btn-blue" style="" @click="loginByCRED()">根据CRED找回账号</div>-->
-          <button class="btn btn-red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</button>
-
-        </div>
-        <div class="control-line" v-show="importFlag">
-          <div class="control-line-label" style="width: 140px;">导入账号不正确？</div>
-          <div class="control-checkbox">
-            <div class="control-line-tip">选择你想要导入的账号</div>
-            <div v-for="(binding,index) in bindingList" :key="index"
-                 class="btn btn-blue" :class="chooseUidClass(binding.uid)"
-                 @click="importSKLandOperatorDataByUid(binding)">
-              {{ `${binding.channelName}-${binding.nickName}-${binding.uid}` }}
-            </div>
-          </div>
-
-        </div>
-
-        <div class="control-line">
-          <div class="control-line-tip">*森空岛导入：请遵循
-            <b>《森空岛数据导入流程》</b>的指引，导入完如显示有误请手动保存并刷新页面，如果遇到服务器意外错误，先尝试“清空所有数据”按钮<br>
-          </div>
-        </div>
-      </div>
-    </c-collapse-item>
 
 
     <!--    干员统计弹窗-->
@@ -272,7 +178,7 @@
       <div class="statistical-popup-container not-own-avatar-sprite-variables">
         <!--        <div class="detail-card">-->
         <!--          <h2 class="card-h2">博士招募情况</h2>-->
-        <!--          <span> Dr.{{ userData.userName }}，您的招募干员情况为-->
+        <!--          <span> Dr.{{ userInfo.userName }}，您的招募干员情况为-->
         <!--            {{ statisticalResultV2.own }}/{{ statisticalResultV2.count }}-->
         <!--          </span>-->
         <!--          <div v-show="statisticalResultV2.count-statisticalResultV2.own>0">-->
@@ -293,9 +199,9 @@
           <h2>博士招募情况</h2>
           <span class="statistical-module-text"> Dr.{{ userData.userName }}，您总计招募了{{
               statisticalResult.total.own
-            }}位干员，
+            }}位干员
             <span v-show="statisticalResult.total.count - statisticalResult.total.own>0"
-                  class="statistical-module-text"> 未招募干员{{
+                  class="statistical-module-text"> ，未招募干员{{
                 statisticalResult.total.count - statisticalResult.total.own
               }}位</span>
           </span>
@@ -304,11 +210,8 @@
             未招募的干员是：
           </div>
           <div class="not-own-operator-wrap">
-            <div class="not-own-avatar-sprite"
-                 v-for="(operator,index) in statisticalResult.total.notOwn" :key="index">
-              <div :class="getAvatarSprite(operator.charId)"></div>
-              <!--              <span class="sprite-alt" style="top:70px">{{ operator.name }}</span>-->
-            </div>
+            <sprite-avatar :name="operator.charId" size="60" style="margin: 4px"
+                           v-for="(operator,index) in statisticalResult.total.notOwn" :key="index"></sprite-avatar>
           </div>
 
           <table class="operator-statistical-table">
@@ -388,10 +291,9 @@
           <h2>理智消耗情况</h2>
           <p style="">总计消耗{{ apCostCount.toFixed(0) }} 理智</p>
           <!--          材料统计-->
-
-          <button class="btn btn-blue" @click="splitMaterialByRarity(5)">不拆分</button>
-          <button class="btn btn-blue" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</button>
-          <button class="btn btn-blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</button>
+          <my-button data-color="orange" @click="splitMaterialByRarity(5)">不拆分</my-button>
+          <my-button data-color="purple" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</my-button>
+          <my-button data-color="blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</my-button>
           <div class="control-line item_cost_wrap" v-for="(itemList,type) in itemCostList"
                :key="type">
             <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
@@ -598,23 +500,25 @@ import {cMessage} from "/src/utils/message.js";
 import {filterByCharacterProperty, professionDict, yearDict} from "./service/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
 import userAPI from "/src/api/userInfo";
-import surveyAPI from "/src/api/survey.js"
+import operatorDataAPI from "/src/api/operator-data.js"
 import sklandApi from '/src/pages/survey/service/skland'
 import {onMounted, ref} from "vue";
-import {DOMAIN} from "/src/api/BASE_URL";
 import operatorRecommend from "/src/pages/survey/service/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
 import {exportExcel} from '/src/utils/exportExcel.js'
 
-
-// import "/src/assets/css/survey/survey_character.css";
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
 import {debounce} from "/src/utils/debounce";
-import {getUserInfo} from "/src/pages/survey/service/userData.js";
+import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
+import {useRouter} from "vue-router";
+
+import MyButton from '/src/components/Button.vue'
+import SpriteAvatar from "/src/components/SpriteAvatar.vue";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
+let itemObtainApproachType = ['常驻干员','赠送干员','限定干员']
 
 let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});  //用户信息
 
@@ -640,22 +544,6 @@ function checkUserStatus(notice) {
     return true;
   }
   return false
-}
-
-
-/**
- * 找回一图流账号
- */
-// eslint-disable-next-line no-unused-vars
-async function retrieveAccount() {
-  const data = {
-    cred: SKlandCREDAndSECRET.value
-  }
-
-  userAPI.retrievalUserAccountByCred(data).then(response => {
-    const userName = response.data.userName;
-    login(userName)
-  })
 }
 
 
@@ -687,7 +575,7 @@ function getOperatorData() {
   const data = {token: userData.value.token}
 
   //根据一图流的token查询用户填写的干员数据
-  userAPI.getSurveyOperatorData(data).then((response) => {
+  operatorDataAPI.getOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
     let obj = {}
     operatorTable.value = characterTable
@@ -716,70 +604,10 @@ function getOperatorData() {
 }
 
 
-// let charIdSet = ref({})
-
-// let intersectionObserver  = new IntersectionObserver(
-//     function (entries){
-//       const entry = entries[0]
-//       if(entry.isIntersecting){
-//         for(const charId in operatorTable.value){
-//           const operator =  operatorTable[charId]
-//           if(!charIdSet.value[charId]&&operator.show){
-//            operatorList.value.push(operator)
-//           }
-//
-//           if(operatorList.value.length>=maxOperatorDisplayQuantity) break;
-//         }
-//         console.log('加载更多')
-//       }
-//
-//       maxOperatorDisplayQuantity+=10;
-//     }
-// )
-//
-// let dropdown = document.getElementById('dropdown');
-//
-// intersectionObserver.observe(dropdown)
-
-
 function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
 
-
-/**
- * 加载完整干员列表
- */
-function loadDisplayData() {
-  operatorList.value = []
-  for (const charId in operatorTable.value) {
-    const operator = operatorTable.value[charId]
-    if (operatorList.value.length >= 32) {
-      break;
-    }
-    if (operator.show) {
-      operatorList.value.push(operator)
-    }
-  }
-}
-
-
-let isCompleteData = ref(false)
-
-/**
- * 加载完整数据
- */
-const loadCompleteData = debounce(() => {
-  operatorList.value = []
-  for (const charId in operatorTable.value) {
-    const operator = operatorTable.value[charId]
-    if (operator.show) {
-      operatorList.value.push(operator)
-    }
-  }
-  console.log('执行了')
-  isCompleteData.value = true;
-}, 1000)
 
 
 function importData() {
@@ -818,7 +646,7 @@ function exportOperatorExcel() {
     ])
   }
 
-  exportExcel('干员练度表',list)
+  exportExcel('干员练度表', list)
 }
 
 
@@ -836,160 +664,30 @@ function collapseImport() {
 }
 
 
-/**
- * 通过cred和secret进行森空岛干员信息导入
- * @returns {Promise<void>}
- */
-async function importSKLandOperatorData() {
-
-  if (checkUserStatus(true)) {
-    return;
-  }
-
-
-  //获取凭证和密匙
-  const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
-  //方舟uid
-  let akUid = "0"
-  let akNickName = ""
-
-  //获取绑定信息
-  const playerBinding = await sklandApi.getPlayBindingV2(userData.value.akUid, '', secret, cred);
-
-  if (!playerBinding) {
-    return
-  }
-
-  //森空岛账号下绑定的所有方舟uid
-  bindingList.value = playerBinding.bindingList
-  importFlag.value = true
-
-  //当前导入的方舟uid
-  currentUid.value = playerBinding.uid
-
-  await importSKLandOperatorDataByUid(playerBinding)
-}
-
-/**
- * 如果导入错误可以自己选择uid进行导入
- * @param akPlayerBinding 玩家账号绑定信息
- * @returns {Promise<void>}
- */
-async function importSKLandOperatorDataByUid(akPlayerBinding) {
-  const {uid, nickName, channelName, channelMasterId} = akPlayerBinding
-
-  if (checkUserStatus(true)) {
-    return;
-  }
-
-  const {cred, secret} = getCredAndSecret(SKlandCREDAndSECRET.value)
-
-  const params = {
-    requestUrl: '/api/v1/game/player/info',
-    requestParam: `uid=${uid}`,
-    secret: secret,
-    cred: cred,
-    akUid: uid,
-    akNickName: nickName,
-    channelMasterId: channelMasterId,
-    channelName: channelName,
-  }
-
-  const playerInfo = await sklandApi.getPlayerInfo(params, characterTable)
-
-
-  if (!playerInfo) {
-    return
-  }
-
-  await uploadSKLandData({
-    token: userData.value.token,
-    data: JSON.stringify(playerInfo)
-  })
-
-
-}
-
-
-
-
-/**
- * 获取cred和secret
- * @param text 用户输入的字符串
- * @return {{cred: *, secret: *}}  cred和secret
- */
-function getCredAndSecret(text) {
-
-  if (!text.includes(',')) {
-    cMessage('输入格式不正确,应是一个中间包含逗号的一串字母', 'error')
-  }
-  text = text.replace(/\s+/g, '')
-      .replace(/["']/g, '')
-
-  const textArr = text.split(',')
-  const cred = textArr[0]
-  const secret = textArr[1]
-  return {cred, secret}
-
-}
-
-/**
- * 上传获取到的森空岛干员数据
- * @param token 用户凭证
- * @param data 干员数据
- * @returns {Promise<void>}
- */
-async function uploadSKLandData({token, data}) {
-
-  surveyAPI.uploadSkLandOperatorData({token, data})
-      .then(response => {
-        uploadMessage.value = response.data;
-        cMessage("森空岛数据导入成功");
-        bindAccount.value = false;
-        getUserInfoAndOperatorData()
-      })
-}
-
-//选择导入uid的按钮样式
-function chooseUidClass(uid) {
-  if (uid === currentUid.value) return 'btn-blue'
-}
-
 let resetPopupVisible = ref(false) //重置账号提示弹窗显示状态
 
 /**
  * 重置账号数据
  */
 function operatorDataReset() {
-
   let data = {
     token: userData.value.token,
   }
-  surveyAPI.resetOperatorData(data).then(response => {
+  operatorDataAPI.resetOperatorData(data).then(response => {
     cMessage(response.data)
   })
 }
 
-/**
- * 登录一图流账号
- * @param userName 一图流用户名（即账号名）
- */
-function login(userName) {
-  let data = {userName: userName}
-  userAPI.login(data).then(response => {
-    if (response.data.status > 0) {
-      localStorage.setItem("globalUserData", JSON.stringify(response.data));
-      // 登录成功刷新
-      location.reload()
-    }
-  })
-}
 
 //上传APi返回的信息
 let uploadMessage = ref({updateTime: "", affectedRows: 0, registered: false, userName: ''});
 //每次点击操作记录下被更新的干员的索引，只上传被修改过的干员
 let selectedCharId = ref({});
 
+const router = useRouter()
+function importDataBySkland(){
+       router.push({name:'IMPORT_BY_SKLAND'})
+}
 
 /**
  * 手动上传
@@ -1031,14 +729,7 @@ function createUploadData() {
 }
 
 
-// eslint-disable-next-line no-unused-vars
-let maaData = ref([{}]);
 
-// eslint-disable-next-line
-function maaData1() {
-  // let dataJson = JSON.parse(maaData.value);
-
-}
 
 let operatorPopupVisible = ref(false) //干员弹窗的显示状态
 let operatorPopupData = ref({})   //干员弹窗内的干员数据
@@ -1082,14 +773,11 @@ function dataOptionClass(charId, current, property) {
 /**
  * 返回筛选按钮是否选中的样式
  * @param {string} property 干员属性名
- * @param {string} rule 筛选规则
- * @returns {string} class 按钮样式
+ * @param {string|number|boolean} rule 筛选规则
+ * @returns {boolean} class 按钮样式
  */
 function selectedBtn(property, rule) {
-  if (filterCondition.value[property].indexOf(rule) > -1) {
-    return "btn btn-blue";
-  }
-  return "btn";
+  return filterCondition.value[property].indexOf(rule) > -1;
 }
 
 let collapseImportFilter = ref(false)  //干员筛选条件折叠栏的展开状态
@@ -1114,10 +802,11 @@ function collapseFilter() {
 /**
  *  增加筛选规则
  * @param {string} property  干员属性
- * @param {string} condition 筛选条件
+ * @param {string|number|boolean} condition 筛选条件
  */
 function addFilterCondition(property, condition) {
-  console.log(filterCondition.value[property]);
+
+  console.log(filterCondition.value);
   if (filterCondition.value[property].indexOf(condition) > -1) {
     filterCondition.value[property] = filterCondition.value[property].filter(e => e !== condition)
     filterCharacterList();
@@ -1305,9 +994,7 @@ function clickBtn(btnId) {
 
 
 function getAvatarSprite(id) {
-
   return "bg-" + id;
-
 }
 
 /**
@@ -1342,9 +1029,7 @@ onMounted(() => {
 
 
 <style scoped>
-.btn {
-  margin: 2px;
-}
+
 
 
 .dev_table td {

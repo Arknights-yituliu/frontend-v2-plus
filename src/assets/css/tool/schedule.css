@@ -622,6 +622,7 @@
     display: flex;
     margin: 8px 16px;
     height: 50px;
+    align-items: center;
     /*background-color: #00a1d6;*/
 }
 

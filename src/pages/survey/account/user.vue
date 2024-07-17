@@ -1,6 +1,6 @@
 <template>
   <div class="survey-login-page">
-    <div class="survey-login-btn" v-show="userData.status<0">
+    <div class="survey-login-btn" v-show="userInfo.status<0">
       <router-link to="/survey/account/register"  >
         <span class="header-button-label" style="margin-right: 12px">注册</span>
       </router-link>
@@ -9,12 +9,12 @@
       </router-link>
     </div>
 
-    <div v-show="userData.status>0">
+    <div v-show="userInfo.status>0">
       <c-popover :name="'avatar'">
         <template #title>
           <div class="nav-avatar-image-wrap">
-            <div :class="getSprite(userData.avatar)"></div>
-            <span class="nav-user-name">{{userData.userName}}</span>
+            <div :class="getSprite(userInfo.avatar)"></div>
+            <span class="nav-user-name">{{userInfo.userName}}</span>
           </div>
         </template>
 
@@ -27,7 +27,7 @@
 
 
     <c-popup :visible="loginVisible" v-model:visible="loginVisible" >
-      <div class="login-card" v-show="userData.status>0">
+      <div class="login-card" v-show="userInfo.status>0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
           <my-button data-color="blue" :active="true" @click="logout()">确定</my-button>
@@ -55,7 +55,7 @@ import {onMounted, ref, watch} from "vue";
 import {cMessage} from "/src/utils/message";
 
 import surveyApi from "/src/api/userInfo";
-import {getUserInfo} from "/src/pages/survey/service/userData.js";
+import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
 import {useRoute} from "vue-router";
 
 
@@ -80,7 +80,7 @@ let inputData = ref({
 
 
 //用户输入的用户名，用obj没准后期有别的字段
-let userData = ref({uid:0,userName: "未登录",akUid:"0", status: -100, token: void 0}); //用户信息(用户名，用户id，用户状态)
+let userInfo = ref({uid:0,userName: "未登录",akUid:"0", status: -100, token: void 0}); //用户信息(用户名，用户id，用户状态)
 
 
 
@@ -114,7 +114,7 @@ function getLoginParams() {
 
 async function getUserInfoByToken() {
 
-  userData.value = await getUserInfo()
+  userInfo.value = await getUserInfo()
 
 }
 

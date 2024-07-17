@@ -6,7 +6,7 @@ import REGISTER from '/src/pages/survey/account/register.vue'
 import LOGIN from '/src/pages/survey/account/login.vue'
 import RETRIEVE from '/src/pages/survey/account/retrieve.vue'
 import IMPORT_BY_SKLAND from '/src/pages/survey/account/importdata.vue'
-import SURVEY_OPERATOR from  '/src/pages/survey/operators.v2.vue'
+import SURVEY_OPERATOR from '/src/pages/survey/operators.vue'
 import USER_HOME from '/src/pages/survey/account/home.vue'
 
 // {

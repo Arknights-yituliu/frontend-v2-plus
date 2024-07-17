@@ -24,6 +24,14 @@ export default {
         })
     },
 
+    uploadWarehouseInfo(data){
+        return request({
+            url:`${api_name}/warehouse-info/import/skland`,
+            method:'post',
+            data:data
+        })
+    },
+
 
     getPlayBindingListByHgToken(data){
         return request({
@@ -53,12 +61,27 @@ export default {
         })
     },
 
+    /**
+     * 找回用户填写的干员数据
+     * @param data
+     * @returns {*}
+     */
+    getOperatorData(data) {
+        return request({
+            url: `${api_name}/operator/info`,
+            method: "post",
+            data:data
+        })
+    },
+
     uploadQuestionnaireInfo(data){
         return request({
             url:`${api_name}/questionnaire/upload`,
             method:'post',
             data:data
         })
-    }
+    },
+
+
 
 }

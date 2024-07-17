@@ -12605,7 +12605,7 @@ Date:   Thu May 11 11:28:23 2023 +0800
     Merge remote-tracking branch 'origin/dev' into dev
     
     # Conflicts:
-    #       src/api/survey.js
+    #       src/api/operator-data.js
 
 commit 32bf49b90dd32c40b284b025622725ac47053d8f
 Merge: 52ffca77 04580668
@@ -12615,7 +12615,7 @@ Date:   Thu May 11 11:28:23 2023 +0800
     Merge remote-tracking branch 'origin/dev' into dev
     
     # Conflicts:
-    #       src/api/survey.js
+    #       src/api/operator-data.js
 
 commit d879e18a1adf3910b1d11f21a7cb7a371345c3c8
 Author: sakura <1969314158@qq.com>

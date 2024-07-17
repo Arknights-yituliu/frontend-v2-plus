@@ -6,7 +6,7 @@ import character_table_simple from "/src/static/json/survey/character_table_simp
 import MyButton from '/src/components/Button.vue'
 import SpriteAvatar from "/src/components/SpriteAvatar.vue";
 
-import surveyApi from "/src/api/survey";
+import surveyApi from "/src/api/operator-data";
 
 let rarityDict = [1, 2, 3, 4, 5, 6];
 
@@ -264,7 +264,7 @@ onMounted(() => {
             </my-button>
             <my-button data-color="green" :active="selectedBtn('itemObtainApproach', '限定干员')"
                        @click="addFilterCondition('itemObtainApproach', '限定干员')">
-              赠送干员
+              限定干员
             </my-button>
           </div>
         </div>
