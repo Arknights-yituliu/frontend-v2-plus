@@ -11,8 +11,14 @@ const OAUTH2_URL = "https://as.hypergryph.com/user/oauth2/v2/grant";
 const GENERATE_CRED_BY_CODE_URL = "https://zonai.skland.com/api/v1/user/auth/generate_cred_by_code";
 const cultivatePlayer =  '/api/v1/game/cultivate/player'
 
-function getSign(path, params, secret) {
-    let timestamp = Math.floor((new Date().getTime() - 500) / 1000).toString();
+function getSign(path, params, token) {
+    let timestamp = Math.floor((new Date().getTime() - 300) / 1000).toString();
+
+    // if(path.indexOf('info')>-1){
+    //     timestamp = 1721211932
+    // }
+
+
     const headers = {
         platform: '3',
         timestamp: timestamp,
@@ -22,13 +28,15 @@ function getSign(path, params, secret) {
     params = params ? params : ''
     let text = path + params + timestamp + JSON.stringify(headers);
 
-    const sign = md5(hmacSHA256(text, secret).toString()).toString()
+    const sign = md5(hmacSHA256(text, token).toString()).toString()
 
     return {timestamp, sign}
 }
 
 function getHeaders(url,params,cred,token){
     const {timestamp, sign} = getSign(PLAYER_BINDING_URL, params, token);
+
+    console.log("我的签名",sign)
     return {
         "platform": '3',
         "timestamp": timestamp,
@@ -165,9 +173,9 @@ async function getPlayerInfo(params, characterTable) {
 
     const url = `${domain}${requestUrl}?${requestParam}`
     // console.log(url)
-    const headers = getHeaders(requestUrl,params,cred,token)
-
-    // console.table(headers)
+    const headers = getHeaders(requestUrl,requestParam,cred,token)
+    console.table(headers)
+    console.table(params)
 
     let uploadData = {}
 
@@ -291,7 +299,7 @@ function FormattingOperatorData(characterList, characterTable) {
         operatorList.push(operator)
     }
 
-    console.table(operatorList)
+
     return operatorList
 }
 

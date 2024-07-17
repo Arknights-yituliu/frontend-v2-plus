@@ -520,7 +520,7 @@ let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
 let itemObtainApproachType = ['常驻干员','赠送干员','限定干员']
 
-let userInfo = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});  //用户信息
+let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});  //用户信息
 
 /**
  * 获取本地缓存的用户信息

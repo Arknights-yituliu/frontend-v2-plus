@@ -34,6 +34,8 @@ let inputData = ref({
 })
 
 
+
+
 function checkPassWord() {
   if (inputData.value.newPassWord.length > 5 && inputData.value.confirmPassWord.length > 5) {
     if (inputData.value.newPassWord === inputData.value.confirmPassWord) {
@@ -45,7 +47,7 @@ function checkPassWord() {
 
 function updatePassWord() {
   const data = {
-    token: userData.value.token,
+    token: userInfo.value.token,
     newPassWord: inputData.value.newPassWord,
     oldPassWord: inputData.value.oldPassWord,
     property: "passWord"
@@ -59,7 +61,7 @@ function updatePassWord() {
 
 function sendEmailCode() {
   const data = {
-    token: userData.value.token,
+    token: userInfo.value.token,
     email: inputData.value.email,
     mailUsage: 'updateEmail'
   }
@@ -74,7 +76,7 @@ function sendEmailCode() {
 
 function updateEmail() {
   const data = {
-    token: userData.value.token,
+    token: userInfo.value.token,
     email: inputData.value.email,
     emailCode: inputData.value.emailCode,
     property: "email"
@@ -88,13 +90,13 @@ function updateEmail() {
 
 function updateUserName() {
   const data = {
-    token: userData.value.token,
+    token: userInfo.value.token,
     userName: inputData.value.userName,
     property: "userName"
   }
   surveyApi.updateUserDataV2(data).then(response => {
     cMessage('用户名更改成功')
-    userData.value.userName = response.data.userName
+    userInfo.value.userName = response.data.userName
 
   })
 }
@@ -110,18 +112,18 @@ function logout() {
 
 
 async function getUserInfoByToken() {
-  userData.value = await getUserInfo()
-  inputData.value.userName = userData.value.userName
+  userInfo.value = await getUserInfo()
+  inputData.value.userName = userInfo.value.userName
 }
 
 let avatar_visible = ref(false)
 
 function avatarPopupVisible() {
   avatar_visible.value = !avatar_visible.value
-  selectedAvatar.value = userData.value.avatar
+  selectedAvatar.value = userInfo.value.avatar
 }
 
-let selectedAvatar = ref(userData.value.avatar)
+let selectedAvatar = ref(userInfo.value.avatar)
 
 function chooseAvatar(avatar) {
   selectedAvatar.value = avatar
@@ -129,14 +131,14 @@ function chooseAvatar(avatar) {
 
 function updateAvatar() {
   const data = {
-    token: userData.value.token,
+    token: userInfo.value.token,
     avatar: selectedAvatar.value,
     property: "avatar"
   }
 
   surveyApi.updateUserDataV2(data).then(response => {
     cMessage('头像更新成功')
-    userData.value.avatar = response.data.avatar
+    userInfo.value.avatar = response.data.avatar
 
   })
 
@@ -166,7 +168,7 @@ onMounted(() => {
         <div class="user-info-card-line">
            <span>点击头像修改</span>
           <div class="user-avatar-sprite" @click="avatarPopupVisible()">
-            <div :class="getSprite(userData.avatar)" ></div>
+            <div :class="getSprite(userInfo.avatar)" ></div>
           </div>
         </div>
 
@@ -213,13 +215,13 @@ onMounted(() => {
 
       <div class="user-info-card">
         <h2 class="user-info-card-title">修改密码</h2>
-        <div class="user-info-card-tip" v-show="!userData.hasPassword">
+        <div class="user-info-card-tip" v-show="!userInfo.hasPassword">
           您还没有设置密码，密码长度最低为6个数字或字母
         </div>
 
-        <h4 v-show="userData.hasPassword">旧密码</h4>
+        <h4 v-show="userInfo.hasPassword">旧密码</h4>
         <div class="user-info-card-input-line"
-             v-show="userData.hasPassword">
+             v-show="userInfo.hasPassword">
           <input class="user-info-card-input" type="password" v-model="inputData.oldPassWord"/>
           <a v-show="inputData.oldPassWord.length>0">{{ inputData.oldPassWord.length }}/20</a>
         </div>
@@ -241,10 +243,10 @@ onMounted(() => {
 
       <div class="user-info-card">
         <h2 class="user-info-card-title">修改邮箱</h2>
-        <div class="user-info-card-tip" v-show="!userData.hasEmail">
+        <div class="user-info-card-tip" v-show="!userInfo.hasEmail">
           绑定邮箱后也可通过邮箱作为账号登录
         </div>
-        <div class="user-info-card-tip" v-show="userData.hasEmail">
+        <div class="user-info-card-tip" v-show="userInfo.hasEmail">
           修改邮箱请输入新邮箱点击发送，将向您的新邮箱发送验证码
         </div>
 
