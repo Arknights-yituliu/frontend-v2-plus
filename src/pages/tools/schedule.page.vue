@@ -23,6 +23,8 @@ import MyButton from '/src/components/Button.vue'
 
 let operatorOwnMap = new Map()
 
+
+
 async function getOperatorDataByAccount() {
 
   const userInfo = await userAPI.getUserInfo()
@@ -372,6 +374,11 @@ const roomPopupStyle = "width:550px;"
 
 const filterOperatorByOwn = debounce( ()=>{
   filterNotOwnOperator.value = !filterNotOwnOperator.value
+  if(operatorOwnMap.size<10){
+    cMessage('未登录或未导入','error')
+    return
+  }
+
   commonFilterOperator()
 },200)
 

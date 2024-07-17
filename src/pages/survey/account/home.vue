@@ -103,7 +103,7 @@ function updateUserName() {
 
 //登出
 function logout() {
-  localStorage.removeItem('globalUserData')
+  localStorage.removeItem('USER_TOKEN')
   setTimeout(() => {
     location.reload()
   }, 1000);

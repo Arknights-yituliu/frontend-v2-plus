@@ -197,7 +197,7 @@
 
         <div class="o-statistical-card">
           <h2>博士招募情况</h2>
-          <span class="statistical-module-text"> Dr.{{ userInfo.userName }}，您总计招募了{{
+          <span class="statistical-module-text"> Dr.{{ userData.userName }}，您总计招募了{{
               statisticalResult.total.own
             }}位干员
             <span v-show="statisticalResult.total.count - statisticalResult.total.own>0"

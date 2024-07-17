@@ -88,7 +88,6 @@ async function getOperatorDataByPlayerBinding(akPlayerBinding) {
   checkUserStatus(true)
 
   const params = {
-    requestUrl: '/api/v1/game/player/info',
     requestParam: `uid=${uid}`,
     token: sklandToken.value,
     cred: sklandCred.value,

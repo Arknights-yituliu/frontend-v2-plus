@@ -24,6 +24,14 @@ export default {
         })
     },
 
+    uploadWarehouseInfo(data){
+        return request({
+            url:`${api_name}/warehouse-info/import/skland`,
+            method:'post',
+            data:data
+        })
+    },
+
 
     getPlayBindingListByHgToken(data){
         return request({
@@ -72,6 +80,8 @@ export default {
             method:'post',
             data:data
         })
-    }
+    },
+
+
 
 }

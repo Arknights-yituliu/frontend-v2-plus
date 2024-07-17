@@ -4,12 +4,12 @@ import request from "/src/api/requestBase";
 import {cMessage} from "/src/utils/message";
 import toolAPI from '/src/api/tool.js'
 
-const domain = "https://zonai.skland.com";
-const playerInfoAPI = '/api/v1/game/player/info'
+const SKLAND_DOMAIN = "https://zonai.skland.com";
+const PLAYER_INFO_API = '/api/v1/game/player/info'
 const PLAYER_BINDING_URL = '/api/v1/game/player/binding'
 const OAUTH2_URL = "https://as.hypergryph.com/user/oauth2/v2/grant";
 const GENERATE_CRED_BY_CODE_URL = "https://zonai.skland.com/api/v1/user/auth/generate_cred_by_code";
-const cultivatePlayer =  '/api/v1/game/cultivate/player'
+const CULTIVATE_PLAYER_API =  '/api/v1/game/cultivate/player'
 
 function getSign(path, params, token) {
     let timestamp = Math.floor((new Date().getTime() - 300) / 1000).toString();
@@ -34,9 +34,8 @@ function getSign(path, params, token) {
 }
 
 function getHeaders(url,params,cred,token){
-    const {timestamp, sign} = getSign(PLAYER_BINDING_URL, params, token);
+    const {timestamp, sign} = getSign(url, params, token);
 
-    console.log("我的签名",sign)
     return {
         "platform": '3',
         "timestamp": timestamp,
@@ -59,7 +58,7 @@ async function getPlayBindingV2(defaultAkUid, params, cred, token) {
     let channelName = '默认'
     let channelMasterId = -1
 
-    const url = `${domain}${PLAYER_BINDING_URL}`
+    const url = `${SKLAND_DOMAIN}${PLAYER_BINDING_URL}`
 
     const headers = getHeaders(PLAYER_BINDING_URL,params,cred,token)
 
@@ -168,14 +167,12 @@ function getCredAndSecret(text) {
 
 async function getPlayerInfo(params, characterTable) {
 
-    const {requestUrl, requestParam, token, cred, akUid, akNickName, channelName, channelMasterId} = params
+    const { requestParam, token, cred, akUid, akNickName, channelName, channelMasterId} = params
 
 
-    const url = `${domain}${requestUrl}?${requestParam}`
+    const url = `${SKLAND_DOMAIN}${PLAYER_INFO_API}?${requestParam}`
     // console.log(url)
-    const headers = getHeaders(requestUrl,requestParam,cred,token)
-    console.table(headers)
-    console.table(params)
+    const headers = getHeaders(PLAYER_INFO_API,requestParam,cred,token)
 
     let uploadData = {}
 
@@ -206,7 +203,7 @@ async function getPlayerInfo(params, characterTable) {
     }).catch(error => {
         const log = {
             message: JSON.stringify(error.response),
-            apiPath: playerInfoAPI,
+            apiPath: PLAYER_INFO_API,
             logType:'error'
         }
         toolAPI.collectLog(log)
@@ -306,8 +303,8 @@ function FormattingOperatorData(characterList, characterTable) {
 
 async function getPlayerWarehouseInfo(cred,token,uid){
    const params = `uid=${uid}`
-   const headers =  getHeaders(cultivatePlayer,params,cred,token)
-   const url = `${domain}${cultivatePlayer}?params`
+   const headers =  getHeaders(CULTIVATE_PLAYER_API,params,cred,token)
+   const url = `${SKLAND_DOMAIN}${CULTIVATE_PLAYER_API}?params`
    await request({
        url:url,
        headers:headers,

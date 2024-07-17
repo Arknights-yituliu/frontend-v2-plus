@@ -9,6 +9,7 @@
 
 <script setup>
 import {watch,onMounted} from "vue";
+import {error} from "echarts/lib/util/log.js";
 
 const emit = defineEmits(["update:visible"]);
 const props = defineProps(["modelValue", "visible", "name",'style']);
@@ -19,6 +20,9 @@ let collapse_item_id = "collapse_item_" + props.name
 onMounted(()=>{
   if(props.visible){
     let element = document.getElementById(collapse_item_id);
+    if(!element){
+      return
+    }
     let height = element.offsetHeight;
     let element_wrap = document.getElementById(collapse_wrap_id);
     element_wrap.style.height = height + "px";
