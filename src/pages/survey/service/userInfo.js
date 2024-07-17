@@ -9,7 +9,7 @@ let userInfo = ref({}); //用户信息(用户名，用户id，用户状态)
 async function getUserInfo(errorMessage=false) {
 
     const USER_TOKEN = localStorage.getItem("USER_TOKEN")
-    let info = {}
+    let info = {uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0}
 
     await request({
         url: `${DOMAIN}user/info?token=${USER_TOKEN}`,

@@ -1,6 +1,6 @@
 <template>
   <div class="survey-login-page">
-    <div class="survey-login-btn" v-show="userData.status<0">
+    <div class="survey-login-btn" v-show="userInfo.status<0">
       <router-link to="/survey/account/register"  >
         <span class="header-button-label" style="margin-right: 12px">注册</span>
       </router-link>
@@ -9,11 +9,11 @@
       </router-link>
     </div>
 
-    <div v-show="userData.status>0">
+    <div v-show="userInfo.status>0">
       <c-popover :name="'avatar'">
         <template #title>
           <div class="nav-avatar-image-wrap">
-            <div :class="getSprite(userData.avatar)"></div>
+            <div :class="getSprite(userInfo.avatar)"></div>
             <span class="nav-user-name">{{userInfo.userName}}</span>
           </div>
         </template>
@@ -27,7 +27,7 @@
 
 
     <c-popup :visible="loginVisible" v-model:visible="loginVisible" >
-      <div class="login-card" v-show="userData.status>0">
+      <div class="login-card" v-show="userInfo.status>0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
           <my-button data-color="blue" :active="true" @click="logout()">确定</my-button>
@@ -114,7 +114,7 @@ function getLoginParams() {
 
 async function getUserInfoByToken() {
 
-  userData.value = await getUserInfo()
+  userInfo.value = await getUserInfo()
 
 }
 
