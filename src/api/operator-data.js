@@ -60,7 +60,7 @@ export default {
      */
     getOperatorData(data) {
         return request({
-            url: `${api_name}/operator/table`,
+            url: `${api_name}/operator/info`,
             method: "post",
             data:data
         })

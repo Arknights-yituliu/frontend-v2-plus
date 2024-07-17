@@ -5,7 +5,7 @@ import surveyApi from "/src/api/userInfo"
 import operator_table_simple from '/src/static/json/survey/character_table_simple.json'
 import "/src/assets/css/survey/home.scss";
 import "/src/assets/css/survey/home.phone.scss";
-import {getUserInfo} from '/src/pages/survey/service/userData.js'
+import {getUserInfo} from '/src/pages/survey/service/userInfo.js'
 import MyButton from '/src/components/Button.vue'
 
 let avatar = []
@@ -20,7 +20,7 @@ for (const char_id in operator_table_simple) {
 
 avatar.sort((a, b) => a.time - b.time)
 
-let userData = ref({});
+let userInfo = ref({});
 
 
 let inputData = ref({
@@ -179,7 +179,7 @@ onMounted(() => {
         </div>
         <div class="user-info-card-line">
           <span>绑定邮箱</span>
-          <span>{{ userData.email }}</span>
+          <span>{{ userInfo.email }}</span>
         </div>
         <!--        <div class="user_info_bar">-->
         <!--          <div class="user_input_label">明日方舟昵称</div>-->

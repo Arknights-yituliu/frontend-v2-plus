@@ -7,7 +7,7 @@ let player_uid = ref('')  //玩家uid
  */
 function retrievalByUid() {
     const data = {
-        token: userData.value.token,
+        token: userInfo.value.token,
         uid: player_uid.value
     }
     surveyOperatorApi.retrievalOperatorDataByUid(data).then(response => {

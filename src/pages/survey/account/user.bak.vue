@@ -125,7 +125,7 @@ import {onMounted, ref} from "vue";
 import {cMessage} from "/src/utils/message";
 
 import surveyApi from "/src/api/userInfo";
-import {getUserInfo} from "/src/pages/survey/service/userData.js";
+import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
 
 let loginStatus = ref('')
 

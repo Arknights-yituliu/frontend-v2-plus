@@ -147,9 +147,9 @@
         <div class="control-line-label">导入导出</div>
         <div class="control-line">
           <div class="control-checkbox">
-            <my-button data-color="green" @click="importDataBySkland()">从森空岛导入</my-button>
-            <my-button data-color="green" @click="exportOperatorExcel()">导出为Excel</my-button>
-            <my-button data-color="red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</my-button>
+            <my-button data-color="green" :active="true" @click="importDataBySkland()">从森空岛导入</my-button>
+            <my-button data-color="green" :active="true" @click="exportOperatorExcel()">导出为Excel</my-button>
+<!--            <my-button data-color="red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</my-button>-->
           </div>
         </div>
         <div class="control-line">
@@ -178,7 +178,7 @@
       <div class="statistical-popup-container not-own-avatar-sprite-variables">
         <!--        <div class="detail-card">-->
         <!--          <h2 class="card-h2">博士招募情况</h2>-->
-        <!--          <span> Dr.{{ userData.userName }}，您的招募干员情况为-->
+        <!--          <span> Dr.{{ userInfo.userName }}，您的招募干员情况为-->
         <!--            {{ statisticalResultV2.own }}/{{ statisticalResultV2.count }}-->
         <!--          </span>-->
         <!--          <div v-show="statisticalResultV2.count-statisticalResultV2.own>0">-->
@@ -197,7 +197,7 @@
 
         <div class="o-statistical-card">
           <h2>博士招募情况</h2>
-          <span class="statistical-module-text"> Dr.{{ userData.userName }}，您总计招募了{{
+          <span class="statistical-module-text"> Dr.{{ userInfo.userName }}，您总计招募了{{
               statisticalResult.total.own
             }}位干员
             <span v-show="statisticalResult.total.count - statisticalResult.total.own>0"
@@ -510,7 +510,7 @@ import {exportExcel} from '/src/utils/exportExcel.js'
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
 import {debounce} from "/src/utils/debounce";
-import {getUserInfo} from "/src/pages/survey/service/userData.js";
+import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
 import {useRouter} from "vue-router";
 
 import MyButton from '/src/components/Button.vue'
@@ -520,7 +520,7 @@ let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
 let itemObtainApproachType = ['常驻干员','赠送干员','限定干员']
 
-let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});  //用户信息
+let userInfo = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});  //用户信息
 
 /**
  * 获取本地缓存的用户信息

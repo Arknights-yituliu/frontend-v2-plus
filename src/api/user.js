@@ -10,7 +10,7 @@ export default {
         let userInfo = {}
 
         await request({
-            url: `${DOMAIN}survey/user/info?token=${USER_TOKEN}`,
+            url: `${DOMAIN}user/info?token=${USER_TOKEN}`,
             method: 'get'
         }).then(response => {
             if (response.data.code === 200) {

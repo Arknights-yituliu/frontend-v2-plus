@@ -9,9 +9,9 @@ const playerInfoAPI = '/api/v1/game/player/info'
 const PLAYER_BINDING_URL = '/api/v1/game/player/binding'
 const OAUTH2_URL = "https://as.hypergryph.com/user/oauth2/v2/grant";
 const GENERATE_CRED_BY_CODE_URL = "https://zonai.skland.com/api/v1/user/auth/generate_cred_by_code";
+const cultivatePlayer =  '/api/v1/game/cultivate/player'
 
-
-function getSign(path, requestParam, secret) {
+function getSign(path, params, secret) {
     let timestamp = Math.floor((new Date().getTime() - 500) / 1000).toString();
     const headers = {
         platform: '3',
@@ -19,20 +19,31 @@ function getSign(path, requestParam, secret) {
         dId: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
         vName: '1.2.0'
     }
-    requestParam = requestParam ? requestParam : ''
-    let message = path + requestParam + timestamp + JSON.stringify(headers);
+    params = params ? params : ''
+    let text = path + params + timestamp + JSON.stringify(headers);
 
-    const sign = md5(hmacSHA256(message, secret).toString()).toString()
+    const sign = md5(hmacSHA256(text, secret).toString()).toString()
 
     return {timestamp, sign}
 }
 
+function getHeaders(url,params,cred,token){
+    const {timestamp, sign} = getSign(PLAYER_BINDING_URL, params, token);
+    return {
+        "platform": '3',
+        "timestamp": timestamp,
+        "dId": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
+        "vName": '1.2.0',
+        "cred": cred,
+        "sign": sign
+    }
+}
 
-async function getPlayBindingV2(defaultAkUid, requestParam, cred, secret) {
 
 
+async function getPlayBindingV2(defaultAkUid, params, cred, token) {
 
-    const {timestamp, sign} = getSign(PLAYER_BINDING_URL, requestParam, secret);
+
 
     let uid = '0'
     let nickName = ""
@@ -41,16 +52,8 @@ async function getPlayBindingV2(defaultAkUid, requestParam, cred, secret) {
     let channelMasterId = -1
 
     const url = `${domain}${PLAYER_BINDING_URL}`
-    // console.log(url)
-    const headers = {
-        "platform": '3',
-        "timestamp": timestamp,
-        "dId": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
-        "vName": '1.2.0',
-        "cred": cred,
-        "sign": sign
-    }
-    // console.table(headers)
+
+    const headers = getHeaders(PLAYER_BINDING_URL,params,cred,token)
 
     let bindingData = {
         bindingList: [],
@@ -159,17 +162,11 @@ async function getPlayerInfo(params, characterTable) {
 
     const {requestUrl, requestParam, token, cred, akUid, akNickName, channelName, channelMasterId} = params
 
-    const {timestamp, sign} = getSign(requestUrl, requestParam, token);
+
     const url = `${domain}${requestUrl}?${requestParam}`
     // console.log(url)
-    const headers = {
-        "platform": '3',
-        "timestamp": timestamp,
-        "dId": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
-        "vName": '1.2.0',
-        "cred": cred,
-        "sign": sign
-    }
+    const headers = getHeaders(requestUrl,params,cred,token)
+
     // console.table(headers)
 
     let uploadData = {}
@@ -213,6 +210,8 @@ async function getPlayerInfo(params, characterTable) {
 }
 
 let equipDict = new Map()
+
+
 
 
 function FormattingOperatorData(characterList, characterTable) {
@@ -294,6 +293,20 @@ function FormattingOperatorData(characterList, characterTable) {
 
     console.table(operatorList)
     return operatorList
+}
+
+
+async function getPlayerWarehouseInfo(cred,token,uid){
+   const params = `uid=${uid}`
+   const headers =  getHeaders(cultivatePlayer,params,cred,token)
+   const url = `${domain}${cultivatePlayer}?params`
+   await request({
+       url:url,
+       headers:headers,
+       method:'get'
+   }).then(response=>{
+
+   })
 
 }
 

@@ -264,7 +264,7 @@ onMounted(() => {
             </my-button>
             <my-button data-color="green" :active="selectedBtn('itemObtainApproach', '限定干员')"
                        @click="addFilterCondition('itemObtainApproach', '限定干员')">
-              赠送干员
+              限定干员
             </my-button>
           </div>
         </div>
