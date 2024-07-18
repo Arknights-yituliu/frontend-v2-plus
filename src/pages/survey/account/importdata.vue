@@ -129,7 +129,7 @@ async function uploadSKLandData({token, data}) {
       .then(response => {
         cMessage("森空岛数据导入成功，即将转跳到干员调查页面");
         setTimeout(() => {
-          // router.push({name:'OperatorSurvey'})
+          router.push({name:'OperatorSurvey'})
         }, 3000)
       })
 }
