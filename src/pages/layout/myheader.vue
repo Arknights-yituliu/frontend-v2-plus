@@ -22,7 +22,7 @@ function menu_collapse(flag) {
       document.getElementById("drawer114").style.willChange = 'transform'
       document.getElementById("drawer114").style.transform = "translateX(0)";
       document.getElementById("drawerMask514").style.display = "block";
-      console.log(document.getElementById("drawer114"))
+
     }, 30);
   } else {
     document.getElementById("drawer114").style.transform = "translateX(-400px) ";
@@ -30,7 +30,7 @@ function menu_collapse(flag) {
     // document.getElementById("drawer114514").className = "nav_collapse";
   }
 
-  console.log(menuFlag.value);
+
 }
 
 let aside_flag = ref(true);
@@ -54,7 +54,7 @@ function aside_collapse() {
 
     }, 200);
   }
-  // console.log(aside_flag.value);
+
 }
 
 let themeV2 = ref('')
@@ -88,20 +88,20 @@ function getPageTitle(path) {
 
   for (let i of routes.value) {
     if (i.isChild) {
-      // console.log(path, " ", i.path);
+
       if (i.path.indexOf(path) > -1) {
         pageTitle.value = i.text;
 
       }
       for (let c of i.child) {
-        // console.log(path, " ", c.path);
+
         if (c.path.indexOf(path) > -1) {
           pageTitle.value = c.text;
 
         }
       }
     } else {
-      // console.log(path, " ", i.path);
+
       if (i.path.indexOf(path) > -1) {
         pageTitle.value = i.text;
       }

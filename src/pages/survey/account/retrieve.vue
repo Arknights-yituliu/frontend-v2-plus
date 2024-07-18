@@ -76,7 +76,7 @@ let recoveryProgress = ref('left:0px')
 function setRecoveryProgress(step){
   const width = - document.getElementById("retrieve-form-scroll-item").offsetWidth
   recoveryProgress.value = `left:${step * width}px`
-  console.log(recoveryProgress.value)
+
 }
 
 function toRetrieveAuthentication(step) {

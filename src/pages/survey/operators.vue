@@ -568,7 +568,6 @@ function getOperatorData() {
   //检查是否登录
   if (checkUserStatus(false)) {
     console.log("未登录")
-
     return;
   }
 

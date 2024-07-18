@@ -4,6 +4,7 @@ import request from "/src/api/requestBase";
 import {cMessage} from "/src/utils/message";
 import toolAPI from '/src/api/tool.js'
 
+
 const SKLAND_DOMAIN = "https://zonai.skland.com";
 const PLAYER_INFO_API = '/api/v1/game/player/info'
 const PLAYER_BINDING_URL = '/api/v1/game/player/binding'
@@ -216,7 +217,37 @@ async function getPlayerInfo(params, characterTable) {
 
 let equipDict = new Map()
 
+async function getWarehouseInfo(akUid, cred, token, userToken){
 
+    const params = `uid=${akUid}`
+    const headers =  getHeaders(CULTIVATE_PLAYER_API,params,cred,token)
+    const url = `${SKLAND_DOMAIN}${CULTIVATE_PLAYER_API}?${params}`
+    let data = {}
+    await request({
+        url:url,
+        headers:headers,
+        method:'get'
+    }).then(response=>{
+        response = response.data
+        console.log(response)
+        if(response.code===0){
+            const items = response.data.items
+            let list = []
+            for(const item of items){
+                list.push({itemId:item.id,quantity:item.count})
+            }
+             data = {
+                akUid:akUid,
+                token:userToken,
+                list:list
+            }
+            console.log(data)
+        }
+    })
+
+
+    return data
+}
 
 
 function FormattingOperatorData(characterList, characterTable) {
@@ -302,16 +333,7 @@ function FormattingOperatorData(characterList, characterTable) {
 
 
 async function getPlayerWarehouseInfo(cred,token,uid){
-   const params = `uid=${uid}`
-   const headers =  getHeaders(CULTIVATE_PLAYER_API,params,cred,token)
-   const url = `${SKLAND_DOMAIN}${CULTIVATE_PLAYER_API}?params`
-   await request({
-       url:url,
-       headers:headers,
-       method:'get'
-   }).then(response=>{
 
-   })
 
 }
 
@@ -319,4 +341,5 @@ export default {
 
     getPlayBindingV2,
     getPlayerInfo,
+    getWarehouseInfo
 }

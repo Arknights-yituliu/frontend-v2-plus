@@ -11,7 +11,7 @@ function retrievalByUid() {
         uid: player_uid.value
     }
     surveyOperatorApi.retrievalOperatorDataByUid(data).then(response => {
-        console.log(response)
+
         setTimeout(() => {
             location.reload()
         }, 1000);

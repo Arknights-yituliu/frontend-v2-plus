@@ -183,7 +183,7 @@ function tryBtn(index) {
   axios.get(requestURL(index)).then(
       (response) => {
         cMessage("调用成功");
-        // console.log(response.data)
+
         apiResponse.value = response.data;
       },
       (response) => {

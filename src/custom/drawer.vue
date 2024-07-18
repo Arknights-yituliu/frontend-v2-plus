@@ -21,7 +21,7 @@ function nav_switch(flag) {
     document.getElementById("drawer").className = "drawer-collapse";
     document.getElementById("drawer_wrap").style.minWidth = "";
   }
-  // console.log(menu_flag.value)
+
 }
 
 onMounted(() => {

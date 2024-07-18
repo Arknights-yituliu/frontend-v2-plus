@@ -19,7 +19,6 @@ let displayOperatorList = ref([])
 
 function getCharStatisticsResult() {
   surveyApi.getCharStatisticsResult().then((response) => {
-    console.log(response.data)
     const {result, userCount, updateTime} = response.data
     for (const item of result) {
       const charId = item.charId
@@ -118,7 +117,6 @@ function getModTypeIcon(equip, type) {
 function getSkillName(skill, index) {
   if (skill.length < index + 1) return "";
   return skill[index].name;
-  // console.log(iconId);
 }
 
 //判断按钮是否选择赋予样式
@@ -154,7 +152,6 @@ let filterCondition = ref({
  * @param condition 属性的条件
  */
 function addFilterCondition(property, condition) {
-  console.log(filterCondition.value);
   let filterRulesCopy = [];
   if (filterCondition.value[property].indexOf(condition) > -1) {
     for (let i in filterCondition.value[property]) {

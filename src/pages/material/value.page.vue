@@ -88,7 +88,7 @@ onMounted(() => {
 
     const index = 0
     for(const list of tmpList){
-      console.log(list)
+
       if(list&&list.length>0){
         if(list.length<9){
           itemValueCollect.value.push(list)

@@ -23,11 +23,10 @@ let visible = false;
 
 let options = ref(props.options);
 
-// console.log('label：',props.label)
-// console.log('key：',props.value)
+
 
 function openAndCloseOption() {
-  // console.log(visible)
+
   if (!visible) {
     visibleStyle.value = "display:block";
   } else {
@@ -52,13 +51,7 @@ watch(
   }
 );
 
-// watch(
-//   () => props.label,
-//   (newVal, oldVal) => {
-//     console.log(newVal)
-//     label.value = newVal
-//   }
-// )
+
 </script>
 
 <style scoped>

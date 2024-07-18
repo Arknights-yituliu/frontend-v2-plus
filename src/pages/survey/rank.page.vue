@@ -62,14 +62,12 @@ function getSurveyResult(obj, rank) {
 function getSpriteIcon(skill, index) {
   if (skill.length < index + 1) return "";
   const iconId = skill[index].iconId;
-  // console.log(iconId);
   return "bg-skill_icon_" + iconId + " rank_sprite_skill";
 }
 
 function getSkillName(skill, index) {
   if (skill.length < index + 1) return "";
   return skill[index].name;
-  // console.log(iconId);
 }
 
 //判断按钮是否选择赋予样式
@@ -96,7 +94,6 @@ let filter_condition = ref({rarity: [], profession: [], year: [], own: [], equip
  * @param condition 属性的条件
  */
 function addFilterCondition(property, condition) {
-  console.log(filter_condition.value);
   let filterRulesCopy = [];
   if (filter_condition.value[property].indexOf(condition) > -1) {
     for (let i in filter_condition.value[property]) {
@@ -148,15 +145,12 @@ function sortRank(property) {
 }
 
 function sortIconClass(property, descOrAsc) {
-  // console.log(property,descOrAsc)
   if (last_property.value === property) {
     if (desc_or_asc.value % 2 !== 0 && 'desc' === descOrAsc) {
-      // console.log('降序')
       return 'border-top: 8px solid #2692fd'
     }
 
     if (desc_or_asc.value % 2 === 0 && 'asc' === descOrAsc) {
-      // console.log('升序')
       return 'border-bottom: 8px solid #2692fd'
     }
   }
@@ -177,7 +171,6 @@ function commonSort(property, condition) {
   for (let i = 0; i < len - 1; i++) {
     for (let j = 0; j < len - 1 - i; j++) {
       if (desc_or_asc.value % 2 !== 0) {
-        // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
         if (operatorsStatisticsList.value[j][property][condition] < operatorsStatisticsList.value[j + 1][property][condition]) {
           const temp = operatorsStatisticsList.value[j]
           operatorsStatisticsList.value[j] = operatorsStatisticsList.value[j + 1]
@@ -186,7 +179,6 @@ function commonSort(property, condition) {
       }
 
       if (desc_or_asc.value % 2 === 0) {
-        // console.log(operators_statistics_list.value[j][property][condition],operators_statistics_list.value[j + 1][property][condition])
         if (operatorsStatisticsList.value[j][property][condition] > operatorsStatisticsList.value[j + 1][property][condition]) {
           const temp = operatorsStatisticsList.value[j]
           operatorsStatisticsList.value[j] = operatorsStatisticsList.value[j + 1]

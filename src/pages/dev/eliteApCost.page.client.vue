@@ -46,11 +46,11 @@ async function eliteApCostCal() {
     const item_cost = item_cost_table[charId];
     if(item_cost==void 0) continue
     for(const eliteRank of item_cost.elite){
-      // console.log(eliteRank)
+
       for(let item_id in eliteRank){
-        // console.log(item_id)
+
         const value = item_value_map.value[item_id]
-        // console.log(value)
+
         if(value !== void 0) apCost += (value*eliteRank[item_id])
       }
     }

@@ -200,12 +200,12 @@ export default {
     },
 
     pieChart(data) {
-      console.log("触发了");
 
-      var chartDom = document.getElementById("all");
-      var myChart = echarts.init(chartDom);
 
-      var option = {
+      const chartDom = document.getElementById("all");
+      const myChart = echarts.init(chartDom);
+
+      const option = {
         tooltip: {
           formatter: "{a} {b} : {c}个 ({d}%)",
           position: "inner",
@@ -253,9 +253,8 @@ export default {
       myChart.setOption(option);
     },
     barChart() {
-      var myChart = echarts.init(document.getElementById("chart2"));
-      console.log(this.xData);
-      var option = {
+      const myChart = echarts.init(document.getElementById("chart2"));
+      const option = {
         color: "#87CEEB",
 
         // backgroundColor: "black",

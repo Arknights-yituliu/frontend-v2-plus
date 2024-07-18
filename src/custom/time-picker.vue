@@ -108,7 +108,7 @@ function hourMoveHandle() {
   // event.preventDefault();
 
   const hour = parseInt((hourHandleElement.scrollTop / hourOptionElement.clientHeight * hourOptionElement.childElementCount).toString())
-  console.log(hourHandleElement.scrollTop / hourOptionElement.clientHeight)
+
   setHours(hour)
 }
 

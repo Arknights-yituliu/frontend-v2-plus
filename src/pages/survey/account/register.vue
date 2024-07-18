@@ -50,7 +50,7 @@ function checkPassword() {
 }
 
 function inputTipDisplay(inputValue) {
-  console.log(!inputValue)
+
   return !inputValue;
 }
 

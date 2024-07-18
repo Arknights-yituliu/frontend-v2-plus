@@ -69,7 +69,6 @@ function countOperatorByProfession() {
 
 chooseOperatorProfession('SNIPER')
 
-console.log(operatorGroupByProfession)
 
 function getCharIdList() {
   let list = []
@@ -154,7 +153,6 @@ function getCharStatisticsResult() {
     listOperators.value = result
     listOperatorSlice.value.push(result.slice(0, sliceLength))
     listOperatorSlice.value.push(result.slice(sliceLength))
-    console.log(listOperatorSlice.value)
   });
 }
 
@@ -185,7 +183,6 @@ function operatorsGroupByAttendance(list, interval) {
 
   }
 
-  console.log(listResult)
   return listResult
 }
 

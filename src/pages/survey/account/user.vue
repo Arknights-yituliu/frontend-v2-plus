@@ -137,7 +137,7 @@ onMounted(() => {
 const route = useRoute();
 
 watch(()=>route.fullPath,(newVal,oldValue)=>{
-  console.log(newVal,oldValue)
+
   getUserInfoByToken()
 })
 

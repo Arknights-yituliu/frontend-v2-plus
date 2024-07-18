@@ -24,12 +24,7 @@ const context_height_style = `height:${props.height}`;
 function openAndClose(visible) {
   emit("update:visible", visible);
   emit("update:modelValue",visible)
-  console.log(visible)
-  // if (visible) {
-  //   popupStyle.value = "display: block;";
-  // } else {
-  //   popupStyle.value = "display: none;";
-  // }
+
 }
 
 </script>

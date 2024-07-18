@@ -33,13 +33,13 @@ function getPathName(path) {
 }
 
 function navParentSelected(path) {
-  // console.log(path, "==", pathName.value);
+
   if (path == pathName.value) return " menu-selected";
   return "";
 }
 
 function navChildSelected(path) {
-  // console.log(path, "==", pathName.value);
+
   if (path === route.path) return "menu-selected";
   return "";
 }

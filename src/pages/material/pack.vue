@@ -50,7 +50,7 @@ function initData() {
 
     pack.lineChartData = getLineChartData(pack)
 
-    //  console.log('正常：',this.packPPRResponse[i].packName);
+
     //性价比位置的为空的强制赋0
     if (!pack.packRmbPerDraw) {
       pack.packRmbPerDraw = 0;

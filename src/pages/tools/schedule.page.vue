@@ -347,7 +347,7 @@ function commonFilterOperator() {
       }
     }
 
-    console.log(operator.charId)
+
 
     if (filterOperatorList.value[operator.charId]) {
       operator.description = filterOperatorList.value[operator.charId].description + '<br><br>' + operator.description
@@ -593,7 +593,7 @@ function setFiammetta(property, value) {
 
 watch(() => plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
     (newVal) => {
-      console.log(newVal)
+
       if (newVal && selectedRoomType.value === 'dormitory') {
         if (plansTemplate.value[selectedPlanIndex.value].rooms
             [selectedRoomType.value][selectedRoomIndex.value].operators.length > 0) {
