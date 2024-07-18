@@ -60,10 +60,10 @@ function toRegister() {
   const param = getParam()
   userAPI.registerV3(param).then(response => {
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
+    cMessage('登录成功，即将转跳到森空岛导入页面')
     setTimeout(() => {
-      router.push({name: "AccountHome"})
+      router.push({name:'IMPORT_BY_SKLAND'})
     }, 3000)
-    cMessage('注册成功，即将转跳到个人信息页面')
   })
 }
 

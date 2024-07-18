@@ -40,9 +40,9 @@ function toLogin() {
 
   userAPI.loginV3(inputContent.value).then(response => {
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
-    cMessage('登录成功，即将转跳到个人信息页面')
+    cMessage('登录成功，即将转跳到森空岛导入页面')
     setTimeout(() => {
-      router.push({name: "AccountHome"})
+      router.push({name:'IMPORT_BY_SKLAND'})
     }, 3000)
 
   })
