@@ -182,7 +182,7 @@ const vLoadmore = {
     const selectWrap = el.querySelector(".el-scrollbar__wrap");
     selectWrap.addEventListener("scroll", (e) => {
       const { scrollHeight, scrollTop, clientHeight } = selectWrap;
-      if (scrollHeight - scrollTop - 200 <= clientHeight) {
+      if (scrollHeight - scrollTop - 160 <= clientHeight) {
         binding.value();
       }
     });
@@ -274,13 +274,13 @@ const vLoadmore = {
 </template>
 
 <style lang="scss">
-.notice-board-page + .elite-page {
-  height: calc(100vh - 68px - 23px);
-}
+//.notice-board-page + .elite-page {
+//  height: calc(100vh - 68px - 23px);
+//}
 @media screen and (max-width: 600px) {
-  .notice-board-page + .elite-page {
-    height: calc(100vh - 80px - 40px) !important;
-  }
+  //.notice-board-page + .elite-page {
+  //  height: calc(100vh - 80px - 40px) !important;
+  //}
   .elite-page {
     height: calc(100vh - 80px) !important;
   }

@@ -624,7 +624,7 @@ function importData() {
  */
 function exportOperatorExcel() {
   let list = [[
-    '干员名称', '是否已招募', '等级', '精英化等级', '潜能等级', '通用技能等级', '1技能专精等级',
+    '干员名称', '是否已招募', '星级','等级', '精英化等级', '潜能等级', '通用技能等级', '1技能专精等级',
     '2技能专精等级', '3技能专精等级', 'X模组等级', 'Y模组等级', 'D模组等级'
   ]]
   for (const charId in operatorTable.value) {
@@ -632,6 +632,7 @@ function exportOperatorExcel() {
     list.push([
       operator.name,
       operator.own,
+      operator.rarity,
       operator.level,
       operator.elite,
       operator.potential,
