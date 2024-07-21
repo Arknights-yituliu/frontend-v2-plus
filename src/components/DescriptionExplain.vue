@@ -8,7 +8,6 @@ import term_description from '/src/static/json/build/term_description.json';
 import {defineProps} from 'vue';
 import {ElNotification} from "element-plus";
 
-// 记录所有创建的介绍框和 z-index 梯度
 const props = defineProps({
   operatorList: {
     type: Array,
@@ -30,12 +29,12 @@ const handleClick = (event) => {
   const descriptionData = term_description[text];
 
   if (descriptionData) {
-    createPopup(text, descriptionData.description);
+    createNotification(text, descriptionData.description);
   }
 };
 
 // 创建一个新的介绍框
-const createPopup = (text, description) => {
+const createNotification = (text, description) => {
   ElNotification({
     title: text,
     dangerouslyUseHTMLString: true,
@@ -77,6 +76,7 @@ onMounted(() => {
   tryBindEvent();
 });
 
+// 在干员列表重新筛选后，再次进行绑定
 watch(() => props.operatorList, () => {
   tryBindEvent();
 });
