@@ -12,7 +12,6 @@
       <router-view>
       </router-view>
     </div>
-
     <components-container></components-container>
     <my-footer></my-footer>
   </div>
