@@ -206,8 +206,9 @@ const vLoadmore = {
         <el-checkbox-button v-for="item in 6" :key="item" :value="item">★{{ item }}</el-checkbox-button>
       </el-checkbox-group>
       <div class="right">
-        <el-input v-model="searchKey" placeholder="干员名称" @input="reset"></el-input>
+        <el-input class="el-input-operator-name" v-model="searchKey" placeholder="干员名称" @input="reset"></el-input>
         <el-cascader
+          class="el-cascader-profession"
           v-model="professionCheckList"
           :options="professionDictJSON"
           @change="reset"
@@ -274,17 +275,7 @@ const vLoadmore = {
 </template>
 
 <style lang="scss">
-//.notice-board-page + .elite-page {
-//  height: calc(100vh - 68px - 23px);
-//}
-@media screen and (max-width: 600px) {
-  //.notice-board-page + .elite-page {
-  //  height: calc(100vh - 80px - 40px) !important;
-  //}
-  .elite-page {
-    height: calc(100vh - 80px) !important;
-  }
-}
+
 
 .elite-page {
   display: flex;
@@ -381,5 +372,42 @@ const vLoadmore = {
       position: absolute;
     }
   }
+
+
+  //.notice-board-page + .elite-page {
+  //  height: calc(100vh - 68px - 23px);
+  //}
 }
+
+
+@media screen and (max-width: 600px) {
+  //.notice-board-page + .elite-page {
+  //  height: calc(100vh - 80px - 40px) !important;
+  //}
+  .elite-page {
+    height: calc(100vh - 80px) !important;
+
+    .el-checkbox-button__inner{
+      padding:12px 16px;
+    }
+
+    .option{
+      .right{
+        .el-input{
+          width: 160px;
+          margin-right: 4px;
+        }
+      }
+    }
+
+
+
+  }
+
+
+
+
+
+}
+
 </style>
