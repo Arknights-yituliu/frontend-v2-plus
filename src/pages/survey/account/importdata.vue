@@ -57,6 +57,7 @@ function getPlayerBindingByHgToken() {
 }
 
 
+
 function canBeParsedAsObject(str) {
 
   str.replace(/[\u00A0\u200B\u200C\u200D\uFEFF\s]/g, '');
