@@ -6,7 +6,7 @@ import character_table_simple from "/src/static/json/survey/character_table_simp
 import MyButton from '/src/components/Button.vue'
 import SpriteAvatar from "/src/components/SpriteAvatar.vue";
 
-import surveyApi from "/src/api/operator-data";
+import operatorDataApi from "/src/api/operator-data";
 
 let rarityDict = [1, 2, 3, 4, 5, 6];
 
@@ -18,7 +18,7 @@ let updateTimeText = ref("2023-05-01");
 
 
 function getCharStatisticsResult() {
-  surveyApi.getCharStatisticsResult().then((response) => {
+  operatorDataApi.getCharStatisticsResult().then((response) => {
     let {result,userCount,updateTime} = response.data
     for(const item of result){
       let char_info = character_table_simple[item.charId]
@@ -277,86 +277,86 @@ onMounted(() => {
     <!--      <table class="mdui-table">-->
 
 
-    <div id="rank_table">
-      <table class="rank_table">
+    <div id="rank_table" class="rank-table-box">
+      <table class="rank-table">
         <thead>
         <tr>
           <td>
-            <div class="rank_table_title" style="width: 220px">代号</div>
+            <div class="rank-table-title" style="width: 220px">代号</div>
           </td>
           <td @click="sortRank('own')">
-            <div class="rank_table_title" style="width: 80px">
+            <div class="rank-table-title" style="width: 80px">
               <div>持有率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('own','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('own','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('own','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('own','desc')"></div>
               </div>
             </div>
           </td>
           <td @click="commonSort('elite','rank2')">
-            <div class="rank_table_title" style="width: 80px">
+            <div class="rank-table-title" style="width: 80px">
               <div>精二率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('elite','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('elite','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('elite','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('elite','desc')"></div>
 
               </div>
             </div>
           </td>
           <td @click="commonSort('skill1','rank3')">
-            <div class="rank_table_title" style="width: 80px">
+            <div class="rank-table-title" style="width: 80px">
               <div>一技能专三率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('skill1','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('skill1','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('skill1','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('skill1','desc')"></div>
               </div>
             </div>
           </td>
           <td @click="commonSort('skill2','rank3')">
-            <div class="rank_table_title" style="width: 80px">
+            <div class="rank-table-title" style="width: 80px">
               <div>二技能专三率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('skill2','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('skill2','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('skill2','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('skill2','desc')"></div>
 
               </div>
             </div>
           </td>
           <td @click="commonSort('skill3','rank3')">
-            <div class="rank_table_title" style="width: 80px">
+            <div class="rank-table-title" style="width: 80px">
               <div>三技能专三率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('skill3','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('skill3','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('skill3','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('skill3','desc')"></div>
 
               </div>
             </div>
           </td>
           <td @click="commonSort('modX','count')">
-            <div class="rank_table_title" style="width: 150px">
+            <div class="rank-table-title" style="width: 150px">
               <div>X模组解锁率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('modX','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('modX','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('modX','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('modX','desc')"></div>
 
               </div>
             </div>
           </td>
           <td @click="commonSort('modY','count')">
-            <div class="rank_table_title" style="width: 150px">
+            <div class="rank-table-title" style="width: 150px">
               <div>Y模组解锁率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('modY','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('modY','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('modY','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('modY','desc')"></div>
               </div>
             </div>
           </td>
           <td @click="commonSort('modD','count')">
-            <div class="rank_table_title" style="width: 150px">
+            <div class="rank-table-title" style="width: 150px">
               <div>D模组解锁率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('modD','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('modD','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('modD','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('modD','desc')"></div>
               </div>
             </div>
           </td>
@@ -412,19 +412,19 @@ onMounted(() => {
             {{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}
           </td>
           <td class="rank_table_7">
-            <div>解锁：{{ getPercentage(getSurveyResult(result.modX, 'count'), 2) }}</div>
+            <div>{{ getPercentage(getSurveyResult(result.modX, 'count'), 2) }}</div>
             <!--            &lt;!&ndash;            <div>一级：{{ getPercentage(getSurveyResult(result.modX, 'rank1'), 1) }}</div>&ndash;&gt;-->
             <!--            &lt;!&ndash;            <div>二级：{{ getPercentage(getSurveyResult(result.modX, 'rank2'), 1) }}</div>&ndash;&gt;-->
             <!--            &lt;!&ndash;            <div>三级：{{ getPercentage(getSurveyResult(result.modX, 'rank3'), 1) }}</div>&ndash;&gt;-->
           </td>
           <td class="rank_table_8">
-            <div>解锁：{{ getPercentage(getSurveyResult(result.modY, 'count'), 2) }}</div>
+            <div>{{ getPercentage(getSurveyResult(result.modY, 'count'), 2) }}</div>
             <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
             <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
             <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
           </td>
           <td class="rank_table_8">
-            <div>解锁：{{ getPercentage(getSurveyResult(result.modD, 'count'), 2) }}</div>
+            <div>{{ getPercentage(getSurveyResult(result.modD, 'count'), 2) }}</div>
             <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
             <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
             <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->

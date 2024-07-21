@@ -359,82 +359,82 @@ onMounted(() => {
     </div>
 
     <div id="rank_table">
-      <table class="rank_table">
+      <table class="rank-table">
         <tr>
           <td>
-            <div class="rank_table_title">代号</div>
+            <div class="rank-table-title">代号</div>
           </td>
           <td @click="sortRank('own')">
-            <div class="rank_table_title">
+            <div class="rank-table-title">
               <div>持有率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('own','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('own','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('own','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('own','desc')"></div>
               </div>
             </div>
           </td>
           <td @click="commonSort('elite','rank2')">
-            <div class="rank_table_title">
+            <div class="rank-table-title">
               <div>精二率</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('elite','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('elite','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('elite','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('elite','desc')"></div>
               </div>
             </div>
           </td>
           <td @click="commonSort('skill1','rank3')">
-            <div class="rank_table_title">
+            <div class="rank-table-title">
               <div>一技能</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('skill1','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('skill1','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('skill1','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('skill1','desc')"></div>
               </div>
             </div>
           </td>
           <td @click="commonSort('skill2','rank3')">
-            <div class="rank_table_title">
+            <div class="rank-table-title">
               <div>二技能</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('skill2','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('skill2','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('skill2','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('skill2','desc')"></div>
 
               </div>
             </div>
           </td>
           <td @click="commonSort('skill3','rank3')">
-            <div class="rank_table_title">
+            <div class="rank-table-title">
               <div>三技能</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('skill3','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('skill3','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('skill3','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('skill3','desc')"></div>
 
               </div>
             </div>
           </td>
           <td @click="commonSort('modX','rank3')">
-            <div class="rank_table_title">
+            <div class="rank-table-title">
               <div>X模组</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('modX','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('modX','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('modX','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('modX','desc')"></div>
               </div>
             </div>
           </td>
           <td @click="commonSort('modY','rank3')">
-            <div class="rank_table_title">
+            <div class="rank-table-title">
               <div>Y模组</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('modY','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('modY','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('modY','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('modY','desc')"></div>
               </div>
             </div>
           </td>
           <td @click="commonSort('modD','rank3')">
-            <div class="rank_table_title">
+            <div class="rank-table-title">
               <div>D模组</div>
               <div>
-                <div class="sort_asc_icon" :style="sortIconClass('modD','asc')"></div>
-                <div class="sort_desc_icon" :style="sortIconClass('modD','desc')"></div>
+                <div class="sort-asc-icon" :style="sortIconClass('modD','asc')"></div>
+                <div class="sort-desc-icon" :style="sortIconClass('modD','desc')"></div>
               </div>
             </div>
           </td>

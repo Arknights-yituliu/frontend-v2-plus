@@ -399,14 +399,7 @@ const vLoadmore = {
         }
       }
     }
-
-
-
   }
-
-
-
-
 
 }
 

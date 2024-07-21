@@ -195,7 +195,7 @@
         <!--          </div>-->
         <!--        </div>-->
 
-        <div class="o-statistical-card">
+        <div class="statistical-card">
           <h2>博士招募情况</h2>
           <span class="statistical-module-text"> Dr.{{ userData.userName }}，您总计招募了{{
               statisticalResult.total.own
@@ -209,7 +209,7 @@
                class="statistical-module-text">
             未招募的干员是：
           </div>
-          <div class="not-own-operator-wrap">
+          <div class="not-own-operator-box">
             <sprite-avatar :name="operator.charId" size="60" style="margin: 4px"
                            v-for="(operator,index) in statisticalResult.total.notOwn" :key="index"></sprite-avatar>
           </div>
@@ -1070,11 +1070,13 @@ onMounted(() => {
 }
 
 
-.not-own-operator-wrap {
+.not-own-operator-box {
   display: flex;
   flex-wrap: wrap;
   margin: auto;
   width: fit-content;
+  max-height: 300px;
+  overflow: auto;
 }
 
 
