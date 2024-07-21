@@ -54,11 +54,13 @@ function getPlayerBindingByHgToken() {
     sklandCred.value = cred
     sklandToken.value = token
   })
-
 }
 
 
 function canBeParsedAsObject(str) {
+
+  str.replace(/[\u00A0\u200B\u200C\u200D\uFEFF\s]/g, '');
+
   try {
     return JSON.parse(str); // 如果没有抛出错误，说明字符串可以被解析为JS对象
   } catch (e) {
