@@ -18,12 +18,13 @@
   .team-box {
     // border: 1px solid #00000080;
     display: inline-block;
-    background-color: #505050b0;
-    color: white;
+    //background-color: #505050b0;
+    color: var(--c-text-color);
     font-weight: 600;
     vertical-align: top;
     padding: 8px;
-    text-shadow: 1px 1px 2px #505050;
+    box-shadow: 1px 1px 8px var(--c-box-shadow-color);
+    //text-shadow: 1px 1px 2px #505050;
   }
 
   .teams-area :first-child {
@@ -51,8 +52,14 @@
   .operator-team-item {
     margin: 8px;
     text-align: center;
-    font-size: 14px;
+    background-color: #505050;
     box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
+    height: 80px;
+    width: 80px;
+    color:white;
+    font-size: 12px;
+    line-height: 80px;
+    box-sizing: border-box;
   }
 
   .profession-filter-single {
@@ -146,11 +153,7 @@
   }
 
   .item-placeholder {
-    height: 80px;
-    width: 80px;
-    background-color: blue;
-    color: aliceblue;
-    font-size: 12px;
+
   }
 
   .team-operator-avatar {
