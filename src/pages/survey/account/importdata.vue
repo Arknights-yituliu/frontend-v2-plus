@@ -84,6 +84,7 @@ async function getPlayerBindingBySkland() {
 }
 
 
+
 async function getOperatorDataByPlayerBinding(akPlayerBinding) {
   const {uid, nickName, channelName, channelMasterId} = akPlayerBinding
 
