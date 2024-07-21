@@ -8,6 +8,7 @@ import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce";
 import {translate} from "/src/utils/i18n";
 import MyButton from '/src/components/Button.vue'
+import DescriptionExplain from "/src/components/DescriptionExplain.vue";
 
 let buildingTable = {}
 for (const operator of building_table) {
@@ -37,7 +38,7 @@ let filterCondition = ref({
  * @param condition
  * @param key 选项的分类名
  */
-const  filterOperatorByTag = debounce((condition, key)=> {
+const filterOperatorByTag = debounce((condition, key) => {
   //清空干员列表
   filterOperatorList.value = []
   const btnKey = `${key}+${condition.label}`
@@ -53,7 +54,7 @@ const  filterOperatorByTag = debounce((condition, key)=> {
 
   //筛选干员
   commonFilterOperator()
-},500)
+}, 500)
 
 
 //干员搜索输入框
@@ -181,7 +182,6 @@ function getAvatar(id) {
 }
 
 
-
 onMounted(() => {
   searchOperatorDebounce()
 })
@@ -196,9 +196,10 @@ onMounted(() => {
            v-show="conditionType.display" :key="key">
           <span class="checkbox-button-label"
                 :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-        <my-button :data-color="conditionType.buttonColor" v-for="(condition,index) in conditionType.conditions" :key="index" style="margin: 2px"
-                  :color="COLOR.BLUE" :active="filterBtnStatus(key,condition.label)"
-                  @click="filterOperatorByTag(condition,key)">
+        <my-button :data-color="conditionType.buttonColor" v-for="(condition,index) in conditionType.conditions"
+                   :key="index" style="margin: 2px"
+                   :color="COLOR.BLUE" :active="filterBtnStatus(key,condition.label)"
+                   @click="filterOperatorByTag(condition,key)">
           {{ translate('schedule', condition.label) }}
         </my-button>
       </div>
@@ -208,7 +209,7 @@ onMounted(() => {
 
       <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
       <my-button :active="hideIrrelevantSkillsFlag" data-color="green"
-                style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
+                 style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
       </my-button>
       <span
           class="logistics-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
@@ -252,4 +253,6 @@ onMounted(() => {
       </tbody>
     </table>
   </div>
+  <!--启用术语解释插件，绑定监听数组filterOperatorList-->
+  <description-explain :operatorList="filterOperatorList"/>
 </template>
