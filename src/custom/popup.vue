@@ -57,7 +57,7 @@ function openAndClose(visible) {
   margin: 10vh auto;
   box-sizing: border-box;
   padding: 8px;
-
+  width: fit-content;
 }
 
 .popup-context {
