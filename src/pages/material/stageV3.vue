@@ -236,7 +236,7 @@ onMounted(() => {
 
 
 let itemIdList = [] // 材料表
-let historyActItemTable = [] // 历史活动up材料表
+let historyActItemTable = ref([]) // 历史活动up材料表
 let historyActItemList = []
 
 let historyActDevice = ref('')
@@ -280,7 +280,7 @@ const reprintActivityList = [
  * 获取历史活动关卡数据
  */
 function getHistoryActStage() {
-  historyActItemTable = []
+  historyActItemTable.value = []
   // 获取历史活动up材料信息
   stageApi.getHistoryActStage(0.625, 300).then(response => {
     // 先把当作表头的材料表转为一个集合
@@ -353,11 +353,11 @@ function getHistoryActStage() {
         }
       }
 
-      historyActItemTable.push(rowData)
+      historyActItemTable.value.push(rowData)
     }
 
     for (const reprintActivity of reprintActivityList) {
-      historyActItemTable.unshift(reprintActivity)
+      historyActItemTable.value.unshift(reprintActivity)
     }
 
     itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
