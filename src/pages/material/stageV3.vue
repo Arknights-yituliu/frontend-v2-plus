@@ -6,7 +6,7 @@ import FixedNav from "/src/components/FixedNav.vue";
 import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
-import {timeFormat} from '/src/utils/dateUtil.js'
+import {timeFormat} from '/src/utils/DateUtil.js'
 
 
 

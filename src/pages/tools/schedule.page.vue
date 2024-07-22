@@ -11,10 +11,10 @@ import building_table from '/src/static/json/build/building_table.json'
 
 import buildingApi from '/src/api/building.js'
 import operatorDataAPI from '/src/api/operator-data.js'
-import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
+import {operatorFilterConditionTable} from '/src/utils/BuildingSkillFilter.js'
 import {translate} from '/src/utils/i18n.js'
-import {getText} from '/src/utils/fileRead.js'
-import {debounce} from "/src/utils/debounce.js";
+import {getText} from '/src/utils/FileRead.js'
+import {debounce} from "/src/utils/Debounce.js";
 import {cMessage} from '/src/utils/message.js'
 import {popoverOnOpen, createPopover} from "/src/utils/popover.js";
 import userAPI from "/src/api/user.js";
@@ -329,15 +329,18 @@ function commonFilterOperator() {
   for (const operator of building_table) {
     // 当按钮key有值时通过暂存的筛选函数进行筛选
     if (selectBtnKey.value && !filterCondition.value.func(operator)) {
+
       continue;
     }
 
     //通过输入关键词筛选
     if (searchInputText.value && !operatorHasKeyword(operator)) {
+
       continue;
     }
 
     if (!selectBtnKey.value && !searchInputText.value) {
+
       continue
     }
 

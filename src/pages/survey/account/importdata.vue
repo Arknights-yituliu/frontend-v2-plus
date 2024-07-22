@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import {copyTextToClipboard} from "/src/utils/copyText.js";
+import {copyTextToClipboard} from "/src/utils/CopyText.js";
 import SklandAPI from '/src/pages/survey/service/skland.js'
 import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
 import {cMessage} from "/src/utils/message.js";

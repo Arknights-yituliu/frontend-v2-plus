@@ -4,7 +4,7 @@ import {
   convertToSeconds,
   secondsToTimeString,
   getSecondsSinceMidnight,
-} from "/src/utils/dataHanding"
+} from "/src/utils/DataHanding"
 import {Clock} from "@element-plus/icons-vue";
 
 const algorithmVisible = ref(false) //算法标识

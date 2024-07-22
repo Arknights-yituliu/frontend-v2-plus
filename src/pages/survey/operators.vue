@@ -505,11 +505,11 @@ import sklandApi from '/src/pages/survey/service/skland'
 import {onMounted, ref} from "vue";
 import operatorRecommend from "/src/pages/survey/service/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
-import {exportExcel} from '/src/utils/exportExcel.js'
+import {exportExcel} from '/src/utils/ExportExcel.js'
 
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
-import {debounce} from "/src/utils/debounce";
+import {debounce} from "/src/utils/Debounce";
 import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
 import {useRouter} from "vue-router";
 

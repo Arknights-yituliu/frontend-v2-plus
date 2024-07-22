@@ -1,6 +1,6 @@
 <script setup>
 import {ref, onMounted} from "vue";
-import {exportExcel} from "/src/utils/exportExcel";
+import {exportExcel} from "/src/utils/ExportExcel";
 import FixedNav from "/src/components/FixedNav.vue";
 import materialAPI from "/src/api/material.js";
 import '/src/assets/css/material/value.scss'

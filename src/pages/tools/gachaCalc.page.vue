@@ -10,7 +10,7 @@ import potentialTable from '/src/static/json/tools/potentialGachaResources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/scheduleByHoneycake.json'
 import storeAPI from '/src/api/store'
 import {cMessage} from "/src/utils/message.js";
-import {dateDiff} from '/src/utils/dateUtil.js'
+import {dateDiff} from '/src/utils/DateUtil.js'
 import {ElNotification} from "element-plus";
 
 

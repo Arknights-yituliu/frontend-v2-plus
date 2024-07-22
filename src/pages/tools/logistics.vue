@@ -2,10 +2,10 @@
 import '/src/assets/css/tool/logistics.scss'
 import '/src/assets/css/tool/logistics.phone.scss'
 
-import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
+import {operatorFilterConditionTable} from "/src/utils/BuildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import {onMounted, ref} from "vue";
-import {debounce} from "/src/utils/debounce";
+import {debounce} from "/src/utils/Debounce";
 import {translate} from "/src/utils/i18n";
 import MyButton from '/src/components/Button.vue'
 import DescriptionExplain from "/src/components/DescriptionExplain.vue";
@@ -95,12 +95,15 @@ function commonFilterOperator() {
     }
     for (const skill of skills) {
 
+
       // 当按钮key有值时通过暂存的筛选函数进行筛选
       if (selectBtnKey.value && !filterCondition.value.func(skill)) {
+
         continue;
       }
       //通过输入关键词筛选
       if (searchInputText.value && !operatorHasKeyword(skill)) {
+
         continue;
       }
 
