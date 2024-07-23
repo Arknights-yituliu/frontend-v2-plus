@@ -1,7 +1,6 @@
 <script setup>
 
 import SpriteImage from "./SpriteImage.vue";
-
 const props = defineProps(["modelValue", 'operatorInfo',]);
 
 </script>
