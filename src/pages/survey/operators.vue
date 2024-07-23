@@ -388,7 +388,6 @@ import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
 import {useRouter} from "vue-router";
 
 import MyButton from '/src/components/Button.vue'
-import SpriteAvatar from "/src/components/SpriteAvatar.vue";
 import OperatorStatisticalTable from "../../components/OperatorStatisticalTable.vue";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级

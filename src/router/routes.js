@@ -180,7 +180,17 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "rank",
-        component: () => import('/src/pages/survey/rank.page.vue')
+        component: () => import('/src/pages/survey/rank.vue')
+        // component: Notice
+    },
+    {
+        path: '/survey/rank2',
+        text: '干员练度调查结果',
+        name: 'OperatorRank2',
+        display: true,
+        module: 'survey',
+        icon: "rank",
+        component: () => import('/src/pages/survey/rank2.vue')
         // component: Notice
     },
     {
