@@ -5,22 +5,22 @@
       <!--      <my-button data-color='blue' :active="true" @click="checkFirstPopup()">操作指引</my-button>-->
 
       <my-button data-color='blue' :active="btnStatus.btn_filter"
-                @click="clickBtn('btn_filter');collapseFilter()">
+                 @click="clickBtn('btn_filter');collapseFilter()">
         筛选/批量操作
       </my-button>
 
       <my-button data-color='blue' :active="btnStatus.btn_import"
-                @click="clickBtn('btn_import');collapseImport()">
+                 @click="clickBtn('btn_import');collapseImport()">
         数据导入导出
       </my-button>
 
       <!--      <div style="width: 60px"></div>-->
       <my-button data-color='green' :active="true" @click="upload()">手动保存练度</my-button>
       <my-button data-color='blue' :active="statisticalPopupVisible"
-                @click="clickBtn('btn_statistics');getOperatorStatisticalResult()">统计干员练度
+                 @click="clickBtn('btn_statistics');">统计干员练度
       </my-button>
       <my-button data-color='blue' :active="recommendPopupVisible"
-                @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）
+                 @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）
       </my-button>
       <!--      <my-button data-color='blue' :active="btn_status.btn_plan"-->
       <!--                @click="clickBtn('btn_plan');getOperatorPlanItemCost()">练度计划材料消耗统计-->
@@ -72,7 +72,7 @@
             <my-button data-color="blue" :active="selectedBtn('own',false)"
                        @click="addFilterCondition('own', false)">
               已拥有
-            </my-button >
+            </my-button>
             <my-button data-color="blue" :active="selectedBtn('own',true)"
                        @click="addFilterCondition('own', true)">
               未拥有
@@ -98,7 +98,7 @@
             <my-button data-color="blue" :active="selectedBtn('equip', true)"
                        @click="addFilterCondition('equip', true)">
               模组已实装
-            </my-button >
+            </my-button>
             <my-button data-color="blue" :active="selectedBtn('equip', false)"
                        @click="addFilterCondition('equip', false)">
               模组未实装
@@ -149,11 +149,12 @@
           <div class="control-checkbox">
             <my-button data-color="green" :active="true" @click="importDataBySkland()">从森空岛导入</my-button>
             <my-button data-color="green" :active="true" @click="exportOperatorExcel()">导出为Excel</my-button>
-<!--            <my-button data-color="red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</my-button>-->
+            <!--            <my-button data-color="red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</my-button>-->
           </div>
         </div>
         <div class="control-line">
-          <div class="control-line-tip">如果遇到不正常干员练度信息，可尝试使用“清空所有数据”按钮，清空导入的数据，再次导入<br>
+          <div class="control-line-tip">
+            如果遇到不正常干员练度信息，可尝试使用“清空所有数据”按钮，清空导入的数据，再次导入<br>
           </div>
         </div>
       </div>
@@ -172,141 +173,14 @@
     </c-popup>
 
 
+
+
+
     <!--    干员统计弹窗-->
     <c-popup v-model="statisticalPopupVisible">
       <!--          干员统计-->
-      <div class="statistical-popup-container not-own-avatar-sprite-variables">
-        <!--        <div class="detail-card">-->
-        <!--          <h2 class="card-h2">博士招募情况</h2>-->
-        <!--          <span> Dr.{{ userInfo.userName }}，您的招募干员情况为-->
-        <!--            {{ statisticalResultV2.own }}/{{ statisticalResultV2.count }}-->
-        <!--          </span>-->
-        <!--          <div v-show="statisticalResultV2.count-statisticalResultV2.own>0">-->
-        <!--            <h3>未招募干员如下</h3>-->
-        <!--            <div class="not-own-operator-wrap">-->
-        <!--              <div class="not-own-operator" v-for="(operator,index) in statisticalResultV2.notOwn" :key="index">-->
-        <!--                <div class="not-own-avatar-sprite">-->
-        <!--                  <div :class="getAvatarSprite(operator.charId)"></div>-->
-        <!--                  &lt;!&ndash;              <span class="sprite-alt" style="top:70px">{{ operator.name }}</span>&ndash;&gt;-->
-        <!--                </div>-->
-        <!--                <span class="not-own-operator-name">{{operator.name}}</span>-->
-        <!--              </div>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--        </div>-->
+      <OperatorStatisticalTable  v-model="statisticalResultV2"></OperatorStatisticalTable>
 
-        <div class="statistical-card">
-          <h2>博士招募情况</h2>
-          <span class="statistical-module-text"> Dr.{{ userData.userName }}，您总计招募了{{
-              statisticalResult.total.own
-            }}位干员
-            <span v-show="statisticalResult.total.count - statisticalResult.total.own>0"
-                  class="statistical-module-text"> ，未招募干员{{
-                statisticalResult.total.count - statisticalResult.total.own
-              }}位</span>
-          </span>
-          <div v-show="statisticalResult.total.count - statisticalResult.total.own>0"
-               class="statistical-module-text">
-            未招募的干员是：
-          </div>
-          <div class="not-own-operator-box">
-            <sprite-avatar :name="operator.charId" size="60" style="margin: 4px"
-                           v-for="(operator,index) in statisticalResult.total.notOwn" :key="index"></sprite-avatar>
-          </div>
-
-          <table class="operator-statistical-table">
-            <tbody>
-            <tr>
-              <td>星级</td>
-              <td>已招募/总数</td>
-              <td>精二数量</td>
-              <td>专三数量</td>
-              <td>3级模组</td>
-            </tr>
-            <tr>
-              <td>总计</td>
-              <td>{{ statisticalResult.total.own }}/{{ statisticalResult.total.count }}</td>
-              <td>{{ statisticalResult.total.elite.rank2 }}</td>
-              <td>{{ statisticalResult.total.skill.rank3 }}</td>
-              <td>{{ statisticalResult.total.mod.rank3 }}</td>
-            </tr>
-            <tr v-for="(detail,index) in statisticsDetail" :key="index">
-              <td><img :src="`/image/survey/bg/rarity-${6-index}.png`" alt=""></td>
-              <td>{{ detail.own }}/{{ detail.count }}</td>
-              <td>{{ detail.elite.rank2 }}</td>
-              <td>{{ detail.skill.rank3 }}</td>
-              <td>{{ detail.mod.rank3 }}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="o-statistical-card">
-          <h2>干员理智投入排行</h2>
-          <div class="statistical-ap-rank-list">
-            <div class="operator-card" v-for="(operator, char_index) in statisticalResult.max" :key="char_index"
-            >
-              <div class="operator-avatar-wrap">
-                <div class="operator-avatar">
-                  <div :class="getAvatar(operator.charId)"></div>
-                </div>
-              </div>
-              <div>
-                <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite-image" alt="">
-                <div class="operator-level-image">
-                  {{ operator.level }}
-                </div>
-              </div>
-
-              <div class="operator-skill-icon-sprite-wrap" v-for="(skill,index) in operator.skill" :key="index">
-                <div class="operator-skill-icon-sprite">
-                  <div :class="getSkillSprite(skill.iconId)"></div>
-                  <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
-                       v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
-                </div>
-                <div class="skill-name">{{ skill.name }}</div>
-              </div>
-
-              <div class="operator-equip-image-wrap" v-for="(equip,index) in operator.equip" :key="index">
-                <div class="operator-skill-icon-sprite">
-                  <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
-                  <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
-                       v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
-                </div>
-                <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
-              </div>
-
-              <div class="operator-equip-image-wrap">
-                <div class="item-ap-sprite">
-                  <div :class="getItem('AP_GAMEPLAY')"></div>
-                </div>
-                <div class="item-ap-cost">{{ operator.apCost.toFixed(0) }}</div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="o-statistical-card">
-          <h2>理智消耗情况</h2>
-          <p style="">总计消耗{{ apCostCount.toFixed(0) }} 理智</p>
-          <!--          材料统计-->
-          <my-button data-color="orange" @click="splitMaterialByRarity(5)">不拆分</my-button>
-          <my-button data-color="purple" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</my-button>
-          <my-button data-color="blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</my-button>
-          <div class="control-line item_cost_wrap" v-for="(itemList,type) in itemCostList"
-               :key="type">
-            <div v-for="(item,index) in itemList" :key="index" class="item_cost_card">
-              <div class="item-used-image">
-                <div :class="getItemCostSprite(item.id)"></div>
-                <span class="item-used-count">
-                  {{ strShowLength(item.count) }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </c-popup>
 
 
@@ -322,7 +196,7 @@
               <span class="operator-name">{{ recommend.name }}</span>
             </div>
 
-            <div class="operator-skill-icon-sprite-wrap"
+            <div class="operator-skill-icon-item"
                  v-show="recommend.info.type==='skill'">
               <div class="operator-skill-icon-sprite">
                 <div :class="getSkillSprite(recommend.info.iconId)"></div>
@@ -391,7 +265,7 @@
           </div>
         </div>
 
-        <div class="operator-skill-icon-sprite-wrap" v-for="(skill,index) in operator.skill" :key="index">
+        <div class="operator-skill-icon-item" v-for="(skill,index) in operator.skill" :key="index">
           <div class="operator-skill-icon-sprite">
             <div :class="getSkillSprite(skill.iconId)"></div>
             <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
@@ -443,7 +317,7 @@
         </div>
 
         <div class="operator-rank-checkbox" v-for="(skill,index) in operatorPopupData.skill" :key="index">
-          <div class="operator-skill-icon-sprite-wrap"
+          <div class="operator-skill-icon-item"
                @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,0)">
             <div class="operator-skill-icon-sprite">
               <div :class="getSkillSprite(skill.iconId)"></div>
@@ -515,10 +389,11 @@ import {useRouter} from "vue-router";
 
 import MyButton from '/src/components/Button.vue'
 import SpriteAvatar from "/src/components/SpriteAvatar.vue";
+import OperatorStatisticalTable from "../../components/OperatorStatisticalTable.vue";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
-let itemObtainApproachType = ['常驻干员','赠送干员','限定干员']
+let itemObtainApproachType = ['常驻干员', '赠送干员', '限定干员']
 
 let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});  //用户信息
 
@@ -599,6 +474,7 @@ function getOperatorData() {
     //转为前端的数据格式
     // loadDisplayData()
     cMessage("导入了 " + list.length + " 条数据");
+    statisticalResultV2.value = operatorStatistical.operatorStatisticalV2(operatorTable.value)
   });
 }
 
@@ -606,7 +482,6 @@ function getOperatorData() {
 function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
-
 
 
 function importData() {
@@ -624,7 +499,7 @@ function importData() {
  */
 function exportOperatorExcel() {
   let list = [[
-    '干员名称', '是否已招募', '星级','等级', '精英化等级', '潜能等级', '通用技能等级', '1技能专精等级',
+    '干员名称', '是否已招募', '星级', '等级', '精英化等级', '潜能等级', '通用技能等级', '1技能专精等级',
     '2技能专精等级', '3技能专精等级', 'X模组等级', 'Y模组等级', 'D模组等级'
   ]]
   for (const charId in operatorTable.value) {
@@ -686,8 +561,9 @@ let uploadMessage = ref({updateTime: "", affectedRows: 0, registered: false, use
 let selectedCharId = ref({});
 
 const router = useRouter()
-function importDataBySkland(){
-       router.push({name:'IMPORT_BY_SKLAND'})
+
+function importDataBySkland() {
+  router.push({name: 'IMPORT_BY_SKLAND'})
 }
 
 /**
@@ -728,8 +604,6 @@ function createUploadData() {
 
   return uploadList;
 }
-
-
 
 
 let operatorPopupVisible = ref(false) //干员弹窗的显示状态
@@ -867,64 +741,12 @@ function sortOperatorListByLevel(property) {
   });
 }
 
-let itemCostList = ref([]) //材料消耗数量
-let apCostCount = ref(0) //理智消耗数量
-let itemCostTable = ref({}) //材料消耗数量
+function openStatisticalPopup(){
+  statisticalPopupVisible.value = !statisticalPopupVisible.value
+}
 
 let statisticalPopupVisible = ref(false)
-
-function getOperatorStatisticalResult() {
-  statistics()
-  setTimeout(function () {
-    statisticalPopupVisible.value = !statisticalPopupVisible.value
-  }, 20)
-}
-
-
-//干员练度统计结果
-let statisticalResult = ref({
-  max: [],
-  total: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity6: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity5: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity4: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity3: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity2: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-  rarity1: {notOwn: [], elite: 0, count: 0, own: 0, skill: {}, mod: {}, modX: {}, modY: {}, modD: {}},
-})
-
 let statisticalResultV2 = ref({})
-
-let statisticsDetail = ref([statisticalResult.value.rarity6, statisticalResult.value.rarity5,
-  statisticalResult.value.rarity4, statisticalResult.value.rarity3,
-  statisticalResult.value.rarity2, statisticalResult.value.rarity1])
-
-//各种统计
-function statistics() {
-  const result = operatorStatistical.calAPCost(operatorTable.value);
-  itemCostTable.value = result.itemMap;
-  itemCostList.value = result.itemList;
-  apCostCount.value = result.apCostCount;
-
-  statisticalResult.value = operatorStatistical.operatorStatistical(operatorTable.value)
-
-  statisticalResultV2.value = operatorStatistical.operatorStatisticalV2(operatorTable.value)
-  console.log(statisticalResultV2)
-  statisticsDetail.value = [
-    statisticalResult.value.rarity6, statisticalResult.value.rarity5,
-    statisticalResult.value.rarity4, statisticalResult.value.rarity3,
-    statisticalResult.value.rarity2, statisticalResult.value.rarity1
-  ]
-}
-
-
-/**
- * 根据材料最大星级对材料进行拆解计算
- * @param highestRarity  材料最大星级
- */
-function splitMaterialByRarity(highestRarity) {
-  itemCostList.value = operatorStatistical.splitMaterial(highestRarity, itemCostTable.value);
-}
 
 
 let collapseRecommendVisible = ref(false)  //干员练度推荐折叠栏的显示状态
@@ -945,20 +767,7 @@ async function getOperatorRecommend() {
 }
 
 
-/**
- * 数字展示长度限制
- * @param num  原始数字
- * @returns {string|*}  格式化后的数字
- */
-function strShowLength(num) {
-  if (num > 99999999) {
-    return (num / 100000000).toFixed(2) + "亿"
-  }
-  if (num > 9999) {
-    return (num / 10000).toFixed(1) + "万"
-  }
-  return num
-}
+
 
 
 function toSKLand() {
@@ -994,6 +803,8 @@ function clickBtn(btnId) {
 }
 
 
+
+
 function getAvatarSprite(id) {
   return "bg-" + id;
 }
@@ -1025,12 +836,12 @@ onMounted(() => {
   getUserInfoAndOperatorData()
 
 
+
 });
 </script>
 
 
 <style scoped>
-
 
 
 .dev_table td {

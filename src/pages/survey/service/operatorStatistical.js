@@ -379,40 +379,91 @@ function operatorStatistical(operatorTable) {
 
 function operatorStatisticalV2(operatorList){
 
-    console.log(operatorList)
-
-    let operatorStatisticsResult = {
-        own: 0,
-        notOwn:[],
-        count:0,
-        elite:{rank0: 0, rank1: 0, rank2: 0},
-        skill: {rank1: 0, rank2: 0, rank3: 0},
-        mod: {rank1: 0, rank2: 0, rank3: 0},
+    let data = {
+        allOwn:0,
+        allNotOwn:[],
+        allCount:0,
+        allElite:[0,0,0],
+        allSkill:[0,0,0,0],
+        allMod:[0,0,0,0],
+        rarity6Own:0,
+        rarity6NotOwn:[],
+        rarity6Count:0,
+        rarity6Elite:[0,0,0],
+        rarity6Skill:[0,0,0,0],
+        rarity6Mod:[0,0,0,0],
+        rarity5Own:0,
+        rarity5NotOwn:[],
+        rarity5Count:0,
+        rarity5Elite:[0,0,0],
+        rarity5Skill:[0,0,0,0],
+        rarity5Mod:[0,0,0,0],
+        rarity4Own:0,
+        rarity4NotOwn:[],
+        rarity4Count:0,
+        rarity4Elite:[0,0,0],
+        rarity4Skill:[0,0,0,0],
+        rarity4Mod:[0,0,0,0],
+        rarity3Own:0,
+        rarity3NotOwn:[],
+        rarity3Count:0,
+        rarity3Elite:[0,0,0],
+        rarity3Skill:[0,0,0,0],
+        rarity3Mod:[0,0,0,0],
+        rarity2Own:0,
+        rarity2NotOwn:[],
+        rarity2Count:0,
+        rarity2Elite:[0,0,0],
+        rarity2Skill:[0,0,0,0],
+        rarity2Mod:[0,0,0,0],
+        rarity1Own:0,
+        rarity1NotOwn:[],
+        rarity1Count:0,
+        rarity1Elite:[0,0,0],
+        rarity1Skill:[0,0,0,0],
+        rarity1Mod:[0,0,0,0],
         apCostRanking:[],
-        itemCostDetail:[],
-        totalApCost:[]
+        itemCostList:[],
+        itemCostMap:[],
+        apCostCount:0,
     }
+
+
 
     for(const charId in operatorList){
         const operator = operatorList[charId];
-        operatorStatisticsResult.count++
+        const rarity = operator.rarity
+        data.allCount++
+        data[`rarity${rarity}Count`]++
+
         if(!operator.own){
-            operatorStatisticsResult.notOwn.push(operator)
+            data.allNotOwn.push(operator)
+            data[`rarity${rarity}NotOwn`]++
             continue
         }
-        operatorStatisticsResult.own++
+
+        data.allOwn++
+        data[`rarity${rarity}Own`]++
+
+        const elite = operator.elite
+
+        data[`rarity${rarity}Elite`][2-elite]++
+        data.allElite[2-elite]++
 
         // 统计每个星级干员和全部星级干员的技能专精情况
         const skills = [operator.skill1,operator.skill2,operator.skill3]
         for(const rank of skills){
-            operatorStatisticsResult.skill[`rank${rank}`]++
+            data[`rarity${rarity}Skill`][3-rank]++
+            data.allSkill[3-rank]++
         }
         // 统计每个星级干员和全部星级干员的模组升级情况
         const equips = [operator.modX,operator.modY,operator.modD]
         for(const rank of equips){
-            operatorStatisticsResult.mod[`rank${rank}`]++
+            data[`rarity${rarity}Mod`][3-rank]++
+            data.allMod[3-rank]++
         }
-        operatorStatisticsResult.elite[`rank${operator.elite}`]++
+
+
 
         //统计干员练度消耗理智情况
         if (operator.rarity < 5) {
@@ -422,25 +473,31 @@ function operatorStatisticalV2(operatorList){
         const itemCost = getOperatorItemCost(operator.charId, operator.rarity, zone_ranks, operator, '')
         const {itemList, apCost} = getItemList(itemCost);
         operator.apCost = apCost
-        operatorStatisticsResult.apCostRanking.push(operator)
+        data.apCostRanking.push(operator)
     }
 
 
     //将未持有干员根据星级倒序
-    operatorStatisticsResult.notOwn.sort((a, b) => {
+    data.allNotOwn.sort((a, b) => {
         return b.rarity - a.rarity
     })
 
     //所有干员的消耗理智根据星级倒序
-    operatorStatisticsResult.apCostRanking.sort((a, b) => {
+    data.apCostRanking.sort((a, b) => {
         return b.apCost - a.apCost
     })
 
 
     //选择练度最高的十位
-    operatorStatisticsResult.apCostRanking = operatorStatisticsResult.apCostRanking.slice(0, 15)
+    data.apCostRanking = data.apCostRanking.slice(0, 15)
 
-    return operatorStatisticsResult
+    const {itemMap,itemList,apCostCount} =  calAPCost(operatorList)
+
+    data.itemCostMap = itemMap
+    data.itemCostList = itemList
+    data.apCostCount = apCostCount
+
+    return data
 }
 
 function operatorPlanCal(operator_data, operator_plan) {
@@ -471,7 +528,7 @@ function operatorPlanCal(operator_data, operator_plan) {
  * 按材料等级拆分材料
  * @param highest_rarity 最高材料等级 int
  * @param item_cost_obj 材料消耗原始数据 obj
- * @returns {{}} item_list 材料消耗表 arr
+ * @returns {[]} item_list 材料消耗表 arr
  */
 function splitMaterial(highest_rarity, item_cost_obj) {
 

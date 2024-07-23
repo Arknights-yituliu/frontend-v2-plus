@@ -1,6 +1,6 @@
 <script setup>
 
-const props = defineProps(["modelValue", 'name', 'size', 'roundedCorner']);
+const props = defineProps(["modelValue", 'id', 'size', 'roundedCorner']);
 
 const size = props.size ? props.size : 40;
 
@@ -17,7 +17,7 @@ top: ${(size - 180) / 2}px;left: ${(size - 180) / 2}px;`
 <template>
 
   <div :style="wrapStyle">
-    <div :style="spriteStyle" :class="`bg-${name}`">
+    <div :style="spriteStyle" :class="`bg-${id}`">
     </div>
   </div>
 
