@@ -168,16 +168,21 @@
     padding: 8px;
     max-width: 700px;
     font-size: 16px;
+    box-sizing: border-box;
+
     background-color: #f0f0f0;
 
     .detail-card {
-      margin: 4px 16px;
       width: 500px;
 
       .detail-card-title {
         font-weight: bolder;
         font-size: 14px;
         padding: 4px;
+      }
+
+      .item-cost-data{
+        background-color: var(--c-background-color);
       }
 
       .operator-info-table {
@@ -206,15 +211,6 @@
       }
 
     }
-
-    .card-h2 {
-      margin: 8px 0;
-    }
-
-    .card-h3 {
-      margin: 8px 0;
-    }
-
   }
 
 
@@ -274,22 +270,20 @@
     flex-wrap: wrap;
   }
 
-  .item-used-image {
+  .item-cost-item {
     height: 50px;
-    width: 50px;
+    width: 70px;
     position: relative;
-    margin: 4px 12px;
+    margin: 4px 8px;
   }
 
-  .item-used-count {
+  .item-cost-num {
     top: 32px;
     font-size: 16px;
     display: block;
-    left: -10px;
     background: #595959;
     width: 70px;
     color: white;
-    line-height: 20px;
     text-align: center;
     position: absolute;
   }

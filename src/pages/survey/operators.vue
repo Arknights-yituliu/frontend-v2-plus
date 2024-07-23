@@ -17,7 +17,7 @@
       <!--      <div style="width: 60px"></div>-->
       <my-button data-color='green' :active="true" @click="upload()">手动保存练度</my-button>
       <my-button data-color='blue' :active="statisticalPopupVisible"
-                 @click="clickBtn('btn_statistics');">统计干员练度
+                 @click="clickBtn('btn_statistics');openStatisticalPopup()">统计干员练度
       </my-button>
       <my-button data-color='blue' :active="recommendPopupVisible"
                  @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）

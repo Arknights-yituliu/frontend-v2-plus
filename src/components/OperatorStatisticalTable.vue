@@ -22,7 +22,7 @@ function updateData() {
     {label: '4⭐干员', value: 'rarity4'}
   ]
 
-  for(const item of operatorGroup){
+  for (const item of operatorGroup) {
     setData(item)
   }
 
@@ -63,8 +63,8 @@ function setData(group) {
   }
 
   allData.value.push({
-    title:group.label,
-    data:data
+    title: group.label,
+    data: data
   })
 }
 
@@ -122,18 +122,20 @@ watch(() => props.modelValue, () => {
 
     <div class="detail-card">
       <div class="detail-card-title">材料消耗情况</div>
-      <p style="">总计消耗{{ apCostCount.toFixed(0) }} 理智</p>
-      <!--          材料统计-->
-      <my-button data-color="orange" @click="splitMaterialByRarity(5)">不拆分</my-button>
-      <my-button data-color="purple" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</my-button>
-      <my-button data-color="blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</my-button>
-      <div class="item-cost-group" v-for="(itemList,type) in itemCostList" :key="type">
-          <div class="item-used-image" v-for="(item,index) in itemList" :key="index">
+      <div class="item-cost-data">
+        <p style="">总计消耗{{ apCostCount.toFixed(0) }} 理智</p>
+        <!--          材料统计-->
+        <my-button data-color="orange" @click="splitMaterialByRarity(5)">不拆分</my-button>
+        <my-button data-color="purple" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</my-button>
+        <my-button data-color="blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</my-button>
+        <div class="item-cost-group" v-for="(itemList,type) in itemCostList" :key="type">
+          <div class="item-cost-item" v-for="(item,index) in itemList" :key="index">
             <SpriteImage original-size="183" display-size="40" :id="item.id" style="margin: auto"></SpriteImage>
-            <span class="item-used-count">
+            <span class="item-cost-num">
                   {{ strShowLength(item.count) }}
             </span>
           </div>
+        </div>
       </div>
     </div>
 

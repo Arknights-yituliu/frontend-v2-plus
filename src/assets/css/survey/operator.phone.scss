@@ -2,13 +2,16 @@
   .survey-operator-page {
 
 
-
     .operator-card {
       width: 99%;
     }
 
-    .statistical-popup-container{
-         max-width: 98%;
+    .statistical-popup-container {
+      max-width: 340px;
+
+      .detail-card {
+        width: 324px;
+      }
     }
 
     .survey-guide-content-container {
@@ -101,6 +104,7 @@
     .skill-name {
       text-align: center;
       font-size: 12px;
+      display: none;
     }
 
     .operator-equip-image-wrap {
@@ -127,6 +131,19 @@
       left: 10px;
       top: 0;
       width: 16px;
+    }
+
+
+    .item-cost-item {
+      height: 40px;
+      width: 50px;
+      margin: 4px;
+    }
+
+    .item-cost-num {
+      width: 50px;
+      top: 24px;
+      font-size: 14px;
     }
 
   }
