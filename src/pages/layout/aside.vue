@@ -1,6 +1,5 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
-import routesJson from "/src/static/json/routes.json";
 import {useRoute} from "vue-router";
 import {LinkedTable} from '/src/router/routes.js'
 
