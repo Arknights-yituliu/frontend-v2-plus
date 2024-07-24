@@ -1,6 +1,6 @@
 import Error404 from "/src/pages/layout/error404.vue";
 import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
-import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.page.vue'
+import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.vue'
 import Notice from '/src/pages/layout/notice.vue'
 import REGISTER from '/src/pages/survey/account/register.vue'
 import LOGIN from '/src/pages/survey/account/login.vue'
@@ -98,7 +98,7 @@ const routes = [
         display: true,
         module: 'tools',
         icon: "schedule",
-        component: () => import('/src/pages/tools/schedule.page.vue')
+        component: () => import('/src/pages/tools/schedule.vue')
     },
     {
         path: '/tools/logistics',

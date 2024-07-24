@@ -3,12 +3,12 @@ import {onMounted, ref} from "vue";
 import {copyTextToClipboard} from "/src/utils/CopyText.js";
 import SklandAPI from '/src/pages/survey/service/skland.js'
 import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
-import {cMessage} from "/src/utils/message.js";
+import {cMessage} from "/src/utils/Message.js";
 import sklandApi from "../service/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";
 import operatorDataAPI from '/src/api/operator-data.js'
 import {useRouter} from "vue-router";
-import {getUserToken} from "/src/utils/getUserToken.js";
+import {getUserToken} from "/src/utils/GetUserToken.js";
 
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
 const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'

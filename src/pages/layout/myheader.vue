@@ -4,7 +4,7 @@ import toolApi from "/src/api/tool";
 import user from "/src/pages/survey/account/user.vue";
 import routesJson from "/src/static/json/routes.json";
 import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
-import {language} from '/src/utils/i18n.js'
+import {language} from '/src/utils/I18n.js'
 import {LinkedTable} from "../../router/routes.js";
 import { useRoute } from 'vue-router';
 

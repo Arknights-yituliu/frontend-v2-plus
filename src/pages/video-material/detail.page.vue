@@ -37,7 +37,7 @@ import "/src/assets/css/stageDetail.css";
 import stageApi from "/src/api/material";
 import * as echarts from "echarts";
 import {onMounted, ref} from "vue";
-import {cMessage} from '/src/utils/message'
+import {cMessage} from '/src/utils/Message'
 import collapse from '/src/custom/collapse.vue'
 
 let BTN_COLOR = {

@@ -12,11 +12,11 @@ import building_table from '/src/static/json/build/building_table.json'
 import buildingApi from '/src/api/building.js'
 import operatorDataAPI from '/src/api/operator-data.js'
 import {operatorFilterConditionTable} from '/src/utils/BuildingSkillFilter.js'
-import {translate} from '/src/utils/i18n.js'
+import {translate} from '/src/utils/I18n.js'
 import {getText} from '/src/utils/FileRead.js'
 import {debounce} from "/src/utils/Debounce.js";
-import {cMessage} from '/src/utils/message.js'
-import {popoverOnOpen, createPopover} from "/src/utils/popover.js";
+import {cMessage} from '/src/utils/Message.js'
+import {popoverOnOpen, createPopover} from "/src/utils/Popover.js";
 import userAPI from "/src/api/user.js";
 
 import MyButton from '/src/components/Button.vue'

@@ -1,6 +1,6 @@
 import request from "./requestBase.js";
 import {DOMAIN} from "./BASE_URL.js";
-import {cMessage} from "/src/utils/message.js";
+import {cMessage} from "/src/utils/Message.js";
 
 
 export default {

@@ -1,7 +1,7 @@
 import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
 import request from "/src/api/requestBase";
-import {cMessage} from "/src/utils/message";
+import {cMessage} from "/src/utils/Message";
 import toolAPI from '/src/api/tool.js'
 
 

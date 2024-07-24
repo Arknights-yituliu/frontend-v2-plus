@@ -3,7 +3,7 @@ import {professionDict} from '/src/pages/survey/service/common.js'
 import characterTable from '/src/static/json/survey/character_table_simple.json'
 import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
-import {cMessage} from "/src/utils/message.js";
+import {cMessage} from "/src/utils/Message.js";
 import operatorDataAPI from '/src/api/operator-data.js'
 import questionnaireAPI from "/src/api/questionnaire.js";
 import character_table_simple from "../../static/json/survey/character_table_simple.json";

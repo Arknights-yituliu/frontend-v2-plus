@@ -236,7 +236,7 @@ import item_list from '/src/static/json/survey/item_list.json'
 import item_init_list from '/src/static/json/survey/item_init_table.json'
 import character_list from '/src/static/json/survey/character_list.json'
 import {onMounted, ref} from "vue";
-import {cMessage} from "/src/utils/message.js";
+import {cMessage} from "/src/utils/Message.js";
 import surveyApi from "/src/api/userInfo.js";
 import operatorDataAPI from '/src/api/operator-data.js'
 import operatorStatistics from "/src/pages/survey/service/operatorStatistical"
