@@ -9,7 +9,7 @@ import * as echarts from "echarts";
 import potentialTable from '/src/static/json/tools/potentialGachaResources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/scheduleByHoneycake.json'
 import storeAPI from '/src/api/store'
-import {cMessage} from "/src/utils/message.js";
+import {cMessage} from "/src/utils/Message.js";
 import {dateDiff} from '/src/utils/DateUtil.js'
 import {ElNotification} from "element-plus";
 
@@ -45,26 +45,27 @@ function batchGenerationServerMaintenanceRewards() {
   const date = new Date();
   let month = date.getMonth() + 1
   let year = date.getFullYear()
-  for (let i = 0; i < 12; i++) {
-    let reward = {
-      name: `游戏维护(${month}月)`,
-      originium: 0,
-      orundum: 1200,
-      gachaTicket: 0,
-      tenGachaTicket: 0,
-      start: new Date(`${year}/0${month}/01 00:00:00`).getTime(),
-      end: month === 2 ? new Date(`${year}/0${month}/27 23:00:00`).getTime() : new Date(`${year}/0${month}/30 23:00:00`).getTime(),
-      rewardType: "公共",
-      module: "honeyCake",
-      probability: ""
+  for (let m = 0; m < 12; m++) {
+
+    let currentDay = 1
+    if (m === 0) {
+      currentDay = date.getDay()
     }
 
-    if (i === 0) {
-      const day = date.getDate();
-      reward.orundum = Math.floor((30 - day) / 5) * 200
-    }
+    for (let d = currentDay; d < 29; d += 4) {
+      let reward = {
+        name: `游戏维护(${month}月)`,
+        originium: 0,
+        orundum: 200,
+        gachaTicket: 0,
+        tenGachaTicket: 0,
+        start: new Date(`${year}/${padZero(month,2)}/${padZero(d,2)} 00:00:00`).getTime(),
+        end:  new Date(`${year}/${padZero(month,2)}/${padZero(d+4,2)} 23:00:00`).getTime(),
+        rewardType: "公共",
+        module: "honeyCake",
+        probability: ""
+      }
 
-    if (reward.orundum > 200) {
       honeyCakeTable.value.push(reward)
     }
 
@@ -75,6 +76,16 @@ function batchGenerationServerMaintenanceRewards() {
     }
   }
 }
+
+
+function padZero(num, size) {
+  let s = num.toString();
+  while (s.length < size) {
+    s = '0' + s;
+  }
+  return s;
+}
+
 
 batchGenerationServerMaintenanceRewards()
 
@@ -107,8 +118,8 @@ let scheduleOptions = [
     name: '周年(11.1)',
     start: new Date('2024/11/01 16:00:00'),
     end: new Date('2024/11/15 04:01:00'),
-    activityType: '夏活限定',
-    disabled: true,
+    activityType: '周年限定',
+    disabled: false,
     dailyGiftResources: true
   },
   {
@@ -203,23 +214,23 @@ function getAndSortPackData() {
 
 function getHistoryPackInfo() {
   const currentScheduleMonth = endDate.value.getMonth()
-  const minTimeStamp = new Date().getTime() - 60*60*24*400*1000
+  const minTimeStamp = new Date().getTime() - 60 * 60 * 24 * 400 * 1000
   let list = []
   for (let pack of packInfoInitList.value) {
-    const {start,saleType} = pack
-    console.log(pack.displayName,saleType,!'activity'===saleType)
-    if('activity'!==saleType){
+    const {start, saleType} = pack
+
+    if ('activity' !== saleType) {
       continue
     }
 
 
     const month = new Date(start).getMonth()
-    if(month===currentScheduleMonth){
+    if (month === currentScheduleMonth) {
       list.push(pack)
     }
   }
 
-  console.log(list)
+
   packListGroupByHistory.value = list
 }
 
@@ -793,9 +804,9 @@ function gachaResourcesCalculation() {
     let totalAmountOfRecharge = 0
 
 
-    for(const index of selectedHistoryPackIndex.value){
+    for (const index of selectedHistoryPackIndex.value) {
       const pack = packListGroupByHistory.value[index]
-      if(!pack){
+      if (!pack) {
         continue
       }
 
@@ -809,7 +820,7 @@ function gachaResourcesCalculation() {
     //循环选中的礼包索引，获得对应的礼包
     for (const i of selectedPackIndex.value) {
       const pack = packList.value[i]
-      if(!pack){
+      if (!pack) {
         continue
       }
       //月卡单独处理
@@ -1144,8 +1155,8 @@ onMounted(() => {
   getAndSortPackData()
 
   ElNotification({
-    title: '2024.5.15',
-    message: h('i', {style: 'color: teal'}, '更新了夏活攒抽排期 @罗德岛蜜饼工坊'),
+    title: '2024.07.24',
+    message: h('i', {style: 'color: teal'}, '更新了周年攒抽排期（非准确排期，待夏活直播后更新）'),
   })
 
 
@@ -1724,7 +1735,8 @@ function handleResize() {
               其他资源（估算）&emsp;{{ keepTheDecimalPoint(calculationResult.otherTotalDraw, 0) }}抽
             </span>
           </template>
-          <activity-gacha-resources v-for="(honeyCake, label) in honeyCakeTable" :key="label" :info="honeyCake" v-show="rewardIsExpired(honeyCake)">
+          <activity-gacha-resources v-for="(honeyCake, label) in honeyCakeTable" :key="label" :info="honeyCake"
+                                    v-show="rewardIsExpired(honeyCake)">
           </activity-gacha-resources>
         </el-collapse-item>
       </el-collapse>
