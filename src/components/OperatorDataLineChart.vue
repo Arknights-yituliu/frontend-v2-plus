@@ -29,13 +29,14 @@ function getData() {
     display: flex;
     flex-wrap: wrap;
     align-items: end;
-    margin: 16px auto 0px;
-    width: 42px;
+    width: 54px;
+    margin: auto;
+
     .line-max {
       font-size: 14px;
       position: absolute;
       right: -16px;
-      top: -18px;
+      top: -16px;
     }
 
     .line-bar{
@@ -44,19 +45,19 @@ function getData() {
 
     .line-0 {
       width: 10px;
-      margin: 2px;
+      margin: 4px;
       background-color: var(--c-blue-4)
     }
 
     .line-1 {
       width: 10px;
-      margin: 2px;
+      margin: 4px;
       background-color: var(--c-purple-4)
     }
 
     .line-2 {
       width: 10px;
-      margin: 2px;
+      margin: 4px;
       background-color: var(--c-orange-4)
     }
 
