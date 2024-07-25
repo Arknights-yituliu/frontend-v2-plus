@@ -108,7 +108,7 @@ function hourMoveHandle() {
   // event.preventDefault();
 
   const hour = parseInt((hourHandleElement.scrollTop / hourOptionElement.clientHeight * hourOptionElement.childElementCount).toString())
-  console.log(hourHandleElement.scrollTop / hourOptionElement.clientHeight)
+
   setHours(hour)
 }
 
@@ -242,7 +242,7 @@ onMounted(() => {
   width: 180px;
   padding: 4px;
   border-radius: 3px;
-  border: var(--c-border);
+  border: 1px solid var(--c-border-color);
   box-sizing: border-box;
   font-size: 16px;
 }
@@ -271,7 +271,7 @@ onMounted(() => {
   overflow: hidden;
   transition: all 200ms linear;
   box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
-  background: var(--c-background-color);
+  background: var(--c-page-background-color);
   z-index: 3000;
 }
 
@@ -281,8 +281,8 @@ onMounted(() => {
   top: 54px;
   height: 24px;
   width: 150px;
-  border-top: var(--c-border);
-  border-bottom: var(--c-border);
+  border-top: 1px solid var(--c-border-color);
+  border-bottom: 1px solid var(--c-border-color);
   background-color: var(--c-background-white-transparent);
   z-index: 1000;
 }

@@ -5,24 +5,6 @@
     padding: 2px;
 }
 
-.sort_desc_icon {
-    width: 0;
-    height: 0;
-    color: #2692fd;
-    border-top: 8px solid #c4c4c4;
-    border-right: 8px solid transparent;
-    border-left: 8px solid transparent;
-    margin: 4px;
-}
-
-.sort_asc_icon {
-    width: 0;
-    height: 0;
-    border-bottom: 8px solid #c4c4c4;
-    border-right: 8px solid transparent;
-    border-left: 8px solid transparent;
-    margin: 4px;
-}
 
 .rank-table-legend{
     display: flex;
@@ -57,19 +39,19 @@
     padding: 0 8px;
 }
 
-.rank_table {
-    min-width:1300px;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: auto;
+.rank-table-box{
+
 }
+
+
 
 .rank_table_tr td {
     /*border-bottom: 1px #9d9d9d solid;*/
 }
 
-.rank_table td {
+.rank-table td {
     padding: 0 12px;
+    box-sizing: border-box;
     margin: 0;
     text-align: center;
 }
@@ -78,14 +60,7 @@
     background-color: var(--c-table-tr-background-color);
 }
 
-.rank_table_title {
-    display: flex;
-    line-height: 40px;
-    height: 40px;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
+
 
 .rank-table-1 {
 

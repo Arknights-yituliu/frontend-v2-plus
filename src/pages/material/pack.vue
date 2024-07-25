@@ -50,7 +50,7 @@ function initData() {
 
     pack.lineChartData = getLineChartData(pack)
 
-    //  console.log('正常：',this.packPPRResponse[i].packName);
+
     //性价比位置的为空的强制赋0
     if (!pack.packRmbPerDraw) {
       pack.packRmbPerDraw = 0;
@@ -425,24 +425,24 @@ onMounted(() => {
 
       <div class="pack-checkbox-btn-group">
         售卖类型：
-        <el-button type="primary">新人</el-button><my-button data-color="blue" v-for="(tag, index) in packTagTable" :key="index" :active="buttonActive(tag.value)"
+        <el-button type="primary">新人</el-button><MyButton data-color="blue" v-for="(tag, index) in packTagTable" :key="index" :active="buttonActive(tag.value)"
           @click="choosePackTagOption(tag.value)">
           {{ tag.label }}
-        </my-button>
+        </MyButton>
       </div>
       <div class="pack-checkbox-btn-group">
         售卖年份：
-        <my-button data-color="blue" v-for="(obj, name) in packSaleDateObject" :key="name" :active="buttonActive(name)"
+        <MyButton data-color="blue" v-for="(obj, name) in packSaleDateObject" :key="name" :active="buttonActive(name)"
           @click="choosePackSaleDateOption(name)">
           {{ name }}
-        </my-button>
+        </MyButton>
       </div>
       <div class="pack-checkbox-btn-group">
         售卖价格：
-        <my-button data-color="blue" v-for="(obj, name) in packSalePriceObject" :key="name" :active="buttonActive(name)"
+        <MyButton data-color="blue" v-for="(obj, name) in packSalePriceObject" :key="name" :active="buttonActive(name)"
           @click="choosePackSalePriceOption(name)">
           {{ name }}
-        </my-button>
+        </MyButton>
 
       </div>
 

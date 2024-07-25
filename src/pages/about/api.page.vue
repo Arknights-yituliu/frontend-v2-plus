@@ -142,7 +142,7 @@
 <script setup>
 import {ref} from "vue";
 import apiJson from "/src/static/json/api.json";
-import {cMessage} from "/src/utils/message";
+import {cMessage} from "/src/utils/Message";
 import '/src/assets/css/api.scss'
 
 let visibleList = ref([0, 1, 2, 3, 4, 5, 6, 7]);
@@ -183,7 +183,7 @@ function tryBtn(index) {
   axios.get(requestURL(index)).then(
       (response) => {
         cMessage("调用成功");
-        // console.log(response.data)
+
         apiResponse.value = response.data;
       },
       (response) => {

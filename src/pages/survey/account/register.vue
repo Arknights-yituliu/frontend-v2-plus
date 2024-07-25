@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/login.v2.scss'
 import '/src/assets/css/survey/login.v2.phone.scss'
 import userAPI from '/src/api/userInfo.js'
-import {cMessage} from "../../../utils/message.js";
+import {cMessage} from "/src/utils/Message.js";
 import {useRouter} from "vue-router";
 import MyButton from '/src/components/Button.vue'
 
@@ -50,7 +50,7 @@ function checkPassword() {
 }
 
 function inputTipDisplay(inputValue) {
-  console.log(!inputValue)
+
   return !inputValue;
 }
 
@@ -60,10 +60,10 @@ function toRegister() {
   const param = getParam()
   userAPI.registerV3(param).then(response => {
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
+    cMessage('登录成功，即将转跳到森空岛导入页面')
     setTimeout(() => {
-      router.push({name: "AccountHome"})
+      router.push({name:'IMPORT_BY_SKLAND'})
     }, 3000)
-    cMessage('注册成功，即将转跳到个人信息页面')
   })
 }
 
@@ -146,9 +146,9 @@ onMounted(() => {
       </div>
 
 
-        <my-button data-color="blue"  class="my-button-login" @click="toRegister()">
+        <MyButton data-color="blue"  class="MyButton-login" @click="toRegister()">
           注册账号
-        </my-button>
+        </MyButton>
 
 
       <div class="login-form-notice">

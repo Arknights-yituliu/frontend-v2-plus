@@ -2,6 +2,7 @@
   .pack-card-container {
     display: flex;
     flex-wrap: wrap;
+
   }
 
   .pack-card {
@@ -9,6 +10,7 @@
     width: 530px;
     display: flex;
     flex-wrap: wrap;
+
   }
 
   .pack-card-part-left {
@@ -58,12 +60,12 @@
     z-index: 10;
     height: 112px;
     width: 370px;
-    background-color: #000000cc;
     margin-top: 4px;
     margin-left: -8px;
     border-radius: 4px;
     box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5);
     display: flex;
+    background-color: var(--c-pack-card-background-color);
   }
 
   .pack-info-text {
@@ -159,7 +161,7 @@
     width: 490px;
     display: none;
     flex-wrap: wrap;
-    background: var(--c-background-color);
+    background-color: var(--c-pack-card-background-color);
     font-size: 14px;
     border-radius: 4px;
     box-shadow: 1px 1px 4px var(--c-box-shadow-color);

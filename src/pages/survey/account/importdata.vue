@@ -1,13 +1,14 @@
 <script setup>
-import {ref} from "vue";
-import {copyTextToClipboard} from "/src/utils/copyText.js";
+import {onMounted, ref} from "vue";
+import {copyTextToClipboard} from "/src/utils/CopyText.js";
 import SklandAPI from '/src/pages/survey/service/skland.js'
-import {getUserInfo} from "/src/pages/survey/service/userData.js";
-import {cMessage} from "/src/utils/message.js";
+import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
+import {cMessage} from "/src/utils/Message.js";
 import sklandApi from "../service/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";
-import surveyAPI from '/src/api/survey.js'
+import operatorDataAPI from '/src/api/operator-data.js'
 import {useRouter} from "vue-router";
+import {getUserToken} from "/src/utils/GetUserToken.js";
 
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
 const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'
@@ -47,17 +48,20 @@ function getPlayerBindingByHgToken() {
   const obj = canBeParsedAsObject(inputText.value);
   const token = obj.data.content
 
-  surveyAPI.getPlayBindingListByHgToken({token: token}).then(response => {
+  operatorDataAPI.getPlayBindingListByHgToken({token: token}).then(response => {
     const {cred,token,playerBindingList} = response.data
     playBindingList.value = playerBindingList
     sklandCred.value = cred
     sklandToken.value = token
   })
-
 }
 
 
+
 function canBeParsedAsObject(str) {
+
+  str.replace(/[\u00A0\u200B\u200C\u200D\uFEFF\s]/g, '');
+
   try {
     return JSON.parse(str); // 如果没有抛出错误，说明字符串可以被解析为JS对象
   } catch (e) {
@@ -80,6 +84,7 @@ async function getPlayerBindingBySkland() {
 }
 
 
+
 async function getOperatorDataByPlayerBinding(akPlayerBinding) {
   const {uid, nickName, channelName, channelMasterId} = akPlayerBinding
 
@@ -88,7 +93,6 @@ async function getOperatorDataByPlayerBinding(akPlayerBinding) {
   checkUserStatus(true)
 
   const params = {
-    requestUrl: '/api/v1/game/player/info',
     requestParam: `uid=${uid}`,
     token: sklandToken.value,
     cred: sklandCred.value,
@@ -108,6 +112,11 @@ async function getOperatorDataByPlayerBinding(akPlayerBinding) {
     token: userInfo.value.token,
     data: JSON.stringify(playerInfo)
   })
+
+  const data = await sklandApi.getWarehouseInfo(uid, sklandCred.value, sklandToken.value, getUserToken());
+
+  await operatorDataAPI.uploadWarehouseInfo(data)
+
 }
 
 const router = useRouter();
@@ -120,7 +129,7 @@ const router = useRouter();
  */
 async function uploadSKLandData({token, data}) {
 
-  surveyAPI.uploadSkLandOperatorData({token, data})
+  operatorDataAPI.uploadSkLandOperatorData({token, data})
       .then(response => {
         cMessage("森空岛数据导入成功，即将转跳到干员调查页面");
         setTimeout(() => {
@@ -181,8 +190,9 @@ function checkUserStatus(notice) {
   return false;
 }
 
+onMounted(()=>{
 
-
+})
 
 </script>
 

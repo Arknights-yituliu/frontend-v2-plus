@@ -17,7 +17,7 @@ if (props.status !== void 0 && props.status) {
 
 
 watch(() => props.status, (newVal) => {
-  // console.log(newVal)
+
   if (props.status !== void 0 && newVal) {
     btnClass.value = `${btnColor}`
   } else {

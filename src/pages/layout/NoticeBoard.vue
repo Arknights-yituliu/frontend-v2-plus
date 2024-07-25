@@ -9,7 +9,7 @@ onMounted(()=>{
   if (currentDomain.indexOf('dev') > -1) {
     devVer.value = true
   }
-  devVer.value = true
+
 })
 
 </script>
@@ -24,14 +24,14 @@ onMounted(()=>{
 <!--      <i class="iconfont icon-error dev-tip-icon"></i>-->
     </div>
 <!--    <div class="dev-tip tip-color-warn" @click="tipDisplay=false" v-show="tipDisplay">-->
-<!--        <span>服务器正在恢复中，如有问题请反馈</span>-->
-<!--        <i class="iconfont icon-error dev-tip-icon"></i>-->
+<!--        <span>本站计划7月17日（周三）22:00-23:30进行维护</span>-->
+<!--&lt;!&ndash;        <i class="iconfont icon-error dev-tip-icon"></i>&ndash;&gt;-->
 <!--    </div>-->
   </div>
 
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 .notice-board-page {
 
@@ -50,7 +50,7 @@ onMounted(()=>{
 
 .dev-tip-icon{
   position: absolute;
-  right: 4px;
+  //right: 4px;
   font-size: 18px;
 }
 

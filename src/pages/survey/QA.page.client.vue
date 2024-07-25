@@ -178,7 +178,7 @@ let loginVisible = ref(false);
 //注册
 async function register() {
   let response = await registerEvent(inputData.value);
-  // console.log("异步：", response);
+
   userData.value = response;
   setTimeout(() => {
     loginVisible.value = !loginVisible.value;

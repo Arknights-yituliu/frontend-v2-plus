@@ -139,11 +139,11 @@ $button-colors: (
   line-height: 14px;
   border-radius: 4px;
   padding: 8px 16px;
-  min-width: 88px;
+  min-width: 60px;
   box-sizing: border-box;
   transition: background-color 0.2s;
   cursor: pointer;
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   border: 1px solid var(--c-border-color);
   outline: none;
   font-weight: 500;
@@ -191,5 +191,6 @@ $button-colors: (
     height: 28px;
     line-height: 14px;
     font-size: 14px;
+    white-space: nowrap;
   }
 }

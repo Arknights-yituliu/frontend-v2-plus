@@ -59,7 +59,7 @@ onUnmounted(() => {
 }
 
 .nav-content {
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   color: var(--c-text-color);
   border: 2px solid var(--c-border-color);
   border-radius: 5px;

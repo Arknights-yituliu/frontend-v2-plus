@@ -54,17 +54,7 @@
     "module": "actRe",
     "probability": ""
   },
-  "熔炉[还魂]记": {
-    "originium": 18,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/07/09 16:00:00",
-    "end": "2024/07/23 03:58:00",
-    "rewardType": "公共",
-    "module": "act",
-    "probability": ""
-  },
+
   "火山旅梦复刻(源石)": {
     "originium": 40,
     "orundum": 0,
@@ -230,57 +220,57 @@
     "module": "honeyCake",
     "probability": ""
   },
-  "剿灭作战更新": {
-    "originium": 0,
-    "orundum": 1500,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/06/23 16:00:00",
-    "end": "2024/06/24 03:58:00",
-    "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "停机更新(6月)": {
-    "originium": 5,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/06/06 16:00:00",
-    "end": "2024/06/06 03:58:00",
-    "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "停机更新(7月)": {
-    "originium": 5,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/07/02 16:00:00",
-    "end": "2024/07/03 03:58:00",
-    "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
-  },
   "停机更新(8月)": {
     "originium": 5,
     "orundum": 0,
     "gachaTicket": 0,
     "tenGachaTicket": 0,
     "start": "2024/08/01 16:00:00",
-    "end": "2024/08/01 03:58:00",
+    "end": "2024/08/02 03:58:00",
     "rewardType": "公共",
     "module": "honeyCake",
     "probability": ""
   },
-  "剿灭作战更新 ": {
+  "停机更新(9月)": {
+    "originium": 5,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/09/15 16:00:00",
+    "end": "2024/09/16 03:58:00",
+    "rewardType": "公共",
+    "module": "honeyCake",
+    "probability": ""
+  },
+  "停机更新(10月)": {
+    "originium": 5,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/10/15 16:00:00",
+    "end": "2024/10/16 03:58:00",
+    "rewardType": "公共",
+    "module": "honeyCake",
+    "probability": ""
+  },
+  "停机更新(11月)": {
+    "originium": 5,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/11/01 16:00:00",
+    "end": "2024/11/02 03:58:00",
+    "rewardType": "公共",
+    "module": "honeyCake",
+    "probability": ""
+  },
+  "剿灭作战更新1": {
     "originium": 0,
     "orundum": 1500,
     "gachaTicket": 0,
     "tenGachaTicket": 0,
-    "start": "2024/07/01 16:00:00",
-    "end": "2024/07/01 03:58:00",
+    "start": "2024/09/02 16:00:00",
+    "end": "2024/09/03 03:58:00",
     "rewardType": "公共",
     "module": "honeyCake",
     "probability": ""

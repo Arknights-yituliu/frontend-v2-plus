@@ -2,12 +2,13 @@
 import '/src/assets/css/tool/logistics.scss'
 import '/src/assets/css/tool/logistics.phone.scss'
 
-import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
+import {operatorFilterConditionTable} from "/src/utils/BuildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import {onMounted, ref} from "vue";
-import {debounce} from "../../utils/debounce";
-import {translate} from "/src/utils/i18n";
+import {debounce} from "/src/utils/Debounce";
+import {translate} from "/src/utils/I18n";
 import MyButton from '/src/components/Button.vue'
+import DescriptionExplain from "/src/components/DescriptionExplain.vue";
 
 let buildingTable = {}
 for (const operator of building_table) {
@@ -37,7 +38,7 @@ let filterCondition = ref({
  * @param condition
  * @param key 选项的分类名
  */
-const  filterOperatorByTag = debounce((condition, key)=> {
+const filterOperatorByTag = debounce((condition, key) => {
   //清空干员列表
   filterOperatorList.value = []
   const btnKey = `${key}+${condition.label}`
@@ -53,7 +54,7 @@ const  filterOperatorByTag = debounce((condition, key)=> {
 
   //筛选干员
   commonFilterOperator()
-},500)
+}, 500)
 
 
 //干员搜索输入框
@@ -94,12 +95,15 @@ function commonFilterOperator() {
     }
     for (const skill of skills) {
 
+
       // 当按钮key有值时通过暂存的筛选函数进行筛选
       if (selectBtnKey.value && !filterCondition.value.func(skill)) {
+
         continue;
       }
       //通过输入关键词筛选
       if (searchInputText.value && !operatorHasKeyword(skill)) {
+
         continue;
       }
 
@@ -180,6 +184,7 @@ function getAvatar(id) {
   return `bg-${id}`
 }
 
+
 onMounted(() => {
   searchOperatorDebounce()
 })
@@ -194,20 +199,21 @@ onMounted(() => {
            v-show="conditionType.display" :key="key">
           <span class="checkbox-button-label"
                 :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-        <my-button :data-color="conditionType.buttonColor" v-for="(condition,index) in conditionType.conditions" :key="index" style="margin: 2px"
-                  :color="COLOR.BLUE" :active="filterBtnStatus(key,condition.label)"
-                  @click="filterOperatorByTag(condition,key)">
+        <MyButton :data-color="conditionType.buttonColor" v-for="(condition,index) in conditionType.conditions"
+                   :key="index" style="margin: 2px"
+                   :color="COLOR.BLUE" :active="filterBtnStatus(key,condition.label)"
+                   @click="filterOperatorByTag(condition,key)">
           {{ translate('schedule', condition.label) }}
-        </my-button>
+        </MyButton>
       </div>
     </div>
 
     <div class="logistics-search-line">
 
       <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
-      <my-button :active="hideIrrelevantSkillsFlag" data-color="green"
-                style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
-      </my-button>
+      <MyButton :active="hideIrrelevantSkillsFlag" data-color="green"
+                 style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
+      </MyButton>
       <span
           class="logistics-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
       <!--  <span-->
@@ -250,4 +256,6 @@ onMounted(() => {
       </tbody>
     </table>
   </div>
+  <!--启用术语解释插件，绑定监听数组filterOperatorList-->
+  <description-explain :operatorList="filterOperatorList"/>
 </template>

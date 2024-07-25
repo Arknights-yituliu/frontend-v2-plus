@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/survey/login.v2.scss'
-import {cMessage} from "../../../utils/message.js";
+import {cMessage} from "/src/utils/Message.js";
 import {useRouter} from "vue-router";
 import MyButton from '/src/components/Button.vue'
 
@@ -40,9 +40,9 @@ function toLogin() {
 
   userAPI.loginV3(inputContent.value).then(response => {
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
-    cMessage('登录成功，即将转跳到个人信息页面')
+    cMessage('登录成功，即将转跳到森空岛导入页面')
     setTimeout(() => {
-      router.push({name: "AccountHome"})
+      router.push({name:'IMPORT_BY_SKLAND'})
     }, 3000)
 
   })
@@ -117,10 +117,10 @@ onMounted(() => {
 
 
 
-        <my-button data-color="blue" class="my-button-login"
+        <MyButton data-color="blue" class="MyButton-login"
                    @click="toLogin">
           登录
-        </my-button>
+        </MyButton>
 
 
 

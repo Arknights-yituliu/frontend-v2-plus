@@ -1,6 +1,6 @@
 <script setup>
 import {ref, onMounted} from "vue";
-import {exportExcel} from "/src/utils/exportExcel";
+import {exportExcel} from "/src/utils/ExportExcel";
 import FixedNav from "/src/components/FixedNav.vue";
 import materialAPI from "/src/api/material.js";
 import '/src/assets/css/material/value.scss'
@@ -88,7 +88,7 @@ onMounted(() => {
 
     const index = 0
     for(const list of tmpList){
-      console.log(list)
+
       if(list&&list.length>0){
         if(list.length<9){
           itemValueCollect.value.push(list)
@@ -122,18 +122,18 @@ onMounted(() => {
     </div>
 
     <div class="value-button-group">
-      <my-button data-color='blue'  :active="value_unit === 'itemValueAp'"
+      <MyButton data-color='blue'  :active="value_unit === 'itemValueAp'"
                 @click="value_unit = 'itemValueAp'">等效理智
-      </my-button>
-      <my-button data-color='blue'  :active="value_unit === 'itemValue'"
+      </MyButton>
+      <MyButton data-color='blue'  :active="value_unit === 'itemValue'"
                 @click="value_unit = 'itemValue'">等效绿票
-      </my-button>
-      <my-button data-color='blue' 
+      </MyButton>
+      <MyButton data-color='blue'
                 @click="exportItemValueExcel">导出Excel
-      </my-button>
-      <my-button data-color='blue' 
+      </MyButton>
+      <MyButton data-color='blue'
                 @click="exportItemValueJson">导出Json
-      </my-button>
+      </MyButton>
     </div>
 
     <div class="item-value-table-wrap color">

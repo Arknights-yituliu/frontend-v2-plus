@@ -8,7 +8,7 @@
     overflow: hidden;
     -webkit-transition: 0.3s;
     transition: 0.3s;
-    background: var(--c-stage-card-background-color);
+    background: var(--c-page-background-color-secondary);
     max-width: 616px;
     height: 120px;
     margin: 6px;
@@ -35,7 +35,7 @@
 
 .stage_card_3 {
     overflow: hidden;
-    background: var(--c-stage-card-background-color);
+    background: var(--c-page-background-color-secondary);
     width: 240px;
     margin: 6px;
     border-radius: 8px;

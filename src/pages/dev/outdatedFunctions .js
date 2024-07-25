@@ -1,5 +1,5 @@
 import {ref} from "vue";
-import surveyOperatorApi from "../../api/survey.js";
+import surveyOperatorApi from "/src/api/operator-data.js";
 
 let player_uid = ref('')  //玩家uid
 /**
@@ -7,11 +7,11 @@ let player_uid = ref('')  //玩家uid
  */
 function retrievalByUid() {
     const data = {
-        token: userData.value.token,
+        token: userInfo.value.token,
         uid: player_uid.value
     }
     surveyOperatorApi.retrievalOperatorDataByUid(data).then(response => {
-        console.log(response)
+
         setTimeout(() => {
             location.reload()
         }, 1000);

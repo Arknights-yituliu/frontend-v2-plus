@@ -1,12 +1,11 @@
 <script setup>
-import {ref, onMounted,  watchEffect} from "vue";
+import {ref, onMounted, watchEffect} from "vue";
 import toolApi from "/src/api/tool";
 import user from "/src/pages/survey/account/user.vue";
-import routesJson from "/src/static/json/routes.json";
-import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
-import {language} from '/src/utils/i18n.js'
-import {LinkedTable} from "../../router/routes.js";
-import { useRoute } from 'vue-router';
+import {routes,LinkedTable} from "/src/router/routes.js";
+import {language} from '/src/utils/I18n.js'
+import {useRoute} from 'vue-router';
+import MyButton from '/src/components/Button.vue'
 
 const LanguageLabel = {
   cn: '中文',
@@ -22,7 +21,7 @@ function menu_collapse(flag) {
       document.getElementById("drawer114").style.willChange = 'transform'
       document.getElementById("drawer114").style.transform = "translateX(0)";
       document.getElementById("drawerMask514").style.display = "block";
-      console.log(document.getElementById("drawer114"))
+
     }, 30);
   } else {
     document.getElementById("drawer114").style.transform = "translateX(-400px) ";
@@ -30,7 +29,7 @@ function menu_collapse(flag) {
     // document.getElementById("drawer114514").className = "nav_collapse";
   }
 
-  console.log(menuFlag.value);
+
 }
 
 let aside_flag = ref(true);
@@ -54,7 +53,7 @@ function aside_collapse() {
 
     }, 200);
   }
-  // console.log(aside_flag.value);
+
 }
 
 let themeV2 = ref('')
@@ -78,50 +77,18 @@ function switchTheme() {
   localStorage.setItem("theme_v2", themeV2.value)
 }
 
-const routes = ref(routesJson);
-const noUpVi = ref(notUpdateVisitsRequestsJson);
-
+const rs = ref(routes);
 let pageTitle = ref("");
 
 function getPageTitle(path) {
   if (path === "/") return (pageTitle.value = "材料一图流");
 
-  for (let i of routes.value) {
-    if (i.isChild) {
-      // console.log(path, " ", i.path);
-      if (i.path.indexOf(path) > -1) {
-        pageTitle.value = i.text;
-
-      }
-      for (let c of i.child) {
-        // console.log(path, " ", c.path);
-        if (c.path.indexOf(path) > -1) {
-          pageTitle.value = c.text;
-
-        }
-      }
-    } else {
-      // console.log(path, " ", i.path);
-      if (i.path.indexOf(path) > -1) {
-        pageTitle.value = i.text;
-      }
+  for (let i of rs.value) {
+    if (i.path.indexOf(path) > -1) {
+      pageTitle.value = i.text;
     }
   }
 
-
-
-  // if (path.indexOf('tools/schedule') > -1) {
-  //   aside_collapse()
-  // }
-  //
-  // if (path.indexOf('tools/rogueCal') > -1) {
-  //   aside_collapse()
-  // }
-  //
-  // if (path.indexOf('tools/maa') > -1) {
-  //   aside_collapse()
-  //   pageTitle.value = "排班生成器旧版-已停止维护,请使用新版生成器"
-  // }
 }
 
 let i18nButtonVisible = ref(false)
@@ -144,7 +111,6 @@ const route = useRoute();
 watchEffect(() => {
   getPageTitle(route.path)
 });
-
 
 
 onMounted(() => {
@@ -196,8 +162,8 @@ function openNewPage(url) {
         </div>
       </template>
       <div class="language-options" id="language">
-        <span @click="language='cn'" >中文</span>
-        <span @click="language='en'" >English</span>
+        <span @click="language='cn'">中文</span>
+        <span @click="language='en'">English</span>
       </div>
     </c-popover>
     <user></user>
@@ -212,7 +178,7 @@ function openNewPage(url) {
           <!-- 导航菜单 -->
           <div class="aside_menu_set" v-for="(parent, index) in LinkedTable" :key="index" v-show="parent.display">
             <!-- 一级标题 -->
-            <router-link :to="parent.path"  class="nav-bar nav-bar-parent">
+            <router-link :to="parent.path" class="nav-bar nav-bar-parent">
               <div class="nav-bar-parent-icon"></div>
               <h3> {{ parent.text }}</h3>
             </router-link>
@@ -244,30 +210,30 @@ function openNewPage(url) {
         <td>Github issues</td>
         <td>国内访问体验稍差一点</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往
-          </c-button>
+          <MyButton data-color="green"  @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往
+          </MyButton>
         </td>
       </tr>
       <tr>
         <td>粉丝群539600566</td>
         <td>进群@山桜反馈，如果不在找管理员</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</c-button>
+          <MyButton data-color="green" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</MyButton>
         </td>
       </tr>
       <tr>
         <td>B站@罗德岛基建BETA</td>
         <td>直接私信反馈</td>
         <td>
-          <c-button :color="`green`" :status="true" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往
-          </c-button>
+          <MyButton data-color="green" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往
+          </MyButton>
         </td>
       </tr>
       <tr>
         <td>开发群938710832</td>
         <td>如果有能力自己解决问题，可以加开发群</td>
         <td>
-          <!--          <c-button :color="`green`" :status="true" @click="openQQPage()">点击前往</c-button>-->
+
         </td>
       </tr>
       </tbody>
@@ -279,9 +245,6 @@ function openNewPage(url) {
 
 
 <style scoped>
-
-
-
 
 
 </style>

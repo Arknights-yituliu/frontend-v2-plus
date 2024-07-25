@@ -1,48 +1,43 @@
 import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
 import request from "/src/api/requestBase";
-import {cMessage} from "/src/utils/message";
-import logService from '/src/api/log.js'
+import {cMessage} from "/src/utils/Message";
+import toolAPI from '/src/api/tool.js'
 
-const domain = "https://zonai.skland.com";
-const playerInfoAPI = '/api/v1/game/player/info'
+
+const SKLAND_DOMAIN = "https://zonai.skland.com";
+const PLAYER_INFO_API = '/api/v1/game/player/info'
 const PLAYER_BINDING_URL = '/api/v1/game/player/binding'
 const OAUTH2_URL = "https://as.hypergryph.com/user/oauth2/v2/grant";
 const GENERATE_CRED_BY_CODE_URL = "https://zonai.skland.com/api/v1/user/auth/generate_cred_by_code";
+const CULTIVATE_PLAYER_API =  '/api/v1/game/cultivate/player'
+
+function getSign(path, params, token) {
+    let timestamp = Math.floor((new Date().getTime() - 300) / 1000).toString();
+
+    // if(path.indexOf('info')>-1){
+    //     timestamp = 1721211932
+    // }
 
 
-function getSign(path, requestParam, secret) {
-    let timestamp = Math.floor((new Date().getTime() - 500) / 1000).toString();
     const headers = {
         platform: '3',
         timestamp: timestamp,
         dId: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
         vName: '1.2.0'
     }
-    requestParam = requestParam ? requestParam : ''
-    let message = path + requestParam + timestamp + JSON.stringify(headers);
+    params = params ? params : ''
+    let text = path + params + timestamp + JSON.stringify(headers);
 
-    const sign = md5(hmacSHA256(message, secret).toString()).toString()
+    const sign = md5(hmacSHA256(text, token).toString()).toString()
 
     return {timestamp, sign}
 }
 
+function getHeaders(url,params,cred,token){
+    const {timestamp, sign} = getSign(url, params, token);
 
-async function getPlayBindingV2(defaultAkUid, requestParam, cred, secret) {
-
-
-
-    const {timestamp, sign} = getSign(PLAYER_BINDING_URL, requestParam, secret);
-
-    let uid = '0'
-    let nickName = ""
-
-    let channelName = '默认'
-    let channelMasterId = -1
-
-    const url = `${domain}${PLAYER_BINDING_URL}`
-    // console.log(url)
-    const headers = {
+    return {
         "platform": '3',
         "timestamp": timestamp,
         "dId": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
@@ -50,7 +45,23 @@ async function getPlayBindingV2(defaultAkUid, requestParam, cred, secret) {
         "cred": cred,
         "sign": sign
     }
-    // console.table(headers)
+}
+
+
+
+async function getPlayBindingV2(defaultAkUid, params, cred, token) {
+
+
+
+    let uid = '0'
+    let nickName = ""
+
+    let channelName = '默认'
+    let channelMasterId = -1
+
+    const url = `${SKLAND_DOMAIN}${PLAYER_BINDING_URL}`
+
+    const headers = getHeaders(PLAYER_BINDING_URL,params,cred,token)
 
     let bindingData = {
         bindingList: [],
@@ -123,7 +134,7 @@ async function getPlayBindingV2(defaultAkUid, requestParam, cred, secret) {
             apiPath: PLAYER_BINDING_URL,
             logType:'error'
         }
-        logService.collectLog(log)
+        toolAPI.collectLog(log)
         console.log(error)
         cMessage('森空岛：' + error.response.data.message, 'error')
         return void 0
@@ -157,20 +168,12 @@ function getCredAndSecret(text) {
 
 async function getPlayerInfo(params, characterTable) {
 
-    const {requestUrl, requestParam, token, cred, akUid, akNickName, channelName, channelMasterId} = params
+    const { requestParam, token, cred, akUid, akNickName, channelName, channelMasterId} = params
 
-    const {timestamp, sign} = getSign(requestUrl, requestParam, token);
-    const url = `${domain}${requestUrl}?${requestParam}`
+
+    const url = `${SKLAND_DOMAIN}${PLAYER_INFO_API}?${requestParam}`
     // console.log(url)
-    const headers = {
-        "platform": '3',
-        "timestamp": timestamp,
-        "dId": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
-        "vName": '1.2.0',
-        "cred": cred,
-        "sign": sign
-    }
-    // console.table(headers)
+    const headers = getHeaders(PLAYER_INFO_API,requestParam,cred,token)
 
     let uploadData = {}
 
@@ -201,10 +204,10 @@ async function getPlayerInfo(params, characterTable) {
     }).catch(error => {
         const log = {
             message: JSON.stringify(error.response),
-            apiPath: playerInfoAPI,
+            apiPath: PLAYER_INFO_API,
             logType:'error'
         }
-        logService.collectLog(log)
+        toolAPI.collectLog(log)
         cMessage('森空岛：' + error, 'error')
         return void 0
     })
@@ -213,6 +216,38 @@ async function getPlayerInfo(params, characterTable) {
 }
 
 let equipDict = new Map()
+
+async function getWarehouseInfo(akUid, cred, token, userToken){
+
+    const params = `uid=${akUid}`
+    const headers =  getHeaders(CULTIVATE_PLAYER_API,params,cred,token)
+    const url = `${SKLAND_DOMAIN}${CULTIVATE_PLAYER_API}?${params}`
+    let data = {}
+    await request({
+        url:url,
+        headers:headers,
+        method:'get'
+    }).then(response=>{
+        response = response.data
+        console.log(response)
+        if(response.code===0){
+            const items = response.data.items
+            let list = []
+            for(const item of items){
+                list.push({itemId:item.id,quantity:item.count})
+            }
+             data = {
+                akUid:akUid,
+                token:userToken,
+                list:list
+            }
+            console.log(data)
+        }
+    })
+
+
+    return data
+}
 
 
 function FormattingOperatorData(characterList, characterTable) {
@@ -292,8 +327,13 @@ function FormattingOperatorData(characterList, characterTable) {
         operatorList.push(operator)
     }
 
-    console.table(operatorList)
+
     return operatorList
+}
+
+
+async function getPlayerWarehouseInfo(cred,token,uid){
+
 
 }
 
@@ -301,4 +341,5 @@ export default {
 
     getPlayBindingV2,
     getPlayerInfo,
+    getWarehouseInfo
 }

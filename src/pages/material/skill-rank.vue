@@ -2,10 +2,10 @@
 import ITEM_COST_TABLE from '/src/static/json/survey/operator_item_cost_table.json'
 import OPERATOR_TABLE from '/src/static/json/survey/character_list.json'
 import materialAPI from '/src/api/material.js'
-import operatorAPI from '/src/api/survey.js'
+import operatorAPI from '/src/api/operator-data.js'
 import {onMounted, ref} from "vue";
-import {timeFormat} from "../../utils/dateUtil.js";
-import SpriteAvatar from "../../components/SpriteAvatar.vue";
+import {timeFormat} from "/src/utils/DateUtil.js";
+import SpriteImage from "/src/components/SpriteImage.vue";
 
 const operatorMap = new Map()
 const charIdMap = new Map()
@@ -264,8 +264,8 @@ const data = [
       </tr>
       <tr v-for="(item,index) in list2" :key="index" :class="index%2!==0?'table-114-td-background':''">
         <td>
-          <sprite-avatar :name="item.charId" size="40">
-          </sprite-avatar>
+          <SpriteImage :name="item.charId" size="40">
+          </SpriteImage>
         </td>
         <td>{{ item.name }}</td>
         <td>{{ item.rarity }}</td>

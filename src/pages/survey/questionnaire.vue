@@ -3,8 +3,9 @@ import {professionDict} from '/src/pages/survey/service/common.js'
 import characterTable from '/src/static/json/survey/character_table_simple.json'
 import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
-import {cMessage} from "../../utils/message.js";
-import surveyApi from '/src/api/survey.js'
+import {cMessage} from "/src/utils/Message.js";
+import operatorDataAPI from '/src/api/operator-data.js'
+import questionnaireAPI from "/src/api/questionnaire.js";
 import character_table_simple from "../../static/json/survey/character_table_simple.json";
 
 let operatorGroupByProfession = new Map()
@@ -69,7 +70,6 @@ function countOperatorByProfession() {
 
 chooseOperatorProfession('SNIPER')
 
-console.log(operatorGroupByProfession)
 
 function getCharIdList() {
   let list = []
@@ -100,7 +100,7 @@ function uploadSubmitContent() {
     questionnaireType: 1,
     operatorList: charIdList.value
   }
-  surveyApi.uploadQuestionnaireInfo(data)
+  questionnaireAPI.uploadQuestionnaireInfo(data)
 }
 
 function selectedOperatorClass(charId) {
@@ -124,7 +124,7 @@ const colorList = [
 ]
 
 function getCharStatisticsResult() {
-  surveyApi.getCharStatisticsResult().then((response) => {
+  operatorDataAPI.getCharStatisticsResult().then((response) => {
     let {result, userCount, updateTime} = response.data
     for (const item of result) {
       const charId = item.charId
@@ -154,7 +154,6 @@ function getCharStatisticsResult() {
     listOperators.value = result
     listOperatorSlice.value.push(result.slice(0, sliceLength))
     listOperatorSlice.value.push(result.slice(sliceLength))
-    console.log(listOperatorSlice.value)
   });
 }
 
@@ -185,7 +184,6 @@ function operatorsGroupByAttendance(list, interval) {
 
   }
 
-  console.log(listResult)
   return listResult
 }
 
@@ -228,16 +226,16 @@ onMounted(() => {
           <div v-for="(operator, index) of operatorTeam" :key="index" class="operator-team-item">
             <div class="team-operator-avatar" @click="removeOperator(operator)">
               <div :class="`bg-${operator.charId}`"
-                   style="background-color: #303030;box-shadow: 4px 4px 8px #00000080;">
+                   style="box-shadow: 4px 4px 8px #00000080;">
               </div>
               <img src="/image/icon/cancel.png" alt="" class="cancel-icon">
             </div>
           </div>
           <div v-for="x in 12" class="operator-team-item item-placeholder">
-            这是个占位符
+            未选择
           </div>
         </div>
-        <div style="padding-left: 8px;">主编队 ( {{ operatorTeam.length }} / 12 ) *至少选择8位干员</div>
+        <div style="padding-left: 8px;">开荒编队 ( {{ operatorTeam.length }} / 12 ) *至少选择8位干员</div>
       </div>
       <!--          <div class="team_area" style="padding-left:0px;background-color: #707070b0;">-->
       <!--            <div class="operator-team" id="team4">-->
@@ -250,7 +248,7 @@ onMounted(() => {
     </div>
     <!-- 操作区 -->
 
-    <el-button type="primary" :disabled="operatorTeam.length<8" style="margin: 4px 0px;">选好了！</el-button>
+    <el-button type="primary" :disabled="operatorTeam.length<8" @click="uploadSubmitContent()" style="margin: 4px 0px;">选好了！</el-button>
     <!--        <el-button type="primary" style="margin: 4px 0px;">选好了！</el-button>-->
 
     <!-- 这里塞一个筛选器，代码比较冗长，或许可以重写一下？ -->

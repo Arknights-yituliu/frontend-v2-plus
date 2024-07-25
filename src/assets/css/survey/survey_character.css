@@ -14,12 +14,9 @@
   /* Chrome Safari */
 }
 
-.item_cost_card{
-  display: flex;
-  margin: 4px;
-}
 
-.item_cost_wrap{
+
+.item-cost-wrap{
   display: flex;
   flex-wrap: wrap;
 }

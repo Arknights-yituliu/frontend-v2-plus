@@ -1,5 +1,5 @@
 import axios from "axios";
-import {cMessage} from "/src/utils/message.js";
+import {cMessage} from "/src/utils/Message.js";
 import {DOMAIN} from "/src/api/BASE_URL";
 
 // 创建axios实例

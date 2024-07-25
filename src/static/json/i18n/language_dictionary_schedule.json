@@ -25,8 +25,8 @@
       "en": "Operator already stationed in a different facility"
     },
     "AutofillDormTip": {
-      "cn": "当前宿舍使用 “自动补满干员” 和 “指定干员入驻” ,可能会导致后续宿舍指定干员入驻功能异常!",
-      "en": "Using \"Autofill\" together with manual selection in this dormitory, may lead to issues with subsequent dormitories"
+      "cn": "当前宿舍使用 ‘自动补满干员’ 和 “指定干员入驻” ,可能会导致后续宿舍指定干员入驻功能异常!",
+      "en": "Using ‘Autofill’ together with manual selection in this dormitory, may lead to issues with subsequent dormitories"
     },
     "ShiftTimesError": {
       "cn": "自动换班时间格式不正确",
@@ -37,8 +37,8 @@
       "en": "Enter schedule id"
     },
     "InfrastructureLayout": {
-      "cn": "选择基建布局",
-      "en": "Infrastructure layout"
+      "cn": "选择基建布局和换班次数",
+      "en": "Infrastructure layout and shift number"
     },
     "EnterScheduleId": {
       "cn": "id为文件名或在文件内找id",

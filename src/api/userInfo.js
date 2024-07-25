@@ -87,13 +87,6 @@ export default {
 
 
 
-
-
-
-
-
-
-
   /**
    * 发送邮件验证码
    * @param userData  内部数据包括邮件用途，邮箱等
@@ -135,18 +128,7 @@ export default {
   },
 
 
-  /**
-   * 找回用户填写的干员数据
-   * @param data
-   * @returns {*}
-   */
-  getSurveyOperatorData(data) {
-    return request({
-      url: `${api_name}/operator/table`,
-      method: "post",
-      data:data
-    })
-  },
+
 
   uploadCharacter(characterList, token) {
     return request({

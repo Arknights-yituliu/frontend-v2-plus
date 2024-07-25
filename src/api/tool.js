@@ -16,4 +16,12 @@ export default {
             method: "get",
         });
     },
+
+    collectLog(logInfo){
+        request({
+            url:'log/collect',
+            method:'post',
+            data:logInfo
+        })
+    }
 };

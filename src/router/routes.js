@@ -1,12 +1,12 @@
 import Error404 from "/src/pages/layout/error404.vue";
 import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
-import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.page.vue'
+import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.vue'
 import Notice from '/src/pages/layout/notice.vue'
 import REGISTER from '/src/pages/survey/account/register.vue'
 import LOGIN from '/src/pages/survey/account/login.vue'
 import RETRIEVE from '/src/pages/survey/account/retrieve.vue'
 import IMPORT_BY_SKLAND from '/src/pages/survey/account/importdata.vue'
-import SURVEY_OPERATOR from  '/src/pages/survey/operators.v2.vue'
+import SURVEY_OPERATOR from '/src/pages/survey/operators.vue'
 import USER_HOME from '/src/pages/survey/account/home.vue'
 
 // {
@@ -73,7 +73,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "elite",
-        component: () => import('/src/pages/material/elite.page.vue')
+        component: () => import('/src/pages/material/elite.vue')
     },
     {
         path: '/tools/gachaCal',
@@ -98,7 +98,7 @@ const routes = [
         display: true,
         module: 'tools',
         icon: "schedule",
-        component: () => import('/src/pages/tools/schedule.page.vue')
+        component: () => import('/src/pages/tools/schedule.vue')
     },
     {
         path: '/tools/logistics',
@@ -180,7 +180,17 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "rank",
-        component: () => import('/src/pages/survey/rank.page.vue')
+        component: () => import('/src/pages/survey/rank2.vue')
+        // component: Notice
+    },
+    {
+        path: '/survey/rank2',
+        text: '干员练度调查结果',
+        name: 'OperatorRank2',
+        display: false,
+        module: 'survey',
+        icon: "rank",
+        component: () => import('/src/pages/survey/rank2.vue')
         // component: Notice
     },
     {

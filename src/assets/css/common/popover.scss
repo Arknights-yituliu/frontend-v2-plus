@@ -3,7 +3,7 @@
   box-sizing: border-box;
   box-shadow: 1px 1px 8px 1px var(--c-box-shadow-color),-1px -1px 8px 1px var(--c-box-shadow-color);
   position: absolute;
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   padding: 8px;
   display: none;
 }
@@ -17,7 +17,7 @@
   height: 10px;
   display: block;
   position: absolute;
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   left: 90px;
   bottom: -5px;
   transform: rotate(45deg);

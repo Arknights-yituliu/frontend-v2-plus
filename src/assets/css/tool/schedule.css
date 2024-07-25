@@ -48,7 +48,7 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    border-bottom: var(--c-border);
+    border-bottom:1px solid var(--c-border-color);
     margin-bottom: 12px;
     padding: 8px 12px;
     justify-content: space-between;
@@ -109,7 +109,7 @@
 .schedule-set-card-header {
     display: block;
     padding: 8px;
-    border-bottom: var(--c-border);
+    border-bottom:1px solid var(--c-border-color);
 }
 
 .schedule-set-card-body {
@@ -201,7 +201,7 @@
     height: 70px;
     --room-operator-short: 180px;
     --room-operator-long: 300px;
-    border: 1px solid var(--c-background-color);
+    border: 1px solid var(--c-page-background-color);
     user-select: none;
 }
 
@@ -218,7 +218,7 @@
     margin: 4px;
     height: 70px;
     width: 500px;
-    border: 1px solid var(--c-background-color);
+    border: 1px solid var(--c-page-background-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -580,7 +580,7 @@
     flex-wrap: wrap;
     height: 52px;
     width: 260px;
-    border: var(--c-border);
+    border: 1px solid var(--c-border-color);
 }
 
 .selected-operator-wrap span {
@@ -613,7 +613,7 @@
     position: relative;
     left: 32px;
     top: -3px;
-    background-color: var(--c-background-color);
+    background-color: var(--c-page-background-color);
     border-radius: 10px;
     box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
 }
@@ -622,6 +622,7 @@
     display: flex;
     margin: 8px 16px;
     height: 50px;
+    align-items: center;
     /*background-color: #00a1d6;*/
 }
 
@@ -650,7 +651,7 @@
     width: 200px;
     display: none;
     line-height: 22px;
-    background-color: var(--c-background-color);
+    background-color: var(--c-page-background-color);
     z-index: 2000;
     padding: 8px;
     box-shadow: 1px 1px 4px var(--c-box-shadow-color);
@@ -688,7 +689,7 @@
     width: 300px;
     display: none;
     line-height: 22px;
-    background-color: var(--c-background-color);
+    background-color: var(--c-page-background-color);
     z-index: 2000;
     padding: 8px;
     box-shadow: 1px 1px 4px var(--c-box-shadow-color);
@@ -761,7 +762,7 @@
 }
 
 .schedule-set-bar div {
-    width: 270px;
+    /*width: 270px;*/
 }
 
 

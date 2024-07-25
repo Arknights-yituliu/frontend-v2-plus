@@ -4,7 +4,7 @@ import {
   convertToSeconds,
   secondsToTimeString,
   getSecondsSinceMidnight,
-} from "/src/utils/dataHanding"
+} from "/src/utils/DataHanding"
 import {Clock} from "@element-plus/icons-vue";
 
 const algorithmVisible = ref(false) //算法标识
@@ -292,7 +292,7 @@ function calculateTime() {
 }
 
 .code-block {
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   color: var(--c-text-color);
   padding: 10px;
   border-radius: 5px;

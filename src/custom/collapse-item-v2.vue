@@ -39,7 +39,7 @@ function collapse(flag) {
 
   let contentElement = document.getElementById(collapseItemId);
   let height = contentElement.clientHeight;
-  console.log(height)
+
 
   let ratio = 1.0
   const animate = () => {
@@ -52,7 +52,7 @@ function collapse(flag) {
 
     wrapElement.style.height = `${heightStep}px`
     ratio+=0.1
-    // console.log(progress, '高度步进', heightStep)
+
     if (progress < 1) {
       requestAnimationFrame(animate)
     } else {

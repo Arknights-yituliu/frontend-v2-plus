@@ -2,19 +2,18 @@
 
   <div class="container color_var" id="container" :class="theme_type">
 
-    <my-aside></my-aside>
-    <loading></loading>
+    <MyAside></MyAside>
+    <Loading></Loading>
     <div class="header">
-      <my-header/>
+      <MyHeader></MyHeader>
     </div>
     <div class="main">
-      <notice-board></notice-board>
+      <NoticeBoard></NoticeBoard>
       <router-view>
       </router-view>
     </div>
-
-    <components-container></components-container>
-    <my-footer></my-footer>
+    <ComponentsContainer></ComponentsContainer>
+    <MyFooter></MyFooter>
   </div>
 
 </template>
@@ -50,16 +49,16 @@ import '/src/assets/css/layout/basic.scss'
 import '/src/assets/css/layout/navigation.scss'
 
 import '/src/assets/css/layout/main.scss'
-import '/src/assets/css/layout/theme.scss'
+import '/src/assets/css/common/theme.scss'
 
 // svg字体
 
 // 旧版css，待修改
 
-import myHeader from "/src/pages/layout/myheader.vue";
-import myFooter from "/src/pages/layout/myfooter.vue";
-import myAside from "/src/pages/layout/aside.vue";
-import loading from '/src/pages/layout/loading.vue'
+import MyHeader from "/src/pages/layout/myheader.vue";
+import MyFooter from "/src/pages/layout/myfooter.vue";
+import MyAside from "/src/pages/layout/aside.vue";
+import Loading from '/src/pages/layout/loading.vue'
 import ComponentsContainer from "/src/components/ComponentsContainer.vue";
 import {onMounted, ref} from "vue";
 import NoticeBoard from "/src/pages/layout/NoticeBoard.vue";

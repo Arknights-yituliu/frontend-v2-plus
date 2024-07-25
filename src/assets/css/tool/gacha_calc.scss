@@ -55,15 +55,21 @@
     width: 600px;
     max-height: 500px;
     z-index: 1004;
+    .el-collapse-item{
+      background-color: var(--c-card-background-color);
+    }
   }
 
   .collapse-group2 {
     width: 600px;
+    .el-collapse-item{
+      background-color: var(--c-card-background-color);
+    }
   }
 
   .collapse-group-content{
     position: relative;
-    background-color: var(--c-background-color);
+
 
   }
 
@@ -222,7 +228,7 @@
     margin: 0 4px;
     outline: none;
     border: 1px solid var(--c-border-color);
-    background-color: var(--c-background-color);
+    background-color: var(--c-page-background-color);
     color: var(--c-text-color);
     box-shadow: none;
   }

@@ -1,6 +1,5 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
-import routesJson from "/src/static/json/routes.json";
 import {useRoute} from "vue-router";
 import {LinkedTable} from '/src/router/routes.js'
 
@@ -33,13 +32,13 @@ function getPathName(path) {
 }
 
 function navParentSelected(path) {
-  // console.log(path, "==", pathName.value);
+
   if (path == pathName.value) return " menu-selected";
   return "";
 }
 
 function navChildSelected(path) {
-  // console.log(path, "==", pathName.value);
+
   if (path === route.path) return "menu-selected";
   return "";
 }

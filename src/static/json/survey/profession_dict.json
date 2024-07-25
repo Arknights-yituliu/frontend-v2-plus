@@ -288,6 +288,10 @@
       {
         "value": "traper",
         "label": "陷阱师"
+      },
+      {
+        "value": "alchemist",
+        "label": "炼金师"
       }
     ]
   }

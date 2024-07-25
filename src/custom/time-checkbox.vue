@@ -91,7 +91,7 @@ function openPopup() {
 
   const elements = document.querySelectorAll('.c-time-checkbox-popup')
 
-  // console.log(popupElement)
+
 
   for (const element of elements) {
     if (element.id !== timeCheckboxPopupId) {
@@ -103,7 +103,7 @@ function openPopup() {
   }
 }
 
-import {debounce} from "../utils/debounce";
+import {debounce} from "../utils/Debounce.js";
 
 const setInsetDebounce = debounce(setInset,500)
 
@@ -119,7 +119,7 @@ function setInset(){
   const popupElementClientWidth = popupElement.clientWidth
 
   popupElement.style.top = `${top}px`
-  // console.log(checkboxElementClientWidth,'-',popupElementClientWidth,'=')
+
   const leftOffset = (checkboxElementClientWidth - popupElementClientWidth)/2
   popupElement.style.left = `${left + leftOffset}px`
 }
@@ -233,7 +233,7 @@ function getOptionClass(value) {
   text-align: center;
   position: absolute;
   box-shadow: 1px 1px 8px var(--c-box-shadow-color);
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   overflow: hidden;
   z-index: 3000;
   opacity: 0;

@@ -6,7 +6,7 @@
   z-index: 1000;
   width: 98%;
   box-shadow: 1px 1px 10px var(--c-box-shadow-color);
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   margin: auto auto 6px;
   padding: 4px 0 4px 16px;
   box-sizing: border-box;
@@ -17,7 +17,7 @@
   margin: 4px auto;
   padding:4px 12px;
   box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   border-radius: 2px;
   box-sizing: border-box;
 }
@@ -42,7 +42,7 @@
 .control-checkbox {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+
 }
 
 .control-line-tip {

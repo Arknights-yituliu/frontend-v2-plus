@@ -24,12 +24,7 @@ const context_height_style = `height:${props.height}`;
 function openAndClose(visible) {
   emit("update:visible", visible);
   emit("update:modelValue",visible)
-  console.log(visible)
-  // if (visible) {
-  //   popupStyle.value = "display: block;";
-  // } else {
-  //   popupStyle.value = "display: none;";
-  // }
+
 }
 
 </script>
@@ -60,19 +55,20 @@ function openAndClose(visible) {
   position: relative;
   z-index: 2100;
   margin: 10vh auto;
-  background-color: var(--c-background-color);
-  border-radius: 6px;
   box-sizing: border-box;
-  box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
+  padding: 8px;
   width: fit-content;
 }
 
 .popup-context {
-
+  border-radius: 6px;
   max-height: 70vh;
   overflow-y: auto;
   overflow-x: hidden;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  background-color: var(--c-page-background-color);
+  box-shadow: 1px 1px 10px var(--c-box-shadow-color);
+  width: fit-content;
 }
 </style>

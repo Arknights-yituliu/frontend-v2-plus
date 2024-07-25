@@ -29,7 +29,7 @@ function getStatusStyle(status) {
 }
 
 if (typeof props.modelValue != "boolean") {
-  // console.log("测试", props.modelValue === undefined);
+
 }
 
 function handleClick() {

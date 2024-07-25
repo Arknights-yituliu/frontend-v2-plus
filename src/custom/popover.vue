@@ -39,7 +39,7 @@ function openOrClose() {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 .popover-wrap {
   position: relative;
@@ -61,7 +61,7 @@ function openOrClose() {
   overflow: hidden;
   transition: all 0.3s;
   z-index: 3000;
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
   border-radius: 4px;
 }
