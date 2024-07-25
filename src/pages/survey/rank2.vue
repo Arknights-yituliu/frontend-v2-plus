@@ -200,6 +200,10 @@ const formatData = (data) =>{
   return [data.rank1*100,data.rank2*100,data.rank3*100]
 }
 
+const getOwnData = (data)=>{
+  return [0,(1-data)*100,data*100]
+}
+
 onMounted(() => {
 
   getCharStatisticsResult()
@@ -379,7 +383,9 @@ onMounted(() => {
               <div class="rank_operator_name" :class="'rarity_'+result.rarity">{{ result.name }}</div>
             </div>
           </td>
-          <td class="rank_table_2 rank_table_text">{{ getPercentage(result.own, 1) }}</td>
+          <td class="rank_table_2 rank_table_text">
+            <OperatorDataLineChart  :line-data="getOwnData(result.own)"></OperatorDataLineChart>
+          </td>
           <td class="rank_table_3 rank_table_text">
             <OperatorDataLineChart  :line-data="getEliteData(result.elite)"></OperatorDataLineChart>
          </td>

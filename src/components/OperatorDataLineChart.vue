@@ -13,10 +13,10 @@ function getData() {
 <template>
   <div class="operator-data-line-chart-box">
     <div style="display: flex" class="operator-data-line-chart">
-      <div :class="`line-${index}`" v-for="(data,index) in lineData" :key="index" :style="`height:${data}%`">
+      <div :class="`line-bar line-${index}`" v-for="(data,index) in lineData" :key="index" :style="`height:${data}%`">
+        <div class="line-max" v-show="index===2">{{ getData() }}%</div>
       </div>
     </div>
-    <div class="line-max">{{ getData() }}%</div>
   </div>
 </template>
 
@@ -25,15 +25,21 @@ function getData() {
 .operator-data-line-chart-box {
 
   .operator-data-line-chart {
-    height: 48px;
+    height: 54px;
     display: flex;
     flex-wrap: wrap;
     align-items: end;
-    margin: auto;
+    margin: 16px auto 0px;
     width: 42px;
-
     .line-max {
       font-size: 14px;
+      position: absolute;
+      right: -16px;
+      top: -18px;
+    }
+
+    .line-bar{
+      position: relative;
     }
 
     .line-0 {
