@@ -119,7 +119,7 @@ let scheduleOptions = [
     start: new Date('2024/11/01 16:00:00'),
     end: new Date('2024/11/15 04:01:00'),
     activityType: '周年限定',
-    disabled: false,
+    disabled: true,
     dailyGiftResources: true
   },
   {
