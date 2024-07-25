@@ -30,8 +30,8 @@
       <div class="login-card" v-show="userInfo.status>0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
-          <my-button data-color="blue" :active="true" @click="logout()">确定</my-button>
-          <my-button data-color="red" :active="true" @click="loginVisible = !loginVisible">取消</my-button>
+          <MyButton data-color="blue" :active="true" @click="logout()">确定</MyButton>
+          <MyButton data-color="red" :active="true" @click="loginVisible = !loginVisible">取消</MyButton>
         </div>
       </div>
     </c-popup>

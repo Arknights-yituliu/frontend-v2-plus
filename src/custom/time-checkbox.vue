@@ -233,7 +233,7 @@ function getOptionClass(value) {
   text-align: center;
   position: absolute;
   box-shadow: 1px 1px 8px var(--c-box-shadow-color);
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   overflow: hidden;
   z-index: 3000;
   opacity: 0;

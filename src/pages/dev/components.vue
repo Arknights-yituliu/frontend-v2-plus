@@ -57,15 +57,15 @@ console.log(buttonColorsMap)
 
   <div class="components-page">
     <div v-for="(color,index) in colors" >
-      <my-button :data-color="color" >
+      <MyButton :data-color="color" >
         默认
-      </my-button>
-<!--      <my-button :data-color="color" data-hover >-->
+      </MyButton>
+<!--      <MyButton :data-color="color" data-hover >-->
 <!--        悬停-->
-<!--      </my-button>-->
-      <my-button :data-color="color" :active="true" >
+<!--      </MyButton>-->
+      <MyButton :data-color="color" :active="true" >
         触发
-      </my-button>
+      </MyButton>
     </div>
 
 

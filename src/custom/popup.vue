@@ -67,7 +67,7 @@ function openAndClose(visible) {
   overflow-x: hidden;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   box-shadow: 1px 1px 10px var(--c-box-shadow-color);
   width: fit-content;
 }

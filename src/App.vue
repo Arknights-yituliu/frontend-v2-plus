@@ -49,7 +49,7 @@ import '/src/assets/css/layout/basic.scss'
 import '/src/assets/css/layout/navigation.scss'
 
 import '/src/assets/css/layout/main.scss'
-import '/src/assets/css/layout/theme.scss'
+import '/src/assets/css/common/theme.scss'
 
 // svg字体
 

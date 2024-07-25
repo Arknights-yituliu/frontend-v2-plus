@@ -117,10 +117,10 @@ onMounted(() => {
 
 
 
-        <my-button data-color="blue" class="my-button-login"
+        <MyButton data-color="blue" class="MyButton-login"
                    @click="toLogin">
           登录
-        </my-button>
+        </MyButton>
 
 
 

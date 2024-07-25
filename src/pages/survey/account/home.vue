@@ -177,7 +177,7 @@ onMounted(() => {
 
           <input class="user-info-card-input" v-model="inputData.userName"/>
           <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>
-          <my-button data-color="blue"  @click="updateUserName()">更新用户名</my-button>
+          <MyButton data-color="blue"  @click="updateUserName()">更新用户名</MyButton>
         </div>
         <div class="user-info-card-line">
           <span>绑定邮箱</span>
@@ -201,7 +201,7 @@ onMounted(() => {
             <div class="user-avatar-sprite">
               <div :class="getSprite(selectedAvatar)"></div>
             </div>
-            <my-button data-color="blue" @click="updateAvatar()"> 保存修改</my-button>
+            <MyButton data-color="blue" @click="updateAvatar()"> 保存修改</MyButton>
           </div>
           <div class="user_avatar_popup_wrap" >
             <div class="user-avatar-sprite" style="margin: 8px" v-for="(avatar,index) in avatar" :key="index" @click="chooseAvatar(avatar.charId)">
@@ -236,7 +236,7 @@ onMounted(() => {
         <div class="user-info-card-input-line">
           <input class="user-info-card-input" type="password" v-model="inputData.confirmPassWord"/>
           <!--          <span v-show="inputData.confirmPassWord.length>0">{{ inputData.confirmPassWord.length }}/20</span>-->
-          <my-button data-color="blue" @click="updatePassWord()">更新密码</my-button>
+          <MyButton data-color="blue" @click="updatePassWord()">更新密码</MyButton>
         </div>
         <div class="user-info-card-tip" style="color: #f83333">{{ checkPassWord() }}</div>
       </div>
@@ -253,17 +253,17 @@ onMounted(() => {
         <h4>输入新邮箱</h4>
         <div class="user-info-card-input-line">
           <input class="user-info-card-input" v-model="inputData.email"/>
-          <my-button data-color="blue"  @click="sendEmailCode()">发送验证码</my-button>
+          <MyButton data-color="blue"  @click="sendEmailCode()">发送验证码</MyButton>
         </div>
 
         <h4>输入邮件验证码</h4>
         <div class="user-info-card-input-line">
           <input class="user-info-card-input" v-model="inputData.emailCode"/>
-          <my-button data-color="blue"  @click="updateEmail()">修改邮箱</my-button>
+          <MyButton data-color="blue"  @click="updateEmail()">修改邮箱</MyButton>
         </div>
       </div>
       <div class="user-info-card">
-        <my-button data-color="blue" style="margin: auto" @click="logout()">退出登录</my-button>
+        <MyButton data-color="blue" style="margin: auto" @click="logout()">退出登录</MyButton>
       </div>
     </div>
   </div>

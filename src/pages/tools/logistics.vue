@@ -199,21 +199,21 @@ onMounted(() => {
            v-show="conditionType.display" :key="key">
           <span class="checkbox-button-label"
                 :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-        <my-button :data-color="conditionType.buttonColor" v-for="(condition,index) in conditionType.conditions"
+        <MyButton :data-color="conditionType.buttonColor" v-for="(condition,index) in conditionType.conditions"
                    :key="index" style="margin: 2px"
                    :color="COLOR.BLUE" :active="filterBtnStatus(key,condition.label)"
                    @click="filterOperatorByTag(condition,key)">
           {{ translate('schedule', condition.label) }}
-        </my-button>
+        </MyButton>
       </div>
     </div>
 
     <div class="logistics-search-line">
 
       <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
-      <my-button :active="hideIrrelevantSkillsFlag" data-color="green"
+      <MyButton :active="hideIrrelevantSkillsFlag" data-color="green"
                  style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
-      </my-button>
+      </MyButton>
       <span
           class="logistics-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
       <!--  <span-->

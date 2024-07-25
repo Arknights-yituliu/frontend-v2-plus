@@ -122,18 +122,18 @@ onMounted(() => {
     </div>
 
     <div class="value-button-group">
-      <my-button data-color='blue'  :active="value_unit === 'itemValueAp'"
+      <MyButton data-color='blue'  :active="value_unit === 'itemValueAp'"
                 @click="value_unit = 'itemValueAp'">等效理智
-      </my-button>
-      <my-button data-color='blue'  :active="value_unit === 'itemValue'"
+      </MyButton>
+      <MyButton data-color='blue'  :active="value_unit === 'itemValue'"
                 @click="value_unit = 'itemValue'">等效绿票
-      </my-button>
-      <my-button data-color='blue' 
+      </MyButton>
+      <MyButton data-color='blue'
                 @click="exportItemValueExcel">导出Excel
-      </my-button>
-      <my-button data-color='blue' 
+      </MyButton>
+      <MyButton data-color='blue'
                 @click="exportItemValueJson">导出Json
-      </my-button>
+      </MyButton>
     </div>
 
     <div class="item-value-table-wrap color">

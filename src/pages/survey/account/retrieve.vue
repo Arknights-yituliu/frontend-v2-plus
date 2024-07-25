@@ -141,10 +141,10 @@ onMounted(() => {
            <div class="">
 
            </div>
-            <my-button data-color="blue" class="my-button-login"
+            <MyButton data-color="blue" class="MyButton-login"
                        @click="toRetrieveAuthentication(1)">
               找回账号
-            </my-button>
+            </MyButton>
 
           </div>
 
@@ -171,10 +171,10 @@ onMounted(() => {
               </span>
             </div>
 
-            <my-button data-color="blue" class="my-button-login"
+            <MyButton data-color="blue" class="MyButton-login"
                        @click="toResetPassword(2)">
               找回账号
-            </my-button>
+            </MyButton>
           </div>
 
           <div class="retrieve-form-scroll-item" v-show="'email'===inputContent.accountType">
@@ -188,14 +188,14 @@ onMounted(() => {
              :style="recoveryProgress">
           <div class="retrieve-form-scroll-item">
             <div style="margin: 10px auto;text-align: center">登录明日方舟官网</div>
-            <my-button data-color="blue" class="my-button-login"
+            <MyButton data-color="blue" class="MyButton-login"
                        @click="openLinkOnNewPage(HYPERGRYPH_LINK)">
               点击前往官网
-            </my-button>
-            <my-button data-color="blue" class="my-button-login"
+            </MyButton>
+            <MyButton data-color="blue" class="MyButton-login"
                        @click="setRecoveryProgress(1)">
               已登录官网，前往下一步
-            </my-button>
+            </MyButton>
 
           </div>
 
@@ -203,14 +203,14 @@ onMounted(() => {
             <img alt="" src="/image/skland/hgAPI.jpg" style="width: 100%;">
             <p>点击对应的服务器链接，将会返回如上图所示的一段数据，将其全部复制</p>
 
-            <my-button data-color="blue"  @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
-            </my-button>
-            <my-button data-color="red" @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服
-            </my-button>
+            <MyButton data-color="blue"  @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
+            </MyButton>
+            <MyButton data-color="red" @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服
+            </MyButton>
 
-            <my-button data-color="blue" class="my-button-login" @click="recoveryProgress='left:-800px'">
+            <MyButton data-color="blue" class="MyButton-login" @click="recoveryProgress='left:-800px'">
               我已复刻，前往下一步
-            </my-button>
+            </MyButton>
 
           </div>
 
@@ -222,9 +222,9 @@ onMounted(() => {
                     v-show="inputTipDisplay(inputContent.hgToken)">请输入token</span>
             </div>
 
-            <my-button data-color="blue" class="my-button-login" @click="toRetrieveAuthentication(3)">
+            <MyButton data-color="blue" class="MyButton-login" @click="toRetrieveAuthentication(3)">
               找回账号
-            </my-button>
+            </MyButton>
 
           </div>
 
@@ -251,9 +251,9 @@ onMounted(() => {
               </span>
             </div>
 
-            <my-button data-color="blue" class="my-button-login" @click="toResetPassword(4)">
+            <MyButton data-color="blue" class="MyButton-login" @click="toResetPassword(4)">
               修改密码
-            </my-button>
+            </MyButton>
           </div>
 
           <div class="retrieve-form-scroll-item" >

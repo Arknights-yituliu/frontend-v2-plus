@@ -210,9 +210,9 @@ onMounted(() => {
   <div class="survey_rank_page">
     <!-- 常驻条 -->
     <div class="control-header">
-      <my-button data-color="blue"  @click="collapseFilter()">
+      <MyButton data-color="blue"  @click="collapseFilter()">
         筛选
-      </my-button>
+      </MyButton>
       <div id="updateTime">
         调查人数{{ userCountText }}<br/>
         更新时间{{ updateTimeText }}
@@ -226,46 +226,46 @@ onMounted(() => {
         <div class="control-line">
           <div class="control-line-label">职业</div>
           <div class="control-checkbox">
-            <my-button data-color="blue"
+            <MyButton data-color="blue"
                        v-for="(profession,index) in professionDict" :key="index"
                        :active="selectedBtn('profession', profession.value)"
                        @click="addFilterCondition('profession', profession.value)">
               {{ profession.label }}
-            </my-button>
+            </MyButton>
           </div>
         </div>
 
         <div class="control-line">
           <div class="control-line-label">稀有度</div>
           <div class="control-checkbox">
-            <my-button data-color="orange"
+            <MyButton data-color="orange"
                        v-for="(rarity,index) in rarityDict" :key="index"
                        :active="selectedBtn('rarity', rarity)"
                        @click="addFilterCondition('rarity', rarity)">
               {{ rarity }}★
-            </my-button>
+            </MyButton>
           </div>
         </div>
 
         <div class="control-line">
           <div class="control-line-label">其他</div>
           <div class="control-checkbox">
-            <my-button data-color="green" :active="selectedBtn('equip', true)"
+            <MyButton data-color="green" :active="selectedBtn('equip', true)"
                        @click="addFilterCondition('equip', true)">
               模组已实装
-            </my-button>
-            <my-button data-color="green" :active="selectedBtn('equip', false)"
+            </MyButton>
+            <MyButton data-color="green" :active="selectedBtn('equip', false)"
                        @click="addFilterCondition('equip', false)">
               模组未实装
-            </my-button>
-            <my-button data-color="green" :active="selectedBtn('itemObtainApproach', '赠送干员')"
+            </MyButton>
+            <MyButton data-color="green" :active="selectedBtn('itemObtainApproach', '赠送干员')"
                        @click="addFilterCondition('itemObtainApproach', '赠送干员')">
               赠送干员
-            </my-button>
-            <my-button data-color="green" :active="selectedBtn('itemObtainApproach', '限定干员')"
+            </MyButton>
+            <MyButton data-color="green" :active="selectedBtn('itemObtainApproach', '限定干员')"
                        @click="addFilterCondition('itemObtainApproach', '限定干员')">
               限定干员
-            </my-button>
+            </MyButton>
           </div>
         </div>
 

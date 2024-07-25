@@ -2,29 +2,28 @@
   <div class="survey-operator-page">
     <!-- 常驻条 -->
     <div class="control-header">
-      <!--      <my-button data-color='blue' :active="true" @click="checkFirstPopup()">操作指引</my-button>-->
 
-      <my-button data-color='blue' :active="btnStatus.btn_filter"
+      <MyButton data-color='blue' :active="btnStatus.btn_filter"
                  @click="clickBtn('btn_filter');collapseFilter()">
         筛选/批量操作
-      </my-button>
+      </MyButton>
 
-      <my-button data-color='blue' :active="btnStatus.btn_import"
+      <MyButton data-color='blue' :active="btnStatus.btn_import"
                  @click="clickBtn('btn_import');collapseImport()">
         数据导入导出
-      </my-button>
+      </MyButton>
 
       <!--      <div style="width: 60px"></div>-->
-      <my-button data-color='green' :active="true" @click="upload()">手动保存练度</my-button>
-      <my-button data-color='blue' :active="statisticalPopupVisible"
+<!--      <MyButton data-color='orange'  @click="upload()">手动保存练度</MyButton>-->
+      <MyButton data-color='blue' :active="statisticalPopupVisible"
                  @click="clickBtn('btn_statistics');openStatisticalPopup()">统计干员练度
-      </my-button>
-      <my-button data-color='blue' :active="recommendPopupVisible"
+      </MyButton>
+      <MyButton data-color='blue' :active="recommendPopupVisible"
                  @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）
-      </my-button>
-      <!--      <my-button data-color='blue' :active="btn_status.btn_plan"-->
+      </MyButton>
+      <!--      <MyButton data-color='blue' :active="btn_status.btn_plan"-->
       <!--                @click="clickBtn('btn_plan');getOperatorPlanItemCost()">练度计划材料消耗统计-->
-      <!--      </my-button>-->
+      <!--      </MyButton>-->
 
 
     </div>
@@ -35,59 +34,59 @@
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">职业</span>
           <div class="control-checkbox">
-            <my-button data-color="blue" :active="selectedBtn('profession', profession.value)"
+            <MyButton data-color="blue" :active="selectedBtn('profession', profession.value)"
                        v-for="(profession,index) in professionDict"
                        :key="index"
                        @click="addFilterCondition('profession', profession.value)">
               {{ profession.label }}
-            </my-button>
+            </MyButton>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">稀有度</span>
           <div class="control-checkbox">
-            <my-button data-color="blue" :active="selectedBtn('rarity', rarity)"
+            <MyButton data-color="blue" :active="selectedBtn('rarity', rarity)"
                        v-for="(rarity,index) in RARITY_TABLE" :key="index"
                        @click="addFilterCondition('rarity', rarity)">
               {{ rarity }}★
-            </my-button>
+            </MyButton>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">年份</span>
           <div class="control-checkbox">
-            <my-button data-color="blue" :active="selectedBtn('year',key)"
+            <MyButton data-color="blue" :active="selectedBtn('year',key)"
                        v-for="(year, key) in yearDict" :key="key"
                        @click="addFilterCondition('year', key)">
               {{ year.label }}
-            </my-button>
+            </MyButton>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">是否拥有</span>
           <div class="control-checkbox">
-            <my-button data-color="blue" :active="selectedBtn('own',false)"
+            <MyButton data-color="blue" :active="selectedBtn('own',false)"
                        @click="addFilterCondition('own', false)">
               已拥有
-            </my-button>
-            <my-button data-color="blue" :active="selectedBtn('own',true)"
+            </MyButton>
+            <MyButton data-color="blue" :active="selectedBtn('own',true)"
                        @click="addFilterCondition('own', true)">
               未拥有
-            </my-button>
+            </MyButton>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">获得方式</span>
           <div class="control-checkbox">
-            <my-button data-color="blue" :active="selectedBtn('itemObtainApproach',type)"
+            <MyButton data-color="blue" :active="selectedBtn('itemObtainApproach',type)"
                        v-for="(type,index) in itemObtainApproachType" :key="index"
                        @click="addFilterCondition('itemObtainApproach', type)">
               {{ type }}
-            </my-button>
+            </MyButton>
 
           </div>
         </div>
@@ -95,23 +94,23 @@
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">模组</span>
           <div class="control-checkbox">
-            <my-button data-color="blue" :active="selectedBtn('equip', true)"
+            <MyButton data-color="blue" :active="selectedBtn('equip', true)"
                        @click="addFilterCondition('equip', true)">
               模组已实装
-            </my-button>
-            <my-button data-color="blue" :active="selectedBtn('equip', false)"
+            </MyButton>
+            <MyButton data-color="blue" :active="selectedBtn('equip', false)"
                        @click="addFilterCondition('equip', false)">
               模组未实装
-            </my-button>
+            </MyButton>
           </div>
         </div>
 
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">排序</span>
           <div class="control-checkbox">
-            <my-button data-color="blue" @click="sortOperatorList('rarity')"> 按稀有度</my-button>
-            <my-button data-color="blue" @click="sortOperatorList('date')"> 按实装顺序</my-button>
-            <my-button data-color="blue" @click="sortOperatorListByLevel('level')"> 按干员等级</my-button>
+            <MyButton data-color="blue" @click="sortOperatorList('rarity')"> 按稀有度</MyButton>
+            <MyButton data-color="blue" @click="sortOperatorList('date')"> 按实装顺序</MyButton>
+            <MyButton data-color="blue" @click="sortOperatorListByLevel('level')"> 按干员等级</MyButton>
           </div>
         </div>
 
@@ -147,9 +146,9 @@
         <div class="control-line-label">导入导出</div>
         <div class="control-line">
           <div class="control-checkbox">
-            <my-button data-color="green" :active="true" @click="importDataBySkland()">从森空岛导入</my-button>
-            <my-button data-color="green" :active="true" @click="exportOperatorExcel()">导出为Excel</my-button>
-            <!--            <my-button data-color="red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</my-button>-->
+            <MyButton data-color="green"  @click="importDataBySkland()">从森空岛导入</MyButton>
+            <MyButton data-color="green"  @click="exportOperatorExcel()">导出为Excel</MyButton>
+            <!--            <MyButton data-color="red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</MyButton>-->
           </div>
         </div>
         <div class="control-line">

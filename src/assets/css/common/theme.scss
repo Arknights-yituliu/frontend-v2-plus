@@ -1,21 +1,21 @@
-@import "button";
+@import "../layout/button";
 
 
 .theme_init {
-  --c-background-color: var(--c-white-4);
+  --c-page-background-color: var(--c-white-4);
   --c-text-color: var(--c-black-1);
 }
 
 .theme_light {
-  /*基础样式*/
-  --c-box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.12);
+  /*基础样式变量*/
   --c-box-shadow-color: rgba(185, 185, 185, 0.5);
-  --c-border: 1px solid var(--c-white-2);
   --c-border-color: #d7d7d7;
-  --c-background-color: var(--c-white-1);
+  --c-page-background-color: #ffffff;
+  --c-page-background-color-secondary: #F9F9F9;
   --c-text-color: var(--c-black-2);
   --c-text-tip-color: #858585;
   --c-background-white-transparent: var(--c-white-transparent);
+  --c-card-background-color:#ffffff;
 
 
   --c-blue: var(--c-blue-1);
@@ -36,9 +36,11 @@
   --c-btn-color-orange: #ff8a52;
   --c-btn-border-orange: rgba(255, 138, 82, 0.5);
 
+  //每个页面的自定义样式变量
   --c-stage-card-background-color: #f7f7f7;
   --c-material-grey: #939393;
-
+  --c-pack-card-background-color:var(--c-black-3);
+  --c-operator-pupup-background-color:#F0F0F0;
   --c-table-tr-background-color: #f6f6f6;
 
   --c-schedule-arrow-color: #c4c4c4;
@@ -56,15 +58,14 @@
 
 .theme_dark {
   /*基础样式*/
-  --c-box-shadow: 1px 1px 4px var(--c-black-1);
-  --c-border: 1px solid var(--c-black-4);
   --c-box-shadow-color: rgb(0, 0, 0);
   --c-border-color: #b6b6b6;
-  --c-background-color: #2d2d2d;
+  --c-page-background-color: #000000;
+  --c-page-background-color-secondary: var(--c-black-3);
   --c-text-color: var(--c-white-2);
   --c-text-tip-color: #c0c0c0;
   --c-background-white-transparent: var(--c-white-transparent);
-
+  --c-card-background-color:var(--c-black-3);
 
   --c-blue: var(--c-blue-dark);
   --c-red: var(--c-red-dark);
@@ -85,11 +86,12 @@
   --c-btn-color-orange: #ff8a52;
   --c-btn-border-orange: #ff8a52;
 
+  //每个页面的自定义样式变量
   --c-stage-card-background-color: #3d3d3d;
   --c-material-grey: #cdcdcd;
-
+  --c-pack-card-background-color:var(--c-black-3);
   --c-table-tr-background-color: #282828;
-
+  --c-operator-pupup-background-color:#000000;
   --c-schedule-arrow-color: #757575;
 
   /*输入框样式*/
@@ -191,13 +193,7 @@
 
 .color_var {
 
-
-
-
   /*亮色颜色*/
-
-
-
   --c-btn-green-light: #30da96;
   --c-btn-blue-light: #00a1d6;
   --c-btn-red-light: #ff6262;

@@ -878,33 +878,33 @@ onMounted(() => {
         <!--      <span class="schedule-header-title">排班生成器</span>-->
       </div>
       <div class="schedule-header-right">
-        <my-button data-color="orange" @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
+        <MyButton data-color="orange" @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
           {{ translate('schedule', 'schedule.InfrastructureLayout') }}
-        </my-button>
+        </MyButton>
         <div>
           <input class="input-base" style="width: 200px" v-model="scheduleImportId"
                  :placeholder="[[translate('schedule', 'schedule.IdPlaceholder')]]"/>
           <span class="input-desc"></span>
         </div>
-        <my-button data-color="blue" @click="importScheduleById()">
+        <MyButton data-color="blue" @click="importScheduleById()">
           {{ translate('schedule', 'schedule.ImportScheduleById') }}
-        </my-button>
+        </MyButton>
 
         <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
-        <my-button data-color="blue" @click="chooseFile()">{{
+        <MyButton data-color="blue" @click="chooseFile()">{{
             translate('schedule', 'schedule.ImportScheduleFile')
           }}
-        </my-button>
-        <my-button data-color="blue" @click="saveAndDownloadScheduleFile()">
+        </MyButton>
+        <MyButton data-color="blue" @click="saveAndDownloadScheduleFile()">
           {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
-        </my-button>
-        <!--      <my-button data-color='blue' :active="true" @click="downloadScheduleFile()">-->
+        </MyButton>
+        <!--      <MyButton data-color='blue' :active="true" @click="downloadScheduleFile()">-->
         <!--        {{ translate('schedule', 'schedule.DownloadScheduleFile') }}-->
-        <!--      </my-button>-->
+        <!--      </MyButton>-->
 
-        <my-button data-color="orange" @click="guidePopup = true">
+        <MyButton data-color="orange" @click="guidePopup = true">
           {{ translate('schedule', 'schedule.GuidePopup') }}
-        </my-button>
+        </MyButton>
       </div>
     </div>
     <!-- TODO separate various paragraphs and translate them -->
@@ -952,21 +952,21 @@ onMounted(() => {
         <div class="schedule-set-bar">
           <span>{{ translate('schedule', 'schedule.BaseLayout') }}</span>
           <div>
-            <my-button data-color='blue' :active="menu.label === selectedScheduleType.label"
+            <MyButton data-color='blue' :active="menu.label === selectedScheduleType.label"
                        @click="chooseScheduleType(menu)" v-for="(menu, index) in schedule_menu" :key="index">
               {{ menu.label }}
-            </my-button>
+            </MyButton>
           </div>
         </div>
 
         <div class="schedule-set-bar">
           <span>{{ translate('schedule', 'schedule.ShiftNumber') }}</span>
           <div>
-            <my-button data-color='blue' :active="num === scheduleTypeV2.planTimes" style="min-width: 40px"
+            <MyButton data-color='blue' :active="num === scheduleTypeV2.planTimes" style="min-width: 40px"
                        v-for="(num, index) in 6" :key="index"
                        @click="choosePlanTimes(num)">
               {{ num }}
-            </my-button>
+            </MyButton>
           </div>
         </div>
       </div>
@@ -992,33 +992,33 @@ onMounted(() => {
             </div>
             <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
             <div style="width: 200px">
-              <my-button data-color='blue' :active="'pre' === plansTemplate[selectedPlanIndex].drones.order"
+              <MyButton data-color='blue' :active="'pre' === plansTemplate[selectedPlanIndex].drones.order"
                          @click="setDrones('order', 'pre')">
                 {{ translate('schedule', 'schedule.PreShift') }}
-              </my-button>
-              <my-button data-color='blue' :active="'post' === plansTemplate[selectedPlanIndex].drones.order"
+              </MyButton>
+              <MyButton data-color='blue' :active="'post' === plansTemplate[selectedPlanIndex].drones.order"
                          @click="setDrones('order', 'post')">
                 {{ translate('schedule', 'schedule.PostShift') }}
-              </my-button>
+              </MyButton>
             </div>
             <span>{{ translate('schedule', 'schedule.TargetRoom') }}</span>
             <div style="width: 220px">
-              <my-button data-color='blue' :active="'trading' === plansTemplate[selectedPlanIndex].drones.room"
+              <MyButton data-color='blue' :active="'trading' === plansTemplate[selectedPlanIndex].drones.room"
                          @click="setDrones('room', 'trading')">
                 {{ translate('schedule', 'schedule.TradingPost') }}
-              </my-button>
-              <my-button data-color='blue' :active="'manufacture' === plansTemplate[selectedPlanIndex].drones.room"
+              </MyButton>
+              <MyButton data-color='blue' :active="'manufacture' === plansTemplate[selectedPlanIndex].drones.room"
                          @click="setDrones('room', 'manufacture')">
                 {{ translate('schedule', 'schedule.Factory') }}
-              </my-button>
+              </MyButton>
             </div>
             <span>{{ translate('schedule', 'schedule.RoomNumber') }}</span>
             <div>
-              <my-button data-width-auto data-color='blue'
+              <MyButton data-width-auto data-color='blue'
                          :active="(index) === plansTemplate[selectedPlanIndex].drones.index"
                          @click="setDrones('index', (index))" v-for="index in 5" :key="index">
                 {{ index }}
-              </my-button>
+              </MyButton>
             </div>
           </div>
 
@@ -1029,14 +1029,14 @@ onMounted(() => {
             </div>
             <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
             <div style="width: 200px">
-              <my-button data-color='blue' :active="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order"
+              <MyButton data-color='blue' :active="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order"
                          @click="setFiammetta('order', 'pre')">
                 {{ translate('schedule', 'schedule.PreShift') }}
-              </my-button>
-              <my-button data-color='blue' :active="'post' === plansTemplate[selectedPlanIndex].Fiammetta.order"
+              </MyButton>
+              <MyButton data-color='blue' :active="'post' === plansTemplate[selectedPlanIndex].Fiammetta.order"
                          @click="setFiammetta('order', 'post')">
                 {{ translate('schedule', 'schedule.PostShift') }}
-              </my-button>
+              </MyButton>
             </div>
             <span>{{ translate('schedule', 'schedule.RecoveryTarget') }}</span>
             <div style="height: 65px">
@@ -1092,10 +1092,10 @@ onMounted(() => {
             <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable" v-show="room.display"
                  :key="key">
               <span :style="`color:${room.color}`">{{ translate('schedule', room.name) }}</span>
-              <my-button v-for="(condition, index) in room.conditions" :key="index" data-color='blue'
+              <MyButton v-for="(condition, index) in room.conditions" :key="index" data-color='blue'
                          :active="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
                 {{ translate('schedule', condition.label) }}
-              </my-button>
+              </MyButton>
             </div>
           </div>
 
@@ -1207,12 +1207,12 @@ onMounted(() => {
             <span>{{ translate('schedule', 'schedule.TempPlan') }}&nbsp;{{ translate('schedule', 'schedule.Shift') }}{{
                 tmpPlanData.index
               }} </span>
-              <my-button data-color='blue' :active="true" @click="copyPlan()">
+              <MyButton data-color='blue' :active="true" @click="copyPlan()">
                 {{ translate('schedule', 'schedule.CopyPlan') }}
-              </my-button>
-              <my-button data-color='blue' :active="true" @click="pastePlan()">
+              </MyButton>
+              <MyButton data-color='blue' :active="true" @click="pastePlan()">
                 {{ translate('schedule', 'schedule.PastePlan') }}
-              </my-button>
+              </MyButton>
             </div>
           </div>
 
@@ -1284,12 +1284,12 @@ onMounted(() => {
 
         <div class="schedule-set-bar" style="justify-content: center">
           <span>{{ translate('schedule', 'schedule.CurrentShift') }}</span>
-          <my-button data-color='blue' :active="index === selectedPlanIndex"
+          <MyButton data-color='blue' :active="index === selectedPlanIndex"
                      v-for="(num, index) in scheduleTypeV2.planTimes" :key="index" @click="currentPlan(index)"
                      class="room_times"
                      style="margin: 0 8px">
             {{ translate('schedule', 'schedule.Shift') }}{{ num }}
-          </my-button>
+          </MyButton>
         </div>
 
 
@@ -1304,12 +1304,12 @@ onMounted(() => {
                 </i>
               </div>
             </div>
-            <my-button data-color='blue' :active="true" @click="copyOperatorList()">
+            <MyButton data-color='blue' :active="true" @click="copyOperatorList()">
               {{ translate('schedule', 'schedule.Copy') }}
-            </my-button>
-            <my-button data-color='blue' :active="true" @click="pasteOperatorList()">
+            </MyButton>
+            <MyButton data-color='blue' :active="true" @click="pasteOperatorList()">
               {{ translate('schedule', 'schedule.Paste') }}
-            </my-button>
+            </MyButton>
             <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsClipboard') }}</span>
             <div class="selected-operator-wrap">
               <div class="room-avatar-sprite-wrap" v-for="(charId, index) in tmpOperatorList" :key="index">
@@ -1323,11 +1323,11 @@ onMounted(() => {
             <div class="condition-bar" v-for="(conditionType, key) in operatorFilterConditionTable"
                  v-show="conditionType.display" :key="key">
               <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-              <my-button v-for="(condition, index) in conditionType.conditions" :key="index"
+              <MyButton v-for="(condition, index) in conditionType.conditions" :key="index"
                          :data-color='conditionType.buttonColor'
                          :active="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
                 {{ translate('schedule', condition.label) }}
-              </my-button>
+              </MyButton>
             </div>
             <span class="condition-tip">{{ translate('schedule', 'schedule.developerTip') }}</span>
           </div>
@@ -1338,7 +1338,7 @@ onMounted(() => {
                      v-model="searchInputText">
               <span class="input-group-text">{{ translate('schedule', 'schedule.searchInputTip') }}</span>
             </div>
-            <my-button data-color="blue" :active="filterNotOwnOperator" @click="filterOperatorByOwn">隐藏未招募干员</my-button>
+            <MyButton data-color="blue" :active="filterNotOwnOperator" @click="filterOperatorByOwn">隐藏未招募干员</MyButton>
           </div>
           <div class="operator-check-box-group">
             <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"
@@ -1375,7 +1375,7 @@ onMounted(() => {
   padding: 8px;
   line-height: 24px;
   font-weight: 600;
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
 }
 

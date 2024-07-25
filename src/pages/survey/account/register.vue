@@ -146,9 +146,9 @@ onMounted(() => {
       </div>
 
 
-        <my-button data-color="blue"  class="my-button-login" @click="toRegister()">
+        <MyButton data-color="blue"  class="MyButton-login" @click="toRegister()">
           注册账号
-        </my-button>
+        </MyButton>
 
 
       <div class="login-form-notice">

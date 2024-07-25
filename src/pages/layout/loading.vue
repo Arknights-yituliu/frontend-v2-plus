@@ -35,7 +35,7 @@ const intervalId = setInterval(() => {
 .loading {
   width: 100%;
   height: calc(100vh);
-  background-color: var(--c-background-color);
+  background-color: var(--c-page-background-color);
   z-index: 3000;
   //font-size: 18px;
   display: flex;

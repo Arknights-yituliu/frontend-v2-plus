@@ -412,7 +412,7 @@ onMounted(() => {
 .popup_header_v2 {
   width: 100%;
   display: flex;
-  border-bottom: var(--c-border);
+  border-bottom: 1px solid var(--c-border-color);
   margin: auto auto 8px;
 
 }
@@ -432,7 +432,7 @@ onMounted(() => {
 }
 
 .popup_tip_v2 {
-  border-top: var(--c-border);
+  border-top: 1px solid var(--c-border-color);
   color: var(--popup-text-fg);
   padding: 8px;
 }
