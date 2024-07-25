@@ -1,11 +1,10 @@
 <script setup>
-import {ref, onMounted,  watchEffect} from "vue";
+import {ref, onMounted, watchEffect} from "vue";
+import toolApi from "/src/api/tool";
 import user from "/src/pages/survey/account/user.vue";
-import routesJson from "/src/static/json/routes.json";
-import notUpdateVisitsRequestsJson from "/src/static/json/not_update_visits_requests.json";
+import {routes,LinkedTable} from "/src/router/routes.js";
 import {language} from '/src/utils/I18n.js'
-import {LinkedTable} from "/src/router/routes.js";
-import { useRoute } from 'vue-router';
+import {useRoute} from 'vue-router';
 import MyButton from '/src/components/Button.vue'
 
 const LanguageLabel = {
@@ -78,50 +77,18 @@ function switchTheme() {
   localStorage.setItem("theme_v2", themeV2.value)
 }
 
-const routes = ref(routesJson);
-const noUpVi = ref(notUpdateVisitsRequestsJson);
-
+const rs = ref(routes);
 let pageTitle = ref("");
 
 function getPageTitle(path) {
   if (path === "/") return (pageTitle.value = "材料一图流");
 
-  for (let i of routes.value) {
-    if (i.isChild) {
-
-      if (i.path.indexOf(path) > -1) {
-        pageTitle.value = i.text;
-
-      }
-      for (let c of i.child) {
-
-        if (c.path.indexOf(path) > -1) {
-          pageTitle.value = c.text;
-
-        }
-      }
-    } else {
-
-      if (i.path.indexOf(path) > -1) {
-        pageTitle.value = i.text;
-      }
+  for (let i of rs.value) {
+    if (i.path.indexOf(path) > -1) {
+      pageTitle.value = i.text;
     }
   }
 
-
-
-  // if (path.indexOf('tools/schedule') > -1) {
-  //   aside_collapse()
-  // }
-  //
-  // if (path.indexOf('tools/rogueCal') > -1) {
-  //   aside_collapse()
-  // }
-  //
-  // if (path.indexOf('tools/maa') > -1) {
-  //   aside_collapse()
-  //   pageTitle.value = "排班生成器旧版-已停止维护,请使用新版生成器"
-  // }
 }
 
 let i18nButtonVisible = ref(false)
@@ -144,7 +111,6 @@ const route = useRoute();
 watchEffect(() => {
   getPageTitle(route.path)
 });
-
 
 
 onMounted(() => {
@@ -196,8 +162,8 @@ function openNewPage(url) {
         </div>
       </template>
       <div class="language-options" id="language">
-        <span @click="language='cn'" >中文</span>
-        <span @click="language='en'" >English</span>
+        <span @click="language='cn'">中文</span>
+        <span @click="language='en'">English</span>
       </div>
     </c-popover>
     <user></user>
@@ -212,7 +178,7 @@ function openNewPage(url) {
           <!-- 导航菜单 -->
           <div class="aside_menu_set" v-for="(parent, index) in LinkedTable" :key="index" v-show="parent.display">
             <!-- 一级标题 -->
-            <router-link :to="parent.path"  class="nav-bar nav-bar-parent">
+            <router-link :to="parent.path" class="nav-bar nav-bar-parent">
               <div class="nav-bar-parent-icon"></div>
               <h3> {{ parent.text }}</h3>
             </router-link>
@@ -279,9 +245,6 @@ function openNewPage(url) {
 
 
 <style scoped>
-
-
-
 
 
 </style>
