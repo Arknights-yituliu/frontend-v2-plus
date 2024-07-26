@@ -32,6 +32,7 @@ jobs:
           secret_key: ${{ secrets.COS_SECRET_KEY }}
           bucket: ${{ secrets.COS_BUCKET_PROD }}
           region: ap-beijing
+        timeout-minutes: 3
 
       - name: Refresh Tencent Cloud CDN Purge Cache
         uses: keithnull/tencent-cloud-cdn-purge-cache@v1.0
