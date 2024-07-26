@@ -77,8 +77,8 @@
     "module": "actRe",
     "probability": ""
   },
-  "夏活阶段1、2": {
-    "originium": 28,
+  "夏活阶段1": {
+    "originium": 12,
     "orundum": 0,
     "gachaTicket": 3,
     "tenGachaTicket": 0,
@@ -88,10 +88,21 @@
     "module": "act",
     "probability": ""
   },
+  "夏活阶段2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/08/08 16:00:00",
+    "end": "2024/08/09 03:58:00",
+    "rewardType": "公共",
+    "module": "act",
+    "probability": ""
+  },
   "夏活阶段3": {
     "originium": 9,
     "orundum": 0,
-    "gachaTicket": 3,
+    "gachaTicket": 0,
     "tenGachaTicket": 0,
     "start": "2024/08/15 16:00:00",
     "end": "2024/08/16 03:58:00",
