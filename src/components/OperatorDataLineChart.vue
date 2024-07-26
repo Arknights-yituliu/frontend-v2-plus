@@ -25,12 +25,14 @@ function getData() {
 .operator-data-line-chart-box {
 
   .operator-data-line-chart {
-    height: 54px;
+    height: 48px;
     display: flex;
     flex-wrap: wrap;
     align-items: end;
     width: 54px;
-    margin: auto;
+
+    box-sizing: border-box;
+    //border: 1px solid black;
 
     .line-max {
       font-size: 14px;
@@ -45,19 +47,19 @@ function getData() {
 
     .line-0 {
       width: 10px;
-      margin: 4px;
+      margin:0 4px;
       background-color: var(--c-blue-4)
     }
 
     .line-1 {
       width: 10px;
-      margin: 4px;
+      margin:0 4px;
       background-color: var(--c-purple-4)
     }
 
     .line-2 {
       width: 10px;
-      margin: 4px;
+      margin:0 4px;
       background-color: var(--c-orange-4)
     }
 

@@ -1,7 +1,7 @@
 <script setup>
 
 
-import {ref, defineEmits, watch} from "vue";
+import {ref,  watch} from "vue";
 import OperatorInfo from "/src/components/OperatorInfo.vue";
 import MyButton from "/src/components/Button.vue";
 

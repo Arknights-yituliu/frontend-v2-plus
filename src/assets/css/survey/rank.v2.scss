@@ -1,0 +1,40 @@
+.survey-rank-page {
+  width: 100%;
+  height: auto;
+  overflow-x: scroll;
+  box-sizing: border-box;
+  padding: 2px;
+
+  .control-checkbox {
+    .my-button {
+      margin: 2px;
+    }
+  }
+
+  .control-header {
+    .my-button {
+      margin: 2px 4px;
+    }
+  }
+
+
+  .rank-table {
+    margin: 28px auto;
+    width: fit-content;
+
+    .rank-table-line {
+
+      display: flex;
+      border-bottom: 1px solid var(--c-border-color);
+      align-items: end;
+      padding: 12px 12px 2px;
+
+      .rank-table-line-item{
+        width: 90px;
+        box-sizing: border-box;
+      }
+
+
+    }
+  }
+}
