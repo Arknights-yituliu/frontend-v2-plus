@@ -119,7 +119,7 @@ let scheduleOptions = [
     start: new Date('2024/11/01 16:00:00'),
     end: new Date('2024/11/15 04:01:00'),
     activityType: '周年限定',
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true
   },
   {
@@ -607,6 +607,9 @@ function gachaResourcesCalculation() {
     //计算用户选择兑换几次黄票商店的38抽
     for (const i of selectedCertificatePack.value) {
       const item = certificatePackList.value[i]
+      if(!rewardIsExpired(item)){
+        continue
+      }
       gachaTicket += item.gachaTicket
       tenGachaTicket += item.tenGachaTicket
     }
@@ -805,8 +808,14 @@ function gachaResourcesCalculation() {
 
 
     for (const index of selectedHistoryPackIndex.value) {
+
       const pack = packListGroupByHistory.value[index]
+
       if (!pack) {
+        continue
+      }
+
+      if(!rewardIsExpired(pack)){
         continue
       }
 
@@ -823,6 +832,11 @@ function gachaResourcesCalculation() {
       if (!pack) {
         continue
       }
+
+      if(!rewardIsExpired(pack)){
+        continue
+      }
+
       //月卡单独处理
       if (pack.displayName === '月卡') {
         //计算卡池结束前月卡可以拿到多少合成玉
