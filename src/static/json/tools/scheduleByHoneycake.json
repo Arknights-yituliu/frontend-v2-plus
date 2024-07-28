@@ -98,6 +98,39 @@
     "rewardType": "公共",
     "module": "act",
     "probability": ""
+  },  
+  "夏活签到-day2": {
+    "originium": 0,
+    "orundum": 200,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/08/02 16:00:00",
+    "end": "2024/08/03 03:58:00",
+    "rewardType": "公共",
+    "module": "act",
+    "probability": ""
+  },
+  "夏活签到-day6": {
+    "originium": 0,
+    "orundum": 200,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/08/06 16:00:00",
+    "end": "2024/08/07 03:58:00",
+    "rewardType": "公共",
+    "module": "act",
+    "probability": ""
+  },
+  "夏活签到-day9": {
+    "originium": 0,
+    "orundum": 200,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/08/09 16:00:00",
+    "end": "2024/08/10 03:58:00",
+    "rewardType": "公共",
+    "module": "act",
+    "probability": ""
   },
   "夏活阶段3": {
     "originium": 9,
