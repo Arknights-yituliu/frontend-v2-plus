@@ -46,6 +46,7 @@
     top: 96px;
     left: 0;
     width: 160px;
+    height: 20px;
     background-color: rgba(0, 0, 0, 0.6902);
     font-size: 14px;
     font-weight: 600;
@@ -161,7 +162,8 @@
     width: 490px;
     display: none;
     flex-wrap: wrap;
-    background-color: var(--c-pack-card-background-color);
+    // background-color: var(--c-pack-card-background-color);
+    background: #ffffff40;
     font-size: 14px;
     border-radius: 4px;
     box-shadow: 1px 1px 4px var(--c-box-shadow-color);

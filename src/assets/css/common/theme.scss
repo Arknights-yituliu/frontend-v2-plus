@@ -58,9 +58,9 @@
 
 .theme_dark {
   /*基础样式*/
-  --c-box-shadow-color: rgb(0, 0, 0);
+  --c-box-shadow-color: #141414;
   --c-border-color: #b6b6b6;
-  --c-page-background-color: #000000;
+  --c-page-background-color: #141414;
   --c-page-background-color-secondary: var(--c-black-3);
   --c-text-color: var(--c-white-2);
   --c-text-tip-color: #c0c0c0;
@@ -91,7 +91,7 @@
   --c-material-grey: #cdcdcd;
   --c-pack-card-background-color:var(--c-black-3);
   --c-table-tr-background-color: #282828;
-  --c-operator-pupup-background-color:#000000;
+  --c-operator-pupup-background-color:#141414;
   --c-schedule-arrow-color: #757575;
 
   /*输入框样式*/
