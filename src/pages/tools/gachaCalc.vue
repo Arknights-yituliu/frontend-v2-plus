@@ -544,10 +544,11 @@ function gachaResourcesCalculation() {
     if (startDate.getDate() !== 1) {
       shoppingTimes++
     }
-    //如果结束日期是1号，商店购买次数加1，因为下面计算时可能越过1号
-    if (endDate.value.getDate() === 1) {
-      shoppingTimes++
-    }
+
+    // //如果结束日期是1号，商店购买次数加1，因为下面计算时可能越过1号
+    // if (endDate.value.getDate() === 1) {
+    //   shoppingTimes++
+    // }
 
 
     //循环计算当前时间到活动结束时间
@@ -575,14 +576,18 @@ function gachaResourcesCalculation() {
     let annihilationTimes = mondayCount //打剿次数
     //如果本周周常已经做完则周数减1
     if (dailyReward.value.weeklyTaskCompleted) {
+
       weeks = mondayCount > 0 ? mondayCount - 1 : mondayCount
     }
+
     //如果本周已经打剿了则打剿次数减1
     if (dailyReward.value.annihilationCompleted) {
       annihilationTimes = mondayCount > 0 ? mondayCount - 1 : mondayCount
     }
+
     //如果本月已清空绿票商店则购买商店次数减1
     if (dailyReward.value.certificateStoreCompleted) {
+      console.log('绿票商店加一')
       shoppingTimes = shoppingTimes > 0 ? shoppingTimes - 1 : shoppingTimes
     }
 
