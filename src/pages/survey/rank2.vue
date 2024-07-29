@@ -354,14 +354,6 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- <div class="collapse_bar">
-          <div class="collapse_title">排序</div>
-          <div class="switch_btn_wrap">
-            <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
-            <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
-            <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
-          </div>
-        </div> -->
       </div>
 
     </c-collapse-item>
@@ -384,7 +376,7 @@ onMounted(() => {
       <div class="rank-table-line" v-for="(result, index) in operatorsStatisticsList" :key="index"
           v-show="result.show">
         <div class="rank-table-line-item">
-          <SpriteImage :id="result.charId" display-size="60"
+          <SpriteImage :image-name="result.charId" display-size="60"
                        original-size="180" style="margin: auto"></SpriteImage>
         </div>
         <div class="rank-table-line-item">
@@ -414,129 +406,6 @@ onMounted(() => {
       </div>
 
     </div>
-
-<!--    <div id="rank_table" class="rank-table-box">-->
-<!--      <table class="rank-table">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--          <td>-->
-<!--            <div class="rank-table-title" style="width: 220px">代号</div>-->
-<!--          </td>-->
-<!--          <td @click="sortRank('own')">-->
-<!--            <div class="rank-table-title" style="width: 80px">-->
-<!--              <div>持有率</div>-->
-<!--              <div>-->
-<!--                <div class="sort-asc-icon" :style="sortIconClass('own','asc')"></div>-->
-<!--                <div class="sort-desc-icon" :style="sortIconClass('own','desc')"></div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--          <td @click="commonSort('elite','rank2')">-->
-<!--            <div class="rank-table-title" style="width: 80px">-->
-<!--              <div>精二率</div>-->
-<!--              <div>-->
-<!--                <div class="sort-asc-icon" :style="sortIconClass('elite','asc')"></div>-->
-<!--                <div class="sort-desc-icon" :style="sortIconClass('elite','desc')"></div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--          <td @click="commonSort('skill1','rank3')">-->
-<!--            <div class="rank-table-title" style="width: 80px">-->
-<!--              <div>一技能</div>-->
-<!--              <div>-->
-<!--                <div class="sort-asc-icon" :style="sortIconClass('skill1','asc')"></div>-->
-<!--                <div class="sort-desc-icon" :style="sortIconClass('skill1','desc')"></div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--          <td @click="commonSort('skill2','rank3')">-->
-<!--            <div class="rank-table-title" style="width: 80px">-->
-<!--              <div>二技能</div>-->
-<!--              <div>-->
-<!--                <div class="sort-asc-icon" :style="sortIconClass('skill2','asc')"></div>-->
-<!--                <div class="sort-desc-icon" :style="sortIconClass('skill2','desc')"></div>-->
-
-<!--              </div>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--          <td @click="commonSort('skill3','rank3')">-->
-<!--            <div class="rank-table-title" style="width: 80px">-->
-<!--              <div>三技能</div>-->
-<!--              <div>-->
-<!--                <div class="sort-asc-icon" :style="sortIconClass('skill3','asc')"></div>-->
-<!--                <div class="sort-desc-icon" :style="sortIconClass('skill3','desc')"></div>-->
-
-<!--              </div>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--          <td @click="commonSort('modX','count')">-->
-<!--            <div class="rank-table-title" style="width: 80px">-->
-<!--              <div>X模组</div>-->
-<!--              <div>-->
-<!--                <div class="sort-asc-icon" :style="sortIconClass('modX','asc')"></div>-->
-<!--                <div class="sort-desc-icon" :style="sortIconClass('modX','desc')"></div>-->
-
-<!--              </div>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--          <td @click="commonSort('modY','count')">-->
-<!--            <div class="rank-table-title" style="width: 80px">-->
-<!--              <div>Y模组</div>-->
-<!--              <div>-->
-<!--                <div class="sort-asc-icon" :style="sortIconClass('modY','asc')"></div>-->
-<!--                <div class="sort-desc-icon" :style="sortIconClass('modY','desc')"></div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--          <td @click="commonSort('modD','count')">-->
-<!--            <div class="rank-table-title" style="width:80px">-->
-<!--              <div>D模组</div>-->
-<!--              <div>-->
-<!--                <div class="sort-asc-icon" :style="sortIconClass('modD','asc')"></div>-->
-<!--                <div class="sort-desc-icon" :style="sortIconClass('modD','desc')"></div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--        </tr>-->
-<!--        </thead>-->
-
-<!--        <tbody>-->
-<!--        <tr v-for="(result, index) in operatorsStatisticsList" :key="index" v-show="result.show"-->
-<!--            class="rank_table_tr">-->
-<!--          <td class="rank_table_1 rank_table_text">-->
-<!--            <div class="rank_table_avatar">-->
-<!--              <SpriteImage :id="result.charId" display-size="70" original-size="180"></SpriteImage>-->
-<!--              <div class="rank_operator_name" :class="'rarity_'+result.rarity">{{ result.name }}</div>-->
-<!--            </div>-->
-<!--          </td>-->
-<!--          <td class="rank_table_2 rank_table_text">-->
-<!--            <OperatorDataLineChart :line-data="getOwnData(result.own)"></OperatorDataLineChart>-->
-<!--          </td>-->
-<!--          <td class="rank_table_3 rank_table_text">-->
-<!--            <OperatorDataLineChart :line-data="getEliteData(result.elite)"></OperatorDataLineChart>-->
-<!--          </td>-->
-<!--          <td class="rank_table_3 rank_table_text">-->
-<!--            <OperatorDataLineChart :line-data="formatData(result.skill1)"></OperatorDataLineChart>-->
-<!--          </td>-->
-<!--          <td class="rank_table_3 rank_table_text">-->
-<!--            <OperatorDataLineChart :line-data="formatData(result.skill2)"></OperatorDataLineChart>-->
-<!--          </td>-->
-<!--          <td class="rank_table_3 rank_table_text">-->
-<!--            <OperatorDataLineChart :line-data="formatData(result.skill3)"></OperatorDataLineChart>-->
-<!--          </td>-->
-<!--          <td class="rank_table_7">-->
-<!--            <OperatorDataLineChart :line-data="formatData(result.modX)"></OperatorDataLineChart>-->
-<!--          </td>-->
-<!--          <td class="rank_table_8">-->
-<!--            <OperatorDataLineChart :line-data="formatData(result.modY)"></OperatorDataLineChart>-->
-<!--          </td>-->
-<!--          <td class="rank_table_8">-->
-<!--            <OperatorDataLineChart :line-data="formatData(result.modD)"></OperatorDataLineChart>-->
-<!--          </td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
-<!--    </div>-->
   </div>
 </template>
 

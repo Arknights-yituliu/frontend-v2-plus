@@ -7,7 +7,7 @@ import MyButton from "/src/components/Button.vue";
 
 const props = defineProps(["modelValue", 'statisticalData']);
 import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
-import SpriteImage from "./SpriteImage.vue";
+import SpriteImage from "/src/components/SpriteImage.vue";
 
 
 let allData = ref([])
@@ -130,7 +130,7 @@ watch(() => props.modelValue, () => {
         <my-button data-color="blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</my-button>
         <div class="item-cost-group" v-for="(itemList,type) in itemCostList" :key="type">
           <div class="item-cost-item" v-for="(item,index) in itemList" :key="index">
-            <SpriteImage original-size="183" display-size="40" :id="item.id" style="margin: auto"></SpriteImage>
+            <SpriteImage original-size="183" display-size="40" :image-name="item.id" style="margin: auto"></SpriteImage>
             <span class="item-cost-num">
                   {{ strShowLength(item.count) }}
             </span>

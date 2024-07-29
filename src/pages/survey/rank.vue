@@ -368,7 +368,7 @@ onMounted(() => {
             class="rank_table_tr">
           <td class="rank_table_1 rank_table_text">
             <div class="rank_table_avatar">
-             <SpriteImage :id="result.charId" display-size="70" original-size="180"></SpriteImage>
+             <SpriteImage :image-name="result.charId" display-size="70" original-size="180"></SpriteImage>
               <div class="rank_operator_name" :class="'rarity_'+result.rarity">{{ result.name }}</div>
             </div>
           </td>
