@@ -2,7 +2,7 @@
 import storeAPI from "/src/api/store";
 import { onMounted, ref } from "vue";
 
-import packCardContainer from '/src/components/PackCardGroup.vue'
+import PackCardContainer from '/src/components/PackCardGroup.vue'
 
 import '/src/assets/css/material/pack.scss'
 import '/src/assets/css/material/pack.phone.scss'
@@ -368,8 +368,8 @@ onMounted(() => {
         </span>
       </div>
 
-      <pack-card-container v-model="limitedPackInfoList">
-      </pack-card-container>
+      <PackCardContainer v-model="limitedPackInfoList">
+      </PackCardContainer>
 
 
       <module-header title="半常驻礼包" title-en="Chips Packs & LMD Packs" :tips="['*内容较为固定，规律较为明确的礼包']">
@@ -381,20 +381,20 @@ onMounted(() => {
           芯片礼包价值有差异的原因见此处
         </span>
       </div> -->
-      <pack-card-container v-model="chipPackInfoList">
-      </pack-card-container>
+      <PackCardContainer v-model="chipPackInfoList">
+      </PackCardContainer>
 
       <h2 style="margin: 12px;">龙门币补给包</h2>
-      <pack-card-container v-model="lmdPackInfoList">
-      </pack-card-container>
+      <PackCardContainer v-model="lmdPackInfoList">
+      </PackCardContainer>
 
 
       <module-header title="常驻/周期性礼包" title-en="Monthly & Weekly & Orundum" :tips="['*每月/每周礼包、新人/回归礼包、源石']">
       </module-header>
 
       <h2 style="margin: 12px;">每月/每周礼包</h2>
-      <pack-card-container v-model="periodicPackInfoList">
-      </pack-card-container>
+      <PackCardContainer v-model="periodicPackInfoList">
+      </PackCardContainer>
 
       <h2 style="margin: 12px;">新人/回归礼包</h2>
       <div class="tag-group">
@@ -403,8 +403,8 @@ onMounted(() => {
         </span>
       </div>
 
-      <pack-card-container v-model="newbiePackInfoList">
-      </pack-card-container>
+      <PackCardContainer v-model="newbiePackInfoList">
+      </PackCardContainer>
 
       <h2 style="margin: 12px;">源石/首充源石</h2>
       <div class="tag-group">
@@ -412,9 +412,9 @@ onMounted(() => {
           每年周年庆会重置源石首充
         </span>
       </div>
-      <pack-card-container v-model="originiumPackInfoList">
+      <PackCardContainer v-model="originiumPackInfoList">
 
-      </pack-card-container>
+      </PackCardContainer>
 
 
 
@@ -473,28 +473,28 @@ onMounted(() => {
       <!--      </el-button-group>-->
 
       <h2 style="margin: 12px;">2024年</h2>
-      <pack-card-container v-model="packInfoListGroupByYear['2024']">
-      </pack-card-container>
+      <PackCardContainer v-model="packInfoListGroupByYear['2024']">
+      </PackCardContainer>
 
       <h2 style="margin: 12px;">2023年</h2>
-      <pack-card-container v-model="packInfoListGroupByYear['2023']">
-      </pack-card-container>
+      <PackCardContainer v-model="packInfoListGroupByYear['2023']">
+      </PackCardContainer>
 
       <h2 style="margin: 12px;">2022年</h2>
-      <pack-card-container v-model="packInfoListGroupByYear['2022']">
-      </pack-card-container>
+      <PackCardContainer v-model="packInfoListGroupByYear['2022']">
+      </PackCardContainer>
 
       <h2 style="margin: 12px;">2021年</h2>
-      <pack-card-container v-model="packInfoListGroupByYear['2021']">
-      </pack-card-container>
+      <PackCardContainer v-model="packInfoListGroupByYear['2021']">
+      </PackCardContainer>
 
       <h2 style="margin: 12px;">2020年</h2>
-      <pack-card-container v-model="packInfoListGroupByYear['2020']">
-      </pack-card-container>
+      <PackCardContainer v-model="packInfoListGroupByYear['2020']">
+      </PackCardContainer>
 
       <h2 style="margin: 12px;">2019年</h2>
-      <pack-card-container v-model="packInfoListGroupByYear['2019']">
-      </pack-card-container>
+      <PackCardContainer v-model="packInfoListGroupByYear['2019']">
+      </PackCardContainer>
 
 
       <module-header title="礼包性价比总表" title-en="Packs Value"></module-header>

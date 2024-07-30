@@ -264,7 +264,7 @@ const data = [
       </tr>
       <tr v-for="(item,index) in list2" :key="index" :class="index%2!==0?'table-114-td-background':''">
         <td>
-          <SpriteImage :name="item.charId" size="40">
+          <SpriteImage :image-name="item.charId" display-size="40" original-size="180">
           </SpriteImage>
         </td>
         <td>{{ item.name }}</td>

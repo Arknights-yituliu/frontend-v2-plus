@@ -4,7 +4,7 @@ import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/Debounce.js";
 
 
-const props = defineProps(["modelValue", 'originalSize', 'id', 'displaySize', 'roundedCorner']);
+const props = defineProps(["modelValue", 'originalSize', 'imageName', 'displaySize', 'roundedCorner']);
 
 let wrapStyle = ref('')
 let spriteStyle = ref('')
@@ -40,7 +40,7 @@ onMounted(() => {
 <template>
 
   <div :style="wrapStyle">
-    <div :style="spriteStyle" :class="`bg-${id}`">
+    <div :style="spriteStyle" :class="`bg-${imageName}`">
     </div>
   </div>
 

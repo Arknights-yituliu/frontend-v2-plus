@@ -8,7 +8,7 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
 <template>
 
   <div class="operator-card">
-    <SpriteImage original-size="180" display-size="50" :id="operatorInfo.charId" style="margin: 0 4px"></SpriteImage>
+    <SpriteImage original-size="180" display-size="50" :image-name="operatorInfo.charId" style="margin: 0 4px"></SpriteImage>
     <div>
       <img :src="`/image/survey/rank/elite${operatorInfo.elite}.png`" class="operator-elite-image" alt="">
       <div class="operator-level-image">
@@ -17,7 +17,7 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
     </div>
 
     <div class="operator-skill-icon-item" v-for="(skill,index) in operatorInfo.skill" :key="index">
-      <SpriteImage original-size="128" display-size="40"  :id="`skill_icon_${skill.iconId}`" style="margin: auto"></SpriteImage>
+      <SpriteImage original-size="128" display-size="40"  :image-name="`skill_icon_${skill.iconId}`" style="margin: auto"></SpriteImage>
       <div class="skill-name">{{ skill.name }}</div>
     </div>
 

@@ -7,7 +7,7 @@ import MyButton from "/src/components/Button.vue";
 
 const props = defineProps(["modelValue", 'statisticalData']);
 import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
-import SpriteImage from "./SpriteImage.vue";
+import SpriteImage from "/src/components/SpriteImage.vue";
 
 
 let allData = ref([])
@@ -117,7 +117,7 @@ watch(() => props.modelValue, () => {
 
     <div class="detail-card">
       <div class="detail-card-title">未招募干员</div>
-      <div class="operator-info-table">
+      <div style="margin: 4px;display: flex;flex-wrap: wrap">
         <SpriteImage :image-name="operator.charId" original-size="180" display-size="40"
                      style="margin: 4px"
                      v-for="(operator,index) in modelValue.allNotOwn"></SpriteImage>
@@ -139,7 +139,7 @@ watch(() => props.modelValue, () => {
         <my-button data-color="blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</my-button>
         <div class="item-cost-group" v-for="(itemList,type) in itemCostList" :key="type">
           <div class="item-cost-item" v-for="(item,index) in itemList" :key="index">
-            <SpriteImage original-size="183" display-size="40" :id="item.id" style="margin: auto"></SpriteImage>
+            <SpriteImage original-size="183" display-size="40" :image-name="item.id" style="margin: auto"></SpriteImage>
             <span class="item-cost-num">
                   {{ strShowLength(item.count) }}
             </span>

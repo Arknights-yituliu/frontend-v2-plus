@@ -1,6 +1,17 @@
 <script setup>
 import { ref, watch} from "vue"
 
+const id = generateRandomString(5)
+
+function generateRandomString(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 const props = defineProps(["modelValue"]);
 function getPackImageLink(link) {
@@ -8,8 +19,8 @@ function getPackImageLink(link) {
 }
 
 
-function displayPackContent(id) {
-  const element = document.getElementById(id)
+function displayPackContent(packId) {
+  const element = document.getElementById(`${packId}${id}`)
   if ('flex' === element.style.display) {
     element.style.display = 'none'
   } else {
@@ -46,9 +57,9 @@ watch(()=>window.screen.width,(newVal)=>{
 
 <template>
   <div class="pack-card-container">
-    <div v-for="(packInfo, index) in props.modelValue" :key="index" class="pack-card" @click="displayPackContent(packInfo.id)">
+    <div v-for="(packInfo, index) in props.modelValue" :key="index" class="pack-card" >
       <!-- 图片部分 -->
-      <div class="pack-card-part-left">
+      <div class="pack-card-part-left" @click="displayPackContent(packInfo.id)">
         <img :src="getPackImageLink(packInfo.imageLink)" alt="" class="pack-image">
         <span class="pack-display-name">
               {{ packInfo.displayName }}
@@ -58,7 +69,7 @@ watch(()=>window.screen.width,(newVal)=>{
       </div>
 
       <!-- 表格部分 -->
-      <div class="pack-info">
+      <div class="pack-info" @click="displayPackContent(packInfo.id)">
         <div class="pack-info-text">
           <span style="color: #ffb46e">折合{{ getFixed(packInfo.packedOriginium, 1) }}石</span>
           <span style="color: #ffb46e">￥{{ getFixed(packInfo.packedOriginiumPrice, 1) }}/石</span>
@@ -77,7 +88,7 @@ watch(()=>window.screen.width,(newVal)=>{
         </div>
       </div>
       <!-- 详情部分 -->
-      <div class="pack-content" :id="packInfo.id">
+      <div class="pack-content" :id="`${packInfo.id}${id}`">
         <div class="pack-content-gacha">
           <span>源石</span><span>X{{ packInfo.originium }}</span>
           <span>合成玉</span><span>X{{ packInfo.orundum }}</span>

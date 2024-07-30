@@ -3,7 +3,7 @@ import md5 from 'crypto-js/md5'
 import request from "/src/api/requestBase";
 import {cMessage} from "/src/utils/Message";
 import toolAPI from '/src/api/tool.js'
-
+import CHARACTER_TABLE_SIMPLE from "/src/static/json/survey/character_table_simple.json";
 
 const SKLAND_DOMAIN = "https://zonai.skland.com";
 const PLAYER_INFO_API = '/api/v1/game/player/info'
@@ -12,40 +12,20 @@ const OAUTH2_URL = "https://as.hypergryph.com/user/oauth2/v2/grant";
 const GENERATE_CRED_BY_CODE_URL = "https://zonai.skland.com/api/v1/user/auth/generate_cred_by_code";
 const CULTIVATE_PLAYER_API =  '/api/v1/game/cultivate/player'
 
-function getSign(path, params, token) {
-    let timestamp = Math.floor((new Date().getTime() - 300) / 1000).toString();
 
-    // if(path.indexOf('info')>-1){
-    //     timestamp = 1721211932
-    // }
-
-
-    const headers = {
-        platform: '3',
-        timestamp: timestamp,
-        dId: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
-        vName: '1.2.0'
-    }
-    params = params ? params : ''
-    let text = path + params + timestamp + JSON.stringify(headers);
-
-    const sign = md5(hmacSHA256(text, token).toString()).toString()
-
-    return {timestamp, sign}
-}
-
-function getHeaders(url,params,cred,token){
-    const {timestamp, sign} = getSign(url, params, token);
-
-    return {
-        "platform": '3',
-        "timestamp": timestamp,
-        "dId": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
-        "vName": '1.2.0',
-        "cred": cred,
-        "sign": sign
+let equipDict = new Map()
+if (equipDict.size < 100) {
+    for (const charId in CHARACTER_TABLE_SIMPLE) {
+        const characterInfo = CHARACTER_TABLE_SIMPLE[charId]
+        if (characterInfo.equip) {
+            for (const equip of characterInfo.equip) {
+                equipDict.set(equip.uniEquipId, equip.typeName2)
+            }
+        }
     }
 }
+
+
 
 
 
@@ -190,7 +170,7 @@ async function getPlayerInfo(params, characterTable) {
             const chars = data.chars;
             const charInfoMap = data.charInfoMap;
 
-            FormattingOperatorData(chars, characterTable)
+            formattingOperatorData(chars, characterTable)
 
             uploadData = {
                 akNickName: akNickName,
@@ -215,7 +195,7 @@ async function getPlayerInfo(params, characterTable) {
     return uploadData
 }
 
-let equipDict = new Map()
+
 
 async function getWarehouseInfo(akUid, cred, token, userToken){
 
@@ -232,6 +212,10 @@ async function getWarehouseInfo(akUid, cred, token, userToken){
         console.log(response)
         if(response.code===0){
             const items = response.data.items
+            const chars = response.data.chars
+
+            formattingOperatorData(chars)
+
             let list = []
             for(const item of items){
                 list.push({itemId:item.id,quantity:item.count})
@@ -250,27 +234,15 @@ async function getWarehouseInfo(akUid, cred, token, userToken){
 }
 
 
-function FormattingOperatorData(characterList, characterTable) {
-
-    if (equipDict.size < 100) {
-        for (const charId in characterTable) {
-            const characterInfo = characterTable[charId]
-            if (characterInfo.equip) {
-                for (const equip of characterInfo.equip) {
-                    equipDict.set(equip.uniEquipId, equip.typeName2)
-                }
-            }
-        }
-    }
-
+function formattingOperatorData(characterList) {
 
     let operatorList = []
 
     for (const character of characterList) {
         const charId = character.charId
         let rarity = 0;
-        if (characterTable[charId]) {
-            rarity = characterTable[charId].rarity
+        if (CHARACTER_TABLE_SIMPLE[charId]) {
+            rarity = CHARACTER_TABLE_SIMPLE[charId].rarity
         } else {
             continue
         }
@@ -301,8 +273,10 @@ function FormattingOperatorData(characterList, characterTable) {
 
         const skills = character.skills
         if (skills) {
-            for (let s = 0; s < skills.length; s++) {
-                operator[`skill${s}`] = parseInt(skills[s].specializeLevel.toString())
+            for (let i = 0; i < skills.length; i++) {
+                if(skills[i]){
+                    operator[`skill${i}`] = parseInt(skills[i].specializeLevel.toString())
+                }
             }
         }
 
@@ -328,13 +302,43 @@ function FormattingOperatorData(characterList, characterTable) {
     }
 
 
+
+
     return operatorList
 }
 
 
-async function getPlayerWarehouseInfo(cred,token,uid){
 
 
+
+function getSign(path, params, token) {
+    let timestamp = Math.floor((new Date().getTime() - 300) / 1000).toString();
+
+    const headers = {
+        platform: '3',
+        timestamp: timestamp,
+        dId: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
+        vName: '1.2.0'
+    }
+    params = params ? params : ''
+    let text = path + params + timestamp + JSON.stringify(headers);
+
+    const sign = md5(hmacSHA256(text, token).toString()).toString()
+
+    return {timestamp, sign}
+}
+
+function getHeaders(url,params,cred,token){
+    const {timestamp, sign} = getSign(url, params, token);
+
+    return {
+        "platform": '3',
+        "timestamp": timestamp,
+        "dId": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0',
+        "vName": '1.2.0',
+        "cred": cred,
+        "sign": sign
+    }
 }
 
 export default {
