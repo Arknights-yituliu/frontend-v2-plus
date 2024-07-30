@@ -68,12 +68,12 @@
         <div class="control-line">
           <span class="control-line-label" style="width: 80px;">是否拥有</span>
           <div class="control-checkbox">
-            <MyButton data-color="blue" :active="selectedBtn('own',false)"
-                       @click="addFilterCondition('own', false)">
-              已拥有
-            </MyButton>
             <MyButton data-color="blue" :active="selectedBtn('own',true)"
                        @click="addFilterCondition('own', true)">
+              已拥有
+            </MyButton>
+            <MyButton data-color="blue" :active="selectedBtn('own',false)"
+                       @click="addFilterCondition('own', false)">
               未拥有
             </MyButton>
           </div>
