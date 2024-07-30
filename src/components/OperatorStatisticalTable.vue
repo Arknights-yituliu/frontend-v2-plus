@@ -1,7 +1,7 @@
 <script setup>
 
 
-import {ref,  watch} from "vue";
+import {ref, watch} from "vue";
 import OperatorInfo from "/src/components/OperatorInfo.vue";
 import MyButton from "/src/components/Button.vue";
 
@@ -112,6 +112,15 @@ watch(() => props.modelValue, () => {
           <span class="info-label">{{ data.label }}</span>
           <span class="info-value">{{ data.value }}</span>
         </div>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <div class="detail-card-title">未招募干员</div>
+      <div class="operator-info-table">
+        <SpriteImage :image-name="operator.charId" original-size="180" display-size="40"
+                     style="margin: 4px"
+                     v-for="(operator,index) in modelValue.allNotOwn"></SpriteImage>
       </div>
     </div>
 
