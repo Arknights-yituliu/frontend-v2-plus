@@ -117,7 +117,7 @@ watch(() => props.modelValue, () => {
 
     <div class="detail-card">
       <div class="detail-card-title">未招募干员</div>
-      <div class="operator-info-table">
+      <div style="margin: 4px;display: flex;flex-wrap: wrap">
         <SpriteImage :image-name="operator.charId" original-size="180" display-size="40"
                      style="margin: 4px"
                      v-for="(operator,index) in modelValue.allNotOwn"></SpriteImage>
