@@ -1,6 +1,6 @@
 .survey-rank-page {
   width: 100%;
-  height: auto;
+  min-height: 700px;
   //overflow-x: scroll;
   box-sizing: border-box;
   padding: 2px;
@@ -17,13 +17,55 @@
     }
   }
 
+  .rank-table-legend-box{
+    display: flex;
+    width: 600px;
+    margin:12px auto;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 14px;
+
+
+    .rank-table-legend{
+      width: 28px;
+      height: 12px;
+      margin: 0 4px 0 12px;
+    }
+
+    .line-0 {
+      background-color: var(--c-blue-4)
+    }
+
+    .line-1 {
+      background-color: var(--c-purple-4)
+    }
+
+    .line-2 {
+      background-color: var(--c-orange-4)
+    }
+  }
+
+
 
   .rank-table {
     margin: 0 auto;
     width: fit-content;
-    position: relative;
-    height: calc(100vh - 128px);
     overflow: auto;
+    position: relative;
+    height: 600px;
+
+
+    .operator-name{
+      position: absolute;
+      top: 30px;
+      left: 20px;
+      width: 120px;
+      padding: 4px 12px;
+      font-size: 14px;
+      font-weight: bolder;
+      text-align: right;
+      background-image: linear-gradient(to right, rgba(255, 111, 62, 0.1), rgba(255, 111, 62));
+    }
 
     .rank-table-line {
       display: flex;
@@ -35,7 +77,13 @@
         width: 90px;
         box-sizing: border-box;
       }
+
+      .rank-table-line-item-long{
+        width: 160px;
+      }
     }
+
+
 
     // 表头固定吸附
     .rank-table-line-title{
