@@ -19,7 +19,7 @@
 
 
   .rank-table {
-    margin: 28px auto;
+    margin: 0 auto;
     width: fit-content;
 
     .rank-table-line {
@@ -29,12 +29,25 @@
       align-items: end;
       padding: 12px 12px 2px;
 
-      .rank-table-line-item{
+      .rank-table-line-item {
         width: 90px;
         box-sizing: border-box;
       }
 
 
+    }
+  }
+
+  // 表头固定吸附
+  .rank-table {
+    height: calc(100vh - 146px);
+    overflow-y: auto;
+
+    >.rank-table-line:first-child {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 1;
     }
   }
 }
