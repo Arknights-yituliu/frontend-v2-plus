@@ -11,13 +11,13 @@ function createPopover(childId,width='200px'){
     popoverArrow.className = 'my-popover-arrow'
     const content =  document.getElementById(childId)
     if(!content){
-        throw new Error('元素不存在')
+      return
     }
     popover.appendChild(content)
     popover.appendChild(popoverArrow)
     const container = document.getElementById('components-container-114514')
     if(!container){
-        throw new Error('元素不存在')
+        return
     }
     container.appendChild(popover)
 }
@@ -31,15 +31,15 @@ function popoverOnOpen(parentId,childId){
     const popoverArrowId = `popover-arrow-${childId}`;
     const popover =  document.getElementById(popoverId)
     if(!popover){
-        throw new Error('元素不存在')
+        return
     }
     const popoverArrow = document.getElementById(popoverArrowId)
     if(!popoverArrow){
-        throw new Error('元素不存在')
+        return
     }
     const parent =  document.getElementById(parentId)
     if(!parent){
-        throw new Error('元素不存在')
+        return
     }
 
     lastChildId = childId

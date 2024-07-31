@@ -1,7 +1,7 @@
 .survey-rank-page {
   width: 100%;
   height: auto;
-  overflow-x: scroll;
+  //overflow-x: scroll;
   box-sizing: border-box;
   padding: 2px;
 
@@ -21,9 +21,11 @@
   .rank-table {
     margin: 0 auto;
     width: fit-content;
+    position: relative;
+    height: calc(100vh - 128px);
+    overflow: auto;
 
     .rank-table-line {
-
       display: flex;
       border-bottom: 1px solid var(--c-border-color);
       align-items: end;
@@ -33,17 +35,10 @@
         width: 90px;
         box-sizing: border-box;
       }
-
-
     }
-  }
 
-  // 表头固定吸附
-  .rank-table {
-    height: calc(100vh - 146px);
-    overflow-y: auto;
-
-    >.rank-table-line:first-child {
+    // 表头固定吸附
+    .rank-table-line-title{
       position: sticky;
       top: 0;
       background-color: white;
