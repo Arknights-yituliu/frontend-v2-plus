@@ -32,7 +32,7 @@ function getCharStatisticsResult() {
         item.itemObtainApproach = charInfo.itemObtainApproach
         item.skill = charInfo.skill
         item.equip = charInfo.equip
-        item.eliteS = charInfo.elite.rank2
+        item.eliteS = item.elite.rank2
         item.skill1S = item.skill1.rank3
         item.skill2S = item.skill2.rank3
         item.skill3S = item.skill3.rank3
@@ -40,12 +40,13 @@ function getCharStatisticsResult() {
         item.modYS = item.modY.rank3
         item.modDS = item.modD.rank3
         item.available = true
+
       } else {
         item.available = false
       }
     }
     result = result.filter(e => e.name)
-    console.log(result)
+
     operatorsStatisticsList.value = result
     addFilterCondition('rarity', 6)
     userCountText.value = userCount;
@@ -135,7 +136,7 @@ function filterCharacterList() {
     operatorsStatisticsList.value[i].show = filterByCharacterProperty(filter_condition.value, character);
   }
 
-  console.log(operatorsStatisticsList.value)
+
 }
 
 let last_property = ref('')
@@ -221,6 +222,7 @@ function sort(list, compare = (a, b) => a - b) {
       }
     }
   }
+
   operatorsStatisticsList.value = list
 }
 
@@ -237,42 +239,10 @@ function sortFunc(property){
   }else {
     selectedHeader.value.value = property
   }
-  console.log(selectedHeader.value)
+
   sort(operatorsStatisticsList.value,func)
 }
 
-function commonSort(property, condition) {
-  if (last_property.value === property) {
-    desc_or_asc.value++;
-  } else {
-    desc_or_asc.value = 1;
-  }
-
-  const len = operatorsStatisticsList.value.length
-
-
-  for (let i = 0; i < len - 1; i++) {
-    for (let j = 0; j < len - 1 - i; j++) {
-      if (desc_or_asc.value % 2 !== 0) {
-        if (operatorsStatisticsList.value[j][property][condition] < operatorsStatisticsList.value[j + 1][property][condition]) {
-          const temp = operatorsStatisticsList.value[j]
-          operatorsStatisticsList.value[j] = operatorsStatisticsList.value[j + 1]
-          operatorsStatisticsList.value[j + 1] = temp;
-        }
-      }
-
-      if (desc_or_asc.value % 2 === 0) {
-        if (operatorsStatisticsList.value[j][property][condition] > operatorsStatisticsList.value[j + 1][property][condition]) {
-          const temp = operatorsStatisticsList.value[j]
-          operatorsStatisticsList.value[j] = operatorsStatisticsList.value[j + 1]
-          operatorsStatisticsList.value[j + 1] = temp;
-        }
-      }
-    }
-  }
-
-  last_property.value = property;
-}
 
 const getEliteData = (data) => {
   return [data.rank0 * 100, data.rank1 * 100, data.rank2 * 100]
@@ -361,7 +331,7 @@ onMounted(() => {
 
     <div class="rank-table">
 
-      <div class="rank-table-line">
+      <div class="rank-table-line rank-table-line-title">
         <div class="rank-table-line-item" v-for="(header,index) in headers" :key="index">
           <TableSortButton
               :value="selectedHeader.value"
