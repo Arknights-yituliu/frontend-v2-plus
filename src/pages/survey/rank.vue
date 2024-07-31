@@ -1,12 +1,15 @@
 <script setup>
-import "/src/assets/css/survey/rank.scss";
-import { filterByCharacterProperty, professionDict} from "./service/common";
+import "/src/assets/css/survey/rank.v2.scss";
+
+import {filterByCharacterProperty, professionDict} from "./service/common";
 import {onMounted, ref} from "vue";
 import character_table_simple from "/src/static/json/survey/character_table_simple.json";
 import MyButton from '/src/components/Button.vue'
 import SpriteImage from "/src/components/SpriteImage.vue";
 
 import operatorDataApi from "/src/api/operator-data";
+import OperatorDataLineChart from "/src/components/OperatorDataLineChart.vue";
+import TableSortButton from "../../components/TableSortButton.vue";
 
 let rarityDict = [1, 2, 3, 4, 5, 6];
 
@@ -19,17 +22,25 @@ let updateTimeText = ref("2023-05-01");
 
 function getCharStatisticsResult() {
   operatorDataApi.getCharStatisticsResult().then((response) => {
-    let {result,userCount,updateTime} = response.data
-    for(const item of result){
-      let char_info = character_table_simple[item.charId]
-      if (char_info) {
-        item.name = char_info.name
-        item.rarity = char_info.rarity
-        item.profession = char_info.profession
-        item.itemObtainApproach = char_info.itemObtainApproach
-        item.skill = char_info.skill
-        item.equip = char_info.equip
+    let {result, userCount, updateTime} = response.data
+    for (const item of result) {
+      let charInfo = character_table_simple[item.charId]
+      if (charInfo) {
+        item.name = charInfo.name
+        item.rarity = charInfo.rarity
+        item.profession = charInfo.profession
+        item.itemObtainApproach = charInfo.itemObtainApproach
+        item.skill = charInfo.skill
+        item.equip = charInfo.equip
+        item.eliteS = item.elite.rank2
+        item.skill1S = item.skill1.rank3
+        item.skill2S = item.skill2.rank3
+        item.skill3S = item.skill3.rank3
+        item.modXS = item.modX.rank3
+        item.modYS = item.modY.rank3
+        item.modDS = item.modD.rank3
         item.available = true
+
       } else {
         item.available = false
       }
@@ -40,6 +51,7 @@ function getCharStatisticsResult() {
     addFilterCondition('rarity', 6)
     userCountText.value = userCount;
     updateTimeText.value = updateTime;
+
   });
 }
 
@@ -80,11 +92,19 @@ function selectedBtn(attribute, rule) {
 
 let collapse_filter_visible = ref(false)
 
-function collapseFilter(){
+function collapseFilter() {
   collapse_filter_visible.value = !collapse_filter_visible.value
 }
 
-let filter_condition = ref({rarity: [], profession: [], year: [], own: [], equip: [], itemObtainApproach: [], TODO: []});
+let filter_condition = ref({
+  rarity: [],
+  profession: [],
+  year: [],
+  own: [],
+  equip: [],
+  itemObtainApproach: [],
+  TODO: []
+});
 
 /**
  * 增加筛选条件
@@ -116,11 +136,12 @@ function filterCharacterList() {
     const character = operatorsStatisticsList.value[i];
     operatorsStatisticsList.value[i].show = filterByCharacterProperty(filter_condition.value, character);
   }
+
+
 }
 
 let last_property = ref('')
 let desc_or_asc = ref(1)
-
 
 
 //按条件排序
@@ -158,39 +179,83 @@ function sortIconClass(property, descOrAsc) {
 }
 
 
-function commonSort(property, condition) {
-  if (last_property.value === property) {
-    desc_or_asc.value++;
-  } else {
-    desc_or_asc.value = 1;
+function quickSort(arr, compare = (a, b) => a - b) {
+  if (arr.length <= 1) return arr;
+
+  const pivotIndex = Math.floor(arr.length / 2);
+  const pivot = arr.splice(pivotIndex, 1)[0];
+  const less = [];
+  const greater = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (compare(arr[i], pivot) < 0) {
+      less.push(arr[i]);
+    } else {
+      greater.push(arr[i]);
+    }
   }
 
-  const len = operatorsStatisticsList.value.length
+  return [...quickSort(less, compare), pivot, ...quickSort(greater, compare)];
+}
 
+const headers = [
+  {label: '干员', value: 'charId'},
+  {label: '持有率', value: 'own'},
+  {label: '精二率', value: 'eliteS'},
+  {label: '一技能', value: 'skill1S'},
+  {label: '二技能', value: 'skill2S'},
+  {label: '三技能', value: 'skill3S'},
+  {label: 'X模组', value: 'modXS'},
+  {label: 'Y模组', value: 'modYS'},
+  {label: 'D模组', value: 'modDS'},
+]
 
-  for (let i = 0; i < len - 1; i++) {
-    for (let j = 0; j < len - 1 - i; j++) {
-      if (desc_or_asc.value % 2 !== 0) {
-        if (operatorsStatisticsList.value[j][property][condition] < operatorsStatisticsList.value[j + 1][property][condition]) {
-          const temp = operatorsStatisticsList.value[j]
-          operatorsStatisticsList.value[j] = operatorsStatisticsList.value[j + 1]
-          operatorsStatisticsList.value[j + 1] = temp;
-        }
-      }
+let selectedHeader = ref({value:'',order:'asc'})
 
-      if (desc_or_asc.value % 2 === 0) {
-        if (operatorsStatisticsList.value[j][property][condition] > operatorsStatisticsList.value[j + 1][property][condition]) {
-          const temp = operatorsStatisticsList.value[j]
-          operatorsStatisticsList.value[j] = operatorsStatisticsList.value[j + 1]
-          operatorsStatisticsList.value[j + 1] = temp;
-        }
+function sort(list, compare = (a, b) => a - b) {
+  const length = list.length
+  for (let i = 0; i < length - 1; i++) {
+    for (let j = 0; j < length - 1 - i; j++) {
+      if (compare(list[j] , list[j+1] )>0) {
+        const temp = list[j]
+        list[j] = list[j + 1]
+        list[j + 1] = temp;
       }
     }
   }
 
-  last_property.value = property;
+  operatorsStatisticsList.value = list
 }
 
+function sortFunc(property){
+  let func = (a,b)=>a[property]-b[property]
+  if(selectedHeader.value.value===property){
+    if(selectedHeader.value.order==='asc'){
+      selectedHeader.value.order = 'desc'
+      func = (a,b)=>b[property]-a[property]
+    }else {
+      selectedHeader.value.order = 'asc'
+      func = (a,b)=>a[property]-b[property]
+    }
+  }else {
+    selectedHeader.value.value = property
+  }
+
+  sort(operatorsStatisticsList.value,func)
+}
+
+
+const getEliteData = (data) => {
+  return [data.rank0 * 100, data.rank1 * 100, data.rank2 * 100]
+}
+
+const formatData = (data) => {
+  return [data.rank1 * 100, data.rank2 * 100, data.rank3 * 100]
+}
+
+const getOwnData = (data) => {
+  return [0, (1 - data) * 100, data * 100]
+}
 
 onMounted(() => {
 
@@ -199,10 +264,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="survey_rank_page">
+  <div class="survey-rank-page">
     <!-- 常驻条 -->
     <div class="control-header">
-      <MyButton data-color="blue"  @click="collapseFilter()">
+      <MyButton data-color="blue" @click="collapseFilter()">
         筛选
       </MyButton>
       <div id="updateTime">
@@ -212,16 +277,15 @@ onMounted(() => {
     </div>
 
     <!-- 筛选模块 -->
-    <c-collapse-item :name="'filter'" :visible="collapse_filter_visible" >
-
+    <c-collapse-item :name="'filter'" :visible="collapse_filter_visible">
       <div class="control-box">
         <div class="control-line">
           <div class="control-line-label">职业</div>
           <div class="control-checkbox">
             <MyButton data-color="blue"
-                       v-for="(profession,index) in professionDict" :key="index"
-                       :active="selectedBtn('profession', profession.value)"
-                       @click="addFilterCondition('profession', profession.value)">
+                      v-for="(profession,index) in professionDict" :key="index"
+                      :active="selectedBtn('profession', profession.value)"
+                      @click="addFilterCondition('profession', profession.value)">
               {{ profession.label }}
             </MyButton>
           </div>
@@ -231,9 +295,9 @@ onMounted(() => {
           <div class="control-line-label">稀有度</div>
           <div class="control-checkbox">
             <MyButton data-color="orange"
-                       v-for="(rarity,index) in rarityDict" :key="index"
-                       :active="selectedBtn('rarity', rarity)"
-                       @click="addFilterCondition('rarity', rarity)">
+                      v-for="(rarity,index) in rarityDict" :key="index"
+                      :active="selectedBtn('rarity', rarity)"
+                      @click="addFilterCondition('rarity', rarity)">
               {{ rarity }}★
             </MyButton>
           </div>
@@ -243,204 +307,89 @@ onMounted(() => {
           <div class="control-line-label">其他</div>
           <div class="control-checkbox">
             <MyButton data-color="green" :active="selectedBtn('equip', true)"
-                       @click="addFilterCondition('equip', true)">
+                      @click="addFilterCondition('equip', true)">
               模组已实装
             </MyButton>
             <MyButton data-color="green" :active="selectedBtn('equip', false)"
-                       @click="addFilterCondition('equip', false)">
+                      @click="addFilterCondition('equip', false)">
               模组未实装
             </MyButton>
             <MyButton data-color="green" :active="selectedBtn('itemObtainApproach', '赠送干员')"
-                       @click="addFilterCondition('itemObtainApproach', '赠送干员')">
+                      @click="addFilterCondition('itemObtainApproach', '赠送干员')">
               赠送干员
             </MyButton>
             <MyButton data-color="green" :active="selectedBtn('itemObtainApproach', '限定干员')"
-                       @click="addFilterCondition('itemObtainApproach', '限定干员')">
+                      @click="addFilterCondition('itemObtainApproach', '限定干员')">
               限定干员
             </MyButton>
           </div>
         </div>
 
-        <!-- <div class="collapse_bar">
-          <div class="collapse_title">排序</div>
-          <div class="switch_btn_wrap">
-            <div class="btn_switch" @click="sortCharacterList('profession')">按职业</div>
-            <div class="btn_switch" @click="sortCharacterList('rarity')">按稀有度</div>
-            <div class="btn_switch" @click="sortCharacterList('date')">按实装顺序</div>
-          </div>
-        </div> -->
       </div>
 
     </c-collapse-item>
 
-    <!--    <div id="rank_table mdui-table-fluid">-->
-    <!--      <table class="mdui-table">-->
 
 
-    <div id="rank_table" class="rank-table-box">
-      <table class="rank-table">
-        <thead>
-        <tr>
-          <td>
-            <div class="rank-table-title" style="width: 220px">代号</div>
-          </td>
-          <td @click="sortRank('own')">
-            <div class="rank-table-title" style="width: 80px">
-              <div>持有率</div>
-              <div>
-                <div class="sort-asc-icon" :style="sortIconClass('own','asc')"></div>
-                <div class="sort-desc-icon" :style="sortIconClass('own','desc')"></div>
-              </div>
-            </div>
-          </td>
-          <td @click="commonSort('elite','rank2')">
-            <div class="rank-table-title" style="width: 80px">
-              <div>精二率</div>
-              <div>
-                <div class="sort-asc-icon" :style="sortIconClass('elite','asc')"></div>
-                <div class="sort-desc-icon" :style="sortIconClass('elite','desc')"></div>
+    <div class="rank-table-legend-box">
+      <div class="rank-table-legend line-0"></div> <span>专精/模组1级</span>
+      <div class="rank-table-legend line-1"></div> <span>专精/模组2级、未持有</span>
+      <div class="rank-table-legend line-2"></div> <span>专精/模组3级、持有</span>
 
-              </div>
-            </div>
-          </td>
-          <td @click="commonSort('skill1','rank3')">
-            <div class="rank-table-title" style="width: 80px">
-              <div>一技能专三率</div>
-              <div>
-                <div class="sort-asc-icon" :style="sortIconClass('skill1','asc')"></div>
-                <div class="sort-desc-icon" :style="sortIconClass('skill1','desc')"></div>
-              </div>
-            </div>
-          </td>
-          <td @click="commonSort('skill2','rank3')">
-            <div class="rank-table-title" style="width: 80px">
-              <div>二技能专三率</div>
-              <div>
-                <div class="sort-asc-icon" :style="sortIconClass('skill2','asc')"></div>
-                <div class="sort-desc-icon" :style="sortIconClass('skill2','desc')"></div>
+    </div>
 
-              </div>
-            </div>
-          </td>
-          <td @click="commonSort('skill3','rank3')">
-            <div class="rank-table-title" style="width: 80px">
-              <div>三技能专三率</div>
-              <div>
-                <div class="sort-asc-icon" :style="sortIconClass('skill3','asc')"></div>
-                <div class="sort-desc-icon" :style="sortIconClass('skill3','desc')"></div>
+    <div class="rank-table">
+      <div class="rank-table-line rank-table-line-title">
+        <div class="rank-table-line-item" :class="index===0?'rank-table-line-item-long':''" v-for="(header,index) in headers" :key="index">
+          <TableSortButton
+              :value="selectedHeader.value"
+              :label="header.value"
+              :order="selectedHeader.order"
+            @click="sortFunc(header.value)">
+            {{ header.label }}
+          </TableSortButton>
+        </div>
+      </div>
+      <div class="rank-table-line" v-for="(result, index) in operatorsStatisticsList" :key="index"
+          v-show="result.show">
+        <div class="rank-table-line-item rank-table-line-item-long" style="position: relative">
+          <div class="operator-name">{{result.name}}</div>
+          <SpriteImage :image-name="result.charId" display-size="60"
+                       original-size="180" ></SpriteImage>
+        </div>
+        <div class="rank-table-line-item">
+          <OperatorDataLineChart :line-data="getOwnData(result.own)"></OperatorDataLineChart>
+        </div>
+        <div class="rank-table-line-item">
+          <OperatorDataLineChart :line-data="getEliteData(result.elite)"></OperatorDataLineChart>
+        </div>
+        <div class="rank-table-line-item">
+          <OperatorDataLineChart :line-data="formatData(result.skill1)"></OperatorDataLineChart>
+        </div>
+        <div class="rank-table-line-item">
+          <OperatorDataLineChart :line-data="formatData(result.skill2)"></OperatorDataLineChart>
+        </div>
+        <div class="rank-table-line-item">
+          <OperatorDataLineChart :line-data="formatData(result.skill3)"></OperatorDataLineChart>
+        </div>
+        <div class="rank-table-line-item">
+          <OperatorDataLineChart :line-data="formatData(result.modX)"></OperatorDataLineChart>
+        </div>
+        <div class="rank-table-line-item">
+          <OperatorDataLineChart :line-data="formatData(result.modY)"></OperatorDataLineChart>
+        </div>
+        <div class="rank-table-line-item">
+          <OperatorDataLineChart :line-data="formatData(result.modD)"></OperatorDataLineChart>
+        </div>
+      </div>
 
-              </div>
-            </div>
-          </td>
-          <td @click="commonSort('modX','count')">
-            <div class="rank-table-title" style="width: 150px">
-              <div>X模组解锁率</div>
-              <div>
-                <div class="sort-asc-icon" :style="sortIconClass('modX','asc')"></div>
-                <div class="sort-desc-icon" :style="sortIconClass('modX','desc')"></div>
-
-              </div>
-            </div>
-          </td>
-          <td @click="commonSort('modY','count')">
-            <div class="rank-table-title" style="width: 150px">
-              <div>Y模组解锁率</div>
-              <div>
-                <div class="sort-asc-icon" :style="sortIconClass('modY','asc')"></div>
-                <div class="sort-desc-icon" :style="sortIconClass('modY','desc')"></div>
-              </div>
-            </div>
-          </td>
-          <td @click="commonSort('modD','count')">
-            <div class="rank-table-title" style="width: 150px">
-              <div>D模组解锁率</div>
-              <div>
-                <div class="sort-asc-icon" :style="sortIconClass('modD','asc')"></div>
-                <div class="sort-desc-icon" :style="sortIconClass('modD','desc')"></div>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(result, index) in operatorsStatisticsList" :key="index" v-show="result.show"
-            class="rank_table_tr">
-          <td class="rank_table_1 rank_table_text">
-            <div class="rank_table_avatar">
-             <SpriteImage :image-name="result.charId" display-size="70" original-size="180"></SpriteImage>
-              <div class="rank_operator_name" :class="'rarity_'+result.rarity">{{ result.name }}</div>
-            </div>
-          </td>
-          <td class="rank_table_2 rank_table_text">{{ getPercentage(result.own, 1) }}</td>
-          <td class="rank_table_3 rank_table_text">{{ getPercentage(getSurveyResult(result.elite, 'rank2'), 1) }}</td>
-          <td class="rank_table_3 rank_table_text">
-<!--            <div class="rank_table_skill">-->
-<!--              <div class="rank_image_skill_wrap">-->
-<!--                <div :class="getSpriteIcon(result.skill, 0)"></div>-->
-<!--              </div>-->
-<!--              <div class="rank_table_skill_text">-->
-<!--                <div class="rank_ratio">{{ getSkillName(result.skill, 0) }}</div>-->
-<!--                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill1, "rank3"), 1) }}</div>-->
-<!--              </div>-->
-<!--            </div>-->
-
-            {{ getPercentage(getSurveyResult(result.skill1, "rank3"), 1) }}
-          </td>
-          <td class="rank_table_3 rank_table_text">
-<!--            <div class="rank_table_skill">-->
-<!--              <div class="rank_image_skill_wrap">-->
-<!--                <div :class="getSpriteIcon(result.skill, 1)"></div>-->
-<!--              </div>-->
-<!--              <div class="rank_table_skill_text">-->
-<!--                <div class="rank_ratio"> {{ getSkillName(result.skill, 1) }}</div>-->
-<!--                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill2, "rank3"), 1) }}</div>-->
-<!--              </div>-->
-<!--            </div>-->
-            {{ getPercentage(getSurveyResult(result.skill2, "rank3"), 1) }}
-          </td>
-          <td class="rank_table_3 rank_table_text">
-<!--            <div class="rank_table_skill">-->
-<!--              <div class="rank_image_skill_wrap">-->
-<!--                <div :class="getSpriteIcon(result.skill, 2)"></div>-->
-<!--              </div>-->
-<!--              <div class="rank_table_skill_text">-->
-<!--                <div class="rank_ratio"> {{ getSkillName(result.skill, 2) }}</div>-->
-<!--                <div class="rank_ratio">{{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}</div>-->
-<!--              </div>-->
-<!--            </div>-->
-            {{ getPercentage(getSurveyResult(result.skill3, "rank" + 3), 1) }}
-          </td>
-          <td class="rank_table_7">
-            <div>{{ getPercentage(getSurveyResult(result.modX, 'count'), 2) }}</div>
-            <!--            &lt;!&ndash;            <div>一级：{{ getPercentage(getSurveyResult(result.modX, 'rank1'), 1) }}</div>&ndash;&gt;-->
-            <!--            &lt;!&ndash;            <div>二级：{{ getPercentage(getSurveyResult(result.modX, 'rank2'), 1) }}</div>&ndash;&gt;-->
-            <!--            &lt;!&ndash;            <div>三级：{{ getPercentage(getSurveyResult(result.modX, 'rank3'), 1) }}</div>&ndash;&gt;-->
-          </td>
-          <td class="rank_table_8">
-            <div>{{ getPercentage(getSurveyResult(result.modY, 'count'), 2) }}</div>
-            <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
-            <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
-            <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
-          </td>
-          <td class="rank_table_8">
-            <div>{{ getPercentage(getSurveyResult(result.modD, 'count'), 2) }}</div>
-            <!--            <div>一级：{{ getPercentage(getSurveyResult(result.modY, 'rank1'), 1) }}</div>-->
-            <!--            <div>二级：{{ getPercentage(getSurveyResult(result.modY, 'rank2'), 1) }}</div>-->
-            <!--            <div>三级：{{ getPercentage(getSurveyResult(result.modY, 'rank3'), 1) }}</div>-->
-          </td>
-        </tr>
-      </tbody>
-      </table>
     </div>
   </div>
 </template>
 
 
-
-
 <style scoped>
-.btn{
+.btn {
   margin: 4px;
 }
 </style>

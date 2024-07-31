@@ -180,7 +180,7 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "rank",
-        component: () => import('/src/pages/survey/rank2.vue')
+        component: () => import('/src/pages/survey/rank.vue')
         // component: Notice
     },
     {
@@ -190,7 +190,7 @@ const routes = [
         display: false,
         module: 'survey',
         icon: "rank",
-        component: () => import('/src/pages/survey/rank2.vue')
+        component: () => import('/src/pages/survey/rank.vue')
         // component: Notice
     },
     {
