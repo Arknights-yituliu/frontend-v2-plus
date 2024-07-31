@@ -71,16 +71,11 @@
   }
 
   #rank_table {
-
+    height: calc(100vh - 150px);
+    overflow-y: auto;
   }
 
-  @media screen and (max-width: 600px) {
-    #rank_table {
-      overflow: scroll;
-    }
-  }
-
-  .rank_table > thead {
+  .rank-table>thead {
     position: sticky;
     top: 0;
     background-color: white;
