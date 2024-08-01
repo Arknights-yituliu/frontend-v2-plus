@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import {onMounted, ref, computed} from "vue";
 import skillJSON from "/src/static/json/survey/operator_item_cost_table.json";
 import characterJSON from "/src/static/json/survey/character_table_simple.json"
 import professionDictJSON from "/src/static/json/survey/profession_dict.json";
@@ -7,10 +7,10 @@ import materialAPI from "/src/api/material.js";  // 职业字典
 import surveyAPI from "/src/api/operator-data.js";  // 干员练度调查结果
 
 const characterRarityEliteCostMap = new Map([
-  [3, { elite1: 10000 }],
-  [4, { elite1: 15000, elite2: 60000 }],
-  [5, { elite1: 20000, elite2: 120000 }],
-  [6, { elite1: 30000, elite2: 180000 }],
+  [3, {elite1: 10000}],
+  [4, {elite1: 15000, elite2: 60000}],
+  [5, {elite1: 20000, elite2: 120000}],
+  [6, {elite1: 30000, elite2: 180000}],
 ]);
 
 let characterList = ref([]) // 干员列表
@@ -55,12 +55,12 @@ function initData() {
     for (let i = 1; i < characterData.elite.length; i++) {
       const eliteMoneyKey = `elite${i}`;
       const eliteMoney = characterRarityEliteCostMap.get(characterData.rarity)?.[eliteMoneyKey] || 0;
-      const money = { num: eliteMoney, ...itemMap.get('4001') };
+      const money = {num: eliteMoney, ...itemMap.get('4001')};
       characterData.eliteFormat[i - 1] = [money];
       for (const [itemId, num] of Object.entries(characterData.elite[i])) {
         const item = itemMap.get(itemId);
         characterData.cost += item.itemValueAp * num;
-        characterData.eliteFormat[i - 1].push({ ...item, num });
+        characterData.eliteFormat[i - 1].push({...item, num});
       }
     }
 
@@ -72,9 +72,21 @@ function initData() {
       secondSkill: character?.skill2,
       thirdSkill: character?.skill3,
     });
-    
+
     // 计算技能专精成本
     function calculateSkillCost(skill, skillFormat) {
+      console.log(skillFormat)
+      if (!skillFormat) {
+        skillFormat = {
+          cost: 0,
+          count: 0,
+          rank0: 0,
+          rank1: 0,
+          rank2: 0,
+          rank3: 0,
+        }
+        skillFormat.cost = 0
+      }
       skillFormat.cost = 0;
       skill.forEach(level => {
         for (const [itemId, num] of Object.entries(level)) {
@@ -88,7 +100,7 @@ function initData() {
     if (characterData.skills.length > 1) {
       calculateSkillCost(characterData.skills[0], characterData.firstSkill);
       calculateSkillCost(characterData.skills[1], characterData.secondSkill);
-      
+
       if (characterData.skills[2]) {
         calculateSkillCost(characterData.skills[2], characterData.thirdSkill);
       }
@@ -118,6 +130,7 @@ function costFormatter(row, col) {
   const value = row[col.property] || getNestedProperty(row, col.property) || 0
   return value || 0
 }
+
 // 表格百分比格式化
 function percentFormatter(row, col) {
   const value = row[col.property] || getNestedProperty(row, col.property) || 0
@@ -125,7 +138,7 @@ function percentFormatter(row, col) {
 }
 
 // 排序
-function sortChange({ prop, order }) {
+function sortChange({prop, order}) {
   characterList.value.sort((a, b) => {
     const sortDirection = order === 'ascending' ? 1 : -1;
     if (prop === 'cost') {
@@ -134,7 +147,7 @@ function sortChange({ prop, order }) {
       return sortDirection * (getNestedProperty(a, prop) - getNestedProperty(b, prop));
     }
   });
-  
+
   tableData.value = filterTableData.value.slice(0, current * size)
 }
 
@@ -143,7 +156,7 @@ function getSpriteImg(id, type) {
   return type === "icon" ? `bg-${id}_icon sprite_store_icon` : `bg-${id} store_sprite_${type}`;
 }
 
-function rowClassName({ row }) {
+function rowClassName({row}) {
   if (row.rarity < 3) return "hide-expand";
   return "";
 }
@@ -181,7 +194,7 @@ const vLoadmore = {
   mounted: (el, binding) => {
     const selectWrap = el.querySelector(".el-scrollbar__wrap");
     selectWrap.addEventListener("scroll", (e) => {
-      const { scrollHeight, scrollTop, clientHeight } = selectWrap;
+      const {scrollHeight, scrollTop, clientHeight} = selectWrap;
       if (scrollHeight - scrollTop - 160 <= clientHeight) {
         binding.value();
       }
@@ -208,12 +221,12 @@ const vLoadmore = {
       <div class="right">
         <el-input class="el-input-operator-name" v-model="searchKey" placeholder="干员名称" @input="reset"></el-input>
         <el-cascader
-          class="el-cascader-profession"
-          v-model="professionCheckList"
-          :options="professionDictJSON"
-          @change="reset"
-          placeholder="选择干员子职业"
-          clearable
+            class="el-cascader-profession"
+            v-model="professionCheckList"
+            :options="professionDictJSON"
+            @change="reset"
+            placeholder="选择干员子职业"
+            clearable
         />
       </div>
     </div>
@@ -221,23 +234,23 @@ const vLoadmore = {
       <el-auto-resizer>
         <template #default="{ height }">
           <el-table
-            :data="tableData"
-            :height="height"
-            stripe
-            highlight-current-row
-            :row-class-name="rowClassName"
-            v-loadmore="load"
-            @sort-change="sortChange"
+              :data="tableData"
+              :height="height"
+              stripe
+              highlight-current-row
+              :row-class-name="rowClassName"
+              v-loadmore="load"
+              @sort-change="sortChange"
           >
             <el-table-column type="expand">
               <template v-slot="{ row }">
                 <div class="detail">
                   <div class="row" v-for="num in row.eliteFormat.length" :key="num">
-                    <p>精{{num}}所需材料</p>
+                    <p>精{{ num }}所需材料</p>
                     <div
-                      v-for="(item, index) in row.eliteFormat[num - 1]"
-                      :key="index"
-                      class="elite-material"
+                        v-for="(item, index) in row.eliteFormat[num - 1]"
+                        :key="index"
+                        class="elite-material"
                     >
                       <div :class="getSpriteImg(item.itemId, 'perm')"></div>
                       <span class="num">{{ item.num }}</span>
@@ -248,18 +261,18 @@ const vLoadmore = {
             </el-table-column>
             <el-table-column prop="index" label="排名" width="60">
             </el-table-column>
-            <el-table-column prop="name" label="干员代号" />
-            <el-table-column prop="eliteRate.rank2" label="精二率" sortable :formatter="percentFormatter" />
-            <el-table-column prop="cost" label="材料开销" sortable />
+            <el-table-column prop="name" label="干员代号"/>
+            <el-table-column prop="eliteRate.rank2" label="精二率" sortable :formatter="percentFormatter"/>
+            <el-table-column prop="cost" label="材料开销" sortable/>
             <el-table-column prop="firstSkill.rank3" label="一技能专三率" sortable :formatter="percentFormatter"/>
             <el-table-column prop="firstSkill.cost" label="材料开销" sortable :formatter="costFormatter"/>
             <el-table-column prop="secondSkill.rank3" label="二技能专三率" sortable :formatter="percentFormatter"/>
             <el-table-column prop="secondSkill.cost" label="材料开销" sortable :formatter="costFormatter"/>
             <el-table-column prop="thirdSkill.rank3" label="三技能专三率" sortable :formatter="percentFormatter"/>
             <el-table-column prop="thirdSkill.cost" label="材料开销" sortable :formatter="costFormatter"/>
-            <el-table-column prop="professionName" label="职业" />
-            <el-table-column prop="subProfessionName" label="分支" />
-            <el-table-column prop="itemObtainApproach" label="获取方式" />
+            <el-table-column prop="professionName" label="职业"/>
+            <el-table-column prop="subProfessionName" label="分支"/>
+            <el-table-column prop="itemObtainApproach" label="获取方式"/>
             <!-- <el-table-column prop="name" label="钱书开销" /> -->
             <!-- <el-table-column prop="name" label="总消耗" /> -->
             <!-- <el-table-column prop="name" label="折合源石" /> -->
@@ -289,21 +302,26 @@ const vLoadmore = {
   .op_title {
     margin-bottom: 10px;
   }
+
   .option {
     display: flex;
     align-items: center;
     margin-left: 10px;
     flex-wrap: wrap;
+
     .el-checkbox-group {
       margin-bottom: 10px;
       margin-right: 10px;
+
       .el-checkbox-button {
         &.is-focus .el-checkbox-button__inner {
           border-color: var(--el-checkbox-button-checked-border-color);
         }
+
         &:first-child .el-checkbox-button__inner {
           border-left: var(--el-border);
         }
+
         .el-checkbox-button__inner {
           border-left-style: solid;
           border-left-color: transparent;
@@ -311,24 +329,31 @@ const vLoadmore = {
         }
       }
     }
+
     .right {
       margin-bottom: 10px;
+
       .el-input {
         width: 200px;
         margin-right: 10px;
       }
     }
   }
+
   .table-container {
     flex: 1;
     box-sizing: border-box;
+
     .el-table {
       box-shadow: var(--el-box-shadow-light);
+
       .detail {
         padding-left: 60px;
+
         .row {
           display: flex;
           align-items: center;
+
           .num {
             position: absolute;
             right: -7px;
@@ -337,10 +362,11 @@ const vLoadmore = {
             font-weight: bold;
             color: #000;
             text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff, -2px -2px 4px #ffffff, 2px -2px 4px #ffffff,
-              -2px 2px 4px #ffffff, 2px 2px 4px #ffffff;
+            -2px 2px 4px #ffffff, 2px 2px 4px #ffffff;
           }
         }
       }
+
       .hide-expand .el-table__expand-column .el-table__expand-icon {
         display: none;
       }
@@ -348,27 +374,30 @@ const vLoadmore = {
 
     .column-header-container {
       display: flex;
+
       .column-title {
         margin-right: 4px;
       }
     }
   }
+
   .cursor-pointer {
     cursor: pointer;
   }
+
   .el-cascader-menu__wrap.el-scrollbar__wrap {
     height: 285px;
   }
 
-  .elite-material{
+  .elite-material {
     width: 60px;
     height: 60px;
     position: relative;
 
-    .div{
+    .div {
       transform: scale(calc(60 / 183));
-      left: calc((60px - 183px)/2);
-      top: calc((60px - 183px)/2);
+      left: calc((60px - 183px) / 2);
+      top: calc((60px - 183px) / 2);
       position: absolute;
     }
   }
@@ -387,13 +416,13 @@ const vLoadmore = {
   .elite-page {
     height: calc(100vh - 80px) !important;
 
-    .el-checkbox-button__inner{
-      padding:12px 16px;
+    .el-checkbox-button__inner {
+      padding: 12px 16px;
     }
 
-    .option{
-      .right{
-        .el-input{
+    .option {
+      .right {
+        .el-input {
           width: 160px;
           margin-right: 4px;
         }
