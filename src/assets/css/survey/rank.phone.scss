@@ -1,0 +1,58 @@
+.survey-rank-page {
+  @media screen and (max-width: 600px) {
+
+    .rank-table-wrap {
+      width: 100%;
+      overflow: scroll;
+
+      .rank-table {
+        font-size: 10px;
+
+        .operator-name {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          width: 70px;
+          padding: 4px 12px;
+          font-weight: bolder;
+          text-align: right;
+          background-image: linear-gradient(to right, rgba(255, 111, 62, 0.1), rgba(255, 111, 62));
+        }
+
+
+        .rank-table-line {
+          display: flex;
+          border-bottom: 1px solid var(--c-border-color);
+          align-items: end;
+          padding: 8px 8px 2px;
+
+          .rank-table-line-item {
+            width: 70px;
+            box-sizing: border-box;
+          }
+
+          .rank-table-line-item-long {
+            width: 110px;
+          }
+        }
+
+      }
+
+    }
+
+
+    .rank-table-legend-box {
+      font-size: 10px;
+
+      .rank-table-legend {
+        width: 16px;
+        height: 4px;
+        margin: 0 4px 0 8px;
+      }
+    }
+
+
+  }
+
+
+}

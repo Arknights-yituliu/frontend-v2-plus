@@ -1,0 +1,57 @@
+.operator-data-line-chart-box {
+
+  .operator-data-line-chart {
+    height: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    width: 54px;
+    margin: auto;
+
+    box-sizing: border-box;
+    //border: 1px solid black;
+
+    .line-max {
+      font-size: 14px;
+      position: absolute;
+      right: -16px;
+      top: -16px;
+    }
+
+    .line-bar {
+      position: relative;
+      width: 10px;
+      margin: 0 4px;
+    }
+
+    .line-0 {
+      background-color: var(--c-blue-4)
+    }
+
+    .line-1 {
+      background-color: var(--c-purple-4)
+    }
+
+    .line-2 {
+      background-color: var(--c-orange-4)
+    }
+
+  }
+
+  @media screen and (max-width: 600px){
+    .operator-data-line-chart-box {
+      .operator-data-line-chart {
+        width: 36px;
+        height: 32px;
+
+        .line-bar {
+          position: relative;
+          width: 4px;
+          margin: 0 4px;
+        }
+
+      }
+    }
+  }
+
+}

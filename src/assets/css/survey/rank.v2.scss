@@ -17,16 +17,15 @@
     }
   }
 
-  .rank-table-legend-box{
+  .rank-table-legend-box {
     display: flex;
-    width: 600px;
-    margin:12px auto;
+
+    margin: 12px auto;
     align-items: center;
-    flex-wrap: wrap;
     font-size: 14px;
+    justify-content: center;
 
-
-    .rank-table-legend{
+    .rank-table-legend {
       width: 28px;
       height: 12px;
       margin: 0 4px 0 12px;
@@ -45,52 +44,70 @@
     }
   }
 
+  .rank-table-wrap {
 
-
-  .rank-table {
-    margin: 0 auto;
-    width: fit-content;
-    overflow: auto;
-    position: relative;
-    height: 600px;
-
-
-    .operator-name{
-      position: absolute;
-      top: 30px;
-      left: 20px;
-      width: 120px;
-      padding: 4px 12px;
+    .rank-table {
+      margin: 0 auto;
+      width: fit-content;
+      overflow: auto;
+      position: relative;
+      height: 600px;
       font-size: 14px;
-      font-weight: bolder;
-      text-align: right;
-      background-image: linear-gradient(to right, rgba(255, 111, 62, 0.1), rgba(255, 111, 62));
-    }
 
-    .rank-table-line {
-      display: flex;
-      border-bottom: 1px solid var(--c-border-color);
-      align-items: end;
-      padding: 12px 12px 2px;
-
-      .rank-table-line-item {
-        width: 90px;
-        box-sizing: border-box;
+      .operator-name {
+        position: absolute;
+        top: 30px;
+        left: 20px;
+        width: 120px;
+        padding: 4px 12px;
+        font-weight: bolder;
+        text-align: right;
+        background-image: linear-gradient(to right, rgba(255, 111, 62, 0.1), rgba(255, 111, 62));
       }
 
-      .rank-table-line-item-long{
-        width: 160px;
+      .rank-table-line {
+        display: flex;
+        border-bottom: 1px solid var(--c-border-color);
+        align-items: end;
+        padding: 12px 12px 2px;
+
+        .rank-table-line-item {
+          width: 90px;
+          box-sizing: border-box;
+        }
+
+        .rank-table-line-item-long {
+          width: 160px;
+        }
       }
-    }
 
 
-
-    // 表头固定吸附
-    .rank-table-line-title{
-      position: sticky;
-      top: 0;
-      background-color: white;
-      z-index: 1;
+      // 表头固定吸附
+      .rank-table-line-title {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 1;
+      }
     }
   }
+
+
+  .operator-data-line-chart-box {
+    .operator-data-line-chart {
+      width: 36px;
+      height: 32px;
+
+      .line-bar {
+        position: relative;
+        width: 4px;
+        margin: 0 4px;
+      }
+
+    }
+  }
+
+
+
+
 }

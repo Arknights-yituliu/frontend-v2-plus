@@ -1,5 +1,7 @@
 <script setup>
 import "/src/assets/css/survey/rank.v2.scss";
+import "/src/assets/css/survey/rank.phone.scss";
+
 
 import {filterByCharacterProperty, professionDict} from "./service/common";
 import {onMounted, ref} from "vue";
@@ -8,7 +10,7 @@ import MyButton from '/src/components/Button.vue'
 import SpriteImage from "/src/components/SpriteImage.vue";
 
 import operatorDataApi from "/src/api/operator-data";
-import OperatorDataLineChart from "/src/components/OperatorDataLineChart.vue";
+import OperatorDataLineChart from "/src/components/LineChart.vue";
 import TableSortButton from "../../components/TableSortButton.vue";
 
 let rarityDict = [1, 2, 3, 4, 5, 6];
@@ -210,13 +212,13 @@ const headers = [
   {label: 'D模组', value: 'modDS'},
 ]
 
-let selectedHeader = ref({value:'',order:'asc'})
+let selectedHeader = ref({value: '', order: 'asc'})
 
 function sort(list, compare = (a, b) => a - b) {
   const length = list.length
   for (let i = 0; i < length - 1; i++) {
     for (let j = 0; j < length - 1 - i; j++) {
-      if (compare(list[j] , list[j+1] )>0) {
+      if (compare(list[j], list[j + 1]) > 0) {
         const temp = list[j]
         list[j] = list[j + 1]
         list[j + 1] = temp;
@@ -227,21 +229,21 @@ function sort(list, compare = (a, b) => a - b) {
   operatorsStatisticsList.value = list
 }
 
-function sortFunc(property){
-  let func = (a,b)=>a[property]-b[property]
-  if(selectedHeader.value.value===property){
-    if(selectedHeader.value.order==='asc'){
+function sortFunc(property) {
+  let func = (a, b) => a[property] - b[property]
+  if (selectedHeader.value.value === property) {
+    if (selectedHeader.value.order === 'asc') {
       selectedHeader.value.order = 'desc'
-      func = (a,b)=>b[property]-a[property]
-    }else {
+      func = (a, b) => b[property] - a[property]
+    } else {
       selectedHeader.value.order = 'asc'
-      func = (a,b)=>a[property]-b[property]
+      func = (a, b) => a[property] - b[property]
     }
-  }else {
+  } else {
     selectedHeader.value.value = property
   }
 
-  sort(operatorsStatisticsList.value,func)
+  sort(operatorsStatisticsList.value, func)
 }
 
 
@@ -330,59 +332,64 @@ onMounted(() => {
     </c-collapse-item>
 
 
-
     <div class="rank-table-legend-box">
-      <div class="rank-table-legend line-0"></div> <span>专精/模组1级</span>
-      <div class="rank-table-legend line-1"></div> <span>专精/模组2级、未持有</span>
-      <div class="rank-table-legend line-2"></div> <span>专精/模组3级、持有</span>
+      <div class="rank-table-legend line-0"></div>
+      <span>专精/模组1级</span>
+      <div class="rank-table-legend line-1"></div>
+      <span>专精/模组2级、未持有</span>
+      <div class="rank-table-legend line-2"></div>
+      <span>专精/模组3级、持有</span>
 
     </div>
 
-    <div class="rank-table">
-      <div class="rank-table-line rank-table-line-title">
-        <div class="rank-table-line-item" :class="index===0?'rank-table-line-item-long':''" v-for="(header,index) in headers" :key="index">
-          <TableSortButton
-              :value="selectedHeader.value"
-              :label="header.value"
-              :order="selectedHeader.order"
-            @click="sortFunc(header.value)">
-            {{ header.label }}
-          </TableSortButton>
+    <div class="rank-table-wrap">
+      <div class="rank-table">
+        <div class="rank-table-line rank-table-line-title">
+          <div class="rank-table-line-item" :class="index===0?'rank-table-line-item-long':''"
+               v-for="(header,index) in headers" :key="index">
+            <TableSortButton
+                :value="selectedHeader.value"
+                :label="header.value"
+                :order="selectedHeader.order"
+                @click="sortFunc(header.value)">
+              {{ header.label }}
+            </TableSortButton>
+          </div>
         </div>
-      </div>
-      <div class="rank-table-line" v-for="(result, index) in operatorsStatisticsList" :key="index"
-          v-show="result.show">
-        <div class="rank-table-line-item rank-table-line-item-long" style="position: relative">
-          <div class="operator-name">{{result.name}}</div>
-          <SpriteImage :image-name="result.charId" display-size="60"
-                       original-size="180" ></SpriteImage>
+        <div class="rank-table-line" v-for="(result, index) in operatorsStatisticsList" :key="index"
+             v-show="result.show">
+          <div class="rank-table-line-item rank-table-line-item-long" style="position: relative">
+            <div class="operator-name">{{ result.name }}</div>
+            <SpriteImage :image-name="result.charId" display-size="60"
+                         original-size="180"></SpriteImage>
+          </div>
+          <div class="rank-table-line-item">
+            <OperatorDataLineChart :line-data="getOwnData(result.own)"></OperatorDataLineChart>
+          </div>
+          <div class="rank-table-line-item">
+            <OperatorDataLineChart :line-data="getEliteData(result.elite)"></OperatorDataLineChart>
+          </div>
+          <div class="rank-table-line-item">
+            <OperatorDataLineChart :line-data="formatData(result.skill1)"></OperatorDataLineChart>
+          </div>
+          <div class="rank-table-line-item">
+            <OperatorDataLineChart :line-data="formatData(result.skill2)"></OperatorDataLineChart>
+          </div>
+          <div class="rank-table-line-item">
+            <OperatorDataLineChart :line-data="formatData(result.skill3)"></OperatorDataLineChart>
+          </div>
+          <div class="rank-table-line-item">
+            <OperatorDataLineChart :line-data="formatData(result.modX)"></OperatorDataLineChart>
+          </div>
+          <div class="rank-table-line-item">
+            <OperatorDataLineChart :line-data="formatData(result.modY)"></OperatorDataLineChart>
+          </div>
+          <div class="rank-table-line-item">
+            <OperatorDataLineChart :line-data="formatData(result.modD)"></OperatorDataLineChart>
+          </div>
         </div>
-        <div class="rank-table-line-item">
-          <OperatorDataLineChart :line-data="getOwnData(result.own)"></OperatorDataLineChart>
-        </div>
-        <div class="rank-table-line-item">
-          <OperatorDataLineChart :line-data="getEliteData(result.elite)"></OperatorDataLineChart>
-        </div>
-        <div class="rank-table-line-item">
-          <OperatorDataLineChart :line-data="formatData(result.skill1)"></OperatorDataLineChart>
-        </div>
-        <div class="rank-table-line-item">
-          <OperatorDataLineChart :line-data="formatData(result.skill2)"></OperatorDataLineChart>
-        </div>
-        <div class="rank-table-line-item">
-          <OperatorDataLineChart :line-data="formatData(result.skill3)"></OperatorDataLineChart>
-        </div>
-        <div class="rank-table-line-item">
-          <OperatorDataLineChart :line-data="formatData(result.modX)"></OperatorDataLineChart>
-        </div>
-        <div class="rank-table-line-item">
-          <OperatorDataLineChart :line-data="formatData(result.modY)"></OperatorDataLineChart>
-        </div>
-        <div class="rank-table-line-item">
-          <OperatorDataLineChart :line-data="formatData(result.modD)"></OperatorDataLineChart>
-        </div>
-      </div>
 
+      </div>
     </div>
   </div>
 </template>
