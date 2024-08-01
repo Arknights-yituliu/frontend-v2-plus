@@ -68,7 +68,7 @@ const routes = [
     },
     {
         path: '/material/elite',
-        text: '精二性价比',
+        text: '精英化与专精性价比',
         name: 'EliteRanking',
         display: true,
         module: 'material',
