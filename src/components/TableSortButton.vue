@@ -1,5 +1,7 @@
 <script setup>
 
+
+
 const props = defineProps(['modelValue','label','value','order']);
 
 function order(order){
@@ -11,6 +13,7 @@ function order(order){
     }
   }
 }
+
 
 </script>
 
@@ -30,7 +33,6 @@ function order(order){
 
 .sort-button {
   display: flex;
-  font-size: 16px;
   align-items: center;
   cursor: pointer;
   justify-content: center;
@@ -48,17 +50,16 @@ function order(order){
   border-top: 6px solid #c4c4c4;
   border-right: 6px solid transparent;
   border-left: 6px solid transparent;
-  margin: 4px;
   display: block;
+  margin: 4px;
 }
 
 .sort-asc-icon {
-
   border-bottom: 6px solid #c4c4c4;
   border-right: 6px solid transparent;
   border-left: 6px solid transparent;
-  margin: 4px;
   display: block;
+  margin: 4px;
 }
 
 .sort-desc-icon[data-active='on'] {
