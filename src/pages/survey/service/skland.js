@@ -4,7 +4,6 @@ import request from "/src/api/requestBase";
 import {cMessage} from "/src/utils/Message";
 import toolAPI from '/src/api/tool.js'
 import CHARACTER_TABLE_SIMPLE from "/src/static/json/survey/character_table_simple.json";
-import PLAYER_INFO from '/public/仓库信息响应.json'
 
 const SKLAND_DOMAIN = "https://zonai.skland.com";
 const PLAYER_INFO_API = '/api/v1/game/player/info'
@@ -191,7 +190,7 @@ async function getPlayerInfo(params, characterTable) {
     return uploadData
 }
 
-formattingOperatorData(PLAYER_INFO.data.characters)
+
 
 async function getWarehouseInfo(akUid, cred, token) {
 
