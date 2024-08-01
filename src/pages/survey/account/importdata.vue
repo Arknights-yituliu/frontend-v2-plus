@@ -49,13 +49,12 @@ function getPlayerBindingByHgToken() {
   const token = obj.data.content
 
   operatorDataAPI.getPlayBindingListByHgToken({token: token}).then(response => {
-    const {cred,token,playerBindingList} = response.data
+    const {cred, token, playerBindingList} = response.data
     playBindingList.value = playerBindingList
     sklandCred.value = cred
     sklandToken.value = token
   })
 }
-
 
 
 function canBeParsedAsObject(str) {
@@ -84,38 +83,21 @@ async function getPlayerBindingBySkland() {
 }
 
 
-
-async function getOperatorDataByPlayerBinding(akPlayerBinding) {
+async function getPlayerInfoByPlayerBinding(akPlayerBinding) {
   const {uid, nickName, channelName, channelMasterId} = akPlayerBinding
 
   userInfo.value = await getUserInfo()
 
   checkUserStatus(true)
 
-  const params = {
-    requestParam: `uid=${uid}`,
-    token: sklandToken.value,
-    cred: sklandCred.value,
-    akUid: uid,
-    akNickName: nickName,
-    channelMasterId: channelMasterId,
-    channelName: channelName,
-  }
 
-  const playerInfo = await sklandApi.getPlayerInfo(params, characterTable)
+  let data = await sklandApi.getWarehouseInfo(uid, sklandCred.value, sklandToken.value);
+  data.channelName = channelName
+  data.channelMasterId = channelMasterId
+  data.nickName = nickName;
+  data.token = getUserToken()
 
-  if (!playerInfo) {
-    return
-  }
-
-  await uploadSKLandData({
-    token: userInfo.value.token,
-    data: JSON.stringify(playerInfo)
-  })
-
-  const data = await sklandApi.getWarehouseInfo(uid, sklandCred.value, sklandToken.value, getUserToken());
-
-  await operatorDataAPI.uploadWarehouseInfo(data)
+  await uploadSKLandData(data)
 
 }
 
@@ -123,17 +105,15 @@ const router = useRouter();
 
 /**
  * 上传获取到的森空岛干员数据
- * @param token 用户凭证
  * @param data 干员数据
  * @returns {Promise<void>}
  */
-async function uploadSKLandData({token, data}) {
-
-  operatorDataAPI.uploadSkLandOperatorData({token, data})
+function uploadSKLandData(data) {
+  operatorDataAPI.uploadSkLandOperatorDataV3(data)
       .then(response => {
         cMessage("森空岛数据导入成功，即将转跳到干员调查页面");
         setTimeout(() => {
-          router.push({name:'OperatorSurvey'})
+          router.push({name: 'OperatorSurvey'})
         }, 3000)
       })
 }
@@ -190,7 +170,7 @@ function checkUserStatus(notice) {
   return false;
 }
 
-onMounted(()=>{
+onMounted(() => {
 
 })
 
@@ -241,8 +221,8 @@ onMounted(()=>{
         <p>等待上一步获取绑定的uid，选择想导入的uid进行导入</p>
         <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"
                 v-for="(binding,index) in playBindingList" :key="index"
-                @click="getOperatorDataByPlayerBinding(binding)">
-          <span > 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>
+                @click="getPlayerInfoByPlayerBinding(binding)">
+          <span> 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>
         </button>
       </div>
 
@@ -285,7 +265,7 @@ onMounted(()=>{
         <p>等待上一步获取绑定的uid，选择想导入的uid进行导入</p>
         <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"
                 v-for="(binding,index) in playBindingList" :key="index"
-                @click="getOperatorDataByPlayerBinding(binding)">
+                @click="getPlayerInfoByPlayerBinding(binding)">
           <span> 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>
         </button>
       </div>
@@ -332,7 +312,7 @@ onMounted(()=>{
   }
 
 
-  @media screen and (max-width: 600px){
+  @media screen and (max-width: 600px) {
     .import-step-item {
       width: 350px;
       font-size: 14px;

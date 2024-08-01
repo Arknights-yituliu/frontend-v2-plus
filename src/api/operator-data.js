@@ -24,6 +24,14 @@ export default {
         })
     },
 
+    uploadSkLandOperatorDataV3(data){
+        return request({
+            url: `${api_name}/operator/import/skland/v3`,
+            method: "post",
+            data: data,
+        })
+    },
+
     uploadWarehouseInfo(data){
         return request({
             url:`${api_name}/warehouse-info/import/skland`,

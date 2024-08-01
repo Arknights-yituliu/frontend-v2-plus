@@ -4,13 +4,14 @@ import request from "/src/api/requestBase";
 import {cMessage} from "/src/utils/Message";
 import toolAPI from '/src/api/tool.js'
 import CHARACTER_TABLE_SIMPLE from "/src/static/json/survey/character_table_simple.json";
+import PLAYER_INFO from '/public/仓库信息响应.json'
 
 const SKLAND_DOMAIN = "https://zonai.skland.com";
 const PLAYER_INFO_API = '/api/v1/game/player/info'
 const PLAYER_BINDING_URL = '/api/v1/game/player/binding'
 const OAUTH2_URL = "https://as.hypergryph.com/user/oauth2/v2/grant";
 const GENERATE_CRED_BY_CODE_URL = "https://zonai.skland.com/api/v1/user/auth/generate_cred_by_code";
-const CULTIVATE_PLAYER_API =  '/api/v1/game/cultivate/player'
+const CULTIVATE_PLAYER_API = '/api/v1/game/cultivate/player'
 
 
 let equipDict = new Map()
@@ -26,11 +27,7 @@ if (equipDict.size < 100) {
 }
 
 
-
-
-
 async function getPlayBindingV2(defaultAkUid, params, cred, token) {
-
 
 
     let uid = '0'
@@ -41,7 +38,7 @@ async function getPlayBindingV2(defaultAkUid, params, cred, token) {
 
     const url = `${SKLAND_DOMAIN}${PLAYER_BINDING_URL}`
 
-    const headers = getHeaders(PLAYER_BINDING_URL,params,cred,token)
+    const headers = getHeaders(PLAYER_BINDING_URL, params, cred, token)
 
     let bindingData = {
         bindingList: [],
@@ -112,7 +109,7 @@ async function getPlayBindingV2(defaultAkUid, params, cred, token) {
         const log = {
             message: JSON.stringify(error.response),
             apiPath: PLAYER_BINDING_URL,
-            logType:'error'
+            logType: 'error'
         }
         toolAPI.collectLog(log)
         console.log(error)
@@ -145,15 +142,14 @@ function getCredAndSecret(text) {
 }
 
 
-
 async function getPlayerInfo(params, characterTable) {
 
-    const { requestParam, token, cred, akUid, akNickName, channelName, channelMasterId} = params
+    const {requestParam, token, cred, akUid, akNickName, channelName, channelMasterId} = params
 
 
     const url = `${SKLAND_DOMAIN}${PLAYER_INFO_API}?${requestParam}`
     // console.log(url)
-    const headers = getHeaders(PLAYER_INFO_API,requestParam,cred,token)
+    const headers = getHeaders(PLAYER_INFO_API, requestParam, cred, token)
 
     let uploadData = {}
 
@@ -185,7 +181,7 @@ async function getPlayerInfo(params, characterTable) {
         const log = {
             message: JSON.stringify(error.response),
             apiPath: PLAYER_INFO_API,
-            logType:'error'
+            logType: 'error'
         }
         toolAPI.collectLog(log)
         cMessage('森空岛：' + error, 'error')
@@ -195,37 +191,38 @@ async function getPlayerInfo(params, characterTable) {
     return uploadData
 }
 
+formattingOperatorData(PLAYER_INFO.data.characters)
 
-
-async function getWarehouseInfo(akUid, cred, token, userToken){
+async function getWarehouseInfo(akUid, cred, token) {
 
     const params = `uid=${akUid}`
-    const headers =  getHeaders(CULTIVATE_PLAYER_API,params,cred,token)
+    const headers = getHeaders(CULTIVATE_PLAYER_API, params, cred, token)
     const url = `${SKLAND_DOMAIN}${CULTIVATE_PLAYER_API}?${params}`
     let data = {}
     await request({
-        url:url,
-        headers:headers,
-        method:'get'
-    }).then(response=>{
+        url: url,
+        headers: headers,
+        method: 'get'
+    }).then(response => {
         response = response.data
-        console.log(response)
-        if(response.code===0){
+
+        if (response.code === 0) {
             const items = response.data.items
-            const chars = response.data.chars
+            const chars = response.data.characters
 
-            formattingOperatorData(chars)
+            const operatorDataList = formattingOperatorData(chars);
 
-            let list = []
-            for(const item of items){
-                list.push({itemId:item.id,quantity:item.count})
+            let itemList = []
+            for (const item of items) {
+                itemList.push({itemId: item.id, quantity: item.count})
             }
-             data = {
-                akUid:akUid,
-                token:userToken,
-                list:list
+
+            data = {
+                uid: akUid,
+                itemList: itemList,
+                operatorDataList:operatorDataList,
             }
-            console.log(data)
+
         }
     })
 
@@ -239,28 +236,25 @@ function formattingOperatorData(characterList) {
     let operatorList = []
 
     for (const character of characterList) {
-        const charId = character.charId
+
+        const {id, level, evolvePhase, mainSkillLevel, skills, equips, potentialRank} = character
+        const potential = Math.ceil(potentialRank + 1)
+
         let rarity = 0;
-        if (CHARACTER_TABLE_SIMPLE[charId]) {
-            rarity = CHARACTER_TABLE_SIMPLE[charId].rarity
+        if (CHARACTER_TABLE_SIMPLE[id]) {
+            rarity = CHARACTER_TABLE_SIMPLE[id].rarity
         } else {
             continue
         }
 
 
-        const level = character.level
-        const elite = character.evolvePhase
-        const potential = Math.ceil(character.potentialRank + 1)
-        const mainSkill = character.mainSkillLvl
-
-
         let operator = {
             own: true,
-            charId: charId,
+            charId: id,
             level: level,
-            elite: elite,
+            elite: evolvePhase,
             potential: potential,
-            mainSkill: mainSkill,
+            mainSkill: mainSkillLevel,
             rarity: rarity,
             skill1: 0,
             skill2: 0,
@@ -270,30 +264,18 @@ function formattingOperatorData(characterList) {
             modD: 0
         }
 
-
-        const skills = character.skills
         if (skills) {
             for (let i = 0; i < skills.length; i++) {
-                if(skills[i]){
-                    operator[`skill${i}`] = parseInt(skills[i].specializeLevel.toString())
+                if (skills[i]) {
+                    operator[`skill${i+1}`] = skills[i].level
                 }
             }
         }
 
-
-        const equips = character.equip
-        const defaultEquipId = character.defaultEquipId
         if (equips) {
             for (const equip of equips) {
                 const equipType = equipDict.get(equip.id)
-                if (equipType) {
-                    if (defaultEquipId === equip.id) {
-                        operator[`mod${equipType}`] = equip.level
-                    }
-                    if (equipType > 1) {
-                        operator[`mod${equipType}`] = equip.level
-                    }
-                }
+                operator[`mod${equipType}`] = equip.level
             }
         }
 
@@ -306,9 +288,6 @@ function formattingOperatorData(characterList) {
 
     return operatorList
 }
-
-
-
 
 
 function getSign(path, params, token) {
@@ -328,7 +307,7 @@ function getSign(path, params, token) {
     return {timestamp, sign}
 }
 
-function getHeaders(url,params,cred,token){
+function getHeaders(url, params, cred, token) {
     const {timestamp, sign} = getSign(url, params, token);
 
     return {
