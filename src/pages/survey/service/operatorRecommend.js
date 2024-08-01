@@ -42,6 +42,9 @@ async function operatorRecommend(operatorTable) {
                     ratio:single.ratio
                 })
             }
+
+            // sort the operators by average in the reverse order
+            recommend.sort((a, b) => (b.avg - a.avg))
         }
     }
 
