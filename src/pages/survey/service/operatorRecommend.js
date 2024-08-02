@@ -1,4 +1,4 @@
-import surveyApi from '/src/api/operator-data'
+import surveyApi from '/src/api/operatorData'
 
 /**
  *

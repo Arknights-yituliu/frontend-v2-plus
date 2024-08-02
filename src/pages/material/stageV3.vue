@@ -403,7 +403,7 @@ function filterOrundumStage() {
 }
 
 function getOrundumRecommendedStage() {
-  stageApi.getOrundumRecommendedStage().then(response => {
+  stageApi.getOrundumRecommendedStage(0.633,300).then(response => {
     for (const stage of response.data) {
       orundumRecommendedStage.value.push({
         stageCode: stage.stageCode,
@@ -1111,7 +1111,7 @@ onMounted(() => {
                   <td>需求目标</td>
                   <td>无限需求</td>
                   <td>EXP系数</td>
-                  <td>0.625</td>
+                  <td>0.633</td>
                 </tr>
                 </tbody>
               </table>

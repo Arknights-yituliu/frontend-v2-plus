@@ -6,7 +6,7 @@ import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
 import {cMessage} from "/src/utils/Message.js";
 import sklandApi from "../service/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";
-import operatorDataAPI from '/src/api/operator-data.js'
+import operatorDataAPI from '/src/api/operatorData.js'
 import {useRouter} from "vue-router";
 import {getUserToken} from "/src/utils/GetUserToken.js";
 

@@ -373,7 +373,7 @@ import {cMessage} from "/src/utils/Message.js";
 import {filterByCharacterProperty, professionDict, yearDict} from "./service/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
 import userAPI from "/src/api/userInfo";
-import operatorDataAPI from "/src/api/operator-data.js"
+import operatorDataAPI from "/src/api/operatorData.js"
 import sklandApi from '/src/pages/survey/service/skland'
 import {onMounted, ref} from "vue";
 import operatorRecommend from "/src/pages/survey/service/operatorRecommend";

@@ -1039,7 +1039,7 @@ function filterOrundumStage() {
   }
 }
 
-stageApi.getOrundumRecommendedStage().then(response => {
+stageApi.getOrundumRecommendedStage(0,300).then(response => {
   for (const stage of response.data) {
     orundumRecommendedStage.value.push({
       stageCode: stage.stageCode,

@@ -2,7 +2,7 @@
 import ITEM_COST_TABLE from '/src/static/json/survey/operator_item_cost_table.json'
 import OPERATOR_TABLE from '/src/static/json/survey/character_list.json'
 import materialAPI from '/src/api/material.js'
-import operatorAPI from '/src/api/operator-data.js'
+import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
 import {timeFormat} from "/src/utils/DateUtil.js";
 import SpriteImage from "/src/components/SpriteImage.vue";

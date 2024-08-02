@@ -9,7 +9,7 @@ import character_table_simple from "/src/static/json/survey/character_table_simp
 import MyButton from '/src/components/Button.vue'
 import SpriteImage from "/src/components/SpriteImage.vue";
 
-import operatorDataApi from "/src/api/operator-data";
+import operatorDataApi from "/src/api/operatorData";
 import OperatorDataLineChart from "/src/components/LineChart.vue";
 import TableSortButton from "../../components/TableSortButton.vue";
 

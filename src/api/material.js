@@ -41,9 +41,9 @@ export default {
   },
 
   //搓玉查询
-  getOrundumRecommendedStage() {
+  getOrundumRecommendedStage(expCoefficient, sampleSize) {
     return request({
-      url: `/stage/orundum`,
+      url: `/stage/orundum?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
       method: "get",
     });
   },

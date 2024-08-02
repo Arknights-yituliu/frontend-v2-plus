@@ -10,7 +10,7 @@ import schedule_menu from '/src/static/json/build/schedule_menu.json'
 import building_table from '/src/static/json/build/building_table.json'
 
 import buildingApi from '/src/api/building.js'
-import operatorDataAPI from '/src/api/operator-data.js'
+import operatorDataAPI from '/src/api/operatorData.js'
 import {operatorFilterConditionTable} from '/src/utils/BuildingSkillFilter.js'
 import {translate} from '/src/utils/I18n.js'
 import {getText} from '/src/utils/FileRead.js'
