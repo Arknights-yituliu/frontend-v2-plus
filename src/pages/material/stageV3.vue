@@ -50,13 +50,13 @@ let updateTime = ref('')
 
 // 获取关卡推荐数据
 function getStageResult() {
-  stageApi.getStageResultGroupByItemSeries(0.625, 300).then(response => {
+  stageApi.getStageResultGroupByItemSeries(0.633, 300).then(response => {
     updateTime.value = response.data.updateTime
     stageResultGroup = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
     getItemCardData()
     //获取材料价值数据
-    stageApi.getItemValueTable(0.625).then(response => {
+    stageApi.getItemValueTable(0.633).then(response => {
       for (const item of response.data) {
         item_value_obj.value[item.itemId] = item;
       }
@@ -282,7 +282,7 @@ const reprintActivityList = [
 function getHistoryActStage() {
   historyActItemTable.value = []
   // 获取历史活动up材料信息
-  stageApi.getHistoryActStage(0.625, 300).then(response => {
+  stageApi.getHistoryActStage(0.633, 300).then(response => {
     // 先把当作表头的材料表转为一个集合
     for (const itemId in itemSeries) {
       const item = itemSeries[itemId]
