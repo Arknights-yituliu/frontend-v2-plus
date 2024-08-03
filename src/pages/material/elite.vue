@@ -74,19 +74,7 @@ function initData() {
     });
 
     // 计算技能专精成本
-    function calculateSkillCost(skill, skillFormat) {
-      console.log(skillFormat)
-      if (!skillFormat) {
-        skillFormat = {
-          cost: 0,
-          count: 0,
-          rank0: 0,
-          rank1: 0,
-          rank2: 0,
-          rank3: 0,
-        }
-        skillFormat.cost = 0
-      }
+    function calculateSkillCost(skill, skillFormat = {}) {
       skillFormat.cost = 0;
       skill.forEach(level => {
         for (const [itemId, num] of Object.entries(level)) {
@@ -127,14 +115,14 @@ function initData() {
 
 // 表格材料开销格式化
 function costFormatter(row, col) {
-  const value = row[col.property] || getNestedProperty(row, col.property) || 0
-  return value || 0
+  const value = row[col.property] || getNestedProperty(row, col.property) || '-'
+  return value
 }
 
 // 表格百分比格式化
 function percentFormatter(row, col) {
   const value = row[col.property] || getNestedProperty(row, col.property) || 0
-  return (value * 100).toFixed(1) + '%'
+  return value ? (value * 100).toFixed(1) + '%' : '-'
 }
 
 // 排序
@@ -163,7 +151,7 @@ function rowClassName({row}) {
 
 // 返回嵌套属性值
 function getNestedProperty(obj, path) {
-  return path.split('.').reduce((o, i) => o[i], obj);
+  return path.split('.').reduce((o, i) => o?.[i], obj);
 }
 
 // 重置表格数据
@@ -208,7 +196,7 @@ const vLoadmore = {
     <!-- 标题区域 -->
     <div class="op_title">
       <div class="op_title_text">
-        <div class="op_title_ctext">五星六星精二性价比</div>
+        <div class="op_title_ctext">精英化与专精性价比</div>
         <div :class="opETextTheme">Elite Efficiency</div>
       </div>
     </div>

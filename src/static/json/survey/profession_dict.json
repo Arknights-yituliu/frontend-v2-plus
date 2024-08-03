@@ -72,6 +72,10 @@
       {
         "value": "lord",
         "label": "领主"
+      },
+      {
+        "value": "hammer",
+        "label": "撼地者"
       }
     ]
   },
