@@ -1,7 +1,7 @@
 .operator-data-line-chart-box {
 
   .operator-data-line-chart {
-    height: 24px;
+    height: 52px;
     display: flex;
     flex-wrap: wrap;
     align-items: end;
@@ -49,6 +49,13 @@
           position: relative;
           width: 4px;
           margin: 0 4px;
+        }
+
+        .line-max {
+          font-size: 10px;
+          position: absolute;
+          right: -16px;
+          top: -16px;
         }
 
       }
