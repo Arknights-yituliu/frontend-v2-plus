@@ -86,7 +86,7 @@
       .rank-table-line-title {
         position: sticky;
         top: 0;
-        background-color: white;
+        background-color: var(--c-card-background-color);
         z-index: 1;
       }
     }
