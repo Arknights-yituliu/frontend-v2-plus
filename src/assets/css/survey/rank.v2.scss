@@ -1,6 +1,6 @@
 .survey-rank-page {
   width: 100%;
-  min-height: 700px;
+  min-height: 100vh;
   //overflow-x: scroll;
   box-sizing: border-box;
   padding: 2px;
@@ -51,7 +51,7 @@
       width: fit-content;
       overflow: auto;
       position: relative;
-      height: 600px;
+      height: calc(100vh - 160px);
       font-size: 14px;
 
       .operator-name {
@@ -93,19 +93,7 @@
   }
 
 
-  .operator-data-line-chart-box {
-    .operator-data-line-chart {
-      width: 36px;
-      height: 32px;
 
-      .line-bar {
-        position: relative;
-        width: 4px;
-        margin: 0 4px;
-      }
-
-    }
-  }
 
 
 

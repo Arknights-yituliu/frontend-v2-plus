@@ -19,7 +19,7 @@ function order(order){
 
 <template>
 
-  <div class="sort-button" >
+  <div class="sort-button">
     <slot></slot>
     <div v-show="label!=='charId'">
       <span class="sort-asc-icon" :data-active="order('asc')"></span>
@@ -51,7 +51,7 @@ function order(order){
   border-right: 6px solid transparent;
   border-left: 6px solid transparent;
   display: block;
-  margin: 4px;
+  margin: 4px 0 4px 2px;
 }
 
 .sort-asc-icon {
@@ -59,7 +59,7 @@ function order(order){
   border-right: 6px solid transparent;
   border-left: 6px solid transparent;
   display: block;
-  margin: 4px;
+  margin: 4px 0 4px 2px;
 }
 
 .sort-desc-icon[data-active='on'] {
