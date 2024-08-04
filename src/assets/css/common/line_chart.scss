@@ -5,7 +5,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: end;
-    width: 54px;
+    width: 60px;
     margin: auto;
 
     box-sizing: border-box;
@@ -20,8 +20,9 @@
 
     .line-bar {
       position: relative;
-      width: 10px;
+      width: 12px;
       margin: 0 4px;
+      background-color: #3d3d3d;
     }
 
     .line-0 {
@@ -39,7 +40,7 @@
   }
 
   @media screen and (max-width: 600px){
-    .operator-data-line-chart-box {
+
       .operator-data-line-chart {
         width: 36px;
         height: 32px;
@@ -52,6 +53,6 @@
 
       }
     }
-  }
+
 
 }

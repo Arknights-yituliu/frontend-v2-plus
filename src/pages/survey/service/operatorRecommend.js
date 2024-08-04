@@ -45,8 +45,8 @@ async function operatorRecommend(operatorTable) {
         }
     }
 
-
-
+   // sort the operators by average in the reverse order
+   recommend.sort((a, b) => (b.avg - a.avg))
    return recommend;
 }
 
