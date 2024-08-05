@@ -29,6 +29,9 @@
           .rank-table-line-item {
             width: 70px;
             box-sizing: border-box;
+            .rank-table-line-item-text{
+              line-height: 40px;
+            }
           }
 
           .rank-table-line-item-long {

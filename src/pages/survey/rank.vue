@@ -248,15 +248,37 @@ function sortFunc(property) {
 
 
 const getEliteData = (data) => {
-  return [data.rank0 * 100, data.rank1 * 100, data.rank2 * 100]
+  if (data) {
+    if (data.rank2) {
+      return `${(data.rank2 * 100).toFixed(1)}%`
+    }
+  }
+  return `0%`
 }
 
-const formatData = (data) => {
+const getSkillDataOrEquipData = (data) => {
+  if (data) {
+    if (data.rank2) {
+      return `${(data.rank3 * 100).toFixed(1)}%`
+    }
+  }
+  return `0%`
+}
+
+const formatLineData = (data) => {
   return [data.rank1 * 100, data.rank2 * 100, data.rank3 * 100]
 }
 
 const getOwnData = (data) => {
+  return `${(data * 100).toFixed(1)}%`
+}
+
+const getOwnLineData = (data) => {
   return [0, (1 - data) * 100, data * 100]
+}
+
+const getEliteLineData = (data) => {
+  return [data.rank0 * 100, data.rank1 * 100, data.rank2 * 100]
 }
 
 onMounted(() => {
@@ -333,13 +355,13 @@ onMounted(() => {
 
 
     <div class="rank-table-legend-box">
-      <div class="rank-table-legend line-0"></div>
-      <span>专精/模组1级</span>
-      <div class="rank-table-legend line-1"></div>
-      <span>专精/模组2级、未持有</span>
-      <div class="rank-table-legend line-2"></div>
-      <span>专精/模组3级、持有</span>
-
+      <!--      <div class="rank-table-legend line-0"></div>-->
+      <!--      <span>专精/模组1级</span>-->
+      <!--      <div class="rank-table-legend line-1"></div>-->
+      <!--      <span>专精/模组2级、未持有</span>-->
+      <!--      <div class="rank-table-legend line-2"></div>-->
+      <!--      <span>专精/模组3级、持有</span>-->
+      <span>以下展示数据仅为技能专三率和模组3级开启率</span>
     </div>
 
     <div class="rank-table-wrap">
@@ -364,28 +386,64 @@ onMounted(() => {
                          original-size="180"></SpriteImage>
           </div>
           <div class="rank-table-line-item">
-            <OperatorDataLineChart :line-data="getOwnData(result.own)"></OperatorDataLineChart>
+            <span class="rank-table-line-item-text"> {{ getOwnData(result.own) }}</span>
           </div>
           <div class="rank-table-line-item">
-            <OperatorDataLineChart :line-data="getEliteData(result.elite)"></OperatorDataLineChart>
+            <span class="rank-table-line-item-text"> {{ getEliteData(result.elite) }}</span>
           </div>
-          <div class="rank-table-line-item">
-            <OperatorDataLineChart :line-data="formatData(result.skill1)"></OperatorDataLineChart>
+          <div class="rank-table-line-item show-complete-data">
+            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.skill1) }}</span>
+            <div class="complete-data">
+              <div v-for="(data,index) in formatLineData(result.skill1)">
+                {{ `专精${index + 1}级：${data.toFixed(1)}%` }}
+              </div>
+            </div>
+            <!--            <OperatorDataLineChart :line-data="formatLineData(result.skill1)"></OperatorDataLineChart>-->
           </div>
-          <div class="rank-table-line-item">
-            <OperatorDataLineChart :line-data="formatData(result.skill2)"></OperatorDataLineChart>
+          <div class="rank-table-line-item show-complete-data">
+            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.skill2) }}</span>
+            <div class="complete-data">
+              <div v-for="(data,index) in formatLineData(result.skill2)">
+                {{ `专精${index + 1}级：${data.toFixed(1)}%` }}
+              </div>
+            </div>
+            <!--            <OperatorDataLineChart :line-data="formatLineData(result.skill2)"></OperatorDataLineChart>-->
           </div>
-          <div class="rank-table-line-item">
-            <OperatorDataLineChart :line-data="formatData(result.skill3)"></OperatorDataLineChart>
+          <div class="rank-table-line-item show-complete-data">
+            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.skill3) }}</span>
+            <div class="complete-data">
+              <div v-for="(data,index) in formatLineData(result.skill3)">
+                {{ `专精${index + 1}级：${data.toFixed(1)}%` }}
+              </div>
+            </div>
+            <!--            <OperatorDataLineChart :line-data="formatLineData(result.skill3)"></OperatorDataLineChart>-->
           </div>
-          <div class="rank-table-line-item">
-            <OperatorDataLineChart :line-data="formatData(result.modX)"></OperatorDataLineChart>
+          <div class="rank-table-line-item show-complete-data">
+            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.modX) }}</span>
+            <div class="complete-data">
+              <div v-for="(data,index) in formatLineData(result.modX)">
+                {{ `模组${index + 1}级：${data.toFixed(1)}%` }}
+              </div>
+            </div>
+            <!--            <OperatorDataLineChart :line-data="formatLineData(result.modX)"></OperatorDataLineChart>-->
           </div>
-          <div class="rank-table-line-item">
-            <OperatorDataLineChart :line-data="formatData(result.modY)"></OperatorDataLineChart>
+          <div class="rank-table-line-item show-complete-data">
+            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.modY) }}</span>
+            <div class="complete-data">
+              <div v-for="(data,index) in formatLineData(result.modY)">
+                {{ `模组${index + 1}级：${data.toFixed(1)}%` }}
+              </div>
+            </div>
+            <!--            <OperatorDataLineChart :line-data="formatLineData(result.modY)"></OperatorDataLineChart>-->
           </div>
-          <div class="rank-table-line-item">
-            <OperatorDataLineChart :line-data="formatData(result.modD)"></OperatorDataLineChart>
+          <div class="rank-table-line-item show-complete-data">
+            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.modD) }}</span>
+            <div class="complete-data">
+              <div v-for="(data,index) in formatLineData(result.modD)">
+                {{ `模组${index + 1}级：${data.toFixed(1)}%` }}
+              </div>
+            </div>
+            <!--            <OperatorDataLineChart :line-data="formatLineData(result.modD)"></OperatorDataLineChart>-->
           </div>
         </div>
 

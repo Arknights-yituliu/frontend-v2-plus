@@ -74,6 +74,32 @@
         .rank-table-line-item {
           width: 90px;
           box-sizing: border-box;
+          text-align: center;
+          position: relative;
+
+          .rank-table-line-item-text {
+            line-height: 60px;
+          }
+
+        }
+
+        .complete-data {
+          display: none;
+          position: absolute;
+          padding: 12px;
+          z-index: 1;
+          width: 110px;
+          background-color: var(--c-card-background-color);
+        }
+
+        .show-complete-data:hover {
+          cursor: pointer;
+          .complete-data {
+            display: block;
+            position: absolute;
+            top: -10px;
+            left: -10px;
+          }
         }
 
         .rank-table-line-item-long {
@@ -91,11 +117,6 @@
       }
     }
   }
-
-
-
-
-
 
 
 }
