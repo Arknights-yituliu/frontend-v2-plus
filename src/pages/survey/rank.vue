@@ -132,7 +132,7 @@ function addFilterCondition(property, condition) {
   filterCharacterList();
 }
 
-//筛选
+//筛选干员
 function filterCharacterList() {
   for (let i in operatorsStatisticsList.value) {
     const character = operatorsStatisticsList.value[i];
@@ -140,44 +140,6 @@ function filterCharacterList() {
   }
 
 
-}
-
-let last_property = ref('')
-let desc_or_asc = ref(1)
-
-
-//按条件排序
-function sortRank(property) {
-  if (last_property.value === property) {
-    desc_or_asc.value++;
-  } else {
-    desc_or_asc.value = 1;
-  }
-  operatorsStatisticsList.value.sort((a, b) => {
-    if (desc_or_asc.value % 2 !== 0) {
-      return b[property] - a[property];
-    }
-
-    if (desc_or_asc.value % 2 === 0) {
-      return a[property] - b[property];
-    }
-
-  });
-
-  last_property.value = property;
-}
-
-function sortIconClass(property, descOrAsc) {
-  if (last_property.value === property) {
-    if (desc_or_asc.value % 2 !== 0 && 'desc' === descOrAsc) {
-      return 'border-top: 8px solid #2692fd'
-    }
-
-    if (desc_or_asc.value % 2 === 0 && 'asc' === descOrAsc) {
-      return 'border-bottom: 8px solid #2692fd'
-    }
-  }
-  return ''
 }
 
 
@@ -200,6 +162,7 @@ function quickSort(arr, compare = (a, b) => a - b) {
   return [...quickSort(less, compare), pivot, ...quickSort(greater, compare)];
 }
 
+//表头标题
 const headers = [
   {label: '干员', value: 'charId'},
   {label: '持有率', value: 'own'},
@@ -212,8 +175,14 @@ const headers = [
   {label: 'D模组', value: 'modDS'},
 ]
 
+//选中的表头标题暂存
 let selectedHeader = ref({value: '', order: 'asc'})
 
+/**
+ * 排序函数
+ * @param list 传入的干员数据集合
+ * @param compare 传入一个比较函数
+ */
 function sort(list, compare = (a, b) => a - b) {
   const length = list.length
   for (let i = 0; i < length - 1; i++) {
@@ -229,7 +198,11 @@ function sort(list, compare = (a, b) => a - b) {
   operatorsStatisticsList.value = list
 }
 
-function sortFunc(property) {
+/**
+ * 根据表头的属性排序
+ * @param property 表头属性
+ */
+function sortByProperty(property) {
   let func = (a, b) => a[property] - b[property]
   if (selectedHeader.value.value === property) {
     if (selectedHeader.value.order === 'asc') {
@@ -246,7 +219,20 @@ function sortFunc(property) {
   sort(operatorsStatisticsList.value, func)
 }
 
+// 后端返回的数据为如下格式，下面的部分函数为格式化数据函数
+// {
+// count: 1-3级合计占比,
+// rank0:0级、未开启占比，
+// rank1:1级占比
+// rank2:2级占比
+// rank3:3级占比
+// }
 
+/**
+ * 获取干员精英化统计数据
+ * @param data  统计数据
+ * @return {string} 格式化后的百分比
+ */
 const getEliteData = (data) => {
   if (data) {
     if (data.rank2) {
@@ -256,6 +242,11 @@ const getEliteData = (data) => {
   return `0%`
 }
 
+/**
+ * 获取干员专精专三或模组三级统计数据
+ * @param data  统计数据
+ * @return {string} 格式化后的百分比
+ */
 const getSkillDataOrEquipData = (data) => {
   if (data) {
     if (data.rank2) {
@@ -265,6 +256,11 @@ const getSkillDataOrEquipData = (data) => {
   return `0%`
 }
 
+/**
+ * 获取干员专精或模组1到3级完整统计数据
+ * @param data 统计数据
+ * @return {number[]} 1到3级的百分比数据集合
+ */
 const formatLineData = (data) => {
   return [data.rank1 * 100, data.rank2 * 100, data.rank3 * 100]
 }
@@ -373,7 +369,7 @@ onMounted(() => {
                 :value="selectedHeader.value"
                 :label="header.value"
                 :order="selectedHeader.order"
-                @click="sortFunc(header.value)">
+                @click="sortByProperty(header.value)">
               {{ header.label }}
             </TableSortButton>
           </div>
