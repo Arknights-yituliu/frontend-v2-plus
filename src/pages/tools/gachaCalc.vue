@@ -977,11 +977,11 @@ function gachaResourcesCalculation() {
 
       if (selectedSchedule.value.dailyGiftResources) {
         if (honeyCake.name.indexOf("每日赠送") > -1) {
-          honeyCake.gachaTicket = getPoolRemainingDays(endDate.value.getTime(), honeyCake.start)
+          honeyCake.gachaTicket = getPoolRemainingDays(honeyCake.end, honeyCake.start)
         }
         if (honeyCake.name.indexOf("矿区") > -1 || honeyCake.name.indexOf("红包墙") > -1|| honeyCake.name.indexOf("许愿墙") > -1) {
 
-          const remainingDays = getPoolRemainingDays(endDate.value.getTime(), honeyCake.start)
+          const remainingDays = getPoolRemainingDays(honeyCake.end, honeyCake.start)
           honeyCake.orundum = remainingDays * 600
         }
       }
