@@ -6,8 +6,8 @@ import '/src/assets/css/sprite/sprite_plane_icon.css'
 import '/src/assets/css/tool/gacha_calc.phone.scss'
 import * as echarts from "echarts";
 
-import potentialTable from '/src/static/json/tools/potentialGachaResources.json'
-import HONEY_CAKE_TABLE from '/src/static/json/tools/scheduleByHoneycake.json'
+import potentialTable from '/src/static/json/tools/potential_gacha_resources.json'
+import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'
 import storeAPI from '/src/api/store'
 import {cMessage} from "/src/utils/Message.js";
 import {dateDiff} from '/src/utils/DateUtil.js'
@@ -60,7 +60,7 @@ function batchGenerationServerMaintenanceRewards() {
         gachaTicket: 0,
         tenGachaTicket: 0,
         start: new Date(`${year}/${padZero(month,2)}/${padZero(d,2)} 00:00:00`).getTime(),
-        end:  new Date(`${year}/${padZero(month,2)}/${padZero(d+4,2)} 23:00:00`).getTime(),
+        end:  new Date(`${year}/${padZero(month,2)}/${padZero(d,2)} 23:00:00`).getTime(),
         rewardType: "公共",
         module: "honeyCake",
         probability: ""
@@ -115,7 +115,15 @@ let scheduleOptions = [
     dailyGiftResources: true
   },
   {
-    name: '周年(11.1)',
+    name: '迷宫饭联动SS',
+    start: new Date('2024/09/02 16:00:00'),
+    end: new Date('2024/09/16 04:01:00'),
+    activityType: '联动限定',
+    disabled: false,
+    dailyGiftResources: true
+  },
+  {
+    name: '周年(11.15)',
     start: new Date('2024/11/01 16:00:00'),
     end: new Date('2024/11/15 04:01:00'),
     activityType: '周年限定',
@@ -1086,13 +1094,15 @@ function gachaResourcesCalculation() {
  */
 function rewardIsExpired(reward) {
   //活动结束时间在当前时间之前，活动已结束
-  if (reward.end < currentTimestamp) {
+  if (reward.end <= currentTimestamp) {
     return false
   }
   //活动开始时间在选择的结束时间节点之后，活动未开启
-  if (reward.start > endDate.value.getTime()) {
+  if (reward.start >= endDate.value.getTime()) {
     return false
   }
+
+  console.log(reward.name,"结束于",reward.end,'>',endDate.value.getTime())
   //判断是否当前奖励的类型是否可以被计入，公共类型都可以计入，特殊类型需要符合当前活动类型，例如联动的专属十连不能被计入新春的攒抽结果中
   if (reward.rewardType) {
     return reward.rewardType === '公共' || reward.rewardType === activityType.value;
@@ -1238,7 +1248,7 @@ function handleResize() {
               </el-radio-group>
             </div>
 
-            <span class="tip" style="text-align: center">日期为卡池结束日期，夏活日期待定，仅参考</span>
+            <span class="tip" style="text-align: center">日期为卡池结束日期</span>
             <div class="switch-wrap">
               <span>只计算到卡池开放当天</span>
               <el-switch v-model="calPoolStart" @click="gachaResourcesCalculation"></el-switch>
@@ -1757,6 +1767,7 @@ function handleResize() {
           <activity-gacha-resources v-for="(honeyCake, label) in honeyCakeTable" :key="label" :info="honeyCake"
                                     v-show="rewardIsExpired(honeyCake)">
           </activity-gacha-resources>
+
         </el-collapse-item>
       </el-collapse>
     </div>
