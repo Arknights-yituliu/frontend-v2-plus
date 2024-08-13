@@ -26,6 +26,7 @@ const props = defineProps(["modelValue", 'info','func']);
         <div class="bg-icon_7004"></div>
       </div>
       <span v-show="props.info.tenGachaTicket > 0">{{ props.info.tenGachaTicket }}</span>
+
     </div>
   </div>
 </template>
