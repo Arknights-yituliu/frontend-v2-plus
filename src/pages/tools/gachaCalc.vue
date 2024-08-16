@@ -106,14 +106,14 @@ let activityType = ref('联动限定')
 // activityType: string 活动类型
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
-  {
-    name: '迷宫饭联动SS',
-    start: new Date('2024/09/02 16:00:00'),
-    end: new Date('2024/09/16 04:01:00'),
-    activityType: '联动限定',
-    disabled: false,
-    dailyGiftResources: true
-  },
+  // {
+  //   name: '迷宫饭联动SS',
+  //   start: new Date('2024/09/02 16:00:00'),
+  //   end: new Date('2024/09/16 04:01:00'),
+  //   activityType: '联动限定',
+  //   disabled: false,
+  //   dailyGiftResources: true
+  // },
   {
     name: '半周年(11.15)',
     start: new Date('2024/11/01 16:00:00'),
