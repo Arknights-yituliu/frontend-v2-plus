@@ -617,10 +617,11 @@ onMounted(() => {
 
 
     <!-- 卡片区域 -->
-    <div id="stageForCards" class="stage-card-wrap">
+    <div id="stageForCards" class="stage-card-wrap" style="background-color: rgb(45,45,45);max-width: 420px;">
       <div class="stage-card" v-for="(stage, index) in stageCardData" :key="index"
            @click="getItemTableData(index, true)"
            :id="`c-${index}`"
+           style="background-color: rgb(61,61,61);margin: 4px;"
       >
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.r3)"></div>
         <div class="stage-card-bar-container">
