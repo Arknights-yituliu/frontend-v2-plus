@@ -106,16 +106,16 @@ let activityType = ref('联动限定')
 // activityType: string 活动类型
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
-  // {
-  //   name: '迷宫饭联动SS',
-  //   start: new Date('2024/09/02 16:00:00'),
-  //   end: new Date('2024/09/16 04:01:00'),
-  //   activityType: '联动限定',
-  //   disabled: false,
-  //   dailyGiftResources: true
-  // },
   {
-    name: '周年(11.15)',
+    name: '迷宫饭联动SS',
+    start: new Date('2024/09/02 16:00:00'),
+    end: new Date('2024/09/16 04:01:00'),
+    activityType: '联动限定',
+    disabled: false,
+    dailyGiftResources: true
+  },
+  {
+    name: '半周年(11.15)',
     start: new Date('2024/11/01 16:00:00'),
     end: new Date('2024/11/15 04:01:00'),
     activityType: '周年限定',
@@ -1176,8 +1176,9 @@ onMounted(() => {
   getAndSortPackData()
 
   ElNotification({
-    title: '2024.07.24',
-    message: h('i', {style: 'color: teal'}, '更新了周年攒抽排期（非准确排期，待夏活直播后更新）'),
+    title: '2024.08.16',
+    dangerouslyUseHTMLString: true,
+    message: '<strong>1.更新了联动卡池排期<br>2.调整了周年卡池排期（仅供参考，非准确排期）</strong>',
   })
 
 
