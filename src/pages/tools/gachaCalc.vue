@@ -1247,7 +1247,7 @@ function handleResize() {
               inactive-text="计算到卡池开放当天" />
           </div>
           <!-- <div class="result-content"> -->
-          <div class="resources-line" style="padding-top: 0px;">
+          <div class="resources-line" style="padding-top: 0px;margin: 0px;">
             <!--饼状图-->
             <div class="gacha-resources-chart-pie" id="calculationResultPieChart">
             </div>
@@ -1347,7 +1347,8 @@ function handleResize() {
             <span></span> 当前库存
           </div>
 
-          <div class="exist-resources-input-wrap">
+          <div class="resources-line">
+          <!-- <div class="exist-resources-input-wrap"> -->
             <div class="exist-resources-input">
               <div class="image-sprite">
                 <div class="bg-icon_4002"></div>
@@ -1370,7 +1371,8 @@ function handleResize() {
             </div>
           </div>
 
-          <div class="switch-wrap">
+          <div class="resources-line">
+          <!-- <div class="switch-wrap"> -->
             <span>是否使用源石抽卡</span>
             <el-switch v-model="originiumIsUsed" @click="gachaResourcesCalculation"></el-switch>
           </div>
@@ -1491,9 +1493,11 @@ function handleResize() {
             </div>
           </div>
           <div class="divider"></div>
-          <el-checkbox-group v-model="selectedCertificatePack" style="margin: 4px" @change="gachaResourcesCalculation">
+
+          <!-- <el-checkbox-group v-model="selectedCertificatePack" style="margin: 4px" @change="gachaResourcesCalculation"> -->
             <el-checkbox-button v-for="(pack, name) in certificatePackList" :key="name" :value="name"
-              style="margin: 4px" v-show="rewardIsExpired(pack)">
+              style="margin: 4px" v-show="rewardIsExpired(pack)"
+              v-model="selectedCertificatePack" @change="gachaResourcesCalculation">
               <div class="checkbox-button">
                 <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
                 <div class="checkbox-button-pack-gacha-resources">
@@ -1508,7 +1512,7 @@ function handleResize() {
                 </div>
               </div>
             </el-checkbox-button>
-          </el-checkbox-group>
+          <!-- </el-checkbox-group> -->
 
         </el-collapse-item>
 

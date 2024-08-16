@@ -30,7 +30,7 @@
   }
 
   .el-checkbox-button__inner {
-    padding: 2px;
+    // padding: 2px;
     border: var(--el-border);
     border-radius: 6px;
   }
@@ -52,7 +52,7 @@
   .collapse-group1 {
     position: sticky;
     top: 20px;
-    width: 600px;
+    max-width: 640px;
     max-height: 500px;
     z-index: 1004;
     .el-collapse-item{
@@ -61,7 +61,7 @@
   }
 
   .collapse-group2 {
-    width: 600px;
+    max-width: 640px;
     .el-collapse-item{
       background-color: var(--c-card-background-color);
     }
@@ -101,8 +101,9 @@
 
 
   .divider {
-    width: 100%;
-    border-bottom: 1px solid #f0f0f0;
+    margin: 0px 8px;
+    width: auto;
+    border-bottom: 1px solid #80808080;
     height: 1px;
   }
 
@@ -137,7 +138,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 16px 0px 16px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #80808080;
   }
 
   //资源条状容器内的每个单项
@@ -277,7 +278,7 @@
     font-style: italic;
     display: block;
     color: #599dff;
-    margin: 4px;
+    margin: 4px 16px;
     font-size: 16px;
     line-height: 24px;
   }
