@@ -116,7 +116,7 @@ let scheduleOptions = [
   },
   {
     name: '半周年(1101~1115)',
-    start: new Date('2024/11/01 16:00:00'),
+    start: new Date('2024/11/02 16:00:00'),
     end: new Date('2024/11/15 04:01:00'),
     activityType: '周年限定',
     disabled: false,
@@ -1298,7 +1298,7 @@ function handleResize() {
           </div>
           <!--抽卡资源总览-->
           <div class="resources-result-bar">
-          <!-- <div class="resources-line"> -->
+            <!-- <div class="resources-line"> -->
             <div class="resources-result-single">
               <div class="image-sprite">
                 <div class="bg-icon_4002"></div>
@@ -1348,7 +1348,7 @@ function handleResize() {
           </div>
 
           <div class="resources-line">
-          <!-- <div class="exist-resources-input-wrap"> -->
+            <!-- <div class="exist-resources-input-wrap"> -->
             <div class="exist-resources-input">
               <div class="image-sprite">
                 <div class="bg-icon_4002"></div>
@@ -1372,7 +1372,7 @@ function handleResize() {
           </div>
 
           <div class="resources-line">
-          <!-- <div class="switch-wrap"> -->
+            <!-- <div class="switch-wrap"> -->
             <span>是否使用源石抽卡</span>
             <el-switch v-model="originiumIsUsed" @click="gachaResourcesCalculation"></el-switch>
           </div>
@@ -1495,23 +1495,23 @@ function handleResize() {
           <div class="divider"></div>
 
           <!-- <el-checkbox-group v-model="selectedCertificatePack" style="margin: 4px" @change="gachaResourcesCalculation"> -->
-            <el-checkbox-button v-for="(pack, name) in certificatePackList" :key="name" :value="name"
-              style="margin: 4px" v-show="rewardIsExpired(pack)"
-              v-model="selectedCertificatePack" @change="gachaResourcesCalculation">
-              <div class="checkbox-button">
-                <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
-                <div class="checkbox-button-pack-gacha-resources">
-                  <div class="image-sprite">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span>{{ pack.gachaTicket }}</span>
-                  <div class="image-sprite">
-                    <div class="bg-icon_7004"></div>
-                  </div>
-                  <span>{{ pack.tenGachaTicket }}</span>
+          <!-- 黄票换抽 -->
+          <el-checkbox-button v-for="(pack, name) in certificatePackList" :key="name" :value="name" size="small"
+            v-show="rewardIsExpired(pack)" v-model="selectedCertificatePack" @change="gachaResourcesCalculation">
+            <div class="checkbox-button">
+              <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
+              <div class="checkbox-button-pack-gacha-resources">
+                <div class="image-sprite">
+                  <div class="bg-icon_7003"></div>
                 </div>
+                <span>{{ pack.gachaTicket }}</span>
+                <div class="image-sprite">
+                  <div class="bg-icon_7004"></div>
+                </div>
+                <span>{{ pack.tenGachaTicket }}</span>
               </div>
-            </el-checkbox-button>
+            </div>
+          </el-checkbox-button>
           <!-- </el-checkbox-group> -->
 
         </el-collapse-item>
