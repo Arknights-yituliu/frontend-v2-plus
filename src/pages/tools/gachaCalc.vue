@@ -973,23 +973,24 @@ function gachaResourcesCalculation() {
         continue
       }
 
+      //判断当前卡池是否有每日赠送奖励
       if (selectedSchedule.value.dailyGiftResources) {
 
+        //奖励结束日期
         let end = honeyCake.end
+        //奖励开始日期
         let start = honeyCake.start
-
+        //如果选中了计算卡池当天奖励，则将结束时间改为卡池当天
         if(!calPoolEnd.value){
           end = endDate.value.getTime()
         }
 
-
+        //自动计算每日赠送单抽和签到墙的奖励
         if (honeyCake.name.indexOf("每日赠送") > -1) {
-          console.log(honeyCake.name,end)
           honeyCake.gachaTicket = getPoolRemainingDays(end, start)
         }
 
         if (honeyCake.name.indexOf("矿区") > -1 || honeyCake.name.indexOf("红包墙") > -1 || honeyCake.name.indexOf("许愿墙") > -1) {
-          console.log(honeyCake.name,end)
           const remainingDays = getPoolRemainingDays(end, start)
           honeyCake.orundum = remainingDays * 600
         }
