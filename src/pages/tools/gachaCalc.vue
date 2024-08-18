@@ -1251,7 +1251,7 @@ function handleResize() {
           </template>
 
           <!--选择攒到某个活动的单选框-->
-          <div class="radio-group-wrap">
+          <div class="radio-group-wrap" style="margin: 0px 16px;">
             <el-radio-group v-model="selectedScheduleName" size="large" style="margin: 8px auto;">
               <el-radio-button v-for="(activity, index) in scheduleOptions" :key="index" :value="activity.name"
                                :label="activity.name" :disabled="activity.disabled"
