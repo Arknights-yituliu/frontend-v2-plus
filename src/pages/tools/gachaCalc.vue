@@ -1367,7 +1367,7 @@ function handleResize() {
             <span></span> 当前库存
           </div>
 
-          <div class="resources-line">
+          <div class="resources-line" style="flex-wrap: wrap;">
             <!-- <div class="exist-resources-input-wrap"> -->
             <div class="exist-resources-input">
               <div class="image-sprite">
