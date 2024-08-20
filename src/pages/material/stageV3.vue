@@ -9,7 +9,6 @@ import '/src/assets/css/material/stage.phone.scss'
 import {timeFormat} from '/src/utils/DateUtil.js'
 import reproduction_activity from '/src/static/json/material/reproduction_activity.json'
 
-
 //漫游导航指引
 const guideOpen = ref(false)
 
