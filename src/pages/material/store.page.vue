@@ -59,10 +59,13 @@ function getStoreData() {
 // const actStoreList = pageContext?.pageProps?.actStoreList || [] // 活动列表
 const opETextTheme = ref('op_title_etext_light')
 
+function getActStoreBackgroundImage(path){
+   return `https://cos.yituliu.cn/${path}`
+}
 
 // 活动商店背景图
-function getBackground(url) {
-  return `background: linear-gradient(rgba(144, 164, 174, 0.7), rgba(144, 164, 174, 0.7)), url(${url}) no-repeat 50% 50% /cover;`
+function getBackground(path) {
+  return `background: linear-gradient(rgba(144, 164, 174, 0.7), rgba(144, 164, 174, 0.7)), url(${getActStoreBackgroundImage(path)}) no-repeat 50% 50% /cover;`
 }
 
 // 活动商店tag
@@ -132,7 +135,7 @@ onMounted(() => {
         <!-- banner -->
         <div class="act_banner_background" :style="getBackground(singleAct.imageLink)">
           <div class="act_banner_img">
-            <img class="act_img" :src="singleAct.imageLink" :alt="singleAct.actName"/>
+            <img class="act_img" :src="getActStoreBackgroundImage(singleAct.imageLink)" :alt="singleAct.actName"/>
           </div>
         </div>
 
