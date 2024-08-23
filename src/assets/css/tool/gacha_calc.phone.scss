@@ -3,11 +3,15 @@
 
 
     .collapse-group1{
-      width: 360px;
+      // width: 360px;
+      width: calc(100% - 10px);
+      width: calc(100%);
     }
 
     .collapse-group2{
-      width: 360px;
+      // width: 360px;
+      width: calc(100% - 10px);
+      width: calc(100%);
     }
 
     .collapse-item {

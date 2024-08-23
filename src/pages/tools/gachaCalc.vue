@@ -217,14 +217,14 @@ function getHistoryPackInfo() {
   const minTimeStamp = new Date().getTime() - 60 * 60 * 24 * 400 * 1000
   let list = []
   for (let pack of packInfoInitList.value) {
-    const { start, saleType } = pack
+    const {officialName,drawEfficiency, start, saleType } = pack
 
-    if ('activity' !== saleType) {
+    if ('activity' !== saleType|| drawEfficiency<0.1) {
       continue
     }
 
-
     const month = new Date(start).getMonth()
+
     if (month === currentScheduleMonth) {
       list.push(pack)
     }
@@ -323,6 +323,7 @@ function updateScheduleOption(index) {
   endDate.value = schedule.end
   activityType.value = schedule.activityType
   gachaResourcesCalculation()
+  getHistoryPackInfo()
 }
 
 
@@ -585,7 +586,7 @@ function gachaResourcesCalculation() {
 
     //如果本月已清空绿票商店则购买商店次数减1
     if (dailyReward.value.certificateStoreCompleted) {
-      console.log('绿票商店加一')
+
       shoppingTimes = shoppingTimes > 0 ? shoppingTimes - 1 : shoppingTimes
     }
 
@@ -616,6 +617,7 @@ function gachaResourcesCalculation() {
       gachaTicket += item.gachaTicket
       tenGachaTicket += item.tenGachaTicket
     }
+
 
     //计算官方月卡
     // if (endDate.value < officialMonthlyCardEndDate) {
@@ -1103,13 +1105,13 @@ function getPoolRemainingDays(endTime, startTime) {
 function rewardIsExpired(reward) {
   //活动结束时间在当前时间之前，活动已结束
   if (reward.end <= currentTimestamp) {
-    console.log(reward.name, '活动结束')
+    // console.log(reward.name, '活动结束')
     return false
   }
 
   //活动开始时间在选择的结束时间节点之后，活动未开启
   if (reward.start > endDate.value.getTime()) {
-    console.log(reward.name, '活动未开始')
+    // console.log(reward.name, '活动未开始')
     return false
   }
 
@@ -1510,10 +1512,21 @@ function handleResize() {
               <span>{{ dailyReward.checkInGachaTicket }}</span>
             </div>
           </div>
-          <div class="divider"></div>
+          <span class="tip"> 黄票换抽计算整合到下面了</span>
+        </el-collapse-item>
 
-          <!-- <el-checkbox-group v-model="selectedCertificatePack" style="margin: 4px" @change="gachaResourcesCalculation"> -->
+        <!--搓玉资源-->
+        <el-collapse-item name="custom" class="collapse-item">
+          <template #title>
+            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
+            <span class="collapse-title-font">
+              搓玉/绿票/黄票换抽&emsp;{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw, 0) }}抽
+            </span>
+          </template>
           <!-- 黄票换抽 -->
+          <div class="collapse-content-subheading">
+            <span></span>黄票换抽
+          </div>
           <el-checkbox-button v-for="(pack, name) in certificatePackList" :key="name" :value="name" size="small"
             v-show="rewardIsExpired(pack)" v-model="selectedCertificatePack" @change="gachaResourcesCalculation">
             <div class="checkbox-button">
@@ -1530,19 +1543,64 @@ function handleResize() {
               </div>
             </div>
           </el-checkbox-button>
-          <!-- </el-checkbox-group> -->
 
-        </el-collapse-item>
+          <div class="divider"></div>
 
-
-        <!--搓玉资源-->
-        <el-collapse-item name="custom" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-              搓玉/绿票商店&emsp;{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw, 0) }}抽
-            </span>
-          </template>
+          <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation" size="small">
+            <el-checkbox-button class="el-checkbox-button" :border="true">
+              <div class="checkbox-button">
+                <span>
+                  10黄票
+                </span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_7003"></div>
+                  </div>
+                  <span style="width: 12px;">1</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+            <el-checkbox-button class="el-checkbox-button" :border="true">
+              <div class="checkbox-button">
+                <span>
+                  18黄票
+                </span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_7003"></div>
+                  </div>
+                  <span style="width: 12px;">2</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+            <el-checkbox-button class="el-checkbox-button" :border="true">
+              <div class="checkbox-button">
+                <span>
+                  50黄票
+                </span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_7003"></div>
+                  </div>
+                  <span style="width: 12px;">5</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+            <el-checkbox-button class="el-checkbox-button" :border="true">
+              <div class="checkbox-button">
+                <span>
+                  70黄票
+                </span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_7004"></div>
+                  </div>
+                  <span style="width: 12px;">1</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
+          <span class="tip">越换越便宜，咱尽量还是一次换完吧</span>
           <div class="collapse-content-subheading">
             <span></span>搓玉计算
           </div>

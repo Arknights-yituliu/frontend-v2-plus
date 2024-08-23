@@ -17,7 +17,7 @@
   }
 
   .el-collapse-item__content {
-    padding-bottom: 8px;
+    padding-bottom: 0px;
   }
 
   .el-collapse-item {
@@ -36,7 +36,7 @@
   }
 
   .collapse-item {
-    margin: 16px 8px;
+    margin: 12px 8px;
     box-shadow: 1px 1px 8px var(--c-box-shadow-color);
 
   }
@@ -55,6 +55,7 @@
     max-width: 640px;
     max-height: 500px;
     z-index: 1004;
+    width: 640px;
     .el-collapse-item{
       background-color: var(--c-card-background-color);
     }
@@ -137,7 +138,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 16px 0px 16px;
+    padding: 8px 16px 8px 16px;
     border-top: 1px solid #80808080;
   }
 
