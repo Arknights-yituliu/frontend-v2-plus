@@ -7,7 +7,7 @@ import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import {timeFormat} from '/src/utils/DateUtil.js'
-
+import reproduction_activity from '/src/static/json/material/reproduction_activity.json'
 
 
 //漫游导航指引
@@ -268,13 +268,7 @@ function historyActDeviceBtnClass(device) {
 }
 
 // 未来复刻的活动
-const reprintActivityList = [
-  {activityName: '火山旅梦', startTime: '预计2024/08', itemList: {}},
-  {activityName: '不义之财', startTime: '预计2024/09', itemList: {}},
-  {activityName: '崔林特尔梅之金', startTime: '预计2024/10', itemList: {}},
-  {activityName: '银心湖列车', startTime: '预计2024/11', itemList: {}},
-  {activityName: '怀黍离', startTime: '预计2025/01', itemList: {}}
-]
+
 
 /**
  * 获取历史活动关卡数据
@@ -347,7 +341,7 @@ function getHistoryActStage() {
         }
       }
 
-      for (const reprintActivity of reprintActivityList) {
+      for (const reprintActivity of reproduction_activity) {
         if (reprintActivity.activityName === rowData.activityName) {
           reprintActivity.itemList = rowData.itemList
         }
@@ -356,7 +350,7 @@ function getHistoryActStage() {
       historyActItemTable.value.push(rowData)
     }
 
-    for (const reprintActivity of reprintActivityList) {
+    for (const reprintActivity of reproduction_activity) {
       historyActItemTable.value.unshift(reprintActivity)
     }
 
@@ -367,12 +361,11 @@ function getHistoryActStage() {
 
 function getCellBgColor(rowIndex, maxIndex) {
 
-  if (rowIndex < reprintActivityList.length) {
+  if (rowIndex < reproduction_activity.length) {
     return ''
   }
 
-  // console.log((rowIndex - reprintActivityList.length), '<', maxIndex)
-  if ((rowIndex - reprintActivityList.length) < maxIndex) {
+  if ((rowIndex - reproduction_activity.length) < maxIndex) {
     return 'background-color: #82beff80'
   }
   return ''
