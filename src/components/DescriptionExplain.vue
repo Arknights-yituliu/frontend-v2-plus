@@ -15,21 +15,18 @@ const props = defineProps({
   }
 })
 
-// 处理 cc-base 元素点击事件
+// 处理术语元素点击事件
 const handleClick = (event) => {
-  const element = event.target.closest('.cc-base');
-  if (!element) return;
+  const element = event.target;
 
-  let targetElement = element;
-  // 追寻内层子元素，定位术语文本
-  while (targetElement.children.length > 0) {
-    targetElement = targetElement.children[0];
-  }
-  const text = targetElement.textContent.trim();
-  const descriptionData = term_description[text];
+  // 获取点击元素的类名，用以匹配术语的key
+  const className = element.className
+  if (!className) return;
+
+  const descriptionData = term_description[className];
 
   if (descriptionData) {
-    createNotification(text, descriptionData.description);
+    createNotification(descriptionData.termName, descriptionData.description);
   }
 };
 
@@ -54,16 +51,20 @@ const bindElements = (elements) => {
   });
 };
 
-// 尝试绑定 cc-base 元素的点击事件
+// 尝试绑定术语元素的点击事件
 const tryBindEvent = () => {
+  const getMatchingElements = () => {
+    return Array.from(document.querySelectorAll('[class^="cc"]')).filter(el => !el.className.startsWith('cc-rem'));
+  };
+
   if (props.operatorList.length > 0) {
-    bindElements(document.querySelectorAll('.cc-base'));
+    bindElements(getMatchingElements());
   } else {
     let attempts = 0;
     const interval = setInterval(() => {
       attempts++;
       if (props.operatorList.length > 0) {
-        bindElements(document.querySelectorAll('.cc-base'));
+        bindElements(getMatchingElements());
         clearInterval(interval);
       } else if (attempts >= 10) { // 最多尝试10次绑定
         clearInterval(interval);
@@ -71,6 +72,7 @@ const tryBindEvent = () => {
     }, 1000);
   }
 };
+
 
 onMounted(() => {
   tryBindEvent();
