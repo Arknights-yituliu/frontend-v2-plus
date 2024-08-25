@@ -1,16 +1,15 @@
 #gachaCalculate {
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 1000px) {
 
 
     .collapse-group1{
       // width: 360px;
-      width: calc(100% - 10px);
+
       width: calc(100%);
     }
 
     .collapse-group2{
       // width: 360px;
-      width: calc(100% - 10px);
       width: calc(100%);
     }
 

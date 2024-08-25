@@ -94,7 +94,7 @@
   display: inline-block;
 }
 
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
   .menu-label {
     font-size: 28px;
     height: 80px;

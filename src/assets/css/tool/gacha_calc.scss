@@ -52,26 +52,25 @@
   .collapse-group1 {
     position: sticky;
     top: 20px;
-    max-width: 640px;
-    max-height: 500px;
     z-index: 1004;
-    width: 640px;
-    .el-collapse-item{
+    width: 600px;
+
+    .el-collapse-item {
       background-color: var(--c-card-background-color);
     }
   }
 
   .collapse-group2 {
-    max-width: 640px;
-    .el-collapse-item{
+    width: 600px;
+
+    .el-collapse-item {
       background-color: var(--c-card-background-color);
     }
   }
 
-  .collapse-group-content{
+
+  .collapse-group-content {
     position: relative;
-
-
   }
 
 
@@ -351,15 +350,24 @@
   }
 
 
+  @media screen and (max-width: 1280px) {
+    .collapse-group1 {
+      width: 500px;
+    }
+    .collapse-group2 {
+      width: 500px;
+    }
+
+    .el-radio-button__inner {
+      width: 150px;
+    }
+
+    .resources-line{
+      font-size: 16px;
+    }
+
+  }
+
 }
 
 
-@media screen and (max-width: 1200px) {
-  //.gacha-calculation-page {
-  //  display: grid;
-  //  grid-template-rows: auto 1fr; /* 第一组高度自适应，第二组占据剩余空间 */
-  //}
-
-
-
-}
