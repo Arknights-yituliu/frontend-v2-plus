@@ -74,10 +74,9 @@
     }
   }
 
-  .collapse-group-content{
+
+  .collapse-group-content {
     position: relative;
-
-
   }
 
 
@@ -361,15 +360,24 @@
   }
 
 
+  @media screen and (max-width: 1280px) {
+    .collapse-group1 {
+      width: 500px;
+    }
+    .collapse-group2 {
+      width: 500px;
+    }
+
+    .el-radio-button__inner {
+      width: 150px;
+    }
+
+    .resources-line{
+      font-size: 16px;
+    }
+
+  }
+
 }
 
 
-@media screen and (max-width: 1200px) {
-  //.gacha-calculation-page {
-  //  display: grid;
-  //  grid-template-rows: auto 1fr; /* 第一组高度自适应，第二组占据剩余空间 */
-  //}
-
-
-
-}
