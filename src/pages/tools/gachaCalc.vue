@@ -1550,61 +1550,61 @@ function handleResize() {
 
           <div class="divider"></div>
 
-          <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation" size="small">
-            <el-checkbox-button class="el-checkbox-button" :border="true">
-              <div class="checkbox-button">
-                <span>
-                  10黄票
-                </span>
-                <div class="checkbox-button-gacha-resources">
-                  <div class="image-sprite">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span style="width: 12px;">1</span>
-                </div>
-              </div>
-            </el-checkbox-button>
-            <el-checkbox-button class="el-checkbox-button" :border="true">
-              <div class="checkbox-button">
-                <span>
-                  18黄票
-                </span>
-                <div class="checkbox-button-gacha-resources">
-                  <div class="image-sprite">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span style="width: 12px;">2</span>
-                </div>
-              </div>
-            </el-checkbox-button>
-            <el-checkbox-button class="el-checkbox-button" :border="true">
-              <div class="checkbox-button">
-                <span>
-                  50黄票
-                </span>
-                <div class="checkbox-button-gacha-resources">
-                  <div class="image-sprite">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span style="width: 12px;">5</span>
-                </div>
-              </div>
-            </el-checkbox-button>
-            <el-checkbox-button class="el-checkbox-button" :border="true">
-              <div class="checkbox-button">
-                <span>
-                  70黄票
-                </span>
-                <div class="checkbox-button-gacha-resources">
-                  <div class="image-sprite">
-                    <div class="bg-icon_7004"></div>
-                  </div>
-                  <span style="width: 12px;">1</span>
-                </div>
-              </div>
-            </el-checkbox-button>
-          </el-checkbox-group>
-          <span class="tip">越换越便宜，咱尽量还是一次换完吧</span>
+<!--          <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation" size="small">-->
+<!--            <el-checkbox-button class="el-checkbox-button" :border="true">-->
+<!--              <div class="checkbox-button">-->
+<!--                <span>-->
+<!--                  10黄票-->
+<!--                </span>-->
+<!--                <div class="checkbox-button-gacha-resources">-->
+<!--                  <div class="image-sprite">-->
+<!--                    <div class="bg-icon_7003"></div>-->
+<!--                  </div>-->
+<!--                  <span style="width: 12px;">1</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </el-checkbox-button>-->
+<!--            <el-checkbox-button class="el-checkbox-button" :border="true">-->
+<!--              <div class="checkbox-button">-->
+<!--                <span>-->
+<!--                  18黄票-->
+<!--                </span>-->
+<!--                <div class="checkbox-button-gacha-resources">-->
+<!--                  <div class="image-sprite">-->
+<!--                    <div class="bg-icon_7003"></div>-->
+<!--                  </div>-->
+<!--                  <span style="width: 12px;">2</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </el-checkbox-button>-->
+<!--            <el-checkbox-button class="el-checkbox-button" :border="true">-->
+<!--              <div class="checkbox-button">-->
+<!--                <span>-->
+<!--                  50黄票-->
+<!--                </span>-->
+<!--                <div class="checkbox-button-gacha-resources">-->
+<!--                  <div class="image-sprite">-->
+<!--                    <div class="bg-icon_7003"></div>-->
+<!--                  </div>-->
+<!--                  <span style="width: 12px;">5</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </el-checkbox-button>-->
+<!--            <el-checkbox-button class="el-checkbox-button" :border="true">-->
+<!--              <div class="checkbox-button">-->
+<!--                <span>-->
+<!--                  70黄票-->
+<!--                </span>-->
+<!--                <div class="checkbox-button-gacha-resources">-->
+<!--                  <div class="image-sprite">-->
+<!--                    <div class="bg-icon_7004"></div>-->
+<!--                  </div>-->
+<!--                  <span style="width: 12px;">1</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </el-checkbox-button>-->
+<!--          </el-checkbox-group>-->
+<!--          <span class="tip">越换越便宜，咱尽量还是一次换完吧</span>-->
           <div class="collapse-content-subheading">
             <span></span>搓玉计算
           </div>
