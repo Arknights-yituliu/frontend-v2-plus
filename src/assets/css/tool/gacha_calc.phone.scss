@@ -1,17 +1,19 @@
 #gachaCalculate {
   @media screen and (max-width: 600px) {
 
-
     .collapse-group1{
       // width: 360px;
       width: calc(100% - 10px);
       width: calc(100%);
+      min-width: 301px;
+      top: 0px;
     }
 
     .collapse-group2{
       // width: 360px;
       width: calc(100% - 10px);
       width: calc(100%);
+      min-width: 301px;
     }
 
     .collapse-item {
@@ -26,7 +28,8 @@
     }
 
     .el-radio-button__inner {
-      width: 116px;
+      width: calc(50% - 54px);
+      min-width: 108px;
       font-size: 10px;
       box-sizing: border-box;
       padding: 8px;
@@ -65,6 +68,9 @@
     }
 
 
+    .gacha-actselector{
+
+    }
     .gacha-resources-chart-pie {
       width: 300px;
       height: 120px;
@@ -90,7 +96,7 @@
     }
 
     .gacha-resources-table-title {
-      width: 50px;
+      width: 60px;
     }
 
     .gacha-resources-table-quantity {
@@ -181,7 +187,7 @@
     }
 
     .exist-resources-input input {
-      width: 120px;
+      width: 96px;
       height: 24px;
       font-size: 16px;
       margin: 0 16px 0 4px;
