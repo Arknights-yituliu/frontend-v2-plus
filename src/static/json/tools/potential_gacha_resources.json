@@ -168,7 +168,7 @@
     "packType": "main"
   },
   {
-    "packName": "突袭",
+    "packName": "磨难/H关",
     "gachaOriginium": "18",
     "gachaOrundum": "0",
     "gachaPermit": "0",
@@ -184,7 +184,7 @@
     "packType": "main"
   },
   {
-    "packName": "突袭",
+    "packName": "磨难/H关",
     "gachaOriginium": "20",
     "gachaOrundum": "0",
     "gachaPermit": "0",
@@ -200,7 +200,7 @@
     "packType": "main"
   },
   {
-    "packName": "突袭",
+    "packName": "磨难/H关",
     "gachaOriginium": "21",
     "gachaOrundum": "0",
     "gachaPermit": "0",
@@ -216,7 +216,23 @@
     "packType": "main"
   },
   {
-    "packName": "突袭",
+    "packName": "磨难/H关",
+    "gachaOriginium": "23",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第十四章 慈悲灯塔",
+    "gachaOriginium": "24",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "磨难/H关/隐藏",
     "gachaOriginium": "23",
     "gachaOrundum": "0",
     "gachaPermit": "0",
@@ -394,6 +410,86 @@
   {
     "packName": "叙拉古人",
     "gachaOriginium": "37",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "照我以火",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "登临意",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "孤星",
+    "gachaOriginium": "42",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "空想花庭",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "火山旅梦",
+    "gachaOriginium": "40",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "不义之财",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "test"
+  },
+  {
+    "packName": "崔林特尔梅之金",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "test"
+  },
+  {
+    "packName": "银心湖列车",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "test"
+  },
+  {
+    "packName": "怀黍离",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "test"
+  },
+  {
+    "packName": "巴别塔",
+    "gachaOriginium": "39",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
