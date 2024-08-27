@@ -399,7 +399,7 @@ let produceOrundum = ref({
   outputByItem: 0,
 })
 
-//黄票商店
+//黄票商店换不完
 let selectedCertificateT2Group = ref([])
 const certificateT2Group = [
   {
