@@ -399,6 +399,23 @@ let produceOrundum = ref({
   outputByItem: 0,
 })
 
+//黄票商店
+let selectedCertificateT2Group = ref([])
+const certificateT2Group = [
+  {
+    text: '10黄票',
+    draw: 1
+  },{
+    text: '18黄票',
+    draw: 2
+  },{
+    text: '40黄票',
+    draw: 5
+  },{
+    text: '70黄票',
+    draw: 10
+  }]
+
 //绿票商店三层
 let certificateStoreF3 = ref({
   //绿票凭证
@@ -610,14 +627,14 @@ function gachaResourcesCalculation() {
     let tenGachaTicket = 0
 
     //计算用户选择兑换几次黄票商店的38抽
-    for (const i of selectedCertificatePack.value) {
-      const item = certificatePackList.value[i]
-      if (!rewardIsExpired(item)) {
-        continue
-      }
-      gachaTicket += item.gachaTicket
-      tenGachaTicket += item.tenGachaTicket
-    }
+    // for (const i of selectedCertificatePack.value) {
+    //   const item = certificatePackList.value[i]
+    //   if (!rewardIsExpired(item)) {
+    //     continue
+    //   }
+    //   gachaTicket += item.gachaTicket
+    //   tenGachaTicket += item.tenGachaTicket
+    // }
 
 
     //计算官方月卡
@@ -727,6 +744,24 @@ function gachaResourcesCalculation() {
 
 
   function produceOrundumCalculate() {
+
+    let gachaTicket = 0
+    let tenGachaTicket = 0
+
+    for (const i of selectedCertificateT2Group.value) {
+      gachaTicket += i.draw
+    }
+
+    //计算用户选择兑换几次黄票商店的38抽
+    for (const i of selectedCertificatePack.value) {
+      const item = certificatePackList.value[i]
+      if (!rewardIsExpired(item)) {
+        continue
+      }
+      gachaTicket += item.gachaTicket
+      tenGachaTicket += item.tenGachaTicket
+    }
+
     //计算用理智产出的合成玉数量
     if (produceOrundum.value.ap && produceOrundum.value.coefficient) {
       produceOrundum.value.outputByAp = Math.ceil(stringToNumber(produceOrundum.value.ap) * stringToNumber(produceOrundum.value.coefficient))
@@ -753,8 +788,10 @@ function gachaResourcesCalculation() {
     const orundum = produceOrundum.value.outputByAp + produceOrundum.value.outputByItem + certificateStoreF3.value.orundum
 
     calculationResult.value.orundum += orundum
+    calculationResult.value.gachaTicket += gachaTicket
+    calculationResult.value.tenGachaTicket += tenGachaTicket
 
-    calculationResult.value.produceOrundumTotalDraw = orundum / 600
+    calculationResult.value.produceOrundumTotalDraw = orundum / 600 + gachaTicket + tenGachaTicket * 10
 
     if (calculationResult.value.produceOrundumTotalDraw > 0) {
       pieChartDataTmp.push({ value: Math.floor(calculationResult.value.produceOrundumTotalDraw), name: "搓玉" })
@@ -1548,62 +1585,22 @@ function handleResize() {
           </el-checkbox-button>
 
           <div class="divider"></div>
-
-<!--          <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation" size="small">-->
-<!--            <el-checkbox-button class="el-checkbox-button" :border="true">-->
-<!--              <div class="checkbox-button">-->
-<!--                <span>-->
-<!--                  10黄票-->
-<!--                </span>-->
-<!--                <div class="checkbox-button-gacha-resources">-->
-<!--                  <div class="image-sprite">-->
-<!--                    <div class="bg-icon_7003"></div>-->
-<!--                  </div>-->
-<!--                  <span style="width: 12px;">1</span>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </el-checkbox-button>-->
-<!--            <el-checkbox-button class="el-checkbox-button" :border="true">-->
-<!--              <div class="checkbox-button">-->
-<!--                <span>-->
-<!--                  18黄票-->
-<!--                </span>-->
-<!--                <div class="checkbox-button-gacha-resources">-->
-<!--                  <div class="image-sprite">-->
-<!--                    <div class="bg-icon_7003"></div>-->
-<!--                  </div>-->
-<!--                  <span style="width: 12px;">2</span>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </el-checkbox-button>-->
-<!--            <el-checkbox-button class="el-checkbox-button" :border="true">-->
-<!--              <div class="checkbox-button">-->
-<!--                <span>-->
-<!--                  50黄票-->
-<!--                </span>-->
-<!--                <div class="checkbox-button-gacha-resources">-->
-<!--                  <div class="image-sprite">-->
-<!--                    <div class="bg-icon_7003"></div>-->
-<!--                  </div>-->
-<!--                  <span style="width: 12px;">5</span>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </el-checkbox-button>-->
-<!--            <el-checkbox-button class="el-checkbox-button" :border="true">-->
-<!--              <div class="checkbox-button">-->
-<!--                <span>-->
-<!--                  70黄票-->
-<!--                </span>-->
-<!--                <div class="checkbox-button-gacha-resources">-->
-<!--                  <div class="image-sprite">-->
-<!--                    <div class="bg-icon_7004"></div>-->
-<!--                  </div>-->
-<!--                  <span style="width: 12px;">1</span>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </el-checkbox-button>-->
-<!--          </el-checkbox-group>-->
-<!--          <span class="tip">越换越便宜，咱尽量还是一次换完吧</span>-->
+          <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation" v-model="selectedCertificateT2Group"
+            size="small">
+            <el-checkbox-button v-for="(price, index) in certificateT2Group" :key="price" :value="price">
+              <div class="checkbox-button"><span>
+                  {{ price.text }}
+                </span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_7003"></div>
+                  </div>
+                  <span style="width: 16px;">{{ certificateT2Group[index].draw }}</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
+          <span class="tip">越换越便宜，咱尽量还是一次换完吧</span>
           <div class="collapse-content-subheading">
             <span></span>搓玉计算
           </div>
