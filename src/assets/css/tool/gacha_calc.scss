@@ -8,12 +8,15 @@
   flex-wrap: wrap;
 }
 
+.gacha-actselector {
+  // width: 33%;
+}
 
 #gachaCalculate {
 
-
   .el-radio-button__inner {
-    width: 184px;
+    width: 100%;
+    min-width: 168px;
   }
 
   .el-collapse-item__content {
@@ -53,9 +56,10 @@
     position: sticky;
     top: 20px;
     max-width: 640px;
+    min-width: 450px;
     max-height: 500px;
     z-index: 1004;
-    width: 640px;
+    flex:3;
     .el-collapse-item{
       background-color: var(--c-card-background-color);
     }
@@ -63,15 +67,16 @@
 
   .collapse-group2 {
     max-width: 640px;
+    min-width: 540px;
+    flex:4;
     .el-collapse-item{
       background-color: var(--c-card-background-color);
     }
   }
 
-  .collapse-group-content{
+
+  .collapse-group-content {
     position: relative;
-
-
   }
 
 
@@ -83,7 +88,9 @@
 
   .gacha-resources-chart-pie {
     width: 300px;
-    height: 240px
+    height: 240px;
+    position: relative;
+    right: 12px;
   }
 
 
@@ -117,6 +124,8 @@
   }
 
   .gacha-resources-table {
+    position: relative;
+    right: 24px;
     width: 200px;
     font-size: 16px;
     line-height: 24px;
@@ -125,7 +134,7 @@
   }
 
   .gacha-resources-table-title {
-    width: 90px;
+    width: 126px;
   }
 
   .gacha-resources-table-quantity {
@@ -222,7 +231,7 @@
   }
 
   .exist-resources-input input {
-    width: 100px;
+    width: 84px;
     height: 28px;
     font-size: 18px;
     font-weight: bold;
@@ -351,15 +360,24 @@
   }
 
 
+  @media screen and (max-width: 1280px) {
+    .collapse-group1 {
+      width: 500px;
+    }
+    .collapse-group2 {
+      width: 500px;
+    }
+
+    .el-radio-button__inner {
+      width: 150px;
+    }
+
+    .resources-line{
+      font-size: 16px;
+    }
+
+  }
+
 }
 
 
-@media screen and (max-width: 1200px) {
-  //.gacha-calculation-page {
-  //  display: grid;
-  //  grid-template-rows: auto 1fr; /* 第一组高度自适应，第二组占据剩余空间 */
-  //}
-
-
-
-}
