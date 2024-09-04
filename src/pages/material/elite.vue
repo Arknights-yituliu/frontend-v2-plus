@@ -5,6 +5,7 @@ import characterJSON from "/src/static/json/survey/character_table_simple.json"
 import professionDictJSON from "/src/static/json/survey/profession_dict.json";
 import materialAPI from "/src/api/material.js";  // 职业字典
 import surveyAPI from "/src/api/operatorData.js";  // 干员练度调查结果
+import {exportExcel} from "/src/utils/ExportExcel";
 
 const characterRarityEliteCostMap = new Map([
   [3, {elite1: 10000}],
@@ -168,6 +169,35 @@ function load() {
   tableData.value = tableData.value.concat(filterTableData.value.slice(current * size, ++current * size));
 }
 
+// 导出表格数据
+function exportData() {
+  let itemList = [[
+    '干员代号', '精二率', '精二材料开销',
+    '一技能专三率', '一技能专三材料开销',
+    '二技能专三率', '二技能专三材料开销',
+    '三技能专三率', '三技能专三材料开销',
+    '职业', '分支', '获取方式'
+  ]]
+  for (const item of characterList.value) {
+    itemList.push([
+      item.name,
+      item.eliteRate.rank2,
+      item.cost,
+      item.firstSkill.rank3,
+      item.firstSkill.cost,
+      item.secondSkill.rank3,
+      item.secondSkill.cost,
+      item.thirdSkill.rank3,
+      item.thirdSkill.cost,
+      item.professionName,
+      item.subProfessionName,
+      item.itemObtainApproach,
+    ])
+  }
+  exportExcel('精英化与专精性价比', itemList)
+
+}
+
 onMounted(async () => {
   const itemResponse = await materialAPI.getItemValueTable(0.625)
   itemList = itemResponse.data
@@ -216,19 +246,20 @@ const vLoadmore = {
             placeholder="选择干员子职业"
             clearable
         />
+        <el-button @click="exportData">导出</el-button>
       </div>
     </div>
     <div class="table-container">
       <el-auto-resizer>
         <template #default="{ height }">
           <el-table
-              :data="tableData"
-              :height="height"
-              stripe
-              highlight-current-row
-              :row-class-name="rowClassName"
-              v-loadmore="load"
-              @sort-change="sortChange"
+            :data="tableData"
+            :height="height"
+            stripe
+            highlight-current-row
+            :row-class-name="rowClassName"
+            v-loadmore="load"
+            @sort-change="sortChange"
           >
             <el-table-column type="expand">
               <template v-slot="{ row }">
