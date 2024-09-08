@@ -6,7 +6,7 @@ import FixedNav from "/src/components/FixedNav.vue";
 import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
-import {timeFormat} from '/src/utils/dateUtil.js'
+import {dataFormat} from '/src/utils/dateUtil.js'
 
 
 
@@ -313,7 +313,7 @@ function getHistoryActStage() {
       //每行数据
       let rowData = {
         activityName: act.zoneName, //活动名
-        startTime: timeFormat(new Date(act.endTime), 'yyyy/MM'),
+        startTime: dataFormat(new Date(act.endTime), 'yyyy/MM'),
         itemList: {} //材料up情况
       }
 
