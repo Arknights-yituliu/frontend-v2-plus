@@ -1,5 +1,61 @@
 [
   {
+    "packName": "敌方索敌",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "我方索敌",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "攻击速度",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "异常状态",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "推力与拉力",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "敌方元素损伤",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "我方元素损伤",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
     "packName": "序章 黑暗时代·上",
     "gachaOriginium": "18",
     "gachaOrundum": "0",

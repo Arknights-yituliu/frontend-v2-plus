@@ -817,6 +817,7 @@ function gachaResourcesCalculation() {
       for (const index of selectedPermanentZoneName.value) {
         const potential = potentialTable[index]
         originium += parseInt(potential.gachaOriginium)
+        orundum += parseInt(potential.gachaOrundum)
       }
     }
 
@@ -1649,7 +1650,7 @@ function handleResize() {
           <span class="tip">鉴于第二层有不少性价比较低的物品，建议囤够2w以上绿票再考虑绿票换玉</span>
         </el-collapse-item>
 
-        <!--        潜在资源-->
+        <!--潜在资源-->
         <el-collapse-item name="potential" class="collapse-item">
           <template #title>
             <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
@@ -1676,6 +1677,26 @@ function handleResize() {
             </div>
             <span>{{ potentialResources.annihilation * 1500 }}</span>
           </div>
+
+          <div class="collapse-content-subheading">
+            <span></span> 训练场
+          </div>
+
+          <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px" @change="gachaResourcesCalculation"
+            size="small">
+            <el-checkbox-button v-for="(potential, index) in potentialTable" :key="index" :value="index"
+              v-show="potential.packType === 'train'" class="el-checkbox-button" :border="true">
+              <div class="checkbox-button">
+                <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_4003"></div>
+                  </div>
+                  <span>{{ potential.gachaOrundum }}</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
           <div class="collapse-content-subheading">
             <span></span> 主线、突袭、绝境
           </div>
