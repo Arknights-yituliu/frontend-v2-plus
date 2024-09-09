@@ -17,18 +17,26 @@ const props = defineProps({
 
 // 处理术语元素点击事件
 const handleClick = (event) => {
-  const element = event.target;
+  let element = event.target;
 
-  // 获取点击元素的类名，用以匹配术语的key
-  const className = element.className
-  if (!className) return;
+  // 迭代查找 data-termId 属性，直到遇到td标签
+  while (element && !element.hasAttribute('data-termId') && element.tagName !== 'TD') {
+    element = element.parentElement;
+  }
 
-  const descriptionData = term_description[className];
+  // 如果找到了具有 data-termId 的元素，再进行检索
+  if (element && element.hasAttribute('data-termId')) {
+    const termId = element.getAttribute('data-termId');
 
-  if (descriptionData) {
-    createNotification(descriptionData.termName, descriptionData.description);
+    const descriptionData = term_description[termId];
+
+    if (descriptionData) {
+      createNotification(descriptionData.termName, descriptionData.description);
+    }
   }
 };
+
+
 
 // 创建一个新的介绍框
 const createNotification = (text, description) => {
@@ -44,7 +52,6 @@ const createNotification = (text, description) => {
 const bindElements = (elements) => {
   elements.forEach((element) => {
     element.addEventListener('click', handleClick);
-    // 添加下划线并改变悬停手势，示意用户可以点击该元素
     element.style.textDecoration = 'underline';
     element.style.textDecorationColor = 'grey';
     element.style.cursor = 'pointer';
@@ -54,9 +61,10 @@ const bindElements = (elements) => {
 // 尝试绑定术语元素的点击事件
 const tryBindEvent = () => {
   const getMatchingElements = () => {
-    return Array.from(document.querySelectorAll('[class^="cc"]')).filter(el => !el.className.startsWith('cc-rem'));
+    const elements = Array.from(document.querySelectorAll('[data-termId]'))
+    // console.log(elements);
+    return elements;
   };
-
   if (props.operatorList.length > 0) {
     bindElements(getMatchingElements());
   } else {
