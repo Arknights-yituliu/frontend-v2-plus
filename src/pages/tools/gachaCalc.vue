@@ -126,12 +126,12 @@ let scheduleOptions = [
   },
   {
     name: '新春',
-    start: new Date('2024/08/27 16:00:00'),
-    end: new Date('2024/08/27 04:01:00'),
-    activityType: '夏活限定',
+    start: new Date('2025/01/21 16:00:00'),
+    end: new Date('2025/02/03 04:01:00'),
+    activityType: '春节限定',
     disabled: true,
     dailyGiftResources: true,
-    historicalPackTimeRange: ''
+    historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2024/02/15 23:59:59').getTime(),]
   }
 ]
 
@@ -859,9 +859,9 @@ function gachaResourcesCalculation() {
         continue
       }
 
-      if (!rewardIsExpired(pack)) {
-        continue
-      }
+      // if (!rewardIsExpired(pack)) {
+      //   continue
+      // }
 
       orundum += pack.orundum
       originium += pack.originium
@@ -1813,7 +1813,7 @@ function handleResize() {
           </el-checkbox-group>
 
           <div class="collapse-content-subheading">
-            <span></span> 往年礼包
+            <span></span> 往年礼包（用于估算氪金）
           </div>
           <el-checkbox-group v-model="selectedHistoryPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByHistory" :key="index" :value="index"
@@ -1822,7 +1822,7 @@ function handleResize() {
               </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
-
+ 
         </el-collapse-item>
 
         <!--活动获得(估算)-->
