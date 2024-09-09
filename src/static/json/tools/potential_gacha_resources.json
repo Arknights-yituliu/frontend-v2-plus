@@ -325,7 +325,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "沃伦姆德的薄暮",
@@ -373,7 +373,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "覆潮之下",
@@ -381,7 +381,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "多索雷斯假日",
@@ -405,7 +405,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "风雪过境",
@@ -429,7 +429,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "吾导先路",
@@ -541,6 +541,6 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   }
 ]

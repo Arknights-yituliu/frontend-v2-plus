@@ -1093,14 +1093,21 @@ function gachaResourcesCalculation() {
   // console.table(logs)
 
   const lastSettings = {
+    //存储到本地的数据
+    //现有资源
     existOrundum: existResources.value.orundum,
     existOriginium: existResources.value.originium,
     existGachaTicket: existResources.value.gachaTicket,
     existTenGachaTicket: existResources.value.tenGachaTicket,
+    //是否使用源石抽卡
     originiumIsUsed: originiumIsUsed.value,
+    //周常是否完成
     weeklyTaskCompleted: dailyReward.value.weeklyTaskCompleted,
+    //绿票商店是否换过
     certificateStoreCompleted: dailyReward.value.certificateStoreCompleted,
+    //剿灭是否完成
     annihilationCompleted: dailyReward.value.annihilationCompleted,
+    // 悖论模拟、剿灭模拟战
     paradox: potentialResources.value.paradox,
     annihilation: potentialResources.value.annihilation
   }
@@ -1721,7 +1728,26 @@ function handleResize() {
           </el-checkbox-group>
 
           <div class="collapse-content-subheading">
-            <span></span> 插曲/别传
+            <span></span> 插曲
+          </div>
+          <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
+            @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(potential, index) in potentialTable" :border="true" :key="index" :value="index"
+              v-show="potential.packType === 'activity-main'" class="el-checkbox-button">
+              <div class="checkbox-button">
+                <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_4002"></div>
+                  </div>
+                  <span>{{ potential.gachaOriginium }}</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
+
+          <div class="collapse-content-subheading">
+            <span></span> 别传
           </div>
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
             @change="gachaResourcesCalculation">
