@@ -76,6 +76,15 @@ const routes = [
         component: () => import('/src/pages/material/elite.vue')
     },
     {
+        path: '/material/scatter-diagram',
+        text: '干员练度需求散点图',
+        name: 'ScatterDiagram',
+        display: true,
+        module: 'material',
+        icon: "elite",
+        component: () => import('/src/pages/material/scatter-diagram.vue')
+    },
+    {
         path: '/tools/gachaCal',
         text: '攒抽计算器',
         name: 'GachaCalculator1',
