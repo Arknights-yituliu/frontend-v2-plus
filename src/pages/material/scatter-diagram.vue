@@ -196,12 +196,12 @@ onMounted(() => {
       <div class="xAxis"></div>
       <div class="yAxis"></div>
       <div v-for="(item,index) in operatorCoordinate" :key="index" class="operator-coordinate-item">
-        <div :style="`position:absolute;left:${item.xAxis-60}px;top:${item.yAxis-70}px`" class="operator-coordinate-data">
+        <div :style="`position:absolute;left:${item.xAxis-60}px;top:${item.yAxis-90}px`" class="operator-coordinate-data">
           干员名称：{{item.name}} <br> 技能消耗：{{item.apCost.toFixed(1)}}理智 <br> 消耗排名：{{`${index+1}/${operatorCoordinate.length}`}}
           <br> 专三率：{{(item.proportion*100).toFixed(1)}}%
 
         </div>
-        <sprite-image :image-name="item.charId" original-size="180" display-size="40" rounded-corner="300"
+        <sprite-image :image-name="item.charId" original-size="180" display-size="28" rounded-corner="300"
                       :style="`position:absolute;left:${item.xAxis}px;top:${item.yAxis}px`">
 
         </sprite-image>
@@ -222,6 +222,8 @@ onMounted(() => {
   margin: 40px 120px;
 
   .operator-coordinate-item{
+    width: fit-content;
+    cursor: pointer;
     .operator-coordinate-data{
       width: 180px;
       border: 1px solid #badfff;
