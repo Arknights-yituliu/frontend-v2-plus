@@ -118,7 +118,8 @@ async function initData(size = 800) {
   let num = 1
   for (const item of skillCostRankList) {
     const percent = (item.apCost - min) / difference
-    item.xAxis = num / 297 * size
+    // item.xAxis = num / 297 * size
+    item.xAxis = percent * size
     item.yAxis = (1 - item.proportion) * size
     num++
 
@@ -193,11 +194,14 @@ onMounted(() => {
     <div class="scatter-diagram-wrap" id="scatter-diagram">
       <span class="x-axis-min-value">{{ axisValue.xAxisMin }}</span>
       <span class="x-axis-max-value">{{ axisValue.xAxisMax }}</span>
+      <span class="y-axis-min-value">0%</span>
+      <span class="y-axis-max-value">100%</span>
       <div class="xAxis"></div>
       <div class="yAxis"></div>
       <div v-for="(item,index) in operatorCoordinate" :key="index" class="operator-coordinate-item">
         <div :style="`position:absolute;left:${item.xAxis-60}px;top:${item.yAxis-90}px`" class="operator-coordinate-data">
-          干员名称：{{item.name}} <br> 技能消耗：{{item.apCost.toFixed(1)}}理智 <br> 消耗排名：{{`${index+1}/${operatorCoordinate.length}`}}
+          干员名称：{{item.name}} <br> 技能消耗：{{item.apCost.toFixed(1)}}理智
+<!--          <br> 消耗排名：{{`${index+1}/${operatorCoordinate.length}`}}-->
           <br> 专三率：{{(item.proportion*100).toFixed(1)}}%
 
         </div>
@@ -265,6 +269,18 @@ onMounted(() => {
     position: absolute;
     left: -100px;
     top: 50%;
+  }
+
+  .y-axis-max-value {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+  }
+
+  .y-axis-min-value {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
   }
 
 
