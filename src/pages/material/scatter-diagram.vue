@@ -4,17 +4,20 @@ import OPERATOR_TABLE from '/src/static/json/survey/character_list.json'
 import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
-import {dataFormat} from "../../utils/DateUtil.js";
+import {dataFormat} from "/src/utils/DateUtil.js";
 import SpriteImage from "/src/components/SpriteImage.vue";
 import {createPopover, popoverOnOpen} from "/src/utils/Popover.js";
+import {getViewportInfo} from "/src/utils/GetViewportInfo.js";
 
 const operatorMap = new Map()
 const charIdMap = new Map()
 
 for (const operator of OPERATOR_TABLE) {
   operatorMap.set(operator.charId, operator)
-  charIdMap.set(operator.name, operator.charId)
+  charIdMap.set(operator.charId, operator.charId)
 }
+
+
 
 
 let operatorCoordinate = ref([])
@@ -56,7 +59,7 @@ async function initData(size = 800) {
   for (const charId in ITEM_COST_TABLE) {
     const {skills, allSkill} = ITEM_COST_TABLE[charId]
 
-    const {rarity, name, date} = operatorMap.get(charId);
+    const {rarity, name, date,skill} = operatorMap.get(charId);
 
     if (rarity !== 6) {
       continue
@@ -73,9 +76,9 @@ async function initData(size = 800) {
     }
 
     let index = 1
-    for (const skill of skills) {
+    for (const s of skills) {
       let apCost = 0
-      for (const rankCost of skill) {
+      for (const rankCost of s) {
         for (const itemId in rankCost) {
           const num = rankCost[itemId]
           if (itemMap.get(itemId)) {
@@ -83,6 +86,8 @@ async function initData(size = 800) {
           }
         }
       }
+
+      const skillName = skill[index-1].name
 
       const proportion = skillRankRatioMap.get(`${charId}S${index}`) ? skillRankRatioMap.get(`${charId}S${index}`) : 0
 
@@ -93,16 +98,20 @@ async function initData(size = 800) {
         min = apCost
       }
 
-      skillCostRankList.push({
+
+      const skillItem = {
         charId: charId,
         name: name,
         apCost: apCost,
         skillIndex: index,
+        skillName:skillName,
         rarity: rarity,
         mainApCost: mainApCost,
         proportion: proportion,
         time: dataFormat(new Date(date))
-      })
+      }
+
+      skillCostRankList.push(skillItem)
       index++
     }
 
@@ -182,7 +191,9 @@ const canvasInit = () => {
 
 onMounted(() => {
   // canvasInit()
-  initData()
+  const viewportInfo = getViewportInfo();
+  console.log(viewportInfo)
+  initData(viewportInfo.viewportHeight-180)
 })
 
 
@@ -200,8 +211,9 @@ onMounted(() => {
       <div class="yAxis"></div>
       <div v-for="(item,index) in operatorCoordinate" :key="index" class="operator-coordinate-item">
         <div :style="`position:absolute;left:${item.xAxis-60}px;top:${item.yAxis-90}px`" class="operator-coordinate-data">
-          干员名称：{{item.name}} <br> 技能消耗：{{item.apCost.toFixed(1)}}理智
-<!--          <br> 消耗排名：{{`${index+1}/${operatorCoordinate.length}`}}-->
+          干员名称：{{item.name}}
+          <br> 技能名称：{{item.skillName}}
+          <br> 技能消耗：{{item.apCost.toFixed(1)}}理智
           <br> 专三率：{{(item.proportion*100).toFixed(1)}}%
 
         </div>
