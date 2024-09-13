@@ -225,7 +225,6 @@ onMounted(() => {
       </div>
       <!--    <canvas id="myCanvas" width="950" height="950"></canvas>-->
 
-
     </div>
   </div>
 
