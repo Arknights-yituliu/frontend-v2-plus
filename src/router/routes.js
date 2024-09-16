@@ -79,7 +79,7 @@ const routes = [
         path: '/material/scatter-diagram',
         text: '干员练度需求散点图',
         name: 'ScatterDiagram',
-        display: true,
+        display: false,
         module: 'material',
         icon: "elite",
         component: () => import('/src/pages/material/scatter-diagram.vue')

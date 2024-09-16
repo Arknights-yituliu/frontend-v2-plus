@@ -218,6 +218,8 @@ function getAndSortPackData() {
 function getHistoryPackInfo() {
 
   const [historicalPackStart, historicalPackEnd] = selectedSchedule.value.historicalPackTimeRange
+  const scheduleStart = selectedSchedule.value.start
+  const scheduleEnd = selectedSchedule.value.end
   let list = []
   for (let pack of packInfoInitList.value) {
     const { officialName, drawEfficiency, start, end, saleType } = pack
@@ -227,7 +229,10 @@ function getHistoryPackInfo() {
     }
     // console.log(officialName,start ,'>', historicalPackStart,'——',start > historicalPackStart,end,'<',historicalPackEnd,'——',end<historicalPackEnd)
     if (start > historicalPackStart && start < historicalPackEnd) {
-      list.push(pack)
+      let item = JSON.parse(JSON.stringify(pack))
+      item.start = scheduleStart.getTime()
+      item.end = scheduleEnd.getTime()
+      list.push(item)
     }
   }
 
@@ -859,9 +864,9 @@ function gachaResourcesCalculation() {
         continue
       }
 
-      // if (!rewardIsExpired(pack)) {
-      //   continue
-      // }
+      if (!rewardIsExpired(pack)) {
+        continue
+      }
 
       orundum += pack.orundum
       originium += pack.originium
