@@ -107,15 +107,6 @@ let activityType = ref('联动限定')
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
   {
-    name: '迷宫饭(0902~0916)',
-    start: new Date('2024/09/02 16:00:00'),
-    end: new Date('2024/09/16 04:01:00'),
-    activityType: '联动限定',
-    disabled: false,
-    dailyGiftResources: true,
-    historicalPackTimeRange: [new Date('2023/03/06 00:00:00').getTime(), new Date('2023/03/28 23:59:59').getTime(),]
-  },
-  {
     name: '半周年(1101~1115)',
     start: new Date('2024/11/01 16:00:00'),
     end: new Date('2024/11/15 04:01:00'),
@@ -132,7 +123,16 @@ let scheduleOptions = [
     disabled: true,
     dailyGiftResources: true,
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2024/02/15 23:59:59').getTime(),]
-  }
+  },
+  {
+    name: '敬请期待',
+    start: new Date('2024/09/02 16:00:00'),
+    end: new Date('2024/09/16 04:01:00'),
+    activityType: '联动限定',
+    disabled: true,
+    dailyGiftResources: true,
+    historicalPackTimeRange: [new Date('2023/03/06 00:00:00').getTime(), new Date('2023/03/28 23:59:59').getTime(),]
+  },
 ]
 
 
