@@ -1,6 +1,6 @@
 <script setup>
-import '/src/assets/css/tool/logistics.scss'
-import '/src/assets/css/tool/logistics.phone.scss'
+import '/src/assets/css/information/logistics.scss'
+import '/src/assets/css/information/logistics.phone.scss'
 
 import {operatorFilterConditionTable} from "/src/utils/BuildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'

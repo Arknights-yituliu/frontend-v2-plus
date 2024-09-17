@@ -110,15 +110,6 @@ const routes = [
         component: () => import('/src/pages/tools/schedule.vue')
     },
     {
-        path: '/tools/logistics',
-        text: '基建技能一览',
-        name: 'Logistics',
-        display: true,
-        module: 'tools',
-        icon: "logistics",
-        component: () => import('/src/pages/tools/logistics.vue')
-    },
-    {
         path: '/tools/specializationTimeCalculate',
         text: '专精时间减半计算器',
         name: 'HalfOperatorCalculate',
@@ -126,6 +117,24 @@ const routes = [
         module: 'tools',
         icon: "calculator",
         component: () => import('/src/pages/tools/specializationTimeCalculate.vue')
+    },
+    {
+        path: '/information/logistics',
+        text: '基建技能一览',
+        name: 'Logistics',
+        display: true,
+        module: 'information',
+        icon: "logistics",
+        component: () => import('/src/pages/information/logistics.vue')
+    },
+    {
+        path: '/information/sandboxFoods',
+        text: '生息演算食材一览',
+        name: 'SandboxFoods',
+        display: true,
+        module: 'information',
+        icon: "sandboxFoods",
+        component: () => import('/src/pages/information/sandboxFoods.vue')
     },
     {
         path: '/survey/account/home',
@@ -318,6 +327,12 @@ const LinkedTable = {
     tools: {
         path: '/',
         text: "一图流工具箱",
+        display:true,
+        child: []
+    },
+    information: {
+        path: '/',
+        text: "信息一览",
         display:true,
         child: []
     },

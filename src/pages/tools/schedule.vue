@@ -2,7 +2,7 @@
 import {onMounted, ref, watch} from "vue"
 
 import '/src/assets/css/tool/schedule.css'
-import '/src/assets/css/tool/building_skill_font_color.css'
+import '/src/assets/css/information/building_skill_font_color.css'
 
 import schedule_template_json from '/src/static/json/build/plans_template.json'
 import character_table from '/src/static/json/survey/character_table_simple.json'
@@ -16,7 +16,6 @@ import {translate} from '/src/utils/I18n.js'
 import {getText} from '/src/utils/FileRead.js'
 import {debounce} from "/src/utils/Debounce.js";
 import {cMessage} from '/src/utils/Message.js'
-import {dataFormat} from '/src/utils/DateUtil.js'
 import {createPopover, popoverOnOpen} from "/src/utils/Popover.js";
 import userAPI from "/src/api/user.js";
 
