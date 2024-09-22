@@ -197,7 +197,6 @@ const deleteOperator = () => {
         height: 500px; /* 设置容器高度 */
         width: 650px;
         padding: 0 50px;
-        overflow-x: auto;
       }
     }
   }
