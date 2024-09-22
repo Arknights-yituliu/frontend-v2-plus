@@ -33,7 +33,6 @@ const searchParams = ref({
 
 // 重置表格数据
 const reset = () => {
-  console.log(`reset`)
   // 干员排名表
   operatorTableRef.value.current = 0; // 用于滚动到第一页
   operatorTableRef.value.getTableData() // 用于新增干员时刷新表格

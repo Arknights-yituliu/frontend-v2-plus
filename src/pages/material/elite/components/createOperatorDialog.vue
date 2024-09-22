@@ -4,6 +4,7 @@ import { useBaseData } from '../js/baseData'
 import { useJSONData, useMaterialMaps, useOperatorMaps, useProfessionMaps } from '../js/maps'
 import { useOperatorData, insertOperatorData, initOperatorData } from '../js/formatOperatorData'
 import { getSpriteImg } from '../js/utils'
+import { ElNotification } from 'element-plus'
 
 const props = defineProps({
   modelValue: Boolean,
@@ -11,7 +12,7 @@ const props = defineProps({
 
 const emits = defineEmits(['update:modelValue', 'reset'])
 
-const { rarityList } = useBaseData() // 干员星级列表, 龙门币ID
+const { rarityList, LMDId } = useBaseData() // 干员星级列表, 龙门币ID
 const { professionDictJSON } = useJSONData() // 职业字典JSON
 const { chipsTypeMap, materialTypeMap } = useMaterialMaps() // 基础材料ID映射, 芯片映射, 精英材料映射
 const { operatorRarityBaseMaterialMap, operatorMaterialMap } = useOperatorMaps() // 通用的干员消耗材料信息映射, 干员精英化、专精技能消耗材料映射
@@ -52,34 +53,35 @@ const getNewCharBaseMaterial = () => {
       const rank = rankIndex + 1;
       const title = getTitle(rank, titleIndex);
       const materialList = []
-      console.log(`rankMaterial`, rankMaterial)
-      console.log(`rankMaterial.fixedMaterialList`, rankMaterial.fixedMaterialList)
+      let LMDQuantity = 0 // 龙门币数量
       rankMaterial.fixedMaterialList.forEach(item => {
         if (!item) return
         const { itemId, quantity } = item
-        materialList.push({
+        if (itemId === LMDId) LMDQuantity = quantity // 龙门币位置不对, 在下面单独插入
+        else materialList.push({
           itemId: itemId || getChipId(profession, rarity, rank), // 芯片无固定ID, 要根据干员职业、星级和精英化等级获取
           quantity
         })
       })
+      if (LMDQuantity) {
+        materialList.unshift({
+          itemId: LMDId,
+          quantity: LMDQuantity,
+        })
+      }
       const materialDicList = rankMaterial.selectMaterialTypes.map(type => materialTypeMap.get(type));
       materials.push({
         title,
         materialList,
         materialDicList,
-        selectList: materialDicList.map(() => ({
-          itemId: "30011",
-          quantity: 4
-        }))
+        selectList: materialDicList.map(() => ({}))
       });
     });
   }
-
   // 处理精英化材料
   const getEliteTitle = (rank) => `精${rank}材料`
   newOperatorInfo.value.elite = []
   formatMaterials(newOperatorInfo.value.elite, elite, getEliteTitle)
-
   // 处理技能材料
   const getSkillTitle = (rank, skillIndex) => `${skillIndex + 1}技能：专${rank}`
   const skillsCount = rarity < 6 ? 2 : 3;
@@ -89,20 +91,12 @@ const getNewCharBaseMaterial = () => {
     formatMaterials(arr, skill, getSkillTitle, skillIndex)
     newOperatorInfo.value.skills.push(arr)
   }
-  console.log(`newOperatorInfo.value.skills`, newOperatorInfo.value.skills.flat())
-
   // 处理模组材料
   const getModTitle = (rank) => `伴生模组：${rank}级`
   newOperatorInfo.value.mods = []
   formatMaterials(newOperatorInfo.value.mods, mod, getModTitle)
 }
-
-const changeNewCharInfo = (v) => {
-  console.log(`changeNewCharInfo v`, v)
-  getNewCharBaseMaterial()
-  console.log(`changeNewCharInfo newOperatorInfo.value`, newOperatorInfo.value)
-}
-
+// 格式化干员材料
 const formatOperatorMaterial = (materialList) => {
   return materialList.map(item => {
     const obj = {};
@@ -113,8 +107,34 @@ const formatOperatorMaterial = (materialList) => {
     return obj;
   });
 }
-const addNewOperator = () => {
-  console.log(`addNewOperator newOperatorInfo.value`, newOperatorInfo.value)
+// 校验材料是否全填了
+const validate = async (obj) => {
+  for (const [_, item] of Object.entries(obj)) {
+    if (Array.isArray(item)) { // item: elite, skills, mods
+      const flattenedSelectLists = item.flatMap(rank => {
+        // rank: elite: [rank1, rank2]
+        //       skills: [skill1, skill2, skill3]
+        //       mods: [Xmod, Ymod]
+        return Array.isArray(rank) ? rank.flatMap(j => j.selectList) : rank.selectList;
+      })
+      
+      for (const selectItem of flattenedSelectLists) { // selectItem: { itemId, quantity }
+        if (!selectItem.hasOwnProperty('itemId') || !selectItem.hasOwnProperty('quantity')) {
+          ElNotification({
+            title: '提示',
+            message: '材料没填满',
+            type: 'warning',
+          })
+          return false
+        }
+      }
+    }
+  }
+  return true
+}
+// 新增干员
+const addNewOperator = async () => {
+  if (!await validate(newOperatorInfo.value)) return
   const newCharId = `char_${operatorList.value.length}_custom`
   const operatorMaterial = {
     elite: formatOperatorMaterial(newOperatorInfo.value.elite),
@@ -152,17 +172,17 @@ const addNewOperator = () => {
     </div>
     <div class="row">
       <label>星级：</label> 
-      <el-radio-group v-model="newOperatorInfo.rarity" @change="changeNewCharInfo" size="large">
+      <el-radio-group v-model="newOperatorInfo.rarity" @change="getNewCharBaseMaterial" size="large">
         <el-radio-button v-for="(item, index) in rarityList.filter(item => item.value >= 4)" :key="index" :value="item.value">{{ item.label }}</el-radio-button>
       </el-radio-group>
     </div>
     <div class="row">
       <label>职业：</label> 
-      <el-radio-group v-model="newOperatorInfo.profession" @change="changeNewCharInfo" size="large">
+      <el-radio-group v-model="newOperatorInfo.profession" @change="getNewCharBaseMaterial" size="large">
         <el-radio-button v-for="(item, index) in professionDictJSON" :key="index" :value="item.value">{{ item.label }}</el-radio-button>
       </el-radio-group>
     </div>
-    <div class="material-list" v-if="newOperatorInfo.rarity">
+    <div class="material-list" v-if="newOperatorInfo.rarity && newOperatorInfo.profession">
       <div class="row" v-for="(item, index) in [...newOperatorInfo.elite, ...newOperatorInfo.skills.flat(), ...newOperatorInfo.mods]" :key="index">
         <label>{{ item.title }}</label>
         <div class="fixed-material">
@@ -188,7 +208,7 @@ const addNewOperator = () => {
     </div>
     <template #footer>
       <el-button @click="emits('update:modelValue', false)">取消</el-button>
-      <el-button type="primary" @click="addNewOperator">确定</el-button>
+      <el-button type="primary" @click="addNewOperator" :disabled="!newOperatorInfo.rarity || !newOperatorInfo.profession">确定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -222,6 +242,7 @@ const addNewOperator = () => {
         display: flex;
         align-items: center;
         justify-content: flex-end;
+        flex-shrink: 0;
       }
       
       .select-material {

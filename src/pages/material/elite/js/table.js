@@ -69,11 +69,7 @@ export const initDetailData = (row) => {
         name: charId.includes('custom') ? item.typeName2 : `${item.typeName2}模组：${item.uniEquipName}`, 
       });
     });
-
-    console.log('detailTableData.value', detailTableData.value);
   }
-
-  console.log('row', row);
   detailData.value = row;
 };
 

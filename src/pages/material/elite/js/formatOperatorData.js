@@ -7,7 +7,7 @@ import { sort } from './utils'
 const { materialMap, baseMaterialIdMap, chipsTypeMap } = useMaterialMaps() // 材料总映射, 基础材料id映射, 芯片类型id映射
 const { professionMap, subProfessionMap } = useProfessionMaps() // 主职业映射, 子职业映射
 const { statisticsMap, operatorMap, operatorMaterialMap, operatorRarityBaseMaterialMap } = useOperatorMaps() // 统计映射, 干员信息映射, 干员材料映射, 干员基础材料映射
-const { LMDid } = useBaseData() // 龙门币ID
+const { LMDId } = useBaseData() // 龙门币ID
 
 const baseMaterialIds = Array.from(baseMaterialIdMap.values()) // 基础材料id数组
 const chipIds = Array.from(chipsTypeMap.values()).flat().map(item => item.itemId) // 芯片id数组
@@ -75,8 +75,9 @@ export const createOperatorData = (charId, charInfo) => {
   // 因为目前只有4,5,6星干员精二券(也只有4,5,6星干员能精二), 所以仅对4,5,6星干员添加龙门币数量
   if (rarity > 3) {
     const baseEliteMaterials = operatorRarityBaseMaterialMap.get(rarity).elite
-    baseEliteMaterials.forEach((item, index) => {
-      filteredElite[index][LMDid] = item.LMDQuantity
+    baseEliteMaterials.forEach((rankMaterials, index) => {
+      const LMDItem = rankMaterials.fixedMaterialList.find(item => item.itemId === LMDId)
+      filteredElite[index][LMDId] = LMDItem.quantity
     })
   }
 
@@ -181,7 +182,7 @@ const formatRankMaterials = (element) => {
   const fixedMaterials = [] // 固定材料列表
   for (const [itemId, quantity] of Object.entries(element)) {
     if (fixedMaterialIds.includes(itemId)) { // 此为固定材料
-      if (itemId === LMDid) LMDQuantity = quantity // 龙门币位置不对, 在下面单独插入
+      if (itemId === LMDId) LMDQuantity = quantity // 龙门币位置不对, 在下面单独插入
       else fixedMaterials.push(getItemInfo(itemId, quantity, materialMap))
       continue
     }
@@ -192,7 +193,7 @@ const formatRankMaterials = (element) => {
   arr.sort((a, b) => b.rarity - a.rarity || b.itemId - a.itemId)
   // 将龙门币位置放在第一个
   if (LMDQuantity) {
-    const LMDInfo = materialMap.get(LMDid)
+    const LMDInfo = materialMap.get(LMDId)
     fixedMaterials.unshift({
       ...LMDInfo,
       quantity: LMDQuantity,
