@@ -1,0 +1,150 @@
+.logistics {
+
+}
+
+.logistics-page {
+    min-height: 100vh;
+
+
+    .logistics-filter-checkbox {
+        width: 95%;
+        margin: auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .checkbox-line {
+        margin: 4px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        .my-button{
+            margin: 2px;
+        }
+    }
+
+    .checkbox-button-tip {
+        font-style: italic;
+        font-size: 14px;
+        padding: 11px;
+    }
+
+    .checkbox-button-label {
+        width: 80px;
+        padding-right: 8px;
+        padding-left: 2px;
+        font-size: 16px;
+    }
+
+    .logistics-table {
+        text-align: center;
+        border-collapse: collapse;
+        box-shadow: 1px 1px 10px var(--c-box-shadow-color);
+        margin: 12px auto;
+        width: 95%;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    .logistics-table-title td{
+        height: 36px;
+        line-height: 36px;
+        font-weight: bold;
+
+    }
+
+    .logistics-table-title-1{
+        width: 110px;
+    }
+    .logistics-table-title-2{
+        width: 60px;
+    }
+    .logistics-table-title-3{
+        width: 100px;
+    }
+    .logistics-table-title-4{
+        width: 100px;
+    }
+
+    .logistics-table td {
+        border-bottom: 1px solid var(--c-border-color);
+        box-sizing: border-box;
+        padding: 4px 0;
+
+    }
+
+    .operator-avatar-sprite{
+        width: 100px;
+        height: 80px;
+        position: relative;
+    }
+
+    .operator-avatar-sprite > div{
+        position: absolute;
+        transform: scale(calc(56 / 180));
+        top: -62px;
+        left: -40px;
+    }
+
+    .operator-avatar-sprite > span {
+        position: absolute;
+        left: 0;
+        top: 60px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .logistics-skill-card div {
+        border: 1px solid var(--c-border-color);
+    }
+
+    .logistics-skill-name {
+        padding: 4px;
+        border-radius: 2px;
+        font-size: 12px;
+        line-height: 2;
+        white-space: nowrap;
+    }
+
+    .logistics-search-line {
+        width: 97%;
+        margin: 12px auto;
+        height: 80px;
+        display: flex;
+        position: relative;
+        padding: 0 0 0 12px;
+    }
+
+    .logistics-search-tip {
+        position: absolute;
+        top: 36px;
+        left: 12px;
+        font-style: italic;
+        font-size: 12px;
+    }
+
+    .cc-base {
+        color: #e77351;
+
+    }
+
+    .cc-vup {
+        color: #e77351;
+
+    }
+
+    .cc-vdown {
+        color: red;
+
+    }
+
+    .cc-rem {
+        font-weight: bold;
+    }
+
+    .cc-kw {
+        color: #00bbff;
+    }
+}

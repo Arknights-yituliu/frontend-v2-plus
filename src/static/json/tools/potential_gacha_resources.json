@@ -1,5 +1,61 @@
 [
   {
+    "packName": "敌方索敌",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "我方索敌",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "攻击速度",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "异常状态",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "推力与拉力",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "敌方元素损伤",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "我方元素损伤",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
     "packName": "序章 黑暗时代·上",
     "gachaOriginium": "18",
     "gachaOrundum": "0",
@@ -269,7 +325,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "沃伦姆德的薄暮",
@@ -317,7 +373,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "覆潮之下",
@@ -325,7 +381,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "多索雷斯假日",
@@ -349,7 +405,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "风雪过境",
@@ -373,7 +429,7 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   },
   {
     "packName": "吾导先路",
@@ -426,14 +482,6 @@
   {
     "packName": "登临意",
     "gachaOriginium": "29",
-    "gachaOrundum": "0",
-    "gachaPermit": "0",
-    "gachaPermit10": "0",
-    "packType": "activity"
-  },
-  {
-    "packName": "孤星",
-    "gachaOriginium": "42",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
@@ -493,6 +541,6 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity-main"
   }
 ]

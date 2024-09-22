@@ -2,7 +2,7 @@
 import {onMounted, ref, watch} from "vue"
 
 import '/src/assets/css/tool/schedule.css'
-import '/src/assets/css/tool/building_skill_font_color.css'
+import '/src/assets/css/information/building_skill_font_color.css'
 
 import schedule_template_json from '/src/static/json/build/plans_template.json'
 import character_table from '/src/static/json/survey/character_table_simple.json'
@@ -16,7 +16,7 @@ import {translate} from '/src/utils/I18n.js'
 import {getText} from '/src/utils/FileRead.js'
 import {debounce} from "/src/utils/Debounce.js";
 import {cMessage} from '/src/utils/Message.js'
-import {popoverOnOpen, createPopover} from "/src/utils/Popover.js";
+import {createPopover, popoverOnOpen} from "/src/utils/Popover.js";
 import userAPI from "/src/api/user.js";
 
 import MyButton from '/src/components/Button.vue'
@@ -315,7 +315,6 @@ let searchInputText = ref('')
  * 根据输入的名称和技能描述搜索干员
  */
 const searchOperatorDebounce = debounce(() => {
-
   //筛选干员
   commonFilterOperator()
 }, 500)
@@ -329,36 +328,33 @@ function commonFilterOperator() {
   for (const operator of building_table) {
     // 当按钮key有值时通过暂存的筛选函数进行筛选
     if (selectBtnKey.value && !filterCondition.value.func(operator)) {
-
       continue;
     }
-
-    //通过输入关键词筛选
+    //判断输入了关键词和干员符合关键词
     if (searchInputText.value && !operatorHasKeyword(operator)) {
-
       continue;
     }
-
+    //如果未选中某个按钮和未输入关键词跳过
     if (!selectBtnKey.value && !searchInputText.value) {
-
       continue
     }
 
+    //是否需要过滤未持有的干员
     if(filterNotOwnOperator.value){
       if(!operatorOwnMap.get(operator.charId)){
         continue
       }
     }
 
-
-
     if (filterOperatorList.value[operator.charId]) {
-      operator.description = filterOperatorList.value[operator.charId].description + '<br><br>' + operator.description
-      filterOperatorList.value[operator.charId] = operator
+      let result = filterOperatorList.value[operator.charId]
+      result.description += '<br><br>' + operator.description
+      filterOperatorList.value[operator.charId] = result
     } else {
-      filterOperatorList.value[operator.charId] = operator
+      filterOperatorList.value[operator.charId] = JSON.parse(JSON.stringify(operator))
     }
   }
+
 }
 
 /**

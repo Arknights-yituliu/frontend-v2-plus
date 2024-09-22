@@ -1,0 +1,22 @@
+.cc-base {
+    color: #e77351;
+
+}
+
+.cc-vup {
+    color: #e77351;
+
+}
+
+.cc-vdown {
+    color: red;
+
+}
+
+.cc-rem {
+    font-weight: bold;
+}
+
+.cc-kw {
+    color: #00bbff;
+}

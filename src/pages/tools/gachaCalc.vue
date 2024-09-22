@@ -107,15 +107,6 @@ let activityType = ref('联动限定')
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
   {
-    name: '迷宫饭(0902~0916)',
-    start: new Date('2024/09/02 16:00:00'),
-    end: new Date('2024/09/16 04:01:00'),
-    activityType: '联动限定',
-    disabled: false,
-    dailyGiftResources: true,
-    historicalPackTimeRange: [new Date('2023/03/06 00:00:00').getTime(), new Date('2023/03/28 23:59:59').getTime(),]
-  },
-  {
     name: '半周年(1101~1115)',
     start: new Date('2024/11/01 16:00:00'),
     end: new Date('2024/11/15 04:01:00'),
@@ -126,13 +117,22 @@ let scheduleOptions = [
   },
   {
     name: '新春',
-    start: new Date('2024/08/27 16:00:00'),
-    end: new Date('2024/08/27 04:01:00'),
-    activityType: '夏活限定',
+    start: new Date('2025/01/21 16:00:00'),
+    end: new Date('2025/02/03 04:01:00'),
+    activityType: '春节限定',
     disabled: true,
     dailyGiftResources: true,
-    historicalPackTimeRange: ''
-  }
+    historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2024/02/15 23:59:59').getTime(),]
+  },
+  {
+    name: '敬请期待',
+    start: new Date('2024/09/02 16:00:00'),
+    end: new Date('2024/09/16 04:01:00'),
+    activityType: '联动限定',
+    disabled: true,
+    dailyGiftResources: true,
+    historicalPackTimeRange: [new Date('2023/03/06 00:00:00').getTime(), new Date('2023/03/28 23:59:59').getTime(),]
+  },
 ]
 
 
@@ -218,6 +218,8 @@ function getAndSortPackData() {
 function getHistoryPackInfo() {
 
   const [historicalPackStart, historicalPackEnd] = selectedSchedule.value.historicalPackTimeRange
+  const scheduleStart = selectedSchedule.value.start
+  const scheduleEnd = selectedSchedule.value.end
   let list = []
   for (let pack of packInfoInitList.value) {
     const { officialName, drawEfficiency, start, end, saleType } = pack
@@ -227,7 +229,10 @@ function getHistoryPackInfo() {
     }
     // console.log(officialName,start ,'>', historicalPackStart,'——',start > historicalPackStart,end,'<',historicalPackEnd,'——',end<historicalPackEnd)
     if (start > historicalPackStart && start < historicalPackEnd) {
-      list.push(pack)
+      let item = JSON.parse(JSON.stringify(pack))
+      item.start = scheduleStart.getTime()
+      item.end = scheduleEnd.getTime()
+      list.push(item)
     }
   }
 
@@ -817,6 +822,7 @@ function gachaResourcesCalculation() {
       for (const index of selectedPermanentZoneName.value) {
         const potential = potentialTable[index]
         originium += parseInt(potential.gachaOriginium)
+        orundum += parseInt(potential.gachaOrundum)
       }
     }
 
@@ -1092,14 +1098,21 @@ function gachaResourcesCalculation() {
   // console.table(logs)
 
   const lastSettings = {
+    //存储到本地的数据
+    //现有资源
     existOrundum: existResources.value.orundum,
     existOriginium: existResources.value.originium,
     existGachaTicket: existResources.value.gachaTicket,
     existTenGachaTicket: existResources.value.tenGachaTicket,
+    //是否使用源石抽卡
     originiumIsUsed: originiumIsUsed.value,
+    //周常是否完成
     weeklyTaskCompleted: dailyReward.value.weeklyTaskCompleted,
+    //绿票商店是否换过
     certificateStoreCompleted: dailyReward.value.certificateStoreCompleted,
+    //剿灭是否完成
     annihilationCompleted: dailyReward.value.annihilationCompleted,
+    // 悖论模拟、剿灭模拟战
     paradox: potentialResources.value.paradox,
     annihilation: potentialResources.value.annihilation
   }
@@ -1649,7 +1662,7 @@ function handleResize() {
           <span class="tip">鉴于第二层有不少性价比较低的物品，建议囤够2w以上绿票再考虑绿票换玉</span>
         </el-collapse-item>
 
-        <!--        潜在资源-->
+        <!--潜在资源-->
         <el-collapse-item name="potential" class="collapse-item">
           <template #title>
             <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
@@ -1676,6 +1689,26 @@ function handleResize() {
             </div>
             <span>{{ potentialResources.annihilation * 1500 }}</span>
           </div>
+
+          <div class="collapse-content-subheading">
+            <span></span> 训练场
+          </div>
+
+          <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px" @change="gachaResourcesCalculation"
+            size="small">
+            <el-checkbox-button v-for="(potential, index) in potentialTable" :key="index" :value="index"
+              v-show="potential.packType === 'train'" class="el-checkbox-button" :border="true">
+              <div class="checkbox-button">
+                <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_4003"></div>
+                  </div>
+                  <span>{{ potential.gachaOrundum }}</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
           <div class="collapse-content-subheading">
             <span></span> 主线、突袭、绝境
           </div>
@@ -1700,7 +1733,26 @@ function handleResize() {
           </el-checkbox-group>
 
           <div class="collapse-content-subheading">
-            <span></span> 插曲/别传
+            <span></span> 插曲
+          </div>
+          <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
+            @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(potential, index) in potentialTable" :border="true" :key="index" :value="index"
+              v-show="potential.packType === 'activity-main'" class="el-checkbox-button">
+              <div class="checkbox-button">
+                <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_4002"></div>
+                  </div>
+                  <span>{{ potential.gachaOriginium }}</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
+
+          <div class="collapse-content-subheading">
+            <span></span> 别传
           </div>
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
             @change="gachaResourcesCalculation">
@@ -1792,7 +1844,7 @@ function handleResize() {
           </el-checkbox-group>
 
           <div class="collapse-content-subheading">
-            <span></span> 往年礼包
+            <span></span> 往年礼包（用于估算氪金）
           </div>
           <el-checkbox-group v-model="selectedHistoryPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByHistory" :key="index" :value="index"
@@ -1801,7 +1853,7 @@ function handleResize() {
               </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
-
+ 
         </el-collapse-item>
 
         <!--活动获得(估算)-->

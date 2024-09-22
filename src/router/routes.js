@@ -76,6 +76,15 @@ const routes = [
         component: () => import('/src/pages/material/elite')
     },
     {
+        path: '/material/scatter-diagram',
+        text: '干员练度需求散点图',
+        name: 'ScatterDiagram',
+        display: false,
+        module: 'material',
+        icon: "elite",
+        component: () => import('/src/pages/material/scatter-diagram.vue')
+    },
+    {
         path: '/tools/gachaCal',
         text: '攒抽计算器',
         name: 'GachaCalculator1',
@@ -101,15 +110,6 @@ const routes = [
         component: () => import('/src/pages/tools/schedule.vue')
     },
     {
-        path: '/tools/logistics',
-        text: '基建技能一览',
-        name: 'Logistics',
-        display: true,
-        module: 'tools',
-        icon: "logistics",
-        component: () => import('/src/pages/tools/logistics.vue')
-    },
-    {
         path: '/tools/specializationTimeCalculate',
         text: '专精时间减半计算器',
         name: 'HalfOperatorCalculate',
@@ -117,6 +117,24 @@ const routes = [
         module: 'tools',
         icon: "calculator",
         component: () => import('/src/pages/tools/specializationTimeCalculate.vue')
+    },
+    {
+        path: '/information/logistics',
+        text: '基建技能一览',
+        name: 'Logistics',
+        display: true,
+        module: 'information',
+        icon: "logistics",
+        component: () => import('/src/pages/information/logistics.vue')
+    },
+    {
+        path: '/information/sandboxFoods',
+        text: '生息演算食材一览',
+        name: 'SandboxFoods',
+        display: true,
+        module: 'information',
+        icon: "sandboxFoods",
+        component: () => import('/src/pages/information/sandboxFoods.vue')
     },
     {
         path: '/survey/account/home',
@@ -286,6 +304,12 @@ const routes = [
         component: () => import('/src/pages/sandbox/sb.page.vue')
     },
     {
+        path: '/material/exp0',
+        text: '收益速览做图用',
+        display: false,
+        component: () => import('/src/pages/material/stageV3E0.vue')
+    },
+    {
         path: '/:catchAll(.*)',
         display: false,
         component: Error404
@@ -303,6 +327,12 @@ const LinkedTable = {
     tools: {
         path: '/',
         text: "一图流工具箱",
+        display:true,
+        child: []
+    },
+    information: {
+        path: '/',
+        text: "信息一览",
         display:true,
         child: []
     },

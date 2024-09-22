@@ -1,7 +1,4 @@
 <script setup>
-
-
-
 const props = defineProps(['modelValue','label','value','order']);
 
 function order(order){
