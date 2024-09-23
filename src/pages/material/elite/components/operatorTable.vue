@@ -29,6 +29,7 @@ watch(() => current.value, () => {
 
 // 根据筛选条件筛选与分页表格数据
 const getTableData = () => {
+  console.log('getTableData')
   // 根据筛选条件筛选干员列表
   let arr = operatorList.value.filter((data) => {
     if (searchParams.rarityCheckedList.length && !searchParams.rarityCheckedList.includes(data.rarity)) return false; // 干员星级搜索
@@ -65,7 +66,7 @@ const sortChange = ({prop, order}) => {
     return sortDirection * ((getNestedProperty(a, prop) || 0) - (getNestedProperty(b, prop) || 0));
   });
 
-  emits('reset')
+  current.value = 0
   getTableData()
 }
 

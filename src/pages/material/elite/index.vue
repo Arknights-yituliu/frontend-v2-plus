@@ -136,7 +136,6 @@ const openDetailDialog = (v) => {
         <SkillTable
           ref="skillTableRef"
           :searchParams="searchParams"
-          @reset="reset"
           @openDetailDialog="openDetailDialog"
         ></SkillTable>
       </el-tab-pane>
@@ -145,7 +144,6 @@ const openDetailDialog = (v) => {
         <ModTable
           ref="modTableRef"
           :searchParams="searchParams"
-          @reset="reset"
           @openDetailDialog="openDetailDialog"
         ></ModTable>
       </el-tab-pane>

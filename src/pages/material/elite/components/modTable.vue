@@ -4,7 +4,7 @@ import { percentFormatter, costFormatter, initDetailData, formatNumber } from '.
 import { useOperatorData } from '../js/formatOperatorData'
 import { getNestedProperty } from "../js/utils"
 
-const emits = defineEmits(['openDetailDialog', 'reset'])
+const emits = defineEmits(['openDetailDialog'])
 const props = defineProps({
   searchParams: Object,
 })
@@ -80,7 +80,7 @@ const sortChange = ({prop, order}) => {
     return sortDirection * ((getNestedProperty(a, prop) || 0) - (getNestedProperty(b, prop) || 0));
   });
 
-  emits('reset')
+  current.value = 0
   getTableData()
 }
 
