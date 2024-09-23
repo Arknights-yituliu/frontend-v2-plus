@@ -22,7 +22,7 @@ export const percentFormatter = (row, col) => {
 }
 
 // 获取表格单元格的值
-const getCellValue = (row, col) => {
+export const getCellValue = (row, col) => {
   return row[col.property] || getNestedProperty(row, col.property) || 0;
 }
 
@@ -36,7 +36,7 @@ const skillIconBasePosition = getBasePosition(skillIconZoomScale, skillIconBaseS
 
 const detailTableData = ref([])
 const detailData = ref({})
-const { totalCostObj } = useOperatorData()
+const { totalCostObj, operatorList } = useOperatorData()
 
 // 点击行查看干员分析信息
 export const initDetailData = (row) => {
@@ -112,9 +112,116 @@ const getIconBaseInfo = (type) => {
   }
 };
 
+
+// 重置表格滚动条
+export const resetTableScrollTop = (tableRef) => {
+  const tableBody = tableRef.$el.querySelector('.el-scrollbar__wrap');
+  if (tableBody) {
+    tableBody.scrollTop = 0;
+  }
+}
+
 export const useTableData = () => {
   return {
     detailData,
     detailTableData,
   }
+}
+
+// 筛选条件
+const searchParams = ref({
+  rarityCheckedList: [], // 当前已选择的干员星级列表
+  professionCheckedList: [], // 已选择的职业列表
+  searchKey: '', // 搜索关键词
+})
+
+// 分页参数
+const size = 50
+const eliteList = ref([])
+const skillList = ref(operatorList.value.flatMap(item => item.skills))
+const modList = ref(operatorList.value.flatMap(item => item.mods))
+const tableDataMap = new Map()
+
+// 初始化表格数据
+export const initTableData = () => {
+  console.log(`initTableData`, )
+  // 根据筛选条件筛选干员列表
+  const filteredOperators = operatorList.value.filter((data) => {
+    if (searchParams.value.rarityCheckedList.length && !searchParams.value.rarityCheckedList.includes(data.rarity)) return false; // 干员星级搜索
+    if (!searchParams.value.professionCheckedList?.length) return true; // 干员子职业搜索: 没选就默认返回所有职业的干员
+    return searchParams.value.professionCheckedList.includes(data.subProfessionId);
+  });
+  tableDataMap.set('elite', filteredOperators)
+  // 筛选后的干员列表拆出技能信息, 并排序
+  tableDataMap.set('skills', filteredOperators.flatMap(item => item.skills).sort((a, b) => b.totalCost - a.totalCost))
+  // 筛选后的干员列表拆出模组信息, 并排序
+  tableDataMap.set('mods', filteredOperators.flatMap(item => item.mods).sort((a, b) => b.totalCost - a.totalCost))
+}
+
+export const rowClick = (row, emits) => {
+  const { operatorName, charId } = row
+  if (operatorName) row = operatorList.value.find(item => item.charId === charId)
+  initDetailData(row)
+  emits('openDetailDialog', true)
+}
+
+export const usePaginationParams = (key) => {
+  const current = ref(0)
+  const total = ref(0);
+  const tableData = ref([])
+  
+  // 表格滚动底部加载更多
+  const loadmore = () => {
+    if (current.value * size < total.value) {
+      current.value++
+      getTableData()
+    }
+  }
+  
+  // 根据筛选条件筛选与分页表格数据
+  const getTableData = () => {
+    const tableList = tableDataMap.get(key)
+    const { searchKey } = searchParams.value
+    const filterFn = (data) => {
+      if (key === 'elite') return data.name.includes(searchKey)
+      else if (key === 'skills') return data.operatorName.includes(searchKey) || data.name.includes(searchKey) 
+      else return data.operatorName.includes(searchKey) || data.uniEquipName.includes(searchKey)
+    }
+    // 排序号, 筛选
+    const tableListFormat = tableList.map((item, index) => ({
+      ...item,
+      index: index + 1
+    })).filter(filterFn)
+    // 最大条数
+    total.value = tableListFormat.length;
+    // 分页
+    const currentData = tableListFormat.slice(current.value * size, (current.value + 1) * size)
+    tableData.value = current.value === 0 ? currentData : tableData.value.concat(currentData)
+  }
+  
+  // 表格排序
+  const sortChange = ({prop, order}) => {
+    const tableList = tableDataMap.get(key)
+    tableList.sort((a, b) => {
+      const sortDirection = order === 'ascending' ? 1 : -1;
+      return sortDirection * ((getNestedProperty(a, prop) || 0) - (getNestedProperty(b, prop) || 0));
+    });
+
+    current.value = 0
+    getTableData()
+  }
+  
+  return { 
+    searchParams,
+    size,
+    current,
+    total,
+    eliteList,
+    skillList,
+    modList,
+    tableData,
+    loadmore,
+    getTableData,
+    sortChange,
+   }
 }

@@ -1,7 +1,5 @@
 <script setup>
-import OperatorTable from "./components/operatorTable"; // 干员排名表
-import SkillTable from "./components/skillTable"; // 技能排名表
-import ModTable from "./components/modTable"; // 模组排名表
+import Table from "./components/table"; // 模组排名表
 import DetailDialog from "./components/detailDialog"; // 详情弹窗
 import CreateOperatorDialog from "./components/createOperatorDialog"; // 新建自定义干员弹窗
 
@@ -10,40 +8,60 @@ import { exportExcel } from "@/utils/ExportExcel"; // 表格导出
 import { useJSONData } from './js/maps'
 import { useOperatorData } from './js/formatOperatorData'
 import { useBaseData } from './js/baseData'
+import { initTableData, usePaginationParams } from './js/table'
+
+initTableData() // 初始化表格数据
 
 const { professionDictJSON } = useJSONData() // 职业字典JSON
 const { rarityList } = useBaseData() // 星级列表
 const { operatorList } = useOperatorData() // 干员列表
+const { searchParams } = usePaginationParams()
 
 const opETextTheme = ref("op_title_etext_light"); // 主题颜色
 const placeholder = ref('干员名称')
 const tabsActiveName = ref('operatorTable')
 const detailDialog = ref(false)
 const createDialog = ref(false)
-const operatorTableRef = ref(null) // 干员排名表
-const skillTableRef = ref(null) // 技能排名表
-const modTableRef = ref(null) // 模组排名表
+const tableRefs = ref([])
 
-// 筛选条件
-const searchParams = ref({
-  rarityCheckedList: [], // 当前已选择的干员星级列表
-  professionCheckedList: [], // 已选择的职业列表
-  searchKey: '', // 搜索关键词
-})
+const tabs = [
+  { label: '干员排名表', name: 'operatorTable', ref: 'operatorTableRef', tableKey: 'elite', options: [
+    { prop: 'index', label: '排名', width: '60', fixed: true },
+    { prop: 'name', label: '干员代号', minWidth: '140' },
+    { prop: 'elite.rank2.rate', label: '精二率', minWidth: '120', sortable: true },
+    { prop: 'elite.totalCost', label: '材料开销', minWidth: '140', sortable: true },
+    { prop: 'professionName', label: '职业', minWidth: '80' },
+    { prop: 'subProfessionName', label: '分支', minWidth: '100' },
+    { prop: 'itemObtainApproach', label: '获取方式', minWidth: '100' },
+  ] },
+  { label: '技能排名表', name: 'skillTable', ref: 'skillTableRef', tableKey: 'skills', options: [
+    { prop: 'index', label: '排名', width: '60', fixed: true },
+    { prop: 'name', label: '技能名称', minWidth: '140' },
+    { prop: 'totalCost', label: '材料开销', minWidth: '120', sortable: true },
+    { prop: 'rank3.rate', label: '专三率', minWidth: '100', sortable: true },
+    { prop: 'operatorName', label: '所属干员', minWidth: '140' },
+    ] },
+  { label: '模组排名表', name: 'modTable', ref: 'modTableRef', tableKey: 'mods', options: [
+    { prop: 'index', label: '排名', width: '60', fixed: true },
+    { prop: 'uniEquipName', label: '模组名称', minWidth: '200' },
+    { prop: 'typeName2', label: '模组类型', minWidth: '100' },
+    { prop: 'rank1.rate', label: '开一级模组率', minWidth: '140', sortable: true },
+    { prop: 'rank1.totalCost', label: '材料开销', minWidth: '120', sortable: true },
+    { prop: 'rank2.rate', label: '开二级模组率', minWidth: '140', sortable: true },
+    { prop: 'rank2.totalCost', label: '材料开销', minWidth: '120', sortable: true },
+    { prop: 'rank3.rate', label: '开三级模组率', minWidth: '140', sortable: true },
+    { prop: 'totalCost', label: '材料开销', minWidth: '120', sortable: true },
+    { prop: 'operatorName', label: '所属干员', minWidth: '140' },
+  ] },
+]
 
 // 重置表格数据
 const reset = () => {
-  // 干员排名表
-  operatorTableRef.value.current = 0; // 用于滚动到第一页
-  operatorTableRef.value.getTableData() // 用于新增干员时刷新表格
-  // 技能排名表
-  skillTableRef.value.current = 0;
-  skillTableRef.value.initTableData() // 用于新增干员时初始化技能列表
-  skillTableRef.value.getTableData()
-  // 模组排名表
-  modTableRef.value.current = 0;
-  modTableRef.value.initTableData() // 用于新增干员时初始化模组列表
-  modTableRef.value.getTableData()
+  initTableData() // 初始化所有表格数据
+  tableRefs.value.forEach(element => {
+    element.current = 0 // 用于滚动到第一页
+    element.getTableData() // 用于新增干员时刷新表格
+  });
 }
 
 // 导出表格数据
@@ -122,29 +140,13 @@ const openDetailDialog = (v) => {
       type="card"
       @tab-click="tabClick"
     >
-      <el-tab-pane label="干员排名表" name="operatorTable">
-        <!-- 干员排名表 -->
-        <OperatorTable
-          ref="operatorTableRef"
-          :searchParams="searchParams"
+      <el-tab-pane v-for="item in tabs" :key="item.name" :label="item.label" :name="item.name">
+        <Table
+          :tableKey="item.tableKey"
+          ref="tableRefs"
           @openDetailDialog="openDetailDialog"
-        ></OperatorTable>
-      </el-tab-pane>
-      <el-tab-pane label="技能排名表" name="skillTable">
-        <!-- 技能排名表 -->
-        <SkillTable
-          ref="skillTableRef"
-          :searchParams="searchParams"
-          @openDetailDialog="openDetailDialog"
-        ></SkillTable>
-      </el-tab-pane>
-      <el-tab-pane label="模组排名表" name="modTable">
-        <!-- 模组排名表 -->
-        <ModTable
-          ref="modTableRef"
-          :searchParams="searchParams"
-          @openDetailDialog="openDetailDialog"
-        ></ModTable>
+          :options="item.options"
+        ></Table>
       </el-tab-pane>
     </el-tabs>
     <!-- 内容区域End -->
