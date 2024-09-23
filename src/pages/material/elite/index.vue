@@ -127,7 +127,6 @@ const openDetailDialog = (v) => {
         <OperatorTable
           ref="operatorTableRef"
           :searchParams="searchParams"
-          @reset="reset"
           @openDetailDialog="openDetailDialog"
         ></OperatorTable>
       </el-tab-pane>

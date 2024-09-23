@@ -4,7 +4,7 @@ import { percentFormatter, costFormatter, initDetailData } from '../js/table'
 import { useOperatorData } from '../js/formatOperatorData'
 import { getNestedProperty } from "../js/utils"
 
-const emits = defineEmits(['openDetailDialog', 'reset'])
+const emits = defineEmits(['openDetailDialog'])
 const props = defineProps({
   searchParams: Object,
 })
@@ -29,7 +29,6 @@ watch(() => current.value, () => {
 
 // 根据筛选条件筛选与分页表格数据
 const getTableData = () => {
-  console.log('getTableData')
   // 根据筛选条件筛选干员列表
   let arr = operatorList.value.filter((data) => {
     if (searchParams.rarityCheckedList.length && !searchParams.rarityCheckedList.includes(data.rarity)) return false; // 干员星级搜索
