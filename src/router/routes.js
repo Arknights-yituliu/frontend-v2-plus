@@ -73,7 +73,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "elite",
-        component: () => import('/src/pages/material/elite.vue')
+        component: () => import('/src/pages/material/elite')
     },
     {
         path: '/material/scatter-diagram',

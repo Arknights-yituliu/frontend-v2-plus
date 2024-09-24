@@ -1,0 +1,88 @@
+.bar-icon {
+  position: absolute;
+  &.bg-icon {
+    opacity: 0.5;
+  }
+  &.char-icon, &.skill-icon {
+    background-color: #fff;
+    box-shadow:
+      inset 2px 2px 10px rgba(0, 0, 0, 0.5),
+      inset -2px 2px 10px rgba(0, 0, 0, 0.5),
+      inset 2px -2px 10px rgba(0, 0, 0, 0.5),
+      inset -2px -2px 10px rgba(0, 0, 0, 0.5);
+    border: 5px solid #fff;
+    box-sizing: border-box;
+  }
+  &.mod-icon {
+    background-color: #000;
+    box-shadow:
+      inset 2px 2px 10px rgba(0, 0, 0, 0.5),
+      inset -2px 2px 10px rgba(0, 0, 0, 0.5),
+      inset 2px -2px 10px rgba(0, 0, 0, 0.5),
+      inset -2px -2px 10px rgba(0, 0, 0, 0.5);
+    border: 5px solid #000;
+    box-sizing: border-box;
+    width: var(--bar-width);
+
+    .operator-equip-image {
+      height: 40px;
+      width: 40px;
+      display: block;
+      margin: auto;
+    }
+  }
+}
+
+.material-list {
+  padding-left: 60px;
+  .material-item-wrapper {
+    min-width: max-content;
+    .row label {
+      width: 50px;
+    }
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    padding-left: 120px;
+
+    .material-item {
+      width: 60px;
+      height: 60px;
+      position: relative;
+    }
+
+    .num {
+      position: absolute;
+      right: -7px;
+      bottom: 0;
+      font-size: 18px;
+      font-weight: bold;
+      color: #000;
+      text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff, -2px -2px 4px #ffffff, 2px -2px 4px #ffffff,
+      -2px 2px 4px #ffffff, 2px 2px 4px #ffffff;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  //.notice-board-page + .elite-page {
+  //  height: calc(100vh - 80px - 40px) !important;
+  //}
+  .elite-page {
+    height: calc(100vh - 80px) !important;
+
+    .el-checkbox-button__inner {
+      padding: 12px 16px;
+    }
+
+    .option {
+      .right {
+        .el-input {
+          width: 160px;
+          margin-right: 6px;
+        }
+      }
+    }
+  }
+}
