@@ -242,7 +242,8 @@ export const usePaginationParams = (key) => {
     getTableData()
   }
   
-  return { 
+  return {
+    searchParams, // index页面还要用
     current,
     tableData,
     options,

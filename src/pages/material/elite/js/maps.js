@@ -28,12 +28,17 @@ addDefaultItem(materialMap, 'mod_update_token_2', '数据增补仪', 5);
 
 // 拆分出精英材料
 const materialTypeList = [
-  { type: 'orange', cardNums: [1, 2] }, // 以下cardNums长度多一位兼容未来YJ可能出新的材料
-  { type: 'purple', cardNums: [2, 3, 4] },
-  { type: 'blue', cardNums: [4, 5, 6] },
-  { type: 'green', cardNums: [6, 7] },
-  { type: 'grey', cardNums: [7, 8] }
-]
+  { type: 'orange', cardNums: [1] },
+  { type: 'purple', cardNums: [2, 3] },
+  { type: 'blue', cardNums: [4, 5] },
+  { type: 'green', cardNums: [6] },
+  { type: 'grey', cardNums: [7] }
+].map(item => {
+  // cardNums长度多一位兼容未来YJ可能出新的材料
+  const lastCardNum = item.cardNums.at(-1);
+  item.cardNums.push(lastCardNum + 1)
+  return item
+})
 // 芯片
 const chipsTypeList = [
   { type: 'orange', cardNums: [11] },
@@ -65,7 +70,6 @@ materialTypeList.forEach(item => {
 chipsTypeList.forEach(item => {
   chipsTypeMap.set(item.type, item.materialList)
 })
-
 
 // 职业映射
 const professionMap = new Map();

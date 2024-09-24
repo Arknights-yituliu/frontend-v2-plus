@@ -1,10 +1,11 @@
 <script setup>
-import Table from "./components/table"; // 模组排名表
-import DetailDialog from "./components/detailDialog"; // 详情弹窗
-import CreateOperatorDialog from "./components/createOperatorDialog"; // 新建自定义干员弹窗
+import Table from './components/table'; // 模组排名表
+import DetailDialog from './components/detailDialog'; // 详情弹窗
+import CreateOperatorDialog from './components/createOperatorDialog'; // 新建自定义干员弹窗
+import ModuleHeader from '@/components/ModuleHeader.vue';
 
 import { ref } from 'vue';
-import { exportExcel } from "@/utils/ExportExcel"; // 表格导出
+import { exportExcel } from '@/utils/ExportExcel'; // 表格导出
 import { useJSONData } from './js/maps'
 import { useOperatorData } from './js/formatOperatorData'
 import { useBaseData } from './js/baseData'
@@ -17,7 +18,6 @@ const { rarityList } = useBaseData() // 星级列表
 const { operatorList } = useOperatorData() // 干员列表
 const { searchParams } = usePaginationParams()
 
-const opETextTheme = ref("op_title_etext_light"); // 主题颜色
 const placeholder = ref('干员名称')
 const tabsActiveName = ref('operatorTable')
 const detailDialog = ref(false)
@@ -81,12 +81,7 @@ const openDetailDialog = (v) => {
 <template>
   <div class="elite-page">
     <!-- 标题区域 -->
-    <div class="op_title">
-      <div class="op_title_text">
-        <div class="op_title_ctext">精英化与专精性价比</div>
-        <div :class="opETextTheme">Elite Efficiency</div>
-      </div>
-    </div>
+    <ModuleHeader title="精英化与专精性价比" title-en="Elite Efficiency"></ModuleHeader>
     <!-- 标题区域end -->
     <!-- 内容区域 -->
     <div class="option">
@@ -110,24 +105,15 @@ const openDetailDialog = (v) => {
       </div>
     </div>
     <!-- 分页 -->
-    <el-tabs
-      v-model="tabsActiveName"
-      type="card"
-      @tab-click="tabClick"
-    >
+    <el-tabs v-model="tabsActiveName" type="card" @tab-click="tabClick">
       <el-tab-pane v-for="item in tabs" :key="item.name" :label="item.label" :name="item.name">
-        <Table
-          :tableKey="item.tableKey"
-          ref="tableRefs"
-          @openDetailDialog="openDetailDialog"
-        ></Table>
+        <Table :tableKey="item.tableKey" ref="tableRefs" @openDetailDialog="openDetailDialog"></Table>
       </el-tab-pane>
     </el-tabs>
     <!-- 内容区域End -->
 
     <DetailDialog v-model="detailDialog" @reset="reset"></DetailDialog>
     <CreateOperatorDialog v-model="createDialog" @reset=reset></CreateOperatorDialog>
-
   </div>
 </template>
 
