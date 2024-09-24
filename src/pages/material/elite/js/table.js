@@ -137,14 +137,44 @@ const searchParams = ref({
 
 // 分页参数
 const size = 50
-const eliteList = ref([])
-const skillList = ref(operatorList.value.flatMap(item => item.skills))
-const modList = ref(operatorList.value.flatMap(item => item.mods))
-const tableDataMap = new Map()
+const tableDataMap = new Map([ // 默认值用来修改代码热编译的时候初始化用的, 实际上没用
+  ['elite', operatorList.value],
+  ['skills', operatorList.value.flatMap(item => item.skills)],
+  ['mods', operatorList.value.flatMap(item => item.mods)],
+])
+const tableOptions = new Map([
+  ['elite', [
+    { prop: 'index', label: '排名', width: '60', fixed: true },
+    { prop: 'name', label: '干员代号', minWidth: '140' },
+    { prop: 'elite.rank2.rate', label: '精二率', minWidth: '120', sortable: true },
+    { prop: 'elite.totalCost', label: '材料开销', minWidth: '140', sortable: true },
+    { prop: 'professionName', label: '职业', minWidth: '80' },
+    { prop: 'subProfessionName', label: '分支', minWidth: '100' },
+    { prop: 'itemObtainApproach', label: '获取方式', minWidth: '100' },
+  ]],
+  ['skills', [
+    { prop: 'index', label: '排名', width: '60', fixed: true },
+    { prop: 'name', label: '技能名称', minWidth: '140' },
+    { prop: 'totalCost', label: '材料开销', minWidth: '120', sortable: true },
+    { prop: 'rank3.rate', label: '专三率', minWidth: '100', sortable: true },
+    { prop: 'operatorName', label: '所属干员', minWidth: '140' },
+    ]],
+  ['mods', [
+    { prop: 'index', label: '排名', width: '60', fixed: true },
+    { prop: 'uniEquipName', label: '模组名称', minWidth: '200' },
+    { prop: 'typeName2', label: '模组类型', minWidth: '100' },
+    { prop: 'rank1.rate', label: '开一级模组率', minWidth: '140', sortable: true },
+    { prop: 'rank1.totalCost', label: '材料开销', minWidth: '120', sortable: true },
+    { prop: 'rank2.rate', label: '开二级模组率', minWidth: '140', sortable: true },
+    { prop: 'rank2.totalCost', label: '材料开销', minWidth: '120', sortable: true },
+    { prop: 'rank3.rate', label: '开三级模组率', minWidth: '140', sortable: true },
+    { prop: 'totalCost', label: '材料开销', minWidth: '120', sortable: true },
+    { prop: 'operatorName', label: '所属干员', minWidth: '140' },
+  ]],
+])
 
 // 初始化表格数据
 export const initTableData = () => {
-  console.log(`initTableData`, )
   // 根据筛选条件筛选干员列表
   const filteredOperators = operatorList.value.filter((data) => {
     if (searchParams.value.rarityCheckedList.length && !searchParams.value.rarityCheckedList.includes(data.rarity)) return false; // 干员星级搜索
@@ -157,7 +187,7 @@ export const initTableData = () => {
   // 筛选后的干员列表拆出模组信息, 并排序
   tableDataMap.set('mods', filteredOperators.flatMap(item => item.mods).sort((a, b) => b.totalCost - a.totalCost))
 }
-
+// 行点击唤起弹窗
 export const rowClick = (row, emits) => {
   const { operatorName, charId } = row
   if (operatorName) row = operatorList.value.find(item => item.charId === charId)
@@ -169,6 +199,7 @@ export const usePaginationParams = (key) => {
   const current = ref(0)
   const total = ref(0);
   const tableData = ref([])
+  const options = tableOptions.get(key)
   
   // 表格滚动底部加载更多
   const loadmore = () => {
@@ -212,14 +243,9 @@ export const usePaginationParams = (key) => {
   }
   
   return { 
-    searchParams,
-    size,
     current,
-    total,
-    eliteList,
-    skillList,
-    modList,
     tableData,
+    options,
     loadmore,
     getTableData,
     sortChange,

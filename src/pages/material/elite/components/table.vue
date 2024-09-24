@@ -14,11 +14,10 @@ import { vLoadmore } from '../js/directives'
 
 const props = defineProps({
   tableKey: String,
-  options: Array,
 })
 
 const emits = defineEmits(['openDetailDialog'])
-const { current, tableData, loadmore, getTableData, sortChange } = usePaginationParams(props.tableKey)
+const { current, tableData, options, loadmore, getTableData, sortChange } = usePaginationParams(props.tableKey)
 
 // 表格数据
 const tableRef = ref(null);

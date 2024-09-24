@@ -135,30 +135,27 @@ const validate = async (obj) => {
 // 新增干员
 const addNewOperator = async () => {
   if (!await validate(newOperatorInfo.value)) return
-  const newCharId = `char_${operatorList.value.length}_custom`
+  const { elite, skills, name, mods } = newOperatorInfo.value
+  const newCharId = `char_${operatorList.value.length}_custom` // 自定义干员ID
   const operatorMaterial = {
-    elite: formatOperatorMaterial(newOperatorInfo.value.elite),
-    skills: newOperatorInfo.value.skills.map(item => formatOperatorMaterial(item))
+    elite: formatOperatorMaterial(elite),
+    skills: skills.map(item => formatOperatorMaterial(item))
   }
-  operatorMaterialMap.set(newCharId, operatorMaterial)
-  const name = newOperatorInfo.value.name || `第${ operatorList.value.length + 1 }位干员`
-  const skill = [
-    { name: '1技能' },
-    { name: '2技能' },
-  ]
-  if (newOperatorInfo.value.rarity > 5) skill.push({ name: '3技能' })
+  operatorMaterialMap.set(newCharId, operatorMaterial) // 添加干员材料
+  const operatorName = name || `第${ operatorList.value.length + 1 }位干员` // 自定义干员代号
+  const skill = skills.map((_, index) => ({ name: `${index + 1}技能` })) // 自定义技能信息
   const charInfo = {
     ...newOperatorInfo.value,
-    name: `${name} (自定义)`,
+    name: `${operatorName} (自定义)`,
     skill,
     equip: [{
       charId: newCharId,
       typeName2: '伴生模组',
-      itemCost: formatOperatorMaterial(newOperatorInfo.value.mods)  
+      itemCost: formatOperatorMaterial(mods)
     }]
   }
-  insertOperatorData(newCharId, charInfo)
-  initOperatorData()
+  insertOperatorData(newCharId, charInfo) // 插入自定义干员数据
+  initOperatorData() // 重新初始化干员数据(排名, 消耗等)
   emits('reset')
   emits('update:modelValue', false)
 }
