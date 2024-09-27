@@ -1,12 +1,10 @@
 <script setup>
-import { useBaseData } from '../js/baseData'
+import { noModIcon } from '../js/baseData' // 无模组图片的图标
 
 const props = defineProps({
   costs: Array,
   items: Array,
 });
-
-const { noModIcon } = useBaseData() // 无模组图片的图标
 </script>
 
 <template>

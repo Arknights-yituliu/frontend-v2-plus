@@ -1,8 +1,18 @@
 <script setup>
 import { ref } from 'vue';
-import { useBaseData } from '../js/baseData'
-import { useJSONData, useMaterialMaps, useOperatorMaps, useProfessionMaps } from '../js/maps'
-import { useOperatorData, insertOperatorData, initOperatorData } from '../js/formatOperatorData'
+import { rarityList, LMDId } from '../js/baseData' // 干员星级列表, 龙门币ID
+import {
+  operatorMaterialMap, // 干员精英化、专精技能消耗材料映射
+  professionMap, // 主职业映射
+  chipsTypeMap, // 芯片映射
+  materialTypeMap, // 精英材料映射
+  operatorRarityBaseMaterialMap, // 干员养成所需固定材料映射
+  professionDictJSON, // 职业字典JSON
+} from '../js/maps'
+import {
+  operatorList, // 干员列表
+  insertOperatorData, initOperatorData
+} from '../js/formatOperatorData'
 import { getSpriteImg } from '../js/utils'
 import { ElNotification } from 'element-plus'
 
@@ -11,13 +21,6 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['update:modelValue', 'reset'])
-
-const { rarityList, LMDId } = useBaseData() // 干员星级列表, 龙门币ID
-const { professionDictJSON } = useJSONData() // 职业字典JSON
-const { chipsTypeMap, materialTypeMap } = useMaterialMaps() // 基础材料ID映射, 芯片映射, 精英材料映射
-const { operatorRarityBaseMaterialMap, operatorMaterialMap } = useOperatorMaps() // 通用的干员消耗材料信息映射, 干员精英化、专精技能消耗材料映射
-const { professionMap } = useProfessionMaps() // 干员主职业映射
-const { operatorList } = useOperatorData() // 干员列表
 
 // 新建自定义干员信息对象
 const newOperatorInfo = ref({

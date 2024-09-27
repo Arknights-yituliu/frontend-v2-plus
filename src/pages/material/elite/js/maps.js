@@ -1,14 +1,14 @@
 import materialAPI from "@/api/material"; // 材料字典
 import surveyAPI from "@/api/operatorData"; // 练度调查结果
 import operatorJSON from "@/static/json/survey/character_table_simple" // 干员信息JSON
-import professionDictJSON from "@/static/json/survey/profession_dict"; // 职业字典JSON
 import operatorMaterialJSON from "/src/static/json/survey/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
+import professionDictJSON from "@/static/json/survey/profession_dict"; // 职业字典JSON
 
 // 获取材料字典
 const { data = [] } = await materialAPI.getItemValueTable(0.625)
 const materialMap = new Map(data.map(item => [item.itemId, item])); // 材料总映射
 const materialTypeMap = new Map() // 精英材料映射
-const chipsTypeMap = new Map() // 芯片映射
+const chipsTypeMap = new Map() // 芯片类型id映射
 const baseMaterialIdMap = new Map() // 基础材料id映射
 // 添加不存在的材料
 function addDefaultItem(materialMap, itemId, itemName, rarity) {
@@ -71,9 +71,8 @@ chipsTypeList.forEach(item => {
   chipsTypeMap.set(item.type, item.materialList)
 })
 
-// 职业映射
-const professionMap = new Map();
-const subProfessionMap = new Map();
+const professionMap = new Map() // 主职业映射
+const subProfessionMap = new Map() // 子职业映射
 
 // 构建职业和子职业映射
 professionDictJSON.forEach(profession => {
@@ -84,12 +83,9 @@ professionDictJSON.forEach(profession => {
 });
 
 const { data: { result = [] } } = await surveyAPI.getCharStatisticsResult()
-// 练度调查映射
-const statisticsMap = new Map(result.map(item => [item.charId, item]));
-// 干员信息映射
-const operatorMap = new Map(Object.entries(operatorJSON));
-// 干员精英化、专精技能消耗材料映射
-const operatorMaterialMap = new Map(Object.entries(operatorMaterialJSON));
+const statisticsMap = new Map(result.map(item => [item.charId, item])) // 练度调查映射
+const operatorMap = new Map(Object.entries(operatorJSON)) // 干员信息映射
+const operatorMaterialMap = new Map(Object.entries(operatorMaterialJSON)) // 干员精英化、专精技能消耗材料映射
 
 // 通用的干员消耗材料信息映射(老干员如银灰虽然不通用, 但这个主要是给新建自定义角色用的, 不影响)
 const createOperatorRarityBaseMaterialMap = () => {
@@ -166,49 +162,29 @@ const createOperatorRarityBaseMaterialMap = () => {
     }],
   ]);
 }
-const operatorRarityBaseMaterialMap = createOperatorRarityBaseMaterialMap();
+const operatorRarityBaseMaterialMap = createOperatorRarityBaseMaterialMap() // 干员养成所需固定材料映射
 
 // 职业映射
-export const useProfessionMaps = () => {
-  // console.log(`干员主职业映射 professionMap`, professionMap)
-  // console.log(`干员子职业映射 subProfessionMap`, subProfessionMap)
-  return {
-    professionMap,
-    subProfessionMap,
-  }
+export {
+  professionMap,
+  subProfessionMap
 }
 
 // 材料信息映射
-export const useMaterialMaps = () => {
-  // console.log(`精英材料映射 materialTypeMap`, materialTypeMap)
-  // console.log(`芯片映射 chipsTypeMap`, chipsTypeMap)
-  // console.log(`基础材料id映射 baseMaterialIdMap`, baseMaterialIdMap)
-  return {
-    materialMap,
-    baseMaterialIdMap,
-    materialTypeMap,
-    chipsTypeMap,
-  }
+export {
+  materialMap,
+  baseMaterialIdMap,
+  materialTypeMap,
+  chipsTypeMap,
 }
 
 // 角色信息映射
-export const useOperatorMaps = () => {
-  // console.log(`练度调查映射 statisticsMap`, statisticsMap)
-  // console.log(`干员信息映射 operatorMap`, operatorMap)
-  // console.log(`干员精英化、专精技能消耗材料映射 operatorMaterialMap`, operatorMaterialMap)
-  // console.log(`通用的干员消耗材料信息映射 operatorRarityBaseMaterialMap`, operatorRarityBaseMaterialMap)
-  return {
-    statisticsMap,
-    operatorMap,
-    operatorMaterialMap,
-    operatorRarityBaseMaterialMap,
-  }
+export {
+  statisticsMap,
+  operatorMap,
+  operatorMaterialMap,
+  operatorRarityBaseMaterialMap,
 }
 
-export const useJSONData = () => {
-  return {
-    operatorJSON,
-    operatorMaterialJSON,
-    professionDictJSON,
-  }
-}
+// JSON
+export { professionDictJSON }
