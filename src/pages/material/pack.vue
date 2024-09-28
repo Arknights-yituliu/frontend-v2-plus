@@ -6,7 +6,6 @@ import ModuleHeader from '/src/components/ModuleHeader.vue';
 import MyButton from '/src/components/Button.vue'
 
 const currentPackInfoList = ref([])
-let packInfoList = []
 const date = new Date() // 当前日期
 const fixedPacks = ref({})
 const saleTypes = [
@@ -40,6 +39,8 @@ const packSalePriceList = [
 const selectedPackTag = ref([])
 const selectedPackSaleDate = ref([])
 const selectedPackSalePrice = ref([])
+const filteredPackMap = ref(new Map()) // 筛选后的礼包列表
+let packInfoList = []
 
 const initData = async () => {
   // 等待获取接口返回的全部礼包信息
@@ -104,10 +105,8 @@ const initData = async () => {
   filterPacks()
 }
 
-initData();
-
 // 筛选按钮是否激活
-function buttonActive(v) {
+const buttonActive = (v) => {
   return (
     selectedPackTag.value.includes(v) ||
     selectedPackSaleDate.value.includes(v) ||
@@ -115,11 +114,10 @@ function buttonActive(v) {
   )
 }
 
-const filteredPackList = ref(new Map())
-
+// 筛选礼包: 当前筛选逻辑是按照之前的"满足其中任何一个条件的礼包都会展示", 而不是"同时满足所有筛选条件的礼包才展示"
 const filterPacks = () => {
   for (let year = date.getFullYear(); year >= 2019; year--) {
-    filteredPackList.value.set(year, [])
+    filteredPackMap.value.set(year, [])
   }
   const filterData = packInfoList.filter(item => {
     // 根据标签筛选
@@ -138,22 +136,24 @@ const filterPacks = () => {
   })
   filterData.forEach(item => {
     const itemYear = new Date(item.start).getFullYear()
-    filteredPackList.value.set(itemYear, [...filteredPackList.value.get(itemYear), item])
+    filteredPackMap.value.set(itemYear, [...filteredPackMap.value.get(itemYear), item])
   })
 }
-
-function resetPackFilterOption() {
+// 重置筛选
+const resetPackFilterOption = () => {
   selectedPackTag.value = []
   selectedPackSaleDate.value = []
   selectedPackSalePrice.value = []
   filterPacks()
 }
-
-function choosePackOption(list, value) {
+// 选择筛选条件时向筛选列表添加或删除
+const choosePackOption = (list, value) => {
   const index = list.indexOf(value);
   index > -1 ? list.splice(index, 1) : list.push(value)
   filterPacks()
 }
+
+initData()
 </script>
 <template>
   <div>
@@ -205,7 +205,7 @@ function choosePackOption(list, value) {
         售卖年份：
         <MyButton
           data-color="blue"
-          v-for="[year] in filteredPackList.entries()"
+          v-for="[year] in filteredPackMap.entries()"
           :key="year"
           :active="buttonActive(year)"
           @click="choosePackOption(selectedPackSaleDate, year)"
@@ -231,7 +231,7 @@ function choosePackOption(list, value) {
       </div>
 
       <!-- 按年份展示筛选礼包 -->
-      <template v-for="[year, list] in filteredPackList.entries()">
+      <template v-for="[year, list] in filteredPackMap.entries()">
         <h2 style="margin: 12px;">{{ year }}年</h2>
         <PackCardContainer :modelValue="list" />
       </template>
