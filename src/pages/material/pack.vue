@@ -14,7 +14,6 @@ let opETextTheme = "op_title_etext_light"
 let packInfoList = ref([])
 let currentPackInfoList = ref([])
 
-
 function getPackList(packType, packState, type1, type2, type3) {
   if (packState < 0.5) {
     return "display: none;";
@@ -30,7 +29,6 @@ function getPackList(packType, packState, type1, type2, type3) {
   }
   return "display: none;";
 }
-
 
 let limitedPackInfoList = ref([])
 let periodicPackInfoList = ref([])
@@ -121,12 +119,10 @@ function getLineChartData(pack) {
 
 let screenWidth = ref(1080)
 
-
 function getFixed(num, acc) {
   acc = typeof acc !== "undefined" ? acc : 2;
   return parseFloat(num).toFixed(acc);
 }
-
 
 const filterConditions = [
   { value: 'newbie', text: '新人' },
@@ -139,7 +135,6 @@ const filterConditions = [
   { value: 'originium', text: '非双倍源石' },
   { value: 'originium2', text: '双倍源石' },
 ]
-
 
 const formatterSaleType = (row, col) => {
   return {
@@ -155,7 +150,6 @@ const formatterSaleType = (row, col) => {
   }[row.saleType]
 }
 
-
 function buttonActive(value) {
   if (selectedPackTag.value.indexOf(value) > -1) {
     return true
@@ -168,7 +162,6 @@ function buttonActive(value) {
   }
   return false
 }
-
 
 const packTagTable = [
   { label: "新人", value: "newbie" },
@@ -215,7 +208,6 @@ const packSalePriceObject = {
     return price < 649 && price >= 200
   }
 }
-
 
 function resetPackFilterOption() {
   selectedPackTag.value = []
@@ -308,7 +300,6 @@ function filterPackBySaleDate(packInfo) {
   return false
 }
 
-
 function filterPackBySalePrice(packInfo) {
   for (const funcName of selectedPackSalePrice.value) {
     const func = packSalePriceObject[funcName];
@@ -318,8 +309,6 @@ function filterPackBySalePrice(packInfo) {
   }
   return false
 }
-
-
 
 let packInfoListGroupByYear = ref({})
 
@@ -342,12 +331,10 @@ function packInfoGroupByYear(packInfoList) {
 
 }
 
-
 onMounted(() => {
   storeAPI.getPackStore().then(response => {
     packInfoList.value = response.data
     initData();
-    filterPackInfo()
   })
   screenWidth.value = window.screen.width
 })
@@ -356,9 +343,8 @@ onMounted(() => {
 <template>
   <div>
     <div id="pack" class="pack-efficiency-page">
-      <module-header title="在售/即将开售的礼包" title-en="New Packs" :tips="['*当前在售的限时礼包，不包括常驻礼包和源石']">
-      </module-header>
-
+      <!-- 在售/即将开售的礼包 Start -->
+      <module-header title="在售/即将开售的礼包" title-en="New Packs" :tips="['*当前在售的限时礼包，不包括常驻礼包和源石']" />
       <div class="tag-group">
         <span class="tag-rank-5">
           点击图片可查看礼包内容，注意区分"仅抽卡"/"折合成源石"
@@ -367,34 +353,23 @@ onMounted(() => {
           “折合成源石”即将材料的理智价值按135：1换算成源石
         </span>
       </div>
+      <PackCardContainer v-model="limitedPackInfoList" />
+      <!-- 在售/即将开售的礼包 End -->
 
-      <PackCardContainer v-model="limitedPackInfoList">
-      </PackCardContainer>
-
-
-      <module-header title="半常驻礼包" title-en="Chips Packs & LMD Packs" :tips="['*内容较为固定，规律较为明确的礼包']">
-      </module-header>
-
+      <!-- 半常驻礼包 Start -->
+      <module-header title="半常驻礼包" title-en="Chips Packs & LMD Packs" :tips="['*内容较为固定，规律较为明确的礼包']" />
       <h2 style="margin: 12px;">职业芯片礼包</h2>
-      <!-- <div class="tag-group">
-        <span class="tag-rank-2">
-          芯片礼包价值有差异的原因见此处
-        </span>
-      </div> -->
-      <PackCardContainer v-model="chipPackInfoList">
-      </PackCardContainer>
+      <PackCardContainer v-model="chipPackInfoList" />
 
       <h2 style="margin: 12px;">龙门币补给包</h2>
-      <PackCardContainer v-model="lmdPackInfoList">
-      </PackCardContainer>
+      <PackCardContainer v-model="lmdPackInfoList" />
+      <!-- 半常驻礼包 End -->
 
-
-      <module-header title="常驻/周期性礼包" title-en="Monthly & Weekly & Orundum" :tips="['*每月/每周礼包、新人/回归礼包、源石']">
-      </module-header>
+      <!-- 常驻/周期性礼包 Start -->
+      <module-header title="常驻/周期性礼包" title-en="Monthly & Weekly & Orundum" :tips="['*每月/每周礼包、新人/回归礼包、源石']" />
 
       <h2 style="margin: 12px;">每月/每周礼包</h2>
-      <PackCardContainer v-model="periodicPackInfoList">
-      </PackCardContainer>
+      <PackCardContainer v-model="periodicPackInfoList" />
 
       <h2 style="margin: 12px;">新人/回归礼包</h2>
       <div class="tag-group">
@@ -402,9 +377,7 @@ onMounted(() => {
           由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
         </span>
       </div>
-
-      <PackCardContainer v-model="newbiePackInfoList">
-      </PackCardContainer>
+      <PackCardContainer v-model="newbiePackInfoList" />
 
       <h2 style="margin: 12px;">源石/首充源石</h2>
       <div class="tag-group">
@@ -412,20 +385,15 @@ onMounted(() => {
           每年周年庆会重置源石首充
         </span>
       </div>
-      <PackCardContainer v-model="originiumPackInfoList">
-
-      </PackCardContainer>
-
-
-
-
-      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']">
-
-      </module-header>
+      <PackCardContainer v-model="originiumPackInfoList" />
+      <!-- 常驻/周期性礼包 End -->
+       
+      <!-- 历史礼包 Start -->
+      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']" />
 
       <div class="pack-checkbox-btn-group">
         售卖类型：
-        <el-button type="primary">新人</el-button><MyButton data-color="blue" v-for="(tag, index) in packTagTable" :key="index" :active="buttonActive(tag.value)"
+        <MyButton data-color="blue" v-for="(tag, index) in packTagTable" :key="index" :active="buttonActive(tag.value)"
           @click="choosePackTagOption(tag.value)">
           {{ tag.label }}
         </MyButton>
@@ -473,31 +441,26 @@ onMounted(() => {
       <!--      </el-button-group>-->
 
       <h2 style="margin: 12px;">2024年</h2>
-      <PackCardContainer v-model="packInfoListGroupByYear['2024']">
-      </PackCardContainer>
+      <PackCardContainer v-model="packInfoListGroupByYear['2024']" />
 
       <h2 style="margin: 12px;">2023年</h2>
-      <PackCardContainer v-model="packInfoListGroupByYear['2023']">
-      </PackCardContainer>
+      <PackCardContainer v-model="packInfoListGroupByYear['2023']" />
 
       <h2 style="margin: 12px;">2022年</h2>
-      <PackCardContainer v-model="packInfoListGroupByYear['2022']">
-      </PackCardContainer>
+      <PackCardContainer v-model="packInfoListGroupByYear['2022']" />
 
       <h2 style="margin: 12px;">2021年</h2>
-      <PackCardContainer v-model="packInfoListGroupByYear['2021']">
-      </PackCardContainer>
+      <PackCardContainer v-model="packInfoListGroupByYear['2021']" />
 
       <h2 style="margin: 12px;">2020年</h2>
-      <PackCardContainer v-model="packInfoListGroupByYear['2020']">
-      </PackCardContainer>
+      <PackCardContainer v-model="packInfoListGroupByYear['2020']" />
 
       <h2 style="margin: 12px;">2019年</h2>
-      <PackCardContainer v-model="packInfoListGroupByYear['2019']">
-      </PackCardContainer>
+      <PackCardContainer v-model="packInfoListGroupByYear['2019']" />
+      <!-- 历史礼包 End -->
 
-
-      <module-header title="礼包性价比总表" title-en="Packs Value"></module-header>
+      <!-- 礼包性价比总表 Start -->
+      <module-header title="礼包性价比总表" title-en="Packs Value" />
       <div class="tag-group">
         <span class="tag-rank-5">
           性价比基准为648￥源石，移动端可左右滑动表格
@@ -512,7 +475,7 @@ onMounted(() => {
           :default-sort="{ prop: 'drawEfficiency', order: 'descending' }" border>
           <el-table-column sortable prop="displayName" label="名称" :sort-by="(row, index) => { return row.displayName; }"
             min-width="154" fixed />
-          <el-table-column sortable label="类型" :formatter=formatterSaleType :filters=filterConditions
+          <el-table-column sortable label="类型" :formatter="formatterSaleType" :filters="filterConditions"
             :filter-method="(value, row, column) => { return row.saleType === value; }"
             :filtered-value="['newbie', 'monthly', 'weekly', 'elite', 'chip', 'lmd', 'activity', 'originium', 'originium2']"
             :sort-by="(row, index) => { return row.saleType; }" min-width="92" />
@@ -543,6 +506,7 @@ onMounted(() => {
         " min-width="120" />
         </el-table>
       </div>
+      <!-- 礼包性价比总表 End -->
     </div>
 
     <module-header title="算法说明" title-en="Algorithm"></module-header>

@@ -1,7 +1,7 @@
 
 import { getZoomScale, getBasePosition, getOffsetTop, getNestedProperty } from './utils'
-import { useOperatorData } from './formatOperatorData'
-import { useBaseData } from './baseData'
+import { totalCostObj, operatorList } from './formatOperatorData' // 总材料消耗对象, 干员列表
+import { barWidth, barHeight } from './baseData' // 条的宽高
 import { ref } from 'vue';
 
 // 格式化小数
@@ -26,17 +26,14 @@ export const getCellValue = (row, col) => {
   return row[col.property] || getNestedProperty(row, col.property) || 0;
 }
 
-const { barWidth, barHeight } = useBaseData()
 const charIconBaseSize = 180;
 const skillIconBaseSize = 128;
 const charIconZoomScale = getZoomScale(barWidth, charIconBaseSize)
 const skillIconZoomScale = getZoomScale(barWidth, skillIconBaseSize)
 const charIconBasePosition = getBasePosition(charIconZoomScale, charIconBaseSize)
 const skillIconBasePosition = getBasePosition(skillIconZoomScale, skillIconBaseSize)
-
 const detailTableData = ref([])
 const detailData = ref({})
-const { totalCostObj, operatorList } = useOperatorData()
 
 // 点击行查看干员分析信息
 export const initDetailData = (row) => {
@@ -112,19 +109,11 @@ const getIconBaseInfo = (type) => {
   }
 };
 
-
 // 重置表格滚动条
 export const resetTableScrollTop = (tableRef) => {
   const tableBody = tableRef.$el.querySelector('.el-scrollbar__wrap');
   if (tableBody) {
     tableBody.scrollTop = 0;
-  }
-}
-
-export const useTableData = () => {
-  return {
-    detailData,
-    detailTableData,
   }
 }
 
@@ -243,7 +232,6 @@ export const usePaginationParams = (key) => {
   }
   
   return {
-    searchParams, // index页面还要用
     current,
     tableData,
     options,
@@ -251,4 +239,10 @@ export const usePaginationParams = (key) => {
     getTableData,
     sortChange,
    }
+}
+
+export {
+  detailData,
+  detailTableData,
+  searchParams,
 }

@@ -1,11 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { getZoomScale, getBasePosition, getIconTop, getSpriteImg, getMaterialIdByName } from "../js/utils"
-import { useMaterialMaps } from '../js/maps'
-import { useBaseData } from '../js/baseData'
-
-const { materialMap } = useMaterialMaps() // 材料映射
-const { barWidth, barHeight } = useBaseData() // 条的宽高
+import { materialMap } from '../js/maps' // 材料总映射
+import { barWidth, barHeight } from '../js/baseData' // 条的宽高
 
 const containerRef = ref(null); // 容器Ref
 

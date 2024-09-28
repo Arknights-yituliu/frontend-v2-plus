@@ -1,6 +1,5 @@
-import { useMaterialMaps } from './maps'
+import { baseMaterialIdMap } from './maps'
 
-const { baseMaterialIdMap } = useMaterialMaps()
 const LMDId = baseMaterialIdMap.get('龙门币')
 const barWidth = 50; // 柱状图宽
 const barHeight = 400; // 柱状图高
@@ -16,12 +15,10 @@ const rarityList = [
   { label: '★6', value: 6 },
 ]
 
-export const useBaseData = () => {
-  return {
-    LMDId,
-    barWidth,
-    barHeight,
-    rarityList,
-    noModIcon,
-  }
+export {
+  LMDId,
+  barWidth,
+  barHeight,
+  noModIcon,
+  rarityList,
 }

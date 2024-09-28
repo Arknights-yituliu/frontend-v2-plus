@@ -1,13 +1,18 @@
 import { ref } from 'vue';
-import { useMaterialMaps, useProfessionMaps, useOperatorMaps } from './maps'
-import { useBaseData } from './baseData'
+import {
+  professionMap, // 主职业映射
+  subProfessionMap, // 子职业映射
+  operatorMaterialMap, // 干员精英化、专精技能消耗材料映射
+  materialMap, // 材料总映射
+  baseMaterialIdMap, // 基础材料id映射
+  chipsTypeMap, // 芯片类型id映射
+  statisticsMap, // 练度调查映射
+  operatorMap, // 干员信息映射
+  operatorRarityBaseMaterialMap, // 干员养成所需固定材料映射
+} from './maps'
+import { LMDId } from './baseData' // 龙门币ID
 import { sort } from './utils'
 // import { test, showSingleInfo } from './test'
-
-const { materialMap, baseMaterialIdMap, chipsTypeMap } = useMaterialMaps() // 材料总映射, 基础材料id映射, 芯片类型id映射
-const { professionMap, subProfessionMap } = useProfessionMaps() // 主职业映射, 子职业映射
-const { statisticsMap, operatorMap, operatorMaterialMap, operatorRarityBaseMaterialMap } = useOperatorMaps() // 统计映射, 干员信息映射, 干员材料映射, 干员基础材料映射
-const { LMDId } = useBaseData() // 龙门币ID
 
 const baseMaterialIds = Array.from(baseMaterialIdMap.values()) // 基础材料id数组
 const chipIds = Array.from(chipsTypeMap.values()).flat().map(item => item.itemId) // 芯片id数组
@@ -225,10 +230,7 @@ for (const [charId, charInfo] of operatorMap.entries()) {
 
 initOperatorData()
 
-export const useOperatorData = () => {
-  return {
-    operatorList,
-    totalCostObj,
-    operatorMaterialMap
-  }
+export {
+  operatorList,
+  totalCostObj,
 }
