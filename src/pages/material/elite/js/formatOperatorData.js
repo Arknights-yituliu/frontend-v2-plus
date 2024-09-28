@@ -9,14 +9,13 @@ import {
   statisticsMap, // 练度调查映射
   operatorMap, // 干员信息映射
   operatorRarityBaseMaterialMap, // 干员养成所需固定材料映射
+  LMDId, // 龙门币ID
 } from './maps'
-import { LMDId } from './baseData' // 龙门币ID
+import { initTableData } from './table'
 import { sort } from './utils'
 // import { test, showSingleInfo } from './test'
 
-const baseMaterialIds = Array.from(baseMaterialIdMap.values()) // 基础材料id数组
-const chipIds = Array.from(chipsTypeMap.values()).flat().map(item => item.itemId) // 芯片id数组
-const fixedMaterialIds = [...baseMaterialIds, ...chipIds] // 合成固定材料id数组
+let fixedMaterialIds = [] // 合成固定材料id数组
 
 const totalCostObj = ref({}) // 总材料消耗对象
 const operatorOriginData = []; // 干员原始数据列表
@@ -224,13 +223,20 @@ const getItemInfo = (itemId, quantity, map) => {
 }
 
 // 初始化干员数据
-for (const [charId, charInfo] of operatorMap.entries()) {
-  insertOperatorData(charId, charInfo)
+const operatorInit = () => {
+  const baseMaterialIds = Array.from(baseMaterialIdMap.values()) // 基础材料id数组
+  const chipIds = Array.from(chipsTypeMap.values()).flat().map(item => item.itemId) // 芯片id数组
+  fixedMaterialIds = [...baseMaterialIds, ...chipIds] // 合成固定材料id数组
+  
+  for (const [charId, charInfo] of operatorMap.entries()) {
+    insertOperatorData(charId, charInfo)
+  }
+  initOperatorData()
+  initTableData() // 初始化表格数据
 }
-
-initOperatorData()
 
 export {
   operatorList,
   totalCostObj,
+  operatorInit
 }

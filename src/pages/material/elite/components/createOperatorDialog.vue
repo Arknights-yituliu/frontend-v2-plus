@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { rarityList, LMDId } from '../js/baseData' // 干员星级列表, 龙门币ID
+import { rarityList } from '../js/baseData' // 干员星级列表
 import {
   operatorMaterialMap, // 干员精英化、专精技能消耗材料映射
   professionMap, // 主职业映射
@@ -8,6 +8,7 @@ import {
   materialTypeMap, // 精英材料映射
   operatorRarityBaseMaterialMap, // 干员养成所需固定材料映射
   professionDictJSON, // 职业字典JSON
+  LMDId, // 龙门币ID
 } from '../js/maps'
 import {
   operatorList, // 干员列表

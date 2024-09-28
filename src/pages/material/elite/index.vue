@@ -11,8 +11,6 @@ import { operatorList } from './js/formatOperatorData' // 干员列表
 import { rarityList } from './js/baseData' // 星级列表
 import { initTableData, searchParams } from './js/table'
 
-initTableData() // 初始化表格数据
-
 const placeholder = ref('干员名称')
 const tabsActiveName = ref('operatorTable')
 const detailDialog = ref(false)

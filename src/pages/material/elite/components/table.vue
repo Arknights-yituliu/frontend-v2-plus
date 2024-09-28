@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
+import { initFlag } from '../js/maps'
 import {
   percentFormatter,
   costFormatter,
@@ -9,7 +10,6 @@ import {
   formatNumber,
   getCellValue,
 } from '../js/table'
-
 import { vLoadmore } from '../js/directives'
 
 const props = defineProps({
@@ -23,14 +23,13 @@ const { current, tableData, options, loadmore, getTableData, sortChange } = useP
 const tableRef = ref(null);
 
 // 监听页数变化
-watch(() => current.value, () => {
+watch(current, () => {
   // 重置表格滚动条
   if (current.value === 0) resetTableScrollTop(tableRef.value)
 })
 
-onMounted(() => {
-  getTableData()
-})
+// 监听初始化完成 
+watch(initFlag, getTableData)
 
 // 暴露给父组件
 defineExpose({

@@ -1,30 +1,19 @@
+import { ref } from 'vue'
 import materialAPI from "@/api/material"; // 材料字典
 import surveyAPI from "@/api/operatorData"; // 练度调查结果
 import operatorJSON from "@/static/json/survey/character_table_simple" // 干员信息JSON
-import operatorMaterialJSON from "/src/static/json/survey/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
+import operatorMaterialJSON from "@/static/json/survey/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
 import professionDictJSON from "@/static/json/survey/profession_dict"; // 职业字典JSON
-
+import { operatorInit } from './formatOperatorData'
 // 获取材料字典
-const { data = [] } = await materialAPI.getItemValueTable(0.625)
-const materialMap = new Map(data.map(item => [item.itemId, item])); // 材料总映射
+const materialMap = new Map(); // 材料总映射
+const statisticsMap = new Map() // 练度调查映射
 const materialTypeMap = new Map() // 精英材料映射
 const chipsTypeMap = new Map() // 芯片类型id映射
 const baseMaterialIdMap = new Map() // 基础材料id映射
-// 添加不存在的材料
-function addDefaultItem(materialMap, itemId, itemName, rarity) {
-  if (!materialMap.has(itemId)) {
-    materialMap.set(itemId, {
-      itemId,
-      itemName,
-      rarity,
-      itemValueAp: 0,
-    });
-  }
-}
-
-// 添加模组升级材料到字典
-addDefaultItem(materialMap, 'mod_update_token_1', '数据增补条', 4);
-addDefaultItem(materialMap, 'mod_update_token_2', '数据增补仪', 5);
+let operatorRarityBaseMaterialMap = null // 干员养成所需固定材料映射
+let LMDId = ''
+const initFlag = ref(false)
 
 // 拆分出精英材料
 const materialTypeList = [
@@ -48,29 +37,6 @@ const chipsTypeList = [
 const allTypeLists = [...materialTypeList, ...chipsTypeList];
 // 基础材料(数值固定不变的)
 const baseMaterialList = [ '龙门币', '技巧概要·卷3', '模组数据块', '数据增补条', '数据增补仪' ]
-// 遍历材料字典构建映射
-for (const [_, item] of materialMap.entries()) {
-  for (const typeItem of allTypeLists) {
-    if (!typeItem.materialList) typeItem.materialList = []
-    const { type, cardNums } = typeItem
-    if (cardNums.includes(item.cardNum) && item.type === type) {
-      typeItem.materialList.push(item);
-    }
-  }
-  // 插入基本材料
-  if (baseMaterialList.includes(item.itemName)) {
-    baseMaterialIdMap.set(item.itemName, item.itemId);
-  }
-}
-// 插入精英材料
-materialTypeList.forEach(item => {
-  materialTypeMap.set(item.type, item.materialList)
-})
-// 插入芯片
-chipsTypeList.forEach(item => {
-  chipsTypeMap.set(item.type, item.materialList)
-})
-
 const professionMap = new Map() // 主职业映射
 const subProfessionMap = new Map() // 子职业映射
 
@@ -82,14 +48,12 @@ professionDictJSON.forEach(profession => {
   });
 });
 
-const { data: { result = [] } } = await surveyAPI.getCharStatisticsResult()
-const statisticsMap = new Map(result.map(item => [item.charId, item])) // 练度调查映射
 const operatorMap = new Map(Object.entries(operatorJSON)) // 干员信息映射
 const operatorMaterialMap = new Map(Object.entries(operatorMaterialJSON)) // 干员精英化、专精技能消耗材料映射
 
 // 通用的干员消耗材料信息映射(老干员如银灰虽然不通用, 但这个主要是给新建自定义角色用的, 不影响)
 const createOperatorRarityBaseMaterialMap = () => {
-  const LMDId = baseMaterialIdMap.get('龙门币');
+  LMDId = baseMaterialIdMap.get('龙门币');
   const skillSummaryId = baseMaterialIdMap.get('技巧概要·卷3');
   const moduleDataBlockId = baseMaterialIdMap.get('模组数据块');
   const dataSupplementStickId = baseMaterialIdMap.get('数据增补条');
@@ -162,7 +126,62 @@ const createOperatorRarityBaseMaterialMap = () => {
     }],
   ]);
 }
-const operatorRarityBaseMaterialMap = createOperatorRarityBaseMaterialMap() // 干员养成所需固定材料映射
+
+const init = async () => {
+  // 练度调查映射
+  const { data: { result = [] } } = await surveyAPI.getCharStatisticsResult()
+  result.forEach(item => statisticsMap.set(item.charId, item))
+  // 材料总映射
+  const { data = [] } = await materialAPI.getItemValueTable(0.625)
+  data.forEach(item => materialMap.set(item.itemId, item))
+  
+  // 添加不存在的材料
+  const addDefaultItem = (materialMap, itemId, itemName, rarity) => {
+    if (!materialMap.has(itemId)) {
+      materialMap.set(itemId, {
+        itemId,
+        itemName,
+        rarity,
+        itemValueAp: 0,
+      });
+    }
+  }
+
+  // 添加模组升级材料到字典
+  addDefaultItem(materialMap, 'mod_update_token_1', '数据增补条', 4);
+  addDefaultItem(materialMap, 'mod_update_token_2', '数据增补仪', 5);
+  
+  // 遍历材料字典构建映射
+  for (const [_, item] of materialMap.entries()) {
+    for (const typeItem of allTypeLists) {
+      if (!typeItem.materialList) typeItem.materialList = []
+      const { type, cardNums } = typeItem
+      if (cardNums.includes(item.cardNum) && item.type === type) {
+        typeItem.materialList.push(item);
+      }
+    }
+    // 插入基本材料
+    if (baseMaterialList.includes(item.itemName)) {
+      baseMaterialIdMap.set(item.itemName, item.itemId);
+    }
+  }
+
+  // 插入精英材料
+  materialTypeList.forEach(item => {
+    materialTypeMap.set(item.type, item.materialList)
+  })
+  // 插入芯片
+  chipsTypeList.forEach(item => {
+    chipsTypeMap.set(item.type, item.materialList)
+  })
+  
+  operatorRarityBaseMaterialMap = createOperatorRarityBaseMaterialMap() // 干员养成所需固定材料映射
+  initFlag.value = true
+  operatorInit()
+  // console.log(`map init over `, )
+}
+
+init()
 
 // 职业映射
 export {
@@ -186,5 +205,8 @@ export {
   operatorRarityBaseMaterialMap,
 }
 
-// JSON
-export { professionDictJSON }
+export { 
+  professionDictJSON,
+  LMDId,
+  initFlag,
+}
