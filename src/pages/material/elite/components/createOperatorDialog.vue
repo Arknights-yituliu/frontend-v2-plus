@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { rarityList, LMDId } from '../js/baseData' // 干员星级列表, 龙门币ID
+import { rarityList } from '../js/baseData' // 干员星级列表
 import {
   operatorMaterialMap, // 干员精英化、专精技能消耗材料映射
   professionMap, // 主职业映射
@@ -8,6 +8,7 @@ import {
   materialTypeMap, // 精英材料映射
   operatorRarityBaseMaterialMap, // 干员养成所需固定材料映射
   professionDictJSON, // 职业字典JSON
+  LMDId, // 龙门币ID
 } from '../js/maps'
 import {
   operatorList, // 干员列表
@@ -72,12 +73,16 @@ const getNewCharBaseMaterial = () => {
           quantity: LMDQuantity,
         })
       }
-      const materialDicList = rankMaterial.selectMaterialTypes.map(type => materialTypeMap.get(type));
+      const materialDicList = rankMaterial.selectMaterialTypes.map(type => JSON.parse(JSON.stringify(materialTypeMap.get(type))));
+      console.log('materialDicList', materialDicList)
       materials.push({
         title,
         materialList,
         materialDicList,
-        selectList: materialDicList.map(() => ({}))
+        selectList: materialDicList.map(() => ({
+          // itemId: '30155', // 测试用
+          // quantity: 4
+        }))
       });
     });
   }
@@ -109,6 +114,13 @@ const formatOperatorMaterial = (materialList) => {
     });
     return obj;
   });
+}
+const disabledItem = (itemId, dicIndex, dicList) => {
+  const otherDic = dicIndex === 0 ? dicList[1] : dicList[0]
+  otherDic.forEach(item => {
+    if (item.itemId === itemId) item.disabled = true
+    else item.disabled = false
+  })
 }
 // 校验材料是否全填了
 const validate = async (obj) => {
@@ -193,11 +205,11 @@ const addNewOperator = async () => {
           </div>
         </div>
         <div class="select-material" v-for="(dic, dicIndex) in item.materialDicList" :key="dicIndex">
-          <el-select v-model="item.selectList[dicIndex].itemId" filterable popper-class="material-popper" placeholder="材料">
+          <el-select v-model="item.selectList[dicIndex].itemId" filterable popper-class="material-popper" placeholder="材料" @change="disabledItem($event, dicIndex, item.materialDicList)">
             <template #prefix>
               <div :class="getSpriteImg(item.selectList[dicIndex].itemId, 'perm')"></div>
             </template>
-            <el-option v-for="t in dic" :key="t.itemId" :value="t.itemId" :label="t.itemName">
+            <el-option v-for="t in dic" :key="t.itemId" :value="t.itemId" :label="t.itemName" :disabled="t.disabled">
               <div :class="getSpriteImg(t.itemId, 'perm')"></div>
               <p>{{t.itemName}}</p>
             </el-option>

@@ -35,13 +35,13 @@ const props = defineProps({
 .rank-bar-icon {
   .max-cost {
     position: absolute;
-    top: -20px;
+    top: -22px;
     left: 0;
     font-size: 16px;
   }
   .min-cost {
     position: absolute;
-    bottom: -20px;
+    bottom: -22px;
     left: 0;
     font-size: 16px;
   }
