@@ -1,12 +1,10 @@
 <script setup>
-import {ref, onMounted} from "vue";
-import {exportExcel} from "/src/utils/ExportExcel";
 import FixedNav from "/src/components/FixedNav.vue";
-import materialAPI from "/src/api/material.js";
-import '/src/assets/css/material/value.scss'
-import '/src/assets/css/material/value.phone.scss'
 import MyButton from '/src/components/Button.vue'
-import Button from "/src/components/Button.vue";
+import ModuleHeader from '@/components/ModuleHeader.vue';
+import {ref, onMounted} from "vue";
+import materialAPI from "/src/api/material.js";
+import {exportExcel} from "/src/utils/ExportExcel";
 
 let opETextTheme = ref("op_title_etext_light")
 
@@ -108,18 +106,8 @@ onMounted(() => {
 
 <template>
   <div id="value">
-    <!-- 标题区域 -->
-    <div class="module-header">
-      <!--      <div class="op_title_text">-->
-      <!--        <div class="op_title_ctext">价值一览</div>-->
-      <!--        <div :class="opETextTheme">Material Value</div>-->
-      <!--      </div>-->
-
-      <div class="module-title">
-        <h1>价值一览</h1>
-        <h4>Material Value</h4>
-      </div>
-    </div>
+    <!-- 价值一览 Start -->
+    <ModuleHeader title="价值一览" title-en="Material Value"></ModuleHeader>
 
     <div class="value-button-group">
       <MyButton data-color='blue'  :active="value_unit === 'itemValueAp'"
@@ -149,14 +137,11 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <!-- 价值一览 End -->
 
-
-    <div class="op_title">
-      <div class="op_title_text">
-        <div class="op_title_ctext">定价算法</div>
-        <div :class="opETextTheme">Algorithm</div>
-      </div>
-    </div>
+    <!-- 定价算法 Start -->
+    <ModuleHeader title="定价算法" title-en="Algorithm"></ModuleHeader>
+    
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
@@ -272,11 +257,16 @@ onMounted(() => {
         </el-card>
       </div>
     </div>
+    <!-- 定价算法 End -->
   </div>
+
   <fixed-nav/>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/assets/css/material/value.scss';
+@import '@/assets/css/material/value.phone.scss';
+
 .value-button-group button{
    margin: 4px;
 }

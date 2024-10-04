@@ -1,8 +1,9 @@
 
 import { getZoomScale, getBasePosition, getOffsetTop, getNestedProperty } from './utils'
-import { useOperatorData } from './formatOperatorData'
-import { useBaseData } from './baseData'
-import { ref } from 'vue';
+import { totalCostObj, operatorList } from './formatOperatorData' // 总材料消耗对象, 干员列表
+import { barWidth, barHeight } from './baseData' // 条的宽高
+import { initFlag } from '../js/maps'
+import { nextTick, ref } from 'vue';
 
 // 格式化小数
 export const formatNumber = (value, suffix = '', decimalPlaces = 1) => {
@@ -26,17 +27,14 @@ export const getCellValue = (row, col) => {
   return row[col.property] || getNestedProperty(row, col.property) || 0;
 }
 
-const { barWidth, barHeight } = useBaseData()
 const charIconBaseSize = 180;
 const skillIconBaseSize = 128;
 const charIconZoomScale = getZoomScale(barWidth, charIconBaseSize)
 const skillIconZoomScale = getZoomScale(barWidth, skillIconBaseSize)
 const charIconBasePosition = getBasePosition(charIconZoomScale, charIconBaseSize)
 const skillIconBasePosition = getBasePosition(skillIconZoomScale, skillIconBaseSize)
-
 const detailTableData = ref([])
 const detailData = ref({})
-const { totalCostObj, operatorList } = useOperatorData()
 
 // 点击行查看干员分析信息
 export const initDetailData = (row) => {
@@ -112,19 +110,11 @@ const getIconBaseInfo = (type) => {
   }
 };
 
-
 // 重置表格滚动条
 export const resetTableScrollTop = (tableRef) => {
   const tableBody = tableRef.$el.querySelector('.el-scrollbar__wrap');
   if (tableBody) {
     tableBody.scrollTop = 0;
-  }
-}
-
-export const useTableData = () => {
-  return {
-    detailData,
-    detailTableData,
   }
 }
 
@@ -137,11 +127,7 @@ const searchParams = ref({
 
 // 分页参数
 const size = 50
-const tableDataMap = new Map([ // 默认值用来修改代码热编译的时候初始化用的, 实际上没用
-  ['elite', operatorList.value],
-  ['skills', operatorList.value.flatMap(item => item.skills)],
-  ['mods', operatorList.value.flatMap(item => item.mods)],
-])
+const tableDataMap = new Map()
 const tableOptions = new Map([
   ['elite', [
     { prop: 'index', label: '排名', width: '60', fixed: true },
@@ -195,7 +181,14 @@ export const rowClick = (row, emits) => {
   emits('openDetailDialog', true)
 }
 
+let HMRFlag = false // 热加载flag
 export const usePaginationParams = (key) => {
+  if (HMRFlag) { // 本地调试用: table.vue 热更新时重新调用此函数会重置tableData的值 todo:其他vue文件以及js文件热更新时还是会清空
+    nextTick(() => {
+      initFlag.value = !initFlag.value
+    })
+  }
+  HMRFlag = true
   const current = ref(0)
   const total = ref(0);
   const tableData = ref([])
@@ -212,6 +205,8 @@ export const usePaginationParams = (key) => {
   // 根据筛选条件筛选与分页表格数据
   const getTableData = () => {
     const tableList = tableDataMap.get(key)
+    // console.log(`getTableData tableList`, tableList) 
+    // console.log(`getTableData operatorList`, operatorList.value)
     const { searchKey } = searchParams.value
     const filterFn = (data) => {
       if (key === 'elite') return data.name.includes(searchKey)
@@ -243,12 +238,17 @@ export const usePaginationParams = (key) => {
   }
   
   return {
-    searchParams, // index页面还要用
     current,
     tableData,
     options,
     loadmore,
     getTableData,
     sortChange,
-   }
+  }
+}
+
+export {
+  detailData,
+  detailTableData,
+  searchParams,
 }

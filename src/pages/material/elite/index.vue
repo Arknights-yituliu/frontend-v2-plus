@@ -6,17 +6,10 @@ import ModuleHeader from '@/components/ModuleHeader.vue';
 
 import { ref } from 'vue';
 import { exportExcel } from '@/utils/ExportExcel'; // 表格导出
-import { useJSONData } from './js/maps'
-import { useOperatorData } from './js/formatOperatorData'
-import { useBaseData } from './js/baseData'
-import { initTableData, usePaginationParams } from './js/table'
-
-initTableData() // 初始化表格数据
-
-const { professionDictJSON } = useJSONData() // 职业字典JSON
-const { rarityList } = useBaseData() // 星级列表
-const { operatorList } = useOperatorData() // 干员列表
-const { searchParams } = usePaginationParams()
+import { professionDictJSON } from './js/maps' // 职业字典JSON
+import { operatorList } from './js/formatOperatorData' // 干员列表
+import { rarityList } from './js/baseData' // 星级列表
+import { initTableData, searchParams } from './js/table'
 
 const placeholder = ref('干员名称')
 const tabsActiveName = ref('operatorTable')

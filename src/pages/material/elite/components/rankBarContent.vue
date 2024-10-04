@@ -1,12 +1,10 @@
 <script setup>
-import { useBaseData } from '../js/baseData'
+import { noModIcon } from '../js/baseData' // 无模组图片的图标
 
 const props = defineProps({
   costs: Array,
   items: Array,
 });
-
-const { noModIcon } = useBaseData() // 无模组图片的图标
 </script>
 
 <template>
@@ -37,13 +35,13 @@ const { noModIcon } = useBaseData() // 无模组图片的图标
 .rank-bar-icon {
   .max-cost {
     position: absolute;
-    top: -20px;
+    top: -22px;
     left: 0;
     font-size: 16px;
   }
   .min-cost {
     position: absolute;
-    bottom: -20px;
+    bottom: -22px;
     left: 0;
     font-size: 16px;
   }

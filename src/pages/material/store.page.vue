@@ -1,14 +1,12 @@
 <script setup>
-import cookie from 'js-cookie'
-import {onMounted, ref} from 'vue'
 import FixedNav from "/src/components/FixedNav.vue";
+import ModuleHeader from '@/components/ModuleHeader.vue';
+import {onMounted, ref} from 'vue'
+import cookie from 'js-cookie'
 import storeAPI from '/src/api/store.js'
-import '/src/assets/css/material/store.scss'
-import '/src/assets/css/material/store.phone.scss'
-import '/src/assets/css/sprite/sprite_plane_icon.css'
 
-let storeListFormat = ref([]) // 常驻商店性价比集合
-let actStoreList = ref([]) // 活动列表
+const storeListFormat = ref([]) // 常驻商店性价比集合
+const actStoreList = ref([]) // 活动列表
 const storeTypeList = [ // 常驻商店数据初始化格式
   {typeName: 'green', iconId: '4005', dividing: 0.8, tier: 0.024, borderColor: 'rgb(0, 162, 162)'},
   {typeName: 'yellow', iconId: '4004', dividing: 9.0, tier: 1.5, borderColor: 'rgb(251, 192, 45)'},
@@ -108,27 +106,14 @@ onMounted(() => {
     storeListFormat.value[i].hide = storeStatusList[i]
   }
 })
-
 </script>
-
 
 <template>
   <div class="store-page">
     <!-- 活动商店 -->
     <div id="actStore" >
-
-
       <!-- 标题区域 -->
-      <!--      <div class="op_title">-->
-      <!--        <div class="op_title_text">-->
-      <!--          <div class="op_title_ctext">活动商店</div>-->
-      <!--          <div :class="opETextTheme">Event Store</div>-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <div class="module-title">
-        <h1>活动商店</h1>
-        <h4>Event Store</h4>
-      </div>
+      <ModuleHeader title="活动商店" title-en="Event Store" />
       <!-- 标题区域end -->
       <!-- 内容区域 -->
       <div v-for="(singleAct, index) in actStoreList" :key="index" class="act_store_block">
@@ -180,39 +165,27 @@ onMounted(() => {
     <!-- 采购中心 -->
     <div id="store">
       <!-- 标题区域 -->
-      <div class="module-header">
-        <div class="module-title">
-          <h1>采购中心</h1>
-          <h4>Store Ranking</h4>
-        </div>
+      <ModuleHeader title="采购中心" title-en="Store Ranking" :tips="['*点击图标切换']">
         <div class="permanent-store-checkbox">
-          <div class="permanent-store-checkbox-button" v-for="(item, index) in storeListFormat" :key="index"
-               :style="item.hide?'':'filter: none;'" @click="switchStore(item)">
+          <div
+            class="permanent-store-checkbox-button"
+            v-for="(item, index) in storeListFormat"
+            :key="index"
+            :style="item.hide ? '' : 'filter: none;'"
+            @click="switchStore(item)"
+          >
             <div class="" :class="`bg-icon_${item.iconId}`"></div>
           </div>
         </div>
-        <span class="module-tip">*点击图标切换</span>
-      </div>
-
-      <!--      <div class="op_title">-->
-      <!--        <div class="op_title_text">-->
-      <!--          <div class="op_title_ctext">采购中心</div>-->
-      <!--          <div :class="opETextTheme">Store Ranking</div>-->
-      <!--        </div>-->
-      <!--        <div class="op_title_tag">-->
-      <!--          <div class="op_title_tag_item" :class="[{ hide: item.hide }]" v-for="(item, index) in storeListFormat"-->
-      <!--               :key="index" @click="switchStore(item)">-->
-      <!--            <div style="margin: 3px" :class="getSpriteImg(item.iconId, 'icon')"></div>-->
-      <!--          </div>-->
-      <!--          <div class="tab_text">*点击图标切换</div>-->
-      <!--        </div>-->
-      <!--      </div>-->
+      </ModuleHeader>
       <!-- 标题区域end -->
       <!-- 内容区域 -->
-      <div v-show="!item.hide"
-           class="permanent-store-content"
-           v-for="(item, index) in storeListFormat" :key="index"
-           :style="{ borderColor: item.borderColor }">
+      <div
+        v-show="!item.hide"
+        class="permanent-store-content"
+        v-for="(item, index) in storeListFormat" :key="index"
+        :style="{ borderColor: item.borderColor }"
+      >
         <div class="permanent-store-icon">
           <div :class="`bg-icon_${item.iconId}`"></div>
         </div>
@@ -226,19 +199,10 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <!-- 采购中心end -->
 
-    <!--    <div class="op_title">-->
-    <!--      <div class="op_title_text">-->
-    <!--        <div class="op_title_ctext">算法说明</div>-->
-    <!--        <div :class="opETextTheme">Algorithm</div>-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <div class="module-header">
-      <div class="module-title">
-        <h1>算法说明</h1>
-        <h4>Algorithm</h4>
-      </div>
-    </div>
+    <!-- 算法说明 -->
+    <ModuleHeader title="算法说明" title-en="Algorithm" />
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
@@ -317,12 +281,16 @@ onMounted(() => {
         </el-card>
       </div>
     </div>
+    <!-- 算法说明end -->
   </div>
   <fixed-nav/>
 </template>
 
-
 <style lang="scss">
+@import '/src/assets/css/material/store.scss';
+@import '/src/assets/css/material/store.phone.scss';
+@import '/src/assets/css/sprite/sprite_plane_icon.css';
+
 #store {
   .op_title {
     display: flex;
@@ -391,4 +359,5 @@ onMounted(() => {
       }
     }
   }
-}</style>
+}
+</style>

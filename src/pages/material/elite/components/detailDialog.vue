@@ -4,9 +4,12 @@ import RankBarContent from "./rankBarContent";
 import MaterialItem from "./materialItem";
 
 import { ref } from 'vue';
-import { useTableData, costFormatter, percentFormatter } from '../js/table'
-import { useOperatorData, deleteOperatorData, initOperatorData } from '../js/formatOperatorData'
-import { useBaseData } from '../js/baseData'
+import { detailData, detailTableData, costFormatter, percentFormatter } from '../js/table'
+import {
+  totalCostObj, // 总材料消耗对象
+  deleteOperatorData, initOperatorData
+} from '../js/formatOperatorData'
+import { noModIcon } from '../js/baseData' // 无模组图片的图标
 
 const props = defineProps({
   modelValue: Boolean,
@@ -14,10 +17,6 @@ const props = defineProps({
 const collapseActive = ref(['1'])
 
 const emits = defineEmits(['update:modelValue', 'reset'])
-
-const { detailData, detailTableData } = useTableData() // 干员信息, 表格排名信息
-const { totalCostObj } = useOperatorData() // 所有材料消耗排名
-const { noModIcon } = useBaseData() // 无模组图片的图标
 
 // 删除自定义干员
 const deleteOperator = () => {
