@@ -8,6 +8,7 @@ import * as echarts from "echarts";
 
 import potentialTable from '/src/static/json/tools/potential_gacha_resources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'
+import FIXED_TABLE from '/src/static/json/tools/schedule_fixed.json'
 import storeAPI from '/src/api/store'
 import { cMessage } from "/src/utils/Message.js";
 import { dateDiff } from '/src/utils/DateUtil.js'
@@ -19,22 +20,35 @@ import ActivityGachaResources from "/src/components/ActivityGachaResources.vue";
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
-let honeyCakeTable = ref([])
+let otherRewardBySchedules = ref([])
 // 罗德岛蜜饼工坊预测的活动排期
-let activitySchedules = ref({})
+let activityBySchedules = ref({})
 
 //将预测活动排期分类
 for (const name in HONEY_CAKE_TABLE) {
-  let honeyCake = HONEY_CAKE_TABLE[name]
+  let activityData = HONEY_CAKE_TABLE[name]
   //将活动排期的日期统一转为时间戳
-  honeyCake.start = new Date(honeyCake.start).getTime()
-  honeyCake.end = new Date(honeyCake.end).getTime()
-  honeyCake.name = name
+  activityData.start = new Date(activityData.start).getTime()
+  activityData.end = new Date(activityData.end).getTime()
+  activityData.name = name
   //分为其他和活动两组数据
-  if (honeyCake.module === 'honeyCake') {
-    honeyCakeTable.value.push(honeyCake)
+  if (activityData.rewardModule === 'otherResources') {
+    otherRewardBySchedules.value.push(activityData)
   } else {
-    activitySchedules.value[name] = honeyCake
+    activityBySchedules.value[name] = activityData
+  }
+}
+for (const name in FIXED_TABLE) {
+  let activityData = FIXED_TABLE[name]
+  //将活动排期的日期统一转为时间戳
+  activityData.start = new Date(activityData.start).getTime()
+  activityData.end = new Date(activityData.end).getTime()
+  activityData.name = name
+  //分为其他和活动两组数据
+  if (activityData.rewardModule === 'otherResources') {
+    otherRewardBySchedules.value.push(activityData)
+  } else {
+    activityBySchedules.value[name] = activityData
   }
 }
 
@@ -62,11 +76,11 @@ function batchGenerationServerMaintenanceRewards() {
         start: new Date(`${year}/${padZero(month, 2)}/${padZero(d, 2)} 00:00:00`).getTime(),
         end: new Date(`${year}/${padZero(month, 2)}/${padZero(d, 2)} 23:00:00`).getTime(),
         rewardType: "公共",
-        module: "honeyCake",
+        rewardModule: "otherResources",
         probability: ""
       }
 
-      honeyCakeTable.value.push(reward)
+      otherRewardBySchedules.value.push(reward)
     }
 
     month++
@@ -116,11 +130,11 @@ let scheduleOptions = [
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
   },
   {
-    name: '新春',
+    name: '新春(估计)',
     start: new Date('2025/01/21 16:00:00'),
     end: new Date('2025/02/03 04:01:00'),
     activityType: '春节限定',
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true,
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2024/02/15 23:59:59').getTime(),]
   },
@@ -955,15 +969,15 @@ function gachaResourcesCalculation() {
     let tenGachaTicket = 0
 
     //循环活动排期，计算活动可获得的奖励
-    for (const activityName in activitySchedules.value) {
-      const activity = activitySchedules.value[activityName]
+    for (const activityName in activityBySchedules.value) {
+      const activity = activityBySchedules.value[activityName]
       //判断这个活动是否在当前选择的时间段内
       if (!rewardIsExpired(activity)) {
         continue
       }
 
       //是复刻活动的话额外判断是否选中，选中的是老玩家还是新玩家的奖励
-      if (activity.module === 'actRe') {
+      if (activity.rewardModule === 'actRe') {
         if (!selectedActivityName.value.includes(activityName)) {
           continue
         }
@@ -1013,7 +1027,7 @@ function gachaResourcesCalculation() {
     const currentMonth = endDate.value.getMonth() + 1
     const MaintenanceTimes = endDate.value.getDate() - new Date().getDate()
     //循环预测奖励排期
-    for (const honeyCake of honeyCakeTable.value) {
+    for (const honeyCake of otherRewardBySchedules.value) {
       // 判断奖励是否在当前选择的时间段内
       if (!rewardIsExpired(honeyCake)) {
         continue
@@ -1468,7 +1482,7 @@ function handleResize() {
           <span class="tip">预留皮肤（18石/件）</span>
         </el-collapse-item>
 
-
+        <!--日常积累-->
         <el-collapse-item name="daily" class="collapse-item">
           <template #title>
             <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
@@ -1869,8 +1883,8 @@ function handleResize() {
             <span></span> 复刻活动
           </div>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(activity, name) in activitySchedules" :key="name" :value="name"
-              v-show="activity.module === 'actRe' && rewardIsExpired(activity)" class="el-checkbox-button">
+            <el-checkbox-button v-for="(activity, name) in activityBySchedules" :key="name" :value="name"
+              v-show="activity.rewardModule === 'actRe' && rewardIsExpired(activity)" class="el-checkbox-button">
               <pack-button-content :data="activity">
               </pack-button-content>
             </el-checkbox-button>
@@ -1880,8 +1894,8 @@ function handleResize() {
           <div class="collapse-content-subheading">
             <span></span> 未来活动
           </div>
-          <activity-gacha-resources v-for="(activity, name) in activitySchedules" :key="name" :info="activity"
-            v-show="activity.module === 'act' && rewardIsExpired(activity)">
+          <activity-gacha-resources v-for="(activity, name) in activityBySchedules" :key="name" :info="activity"
+            v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)">
           </activity-gacha-resources>
         </el-collapse-item>
 
@@ -1892,7 +1906,7 @@ function handleResize() {
               其他资源（估算）&emsp;{{ keepTheDecimalPoint(calculationResult.otherTotalDraw, 0) }}抽
             </span>
           </template>
-          <activity-gacha-resources v-for="(honeyCake, label) in honeyCakeTable" :key="label" :info="honeyCake"
+          <activity-gacha-resources v-for="(honeyCake, label) in otherRewardBySchedules" :key="label" :info="honeyCake"
             v-show="rewardIsExpired(honeyCake)">
           </activity-gacha-resources>
 
