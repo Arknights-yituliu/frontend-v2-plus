@@ -13,6 +13,8 @@
 }
 
 #gachaCalculate {
+  overflow: scroll;
+  height: calc(100vh - 20px);
 
   .el-radio-button__inner {
     width: 100%;
@@ -54,7 +56,7 @@
 
   .collapse-group1 {
     position: sticky;
-    top: 20px;
+    // top: 20px;
     max-width: 640px;
     min-width: 450px;
     max-height: 500px;
