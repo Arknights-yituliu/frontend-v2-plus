@@ -130,7 +130,7 @@ let scheduleOptions = [
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
   },
   {
-    name: '新春(估计)',
+    name: '新春(0121前后)',
     start: new Date('2025/01/21 16:00:00'),
     end: new Date('2025/02/03 04:01:00'),
     activityType: '春节限定',
@@ -424,13 +424,13 @@ const certificateT2Group = [
   {
     text: '10黄票',
     draw: 1
-  },{
+  }, {
     text: '18黄票',
     draw: 2
-  },{
+  }, {
     text: '40黄票',
     draw: 5
-  },{
+  }, {
     text: '70黄票',
     draw: 10
   }]
@@ -983,6 +983,11 @@ function gachaResourcesCalculation() {
         }
       }
 
+      if (activity.rewardModule === 'act') {
+        if (!selectedActivityName.value.includes(activityName)) {
+          continue
+        }
+      }
       orundum += activity.orundum
       originium += activity.originium
       gachaTicket += activity.gachaTicket
@@ -1612,8 +1617,8 @@ function handleResize() {
           </el-checkbox-button>
 
           <div class="divider"></div>
-          <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation" v-model="selectedCertificateT2Group"
-            size="small">
+          <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation"
+            v-model="selectedCertificateT2Group" size="small">
             <el-checkbox-button v-for="(price, index) in certificateT2Group" :key="price" :value="price">
               <div class="checkbox-button"><span>
                   {{ price.text }}
@@ -1825,6 +1830,7 @@ function handleResize() {
           <div class="collapse-content-subheading">
             <span></span> 限时礼包
           </div>
+          <span class="tip">"未致蒙尘"寻访包仅能用于10月维娜池，不能用于任何限定池</span>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByActivity" :key="index" :value="pack.parentIndex"
               class="el-checkbox-button">
@@ -1867,7 +1873,7 @@ function handleResize() {
               </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
- 
+
         </el-collapse-item>
 
         <!--活动获得(估算)-->
@@ -1894,9 +1900,17 @@ function handleResize() {
           <div class="collapse-content-subheading">
             <span></span> 未来活动
           </div>
-          <activity-gacha-resources v-for="(activity, name) in activityBySchedules" :key="name" :info="activity"
+          <!-- <activity-gacha-resources v-for="(activity, name) in activityBySchedules" :key="name" :info="activity"
             v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)">
-          </activity-gacha-resources>
+          </activity-gacha-resources> -->
+
+          <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(activity, name) in activityBySchedules" :key="name" :value="name"
+              v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)" class="el-checkbox-button">
+              <pack-button-content :data="activity">
+              </pack-button-content>
+            </el-checkbox-button>
+          </el-checkbox-group>
         </el-collapse-item>
 
         <el-collapse-item name="other" class="collapse-item">

@@ -8,7 +8,8 @@
     "end": "2024/09/29 04:00:00",
     "rewardType": "公共",
     "rewardModule": "actRe",
-    "probability": ""
+    "probability": "",
+    "defaultStatus": ""
   },
   "不义之财复刻(紫票)": {
     "originium": 0,
@@ -19,9 +20,10 @@
     "end": "2024/09/29 04:00:00",
     "rewardType": "公共",
     "rewardModule": "actRe",
-    "probability": ""
+    "probability": "",
+    "defaultStatus": "1"
   },
-  "SideStory追迹日落以西.Part1": {
+  "SS-追迹日落以西.Part1": {
     "originium": 12,
     "orundum": 0,
     "gachaTicket": 3,
@@ -30,18 +32,20 @@
     "end": "2024/10/09 04:00:00",
     "rewardType": "公共",
     "rewardModule": "act",
-    "probability": ""
+    "probability": "",
+    "defaultStatus": "1"
   },
-  "SideStory追迹日落以西.Part2": {
+  "SS-追迹日落以西.Part2": {
     "originium": 16,
     "orundum": 0,
-    "gachaTicket": 3,
+    "gachaTicket": 0,
     "tenGachaTicket": 0,
     "start": "2024/10/14 16:00:00",
     "end": "2024/10/15 04:00:00",
     "rewardType": "公共",
     "rewardModule": "act",
-    "probability": ""
+    "probability": "",
+    "defaultStatus": "1"
   },
   "主线EP15": {
     "originium": 47,
@@ -52,6 +56,175 @@
     "end": "2024/11/02 04:00:00",
     "rewardType": "公共",
     "rewardModule": "act",
-    "probability": ""
+    "probability": "",
+    "defaultStatus": ""
+  },
+  "感谢庆典SS.Part1": {
+    "originium": 12,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/11/01 16:00:00",
+    "end": "2024/11/02 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": "1"
+  },
+  "感谢庆典SS.Part2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/11/08 16:00:00",
+    "end": "2024/11/09 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": "1"
+  },
+  "感谢庆典SS.Part3": {
+    "originium": 9,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/11/15 16:00:00",
+    "end": "2024/11/16 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": "1"
+  },
+  "未知SS-1.Part1": {
+    "originium": 12,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/12/08 16:00:00",
+    "end": "2024/12/09 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": "1"
+  },
+  "未知SS-1.Part2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/12/14 16:00:00",
+    "end": "2024/12/15 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": "1"
+  },
+  "未知SS-2.Part1": {
+    "originium": 12,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/12/08 16:00:00",
+    "end": "2024/12/09 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": "1"
+  },
+  "未知SS-2.Part2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/12/14 16:00:00",
+    "end": "2024/12/15 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": "1"
+  },
+  "未知故事集": {
+    "originium": 18,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/12/08 16:00:00",
+    "end": "2024/12/09 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": "1"
+  },
+  "崔林特尔梅之金(源石)": {
+    "originium": 41,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/11/16 16:00:00",
+    "end": "2024/11/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus":""
+  },
+  "崔林特尔梅之金(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/11/16 16:00:00",
+    "end": "2024/11/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus":"1"
+  },
+  "银心湖列车(源石)": {
+    "originium": 28,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/12/16 16:00:00",
+    "end": "2024/12/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus":""
+  },
+  "银心湖列车(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/12/16 16:00:00",
+    "end": "2024/12/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus":"1"
+  },
+  "怀黍离(源石)": {
+    "originium": 28,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2025/02/16 16:00:00",
+    "end": "2025/02/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus":""
+  },
+  "怀黍离(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2025/02/16 16:00:00",
+    "end": "2025/02/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus":"1"
   }
 }
