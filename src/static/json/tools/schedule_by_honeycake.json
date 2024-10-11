@@ -1,114 +1,4 @@
 {
-  "夏活阶段3": {
-    "originium": 9,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/08/15 16:00:00",
-    "end": "2024/08/16 04:00:00",
-    "rewardType": "公共",
-    "module": "act",
-    "probability": ""
-  },
-  "夏活许愿墙": {
-    "originium": 0,
-    "orundum": 8400,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/08/01 16:00:00",
-    "end": "2024/08/15 04:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "夏活池每日赠送寻访凭证": {
-    "originium": 0,
-    "orundum": 0,
-    "gachaTicket": 14,
-    "tenGachaTicket": 0,
-    "start": "2024/08/01 16:00:00",
-    "end": "2024/08/15 04:00:00",
-    "rewardType": "夏活限定",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "夏活池专属十连寻访凭证": {
-    "originium": 0,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 1,
-    "start": "2024/08/01 16:00:00",
-    "end": "2024/08/02 04:00:00",
-    "rewardType": "夏活限定",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "火山旅梦复刻(源石)": {
-    "originium": 40,
-    "orundum": 0,
-    "gachaTicket": 3,
-    "tenGachaTicket": 0,
-    "start": "2024/08/22 16:00:00",
-    "end": "2024/08/31 04:00:00",
-    "rewardType": "公共",
-    "module": "actRe",
-    "probability": ""
-  },
-  "火山旅梦复刻(紫票)": {
-    "originium": 0,
-    "orundum": 2000,
-    "gachaTicket": 3,
-    "tenGachaTicket": 0,
-    "start": "2024/08/22 16:00:00",
-    "end": "2024/08/31 04:00:00",
-    "rewardType": "公共",
-    "module": "actRe",
-    "probability": ""
-  },
-  "迷宫饭联动SS.Part1": {
-    "originium": 12,
-    "orundum": 0,
-    "gachaTicket": 3,
-    "tenGachaTicket": 0,
-    "start": "2024/09/02 16:00:00",
-    "end": "2024/09/03 04:00:00",
-    "rewardType": "公共",
-    "module": "act",
-    "probability": ""
-  },
-  "迷宫饭联动SS.Part2": {
-    "originium": 16,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/09/09 16:00:00",
-    "end": "2024/09/10 04:00:00",
-    "rewardType": "公共",
-    "module": "act",
-    "probability": ""
-  },
-  "签到十连-day1": {
-    "originium": 0,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 1,
-    "start": "2024/09/02 16:00:00",
-    "end": "2024/09/03 04:00:00",
-    "rewardType": "联动限定",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "签到十连-day7": {
-    "originium": 0,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 1,
-    "start": "2024/09/09 04:00:00",
-    "end": "2024/09/09 16:00:00",
-    "rewardType": "联动限定",
-    "module": "honeyCake",
-    "probability": ""
-  },
   "不义之财复刻(源石)": {
     "originium": 29,
     "orundum": 0,
@@ -117,8 +7,9 @@
     "start": "2024/09/16 16:00:00",
     "end": "2024/09/29 04:00:00",
     "rewardType": "公共",
-    "module": "actRe",
-    "probability": ""
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": false
   },
   "不义之财复刻(紫票)": {
     "originium": 0,
@@ -128,19 +19,33 @@
     "start": "2024/09/16 16:00:00",
     "end": "2024/09/29 04:00:00",
     "rewardType": "公共",
-    "module": "actRe",
-    "probability": ""
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": true
   },
-  "未知SideStory": {
-    "originium": 39,
+  "SS-追迹日落以西.Part1": {
+    "originium": 12,
     "orundum": 0,
     "gachaTicket": 3,
     "tenGachaTicket": 0,
     "start": "2024/10/08 16:00:00",
-    "end": "2024/10/28 04:00:00",
+    "end": "2024/10/09 04:00:00",
     "rewardType": "公共",
-    "module": "act",
-    "probability": ""
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "SS-追迹日落以西.Part2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/10/14 16:00:00",
+    "end": "2024/10/15 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
   },
   "主线EP15": {
     "originium": 47,
@@ -150,95 +55,176 @@
     "start": "2024/11/01 16:00:00",
     "end": "2024/11/02 04:00:00",
     "rewardType": "公共",
-    "module": "act",
-    "probability": ""
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": false
   },
-  "兔子矿区": {
-    "originium": 0,
-    "orundum": 8400,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/11/01 16:00:00",
-    "end": "2024/11/15 04:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "周年池每日赠送寻访凭证": {
-    "originium": 0,
+  "感谢庆典SS.Part1": {
+    "originium": 12,
     "orundum": 0,
-    "gachaTicket": 14,
-    "tenGachaTicket": 0,
-    "start": "2024/11/01 16:00:00",
-    "end": "2024/11/15 04:00:00",
-    "rewardType": "周年限定",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "周年池专属十连寻访凭证": {
-    "originium": 0,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 1,
-    "start": "2024/11/01 16:00:00",
-    "end": "2024/11/02 04:00:00",
-    "rewardType": "周年限定",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "停机更新(8月)": {
-    "originium": 5,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/08/01 16:00:00",
-    "end": "2024/08/02 04:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "停机更新(9月)": {
-    "originium": 5,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/09/02 16:00:00",
-    "end": "2024/09/03 04:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "停机更新(10月)": {
-    "originium": 5,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2024/10/15 16:00:00",
-    "end": "2024/10/16 04:00:00",
-    "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
-  },
-  "停机更新(11月)": {
-    "originium": 5,
-    "orundum": 0,
-    "gachaTicket": 0,
+    "gachaTicket": 3,
     "tenGachaTicket": 0,
     "start": "2024/11/01 16:00:00",
     "end": "2024/11/02 04:00:00",
     "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
   },
-  "剿灭作战更新1": {
-    "originium": 0,
-    "orundum": 1500,
+  "感谢庆典SS.Part2": {
+    "originium": 16,
+    "orundum": 0,
     "gachaTicket": 0,
     "tenGachaTicket": 0,
-    "start": "2024/09/02 16:00:00",
-    "end": "2024/09/03 04:00:00",
+    "start": "2024/11/08 16:00:00",
+    "end": "2024/11/09 04:00:00",
     "rewardType": "公共",
-    "module": "honeyCake",
-    "probability": ""
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "感谢庆典SS.Part3": {
+    "originium": 9,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/11/15 16:00:00",
+    "end": "2024/11/16 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "未知SS-1.Part1": {
+    "originium": 12,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/12/08 16:00:00",
+    "end": "2024/12/09 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "未知SS-1.Part2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/12/14 16:00:00",
+    "end": "2024/12/15 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "未知SS-2.Part1": {
+    "originium": 12,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/12/08 16:00:00",
+    "end": "2024/12/09 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "未知SS-2.Part2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/12/14 16:00:00",
+    "end": "2024/12/15 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "未知故事集": {
+    "originium": 18,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2024/12/08 16:00:00",
+    "end": "2024/12/09 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "崔林特尔梅之金(源石)": {
+    "originium": 41,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/11/16 16:00:00",
+    "end": "2024/11/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "崔林特尔梅之金(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/11/16 16:00:00",
+    "end": "2024/11/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "银心湖列车(源石)": {
+    "originium": 28,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/12/16 16:00:00",
+    "end": "2024/12/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "银心湖列车(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2024/12/16 16:00:00",
+    "end": "2024/12/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "怀黍离(源石)": {
+    "originium": 28,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2025/02/16 16:00:00",
+    "end": "2025/02/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "怀黍离(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2025/02/16 16:00:00",
+    "end": "2025/02/29 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": true
   }
 }
