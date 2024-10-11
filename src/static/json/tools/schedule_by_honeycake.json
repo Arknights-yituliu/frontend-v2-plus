@@ -129,7 +129,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": true
+    "defaultStatus": false
   },
   "未知SS-2.Part2": {
     "originium": 16,
@@ -141,7 +141,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": true
+    "defaultStatus": false
   },
   "未知故事集": {
     "originium": 18,
@@ -165,7 +165,7 @@
     "rewardType": "公共",
     "rewardModule": "actRe",
     "probability": "",
-    "defaultStatus":""
+    "defaultStatus": false
   },
   "崔林特尔梅之金(紫票)": {
     "originium": 0,
@@ -177,7 +177,7 @@
     "rewardType": "公共",
     "rewardModule": "actRe",
     "probability": "",
-    "defaultStatus":"1"
+    "defaultStatus": true
   },
   "银心湖列车(源石)": {
     "originium": 28,
@@ -189,7 +189,7 @@
     "rewardType": "公共",
     "rewardModule": "actRe",
     "probability": "",
-    "defaultStatus":""
+    "defaultStatus": false
   },
   "银心湖列车(紫票)": {
     "originium": 0,
@@ -201,7 +201,7 @@
     "rewardType": "公共",
     "rewardModule": "actRe",
     "probability": "",
-    "defaultStatus":"1"
+    "defaultStatus": true
   },
   "怀黍离(源石)": {
     "originium": 28,
@@ -213,7 +213,7 @@
     "rewardType": "公共",
     "rewardModule": "actRe",
     "probability": "",
-    "defaultStatus":""
+    "defaultStatus": false
   },
   "怀黍离(紫票)": {
     "originium": 0,
@@ -225,6 +225,6 @@
     "rewardType": "公共",
     "rewardModule": "actRe",
     "probability": "",
-    "defaultStatus":"1"
+    "defaultStatus": true
   }
 }

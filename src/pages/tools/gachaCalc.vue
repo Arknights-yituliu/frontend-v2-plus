@@ -64,6 +64,9 @@ for (const name in FIXED_TABLE) {
     otherRewardBySchedules.value.push(activityData)
   } else {
     activityBySchedules.value[name] = activityData
+    if(activityData.defaultStatus){
+      selectedActivityName.value.push(activityData.name)
+    }
   }
 }
 
