@@ -6,12 +6,11 @@ import '/src/assets/css/sprite/sprite_plane_icon.css'
 import '/src/assets/css/tool/gacha_calc.phone.scss'
 import * as echarts from "echarts";
 
-import potentialTable from '/src/static/json/tools/potential_gacha_resources.json'
+import POTENTIAL_TABLE from '/src/static/json/tools/potential_gacha_resources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'
 import FIXED_TABLE from '/src/static/json/tools/schedule_fixed.json'
 import storeAPI from '/src/api/store'
 import { cMessage } from "/src/utils/Message.js";
-import { dateDiff } from '/src/utils/DateUtil.js'
 import { ElNotification } from "element-plus";
 
 
@@ -23,6 +22,19 @@ import ActivityGachaResources from "/src/components/ActivityGachaResources.vue";
 let otherRewardBySchedules = ref([])
 // 罗德岛蜜饼工坊预测的活动排期
 let activityBySchedules = ref({})
+
+//当前时间戳
+const currentTimestamp = new Date().getTime();
+//选中的黄票兑换抽卡券
+let selectedCertificatePack = ref([])
+//选中的潜在章节
+let selectedPermanentZoneName = ref([])
+//选中的活动名称
+let selectedActivityName = ref([])
+//选择的礼包索引
+let selectedPackIndex = ref([])
+
+let selectedHistoryPackIndex = ref([])
 
 //将预测活动排期分类
 for (const name in HONEY_CAKE_TABLE) {
@@ -36,6 +48,9 @@ for (const name in HONEY_CAKE_TABLE) {
     otherRewardBySchedules.value.push(activityData)
   } else {
     activityBySchedules.value[name] = activityData
+    if(activityData.defaultStatus){
+      selectedActivityName.value.push(activityData.name)
+    }
   }
 }
 for (const name in FIXED_TABLE) {
@@ -507,18 +522,7 @@ let singleResourceDraws = ref({
   tenGachaTicket: 0,
 })
 
-//当前时间戳
-const currentTimestamp = new Date().getTime();
-//选中的黄票兑换抽卡券
-let selectedCertificatePack = ref([])
-//选中的潜在章节
-let selectedPermanentZoneName = ref([])
-//选中的活动名称
-let selectedActivityName = ref([])
-//选择的礼包索引
-let selectedPackIndex = ref([])
 
-let selectedHistoryPackIndex = ref([])
 
 let logs = []
 
@@ -834,7 +838,7 @@ function gachaResourcesCalculation() {
     if (selectedPermanentZoneName.value) {
       //循环选中的章节按钮的索引，获得对应的章节奖励
       for (const index of selectedPermanentZoneName.value) {
-        const potential = potentialTable[index]
+        const potential = POTENTIAL_TABLE[index]
         originium += parseInt(potential.gachaOriginium)
         orundum += parseInt(potential.gachaOrundum)
       }
@@ -1715,7 +1719,7 @@ function handleResize() {
 
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px" @change="gachaResourcesCalculation"
             size="small">
-            <el-checkbox-button v-for="(potential, index) in potentialTable" :key="index" :value="index"
+            <el-checkbox-button v-for="(potential, index) in POTENTIAL_TABLE" :key="index" :value="index"
               v-show="potential.packType === 'train'" class="el-checkbox-button" :border="true">
               <div class="checkbox-button">
                 <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
@@ -1734,7 +1738,7 @@ function handleResize() {
 
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px" @change="gachaResourcesCalculation"
             size="small">
-            <el-checkbox-button v-for="(potential, index) in potentialTable" :key="index" :value="index"
+            <el-checkbox-button v-for="(potential, index) in POTENTIAL_TABLE" :key="index" :value="index"
               v-show="potential.packType === 'main'" class="el-checkbox-button" :border="true">
               <div class="checkbox-button">
                 <span
@@ -1756,7 +1760,7 @@ function handleResize() {
           </div>
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
             @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(potential, index) in potentialTable" :border="true" :key="index" :value="index"
+            <el-checkbox-button v-for="(potential, index) in POTENTIAL_TABLE" :border="true" :key="index" :value="index"
               v-show="potential.packType === 'activity-main'" class="el-checkbox-button">
               <div class="checkbox-button">
                 <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
@@ -1775,7 +1779,7 @@ function handleResize() {
           </div>
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
             @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(potential, index) in potentialTable" :border="true" :key="index" :value="index"
+            <el-checkbox-button v-for="(potential, index) in POTENTIAL_TABLE" :border="true" :key="index" :value="index"
               v-show="potential.packType === 'activity'" class="el-checkbox-button">
               <div class="checkbox-button">
                 <span class="checkbox-button-zone-label">{{ potential.packName }}</span>

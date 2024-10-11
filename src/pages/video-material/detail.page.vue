@@ -79,16 +79,7 @@ function getStageResultDetail() {
   })
 }
 
-//设置饼图信息
-function setPieChartObj(InsideOrOutside, ratio, description) {
-  let chartFan = {};
-  if (ratio > 0) {
-    chartFan.value = ratio;
-    chartFan.name = description;
-    if ("inside" === InsideOrOutside) pieDataMain.value.push(chartFan);
-    if ("outside" === InsideOrOutside) pieDataExtra.value.push(chartFan);
-  }
-}
+
 
 function getStageDetailByStageId(stage_id) {
 
@@ -108,7 +99,8 @@ function getStageDetailByStageId(stage_id) {
 
   const drop_detail_list = stage_result_detail.dropDetailList
   for (const element of drop_detail_list) {
-    const ratio = formatNumber(element.ratio * stage_result_detail.stageEfficiency * 100, 1); //占比
+
+    const ratio = formatNumber(element.ratio *100, 1); //占比
 
     let description = element.itemName;
     if (ratio > 10) {
@@ -137,9 +129,25 @@ function getStageDetailByStageId(stage_id) {
 
 
 
-  // console.log(pieDataMain.value)
+  console.log(pieDataMain.value)
   // console.log(pieDataExtra.value)
   pieChart(pieDataMain.value);
+}
+
+
+//设置饼图信息
+function setPieChartObj(InsideOrOutside, ratio, description) {
+  let chartFan = {};
+  if (ratio > 0) {
+    chartFan.value = ratio;
+    chartFan.name = description;
+    if ("inside" === InsideOrOutside) {
+      pieDataMain.value.push(chartFan);
+    }
+    if ("outside" === InsideOrOutside) {
+      pieDataExtra.value.push(chartFan);
+    }
+  }
 }
 
 function formatNumber(num, acc) {

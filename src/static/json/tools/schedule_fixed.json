@@ -9,7 +9,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "（联动模板）迷宫饭联动SS.Part2": {
     "originium": 16,
@@ -21,7 +21,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "（联动模板）签到十连-day1": {
     "originium": 0,
@@ -33,7 +33,7 @@
     "rewardType": "联动限定",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "（联动模板）签到十连-day7": {
     "originium": 0,
@@ -45,7 +45,7 @@
     "rewardType": "联动限定",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "春节池幸运签": {
     "originium": 0,
@@ -57,7 +57,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "春节池每日赠送单抽": {
     "originium": 0,
@@ -69,7 +69,7 @@
     "rewardType": "春节限定",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "春节池专属十连寻访凭证": {
     "originium": 0,
@@ -81,7 +81,7 @@
     "rewardType": "春节限定",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "春节SS.Part1": {
     "originium": 12,
@@ -93,7 +93,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "春节SS.Part2": {
     "originium": 16,
@@ -105,7 +105,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "（可能没有）春节SS.Part3": {
     "originium": 9,
@@ -117,7 +117,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "（周年模板）兔子矿区": {
     "originium": 0,
@@ -129,7 +129,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "（夏活模板）夏活阶段3": {
     "originium": 9,
@@ -141,7 +141,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "产业合作洽谈": {
     "originium": 0,
@@ -153,7 +153,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "感谢庆典每日单抽": {
     "originium": 0,
@@ -165,7 +165,7 @@
     "rewardType": "周年限定",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "感谢庆典专属十连": {
     "originium": 0,
@@ -177,7 +177,7 @@
     "rewardType": "周年限定",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "感谢庆典.Part1": {
     "originium": 12,
@@ -189,7 +189,7 @@
     "rewardType": "公共",
     "rewardModule": "none",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "感谢庆典.Part2": {
     "originium": 16,
@@ -201,7 +201,7 @@
     "rewardType": "公共",
     "rewardModule": "none",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "感谢庆典.Part3": {
     "originium": 9,
@@ -213,7 +213,7 @@
     "rewardType": "公共",
     "rewardModule": "none",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "停机更新(8月)": {
     "originium": 5,
@@ -225,7 +225,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "停机更新(9月)": {
     "originium": 5,
@@ -237,7 +237,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "停机更新(10月)": {
     "originium": 5,
@@ -249,7 +249,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "停机更新(11月)": {
     "originium": 5,
@@ -261,7 +261,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "停机更新(12月)": {
     "originium": 5,
@@ -273,7 +273,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "停机更新(1月)": {
     "originium": 5,
@@ -285,7 +285,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "停机更新(2月)": {
     "originium": 5,
@@ -297,7 +297,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "剿灭作战更新1": {
     "originium": 0,
@@ -309,7 +309,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "剿灭作战更新2": {
     "originium": 0,
@@ -321,7 +321,7 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   },
   "剿灭作战更新3": {
     "originium": 0,
@@ -333,6 +333,6 @@
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
-    "defaultStatus": "1"
+    "defaultStatus": true
   }
 }
