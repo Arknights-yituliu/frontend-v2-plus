@@ -119,6 +119,15 @@ const routes = [
         component: () => import('/src/pages/tools/specializationTimeCalculate.vue')
     },
     {
+        path: '/tools/excels',
+        text: '常用计算表',
+        name: 'Excels',
+        display: false,
+        module: 'tools',
+        icon: "calculator",
+        component: () => import('/src/pages/tools/excels.page.vue')
+    },
+    {
         path: '/information/logistics',
         text: '基建技能一览',
         name: 'Logistics',
