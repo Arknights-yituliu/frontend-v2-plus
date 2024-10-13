@@ -53,6 +53,7 @@ for (const name in HONEY_CAKE_TABLE) {
     }
   }
 }
+
 for (const name in FIXED_TABLE) {
   let activityData = FIXED_TABLE[name]
   //将活动排期的日期统一转为时间戳
