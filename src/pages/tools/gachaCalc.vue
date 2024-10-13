@@ -995,13 +995,13 @@ function gachaResourcesCalculation() {
         }
       }
 
-      console.log(activityName)
+
 
       orundum += activity.orundum
       originium += activity.originium
       gachaTicket += activity.gachaTicket
       tenGachaTicket += activity.tenGachaTicket
-      console.log(gachaTicket)
+
     }
 
     if (!originiumIsUsed.value) {
@@ -1150,7 +1150,6 @@ function gachaResourcesCalculation() {
   localStorage.setItem('LastSettings', JSON.stringify(lastSettings))
 
   setPieChart(pieChartData.value)
-  console.table(logs)
 
   // console.log(calculationResult.value)
 }
