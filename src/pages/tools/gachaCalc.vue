@@ -1283,7 +1283,6 @@ onMounted(() => {
     message: '<strong>1.更新了春节卡池排期（非准确排期）<br>2.修复了部分奖励计算错误的问题</strong>',
   })
 
-
 })
 
 function keepTheDecimalPoint(num, decimalPlaces) {
