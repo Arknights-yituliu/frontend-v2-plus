@@ -1280,7 +1280,7 @@ onMounted(() => {
   ElNotification({
     title: '2024.08.16',
     dangerouslyUseHTMLString: true,
-    message: '<strong>1.更新了联动卡池排期<br>2.调整了周年卡池排期（仅供参考，非准确排期）</strong>',
+    message: '<strong>1.更新了春节卡池排期（非准确排期）<br>2.修复了部分奖励计算错误的问题</strong>',
   })
 
 
