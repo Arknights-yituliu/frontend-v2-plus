@@ -53,6 +53,7 @@ for (const name in HONEY_CAKE_TABLE) {
     }
   }
 }
+
 for (const name in FIXED_TABLE) {
   let activityData = FIXED_TABLE[name]
   //将活动排期的日期统一转为时间戳
@@ -995,13 +996,13 @@ function gachaResourcesCalculation() {
         }
       }
 
-      console.log(activityName)
+
 
       orundum += activity.orundum
       originium += activity.originium
       gachaTicket += activity.gachaTicket
       tenGachaTicket += activity.tenGachaTicket
-      console.log(gachaTicket)
+
     }
 
     if (!originiumIsUsed.value) {
@@ -1150,7 +1151,6 @@ function gachaResourcesCalculation() {
   localStorage.setItem('LastSettings', JSON.stringify(lastSettings))
 
   setPieChart(pieChartData.value)
-  console.table(logs)
 
   // console.log(calculationResult.value)
 }
