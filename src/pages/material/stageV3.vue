@@ -7,7 +7,7 @@ import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import {dataFormat} from '/src/utils/DateUtil.js'
-import reproduction_activity from '/src/static/json/material/reproduction_activity.json'
+import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 
 //漫游导航指引
 const guideOpen = ref(false)
@@ -62,7 +62,6 @@ function getStageResult() {
       getItemTableData(0, false)
     })
   })
-
 
 
 }
@@ -238,14 +237,14 @@ let itemIdList = [] // 材料表
 let historyActItemTable = ref([]) // 历史活动up材料表
 let historyActItemList = []
 
-let historyActDevice = ref('')
+let actHistoryTableType = ref('')
 
 /**
- * 传入一个设备类型，将其赋值给 historyActDevice 按钮通过 historyActDevice 进行判断是什么模式
+ * 传入一个设备类型，将其赋值给 actHistoryTableType 按钮通过 actHistoryTableType 进行判断是什么形式的表格
  * @param {string} device
  */
 function chooseHistoryActDevice(device) {
-  historyActDevice.value = device
+  actHistoryTableType.value = device
   const pcElement = document.getElementById('act-table-pc')
   const phoneElement = document.getElementById('act-table-phone')
   if (device === 'pc') {
@@ -257,16 +256,6 @@ function chooseHistoryActDevice(device) {
   }
 
 }
-
-
-function historyActDeviceBtnClass(device) {
-  if (device === historyActDevice.value) {
-    // return 'op_tag_1'
-  }
-  // return 'op_tag_0'
-}
-
-// 未来复刻的活动
 
 
 /**
@@ -340,8 +329,11 @@ function getHistoryActStage() {
         }
       }
 
-      for (const reprintActivity of reproduction_activity) {
+      //循环复刻活动的数据
+      for (const reprintActivity of REPRODUCTION_ACTIVITY) {
+        //通过判断同名的活动和复刻活动，将up材料赋予给复刻活动
         if (reprintActivity.activityName === rowData.activityName) {
+          //将up材料赋予给复刻活动
           reprintActivity.itemList = rowData.itemList
         }
       }
@@ -349,7 +341,10 @@ function getHistoryActStage() {
       historyActItemTable.value.push(rowData)
     }
 
-    for (const reprintActivity of reproduction_activity) {
+    historyActItemTable.value[0].divider = true
+
+    //将复刻活动按首位插入进活动表格的集合中
+    for (const reprintActivity of REPRODUCTION_ACTIVITY) {
       historyActItemTable.value.unshift(reprintActivity)
     }
 
@@ -360,14 +355,20 @@ function getHistoryActStage() {
 
 function getCellBgColor(rowIndex, maxIndex) {
 
-  if (rowIndex < reproduction_activity.length) {
+  if (rowIndex < REPRODUCTION_ACTIVITY.length) {
     return ''
   }
 
-  if ((rowIndex - reproduction_activity.length) < maxIndex) {
+  if ((rowIndex - REPRODUCTION_ACTIVITY.length) < maxIndex) {
     return 'background-color: #82beff80'
   }
   return ''
+}
+
+function getTableDividerClass(divider){
+  if(divider){
+    return 'act-history-table-divider'
+  }
 }
 
 
@@ -395,7 +396,7 @@ function filterOrundumStage() {
 }
 
 function getOrundumRecommendedStage() {
-  stageApi.getOrundumRecommendedStage(0.633,300).then(response => {
+  stageApi.getOrundumRecommendedStage(0.633, 300).then(response => {
     for (const stage of response.data) {
       orundumRecommendedStage.value.push({
         stageCode: stage.stageCode,
@@ -534,7 +535,7 @@ onMounted(() => {
 
     <!-- 图例3.0 -->
     <div class="stage-legend" @click="scrollToLegendDescription" id="sStageLegend">
-      <table class="s-stage-legend-table">
+      <table class="stage-legend-table">
         <tbody>
         <tr>
           <td>
@@ -788,7 +789,7 @@ onMounted(() => {
             {{ formatNumber(scope.row.knockRating * 100, 1) }}%
           </template>
         </el-table-column>
-        <el-table-column  prop="apExpect" label="期望理智" sortable>
+        <el-table-column prop="apExpect" label="期望理智" sortable>
           <template #default="scope">
             {{ formatNumber(scope.row.apExpect, 1) }}
           </template>
@@ -889,18 +890,6 @@ onMounted(() => {
       <button class="tag-button" @click="chooseHistoryActDevice('pc')">表格模式</button>
     </div>
 
-    <!--    <div class="op_title" id="history-stage-table">-->
-    <!--      <div class="op_title_text">-->
-    <!--        <div class="op_title_ctext">往期活动数据</div>-->
-    <!--        <div class="op_title_etext_light">History Event</div>-->
-    <!--      </div>-->
-    <!--      <div class="op_title_tag">-->
-    <!--        &lt;!&ndash; <div class="op_tag_0">图例</div> &ndash;&gt;-->
-    <!--        <div :class="historyActDeviceBtnClass('phone')" @click="chooseHistoryActDevice('phone')">紧密模式-->
-    <!--        </div>-->
-    <!--        <div :class="historyActDeviceBtnClass('pc')" @click="chooseHistoryActDevice('pc')">表格模式</div>-->
-    <!--      </div>-->
-    <!--    </div>-->
     <!-- pc端大表格 -->
     <div class="activity-table-pc-container" id="act-table-pc">
       <table class="activity-table-pc">
@@ -913,7 +902,7 @@ onMounted(() => {
             </div>
           </td>
         </tr>
-        <tr v-for="(act, rowIndex) in historyActItemTable" :key="rowIndex">
+        <tr v-for="(act, rowIndex) in historyActItemTable" :key="rowIndex"  :class="getTableDividerClass(act.divider)">
           <td class="activity-name-pc">
             {{ act.activityName }} <br>
             {{ act.startTime }}
@@ -923,7 +912,7 @@ onMounted(() => {
             <div class="activity-pickup-item-pc" v-if="act.itemList[item.id]">
               <div :class="getActTableItemSprite(item.id)"></div>
             </div>
-            <div class="s-activity-stage-efficiency-pc" v-if="act.itemList[item.id]">
+            <div class="activity-stage-efficiency-pc" v-if="act.itemList[item.id]">
               {{ formatNumber(act.itemList[item.id].stageEfficiency, 2) }}%
             </div>
           </td>
@@ -935,9 +924,9 @@ onMounted(() => {
     <div class="activity-table-phone-container" id="act-table-phone">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActItemList" :key="index">
-          <td class="s-activity-name-phone">{{ act.zoneName }}</td>
+          <td class="activity-name-phone">{{ act.zoneName }}</td>
           <td v-for="(stage, index) in  act.actStageList" :key="index">
-            <div class="s-activity-drop">
+            <div class="activity-drop">
               <div class="activity-pickup-item">
                 <div :class="getActTableSimpleItemSprite(stage.itemId)"></div>
               </div>
@@ -988,7 +977,7 @@ onMounted(() => {
               <b>图例</b>
               <hr/>
               <div class="stage-legend">
-                <table class="s-stage-legend-table">
+                <table class="stage-legend-table">
                   <tbody>
                   <tr>
                     <td>
