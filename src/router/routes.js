@@ -319,6 +319,12 @@ const routes = [
         component: () => import('/src/pages/material/stageV3E0.vue')
     },
     {
+        path: '/tools/rogueSeeds',
+        text: 'rogueseeds',
+        display: false,
+        component: () => import('/src/pages/tools/rogueSeeds.vue')
+    },
+    {
         path: '/:catchAll(.*)',
         display: false,
         component: Error404
