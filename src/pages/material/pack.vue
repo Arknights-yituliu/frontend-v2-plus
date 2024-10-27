@@ -153,6 +153,10 @@ const choosePackOption = (list, value) => {
   filterPacks()
 }
 
+function getText(item, row) {
+  return saleTypes.find(item => item.value === row.saleType)?.text
+}
+
 initData()
 </script>
 <template>
@@ -266,7 +270,7 @@ initData()
             min-width="92"
             v-slot="{ row }"
           >
-            <span>{{ saleTypes.find(item => item.value === row.saleType).text }}</span>
+            <span>{{ getText(item, row) }}</span>
           </el-table-column>
           <el-table-column prop="price" label="售价" sortable min-width="80" :formatter="row => row.price + '元'" />
           <el-table-column prop="draws" label="抽数" sortable min-width="80" :formatter="row => row.draws.toFixed(2)" />
