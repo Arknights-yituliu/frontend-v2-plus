@@ -4,10 +4,12 @@
 }
 
 
+
 .bg-1 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -213px -10px;
 }
+
 
 
 .bg-2001 {
@@ -16,16 +18,19 @@
 }
 
 
+
 .bg-2002 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -213px -213px;
 }
 
 
-.bg-3003 {
+
+.bg-2003 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -416px -10px;
 }
+
 
 
 .bg-2004 {
@@ -34,10 +39,12 @@
 }
 
 
-.bg-2003 {
+
+.bg-3003 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -10px -416px;
 }
+
 
 
 .bg-3112 {
@@ -46,10 +53,12 @@
 }
 
 
+
 .bg-3113 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -416px -416px;
 }
+
 
 
 .bg-3114 {
@@ -58,46 +67,54 @@
 }
 
 
+
 .bg-3141 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -213px;
 }
 
 
-.bg-3212 {
+
+.bg-3211 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -416px;
 }
 
 
-.bg-3211 {
+
+.bg-3212 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -10px -619px;
 }
 
 
-.bg-3221 {
+
+.bg-3213 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -213px -619px;
 }
 
 
-.bg-3213 {
+
+.bg-3221 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -416px -619px;
 }
 
 
-.bg-3223 {
+
+.bg-3222 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -619px;
 }
 
 
-.bg-3222 {
+
+.bg-3223 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -822px -10px;
 }
+
 
 
 .bg-3231 {
@@ -106,16 +123,19 @@
 }
 
 
-.bg-3233 {
+
+.bg-3232 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -822px -416px;
 }
 
 
-.bg-3232 {
+
+.bg-3233 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -822px -619px;
 }
+
 
 
 .bg-3241 {
@@ -124,10 +144,12 @@
 }
 
 
+
 .bg-3242 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -213px -822px;
 }
+
 
 
 .bg-3243 {
@@ -136,10 +158,12 @@
 }
 
 
+
 .bg-3251 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -822px;
 }
+
 
 
 .bg-3252 {
@@ -148,22 +172,26 @@
 }
 
 
-.bg-3261 {
+
+.bg-3253 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -10px;
 }
 
 
-.bg-3262 {
+
+.bg-3261 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -213px;
 }
 
 
-.bg-3253 {
+
+.bg-3262 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -416px;
 }
+
 
 
 .bg-3263 {
@@ -172,10 +200,12 @@
 }
 
 
+
 .bg-3271 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -822px;
 }
+
 
 
 .bg-3272 {
@@ -184,22 +214,26 @@
 }
 
 
+
 .bg-3273 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -213px -1025px;
 }
 
 
-.bg-3282 {
+
+.bg-3281 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -416px -1025px;
 }
 
 
-.bg-3281 {
+
+.bg-3282 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -1025px;
 }
+
 
 
 .bg-3283 {
@@ -208,34 +242,40 @@
 }
 
 
+
 .bg-3301 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -1025px;
 }
 
 
-.bg-3303 {
+
+.bg-3302 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -10px;
 }
 
 
-.bg-3401 {
+
+.bg-3303 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -213px;
 }
 
 
-.bg-4001 {
+
+.bg-3401 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -416px;
 }
 
 
-.bg-3302 {
+
+.bg-4001 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -619px;
 }
+
 
 
 .bg-4002 {
@@ -244,16 +284,19 @@
 }
 
 
-.bg-4005 {
+
+.bg-4003 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -1025px;
 }
 
 
-.bg-4003 {
+
+.bg-4003sp {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -10px -1228px;
 }
+
 
 
 .bg-4004 {
@@ -262,70 +305,82 @@
 }
 
 
-.bg-5001 {
+
+.bg-4005 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -416px -1228px;
 }
 
 
-.bg-7001 {
+
+.bg-4006 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -1228px;
 }
 
 
-.bg-4006 {
+
+.bg-5001 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -822px -1228px;
 }
 
 
-.bg-7004 {
+
+.bg-7001 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -1228px;
 }
 
 
-.bg-30011 {
+
+.bg-7003 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -1228px;
 }
 
 
-.bg-7003 {
+
+.bg-7004 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -10px;
 }
 
 
-.bg-30013 {
+
+.bg-30011 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -213px;
 }
 
 
-.bg-30014 {
+
+.bg-30012 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -416px;
 }
 
 
-.bg-30012 {
+
+.bg-30013 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -619px;
 }
 
 
-.bg-30021 {
+
+.bg-30014 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -822px;
 }
 
 
-.bg-30023 {
+
+.bg-30021 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -1025px;
 }
+
 
 
 .bg-30022 {
@@ -334,64 +389,75 @@
 }
 
 
-.bg-30024 {
+
+.bg-30023 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -10px -1431px;
 }
 
 
-.bg-30031 {
+
+.bg-30024 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -213px -1431px;
 }
 
 
-.bg-30032 {
+
+.bg-30031 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -416px -1431px;
 }
 
 
-.bg-30033 {
+
+.bg-30032 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -1431px;
 }
 
 
-.bg-30034 {
+
+.bg-30033 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -822px -1431px;
 }
 
 
-.bg-30041 {
+
+.bg-30034 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -1431px;
 }
 
 
-.bg-30042 {
+
+.bg-30041 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -1431px;
 }
 
 
-.bg-30043 {
+
+.bg-30042 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -1431px;
 }
 
 
-.bg-30044 {
+
+.bg-30043 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -10px;
 }
 
 
-.bg-30052 {
+
+.bg-30044 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -213px;
 }
+
 
 
 .bg-30051 {
@@ -400,58 +466,68 @@
 }
 
 
-.bg-30054 {
+
+.bg-30052 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -619px;
 }
 
 
-.bg-30061 {
+
+.bg-30053 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -822px;
 }
 
 
-.bg-30053 {
+
+.bg-30054 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -1025px;
 }
 
 
-.bg-30062 {
+
+.bg-30061 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -1228px;
 }
 
 
-.bg-30064 {
+
+.bg-30062 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -1431px;
 }
 
 
-.bg-30073 {
+
+.bg-30063 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -10px -1634px;
 }
 
 
-.bg-30074 {
+
+.bg-30064 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -213px -1634px;
 }
 
 
-.bg-30063 {
+
+.bg-30073 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -416px -1634px;
 }
 
 
-.bg-30084 {
+
+.bg-30074 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -1634px;
 }
+
 
 
 .bg-30083 {
@@ -460,28 +536,33 @@
 }
 
 
-.bg-30093 {
+
+.bg-30084 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -1634px;
 }
 
 
-.bg-30094 {
+
+.bg-30093 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -1634px;
 }
 
 
-.bg-30103 {
+
+.bg-30094 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -1634px;
 }
 
 
-.bg-30125 {
+
+.bg-30103 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -1634px;
 }
+
 
 
 .bg-30104 {
@@ -490,46 +571,54 @@
 }
 
 
+
 .bg-30115 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1837px -213px;
 }
 
 
-.bg-30135 {
+
+.bg-30125 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1837px -416px;
 }
 
 
-.bg-30145 {
+
+.bg-30135 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1837px -619px;
 }
 
 
-.bg-31013 {
+
+.bg-30145 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1837px -822px;
 }
 
 
-.bg-31014 {
+
+.bg-30155 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1837px -1025px;
 }
 
 
-.bg-30155 {
+
+.bg-31013 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1837px -1228px;
 }
 
 
-.bg-31024 {
+
+.bg-31014 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1837px -1431px;
 }
+
 
 
 .bg-31023 {
@@ -538,175 +627,204 @@
 }
 
 
-.bg-31033 {
+
+.bg-31024 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -10px -1837px;
 }
 
 
-.bg-31034 {
+
+.bg-31033 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -213px -1837px;
 }
 
 
-.bg-31043 {
+
+.bg-empty {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -416px -1837px;
 }
 
 
-.bg-31053 {
+
+.bg-31034 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -1837px;
 }
 
 
-.bg-31044 {
+
+.bg-31043 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -822px -1837px;
 }
 
 
-.bg-31054 {
+
+.bg-31044 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -1837px;
 }
 
 
-.bg-31063 {
+
+.bg-31053 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -1837px;
 }
 
 
-.bg-31064 {
+
+.bg-31054 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -1837px;
 }
 
 
-.bg-31073 {
+
+.bg-31063 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -1837px;
 }
 
 
-.bg-31074 {
+
+.bg-31064 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1837px -1837px;
 }
 
 
-.bg-31083 {
+
+.bg-31073 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -10px;
 }
 
 
-.bg-31084 {
+
+.bg-31074 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -213px;
 }
 
 
-.bg-32001 {
+
+.bg-31083 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -416px;
 }
 
 
-.bg-act24side_melding_5 {
+
+.bg-31084 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -619px;
 }
 
 
-.bg-AP_GAMEPLAY {
+
+.bg-32001 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -822px;
 }
 
 
-.bg-ap_supply_lt_010 {
+
+.bg-act24side_melding_5 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -1025px;
 }
 
 
-.bg-base_ap {
+
+.bg-AP_GAMEPLAY {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -1228px;
 }
 
 
-.bg-classic_gacha {
+
+.bg-ap_supply_lt_010 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -1431px;
 }
 
 
-.bg-classic_gacha_10 {
+
+.bg-base_ap {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -1634px;
 }
 
 
-.bg-empty {
+
+.bg-classic_gacha {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -2040px -1837px;
 }
 
 
-.bg-EPGS_COIN {
+
+.bg-classic_gacha_10 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -10px -2040px;
 }
 
 
-.bg-mod_unlock_token {
+
+.bg-EPGS_COIN {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -213px -2040px;
 }
 
 
-.bg-mod_update_token_1 {
+
+.bg-mod_unlock_token {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -416px -2040px;
 }
 
 
-.bg-mod_update_token_2 {
+
+.bg-mod_update_token_1 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -619px -2040px;
 }
 
 
-.bg-REP_COIN {
+
+.bg-mod_update_token_2 {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -822px -2040px;
 }
 
 
-.bg-RETRO_COIN {
+
+.bg-REP_COIN {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1025px -2040px;
 }
 
 
-.bg-SOCIAL_PT {
+
+.bg-RETRO_COIN {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1228px -2040px;
 }
 
 
-.bg-STORY_REVIEW_COIN {
+
+.bg-SOCIAL_PT {
   width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1431px -2040px;
 }
 
 
-.bg-download {
-  width: 100px; height: 100px;
+
+.bg-STORY_REVIEW_COIN {
+  width: 183px; height: 183px;
   background: url('/image/sprite/item-20241027.webp') -1634px -2040px;
 }
