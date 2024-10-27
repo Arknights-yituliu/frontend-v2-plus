@@ -376,7 +376,7 @@
           <td v-for="(item, index) in act.itemList" :key="index" :style="getCellBgColor(item.cellBgColor)">
             <div class="activity-pickup-item-pc" v-if="item.isUp">
               <div :class="getActTableItemSprite(item.itemId)"></div>
-              <span v-show="typeof item.stageEfficiency !== 'undefined'" class="s-activity-stage-efficiency-pc">
+              <span v-show="typeof item.stageEfficiency !== 'undefined'" class="activity-stage-efficiency-pc">
                 {{ formatNumber(item.stageEfficiency, 2) }}%
               </span>
             </div>
@@ -389,9 +389,9 @@
     <div class="activity-table-phone-container detailTable" id="act-table-phone" style="max-width: 600px;">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActItemList" :key="index">
-          <td class="s-activity-name-phone">{{ act.zoneName }}</td>
+          <td class="activity-name-phone">{{ act.zoneName }}</td>
           <td v-for="(stage, index) in  act.actStageList" :key="index">
-            <div class="s-activity-drop">
+            <div class="activity-drop">
               <div class="activity-pickup-item">
                 <div :class="getActTableSimpleItemSprite(stage.itemId)"></div>
               </div>

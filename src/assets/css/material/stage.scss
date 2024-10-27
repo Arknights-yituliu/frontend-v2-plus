@@ -14,7 +14,7 @@
     font-size: 16px;
   }
 
-  .s-stage-legend-table {
+  .stage-legend-table {
     border-collapse: collapse;
   }
 
@@ -217,10 +217,13 @@
     left: calc((-183px + 40px) / 2);
   }
 
-  .s-activity-stage-efficiency-pc {
+  .activity-stage-efficiency-pc {
     padding-top: 4px;
   }
 
+  .act-history-table-divider{
+    border-top: 2px solid var(--c-border-color);
+  }
 
   .activity-table-phone-container {
     display: none;
@@ -243,12 +246,12 @@
     height: 60px;
   }
 
-  .s-activity-name-phone {
+  .activity-name-phone {
     color: var(--c-blue-4);
     font-weight: 600;
   }
 
-  .s-activity-drop {
+  .activity-drop {
     display: flex;
   }
 

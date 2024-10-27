@@ -542,7 +542,7 @@ onMounted(() => {
 
     <!-- 图例3.0 -->
     <div class="stage-legend" @click="scrollToLegendDescription" id="sStageLegend">
-      <table class="s-stage-legend-table">
+      <table class="stage-legend-table">
         <tbody>
         <tr>
           <td>
@@ -931,7 +931,7 @@ onMounted(() => {
             <div class="activity-pickup-item-pc" v-if="act.itemList[item.id]">
               <div :class="getActTableItemSprite(item.id)"></div>
             </div>
-            <div class="s-activity-stage-efficiency-pc" v-if="act.itemList[item.id]">
+            <div class="activity-stage-efficiency-pc" v-if="act.itemList[item.id]">
               {{ formatNumber(act.itemList[item.id].stageEfficiency, 2) }}%
             </div>
           </td>
@@ -943,9 +943,9 @@ onMounted(() => {
     <div class="activity-table-phone-container" id="act-table-phone">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActItemList" :key="index">
-          <td class="s-activity-name-phone">{{ act.zoneName }}</td>
+          <td class="activity-name-phone">{{ act.zoneName }}</td>
           <td v-for="(stage, index) in  act.actStageList" :key="index">
-            <div class="s-activity-drop">
+            <div class="activity-drop">
               <div class="activity-pickup-item">
                 <div :class="getActTableSimpleItemSprite(stage.itemId)"></div>
               </div>
@@ -996,7 +996,7 @@ onMounted(() => {
               <b>图例</b>
               <hr/>
               <div class="stage-legend">
-                <table class="s-stage-legend-table">
+                <table class="stage-legend-table">
                   <tbody>
                   <tr>
                     <td>
