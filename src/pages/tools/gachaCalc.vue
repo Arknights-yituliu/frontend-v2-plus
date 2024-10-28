@@ -4,7 +4,7 @@ import { h, onMounted, ref } from "vue";
 import '/src/assets/css/tool/gacha_calc.scss'
 import '/src/assets/css/sprite/sprite_plane_icon.css'
 import '/src/assets/css/tool/gacha_calc.phone.scss'
-import * as echarts from "echarts";
+// import * as echarts from "echarts";
 
 import POTENTIAL_TABLE from '/src/static/json/tools/potential_gacha_resources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'

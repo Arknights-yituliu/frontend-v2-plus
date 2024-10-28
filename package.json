@@ -14,7 +14,6 @@
     "axios": "1.6.7",
     "connect-history-api-fallback": "^2.0.0",
     "crypto-js": "4.2.0",
-    "echarts": "5.0.0",
     "element-plus": "2.6.0",
     "express": "4.18.2",
     "js-cookie": "3.0.5",
