@@ -40,11 +40,13 @@ const selectedPackTag = ref([])
 const selectedPackSaleDate = ref([])
 const selectedPackSalePrice = ref([])
 const filteredPackMap = ref(new Map()) // 筛选后的礼包列表
+let packInfoListFromAPI = []
 let packInfoList = []
-
+//FromAPI是原始数据，用于重置packinfolist
 const initData = async () => {
   // 等待获取接口返回的全部礼包信息
   const { data } = await storeAPI.getPackStore()
+  packInfoListFromAPI = data
   packInfoList = data
   const currentTimeStamp = date.getTime() // 获取时间戳
 
@@ -77,7 +79,7 @@ const initData = async () => {
     {
       title: '在售/即将开售的礼包',
       titleEn: 'New Packs',
-      tips: ['*当前在售的限时礼包，不包括常驻礼包和源石'],
+      tips: ['*在售/即将开售的限时礼包，常驻、半常驻礼包和源石请往下翻'],
       list: [
         { title: '', packs: packs.activity },
       ]
@@ -105,6 +107,22 @@ const initData = async () => {
   filterPacks()
 }
 
+let isKernelValuable = ref(false)
+//如果是true就覆写数据，如果是false就用原始数据重置
+function changeKernelValue() {
+    if (isKernelValuable.value) {
+      for (const pack of packInfoList) {
+        pack.draws=pack.drawsKernel
+        pack.packEfficiency=pack.packEfficiencyKernel
+        pack.packedOriginium=pack.packedOriginiumKernel
+        pack.packedOriginiumPrice=pack.packedOriginiumPriceKernel
+        pack.drawEfficiency=pack.drawEfficiencyKernel
+        pack.drawPrice=pack.drawPriceKernel
+    }
+    } else {
+      packInfoList = packInfoListFromAPI
+    }
+  }
 // 筛选按钮是否激活
 const buttonActive = (v) => {
   return (
@@ -163,17 +181,22 @@ initData()
         <module-header :title="item.title" :title-en="item.titleEn" :tips="item.tips" />
         <div class="tag-group" v-if="item.titleEn === 'New Packs'">
           <span class="tag-rank-5">
-            点击图片可查看礼包内容，注意区分"仅抽卡"/"折合成源石"
+            点击图片可查看礼包内容
           </span>
           <span class="tag-rank-5">
-            “折合成源石”即将材料的理智价值按135：1换算成源石
+            折合成源石：135理智=1源石
+          </span>
+          <span class="tag-rank-5">
+            中坚寻访：1蓝抽也记为1抽，但价值视为0.837抽
           </span>
         </div>
+        <el-switch v-if="item.titleEn === 'New Packs'" @click="changeKernelValue" v-model="isKernelValuable" class="mb-2" active-text="中坚寻访视为有价值"
+          inactive-text="中坚寻访视为无价值" style="margin-left: 8px;" />
         <template v-for="(packInfo, packIndex) in item.list" :key="packIndex">
           <h2 style="margin: 12px;" v-if="packInfo.title">{{ packInfo.title }}</h2>
           <div class="tag-group" v-if="packInfo.title === '新人/回归礼包'">
             <span class="tag-rank-6">
-              由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。
+              由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”
             </span>
           </div>
           <div class="tag-group" v-else-if="packInfo.title === '源石/首充源石'">
@@ -191,37 +214,22 @@ initData()
 
       <div class="pack-checkbox-btn-group">
         售卖类型：
-        <MyButton
-          data-color="blue"
-          v-for="(tag, index) in packTags"
-          :key="index"
-          :active="buttonActive(tag.value)"
-          @click="choosePackOption(selectedPackTag, tag.value)"
-        >
+        <MyButton data-color="blue" v-for="(tag, index) in packTags" :key="index" :active="buttonActive(tag.value)"
+          @click="choosePackOption(selectedPackTag, tag.value)">
           {{ tag.label }}
         </MyButton>
       </div>
       <div class="pack-checkbox-btn-group">
         售卖年份：
-        <MyButton
-          data-color="blue"
-          v-for="[year] in filteredPackMap.entries()"
-          :key="year"
-          :active="buttonActive(year)"
-          @click="choosePackOption(selectedPackSaleDate, year)"
-        >
+        <MyButton data-color="blue" v-for="[year] in filteredPackMap.entries()" :key="year" :active="buttonActive(year)"
+          @click="choosePackOption(selectedPackSaleDate, year)">
           {{ year }}年
         </MyButton>
       </div>
       <div class="pack-checkbox-btn-group">
         售卖价格：
-        <MyButton
-          data-color="blue"
-          v-for="item in packSalePriceList"
-          :key="item.label"
-          :active="buttonActive(item.label)"
-          @click="choosePackOption(selectedPackSalePrice, item.label)"
-        >
+        <MyButton data-color="blue" v-for="item in packSalePriceList" :key="item.label"
+          :active="buttonActive(item.label)" @click="choosePackOption(selectedPackSalePrice, item.label)">
           {{ item.label }}
         </MyButton>
       </div>
@@ -248,31 +256,21 @@ initData()
       </div>
 
       <div class="pack-table-wrapper">
-        <el-table
-          :data="currentPackInfoList"
-          class="pack-table"
-          stripe
-          border
-          table-layout="auto"
-          :default-sort="{ prop: 'drawEfficiency', order: 'descending' }"
-        >
+        <el-table :data="currentPackInfoList" class="pack-table" stripe border table-layout="auto"
+          :default-sort="{ prop: 'drawEfficiency', order: 'descending' }">
           <el-table-column prop="displayName" label="名称" sortable min-width="154" fixed />
-          <el-table-column
-            prop="saleType"
-            label="类型"
-            :filters="saleTypes"
-            :filter-method="(tag, row) => row.tags.includes(tag) || row.saleType === tag"
-            sortable
-            min-width="92"
-            v-slot="{ row }"
-          >
+          <el-table-column prop="saleType" label="类型" :filters="saleTypes"
+            :filter-method="(tag, row) => row.tags.includes(tag) || row.saleType === tag" sortable min-width="92"
+            v-slot="{ row }">
             <span>{{ saleTypes.find(item => item.value === row.saleType).text }}</span>
           </el-table-column>
           <el-table-column prop="price" label="售价" sortable min-width="80" :formatter="row => row.price + '元'" />
           <el-table-column prop="draws" label="抽数" sortable min-width="80" :formatter="row => row.draws.toFixed(2)" />
           <el-table-column prop="originium" label="源石" sortable min-width="80" />
-          <el-table-column prop="drawEfficiency" label="抽卡性价比" sortable min-width="120" :formatter="row => row.drawEfficiency.toFixed(2)" />
-          <el-table-column prop="packEfficiency" label="综合性价比" sortable min-width="120" :formatter="row => row.packEfficiency.toFixed(2)" />
+          <el-table-column prop="drawEfficiency" label="抽卡性价比" sortable min-width="120"
+            :formatter="row => row.drawEfficiency.toFixed(2)" />
+          <el-table-column prop="packEfficiency" label="综合性价比" sortable min-width="120"
+            :formatter="row => row.packEfficiency.toFixed(2)" />
         </el-table>
       </div>
       <!-- 礼包性价比总表 End -->
@@ -296,6 +294,7 @@ initData()
                 <li>每月芯片自选包和每月材料自选包都用价值最高的材料进行计价</li>
                 <li>精二券暂以平均价值计价，详情可查阅[精二性价比]</li>
                 <li>模组块暂以120红票计价，模组条无法计价，请自行权衡</li>
+                <li>标准寻访是258黄票38抽，中坚寻访是216黄票38抽，因此价值暂定为216/258=0.837抽</li>
                 <li>家具零件视为0价值</li>
               </ul>
             </el-collapse-item>
