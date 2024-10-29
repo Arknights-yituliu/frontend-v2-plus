@@ -1,10 +1,5 @@
 import request from "/src/api/request";
-
-
-
 export default {
-
-
   //查询所有常驻商店数据
   getPermStore() {
     return request({

@@ -319,10 +319,10 @@ const routes = [
         component: () => import('/src/pages/material/stageV3E0.vue')
     },
     {
-        path: '/tools/rogueSeeds',
-        text: 'rogueseeds',
+        path: '/tools/rogue-seed',
+        text: '种子收集站',
         display: false,
-        component: () => import('/src/pages/tools/rogueSeeds.vue')
+        component: () => import('/src/pages/tools/rogue-seeds.vue')
     },
     {
         path: '/:catchAll(.*)',
