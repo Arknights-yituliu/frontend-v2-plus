@@ -131,7 +131,7 @@ filterOperator()
                            @click="addOrDeleteOperator(operator)"></SpriteImage>
             </div>
 
-            <h3>待选干员</h3>
+            <h3>点击下面头像选择初始干员，再次点击取消选择</h3>
             <div>
               星级
               <el-radio-group v-model="selectedRarity">
