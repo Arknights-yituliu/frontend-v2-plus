@@ -2,6 +2,7 @@
 import {ref} from 'vue'
 import '/src/assets/css/rogueSeed/rogueSeed.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
+import {cMessage} from "@/utils/Message.js";
 
 // do not use same name with ref
 const rougeSeedForm = ref({
@@ -24,6 +25,7 @@ const onSubmit = () => {
 const upload = () =>{
   rogueSeedAPI.uploadRogueSeed(rougeSeedForm.value).then(response=>{
     console.log(response.data)
+    cMessage('提交成功')
   })
 }
 
