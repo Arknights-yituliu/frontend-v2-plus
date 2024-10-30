@@ -145,12 +145,12 @@ function openNewPage(url) {
     </el-card>
 
     <!-- 展示区域 -->
-    <el-radio-group size="large">
-      <el-radio-button label="#1 傀影与猩红血钻" value="New York"/>
-      <el-radio-button label="#2 水月" value="Washington"/>
-      <el-radio-button label="#3 萨米" value="Los Angeles"/>
-      <el-radio-button label="#4 萨卡兹" value=""/>
-    </el-radio-group>
+<!--    <el-radio-group size="large">-->
+<!--      <el-radio-button label="#1 傀影与猩红血钻" value="New York"/>-->
+<!--      <el-radio-button label="#2 水月" value="Washington"/>-->
+<!--      <el-radio-button label="#3 萨米" value="Los Angeles"/>-->
+<!--      <el-radio-button label="#4 萨卡兹" value=""/>-->
+<!--    </el-radio-group>-->
     <div class="flex flex-wrap gap-4" style="display: flex;">
       <!-- 版本热门seeds -->
       <el-card style="max-width: 720px">
