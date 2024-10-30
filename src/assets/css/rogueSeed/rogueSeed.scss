@@ -1,8 +1,15 @@
 .rogue-seed-page {
 
   .rogue-seed-form {
-    width: 80%;
+    width: 800px;
     margin: auto;
+
+
+    .operator-checkbox{
+      display: flex;
+      flex-wrap: wrap;
+    }
+
     .rogue-seed-tag-form {
       display: flex;
       border-radius: 4px;

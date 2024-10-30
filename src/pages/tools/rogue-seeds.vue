@@ -5,38 +5,9 @@ import rogueSeedAPI from "/src/api/rogueSeed.js";
 import {cMessage} from "@/utils/Message.js";
 import {copyTextToClipboard} from "/src/utils/CopyText.js";
 // do not use same name with ref
-const rougeSeedForm = ref({
-  "seedId": 1735237566300,
-  "seed": "1414115151",
-  "uid": 14401084810,
-  "rogueVersion": "萨卡兹的无终奇语DLC-遁入阇那",
-  "rogueTheme": "萨卡兹的无终奇语",
-  "squad": "蓝图测绘分队",
-  "operatorTeam":  "维什戴尔,古米,卡达",
-  "description": "这里写下你的描述",
-  "tags": ["萨卡兹的无终奇语", "蓝图测绘分队"],
-  "summaryImageLink": "http://192.168.1.19:4000/image/sprite/sprites-icon.png"
-})
 
-const onSubmit = () => {
-  console.log('submit!')
-}
 
-const upload = () =>{
-  rogueSeedAPI.uploadRogueSeed(rougeSeedForm.value).then(response=>{
-    console.log(response.data)
-    cMessage('提交成功')
-  })
-}
 
-let seedTagValue = ref('')
-
-const addSeedTag = ()=>{
-  if(rougeSeedForm.value.tags.indexOf(seedTagValue.value)<0){
-    rougeSeedForm.value.tags.push(seedTagValue.value)
-    seedTagValue.value = ''
-  }
-}
 
 let rougeSeedList = ref([])
 
@@ -94,9 +65,7 @@ const links = [
 ]
 
 
-function openNewPage(url) {
-  window.open(url)
-}
+
 
 getRougeSeedPage()
 
@@ -104,62 +73,7 @@ getRougeSeedPage()
 
 <template>
   <div class="rogue-seed-page">
-    <!-- 提名区域 -->
-    <el-card >
-      <el-form :model="rougeSeedForm" label-width="auto" class="rogue-seed-form">
-        <el-form-item label="种子">
-          <el-input v-model="rougeSeedForm.seed" style="width: 500px;"/>
-        </el-form-item>
-        <el-form-item label="肉鸽主题">
-          <el-select v-model="rougeSeedForm.rogueTheme" placeholder="" style="width: 500px;">
-            <el-option label="水月与深蓝之树" value="水月与深蓝之树"/>
-            <el-option label="探索者的银凇止境" value="探索者的银凇止境"/>
-            <el-option label="萨卡兹的无终奇语" value="萨卡兹的无终奇语"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="肉鸽版本">
-          <el-select v-model="rougeSeedForm.rogueVersion" placeholder="" style="width: 500px;">
-            <el-option label="萨卡兹的无终奇语DLC-遁入阇那" value="萨卡兹的无终奇语DLC-遁入阇那"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="分队选择">
-          <el-select v-model="rougeSeedForm.squad" placeholder="" style="width: 500px;">
-            <el-option label="蓝图测绘分队" value="蓝图测绘分队"/>
-            <el-option label="突击战术分队" value="突击战术分队"/>
-            <el-option label="远程战术分队" value="远程战术分队"/>
-            <el-option label="破坏战术分队" value="破坏战术分队"/>
-            <el-option label="异想天开分队" value="异想天开分队"/>
-            <el-option label="点刺成锭分队" value="点刺成锭分队"/>
-            <el-option label="因地制宜分队" value="因地制宜分队"/>
-            <el-option label="魂灵护送分队" value="魂灵护送分队"/>
-            <el-option label="博闻广记分队" value="博闻广记分队"/>
-            <el-option label="指挥分队" value="指挥分队"/>
-            <el-option label="拟态学者分队" value="拟态学者分队"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="种子简介">
-          <el-input v-model="rougeSeedForm.description" type="textarea" />
-        </el-form-item>
-        <el-form-item>
-          <div class="rogue-seed-tag-form">
-            <div class="rogue-seed-tag-box">
-              <div class="rogue-seed-tag" v-for="(tag,index) in rougeSeedForm.tags">
-                #{{tag}}
-              </div>
-            </div>
-            <input class="rogue-seed-tag-input" v-model="seedTagValue"/>
-            <div class="rogue-seed-tag-button" @click="addSeedTag()">输入后点击添加标签</div>
-          </div>
-        </el-form-item>
 
-        <el-button type="primary" @click="upload">提名种子！</el-button>
-
-<!--        <el-button type="primary" @click="onSubmit">随机来一个Seed让我爽爽！</el-button>-->
-<!--        <div>-->
-<!--          种子 : KFCVME50 天胡国王套200源石锭戒律酒杯胡局-->
-<!--        </div>-->
-      </el-form>
-    </el-card>
 
     <!-- 展示区域 -->
 <!--    <el-radio-group size="large">-->
