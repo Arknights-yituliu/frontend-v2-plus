@@ -1,19 +1,19 @@
-.rouge-seed-page {
+.rogue-seed-page {
 
-  .rouge-seed-form {
+  .rogue-seed-form {
     width: 80%;
     margin: auto;
-    .rouge-seed-tag-form {
+    .rogue-seed-tag-form {
       display: flex;
       border-radius: 4px;
       border: 1px solid var(--c-border-color);
       width: 95%;
       align-items: center;
       flex-wrap: wrap;
-      .rouge-seed-tag-box {
+      .rogue-seed-tag-box {
         display: flex;
 
-        .rouge-seed-tag {
+        .rogue-seed-tag {
           background-color: var(--c-btn-blue-light);
           border-radius: 3px;
           padding:0 8px;
@@ -23,25 +23,25 @@
           color: white;
         }
       }
-      .rouge-seed-tag-input{
+      .rogue-seed-tag-input{
         border: none;
         outline: none;
         height: 36px;
         width: auto;
       }
-      .rouge-seed-tag-button{
+      .rogue-seed-tag-button{
         cursor: pointer;
         border-radius: 3px;
         padding:0 4px;
       }
 
-      .rouge-seed-tag-button:hover{
+      .rogue-seed-tag-button:hover{
         background-color: var(--c-btn-blue-light);
       }
     }
   }
 
-  .rouge-seed-form :deep(.el-select){
+  .rogue-seed-form :deep(.el-select){
     width: 600px;
   }
 

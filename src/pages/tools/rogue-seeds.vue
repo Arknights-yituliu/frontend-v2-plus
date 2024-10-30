@@ -1,15 +1,15 @@
 <script  setup>
 import {ref} from 'vue'
-import '/src/assets/css/rougeSeed/rougeSeed.scss'
-import rougeSeedAPI from "/src/api/rougeSeed.js";
+import '/src/assets/css/rogueSeed/rogueSeed.scss'
+import rogueSeedAPI from "/src/api/rogueSeed.js";
 
 // do not use same name with ref
-const form = ref({
-  "seedId": 1735237566370100,
+const rougeSeedForm = ref({
+  "seedId": 1735237566300,
   "seed": "1414115151",
   "uid": 14401084810,
-  "rougeVersion": "萨卡兹的无终奇语DLC-遁入阇那",
-  "rougeTheme": "萨卡兹的无终奇语",
+  "rogueVersion": "萨卡兹的无终奇语DLC-遁入阇那",
+  "rogueTheme": "萨卡兹的无终奇语",
   "squad": "蓝图测绘分队",
   "operatorTeam":  "维什戴尔,古米,卡达",
   "description": "这里写下你的描述",
@@ -22,9 +22,18 @@ const onSubmit = () => {
 }
 
 const upload = () =>{
-  rougeSeedAPI.uploadRougeSeed(form.value).then(response=>{
+  rogueSeedAPI.uploadRogueSeed(rougeSeedForm.value).then(response=>{
     console.log(response.data)
   })
+}
+
+let seedTagValue = ref('')
+
+const addSeedTag = ()=>{
+  if(rougeSeedForm.value.tags.indexOf(seedTagValue.value)<0){
+    rougeSeedForm.value.tags.push(seedTagValue.value)
+    seedTagValue.value = ''
+  }
 }
 
 //总打分数、总星数
@@ -75,27 +84,27 @@ function openNewPage(url) {
 </script>
 
 <template>
-  <div class="rouge-seed-page">
+  <div class="rogue-seed-page">
     <!-- 提名区域 -->
     <el-card >
-      <el-form :model="form" label-width="auto"  class="rouge-seed-form">
+      <el-form :model="rougeSeedForm" label-width="auto" class="rogue-seed-form">
         <el-form-item label="种子">
-          <el-input v-model="form.seed" style="width: 500px;"/>
+          <el-input v-model="rougeSeedForm.seed" style="width: 500px;"/>
         </el-form-item>
         <el-form-item label="肉鸽主题">
-          <el-select v-model="form.rougeTheme" placeholder="" style="width: 500px;">
+          <el-select v-model="rougeSeedForm.rogueTheme" placeholder="" style="width: 500px;">
             <el-option label="水月与深蓝之树" value="水月与深蓝之树"/>
             <el-option label="探索者的银凇止境" value="探索者的银凇止境"/>
             <el-option label="萨卡兹的无终奇语" value="萨卡兹的无终奇语"/>
           </el-select>
         </el-form-item>
         <el-form-item label="肉鸽版本">
-          <el-select v-model="form.rougeVersion" placeholder="" style="width: 500px;">
+          <el-select v-model="rougeSeedForm.rogueVersion" placeholder="" style="width: 500px;">
             <el-option label="萨卡兹的无终奇语DLC-遁入阇那" value="萨卡兹的无终奇语DLC-遁入阇那"/>
           </el-select>
         </el-form-item>
         <el-form-item label="分队选择">
-          <el-select v-model="form.squad" placeholder="" style="width: 500px;">
+          <el-select v-model="rougeSeedForm.squad" placeholder="" style="width: 500px;">
             <el-option label="蓝图测绘分队" value="蓝图测绘分队"/>
             <el-option label="突击战术分队" value="突击战术分队"/>
             <el-option label="远程战术分队" value="远程战术分队"/>
@@ -110,17 +119,17 @@ function openNewPage(url) {
           </el-select>
         </el-form-item>
         <el-form-item label="种子简介">
-          <el-input v-model="form.description" type="textarea" />
+          <el-input v-model="rougeSeedForm.description" type="textarea" />
         </el-form-item>
         <el-form-item>
-          <div class="rouge-seed-tag-form">
-            <div class="rouge-seed-tag-box">
-              <div class="rouge-seed-tag" v-for="(tag,index) in form.tags">
+          <div class="rogue-seed-tag-form">
+            <div class="rogue-seed-tag-box">
+              <div class="rogue-seed-tag" v-for="(tag,index) in rougeSeedForm.tags">
                 #{{tag}}
               </div>
             </div>
-            <input class="rouge-seed-tag-input" />
-            <div class="rouge-seed-tag-button">输入后点击添加标签</div>
+            <input class="rogue-seed-tag-input" v-model="seedTagValue"/>
+            <div class="rogue-seed-tag-button" @click="addSeedTag()">输入后点击添加标签</div>
           </div>
         </el-form-item>
 

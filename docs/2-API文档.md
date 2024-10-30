@@ -633,7 +633,7 @@ backend.yituliu.cn/survey/operator/result
 ### 路径：
 
 ```
-backend.yituliu.cn/rouge-seed/upload
+backend.yituliu.cn/rogue-seed/upload
 ```
 
 ### 参数：
@@ -645,8 +645,8 @@ backend.yituliu.cn/rouge-seed/upload
   //后端会根据这个判断是一个新种子还是旧种子，如果没有这个id则会进行新增种子操作
   "seed_id": 1681797491749,
   "seed": "12rui01o1ru01",
-  "rougeVersion": "遁入阇那",
-  "rougeTheme": "萨卡兹的无终奇语",
+  "rogueVersion": "遁入阇那",
+  "rogueTheme": "萨卡兹的无终奇语",
   "squad": "蓝图测绘分队",
   "operatorTeam": [
     "维什戴尔",
@@ -675,7 +675,7 @@ backend.yituliu.cn/rouge-seed/upload
 ### 路径：
 
 ```
-backend.yituliu.cn/rouge-seed/list
+backend.yituliu.cn/rogue-seed/list
 ```
 
 ### 参数：
@@ -713,8 +713,8 @@ backend.yituliu.cn/rouge-seed/list
     "list": [
       {
         "seed": "12rui01o1ru01",
-        "rougeVersion": "遁入阇那",
-        "rougeTheme": "萨卡兹的无终奇语",
+        "rogueVersion": "遁入阇那",
+        "rogueTheme": "萨卡兹的无终奇语",
         "squad": "蓝图测绘分队",
         "operatorTeam": [
           "维什戴尔",
