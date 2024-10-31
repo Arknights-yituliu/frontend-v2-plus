@@ -2,10 +2,12 @@
 import {ref} from 'vue'
 import '/src/assets/css/rogueSeed/rogueSeed.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
-import {cMessage} from "@/utils/Message.js";
+import {cMessage} from "/src/utils/Message.js";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
-import SpriteImage from "@/components/SpriteImage.vue";
+import SpriteImage from "/src/components/SpriteImage.vue";
 import {professionDict} from "/src/pages/survey/service/common.js";
+import CompressImage from "/src/utils/CompressImage.js";
+import {debounce} from "@/utils/Debounce.js";
 
 let operatorTable = new Map()
 
@@ -40,20 +42,44 @@ const addSeedTag = () => {
   }
 }
 
-const addOrDeleteOperator = (operator)=>{
-  if(rougeSeedForm.value.operatorTeam.indexOf(operator)<0){
+const addOrDeleteOperator = (operator) => {
+  if (rougeSeedForm.value.operatorTeam.indexOf(operator) < 0) {
     rougeSeedForm.value.operatorTeam.push(operator)
-  }else {
-    rougeSeedForm.value.operatorTeam = rougeSeedForm.value.operatorTeam.filter(e=>e!==operator)
+  } else {
+    rougeSeedForm.value.operatorTeam = rougeSeedForm.value.operatorTeam.filter(e => e !== operator)
   }
 }
 
+let settlementChartDataUrl = ref('')
+
+function chooseImage() {
+  const element = document.getElementById("settlement-chart");
+  // 添加一个事件监听器来监听文件选择的变化
+  element.addEventListener('change', fileToDataUrl);
+  // 触发文件选择对话框
+  element.click();
+}
+
+const fileToDataUrl = debounce(async () => {
+  const input = document.getElementById('settlement-chart')
+  const files = input.files;
+  if (files.length === 0) {
+    alert('至少选择一个文件');
+    return;
+  }
+
+  const file = files[0]
+  settlementChartDataUrl.value = await CompressImage(file)
+
+
+}, 1000)
+
 const upload = () => {
   let data = JSON.parse(JSON.stringify(rougeSeedForm.value))
-  if(data.operatorTeam){
+  if (data.operatorTeam) {
     data.operatorTeam = data.operatorTeam.join(',')
-  }else {
-    cMessage('未选择初始干员','error')
+  } else {
+    cMessage('未选择初始干员', 'error')
   }
 
   rogueSeedAPI.uploadRogueSeed(data).then(response => {
@@ -81,6 +107,7 @@ const filterOperator = () => {
   }
   console.log(displayOperator.value)
 }
+
 
 let operatorCheckBoxCollapse = ref(true)
 initOperatorTable()
@@ -149,11 +176,25 @@ filterOperator()
             <div>
               <div class="operator-checkbox">
                 <SpriteImage original-size="180" display-size="60" :image-name="operator.charId" margin="4"
-                             v-for="(operator,charId) in displayOperator" :key="charId" @click="addOrDeleteOperator(operator.name)">
+                             v-for="(operator,charId) in displayOperator" :key="charId"
+                             @click="addOrDeleteOperator(operator.name)">
                 </SpriteImage>
               </div>
             </div>
 
+          </div>
+        </el-form-item>
+
+        <el-form-item label="结算图">
+          <div>
+            <div>
+              <el-button type="primary">上传结算图</el-button>
+            </div>
+            <input style="display: none" type="file" id="settlement-chart">
+            <div class="settlement-chart-checkbox" @click="chooseImage()">
+              <img src="/image/icon/upload-image.png" class="settlement-chart-upload-button" alt="">
+              <img :src="settlementChartDataUrl" alt="" class="settlement-chart">
+            </div>
           </div>
         </el-form-item>
 
