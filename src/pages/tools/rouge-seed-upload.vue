@@ -74,7 +74,7 @@ const fileToDataUrl = debounce(async () => {
   const file = files[0]
   settlementChartBlob.value = await compressImage(file)
   getDataUrl(settlementChartBlob.value).then(response => {
-    console.log(response)
+
     settlementChartDataUrl.value = response
   })
 
@@ -103,6 +103,8 @@ const uploadImage = () => {
   const formData = new FormData();
   formData.append('file', settlementChartBlob.value)
   rogueSeedAPI.uploadRougeSeedSettlementChart(formData).then(response => {
+    rougeSeedForm.value.summaryImageLink = response.data.imagePath
+
     uploadSeed()
   })
 }
