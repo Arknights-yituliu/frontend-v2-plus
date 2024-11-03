@@ -4132,13 +4132,13 @@ Date:   Sat Jan 13 21:22:57 2024 +0800
 
     Merge pull request #23 from tanch-p/dev
     
-    fix wrong event handlers in rougeCal page
+    fix wrong event handlers in rogueCal page
 
 commit b602c676e8d4b986f2cfb2264a169962cf528d2e
 Author: Chor <97508567+tanch-p@users.noreply.github.com>
 Date:   Sat Jan 13 22:18:18 2024 +0900
 
-    fix wrong event handlers in rougeCal page
+    fix wrong event handlers in rogueCal page
 
 commit a74e22567089cd32224f576d096b08c9e086fbc9
 Author: sakura <1969314158@qq.com>

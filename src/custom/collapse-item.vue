@@ -9,7 +9,6 @@
 
 <script setup>
 import {watch,onMounted} from "vue";
-import {error} from "echarts/lib/util/log.js";
 
 const emit = defineEmits(["update:visible"]);
 const props = defineProps(["modelValue", "visible", "name",'style']);

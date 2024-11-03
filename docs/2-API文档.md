@@ -2,13 +2,11 @@
 
 ## 请求格式示例
 
-### HTTP GET 
-
+### HTTP GET
 
 |  名称   | 说明                              |
 |:-----:|:--------------------------------|
 | 请求URL | 	域名/API路径?参数名=参数值&参数名=参数值...... |
-
 
 ### HTTP POST:
 
@@ -39,10 +37,11 @@ param1=value&param2=value
 ### 路径：
 
 ```
-https://backend.yituliu.cn/stage/t3
+backend.yituliu.cn/stage/t3
 ```
 
 ### 参数：
+
 非必须
 
 |      字段名       |  数据类型  |  默认值  | 数据类型                 |
@@ -51,6 +50,7 @@ https://backend.yituliu.cn/stage/t3
 |   sampleSize   |  int   |  300  | 样本量                  |
 
 ### 响应数据：
+
 ```json5
 {
   // 状态码
@@ -123,15 +123,17 @@ https://backend.yituliu.cn/stage/t3
 ### 路径：
 
 ```
-https://backend.yituliu.cn/stage/orundum
+backend.yituliu.cn/stage/orundum
 ```
 
 ### 参数：
+
 ```
 本API无参数
 ```
 
 ### 响应数据：
+
 ```json5
 {
   //状态码
@@ -152,7 +154,7 @@ https://backend.yituliu.cn/stage/orundum
       //关卡的搓玉效率，以1-7为标准
       "orundumPerApEfficiency": 0.9999720404402339,
       //关卡类型
-      "stageType": "MAIN", 
+      "stageType": "MAIN",
       //每搓一抽合成玉需要的龙门币消耗
       "lmdcost": 9.535844273102738
     }
@@ -160,21 +162,22 @@ https://backend.yituliu.cn/stage/orundum
 }
 ```
 
-
 ## 获取搓玉推荐关卡 GET
 
 ### 路径：
 
 ```
-https://backend.yituliu.cn/stage/act
+backend.yituliu.cn/stage/act
 ```
 
 ### 参数：
+
 ```
 本API无参数
 ```
 
 ### 响应数据：
+
 ```json5
 {
   //状态码
@@ -219,10 +222,11 @@ https://backend.yituliu.cn/stage/act
 ### 路径：
 
 ```
-https://backend.yituliu.cn/item/value
+backend.yituliu.cn/item/value
 ```
 
 ### 参数：
+
 非必须
 
 |      字段名       |  数据类型  |  默认值  | 数据类型                 |
@@ -231,6 +235,7 @@ https://backend.yituliu.cn/item/value
 |   sampleSize   |  int   |  300  | 样本量                  |
 
 ### 响应数据：
+
 ```json5
 {
   //状态码
@@ -265,15 +270,17 @@ https://backend.yituliu.cn/item/value
 ### 路径：
 
 ```
-https://backend.yituliu.cn/store/perm
+backend.yituliu.cn/store/perm
 ```
 
 ### 参数：
+
 ```
 本API无参数
 ```
 
 ### 响应数据：
+
 ```json5
  {
   //状态码
@@ -310,10 +317,11 @@ https://backend.yituliu.cn/store/perm
 ### 路径：
 
 ```
-https://backend.yituliu.cn/store/act
+backend.yituliu.cn/store/act
 ```
 
 ### 响应数据：
+
 ```json5
  {
   //状态码
@@ -335,7 +343,7 @@ https://backend.yituliu.cn/store/act
         }
       ],
       //图片链接
-      "imageLink": "https://cos.yituliu.cn/image/store/1626290215840100.jpg",
+      "imageLink": "cos.yituliu.cn/image/store/1626290215840100.jpg",
       //商店性价比分级基准
       "actPPRBase": 2.5,
       //每一级的性价比区间
@@ -369,15 +377,17 @@ https://backend.yituliu.cn/store/act
 ### 路径：
 
 ```
-https://backend.yituliu.cn/store/pack
+backend.yituliu.cn/store/pack
 ```
 
 ### 参数：
+
 ```
 本API无参数
 ```
 
 ### 响应数据：
+
 ```json5
 {
   //状态码
@@ -461,8 +471,6 @@ https://backend.yituliu.cn/store/pack
 }
 ```
 
-
-
 # 调查与统计
 
 ## 获取用户的干员练度信息 POST
@@ -470,17 +478,19 @@ https://backend.yituliu.cn/store/pack
 ### 路径：
 
 ```
-https://backend.yituliu.cn/survey/operator/table
+backend.yituliu.cn/survey/operator/table
 ```
 
 ### 参数：
+
 ```json5
 {
-  token:"用户登录后服务器返回的用户凭证"
+  token: "用户登录后服务器返回的用户凭证"
 }
 ```
 
 ### 响应数据：
+
 ```json5
 {
   //状态码
@@ -521,21 +531,22 @@ https://backend.yituliu.cn/survey/operator/table
 }
 ```
 
-
 ## 获取用户的干员练度信息 GET
 
 ### 路径：
 
 ```
-https://backend.yituliu.cn/survey/operator/result
+backend.yituliu.cn/survey/operator/result
 ```
 
 ### 参数：
+
 ```
 本API无参数
 ```
 
 ### 响应数据：
+
 ```json5
 {
   "code": 200,
@@ -611,6 +622,111 @@ https://backend.yituliu.cn/survey/operator/result
           "rank3": 0,
           "count": 0
         }
+      }
+    ]
+  }
+}
+```
+
+## 新增/更新种子  POST
+
+### 路径：
+
+```
+backend.yituliu.cn/rogue-seed/upload
+```
+
+### 参数：
+
+请求体
+
+```json5
+{
+  //后端会根据这个判断是一个新种子还是旧种子，如果没有这个id则会进行新增种子操作
+  "seed_id": 1681797491749,
+  "seed": "12rui01o1ru01",
+  "rogueVersion": "遁入阇那",
+  "rogueTheme": "萨卡兹的无终奇语",
+  "squad": "蓝图测绘分队",
+  "operatorTeam": [
+    "维什戴尔",
+    "古米",
+    "卡达"
+  ],
+  "tags": [
+    "爽局",
+    "目光呆滞"
+  ],
+  "description": "这是一个目光呆滞的ew爽局",
+  "summaryImage": "static.yituliu.cn/114.jpg"
+}
+
+```
+
+### 响应数据：
+
+```json5
+
+
+```
+
+## 种子分页列表  POST
+
+### 路径：
+
+```
+backend.yituliu.cn/rogue-seed/list
+```
+
+### 参数：
+
+请求体
+
+```json5
+{
+  //date,rating,time
+  "orderBy": "date",
+  "pageSize":50,
+  "pageNum":1,
+  "keyword": [
+    "维什戴尔",
+    "蓝图测绘分队",
+    "爽局"
+  ],
+}
+```
+
+### 响应数据：
+
+```json5
+{
+  "code": 200,
+  "msg": "操作成功",
+  "data": {
+    "orderBY": "date",
+    "keyword": [
+      "维什戴尔",
+      "蓝图测绘分队",
+      "爽局"
+    ],
+    updateTime: 1514980148180,
+    "list": [
+      {
+        "seed": "12rui01o1ru01",
+        "rogueVersion": "遁入阇那",
+        "rogueTheme": "萨卡兹的无终奇语",
+        "squad": "蓝图测绘分队",
+        "operatorTeam": [
+          "维什戴尔",
+          "古米",
+          "卡达"
+        ],
+        "tags": [
+          "爽局",
+          "目光呆滞"
+        ],
+        "description": "这是一个目光呆滞的ew爽局",
+        "summaryImage": "static.yituliu.cn/114.jpg"
       }
     ]
   }

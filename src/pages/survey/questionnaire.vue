@@ -261,8 +261,8 @@ onMounted(() => {
       </div>
 
       <div id="profession_options">
-        <el-checkbox label="只显示已有干员" border size=large type="info" round style="margin: 12px 8px;"/>
-        <el-checkbox label="只显示已精二干员" border size=large round style="margin: 12px 8px;"/>
+        <el-checkbox value="只显示已有干员" border size=large type="info" round style="margin: 12px 8px;"/>
+        <el-checkbox value="只显示已精二干员" border size=large round style="margin: 12px 8px;"/>
       </div>
     </div>
     <!-- 选择模块 -->

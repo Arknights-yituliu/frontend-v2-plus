@@ -110,7 +110,6 @@
 
 <script>
 import toolApi from "/src/api/tool";
-import * as echarts from "echarts";
 import "/src/assets/css/poster.css";
 
 export default {
