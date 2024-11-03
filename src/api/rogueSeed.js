@@ -10,6 +10,16 @@ export default {
         });
     },
 
+    uploadRougeSeedSettlementChart(data) {
+        const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
+        return request({
+            headers:{Authorization:token},
+            url: `auth/rogue-seed/settlement-chart`,
+            method: "post",
+            data:data
+        });
+    },
+
     getRogueSeedPage(data) {
         const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
         return request({

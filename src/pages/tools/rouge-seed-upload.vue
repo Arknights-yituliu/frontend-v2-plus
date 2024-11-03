@@ -6,7 +6,8 @@ import {cMessage} from "/src/utils/Message.js";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import SpriteImage from "/src/components/SpriteImage.vue";
 import {professionDict} from "/src/pages/survey/service/common.js";
-import CompressImage from "/src/utils/CompressImage.js";
+
+import {compressImage, getDataUrl} from '/src/utils/FileConversion.js'
 import {debounce} from "@/utils/Debounce.js";
 
 let operatorTable = new Map()
@@ -24,6 +25,7 @@ const rougeSeedForm = ref({
   "seedId": 1735237566300,
   "seed": "1414115151",
   "uid": 14401084810,
+  'difficulty':15,
   "rogueVersion": "萨卡兹的无终奇语DLC-遁入阇那",
   "rogueTheme": "萨卡兹的无终奇语",
   "squad": "蓝图测绘分队",
@@ -50,6 +52,7 @@ const addOrDeleteOperator = (operator) => {
   }
 }
 
+let settlementChartBlob = ref('')
 let settlementChartDataUrl = ref('')
 
 function chooseImage() {
@@ -69,12 +72,16 @@ const fileToDataUrl = debounce(async () => {
   }
 
   const file = files[0]
-  settlementChartDataUrl.value = await CompressImage(file)
+  settlementChartBlob.value = await compressImage(file)
+  getDataUrl(settlementChartBlob.value).then(response => {
+    console.log(response)
+    settlementChartDataUrl.value = response
+  })
 
 
 }, 1000)
 
-const upload = () => {
+const uploadSeed = () => {
   let data = JSON.parse(JSON.stringify(rougeSeedForm.value))
   if (data.operatorTeam) {
     data.operatorTeam = data.operatorTeam.join(',')
@@ -85,6 +92,18 @@ const upload = () => {
   rogueSeedAPI.uploadRogueSeed(data).then(response => {
     console.log(response.data)
     cMessage('提交成功')
+  })
+}
+
+const upload = debounce(() => {
+  uploadImage()
+}, 1500)
+
+const uploadImage = () => {
+  const formData = new FormData();
+  formData.append('file', settlementChartBlob.value)
+  rogueSeedAPI.uploadRougeSeedSettlementChart(formData).then(response => {
+    uploadSeed()
   })
 }
 
@@ -213,7 +232,7 @@ filterOperator()
           </div>
         </el-form-item>
 
-        <el-button type="primary" @click="upload">提名种子！</el-button>
+        <el-button type="primary" @click="upload()">提名种子！</el-button>
 
         <!--        <el-button type="primary" @click="onSubmit">随机来一个Seed让我爽爽！</el-button>-->
         <!--        <div>-->

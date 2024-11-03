@@ -13,7 +13,7 @@ import buildingApi from '/src/api/building.js'
 import operatorDataAPI from '/src/api/operatorData.js'
 import {operatorFilterConditionTable} from '/src/utils/BuildingSkillFilter.js'
 import {translate} from '/src/utils/I18n.js'
-import {getText} from '/src/utils/FileRead.js'
+import {getText} from '/src/utils/FileConversion.js'
 import {debounce} from "/src/utils/Debounce.js";
 import {cMessage} from '/src/utils/Message.js'
 import {createPopover, popoverOnOpen} from "/src/utils/Popover.js";
