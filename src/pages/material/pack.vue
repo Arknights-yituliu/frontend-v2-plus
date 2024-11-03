@@ -184,13 +184,11 @@ const choosePackOption = (list, value) => {
 }
 
 
-
-initData()
-
 function getText(row) {
   return saleTypes.find(item => item.value === row.saleType)?.text
 }
 
+getPackInfoData()
 
 </script>
 <template>
@@ -297,7 +295,7 @@ function getText(row) {
           <el-table-column prop="drawEfficiency" label="抽卡性价比" sortable min-width="120"
                            :formatter="row => row.drawEfficiency.toFixed(2)"/>
           <el-table-column prop="packEfficiency" label="综合性价比" sortable min-width="120"
-                           :formatter="row => row.packEfficiency.toFixed(2)"/>
+                           :formatter="row => row.packEfficiency.toString().slice(0,4)"/>
         </el-table>
       </div>
       <!-- 礼包性价比总表 End -->
