@@ -130,7 +130,7 @@ let recommendedStageDetailTable = ref([])
  */
 function getItemTableData(index, isJump) {
   //当前材料系列的推荐关卡
-  let recommendedStage = stageResultGroup.value[index];
+  let recommendedStage = provisionalData(stageResultGroup.value[index]);
 
   //推荐关卡集合
   let stageResultList = recommendedStage.stageResultList;
@@ -142,13 +142,36 @@ function getItemTableData(index, isJump) {
   }
 }
 
+function provisionalData(data){
+  let dataCopy = JSON.parse(JSON.stringify(data))
+  let actStageLMD = {}
+  let actStage30073 = {}
+  let indexTmp = 0
+  console.log(dataCopy.stageResultList)
 
+  for(let index in dataCopy.stageResultList){
+    const item  = dataCopy.stageResultList[index]
+    if(item.stageCode.indexOf('PV')>-1){
+      indexTmp = index
+      actStageLMD = item
+      actStage30073 = JSON.parse(JSON.stringify(item))
+      break
+    }
+  }
+  actStageLMD.secondaryItemId = 4001
+  dataCopy.stageResultList[indexTmp] = actStageLMD
+  actStage30073.stageEfficiency = actStage30073.stageEfficiency - 0.072 + 21/25*23.5158/21
+  actStage30073.secondaryItemId = 30073
+  dataCopy.stageResultList.unshift(actStage30073)
 
+  console.log(dataCopy)
+  return dataCopy
+}
 
 function replaceZoneName(str) {
   if (typeof str === "undefined") return ''
   str = str.row.zoneName
-  return str.replace("(标准)", '')
+  return str?str.replace("(标准)", ''):str
 }
 
 let legendStyle = ref('')
@@ -368,8 +391,8 @@ function getCellBgColor(rowIndex, maxIndex) {
   return ''
 }
 
-function getTableDividerClass(divider){
-  if(divider){
+function getTableDividerClass(divider) {
+  if (divider) {
     return 'act-history-table-divider'
   }
 }
@@ -853,7 +876,7 @@ onMounted(() => {
             </div>
           </td>
         </tr>
-        <tr v-for="(act, rowIndex) in historyActItemTable" :key="rowIndex"  :class="getTableDividerClass(act.divider)">
+        <tr v-for="(act, rowIndex) in historyActItemTable" :key="rowIndex" :class="getTableDividerClass(act.divider)">
           <td class="activity-name-pc">
             {{ act.activityName }} <br>
             {{ act.startTime }}
@@ -863,9 +886,9 @@ onMounted(() => {
             <div class="activity-pickup-item-pc" v-if="act.itemList[item.id]">
               <div :class="getActTableItemSprite(item.id)"></div>
             </div>
-            <div class="activity-stage-efficiency-pc" v-if="act.itemList[item.id]">
-              {{ formatNumber(act.itemList[item.id].stageEfficiency, 2) }}%
-            </div>
+<!--            <div class="activity-stage-efficiency-pc" v-if="act.itemList[item.id]">-->
+<!--              {{ formatNumber(act.itemList[item.id].stageEfficiency, 2) }}%-->
+<!--            </div>-->
           </td>
         </tr>
         </tbody>

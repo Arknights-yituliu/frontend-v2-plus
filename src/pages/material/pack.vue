@@ -290,12 +290,17 @@ getPackInfoData()
             <span>{{ getText(row) }}</span>
           </el-table-column>
           <el-table-column prop="price" label="售价" sortable min-width="80" :formatter="row => row.price + '元'"/>
-          <el-table-column prop="draws" label="抽数" sortable min-width="80" :formatter="row => row.draws.toFixed(2)"/>
+          <el-table-column prop="draws" label="抽数(不含中坚)" sortable min-width="80" :formatter="row => row.draws.toFixed(2)"/>
+          <el-table-column prop="drawsKernel" label="抽数(含中坚)" sortable min-width="80" :formatter="row => row.drawsKernel.toFixed(2)"/>
           <el-table-column prop="originium" label="源石" sortable min-width="80"/>
-          <el-table-column prop="drawEfficiency" label="抽卡性价比" sortable min-width="120"
+          <el-table-column prop="drawEfficiency" label="抽卡性价比(不含中坚)" sortable min-width="120"
                            :formatter="row => row.drawEfficiency.toFixed(2)"/>
-          <el-table-column prop="packEfficiency" label="综合性价比" sortable min-width="120"
+          <el-table-column prop="packEfficiency" label="综合性价比(不含中坚)" sortable min-width="120"
                            :formatter="row => row.packEfficiency.toString().slice(0,4)"/>
+          <el-table-column prop="drawEfficiencyKernel" label="抽卡性价比(含中坚)" sortable min-width="120"
+                           :formatter="row => row.drawEfficiencyKernel.toFixed(2)"/>
+          <el-table-column prop="packEfficiencyKernel" label="综合性价比(含中坚)" sortable min-width="120"
+                           :formatter="row => row.packEfficiencyKernel.toString().slice(0,4)"/>
         </el-table>
       </div>
       <!-- 礼包性价比总表 End -->

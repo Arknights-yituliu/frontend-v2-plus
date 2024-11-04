@@ -319,6 +319,12 @@ const routes = [
         component: () => import('/src/pages/material/stageV3E0.vue')
     },
     {
+        path: '/material/skland',
+        text: '收益速览做图用',
+        display: false,
+        component: () => import('/src/pages/video-material/stageV3.vue')
+    },
+    {
         path: '/tools/rogue-seed/upload',
         text: '种子上传',
         display: false,
