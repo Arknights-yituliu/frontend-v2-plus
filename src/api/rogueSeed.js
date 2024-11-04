@@ -20,11 +20,21 @@ export default {
         });
     },
 
+    rougeSeedRating(data) {
+        const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
+        return request({
+            headers:{Authorization:token},
+            url: `auth/rogue-seed/rating`,
+            method: "post",
+            data:data
+        });
+    },
+
     getRogueSeedPage(data) {
         const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
         return request({
             headers:{Authorization:token},
-            url: `auth/rogue-seed/list`,
+            url: `auth/rogue-seed/page`,
             method: "post",
             data:data
         });
