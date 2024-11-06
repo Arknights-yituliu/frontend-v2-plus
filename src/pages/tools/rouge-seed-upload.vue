@@ -22,7 +22,7 @@ function initOperatorTable() {
 }
 
 const rougeSeedForm = ref({
-  "seedId": 1735237566300,
+  "seedId": 1741880747960100,
   "seed": "1414115151",
   "uid": 14401084810,
   'difficulty':15,
@@ -32,7 +32,7 @@ const rougeSeedForm = ref({
   "operatorTeam": ['维什戴尔', '古米', '卡达'],
   "description": "这里写下你的描述",
   "tags": ["萨卡兹的无终奇语", "蓝图测绘分队"],
-  "summaryImageLink": "http://192.168.1.19:4000/image/sprite/sprites-icon.png"
+  "summaryImageLink": ""
 })
 
 let seedTagValue = ref('')
@@ -63,7 +63,7 @@ function chooseImage() {
   element.click();
 }
 
-const fileToDataUrl = debounce(async () => {
+const fileToDataUrl = async () => {
   const input = document.getElementById('settlement-chart')
   const files = input.files;
   if (files.length === 0) {
@@ -79,7 +79,7 @@ const fileToDataUrl = debounce(async () => {
   })
 
 
-}, 1000)
+}
 
 const uploadSeed = () => {
   let data = JSON.parse(JSON.stringify(rougeSeedForm.value))
@@ -96,7 +96,13 @@ const uploadSeed = () => {
 }
 
 const upload = debounce(() => {
-  uploadImage()
+  const input = document.getElementById('settlement-chart')
+  if(input.files.length>0){
+    uploadImage()
+  }else {
+    uploadSeed()
+  }
+
 }, 1500)
 
 const uploadImage = () => {

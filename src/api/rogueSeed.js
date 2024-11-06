@@ -31,12 +31,24 @@ export default {
     },
 
     getRogueSeedPage(data) {
-        const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
         return request({
-            headers:{Authorization:token},
             url: `auth/rogue-seed/page`,
             method: "post",
             data:data
+        });
+    },
+
+    getRogueSeedPageTag() {
+        return request({
+            url: `rogue-seed/page-tag`,
+            method: "get"
+        });
+    },
+
+    getRogueSeedPageByCOS(tag) {
+        return request({
+            url: `https://cos.yituliu.cn/rogue-seed/page/${tag}.json`,
+            method: "get"
         });
     },
 }

@@ -1,4 +1,5 @@
 import request from "/src/api/request";
+import axios from "axios";
 export default {
   //查询所有常驻商店数据
   getPermStore() {
@@ -23,4 +24,15 @@ export default {
       method: "get",
     });
   },
+
+  getPackInfoTag() {
+    return request({
+      url: `/store/pack/tag`,
+      method: "get",
+    });
+  },
+
+  getPackInfoByCos(tag){
+    return axios.get(`https://cos.yituliu.cn/store/pack/${tag}.json`)
+  }
 };

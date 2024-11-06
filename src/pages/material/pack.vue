@@ -46,10 +46,15 @@ let packInfoList = []
 
 const getPackInfoData = async () => {
   // 等待获取接口返回的全部礼包信息
-  const {data} = await storeAPI.getPackStore()
-  packInfoListFromAPI = JSON.parse(JSON.stringify(data))
-  packInfoList = data
-  initData()
+  storeAPI.getPackInfoTag().then(rep => {
+    const tag = rep.data
+    storeAPI.getPackInfoByCos(tag).then(response => {
+      const data = response.data
+      packInfoListFromAPI = JSON.parse(JSON.stringify(data.data))
+      packInfoList = data.data
+      initData()
+    })
+  })
 }
 
 const initData = () => {
@@ -290,8 +295,10 @@ getPackInfoData()
             <span>{{ getText(row) }}</span>
           </el-table-column>
           <el-table-column prop="price" label="售价" sortable min-width="80" :formatter="row => row.price + '元'"/>
-          <el-table-column prop="draws" label="抽数(不含中坚)" sortable min-width="80" :formatter="row => row.draws.toFixed(2)"/>
-          <el-table-column prop="drawsKernel" label="抽数(含中坚)" sortable min-width="80" :formatter="row => row.drawsKernel.toFixed(2)"/>
+          <el-table-column prop="draws" label="抽数(不含中坚)" sortable min-width="80"
+                           :formatter="row => row.draws.toFixed(2)"/>
+          <el-table-column prop="drawsKernel" label="抽数(含中坚)" sortable min-width="80"
+                           :formatter="row => row.drawsKernel.toFixed(2)"/>
           <el-table-column prop="originium" label="源石" sortable min-width="80"/>
           <el-table-column prop="drawEfficiency" label="抽卡性价比(不含中坚)" sortable min-width="120"
                            :formatter="row => row.drawEfficiency.toFixed(2)"/>

@@ -25,20 +25,22 @@ let searchCriteria = ref({
 })
 
 function getRougeSeedPage() {
-  rogueSeedAPI.getRogueSeedPage(searchCriteria.value).then(response => {
-    console.log(response.data)
-    rougeSeedList.value = response.data
+  rogueSeedAPI.getRogueSeedPageTag().then(rep => {
+    const tag = rep.data
+    rogueSeedAPI.getRogueSeedPageByCOS(tag).then(response => {
+      rougeSeedList.value = response.list
+    })
   })
 }
 
-function getOperatorList(team){
+function getOperatorList(team) {
 
   let list = []
-  for(const name of team){
+  for (const name of team) {
     console.log(name)
     console.log(charIdDict)
     console.log(charIdDict.get(name))
-     list.push(charIdDict.get(name))
+    list.push(charIdDict.get(name))
   }
   return list
 }
@@ -99,7 +101,7 @@ getRougeSeedPage()
     <!--      <el-radio-button label="#3 萨米" value="Los Angeles"/>-->
     <!--      <el-radio-button label="#4 萨卡兹" value=""/>-->
     <!--    </el-radio-group>-->
-    <div >
+    <div>
       <!-- 版本热门seeds -->
       <el-card style="margin: 12px">
         <template #header>
@@ -121,8 +123,8 @@ getRougeSeedPage()
           <el-table-column label="初始干员" width="200" prop="difficulty">
             <template #default="scope">
               <div style="display: flex">
-              <SpriteImage v-for="(operator,index) in getOperatorList(scope.row.operatorTeam)"
-               display-size="50" original-size="180" :image-name="operator" margin="8"></SpriteImage>
+                <SpriteImage v-for="(operator,index) in getOperatorList(scope.row.operatorTeam)"
+                             display-size="50" original-size="180" :image-name="operator" margin="8"></SpriteImage>
               </div>
             </template>
           </el-table-column>
@@ -131,7 +133,7 @@ getRougeSeedPage()
               <el-button link type="primary" size="small" @click="copyTextToClipboard(scope.row.seed)">
                 复制
               </el-button>
-              <el-button link type="primary" size="small"  @click="">
+              <el-button link type="primary" size="small" @click="">
                 详情
               </el-button>
             </template>
