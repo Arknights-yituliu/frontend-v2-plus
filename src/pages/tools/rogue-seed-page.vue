@@ -1,11 +1,12 @@
 <script setup>
 import {ref} from 'vue'
-import '/src/assets/css/rogueSeed/rogueSeed.scss'
+import '/src/assets/css/rogueSeed/rogue-seed-page.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
 import {cMessage} from "@/utils/Message.js";
 import {copyTextToClipboard} from "/src/utils/CopyText.js";
 import SpriteImage from "@/components/SpriteImage.vue";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
+import Popup from '/src/components/popup.vue'
 
 let charIdDict = new Map()
 
@@ -29,21 +30,24 @@ function getRougeSeedPage() {
     const tag = rep.data
     rogueSeedAPI.getRogueSeedPageByCOS(tag).then(response => {
       rougeSeedList.value = response.list
+      rogueSeedDetail.value = rougeSeedList.value[6]
+      console.log(rogueSeedDetail.value)
     })
   })
 }
+
 
 function getOperatorList(team) {
 
   let list = []
   for (const name of team) {
-    console.log(name)
-    console.log(charIdDict)
-    console.log(charIdDict.get(name))
     list.push(charIdDict.get(name))
   }
   return list
 }
+
+let rogueSeedDetail = ref({})
+let rogueSeedDetailVisible = ref(true)
 
 //总打分数、总星数
 const links = [
@@ -165,6 +169,16 @@ getRougeSeedPage()
           </el-table-column>
         </el-table>
       </el-card>
+
+      <Popup v-model:visible="rogueSeedDetailVisible" :width="'500px'">
+        <div class="rogue-seed-detail-content">
+          <h3>通关结算图</h3>
+          <img class="rogue-seed-detail-settlement-chart"
+               :src="`https://cos.yituliu.cn/${rogueSeedDetail.summaryImageLink}`" alt="">
+          <h3>种子描述</h3>
+          <p>{{rogueSeedDetail.description}}</p>
+        </div>
+      </Popup>
     </div>
 
   </div>

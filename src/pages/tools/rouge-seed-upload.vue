@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import '/src/assets/css/rogueSeed/rogueSeed.scss'
+import '/src/assets/css/rogueSeed/rogue-seed-upload.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
 import {cMessage} from "/src/utils/Message.js";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
@@ -143,7 +143,7 @@ filterOperator()
 </script>
 
 <template>
-  <div class="rogue-seed-page">
+  <div class="rogue-seed-upload">
     <!-- 提名区域 -->
     <el-card>
       <el-form :model="rougeSeedForm" label-width="auto" class="rogue-seed-form">
