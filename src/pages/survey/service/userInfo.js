@@ -1,7 +1,7 @@
 import {ref} from "vue";
 import {DOMAIN} from '/src/api/BASE_URL.js'
 import request from '/src/api/requestBase.js'
-import {cMessage} from "../../../utils/Message.js";
+import {cMessage} from "/src/utils/Message.js";
 
 let userInfo = ref({}); //用户信息(用户名，用户id，用户状态)
 

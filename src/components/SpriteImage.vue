@@ -36,7 +36,7 @@ function calculatedSize() {
 
 }
 
-console.log(props.imageName)
+
 calculatedSize()
 
 onMounted(() => {

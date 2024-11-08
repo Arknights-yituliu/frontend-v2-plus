@@ -23,7 +23,7 @@ service.interceptors.request.use(
 // http response 拦截器
 service.interceptors.response.use(
     (response) => {
-        if (!(response.data.code === 200||response.status === 200)) {
+        if (response.data.code !== 200) {
             console.log(response.status)
             cMessage(response.data.msg, "error");
             return Promise.reject(response.data);

@@ -11,4 +11,23 @@
     margin:auto;
   }
 
+  .rogue-seed-rating-item{
+    display: flex;
+    align-items: center;
+  }
+
+  .rogue-seed-rating-icon{
+    display: block;
+    margin: 4px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .rogue-seed-rating-button{
+    display: block;
+    margin: 4px 20px;
+    width: 40px;
+    height: 40px;
+  }
+
 }

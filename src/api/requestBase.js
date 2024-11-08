@@ -7,5 +7,4 @@ const service = axios.create({
     timeout: 15000, // 请求超时时间
 });
 
-
 export default service;

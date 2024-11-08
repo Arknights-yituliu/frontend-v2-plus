@@ -29,7 +29,6 @@ function throttle(func,begin, delay = 500,message = '操作过于频繁') {
     return function (...args) {
         if(current - begin >=delay){
             func.apply(this, args);
-
         }else {
             cMessage(message)
         }

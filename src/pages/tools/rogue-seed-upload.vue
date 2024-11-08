@@ -21,7 +21,7 @@ function initOperatorTable() {
   }
 }
 
-const rougeSeedForm = ref({
+const rogueSeedForm = ref({
   "seedId": 1741880747960100,
   "seed": "1414115151",
   "uid": 14401084810,
@@ -38,17 +38,17 @@ const rougeSeedForm = ref({
 let seedTagValue = ref('')
 
 const addSeedTag = () => {
-  if (rougeSeedForm.value.tags.indexOf(seedTagValue.value) < 0) {
-    rougeSeedForm.value.tags.push(seedTagValue.value)
+  if (rogueSeedForm.value.tags.indexOf(seedTagValue.value) < 0) {
+    rogueSeedForm.value.tags.push(seedTagValue.value)
     seedTagValue.value = ''
   }
 }
 
 const addOrDeleteOperator = (operator) => {
-  if (rougeSeedForm.value.operatorTeam.indexOf(operator) < 0) {
-    rougeSeedForm.value.operatorTeam.push(operator)
+  if (rogueSeedForm.value.operatorTeam.indexOf(operator) < 0) {
+    rogueSeedForm.value.operatorTeam.push(operator)
   } else {
-    rougeSeedForm.value.operatorTeam = rougeSeedForm.value.operatorTeam.filter(e => e !== operator)
+    rogueSeedForm.value.operatorTeam = rogueSeedForm.value.operatorTeam.filter(e => e !== operator)
   }
 }
 
@@ -82,7 +82,7 @@ const fileToDataUrl = async () => {
 }
 
 const uploadSeed = () => {
-  let data = JSON.parse(JSON.stringify(rougeSeedForm.value))
+  let data = JSON.parse(JSON.stringify(rogueSeedForm.value))
   if (data.operatorTeam) {
     data.operatorTeam = data.operatorTeam.join(',')
   } else {
@@ -108,8 +108,8 @@ const upload = debounce(() => {
 const uploadImage = () => {
   const formData = new FormData();
   formData.append('file', settlementChartBlob.value)
-  rogueSeedAPI.uploadRougeSeedSettlementChart(formData).then(response => {
-    rougeSeedForm.value.summaryImageLink = response.data.imagePath
+  rogueSeedAPI.uploadRogueSeedSettlementChart(formData).then(response => {
+    rogueSeedForm.value.summaryImageLink = response.data.imagePath
 
     uploadSeed()
   })
@@ -146,24 +146,24 @@ filterOperator()
   <div class="rogue-seed-upload">
     <!-- 提名区域 -->
     <el-card>
-      <el-form :model="rougeSeedForm" label-width="auto" class="rogue-seed-form">
+      <el-form :model="rogueSeedForm" label-width="auto" class="rogue-seed-form">
         <el-form-item label="种子">
-          <el-input v-model="rougeSeedForm.seed" style="width: 500px;"/>
+          <el-input v-model="rogueSeedForm.seed" style="width: 500px;"/>
         </el-form-item>
         <el-form-item label="肉鸽主题">
-          <el-select v-model="rougeSeedForm.rogueTheme" placeholder="" style="width: 500px;">
+          <el-select v-model="rogueSeedForm.rogueTheme" placeholder="" style="width: 500px;">
             <el-option label="水月与深蓝之树" value="水月与深蓝之树"/>
             <el-option label="探索者的银凇止境" value="探索者的银凇止境"/>
             <el-option label="萨卡兹的无终奇语" value="萨卡兹的无终奇语"/>
           </el-select>
         </el-form-item>
         <el-form-item label="肉鸽版本">
-          <el-select v-model="rougeSeedForm.rogueVersion" placeholder="" style="width: 500px;">
+          <el-select v-model="rogueSeedForm.rogueVersion" placeholder="" style="width: 500px;">
             <el-option label="萨卡兹的无终奇语DLC-遁入阇那" value="萨卡兹的无终奇语DLC-遁入阇那"/>
           </el-select>
         </el-form-item>
         <el-form-item label="分队选择">
-          <el-select v-model="rougeSeedForm.squad" placeholder="" style="width: 500px;">
+          <el-select v-model="rogueSeedForm.squad" placeholder="" style="width: 500px;">
             <el-option label="蓝图测绘分队" value="蓝图测绘分队"/>
             <el-option label="突击战术分队" value="突击战术分队"/>
             <el-option label="远程战术分队" value="远程战术分队"/>
@@ -181,7 +181,7 @@ filterOperator()
           <div>
             <div class="operator-checkbox">
               <SpriteImage original-size="180" display-size="60" :image-name="charIdDict.get(operator)"
-                           v-for="(operator,index) in rougeSeedForm.operatorTeam" :key="index"
+                           v-for="(operator,index) in rogueSeedForm.operatorTeam" :key="index"
                            @click="addOrDeleteOperator(operator)"></SpriteImage>
             </div>
 
@@ -226,12 +226,12 @@ filterOperator()
         </el-form-item>
 
         <el-form-item label="种子简介">
-          <el-input v-model="rougeSeedForm.description" type="textarea"/>
+          <el-input v-model="rogueSeedForm.description" type="textarea"/>
         </el-form-item>
         <el-form-item>
           <div class="rogue-seed-tag-form">
             <div class="rogue-seed-tag-box">
-              <div class="rogue-seed-tag" v-for="(tag,index) in rougeSeedForm.tags">
+              <div class="rogue-seed-tag" v-for="(tag,index) in rogueSeedForm.tags">
                 #{{ tag }}
               </div>
             </div>

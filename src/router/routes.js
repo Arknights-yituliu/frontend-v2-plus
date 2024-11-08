@@ -328,7 +328,7 @@ const routes = [
         path: '/tools/rogue-seed/upload',
         text: '种子上传',
         display: false,
-        component: () => import('/src/pages/tools/rouge-seed-upload.vue')
+        component: () => import('/src/pages/tools/rogue-seed-upload.vue')
     },
     {
         path: '/tools/rogue-seed/page',

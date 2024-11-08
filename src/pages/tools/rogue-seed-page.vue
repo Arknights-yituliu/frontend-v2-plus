@@ -7,6 +7,7 @@ import {copyTextToClipboard} from "/src/utils/CopyText.js";
 import SpriteImage from "@/components/SpriteImage.vue";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import Popup from '/src/components/popup.vue'
+import {debounce} from "@/utils/Debounce.js";
 
 let charIdDict = new Map()
 
@@ -16,7 +17,7 @@ for (const charId in CHARACTER_TABLE) {
 }
 
 
-let rougeSeedList = ref([])
+let rogueSeedList = ref([])
 
 let searchCriteria = ref({
   keywords: [],
@@ -25,20 +26,34 @@ let searchCriteria = ref({
   orderBy: "rating"
 })
 
-function getRougeSeedPage() {
+function getRogueSeedPage() {
   rogueSeedAPI.getRogueSeedPageTag().then(rep => {
     const tag = rep.data
     rogueSeedAPI.getRogueSeedPageByCOS(tag).then(response => {
-      rougeSeedList.value = response.list
-      rogueSeedDetail.value = rougeSeedList.value[6]
-      console.log(rogueSeedDetail.value)
+      rogueSeedList.value = response.data.list
+      rogueSeedDetail.value = rogueSeedList.value[6]
+      console.log(rogueSeedList.value[6])
+      getRogueSeedRatingList()
     })
+  })
+}
+
+//记录点赞的字典
+//内部对象结构
+// { 种子唯一id:{rating:0} }
+
+let rogueSeedRatingDict = ref({})
+
+function getRogueSeedRatingList() {
+  rogueSeedAPI.getRogueSeedRatingList().then(rep => {
+    for (const item of rep.data) {
+      rogueSeedRatingDict.value[item.seedId] = item
+    }
   })
 }
 
 
 function getOperatorList(team) {
-
   let list = []
   for (const name of team) {
     list.push(charIdDict.get(name))
@@ -47,50 +62,60 @@ function getOperatorList(team) {
 }
 
 let rogueSeedDetail = ref({})
-let rogueSeedDetailVisible = ref(true)
+let rogueSeedDetailVisible = ref(false)
 
-//总打分数、总星数
-const links = [
-  {
-    "seed": "ROGUE114514",
-    "text": "种子简介文本种子简介文本种子简介文本种子简介文本种子简介文本",
-    "users": ["第一个提名的用户", "第二个提名的用户"],
-    "totalRank": 114,
-    "totalStar": 514,
-    "lastDate": "2024/10/20",
-    "version": "3.3",
-  },
-  {
-    "seed": "ROGUE1919810",
-    "text": "悬赏114514龙门币过这个天谴局，觉得够坑请打高分",
-    "users": ["第一个提名的用户", "第二个提名的用户"],
-    "totalRank": 114,
-    "totalStar": 514,
-    "lastDate": "2024/10/20",
-    "version": "3.3",
-  },
-  {
-    "seed": "ROGUE1048576",
-    "text": "请自备999源石锭",
-    "users": ["第一个提名的用户", "第二个提名的用户"],
-    "totalRank": 114,
-    "totalStar": 514,
-    "lastDate": "2024/10/20",
-    "version": "3.3",
-  },
-  {
-    "seed": "ROGUE8388608",
-    "text": "开局记得选维什戴尔",
-    "users": ["第一个提名的用户", "第二个提名的用户"],
-    "totalRank": 114,
-    "totalStar": 514,
-    "lastDate": "2024/10/20",
-    "version": "3.3",
+function displayRogueSeedDetail(item){
+  rogueSeedDetail.value = item
+  rogueSeedDetailVisible.value  = true
+}
+
+function getRogueSeedRating(value, icon, seedId) {
+
+  if (typeof rogueSeedRatingDict.value[seedId] === "undefined") {
+    return `/image/survey/${icon}0.png`
   }
-]
+  const {rating} = rogueSeedRatingDict.value[seedId]
+  if (typeof rating === 'number') {
+
+    if (value === rating) {
+      return `/image/survey/${icon}1.png`
+    }
+  }
+  return `/image/survey/${icon}0.png`
+}
 
 
-getRougeSeedPage()
+const rating = debounce((seedId, value) => {
+  const item = rogueSeedRatingDict.value[seedId]
+  let data
+
+  if (!item) {
+    data = {seedId: seedId, rating: value}
+  } else {
+    if (value === item.rating) {
+      data = {seedId: seedId, rating: -1}
+    } else {
+      data = {seedId: seedId, rating: value}
+    }
+  }
+  rogueSeedRatingDict.value[seedId] = data
+  rogueSeedAPI.rogueSeedRating(data).then(response => {
+  })
+}, 500)
+
+/**
+ * 上传种子评分
+ * @param seedId 种子id
+ * @param value 评价分值
+ */
+function rogueSeedRating(seedId, value) {
+  rating(seedId, value)
+}
+
+
+
+
+getRogueSeedPage()
 
 </script>
 
@@ -113,7 +138,7 @@ getRougeSeedPage()
             <span>版本热门seeds</span>
           </div>
         </template>
-        <el-table :data="rougeSeedList" style="width: 100%">
+        <el-table :data="rogueSeedList" style="width: 100%">
           <el-table-column fixed prop="description" label="简介" width="240"/>
           <el-table-column prop="seed" label="种子代码" width="180"/>
           <el-table-column label="肉鸽主题" width="150" prop="rogueTheme">
@@ -121,6 +146,22 @@ getRougeSeedPage()
           <el-table-column label="分队" width="150" prop="squad">
           </el-table-column>
           <el-table-column label="评分" width="60" prop="rating">
+            <template #default="scope">
+              <div>
+                <div class="rogue-seed-rating-item">
+                  <img src="/image/survey/like1.png" class="rogue-seed-rating-icon" alt="">
+                  <span>{{ scope.row.rating.likeCount }}</span>
+                </div>
+                <div class="rogue-seed-rating-item">
+                  <img src="/image/survey/normal1.png" class="rogue-seed-rating-icon" alt="">
+                  <span>{{ scope.row.rating.normalCount }}</span>
+                </div>
+                <div class="rogue-seed-rating-item">
+                  <img src="/image/survey/dislike1.png" class="rogue-seed-rating-icon" alt="">
+                  <span>{{ scope.row.rating.dislikeCount }}</span>
+                </div>
+              </div>
+            </template>
           </el-table-column>
           <el-table-column label="难度" width="60" prop="difficulty">
           </el-table-column>
@@ -134,35 +175,10 @@ getRougeSeedPage()
           </el-table-column>
           <el-table-column label="操作" min-width="120">
             <template #default="scope">
-              <el-button link type="primary" size="small" @click="copyTextToClipboard(scope.row.seed)">
+              <el-button link type="primary" size="small" @click="copyTextToClipboard(scope.row.seed)" >
                 复制
               </el-button>
-              <el-button link type="primary" size="small" @click="">
-                详情
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
-      <!-- 本周热门seeds -->
-      <el-card style="max-width: 720px">
-        <template #header>
-          <div class="card-header">
-            <span>本周热门seeds</span>
-          </div>
-        </template>
-        <el-table :data="links" style="width: 100%">
-          <el-table-column fixed prop="text" label="简介" width="240"/>
-          <el-table-column prop="seed" label="seed" width="180"/>
-          <el-table-column prop="rank" label="有多爽/有多坑" width="150">
-            <el-rate v-model="value" clearable/>
-          </el-table-column>
-          <el-table-column label="操作" min-width="120">
-            <template #default>
-              <el-button link type="primary" size="small" @click="">
-                复制
-              </el-button>
-              <el-button link type="primary" size="small" disabled @click="">
+              <el-button link type="primary" size="small" @click="displayRogueSeedDetail(scope.row)">
                 详情
               </el-button>
             </template>
@@ -170,13 +186,24 @@ getRougeSeedPage()
         </el-table>
       </el-card>
 
+
       <Popup v-model:visible="rogueSeedDetailVisible" :width="'500px'">
         <div class="rogue-seed-detail-content">
+
+          <h3>种子描述</h3>
+          <p>{{ rogueSeedDetail.description }}</p>
           <h3>通关结算图</h3>
           <img class="rogue-seed-detail-settlement-chart"
                :src="`https://cos.yituliu.cn/${rogueSeedDetail.summaryImageLink}`" alt="">
-          <h3>种子描述</h3>
-          <p>{{rogueSeedDetail.description}}</p>
+          <h3>对种子评价</h3>
+          <div style="display: flex">
+            <img :src="getRogueSeedRating(0,'dislike',rogueSeedDetail.seedId)" alt=""
+                 class="rogue-seed-rating-button" @click="rogueSeedRating(rogueSeedDetail.seedId,0)">
+            <img :src="getRogueSeedRating(1,'normal',rogueSeedDetail.seedId)" alt=""
+                 class="rogue-seed-rating-button" @click="rogueSeedRating(rogueSeedDetail.seedId,1)">
+            <img :src="getRogueSeedRating(2,'like',rogueSeedDetail.seedId)" alt=""
+                 class="rogue-seed-rating-button" @click="rogueSeedRating(rogueSeedDetail.seedId,2)">
+          </div>
         </div>
       </Popup>
     </div>
