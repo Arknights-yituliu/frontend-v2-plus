@@ -67,7 +67,7 @@ function formattedItemDisplayList(itemList) {
 
 
 onMounted(() => {
-  materialAPI.getItemValueTable(0.625).then(response => {
+  materialAPI.getItemValueTable(0.633).then(response => {
     itemValueList.value = response.data
     let tmpList = []
     for (const item of response.data) {

@@ -132,7 +132,7 @@ const init = async () => {
   const { data: { result = [] } } = await surveyAPI.getCharStatisticsResult()
   result.forEach(item => statisticsMap.set(item.charId, item))
   // 材料总映射
-  const { data = [] } = await materialAPI.getItemValueTable(0.625)
+  const { data = [] } = await materialAPI.getItemValueTable(0.633)
   data.forEach(item => materialMap.set(item.itemId, item))
   
   // 添加不存在的材料

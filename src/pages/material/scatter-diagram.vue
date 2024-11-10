@@ -34,7 +34,7 @@ async function initData(size = 800) {
 
   const itemMap = new Map()
 
-  await materialAPI.getItemValueTable(0.625).then(response => {
+  await materialAPI.getItemValueTable(0.633).then(response => {
     const list = response.data
     for (const item of list) {
       itemMap.set(item.itemId, item.itemValueAp)
