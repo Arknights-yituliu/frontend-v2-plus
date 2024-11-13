@@ -1,7 +1,7 @@
 <script setup>
 import stageApi from '/src/api/material'
 import {onMounted, ref} from "vue";
-import itemSeries from '/src/static/json/material/item_series.json'
+import ITEM_SERIES from '/src/static/json/material/item_series.json'
 import FixedNav from "/src/components/FixedNav.vue";
 import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
@@ -9,40 +9,32 @@ import '/src/assets/css/material/stage.phone.scss'
 import {dataFormat} from '/src/utils/DateUtil.js'
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 
+import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
+import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
+import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
+
+
 //漫游导航指引
 const guideOpen = ref(false)
 
+let itemIdList = [] // 材料表
+// 先把当作表头的材料表转为一个集合
+for (const itemId in ITEM_SERIES) {
+  const item = ITEM_SERIES[itemId]
+  itemIdList.push({
+    id: item.id,
+    name: item.name,
+    lastUp: false,
+    lastUpInterval: 0
+  })
+}
+
 // 根据物品系列进行分组的推荐关卡
-let stageResultGroup = ref({})
-// let stage_result_group = ref(stage_api_data.data.recommendedStage.sort((a,b)=>a.itemSeriesId-b.itemSeriesId))
+let stageResultGroup = ref(TMP_STAGE_RESULT.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId))
+
 
 //材料卡片数据
 let stageCardData = ref([])
-
-//当前时间的时间戳
-let nowTimeStamp = new Date().getTime();
-
-let itemValueMap = ref({})
-
-let selectedItem = ref({
-  itemId: '30013',
-  itemValueAp: 17.32,
-  itemName: '固源岩组',
-  lastUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  nextUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  storeCostPerf: [
-    {token: '4005', costPerf: 0.75},
-    {token: 'EPGS_COIN', costPerf: 0.75},
-    {token: 'REP_COIN', costPerf: 0.75},
-    {token: '4004', costPerf: 0.75}
-  ]
-})
 
 
 let updateTime = ref('')
@@ -54,16 +46,8 @@ function getStageResult() {
     stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
     getItemCardData()
-    //获取材料价值数据
-    stageApi.getItemValueTable(0.633).then(response => {
-      for (const item of response.data) {
-        itemValueMap.value[item.itemId] = item;
-      }
-      getItemTableData(0, false)
-    })
+    getItemTableData(0, false)
   })
-
-
 }
 
 
@@ -112,7 +96,7 @@ function getItemCardData() {
     }
 
     //获得该材料系列的上下级材料的物品id
-    recommendStage.series = itemSeries[recommendedStageList.itemSeriesId].series
+    recommendStage.series = ITEM_SERIES[recommendedStageList.itemSeriesId].series
 
     stageCardData.value.push(recommendStage)
     // console.log(item_recommend_stage)
@@ -141,8 +125,6 @@ function getItemTableData(index, isJump) {
     document.getElementById('detail-table').scrollIntoView({behavior: 'smooth', block: 'center'})
   }
 }
-
-
 
 
 function replaceZoneName(str) {
@@ -236,18 +218,17 @@ onMounted(() => {
 })
 
 
-let itemIdList = [] // 材料表
-let historyActItemTable = ref([]) // 历史活动up材料表
-let historyActItemList = []
+let historyActivityTable = ref([]) // 历史活动up材料表
+let historyActivityList = ref(TMP_HISTORY_STAGE)
 
-let actHistoryTableType = ref('')
+let historyActivityDisplayType = ref('')
 
 /**
  * 传入一个设备类型，将其赋值给 actHistoryTableType 按钮通过 actHistoryTableType 进行判断是什么形式的表格
  * @param {string} device
  */
 function chooseHistoryActDevice(device) {
-  actHistoryTableType.value = device
+  historyActivityDisplayType.value = device
   const pcElement = document.getElementById('act-table-pc')
   const phoneElement = document.getElementById('act-table-phone')
   if (device === 'pc') {
@@ -261,97 +242,90 @@ function chooseHistoryActDevice(device) {
 }
 
 
+function formatPcHistoryTableData() {
+  historyActivityTable.value = []
+  // 每种材料距离上次up间隔
+  let lastUpInterval = 0;
+
+  // 循环历史活动数据
+  for (const act of historyActivityList.value) {
+    if (act.zoneName === '落叶逐火') {
+      continue
+    }
+    lastUpInterval++
+    //复刻不计入
+    // if(act.zoneName.indexOf('复刻')>-1) {
+    //   continue;
+    // }
+    //每行数据
+    let rowData = {
+      activityName: act.zoneName, //活动名
+      startTime: dataFormat(new Date(act.endTime), 'yyyy/MM'),
+      itemList: {} //材料up情况
+    }
+
+
+    for (const stage of act.actStageList) {
+      rowData.itemList[stage.itemId] = {
+        itemId: stage.itemId,
+        stageEfficiency: stage.stageEfficiency * 100,
+        stageCode: stage.stageCode
+      }
+    }
+
+    for (const itemIndex in itemIdList) {
+      const item = itemIdList[itemIndex]
+      //材料up标记
+      let isUpFlag = false;
+
+      //如果当前材料up了,将标记记为true
+      if (rowData.itemList[item.id]) {
+        isUpFlag = true
+      }
+
+      //如果这个材料已经up了，则将这个材料的上次up标记为true
+      if (isUpFlag) {
+        itemIdList[itemIndex].lastUp = true;
+      }
+
+      //如果这个材料这个活动没up,更新up间隔次数,表格根据这个间隔进行背景色的渲染
+      if (!itemIdList[itemIndex].lastUp) {
+        itemIdList[itemIndex].lastUpInterval = lastUpInterval;
+      }
+    }
+
+    //循环复刻活动的数据
+    for (const reprintActivity of REPRODUCTION_ACTIVITY) {
+      //通过判断同名的活动和复刻活动，将up材料赋予给复刻活动
+      if (reprintActivity.activityName === rowData.activityName) {
+        //将up材料赋予给复刻活动
+        reprintActivity.itemList = rowData.itemList
+      }
+    }
+
+    historyActivityTable.value.push(rowData)
+  }
+
+  historyActivityTable.value[0].divider = true
+
+  //将复刻活动按首位插入进活动表格的集合中
+  for (const reprintActivity of REPRODUCTION_ACTIVITY) {
+    historyActivityTable.value.unshift(reprintActivity)
+  }
+
+  itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
+}
+
 /**
  * 获取历史活动关卡数据
  */
 function getHistoryActStage() {
-  historyActItemTable.value = []
+
   // 获取历史活动up材料信息
   stageApi.getHistoryActStage(0.633, 300).then(response => {
-    // 先把当作表头的材料表转为一个集合
-    for (const itemId in itemSeries) {
-      const item = itemSeries[itemId]
-      itemIdList.push({
-        id: item.id,
-        name: item.name,
-        lastUp: false,
-        lastUpInterval: 0
-      })
-    }
-
     // 历史活动数据
-    historyActItemList = response.data
-
-    // 每种材料距离上次up间隔
-    let lastUpInterval = 0;
-
-    // 循环历史活动数据
-    for (const act of historyActItemList) {
-      if (act.zoneName === '落叶逐火') {
-        continue
-      }
-      lastUpInterval++
-      //复刻不计入
-      // if(act.zoneName.indexOf('复刻')>-1) {
-      //   continue;
-      // }
-      //每行数据
-      let rowData = {
-        activityName: act.zoneName, //活动名
-        startTime: dataFormat(new Date(act.endTime), 'yyyy/MM'),
-        itemList: {} //材料up情况
-      }
-
-
-      for (const stage of act.actStageList) {
-        rowData.itemList[stage.itemId] = {
-          itemId: stage.itemId,
-          stageEfficiency: stage.stageEfficiency * 100,
-          stageCode: stage.stageCode
-        }
-      }
-
-      for (const itemIndex in itemIdList) {
-        const item = itemIdList[itemIndex]
-        //材料up标记
-        let isUpFlag = false;
-
-        //如果当前材料up了,将标记记为true
-        if (rowData.itemList[item.id]) {
-          isUpFlag = true
-        }
-
-        //如果这个材料已经up了，则将这个材料的上次up标记为true
-        if (isUpFlag) {
-          itemIdList[itemIndex].lastUp = true;
-        }
-
-        //如果这个材料这个活动没up,更新up间隔次数,表格根据这个间隔进行背景色的渲染
-        if (!itemIdList[itemIndex].lastUp) {
-          itemIdList[itemIndex].lastUpInterval = lastUpInterval;
-        }
-      }
-
-      //循环复刻活动的数据
-      for (const reprintActivity of REPRODUCTION_ACTIVITY) {
-        //通过判断同名的活动和复刻活动，将up材料赋予给复刻活动
-        if (reprintActivity.activityName === rowData.activityName) {
-          //将up材料赋予给复刻活动
-          reprintActivity.itemList = rowData.itemList
-        }
-      }
-
-      historyActItemTable.value.push(rowData)
-    }
-
-    historyActItemTable.value[0].divider = true
-
-    //将复刻活动按首位插入进活动表格的集合中
-    for (const reprintActivity of REPRODUCTION_ACTIVITY) {
-      historyActItemTable.value.unshift(reprintActivity)
-    }
-
-    itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
+    historyActivityList.value = response.data
+    formatPcHistoryTableData()
   })
 }
 
@@ -368,8 +342,8 @@ function getCellBgColor(rowIndex, maxIndex) {
   return ''
 }
 
-function getTableDividerClass(divider){
-  if(divider){
+function getTableDividerClass(divider) {
+  if (divider) {
     return 'act-history-table-divider'
   }
 }
@@ -378,6 +352,7 @@ function getTableDividerClass(divider){
 let orundumRecommendedStage = ref([])
 let displayOrundumRecommendedStage = ref([])
 let onlyShowActStage = ref(false)
+
 
 /**
  * 过滤搓玉推荐关卡，只显示1-7，CW-6和当前活动关
@@ -400,26 +375,31 @@ function filterOrundumStage() {
 
 function getOrundumRecommendedStage() {
   stageApi.getOrundumRecommendedStage(0.633, 300).then(response => {
-    for (const stage of response.data) {
-      orundumRecommendedStage.value.push({
-        stageCode: stage.stageCode,
-        orundumPerAp: stage.orundumPerAp.toFixed(2),
-        lmdcost: stage.lmdcost.toFixed(2) + 'w',
-        orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
-        stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
-        stageType: stage.stageType ? stage.stageType : ''
-      })
-    }
-    displayOrundumRecommendedStage.value = orundumRecommendedStage.value
+    formatOrundumRecommendedStage(response.data)
   })
 }
 
-function getFormatDate() {
-
+function formatOrundumRecommendedStage(list) {
+  orundumRecommendedStage.value = []
+  for (const stage of list) {
+    orundumRecommendedStage.value.push({
+      stageCode: stage.stageCode,
+      orundumPerAp: stage.orundumPerAp.toFixed(2),
+      lmdcost: stage.lmdcost.toFixed(2) + 'w',
+      orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
+      stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
+      stageType: stage.stageType ? stage.stageType : ''
+    })
+  }
+  displayOrundumRecommendedStage.value = orundumRecommendedStage.value
 }
 
-onMounted(() => {
+getItemCardData()
+getItemTableData(0, false)
+formatPcHistoryTableData()
+formatOrundumRecommendedStage(TMP_STAGE_ORUNDUM)
 
+onMounted(() => {
   getOrundumRecommendedStage()
   getHistoryActStage()
   getStageResult()
@@ -703,8 +683,8 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="stage-card" style="height: 0px;border: 1px;flex-grow: 1;"></div>
-      <div class="stage-card" style="height: 0px;border: 1px;flex-grow: 1;"></div>
+      <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
+      <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
     </div>
 
 
@@ -718,7 +698,7 @@ onMounted(() => {
     </div>
 
     <!-- 详情表 -->
-    <div id="detail-table" style="margin:0px 8px;max-width: 1260px;border: 1px solid #00000040;border-radius: 8px;">
+    <div id="detail-table" style="margin:0 8px;max-width: 1260px;border: 1px solid #00000040;border-radius: 8px;">
       <el-table stripe :data="recommendedStageDetailTable" max-height="500" class="stage-detail-table">
         <el-table-column fixed prop="stageCode" label="关卡名" sortable>
           <template #default="scope">
@@ -803,7 +783,7 @@ onMounted(() => {
       <button class="tag-button" @click="filterOrundumStage()">仅显示1-7、CW-6和活动关</button>
     </div>
 
-    <div class="tableArea" style="margin:0px 8px;max-width: 720px;border: 1px solid #00000040;border-radius: 8px;">
+    <div class="tableArea" style="margin:0 8px;max-width: 720px;border: 1px solid #00000040;border-radius: 8px;">
       <el-table class="detailTable" :data="displayOrundumRecommendedStage" stripe style="width: 100%;height: 400px;">
         <el-table-column prop="stageCode" label="关卡名"/>
         <el-table-column label="每理智可搓玉">
@@ -853,7 +833,7 @@ onMounted(() => {
             </div>
           </td>
         </tr>
-        <tr v-for="(act, rowIndex) in historyActItemTable" :key="rowIndex"  :class="getTableDividerClass(act.divider)">
+        <tr v-for="(act, rowIndex) in historyActivityTable" :key="rowIndex" :class="getTableDividerClass(act.divider)">
           <td class="activity-name-pc">
             {{ act.activityName }} <br>
             {{ act.startTime }}
@@ -874,7 +854,7 @@ onMounted(() => {
     <!-- 移动端小列表 -->
     <div class="activity-table-phone-container" id="act-table-phone">
       <table class="activity-table-phone">
-        <tr v-for="(act, index) in historyActItemList" :key="index">
+        <tr v-for="(act, index) in historyActivityList" :key="index">
           <td class="activity-name-phone">{{ act.zoneName }}</td>
           <td v-for="(stage, index) in  act.actStageList" :key="index">
             <div class="activity-drop">
