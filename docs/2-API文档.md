@@ -478,7 +478,7 @@ backend.yituliu.cn/store/pack
 ### 路径：
 
 ```
-backend.yituliu.cn/survey/operator/table
+backend.yituliu.cn/survey/operator/info
 ```
 
 ### 参数：
