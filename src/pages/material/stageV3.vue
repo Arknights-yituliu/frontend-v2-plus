@@ -55,6 +55,8 @@ function getStageResult() {
  * 拼接材料卡片的数据
  */
 function getItemCardData() {
+
+  let list = []
   for (let index in stageResultGroup.value) {
     //每一种材料系列的推荐关卡
     let recommendedStageList = stageResultGroup.value[index]
@@ -98,9 +100,11 @@ function getItemCardData() {
     //获得该材料系列的上下级材料的物品id
     recommendStage.series = ITEM_SERIES[recommendedStageList.itemSeriesId].series
 
-    stageCardData.value.push(recommendStage)
+    list.push(recommendStage)
     // console.log(item_recommend_stage)
   }
+
+  stageCardData.value = list
 }
 
 
