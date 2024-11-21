@@ -18,16 +18,21 @@ import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
 const guideOpen = ref(false)
 
 let itemIdList = [] // 材料表
-// 先把当作表头的材料表转为一个集合
-for (const itemId in ITEM_SERIES) {
-  const item = ITEM_SERIES[itemId]
-  itemIdList.push({
-    id: item.id,
-    name: item.name,
-    lastUp: false,
-    lastUpInterval: 0
-  })
+
+const itemIdListInit =()=>{
+  itemIdList = []
+  // 先把当作表头的材料表转为一个集合
+  for (const itemId in ITEM_SERIES) {
+    const item = ITEM_SERIES[itemId]
+    itemIdList.push({
+      id: item.id,
+      name: item.name,
+      lastUp: false,
+      lastUpInterval: 0
+    })
+  }
 }
+
 
 // 根据物品系列进行分组的推荐关卡
 let stageResultGroup = ref(TMP_STAGE_RESULT.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId))
@@ -250,6 +255,7 @@ function formatPcHistoryTableData() {
   historyActivityTable.value = []
   // 每种材料距离上次up间隔
   let lastUpInterval = 0;
+  itemIdListInit()
 
   // 循环历史活动数据
   for (const act of historyActivityList.value) {
