@@ -73,7 +73,7 @@ const initData = () => {
   }
 
   const packs = {}
-
+  currentPackInfoList.value = []
   packInfoList.forEach(packInfo => {
     packInfo.lineChartData = getLineChartData(packInfo);
     packInfo.packRmbPerDraw = packInfo.packRmbPerDraw || 0;
