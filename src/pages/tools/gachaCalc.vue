@@ -140,15 +140,6 @@ let activityType = ref('联动限定')
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
   {
-    name: '半周年(1101~1115)',
-    start: new Date('2024/11/01 16:00:00'),
-    end: new Date('2024/11/15 04:01:00'),
-    activityType: '周年限定',
-    disabled: false,
-    dailyGiftResources: true,
-    historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
-  },
-  {
     name: '新春(0121前后)',
     start: new Date('2025/01/21 16:00:00'),
     end: new Date('2025/02/04 04:01:00'),
@@ -165,6 +156,15 @@ let scheduleOptions = [
     disabled: true,
     dailyGiftResources: true,
     historicalPackTimeRange: [new Date('2023/03/06 00:00:00').getTime(), new Date('2023/03/28 23:59:59').getTime(),]
+  },
+  {
+    name: '敬请期待',
+    start: new Date('2024/11/01 16:00:00'),
+    end: new Date('2024/11/15 04:01:00'),
+    activityType: '周年限定',
+    disabled: true,
+    dailyGiftResources: true,
+    historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
   },
 ]
 
@@ -199,7 +199,7 @@ function getAndSortPackData() {
   //从服务器获取礼包数据，将其进行分类
 
   storeAPI.getPackInfoTag().then(rep => {
-    const tag =  rep.data
+    const tag = rep.data
 
     storeAPI.getPackInfoByCos(tag).then(response => {
 
