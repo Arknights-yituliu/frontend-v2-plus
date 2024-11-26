@@ -22,6 +22,8 @@ import userAPI from "/src/api/user.js";
 import MyButton from '/src/components/Button.vue'
 import SpriteImage from "@/components/SpriteImage.vue";
 
+import {downloadJsonFile} from "/src/utils/DownLoad.js";
+
 let operatorOwnMap = new Map()
 
 
@@ -684,14 +686,12 @@ function saveAndDownloadScheduleFile() {
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
-    const link = document.createElement('a')
-    link.download = `${scheduleId.value}.json`
-    link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scheduleInfo.value, null, 2))
-    link.click()
-    link.remove()
+    downloadJsonFile(scheduleInfo.value,scheduleId.value)
     cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value)
   })
 }
+
+
 
 function downloadScheduleFile() {
   createSchedule()
