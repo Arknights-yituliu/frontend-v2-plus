@@ -337,6 +337,12 @@ const routes = [
         component: () => import('/src/pages/tools/rogue-seed-page.vue')
     },
     {
+        path: '/tools/rogue-seed',
+        text: '种子收集站',
+        display: false,
+        component: () => import('/src/pages/tools/rogue-seed.vue')
+    },
+    {
         path: '/:catchAll(.*)',
         display: false,
         component: Error404

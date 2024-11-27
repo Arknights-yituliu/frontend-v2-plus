@@ -1,29 +1,145 @@
 .rogue-seed-page {
 
-  .rogue-seed-detail-content{
+  --cc-rogue-seed-background-color: #f5f5f5;
+  --cc-rogue-seed-button-border-action: #e6e6e6;
+  --cc-rogue-seed-button-border-hover: #3296d9;
+  background-color: var(--cc-rogue-seed-background-color);
+  font-size: 14px;
+
+  .rogue-seed-display-page {
+    margin: 0 0 0 20px;
+  }
+
+
+  .rogue-seed-navigation-bar {
+    padding: 8px 20px 0 20px;
+    background-color: white;
+    display: flex;
+    margin: 0 0 20px 0;
+
+    box-sizing: border-box;
+
+    .rogue-seed-navigation-button {
+      padding: 8px 20px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      cursor: pointer;
+    }
+
+    .rogue-seed-navigation-button:hover {
+      color: var(--cc-rogue-seed-button-border-hover);
+    }
+
+    .rogue-seed-navigation-button-action {
+      background-color: var(--cc-rogue-seed-background-color);
+      border: var(--cc-rogue-seed-button-border-action) solid 1px;
+      border-bottom: none;
+    }
+  }
+
+  .rogue-seed-table {
+
+    background-color: white;
+    padding: 4px;
+    width: 800px;
+
+    .rogue-seed-container {
+      margin: 8px 8px;
+      border: var(--cc-rogue-seed-button-border-action) solid 1px;
+      height: 200px;
+      position: relative;
+      box-sizing: border-box;
+      padding: 4px 4px;
+      border-radius: 6px;
+
+      .rogue-seed-init-team {
+        display: flex;
+        position: absolute;
+        top: 8px;
+        left: 8px;
+      }
+
+      .rogue-seed-action-button {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 24px;
+        right: 8px;
+      }
+
+      .rogue-seed-label {
+        display: block;
+      }
+
+      .rogue-seed-label-button {
+        margin: 0 4px 0 16px;
+        color: var(--cc-rogue-seed-button-border-hover);
+        cursor: pointer;
+      }
+
+      .rogue-seed-tag-box {
+        display: flex;
+        position: absolute;
+        top: 70px;
+        left: 8px;
+
+        .rogue-seed-tag {
+          background-color: var(--cc-rogue-seed-button-border-hover);
+          color: white;
+          padding: 4px 12px;
+          margin: 0 8px 0 0;
+          border-radius: 4px;
+        }
+      }
+
+      .rogue-seed-card-description {
+        position: absolute;
+        top: 110px;
+        left: 8px;
+      }
+
+      .rogue-seed-rating-check-box {
+        display: flex;
+        position: absolute;
+        right: 16px;
+        bottom: 8px;
+
+        .rogue-seed-rating-icon {
+          display: block;
+          margin: 0 4px 0 0;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+    }
+  }
+
+
+  .rogue-seed-detail-content {
     width: 500px;
     padding: 12px;
     box-sizing: border-box;
   }
 
-  .rogue-seed-detail-settlement-chart{
+  .rogue-seed-detail-settlement-chart {
     width: 460px;
-    margin:auto;
+    margin: auto;
   }
 
-  .rogue-seed-rating-item{
+  .rogue-seed-rating-item {
     display: flex;
     align-items: center;
   }
 
-  .rogue-seed-rating-icon{
+  .rogue-seed-rating-icon {
     display: block;
     margin: 4px;
     width: 20px;
     height: 20px;
   }
 
-  .rogue-seed-rating-button{
+  .rogue-seed-rating-button {
     display: block;
     margin: 4px 20px;
     width: 40px;

@@ -10,9 +10,40 @@ body {
 
 
 
-html {
+///* 设置滚动条的宽度 */
+//:root {
+//
+//  /* 定义整个滚动条的宽度 */
+//  ::-webkit-scrollbar {
+//    width: 2px; /* 水平滚动条的宽度 */
+//    height: 2px; /* 垂直滚动条的高度 */
+//  }
+//
+//  /* 定义滚动条的轨道 */
+//  ::-webkit-scrollbar-track {
+//    background: transparent; /* 轨道的背景色 */
+//  }
+//
+//  /* 定义滚动条的滑块 */
+//  ::-webkit-scrollbar-thumb {
+//    background: #888; /* 滑块的颜色 */
+//    border-radius: 4px; /* 滑块的圆角 */
+//  }
+//
+//  /* 鼠标悬停时滑块的颜色 */
+//  ::-webkit-scrollbar-thumb:hover {
+//    background: #555;
+//  }
+//
+//
+//  scrollbar-width: thin; /* 可以是 auto, thin, 或 none */
+//  scrollbar-color: #555 #888; /* 第一个参数是滑块颜色，第二个参数是轨道颜色 */
+//
+//}
 
-}
+
+
+
 
 .container {
   color: var(--c-text-color);

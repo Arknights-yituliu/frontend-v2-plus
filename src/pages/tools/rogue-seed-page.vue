@@ -64,9 +64,9 @@ function getOperatorList(team) {
 let rogueSeedDetail = ref({})
 let rogueSeedDetailVisible = ref(false)
 
-function displayRogueSeedDetail(item){
+function displayRogueSeedDetail(item) {
   rogueSeedDetail.value = item
-  rogueSeedDetailVisible.value  = true
+  rogueSeedDetailVisible.value = true
 }
 
 function getRogueSeedRating(value, icon, seedId) {
@@ -123,68 +123,53 @@ getRogueSeedPage()
   <div class="rogue-seed-page">
 
 
-    <!-- 展示区域 -->
-    <!--    <el-radio-group size="large">-->
-    <!--      <el-radio-button label="#1 傀影与猩红血钻" value="New York"/>-->
-    <!--      <el-radio-button label="#2 水月" value="Washington"/>-->
-    <!--      <el-radio-button label="#3 萨米" value="Los Angeles"/>-->
-    <!--      <el-radio-button label="#4 萨卡兹" value=""/>-->
-    <!--    </el-radio-group>-->
-    <div>
-      <!-- 版本热门seeds -->
-      <el-card style="margin: 12px">
-        <template #header>
-          <div class="card-header">
-            <span>版本热门seeds</span>
+    <div class="rogue-seed-table">
+      <div class="rogue-seed-container" v-for="(rogueSeed, index) in rogueSeedList" :key="index">
+        <div class="rogue-seed-init-team">
+          <SpriteImage v-for="(operator,index) in getOperatorList(rogueSeed.operatorTeam)"
+                       display-size="50" original-size="180" :image-name="operator"
+                       style="margin:0 8px 0 0">
+
+          </SpriteImage>
+        </div>
+
+        <div class="rogue-seed-tag-box">
+          <div class="rogue-seed-tag" v-for="(tag,index) in rogueSeed.tags">
+            #{{ tag }}
           </div>
-        </template>
-        <el-table :data="rogueSeedList" style="width: 100%">
-          <el-table-column fixed prop="description" label="简介" width="240"/>
-          <el-table-column prop="seed" label="种子代码" width="180"/>
-          <el-table-column label="肉鸽主题" width="150" prop="rogueTheme">
-          </el-table-column>
-          <el-table-column label="分队" width="150" prop="squad">
-          </el-table-column>
-          <el-table-column label="评分" width="60" prop="rating">
-            <template #default="scope">
-              <div>
-                <div class="rogue-seed-rating-item">
-                  <img src="/image/survey/like1.png" class="rogue-seed-rating-icon" alt="">
-                  <span>{{ scope.row.rating.likeCount }}</span>
-                </div>
-                <div class="rogue-seed-rating-item">
-                  <img src="/image/survey/normal1.png" class="rogue-seed-rating-icon" alt="">
-                  <span>{{ scope.row.rating.normalCount }}</span>
-                </div>
-                <div class="rogue-seed-rating-item">
-                  <img src="/image/survey/dislike1.png" class="rogue-seed-rating-icon" alt="">
-                  <span>{{ scope.row.rating.dislikeCount }}</span>
-                </div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="难度" width="60" prop="difficulty">
-          </el-table-column>
-          <el-table-column label="初始干员" width="200" prop="difficulty">
-            <template #default="scope">
-              <div style="display: flex">
-                <SpriteImage v-for="(operator,index) in getOperatorList(scope.row.operatorTeam)"
-                             display-size="50" original-size="180" :image-name="operator" margin="8"></SpriteImage>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" min-width="120">
-            <template #default="scope">
-              <el-button link type="primary" size="small" @click="copyTextToClipboard(scope.row.seed)" >
-                复制
-              </el-button>
-              <el-button link type="primary" size="small" @click="displayRogueSeedDetail(scope.row)">
-                详情
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
+        </div>
+
+        <div class="rogue-seed-action-button">
+          <span class="rogue-seed-label">种子：{{ rogueSeed.seed }}</span>
+          <span class="rogue-seed-label-button" @click="copyTextToClipboard(rogueSeed.seed)">复制</span>
+          <span class="rogue-seed-label-button" @click="displayRogueSeedDetail(rogueSeed)">详情</span>
+        </div>
+
+
+        <span class="rogue-seed-card-description">{{ rogueSeed.description }}</span>
+
+        <div class="rogue-seed-rating-check-box">
+          <div class="rogue-seed-rating-item" @click="rogueSeedRating(rogueSeed.seedId,0)">
+            <img :src="getRogueSeedRating(0,'dislike',rogueSeed.seedId)"
+                 class="rogue-seed-rating-icon" alt="">
+            <span>{{ rogueSeed.rating.likeCount }}</span>
+          </div>
+          <div class="rogue-seed-rating-item" @click="rogueSeedRating(rogueSeed.seedId,1)">
+            <img :src="getRogueSeedRating(1,'normal',rogueSeed.seedId)"
+                 class="rogue-seed-rating-icon" alt="">
+            <span>{{ rogueSeed.rating.normalCount }}</span>
+          </div>
+          <div class="rogue-seed-rating-item" @click="rogueSeedRating(rogueSeed.seedId,2)">
+            <img :src="getRogueSeedRating(2,'like',rogueSeed.seedId)"
+                 class="rogue-seed-rating-icon" alt="">
+            <span>{{ rogueSeed.rating.dislikeCount }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div>
+
 
 
       <Popup v-model:visible="rogueSeedDetailVisible" :width="'500px'">

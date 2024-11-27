@@ -145,7 +145,7 @@ filterOperator()
 <template>
   <div class="rogue-seed-upload">
     <!-- 提名区域 -->
-    <el-card>
+    <el-card style="margin: 0 0 0 8px;width: 800px;">
       <el-form :model="rogueSeedForm" label-width="auto" class="rogue-seed-form">
         <el-form-item label="种子">
           <el-input v-model="rogueSeedForm.seed" style="width: 500px;"/>
@@ -212,18 +212,18 @@ filterOperator()
           </div>
         </el-form-item>
 
-        <el-form-item label="结算图">
-          <div>
-            <div>
-              <el-button type="primary">上传结算图</el-button>
-            </div>
-            <input style="display: none" type="file" id="settlement-chart">
-            <div class="settlement-chart-checkbox" @click="chooseImage()">
-              <img src="/image/icon/upload-image.png" class="settlement-chart-upload-button" alt="">
-              <img :src="settlementChartDataUrl" alt="" class="settlement-chart">
-            </div>
-          </div>
-        </el-form-item>
+<!--        <el-form-item label="结算图">-->
+<!--          <div>-->
+<!--            <div>-->
+<!--              <el-button type="primary">上传结算图</el-button>-->
+<!--            </div>-->
+<!--            <input style="display: none" type="file" id="settlement-chart">-->
+<!--            <div class="settlement-chart-checkbox" @click="chooseImage()">-->
+<!--              <img src="/image/icon/upload-image.png" class="settlement-chart-upload-button" alt="">-->
+<!--              <img :src="settlementChartDataUrl" alt="" class="settlement-chart">-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </el-form-item>-->
 
         <el-form-item label="种子简介">
           <el-input v-model="rogueSeedForm.description" type="textarea"/>
