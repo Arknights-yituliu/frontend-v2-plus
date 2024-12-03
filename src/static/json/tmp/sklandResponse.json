@@ -1,0 +1,8660 @@
+{
+  "code": 0,
+  "message": "OK",
+  "timestamp": "1733215749",
+  "data": {
+    "characters": [
+      {
+        "id": "char_002_amiya",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_magic_rage[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_amiya_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_amiya_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_amiya",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1001_amiya2",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_amiya2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_amiya2_2",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1037_amiya3",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_amiya3_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_amiya3_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_amiya3",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_502_nblade",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_500_noirc",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_503_rang",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_136_hsguma",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_hsguma_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_hsguma_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_hsguma_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_hsguma",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_hsguma",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_120_hibisc",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_heal_up[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_230_savage",
+        "level": 40,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_savage_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_savage_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_savage",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_122_beagle",
+        "level": 15,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_def_up[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_209_ardign",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 6,
+        "skills": [
+          {
+            "id": "skcom_heal_self[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_166_skfire",
+        "level": 50,
+        "evolvePhase": 1,
+        "mainSkillLevel": 5,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_skfire_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_skfire",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_192_falco",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 4,
+        "skills": [
+          {
+            "id": "skcom_quickattack[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_117_myrrh",
+        "level": 40,
+        "evolvePhase": 1,
+        "mainSkillLevel": 5,
+        "skills": [
+          {
+            "id": "skchr_myrrh_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_myrrh_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_myrrh",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_185_frncat",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_frncat_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_frncat_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_289_gyuki",
+        "level": 60,
+        "evolvePhase": 1,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_heal_self[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_gyuki_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_gyuki",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_172_svrash",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_svrash_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_svrash_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_svrash_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_svrash",
+            "level": 3
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_290_vigna",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_vigna_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_vigna_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_vigna",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_181_flower",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_heal_up[2]",
+            "level": 2
+          },
+          {
+            "id": "skchr_flower_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_flower",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_123_fang",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_210_stward",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_stward_1",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_211_adnach",
+        "level": 11,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_235_jesica",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_jesica_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_jesica_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_jesica",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_501_durin",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_009_12fce",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_121_lava",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 4,
+        "skills": [
+          {
+            "id": "skcom_magic_rage[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_212_ansel",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_range_extend",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_208_melan",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_150_snakek",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_def_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_snakek_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_snakek",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_199_yak",
+        "level": 40,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_yak_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_yak_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_yak",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_106_franka",
+        "level": 30,
+        "evolvePhase": 1,
+        "mainSkillLevel": 3,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_franka_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_franka",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_103_angel",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_angel_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_angel_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_angel_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_angel",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_141_nights",
+        "level": 60,
+        "evolvePhase": 1,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_nights_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_nights",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_278_orchid",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_quickattack[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_124_kroos",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_kroos_1",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_240_wyvern",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_wyvern_1",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_285_medic2",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_277_sqrrel",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_sqrrel_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_sqrrel_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_sqrrel",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_126_shotst",
+        "level": 60,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_shotst_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_shotst_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_shotst",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_115_headbr",
+        "level": 70,
+        "evolvePhase": 1,
+        "mainSkillLevel": 5,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_headbr_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_headbr",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_183_skgoat",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_skgoat_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_skgoat",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_107_liskam",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_liskam_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_liskam_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_liskam",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_237_gravel",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_gravel_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_gravel_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_gravel",
+            "level": 3
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_291_aglina",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_aglina_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_aglina_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_aglina_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_aglina",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_aglina",
+            "level": 0
+          },
+          {
+            "id": "uniequip_004_aglina",
+            "level": 0
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_236_rope",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_rope_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_rope_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_rope",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_198_blackd",
+        "level": 24,
+        "evolvePhase": 1,
+        "mainSkillLevel": 3,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_blackd_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_blackd",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_187_ccheal",
+        "level": 60,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ccheal_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ccheal_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ccheal",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_149_scave",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_scave_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_scave",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_130_doberm",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_doberm_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_doberm_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_doberm",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_193_frostl",
+        "level": 20,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_frostl_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_frostl_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_frostl",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_118_yuki",
+        "level": 30,
+        "evolvePhase": 1,
+        "mainSkillLevel": 5,
+        "skills": [
+          {
+            "id": "skchr_yuki_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_yuki_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_yuki",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_108_silent",
+        "level": 70,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_heal_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_silent_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_silent",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_173_slchan",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_slchan_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_slchan_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_slchan",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_109_fmout",
+        "level": 40,
+        "evolvePhase": 1,
+        "mainSkillLevel": 6,
+        "skills": [
+          {
+            "id": "skcom_magic_rage[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_fmout_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_fmout",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_196_sunbr",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_sunbr_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_sunbr_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_sunbr",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_174_slbell",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 3,
+        "skills": [
+          {
+            "id": "skchr_slbell_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_slbell_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_slbell",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_145_prove",
+        "level": 50,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_prove_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_prove_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_prove",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_171_bldsk",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_bldsk_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_bldsk_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bldsk",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_179_cgbird",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_heal_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_cgbird_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_cgbird_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cgbird",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_cgbird",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_102_texas",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_texas_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_texas",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_127_estell",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 5,
+        "skills": [
+          {
+            "id": "skcom_atk_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_estell_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_estell",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_282_catap",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_catap_1",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_204_platnm",
+        "level": 70,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_platnm_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_platnm",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_220_grani",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 5,
+        "skills": [
+          {
+            "id": "skcom_def_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_grani_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_grani",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_263_skadi",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_skadi_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_skadi_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_skadi",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_skadi",
+            "level": 3
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_286_cast3",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_144_red",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_red_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_red_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_red",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_110_deepcl",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_deepcl_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_deepcl_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_deepcl",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_242_otter",
+        "level": 60,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_otter_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_otter_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_otter",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_283_midn",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_midn_1",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_180_amgoat",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_amgoat_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_amgoat_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_amgoat_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_amgoat",
+            "level": 3
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_134_ifrit",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ifrit_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ifrit_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_ifrit_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ifrit",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_ifrit",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_158_milu",
+        "level": 40,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_milu_1",
+            "level": 1
+          },
+          {
+            "id": "skchr_milu_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_milu",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_215_mantic",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_mantic_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_mantic_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_mantic",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_137_brownb",
+        "level": 21,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_brownb_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_brownb_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_brownb",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_148_nearl",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_nearl_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_nearl_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_nearl",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_202_demkni",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_demkni_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_demkni_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_demkni_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_demkni",
+            "level": 2
+          },
+          {
+            "id": "uniequip_003_demkni",
+            "level": 3
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_253_greyy",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_magic_rage[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_greyy_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_greyy",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_010_chen",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_chen_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_chen_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_chen_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_chen",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_chen",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_284_spot",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 6,
+        "skills": [
+          {
+            "id": "skchr_spot_1",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_241_panda",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_panda_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_panda_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_panda",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_112_siege",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_siege_2",
+            "level": 1
+          },
+          {
+            "id": "skchr_siege_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_siege",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_siege",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_281_popka",
+        "level": 55,
+        "evolvePhase": 1,
+        "mainSkillLevel": 6,
+        "skills": [
+          {
+            "id": "skcom_atk_up[1]",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_101_sora",
+        "level": 2,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_sora_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_sora_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_sora",
+            "level": 0
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_298_susuro",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_heal_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_susuro_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_susuro",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_326_glacus",
+        "level": 50,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_glacus_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_glacus_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_glacus",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_348_ceylon",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_ceylon_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ceylon_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ceylon",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_129_bluep",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_bluep_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_bluep_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bluep",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_340_shwaz",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_shwaz_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_shwaz_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_shwaz_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_shwaz",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_shwaz",
+            "level": 1
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_147_shining",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_shining_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_shining_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_shining_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_shining",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_shining",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_128_plosis",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_heal_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_plosis_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_plosis",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_151_myrtle",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_assist_cost[2]",
+            "level": 3
+          },
+          {
+            "id": "skchr_myrtle_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_myrtle",
+            "level": 3
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_188_helage",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_helage_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_helage_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_helage_3",
+            "level": 1
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_helage",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_helage",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_195_glassb",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_glassb_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_glassb_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_glassb",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_274_astesi",
+        "level": 30,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_astesi_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_astesi_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_260_durnar",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_durnar_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_201_moeshd",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_moeshd_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_moeshd_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_moeshd",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_164_nightm",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_nightm_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_nightm_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_nightm",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_190_clour",
+        "level": 10,
+        "evolvePhase": 1,
+        "mainSkillLevel": 4,
+        "skills": [
+          {
+            "id": "skcom_atk_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_clour_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_clour",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_279_excu",
+        "level": 70,
+        "evolvePhase": 1,
+        "mainSkillLevel": 6,
+        "skills": [
+          {
+            "id": "skchr_excu_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_excu_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_excu",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_248_mgllan",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_mgllan_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_mgllan_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_mgllan_3",
+            "level": 2
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_mgllan",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_mgllan",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_131_flameb",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_flameb_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_flameb_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_flameb",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_219_meteo",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_meteo_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_meteo_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_meteo",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_140_whitew",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_whitew_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_whitew_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_whitew",
+            "level": 3
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_275_breeze",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_breeze_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_breeze_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_breeze",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_133_mm",
+        "level": 50,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_mm_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_mm_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_mm",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_243_waaifu",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 6,
+        "skills": [
+          {
+            "id": "skchr_waaifu_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_waaifu_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_waaifu",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_213_mostma",
+        "level": 60,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_mostma_2",
+            "level": 2
+          },
+          {
+            "id": "skchr_mostma_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_mostma",
+            "level": 3
+          },
+          {
+            "id": "uniequip_003_mostma",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_325_bison",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_def_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_bison_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bison",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_355_ethan",
+        "level": 40,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ethan_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ethan_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ethan",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_155_tiger",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_tiger_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_tiger_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_tiger",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_356_broca",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_broca_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_broca_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_broca",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_261_sddrag",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 2,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_sddrag_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_sddrag",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_302_glaze",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_glaze_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_glaze_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_glaze",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_367_swllow",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_swllow_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_swllow_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_swllow",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_017_huang",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_huang_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_huang_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_huang_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_huang",
+            "level": 3
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_383_snsant",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_snsant_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_snsant_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_snsant",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_226_hmau",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_hmau_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_hmau_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_hmau",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_225_haak",
+        "level": 60,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_haak_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_haak_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_haak_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_haak",
+            "level": 0
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_2014_nian",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_nian_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_nian_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_nian_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_nian",
+            "level": 3
+          },
+          {
+            "id": "uniequip_003_nian",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_163_hpsts",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_hpsts_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_hpsts_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_hpsts",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_308_swire",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_swire_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_swire_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_swire",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_143_ghost",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_ghost_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ghost",
+            "level": 3
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_306_leizi",
+        "level": 60,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_leizi_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_leizi",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_2013_cerber",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_cerber_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_cerber_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_cerber_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cerber",
+            "level": 3
+          },
+          {
+            "id": "uniequip_003_cerber",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_385_finlpp",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_finlpp_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_finlpp_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_finlpp",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_337_utage",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_utage_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_utage_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_utage",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_222_bpipe",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_bpipe_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_bpipe_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bpipe",
+            "level": 3
+          },
+          {
+            "id": "uniequip_003_bpipe",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_252_bibeak",
+        "level": 50,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_bibeak_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_bibeak_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bibeak",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_379_sesa",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_sesa_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_sesa",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_159_peacok",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_peacok_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_peacok_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_peacok",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_301_cutter",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_cutter_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_cutter_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cutter",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_254_vodfox",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_vodfox_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_vodfox_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_vodfox",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_333_sidero",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_heal_self[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_sidero_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_376_therex",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_401_elysm",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_assist_cost[3]",
+            "level": 3
+          },
+          {
+            "id": "skchr_elysm_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_elysm",
+            "level": 1
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_113_cqbw",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_cqbw_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_cqbw_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_cqbw_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cqbw",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_cqbw",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_400_weedy",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_weedy_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_weedy_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_weedy_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_weedy",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_weedy",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_250_phatom",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_phatom_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_phatom_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_phatom_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_phatom",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_phatom",
+            "level": 0
+          },
+          {
+            "id": "uniequip_004_phatom",
+            "level": 3
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_378_asbest",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_asbest_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_asbest_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_258_podego",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_podego_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_podego_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_podego",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_373_lionhd",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_lionhd_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lionhd",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_197_poca",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_poca_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_poca_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_poca",
+            "level": 3
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_405_absin",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_absin_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_absin_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_absin",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_328_cammou",
+        "level": 60,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_cammou_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cammou",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_358_lisa",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_lisa_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_lisa_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_lisa_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lisa",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_lisa",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_294_ayer",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_ayer_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ayer_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ayer",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_345_folnic",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_folnic_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_folnic_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_folnic",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_336_folivo",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_folivo_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_folivo_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_folivo",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_349_chiave",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_chiave_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_chiave",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_344_beewax",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_beewax_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_beewax_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_beewax",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_272_strong",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_strong_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_strong_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_strong",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_218_cuttle",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_cuttle_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cuttle",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_343_tknogi",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_tknogi_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_tknogi_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_tknogi",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_293_thorns",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_thorns_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_thorns_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_thorns",
+            "level": 3
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_366_acdrop",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_acdrop_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_acdrop_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_acdrop",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_411_tomimi",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_tomimi_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_tomimi_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_tomimi",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_415_flint",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_flint_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_flint_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_flint",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_416_zumama",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_zumama_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_zumama_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_zumama_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_zumama",
+            "level": 2
+          },
+          {
+            "id": "uniequip_003_zumama",
+            "level": 0
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_271_spikes",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_spikes_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_spikes_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_spikes",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_365_aprl",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_aprl_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_aprl_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_aprl",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_388_mint",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_mint_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_mint_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_mint",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_350_surtr",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_surtr_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_surtr_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_surtr_3",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_381_bubble",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_def_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_bubble_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bubble",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_265_sophia",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_sophia_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_sophia_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_sophia",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_436_whispr",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_whispr_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_whispr_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_whispr",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_347_jaksel",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_jaksel_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_jaksel_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_jaksel",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_311_mudrok",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_def_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_mudrok_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_mudrok_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_mudrok",
+            "level": 3
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_391_rosmon",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_rosmon_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_rosmon_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_rosmon_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_rosmon",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_rosmon",
+            "level": 3
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_214_kafka",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_kafka_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_kafka_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_kafka",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_440_pinecn",
+        "level": 20,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_pinecn_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_pinecn_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_pinecn",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_346_aosta",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_aosta_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_aosta",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_264_f12yin",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_f12yin_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_f12yin_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_f12yin_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_f12yin",
+            "level": 3
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_451_robin",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_robin_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_robin_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_robin",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_452_bstalk",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_bstalk_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_bstalk_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bstalk",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_332_archet",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_archet_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_archet_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_archet_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_archet",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_archet",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_402_tuye",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_tuye_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_tuye_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_tuye",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_455_nothin",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_nothin_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_nothin_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_nothin",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_2015_dusk",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_dusk_1",
+            "level": 1
+          },
+          {
+            "id": "skchr_dusk_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_dusk_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_dusk",
+            "level": 2
+          },
+          {
+            "id": "uniequip_003_dusk",
+            "level": 0
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_362_saga",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_saga_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_saga_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_saga",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_saga",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_1011_lava2",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_lava2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_lava2_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lava2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_458_rfrost",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_rfrost_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_rfrost_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_rfrost",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_457_blitz",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_blitz_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_blitz_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_blitz",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_456_ash",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ash_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ash_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_ash_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ash",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_ash",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_459_tachak",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_tachak_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_tachak_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_tachak",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_472_pasngr",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_pasngr_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_pasngr_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_pasngr_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_pasngr",
+            "level": 3
+          },
+          {
+            "id": "uniequip_003_pasngr",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_304_zebra",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_zebra_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_zebra_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_zebra",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_475_akafyu",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_akafyu_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_akafyu_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_akafyu",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1012_skadi2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_skadi2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_skadi2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_skadi2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_skadi2",
+            "level": 1
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_003_kalts",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_kalts_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_kalts_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_kalts_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_kalts",
+            "level": 2
+          },
+          {
+            "id": "uniequip_003_kalts",
+            "level": 0
+          },
+          {
+            "id": "uniequip_004_kalts",
+            "level": 3
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_474_glady",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_glady_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_glady_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_glady_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_glady",
+            "level": 3
+          },
+          {
+            "id": "uniequip_003_glady",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_478_kirara",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_kirara_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_kirara_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_kirara",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_469_indigo",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_indigo_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_indigo_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_indigo",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_426_billro",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_billro_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_billro_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_billro_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_billro",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_billro",
+            "level": 0
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_369_bena",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_bena_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_bena_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bena",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_485_pallas",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_pallas_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_pallas_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_pallas_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_pallas",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_pallas",
+            "level": 1
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_437_mizuki",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_mizuki_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_mizuki_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_mizuki_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_mizuki",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_mizuki",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_421_crow",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_crow_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_crow_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_crow",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1013_chen2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_chen2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_chen2_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_chen2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_chen2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_486_takila",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_takila_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_takila_2",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_484_robrta",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_robrta_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_robrta_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_robrta",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_479_sleach",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_assist_cost[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_sleach_2",
+            "level": 2
+          },
+          {
+            "id": "skchr_sleach_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_sleach",
+            "level": 0
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_423_blemsh",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_blemsh_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_blemsh_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_blemsh_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_blemsh",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_blemsh",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_431_ashlok",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_ashlok_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ashlok",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_489_serum",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_serum_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_serum_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_serum",
+            "level": 0
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_1014_nearl2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_nearl2_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_nearl2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_nearl2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_nearl2",
+            "level": 3
+          },
+          {
+            "id": "uniequip_003_nearl2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_420_flamtl",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_flamtl_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_flamtl_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_flamtl_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_flamtl",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_flamtl",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_496_wildmn",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_wildmn_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_wildmn_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_wildmn",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_449_glider",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_glider_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_glider_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_glider",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4004_pudd",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_magic_rage[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_pudd_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_pudd",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4000_jnight",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_422_aurora",
+        "level": 20,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_aurora_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_aurora_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_aurora",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_206_gnosis",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_gnosis_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_gnosis_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_gnosis_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_gnosis",
+            "level": 3
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4013_kjera",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_kjera_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_kjera",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4025_aprot2",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_aprot2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_aprot2_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4019_ncdeer",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_ncdeer_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ncdeer_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ncdeer",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_476_blkngt",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_blkngt_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_blkngt_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_blkngt",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_322_lmlee",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_lmlee_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_lmlee_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_lmlee_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lmlee",
+            "level": 1
+          },
+          {
+            "id": "uniequip_003_lmlee",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_2023_ling",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ling_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ling_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_ling_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ling",
+            "level": 2
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_1021_kroos2",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_kroos2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_kroos2_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_kroos2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_492_quercu",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_quercu_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_quercu_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_quercu",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_377_gdglow",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_gdglow_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_gdglow_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_gdglow_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_gdglow",
+            "level": 3
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_4036_forcer",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_forcer_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_forcer_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_forcer",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4016_kazema",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_kazema_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_kazema_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_kazema",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4041_chnut",
+        "level": 35,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_chnut_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_chnut_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_chnut",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4040_rockr",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_magic_rage[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_rockr_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_rockr",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4039_horn",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_horn_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_horn_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_horn_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_horn",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_horn",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_4045_heidi",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_heidi_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_heidi_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_heidi",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_433_windft",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_windft_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_windft_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_windft",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_363_toddi",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_toddi_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_toddi_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_toddi",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_1023_ghost2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ghost2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ghost2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_ghost2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ghost2",
+            "level": 3
+          },
+          {
+            "id": "uniequip_003_ghost2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4009_irene",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_irene_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_irene_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_irene_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_irene",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_irene",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4042_lumen",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_lumen_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_lumen_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_lumen_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lumen",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_lumen",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4043_erato",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_erato_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_erato_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_erato",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4046_ebnhlz",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ebnhlz_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ebnhlz_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_ebnhlz_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ebnhlz",
+            "level": 3
+          },
+          {
+            "id": "uniequip_003_ebnhlz",
+            "level": 0
+          },
+          {
+            "id": "uniequip_004_ebnhlz",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4047_pianst",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_pianst_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_pianst_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1024_hbisc2",
+        "level": 50,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_hbisc2_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_hbisc2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_4048_doroth",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_doroth_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_doroth_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_doroth_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_doroth",
+            "level": 1
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_135_halo",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_halo_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_halo_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_halo",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_497_ctable",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ctable_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_ctable_2",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4055_bgsnow",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_bgsnow_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_bgsnow_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_bgsnow_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bgsnow",
+            "level": 3
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1026_gvial2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_gvial2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_gvial2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_gvial2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_gvial2",
+            "level": 1
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4054_malist",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_malist_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_malist",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4064_mlynar",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_mlynar_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_mlynar_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_mlynar_3",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4032_provs",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_provs_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_provs_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_provs",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4067_lolxh",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_lolxh_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_lolxh_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lolxh",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4066_highmo",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_highmo_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_highmo_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_highmo",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4062_totter",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_totter_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_totter_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_totter",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4071_peper",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_heal_rage[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_peper_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_473_mberry",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_mberry_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_mberry_2",
+            "level": 2
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_mberry",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_157_dagda",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_dagda_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_dagda_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_dagda",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4014_lunacu",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_lunacu_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_lunacu_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lunacu",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4065_judge",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_judge_1",
+            "level": 1
+          },
+          {
+            "id": "skchr_judge_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_judge_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_judge",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_judge",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_430_fartth",
+        "level": 60,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_fartth_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_fartth_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_fartth",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_fartth",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_427_vigil",
+        "level": 60,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_vigil_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_vigil_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_vigil_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_vigil",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1028_texas2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_texas2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_texas2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_texas2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_texas2",
+            "level": 1
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_300_phenxi",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_phenxi_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_phenxi_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_phenxi_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_phenxi",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_phenxi",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_297_hamoni",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_hamoni_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_hamoni_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_hamoni",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_1020_reed2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_reed2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_reed2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_reed2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4017_puzzle",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_puzzle_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_puzzle_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_493_firwhl",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_firwhl_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_firwhl_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_firwhl",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4080_lin",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_lin_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_lin_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_lin_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lin",
+            "level": 3
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4078_bdhkgt",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_bdhkgt_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_bdhkgt_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bdhkgt",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_2024_chyue",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_chyue_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_chyue_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_chyue_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_chyue",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4063_quartz",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[2]",
+            "level": 0
+          },
+          {
+            "id": "skchr_quartz_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_quartz",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4082_qiubai",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_qiubai_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_qiubai_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_qiubai_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_qiubai",
+            "level": 1
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_1030_noirc2",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_noirc2_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_noirc2_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_noirc2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_1029_yato2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_yato2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_yato2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_yato2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_yato2",
+            "level": 3
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4077_palico",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4091_ulika",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4083_chimes",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_chimes_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_chimes",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_491_humus",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_humus_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_humus_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_humus",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_464_cement",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_cement_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_cement_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cement",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4087_ines",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ines_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ines_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_ines_3",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_154_morgan",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_morgan_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_morgan_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_morgan",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_249_mlyss",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_mlyss_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_mlyss_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_mlyss_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_mlyss",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4027_heyak",
+        "level": 60,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_heyak_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_heyak_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_heyak_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_heyak",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_heyak",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4006_melnte",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_melnte_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_melnte_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_melnte",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_1031_slent2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_slent2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_slent2_2",
+            "level": 1
+          },
+          {
+            "id": "skchr_slent2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_slent2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4093_frston",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_338_iris",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_iris_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_iris_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_iris",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_1032_excu2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_excu2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_excu2_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_excu2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_excu2",
+            "level": 3
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_498_inside",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_inside_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_inside_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_inside",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_2012_typhon",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_typhon_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_typhon_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_typhon",
+            "level": 3
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_341_sntlla",
+        "level": 50,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_sntlla_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_sntlla",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4102_threye",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_threye_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_threye_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_threye",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1033_swire2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_swire2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_swire2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_swire2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_swire2",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_swire2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_488_buildr",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_buildr_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_buildr",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1016_agoat2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_agoat2_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_agoat2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_agoat2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_agoat2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4106_bryota",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_bryota_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_bryota_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bryota",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4105_almond",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_almond_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_almond_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_almond",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_1034_jesca2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_jesca2_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_jesca2_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_jesca2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_jesca2",
+            "level": 1
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4104_coldst",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_atk_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_coldst_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_coldst",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4072_ironmn",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ironmn_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_ironmn_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_ironmn_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ironmn",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_ironmn",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_466_qanik",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_qanik_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_qanik_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_qanik",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4107_vrdant",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_vrdant_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_vrdant_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_vrdant",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_494_vendla",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_magic_rage[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_vendla_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_vendla",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4088_hodrer",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_hodrer_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_hodrer_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_hodrer_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_hodrer",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4110_delphn",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_delphn_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_delphn_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_delphn",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_4109_baslin",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_baslin_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_baslin_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_baslin",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_245_cello",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_cello_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_cello_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_cello_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cello",
+            "level": 3
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_1027_greyy2",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_greyy2_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_greyy2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4098_vvana",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_vvana_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_vvana_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_vvana_3",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4100_caper",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_caper_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_caper_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_499_kaitou",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_kaitou_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_kaitou_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4011_lessng",
+        "level": 60,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_lessng_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_lessng_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_lessng_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lessng",
+            "level": 0
+          },
+          {
+            "id": "uniequip_003_lessng",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4116_blkkgt",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_blkkgt_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_blkkgt_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_blkkgt_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_blkkgt",
+            "level": 3
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_194_leto",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_quickattack[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_leto_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_leto",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4114_harold",
+        "level": 50,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skcom_heal_up[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_harold_2",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_harold",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4081_warmy",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_warmy_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_warmy_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_4117_ray",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ray_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ray_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_ray_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ray",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4122_grabds",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_grabds_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_grabds_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_grabds",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4121_zuole",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_zuole_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_zuole_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_zuole_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_zuole",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_2025_shu",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_shu_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_shu_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_shu_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_shu",
+            "level": 3
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_4119_wanqin",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_assist_cost[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_wanqin_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_wanqin",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4023_rfalcn",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skcom_charge_cost[3]",
+            "level": 0
+          },
+          {
+            "id": "skchr_rfalcn_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_rfalcn",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4125_rdoc",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_rdoc_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_rdoc_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_rdoc",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4124_iana",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_iana_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_iana_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_iana",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4123_ela",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ela_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ela_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_ela_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ela",
+            "level": 3
+          }
+        ],
+        "potentialRank": 3
+      },
+      {
+        "id": "char_4126_fuze",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_fuze_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_fuze_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_fuze",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4130_luton",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_luton_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_luton_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_luton",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4132_ascln",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ascln_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_ascln_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_ascln_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ascln",
+            "level": 1
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4131_odda",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_odda_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_odda_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_446_aroma",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_aroma_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_aroma_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_aroma",
+            "level": 0
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_1036_fang2",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_fang2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_fang2_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_fang2",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1035_wisdel",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_wisdel_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_wisdel_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_wisdel_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_wisdel",
+            "level": 3
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4133_logos",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_logos_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_logos_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_logos_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_logos",
+            "level": 3
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4134_cetsyr",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_cetsyr_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_cetsyr_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_cetsyr_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cetsyr",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4136_phonor",
+        "level": 30,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4015_spuria",
+        "level": 1,
+        "evolvePhase": 1,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_spuria_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_spuria_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_spuria",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_4079_haini",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_haini_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_haini_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_haini",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4145_ulpia",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ulpia_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ulpia_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_ulpia_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_ulpia",
+            "level": 1
+          }
+        ],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4137_udflow",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_udflow_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_udflow_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_udflow",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4146_nymph",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_nymph_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_nymph_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_nymph_3",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_4151_tinman",
+        "level": 80,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_tinman_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_tinman_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4058_pepe",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_pepe_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_pepe_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_pepe_3",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4138_narant",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_narant_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_narant_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_narant_3",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4139_papyrs",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_papyrs_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_papyrs_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4140_lasher",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_lasher_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_lasher_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_lasher",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_4142_laios",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_laios_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_laios_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_laios",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_4144_chilc",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_chilc_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_chilc_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_chilc",
+            "level": 0
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_4141_marcil",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_marcil_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_marcil_2",
+            "level": 3
+          },
+          {
+            "id": "skchr_marcil_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_marcil",
+            "level": 0
+          }
+        ],
+        "potentialRank": 1
+      },
+      {
+        "id": "char_4143_sensi",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_sensi_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_sensi_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_sensi",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_487_bobb",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_bobb_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_bobb_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_bobb",
+            "level": 0
+          }
+        ],
+        "potentialRank": 2
+      },
+      {
+        "id": "char_1019_siege2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_siege2_1",
+            "level": 3
+          },
+          {
+            "id": "skchr_siege2_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_siege2_3",
+            "level": 3
+          }
+        ],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4162_cathy",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_cathy_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_cathy_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_cathy",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4155_talr",
+        "level": 1,
+        "evolvePhase": 0,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_talr_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_talr_2",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_talr",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_4026_vulpis",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_vulpis_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_vulpis_2",
+            "level": 2
+          },
+          {
+            "id": "skchr_vulpis_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_vulpis",
+            "level": 1
+          }
+        ],
+        "potentialRank": 4
+      },
+      {
+        "id": "char_4148_philae",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_philae_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_philae_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_4165_ctrail",
+        "level": 70,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_ctrail_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_ctrail_2",
+            "level": 0
+          }
+        ],
+        "equips": [],
+        "potentialRank": 0
+      },
+      {
+        "id": "char_1502_crosly",
+        "level": 1,
+        "evolvePhase": 2,
+        "mainSkillLevel": 1,
+        "skills": [
+          {
+            "id": "skchr_crosly_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_crosly_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_crosly_3",
+            "level": 0
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_crosly",
+            "level": 0
+          }
+        ],
+        "potentialRank": 5
+      },
+      {
+        "id": "char_1038_whitw2",
+        "level": 90,
+        "evolvePhase": 2,
+        "mainSkillLevel": 7,
+        "skills": [
+          {
+            "id": "skchr_whitw2_1",
+            "level": 0
+          },
+          {
+            "id": "skchr_whitw2_2",
+            "level": 0
+          },
+          {
+            "id": "skchr_whitw2_3",
+            "level": 3
+          }
+        ],
+        "equips": [
+          {
+            "id": "uniequip_002_whitw2",
+            "level": 3
+          }
+        ],
+        "potentialRank": 2
+      }
+    ],
+    "items": [
+      {
+        "id": "30024",
+        "count": "50"
+      },
+      {
+        "id": "30044",
+        "count": "25"
+      },
+      {
+        "id": "2004",
+        "count": "63"
+      },
+      {
+        "id": "3223",
+        "count": "0"
+      },
+      {
+        "id": "3261",
+        "count": "12"
+      },
+      {
+        "id": "3133",
+        "count": "29"
+      },
+      {
+        "id": "mod_update_token_1",
+        "count": "2605"
+      },
+      {
+        "id": "3105",
+        "count": "0"
+      },
+      {
+        "id": "31023",
+        "count": "224"
+      },
+      {
+        "id": "31024",
+        "count": "13"
+      },
+      {
+        "id": "30094",
+        "count": "24"
+      },
+      {
+        "id": "31034",
+        "count": "14"
+      },
+      {
+        "id": "30135",
+        "count": "25"
+      },
+      {
+        "id": "31053",
+        "count": "66"
+      },
+      {
+        "id": "3003",
+        "count": "164"
+      },
+      {
+        "id": "30064",
+        "count": "15"
+      },
+      {
+        "id": "30021",
+        "count": "120"
+      },
+      {
+        "id": "30084",
+        "count": "28"
+      },
+      {
+        "id": "31013",
+        "count": "190"
+      },
+      {
+        "id": "31044",
+        "count": "22"
+      },
+      {
+        "id": "STORY_REVIEW_COIN",
+        "count": "0"
+      },
+      {
+        "id": "3302",
+        "count": "175"
+      },
+      {
+        "id": "3262",
+        "count": "9"
+      },
+      {
+        "id": "30023",
+        "count": "6"
+      },
+      {
+        "id": "3112",
+        "count": "65"
+      },
+      {
+        "id": "30013",
+        "count": "75"
+      },
+      {
+        "id": "31064",
+        "count": "17"
+      },
+      {
+        "id": "3303",
+        "count": "237"
+      },
+      {
+        "id": "30083",
+        "count": "355"
+      },
+      {
+        "id": "4006",
+        "count": "1622"
+      },
+      {
+        "id": "30031",
+        "count": "151"
+      },
+      {
+        "id": "2001",
+        "count": "11275"
+      },
+      {
+        "id": "3221",
+        "count": "13"
+      },
+      {
+        "id": "30012",
+        "count": "461"
+      },
+      {
+        "id": "30125",
+        "count": "27"
+      },
+      {
+        "id": "31033",
+        "count": "33"
+      },
+      {
+        "id": "30014",
+        "count": "21"
+      },
+      {
+        "id": "30043",
+        "count": "281"
+      },
+      {
+        "id": "2002",
+        "count": "6704"
+      },
+      {
+        "id": "3231",
+        "count": "7"
+      },
+      {
+        "id": "3211",
+        "count": "11"
+      },
+      {
+        "id": "30093",
+        "count": "277"
+      },
+      {
+        "id": "3283",
+        "count": "0"
+      },
+      {
+        "id": "30011",
+        "count": "203"
+      },
+      {
+        "id": "3213",
+        "count": "0"
+      },
+      {
+        "id": "30155",
+        "count": "14"
+      },
+      {
+        "id": "30073",
+        "count": "419"
+      },
+      {
+        "id": "30104",
+        "count": "17"
+      },
+      {
+        "id": "3242",
+        "count": "7"
+      },
+      {
+        "id": "3282",
+        "count": "2"
+      },
+      {
+        "id": "30042",
+        "count": "471"
+      },
+      {
+        "id": "mod_update_token_2",
+        "count": "772"
+      },
+      {
+        "id": "30053",
+        "count": "336"
+      },
+      {
+        "id": "31084",
+        "count": "14"
+      },
+      {
+        "id": "3114",
+        "count": "926"
+      },
+      {
+        "id": "30115",
+        "count": "25"
+      },
+      {
+        "id": "30034",
+        "count": "41"
+      },
+      {
+        "id": "30052",
+        "count": "443"
+      },
+      {
+        "id": "30022",
+        "count": "76"
+      },
+      {
+        "id": "31014",
+        "count": "24"
+      },
+      {
+        "id": "3281",
+        "count": "9"
+      },
+      {
+        "id": "3301",
+        "count": "117"
+      },
+      {
+        "id": "3272",
+        "count": "0"
+      },
+      {
+        "id": "3271",
+        "count": "16"
+      },
+      {
+        "id": "30074",
+        "count": "28"
+      },
+      {
+        "id": "31063",
+        "count": "55"
+      },
+      {
+        "id": "3251",
+        "count": "1"
+      },
+      {
+        "id": "3273",
+        "count": "2"
+      },
+      {
+        "id": "30062",
+        "count": "564"
+      },
+      {
+        "id": "3401",
+        "count": "26661"
+      },
+      {
+        "id": "30051",
+        "count": "102"
+      },
+      {
+        "id": "31073",
+        "count": "22"
+      },
+      {
+        "id": "3131",
+        "count": "5"
+      },
+      {
+        "id": "2003",
+        "count": "1266"
+      },
+      {
+        "id": "3243",
+        "count": "0"
+      },
+      {
+        "id": "3252",
+        "count": "6"
+      },
+      {
+        "id": "30061",
+        "count": "162"
+      },
+      {
+        "id": "31054",
+        "count": "19"
+      },
+      {
+        "id": "31083",
+        "count": "64"
+      },
+      {
+        "id": "3132",
+        "count": "1"
+      },
+      {
+        "id": "3141",
+        "count": "0"
+      },
+      {
+        "id": "3241",
+        "count": "13"
+      },
+      {
+        "id": "30032",
+        "count": "431"
+      },
+      {
+        "id": "30054",
+        "count": "27"
+      },
+      {
+        "id": "31074",
+        "count": "17"
+      },
+      {
+        "id": "32001",
+        "count": "2"
+      },
+      {
+        "id": "4001",
+        "count": "3861729"
+      },
+      {
+        "id": "31043",
+        "count": "83"
+      },
+      {
+        "id": "3253",
+        "count": "0"
+      },
+      {
+        "id": "3113",
+        "count": "11"
+      },
+      {
+        "id": "3233",
+        "count": "0"
+      },
+      {
+        "id": "3212",
+        "count": "2"
+      },
+      {
+        "id": "3222",
+        "count": "2"
+      },
+      {
+        "id": "30103",
+        "count": "387"
+      },
+      {
+        "id": "3232",
+        "count": "1"
+      },
+      {
+        "id": "mod_unlock_token",
+        "count": "180"
+      },
+      {
+        "id": "30033",
+        "count": "1"
+      },
+      {
+        "id": "30063",
+        "count": "445"
+      },
+      {
+        "id": "3263",
+        "count": "0"
+      },
+      {
+        "id": "30145",
+        "count": "24"
+      },
+      {
+        "id": "30041",
+        "count": "53"
+      }
+    ]
+  }
+}

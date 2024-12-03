@@ -18,6 +18,7 @@
             <div class="poster_block_content pie_all" id="chart2" ref="chart"></div>
             <div class="probabilityDescribe">
               <table>
+                <tbody>
                 <tr>
                   <td>六星：{{ getProbability(maaData.topOperator, maaData.maaTagsDataCount) }}%</td>
                   <td>五星：{{ getProbability(maaData.seniorOperatorCount, maaData.maaTagsDataCount) }}%</td>
@@ -26,6 +27,7 @@
                   <td>四星：{{ getProbability(maaData.rareOperatorCount, maaData.maaTagsDataCount) }}%</td>
                   <td>三星：{{ getProbability(maaData.commonOperatorCount, maaData.maaTagsDataCount) }}%</td>
                 </tr>
+                </tbody>
               </table>
             </div>
           </div>

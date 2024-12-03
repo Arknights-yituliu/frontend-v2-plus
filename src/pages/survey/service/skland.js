@@ -260,7 +260,8 @@ function formattingOperatorData(characterList) {
             skill3: 0,
             modX: 0,
             modY: 0,
-            modD: 0
+            modD: 0,
+            modA:0
         }
 
         if (skills) {
