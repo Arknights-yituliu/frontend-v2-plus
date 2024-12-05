@@ -46,7 +46,12 @@ let updateTime = ref('')
 
 // 获取关卡推荐数据
 function getStageResult() {
-  stageApi.getStageResultGroupByItemSeries(0.633, 300).then(response => {
+  const config = {
+    id:202412050002,
+    expCoefficient:0.633,
+    sampleSize:300
+  }
+  stageApi.getStageResultGroupByItemSeries(config).then(response => {
     updateTime.value = response.data.updateTime
     stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式

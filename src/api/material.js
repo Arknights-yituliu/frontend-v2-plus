@@ -1,29 +1,18 @@
 import request from "/src/api/request";
 
 export default {
-  /**
-   * 查询蓝色品质材料的推荐关卡
-   * @param expCoefficient 经验书价值系数
-   * @param sampleSize 样本量
-   * @returns {*}
-   */
-  getT3RecommendedStage(expCoefficient, sampleSize) {
-    return request({
-      url: `/stage/t3?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
-      method: "get",
-    });
-  },
+
 
   /**
    * 获取关卡效率，按材料系列分组
-   * @param expCoefficient 经验书价值系数
-   * @param sampleSize 样本量
+   * @param data 请求参数
    * @returns {*}
    */
-  getStageResultGroupByItemSeries(expCoefficient,sampleSize) {
+  getStageResultGroupByItemSeries(data) {
     return request({
-      url: `/stage/result?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
-      method: "get",
+      url: `/stage/result/custom`,
+      method: "post",
+      data:data
     });
   },
 
