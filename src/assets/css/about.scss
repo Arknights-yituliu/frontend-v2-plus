@@ -1,3 +1,17 @@
+.tool-link-page{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    .tool-link-card{
+        width: 350px;
+        margin: 4px;
+
+    }
+    .tool-link-card-content{
+        height: 240px;
+    }
+}
+
 .label-wrap {
     display: flex;
     flex-wrap: wrap;

@@ -27,7 +27,7 @@ import "/src/assets/css/store_v2.css";
 import "/src/assets/css/sprite_item.css";
 import "/src/assets/css/sprite_style.css";
 import "/src/assets/css/sprite_icon.css";
-import "/src/assets/css/about.css";
+import "/src/assets/css/about.scss";
 import "/src/assets/css/elite.css";
 import '/src/assets/css/sprite/sprite_avatar.css'
 

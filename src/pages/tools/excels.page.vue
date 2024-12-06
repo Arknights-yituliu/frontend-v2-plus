@@ -104,8 +104,6 @@ function openNewPage(url) {
   border-radius: 20px;
   text-align: center;
   overflow: hidden;
-  background: rgb(40, 40, 40);
-  color: #e6e6e6;
   height: 30px;
   line-height: 30px;
   font-size: 14px;
