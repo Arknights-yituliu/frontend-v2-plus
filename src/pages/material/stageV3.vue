@@ -7,6 +7,7 @@ import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import {dataFormat} from '/src/utils/DateUtil.js'
+import {getStageConfig} from '/src/utils/GetUserConfig.js'
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 
 import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
@@ -46,12 +47,8 @@ let updateTime = ref('')
 
 // 获取关卡推荐数据
 function getStageResult() {
-  const config = {
-    id:202412050002,
-    expCoefficient:0.633,
-    sampleSize:300
-  }
-  stageApi.getStageResultGroupByItemSeries(config).then(response => {
+  const config =  getStageConfig()
+  stageApi.getRecommendedStage(config).then(response => {
     updateTime.value = response.data.updateTime
     stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
@@ -335,9 +332,9 @@ function formatPcHistoryTableData() {
  * 获取历史活动关卡数据
  */
 function getHistoryActStage() {
-
+  const config = getStageConfig()
   // 获取历史活动up材料信息
-  stageApi.getHistoryActStage(0.633, 300).then(response => {
+  stageApi.getHistoryActStageV4(config).then(response => {
     // 历史活动数据
     historyActivityList.value = response.data
     formatPcHistoryTableData()
@@ -389,7 +386,8 @@ function filterOrundumStage() {
 }
 
 function getOrundumRecommendedStage() {
-  stageApi.getOrundumRecommendedStage(0.633, 300).then(response => {
+  const config = getStageConfig()
+  stageApi.getOrundumRecommendedStageV4(config).then(response => {
     formatOrundumRecommendedStage(response.data)
   })
 }

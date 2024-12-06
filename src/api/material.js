@@ -3,31 +3,21 @@ import request from "/src/api/request";
 export default {
 
 
-  /**
-   * 获取关卡效率，按材料系列分组
-   * @param data 请求参数
-   * @returns {*}
-   */
-  getStageResultGroupByItemSeries(data) {
-    return request({
-      url: `/stage/result/custom`,
-      method: "post",
-      data:data
-    });
-  },
 
   /**
-   * 查询绿色品质材料的推荐关卡
+   * 获取关卡效率，按材料系列分组
    * @param expCoefficient 经验书价值系数
    * @param sampleSize 样本量
    * @returns {*}
    */
-  getT2RecommendedStage(expCoefficient, sampleSize) {
+  getStageResultGroupByItemSeries(expCoefficient,sampleSize) {
     return request({
-      url: `/stage/t2?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
+      url: `/stage/result?expCoefficient=${expCoefficient}&sampleSize=${sampleSize}`,
       method: "get",
     });
   },
+
+
 
   //搓玉查询
   getOrundumRecommendedStage(expCoefficient, sampleSize) {
@@ -92,4 +82,63 @@ export default {
       method: "get",
     });
   },
+
+
+  getRecommendedStage(data){
+    return request({
+      url: `/custom/stage/result`,
+      method: "post",
+      data:data
+    })
+  },
+
+  getItemValueTableV4(data){
+    return request({
+      url: `/custom/item/value`,
+      method:"post",
+      data:data
+    })
+  },
+
+
+  getHistoryActStageV4(data) {
+    return request({
+      url: `/custom/stage/history`,
+      method:"post",
+      data:data
+    });
+  },
+
+  getOrundumRecommendedStageV4(data) {
+    return request({
+      url: `/custom/stage/orundum`,
+      method:"post",
+      data:data
+    });
+  },
+
+  getStorePermDataV4(data){
+    return request({
+      url: `/custom/store/perm`,
+      method:"post",
+      data:data
+    })
+  },
+
+  getActStoreV4(data) {
+    return request({
+      url: `/custom/store/act`,
+      method:"post",
+      data:data
+    });
+  },
+
+  getStorePackV4(data) {
+    return request({
+      url: `/custom/store/pack`,
+      method:"post",
+      data:data
+    });
+  },
+
 };

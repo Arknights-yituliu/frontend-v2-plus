@@ -4,6 +4,8 @@ import ModuleHeader from '@/components/ModuleHeader.vue';
 import {onMounted, ref} from 'vue'
 import cookie from 'js-cookie'
 import storeAPI from '/src/api/store.js'
+import materialAPI from '/src/api/material.js'
+import {getStageConfig} from "/src/utils/GetUserConfig.js";
 
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表
@@ -18,19 +20,22 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 
 function getStoreData() {
   // 遍历常驻商店格式化数据
-
-  storeAPI.getPermStore().then(response => {
+  const config = getStageConfig()
+  materialAPI.getStorePermDataV4(config).then(response => {
     const perm = response.data
     for (let i = 0; i < storeTypeList.length; i++) {
       const item = storeTypeList[i]
+      const list = perm[item.typeName]
+      console.log(list)
+      list.sort((a,b)=>b.costPer-a.costPer)
       storeListFormat.value.push({
         ...item,
-        itemList: perm[item.typeName]
+        itemList: list
       })
     }
   })
 
-  storeAPI.getActStore().then(response => {
+  materialAPI.getActStoreV4(config).then(response => {
     actStoreList.value = response.data
     // 遍历活动列表
     actStoreList.value.forEach(act => {
@@ -43,6 +48,7 @@ function getStoreData() {
       // 每个区域独立数组
       areas.forEach(areaNo => {
         const areaItems = act.actStore.filter(item => item.itemArea === areaNo)
+
         act.actStoreFormat.push(areaItems)
       })
     })

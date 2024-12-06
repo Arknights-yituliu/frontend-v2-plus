@@ -1,9 +1,11 @@
 <script setup>
 import storeAPI from '/src/api/store';
+import materialAPI from "/src/api/material.js";
 import {ref} from 'vue';
 import PackCardContainer from '/src/components/PackCardGroup.vue'
 import ModuleHeader from '/src/components/ModuleHeader.vue';
 import MyButton from '/src/components/Button.vue'
+import {getStageConfig} from "@/utils/GetUserConfig.js";
 
 const currentPackInfoList = ref([])
 const date = new Date() // 当前日期
@@ -46,14 +48,12 @@ let packInfoList = []
 
 const getPackInfoData = async () => {
   // 等待获取接口返回的全部礼包信息
-  storeAPI.getPackInfoTag().then(rep => {
-    const tag = rep.data
-    storeAPI.getPackInfoByCos(tag).then(response => {
-      const data = response.data
-      packInfoListFromAPI = JSON.parse(JSON.stringify(data.data))
-      packInfoList = data.data
+  const config = getStageConfig()
+  materialAPI.getStorePackV4(config).then(rep => {
+      const data = rep.data
+      packInfoListFromAPI = JSON.parse(JSON.stringify(data))
+      packInfoList = data
       initData()
-    })
   })
 }
 

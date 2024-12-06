@@ -9,13 +9,14 @@ import '/src/assets/css/tool/gacha_calc.phone.scss'
 import POTENTIAL_TABLE from '/src/static/json/tools/potential_gacha_resources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'
 import FIXED_TABLE from '/src/static/json/tools/schedule_fixed.json'
-import storeAPI from '/src/api/store'
+import materialAPI from "/src/api/material.js";
 import {cMessage} from "/src/utils/Message.js";
 import {ElNotification} from "element-plus";
 
 
 import PackButtonContent from "/src/components/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/ActivityGachaResources.vue";
+import {getStageConfig} from "@/utils/GetUserConfig.js";
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
@@ -197,13 +198,10 @@ function getAndSortPackData() {
   const currentTimeStamp = new Date().getTime()
 
   //从服务器获取礼包数据，将其进行分类
+  const config = getStageConfig()
+  materialAPI.getStorePackV4(config).then(response => {
 
-  storeAPI.getPackInfoTag().then(rep => {
-    const tag = rep.data
-
-    storeAPI.getPackInfoByCos(tag).then(response => {
-
-      packInfoInitList.value = response.data.data
+      packInfoInitList.value = response.data
       for (let pack of packInfoInitList.value) {
 
         if (pack.officialName.indexOf('如死亦终') > -1) {
@@ -249,8 +247,6 @@ function getAndSortPackData() {
       }
       getHistoryPackInfo()
       batchGenerationMonthlyPack(index)
-
-    })
   })
 }
 
