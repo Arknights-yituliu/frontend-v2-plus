@@ -1,8 +1,6 @@
 <script setup>
 import stage from "/src/pages/material/stageV3.vue";
-import FootComponent from "/src/components/FootComponent.vue";
 import {onMounted, ref} from "vue";
-import myFooter from '/src/components/myfooter.vue'
 /**
  * 点击复制内容
  */

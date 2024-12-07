@@ -19,6 +19,9 @@
 </template>
 
 <script setup>
+
+
+
 //导航
 import '/src/assets/svg/iconfont.css'
 
@@ -63,7 +66,10 @@ import ComponentsContainer from "/src/components/ComponentsContainer.vue";
 import {onMounted, ref} from "vue";
 import NoticeBoard from "/src/pages/layout/NoticeBoard.vue";
 
+
+
 let theme_type = ref("theme_init")
+
 
 
 let componentsContainerId = 114514
@@ -76,10 +82,6 @@ onMounted(() => {
   } else {
     theme_type.value = 'theme_light'
   }
-
-
-
-
   document.getElementsByTagName("html").item(0).className = theme_v2 === "dark" ? "dark" : "light";
 })
 

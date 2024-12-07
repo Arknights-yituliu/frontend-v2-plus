@@ -1,8 +1,11 @@
 <script setup>
 
 import {ref} from "vue";
-import {NCard, NTag, NButton} from 'naive-ui'
 import "/src/assets/css/about.scss"
+
+import 'mdui/components/card.js';
+import { setColorScheme } from 'mdui/functions/setColorScheme';
+setColorScheme('#1766f8');
 
 const requestOptions = {
   method: 'GET',
@@ -34,8 +37,6 @@ const formatLinkData = (data, localized = 'zh_CN') => {
     localized_name, localized_description, localized_slogan,
     localized_tags, icon_url, links
   } = data
-  console.log(data)
-  console.log(links)
   return {
     name: localized_name[localized],
     description: localized_description[localized],
@@ -62,9 +63,9 @@ const formatLinkData = (data, localized = 'zh_CN') => {
 </script>
 
 <template>
-
+  <div style="background-color: rgb(var(--mdui-color-primary-light));width: 40px;height: 40px;"> </div>
   <div class="tool-link-page">
-    <n-card v-for="(item,index) in toolLinks" :key="index" class="tool-link-card">
+    <mdui-card v-for="(item,index) in toolLinks" :key="index" class="tool-link-card">
       <div class="tool-link-card-content">
         <div class="f-link-card-header">
           <img :src="item.icon_url" alt="" class="f-link-avatar" @click="openNewPage(item.url)">
@@ -80,7 +81,7 @@ const formatLinkData = (data, localized = 'zh_CN') => {
       <n-button quaternary type="error" v-for="(link,index) in item.links" @click="openNewPage(link.url)">
         {{ link.name }}
       </n-button>
-    </n-card>
+    </mdui-card>
   </div>
 
 </template>
