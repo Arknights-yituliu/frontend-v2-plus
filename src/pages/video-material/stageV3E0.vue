@@ -386,7 +386,7 @@
     </table>
 
     <!-- 移动端小列表 -->
-    <div class="activity-table-phone-container detailTable" id="act-table-phone" style="max-width: 600px;">
+    <div class="activity-table-phone-card detailTable" id="act-table-phone" style="max-width: 600px;">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActItemList" :key="index">
           <td class="activity-name-phone">{{ act.zoneName }}</td>

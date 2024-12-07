@@ -13,6 +13,12 @@ import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activi
 import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
+// import {getButtonSize} from '/src/plugins/vuetify/getDisplaySize'
+
+function getButtonSize(){
+
+}
+
 
 
 //漫游导航指引
@@ -451,12 +457,11 @@ onMounted(() => {
         <h1>推荐关卡</h1>
         <h4>Best Stages</h4>
       </div>
-      <button class="tag-button" @click="scrollToOrundumTable()">搓玉数据</button>
-      <button class="tag-button" @click="scrollToHistoryStageTable()">往期活动</button>
-      <button class="tag-button" @click="scrollToFrequentlyAskedQuestion()">常见问题</button>
-      <!--      <button class="tag-button" @click="guideOpen=true">*点我查看操作指引</button>-->
-      <!--      <span class="c-module-tip"></span>-->
-      <span class="module-tip">更新时间：{{ updateTime }}</span>
+      <v-btn type="secondary" :size="getButtonSize()" @click="scrollToOrundumTable()">搓玉数据</v-btn>
+      <v-btn type="secondary" :size="getButtonSize()" @click="scrollToHistoryStageTable()">往期活动</v-btn>
+      <v-btn type="secondary" :size="getButtonSize()" @click="scrollToFrequentlyAskedQuestion()">常见问题</v-btn>
+      <v-chip type="secondary" :size="getButtonSize()" >更新时间：{{ updateTime }}</v-chip>
+
     </div>
     <!--    <div class="op_title">-->
     <!--      <div class="op_title_text">-->
@@ -793,7 +798,7 @@ onMounted(() => {
         <h1>搓玉数据表</h1>
         <h4>Orundum</h4>
       </div>
-      <button class="tag-button" @click="filterOrundumStage()">仅显示1-7、CW-6和活动关</button>
+      <v-btn type="secondary" :size="getButtonSize()" @click="filterOrundumStage()">仅显示1-7、CW-6和活动关</v-btn>
     </div>
 
     <div class="tableArea" style="margin:0 8px;max-width: 720px;border: 1px solid #00000040;border-radius: 8px;">
@@ -829,13 +834,13 @@ onMounted(() => {
         <h1>往期活动数据</h1>
         <h4>History Event</h4>
       </div>
-      <button class="tag-button" @click="chooseHistoryActDevice('phone')">列表模式
-      </button>
-      <button class="tag-button" @click="chooseHistoryActDevice('pc')">表格模式</button>
+      <v-btn type="secondary" class="tag-button" @click="chooseHistoryActDevice('phone')">列表模式
+      </v-btn>
+      <v-btn type="secondary" class="tag-button" @click="chooseHistoryActDevice('pc')">表格模式</v-btn>
     </div>
 
     <!-- pc端大表格 -->
-    <div class="activity-table-pc-container" id="act-table-pc">
+    <v-card class="activity-table-pc-card" id="act-table-pc">
       <table class="activity-table-pc">
         <tbody>
         <tr>
@@ -863,9 +868,9 @@ onMounted(() => {
         </tr>
         </tbody>
       </table>
-    </div>
+    </v-card>
     <!-- 移动端小列表 -->
-    <div class="activity-table-phone-container" id="act-table-phone">
+    <v-card  class="activity-table-phone-card" id="act-table-phone">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActivityList" :key="index">
           <td class="activity-name-phone">{{ act.zoneName }}</td>
@@ -882,7 +887,7 @@ onMounted(() => {
           </td>
         </tr>
       </table>
-    </div>
+    </v-card>
     <!-- 常见问题 -->
     <div class="module-header" id="frequently-asked-question">
       <div class="module-title">

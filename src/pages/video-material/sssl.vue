@@ -824,7 +824,7 @@ onMounted(() => {
     <!--      </div>-->
     <!--    </div>-->
     <!-- pc端大表格 -->
-    <div class="activity-table-pc-container" id="act-table-pc">
+    <div class="activity-table-pc-card" id="act-table-pc">
       <table class="activity-table-pc">
         <tbody>
         <tr>
@@ -854,7 +854,7 @@ onMounted(() => {
       </table>
     </div>
     <!-- 移动端小列表 -->
-    <div class="activity-table-phone-container" id="act-table-phone">
+    <div class="activity-table-phone-card" id="act-table-phone">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActItemList" :key="index">
           <td class="activity-name-phone">{{ act.zoneName }}</td>

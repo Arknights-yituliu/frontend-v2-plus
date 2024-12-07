@@ -173,16 +173,12 @@
     left: calc((-183px + 36px) / 2);
   }
 
-  .activity-table-pc-container {
+  .activity-table-pc-card {
     width: 98%;
-    margin: 8px;
+    margin: auto;
     overflow: hidden;
     overflow-x: auto;
-    border-radius: 8px;
-    flex-grow: 1;
-    padding: -3px;
-    border: 1px solid #80808020;
-    box-shadow: 0px 0px 8px #00000040;
+    padding: -2px;
   }
 
   .activity-table-pc {
@@ -225,15 +221,10 @@
     border-top: 2px solid var(--c-border-color);
   }
 
-  .activity-table-phone-container {
+  .activity-table-phone-card {
     display: none;
     margin: 4px;
-    padding: 4px 8px;
-    max-width: 520px;
-    height: 500px;
-    overflow-y: scroll;
-    border-radius: 8px;
-    box-shadow: 0px 0px 8px #00000040;
+    width: 600px;
   }
 
   .activity-table-phone {

@@ -33,14 +33,14 @@
   }
 
   .operator-card {
-    padding: 4px;
+    //padding: 4px;
     display: flex;
     align-items: center;
-    box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
-    background-color: var(--c-card-background-color);
+    //box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
+    //background-color: var(--c-card-background-color);
     margin: 8px;
     width: 500px;
-    box-sizing: border-box;
+    //box-sizing: border-box;
   }
 
 
@@ -179,14 +179,32 @@
   /*干员统计弹窗卡片样式*/
   .statistical-popup-container {
     padding: 8px;
-    max-width: 700px;
     font-size: 16px;
     box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 
-
-    .detail-card {
+    .operator-statistical-card {
       width: 500px;
-      margin: 0 20px 0 0;
+      margin: 12px;
+
+      .operator-statistical-item {
+        display: flex;
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 8px 8px;
+        border-bottom: 1px solid var(--c-border-color);
+
+        .operator-info-label {
+
+        }
+
+        .operator-info-value {
+          text-align: right;
+        }
+
+      }
 
       .detail-card-title {
         font-weight: bolder;
@@ -205,23 +223,10 @@
         box-shadow: 1px 1px 4px var(--c-box-shadow-color),-1px -1px 4px var(--c-box-shadow-color);
         background-color: var(--c-card-background-color);
 
-        .operator-info-item {
-          display: flex;
-          justify-content: space-between;
-          box-sizing: border-box;
-          padding: 8px 8px;
-          border-bottom: 1px solid var(--c-border-color);
 
-          .operator-info-label {
-
-          }
-
-          .operator-info-value {
-            text-align: right;
-          }
-
-        }
       }
+
+
 
     }
   }

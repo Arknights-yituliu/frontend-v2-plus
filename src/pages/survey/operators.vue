@@ -1,6 +1,4 @@
 <script setup>
-import {NCollapse, NCollapseItem, NButton, NCard} from 'naive-ui'
-
 import {cMessage} from "/src/utils/Message.js";
 import {filterByCharacterProperty, professionDict, yearDict} from "./service/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
@@ -35,6 +33,8 @@ async function getUserInfoAndOperatorData() {
   userData.value = await getUserInfo()
   getOperatorData()
 }
+
+let headerTag = ref('干员筛选')
 
 /**
  * 检查用户状态
@@ -282,7 +282,11 @@ function dataOptionClass(charId, current, property) {
  * @returns {boolean} class 按钮样式
  */
 function selectedBtn(property, rule) {
-  return filterCondition.value[property].indexOf(rule) < 0;
+  if (filterCondition.value[property].indexOf(rule) > -1) {
+    return "primary"
+  }
+  return "secondary"
+
 }
 
 let collapseImportFilter = ref(false)  //干员筛选条件折叠栏的展开状态
@@ -467,295 +471,146 @@ onMounted(() => {
 
 <template>
   <div class="survey-operator-page">
-    <!-- 常驻条 -->
-    <div class="control-header">
+    <v-card style="width: 96%;margin: 0 auto">
+      <v-tabs
+          v-model="headerTag"
+          bg-color="primary"
+      >
+        <v-tab value="干员筛选">干员筛选</v-tab>
+        <v-tab value="数据导入导出">数据导入导出</v-tab>
+        <v-tab value="个人干员数据统计"
+               @click="clickBtn('btn_statistics');openStatisticalPopup()">
+          个人干员数据统计
+        </v-tab>
+        <v-tab value="干员练度推荐"
+               @click="clickBtn('btn_recommend');getOperatorRecommend()">
+          干员练度推荐</v-tab>
+      </v-tabs>
+      <v-card-text>
+        <v-tabs-window v-model="headerTag">
+          <v-tabs-window-item value="干员筛选">
+            <div class="checkbox">
+              <v-btn variant="text" class="checkbox-label">职业</v-btn>
+              <v-btn :type="selectedBtn('profession', profession.value)"
+                     class="checkbox-button" rounded="x-large"
+                     v-for="(profession,index) in professionDict" :key="index"
+                     @click="addFilterCondition('profession', profession.value)">
+                {{ profession.label }}
+              </v-btn>
+            </div>
+            <div class="checkbox">
+              <v-btn variant="text" class="checkbox-label">稀有度</v-btn>
+              <v-btn :type="selectedBtn('rarity', rarity)"
+                     class="checkbox-button" rounded="x-large"
+                     v-for="(rarity,index) in RARITY_TABLE" :key="index"
+                     @click="addFilterCondition('rarity', rarity)">
+                {{ rarity }}★
+              </v-btn>
+            </div>
+            <div class="checkbox">
+              <v-btn variant="text" class="checkbox-label">年份</v-btn>
+              <v-btn :type="selectedBtn('year',key)"
+                     class="checkbox-button" rounded="x-large"
+                     v-for="(year, key) in yearDict" :key="key"
+                     @click="addFilterCondition('year', key)">
+                {{ year.label }}
+              </v-btn>
+            </div>
+            <div class="checkbox">
+              <v-btn variant="text" class="checkbox-label">是否拥有</v-btn>
+              <v-btn :type="selectedBtn('own',true)"
+                     class="checkbox-button" rounded="x-large"
+                     @click="addFilterCondition('own',true)">
+                已拥有
+              </v-btn>
+              <v-btn :type="selectedBtn('own', false)"
+                     class="checkbox-button" rounded="x-large"
+                     @click="addFilterCondition('own', false)">
+                未拥有
+              </v-btn>
+            </div>
+            <div class="checkbox">
+              <v-btn variant="text" class="checkbox-label">获得方式</v-btn>
+              <v-btn :type="selectedBtn('itemObtainApproach',itemObtainApproach)"
+                     class="checkbox-button" rounded="x-large"
+                     v-for="(itemObtainApproach,index) in itemObtainApproachType" :key="index"
+                     @click="addFilterCondition('itemObtainApproach',itemObtainApproach)">
+                {{ itemObtainApproach }}
+              </v-btn>
 
-      <MyButton data-color='blue' :active="btnStatus.btn_filter"
-                @click="clickBtn('btn_filter');collapseFilter()">
-        筛选/批量操作
-      </MyButton>
+            </div>
+          </v-tabs-window-item>
 
-      <MyButton data-color='blue' :active="btnStatus.btn_import"
-                @click="clickBtn('btn_import');collapseImport()">
-        数据导入导出
-      </MyButton>
-
-      <!--      <div style="width: 60px"></div>-->
-      <!--      <MyButton data-color='orange'  @click="upload()">手动保存练度</MyButton>-->
-      <MyButton data-color='blue' :active="statisticalPopupVisible"
-                @click="clickBtn('btn_statistics');openStatisticalPopup()">统计干员练度
-      </MyButton>
-      <MyButton data-color='blue' :active="recommendPopupVisible"
-                @click="clickBtn('btn_recommend');getOperatorRecommend()">干员练度推荐（测试）
-      </MyButton>
-      <!--      <MyButton data-color='blue' :active="btn_status.btn_plan"-->
-      <!--                @click="clickBtn('btn_plan');getOperatorPlanItemCost()">练度计划材料消耗统计-->
-      <!--      </MyButton>-->
-    </div>
-
-    <n-card>
-      <n-collapse :default-expanded-names="['2', '3']">
-        <n-collapse-item title="干员筛选" name="filter">
-          <div class="checkbox">
-            <n-button quaternary type="info" class="checkbox-label">职业</n-button>
-            <n-button :secondary="selectedBtn('profession', profession.value)"
-                      type="info" class="checkbox-button"
-                      v-for="(profession,index) in professionDict" :key="index"
-                      @click="addFilterCondition('profession', profession.value)">
-              {{ profession.label }}
-            </n-button>
-          </div>
-          <div class="checkbox">
-            <n-button quaternary type="info" class="checkbox-label">稀有度</n-button>
-            <n-button :secondary="selectedBtn('rarity', rarity)"
-                      type="info" class="checkbox-button"
-                      v-for="(rarity,index) in RARITY_TABLE" :key="index"
-                      @click="addFilterCondition('rarity', rarity)">
-              {{ rarity }}★
-            </n-button>
-          </div>
-          <div class="checkbox">
-            <n-button quaternary type="info" class="checkbox-label">年份</n-button>
-            <n-button :secondary="selectedBtn('year',key)"
-                      type="info" class="checkbox-button"
-                      v-for="(year, key) in yearDict" :key="key"
-                      @click="addFilterCondition('year', key)">
-              {{ year.label }}
-            </n-button>
-          </div>
-
-        </n-collapse-item>
-        <n-collapse-item title="数据导入导出" name="2">
-          <div>
-            <n-button type="success" class="checkbox-button" @click="importDataBySkland()">从森空岛导入</n-button>
-            <n-button type="success" class="checkbox-button" @click="exportOperatorExcel()">
+          <v-tabs-window-item value="数据导入导出">
+            <v-btn data-color="green" type="primary" class="checkbox-button" @click="importDataBySkland()">
+              从森空岛导入
+            </v-btn>
+            <v-btn data-color="green" type="primary" class="checkbox-button" @click="exportOperatorExcel()">
               导出为Excel
-            </n-button>
-          </div>
-        </n-collapse-item>
+            </v-btn>
+          </v-tabs-window-item>
 
-      </n-collapse>
-    </n-card>
-
-    <!-- 筛选模块 -->
-    <c-collapse-item-v2 v-model:visible="collapseImportFilter" :name="'filter'">
-      <div class="control-box">
-        <div class="control-line">
-          <span class="control-line-label" style="width: 80px;">职业</span>
-          <div class="control-checkbox">
-            <MyButton data-color="blue" :active="selectedBtn('profession', profession.value)"
-                      v-for="(profession,index) in professionDict"
-                      :key="index"
-                      @click="addFilterCondition('profession', profession.value)">
-              {{ profession.label }}
-            </MyButton>
-          </div>
-        </div>
-
-        <div class="control-line">
-          <span class="control-line-label" style="width: 80px;">稀有度</span>
-          <div class="control-checkbox">
-            <MyButton data-color="blue" :active="selectedBtn('rarity', rarity)"
-                      v-for="(rarity,index) in RARITY_TABLE" :key="index"
-                      @click="addFilterCondition('rarity', rarity)">
-              {{ rarity }}★
-            </MyButton>
-          </div>
-        </div>
-
-        <div class="control-line">
-          <span class="control-line-label" style="width: 80px;">年份</span>
-          <div class="control-checkbox">
-            <MyButton data-color="blue" :active="selectedBtn('year',key)"
-                      v-for="(year, key) in yearDict" :key="key"
-                      @click="addFilterCondition('year', key)">
-              {{ year.label }}
-            </MyButton>
-          </div>
-        </div>
-
-        <div class="control-line">
-          <span class="control-line-label" style="width: 80px;">是否拥有</span>
-          <div class="control-checkbox">
-            <MyButton data-color="blue" :active="selectedBtn('own',true)"
-                      @click="addFilterCondition('own', true)">
-              已拥有
-            </MyButton>
-            <MyButton data-color="blue" :active="selectedBtn('own',false)"
-                      @click="addFilterCondition('own', false)">
-              未拥有
-            </MyButton>
-          </div>
-        </div>
-
-        <div class="control-line">
-          <span class="control-line-label" style="width: 80px;">获得方式</span>
-          <div class="control-checkbox">
-            <MyButton data-color="blue" :active="selectedBtn('itemObtainApproach',type)"
-                      v-for="(type,index) in itemObtainApproachType" :key="index"
-                      @click="addFilterCondition('itemObtainApproach', type)">
-              {{ type }}
-            </MyButton>
-
-          </div>
-        </div>
-
-        <div class="control-line">
-          <span class="control-line-label" style="width: 80px;">模组</span>
-          <div class="control-checkbox">
-            <MyButton data-color="blue" :active="selectedBtn('equip', true)"
-                      @click="addFilterCondition('equip', true)">
-              模组已实装
-            </MyButton>
-            <MyButton data-color="blue" :active="selectedBtn('equip', false)"
-                      @click="addFilterCondition('equip', false)">
-              模组未实装
-            </MyButton>
-          </div>
-        </div>
-
-        <div class="control-line">
-          <span class="control-line-label" style="width: 80px;">排序</span>
-          <div class="control-checkbox">
-            <MyButton data-color="blue" @click="sortOperatorList('rarity')"> 按稀有度</MyButton>
-            <MyButton data-color="blue" @click="sortOperatorList('date')"> 按实装顺序</MyButton>
-            <MyButton data-color="blue" @click="sortOperatorListByLevel('level')"> 按干员等级</MyButton>
-          </div>
-        </div>
-
-        <!--          <div class="control_tip ">-->
-        <!--            <a class="">对所有被筛选出的干员进行操作</a>-->
-        <!--          </div>-->
-        <!--          <div class="control_bar">-->
-        <!--            <div class="control_title" style="width: 100px;">-->
-        <!--              批量操作-->
-        <!--            </div>-->
-        <!--            <div class="switch_btn_wrap">-->
-        <!--              <div class="btn" @click="batchUpdatesOwn(true)">设为已拥有</div>-->
-        <!--              <div class="btn" @click="batchUpdatesOwn(false)">设为未拥有</div>-->
-        <!--              <div class="btn" @click="batchUpdatesElite(0)">设为无精</div>-->
-        <!--              <div class="btn" @click="batchUpdatesElite(1)">设为精一</div>-->
-        <!--              <div class="btn" @click="batchUpdatesElite(2)">设为精二</div>-->
-        <!--              <div class="btn">设为满级</div>-->
-        <!--              <div class="btn">设为满潜能</div>-->
-        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill1', 3)">一技能设为专三</div>-->
-        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill2', 3)">二技能设为专三</div>-->
-        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('skill3', 3)">三技能设为专三</div>-->
-        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('modX', 3)">X模组设为三级</div>-->
-        <!--              <div class="btn" @click="batchUpdatesSkillAndMod('modY', 3)">Y模组设为三级</div>-->
-        <!--            </div>-->
-        <!--          </div>-->
-      </div>
-    </c-collapse-item-v2>
+          <v-tabs-window-item value="个人干员数据统计" v-loading>
+            <OperatorStatisticalTable v-model="statisticalResultV2"></OperatorStatisticalTable>
+          </v-tabs-window-item>
 
 
-    <!-- 导入导出模块 -->
-    <c-collapse-item v-model:visible="collapseImportVisible" :name="'upload'">
-      <div class="control-box">
-        <div class="control-line-label">导入导出</div>
-        <div class="control-line">
-          <div class="control-checkbox">
-            <MyButton data-color="green" @click="importDataBySkland()">从森空岛导入</MyButton>
-            <MyButton data-color="green" @click="exportOperatorExcel()">导出为Excel</MyButton>
-            <!--            <MyButton data-color="red" @click="resetPopupVisible = !resetPopupVisible">清空所有数据</MyButton>-->
-          </div>
-        </div>
-        <div class="control-line">
-          <div class="control-line-tip">
-            如果遇到不正常干员练度信息，可尝试使用“清空所有数据”按钮，清空导入的数据，再次导入<br>
-          </div>
-        </div>
-      </div>
-    </c-collapse-item>
+          <v-tabs-window-item value="干员练度推荐" v-loading>
+            <div class="operator-recommend-popup-container operator-recommend-avatar-variables">
+              <div class="operator-recommend-card-wrap">
+                <div class="operator-recommend-card"
+                     v-for="(recommend,index) in operatorRecommendList" :key="index">
+                  <div class="operator-avatar-wrap">
+                    <div class="operator-avatar">
+                      <div :class="getAvatar(recommend.charId)"></div>
+                    </div>
+                    <span class="operator-name">{{ recommend.name }}</span>
+                  </div>
 
+                  <div class="operator-skill-icon-item"
+                       v-show="recommend.info.type==='skill'">
+                    <div class="operator-skill-icon-sprite">
+                      <div :class="getSkillSprite(recommend.info.iconId)"></div>
+                    </div>
+                    <!--              <div class="skill-name">{{ recommend.info.name }}</div>-->
+                  </div>
+                  <div v-show="recommend.info.type==='equip'" class="operator-equip-image-wrap">
+                    <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt=""
+                         class="operator-equip-image">
+                    <div class="equip-name">{{ recommend.info.iconId }}</div>
+                  </div>
 
-    <c-popup :visible="resetPopupVisible" v-model:visible="resetPopupVisible">
-      <div class="popup_action_tip">
-        此操作将清空一图流账号上保存的所有干员数据，确定要执行操作吗？
-      </div>
-      <div class="control-checkbox">
-        <div class="btn btn-red" @click="operatorDataReset()">确定</div>
-        <div style="width: 80px;height: 50px"></div>
-        <div class="btn" @click="resetPopupVisible = !resetPopupVisible">取消</div>
-      </div>
-    </c-popup>
+                  <div class="recommend-text">
+                    {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>
+                    {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}
+                  </div>
 
-
-    <!--    干员统计弹窗-->
-    <c-popup v-model="statisticalPopupVisible">
-      <!--          干员统计-->
-      <OperatorStatisticalTable v-model="statisticalResultV2"></OperatorStatisticalTable>
-
-    </c-popup>
-
-
-    <c-popup v-model="recommendPopupVisible">
-      <div class="operator-recommend-popup-container operator-recommend-avatar-variables">
-        <div class="operator-recommend-card-wrap">
-          <div class="operator-recommend-card"
-               v-for="(recommend,index) in operatorRecommendList" :key="index">
-            <div class="operator-avatar-wrap">
-              <div class="operator-avatar">
-                <div :class="getAvatar(recommend.charId)"></div>
+                </div>
               </div>
-              <span class="operator-name">{{ recommend.name }}</span>
             </div>
+          </v-tabs-window-item>
+        </v-tabs-window>
+      </v-card-text>
 
-            <div class="operator-skill-icon-item"
-                 v-show="recommend.info.type==='skill'">
-              <div class="operator-skill-icon-sprite">
-                <div :class="getSkillSprite(recommend.info.iconId)"></div>
-              </div>
-              <!--              <div class="skill-name">{{ recommend.info.name }}</div>-->
-            </div>
-            <div v-show="recommend.info.type==='equip'" class="operator-equip-image-wrap">
-              <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt=""
-                   class="operator-equip-image">
-              <div class="equip-name">{{ recommend.info.iconId }}</div>
-            </div>
+    </v-card>
 
-            <div class="recommend-text">
-              {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>
-              {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}
-            </div>
+    <!--    <c-popup :visible="resetPopupVisible" v-model:visible="resetPopupVisible">-->
+    <!--      <div class="popup_action_tip">-->
+    <!--        此操作将清空一图流账号上保存的所有干员数据，确定要执行操作吗？-->
+    <!--      </div>-->
+    <!--      <div class="control-checkbox">-->
+    <!--        <div class="btn btn-red" @click="operatorDataReset()">确定</div>-->
+    <!--        <div style="width: 80px;height: 50px"></div>-->
+    <!--        <div class="btn" @click="resetPopupVisible = !resetPopupVisible">取消</div>-->
+    <!--      </div>-->
+    <!--    </c-popup>-->
 
-          </div>
-        </div>
-      </div>
 
-    </c-popup>
 
-    <!--    干员推荐-->
-    <c-collapse-item-v2 v-model:visible="collapseRecommendVisible" :name="'recommend'">
-      <div class="control-box">
-        <div class="operator-form">
-          <div class="operator-recommend-card" v-for="(recommend,index) in operatorRecommendList" :key="index">
-            <div class="operator-avatar">
-              <div :class="getAvatar(recommend.charId)"></div>
-              <div class="operator-name">{{ recommend.name }}</div>
-            </div>
-            <div v-show="recommend.info.type==='skill'" class="operator-skill-icon-sprite">
-              <div :class="getSkillSprite(recommend.info.iconId)"></div>
-              <div class="sprite-alt">{{ recommend.info.name }}</div>
-            </div>
-            <div v-show="recommend.info.type==='equip'" class="operator-skill-icon-sprite">
-              <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt="" class="operator-equip-image">
-              <div class="sprite-alt">{{ recommend.info.iconId }}</div>
-            </div>
-
-            <div class="recommend-text">
-              {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>
-              {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </c-collapse-item-v2>
 
     <!--   干员表单-->
     <div class="operator-form">
-      <div class="operator-card" v-for="(operator, char_index) in operatorList" :key="char_index"
+      <v-card class="operator-card" v-for="(operator, char_index) in operatorList" :key="char_index"
            @click="updateOperatorPopup(char_index)">
         <div class="operator-avatar-wrap">
           <div class="operator-avatar">
@@ -788,7 +643,7 @@ onMounted(() => {
           <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
         </div>
 
-      </div>
+      </v-card>
     </div>
 
 

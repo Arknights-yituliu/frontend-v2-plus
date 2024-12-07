@@ -22,6 +22,8 @@ function updateData() {
     {label: '4⭐干员', value: 'rarity4'}
   ]
 
+  console.log("统计数据:"+props.modelValue)
+
   for (const item of operatorGroup) {
     setData(item)
   }
@@ -96,26 +98,23 @@ function strShowLength(num) {
 }
 
 watch(() => props.modelValue, () => {
-  updateData()
-})
 
+})
+updateData()
 
 </script>
 
 <template>
 
   <div class="statistical-popup-container">
-    <div class="detail-card" v-for="(group,index) in allData" :key="index">
-      <div class="detail-card-title">{{ group.title }}</div>
-      <div class="operator-info-table">
-        <div class="operator-info-item" v-for="(data,index) in group.data" :key="index">
+    <v-card class="operator-statistical-card" :title="group.title" v-for="(group,index) in allData" :key="index">
+        <div class="operator-statistical-item" v-for="(data,index) in group.data" :key="index">
           <span class="info-label">{{ data.label }}</span>
           <span class="info-value">{{ data.value }}</span>
         </div>
-      </div>
-    </div>
+    </v-card>
 
-    <div class="detail-card">
+    <div class="operator-statistical-card">
       <div class="detail-card-title">未招募干员</div>
       <div style="margin: 4px;display: flex;flex-wrap: wrap">
         <SpriteImage :image-name="operator.charId" original-size="180" display-size="40"
@@ -124,12 +123,12 @@ watch(() => props.modelValue, () => {
       </div>
     </div>
 
-    <div class="detail-card">
+    <div class="operator-statistical-card">
       <div class="detail-card-title">干员消耗理智排行</div>
       <OperatorInfo v-for="(item,index) in modelValue.apCostRanking" :key="index" :operator-info="item"></OperatorInfo>
     </div>
 
-    <div class="detail-card">
+    <div class="operator-statistical-card">
       <div class="detail-card-title">材料消耗情况</div>
       <div class="item-cost-data">
         <p style="">总计消耗{{ apCostCount.toFixed(0) }} 理智</p>

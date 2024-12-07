@@ -3,9 +3,6 @@
 import {ref} from "vue";
 import "/src/assets/css/about.scss"
 
-import 'mdui/components/card.js';
-import { setColorScheme } from 'mdui/functions/setColorScheme';
-setColorScheme('#1766f8');
 
 const requestOptions = {
   method: 'GET',
@@ -63,25 +60,26 @@ const formatLinkData = (data, localized = 'zh_CN') => {
 </script>
 
 <template>
-  <div style="background-color: rgb(var(--mdui-color-primary-light));width: 40px;height: 40px;"> </div>
+
   <div class="tool-link-page">
-    <mdui-card v-for="(item,index) in toolLinks" :key="index" class="tool-link-card">
+    <v-card v-for="(item,index) in toolLinks" :key="index" class="tool-link-card">
       <div class="tool-link-card-content">
         <div class="f-link-card-header">
           <img :src="item.icon_url" alt="" class="f-link-avatar" @click="openNewPage(item.url)">
           <span class="f-link-name">{{ item.name }}</span>
         </div>
         <div class="f-link-tag-wrap">
-          <n-tag type="info" round v-for="(tag,index) in item.tags" :key="index" style="margin: 4px">
+          <v-chip v-for="(tag,index) in item.tags" :key="index" style="margin: 4px" color="primary">
             {{ tag }}
-          </n-tag>
+          </v-chip>
         </div>
         <p>{{ item.description }}</p>
       </div>
-      <n-button quaternary type="error" v-for="(link,index) in item.links" @click="openNewPage(link.url)">
+      <v-btn rounded="x-large" type="primary" class="tool-link-button"  v-for="(link,index) in item.links" @click="openNewPage(link.url)">
         {{ link.name }}
-      </n-button>
-    </mdui-card>
+      </v-btn>
+    </v-card>
+
   </div>
 
 </template>

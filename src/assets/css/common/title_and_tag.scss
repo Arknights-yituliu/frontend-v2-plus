@@ -1,35 +1,33 @@
 .module-header {
+    padding: 12px 0;
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-end;
-    padding: 12px 0;
+    align-items: center;
+    //border: 1px solid red;
 }
 
 .module-title {
-    width: fit-content;
     height: 60px;
+    position: relative;
 }
 
 .module-title h1 {
-    padding-right: 16px;
-    padding-left: 2px;
     line-height: 1;
     font-size: 36px;
     font-weight: bolder;
-    margin-top: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .module-title h4 {
     line-height: 1.5;
-    margin-top: -28px;
-    padding-top: 6px;
-    padding-left: 2px;
-    padding-right: 4px;
     background-color: #888888;
+    width: 100%;
     color: #ffffff;
     border-left: 8px solid #6495ed;
-    z-index: 1;
     font-size: 14px;
+    position: absolute;
+    top: 30px;
 }
 
 .module-tip {
@@ -123,12 +121,14 @@
 
     .module-title h1 {
         font-size: 24px;
+        position: relative;
+        z-index: 1;
     }
 
     .module-title h4 {
         font-size: 10px;
-        margin-top: -20px;
-        z-index: 1;
+        position: absolute;
+        top: 22px;
     }
 
     .module-tip {
@@ -145,9 +145,5 @@
         margin: 2px 4px;
     }
 
-    .tag-button{
-        font-size: 14px;
-        line-height: 14px;
-        padding: 2px 8px;
-    }
+
 }

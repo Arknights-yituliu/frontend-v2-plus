@@ -1,0 +1,13 @@
+.v-chip[type='primary'] {
+  background-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-surface));
+  box-shadow: none;
+  margin: 4px;
+}
+
+.v-chip[type='secondary'] {
+  background-color: rgba(var(--v-theme-primary), var(--v-secondary-opacity));
+  box-shadow: none;
+  color: rgb(var(--v-theme-primary));
+  margin: 4px;
+}
