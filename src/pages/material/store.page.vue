@@ -5,7 +5,7 @@ import {onMounted, ref} from 'vue'
 import cookie from 'js-cookie'
 import storeAPI from '/src/api/store.js'
 import materialAPI from '/src/api/material.js'
-import {getStageConfig} from "/src/utils/GetUserConfig.js";
+import userService from "/src/service/UserService.js";
 
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表
@@ -20,7 +20,7 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 
 function getStoreData() {
   // 遍历常驻商店格式化数据
-  const config = getStageConfig()
+  const config = userService.getStageConfig()
   materialAPI.getStorePermDataV4(config).then(response => {
     const perm = response.data
     for (let i = 0; i < storeTypeList.length; i++) {
@@ -34,6 +34,7 @@ function getStoreData() {
       })
     }
   })
+
 
   materialAPI.getActStoreV4(config).then(response => {
     actStoreList.value = response.data

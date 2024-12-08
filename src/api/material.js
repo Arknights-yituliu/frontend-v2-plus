@@ -2,8 +2,6 @@ import request from "/src/api/request";
 
 export default {
 
-
-
   /**
    * 获取关卡效率，按材料系列分组
    * @param expCoefficient 经验书价值系数
@@ -46,7 +44,7 @@ export default {
    */
   getNewChapterStage(){
     return request({
-      url: `stage/chapter?expCoefficient=0.625&sampleSize=300&zoneCode=14-`,
+      url: `/stage/chapter?expCoefficient=0.625&sampleSize=300&zoneCode=14-`,
       method: "get",
     });
   },
@@ -140,5 +138,13 @@ export default {
       data:data
     });
   },
+
+  checkItemValue(data){
+    return request({
+      url: `/check/item/value`,
+      method:"post",
+      data:data
+    })
+  }
 
 };

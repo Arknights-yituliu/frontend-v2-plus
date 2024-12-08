@@ -7,7 +7,7 @@ import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import {dataFormat} from '/src/utils/DateUtil.js'
-import {getStageConfig} from '/src/utils/GetUserConfig.js'
+import userService from '/src/service/UserService.js'
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 
 import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
@@ -53,7 +53,7 @@ let updateTime = ref('')
 
 // 获取关卡推荐数据
 function getStageResult() {
-  const config =  getStageConfig()
+  const config =  userService.getStageConfig()
   stageApi.getRecommendedStage(config).then(response => {
     updateTime.value = response.data.updateTime
     stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
@@ -338,7 +338,7 @@ function formatPcHistoryTableData() {
  * 获取历史活动关卡数据
  */
 function getHistoryActStage() {
-  const config = getStageConfig()
+  const config = userService.getStageConfig()
   // 获取历史活动up材料信息
   stageApi.getHistoryActStageV4(config).then(response => {
     // 历史活动数据
@@ -392,7 +392,7 @@ function filterOrundumStage() {
 }
 
 function getOrundumRecommendedStage() {
-  const config = getStageConfig()
+  const config = userService.getStageConfig()
   stageApi.getOrundumRecommendedStageV4(config).then(response => {
     formatOrundumRecommendedStage(response.data)
   })

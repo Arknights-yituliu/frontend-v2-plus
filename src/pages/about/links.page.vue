@@ -85,12 +85,7 @@ const formatLinkData = (data, localized = 'zh_CN') => {
 </template>
 
 <style scoped>
-.f-link-card-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  padding-bottom: 200px;
-}
+
 
 
 .f-link-card-header {
@@ -100,9 +95,6 @@ const formatLinkData = (data, localized = 'zh_CN') => {
   padding: 8px;
 }
 
-.f-link-card-content {
-  height: 190px;
-}
 
 .f-link-avatar {
   width: 40px;
@@ -124,25 +116,6 @@ const formatLinkData = (data, localized = 'zh_CN') => {
   flex-wrap: wrap;
 }
 
-.f-link-tag {
-  display: block;
-  padding: 4px 12px;
-  margin: 4px;
-  font-size: 14px;
-  border-radius: 20px;
-  background: rgb(61, 111, 224);
-  color: white;
-}
 
-.f-link {
-  width: 280px;
-  border-radius: 20px;
-  text-align: center;
-  overflow: hidden;
-  line-height: 30px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-}
 
 </style>

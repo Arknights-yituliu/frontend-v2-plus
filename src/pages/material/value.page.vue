@@ -5,7 +5,7 @@ import ModuleHeader from '@/components/ModuleHeader.vue';
 import {ref, onMounted} from "vue";
 import materialAPI from "/src/api/material.js";
 import {exportExcel} from "/src/utils/ExportExcel";
-import {getStageConfig} from "@/utils/GetUserConfig.js";
+import userService from "@/service/UserService.js";
 
 let opETextTheme = ref("op_title_etext_light")
 
@@ -68,7 +68,7 @@ function formattedItemDisplayList(itemList) {
 
 
 onMounted(() => {
-  const config = getStageConfig()
+  const config = userService.getStageConfig()
   materialAPI.getItemValueTableV4(config).then(response => {
     itemValueList.value = response.data
     let tmpList = []

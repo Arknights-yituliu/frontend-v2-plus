@@ -21,7 +21,6 @@
 <script setup>
 
 
-
 //导航
 import '/src/assets/svg/iconfont.css'
 
@@ -65,8 +64,6 @@ import Loading from '/src/pages/layout/loading.vue'
 import ComponentsContainer from "/src/components/ComponentsContainer.vue";
 import {onMounted, ref} from "vue";
 import NoticeBoard from "/src/pages/layout/NoticeBoard.vue";
-
-
 
 let theme_type = ref("theme_init")
 
