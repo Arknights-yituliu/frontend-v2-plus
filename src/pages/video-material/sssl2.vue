@@ -1,5 +1,4 @@
 <script setup>
-import cookie from 'js-cookie'
 import {onMounted, ref} from 'vue'
 import FixedNav from "/src/components/FixedNav.vue";
 import storeAPI from '/src/api/store.js'
@@ -93,13 +92,12 @@ function getEfficiency(num, acc = 2) {
 function switchStore(item) {
   item.hide = !item.hide
   const storeStatusList = storeListFormat.value.map(t => t.hide)
-  cookie.set('storeStatusList', JSON.stringify(storeStatusList), {expires: 30})
+  localStorage.setItem('storeStatusList', JSON.stringify(storeStatusList))
 }
 
 onMounted(() => {
   getStoreData()
-  // 取cookie存的商店显隐状态
-  const storeStatusList = JSON.parse(cookie.get('storeStatusList') || '[]')
+  const storeStatusList = JSON.parse(localStorage.getItem('storeStatusList') || '[]')
   for (let i = 0; i < storeListFormat.value.length; i++) {
     storeListFormat.value[i].hide = storeStatusList[i]
   }
