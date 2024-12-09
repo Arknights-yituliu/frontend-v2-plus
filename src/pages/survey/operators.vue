@@ -355,9 +355,9 @@ function sortOperatorList(property) {
   sortProperty.value[property] = !sortProperty.value[property]
   operatorList.value.sort((a, b) => {
     if (sortProperty.value[property]) {
-      return a[property] - b[property];
-    } else {
       return b[property] - a[property];
+    } else {
+      return a[property] - b[property];
     }
   });
 }
@@ -537,7 +537,35 @@ onMounted(() => {
                      @click="addFilterCondition('itemObtainApproach',itemObtainApproach)">
                 {{ itemObtainApproach }}
               </v-btn>
-
+            </div>
+            <div class="checkbox">
+              <v-btn variant="text" class="checkbox-label">模组</v-btn>
+              <v-btn :type="selectedBtn('equip',true)"
+                     class="checkbox-button" rounded="x-large"
+                     @click="addFilterCondition('equip',true)">
+                已拥有
+              </v-btn>
+              <v-btn :type="selectedBtn('equip', false)"
+                     class="checkbox-button" rounded="x-large"
+                     @click="addFilterCondition('equip', false)">
+                未拥有
+              </v-btn>
+            </div>
+            <div class="checkbox">
+              <v-btn variant="text" class="checkbox-label">排序</v-btn>
+              <v-btn type="primary"
+                     @click="sortOperatorList('rarity')">
+                按稀有度
+              </v-btn>
+              <v-btn type="primary"
+                     @click="sortOperatorList('date')">
+                按实装顺序
+              </v-btn>
+<!--              <v-btn type="primary"-->
+<!--                     class="checkbox-button" rounded="x-large"-->
+<!--                     @click="addFilterCondition('equip', false)">-->
+<!--                未拥有-->
+<!--              </v-btn>-->
             </div>
           </v-tabs-window-item>
 
