@@ -1,11 +1,11 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
-import {cMessage} from "/src/utils/Message";
+import {cMessage} from "/src/utils/message";
 import surveyApi from "/src/api/userInfo"
 import operator_table_simple from '/src/static/json/survey/character_table_simple.json'
 import "/src/assets/css/survey/home.scss";
 import "/src/assets/css/survey/home.phone.scss";
-import {getUserInfo} from '/src/pages/survey/service/userInfo.js'
+import {getUserInfo} from '/src/utils/survey/userInfo.js'
 import MyButton from '/src/components/Button.vue'
 
 let avatar = []

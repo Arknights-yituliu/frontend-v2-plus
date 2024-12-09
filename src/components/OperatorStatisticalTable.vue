@@ -6,7 +6,7 @@ import OperatorInfo from "/src/components/OperatorInfo.vue";
 import MyButton from "/src/components/Button.vue";
 
 const props = defineProps(["modelValue", 'statisticalData']);
-import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
+import operatorStatistical from "/src/utils/survey/operatorStatistical"
 import SpriteImage from "/src/components/SpriteImage.vue";
 
 

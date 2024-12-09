@@ -52,10 +52,10 @@ import "/src/assets/css/survey/survey_nav.css";
 import MyButton from '/src/components/Button.vue'
 
 import {onMounted, ref, watch} from "vue";
-import {cMessage} from "/src/utils/Message";
+import {cMessage} from "/src/utils/message";
 
 import surveyApi from "/src/api/userInfo";
-import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
+import {getUserInfo} from "/src/utils/survey/userInfo.js";
 import {useRoute} from "vue-router";
 
 

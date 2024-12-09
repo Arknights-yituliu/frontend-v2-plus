@@ -103,7 +103,7 @@ function openPopup() {
   }
 }
 
-import {debounce} from "../utils/Debounce.js";
+import {debounce} from "../utils/debounce.js";
 
 const setInsetDebounce = debounce(setInset,500)
 

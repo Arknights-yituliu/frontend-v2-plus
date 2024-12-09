@@ -10,7 +10,7 @@ import POTENTIAL_TABLE from '/src/static/json/tools/potential_gacha_resources.js
 import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'
 import FIXED_TABLE from '/src/static/json/tools/schedule_fixed.json'
 import materialAPI from "/src/api/material.js";
-import {cMessage} from "/src/utils/Message.js";
+import {cMessage} from "/src/utils/message.js";
 import {ElNotification} from "element-plus";
 
 

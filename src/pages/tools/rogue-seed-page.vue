@@ -2,12 +2,12 @@
 import {ref} from 'vue'
 import '/src/assets/css/rogueSeed/rogue-seed-page.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
-import {cMessage} from "@/utils/Message.js";
-import {copyTextToClipboard} from "/src/utils/CopyText.js";
+import {cMessage} from "@/utils/message.js";
+import {copyTextToClipboard} from "/src/utils/copyText.js";
 import SpriteImage from "@/components/SpriteImage.vue";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import Popup from '/src/components/popup.vue'
-import {debounce} from "@/utils/Debounce.js";
+import {debounce} from "@/utils/debounce.js";
 
 let charIdDict = new Map()
 

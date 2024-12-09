@@ -1,4 +1,4 @@
-import {cMessage} from "./Message.js";
+import {cMessage} from "./message.js";
 
 /**
  * 函数防抖

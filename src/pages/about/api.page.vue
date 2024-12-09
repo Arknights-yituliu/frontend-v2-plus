@@ -142,7 +142,7 @@
 <script setup>
 import {ref} from "vue";
 import apiJson from "/src/static/json/api.json";
-import {cMessage} from "/src/utils/Message";
+import {cMessage} from "/src/utils/message";
 import '/src/assets/css/api.scss'
 
 let visibleList = ref([0, 1, 2, 3, 4, 5, 6, 7]);

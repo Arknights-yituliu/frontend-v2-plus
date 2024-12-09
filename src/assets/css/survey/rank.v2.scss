@@ -1,7 +1,23 @@
+.survey-rank-page-v2{
+  .v-data-table-header__content{
+    font-weight: bold;
+  }
+
+  .rank-card{
+    width: 96%;
+    margin:6px auto;
+  }
+
+  .rank-table{
+
+  }
+
+}
+
+
 .survey-rank-page {
   width: 100%;
   min-height: 100vh;
-  //overflow-x: scroll;
   box-sizing: border-box;
   padding: 2px;
 
@@ -22,7 +38,6 @@
 
     margin: 12px auto;
     align-items: center;
-    font-size: 14px;
     justify-content: center;
 
     .rank-table-legend {
@@ -117,6 +132,6 @@
       }
     }
   }
-
-
 }
+
+

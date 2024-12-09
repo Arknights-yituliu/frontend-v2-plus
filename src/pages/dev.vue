@@ -1,97 +1,119 @@
 <script setup>
 
+import {ref} from "vue";
 
+let sortBy = ref([{key: 'calories', order: 'asc'}],)
+const headers = [
+  {
+    title: 'Dessert (100g serving)',
+    align: 'start',
+    sortable: false,
+    key: 'name',
+  },
+  {title: 'Calories', key: 'calories'},
+  {title: 'Fat (g)', key: 'fat'},
+  {title: 'Carbs (g)', key: 'carbs'},
+  {title: 'Protein (g)', key: 'protein'},
+  {title: 'Iron (%)', key: 'iron'},
+]
+const desserts = [
+  {
+    name: 'Frozen Yogurt',
+    calories: 200,
+    fat: 6.0,
+    carbs: 24,
+    protein: 4.0,
+    iron: '1%',
+  },
+  {
+    name: 'Ice cream sandwich',
+    calories: 200,
+    fat: 9.0,
+    carbs: 37,
+    protein: 4.3,
+    iron: '1%',
+  },
+  {
+    name: 'Eclair',
+    calories: 300,
+    fat: 16.0,
+    carbs: 23,
+    protein: 6.0,
+    iron: '7%',
+  },
+  {
+    name: 'Cupcake',
+    calories: 300,
+    fat: 3.7,
+    carbs: 67,
+    protein: 4.3,
+    iron: '8%',
+  },
+  {
+    name: 'Gingerbread',
+    calories: 400,
+    fat: 16.0,
+    carbs: 49,
+    protein: 3.9,
+    iron: '16%',
+  },
+  {
+    name: 'Jelly bean',
+    calories: 400,
+    fat: 0.0,
+    carbs: 94,
+    protein: 0.0,
+    iron: '0%',
+  },
+  {
+    name: 'Lollipop',
+    calories: 400,
+    fat: 0.2,
+    carbs: 98,
+    protein: 0,
+    iron: '2%',
+  },
+  {
+    name: 'Honeycomb',
+    calories: 400,
+    fat: 3.2,
+    carbs: 87,
+    protein: 6.5,
+    iron: '45%',
+  },
+  {
+    name: 'Donut',
+    calories: 500,
+    fat: 25.0,
+    carbs: 51,
+    protein: 4.9,
+    iron: '22%',
+  },
+  {
+    name: 'KitKat',
+    calories: 500,
+    fat: 26.0,
+    carbs: 65,
+    protein: 7,
+    iron: '6%',
+  },
+]
 
 </script>
 
 
 <template>
-  <div>
+  <v-data-table
+      v-model:sort-by="sortBy"
+      :headers="headers"
+      :items="desserts"
+  ></v-data-table>
 
-  </div>
-  <div>
-
-  </div>
+  <pre>{{ sortBy }}</pre>
 
 </template>
 
-<style scoped>
-.container1 {
 
-  display: flex;
-
-  flex-direction: row;
-
-  position: relative;
-
-}
-
-
-@media (max-width: 1000px) {
-
-  .container1 {
-
-    display: grid;
-
-    grid-template-rows: auto 1fr; /* 第一组高度自适应，第二组占据剩余空间 */
-
-    grid-gap: 20px; /* 可以根据需要调整两组之间的间距 */
-
-  }
-
-
-  .group1 {
-
-    position: sticky;
-
-    top: 20px;
-
-    z-index: 1; /* 确保第一组元素位于第二组之上 */
-
-  }
-
-}
-
-
-.group1 {
-  position: sticky;
-
-  top: 20px;
-  height: 1px;
-  z-index: 1; /* 确保第一组元素位于第二组之上 */
-  /* 在大屏幕下，a元素的相关样式 */
-
-}
-
-
-.group2 {
-
-  display: flex;
-
-  flex-direction: column; /* 小屏幕下，b和c元素纵向排列 */
-
-}
-
-
-.a{
-  background-color: palevioletred;
-  width: 600px;
-
-}
-
-.b{
-  background-color: #00a2a2;
-  width: 600px;
-  height: 1000px;
-}
-
-.c{
-  background-color: #00a1d6;
-  width: 600px;
-  height: 1000px;
-}
-
-</style>
 
 
 

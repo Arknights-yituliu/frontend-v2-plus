@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/survey/login.v2.scss'
-import {cMessage} from "/src/utils/Message.js";
+import {cMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
 import MyButton from '/src/components/Button.vue'
 

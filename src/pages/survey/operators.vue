@@ -1,19 +1,19 @@
 <script setup>
-import {cMessage} from "/src/utils/Message.js";
-import {filterByCharacterProperty, professionDict, yearDict} from "./service/common"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import operatorStatistical from "/src/pages/survey/service/operatorStatistical"
+import {cMessage} from "/src/utils/message.js";
+import {filterByCharacterProperty, professionDict, yearDict} from "../../utils/survey/common.js"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import operatorStatistical from "/src/utils/survey/operatorStatistical"
 import userAPI from "/src/api/userInfo";
 import operatorDataAPI from "/src/api/operatorData.js"
-import sklandApi from '/src/pages/survey/service/skland'
+import sklandApi from '/src/utils/survey/skland'
 import {onMounted, ref} from "vue";
-import operatorRecommend from "/src/pages/survey/service/operatorRecommend";
+import operatorRecommend from "/src/utils/survey/operatorRecommend";
 import characterTable from '/src/static/json/survey/character_table_simple.json'
-import {exportExcel} from '/src/utils/ExportExcel.js'
+import {exportExcel} from '/src/utils/exportExcel.js'
 
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
-import {debounce} from "/src/utils/Debounce";
-import {getUserInfo} from "/src/pages/survey/service/userInfo.js";
+import {debounce} from "/src/utils/debounce";
+import {getUserInfo} from "/src/utils/survey/userInfo.js";
 import {useRouter} from "vue-router";
 
 import MyButton from '/src/components/Button.vue'
@@ -279,13 +279,12 @@ function dataOptionClass(charId, current, property) {
  * 返回筛选按钮是否选中的样式
  * @param {string} property 干员属性名
  * @param {string|number|boolean} rule 筛选规则
- * @returns {boolean} class 按钮样式
+ * @returns  class 按钮样式
  */
 function selectedBtn(property, rule) {
-  if (filterCondition.value[property].indexOf(rule) > -1) {
-    return "primary"
+  if (filterCondition.value[property].indexOf(rule) < 0) {
+    return "tonal"
   }
-  return "secondary"
 
 }
 
@@ -470,7 +469,7 @@ onMounted(() => {
 
 
 <template>
-  <div class="survey-operator-page">
+  <div class="survey-operator-page survey-common">
     <v-card style="width: 96%;margin: 0 auto">
       <v-tabs
           v-model="headerTag"
@@ -491,7 +490,7 @@ onMounted(() => {
           <v-tabs-window-item value="干员筛选">
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">职业</v-btn>
-              <v-btn :type="selectedBtn('profession', profession.value)"
+              <v-btn color="primary" :variant="selectedBtn('profession', profession.value)"
                      class="checkbox-button" rounded="x-large"
                      v-for="(profession,index) in professionDict" :key="index"
                      @click="addFilterCondition('profession', profession.value)">
@@ -500,7 +499,7 @@ onMounted(() => {
             </div>
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">稀有度</v-btn>
-              <v-btn :type="selectedBtn('rarity', rarity)"
+              <v-btn color="primary" :variant="selectedBtn('rarity', rarity)"
                      class="checkbox-button" rounded="x-large"
                      v-for="(rarity,index) in RARITY_TABLE" :key="index"
                      @click="addFilterCondition('rarity', rarity)">
@@ -509,7 +508,7 @@ onMounted(() => {
             </div>
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">年份</v-btn>
-              <v-btn :type="selectedBtn('year',key)"
+              <v-btn color="primary" :variant="selectedBtn('year',key)"
                      class="checkbox-button" rounded="x-large"
                      v-for="(year, key) in yearDict" :key="key"
                      @click="addFilterCondition('year', key)">
@@ -518,12 +517,12 @@ onMounted(() => {
             </div>
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">是否拥有</v-btn>
-              <v-btn :type="selectedBtn('own',true)"
+              <v-btn color="primary" :variant="selectedBtn('own',true)"
                      class="checkbox-button" rounded="x-large"
                      @click="addFilterCondition('own',true)">
                 已拥有
               </v-btn>
-              <v-btn :type="selectedBtn('own', false)"
+              <v-btn color="primary" :variant="selectedBtn('own', false)"
                      class="checkbox-button" rounded="x-large"
                      @click="addFilterCondition('own', false)">
                 未拥有
@@ -531,7 +530,7 @@ onMounted(() => {
             </div>
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">获得方式</v-btn>
-              <v-btn :type="selectedBtn('itemObtainApproach',itemObtainApproach)"
+              <v-btn color="primary" :variant="selectedBtn('itemObtainApproach',itemObtainApproach)"
                      class="checkbox-button" rounded="x-large"
                      v-for="(itemObtainApproach,index) in itemObtainApproachType" :key="index"
                      @click="addFilterCondition('itemObtainApproach',itemObtainApproach)">
@@ -540,12 +539,12 @@ onMounted(() => {
             </div>
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">模组</v-btn>
-              <v-btn :type="selectedBtn('equip',true)"
+              <v-btn color="primary" :variant="selectedBtn('equip',true)"
                      class="checkbox-button" rounded="x-large"
                      @click="addFilterCondition('equip',true)">
                 已拥有
               </v-btn>
-              <v-btn :type="selectedBtn('equip', false)"
+              <v-btn color="primary" :variant="selectedBtn('equip', false)"
                      class="checkbox-button" rounded="x-large"
                      @click="addFilterCondition('equip', false)">
                 未拥有
@@ -561,19 +560,14 @@ onMounted(() => {
                      @click="sortOperatorList('date')">
                 按实装顺序
               </v-btn>
-<!--              <v-btn type="primary"-->
-<!--                     class="checkbox-button" rounded="x-large"-->
-<!--                     @click="addFilterCondition('equip', false)">-->
-<!--                未拥有-->
-<!--              </v-btn>-->
             </div>
           </v-tabs-window-item>
 
           <v-tabs-window-item value="数据导入导出">
-            <v-btn data-color="green" type="primary" class="checkbox-button" @click="importDataBySkland()">
+            <v-btn color="primary" class="checkbox-button" @click="importDataBySkland()">
               从森空岛导入
             </v-btn>
-            <v-btn data-color="green" type="primary" class="checkbox-button" @click="exportOperatorExcel()">
+            <v-btn color="primary" class="checkbox-button" @click="exportOperatorExcel()">
               导出为Excel
             </v-btn>
           </v-tabs-window-item>

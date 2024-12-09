@@ -4,10 +4,10 @@ import OPERATOR_TABLE from '/src/static/json/survey/character_list.json'
 import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
-import {dataFormat} from "/src/utils/DateUtil.js";
+import {dataFormat} from "/src/utils/dateUtil.js";
 import SpriteImage from "/src/components/SpriteImage.vue";
-import {createPopover, popoverOnOpen} from "/src/utils/Popover.js";
-import {getViewportInfo} from "/src/utils/GetViewportInfo.js";
+import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
+import {getViewportInfo} from "/src/utils/getViewportInfo.js";
 
 const operatorMap = new Map()
 const charIdMap = new Map()

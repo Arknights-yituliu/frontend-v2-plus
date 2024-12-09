@@ -5,7 +5,7 @@ import CreateOperatorDialog from './components/createOperatorDialog'; // 新建�
 import ModuleHeader from '@/components/ModuleHeader.vue';
 
 import { ref } from 'vue';
-import { exportExcel } from '@/utils/ExportExcel'; // 表格导出
+import { exportExcel } from '@/utils/exportExcel.js'; // 表格导出
 import { professionDictJSON } from './js/maps' // 职业字典JSON
 import { operatorList } from './js/formatOperatorData' // 干员列表
 import { rarityList } from './js/baseData' // 星级列表

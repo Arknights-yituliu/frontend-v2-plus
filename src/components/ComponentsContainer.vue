@@ -1,8 +1,8 @@
 <script setup>
 import {onMounted, watch} from "vue";
-import {debounce} from "/src/utils/Debounce.js";
+import {debounce} from "/src/utils/debounce.js";
 
-import {popupResize} from "/src/utils/Popover.js";
+import {popupResize} from "/src/utils/popover.js";
 onMounted(() => {
   window.addEventListener('resize', debounce(popupResize));
 })

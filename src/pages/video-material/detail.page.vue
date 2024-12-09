@@ -36,7 +36,7 @@
 import "/src/assets/css/stageDetail.css";
 import stageApi from "/src/api/material";
 import {onMounted, ref} from "vue";
-import {cMessage} from '/src/utils/Message'
+import {cMessage} from '/src/utils/message'
 import collapse from '/src/custom/collapse.vue'
 
 let BTN_COLOR = {

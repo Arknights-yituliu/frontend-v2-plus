@@ -2,11 +2,11 @@
 import '/src/assets/css/information/logistics.scss'
 import '/src/assets/css/information/logistics.phone.scss'
 
-import {operatorFilterConditionTable} from "/src/utils/BuildingSkillFilter";
+import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import {onMounted, ref} from "vue";
-import {debounce} from "/src/utils/Debounce";
-import {translate} from "/src/utils/I18n";
+import {debounce} from "/src/utils/debounce";
+import {translate} from "/src/utils/i18n";
 import MyButton from '/src/components/Button.vue'
 import DescriptionExplain from "/src/components/DescriptionExplain.vue";
 

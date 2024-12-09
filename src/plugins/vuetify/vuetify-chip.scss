@@ -11,3 +11,24 @@
   color: rgb(var(--v-theme-primary));
   margin: 4px;
 }
+
+.v-chip[type='primary'] {
+  background-color: rgba(var(--v-theme-success), var(--v-secondary-opacity));
+  box-shadow: none;
+  color: rgb(var(--v-theme-success));
+  margin: 4px;
+}
+
+.v-chip[type='success'] {
+  background-color: rgba(var(--v-theme-success));
+  box-shadow: none;
+  color: rgb(var(--v-theme-surface));
+  margin: 4px;
+}
+
+.v-chip[plain] {
+  background-color: rgba(var(--v-theme-success), var(--v-secondary-opacity));
+  box-shadow: none;
+  color: rgb(var(--v-theme-success));
+  margin: 4px;
+}

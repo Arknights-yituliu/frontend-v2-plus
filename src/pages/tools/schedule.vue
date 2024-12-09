@@ -11,18 +11,18 @@ import BUILDING_TABLE from '/src/static/json/build/building_table.json'
 
 import buildingApi from '/src/api/building.js'
 import operatorDataAPI from '/src/api/operatorData.js'
-import {operatorFilterConditionTable} from '/src/utils/BuildingSkillFilter.js'
-import {translate} from '/src/utils/I18n.js'
-import {getText} from '/src/utils/FileConversion.js'
-import {debounce} from "/src/utils/Debounce.js";
-import {cMessage} from '/src/utils/Message.js'
-import {createPopover, popoverOnOpen} from "/src/utils/Popover.js";
+import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
+import {translate} from '/src/utils/i18n.js'
+import {getText} from '/src/utils/fileConversion.js'
+import {debounce} from "/src/utils/debounce.js";
+import {cMessage} from '/src/utils/message.js'
+import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
 import userAPI from "/src/api/user.js";
 
 import MyButton from '/src/components/Button.vue'
 import SpriteImage from "@/components/SpriteImage.vue";
 
-import {downloadJsonFile} from "/src/utils/DownLoad.js";
+import {downloadJsonFile} from "/src/utils/download.js";
 
 let operatorOwnMap = new Map()
 

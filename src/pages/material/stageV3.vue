@@ -6,7 +6,7 @@ import FixedNav from "/src/components/FixedNav.vue";
 import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
-import {dataFormat} from '/src/utils/DateUtil.js'
+import {dataFormat} from '/src/utils/dateUtil.js'
 import userService from '/src/service/UserService.js'
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 

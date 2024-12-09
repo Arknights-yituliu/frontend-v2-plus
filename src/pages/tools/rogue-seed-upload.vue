@@ -2,13 +2,13 @@
 import {ref} from 'vue'
 import '/src/assets/css/rogueSeed/rogue-seed-upload.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
-import {cMessage} from "/src/utils/Message.js";
+import {cMessage} from "/src/utils/message.js";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import SpriteImage from "/src/components/SpriteImage.vue";
-import {professionDict} from "/src/pages/survey/service/common.js";
+import {professionDict} from "/src/utils/survey/common.js";
 
-import {compressImage, getDataUrl} from '/src/utils/FileConversion.js'
-import {debounce} from "@/utils/Debounce.js";
+import {compressImage, getDataUrl} from '/src/utils/fileConversion.js'
+import {debounce} from "@/utils/debounce.js";
 
 let operatorTable = new Map()
 

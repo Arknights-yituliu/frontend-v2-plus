@@ -74,7 +74,6 @@ function getProfession(str) {
 function filterByCharacterProperty(filterCondition, characterInfo) {
     let show = true;
     for (const property in filterCondition) {
-
         if (property === 'rarity' || property === 'profession' || property === 'own' ||
             property === 'itemObtainApproach') {
             const flag = hasProperty(filterCondition, characterInfo, property);

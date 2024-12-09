@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 
 import ElementPlus from 'element-plus'
 import App from './App.vue'
@@ -14,6 +14,7 @@ import 'vuetify/styles'
 import vuetify from "/src/plugins/vuetify/vuetify.js";
 import '/src/plugins/vuetify/vuetify.scss'
 
+
 const app = createApp(App)
 
 const files = import.meta.glob('/src/custom/*.vue', {eager: true})
@@ -23,11 +24,7 @@ for (let index in files) {
 }
 
 
-
-app.use(ElementPlus,{
-    locale: zhCn,
-})
-
+app.use(ElementPlus, {locale: zhCn,})
 app.use(router)
-
-app.use(vuetify).mount('#app')
+app.use(vuetify)
+app.mount('#app')
