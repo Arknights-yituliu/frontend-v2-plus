@@ -13,7 +13,7 @@ import {getUserToken} from "/src/utils/GetUserToken.js";
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
 const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'
 const BILIBILI_TOKEN_API = 'https://web-api.hypergryph.com/account/info/ak-b'
-const SKLAND_LINK = 'https://www.skland.com/'
+const SKLAND_LINK = 'https://www.skland.com/index '
 const CONSOLE_CODE = 'localStorage.getItem(\'SK_OAUTH_CRED_KEY\')+\',\'+localStorage.getItem(\'SK_TOKEN_CACHE_KEY\')'
 
 function openLinkOnNewPage(url) {
