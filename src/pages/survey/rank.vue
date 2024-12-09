@@ -1,24 +1,32 @@
 <script setup>
 import "/src/assets/css/survey/rank.v2.scss";
 import "/src/assets/css/survey/rank.phone.scss";
-import {filterByCharacterProperty, professionDict, yearDict} from "../../utils/survey/common.js";
+import {filterByCharacterProperty, professionDict, yearDict} from "/src/utils/survey/common.js";
 import {onMounted, ref} from "vue";
 import character_table_simple from "/src/static/json/survey/character_table_simple.json";
-import MyButton from '/src/components/Button.vue'
 import SpriteImage from "/src/components/SpriteImage.vue";
 import operatorDataApi from "/src/api/operatorData";
-import OperatorDataLineChart from "/src/components/LineChart.vue";
-import TableSortButton from "../../components/TableSortButton.vue";
-import OperatorStatisticalTable from "@/components/OperatorStatisticalTable.vue";
 
-let rarityDict = [1, 2, 3, 4, 5, 6];
-let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
-let itemObtainApproachType = ['常驻干员', '赠送干员', '限定干员']
+import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
+import {debounce} from "@/utils/debounce.js";
+
+
 let operatorsStatisticsList = ref([]);
 let userCountText = ref(0);
 let updateTimeText = ref("2023-05-01");
+let displayList = ref([])
 
-let headerTag = ref('干员筛选')
+const addFilterConditionAndFilterOperator = debounce((func,index) => {
+  func(index)
+  displayList.value = filterOperatorList(operatorsStatisticsList.value)
+}, 500)
+
+function btnAction(action){
+   if(!action){
+     return "tonal"
+   }
+}
+
 
 
 //表头标题
@@ -81,7 +89,7 @@ function getCharStatisticsResult() {
         item.modDS = item.modD.rank3
         item.modAS = item.modA.rank3
         item.available = true
-
+        item.date = charInfo.date
       } else {
         item.available = false
       }
@@ -89,6 +97,7 @@ function getCharStatisticsResult() {
     result = result.filter(e => e.name)
 
     operatorsStatisticsList.value = result
+    displayList.value =  filterOperatorList(operatorsStatisticsList.value)
     addFilterCondition('rarity', 6)
     userCountText.value = userCount;
     updateTimeText.value = updateTime;
@@ -125,7 +134,7 @@ function getSkillName(skill, index) {
 
 //判断按钮是否选择赋予样式
 function selectedBtn(property, rule) {
-  if (filter_condition.value[property].indexOf(rule) <0) {
+  if (filter_condition.value[property].indexOf(rule) < 0) {
     return "tonal"
   }
 
@@ -307,7 +316,6 @@ const getEliteLineData = (data) => {
 }
 
 onMounted(() => {
-
   getCharStatisticsResult()
 })
 
@@ -318,59 +326,16 @@ onMounted(() => {
 
 
   <div class="survey-rank-page-v2 survey-common">
-
     <v-card class="rank-card">
-      <div class="checkbox">
-        <v-btn variant="text" class="checkbox-label">职业</v-btn>
-        <v-btn color="primary" :variant="selectedBtn('profession', profession.value)"
+      <div class="checkbox" v-for="(conditions,module) in operatorFilterCondition" :key="module">
+        <v-btn variant="text" class="checkbox-label">{{ conditions.label }}</v-btn>
+        <v-btn color="primary" :variant="btnAction(condition.action)"
                class="checkbox-button" rounded="x-large"
-               v-for="(profession,index) in professionDict" :key="index"
-               @click="addFilterCondition('profession', profession.value)">
-          {{ profession.label }}
+               v-for="(condition,index) in conditions.conditions" :key="index"
+               @click="addFilterConditionAndFilterOperator(conditions.actionFunc,index)">
+          {{ condition.label }}
         </v-btn>
       </div>
-      <div class="checkbox">
-        <v-btn variant="text" class="checkbox-label">稀有度</v-btn>
-        <v-btn color="primary" :variant="selectedBtn('rarity', rarity)"
-               class="checkbox-button" rounded="x-large"
-               v-for="(rarity,index) in RARITY_TABLE" :key="index"
-               @click="addFilterCondition('rarity', rarity)">
-          {{ rarity }}★
-        </v-btn>
-      </div>
-      <div class="checkbox">
-        <v-btn variant="text" class="checkbox-label">年份</v-btn>
-        <v-btn color="primary" :variant="selectedBtn('year',key)"
-               class="checkbox-button" rounded="x-large"
-               v-for="(year, key) in yearDict" :key="key"
-               @click="addFilterCondition('year', key)">
-          {{ year.label }}
-        </v-btn>
-      </div>
-      <div class="checkbox">
-        <v-btn variant="text" class="checkbox-label">获得方式</v-btn>
-        <v-btn color="primary" :variant="selectedBtn('itemObtainApproach',itemObtainApproach)"
-               class="checkbox-button" rounded="x-large"
-               v-for="(itemObtainApproach,index) in itemObtainApproachType" :key="index"
-               @click="addFilterCondition('itemObtainApproach',itemObtainApproach)">
-          {{ itemObtainApproach }}
-        </v-btn>
-      </div>
-      <div class="checkbox">
-        <v-btn variant="text" class="checkbox-label">模组</v-btn>
-        <v-btn color="primary" :variant="selectedBtn('equip',true)"
-               class="checkbox-button" rounded="x-large"
-               @click="addFilterCondition('equip',true)">
-          已拥有
-        </v-btn>
-        <v-btn color="primary" :variant="selectedBtn('equip', false)"
-               class="checkbox-button" rounded="x-large"
-               @click="addFilterCondition('equip', false)">
-          未拥有
-        </v-btn>
-      </div>
-
-      <v-btn color="red" variant="tonal">111111</v-btn>
 
       <v-chip color="primary">
         以下展示数据仅为技能专三率和模组3级开启率
@@ -388,7 +353,7 @@ onMounted(() => {
       <v-data-table
           v-model:sort-by="sortBy"
           :headers="headers2"
-          :items="operatorsStatisticsList"
+          :items="displayList"
           hide-default-footer
           items-per-page="-1">
         <template v-slot:item.charId="{ item }">
@@ -425,169 +390,6 @@ onMounted(() => {
       </v-data-table>
     </v-card>
 
-
-
-    <!-- 常驻条 -->
-    <div class="control-header">
-      <MyButton data-color="blue" @click="collapseFilter()">
-        筛选
-      </MyButton>
-      <div id="updateTime">
-        调查人数{{ userCountText }}<br/>
-        更新时间{{ updateTimeText }}
-      </div>
-    </div>
-
-    <!-- 筛选模块 -->
-    <c-collapse-item :name="'filter'" :visible="collapse_filter_visible">
-      <div class="control-box">
-        <div class="control-line">
-          <div class="control-line-label">职业</div>
-          <div class="control-checkbox">
-            <MyButton data-color="blue"
-                      v-for="(profession,index) in professionDict" :key="index"
-                      :active="selectedBtn('profession', profession.value)"
-                      @click="addFilterCondition('profession', profession.value)">
-              {{ profession.label }}
-            </MyButton>
-          </div>
-        </div>
-
-        <div class="control-line">
-          <div class="control-line-label">稀有度</div>
-          <div class="control-checkbox">
-            <MyButton data-color="orange"
-                      v-for="(rarity,index) in rarityDict" :key="index"
-                      :active="selectedBtn('rarity', rarity)"
-                      @click="addFilterCondition('rarity', rarity)">
-              {{ rarity }}★
-            </MyButton>
-          </div>
-        </div>
-
-        <div class="control-line">
-          <div class="control-line-label">其他</div>
-          <div class="control-checkbox">
-            <MyButton data-color="green" :active="selectedBtn('equip', true)"
-                      @click="addFilterCondition('equip', true)">
-              模组已实装
-            </MyButton>
-            <MyButton data-color="green" :active="selectedBtn('equip', false)"
-                      @click="addFilterCondition('equip', false)">
-              模组未实装
-            </MyButton>
-            <MyButton data-color="green" :active="selectedBtn('itemObtainApproach', '赠送干员')"
-                      @click="addFilterCondition('itemObtainApproach', '赠送干员')">
-              赠送干员
-            </MyButton>
-            <MyButton data-color="green" :active="selectedBtn('itemObtainApproach', '限定干员')"
-                      @click="addFilterCondition('itemObtainApproach', '限定干员')">
-              限定干员
-            </MyButton>
-          </div>
-        </div>
-
-      </div>
-
-    </c-collapse-item>
-
-
-    <!--    <div class="rank-table-legend-box">-->
-    <!--      &lt;!&ndash;      <div class="rank-table-legend line-0"></div>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <span>专精/模组1级</span>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <div class="rank-table-legend line-1"></div>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <span>专精/模组2级、未持有</span>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <div class="rank-table-legend line-2"></div>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      <span>专精/模组3级、持有</span>&ndash;&gt;-->
-    <!--      <span>以下展示数据仅为技能专三率和模组3级开启率</span>-->
-    <!--    </div>-->
-
-
-    <div class="rank-table-wrap" style="display: none">
-      <div class="rank-table">
-        <div class="rank-table-line rank-table-line-title">
-          <div class="rank-table-line-item" :class="index===0?'rank-table-line-item-long':''"
-               v-for="(header,index) in headers" :key="index">
-            <TableSortButton
-                :value="selectedHeader.value"
-                :label="header.value"
-                :order="selectedHeader.order"
-                @click="sortByProperty(header.value)">
-              {{ header.label }}
-            </TableSortButton>
-          </div>
-        </div>
-        <div class="rank-table-line" v-for="(result, index) in operatorsStatisticsList" :key="index"
-             v-show="result.show">
-          <div class="rank-table-line-item rank-table-line-item-long" style="position: relative">
-            <div class="operator-name">{{ result.name }}</div>
-            <SpriteImage :image-name="result.charId" display-size="60"
-                         original-size="180"></SpriteImage>
-          </div>
-          <div class="rank-table-line-item">
-            <span class="rank-table-line-item-text"> {{ getOwnData(result.own) }}</span>
-          </div>
-          <div class="rank-table-line-item">
-            <span class="rank-table-line-item-text"> {{ getEliteData(result.elite) }}</span>
-          </div>
-          <div class="rank-table-line-item show-complete-data">
-            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.skill1) }}</span>
-            <div class="complete-data">
-              <div v-for="(data,index) in formatLineData(result.skill1)">
-                {{ `专精${index + 1}级：${data.toFixed(1)}%` }}
-              </div>
-            </div>
-            <!--            <OperatorDataLineChart :line-data="formatLineData(result.skill1)"></OperatorDataLineChart>-->
-          </div>
-          <div class="rank-table-line-item show-complete-data">
-            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.skill2) }}</span>
-            <div class="complete-data">
-              <div v-for="(data,index) in formatLineData(result.skill2)">
-                {{ `专精${index + 1}级：${data.toFixed(1)}%` }}
-              </div>
-            </div>
-            <!--            <OperatorDataLineChart :line-data="formatLineData(result.skill2)"></OperatorDataLineChart>-->
-          </div>
-          <div class="rank-table-line-item show-complete-data">
-            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.skill3) }}</span>
-            <div class="complete-data">
-              <div v-for="(data,index) in formatLineData(result.skill3)">
-                {{ `专精${index + 1}级：${data.toFixed(1)}%` }}
-              </div>
-            </div>
-            <!--            <OperatorDataLineChart :line-data="formatLineData(result.skill3)"></OperatorDataLineChart>-->
-          </div>
-          <div class="rank-table-line-item show-complete-data">
-            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.modX) }}</span>
-            <div class="complete-data">
-              <div v-for="(data,index) in formatLineData(result.modX)">
-                {{ `模组${index + 1}级：${data.toFixed(1)}%` }}
-              </div>
-            </div>
-            <!--            <OperatorDataLineChart :line-data="formatLineData(result.modX)"></OperatorDataLineChart>-->
-          </div>
-          <div class="rank-table-line-item show-complete-data">
-            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.modY) }}</span>
-            <div class="complete-data">
-              <div v-for="(data,index) in formatLineData(result.modY)">
-                {{ `模组${index + 1}级：${data.toFixed(1)}%` }}
-              </div>
-            </div>
-            <!--            <OperatorDataLineChart :line-data="formatLineData(result.modY)"></OperatorDataLineChart>-->
-          </div>
-          <div class="rank-table-line-item show-complete-data">
-            <span class="rank-table-line-item-text"> {{ getSkillDataOrEquipData(result.modD) }}</span>
-            <div class="complete-data">
-              <div v-for="(data,index) in formatLineData(result.modD)">
-                {{ `模组${index + 1}级：${data.toFixed(1)}%` }}
-              </div>
-            </div>
-            <!--            <OperatorDataLineChart :line-data="formatLineData(result.modD)"></OperatorDataLineChart>-->
-          </div>
-        </div>
-
-      </div>
-    </div>
   </div>
 </template>
 

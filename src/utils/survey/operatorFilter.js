@@ -1,6 +1,7 @@
 import {ref} from "vue";
 
 const filterByYear = (condition, data) => {
+    console.log(data)
     return data.date >= condition.start && data.date <= condition.end;
 }
 
@@ -16,15 +17,15 @@ const filterByItemObtainApproach = (condition, data) => {
     return data.itemObtainApproach === condition;
 }
 
-const filterByEquip = (data) => {
-    return !!data.equip;
+const filterByEquip = (condition, data) => {
+    return condition === !!data.equip;
 }
 
 const filterByEquipType = (type, data) => {
     return data[type] > 0;
 }
 
-const filterByOwn = (data) => {
+const filterByOwn = (condition, data) => {
     return data.own;
 }
 
@@ -61,7 +62,7 @@ let operatorFilterCondition = ref({
             {label: "3★", value: 3, func: filterByRarity, action: false},
             {label: "4★", value: 4, func: filterByRarity, action: false},
             {label: "5★", value: 5, func: filterByRarity, action: false},
-            {label: "6★", value: 6, func: filterByRarity, action: false},
+            {label: "6★", value: 6, func: filterByRarity, action: true},
         ]
     },
     'date': {
@@ -98,8 +99,8 @@ let operatorFilterCondition = ref({
             operatorFilterCondition.value.equip.conditions[index].action = !operatorFilterCondition.value.equip.conditions[index].action
         },
         conditions: [
-            {label: "模组已实装", value: 1, func: filterByEquip},
-            {label: "模组未实装", value: 2, func: filterByEquip},
+            {label: "模组已实装", value: true, func: filterByEquip},
+            {label: "模组未实装", value: false, func: filterByEquip},
             {label: "开放X模组的干员", value: 'modX', func: filterByEquipType, action: false},
             {label: "开放Y模组的干员", value: 'modY', func: filterByEquipType, action: false},
             {label: "开放D模组的干员", value: 'modD', func: filterByEquipType, action: false},
@@ -111,6 +112,7 @@ let operatorFilterCondition = ref({
         type: 'own',
         actionFunc: (index) => {
             operatorFilterCondition.value.own.conditions[index].action = !operatorFilterCondition.value.own.conditions[index].action
+
         },
         conditions: [
             {label: "已招募", value: true, filterByOwn, action: false},
@@ -118,3 +120,36 @@ let operatorFilterCondition = ref({
         ]
     },
 })
+
+
+function filterOperatorList(list) {
+    let displayList = []
+    for (const index in list) {
+        const operator = list[index]
+        let display = true
+        for (const c in operatorFilterCondition.value) {
+            const item = operatorFilterCondition.value[c];
+            const conditions = item.conditions
+            let flag = true
+            for (const condition of conditions) {
+                if (condition.action) {
+                    flag = condition.func(condition.value, operator)
+                    if (flag) {
+                        break
+                    }
+                }
+            }
+            display = display&&flag
+        }
+
+        if (display) {
+            displayList.push(operator)
+        }
+    }
+
+    return displayList;
+}
+
+export {
+    operatorFilterCondition, filterOperatorList
+}
