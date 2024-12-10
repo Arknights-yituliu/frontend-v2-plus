@@ -1,32 +1,61 @@
 <template>
   <div class="survey-login-page">
     <div class="survey-login-btn" v-show="userInfo.status<0">
-      <router-link to="/survey/account/register"  >
+      <router-link to="/survey/account/register">
         <span class="header-button-label" style="margin-right: 12px">注册</span>
       </router-link>
-      <router-link to="/survey/account/login"  >
+      <router-link to="/survey/account/login">
         <span class="header-button-label">登录</span>
       </router-link>
     </div>
 
-    <div v-show="userInfo.status>0">
-      <c-popover :name="'avatar'">
-        <template #title>
-          <div class="nav-avatar-image-wrap">
-            <div :class="getSprite(userInfo.avatar)"></div>
-            <span class="nav-user-name">{{userInfo.userName}}</span>
-          </div>
-        </template>
+    <v-menu v-show="userInfo.status>0">
+      <template v-slot:activator="{ props }" >
+        <SpriteImage :image-name="userInfo.avatar" style="background-color: white" display-size="50" original-size="180"
+                     rounded-corner="100" v-bind="props" >
+        </SpriteImage>
+        <!--        <v-btn  ></v-btn>-->
+      </template>
 
-        <div class="survey_nav_menu" id="avatar">
-          <a class="survey_nav_menu_item menu_href" href="/survey/account/home"> 个人中心 </a>
-          <a class="survey_nav_menu_item menu_href" @click="loginVisible=!loginVisible">退出登录 </a>
-        </div>
-      </c-popover>
-    </div>
+      <v-list>
+        <v-list-item href="/survey/account/home">
+          <v-btn variant="text" text="个人中心" @click="router.push({name:'AccountHome'})">
+          </v-btn>
+        </v-list-item>
+        <v-list-item @click="loginVisible=!loginVisible">
+          <v-dialog max-width="360">
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-btn
+                  v-bind="activatorProps"
+                  color="surface-variant"
+                  text=" 退出登录"
+                  variant="text"
+              ></v-btn>
+            </template>
+            <template v-slot:default="{ isActive }">
+              <v-card title="Dialog">
+                <v-card-text>
+                  <v-alert text="是否退出登录？" type="warning"></v-alert>
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      text="取消"
+                      @click="isActive.value = false"
+                  ></v-btn>
+                </v-card-actions>
+              </v-card>
+            </template>
+
+          </v-dialog>
+
+        </v-list-item>
+      </v-list>
+    </v-menu>
 
 
-    <c-popup :visible="loginVisible" v-model:visible="loginVisible" >
+    <c-popup :visible="loginVisible" v-model:visible="loginVisible">
       <div class="login-card" v-show="userInfo.status>0">
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
@@ -56,13 +85,14 @@ import {cMessage} from "/src/utils/message";
 
 import surveyApi from "/src/api/userInfo";
 import {getUserInfo} from "/src/utils/survey/userInfo.js";
-import {useRoute} from "vue-router";
+import {useRoute,useRouter} from "vue-router";
+import SpriteImage from "@/components/SpriteImage.vue";
 
+const router = useRouter();
 
 let loginStatus = ref('')
 
 let loginVisible = ref(false);
-
 
 
 let inputData = ref({
@@ -78,10 +108,8 @@ let inputData = ref({
 });
 
 
-
 //用户输入的用户名，用obj没准后期有别的字段
-let userInfo = ref({uid:0,userName: "未登录",akUid:"0", status: -100, token: void 0}); //用户信息(用户名，用户id，用户状态)
-
+let userInfo = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0}); //用户信息(用户名，用户id，用户状态)
 
 
 function getLoginParams() {
@@ -111,7 +139,6 @@ function getLoginParams() {
 }
 
 
-
 async function getUserInfoByToken() {
 
   userInfo.value = await getUserInfo()
@@ -136,7 +163,7 @@ onMounted(() => {
 
 const route = useRoute();
 
-watch(()=>route.fullPath,(newVal,oldValue)=>{
+watch(() => route.fullPath, (newVal, oldValue) => {
 
   getUserInfoByToken()
 })
@@ -147,6 +174,7 @@ watch(()=>route.fullPath,(newVal,oldValue)=>{
 .checkbox-btn {
   border: none;
 }
+
 .survey-login-page a {
   text-decoration: none;
 }

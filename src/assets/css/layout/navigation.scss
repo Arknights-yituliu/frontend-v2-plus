@@ -1,24 +1,4 @@
-.drawer-navigation {
-  .v-list-item {
-    --indent-padding: 32px;
-  }
 
-  .navigation-item-content {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color:inherit;
-    .navigation-item-content-spacer{
-      width: 16px;
-    }
-  }
-}
-
-
-.drawer-navigation-group-item .v-list-item {
-  color: red;
-  padding-inline-start: 40px
-}
 
 .header-button-label {
   font-size: 16px;

@@ -452,7 +452,7 @@ onMounted(() => {
 
 
   <!-- 地图效率Start -->
-  <div id="stage" class="s-stage-page">
+  <div id="stage" class="stage-page">
     <!-- 标题区域 -->
 
     <div class="module-header">

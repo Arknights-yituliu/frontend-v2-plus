@@ -13,12 +13,15 @@ import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activi
 import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
+import StageLegend from "@/components/material/StageLegend.vue";
+
 // import {getButtonSize} from '/src/plugins/vuetify/getDisplaySize'
 
-function getButtonSize(){
+function getButtonSize() {
 
 }
 
+let legendDisplay = ref(false)
 
 
 //漫游导航指引
@@ -26,7 +29,7 @@ const guideOpen = ref(false)
 
 let itemIdList = [] // 材料表
 
-const itemIdListInit =()=>{
+const itemIdListInit = () => {
   itemIdList = []
   // 先把当作表头的材料表转为一个集合
   for (const itemId in ITEM_SERIES) {
@@ -53,7 +56,7 @@ let updateTime = ref('')
 
 // 获取关卡推荐数据
 function getStageResult() {
-  const config =  userService.getStageConfig()
+  const config = userService.getStageConfig()
   stageApi.getRecommendedStage(config).then(response => {
     updateTime.value = response.data.updateTime
     stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
@@ -449,7 +452,7 @@ onMounted(() => {
 
 
   <!-- 地图效率Start -->
-  <div id="stage" class="s-stage-page">
+  <div id="stage" class="stage-page">
     <!-- 标题区域 -->
 
     <div class="module-header">
@@ -457,186 +460,36 @@ onMounted(() => {
         <h1>推荐关卡</h1>
         <h4>Best Stages</h4>
       </div>
-      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="scrollToOrundumTable()">搓玉数据</v-btn>
-      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="scrollToHistoryStageTable()">往期活动</v-btn>
-      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="scrollToFrequentlyAskedQuestion()">常见问题</v-btn>
-      <v-chip color="primary" variant="tonal" :size="getButtonSize()" >更新时间：{{ updateTime }}</v-chip>
+      <v-btn color="primary" variant="tonal" class="v-btn" :size="getButtonSize()"
+             @click="legendDisplay=!legendDisplay">显示图例说明
+      </v-btn>
+      <v-btn color="primary" variant="tonal" class="v-btn" :size="getButtonSize()"
+             @click="scrollToOrundumTable()">搓玉数据
+      </v-btn>
+      <v-btn color="primary" variant="tonal" class="v-btn" :size="getButtonSize()"
+             @click="scrollToHistoryStageTable()">往期活动
+      </v-btn>
+      <v-btn color="primary" variant="tonal" class="v-btn" :size="getButtonSize()"
+             @click="scrollToFrequentlyAskedQuestion()">常见问题
+      </v-btn>
+      <v-chip color="primary" variant="tonal" class="v-btn" :size="getButtonSize()">
+        更新时间：{{ updateTime }}
+      </v-chip>
 
     </div>
-    <!--    <div class="op_title">-->
-    <!--      <div class="op_title_text">-->
-    <!--        <div class="op_title_ctext">推荐关卡</div>-->
-    <!--        <div class="op_title_etext_light">Best Stages</div>-->
-    <!--      </div>-->
-    <!--      <div class="op_title_tag">-->
-    <!--        <div class="op_tag_1" @click="scrollToOrundumTable()">搓玉数据</div>-->
-    <!--        <div class="op_tag_1" @click="scrollToHistoryStageTable()">往期活动</div>-->
-    <!--        <div class="op_tag_1" @click="scrollToFrequentlyAskedQuestion()">常见问题</div>-->
-    <!--        <div class="tab_text" @click="guideOpen=true" style="cursor: pointer">*点我查看操作指引</div>-->
-    <!--        <span class="tab_text">更新时间：{{ updateTime }}</span>-->
-    <!--      </div>-->
-    <!-- <div class="op_title_tag" style="height: 24px">
-        <div class="tab_text">
-          占位
-        </div>
-      </div> -->
-    <!--    </div>-->
+
 
     <!-- 说明区域 -->
 
-    <div class="recommendation-table-wrap" style="display: none">
-      <h1>活动期间刷图推荐</h1>
-
-      <table class="recommendation-table">
-        <tbody>
-        <tr>
-          <td>材料</td>
-          <td>推荐关卡</td>
-          <td>关卡效率</td>
-        </tr>
-        <tr>
-          <td>全新装置</td>
-          <td>14-16、14-8、14-12、14-19</td>
-          <td>125%(副本掉率提升+理智小样)</td>
-        </tr>
-        <tr>
-          <td>酮凝集组</td>
-          <td>14-20、14-14、14-6、14-9、14-17</td>
-          <td>125%(副本掉率提升+理智小样)</td>
-        </tr>
-        <tr>
-          <td>化合切削液</td>
-          <td>12-17</td>
-          <td>112%(仅理智小样)</td>
-        </tr>
-        <tr>
-          <td>固源岩系</td>
-          <td>1-7</td>
-          <td>112%(仅理智小样)</td>
-        </tr>
-        <tr>
-          <td> 其他精英材料</td>
-          <td>对应的主线最优关</td>
-          <td>112%(仅理智小样)</td>
-        </tr>
-        <tr>
-          <td>资源本<br>龙门币/芯片/红票等</td>
-          <td>对应的最高级资源关</td>
-          <td> 112%(仅理智小样)</td>
-        </tr>
-        </tbody>
-      </table>
-      <span>*关卡效率：关卡掉落物品的总价值 / 关卡理智消耗，数值越大越推荐刷。<br>图上数据非最终结论，仅供参考，其他材料up关卡未必差。后续可查看一图流网站实时更新的材料一图流</span>
-      <span>代币仅在第14章掉落，优先搬空商店。<br>效率计算：明日方舟一图流 https://ark.yituliu.cn<br>掉落数据：企鹅物流数据统计 https://penguin-stats.cn<br></span>
-
-      <!--      <span style="text-align: right;">制图：&emsp;B站@罗德岛基建BETA</span>-->
-      <span style="text-align: right;">数据收集时间：&emsp;2024.5.3 09:00</span>
-    </div>
 
 
-    <!-- 图例3.0 -->
-    <div class="stage-legend" @click="scrollToLegendDescription" id="sStageLegend">
-      <table class="stage-legend-table">
-        <tbody>
-        <tr>
-          <td>
-            <div class="stage-legend-sprite">
-              <div :class="getLegendSprite('AP_GAMEPLAY')"></div>
-            </div>
-          </td>
-          <td class="stage-legend-text-1">
-            <span>需要所有材料→</span>
-          </td>
-          <td class="stage-legend-text-2">
-            <span>10-10</span>
-          </td>
-          <td class="stage-legend-text-3">
-            <span class="stage-legend-text-bold">[综合效率]</span>
-            <br>
-            <span class="stage-legend-text-underline">
-                所有掉落物的价值之和
-            </span>
-            <br>
-            <span>理智消耗</span>
-          </td>
-          <td class="stage-legend-text-4">
-            <span>[综合效率]</span>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <div class="stage-legend-sprite">
-              <div :class="getLegendSprite('30024')"></div>
-            </div>
-          </td>
-          <td class="stage-legend-text-1">
-            <span>
-              需要<span style="color: #c01dd7;font-weight: bold">紫材料→</span>
-              </span>
-          </td>
-          <td class="stage-legend-text-2">
-            <span>LE-5</span>
-          </td>
-          <td class="stage-legend-text-3">
-            <span class="stage-legend-text-bold" style="color: #c01dd7;">[T4效率]</span>
-            <br>
-            <span class="stage-legend-text-underline">
-              <span style="color: #c01dd7;font-weight: bold">紫</span>
-              <span style="color: #0276f8;font-weight: bold">蓝</span>
-              <span style="color: #01c028;font-weight: bold">绿</span>
-              <span>白糖价值之和 </span>
-            </span>
-            <br>
-            <span>理智消耗</span>
-
-          </td>
-          <td class="stage-legend-text-4">
-            <span>[综合效率]</span>
-          </td>
-        </tr>
-
-        <tr>
-          <td>
-            <div class="stage-legend-sprite">
-              <div :class="getLegendSprite('30023')"></div>
-            </div>
-          </td>
-          <td class="stage-legend-text-1">
-            <span>
-              需要<span style="color: #0276f8;font-weight: bold">蓝材料→</span>
-              </span>
-          </td>
-          <td class="stage-legend-text-2">
-            <span>LE-5</span>
-          </td>
-          <td class="stage-legend-text-3">
-            <span class="stage-legend-text-bold" style="color: #0276f8;">[T3效率]</span>
-            <br>
-            <span class="stage-legend-text-underline">
-              <span style="color: #0276f8;font-weight: bold">蓝</span>
-              <span style="color: #01c028;font-weight: bold">绿</span>
-              <span>白糖价值之和 </span>
-            </span>
-            <br>
-            <span>理智消耗</span>
-
-          </td>
-          <td class="stage-legend-text-4">
-            <span>[综合效率]</span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-
+    <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
 
     <!-- 卡片区域 -->
     <div id="stageForCards" class="stage-card-wrap">
       <div class="stage-card" v-for="(stage, index) in stageCardData" :key="index"
            @click="getItemTableData(index, true)"
-           :id="`c-${index}`"
-      >
+           :id="`c-${index}`">
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.r3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">
@@ -798,7 +651,9 @@ onMounted(() => {
         <h1>搓玉数据表</h1>
         <h4>Orundum</h4>
       </div>
-      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="filterOrundumStage()">仅显示1-7、CW-6和活动关</v-btn>
+      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="filterOrundumStage()">
+        仅显示1-7、CW-6和活动关
+      </v-btn>
     </div>
 
     <div class="tableArea" style="margin:0 8px;max-width: 720px;border: 1px solid #00000040;border-radius: 8px;">
@@ -870,7 +725,7 @@ onMounted(() => {
       </table>
     </v-card>
     <!-- 移动端小列表 -->
-    <v-card  class="activity-table-phone-card" id="act-table-phone">
+    <v-card class="activity-table-phone-card" id="act-table-phone">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActivityList" :key="index">
           <td class="activity-name-phone">{{ act.zoneName }}</td>

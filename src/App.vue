@@ -19,53 +19,66 @@ import '/src/assets/css/common/title_and_tag.scss'
 import '/src/assets/css/common/popover.scss'
 import '/src/assets/css/common/icon.scss'
 
+import '/src/assets/css/layout.scss'
 import '/src/assets/css/layout/aside.scss'
 import '/src/assets/css/layout/atom.scss'
 import '/src/assets/css/layout/basic.scss'
 import '/src/assets/css/layout/navigation.scss'
 import '/src/assets/css/layout/main.scss'
 import '/src/assets/css/common/theme.scss'
+import '/src/assets/css/vuetify_common.scss'
+
+import "/src/assets/css/survey/survey_common.css";
 
 // svg字体
 import Navigation from '/src/components/drawer/Navigation.vue'
-
+import {useTheme} from 'vuetify'
 // 旧版css，待修改
+
+const theme = useTheme()
+
+import User from '/src/components/survey/user.vue'
 
 import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 
-let theme_type = ref("theme_init")
+let customTheme = ref("")
 let drawer = ref(true)
+let rightDrawer = ref(false)
 
 
 onMounted(() => {
-  const theme_v2 = localStorage.getItem("theme_v2");
-
-  if (theme_v2 === 'dark') {
-    theme_type.value = 'theme_dark'
-  } else {
-    theme_type.value = 'theme_light'
-  }
-  document.getElementsByTagName("html").item(0).className = theme_v2 === "dark" ? "dark" : "light";
+  const themeSet = localStorage.getItem("Theme");
+  console.log(themeSet)
+  changeTheme()
 })
 
+let currentTheme = ref('dark')
+
+function changeTheme() {
+  currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark'
+  theme.global.name.value = currentTheme.value
+  document.getElementsByTagName("html").item(0).className = currentTheme.value;
+  customTheme.value = `theme-${currentTheme.value}`
+  localStorage.setItem("Theme",currentTheme.value)
+}
 
 const route = useRoute();
 const currentPath = computed(() => route.path);
 
-let pageTitle = ref("");
+let pageTitle = ref(routeMap.get(normalizePath(route.path)));
 
 watch(currentPath, (newPath, oldPath) => {
-  console.log(route)
-  pageTitle.value = routeMap.get(normalizePath(newPath))||'未定义路径'
+
+  pageTitle.value = routeMap.get(normalizePath(newPath)) || '未定义路径'
   // 在这里执行你想要的操作
 });
 
 function normalizePath(path) {
   // 如果路径是根路径 '/'，直接返回
   if (path === '/') {
-    return path;
+    return '/';
   }
 
   // 如果路径最后一位是 '/'，则去除它
@@ -74,58 +87,32 @@ function normalizePath(path) {
   }
 
   // 否则，返回原路径
-  return path;
+  return '/';
 }
 
 
 </script>
 
 <template>
-
-<!--    <div class="container color_var" id="container" :class="theme_type">-->
-
-<!--      <MyAside></MyAside>-->
-<!--      <Loading></Loading>-->
-<!--      <div class="header">-->
-<!--        <MyHeader></MyHeader>-->
-<!--      </div>-->
-<!--      <div class="main">-->
-<!--        <NoticeBoard></NoticeBoard>-->
-<!--        <router-view>-->
-<!--        </router-view>-->
-<!--      </div>-->
-<!--      <ComponentsContainer></ComponentsContainer>-->
-<!--      <MyFooter></MyFooter>-->
-<!--    </div>-->
-
-
-
-  <!--  <v-layout class="rounded rounded-md color_var" :class="theme_type" id="container">-->
-  <!--    <v-navigation-drawer>-->
-  <!--      <v-list>-->
-  <!--        <v-list-item title="Navigation drawer"></v-list-item>-->
-  <!--      </v-list>-->
-  <!--    </v-navigation-drawer>-->
-
-  <!--    <v-app-bar title="Application bar"></v-app-bar>-->
-
-  <!--    <v-main class="d-flex align-center justify-center" style="min-height: 300px;">-->
-  <!--      Main Content-->
-  <!--    </v-main>-->
-  <!--  </v-layout>-->
-
-  <v-responsive class="border rounded color_var" >
-    <v-app>
+  <v-responsive class="border rounded" >
+    <v-app class="app color_var" :class="customTheme">
       <v-navigation-drawer v-model="drawer" width="280">
-         <Navigation></Navigation>
+        <Navigation></Navigation>
       </v-navigation-drawer>
 
-      <v-app-bar :elevation="1">
+      <v-navigation-drawer v-model="rightDrawer" location="right" temporary>
+      </v-navigation-drawer>
+
+      <v-app-bar :elevation="1" color="primary">
         <template v-slot:prepend>
           <v-app-bar-nav-icon @click="drawer=!drawer"></v-app-bar-nav-icon>
         </template>
-
-        <v-app-bar-title>{{ pageTitle }}</v-app-bar-title>
+        <v-app-bar-title>{{ pageTitle }}
+        </v-app-bar-title>
+        <div class="app-bar-content">
+          <v-icon icon="mdi-theme-light-dark" size="40" @click="changeTheme"></v-icon>
+         <User></User>
+        </div>
       </v-app-bar>
 
       <v-main>
