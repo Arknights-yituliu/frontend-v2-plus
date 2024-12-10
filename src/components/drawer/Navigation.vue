@@ -34,7 +34,6 @@ for(const module in LinkedTable){
           color="primary"
           rounded
           :value="child.text"
-          style="margin: 4px"
           class="drawer-navigation-group-item">
         <router-link :to="child.path" :href="child.path" class="navigation-item-content">
           <v-icon :icon="child.icon"></v-icon>

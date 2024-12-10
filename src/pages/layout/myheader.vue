@@ -1,7 +1,7 @@
 <script setup>
 import {ref, onMounted, watchEffect} from "vue";
 import toolApi from "/src/api/tool";
-import user from "/src/pages/survey/account/user.vue";
+import user from "/src/components/survey/user.vue";
 import {routes,LinkedTable} from "/src/router/routes.js";
 import {language} from '/src/utils/i18n.js'
 import {useRoute} from 'vue-router';

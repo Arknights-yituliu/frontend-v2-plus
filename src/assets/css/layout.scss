@@ -1,0 +1,30 @@
+.app {
+  .drawer-navigation {
+    .v-list-item {
+      --indent-padding: 32px;
+    }
+
+    .navigation-item-content {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+
+      .navigation-item-content-spacer {
+        width: 16px;
+      }
+    }
+  }
+
+
+  .drawer-navigation-group-item {
+    margin: 4px
+  }
+
+  .app-bar-content {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    margin-right: 20px;
+  }
+}

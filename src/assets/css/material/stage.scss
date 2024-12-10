@@ -1,10 +1,16 @@
-.s-stage-page {
+.stage-page {
   padding: 4px;
 
+  .stage-legend-card{
+    width: fit-content;
+    padding: 8px;
+  }
+
+  .v-btn{
+     margin: 4px;
+  }
 
   .stage-legend {
-    margin-left: 8px;
-    margin-top: 4px;
     padding: 8px;
     width: fit-content;
     border-radius: 4px;
