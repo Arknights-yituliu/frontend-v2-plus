@@ -1,17 +1,13 @@
-.survey-rank-page-v2{
-  .v-data-table-header__content{
+.survey-rank-page-v2 {
+  width: 96%;
+  margin: 6px auto;
+
+  .v-data-table-header__content {
     font-weight: bold;
   }
-
   .rank-card{
-    width: 96%;
-    margin:6px auto;
+     margin: 12px 0;
   }
-
-  .rank-table{
-
-  }
-
 }
 
 
@@ -109,6 +105,7 @@
 
         .show-complete-data:hover {
           cursor: pointer;
+
           .complete-data {
             display: block;
             position: absolute;

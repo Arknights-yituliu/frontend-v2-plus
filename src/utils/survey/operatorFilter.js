@@ -99,16 +99,13 @@ let operatorFilterCondition = ref({
             operatorFilterCondition.value.equip.conditions[index].action = !operatorFilterCondition.value.equip.conditions[index].action
         },
         conditions: [
-            {label: "模组已实装", value: true, func: filterByEquip},
-            {label: "模组未实装", value: false, func: filterByEquip},
-            {label: "开放X模组的干员", value: 'modX', func: filterByEquipType, action: false},
-            {label: "开放Y模组的干员", value: 'modY', func: filterByEquipType, action: false},
-            {label: "开放D模组的干员", value: 'modD', func: filterByEquipType, action: false},
-            {label: "开放A模组的干员", value: 'modA', func: filterByEquipType, action: false},
+            {label: "模组已实装", value: true, func: filterByEquip, action: false},
+            {label: "模组未实装", value: false, func: filterByEquip, action: false},
+
         ]
     },
     'own': {
-        label: "干员招募情况",
+        label: "招募情况",
         type: 'own',
         actionFunc: (index) => {
             operatorFilterCondition.value.own.conditions[index].action = !operatorFilterCondition.value.own.conditions[index].action
@@ -121,12 +118,20 @@ let operatorFilterCondition = ref({
     },
 })
 
+//
+// {label: "开放X模组的干员", value: 'modX', func: filterByEquipType, action: false},
+// {label: "开放Y模组的干员", value: 'modY', func: filterByEquipType, action: false},
+// {label: "开放D模组的干员", value: 'modD', func: filterByEquipType, action: false},
+// {label: "开放A模组的干员", value: 'modA', func: filterByEquipType, action: false},
 
 function filterOperatorList(list) {
     let displayList = []
     for (const index in list) {
         const operator = list[index]
         let display = true
+
+        // let logText = operator.name
+
         for (const c in operatorFilterCondition.value) {
             const item = operatorFilterCondition.value[c];
             const conditions = item.conditions
@@ -140,7 +145,10 @@ function filterOperatorList(list) {
                 }
             }
             display = display&&flag
+            // logText+=`{}${flag}`
         }
+        // logText+=`{}${display}`
+        // console.log(logText)
 
         if (display) {
             displayList.push(operator)

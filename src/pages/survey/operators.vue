@@ -1,13 +1,12 @@
 <script setup>
 import {cMessage} from "/src/utils/message.js";
-import {filterByCharacterProperty, professionDict, yearDict} from "../../utils/survey/common.js"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
+import {filterByCharacterProperty, professionDict, yearDict} from "/src/utils/survey/common.js"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
 import operatorStatistical from "/src/utils/survey/operatorStatistical"
 import userAPI from "/src/api/userInfo";
 import operatorDataAPI from "/src/api/operatorData.js"
-import sklandApi from '/src/utils/survey/skland'
 import {onMounted, ref} from "vue";
 import operatorRecommend from "/src/utils/survey/operatorRecommend";
-import characterTable from '/src/static/json/survey/character_table_simple.json'
+import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import {exportExcel} from '/src/utils/exportExcel.js'
 
 import "/src/assets/css/survey/operator.scss";
@@ -15,57 +14,36 @@ import "/src/assets/css/survey/operator.phone.scss";
 import {debounce} from "/src/utils/debounce";
 import {getUserInfo} from "/src/utils/survey/userInfo.js";
 import {useRouter} from "vue-router";
+import {operatorFilterCondition, filterOperatorList} from "@/utils/survey/operatorFilter.js";
 
-import MyButton from '/src/components/Button.vue'
-import OperatorStatisticalTable from "../../components/OperatorStatisticalTable.vue";
+import OperatorStatisticalTable from "/src/components/OperatorStatisticalTable.vue";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
-let RARITY_TABLE = [1, 2, 3, 4, 5, 6];  //星级
-let itemObtainApproachType = ['常驻干员', '赠送干员', '限定干员']
 
-let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});  //用户信息
+
+
+let displayTabHeader = ref('干员筛选')
+
+//用户信息
+let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});
 
 /**
  * 获取本地缓存的用户信息
  */
 async function getUserInfoAndOperatorData() {
-
   userData.value = await getUserInfo()
   getOperatorData()
 }
 
-let headerTag = ref('干员筛选')
 
-/**
- * 检查用户状态
- * @param notice 是否弹出提示
- * @returns {boolean} 状态
- */
-function checkUserStatus(notice) {
-  if (!userData.value.token) {
-    if (notice) {
-      cMessage('请先注册或登录一图流账号', 'error')
-    }
-    return true;
-  }
-  return false
-}
-
-
-let introPopupVisible = ref(false) //网站教程弹窗显示状态
-
-/**
- * 检查是否是第一次进入页面
- */
-function checkFirstPopup() {
-  introPopupVisible.value = !introPopupVisible.value
-  localStorage.setItem("first_popup", "done");
-}
-
-
-let operatorTable = ref(characterTable);
+let operatorTable = ref(CHARACTER_TABLE);
+//后端返回的用户干员信息
 let operatorList = ref([])  //干员列表
-
+//前端筛选后的干员信息
+let displayOperatorList = ref([])  //干员列表
+let operatorIdAndIndexDict = ref({})
+//干员统计信息
+let statisticalResultV2 = ref({})
 /**
  * 找回填写过的角色信息
  */
@@ -81,48 +59,70 @@ function getOperatorData() {
   //根据一图流的token查询用户填写的干员数据
   operatorDataAPI.getOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
-    let obj = {}
-    operatorTable.value = characterTable
     //转为前端的数据格式
+    operatorList.value = []
     for (const item of list) {
-      const sCharId = item.charId;
-      obj[sCharId] = item
-      if (operatorTable.value[sCharId]) {
-        operatorTable.value[sCharId].elite = item.elite;
-        operatorTable.value[sCharId].level = item.level;
-        operatorTable.value[sCharId].potential = item.potential;
-        operatorTable.value[sCharId].mainSkill = item.mainSkill;
-        operatorTable.value[sCharId].skill1 = item.skill1;
-        operatorTable.value[sCharId].skill2 = item.skill2;
-        operatorTable.value[sCharId].skill3 = item.skill3;
-        operatorTable.value[sCharId].modX = item.modX;
-        operatorTable.value[sCharId].modY = item.modY;
-        operatorTable.value[sCharId].modD = item.modD;
-        operatorTable.value[sCharId].own = item.own;
+      const charId = item.charId;
+      if(CHARACTER_TABLE[charId]){
+        let formatData = CHARACTER_TABLE[charId]
+        formatData.elite = item.elite;
+        formatData.level = item.level;
+        formatData.potential = item.potential;
+        formatData.mainSkill = item.mainSkill;
+        formatData.skill1 = item.skill1;
+        formatData.skill2 = item.skill2;
+        formatData.skill3 = item.skill3;
+        formatData.modX = item.modX;
+        formatData.modY = item.modY;
+        formatData.modD = item.modD;
+        formatData.own = item.own;
+        formatData.modA = item.modA;
+        operatorList.value.push(formatData)
+        operatorIdAndIndexDict.value[charId] = operatorList.value.length-1
       }
     }
-    //转为前端的数据格式
-    // loadDisplayData()
+    displayOperatorList.value = filterOperatorList(operatorList.value)
     cMessage("导入了 " + list.length + " 条数据");
     statisticalResultV2.value = operatorStatistical.operatorStatisticalV2(operatorTable.value)
   });
 }
 
+/**
+ * 筛选干员
+ * @param func 筛选函数
+ * @param index 传入筛选条件索引
+ */
+const addFilterConditionAndFilterOperator = debounce((func, index) => {
+  func(index)
+  displayOperatorList.value = filterOperatorList(operatorList.value)
+  console.log(displayOperatorList.value)
+}, 500)
 
-function sleep(time) {
-  return new Promise((resolve) => setTimeout(resolve, time))
-}
-
-
-function importData() {
-  operatorList.value = []
-  for (const charId in operatorTable.value) {
-    const operator = operatorTable.value[charId]
-    if (operator.show) {
-      operatorList.value.push(operator)
-    }
+/**
+ * 根据按钮点击状态返回按钮样式
+ * @param action 状态
+ * @returns {string} 按钮样式
+ */
+function btnAction(action) {
+  if (!action) {
+    return "tonal"
   }
 }
+
+
+let operatorRecommendList = ref([]) //干员练度推荐列表
+
+
+let introPopupVisible = ref(false) //网站教程弹窗显示状态
+
+/**
+ * 检查是否是第一次进入页面
+ */
+function checkFirstPopup() {
+  introPopupVisible.value = !introPopupVisible.value
+  localStorage.setItem("first_popup", "done");
+}
+
 
 /**
  * 导出评分表的excel
@@ -155,34 +155,6 @@ function exportOperatorExcel() {
   exportExcel('干员练度表', list)
 }
 
-
-let importPopupVisible = ref(false)  //导入教程弹窗显示状态
-let SKlandCREDAndSECRET = ref("");  //森空岛cred
-let bindAccount = ref(false) //玩家uid是否绑定了一图流账号
-let bindingList = ref([])  //绑定列表
-let currentUid = ref('')  //默认uid
-let importFlag = ref(false) //是否导入
-let collapseImportVisible = ref(true) //导入折叠栏显示状态
-
-//控制导入折叠栏关闭展开
-function collapseImport() {
-  collapseImportVisible.value = !collapseImportVisible.value
-}
-
-
-let resetPopupVisible = ref(false) //重置账号提示弹窗显示状态
-
-/**
- * 重置账号数据
- */
-function operatorDataReset() {
-  let data = {
-    token: userData.value.token,
-  }
-  operatorDataAPI.resetOperatorData(data).then(response => {
-    cMessage(response.data)
-  })
-}
 
 
 //上传APi返回的信息
@@ -260,6 +232,7 @@ function updateOperatorData(charId, property, newValue) {
   selectedCharId.value[charId] = charId
 }
 
+
 /**
  * 返回干员的属性选项是否选中样式
  * @param {string} charId 干员id
@@ -275,72 +248,6 @@ function dataOptionClass(charId, current, property) {
 }
 
 
-/**
- * 返回筛选按钮是否选中的样式
- * @param {string} property 干员属性名
- * @param {string|number|boolean} rule 筛选规则
- * @returns  class 按钮样式
- */
-function selectedBtn(property, rule) {
-  if (filterCondition.value[property].indexOf(rule) < 0) {
-    return "tonal"
-  }
-
-}
-
-let collapseImportFilter = ref(false)  //干员筛选条件折叠栏的展开状态
-
-let filterCondition = ref({   //干员筛选条件
-  rarity: [6],
-  profession: [],
-  year: [],
-  own: [true],
-  equip: [],
-  itemObtainApproach: [],
-  TODO: []
-});
-
-/**
- * 控制干员筛选条件折叠栏展开状态
- */
-function collapseFilter() {
-  collapseImportFilter.value = !collapseImportFilter.value
-}
-
-/**
- *  增加筛选规则
- * @param {string} property  干员属性
- * @param {string|number|boolean} condition 筛选条件
- */
-function addFilterCondition(property, condition) {
-
-  console.log(filterCondition.value);
-  if (filterCondition.value[property].indexOf(condition) > -1) {
-    filterCondition.value[property] = filterCondition.value[property].filter(e => e !== condition)
-    filterCharacterList();
-    return;
-  }
-
-  filterCondition.value[property].push(condition);
-  filterCharacterList();
-}
-
-
-/**
- * 过滤干员列表
- */
-function filterCharacterList() {
-  operatorList.value = []
-  for (let charId in operatorTable.value) {
-    const operator = operatorTable.value[charId];
-    const show = filterByCharacterProperty(filterCondition.value, operator);
-    operatorTable.value[charId].show = show;
-
-    if (show) {
-      operatorList.value.push(operator)
-    }
-  }
-}
 
 
 let sortProperty = ref({})
@@ -352,7 +259,7 @@ let sortProperty = ref({})
 function sortOperatorList(property) {
 
   sortProperty.value[property] = !sortProperty.value[property]
-  operatorList.value.sort((a, b) => {
+  displayOperatorList.value.sort((a, b) => {
     if (sortProperty.value[property]) {
       return b[property] - a[property];
     } else {
@@ -361,30 +268,6 @@ function sortOperatorList(property) {
   });
 }
 
-function sortOperatorListByLevel(property) {
-  sortProperty.value[property] = !sortProperty.value[property]
-  operatorList.value.sort((a, b) => {
-    let difference = 0;
-    if (a.elite !== b.elite) {
-      difference = b.elite - a.elite
-    } else {
-      difference = b.level - a.level
-    }
-    return sortProperty.value[property] ? difference : -difference;
-  });
-}
-
-function openStatisticalPopup() {
-  statisticalPopupVisible.value = !statisticalPopupVisible.value
-}
-
-let statisticalPopupVisible = ref(false)
-let statisticalResultV2 = ref({})
-
-
-let collapseRecommendVisible = ref(false)  //干员练度推荐折叠栏的显示状态
-let operatorRecommendList = ref([]) //干员练度推荐列表
-let recommendPopupVisible = ref(false);
 
 
 /**
@@ -392,59 +275,14 @@ let recommendPopupVisible = ref(false);
  */
 async function getOperatorRecommend() {
   operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorTable.value)
-
-  setTimeout(function () {
-    recommendPopupVisible.value = !recommendPopupVisible.value;
-  }, 50);
-
 }
 
 
-function toSKLand() {
-  window.open("https://www.skland.com");
-}
-
-/**
- * 点击复制内容
- */
-function copyCode(text) {
-  let elementInput = document.createElement('input');
-  elementInput.value = text
-  document.body.appendChild(elementInput)
-  elementInput.select()
-  document.execCommand("Copy");
-  elementInput.remove()
-}
-
-let btnStatus = ref({
-  btn_import: true,
-  btn_filter: false,
-  btn_statistics: false,
-  btn_plan: false,
-  btn_recommend: false
-})  //所有按钮的状态
-
-/**
- * 点击按钮改变按钮状态
- * @param btnId 按钮id
- */
-function clickBtn(btnId) {
-  btnStatus.value[btnId] = !btnStatus.value[btnId]
-}
 
 
-function getAvatarSprite(id) {
-  return "bg-" + id;
-}
 
-/**
- * 获取雪碧图
- * @param {string} id 图片id
- * @returns {string} css样式名
- */
-function getItemCostSprite(id) {
-  return 'bg-' + id
-}
+
+
 
 function getAvatar(id) {
   return "bg-" + id;
@@ -454,16 +292,27 @@ function getSkillSprite(id) {
   return "bg-skill_icon_" + id;
 }
 
-function getItem(id) {
-  return 'bg-' + id
+
+
+
+/**
+ * 检查用户状态
+ * @param notice 是否弹出提示
+ * @returns {boolean} 状态
+ */
+function checkUserStatus(notice) {
+  if (!userData.value.token) {
+    if (notice) {
+      cMessage('请先注册或登录一图流账号', 'error')
+    }
+    return true;
+  }
+  return false
 }
 
-
 onMounted(() => {
-  importData()
+
   getUserInfoAndOperatorData()
-
-
 });
 </script>
 
@@ -472,84 +321,34 @@ onMounted(() => {
   <div class="survey-operator-page survey-common">
     <v-card style="width: 96%;margin: 0 auto">
       <v-tabs
-          v-model="headerTag"
-          bg-color="primary"
-      >
-        <v-tab value="干员筛选">干员筛选</v-tab>
+          v-model="displayTabHeader"
+          bg-color="primary" >
         <v-tab value="数据导入导出">数据导入导出</v-tab>
-        <v-tab value="个人干员数据统计"
-               @click="clickBtn('btn_statistics');openStatisticalPopup()">
+        <v-tab value="干员筛选">干员筛选</v-tab>
+
+        <v-tab value="个人干员数据统计">
           个人干员数据统计
         </v-tab>
         <v-tab value="干员练度推荐"
-               @click="clickBtn('btn_recommend');getOperatorRecommend()">
-          干员练度推荐</v-tab>
+               @click="getOperatorRecommend()">
+          干员练度推荐
+        </v-tab>
       </v-tabs>
       <v-card-text>
-        <v-tabs-window v-model="headerTag">
+        <v-tabs-window v-model="displayTabHeader">
           <v-tabs-window-item value="干员筛选">
-            <div class="checkbox">
-              <v-btn variant="text" class="checkbox-label">职业</v-btn>
-              <v-btn color="primary" :variant="selectedBtn('profession', profession.value)"
+            <div class="checkbox" v-for="(conditions,module) in operatorFilterCondition" :key="module">
+              <v-btn variant="text" class="checkbox-label">{{ conditions.label }}</v-btn>
+              <v-btn color="primary" :variant="btnAction(condition.action)"
                      class="checkbox-button" rounded="x-large"
-                     v-for="(profession,index) in professionDict" :key="index"
-                     @click="addFilterCondition('profession', profession.value)">
-                {{ profession.label }}
+                     v-for="(condition,index) in conditions.conditions" :key="index"
+                     @click="addFilterConditionAndFilterOperator(conditions.actionFunc,index)">
+                {{ condition.label }}
               </v-btn>
             </div>
-            <div class="checkbox">
-              <v-btn variant="text" class="checkbox-label">稀有度</v-btn>
-              <v-btn color="primary" :variant="selectedBtn('rarity', rarity)"
-                     class="checkbox-button" rounded="x-large"
-                     v-for="(rarity,index) in RARITY_TABLE" :key="index"
-                     @click="addFilterCondition('rarity', rarity)">
-                {{ rarity }}★
-              </v-btn>
-            </div>
-            <div class="checkbox">
-              <v-btn variant="text" class="checkbox-label">年份</v-btn>
-              <v-btn color="primary" :variant="selectedBtn('year',key)"
-                     class="checkbox-button" rounded="x-large"
-                     v-for="(year, key) in yearDict" :key="key"
-                     @click="addFilterCondition('year', key)">
-                {{ year.label }}
-              </v-btn>
-            </div>
-            <div class="checkbox">
-              <v-btn variant="text" class="checkbox-label">是否拥有</v-btn>
-              <v-btn color="primary" :variant="selectedBtn('own',true)"
-                     class="checkbox-button" rounded="x-large"
-                     @click="addFilterCondition('own',true)">
-                已拥有
-              </v-btn>
-              <v-btn color="primary" :variant="selectedBtn('own', false)"
-                     class="checkbox-button" rounded="x-large"
-                     @click="addFilterCondition('own', false)">
-                未拥有
-              </v-btn>
-            </div>
-            <div class="checkbox">
-              <v-btn variant="text" class="checkbox-label">获得方式</v-btn>
-              <v-btn color="primary" :variant="selectedBtn('itemObtainApproach',itemObtainApproach)"
-                     class="checkbox-button" rounded="x-large"
-                     v-for="(itemObtainApproach,index) in itemObtainApproachType" :key="index"
-                     @click="addFilterCondition('itemObtainApproach',itemObtainApproach)">
-                {{ itemObtainApproach }}
-              </v-btn>
-            </div>
-            <div class="checkbox">
-              <v-btn variant="text" class="checkbox-label">模组</v-btn>
-              <v-btn color="primary" :variant="selectedBtn('equip',true)"
-                     class="checkbox-button" rounded="x-large"
-                     @click="addFilterCondition('equip',true)">
-                已拥有
-              </v-btn>
-              <v-btn color="primary" :variant="selectedBtn('equip', false)"
-                     class="checkbox-button" rounded="x-large"
-                     @click="addFilterCondition('equip', false)">
-                未拥有
-              </v-btn>
-            </div>
+<!--            <pre>-->
+<!--              {{operatorFilterCondition}}-->
+<!--            </pre>-->
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">排序</v-btn>
               <v-btn type="primary"
@@ -628,12 +427,10 @@ onMounted(() => {
     <!--    </c-popup>-->
 
 
-
-
     <!--   干员表单-->
     <div class="operator-form">
-      <v-card class="operator-card" v-for="(operator, char_index) in operatorList" :key="char_index"
-           @click="updateOperatorPopup(char_index)">
+      <v-card class="operator-card" v-for="(operator, charId) in displayOperatorList" :key="charId"
+              @click="updateOperatorPopup(charId)">
         <div class="operator-avatar-wrap">
           <div class="operator-avatar">
             <div :class="getAvatar(operator.charId)"></div>

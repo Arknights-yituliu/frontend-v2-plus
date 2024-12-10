@@ -6,11 +6,11 @@
     }
 
     .checkbox-label{
-        width: 60px;
+        min-width: 100px;
     }
 
     .checkbox-button{
-        min-width: 60px;
+        min-width: 100px;
         margin: 0 4px;
     }
 }
