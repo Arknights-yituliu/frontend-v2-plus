@@ -75,7 +75,7 @@ const formatLinkData = (data, localized = 'zh_CN') => {
         </div>
         <p>{{ item.description }}</p>
       </div>
-      <v-btn rounded="x-large" type="primary" class="tool-link-button"  v-for="(link,index) in item.links" @click="openNewPage(link.url)">
+      <v-btn rounded="x-large" color="primary"  class="tool-link-button"  v-for="(link,index) in item.links" @click="openNewPage(link.url)">
         {{ link.name }}
       </v-btn>
     </v-card>

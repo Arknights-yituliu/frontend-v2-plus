@@ -457,10 +457,10 @@ onMounted(() => {
         <h1>推荐关卡</h1>
         <h4>Best Stages</h4>
       </div>
-      <v-btn type="secondary" :size="getButtonSize()" @click="scrollToOrundumTable()">搓玉数据</v-btn>
-      <v-btn type="secondary" :size="getButtonSize()" @click="scrollToHistoryStageTable()">往期活动</v-btn>
-      <v-btn type="secondary" :size="getButtonSize()" @click="scrollToFrequentlyAskedQuestion()">常见问题</v-btn>
-      <v-chip type="secondary" :size="getButtonSize()" >更新时间：{{ updateTime }}</v-chip>
+      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="scrollToOrundumTable()">搓玉数据</v-btn>
+      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="scrollToHistoryStageTable()">往期活动</v-btn>
+      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="scrollToFrequentlyAskedQuestion()">常见问题</v-btn>
+      <v-chip color="primary" variant="tonal" :size="getButtonSize()" >更新时间：{{ updateTime }}</v-chip>
 
     </div>
     <!--    <div class="op_title">-->
@@ -798,7 +798,7 @@ onMounted(() => {
         <h1>搓玉数据表</h1>
         <h4>Orundum</h4>
       </div>
-      <v-btn type="secondary" :size="getButtonSize()" @click="filterOrundumStage()">仅显示1-7、CW-6和活动关</v-btn>
+      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="filterOrundumStage()">仅显示1-7、CW-6和活动关</v-btn>
     </div>
 
     <div class="tableArea" style="margin:0 8px;max-width: 720px;border: 1px solid #00000040;border-radius: 8px;">
@@ -834,9 +834,9 @@ onMounted(() => {
         <h1>往期活动数据</h1>
         <h4>History Event</h4>
       </div>
-      <v-btn type="secondary" class="tag-button" @click="chooseHistoryActDevice('phone')">列表模式
+      <v-btn color="primary" variant="tonal" class="tag-button" @click="chooseHistoryActDevice('phone')">列表模式
       </v-btn>
-      <v-btn type="secondary" class="tag-button" @click="chooseHistoryActDevice('pc')">表格模式</v-btn>
+      <v-btn color="primary" variant="tonal" class="tag-button" @click="chooseHistoryActDevice('pc')">表格模式</v-btn>
     </div>
 
     <!-- pc端大表格 -->
