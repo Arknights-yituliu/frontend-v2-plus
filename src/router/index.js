@@ -9,15 +9,15 @@ const router = createRouter({
 
 
 router.beforeEach((to, from) => {
-    const element = document.getElementById('loading')
-    element.style.display = 'flex'
+    // const element = document.getElementById('loading')
+    // element.style.display = 'flex'
 })
 
 
 // 可选地，在导航完成时重置加载状态
 router.afterEach((to) => {
-    const element = document.getElementById('loading')
-    element.style.display = 'none'
+    // const element = document.getElementById('loading')
+    // element.style.display = 'none'
     updateVisits(to.path)
 
     // setTimeout(() => element.style.display = 'none', 100)

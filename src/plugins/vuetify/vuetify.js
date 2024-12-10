@@ -46,14 +46,9 @@ const myCustomLightTheme = {
 
 const vuetify = createVuetify({
     theme: {
-        defaultTheme: 'myCustomLightTheme',
+        defaultTheme: 'dark',
         themes: {
             myCustomLightTheme,
-            light: {
-                primary: '#3F51B5', // #E53935
-                secondary: '#E8EAF6', // #FFCDD2
-                accent: '#8C9EFF', // #3F51B5
-            },
         },
     },
     icons:{
