@@ -1,81 +1,96 @@
-.header-button-label{
-    font-size: 16px;
-    color:white;
+.drawer-navigation {
+  .v-list-item {
+    --indent-padding: 32px;
+  }
+
+  .navigation-item-content {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color:inherit;
+    .navigation-item-content-spacer{
+      width: 16px;
+    }
+  }
 }
 
 
+.drawer-navigation-group-item .v-list-item {
+  color: red;
+  padding-inline-start: 40px
+}
 
-
-
-
+.header-button-label {
+  font-size: 16px;
+  color: white;
+}
 
 .page-title {
-    color: white;
-    font-size: 16px;
-    font-weight: 400;
-    padding:0 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 0 8px;
 }
 
 .menu-button {
-    display: none;
-    font-size: 24px;color: rgb(230,230,230)
+  display: none;
+  font-size: 24px;
+  color: rgb(230, 230, 230)
 }
 
 .menu-button-desktop {
-    display: block;
-    font-size:32px;
-    color: rgb(230,230,230);
+  display: block;
+  font-size: 32px;
+  color: rgb(230, 230, 230);
 }
-
-
 
 
 .drawer_wrap {
-    display: flex;
-    width: 100%;
-    height: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2000;
-    /* border: solid red 1px; */
+  display: flex;
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  /* border: solid red 1px; */
 }
 
 .drawer {
-    position: absolute;
-    top: 0;
-    width: 380px;
-    height: 100vh;
-    transform: translateX(-500px);
-    transition: translate 0.3s linear;
-    background-color: #1e222d;
-    overflow: auto;
+  position: absolute;
+  top: 0;
+  width: 380px;
+  height: 100vh;
+  transform: translateX(-500px);
+  transition: translate 0.3s linear;
+  background-color: #1e222d;
+  overflow: auto;
 }
 
 .menu-mask {
-    background: rgba(0, 0, 0, 0.6);
-    width: 100%;
-    height: 100vh;
-    display: none;
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100vh;
+  display: none;
 }
 
 .menu_table {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: white;
-    margin-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+  margin-bottom: 100px;
 }
 
 .menu_title {
-    width: 100%;
-    height: 80px;
-    /* border: 1px red solid; */
-    font-size: 36px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  height: 80px;
+  /* border: 1px red solid; */
+  font-size: 36px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 

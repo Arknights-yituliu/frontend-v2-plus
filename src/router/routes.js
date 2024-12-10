@@ -27,7 +27,7 @@ const routes = [
         name: 'StageRecommendation',
         display: true,
         module: 'material',
-        icon: "item",
+        icon: "mdi-hexagon-multiple",
         component: STAGE_RECOMMENDATION_REGISTER
     },
     // {
@@ -45,7 +45,7 @@ const routes = [
         name: 'MaterialStore',
         display: true,
         module: 'material',
-        icon: "shop",
+        icon: "mdi-store",
         component: () => import('/src/pages/material/store.page.vue')
     },
     {
@@ -54,7 +54,7 @@ const routes = [
         name: 'PackEfficiency',
         display: true,
         module: 'material',
-        icon: "pack",
+        icon: "mdi-gift",
         component: () => import('/src/pages/material/pack.vue')
     },
     {
@@ -63,7 +63,7 @@ const routes = [
         name: 'MaterialValue',
         display: true,
         module: 'material',
-        icon: "materials",
+        icon: "mdi-gold",
         component: () => import('/src/pages/material/value.page.vue')
     },
     {
@@ -97,7 +97,7 @@ const routes = [
         name: 'GachaCalculator',
         display: true,
         module: 'tools',
-        icon: "calculator",
+        icon: "mdi-calculator",
         component: GACHA_CALCULATOR
     },
     {
@@ -106,7 +106,7 @@ const routes = [
         name: 'Schedule',
         display: true,
         module: 'tools',
-        icon: "schedule",
+        icon: "mdi-calendar-clock",
         component: () => import('/src/pages/tools/schedule.vue')
     },
     {
@@ -115,7 +115,7 @@ const routes = [
         name: 'HalfOperatorCalculate',
         display: true,
         module: 'tools',
-        icon: "calculator",
+        icon: "mdi-calculator",
         component: () => import('/src/pages/tools/specializationTimeCalculate.vue')
     },
     {
@@ -133,7 +133,7 @@ const routes = [
         name: 'Logistics',
         display: true,
         module: 'information',
-        icon: "logistics",
+        icon: "mdi-cog",
         component: () => import('/src/pages/information/logistics.vue')
     },
     {
@@ -142,17 +142,8 @@ const routes = [
         name: 'SandboxFoods',
         display: true,
         module: 'information',
-        icon: "item",
+        icon: "mdi-food",
         component: () => import('/src/pages/information/sandboxFoods.vue')
-    },
-    {
-        path: '/information/integratedStrategies',
-        text: '集成战略结局一览',
-        name: 'IntegratedStrategies',
-        display: true,
-        module: 'information',
-        icon: "item",
-        component: () => import('/src/pages/information/integratedStrategies.vue')
     },
     {
         path: '/survey/account/home',
@@ -160,7 +151,7 @@ const routes = [
         name: 'AccountHome',
         display: true,
         module: 'survey',
-        icon: "user",
+        icon: "mdi-account",
         component: USER_HOME
         // component: Notice
     },
@@ -197,7 +188,7 @@ const routes = [
         name: 'OperatorSurvey',
         display: true,
         module: 'survey',
-        icon: "survey2",
+        icon: "mdi-chart-bar",
         component: SURVEY_OPERATOR
     },
     {
@@ -206,7 +197,7 @@ const routes = [
         name: 'Questionnaire',
         display: false,
         module: 'survey',
-        icon: "survey2",
+        icon: "mdi-chart-bar",
         component: () => import('/src/pages/survey/questionnaire.vue')
     },
     {
@@ -215,7 +206,7 @@ const routes = [
         name: 'OperatorRank',
         display: true,
         module: 'survey',
-        icon: "rank",
+        icon: "mdi-chart-bar",
         component: () => import('/src/pages/survey/rank.vue')
         // component: Notice
     },
@@ -235,7 +226,7 @@ const routes = [
         name: 'RecruitDataSurvey',
         display: true,
         module: 'survey',
-        icon: "survey2",
+        icon: "mdi-chart-bar",
         component: () => import('/src/pages/survey/maarecruitdata.page.vue')
         // component: Notice
     },
@@ -245,14 +236,14 @@ const routes = [
         name: 'Develop',
         display: true,
         module: 'about',
-        icon: "develop",
+        icon: "mdi-source-branch",
         component: () => import('/src/pages/about/dev.page.vue')
     },
     {
         path: '/about/log',
         text: '开发日志',
         name: 'Log',
-        display: true,
+        display: false,
         module: 'about',
         icon: "log",
         component: () => import('/src/pages/about/log.page.vue')
@@ -272,7 +263,7 @@ const routes = [
         name: 'FriendlyLink',
         display: true,
         module: 'about',
-        icon: "link",
+        icon: "mdi-link",
         component: () => import('/src/pages/about/links.page.vue')
     },
     {
@@ -364,43 +355,55 @@ const LinkedTable = {
         path: '/',
         text: "材料收益",
         display:true,
+        icon:'mdi-gold',
         child: []
     },
     tools: {
         path: '/',
         text: "一图流工具箱",
         display:true,
+        icon:'mdi-toolbox',
         child: []
     },
     information: {
         path: '/',
         text: "信息一览",
         display:true,
+        icon:'mdi-information',
         child: []
     },
     survey: {
         path: '/',
         text: "调查与统计",
         display:true,
+        icon:'mdi-chart-bar',
         child: []
     },
     about: {
         path: '/',
         text: "其他信息",
         display:true,
+        icon:'mdi-application-cog',
         child: []
     },
     backend: {
         path: '/',
         text: "后台导航",
         display:false,
+        icon:'mdi-toolbox',
         child: []
     }
 }
 
 const devRoute = ['/survey/questionnaire']
 
+let routeMap = new Map()
+
+
+
 for (const route of routes) {
+
+    routeMap.set(route.path,route.text)
 
     if (!route.module) {
         LinkedTable.backend.child.push(route)
@@ -412,13 +415,10 @@ for (const route of routes) {
         continue
     }
 
-
-
     LinkedTable[route.module].child.push(route)
-
 
 }
 
 export {
-    routes, LinkedTable
+    routes, LinkedTable,routeMap
 }

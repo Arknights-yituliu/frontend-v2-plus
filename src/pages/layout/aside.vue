@@ -6,7 +6,7 @@ import {LinkedTable} from '/src/router/routes.js'
 let pathName = ref("/");
 
 function getPathName(path) {
-  if (path == "/") {
+  if (path === "/") {
     pathName.value = path;
     return 1;
   }
@@ -20,7 +20,7 @@ function getPathName(path) {
 
   const lastStr = path.substr(strLength - 1, strLength);
 
-  if (lastStr == "/") {
+  if (lastStr === "/") {
     path = path.substr(0, strLength - 1);
     // console.log("路径以“/”结尾，被截取后路径：", path);
     pathName.value = path;
@@ -33,7 +33,7 @@ function getPathName(path) {
 
 function navParentSelected(path) {
 
-  if (path == pathName.value) return " menu-selected";
+  if (path === pathName.value) return " menu-selected";
   return "";
 }
 
