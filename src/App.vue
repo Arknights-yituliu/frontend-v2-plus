@@ -111,6 +111,8 @@ function normalizePath(path) {
         </v-app-bar-title>
         <div class="app-bar-content">
           <v-icon icon="mdi-theme-light-dark" size="40" @click="changeTheme"></v-icon>
+          <div class="app-bar-content-spacer">
+          </div>
          <User></User>
         </div>
       </v-app-bar>

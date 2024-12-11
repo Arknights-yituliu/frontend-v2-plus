@@ -5,7 +5,7 @@ import {ref} from 'vue';
 import PackCardContainer from '/src/components/PackCardGroup.vue'
 import ModuleHeader from '/src/components/ModuleHeader.vue';
 import MyButton from '/src/components/Button.vue'
-import userService from "@/service/UserService.js";
+import userService from "@/utils/user/userConfig.js";
 
 const currentPackInfoList = ref([])
 const date = new Date() // 当前日期

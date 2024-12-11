@@ -4,7 +4,7 @@ import ModuleHeader from '@/components/ModuleHeader.vue';
 import {onMounted, ref} from 'vue'
 import storeAPI from '/src/api/store.js'
 import materialAPI from '/src/api/material.js'
-import userService from "/src/service/UserService.js";
+import userService from "/src/utils/user/userConfig.js";
 
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表

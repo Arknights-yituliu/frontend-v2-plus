@@ -16,7 +16,7 @@ import {ElNotification} from "element-plus";
 
 import PackButtonContent from "/src/components/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/ActivityGachaResources.vue";
-import userService from "/src/service/UserService.js";
+import userService from "/src/utils/user/userConfig.js";
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期

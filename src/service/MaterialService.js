@@ -1,5 +1,5 @@
 import materialAPI from "/src/api/material.js";
-import userService from "/src/service/UserService.js";
+import userService from "/src/utils/user/userConfig.js";
 
 function checkItemValue(){
     const data = userService.getStageConfig();
