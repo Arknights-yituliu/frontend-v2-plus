@@ -5,10 +5,7 @@
     }
 
     .navigation-item-content {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
+      display: flex;align-items: center;
 
       .navigation-item-content-spacer {
         width: 16px;
@@ -16,6 +13,10 @@
     }
   }
 
+  .router-link{
+    text-decoration: none;
+    color: inherit;
+  }
 
   .drawer-navigation-group-item {
     margin: 4px
