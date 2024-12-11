@@ -5,7 +5,7 @@ import ModuleHeader from '@/components/ModuleHeader.vue';
 import {ref, onMounted} from "vue";
 import materialAPI from "/src/api/material.js";
 import {exportExcel} from "/src/utils/exportExcel";
-import userService from "@/service/UserService.js";
+import userService from "@/utils/user/userConfig.js";
 
 let opETextTheme = ref("op_title_etext_light")
 

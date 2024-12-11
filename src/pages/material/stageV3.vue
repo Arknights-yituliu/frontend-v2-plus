@@ -7,13 +7,14 @@ import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import {dataFormat} from '/src/utils/dateUtil.js'
-import userService from '/src/service/UserService.js'
+import userService from '/src/utils/user/userConfig.js'
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 
 import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
 import StageLegend from "@/components/material/StageLegend.vue";
+import StageDetailTable from "@/components/material/StageDetailTable.vue";
 
 // import {getButtonSize} from '/src/plugins/vuetify/getDisplaySize'
 
@@ -568,72 +569,7 @@ onMounted(() => {
       <span class="module-tip">*移动端可左右拖动查看</span>
     </div>
 
-    <!-- 详情表 -->
-    <div id="detail-table" style="margin:0 8px;max-width: 1260px;border: 1px solid #00000040;border-radius: 8px;">
-      <el-table stripe :data="recommendedStageDetailTable" max-height="500" class="stage-detail-table">
-        <el-table-column fixed prop="stageCode" label="关卡名" sortable>
-          <template #default="scope">
-            <div>
-              <span style="font-size: 10px;line-height: 8px;">{{ replaceZoneName(scope) }}</span><br>
-              {{ scope.row.stageCode }}
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="primary" label="主产物" width="88px">
-          <template #default="scope">
-            <div class="stage-detail-table-item-icon">
-              <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="primary" label="主产物掉率">
-          <template #default="scope">
-            {{ formatNumber(scope.row.knockRating * 100, 1) }}%
-          </template>
-        </el-table-column>
-        <el-table-column prop="apExpect" label="期望理智" sortable>
-          <template #default="scope">
-            {{ formatNumber(scope.row.apExpect, 1) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="secondary" label="副产物" width="88px">
-          <template #default="scope">
-            <div class="stage-detail-table-item-icon">
-              <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="eff" label="综合效率" sortable>
-          <template #default="scope">
-            {{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%
-          </template>
-        </el-table-column>
-        <el-table-column prop="spm" label="SPM" :width="110" sortable/>
-        <el-table-column prop="leT4Efficiency" label="T4效率" sortable>
-          <template #default="scope">
-            {{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%
-          </template>
-        </el-table-column>
-        <el-table-column prop="leT3Efficiency" label="T3效率" sortable>
-          <template #default="scope">
-            {{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%
-          </template>
-        </el-table-column>
-        <el-table-column prop="leT2Efficiency" label="T2效率" sortable>
-          <template #default="scope">
-            {{ formatNumber(scope.row.leT2Efficiency * 100, 1) }}%
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="stage-legend-description" id="description">
-        <span>*主产物/副产物：价值占比最高/第二高的产物</span>
-        <span>*综合效率：产物的总价值 / 关卡理智消耗，长期囤材料建议以这个为参考依据</span>
-        <span>*T4效率 = (对应紫材料价值+对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗 </span>
-        <span>*T3效率 = (对应蓝材料价值+对应绿材料价值+对应白材料价值) / 关卡理智消耗</span>
-        <span>*T2效率 = (对应绿材料价值+对应白材料价值) / 关卡理智消耗</span>
-        <span>*SPM：1倍速下每分钟消耗的理智，假设所有敌人均被秒杀，实际可能略大于该值</span>
-      </div>
-    </div>
+    <StageDetailTable v-model="recommendedStageDetailTable"></StageDetailTable>
 
     <!-- 搓玉 -->
     <!--    <div class="op_title" id="orundum-table">-->

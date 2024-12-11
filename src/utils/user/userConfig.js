@@ -17,7 +17,7 @@ function getStageConfig(){
                 "30073": 1.8
             }
         }
-        return config1
+        return config2
     }
 }
 
