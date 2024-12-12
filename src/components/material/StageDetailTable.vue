@@ -66,7 +66,7 @@ function replaceZoneName(str) {
         {{ item.SPM }}
       </template>
       <template v-slot:item.leT4Efficiency="{ item }">
-        {{ formatNumber(item.leT3Efficiency * 100, 1) }}%
+        {{ formatNumber(item.leT4Efficiency * 100, 1) }}%
       </template>
       <template v-slot:item.leT3Efficiency="{ item }">
         {{ formatNumber(item.leT3Efficiency * 100, 1) }}%
