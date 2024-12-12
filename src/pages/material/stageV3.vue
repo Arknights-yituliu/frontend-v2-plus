@@ -557,6 +557,10 @@ onMounted(() => {
       </div>
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
+      <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
+      <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
+      <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
+      <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
     </div>
 
 
