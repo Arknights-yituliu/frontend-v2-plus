@@ -76,7 +76,7 @@ watch(currentPath, (newPath, oldPath) => {
 
 function normalizePath(path) {
   // 如果路径是根路径 '/'，直接返回
-  if (path === '/') {
+  if (path === '/'||!path) {
     return '/';
   }
 
@@ -86,7 +86,7 @@ function normalizePath(path) {
   }
 
   // 否则，返回原路径
-  return '/';
+  return path;
 }
 
 
