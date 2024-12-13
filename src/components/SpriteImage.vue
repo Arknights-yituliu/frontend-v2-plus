@@ -1,6 +1,6 @@
 <script setup>
 
-import {onMounted, ref} from "vue";
+import {onMounted} from "vue";
 import {debounce} from "/src/utils/debounce.js";
 
 
@@ -11,13 +11,11 @@ let spriteStyle = ''
 
 function calculatedSize() {
   const innerWidth = window.innerWidth;
-
   let ratio = 1
 
   if(innerWidth<600){
     ratio = 0.7
   }
-
 
   const displaySize = props.displaySize ? props.displaySize * ratio : 40;
 

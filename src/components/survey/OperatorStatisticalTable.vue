@@ -1,19 +1,26 @@
 <script setup>
-
-
 import {ref, watch} from "vue";
 import OperatorInfo from "/src/components/OperatorInfo.vue";
 import MyButton from "/src/components/Button.vue";
-
-const props = defineProps(["modelValue", 'statisticalData']);
-import operatorStatistical from "/src/utils/survey/operatorStatistical"
+import '/src/assets/css/survey/operator.scss'
+import '/src/assets/css/survey/operator.phone.scss'
+const props = defineProps(["modelValue"]);
+import {operatorStatisticalV2, splitMaterial} from "/src/utils/survey/operatorStatistical"
 import SpriteImage from "/src/components/SpriteImage.vue";
 
 
 let allData = ref([])
+let itemCostList = ref([]) //材料消耗数量
+let apCostCount = ref(0) //理智消耗数量
+let itemCostMap = ref({}) //材料消耗数量
+let apCostRanking = ref([])
+let notOwn = ref([])
+
+function updateData(list) {
+
+  const statisticalInfo = operatorStatisticalV2(list);
 
 
-function updateData() {
   allData.value = []
   const operatorGroup = [
     {label: '全部干员', value: 'all'},
@@ -22,31 +29,33 @@ function updateData() {
     {label: '4⭐干员', value: 'rarity4'}
   ]
 
-  console.log("统计数据:"+props.modelValue)
+
 
   for (const item of operatorGroup) {
-    setData(item)
+    setData(item,statisticalInfo)
   }
 
-  itemCostList.value = props.modelValue.itemCostList
-  itemCostMap.value = props.modelValue.itemCostMap
-  apCostCount.value = props.modelValue.apCostCount
+  itemCostList.value = statisticalInfo.itemCostList
+  itemCostMap.value = statisticalInfo.itemCostMap
+  apCostCount.value = statisticalInfo.apCostCount
+  apCostRanking.value = statisticalInfo.apCostRanking
+  notOwn.value = statisticalInfo.allNotOwn
 }
 
-function setData(group) {
+function setData(group, statisticalInfo) {
   let value = group.value
 
   let data = [{
     label: '招募干员数量',
-    value: `${props.modelValue[`${value}Own`]}/${props.modelValue[`${value}Count`]}`
+    value: `${statisticalInfo[`${value}Own`]}/${statisticalInfo[`${value}Count`]}`
   }]
   let rank = 2
-  for (const num of props.modelValue[`${value}Elite`]) {
+  for (const num of statisticalInfo[`${value}Elite`]) {
     data.push({label: `精英阶段${rank}干员`, value: num.toString()})
     rank--
   }
   rank = 3
-  for (const num of props.modelValue[`${value}Skill`]) {
+  for (const num of statisticalInfo[`${value}Skill`]) {
     if (rank === 0) {
       continue
     }
@@ -55,7 +64,8 @@ function setData(group) {
     rank--
   }
   rank = 3
-  for (const num of props.modelValue[`${value}Mod`]) {
+
+  for (const num of statisticalInfo[`${value}Mod`]) {
     if (rank === 0) {
       continue
     }
@@ -70,16 +80,13 @@ function setData(group) {
   })
 }
 
-let itemCostList = ref([]) //材料消耗数量
-let apCostCount = ref(0) //理智消耗数量
-let itemCostMap = ref({}) //材料消耗数量
 
 /**
  * 根据材料最大星级对材料进行拆解计算
  * @param highestRarity  材料最大星级
  */
 function splitMaterialByRarity(highestRarity) {
-  itemCostList.value = operatorStatistical.splitMaterial(highestRarity, itemCostMap.value);
+  itemCostList.value = splitMaterial(highestRarity, itemCostMap.value);
 }
 
 /**
@@ -97,21 +104,26 @@ function strShowLength(num) {
   return num
 }
 
-watch(() => props.modelValue, () => {
+updateData(props.modelValue)
 
+watch(props.modelValue,() =>  (newVal,oldValue) => {
+
+  updateData(props.modelValue)
 })
-updateData()
+
 
 </script>
 
 <template>
 
-  <div class="statistical-popup-container">
-    <v-card class="operator-statistical-card" :title="group.title" v-for="(group,index) in allData" :key="index">
-        <div class="operator-statistical-item" v-for="(data,index) in group.data" :key="index">
-          <span class="info-label">{{ data.label }}</span>
-          <span class="info-value">{{ data.value }}</span>
-        </div>
+  <div class="operator-statistical-page">
+    <v-card class="operator-statistical-card m-4" :title="group.title"
+            v-for="(group,index) in allData" :key="index"
+    >
+      <div class="operator-statistical-item" v-for="(data,index) in group.data" :key="index">
+        <span class="info-label">{{ data.label }}</span>
+        <span class="info-value">{{ data.value }}</span>
+      </div>
     </v-card>
 
     <div class="operator-statistical-card">
@@ -119,13 +131,13 @@ updateData()
       <div style="margin: 4px;display: flex;flex-wrap: wrap">
         <SpriteImage :image-name="operator.charId" original-size="180" display-size="40"
                      style="margin: 4px"
-                     v-for="(operator,index) in modelValue.allNotOwn"></SpriteImage>
+                     v-for="(operator) in notOwn"></SpriteImage>
       </div>
     </div>
 
     <div class="operator-statistical-card">
       <div class="detail-card-title">干员消耗理智排行</div>
-      <OperatorInfo v-for="(item,index) in modelValue.apCostRanking" :key="index" :operator-info="item"></OperatorInfo>
+      <OperatorInfo v-for="(item,index) in apCostRanking" :key="index" :operator-info="item"></OperatorInfo>
     </div>
 
     <div class="operator-statistical-card">

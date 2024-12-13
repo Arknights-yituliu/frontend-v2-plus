@@ -1,0 +1,50 @@
+.v-data-table-header__content {
+  font-weight: bolder;
+}
+
+
+//间隔
+.p-4{
+  padding: 4px;
+}
+
+.m-2 {
+  margin: 2px;
+}
+
+.m-4 {
+  margin: 4px;
+}
+
+//布局
+.flex{
+  display: flex;
+}
+
+.flex-col{
+  flex-direction: column;
+}
+
+
+.items-center{
+  align-items: center;
+}
+
+.justify-between{
+  justify-content: space-between;
+}
+
+
+//透明度
+.opacity-70{
+  opacity:0.7;
+}
+
+//文本
+.no-wrap {
+  white-space: nowrap;
+}
+
+.font-bold{
+  font-weight: bold;
+}

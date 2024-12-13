@@ -166,60 +166,6 @@
   }
 
 
-  /*干员统计弹窗卡片样式*/
-  .statistical-popup-container {
-    padding: 8px;
-    font-size: 16px;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    .operator-statistical-card {
-      width: 500px;
-      margin: 12px;
-
-      .operator-statistical-item {
-        display: flex;
-        justify-content: space-between;
-        box-sizing: border-box;
-        padding: 8px 8px;
-        border-bottom: 1px solid var(--c-border-color);
-
-        .operator-info-label {
-
-        }
-
-        .operator-info-value {
-          text-align: right;
-        }
-
-      }
-
-      .detail-card-title {
-        font-weight: bolder;
-        font-size: 16px;
-        padding: 12px 0 4px;
-      }
-
-      .item-cost-data{
-        background-color: var(--c-card-background-color);
-      }
-
-      .operator-info-table {
-        margin: 4px auto;
-        border-radius: 6px;
-        overflow: hidden;
-        box-shadow: 1px 1px 4px var(--c-box-shadow-color),-1px -1px 4px var(--c-box-shadow-color);
-        background-color: var(--c-card-background-color);
-
-
-      }
-
-
-
-    }
-  }
 
 
   .not-own-operator {
@@ -429,6 +375,62 @@
       margin: 0 32px;
       box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
     }
+
+
+  }
+}
+
+
+/*干员统计容器样式*/
+.operator-statistical-page {
+  padding: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .operator-statistical-card {
+    width: 500px;
+
+
+    .operator-statistical-item {
+      display: flex;
+      justify-content: space-between;
+      box-sizing: border-box;
+      padding: 8px 8px;
+      border-bottom: 1px solid var(--c-border-color);
+
+      .operator-info-label {
+
+      }
+
+      .operator-info-value {
+        text-align: right;
+      }
+
+    }
+
+    .detail-card-title {
+      font-weight: bolder;
+      font-size: 16px;
+      padding: 12px 0 4px;
+    }
+
+    .item-cost-data{
+      background-color: var(--c-card-background-color);
+    }
+
+    .operator-info-table {
+      margin: 4px auto;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 1px 1px 4px var(--c-box-shadow-color),-1px -1px 4px var(--c-box-shadow-color);
+      background-color: var(--c-card-background-color);
+
+
+    }
+
 
 
   }

@@ -2,12 +2,12 @@ import Error404 from "/src/pages/layout/error404.vue";
 import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
 import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.vue'
 import Notice from '/src/pages/layout/notice.vue'
-import REGISTER from '/src/pages/survey/account/register.vue'
-import LOGIN from '/src/pages/survey/account/login.vue'
-import RETRIEVE from '/src/pages/survey/account/retrieve.vue'
-import IMPORT_BY_SKLAND from '/src/pages/survey/account/importdata.vue'
+import REGISTER from '/src/pages/account/register.vue'
+import LOGIN from '/src/pages/account/login.vue'
+import RETRIEVE from '/src/pages/account/retrieve.vue'
+import IMPORT_BY_SKLAND from '/src/pages/survey/importdata.vue'
 import SURVEY_OPERATOR from '/src/pages/survey/operators.vue'
-import USER_HOME from '/src/pages/survey/account/home.vue'
+import USER_HOME from '/src/pages/account/home.vue'
 
 // {
 //     path: '/',  访问路径
@@ -17,7 +17,7 @@ import USER_HOME from '/src/pages/survey/account/home.vue'
 //     module: 'material',  在导航栏中所属的模块
 //     icon: "item", 导航栏上的图标
 //     component: StageRecommendation  //引入对应的页面①
-//     component: () => import('/src/pages/material/store.page.vue') //引入对应的页面② 这种引入在不访问对应路径时，不会加载js
+//     component: () => import('/src/pages/material/store.vue') //引入对应的页面② 这种引入在不访问对应路径时，不会加载js
 // },
 
 const routes = [
@@ -46,7 +46,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-store",
-        component: () => import('/src/pages/material/store.page.vue')
+        component: () => import('/src/pages/material/store.vue')
     },
     {
         path: '/material/pack',
@@ -64,7 +64,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-gold",
-        component: () => import('/src/pages/material/value.page.vue')
+        component: () => import('/src/pages/material/value.vue')
     },
     {
         path: '/material/elite',
