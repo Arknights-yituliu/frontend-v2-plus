@@ -35,16 +35,13 @@
             <template v-slot:default="{ isActive }">
               <v-card title="Dialog">
                 <v-card-text>
-                  <v-alert text="是否退出登录？" type="warning"></v-alert>
+                  <v-alert text="是否退出登录？" type="error"></v-alert>
                 </v-card-text>
 
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                      text="取消"
-                      @click="isActive.value = false"
-                  ></v-btn>
-                </v-card-actions>
+                <div class="flex justify-center">
+                  <v-btn text="确定" @click="logout" class="m-4"></v-btn>
+                  <v-btn text="取消" @click="isActive.value = false" class="m-4"></v-btn>
+                </div>
               </v-card>
             </template>
 
