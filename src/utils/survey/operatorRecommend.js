@@ -1,5 +1,6 @@
 import surveyApi from '/src/api/operatorData'
 
+
 /**
  *
  * @param operatorTable
@@ -89,4 +90,4 @@ function getPropertyName(property, operator) {
 
 
 
-export default { operatorRecommend }
+export  { operatorRecommend }

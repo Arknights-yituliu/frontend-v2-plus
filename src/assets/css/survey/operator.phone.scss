@@ -7,14 +7,7 @@
       margin: 4px;
     }
 
-    .statistical-popup-container {
-      max-width: 340px;
 
-      .operator-statistical-card {
-        width: 324px;
-        margin: 0;
-      }
-    }
 
     .survey-guide-content-container {
       padding: 8px;
@@ -148,5 +141,15 @@
       font-size: 14px;
     }
 
+  }
+}
+
+
+.operator-statistical-page {
+  max-width: 340px;
+
+  .operator-statistical-card {
+    width: 324px;
+    margin: 0;
   }
 }

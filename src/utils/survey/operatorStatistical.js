@@ -379,6 +379,10 @@ function operatorStatistical(operatorTable) {
 
 function operatorStatisticalV2(operatorList){
 
+    if(!operatorList){
+        return
+    }
+
     let data = {
         allOwn:0,
         allNotOwn:[],
@@ -430,8 +434,8 @@ function operatorStatisticalV2(operatorList){
 
 
 
-    for(const charId in operatorList){
-        const operator = operatorList[charId];
+    for(const index in operatorList){
+        const operator = operatorList[index];
         const rarity = operator.rarity
         data.allCount++
         data[`rarity${rarity}Count`]++
@@ -577,6 +581,6 @@ function splitMaterial(highest_rarity, item_cost_obj) {
     return itemList
 }
 
-export default {
+export  {
     calAPCost, splitMaterial, operatorStatistical, operatorPlanCal , operatorStatisticalV2
 }

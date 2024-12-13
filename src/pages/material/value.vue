@@ -1,13 +1,11 @@
 <script setup>
 import FixedNav from "/src/components/FixedNav.vue";
-import MyButton from '/src/components/Button.vue'
 import ModuleHeader from '@/components/ModuleHeader.vue';
 import {ref, onMounted} from "vue";
 import materialAPI from "/src/api/material.js";
 import {exportExcel} from "/src/utils/exportExcel";
 import userService from "@/utils/user/userConfig.js";
 
-let opETextTheme = ref("op_title_etext_light")
 
 let value_unit = ref('itemValueAp')
 
@@ -86,17 +84,16 @@ onMounted(() => {
       tmpList[sortId] = list
     }
 
-    const index = 0
-    for(const list of tmpList){
 
+    for(const list of tmpList){
       if(list&&list.length>0){
+        // itemValueCollect.value.push(list)
         if(list.length<9){
           itemValueCollect.value.push(list)
         }else {
           itemValueCollect.value.push(list.slice(0,9))
           itemValueCollect.value.push(list.slice(9))
         }
-
       }
 
     }
@@ -110,22 +107,12 @@ onMounted(() => {
   <div id="value">
     <!-- 价值一览 Start -->
     <ModuleHeader title="价值一览" title-en="Material Value"></ModuleHeader>
-
-    <div class="value-button-group">
-      <MyButton data-color='blue'  :active="value_unit === 'itemValueAp'"
-                @click="value_unit = 'itemValueAp'">等效理智
-      </MyButton>
-      <MyButton data-color='blue'  :active="value_unit === 'itemValue'"
-                @click="value_unit = 'itemValue'">等效绿票
-      </MyButton>
-      <MyButton data-color='blue'
+      <v-btn color="primary" variant="tonal" class="m-4"
                 @click="exportItemValueExcel">导出Excel
-      </MyButton>
-      <MyButton data-color='blue'
+      </v-btn>
+      <v-btn color="primary" variant="tonal" class="m-4"
                 @click="exportItemValueJson">导出Json
-      </MyButton>
-    </div>
-
+      </v-btn>
     <div class="item-value-table-wrap color">
       <div v-for="(item_group, index) in itemValueCollect" :key="index" class="item-value-list">
         <div class="item-value-cell" v-for="(item, index) in item_group" :key="index"
