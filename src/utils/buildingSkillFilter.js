@@ -249,7 +249,7 @@ const operatorFilterConditionTable = {
 
 // Official english name is "Rosmontis"
 const RosmontisUniverse = ['琴柳']
-const GoldProductionLine = ['桃金娘','杜林','褐果','至简']
+const GoldProductionLine = ['至简','桃金娘','褐果','杜林','特克诺']
 const Knight = ['砾','薇薇安娜','正义骑士号']
 const Automation = ['清流','承曦格雷伊','Lancet-2']
 const RhineLab = ['赫默','伊芙利特','塞雷娅','白面鸮','梅尔','麦哲伦','多萝西','星源','缪尔赛思']
