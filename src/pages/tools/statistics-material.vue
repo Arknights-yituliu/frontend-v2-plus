@@ -6,34 +6,34 @@ import SpriteImage from "@/components/SpriteImage.vue";
 
 let listItemCollect = ref({})
 let logList = ref([])
+
 function statistics() {
   let list = []
   for (const charId in CHARACTER_TABLE) {
     const info = CHARACTER_TABLE[charId]
     _formatData(info)
   }
-  list.sort((a, b) => b.rarity-a.rarity)
+  list.sort((a, b) => b.rarity - a.rarity)
 
-
-  const {itemCostCollect,logs} = statisticsOperatorInfo(list)
+  console.table(list)
+  const {itemCostCollect, logs} = statisticsOperatorInfo(list)
   logList.value = logs
   console.log(itemCostCollect)
 
   listItemCollect.value = splitMaterialByTier(5, itemCostCollect);
 
 
-
   function _formatData(info) {
 
-    const {charId,name,rarity} = info;
+    const {charId, name, rarity} = info;
     if (rarity < 3) {
       return
     }
 
     let formatData = {
-      charId:charId,
-      name:name,
-      rarity:rarity,
+      charId: charId,
+      name: name,
+      rarity: rarity,
       elite: 0,
       level: 0,
       mainSkill: 0,
@@ -84,48 +84,34 @@ function statistics() {
 
 
 }
+
 statistics()
 
 </script>
 <template>
 
-  <table class="table114514">
-    <tbody>
-     <tr v-for="(item,index) in logList" >
-       <td >
-         <SpriteImage original-size="180" display-size="50" :image-name="item.charId">   </SpriteImage>
 
-       </td>
-       <td>
-         {{item.name}}
-       </td>
-       <td>
-         {{item.count-item.cost}}
-       </td>
-       <td>
-         +
-       </td>
-       <td >
-           {{item.cost}}
-       </td>
-       <td>
-         =
-       </td>
-       <td>
-         {{item.count}}
-       </td>
-     </tr>
-    </tbody>
-  </table>
+  <div  class="log114514">
+    <div v-for="(item,index) in logList" style="display: flex;align-items: center">
+      <SpriteImage original-size="180" display-size="50" :image-name="item.charId"></SpriteImage>
+      <div class="cell114514">
+         {{ item.name }}
+      </div>
+      <div class="cell114514">
+         {{ item.count - item.cost }} +  {{ item.cost }} = {{ item.count }}
+      </div>
+    </div>
+  </div>
+
 
   <table v-for="(list,tier) in listItemCollect">
     <tbody>
     <tr v-for="(item,index) in list">
       <td>
-        <SpriteImage original-size="183" display-size="50" :image-name="item.id">   </SpriteImage>
+        <SpriteImage original-size="183" display-size="50" :image-name="item.id"></SpriteImage>
       </td>
       <td>
-        {{item.count}}
+        {{ item.count }}
       </td>
     </tr>
     </tbody>
@@ -134,13 +120,15 @@ statistics()
 </template>
 
 
-<style >
-.table114514{
-  border-collapse: collapse
+<style>
+.log114514 {
+  display: flex;flex-wrap: wrap;
+  .cell114514 {
+    display: block;
+    width: 140px;
+    padding: 4px 12px;
+  }
 }
 
-.table114514 td{
-  border: 1px solid black;
-  padding: 4px;
-}
+
 </style>
