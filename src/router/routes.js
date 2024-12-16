@@ -349,6 +349,12 @@ const routes = [
         component: () => import('/src/pages/tools/rogue-seed.vue')
     },
     {
+        path: '/statistics-material',
+        text: '材料统计',
+        display: false,
+        component: () => import('/src/pages/tools/statistics-material.vue')
+    },
+    {
         path: '/:catchAll(.*)',
         display: false,
         component: Error404
