@@ -16,6 +16,10 @@
   margin: 4px;
 }
 
+.m-a{
+  margin: auto;
+}
+
 //布局
 .flex{
   display: flex;
@@ -25,6 +29,9 @@
   flex-direction: column;
 }
 
+.flex-wrap{
+  flex-wrap: wrap;
+}
 
 .items-center{
   align-items: center;
@@ -37,6 +44,8 @@
 .justify-center{
   justify-content: center;
 }
+
+
 
 //透明度
 .opacity-70{

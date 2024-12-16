@@ -4,80 +4,64 @@ import OperatorInfo from "/src/components/OperatorInfo.vue";
 import MyButton from "/src/components/Button.vue";
 import '/src/assets/css/survey/operator.scss'
 import '/src/assets/css/survey/operator.phone.scss'
+
 const props = defineProps(["modelValue"]);
-import {operatorStatisticalV2, splitMaterial} from "/src/utils/survey/operatorStatistical"
+import { statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical"
 import SpriteImage from "/src/components/SpriteImage.vue";
 
 
-let allData = ref([])
+let operatorInfo = ref([])
 let itemCostList = ref([]) //材料消耗数量
-let apCostCount = ref(0) //理智消耗数量
+let apCost = ref(0) //理智消耗数量
+let itemCostCollectOriginal = ref([])
+let itemCostCollectData = ref([])
 let itemCostMap = ref({}) //材料消耗数量
-let apCostRanking = ref([])
-let notOwn = ref([])
+let apCostRankingData = ref([])
+let notOwnData = ref([])
 
 function updateData(list) {
 
-  const statisticalInfo = operatorStatisticalV2(list);
+  // const statisticalInfo = operatorStatisticalV2(list);
+  const statisticsOperatorInfo1 = statisticsOperatorInfo(list);
 
+  const {notOwn, apCostRanking, itemCostCollect, apCostCount, info} = statisticsOperatorInfo1
 
-  allData.value = []
-  const operatorGroup = [
-    {label: '全部干员', value: 'all'},
-    {label: '6⭐干员', value: 'rarity6'},
-    {label: '5⭐干员', value: 'rarity5'},
-    {label: '4⭐干员', value: 'rarity4'}
-  ]
+  operatorInfo.value = _setData(info)
 
+  const {T5, T4, T3, T2, T1} = itemCostCollect
+  itemCostCollectData.value = [T5, T4, T3, T2, T1]
+  itemCostCollectOriginal.value = itemCostCollect
 
+  apCost.value = apCostCount
 
-  for (const item of operatorGroup) {
-    setData(item,statisticalInfo)
+  try {
+    apCostRankingData.value = apCostRanking
+    notOwnData.value = notOwn
+  } catch (error) {
+    console.log(error)
   }
 
-  itemCostList.value = statisticalInfo.itemCostList
-  itemCostMap.value = statisticalInfo.itemCostMap
-  apCostCount.value = statisticalInfo.apCostCount
-  apCostRanking.value = statisticalInfo.apCostRanking
-  notOwn.value = statisticalInfo.allNotOwn
-}
 
-function setData(group, statisticalInfo) {
-  let value = group.value
-
-  let data = [{
-    label: '招募干员数量',
-    value: `${statisticalInfo[`${value}Own`]}/${statisticalInfo[`${value}Count`]}`
-  }]
-  let rank = 2
-  for (const num of statisticalInfo[`${value}Elite`]) {
-    data.push({label: `精英阶段${rank}干员`, value: num.toString()})
-    rank--
-  }
-  rank = 3
-  for (const num of statisticalInfo[`${value}Skill`]) {
-    if (rank === 0) {
-      continue
+  function _setData(info) {
+    let cardData = []
+    for (let item of info) {
+      const {elite, equip, skill, own, count} = item
+      const data = [
+        {label: '招募干员数量', value: `${own}/${count}`},
+        {label: '精英阶段2干员', value: `${elite.rank2}`},
+        {label: '专精三级技能数量', value: `${skill.rank3}`},
+        {label: '专精二级技能数量', value: `${skill.rank2}`},
+        {label: '专精一级技能数量', value: `${skill.rank1}`},
+        {label: '三级模组数量', value: `${equip.rank3}`},
+        {label: '二级模组数量', value: `${equip.rank2}`},
+        {label: '一级模组数量', value: `${equip.rank1}`},
+      ]
+      cardData.push({title: item.module, data: data})
     }
-    const label = rank !== 0 ? `技能专精等级${rank}` : `技能未专精`
-    data.push({label: label, value: num.toString()})
-    rank--
-  }
-  rank = 3
 
-  for (const num of statisticalInfo[`${value}Mod`]) {
-    if (rank === 0) {
-      continue
-    }
-    const label = rank !== 0 ? `模组等级${rank}` : `未开启模组`
-    data.push({label: label, value: num.toString()})
-    rank--
+    return cardData
   }
 
-  allData.value.push({
-    title: group.label,
-    data: data
-  })
 }
 
 
@@ -86,7 +70,8 @@ function setData(group, statisticalInfo) {
  * @param highestRarity  材料最大星级
  */
 function splitMaterialByRarity(highestRarity) {
-  itemCostList.value = splitMaterial(highestRarity, itemCostMap.value);
+  itemCostCollectData.value = splitMaterialByTier(highestRarity, itemCostCollectOriginal.value);
+  console.log(itemCostCollectData.value)
 }
 
 /**
@@ -106,7 +91,7 @@ function strShowLength(num) {
 
 updateData(props.modelValue)
 
-watch(props.modelValue,() =>  (newVal,oldValue) => {
+watch(props.modelValue, () => (newVal, oldValue) => {
 
   updateData(props.modelValue)
 })
@@ -116,9 +101,9 @@ watch(props.modelValue,() =>  (newVal,oldValue) => {
 
 <template>
 
-  <div class="operator-statistical-page">
+  <div class="operator-statistical-page flex flex-wrap m-a">
     <v-card class="operator-statistical-card m-4" :title="group.title"
-            v-for="(group,index) in allData" :key="index"
+            v-for="(group,index) in operatorInfo" :key="index"
     >
       <div class="operator-statistical-item" v-for="(data,index) in group.data" :key="index">
         <span class="info-label">{{ data.label }}</span>
@@ -131,25 +116,25 @@ watch(props.modelValue,() =>  (newVal,oldValue) => {
       <div style="margin: 4px;display: flex;flex-wrap: wrap">
         <SpriteImage :image-name="operator.charId" original-size="180" display-size="40"
                      style="margin: 4px"
-                     v-for="(operator) in notOwn"></SpriteImage>
+                     v-for="(operator) in notOwnData"></SpriteImage>
       </div>
     </div>
 
     <div class="operator-statistical-card">
       <div class="detail-card-title">干员消耗理智排行</div>
-      <OperatorInfo v-for="(item,index) in apCostRanking" :key="index" :operator-info="item"></OperatorInfo>
+      <OperatorInfo v-for="(item,index) in apCostRankingData" :key="index" :operator-info="item"></OperatorInfo>
     </div>
 
     <div class="operator-statistical-card">
       <div class="detail-card-title">材料消耗情况</div>
       <div class="item-cost-data">
-        <p style="">总计消耗{{ apCostCount.toFixed(0) }} 理智</p>
+        <p style="">总计消耗{{ apCost.toFixed(0) }} 理智</p>
         <!--          材料统计-->
-        <my-button data-color="orange" @click="splitMaterialByRarity(5)">不拆分</my-button>
-        <my-button data-color="purple" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</my-button>
-        <my-button data-color="blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</my-button>
-        <div class="item-cost-group" v-for="(itemList,type) in itemCostList" :key="type">
-          <div class="item-cost-item" v-for="(item,index) in itemList" :key="index">
+        <v-btn color="orange" class="m-4" @click="splitMaterialByRarity(5)">不拆分</v-btn>
+        <v-btn color="purple" class="m-4" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</v-btn>
+        <v-btn color="blue" class="m-4" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</v-btn>
+        <div class="item-cost-group" v-for="(list,tier) in itemCostCollectData" :key="tier">
+          <div class="item-cost-item" v-for="(item,index) in list" :key="index">
             <SpriteImage original-size="183" display-size="40" :image-name="item.id" style="margin: auto"></SpriteImage>
             <span class="item-cost-num">
                   {{ strShowLength(item.count) }}

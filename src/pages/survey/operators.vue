@@ -15,9 +15,9 @@ import {useRouter} from "vue-router";
 import {operatorFilterCondition, filterOperatorList} from "@/utils/survey/operatorFilter.js";
 
 import OperatorStatisticalTable from "/src/components/survey/OperatorStatisticalTable.vue";
+import deepClone from "@/utils/deepClone.js";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
-
 
 
 let displayTabHeader = ref('干员筛选')
@@ -34,13 +34,11 @@ async function getUserInfoAndOperatorData() {
 }
 
 
-
 //后端返回的用户干员信息
 let operatorList = ref([])  //干员列表
 //前端筛选后的干员信息
 let displayOperatorList = ref([])  //干员列表
 let operatorIdAndIndexDict = ref({})
-
 
 
 /**
@@ -60,25 +58,46 @@ function getOperatorData() {
     let list = response.data; //后端返回的数据
     //转为前端的数据格式
     operatorList.value = []
+    const operatorMap = {}
     for (const item of list) {
-      const charId = item.charId;
-      if(CHARACTER_TABLE[charId]){
-        let formatData = JSON.parse(JSON.stringify(CHARACTER_TABLE[charId]))
-        formatData.elite = item.elite;
-        formatData.level = item.level;
-        formatData.potential = item.potential;
-        formatData.mainSkill = item.mainSkill;
-        formatData.skill1 = item.skill1;
-        formatData.skill2 = item.skill2;
-        formatData.skill3 = item.skill3;
-        formatData.modX = item.modX;
-        formatData.modY = item.modY;
-        formatData.modD = item.modD;
-        formatData.own = item.own;
-        formatData.modA = item.modA;
-        operatorList.value.push(formatData)
-        operatorIdAndIndexDict.value[charId] = operatorList.value.length-1
+      operatorMap[item.charId] = item;
+    }
+
+    for (const charId in CHARACTER_TABLE) {
+      let formatData = deepClone(CHARACTER_TABLE[charId])
+
+      let item = {}
+      if (operatorMap[charId]) {
+        item = operatorMap[charId]
+      } else {
+        item = {
+          elite: 0,
+          level: 0,
+          mainSkill: 0,
+          skill1: 0,
+          skill2: 0,
+          skill3: 0,
+          modX: 0,
+          modY: 0
+        }
       }
+
+      formatData.elite = item.elite;
+      formatData.level = item.level;
+      formatData.potential = item.potential;
+      formatData.mainSkill = item.mainSkill;
+      formatData.skill1 = item.skill1;
+      formatData.skill2 = item.skill2;
+      formatData.skill3 = item.skill3;
+      formatData.modX = item.modX;
+      formatData.modY = item.modY;
+      formatData.modD = item.modD;
+      formatData.own = item.own;
+      formatData.modA = item.modA;
+
+      operatorList.value.push(formatData)
+      operatorIdAndIndexDict.value[charId] = operatorList.value.length - 1
+
     }
     displayOperatorList.value = filterOperatorList(operatorList.value)
     cMessage("导入了 " + list.length + " 条数据");
@@ -152,7 +171,6 @@ function exportOperatorExcel() {
 
   exportExcel('干员练度表', list)
 }
-
 
 
 //上传APi返回的信息
@@ -252,8 +270,6 @@ function dataOptionClass(charId, current, property) {
 }
 
 
-
-
 let sortProperty = ref({})
 
 /**
@@ -273,19 +289,12 @@ function sortOperatorList(property) {
 }
 
 
-
 /**
  * 控制干员练度推荐折叠栏的显示状态
  */
 async function getOperatorRecommend() {
   operatorRecommendList.value = await operatorRecommend(operatorList.value)
 }
-
-
-
-
-
-
 
 
 function getAvatar(id) {
@@ -295,8 +304,6 @@ function getAvatar(id) {
 function getSkillSprite(id) {
   return "bg-skill_icon_" + id;
 }
-
-
 
 
 /**
@@ -323,10 +330,10 @@ onMounted(() => {
 
 <template>
   <div class="survey-operator-page survey-common">
-    <v-card style="width: 96%;margin: 0 auto">
+    <v-card>
       <v-tabs
           v-model="displayTabHeader"
-          bg-color="primary" >
+          bg-color="primary">
         <v-tab value="数据导入导出">数据导入导出</v-tab>
         <v-tab value="干员筛选">干员筛选</v-tab>
 
@@ -350,9 +357,9 @@ onMounted(() => {
                 {{ condition.label }}
               </v-btn>
             </div>
-<!--            <pre>-->
-<!--              {{operatorFilterCondition}}-->
-<!--            </pre>-->
+            <!--            <pre>-->
+            <!--              {{operatorFilterCondition}}-->
+            <!--            </pre>-->
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">排序</v-btn>
               <v-btn color="primary"
