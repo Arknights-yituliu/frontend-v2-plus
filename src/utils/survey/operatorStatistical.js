@@ -76,7 +76,7 @@ function getOperatorItemCost(charId, rarity, current, target) {
     const targetLevel = target.level
     const targetMainSkill = target.mainSkill
     const targetSkill1 = target.skill1
-    const targetSkill2 = target.skill3
+    const targetSkill2 = target.skill2
     const targetSkill3 = target.skill3
     const targetModX = target.modX
     const targetModY = target.modY
@@ -130,58 +130,51 @@ function getOperatorItemCost(charId, rarity, current, target) {
         }
     }
 
-    // 技能专精消耗的材料
-    // const currentSkillRanks = [currentSkill1, currentSkill2, currentSkill3]
-    // const targetSkillRanks = [targetSkill1, targetSkill2, targetSkill3]
-    // debug("干员从当前到目标练度的消耗", target, currentSkillRanks, targetSkillRanks)
-    // for (let index in currentSkillRanks) {
-    //     debug("干员当前技能专精的消耗", target, skills[index])
-    //     for (let rank = currentSkillRanks[index]; rank < targetSkillRanks[index]; rank++) {
-    //         debug("干员当前技能专精每级的消耗", target, rank, skills[index])
-    //         for (let itemId in skills[index][rank]) {
-    //             let count = skills[index][rank][itemId];
-    //             _addItemCost(itemId, count)
-    //             // console.log(name, index + '技能专精' + rank, "消耗：", itemId + 'X.' + count)
-    //         }
-    //     }
-    // }
+    _statisticsSkills(0, currentSkill1, targetSkill1)
+    _statisticsSkills(1, currentSkill2, targetSkill2)
+    _statisticsSkills(2, currentSkill3, targetSkill3)
 
+    debug("11111", target,currentSkill2, targetSkill2 )
 
-    _skillsCost(0, currentSkill1, targetSkill1)
-    _skillsCost(1, currentSkill2, targetSkill2)
-    _skillsCost(2, currentSkill3, targetSkill3)
-
-
-    function _skillsCost(index, currentSkill, targetSkill) {
+    function _statisticsSkills(index, currentSkill, targetSkill) {
         const list = skills[index]
-        if (!list||list.length<1) {
+        if (!list) {
             return
         }
 
-        debug("干员当前技能专精的消耗", target, `技能${index+1}`,list)
+        debug("干员专精的消耗", target, `技能${index + 1}`, list)
+
         for (let i = currentSkill; i < targetSkill; i++) {
-            const {id, count,name} = list[i];
-            debug("干员当前技能专精每级的消耗", target, `专精等级${i+1}`,name,count)
-            _addItemCost(id, count)
+
+            const itemCost = list[i]
+            for (const id in itemCost) {
+                const count = itemCost[id]
+                debug("干员专精每级的消耗", target, id, count)
+                _addItemCost(id, count)
+            }
         }
 
     }
 
-    // 模组升级消耗的材料
-    const currentEquipRanks = {"X": currentModX, "Y": currentModY, "D": currentModD}
-    const targetEquipRanks = {"X": targetModX, "Y": targetModY, "D": targetModD}
-    // debug(target, currentEquipRanks, targetEquipRanks)
 
-    for (const type in currentEquipRanks) {
+    _statisticsEquip('X', currentModX, targetModX)
+    _statisticsEquip('Y', currentModY, targetModY)
+    _statisticsEquip('D', currentModD, targetModD)
+
+    function _statisticsEquip(type, currentEquipRank, targetEquipRank) {
         if (!operatorItemCost[`mod${type}`]) {
-            continue;
+            return;
         }
-        // debug(target, `mod${type}` , operatorItemCost[`mod${type}`])
-        for (let i = currentEquipRanks[type]; i < targetEquipRanks[type]; i++) {
-            for (let itemId in operatorItemCost[`mod${type}`][i]) {
-                let count = operatorItemCost[`mod${type}`][i][itemId];
-                // console.log(name,'模组'+type,'等级',i,"消耗：",itemId+' : '+count)
-                _addItemCost(itemId, count)
+
+        const list = operatorItemCost[`mod${type}`]
+
+        debug("干员模组消耗", target, `mod${type}`, list)
+        for (let i = currentEquipRank; i < targetEquipRank; i++) {
+            const itemCost = list[i]
+            for (let id in itemCost) {
+                let count = itemCost[id];
+                debug("干员模组每级的消耗", target, id, count)
+                _addItemCost(id, count)
             }
         }
     }
@@ -409,12 +402,14 @@ function statisticsOperatorInfo(operatorList) {
             const apCost = _calcApCost(itemCost);
 
 
-            if (itemCost['30115'] && itemCostCollect.T5['30115']) {
+            const logId = '30155'
+
+            if (itemCost[logId] && itemCostCollect.T5[logId]) {
                 let log = {
                     charId: operator.charId,
                     name: operator.name,
-                    cost: itemCost['30115'].count,
-                    count: itemCostCollect.T5['30115'].count
+                    cost: itemCost[logId].count,
+                    count: itemCostCollect.T5[logId].count
                 }
                 logs.push(log)
             }
@@ -427,10 +422,10 @@ function statisticsOperatorInfo(operatorList) {
 
         statisticalData.itemCostCollect = itemCostCollect
 
-        console.table(logs)
-        console.table(itemCostCollect.T5)
-        console.table(itemCostCollect.T4)
-        console.table(itemCostCollect.T3)
+        // console.table(logs)
+        // console.table(itemCostCollect.T5)
+        // console.table(itemCostCollect.T4)
+        // console.table(itemCostCollect.T3)
 
         statisticalData.notOwn.sort((a, b) => {
             return b.rarity - a.rarity
@@ -630,13 +625,13 @@ function splitMaterialByTier(tier, itemCollect) {
 
 function debug(breakpoint, operator, value1, value2, value3) {
 
-    // return;
+    return;
     const {name, rarity} = operator
-    if (rarity < 6) {
-        return
-    }
+    // if (rarity < 6) {
+    //     return
+    // }
 
-    if ('浊心斯卡蒂' !== name) {
+    if ('摩根' !== name) {
         return;
     }
 
