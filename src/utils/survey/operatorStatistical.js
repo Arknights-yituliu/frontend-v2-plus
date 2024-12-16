@@ -109,40 +109,62 @@ function getOperatorItemCost(charId, rarity, current, target) {
     // 下面的是计算从当前练度到目标练度的消耗
     // 精英化消耗的材料
 
-    for (let e = currentElite; e <=targetElite; e++) {
-        const costList =  operatorItemCost.elite[e]
-        debug(`精英消耗`, target,costList)
+    for (let e = currentElite; e <= targetElite; e++) {
+        const costList = operatorItemCost.elite[e]
+        debug(`精英消耗`, target, costList)
         for (let itemId in costList) {
 
             let count = operatorItemCost.elite[e][itemId];
             _addItemCost(itemId, count)
-            debug( `精英'+${e}`, target,itemId,count)
+            debug(`精英'+${e}`, target, itemId, count)
         }
     }
 
     // 通用技能消耗的材料
-    for (let i = currentMainSkill; i < targetMainSkill; i++) {
-        for (let itemId in allSkill[i]) {
-            let count = allSkill[i][itemId];
+    for (let m = currentMainSkill; m <= targetMainSkill; m++) {
+        const list = allSkill[m]
+        for (let itemId in list) {
+            let count = allSkill[m][itemId];
             _addItemCost(itemId, count)
-            // console.log(name,'技能'+i,"消耗：",itemId+'X.'+count)
+            debug(`主技能等级'+${m}`, target, itemId, count)
         }
     }
 
     // 技能专精消耗的材料
-    const currentSkillRanks = [currentSkill1, currentSkill2, currentSkill3]
-    const targetSkillRanks = [targetSkill1, targetSkill2, targetSkill3]
-    debug("干员从当前到目标练度的消耗", target, currentSkillRanks, targetSkillRanks)
-    for (let index in currentSkillRanks) {
-        debug("干员当前技能专精的消耗", target, skills[index])
-        for (let rank = currentSkillRanks[index]; rank < targetSkillRanks[index]; rank++) {
-            debug("干员当前技能专精每级的消耗", target, rank, skills[index])
-            for (let itemId in skills[index][rank]) {
-                let count = skills[index][rank][itemId];
-                _addItemCost(itemId, count)
-                // console.log(name, index + '技能专精' + rank, "消耗：", itemId + 'X.' + count)
-            }
+    // const currentSkillRanks = [currentSkill1, currentSkill2, currentSkill3]
+    // const targetSkillRanks = [targetSkill1, targetSkill2, targetSkill3]
+    // debug("干员从当前到目标练度的消耗", target, currentSkillRanks, targetSkillRanks)
+    // for (let index in currentSkillRanks) {
+    //     debug("干员当前技能专精的消耗", target, skills[index])
+    //     for (let rank = currentSkillRanks[index]; rank < targetSkillRanks[index]; rank++) {
+    //         debug("干员当前技能专精每级的消耗", target, rank, skills[index])
+    //         for (let itemId in skills[index][rank]) {
+    //             let count = skills[index][rank][itemId];
+    //             _addItemCost(itemId, count)
+    //             // console.log(name, index + '技能专精' + rank, "消耗：", itemId + 'X.' + count)
+    //         }
+    //     }
+    // }
+
+
+    _skillsCost(0, currentSkill1, targetSkill1)
+    _skillsCost(1, currentSkill2, targetSkill2)
+    _skillsCost(2, currentSkill3, targetSkill3)
+
+
+    function _skillsCost(index, currentSkill, targetSkill) {
+        const list = skills[index]
+        if (!list||list.length<1) {
+            return
         }
+
+        debug("干员当前技能专精的消耗", target, `技能${index+1}`,list)
+        for (let i = currentSkill; i < targetSkill; i++) {
+            const {id, count,name} = list[i];
+            debug("干员当前技能专精每级的消耗", target, `专精等级${i+1}`,name,count)
+            _addItemCost(id, count)
+        }
+
     }
 
     // 模组升级消耗的材料
@@ -388,7 +410,12 @@ function statisticsOperatorInfo(operatorList) {
 
 
             if (itemCost['30115'] && itemCostCollect.T5['30115']) {
-                let log = {charId: operator.charId,name: operator.name, cost: itemCost['30115'].count,count: itemCostCollect.T5['30115'].count}
+                let log = {
+                    charId: operator.charId,
+                    name: operator.name,
+                    cost: itemCost['30115'].count,
+                    count: itemCostCollect.T5['30115'].count
+                }
                 logs.push(log)
             }
 
@@ -483,12 +510,9 @@ function statisticsOperatorInfo(operatorList) {
 
             for (const itemId in itemCost) {
                 const item = itemCost[itemId]
-                const {id,name,rarity,itemValueAp,count} = item
+                const {id, name, rarity, itemValueAp, count} = item
                 apCost += (itemValueAp * count)
                 const tier = `T${rarity}`
-
-
-
 
 
                 if (!itemCostCollect[tier][itemId]) {
@@ -612,7 +636,7 @@ function debug(breakpoint, operator, value1, value2, value3) {
         return
     }
 
-    if('浊心斯卡蒂'!==name){
+    if ('浊心斯卡蒂' !== name) {
         return;
     }
 
