@@ -36,7 +36,7 @@ import {useTheme} from 'vuetify'
 
 const theme = useTheme()
 
-import User from '/src/components/survey/user.vue'
+import User from '/src/pages/account/user.vue'
 
 import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
