@@ -156,14 +156,14 @@ const routes = [
         // component: Notice
     },
     {
-        path: '/survey/account/register',
+        path: '/account/register',
         text: '注册账号',
         name: 'REGISTER',
         display: true,
         component: REGISTER
     },
     {
-        path: '/survey/account/login',
+        path: '/account/login',
         text: '登录账号',
         name: 'LOGIN',
         display: false,

@@ -1,19 +1,17 @@
 <template>
   <div class="survey-login-page">
-    <div class="survey-login-btn" v-show="userInfo.status<0">
-      <router-link to="/survey/account/register">
-        <span class="header-button-label" style="margin-right: 12px">注册</span>
-      </router-link>
-      <router-link to="/survey/account/login">
+    <div  v-show="userInfo.status<0">
+      <router-link to="/account/login">
         <span class="header-button-label">登录</span>
       </router-link>
     </div>
 
-    <v-menu v-show="userInfo.status>0">
+    <div v-show="userInfo.status>0">
+    <v-menu >
       <template v-slot:activator="{ props }" >
-        <SpriteImage :image-name="userInfo.avatar" style="background-color: white" display-size="50" original-size="180"
+        <OperatorAvatar :image-name="userInfo.avatar" style="background-color: white" :rounded="true"
                      rounded-corner="100" v-bind="props" >
-        </SpriteImage>
+        </OperatorAvatar>
         <!--        <v-btn  ></v-btn>-->
       </template>
 
@@ -50,7 +48,7 @@
         </v-list-item>
       </v-list>
     </v-menu>
-
+    </div>
 
     <c-popup :visible="loginVisible" v-model:visible="loginVisible">
       <div class="login-card" v-show="userInfo.status>0">
@@ -84,6 +82,7 @@ import surveyApi from "/src/api/userInfo";
 import {getUserInfo} from "/src/utils/survey/userInfo.js";
 import {useRoute,useRouter} from "vue-router";
 import SpriteImage from "@/components/SpriteImage.vue";
+import OperatorAvatar from "@/components/OperatorAvatar.vue";
 
 const router = useRouter();
 
