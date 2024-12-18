@@ -307,6 +307,12 @@ const routes = [
         component: () => import('/src/pages/video-material/pack.page.vue')
     },
     {
+        path: '/media/weekly',
+        text: '周报做图用',
+        display: false,
+        component: () => import('/src/pages/video-material/weekly.page.vue')
+    },
+    {
         path: '/test/sandbox',
         text: '收益速览做图用',
         display: false,
