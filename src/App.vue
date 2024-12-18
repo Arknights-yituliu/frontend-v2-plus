@@ -25,7 +25,7 @@ import '/src/assets/css/layout/basic.scss'
 import '/src/assets/css/layout/navigation.scss'
 import '/src/assets/css/layout/main.scss'
 import '/src/assets/css/common/theme.scss'
-import '/src/assets/css/vuetify_common.scss'
+import '/src/assets/css/atomic.scss'
 
 import "/src/assets/css/survey/survey_common.css";
 
@@ -36,7 +36,7 @@ import {useTheme} from 'vuetify'
 
 const theme = useTheme()
 
-import User from '/src/components/survey/user.vue'
+import User from '/src/pages/account/user.vue'
 
 import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";

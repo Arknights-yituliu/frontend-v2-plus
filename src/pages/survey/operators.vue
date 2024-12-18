@@ -1,11 +1,9 @@
 <script setup>
 import {cMessage} from "/src/utils/message.js";
-import {filterByCharacterProperty, professionDict, yearDict} from "/src/utils/survey/common.js"; //基础信息（干员基础信息列表，干员职业字典，干员星级）
-import operatorStatistical from "/src/utils/survey/operatorStatistical"
 import userAPI from "/src/api/userInfo";
 import operatorDataAPI from "/src/api/operatorData.js"
 import {onMounted, ref} from "vue";
-import operatorRecommend from "/src/utils/survey/operatorRecommend";
+import {operatorRecommend} from "/src/utils/survey/operatorRecommend";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import {exportExcel} from '/src/utils/exportExcel.js'
 
@@ -16,10 +14,10 @@ import {getUserInfo} from "/src/utils/survey/userInfo.js";
 import {useRouter} from "vue-router";
 import {operatorFilterCondition, filterOperatorList} from "@/utils/survey/operatorFilter.js";
 
-import OperatorStatisticalTable from "/src/components/OperatorStatisticalTable.vue";
+import OperatorStatisticalTable from "/src/components/survey/OperatorStatisticalTable.vue";
+import deepClone from "@/utils/deepClone.js";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
-
 
 
 let displayTabHeader = ref('干员筛选')
@@ -36,14 +34,13 @@ async function getUserInfoAndOperatorData() {
 }
 
 
-let operatorTable = ref(CHARACTER_TABLE);
 //后端返回的用户干员信息
 let operatorList = ref([])  //干员列表
 //前端筛选后的干员信息
 let displayOperatorList = ref([])  //干员列表
 let operatorIdAndIndexDict = ref({})
-//干员统计信息
-let statisticalResultV2 = ref({})
+
+
 /**
  * 找回填写过的角色信息
  */
@@ -61,29 +58,50 @@ function getOperatorData() {
     let list = response.data; //后端返回的数据
     //转为前端的数据格式
     operatorList.value = []
+    const operatorMap = {}
     for (const item of list) {
-      const charId = item.charId;
-      if(CHARACTER_TABLE[charId]){
-        let formatData = CHARACTER_TABLE[charId]
-        formatData.elite = item.elite;
-        formatData.level = item.level;
-        formatData.potential = item.potential;
-        formatData.mainSkill = item.mainSkill;
-        formatData.skill1 = item.skill1;
-        formatData.skill2 = item.skill2;
-        formatData.skill3 = item.skill3;
-        formatData.modX = item.modX;
-        formatData.modY = item.modY;
-        formatData.modD = item.modD;
-        formatData.own = item.own;
-        formatData.modA = item.modA;
-        operatorList.value.push(formatData)
-        operatorIdAndIndexDict.value[charId] = operatorList.value.length-1
+      operatorMap[item.charId] = item;
+    }
+
+    for (const charId in CHARACTER_TABLE) {
+      let formatData = deepClone(CHARACTER_TABLE[charId])
+
+      let item = {}
+      if (operatorMap[charId]) {
+        item = operatorMap[charId]
+      } else {
+        item = {
+          elite: 0,
+          level: 0,
+          mainSkill: 0,
+          skill1: 0,
+          skill2: 0,
+          skill3: 0,
+          modX: 0,
+          modY: 0
+        }
       }
+
+      formatData.elite = item.elite;
+      formatData.level = item.level;
+      formatData.potential = item.potential;
+      formatData.mainSkill = item.mainSkill;
+      formatData.skill1 = item.skill1;
+      formatData.skill2 = item.skill2;
+      formatData.skill3 = item.skill3;
+      formatData.modX = item.modX;
+      formatData.modY = item.modY;
+      formatData.modD = item.modD;
+      formatData.own = item.own;
+      formatData.modA = item.modA;
+
+      operatorList.value.push(formatData)
+      operatorIdAndIndexDict.value[charId] = operatorList.value.length - 1
+
     }
     displayOperatorList.value = filterOperatorList(operatorList.value)
     cMessage("导入了 " + list.length + " 条数据");
-    statisticalResultV2.value = operatorStatistical.operatorStatisticalV2(operatorTable.value)
+
   });
 }
 
@@ -95,7 +113,7 @@ function getOperatorData() {
 const addFilterConditionAndFilterOperator = debounce((func, index) => {
   func(index)
   displayOperatorList.value = filterOperatorList(operatorList.value)
-  console.log(displayOperatorList.value)
+
 }, 500)
 
 /**
@@ -132,8 +150,7 @@ function exportOperatorExcel() {
     '干员名称', '是否已招募', '星级', '等级', '精英化等级', '潜能等级', '通用技能等级', '1技能专精等级',
     '2技能专精等级', '3技能专精等级', 'X模组等级', 'Y模组等级', 'D模组等级'
   ]]
-  for (const charId in operatorTable.value) {
-    const operator = operatorTable.value[charId]
+  for (const operator in operatorList.value) {
     list.push([
       operator.name,
       operator.own,
@@ -154,7 +171,6 @@ function exportOperatorExcel() {
 
   exportExcel('干员练度表', list)
 }
-
 
 
 //上传APi返回的信息
@@ -187,21 +203,27 @@ let uploadFileName = ref("上传的文件名");
  */
 function createUploadData() {
   let uploadList = [];
-  for (const sCharId in selectedCharId.value) {
-    const operator = {
-      charId: operatorTable.value[sCharId].charId,
-      own: operatorTable.value[sCharId].own,
-      rarity: operatorTable.value[sCharId].rarity,
-      elite: operatorTable.value[sCharId].elite,
-      level: operatorTable.value[sCharId].level,
-      potential: operatorTable.value[sCharId].potential,
-      skill1: operatorTable.value[sCharId].skill1,
-      skill2: operatorTable.value[sCharId].skill2,
-      skill3: operatorTable.value[sCharId].skill3,
-      modX: operatorTable.value[sCharId].modX,
-      modY: operatorTable.value[sCharId].modY,
+  for (const charId in selectedCharId.value) {
+
+    const index = operatorIdAndIndexDict.value[charId];
+
+    const operator = operatorList.value[index];
+
+    const data = {
+
+      charId: operator.charId,
+      own: operator.own,
+      rarity: operator.rarity,
+      elite: operator.elite,
+      level: operator.level,
+      potential: operator.potential,
+      skill1: operator.skill1,
+      skill2: operator.skill2,
+      skill3: operator.skill3,
+      modX: operator.modX,
+      modY: operator.modY,
     };
-    uploadList.push(operator);
+    uploadList.push(data);
   }
 
   return uploadList;
@@ -228,7 +250,7 @@ function updateOperatorPopup(index) {
  */
 function updateOperatorData(charId, property, newValue) {
   operatorPopupData.value[property] = newValue
-  operatorTable.value[charId][property] = newValue
+  // operatorTable.value[charId][property] = newValue
   selectedCharId.value[charId] = charId
 }
 
@@ -246,8 +268,6 @@ function dataOptionClass(charId, current, property) {
   }
 
 }
-
-
 
 
 let sortProperty = ref({})
@@ -269,19 +289,12 @@ function sortOperatorList(property) {
 }
 
 
-
 /**
  * 控制干员练度推荐折叠栏的显示状态
  */
 async function getOperatorRecommend() {
-  operatorRecommendList.value = await operatorRecommend.operatorRecommend(operatorTable.value)
+  operatorRecommendList.value = await operatorRecommend(operatorList.value)
 }
-
-
-
-
-
-
 
 
 function getAvatar(id) {
@@ -291,8 +304,6 @@ function getAvatar(id) {
 function getSkillSprite(id) {
   return "bg-skill_icon_" + id;
 }
-
-
 
 
 /**
@@ -319,10 +330,10 @@ onMounted(() => {
 
 <template>
   <div class="survey-operator-page survey-common">
-    <v-card style="width: 96%;margin: 0 auto">
+    <v-card>
       <v-tabs
           v-model="displayTabHeader"
-          bg-color="primary" >
+          bg-color="primary">
         <v-tab value="数据导入导出">数据导入导出</v-tab>
         <v-tab value="干员筛选">干员筛选</v-tab>
 
@@ -346,9 +357,9 @@ onMounted(() => {
                 {{ condition.label }}
               </v-btn>
             </div>
-<!--            <pre>-->
-<!--              {{operatorFilterCondition}}-->
-<!--            </pre>-->
+            <!--            <pre>-->
+            <!--              {{operatorFilterCondition}}-->
+            <!--            </pre>-->
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">排序</v-btn>
               <v-btn color="primary"
@@ -372,7 +383,7 @@ onMounted(() => {
           </v-tabs-window-item>
 
           <v-tabs-window-item value="个人干员数据统计" v-loading>
-            <OperatorStatisticalTable v-model="statisticalResultV2"></OperatorStatisticalTable>
+            <OperatorStatisticalTable v-model="operatorList"></OperatorStatisticalTable>
           </v-tabs-window-item>
 
 

@@ -15,6 +15,7 @@ import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
 import StageLegend from "@/components/material/StageLegend.vue";
 import StageDetailTable from "@/components/material/StageDetailTable.vue";
+import OrundumTable from "@/components/material/OrundumTable.vue";
 
 // import {getButtonSize} from '/src/plugins/vuetify/getDisplaySize'
 
@@ -596,33 +597,35 @@ onMounted(() => {
       </v-btn>
     </div>
 
-    <div class="tableArea" style="margin:0 8px;max-width: 720px;border: 1px solid #00000040;border-radius: 8px;">
-      <el-table class="detailTable" :data="displayOrundumRecommendedStage" stripe style="width: 100%;height: 400px;">
-        <el-table-column prop="stageCode" label="关卡名"/>
-        <el-table-column label="每理智可搓玉">
-          <template #default="scope">
-            <div style="display: flex; align-items: center">
-              <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>
-              <div class="orundum-table-icon">
-                <div class="bg-4003_icon sprite-icon"></div>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="每搓1抽消耗">
-          <template #default="scope">
-            <div style="display: flex; align-items: center">
-              <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
-              <div class="orundum-table-icon">
-                <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率"/>
-        <el-table-column prop="stageEfficiency" label="关卡效率"/>
-      </el-table>
-    </div>
+    <OrundumTable v-model="displayOrundumRecommendedStage"></OrundumTable>
+
+<!--    <div class="tableArea" style="margin:0 8px;max-width: 720px;border: 1px solid #00000040;border-radius: 8px;">-->
+<!--      <el-table class="detailTable" :data="displayOrundumRecommendedStage" stripe style="width: 100%;height: 400px;">-->
+<!--        <el-table-column prop="stageCode" label="关卡名"/>-->
+<!--        <el-table-column label="每理智可搓玉">-->
+<!--          <template #default="scope">-->
+<!--            <div style="display: flex; align-items: center">-->
+<!--              <span style="margin-left: 10px">{{ scope.row.orundumPerAp }}</span>-->
+<!--              <div class="orundum-table-icon">-->
+<!--                <div class="bg-4003_icon sprite-icon"></div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column label="每搓1抽消耗">-->
+<!--          <template #default="scope">-->
+<!--            <div style="display: flex; align-items: center">-->
+<!--              <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>-->
+<!--              <div class="orundum-table-icon">-->
+<!--                <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column prop="orundumPerApEfficiency" label="搓玉效率"/>-->
+<!--        <el-table-column prop="stageEfficiency" label="关卡效率"/>-->
+<!--      </el-table>-->
+<!--    </div>-->
     <!-- 历史活动 -->
     <div class="module-header" id="history-stage-table">
       <div class="module-title">

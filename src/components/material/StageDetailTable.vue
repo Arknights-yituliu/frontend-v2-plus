@@ -6,12 +6,7 @@ import {ref} from "vue";
 const props = defineProps(['modelValue'])
 
 let sortBy = ref([
-  {key: 'knockRating', order: 'desc'},
-  {key: 'apExpect', order: 'desc'},
   {key: 'stageEfficiency', order: 'desc'},
-  {key: 'leT4Efficiency', order: 'desc'},
-  {key: 'leT3Efficiency', order: 'desc'},
-  {key: 'leT2Efficiency', order: 'desc'},
 ])
 
 const headers = [
@@ -35,10 +30,7 @@ function replaceZoneName(str) {
 </script>
 
 <template>
-
   <v-card>
-
-
     <v-data-table
         v-model:sort-by="sortBy"
         :headers="headers"

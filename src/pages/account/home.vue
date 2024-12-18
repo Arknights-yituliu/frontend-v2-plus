@@ -7,6 +7,10 @@ import "/src/assets/css/survey/home.scss";
 import "/src/assets/css/survey/home.phone.scss";
 import {getUserInfo} from '/src/utils/survey/userInfo.js'
 import MyButton from '/src/components/Button.vue'
+import OperatorAvatar from "@/components/OperatorAvatar.vue";
+import operatorDataAPI from "@/api/operatorData.js";
+import CHARACTER_TABLE from "@/static/json/survey/character_table_simple.json";
+import OperatorStatisticalTable from "@/components/survey/OperatorStatisticalTable.vue";
 
 let avatar = []
 for (const char_id in operator_table_simple) {
@@ -32,8 +36,6 @@ let inputData = ref({
   email: '',
   emailCode: ''
 })
-
-
 
 
 function checkPassWord() {
@@ -110,7 +112,6 @@ function logout() {
 }
 
 
-
 async function getUserInfoByToken() {
   userInfo.value = await getUserInfo()
   inputData.value.userName = userInfo.value.userName
@@ -148,17 +149,81 @@ function getSprite(id) {
   return "bg-" + id;
 }
 
+let operatorList = ref([])
+
+
+function getOperatorData() {
+  //检查是否登录
+  const data = {token: localStorage.getItem('USER_TOKEN')}
+  //根据一图流的token查询用户填写的干员数据
+  operatorDataAPI.getOperatorData(data).then((response) => {
+    let list = response.data; //后端返回的数据
+    //转为前端的数据格式
+    operatorList.value = []
+    let tmpList = []
+    for (const item of list) {
+      const charId = item.charId;
+      if(CHARACTER_TABLE[charId]){
+        let formatData = JSON.parse(JSON.stringify(CHARACTER_TABLE[charId]))
+        formatData.elite = item.elite;
+        formatData.level = item.level;
+        formatData.potential = item.potential;
+        formatData.mainSkill = item.mainSkill;
+        formatData.skill1 = item.skill1;
+        formatData.skill2 = item.skill2;
+        formatData.skill3 = item.skill3;
+        formatData.modX = item.modX;
+        formatData.modY = item.modY;
+        formatData.modD = item.modD;
+        formatData.own = item.own;
+        formatData.modA = item.modA;
+        tmpList.push(formatData)
+      }
+    }
+    operatorList.value = tmpList
+  });
+}
+
 onMounted(() => {
   getUserInfoByToken()
-
-
+  getOperatorData()
 })
-
-
 
 
 </script>
 <template>
+
+  <div class="account-home-page">
+    <v-card class="user-card m-4" title="用户信息">
+      <v-list>
+        <v-list-item>
+          <div class="m-4 flex items-center justify-between">
+            <span class="opacity-70">头像</span>
+            <OperatorAvatar :char-id="userInfo.avatar" rounded size="40"></OperatorAvatar>
+          </div>
+        </v-list-item>
+        <v-list-item >
+          <div class="m-4 flex items-center justify-between">
+            <span class="opacity-70">用户名</span>
+            <span class="font-bold">{{ userInfo.userName}}</span>
+          </div>
+        </v-list-item>
+        <v-list-item >
+          <div class="m-4 flex items-center justify-between">
+            <span class="opacity-70">绑定邮箱</span>
+            <span class="font-bold">{{ userInfo.email}}</span>
+          </div>
+        </v-list-item>
+      </v-list>
+    </v-card>
+
+    <v-card class="user-card m-4" title="干员信息">
+      <OperatorStatisticalTable v-model="operatorList"></OperatorStatisticalTable>
+    </v-card>
+
+
+  </div>
+
   <div class="account-home-page">
     <div class="user-info-card-container">
 
@@ -166,9 +231,9 @@ onMounted(() => {
         <h2 class="user-info-card-title">用户信息</h2>
         <h4>头像</h4>
         <div class="user-info-card-line">
-           <span>点击头像修改</span>
+          <span>点击头像修改</span>
           <div class="user-avatar-sprite" @click="avatarPopupVisible()">
-            <div :class="getSprite(userInfo.avatar)" ></div>
+            <div :class="getSprite(userInfo.avatar)"></div>
           </div>
         </div>
 
@@ -177,7 +242,7 @@ onMounted(() => {
 
           <input class="user-info-card-input" v-model="inputData.userName"/>
           <a v-show="inputData.userName.length>0">{{ inputData.userName.length }}/20</a>
-          <MyButton data-color="blue"  @click="updateUserName()">更新用户名</MyButton>
+          <MyButton data-color="blue" @click="updateUserName()">更新用户名</MyButton>
         </div>
         <div class="user-info-card-line">
           <span>绑定邮箱</span>
@@ -203,14 +268,14 @@ onMounted(() => {
             </div>
             <MyButton data-color="blue" @click="updateAvatar()"> 保存修改</MyButton>
           </div>
-          <div class="user_avatar_popup_wrap" >
-            <div class="user-avatar-sprite" style="margin: 8px" v-for="(avatar,index) in avatar" :key="index" @click="chooseAvatar(avatar.charId)">
-              <div :class="getSprite(avatar.charId)" ></div>
+          <div class="user_avatar_popup_wrap">
+            <div class="user-avatar-sprite" style="margin: 8px" v-for="(avatar,index) in avatar" :key="index"
+                 @click="chooseAvatar(avatar.charId)">
+              <div :class="getSprite(avatar.charId)"></div>
             </div>
           </div>
         </div>
       </c-popup>
-
 
 
       <div class="user-info-card">
@@ -253,13 +318,13 @@ onMounted(() => {
         <h4>输入新邮箱</h4>
         <div class="user-info-card-input-line">
           <input class="user-info-card-input" v-model="inputData.email"/>
-          <MyButton data-color="blue"  @click="sendEmailCode()">发送验证码</MyButton>
+          <MyButton data-color="blue" @click="sendEmailCode()">发送验证码</MyButton>
         </div>
 
         <h4>输入邮件验证码</h4>
         <div class="user-info-card-input-line">
           <input class="user-info-card-input" v-model="inputData.emailCode"/>
-          <MyButton data-color="blue"  @click="updateEmail()">修改邮箱</MyButton>
+          <MyButton data-color="blue" @click="updateEmail()">修改邮箱</MyButton>
         </div>
       </div>
       <div class="user-info-card">
@@ -268,7 +333,6 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
 
 
 <style scoped>
