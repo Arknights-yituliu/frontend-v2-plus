@@ -170,7 +170,7 @@ const routes = [
         component: LOGIN
     },
     {
-        path: '/survey/account/retrieve',
+        path: '/account/retrieve',
         text: '找回账号',
         name: 'RETRIEVE',
         display: false,

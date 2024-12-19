@@ -18,6 +18,7 @@ function openLinkOnNewPage(url) {
   window.open(url)
 }
 
+let currentStepper = ref(2)
 
 function optionLineClass(type) {
   if (type === inputContent.value.accountType) {
@@ -34,7 +35,7 @@ let inputContent = ref({
   email: '',
   verificationCode: '',
   hgToken: '',
-  accountType: '',
+  accountType: 'email',
   token: ''
 })
 
@@ -73,8 +74,8 @@ function checkPassword() {
 
 let recoveryProgress = ref('left:0px')
 
-function setRecoveryProgress(step){
-  const width = - document.getElementById("retrieve-form-scroll-item").offsetWidth
+function setRecoveryProgress(step) {
+  const width = -document.getElementById("retrieve-form-scroll-item").offsetWidth
   recoveryProgress.value = `left:${step * width}px`
 
 }
@@ -107,6 +108,51 @@ onMounted(() => {
 
 <template>
   <div class="login-page">
+    <v-card class="login-card m-a">
+      <v-tabs
+          v-model="inputContent.accountType"
+          bg-color="primary"
+      >
+        <v-tab value="email">通过邮箱找回</v-tab>
+      </v-tabs>
+      <v-card-text>
+        <v-tabs-window v-model="inputContent.accountType">
+          <v-tabs-window-item value="email">
+            <v-stepper alt-labels v-model="currentStepper">
+              <v-stepper-header>
+                <v-stepper-item
+                    title="Select campaign settings"
+                    value="1"
+                ></v-stepper-item>
+
+                <v-divider></v-divider>
+
+                <v-stepper-item
+                    title="Create an ad group"
+                    value="2"
+                ></v-stepper-item>
+
+                <v-divider></v-divider>
+
+                <v-stepper-item
+                    title="Create an ad"
+                    value="3"
+                ></v-stepper-item>
+              </v-stepper-header>
+
+
+              <v-stepper-window>
+                <v-card title="Step One" flat>111111</v-card>
+              </v-stepper-window>
+
+
+            </v-stepper>
+          </v-tabs-window-item>
+        </v-tabs-window>
+      </v-card-text>
+    </v-card>
+
+
     <div class="login-form">
       <div class="checkbox login-checkbox">
         <c-checkbox-option :value="inputContent.accountType" label="email"
@@ -124,7 +170,7 @@ onMounted(() => {
       <div class="retrieve-form-scroll-wrap">
         <div class="retrieve-form-scroll" v-show="'email'===inputContent.accountType"
              :style="recoveryProgress">
-          <div class="retrieve-form-scroll-item" >
+          <div class="retrieve-form-scroll-item">
             <div class="login-form-content-item">
               <span class="login-form-content-item-label">邮箱</span>
               <input class="login-form-input" v-model="inputContent.email">
@@ -133,16 +179,16 @@ onMounted(() => {
             </div>
             <div class="login-form-content-item">
               <span class="login-form-content-item-label">验证码</span>
-              <input class="login-form-input"  v-model="inputContent.verificationCode">
+              <input class="login-form-input" v-model="inputContent.verificationCode">
               <span class="login-form-content-item-tip"
                     v-show="inputTipDisplay(inputContent.verificationCode)">请输入验证码</span>
               <button class="login-form-btn-send" @click="sendVerificationCode">发送验证码</button>
             </div>
-           <div class="">
+            <div class="">
 
-           </div>
+            </div>
             <MyButton data-color="blue" class="MyButton-login"
-                       @click="toRetrieveAuthentication(1)">
+                      @click="toRetrieveAuthentication(1)">
               找回账号
             </MyButton>
 
@@ -172,7 +218,7 @@ onMounted(() => {
             </div>
 
             <MyButton data-color="blue" class="MyButton-login"
-                       @click="toResetPassword(2)">
+                      @click="toResetPassword(2)">
               找回账号
             </MyButton>
           </div>
@@ -189,11 +235,11 @@ onMounted(() => {
           <div class="retrieve-form-scroll-item">
             <div style="margin: 10px auto;text-align: center">登录明日方舟官网</div>
             <MyButton data-color="blue" class="MyButton-login"
-                       @click="openLinkOnNewPage(HYPERGRYPH_LINK)">
+                      @click="openLinkOnNewPage(HYPERGRYPH_LINK)">
               点击前往官网
             </MyButton>
             <MyButton data-color="blue" class="MyButton-login"
-                       @click="setRecoveryProgress(1)">
+                      @click="setRecoveryProgress(1)">
               已登录官网，前往下一步
             </MyButton>
 
@@ -203,7 +249,7 @@ onMounted(() => {
             <img alt="" src="/image/skland/hgAPI.jpg" style="width: 100%;">
             <p>点击对应的服务器链接，将会返回如上图所示的一段数据，将其全部复制</p>
 
-            <MyButton data-color="blue"  @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
+            <MyButton data-color="blue" @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
             </MyButton>
             <MyButton data-color="red" @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服
             </MyButton>
@@ -228,7 +274,7 @@ onMounted(() => {
 
           </div>
 
-          <div class="retrieve-form-scroll-item" >
+          <div class="retrieve-form-scroll-item">
             <div class="login-form-content-item">
               <span class="login-form-content-item-label">账号</span>
               <input class="login-form-input" v-model="inputContent.userName">
@@ -256,7 +302,7 @@ onMounted(() => {
             </MyButton>
           </div>
 
-          <div class="retrieve-form-scroll-item" >
+          <div class="retrieve-form-scroll-item">
             <div class="login-retrieve">
               <i class="iconfont icon-right" style="color: #00b28a;font-size: 18px"></i> 修改成功，即将转跳到个人中心
             </div>

@@ -8,6 +8,25 @@ import {useRouter} from "vue-router";
 import MyButton from '/src/components/Button.vue'
 
 
+const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
+const englishNumberRegex = /^[A-Za-z0-9]+$/;
+
+const accountRules = [
+  value => !!value || '不能为空',
+  value => chineseEnglishNumberRegex.test(value) || '账号仅可由汉字、数字、英文组成'
+]
+
+const passwordRules = [
+  value => !!value || '不能为空',
+  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成'
+]
+
+const confirmPasswordRules = [
+  value => !!value || '不能为空',
+  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成',
+  value => value===inputContent.value.password || '两次密码输入不一致'
+]
+
 function getParam(method) {
   let param = {
     accountType: inputContent.value.accountType
@@ -49,10 +68,7 @@ function checkPassword() {
   }
 }
 
-function inputTipDisplay(inputValue) {
 
-  return !inputValue;
-}
 
 const router = useRouter()
 
@@ -87,82 +103,108 @@ onMounted(() => {
 
 <template>
   <div class="login-page">
-    <div class="login-form">
-      <div class="checkbox login-checkbox">
-        <c-checkbox-option :value="inputContent.accountType" label="password"
-                           @click="inputContent.accountType='password'">
-          账号密码注册
-        </c-checkbox-option>
-        <c-checkbox-option :value="inputContent.accountType" label="email"
-                           @click="inputContent.accountType='email'">
-          邮箱注册
-        </c-checkbox-option>
-      </div>
+    <v-card class="login-card m-a">
+      <v-tabs
+          v-model="inputContent.accountType"
+          bg-color="primary"
+      >
+        <v-tab value="password">账号注册</v-tab>
+        <v-tab value="email">邮箱注册</v-tab>
+      </v-tabs>
 
-      <div class="login-form-content" v-show="'password'===inputContent.accountType">
-        <div class="login-form-content-item">
-          <span class="login-form-content-item-label">用户名</span>
-          <input class="login-form-input" v-model="inputContent.userName">
-          <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.userName)">请输入用户名，仅可由汉字、英文、数字组成</span>
-        </div>
-        <div class="login-form-content-item">
-          <span class="login-form-content-item-label">登录密码</span>
-          <input class="login-form-input" type="password" v-model="inputContent.password">
-          <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.password)">请输入密码，仅可由英文、数字组成</span>
-        </div>
-        <div class="login-form-content-item">
-          <span class="login-form-content-item-label">确认密码</span>
-          <input class="login-form-input" type="password" v-model="inputContent.confirmPassword">
-          <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.confirmPassword)">请再次输入密码</span>
-          <span class="login-form-content-item-warn">
-                  {{ checkPassword() }}
-              </span>
-        </div>
-        <div class="login-form-content-item">
-          <span class="login-form-content-item-label">绑定邮箱(选填)</span>
-          <input class="login-form-input" v-model="inputContent.email">
-          <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.confirmPassword)">请输入邮箱</span>
-        </div>
-      </div>
+      <v-card-text>
+        <v-tabs-window v-model="inputContent.accountType">
+          <v-tabs-window-item value="password">
+            <div class="m-0-4">账号（用户名）</div>
+            <v-text-field
+                :rules="accountRules"
+                density="compact"
+                v-model="inputContent.userName"
+                hint="账号仅可由汉字、数字、英文组成"
+                color="primary"
+                variant="outlined"
+                class="m-4"
+            ></v-text-field>
+            <div class="m-0-4">登录密码</div>
+            <v-text-field
+                density="compact"
+                :rules="passwordRules"
+                color="primary"
+                hint="密码仅可由数字、英文组成"
+                v-model="inputContent.password"
+                variant="outlined"
+                type="password"
+                hide-details="auto"
+                class="m-4"
+            ></v-text-field>
+            <div class="m-0-4">确认密码</div>
+            <v-text-field
+                density="compact"
+                :rules="confirmPasswordRules"
+                color="primary"
+                hint="密码仅可由数字、英文组成"
+                v-model="inputContent.confirmPassword"
+                variant="outlined"
+                type="password"
+                hide-details="auto"
+                class="m-4"
+            ></v-text-field>
+            <div class="m-0-4">绑定邮箱</div>
+            <v-text-field
+                density="compact"
+                color="primary"
+                hint="唯一的找回密码方式"
+                v-model="inputContent.email"
+                variant="outlined"
+                hide-details="auto"
+                class="m-4"
+            ></v-text-field>
 
-      <div class="login-form-content" v-show="'email'===inputContent.accountType">
-        <div class="login-form-content-item">
-          <span class="login-form-content-item-label">邮箱</span>
-          <input class="login-form-input" v-model="inputContent.email">
-          <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.email)">请输入邮箱</span>
+          </v-tabs-window-item>
+
+          <v-tabs-window-item value="email">
+            <div>邮箱</div>
+            <div class="flex">
+              <v-text-field
+                  v-model="inputContent.email"
+                  color="primary"
+                  density="compact"
+                  variant="outlined"
+                  class="m-4"
+              ></v-text-field>
+              <v-btn color="primary" variant="text" text="发送验证码"
+                     @click="sendVerificationCode"></v-btn>
+            </div>
+            <div>验证码</div>
+            <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
+          </v-tabs-window-item>
+        </v-tabs-window>
+
+        <div class="flex justify-center">
+          <v-btn @click="toRegister" text="登录" color="primary"></v-btn>
         </div>
-        <div class="login-form-content-item">
-          <span class="login-form-content-item-label">验证码</span>
-          <input class="login-form-input" v-model="inputContent.verificationCode">
-          <span class="login-form-content-item-tip"
-                v-show="inputTipDisplay(inputContent.verificationCode)">请输入验证码</span>
-          <button class="login-form-btn-send" @click="sendVerificationCode()">发送验证码</button>
-        </div>
-      </div>
+
+        <v-card title="账号须知" color="primary" variant="tonal" class="m-12-4">
+          <v-card-text>
+            <p>
+              使用密码登录时，如果账号绑定了邮箱，也可将邮箱作为账号进行登录。
+            </p>
+            <p>
+              *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
+            </p>
+            <p>
+              *为了您的账号安全，注册时的密码不要与您其他重要账号的密码相同
+            </p>
+            <p>
+              *请妥善保管好您的官网token和森空岛token
+            </p>
+          </v-card-text>
+        </v-card>
 
 
-        <MyButton data-color="blue"  class="MyButton-login" @click="toRegister()">
-          注册账号
-        </MyButton>
+      </v-card-text>
+    </v-card>
 
-
-      <div class="login-form-notice">
-        <p>
-          因服务器被攻击，数据库部分数据无法恢复，请尽量重新注册账号
-        </p>
-        <p>
-          邮箱是找回一图流账号密码的途径之一，强烈建议绑定邮箱，绑定后也作为账号用于登录
-        </p>
-        <p class="tip-color-warn">
-          *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
-        </p>
-      </div>
-    </div>
 
 
   </div>
