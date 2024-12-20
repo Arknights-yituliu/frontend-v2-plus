@@ -473,9 +473,10 @@ onMounted(() => {
       <v-btn color="primary" variant="tonal" class="v-btn" :size="getButtonSize()"
         @click="scrollToFrequentlyAskedQuestion()">常见问题
       </v-btn>
-      <v-chip color="primary" variant="tonal" class="v-btn" :size="getButtonSize()">
+      <span class="module-tip">更新时间：{{ updateTime }}</span>
+      <!-- <v-chip color="primary" variant="tonal" class="v-btn" :size="getButtonSize()">
         更新时间：{{ updateTime }}
-      </v-chip>
+      </v-chip> -->
 
     </div>
 
@@ -742,7 +743,7 @@ onMounted(() => {
                         <span class="stage-legend-text-1">需要所有材料→</span>
                       </td>
                       <td>
-                        <span class="stage-legend-text-2">10-10</span>
+                        <span class="stage-legend-text-2">14-17</span>
                       </td>
                       <td>
                         <span class="stage-legend-text-3">[综合效率]<br>所有掉落物的价值之和/理智消耗</span>
@@ -764,7 +765,7 @@ onMounted(() => {
                         </span>
                       </td>
                       <td>
-                        <span class="stage-legend-text-2">LE-5</span>
+                        <span class="stage-legend-text-2">14-17</span>
                       </td>
                       <td>
                         <span class="stage-legend-text-3">
@@ -791,7 +792,7 @@ onMounted(() => {
                         </span>
                       </td>
                       <td>
-                        <span class="stage-legend-text-2">LE-5</span>
+                        <span class="stage-legend-text-2">MB-6</span>
                       </td>
                       <td>
                         <span class="stage-legend-text-3">

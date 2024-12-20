@@ -64,10 +64,10 @@ import SpriteImage from "/src/components/SpriteImage.vue";
           <span>需要所有材料→</span>
         </td>
         <td class="stage-legend-text-2">
-          <span>10-10</span>
+          <span>14-17</span>
         </td>
         <td class="stage-legend-text-3">
-          <span class="stage-legend-text-bold">[综合效率]</span>
+          <span class="stage-legend-text-bold" style="font-size: 20px;">[综合效率]</span>
           <br>
           <span class="stage-legend-text-underline">
                 所有掉落物的价值之和
@@ -76,7 +76,7 @@ import SpriteImage from "/src/components/SpriteImage.vue";
           <span>理智消耗</span>
         </td>
         <td class="stage-legend-text-4">
-          <span>[综合效率]</span>
+          <span style="font-size: 20px;font-weight: bold;">[综合效率]</span>
         </td>
       </tr>
 
@@ -90,23 +90,23 @@ import SpriteImage from "/src/components/SpriteImage.vue";
               </span>
         </td>
         <td class="stage-legend-text-2">
-          <span>LE-5</span>
+          <span>14-17</span>
         </td>
         <td class="stage-legend-text-3">
-          <span class="stage-legend-text-bold" style="color: #c01dd7;">[T4效率]</span>
+          <span class="stage-legend-text-bold" style="color: #c01dd7;font-size: 20px;">[T4效率]</span>
           <br>
           <span class="stage-legend-text-underline">
               <span style="color: #c01dd7;font-weight: bold">紫</span>
               <span style="color: #0276f8;font-weight: bold">蓝</span>
               <span style="color: #01c028;font-weight: bold">绿</span>
-              <span>白糖价值之和 </span>
+              <span>白[糖]价值之和 </span>
             </span>
           <br>
           <span>理智消耗</span>
 
         </td>
         <td class="stage-legend-text-4">
-          <span>[综合效率]</span>
+          <span style="font-size: 20px;font-weight: bold;">[综合效率]</span>
         </td>
       </tr>
 
@@ -116,26 +116,26 @@ import SpriteImage from "/src/components/SpriteImage.vue";
         </td>
         <td class="stage-legend-text-1">
             <span>
-              需要<span style="color: #0276f8;font-weight: bold">蓝材料→</span>
+              需要<span style="color: #0276f8;font-weight: bold;">蓝材料→</span>
               </span>
         </td>
         <td class="stage-legend-text-2">
-          <span>LE-5</span>
+          <span>MB-6</span>
         </td>
         <td class="stage-legend-text-3">
-          <span class="stage-legend-text-bold" style="color: #0276f8;">[T3效率]</span>
+          <span class="stage-legend-text-bold" style="color: #0276f8;font-size: 20px;">[T3效率]</span>
           <br>
           <span class="stage-legend-text-underline">
               <span style="color: #0276f8;font-weight: bold">蓝</span>
               <span style="color: #01c028;font-weight: bold">绿</span>
-              <span>白糖价值之和 </span>
+              <span>白[糖]价值之和 </span>
             </span>
           <br>
           <span>理智消耗</span>
 
         </td>
         <td class="stage-legend-text-4">
-          <span>[综合效率]</span>
+          <span style="font-size: 20px;font-weight: bold;">[综合效率]</span>
         </td>
       </tr>
       </tbody>
