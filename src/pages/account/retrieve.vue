@@ -13,6 +13,19 @@ const BILIBILI_TOKEN_API = 'https://web-api.hypergryph.com/account/info/ak-b'
 const SKLAND_LINK = 'https://www.skland.com/'
 const CONSOLE_CODE = 'localStorage.getItem(\'SK_OAUTH_CRED_KEY\')+\',\'+localStorage.getItem(\'SK_TOKEN_CACHE_KEY\')'
 
+const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
+const englishNumberRegex = /^[A-Za-z0-9]+$/;
+
+const passwordRules = [
+  value => !!value || '不能为空',
+  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成'
+]
+
+const confirmPasswordRules = [
+  value => !!value || '不能为空',
+  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成',
+  value => value===inputContent.value.password || '两次密码输入不一致'
+]
 
 function openLinkOnNewPage(url) {
   window.open(url)
@@ -121,28 +134,86 @@ onMounted(() => {
             <v-stepper alt-labels v-model="currentStepper">
               <v-stepper-header>
                 <v-stepper-item
-                    title="Select campaign settings"
+                    title="邮箱验证"
                     value="1"
                 ></v-stepper-item>
 
                 <v-divider></v-divider>
 
                 <v-stepper-item
-                    title="Create an ad group"
+                    title="设置新密码"
                     value="2"
                 ></v-stepper-item>
 
                 <v-divider></v-divider>
 
                 <v-stepper-item
-                    title="Create an ad"
+                    title="设置成功"
                     value="3"
                 ></v-stepper-item>
               </v-stepper-header>
 
 
-              <v-stepper-window>
-                <v-card title="Step One" flat>111111</v-card>
+
+              <v-stepper-window v-show="currentStepper===0">
+                <div>邮箱</div>
+                <div class="flex">
+                  <v-text-field
+                      v-model="inputContent.email"
+                      color="primary"
+                      density="compact"
+                      variant="outlined"
+                      class="m-4"
+                  ></v-text-field>
+                  <v-btn color="primary" variant="text" text="发送验证码"
+                         @click="sendVerificationCode"></v-btn>
+                </div>
+                <div>验证码</div>
+                <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
+              </v-stepper-window>
+
+              <v-stepper-window v-show="currentStepper===1">
+                <div class="m-0-4">登录密码</div>
+                <v-text-field
+                    density="compact"
+                    :rules="passwordRules"
+                    color="primary"
+                    hint="密码仅可由数字、英文组成"
+                    v-model="inputContent.password"
+                    variant="outlined"
+                    type="password"
+                    hide-details="auto"
+                    class="m-4"
+                ></v-text-field>
+                <div class="m-0-4">确认密码</div>
+                <v-text-field
+                    density="compact"
+                    :rules="confirmPasswordRules"
+                    color="primary"
+                    hint="密码仅可由数字、英文组成"
+                    v-model="inputContent.confirmPassword"
+                    variant="outlined"
+                    type="password"
+                    hide-details="auto"
+                    class="m-4"
+                ></v-text-field>
+              </v-stepper-window>
+
+              <v-stepper-window v-show="currentStepper===2">
+                <div>邮箱</div>
+                <div class="flex">
+                  <v-text-field
+                      v-model="inputContent.email"
+                      color="primary"
+                      density="compact"
+                      variant="outlined"
+                      class="m-4"
+                  ></v-text-field>
+                  <v-btn color="primary" variant="text" text="发送验证码"
+                         @click="sendVerificationCode"></v-btn>
+                </div>
+                <div>验证码</div>
+                <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
               </v-stepper-window>
 
 
