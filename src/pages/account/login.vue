@@ -76,14 +76,14 @@ onMounted(() => {
           v-model="inputContent.accountType"
           bg-color="primary"
       >
-        <v-tab value="password">账号密码登录</v-tab>
+        <v-tab value="password">密码登录</v-tab>
         <v-tab value="email">邮箱登录</v-tab>
       </v-tabs>
 
       <v-card-text>
         <v-tabs-window v-model="inputContent.accountType">
           <v-tabs-window-item value="password">
-            <div class="m-0-4">账号</div>
+            <div class="m-0-4">账号（用户名）</div>
             <v-text-field
                 :rules="accountRules"
                 density="compact"
@@ -98,7 +98,7 @@ onMounted(() => {
                 density="compact"
                 :rules="passwordRules"
                 color="primary"
-                hint="密码仅可由汉字、数字、英文组成"
+                hint="密码仅可由数字、英文组成"
                 v-model="inputContent.password"
                 variant="outlined"
                 type="password"
@@ -137,7 +137,7 @@ onMounted(() => {
         <v-card title="账号须知" color="primary" variant="tonal" class="m-12-4">
           <v-card-text>
             <p>
-              使用账号密码登录时，如果账号绑定了邮箱，也可将邮箱作为账号进行登录。
+              使用密码登录时，如果账号绑定了邮箱，也可将邮箱作为账号进行登录。
             </p>
             <p>
               *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
