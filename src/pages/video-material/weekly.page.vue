@@ -3,18 +3,40 @@ let materialBlueData = ref(
   [
     {
       "material": "扭转醇",
-      "dropRate": 0.56,
-      "eff": 1.12
+      "stage": "ST-1",
+      "dropRate": 56,
+      "eff": 112,
+      "nextReDate": "2025.02",
+      "nextReAct": "一个活动名称",
+      "reMaterialA": "异铁组",
+      "reMaterialB": "异铁组",
+      "reMaterialC": "异铁组",
+      "demand": 114514,
+      "demand3Y": 1919
+    },
+    {
+      "material": "化合切削液",
+      "stage": "ST-1",
+      "dropRate": 56,
+      "eff": 112,
+      "nextRe": "2月xxxx",
+      "reMaterialA": "异铁组",
+      "reMaterialB": "异铁组",
+      "reMaterialC": "异铁组",
+      "demand": 114514,
+      "demand3Y": 1919
     },
     {
       "material": "扭转醇",
-      "dropRate": 0.56,
-      "eff": 1.12
-    },
-    {
-      "material": "扭转醇",
-      "dropRate": 0.56,
-      "eff": 1.12
+      "stage": "ST-1",
+      "dropRate": 56,
+      "eff": 112,
+      "nextRe": "2月xxxx",
+      "reMaterialA": "异铁组",
+      "reMaterialB": "异铁组",
+      "reMaterialC": "异铁组",
+      "demand": 114514,
+      "demand3Y": 1919
     }
   ]
 )
@@ -468,25 +490,77 @@ onMounted(() => {
       </div>
 
       <div class="weekly-module">
+        <!-- 模块头图 -->
         <img class="module-pic" src="\public\image\media\p1m1.jpg">
+        <!-- 文字子模块 -->
         <img class="module-title-pic" src="\public\image\media\p1m1.jpg">
+        <!-- 掉落子模块 -->
         <div class="module-drop">
+          <!-- 蓝材料区域 -->
           <div class="drop-blue">
+            <!-- 蓝材料模块 -->
             <div v-for="(material, index) in materialBlueData" :key="index" class="drop-blue-unit">
               <div class="drop-unit-top">
                 <div class="drop-unit-top-background">
                   <div class="drop-blue-sprite">
                     <div :class="getLegendSprite('30023')" class="drop-unit-image"></div>
                   </div>
-                  <div class="drop-unit-material">
-                    {{ materialBlueData[index].material }}
+                  <div class="drop-blue-info">
+                    <div class="drop-unit-stage">{{ materialBlueData[index].stage }}</div>
+                    <div class="drop-unit-material">{{ materialBlueData[index].material }}</div>
                   </div>
                 </div>
               </div>
-              material-A
+              <!-- 数据表 -->
+              <div class="drop-unit-bottom">
+                <table class="drop-unit-table">
+                  <tr>
+                    <td>
+                      综合效率
+                    </td>
+                    <td>
+                      {{ materialBlueData[index].eff }}%
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      掉率
+                    </td>
+                    <td>
+                      {{ materialBlueData[index].dropRate }}%
+                    </td>
+                  </tr>
+                </table>
+                <table class="drop-unit-table">
+                  <tr>
+                    <td>
+                      下次复刻
+                    </td>
+                    <td>
+                      {{ materialBlueData[index].nextReDate }}<br>
+                      {{ materialBlueData[index].nextReAct }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      同期材料
+                    </td>
+                    <td>
+                      <div :class="getLegendSprite('30023')" class="drop-unit-imageRe"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      总需求量
+                    </td>
+                    <td>
+                      {{ materialBlueData[index].dropRate }}%
+                    </td>
+                  </tr>
+                </table>
+              </div>
             </div>
           </div>
-          标题区域
         </div>
       </div>
     </div>
