@@ -142,8 +142,17 @@ const routes = [
         name: 'SandboxFoods',
         display: true,
         module: 'information',
-        icon: "sandboxFoods",
+        icon: "item",
         component: () => import('/src/pages/information/sandboxFoods.vue')
+    },
+    {
+        path: '/information/integratedStrategies',
+        text: '集成战略结局一览',
+        name: 'IntegratedStrategies',
+        display: true,
+        module: 'information',
+        icon: "item",
+        component: () => import('/src/pages/information/integratedStrategies.vue')
     },
     {
         path: '/survey/account/home',

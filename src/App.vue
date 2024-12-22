@@ -42,6 +42,7 @@ import '/src/assets/css/common/input.scss'
 import '/src/assets/css/common/tip.scss'
 import '/src/assets/css/common/title_and_tag.scss'
 import '/src/assets/css/common/popover.scss'
+import '/src/assets/css/common/icon.scss'
 
 
 import '/src/assets/css/layout/aside.scss'
