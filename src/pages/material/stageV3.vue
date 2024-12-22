@@ -462,16 +462,22 @@ onMounted(() => {
         <h1>推荐关卡</h1>
         <h4>Best Stages</h4>
       </div>
-      <v-btn color="primary" variant="tonal" class="v-btn" :size="getButtonSize()"
-        @click="legendDisplay = !legendDisplay">显示图例说明
+      <v-btn-group>
+        <v-btn color="primary" :size="getButtonSize()"
+          @click="scrollToOrundumTable()" style="margin: 10px 0px 2px 8px;">搓玉数据
+        </v-btn>
+        <v-btn color="primary" :size="getButtonSize()"
+          @click="scrollToHistoryStageTable()" style="margin: 10px 0px 2px 0px;">往期活动
+        </v-btn>
+        <v-btn color="primary" :size="getButtonSize()"
+          @click="scrollToFrequentlyAskedQuestion()" style="margin: 10px 4px 2px 0px;">常见问题
+        </v-btn>
+      </v-btn-group>
+      <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
+        @click="legendDisplay = !legendDisplay">显示图例
       </v-btn>
-      <v-btn color="primary" variant="tonal" class="v-btn" :size="getButtonSize()" @click="scrollToOrundumTable()">搓玉数据
-      </v-btn>
-      <v-btn color="primary" variant="tonal" class="v-btn" :size="getButtonSize()"
-        @click="scrollToHistoryStageTable()">往期活动
-      </v-btn>
-      <v-btn color="primary" variant="tonal" class="v-btn" :size="getButtonSize()"
-        @click="scrollToFrequentlyAskedQuestion()">常见问题
+      <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
+        @click="scrollToFrequentlyAskedQuestion()">旧版入口
       </v-btn>
       <span class="module-tip">更新时间：{{ updateTime }}</span>
       <!-- <v-chip color="primary" variant="tonal" class="v-btn" :size="getButtonSize()">
@@ -555,7 +561,8 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="stage-card" style="display: flex; align-items: center; flex-grow: 1;display: none;">
+      <!-- 网站信息卡 -->
+      <div class="stage-card" style="display: flex; align-items: center; flex-grow: 1;">
         <div style="display: inline-block;margin:0px 16px ;">
           明日方舟一图流<br>
           ark.yituliu.cn<br>

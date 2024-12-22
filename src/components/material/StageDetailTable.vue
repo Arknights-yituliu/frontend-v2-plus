@@ -16,7 +16,7 @@ const headers = [
   {title: '期望理智', key: 'apExpect'},
   {title: '副产物', sortable: false, key: 'secondaryItemId'},
   {title: '综合效率', key: 'stageEfficiency'},
-  {title: 'spm', key: 'SPM'},
+  {title: 'SPM', key: 'SPM'},
   {title: 'T4效率', key: 'leT4Efficiency'},
   {title: 'T3效率', key: 'leT3Efficiency'},
   {title: 'T2效率', key: 'leT2Efficiency'},
