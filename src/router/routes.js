@@ -146,6 +146,15 @@ const routes = [
         component: () => import('/src/pages/information/sandboxFoods.vue')
     },
     {
+        path: '/information/integratedStrategies',
+        text: '集成战略结局一览',
+        name: 'IntegratedStrategies',
+        display: true,
+        module: 'information',
+        icon: "item",
+        component: () => import('/src/pages/information/integratedStrategies.vue')
+    },
+    {
         path: '/account/home',
         text: '用户中心',
         name: 'AccountHome',
