@@ -537,6 +537,7 @@ onMounted(() => {
                       下次复刻
                     </td>
                     <td>
+                      <img class="reAct-image" src="\public\image\media\p1m1.jpg">
                       {{ materialBlueData[index].nextReDate }}<br>
                       {{ materialBlueData[index].nextReAct }}
                     </td>
@@ -546,7 +547,7 @@ onMounted(() => {
                       同期材料
                     </td>
                     <td>
-                      <div :class="getLegendSprite('30023')" class="drop-unit-imageRe"></div>
+                      <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
                     </td>
                   </tr>
                   <tr>
