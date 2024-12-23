@@ -116,12 +116,13 @@
               font-size: 20px;
               border-collapse: separate;
               border-spacing: 4px;
-              color:#ffffff;
+              color: #ffffff;
               text-align: center;
               width: 240px;
               // margin: 12px;
               // border: 2px;
             }
+
 
             .drop-unit-table td:first-child {
               height: 22px;
@@ -131,7 +132,13 @@
               color: #000;
             }
 
-            .drop-unit-imageRe {
+            .reAct-image {
+              // width: 96px;
+              height: 60px;
+              width: 150px;
+            }
+
+            .reMaterial-image {
               // width: 96px;
               // height: 96px;
               transform: scale(0.17);
