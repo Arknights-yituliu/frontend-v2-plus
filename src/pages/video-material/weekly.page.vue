@@ -7,7 +7,8 @@ let materialBlueData = ref(
       "dropRate": 56,
       "eff": 112,
       "nextReDate": "2025.02",
-      "nextReAct": "一个活动名称",
+      "nextReActImg": "/public/image/media/出苍白海.jpg",
+      "nextReActCut": "70%",
       "reMaterialA": "异铁组",
       "reMaterialB": "异铁组",
       "reMaterialC": "异铁组",
@@ -16,10 +17,12 @@ let materialBlueData = ref(
     },
     {
       "material": "化合切削液",
-      "stage": "ST-1",
+      "stage": "ST-2",
       "dropRate": 56,
       "eff": 112,
-      "nextRe": "2月xxxx",
+      "nextReDate": "2025.02",
+      "nextReActImg": "/public/image/media/p1m1.jpg",
+      "nextReActCut": "10%",
       "reMaterialA": "异铁组",
       "reMaterialB": "异铁组",
       "reMaterialC": "异铁组",
@@ -31,7 +34,9 @@ let materialBlueData = ref(
       "stage": "ST-1",
       "dropRate": 56,
       "eff": 112,
-      "nextRe": "2月xxxx",
+      "nextReDate": "2025.02",
+      "nextReActImg": "/public/image/media/p1m1.jpg",
+      "nextReActCut": "10%",
       "reMaterialA": "异铁组",
       "reMaterialB": "异铁组",
       "reMaterialC": "异铁组",
@@ -40,6 +45,12 @@ let materialBlueData = ref(
     }
   ]
 )
+
+function getReActImg(url, cut) {
+  const safeUrl = encodeURI(url);
+  // return `background: url('${safeUrl}')`;
+  return `background: url('${safeUrl}') ${cut} / 312% 126%;`;
+}
 
 import stageApi from '/src/api/material'
 import { onMounted, ref } from "vue";
@@ -51,6 +62,7 @@ import '/src/assets/css/material/stage.phone.scss'
 import '/src/assets/css/media/weekly.scss'
 
 import { dataFormat } from '/src/utils/dateUtil.js'
+import { dividerDark } from 'naive-ui';
 //漫游导航指引
 const guideOpen = ref(false)
 
@@ -515,7 +527,7 @@ onMounted(() => {
               <div class="drop-unit-bottom">
                 <table class="drop-unit-table">
                   <tr>
-                    <td>
+                    <td class="drop-unit-table-title">
                       综合效率
                     </td>
                     <td>
@@ -523,7 +535,7 @@ onMounted(() => {
                     </td>
                   </tr>
                   <tr>
-                    <td>
+                    <td class="drop-unit-table-title">
                       掉率
                     </td>
                     <td>
@@ -531,23 +543,34 @@ onMounted(() => {
                     </td>
                   </tr>
                 </table>
+                <dividerDark></dividerDark>
                 <table class="drop-unit-table">
                   <tr>
-                    <td>
+                    <td class="drop-unit-table-title">
                       下次复刻
                     </td>
-                    <td>
-                      <img class="reAct-image" src="\public\image\media\p1m1.jpg">
-                      {{ materialBlueData[index].nextReDate }}<br>
-                      {{ materialBlueData[index].nextReAct }}
+                    <td rowspan="3">
+                      <div class="reAct-image"
+                        :style="getReActImg(materialBlueData[index].nextReActImg, materialBlueData[index].nextReActCut)">
+                      </div>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      同期材料
+                      {{ materialBlueData[index].nextReDate }}
                     </td>
+                  </tr>
+                  <tr>
                     <td>
-                      <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                      <div class="reMaterial-wrapper">
+                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                      </div>
+                      <div class="reMaterial-wrapper">
+                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                      </div>
+                      <div class="reMaterial-wrapper">
+                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -555,7 +578,6 @@ onMounted(() => {
                       总需求量
                     </td>
                     <td>
-                      {{ materialBlueData[index].dropRate }}%
                     </td>
                   </tr>
                 </table>
