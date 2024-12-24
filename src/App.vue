@@ -44,7 +44,7 @@ import {routeMap} from "/src/router/routes";
 
 let customTheme = ref("")
 let drawer = ref(true)
-let rightDrawer = ref(false)
+let rightDrawer = ref()
 
 
 onMounted(() => {
@@ -97,9 +97,6 @@ function normalizePath(path) {
     <v-app class="app color_var" :class="customTheme">
       <v-navigation-drawer v-model="drawer" width="280">
         <Navigation></Navigation>
-      </v-navigation-drawer>
-
-      <v-navigation-drawer v-model="rightDrawer" location="right" temporary>
       </v-navigation-drawer>
 
       <v-app-bar :elevation="1" color="primary">

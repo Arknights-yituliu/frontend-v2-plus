@@ -5,9 +5,9 @@ import {debounce} from "/src/utils/debounce.js";
 
 
 const props = defineProps({
-  charId: {
+  itemId: {
     type: String,
-    default: "char_377_gdglow"
+    default: ""
   },
   rounded: {
     type: Boolean,
@@ -16,11 +16,8 @@ const props = defineProps({
   size: {
     type: Number,
     default: 40
-  },
-  mobileSize: {
-    type: Number,
-    default: 40
   }
+
 });
 
 let wrapStyle = ''
@@ -28,21 +25,21 @@ let spriteStyle = ''
 
 function calculatedSize() {
   const innerWidth = window.innerWidth;
-
-  let size = props.size;
+  let ratio = 1
 
   if (innerWidth < 600) {
-    size = props.mobileSize;
+    ratio = 0.7
   }
 
+  const size = props.size * ratio;
 
   wrapStyle = `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
   if (props.rounded) {
     wrapStyle += `;border-radius:60px;`
   }
 
-  spriteStyle = `position: absolute;transform: scale(${size / 180});
-  top: ${(size - 180) / 2}px;left: ${(size - 180) / 2}px;`
+  spriteStyle = `position: absolute;transform: scale(${size / 183});
+  top: ${(size - 183) / 2}px;left: ${(size - 183) / 2}px;`
 
 }
 
@@ -59,7 +56,7 @@ onMounted(() => {
 <template>
 
   <div :style="wrapStyle">
-    <div :style="spriteStyle" :class="`bg-${charId}`">
+    <div :style="spriteStyle" :class="`bg-${itemId}`">
     </div>
   </div>
 
