@@ -1,13 +1,13 @@
 <script setup>
 import {ref, watch} from "vue";
 import OperatorInfo from "/src/components/OperatorInfo.vue";
-import MyButton from "/src/components/Button.vue";
 import '/src/assets/css/survey/operator.scss'
 import '/src/assets/css/survey/operator.phone.scss'
-
-const props = defineProps(["modelValue"]);
 import { statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical"
 import SpriteImage from "/src/components/SpriteImage.vue";
+
+
+const props = defineProps(["modelValue"]);
 
 
 let operatorInfo = ref([])
@@ -21,7 +21,6 @@ let notOwnData = ref([])
 
 function updateData(list) {
 
-  // const statisticalInfo = operatorStatisticalV2(list);
   const statisticsOperatorInfo1 = statisticsOperatorInfo(list);
 
   const {notOwn, apCostRanking, itemCostCollect, apCostCount, info} = statisticsOperatorInfo1
@@ -89,10 +88,10 @@ function strShowLength(num) {
   return num
 }
 
-updateData(props.modelValue)
 
-watch(props.modelValue, () => (newVal, oldValue) => {
 
+watch(() =>props.modelValue.length,  (newVal, oldValue) => {
+  console.log(newVal, oldValue)
   updateData(props.modelValue)
 })
 
@@ -101,7 +100,7 @@ watch(props.modelValue, () => (newVal, oldValue) => {
 
 <template>
 
-  <div class="operator-statistical-page flex flex-wrap m-a">
+  <div class="operator-statistical-page flex justify-center flex-wrap m-a">
     <v-card class="operator-statistical-card m-4" :title="group.title"
             v-for="(group,index) in operatorInfo" :key="index"
     >

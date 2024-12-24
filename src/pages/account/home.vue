@@ -10,7 +10,7 @@ import MyButton from '/src/components/Button.vue'
 import OperatorAvatar from "@/components/OperatorAvatar.vue";
 import operatorDataAPI from "@/api/operatorData.js";
 import CHARACTER_TABLE from "@/static/json/survey/character_table_simple.json";
-import OperatorStatisticalTable from "@/components/survey/OperatorStatisticalTable.vue";
+import OperatorProgression from "@/components/survey/OperatorProgressionStatistical.vue";
 
 let avatar = []
 for (const char_id in operator_table_simple) {
@@ -182,6 +182,8 @@ function getOperatorData() {
     }
     operatorList.value = tmpList
   });
+
+
 }
 
 onMounted(() => {
@@ -193,38 +195,45 @@ onMounted(() => {
 </script>
 <template>
 
-  <div class="account-home-page">
+  <div class="account-home-page flex flex-wrap justify-center ">
     <v-card class="user-card m-4" title="用户信息">
       <v-list>
         <v-list-item>
-          <div class="m-4 flex items-center justify-between">
+          <div class="m-4 flex items-center">
             <span class="opacity-70">头像</span>
+            <div class="flex-grow"></div>
             <OperatorAvatar :char-id="userInfo.avatar" rounded size="40"></OperatorAvatar>
           </div>
         </v-list-item>
         <v-list-item >
-          <div class="m-4 flex items-center justify-between">
+          <div class="m-4 flex items-center">
             <span class="opacity-70">用户名</span>
+            <div class="flex-grow"></div>
             <span class="font-bold">{{ userInfo.userName}}</span>
           </div>
         </v-list-item>
         <v-list-item >
-          <div class="m-4 flex items-center justify-between">
+          <div class="m-4 flex items-center">
             <span class="opacity-70">绑定邮箱</span>
+            <div class="flex-grow"></div>
             <span class="font-bold">{{ userInfo.email}}</span>
           </div>
         </v-list-item>
       </v-list>
+
+      <div class="flex justify-center">
+        <v-btn color="primary" variant="outlined" text="修改用户信息" class="m-8"></v-btn>
+        <v-btn color="red" variant="outlined" text="退出登录"  @click="logout" class="m-8"></v-btn>
+      </div>
+
     </v-card>
 
-    <v-card class="user-card m-4" title="干员信息">
-      <OperatorStatisticalTable v-model="operatorList"></OperatorStatisticalTable>
+    <v-card class="user-card m-4" title="干员练度简表">
+      <OperatorProgression v-model="operatorList"></OperatorProgression>
     </v-card>
-
-
   </div>
 
-  <div class="account-home-page">
+  <div class="account-home-page" style="display: none">
     <div class="user-info-card-container">
 
       <div class="user-info-card">

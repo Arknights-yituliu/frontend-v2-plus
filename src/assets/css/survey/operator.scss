@@ -54,14 +54,6 @@
   }
 
 
-  .operator_potential {
-    width: 22px;
-    position: absolute;
-    top: 22px;
-    right: 0;
-    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
-  }
-
   .operator-avatar-wrap {
     width: 80px;
   }
@@ -218,29 +210,7 @@
     border: 1px solid var(--c-border-color);
   }
 
-  .item-cost-group{
-    display: flex;
-    margin: 4px;
-    flex-wrap: wrap;
-  }
 
-  .item-cost-item {
-    height: 50px;
-    width: 70px;
-    position: relative;
-    margin: 4px 8px;
-  }
-
-  .item-cost-num {
-    top: 32px;
-    font-size: 16px;
-    display: block;
-    background: #595959;
-    width: 70px;
-    color: white;
-    text-align: center;
-    position: absolute;
-  }
 
   /*干员推荐弹窗卡片样式*/
   .operator-recommend-popup-container {
@@ -384,11 +354,8 @@
 /*干员统计容器样式*/
 .operator-statistical-page {
 
-
   .operator-statistical-card {
     width: 500px;
-
-
     .operator-statistical-item {
       display: flex;
       justify-content: space-between;
@@ -422,11 +389,30 @@
       overflow: hidden;
       box-shadow: 1px 1px 4px var(--c-box-shadow-color),-1px -1px 4px var(--c-box-shadow-color);
       background-color: var(--c-card-background-color);
-
-
     }
+  }
 
+  .item-cost-group{
+    display: flex;
+    margin: 4px;
+    flex-wrap: wrap;
+  }
 
+  .item-cost-item {
+    height: 50px;
+    width: 70px;
+    position: relative;
+    margin: 4px 8px;
+  }
 
+  .item-cost-num {
+    top: 32px;
+    font-size: 16px;
+    display: block;
+    background: #595959;
+    width: 70px;
+    color: white;
+    text-align: center;
+    position: absolute;
   }
 }
