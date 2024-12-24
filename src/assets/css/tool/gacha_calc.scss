@@ -1,5 +1,4 @@
-/*为避免css打包冲突问题，本页面的css将使用“页面名-样式名”的格式命名，例如：gacha-calc-container*/
-/*考虑命名过长，gacha-calc-将简写为gc-*/
+
 
 .gacha-calculation-page {
   display: flex;
@@ -13,8 +12,7 @@
 }
 
 #gachaCalculate {
-  overflow: scroll;
-  height: calc(100vh - 20px);
+
 
   .el-radio-button__inner {
     width: 100%;
