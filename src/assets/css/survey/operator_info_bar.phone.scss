@@ -1,0 +1,42 @@
+.operator-info-bar{
+  width: 98%;
+
+  .operator-level-image {
+    width: 20px;
+    height: 20px;
+    background-size: 20px;
+    font-size: 8px;
+    line-height: 8px;
+    padding-top: 10px;
+    overflow: hidden;
+  }
+
+  .operator-elite-image {
+    width: 20px;
+  }
+
+  .operator-skill-item {
+    width: 40px;
+    height: 40px;
+
+    .skill-name {
+      display: none;
+    }
+  }
+
+  .operator-equip-icon {
+    width: 40px;
+
+    .equip-name {
+      font-size: 10px;
+    }
+  }
+
+  .operator-rank-icon {
+    left: -2px;
+    top: -2px;
+    width: 14px;
+  }
+
+
+}

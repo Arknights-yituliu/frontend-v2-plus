@@ -1,0 +1,75 @@
+.operator-info-bar{
+  display: flex;
+  align-items: center;
+  width: 500px;
+  box-shadow: 0px 0px 2px 1px var(--c-box-shadow-color);
+
+  .operator-elite-image {
+    width: 28px;
+    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+  }
+
+  .operator-level-image {
+    width: 28px;
+    height: 28px;
+    color: white;
+    background: url("/image/survey/rank/lv-bg.png");
+    background-size: 28px;
+    font-size: 12px;
+    line-height: 12px;
+    padding-top: 14px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .operator-skill-item {
+    width: 60px;
+    text-align: center;
+    .skill-name {
+      text-align: center;
+      font-size: 12px;
+    }
+  }
+
+  .operator-equip-item {
+    width: 60px;
+    position: relative;
+  }
+
+  .operator-equip-icon{
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin: auto;
+
+    .operator-equip-icon-image {
+      height: 40px;
+      width: 40px;
+      display: block;
+      margin: auto;
+      filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+    }
+
+    .equip-name {
+      text-align: center;
+      font-size: 12px;
+      line-height: 18px;
+    }
+  }
+
+  .item-ap-cost {
+    text-align: center;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .operator-rank-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16px;
+    box-shadow: 1px 1px 2px white;
+  }
+}
+
+
