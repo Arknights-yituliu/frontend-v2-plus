@@ -163,7 +163,7 @@ function getOperatorData() {
     let tmpList = []
     for (const item of list) {
       const charId = item.charId;
-      if(CHARACTER_TABLE[charId]){
+      if (CHARACTER_TABLE[charId]) {
         let formatData = JSON.parse(JSON.stringify(CHARACTER_TABLE[charId]))
         formatData.elite = item.elite;
         formatData.level = item.level;
@@ -195,41 +195,46 @@ onMounted(() => {
 </script>
 <template>
 
-  <div class="account-home-page flex flex-wrap justify-center ">
-    <v-card class="user-card m-4" title="用户信息">
+  <div class="account-home-page flex flex-wrap justify-center">
+    <v-card class="user-card m-12" title="用户信息">
       <v-list>
         <v-list-item>
-          <div class="m-4 flex items-center">
-            <span class="opacity-70">头像</span>
-            <div class="flex-grow"></div>
+          <div class="opacity-70 user-card-label">头像</div>
+          <div class="m-4 flex items-center user-card-bar justify-between">
             <OperatorAvatar :char-id="userInfo.avatar" rounded size="40"></OperatorAvatar>
+            <v-btn color="primary" variant="text" text="修改头像"></v-btn>
           </div>
         </v-list-item>
-        <v-list-item >
-          <div class="m-4 flex items-center">
-            <span class="opacity-70">用户名</span>
-            <div class="flex-grow"></div>
-            <span class="font-bold">{{ userInfo.userName}}</span>
+        <v-list-item>
+          <div class="opacity-70 user-card-label">用户名</div>
+          <div class="m-4 flex items-center user-card-bar justify-between">
+            <span class="font-bold">{{ userInfo.userName }}</span>
+            <v-btn color="primary" variant="text" text="修改用户名"></v-btn>
           </div>
         </v-list-item>
-        <v-list-item >
-          <div class="m-4 flex items-center">
-            <span class="opacity-70">绑定邮箱</span>
-            <div class="flex-grow"></div>
-            <span class="font-bold">{{ userInfo.email}}</span>
+        <v-list-item>
+          <div class="opacity-70 user-card-label">绑定邮箱</div>
+          <div class="m-4 flex items-center user-card-bar justify-between">
+            <span class="font-bold">{{ userInfo.email }}</span>
+            <v-btn color="primary" variant="text" text="修改邮箱"></v-btn>
           </div>
         </v-list-item>
       </v-list>
 
       <div class="flex justify-center">
-        <v-btn color="primary" variant="outlined" text="修改用户信息" class="m-8"></v-btn>
-        <v-btn color="red" variant="outlined" text="退出登录"  @click="logout" class="m-8"></v-btn>
+<!--        <v-btn color="primary" variant="outlined" text="修改用户信息" class="m-8"></v-btn>-->
+        <v-btn color="red" variant="outlined" text="退出登录" @click="logout" class="m-8"></v-btn>
       </div>
 
     </v-card>
 
-    <v-card class="user-card m-4" title="干员练度简表">
+    <v-card class="user-card m-12" title="干员练度简表">
       <OperatorProgression v-model="operatorList"></OperatorProgression>
+    </v-card>
+
+    <v-card>
+
+
     </v-card>
   </div>
 

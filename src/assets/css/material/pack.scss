@@ -8,9 +8,6 @@
   .pack-card {
     margin: 8px;
     width: 530px;
-    display: flex;
-    flex-wrap: wrap;
-
   }
 
   .pack-card-part-left {
@@ -371,7 +368,6 @@
   .pack-note {
     width: 100%;
     margin: 0px 24px;
-    text-align: right;
     font-style: italic
   }
 
