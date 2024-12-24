@@ -124,9 +124,9 @@
             }
 
 
-            .drop-unit-table td:first-child {
+            .drop-unit-table-title {
               height: 22px;
-              width: 100px;
+              width: 90px;
               background-color: #ffffff80;
               font-weight: 600;
               color: #000;
@@ -134,17 +134,25 @@
 
             .reAct-image {
               // width: 96px;
-              height: 60px;
-              width: 150px;
+              height: 100px;
+              width: 126px;
+              background-size: 200%;
             }
 
+            .reMaterial-wrapper{
+              width: 24px;
+              height: 24px;
+              display: inline-block;
+            }
             .reMaterial-image {
               // width: 96px;
               // height: 96px;
               transform: scale(0.17);
-              position: absolute;
+              transform-origin: top left;
+              // position: absolute;
               top: -32px;
               left: -32px;
+              // background-size: 50%;
             }
           }
         }

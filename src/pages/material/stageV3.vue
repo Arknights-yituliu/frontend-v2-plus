@@ -562,7 +562,7 @@ onMounted(() => {
         </div>
       </div>
       <!-- 网站信息卡 -->
-      <div class="stage-card" style="display: flex; align-items: center; flex-grow: 1;">
+      <div class="stage-card" style="display: none; align-items: center; flex-grow: 1;">
         <div style="display: inline-block;margin:0px 16px ;">
           明日方舟一图流<br>
           ark.yituliu.cn<br>
