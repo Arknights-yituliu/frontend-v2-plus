@@ -1,6 +1,6 @@
 import Error404 from "/src/pages/layout/error404.vue";
 import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
-import GACHA_CALCULATOR from '/src/pages/tools/gachaCalc.vue'
+import GACHA_CALCULATOR from '/src/pages/tools/gacha-calc.vue'
 import Notice from '/src/pages/layout/notice.vue'
 import REGISTER from '/src/pages/account/register.vue'
 import LOGIN from '/src/pages/account/login.vue'
