@@ -7,6 +7,7 @@ let materialBlueData = ref(
       "dropRate": 56,
       "eff": 112,
       "nextReDate": "2025.02",
+      "nextReAct": "七个字的活动名",
       "nextReActImg": "/public/image/media/出苍白海.jpg",
       "nextReActCut": "70%",
       "reMaterialA": "异铁组",
@@ -42,6 +43,22 @@ let materialBlueData = ref(
       "reMaterialC": "异铁组",
       "demand": 114514,
       "demand3Y": 1919
+    }
+  ]
+)
+
+let materialGreenData = ref(
+  [
+    {
+      "stage": "ST-1",
+      "materialA": "固源岩",
+      "materialB": "固源岩",
+      "OPS": 0.7
+    }, {
+      "stage": "ST-1",
+      "materialA": "固源岩",
+      "materialB": "固源岩",
+      "OPS": 0.7
     }
   ]
 )
@@ -547,40 +564,50 @@ onMounted(() => {
                 <table class="drop-unit-table">
                   <tr>
                     <td class="drop-unit-table-title">
-                      下次复刻
+                      总需求量
                     </td>
-                    <td rowspan="3">
-                      <div class="reAct-image"
-                        :style="getReActImg(materialBlueData[index].nextReActImg, materialBlueData[index].nextReActCut)">
-                      </div>
+                    <td>
+                      114
                     </td>
                   </tr>
                   <tr>
+                    <td class="drop-unit-table-title">下次复刻</td>
                     <td>
                       {{ materialBlueData[index].nextReDate }}
                     </td>
                   </tr>
+                </table>
+                <table>
                   <tr>
                     <td>
-                      <div class="reMaterial-wrapper">
-                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
-                      </div>
-                      <div class="reMaterial-wrapper">
-                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
-                      </div>
-                      <div class="reMaterial-wrapper">
-                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      总需求量
+                      {{ materialBlueData[index].nextReAct }}
                     </td>
                     <td>
+                      <div class="reMaterial-wrapper">
+                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                      </div>
+                      <div class="reMaterial-wrapper">
+                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                      </div>
+                      <div class="reMaterial-wrapper">
+                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                      </div>
                     </td>
                   </tr>
                 </table>
+              </div>
+            </div>
+          </div>
+          <!-- 搓玉数据 -->
+          <div class="drop-green shadowBlock">
+            <div class="drop-green-sprite">
+              <div :class="getLegendSprite('30023')" class="drop-unit-image"></div>
+            </div>
+            <div class="drop-green-table">
+              <div class="drop-green-module">
+                <div class="T2-wrapper">
+                  <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                </div>
               </div>
             </div>
           </div>

@@ -1,7 +1,11 @@
 .weekly {
+  .shadowBlock {
+    background-color: #575757b7;
+  }
+
   .weekly-P1 {
     width: 1080px;
-    padding: 48px;
+    padding: 32px;
     background: url('\\public\\image\\media\\background1.png') no-repeat center center;
     ;
     background-size: cover;
@@ -45,13 +49,17 @@
     }
 
     .module-drop {
+      width: calc(100% - 32px);
+      margin: auto;
+      // 减去2倍margin
+
       .drop-blue {
         display: flex;
         flex-wrap: nowrap;
-        justify-content: space-evenly;
+        justify-content: space-between;
 
         .drop-blue-unit {
-          width: 270px;
+          width: 300px;
 
           .drop-unit-top {
             width: 100%;
@@ -67,7 +75,7 @@
 
               .drop-blue-sprite {
                 position: relative;
-                width: 128px;
+                width: 132px;
                 height: 84px;
                 display: inline-block;
 
@@ -76,8 +84,8 @@
                   // height: 96px;
                   transform: scale(0.57);
                   position: absolute;
-                  top: -32px;
-                  left: -32px;
+                  top: -36px;
+                  left: -24px;
                 }
               }
 
@@ -91,7 +99,7 @@
                 .drop-unit-stage {
                   color: #fff;
                   font-weight: 600;
-                  font-size: 32px;
+                  font-size: 36px;
                   margin-top: 16px;
                 }
 
@@ -113,20 +121,20 @@
             background-color: #575757b7;
 
             .drop-unit-table {
-              font-size: 20px;
+              font-size: 24px;
               border-collapse: separate;
               border-spacing: 4px;
               color: #ffffff;
               text-align: center;
-              width: 240px;
+              width: 270px;
               // margin: 12px;
               // border: 2px;
             }
 
 
             .drop-unit-table-title {
-              height: 22px;
-              width: 90px;
+              line-height: 28px;
+              width: 120px;
               background-color: #ffffff80;
               font-weight: 600;
               color: #000;
@@ -139,11 +147,12 @@
               background-size: 200%;
             }
 
-            .reMaterial-wrapper{
+            .reMaterial-wrapper {
               width: 24px;
               height: 24px;
               display: inline-block;
             }
+
             .reMaterial-image {
               // width: 96px;
               // height: 96px;
@@ -155,6 +164,50 @@
               // background-size: 50%;
             }
           }
+        }
+      }
+
+      .drop-green {
+        height: 150px;
+        border-radius: 75px;
+        margin: 32px auto;
+        // width: 666px;
+
+        .drop-green-sprite {
+          transform: scale(0.82);
+          transform-origin: top left;
+          display: inline-block;
+          height: 150px;
+        }
+
+        .drop-green-table {
+          display: inline-block;
+          background-color: #00a2a2;
+          width: 600px;
+          height: 150px;
+
+          .drop-green-module {
+            width: 200px;
+            margin: 15px;
+            /* 梯形的底边宽度 */
+            height: 120px;
+            /* 梯形的高度 */
+            background-color: #3498db;
+            /* 梯形的颜色 */
+            // border-right:2px solid #3f51b5;
+            // clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 0% 100%);
+            /* 左上(0% 0%)，右上(100% 0%)，右下(100% 100%)，左下(30% 100%) */
+
+
+            .T2-wrapper {
+              transform: scale(0.22);
+              transform-origin: top left;
+              width: 144px;
+              height: 144px;
+            }
+          }
+
+
         }
       }
     }
