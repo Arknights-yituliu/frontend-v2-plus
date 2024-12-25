@@ -3,10 +3,10 @@
 </template>
 
 <script setup>
-import {onMounted,  watch} from 'vue';
+import {defineProps, onMounted, watch} from 'vue';
 import term_description from '/src/static/json/build/term_description.json';
-import {defineProps} from 'vue';
 import {ElNotification} from "element-plus";
+import {htmlStringToVNode} from "@/utils/format.js";
 
 const props = defineProps({
   operatorList: {
@@ -36,14 +36,11 @@ const handleClick = (event) => {
   }
 };
 
-
-
 // 创建一个新的介绍框
 const createNotification = (text, description) => {
   ElNotification({
     title: text,
-    dangerouslyUseHTMLString: true,
-    message: description,
+    message: htmlStringToVNode(description),
     duration: 7000
   })
 };
