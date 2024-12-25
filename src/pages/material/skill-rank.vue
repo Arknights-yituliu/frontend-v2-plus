@@ -5,7 +5,7 @@ import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
 import {dataFormat} from "/src/utils/dateUtil.js";
-import SpriteImage from "/src/components/sprite/SpriteImage.vue";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 
 const operatorMap = new Map()
 const charIdMap = new Map()
@@ -211,16 +211,13 @@ const data = [
 
   <div style="display: flex;flex-wrap: wrap">
     <div class="operator-114-card" v-for="(item,index) in data" :key="index">
-      <sprite-avatar style="margin: auto" :name="charIdMap.get(item.name)" size="80">
-      </sprite-avatar>
+      <OperatorAvatar style="margin: auto" :char-id="charIdMap.get(item.name)" size="80">
+      </OperatorAvatar>
       {{charIdMap[item.name]}}
       <p><span v-for="(skill,index) in item.skill" :key="index" style="padding: 0 4px">{{skill}}</span></p>
       <p>{{ item.text }}</p>
     </div>
   </div>
-
-
-
 
   <div style="display: flex;flex-wrap: wrap">
 
@@ -264,8 +261,8 @@ const data = [
       </tr>
       <tr v-for="(item,index) in list2" :key="index" :class="index%2!==0?'table-114-td-background':''">
         <td>
-          <SpriteImage :image-name="item.charId" display-size="40" original-size="180">
-          </SpriteImage>
+          <OperatorAvatar :char-id="item.charId" >
+          </OperatorAvatar>
         </td>
         <td>{{ item.name }}</td>
         <td>{{ item.rarity }}</td>

@@ -57,12 +57,13 @@ function getOperatorData() {
   operatorDataAPI.getOperatorData(data).then((response) => {
     let list = response.data; //后端返回的数据
     //转为前端的数据格式
-    operatorList.value = []
+
     const operatorMap = {}
     for (const item of list) {
       operatorMap[item.charId] = item;
     }
 
+    const tmpList = []
     for (const charId in CHARACTER_TABLE) {
       let formatData = deepClone(CHARACTER_TABLE[charId])
 
@@ -95,10 +96,11 @@ function getOperatorData() {
       formatData.own = item.own;
       formatData.modA = item.modA;
 
-      operatorList.value.push(formatData)
+      tmpList.push(formatData)
       operatorIdAndIndexDict.value[charId] = operatorList.value.length - 1
-
     }
+
+    operatorList.value = tmpList
     displayOperatorList.value = filterOperatorList(operatorList.value)
     cMessage("导入了 " + list.length + " 条数据");
 

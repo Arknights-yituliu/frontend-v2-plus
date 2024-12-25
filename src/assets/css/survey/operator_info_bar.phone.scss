@@ -24,8 +24,14 @@
     }
   }
 
-  .operator-equip-icon {
-    width: 40px;
+  .operator-equip {
+    width: 32px;
+    height: 32px;
+
+    .operator-equip-icon-image {
+      width: 32px;
+      height: 32px;
+    }
 
     .equip-name {
       font-size: 10px;

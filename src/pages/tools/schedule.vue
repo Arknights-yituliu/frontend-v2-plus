@@ -20,8 +20,7 @@ import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
 import userAPI from "/src/api/user.js";
 
 import MyButton from '/src/components/Button.vue'
-import SpriteImage from "@/components/sprite/SpriteImage.vue";
-
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {downloadJsonFile} from "/src/utils/download.js";
 
 let operatorOwnMap = new Map()
@@ -1166,9 +1165,8 @@ onMounted(() => {
                 <div :class="getRoomProduct('trading', index)"></div>
               </div>
               <div class="settlement-operator">
-                <SpriteImage v-for="(charName, index) in getRoomOperators('trading', index)" :key="index"
-                             :original-size="180" :display-size="40" :image-name="getCharId(charName)"
-                             :margin="4"></SpriteImage>
+                <OperatorAvatar v-for="(charName, index) in getRoomOperators('trading', index)" :key="index"
+                             :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
               </div>
             </div>
 
@@ -1182,9 +1180,10 @@ onMounted(() => {
                 <div :class="getRoomProduct('manufacture', index)"></div>
               </div>
               <div class="settlement-operator">
-                <SpriteImage v-for="(charName, index) in getRoomOperators('manufacture', index)" :key="index"
-                             :original-size="180" :display-size="40" :image-name="getCharId(charName)"
-                             :margin="4"></SpriteImage>
+                <OperatorAvatar v-for="(charName, index) in getRoomOperators('manufacture', index)" :key="index"
+                              :char-id="getCharId(charName)" class="m-4">
+
+                </OperatorAvatar>
               </div>
             </div>
 
@@ -1194,9 +1193,8 @@ onMounted(() => {
                  v-for="(num, index) in scheduleTypeV2.power" :key="index"
                  @click="chooseRoom('power', index)">
               <div class="room-name">{{ translate('schedule', 'schedule.PowerPlant') }}#{{ num }}</div>
-              <SpriteImage v-for="(charName, index) in getRoomOperators('power', index)" :key="index"
-                           :original-size="180" :display-size="40" :image-name="getCharId(charName)"
-                           :margin="4"></SpriteImage>
+              <OperatorAvatar v-for="(charName, index) in getRoomOperators('power', index)" :key="index"
+                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
 
             <div class="copy-btn-wrap">
@@ -1219,9 +1217,8 @@ onMounted(() => {
                  @click="chooseRoom('control', 0)"
             >
               <div class="room-name">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
-              <SpriteImage v-for="(charName, index) in getRoomOperators('control', 0)" :key="index"
-                           :original-size="180" :display-size="40" :image-name="getCharId(charName)"
-                           :margin="4"></SpriteImage>
+              <OperatorAvatar v-for="(charName, index) in getRoomOperators('control', 0)" :key="index"
+                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
             <!--     宿舍-->
             <div class="room-template dormitory" :id="`dormitory#${index}`"
@@ -1229,9 +1226,10 @@ onMounted(() => {
                  v-for="(num, index) in scheduleTypeV2.dormitory" :key="index"
                  @click="chooseRoom('dormitory', index)">
               <div class="room-name">{{ translate('schedule', 'schedule.Dormitory') }}#{{ num }}</div>
-              <SpriteImage v-for="(charName, index) in getRoomOperators('dormitory', index)" :key="index"
-                           :original-size="180" :display-size="40" :image-name="getCharId(charName)"
-                           :margin="4"></SpriteImage>
+              <OperatorAvatar v-for="(charName, index) in getRoomOperators('dormitory', index)" :key="index"
+                              :char-id="getCharId(charName)" class="m-4">
+
+              </OperatorAvatar>
             </div>
           </div>
 
@@ -1243,27 +1241,24 @@ onMounted(() => {
                  @click="chooseRoom('meeting', 0)"
             >
               <div class="room-name">{{ translate('schedule', 'schedule.ReceptionRoom') }}</div>
-              <SpriteImage v-for="(charName, index) in getRoomOperators('meeting', 0)" :key="index"
-                           :original-size="180" :display-size="40" :image-name="getCharId(charName)"
-                           :margin="4"></SpriteImage>
+              <OperatorAvatar v-for="(charName, index) in getRoomOperators('meeting', 0)" :key="index"
+                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
             <!--      加工站-->
             <div class="room-template processing" :id="`processing#0`"
                  :class="roomSelectedClass('processing', 0)"
                  @click="chooseRoom('processing', 0)">
               <div class="room-name">{{ translate('schedule', 'schedule.Workshop') }}</div>
-              <SpriteImage v-for="(charName, index) in getRoomOperators('processing', 0)" :key="index"
-                           :original-size="180" :display-size="40" :image-name="getCharId(charName)"
-                           :margin="4"></SpriteImage>
+              <OperatorAvatar v-for="(charName, index) in getRoomOperators('processing', 0)" :key="index"
+                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
 
             <!--     办公室 -->
             <div class="room-template hire" :id="`hire#0`"
                  :class="roomSelectedClass('hire', 0)" @click="chooseRoom('hire', 0)">
               <div class="room-name">{{ translate('schedule', 'schedule.Office') }}</div>
-              <SpriteImage v-for="(charName, index) in getRoomOperators('hire', 0)" :key="index"
-                           :original-size="180" :display-size="40" :image-name="getCharId(charName)"
-                           :margin="4"></SpriteImage>
+              <OperatorAvatar v-for="(charName, index) in getRoomOperators('hire', 0)" :key="index"
+                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
             <div class="room-template blank" style="width: 100px;"></div>
           </div>

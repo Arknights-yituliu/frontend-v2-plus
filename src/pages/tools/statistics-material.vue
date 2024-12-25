@@ -3,7 +3,7 @@ import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json
 import {ref} from "vue";
 import {statisticsOperatorInfo, splitMaterialByTier} from "@/utils/survey/operatorStatistical.js";
 import SpriteImage from "@/components/sprite/SpriteImage.vue";
-
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 let listItemCollect = ref({})
 let logList = ref([])
 
@@ -91,24 +91,14 @@ statistics()
 <template>
 
 
-  <div  class="log114514">
-    <div v-for="(item,index) in logList" style="display: flex;align-items: center">
-      <SpriteImage original-size="180" display-size="50" :image-name="item.charId"></SpriteImage>
-      <div class="cell114514">
-         {{ item.name }}
-      </div>
-      <div class="cell114514">
-         {{ item.count - item.cost }} +  {{ item.cost }} = {{ item.count }}
-      </div>
-    </div>
-  </div>
+
 
 
   <table v-for="(list,tier) in listItemCollect">
     <tbody>
     <tr v-for="(item,index) in list">
       <td>
-        <SpriteImage original-size="183" display-size="50" :image-name="item.id"></SpriteImage>
+        <ItemImage size="60" :item-id="item.id"></ItemImage>
       </td>
       <td>
         {{ item.count }}

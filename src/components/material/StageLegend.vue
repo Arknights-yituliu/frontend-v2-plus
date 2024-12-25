@@ -1,5 +1,5 @@
 <script setup>
-import SpriteImage from "/src/components/sprite/SpriteImage.vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 </script>
 
 <template>
@@ -58,7 +58,7 @@ import SpriteImage from "/src/components/sprite/SpriteImage.vue";
       <tbody>
       <tr>
         <td>
-          <SpriteImage :image-name="'AP_GAMEPLAY'" :original-size="183" :display-size="30"></SpriteImage>
+          <ItemImage :item-id="'AP_GAMEPLAY'" ></ItemImage>
         </td>
         <td class="stage-legend-text-1">
           <span>需要所有材料→</span>
@@ -82,7 +82,7 @@ import SpriteImage from "/src/components/sprite/SpriteImage.vue";
 
       <tr>
         <td>
-          <SpriteImage :image-name="'30024'" :original-size="183" :display-size="30"></SpriteImage>
+          <ItemImage :item-id="'30024'"></ItemImage>
         </td>
         <td class="stage-legend-text-1">
             <span>
@@ -112,7 +112,7 @@ import SpriteImage from "/src/components/sprite/SpriteImage.vue";
 
       <tr>
         <td>
-          <SpriteImage :image-name="'30023'" :original-size="183" :display-size="30"></SpriteImage>
+          <ItemImage :item-id="'30023'"></ItemImage>
         </td>
         <td class="stage-legend-text-1">
             <span>
