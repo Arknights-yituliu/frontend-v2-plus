@@ -5,7 +5,7 @@ import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
 import {dataFormat} from "/src/utils/dateUtil.js";
-import SpriteImage from "/src/components/SpriteImage.vue";
+import SpriteImage from "/src/components/sprite/SpriteImage.vue";
 
 const operatorMap = new Map()
 const charIdMap = new Map()

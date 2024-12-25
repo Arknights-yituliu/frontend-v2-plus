@@ -5,7 +5,7 @@ import {ref, onMounted} from "vue";
 import materialAPI from "/src/api/material.js";
 import {exportExcel} from "/src/utils/exportExcel";
 import userService from "@/utils/user/userConfig.js";
-import ItemSpriteImage from "@/components/ItemSpriteImage.vue";
+import ItemSpriteImage from "@/components/sprite/ItemImage.vue";
 
 let value_unit = ref('itemValueAp')
 

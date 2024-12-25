@@ -4,7 +4,7 @@ import OperatorInfo from "/src/components/OperatorInfo.vue";
 import '/src/assets/css/survey/operator.scss'
 import '/src/assets/css/survey/operator.phone.scss'
 import { statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical"
-import SpriteImage from "/src/components/SpriteImage.vue";
+import SpriteImage from "/src/components/sprite/SpriteImage.vue";
 
 
 const props = defineProps(["modelValue"]);

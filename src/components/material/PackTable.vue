@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from "vue";
 import {formatNumber} from "@/utils/format.js";
-import SpriteImage from "@/components/SpriteImage.vue";
+import SpriteImage from "@/components/sprite/SpriteImage.vue";
 let search = ref('')
 
 const props = defineProps(['modelValue'])
