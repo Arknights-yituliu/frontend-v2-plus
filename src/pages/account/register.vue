@@ -149,7 +149,7 @@ onMounted(() => {
                 hide-details="auto"
                 class="m-4"
             ></v-text-field>
-            <div class="m-0-4">绑定邮箱</div>
+            <div class="m-0-4">绑定邮箱（非必须，但找回账号只能通过邮箱）</div>
             <v-text-field
                 density="compact"
                 color="primary"
@@ -159,7 +159,8 @@ onMounted(() => {
                 hide-details="auto"
                 class="m-4"
             ></v-text-field>
-
+            <div>邮箱验证码（如未填邮箱请忽视）</div>
+            <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
           </v-tabs-window-item>
 
           <v-tabs-window-item value="email">
@@ -181,7 +182,7 @@ onMounted(() => {
         </v-tabs-window>
 
         <div class="flex justify-center">
-          <v-btn @click="toRegister" text="登录" color="primary"></v-btn>
+          <v-btn @click="toRegister" text="注册" color="primary"></v-btn>
         </div>
 
         <v-card title="账号须知" color="primary" variant="tonal" class="m-12-4">

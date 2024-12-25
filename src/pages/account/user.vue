@@ -16,7 +16,7 @@
       </template>
 
       <v-list>
-        <v-list-item href="/survey/account/home">
+        <v-list-item>
           <v-btn variant="text" text="个人中心" @click="router.push({name:'AccountHome'})">
           </v-btn>
         </v-list-item>
