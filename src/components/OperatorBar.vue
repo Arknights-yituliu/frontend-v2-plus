@@ -14,7 +14,7 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
 <template>
 
   <div class="operator-info-bar flex m-4">
-    <OperatorAvatar original-size="180" display-size="50" :image-name="operatorInfo.charId" style="margin: 0 4px"></OperatorAvatar>
+    <OperatorAvatar  :char-id="operatorInfo.charId" class="m-0-4"></OperatorAvatar>
     <div>
       <img :src="`/image/survey/rank/elite${operatorInfo.elite}.png`" class="operator-elite-image" alt="">
       <div class="operator-level-image">
@@ -23,12 +23,12 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
     </div>
 
     <div class="operator-skill-item" v-for="(skill,index) in operatorInfo.skill" :key="index">
-      <SkillIcon :icon="`skill_icon_${skill.iconId}`" style="margin: auto"></SkillIcon>
+      <SkillIcon mobile-size="32" :icon="`skill_icon_${skill.iconId}`" style="margin: auto"></SkillIcon>
       <div class="skill-name">{{ skill.name }}</div>
     </div>
 
-    <div class="operator-equip-item" v-for="(equip,index) in operatorInfo.equip" :key="index">
-      <div class="operator-equip-icon">
+    <div class="operator-equip-group" v-for="(equip,index) in operatorInfo.equip" :key="index">
+      <div class="operator-equip">
         <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-icon-image">
         <img :src="`/image/survey/skill-rank-${operatorInfo[`mod${equip.typeName2}`]}.jpg`"
              v-show="operatorInfo[`mod${equip.typeName2}`]>0" class="operator-rank-icon" alt="">
@@ -36,8 +36,8 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
       <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
     </div>
 
-    <div class="operator-equip-item">
-      <ItemImage  item-id="AP_GAMEPLAY"></ItemImage>
+    <div class="operator-ap-cost">
+      <ItemImage  item-id="AP_GAMEPLAY" ></ItemImage>
       <div class="item-ap-cost">{{ operatorInfo.apCost.toFixed(0) }}</div>
     </div>
 

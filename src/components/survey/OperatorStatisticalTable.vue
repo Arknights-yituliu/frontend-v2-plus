@@ -1,21 +1,18 @@
 <script setup>
 import {ref, watch} from "vue";
-import OperatorInfo from "/src/components/OperatorInfo.vue";
+import OperatorBar from "/src/components/OperatorBar.vue";
 import '/src/assets/css/survey/operator.scss'
 import '/src/assets/css/survey/operator.phone.scss'
-import { statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical"
-import SpriteImage from "/src/components/sprite/SpriteImage.vue";
-
+import {statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical"
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 
 const props = defineProps(["modelValue"]);
 
-
 let operatorInfo = ref([])
-let itemCostList = ref([]) //材料消耗数量
 let apCost = ref(0) //理智消耗数量
 let itemCostCollectOriginal = ref([])
 let itemCostCollectData = ref([])
-let itemCostMap = ref({}) //材料消耗数量
 let apCostRankingData = ref([])
 let notOwnData = ref([])
 
@@ -24,6 +21,7 @@ function updateData(list) {
   const statisticsOperatorInfo1 = statisticsOperatorInfo(list);
 
   const {notOwn, apCostRanking, itemCostCollect, apCostCount, info} = statisticsOperatorInfo1
+  console.log(apCostRanking)
 
   operatorInfo.value = _setData(info)
 
@@ -89,9 +87,9 @@ function strShowLength(num) {
 }
 
 
+updateData(props.modelValue)
+watch(() => props.modelValue.length, (newVal, oldValue) => {
 
-watch(() =>props.modelValue.length,  (newVal, oldValue) => {
-  console.log(newVal, oldValue)
   updateData(props.modelValue)
 })
 
@@ -110,22 +108,19 @@ watch(() =>props.modelValue.length,  (newVal, oldValue) => {
       </div>
     </v-card>
 
-    <div class="operator-statistical-card">
-      <div class="detail-card-title">未招募干员</div>
-      <div style="margin: 4px;display: flex;flex-wrap: wrap">
-        <SpriteImage :image-name="operator.charId" original-size="180" display-size="40"
+    <v-card class="operator-statistical-card" title="未招募干员">
+      <div class="flex flex-wrap m-4">
+        <OperatorAvatar :char-id="operator.charId"
                      style="margin: 4px"
-                     v-for="(operator) in notOwnData"></SpriteImage>
+                     v-for="(operator) in notOwnData"></OperatorAvatar>
       </div>
-    </div>
+    </v-card>
 
-    <div class="operator-statistical-card">
-      <div class="detail-card-title">干员消耗理智排行</div>
-      <OperatorInfo v-for="(item,index) in apCostRankingData" :key="index" :operator-info="item"></OperatorInfo>
-    </div>
+    <v-card class="operator-statistical-card" title="干员消耗理智排行">
+      <OperatorBar v-for="(item,index) in apCostRankingData" :key="index" :operator-info="item"></OperatorBar>
+    </v-card>
 
-    <div class="operator-statistical-card">
-      <div class="detail-card-title">材料消耗情况</div>
+    <v-card class="operator-statistical-card" title="材料消耗情况">
       <div class="item-cost-data">
         <p style="">总计消耗{{ apCost.toFixed(0) }} 理智</p>
         <!--          材料统计-->
@@ -134,14 +129,14 @@ watch(() =>props.modelValue.length,  (newVal, oldValue) => {
         <v-btn color="blue" class="m-4" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</v-btn>
         <div class="item-cost-group" v-for="(list,tier) in itemCostCollectData" :key="tier">
           <div class="item-cost-item" v-for="(item,index) in list" :key="index">
-            <SpriteImage original-size="183" display-size="40" :image-name="item.id" style="margin: auto"></SpriteImage>
+            <ItemImage  :item-id="item.id" style="margin: auto"></ItemImage>
             <span class="item-cost-num">
                   {{ strShowLength(item.count) }}
             </span>
           </div>
         </div>
       </div>
-    </div>
+    </v-card>
 
   </div>
 

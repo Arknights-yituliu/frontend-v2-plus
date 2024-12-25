@@ -49,16 +49,6 @@
       </v-list>
     </v-menu>
     </div>
-
-    <c-popup :visible="loginVisible" v-model:visible="loginVisible">
-      <div class="login-card" v-show="userInfo.status>0">
-        <div class="logout_text">确定登出当前用户？</div>
-        <div class="logout_btn_wrap">
-          <MyButton data-color="blue" :active="true" @click="logout()">确定</MyButton>
-          <MyButton data-color="red" :active="true" @click="loginVisible = !loginVisible">取消</MyButton>
-        </div>
-      </div>
-    </c-popup>
   </div>
 </template>
 
@@ -73,20 +63,14 @@ import "/src/assets/css/survey/login.scss"
 import "/src/assets/css/survey/login.phone.scss"
 
 import "/src/assets/css/survey/survey_nav.css";
-import MyButton from '/src/components/Button.vue'
-
 import {onMounted, ref, watch} from "vue";
-import {cMessage} from "/src/utils/message";
-
-import surveyApi from "/src/api/userInfo";
 import {getUserInfo} from "/src/utils/survey/userInfo.js";
 import {useRoute,useRouter} from "vue-router";
-import SpriteImage from "@/components/sprite/SpriteImage.vue";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 
 const router = useRouter();
 
-let loginStatus = ref('')
+
 
 let loginVisible = ref(false);
 

@@ -1,5 +1,5 @@
 <script setup>
-import SpriteImage from "@/components/sprite/SpriteImage.vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {formatNumber} from "/src/utils/format.js";
 import {ref} from "vue";
 
@@ -40,7 +40,7 @@ function replaceZoneName(str) {
         {{ replaceZoneName(item.stageCode) }}
       </template>
       <template v-slot:item.itemId="{ item }">
-        <SpriteImage :image-name="item.itemId" display-size="40" original-size="183"></SpriteImage>
+        <ItemImage :item-id="item.itemId"></ItemImage>
       </template>
       <template v-slot:item.knockRating="{ item }">
         {{ formatNumber(item.knockRating * 100, 1) }}%
@@ -49,7 +49,7 @@ function replaceZoneName(str) {
         {{ formatNumber(item.apExpect, 1) }}
       </template>
       <template v-slot:item.secondaryItemId="{ item }">
-        <SpriteImage :image-name="item.secondaryItemId" display-size="40" original-size="183"></SpriteImage>
+        <ItemImage :item-id="item.secondaryItemId" ></ItemImage>
       </template>
       <template v-slot:item.stageEfficiency="{ item }">
         {{ formatNumber(item.stageEfficiency * 100, 1) }}%

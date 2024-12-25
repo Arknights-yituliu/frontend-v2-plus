@@ -1,7 +1,6 @@
 <script setup>
 import {ref} from "vue";
 import {formatNumber} from "@/utils/format.js";
-import SpriteImage from "@/components/sprite/SpriteImage.vue";
 let search = ref('')
 
 const props = defineProps(['modelValue'])
@@ -31,6 +30,7 @@ const headers = [
   >
     <template v-slot:text>
       <v-text-field
+          :sort="sortBy"
           v-model="search"
           label="Search"
           prepend-inner-icon="mdi-magnify"

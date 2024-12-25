@@ -5,8 +5,7 @@ import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
 import {dataFormat} from "/src/utils/dateUtil.js";
-import SpriteImage from "/src/components/sprite/SpriteImage.vue";
-import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {getViewportInfo} from "/src/utils/getViewportInfo.js";
 
 const operatorMap = new Map()
@@ -217,10 +216,10 @@ onMounted(() => {
           <br> 专三率：{{(item.proportion*100).toFixed(1)}}%
 
         </div>
-        <sprite-image :image-name="item.charId" original-size="180" display-size="28" rounded-corner="300"
+        <ItemImage :item="item.charId" size="28" :rounded="true"
                       :style="`position:absolute;left:${item.xAxis}px;top:${item.yAxis}px`">
 
-        </sprite-image>
+        </ItemImage>
         <!--      {{`S${item.skillIndex}——${item.apCost}——${(item.proportion*100).toFixed(0)}` }}-->
       </div>
       <!--    <canvas id="myCanvas" width="950" height="950"></canvas>-->

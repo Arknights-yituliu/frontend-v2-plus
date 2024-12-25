@@ -3,7 +3,7 @@ import "/src/assets/css/survey/rank.v2.scss";
 import "/src/assets/css/survey/rank.phone.scss";
 import {onMounted, ref} from "vue";
 import character_table_simple from "/src/static/json/survey/character_table_simple.json";
-import SpriteImage from "/src/components/sprite/SpriteImage.vue";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorDataApi from "/src/api/operatorData";
 
 import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
@@ -164,8 +164,7 @@ onMounted(() => {
           hide-default-footer
           items-per-page="-1">
         <template v-slot:item.charId="{ item }">
-          <SpriteImage :roundedCorner="100" :image-name="item.charId" display-size="60"
-                       original-size="180"></SpriteImage>
+          <OperatorAvatar :rounded="true" :char-id="item.charId" size="60"></OperatorAvatar>
         </template>
         <template v-slot:item.own="{ item }">
           {{ formatCellData(item.own) }}
@@ -200,9 +199,3 @@ onMounted(() => {
   </div>
 </template>
 
-
-<style scoped>
-.btn {
-  margin: 4px;
-}
-</style>

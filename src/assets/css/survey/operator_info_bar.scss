@@ -31,12 +31,16 @@
     }
   }
 
-  .operator-equip-item {
+  .operator-equip-group {
     width: 60px;
     position: relative;
   }
 
-  .operator-equip-icon{
+  .operator-ap-cost{
+
+  }
+
+  .operator-equip{
     width: 40px;
     height: 40px;
     position: relative;
@@ -61,6 +65,7 @@
     text-align: center;
     font-size: 12px;
     line-height: 18px;
+    margin: auto;
   }
 
   .operator-rank-icon {

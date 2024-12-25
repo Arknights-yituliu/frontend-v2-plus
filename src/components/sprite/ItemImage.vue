@@ -16,6 +16,10 @@ const props = defineProps({
   size: {
     type: Number,
     default: 40
+  },
+  mobileSize: {
+    type: Number,
+    default: 32
   }
 
 });
@@ -25,13 +29,12 @@ let spriteStyle = ''
 
 function calculatedSize() {
   const innerWidth = window.innerWidth;
-  let ratio = 1
+
+  let size = props.size;
 
   if (innerWidth < 600) {
-    ratio = 0.7
+    size = props.mobileSize;
   }
-
-  const size = props.size * ratio;
 
   wrapStyle = `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
   if (props.rounded) {

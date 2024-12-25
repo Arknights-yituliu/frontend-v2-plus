@@ -1,6 +1,6 @@
 <script setup>
 
-import {onMounted} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {debounce} from "/src/utils/debounce.js";
 
 
@@ -25,9 +25,12 @@ const props = defineProps({
 
 let wrapStyle = ''
 let spriteStyle = ''
+let charId = ref(props.charId);
 
 function calculatedSize() {
   const innerWidth = window.innerWidth;
+
+  charId.value = props.charId;
 
   let size = props.size;
 
@@ -49,10 +52,15 @@ function calculatedSize() {
 
 calculatedSize()
 
+
 onMounted(() => {
   window.addEventListener('resize', debounce(calculatedSize));
 })
 
+watch(()=>props.charId,(newVal,oldVal)=>{
+   console.log(newVal);
+  charId.value = props.charId;
+})
 
 </script>
 
