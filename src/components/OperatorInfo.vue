@@ -4,7 +4,9 @@ import '/src/assets/css/survey/operator_info_bar.scss'
 import '/src/assets/css/survey/operator_info_bar.phone.scss'
 
 
-import SpriteImage from "./SpriteImage.vue";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
+import SkillIcon from "/src/components/sprite/SkillIcon.vue";
 const props = defineProps(["modelValue", 'operatorInfo',]);
 
 </script>
@@ -12,7 +14,7 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
 <template>
 
   <div class="operator-info-bar flex m-4">
-    <SpriteImage original-size="180" display-size="50" :image-name="operatorInfo.charId" style="margin: 0 4px"></SpriteImage>
+    <OperatorAvatar original-size="180" display-size="50" :image-name="operatorInfo.charId" style="margin: 0 4px"></OperatorAvatar>
     <div>
       <img :src="`/image/survey/rank/elite${operatorInfo.elite}.png`" class="operator-elite-image" alt="">
       <div class="operator-level-image">
@@ -21,7 +23,7 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
     </div>
 
     <div class="operator-skill-item" v-for="(skill,index) in operatorInfo.skill" :key="index">
-      <SpriteImage original-size="128" display-size="40"  :image-name="`skill_icon_${skill.iconId}`" style="margin: auto"></SpriteImage>
+      <SkillIcon :icon="`skill_icon_${skill.iconId}`" style="margin: auto"></SkillIcon>
       <div class="skill-name">{{ skill.name }}</div>
     </div>
 
@@ -35,7 +37,7 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
     </div>
 
     <div class="operator-equip-item">
-      <SpriteImage original-size="183" display-size="40" id="AP_GAMEPLAY"></SpriteImage>
+      <ItemImage  item-id="AP_GAMEPLAY"></ItemImage>
       <div class="item-ap-cost">{{ operatorInfo.apCost.toFixed(0) }}</div>
     </div>
 

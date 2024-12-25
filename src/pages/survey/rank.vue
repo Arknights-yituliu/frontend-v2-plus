@@ -3,7 +3,7 @@ import "/src/assets/css/survey/rank.v2.scss";
 import "/src/assets/css/survey/rank.phone.scss";
 import {onMounted, ref} from "vue";
 import character_table_simple from "/src/static/json/survey/character_table_simple.json";
-import SpriteImage from "/src/components/SpriteImage.vue";
+import SpriteImage from "/src/components/sprite/SpriteImage.vue";
 import operatorDataApi from "/src/api/operatorData";
 
 import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";

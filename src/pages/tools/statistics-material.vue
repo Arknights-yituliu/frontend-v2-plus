@@ -2,7 +2,7 @@
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import {ref} from "vue";
 import {statisticsOperatorInfo, splitMaterialByTier} from "@/utils/survey/operatorStatistical.js";
-import SpriteImage from "@/components/SpriteImage.vue";
+import SpriteImage from "@/components/sprite/SpriteImage.vue";
 
 let listItemCollect = ref({})
 let logList = ref([])

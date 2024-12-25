@@ -4,7 +4,7 @@ import '/src/assets/css/rogueSeed/rogue-seed-page.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
 import {cMessage} from "@/utils/message.js";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
-import SpriteImage from "@/components/SpriteImage.vue";
+import SpriteImage from "@/components/sprite/SpriteImage.vue";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import Popup from '/src/components/popup.vue'
 import {debounce} from "@/utils/debounce.js";

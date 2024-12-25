@@ -81,8 +81,8 @@ import {cMessage} from "/src/utils/message";
 import surveyApi from "/src/api/userInfo";
 import {getUserInfo} from "/src/utils/survey/userInfo.js";
 import {useRoute,useRouter} from "vue-router";
-import SpriteImage from "@/components/SpriteImage.vue";
-import OperatorAvatar from "@/components/OperatorAvatar.vue";
+import SpriteImage from "@/components/sprite/SpriteImage.vue";
+import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 
 const router = useRouter();
 
