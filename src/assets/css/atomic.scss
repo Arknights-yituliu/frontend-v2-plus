@@ -2,14 +2,23 @@
   font-weight: bolder;
 }
 
+.flex-grow{
+  flex-grow: 1;
+}
+
 
 //间隔
+
 .p-4{
   padding: 4px;
 }
 
 .p-12{
   padding: 12px;
+}
+
+.p-16-0{
+  padding: 16px 0;
 }
 
 .m-2 {
@@ -20,6 +29,14 @@
   margin: 4px;
 }
 
+.m-8{
+  margin: 8px;
+}
+
+.m-12{
+  margin: 8px;
+}
+
 .m-a{
   margin: auto;
 }
@@ -28,6 +45,9 @@
   margin: auto 4px;
 }
 
+.m-0-8{
+  margin:0 8px;
+}
 
 .m-12-4{
   margin: 12px 4px;
@@ -58,6 +78,15 @@
   justify-content: center;
 }
 
+.justify-end{
+  justify-content: end;
+
+}
+
+
+.overflow-auto{
+  overflow: auto;
+}
 
 
 //透明度

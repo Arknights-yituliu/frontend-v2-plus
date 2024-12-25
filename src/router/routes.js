@@ -146,7 +146,7 @@ const routes = [
         component: () => import('/src/pages/information/sandboxFoods.vue')
     },
     {
-        path: '/survey/account/home',
+        path: '/account/home',
         text: '用户中心',
         name: 'AccountHome',
         display: true,

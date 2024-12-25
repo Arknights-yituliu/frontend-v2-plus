@@ -1,5 +1,5 @@
 <script setup>
-import SpriteImage from "@/components/SpriteImage.vue";
+import SpriteImage from "@/components/sprite/SpriteImage.vue";
 import {formatNumber} from "/src/utils/format.js";
 import {ref} from "vue";
 

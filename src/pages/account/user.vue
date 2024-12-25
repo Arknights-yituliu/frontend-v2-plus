@@ -16,7 +16,7 @@
       </template>
 
       <v-list>
-        <v-list-item href="/survey/account/home">
+        <v-list-item>
           <v-btn variant="text" text="个人中心" @click="router.push({name:'AccountHome'})">
           </v-btn>
         </v-list-item>
@@ -81,8 +81,8 @@ import {cMessage} from "/src/utils/message";
 import surveyApi from "/src/api/userInfo";
 import {getUserInfo} from "/src/utils/survey/userInfo.js";
 import {useRoute,useRouter} from "vue-router";
-import SpriteImage from "@/components/SpriteImage.vue";
-import OperatorAvatar from "@/components/OperatorAvatar.vue";
+import SpriteImage from "@/components/sprite/SpriteImage.vue";
+import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 
 const router = useRouter();
 

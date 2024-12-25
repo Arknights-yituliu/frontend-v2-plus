@@ -20,7 +20,7 @@ import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
 import userAPI from "/src/api/user.js";
 
 import MyButton from '/src/components/Button.vue'
-import SpriteImage from "@/components/SpriteImage.vue";
+import SpriteImage from "@/components/sprite/SpriteImage.vue";
 
 import {downloadJsonFile} from "/src/utils/download.js";
 

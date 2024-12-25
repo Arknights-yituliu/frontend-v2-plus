@@ -1,5 +1,5 @@
 <script setup>
-import SpriteImage from "/src/components/SpriteImage.vue";
+import SpriteImage from "/src/components/sprite/SpriteImage.vue";
 </script>
 
 <template>

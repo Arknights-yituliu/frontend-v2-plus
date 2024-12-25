@@ -5,7 +5,7 @@ import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
 import {dataFormat} from "/src/utils/dateUtil.js";
-import SpriteImage from "/src/components/SpriteImage.vue";
+import SpriteImage from "/src/components/sprite/SpriteImage.vue";
 import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
 import {getViewportInfo} from "/src/utils/getViewportInfo.js";
 
