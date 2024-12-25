@@ -72,7 +72,7 @@ const routes = [
         name: 'EliteRanking',
         display: true,
         module: 'material',
-        icon: "elite",
+        icon: "mdi-codepen",
         component: () => import('/src/pages/material/elite')
     },
     {
@@ -81,7 +81,7 @@ const routes = [
         name: 'ScatterDiagram',
         display: false,
         module: 'material',
-        icon: "elite",
+        icon: "mdi-codepen",
         component: () => import('/src/pages/material/scatter-diagram.vue')
     },
     {
@@ -151,7 +151,7 @@ const routes = [
         name: 'IntegratedStrategies',
         display: true,
         module: 'information',
-        icon: "item",
+        icon: "mdi-compass",
         component: () => import('/src/pages/information/integratedStrategies.vue')
     },
     {
