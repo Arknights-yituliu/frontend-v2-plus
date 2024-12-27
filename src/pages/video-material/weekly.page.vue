@@ -59,6 +59,11 @@ let materialGreenData = ref(
       "materialA": "固源岩",
       "materialB": "固源岩",
       "OPS": 0.7
+    }, {
+      "stage": "ST-1",
+      "materialA": "固源岩",
+      "materialB": "固源岩",
+      "OPS": 0.7
     }
   ]
 )
@@ -584,13 +589,13 @@ onMounted(() => {
                     </td>
                     <td>
                       <div class="reMaterial-wrapper">
-                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                        <div :class="getLegendSprite('30023')" class="reMaterial-image-32"></div>
                       </div>
                       <div class="reMaterial-wrapper">
-                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                        <div :class="getLegendSprite('30023')" class="reMaterial-image-32"></div>
                       </div>
                       <div class="reMaterial-wrapper">
-                        <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                        <div :class="getLegendSprite('30023')" class="reMaterial-image-32"></div>
                       </div>
                     </td>
                   </tr>
@@ -604,10 +609,13 @@ onMounted(() => {
               <div :class="getLegendSprite('30023')" class="drop-unit-image"></div>
             </div>
             <div class="drop-green-table">
-              <div class="drop-green-module">
+              <div v-for="(material, index) in materialGreenData" :key="index" class="drop-green-module">
                 <div class="T2-wrapper">
-                  <div :class="getLegendSprite('30023')" class="reMaterial-image"></div>
+                  <div :class="getLegendSprite('30023')" class="reMaterial-image-64"></div>
                 </div>
+                <div class="T2-stage">{{ material.stage }}</div>
+                <div class="T2-text">每理智可搓{{ material.OPS }}</div>
+
               </div>
             </div>
           </div>
@@ -618,10 +626,10 @@ onMounted(() => {
     <header>
       <div class="header-top">
         <span class="logo"></span>
-        <span class="title">方舟数据周报</span>
+        <span class="title"></span>
       </div>
       <div class="week-info">
-        <p>2024/00/00 第九十十期</p>
+        <p>2024/00/00</p>
       </div>
     </header>
     <section class="banner">

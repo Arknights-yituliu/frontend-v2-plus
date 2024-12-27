@@ -3,6 +3,25 @@
     background-color: #575757b7;
   }
 
+  .reMaterial-image-32 {
+    transform: scale(0.175);
+    transform-origin: top left;
+    top: -32px;
+    left: -32px;
+  }
+  .reMaterial-image-48 {
+    transform: scale(0.262);
+    transform-origin: top left;
+    top: -48px;
+    left: -48px;
+  }
+  .reMaterial-image-64 {
+    transform: scale(0.35);
+    transform-origin: top left;
+    top: -32px;
+    left: -32px;
+  }
+
   .weekly-P1 {
     width: 1080px;
     padding: 32px;
@@ -153,16 +172,6 @@
               display: inline-block;
             }
 
-            .reMaterial-image {
-              // width: 96px;
-              // height: 96px;
-              transform: scale(0.17);
-              transform-origin: top left;
-              // position: absolute;
-              top: -32px;
-              left: -32px;
-              // background-size: 50%;
-            }
           }
         }
       }
@@ -171,6 +180,7 @@
         height: 150px;
         border-radius: 75px;
         margin: 32px auto;
+        display: flex;
         // width: 666px;
 
         .drop-green-sprite {
@@ -178,16 +188,19 @@
           transform-origin: top left;
           display: inline-block;
           height: 150px;
+          width: 144px;
         }
 
         .drop-green-table {
-          display: inline-block;
+          display: flex;
           background-color: #00a2a2;
-          width: 600px;
+          width: 750px;
           height: 150px;
+          flex-wrap: nowrap;
+
 
           .drop-green-module {
-            width: 200px;
+            width: 216px;
             margin: 15px;
             /* 梯形的底边宽度 */
             height: 120px;
@@ -200,10 +213,23 @@
 
 
             .T2-wrapper {
-              transform: scale(0.22);
-              transform-origin: top left;
-              width: 144px;
-              height: 144px;
+              width: 64px;
+              height: 64px;
+              display: inline-block;
+              background-color: #f1cd00;
+              vertical-align: middle;
+            }
+
+            .T2-stage{
+              display: inline-block;
+              font-size: 28px;
+              line-height: 64px;
+              vertical-align: middle;
+            }
+
+            .T2-text{
+              font-size: 28px;
+              font-style: italic;
             }
           }
 
