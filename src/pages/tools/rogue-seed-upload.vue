@@ -41,7 +41,7 @@ function filterOperatorByCondition(func, index) {
 
 filterOperatorByCondition(operatorFilterCondition.value.profession.actionFunc, 4)
 
-console.log(displayOperatorsList.value)
+
 
 function btnAction(action) {
   if (!action) {
@@ -127,7 +127,7 @@ function uploadSeed() {
   }
 
   rogueSeedAPI.uploadRogueSeed(data).then(response => {
-    console.log(response.data)
+
     cMessage('提交成功')
   })
 }
@@ -221,7 +221,7 @@ function uploadImage() {
         <v-textarea v-model="rogueSeedForm.description" variant="outlined"></v-textarea>
 
 <!--        <div class="m-0-4 opacity-70">上传图片（非必须）</div>-->
-<!--        <input style="display: none" type="file" id="settlement-chart">-->
+        <input style="display: none" type="file" id="settlement-chart">
 <!--        <div class="settlement-chart-checkbox" @click="chooseImage()">-->
 <!--          <v-icon icon="mdi-plus" class="settlement-chart-upload-button" size="60" color="grey"></v-icon>-->
 <!--          <img :src="settlementChartDataUrl" alt="" class="settlement-chart">-->
@@ -249,7 +249,7 @@ function uploadImage() {
 
 
         <div class="flex justify-center">
-          <v-btn color="primary" @click="upload"></v-btn>
+          <v-btn color="primary" @click="upload" text="提交种子"></v-btn>
         </div>
 
       </v-card-text>
