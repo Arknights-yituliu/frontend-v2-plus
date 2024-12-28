@@ -4,8 +4,8 @@ import ModuleHeader from '@/components/ModuleHeader.vue';
 import {ref, onMounted} from "vue";
 import materialAPI from "/src/api/material.js";
 import {exportExcel} from "/src/utils/exportExcel";
-import userService from "@/utils/user/userConfig.js";
-import ItemSpriteImage from "@/components/sprite/ItemImage.vue";
+import userService from "/src/utils/user/userConfig.js";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 
 let value_unit = ref('itemValueAp')
 
@@ -117,7 +117,7 @@ onMounted(() => {
       <div v-for="(item_group, index) in itemValueCollect" :key="index" class="item-value-list">
         <div class="item-value-cell flex align-center" v-for="(item, index) in item_group" :key="index"
              :style="getItemRarityColor(item.rarity)">
-          <ItemSpriteImage :item-id="item.itemId"></ItemSpriteImage>
+          <ItemImage :item-id="item.itemId"></ItemImage>
           <div class="item-value">
             {{ item[value_unit].toFixed(4) }}
           </div>
