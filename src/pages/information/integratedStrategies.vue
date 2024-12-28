@@ -203,7 +203,7 @@
               </el-timeline-item>
               <el-timeline-item :icon="Battle" color="#5EDFD6">
                 <div>
-                  持有死囚之舞触发不期而遇
+                  持有死囚之舞可触发不期而遇
                   <el-link
                       href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%A4%8D%E4%BB%87%E5%89%A7"
                       type="primary"
@@ -424,7 +424,7 @@
         </el-timeline-item>
         <el-timeline-item placement="top" timestamp="第四结局">
           <el-card>
-            <h3>深蓝之树</h3>
+            <h3>如星空般深蓝</h3>
             <el-timeline>
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
@@ -696,7 +696,7 @@
               </el-timeline-item>
               <el-timeline-item :icon="Battle" color="#5EDFD6">
                 <div>
-                  持有视界邀约可在不期而遇触发事件
+                  持有视界邀约可触发不期而遇
                   <el-link
                       href="https://prts.wiki/w/%E6%8E%A2%E7%B4%A2%E8%80%85%E7%9A%84%E9%93%B6%E5%87%87%E6%AD%A2%E5%A2%83/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8F%98%E5%8C%96"
                       type="primary"
@@ -715,6 +715,29 @@
                   >
                     <el-text tag="ins">【维度流质】</el-text>
                   </el-tooltip>
+                </div>
+              </el-timeline-item>
+              <el-timeline-item :icon="MoreFilled" type="primary">
+                <div>
+                  <span class="optional">（可选）</span>
+                  在路途上收集
+                  <el-tooltip content="希望+3，让探索开启不同的方向" effect="light" placement="top"
+                  >
+                    <el-text tag="ins">【安玛的爱】</el-text>
+                  </el-tooltip>
+                  、
+                  <el-tooltip
+                      content="所有我方单位的生命、攻击力、防御力+1%；有时会发挥奇妙的效果（奇妙的效果：持有此收藏品时进入部分事件将出现能够获得更多收益/不需要支付代价的隐藏选项，此类选项会要求失去该收藏品）"
+                      effect="light" placement="top"
+                  >
+                    <el-text tag="ins">【树痕之盔】</el-text>
+                  </el-tooltip>
+                  、
+                  <el-tooltip content="坍缩值+3，让探索开启不同的方向" effect="light" placement="top"
+                  >
+                    <el-text tag="ins">【无垠赠礼】</el-text>
+                  </el-tooltip>
+                  以逐步减小重构事件的削弱力度
                 </div>
               </el-timeline-item>
               <el-timeline-item :icon="Flag" type="warning">
@@ -973,7 +996,7 @@
                   >
                     “待诉说的真相”
                   </el-link>
-                  选择
+                  ，选择
                   <el-tooltip content="消耗2缕构想">
                     <el-text tag="ins">“用构想补足缺陷”</el-text>
                   </el-tooltip>
