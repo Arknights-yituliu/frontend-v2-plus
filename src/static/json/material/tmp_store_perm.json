@@ -1,0 +1,1128 @@
+{
+  "orange": [
+    {
+      "itemId": "30104",
+      "itemName": "RMA70-24",
+      "storeType": "orange",
+      "cost": 80.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.1960485
+    },
+    {
+      "itemId": "30094",
+      "itemName": "五水研磨石",
+      "storeType": "orange",
+      "cost": 75.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.23188244
+    },
+    {
+      "itemId": "30084",
+      "itemName": "三水锰矿",
+      "storeType": "orange",
+      "cost": 80.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 0.9681143125
+    },
+    {
+      "itemId": "30074",
+      "itemName": "白马醇",
+      "storeType": "orange",
+      "cost": 65.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 0.8392931230769232
+    },
+    {
+      "itemId": "30064",
+      "itemName": "改量装置",
+      "storeType": "orange",
+      "cost": 85.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.1745035176470588
+    },
+    {
+      "itemId": "30054",
+      "itemName": "酮阵列",
+      "storeType": "orange",
+      "cost": 85.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.179157776470588
+    },
+    {
+      "itemId": "30034",
+      "itemName": "聚酸酯块",
+      "storeType": "orange",
+      "cost": 80.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 0.885235375
+    },
+    {
+      "itemId": "30044",
+      "itemName": "异铁块",
+      "storeType": "orange",
+      "cost": 90.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.2242854888888888
+    },
+    {
+      "itemId": "30024",
+      "itemName": "糖聚块",
+      "storeType": "orange",
+      "cost": 75.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.2123870933333334
+    },
+    {
+      "itemId": "30014",
+      "itemName": "提纯源岩",
+      "storeType": "orange",
+      "cost": 60.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.0839054833333333
+    },
+    {
+      "itemId": "31014",
+      "itemName": "聚合凝胶",
+      "storeType": "orange",
+      "cost": 65.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.2214640153846155
+    },
+    {
+      "itemId": "31024",
+      "itemName": "炽合金块",
+      "storeType": "orange",
+      "cost": 75.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.2115407866666668
+    },
+    {
+      "itemId": "31034",
+      "itemName": "晶体电路",
+      "storeType": "orange",
+      "cost": 90.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.0116081444444445
+    },
+    {
+      "itemId": "31044",
+      "itemName": "精炼溶剂",
+      "storeType": "orange",
+      "cost": 70.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.1772589
+    },
+    {
+      "itemId": "31054",
+      "itemName": "切削原液",
+      "storeType": "orange",
+      "cost": 70.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.0985384428571427
+    },
+    {
+      "itemId": "31064",
+      "itemName": "转质盐聚块",
+      "storeType": "orange",
+      "cost": 70.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.1437191285714285
+    },
+    {
+      "itemId": "30083",
+      "itemName": "轻锰矿",
+      "storeType": "orange",
+      "cost": 45.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.2707884
+    },
+    {
+      "itemId": "30103",
+      "itemName": "RMA70-12",
+      "storeType": "orange",
+      "cost": 60.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.2390714333333332
+    },
+    {
+      "itemId": "30093",
+      "itemName": "研磨石",
+      "storeType": "orange",
+      "cost": 50.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.27366512
+    },
+    {
+      "itemId": "30073",
+      "itemName": "扭转醇",
+      "storeType": "orange",
+      "cost": 40.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 0.09
+    },
+    {
+      "itemId": "30063",
+      "itemName": "全新装置",
+      "storeType": "orange",
+      "cost": 60.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.2502105000000001
+    },
+    {
+      "itemId": "30053",
+      "itemName": "酮凝集组",
+      "storeType": "orange",
+      "cost": 45.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.2456391555555555
+    },
+    {
+      "itemId": "30033",
+      "itemName": "聚酸酯组",
+      "storeType": "orange",
+      "cost": 35.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.287330457142857
+    },
+    {
+      "itemId": "30043",
+      "itemName": "异铁组",
+      "storeType": "orange",
+      "cost": 45.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.2047936000000001
+    },
+    {
+      "itemId": "30023",
+      "itemName": "糖组",
+      "storeType": "orange",
+      "cost": 35.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.1226586285714286
+    },
+    {
+      "itemId": "30013",
+      "itemName": "固源岩组",
+      "storeType": "orange",
+      "cost": 30.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.1516490666666668
+    },
+    {
+      "itemId": "31013",
+      "itemName": "凝胶",
+      "storeType": "orange",
+      "cost": 50.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.23078756
+    },
+    {
+      "itemId": "31023",
+      "itemName": "炽合金",
+      "storeType": "orange",
+      "cost": 40.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.2791116
+    },
+    {
+      "itemId": "31033",
+      "itemName": "晶体元件",
+      "storeType": "orange",
+      "cost": 40.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 0.9689357
+    },
+    {
+      "itemId": "31043",
+      "itemName": "半自然溶剂",
+      "storeType": "orange",
+      "cost": 50.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.2516639999999999
+    },
+    {
+      "itemId": "31053",
+      "itemName": "化合切削液",
+      "storeType": "orange",
+      "cost": 50.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 0.97645804
+    },
+    {
+      "itemId": "31063",
+      "itemName": "转质盐组",
+      "storeType": "orange",
+      "cost": 55.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.206793781818182
+    },
+    {
+      "itemId": "30062",
+      "itemName": "装置",
+      "storeType": "orange",
+      "cost": 40.0,
+      "quantity": 4,
+      "rarity": 2,
+      "costPer": 0.9485113000000001
+    },
+    {
+      "itemId": "30052",
+      "itemName": "酮凝集",
+      "storeType": "orange",
+      "cost": 30.0,
+      "quantity": 4,
+      "rarity": 2,
+      "costPer": 0.9487005333333334
+    },
+    {
+      "itemId": "30042",
+      "itemName": "异铁",
+      "storeType": "orange",
+      "cost": 30.0,
+      "quantity": 4,
+      "rarity": 2,
+      "costPer": 0.9180664000000001
+    },
+    {
+      "itemId": "30032",
+      "itemName": "聚酸酯",
+      "storeType": "orange",
+      "cost": 25.0,
+      "quantity": 4,
+      "rarity": 2,
+      "costPer": 0.9184966400000001
+    },
+    {
+      "itemId": "30022",
+      "itemName": "糖",
+      "storeType": "orange",
+      "cost": 25.0,
+      "quantity": 4,
+      "rarity": 2,
+      "costPer": 0.8032264000000001
+    },
+    {
+      "itemId": "30012",
+      "itemName": "固源岩",
+      "storeType": "orange",
+      "cost": 15.0,
+      "quantity": 4,
+      "rarity": 2,
+      "costPer": 0.9444730666666667
+    },
+    {
+      "itemId": "30061",
+      "itemName": "破损装置",
+      "storeType": "orange",
+      "cost": 40.0,
+      "quantity": 8,
+      "rarity": 1,
+      "costPer": 0.6341058
+    },
+    {
+      "itemId": "30051",
+      "itemName": "双酮",
+      "storeType": "orange",
+      "cost": 30.0,
+      "quantity": 8,
+      "rarity": 1,
+      "costPer": 0.6348202666666667
+    },
+    {
+      "itemId": "30041",
+      "itemName": "异铁碎片",
+      "storeType": "orange",
+      "cost": 30.0,
+      "quantity": 8,
+      "rarity": 1,
+      "costPer": 0.6143973333333334
+    },
+    {
+      "itemId": "30021",
+      "itemName": "代糖",
+      "storeType": "orange",
+      "cost": 25.0,
+      "quantity": 8,
+      "rarity": 1,
+      "costPer": 0.53830816
+    },
+    {
+      "itemId": "30031",
+      "itemName": "酯原料",
+      "storeType": "orange",
+      "cost": 25.0,
+      "quantity": 8,
+      "rarity": 1,
+      "costPer": 0.61515488
+    },
+    {
+      "itemId": "30011",
+      "itemName": "源岩",
+      "storeType": "orange",
+      "cost": 15.0,
+      "quantity": 8,
+      "rarity": 1,
+      "costPer": 0.6343552
+    },
+    {
+      "itemId": "31073",
+      "itemName": "褐素纤维",
+      "storeType": "orange",
+      "cost": 55.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.2375324727272727
+    },
+    {
+      "itemId": "31083",
+      "itemName": "环烃聚质",
+      "storeType": "orange",
+      "cost": 60.0,
+      "quantity": 2,
+      "rarity": 3,
+      "costPer": 1.2752657666666667
+    },
+    {
+      "itemId": "31074",
+      "itemName": "固化纤维板",
+      "storeType": "orange",
+      "cost": 70.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.3185546857142858
+    },
+    {
+      "itemId": "31084",
+      "itemName": "环烃预制体",
+      "storeType": "orange",
+      "cost": 80.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.267654125
+    }
+  ],
+  "green": [
+    {
+      "itemId": "30083",
+      "itemName": "轻锰矿",
+      "storeType": "green",
+      "cost": 35.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.8169354000000001
+    },
+    {
+      "itemId": "30103",
+      "itemName": "RMA70-12",
+      "storeType": "green",
+      "cost": 45.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.8260476222222222
+    },
+    {
+      "itemId": "30093",
+      "itemName": "研磨石",
+      "storeType": "green",
+      "cost": 40.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.7960407
+    },
+    {
+      "itemId": "30073",
+      "itemName": "扭转醇",
+      "storeType": "green",
+      "cost": 30.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.060000000000000005
+    },
+    {
+      "itemId": "30063",
+      "itemName": "全新装置",
+      "storeType": "green",
+      "cost": 45.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.8334736666666667
+    },
+    {
+      "itemId": "30053",
+      "itemName": "酮凝集组",
+      "storeType": "green",
+      "cost": 35.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.8007680285714286
+    },
+    {
+      "itemId": "30033",
+      "itemName": "聚酸酯组",
+      "storeType": "green",
+      "cost": 30.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.7509427666666666
+    },
+    {
+      "itemId": "30043",
+      "itemName": "异铁组",
+      "storeType": "green",
+      "cost": 35.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.7745101714285715
+    },
+    {
+      "itemId": "30023",
+      "itemName": "糖组",
+      "storeType": "green",
+      "cost": 30.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.6548842
+    },
+    {
+      "itemId": "30013",
+      "itemName": "固源岩组",
+      "storeType": "green",
+      "cost": 25.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.6909894400000001
+    },
+    {
+      "itemId": "31043",
+      "itemName": "半自然溶剂",
+      "storeType": "green",
+      "cost": 40.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.7822899999999999
+    },
+    {
+      "itemId": "31053",
+      "itemName": "化合切削液",
+      "storeType": "green",
+      "cost": 40.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.610286275
+    },
+    {
+      "itemId": "31013",
+      "itemName": "凝胶",
+      "storeType": "green",
+      "cost": 40.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.769242225
+    },
+    {
+      "itemId": "31023",
+      "itemName": "炽合金",
+      "storeType": "green",
+      "cost": 35.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.7309209142857144
+    },
+    {
+      "itemId": "31033",
+      "itemName": "晶体元件",
+      "storeType": "green",
+      "cost": 30.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.6459571333333333
+    },
+    {
+      "itemId": "31063",
+      "itemName": "转质盐组",
+      "storeType": "green",
+      "cost": 45.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.737485088888889
+    },
+    {
+      "itemId": "31073",
+      "itemName": "褐素纤维",
+      "storeType": "green",
+      "cost": 40.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.8508035749999999
+    },
+    {
+      "itemId": "31083",
+      "itemName": "环烃聚质",
+      "storeType": "green",
+      "cost": 45.0,
+      "quantity": 1,
+      "rarity": 3,
+      "costPer": 0.8501771777777778
+    },
+    {
+      "itemId": "7001",
+      "itemName": "招聘许可",
+      "storeType": "green",
+      "cost": 15.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.6045333333333334
+    },
+    {
+      "itemId": "7003",
+      "itemName": "寻访凭证",
+      "storeType": "green",
+      "cost": 450.0,
+      "quantity": 1,
+      "rarity": 5,
+      "costPer": 1.0
+    }
+  ],
+  "yellow": [
+    {
+      "itemId": "30064",
+      "itemName": "改量装置",
+      "storeType": "yellow",
+      "cost": 20.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 4.99163995
+    },
+    {
+      "itemId": "30014",
+      "itemName": "提纯源岩",
+      "storeType": "yellow",
+      "cost": 10.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 6.5034329
+    },
+    {
+      "itemId": "30054",
+      "itemName": "酮阵列",
+      "storeType": "yellow",
+      "cost": 15.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 6.681894066666667
+    },
+    {
+      "itemId": "30024",
+      "itemName": "糖聚块",
+      "storeType": "yellow",
+      "cost": 10.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 9.0929032
+    },
+    {
+      "itemId": "30044",
+      "itemName": "异铁块",
+      "storeType": "yellow",
+      "cost": 15.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 7.345712933333333
+    },
+    {
+      "itemId": "30034",
+      "itemName": "聚酸酯块",
+      "storeType": "yellow",
+      "cost": 10.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 7.081883
+    },
+    {
+      "itemId": "30094",
+      "itemName": "五水研磨石",
+      "storeType": "yellow",
+      "cost": 10.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 9.2391183
+    },
+    {
+      "itemId": "30084",
+      "itemName": "三水锰矿",
+      "storeType": "yellow",
+      "cost": 10.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 7.7449145
+    },
+    {
+      "itemId": "31024",
+      "itemName": "炽合金块",
+      "storeType": "yellow",
+      "cost": 15.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 6.057703933333333
+    },
+    {
+      "itemId": "31014",
+      "itemName": "聚合凝胶",
+      "storeType": "yellow",
+      "cost": 15.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 5.293010733333333
+    },
+    {
+      "itemId": "30104",
+      "itemName": "RMA70-24",
+      "storeType": "yellow",
+      "cost": 15.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 6.378925333333333
+    },
+    {
+      "itemId": "31034",
+      "itemName": "晶体电路",
+      "storeType": "yellow",
+      "cost": 15.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 6.069648866666666
+    },
+    {
+      "itemId": "30074",
+      "itemName": "白马醇",
+      "storeType": "yellow",
+      "cost": 10.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 5.455405300000001
+    },
+    {
+      "itemId": "mod_unlock_token",
+      "itemName": "模组数据块",
+      "storeType": "yellow",
+      "cost": 20.0,
+      "quantity": 1,
+      "rarity": 5,
+      "costPer": 8.16
+    },
+    {
+      "itemId": "32001",
+      "itemName": "芯片助剂",
+      "storeType": "yellow",
+      "cost": 15.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 8.201142857142859
+    }
+  ],
+  "purple": [
+    {
+      "itemId": "4003",
+      "itemName": "合成玉",
+      "storeType": "purple",
+      "cost": 20.0,
+      "quantity": 100,
+      "rarity": 5,
+      "costPer": 3.75
+    },
+    {
+      "itemId": "30064",
+      "itemName": "改量装置",
+      "storeType": "purple",
+      "cost": 85.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.1745035176470588
+    },
+    {
+      "itemId": "30014",
+      "itemName": "提纯源岩",
+      "storeType": "purple",
+      "cost": 50.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.30068658
+    },
+    {
+      "itemId": "30054",
+      "itemName": "酮阵列",
+      "storeType": "purple",
+      "cost": 65.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.5419755538461537
+    },
+    {
+      "itemId": "30024",
+      "itemName": "糖聚块",
+      "storeType": "purple",
+      "cost": 60.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.5154838666666668
+    },
+    {
+      "itemId": "30044",
+      "itemName": "异铁块",
+      "storeType": "purple",
+      "cost": 70.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.5740813428571427
+    },
+    {
+      "itemId": "30034",
+      "itemName": "聚酸酯块",
+      "storeType": "purple",
+      "cost": 60.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.1803138333333334
+    },
+    {
+      "itemId": "30094",
+      "itemName": "五水研磨石",
+      "storeType": "purple",
+      "cost": 60.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.53985305
+    },
+    {
+      "itemId": "30084",
+      "itemName": "三水锰矿",
+      "storeType": "purple",
+      "cost": 60.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.2908190833333333
+    },
+    {
+      "itemId": "31024",
+      "itemName": "炽合金块",
+      "storeType": "purple",
+      "cost": 60.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.5144259833333333
+    },
+    {
+      "itemId": "31014",
+      "itemName": "聚合凝胶",
+      "storeType": "purple",
+      "cost": 50.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.58790322
+    },
+    {
+      "itemId": "31034",
+      "itemName": "晶体电路",
+      "storeType": "purple",
+      "cost": 70.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.3006390428571428
+    },
+    {
+      "itemId": "30104",
+      "itemName": "RMA70-24",
+      "storeType": "purple",
+      "cost": 65.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.4720596923076923
+    },
+    {
+      "itemId": "30074",
+      "itemName": "白马醇",
+      "storeType": "purple",
+      "cost": 50.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.09108106
+    },
+    {
+      "itemId": "4001",
+      "itemName": "龙门币",
+      "storeType": "purple",
+      "cost": 15.0,
+      "quantity": 2000,
+      "rarity": 4,
+      "costPer": 0.48000000000000004
+    },
+    {
+      "itemId": "31044",
+      "itemName": "精炼溶剂",
+      "storeType": "purple",
+      "cost": 55.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.4983295090909092
+    },
+    {
+      "itemId": "31054",
+      "itemName": "切削原液",
+      "storeType": "purple",
+      "cost": 55.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.3981398363636364
+    },
+    {
+      "itemId": "2004",
+      "itemName": "高级作战记录",
+      "storeType": "purple",
+      "cost": 15.0,
+      "quantity": 1,
+      "rarity": 5,
+      "costPer": 0.30384
+    },
+    {
+      "itemId": "3303",
+      "itemName": "技巧概要·卷3",
+      "storeType": "purple",
+      "cost": 20.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 0.5085634641279441
+    },
+    {
+      "itemId": "31064",
+      "itemName": "转质盐聚块",
+      "storeType": "purple",
+      "cost": 55.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 1.4556425272727274
+    }
+  ],
+  "grey": [
+    {
+      "itemId": "4001",
+      "itemName": "龙门币",
+      "storeType": "grey",
+      "cost": 100.0,
+      "quantity": 1800,
+      "rarity": 4,
+      "costPer": 6.4799999999999995
+    },
+    {
+      "itemId": "2001",
+      "itemName": "基础作战记录",
+      "storeType": "grey",
+      "cost": 100.0,
+      "quantity": 9,
+      "rarity": 2,
+      "costPer": 4.10184
+    },
+    {
+      "itemId": "2002",
+      "itemName": "初级作战记录",
+      "storeType": "grey",
+      "cost": 200.0,
+      "quantity": 9,
+      "rarity": 3,
+      "costPer": 4.10184
+    },
+    {
+      "itemId": "7001",
+      "itemName": "招聘许可",
+      "storeType": "grey",
+      "cost": 160.0,
+      "quantity": 1,
+      "rarity": 4,
+      "costPer": 15.0425
+    },
+    {
+      "itemId": "3003",
+      "itemName": "赤金",
+      "storeType": "grey",
+      "cost": 160.0,
+      "quantity": 6,
+      "rarity": 4,
+      "costPer": 3.4182000000000006
+    },
+    {
+      "itemId": "3301",
+      "itemName": "技巧概要·卷1",
+      "storeType": "grey",
+      "cost": 160.0,
+      "quantity": 5,
+      "rarity": 2,
+      "costPer": 4.91752616285937
+    },
+    {
+      "itemId": "3302",
+      "itemName": "技巧概要·卷2",
+      "storeType": "grey",
+      "cost": 200.0,
+      "quantity": 3,
+      "rarity": 3,
+      "costPer": 6.00104887670974
+    },
+    {
+      "itemId": "30011",
+      "itemName": "源岩",
+      "storeType": "grey",
+      "cost": 80.0,
+      "quantity": 2,
+      "rarity": 1,
+      "costPer": 2.9735400000000003
+    },
+    {
+      "itemId": "30021",
+      "itemName": "代糖",
+      "storeType": "grey",
+      "cost": 100.0,
+      "quantity": 2,
+      "rarity": 1,
+      "costPer": 3.3644260000000004
+    },
+    {
+      "itemId": "30031",
+      "itemName": "酯原料",
+      "storeType": "grey",
+      "cost": 100.0,
+      "quantity": 2,
+      "rarity": 1,
+      "costPer": 3.844718
+    },
+    {
+      "itemId": "30041",
+      "itemName": "异铁碎片",
+      "storeType": "grey",
+      "cost": 120.0,
+      "quantity": 2,
+      "rarity": 1,
+      "costPer": 3.8399833333333335
+    },
+    {
+      "itemId": "30051",
+      "itemName": "双酮",
+      "storeType": "grey",
+      "cost": 120.0,
+      "quantity": 2,
+      "rarity": 1,
+      "costPer": 3.967626666666667
+    },
+    {
+      "itemId": "30061",
+      "itemName": "破损装置",
+      "storeType": "grey",
+      "cost": 80.0,
+      "quantity": 1,
+      "rarity": 1,
+      "costPer": 3.96316125
+    },
+    {
+      "itemId": "30012",
+      "itemName": "固源岩",
+      "storeType": "grey",
+      "cost": 200.0,
+      "quantity": 3,
+      "rarity": 2,
+      "costPer": 5.312661
+    },
+    {
+      "itemId": "30022",
+      "itemName": "糖",
+      "storeType": "grey",
+      "cost": 200.0,
+      "quantity": 2,
+      "rarity": 2,
+      "costPer": 5.020165
+    },
+    {
+      "itemId": "30032",
+      "itemName": "聚酸酯",
+      "storeType": "grey",
+      "cost": 200.0,
+      "quantity": 2,
+      "rarity": 2,
+      "costPer": 5.740604
+    },
+    {
+      "itemId": "30042",
+      "itemName": "异铁",
+      "storeType": "grey",
+      "cost": 240.0,
+      "quantity": 2,
+      "rarity": 2,
+      "costPer": 5.737915
+    },
+    {
+      "itemId": "30052",
+      "itemName": "酮凝集",
+      "storeType": "grey",
+      "cost": 240.0,
+      "quantity": 2,
+      "rarity": 2,
+      "costPer": 5.929378333333333
+    },
+    {
+      "itemId": "30062",
+      "itemName": "装置",
+      "storeType": "grey",
+      "cost": 160.0,
+      "quantity": 1,
+      "rarity": 2,
+      "costPer": 5.928195625000001
+    },
+    {
+      "itemId": "3112",
+      "itemName": "碳",
+      "storeType": "grey",
+      "cost": 160.0,
+      "quantity": 5,
+      "rarity": 2,
+      "costPer": 2.7250000000000005
+    },
+    {
+      "itemId": "3113",
+      "itemName": "碳素",
+      "storeType": "grey",
+      "cost": 200.0,
+      "quantity": 3,
+      "rarity": 3,
+      "costPer": 2.052
+    }
+  ]
+}

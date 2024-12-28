@@ -54,7 +54,7 @@ let stageResultGroup = ref(TMP_STAGE_RESULT.recommendedStageList.sort((a, b) => 
 let stageCardData = ref([])
 
 
-let updateTime = ref('')
+let updateTime = ref(TMP_STAGE_RESULT.updateTime)
 
 // 获取关卡推荐数据
 function getStageResult() {

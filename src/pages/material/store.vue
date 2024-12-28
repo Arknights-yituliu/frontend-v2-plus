@@ -2,9 +2,9 @@
 import FixedNav from "/src/components/FixedNav.vue";
 import ModuleHeader from '@/components/ModuleHeader.vue';
 import {onMounted, ref} from 'vue'
-import storeAPI from '/src/api/store.js'
 import materialAPI from '/src/api/material.js'
 import userService from "/src/utils/user/userConfig.js";
+import TMP_STORE_PERM from '/src/static/json/material/tmp_store_perm.json'
 
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表
@@ -17,21 +17,26 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 ]
 
 
+formatStorePerm(TMP_STORE_PERM)
+
+function formatStorePerm(data){
+  for (let i = 0; i < storeTypeList.length; i++) {
+    const item = storeTypeList[i]
+    const list = data[item.typeName]
+    console.log(list)
+    list.sort((a,b)=>b.costPer-a.costPer)
+    storeListFormat.value.push({
+      ...item,
+      itemList: list
+    })
+  }
+}
+
 function getStoreData() {
   // 遍历常驻商店格式化数据
   const config = userService.getStageConfig()
   materialAPI.getStorePermDataV4(config).then(response => {
-    const perm = response.data
-    for (let i = 0; i < storeTypeList.length; i++) {
-      const item = storeTypeList[i]
-      const list = perm[item.typeName]
-      console.log(list)
-      list.sort((a,b)=>b.costPer-a.costPer)
-      storeListFormat.value.push({
-        ...item,
-        itemList: list
-      })
-    }
+    formatStorePerm(response.data)
   })
 
 
