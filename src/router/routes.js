@@ -210,23 +210,13 @@ const routes = [
         component: () => import('/src/pages/survey/questionnaire.vue')
     },
     {
-        path: '/survey/rank',
+        path: '/survey/operator-progression-statistics',
         text: '干员练度调查结果',
         name: 'OperatorRank',
         display: true,
         module: 'survey',
         icon: "mdi-chart-bar",
-        component: () => import('/src/pages/survey/rank.vue')
-        // component: Notice
-    },
-    {
-        path: '/survey/rank2',
-        text: '干员练度调查结果',
-        name: 'OperatorRank2',
-        display: false,
-        module: 'survey',
-        icon: "rank",
-        component: () => import('/src/pages/survey/rank.vue')
+        component: () => import('/src/pages/survey/operator-progression-statistics.vue')
         // component: Notice
     },
     {

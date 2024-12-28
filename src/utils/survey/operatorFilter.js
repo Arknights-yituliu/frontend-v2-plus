@@ -26,7 +26,7 @@ const filterByEquipType = (type, data) => {
 }
 
 const filterByOwn = (condition, data) => {
-    return data.own;
+    return condition===data.own;
 }
 
 
@@ -109,11 +109,10 @@ let operatorFilterCondition = ref({
         type: 'own',
         actionFunc: (index) => {
             operatorFilterCondition.value.own.conditions[index].action = !operatorFilterCondition.value.own.conditions[index].action
-
         },
         conditions: [
-            {label: "已招募", value: true, filterByOwn, action: false},
-            {label: "未招募", value: false, filterByOwn, action: false},
+            {label: "已招募", value: true,func: filterByOwn, action: false},
+            {label: "未招募", value: false,func: filterByOwn, action: false},
         ]
     },
 })
@@ -135,6 +134,7 @@ function filterOperatorList(list) {
         for (const c in operatorFilterCondition.value) {
             const item = operatorFilterCondition.value[c];
             const conditions = item.conditions
+            // logText+=`{  }要判断的内容:${item.label}`
             let flag = true
             for (const condition of conditions) {
                 if (condition.action) {
@@ -145,15 +145,18 @@ function filterOperatorList(list) {
                 }
             }
             display = display&&flag
-            // logText+=`{}${flag}`
+            // logText+=`{  }结果:${flag}`
         }
-        // logText+=`{}${display}`
+        // logText+=`{  }最终结果${display}`
         // console.log(logText)
 
         if (display) {
+            // console.log('加入了')
             displayList.push(operator)
         }
     }
+
+    // console.log(displayList)
 
     return displayList;
 }
