@@ -1055,6 +1055,7 @@
                   >
                     <el-text tag="ins">【片瓣】</el-text>
                   </el-tooltip>
+                  （此藏品削弱力度较大，建议发育至第4层再进行获取）
                 </div>
               </el-timeline-item>
               <el-timeline-item :icon="Battle" color="#5EDFD6">
