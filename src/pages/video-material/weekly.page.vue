@@ -84,7 +84,7 @@ import '/src/assets/css/material/stage.phone.scss'
 import '/src/assets/css/media/weekly.scss'
 
 import { dataFormat } from '/src/utils/dateUtil.js'
-import { dividerDark } from 'naive-ui';
+
 //漫游导航指引
 const guideOpen = ref(false)
 
@@ -565,7 +565,7 @@ onMounted(() => {
                     </td>
                   </tr>
                 </table>
-                <dividerDark></dividerDark>
+
                 <table class="drop-unit-table">
                   <tr>
                     <td class="drop-unit-table-title">
