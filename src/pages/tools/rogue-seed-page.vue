@@ -4,7 +4,8 @@ import '/src/assets/css/rogueSeed/rogue-seed-page.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
 import {cMessage} from "@/utils/message.js";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
-import SpriteImage from "@/components/sprite/SpriteImage.vue";
+
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import Popup from '/src/components/popup.vue'
 import {debounce} from "@/utils/debounce.js";
@@ -69,7 +70,7 @@ function displayRogueSeedDetail(item) {
   rogueSeedDetailVisible.value = true
 }
 
-function getRogueSeedRating(value, icon, seedId) {
+function ratingAction(value, icon, seedId) {
 
   if (typeof rogueSeedRatingDict.value[seedId] === "undefined") {
     return `/image/survey/${icon}0.png`
@@ -113,8 +114,6 @@ function rogueSeedRating(seedId, value) {
 }
 
 
-
-
 getRogueSeedPage()
 
 </script>
@@ -122,53 +121,49 @@ getRogueSeedPage()
 <template>
   <div class="rogue-seed-page">
 
+    <div class="flex flex-wrap">
+      <v-card v-for="(rogueSeed, index) in rogueSeedList" :key="index" class="rogue-seed-card m-8">
+        <v-card-text>
+          <div class="flex justify-between m-8">
+            <div class="flex">
+              <OperatorAvatar v-for="(operator,index) in getOperatorList(rogueSeed.operatorTeam)"
+                              :char-id="operator" class="m-0-4">
+              </OperatorAvatar>
+            </div>
 
-    <div class="rogue-seed-table">
-      <div class="rogue-seed-container" v-for="(rogueSeed, index) in rogueSeedList" :key="index">
-        <div class="rogue-seed-init-team">
-          <SpriteImage v-for="(operator,index) in getOperatorList(rogueSeed.operatorTeam)"
-                       display-size="50" original-size="180" :image-name="operator"
-                       style="margin:0 8px 0 0">
-
-          </SpriteImage>
-        </div>
-
-        <div class="rogue-seed-tag-box">
-          <div class="rogue-seed-tag" v-for="(tag,index) in rogueSeed.tags">
-            #{{ tag }}
+            <div class="flex align-center">
+              <span>种子：{{ rogueSeed.seed }}</span>
+              <v-btn color="primary" variant="text" @click="copyTextToClipboard(rogueSeed.seed)">复制</v-btn>
+              <v-btn color="primary" variant="text" @click="displayRogueSeedDetail(rogueSeed)">详情</v-btn>
+            </div>
           </div>
-        </div>
 
-        <div class="rogue-seed-action-button">
-          <span class="rogue-seed-label">种子：{{ rogueSeed.seed }}</span>
-          <span class="rogue-seed-label-button" @click="copyTextToClipboard(rogueSeed.seed)">复制</span>
-          <span class="rogue-seed-label-button" @click="displayRogueSeedDetail(rogueSeed)">详情</span>
-        </div>
-
-
-        <span class="rogue-seed-card-description">{{ rogueSeed.description }}</span>
-
-        <div class="rogue-seed-rating-check-box">
-          <div class="rogue-seed-rating-item" @click="rogueSeedRating(rogueSeed.seedId,0)">
-            <img :src="getRogueSeedRating(0,'dislike',rogueSeed.seedId)"
-                 class="rogue-seed-rating-icon" alt="">
-            <span>{{ rogueSeed.rating.likeCount }}</span>
+          <div class="flex">
+            <v-chip density="compact" color="primary" v-for="(tag,index) in rogueSeed.tags" class="m-0-4">
+              #{{ tag }}
+            </v-chip>
           </div>
-          <div class="rogue-seed-rating-item" @click="rogueSeedRating(rogueSeed.seedId,1)">
-            <img :src="getRogueSeedRating(1,'normal',rogueSeed.seedId)"
-                 class="rogue-seed-rating-icon" alt="">
-            <span>{{ rogueSeed.rating.normalCount }}</span>
+          <div class="m-8">{{ rogueSeed.description }}</div>
+          <div class="flex justify-end">
+            <div class="flex align-center" @click="rogueSeedRating(rogueSeed.seedId,0)">
+              <img :src="ratingAction(0,'dislike',rogueSeed.seedId)"
+                   class="rogue-seed-rating-icon" alt="">
+              <span>{{ rogueSeed.rating.likeCount }}</span>
+            </div>
+            <div class="flex align-center" @click="rogueSeedRating(rogueSeed.seedId,1)">
+              <img :src="ratingAction(1,'normal',rogueSeed.seedId)"
+                   class="rogue-seed-rating-icon" alt="">
+              <span>{{ rogueSeed.rating.normalCount }}</span>
+            </div>
+            <div class="flex align-center" @click="rogueSeedRating(rogueSeed.seedId,2)">
+              <img :src="ratingAction(2,'like',rogueSeed.seedId)"
+                   class="rogue-seed-rating-icon" alt="">
+              <span>{{ rogueSeed.rating.dislikeCount }}</span>
+            </div>
           </div>
-          <div class="rogue-seed-rating-item" @click="rogueSeedRating(rogueSeed.seedId,2)">
-            <img :src="getRogueSeedRating(2,'like',rogueSeed.seedId)"
-                 class="rogue-seed-rating-icon" alt="">
-            <span>{{ rogueSeed.rating.dislikeCount }}</span>
-          </div>
-        </div>
-
-      </div>
+        </v-card-text>
+      </v-card>
     </div>
-    <div>
 
 
 
@@ -182,16 +177,16 @@ getRogueSeedPage()
                :src="`https://cos.yituliu.cn/${rogueSeedDetail.summaryImageLink}`" alt="">
           <h3>对种子评价</h3>
           <div style="display: flex">
-            <img :src="getRogueSeedRating(0,'dislike',rogueSeedDetail.seedId)" alt=""
+            <img :src="ratingAction(0,'dislike',rogueSeedDetail.seedId)" alt=""
                  class="rogue-seed-rating-button" @click="rogueSeedRating(rogueSeedDetail.seedId,0)">
-            <img :src="getRogueSeedRating(1,'normal',rogueSeedDetail.seedId)" alt=""
+            <img :src="ratingAction(1,'normal',rogueSeedDetail.seedId)" alt=""
                  class="rogue-seed-rating-button" @click="rogueSeedRating(rogueSeedDetail.seedId,1)">
-            <img :src="getRogueSeedRating(2,'like',rogueSeedDetail.seedId)" alt=""
+            <img :src="ratingAction(2,'like',rogueSeedDetail.seedId)" alt=""
                  class="rogue-seed-rating-button" @click="rogueSeedRating(rogueSeedDetail.seedId,2)">
           </div>
         </div>
       </Popup>
-    </div>
+
 
   </div>
 </template>
