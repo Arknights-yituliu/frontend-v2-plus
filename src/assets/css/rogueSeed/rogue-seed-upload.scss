@@ -1,88 +1,31 @@
 .rogue-seed-upload {
 
-  .rogue-seed-form {
-    width: 800px;
-    margin: auto;
+  .rogue-seed-form{
+   width: 700px;
 
-
-    .operator-checkbox{
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .settlement-chart-checkbox{
-      position: relative;
-      height: 300px;
-    }
-
-    .settlement-chart{
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      width: 500px;
-    }
-
-    .settlement-chart-upload-button{
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 200px;
-      border: 1px dashed var(--c-border-color);
-      border-radius:3px;
-      z-index: 0;
-    }
-
-
-
-    .settlement-chart-upload-button:hover{
-      border-color: var(--c-button-blue-background-active);
-    }
-
-    .rogue-seed-tag-form {
-      display: flex;
-      border-radius: 4px;
-      border: 1px solid var(--c-border-color);
-      width: 95%;
-      align-items: center;
-      flex-wrap: wrap;
-      .rogue-seed-tag-box {
-        display: flex;
-
-        .rogue-seed-tag {
-          background-color: var(--c-btn-blue-light);
-          border-radius: 3px;
-          padding:0 8px;
-          margin: 4px;
-          font-weight: bolder;
-          font-size: 14px;
-          color: white;
-        }
-      }
-      .rogue-seed-tag-input{
-        border: none;
-        outline: none;
-        height: 36px;
-        width: auto;
-      }
-      .rogue-seed-tag-button{
-        cursor: pointer;
-        border-radius: 3px;
-        padding:0 4px;
-      }
-
-      .rogue-seed-tag-button:hover{
-        background-color: var(--c-btn-blue-light);
-      }
-    }
   }
 
-  .rogue-seed-form :deep(.el-select){
-    width: 600px;
+  .settlement-chart-checkbox{
+    position: relative;
+    height: 150px;
+    width: 150px;
+    border: 1px dashed var(--c-border-color);
+    border-radius:3px;
   }
 
+  .settlement-chart{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 500px;
+  }
 
-
-
+  .settlement-chart-upload-button{
+    position: absolute;
+    top: 45px;
+    left: 45px;
+    z-index: 0;
+  }
 
 }

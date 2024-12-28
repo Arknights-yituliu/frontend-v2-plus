@@ -4,28 +4,65 @@ import '/src/assets/css/rogueSeed/rogue-seed-upload.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
 import {cMessage} from "/src/utils/message.js";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
-import SpriteImage from "/src/components/sprite/SpriteImage.vue";
-import {professionDict} from "/src/utils/survey/common.js";
-
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
 import {compressImage, getDataUrl} from '/src/utils/fileConversion.js'
 import {debounce} from "@/utils/debounce.js";
 
-let operatorTable = new Map()
+const displayFilterCondition = ['profession', 'rarity']
 
-let charIdDict = new Map()
+let operatorsList = []
 
-function initOperatorTable() {
-  for (const charId in CHARACTER_TABLE) {
-    const item = CHARACTER_TABLE[charId];
-    charIdDict.set(item.name, charId)
+let operatorIdDict = new Map()
+
+for (const charId in CHARACTER_TABLE) {
+  const item = CHARACTER_TABLE[charId];
+  operatorIdDict.set(item.name, charId)
+  operatorsList.push({
+    charId: charId,
+    name: item.name,
+    rarity: item.rarity,
+    profession: item.profession,
+    itemObtainApproach: item.itemObtainApproach,
+    subProfessionId: item.subProfessionId,
+  })
+}
+
+
+let displayOperatorsList = ref([])
+
+
+const debounceAddFilterConditionAndFilterOperator = debounce(filterOperatorByCondition, 500)
+
+function filterOperatorByCondition(func, index) {
+  func(index)
+  displayOperatorsList.value = filterOperatorList(operatorsList)
+}
+
+filterOperatorByCondition(operatorFilterCondition.value.profession.actionFunc, 4)
+
+console.log(displayOperatorsList.value)
+
+function btnAction(action) {
+  if (!action) {
+    return "tonal"
   }
 }
+
+
+const ROGUE_THEME = ["萨卡兹的无终奇语", "探索者的银凇止境", "水月与深蓝之树"]
+
+const ROGUE_VERSION = ["萨卡兹的无终奇语DLC-遁入阇那"]
+
+const SQUAD = ["蓝图测绘分队", "突击战术分队", "远程战术分队", "破坏战术分队",
+  "异想天开分队", "点刺成锭分队", "因地制宜分队", "魂灵护送分队", "博闻广记分队"]
+
 
 const rogueSeedForm = ref({
   "seedId": 1741880747960100,
   "seed": "1414115151",
   "uid": 14401084810,
-  'difficulty':15,
+  'difficulty': 15,
   "rogueVersion": "萨卡兹的无终奇语DLC-遁入阇那",
   "rogueTheme": "萨卡兹的无终奇语",
   "squad": "蓝图测绘分队",
@@ -35,16 +72,16 @@ const rogueSeedForm = ref({
   "summaryImageLink": ""
 })
 
-let seedTagValue = ref('')
+let inputTagText = ref('')
 
-const addSeedTag = () => {
-  if (rogueSeedForm.value.tags.indexOf(seedTagValue.value) < 0) {
-    rogueSeedForm.value.tags.push(seedTagValue.value)
-    seedTagValue.value = ''
+function addSeedTag() {
+  if (rogueSeedForm.value.tags.indexOf(inputTagText.value) < 0) {
+    rogueSeedForm.value.tags.push(inputTagText.value)
+    inputTagText.value = ''
   }
 }
 
-const addOrDeleteOperator = (operator) => {
+function addOrDeleteOperator(operator) {
   if (rogueSeedForm.value.operatorTeam.indexOf(operator) < 0) {
     rogueSeedForm.value.operatorTeam.push(operator)
   } else {
@@ -81,7 +118,7 @@ const fileToDataUrl = async () => {
 
 }
 
-const uploadSeed = () => {
+function uploadSeed() {
   let data = JSON.parse(JSON.stringify(rogueSeedForm.value))
   if (data.operatorTeam) {
     data.operatorTeam = data.operatorTeam.join(',')
@@ -97,15 +134,15 @@ const uploadSeed = () => {
 
 const upload = debounce(() => {
   const input = document.getElementById('settlement-chart')
-  if(input.files.length>0){
+  if (input.files.length > 0) {
     uploadImage()
-  }else {
+  } else {
     uploadSeed()
   }
 
 }, 1500)
 
-const uploadImage = () => {
+function uploadImage() {
   const formData = new FormData();
   formData.append('file', settlementChartBlob.value)
   rogueSeedAPI.uploadRogueSeedSettlementChart(formData).then(response => {
@@ -115,139 +152,108 @@ const uploadImage = () => {
   })
 }
 
-let selectedProfession = ref('SNIPER')
-let selectedRarity = ref(6)
 
-let displayOperator = ref([])
-const filterOperator = () => {
-  for (const charId in CHARACTER_TABLE) {
-    const item = CHARACTER_TABLE[charId];
-    if (item.rarity !== selectedRarity.value) {
-      console.log(item.rarity + "跳出")
-      continue
-    }
-    if (item.profession !== selectedProfession.value) {
-      console.log(item.profession + "跳出")
-      continue
-    }
-    displayOperator.value.push(item)
-  }
-  console.log(displayOperator.value)
-}
-
-
-let operatorCheckBoxCollapse = ref(true)
-initOperatorTable()
-console.log(charIdDict)
-filterOperator()
 </script>
 
 <template>
   <div class="rogue-seed-upload">
     <!-- 提名区域 -->
-    <el-card style="margin: 0 0 0 8px;width: 800px;">
-      <el-form :model="rogueSeedForm" label-width="auto" class="rogue-seed-form">
-        <el-form-item label="种子">
-          <el-input v-model="rogueSeedForm.seed" style="width: 500px;"/>
-        </el-form-item>
-        <el-form-item label="肉鸽主题">
-          <el-select v-model="rogueSeedForm.rogueTheme" placeholder="" style="width: 500px;">
-            <el-option label="水月与深蓝之树" value="水月与深蓝之树"/>
-            <el-option label="探索者的银凇止境" value="探索者的银凇止境"/>
-            <el-option label="萨卡兹的无终奇语" value="萨卡兹的无终奇语"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="肉鸽版本">
-          <el-select v-model="rogueSeedForm.rogueVersion" placeholder="" style="width: 500px;">
-            <el-option label="萨卡兹的无终奇语DLC-遁入阇那" value="萨卡兹的无终奇语DLC-遁入阇那"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="分队选择">
-          <el-select v-model="rogueSeedForm.squad" placeholder="" style="width: 500px;">
-            <el-option label="蓝图测绘分队" value="蓝图测绘分队"/>
-            <el-option label="突击战术分队" value="突击战术分队"/>
-            <el-option label="远程战术分队" value="远程战术分队"/>
-            <el-option label="破坏战术分队" value="破坏战术分队"/>
-            <el-option label="异想天开分队" value="异想天开分队"/>
-            <el-option label="点刺成锭分队" value="点刺成锭分队"/>
-            <el-option label="因地制宜分队" value="因地制宜分队"/>
-            <el-option label="魂灵护送分队" value="魂灵护送分队"/>
-            <el-option label="博闻广记分队" value="博闻广记分队"/>
-            <el-option label="指挥分队" value="指挥分队"/>
-            <el-option label="拟态学者分队" value="拟态学者分队"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="初始干员">
-          <div>
-            <div class="operator-checkbox">
-              <SpriteImage original-size="180" display-size="60" :image-name="charIdDict.get(operator)"
-                           v-for="(operator,index) in rogueSeedForm.operatorTeam" :key="index"
-                           @click="addOrDeleteOperator(operator)"></SpriteImage>
-            </div>
 
-            <h3>点击下面头像选择初始干员，再次点击取消选择</h3>
-            <div>
-              星级
-              <el-radio-group v-model="selectedRarity">
-                <el-radio-button v-for="(item,index) in [1,2,3,4,5,6]" :label="item" :value="item"/>
+    <v-card class="rogue-seed-form">
+      <v-card-text>
+        <div class="m-0-4 opacity-70">种子id</div>
+        <v-text-field
+            density="compact"
+            v-model="rogueSeedForm.seed"
+            color="primary"
+            variant="outlined"
+            class="m-4"
+        ></v-text-field>
+        <div class="m-0-4 opacity-70">肉鸽主题</div>
+        <v-select
+            :items="ROGUE_THEME"
+            density="compact"
+            variant="outlined"
+            v-model="rogueSeedForm.rogueTheme"
+        ></v-select>
+        <div class="m-0-4 opacity-70">肉鸽版本</div>
+        <v-select
+            :items="ROGUE_VERSION"
+            density="compact"
+            variant="outlined"
+            v-model="rogueSeedForm.rogueVersion"
+        ></v-select>
+        <div class="m-0-4 opacity-70">分队</div>
+        <v-select
+            :items="SQUAD"
+            density="compact"
+            variant="outlined"
+            v-model="rogueSeedForm.squad"
+        ></v-select>
+        <div class="m-0-4 opacity-70">初始干员</div>
 
-              </el-radio-group>
-            </div>
-            <div>
-              职业
-              <el-radio-group v-model="selectedProfession">
-                <el-radio-button v-for="(item,index) in professionDict" :label="item.label" :value="item.value"/>
-              </el-radio-group>
-            </div>
+        <div class="flex">
+          <OperatorAvatar :char-id="operatorIdDict.get(operator)" size="60" mobile-size="50"
+                          class="m-4 shadow-md"
+                          v-for="(operator,index) in rogueSeedForm.operatorTeam" :key="index"
+                          @click="addOrDeleteOperator(operator)"></OperatorAvatar>
+        </div>
 
-            <div>
-              <div class="operator-checkbox">
-                <SpriteImage original-size="180" display-size="60" :image-name="operator.charId" margin="4"
-                             v-for="(operator,charId) in displayOperator" :key="charId"
-                             @click="addOrDeleteOperator(operator.name)">
-                </SpriteImage>
-              </div>
-            </div>
+        <div class="m-4" v-for="(conditions,module) in operatorFilterCondition" :key="module"
+             v-show="displayFilterCondition.includes(module)">
+          <v-btn variant="text" class="checkbox-label">{{ conditions.label }}</v-btn>
+          <v-btn color="primary" :variant="btnAction(condition.action)"
+                 class="checkbox-button" rounded="x-large"
+                 v-for="(condition,index) in conditions.conditions" :key="index"
+                 @click="debounceAddFilterConditionAndFilterOperator(conditions.actionFunc,index)">
+            {{ condition.label }}
+          </v-btn>
+        </div>
 
-          </div>
-        </el-form-item>
+        <div class="flex flex-wrap">
+          <OperatorAvatar :char-id="operator.charId" class="m-4 shadow-md" size="60" mobile-size="50"
+                          v-for="(operator,index) in displayOperatorsList" :key="index"
+                          @click="addOrDeleteOperator(operator.name)">
+          </OperatorAvatar>
+        </div>
 
-<!--        <el-form-item label="结算图">-->
-<!--          <div>-->
-<!--            <div>-->
-<!--              <el-button type="primary">上传结算图</el-button>-->
-<!--            </div>-->
-<!--            <input style="display: none" type="file" id="settlement-chart">-->
-<!--            <div class="settlement-chart-checkbox" @click="chooseImage()">-->
-<!--              <img src="/image/icon/upload-image.png" class="settlement-chart-upload-button" alt="">-->
-<!--              <img :src="settlementChartDataUrl" alt="" class="settlement-chart">-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </el-form-item>-->
+        <div class="m-0-4 opacity-70">种子简介</div>
+        <v-textarea v-model="rogueSeedForm.description" variant="outlined"></v-textarea>
 
-        <el-form-item label="种子简介">
-          <el-input v-model="rogueSeedForm.description" type="textarea"/>
-        </el-form-item>
-        <el-form-item>
-          <div class="rogue-seed-tag-form">
-            <div class="rogue-seed-tag-box">
-              <div class="rogue-seed-tag" v-for="(tag,index) in rogueSeedForm.tags">
-                #{{ tag }}
-              </div>
-            </div>
-            <input class="rogue-seed-tag-input" v-model="seedTagValue"/>
-            <div class="rogue-seed-tag-button" @click="addSeedTag()">输入后点击添加标签</div>
-          </div>
-        </el-form-item>
+<!--        <div class="m-0-4 opacity-70">上传图片（非必须）</div>-->
+<!--        <input style="display: none" type="file" id="settlement-chart">-->
+<!--        <div class="settlement-chart-checkbox" @click="chooseImage()">-->
+<!--          <v-icon icon="mdi-plus" class="settlement-chart-upload-button" size="60" color="grey"></v-icon>-->
+<!--          <img :src="settlementChartDataUrl" alt="" class="settlement-chart">-->
+<!--        </div>-->
 
-        <el-button type="primary" @click="upload()">提名种子！</el-button>
+        <div class="m-0-4 opacity-70">种子标签</div>
+        <div>
+          <v-chip density="compact" :text="`#${tag}`"
+                  v-for="(tag,index) in rogueSeedForm.tags" class="m-4"></v-chip>
+        </div>
 
-        <!--        <el-button type="primary" @click="onSubmit">随机来一个Seed让我爽爽！</el-button>-->
-        <!--        <div>-->
-        <!--          种子 : KFCVME50 天胡国王套200源石锭戒律酒杯胡局-->
-        <!--        </div>-->
-      </el-form>
-    </el-card>
+        <div class="flex align-center">
+          <v-text-field
+              density="compact"
+              v-model="inputTagText"
+              color="primary"
+              variant="outlined"
+          >
+            <template v-slot:append>
+              <v-btn color="primary" variant="outlined" text="添加tag" @click="addSeedTag"></v-btn>
+            </template>
+          </v-text-field>
+
+        </div>
+
+
+        <div class="flex justify-center">
+          <v-btn color="primary" @click="upload"></v-btn>
+        </div>
+
+      </v-card-text>
+    </v-card>
 
   </div>
 

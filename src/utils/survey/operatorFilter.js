@@ -57,12 +57,12 @@ let operatorFilterCondition = ref({
             operatorFilterCondition.value.rarity.conditions[index].action = !operatorFilterCondition.value.rarity.conditions[index].action
         },
         conditions: [
-            {label: "1★", value: 1, func: filterByRarity, action: false},
-            {label: "2★", value: 2, func: filterByRarity, action: false},
-            {label: "3★", value: 3, func: filterByRarity, action: false},
-            {label: "4★", value: 4, func: filterByRarity, action: false},
-            {label: "5★", value: 5, func: filterByRarity, action: false},
             {label: "6★", value: 6, func: filterByRarity, action: true},
+            {label: "5★", value: 5, func: filterByRarity, action: false},
+            {label: "4★", value: 4, func: filterByRarity, action: false},
+            {label: "3★", value: 3, func: filterByRarity, action: false},
+            {label: "2★", value: 2, func: filterByRarity, action: false},
+            {label: "1★", value: 1, func: filterByRarity, action: false},
         ]
     },
     'date': {

@@ -83,11 +83,19 @@
 
 }
 
+.justify-space-between{
+  justify-content: space-between;
+}
+
 
 .overflow-auto{
   overflow: auto;
 }
 
+
+.shadow-md{
+  box-shadow: 0 0 1px 1px rgb(0,0,0,0.1);
+}
 
 //透明度
 .opacity-70{

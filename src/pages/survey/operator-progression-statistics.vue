@@ -13,13 +13,13 @@ import {debounce} from "@/utils/debounce.js";
 let operatorsStatisticsList = ref([]);
 let userCountText = ref(0);
 let updateTimeText = ref("2023-05-01");
-let displayList = ref([])
+let displayOperatorsList = ref([])
 
 const displayFilterCondition = ['profession', 'rarity', 'date', 'itemObtainApproach']
 
 const addFilterConditionAndFilterOperator = debounce((func, index) => {
   func(index)
-  displayList.value = filterOperatorList(operatorsStatisticsList.value)
+  displayOperatorsList.value = filterOperatorList(operatorsStatisticsList.value)
 }, 500)
 
 function btnAction(action) {
@@ -81,7 +81,7 @@ function getCharStatisticsResult() {
     result = result.filter(e => e.name)
 
     operatorsStatisticsList.value = result
-    displayList.value = filterOperatorList(operatorsStatisticsList.value)
+    displayOperatorsList.value = filterOperatorList(operatorsStatisticsList.value)
 
     userCountText.value = userCount;
     updateTimeText.value = updateTime;
@@ -160,7 +160,7 @@ onMounted(() => {
       <v-data-table
           v-model:sort-by="sortBy"
           :headers="headers2"
-          :items="displayList"
+          :items="displayOperatorsList"
           hide-default-footer
           items-per-page="-1">
         <template v-slot:item.charId="{ item }">
