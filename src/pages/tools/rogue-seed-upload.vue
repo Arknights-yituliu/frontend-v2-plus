@@ -201,9 +201,9 @@ function uploadImage() {
 
         <div class="m-4" v-for="(conditions,module) in operatorFilterCondition" :key="module"
              v-show="displayFilterCondition.includes(module)">
-          <v-btn variant="text" class="checkbox-label">{{ conditions.label }}</v-btn>
+          <v-btn variant="text" class="m-4">{{ conditions.label }}</v-btn>
           <v-btn color="primary" :variant="btnAction(condition.action)"
-                 class="checkbox-button" rounded="x-large"
+                 class="m-4" rounded="x-large"
                  v-for="(condition,index) in conditions.conditions" :key="index"
                  @click="debounceAddFilterConditionAndFilterOperator(conditions.actionFunc,index)">
             {{ condition.label }}
@@ -229,7 +229,7 @@ function uploadImage() {
 
         <div class="m-0-4 opacity-70">种子标签</div>
         <div>
-          <v-chip density="compact" :text="`#${tag}`"
+          <v-chip density="compact" :text="`#${tag}`" color="primary"
                   v-for="(tag,index) in rogueSeedForm.tags" class="m-4"></v-chip>
         </div>
 
