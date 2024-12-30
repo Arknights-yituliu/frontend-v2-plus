@@ -17,26 +17,29 @@ import {getText} from '/src/utils/fileConversion.js'
 import {debounce} from "/src/utils/debounce.js";
 import {cMessage} from '/src/utils/message.js'
 import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
-import userAPI from "/src/api/user.js";
 
 import MyButton from '/src/components/Button.vue'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {downloadJsonFile} from "/src/utils/download.js";
+import {getUserInfo} from "/src/utils/user/userInfo.js";
 
 let operatorOwnMap = new Map()
 
 
 async function getOperatorDataByAccount() {
 
-  const userInfo = await userAPI.getUserInfo()
+  const userInfo = await getUserInfo()
+
   const data = {
     token: userInfo.token
   }
+
   operatorDataAPI.getOperatorData(data).then(response => {
     for (const operator of response.data) {
       operatorOwnMap.set(operator.charId, operator.own)
     }
   })
+
 }
 
 let plansTemplate = ref('')

@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
 import SklandAPI from '/src/utils/survey/skland.js'
-import {getUserInfo} from "/src/utils/survey/userInfo.js";
+import {getUserInfo} from "/src/utils/user/userInfo.js";
 import {cMessage} from "/src/utils/message.js";
 import sklandApi from "../../utils/survey/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";

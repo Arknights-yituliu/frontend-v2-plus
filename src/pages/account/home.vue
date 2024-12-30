@@ -5,7 +5,7 @@ import surveyApi from "/src/api/userInfo"
 import operator_table_simple from '/src/static/json/survey/character_table_simple.json'
 import "/src/assets/css/survey/home.scss";
 import "/src/assets/css/survey/home.phone.scss";
-import {getUserInfo} from '/src/utils/survey/userInfo.js'
+import {getUserInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import operatorDataAPI from "@/api/operatorData.js";
 import CHARACTER_TABLE from "@/static/json/survey/character_table_simple.json";

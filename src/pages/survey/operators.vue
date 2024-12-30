@@ -10,7 +10,7 @@ import {exportExcel} from '/src/utils/exportExcel.js'
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
 import {debounce} from "/src/utils/debounce";
-import {getUserInfo} from "/src/utils/survey/userInfo.js";
+import {getUserInfo} from "/src/utils/user/userInfo.js";
 import {useRouter} from "vue-router";
 import {operatorFilterCondition, filterOperatorList} from "@/utils/survey/operatorFilter.js";
 

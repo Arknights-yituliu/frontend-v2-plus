@@ -31,7 +31,7 @@
               ></v-btn>
             </template>
             <template v-slot:default="{ isActive }">
-              <v-card title="Dialog">
+              <v-card title="退出登录">
                 <v-card-text>
                   <v-alert text="是否退出登录？" type="error"></v-alert>
                 </v-card-text>
@@ -64,13 +64,11 @@ import "/src/assets/css/survey/login.phone.scss"
 
 import "/src/assets/css/survey/survey_nav.css";
 import {onMounted, ref, watch} from "vue";
-import {getUserInfo} from "/src/utils/survey/userInfo.js";
+import {getUserInfo} from "/src/utils/user/userInfo.js";
 import {useRoute,useRouter} from "vue-router";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 
 const router = useRouter();
-
-
 
 let loginVisible = ref(false);
 

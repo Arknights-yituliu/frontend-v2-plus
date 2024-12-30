@@ -39,11 +39,11 @@ function toLogin() {
 
   userAPI.loginV3(inputContent.value).then(response => {
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
-    cMessage('登录成功，即将转跳到森空岛导入页面')
+    cMessage('登录成功，即将转跳到首页')
     setTimeout(() => {
       // router.push({name: 'IMPORT_BY_SKLAND'})
       window.location.href = '/';
-    }, 3000)
+    }, 2000)
 
   })
 }
