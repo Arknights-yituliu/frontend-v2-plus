@@ -9,7 +9,6 @@ import {getUserInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import operatorDataAPI from "@/api/operatorData.js";
 import CHARACTER_TABLE from "@/static/json/survey/character_table_simple.json";
-import OperatorProgression from "@/components/survey/OperatorProgressionStatistical.vue";
 
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
 const englishNumberRegex = /^[A-Za-z0-9]+$/;
@@ -168,7 +167,7 @@ function logout() {
 
 onMounted(() => {
   getUserInfoByToken()
-  getOperatorData()
+  // getOperatorData()
 })
 
 
@@ -255,9 +254,7 @@ onMounted(() => {
       </v-card-text>
     </v-card>
 
-    <v-card class="user-card m-12" title="干员练度简表">
-      <OperatorProgression v-model="operatorList"></OperatorProgression>
-    </v-card>
+
 
 <!--    <v-card>-->
 <!--      <v-card-text>-->

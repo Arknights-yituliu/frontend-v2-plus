@@ -63,7 +63,7 @@ function changeTheme() {
   theme.global.name.value = currentTheme.value
   document.getElementsByTagName("html").item(0).className = currentTheme.value;
   customTheme.value = `theme-${currentTheme.value}`
-  localStorage.setItem("Theme",currentTheme.value)
+  localStorage.setItem("Theme", currentTheme.value)
 }
 
 const route = useRoute();
@@ -79,7 +79,7 @@ watch(currentPath, (newPath, oldPath) => {
 
 function normalizePath(path) {
   // 如果路径是根路径 '/'，直接返回
-  if (path === '/'||!path) {
+  if (path === '/' || !path) {
     return '/';
   }
 
@@ -96,9 +96,16 @@ function normalizePath(path) {
 </script>
 
 <template>
-  <v-responsive class="border rounded" >
+  <v-responsive class="border rounded">
     <v-app class="app color_var" :class="customTheme">
       <v-navigation-drawer v-model="drawer" width="280">
+
+<!--        <img src="/image/website/icon-large.webp" alt=""-->
+<!--             style="border-radius: 1000px;width: 120px;margin:36px auto 20px;display: block">-->
+
+        <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 36px 0 12px">
+          明日方舟一图流
+        </div>
         <Navigation></Navigation>
       </v-navigation-drawer>
 
@@ -127,7 +134,7 @@ function normalizePath(path) {
           <v-icon icon="mdi-theme-light-dark" size="28" @click="changeTheme"></v-icon>
           <div class="app-bar-content-spacer"/>
 
-         <User></User>
+          <User></User>
         </div>
       </v-app-bar>
 
