@@ -43,6 +43,7 @@ import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "@/components/ComponentsContainer.vue";
+import {language} from "@/utils/i18n.js";
 
 let customTheme = ref("")
 let drawer = ref(true)
@@ -108,9 +109,24 @@ function normalizePath(path) {
         <v-app-bar-title>{{ pageTitle }}
         </v-app-bar-title>
         <div class="app-bar-content">
-          <v-icon icon="mdi-theme-light-dark" size="32" @click="changeTheme"></v-icon>
-          <div class="app-bar-content-spacer">
-          </div>
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-icon icon="mdi-translate" size="28" v-bind="props"></v-icon>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-btn variant="text" @click="language='cn'" text="中文"></v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn variant="text" @click="language='en'" text="English"></v-btn>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
+          <div class="app-bar-content-spacer"/>
+          <v-icon icon="mdi-theme-light-dark" size="28" @click="changeTheme"></v-icon>
+          <div class="app-bar-content-spacer"/>
+
          <User></User>
         </div>
       </v-app-bar>
