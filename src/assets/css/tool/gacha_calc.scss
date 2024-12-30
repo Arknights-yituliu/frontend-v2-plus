@@ -15,8 +15,7 @@
 
 
   .el-radio-button__inner {
-    width: 100%;
-    min-width: 168px;
+    width: 150px;
   }
 
   .el-collapse-item__content {
@@ -360,23 +359,23 @@
   }
 
 
-  @media screen and (max-width: 1280px) {
-    .collapse-group1 {
-      width: 500px;
-    }
-    .collapse-group2 {
-      width: 500px;
-    }
-
-    .el-radio-button__inner {
-      width: 150px;
-    }
-
-    .resources-line{
-      font-size: 16px;
-    }
-
-  }
+  //@media screen and (max-width: 1280px) {
+  //  .collapse-group1 {
+  //    width: 500px;
+  //  }
+  //  .collapse-group2 {
+  //    width: 500px;
+  //  }
+  //
+  //  .el-radio-button__inner {
+  //    width: 150px;
+  //  }
+  //
+  //  .resources-line{
+  //    font-size: 16px;
+  //  }
+  //
+  //}
 
 }
 
