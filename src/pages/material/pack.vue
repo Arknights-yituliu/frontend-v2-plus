@@ -9,17 +9,8 @@ import PackTable from "@/components/material/PackTable.vue";
 const currentPackInfoList = ref([])
 const date = new Date() // 当前日期
 const fixedPacks = ref({})
-const saleTypes = [
-  {value: 'newbie', text: '新人'},
-  {value: 'monthly', text: '每月重置'},
-  {value: 'weekly', text: '每周重置'},
-  {value: 'elite', text: '直升礼包'},
-  {value: 'chip', text: '芯片'},
-  {value: 'lmd', text: '龙门币'},
-  {value: 'activity', text: '活动礼包'},
-  {value: 'originium', text: '非双倍源石'},
-  {value: 'originium2', text: '双倍源石'},
-]
+
+
 const packTags = [
   {label: "新人", value: "newbie"},
   {label: "含有模组块", value: "mod"},
@@ -189,9 +180,7 @@ const choosePackOption = (list, value) => {
 }
 
 
-function getText(row) {
-  return saleTypes.find(item => item.value === row.saleType)?.text
-}
+
 
 getPackInfoData()
 

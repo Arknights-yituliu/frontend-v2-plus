@@ -1,6 +1,25 @@
 <script setup>
 import {ref} from "vue";
 import {formatNumber} from "@/utils/format.js";
+
+const saleTypes = [
+  {value: 'newbie', text: '新人'},
+  {value: 'monthly', text: '每月重置'},
+  {value: 'weekly', text: '每周重置'},
+  {value: 'elite', text: '直升礼包'},
+  {value: 'chip', text: '芯片'},
+  {value: 'lmd', text: '龙门币'},
+  {value: 'activity', text: '活动礼包'},
+  {value: 'originium', text: '非双倍源石'},
+  {value: 'originium2', text: '双倍源石'},
+]
+
+const saleTypeMap = new Map()
+
+for(const item of saleTypes){
+  saleTypeMap.set(item.value,item.text)
+}
+
 let search = ref('')
 
 const props = defineProps(['modelValue'])
@@ -48,6 +67,10 @@ const headers = [
         items-per-page="-1"
         class="no-wrap"
     >
+
+      <template v-slot:item.saleType="{ item }">
+        {{saleTypeMap.get(item.saleType)}}
+      </template>
       <template v-slot:item.price="{ item }">
         {{`${item.price}元`}}
       </template>
