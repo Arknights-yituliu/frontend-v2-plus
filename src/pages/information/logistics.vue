@@ -38,12 +38,13 @@ function btnAction(key, label) {
   }
 }
 
+
 /**
  * 筛选干员
- * @param condition
- * @param key 选项的分类名
+ * @param condition 筛选条件
+ * @param key 筛选条件的按钮文本
  */
-const filterOperatorByTag = debounce((condition, key) => {
+function filterOperatorByTag(condition, key){
   //清空干员列表
   filterOperatorList.value = []
   const btnKey = `${key}+${condition.label}`
@@ -59,7 +60,7 @@ const filterOperatorByTag = debounce((condition, key) => {
 
   //筛选干员
   commonFilterOperator()
-}, 500)
+}
 
 
 //干员搜索输入框

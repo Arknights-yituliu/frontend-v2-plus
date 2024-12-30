@@ -24,8 +24,6 @@
 
 
 .pieChartBlock {
-  border: solid 1px rgb(0, 132, 255);
-  border-radius: 4px;
   width: 500px;
   height: 500px;
 }

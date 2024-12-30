@@ -18,7 +18,6 @@ import {debounce} from "/src/utils/debounce.js";
 import {cMessage} from '/src/utils/message.js'
 import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
 
-import MyButton from '/src/components/Button.vue'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {downloadJsonFile} from "/src/utils/download.js";
 import {getUserInfo} from "/src/utils/user/userInfo.js";
@@ -159,6 +158,11 @@ function chooseScheduleType(type) {
   scheduleTypeV2.value.power = power
 }
 
+
+function scheduleTypeButtonAction() {
+
+}
+
 /**
  * 选择换班次数
  * @param {number} num
@@ -291,7 +295,9 @@ let filterOperatorList = ref({})
 let filterNotOwnOperator = ref(false)
 
 function filterBtnStatus(key, label) {
-  return selectBtnKey.value === `${key}+${label}`
+  if (selectBtnKey.value !== `${key}+${label}`) {
+    return 'tonal'
+  }
 }
 
 let filterCondition = ref({
@@ -400,8 +406,6 @@ const filterOperatorByOwn = debounce(() => {
  * @param {string} charName 干员id
  */
 function chooseOperator(charName) {
-
-
   if (!checkRoomDuplicateOperator(charName)) {
     return;
   }
@@ -881,107 +885,115 @@ onMounted(() => {
 <template>
   <div class="schedule-page">
     <div class="schedule-header">
-        <v-text-field density="compact" variant="outlined"
-                      :label="translate('schedule', 'schedule.IdPlaceholder')"
-                      v-model="scheduleImportId">
-          <template v-slot:prepend>
-            <!--选择基建布局和换班次数-->
-            <v-btn color="orange" variant="outlined" class="m-2"
-                   @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
-              {{ translate('schedule', 'schedule.InfrastructureLayout') }}
-            </v-btn>
-          </template>
+      <v-text-field density="compact" variant="outlined"
+                    :label="translate('schedule', 'schedule.IdPlaceholder')"
+                    v-model="scheduleImportId">
+        <template v-slot:prepend>
+          <!--选择基建布局和换班次数-->
+          <v-btn color="orange" variant="outlined" class="m-2"
+                 @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
+            {{ translate('schedule', 'schedule.InfrastructureLayout') }}
+          </v-btn>
+        </template>
 
-          <template v-slot:append>
-            <!--根据id导入排班-->
-            <v-btn color="primary" variant="outlined" class="m-2" @click="importScheduleById()">
-              {{ translate('schedule', 'schedule.ImportScheduleById') }}
-            </v-btn>
+        <template v-slot:append>
+          <!--根据id导入排班-->
+          <v-btn color="primary" variant="outlined" class="m-2" @click="importScheduleById()">
+            {{ translate('schedule', 'schedule.ImportScheduleById') }}
+          </v-btn>
 
-            <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
-            <!--根据文件导入排版-->
-            <v-btn color="primary" variant="outlined" class="m-2" @click="chooseFile()">{{
-                translate('schedule', 'schedule.ImportScheduleFile')
-              }}
-            </v-btn>
-            <!--下载排版文件-->
-            <v-btn color="primary" variant="outlined" class="m-2" @click="saveAndDownloadScheduleFile()">
-              {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
-            </v-btn>
+          <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
+          <!--根据文件导入排版-->
+          <v-btn color="primary" variant="outlined" class="m-2" @click="chooseFile()">{{
+              translate('schedule', 'schedule.ImportScheduleFile')
+            }}
+          </v-btn>
+          <!--下载排版文件-->
+          <v-btn color="primary" variant="outlined" class="m-2" @click="saveAndDownloadScheduleFile()">
+            {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
+          </v-btn>
 
-            <!--操作指引-->
-            <v-btn color="primary" variant="outlined" class="m-2" @click="guidePopup = true">
-              {{ translate('schedule', 'schedule.GuidePopup') }}
-            </v-btn>
-          </template>
-        </v-text-field>
+          <!--操作指引-->
+          <v-btn color="primary" variant="outlined" class="m-2" @click="guidePopup = true">
+            {{ translate('schedule', 'schedule.GuidePopup') }}
+          </v-btn>
+        </template>
+      </v-text-field>
     </div>
     <!-- TODO separate various paragraphs and translate them -->
-    <c-popup v-model:visible="guidePopup">
-      <div class="guide-box">
-        <h1 style="text-align: center">排班生成器使用说明</h1>
-        <h2>修改贸易站、制造站数量及换班次数</h2>
-        <p>点击顶栏的<span class="guide-keynote">“选择基建类型”</span>按钮</p>
-        <h2>通过Id导入排班</h2>
-        <p>打开排班文件内，查看文件内的<span class="guide-keynote">id属性</span>，复制id，填入输入框，点击根据id导入排班</p>
-        <h2>通过文件导入排班</h2>
-        <p>点击<span class="guide-keynote">“导入排班文件”</span>按钮，选择你要导入的文件，即可导入</p>
-        <h2>使用无人机的房间编号</h2>
-        <p>房间编号为下图中的编号</p>
-        <img src="/image/schedule/房间编号.jpg" alt="" class="guide-image">
-        <h2>定时换班</h2>
-        <p>不打开定时换班设置，MAA将默认按照排班的顺序执行排班，打开后将按照时间段执行排班</p>
-        <h2>基建布局上的房间编号</h2>
-        <img src="/image/schedule/基建布局.jpg" alt="" class="guide-image">
-        <p>布局的房间位置不影响换班，MAA执行排班时会根据房间编号进行换班，制造站#1对应下图的01房间</p>
-        <img src="/image/schedule/房间编号.jpg" alt="" class="guide-image">
-      </div>
-    </c-popup>
+    <v-dialog v-model="guidePopup">
+      <v-card>
+        <v-card-text>
+          <div class="guide-box">
+            <h1 style="text-align: center">排班生成器使用说明</h1>
+            <h2>修改贸易站、制造站数量及换班次数</h2>
+            <p>点击顶栏的<span class="guide-keynote">“选择基建类型”</span>按钮</p>
+            <h2>通过Id导入排班</h2>
+            <p>打开排班文件内，查看文件内的<span class="guide-keynote">id属性</span>，复制id，填入输入框，点击根据id导入排班
+            </p>
+            <h2>通过文件导入排班</h2>
+            <p>点击<span class="guide-keynote">“导入排班文件”</span>按钮，选择你要导入的文件，即可导入</p>
+            <h2>使用无人机的房间编号</h2>
+            <p>房间编号为下图中的编号</p>
+            <img src="/image/schedule/房间编号.jpg" alt="" class="guide-image">
+            <h2>定时换班</h2>
+            <p>不打开定时换班设置，MAA将默认按照排班的顺序执行排班，打开后将按照时间段执行排班</p>
+            <h2>基建布局上的房间编号</h2>
+            <img src="/image/schedule/基建布局.jpg" alt="" class="guide-image">
+            <p>布局的房间位置不影响换班，MAA执行排班时会根据房间编号进行换班，制造站#1对应下图的01房间</p>
+            <img src="/image/schedule/房间编号.jpg" alt="" class="guide-image">
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <span class="schedule-version">V1.3.6</span>
 
-    <c-popup v-model:visible="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
-      <div class="schedule-set-wrap">
-        <!--换班表名称-->
-        <div class="schedule-set-bar">
-          <span>{{ translate('schedule', 'schedule.ScheduleTitle') }}</span>
-          <div><input class="input-base" v-model="scheduleInfo.title"/></div>
-        </div>
-        <!--换班表描述-->
-        <div class="schedule-set-bar">
-          <span>{{ translate('schedule', 'schedule.ScheduleDescription') }}</span>
-          <div><input class="input-base" v-model="scheduleInfo.description"/></div>
-        </div>
-        <!--换班表完成后的描述-->
-        <div class="schedule-set-bar">
-          <span>{{ translate('schedule', 'schedule.Author') }}</span>
-          <div><input class="input-base" v-model="scheduleInfo.author"/></div>
-        </div>
+    <v-dialog v-model="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
+      <v-card>
+        <v-card-text>
+          <div class="schedule-set-wrap">
+            <!--换班表名称-->
+            <div class="schedule-set-bar">
+              <span>{{ translate('schedule', 'schedule.ScheduleTitle') }}</span>
+              <div><input class="input-base" v-model="scheduleInfo.title"/></div>
+            </div>
+            <!--换班表描述-->
+            <div class="schedule-set-bar">
+              <span>{{ translate('schedule', 'schedule.ScheduleDescription') }}</span>
+              <div><input class="input-base" v-model="scheduleInfo.description"/></div>
+            </div>
+            <!--换班表完成后的描述-->
+            <div class="schedule-set-bar">
+              <span>{{ translate('schedule', 'schedule.Author') }}</span>
+              <div><input class="input-base" v-model="scheduleInfo.author"/></div>
+            </div>
 
-        <!--基建布局-->
-        <div class="schedule-set-bar">
-          <span>{{ translate('schedule', 'schedule.BaseLayout') }}</span>
-          <div>
-            <MyButton data-color='blue' :active="menu.label === selectedScheduleType.label"
-                      @click="chooseScheduleType(menu)" v-for="(menu, index) in SCHEDULE_MENU" :key="index">
-              {{ menu.label }}
-            </MyButton>
-          </div>
-        </div>
+            <!--基建布局-->
+            <div class="schedule-set-bar">
+              <span>{{ translate('schedule', 'schedule.BaseLayout') }}</span>
+              <div>
+                <v-btn color="primary" class="m-2" :variant="menu.label === selectedScheduleType.label?void 0:`tonal`"
+                       @click="chooseScheduleType(menu)" v-for="(menu, index) in SCHEDULE_MENU" :key="index">
+                  {{ menu.label }}
+                </v-btn>
+              </div>
+            </div>
 
-        <!--换班次数-->
-        <div class="schedule-set-bar">
-          <span>{{ translate('schedule', 'schedule.ShiftNumber') }}</span>
-          <div>
-            <MyButton data-color='blue' :active="num === scheduleTypeV2.planTimes" style="min-width: 40px"
-                      v-for="(num, index) in 6" :key="index"
-                      @click="choosePlanTimes(num)">
-              {{ num }}
-            </MyButton>
+            <!--换班次数-->
+            <div class="schedule-set-bar">
+              <span>{{ translate('schedule', 'schedule.ShiftNumber') }}</span>
+              <div>
+                <v-btn color="primary" class="m-2" :variant="num === scheduleTypeV2.planTimes?void 0:`tonal`"
+                       v-for="(num, index) in 6" :key="index" @click="choosePlanTimes(num)">
+                  {{ num }}
+                </v-btn>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </c-popup>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
     <div class="maa-schedule-wrap-v2">
       <div class="maa-schedule-v2">
@@ -1002,40 +1014,44 @@ onMounted(() => {
             <!--是否使用无人机-->
             <span style="width: 140px">{{ translate('schedule', 'schedule.UseDrones') }}</span>
             <div style="width: 70px">
-              <c-switch v-model="plansTemplate[selectedPlanIndex].drones.enable"></c-switch>
+              <v-switch color="success" density="compact" hide-details
+                        v-model="plansTemplate[selectedPlanIndex].drones.enable"></v-switch>
             </div>
             <!--换班前后-->
-            <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
+            <span style="width: 80px">{{ translate('schedule', 'schedule.Usage') }}</span>
             <div style="width: 200px">
-              <MyButton data-color='blue' :active="'pre' === plansTemplate[selectedPlanIndex].drones.order"
-                        @click="setDrones('order', 'pre')">
-                {{ translate('schedule', 'schedule.PreShift') }}
-              </MyButton>
-              <MyButton data-color='blue' :active="'post' === plansTemplate[selectedPlanIndex].drones.order"
-                        @click="setDrones('order', 'post')">
-                {{ translate('schedule', 'schedule.PostShift') }}
-              </MyButton>
+              <v-btn color="primary" :variant="'pre' === plansTemplate[selectedPlanIndex].drones.order?void 0:`tonal`"
+                     @click="setDrones('order', 'pre')"
+                     :text=" translate('schedule', 'schedule.PreShift')">
+              </v-btn>
+
+              <v-btn color="primary" :variant="'post' === plansTemplate[selectedPlanIndex].drones.order?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.PostShift')"
+                     @click="setDrones('order', 'post')">
+              </v-btn>
             </div>
             <!--目标房间-->
             <span>{{ translate('schedule', 'schedule.TargetRoom') }}</span>
             <div style="width: 220px">
-              <MyButton data-color='blue' :active="'trading' === plansTemplate[selectedPlanIndex].drones.room"
-                        @click="setDrones('room', 'trading')">
-                {{ translate('schedule', 'schedule.TradingPost') }}
-              </MyButton>
-              <MyButton data-color='blue' :active="'manufacture' === plansTemplate[selectedPlanIndex].drones.room"
-                        @click="setDrones('room', 'manufacture')">
-                {{ translate('schedule', 'schedule.Factory') }}
-              </MyButton>
+              <v-btn color="primary"
+                     :variant="'trading' === plansTemplate[selectedPlanIndex].drones.room?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.TradingPost')"
+                     @click="setDrones('room', 'trading')">
+              </v-btn>
+              <v-btn color="primary"
+                     :variant="'manufacture' === plansTemplate[selectedPlanIndex].drones.room?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.Factory')"
+                     @click="setDrones('room', 'manufacture')">
+
+              </v-btn>
             </div>
             <!--房间编号-->
             <span>{{ translate('schedule', 'schedule.RoomNumber') }}</span>
             <div>
-              <MyButton data-width-auto data-color='blue'
-                        :active="(index) === plansTemplate[selectedPlanIndex].drones.index"
-                        @click="setDrones('index', (index))" v-for="index in 5" :key="index">
-                {{ index }}
-              </MyButton>
+              <v-btn color="primary" :variant="(index) === plansTemplate[selectedPlanIndex].drones.index?void 0:`tonal`"
+                     :text="index"
+                     @click="setDrones('index', (index))" v-for="index in 5" :key="index">
+              </v-btn>
             </div>
           </div>
 
@@ -1043,18 +1059,21 @@ onMounted(() => {
             <!--是否使用菲亚梅塔-->
             <span style="width: 140px">{{ translate('schedule', 'schedule.UseFiammetta') }}</span>
             <div style="width: 70px">
-              <c-switch v-model="plansTemplate[selectedPlanIndex].Fiammetta.enable"></c-switch>
+              <v-switch color="success" density="compact" hide-details
+                        v-model="plansTemplate[selectedPlanIndex].Fiammetta.enable"></v-switch>
             </div>
-            <span style="width: 70px">{{ translate('schedule', 'schedule.Usage') }}</span>
+            <span style="width: 80px">{{ translate('schedule', 'schedule.Usage') }}</span>
             <div style="width: 200px">
-              <MyButton data-color='blue' :active="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order"
-                        @click="setFiammetta('order', 'pre')">
-                {{ translate('schedule', 'schedule.PreShift') }}
-              </MyButton>
-              <MyButton data-color='blue' :active="'post' === plansTemplate[selectedPlanIndex].Fiammetta.order"
-                        @click="setFiammetta('order', 'post')">
-                {{ translate('schedule', 'schedule.PostShift') }}
-              </MyButton>
+              <v-btn color="primary"
+                     :variant="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.PreShift')"
+                     @click="setFiammetta('order', 'pre')">
+              </v-btn>
+              <v-btn color="primary"
+                     :variant="'post' === plansTemplate[selectedPlanIndex].Fiammetta.order?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.PostShift')"
+                     @click="setFiammetta('order', 'post')">
+              </v-btn>
             </div>
             <!--恢复目标-->
             <span>{{ translate('schedule', 'schedule.RecoveryTarget') }}</span>
@@ -1072,7 +1091,8 @@ onMounted(() => {
           <div class="schedule-set-bar-short">
             <!--定时换班-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.TimedShiftChange') }}</span>
-            <c-switch v-model="isPeriod"></c-switch>
+            <v-switch color="success" density="compact" hide-details
+                      v-model="isPeriod"></v-switch>
             <!--不选择则按班次顺序执行-->
             <div class="schedule-set-tip">&emsp;{{ translate('schedule', 'schedule.TimedShiftChangeTip') }}</div>
           </div>
@@ -1090,26 +1110,33 @@ onMounted(() => {
 
 
         <!--肥鸭的选择弹窗-->
-        <c-popup v-model:visible="FiammettaTargetVisible" :style="roomPopupStyle">
-          <div class="filter-condition-box">
-            <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable" v-show="room.display"
-                 :key="key">
-              <span :style="`color:${room.color}`">{{ translate('schedule', room.name) }}</span>
-              <MyButton v-for="(condition, index) in room.conditions" :key="index" data-color='blue'
-                        :active="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
-                {{ translate('schedule', condition.label) }}
-              </MyButton>
-            </div>
-          </div>
+        <v-dialog v-model="FiammettaTargetVisible">
+          <v-card>
+            <v-card-text>
+              <div class="filter-condition-box">
+                <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable" v-show="room.display"
+                     :key="key">
+                  <v-btn :color="room.color" variant="text"
+                         :text="translate('schedule', room.name)">
+                  </v-btn>
+                  <v-btn v-for="(condition, index) in room.conditions" :key="index"
+                         color="primary" :variant="filterBtnStatus(key, condition.label)"
+                         :text="translate('schedule', condition.label)"
+                         @click="filterOperatorByTag(condition, key)">
+                  </v-btn>
+                </div>
+              </div>
 
-          <div class="operator-check-box-group" style="width: 550px">
-            <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"
-                 @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
-              <div :class="getOptionAvatar(operator.charId)"></div>
-              <div class="operator-check-label">{{ operator.name }}</div>
-            </div>
-          </div>
-        </c-popup>
+              <div class="operator-check-box-group" style="width: 550px">
+                <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"
+                     @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
+                  <div :class="getOptionAvatar(operator.charId)"></div>
+                  <div class="operator-check-label">{{ operator.name }}</div>
+                </div>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
 
 
         <div id="room-set">
@@ -1117,12 +1144,16 @@ onMounted(() => {
           <div class="schedule-set-bar-short">
             <!--按顺序入驻-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.OrderedStationing') }}</span>
-            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
-            </c-switch>
+            <v-switch color="success" density="compact" hide-details
+                      v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
+
+            </v-switch>
             <!--补满空位-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.Autofill') }}</span>
-            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
-            </c-switch>
+            <v-switch color="success" density="compact" hide-details
+                      v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
+
+            </v-switch>
             <!--补满空位功能提示-->
             <i class="iconfont icon-question schedule-question">
               <span class="schedule-tip">{{ translate('schedule', 'schedule.SkipRoomTip') }}</span>
@@ -1131,8 +1162,9 @@ onMounted(() => {
           <div class="schedule-set-bar-short">
             <!--跳过房间-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.SkipRoom') }}</span>
-            <c-switch v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
-            </c-switch>
+            <v-switch color="success" density="compact" hide-details
+                      v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
+            </v-switch>
             <!--选择产物-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
             <div class="product-image-wrap" @click="setProduct(product.value)"
@@ -1197,15 +1229,15 @@ onMounted(() => {
             </div>
 
             <div class="copy-btn-wrap">
-            <span>{{ translate('schedule', 'schedule.TempPlan') }}&nbsp;{{ translate('schedule', 'schedule.Shift') }}{{
-                tmpPlanData.index
-              }} </span>
-              <MyButton data-color='blue' :active="true" @click="copyPlan()">
-                {{ translate('schedule', 'schedule.CopyPlan') }}
-              </MyButton>
-              <MyButton data-color='blue' :active="true" @click="pastePlan()">
-                {{ translate('schedule', 'schedule.PastePlan') }}
-              </MyButton>
+            <span>
+              {{ translate('schedule', 'schedule.TempPlan') }}&nbsp;
+              {{ translate('schedule', 'schedule.Shift') }}
+              {{ tmpPlanData.index }}
+            </span>
+              <v-btn color="primary" @click="copyPlan()" :text="translate('schedule', 'schedule.CopyPlan')">
+              </v-btn>
+              <v-btn color="primary" @click="pastePlan()" :text="translate('schedule', 'schedule.PastePlan')">
+              </v-btn>
             </div>
           </div>
 
@@ -1269,12 +1301,12 @@ onMounted(() => {
         <!--选择当前排班表-->
         <div class="schedule-set-bar" style="justify-content: center">
           <span>{{ translate('schedule', 'schedule.CurrentShift') }}</span>
-          <MyButton data-color='blue' :active="index === selectedPlanIndex"
+          <v-btn color="primary" :variant="index === selectedPlanIndex?void 0:`tonal`"
                     v-for="(num, index) in scheduleTypeV2.planTimes" :key="index" @click="currentPlan(index)"
                     class="room_times"
                     style="margin: 0 8px">
             {{ translate('schedule', 'schedule.Shift') }}{{ num }}
-          </MyButton>
+          </v-btn>
         </div>
 
 
@@ -1290,12 +1322,12 @@ onMounted(() => {
                 </i>
               </div>
             </div>
-            <MyButton data-color='blue' :active="true" @click="copyOperatorList()">
-              {{ translate('schedule', 'schedule.Copy') }}
-            </MyButton>
-            <MyButton data-color='blue' :active="true" @click="pasteOperatorList()">
-              {{ translate('schedule', 'schedule.Paste') }}
-            </MyButton>
+            <v-btn color="primary" variant="tonal" @click="copyOperatorList()"
+                   :text="translate('schedule', 'schedule.Copy')">
+            </v-btn>
+            <v-btn color="primary" variant="tonal" @click="pasteOperatorList()"
+                   :text="translate('schedule', 'schedule.Paste')">
+            </v-btn>
             <!--复制的干员-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsClipboard') }}</span>
             <div class="selected-operator-wrap">
@@ -1310,11 +1342,10 @@ onMounted(() => {
             <div class="condition-bar" v-for="(conditionType, key) in operatorFilterConditionTable"
                  v-show="conditionType.display" :key="key">
               <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-              <MyButton v-for="(condition, index) in conditionType.conditions" :key="index"
-                        :data-color='conditionType.buttonColor'
-                        :active="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
+              <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"
+                     color="primary" :variant="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
                 {{ translate('schedule', condition.label) }}
-              </MyButton>
+              </v-btn>
             </div>
             <span class="condition-tip">{{ translate('schedule', 'schedule.developerTip') }}</span>
           </div>
@@ -1325,8 +1356,8 @@ onMounted(() => {
                      v-model="searchInputText">
               <span class="input-group-text">{{ translate('schedule', 'schedule.searchInputTip') }}</span>
             </div>
-            <MyButton data-color="blue" :active="filterNotOwnOperator" @click="filterOperatorByOwn">隐藏未招募干员
-            </MyButton>
+            <v-btn color="primary" :variant="filterNotOwnOperator?void 0:`tonal`" @click="filterOperatorByOwn">隐藏未招募干员
+            </v-btn>
           </div>
           <div class="operator-check-box-group">
             <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"

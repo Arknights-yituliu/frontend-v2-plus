@@ -269,7 +269,7 @@ const routes = [
         path: '/material/detail',
         text: '关卡详情',
         display: false,
-        component: () => import('/src/pages/video-material/detail.page.vue')
+        component: () => import('/src/pages/video-material/detail.vue')
     },
     {
         path:'/components',

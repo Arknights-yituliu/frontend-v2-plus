@@ -1109,8 +1109,8 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import {Coin, Flag, MoreFilled, Refresh, Right, Search, Warning} from '@element-plus/icons-vue'
-import BOSS from '@/custom/icon/BOSS.vue'
-import Battle from '@/custom/icon/Battle.vue'
+import BOSS from '/src/components/information/BOSS.vue'
+import Battle from '/src/components/information/Battle.vue'
 
 const options = [
   '傀影与猩红孤钻',

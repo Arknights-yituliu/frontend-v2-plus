@@ -431,16 +431,7 @@ onMounted(() => {
 
     </v-card>
 
-    <!--    <c-popup :visible="resetPopupVisible" v-model:visible="resetPopupVisible">-->
-    <!--      <div class="popup_action_tip">-->
-    <!--        此操作将清空一图流账号上保存的所有干员数据，确定要执行操作吗？-->
-    <!--      </div>-->
-    <!--      <div class="control-checkbox">-->
-    <!--        <div class="btn btn-red" @click="operatorDataReset()">确定</div>-->
-    <!--        <div style="width: 80px;height: 50px"></div>-->
-    <!--        <div class="btn" @click="resetPopupVisible = !resetPopupVisible">取消</div>-->
-    <!--      </div>-->
-    <!--    </c-popup>-->
+
 
 
     <!--   干员表单-->
@@ -477,84 +468,8 @@ onMounted(() => {
           </div>
           <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
         </div>
-
       </v-card>
     </div>
-
-
-    <!--    <div class="opr-loading-btn" @click="loadCompleteData()">加载所有干员</div>-->
-
-<!--    <c-popup v-model="operatorPopupVisible">-->
-
-<!--      <div class="updateOperatorPopup">-->
-<!--        <div class="operator-own-switch-wrap">-->
-<!--          <div class="operator-avatar" style="margin: 0 4px">-->
-<!--            <div :class="getAvatar(operatorPopupData.charId)"></div>-->
-<!--          </div>-->
-<!--          <span>是否持有</span>-->
-<!--          <el-switch v-model="operatorPopupData.own">-->
-<!--          </el-switch>-->
-<!--        </div>-->
-<!--        <div class="operator-rank-checkbox">-->
-<!--          <div class="operator-equip-image-wrap">-->
-<!--            <img :src="`/image/survey/rank/elite${operatorPopupData.elite}.png`" class="operator-equip-image" alt="">-->
-<!--          </div>-->
-<!--          <div class="operator-rank-checkbox-button-group">-->
-<!--            <div v-for="rank in RANK_TABLE.slice(0,3)" :key="rank"-->
-<!--                 @click="updateOperatorData(operatorPopupData.charId,`elite`,rank)"-->
-<!--                 class="operator-rank-checkbox-button"-->
-<!--                 :class="dataOptionClass(operatorPopupData.charId,rank,`elite`)">-->
-<!--              <img :src="`/image/survey/rank/elite${rank}.png`"-->
-<!--                   class="operator-rank-checkbox-button-icon" alt="">-->
-<!--              &lt;!&ndash;              <div :class="getOptionEliteSprite(`elite${rank}`)"></div>&ndash;&gt;-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div class="operator-rank-checkbox" v-for="(skill,index) in operatorPopupData.skill" :key="index">-->
-<!--          <div class="operator-skill-icon-item"-->
-<!--               @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,0)">-->
-<!--            <div class="operator-skill-icon-sprite">-->
-<!--              <div :class="getSkillSprite(skill.iconId)"></div>-->
-<!--              <img :src="`/image/survey/skill-rank-${operatorPopupData[`skill${index+1}`]}.jpg`"-->
-<!--                   v-show="operatorPopupData[`skill${index+1}`]>0" class="operator-skill-rank" alt="">-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          <div class="operator-rank-checkbox-button-group">-->
-<!--            <div v-for="rank in RANK_TABLE.slice(1,4)" :key="rank"-->
-<!--                 class="operator-rank-checkbox-button"-->
-<!--                 @click="updateOperatorData(operatorPopupData.charId,`skill${index+1}`,rank)"-->
-<!--                 :class="dataOptionClass(operatorPopupData.charId,rank,`skill${index+1}`)">-->
-<!--              <img :src="`/image/survey/rank/skill-rank-${rank}.png`" class="operator-rank-checkbox-button-icon"-->
-<!--                   alt=""/>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div class="operator-rank-checkbox"-->
-<!--             v-for="(equip,index) in operatorPopupData.equip" :key="index">-->
-<!--          <div class="operator-equip-image-wrap"-->
-<!--               @click="updateOperatorData(operatorPopupData.charId,`mod${equip.typeName2}`,0)">-->
-<!--            <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">-->
-<!--            <img :src="`/image/survey/skill-rank-${operatorPopupData[`mod${equip.typeName2}`]}.jpg`"-->
-<!--                 v-show="operatorPopupData[`mod${equip.typeName2}`]>0" class="operator-equip-rank">-->
-<!--            <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>-->
-<!--          </div>-->
-
-<!--          <div class="operator-rank-checkbox-button-group">-->
-<!--            <button v-for="rank in RANK_TABLE.slice(1,4)" :key="rank"-->
-<!--                    class="operator-rank-checkbox-button"-->
-<!--                    @click="updateOperatorData(operatorPopupData.charId,`mod${equip.typeName2}`,rank)"-->
-<!--                    :class="dataOptionClass(operatorPopupData.charId,rank,`mod${equip.typeName2}`)">-->
-<!--              <img :src="`/image/survey/rank/mod-rank-${rank}.png`" class="operator-rank-checkbox-button-icon" alt=""/>-->
-<!--            </button>-->
-<!--          </div>-->
-
-<!--        </div>-->
-<!--      </div>-->
-<!--    </c-popup>-->
-
     <!-- 数据声明 -->
     <!-- <div class="char_card">此处安放版权声明/开发信息</div> -->
     <div class="footer_info">

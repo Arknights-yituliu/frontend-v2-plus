@@ -1,7 +1,6 @@
 <script setup>
 import "/src/assets/css/sprite_item.css";
 import NaviCards from "/src/components/NaviCards.vue";
-import collapse from '/src/custom/collapse.vue'
 
 const navi_data = [
   {
@@ -33,17 +32,7 @@ const navi_data = [
 
 <template>
 
-  <collapse :name="'collapse'">
-    <template #title>测试标题</template>
 
-      <div>
-        <h1>1111</h1>
-      </div>
-      <div>
-        <h1>2222</h1>
-      </div>
-
-  </collapse>
 
 
 

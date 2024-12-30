@@ -179,16 +179,6 @@ onMounted(() => {
 <template>
   <div class="import-page">
 
-<!--    <div class="checkbox">-->
-<!--      <c-checkbox-option :value="selectedOption" label="hg"-->
-<!--                         @click="selectedOption='hg'">-->
-<!--        从官网导入-->
-<!--      </c-checkbox-option>-->
-<!--      <c-checkbox-option :value="selectedOption" label="skland"-->
-<!--                         @click="selectedOption='skland'">-->
-<!--        从森空岛导入-->
-<!--      </c-checkbox-option>-->
-<!--    </div>-->
 
     <div class="import-step" v-show="'hg'===selectedOption">
       <div class="import-step-item">

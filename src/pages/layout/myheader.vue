@@ -1,7 +1,7 @@
 <script setup>
 import {ref, onMounted, watchEffect} from "vue";
 import user from "/src/pages/account/user.vue";
-import {routes,LinkedTable} from "/src/router/routes.js";
+import {routes, LinkedTable} from "/src/router/routes.js";
 import {language} from '/src/utils/i18n.js'
 import {useRoute} from 'vue-router';
 
@@ -153,18 +153,25 @@ function openNewPage(url) {
       <i class="iconfont icon-survey icon-feed-back-style"></i>
       <span class="header-button-label">反馈</span>
     </div>
-    <c-popover name="language">
-      <template #title>
-        <div class="icon-button">
-          <i class="iconfont icon-language icon-language-style"></i>
-          <span class="header-button-label">{{ LanguageLabel[language] }}</span>
-        </div>
+    <v-menu>
+      <template v-slot:activator="{ props }" >
+                <div class="icon-button">
+                  <i class="iconfont icon-language icon-language-style"></i>
+                  <span class="header-button-label">{{ LanguageLabel[language] }}</span>
+                </div>
       </template>
-      <div class="language-options" id="language">
-        <span @click="language='cn'">中文</span>
-        <span @click="language='en'">English</span>
-      </div>
-    </c-popover>
+      <v-list>
+        <v-list-item>
+          <v-btn variant="text" @click="language='cn'" text="中文"></v-btn>
+          <v-btn variant="text" @click="language='en'" text="English"></v-btn>
+        </v-list-item>
+        <v-list-item>
+
+        </v-list-item>
+      </v-list>
+
+    </v-menu>
+
     <user></user>
 
     <div class="drawer-container">
@@ -197,47 +204,51 @@ function openNewPage(url) {
   </div>
 
 
-  <c-popup v-model:visible="feedbackPopupVisible">
-    <table class="feedback-table">
-      <tbody>
-      <tr>
-        <td>反馈方式</td>
-        <td>反馈流程(越靠前越推荐)</td>
-        <td>点击转跳</td>
-      </tr>
-      <tr>
-        <td>Github issues</td>
-        <td>国内访问体验稍差一点</td>
-        <td>
-          <v-btn color="green"  @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往
-          </v-btn>
-        </td>
-      </tr>
-      <tr>
-        <td>粉丝群539600566</td>
-        <td>进群@山桜反馈，如果不在找管理员</td>
-        <td>
-          <v-btn color="green" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</v-btn>
-        </td>
-      </tr>
-      <tr>
-        <td>B站@罗德岛基建BETA</td>
-        <td>直接私信反馈</td>
-        <td>
-          <v-btn color="green" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往
-          </v-btn>
-        </td>
-      </tr>
-      <tr>
-        <td>开发群938710832</td>
-        <td>如果有能力自己解决问题，可以加开发群</td>
-        <td>
+  <v-dialog v-model="feedbackPopupVisible">
+    <v-card>
+      <v-card-text>
+        <table class="feedback-table">
+          <tbody>
+          <tr>
+            <td>反馈方式</td>
+            <td>反馈流程(越靠前越推荐)</td>
+            <td>点击转跳</td>
+          </tr>
+          <tr>
+            <td>Github issues</td>
+            <td>国内访问体验稍差一点</td>
+            <td>
+              <v-btn color="green" @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往
+              </v-btn>
+            </td>
+          </tr>
+          <tr>
+            <td>粉丝群539600566</td>
+            <td>进群@山桜反馈，如果不在找管理员</td>
+            <td>
+              <v-btn color="green" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</v-btn>
+            </td>
+          </tr>
+          <tr>
+            <td>B站@罗德岛基建BETA</td>
+            <td>直接私信反馈</td>
+            <td>
+              <v-btn color="green" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往
+              </v-btn>
+            </td>
+          </tr>
+          <tr>
+            <td>开发群938710832</td>
+            <td>如果有能力自己解决问题，可以加开发群</td>
+            <td>
 
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </c-popup>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 
 
 </template>
