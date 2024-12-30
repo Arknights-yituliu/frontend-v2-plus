@@ -135,11 +135,11 @@ onMounted(() => {
 
   <div class="survey-rank-page-v2 survey-common">
     <v-card class="rank-card">
-      <div class="checkbox" v-for="(conditions,module) in operatorFilterCondition" :key="module"
+      <div class="flex flex-wrap" v-for="(conditions,module) in operatorFilterCondition" :key="module"
            v-show="displayFilterCondition.includes(module)">
-        <v-btn variant="text" class="checkbox-label">{{ conditions.label }}</v-btn>
+        <v-btn variant="text" class="m-4">{{ conditions.label }}</v-btn>
         <v-btn color="primary" :variant="btnAction(condition.action)"
-               class="checkbox-button" rounded="x-large"
+               class="m-4" rounded="x-large"
                v-for="(condition,index) in conditions.conditions" :key="index"
                @click="addFilterConditionAndFilterOperator(conditions.actionFunc,index)">
           {{ condition.label }}

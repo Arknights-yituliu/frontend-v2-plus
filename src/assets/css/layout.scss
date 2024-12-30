@@ -1,4 +1,12 @@
+html{
+  .v-responsive{
+    overflow: visible !important;
+  }
+}
+
+
 .app {
+
   .drawer-navigation {
     .v-list-item {
       --indent-padding: 32px;

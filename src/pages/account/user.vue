@@ -9,8 +9,7 @@
     <div v-show="userInfo.status>0">
     <v-menu >
       <template v-slot:activator="{ props }" >
-        <OperatorAvatar :image-name="userInfo.avatar" style="background-color: white" :rounded="true"
-                     rounded-corner="100" v-bind="props" >
+        <OperatorAvatar :char-id="userInfo.avatar" size="44" mobile-size="44" style="background-color: white" :rounded="true" v-bind="props" >
         </OperatorAvatar>
         <!--        <v-btn  ></v-btn>-->
       </template>
@@ -20,7 +19,7 @@
           <v-btn variant="text" text="个人中心" @click="router.push({name:'AccountHome'})">
           </v-btn>
         </v-list-item>
-        <v-list-item @click="loginVisible=!loginVisible">
+        <v-list-item @click="homeMenu=!homeMenu">
           <v-dialog max-width="360">
             <template v-slot:activator="{ props: activatorProps }">
               <v-btn
@@ -64,62 +63,19 @@ import "/src/assets/css/survey/login.phone.scss"
 
 import "/src/assets/css/survey/survey_nav.css";
 import {onMounted, ref, watch} from "vue";
-import {getUserInfo} from "/src/utils/user/userInfo.js";
+import {getUserInfo,userInfo} from "/src/utils/user/userInfo.js";
 import {useRoute,useRouter} from "vue-router";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 
 const router = useRouter();
 
-let loginVisible = ref(false);
+let homeMenu = ref(false);
 
 
-let inputData = ref({
-  userName: '',
-  passWord: '',
-  cred: '',
-  email: '',
-  emailCode: '',
-  accountType: '',
-  avatar: '',
-  hgToken: '',
-  mailUsage: 'register'
-});
 
 
-//用户输入的用户名，用obj没准后期有别的字段
-let userInfo = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0}); //用户信息(用户名，用户id，用户状态)
-
-
-function getLoginParams() {
-
-  if ('hgToken' === accountType.value) {
-    return {
-      accountType: 'hgToken',
-      hgToken: inputData.value.hgToken
-    }
-  }
-  if ('emailCode' === accountType.value) {
-    return {
-      accountType: 'email',
-      email: inputData.value.email,
-      emailCode: inputData.value.emailCode,
-    }
-  }
-  if ('passWord' === accountType.value) {
-    return {
-      accountType: 'passWord',
-      userName: inputData.value.userName,
-      passWord: inputData.value.passWord,
-    }
-  }
-
-
-}
-
-
-async function getUserInfoByToken() {
-
-  userInfo.value = await getUserInfo()
+function getUserInfoByToken() {
+  getUserInfo()
 
 }
 
@@ -131,9 +87,7 @@ function logout() {
   }, 1000);
 }
 
-function getSprite(id) {
-  return "bg-" + id + " nav_avatar_image";
-}
+
 
 onMounted(() => {
   getUserInfoByToken()

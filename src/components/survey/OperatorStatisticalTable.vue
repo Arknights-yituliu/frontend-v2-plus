@@ -1,6 +1,6 @@
 <script setup>
 import {ref, watch} from "vue";
-import OperatorBar from "/src/components/OperatorBar.vue";
+import OperatorBar from "/src/components/survey/OperatorBar.vue";
 import '/src/assets/css/survey/operator.scss'
 import '/src/assets/css/survey/operator.phone.scss'
 import {statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical"
@@ -108,7 +108,7 @@ watch(() => props.modelValue.length, (newVal, oldValue) => {
       </div>
     </v-card>
 
-    <v-card class="operator-statistical-card" title="未招募干员">
+    <v-card class="operator-statistical-card m-4" title="未招募干员">
       <div class="flex flex-wrap m-4">
         <OperatorAvatar :char-id="operator.charId"
                      style="margin: 4px"
@@ -116,11 +116,11 @@ watch(() => props.modelValue.length, (newVal, oldValue) => {
       </div>
     </v-card>
 
-    <v-card class="operator-statistical-card" title="干员消耗理智排行">
+    <v-card class="operator-statistical-card m-4" title="干员消耗理智排行">
       <OperatorBar v-for="(item,index) in apCostRankingData" :key="index" :operator-info="item"></OperatorBar>
     </v-card>
 
-    <v-card class="operator-statistical-card" title="材料消耗情况">
+    <v-card class="operator-statistical-card m-4" title="材料消耗情况">
       <div class="item-cost-data">
         <p style="">总计消耗{{ apCost.toFixed(0) }} 理智</p>
         <!--          材料统计-->

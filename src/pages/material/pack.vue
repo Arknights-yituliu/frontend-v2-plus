@@ -1,10 +1,8 @@
 <script setup>
-import storeAPI from '/src/api/store';
 import materialAPI from "/src/api/material.js";
 import {ref} from 'vue';
-import PackCardContainer from '/src/components/PackCardGroup.vue'
+import PackCardContainer from '/src/components/material/PackCardGroup.vue'
 import ModuleHeader from '/src/components/ModuleHeader.vue';
-import MyButton from '/src/components/Button.vue'
 import userService from "@/utils/user/userConfig.js";
 import PackTable from "@/components/material/PackTable.vue";
 

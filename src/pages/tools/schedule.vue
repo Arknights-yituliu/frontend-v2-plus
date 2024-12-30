@@ -688,11 +688,10 @@ function saveAndDownloadScheduleFile() {
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
-    downloadJsonFile(scheduleInfo.value,scheduleId.value)
+    downloadJsonFile(scheduleInfo.value, scheduleId.value)
     cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value)
   })
 }
-
 
 
 function downloadScheduleFile() {
@@ -882,43 +881,40 @@ onMounted(() => {
 <template>
   <div class="schedule-page">
     <div class="schedule-header">
-      <div class="schedule-header-left">
-        <!--      <span class="schedule-header-title">排班生成器</span>-->
-      </div>
+        <v-text-field density="compact" variant="outlined"
+                      :label="translate('schedule', 'schedule.IdPlaceholder')"
+                      v-model="scheduleImportId">
+          <template v-slot:prepend>
+            <!--选择基建布局和换班次数-->
+            <v-btn color="orange" variant="outlined" class="m-2"
+                   @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
+              {{ translate('schedule', 'schedule.InfrastructureLayout') }}
+            </v-btn>
+          </template>
 
-      <div class="schedule-header-right">
-        <!--选择基建布局和换班次数-->
-        <MyButton data-color="orange" @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
-          {{ translate('schedule', 'schedule.InfrastructureLayout') }}
-        </MyButton>
-        <div>
-          <input class="input-base" style="width: 200px" v-model="scheduleImportId"
-                 :placeholder="[[translate('schedule', 'schedule.IdPlaceholder')]]"/>
-          <span class="input-desc"></span>
-        </div>
-        <!--根据id导入排班-->
-        <MyButton data-color="blue" @click="importScheduleById()">
-          {{ translate('schedule', 'schedule.ImportScheduleById') }}
-        </MyButton>
+          <template v-slot:append>
+            <!--根据id导入排班-->
+            <v-btn color="primary" variant="outlined" class="m-2" @click="importScheduleById()">
+              {{ translate('schedule', 'schedule.ImportScheduleById') }}
+            </v-btn>
 
-        <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
-        <!--根据文件导入排版-->
-        <MyButton data-color="blue" @click="chooseFile()">{{
-            translate('schedule', 'schedule.ImportScheduleFile')
-          }}
-        </MyButton>
-        <!--下载排版文件-->
-        <MyButton data-color="blue" @click="saveAndDownloadScheduleFile()">
-          {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
-        </MyButton>
-        <!--      <MyButton data-color='blue' :active="true" @click="downloadScheduleFile()">-->
-        <!--{{ translate('schedule', 'schedule.DownloadScheduleFile') }}-->
-        <!--      </MyButton>-->
-        <!--操作指引-->
-        <MyButton data-color="orange" @click="guidePopup = true">
-          {{ translate('schedule', 'schedule.GuidePopup') }}
-        </MyButton>
-      </div>
+            <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
+            <!--根据文件导入排版-->
+            <v-btn color="primary" variant="outlined" class="m-2" @click="chooseFile()">{{
+                translate('schedule', 'schedule.ImportScheduleFile')
+              }}
+            </v-btn>
+            <!--下载排版文件-->
+            <v-btn color="primary" variant="outlined" class="m-2" @click="saveAndDownloadScheduleFile()">
+              {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
+            </v-btn>
+
+            <!--操作指引-->
+            <v-btn color="primary" variant="outlined" class="m-2" @click="guidePopup = true">
+              {{ translate('schedule', 'schedule.GuidePopup') }}
+            </v-btn>
+          </template>
+        </v-text-field>
     </div>
     <!-- TODO separate various paragraphs and translate them -->
     <c-popup v-model:visible="guidePopup">
@@ -1169,7 +1165,7 @@ onMounted(() => {
               </div>
               <div class="settlement-operator">
                 <OperatorAvatar v-for="(charName, index) in getRoomOperators('trading', index)" :key="index"
-                             :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
+                                :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
               </div>
             </div>
 
@@ -1184,7 +1180,7 @@ onMounted(() => {
               </div>
               <div class="settlement-operator">
                 <OperatorAvatar v-for="(charName, index) in getRoomOperators('manufacture', index)" :key="index"
-                              :char-id="getCharId(charName)" class="m-4">
+                                :char-id="getCharId(charName)" class="m-4">
 
                 </OperatorAvatar>
               </div>

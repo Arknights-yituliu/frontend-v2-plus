@@ -17,15 +17,15 @@
         <div class="logout_text">确定登出当前用户？</div>
         <div class="logout_btn_wrap">
           <div class="login-btn" @click="logout()">确定</div>
-          <div class="login-btn" @click="loginVisible = !loginVisible">取消</div>
+          <div class="login-btn" @click="homeMenu = !loginVisible">取消</div>
         </div>
       </div>
     </c-popup>
 
     <div class="survey_index_header">
       <div class="survey_index_login_wrap">
-        <div class="survey_index_login_text" @click="loginVisible = !loginVisible" v-show="globalUserData.status > 0">{{ globalUserData.userName }}</div>
-        <div class="survey_index_login_text" @click="loginVisible = !loginVisible" v-show="globalUserData.status < 0">点击登录</div>
+        <div class="survey_index_login_text" @click="homeMenu = !loginVisible" v-show="globalUserData.status > 0">{{ globalUserData.userName }}</div>
+        <div class="survey_index_login_text" @click="homeMenu = !loginVisible" v-show="globalUserData.status < 0">点击登录</div>
       </div>
     </div>
 

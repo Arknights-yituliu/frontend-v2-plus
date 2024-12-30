@@ -2,12 +2,10 @@
 import {ref} from 'vue'
 import '/src/assets/css/rogueSeed/rogue-seed-page.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
-import {cMessage} from "@/utils/message.js";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
 
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
-import Popup from '/src/components/popup.vue'
 import {debounce} from "@/utils/debounce.js";
 
 let charIdDict = new Map()
@@ -167,25 +165,7 @@ getRogueSeedPage()
 
 
 
-      <Popup v-model:visible="rogueSeedDetailVisible" :width="'500px'">
-        <div class="rogue-seed-detail-content">
 
-          <h3>种子描述</h3>
-          <p>{{ rogueSeedDetail.description }}</p>
-          <h3>通关结算图</h3>
-          <img class="rogue-seed-detail-settlement-chart"
-               :src="`https://cos.yituliu.cn/${rogueSeedDetail.summaryImageLink}`" alt="">
-          <h3>对种子评价</h3>
-          <div style="display: flex">
-            <img :src="ratingAction(0,'dislike',rogueSeedDetail.seedId)" alt=""
-                 class="rogue-seed-rating-button" @click="rogueSeedRating(rogueSeedDetail.seedId,0)">
-            <img :src="ratingAction(1,'normal',rogueSeedDetail.seedId)" alt=""
-                 class="rogue-seed-rating-button" @click="rogueSeedRating(rogueSeedDetail.seedId,1)">
-            <img :src="ratingAction(2,'like',rogueSeedDetail.seedId)" alt=""
-                 class="rogue-seed-rating-button" @click="rogueSeedRating(rogueSeedDetail.seedId,2)">
-          </div>
-        </div>
-      </Popup>
 
 
   </div>

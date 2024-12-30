@@ -42,6 +42,7 @@ import User from '/src/pages/account/user.vue'
 import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
+import ComponentsContainer from "@/components/ComponentsContainer.vue";
 
 let customTheme = ref("")
 let drawer = ref(true)
@@ -118,6 +119,7 @@ function normalizePath(path) {
         <v-container>
           <router-view>
           </router-view>
+          <ComponentsContainer></ComponentsContainer>
         </v-container>
       </v-main>
     </v-app>

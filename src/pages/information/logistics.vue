@@ -7,7 +7,6 @@ import building_table from '/src/static/json/build/building_table.json'
 import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce";
 import {translate} from "/src/utils/i18n";
-import MyButton from '/src/components/Button.vue'
 import DescriptionExplain from "/src/components/DescriptionExplain.vue";
 
 let buildingTable = {}
@@ -32,6 +31,12 @@ let filterCondition = ref({
   func: () => {
   }
 })
+
+function btnAction(key, label) {
+  if (selectBtnKey.value !== `${key}+${label}`) {
+    return "tonal"
+  }
+}
 
 /**
  * 筛选干员
@@ -195,30 +200,29 @@ onMounted(() => {
 
   <div class="logistics-page">
     <div class="logistics-filter-checkbox">
-      <div class="checkbox-line" v-for="(conditionType,key) in operatorFilterConditionTable"
+      <div class="flex flex-wrap" v-for="(conditionType,key) in operatorFilterConditionTable"
            v-show="conditionType.display" :key="key">
-          <span class="checkbox-button-label"
-                :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-        <MyButton :data-color="conditionType.buttonColor" v-for="(condition,index) in conditionType.conditions"
-                   :key="index" style="margin: 2px"
-                   :color="COLOR.BLUE" :active="filterBtnStatus(key,condition.label)"
-                   @click="filterOperatorByTag(condition,key)">
-          {{ translate('schedule', condition.label) }}
-        </MyButton>
+
+        <v-btn :color="conditionType.color" variant="text" :text="translate('schedule',conditionType.name)"></v-btn>
+        <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
+               class="m-2" color="primary" :variant="btnAction(key,condition.label)"
+               @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"> </v-btn>
+
       </div>
     </div>
 
-    <div class="logistics-search-line">
-
-      <input class="input-base" @input="searchOperatorDebounce()" v-model="searchInputText">
-      <MyButton :active="hideIrrelevantSkillsFlag" data-color="green"
-                 style="margin-left: 12px" @click="hideIrrelevantSkills">隐藏无关技能
-      </MyButton>
-      <span
-          class="logistics-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
-      <!--  <span-->
-      <!--      style="font-style: italic;font-size: 14px">（搜索栏可，可与上面的预设TAG按钮共同生效筛选,再次点击按钮可取消按钮)</span>-->
-
+    <div class="m-0-8">
+      <v-text-field density="compact"
+                    variant="outlined"
+                    @input="searchOperatorDebounce()"
+                    v-model="searchInputText" >
+        <template v-slot:append>
+          <v-btn color="primary" :variant="hideIrrelevantSkillsFlag?void 0:'tonal'"
+                 class="m-4" @click="hideIrrelevantSkills">隐藏无关技能
+          </v-btn>
+        </template>
+      </v-text-field>
+      <span class="logistics-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
     </div>
 
     <table class="logistics-table">

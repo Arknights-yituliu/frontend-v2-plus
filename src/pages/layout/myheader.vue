@@ -1,11 +1,10 @@
 <script setup>
 import {ref, onMounted, watchEffect} from "vue";
-import toolApi from "/src/api/tool";
 import user from "/src/pages/account/user.vue";
 import {routes,LinkedTable} from "/src/router/routes.js";
 import {language} from '/src/utils/i18n.js'
 import {useRoute} from 'vue-router';
-import MyButton from '/src/components/Button.vue'
+
 
 const LanguageLabel = {
   cn: '中文',
@@ -210,23 +209,23 @@ function openNewPage(url) {
         <td>Github issues</td>
         <td>国内访问体验稍差一点</td>
         <td>
-          <MyButton data-color="green"  @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往
-          </MyButton>
+          <v-btn color="green"  @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往
+          </v-btn>
         </td>
       </tr>
       <tr>
         <td>粉丝群539600566</td>
         <td>进群@山桜反馈，如果不在找管理员</td>
         <td>
-          <MyButton data-color="green" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</MyButton>
+          <v-btn color="green" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</v-btn>
         </td>
       </tr>
       <tr>
         <td>B站@罗德岛基建BETA</td>
         <td>直接私信反馈</td>
         <td>
-          <MyButton data-color="green" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往
-          </MyButton>
+          <v-btn color="green" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往
+          </v-btn>
         </td>
       </tr>
       <tr>

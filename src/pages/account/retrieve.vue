@@ -5,8 +5,6 @@ import '/src/assets/css/survey/login.v2.scss'
 import {cMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
 
-import MyButton from '/src/components/Button.vue'
-
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
 const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'
 const BILIBILI_TOKEN_API = 'https://web-api.hypergryph.com/account/info/ak-b'

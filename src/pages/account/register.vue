@@ -5,7 +5,6 @@ import '/src/assets/css/survey/login.v2.phone.scss'
 import userAPI from '/src/api/userInfo.js'
 import {cMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
-import MyButton from '/src/components/Button.vue'
 
 
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;

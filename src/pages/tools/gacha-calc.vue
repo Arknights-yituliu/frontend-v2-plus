@@ -14,8 +14,8 @@ import {cMessage} from "/src/utils/message.js";
 import {ElNotification} from "element-plus";
 
 
-import PackButtonContent from "/src/components/PackButtonContent.vue";
-import ActivityGachaResources from "/src/components/ActivityGachaResources.vue";
+import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
+import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
 import userService from "/src/utils/user/userConfig.js";
 
 
@@ -1915,9 +1915,6 @@ function handleResize() {
           <div class="collapse-content-subheading">
             <span></span> 未来活动
           </div>
-          <!-- <activity-gacha-resources v-for="(activity, name) in activityBySchedules" :key="name" :info="activity"
-            v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)">
-          </activity-gacha-resources> -->
 
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(activity, name) in activityBySchedules" :key="name" :value="name"

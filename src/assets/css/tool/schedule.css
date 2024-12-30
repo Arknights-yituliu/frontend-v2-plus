@@ -46,8 +46,6 @@
 
 .schedule-header {
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
     border-bottom:1px solid var(--c-border-color);
     margin-bottom: 12px;
     padding: 8px 12px;

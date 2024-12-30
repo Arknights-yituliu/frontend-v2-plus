@@ -16,32 +16,32 @@
     <h2>Github</h2>
 
     <div class="card-module">
-      <dev-card v-for="(data,index) in developmentRelated" :key="index" :data="data">
+      <DevCard v-for="(data,index) in developmentRelated" :key="index" :data="data">
 
-      </dev-card>
+      </DevCard>
     </div>
     <h2>开发群</h2>
     <div class="card-module">
-      <dev-card v-for="(data,index) in developmentChat" :key="index" :data="data">
+      <DevCard v-for="(data,index) in developmentChat" :key="index" :data="data">
 
-      </dev-card>
+      </DevCard>
     </div>
     <h2>信息发布</h2>
     <div class="card-module">
-      <dev-card v-for="(data,index) in informationRelease" :key="index" :data="data">
+      <DevCard v-for="(data,index) in informationRelease" :key="index" :data="data">
 
-      </dev-card>
+      </DevCard>
     </div>
     <h2>网站开发贡献者名单</h2>
     <div class="card-module">
-      <dev-card v-for="(data,index) in developmentTeam" :key="index" :data="data">
-      </dev-card>
+      <DevCard v-for="(data,index) in developmentTeam" :key="index" :data="data">
+      </DevCard>
     </div>
 
     <h2>开发资料和数据来源</h2>
     <div class="card-module">
-      <dev-card v-for="(data,index) in developResources" :key="index" :data="data">
-      </dev-card>
+      <DevCard v-for="(data,index) in developResources" :key="index" :data="data">
+      </DevCard>
     </div>
 
     <!--    <div class="mdui-typo" id="dev_api">-->
