@@ -272,10 +272,6 @@ const routes = [
         component: () => import('/src/pages/video-material/detail.vue')
     },
     {
-        path:'/components',
-        component: ()=>import('/src/pages/dev/components.vue')
-    },
-    {
         path: '/dev',
         text: '测试页面',
         display: false,

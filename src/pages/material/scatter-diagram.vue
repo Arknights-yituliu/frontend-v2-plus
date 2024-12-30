@@ -1,6 +1,6 @@
 <script setup>
 import ITEM_COST_TABLE from '/src/static/json/survey/operator_item_cost_table.json'
-import OPERATOR_TABLE from '/src/static/json/survey/character_list.json'
+import OPERATOR_TABLE from '/src/static/json/survey/character_table_simple.json'
 import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
@@ -11,9 +11,10 @@ import {getViewportInfo} from "/src/utils/getViewportInfo.js";
 const operatorMap = new Map()
 const charIdMap = new Map()
 
-for (const operator of OPERATOR_TABLE) {
-  operatorMap.set(operator.charId, operator)
-  charIdMap.set(operator.charId, operator.charId)
+for (const charId in OPERATOR_TABLE) {
+  const operator = OPERATOR_TABLE[charId]
+  operatorMap.set(charId, operator)
+  charIdMap.set(operator.name,operator.charId)
 }
 
 

@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+
 
 function exportExcel(fileName,data){
     let exc = XLSX.utils.book_new(); // 初始化一个excel文件
