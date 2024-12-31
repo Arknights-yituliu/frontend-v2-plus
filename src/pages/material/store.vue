@@ -20,6 +20,7 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 formatStorePerm(TMP_STORE_PERM)
 
 function formatStorePerm(data){
+  storeListFormat.value = []
   for (let i = 0; i < storeTypeList.length; i++) {
     const item = storeTypeList[i]
     const list = data[item.typeName]

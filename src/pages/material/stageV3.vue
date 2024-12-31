@@ -476,9 +476,9 @@ onMounted(() => {
       <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
         @click="legendDisplay = !legendDisplay">显示图例
       </v-btn>
-      <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
-        @click="scrollToFrequentlyAskedQuestion()">旧版入口
-      </v-btn>
+<!--      <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"-->
+<!--        @click="scrollToFrequentlyAskedQuestion()">旧版入口-->
+<!--      </v-btn>-->
       <span class="module-tip">更新时间：{{ updateTime }}</span>
       <!-- <v-chip color="primary" variant="tonal" class="v-btn" :size="getButtonSize()">
         更新时间：{{ updateTime }}
