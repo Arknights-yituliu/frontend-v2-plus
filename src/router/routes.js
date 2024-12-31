@@ -110,6 +110,15 @@ const routes = [
         component: () => import('/src/pages/tools/schedule.vue')
     },
     {
+        path: '/tools/scheduleV2',
+        text: '排班表生成器',
+        name: 'ScheduleV2',
+        display: false,
+        module: 'tools',
+        icon: "mdi-calendar-clock",
+        component: () => import('/src/pages/tools/schedule.v2.vue')
+    },
+    {
         path: '/tools/specializationTimeCalculate',
         text: '专精时间减半计算器',
         name: 'HalfOperatorCalculate',
