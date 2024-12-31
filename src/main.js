@@ -10,7 +10,7 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 import 'vuetify/styles'
 import vuetify from "/src/plugins/vuetify/vuetify.js";
-import '/src/plugins/vuetify/vuetify.scss'
+
 
 
 const app = createApp(App)

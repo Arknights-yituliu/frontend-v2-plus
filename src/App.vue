@@ -98,7 +98,7 @@ function normalizePath(path) {
 <template>
   <v-responsive class="border rounded">
     <v-app class="app color_var" :class="customTheme">
-      <v-navigation-drawer v-model="drawer" width="280">
+      <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
 
 <!--        <img src="/image/website/icon-large.webp" alt=""-->
 <!--             style="border-radius: 1000px;width: 120px;margin:36px auto 20px;display: block">-->

@@ -1,11 +1,11 @@
-html{
-  .v-responsive{
+html {
+  .v-responsive {
     overflow: visible !important;
   }
 }
 
 
-.app {
+.navigation-drawer {
 
   .drawer-navigation {
     .v-list-item {
@@ -13,7 +13,8 @@ html{
     }
 
     .navigation-item-content {
-      display: flex;align-items: center;
+      display: flex;
+      align-items: center;
 
       .navigation-item-content-spacer {
         width: 16px;
@@ -21,29 +22,28 @@ html{
     }
   }
 
-  .router-link{
+  .router-link {
     text-decoration: none;
     color: inherit;
   }
 
-  .drawer-navigation-group-item {
-    margin: 4px
-  }
 
-  .app-bar-content {
-    display: flex;
-    align-items: center;
-    justify-content: right;
-    margin-right: 20px;
-  }
 
-  .app-bar-content-spacer{
-    width: 20px;
-  }
 }
 
-@media screen and (max-width: 700px){
-  .v-container{
+.app-bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-right: 20px;
+}
+
+.app-bar-content-spacer {
+  width: 20px;
+}
+
+@media screen and (max-width: 700px) {
+  .v-container {
     padding: 0 !important;
   }
 }
