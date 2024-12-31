@@ -1,5 +1,7 @@
 .schedule-v2-page{
-
+   .schedule-item-card{
+       width: 240px;
+   }
 }
 
 
@@ -7,9 +9,7 @@
 .schedule-page{
     padding: 8px;
     box-sizing: border-box;
-    .my-button {
-        margin: 4px;
-    }
+
 }
 .maa-schedule-wrap-v2 {
 

@@ -886,6 +886,15 @@ onMounted(() => {
 
   <div class="schedule-v2-page">
 
+    <v-card class="schedule-item-card">
+      <v-card-text>
+        <v-text-field variant="outlined" hide-details density="compact"
+                      :label="translate('schedule', 'schedule.ShiftName')"
+                      v-model="plansTemplate[selectedPlanIndex].name">
+        </v-text-field>
+      </v-card-text>
+    </v-card>
+
 
   </div>
 
