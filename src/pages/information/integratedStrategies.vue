@@ -721,14 +721,14 @@
                 <div>
                   <span class="optional">（可选）</span>
                   在路途上收集
-                  <el-tooltip content="希望+3，让探索开启不同的方向" effect="light" placement="top"
+                  <el-tooltip
+                      content="所有我方单位的生命、攻击力、防御力+1%；有时会发挥奇妙的效果（奇妙的效果：持有此收藏品时进入部分事件将出现能够获得更多收益/不需要支付代价的隐藏选项，此类选项会要求失去该收藏品）"
+                      effect="light" placement="top"
                   >
                     <el-text tag="ins">【安玛的爱】</el-text>
                   </el-tooltip>
                   、
-                  <el-tooltip
-                      content="所有我方单位的生命、攻击力、防御力+1%；有时会发挥奇妙的效果（奇妙的效果：持有此收藏品时进入部分事件将出现能够获得更多收益/不需要支付代价的隐藏选项，此类选项会要求失去该收藏品）"
-                      effect="light" placement="top"
+                  <el-tooltip content="希望+3，让探索开启不同的方向" effect="light" placement="top"
                   >
                     <el-text tag="ins">【树痕之盔】</el-text>
                   </el-tooltip>
