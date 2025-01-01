@@ -23,11 +23,20 @@
   }
 
   .operator-skill-item {
+    position: relative;
     width: 60px;
     text-align: center;
     .skill-name {
       text-align: center;
       font-size: 12px;
+    }
+
+    .operator-skill-rank-icon{
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 16px;
+      box-shadow: 1px 1px 2px white;
     }
   }
 

@@ -4,10 +4,13 @@ import '/src/assets/css/survey/operator_info_bar.scss'
 import '/src/assets/css/survey/operator_info_bar.phone.scss'
 
 
+
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import SkillIcon from "/src/components/sprite/SkillIcon.vue";
 const props = defineProps(["modelValue", 'operatorInfo',]);
+
+console.log(props.operatorInfo)
 
 </script>
 
@@ -23,8 +26,9 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
     </div>
 
     <div class="operator-skill-item" v-for="(skill,index) in operatorInfo.skill" :key="index">
-      <SkillIcon mobile-size="32" :icon="`skill_icon_${skill.iconId}`" style="margin: auto"></SkillIcon>
-      <div class="skill-name">{{ skill.name }}</div>
+      <SkillIcon mobile-size="32" :icon="`skill_icon_${skill.iconId}`" ></SkillIcon>
+      <img :src="`/image/survey/skill-rank-${operatorInfo[`skill${index+1}`]}.jpg`"
+           v-show="operatorInfo[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
     </div>
 
     <div class="operator-equip-group" v-for="(equip,index) in operatorInfo.equip" :key="index">
