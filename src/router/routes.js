@@ -45,7 +45,7 @@ const routes = [
         name: 'MaterialStore',
         display: true,
         module: 'material',
-        icon: "mdi-store",
+        icon: "mdi-circle-multiple",
         component: () => import('/src/pages/material/store.vue')
     },
     {
@@ -54,7 +54,7 @@ const routes = [
         name: 'PackEfficiency',
         display: true,
         module: 'material',
-        icon: "mdi-gift",
+        icon: "mdi-cart",
         component: () => import('/src/pages/material/pack.vue')
     },
     {
@@ -72,7 +72,7 @@ const routes = [
         name: 'EliteRanking',
         display: true,
         module: 'material',
-        icon: "mdi-codepen",
+        icon: "mdi-account-details",
         component: () => import('/src/pages/material/elite')
     },
     {
@@ -89,6 +89,7 @@ const routes = [
         text: '攒抽计算器',
         name: 'GachaCalculator1',
         display: false,
+        icon: "mdi-wallet",
         component: GACHA_CALCULATOR
     },
     {
@@ -97,7 +98,7 @@ const routes = [
         name: 'GachaCalculator',
         display: true,
         module: 'tools',
-        icon: "mdi-calculator",
+        icon: "mdi-wallet",
         component: GACHA_CALCULATOR
     },
     {
@@ -124,7 +125,7 @@ const routes = [
         name: 'HalfOperatorCalculate',
         display: true,
         module: 'tools',
-        icon: "mdi-calculator",
+        icon: "mdi-dumbbell",
         component: () => import('/src/pages/tools/specializationTimeCalculate.vue')
     },
     {
@@ -142,7 +143,7 @@ const routes = [
         name: 'Logistics',
         display: true,
         module: 'information',
-        icon: "mdi-cog",
+        icon: "mdi-floor-plan",
         component: () => import('/src/pages/information/logistics.vue')
     },
     {
@@ -151,7 +152,7 @@ const routes = [
         name: 'SandboxFoods',
         display: true,
         module: 'information',
-        icon: "mdi-food",
+        icon: "mdi-food-drumstick",
         component: () => import('/src/pages/information/sandboxFoods.vue')
     },
     {
@@ -160,7 +161,7 @@ const routes = [
         name: 'IntegratedStrategies',
         display: true,
         module: 'information',
-        icon: "mdi-compass",
+        icon: "mdi-routes",
         component: () => import('/src/pages/information/integratedStrategies.vue')
     },
     {
@@ -206,7 +207,7 @@ const routes = [
         name: 'OperatorSurvey',
         display: true,
         module: 'survey',
-        icon: "mdi-chart-bar",
+        icon: "mdi-chart-box",
         component: SURVEY_OPERATOR
     },
     {
@@ -224,7 +225,7 @@ const routes = [
         name: 'OperatorRank',
         display: true,
         module: 'survey',
-        icon: "mdi-chart-bar",
+        icon: "mdi-chart-bar-stacked",
         component: () => import('/src/pages/survey/operator-progression-statistics.vue')
         // component: Notice
     },
@@ -262,7 +263,7 @@ const routes = [
         name: 'Donate',
         display: true,
         module: 'about',
-        icon: "encourage",
+        icon: "mdi-thumb-up",
         component: () => import('/src/pages/about/donate.page.vue')
     },
     {
@@ -271,7 +272,7 @@ const routes = [
         name: 'FriendlyLink',
         display: true,
         module: 'about',
-        icon: "mdi-link",
+        icon: "mdi-link-variant",
         component: () => import('/src/pages/about/links.page.vue')
     },
     {
@@ -371,7 +372,7 @@ const LinkedTable = {
         path: '/',
         text: "材料收益",
         display:true,
-        icon:'mdi-gold',
+        icon:'mdi-view-grid-plus',
         child: []
     },
     tools: {
@@ -385,14 +386,14 @@ const LinkedTable = {
         path: '/',
         text: "信息一览",
         display:true,
-        icon:'mdi-information',
+        icon:'mdi-format-list-bulleted',
         child: []
     },
     survey: {
         path: '/',
         text: "调查与统计",
         display:true,
-        icon:'mdi-chart-bar',
+        icon:'mdi-account-box-edit-outline',
         child: []
     },
     about: {
