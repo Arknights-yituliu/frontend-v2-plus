@@ -454,7 +454,7 @@ onMounted(() => {
         <div class="operator-skill-icon-item" v-for="(skill,index) in operator.skill" :key="index">
           <div class="operator-skill-icon-sprite">
             <div :class="getSkillSprite(skill.iconId)"></div>
-            <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}.jpg`"
+            <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}-v1.jpg`"
                  v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
           </div>
           <!--          <div class="skill-name">{{ skill.name }}</div>-->
@@ -463,7 +463,7 @@ onMounted(() => {
         <div class="operator-equip-image-wrap" v-for="(equip,index) in operator.equip" :key="index">
           <div class="operator-skill-icon-sprite">
             <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
-            <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}.jpg`"
+            <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}-v1.jpg`"
                  v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
           </div>
           <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>

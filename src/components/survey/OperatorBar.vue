@@ -27,14 +27,14 @@ console.log(props.operatorInfo)
 
     <div class="operator-skill-item" v-for="(skill,index) in operatorInfo.skill" :key="index">
       <SkillIcon mobile-size="32" :icon="`skill_icon_${skill.iconId}`" ></SkillIcon>
-      <img :src="`/image/survey/skill-rank-${operatorInfo[`skill${index+1}`]}.jpg`"
+      <img :src="`/image/survey/skill-rank-${operatorInfo[`skill${index+1}`]}-v1.jpg`"
            v-show="operatorInfo[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
     </div>
 
     <div class="operator-equip-group" v-for="(equip,index) in operatorInfo.equip" :key="index">
       <div class="operator-equip">
         <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-icon-image">
-        <img :src="`/image/survey/skill-rank-${operatorInfo[`mod${equip.typeName2}`]}.jpg`"
+        <img :src="`/image/survey/skill-rank-${operatorInfo[`mod${equip.typeName2}`]}-v1.jpg`"
              v-show="operatorInfo[`mod${equip.typeName2}`]>0" class="operator-rank-icon" alt="">
       </div>
       <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
