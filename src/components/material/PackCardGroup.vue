@@ -88,22 +88,24 @@ watch(() => window.screen.width, (newVal) => {
             </div>
           </div>
         </div>
-        <!-- 详情部分 -->
-        <div class="pack-content" :id="`${packInfo.id}${id}`">
-          <div class="pack-content-gacha">
-            <span>源石</span><span>X{{ packInfo.originium }}</span>
-            <span>合成玉</span><span>X{{ packInfo.orundum }}</span>
-            <span>单抽</span><span>X{{ packInfo.gachaTicket }}</span>
-            <span>十连</span><span>X{{ packInfo.tenGachaTicket }}</span>
-          </div>
-          <div class="pack-content-material">
-            <div class="pack-content-material-item" v-for="(item, index) in packInfo.packContent" :key="index">
-              <span class="pack-content-material-item-name">{{ item.itemName }}</span>
-              <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
-            </div>
+      </div>
+
+      <!-- 详情部分 -->
+      <div class="pack-content" :id="`${packInfo.id}${id}`">
+        <div class="pack-content-gacha">
+          <span>源石</span><span>X{{ packInfo.originium }}</span>
+          <span>合成玉</span><span>X{{ packInfo.orundum }}</span>
+          <span>单抽</span><span>X{{ packInfo.gachaTicket }}</span>
+          <span>十连</span><span>X{{ packInfo.tenGachaTicket }}</span>
+        </div>
+        <div class="pack-content-material">
+          <div class="pack-content-material-item" v-for="(item, index) in packInfo.packContent" :key="index">
+            <span class="pack-content-material-item-name">{{ item.itemName }}</span>
+            <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
           </div>
         </div>
       </div>
+
       <!-- 说明部分 -->
       <div class="pack-note">
         {{ packInfo.note }}
