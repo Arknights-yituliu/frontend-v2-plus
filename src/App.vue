@@ -129,7 +129,7 @@ function openNewPage(url) {
         <v-app-bar-title>{{ pageTitle }}
         </v-app-bar-title>
         <div class="app-bar-content">
-          <v-icon icon="mdi-bulletin-board" @click="feedbackPopupVisible=true"></v-icon>
+          <v-btn text="反馈" variant="text" style="font-size: 16px" @click="feedbackPopupVisible=true"></v-btn>
           <div class="app-bar-content-spacer"/>
 <!--          <v-menu>-->
 <!--            <template v-slot:activator="{ props }">-->
@@ -147,7 +147,6 @@ function openNewPage(url) {
 <!--          <div class="app-bar-content-spacer"/>-->
           <v-icon icon="mdi-theme-light-dark" size="28" @click="changeTheme"></v-icon>
           <div class="app-bar-content-spacer"/>
-
           <User></User>
         </div>
       </v-app-bar>
