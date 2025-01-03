@@ -31,13 +31,14 @@ import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "@/components/ComponentsContainer.vue";
-import {addData} from "/src/plugins/IndexedDB/IndexedDB.js";
+import resourceAPI from '/src/api/resource.js'
+import {addData,getDataByKey} from "/src/plugins/IndexedDB/IndexedDB.js";
+import OperatorTable from '/src/static/json/game-data/operator_table.json'
 
 const theme = useTheme()
 
 let customTheme = ref("")
 let drawer = ref(true)
-
 
 
 let currentTheme = ref('dark')
@@ -54,7 +55,6 @@ const route = useRoute();
 const currentPath = computed(() => route.path);
 
 let pageTitle = ref(routeMap.get(normalizePath(route.path)));
-
 
 
 function normalizePath(path) {
@@ -82,7 +82,6 @@ const feedbackLinkList = {
 }
 
 
-
 function openNewPage(url) {
   window.open(url)
 }
@@ -93,16 +92,29 @@ watch(currentPath, (newPath, oldPath) => {
 });
 
 
-function initResource(){
-
+function initResource() {
+  resourceAPI.getOperatorTableByCOS().then(rep => {
+    const data = {
+      name: 'OperatorTable',
+      resource: rep.data,
+      updateTime: new Date().getTime().toString(),
+    }
+    addData(data)
+  })
 }
 
 onMounted(() => {
   const themeSet = localStorage.getItem("Theme");
   console.log(themeSet)
   changeTheme()
+  // initResource()
+  // getDataByKey('OperatorTable').then(rep=>{
+  //   console.log("indexedDB {} ",rep.resource)
+  // })
 
+  console.log(OperatorTable)
 })
+
 
 
 </script>
@@ -126,20 +138,20 @@ onMounted(() => {
         <div class="app-bar-content">
           <v-btn text="反馈" variant="text" style="font-size: 16px" @click="feedbackPopupVisible=true"></v-btn>
           <div class="app-bar-content-spacer"/>
-<!--          <v-menu>-->
-<!--            <template v-slot:activator="{ props }">-->
-<!--              <v-icon icon="mdi-translate" size="28" v-bind="props"></v-icon>-->
-<!--            </template>-->
-<!--            <v-list>-->
-<!--              <v-list-item>-->
-<!--                <v-btn variant="text" @click="language='cn'" text="中文"></v-btn>-->
-<!--              </v-list-item>-->
-<!--              <v-list-item>-->
-<!--                <v-btn variant="text" @click="language='en'" text="English"></v-btn>-->
-<!--              </v-list-item>-->
-<!--            </v-list>-->
-<!--          </v-menu>-->
-<!--          <div class="app-bar-content-spacer"/>-->
+          <!--          <v-menu>-->
+          <!--            <template v-slot:activator="{ props }">-->
+          <!--              <v-icon icon="mdi-translate" size="28" v-bind="props"></v-icon>-->
+          <!--            </template>-->
+          <!--            <v-list>-->
+          <!--              <v-list-item>-->
+          <!--                <v-btn variant="text" @click="language='cn'" text="中文"></v-btn>-->
+          <!--              </v-list-item>-->
+          <!--              <v-list-item>-->
+          <!--                <v-btn variant="text" @click="language='en'" text="English"></v-btn>-->
+          <!--              </v-list-item>-->
+          <!--            </v-list>-->
+          <!--          </v-menu>-->
+          <!--          <div class="app-bar-content-spacer"/>-->
           <v-icon icon="mdi-theme-light-dark" size="28" @click="changeTheme"></v-icon>
           <div class="app-bar-content-spacer"/>
           <User></User>
@@ -147,7 +159,7 @@ onMounted(() => {
       </v-app-bar>
       <v-main>
         <v-dialog v-model="feedbackPopupVisible">
-          <v-card max-width="320" class="m-a" >
+          <v-card max-width="320" class="m-a">
             <v-card-text title="反馈方式">
               <v-list lines="three">
                 <v-list-item title="Github issues" subtitle="国内访问体验稍差一点">

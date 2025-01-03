@@ -116,7 +116,7 @@ const routes = [
         display: true,
         module: 'tools',
         icon: "mdi-calendar-clock",
-        component: () => import('/src/pages/tools/dps-calculator.vue')
+        component: () => import('/src/pages/tools/dps/calculator.vue')
     },
     {
         path: '/tools/scheduleV2',
