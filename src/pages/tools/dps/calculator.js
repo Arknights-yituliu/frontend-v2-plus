@@ -1,5 +1,6 @@
 import deepClone from "@/utils/deepClone.js";
 
+
 const operatorCalculatorResult = {
     hps: {value: 0, data: [], log: []},
     dps: {value: 0, data: [], log: []},
@@ -17,7 +18,12 @@ const logDict = {
     "support": "辅助",
     "damage": "伤害",
     "healing": "治疗",
+    "atk":"攻击力"
 }
+
+
+
+
 
 function char_1039_thorn2(operatorInfo, supportBuff) {
 
@@ -88,12 +94,12 @@ function getHealingHit(atk, buffs, log) {
 
 
     for (const buff of buffs) {
-        const {zone, value, type, action} = buff
+        const {zone, value,  source, type} = buff
         const last = healing
-        if (!('healing' === action || 'atk' === action)) {
+        if (!('healing' === type || 'atk' === type)) {
             continue
         }
-        let text = `治疗量受到${logDict[type]}的${logDict[zone]}从${last}提升为${healing}`
+        let text = `治疗量受到${logDict[source]}的${logDict[zone]}从${last}提升为${healing}`
         if ("A" === zone) {
             healing += value
             text += `（${last}+${value}=${healing}）`

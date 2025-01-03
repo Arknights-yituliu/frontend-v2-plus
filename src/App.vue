@@ -112,7 +112,7 @@ onMounted(() => {
   //   console.log("indexedDB {} ",rep.resource)
   // })
 
-  console.log(OperatorTable)
+  // console.log(OperatorTable)
 })
 
 

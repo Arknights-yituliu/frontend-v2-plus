@@ -1,6 +1,7 @@
 <script setup>
 import '/src/assets/css/tool/dps_calculator.scss'
-
+import {getOperatorInfo} from "/src/pages/tools/dps/getOperatorInfo.js";
+getOperatorInfo()
 
 </script>
 
