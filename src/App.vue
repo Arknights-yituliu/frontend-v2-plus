@@ -92,6 +92,19 @@ function normalizePath(path) {
   return path;
 }
 
+let feedbackPopupVisible = ref(false)
+
+const feedbackLinkList = {
+  "GitHubIssues": 'https://github.com/Arknights-yituliu/frontend-v2-plus/issues',
+  "OfficialAccount": 'https://space.bilibili.com/688411531',
+  "QQFan": 'https://jq.qq.com/?_wv=1027&k=q1z3p9Yj',
+  "QQDocs": 'https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill'
+}
+
+function openNewPage(url) {
+  window.open(url)
+}
+
 
 </script>
 
@@ -116,31 +129,51 @@ function normalizePath(path) {
         <v-app-bar-title>{{ pageTitle }}
         </v-app-bar-title>
         <div class="app-bar-content">
-          <v-menu>
-            <template v-slot:activator="{ props }">
-              <v-icon icon="mdi-translate" size="28" v-bind="props"></v-icon>
-            </template>
-            <v-list>
-              <v-list-item>
-                <v-btn variant="text" @click="language='cn'" text="中文"></v-btn>
-              </v-list-item>
-              <v-list-item>
-                <v-btn variant="text" @click="language='en'" text="English"></v-btn>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-
+          <v-icon icon="mdi-bulletin-board" @click="feedbackPopupVisible=true"></v-icon>
           <div class="app-bar-content-spacer"/>
+<!--          <v-menu>-->
+<!--            <template v-slot:activator="{ props }">-->
+<!--              <v-icon icon="mdi-translate" size="28" v-bind="props"></v-icon>-->
+<!--            </template>-->
+<!--            <v-list>-->
+<!--              <v-list-item>-->
+<!--                <v-btn variant="text" @click="language='cn'" text="中文"></v-btn>-->
+<!--              </v-list-item>-->
+<!--              <v-list-item>-->
+<!--                <v-btn variant="text" @click="language='en'" text="English"></v-btn>-->
+<!--              </v-list-item>-->
+<!--            </v-list>-->
+<!--          </v-menu>-->
+<!--          <div class="app-bar-content-spacer"/>-->
           <v-icon icon="mdi-theme-light-dark" size="28" @click="changeTheme"></v-icon>
           <div class="app-bar-content-spacer"/>
 
           <User></User>
         </div>
       </v-app-bar>
-
       <v-main>
+        <v-dialog v-model="feedbackPopupVisible">
+          <v-card max-width="320" class="m-a" >
+            <v-card-text title="反馈方式">
+              <v-list lines="three">
+                <v-list-item title="Github issues" subtitle="国内访问体验稍差一点">
+                  <v-btn color="green" @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往</v-btn>
+                </v-list-item>
+                <v-list-item title="粉丝群539600566" subtitle="进群@山桜反馈，如果不在找管理员">
+                  <v-btn color="green" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</v-btn>
+                </v-list-item>
+                <v-list-item title="B站@罗德岛基建BETA" subtitle="直接私信反馈">
+                  <v-btn color="green" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往</v-btn>
+                </v-list-item>
+                <v-list-item title="开发群938710832" subtitle="如果有能力自己解决问题，可以加开发群">
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
         <v-container>
           <router-view>
+
           </router-view>
           <ComponentsContainer></ComponentsContainer>
         </v-container>
