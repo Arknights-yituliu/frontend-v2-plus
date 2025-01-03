@@ -1,7 +1,6 @@
-import Error404 from "/src/pages/layout/error404.vue";
+import Error404 from "/src/components/Error404.vue";
 import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
 import GACHA_CALCULATOR from '/src/pages/tools/gacha-calc.vue'
-import Notice from '/src/pages/layout/notice.vue'
 import REGISTER from '/src/pages/account/register.vue'
 import LOGIN from '/src/pages/account/login.vue'
 import RETRIEVE from '/src/pages/account/retrieve.vue'
@@ -109,6 +108,15 @@ const routes = [
         module: 'tools',
         icon: "mdi-calendar-clock",
         component: () => import('/src/pages/tools/schedule.vue')
+    },
+    {
+        path: '/tools/dps/calculator',
+        text: 'DPS计算器',
+        name: 'Schedule',
+        display: true,
+        module: 'tools',
+        icon: "mdi-calendar-clock",
+        component: () => import('/src/pages/tools/dps-calculator.vue')
     },
     {
         path: '/tools/scheduleV2',
@@ -336,22 +344,16 @@ const routes = [
         component: () => import('/src/pages/video-material/stageV3.vue')
     },
     {
-        path: '/tools/rogue-seed/upload',
+        path: '/tools/rogue/seed/upload',
         text: '种子上传',
         display: false,
-        component: () => import('/src/pages/tools/rogue-seed-upload.vue')
+        component: () => import('/src/pages/tools/rogue/upload.vue')
     },
     {
-        path: '/tools/rogue-seed/page',
+        path: '/tools/rogue/seed/page',
         text: '种子收集站',
         display: false,
-        component: () => import('/src/pages/tools/rogue-seed-page.vue')
-    },
-    {
-        path: '/tools/rogue-seed',
-        text: '种子收集站',
-        display: false,
-        component: () => import('/src/pages/tools/rogue-seed.vue')
+        component: () => import('/src/pages/tools/rogue/page.vue')
     },
     {
         path: '/statistics-material',
