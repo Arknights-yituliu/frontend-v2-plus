@@ -1,7 +1,6 @@
 <script setup>
 
 import {ref} from "vue";
-import "/src/assets/css/about.scss"
 
 
 const requestOptions = {
@@ -86,7 +85,23 @@ const formatLinkData = (data, localized = 'zh_CN') => {
 
 <style scoped>
 
+.tool-link-page{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  .tool-link-card{
+    width: 350px;
+    margin: 4px;
 
+  }
+  .tool-link-card-content{
+    height: 240px;
+  }
+
+  .tool-link-button{
+    margin: 4px;
+  }
+}
 
 .f-link-card-header {
   display: flex;

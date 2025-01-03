@@ -30,7 +30,6 @@ function getRogueSeedPage() {
     const tag = rep.data
     rogueSeedAPI.getRogueSeedPageByCOS(tag).then(response => {
       rogueSeedList.value = response.data.list
-      rogueSeedDetail.value = rogueSeedList.value[6]
       console.log(rogueSeedList.value[6])
       getRogueSeedRatingList()
     })

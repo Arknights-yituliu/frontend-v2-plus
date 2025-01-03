@@ -1,9 +1,6 @@
 <script setup>
 import '/src/assets/svg/iconfont.css'
-
-import '/src/assets/css/about.scss';
 import '/src/assets/css/elite.css';
-
 
 //雪碧图
 import '/src/assets/css/sprite/sprite_avatar.css'
@@ -24,32 +21,24 @@ import '/src/assets/css/layout/basic.scss'
 import '/src/assets/css/layout/main.scss'
 import '/src/assets/css/common/theme.scss'
 import '/src/assets/css/atomic.scss'
-
 import "/src/assets/css/survey/survey_common.css";
 
-// svg字体
 import Navigation from '/src/components/drawer/Navigation.vue'
 import {useTheme} from 'vuetify'
-// 旧版css，待修改
-
-const theme = useTheme()
 
 import User from '/src/pages/account/user.vue'
-
 import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "@/components/ComponentsContainer.vue";
+import {addData} from "/src/plugins/IndexedDB/IndexedDB.js";
+
+const theme = useTheme()
 
 let customTheme = ref("")
 let drawer = ref(true)
 
 
-onMounted(() => {
-  const themeSet = localStorage.getItem("Theme");
-  console.log(themeSet)
-  changeTheme()
-})
 
 let currentTheme = ref('dark')
 
@@ -66,11 +55,7 @@ const currentPath = computed(() => route.path);
 
 let pageTitle = ref(routeMap.get(normalizePath(route.path)));
 
-watch(currentPath, (newPath, oldPath) => {
 
-  pageTitle.value = routeMap.get(normalizePath(newPath)) || '未定义路径'
-  // 在这里执行你想要的操作
-});
 
 function normalizePath(path) {
   // 如果路径是根路径 '/'，直接返回
@@ -96,9 +81,28 @@ const feedbackLinkList = {
   "QQDocs": 'https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill'
 }
 
+
+
 function openNewPage(url) {
   window.open(url)
 }
+
+watch(currentPath, (newPath, oldPath) => {
+  pageTitle.value = routeMap.get(normalizePath(newPath)) || '未定义路径'
+  // 在这里执行你想要的操作
+});
+
+
+function initResource(){
+
+}
+
+onMounted(() => {
+  const themeSet = localStorage.getItem("Theme");
+  console.log(themeSet)
+  changeTheme()
+
+})
 
 
 </script>
