@@ -1,4 +1,3 @@
-// db.js
 import Dexie from 'dexie';
 
 
@@ -19,12 +18,13 @@ async function getDataByKey(key) {
     return  myDatabase.cacheData.get(key)
 }
 
+
+
 function getOperatorData(){
     getDataByKey("operatorTable").then(result => {
         if(!result){
             //保存数据
         }
-
     })
 }
 

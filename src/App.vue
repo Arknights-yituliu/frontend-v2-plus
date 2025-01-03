@@ -1,29 +1,26 @@
 <script setup>
 import '/src/assets/svg/iconfont.css'
-import '/src/assets/css/stage_v2.css';
-import '/src/assets/css/store_v2.css';
-import '/src/assets/css/sprite_item.css';
-import '/src/assets/css/sprite_style.css';
-import '/src/assets/css/sprite_icon.css';
+
 import '/src/assets/css/about.scss';
 import '/src/assets/css/elite.css';
+
+
+//雪碧图
 import '/src/assets/css/sprite/sprite_avatar.css'
-import '/src/assets/css/stage_v3.css';
+import '/src/assets/css/sprite/sprite_icon.css';
+import '/src/assets/css/sprite/sprite_item.css';
+import "/src/assets/css/sprite/sprite_skill.css";
+import "/src/assets/css/sprite/sprite_rank.css";
 
 // 通用样式
 import '/src/assets/css/common/btn.scss'
-import '/src/assets/css/common/checkbox.scss'
 import '/src/assets/css/common/input.scss'
-import '/src/assets/css/common/tip.scss'
 import '/src/assets/css/common/title_and_tag.scss'
 import '/src/assets/css/common/popover.scss'
 import '/src/assets/css/common/icon.scss'
 
 import '/src/assets/css/layout.scss'
-import '/src/assets/css/layout/aside.scss'
-import '/src/assets/css/layout/atom.scss'
 import '/src/assets/css/layout/basic.scss'
-import '/src/assets/css/layout/navigation.scss'
 import '/src/assets/css/layout/main.scss'
 import '/src/assets/css/common/theme.scss'
 import '/src/assets/css/atomic.scss'
@@ -43,11 +40,9 @@ import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "@/components/ComponentsContainer.vue";
-import {language} from "@/utils/i18n.js";
 
 let customTheme = ref("")
 let drawer = ref(true)
-let rightDrawer = ref()
 
 
 onMounted(() => {
@@ -112,10 +107,6 @@ function openNewPage(url) {
   <v-responsive class="border rounded">
     <v-app class="app color_var" :class="customTheme">
       <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
-
-<!--        <img src="/image/website/icon-large.webp" alt=""-->
-<!--             style="border-radius: 1000px;width: 120px;margin:36px auto 20px;display: block">-->
-
         <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 36px 0 12px">
           明日方舟一图流
         </div>

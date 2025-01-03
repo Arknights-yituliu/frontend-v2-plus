@@ -305,4 +305,18 @@
     border: 1px solid black;
     padding: 12px 0;
   }
+
+  .orundum-table-icon {
+    width: 18px;
+    height: 18px;
+    position: relative;
+  }
+
+  .sprite-icon {
+    transform: scale(0.5);
+    position: absolute;
+    top: -14px;
+    left: -10px;
+  }
+
 }

@@ -1,5 +1,5 @@
 <script setup>
-import "/src/assets/css/sprite_item.css";
+
 import NaviCards from "/src/components/NaviCards.vue";
 
 const navi_data = [

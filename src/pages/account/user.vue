@@ -2,7 +2,7 @@
   <div class="survey-login-page">
     <div v-show="userInfo.status<0">
       <router-link to="/account/login">
-        <span class="header-button-label">登录</span>
+        <span style="font-size: 16px;color: white">登录</span>
       </router-link>
     </div>
 
@@ -53,11 +53,9 @@
 </template>
 
 <script setup>
-import "/src/assets/css/survey/survey_common.css";
 import "/src/assets/css/survey/common.scss"
 import "/src/assets/css/survey/common.phone.scss"
-import "/src/assets/css/sprite/sprite_skill.css";
-import "/src/assets/css/sprite/sprite_rank.css";
+
 import "/src/assets/css/survey/survey_index.css";
 import "/src/assets/css/survey/login.scss"
 import "/src/assets/css/survey/login.phone.scss"

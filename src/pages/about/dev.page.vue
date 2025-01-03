@@ -69,7 +69,6 @@
 </template>
 
 <script setup>
-import "/src/assets/css/sprite_item.css";
 import DevCard from "/src/components/DevCard.vue";
 
 import developmentRelated from '/src/static/json/about/developmentRelated.json'

@@ -112,7 +112,7 @@ const routes = [
     {
         path: '/tools/dps/calculator',
         text: 'DPS计算器',
-        name: 'Schedule',
+        name: 'DPSCalculator',
         display: true,
         module: 'tools',
         icon: "mdi-calendar-clock",
