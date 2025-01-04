@@ -60,7 +60,11 @@ let updateTime = ref(TMP_STAGE_RESULT.updateTime)
 function getStageResult() {
   const config = userService.getStageConfig()
   stageApi.getRecommendedStage(config).then(response => {
+
     updateTime.value = response.data.updateTime
+    if(!response.data.recommendedStageList){
+      return
+    }
     stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
     getItemCardData()
@@ -144,7 +148,7 @@ function getItemTableData(index, isJump) {
   recommendedStageDetailTable.value = stageResultList.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
 
   if (isJump) {
-    document.getElementById('detail-table').scrollIntoView({ behavior: 'smooth', block: 'center' })
+    document.getElementById('StageDetailTable').scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 }
 
@@ -346,6 +350,9 @@ function getHistoryActStage() {
   const config = userService.getStageConfig()
   // 获取历史活动up材料信息
   stageApi.getHistoryActStageV4(config).then(response => {
+    if(!response.data){
+      return
+    }
     // 历史活动数据
     historyActivityList.value = response.data
     formatPcHistoryTableData()
@@ -580,15 +587,15 @@ onMounted(() => {
 
 
     <!-- 材料情报卡 -->
-    <div class="module-header">
+    <div class="module-header" >
       <div class="module-title">
         <h1>材料详情</h1>
         <h4>Item Info</h4>
       </div>
       <span class="module-tip">*移动端可左右拖动查看</span>
     </div>
-
-    <StageDetailTable v-model="recommendedStageDetailTable"></StageDetailTable>
+     <span id="StageDetailTable"></span>
+    <StageDetailTable  v-model="recommendedStageDetailTable"></StageDetailTable>
 
     <!-- 搓玉 -->
     <!--    <div class="op_title" id="orundum-table">-->
