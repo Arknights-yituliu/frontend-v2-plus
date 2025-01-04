@@ -151,26 +151,14 @@ function checkFirstPopup() {
 function exportOperatorExcel() {
   let list = [[
     '干员名称', '是否已招募', '星级', '等级', '精英化等级', '潜能等级', '通用技能等级', '1技能专精等级',
-    '2技能专精等级', '3技能专精等级', 'X模组等级', 'Y模组等级', 'D模组等级'
+    '2技能专精等级', '3技能专精等级', 'χ分支模组', 'γ分支模组', 'Δ分支模组', 'α分支模组'
   ]]
-  for (const operator in operatorList.value) {
-    list.push([
-      operator.name,
-      operator.own,
-      operator.rarity,
-      operator.level,
-      operator.elite,
-      operator.potential,
-      operator.mainSkill,
-      operator.skill1,
-      operator.skill2,
-      operator.skill3,
-      operator.modX,
-      operator.modY,
-      operator.modD,
-    ])
+  for (const operator of operatorList.value) {
+    const {name,own,rarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA} = operator
+    list.push([name,own,rarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA])
   }
 
+  console.log(list)
 
   exportExcel('干员练度表', list)
 }

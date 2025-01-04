@@ -1,7 +1,20 @@
 import OperatorTable from '/src/static/json/game-data/operator_table.json'
 import SkillTable from '/src/static/json/game-data/skill_table.json'
+import skillIcon from "@/components/sprite/SkillIcon.vue";
 
+let operatorList = []
 
+for (const charId in OperatorTable) {
+    const operator = OperatorTable[charId];
+    let {name, profession,rarity} = operator
+    console.log(rarity)
+    rarity = textParseInt(rarity)
+    if(rarity<5){
+        continue
+    }
+    const item = {charId: charId, name: name, profession: profession,rarity:rarity};
+    operatorList.push(item)
+}
 
 
 function textParseInt(text) {
@@ -43,9 +56,23 @@ function formatBuff(blackboard) {
         }
     }
 
-    projectile_extend
+    if ('hp_recovery_per_sec_ratio' === key) {
+        return {
+            zone: 'B',
+            value: value,
+            source: 'skill',
+            type: 'healing',
+        }
+    }
 
-
+    if ('projectile_delay_time' === key) {
+        return {
+            zone: 'B',
+            value: value,
+            source: 'skill',
+            type: 'delay',
+        }
+    }
 }
 
 function getAttributes(operatorInfo) {
@@ -68,7 +95,7 @@ function getAttributes(operatorInfo) {
     }
 }
 
-function getTalentsAttributes(operatorInfo) {
+function getTalents(operatorInfo) {
     const talents = operatorInfo.talents
     let talentsOptions = []
     if (!talents) {
@@ -78,6 +105,7 @@ function getTalentsAttributes(operatorInfo) {
         const talent = talents[index]
         let options = []
         const candidates = talent.candidates
+        let name = ''
         for (const candidate of candidates) {
             const phase = textParseInt(candidate.unlockCondition.phase)
             const potentialRank = candidate.requiredPotentialRank
@@ -86,10 +114,12 @@ function getTalentsAttributes(operatorInfo) {
             if (phase < 2) {
                 continue;
             }
+
+            name = candidate.name
             for (const blackboard of blackboards) {
                 const buff = formatBuff(blackboard);
-                if(buff){
-                    buffs.push()
+                if (buff) {
+                    buffs.push(buff)
                 }
             }
 
@@ -99,23 +129,86 @@ function getTalentsAttributes(operatorInfo) {
                 buffs: buffs
             })
         }
-        talentsOptions.push(options)
+
+        talentsOptions.push({
+            name: name,
+            options: options,
+        })
+    }
+    return talentsOptions
+}
+
+
+function getSkillInfo(operatorInfo) {
+    const skills = operatorInfo.skills
+    let skillOptions = []
+    for (const skill of skills) {
+        let options = []
+        let name = ''
+        const skillId = skill.skillId;
+        const skillTableElement = SkillTable[skillId];
+        let iconId = skillTableElement.iconId;
+        if(!iconId){
+            iconId = skillId
+        }
+        iconId.replace('[','_')
+        iconId.replace(']','_')
+        const levels = skillTableElement.levels
+        for (const index in levels) {
+            if(index<7){
+                continue
+            }
+            const level = levels[index];
+            name = level.name
+            const blackboard = level.blackboard
+            let buffs = []
+            for (const item of blackboard) {
+                const buff = formatBuff(blackboard);
+                if (buff) {
+                    buffs.push(buff)
+                }
+            }
+            options.push({
+                rank: parseInt(index) + 1,
+                buffs: buffs
+            })
+        }
+        skillOptions.push({
+            skillId:skillId,
+            iconId: iconId,
+            name: name,
+            options: options,
+        })
     }
 
-    return talentsOptions
-
+    return skillOptions
 }
 
 
+function getOperatorInfo(charId) {
+    const operatorInfo = OperatorTable[charId]
 
-function getOperatorInfo(){
-    const operatorInfo = OperatorTable['char_1039_thorn2']
+    const {name} = operatorInfo
+
     const attributes = getAttributes(operatorInfo)
-    console.log(attributes)
-    const talentsAttributes = getTalentsAttributes(operatorInfo);
-    console.log(talentsAttributes)
+
+    const talents = getTalents(operatorInfo);
+
+    const skills = getSkillInfo(operatorInfo)
+
+    return {
+        name: name,
+        charId:charId,
+        skillIndex:0,
+        skillRank:3,
+        potentialRank:4,
+        attributes: attributes,
+        talents: talents,
+        skills: skills,
+        panel:[]
+    }
 }
 
 
-export {getOperatorInfo}
+export {getOperatorInfo,operatorList}
 

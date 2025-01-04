@@ -25,7 +25,7 @@ const logDict = {
 
 
 
-function char_1039_thorn2(operatorInfo, supportBuff) {
+function char_1039_thorn2(operatorInfo,skillIndex, buffs) {
 
     //天赋
     //攻击力+10%，攻击范围内存在其他干员时，自身投掷的炼金单元持续时间延长3秒
@@ -41,45 +41,44 @@ function char_1039_thorn2(operatorInfo, supportBuff) {
         action: '伤害',
     }
 
+    if(skillIndex===1){
+        _skill1(operatorInfo,buffs)
+    }
+
     function _skill1(operatorInfo, buffs) {
         //解构出干员攻击力atk（不含天赋），技能信息，天赋信息
-        let log = []
-        let {atk, skillInfo} = operatorInfo
-        let {duration, spCost} = skillInfo
+
+        const {attributes, skillInfo} = operatorInfo
+        const {atk} = attributes
+        const {duration, spCost} = skillInfo
         buffs.sort((a, b) => a.zone - b.zone)
-        log.push(`技能每秒的治疗量为${atk}`)
 
-        const healingHitResult = getHealingHit(atk, buffs, log);
-        log = healingHitResult.log
-        const healingHit = healingHitResult.result
+        const healingHitResult = getHealingHit(atk, buffs);
+        const {hit,log} = healingHitResult
 
-        const result = deepClone(operatorCalculatorResult);
-
-        result.hps.value = atk
         let hpsData = []
         const skillCycle = duration < spCost ? spCost : duration
         for (let i = 0; i < 2; i++) {
             for (let second = 1; second <= skillCycle; second++) {
                 if (second <= duration) {
-                    hpsData.push(healingHit)
+                    hpsData.push(hit)
                 } else {
                     hpsData.push(0)
                 }
             }
         }
-        result.hps.data = hpsData
+
+        const finalResult = deepClone(operatorCalculatorResult);
+        finalResult.hps.value = hit
+        finalResult.hps.data = hpsData
+        finalResult.hps.log = log
     }
 
     function _skill2(operatorInfo, supportBuff) {
         const {skillInfo} = operatorInfo
 
-        const {hpRatio} = skillInfo
-        return {
-            hps: finalAtk,
-            dps: 0,
-            dph: 0,
-            hph: finalAtk,
-        }
+
+
     }
 
 }
@@ -91,39 +90,20 @@ function getOperatorData() {
 
 function getHealingHit(atk, buffs, log) {
     let healing = atk
-
-
     for (const buff of buffs) {
         const {zone, value,  source, type} = buff
-        const last = healing
         if (!('healing' === type || 'atk' === type)) {
             continue
         }
-        let text = `治疗量受到${logDict[source]}的${logDict[zone]}从${last}提升为${healing}`
-        if ("A" === zone) {
-            healing += value
-            text += `（${last}+${value}=${healing}）`
-        }
+        let text ='治疗量'
 
-        if ("B" === zone) {
-            healing += healing * value
-            text += `（${last}+${last}*${value}=${healing}）`
-        }
-
-        if ("C" === zone) {
-            healing += value
-            text += `（${last}+${value}=${healing}）`
-        }
-
-        if ("D" === zone) {
-            healing += value
-            text += `（${last}*${value}=${healing}）`
-        }
-
+        const result = ABCDZoneBuff(value,zone,text)
+        healing = result.value
+        text = result.text
         log.push(text)
     }
 
-    return {result: healing, log: log}
+    return {hit: healing, log: log}
 }
 
 
@@ -132,36 +112,54 @@ function getDamageHit(atk, buffs, log) {
 
     buffs.sort((a, b) => a.zone - b.zone)
     for (const buff of buffs) {
-        const {zone, value, type, action} = buff
-        const last = healing
-        if (!('damage' === action || 'atk' === action)) {
+        const {zone, value, source,type} = buff
+        const oldValue = healing
+        if (!('damage' === type || 'atk' === type)) {
             continue
         }
-        let text = `治疗量受到${logDict[type]}的${logDict[zone]}从${last}提升为${healing}`
-        if ("A" === zone) {
-            healing += value
-            text += `（${last}+${value}=${healing}）`
-        }
+        let text = ''
 
-        if ("B" === zone) {
-            healing += healing * value
-            text += `（${last}+${last}*${value}=${healing}）`
-        }
-
-        if ("C" === zone) {
-            healing += value
-            text += `（${last}+${value}=${healing}）`
-        }
-
-        if ("D" === zone) {
-            healing += value
-            text += `（${last}*${value}=${healing}）`
-        }
+        const result = ABCDZoneBuff(value,zone,text)
+        healing = result.value
+        text = result.text
 
         log.push(text)
     }
 
-    return {result: healing, log: log}
+    return {hit: healing, log: log}
+}
+
+
+function ABCDZoneBuff(value,type,zone,text){
+    const oldValue = value
+
+
+    let process = ''
+    if ("A" === zone) {
+        value += value
+        process = `（${oldValue}+${value}=${value}）`
+    }
+
+    if ("B" === zone) {
+        value += value * value
+        process = `（${oldValue}+${oldValue}*${value}=${value}）`
+    }
+
+    if ("C" === zone) {
+        value += value
+        process = `（${oldValue}+${value}=${value}）`
+    }
+
+    if ("D" === zone) {
+        value += value
+        process = `（${oldValue}*${value}=${value}）`
+    }
+
+    text += `受到${logDict[type]}的${logDict[zone]}从${oldValue}提升为${value}——${process}`
+    return {
+        value:value,
+        text:text
+    }
 }
 
 // function getHealing(operatorInfo, supportBuff) {
@@ -188,6 +186,12 @@ function getAttackSpeed(operatorInfo, supportBuff) {
 
 
 const operatorDPSCalculator = {
-    char_1039_thorn2: char_1039_thorn2
+    char_1039_thorn2:{
+        calculator:char_1039_thorn2
+    }
 }
+
+
+
+export {operatorDPSCalculator}
 

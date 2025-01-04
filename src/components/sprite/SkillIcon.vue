@@ -59,7 +59,7 @@ onMounted(() => {
 <template>
 
   <div :style="wrapStyle">
-    <div :style="spriteStyle" :class="`bg-${icon}`">
+    <div :style="spriteStyle" :class="`bg-skill_icon_${icon}`">
     </div>
   </div>
 

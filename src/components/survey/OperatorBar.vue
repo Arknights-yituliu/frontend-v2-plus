@@ -26,7 +26,7 @@ console.log(props.operatorInfo)
     </div>
 
     <div class="operator-skill-item" v-for="(skill,index) in operatorInfo.skill" :key="index">
-      <SkillIcon mobile-size="32" :icon="`skill_icon_${skill.iconId}`" ></SkillIcon>
+      <SkillIcon mobile-size="32" :icon="`${skill.iconId}`" ></SkillIcon>
       <img :src="`/image/survey/skill-rank-${operatorInfo[`skill${index+1}`]}-v1.jpg`"
            v-show="operatorInfo[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
     </div>

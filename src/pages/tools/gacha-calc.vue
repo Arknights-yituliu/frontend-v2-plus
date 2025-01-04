@@ -1278,11 +1278,11 @@ onMounted(() => {
   updateScheduleOption(0)
   getAndSortPackData()
 
-  ElNotification({
-    title: '2024.08.16',
-    dangerouslyUseHTMLString: true,
-    message: '<strong>1.更新了春节卡池排期（非准确排期）<br>2.修复了部分奖励计算错误的问题</strong>',
-  })
+  // ElNotification({
+  //   title: '2024.08.16',
+  //   dangerouslyUseHTMLString: true,
+  //   message: '<strong>1.更新了春节卡池排期（非准确排期）<br>2.修复了部分奖励计算错误的问题</strong>',
+  // })
 })
 
 function keepTheDecimalPoint(num, decimalPlaces) {

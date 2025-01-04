@@ -113,7 +113,7 @@ const routes = [
         path: '/tools/dps/calculator',
         text: 'DPS计算器',
         name: 'DPSCalculator',
-        display: true,
+        display: false,
         module: 'tools',
         icon: "mdi-calendar-clock",
         component: () => import('/src/pages/tools/dps/calculator.vue')
