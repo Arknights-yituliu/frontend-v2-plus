@@ -640,7 +640,7 @@ function getPeriod(index) {
 }
 
 let scheduleInfo = ref({
-  "author": "文字作者",
+  "author": "文件作者",
   "description": "文件描述",
   "id": 1702203342688921,
   "title": "文件标题",
@@ -1245,8 +1245,7 @@ onMounted(() => {
             <!--     控制中枢-->
             <div class="room-template control" :id="`control#0`"
                  :class="roomSelectedClass('control', 0)"
-                 @click="chooseRoom('control', 0)"
-            >
+                 @click="chooseRoom('control', 0)">
               <div class="room-name">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
               <OperatorAvatar v-for="(charName, index) in getRoomOperators('control', 0)" :key="index"
                               :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>

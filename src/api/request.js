@@ -24,7 +24,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response) => {
         if (response.data.code !== 200) {
-            console.log(response.status)
             cMessage(response.data.msg, "error");
             return Promise.reject(response.data);
         } else {

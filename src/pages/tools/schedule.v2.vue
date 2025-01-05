@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watch} from "vue"
 
-import '/src/assets/css/tool/schedule.css'
+import '/src/assets/css/tool/schedule.v2.css'
 import '/src/assets/css/information/building_skill_font_color.css'
 
 import SCHEDULE_TEMPLATE from '/src/static/json/build/plans_template.json'
@@ -21,9 +21,35 @@ import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {downloadJsonFile} from "/src/utils/download.js";
 import {getUserInfo} from "/src/utils/user/userInfo.js";
+import {useDisplay} from 'vuetify'
+
+const useDisplay1 = useDisplay()
+
+console.log('设备尺寸{}', useDisplay1.xs.value)
+
+import ItemImage from "@/components/sprite/ItemImage.vue";
 
 let operatorOwnMap = new Map()
 
+function buttonSize() {
+  if (useDisplay1.xs.value) {
+    return 'x-small'
+  }
+
+  return 'small'
+}
+
+let filterMainCondition = []
+let filterSecCondition = []
+
+for (const type in operatorFilterConditionTable) {
+  filterMainCondition.push(type)
+  const element = operatorFilterConditionTable[type];
+  const conditions = element.conditions
+  for (const condition of conditions) {
+    filterSecCondition.push(condition.label)
+  }
+}
 
 async function getOperatorDataByAccount() {
 
@@ -31,6 +57,10 @@ async function getOperatorDataByAccount() {
 
   const data = {
     token: userInfo.token
+  }
+
+  if (userInfo.status < 0) {
+    return
   }
 
   operatorDataAPI.getOperatorData(data).then(response => {
@@ -117,25 +147,28 @@ let scheduleTypeV2 = ref({
 
 /**
  * 获得获得房间内的干员
+ * @param scheduleIndex 当前班次索引
  * @param {string} room 设施类型
  * @param {number} index 房间编号
  * @return {*[string]} 干员组
  */
-function getRoomOperators(room, index) {
-  if (!plansTemplate.value[selectedPlanIndex.value]) {
+function getRoomOperators(scheduleIndex, room, index) {
+  // console.log("排班#",scheduleIndex," {} ",room,"#",index)
+  if (!plansTemplate.value[scheduleIndex]) {
     // cMessage(index + '-班次索引越界', 'error')
     return []
   }
-  if (!plansTemplate.value[selectedPlanIndex.value].rooms[room]) {
-    cMessage(room + '-' + translate('schedule', 'FacilityNotExist'), 'error')
-    return []
-  }
-  if (!plansTemplate.value[selectedPlanIndex.value].rooms[room][index]) {
-    cMessage(index + '-' + translate('schedule', 'OperatorIndexOutOfBounds'), 'error')
+  if (!plansTemplate.value[scheduleIndex].rooms[room]) {
+    cMessage('Facility#' + room + '-' + translate('schedule', 'schedule.FacilityNotExist'), 'error')
     return []
   }
 
-  return plansTemplate.value[selectedPlanIndex.value].rooms[room][index].operators
+  if (!plansTemplate.value[scheduleIndex].rooms[room][index]) {
+    cMessage('Operator#' + index + '-' + translate('schedule', 'schedule.OperatorIndexOutOfBounds'), 'error')
+    return []
+  }
+
+  return plansTemplate.value[scheduleIndex].rooms[room][index].operators
 }
 
 
@@ -177,11 +210,11 @@ function choosePlanTimes(num) {
  */
 function toNextPlan(index) {
   if (index < 0)
-    selectedPlanIndex.value = scheduleTypeV2.value.planTimes - 1
+    selectedScheduleIndex.value = scheduleTypeV2.value.planTimes - 1
   else if (index >= scheduleTypeV2.value.planTimes)
-    selectedPlanIndex.value = 0
+    selectedScheduleIndex.value = 0
   else
-    selectedPlanIndex.value = index
+    selectedScheduleIndex.value = index
 
   /**
    * ! not used anymore as there is no way this will ever be triggered
@@ -245,7 +278,7 @@ function getItemSprite(name) {
 //控制选择房间内干员的弹窗展开的属性
 
 //第几次换班
-let selectedPlanIndex = ref(0)
+let selectedScheduleIndex = ref(0)
 //房间类型
 let selectedRoomType = ref('trading')
 //房间序号
@@ -256,7 +289,7 @@ let selectedRoomIndex = ref(0)
  * @param {number} index 班次（班次1为0,以此类推)
  */
 function currentPlan(index) {
-  selectedPlanIndex.value = index
+  selectedScheduleIndex.value = index
 }
 
 /**
@@ -283,7 +316,7 @@ function chooseRoom(roomType, index) {
   selectedRoomIndex.value = index
 
   if ('trading' === roomType || 'manufacture' === roomType) {
-    selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedPlanIndex.value]
+    selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedScheduleIndex.value]
         .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
   }
 
@@ -293,6 +326,7 @@ function chooseRoom(roomType, index) {
 let selectBtnKey = ref({})
 let filterOperatorList = ref({})
 let filterNotOwnOperator = ref(false)
+
 
 function filterBtnStatus(key, label) {
   if (selectBtnKey.value !== `${key}+${label}`) {
@@ -401,6 +435,17 @@ const filterOperatorByOwn = debounce(() => {
   commonFilterOperator()
 }, 200)
 
+
+let operatorCheckBoxDialog = ref(false)
+
+function openOperatorCheckBoxDialog(scheduleIndex, roomType, roomIndex) {
+  selectedScheduleIndex.value = scheduleIndex
+  selectedRoomType.value = roomType
+  selectedRoomIndex.value = roomIndex
+  operatorCheckBoxDialog.value = true
+
+}
+
 /**
  * 选择该房间入驻干员
  * @param {string} charName 干员id
@@ -414,10 +459,10 @@ function chooseOperator(charName) {
     return;
   }
 
-  checkPlanDuplicateOperator(selectedPlanIndex.value, charName, true)
+  checkPlanDuplicateOperator(selectedScheduleIndex.value, charName, true)
 
 
-  plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charName)
+  plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charName)
 
   if (selectedRoomType.value === 'dormitory') {
     fillOperatorConflict(selectedRoomIndex.value)
@@ -438,7 +483,7 @@ function displayOperatorDescription(id) {
  * @returns {boolean}
  */
 function checkRoomDuplicateOperator(charName) {
-  if (plansTemplate.value[selectedPlanIndex.value]
+  if (plansTemplate.value[selectedScheduleIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.includes(charName)) {
     cMessage(translate('schedule', 'schedule.OperatorAlreadyStationed'), 'error')
@@ -454,7 +499,7 @@ function checkRoomDuplicateOperator(charName) {
  * @returns {boolean}
  */
 function checkRoomMaximum() {
-  if (plansTemplate.value[selectedPlanIndex.value]
+  if (plansTemplate.value[selectedScheduleIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
     cMessage(translate('schedule', 'schedule.FacilityFull'), 'error')
@@ -466,16 +511,19 @@ function checkRoomMaximum() {
 
 /**
  * 删除该房间中选中的干员
- * @param {string} charName 干员id
+ * @param scheduleIndex 当前选择的排班表
+ * @param roomType  房间类型
+ * @param roomIndex 房间编号
+ * @param {string} charName 干员名称
  */
-function deleteOperator(charName) {
+function deleteOperator(scheduleIndex, roomType, roomIndex, charName) {
 
-  plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
-      plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
+  plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
+      plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
         return e !== charName
       })
 
-  checkPlanDuplicateOperator(selectedPlanIndex.value, charName, false)
+  checkPlanDuplicateOperator(selectedScheduleIndex.value, charName, false)
 
 }
 
@@ -511,14 +559,14 @@ let tmpOperatorList = ref([])
  */
 function copyOperatorList() {
   tmpOperatorList.value =
-      plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators
+      plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators
 }
 
 /**
  * 粘贴干员组
  */
 function pasteOperatorList() {
-  for (const charName of plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators) {
+  for (const charName of plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators) {
     deleteOperator(charName)
   }
 
@@ -528,22 +576,22 @@ function pasteOperatorList() {
     if (!checkRoomMaximum()) {
       return;
     }
-    plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charId)
+    plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charId)
 
-    checkPlanDuplicateOperator(selectedPlanIndex.value, charId, true)
+    checkPlanDuplicateOperator(selectedScheduleIndex.value, charId, true)
   }
 }
 
 let tmpPlanData = ref({index: 0, plan: ''})
 
 function copyPlan() {
-  tmpPlanData.value.plan = JSON.stringify(plansTemplate.value[selectedPlanIndex.value])
-  tmpPlanData.value.index = selectedPlanIndex.value + 1
+  tmpPlanData.value.plan = JSON.stringify(plansTemplate.value[selectedScheduleIndex.value])
+  tmpPlanData.value.index = selectedScheduleIndex.value + 1
 }
 
 function pastePlan() {
-  plansTemplate.value[selectedPlanIndex.value] = JSON.parse(tmpPlanData.value.plan)
-  duplicateOperatorTable.value[selectedPlanIndex.value] = {}
+  plansTemplate.value[selectedScheduleIndex.value] = JSON.parse(tmpPlanData.value.plan)
+  duplicateOperatorTable.value[selectedScheduleIndex.value] = {}
 }
 
 let selectedProduct = ref("")
@@ -553,8 +601,8 @@ let selectedProduct = ref("")
  * @param {string} product 产物类型
  */
 function setProduct(product) {
-  plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].product = product
-  selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedPlanIndex.value]
+  plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].product = product
+  selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedScheduleIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
 }
 
@@ -571,16 +619,16 @@ function getItemIdByProductName(product) {
   if (product === "Originium Shard") return "3141";
 }
 
-function getRoomProduct(roomType, index) {
-  const product = plansTemplate.value[selectedPlanIndex.value].rooms[roomType][index].product
-
-  const itemId = getItemIdByProductName(product)
-  return `bg-${itemId} room-product`
+function getRoomProduct(scheduleIndex, roomType, index) {
+  // console.log("产物 {} 排班#",scheduleIndex," {} ",roomType,"#",index)
+  const product = plansTemplate.value[scheduleIndex].rooms[roomType][index].product
+  // console.log(`bg-${itemId} room-product`)
+  return getItemIdByProductName(product)
 }
 
 function fillOperatorConflict(index) {
-  if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].autofill) {
-    if (plansTemplate.value[selectedPlanIndex.value].rooms['dormitory'][index].operators) {
+  if (plansTemplate.value[selectedScheduleIndex.value].rooms['dormitory'][index].autofill) {
+    if (plansTemplate.value[selectedScheduleIndex.value].rooms['dormitory'][index].operators) {
       cMessage(translate('schedule', 'schedule.AutofillDormTip'), 'warn')
     }
   }
@@ -592,7 +640,7 @@ function fillOperatorConflict(index) {
  * @param {*} value 参数值
  */
 function setDrones(property, value) {
-  plansTemplate.value[selectedPlanIndex.value].drones[property] = value
+  plansTemplate.value[selectedScheduleIndex.value].drones[property] = value
 
 }
 
@@ -605,14 +653,14 @@ let FiammettaTargetVisible = ref(false)
  * @param {*} value 参数值
  */
 function setFiammetta(property, value) {
-  plansTemplate.value[selectedPlanIndex.value].Fiammetta[property] = value
+  plansTemplate.value[selectedScheduleIndex.value].Fiammetta[property] = value
 }
 
-watch(() => plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
+watch(() => plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
     (newVal) => {
 
       if (newVal && selectedRoomType.value === 'dormitory') {
-        if (plansTemplate.value[selectedPlanIndex.value].rooms
+        if (plansTemplate.value[selectedScheduleIndex.value].rooms
             [selectedRoomType.value][selectedRoomIndex.value].operators.length > 0) {
           cMessage(translate('schedule', 'schedule.AutofillDormTip'), 'warn')
         }
@@ -640,7 +688,7 @@ function getPeriod(index) {
 }
 
 let scheduleInfo = ref({
-  "author": "文字作者",
+  "author": "文件作者",
   "description": "文件描述",
   "id": 1702203342688921,
   "title": "文件标题",
@@ -886,59 +934,44 @@ onMounted(() => {
 
   <div class="schedule-v2-page">
 
-    <v-card class="schedule-item-card">
-      <v-card-text>
-        <v-text-field variant="outlined" hide-details density="compact"
-                      :label="translate('schedule', 'schedule.ShiftName')"
-                      v-model="plansTemplate[selectedPlanIndex].name">
-        </v-text-field>
-      </v-card-text>
-    </v-card>
-
-
-  </div>
-
-
-  <div class="schedule-page">
-    <div class="schedule-header">
-      <v-text-field density="compact" variant="outlined"
+    <div class="flex flex-wrap">
+      <!--选择基建布局和换班次数-->
+      <v-btn color="orange" variant="outlined" class="m-2"
+             @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
+        {{ translate('schedule', 'schedule.InfrastructureLayout') }}
+      </v-btn>
+      <!--输入排班id-->
+      <v-text-field density="compact" variant="outlined" hide-details width="200"
                     :label="translate('schedule', 'schedule.IdPlaceholder')"
                     v-model="scheduleImportId">
-        <template v-slot:prepend>
-          <!--选择基建布局和换班次数-->
-          <v-btn color="orange" variant="outlined" class="m-2"
-                 @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
-            {{ translate('schedule', 'schedule.InfrastructureLayout') }}
-          </v-btn>
-        </template>
-
-        <template v-slot:append>
-          <!--根据id导入排班-->
-          <v-btn color="primary" variant="outlined" class="m-2" @click="importScheduleById()">
-            {{ translate('schedule', 'schedule.ImportScheduleById') }}
-          </v-btn>
-
-          <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
-          <!--根据文件导入排版-->
-          <v-btn color="primary" variant="outlined" class="m-2" @click="chooseFile()">{{
-              translate('schedule', 'schedule.ImportScheduleFile')
-            }}
-          </v-btn>
-          <!--下载排版文件-->
-          <v-btn color="primary" variant="outlined" class="m-2" @click="saveAndDownloadScheduleFile()">
-            {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
-          </v-btn>
-
-          <!--操作指引-->
-          <v-btn color="primary" variant="outlined" class="m-2" @click="guidePopup = true">
-            {{ translate('schedule', 'schedule.GuidePopup') }}
-          </v-btn>
-        </template>
       </v-text-field>
+      <!--根据id导入排班-->
+      <v-btn color="primary" variant="outlined" class="m-2" @click="importScheduleById()">
+        {{ translate('schedule', 'schedule.ImportScheduleById') }}
+      </v-btn>
+
+      <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
+      <!--根据文件导入排版-->
+      <v-btn color="primary" variant="outlined" class="m-2" @click="chooseFile()">{{
+          translate('schedule', 'schedule.ImportScheduleFile')
+        }}
+      </v-btn>
+      <!--下载排版文件-->
+      <v-btn color="primary" variant="outlined" class="m-2" @click="saveAndDownloadScheduleFile()">
+        {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
+      </v-btn>
+
+      <!--操作指引-->
+      <v-btn color="primary" variant="outlined" class="m-2" @click="guidePopup = true">
+        {{ translate('schedule', 'schedule.GuidePopup') }}
+      </v-btn>
     </div>
-    <!-- TODO separate various paragraphs and translate them -->
+
     <v-dialog v-model="guidePopup">
       <v-card>
+        <div class="flex justify-end m-8" @click="guidePopup=false">
+          <v-icon icon="mdi-close"></v-icon>
+        </div>
         <v-card-text>
           <div class="guide-box">
             <h1 style="text-align: center">排班生成器使用说明</h1>
@@ -963,10 +996,12 @@ onMounted(() => {
       </v-card>
     </v-dialog>
 
-    <span class="schedule-version">V1.3.6</span>
-
-    <v-dialog v-model="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
+    <!--    填写文件描述和选择基建类型、换班次数-->
+    <v-dialog v-model="scheduleTypePopupVisible">
       <v-card>
+        <div class="flex justify-end m-8" @click="scheduleTypePopupVisible=false">
+          <v-icon icon="mdi-close"></v-icon>
+        </div>
         <v-card-text>
           <div class="schedule-set-wrap">
             <!--换班表名称-->
@@ -980,9 +1015,8 @@ onMounted(() => {
               <span>{{ translate('schedule', 'schedule.ScheduleDescription') }}</span>
               <v-text-field density="compact" hide-details variant="outlined" v-model="scheduleInfo.description">
               </v-text-field>
-
             </div>
-            <!--换班表完成后的描述-->
+            <!--文件作者-->
             <div class="schedule-set-bar">
               <span>{{ translate('schedule', 'schedule.Author') }}</span>
               <v-text-field density="compact" hide-details variant="outlined" v-model="scheduleInfo.author">
@@ -1015,385 +1049,262 @@ onMounted(() => {
       </v-card>
     </v-dialog>
 
-    <div class="maa-schedule-wrap-v2">
-      <div class="maa-schedule-v2">
-        <div class="schedule-set-wrap">
-          <div class="schedule-set-bar">
+    <div class="schedule-box-container">
+      <div class="flex schedule-box">
+        <v-card class="schedule-item-card" v-for="(i,scheduleIndex) in scheduleTypeV2.planTimes">
+          <v-list density="compact">
             <!--当前换班表名称-->
-            <span>{{ translate('schedule', 'schedule.ShiftName') }}</span>
-            <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].name"/></div>
-            <!--当前换班表描述-->
-            <span>{{ translate('schedule', 'schedule.ShiftDescription') }}</span>
-            <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].description"/></div>
-            <!--当前换班表完成后的描述-->
-            <span>{{ translate('schedule', 'schedule.ShiftDescriptionPost') }}</span>
-            <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].description_post"/></div>
-          </div>
-
-          <div class="schedule-set-bar-short">
+            <v-list-item>
+              <v-list-item-title>
+                <span class="font-bold">{{ translate('schedule', 'schedule.ShiftName') }}</span>
+              </v-list-item-title>
+              <v-text-field variant="outlined" hide-details density="compact"
+                            v-model="plansTemplate[scheduleIndex].name">
+              </v-text-field>
+            </v-list-item>
+            <!--排班表描述-->
+            <v-list-item>
+              <v-list-item-title>
+                <span class="font-bold">{{ translate('schedule', 'schedule.ShiftDescription') }}</span>
+              </v-list-item-title>
+              <v-text-field density="compact" hide-details variant="outlined"
+                            v-model="plansTemplate[scheduleIndex].description">
+              </v-text-field>
+            </v-list-item>
+            <!--换班表完成后的描述-->
+            <v-list-item>
+              <v-list-item-title>
+                <span class="font-bold">{{ translate('schedule', 'schedule.ShiftDescriptionPost') }}</span>
+              </v-list-item-title>
+              <v-text-field density="compact" hide-details variant="outlined"
+                            v-model="plansTemplate[scheduleIndex].description_post">
+              </v-text-field>
+            </v-list-item>
             <!--是否使用无人机-->
-            <span style="width: 140px">{{ translate('schedule', 'schedule.UseDrones') }}</span>
-            <div style="width: 70px">
-              <v-switch color="success" density="compact" hide-details
-                        v-model="plansTemplate[selectedPlanIndex].drones.enable"></v-switch>
-            </div>
-            <!--换班前后-->
-            <span style="width: 80px">{{ translate('schedule', 'schedule.Usage') }}</span>
-            <div style="width: 200px">
-              <v-btn color="primary" :variant="'pre' === plansTemplate[selectedPlanIndex].drones.order?void 0:`tonal`"
-                     @click="setDrones('order', 'pre')"
+            <v-list-item>
+              <v-list-item-title>
+                <span class="font-bold">{{ translate('schedule', 'schedule.DronesSet') }}</span>
+              </v-list-item-title>
+              <div class="flex justify-space-between align-center">
+                <span class="opacity-70">{{ translate('schedule', 'schedule.UseDrones') }}</span>
+
+                <v-switch color="success" density="compact" hide-details
+                          v-model="plansTemplate[scheduleIndex].drones.enable"></v-switch>
+              </div>
+              <!--无人机用在换班前或后-->
+              <div class="opacity-70">{{ translate('schedule', 'schedule.UseDronesBeforeOrAfterAShift') }}</div>
+              <v-btn color="primary" :variant="'pre' === plansTemplate[scheduleIndex].drones.order?void 0:`tonal`"
+                     @click="setDrones('order', 'pre')" class="m-4"
                      :text=" translate('schedule', 'schedule.PreShift')">
               </v-btn>
-
-              <v-btn color="primary" :variant="'post' === plansTemplate[selectedPlanIndex].drones.order?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.PostShift')"
+              <v-btn color="primary" :variant="'post' === plansTemplate[scheduleIndex].drones.order?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.PostShift')" class="m-4"
                      @click="setDrones('order', 'post')">
               </v-btn>
-            </div>
-            <!--目标房间-->
-            <span>{{ translate('schedule', 'schedule.TargetRoom') }}</span>
-            <div style="width: 220px">
+              <!--目标房间-->
+              <div class="opacity-70">{{ translate('schedule', 'schedule.TargetRoom') }}</div>
               <v-btn color="primary"
-                     :variant="'trading' === plansTemplate[selectedPlanIndex].drones.room?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.TradingPost')"
+                     :variant="'trading' === plansTemplate[scheduleIndex].drones.room?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.TradingPost')" class="m-4"
                      @click="setDrones('room', 'trading')">
               </v-btn>
               <v-btn color="primary"
-                     :variant="'manufacture' === plansTemplate[selectedPlanIndex].drones.room?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.Factory')"
+                     :variant="'manufacture' === plansTemplate[scheduleIndex].drones.room?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.Factory')" class="m-4"
                      @click="setDrones('room', 'manufacture')">
 
               </v-btn>
-            </div>
-            <!--房间编号-->
-            <span>{{ translate('schedule', 'schedule.RoomNumber') }}</span>
-            <div>
-              <v-btn color="primary" :variant="(index) === plansTemplate[selectedPlanIndex].drones.index?void 0:`tonal`"
-                     :text="index"
+              <!--房间编号-->
+              <div class="opacity-70">{{ translate('schedule', 'schedule.RoomNumber') }}</div>
+              <v-btn color="primary" :variant="(index) === plansTemplate[scheduleIndex].drones.index?void 0:`tonal`"
+                     :text="index" class="m-4"
                      @click="setDrones('index', (index))" v-for="index in 5" :key="index">
               </v-btn>
-            </div>
-          </div>
+            </v-list-item>
+            <!--菲亚梅塔设置-->
+            <v-list-item>
+              <v-list-item-title>
+                <span class="font-bold">{{ translate('schedule', 'schedule.FiammettaSet') }}</span>
+              </v-list-item-title>
+              <div class="flex align-center justify-space-between">
+                <div class="opacity-70">{{ translate('schedule', 'schedule.UseFiammetta') }}</div>
+                <v-switch color="success" density="compact" hide-details
+                          v-model="plansTemplate[scheduleIndex].Fiammetta.enable"></v-switch>
 
-          <div class="schedule-set-bar-short">
-            <!--是否使用菲亚梅塔-->
-            <span style="width: 140px">{{ translate('schedule', 'schedule.UseFiammetta') }}</span>
-            <div style="width: 70px">
-              <v-switch color="success" density="compact" hide-details
-                        v-model="plansTemplate[selectedPlanIndex].Fiammetta.enable"></v-switch>
-            </div>
-            <span style="width: 80px">{{ translate('schedule', 'schedule.Usage') }}</span>
-            <div style="width: 200px">
+              </div>
+
+              <div class="opacity-70">{{ translate('schedule', 'schedule.Usage') }}</div>
+
               <v-btn color="primary"
-                     :variant="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.PreShift')"
+                     :variant="'pre' === plansTemplate[scheduleIndex].Fiammetta.order?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.PreShift')" class="m-4"
                      @click="setFiammetta('order', 'pre')">
               </v-btn>
               <v-btn color="primary"
-                     :variant="'post' === plansTemplate[selectedPlanIndex].Fiammetta.order?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.PostShift')"
+                     :variant="'post' === plansTemplate[scheduleIndex].Fiammetta.order?void 0:`tonal`"
+                     :text="translate('schedule', 'schedule.PostShift')" class="m-4"
                      @click="setFiammetta('order', 'post')">
               </v-btn>
-            </div>
-            <!--恢复目标-->
-            <span>{{ translate('schedule', 'schedule.RecoveryTarget') }}</span>
-            <div style="height: 65px">
-              <!--<div class="room-avatar-sprite-wrap" @click="Fiammetta_target_visible=true">-->
-              <!--  <div :class="getAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
-              <!--</div>-->
 
-              <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible = true">
-                <div :class="getOptionAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>
+              <div class="flex align-center ">
+                <div class="opacity-70">{{ translate('schedule', 'schedule.RecoveryTarget') }}</div>
+                <div class="spacer-12"></div>
+                <OperatorAvatar size="50" class="shadow-md" @click="FiammettaTargetVisible=true"
+                                :char-id="getCharId(plansTemplate[scheduleIndex].Fiammetta.target)"></OperatorAvatar>
               </div>
-            </div>
-          </div>
-
-          <div class="schedule-set-bar-short">
-            <!--定时换班-->
-            <span class="room-set-description">{{ translate('schedule', 'schedule.TimedShiftChange') }}</span>
-            <v-switch color="success" density="compact" hide-details
-                      v-model="isPeriod"></v-switch>
-            <!--不选择则按班次顺序执行-->
-            <div class="schedule-set-tip">&emsp;{{ translate('schedule', 'schedule.TimedShiftChangeTip') }}</div>
-          </div>
-
-          <!--定时换班-->
-          <div class="schedule-set-bar-short" style="flex-wrap:wrap;padding-bottom: 20px">
-            <div class="execution-time" v-for="(num, index) in scheduleTypeV2.planTimes" :key="index">
-              <span>{{ translate('schedule', 'schedule.Shift') }}{{ num }}</span>
-              <el-time-picker v-model="executionTimeList[index][0]" placeholder="Arbitrary time" style="width: 180px"/>
-              <span>to</span>
-              <el-time-picker v-model="executionTimeList[index][1]" placeholder="Arbitrary time" style="width: 180px"/>
-            </div>
-          </div>
-        </div>
 
 
-        <!--肥鸭的选择弹窗-->
-        <v-dialog v-model="FiammettaTargetVisible">
-          <v-card>
-            <v-card-text>
-              <div class="filter-condition-box">
-                <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable" v-show="room.display"
-                     :key="key">
-                  <v-btn :color="room.color" variant="text"
-                         :text="translate('schedule', room.name)">
-                  </v-btn>
-                  <v-btn v-for="(condition, index) in room.conditions" :key="index"
-                         color="primary" :variant="filterBtnStatus(key, condition.label)"
-                         :text="translate('schedule', condition.label)"
-                         @click="filterOperatorByTag(condition, key)">
-                  </v-btn>
+            </v-list-item>
+            <!--            时间选择器-->
+            <v-list-item>
+              <v-list-item-title>
+                <span class="font-bold">{{ translate('schedule', 'schedule.ShiftRunTime') }}</span>
+              </v-list-item-title>
+              <el-time-picker v-model="executionTimeList[scheduleIndex][0]" placeholder="Arbitrary time"
+                              style="width: 120px"/>
+              to
+              <el-time-picker v-model="executionTimeList[scheduleIndex][1]" placeholder="Arbitrary time"
+                              style="width: 120px"/>
+            </v-list-item>
+
+            <v-list-item>
+              <!--     控制中枢-->
+              <div class="room-template control" :id="`control#0`"
+                   @click="openOperatorCheckBoxDialog(scheduleIndex,'control',0)">
+                <div class="room-title">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
+                <div class="flex justify-center">
+                  <OperatorAvatar v-for="(charName, operator) in getRoomOperators(scheduleIndex,'control', 0)"
+                                  :key="operator" @click="deleteOperator(scheduleIndex,'control',0,charName)"
+                                  :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
+                </div>
+              </div>
+              <!--    贸易站-->
+              <div v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
+                   class="room-template trading" :id="`trading#${tradingIndex}`"
+                   @click="chooseRoom('trading', tradingIndex)">
+                <div class="flex flex-wrap align-center justify-center">
+                  <div>{{ translate('schedule', 'schedule.TradingPost') }}#{{ num }}</div>
+                  <div class="spacer-12"></div>
+                  <ItemImage size="36" mobile-size="36"
+                             :item-id="getRoomProduct(scheduleIndex,'trading', tradingIndex)"></ItemImage>
+                </div>
+                <div class="settlement-operator">
+                  <OperatorAvatar
+                      v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'trading', tradingIndex)"
+                      :key="operatorIndex"
+                      :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
                 </div>
               </div>
 
-              <div class="operator-check-box-group" style="width: 550px">
-                <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"
-                     @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
-                  <div :class="getOptionAvatar(operator.charId)"></div>
-                  <div class="operator-check-label">{{ operator.name }}</div>
+              <!--  制造站-->
+              <div v-for="(num, manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"
+                   class="room-template manufacture" :id="`manufacture#${manufactureIndex}`"
+                   @click="chooseRoom('manufacture', manufactureIndex)">
+                <div class="flex flex-wrap align-center justify-center">
+                  <div>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</div>
+                  <div class="spacer-12"></div>
+                  <ItemImage :item-id="getRoomProduct(scheduleIndex,'manufacture', manufactureIndex)"></ItemImage>
+                </div>
+                <div class="settlement-operator">
+                  <OperatorAvatar
+                      v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'manufacture', manufactureIndex)"
+                      :key="operatorIndex"
+                      :char-id="getCharId(charName)" class="m-4">
+                  </OperatorAvatar>
                 </div>
               </div>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
 
+            </v-list-item>
 
-        <div id="room-set">
+            <v-list-item>
 
-          <div class="schedule-set-bar-short">
-            <!--按顺序入驻-->
-            <span class="room-set-description">{{ translate('schedule', 'schedule.OrderedStationing') }}</span>
-            <v-switch color="success" density="compact" hide-details
-                      v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
+            </v-list-item>
 
-            </v-switch>
-            <!--补满空位-->
-            <span class="room-set-description">{{ translate('schedule', 'schedule.Autofill') }}</span>
-            <v-switch color="success" density="compact" hide-details
-                      v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
+            <v-list-item>
 
-            </v-switch>
-            <!--补满空位功能提示-->
-            <i class="iconfont icon-question schedule-question">
-              <span class="schedule-tip">{{ translate('schedule', 'schedule.SkipRoomTip') }}</span>
-            </i>
-          </div>
-          <div class="schedule-set-bar-short">
-            <!--跳过房间-->
-            <span class="room-set-description">{{ translate('schedule', 'schedule.SkipRoom') }}</span>
-            <v-switch color="success" density="compact" hide-details
-                      v-model="plansTemplate[selectedPlanIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
-            </v-switch>
-            <!--选择产物-->
-            <span class="room-set-description">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
-            <div class="product-image-wrap" @click="setProduct(product.value)"
-                 v-for="(product, index) in productTable[selectedRoomType]" :key="index">
-              <div :class="getItemSprite(product.id)"></div>
-            </div>
-          </div>
-        </div>
+            </v-list-item>
 
-
-        <div class="room-wrap">
-          <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex - 1)">
-            <i class="iconfont icon-arrow-left" style="font-size: 48px">
-            </i>
-          </div>
-          <!--  左边站点-->
-          <div class="room-wrap-left">
-            <!--<div class="room-template blank" style="width: 180px;" -->
-            <!-- v-for="index in 3" :key="index">-->
-            <!--</div>-->
-            <div class="copy-btn-wrap">
-            </div>
-            <!--    贸易站-->
-            <div class="room-template trading" :id="`trading#${index}`"
-                 :class="roomSelectedClass('trading', index)"
-                 v-for="(num, index) in scheduleTypeV2.trading" :key="index"
-                 @click="chooseRoom('trading', index)">
-              <div class="room-name">
-                <span>{{ translate('schedule', 'schedule.TradingPost') }}#{{ num }}</span>
-                <div :class="getRoomProduct('trading', index)"></div>
-              </div>
-              <div class="settlement-operator">
-                <OperatorAvatar v-for="(charName, index) in getRoomOperators('trading', index)" :key="index"
-                                :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
-              </div>
-            </div>
-
-            <!--  制造站-->
-            <div class="room-template manufacture" :id="`manufacture#${index}`"
-                 :class="roomSelectedClass('manufacture', index)"
-                 v-for="(num, index) in scheduleTypeV2.manufacture" :key="index"
-                 @click="chooseRoom('manufacture', index)">
-              <div class="room-name">
-                <span>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</span>
-                <div :class="getRoomProduct('manufacture', index)"></div>
-              </div>
-              <div class="settlement-operator">
-                <OperatorAvatar v-for="(charName, index) in getRoomOperators('manufacture', index)" :key="index"
-                                :char-id="getCharId(charName)" class="m-4">
-
-                </OperatorAvatar>
-              </div>
-            </div>
-
-            <!--  发电站-->
-            <div class="room-template power" :id="`power#${index}`"
-                 :class="roomSelectedClass('power', index)"
-                 v-for="(num, index) in scheduleTypeV2.power" :key="index"
-                 @click="chooseRoom('power', index)">
-              <div class="room-name">{{ translate('schedule', 'schedule.PowerPlant') }}#{{ num }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('power', index)" :key="index"
-                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
-            </div>
-
-            <div class="copy-btn-wrap">
-            <span>
-              {{ translate('schedule', 'schedule.TempPlan') }}&nbsp;
-              {{ translate('schedule', 'schedule.Shift') }}
-              {{ tmpPlanData.index }}
-            </span>
-              <v-btn color="primary" @click="copyPlan()" :text="translate('schedule', 'schedule.CopyPlan')">
-              </v-btn>
-              <v-btn color="primary" @click="pastePlan()" :text="translate('schedule', 'schedule.PastePlan')">
-              </v-btn>
-            </div>
-          </div>
-
-          <div class="room-wrap-center">
-            <!--     控制中枢-->
-            <div class="room-template control" :id="`control#0`"
-                 :class="roomSelectedClass('control', 0)"
-                 @click="chooseRoom('control', 0)"
-            >
-              <div class="room-name">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('control', 0)" :key="index"
-                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
-            </div>
-            <!--     宿舍-->
-            <div class="room-template dormitory" :id="`dormitory#${index}`"
-                 :class="roomSelectedClass('dormitory', index)"
-                 v-for="(num, index) in scheduleTypeV2.dormitory" :key="index"
-                 @click="chooseRoom('dormitory', index)">
-              <div class="room-name">{{ translate('schedule', 'schedule.Dormitory') }}#{{ num }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('dormitory', index)" :key="index"
-                              :char-id="getCharId(charName)" class="m-4">
-
-              </OperatorAvatar>
-            </div>
-          </div>
-
-          <div class="room-wrap-right">
-            <div class="room-template blank" style="width: 100px;"></div>
-            <!--     会客室-->
-            <div class="room-template meeting" :id="`meeting#0`"
-                 :class="roomSelectedClass('meeting', 0)"
-                 @click="chooseRoom('meeting', 0)"
-            >
-              <div class="room-name">{{ translate('schedule', 'schedule.ReceptionRoom') }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('meeting', 0)" :key="index"
-                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
-            </div>
-            <!--      加工站-->
-            <div class="room-template processing" :id="`processing#0`"
-                 :class="roomSelectedClass('processing', 0)"
-                 @click="chooseRoom('processing', 0)">
-              <div class="room-name">{{ translate('schedule', 'schedule.Workshop') }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('processing', 0)" :key="index"
-                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
-            </div>
-
-            <!--     办公室 -->
-            <div class="room-template hire" :id="`hire#0`"
-                 :class="roomSelectedClass('hire', 0)" @click="chooseRoom('hire', 0)">
-              <div class="room-name">{{ translate('schedule', 'schedule.Office') }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('hire', 0)" :key="index"
-                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
-            </div>
-            <div class="room-template blank" style="width: 100px;"></div>
-          </div>
-
-          <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex + 1)"><i class="iconfont icon-arrow-right"
-                                                                                     style="font-size: 48px"></i></div>
-        </div>
-
-        <!--选择当前排班表-->
-        <div class="schedule-set-bar" style="justify-content: center">
-          <span>{{ translate('schedule', 'schedule.CurrentShift') }}</span>
-          <v-btn color="primary" :variant="index === selectedPlanIndex?void 0:`tonal`"
-                 v-for="(num, index) in scheduleTypeV2.planTimes" :key="index" @click="currentPlan(index)"
-                 class="room_times"
-                 style="margin: 0 8px">
-            {{ translate('schedule', 'schedule.Shift') }}{{ num }}
-          </v-btn>
-        </div>
-
-
-        <div class="room-set-wrap">
-          <div class="room-set">
-            <!--入驻的干员-->
-            <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsStationed') }}</span>
-            <div class="selected-operator-wrap">
-              <div class="room-avatar-sprite-wrap"
-                   v-for="(charId, index) in getRoomOperators(selectedRoomType, selectedRoomIndex)" :key="index">
-                <div :class="getAvatar(charId)"></div>
-                <i class="iconfont icon-error operator-delete-icon" @click="deleteOperator(charId)">
-                </i>
-              </div>
-            </div>
-            <v-btn color="primary" variant="tonal" @click="copyOperatorList()"
-                   :text="translate('schedule', 'schedule.Copy')">
-            </v-btn>
-            <v-btn color="primary" variant="tonal" @click="pasteOperatorList()"
-                   :text="translate('schedule', 'schedule.Paste')">
-            </v-btn>
-            <!--复制的干员-->
-            <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsClipboard') }}</span>
-            <div class="selected-operator-wrap">
-              <div class="room-avatar-sprite-wrap" v-for="(charId, index) in tmpOperatorList" :key="index">
-                <div :class="getAvatar(charId)"></div>
-              </div>
-            </div>
-          </div>
-
-          <!--筛选干员-->
-          <div class="filter-condition-box">
-            <div class="condition-bar" v-for="(conditionType, key) in operatorFilterConditionTable"
-                 v-show="conditionType.display" :key="key">
-              <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-              <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"
-                     color="primary" :variant="filterBtnStatus(key, condition.label)"
-                     @click="filterOperatorByTag(condition, key)">
-                {{ translate('schedule', condition.label) }}
-              </v-btn>
-            </div>
-            <span class="condition-tip">{{ translate('schedule', 'schedule.developerTip') }}</span>
-          </div>
-
-          <div class="schedule-operator-search-input-box">
-            <div class="input-group">
-              <input class="input-base" id="input-id" style="width:500px" @input="searchOperatorDebounce()"
-                     v-model="searchInputText">
-              <span class="input-group-text">{{ translate('schedule', 'schedule.searchInputTip') }}</span>
-            </div>
-            <v-btn color="primary" :variant="filterNotOwnOperator?void 0:`tonal`" @click="filterOperatorByOwn">隐藏未招募干员
-            </v-btn>
-          </div>
-          <div class="operator-check-box-group">
-            <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"
-                 :id="operator.charId" class="operator-check-box-option">
-              <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>
-              <div class="operator-check-label">{{ operator.name }}</div>
-              <span class="operator-building-skill-description" :id="`${operator.charId}-description`"
-                    v-html="operator.description"></span>
-            </div>
-          </div>
-        </div>
+          </v-list>
+        </v-card>
       </div>
     </div>
   </div>
+
+  <v-dialog v-model="operatorCheckBoxDialog" max-width="800">
+    <v-card class="m-a">
+      <div class="flex justify-end m-8" @click="operatorCheckBoxDialog=false">
+        <v-icon icon="mdi-close"></v-icon>
+      </div>
+
+
+      <div class="opacity-70">{{ translate('schedule', 'schedule.OperatorsStationed') }}</div>
+      <div class="flex m-0-8">
+        <OperatorAvatar
+            v-for="(charId, index) in getRoomOperators(selectedScheduleIndex,selectedRoomType, selectedRoomIndex)"
+            :key="index" :char-id="getCharId(charId)" class="m-4"></OperatorAvatar>
+      </div>
+
+      <div class="flex flex-wrap" v-for="(conditionType, key) in operatorFilterConditionTable"
+           v-show="conditionType.display" :key="key">
+
+        <v-btn :color="conditionType.color" variant="text" class="m-4" :size="buttonSize()">
+          {{ translate('schedule', conditionType.name) }}
+        </v-btn>
+        <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"
+               color="primary" :variant="filterBtnStatus(key, condition.label)" :size="buttonSize()"
+               @click="filterOperatorByTag(condition, key)" class="m-4">
+          {{ translate('schedule', condition.label) }}
+        </v-btn>
+      </div>
+
+      <div class="flex flex-wrap">
+        <div v-for="(operator, charId) in filterOperatorList" :key="charId"
+             @click="chooseOperator(operator.name)" class="m-4">
+          <OperatorAvatar :char-id="charId"></OperatorAvatar>
+          <div style="text-align: center">{{ operator.name }}</div>
+        </div>
+      </div>
+
+
+    </v-card>
+  </v-dialog>
+
+
+  <!--肥鸭的选择弹窗-->
+  <v-dialog v-model="FiammettaTargetVisible">
+    <v-card max-width="800" class="m-a">
+      <div class="flex justify-end m-8" @click="FiammettaTargetVisible=false">
+        <v-icon icon="mdi-close"></v-icon>
+      </div>
+      <div class="filter-condition-box">
+        <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable"
+             v-show="room.display"
+             :key="key">
+          <v-btn :color="room.color" variant="text" class="m-4"
+                 :text="translate('schedule', room.name)">
+          </v-btn>
+          <v-btn v-for="(condition, index) in room.conditions" :key="index"
+                 color="primary" :variant="filterBtnStatus(key, condition.label)"
+                 :text="translate('schedule', condition.label)"
+                 class="m-4"
+                 @click="filterOperatorByTag(condition, key)">
+          </v-btn>
+        </div>
+      </div>
+
+      <div class="operator-check-box-group">
+        <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList"
+             :key="charId"
+             @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
+          <div :class="getOptionAvatar(operator.charId)"></div>
+          <div class="operator-check-label">{{ operator.name }}</div>
+        </div>
+      </div>
+
+    </v-card>
+  </v-dialog>
+
+
 </template>
 
 <style scoped>

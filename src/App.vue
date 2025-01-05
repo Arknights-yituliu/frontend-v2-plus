@@ -32,7 +32,7 @@ import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "@/components/ComponentsContainer.vue";
 import resourceAPI from '/src/api/resource.js'
-import {addData,getDataByKey} from "/src/plugins/IndexedDB/IndexedDB.js";
+import {addData, getDataByKey} from "/src/plugins/IndexedDB/IndexedDB.js";
 import OperatorTable from '/src/static/json/game-data/operator_table.json'
 
 const theme = useTheme()
@@ -103,6 +103,30 @@ function initResource() {
   })
 }
 
+const feedbackTable = [
+  {
+    label: "Github issues",
+    description: '国内访问体验稍差一点',
+    url: 'https://github.com/Arknights-yituliu/frontend-v2-plus/issues'
+  },
+  {
+    label: "B站@罗德岛基建BETA",
+    description: '直接私信反馈',
+    url: 'https://space.bilibili.com/688411531'
+  },
+  {
+    label: "粉丝群539600566",
+    description: '进群@山桜反馈，如果不在找管理员',
+    url: 'https://jq.qq.com/?_wv=1027&k=q1z3p9Yj'
+  },
+  {
+    label: "开发群938710832",
+    description: '如果有能力自己解决问题，可以加开发群',
+    url: void 0
+  }
+]
+
+
 onMounted(() => {
   const themeSet = localStorage.getItem("Theme");
   console.log(themeSet)
@@ -114,7 +138,6 @@ onMounted(() => {
 
   // console.log(OperatorTable)
 })
-
 
 
 </script>
@@ -159,22 +182,38 @@ onMounted(() => {
       </v-app-bar>
       <v-main>
         <v-dialog v-model="feedbackPopupVisible">
-          <v-card max-width="320" class="m-a">
-            <v-card-text title="反馈方式">
-              <v-list lines="three">
-                <v-list-item title="Github issues" subtitle="国内访问体验稍差一点">
-                  <v-btn color="green" @click="openNewPage(feedbackLinkList.GitHubIssues)">点击前往</v-btn>
-                </v-list-item>
-                <v-list-item title="粉丝群539600566" subtitle="进群@山桜反馈，如果不在找管理员">
-                  <v-btn color="green" @click="openNewPage(feedbackLinkList.QQFan)">点击前往</v-btn>
-                </v-list-item>
-                <v-list-item title="B站@罗德岛基建BETA" subtitle="直接私信反馈">
-                  <v-btn color="green" @click="openNewPage(feedbackLinkList.OfficialAccount)">点击前往</v-btn>
-                </v-list-item>
-                <v-list-item title="开发群938710832" subtitle="如果有能力自己解决问题，可以加开发群">
-                </v-list-item>
-              </v-list>
-            </v-card-text>
+          <v-card max-width="500" class="m-a">
+
+              <div class="flex justify-end m-8"  @click="feedbackPopupVisible=false">
+                <v-icon icon="mdi-close"></v-icon>
+              </div>
+
+            <v-table>
+              <thead>
+              <tr>
+                <th class="text-left">
+                  反馈方式
+                </th>
+                <th class="text-left">
+                  说明
+                </th>
+                <th class="text-left">
+                  操作
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                  v-for="item in feedbackTable"
+                  :key="item.name"
+              >
+                <td>{{ item.label }}</td>
+                <td>{{ item.description }}</td>
+                <td><v-btn v-show="item.url" color="green" @click="openNewPage(item.label)">点击前往</v-btn></td>
+              </tr>
+              </tbody>
+            </v-table>
+
           </v-card>
         </v-dialog>
         <v-container>

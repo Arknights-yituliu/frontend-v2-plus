@@ -72,6 +72,10 @@
       "cn": "排班表名称",
       "en": "Title"
     },
+    "ShiftRunTime": {
+      "cn": "当前排班执行时间",
+      "en": "Shift Run Time"
+    },
     "ScheduleDescription": {
       "cn": "排班表描述",
       "en": "Schedule"
@@ -108,9 +112,17 @@
       "cn": "当前换班表完成后的描述",
       "en": "Shift Description upon Completion"
     },
+    "DronesSet": {
+      "cn": "无人机设置",
+      "en": "Drones Set"
+    },
+    "UseDronesBeforeOrAfterAShift": {
+      "cn": "使用无人机在换班前后",
+      "en": "Use Drones Before Or After A Shift"
+    },
     "UseDrones": {
       "cn": "是否使用无人机",
-      "en": "Use Drones"
+      "en": "Usage"
     },
     "Usage": {
       "cn": "换班前后",
@@ -167,6 +179,10 @@
     "UseFiammetta": {
       "cn": "是否使用菲亚梅塔",
       "en": "Use Fiammetta"
+    },
+    "FiammettaSet": {
+      "cn": "菲亚梅塔设置",
+      "en": "Fiammetta Set"
     },
     "RecoveryTarget": {
       "cn": "恢复目标",

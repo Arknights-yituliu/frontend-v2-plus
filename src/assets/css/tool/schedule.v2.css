@@ -1,0 +1,87 @@
+.schedule-v2-page{
+    margin-bottom: 40px;
+
+    .schedule-box-container{
+        width: 98% !important;
+        overflow: auto;
+    }
+
+    .schedule-box{
+       width: 2200px;
+    }
+
+   .schedule-item-card{
+       width: 300px;
+       margin: 8px;
+       .v-list-item__content{
+           overflow: initial;
+       }
+   }
+
+    .room-template {
+        padding: 4px;
+        justify-content: center;
+        margin: 4px auto;
+        border-radius: 3px;
+        font-weight: 600;
+        width: 280px;
+        height: 80px;
+        user-select: none;
+    }
+
+    .room-title{
+        width: 100%;
+        justify-content: center;
+        display: flex;
+    }
+
+
+
+    /* 设施样式 */
+    .trading {
+        background-color: #0288d115;
+        color: #0288d1;
+    }
+
+    .manufacture {
+        background-color: #ffb50015;
+        color: #ffb500;
+    }
+
+    .power {
+        background-color: #43a04715;
+        color: #43a047;
+    }
+
+    .control {
+        background-color: #43a04715;
+        color: #43a047;
+    }
+
+    .dormitory {
+        background-color: #009fb415;
+        color: #009fb4;
+    }
+
+    .meeting {
+        background-color: #7e7e7e15;
+        color: #7e7e7e;
+    }
+
+    .processing {
+        background-color: #7e7e7e15;
+        color: #7e7e7e;
+       
+    }
+
+    .hire {
+        background-color: #7e7e7e15;
+        color: #7e7e7e;
+       
+    }
+
+
+}
+
+
+

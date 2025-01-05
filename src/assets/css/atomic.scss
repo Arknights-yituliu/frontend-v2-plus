@@ -47,6 +47,10 @@
   margin: auto;
 }
 
+.m-4-a{
+  margin:4px auto;
+}
+
 .m-0-4{
   margin: auto 4px;
 }
@@ -86,7 +90,6 @@
 
 .justify-end{
   justify-content: end;
-
 }
 
 .justify-space-between{
@@ -107,7 +110,16 @@
   box-shadow: 0 0 1px 1px rgb(0,0,0,0.1);
 }
 
+
 //透明度
+.opacity-30{
+  opacity:0.3;
+}
+
+.opacity-50{
+  opacity:0.5;
+}
+
 .opacity-70{
   opacity:0.7;
 }
@@ -121,6 +133,11 @@
   font-weight: bold;
 }
 
+.spacer-12{
+  width: 12px;
+  height: 4px;
+
+}
 
 .spacer-40{
   width: 40px;

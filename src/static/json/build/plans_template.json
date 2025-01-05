@@ -139,7 +139,11 @@
       "control": [
         {
           "skip": false,
-          "operators": [],
+          "operators": ["火哨",
+            "石英",
+            "伺夜",
+            "明椒",
+            "但书"],
           "sort": false,
           "autofill": false
         }
