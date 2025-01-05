@@ -1,6 +1,6 @@
 .survey-operator-page {
-   width: 98%;
-   margin: auto;
+  width: 98%;
+  margin: auto;
 
 
   .control-checkbox {
@@ -109,10 +109,7 @@
     box-shadow: 1px 1px 2px white;
   }
 
-  .skill-name {
-    text-align: center;
-    font-size: 12px;
-  }
+
 
   .operator-equip-image-wrap {
     width: 60px;
@@ -157,8 +154,6 @@
     cursor: pointer;
     box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
   }
-
-
 
 
   .not-own-operator {
@@ -210,7 +205,6 @@
     padding: 8px;
     border: 1px solid var(--c-border-color);
   }
-
 
 
   /*干员推荐弹窗卡片样式*/
@@ -355,45 +349,53 @@
 /*干员统计容器样式*/
 .operator-statistical-page {
 
+
+
   .operator-statistical-card {
-    width: 500px;
-    .operator-statistical-item {
-      display: flex;
-      justify-content: space-between;
-      box-sizing: border-box;
-      padding: 12px 8px;
-      border-bottom: 1px solid var(--c-border-color);
-
-      .operator-info-label {
-
-      }
-
-      .operator-info-value {
-        text-align: right;
-      }
-
-    }
-
-    .detail-card-title {
-      font-weight: bolder;
-      font-size: 16px;
-      padding: 12px 0 4px;
-    }
-
-    .item-cost-data{
-      background-color: var(--c-card-background-color);
-    }
-
-    .operator-info-table {
-      margin: 4px auto;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 1px 1px 4px var(--c-box-shadow-color),-1px -1px 4px var(--c-box-shadow-color);
-      background-color: var(--c-card-background-color);
-    }
+    width: 240px;
   }
 
-  .item-cost-group{
+  .operator-ap-cost-rank-card {
+    width: 520px;
+  }
+
+  .operator-statistical-item {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--c-border-color);
+
+    .operator-info-label {
+
+    }
+
+    .operator-info-value {
+      text-align: right;
+    }
+
+  }
+
+  .detail-card-title {
+    font-weight: bolder;
+    font-size: 16px;
+    padding: 12px 0 4px;
+  }
+
+  .item-cost-data {
+    background-color: var(--c-card-background-color);
+  }
+
+  .operator-info-table {
+    margin: 4px auto;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 1px 1px 4px var(--c-box-shadow-color), -1px -1px 4px var(--c-box-shadow-color);
+    background-color: var(--c-card-background-color);
+  }
+
+
+  .item-cost-group {
     display: flex;
     margin: 4px;
     flex-wrap: wrap;
@@ -417,3 +419,6 @@
     position: absolute;
   }
 }
+
+
+

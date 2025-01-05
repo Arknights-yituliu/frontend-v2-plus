@@ -100,42 +100,44 @@ watch(() => props.modelValue.length, (newVal, oldValue) => {
 
   <div class="operator-statistical-page flex justify-center flex-wrap m-a">
     <v-card class="operator-statistical-card m-4" :title="group.title"
-            v-for="(group,index) in operatorInfo" :key="index"
-    >
-      <div class="operator-statistical-item" v-for="(data,index) in group.data" :key="index">
-        <span class="info-label">{{ data.label }}</span>
-        <span class="info-value">{{ data.value }}</span>
-      </div>
+            v-for="(group,index) in operatorInfo" :key="index">
+      <v-card-text>
+        <div class="operator-statistical-item" v-for="(data,index) in group.data" :key="index">
+          <span class="info-label">{{ data.label }}</span>
+          <span class="info-value">{{ data.value }}</span>
+        </div>
+      </v-card-text>
     </v-card>
 
     <v-card class="operator-statistical-card m-4" title="未招募干员">
       <div class="flex flex-wrap m-4">
         <OperatorAvatar :char-id="operator.charId"
-                     style="margin: 4px"
-                     v-for="(operator) in notOwnData"></OperatorAvatar>
+                        v-for="(operator) in notOwnData"></OperatorAvatar>
       </div>
     </v-card>
 
-    <v-card class="operator-statistical-card m-4" title="干员消耗理智排行">
+    <v-card class="operator-ap-cost-rank-card m-4" title="干员消耗理智排行">
       <OperatorBar v-for="(item,index) in apCostRankingData" :key="index" :operator-info="item"></OperatorBar>
     </v-card>
 
-    <v-card class="operator-statistical-card m-4" title="材料消耗情况">
-      <div class="item-cost-data">
-        <p style="">总计消耗{{ apCost.toFixed(0) }} 理智</p>
-        <!--          材料统计-->
-        <v-btn color="orange" class="m-4" @click="splitMaterialByRarity(5)">不拆分</v-btn>
-        <v-btn color="purple" class="m-4" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</v-btn>
-        <v-btn color="blue" class="m-4" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</v-btn>
-        <div class="item-cost-group" v-for="(list,tier) in itemCostCollectData" :key="tier">
-          <div class="item-cost-item" v-for="(item,index) in list" :key="index">
-            <ItemImage  :item-id="item.id" style="margin: auto"></ItemImage>
-            <span class="item-cost-num">
+    <v-card class="m-4" title="材料消耗情况">
+      <v-card-text>
+        <div class="item-cost-data">
+          <p style="">总计消耗{{ apCost.toFixed(0) }} 理智</p>
+          <!--          材料统计-->
+          <v-btn color="orange" class="m-4" @click="splitMaterialByRarity(5)">不拆分</v-btn>
+          <v-btn color="purple" class="m-4" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</v-btn>
+          <v-btn color="blue" class="m-4" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</v-btn>
+          <div class="item-cost-group" v-for="(list,tier) in itemCostCollectData" :key="tier">
+            <div class="item-cost-item" v-for="(item,index) in list" :key="index">
+              <ItemImage :item-id="item.id" style="margin: auto"></ItemImage>
+              <span class="item-cost-num">
                   {{ strShowLength(item.count) }}
             </span>
+            </div>
           </div>
         </div>
-      </div>
+      </v-card-text>
     </v-card>
 
   </div>

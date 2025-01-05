@@ -336,7 +336,7 @@ onMounted(() => {
           干员练度推荐
         </v-tab>
       </v-tabs>
-      <v-card-text>
+
         <v-tabs-window v-model="displayTabHeader">
           <v-tabs-window-item value="干员筛选">
             <div class="flex flex-wrap" v-for="(conditions,module) in operatorFilterCondition" :key="module">
@@ -415,7 +415,7 @@ onMounted(() => {
             </div>
           </v-tabs-window-item>
         </v-tabs-window>
-      </v-card-text>
+
 
     </v-card>
 
@@ -451,7 +451,7 @@ onMounted(() => {
         <div class="operator-equip-image-wrap" v-for="(equip,index) in operator.equip" :key="index">
           <div class="operator-skill-icon-sprite">
             <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
-            <img :src="`/image/survey/skill-rank-${operator[`mod${equip.typeName2}`]}-v1.jpg`"
+            <img :src="`/image/survey/mod-rank-${operator[`mod${equip.typeName2}`]}-v1.jpg`"
                  v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
           </div>
           <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>

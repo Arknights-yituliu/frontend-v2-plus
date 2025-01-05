@@ -1,4 +1,4 @@
-.operator-info-bar{
+.operator-info-bar {
   display: flex;
   align-items: center;
   width: 500px;
@@ -22,16 +22,22 @@
     text-align: center;
   }
 
-  .operator-skill-item {
+  .bar-operator-skill-item {
     position: relative;
-    width: 60px;
     text-align: center;
+    margin: 0 8px;
+
+    width: 40px;
+    height: 54px;
+    overflow: hidden;
+
     .skill-name {
       text-align: center;
-      font-size: 12px;
+      font-size: 10px;
+      line-height: 12px;
     }
 
-    .operator-skill-rank-icon{
+    .operator-skill-rank-icon {
       position: absolute;
       left: 0;
       top: 0;
@@ -41,36 +47,41 @@
   }
 
   .operator-equip-group {
-    width: 60px;
-    position: relative;
+    width: 40px;
+    margin: 0 8px;
   }
 
-  .operator-ap-cost{
 
-  }
 
-  .operator-equip{
+  .bar-operator-equip {
     width: 40px;
     height: 40px;
     position: relative;
-    margin: auto;
+    padding-top: 4px;
 
-    .operator-equip-icon-image {
+    .bar-equip-icon-image {
       height: 40px;
       width: 40px;
       display: block;
       margin: auto;
       filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
     }
-
-    .equip-name {
-      text-align: center;
-      font-size: 12px;
-      line-height: 18px;
-    }
   }
 
-  .item-ap-cost {
+  .bar-equip-rank-icon{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+  }
+
+  .bar-equip-name {
+    text-align: center;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .operator-ap-cost {
     text-align: center;
     font-size: 12px;
     line-height: 18px;

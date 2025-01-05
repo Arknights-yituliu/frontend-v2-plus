@@ -8,7 +8,6 @@
     }
 
 
-
     .survey-guide-content-container {
       padding: 8px;
       box-sizing: border-box;
@@ -90,16 +89,13 @@
 
     .operator-skill-rank {
       position: absolute;
-      left: -2px;
-      top: -2px;
-      width: 14px;
+      left: 0;
+      top: 0;
+      width: 12px;
+      height: 12px;
     }
 
-    .skill-name {
-      text-align: center;
-      font-size: 12px;
-      display: none;
-    }
+
 
     .operator-equip-image-wrap {
       width: 40px;
@@ -143,13 +139,27 @@
   }
 }
 
+@media screen and (max-width: 1080px) {
+  .operator-statistical-page {
+    .operator-statistical-card {
+      width: 520px;
+    }
 
-//.operator-statistical-page {
-//  width: 96%;
-//  margin: auto;
-//
-//  //.operator-statistical-card {
-//  //  width: 324px;
-//  //  margin: 0;
-//  //}
-//}
+    .operator-ap-cost-rank-card {
+      width: 520px;
+    }
+  }
+}
+
+
+@media screen and (max-width: 360px) {
+  .operator-statistical-page {
+    .operator-statistical-card {
+      width: 100%;
+    }
+
+    .operator-ap-cost-rank-card {
+      width: 100%;
+    }
+  }
+}
