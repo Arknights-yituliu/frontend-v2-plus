@@ -33,10 +33,10 @@ let operatorOwnMap = new Map()
 
 function buttonSize() {
   if (useDisplay1.xs.value) {
-    return 'x-small'
+    return 'small'
   }
 
-  return 'small'
+
 }
 
 let filterMainCondition = []
@@ -967,11 +967,8 @@ onMounted(() => {
       </v-btn>
     </div>
 
-    <v-dialog v-model="guidePopup">
+    <v-dialog v-model="guidePopup" max-width="800">
       <v-card>
-        <div class="flex justify-end m-8" @click="guidePopup=false">
-          <v-icon icon="mdi-close"></v-icon>
-        </div>
         <v-card-text>
           <div class="guide-box">
             <h1 style="text-align: center">排班生成器使用说明</h1>
@@ -997,11 +994,8 @@ onMounted(() => {
     </v-dialog>
 
     <!--    填写文件描述和选择基建类型、换班次数-->
-    <v-dialog v-model="scheduleTypePopupVisible">
+    <v-dialog v-model="scheduleTypePopupVisible" max-width="800">
       <v-card>
-        <div class="flex justify-end m-8" @click="scheduleTypePopupVisible=false">
-          <v-icon icon="mdi-close"></v-icon>
-        </div>
         <v-card-text>
           <div class="schedule-set-wrap">
             <!--换班表名称-->
@@ -1174,21 +1168,21 @@ onMounted(() => {
                 <div class="room-title">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
                 <div class="flex justify-center">
                   <OperatorAvatar v-for="(charName, operator) in getRoomOperators(scheduleIndex,'control', 0)"
-                                  :key="operator" @click="deleteOperator(scheduleIndex,'control',0,charName)"
+                                  :key="operator"
                                   :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
                 </div>
               </div>
               <!--    贸易站-->
               <div v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
                    class="room-template trading" :id="`trading#${tradingIndex}`"
-                   @click="chooseRoom('trading', tradingIndex)">
+                   @click="openOperatorCheckBoxDialog(scheduleIndex,'trading',tradingIndex)">
                 <div class="flex flex-wrap align-center justify-center">
                   <div>{{ translate('schedule', 'schedule.TradingPost') }}#{{ num }}</div>
                   <div class="spacer-12"></div>
                   <ItemImage size="36" mobile-size="36"
                              :item-id="getRoomProduct(scheduleIndex,'trading', tradingIndex)"></ItemImage>
                 </div>
-                <div class="settlement-operator">
+                <div class="flex justify-center">
                   <OperatorAvatar
                       v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'trading', tradingIndex)"
                       :key="operatorIndex"
@@ -1199,13 +1193,13 @@ onMounted(() => {
               <!--  制造站-->
               <div v-for="(num, manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"
                    class="room-template manufacture" :id="`manufacture#${manufactureIndex}`"
-                   @click="chooseRoom('manufacture', manufactureIndex)">
+                   @click="openOperatorCheckBoxDialog(scheduleIndex,'manufacture',manufactureIndex)">
                 <div class="flex flex-wrap align-center justify-center">
                   <div>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</div>
                   <div class="spacer-12"></div>
                   <ItemImage :item-id="getRoomProduct(scheduleIndex,'manufacture', manufactureIndex)"></ItemImage>
                 </div>
-                <div class="settlement-operator">
+                <div class="flex justify-center">
                   <OperatorAvatar
                       v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'manufacture', manufactureIndex)"
                       :key="operatorIndex"
@@ -1228,82 +1222,78 @@ onMounted(() => {
         </v-card>
       </div>
     </div>
+
+
+    <v-dialog v-model="operatorCheckBoxDialog" max-width="800" class="schedule-dialog">
+      <v-card class="m-a">
+        <v-card-text>
+
+          <div class="flex flex-wrap" v-for="(conditionType, key) in operatorFilterConditionTable"
+               v-show="conditionType.display" :key="key">
+
+            <v-btn :color="conditionType.color" variant="text" class="m-2" :size="buttonSize()">
+              {{ translate('schedule', conditionType.name) }}
+            </v-btn>
+            <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"
+                   color="primary" :variant="filterBtnStatus(key, condition.label)" :size="buttonSize()"
+                   @click="filterOperatorByTag(condition, key)" class="m-2">
+              {{ translate('schedule', condition.label) }}
+            </v-btn>
+          </div>
+
+          <div class="flex flex-wrap align-center">
+            <div>{{ translate('schedule', 'schedule.OperatorsStationed') }}</div>
+            <div class="flex m-0-8">
+              <OperatorAvatar size="48"
+                              v-for="(charId, index) in getRoomOperators(selectedScheduleIndex,selectedRoomType, selectedRoomIndex)"
+                              :key="index" :char-id="getCharId(charId)" class="m-4"></OperatorAvatar>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap">
+            <div v-for="(operator, charId) in filterOperatorList" :key="charId"
+                 @click="chooseOperator(operator.name)" class="operator-option shadow-md m-4">
+              <OperatorAvatar size="48" mobile-size="36" :char-id="charId"></OperatorAvatar>
+              <div class="operator-name">{{ operator.name }}</div>
+            </div>
+          </div>
+        </v-card-text>
+
+      </v-card>
+    </v-dialog>
+
+
+    <!--肥鸭的选择弹窗-->
+    <v-dialog v-model="FiammettaTargetVisible" max-width="800">
+      <v-card  class="m-a">
+        <div class="filter-condition-box">
+          <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable"
+               v-show="room.display"
+               :key="key">
+            <v-btn :color="room.color" variant="text" class="m-4"
+                   :text="translate('schedule', room.name)">
+            </v-btn>
+            <v-btn v-for="(condition, index) in room.conditions" :key="index"
+                   color="primary" :variant="filterBtnStatus(key, condition.label)"
+                   :text="translate('schedule', condition.label)"
+                   class="m-4"
+                   @click="filterOperatorByTag(condition, key)">
+            </v-btn>
+          </div>
+        </div>
+
+        <div class="operator-check-box-group">
+          <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList"
+               :key="charId"
+               @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
+            <div :class="getOptionAvatar(operator.charId)"></div>
+            <div class="operator-check-label">{{ operator.name }}</div>
+          </div>
+        </div>
+
+      </v-card>
+    </v-dialog>
   </div>
-
-  <v-dialog v-model="operatorCheckBoxDialog" max-width="800">
-    <v-card class="m-a">
-      <div class="flex justify-end m-8" @click="operatorCheckBoxDialog=false">
-        <v-icon icon="mdi-close"></v-icon>
-      </div>
-
-
-      <div class="opacity-70">{{ translate('schedule', 'schedule.OperatorsStationed') }}</div>
-      <div class="flex m-0-8">
-        <OperatorAvatar
-            v-for="(charId, index) in getRoomOperators(selectedScheduleIndex,selectedRoomType, selectedRoomIndex)"
-            :key="index" :char-id="getCharId(charId)" class="m-4"></OperatorAvatar>
-      </div>
-
-      <div class="flex flex-wrap" v-for="(conditionType, key) in operatorFilterConditionTable"
-           v-show="conditionType.display" :key="key">
-
-        <v-btn :color="conditionType.color" variant="text" class="m-4" :size="buttonSize()">
-          {{ translate('schedule', conditionType.name) }}
-        </v-btn>
-        <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"
-               color="primary" :variant="filterBtnStatus(key, condition.label)" :size="buttonSize()"
-               @click="filterOperatorByTag(condition, key)" class="m-4">
-          {{ translate('schedule', condition.label) }}
-        </v-btn>
-      </div>
-
-      <div class="flex flex-wrap">
-        <div v-for="(operator, charId) in filterOperatorList" :key="charId"
-             @click="chooseOperator(operator.name)" class="m-4">
-          <OperatorAvatar :char-id="charId"></OperatorAvatar>
-          <div style="text-align: center">{{ operator.name }}</div>
-        </div>
-      </div>
-
-
-    </v-card>
-  </v-dialog>
-
-
-  <!--肥鸭的选择弹窗-->
-  <v-dialog v-model="FiammettaTargetVisible">
-    <v-card max-width="800" class="m-a">
-      <div class="flex justify-end m-8" @click="FiammettaTargetVisible=false">
-        <v-icon icon="mdi-close"></v-icon>
-      </div>
-      <div class="filter-condition-box">
-        <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable"
-             v-show="room.display"
-             :key="key">
-          <v-btn :color="room.color" variant="text" class="m-4"
-                 :text="translate('schedule', room.name)">
-          </v-btn>
-          <v-btn v-for="(condition, index) in room.conditions" :key="index"
-                 color="primary" :variant="filterBtnStatus(key, condition.label)"
-                 :text="translate('schedule', condition.label)"
-                 class="m-4"
-                 @click="filterOperatorByTag(condition, key)">
-          </v-btn>
-        </div>
-      </div>
-
-      <div class="operator-check-box-group">
-        <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList"
-             :key="charId"
-             @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
-          <div :class="getOptionAvatar(operator.charId)"></div>
-          <div class="operator-check-label">{{ operator.name }}</div>
-        </div>
-      </div>
-
-    </v-card>
-  </v-dialog>
-
 
 </template>
 

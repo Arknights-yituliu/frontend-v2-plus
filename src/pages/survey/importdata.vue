@@ -65,7 +65,7 @@ function canBeParsedAsObject(str) {
     return JSON.parse(str); // 如果没有抛出错误，说明字符串可以被解析为JS对象
   } catch (e) {
     console.error(str)
-    cMessage("内容没有复制完整或格式不正确", 'error')
+    cMessage(e, 'error')
     return false; // 捕获到错误，说明字符串不能被解析为JS对象
   }
 }
@@ -246,7 +246,8 @@ onMounted(() => {
         <div class="import-step-item-title">第三步</div>
         <img src="/image/skland/step2.jpg" alt="" class="import-step-image">
         <p>此时你可以获得一段神秘的字符，复制这段字符<b>（*不要带引号）</b>，输入到下面的输入框中</p>
-        <input class="input" style="display: block;width: 300px;margin: 0 auto 20px" v-model="inputText">
+        <v-text-field v-model="inputText" density="compact" hide-details variant="outlined">
+        </v-text-field>
         <button class="btn btn-blue" @click="getPlayerBindingBySkland">获取森空岛信息</button>
       </div>
 

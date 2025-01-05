@@ -81,6 +81,30 @@
     }
 
 
+
+}
+
+.schedule-dialog{
+    .operator-option{
+        font-size: 0;
+        width: 50px;
+        cursor: pointer;
+        .operator-name{
+            font-size: 12px;
+            text-align: center;
+        }
+    }
+}
+
+@media screen and (max-width: 600px){
+    .schedule-dialog{
+        .operator-option{
+            width:36px;
+            .operator-name{
+                font-size: 8px;
+            }
+        }
+    }
 }
 
 
