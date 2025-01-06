@@ -244,13 +244,21 @@
       "cn": "粘贴",
       "en": "Paste"
     },
-    "searchInputTip": {
+    "SearchInputTip": {
       "cn": "输入干员名、技能名称、技能描述搜索干员",
       "en": "Enter operator name, skill name, skill description to search operator"
     },
-    "developerTip": {
+    "DeveloperTip": {
       "cn": "开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改",
       "en": "Development level and staff are limited. If there are issues, please give feedback or commit directly on GitHub"
+    },
+    "AvailableCharacter": {
+      "cn": "待选干员",
+      "en": "Available Character"
+    },
+    "FilterCondition": {
+      "cn": "筛选条件",
+      "en": "Filter Condition"
     }
   },
   "buildSkillFilter": {

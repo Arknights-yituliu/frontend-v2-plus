@@ -28,6 +28,7 @@ const useDisplay1 = useDisplay()
 console.log('设备尺寸{}', useDisplay1.xs.value)
 
 import ItemImage from "@/components/sprite/ItemImage.vue";
+import BuildingFactory from "@/components/tools/BuildingFactory.vue";
 
 let operatorOwnMap = new Map()
 
@@ -400,6 +401,7 @@ function commonFilterOperator() {
       }
     }
 
+
     if (filterOperatorList.value[operator.charId]) {
       let result = filterOperatorList.value[operator.charId]
       result.description += '<br><br>' + operator.description
@@ -511,12 +513,9 @@ function checkRoomMaximum() {
 
 /**
  * 删除该房间中选中的干员
- * @param scheduleIndex 当前选择的排班表
- * @param roomType  房间类型
- * @param roomIndex 房间编号
  * @param {string} charName 干员名称
  */
-function deleteOperator(scheduleIndex, roomType, roomIndex, charName) {
+function deleteOperator(charName) {
 
   plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators =
       plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.filter(e => {
@@ -1149,7 +1148,7 @@ onMounted(() => {
 
 
             </v-list-item>
-            <!--            时间选择器-->
+            <!--  时间选择器-->
             <v-list-item>
               <v-list-item-title>
                 <span class="font-bold">{{ translate('schedule', 'schedule.ShiftRunTime') }}</span>
@@ -1165,7 +1164,9 @@ onMounted(() => {
               <!--     控制中枢-->
               <div class="room-template control" :id="`control#0`"
                    @click="openOperatorCheckBoxDialog(scheduleIndex,'control',0)">
-                <div class="room-title">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
+                <div class="flex flex-wrap align-center justify-center">
+                  {{ translate('schedule', 'schedule.ControlCenter') }}
+                </div>
                 <div class="flex justify-center">
                   <OperatorAvatar v-for="(charName, operator) in getRoomOperators(scheduleIndex,'control', 0)"
                                   :key="operator"
@@ -1173,20 +1174,45 @@ onMounted(() => {
                 </div>
               </div>
               <!--    贸易站-->
-              <div v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
-                   class="room-template trading" :id="`trading#${tradingIndex}`"
-                   @click="openOperatorCheckBoxDialog(scheduleIndex,'trading',tradingIndex)">
+              <BuildingFactory v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
+                               :room-index="tradingIndex" room-type="trading" :operators="getRoomOperators(scheduleIndex,'trading', tradingIndex)"
+                               :product="getRoomProduct(scheduleIndex,'trading', tradingIndex)">
+
+              </BuildingFactory>
+<!--              <div v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"-->
+<!--                   class="room-template trading" :id="`trading#${tradingIndex}`"-->
+<!--                   @click="openOperatorCheckBoxDialog(scheduleIndex,'trading',tradingIndex)">-->
+<!--                <div class="flex flex-wrap align-center justify-center">-->
+<!--                  <div>{{ translate('schedule', 'schedule.TradingPost') }}#{{ num }}</div>-->
+<!--                  <div class="spacer-12"></div>-->
+<!--                  <ItemImage size="24" mobile-size="24"-->
+<!--                             :item-id="getRoomProduct(scheduleIndex,'trading', tradingIndex)"></ItemImage>-->
+<!--                </div>-->
+<!--                <div class="flex justify-center">-->
+<!--                  <OperatorAvatar-->
+<!--                      v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'trading', tradingIndex)"-->
+<!--                      :key="operatorIndex"-->
+<!--                      :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>-->
+<!--                </div>-->
+<!--              </div>-->
+
+              <!--  制造站-->
+              <div v-for="(num, manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"
+                   class="room-template manufacture" :id="`manufacture#${manufactureIndex}`"
+                   @click="openOperatorCheckBoxDialog(scheduleIndex,'manufacture',manufactureIndex)">
                 <div class="flex flex-wrap align-center justify-center">
-                  <div>{{ translate('schedule', 'schedule.TradingPost') }}#{{ num }}</div>
+                  <div>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</div>
                   <div class="spacer-12"></div>
-                  <ItemImage size="36" mobile-size="36"
-                             :item-id="getRoomProduct(scheduleIndex,'trading', tradingIndex)"></ItemImage>
+                  <ItemImage size="24" mobile-size="24"
+                             :item-id="getRoomProduct(scheduleIndex,'manufacture', manufactureIndex)"></ItemImage>
                 </div>
                 <div class="flex justify-center">
+
                   <OperatorAvatar
-                      v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'trading', tradingIndex)"
+                      v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'manufacture', manufactureIndex)"
                       :key="operatorIndex"
-                      :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
+                      :char-id="getCharId(charName)" class="m-4">
+                  </OperatorAvatar>
                 </div>
               </div>
 
@@ -1197,9 +1223,11 @@ onMounted(() => {
                 <div class="flex flex-wrap align-center justify-center">
                   <div>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</div>
                   <div class="spacer-12"></div>
-                  <ItemImage :item-id="getRoomProduct(scheduleIndex,'manufacture', manufactureIndex)"></ItemImage>
+                  <ItemImage size="24" mobile-size="24"
+                             :item-id="getRoomProduct(scheduleIndex,'manufacture', manufactureIndex)"></ItemImage>
                 </div>
                 <div class="flex justify-center">
+
                   <OperatorAvatar
                       v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'manufacture', manufactureIndex)"
                       :key="operatorIndex"
@@ -1223,14 +1251,53 @@ onMounted(() => {
       </div>
     </div>
 
-
+    <!--    点击房间后弹出的房间设置弹窗-->
     <v-dialog v-model="operatorCheckBoxDialog" max-width="800" class="schedule-dialog">
       <v-card class="m-a">
         <v-card-text>
+          <div class="flex align-center justify-space-between" style="width: 300px">
+            <!--按顺序入驻-->
+            <span class="room-set-label">{{ translate('schedule', 'schedule.OrderedStationing') }}</span>
+            <v-switch color="success" density="compact" hide-details
+                      v-model="plansTemplate[selectedScheduleIndex].rooms[selectedRoomType][selectedRoomIndex].sort">
+            </v-switch>
 
+            <!--补满空位-->
+            <span class="room-set-label">{{ translate('schedule', 'schedule.Autofill') }}</span>
+            <v-switch color="success" density="compact" hide-details
+                      v-model="plansTemplate[selectedScheduleIndex].rooms[selectedRoomType][selectedRoomIndex].autofill">
+            </v-switch>
+
+            <!--跳过房间-->
+            <span class="room-set-label">{{ translate('schedule', 'schedule.SkipRoom') }}</span>
+            <v-switch color="success" density="compact" hide-details
+                      v-model="plansTemplate[selectedScheduleIndex].rooms[selectedRoomType][selectedRoomIndex].skip">
+            </v-switch>
+          </div>
+
+          <span class="room-set-label" v-show="productTable[selectedRoomType]">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
+          <div class="flex align-center">
+            <ItemImage v-for="(product, index) in productTable[selectedRoomType]" :key="index"
+                       :item-id="product.id"
+                       @click="setProduct(product.value)"></ItemImage>
+          </div>
+
+          <!--房间入驻干员-->
+          <span class="room-set-label">{{ translate('schedule', 'schedule.OperatorsStationed') }}</span>
+          <div class="flex m-0-8">
+            <div class="selected-operator"
+                 v-for="(charName, index) in getRoomOperators(selectedScheduleIndex,selectedRoomType, selectedRoomIndex)"
+                 :key="index">
+              <OperatorAvatar size="60" mobile-size="32" @click="deleteOperator(charName)"
+                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
+              <v-icon icon="mdi-close" class="selected-operator-icon-close"></v-icon>
+            </div>
+          </div>
+
+          <!--筛选条件-->
+          <span class="room-set-label">{{ translate('schedule', 'schedule.FilterCondition') }}</span>
           <div class="flex flex-wrap" v-for="(conditionType, key) in operatorFilterConditionTable"
                v-show="conditionType.display" :key="key">
-
             <v-btn :color="conditionType.color" variant="text" class="m-2" :size="buttonSize()">
               {{ translate('schedule', conditionType.name) }}
             </v-btn>
@@ -1241,21 +1308,16 @@ onMounted(() => {
             </v-btn>
           </div>
 
-          <div class="flex flex-wrap align-center">
-            <div>{{ translate('schedule', 'schedule.OperatorsStationed') }}</div>
-            <div class="flex m-0-8">
-              <OperatorAvatar size="48"
-                              v-for="(charId, index) in getRoomOperators(selectedScheduleIndex,selectedRoomType, selectedRoomIndex)"
-                              :key="index" :char-id="getCharId(charId)" class="m-4"></OperatorAvatar>
-            </div>
-          </div>
-
+          <!--待选干员-->
+          <span class="room-set-label">{{ translate('schedule', 'schedule.AvailableCharacter') }}</span>
           <div class="flex flex-wrap">
-            <div v-for="(operator, charId) in filterOperatorList" :key="charId"
-                 @click="chooseOperator(operator.name)" class="operator-option shadow-md m-4">
-              <OperatorAvatar size="48" mobile-size="36" :char-id="charId"></OperatorAvatar>
-              <div class="operator-name">{{ operator.name }}</div>
-            </div>
+            <v-btn v-for="(operator, charId) in filterOperatorList" :key="charId"
+                   @click="chooseOperator(operator.name)"
+                   :text="operator.name" variant="tonal" color="primary" class="m-2">
+              <template v-slot:prepend>
+                <OperatorAvatar size="28" mobile-size="30" rounded :char-id="charId"></OperatorAvatar>
+              </template>
+            </v-btn>
           </div>
         </v-card-text>
 
@@ -1265,7 +1327,7 @@ onMounted(() => {
 
     <!--肥鸭的选择弹窗-->
     <v-dialog v-model="FiammettaTargetVisible" max-width="800">
-      <v-card  class="m-a">
+      <v-card class="m-a">
         <div class="filter-condition-box">
           <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable"
                v-show="room.display"

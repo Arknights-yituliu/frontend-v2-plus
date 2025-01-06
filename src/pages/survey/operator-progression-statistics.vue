@@ -164,7 +164,7 @@ onMounted(() => {
           hide-default-footer
           items-per-page="-1">
         <template v-slot:item.charId="{ item }">
-          <OperatorAvatar :rounded="true" :char-id="item.charId" size="60"></OperatorAvatar>
+          <OperatorAvatar rounded :char-id="item.charId" size="60"></OperatorAvatar>
         </template>
         <template v-slot:item.own="{ item }">
           {{ formatCellData(item.own) }}

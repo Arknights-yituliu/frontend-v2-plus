@@ -1201,7 +1201,7 @@ onMounted(() => {
               </div>
             </div>
 
-            <!--  制造站-->
+            <!--制造站-->
             <div class="room-template manufacture" :id="`manufacture#${index}`"
                  :class="roomSelectedClass('manufacture', index)"
                  v-for="(num, index) in scheduleTypeV2.manufacture" :key="index"
@@ -1346,14 +1346,14 @@ onMounted(() => {
                 {{ translate('schedule', condition.label) }}
               </v-btn>
             </div>
-            <span class="condition-tip">{{ translate('schedule', 'schedule.developerTip') }}</span>
+            <span class="condition-tip">{{ translate('schedule', 'schedule.DeveloperTip') }}</span>
           </div>
 
           <div class="schedule-operator-search-input-box">
             <div class="input-group">
               <input class="input-base" id="input-id" style="width:500px" @input="searchOperatorDebounce()"
                      v-model="searchInputText">
-              <span class="input-group-text">{{ translate('schedule', 'schedule.searchInputTip') }}</span>
+              <span class="input-group-text">{{ translate('schedule', 'schedule.SearchInputTip') }}</span>
             </div>
             <v-btn color="primary" :variant="filterNotOwnOperator?void 0:`tonal`" @click="filterOperatorByOwn">隐藏未招募干员
             </v-btn>
