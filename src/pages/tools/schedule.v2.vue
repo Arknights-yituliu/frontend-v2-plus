@@ -1174,27 +1174,17 @@ onMounted(() => {
                 </div>
               </div>
               <!--    贸易站-->
+              <BuildingFactory :room-index="0" room-type="control" :operators="getRoomOperators(scheduleIndex,'control', 0)"
+                               :product="getRoomProduct(scheduleIndex,'control', 0)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'control',0)">
+              </BuildingFactory>
+              <!--    贸易站-->
               <BuildingFactory v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
                                :room-index="tradingIndex" room-type="trading" :operators="getRoomOperators(scheduleIndex,'trading', tradingIndex)"
-                               :product="getRoomProduct(scheduleIndex,'trading', tradingIndex)">
-
+                               :product="getRoomProduct(scheduleIndex,'trading', tradingIndex)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'trading',tradingIndex)">
               </BuildingFactory>
-<!--              <div v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"-->
-<!--                   class="room-template trading" :id="`trading#${tradingIndex}`"-->
-<!--                   @click="openOperatorCheckBoxDialog(scheduleIndex,'trading',tradingIndex)">-->
-<!--                <div class="flex flex-wrap align-center justify-center">-->
-<!--                  <div>{{ translate('schedule', 'schedule.TradingPost') }}#{{ num }}</div>-->
-<!--                  <div class="spacer-12"></div>-->
-<!--                  <ItemImage size="24" mobile-size="24"-->
-<!--                             :item-id="getRoomProduct(scheduleIndex,'trading', tradingIndex)"></ItemImage>-->
-<!--                </div>-->
-<!--                <div class="flex justify-center">-->
-<!--                  <OperatorAvatar-->
-<!--                      v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'trading', tradingIndex)"-->
-<!--                      :key="operatorIndex"-->
-<!--                      :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>-->
-<!--                </div>-->
-<!--              </div>-->
+
 
               <!--  制造站-->
               <div v-for="(num, manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"

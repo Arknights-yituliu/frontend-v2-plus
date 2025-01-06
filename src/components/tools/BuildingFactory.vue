@@ -44,7 +44,6 @@ const props = defineProps({
                :item-id="props.product"></ItemImage>
   </div>
   <div class="flex justify-center">
-
     <OperatorAvatar
         v-for="(charId, operatorIndex) in props.operators"
         :key="operatorIndex"
