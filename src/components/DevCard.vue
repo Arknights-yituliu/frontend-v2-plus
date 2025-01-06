@@ -9,10 +9,14 @@ const props = defineProps(["modelValue", 'data']);
 //   tags: ['标签1', '标签2', '标签3']
 // }
 
+function openNewPage(url) {
+  window.open(url)
+}
+
 </script>
 
 <template>
-  <v-card class="developer-card">
+  <v-card class="developer-card" @click="openNewPage(props.data.url)">
     <v-card-item>
       <div class="flex">
         <img :src="props.data.avatar" alt="" class="developer-avatar"/>

@@ -1,37 +1,48 @@
 [
   {
-   "link": "https://ak.hypergryph.com",
+    "url": "https://ak.hypergryph.com",
     "avatar": "/image/website/ark.png",
     "title": "明日方舟",
     "description": "明日方舟官方网站",
-    "tags": ["图片素材"]
+    "tags": [
+      "图片素材"
+    ]
   },
   {
-   "link": "https://penguin-stats.cn",
+    "url": "https://penguin-stats.cn",
     "avatar": "/image/website/penguin_stats_logo.webp",
     "title": "企鹅物流数据统计",
     "description": "素材掉率统计网站",
-    "tags": ["关卡掉率数据"]
+    "tags": [
+      "关卡掉率数据"
+    ]
   },
   {
-   "link": "https://github.com/yuanyan3060/ArknightsGameResource",
+    "url": "https://github.com/yuanyan3060/ArknightsGameResource",
     "avatar": "https://avatars.githubusercontent.com/u/58114805",
     "title": "Arknights-Bot-Resource",
     "description": "明日方舟常用素材",
-    "tags": ["图片素材"]
+    "tags": [
+      "图片素材"
+    ]
   },
   {
-   "link": "https://prts.wiki/w/%E9%A6%96%E9%A1%B5",
+    "url": "https://prts.wiki/w/%E9%A6%96%E9%A1%B5",
     "avatar": "/image/website/prts.webp",
     "title": "prts",
     "description": "明日方舟wiki",
-    "tags": ["图片素材", "关卡数据"]
+    "tags": [
+      "图片素材",
+      "关卡数据"
+    ]
   },
   {
-   "link": "https://space.bilibili.com/8412516",
+    "url": "https://space.bilibili.com/8412516",
     "avatar": "/image/website/honeycake.webp",
     "title": "罗德岛蜜饼工坊",
     "description": "明日方舟饼学研究组",
-    "tags": ["活动排期数据"]
+    "tags": [
+      "活动排期数据"
+    ]
   }
 ]
