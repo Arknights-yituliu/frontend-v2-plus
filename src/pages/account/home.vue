@@ -211,12 +211,12 @@ onMounted(() => {
           <v-btn variant="text" color="primary" text="返回" @click="displayOrUpdateInfo = 'display'"></v-btn>
         </div>
         <div class="flex align-center justify-center">
-          <OperatorAvatar :char-id="selectedAvatar" :rounded="true" :size="80" :mobile-size="60"></OperatorAvatar>
+          <OperatorAvatar :char-id="selectedAvatar" rounded :size="80" :mobile-size="60"></OperatorAvatar>
         </div>
         <div class="user-avatar-checkbox flex flex-wrap justify-center p-16-0 overflow-auto">
           <OperatorAvatar v-for="(avatar,index) in avatarList" :key="index" :char-id="avatar.charId"
                           :size="60" :mobile-size="40"
-                          @click="chooseAvatar(avatar.charId)" class="m-8" :rounded="true">
+                          @click="chooseAvatar(avatar.charId)" class="m-8" rounded>
           </OperatorAvatar>
         </div>
         <div class="flex justify-center">

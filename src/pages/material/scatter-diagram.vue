@@ -217,7 +217,7 @@ onMounted(() => {
           <br> 专三率：{{(item.proportion*100).toFixed(1)}}%
 
         </div>
-        <ItemImage :item="item.charId" size="28" :rounded="true"
+        <ItemImage :item="item.charId" size="28" rounded
                       :style="`position:absolute;left:${item.xAxis}px;top:${item.yAxis}px`">
 
         </ItemImage>
