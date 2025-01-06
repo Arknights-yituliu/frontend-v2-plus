@@ -575,7 +575,7 @@ onMounted(() => {
           ark.yituliu.cn<br>
           2024/12/20
         </div>
-        <img src="\public\image\website\QR\yituliuQR.png" style="height: 128px; display: inline-block;">
+        <img src="/image/website/QR/yituliuQR.png" style="height: 128px; display: inline-block;">
       </div>
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
