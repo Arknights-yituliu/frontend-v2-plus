@@ -231,6 +231,7 @@ onMounted(() => {
         <div class="import-step-item-title">第二步</div>
         <img src="/image/skland/step1.jpg" alt="" class="import-step-image">
         <p>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
+        <p>（windows系统建议使用microsoft edge浏览器，iOS系统建议使用safari浏览器）</p>
         <p style="color:#6ebeff">localStorage.getItem('SK_OAUTH_CRED_KEY')+','+ localStorage
           .getItem('SK_TOKEN_CACHE_KEY')</p>
         <button class="btn btn-orange" style="margin: 0 12px"
