@@ -125,9 +125,6 @@ function uploadSKLandData(data) {
  */
 function getCredAndSecret(text) {
 
-  if (!text.includes(',')) {
-    cMessage('输入格式不正确,应是一个中间包含逗号的一串字母', 'error')
-  }
   text = text.replace(/\s+/g, '')
       .replace(/["']/g, '')
 
