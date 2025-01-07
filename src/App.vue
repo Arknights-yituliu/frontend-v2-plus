@@ -181,8 +181,8 @@ onMounted(() => {
         </div>
       </v-app-bar>
       <v-main>
-        <v-dialog v-model="feedbackPopupVisible">
-          <v-card max-width="500" class="m-a">
+        <v-dialog v-model="feedbackPopupVisible" max-width="500">
+          <v-card>
 
               <div class="flex justify-end m-8"  @click="feedbackPopupVisible=false">
                 <v-icon icon="mdi-close"></v-icon>
