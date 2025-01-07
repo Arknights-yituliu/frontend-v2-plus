@@ -725,6 +725,7 @@
 
 .schedule-set-wrap {
     margin: auto;
+    font-size: 14px;
 }
 
 .schedule-set-bar {
@@ -741,7 +742,6 @@
     min-width: 80px;
     padding-left: 4px;
     padding-right: 4px;
-    font-size: 14px;
     font-weight: 600;
 }
 
@@ -761,6 +761,5 @@
 .schedule-set-bar-short>span {
     padding-left: 4px;
     padding-right: 4px;
-    font-size: 14px;
     font-weight: 600;
 }

@@ -921,7 +921,7 @@ onMounted(() => {
       </v-text-field>
     </div>
     <!-- TODO separate various paragraphs and translate them -->
-    <v-dialog v-model="guidePopup">
+    <v-dialog v-model="guidePopup" max-width="800">
       <v-card>
         <v-card-text>
           <div class="guide-box">
@@ -949,24 +949,29 @@ onMounted(() => {
 
     <span class="schedule-version">V1.3.6</span>
 
-    <v-dialog v-model="scheduleTypePopupVisible" :style="scheduleTypePopupStyle">
+    <v-dialog v-model="scheduleTypePopupVisible" :style="scheduleTypePopupStyle" max-width="600">
       <v-card>
         <v-card-text>
           <div class="schedule-set-wrap">
             <!--换班表名称-->
             <div class="schedule-set-bar">
               <span>{{ translate('schedule', 'schedule.ScheduleTitle') }}</span>
-              <div><input class="input-base" v-model="scheduleInfo.title"/></div>
+              <v-text-field hide-details density="compact" variant="outlined" v-model="scheduleInfo.title">
+              </v-text-field>
+
             </div>
             <!--换班表描述-->
             <div class="schedule-set-bar">
               <span>{{ translate('schedule', 'schedule.ScheduleDescription') }}</span>
-              <div><input class="input-base" v-model="scheduleInfo.description"/></div>
+              <v-text-field hide-details density="compact" variant="outlined" v-model="scheduleInfo.description">
+              </v-text-field>
+
             </div>
             <!--换班表完成后的描述-->
             <div class="schedule-set-bar">
               <span>{{ translate('schedule', 'schedule.Author') }}</span>
-              <div><input class="input-base" v-model="scheduleInfo.author"/></div>
+              <v-text-field hide-details density="compact" variant="outlined" v-model="scheduleInfo.author">
+              </v-text-field>
             </div>
 
             <!--基建布局-->
@@ -998,16 +1003,26 @@ onMounted(() => {
     <div class="maa-schedule-wrap-v2">
       <div class="maa-schedule-v2">
         <div class="schedule-set-wrap">
-          <div class="schedule-set-bar">
+          <div class="flex flex-wrap align-center">
+
             <!--当前换班表名称-->
-            <span>{{ translate('schedule', 'schedule.ShiftName') }}</span>
-            <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].name"/></div>
+            <v-text-field :label="translate('schedule', 'schedule.ShiftName')"
+                          hide-details density="compact" variant="outlined"
+                          v-model="plansTemplate[selectedPlanIndex].name" class="m-4">
+            </v-text-field>
+
             <!--当前换班表描述-->
-            <span>{{ translate('schedule', 'schedule.ShiftDescription') }}</span>
-            <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].description"/></div>
+            <v-text-field :label="translate('schedule', 'schedule.ShiftDescription')"
+                          hide-details density="compact" variant="outlined"
+                          v-model="plansTemplate[selectedPlanIndex].description" class="m-4">
+            </v-text-field>
+
             <!--当前换班表完成后的描述-->
-            <span>{{ translate('schedule', 'schedule.ShiftDescriptionPost') }}</span>
-            <div><input class="input-base" v-model="plansTemplate[selectedPlanIndex].description_post"/></div>
+            <v-text-field :label="translate('schedule', 'schedule.ShiftDescriptionPost')"
+                          hide-details density="compact" variant="outlined"
+                          v-model="plansTemplate[selectedPlanIndex].description_post" class="m-4">
+            </v-text-field>
+
           </div>
 
           <div class="schedule-set-bar-short">
@@ -1098,7 +1113,7 @@ onMounted(() => {
           </div>
 
           <!--定时换班-->
-          <div class="flex flex-wrap align-center" >
+          <div class="flex flex-wrap align-center">
             <div class="flex flex-wrap justify-center" v-for="(num, index) in scheduleTypeV2.planTimes" :key="index">
               <span style="margin: 0 8px">{{ translate('schedule', 'schedule.Shift') }}{{ num }}</span>
               <el-time-picker v-model="executionTimeList[index][0]" placeholder="Arbitrary time" style="width: 140px"/>
@@ -1127,7 +1142,7 @@ onMounted(() => {
                 </div>
               </div>
 
-              <div class="operator-check-box-group" >
+              <div class="operator-check-box-group">
                 <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"
                      @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
                   <div :class="getOptionAvatar(operator.charId)"></div>
@@ -1294,9 +1309,9 @@ onMounted(() => {
         <div class="schedule-set-bar" style="justify-content: center">
           <span>{{ translate('schedule', 'schedule.CurrentShift') }}</span>
           <v-btn color="primary" :variant="index === selectedPlanIndex?void 0:`tonal`" size="small"
-                    v-for="(num, index) in scheduleTypeV2.planTimes" :key="index" @click="currentPlan(index)"
-                    class="room_times"
-                    style="margin: 0 8px">
+                 v-for="(num, index) in scheduleTypeV2.planTimes" :key="index" @click="currentPlan(index)"
+                 class="room_times"
+                 style="margin: 0 8px">
             {{ translate('schedule', 'schedule.Shift') }}{{ num }}
           </v-btn>
         </div>
@@ -1335,7 +1350,8 @@ onMounted(() => {
                  v-show="conditionType.display" :key="key">
               <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
               <v-btn v-for="(condition, index) in conditionType.conditions" :key="index" size="small" class="m-2"
-                     color="primary" :variant="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
+                     color="primary" :variant="filterBtnStatus(key, condition.label)"
+                     @click="filterOperatorByTag(condition, key)">
                 {{ translate('schedule', condition.label) }}
               </v-btn>
             </div>
@@ -1348,7 +1364,8 @@ onMounted(() => {
                      v-model="searchInputText">
               <span class="input-group-text">{{ translate('schedule', 'schedule.SearchInputTip') }}</span>
             </div>
-            <v-btn color="primary" :variant="filterNotOwnOperator?void 0:`tonal`" size="small" @click="filterOperatorByOwn">隐藏未招募干员
+            <v-btn color="primary" :variant="filterNotOwnOperator?void 0:`tonal`" size="small"
+                   @click="filterOperatorByOwn">隐藏未招募干员
             </v-btn>
           </div>
           <div class="operator-check-box-group">

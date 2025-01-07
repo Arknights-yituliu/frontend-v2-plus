@@ -107,8 +107,8 @@ function isActive(current, value) {
       </v-card-text>
     </v-card>
 
-    <v-dialog v-model="operatorCheckBoxDialog">
-      <v-card text="选择干员" max-width="800" class="m-a">
+    <v-dialog v-model="operatorCheckBoxDialog" max-width="800">
+      <v-card text="选择干员"  class="m-a">
         <v-card-text>
           <div class="flex flex-wrap" v-for="(conditions,module) in operatorFilterCondition" :key="module"
                v-show="displayOperatorFilterCondition.includes(module)">
