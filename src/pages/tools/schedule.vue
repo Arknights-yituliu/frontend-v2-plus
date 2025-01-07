@@ -1012,35 +1012,35 @@ onMounted(() => {
 
           <div class="schedule-set-bar-short">
             <!--是否使用无人机-->
-            <span style="width: 140px">{{ translate('schedule', 'schedule.UseDrones') }}</span>
-            <div style="width: 70px">
+            <span style="width: 120px">{{ translate('schedule', 'schedule.UseDrones') }}</span>
+            <div style="width: 60px">
               <v-switch color="success" density="compact" hide-details
                         v-model="plansTemplate[selectedPlanIndex].drones.enable"></v-switch>
             </div>
             <!--换班前后-->
             <span style="width: 80px">{{ translate('schedule', 'schedule.Usage') }}</span>
-            <div style="width: 200px">
+            <div style="width: 160px">
               <v-btn color="primary" :variant="'pre' === plansTemplate[selectedPlanIndex].drones.order?void 0:`tonal`"
-                     @click="setDrones('order', 'pre')"
+                     @click="setDrones('order', 'pre')" size="small"
                      :text=" translate('schedule', 'schedule.PreShift')">
               </v-btn>
 
               <v-btn color="primary" :variant="'post' === plansTemplate[selectedPlanIndex].drones.order?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.PostShift')"
+                     :text="translate('schedule', 'schedule.PostShift')" size="small"
                      @click="setDrones('order', 'post')">
               </v-btn>
             </div>
             <!--目标房间-->
             <span>{{ translate('schedule', 'schedule.TargetRoom') }}</span>
-            <div style="width: 220px">
+            <div style="width: 160px">
               <v-btn color="primary"
                      :variant="'trading' === plansTemplate[selectedPlanIndex].drones.room?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.TradingPost')"
+                     :text="translate('schedule', 'schedule.TradingPost')" size="small"
                      @click="setDrones('room', 'trading')">
               </v-btn>
               <v-btn color="primary"
                      :variant="'manufacture' === plansTemplate[selectedPlanIndex].drones.room?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.Factory')"
+                     :text="translate('schedule', 'schedule.Factory')" size="small"
                      @click="setDrones('room', 'manufacture')">
 
               </v-btn>
@@ -1049,7 +1049,7 @@ onMounted(() => {
             <span>{{ translate('schedule', 'schedule.RoomNumber') }}</span>
             <div>
               <v-btn color="primary" :variant="(index) === plansTemplate[selectedPlanIndex].drones.index?void 0:`tonal`"
-                     :text="index"
+                     :text="index" size="small"
                      @click="setDrones('index', (index))" v-for="index in 5" :key="index">
               </v-btn>
             </div>
@@ -1058,20 +1058,20 @@ onMounted(() => {
           <div class="schedule-set-bar-short">
             <!--是否使用菲亚梅塔-->
             <span style="width: 140px">{{ translate('schedule', 'schedule.UseFiammetta') }}</span>
-            <div style="width: 70px">
+            <div style="width: 60px">
               <v-switch color="success" density="compact" hide-details
                         v-model="plansTemplate[selectedPlanIndex].Fiammetta.enable"></v-switch>
             </div>
             <span style="width: 80px">{{ translate('schedule', 'schedule.Usage') }}</span>
-            <div style="width: 200px">
+            <div style="width: 160px">
               <v-btn color="primary"
                      :variant="'pre' === plansTemplate[selectedPlanIndex].Fiammetta.order?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.PreShift')"
+                     :text="translate('schedule', 'schedule.PreShift')" size="small"
                      @click="setFiammetta('order', 'pre')">
               </v-btn>
               <v-btn color="primary"
                      :variant="'post' === plansTemplate[selectedPlanIndex].Fiammetta.order?void 0:`tonal`"
-                     :text="translate('schedule', 'schedule.PostShift')"
+                     :text="translate('schedule', 'schedule.PostShift')" size="small"
                      @click="setFiammetta('order', 'post')">
               </v-btn>
             </div>
@@ -1098,36 +1098,36 @@ onMounted(() => {
           </div>
 
           <!--定时换班-->
-          <div class="schedule-set-bar-short" style="flex-wrap:wrap;padding-bottom: 20px">
-            <div class="execution-time" v-for="(num, index) in scheduleTypeV2.planTimes" :key="index">
-              <span>{{ translate('schedule', 'schedule.Shift') }}{{ num }}</span>
-              <el-time-picker v-model="executionTimeList[index][0]" placeholder="Arbitrary time" style="width: 180px"/>
-              <span>to</span>
-              <el-time-picker v-model="executionTimeList[index][1]" placeholder="Arbitrary time" style="width: 180px"/>
+          <div class="flex flex-wrap align-center" >
+            <div class="flex flex-wrap justify-center" v-for="(num, index) in scheduleTypeV2.planTimes" :key="index">
+              <span style="margin: 0 8px">{{ translate('schedule', 'schedule.Shift') }}{{ num }}</span>
+              <el-time-picker v-model="executionTimeList[index][0]" placeholder="Arbitrary time" style="width: 140px"/>
+              <span style="margin: 0 8px">to</span>
+              <el-time-picker v-model="executionTimeList[index][1]" placeholder="Arbitrary time" style="width: 140px"/>
             </div>
           </div>
         </div>
 
 
         <!--肥鸭的选择弹窗-->
-        <v-dialog v-model="FiammettaTargetVisible">
+        <v-dialog v-model="FiammettaTargetVisible" max-width="800">
           <v-card>
             <v-card-text>
               <div class="filter-condition-box">
                 <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable" v-show="room.display"
                      :key="key">
-                  <v-btn :color="room.color" variant="text"
+                  <v-btn :color="room.color" variant="text" size="small" class="m-2"
                          :text="translate('schedule', room.name)">
                   </v-btn>
                   <v-btn v-for="(condition, index) in room.conditions" :key="index"
-                         color="primary" :variant="filterBtnStatus(key, condition.label)"
+                         color="primary" :variant="filterBtnStatus(key, condition.label)" size="small" class="m-2"
                          :text="translate('schedule', condition.label)"
                          @click="filterOperatorByTag(condition, key)">
                   </v-btn>
                 </div>
               </div>
 
-              <div class="operator-check-box-group" style="width: 550px">
+              <div class="operator-check-box-group" >
                 <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"
                      @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
                   <div :class="getOptionAvatar(operator.charId)"></div>
@@ -1175,15 +1175,9 @@ onMounted(() => {
         </div>
 
         <div class="room-wrap">
-          <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex - 1)">
-            <i class="iconfont icon-arrow-left" style="font-size: 48px">
-            </i>
-          </div>
+
           <!--  左边站点-->
           <div class="room-wrap-left">
-            <!--<div class="room-template blank" style="width: 180px;" -->
-            <!-- v-for="index in 3" :key="index">-->
-            <!--</div>-->
             <div class="copy-btn-wrap">
             </div>
             <!--    贸易站-->
@@ -1293,14 +1287,13 @@ onMounted(() => {
             <div class="room-template blank" style="width: 100px;"></div>
           </div>
 
-          <div class="room-arrow-wrap" @click="toNextPlan(selectedPlanIndex + 1)"><i class="iconfont icon-arrow-right"
-                                                                                     style="font-size: 48px"></i></div>
+
         </div>
 
         <!--选择当前排班表-->
         <div class="schedule-set-bar" style="justify-content: center">
           <span>{{ translate('schedule', 'schedule.CurrentShift') }}</span>
-          <v-btn color="primary" :variant="index === selectedPlanIndex?void 0:`tonal`"
+          <v-btn color="primary" :variant="index === selectedPlanIndex?void 0:`tonal`" size="small"
                     v-for="(num, index) in scheduleTypeV2.planTimes" :key="index" @click="currentPlan(index)"
                     class="room_times"
                     style="margin: 0 8px">
@@ -1341,7 +1334,7 @@ onMounted(() => {
             <div class="condition-bar" v-for="(conditionType, key) in operatorFilterConditionTable"
                  v-show="conditionType.display" :key="key">
               <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
-              <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"
+              <v-btn v-for="(condition, index) in conditionType.conditions" :key="index" size="small" class="m-2"
                      color="primary" :variant="filterBtnStatus(key, condition.label)" @click="filterOperatorByTag(condition, key)">
                 {{ translate('schedule', condition.label) }}
               </v-btn>
@@ -1355,7 +1348,7 @@ onMounted(() => {
                      v-model="searchInputText">
               <span class="input-group-text">{{ translate('schedule', 'schedule.SearchInputTip') }}</span>
             </div>
-            <v-btn color="primary" :variant="filterNotOwnOperator?void 0:`tonal`" @click="filterOperatorByOwn">隐藏未招募干员
+            <v-btn color="primary" :variant="filterNotOwnOperator?void 0:`tonal`" size="small" @click="filterOperatorByOwn">隐藏未招募干员
             </v-btn>
           </div>
           <div class="operator-check-box-group">
