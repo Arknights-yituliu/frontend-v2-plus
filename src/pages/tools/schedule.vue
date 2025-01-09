@@ -1358,16 +1358,15 @@ onMounted(() => {
             <span class="condition-tip">{{ translate('schedule', 'schedule.DeveloperTip') }}</span>
           </div>
 
-          <div class="schedule-operator-search-input-box">
-            <div class="input-group">
-              <input class="input-base" id="input-id" style="width:500px" @input="searchOperatorDebounce()"
-                     v-model="searchInputText">
-              <span class="input-group-text">{{ translate('schedule', 'schedule.SearchInputTip') }}</span>
-            </div>
-            <v-btn color="primary" :variant="filterNotOwnOperator?void 0:`tonal`" size="small"
-                   @click="filterOperatorByOwn">隐藏未招募干员
-            </v-btn>
-          </div>
+          <v-text-field hide-details density="compact" :label=" translate('schedule', 'schedule.SearchInputTip')"
+                        variant="outlined" width="500" class="m-8"
+                        @input="searchOperatorDebounce()" v-model="searchInputText">
+            <template v-slot:append>
+              <v-btn color="primary" text="隐藏未招募干员">
+
+              </v-btn>
+            </template>
+          </v-text-field>
           <div class="operator-check-box-group">
             <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"
                  :id="operator.charId" class="operator-check-box-option">

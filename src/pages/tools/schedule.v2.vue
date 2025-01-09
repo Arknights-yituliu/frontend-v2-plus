@@ -16,7 +16,7 @@ import {translate} from '/src/utils/i18n.js'
 import {getText} from '/src/utils/fileConversion.js'
 import {debounce} from "/src/utils/debounce.js";
 import {cMessage} from '/src/utils/message.js'
-import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
+
 
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {downloadJsonFile} from "/src/utils/download.js";
@@ -321,7 +321,7 @@ function chooseRoom(roomType, index) {
         .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
   }
 
-  popoverOnOpen(`${roomType}#${index}`, 'room-set')
+
 }
 
 let selectBtnKey = ref({})
@@ -922,7 +922,7 @@ function setPosition() {
 
 onMounted(() => {
   filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], 'room')
-  createPopover('room-set', `auto`)
+
   getOperatorDataByAccount()
 })
 

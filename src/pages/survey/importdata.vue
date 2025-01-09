@@ -176,91 +176,114 @@ onMounted(() => {
 <template>
   <div class="import-page">
 
+    <!--    <v-tabs-->
+    <!--        v-model="selectedOption"-->
+    <!--        bg-color="primary"-->
+    <!--    >-->
+    <!--      <v-tab value="password">官网导入</v-tab>-->
+    <!--      <v-tab value="email">邮箱注册</v-tab>-->
+    <!--    </v-tabs>-->
 
-    <div class="import-step" v-show="'hg'===selectedOption">
-      <div class="import-step-item">
-        <div class="import-step-item-title">第一步</div>
-        <p>登录明日方舟官网</p>
-        <button class="btn btn-blue" @click="openLinkOnNewPage(HYPERGRYPH_LINK)">官网链接</button>
-      </div>
 
-      <div class="import-step-item">
-        <div class="import-step-item-title">第二步</div>
-        <img src="/image/skland/hgAPI.jpg" alt="" class="import-step-image">
-        <p>点击对应的服务器链接，将会返回如上图所示的一段数据，将其全部复制</p>
-
-        <button class="btn btn-blue login-btn-line" @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服
-        </button>
-
-        <button class="btn btn-red login-btn-line" @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服
-        </button>
-      </div>
-
-      <div class="import-step-item">
-        <div class="import-step-item-title">第三步</div>
-        <p>输入复制的内容</p>
-        <input class="input" style="display: block;width: 300px;margin: 0 auto 20px" v-model="inputText">
-        <button class="btn btn-blue" @click="getPlayerBindingByHgToken()">导入数据</button>
-      </div>
-
-      <div class="import-step-item">
-        <div class="import-step-item-title">第四步</div>
-        <p>等待上一步获取绑定的uid，选择想导入的uid进行导入</p>
-        <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"
-                v-for="(binding,index) in playBindingList" :key="index"
-                @click="getPlayerInfoByPlayerBinding(binding)">
-          <span> 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>
-        </button>
-      </div>
-
-      <div class="import-step-item">
-        <div class="import-step-item-title">第五步</div>
-        <p>为了您的账号安全，导入后会强制退出官网登录，可以再次进入官网检查登录状态</p>
-        <button class="btn btn-blue" @click="openLinkOnNewPage(HYPERGRYPH_LINK)">官网链接</button>
-      </div>
+    <div class="flex flex-wrap">
+      <v-card class="import-step-card" title="第一步">
+        <v-card-text>
+          <div class="flex flex-col flex-wrap justify-center">
+            <p class="m-12 text-center">登录森空岛</p>
+            <v-btn color="primary" text="森空岛官网链接" class="m-12-a"
+                   @click="openLinkOnNewPage(SKLAND_LINK)">
+            </v-btn>
+            <v-alert :icon="false" color="primary" variant="tonal">此导入方式仅适合电脑，windows系统建议使用microsoft
+              edge浏览器，iOS系统建议使用safari浏览器）
+            </v-alert>
+          </div>
+        </v-card-text>
+      </v-card>
+      <v-card class="import-step-card" title="第二步">
+        <v-card-text>
+          <img src="/image/skland/step1.jpg" alt="" class="import-step-image">
+          <div class="flex flex-col justify-center">
+            <p>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
+            <v-alert :icon="false" color="primary" variant="tonal">
+              localStorage.getItem('SK_OAUTH_CRED_KEY')+','+ localStorage.getItem('SK_TOKEN_CACHE_KEY')
+            </v-alert>
+            <div class="flex flex-col justify-center m-8-a">
+              <v-btn color="primary" text="点击复制" @click="copyText(CONSOLE_CODE)">
+              </v-btn>
+            </div>
+          </div>
+        </v-card-text>
+      </v-card>
+      <v-card class="import-step-card" title="第三步">
+        <v-card-text>
+          <div class="flex flex-col justify-center">
+            <p>此时你可以获得一段神秘的字符，复制这段字符<b>（*不要带引号）</b>，输入到下面的输入框中</p>
+            <v-text-field label="输入神秘字符后点击获取按钮" v-model="inputText"
+                          density="compact" hide-details variant="outlined"
+                          class="m-8">
+            </v-text-field>
+            <v-btn color="primary" text="获取森空岛信息" class="m-8-a" @click="getPlayerBindingBySkland"></v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
+      <v-card class="import-step-card" title="第四步">
+        <v-card-text>
+          <div class="flex flex-col justify-center">
+            <p>上一步完成后可获取绑定的uid，选择想导入的uid进行导入，获取过程可能有网络延迟，请耐心等待</p>
+            <v-btn  v-for="(binding,index) in playBindingList" :key="index"
+                    color="primary"  size="small"
+                    :text="`昵称：${ binding.nickName } 区服：${ binding.channelName } uid：${ binding.uid }`"
+                    @click="getPlayerInfoByPlayerBinding(binding)">
+            </v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
     </div>
 
-    <div class="import-step" v-show="'skland'===selectedOption">
-      <div class="import-step-item">
-        <div class="import-step-item-title">第一步</div>
-        <p>登录森空岛官网</p>
-        <button class="btn btn-blue" @click="openLinkOnNewPage(SKLAND_LINK)">官网链接</button>
-      </div>
 
-      <div class="import-step-item">
-        <div class="import-step-item-title">第二步</div>
-        <img src="/image/skland/step1.jpg" alt="" class="import-step-image">
-        <p>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
-        <p>（windows系统建议使用microsoft edge浏览器，iOS系统建议使用safari浏览器）</p>
-        <p style="color:#6ebeff">localStorage.getItem('SK_OAUTH_CRED_KEY')+','+ localStorage
-          .getItem('SK_TOKEN_CACHE_KEY')</p>
-        <button class="btn btn-orange" style="margin: 0 12px"
-                @click="copyText(CONSOLE_CODE)">点击复制
-        </button>
+<!--    <div class="import-step" v-show="'hg'===selectedOption">-->
+<!--      <div class="import-step-item">-->
+<!--        <div class="import-step-item-title">第一步</div>-->
+<!--        <p>登录明日方舟官网</p>-->
+<!--        <button class="btn btn-blue" @click="openLinkOnNewPage(HYPERGRYPH_LINK)">官网链接</button>-->
+<!--      </div>-->
 
-      </div>
+<!--      <div class="import-step-item">-->
+<!--        <div class="import-step-item-title">第二步</div>-->
+<!--        <img src="/image/skland/hgAPI.jpg" alt="" class="import-step-image">-->
+<!--        <p>点击对应的服务器链接，将会返回如上图所示的一段数据，将其全部复制</p>-->
 
-      <div class="import-step-item">
-        <div class="import-step-item-title">第三步</div>
-        <img src="/image/skland/step2.jpg" alt="" class="import-step-image">
-        <p>此时你可以获得一段神秘的字符，复制这段字符<b>（*不要带引号）</b>，输入到下面的输入框中</p>
-        <v-text-field v-model="inputText" density="compact" hide-details variant="outlined">
-        </v-text-field>
-        <button class="btn btn-blue" @click="getPlayerBindingBySkland">获取森空岛信息</button>
-      </div>
+<!--        <button class="btn btn-blue login-btn-line" @click="openLinkOnNewPage(HYPERGRYPH_TOKEN_API)">官服-->
+<!--        </button>-->
 
-      <div class="import-step-item">
-        <div class="import-step-item-title">第四步</div>
-        <p>等待上一步获取绑定的uid，选择想导入的uid进行导入</p>
-        <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"
-                v-for="(binding,index) in playBindingList" :key="index"
-                @click="getPlayerInfoByPlayerBinding(binding)">
-          <span> 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>
-        </button>
-      </div>
+<!--        <button class="btn btn-red login-btn-line" @click="openLinkOnNewPage(BILIBILI_TOKEN_API)">B服-->
+<!--        </button>-->
+<!--      </div>-->
 
+<!--      <div class="import-step-item">-->
+<!--        <div class="import-step-item-title">第三步</div>-->
+<!--        <p>输入复制的内容</p>-->
+<!--        <input class="input" style="display: block;width: 300px;margin: 0 auto 20px" v-model="inputText">-->
+<!--        <button class="btn btn-blue" @click="getPlayerBindingByHgToken()">导入数据</button>-->
+<!--      </div>-->
 
-    </div>
+<!--      <div class="import-step-item">-->
+<!--        <div class="import-step-item-title">第四步</div>-->
+<!--        <p>等待上一步获取绑定的uid，选择想导入的uid进行导入</p>-->
+<!--        <button class="btn btn-blue" :class="defaultBindUidBtnClass(binding.uid)"-->
+<!--                v-for="(binding,index) in playBindingList" :key="index"-->
+<!--                @click="getPlayerInfoByPlayerBinding(binding)">-->
+<!--          <span> 昵称：{{ binding.nickName }} 区服：{{ binding.channelName }} uid：{{ binding.uid }}</span>-->
+<!--        </button>-->
+<!--      </div>-->
+
+<!--      <div class="import-step-item">-->
+<!--        <div class="import-step-item-title">第五步</div>-->
+<!--        <p>为了您的账号安全，导入后会强制退出官网登录，可以再次进入官网检查登录状态</p>-->
+<!--        <button class="btn btn-blue" @click="openLinkOnNewPage(HYPERGRYPH_LINK)">官网链接</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
   </div>
 </template>
 
@@ -270,6 +293,10 @@ onMounted(() => {
   padding: 1px;
   min-height: 95vh;
 
+  .import-step-card {
+    width: 340px;
+    margin: 4px;
+  }
 
   .checkbox {
     width: 300px;
