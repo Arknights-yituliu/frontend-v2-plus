@@ -732,3 +732,49 @@ backend.yituliu.cn/rogue-seed/list
   }
 }
 ```
+
+
+```json5
+{
+  "code": 200,
+  "msg": "操作成功",
+  "data": [
+    {
+      //种子在数据库中的唯一id
+      seedID:2120049104910,
+      //种子
+      "seed": "1414115151",
+      //用户id
+      "uid": 14401084810,
+      //难度
+      "difficulty": 15,
+      //肉鸽版本
+      "rogueVersion": "萨卡兹的无终奇语DLC-遁入阇那",
+      //肉鸽主题锁死
+      "rogueTheme": "萨卡兹的无终奇语",
+      //分队
+      "squad": "蓝图测绘分队",
+      //结算得分
+      "settlementScore": 2000,
+      //评分
+      "rating":3.4,
+      //评分总数
+      "ratingCount":200,
+      //初始干员
+      "operatorTeam": [
+        '维什戴尔',
+        '古米',
+        '卡达'
+      ],
+      //种子描述
+      "description": "这里写下你的描述",
+      //种子标签
+      "tags": [
+        "萨卡兹的无终奇语",
+        "蓝图测绘分队"
+      ]
+    }
+  ]
+}
+
+```
