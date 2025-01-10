@@ -4,50 +4,40 @@
       <v-card-title class="text-h5">种子上传</v-card-title>
       <v-card-text>
         <!-- 种子输入框 -->
-        <v-text-field label="粘贴种子" v-model="seed" outlined dense placeholder="请输入种子名称"></v-text-field>
-
+        <v-text-field clearable v-model="seed" variant="outlined" hide-details="auto" dense
+          placeholder="在此粘贴种子"></v-text-field>
+        <v-radio-group inline  hide-details="auto" style="margin: 8px auto;">
+          <v-radio label="胡种" value="one" style="padding-right: 8px;"></v-radio>
+          <v-radio label="毒种" value="two" style="padding-right: 8px;"></v-radio>
+          <v-radio label="特殊种" value="three" style="padding-right: 8px;"></v-radio>
+        </v-radio-group>
         <!-- 描述输入框 -->
-        <v-textarea label="种子描述" v-model="description" outlined dense placeholder="请输入种子描述"></v-textarea>
-        <!-- 种子类型三联按钮 -->
-        <div class="my-4">
-          <h4>选择种子类型并上传：</h4>
-          <v-row dense>
-            <v-col cols="auto">
-              <v-btn color="success" outlined @click="seedType = '胡种'">
-                上传胡种
-              </v-btn>
-            </v-col>
-            <v-col cols="auto">
-              <v-btn color="error" outlined @click="seedType = '毒种'">
-                上传毒种
-              </v-btn>
-            </v-col>
-            <v-col cols="auto">
-              <v-btn color="warning" outlined @click="seedType = '特殊种'">
-                上传特殊种
-              </v-btn>
-            </v-col>
-
-          </v-row>
-        </div>
+        <v-textarea label="简单描述一下这个种子" clearable v-model="description" variant="outlined" hide-details="auto" dense
+          placeholder="简单描述一下这个种子"></v-textarea>
 
         <!-- 编队选择按钮组 -->
-        <div class="my-4">
-  <h4>（可选）选择编队：</h4>
-  <v-btn-toggle v-model="selectedTeams" multiple>
-    <v-btn v-for="team in teams" :key="team" color="primary" outlined>{{ team }}</v-btn>
-  </v-btn-toggle>
-</div>
-<div class="my-4">
-  <v-text-field
-    v-model="score"
-    label="（可选）结算分数"
-    outlined
-    type="number"
-    color="primary"
-  ></v-text-field>
-</div>
+        <div class="my-2">
+          <!-- <h4>编队：</h4> -->
+          <v-select v-model="selectedTeams" hide-details="auto" :items="teams"></v-select>
+          <!-- <v-row dense>
+              <v-col cols="auto" v-for="team in teams" :key="team">
+                <v-btn :class="{ 'selected': selectedTeams.includes(team) }" color="primary" outlined
+                  @click="toggleTeam(team)">
+                  {{ team }}
+                </v-btn>
+              </v-col>
+            </v-row> -->
 
+        </div>
+        <div class="my-2">
+          <v-text-field v-model="score" label="（可选）结算分数" hide-details="auto" variant="outlined" type="number"
+            color="primary"></v-text-field>
+        </div>
+        <div class="my-2">
+          <v-btn color="success" outlined @click="seedType = '胡种'">
+            填好了，上传种子！
+          </v-btn>
+        </div>
       </v-card-text>
 
     </v-card>
@@ -60,7 +50,9 @@ export default {
     return {
       seed: "", // 种子名称
       description: "", // 种子描述
-      teams: ["编队1", "编队2", "编队3", "编队4", "编队5", "编队6", "编队7", "编队8", "编队9", "编队10"], // 编队选项
+      tags: ["胡种", "毒种", "特殊种"], // tag选项
+      teams: ["-不限分队-", "因地制宜", "魂灵护送", "博闻广记", "蓝图测绘", "指挥分队", "集群分队", "后勤分队", "矛头分队", "近锋分队", "重辅分队", "狙医分队", "术特分队", "高规格", "点刺成锭", "拟态学者", "异想天开", "专业人士"], // 编队选项
+      selectedTag: null,
       selectedTeams: [], // 用户选择的编队
       seedType: null, // 种子类型
     };
@@ -77,6 +69,9 @@ export default {
       console.log("选择的编队：", this.selectedTeams);
       console.log("种子类型：", this.seedType);
       alert("种子上传成功！");
+    },
+    selectTag(tag) {
+      this.selectedTag = tag; // 设置为选中的按钮
     },
   },
 };
