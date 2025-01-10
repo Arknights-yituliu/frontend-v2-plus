@@ -356,6 +356,12 @@ const routes = [
         component: () => import('/src/pages/tools/rogue/page.vue')
     },
     {
+        path: '/tools/rogue/index',
+        text: '种子收集站',
+        display: false,
+        component: () => import('/src/pages/tools/rogue/index.vue')
+    },
+    {
         path: '/statistics-material',
         text: '材料统计',
         display: false,
