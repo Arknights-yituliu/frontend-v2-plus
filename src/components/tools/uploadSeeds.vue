@@ -4,33 +4,50 @@
       <v-card-title class="text-h5">种子上传</v-card-title>
       <v-card-text>
         <!-- 种子输入框 -->
-        <v-text-field label="种子输入" v-model="seed" outlined dense placeholder="请输入种子名称"></v-text-field>
+        <v-text-field label="粘贴种子" v-model="seed" outlined dense placeholder="请输入种子名称"></v-text-field>
 
         <!-- 描述输入框 -->
         <v-textarea label="种子描述" v-model="description" outlined dense placeholder="请输入种子描述"></v-textarea>
-        <v-card-actions>
-        <!-- 上传按钮 -->
-        <v-btn color="primary" @click="uploadSeed">上传种子</v-btn>
-      </v-card-actions>
+        <!-- 种子类型三联按钮 -->
+        <div class="my-4">
+          <h4>选择种子类型并上传：</h4>
+          <v-row dense>
+            <v-col cols="auto">
+              <v-btn color="success" outlined @click="seedType = '胡种'">
+                上传胡种
+              </v-btn>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn color="error" outlined @click="seedType = '毒种'">
+                上传毒种
+              </v-btn>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn color="warning" outlined @click="seedType = '特殊种'">
+                上传特殊种
+              </v-btn>
+            </v-col>
 
+          </v-row>
+        </div>
 
         <!-- 编队选择按钮组 -->
         <div class="my-4">
-          <h6>选择编队：</h6>
-          <v-btn-toggle v-model="selectedTeams" multiple>
-            <v-btn v-for="team in teams" :key="team" color="primary" outlined>{{ team }}</v-btn>
-          </v-btn-toggle>
-        </div>
+  <h4>（可选）选择编队：</h4>
+  <v-btn-toggle v-model="selectedTeams" multiple>
+    <v-btn v-for="team in teams" :key="team" color="primary" outlined>{{ team }}</v-btn>
+  </v-btn-toggle>
+</div>
+<div class="my-4">
+  <v-text-field
+    v-model="score"
+    label="（可选）结算分数"
+    outlined
+    type="number"
+    color="primary"
+  ></v-text-field>
+</div>
 
-        <!-- 种子类型三联按钮 -->
-        <div class="my-4">
-          <h6>选择种子类型：</h6>
-          <v-btn-toggle v-model="seedType">
-            <v-btn value="毒种" color="error">毒种</v-btn>
-            <v-btn value="胡种" color="success">胡种</v-btn>
-            <v-btn value="特殊种" color="warning">特殊种</v-btn>
-          </v-btn-toggle>
-        </div>
       </v-card-text>
 
     </v-card>
@@ -75,4 +92,3 @@ export default {
   margin: 1rem 0;
 }
 </style>
-
