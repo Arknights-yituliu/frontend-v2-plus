@@ -6,7 +6,7 @@
           <v-row>
             <v-col cols="12" sm="6" md="4" lg="3">
               <v-card outlined>
-                <v-card-title>种子名称: 胡种示例1</v-card-title>
+                <v-card-title>种子名称: 毒示例1</v-card-title>
                 <v-card-subtitle>得分: 95</v-card-subtitle>
                 <v-card-text>
                   <p>难度: 高</p>
