@@ -10,8 +10,8 @@ import "/src/assets/css/sprite/sprite_skill.css";
 import "/src/assets/css/sprite/sprite_rank.css";
 
 // 通用样式
-import '/src/assets/css/common/btn.scss'
-import '/src/assets/css/common/input.scss'
+
+
 import '/src/assets/css/common/title_and_tag.scss'
 import '/src/assets/css/common/popover.scss'
 import '/src/assets/css/common/icon.scss'
