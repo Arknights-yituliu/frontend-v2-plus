@@ -1,8 +1,5 @@
 <template>
   <v-container>
-    <v-card>
-      <v-card-title class="text-h5">种子上传</v-card-title>
-      <v-card-text>
         <!-- 种子输入框 -->
         <v-text-field :rules="seedInputRules" v-model="seedForm.seed" variant="outlined" hide-details="auto" dense>
           <template v-slot:label >
@@ -34,9 +31,6 @@
             填好了，上传种子！
           </v-btn>
         </div>
-      </v-card-text>
-
-    </v-card>
   </v-container>
 </template>
 
