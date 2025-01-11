@@ -5,7 +5,7 @@ export default {
         const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
         return request({
             headers:{"test":'11',Authorization:token},
-            url: `auth/rogue-seed/upload`,
+            url: `rogue/seed/upload`,
             method: "post",
             data:data
         });
