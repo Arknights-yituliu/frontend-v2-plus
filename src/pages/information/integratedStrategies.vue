@@ -792,6 +792,7 @@
       <!-- 萨卡兹的无终奇语 -->
       <!-- 事件：https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88 -->
       <!-- 收藏品：https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E6%83%B3%E8%B1%A1%E5%AE%9E%E4%BD%93%E5%9B%BE%E9%89%B4 -->
+      <!-- 思绪：https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BD%9A%E6%95%A3%E6%80%9D%E7%BB%B4%E8%BE%91%E5%BD%95 -->
       <el-timeline v-else-if="selectedOption === '萨卡兹的无终奇语'">
         <el-timeline-item placement="top" timestamp="第一结局">
           <el-card>
@@ -1100,7 +1101,136 @@
             </el-timeline>
           </el-card>
         </el-timeline-item>
-        <el-timeline-item placement="top" timestamp="尚待更新"/>
+        <el-timeline-item placement="top" timestamp="第五结局">
+          <el-card>
+            <h3>无瑕之日</h3>
+            <el-timeline>
+              <el-timeline-item :icon="Refresh" type="success">
+                <div>
+                  进入任意一个不期而遇节点，触发事件
+                  <el-link
+                      href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%A9%BA%E6%97%A0%E5%89%8D%E5%85%86"
+                      type="primary"
+                  >
+                    “空无前兆”
+                  </el-link>
+                  选择“试着接受它”，获得
+                  <el-tooltip
+                      content="终曲合声会在作战中出现"
+                      effect="light"
+                      placement="top"
+                  >
+                    <el-text tag="ins">【预言显像】</el-text>
+                  </el-tooltip>
+                </div>
+              </el-timeline-item>
+              <el-timeline-item :icon="Battle" color="#5EDFD6">
+                <div>
+                  于作战中击败
+                  <el-link href="https://prts.wiki/w/%E7%BB%88%E6%9B%B2%E5%90%88%E5%A3%B0" type="primary">【终曲合声】
+                  </el-link>
+                  ，获得
+                  <el-tooltip
+                      content="与构想解读获得拯救，可于不期而遇：孤注一掷中使用"
+                      effect="light"
+                      placement="top"
+                  >
+                    <el-text tag="ins">“绝望”</el-text>
+                  </el-tooltip>
+                </div>
+              </el-timeline-item>
+              <el-timeline-item :icon="Search" type="warning">
+                <div>
+                  <span class="optional">（可选）</span>
+                  在任意一个去伪存真节点中消耗1~2个构想将“绝望”逐步组合成
+                  <el-tooltip
+                      content="与构想解读获得停止，可于不期而遇：孤注一掷中使用"
+                      effect="light"
+                      placement="top"
+                  >
+                    <el-text tag="ins">“拯救”</el-text>
+                  </el-tooltip>
+                  或
+                  <el-tooltip
+                      content="可于不期而遇：孤注一掷中使用"
+                      effect="light"
+                      placement="top"
+                  >
+                    <el-text tag="ins">“停止”</el-text>
+                  </el-tooltip>
+                </div>
+              </el-timeline-item>
+              <el-timeline-item :icon="MoreFilled" type="primary">
+                <div>
+                  持有（
+                  <el-tooltip content="对应【终结的骨架】">
+                    <el-text tag="ins">绝望</el-text>
+                  </el-tooltip>
+                  /
+                  <el-tooltip content="对应【终结的躯体】">
+                    <el-text tag="ins">拯救</el-text>
+                  </el-tooltip>
+                  /
+                  <el-tooltip content="对应【终结的实相】">
+                    <el-text tag="ins">停止</el-text>
+                  </el-tooltip>
+                  ）可触发不期而遇
+                  <el-link
+                      href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%AD%A4%E6%B3%A8%E4%B8%80%E6%8E%B7"
+                      type="primary">“孤注一掷”
+                  </el-link>
+                  ，选择
+                  <el-tooltip content="需要“绝望”">
+                    <el-text tag="ins">“以开端铸造钥匙”</el-text>
+                  </el-tooltip>
+                  或
+                  <el-tooltip content="需要“拯救”">
+                    <el-text tag="ins">“以转变铸造钥匙”</el-text>
+                  </el-tooltip>
+                  或
+                  <el-tooltip content="需要“停止”">
+                    <el-text tag="ins">“以终点铸造钥匙”</el-text>
+                  </el-tooltip>
+                  ，获得（
+                  <el-tooltip content="所有干员的部署费用+2，所有敌人受到的物理与法术伤害降低20%" effect="light"
+                              placement="top">
+                    <el-text tag="ins">【终结的骨架】</el-text>
+                  </el-tooltip>
+                  /
+                  <el-tooltip content="所有干员的部署费用+2，所有敌人受到的物理与法术伤害降低20%，所有敌人攻击力+20%"
+                              effect="light" placement="top">
+                    <el-text tag="ins">【终结的躯体】</el-text>
+                  </el-tooltip>
+                  /
+                  <el-tooltip
+                      content="所有干员的部署费用+2，所有敌人受到的物理与法术伤害降低20%，所有敌人攻击力+20%，最终战场上出现额外敌人（隐藏效果：持有此藏品在战斗失败后强制进入特殊的通向死亡的诡谲断章，与【“拱门”与“呼救”】冲突，最先获取的优先触发。特别地，当在诡谲断章的非最终战斗节点中战斗失败时，该效果会使探索继续。该效果全局生效一次）"
+                      effect="light" placement="top">
+                    <el-text tag="ins">【终结的实相】</el-text>
+                  </el-tooltip>
+                  ）和
+                  <el-tooltip
+                      content="让探索开启不同的方向"
+                      effect="light" placement="top">
+                    <el-text tag="ins">【无终之钥】</el-text>
+                  </el-tooltip>
+                </div>
+              </el-timeline-item>
+              <el-timeline-item :icon="BOSS" color="#8A0993">
+                <div>
+                  抵达第6层，通过
+                  <el-link href="https://prts.wiki/w/ISW-DF_%E4%B8%8D%E5%AE%B9%E6%8B%92%E7%BB%9D" type="primary">
+                    【ISW-DF 不容拒绝】
+                  </el-link>
+                  达成结局
+                </div>
+                <div>
+                  <span class="optional warning">（注意）</span>该层只有这一个关卡，若有什么前置运营操作需要在前一层完成
+                </div>
+              </el-timeline-item>
+            </el-timeline>
+          </el-card>
+        </el-timeline-item>
+        <el-timeline-item placement="top" timestamp="完结"/>
       </el-timeline>
     </transition>
   </div>
