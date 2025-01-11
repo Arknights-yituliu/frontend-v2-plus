@@ -1,6 +1,8 @@
-import {onBeforeRouteUpdate, useRouter, createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 import {routes} from "./routes.js";
 import toolApi from "../api/tool.js";
+import {getUserInfo} from "@/utils/user/userInfo.js";
+import {cMessage} from "@/utils/message.js";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -8,19 +10,21 @@ const router = createRouter({
 })
 
 
-router.beforeEach((to, from) => {
-    // const element = document.getElementById('loading')
-    // element.style.display = 'flex'
+router.beforeEach(async (to, from) => {
+    const userInfo = await getUserInfo()
+
+
+    if ('AccountHome'===to.name&&userInfo.status < 0) {
+        cMessage('未登录', 'error')
+        return false;
+    }
+
 })
 
 
 // 可选地，在导航完成时重置加载状态
 router.afterEach((to) => {
-    // const element = document.getElementById('loading')
-    // element.style.display = 'none'
     updateVisits(to.path)
-
-    // setTimeout(() => element.style.display = 'none', 100)
 })
 
 
@@ -29,13 +33,15 @@ function updateVisits(pathName) {
     //访问"/"直接更新
     if (pathName === "/") {
         console.log("访问的是首页");
-        toolApi.updateVisits(pathName);
-        return ;
+        toolApi.updateVisits(pathName).then(r => {
+        });
+        return;
     }
 
     pathName = removeTrailingSlash(pathName, 2);
     console.log("访问的页面是：", pathName);
-    toolApi.updateVisits(pathName);
+    toolApi.updateVisits(pathName).then(r => {
+    });
 
     return 1;
 }

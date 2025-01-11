@@ -99,7 +99,7 @@ function uploadSeed() {
   data.difficulty = _extractNumberAfterSecondComma(data.seed)
 
   rogueSeedAPI.uploadRogueSeed(data).then(response => {
-
+      cMessage('上传成功')
   })
 
   function _extractNumberAfterSecondComma(inputString) {
