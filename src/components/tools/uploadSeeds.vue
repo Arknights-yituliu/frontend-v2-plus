@@ -48,6 +48,7 @@ const seedType = ["胡种", "毒种", "特殊种"]
 const seedInputRules = [value=>extractContent(value)]
 
 function extractContent(inputString) {
+  inputString =  inputString.replace(/[ \f\n\r\t\v\u00a0\u1680\u180e\u2000-\u200b\u2028\u2029\u202f\u205f\u3000\ufeff]+/g, '');
   // 正则表达式匹配[]中的内容
   if (inputString.indexOf("]")>-1) {
     console.log('有方括号')
@@ -71,7 +72,7 @@ function validateFormat(str) {
     seedForm.value.seed = str
   } else {
     // 如果不符合特定格式，返回提示信息
-    return "输入的种子格式不确定或不完整";
+    return "输入的种子格式包含特殊字符或格式不正确";
   }
 }
 

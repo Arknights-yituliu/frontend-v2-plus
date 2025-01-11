@@ -1,67 +1,103 @@
+<script setup>
+import rogueSeedAPI from "/src/api/rogueSeed.js";
+import {onMounted, ref} from "vue";
+import {copyTextToClipboard} from "/src/utils/copyText.js";
+import {cMessage} from "@/utils/message.js";
+
+
+let pageInfo = ref({
+  sortCondition: 'rating',
+  pageNum: 0,
+  pageSize: 30,
+})
+
+let rougeSeedList = ref([])
+
+function getRogueSeedPage() {
+  rogueSeedAPI.getRogueSeedPage(pageInfo.value).then(response => {
+    rougeSeedList.value = response.data
+    rogueSeedAPI.getRogueSeedUserRating().then(response => {
+      let ratingMap = response.data
+      for (const item of rougeSeedList.value) {
+        if (ratingMap[item.seedId]) {
+          item.rating = ratingMap[item.seedId].rating
+        }
+      }
+    })
+  })
+}
+
+function rogueSeedRating(seedId, rating) {
+
+  rogueSeedAPI.rogueSeedRating({seedId: seedId, rating: rating}).then(response => {
+    cMessage('评分成功')
+  })
+}
+
+function getUserRating() {
+
+}
+
+onMounted(() => {
+  getRogueSeedPage()
+})
+
+</script>
+
 <template>
-  <v-container>
-    <v-row dense>
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
-        v-for="(card, index) in cards"
+
+  <v-row dense>
+    <v-col
+        v-for="(rougeSeed, index) in rougeSeedList"
         :key="index"
-      >
-        <v-card class="pa-4 mb-4" outlined style="height: 300px;">
-          <!-- 标题和复制按钮 -->
-          <v-row align="center" justify="space-between">
-            <v-col cols="auto">
-              <h4 class="mb-0">{{ card.title }}</h4>
-            </v-col>
-            <v-col cols="auto">
-              <v-btn text color="primary" @click="copyTitle(card.title)">
-                复制
-              </v-btn>
-            </v-col>
-          </v-row>
+    >
+      <v-card class="rogue-seed-card" outlined>
+        <!-- 标题和复制按钮 -->
+        <v-card-text>
+
+          <div class="flex justify-between align-center m-4-0">
+            {{ rougeSeed.seed }}
+            <v-btn variant="text" color="primary" density="compact" @click="copyTextToClipboard(rougeSeed.seed)">
+              复制
+            </v-btn>
+          </div>
 
           <!-- 标签区域 -->
-          <v-row class="mb-4" dense>
+          <div class="flex flex-wrap m-12-0">
             <v-chip
-              v-for="(tag, tagIndex) in card.tags"
-              :key="tagIndex"
-              color="primary"
-              class="ma-1"
-              outlined
+                v-for="(tag, tagIndex) in rougeSeed.tags"
+                :key="tagIndex"
+                color="primary"
+                class="m-4"
+                density="compact"
             >
               {{ tag }}
             </v-chip>
-          </v-row>
+          </div>
 
           <!-- 描述区域 -->
           <div class="mb-4 description">
-            {{ card.description }}
+            {{ rougeSeed.description }}
           </div>
 
           <!-- 评分模块 -->
-          <v-row align="center" justify="space-between">
-            <v-col cols="auto">
-              <h5>评分：</h5>
-            </v-col>
-            <v-col cols="auto">
-              <v-rating
-                v-model="card.rating"
+          <v-card-actions class="justify-end">
+            <v-rating
+                v-model="rougeSeed.rating"
                 length="5"
-                color="yellow"
+                color="orange"
                 background-color="grey"
                 half-increments
-              ></v-rating>
-            </v-col>
-            <v-col cols="auto">
-              <p class="mb-0">{{ card.rating }}/5</p>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+                @click="rogueSeedRating(rougeSeed.seedId,rougeSeed.rating)"
+            ></v-rating>
+            <p class="mb-0">{{ rougeSeed.rating }}/5</p>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
+
+
   <v-container>
 
     <v-row>
@@ -97,38 +133,6 @@
   </v-container>
 </template>
 
-<script>
-export default {
-  name: "HuZhongBang",
-  data() {
-    return {
-      cards: [
-        {
-          title: "U1eIA1I29844Ae925i,rogue_4,11",
-          description: "这是第一个示例卡片，包含标题、描述、标签、评分和复制功能。",
-          tags: ["胡种", "近锋", "114514分"],
-          rating: 0,
-        },
-        {
-          title: "U1eIA1I29844Ae925i,rogue_4,",
-          description: "这是第二个示例卡片，包含标题、描述、标签、评、标签、评分和复制功能。",
-          tags: ["胡种", "近锋", "114514分"],
-          rating: 0,
-        },
-        // 添加更多卡片
-      ],
-    };
-  },
-  methods: {
-    copyTitle() {
-      navigator.clipboard.writeText(this.title).then(() => {
-        this.$emit("snackbar", "标题已复制到剪贴板！"); // 可触发通知
-      });
-    },
-  },
-};
-
-</script>
 
 <style scoped>
 /* 固定卡片内容高度，描述多行文本截断 */
@@ -136,6 +140,7 @@ export default {
   border-radius: 12px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
+
 .description {
   height: 60px; /* 固定高度 */
   overflow: hidden;

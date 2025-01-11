@@ -183,11 +183,9 @@ onMounted(() => {
       <v-main>
         <v-dialog v-model="feedbackPopupVisible" max-width="500">
           <v-card>
-
-              <div class="flex justify-end m-8"  @click="feedbackPopupVisible=false">
-                <v-icon icon="mdi-close"></v-icon>
-              </div>
-
+            <div class="flex justify-end m-8" @click="feedbackPopupVisible=false">
+              <v-icon icon="mdi-close"></v-icon>
+            </div>
             <v-table>
               <thead>
               <tr>
@@ -209,7 +207,9 @@ onMounted(() => {
               >
                 <td>{{ item.label }}</td>
                 <td>{{ item.description }}</td>
-                <td><v-btn v-show="item.url" color="green" @click="openNewPage(item.label)">点击前往</v-btn></td>
+                <td>
+                  <v-btn v-show="item.url" color="green" @click="openNewPage(item.label)">点击前往</v-btn>
+                </td>
               </tr>
               </tbody>
             </v-table>

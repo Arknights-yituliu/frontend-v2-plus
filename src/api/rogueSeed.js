@@ -2,7 +2,7 @@ import request from "/src/api/request";
 import requestBase from "/src/api/requestBase.js";
 export default {
     uploadRogueSeed(data) {
-        const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
+        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
         return request({
             headers:{"test":'11',Authorization:token},
             url: `rogue/seed/upload`,
@@ -12,7 +12,7 @@ export default {
     },
 
     uploadRogueSeedSettlementChart(data) {
-        const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
+        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
         return request({
             headers:{Authorization:token},
             url: `auth/rogue-seed/settlement-chart`,
@@ -22,10 +22,10 @@ export default {
     },
 
     rogueSeedRating(data) {
-        const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
+        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
         return request({
             headers:{Authorization:token},
-            url: `auth/rogue-seed/rating`,
+            url: `auth/rogue/seed/rating`,
             method: "post",
             data:data
         });
@@ -33,7 +33,7 @@ export default {
 
     getRogueSeedPage(data) {
         return request({
-            url: `auth/rogue-seed/page`,
+            url: `rogue/seed/page`,
             method: "post",
             data:data
         });
@@ -54,11 +54,20 @@ export default {
     },
 
     getRogueSeedRatingList() {
-        const token = `Bearer ${localStorage.getItem("USER_TOKEN")}`
+        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
         return request({
             headers:{"test":'11',Authorization:token},
             url: `auth/rogue-seed/rating/list`,
             method: "get"
         });
     },
+    
+    getRogueSeedUserRating() {
+        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
+        return request({
+            headers:{"test":'11',Authorization:token},
+            url: `auth/rogue/seed/user/rating`,
+            method: "get"
+        });
+    }
 }

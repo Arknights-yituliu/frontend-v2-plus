@@ -379,43 +379,43 @@ const LinkedTable = {
     material: {
         path: '/',
         text: "材料收益",
-        display:true,
-        icon:'mdi-view-grid-plus',
+        display: true,
+        icon: 'mdi-view-grid-plus',
         child: []
     },
     tools: {
         path: '/',
         text: "一图流工具箱",
-        display:true,
-        icon:'mdi-toolbox',
-        child: []
-    },
-    information: {
-        path: '/',
-        text: "信息一览",
-        display:true,
-        icon:'mdi-format-list-bulleted',
+        display: true,
+        icon: 'mdi-toolbox',
         child: []
     },
     survey: {
         path: '/',
         text: "调查与统计",
-        display:true,
-        icon:'mdi-account-box-edit-outline',
+        display: true,
+        icon: 'mdi-account-box-edit-outline',
+        child: []
+    },
+    information: {
+        path: '/',
+        text: "信息一览",
+        display: true,
+        icon: 'mdi-format-list-bulleted',
         child: []
     },
     about: {
         path: '/',
         text: "其他信息",
-        display:true,
-        icon:'mdi-application-cog',
+        display: true,
+        icon: 'mdi-application-cog',
         child: []
     },
     backend: {
         path: '/',
         text: "后台导航",
-        display:false,
-        icon:'mdi-toolbox',
+        display: false,
+        icon: 'mdi-toolbox',
         child: []
     }
 }
@@ -425,10 +425,9 @@ const devRoute = ['/survey/questionnaire']
 let routeMap = new Map()
 
 
-
 for (const route of routes) {
 
-    routeMap.set(route.path,route.text)
+    routeMap.set(route.path, route.text)
 
     if (!route.module) {
         LinkedTable.backend.child.push(route)
@@ -445,5 +444,5 @@ for (const route of routes) {
 }
 
 export {
-    routes, LinkedTable,routeMap
+    routes, LinkedTable, routeMap
 }
