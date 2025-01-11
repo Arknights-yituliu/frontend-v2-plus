@@ -356,7 +356,7 @@ const routes = [
         component: () => import('/src/pages/tools/rogue/page.vue')
     },
     {
-        path: '/tools/rogue/index',
+        path: '/tools/rogue/collect',
         text: '种子收集站',
         display: false,
         component: () => import('/src/pages/tools/rogue/index.vue')
