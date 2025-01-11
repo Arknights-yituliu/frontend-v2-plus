@@ -40,7 +40,7 @@
                   >
                     “解脱？”
                   </el-link>
-                  选择
+                  ，选择
                   <el-tooltip content="消耗1希望">
                     <el-text tag="ins">“太可怜了，仔细观赏”</el-text>
                   </el-tooltip>
@@ -82,7 +82,7 @@
                   >
                     “解脱”
                   </el-link>
-                  选择“询问对方姓名”获得
+                  ，选择“询问对方姓名”获得
                   <el-tooltip content="使【伤心的大锁】自愈能力失效" effect="light" placement="top"
                   >
                     <el-text tag="ins">【空白遗书】</el-text>
@@ -808,7 +808,7 @@
                   >
                     “表达欲”
                   </el-link>
-                  选择
+                  ，选择
                   <el-tooltip content="消耗2缕构想">
                     <el-text tag="ins">“奋起反抗”</el-text>
                   </el-tooltip>
@@ -913,7 +913,7 @@
                   >
                     “表达欲”
                   </el-link>
-                  选择
+                  ，选择
                   <el-tooltip content="消耗2缕构想">
                     <el-text tag="ins">“奋起反抗”</el-text>
                   </el-tooltip>
@@ -1048,7 +1048,7 @@
                   >
                     “原初异途”
                   </el-link>
-                  选择“一片莲瓣”，获得
+                  ，选择“一片莲瓣”，获得
                   <el-tooltip
                       content="战斗获得的指挥经验与源石锭-50%，在狭路相逢中会有奇妙的效果"
                       effect="light"
@@ -1114,7 +1114,7 @@
                   >
                     “空无前兆”
                   </el-link>
-                  选择“试着接受它”，获得
+                  ，选择“试着接受它”，获得
                   <el-tooltip
                       content="终曲合声会在作战中出现"
                       effect="light"
