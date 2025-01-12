@@ -77,18 +77,17 @@ function validateFormat(str) {
 }
 
 let seedForm = ref({
-  "seedId": 1741880747960100,
   "seed": "",
-  'seedType': '',
-  'difficulty': 15,
+  "seedType": 0,
+  "difficulty": 15,
   "rogueVersion": "DLC_2",
   "rogueTheme": "rogue_4",
   "squad": [],
   "score":0,
   "source":'一图流',
-  "operatorTeam": [],
+  "operatorTeam": [''],
   "description": "",
-  "tags": [],
+  "tags": ["萨卡兹的无终奇语","DLC_2"],
   "summaryImageLink": ""
 })
 
@@ -96,6 +95,10 @@ let seedForm = ref({
 
 function uploadSeed() {
   let data = deepClone(seedForm.value)
+
+  for(const item of data.squad){
+    data.tags.push(item)
+  }
 
   data.difficulty = _extractNumberAfterSecondComma(data.seed)
 
