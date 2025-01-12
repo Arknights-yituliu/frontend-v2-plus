@@ -7,7 +7,7 @@
           </template>
         </v-text-field>
         <v-radio-group inline hide-details="auto" class="m-8-a"  v-model="seedForm.seedType" color="primary">
-          <v-radio :label="value" :value="value" v-for="value in seedType" :key="value"></v-radio>
+          <v-radio :label="item.label" :value="item.value" v-for="item in seedType"></v-radio>
         </v-radio-group>
         <!-- 描述输入框 -->
         <v-textarea v-model="seedForm.description" variant="outlined"
@@ -43,7 +43,7 @@ import {cMessage} from "@/utils/message.js";
 
 const teams = ["不限分队", "因地制宜", "魂灵护送", "博闻广记", "蓝图测绘", "指挥分队", "集群分队",
   "后勤分队", "矛头分队", "近锋分队", "重辅分队", "狙医分队", "术特分队", "高规格", "点刺成锭", "拟态学者", "异想天开", "专业人士"] // 编队选项
-const seedType = ["胡种", "毒种", "特殊种"]
+const seedType = [{label:"胡种",value:1},{label:"毒种",value:2},{label:"特殊种",value:3}]
 
 const seedInputRules = [value=>extractContent(value)]
 
