@@ -1,33 +1,27 @@
 import request from "/src/api/request";
 import requestBase from "/src/api/requestBase.js";
+
 export default {
     uploadRogueSeed(data) {
-        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
         return request({
-            headers:{"test":'11',Authorization:token},
-            url: `rogue/seed/upload`,
-            method: "post",
-            data:data
+            url: `rogue/seed/upload`, method: "post",
+            data: data
         });
     },
 
     uploadRogueSeedSettlementChart(data) {
-        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
         return request({
-            headers:{Authorization:token},
             url: `auth/rogue-seed/settlement-chart`,
             method: "post",
-            data:data
+            data: data
         });
     },
 
     rogueSeedRating(data) {
-        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
         return request({
-            headers:{Authorization:token},
             url: `auth/rogue/seed/rating`,
             method: "post",
-            data:data
+            data: data
         });
     },
 
@@ -35,38 +29,15 @@ export default {
         return request({
             url: `rogue/seed/page`,
             method: "post",
-            data:data
+            data: data
         });
     },
 
-    getRogueSeedPageTag() {
-        return request({
-            url: `rogue-seed/page-tag`,
-            method: "get"
-        });
-    },
 
-    getRogueSeedPageByCOS(tag) {
-        return requestBase({
-            url: `https://cos.yituliu.cn/rogue-seed/page/${tag}.json`,
-            method: "get"
-        });
-    },
 
-    getRogueSeedRatingList() {
-        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
-        return request({
-            headers:{"test":'11',Authorization:token},
-            url: `auth/rogue-seed/rating/list`,
-            method: "get"
-        });
-    },
-    
     getRogueSeedUserRating() {
-        const token = `Authorization ${localStorage.getItem("USER_TOKEN")}`
         return request({
-            headers:{"test":'11',Authorization:token},
-            url: `auth/rogue/seed/user/rating`,
+            url: `rogue/seed/user/rating`,
             method: "get"
         });
     }

@@ -128,6 +128,15 @@ const routes = [
         component: () => import('/src/pages/tools/schedule.v2.vue')
     },
     {
+        path: '/tools/rogue/collect',
+        text: '种子收集站',
+        name: 'RogueCollect',
+        display: true,
+        module: 'tools',
+        icon: "mdi-calendar-clock",
+        component: () => import('/src/pages/tools/rogue/index.vue')
+    },
+    {
         path: '/tools/specializationTimeCalculate',
         text: '专精时间减半计算器',
         name: 'HalfOperatorCalculate',
@@ -343,24 +352,7 @@ const routes = [
         display: false,
         component: () => import('/src/pages/video-material/stageV3.vue')
     },
-    {
-        path: '/tools/rogue/seed/upload',
-        text: '种子上传',
-        display: false,
-        component: () => import('/src/pages/tools/rogue/upload.vue')
-    },
-    {
-        path: '/tools/rogue/seed/page',
-        text: '种子收集站',
-        display: false,
-        component: () => import('/src/pages/tools/rogue/page.vue')
-    },
-    {
-        path: '/tools/rogue/collect',
-        text: '种子收集站',
-        display: false,
-        component: () => import('/src/pages/tools/rogue/index.vue')
-    },
+
     {
         path: '/statistics-material',
         text: '材料统计',

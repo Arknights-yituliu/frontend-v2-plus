@@ -11,19 +11,40 @@ let pageInfo = ref({
   pageSize: 30,
 })
 
-let rougeSeedList = ref([])
+let displayRougeSeedList = ref([])
 
-function getRogueSeedPage() {
+let rougeSeedListByDate = ref([])
+let rougeSeedListByRating = ref([])
+
+
+
+function getRogueSeedPage(sortCondition) {
+  pageInfo.value.sortCondition = sortCondition
+  if ('rating' === sortCondition && rougeSeedListByRating.value.length > 10) {
+    displayRougeSeedList.value = rougeSeedListByRating.value
+    getUserRating()
+  }
+
   rogueSeedAPI.getRogueSeedPage(pageInfo.value).then(response => {
-    rougeSeedList.value = response.data
-    rogueSeedAPI.getRogueSeedUserRating().then(response => {
-      let ratingMap = response.data
-      for (const item of rougeSeedList.value) {
-        if (ratingMap[item.seedId]) {
-          item.rating = ratingMap[item.seedId].rating
-        }
+    displayRougeSeedList.value = response.data
+    getUserRating()
+    if ('rating' === sortCondition) {
+      rougeSeedListByRating.value = response.data
+    }
+    if ('date' === sortCondition) {
+      rougeSeedListByDate.value = response.data
+    }
+  })
+}
+
+function getUserRating() {
+  rogueSeedAPI.getRogueSeedUserRating().then(response => {
+    let ratingMap = response.data
+    for (const item of displayRougeSeedList.value) {
+      if (ratingMap[item.seedId]) {
+        item.rating = ratingMap[item.seedId].rating
       }
-    })
+    }
   })
 }
 
@@ -34,21 +55,29 @@ function rogueSeedRating(seedId, rating) {
   })
 }
 
-function getUserRating() {
-
+function sortBtnAction(sortCondition) {
+  if(sortCondition===pageInfo.value.sortCondition) {
+    return 'primary'
+  }
 }
 
 onMounted(() => {
-  getRogueSeedPage()
+  getRogueSeedPage('rating')
 })
 
 </script>
 
 <template>
 
+  <div class="flex justify-end align-center m-8">
+    <v-icon icon="mdi-sort-ascending"></v-icon>
+    <v-btn variant="text" :color="sortBtnAction('rating')" text="按评分" @click="getRogueSeedPage('rating')"></v-btn>
+    <v-btn variant="text" :color="sortBtnAction('date')" text="按时间" @click="getRogueSeedPage('date')"></v-btn>
+  </div>
+
   <v-row dense>
     <v-col
-        v-for="(rougeSeed, index) in rougeSeedList"
+        v-for="(rougeSeed, index) in displayRougeSeedList"
         :key="index"
     >
       <v-card class="rogue-seed-card" outlined>
@@ -98,39 +127,7 @@ onMounted(() => {
   </v-row>
 
 
-  <v-container>
 
-    <v-row>
-      <v-col cols="12" sm="6" md="4" lg="3">
-        <v-card outlined>
-          <v-card-title>这里是种是种是种是种是种是种是种子</v-card-title>
-          <v-card-subtitle>得分: 95</v-card-subtitle>
-          <v-card-text>
-            <p>难度: 高</p>
-            <p>版本: 1.0.1</p>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="success" text>查看详情</v-btn>
-            <v-btn color="primary" text>收藏</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-      <v-col cols="12" sm="6" md="4" lg="3">
-        <v-card outlined>
-          <v-card-title>种子名称: 胡种示例2</v-card-title>
-          <v-card-subtitle>得分: 89</v-card-subtitle>
-          <v-card-text>
-            <p>难度: 中</p>
-            <p>版本: 1.2.0</p>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="success" text>查看详情</v-btn>
-            <v-btn color="primary" text>收藏</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
 </template>
 
 

@@ -1,6 +1,7 @@
 import axios from "axios";
 import {cMessage} from "/src/utils/message.js";
 import {DOMAIN} from "/src/api/BASE_URL";
+import {getUserTokenV2} from "/src/utils/getUserToken.js";
 
 // 创建axios实例
 const service = axios.create({
@@ -11,7 +12,9 @@ const service = axios.create({
 // http request 拦截器
 service.interceptors.request.use(
     (config) => {
-        // config.headers["Access-Control-Max-Age"] = 86400;
+        const userToken = getUserTokenV2();
+        config.headers["Access-Control-Max-Age"] = 86400;
+        config.headers["Authorization"] = userToken;
         // token 先不处理，后续使用时在完善
         return config;
     },
