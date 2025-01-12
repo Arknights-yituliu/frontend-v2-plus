@@ -88,7 +88,7 @@ let seedForm = ref({
   "source":'一图流',
   "operatorTeam": [],
   "description": "",
-  "tags": ["萨卡兹的无终奇语", "蓝图测绘分队"],
+  "tags": [],
   "summaryImageLink": ""
 })
 
