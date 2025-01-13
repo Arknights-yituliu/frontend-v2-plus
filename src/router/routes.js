@@ -128,7 +128,7 @@ const routes = [
         component: () => import('/src/pages/tools/schedule.v2.vue')
     },
     {
-        path: '/tools/rogue/collect',
+        path: '/tools/rogue',
         text: '种子收集站',
         name: 'RogueCollect',
         display: true,
