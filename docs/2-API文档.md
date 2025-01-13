@@ -633,32 +633,57 @@ backend.yituliu.cn/survey/operator/result
 ### 路径：
 
 ```
-backend.yituliu.cn/rogue-seed/upload
+backend.yituliu.cn/rogue/seed/upload
 ```
 
 ### 参数：
 
-请求体
+#### 请求头 headers
 
 ```json5
 {
-  //后端会根据这个判断是一个新种子还是旧种子，如果没有这个id则会进行新增种子操作
-  "seed_id": 1681797491749,
+  //非必须
+  "Authorization": "用户token"
+}
+
+```
+
+#### 请求体 body
+
+```json5
+{
+  //种子
   "seed": "12rui01o1ru01",
-  "rogueVersion": "遁入阇那",
-  "rogueTheme": "萨卡兹的无终奇语",
-  "squad": "蓝图测绘分队",
+  //种子类型   胡种：1、毒种：2、特殊种：3
+  "seedType": 1,
+  //难度
+  "difficulty": 15,
+  //上传来源  自行填写
+  "source": '一图流',
+  //种子描述
+  "description": "这是一个目光呆滞的ew爽局",
+  //肉鸽版本
+  "rogueVersion": "DLC_2",
+  //肉鸽主题 rogue代表萨卡兹的无终奇语
+  "rogueTheme": "rogue_4",
+  //分队
+  "squad": [
+    "蓝图测绘分队",
+    "狙医分队"
+  ],
+  //结算分
+  "score": 0,
+  //初始队伍
   "operatorTeam": [
     "维什戴尔",
     "古米",
     "卡达"
   ],
+  //标签
   "tags": [
     "爽局",
     "目光呆滞"
   ],
-  "description": "这是一个目光呆滞的ew爽局",
-  "summaryImage": "static.yituliu.cn/114.jpg"
 }
 
 ```
@@ -675,20 +700,20 @@ backend.yituliu.cn/rogue-seed/upload
 ### 路径：
 
 ```
-backend.yituliu.cn/rogue-seed/list
+backend.yituliu.cn/rogue/seed/page
 ```
 
 ### 参数：
 
-请求体
+#### 请求体
 
 ```json5
 {
-  //date,rating,time
-  "orderBy": "date",
-  "pageSize":50,
-  "pageNum":1,
-  "keyword": [
+  //目前可根据rating（评分）、date（时间）
+  "sortCondition": "date",
+  "pageSize": 50,
+  "pageNum": 0,
+  "keywords": [
     "维什戴尔",
     "蓝图测绘分队",
     "爽局"
@@ -702,79 +727,48 @@ backend.yituliu.cn/rogue-seed/list
 {
   "code": 200,
   "msg": "操作成功",
-  "data": {
-    "orderBY": "date",
-    "keyword": [
-      "维什戴尔",
-      "蓝图测绘分队",
-      "爽局"
-    ],
-    updateTime: 1514980148180,
-    "list": [
-      {
-        "seed": "12rui01o1ru01",
-        "rogueVersion": "遁入阇那",
-        "rogueTheme": "萨卡兹的无终奇语",
-        "squad": "蓝图测绘分队",
-        "operatorTeam": [
-          "维什戴尔",
-          "古米",
-          "卡达"
-        ],
-        "tags": [
-          "爽局",
-          "目光呆滞"
-        ],
-        "description": "这是一个目光呆滞的ew爽局",
-        "summaryImage": "static.yituliu.cn/114.jpg"
-      }
-    ]
-  }
-}
-```
-
-
-```json5
-{
-  "code": 200,
-  "msg": "操作成功",
   "data": [
     {
-      //种子在数据库中的唯一id
-      seedID:2120049104910,
       //种子
-      "seed": "1414115151",
-      //用户id
-      "uid": 14401084810,
+      "seed": "12rui01o1ru01",
+      //种子类型   胡种：1、毒种：2、特殊种：3
+      "seedType": 1,
       //难度
       "difficulty": 15,
-      //肉鸽版本
-      "rogueVersion": "萨卡兹的无终奇语DLC-遁入阇那",
-      //肉鸽主题锁死
-      "rogueTheme": "萨卡兹的无终奇语",
-      //分队
-      "squad": "蓝图测绘分队",
-      //结算得分
-      "settlementScore": 2000,
-      //评分
-      "rating":3.4,
-      //评分总数
-      "ratingCount":200,
-      //初始干员
-      "operatorTeam": [
-        '维什戴尔',
-        '古米',
-        '卡达'
-      ],
+      //上传来源  自行填写
+      "source": '一图流',
       //种子描述
-      "description": "这里写下你的描述",
-      //种子标签
+      "description": "这是一个目光呆滞的ew爽局",
+      //肉鸽版本
+      "rogueVersion": "DLC_2",
+      //肉鸽主题 rogue代表萨卡兹的无终奇语
+      "rogueTheme": "rogue_4",
+      //分队
+      "squad": [
+        "蓝图测绘分队",
+        "狙医分队"
+      ],
+      //结算分
+      "score": 0,
+      //初始队伍
+      "operatorTeam": [
+        "维什戴尔",
+        "古米",
+        "卡达"
+      ],
+      //标签
       "tags": [
-        "萨卡兹的无终奇语",
-        "蓝图测绘分队"
-      ]
+        "爽局",
+        "目光呆滞"
+      ],
+      //创建时间
+      createTime: 20250520,
+      //评分
+      rating: 2.3,
+      //评分人数
+      ratingCount: 30
     }
   ]
 }
-
 ```
+
