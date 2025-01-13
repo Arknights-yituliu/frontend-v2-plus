@@ -10,8 +10,6 @@ function getUserToken() {
 
 function getUserTokenV2() {
     const item = localStorage.getItem('USER_TOKEN');
-    console.log(typeof item, ' {} ', item)
-
     return `Authorization ${item}`
 }
 
