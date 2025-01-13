@@ -11,28 +11,28 @@ let pageInfo = ref({
   pageSize: 30,
 })
 
-let displayRougeSeedList = ref([])
+let displayRogueSeedList = ref([])
 
-let rougeSeedListByDate = ref([])
-let rougeSeedListByRating = ref([])
+let rogueSeedListByDate = ref([])
+let rogueSeedListByRating = ref([])
 
 
 
 function getRogueSeedPage(sortCondition) {
   pageInfo.value.sortCondition = sortCondition
-  if ('rating' === sortCondition && rougeSeedListByRating.value.length > 10) {
-    displayRougeSeedList.value = rougeSeedListByRating.value
+  if ('rating' === sortCondition && rogueSeedListByRating.value.length > 10) {
+    displayRogueSeedList.value = rogueSeedListByRating.value
     getUserRating()
   }
 
   rogueSeedAPI.getRogueSeedPage(pageInfo.value).then(response => {
-    displayRougeSeedList.value = response.data
+    displayRogueSeedList.value = response.data
     getUserRating()
     if ('rating' === sortCondition) {
-      rougeSeedListByRating.value = response.data
+      rogueSeedListByRating.value = response.data
     }
     if ('date' === sortCondition) {
-      rougeSeedListByDate.value = response.data
+      rogueSeedListByDate.value = response.data
     }
   })
 }
@@ -40,9 +40,9 @@ function getRogueSeedPage(sortCondition) {
 function getUserRating() {
   rogueSeedAPI.getRogueSeedUserRating().then(response => {
     let ratingMap = response.data
-    for (const item of displayRougeSeedList.value) {
+    for (const item of displayRogueSeedList.value) {
       if (ratingMap[item.seedId]) {
-        item.rating = ratingMap[item.seedId].rating
+        item.userRating = ratingMap[item.seedId].rating
       }
     }
   })
@@ -75,67 +75,92 @@ onMounted(() => {
     <v-btn variant="text" :color="sortBtnAction('date')" text="按时间" @click="getRogueSeedPage('date')"></v-btn>
   </div>
 
-  <v-row dense>
-    <v-col
-        v-for="(rougeSeed, index) in displayRougeSeedList"
-        :key="index"
-    >
-      <v-card class="rogue-seed-card" outlined>
-        <!-- 标题和复制按钮 -->
-        <v-card-text>
+  <div class="flex flex-wrap align-center justify-center">
+    <v-card class="rogue-seed-card" outlined  v-for="(rogueSeed, index) in displayRogueSeedList"
+            :key="index">
+      <!-- 标题和复制按钮 -->
+      <v-card-text>
 
-          <div class="flex justify-between align-center m-4-0">
-            {{ rougeSeed.seed }}
-            <v-btn variant="text" color="primary" density="compact" @click="copyTextToClipboard(rougeSeed.seed)">
-              复制
-            </v-btn>
-          </div>
+        <div class="flex align-center m-4-0">
+          <span class="rogue-seed">{{ rogueSeed.seed }}</span>
+          <v-spacer></v-spacer>
+          <v-btn variant="text" color="primary" density="compact" @click="copyTextToClipboard(rogueSeed.seed)">
+            <template v-slot:prepend><v-icon icon="mdi-clipboard"></v-icon></template>
+            复制
+          </v-btn>
+        </div>
+        <div class="flex  align-center m-4-0">
+          <v-icon icon="mdi-thumb-up" color="grey">
 
-          <!-- 标签区域 -->
-          <div class="flex flex-wrap m-12-0">
-            <v-chip
-                v-for="(tag, tagIndex) in rougeSeed.tags"
-                :key="tagIndex"
-                color="primary"
-                class="m-4"
-                density="compact"
-            >
-              {{ tag }}
-            </v-chip>
-          </div>
+          </v-icon>
+          <v-rating color="orange"
+                    density="compact"
+                    length="5"
+                    background-color="grey"
+                    half-increments
+                    v-model="rogueSeed.rating"
+          >
+          </v-rating>
+<!--          <div>-->
+<!--          <span class="avg-rating">{{rogue.rating.toFixed(2)}}</span>-->
+<!--          <span class="rating-ceiling">/5</span>-->
+<!--          </div>-->
+          <v-spacer></v-spacer>
 
-          <!-- 描述区域 -->
-          <div class="mb-4 description">
-            {{ rougeSeed.description }}
-          </div>
+          <v-btn variant="text" color="primary" density="compact"  :text="rogueSeed.uploadTimes">
+            <template v-slot:prepend ><v-icon color="grey" icon="mdi-upload"></v-icon></template>
+          </v-btn>
 
-          <!-- 评分模块 -->
-          <v-card-actions class="justify-end">
-            <v-rating
-                v-model="rougeSeed.rating"
-                length="5"
-                color="orange"
-                background-color="grey"
-                half-increments
-                @click="rogueSeedRating(rougeSeed.seedId,rougeSeed.rating)"
-            ></v-rating>
-            <p class="mb-0">{{ rougeSeed.rating }}/5</p>
-          </v-card-actions>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+        </div>
 
+        <!-- 标签区域 -->
+        <div class="flex flex-wrap m-12-0">
+          <v-chip
+              v-for="(tag, tagIndex) in rogueSeed.tags"
+              :key="tagIndex"
+              color="primary"
+              class="m-4"
+              size="small"
+          >
+            {{ tag }}
+          </v-chip>
+        </div>
 
+        <!-- 描述区域 -->
+        <div class="mb-4 description">
+          {{ rogueSeed.description }}
+        </div>
+
+        <!-- 评分模块 -->
+        <div class="flex align-center justify-end">
+          <v-rating
+              v-model="rogueSeed.userRating"
+              length="5"
+              color="primary"
+              density="compact"
+              background-color="grey"
+              half-increments
+              @click="rogueSeedRating(rogueSeed.seedId,rogueSeed.userRating)"
+          ></v-rating>
+          <span>{{rogueSeed.userRating}}/5</span>
+        </div>
+      </v-card-text>
+    </v-card>
+  </div>
 
 </template>
 
 
 <style scoped>
+
 /* 固定卡片内容高度，描述多行文本截断 */
-.v-card {
-  border-radius: 12px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+
+.avg-rating{
+ font-size: 18px;
+}
+
+.rating-ceiling{
+    font-size:10px;
 }
 
 .description {

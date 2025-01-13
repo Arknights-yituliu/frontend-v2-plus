@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import '/src/assets/css/rogueSeed/rogue-seed-upload.scss'
+import '/src/assets/css/rogue/rogue-seed-upload.scss'
 import rogueSeedAPI from "/src/api/rogueSeed.js";
 import {cMessage} from "/src/utils/message.js";
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
