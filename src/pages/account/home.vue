@@ -180,21 +180,21 @@ onMounted(() => {
         <v-list>
           <v-list-item>
             <div class="opacity-70 user-card-label">头像</div>
-            <div class="m-4 flex items-center user-card-bar justify-between">
+            <div class="m-4 flex align-center user-card-bar justify-between">
               <OperatorAvatar :char-id="userInfo.avatar" rounded size="50"></OperatorAvatar>
               <v-btn color="primary" variant="text" text="修改头像" @click="displayOrUpdateInfo = 'avatar'"></v-btn>
             </div>
           </v-list-item>
           <v-list-item>
             <div class="opacity-70 user-card-label">用户名（账号）</div>
-            <div class="m-4 flex items-center user-card-bar justify-between">
+            <div class="m-4 flex align-center user-card-bar justify-between">
               <span class="font-bold">{{ userInfo.userName }}</span>
               <v-btn color="primary" variant="text" text="修改用户名（账号）" @click="displayOrUpdateInfo = 'userName'"></v-btn>
             </div>
           </v-list-item>
           <v-list-item>
             <div class="opacity-70 user-card-label">绑定邮箱</div>
-            <div class="m-4 flex items-center user-card-bar justify-between">
+            <div class="m-4 flex align-center user-card-bar justify-between">
               <span class="font-bold">{{ userInfo.email }}</span>
               <v-btn color="primary" variant="text" text="修改邮箱" disabled></v-btn>
             </div>

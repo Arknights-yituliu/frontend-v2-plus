@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import '/src/assets/css/rogueSeed/rogue-seed-page.scss'
+import '/src/assets/css/rogue/seed-collect.scss'
 
 import specialSeeds from "/src/components/tools/specialSeeds.vue";
 import goodSeeds from "/src/components/tools/goodSeeds.vue";
