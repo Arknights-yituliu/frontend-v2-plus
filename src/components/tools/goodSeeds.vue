@@ -1,8 +1,8 @@
 <script setup>
 import rogueSeedAPI from "/src/api/rogueSeed.js";
-import {onMounted, ref} from "vue";
-import {copyTextToClipboard} from "/src/utils/copyText.js";
-import {cMessage} from "@/utils/message.js";
+import { onMounted, ref } from "vue";
+import { copyTextToClipboard } from "/src/utils/copyText.js";
+import { cMessage } from "@/utils/message.js";
 
 
 let pageInfo = ref({
@@ -50,13 +50,13 @@ function getUserRating() {
 
 function rogueSeedRating(seedId, rating) {
 
-  rogueSeedAPI.rogueSeedRating({seedId: seedId, rating: rating}).then(response => {
+  rogueSeedAPI.rogueSeedRating({ seedId: seedId, rating: rating }).then(response => {
     cMessage('评分成功')
   })
 }
 
 function sortBtnAction(sortCondition) {
-  if(sortCondition===pageInfo.value.sortCondition) {
+  if (sortCondition === pageInfo.value.sortCondition) {
     return 'primary'
   }
 }
@@ -70,80 +70,68 @@ onMounted(() => {
 <template>
 
   <div class="flex justify-end align-center m-8">
+    强制修改难度为<v-select
+          :items="numbers"
+          label="选择难度"
+          v-model="selectedNumber"
+          outlined
+        ></v-select>
+
     <v-icon icon="mdi-sort-ascending"></v-icon>
     <v-btn variant="text" :color="sortBtnAction('rating')" text="按评分" @click="getRogueSeedPage('rating')"></v-btn>
     <v-btn variant="text" :color="sortBtnAction('date')" text="按时间" @click="getRogueSeedPage('date')"></v-btn>
   </div>
 
   <div class="flex flex-wrap align-center justify-center">
-    <v-card class="rogue-seed-card" outlined  v-for="(rogueSeed, index) in displayRogueSeedList"
-            :key="index">
+    <v-card class="rogue-seed-card" outlined v-for="(rogueSeed, index) in displayRogueSeedList" :key="index">
       <!-- 标题和复制按钮 -->
       <v-card-text>
 
         <div class="flex align-center m-4-0">
           <span class="rogue-seed">{{ rogueSeed.seed }}</span>
           <v-spacer></v-spacer>
-          <v-btn variant="text" color="primary" density="compact" @click="copyTextToClipboard(rogueSeed.seed)">
+          <v-btn color="primary" density="compact" @click="copyTextToClipboard(rogueSeed.seed)">
             <template v-slot:prepend><v-icon icon="mdi-clipboard"></v-icon></template>
             复制
           </v-btn>
         </div>
-        <div class="flex  align-center m-4-0">
-          <v-icon icon="mdi-thumb-up" color="grey">
 
-          </v-icon>
-          <v-rating color="orange"
-                    density="compact"
-                    length="5"
-                    background-color="grey"
-                    half-increments
-                    v-model="rogueSeed.rating"
-          >
-          </v-rating>
-<!--          <div>-->
-<!--          <span class="avg-rating">{{rogue.rating.toFixed(2)}}</span>-->
-<!--          <span class="rating-ceiling">/5</span>-->
-<!--          </div>-->
-          <v-spacer></v-spacer>
-
-          <v-btn variant="text" color="primary" density="compact"  :text="rogueSeed.uploadTimes">
-            <template v-slot:prepend ><v-icon color="grey" icon="mdi-upload"></v-icon></template>
-          </v-btn>
-
-        </div>
 
         <!-- 标签区域 -->
         <div class="flex flex-wrap m-12-0">
-          <v-chip
-              v-for="(tag, tagIndex) in rogueSeed.tags"
-              :key="tagIndex"
-              color="primary"
-              class="m-4"
-              size="small"
-          >
+          <v-chip v-for="(tag, tagIndex) in rogueSeed.tags" :key="tagIndex" color="primary" class="m-4" size="small">
             {{ tag }}
           </v-chip>
         </div>
 
         <!-- 描述区域 -->
-        <div class="mb-4 description">
+        <div class="mb-4 description" style="background-color: antiquewhite;border-radius: 4px;">
+          如果没有描述 显示-无描述-
           {{ rogueSeed.description }}
         </div>
 
         <!-- 评分模块 -->
-        <div class="flex align-center justify-end">
+
+        <v-row justify="center" align="center">
           <v-rating
-              v-model="rogueSeed.userRating"
-              length="5"
-              color="primary"
-              density="compact"
-              background-color="grey"
-              half-increments
-              @click="rogueSeedRating(rogueSeed.seedId,rogueSeed.userRating)"
-          ></v-rating>
-          <span>{{rogueSeed.userRating}}/5</span>
-        </div>
+      v-model="rating" density="compact"
+      readonly
+    ></v-rating>
+          <v-col cols="auto">
+            <v-btn color="primary" @click="likeCount++" :disabled="isLiked">
+              <v-icon left>mdi-thumb-up</v-icon>
+              好玩！ (514)
+            </v-btn>
+          </v-col>
+
+          <v-col cols="auto">
+            <v-btn color="error" @click="dislikeCount++" :disabled="isDisliked">
+              <v-icon left>mdi-thumb-down</v-icon>
+              没意思! (114)
+            </v-btn>
+          </v-col>
+        </v-row>
+
       </v-card-text>
     </v-card>
   </div>
@@ -152,23 +140,24 @@ onMounted(() => {
 
 
 <style scoped>
-
 /* 固定卡片内容高度，描述多行文本截断 */
 
-.avg-rating{
- font-size: 18px;
+.avg-rating {
+  font-size: 18px;
 }
 
-.rating-ceiling{
-    font-size:10px;
+.rating-ceiling {
+  font-size: 10px;
 }
 
 .description {
-  height: 60px; /* 固定高度 */
+  height: 60px;
+  /* 固定高度 */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* 限制显示行数 */
+  -webkit-line-clamp: 3;
+  /* 限制显示行数 */
   -webkit-box-orient: vertical;
 }
 </style>
