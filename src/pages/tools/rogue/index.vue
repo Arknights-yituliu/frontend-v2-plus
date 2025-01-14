@@ -2,7 +2,7 @@
 import {ref} from 'vue'
 import '/src/assets/css/rogueSeed/rogue-seed-page.scss'
 
-
+import specialSeeds from "/src/components/tools/specialSeeds.vue";
 import goodSeeds from "/src/components/tools/goodSeeds.vue";
 import badSeeds from "/src/components/tools/badSeeds.vue";
 import uploadSeeds from "/src/components/tools/uploadSeeds.vue";
@@ -77,12 +77,16 @@ let activeTab = ref('GoodSeed')
       <!-- Tabs -->
       <v-card>
         <v-tabs v-model="activeTab" bg-color="primary" dark>
+          <v-tab value="SpecialSeed">特殊种子</v-tab>
           <v-tab value="GoodSeed">胡种榜</v-tab>
           <v-tab value="BadSeeds">毒种榜</v-tab>
           <v-tab value="UploadSeeds">种子上传</v-tab>
         </v-tabs>
 
         <v-tabs-window v-model="activeTab">
+          <v-tabs-window-item value="SpecialSeed">
+            <specialSeeds/>
+          </v-tabs-window-item>
           <v-tabs-window-item value="GoodSeed">
             <goodSeeds/>
           </v-tabs-window-item>
