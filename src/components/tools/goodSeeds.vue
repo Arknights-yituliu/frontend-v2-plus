@@ -70,27 +70,23 @@ onMounted(() => {
 <template>
 
   <div class="flex justify-end align-center m-8">
-    强制修改难度为<v-select
-          :items="numbers"
-          label="选择难度"
-          v-model="selectedNumber"
-          outlined
-        ></v-select>
-
+    <div class="difficulty-wrap">
+    <v-select :items="numbers" label="选择难度" v-model="selectedNumber" variant="outlined"></v-select>
+    </div>
     <v-icon icon="mdi-sort-ascending"></v-icon>
     <v-btn variant="text" :color="sortBtnAction('rating')" text="按评分" @click="getRogueSeedPage('rating')"></v-btn>
     <v-btn variant="text" :color="sortBtnAction('date')" text="按时间" @click="getRogueSeedPage('date')"></v-btn>
   </div>
 
   <div class="flex flex-wrap align-center justify-center">
-    <v-card class="rogue-seed-card" outlined v-for="(rogueSeed, index) in displayRogueSeedList" :key="index">
+    <v-card class="rogue-seed-card" variant="tonal" v-for="(rogueSeed, index) in displayRogueSeedList" :key="index">
       <!-- 标题和复制按钮 -->
       <v-card-text>
 
         <div class="flex align-center m-4-0">
-          <span class="rogue-seed">{{ rogueSeed.seed }}</span>
+          <span class="rogue-seed" style="border-radius: 8px;padding: 8px;">{{ rogueSeed.seed }}</span>
           <v-spacer></v-spacer>
-          <v-btn color="primary" density="compact" @click="copyTextToClipboard(rogueSeed.seed)">
+          <v-btn color="primary" @click="copyTextToClipboard(rogueSeed.seed)">
             <template v-slot:prepend><v-icon icon="mdi-clipboard"></v-icon></template>
             复制
           </v-btn>
@@ -99,35 +95,34 @@ onMounted(() => {
 
         <!-- 标签区域 -->
         <div class="flex flex-wrap m-12-0">
+          <v-chip color="green" class="m-4" size="small">
+            已复制
+          </v-chip>
           <v-chip v-for="(tag, tagIndex) in rogueSeed.tags" :key="tagIndex" color="primary" class="m-4" size="small">
             {{ tag }}
           </v-chip>
         </div>
 
         <!-- 描述区域 -->
-        <div class="mb-4 description" style="background-color: antiquewhite;border-radius: 4px;">
+        <div class="mb-4 description" style="background-color: #55553322;border-radius: 12px;padding: 8px;">
           如果没有描述 显示-无描述-
           {{ rogueSeed.description }}
         </div>
 
         <!-- 评分模块 -->
 
-        <v-row justify="center" align="center">
-          <v-rating
-      v-model="rating" density="compact"
-      readonly
-    ></v-rating>
+        <v-row justify="center" align="center" dense>
           <v-col cols="auto">
-            <v-btn color="primary" @click="likeCount++" :disabled="isLiked">
+            <v-btn color="primary" @click="likeCount++" :disabled="isLiked" rounded="xl" variant="outlined">
               <v-icon left>mdi-thumb-up</v-icon>
-              好玩！ (514)
+              <!-- 好玩！ (514) -->
             </v-btn>
           </v-col>
-
+          <v-rating v-model="rating" density="compact" readonly></v-rating>
           <v-col cols="auto">
-            <v-btn color="error" @click="dislikeCount++" :disabled="isDisliked">
+            <v-btn color="error" @click="dislikeCount++" :disabled="isDisliked" rounded="xl" variant="outlined">
               <v-icon left>mdi-thumb-down</v-icon>
-              没意思! (114)
+              <!-- 没意思! (114) -->
             </v-btn>
           </v-col>
         </v-row>
