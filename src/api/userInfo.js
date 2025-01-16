@@ -31,13 +31,6 @@ export default {
   },
 
 
-  getUserInfo(token){
-    return request({
-      url: `user/info?token=${token}`,
-      method: "get",
-    })
-  },
-
   /**
    * 发送邮件验证码
    * @param userData  内部数据包括邮件用途，邮箱等
@@ -87,52 +80,9 @@ export default {
 
 
 
-  /**
-   * 发送邮件验证码
-   * @param userData  内部数据包括邮件用途，邮箱等
-   * @returns {*}  成功信息
-   */
-  sendVerificationCode(userData){
+  uploadOperatorInfo(characterList) {
     return request({
-      url: `${api_name}/user/emailCode`,
-      method: "post",
-      data: userData,
-    })
-  },
-
-  /**
-   * 更新用户信息
-   * @param data
-   * @returns {*}
-   */
-  updateUserData(data) {
-    return request({
-      url: `${api_name}/user/update`,
-      method: "post",
-      data: data,
-    })
-  },
-
-
-  /**
-   * 通过cred找回账号
-   * @param data
-   * @returns {*}
-   */
-  retrievalUserAccountByCred(data){
-    return request({
-      url: `${api_name}/character/user/retrieval`,
-      method: "post",
-      data: data,
-    })
-  },
-
-
-
-
-  uploadCharacter(characterList, token) {
-    return request({
-      url: `${api_name}/character/upload?token=${token}`,
+      url: `${api_name}/auth/character/upload`,
       method: "post",
       data: characterList,
     })

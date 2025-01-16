@@ -2,14 +2,11 @@
 import {ref} from 'vue'
 import '/src/assets/css/rogue/seed-collect.scss'
 
-import specialSeeds from "/src/components/tools/specialSeeds.vue";
-import goodSeeds from "/src/components/tools/goodSeeds.vue";
-import badSeeds from "/src/components/tools/badSeeds.vue";
+import SeedTable from "/src/pages/tools/rogue/SeedTable.vue";
 import uploadSeeds from "/src/components/tools/uploadSeeds.vue";
 
 
 let activeTab = ref('GoodSeed')
-
 
 </script>
 
@@ -85,13 +82,13 @@ let activeTab = ref('GoodSeed')
 
         <v-tabs-window v-model="activeTab">
           <v-tabs-window-item value="SpecialSeed">
-            <specialSeeds/>
+            <SeedTable :seed-type="3"/>
           </v-tabs-window-item>
           <v-tabs-window-item value="GoodSeed">
-            <goodSeeds/>
+            <SeedTable :seed-type="1"/>
           </v-tabs-window-item>
           <v-tabs-window-item value="BadSeeds">
-            <badSeeds/>
+            <SeedTable :seed-type="2"/>
           </v-tabs-window-item>
           <v-tabs-window-item value="UploadSeeds">
             <uploadSeeds/>

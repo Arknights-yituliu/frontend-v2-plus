@@ -1,14 +1,11 @@
 <script setup>
 import {onMounted, ref, watch} from "vue"
-
 import '/src/assets/css/tool/schedule.v2.css'
 import '/src/assets/css/information/building_skill_font_color.css'
-
 import SCHEDULE_TEMPLATE from '/src/static/json/build/plans_template.json'
 import character_table from '/src/static/json/survey/character_table_simple.json'
 import SCHEDULE_MENU from '/src/static/json/build/schedule_menu.json'
 import BUILDING_TABLE from '/src/static/json/build/building_table.json'
-
 import buildingApi from '/src/api/building.js'
 import operatorDataAPI from '/src/api/operatorData.js'
 import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
@@ -16,11 +13,8 @@ import {translate} from '/src/utils/i18n.js'
 import {getText} from '/src/utils/fileConversion.js'
 import {debounce} from "/src/utils/debounce.js";
 import {cMessage} from '/src/utils/message.js'
-
-
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {downloadJsonFile} from "/src/utils/download.js";
-import {getUserInfo} from "/src/utils/user/userInfo.js";
 import {useDisplay} from 'vuetify'
 
 const useDisplay1 = useDisplay()
@@ -53,18 +47,7 @@ for (const type in operatorFilterConditionTable) {
 }
 
 async function getOperatorDataByAccount() {
-
-  const userInfo = await getUserInfo("Schedule")
-
-  const data = {
-    token: userInfo.token
-  }
-
-  if (userInfo.status < 0) {
-    return
-  }
-
-  operatorDataAPI.getOperatorData(data).then(response => {
+  operatorDataAPI.getOperatorData().then(response => {
     for (const operator of response.data) {
       operatorOwnMap.set(operator.charId, operator.own)
     }

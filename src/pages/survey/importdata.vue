@@ -8,7 +8,7 @@ import sklandApi from "../../utils/survey/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";
 import operatorDataAPI from '/src/api/operatorData.js'
 import {useRouter} from "vue-router";
-import {getUserToken} from "/src/utils/getUserToken.js";
+
 
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
 const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'
@@ -93,8 +93,6 @@ async function getPlayerInfoByPlayerBinding(akPlayerBinding) {
   data.channelName = channelName
   data.channelMasterId = channelMasterId
   data.nickName = nickName;
-  data.token = getUserToken()
-
   await uploadSKLandData(data)
 
 }

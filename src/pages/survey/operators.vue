@@ -22,16 +22,6 @@ let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 
 let displayTabHeader = ref('干员筛选')
 
-//用户信息
-let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, token: void 0});
-
-/**
- * 获取本地缓存的用户信息
- */
-async function getUserInfoAndOperatorData() {
-  userData.value = await getUserInfo("Survey-Operators")
-  getOperatorData()
-}
 
 
 //后端返回的用户干员信息
@@ -45,16 +35,9 @@ let operatorIdAndIndexDict = ref({})
  * 找回填写过的角色信息
  */
 function getOperatorData() {
-  //检查是否登录
-  if (checkUserStatus(false)) {
-    console.log("未登录")
-    return;
-  }
-
-  const data = {token: userData.value.token}
 
   //根据一图流的token查询用户填写的干员数据
-  operatorDataAPI.getOperatorData(data).then((response) => {
+  operatorDataAPI.getOperatorData().then((response) => {
     let list = response.data; //后端返回的数据
     //转为前端的数据格式
 
@@ -180,7 +163,7 @@ function importDataBySkland() {
  */
 const upload = debounce(() => {
   let uploadList = createUploadData();
-  userAPI.uploadCharacter(uploadList, userData.value.token).then((response) => {
+  userAPI.uploadOperatorInfo(uploadList).then((response) => {
     uploadMessage.value = response.data;
     cMessage("保存成功");
     selectedCharId.value = {};
@@ -297,24 +280,11 @@ function getSkillSprite(id) {
 }
 
 
-/**
- * 检查用户状态
- * @param notice 是否弹出提示
- * @returns {boolean} 状态
- */
-function checkUserStatus(notice) {
-  if (!userData.value.token) {
-    if (notice) {
-      cMessage('请先注册或登录一图流账号', 'error')
-    }
-    return true;
-  }
-  return false
-}
+
 
 onMounted(() => {
 
-  getUserInfoAndOperatorData()
+  getOperatorData()
 });
 </script>
 

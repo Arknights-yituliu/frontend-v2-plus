@@ -8,7 +8,7 @@ let userInfo = ref({uid: 0, userName: "未登录",avatar:'', akUid: "0", status:
 
 async function getUserInfo(page,errorMessage=false) {
 
-    const USER_TOKEN = localStorage.getItem("USER_TOKEN")
+    const USER_TOKEN = encodeURIComponent(localStorage.getItem("USER_TOKEN"))
     let info = {uid: 0, userName: "未登录", akUid: "0",avatar:'', status: -100, token: void 0}
 
     await request({

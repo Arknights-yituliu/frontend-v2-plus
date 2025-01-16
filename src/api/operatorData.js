@@ -19,7 +19,7 @@ export default {
 
     uploadSkLandOperatorDataV3(data){
         return request({
-            url: `${api_name}/operator/import/skland/v3`,
+            url: `${api_name}/auth/operator/import/skland/v3`,
             method: "post",
             data: data,
         })
@@ -64,14 +64,13 @@ export default {
 
     /**
      * 找回用户填写的干员数据
-     * @param data
      * @returns {*}
      */
-    getOperatorData(data) {
+    getOperatorData() {
+        const USER_TOKEN = encodeURIComponent(localStorage.getItem("USER_TOKEN"))
         return request({
-            url: `${api_name}/operator/info`,
-            method: "post",
-            data:data
+            url: `${api_name}/operator/info?token=${USER_TOKEN}`,
+            method: "get"
         })
     },
 

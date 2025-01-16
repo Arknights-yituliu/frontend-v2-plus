@@ -123,37 +123,37 @@ function updateEmail() {
 
 let operatorList = ref([])
 
-function getOperatorData() {
-  //检查是否登录
-  const data = {token: localStorage.getItem('USER_TOKEN')}
-  //根据一图流的token查询用户填写的干员数据
-  operatorDataAPI.getOperatorData(data).then((response) => {
-    let list = response.data; //后端返回的数据
-    //转为前端的数据格式
-    operatorList.value = []
-    let tmpList = []
-    for (const item of list) {
-      const charId = item.charId;
-      if (CHARACTER_TABLE[charId]) {
-        let formatData = JSON.parse(JSON.stringify(CHARACTER_TABLE[charId]))
-        formatData.elite = item.elite;
-        formatData.level = item.level;
-        formatData.potential = item.potential;
-        formatData.mainSkill = item.mainSkill;
-        formatData.skill1 = item.skill1;
-        formatData.skill2 = item.skill2;
-        formatData.skill3 = item.skill3;
-        formatData.modX = item.modX;
-        formatData.modY = item.modY;
-        formatData.modD = item.modD;
-        formatData.own = item.own;
-        formatData.modA = item.modA;
-        tmpList.push(formatData)
-      }
-    }
-    operatorList.value = tmpList
-  });
-}
+// function getOperatorData() {
+//   //检查是否登录
+//   const data = {token: localStorage.getItem('USER_TOKEN')}
+//   //根据一图流的token查询用户填写的干员数据
+//   operatorDataAPI.getOperatorData(data).then((response) => {
+//     let list = response.data; //后端返回的数据
+//     //转为前端的数据格式
+//     operatorList.value = []
+//     let tmpList = []
+//     for (const item of list) {
+//       const charId = item.charId;
+//       if (CHARACTER_TABLE[charId]) {
+//         let formatData = JSON.parse(JSON.stringify(CHARACTER_TABLE[charId]))
+//         formatData.elite = item.elite;
+//         formatData.level = item.level;
+//         formatData.potential = item.potential;
+//         formatData.mainSkill = item.mainSkill;
+//         formatData.skill1 = item.skill1;
+//         formatData.skill2 = item.skill2;
+//         formatData.skill3 = item.skill3;
+//         formatData.modX = item.modX;
+//         formatData.modY = item.modY;
+//         formatData.modD = item.modD;
+//         formatData.own = item.own;
+//         formatData.modA = item.modA;
+//         tmpList.push(formatData)
+//       }
+//     }
+//     operatorList.value = tmpList
+//   });
+// }
 
 /**
  * 退出登录

@@ -1,46 +1,34 @@
 <script setup>
 import rogueSeedAPI from "/src/api/rogueSeed.js";
-import { onMounted, ref } from "vue";
-import { copyTextToClipboard } from "/src/utils/copyText.js";
-import { cMessage } from "@/utils/message.js";
+import {onMounted, ref, watch} from "vue";
+import {copyTextToClipboard} from "/src/utils/copyText.js";
+import {cMessage} from "@/utils/message.js";
 
 
 let pageInfo = ref({
   sortCondition: 'rating',
   pageNum: 0,
   pageSize: 30,
+  seedType:1
 })
 
-let displayRogueSeedList = ref([])
-
-let rogueSeedListByDate = ref([])
-let rogueSeedListByRating = ref([])
+const props = defineProps(["modelValue", 'seedType']);
 
 
-
+let rogueSeedList = ref([])
 function getRogueSeedPage(sortCondition) {
   pageInfo.value.sortCondition = sortCondition
-  if ('rating' === sortCondition && rogueSeedListByRating.value.length > 10) {
-    displayRogueSeedList.value = rogueSeedListByRating.value
-    getUserRating()
-  }
-
+  pageInfo.value.seedType = props.seedType
   rogueSeedAPI.getRogueSeedPage(pageInfo.value).then(response => {
-    displayRogueSeedList.value = response.data
+    rogueSeedList.value = response.data
     getUserRating()
-    if ('rating' === sortCondition) {
-      rogueSeedListByRating.value = response.data
-    }
-    if ('date' === sortCondition) {
-      rogueSeedListByDate.value = response.data
-    }
   })
 }
 
 function getUserRating() {
   rogueSeedAPI.getRogueSeedUserRating().then(response => {
     let ratingMap = response.data
-    for (const item of displayRogueSeedList.value) {
+    for (const item of rogueSeedList.value) {
       if (ratingMap[item.seedId]) {
         item.userRating = ratingMap[item.seedId].rating
       }
@@ -48,10 +36,18 @@ function getUserRating() {
   })
 }
 
-function rogueSeedRating(seedId, rating) {
+function rogueSeedRating(seedIndex,oldRating,newRating) {
 
-  rogueSeedAPI.rogueSeedRating({ seedId: seedId, rating: rating }).then(response => {
-    cMessage('评分成功')
+  if(oldRating===newRating){
+    rogueSeedList.value[seedIndex].userRating=-1;
+  }else {
+    rogueSeedList.value[seedIndex].userRating=newRating;
+  }
+
+  const seedId = rogueSeedList.value[seedIndex].seedId
+
+  rogueSeedAPI.rogueSeedRating({seedId: seedId, rating: newRating}).then(response => {
+    cMessage(response.data)
   })
 }
 
@@ -61,8 +57,25 @@ function sortBtnAction(sortCondition) {
   }
 }
 
+function ratingBtnAction(oldRating,newRating){
+   if(oldRating===0&&oldRating===newRating){
+
+     return 'error'
+   }
+   if(oldRating===1&&oldRating===newRating){
+     return 'primary'
+   }
+
+   return 'gery'
+}
+
 onMounted(() => {
-  getRogueSeedPage('rating')
+  getRogueSeedPage(pageInfo.value.sortCondition)
+})
+
+
+watch(()=>props.seedType,(newVal,oldVal) => {
+  getRogueSeedPage(pageInfo.value.sortCondition)
 })
 
 </script>
@@ -71,7 +84,7 @@ onMounted(() => {
 
   <div class="flex justify-end align-center m-8">
     <div class="difficulty-wrap">
-    <v-select :items="numbers" label="选择难度" v-model="selectedNumber" variant="outlined"></v-select>
+      <v-select :items="numbers" label="选择难度" v-model="selectedNumber" variant="outlined"></v-select>
     </div>
     <v-icon icon="mdi-sort-ascending"></v-icon>
     <v-btn variant="text" :color="sortBtnAction('rating')" text="按评分" @click="getRogueSeedPage('rating')"></v-btn>
@@ -79,7 +92,7 @@ onMounted(() => {
   </div>
 
   <div class="flex flex-wrap align-center justify-center">
-    <v-card class="rogue-seed-card" variant="tonal" v-for="(rogueSeed, index) in displayRogueSeedList" :key="index">
+    <v-card class="rogue-seed-card" v-for="(rogueSeed, seedIndex) in rogueSeedList" :key="seedIndex">
       <!-- 标题和复制按钮 -->
       <v-card-text>
 
@@ -87,7 +100,9 @@ onMounted(() => {
           <span class="rogue-seed" style="border-radius: 8px;padding: 8px;">{{ rogueSeed.seed }}</span>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="copyTextToClipboard(rogueSeed.seed)">
-            <template v-slot:prepend><v-icon icon="mdi-clipboard"></v-icon></template>
+            <template v-slot:prepend>
+              <v-icon icon="mdi-clipboard"></v-icon>
+            </template>
             复制
           </v-btn>
         </div>
@@ -104,27 +119,36 @@ onMounted(() => {
         </div>
 
         <!-- 描述区域 -->
-        <div class="mb-4 description" style="background-color: #55553322;border-radius: 12px;padding: 8px;">
-          如果没有描述 显示-无描述-
-          {{ rogueSeed.description }}
-        </div>
+        <v-alert :icon="false"
+                 :text=" rogueSeed.description"
+                 type="info"
+                 variant="tonal"
+                 height="100"
+          class="m-8-0">
+
+        </v-alert>
+        <!--        <div class="mb-4 description" >-->
+        <!--          如果没有描述 显示-无描述- -->
+        <!--          {{ }}-->
+        <!--        </div>-->
 
         <!-- 评分模块 -->
 
         <v-row justify="center" align="center" dense>
           <v-col cols="auto">
-            <v-btn color="primary" @click="likeCount++" :disabled="isLiked" rounded="xl" variant="outlined">
+            <v-btn :color="ratingBtnAction(rogueSeed.userRating,1)"  size="small" rounded="xl" variant="elevated"  @click="rogueSeedRating(seedIndex,rogueSeed.userRating,1)">
               <v-icon left>mdi-thumb-up</v-icon>
               <!-- 好玩！ (514) -->
             </v-btn>
           </v-col>
-          <v-rating v-model="rating" density="compact" readonly></v-rating>
+          <v-rating v-model="rogueSeed.rating" color="primary" half-increments density="compact" readonly></v-rating>
           <v-col cols="auto">
-            <v-btn color="error" @click="dislikeCount++" :disabled="isDisliked" rounded="xl" variant="outlined">
+            <v-btn :color="ratingBtnAction(rogueSeed.userRating,0)"  size="small"   rounded="xl" variant="elevated" @click="rogueSeedRating(seedIndex,rogueSeed.userRating,0)">
               <v-icon left>mdi-thumb-down</v-icon>
               <!-- 没意思! (114) -->
             </v-btn>
           </v-col>
+          {{rogueSeed.userRating}}
         </v-row>
 
       </v-card-text>
@@ -154,5 +178,8 @@ onMounted(() => {
   -webkit-line-clamp: 3;
   /* 限制显示行数 */
   -webkit-box-orient: vertical;
+  background-color: #55553322;
+  border-radius: 12px;
+  padding: 8px;
 }
 </style>
