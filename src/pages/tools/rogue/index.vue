@@ -75,7 +75,7 @@ let activeTab = ref('GoodSeed')
 
 
       <!-- Tabs -->
-      <v-card>
+
         <v-tabs v-model="activeTab" bg-color="primary" dark>
           <v-tab value="SpecialSeed">特殊种子</v-tab>
           <v-tab value="GoodSeed">胡种榜</v-tab>
@@ -98,7 +98,6 @@ let activeTab = ref('GoodSeed')
           </v-tabs-window-item>
           <!-- Tab content -->
         </v-tabs-window>
-      </v-card>
 
 
 

@@ -27,7 +27,7 @@ let operatorOwnMap = new Map()
 
 async function getOperatorDataByAccount() {
 
-  const userInfo = await getUserInfo()
+  const userInfo = await getUserInfo("Schedule")
 
   const data = {
     token: userInfo.token

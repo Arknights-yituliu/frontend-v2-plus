@@ -54,7 +54,7 @@ for (const type in operatorFilterConditionTable) {
 
 async function getOperatorDataByAccount() {
 
-  const userInfo = await getUserInfo()
+  const userInfo = await getUserInfo("Schedule")
 
   const data = {
     token: userInfo.token

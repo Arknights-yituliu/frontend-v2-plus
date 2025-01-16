@@ -72,8 +72,7 @@ let homeMenu = ref(false);
 
 
 function getUserInfoByToken() {
-  getUserInfo()
-
+  getUserInfo("User")
 }
 
 //登出
@@ -91,10 +90,10 @@ onMounted(() => {
 
 const route = useRoute();
 
-watch(() => route.fullPath, (newVal, oldValue) => {
-
-  getUserInfoByToken()
-})
+// watch(() => route.fullPath, (newVal, oldValue) => {
+//
+//   getUserInfoByToken()
+// })
 
 </script>
 

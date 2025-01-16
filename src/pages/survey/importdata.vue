@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
 import SklandAPI from '/src/utils/survey/skland.js'
-import {getUserInfo} from "/src/utils/user/userInfo.js";
+import {userInfo} from "/src/utils/user/userInfo.js";
 import {cMessage} from "/src/utils/message.js";
 import sklandApi from "../../utils/survey/skland.js";
 import characterTable from "/src/static/json/survey/character_table_simple.json";
@@ -22,7 +22,7 @@ function openLinkOnNewPage(url) {
 
 let selectedOption = ref('skland')
 
-const userInfo = ref({})
+
 
 function optionLineClass(type) {
   if (type === selectedOption.value) {
@@ -85,8 +85,6 @@ async function getPlayerBindingBySkland() {
 
 async function getPlayerInfoByPlayerBinding(akPlayerBinding) {
   const {uid, nickName, channelName, channelMasterId} = akPlayerBinding
-
-  userInfo.value = await getUserInfo()
 
   checkUserStatus(true)
 

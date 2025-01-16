@@ -5,7 +5,7 @@ import surveyApi from "/src/api/userInfo"
 import operator_table_simple from '/src/static/json/survey/character_table_simple.json'
 import "/src/assets/css/survey/home.scss";
 import "/src/assets/css/survey/home.phone.scss";
-import {getUserInfo} from '/src/utils/user/userInfo.js'
+import {userInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import operatorDataAPI from "@/api/operatorData.js";
 import CHARACTER_TABLE from "@/static/json/survey/character_table_simple.json";
@@ -32,10 +32,10 @@ for (const char_id in operator_table_simple) {
 avatarList.sort((a, b) => b.rarity - a.rarity)
 
 
-let userInfo = ref({});
+
 
 async function getUserInfoByToken() {
-  userInfo.value = await getUserInfo()
+
   inputContent.value.userName = userInfo.value.userName
   selectedAvatar.value = userInfo.value.avatar
 }

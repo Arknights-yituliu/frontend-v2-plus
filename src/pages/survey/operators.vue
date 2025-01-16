@@ -29,7 +29,7 @@ let userData = ref({uid: 0, userName: "未登录", akUid: "0", status: -100, tok
  * 获取本地缓存的用户信息
  */
 async function getUserInfoAndOperatorData() {
-  userData.value = await getUserInfo()
+  userData.value = await getUserInfo("Survey-Operators")
   getOperatorData()
 }
 
