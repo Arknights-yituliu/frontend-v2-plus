@@ -7,9 +7,8 @@
     框架：<a href="https://cn.vuejs.org">vue@3</a> <br/>
     vite插件（服务端渲染）：<a href="https://cn.vite-plugin-ssr.com">vite-plugin-ssr</a>
     <h4>后端</h4>
-    框架：<a href="https://spring.io/projects/spring-boot">Spring Boot 2</a> <br/>
-    数据库：<a href="https://www.mysql.com/">Mysql 5.7</a> 、
-    <a href="https://redis.io/">redis 7</a>
+    框架：<a href="https://spring.io/projects/spring-boot">Spring Boot 3</a> <br/>
+    数据库：<a href="https://www.mysql.com/">Mysql 8.0</a> 、<a href="https://redis.io/">redis 7</a>
 
     <h2>示例/沙盒</h2>
     <a href="http://localhost:3000/design">http://localhost:3000/design</a>
