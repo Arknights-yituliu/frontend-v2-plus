@@ -10,8 +10,6 @@ import "/src/assets/css/sprite/sprite_skill.css";
 import "/src/assets/css/sprite/sprite_rank.css";
 
 // 通用样式
-
-
 import '/src/assets/css/common/title_and_tag.scss'
 import '/src/assets/css/common/popover.scss'
 import '/src/assets/css/common/icon.scss'
@@ -143,7 +141,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-responsive class="border rounded">
+  <v-responsive >
     <v-app class="app color_var" :class="customTheme">
       <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
         <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 36px 0 12px">
