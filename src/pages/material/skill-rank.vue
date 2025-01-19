@@ -4,7 +4,7 @@ import OPERATOR_TABLE from '/src/static/json/survey/character_table_simple.json'
 import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
-import {dataFormat} from "/src/utils/dateUtil.js";
+import {dateFormat} from "/src/utils/dateUtil.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 
 const operatorMap = new Map()
@@ -82,7 +82,7 @@ async function initData() {
         rarity: rarity,
         mainApCost: mainApCost,
         proportion: proportion,
-        time: dataFormat(new Date(date))
+        time: dateFormat(new Date(date))
       })
 
       index++
