@@ -25,14 +25,15 @@ let activeTab = ref('GoodSeed')
 
     <!-- Tabs -->
 
-    <RollSeed></RollSeed>
 
 
-    <v-tabs v-model="activeTab" bg-color="primary" dark>
-      <v-tab value="SpecialSeed">特殊种子</v-tab>
-      <v-tab value="GoodSeed">胡种榜</v-tab>
-      <v-tab value="BadSeeds">毒种榜</v-tab>
-      <v-tab value="UploadSeeds">种子上传</v-tab>
+
+    <v-tabs v-model="activeTab" bg-color="primary">
+      <v-tab value="UploadSeed" >种子上传</v-tab>
+      <v-tab value="GoodSeed" >胡种榜</v-tab>
+      <v-tab value="BadSeeds" >毒种榜</v-tab>
+      <v-tab value="SpecialSeed" >特殊种</v-tab>
+      <v-tab value="RollSeed" >Roll种子</v-tab>
     </v-tabs>
 
     <v-tabs-window v-model="activeTab">
@@ -45,7 +46,10 @@ let activeTab = ref('GoodSeed')
       <v-tabs-window-item value="BadSeeds">
         <SeedTable :seed-type="2"></SeedTable>
       </v-tabs-window-item>
-      <v-tabs-window-item value="UploadSeeds">
+      <v-tabs-window-item value="RollSeed">
+        <RollSeed></RollSeed>
+      </v-tabs-window-item>
+      <v-tabs-window-item value="UploadSeed">
         <UploadSeed></UploadSeed>
       </v-tabs-window-item>
       <!-- Tab content -->

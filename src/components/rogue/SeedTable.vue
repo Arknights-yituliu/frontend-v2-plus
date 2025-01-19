@@ -5,7 +5,9 @@ import {copyTextToClipboard} from "/src/utils/copyText.js";
 import {cMessage} from "@/utils/message.js";
 import userActionOnSeedDB from "/src/utils/indexDB/userActionOnSeed.js";
 import userActionOnSeed from "/src/utils/indexDB/userActionOnSeed.js";
-
+import {dateFormat} from "/src/utils/dateUtil.js";
+import {useDisplay} from "vuetify";
+const { mobile } = useDisplay()
 
 let pageInfo = ref({
   sortCondition: 'rating',
@@ -13,6 +15,9 @@ let pageInfo = ref({
   pageSize: 30,
   seedType: 1
 })
+
+
+
 
 const props = defineProps(["modelValue", 'seedType']);
 
@@ -83,10 +88,10 @@ function copySeed(seed) {
 
 function getUserActionHistory() {
   userActionOnSeed.queryByAction('copy').then(response => {
-    console.log(response)
+
     let actionMap = new Map()
     for (let item of response) {
-         actionMap.set(item.seedId,'已复制')
+      actionMap.set(item.seedId, '已复制')
     }
 
     for (const item of rogueSeedList.value) {
@@ -95,6 +100,12 @@ function getUserActionHistory() {
       }
     }
   })
+}
+
+function getBtnSize(){
+  if(mobile.value){
+    return 'small'
+  }
 }
 
 onMounted(() => {
@@ -118,27 +129,31 @@ watch(() => props.seedType, (newVal, oldVal) => {
   </div>
 
   <div class="flex flex-wrap align-center justify-center">
-    <v-card class="rogue-seed-card" v-for="(rogueSeed, seedIndex) in rogueSeedList" :key="seedIndex" >
+    <v-card class="rogue-seed-card" v-for="(rogueSeed, seedIndex) in rogueSeedList" :key="seedIndex">
       <!-- 标题和复制按钮 -->
       <v-card-text>
-
         <div class="flex align-center m-4-0">
-          <span class="rogue-seed" style="border-radius: 8px;padding: 8px;">{{ rogueSeed.seed }}</span>
+          <span class="rogue-seed" >{{ rogueSeed.seed }}</span>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="copySeed(rogueSeed)">
+          <v-btn color="primary" @click="copySeed(rogueSeed)" :size="getBtnSize()">
             <template v-slot:prepend>
               <v-icon icon="mdi-clipboard"></v-icon>
             </template>
             复制
           </v-btn>
         </div>
-
+        <div class="flex align-center p-4">
+          <v-icon icon="mdi-update" >
+          </v-icon>
+          {{ dateFormat(rogueSeed.createTime,'yyyy/MM/dd HH:mm') }}
+        </div>
 
         <!-- 标签区域 -->
         <div class="flex flex-wrap m-12-0">
-          <v-chip  color="green" class="m-4" size="small" text="已复制" v-show="rogueSeed.copyFlag">
+          <v-chip color="green" class="m-4" size="small" text="已复制" v-show="rogueSeed.copyFlag">
           </v-chip>
-          <v-chip v-for="(tag, tagIndex) in rogueSeed.tags" :key="tagIndex" color="primary" class="m-4" size="small" :text="tag">
+          <v-chip v-for="(tag, tagIndex) in rogueSeed.tags" :key="tagIndex" color="primary" class="m-4" size="small"
+                  :text="tag">
           </v-chip>
         </div>
 

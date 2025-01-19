@@ -2,6 +2,8 @@
 import {ref} from "vue";
 import rogueSeedAPI from "@/api/rogueSeed.js";
 import {copyTextToClipboard} from "@/utils/copyText.js";
+import {useDisplay} from "vuetify";
+const { mobile } = useDisplay()
 
 let rogueSeed = ref({})
 
@@ -12,6 +14,11 @@ function rollSeed(seedType) {
   // })
 }
 
+function getBtnSize(){
+  if(mobile.value){
+    return 'small'
+  }
+}
 
 </script>
 
@@ -32,14 +39,14 @@ function rollSeed(seedType) {
       </v-btn>
     </div>
 
-    <v-card class="roll-rogue-seed-card" v-show="rogueSeed" disabled>
+    <v-card class="rogue-seed-card" v-show="rogueSeed" disabled>
       <!-- 标题和复制按钮 -->
       <v-card-text>
 
         <div class="flex align-center m-4-0">
           <span class="rogue-seed" style="border-radius: 8px;padding: 8px;">{{ rogueSeed.seed }}</span>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="copyTextToClipboard(rogueSeed)">
+          <v-btn color="primary" @click="copyTextToClipboard(rogueSeed)" :size="getBtnSize()">
             <template v-slot:prepend>
               <v-icon icon="mdi-clipboard"></v-icon>
             </template>

@@ -26,3 +26,18 @@
   }
 
 }
+
+
+@media screen and (max-width: 600px){
+  .rogue-seed-page {
+
+    .rogue-seed-card {
+      width: 350px;
+      margin: auto;
+    }
+
+    .rogue-seed{
+      font-size: 14px;
+    }
+  }
+}
