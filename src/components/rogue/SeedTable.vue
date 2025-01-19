@@ -118,7 +118,7 @@ watch(() => props.seedType, (newVal, oldVal) => {
   </div>
 
   <div class="flex flex-wrap align-center justify-center">
-    <v-card class="rogue-seed-card" v-for="(rogueSeed, seedIndex) in rogueSeedList" :key="seedIndex">
+    <v-card class="rogue-seed-card" v-for="(rogueSeed, seedIndex) in rogueSeedList" :key="seedIndex" >
       <!-- 标题和复制按钮 -->
       <v-card-text>
 

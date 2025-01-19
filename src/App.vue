@@ -142,7 +142,7 @@ onMounted(() => {
 
 <template>
   <v-responsive >
-    <v-app class="app color_var" :class="customTheme">
+    <v-app class="app" :class="customTheme">
       <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
         <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 36px 0 12px">
           明日方舟一图流

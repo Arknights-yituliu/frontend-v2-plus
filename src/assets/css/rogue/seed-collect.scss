@@ -2,6 +2,15 @@
   .rogue-seed-card {
     width: 500px;
     margin: 4px;
+    background-color: rgba(var(--v-theme-primary),0.05);
+
+  }
+
+  .roll-rogue-seed-card {
+    width: 500px;
+    margin: auto;
+    background-color: rgba(var(--v-theme-primary),0.05);
+
   }
 
   .rogue-seed{

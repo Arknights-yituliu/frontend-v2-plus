@@ -286,36 +286,5 @@ const data = [
 </template>
 
 <style>
-.table-114 {
-  border-collapse: collapse;
-  text-align: center;
-  margin: 4px;
-  font-size: 14px;
-}
 
-.table-114-title td {
-  background-color: var(--c-blue-6);
-  color: white;
-  font-weight: bolder;
-}
-
-.table-114-td-background {
-  background-color: #e1efff;
-}
-
-.table-114-td-stress {
-  background-color: var(--c-orange-5);
-  color: white;
-}
-
-.operator-114-card{
-  width: 120px;
-  margin: 8px;
-  text-align: center;
-}
-
-.table-114 td {
-  padding:4px 8px;
-  border: 1px solid #a6a6a6;
-}
 </style>
