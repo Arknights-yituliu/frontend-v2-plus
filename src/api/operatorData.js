@@ -1,6 +1,5 @@
 import request from "/src/api/request"
 
-const api_name = `/survey`
 
 export default {
     /**
@@ -10,24 +9,24 @@ export default {
      */
     retrievalOperatorDataByUid(data){
         return request({
-            url: `${api_name}/operator/table`,
+            url: `/survey/operator/table`,
             method: "post",
             data: data,
         })
     },
 
 
-    uploadSkLandOperatorDataV3(data){
+    importSkLandOperatorDataV3(data){
         return request({
-            url: `${api_name}/auth/operator/import/skland/v3`,
+            url: `/auth/survey/operator/import/skland/v3`,
             method: "post",
             data: data,
         })
     },
 
-    uploadWarehouseInfo(data){
+    importWarehouseInfo(data){
         return request({
-            url:`${api_name}/warehouse-info/import/skland`,
+            url:`/survey/warehouse-info/import/skland`,
             method:'post',
             data:data
         })
@@ -36,7 +35,7 @@ export default {
 
     getPlayBindingListByHgToken(data){
         return request({
-            url: `${api_name}/hg/player-binding`,
+            url: `/survey/hg/player-binding`,
             method: "post",
             data: data,
         })
@@ -49,7 +48,7 @@ export default {
      */
     resetOperatorData(data){
         return request({
-            url: `${api_name}/operator/reset`,
+            url: `/survey/operator/reset`,
             method: "post",
             data: data,
         })
@@ -57,7 +56,7 @@ export default {
 
     getCharStatisticsResult() {
         return request({
-            url: `${api_name}/operator/result`,
+            url: `/survey/operator/result`,
             method: "get",
         })
     },
@@ -69,12 +68,18 @@ export default {
     getOperatorData() {
         const USER_TOKEN = encodeURIComponent(localStorage.getItem("USER_TOKEN"))
         return request({
-            url: `${api_name}/operator/info?token=${USER_TOKEN}`,
+            url: `/survey/operator/info?token=${USER_TOKEN}`,
             method: "get"
         })
     },
 
-
+    uploadOperatorInfo(characterList) {
+        return request({
+            url: `/auth/survey/operator/upload`,
+            method: "post",
+            data: characterList,
+        })
+    },
 
 
 

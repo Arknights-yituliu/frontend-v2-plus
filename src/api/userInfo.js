@@ -80,42 +80,8 @@ export default {
 
 
 
-  uploadOperatorInfo(characterList) {
-    return request({
-      url: `${api_name}/auth/character/upload`,
-      method: "post",
-      data: characterList,
-    })
-  },
 
 
-
-
-  /**
-   * 注册
-   * @param userData 账号密码或邮箱验证码
-   * @returns {*} 用户信息
-   */
-  register(userData) {
-    return request({
-      url: `${api_name}/register/v2`,
-      method: "post",
-      data: userData,
-    })
-  },
-
-  /**
-   * 调查站登录
-   * @param userData 账号密码或邮箱验证码
-   * @returns {*} 用户信息
-   */
-  login(userData) {
-    return request({
-      url: `${api_name}/login/v2`,
-      method: "post",
-      data: userData,
-    })
-  },
 
 
 

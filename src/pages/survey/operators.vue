@@ -163,7 +163,7 @@ function importDataBySkland() {
  */
 const upload = debounce(() => {
   let uploadList = createUploadData();
-  userAPI.uploadOperatorInfo(uploadList).then((response) => {
+  operatorDataAPI.uploadOperatorInfo(uploadList).then((response) => {
     uploadMessage.value = response.data;
     cMessage("保存成功");
     selectedCharId.value = {};
