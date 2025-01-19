@@ -51,7 +51,7 @@ export default {
    */
   updateUserDataV2(data) {
     return request({
-      url: `user/update/v2`,
+      url: `user/auth/update/v2`,
       method: "post",
       data: data,
     })
