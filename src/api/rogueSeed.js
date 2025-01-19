@@ -40,5 +40,13 @@ export default {
             url: `rogue/seed/user/rating`,
             method: "get"
         });
+    },
+
+    rollRogueSeed(data) {
+        return request({
+            url: `rogue/seed/roll`,
+            method: "post",
+            data: data
+        });
     }
 }

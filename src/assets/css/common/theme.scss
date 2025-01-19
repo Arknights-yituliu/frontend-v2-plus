@@ -1,6 +1,3 @@
-
-
-
 .theme_init {
   --c-page-background-color: var(--c-white-4);
   --c-text-color: var(--c-black-1);
@@ -16,25 +13,6 @@
   --c-text-tip-color: #858585;
   --c-background-white-transparent: var(--c-white-transparent);
   --c-card-background-color:#ffffff;
-
-
-  --c-blue: var(--c-blue-1);
-  --c-red: var(--c-red-light);
-
-  /*按钮样式*/
-  --c-btn-bg: var(--c-white-1);
-  --c-btn-border: 1px solid var(--c-white-3);
-  --c-btn-color: var(--c-black-1);
-  --c-btn-text-color: var(--c-white-1);
-
-  --c-btn-color-blue: #1f88ff;
-  --c-btn-border-blue: rgba(31, 136, 255, 0.5);
-  --c-btn-color-red: #ff3e24;
-  --c-btn-border-red: rgba(255, 62, 36, 0.3);
-  --c-btn-color-green: #00b28a;
-  --c-btn-border-green: rgba(0, 178, 138, 0.5);
-  --c-btn-color-orange: #ff8a52;
-  --c-btn-border-orange: rgba(255, 138, 82, 0.5);
 
   //每个页面的自定义样式变量
   --c-stage-card-background-color: #f7f7f7;
@@ -67,24 +45,6 @@
   --c-background-white-transparent: var(--c-white-transparent);
   --c-card-background-color:var(--c-black-3);
 
-  --c-blue: var(--c-blue-dark);
-  --c-red: var(--c-red-dark);
-
-  /*按钮样式*/
-  --c-btn-bg: '';
-  --c-btn-border: 1px solid var(--c-white-3);
-  --c-btn-color: var(--c-white-1);
-  --c-btn-text-color: var(--c-black-1);
-
-
-  --c-btn-color-blue: #6ebeff;
-  --c-btn-border-blue: #badfff;
-  --c-btn-color-red: #ff7962;
-  --c-btn-border-red: #ffb0a4;
-  --c-btn-color-green: #2ec4b6;
-  --c-btn-border-green: #93e0d6;
-  --c-btn-color-orange: #ff8a52;
-  --c-btn-border-orange: #ff8a52;
 
   //每个页面的自定义样式变量
   --c-stage-card-background-color: #3d3d3d;
@@ -94,18 +54,9 @@
   --c-operator-pupup-background-color:#141414;
   --c-schedule-arrow-color: #757575;
 
-  /*输入框样式*/
-  --c-input-bg: '';
-  --c-input-border: 1px solid var(--c-black-6);
-  --c-input-border-focus: 1px solid #6ec3ff;
-  --c-input-text-color: var(--c-white-2);
-  --c-input-border-color: rgb(255, 255, 255);
-  --c-input-border-focus-color: rgb(255, 83, 30);
 
 
-  --c-checkbox-color: #6ec3ff;
 
-  --c-warn-color: #ff6d6d;
 }
 
 :root {
@@ -185,28 +136,9 @@
   --c-white-5: #9b9b9b;
   --c-white-6: #828282;
 
-  --c-white-transparent: rgba(255, 255, 255, 0.1);
 
-  font-family: Roboto, Noto Sans SC, PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, "Microsoft Sans Serif", WenQuanYi Micro Hei, sans-serif
-
-}
-
-.color_var {
-
-  /*亮色颜色*/
-  --c-btn-green-light: #30da96;
-  --c-btn-blue-light: #00a1d6;
-  --c-btn-red-light: #ff6262;
-  --c-btn-orange-light: #ff641e;
-
-  /*暗色颜色*/
-  --c-blue-dark: #56b7ff;
-  --c-red-dark: #fa6f6f;
-
-  --c-btn-green-dark: #3bb6ac;
-  --c-btn-blue-dark: #4ab4ef;
-  --c-btn-red-dark: #fa6f6f;
-  --c-btn-orange-dark: #ff641e;
 
 
 }
+
+

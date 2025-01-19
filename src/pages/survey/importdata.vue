@@ -105,7 +105,7 @@ const router = useRouter();
  * @returns {Promise<void>}
  */
 function uploadSKLandData(data) {
-  operatorDataAPI.uploadSkLandOperatorDataV3(data)
+  operatorDataAPI.importSkLandOperatorDataV3(data)
       .then(response => {
         cMessage("森空岛数据导入成功，即将转跳到干员调查页面");
         setTimeout(() => {

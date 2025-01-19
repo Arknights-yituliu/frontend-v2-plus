@@ -5,7 +5,7 @@
  * @return {string} 传入时间类的格式化字符串
  * @example dateUtil(date, format = 'yyyy/MM/dd') 将返回 2024/01/01
  */
-function dataFormat(input, template = 'yyyy/MM/dd') {
+function dateFormat(input, template = 'yyyy/MM/dd') {
 
     const date = checkType(input);
 
@@ -66,4 +66,4 @@ function checkType(input) {
 
 }
 
-export {dataFormat, dateDiff}
+export {dateFormat, dateDiff}

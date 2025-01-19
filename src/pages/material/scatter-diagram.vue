@@ -4,7 +4,7 @@ import OPERATOR_TABLE from '/src/static/json/survey/character_table_simple.json'
 import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
-import {dataFormat} from "/src/utils/dateUtil.js";
+import {dateFormat} from "/src/utils/dateUtil.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {getViewportInfo} from "/src/utils/getViewportInfo.js";
 
@@ -108,7 +108,7 @@ async function initData(size = 800) {
         rarity: rarity,
         mainApCost: mainApCost,
         proportion: proportion,
-        time: dataFormat(new Date(date))
+        time: dateFormat(new Date(date))
       }
 
       skillCostRankList.push(skillItem)

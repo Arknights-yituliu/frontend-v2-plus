@@ -111,7 +111,6 @@ const fileToDataUrl = async () => {
   const file = files[0]
   settlementChartBlob.value = await compressImage(file)
   getDataUrl(settlementChartBlob.value).then(response => {
-
     settlementChartDataUrl.value = response
   })
 

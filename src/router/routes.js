@@ -133,7 +133,7 @@ const routes = [
         name: 'RogueCollect',
         display: true,
         module: 'tools',
-        icon: "mdi-calendar-clock",
+        icon: "mdi-chart-timeline-variant",
         component: () => import('/src/pages/tools/rogue/index.vue')
     },
     {
