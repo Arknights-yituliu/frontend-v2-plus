@@ -39,7 +39,8 @@ function getBtnSize(){
       </v-btn>
     </div>
 
-    <v-card class="rogue-seed-card" v-show="rogueSeed" disabled>
+
+    <v-card class="roll-rogue-seed-card" v-show="rogueSeed" disabled>
       <!-- 标题和复制按钮 -->
       <v-card-text>
 
