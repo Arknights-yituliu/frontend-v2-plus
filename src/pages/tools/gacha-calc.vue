@@ -141,9 +141,9 @@ let activityType = ref('联动限定')
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
   {
-    name: '新春(0121前后)',
-    start: new Date('2025/01/21 16:00:00'),
-    end: new Date('2025/02/04 04:01:00'),
+    name: '新春(0122)',
+    start: new Date('2025/01/22 16:00:00'),
+    end: new Date('2025/02/05 04:01:00'),
     activityType: '春节限定',
     disabled: false,
     dailyGiftResources: true,
