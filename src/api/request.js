@@ -12,9 +12,7 @@ const service = axios.create({
 // http request 拦截器
 service.interceptors.request.use(
     (config) => {
-        const userToken = getUserTokenV2();
-        config.headers["Access-Control-Max-Age"] = 86400;
-        config.headers["Authorization"] = userToken;
+        config.headers["Authorization"] = getUserTokenV2();
         // token 先不处理，后续使用时在完善
         return config;
     },

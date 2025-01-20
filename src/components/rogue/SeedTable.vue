@@ -7,7 +7,9 @@ import userActionOnSeedDB from "/src/utils/indexDB/userActionOnSeed.js";
 import userActionOnSeed from "/src/utils/indexDB/userActionOnSeed.js";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {useDisplay} from "vuetify";
-const { mobile } = useDisplay()
+import {getTmpUid} from "@/utils/user/userInfo.js";
+
+const {mobile} = useDisplay()
 
 let pageInfo = ref({
   sortCondition: 'rating',
@@ -15,8 +17,6 @@ let pageInfo = ref({
   pageSize: 30,
   seedType: 1
 })
-
-
 
 
 const props = defineProps(["modelValue", 'seedType']);
@@ -45,6 +45,8 @@ function getUserRating() {
   })
 }
 
+const tmpUid = getTmpUid();
+
 function rogueSeedRating(seedIndex, oldRating, newRating) {
 
   if (oldRating === newRating) {
@@ -54,8 +56,10 @@ function rogueSeedRating(seedIndex, oldRating, newRating) {
   }
 
   const seedId = rogueSeedList.value[seedIndex].seedId
+  const data = {seedId: seedId, rating: newRating, uid: tmpUid}
 
-  rogueSeedAPI.rogueSeedRating({seedId: seedId, rating: newRating}).then(response => {
+  rogueSeedAPI.rogueSeedRating(data).then(response => {
+
     cMessage(response.data)
   })
 }
@@ -102,8 +106,8 @@ function getUserActionHistory() {
   })
 }
 
-function getBtnSize(){
-  if(mobile.value){
+function getBtnSize() {
+  if (mobile.value) {
     return 'small'
   }
 }
@@ -133,7 +137,7 @@ watch(() => props.seedType, (newVal, oldVal) => {
       <!-- 标题和复制按钮 -->
       <v-card-text>
         <div class="flex align-center m-4-0">
-          <span class="rogue-seed" >{{ rogueSeed.seed }}</span>
+          <span class="rogue-seed">{{ rogueSeed.seed }}</span>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="copySeed(rogueSeed)" :size="getBtnSize()">
             <template v-slot:prepend>
@@ -143,9 +147,9 @@ watch(() => props.seedType, (newVal, oldVal) => {
           </v-btn>
         </div>
         <div class="flex align-center p-4">
-          <v-icon icon="mdi-update" >
+          <v-icon icon="mdi-update">
           </v-icon>
-          {{ dateFormat(rogueSeed.createTime,'yyyy/MM/dd HH:mm') }}
+          {{ dateFormat(rogueSeed.createTime, 'yyyy/MM/dd HH:mm') }}
         </div>
 
         <!-- 标签区域 -->
