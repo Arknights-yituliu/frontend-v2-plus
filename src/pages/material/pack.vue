@@ -5,6 +5,7 @@ import PackCardContainer from '/src/components/material/PackCardGroup.vue'
 import ModuleHeader from '/src/components/ModuleHeader.vue';
 import userService from "@/utils/user/userConfig.js";
 import PackTable from "@/components/material/PackTable.vue";
+import deepClone from "@/utils/deepClone.js";
 
 const currentPackInfoList = ref([])
 const date = new Date() // 当前日期
@@ -41,7 +42,7 @@ const getPackInfoData = async () => {
   const config = userService.getStageConfig()
   materialAPI.getStorePackV4(config).then(rep => {
     const data = rep.data
-    packInfoListFromAPI = JSON.parse(JSON.stringify(data))
+    packInfoListFromAPI = deepClone(data)
     packInfoList = data
     initData()
   })
@@ -122,7 +123,7 @@ function changeKernelValue() {
       pack.drawPrice = pack.drawPriceKernel
     }
   } else {
-    packInfoList = JSON.parse(JSON.stringify(packInfoListFromAPI))
+    packInfoList = deepClone(packInfoListFromAPI)
   }
   initData()
 }
@@ -198,7 +199,7 @@ getPackInfoData()
         </div>
         <v-switch v-if="item.titleEn === 'New Packs'"
                   color="primary" label="中坚寻访视为有价值"
-                  @click="changeKernelValue" v-model="isKernelValuable" style="width: 200px">
+                  @change="changeKernelValue" v-model="isKernelValuable" style="width: 200px">
         </v-switch>
 
         <template v-for="(packInfo, packIndex) in item.list" :key="packIndex">

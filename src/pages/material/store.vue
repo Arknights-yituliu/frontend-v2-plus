@@ -24,7 +24,7 @@ function formatStorePerm(data){
   for (let i = 0; i < storeTypeList.length; i++) {
     const item = storeTypeList[i]
     const list = data[item.typeName]
-    console.log(list)
+
     list.sort((a,b)=>b.costPer-a.costPer)
     storeListFormat.value.push({
       ...item,

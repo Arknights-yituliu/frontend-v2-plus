@@ -1,9 +1,10 @@
 import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
-import request from "/src/api/requestBase";
+
 import {cMessage} from "/src/utils/message";
 import toolAPI from '/src/api/tool.js'
 import CHARACTER_TABLE_SIMPLE from "/src/static/json/survey/character_table_simple.json";
+import axios from "axios";
 
 const SKLAND_DOMAIN = "https://zonai.skland.com";
 const PLAYER_INFO_API = '/api/v1/game/player/info'
@@ -48,11 +49,11 @@ async function getPlayBindingV2(defaultAkUid, params, cred, token) {
     }
 
 
-    await request({
-        url: url,
-        headers: headers,
-        method: "get",
-    }).then(response => {
+    await axios.get(url,
+        {
+            headers: headers
+        }
+    ).then(response => {
 
         response = response.data
         // console.log(response)
@@ -152,11 +153,11 @@ async function getPlayerInfo(params, characterTable) {
 
     let uploadData = {}
 
-    await request({
-        url: url,
-        headers: headers,
-        method: "get",
-    }).then(response => {
+    await axios.get(url,
+        {
+            headers: headers
+        }
+    ).then(response => {
         response = response.data
         if (response.code !== 0) {
             cMessage("读取森空岛数据失败")
@@ -191,18 +192,17 @@ async function getPlayerInfo(params, characterTable) {
 }
 
 
-
 async function getWarehouseInfo(akUid, cred, token) {
 
     const params = `uid=${akUid}`
     const headers = getHeaders(CULTIVATE_PLAYER_API, params, cred, token)
     const url = `${SKLAND_DOMAIN}${CULTIVATE_PLAYER_API}?${params}`
     let data = {}
-    await request({
-        url: url,
-        headers: headers,
-        method: 'get'
-    }).then(response => {
+    await axios.get(url,
+        {
+            headers: headers
+        }
+    ).then(response => {
         response = response.data
 
         if (response.code === 0) {
@@ -219,7 +219,7 @@ async function getWarehouseInfo(akUid, cred, token) {
             data = {
                 uid: akUid,
                 itemList: itemList,
-                operatorDataList:operatorDataList,
+                operatorDataList: operatorDataList,
             }
 
         }
@@ -261,13 +261,13 @@ function formattingOperatorData(characterList) {
             modX: 0,
             modY: 0,
             modD: 0,
-            modA:0
+            modA: 0
         }
 
         if (skills) {
             for (let i = 0; i < skills.length; i++) {
                 if (skills[i]) {
-                    operator[`skill${i+1}`] = skills[i].level
+                    operator[`skill${i + 1}`] = skills[i].level
                 }
             }
         }
@@ -282,8 +282,6 @@ function formattingOperatorData(characterList) {
 
         operatorList.push(operator)
     }
-
-
 
 
     return operatorList

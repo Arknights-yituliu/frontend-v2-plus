@@ -1,5 +1,4 @@
 import request from "/src/api/request";
-import requestBase from "/src/api/requestBase.js";
 
 export default {
     uploadRogueSeed(data) {
@@ -19,7 +18,7 @@ export default {
 
     rogueSeedRating(data) {
         return request({
-            url: `auth/rogue/seed/rating`,
+            url: `rogue/seed/rating`,
             method: "post",
             data: data
         });
