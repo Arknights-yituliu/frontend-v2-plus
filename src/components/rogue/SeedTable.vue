@@ -51,16 +51,16 @@ function getRogueSeedPage(sortCondition) {
   //根据分页参数获取种子
   rogueSeedAPI.getRogueSeedPage(pageInfo.value).then(response => {
 
-    if(response.data.length<1){
-       cMessage("没有更多种子了")
-       return
+    if (response.data.length < 1) {
+      cMessage("没有更多种子了")
+      return
     }
     for (const seed of response.data) {
-      const {squad,difficulty} = seed
+      const {squad, difficulty} = seed
       seed.tags.push(`n${difficulty}`)
-      if(squad&&squad.length>1){
+      if (squad && squad.length > 1) {
         const squads = stringToArray(squad);
-        for(const s of squads){
+        for (const s of squads) {
           seed.tags.push(s)
         }
       }
@@ -101,7 +101,6 @@ function getUserRating() {
     }
   }
 }
-
 
 
 /**
@@ -206,8 +205,8 @@ function getBtnSize() {
   }
 }
 
-function loadNextPage(){
-  pageInfo.value.pageNum+=20
+function loadNextPage() {
+  pageInfo.value.pageNum += 20
   getRogueSeedPage(pageInfo.value.sortCondition)
 }
 
@@ -222,13 +221,29 @@ onMounted(() => {
 
   <div class="flex justify-end align-center m-8">
 
-    <v-icon icon="mdi-sort-ascending"></v-icon>
-    <v-btn variant="text" :color="sortBtnAction('rating')" text="按评分" @click="getRogueSeedPage('rating')"></v-btn>
-    <v-btn variant="text" :color="sortBtnAction('date')" text="按时间" @click="getRogueSeedPage('date')"></v-btn>
+    <v-icon icon="mdi-sort-ascending" :size="getBtnSize()"></v-icon>
+    <v-btn variant="text"
+           :size="getBtnSize()"
+           :color="sortBtnAction('rating')"
+           text="按评分"
+           @click="getRogueSeedPage('rating')">
+    </v-btn>
+    <v-btn variant="text"
+           :size="getBtnSize()"
+           :color="sortBtnAction('thumbsUp')"
+           text="按点赞次数"
+           @click="getRogueSeedPage('thumbsUp')">
+    </v-btn>
+    <v-btn variant="text"
+           :size="getBtnSize()"
+           :color="sortBtnAction('date')"
+           text="按时间"
+           @click="getRogueSeedPage('date')">
+    </v-btn>
   </div>
 
   <div class="flex flex-wrap align-center justify-center">
-    <v-card class="rogue-seed-card" v-for="(rogueSeed, seedIndex) in rogueSeedList" :key="seedIndex" >
+    <v-card class="rogue-seed-card" v-for="(rogueSeed, seedIndex) in rogueSeedList" :key="seedIndex">
       <!-- 标题和复制按钮 -->
       <v-card-text>
         <div class="flex align-center m-4-0">
@@ -271,10 +286,10 @@ onMounted(() => {
         <v-row justify="center" align="center" dense>
           <v-col cols="auto">
             <v-btn :color="ratingBtnAction(rogueSeed.userRating,1)" size="small" rounded="xl" variant="elevated"
-                   @click="rogueSeedRating(seedIndex,rogueSeed.userRating,1)" >
+                   @click="rogueSeedRating(seedIndex,rogueSeed.userRating,1)">
               <v-icon left>mdi-thumb-up</v-icon>
               <template v-slot:append>
-                 {{rogueSeed.thumbsUp}}
+                {{ rogueSeed.thumbsUp }}
               </template>
               <!-- 好玩！ (514) -->
             </v-btn>
@@ -286,7 +301,7 @@ onMounted(() => {
               <v-icon left>mdi-thumb-down</v-icon>
               <!-- 没意思! (114) -->
               <template v-slot:append>
-                {{rogueSeed.thumbsDown}}
+                {{ rogueSeed.thumbsDown }}
               </template>
             </v-btn>
           </v-col>

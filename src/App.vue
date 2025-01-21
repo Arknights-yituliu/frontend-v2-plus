@@ -156,7 +156,7 @@ onMounted(() => {
         <v-app-bar-title>{{ pageTitle }}
         </v-app-bar-title>
         <div class="app-bar-content">
-          <v-btn text="反馈" variant="text" style="font-size: 16px" @click="feedbackPopupVisible=true"></v-btn>
+          <v-btn text="反馈" variant="text"  @click="feedbackPopupVisible=true"></v-btn>
           <div class="app-bar-content-spacer"/>
           <!--          <v-menu>-->
           <!--            <template v-slot:activator="{ props }">-->
