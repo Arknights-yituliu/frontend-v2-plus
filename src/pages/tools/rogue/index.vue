@@ -13,18 +13,8 @@ let activeTab = ref('GoodSeed')
 <template>
   <div class="rogue-seed-page">
 
-    <!--      <v-row justify="center">-->
-    <!--        <v-col cols="auto">-->
-    <!--          <v-btn color="success" @click="generateHu">给我一个胡种</v-btn>-->
-    <!--        </v-col>-->
-    <!--        <v-col cols="auto">-->
-    <!--          <v-btn color="error" @click="generateDu">给我一个毒种</v-btn>-->
-    <!--        </v-col>-->
-    <!--      </v-row>-->
-
-
     <!-- Tabs -->
-    <RollSeed></RollSeed>
+<!--    <RollSeed></RollSeed>-->
 
     <v-tabs v-model="activeTab" bg-color="primary">
       <v-tab value="UploadSeed" >种子上传</v-tab>
