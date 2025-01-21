@@ -18,7 +18,7 @@ let pageInfo = ref({
   //页数
   pageNum: 0,
   //每页数量
-  pageSize: 30,
+  pageSize: 20,
   //种子类型
   seedType: 1
 })
@@ -35,8 +35,9 @@ let rogueSeedList = ref([])
  */
 function getRogueSeedPage(sortCondition) {
 
-  if(pageInfo.value.sortCondition!==sortCondition){
+  if (pageInfo.value.sortCondition !== sortCondition) {
     rogueSeedList.value = []
+    pageInfo.value.pageNum = 0
   }
 
   //设置排序条件
@@ -45,7 +46,7 @@ function getRogueSeedPage(sortCondition) {
   pageInfo.value.seedType = props.seedType
   //根据分页参数获取种子
   rogueSeedAPI.getRogueSeedPage(pageInfo.value).then(response => {
-    for(const item of response.data) {
+    for (const item of response.data) {
       rogueSeedList.value.push(item)
     }
     //获取在服务段保存的用户评价
@@ -61,7 +62,7 @@ let ratingRecord = ref({})
  */
 function getUserRating() {
   //如果已经获取过了，则不在从服务端获取数据
-  if(ratingRecord.value.length>1){
+  if (ratingRecord.value.length > 1) {
     _writeRatingValue()
   }
   rogueSeedAPI.getRogueSeedUserRating().then(response => {
@@ -74,7 +75,7 @@ function getUserRating() {
    * 遍历种子列表，写入用户之前的评价
    * @private
    */
-  function _writeRatingValue(){
+  function _writeRatingValue() {
     for (const item of rogueSeedList.value) {
       if (ratingRecord.value[item.seedId]) {
         item.userRating = ratingRecord.value[item.seedId].rating
@@ -188,6 +189,11 @@ function getBtnSize() {
   }
 }
 
+function loadNextPage(){
+  pageInfo.value.pageNum+=20
+  getRogueSeedPage(pageInfo.value.sortCondition)
+}
+
 onMounted(() => {
   getRogueSeedPage(pageInfo.value.sortCondition)
 })
@@ -205,7 +211,7 @@ onMounted(() => {
   </div>
 
   <div class="flex flex-wrap align-center justify-center">
-    <v-card class="rogue-seed-card" v-for="(rogueSeed, seedIndex) in rogueSeedList" :key="seedIndex">
+    <v-card class="rogue-seed-card" v-for="(rogueSeed, seedIndex) in rogueSeedList" :key="seedIndex" >
       <!-- 标题和复制按钮 -->
       <v-card-text>
         <div class="flex align-center m-4-0">
@@ -224,7 +230,7 @@ onMounted(() => {
           <div> {{ dateFormat(rogueSeed.createTime, 'yyyy/MM/dd HH:mm') }}</div>
           <div class="spacer-12"></div>
           <v-icon icon="mdi-comment" color="primary"></v-icon>
-          <div>{{rogueSeed.ratingCount}}</div>
+          <div>{{ rogueSeed.ratingCount }}</div>
         </div>
 
         <!-- 标签区域 -->
@@ -274,6 +280,10 @@ onMounted(() => {
     </v-card>
   </div>
 
+  <div class="flex justify-center m-20-0">
+    <v-btn text="加载更多种子" variant="text" color="primary" @click="loadNextPage()">
+    </v-btn>
+  </div>
 </template>
 
 
