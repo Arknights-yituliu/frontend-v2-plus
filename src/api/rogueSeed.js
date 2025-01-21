@@ -34,9 +34,9 @@ export default {
 
 
 
-    getRogueSeedUserRating() {
+    getRogueSeedUserRating(uid) {
         return request({
-            url: `rogue/seed/user/rating`,
+            url: `rogue/seed/user/rating?uid=${uid}`,
             method: "get"
         });
     },

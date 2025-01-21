@@ -12,6 +12,9 @@ import {stringToArray} from "@/utils/stringUtils.js";
 
 const {mobile} = useDisplay()
 
+//临时uid，用于作为保存非登录状态的用户各种记录的唯一标识
+const tmpUid = getTmpUid();
+
 //分页获取种子API的参数
 let pageInfo = ref({
   //排序条件
@@ -80,7 +83,7 @@ function getUserRating() {
   if (ratingRecord.value.length > 1) {
     _writeRatingValue()
   }
-  rogueSeedAPI.getRogueSeedUserRating().then(response => {
+  rogueSeedAPI.getRogueSeedUserRating(tmpUid).then(response => {
     //获取的评价记录是一个map，key为种子id，value为评价状态
     ratingRecord.value = response.data
     _writeRatingValue()
@@ -99,8 +102,7 @@ function getUserRating() {
   }
 }
 
-//临时uid，用于作为保存非登录状态的用户各种记录的唯一标识
-const tmpUid = getTmpUid();
+
 
 /**
  * 点赞种子
@@ -239,14 +241,7 @@ onMounted(() => {
             复制
           </v-btn>
         </div>
-        <div class="flex align-center">
-          <v-icon icon="mdi-update" color="primary">
-          </v-icon>
-          <div> {{ dateFormat(rogueSeed.createTime, 'yyyy/MM/dd HH:mm') }}</div>
-          <div class="spacer-12"></div>
-          <v-icon icon="mdi-comment" color="primary"></v-icon>
-          <div>{{ rogueSeed.ratingCount }}</div>
-        </div>
+
 
         <!-- 标签区域 -->
         <div class="flex flex-wrap m-12-0">
@@ -262,8 +257,8 @@ onMounted(() => {
                  :text=" rogueSeed.description"
                  type="info"
                  variant="tonal"
-                 height="100"
-                 class="m-8-0">
+                 class="m-8-0"
+                 height="140">
 
         </v-alert>
         <!--        <div class="mb-4 description" >-->
@@ -276,8 +271,11 @@ onMounted(() => {
         <v-row justify="center" align="center" dense>
           <v-col cols="auto">
             <v-btn :color="ratingBtnAction(rogueSeed.userRating,1)" size="small" rounded="xl" variant="elevated"
-                   @click="rogueSeedRating(seedIndex,rogueSeed.userRating,1)">
+                   @click="rogueSeedRating(seedIndex,rogueSeed.userRating,1)" >
               <v-icon left>mdi-thumb-up</v-icon>
+              <template v-slot:append>
+                 {{rogueSeed.thumbsUp}}
+              </template>
               <!-- 好玩！ (514) -->
             </v-btn>
           </v-col>
@@ -287,9 +285,20 @@ onMounted(() => {
                    @click="rogueSeedRating(seedIndex,rogueSeed.userRating,0)">
               <v-icon left>mdi-thumb-down</v-icon>
               <!-- 没意思! (114) -->
+              <template v-slot:append>
+                {{rogueSeed.thumbsDown}}
+              </template>
             </v-btn>
           </v-col>
         </v-row>
+
+        <div class="m-12"></div>
+
+        <div class="flex align-center justify-end">
+          <v-icon icon="mdi-update" color="primary">
+          </v-icon>
+          <div> {{ dateFormat(rogueSeed.createTime, 'yyyy/MM/dd HH:mm') }}</div>
+        </div>
 
       </v-card-text>
     </v-card>
