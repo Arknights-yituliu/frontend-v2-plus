@@ -1,4 +1,7 @@
-function splitToArray(string, delimiter) {
+function stringToArray(string, delimiter) {
+    if(!string){
+        return []
+    }
     return string.split(',').map((item) => {
         return item.trim();
     }).filter(item => item);
@@ -12,4 +15,4 @@ function arrayToString(array) {
     return array.join(",")
 }
 
-export {splitToArray,arrayToString};
+export {stringToArray,arrayToString};

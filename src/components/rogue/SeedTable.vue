@@ -8,6 +8,7 @@ import userActionOnSeed from "/src/utils/indexDB/userActionOnSeed.js";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {useDisplay} from "vuetify";
 import {getTmpUid} from "@/utils/user/userInfo.js";
+import {stringToArray} from "@/utils/stringUtils.js";
 
 const {mobile} = useDisplay()
 
@@ -46,8 +47,20 @@ function getRogueSeedPage(sortCondition) {
   pageInfo.value.seedType = props.seedType
   //根据分页参数获取种子
   rogueSeedAPI.getRogueSeedPage(pageInfo.value).then(response => {
-    for (const item of response.data) {
-      rogueSeedList.value.push(item)
+
+    if(response.data.length<1){
+       cMessage("没有更多种子了")
+       return
+    }
+    for (const seed of response.data) {
+      const {squad} = seed
+      if(squad&&squad.length>1){
+        const squads = stringToArray(squad);
+        for(const s of squads){
+          seed.tags.push(s)
+        }
+      }
+      rogueSeedList.value.push(seed)
     }
     //获取在服务段保存的用户评价
     getUserRating()
