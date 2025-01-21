@@ -53,13 +53,15 @@ function getRogueSeedPage(sortCondition) {
        return
     }
     for (const seed of response.data) {
-      const {squad} = seed
+      const {squad,difficulty} = seed
+      seed.tags.push(`n${difficulty}`)
       if(squad&&squad.length>1){
         const squads = stringToArray(squad);
         for(const s of squads){
           seed.tags.push(s)
         }
       }
+
       rogueSeedList.value.push(seed)
     }
     //获取在服务段保存的用户评价
