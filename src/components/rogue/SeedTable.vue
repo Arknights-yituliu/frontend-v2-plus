@@ -11,78 +11,149 @@ import {getTmpUid} from "@/utils/user/userInfo.js";
 
 const {mobile} = useDisplay()
 
+//分页获取种子API的参数
 let pageInfo = ref({
+  //排序条件
   sortCondition: 'rating',
+  //页数
   pageNum: 0,
+  //每页数量
   pageSize: 30,
+  //种子类型
   seedType: 1
 })
 
-
+//从父组件传来的数据
 const props = defineProps(["modelValue", 'seedType']);
 
-
+//种子列表
 let rogueSeedList = ref([])
 
+/**
+ * 分页获取种子
+ * @param sortCondition 获取种子列表的排序条件
+ */
 function getRogueSeedPage(sortCondition) {
-  pageInfo.value.sortCondition = sortCondition
-  pageInfo.value.seedType = props.seedType
-  rogueSeedAPI.getRogueSeedPage(pageInfo.value).then(response => {
-    rogueSeedList.value = response.data
-    getUserRating()
-    getUserActionHistory()
-  })
-}
 
-function getUserRating() {
-  rogueSeedAPI.getRogueSeedUserRating().then(response => {
-    let ratingMap = response.data
-    for (const item of rogueSeedList.value) {
-      if (ratingMap[item.seedId]) {
-        item.userRating = ratingMap[item.seedId].rating
-      }
-    }
-  })
-}
-
-const tmpUid = getTmpUid();
-
-function rogueSeedRating(seedIndex, oldRating, newRating) {
-
-  if (oldRating === newRating) {
-    rogueSeedList.value[seedIndex].userRating = -1;
-  } else {
-    rogueSeedList.value[seedIndex].userRating = newRating;
+  if(pageInfo.value.sortCondition!==sortCondition){
+    rogueSeedList.value = []
   }
 
-  const seedId = rogueSeedList.value[seedIndex].seedId
-  const data = {seedId: seedId, rating: newRating, uid: tmpUid}
+  //设置排序条件
+  pageInfo.value.sortCondition = sortCondition
+  //种子类型
+  pageInfo.value.seedType = props.seedType
+  //根据分页参数获取种子
+  rogueSeedAPI.getRogueSeedPage(pageInfo.value).then(response => {
+    for(const item of response.data) {
+      rogueSeedList.value.push(item)
+    }
+    //获取在服务段保存的用户评价
+    getUserRating()
+    getUserCopyRecord()
+  })
+}
 
+let ratingRecord = ref({})
+
+/**
+ * 获取在服务段保存的用户评价
+ */
+function getUserRating() {
+  //如果已经获取过了，则不在从服务端获取数据
+  if(ratingRecord.value.length>1){
+    _writeRatingValue()
+  }
+  rogueSeedAPI.getRogueSeedUserRating().then(response => {
+    //获取的评价记录是一个map，key为种子id，value为评价状态
+    ratingRecord.value = response.data
+    _writeRatingValue()
+  })
+
+  /**
+   * 遍历种子列表，写入用户之前的评价
+   * @private
+   */
+  function _writeRatingValue(){
+    for (const item of rogueSeedList.value) {
+      if (ratingRecord.value[item.seedId]) {
+        item.userRating = ratingRecord.value[item.seedId].rating
+      }
+    }
+  }
+}
+
+//临时uid，用于作为保存非登录状态的用户各种记录的唯一标识
+const tmpUid = getTmpUid();
+
+/**
+ * 点赞种子
+ * @param seedIndex 种子在种子列表中的索引
+ * @param oldRating 用户之前的评价
+ * @param newRating 用户当前的评价
+ */
+function rogueSeedRating(seedIndex, oldRating, newRating) {
+
+
+  //请求体
+  const data = {
+    //种子的唯一标识
+    seedId: rogueSeedList.value[seedIndex].seedId,
+    //新评价
+    rating: newRating,
+    //这个uid填入的是临时uid，是一个兜底方式。<br>
+    //如果用户是登录状态，后端会忽略这个临时uid，根据请求头的token获取的用户id进行评价并记录；反之则会使用这个临时id进行评价并记录
+    uid: tmpUid
+  }
+  //发起评价请求
   rogueSeedAPI.rogueSeedRating(data).then(response => {
-
+    //待请求成功后再对前端的种子评价进行更新
+    //如果新旧评价相同，代表用户要取消评价，将这个种子的评价取消
+    if (oldRating === newRating) {
+      rogueSeedList.value[seedIndex].userRating = -1;
+    } else {
+      //反之则直接对种子更新评价
+      rogueSeedList.value[seedIndex].userRating = newRating;
+    }
     cMessage(response.data)
   })
 }
 
+/**
+ * 根据用户选择的种子排序方式获取排序按钮样式
+ * @param sortCondition  排序条件
+ * @returns {string} 按钮颜色样式
+ */
 function sortBtnAction(sortCondition) {
   if (sortCondition === pageInfo.value.sortCondition) {
     return 'primary'
   }
 }
 
-function ratingBtnAction(oldRating, newRating) {
-  if (oldRating === 0 && oldRating === newRating) {
+/**
+ * 根据用户对种子的评价获取按钮样式
+ * @param userRating  用户评价
+ * @param activeValue 按钮代表的评价
+ * @returns {string}  按钮颜色样式
+ */
+function ratingBtnAction(userRating, activeValue) {
+  if (userRating === 0 && userRating === activeValue) {
     return 'error'
   }
-  if (oldRating === 1 && oldRating === newRating) {
+  if (userRating === 1 && userRating === activeValue) {
     return 'primary'
   }
-
   return 'gery'
 }
 
+
+/**
+ * 复制种子
+ * @param seed 种子
+ */
 function copySeed(seed) {
   copyTextToClipboard(seed.seed)
+  //将用户的复制记录保存在indexDB中
   userActionOnSeedDB.insert({
     id: new Date().getTime(),
     seedId: seed.seedId,
@@ -90,14 +161,19 @@ function copySeed(seed) {
   })
 }
 
-function getUserActionHistory() {
+/**
+ * 获取用户的历史操作
+ */
+function getUserCopyRecord() {
+  //从indexDB中获取动作为复制的数据
   userActionOnSeed.queryByAction('copy').then(response => {
-
     let actionMap = new Map()
+    //将集合转为map
     for (let item of response) {
       actionMap.set(item.seedId, '已复制')
     }
 
+    //遍历种子，判断种子是否被复制过
     for (const item of rogueSeedList.value) {
       if (actionMap.get(item.seedId)) {
         item.copyFlag = true
@@ -116,10 +192,6 @@ onMounted(() => {
   getRogueSeedPage(pageInfo.value.sortCondition)
 })
 
-
-watch(() => props.seedType, (newVal, oldVal) => {
-  getRogueSeedPage(pageInfo.value.sortCondition)
-})
 
 </script>
 
@@ -146,10 +218,13 @@ watch(() => props.seedType, (newVal, oldVal) => {
             复制
           </v-btn>
         </div>
-        <div class="flex align-center p-4">
-          <v-icon icon="mdi-update">
+        <div class="flex align-center">
+          <v-icon icon="mdi-update" color="primary">
           </v-icon>
-          {{ dateFormat(rogueSeed.createTime, 'yyyy/MM/dd HH:mm') }}
+          <div> {{ dateFormat(rogueSeed.createTime, 'yyyy/MM/dd HH:mm') }}</div>
+          <div class="spacer-12"></div>
+          <v-icon icon="mdi-comment" color="primary"></v-icon>
+          <div>{{rogueSeed.ratingCount}}</div>
         </div>
 
         <!-- 标签区域 -->
@@ -205,25 +280,5 @@ watch(() => props.seedType, (newVal, oldVal) => {
 <style scoped>
 /* 固定卡片内容高度，描述多行文本截断 */
 
-.avg-rating {
-  font-size: 18px;
-}
 
-.rating-ceiling {
-  font-size: 10px;
-}
-
-.description {
-  height: 60px;
-  /* 固定高度 */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  /* 限制显示行数 */
-  -webkit-box-orient: vertical;
-  background-color: #55553322;
-  border-radius: 12px;
-  padding: 8px;
-}
 </style>

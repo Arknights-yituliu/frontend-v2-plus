@@ -26,8 +26,6 @@ let activeTab = ref('GoodSeed')
     <!-- Tabs -->
     <RollSeed></RollSeed>
 
-
-
     <v-tabs v-model="activeTab" bg-color="primary">
       <v-tab value="UploadSeed" >种子上传</v-tab>
       <v-tab value="GoodSeed" >胡种榜</v-tab>
