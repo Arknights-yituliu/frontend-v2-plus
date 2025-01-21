@@ -121,10 +121,6 @@ let seedForm = ref({
 function uploadSeed() {
   let data = deepClone(seedForm.value)
 
-  for (const item of data.squad) {
-    data.tags.push(item)
-  }
-
   data.difficulty = _extractNumberAfterSecondComma(data.seed)
 
   rogueSeedAPI.uploadRogueSeed(data).then(response => {
