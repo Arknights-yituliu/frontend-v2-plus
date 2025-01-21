@@ -215,18 +215,16 @@ onMounted(() => {
         </v-dialog>
         <v-container>
           <router-view>
-
           </router-view>
-
-            <div class="flex justify-center align-center">
-              <img src="/image/website/备案图标.png" style="width: 20px; height: 20px;margin: 0 12px" alt=""/>
-              <a href="https://beian.miit.gov.cn/">豫ICP备2024043594号-1</a>
-            </div>
-
           <ComponentsContainer></ComponentsContainer>
         </v-container>
+        <v-footer class="flex justify-center" color="primary">
+          <img src="/image/website/备案图标.png" style="width: 20px; height: 20px;margin: 0 12px" alt=""/>
+          <a href="https://beian.miit.gov.cn/" style="color: white">豫ICP备2024043594号-1</a>
+        </v-footer>
       </v-main>
     </v-app>
+
   </v-responsive>
 
 </template>
