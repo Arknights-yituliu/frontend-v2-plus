@@ -5,6 +5,15 @@ const props = defineProps({
   costs: Array,
   items: Array,
 });
+
+
+function getEquipIcon(typeIcon){
+  if(typeIcon){
+    return `https://cos.yituliu.cn/equip-icon/${item.typeIcon}.png`
+  }
+  return noModIcon
+}
+
 </script>
 
 <template>
@@ -16,7 +25,7 @@ const props = defineProps({
     <div v-for="(item, index) in items" :key="index" class="bar-content" :style="item.contentStyle">
       <!-- 图标 -->
       <div :class="['bar-icon', item.typeName2 ? 'mod-icon' : item.iconClass]" :style="item.style">
-        <img v-if="item.typeName2" class="operator-equip-image" :src="item.typeIcon ? `/image/survey/mod-icon/${item.typeIcon}.png` : noModIcon">
+        <img v-if="item.typeName2" class="operator-equip-image" :src="getEquipIcon(item.typeIcon)" alt="">
       </div>
       <!-- 侧边描述文字 -->
       <div class="bar-text" :style="item.textStyle">

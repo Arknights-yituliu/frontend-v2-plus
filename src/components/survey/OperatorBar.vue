@@ -8,6 +8,7 @@ import '/src/assets/css/survey/operator_info_bar.phone.scss'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import SkillIcon from "/src/components/sprite/SkillIcon.vue";
+import EquipIcon from "@/components/EquipIcon.vue";
 const props = defineProps(["modelValue", 'operatorInfo',]);
 
 console.log(props.operatorInfo)
@@ -36,7 +37,7 @@ console.log(props.operatorInfo)
 
     <div class="operator-equip-group" v-for="(equip,index) in operatorInfo.equip" :key="index">
       <div class="bar-operator-equip">
-        <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="bar-equip-icon-image">
+        <EquipIcon :icon="equip.typeIcon" mobile-size="28" size="40"></EquipIcon>
         <img :src="`/image/survey/mod-rank-${operatorInfo[`mod${equip.typeName2}`]}-v1.jpg`"
              v-show="operatorInfo[`mod${equip.typeName2}`]>0" class="bar-equip-rank-icon" alt="">
       </div>

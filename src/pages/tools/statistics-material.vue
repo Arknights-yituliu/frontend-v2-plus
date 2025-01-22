@@ -1,5 +1,6 @@
 <script setup>
-import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
+import {operatorTable} from "/src/utils/gameData.js";
+
 import {ref} from "vue";
 import {statisticsOperatorInfo, splitMaterialByTier} from "@/utils/survey/operatorStatistical.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
@@ -32,8 +33,8 @@ let T3Material = ref([])
 
 function statistics() {
   let list = []
-  for (const charId in CHARACTER_TABLE) {
-    const info = CHARACTER_TABLE[charId]
+  for (const charId in operatorTable) {
+    const info = operatorTable[charId]
     _formatData(info)
   }
   list.sort((a, b) => b.rarity - a.rarity)

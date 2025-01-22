@@ -5,7 +5,7 @@ import '/src/assets/css/tool/schedule.css'
 import '/src/assets/css/information/building_skill_font_color.css'
 
 import SCHEDULE_TEMPLATE from '/src/static/json/build/plans_template.json'
-import character_table from '/src/static/json/survey/character_table_simple.json'
+import {operatorTable} from "/src/utils/gameData.js";
 import SCHEDULE_MENU from '/src/static/json/build/schedule_menu.json'
 import BUILDING_TABLE from '/src/static/json/build/building_table.json'
 
@@ -88,8 +88,8 @@ const productTable = {
 
 let characterIdAndName = {}
 
-for (const key in character_table) {
-  characterIdAndName[character_table[key].name] = replaceCharId(key)
+for (const key in operatorTable) {
+  characterIdAndName[operatorTable[key].name] = replaceCharId(key)
 }
 
 function replaceCharId(string) {

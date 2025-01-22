@@ -1,4 +1,4 @@
-import characterBasicInfo from "/src/static/json/survey/character_table_simple.json";
+import {operatorTable} from "/src/utils/gameData.js";
 
 
 let yearDict = [
@@ -147,8 +147,8 @@ let characterList = [];
 
 //干员基础数据
 function characterListInit() {
-    for (let charId in characterBasicInfo) {
-        const baseData = characterBasicInfo[charId];
+    for (let charId in operatorTable) {
+        const baseData = operatorTable[charId];
         // if (baseInfo.rarity < 5) continue;
 
         let default_show = false;
@@ -193,8 +193,8 @@ function characterListInit() {
 let scoreList = [];
 
 function scoreListInit() {
-    for (let charId in characterBasicInfo) {
-        const baseInfo = characterBasicInfo[charId];
+    for (let charId in operatorTable) {
+        const baseInfo = operatorTable[charId];
         // console.log(baseInfo)
         let score = {
             charId: charId,
@@ -228,8 +228,8 @@ function scoreListInit() {
 let rankingList = [];
 
 function rankingListInit() {
-    for (let charId in characterBasicInfo) {
-        const baseInfo = characterBasicInfo[charId];
+    for (let charId in operatorTable) {
+        const baseInfo = operatorTable[charId];
         let rankInfo = {
             charId: charId,
             name: baseInfo.name,

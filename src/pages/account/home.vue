@@ -2,13 +2,11 @@
 import {onMounted, ref, watch} from "vue";
 import {cMessage} from "/src/utils/message";
 import surveyApi from "/src/api/userInfo"
-import operator_table_simple from '/src/static/json/survey/character_table_simple.json'
 import "/src/assets/css/survey/home.scss";
 import "/src/assets/css/survey/home.phone.scss";
 import {userInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
-import operatorDataAPI from "@/api/operatorData.js";
-import CHARACTER_TABLE from "@/static/json/survey/character_table_simple.json";
+import {operatorTable} from '/src/utils/gameData.js'
 
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
 const englishNumberRegex = /^[A-Za-z0-9]+$/;
@@ -19,11 +17,12 @@ const accountRules = [
 ]
 
 let avatarList = []
-for (const char_id in operator_table_simple) {
+
+for (const char_id in operatorTable) {
   const operator = {
     charId: char_id,
-    time: operator_table_simple[char_id].date,
-    rarity: operator_table_simple[char_id].rarity,
+    time: operatorTable[char_id].date,
+    rarity: operatorTable[char_id].rarity,
   }
   avatarList.push(operator)
 }

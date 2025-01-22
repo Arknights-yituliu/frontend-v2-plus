@@ -18,8 +18,10 @@
 <script setup>
 import stageApi from "/src/api/material";
 import {onMounted, ref} from "vue";
-import item_cost_table from '/src/static/json/survey/operator_item_cost_table.json'
-import character_table from '/src/static/json/survey/character_table_simple.json'
+import item_cost_table from '/src/static/json/operator/operator_item_cost_table.json'
+import {operatorTable} from '/src/utils/gameData.js'
+
+
 
 let item_value_map = ref({});
 
@@ -37,9 +39,9 @@ let apCostList = ref([]);
 
 async function eliteApCostCal() {
   await getItemValue();
-  for(const charId in character_table){
+  for(const charId in operatorTable){
     let  apCost = 0
-    const character = character_table[charId]
+    const character = operatorTable[charId]
     const rarity =  character.rarity
     const name = character.name
     if(rarity <5) continue

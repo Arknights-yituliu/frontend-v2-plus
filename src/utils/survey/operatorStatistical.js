@@ -1,7 +1,7 @@
-import OPERATOR_ITEM_COST_TABLE from "/src/static/json/survey/operator_item_cost_table.json";
-import LEVEL_COST_TABLE from "/src/static/json/survey/level_cost_table.json";
-import COMPOSITE_TABLE from "/src/static/json/survey/composite_table.json";
-import ITEM_TABLE from "/src/static/json/survey/item_table.json";
+import OPERATOR_ITEM_COST_TABLE from "/src/static/json/operator/operator_item_cost_table.json";
+import LEVEL_COST_TABLE from "/src/static/json/operator/level_cost_table.json";
+import COMPOSITE_TABLE from "/src/static/json/operator/composite_table.json";
+import ITEM_TABLE from "/src/static/json/operator/item_table.json";
 import deepClone from "/src/utils/deepClone.js";
 
 // 初始练度

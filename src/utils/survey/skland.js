@@ -3,7 +3,8 @@ import md5 from 'crypto-js/md5'
 
 import {cMessage} from "/src/utils/message";
 import toolAPI from '/src/api/tool.js'
-import CHARACTER_TABLE_SIMPLE from "/src/static/json/survey/character_table_simple.json";
+import {operatorTable} from "/src/utils/gameData.js";
+
 import axios from "axios";
 
 const SKLAND_DOMAIN = "https://zonai.skland.com";
@@ -16,8 +17,8 @@ const CULTIVATE_PLAYER_API = '/api/v1/game/cultivate/player'
 
 let equipDict = new Map()
 if (equipDict.size < 100) {
-    for (const charId in CHARACTER_TABLE_SIMPLE) {
-        const characterInfo = CHARACTER_TABLE_SIMPLE[charId]
+    for (const charId in operatorTable) {
+        const characterInfo = operatorTable[charId]
         if (characterInfo.equip) {
             for (const equip of characterInfo.equip) {
                 equipDict.set(equip.uniEquipId, equip.typeName2)
@@ -240,8 +241,8 @@ function formattingOperatorData(characterList) {
         const potential = Math.ceil(potentialRank + 1)
 
         let rarity = 0;
-        if (CHARACTER_TABLE_SIMPLE[id]) {
-            rarity = CHARACTER_TABLE_SIMPLE[id].rarity
+        if (operatorTable[id]) {
+            rarity = operatorTable[id].rarity
         } else {
             continue
         }

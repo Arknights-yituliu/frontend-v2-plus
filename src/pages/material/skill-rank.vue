@@ -1,6 +1,6 @@
 <script setup>
-import ITEM_COST_TABLE from '/src/static/json/survey/operator_item_cost_table.json'
-import OPERATOR_TABLE from '/src/static/json/survey/character_table_simple.json'
+import ITEM_COST_TABLE from '/src/static/json/operator/operator_item_cost_table.json'
+import {operatorTable} from "/src/utils/gameData.js";
 import materialAPI from '/src/api/material.js'
 import operatorAPI from '/src/api/operatorData.js'
 import {onMounted, ref} from "vue";
@@ -9,8 +9,8 @@ import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 
 const operatorMap = new Map()
 const charIdMap = new Map()
-for (const charId in OPERATOR_TABLE) {
-  const operator = OPERATOR_TABLE[charId]
+for (const charId in operatorTable) {
+  const operator = operatorTable[charId]
   operatorMap.set(charId, operator)
   charIdMap.set(operator.name,operator.charId)
 }

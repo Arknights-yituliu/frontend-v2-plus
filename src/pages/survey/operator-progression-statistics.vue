@@ -2,7 +2,8 @@
 import "/src/assets/css/survey/rank.v2.scss";
 import "/src/assets/css/survey/rank.phone.scss";
 import {onMounted, ref} from "vue";
-import character_table_simple from "/src/static/json/survey/character_table_simple.json";
+import {operatorTable} from "/src/utils/gameData.js";
+
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorDataApi from "/src/api/operatorData";
 
@@ -56,7 +57,7 @@ function getCharStatisticsResult() {
   operatorDataApi.getCharStatisticsResult().then((response) => {
     let {result, userCount, updateTime} = response.data
     for (const item of result) {
-      let charInfo = character_table_simple[item.charId]
+      let charInfo = operatorTable[item.charId]
       if (charInfo) {
         item.name = charInfo.name
         item.rarity = charInfo.rarity

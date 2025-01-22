@@ -5,7 +5,6 @@ import SklandAPI from '/src/utils/survey/skland.js'
 import {userInfo} from "/src/utils/user/userInfo.js";
 import {cMessage} from "/src/utils/message.js";
 import sklandApi from "../../utils/survey/skland.js";
-import characterTable from "/src/static/json/survey/character_table_simple.json";
 import operatorDataAPI from '/src/api/operatorData.js'
 import {useRouter} from "vue-router";
 

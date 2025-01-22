@@ -1,9 +1,9 @@
 import { ref } from 'vue'
 import materialAPI from "@/api/material"; // 材料字典
 import surveyAPI from "@/api/operatorData"; // 练度调查结果
-import operatorJSON from "@/static/json/survey/character_table_simple" // 干员信息JSON
-import operatorMaterialJSON from "@/static/json/survey/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
-import professionDictJSON from "@/static/json/survey/profession_dict"; // 职业字典JSON
+import {operatorTable} from "/src/utils/gameData.js";
+import operatorMaterialJSON from "@/static/json/operator/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
+import professionDictJSON from "@/static/json/operator/profession_dict"; // 职业字典JSON
 import { operatorInit } from './formatOperatorData'
 // 获取材料字典
 const materialMap = new Map(); // 材料总映射
@@ -48,7 +48,7 @@ professionDictJSON.forEach(profession => {
   });
 });
 
-const operatorMap = new Map(Object.entries(operatorJSON)) // 干员信息映射
+const operatorMap = new Map(Object.entries(operatorTable)) // 干员信息映射
 const operatorMaterialMap = new Map(Object.entries(operatorMaterialJSON)) // 干员精英化、专精技能消耗材料映射
 
 // 通用的干员消耗材料信息映射(老干员如银灰虽然不通用, 但这个主要是给新建自定义角色用的, 不影响)

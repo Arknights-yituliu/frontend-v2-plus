@@ -4,7 +4,7 @@ import userAPI from "/src/api/userInfo";
 import operatorDataAPI from "/src/api/operatorData.js"
 import {onMounted, ref} from "vue";
 import {operatorRecommend} from "/src/utils/survey/operatorRecommend";
-import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
+import {operatorTable} from "/src/utils/gameData.js";
 import {exportExcel} from '/src/utils/exportExcel.js'
 
 import "/src/assets/css/survey/operator.scss";
@@ -15,6 +15,7 @@ import {operatorFilterCondition, filterOperatorList} from "@/utils/survey/operat
 
 import OperatorStatisticalTable from "/src/components/survey/OperatorStatisticalTable.vue";
 import deepClone from "@/utils/deepClone.js";
+import EquipIcon from "@/components/EquipIcon.vue";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 
@@ -46,8 +47,8 @@ function getOperatorData() {
     }
 
     const tmpList = []
-    for (const charId in CHARACTER_TABLE) {
-      let formatData = deepClone(CHARACTER_TABLE[charId])
+    for (const charId in operatorTable) {
+      let formatData = deepClone(operatorTable[charId])
 
       let item = {}
       if (operatorMap[charId]) {
@@ -370,8 +371,7 @@ onMounted(() => {
                     <!--              <div class="skill-name">{{ recommend.info.name }}</div>-->
                   </div>
                   <div v-show="recommend.info.type==='equip'" class="operator-equip-image-wrap">
-                    <img :src="`/image/survey/mod-icon/${recommend.info.iconId}.png`" alt=""
-                         class="operator-equip-image">
+                    <EquipIcon :icon="recommend.info.iconId" mobile-size="28" size="40"></EquipIcon>
                     <div class="equip-name">{{ recommend.info.iconId }}</div>
                   </div>
 
@@ -420,7 +420,7 @@ onMounted(() => {
 
         <div class="operator-equip-image-wrap" v-for="(equip,index) in operator.equip" :key="index">
           <div class="operator-skill-icon-sprite">
-            <img :src="`/image/survey/mod-icon/${equip.typeIcon}.png`" alt="" class="operator-equip-image">
+            <EquipIcon :icon="equip.typeIcon" mobile-size="28" size="40"></EquipIcon>
             <img :src="`/image/survey/mod-rank-${operator[`mod${equip.typeName2}`]}-v1.jpg`"
                  v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">
           </div>

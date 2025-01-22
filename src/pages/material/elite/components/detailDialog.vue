@@ -26,6 +26,13 @@ const deleteOperator = () => {
   emits('update:modelValue', false)
 }
 
+function getEquipIcon(typeIcon){
+  if(typeIcon){
+    return `https://cos.yituliu.cn/equip-icon/${item.typeIcon}.png`
+  }
+  return noModIcon
+}
+
 </script>
 
 <template>
@@ -52,7 +59,7 @@ const deleteOperator = () => {
             <el-table-column label="图标" v-slot="{ row }">
               <div :class="['bar-icon', row.iconClass]" :style="row.style" v-if="row.iconClass"></div>
               <div :class="['mod-icon', 'bar-icon']"  v-else>
-                <img class="operator-equip-image" :src="row.typeIcon ? `/image/survey/mod-icon/${row.typeIcon}.png` : noModIcon">
+                <img class="operator-equip-image" :src="getEquipIcon(row.typeIcon)">
               </div>
             </el-table-column>
             <el-table-column prop="totalCost" label="材料开销" :formatter="costFormatter"/>

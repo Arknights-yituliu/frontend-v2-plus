@@ -1,17 +1,16 @@
 <script setup>
 import {professionDict} from '/src/utils/survey/common.js'
-import characterTable from '/src/static/json/survey/character_table_simple.json'
+import {operatorTable} from "/src/utils/gameData.js";
 import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
 import {cMessage} from "/src/utils/message.js";
 import operatorDataAPI from '/src/api/operatorData.js'
 import questionnaireAPI from "/src/api/questionnaire.js";
-import character_table_simple from "../../static/json/survey/character_table_simple.json";
 
 let operatorGroupByProfession = new Map()
 
-for (const charId in characterTable) {
-  const character = characterTable[charId]
+for (const charId in operatorTable) {
+  const character = operatorTable[charId]
   const {profession, rarity} = character
 
   // if (rarity < 6) continue
@@ -128,7 +127,7 @@ function getCharStatisticsResult() {
     let {result, userCount, updateTime} = response.data
     for (const item of result) {
       const charId = item.charId
-      let char_info = character_table_simple[charId]
+      let char_info = operatorTable[charId]
       item.name = char_info.name
       item.rarity = char_info.rarity
       item.profession = char_info.profession

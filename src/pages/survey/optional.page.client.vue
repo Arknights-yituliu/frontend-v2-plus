@@ -22,7 +22,7 @@
 
 <script setup>
 
-import optional_table from '/src/static/json/survey/optional_table.json'
+import optional_table from '/src/static/json/operator/optional_table.json'
 
 function updateOwn(){
 
