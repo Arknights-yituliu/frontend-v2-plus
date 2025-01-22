@@ -10,7 +10,6 @@ import {exportExcel} from '/src/utils/exportExcel.js'
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
 import {debounce} from "/src/utils/debounce";
-import {getUserInfo} from "/src/utils/user/userInfo.js";
 import {useRouter} from "vue-router";
 import {operatorFilterCondition, filterOperatorList} from "@/utils/survey/operatorFilter.js";
 
@@ -20,7 +19,7 @@ import deepClone from "@/utils/deepClone.js";
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 
 
-let displayTabHeader = ref('干员筛选')
+let displayTabHeader = ref('数据导入导出')
 
 
 
@@ -336,7 +335,8 @@ onMounted(() => {
             </div>
           </v-tabs-window-item>
 
-          <v-tabs-window-item value="数据导入导出">
+          <v-tabs-window-item value="数据导入导出" >
+            <v-chip color="red" text="导入之前请先登录"></v-chip>
             <v-btn color="primary" class="checkbox-button" @click="importDataBySkland()">
               从森空岛导入
             </v-btn>

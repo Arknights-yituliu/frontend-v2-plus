@@ -5,7 +5,9 @@ import {onMounted, ref} from 'vue'
 import materialAPI from '/src/api/material.js'
 import userService from "/src/utils/user/userConfig.js";
 import TMP_STORE_PERM from '/src/static/json/material/tmp_store_perm.json'
-
+import '/src/assets/css/material/store.scss';
+import '/src/assets/css/material/store.phone.scss';
+import '/src/assets/css/sprite/sprite_plane_icon.css';
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表
 const storeTypeList = [ // 常驻商店数据初始化格式
@@ -129,10 +131,8 @@ onMounted(() => {
       <!-- 内容区域 -->
       <div v-for="(singleAct, index) in actStoreList" :key="index" class="act_store_block">
         <!-- banner -->
-        <div class="act_banner_background" :style="getBackground(singleAct.imageLink)">
-          <div class="act_banner_img">
-            <img class="act_img" :src="getActStoreBackgroundImage(singleAct.imageLink)" :alt="singleAct.actName"/>
-          </div>
+        <div class="act-banner-background" :style="getBackground(singleAct.imageLink)">
+            <img class="act-banner-img"  :src="getActStoreBackgroundImage(singleAct.imageLink)" :alt="singleAct.actName"/>
         </div>
 
         <!-- tag -->
@@ -298,9 +298,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-@import '/src/assets/css/material/store.scss';
-@import '/src/assets/css/material/store.phone.scss';
-@import '/src/assets/css/sprite/sprite_plane_icon.css';
+
 
 #store {
   .op_title {
