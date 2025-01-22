@@ -324,12 +324,7 @@ onMounted(() => {
             <div class="checkbox">
               <v-btn variant="text" class="checkbox-label">排序</v-btn>
               <v-btn color="primary" variant="tonal"
-                     @click="sortOperatorList('rarity')"
-                     class="checkbox-button">
-                按稀有度
-              </v-btn>
-              <v-btn color="primary" variant="tonal"
-                     @click="sortOperatorList('date')"
+                     @click="sortOperatorList('updateTime')"
                      class="checkbox-button">
                 按实装顺序
               </v-btn>

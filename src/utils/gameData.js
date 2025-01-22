@@ -12,7 +12,7 @@ function getOperatorTable(){
         let itemObtainApproach = '常驻干员'
         if(operator_add_time[name]){
             const {addTime,obtainApproach} =operator_add_time[name]
-            updateTime = addTime
+            updateTime =  new Date(addTime).getTime()
             itemObtainApproach = obtainApproach
         }
 
