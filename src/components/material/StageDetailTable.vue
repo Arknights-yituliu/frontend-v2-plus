@@ -16,7 +16,7 @@ const headers = [
   {title: '期望理智', key: 'apExpect'},
   {title: '副产物', sortable: false, key: 'secondaryItemId'},
   {title: '综合效率', key: 'stageEfficiency'},
-  {title: 'SPM', key: 'SPM'},
+  {title: 'SPM', key: 'spm'},
   {title: 'T4效率', key: 'leT4Efficiency'},
   {title: 'T3效率', key: 'leT3Efficiency'},
   {title: 'T2效率', key: 'leT2Efficiency'},
@@ -54,8 +54,8 @@ function replaceZoneName(str) {
       <template v-slot:item.stageEfficiency="{ item }">
         {{ formatNumber(item.stageEfficiency * 100, 1) }}%
       </template>
-      <template v-slot:item.SPM="{ item }">
-        {{ item.SPM }}
+      <template v-slot:item.spm="{ item }">
+        {{ item.spm }}
       </template>
       <template v-slot:item.leT4Efficiency="{ item }">
         {{ formatNumber(item.leT4Efficiency * 100, 1) }}%
