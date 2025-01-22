@@ -2,10 +2,33 @@
 import CHARACTER_TABLE from '/src/static/json/survey/character_table_simple.json'
 import {ref} from "vue";
 import {statisticsOperatorInfo, splitMaterialByTier} from "@/utils/survey/operatorStatistical.js";
-import SpriteImage from "@/components/sprite/SpriteImage.vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
+
 let listItemCollect = ref({})
 let logList = ref([])
+
+const T3ItemId = [
+  "30013",
+  "30023",
+  "30033",
+  "30043",
+  "30053",
+  "30063",
+  "30073",
+  "30083",
+  "30093",
+  "30103",
+  "31013",
+  "31023",
+  "31033",
+  "31043",
+  "31053",
+  "31063",
+  "31073",
+  "31083"
+]
+
+let T3Material = ref([])
 
 function statistics() {
   let list = []
@@ -15,12 +38,23 @@ function statistics() {
   }
   list.sort((a, b) => b.rarity - a.rarity)
 
-  console.table(list)
+
   const {itemCostCollect, logs} = statisticsOperatorInfo(list)
   logList.value = logs
-  console.log(itemCostCollect)
 
-  listItemCollect.value = splitMaterialByTier(5, itemCostCollect);
+
+  listItemCollect.value = splitMaterialByTier(3, itemCostCollect);
+
+
+
+  for (const id in listItemCollect.value[2]) {
+    const item = listItemCollect.value[2][id]
+    if (item.id > 30000) {
+      T3Material.value.push(item)
+    }
+  }
+
+  T3Material.value.sort((a,b)=> b.count-a.count)
 
 
   function _formatData(info) {
@@ -81,9 +115,8 @@ function statistics() {
 
     list.push(formatData)
   }
-
-
 }
+
 
 statistics()
 
@@ -91,33 +124,26 @@ statistics()
 <template>
 
 
+  <div class="flex flex-wrap" style="width: 520px">
+    <div v-for="(item,index) in T3Material" v-show="T3ItemId.includes(item.id)" class="m-8">
+      <ItemImage size="60" :item-id="item.id"></ItemImage>
+      <div style="text-align: center">{{ item.count }}</div>
+    </div>
+  </div>
 
-
-
-  <table v-for="(list,tier) in listItemCollect">
-    <tbody>
-    <tr v-for="(item,index) in list">
-      <td>
-        <ItemImage size="60" :item-id="item.id"></ItemImage>
-      </td>
-      <td>
-        {{ item.count }}
-      </td>
-    </tr>
-    </tbody>
-  </table>
 
 </template>
 
 
 <style>
-.log114514 {
-  display: flex;flex-wrap: wrap;
-  .cell114514 {
-    display: block;
-    width: 140px;
-    padding: 4px 12px;
+.statistics-material-table {
+  border-collapse: collapse;
+
+  td {
+    border: 1px solid black;
+    padding: 12px;
   }
+
 }
 
 
