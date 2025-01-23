@@ -1,8 +1,7 @@
 <script setup>
 import '/src/assets/css/tool/dps_calculator.scss'
-import {getOperatorInfo, operatorList} from "/src/pages/tools/dps/getOperatorInfo.js";
+// import {getOperatorInfo, operatorList} from "/src/pages/tools/dps/getOperatorInfo.js";
 import {filterOperatorList, operatorFilterCondition} from "/src/utils/survey/operatorFilter.js";
-import deepClone from "@/utils/deepClone.js";
 import {ref} from "vue";
 import {debounce} from "@/utils/debounce.js";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
@@ -29,7 +28,7 @@ addOperator('char_1039_thorn2')
 
 function addOperator(charId) {
 
-  selectedOperator.value[charId] = getOperatorInfo(charId)
+  // selectedOperator.value[charId] = getOperatorInfo(charId)
 }
 
 let operatorCheckBoxDialog = ref(false)
@@ -44,7 +43,7 @@ let displayOperatorList = ref([])
  */
 const addFilterConditionAndFilterOperator = debounce((func, index) => {
   func(index)
-  displayOperatorList.value = filterOperatorList(operatorList)
+  // displayOperatorList.value = filterOperatorList(operatorList)
 
 }, 500)
 
