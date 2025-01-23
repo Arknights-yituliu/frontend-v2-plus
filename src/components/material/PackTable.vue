@@ -16,8 +16,8 @@ const saleTypes = [
 
 const saleTypeMap = new Map()
 
-for(const item of saleTypes){
-  saleTypeMap.set(item.value,item.text)
+for (const item of saleTypes) {
+  saleTypeMap.set(item.value, item.text)
 }
 
 let search = ref('')
@@ -28,12 +28,12 @@ let sortBy = ref([
   {key: 'stageEfficiency', order: 'desc'},
 ])
 
-const headers = [
+const headersItem = [
   {title: '名称', sortable: false, key: 'displayName'},
-  {title: '类型',  key: 'saleType'},
+  {title: '类型', key: 'saleType'},
   {title: '售价', key: 'price'},
   {title: '抽数(不含中坚)', key: 'draws'},
-  {title: '抽数(含中坚)',  key: 'drawsKernel'},
+  {title: '抽数(含中坚)', key: 'drawsKernel'},
   {title: '源石', key: 'originium'},
   {title: '抽卡性价比(不含中坚)', key: 'drawEfficiency'},
   {title: '综合性价比(不含中坚)', key: 'packEfficiency'},
@@ -41,12 +41,57 @@ const headers = [
   {title: '综合性价比(含中坚)', key: 'packEfficiencyKernel'},
 ]
 
+const headers = ref([
+  {title: '名称', sortable: false, key: 'displayName'},
+  {title: '类型', key: 'saleType'},
+  {title: '售价', key: 'price'},
+  {title: '抽数', key: 'draws'},
+  {title: '源石', key: 'originium'},
+  {title: '抽卡性价比', key: 'drawEfficiency'},
+  {title: '综合性价比', key: 'packEfficiency'},
+])
+
+let displayKernel = ref(false)
+
+function hiddenKernel() {
+  displayKernel.value = !displayKernel.value
+  if (displayKernel.value) {
+    headers.value = [
+      {title: '名称', sortable: false, key: 'displayName'},
+      {title: '类型', key: 'saleType'},
+      {title: '售价', key: 'price'},
+      {title: '抽数(不含中坚)', key: 'draws'},
+      {title: '抽数(含中坚)', key: 'drawsKernel'},
+      {title: '源石', key: 'originium'},
+      {title: '抽卡性价比(不含中坚)', key: 'drawEfficiency'},
+      {title: '综合性价比(不含中坚)', key: 'packEfficiency'},
+      {title: '抽卡性价比(含中坚)', key: 'drawEfficiencyKernel'},
+      {title: '综合性价比(含中坚)', key: 'packEfficiencyKernel'},
+    ]
+  } else {
+    headers.value = [
+      {title: '名称', sortable: false, key: 'displayName'},
+      {title: '类型', key: 'saleType'},
+      {title: '售价', key: 'price'},
+      {title: '抽数', key: 'draws'},
+      {title: '源石', key: 'originium'},
+      {title: '抽卡性价比', key: 'drawEfficiency'},
+      {title: '综合性价比', key: 'packEfficiency'},
+    ]
+  }
+}
+
 </script>
 
 <template>
   <v-card
       title="礼包性价比总表"
   >
+
+    <v-switch label="是否显示包含中坚寻访的性价比" color="primary" v-model="displayKernel" @click="hiddenKernel()" >
+
+    </v-switch>
+
     <template v-slot:text>
       <v-text-field
           :sort="sortBy"
@@ -54,6 +99,7 @@ const headers = [
           label="Search"
           prepend-inner-icon="mdi-magnify"
           variant="outlined"
+          density="compact"
           hide-details
           single-line
       ></v-text-field>
@@ -67,35 +113,20 @@ const headers = [
         items-per-page="-1"
         class="no-wrap"
     >
-
-      <template v-slot:item.saleType="{ item }">
-        {{saleTypeMap.get(item.saleType)}}
+      <template v-slot:item="{ item }">
+        <tr>
+          <td>{{ item.displayName }}</td>
+          <td> {{ saleTypeMap.get(item.saleType) }}</td>
+          <td> {{ `${item.price}元` }}</td>
+          <td>{{ formatNumber(item.draws, 1) }}</td>
+          <td v-show="displayKernel"> {{ formatNumber(item.drawsKernel, 1) }}</td>
+          <td> {{ item.originium }}</td>
+          <td> {{ formatNumber(item.drawEfficiency) }}</td>
+          <td> {{ formatNumber(item.packEfficiency) }}</td>
+          <td v-show="displayKernel"> {{ formatNumber(item.drawEfficiencyKernel) }}</td>
+          <td v-show="displayKernel">{{ formatNumber(item.packEfficiencyKernel) }}</td>
+        </tr>
       </template>
-      <template v-slot:item.price="{ item }">
-        {{`${item.price}元`}}
-      </template>
-      <template v-slot:item.draws="{ item }">
-        {{formatNumber(item.draws , 1)}}
-      </template>
-      <template v-slot:item.drawsKernel="{ item }">
-        {{formatNumber(item.drawsKernel , 1)}}
-      </template>
-      <template v-slot:item.originium="{ item }">
-        {{item.originium}}
-      </template>
-      <template v-slot:item.drawEfficiency="{ item }">
-        {{formatNumber(item.drawEfficiency) }}
-      </template>
-      <template v-slot:item.packEfficiency="{ item }">
-        {{formatNumber(item.packEfficiency) }}
-      </template>
-      <template v-slot:item.drawEfficiencyKernel="{ item }">
-        {{formatNumber(item.drawEfficiencyKernel) }}
-      </template>
-      <template v-slot:item.packEfficiencyKernel="{ item }">
-        {{formatNumber(item.packEfficiencyKernel) }}
-      </template>
-
     </v-data-table>
   </v-card>
 </template>

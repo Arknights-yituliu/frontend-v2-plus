@@ -6,6 +6,8 @@ import ModuleHeader from '/src/components/ModuleHeader.vue';
 import userService from "@/utils/user/userConfig.js";
 import PackTable from "@/components/material/PackTable.vue";
 import deepClone from "@/utils/deepClone.js";
+import '/src/assets/css/material/pack.scss';
+import '/src/assets/css/material/pack.phone.scss';
 
 const currentPackInfoList = ref([])
 const date = new Date() // 当前日期
@@ -339,8 +341,7 @@ getPackInfoData()
 </template>
 
 <style lang="scss">
-@import '/src/assets/css/material/pack.scss';
-@import '/src/assets/css/material/pack.phone.scss';
+
 
 #pack {
   /* background-color: #eeeeee; */
