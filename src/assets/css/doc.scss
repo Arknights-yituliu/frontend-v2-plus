@@ -1,0 +1,37 @@
+.doc-page {
+  max-width: 80%;
+
+  h1 {
+    margin: 16px 0;
+  }
+
+  h2 {
+    margin: 12px 0;
+  }
+
+  img{
+    margin: auto;
+    display: block;
+  }
+
+  p{
+    margin: 16px 0;
+  }
+
+  code{
+    background-color: #222222;
+    color: white;
+    padding: 12px;
+    display: block;
+    margin: 12px;
+    border-radius: 4px;
+  }
+
+  button{
+    background-color: rgba(0, 102, 255, 0.5);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+
+}

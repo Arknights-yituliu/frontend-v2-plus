@@ -281,7 +281,7 @@ const routes = [
         display: true,
         module: 'dev',
         icon: "log",
-        component: () => import('/src/pages/dev/join-development.vue')
+        component: () => import('/src/pages/doc/join-development.vue')
     },
     {
         path: '/about/donate',
