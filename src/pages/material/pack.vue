@@ -72,9 +72,16 @@ const initData = () => {
     packInfo.packRmbPerDraw = packInfo.packRmbPerDraw || 0;
     if (!packs[packInfo.saleType]) packs[packInfo.saleType] = []
     // 龙门币模板礼包不放入总表所以单独放入
-    if (packInfo.saleType === 'lmd') return packs.lmd.push(packInfo)
+    if (packInfo.saleType === 'lmd') {
+      return packs.lmd.push(packInfo)
+    }
     // 除龙门币模板礼包外, 不放入过期礼包
-    if (packInfo.end < currentTimeStamp) return
+    if (packInfo.end < currentTimeStamp) {
+      return
+    }
+
+    packInfo.originiumUnitPrice = packInfo.originium?(packInfo.price/packInfo.originium).toFixed(1):packInfo.originium
+
     currentPackInfoList.value.push(packInfo) // 放入总表
     packs[packInfo.saleType].push(packInfo) // 放入各个类型
   })

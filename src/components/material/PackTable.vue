@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {formatNumber} from "@/utils/format.js";
 
 const saleTypes = [
@@ -28,30 +28,12 @@ let sortBy = ref([
   {key: 'stageEfficiency', order: 'desc'},
 ])
 
-const headersItem = [
-  {title: '名称', sortable: false, key: 'displayName'},
-  {title: '类型', key: 'saleType'},
-  {title: '售价', key: 'price'},
-  {title: '抽数(不含中坚)', key: 'draws'},
-  {title: '抽数(含中坚)', key: 'drawsKernel'},
-  {title: '源石', key: 'originium'},
-  {title: '抽卡性价比(不含中坚)', key: 'drawEfficiency'},
-  {title: '综合性价比(不含中坚)', key: 'packEfficiency'},
-  {title: '抽卡性价比(含中坚)', key: 'drawEfficiencyKernel'},
-  {title: '综合性价比(含中坚)', key: 'packEfficiencyKernel'},
-]
 
-const headers = ref([
-  {title: '名称', sortable: false, key: 'displayName'},
-  {title: '类型', key: 'saleType'},
-  {title: '售价', key: 'price'},
-  {title: '抽数', key: 'draws'},
-  {title: '源石', key: 'originium'},
-  {title: '抽卡性价比', key: 'drawEfficiency'},
-  {title: '综合性价比', key: 'packEfficiency'},
-])
 
-let displayKernel = ref(false)
+
+const headers = ref([])
+
+let displayKernel = ref(true)
 
 function hiddenKernel() {
   displayKernel.value = !displayKernel.value
@@ -63,6 +45,7 @@ function hiddenKernel() {
       {title: '抽数(不含中坚)', key: 'draws'},
       {title: '抽数(含中坚)', key: 'drawsKernel'},
       {title: '源石', key: 'originium'},
+      {title: '源石单价', key: 'originiumUnitPrice'},
       {title: '抽卡性价比(不含中坚)', key: 'drawEfficiency'},
       {title: '综合性价比(不含中坚)', key: 'packEfficiency'},
       {title: '抽卡性价比(含中坚)', key: 'drawEfficiencyKernel'},
@@ -75,11 +58,14 @@ function hiddenKernel() {
       {title: '售价', key: 'price'},
       {title: '抽数', key: 'draws'},
       {title: '源石', key: 'originium'},
+      {title: '源石单价', key: 'originiumUnitPrice'},
       {title: '抽卡性价比', key: 'drawEfficiency'},
       {title: '综合性价比', key: 'packEfficiency'},
     ]
   }
 }
+
+hiddenKernel()
 
 </script>
 
@@ -121,6 +107,7 @@ function hiddenKernel() {
           <td>{{ formatNumber(item.draws, 1) }}</td>
           <td v-show="displayKernel"> {{ formatNumber(item.drawsKernel, 1) }}</td>
           <td> {{ item.originium }}</td>
+          <td> {{ item.originiumUnitPrice }}</td>
           <td> {{ formatNumber(item.drawEfficiency) }}</td>
           <td> {{ formatNumber(item.packEfficiency) }}</td>
           <td v-show="displayKernel"> {{ formatNumber(item.drawEfficiencyKernel) }}</td>
