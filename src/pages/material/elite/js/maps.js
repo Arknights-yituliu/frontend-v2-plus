@@ -5,6 +5,7 @@ import {operatorTable} from "/src/utils/gameData.js";
 import operatorMaterialJSON from "@/static/json/operator/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
 import professionDictJSON from "@/static/json/operator/profession_dict"; // 职业字典JSON
 import { operatorInit } from './formatOperatorData'
+import {getStageConfig} from '/src/utils/user/userConfig.js'
 // 获取材料字典
 const materialMap = new Map(); // 材料总映射
 const statisticsMap = new Map() // 练度调查映射
@@ -132,7 +133,8 @@ const init = async () => {
   const { data: { result = [] } } = await surveyAPI.getCharStatisticsResult()
   result.forEach(item => statisticsMap.set(item.charId, item))
   // 材料总映射
-  const { data = [] } = await materialAPI.getItemValueTable(0.633)
+  const stageConfig = getStageConfig()
+  const { data = [] } = await materialAPI.getItemValueTableV4(stageConfig)
   data.forEach(item => materialMap.set(item.itemId, item))
   
   // 添加不存在的材料
