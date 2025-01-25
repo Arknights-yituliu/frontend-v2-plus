@@ -1,5 +1,3 @@
-
-
 function exportExcel(fileName,data){
     let exc = XLSX.utils.book_new(); // 初始化一个excel文件
     let exc_data = XLSX.utils.aoa_to_sheet(data);   // 传入数据 , 到excel

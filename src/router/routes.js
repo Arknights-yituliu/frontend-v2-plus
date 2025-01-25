@@ -275,6 +275,15 @@ const routes = [
         component: () => import('/src/pages/about/log.page.vue')
     },
     {
+        path: '/dev/join-development',
+        text: '参与开发',
+        name: 'JoinDevelopment',
+        display: true,
+        module: 'dev',
+        icon: "log",
+        component: () => import('/src/pages/dev/join-development.vue')
+    },
+    {
         path: '/about/donate',
         text: '支持我们',
         name: 'Donate',
@@ -391,9 +400,16 @@ const LinkedTable = {
     },
     information: {
         path: '/',
-        text: "信息一览",
+        text: "游戏数据",
         display: true,
         icon: 'mdi-format-list-bulleted',
+        child: []
+    },
+    dev: {
+        path: '/',
+        text: "参与开发",
+        display: true,
+        icon: 'mdi-application-cog',
         child: []
     },
     about: {
@@ -401,13 +417,6 @@ const LinkedTable = {
         text: "其他信息",
         display: true,
         icon: 'mdi-application-cog',
-        child: []
-    },
-    backend: {
-        path: '/',
-        text: "后台导航",
-        display: false,
-        icon: 'mdi-toolbox',
         child: []
     }
 }
@@ -421,13 +430,7 @@ for (const route of routes) {
 
     routeMap.set(route.path, route.text)
 
-    if (!route.module) {
-        LinkedTable.backend.child.push(route)
-        continue
-    }
-
-    if (!route.display) {
-        LinkedTable.backend.child.push(route)
+    if (!route.module||!route.display) {
         continue
     }
 

@@ -7,6 +7,9 @@ import {ref, computed, watch} from "vue";
 let open = ref([])
 
 for (const module in LinkedTable) {
+  if(module === 'information'){
+    continue
+  }
   open.value.push(module)
 }
 

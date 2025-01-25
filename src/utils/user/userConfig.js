@@ -23,6 +23,6 @@ function getStageConfig(){
     }
 }
 
-export default {
+export  {
     getStageConfig
 }

@@ -4,7 +4,7 @@ import ModuleHeader from '@/components/ModuleHeader.vue';
 import {ref, onMounted} from "vue";
 import materialAPI from "/src/api/material.js";
 import {exportExcel} from "/src/utils/exportExcel";
-import userService from "/src/utils/user/userConfig.js";
+import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 
 let value_unit = ref('itemValueAp')
@@ -66,7 +66,7 @@ function formattedItemDisplayList(itemList) {
 
 
 onMounted(() => {
-  const config = userService.getStageConfig()
+  const config = getStageConfig()
   materialAPI.getItemValueTableV4(config).then(response => {
     itemValueList.value = response.data
     let tmpList = []

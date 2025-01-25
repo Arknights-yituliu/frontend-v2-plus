@@ -16,7 +16,7 @@ import {ElNotification} from "element-plus";
 
 import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
-import userService from "/src/utils/user/userConfig.js";
+import {getStageConfig} from "/src/utils/user/userConfig.js";
 
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
@@ -198,7 +198,7 @@ function getAndSortPackData() {
   const currentTimeStamp = new Date().getTime()
 
   //从服务器获取礼包数据，将其进行分类
-  const config = userService.getStageConfig()
+  const config = getStageConfig()
   materialAPI.getStorePackV4(config).then(response => {
 
       packInfoInitList.value = response.data

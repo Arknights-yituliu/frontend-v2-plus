@@ -7,7 +7,7 @@ import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import { dateFormat } from '/src/utils/dateUtil.js'
-import userService from '/src/utils/user/userConfig.js'
+import {getStageConfig} from '/src/utils/user/userConfig.js'
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 
 import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
@@ -16,15 +16,21 @@ import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
 import StageLegend from "@/components/material/StageLegend.vue";
 import StageDetailTable from "@/components/material/StageDetailTable.vue";
 import OrundumTable from "@/components/material/OrundumTable.vue";
-
+import {useDisplay} from "vuetify";
+const {mobile} = useDisplay()
 // import {getButtonSize} from '/src/plugins/vuetify/getDisplaySize'
 
-function getButtonSize() {
-
-}
+const stageConfig = getStageConfig();
 
 let legendDisplay = ref(false)
 
+
+function getButtonSize(){
+  if (mobile.value) {
+
+    return 'small'
+  }
+}
 
 //漫游导航指引
 const guideOpen = ref(false)
@@ -58,8 +64,8 @@ let updateTime = ref(TMP_STAGE_RESULT.updateTime)
 
 // 获取关卡推荐数据
 function getStageResult() {
-  const config = userService.getStageConfig()
-  stageApi.getRecommendedStage(config).then(response => {
+
+  stageApi.getRecommendedStage(stageConfig).then(response => {
 
     updateTime.value = response.data.updateTime
     if(!response.data.recommendedStageList){
@@ -347,9 +353,9 @@ function formatPcHistoryTableData() {
  * 获取历史活动关卡数据
  */
 function getHistoryActStage() {
-  const config = userService.getStageConfig()
+
   // 获取历史活动up材料信息
-  stageApi.getHistoryActStageV4(config).then(response => {
+  stageApi.getHistoryActStageV4(stageConfig).then(response => {
     if(!response.data){
       return
     }
@@ -404,8 +410,8 @@ function filterOrundumStage() {
 }
 
 function getOrundumRecommendedStage() {
-  const config = userService.getStageConfig()
-  stageApi.getOrundumRecommendedStageV4(config).then(response => {
+
+  stageApi.getOrundumRecommendedStageV4(stageConfig).then(response => {
     formatOrundumRecommendedStage(response.data)
   })
 }
@@ -469,7 +475,7 @@ onMounted(() => {
         <h1>推荐关卡</h1>
         <h4>Best Stages</h4>
       </div>
-      <v-btn-group>
+      <v-btn-group >
         <v-btn color="primary" :size="getButtonSize()"
           @click="scrollToOrundumTable()" style="margin: 10px 0px 2px 8px;">搓玉数据
         </v-btn>

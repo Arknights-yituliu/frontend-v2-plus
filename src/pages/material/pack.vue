@@ -3,7 +3,7 @@ import materialAPI from "/src/api/material.js";
 import {ref} from 'vue';
 import PackCardContainer from '/src/components/material/PackCardGroup.vue'
 import ModuleHeader from '/src/components/ModuleHeader.vue';
-import userService from "@/utils/user/userConfig.js";
+import {getStageConfig} from "@/utils/user/userConfig.js";
 import PackTable from "@/components/material/PackTable.vue";
 import deepClone from "@/utils/deepClone.js";
 import '/src/assets/css/material/pack.scss';
@@ -41,7 +41,7 @@ let packInfoList = []
 
 const getPackInfoData = async () => {
   // 等待获取接口返回的全部礼包信息
-  const config = userService.getStageConfig()
+  const config = getStageConfig()
   materialAPI.getStorePackV4(config).then(rep => {
     const data = rep.data
     packInfoListFromAPI = deepClone(data)

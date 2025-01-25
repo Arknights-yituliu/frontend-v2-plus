@@ -3,7 +3,7 @@ import FixedNav from "/src/components/FixedNav.vue";
 import ModuleHeader from '@/components/ModuleHeader.vue';
 import {onMounted, ref} from 'vue'
 import materialAPI from '/src/api/material.js'
-import userService from "/src/utils/user/userConfig.js";
+import  {getStageConfig} from "/src/utils/user/userConfig.js";
 import TMP_STORE_PERM from '/src/static/json/material/tmp_store_perm.json'
 import '/src/assets/css/material/store.scss';
 import '/src/assets/css/material/store.phone.scss';
@@ -37,7 +37,7 @@ function formatStorePerm(data){
 
 function getStoreData() {
   // 遍历常驻商店格式化数据
-  const config = userService.getStageConfig()
+  const config = getStageConfig()
   materialAPI.getStorePermDataV4(config).then(response => {
     formatStorePerm(response.data)
   })

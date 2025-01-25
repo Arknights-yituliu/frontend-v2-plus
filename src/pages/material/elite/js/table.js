@@ -195,7 +195,7 @@ export const usePaginationParams = (key) => {
   const options = tableOptions.get(key)
   
   // 表格滚动底部加载更多
-  const loadmore = () => {
+  const loadMore = () => {
     if (current.value * size < total.value) {
       current.value++
       getTableData()
@@ -241,7 +241,7 @@ export const usePaginationParams = (key) => {
     current,
     tableData,
     options,
-    loadmore,
+    loadmore: loadMore,
     getTableData,
     sortChange,
   }
