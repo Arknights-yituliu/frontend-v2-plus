@@ -17,34 +17,34 @@ import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {downloadJsonFile} from "/src/utils/download.js";
 import {useDisplay} from 'vuetify'
 
-const useDisplay1 = useDisplay()
+const {mobile} = useDisplay()
 
-console.log('设备尺寸{}', useDisplay1.xs.value)
+let operatorFilterConditionList = []
+
+for (const label in operatorFilterConditionTable) {
+  let {conditions,name} = operatorFilterConditionTable[label]
+
+  for (const condition of conditions) {
+    condition.type = name
+    operatorFilterConditionList.push(condition)
+  }
+
+
+}
 
 import ItemImage from "@/components/sprite/ItemImage.vue";
 import BuildingFactory from "@/components/tools/BuildingFactory.vue";
+import deepClone from "@/utils/deepClone.js";
 
 let operatorOwnMap = new Map()
 
 function buttonSize() {
-  if (useDisplay1.xs.value) {
+  if (mobile.value) {
     return 'small'
   }
-
-
 }
 
-let filterMainCondition = []
-let filterSecCondition = []
 
-for (const type in operatorFilterConditionTable) {
-  filterMainCondition.push(type)
-  const element = operatorFilterConditionTable[type];
-  const conditions = element.conditions
-  for (const condition of conditions) {
-    filterSecCondition.push(condition.label)
-  }
-}
 
 async function getOperatorDataByAccount() {
   operatorDataAPI.getOperatorData().then(response => {
@@ -308,7 +308,7 @@ function chooseRoom(roomType, index) {
 }
 
 let selectBtnKey = ref({})
-let filterOperatorList = ref({})
+let displayOperatorList = ref([])
 let filterNotOwnOperator = ref(false)
 
 
@@ -323,12 +323,16 @@ let filterCondition = ref({
   }
 })
 
+// const intervalId = setInterval(() => {
+//   console.log(filterCondition.value);
+// }, 1000); // 1000毫秒=1秒
+
 /**
  * 筛选干员
  * @param condition
  * @param key 选项的分类名
  */
-const filterOperatorByTag = debounce((condition, key) => {
+function filterOperatorByTag(condition, key) {
   //清空干员列表
 
   const btnKey = `${key}+${condition.label}`
@@ -343,7 +347,7 @@ const filterOperatorByTag = debounce((condition, key) => {
   }
   //筛选干员
   commonFilterOperator()
-}, 500)
+}
 
 
 //干员搜索输入框输入内容
@@ -357,12 +361,17 @@ const searchOperatorDebounce = debounce(() => {
   commonFilterOperator()
 }, 500)
 
+watch(()=>commonFilterOperator(),()=>{
+  commonFilterOperator()
+})
+
 /**
  * 通用的筛选干员逻辑
  */
 function commonFilterOperator() {
   //清空干员列表
-  filterOperatorList.value = {}
+  displayOperatorList.value = []
+  let charIdObj = {}
   for (const operator of BUILDING_TABLE) {
     // 当按钮key有值时通过暂存的筛选函数进行筛选
     if (selectBtnKey.value && !filterCondition.value.func(operator)) {
@@ -385,15 +394,16 @@ function commonFilterOperator() {
     }
 
 
-    if (filterOperatorList.value[operator.charId]) {
-      let result = filterOperatorList.value[operator.charId]
-      result.description += '<br><br>' + operator.description
-      filterOperatorList.value[operator.charId] = result
-    } else {
-      filterOperatorList.value[operator.charId] = JSON.parse(JSON.stringify(operator))
+    const {charId,name} = operator
+    if(!charIdObj[charId]) {
+      displayOperatorList.value.push({charId:charId,name:name})
+      charIdObj[charId] = charId
     }
-  }
 
+
+
+  }
+  console.log(displayOperatorList.value)
 }
 
 /**
@@ -445,8 +455,8 @@ function chooseOperator(charName) {
   }
 
 
-  if(!checkPlanDuplicateOperator(selectedScheduleIndex.value, charName, true)){
-     return;
+  if (!checkPlanDuplicateOperator(selectedScheduleIndex.value, charName, true)) {
+    return;
   }
 
 
@@ -639,6 +649,7 @@ let FiammettaTargetVisible = ref(false)
  */
 function setFiammetta(property, value) {
   plansTemplate.value[selectedScheduleIndex.value].Fiammetta[property] = value
+  FiammettaTargetVisible.value = false
 }
 
 watch(() => plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
@@ -888,23 +899,7 @@ function importSchedule(schedule) {
 
 let guidePopup = ref(false)
 
-function setPosition() {
-  for (const charId in filterOperatorList.value) {
-    const parentElement = document.getElementById(charId)
-    if (!parentElement) {
-      continue
-    }
-    const childElement = document.getElementById(`${charId}-description`)
-    const parentTop = parentElement.offsetTop;
-    const parentLeft = parentElement.offsetLeft;
-    childElement.style.top = `${parentTop}px`;
-    if (parentLeft > 700) {
-      childElement.style.left = `100px`
-    } else {
-      childElement.style.left = `700px`
-    }
-  }
-}
+
 
 onMounted(() => {
   filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], 'room')
@@ -1170,18 +1165,44 @@ onMounted(() => {
                                :product="getRoomProduct(scheduleIndex,'manufacture', manufactureIndex)"
                                @click="openOperatorCheckBoxDialog(scheduleIndex,'manufacture',manufactureIndex)">
               </BuildingFactory>
-
-
+              <!--发电站-->
+              <BuildingFactory v-for="(num, powerIndex) in scheduleTypeV2.power" :key="powerIndex"
+                               :room-index="num"
+                               room-type="power"
+                               :operators="getRoomOperators(scheduleIndex,'power', powerIndex)"
+                               :product="getRoomProduct(scheduleIndex,'power', powerIndex)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'power',powerIndex)">
+              </BuildingFactory>
+              <!--会客室-->
+              <BuildingFactory :room-index="0"
+                               room-type="meeting"
+                               :operators="getRoomOperators(scheduleIndex,'meeting', 0)"
+                               :product="getRoomProduct(scheduleIndex,'meeting', 0)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'meeting',0)">
+              </BuildingFactory>
+              <!--加工站-->
+              <BuildingFactory :room-index="0"
+                               room-type="processing"
+                               :operators="getRoomOperators(scheduleIndex,'processing', 0)"
+                               :product="getRoomProduct(scheduleIndex,'processing', 0)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'processing',0)">
+              </BuildingFactory>
+              <!--办公室-->
+              <BuildingFactory :room-index="0"
+                               room-type="hire"
+                               :operators="getRoomOperators(scheduleIndex,'hire', 0)"
+                               :product="getRoomProduct(scheduleIndex,'hire', 0)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'hire',0)">
+              </BuildingFactory>
+              <!--宿舍-->
+              <BuildingFactory v-for="(num, dormitoryIndex) in scheduleTypeV2.dormitory" :key="dormitoryIndex"
+                               :room-index="num"
+                               room-type="dormitory"
+                               :operators="getRoomOperators(scheduleIndex,'dormitory', dormitoryIndex)"
+                               :product="getRoomProduct(scheduleIndex,'dormitory', dormitoryIndex)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'dormitory',dormitoryIndex)">
+              </BuildingFactory>
             </v-list-item>
-
-            <v-list-item>
-
-            </v-list-item>
-
-            <v-list-item>
-
-            </v-list-item>
-
           </v-list>
         </v-card>
       </div>
@@ -1211,7 +1232,8 @@ onMounted(() => {
             </v-switch>
           </div>
 
-          <span class="room-set-label" v-show="productTable[selectedRoomType]">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
+          <span class="room-set-label"
+                v-show="productTable[selectedRoomType]">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
           <div class="flex align-center">
             <ItemImage v-for="(product, index) in productTable[selectedRoomType]" :key="index"
                        :item-id="product.id"
@@ -1230,28 +1252,63 @@ onMounted(() => {
             </div>
           </div>
 
+
+
+
           <!--筛选条件-->
           <span class="room-set-label">{{ translate('schedule', 'schedule.FilterCondition') }}</span>
-          <div class="flex flex-wrap" v-for="(conditionType, key) in operatorFilterConditionTable"
-               v-show="conditionType.display" :key="key">
-            <v-btn :color="conditionType.color" variant="text" class="m-2" :size="buttonSize()">
-              {{ translate('schedule', conditionType.name) }}
-            </v-btn>
-            <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"
-                   color="primary" :variant="filterBtnStatus(key, condition.label)" :size="buttonSize()"
-                   @click="filterOperatorByTag(condition, key)" class="m-2">
-              {{ translate('schedule', condition.label) }}
-            </v-btn>
-          </div>
+          <v-select :items="operatorFilterConditionList"
+                    v-model="filterCondition"
+                    variant="outlined"
+                    color="primary">
+            <template v-slot:selection="{ item, index }">
+              <!--              {{item}}-->
+              <span>{{`${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}`}}</span>
+            </template>
+            <template v-slot:item="{ props, item }">
+              <v-list-item v-bind="props"
+                           :title="`${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}`">
+              </v-list-item>
+            </template>
+          </v-select>
+
+<!--          <div class="flex flex-wrap" v-for="(conditionType, key) in operatorFilterConditionTable"-->
+<!--               v-show="conditionType.display" :key="key">-->
+<!--            <v-btn :color="conditionType.color" variant="text" class="m-2" :size="buttonSize()">-->
+<!--              {{ translate('schedule', conditionType.name) }}-->
+<!--            </v-btn>-->
+<!--            <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"-->
+<!--                   color="primary" :variant="filterBtnStatus(key, condition.label)" :size="buttonSize()"-->
+<!--                   @click="filterOperatorByTag(condition, key)" class="m-2">-->
+<!--              {{ translate('schedule', condition.label) }}-->
+<!--            </v-btn>-->
+<!--          </div>-->
 
           <!--待选干员-->
           <span class="room-set-label">{{ translate('schedule', 'schedule.AvailableCharacter') }}</span>
+<!--          <v-select :label="translate('schedule', 'schedule.FilterCondition')"-->
+<!--                    :items="displayOperatorList" chips multiple>-->
+<!--            <template v-slot:chip>-->
+<!--              <v-chip v-for="(charName, index) in getRoomOperators(selectedScheduleIndex,selectedRoomType, selectedRoomIndex)">-->
+<!--                <template v-slot:prepend>-->
+<!--                  <OperatorAvatar size="28" mobile-size="28" rounded :char-id="getCharId(charName)"></OperatorAvatar>-->
+<!--                </template>-->
+<!--              </v-chip>-->
+<!--            </template>-->
+<!--            <template v-slot:item="{ props, item }" >-->
+<!--              <v-list-item v-bind="props" :title=" item.raw.name" @click="chooseOperator(item.raw.name)">-->
+<!--                <template v-slot:prepend>-->
+<!--                  <OperatorAvatar size="28" mobile-size="28" rounded :char-id="item.raw.charId"></OperatorAvatar>-->
+<!--                </template>-->
+<!--              </v-list-item>-->
+<!--            </template>-->
+<!--          </v-select>-->
           <div class="flex flex-wrap">
-            <v-btn v-for="(operator, charId) in filterOperatorList" :key="charId"
+            <v-btn v-for="(operator, charId) in displayOperatorList" :key="charId"
                    @click="chooseOperator(operator.name)"
                    :text="operator.name" variant="tonal" color="primary" class="m-2">
               <template v-slot:prepend>
-                <OperatorAvatar size="28" mobile-size="30" rounded :char-id="charId"></OperatorAvatar>
+                <OperatorAvatar size="28" mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
               </template>
             </v-btn>
           </div>
@@ -1264,29 +1321,30 @@ onMounted(() => {
     <!--肥鸭的选择弹窗-->
     <v-dialog v-model="FiammettaTargetVisible" max-width="800">
       <v-card class="m-a">
-        <div class="filter-condition-box">
-          <div class="condition-bar" v-for="(room, key) in operatorFilterConditionTable"
-               v-show="room.display"
-               :key="key">
-            <v-btn :color="room.color" variant="text" class="m-4"
-                   :text="translate('schedule', room.name)">
-            </v-btn>
-            <v-btn v-for="(condition, index) in room.conditions" :key="index"
-                   color="primary" :variant="filterBtnStatus(key, condition.label)"
-                   :text="translate('schedule', condition.label)"
-                   class="m-4"
-                   @click="filterOperatorByTag(condition, key)">
-            </v-btn>
-          </div>
+        <!--筛选条件-->
+        <span class="room-set-label">{{ translate('schedule', 'schedule.FilterCondition') }}</span>
+        <div class="flex flex-wrap" v-for="(conditionType, key) in operatorFilterConditionTable"
+             v-show="conditionType.display" :key="key">
+          <v-btn :color="conditionType.color" variant="text" class="m-2" :size="buttonSize()">
+            {{ translate('schedule', conditionType.name) }}
+          </v-btn>
+          <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"
+                 color="primary" :variant="filterBtnStatus(key, condition.label)" :size="buttonSize()"
+                 @click="filterOperatorByTag(condition, key)" class="m-2">
+            {{ translate('schedule', condition.label) }}
+          </v-btn>
         </div>
 
-        <div class="operator-check-box-group">
-          <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList"
-               :key="charId"
-               @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
-            <div :class="getOptionAvatar(operator.charId)"></div>
-            <div class="operator-check-label">{{ operator.name }}</div>
-          </div>
+        <!--待选干员-->
+        <span class="room-set-label">{{ translate('schedule', 'schedule.AvailableCharacter') }}</span>
+        <div class="flex flex-wrap">
+          <v-btn v-for="(operator, charId) in displayOperatorList" :key="charId"
+                 @click="setFiammetta('target', operator.name)"
+                 :text="operator.name" variant="tonal" color="primary" class="m-2">
+            <template v-slot:prepend>
+              <OperatorAvatar size="28" mobile-size="30" rounded :char-id="charId"></OperatorAvatar>
+            </template>
+          </v-btn>
         </div>
 
       </v-card>

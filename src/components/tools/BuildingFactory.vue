@@ -41,9 +41,9 @@ const translateKey = {
   power: 'PowerPlant',
   control: 'ControlCenter',
   dormitory: 'Dormitory',
-  ReceptionRoom: 'ReceptionRoom',
-  Workshop: 'Workshop',
-  Office: 'Office',
+  meeting: 'ReceptionRoom',
+  processing: 'Workshop',
+  hire: 'Office',
   Training: 'Training',
 }
 
@@ -62,7 +62,7 @@ const translateKey = {
       <OperatorAvatar
           v-for="(name, operatorIndex) in props.operators"
           :key="operatorIndex"
-          :char-id="characterIdAndName[name]" class="m-4">
+          :char-id="characterIdAndName[name]" class="m-4" size="44" mobile-size="44">
       </OperatorAvatar>
     </div>
   </div>
