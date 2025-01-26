@@ -1,8 +1,73 @@
 .questionnaire-page {
 
-  width: 1200px;
-  margin: auto;
-  padding: 12px;
+  .operator-form-and-checkbox{
+    display: flex;
+  }
+
+  .operator-form {
+    min-width: 460px;
+    margin: 4px;
+  }
+
+  .operator-team-item {
+    margin: 8px;
+    text-align: center;
+    background-color: #505050;
+    height: 80px;
+    width: 80px;
+    color: white;
+    font-size: 12px;
+    line-height: 80px;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .cancel-icon {
+    width: 20px;
+    position: absolute;
+    top: -2px;
+    left: 62px;
+
+  }
+
+
+  .profession-option {
+    width: 40px;
+    height: 40px;
+    margin: 4px;
+    background-color: black;
+  }
+
+
+  .operator-checkbox {
+    margin: 4px;
+  }
+
+  .operator-option {
+    width: 60px;
+    height: 60px;
+    margin: 8px;
+    border-radius: 4px;
+    box-shadow: 2px 2px 2px #80808080;
+    text-align: center;
+    font-size: 14px;
+    background-color: #505050;
+    color: whitesmoke;
+    overflow: hidden;
+    //border: 1px solid red;
+  }
+
+  .operator-selected {
+    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(127, 97, 63, 0.8) 3%, #505050 40%);
+  }
+
+  .operator-name {
+    padding: 4px 0;
+    text-align: center;
+    font-size: 12px;
+    line-height: 14px;
+    width: 100%;
+  }
 
   .question {
     width: 80%;
@@ -30,16 +95,6 @@
   .teams-area :first-child {
   }
 
-  .operator-team {
-    display: flex;
-    flex-wrap: wrap;
-    height: 192px;
-    overflow: hidden;
-    flex-direction: column;
-    align-content: flex-start;
-    // background-color: aqua;
-    // box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
-  }
 
   #team12 {
     width: 576px;
@@ -49,18 +104,6 @@
     width: 192px;
   }
 
-  .operator-team-item {
-    margin: 8px;
-    text-align: center;
-    background-color: #505050;
-    box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
-    height: 80px;
-    width: 80px;
-    color:white;
-    font-size: 12px;
-    line-height: 80px;
-    box-sizing: border-box;
-  }
 
   .profession-filter-single {
     width: 50px;
@@ -91,44 +134,14 @@
     margin: 20px 0;
   }
 
-  .operator-checkbox {
-    display: flex;
-    flex-wrap: wrap;
-    border: 1px solid #505050;
-    max-width: 1160px;
-    // box-shadow: 1px 1px 1px 0 var(--c-box-shadow-color);
-  }
 
-  .operator-option {
-    width: 80px;
-    height: 106px;
-    margin: 8px;
-    border-radius: 4px;
-    box-shadow: 2px 2px 2px #80808080;
-    text-align: center;
-    font-size: 14px;
-    background-color: #505050;
-    color: whitesmoke;
-    overflow: hidden;
-    //border: 1px solid red;
-  }
 
-  .operator-selected {
-    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(127, 97, 63, 0.8) 3%, #505050 40%);
-
-  }
 
   .operator_name_shell {
     height: 30px;
   }
 
-  .operator-name {
-    padding: 4px 0;
-    text-align: center;
-    font-size: 14px;
-    line-height: 16px;
-    width: 100%;
-  }
+
 
   .operator-avatar {
     width: 80px;
@@ -349,4 +362,8 @@
     top: -60px;
     left: -60px;
   }
+}
+
+@media screen and (min-width: 900px) {
+
 }
