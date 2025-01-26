@@ -1,10 +1,6 @@
 <script setup>
-import {reactive, ref, onMounted} from "vue"
-import {
-  convertToSeconds,
-  secondsToTimeString,
-  getSecondsSinceMidnight,
-} from "/src/utils/dateHanding"
+import {onMounted, reactive, ref} from "vue"
+import {convertToSeconds, getSecondsSinceMidnight, secondsToTimeString,} from "/src/utils/dateHanding"
 import {Clock} from "@element-plus/icons-vue";
 
 const algorithmVisible = ref(false) //算法标识
@@ -74,7 +70,7 @@ function calculateTime() {
 }
 
 //使用指南作者彩蛋
-function revealAuthor(){
+function revealAuthor() {
   window.open('https://space.bilibili.com/22606843?spm_id_from=333.337.0.0', '_blank');
 }
 
@@ -84,7 +80,7 @@ function revealAuthor(){
   <el-collapse-item name="HalfOperatorCalculate">
     <template #title>
       <Clock style="width: 13px;margin-inline: 8px"/>
-      <el-text tag="b" size="large">换专精时间减半干员的专精时间点计算</el-text>
+      <el-text size="large" tag="b">换专精时间减半干员的专精时间点计算</el-text>
     </template>
     <el-form :model="halfOperatorParams">
       <transition-group name="list" tag="ul">
@@ -92,8 +88,8 @@ function revealAuthor(){
           <el-form-item label="当前已入驻的专精助手干员提供的效率">
             <el-input-number
                 v-model="halfOperatorParams.efficiency"
-                :min="0"
                 :max="10"
+                :min="0"
                 :precision="2"
                 :step="0.01"
                 :value-on-clear="0"
@@ -103,7 +99,7 @@ function revealAuthor(){
           </el-form-item>
         </li>
         <li :key="2">
-          <el-form-item label="阿斯卡纶是否入驻控制中枢">
+          <el-form-item label="阿斯卡纶/烛煌是否入驻控制中枢">
             <el-switch
                 v-model="halfOperatorParams.hasAscalon"
                 @change="calculateTime"
@@ -118,10 +114,10 @@ function revealAuthor(){
             />
           </el-form-item>
         </li>
-        <li :key="4" v-if="halfOperatorParams.isFit" style="display: inline-block">
+        <li v-if="halfOperatorParams.isFit" :key="4" style="display: inline-block">
           <el-tooltip
-              effect="light"
               content="示例数据：艾丽妮-30% 覆盖近卫/狙击职业；逻各斯-30% 覆盖术师/辅助职业"
+              effect="light"
               placement="right"
           >
             <el-form-item label="减半干员提供的职业效率加成">
@@ -161,20 +157,20 @@ function revealAuthor(){
           <el-text :type="state">{{ remindText }}</el-text>
         </li>
         <li :key="8">
-          <el-link type="primary" :underline="false" style="float: right; color: blue;margin-right: 10px"
+          <el-link :underline="false" style="float: right; color: blue;margin-right: 10px" type="primary"
                    @click="algorithmVisible = true">算法标注
           </el-link>
-          <el-link type="primary" :underline="false" style="float: right; color: blue;margin-right: 10px"
+          <el-link :underline="false" style="float: right; color: blue;margin-right: 10px" type="primary"
                    @click="usageGuideVisible = true">使用指南
           </el-link>
         </li>
       </transition-group>
     </el-form>
     <el-drawer
-        title="换专精减半干员的专精时间点算法"
         v-model="algorithmVisible"
         direction="rtl"
         size="70%"
+        title="换专精减半干员的专精时间点算法"
     >
       <div class="algorithm-content">
         <h2>算法中用到的各个变量</h2>
@@ -239,17 +235,17 @@ function calculateTime() {
   }
 }
     </pre>
-        <el-text tag="sub" size="small" class="tip-text">感谢网友“一般路过魔界人”的提醒(・∀・)</el-text>
+        <el-text class="tip-text" size="small" tag="sub">感谢网友“一般路过魔界人”的提醒(・∀・)</el-text>
       </div>
     </el-drawer>
     <el-drawer
-        title="使用指南"
         v-model="usageGuideVisible"
         direction="rtl"
         size="70%"
+        title="使用指南"
     >
       <div style="position: relative">
-        <img style="width: 100%;" src="/image/specialization/introduce.png"/>
+        <img src="/image/specialization/introduce.png" style="width: 100%;"/>
         <ol style="font-size:medium">
           <li>
             点击查看并记录专精剩余时间，填入“当前显示的专精剩余时间”栏中，如04:50:28
@@ -262,8 +258,8 @@ function calculateTime() {
           </li>
           <li>
             <el-tooltip
-                effect="light"
                 content="若有阿斯卡纶等训练室外提供额外专精效率的干员，则额外效率补充至先手干员和减半干员的效率中，如0.6→0.65，0.3→0.35"
+                effect="light"
                 placement="top"
             >
               若控制中枢入驻了阿斯卡纶，则启用“阿斯卡纶是否入驻控制中枢”
@@ -276,7 +272,7 @@ function calculateTime() {
             填写完成即可自动计算输出结果，提示需要替换减半干员（艾丽妮/逻各斯）的时间点，或者提示期望余裕时间不足，亦或者已无法触发减半效果
           </li>
         </ol>
-        <el-text tag="sub" size="small" class="easterEgg-text" @click="revealAuthor">
+        <el-text class="easterEgg-text" size="small" tag="sub" @click="revealAuthor">
           本文档由一位不愿透露名称的热心网友提供(⁎˃ᴗ˂⁎)
         </el-text>
       </div>
@@ -284,7 +280,7 @@ function calculateTime() {
   </el-collapse-item>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .algorithm-content {
   font-family: Arial, sans-serif;
   line-height: 25px;
