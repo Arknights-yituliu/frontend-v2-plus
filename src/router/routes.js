@@ -101,13 +101,22 @@ const routes = [
         component: GACHA_CALCULATOR
     },
     {
-        path: '/tools/schedule',
+        path: '/tools/scheduleV2',
         text: '排班表生成器',
-        name: 'Schedule',
+        name: 'ScheduleV2',
         display: true,
         module: 'tools',
         icon: "mdi-calendar-clock",
-        component: () => import('/src/pages/tools/schedule.vue')
+        component: () => import('/src/pages/tools/schedule.v2.vue')
+    },
+    {
+        path: '/tools/scheduleV1',
+        text: '排班表生成器',
+        name: 'ScheduleV1',
+        display: false,
+        module: 'tools',
+        icon: "mdi-calendar-clock",
+        component: () => import('/src/pages/tools/schedule.v1.vue')
     },
     {
         path: '/tools/dps/calculator',
@@ -118,15 +127,7 @@ const routes = [
         icon: "mdi-calendar-clock",
         component: () => import('/src/pages/tools/dps/calculator.vue')
     },
-    {
-        path: '/tools/scheduleV2',
-        text: '排班表生成器',
-        name: 'ScheduleV2',
-        display: false,
-        module: 'tools',
-        icon: "mdi-calendar-clock",
-        component: () => import('/src/pages/tools/schedule.v2.vue')
-    },
+
     {
         path: '/tools/rogue',
         text: '种子收集站',
