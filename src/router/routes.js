@@ -281,7 +281,7 @@ const routes = [
         name: 'JoinDevelopment',
         display: true,
         module: 'dev',
-        icon: "log",
+        icon: "mdi-pencil",
         component: () => import('/src/pages/doc/join-development.vue')
     },
     {
