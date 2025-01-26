@@ -444,7 +444,10 @@ function chooseOperator(charName) {
     return;
   }
 
-  checkPlanDuplicateOperator(selectedScheduleIndex.value, charName, true)
+
+  if(!checkPlanDuplicateOperator(selectedScheduleIndex.value, charName, true)){
+     return;
+  }
 
 
   plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].operators.push(charName)
@@ -1144,70 +1147,30 @@ onMounted(() => {
             </v-list-item>
 
             <v-list-item>
-              <!--     控制中枢-->
-              <div class="room-template control" :id="`control#0`"
-                   @click="openOperatorCheckBoxDialog(scheduleIndex,'control',0)">
-                <div class="flex flex-wrap align-center justify-center">
-                  {{ translate('schedule', 'schedule.ControlCenter') }}
-                </div>
-                <div class="flex justify-center">
-                  <OperatorAvatar v-for="(charName, operator) in getRoomOperators(scheduleIndex,'control', 0)"
-                                  :key="operator"
-                                  :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
-                </div>
-              </div>
-              <!--    贸易站-->
-              <BuildingFactory :room-index="0" room-type="control" :operators="getRoomOperators(scheduleIndex,'control', 0)"
+              <!--中枢-->
+              <BuildingFactory :room-index="0"
+                               room-type="control"
+                               :operators="getRoomOperators(scheduleIndex,'control', 0)"
                                :product="getRoomProduct(scheduleIndex,'control', 0)"
                                @click="openOperatorCheckBoxDialog(scheduleIndex,'control',0)">
               </BuildingFactory>
-              <!--    贸易站-->
+              <!--贸易站-->
               <BuildingFactory v-for="(num, tradingIndex) in scheduleTypeV2.trading" :key="tradingIndex"
-                               :room-index="tradingIndex" room-type="trading" :operators="getRoomOperators(scheduleIndex,'trading', tradingIndex)"
+                               :room-index="num"
+                               room-type="trading"
+                               :operators="getRoomOperators(scheduleIndex,'trading', tradingIndex)"
                                :product="getRoomProduct(scheduleIndex,'trading', tradingIndex)"
                                @click="openOperatorCheckBoxDialog(scheduleIndex,'trading',tradingIndex)">
               </BuildingFactory>
+              <!--制造站-->
+              <BuildingFactory v-for="(num, manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"
+                               :room-index="num"
+                               room-type="manufacture"
+                               :operators="getRoomOperators(scheduleIndex,'manufacture', manufactureIndex)"
+                               :product="getRoomProduct(scheduleIndex,'manufacture', manufactureIndex)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'manufacture',manufactureIndex)">
+              </BuildingFactory>
 
-
-              <!--  制造站-->
-              <div v-for="(num, manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"
-                   class="room-template manufacture" :id="`manufacture#${manufactureIndex}`"
-                   @click="openOperatorCheckBoxDialog(scheduleIndex,'manufacture',manufactureIndex)">
-                <div class="flex flex-wrap align-center justify-center">
-                  <div>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</div>
-                  <div class="spacer-12"></div>
-                  <ItemImage size="24" mobile-size="24"
-                             :item-id="getRoomProduct(scheduleIndex,'manufacture', manufactureIndex)"></ItemImage>
-                </div>
-                <div class="flex justify-center">
-
-                  <OperatorAvatar
-                      v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'manufacture', manufactureIndex)"
-                      :key="operatorIndex"
-                      :char-id="getCharId(charName)" class="m-4">
-                  </OperatorAvatar>
-                </div>
-              </div>
-
-              <!--  制造站-->
-              <div v-for="(num, manufactureIndex) in scheduleTypeV2.manufacture" :key="manufactureIndex"
-                   class="room-template manufacture" :id="`manufacture#${manufactureIndex}`"
-                   @click="openOperatorCheckBoxDialog(scheduleIndex,'manufacture',manufactureIndex)">
-                <div class="flex flex-wrap align-center justify-center">
-                  <div>{{ translate('schedule', 'schedule.Factory') }}#{{ num }}</div>
-                  <div class="spacer-12"></div>
-                  <ItemImage size="24" mobile-size="24"
-                             :item-id="getRoomProduct(scheduleIndex,'manufacture', manufactureIndex)"></ItemImage>
-                </div>
-                <div class="flex justify-center">
-
-                  <OperatorAvatar
-                      v-for="(charName, operatorIndex) in getRoomOperators(scheduleIndex,'manufacture', manufactureIndex)"
-                      :key="operatorIndex"
-                      :char-id="getCharId(charName)" class="m-4">
-                  </OperatorAvatar>
-                </div>
-              </div>
 
             </v-list-item>
 
@@ -1263,7 +1226,7 @@ onMounted(() => {
                  :key="index">
               <OperatorAvatar size="60" mobile-size="32" @click="deleteOperator(charName)"
                               :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
-              <v-icon icon="mdi-close" class="selected-operator-icon-close"></v-icon>
+              <v-icon icon="mdi-close" class="selected-operator-icon-close" @click="deleteOperator(charName)"></v-icon>
             </div>
           </div>
 

@@ -1357,11 +1357,16 @@ onMounted(() => {
                         variant="outlined" width="500" class="m-8"
                         @input="searchOperatorDebounce()" v-model="searchInputText">
             <template v-slot:append>
-              <v-btn color="primary" text="隐藏未招募干员">
-
+              <v-btn color="primary" text="隐藏未招募干员" @click="filterOperatorByOwn()">
               </v-btn>
+              <v-tooltip text="此功能需要登录并导入过干员数据后才可使用" location="top">
+                <template v-slot:activator="{ props }" >
+                  <v-icon icon="mdi-help-circle" v-bind="props"></v-icon>
+                </template>
+              </v-tooltip>
             </template>
           </v-text-field>
+
           <div class="operator-check-box-group">
             <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"
                  :id="operator.charId" class="operator-check-box-option">

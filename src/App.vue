@@ -140,7 +140,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-responsive >
+  <v-responsive>
     <v-app class="app" :class="customTheme">
       <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
         <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 36px 0 12px">
@@ -156,7 +156,7 @@ onMounted(() => {
         <v-app-bar-title>{{ pageTitle }}
         </v-app-bar-title>
         <div class="app-bar-content">
-          <v-btn text="反馈" variant="text"  @click="feedbackPopupVisible=true"></v-btn>
+          <v-btn text="反馈" variant="text" @click="feedbackPopupVisible=true"></v-btn>
           <div class="app-bar-content-spacer"/>
           <!--          <v-menu>-->
           <!--            <template v-slot:activator="{ props }">-->
@@ -186,22 +186,13 @@ onMounted(() => {
             <v-table>
               <thead>
               <tr>
-                <th class="text-left">
-                  反馈方式
-                </th>
-                <th class="text-left">
-                  说明
-                </th>
-                <th class="text-left">
-                  操作
-                </th>
+                <th>反馈方式</th>
+                <th>说明</th>
+                <th>操作</th>
               </tr>
               </thead>
               <tbody>
-              <tr
-                  v-for="item in feedbackTable"
-                  :key="item.name"
-              >
+              <tr v-for="item in feedbackTable" :key="item.name">
                 <td>{{ item.label }}</td>
                 <td>{{ item.description }}</td>
                 <td>
