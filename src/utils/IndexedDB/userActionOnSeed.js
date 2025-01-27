@@ -2,7 +2,7 @@ import Dexie from 'dexie';
 const myDatabase = new Dexie('myDatabase');
 
 myDatabase.version(1).stores({
-    user_action_on_Seed: 'id,seedId, action, create_time', // Primary key and indexed props
+    user_action_on_Seed: 'id,seedId,action,create_time', // Primary key and indexed props
 });
 
 function insert(data){
