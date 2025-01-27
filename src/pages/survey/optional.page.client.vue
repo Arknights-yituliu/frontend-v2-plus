@@ -22,11 +22,6 @@
 
 <script setup>
 
-import optional_table from '/src/static/json/operator/optional_table.json'
-
-function updateOwn(){
-
-}
 
 </script>
 

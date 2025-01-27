@@ -29,7 +29,7 @@ import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "@/components/ComponentsContainer.vue";
 import resourceAPI from '/src/api/resource.js'
-import {addData, getDataByKey} from "/src/plugins/IndexedDB/IndexedDB.js";
+import {addData, getDataByKey} from "/src/utils/IndexedDB/IndexedDB.js";
 import OperatorTable from '/src/static/json/game-data/operator_table.json'
 
 const theme = useTheme()
