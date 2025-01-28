@@ -235,7 +235,7 @@ const routes = [
         display: false,
         module: 'survey',
         icon: "mdi-chart-bar",
-        component: () => import('/src/pages/survey/questionnaire.vue')
+        component: () => import('/src/pages/survey/operator-carry.vue')
     },
     {
         path: '/survey/operator-progression-statistics',

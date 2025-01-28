@@ -28,9 +28,7 @@ import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "@/components/ComponentsContainer.vue";
-import resourceAPI from '/src/api/resource.js'
-import {addData, getDataByKey} from "/src/utils/IndexedDB/IndexedDB.js";
-import OperatorTable from '/src/static/json/game-data/operator_table.json'
+
 
 const theme = useTheme()
 
@@ -89,16 +87,7 @@ watch(currentPath, (newPath, oldPath) => {
 });
 
 
-function initResource() {
-  resourceAPI.getOperatorTableByCOS().then(rep => {
-    const data = {
-      name: 'OperatorTable',
-      resource: rep.data,
-      updateTime: new Date().getTime().toString(),
-    }
-    addData(data)
-  })
-}
+
 
 const feedbackTable = [
   {

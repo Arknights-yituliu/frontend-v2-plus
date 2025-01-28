@@ -13,7 +13,6 @@ let operatorGroupByProfession = new Map()
 for (const charId in operatorTable) {
   const character = operatorTable[charId]
   const {profession, rarity} = character
-
   // if (rarity < 6) continue
   let list = operatorGroupByProfession.get(profession);
   if (list) {
@@ -64,11 +63,6 @@ function removeOperator(operator) {
 }
 
 
-let professionCount = ref([])
-
-function countOperatorByProfession() {
-
-}
 
 
 chooseOperatorProfession('SNIPER')
@@ -96,10 +90,8 @@ function getCharIdList() {
 
 }
 
-function uploadSubmitContent() {
-
+function uploadQuestionnaire() {
   const data = {
-    id: void 0,
     questionnaireType: 1,
     operatorList: charIdList.value
   }
@@ -117,14 +109,7 @@ function selectedOperatorClass(charId) {
 let listOperatorSlice = ref([]);
 let listOperators = ref([])
 
-const colorList = [
-  '#ff8c00',
-  '#ffb400',
-  '#ffdc00',
-  '#ffff00',
-  '#00ff64',
-  '#ffffff',
-]
+
 
 function getCharStatisticsResult() {
   operatorDataAPI.getCharStatisticsResult().then((response) => {
@@ -164,7 +149,6 @@ let listOperatorGroupByAttendance = ref([])
 
 function operatorsGroupByAttendance(list, interval) {
 
-
   // 初始化分组结果数组
   let listResult = [];
 
@@ -182,9 +166,7 @@ function operatorsGroupByAttendance(list, interval) {
         list: []
       }
     }
-
     listResult[index].list.push(item)
-
   }
 
   return listResult
@@ -249,7 +231,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="flex justify-center">
-            <v-btn color="primary" text="上传编队"></v-btn>
+            <v-btn color="primary" text="上传编队" @click="uploadQuestionnaire()"></v-btn>
           </div>
         </v-card-text>
 
@@ -272,6 +254,11 @@ onMounted(() => {
         </v-card-text>
       </v-card>
     </div>
+
+    <v-data-table
+    :items="">
+
+    </v-data-table>
 
     <!-- 个人结果展示模块 -->
     <div id="survey_result_personal" class="survey-result-personal" style="display: none">
@@ -304,18 +291,7 @@ onMounted(() => {
     <!-- 先大概看下统计结果，然后看看怎么划段分级 -->
 
 
-    <!--    <div class="survey-ranking-table" >-->
-    <!--      <div v-for="(group,index) in listOperatorGroupByAttendance" :key="index" class="survey-ranking-tier">-->
-    <!--        <div class="survey-ranking-tier-interval" :style="`background-color: ${colorList[index]}`">-->
-    <!--          {{ group.interval }}-->
-    <!--        </div>-->
-    <!--        <div class="survey-ranking-tier-operators">-->
-    <!--          <div v-for="(operator,index) in group.list" :key="index" class="survey-ranking-tier-avatar">-->
-    <!--            <div :class="`bg-${operator.charId}`"></div>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
+
 
   </div>
 

@@ -1,5 +1,4 @@
-import Dexie from 'dexie';
-const myDatabase = new Dexie('myDatabase');
+import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
 
 myDatabase.version(1).stores({
     user_action_on_Seed: 'id,seedId,action,create_time', // Primary key and indexed props

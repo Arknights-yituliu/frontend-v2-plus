@@ -6,6 +6,7 @@ import materialAPI from "/src/api/material.js";
 import {exportExcel} from "/src/utils/exportExcel";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
+import itemValueCache from '/src/utils/indexedDB/itemValueCache.js'
 
 let value_unit = ref('itemValueAp')
 
@@ -20,7 +21,6 @@ function exportItemValueJson() {
       id: item.itemId,
       name: item.itemName,
       apValue: item.itemValueAp,
-      certValue: item.itemValue,
       rarity: item.rarity
     })
   }
@@ -32,14 +32,13 @@ function exportItemValueJson() {
 
 function exportItemValueExcel() {
   let itemList = [[
-    '物品id', '物品名称', '等效理智', '等效绿票', '物品稀有度'
+    '物品id', '物品名称', '等效理智','物品稀有度'
   ]]
   for (const item of itemValueList.value) {
     itemList.push([
       item.itemId,
       item.itemName,
       item.itemValueAp,
-      item.itemValue,
       item.rarity
     ])
   }
@@ -67,10 +66,11 @@ function formattedItemDisplayList(itemList) {
 
 onMounted(() => {
   const config = getStageConfig()
-  materialAPI.getItemValueTableV4(config).then(response => {
-    itemValueList.value = response.data
+
+  itemValueCache.queryByVersion().then(response => {
+    itemValueList.value = response
     let tmpList = []
-    for (const item of response.data) {
+    for (const item of response) {
       const sortId = item.cardNum
       if (sortId > 90) {
         continue
@@ -85,16 +85,18 @@ onMounted(() => {
     }
 
 
-    for(const list of tmpList){
-      if(list&&list.length>0){
-        // itemValueCollect.value.push(list)
-        if(list.length<9){
-          itemValueCollect.value.push(list)
-        }else {
-          itemValueCollect.value.push(list.slice(0,9))
-          itemValueCollect.value.push(list.slice(9))
-        }
+    for (const list of tmpList) {
+      if (!list || list.length < 1) {
+        continue
       }
+      // itemValueCollect.value.push(list)
+      if (list.length < 9) {
+        itemValueCollect.value.push(list)
+      } else {
+        itemValueCollect.value.push(list.slice(0, 9))
+        itemValueCollect.value.push(list.slice(9))
+      }
+
 
     }
   })
@@ -107,12 +109,12 @@ onMounted(() => {
   <div id="value">
     <!-- 价值一览 Start -->
     <ModuleHeader title="价值一览" title-en="Material Value"></ModuleHeader>
-      <v-btn color="primary" variant="tonal" class="m-4"
-                @click="exportItemValueExcel">导出Excel
-      </v-btn>
-      <v-btn color="primary" variant="tonal" class="m-4"
-                @click="exportItemValueJson">导出Json
-      </v-btn>
+    <v-btn color="primary" variant="tonal" class="m-4"
+           @click="exportItemValueExcel">导出Excel
+    </v-btn>
+    <v-btn color="primary" variant="tonal" class="m-4"
+           @click="exportItemValueJson">导出Json
+    </v-btn>
     <div class="item-value-table-wrap color">
       <div v-for="(item_group, index) in itemValueCollect" :key="index" class="item-value-list">
         <div class="item-value-cell flex align-center" v-for="(item, index) in item_group" :key="index"
@@ -128,7 +130,7 @@ onMounted(() => {
 
     <!-- 定价算法 Start -->
     <ModuleHeader title="定价算法" title-en="Algorithm"></ModuleHeader>
-    
+
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
@@ -254,8 +256,8 @@ onMounted(() => {
 @import '@/assets/css/material/value.scss';
 @import '@/assets/css/material/value.phone.scss';
 
-.value-button-group button{
-   margin: 4px;
+.value-button-group button {
+  margin: 4px;
 }
 </style>
 
