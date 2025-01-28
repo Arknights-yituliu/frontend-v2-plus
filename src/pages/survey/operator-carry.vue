@@ -4,11 +4,10 @@ import {operatorTable} from "/src/utils/gameData.js";
 import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
 import {cMessage} from "/src/utils/message.js";
-import operatorDataAPI from '/src/api/operatorData.js'
 import questionnaireAPI from "/src/api/questionnaire.js";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "@/utils/indexedDB/operatorProgressionStatisticsData.js";
-import {formatNumber} from "../../utils/format.js";
+import {formatNumber} from "/src/utils/format.js";
 import {dateFormat} from "@/utils/dateUtil.js";
 
 let operatorGroupByProfession = new Map()
@@ -16,7 +15,9 @@ let operatorGroupByProfession = new Map()
 for (const charId in operatorTable) {
   const character = operatorTable[charId]
   const {profession, rarity} = character
-  // if (rarity < 6) continue
+  if (rarity < 4) {
+    continue
+  }
   let list = operatorGroupByProfession.get(profession);
   if (list) {
     list.push(character)
@@ -97,7 +98,7 @@ function uploadQuestionnaire() {
     operatorList: charIdList.value
   }
   questionnaireAPI.uploadQuestionnaireInfo(data).then(response=>{
-    cMessage(response.data)
+    cMessage('提交成功')
   })
 }
 
@@ -189,24 +190,26 @@ onMounted(() => {
     <!--              style="margin: 8px 0px;"/>-->
 
     <v-alert
-        title="Alert title"
+        title="Q&A"
         type="info"
         class="m-12-0 hide-prepend"
     >
+      <p class="font-bold m-12-0">Q：这个问卷是干什么的？</p>
+      <p>A：用于收集各位博士在各种模式遇到新关卡时会优先带的干员</p>
       <p class="font-bold m-12-0">Q：填写要求</p>
-      <p>A：提交的干员数量至少6人</p>
+      <p>A：提交的干员数量至少6位，至多可填12位</p>
       <p class="font-bold m-12-0">Q：可以当练卡参考吗？</p>
       <p>A：由于提交的博士每个人的玩法有差异，有博士倾向日常挂机，也有博士倾向肉鸽，故本问卷的调查结果仅供参考</p>
 
     </v-alert>
 
     <div class="operator-form-and-checkbox">
-      <v-card title="选择12位你开荒时会优先选择的干员" class="operator-form">
+      <v-card title="选择你的最强开荒队" class="operator-form">
         <v-card-text>
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, index) of operatorTeam" :key="index" class="operator-team-item"
                  @click="removeOperator(operator)">
-              <OperatorAvatar :char-id="operator.charId" size="80" mobile-size="80"></OperatorAvatar>
+              <OperatorAvatar :char-id="operator.charId" size="80" mobile-size="70"></OperatorAvatar>
               <img src="/image/icon/cancel.png" alt="" class="cancel-icon">
 
             </div>
@@ -223,7 +226,7 @@ onMounted(() => {
 
       <v-card class="operator-checkbox">
         <v-card-text>
-          <div>
+          <div class="flex justify-center">
             <img :src="`/image/survey/bg/${p.value}.png`" alt=""
                  class="profession-option"
                  v-for="(p, index) in professionDict"
@@ -231,8 +234,11 @@ onMounted(() => {
           </div>
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
-                 @click="chooseOperator(operator)" :class="selectedOperatorClass(operator.charId)">
+                 @click="chooseOperator(operator)" >
               <OperatorAvatar :char-id="operator.charId" size="60" mobile-size="60"></OperatorAvatar>
+              <div :class="selectedOperatorClass(operator.charId)" >
+
+              </div>
             </div>
           </div>
         </v-card-text>

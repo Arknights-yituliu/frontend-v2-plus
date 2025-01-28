@@ -1,11 +1,15 @@
 .questionnaire-page {
+  max-width: 1400px;
+  margin: auto;
 
-  .operator-form-and-checkbox{
+  .operator-form-and-checkbox {
     display: flex;
+    justify-content: center;
   }
 
   .operator-form {
     min-width: 460px;
+    max-width: 500px;
     margin: 4px;
   }
 
@@ -54,316 +58,62 @@
     background-color: #505050;
     color: whitesmoke;
     overflow: hidden;
+    position: relative;
     //border: 1px solid red;
   }
 
   .operator-selected {
-    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(127, 97, 63, 0.8) 3%, #505050 40%);
-  }
-
-  .operator-name {
-    padding: 4px 0;
-    text-align: center;
-    font-size: 12px;
-    line-height: 14px;
-    width: 100%;
-  }
-
-  .question {
-    width: 80%;
-    margin: auto;
-  }
-
-  .question-title {
-    font-size: 30px;
-    font-weight: bolder;
-    padding: 12px 0;
-  }
-
-  .team-box {
-    // border: 1px solid #00000080;
-    display: inline-block;
-    //background-color: #505050b0;
-    color: var(--c-text-color);
-    font-weight: 600;
-    vertical-align: top;
-    padding: 8px;
-    box-shadow: 1px 1px 8px var(--c-box-shadow-color);
-    //text-shadow: 1px 1px 2px #505050;
-  }
-
-  .teams-area :first-child {
-  }
-
-
-  #team12 {
-    width: 576px;
-  }
-
-  #team4 {
-    width: 192px;
-  }
-
-
-  .profession-filter-single {
-    width: 50px;
-    height: 50px;
-    position: relative;
-    background-color: black;
-    padding: 4px 10px 0px 10px;
-  }
-
-  .profession-mask {
-    height: 100%;
-    width: 66px;
-    background: linear-gradient(to top, rgb(127, 127, 255) 5%, rgba(63, 63, 127, 0.8) 5%, rgba(0, 0, 0, 0) 40%);
-    position: absolute;
-    bottom: 0px;
-    right: 2px
-  }
-
-  .profession-count {
-    color: white;
-    position: absolute;
-    bottom: -2px;
-    right: 6px;
-    background-color: rgba(0, 0, 0, 0);
-  }
-
-  .profession-checkbox {
-    margin: 20px 0;
-  }
-
-
-
-
-  .operator_name_shell {
-    height: 30px;
-  }
-
-
-
-  .operator-avatar {
-    width: 80px;
-    height: 80px;
-    margin: auto;
-    position: relative;
-  }
-
-  .operator-option span {
-    display: block;
-    height: 18px;
-    overflow: hidden;
-    font-size: 14px;
-  }
-
-  .operator-avatar div {
-    position: absolute;
-    transform: scale(0.44444);
-    //transform: scale(0.53);
-    top: -50px;
-    left: -50px;
-  }
-
-  .item-placeholder {
-
-  }
-
-  .team-operator-avatar {
-    width: 80px;
-    height: 80px;
-    margin: auto;
-    position: relative;
-
-    .cancel-icon {
-      width: 20px;
-      position: absolute;
-      top: -4px;
-      left: 66px;
-    }
-
-  }
-
-  .team-operator-avatar div {
-    position: absolute;
-    transform: scale(0.44444);
-    top: -50px;
-    left: -50px;
-  }
-
-
-  .survey-result-table {
-
-  }
-
-  .survey-result-table-title {
-    display: flex;
-  }
-
-  .survey-result-table-content {
-    display: flex;
-  }
-
-  .survey-result-table-content-item {
-
-  }
-
-  .survey-result-table-tr {
-    width: 550px;
-    display: flex;
-    justify-content: flex-start;
-    border-bottom: 1px solid var(--c-border-color);
-  }
-
-  .survey-result-table-tr > div {
-    text-align: center;
-    line-height: 50px;
-    height: 50px;
-    font-size: 15px;
-  }
-
-  .survey-result-table-operator-name {
-    width: 160px;
-  }
-
-  .survey-result-table-avatar {
-    position: relative;
-    width: 50px;
-    height: 50px;
-  }
-
-  .survey-result-table-avatar div {
-    position: absolute;
-    transform: scale(0.277777);
-    top: -65px;
-    left: -65px;
-  }
-
-  .survey-result-table-avatar span {
-    position: absolute;
-    line-height: 50px;
-    left: 54px;
-    width: 80px;
-    padding: 0 12px 0;
-    text-align: left;
-  }
-
-  .profession-icon-w-20 {
+    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(255, 174, 127,0.3) 3%, rgba(255, 174, 127,0) 40%);
     position: absolute;
     top: 0;
-    left: -4px;
-    width: 20px;
-  }
-
-  .survey-result-personal {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-  }
-
-
-  .survey-result-operator {
-    border: 1px solid var(--c-border-color);
-    border-radius: 16px;
-    height: 96px;
-    width: 480px;
-    min-width: 480px;
-    margin: 8px;
-    display: flex;
-  }
-
-
-  .survey-result-info {
-    vertical-align: top;
-    width: 160px;
-    display: flex;
-    flex-wrap: wrap;
-    height: 72px;
-    margin: auto;
-  }
-
-  .survey-result-info-profession {
-    padding: 2px 4px;
-    font-size: 16px;
-    height: 20px;
-  }
-
-  .survey-result-info-profession-icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  .survey-result-info-name {
-    width: 160px;
-    font-size: 20px;
-    line-height: 22px;
-  }
-
-  .survey-result-avatar {
-    width: 96px;
-    height: 96px;
-    overflow: hidden;
-  }
-
-  .survey-result-rarity-icon {
-    height: 20px;
-  }
-
-  .survey-result-avatar div {
-    background-color: chocolate;
-    border-radius: 20px;
-    scale: 0.4;
-    position: relative;
-    top: -42px;
-    left: -42px;
-    display: inline-block;
-  }
-
-
-  .survey-result-data {
-    height: 72px;
-    margin: auto;
-    border-left: 1px dashed #00000020;
-    padding-left: 8px;
-  }
-
-  .survey-ranking-table {
-    width: 1000px;
-  }
-
-  .survey-ranking-tier {
-    display: flex;
-  }
-
-  .survey-ranking-tier-interval {
-    min-width: 100px;
-    font-size: 20px;
-    font-weight: bolder;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-  }
-
-  .survey-ranking-tier-operators {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .survey-ranking-tier-avatar {
+    left: 0;
     width: 60px;
     height: 60px;
-    position: relative;
   }
 
-  .survey-ranking-tier-avatar div {
-    position: absolute;
-    transform: scale(0.3333);
-    top: -60px;
-    left: -60px;
-  }
 }
 
-@media screen and (min-width: 900px) {
 
+@media screen and (max-width: 600px) {
+  .questionnaire-page {
+
+    .operator-form-and-checkbox {
+      display: block;
+      .v-card-text{
+        padding: 4px;
+      }
+    }
+
+    .operator-form {
+      min-width: auto;
+      width: 100%;
+    }
+
+    .operator-team-item {
+      width: 70px;
+      height: 70px;
+      margin: 4px;
+      font-size: 10px;
+      line-height: 40px;
+    }
+
+    .cancel-icon {
+      width: 16px;
+      position: absolute;
+      top: -2px;
+      left: 56px;
+
+    }
+
+    .operator-option {
+      margin: 4px;
+    }
+
+    .profession-option {
+      width: 32px;
+      height: 32px;
+      margin: 12px 4px;
+      background-color: black;
+    }
+  }
 }
