@@ -1,15 +1,17 @@
 <script setup>
-import FixedNav from "/src/components/FixedNav.vue";
 import ModuleHeader from '@/components/ModuleHeader.vue';
 import {onMounted, ref} from 'vue'
 import materialAPI from '/src/api/material.js'
-import  {getStageConfig} from "/src/utils/user/userConfig.js";
-import TMP_STORE_PERM from '/src/static/json/material/tmp_store_perm.json'
+import {getStageConfig} from "/src/utils/user/userConfig.js";
 import '/src/assets/css/material/store.scss';
 import '/src/assets/css/material/store.phone.scss';
 import '/src/assets/css/sprite/sprite_plane_icon.css';
+import STORE_PERM_DATA from '/src/static/json/material/store_perm_table.json'
+import itemValueCache from "/src/utils/indexedDB/itemValueCache.js";
+
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表
+
 const storeTypeList = [ // 常驻商店数据初始化格式
   {typeName: 'green', iconId: '4005', dividing: 0.8, tier: 0.024, borderColor: 'rgb(0, 162, 162)'},
   {typeName: 'yellow', iconId: '4004', dividing: 9.0, tier: 1.5, borderColor: 'rgb(251, 192, 45)'},
@@ -18,32 +20,38 @@ const storeTypeList = [ // 常驻商店数据初始化格式
   {typeName: 'grey', iconId: 'SOCIAL_PT', dividing: 6.5, tier: 1.6, borderColor: 'rgb(160, 160, 160)'},
 ]
 
+const stageConfig = getStageConfig()
 
-formatStorePerm(TMP_STORE_PERM)
-
-function formatStorePerm(data){
-  storeListFormat.value = []
-  for (let i = 0; i < storeTypeList.length; i++) {
-    const item = storeTypeList[i]
-    const list = data[item.typeName]
-
-    list.sort((a,b)=>b.costPer-a.costPer)
-    storeListFormat.value.push({
-      ...item,
-      itemList: list
-    })
+async function StorePermComputed() {
+  const itemValueList = await itemValueCache.queryByVersion(stageConfig)
+  let itemValueMap = new Map()
+  for (const item of itemValueList) {
+    itemValueMap.set(item.itemId, item.itemValueAp)
   }
+  for (const storeInfo of storeTypeList) {
+    const data = STORE_PERM_DATA[storeInfo.typeName]
+    for (const item of data) {
+      const itemValueAp = itemValueMap.get(item.itemId)
+      let apEfficiency = itemValueAp * item.quantity / item.price
+      if (storeInfo.typeName === 'grey') {
+        apEfficiency *= 100
+      }
+      item.apEfficiency = apEfficiency
+
+    }
+    data.sort((a,b)=>b.apEfficiency-a.apEfficiency)
+    storeInfo.list = data
+  }
+
+  storeListFormat.value = storeTypeList
+
 }
 
+StorePermComputed()
+
 function getStoreData() {
-  // 遍历常驻商店格式化数据
-  const config = getStageConfig()
-  materialAPI.getStorePermDataV4(config).then(response => {
-    formatStorePerm(response.data)
-  })
 
-
-  materialAPI.getActStoreV4(config).then(response => {
+  materialAPI.getActStoreV4(stageConfig).then(response => {
     actStoreList.value = response.data
     // 遍历活动列表
     actStoreList.value.forEach(act => {
@@ -60,19 +68,13 @@ function getStoreData() {
         act.actStoreFormat.push(areaItems)
       })
     })
-
   })
-
-
 }
 
-
-// const storeListFormat = ref(pageContext?.pageProps?.storeListFormat) // 常驻商店性价比集合
-// const actStoreList = pageContext?.pageProps?.actStoreList || [] // 活动列表
 const opETextTheme = ref('op_title_etext_light')
 
-function getActStoreBackgroundImage(path){
-   return `https://cos.yituliu.cn/${path}`
+function getActStoreBackgroundImage(path) {
+  return `https://cos.yituliu.cn/${path}`
 }
 
 // 活动商店背景图
@@ -124,21 +126,22 @@ onMounted(() => {
 <template>
   <div class="store-page">
     <!-- 活动商店 -->
-    <div id="actStore" >
+    <div id="actStore">
       <!-- 标题区域 -->
-      <ModuleHeader title="活动商店" title-en="Event Store" />
+      <ModuleHeader title="活动商店" title-en="Event Store"/>
       <!-- 标题区域end -->
       <!-- 内容区域 -->
       <div v-for="(singleAct, index) in actStoreList" :key="index" class="act_store_block">
         <!-- banner -->
         <div class="act-banner-background" :style="getBackground(singleAct.imageLink)">
-            <img class="act-banner-img"  :src="getActStoreBackgroundImage(singleAct.imageLink)" :alt="singleAct.actName"/>
+          <img class="act-banner-img" :src="getActStoreBackgroundImage(singleAct.imageLink)" :alt="singleAct.actName"/>
         </div>
 
         <!-- tag -->
 
         <div class="tag-group">
-          <span :class="`tag-rank-${singleTag.tagRank}`" v-for="(singleTag, index) in singleAct.actTagArea" :key="index">
+          <span :class="`tag-rank-${singleTag.tagRank}`" v-for="(singleTag, index) in singleAct.actTagArea"
+                :key="index">
            {{ singleTag.tagText }}
           </span>
         </div>
@@ -179,11 +182,11 @@ onMounted(() => {
       <ModuleHeader title="采购中心" title-en="Store Ranking" :tips="['*点击图标切换']">
         <div class="permanent-store-checkbox">
           <div
-            class="permanent-store-checkbox-button"
-            v-for="(item, index) in storeListFormat"
-            :key="index"
-            :style="item.hide ? '' : 'filter: none;'"
-            @click="switchStore(item)"
+              class="permanent-store-checkbox-button"
+              v-for="(item, index) in storeTypeList"
+              :key="index"
+              :style="item.hide ? '' : 'filter: none;'"
+              @click="switchStore(item)"
           >
             <div class="" :class="`bg-icon_${item.iconId}`"></div>
           </div>
@@ -192,20 +195,20 @@ onMounted(() => {
       <!-- 标题区域end -->
       <!-- 内容区域 -->
       <div
-        v-show="!item.hide"
-        class="permanent-store-content"
-        v-for="(item, index) in storeListFormat" :key="index"
-        :style="{ borderColor: item.borderColor }"
+          v-show="!item.hide"
+          class="permanent-store-content"
+          v-for="(item, index) in storeListFormat" :key="index"
+          :style="{ borderColor: item.borderColor }"
       >
         <div class="permanent-store-icon">
           <div :class="`bg-icon_${item.iconId}`"></div>
         </div>
-        <div v-for="(m_data, index) in item.itemList" class="permanent-store-good" :key="index">
+        <div v-for="(m_data, index) in item.list" class="permanent-store-good" :key="index">
           <div class="permanent-store-good-sprite">
             <div :class="`bg-${m_data.itemId}`"></div>
           </div>
-          <p class="permanent-store-good-text" :class="getColor(m_data.costPer, item.dividing, item.tier)">
-            {{ getEfficiency(m_data.costPer) }}
+          <p class="permanent-store-good-text" :class="getColor(m_data.apEfficiency, item.dividing, item.tier)">
+            {{ getEfficiency(m_data.apEfficiency) }}
           </p>
         </div>
       </div>
@@ -213,7 +216,7 @@ onMounted(() => {
     <!-- 采购中心end -->
 
     <!-- 算法说明 -->
-    <ModuleHeader title="算法说明" title-en="Algorithm" />
+    <ModuleHeader title="算法说明" title-en="Algorithm"/>
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">
         <el-card class="box-card">
@@ -276,7 +279,8 @@ onMounted(() => {
             </el-collapse-item>
             <el-collapse-item name="5" style="">
               <template #title>
-                <span style="font-size: large; display: flex; align-items: center"> <i class="iconfont icon-copyright"></i>
+                <span style="font-size: large; display: flex; align-items: center"> <i
+                    class="iconfont icon-copyright"></i>
                   <b style="margin-left: 4px">版权声明与许可协议</b>
                 </span>
               </template>
@@ -294,7 +298,7 @@ onMounted(() => {
     </div>
     <!-- 算法说明end -->
   </div>
-  <fixed-nav/>
+
 </template>
 
 <style lang="scss">

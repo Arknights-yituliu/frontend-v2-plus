@@ -130,7 +130,7 @@ const createOperatorRarityBaseMaterialMap = () => {
 
 const init = async () => {
   // 练度调查映射
-  const { data: { result = [] } } = await surveyAPI.getCharStatisticsResult()
+  const { data: { result = [] } } = await surveyAPI.getOperatorStatisticsResult()
   result.forEach(item => statisticsMap.set(item.charId, item))
   // 材料总映射
   const stageConfig = getStageConfig()

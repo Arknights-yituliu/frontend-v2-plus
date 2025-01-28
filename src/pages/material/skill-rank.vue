@@ -31,7 +31,7 @@ async function initData() {
 
   const skillRankRatioMap = new Map()
 
-  await operatorAPI.getCharStatisticsResult().then(response => {
+  await operatorAPI.getOperatorStatisticsResult().then(response => {
     const result = response.data.result;
 
     for (const item of result) {
