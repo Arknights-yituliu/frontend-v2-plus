@@ -54,7 +54,7 @@ export default {
         })
     },
 
-    getCharStatisticsResult() {
+    getOperatorStatisticsResult() {
         return request({
             url: `/survey/operator/result`,
             method: "get",

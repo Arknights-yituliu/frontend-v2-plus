@@ -7,6 +7,9 @@ import {cMessage} from "/src/utils/message.js";
 import operatorDataAPI from '/src/api/operatorData.js'
 import questionnaireAPI from "/src/api/questionnaire.js";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import operatorProgressionStatisticsDataCache from "@/utils/indexedDB/operatorProgressionStatisticsData.js";
+import {formatNumber} from "../../utils/format.js";
+import {dateFormat} from "@/utils/dateUtil.js";
 
 let operatorGroupByProfession = new Map()
 
@@ -63,8 +66,6 @@ function removeOperator(operator) {
 }
 
 
-
-
 chooseOperatorProfession('SNIPER')
 
 
@@ -106,74 +107,54 @@ function selectedOperatorClass(charId) {
   }
 }
 
-let listOperatorSlice = ref([]);
+const headers = [
+  {title: '序号', sortable: false, key: 'index'},
+  {title: '干员', sortable: false, key: 'charId'},
+  {title: '携带人数', sortable: true, key: 'carryCount'},
+  {title: '携带率', sortable: true, key: 'carryRate'},
+  {title: '持有人数', sortable: true, key: 'ownCount'},
+  {title: '持有率', sortable: true, key: 'own'},
+]
+
 let listOperators = ref([])
+let operatorCarryResult = ref([])
+let updateTime = ref('')
+let carryRateSampleSize = ref('')
+let ownSampleSize = ref('')
 
 
+async function getOperatorCarryStatisticsResult() {
+  const data = await operatorProgressionStatisticsDataCache.getData();
+  questionnaireAPI.getQuestionnaireResult(1).then(response => {
+    operatorCarryResult.value = []
+    updateTime.value = dateFormat(response.data.updateTime, 'yyyy/MM/dd HH:mm')
+    carryRateSampleSize.value = response.data.sampleSize
+    const carryRateData = new Map()
+    for (const item of response.data.list) {
+      const {charId, carryRate} = item
+      carryRateData.set(charId, carryRate)
+    }
 
-function getCharStatisticsResult() {
-  operatorDataAPI.getCharStatisticsResult().then((response) => {
-    let {result, userCount, updateTime} = response.data
-    for (const item of result) {
-      const charId = item.charId
-      let char_info = operatorTable[charId]
-      item.name = char_info.name
-      item.rarity = char_info.rarity
-      item.profession = char_info.profession
-      item.itemObtainApproach = char_info.itemObtainApproach
-      item.skill = char_info.skill
-      item.equip = char_info.equip
-
-      if (item.rarity < 6) {
-        item.appearanceRate = Math.floor(Math.random() * 41)
-      } else {
-        item.appearanceRate = Math.floor(Math.random() * 100)
+    for (let item of data.result) {
+      ownSampleSize.value = data.userCount
+      const carryRate = carryRateData.get(item.charId);
+      if (carryRate) {
+        item.carryRate = carryRate
+        item.carryCount = formatNumber(carryRateSampleSize.value * carryRate, 0)
+        item.ownCount = formatNumber(item.own * ownSampleSize.value, 0)
+        operatorCarryResult.value.push(item)
       }
     }
 
-    result = result.filter(e => e.rarity === 6).sort((a, b) => {
-      return b.appearanceRate - a.appearanceRate
-    })
-
-    listOperatorGroupByAttendance.value = operatorsGroupByAttendance(result, 17)
-
-    const sliceLength = Math.ceil(result.length / 2)
-
-    listOperators.value = result
-    listOperatorSlice.value.push(result.slice(0, sliceLength))
-    listOperatorSlice.value.push(result.slice(sliceLength))
-  });
+    operatorCarryResult.value.sort((a, b) => b.carryRate - a.carryRate)
+  })
 }
 
-let listOperatorGroupByAttendance = ref([])
+getOperatorCarryStatisticsResult()
 
-function operatorsGroupByAttendance(list, interval) {
-
-  // 初始化分组结果数组
-  let listResult = [];
-
-  // 计算总共需要的分组数
-  let totalGroups = Math.ceil(100 / interval);
-
-  // 从最大值开始，向最小值遍历创建分组
-
-  for (const item of list) {
-    const quotient = Math.floor(item.appearanceRate / interval)
-    const index = totalGroups - quotient - 1
-    if (!listResult[index]) {
-      listResult[index] = {
-        interval: `T${index}`,
-        list: []
-      }
-    }
-    listResult[index].list.push(item)
-  }
-
-  return listResult
-}
 
 onMounted(() => {
-  getCharStatisticsResult()
+
 })
 
 </script>
@@ -208,11 +189,12 @@ onMounted(() => {
     <v-alert
         title="Alert title"
         type="info"
-        class="m-12-0"
+        class="m-12-0 hide-prepend"
     >
-
-      <p>1.提交的干员数量必须大于6人</p>
-      <p>2.由于提交的博士每个人的玩法差异较大，故本问卷的调查结果仅供参考，并不能认为是一个权威榜单</p>
+      <p class="font-bold m-12-0">Q：填写要求</p>
+      <p>A：提交的干员数量至少6人</p>
+      <p class="font-bold m-12-0">Q：可以当练卡参考吗？</p>
+      <p>A：由于提交的博士每个人的玩法有差异，有博士倾向日常挂机，也有博士倾向肉鸽，故本问卷的调查结果仅供参考</p>
 
     </v-alert>
 
@@ -255,9 +237,32 @@ onMounted(() => {
       </v-card>
     </div>
 
-    <v-data-table hide-default-footer items-per-page="-1">
+    <v-card class="m-a" max-width="700">
+      <v-card-text>
+        <v-chip color="primary" :text="`更新时间：${updateTime}`" class="m-4"></v-chip>
+        <v-chip color="primary" :text="`携带率样本量：${carryRateSampleSize}`" class="m-4"></v-chip>
+        <v-chip color="primary" :text="`持有率样本量：${ownSampleSize}`" class="m-4"></v-chip>
+        <v-data-table
+            :headers="headers"
+            :items="operatorCarryResult"
+            hide-default-footer
+            items-per-page="-1">
+          <template v-slot:item="{item,index}">
+            <tr>
+              <td>{{ index + 1 }}</td>
+              <td>
+                <OperatorAvatar :char-id="item.charId"></OperatorAvatar>
+              </td>
+              <td>{{item.carryCount}}</td>
+              <td>{{ formatNumber(item.carryRate * 100, 2) }}%</td>
+              <td>{{item.ownCount}}</td>
+              <td>{{ formatNumber(item.own * 100, 2) }}%</td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-card-text>
+    </v-card>
 
-    </v-data-table>
 
     <!-- 个人结果展示模块 -->
     <div id="survey_result_personal" class="survey-result-personal" style="display: none">
@@ -288,8 +293,6 @@ onMounted(() => {
     <!-- 全站结果展示模块 -->
     <!--    这里是使用率最高的前50名干员，可以用tier maker的形式-->
     <!-- 先大概看下统计结果，然后看看怎么划段分级 -->
-
-
 
 
   </div>

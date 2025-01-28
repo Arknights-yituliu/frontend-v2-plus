@@ -58,7 +58,7 @@ onMounted(() => {
 })
 
 watch(()=>props.charId,(newVal,oldVal)=>{
-   console.log(newVal);
+   // console.log(newVal);
   charId.value = props.charId;
 })
 

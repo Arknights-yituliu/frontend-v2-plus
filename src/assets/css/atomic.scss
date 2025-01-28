@@ -2,6 +2,12 @@
   font-weight: bolder;
 }
 
+.hide-prepend {
+  .v-alert__prepend {
+    display: none;
+  }
+}
+
 
 .disabled {
   filter: grayscale(1);
@@ -96,7 +102,6 @@
 .m-20-0 {
   margin: 20px 0;
 }
-
 
 
 .m-0-4 {

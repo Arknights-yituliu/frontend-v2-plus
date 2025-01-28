@@ -1,14 +1,19 @@
 import request from "/src/api/request"
 
-const api_name = `/survey`
-
 export default {
 
     uploadQuestionnaireInfo(data){
         return request({
-            url:`${api_name}/questionnaire/upload`,
+            url:`/survey/questionnaire/upload`,
             method:'post',
             data:data
+        })
+    },
+
+    getQuestionnaireResult(type){
+        return request({
+            url:`/survey/questionnaire/result?questionnaireType=${type}`,
+            method:'get'
         })
     },
 

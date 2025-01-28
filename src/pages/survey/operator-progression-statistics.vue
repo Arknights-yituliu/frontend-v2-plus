@@ -54,7 +54,7 @@ for (const item of headers2) {
 
 
 function getCharStatisticsResult() {
-  operatorDataApi.getCharStatisticsResult().then((response) => {
+  operatorDataApi.getOperatorStatisticsResult().then((response) => {
     let {result, userCount, updateTime} = response.data
     for (const item of result) {
       let charInfo = operatorTable[item.charId]

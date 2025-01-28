@@ -11,7 +11,7 @@ async function operatorRecommend(operatorTable) {
     let recommend = []
 
     let operatorStatisticsResult = {}
-    await surveyApi.getCharStatisticsResult().then(response => {
+    await surveyApi.getOperatorStatisticsResult().then(response => {
         for (const result of response.data.result) {
             if (result.rarity < 6) continue;
             operatorStatisticsResult[result.charId] = {
