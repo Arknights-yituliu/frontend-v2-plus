@@ -96,7 +96,9 @@ function uploadQuestionnaire() {
     questionnaireType: 1,
     operatorList: charIdList.value
   }
-  questionnaireAPI.uploadQuestionnaireInfo(data)
+  questionnaireAPI.uploadQuestionnaireInfo(data).then(response=>{
+    cMessage(response.data)
+  })
 }
 
 function selectedOperatorClass(charId) {
