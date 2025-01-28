@@ -1,8 +1,8 @@
 import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
 
-myDatabase.version(1).stores({
-    user_action_on_Seed: 'id,seedId,action,create_time', // Primary key and indexed props
-});
+// myDatabase.version(1).stores({
+//     user_action_on_Seed: 'id,seedId,action,create_time', // Primary key and indexed props
+// });
 
 function insert(data){
     myDatabase.user_action_on_Seed.add(data)

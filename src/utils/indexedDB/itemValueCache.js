@@ -3,9 +3,9 @@ import materialAPI from "/src/api/material.js";
 import {getStageConfig} from "@/utils/user/userConfig.js";
 import checkCache from '/src/utils/indexedDB/cacheExpireTime.js'
 
-myDatabase.version(1).stores({
-    item_value: 'itemId,itemName,itemValueAp,rarity,cardNum,version',
-});
+// myDatabase.version(1).stores({
+//     item_value: 'itemId,itemName,itemValueAp,rarity,cardNum,version',
+// });
 
 function insert(data) {
     myDatabase.item_value.add(data)

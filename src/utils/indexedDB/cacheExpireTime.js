@@ -1,8 +1,8 @@
 import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
 
-myDatabase.version(1).stores({
-    cache_time: 'resource,version,createTime',
-});
+// myDatabase.version(1).stores({
+//     cache_time: 'resource,version,createTime',
+// });
 
 function insert(data) {
     myDatabase.cache_time.put(data)
