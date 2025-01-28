@@ -232,7 +232,7 @@ const routes = [
         path: '/survey/questionnaire',
         text: '干员携带率问卷',
         name: 'Questionnaire',
-        display: false,
+        display: true,
         module: 'survey',
         icon: "mdi-chart-bar",
         component: () => import('/src/pages/survey/operator-carry.vue')

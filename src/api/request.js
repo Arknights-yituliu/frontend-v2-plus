@@ -1,7 +1,7 @@
 import axios from "axios";
 import {cMessage} from "/src/utils/message.js";
 import {DOMAIN} from "/src/api/BASE_URL";
-import {getUserTokenV2} from "/src/utils/getUserToken.js";
+import {getUid,getUserTokenV2} from "@/utils/user/userInfo.js";
 
 // 创建axios实例
 const service = axios.create({
@@ -13,6 +13,7 @@ const service = axios.create({
 service.interceptors.request.use(
     (config) => {
         config.headers["Authorization"] = getUserTokenV2();
+        config.headers["uid"] = getUid();
         // token 先不处理，后续使用时在完善
         return config;
     },

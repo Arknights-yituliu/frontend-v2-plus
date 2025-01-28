@@ -38,7 +38,9 @@ function toLogin() {
 
 
   userAPI.loginV3(inputContent.value).then(response => {
-    localStorage.setItem("USER_TOKEN", response.data.token.toString());
+    const {token,uid} = response.data
+    localStorage.setItem("USER_TOKEN", token);
+    localStorage.setItem("UID",uid);
     cMessage('登录成功，即将转跳到首页')
     setTimeout(() => {
       // router.push({name: 'IMPORT_BY_SKLAND'})

@@ -255,8 +255,7 @@ onMounted(() => {
       </v-card>
     </div>
 
-    <v-data-table
-    :items="">
+    <v-data-table hide-default-footer items-per-page="-1">
 
     </v-data-table>
 

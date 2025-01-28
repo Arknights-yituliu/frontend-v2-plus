@@ -7,13 +7,13 @@ import userActionOnSeedDB from "/src/utils/indexedDB/userActionOnSeed.js";
 import userActionOnSeed from "/src/utils/indexedDB/userActionOnSeed.js";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {useDisplay} from "vuetify";
-import {getTmpUid} from "@/utils/user/userInfo.js";
+import {getUid} from "@/utils/user/userInfo.js";
 import {stringToArray} from "@/utils/stringUtils.js";
 
 const {mobile} = useDisplay()
 
 //临时uid，用于作为保存非登录状态的用户各种记录的唯一标识
-const tmpUid = getTmpUid();
+const tmpUid = getUid();
 
 //分页获取种子API的参数
 let pageInfo = ref({
