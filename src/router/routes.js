@@ -182,16 +182,7 @@ const routes = [
         icon: "mdi-routes",
         component: () => import('/src/pages/information/integratedStrategies.vue')
     },
-    {
-        path: '/account/home',
-        text: '用户中心',
-        name: 'AccountHome',
-        display: true,
-        module: 'survey',
-        icon: "mdi-account",
-        component: USER_HOME
-        // component: Notice
-    },
+
     {
         path: '/account/register',
         text: '注册账号',
@@ -212,6 +203,13 @@ const routes = [
         name: 'RETRIEVE',
         display: false,
         component: RETRIEVE
+    },
+    {
+        path: '/account/home',
+        text: '用户中心',
+        name: 'AccountHome',
+        display: false,
+        component: USER_HOME
     },
     {
         path: '/survey/account/importbyskland',

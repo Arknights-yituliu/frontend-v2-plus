@@ -20,7 +20,7 @@ import '/src/assets/css/common/theme.scss'
 import '/src/assets/css/atomic.scss'
 import "/src/assets/css/survey/survey_common.css";
 
-import Navigation from '/src/components/drawer/Navigation.vue'
+import Navigation from '/src/components/Navigation.vue'
 import {useTheme} from 'vuetify'
 
 import User from '/src/pages/account/user.vue'
@@ -132,7 +132,7 @@ onMounted(() => {
   <v-responsive>
     <v-app class="app" :class="customTheme">
       <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
-        <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 36px 0 12px">
+        <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
           明日方舟一图流
         </div>
         <Navigation></Navigation>
