@@ -23,8 +23,8 @@ const props = defineProps({
   }
 });
 
-let wrapStyle = ''
-let spriteStyle = ''
+let wrapStyle = ref('')
+let spriteStyle = ref('')
 let charId = ref(props.charId);
 
 function calculatedSize() {
@@ -34,19 +34,21 @@ function calculatedSize() {
 
   let size = props.size;
 
+
   if (innerWidth < 600) {
     size = props.mobileSize;
   }
+  console.log(props.size)
+  console.log(innerWidth < 600,size)
 
-
-  wrapStyle = `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
+  wrapStyle.value = `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
   if (props.rounded) {
-    wrapStyle += `;border-radius:60px;`
+    wrapStyle.value += `;border-radius:60px;`
   }
 
-  spriteStyle = `position: absolute;transform: scale(${size / 180});
+  spriteStyle.value = `position: absolute;transform: scale(${size / 180});
   top: ${(size - 180) / 2}px;left: ${(size - 180) / 2}px;`
-
+  console.log('resize')
 }
 
 
@@ -54,8 +56,9 @@ calculatedSize()
 
 
 onMounted(() => {
-  window.addEventListener('resize', debounce(calculatedSize));
+
 })
+window.addEventListener('resize', debounce(calculatedSize));
 
 watch(()=>props.charId,(newVal,oldVal)=>{
    // console.log(newVal);
@@ -66,8 +69,8 @@ watch(()=>props.charId,(newVal,oldVal)=>{
 
 <template>
 
-  <div :style="wrapStyle">
-    <div :style="spriteStyle" :class="`bg-${charId}`">
+  <div v-bind:style="wrapStyle">
+    <div v-bind:style="spriteStyle" :class="`bg-${charId}`">
     </div>
   </div>
 
