@@ -3,6 +3,7 @@
   margin: auto;
 
   .operator-form-and-checkbox {
+    margin: 12px 0;
     display: flex;
     justify-content: center;
   }
@@ -10,7 +11,7 @@
   .operator-form {
     min-width: 460px;
     max-width: 500px;
-    margin: 4px;
+    margin:8px 4px;
   }
 
   .operator-team-item {
@@ -44,7 +45,7 @@
 
 
   .operator-checkbox {
-    margin: 4px;
+    margin:8px 4px;
   }
 
   .operator-option {
@@ -63,7 +64,7 @@
   }
 
   .operator-selected {
-    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(255, 174, 127,0.3) 3%, rgba(255, 174, 127,0) 40%);
+    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(255, 174, 127, 0.3) 3%, rgba(255, 174, 127, 0) 40%);
     position: absolute;
     top: 0;
     left: 0;
@@ -76,22 +77,24 @@
 
 @media screen and (max-width: 600px) {
   .questionnaire-page {
+    width: 99%;
 
     .operator-form-and-checkbox {
       display: block;
-      .v-card-text{
+
+      .v-card-text {
         padding: 4px;
       }
     }
 
     .operator-form {
       min-width: auto;
-      width: 100%;
+      box-sizing: border-box;
     }
 
     .operator-team-item {
-      width: 70px;
-      height: 70px;
+      width: 44px;
+      height: 44px;
       margin: 4px;
       font-size: 10px;
       line-height: 40px;
@@ -101,12 +104,19 @@
       width: 16px;
       position: absolute;
       top: -2px;
-      left: 56px;
+      left: 32px;
 
     }
 
     .operator-option {
+      width: 50px;
+      height: 50px;
       margin: 4px;
+    }
+
+    .operator-selected {
+      width: 50px;
+      height:50px;
     }
 
     .profession-option {

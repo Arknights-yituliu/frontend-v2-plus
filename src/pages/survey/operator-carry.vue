@@ -189,27 +189,33 @@ onMounted(() => {
     <!--              description="大数据仅统计60天内的答卷，您的答卷将保留，但不参与统计"-->
     <!--              style="margin: 8px 0px;"/>-->
 
-    <v-alert
-        title="Q&A"
-        type="info"
-        class="m-12-0 hide-prepend"
-    >
-      <p class="font-bold m-12-0">Q：这个问卷是干什么的？</p>
-      <p>A：用于收集各位博士在各种模式遇到新关卡时会优先带的干员</p>
-      <p class="font-bold m-12-0">Q：填写要求</p>
-      <p>A：提交的干员数量至少6位，至多可填12位</p>
-      <p class="font-bold m-12-0">Q：可以当练卡参考吗？</p>
-      <p>A：由于提交的博士每个人的玩法有差异，有博士倾向日常挂机，也有博士倾向肉鸽，故本问卷的调查结果仅供参考</p>
+    <v-expansion-panels class="m-4">
+      <v-expansion-panel
+          title="Q&A"
+          color="primary"
+      >
+        <v-expansion-panel-text>
+        <p class="font-bold m-12-0">Q：这个问卷是干什么的</p>
+        <p>A：用于收集博士心目中的最强开荒队伍</p>
+        <p class="font-bold m-12-0">Q：填写要求</p>
+        <p>A：提交的干员数量至少6位，至多可填12位</p>
+        <p class="font-bold m-12-0">Q：可以当练卡参考吗</p>
+        <p>A：由于提交的博士每个人的玩法有差异，有博士倾向日常挂机，也有博士倾向肉鸽，故本问卷的调查结果仅供参考</p>
+        <p class="font-bold m-12-0">Q：如果我想再填一份怎么办</p>
+        <p>A：7天内提交的结果是可以被覆盖的</p>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
 
-    </v-alert>
+
 
     <div class="operator-form-and-checkbox">
-      <v-card title="选择你的最强开荒队" class="operator-form">
+      <v-card title="选出你心目中的最强编队" class="operator-form">
         <v-card-text>
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, index) of operatorTeam" :key="index" class="operator-team-item"
                  @click="removeOperator(operator)">
-              <OperatorAvatar :char-id="operator.charId" size="80" mobile-size="70"></OperatorAvatar>
+              <OperatorAvatar :char-id="operator.charId" size="80" mobile-size="44"></OperatorAvatar>
               <img src="/image/icon/cancel.png" alt="" class="cancel-icon">
 
             </div>
@@ -235,7 +241,7 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
                  @click="chooseOperator(operator)" >
-              <OperatorAvatar :char-id="operator.charId" size="60" mobile-size="60"></OperatorAvatar>
+              <OperatorAvatar :char-id="operator.charId" size="60" mobile-size="50"></OperatorAvatar>
               <div :class="selectedOperatorClass(operator.charId)" >
 
               </div>
