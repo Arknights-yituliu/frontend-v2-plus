@@ -115,7 +115,6 @@ const headers = [
   {title: '干员', sortable: false, key: 'charId'},
   {title: '携带人数', sortable: true, key: 'carryCount'},
   {title: '携带率', sortable: true, key: 'carryRate'},
-  {title: '持有人数', sortable: true, key: 'ownCount'},
   {title: '持有率', sortable: true, key: 'own'},
 ]
 
@@ -139,12 +138,12 @@ async function getOperatorCarryStatisticsResult() {
     }
 
     for (let item of data.result) {
-      ownSampleSize.value = data.userCount
+      // ownSampleSize.value = data.userCount
       const carryRate = carryRateData.get(item.charId);
       if (carryRate) {
         item.carryRate = carryRate
         item.carryCount = formatNumber(carryRateSampleSize.value * carryRate, 0)
-        item.ownCount = formatNumber(item.own * ownSampleSize.value, 0)
+        // item.ownCount = formatNumber(item.own * ownSampleSize.value, 0)
         operatorCarryResult.value.push(item)
       }
     }
@@ -230,7 +229,7 @@ onMounted(() => {
 
       </v-card>
 
-      <v-card class="operator-checkbox">
+      <v-card title="待选干员" class="operator-checkbox">
         <v-card-text>
           <div class="flex justify-center">
             <img :src="`/image/survey/bg/${p.value}.png`" alt=""
@@ -251,11 +250,14 @@ onMounted(() => {
       </v-card>
     </div>
 
+
+
+
     <v-card class="m-a" max-width="700">
       <v-card-text>
         <v-chip color="primary" :text="`更新时间：${updateTime}`" class="m-4"></v-chip>
-        <v-chip color="primary" :text="`携带率样本量：${carryRateSampleSize}`" class="m-4"></v-chip>
-        <v-chip color="primary" :text="`持有率样本量：${ownSampleSize}`" class="m-4"></v-chip>
+        <v-chip color="primary" :text="`提交人数：${carryRateSampleSize}`" class="m-4"></v-chip>
+
         <v-data-table
             :headers="headers"
             :items="operatorCarryResult"
@@ -269,7 +271,6 @@ onMounted(() => {
               </td>
               <td>{{item.carryCount}}</td>
               <td>{{ formatNumber(item.carryRate * 100, 2) }}%</td>
-              <td>{{item.ownCount}}</td>
               <td>{{ formatNumber(item.own * 100, 2) }}%</td>
             </tr>
           </template>
