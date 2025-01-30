@@ -1372,31 +1372,4 @@ function useNewUI(){
 
 <style scoped>
 
-
-.schedule-question {
-  font-size: 20px;
-  padding: 0 4px;
-  position: relative;
-}
-
-.schedule-tip {
-  position: absolute;
-  z-index: 3000;
-  top: 20px;
-  left: 20px;
-  display: none;
-  width: 100px;
-  font-size: 14px;
-  padding: 8px;
-  line-height: 24px;
-  font-weight: 600;
-  background-color: var(--c-page-background-color);
-  box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
-}
-
-.schedule-question:hover {
-  .schedule-tip {
-    display: block;
-  }
-}
 </style>

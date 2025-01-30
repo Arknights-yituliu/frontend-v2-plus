@@ -4,6 +4,14 @@ html {
   }
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  overscroll-behavior: none;
+}
+
 .href-black {
   text-decoration: none;
   color: rgb(255, 255, 255);
