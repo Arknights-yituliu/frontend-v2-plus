@@ -93,6 +93,11 @@ watch(currentPath, (newPath, oldPath) => {
 
 const feedbackTable = [
   {
+    label: "反馈QQ：3831811497",
+    description: '一图流问题反馈专用QQ',
+    url: void 0
+  },
+  {
     label: "Github issues",
     description: '国内访问体验稍差一点',
     url: 'https://github.com/Arknights-yituliu/frontend-v2-plus/issues'
