@@ -1,5 +1,4 @@
 {
-
   "烛煌": {
     "addTime": "2025/01/22 16:00:00",
     "obtainApproach": "常驻干员"
@@ -10,7 +9,7 @@
   },
   "寻澜": {
     "addTime": "2025/01/22 16:00:00",
-    "obtainApproach": "常驻干员"
+    "obtainApproach": "赠送干员"
   },
   "行箸": {
     "addTime": "2025/01/22 16:00:00",
@@ -18,7 +17,7 @@
   },
   "瑰盐": {
     "addTime": "2024/12/05 16:00:00",
-    "obtainApproach": "常驻干员"
+    "obtainApproach": "赠送干员"
   },
   "引星棘刺": {
     "addTime": "2024/12/05 16:00:00",
@@ -29,83 +28,83 @@
     "obtainApproach": "常驻干员"
   },
   "荒芜拉普兰德": {
-    "addTime": "2024/11/03 16:00:00",
-    "obtainApproach": "常驻干员"
+    "addTime": "2024/11/01 16:00:00",
+    "obtainApproach": "限定干员"
   },
   "弑君者": {
-    "addTime": "2024/11/03 16:00:00",
-    "obtainApproach": "常驻干员"
+    "addTime": "2024/11/01 16:00:00",
+    "obtainApproach": "赠送干员"
   },
   "忍冬": {
-    "addTime": "2024/11/03 16:00:00",
+    "addTime": "2024/11/01 16:00:00",
     "obtainApproach": "常驻干员"
   },
   "菲莱": {
-    "addTime": "2024/11/03 16:00:00",
+    "addTime": "2024/11/01 16:00:00",
     "obtainApproach": "常驻干员"
   },
   "裁度": {
-    "addTime": "2024/11/03 16:00:00",
+    "addTime": "2024/11/01 16:00:00",
     "obtainApproach": "常驻干员"
   },
   "云迹": {
-    "addTime": "2024/11/03 16:00:00",
+    "addTime": "2024/11/01 16:00:00",
     "obtainApproach": "常驻干员"
   },
   "维娜·维多利亚": {
-    "addTime": "2024/10/11 16:00:00",
+    "addTime": "2024/10/09 16:00:00",
     "obtainApproach": "常驻干员"
   },
   "凯瑟琳": {
-    "addTime": "2024/10/11 16:00:00",
-    "obtainApproach": "常驻干员"
+    "addTime": "2024/10/09 16:00:00",
+    "obtainApproach": "赠送干员"
   },
   "波卜": {
-    "addTime": "2024/10/11 16:00:00",
-    "obtainApproach": "常驻干员"
-  },
-  "佩佩": {
-    "addTime": "2024/10/11 16:00:00",
-    "obtainApproach": "常驻干员"
-  },
-  "娜仁图亚": {
-    "addTime": "2024/10/11 16:00:00",
-    "obtainApproach": "常驻干员"
-  },
-  "莎草": {
-    "addTime": "2024/10/11 16:00:00",
-    "obtainApproach": "常驻干员"
-  },
-  "衡沙": {
-    "addTime": "2024/10/11 16:00:00",
+    "addTime": "2024/10/09 16:00:00",
     "obtainApproach": "常驻干员"
   },
   "玛露西尔": {
-    "addTime": "2024/10/11 16:00:00",
-    "obtainApproach": "常驻干员"
+    "addTime": "2024/09/02 16:00:00",
+    "obtainApproach": "限定干员"
   },
   "莱欧斯": {
-    "addTime": "2024/10/11 16:00:00",
-    "obtainApproach": "常驻干员"
+    "addTime": "2024/09/02 16:00:00",
+    "obtainApproach": "限定干员"
   },
   "森西": {
-    "addTime": "2024/10/11 16:00:00",
-    "obtainApproach": "常驻干员"
+    "addTime": "2024/09/02 16:00:00",
+    "obtainApproach": "限定干员"
   },
   "齐尔查克": {
-    "addTime": "2024/10/11 16:00:00",
+    "addTime": "2024/09/02 16:00:00",
+    "obtainApproach": "限定干员"
+  },
+  "佩佩": {
+    "addTime": "2024/08/01 16:00:00",
+    "obtainApproach": "限定干员"
+  },
+  "娜仁图亚": {
+    "addTime": "2024/08/01 16:00:00",
+    "obtainApproach": "常驻干员"
+  },
+  "莎草": {
+    "addTime": "2024/08/01 16:00:00",
+    "obtainApproach": "常驻干员"
+  },
+  "衡沙": {
+    "addTime": "2024/08/01 16:00:00",
     "obtainApproach": "常驻干员"
   },
   "锡人": {
-    "addTime": "2024/10/11 16:00:00",
-    "obtainApproach": "常驻干员"
+    "addTime": "2024/07/16 16:00:00",
+    "obtainApproach": "赠送干员"
   },
   "妮芙": {
-    "addTime": "2024/07/10 16:00:00",
+    "addTime": "2024/07/09 16:00:00",
     "obtainApproach": "常驻干员"
   },
   "渡桥": {
-    "addTime": "2024/07/10 16:00:00",
+    "addTime": "2024/07/09 16:00:00",
     "obtainApproach": "常驻干员"
   },
   "海霓": {
@@ -114,7 +113,7 @@
   },
   "深巡": {
     "addTime": "2024/06/05 16:00:00",
-    "obtainApproach": "常驻干员"
+    "obtainApproach": "赠送干员"
   },
   "乌尔比安": {
     "addTime": "2024/06/05 16:00:00",
