@@ -326,7 +326,7 @@ onMounted(() => {
               <v-btn variant="text" class="checkbox-label">排序</v-btn>
               <v-btn color="primary" variant="tonal"
                      @click="sortOperatorList('updateTime')"
-                     class="checkbox-button">
+                     class="m-4">
                 按实装顺序
               </v-btn>
             </div>
@@ -334,10 +334,10 @@ onMounted(() => {
 
           <v-tabs-window-item value="数据导入导出" >
             <v-chip color="red" text="导入之前请先登录"></v-chip>
-            <v-btn color="primary" class="checkbox-button" @click="importDataBySkland()">
+            <v-btn color="primary" class="m-4" @click="importDataBySkland()">
               从森空岛导入
             </v-btn>
-            <v-btn color="primary" class="checkbox-button" @click="exportOperatorExcel()">
+            <v-btn color="primary" class="m-4" @click="exportOperatorExcel()">
               导出为Excel
             </v-btn>
           </v-tabs-window-item>
