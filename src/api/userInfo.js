@@ -1,6 +1,6 @@
 import request from "/src/api/request"
 
-const api_name = `/survey`
+
 
 export default {
 
@@ -33,14 +33,43 @@ export default {
 
   /**
    * 发送邮件验证码
-   * @param userData  内部数据包括邮件用途，邮箱等
+   * @param data  内部数据包括邮件用途，邮箱等
    * @returns {*}  成功信息
    */
-  sendVerificationCodeV2(userData){
+  sendVerificationCodeV2(data){
     return request({
       url: `user/verificationCode`,
       method: "post",
-      data: userData,
+      data: data,
+    })
+  },
+
+  /**
+   * 发送邮件验证码
+   * @param data  内部数据包括邮件用途，邮箱等
+   * @returns {*}  成功信息
+   */
+  sendUpdateEmailVerificationCode(data){
+    return request({
+      url: `auth/user/update-email/verificationCode`,
+      method: "post",
+      data: data,
+    })
+  },
+
+  checkVerificationCode(data) {
+    const {oldEmail,verificationCode} = data
+    return request({
+      url: `auth/user/check/verificationCode?email=${oldEmail}&verificationCode=${verificationCode}`,
+      method: "get"
+    })
+  },
+
+  bindEmail(data) {
+    return request({
+      url: `auth/user/bind-email`,
+      method: "post",
+      data: data,
     })
   },
 
@@ -51,7 +80,7 @@ export default {
    */
   updateUserDataV2(data) {
     return request({
-      url: `user/auth/update/v2`,
+      url: `auth/user/update/v2`,
       method: "post",
       data: data,
     })
@@ -77,11 +106,6 @@ export default {
       data: data,
     })
   },
-
-
-
-
-
 
 
 

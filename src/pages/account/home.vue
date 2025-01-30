@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import {cMessage} from "/src/utils/message";
-import surveyApi from "/src/api/userInfo"
+import userInfoAPI from "/src/api/userInfo"
 import "/src/assets/css/account/home.scss";
 import {userInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
@@ -30,23 +30,23 @@ for (const char_id in operatorTable) {
 avatarList.sort((a, b) => b.rarity - a.rarity)
 
 
-
-
 async function getUserInfoByToken() {
 
-  inputContent.value.userName = userInfo.value.userName
+  formData.value.userName = userInfo.value.userName
+
   selectedAvatar.value = userInfo.value.avatar
 }
 
 
-let inputContent = ref({
+let formData = ref({
   userName: '',
-  cred: '',
   newPassWord: "",
   confirmPassWord: '',
   oldPassWord: "",
   email: '',
-  emailCode: ''
+  mailUsage:'',
+  verificationCode: '',
+  cred: '',
 })
 
 let displayOrUpdateInfo = ref('display')
@@ -69,7 +69,7 @@ function updateAvatar() {
     property: "avatar"
   }
 
-  surveyApi.updateUserDataV2(data).then(response => {
+  userInfoAPI.updateUserDataV2(data).then(response => {
     cMessage('头像更新成功')
     userInfo.value.avatar = response.data.avatar
 
@@ -77,15 +77,35 @@ function updateAvatar() {
 }
 
 
-function sendEmailCode() {
-  const data = {
-    token: userInfo.value.token,
-    email: inputContent.value.email,
-    mailUsage: 'updateEmail'
-  }
-  // eslint-disable-next-line no-unused-vars
-  surveyApi.sendVerificationCodeV2(data).then(response => {
+function sendUpdateEmailVerificationCode() {
+  userInfoAPI.sendUpdateEmailVerificationCode(formData.value).then(response => {
     cMessage('验证码已发送')
+  })
+}
+
+function sendVerificationCode() {
+  formData.value.mailUsage = "register"
+  userInfoAPI.sendVerificationCodeV2(formData.value).then(response => {
+    cMessage('验证码已发送')
+  })
+}
+
+function checkVerificationCode(){
+  userInfoAPI.checkVerificationCode(formData.value).then(response => {
+    formData.value.cred = response.data
+    formData.value.verificationCode = ''
+    displayOrUpdateInfo.value = 'bindEmail'
+  })
+}
+
+
+function bindEmail() {
+  userInfoAPI.bindEmail(formData.value).then(response => {
+    cMessage('邮箱绑定成功')
+    setTimeout(() => {
+      location.reload();
+    }, 2000)
+
   })
 }
 
@@ -95,31 +115,29 @@ function sendEmailCode() {
 function updateUserName() {
   const data = {
     token: userInfo.value.token,
-    userName: inputContent.value.userName,
+    userName: formData.value.userName,
     property: "userName"
   }
-  surveyApi.updateUserDataV2(data).then(response => {
+  userInfoAPI.updateUserDataV2(data).then(response => {
     cMessage('用户名更改成功')
     userInfo.value.userName = response.data.userName
 
   })
 }
 
-function updateEmail() {
-  const data = {
-    token: userInfo.value.token,
-    email: inputContent.value.email,
-    emailCode: inputContent.value.emailCode,
-    property: "email"
-  }
-  surveyApi.updateUserDataV2(data).then(response => {
-    cMessage('邮箱绑定成功')
-    getUserInfoByToken()
-  })
-}
+
+
 
 
 let operatorList = ref([])
+
+function updateOrBindEmail(){
+  if(userInfo.value.hasEmail){
+    displayOrUpdateInfo.value = 'checkEmail'
+  }else {
+    displayOrUpdateInfo.value = 'bindEmail'
+  }
+}
 
 // function getOperatorData() {
 //   //检查是否登录
@@ -187,14 +205,15 @@ onMounted(() => {
             <div class="opacity-70 user-card-label">用户名（账号）</div>
             <div class="m-4 flex align-center user-card-bar justify-between">
               <span class="font-bold">{{ userInfo.userName }}</span>
-              <v-btn color="primary" variant="text" text="修改用户名（账号）" @click="displayOrUpdateInfo = 'userName'"></v-btn>
+              <v-btn color="primary" variant="text" text="修改用户名（账号）"
+                     @click="displayOrUpdateInfo = 'userName'"></v-btn>
             </div>
           </v-list-item>
           <v-list-item>
             <div class="opacity-70 user-card-label">绑定邮箱</div>
             <div class="m-4 flex align-center user-card-bar justify-between">
               <span class="font-bold">{{ userInfo.email }}</span>
-              <v-btn color="primary" variant="text" text="修改邮箱" disabled></v-btn>
+              <v-btn color="primary" variant="text" :text="userInfo.hasEmail?'修改邮箱':'绑定邮箱'" @click="updateOrBindEmail"></v-btn>
             </div>
           </v-list-item>
         </v-list>
@@ -204,10 +223,12 @@ onMounted(() => {
         </div>
       </v-card-text>
 
+      <div class="flex justify-between p-4" v-show="displayOrUpdateInfo !== 'display'">
+        <v-btn variant="text" color="primary" text="返回" @click="displayOrUpdateInfo = 'display'"></v-btn>
+      </div>
+
       <v-card-text v-show="displayOrUpdateInfo==='avatar'">
-        <div class="p-4">
-          <v-btn variant="text" color="primary" text="返回" @click="displayOrUpdateInfo = 'display'"></v-btn>
-        </div>
+
         <div class="flex align-center justify-center">
           <OperatorAvatar :char-id="selectedAvatar" rounded :size="80" :mobile-size="60"></OperatorAvatar>
         </div>
@@ -223,14 +244,12 @@ onMounted(() => {
       </v-card-text>
 
       <v-card-text v-show="displayOrUpdateInfo==='userName'">
-        <div class="flex justify-between p-4">
-          <v-btn variant="text" color="primary" text="返回" @click="displayOrUpdateInfo = 'display'"></v-btn>
-        </div>
-        <div class="m-0-4 opacity-70" >输入您的新用户名（账号）</div>
+
+        <div class="m-0-4 opacity-70">输入您的新用户名（账号）</div>
         <v-text-field
             :rules="accountRules"
             density="compact"
-            v-model="inputContent.userName"
+            v-model="formData.userName"
             hint="用户名仅可由汉字、数字、英文组成"
             color="primary"
             variant="outlined"
@@ -241,24 +260,48 @@ onMounted(() => {
         </div>
       </v-card-text>
 
-      <v-card-text v-show="displayOrUpdateInfo==='email'">
-        <div class="flex justify-between p-4">
-          <v-btn variant="text" color="primary" text="返回" @click="displayOrUpdateInfo = 'display'"></v-btn>
+      <v-card-text v-show="displayOrUpdateInfo==='checkEmail'">
+
+        <span>为了您的账号安全，本操作需要验证您的邮箱，验证码将会以邮件方式发送到您的邮箱{{userInfo.email}}</span>
+
+        <v-otp-input v-model="formData.verificationCode" length="4" >
+
+        </v-otp-input>
+
+        <v-btn text="获取验证码"  density="compact" variant="text" color="primary" @click="sendUpdateEmailVerificationCode()"></v-btn>
+
+        <div class="flex justify-center m-20-0">
+          <v-btn text="下一步操作" color="primary" @click="checkVerificationCode()"></v-btn>
         </div>
-        <div class="m-0-4 opacity-70" >11111</div>
-        <div class="flex justify-center">
-          <v-btn variant="text" color="primary" text="确认修改" @click="updateUserName"></v-btn>
-        </div>
+
       </v-card-text>
+
+      <v-card-text v-show="displayOrUpdateInfo==='bindEmail'">
+        <div class="m-0-4 opacity-70">输入您的新邮箱</div>
+        <v-text-field
+            v-model="formData.email"
+            color="primary"
+            density="compact"
+            variant="outlined"
+            class="m-4"
+        >
+          <template v-slot:append>
+            <v-btn color="primary" variant="text" text="发送验证码"
+                   @click="sendVerificationCode()"></v-btn>
+          </template>
+        </v-text-field>
+        <v-otp-input class="m-4" v-model="formData.verificationCode" length="4"></v-otp-input>
+        <v-btn text="更新邮箱" @click="bindEmail()"></v-btn>
+      </v-card-text>
+
     </v-card>
 
 
+    <!--    <v-card>-->
+    <!--      <v-card-text>-->
 
-<!--    <v-card>-->
-<!--      <v-card-text>-->
-
-<!--      </v-card-text>-->
-<!--    </v-card>-->
+    <!--      </v-card-text>-->
+    <!--    </v-card>-->
 
   </div>
 

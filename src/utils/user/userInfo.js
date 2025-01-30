@@ -3,7 +3,7 @@ import {DOMAIN} from '/src/api/BASE_URL.js'
 import {cMessage} from "/src/utils/message.js";
 import axios from "axios";
 
-let userInfo = ref({uid: 0, userName: "未登录",avatar:'', akUid: "0", status: -100, token: void 0}); //用户信息(用户名，用户id，用户状态)
+let userInfo = ref({uid: 0, userName: "未登录",email:'',avatar:'', akUid: "0", status: -100, token: void 0}); //用户信息(用户名，用户id，用户状态)
 
 
 async function getUserInfo(page,errorMessage=false) {
