@@ -9,6 +9,7 @@ import operatorDataApi from "/src/api/operatorData";
 
 import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
 import {debounce} from "@/utils/debounce.js";
+import OperatorStatisticsDetail from "@/components/survey/OperatorStatisticsDetail.vue";
 
 
 let operatorsStatisticsList = ref([]);
@@ -32,15 +33,15 @@ function btnAction(action) {
 //表头标题
 let headers2 = [
   {title: '干员', align: 'start', sortable: false, key: 'charId'},
-  {title: '持有率', key: 'own'},
-  {title: '精二率', key: 'eliteS'},
-  {title: '一技能', key: 'skill1S'},
-  {title: '二技能', key: 'skill2S'},
-  {title: '三技能', key: 'skill3S'},
-  {title: 'X模组', key: 'modXS'},
-  {title: 'Y模组', key: 'modYS'},
-  {title: 'D模组', key: 'modDS'},
-  {title: 'A模组', key: 'modAS'},
+  {title: '持有率', sortable: true, key: 'own'},
+  {title: '精二率', sortable: true, key: 'eliteS'},
+  {title: '一技能', sortable: true, key: 'skill1S'},
+  {title: '二技能', sortable: true, key: 'skill2S'},
+  {title: '三技能', sortable: true, key: 'skill3S'},
+  {title: 'X模组', sortable: true, key: 'modXS'},
+  {title: 'Y模组', sortable: true, key: 'modYS'},
+  {title: 'D模组', sortable: true, key: 'modDS'},
+  {title: 'A模组', sortable: true, key: 'modAS'},
 ]
 
 
@@ -111,6 +112,7 @@ function quickSort(arr, compare = (a, b) => a - b) {
 }
 
 
+
 // 后端返回的数据为如下格式，下面的部分函数为格式化数据函数
 // {
 // count: 1-3级合计占比,
@@ -134,7 +136,7 @@ onMounted(() => {
 <template>
 
 
-  <div class="survey-rank-page-v2 survey-common">
+  <div class="survey-rank-page-v2">
     <v-card class="rank-card">
       <div class="flex flex-wrap" v-for="(conditions,module) in operatorFilterCondition" :key="module"
            v-show="displayFilterCondition.includes(module)">
@@ -148,9 +150,6 @@ onMounted(() => {
       </div>
     </v-card>
     <v-chip color="primary">
-      以下展示数据仅为技能专三率和模组3级开启率
-    </v-chip>
-    <v-chip color="primary">
       调查人数{{ userCountText }}
     </v-chip>
     <v-chip color="primary">
@@ -158,6 +157,9 @@ onMounted(() => {
     </v-chip>
 
     <v-card class="rank-card">
+      <v-card-subtitle>
+        表格展示数据为技能专三率和模组3级开启率，将鼠标移至技能和模组数字上方可查看所有等级的详细数据
+      </v-card-subtitle>
       <v-data-table
           v-model:sort-by="sortBy"
           :headers="headers2"
@@ -174,25 +176,53 @@ onMounted(() => {
           {{ formatCellData(item.eliteS) }}
         </template>
         <template v-slot:item.skill1S="{ item }">
-          {{ formatCellData(item.skill1S) }}
+          <div class="display-data">
+            {{ formatCellData(item.skill1S) }}
+            <OperatorStatisticsDetail :data="item.skill1" class="display-detail-data">
+            </OperatorStatisticsDetail>
+          </div>
         </template>
         <template v-slot:item.skill2S="{ item }">
-          {{ formatCellData(item.skill2S) }}
+          <div class="display-data">
+            {{ formatCellData(item.skill2S) }}
+            <OperatorStatisticsDetail :data="item.skill2" class="display-detail-data">
+            </OperatorStatisticsDetail>
+          </div>
         </template>
         <template v-slot:item.skill3S="{ item }">
-          {{ formatCellData(item.skill3S) }}
+          <div class="display-data">
+            {{ formatCellData(item.skill3S) }}
+            <OperatorStatisticsDetail :data="item.skill3" class="display-detail-data">
+            </OperatorStatisticsDetail>
+          </div>
         </template>
         <template v-slot:item.modXS="{ item }">
-          {{ formatCellData(item.modXS) }}
+          <div class="display-data">
+            {{ formatCellData(item.modXS) }}
+              <OperatorStatisticsDetail :data="item.modX" class="display-detail-data">
+              </OperatorStatisticsDetail>
+          </div>
         </template>
         <template v-slot:item.modYS="{ item }">
-          {{ formatCellData(item.modYS) }}
+          <div class="display-data">
+            {{ formatCellData(item.modYS) }}
+            <OperatorStatisticsDetail :data="item.modY" class="display-detail-data">
+            </OperatorStatisticsDetail>
+          </div>
         </template>
         <template v-slot:item.modDS="{ item }">
-          {{ formatCellData(item.modDS) }}
+          <div class="display-data">
+            {{ formatCellData(item.modDS) }}
+            <OperatorStatisticsDetail :data="item.modD" class="display-detail-data">
+            </OperatorStatisticsDetail>
+          </div>
         </template>
         <template v-slot:item.modAS="{ item }">
-          {{ formatCellData(item.modAS) }}
+          <div class="display-data">
+            {{ formatCellData(item.modAS) }}
+            <OperatorStatisticsDetail :data="item.modA" class="display-detail-data">
+            </OperatorStatisticsDetail>
+          </div>
         </template>
       </v-data-table>
     </v-card>
