@@ -16,7 +16,7 @@ import {cMessage} from '/src/utils/message.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {downloadJsonFile} from "/src/utils/download.js";
 import {useDisplay} from 'vuetify'
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
 
 
 const router = useRouter();
@@ -26,7 +26,7 @@ const {mobile} = useDisplay()
 let operatorFilterConditionList = []
 
 for (const label in operatorFilterConditionTable) {
-  let {conditions,name} = operatorFilterConditionTable[label]
+  let {conditions, name} = operatorFilterConditionTable[label]
 
   for (const condition of conditions) {
     condition.type = name
@@ -49,7 +49,6 @@ function buttonSize() {
 }
 
 
-
 async function getOperatorDataByAccount() {
   operatorDataAPI.getOperatorData().then(response => {
     for (const operator of response.data) {
@@ -59,8 +58,8 @@ async function getOperatorDataByAccount() {
 
 }
 
-let plansTemplate = ref('')
-plansTemplate.value = SCHEDULE_TEMPLATE
+let plansTemplate = ref(SCHEDULE_TEMPLATE)
+
 
 let executionTimeList = ref([])
 for (let i = 0; i < 7; i++) {
@@ -365,7 +364,7 @@ const searchOperatorDebounce = debounce(() => {
   commonFilterOperator()
 }, 500)
 
-watch(()=>commonFilterOperator(),()=>{
+watch(() => commonFilterOperator(), () => {
   commonFilterOperator()
 })
 
@@ -398,12 +397,11 @@ function commonFilterOperator() {
     }
 
 
-    const {charId,name} = operator
-    if(!charIdObj[charId]) {
-      displayOperatorList.value.push({charId:charId,name:name})
+    const {charId, name} = operator
+    if (!charIdObj[charId]) {
+      displayOperatorList.value.push({charId: charId, name: name})
       charIdObj[charId] = charId
     }
-
 
 
   }
@@ -635,25 +633,32 @@ function fillOperatorConflict(index) {
 
 /**
  * 写入无人机使用设置
+ * @param scheduleIndex
  * @param {string} property 无人机设置参数 如enable等
  * @param {*} value 参数值
  */
-function setDrones(property, value) {
-  plansTemplate.value[selectedScheduleIndex.value].drones[property] = value
+function setDrones(scheduleIndex, property, value) {
+  plansTemplate.value[scheduleIndex].drones[property] = value
 
 }
 
 
-let FiammettaTargetVisible = ref(false)
+let FiammettaDialogVisible = ref(false)
 
 /**
  * 写入菲亚梅塔使用设置
+ * @param scheduleIndex
  * @param {string} property 无人机设置参数 如enable等
  * @param {*} value 参数值
  */
-function setFiammetta(property, value) {
+function setFiammetta(scheduleIndex, property, value) {
   plansTemplate.value[selectedScheduleIndex.value].Fiammetta[property] = value
-  FiammettaTargetVisible.value = false
+  FiammettaDialogVisible.value = false
+}
+
+function openFiammettaDialog(scheduleIndex){
+  selectedScheduleIndex.value = scheduleIndex
+  FiammettaDialogVisible.value = true
 }
 
 watch(() => plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].autofill,
@@ -665,7 +670,8 @@ watch(() => plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomT
           cMessage(translate('schedule', 'schedule.AutofillDormTip'), 'warn')
         }
       }
-    })
+    }
+)
 
 
 /**
@@ -904,15 +910,14 @@ function importSchedule(schedule) {
 let guidePopup = ref(false)
 
 
-
 onMounted(() => {
   filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], 'room')
 
   getOperatorDataByAccount()
 })
 
-function useNewUI(){
-  router.push({name:'ScheduleV2'})
+function useNewUI() {
+  router.push({name: 'ScheduleV2'})
 }
 
 </script>
@@ -924,30 +929,29 @@ function useNewUI(){
 
     <div>
       <!--选择基建布局和换班次数-->
-      <v-btn color="red"  class="m-2"
+      <v-btn color="red" class="m-2"
              @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
         {{ translate('schedule', 'schedule.InfrastructureLayout') }}
       </v-btn>
-      <v-btn color="orange"  class="m-2"
+      <v-btn color="orange" class="m-2"
              @click="useNewUI()" text="切换到新版UI">
       </v-btn>
       <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
       <!--根据文件导入排版-->
-      <v-btn color="primary"  class="m-2" @click="chooseFile()">{{
+      <v-btn color="primary" class="m-2" @click="chooseFile()">{{
           translate('schedule', 'schedule.ImportScheduleFile')
         }}
       </v-btn>
       <!--下载排版文件-->
-      <v-btn color="primary"  class="m-2" @click="saveAndDownloadScheduleFile()">
+      <v-btn color="primary" class="m-2" @click="saveAndDownloadScheduleFile()">
         {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
       </v-btn>
 
       <!--操作指引-->
-      <v-btn color="primary"  class="m-2" @click="guidePopup = true">
+      <v-btn color="primary" class="m-2" @click="guidePopup = true">
         {{ translate('schedule', 'schedule.GuidePopup') }}
       </v-btn>
     </div>
-
 
 
     <!--输入排班id-->
@@ -956,12 +960,11 @@ function useNewUI(){
                   v-model="scheduleImportId">
       <template v-slot:append>
         <!--根据id导入排班-->
-        <v-btn color="primary"  class="m-2" @click="importScheduleById()">
+        <v-btn color="primary" class="m-2" @click="importScheduleById()">
           {{ translate('schedule', 'schedule.ImportScheduleById') }}
         </v-btn>
       </template>
     </v-text-field>
-
 
 
     <v-dialog v-model="guidePopup" max-width="800">
@@ -1042,7 +1045,8 @@ function useNewUI(){
 
     <div class="schedule-box-container">
       <div class="flex schedule-box">
-        <v-card class="schedule-item-card" v-for="(i,scheduleIndex) in scheduleTypeV2.planTimes">
+        <v-card class="schedule-item-card" v-for="(index,scheduleIndex) in scheduleTypeV2.planTimes">
+          {{ `#${scheduleIndex}` }}
           <v-list density="compact">
             <!--当前换班表名称-->
             <v-list-item>
@@ -1085,31 +1089,31 @@ function useNewUI(){
               <!--无人机用在换班前或后-->
               <div class="opacity-70">{{ translate('schedule', 'schedule.UseDronesBeforeOrAfterAShift') }}</div>
               <v-btn color="primary" :variant="'pre' === plansTemplate[scheduleIndex].drones.order?void 0:`tonal`"
-                     @click="setDrones('order', 'pre')" class="m-4"
+                     @click="setDrones(scheduleIndex,'order', 'pre')" class="m-4"
                      :text=" translate('schedule', 'schedule.PreShift')">
               </v-btn>
               <v-btn color="primary" :variant="'post' === plansTemplate[scheduleIndex].drones.order?void 0:`tonal`"
                      :text="translate('schedule', 'schedule.PostShift')" class="m-4"
-                     @click="setDrones('order', 'post')">
+                     @click="setDrones(scheduleIndex,'order', 'post')">
               </v-btn>
               <!--目标房间-->
               <div class="opacity-70">{{ translate('schedule', 'schedule.TargetRoom') }}</div>
               <v-btn color="primary"
                      :variant="'trading' === plansTemplate[scheduleIndex].drones.room?void 0:`tonal`"
                      :text="translate('schedule', 'schedule.TradingPost')" class="m-4"
-                     @click="setDrones('room', 'trading')">
+                     @click="setDrones(scheduleIndex,'room', 'trading')">
               </v-btn>
               <v-btn color="primary"
                      :variant="'manufacture' === plansTemplate[scheduleIndex].drones.room?void 0:`tonal`"
                      :text="translate('schedule', 'schedule.Factory')" class="m-4"
-                     @click="setDrones('room', 'manufacture')">
+                     @click="setDrones(scheduleIndex,'room', 'manufacture')">
 
               </v-btn>
               <!--房间编号-->
               <div class="opacity-70">{{ translate('schedule', 'schedule.RoomNumber') }}</div>
-              <v-btn color="primary" :variant="(index) === plansTemplate[scheduleIndex].drones.index?void 0:`tonal`"
-                     :text="index" class="m-4"
-                     @click="setDrones('index', (index))" v-for="index in 5" :key="index">
+              <v-btn color="primary" :variant="(roomIndex) === plansTemplate[scheduleIndex].drones.index?void 0:`tonal`"
+                     :text="roomIndex.toString()" class="m-4"
+                     @click="setDrones(scheduleIndex,'index', (roomIndex))" v-for="roomIndex in 5" :key="roomIndex">
               </v-btn>
             </v-list-item>
             <!--菲亚梅塔设置-->
@@ -1129,18 +1133,18 @@ function useNewUI(){
               <v-btn color="primary"
                      :variant="'pre' === plansTemplate[scheduleIndex].Fiammetta.order?void 0:`tonal`"
                      :text="translate('schedule', 'schedule.PreShift')" class="m-4"
-                     @click="setFiammetta('order', 'pre')">
+                     @click="setFiammetta(scheduleIndex,'order', 'pre')">
               </v-btn>
               <v-btn color="primary"
                      :variant="'post' === plansTemplate[scheduleIndex].Fiammetta.order?void 0:`tonal`"
                      :text="translate('schedule', 'schedule.PostShift')" class="m-4"
-                     @click="setFiammetta('order', 'post')">
+                     @click="setFiammetta(scheduleIndex,'order', 'post')">
               </v-btn>
 
               <div class="flex align-center ">
                 <div class="opacity-70">{{ translate('schedule', 'schedule.RecoveryTarget') }}</div>
                 <div class="spacer-12"></div>
-                <OperatorAvatar size="50" class="shadow-md" @click="FiammettaTargetVisible=true"
+                <OperatorAvatar size="50" class="shadow-md" @click="openFiammettaDialog(scheduleIndex)"
                                 :char-id="getCharId(plansTemplate[scheduleIndex].Fiammetta.target)"></OperatorAvatar>
               </div>
 
@@ -1270,8 +1274,6 @@ function useNewUI(){
           </div>
 
 
-
-
           <!--筛选条件-->
           <span class="room-set-label">{{ translate('schedule', 'schedule.FilterCondition') }}</span>
           <v-select :items="operatorFilterConditionList"
@@ -1280,7 +1282,7 @@ function useNewUI(){
                     color="primary">
             <template v-slot:selection="{ item, index }">
               <!--              {{item}}-->
-              <span>{{`${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}`}}</span>
+              <span>{{ `${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}` }}</span>
             </template>
             <template v-slot:item="{ props, item }">
               <v-list-item v-bind="props"
@@ -1289,37 +1291,9 @@ function useNewUI(){
             </template>
           </v-select>
 
-<!--          <div class="flex flex-wrap" v-for="(conditionType, key) in operatorFilterConditionTable"-->
-<!--               v-show="conditionType.display" :key="key">-->
-<!--            <v-btn :color="conditionType.color" variant="text" class="m-2" :size="buttonSize()">-->
-<!--              {{ translate('schedule', conditionType.name) }}-->
-<!--            </v-btn>-->
-<!--            <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"-->
-<!--                   color="primary" :variant="filterBtnStatus(key, condition.label)" :size="buttonSize()"-->
-<!--                   @click="filterOperatorByTag(condition, key)" class="m-2">-->
-<!--              {{ translate('schedule', condition.label) }}-->
-<!--            </v-btn>-->
-<!--          </div>-->
-
           <!--待选干员-->
           <span class="room-set-label">{{ translate('schedule', 'schedule.AvailableCharacter') }}</span>
-<!--          <v-select :label="translate('schedule', 'schedule.FilterCondition')"-->
-<!--                    :items="displayOperatorList" chips multiple>-->
-<!--            <template v-slot:chip>-->
-<!--              <v-chip v-for="(charName, index) in getRoomOperators(selectedScheduleIndex,selectedRoomType, selectedRoomIndex)">-->
-<!--                <template v-slot:prepend>-->
-<!--                  <OperatorAvatar size="28" mobile-size="28" rounded :char-id="getCharId(charName)"></OperatorAvatar>-->
-<!--                </template>-->
-<!--              </v-chip>-->
-<!--            </template>-->
-<!--            <template v-slot:item="{ props, item }" >-->
-<!--              <v-list-item v-bind="props" :title=" item.raw.name" @click="chooseOperator(item.raw.name)">-->
-<!--                <template v-slot:prepend>-->
-<!--                  <OperatorAvatar size="28" mobile-size="28" rounded :char-id="item.raw.charId"></OperatorAvatar>-->
-<!--                </template>-->
-<!--              </v-list-item>-->
-<!--            </template>-->
-<!--          </v-select>-->
+
           <div class="flex flex-wrap">
             <v-btn v-for="(operator, charId) in displayOperatorList" :key="charId"
                    @click="chooseOperator(operator.name)"
@@ -1336,34 +1310,38 @@ function useNewUI(){
 
 
     <!--肥鸭的选择弹窗-->
-    <v-dialog v-model="FiammettaTargetVisible" max-width="800">
+    <v-dialog v-model="FiammettaDialogVisible" max-width="800">
       <v-card class="m-a">
+        <v-card-text>
         <!--筛选条件-->
         <span class="room-set-label">{{ translate('schedule', 'schedule.FilterCondition') }}</span>
-        <div class="flex flex-wrap" v-for="(conditionType, key) in operatorFilterConditionTable"
-             v-show="conditionType.display" :key="key">
-          <v-btn :color="conditionType.color" variant="text" class="m-2" :size="buttonSize()">
-            {{ translate('schedule', conditionType.name) }}
-          </v-btn>
-          <v-btn v-for="(condition, index) in conditionType.conditions" :key="index"
-                 color="primary" :variant="filterBtnStatus(key, condition.label)" :size="buttonSize()"
-                 @click="filterOperatorByTag(condition, key)" class="m-2">
-            {{ translate('schedule', condition.label) }}
-          </v-btn>
-        </div>
+        <v-select :items="operatorFilterConditionList"
+                  v-model="filterCondition"
+                  variant="outlined"
+                  color="primary">
+          <template v-slot:selection="{ item, index }">
+            <!--              {{item}}-->
+            <span>{{ `${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}` }}</span>
+          </template>
+          <template v-slot:item="{ props, item }">
+            <v-list-item v-bind="props"
+                         :title="`${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}`">
+            </v-list-item>
+          </template>
+        </v-select>
 
         <!--待选干员-->
         <span class="room-set-label">{{ translate('schedule', 'schedule.AvailableCharacter') }}</span>
         <div class="flex flex-wrap">
           <v-btn v-for="(operator, charId) in displayOperatorList" :key="charId"
-                 @click="setFiammetta('target', operator.name)"
+                 @click="setFiammetta(selectedScheduleIndex,'target', operator.name)"
                  :text="operator.name" variant="tonal" color="primary" class="m-2">
             <template v-slot:prepend>
-              <OperatorAvatar size="28" mobile-size="30" rounded :char-id="charId"></OperatorAvatar>
+              <OperatorAvatar size="28" mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
             </template>
           </v-btn>
         </div>
-
+        </v-card-text>
       </v-card>
     </v-dialog>
   </div>
