@@ -2,7 +2,7 @@
 import {operatorTable} from "/src/utils/gameData.js";
 
 import {ref} from "vue";
-import {statisticsOperatorInfo, splitMaterialByTier} from "@/utils/survey/operatorStatistical.js";
+import {statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 
 let listItemCollect = ref({})

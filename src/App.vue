@@ -13,12 +13,11 @@ import '/src/assets/css/common/title_and_tag.scss'
 import '/src/assets/css/common/popover.scss'
 import '/src/assets/css/common/icon.scss'
 
-import '/src/assets/css/layout.scss'
+import '/src/assets/css/common/app.scss'
 import '/src/assets/css/layout/basic.scss'
 import '/src/assets/css/layout/main.scss'
 import '/src/assets/css/common/theme.scss'
-import '/src/assets/css/atomic.scss'
-import "/src/assets/css/survey/survey_common.css";
+import '/src/assets/css/common/atomic.scss'
 
 import Navigation from '/src/components/Navigation.vue'
 import {useTheme} from 'vuetify'
@@ -27,7 +26,7 @@ import User from '/src/pages/account/user.vue'
 import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
-import ComponentsContainer from "@/components/ComponentsContainer.vue";
+import ComponentsContainer from "/src/components/ComponentsContainer.vue";
 
 
 const theme = useTheme()
@@ -38,12 +37,16 @@ let drawer = ref(true)
 
 let currentTheme = ref('dark')
 
+function setTheme(value){
+  theme.global.name.value = value
+  document.getElementsByTagName("html").item(0).className = value;
+  customTheme.value = `theme-${value}`
+  localStorage.setItem("Theme", value)
+}
+
 function changeTheme() {
   currentTheme.value = currentTheme.value === 'dark' ? 'light' : 'dark'
-  theme.global.name.value = currentTheme.value
-  document.getElementsByTagName("html").item(0).className = currentTheme.value;
-  customTheme.value = `theme-${currentTheme.value}`
-  localStorage.setItem("Theme", currentTheme.value)
+  setTheme(currentTheme.value)
 }
 
 const route = useRoute();
@@ -114,9 +117,8 @@ const feedbackTable = [
 
 
 onMounted(() => {
-  const themeSet = localStorage.getItem("Theme");
-  console.log(themeSet)
-  changeTheme()
+  currentTheme.value = localStorage.getItem("Theme")=== 'dark' ? 'dark' : 'light';
+  setTheme(currentTheme.value)
   // initResource()
   // getDataByKey('OperatorTable').then(rep=>{
   //   console.log("indexedDB {} ",rep.resource)

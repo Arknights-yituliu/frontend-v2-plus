@@ -5,10 +5,10 @@ import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
 import {cMessage} from "/src/utils/message.js";
 import questionnaireAPI from "/src/api/questionnaire.js";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
-import operatorProgressionStatisticsDataCache from "@/utils/indexedDB/operatorProgressionStatisticsData.js";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";
-import {dateFormat} from "@/utils/dateUtil.js";
+import {dateFormat} from "/src/utils/dateUtil.js";
 
 let operatorGroupByProfession = new Map()
 

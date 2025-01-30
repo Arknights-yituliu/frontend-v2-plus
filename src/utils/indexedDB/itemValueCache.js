@@ -1,6 +1,6 @@
 import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
 import materialAPI from "/src/api/material.js";
-import {getStageConfig} from "@/utils/user/userConfig.js";
+import {getStageConfig} from "/src/utils/user/userConfig.js";
 import checkCache from '/src/utils/indexedDB/cacheExpireTime.js'
 
 // myDatabase.version(1).stores({

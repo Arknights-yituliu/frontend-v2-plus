@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import {formatNumber} from "@/utils/format.js";
+import {formatNumber} from "/src/utils/format.js";
 
 const saleTypes = [
   {value: 'newbie', text: '新人'},

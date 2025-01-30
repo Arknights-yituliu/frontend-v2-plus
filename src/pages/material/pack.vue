@@ -3,9 +3,9 @@ import materialAPI from "/src/api/material.js";
 import {ref} from 'vue';
 import PackCardContainer from '/src/components/material/PackCardGroup.vue'
 import ModuleHeader from '/src/components/ModuleHeader.vue';
-import {getStageConfig} from "@/utils/user/userConfig.js";
-import PackTable from "@/components/material/PackTable.vue";
-import deepClone from "@/utils/deepClone.js";
+import {getStageConfig} from "/src/utils/user/userConfig.js";
+import PackTable from "/src/components/material/PackTable.vue";
+import deepClone from "/src/utils/deepClone.js";
 import '/src/assets/css/material/pack.scss';
 import '/src/assets/css/material/pack.phone.scss';
 

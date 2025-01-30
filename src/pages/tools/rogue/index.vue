@@ -4,7 +4,7 @@ import '/src/assets/css/rogue/seed-collect.scss'
 
 import SeedTable from "/src/components/rogue/SeedTable.vue";
 import UploadSeed from "/src/components/rogue/UploadSeed.vue";
-import RollSeed from "@/components/rogue/RollSeed.vue";
+import RollSeed from "/src/components/rogue/RollSeed.vue";
 
 let activeTab = ref('GoodSeed')
 

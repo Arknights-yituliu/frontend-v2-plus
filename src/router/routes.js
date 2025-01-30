@@ -310,7 +310,7 @@ const routes = [
         path: '/dev',
         text: '测试页面',
         display: false,
-        component: () => import('/src/pages/dev.vue')
+        component: () => import('/src/pages/dev/dev.vue')
     },
     {
         path: '/material/sssl',

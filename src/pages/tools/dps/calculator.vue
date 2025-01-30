@@ -3,9 +3,9 @@ import '/src/assets/css/tool/dps_calculator.scss'
 // import {getOperatorInfo, operatorList} from "/src/pages/tools/dps/getOperatorInfo.js";
 import {filterOperatorList, operatorFilterCondition} from "/src/utils/survey/operatorFilter.js";
 import {ref} from "vue";
-import {debounce} from "@/utils/debounce.js";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
-import SkillIcon from "@/components/sprite/SkillIcon.vue";
+import {debounce} from "/src/utils/debounce.js";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import SkillIcon from "/src/components/sprite/SkillIcon.vue";
 
 
 const displayOperatorFilterCondition = ['profession', 'rarity']

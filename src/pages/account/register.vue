@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import '/src/assets/css/survey/login.v2.scss'
-import '/src/assets/css/survey/login.v2.phone.scss'
+import '/src/assets/css/account/login.v2.scss'
+import '/src/assets/css/account/login.v2.phone.scss'
 import userAPI from '/src/api/userInfo.js'
 import {cMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";

@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from "vue";
-import rogueSeedAPI from "@/api/rogueSeed.js";
-import {copyTextToClipboard} from "@/utils/copyText.js";
+import rogueSeedAPI from "/src/api/rogueSeed.js";
+import {copyTextToClipboard} from "/src/utils/copyText.js";
 import {useDisplay} from "vuetify";
 const { mobile } = useDisplay()
 

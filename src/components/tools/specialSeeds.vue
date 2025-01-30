@@ -2,7 +2,7 @@
 import rogueSeedAPI from "/src/api/rogueSeed.js";
 import {onMounted, ref} from "vue";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
-import {cMessage} from "@/utils/message.js";
+import {cMessage} from "/src/utils/message.js";
 
 
 let pageInfo = ref({

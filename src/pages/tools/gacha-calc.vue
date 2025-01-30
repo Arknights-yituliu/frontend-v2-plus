@@ -1532,7 +1532,7 @@ function handleResize() {
           <!--            </div>-->
           <!--          </div>-->
           <!--          <el-divider></el-divider>-->
-          <div class="divider"></div>
+          <v-divider></v-divider>
           <div class="resources-line">
             <span class="resources-line-label">
               周常{{ dailyReward.weekly }}周
@@ -1564,7 +1564,7 @@ function handleResize() {
               本周已完成
             </div>
           </div>
-          <div class="divider"></div>
+          <v-divider></v-divider>
           <div class="resources-line">
             <span class="resources-line-label">
               绿票商店{{ dailyReward.certificateShoppingTimes }}月
@@ -1630,7 +1630,7 @@ function handleResize() {
             </div>
           </el-checkbox-button>
 
-          <div class="divider"></div>
+          <v-divider></v-divider>
           <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation"
                              v-model="selectedCertificateT2Group" size="small">
             <el-checkbox-button v-for="(price, index) in certificateT2Group" :key="price" :value="price">

@@ -1,7 +1,7 @@
 <script setup>
-import {translate} from "@/utils/i18n.js";
-import ItemImage from "@/components/sprite/ItemImage.vue";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import {translate} from "/src/utils/i18n.js";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {operatorTable} from '/src/utils/gameData.js'
 
 

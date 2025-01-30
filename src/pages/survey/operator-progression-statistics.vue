@@ -8,8 +8,8 @@ import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorDataApi from "/src/api/operatorData";
 
 import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
-import {debounce} from "@/utils/debounce.js";
-import OperatorStatisticsDetail from "@/components/survey/OperatorStatisticsDetail.vue";
+import {debounce} from "/src/utils/debounce.js";
+import OperatorStatisticsDetail from "/src/components/survey/OperatorStatisticsDetail.vue";
 
 
 let operatorsStatisticsList = ref([]);

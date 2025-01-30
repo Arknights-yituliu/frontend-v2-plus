@@ -1,6 +1,4 @@
 @media screen and (max-width: 600px) {
-
-
   .operator-info-bar {
     width: 98%;
 
@@ -21,16 +19,16 @@
     .bar-operator-skill-item {
       width: 44px;
       height: 44px;
+    }
 
-      .skill-name {
-        font-size: 8px;
-      }
+    .skill-name {
+      font-size: 8px;
+    }
 
-      .operator-skill-rank-icon {
-        left: -2px;
-        top: -2px;
-        width: 14px;
-      }
+    .operator-skill-rank-icon {
+      left: -2px;
+      top: -2px;
+      width: 14px;
     }
 
     .operator-equip-group {
@@ -39,15 +37,14 @@
     }
 
 
-    .bar-operator-equip {
+    .operator-equip {
       width: 32px;
       height: 32px;
+    }
 
-      .bar-equip-icon-image {
-        width: 28px;
-        height: 28px;
-      }
-
+    .equip-icon {
+      width: 28px;
+      height: 28px;
     }
 
     .bar-equip-rank-icon {
@@ -57,7 +54,7 @@
       width: 14px;
     }
 
-    .bar-equip-name {
+    .equip-name {
       font-size: 8px;
     }
 

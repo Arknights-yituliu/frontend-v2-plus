@@ -49,9 +49,9 @@
 <script setup>
 
 import {ref} from "vue";
-import rogueSeedAPI from "@/api/rogueSeed.js";
-import deepClone from "@/utils/deepClone.js";
-import {cMessage} from "@/utils/message.js";
+import rogueSeedAPI from "/src/api/rogueSeed.js";
+import deepClone from "/src/utils/deepClone.js";
+import {cMessage} from "/src/utils/message.js";
 
 const teams = ["不限分队", "因地制宜", "魂灵护送", "博闻广记", "蓝图测绘", "指挥分队", "集群分队",
   "后勤分队", "矛头分队", "近锋分队", "重辅分队", "狙医分队", "术特分队", "高规格", "点刺成锭", "拟态学者", "异想天开", "专业人士"] // 编队选项

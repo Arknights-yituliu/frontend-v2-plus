@@ -1,6 +1,6 @@
 <script setup>
-import '/src/assets/css/doc.scss'
-import {copyTextToClipboard} from "@/utils/copyText.js";
+import '/src/assets/css/doc/doc.scss'
+import {copyTextToClipboard} from "/src/utils/copyText.js";
 </script>
 <template>
   <v-container class="doc-page">

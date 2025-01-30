@@ -6,7 +6,7 @@
 import {defineProps, onMounted, watch} from 'vue';
 import term_description from '/src/static/json/build/term_description.json';
 import {ElNotification} from "element-plus";
-import {htmlStringToVNode} from "@/utils/format.js";
+import {htmlStringToVNode} from "/src/utils/format.js";
 
 const props = defineProps({
   operatorList: {

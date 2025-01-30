@@ -1,9 +1,9 @@
 import { ref } from 'vue'
-import materialAPI from "@/api/material"; // 材料字典
-import surveyAPI from "@/api/operatorData"; // 练度调查结果
+import materialAPI from "/src/api/material"; // 材料字典
+import surveyAPI from "/src/api/operatorData"; // 练度调查结果
 import {operatorTable} from "/src/utils/gameData.js";
-import operatorMaterialJSON from "@/static/json/operator/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
-import professionDictJSON from "@/static/json/operator/profession_dict"; // 职业字典JSON
+import operatorMaterialJSON from "/src/static/json/operator/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
+import professionDictJSON from "/src/static/json/operator/profession_dict"; // 职业字典JSON
 import { operatorInit } from './formatOperatorData'
 import {getStageConfig} from '/src/utils/user/userConfig.js'
 // 获取材料字典

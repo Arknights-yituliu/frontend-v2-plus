@@ -1,4 +1,4 @@
-import deepClone from "@/utils/deepClone.js";
+import deepClone from "/src/utils/deepClone.js";
 
 
 const operatorCalculatorResult = {

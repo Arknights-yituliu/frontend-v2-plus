@@ -9,7 +9,7 @@
     <div v-show="userInfo.status>0">
       <v-menu>
         <template v-slot:activator="{ props }">
-          <OperatorAvatar :char-id="userInfo.avatar" size="44" mobile-size="44" style="background-color: white"
+          <OperatorAvatar :char-id="userInfo.avatar" size="44" mobile-size="44"
                           rounded v-bind="props">
           </OperatorAvatar>
           <!--        <v-btn  ></v-btn>-->
@@ -53,18 +53,10 @@
 </template>
 
 <script setup>
-import "/src/assets/css/survey/common.scss"
-import "/src/assets/css/survey/common.phone.scss"
-
-import "/src/assets/css/survey/survey_index.css";
-import "/src/assets/css/survey/login.scss"
-import "/src/assets/css/survey/login.phone.scss"
-
-import "/src/assets/css/survey/survey_nav.css";
 import {onMounted, ref, watch} from "vue";
 import {getUserInfo, userInfo} from "/src/utils/user/userInfo.js";
 import {useRoute, useRouter} from "vue-router";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 
 const router = useRouter();
 

@@ -80,7 +80,7 @@ export const documentProps = {
 </template>
 
 <script setup>
-import { usePageContext } from "@/renderer/usePageContext";
+import { usePageContext } from "/src/renderer/usePageContext";
 import { ref } from "vue";
 
 const pageContext = usePageContext();

@@ -36,9 +36,9 @@ for (const label in operatorFilterConditionTable) {
 
 }
 
-import ItemImage from "@/components/sprite/ItemImage.vue";
-import BuildingFactory from "@/components/tools/BuildingFactory.vue";
-import deepClone from "@/utils/deepClone.js";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
+import BuildingFactory from "/src/components/tools/BuildingFactory.vue";
+import deepClone from "/src/utils/deepClone.js";
 
 let operatorOwnMap = new Map()
 

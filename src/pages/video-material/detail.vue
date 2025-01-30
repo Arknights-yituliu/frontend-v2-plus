@@ -52,7 +52,6 @@
 </template>
 
 <script setup>
-import "/src/assets/css/stageDetail.css";
 import stageApi from "/src/api/material";
 import {onMounted, ref} from "vue";
 import {cMessage} from '/src/utils/message'
@@ -217,3 +216,42 @@ onMounted(() => {
 
 
 </script>
+
+
+<style>
+.stage_detail_page {
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+
+}
+
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+.pieChartBlock {
+  width: 500px;
+  height: 500px;
+}
+
+.stage_type{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+.zone_table{
+  padding: 1px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+</style>

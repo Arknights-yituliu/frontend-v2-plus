@@ -2,10 +2,9 @@
 import {onMounted, ref, watch} from "vue";
 import {cMessage} from "/src/utils/message";
 import surveyApi from "/src/api/userInfo"
-import "/src/assets/css/survey/home.scss";
-import "/src/assets/css/survey/home.phone.scss";
+import "/src/assets/css/account/home.scss";
 import {userInfo} from '/src/utils/user/userInfo.js'
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {operatorTable} from '/src/utils/gameData.js'
 
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;

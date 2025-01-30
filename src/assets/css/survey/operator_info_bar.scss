@@ -2,48 +2,66 @@
   display: flex;
   align-items: center;
   width: 500px;
-  box-shadow: 0px 0px 2px 1px var(--c-box-shadow-color);
+
+  .operator-info {
+    width: 80px;
+    height: 44px;
+    position: relative;
+    //border: 1px solid red;
+  }
+
+  .operator-name {
+    font-size: 12px;
+    position: absolute;
+    top: 0;
+    left: 4px;
+  }
 
   .operator-elite-image {
-    width: 28px;
-    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+    width: 24px;
+    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100));
+    position: absolute;
+    top: 22px;
+    left: 4px;
   }
 
   .operator-level-image {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     color: white;
     background: url("/image/survey/rank/lv-bg.png");
-    background-size: 28px;
-    font-size: 12px;
-    line-height: 12px;
+    background-size: 24px;
+    font-size: 10px;
+    line-height:8px;
     padding-top: 14px;
     box-sizing: border-box;
     text-align: center;
+    position: absolute;
+    top: 20px;
+    left: 32px;
   }
 
   .bar-operator-skill-item {
     position: relative;
     text-align: center;
-    margin: 0 8px;
-
+    margin: 0 4px;
     width: 40px;
-    height: 54px;
+    height: 40px;
     overflow: hidden;
+  }
 
-    .skill-name {
-      text-align: center;
-      font-size: 10px;
-      line-height: 12px;
-    }
+  .skill-name {
+    text-align: center;
+    font-size: 10px;
+    line-height: 12px;
+  }
 
-    .operator-skill-rank-icon {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 16px;
-      box-shadow: 1px 1px 2px white;
-    }
+  .operator-skill-rank-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16px;
+    box-shadow: 1px 1px 2px white;
   }
 
   .operator-equip-group {
@@ -52,33 +70,31 @@
   }
 
 
-
-  .bar-operator-equip {
+  .operator-equip {
     width: 40px;
     height: 40px;
     position: relative;
     padding-top: 4px;
-
-    .bar-equip-icon-image {
-      height: 40px;
-      width: 40px;
-      display: block;
-      margin: auto;
-      filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
-    }
   }
 
-  .bar-equip-rank-icon{
+  .equip-icon {
+    height: 32px;
+    width: 32px;
+    display: block;
+    margin: auto;
+    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+  }
+
+  .bar-equip-rank-icon {
     position: absolute;
     left: 0;
     top: 0;
     width: 18px;
   }
 
-  .bar-equip-name {
+  .equip-name {
     text-align: center;
-    font-size: 12px;
-    line-height: 18px;
+    font-size: 10px;
   }
 
   .operator-ap-cost {

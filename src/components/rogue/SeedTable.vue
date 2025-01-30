@@ -2,13 +2,13 @@
 import rogueSeedAPI from "/src/api/rogueSeed.js";
 import {onMounted, ref, watch} from "vue";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
-import {cMessage} from "@/utils/message.js";
+import {cMessage} from "/src/utils/message.js";
 import userActionOnSeedDB from "/src/utils/indexedDB/userActionOnSeed.js";
 import userActionOnSeed from "/src/utils/indexedDB/userActionOnSeed.js";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {useDisplay} from "vuetify";
-import {getUid} from "@/utils/user/userInfo.js";
-import {stringToArray} from "@/utils/stringUtils.js";
+import {getUid} from "/src/utils/user/userInfo.js";
+import {stringToArray} from "/src/utils/stringUtils.js";
 
 const {mobile} = useDisplay()
 

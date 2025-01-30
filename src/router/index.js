@@ -1,8 +1,8 @@
 import {createRouter, createWebHistory} from "vue-router";
 import {routes} from "./routes.js";
 import toolApi from "../api/tool.js";
-import {getUserInfo} from "@/utils/user/userInfo.js";
-import {cMessage} from "@/utils/message.js";
+import {getUserInfo} from "/src/utils/user/userInfo.js";
+import {cMessage} from "/src/utils/message.js";
 
 const router = createRouter({
     history: createWebHistory(),

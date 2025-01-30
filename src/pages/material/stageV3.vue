@@ -13,9 +13,9 @@ import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activi
 import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
-import StageLegend from "@/components/material/StageLegend.vue";
-import StageDetailTable from "@/components/material/StageDetailTable.vue";
-import OrundumTable from "@/components/material/OrundumTable.vue";
+import StageLegend from "/src/components/material/StageLegend.vue";
+import StageDetailTable from "/src/components/material/StageDetailTable.vue";
+import OrundumTable from "/src/components/material/OrundumTable.vue";
 import {useDisplay} from "vuetify";
 const {mobile} = useDisplay()
 // import {getButtonSize} from '/src/plugins/vuetify/getDisplaySize'
