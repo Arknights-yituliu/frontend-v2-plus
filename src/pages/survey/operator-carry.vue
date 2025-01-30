@@ -195,9 +195,7 @@ onMounted(() => {
       >
         <v-expansion-panel-text>
         <p class="font-bold m-12-0">Q：这个问卷是干什么的</p>
-        <p>A：用于收集博士心目中的最强开荒队伍</p>
-        <p class="font-bold m-12-0">Q：填写要求</p>
-        <p>A：提交的干员数量至少6位，至多可填12位</p>
+        <p>A：用于收集博士心目中的最强队伍</p>
         <p class="font-bold m-12-0">Q：可以当练卡参考吗</p>
         <p>A：由于提交的博士每个人的玩法有差异，有博士倾向日常挂机，也有博士倾向肉鸽，故本问卷的调查结果仅供参考</p>
         <p class="font-bold m-12-0">Q：如果我想再填一份怎么办</p>
@@ -222,6 +220,7 @@ onMounted(() => {
               未选择
             </div>
           </div>
+          <p style="text-align: center" class="m-8-0" >无须填满12人，填满6人即可提交</p>
           <div class="flex justify-center">
             <v-btn color="primary" text="上传编队" @click="uploadQuestionnaire()"></v-btn>
           </div>

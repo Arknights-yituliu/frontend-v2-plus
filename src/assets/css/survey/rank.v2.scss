@@ -5,130 +5,37 @@
   .v-data-table-header__content {
     font-weight: bold;
   }
-  .rank-card{
-     margin: 12px 0;
+
+  .rank-card {
+    margin: 12px 0;
   }
+
+
+  .display-data {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .display-data:hover {
+    .display-detail-data {
+      display:block;
+    }
+  }
+
+  .display-detail-data {
+    position: absolute;
+    top: -70px;
+    right: 0;
+    display: none;
+    z-index:10;
+  }
+
+
+
+
 }
 
 
-.survey-rank-page {
-  width: 100%;
-  min-height: 100vh;
-  box-sizing: border-box;
-  padding: 2px;
 
-  .control-checkbox {
-    .my-button {
-      margin: 2px;
-    }
-  }
-
-  .control-header {
-    .my-button {
-      margin: 2px 4px;
-    }
-  }
-
-  .rank-table-legend-box {
-    display: flex;
-
-    margin: 12px auto;
-    align-items: center;
-    justify-content: center;
-
-    .rank-table-legend {
-      width: 28px;
-      height: 12px;
-      margin: 0 4px 0 12px;
-    }
-
-    .line-0 {
-      background-color: var(--c-blue-4)
-    }
-
-    .line-1 {
-      background-color: var(--c-purple-4)
-    }
-
-    .line-2 {
-      background-color: var(--c-orange-4)
-    }
-  }
-
-  .rank-table-wrap {
-
-    .rank-table {
-      margin: 0 auto;
-      width: fit-content;
-      overflow: auto;
-      position: relative;
-      height: calc(100vh - 160px);
-      font-size: 14px;
-
-      .operator-name {
-        position: absolute;
-        top: 30px;
-        left: 20px;
-        width: 120px;
-        padding: 4px 12px;
-        font-weight: bolder;
-        text-align: right;
-        background-image: linear-gradient(to right, rgba(255, 111, 62, 0.1), rgba(255, 111, 62));
-      }
-
-      .rank-table-line {
-        display: flex;
-        border-bottom: 1px solid var(--c-border-color);
-        align-items: end;
-        padding: 12px 12px 2px;
-
-        .rank-table-line-item {
-          width: 90px;
-          box-sizing: border-box;
-          text-align: center;
-          position: relative;
-
-          .rank-table-line-item-text {
-            line-height: 60px;
-          }
-
-        }
-
-        .complete-data {
-          display: none;
-          position: absolute;
-          padding: 12px;
-          z-index: 1;
-          width: 110px;
-          background-color: var(--c-card-background-color);
-        }
-
-        .show-complete-data:hover {
-          cursor: pointer;
-
-          .complete-data {
-            display: block;
-            position: absolute;
-            top: -10px;
-            left: -10px;
-          }
-        }
-
-        .rank-table-line-item-long {
-          width: 160px;
-        }
-      }
-
-
-      // 表头固定吸附
-      .rank-table-line-title {
-        position: sticky;
-        top: 0;
-        background-color: var(--c-card-background-color);
-        z-index: 1;
-      }
-    }
-  }
-}
 
 
