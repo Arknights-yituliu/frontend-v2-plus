@@ -17,6 +17,9 @@ import OperatorStatisticalTable from "/src/components/survey/OperatorStatistical
 import deepClone from "/src/utils/deepClone.js";
 import EquipIcon from "/src/components/EquipIcon.vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
+import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import {formatNumber} from "../../utils/format.js";
+import SkillIcon from "@/components/sprite/SkillIcon.vue";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 
@@ -281,7 +284,12 @@ function getSkillSprite(id) {
 }
 
 
-
+const headers = [
+  {title: '干员',key:"charId"},
+  {title: '推荐技能or模组'},
+  {title: '平均等级'},
+  {title: '三级占比'},
+]
 
 onMounted(() => {
 
@@ -348,37 +356,67 @@ onMounted(() => {
 
 
           <v-tabs-window-item value="干员练度推荐" v-loading>
-            <div class="operator-recommend-popup-container operator-recommend-avatar-variables">
-              <div class="operator-recommend-card-wrap">
-                <div class="operator-recommend-card"
-                     v-for="(recommend,index) in operatorRecommendList" :key="index">
-                  <div class="operator-avatar-wrap">
-                    <div class="operator-avatar">
-                      <div :class="getAvatar(recommend.charId)"></div>
-                    </div>
-                    <span class="operator-name">{{ recommend.name }}</span>
-                  </div>
+            <v-data-table :headers="headers" :items="operatorRecommendList" hide-default-footer
+            items-per-page="-1" class="operator-recommend-table">
+              <template v-slot:item="{ item }">
+                 <tr>
+                   <td>
+                     <OperatorAvatar size="50" mobile-size="50" :border="true" :char-id="item.charId"></OperatorAvatar>
+                   </td>
+                   <td>
+                     <SkillIcon :icon="item.info.iconId" size="40" mobile-size="40" v-show="item.info.type==='skill'">
 
-                  <div class="operator-skill-icon-item"
-                       v-show="recommend.info.type==='skill'">
-                    <div class="operator-skill-icon-sprite">
-                      <div :class="getSkillSprite(recommend.info.iconId)"></div>
-                    </div>
-                    <!--              <div class="skill-name">{{ recommend.info.name }}</div>-->
-                  </div>
-                  <div v-show="recommend.info.type==='equip'" class="operator-equip-image-wrap">
-                    <EquipIcon :icon="recommend.info.iconId" mobile-size="28" size="40"></EquipIcon>
-                    <div class="equip-name">{{ recommend.info.iconId }}</div>
-                  </div>
-
-                  <div class="recommend-text">
-                    {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>
-                    {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}
-                  </div>
-
-                </div>
-              </div>
+                     </SkillIcon>
+                     <div class="operator-equip-group" v-show="item.info.type==='equip'">
+                       <div class="operator-equip">
+                         <EquipIcon :icon="item.info.iconId" mobile-size="22" size="22" class="equip-icon" ></EquipIcon>
+                         <div class="equip-name">{{ item.info.iconId }}</div>
+                       </div>
+                     </div>
+                   </td>
+                   <td>
+                    {{formatNumber(item.avg,2)}}级
+                   </td>
+                   <td>
+                     {{formatNumber(item.ratio*100,2)}}%
+                   </td>
+                 </tr>
+              </template>
+            </v-data-table>
+            <div v-for="(recommend,index) in operatorRecommendList" :key="index">
+                {{recommend}}
             </div>
+<!--            <div class="operator-recommend-popup-container operator-recommend-avatar-variables">-->
+<!--              <div class="operator-recommend-card-wrap">-->
+<!--                <div class="operator-recommend-card"-->
+<!--                     v-for="(recommend,index) in operatorRecommendList" :key="index">-->
+<!--                  <div class="operator-avatar-wrap">-->
+<!--                    <div class="operator-avatar">-->
+<!--                      <div :class="getAvatar(recommend.charId)"></div>-->
+<!--                    </div>-->
+<!--                    <span class="operator-name">{{ recommend.name }}</span>-->
+<!--                  </div>-->
+
+<!--                  <div class="operator-skill-icon-item"-->
+<!--                       v-show="recommend.info.type==='skill'">-->
+<!--                    <div class="operator-skill-icon-sprite">-->
+<!--                      <div :class="getSkillSprite(recommend.info.iconId)"></div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash;              <div class="skill-name">{{ recommend.info.name }}</div>&ndash;&gt;-->
+<!--                  </div>-->
+<!--                  <div v-show="recommend.info.type==='equip'" class="operator-equip-image-wrap">-->
+<!--                    <EquipIcon :icon="recommend.info.iconId" mobile-size="28" size="40"></EquipIcon>-->
+<!--                    <div class="equip-name">{{ recommend.info.iconId }}</div>-->
+<!--                  </div>-->
+
+<!--                  <div class="recommend-text">-->
+<!--                    {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>-->
+<!--                    {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}-->
+<!--                  </div>-->
+
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
           </v-tabs-window-item>
         </v-tabs-window>
 

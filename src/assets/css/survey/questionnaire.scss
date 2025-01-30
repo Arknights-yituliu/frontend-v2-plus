@@ -125,5 +125,15 @@
       margin: 12px 4px;
       background-color: black;
     }
+
+
+    .operator-carry-table{
+      text-align: center;
+      .v-data-table__th{
+        font-size: 12px;
+        padding: 0 4px;
+      }
+    }
+
   }
 }

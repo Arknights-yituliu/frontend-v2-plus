@@ -115,17 +115,19 @@ onMounted(() => {
 
           <v-tabs-window-item value="email">
             <div>邮箱</div>
-            <div class="flex">
+
               <v-text-field
                   v-model="inputContent.email"
                   color="primary"
                   density="compact"
                   variant="outlined"
                   class="m-4"
-              ></v-text-field>
-              <v-btn color="primary" variant="text" text="发送验证码"
-                     @click="sendVerificationCode"></v-btn>
-            </div>
+              >
+                <template v-slot:append>
+                  <v-btn color="primary" variant="text" text="发送验证码"
+                         @click="sendVerificationCode"></v-btn>
+                </template>
+              </v-text-field>
             <div>验证码</div>
             <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
           </v-tabs-window-item>

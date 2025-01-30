@@ -1,7 +1,12 @@
-.operator-info-bar {
-  display: flex;
-  align-items: center;
+.operator-info-card {
   width: 500px;
+  margin: 8px;
+
+  .operator-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+  }
 
   .operator-info {
     width: 80px;

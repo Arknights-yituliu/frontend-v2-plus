@@ -8,6 +8,40 @@
     justify-content: center;
   }
 
+  .operator-recommend-table{
+    .operator-equip-group {
+      width: 40px;
+      height: 40px;
+      background-color: #4A90E2;
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+
+    .operator-equip {
+      width: 36px;
+      height: 36px;
+      position: relative;
+      padding-top: 4px;
+      border-radius: 4px;
+      background-color: var(--c-background-color);
+    }
+
+    .equip-icon {
+      display: block;
+      margin: auto;
+    }
+
+
+    .equip-name {
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      position: absolute;
+      top: 22px;
+    }
+  }
+
   /*干员推荐弹窗卡片样式*/
   .operator-recommend-popup-container {
     padding: 12px;

@@ -239,7 +239,7 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
                  @click="chooseOperator(operator)" >
-              <OperatorAvatar :char-id="operator.charId" size="60" mobile-size="50"></OperatorAvatar>
+              <OperatorAvatar :border="true" :char-id="operator.charId" size="60" mobile-size="50"></OperatorAvatar>
               <div :class="selectedOperatorClass(operator.charId)" >
 
               </div>
@@ -261,14 +261,17 @@ onMounted(() => {
             :headers="headers"
             :items="operatorCarryResult"
             hide-default-footer
-            items-per-page="-1">
+            items-per-page="-1"
+            class="operator-carry-table">
           <template v-slot:item="{item,index}">
             <tr>
               <td>{{ index + 1 }}</td>
               <td>
-                <OperatorAvatar :char-id="item.charId"></OperatorAvatar>
+                <OperatorAvatar :border="true" :char-id="item.charId"></OperatorAvatar>
               </td>
-              <td>{{item.carryCount}}</td>
+              <td>
+                {{item.carryCount}}
+              </td>
               <td>{{ formatNumber(item.carryRate * 100, 2) }}%</td>
               <td>{{ formatNumber(item.own * 100, 2) }}%</td>
             </tr>

@@ -1,24 +1,42 @@
 @media screen and (max-width: 600px) {
-  .operator-info-bar {
-    width: 98%;
+  .operator-info-card {
+    width:100%;
+    margin: 4px 0;
 
-    .operator-level-image {
-      width: 20px;
-      height: 20px;
-      background-size: 20px;
+    .operator-info {
+      width: 50px;
+      height: 32px;
+      position: relative;
+      //border: 1px solid red;
+    }
+
+    .operator-name {
       font-size: 8px;
-      line-height: 8px;
-      padding-top: 10px;
-      overflow: hidden;
+      position: absolute;
+      left: 0;
     }
 
     .operator-elite-image {
-      width: 20px;
+      width: 18px;
+      top: 14px;
+      left: 0;
     }
 
+    .operator-level-image {
+      width: 16px;
+      height: 16px;
+      background-size: 16px;
+      font-size: 8px;
+      padding-top: 6px;
+      top: 14px;
+      left: 28px;
+    }
+
+
     .bar-operator-skill-item {
-      width: 44px;
-      height: 44px;
+      width: 30px;
+      height: 30px;
+      margin: 0 2px;
     }
 
     .skill-name {
@@ -26,36 +44,39 @@
     }
 
     .operator-skill-rank-icon {
+      left: -1px;
+      top: -1px;
+      width: 14px;
+    }
+
+    .operator-equip-group {
+      width: 30px;
+      height: 30px;
+      margin: 0 2px;
+      padding: 1px;
+
+    }
+
+
+    .operator-equip {
+      width: 28px;
+      height: 28px;
+    }
+
+    .equip-icon {
+      left: 5px;
+    }
+
+    .equip-rank-icon {
+      position: absolute;
       left: -2px;
       top: -2px;
       width: 14px;
     }
 
-    .operator-equip-group {
-      width: 40px;
-      position: relative;
-    }
-
-
-    .operator-equip {
-      width: 32px;
-      height: 32px;
-    }
-
-    .equip-icon {
-      width: 28px;
-      height: 28px;
-    }
-
-    .equip-rank-icon {
-      position: absolute;
-      left: 2px;
-      top: 2px;
-      width: 14px;
-    }
-
     .equip-name {
       font-size: 8px;
+      top: 16px;
     }
 
     .operator-rank-icon {

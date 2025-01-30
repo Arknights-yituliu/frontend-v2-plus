@@ -43,9 +43,17 @@ function calculatedSize() {
 
 
   if (props.border) {
-    size -= 4
-    borderStyle.value = 'background: linear-gradient(45deg, #FF5722, #FDD835);border-radius: 4px;padding:2px'
+
+    borderStyle.value = `width:${size}px;height: ${size}px;background: linear-gradient(45deg, #FF5722, #FDD835);border-radius: 4px;`
     wrapStyle.value += `border-radius:4px;`
+  }
+
+  if (innerWidth < 600) {
+    size -= 2
+    borderStyle.value +=`padding:1px;`
+  }else {
+    size -= 4
+    borderStyle.value +=`padding:2px;`
   }
 
   wrapStyle.value += `overflow: hidden;background-color:var(--c-background-color);position: relative;width: ${size}px;height: ${size}px;`

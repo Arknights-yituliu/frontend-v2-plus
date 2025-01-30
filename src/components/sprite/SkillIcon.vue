@@ -36,20 +36,30 @@ function calculatedSize() {
 
   let size = props.size;
 
+
   if (innerWidth < 600) {
     size = props.mobileSize;
+
   }
 
   if (props.border) {
-    borderStyle.value = `background: rgb(33, 150, 243);border-radius: 4px;padding:2px`
+    borderStyle.value = `width: ${size}px;height: ${size}px;background: rgb(33, 150, 243);border-radius: 4px;`
     wrapStyle.value += `border-radius:4px;`
-    size -= 4
+
   }
 
-  wrapStyle.value += `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
+  if (innerWidth < 600) {
+    size -= 2
+    borderStyle.value +=`padding:1px;`
+  }else {
+    size -= 4
+    borderStyle.value +=`padding:2px;`
+  }
+
+  wrapStyle.value += `overflow: hidden;position: relative;width: ${size}px;height: ${size}px;`
 
   if (props.rounded) {
-    wrapStyle.value += `;border-radius:60px;`
+    wrapStyle.value += `border-radius:60px;`
   }
 
   spriteStyle = `position: absolute;transform: scale(${size / 128});
