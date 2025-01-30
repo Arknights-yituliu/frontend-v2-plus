@@ -186,7 +186,7 @@ onMounted(() => {
                 <td>{{ item.label }}</td>
                 <td>{{ item.description }}</td>
                 <td>
-                  <v-btn v-show="item.url" color="green" @click="openNewPage(item.label)">点击前往</v-btn>
+                  <v-btn v-show="item.url" color="green" @click="openNewPage(item.url)">点击前往</v-btn>
                 </td>
               </tr>
               </tbody>
