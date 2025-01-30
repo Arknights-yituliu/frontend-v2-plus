@@ -1,6 +1,5 @@
 import OperatorTable from '/src/static/json/game-data/operator_table.json'
 import SkillTable from '/src/static/json/game-data/skill_table.json'
-import skillIcon from "/src/components/sprite/SkillIcon.vue";
 
 let operatorList = []
 

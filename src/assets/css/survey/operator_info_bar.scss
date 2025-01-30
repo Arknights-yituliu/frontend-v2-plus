@@ -32,7 +32,7 @@
     background: url("/image/survey/rank/lv-bg.png");
     background-size: 24px;
     font-size: 10px;
-    line-height:8px;
+    line-height: 8px;
     padding-top: 14px;
     box-sizing: border-box;
     text-align: center;
@@ -47,8 +47,9 @@
     margin: 0 4px;
     width: 40px;
     height: 40px;
-    overflow: hidden;
+    //overflow: hidden;
   }
+
 
   .skill-name {
     text-align: center;
@@ -58,43 +59,50 @@
 
   .operator-skill-rank-icon {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: -2px;
+    top: -2px;
     width: 16px;
     box-shadow: 1px 1px 2px white;
   }
 
   .operator-equip-group {
     width: 40px;
+    height: 40px;
+    background-color: #4A90E2;
     margin: 0 8px;
+    padding: 2px;
+    border-radius: 4px;
   }
 
 
   .operator-equip {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     position: relative;
     padding-top: 4px;
+    border-radius: 4px;
+    background-color: var(--c-background-color);
   }
 
   .equip-icon {
-    height: 32px;
-    width: 32px;
-    display: block;
-    margin: auto;
-    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+    position: absolute;
+    top: 0;
+    left: 7px;
   }
 
-  .bar-equip-rank-icon {
+  .equip-rank-icon {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: -4px;
+    top: -4px;
     width: 18px;
   }
 
   .equip-name {
+    width: 100%;
     text-align: center;
-    font-size: 10px;
+    font-size: 12px;
+    position: absolute;
+    top: 20px;
   }
 
   .operator-ap-cost {

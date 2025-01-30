@@ -393,39 +393,6 @@ onMounted(() => {
 
       <OperatorBar v-for="(operator, charId) in displayOperatorList"  :operator-info="operator"></OperatorBar>
 
-<!--      <v-card class="operator-card" v-for="(operator, charId) in displayOperatorList" :key="charId"-->
-<!--              @click="updateOperatorPopup(charId)">-->
-<!--        <div class="operator-avatar-wrap">-->
-<!--          <div class="operator-avatar">-->
-<!--            <div :class="getAvatar(operator.charId)"></div>-->
-<!--          </div>-->
-<!--          <span class="operator-name">{{ operator.name }}</span>-->
-<!--        </div>-->
-<!--        <div>-->
-<!--          <img :src="`/image/survey/rank/elite${operator.elite}.png`" class="operator-elite-image" alt="">-->
-<!--          <div class="operator-level-image">-->
-<!--            {{ operator.level }}-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <div class="operator-skill-icon-item" v-for="(skill,index) in operator.skill" :key="index">-->
-<!--          <div class="operator-skill-icon-sprite">-->
-<!--            <div :class="getSkillSprite(skill.iconId)"></div>-->
-<!--            <img :src="`/image/survey/skill-rank-${operator[`skill${index+1}`]}-v1.jpg`"-->
-<!--                 v-show="operator[`skill${index+1}`]>0" class="operator-skill-rank" alt="">-->
-<!--          </div>-->
-<!--          &lt;!&ndash;          <div class="skill-name">{{ skill.name }}</div>&ndash;&gt;-->
-<!--        </div>-->
-
-<!--        <div class="operator-equip-image-wrap" v-for="(equip,index) in operator.equip" :key="index">-->
-<!--          <div class="operator-skill-icon-sprite">-->
-<!--            <EquipIcon :icon="equip.typeIcon" mobile-size="28" size="40"></EquipIcon>-->
-<!--            <img :src="`/image/survey/mod-rank-${operator[`mod${equip.typeName2}`]}-v1.jpg`"-->
-<!--                 v-show="operator[`mod${equip.typeName2}`]>0" class="operator-skill-rank">-->
-<!--          </div>-->
-<!--          <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>-->
-<!--        </div>-->
-<!--      </v-card>-->
     </div>
     <!-- 数据声明 -->
     <!-- <div class="char_card">此处安放版权声明/开发信息</div> -->

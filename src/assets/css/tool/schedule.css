@@ -92,18 +92,8 @@
 }
 
 
-.schedule-set-card {
-    margin: 4px;
-    border-radius: 4px;
-    box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
-    background-color: var(--c-background-white-transparent);
-}
 
-.schedule-set-card-header {
-    display: block;
-    padding: 8px;
-    border-bottom:1px solid var(--c-border-color);
-}
+
 
 .schedule-set-card-body {
     padding: 4px;
@@ -133,19 +123,12 @@
 .room-wrap {
     display: flex;
     flex-wrap: wrap;
-    
+
     margin: auto;
     justify-content: center;
 }
 
-.room-arrow-wrap {
-    width: 50px;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    justify-content: center;
-    color: var(--c-schedule-arrow-color);
-}
+
 
 
 .room-wrap-left {
