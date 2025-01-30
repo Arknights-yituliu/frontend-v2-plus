@@ -29,21 +29,23 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
       </div>
 
       <div class="bar-operator-skill-item" v-for="(skill,index) in operatorInfo.skill" :key="index">
-        <SkillIcon size="40" mobile-size="44" :icon="`${skill.iconId}`"></SkillIcon>
+        <SkillIcon size="40" mobile-size="44" :border="true" :icon="`${skill.iconId}`"></SkillIcon>
         <img :src="`/image/survey/skill-rank-${operatorInfo[`skill${index+1}`]}-v1.jpg`"
-             v-show="operatorInfo[`skill${index+1}`]>0" class="operator-skill-rank" alt="">
+             v-show="operatorInfo[`skill${index+1}`]>0"
+             class="operator-skill-rank-icon" >
       </div>
 
       <div class="operator-equip-group" v-for="(equip,index) in operatorInfo.equip" :key="index">
         <div class="operator-equip">
-          <EquipIcon :icon="equip.typeIcon" mobile-size="28" size="32" class="m-0-4"></EquipIcon>
+          <EquipIcon :icon="equip.typeIcon" mobile-size="28" size="24" class="equip-icon" ></EquipIcon>
           <img :src="`/image/survey/mod-rank-${operatorInfo[`mod${equip.typeName2}`]}-v1.jpg`"
-               v-show="operatorInfo[`mod${equip.typeName2}`]>0" class="bar-equip-rank-icon" alt="">
+               v-show="operatorInfo[`mod${equip.typeName2}`]>0" class="equip-rank-icon" alt="">
+          <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
         </div>
-        <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>
+
       </div>
 
-      <div>
+      <div v-show="operatorInfo.apCost">
         <ItemImage item-id="AP_GAMEPLAY" mobile-size="28"></ItemImage>
         <div class="operator-ap-cost">{{ formatNumber(operatorInfo.apCost) }}</div>
       </div>

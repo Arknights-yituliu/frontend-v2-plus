@@ -1,6 +1,6 @@
 <script setup>
 
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce.js";
 
 
@@ -24,8 +24,8 @@ const props = defineProps({
 
 });
 
-let wrapStyle = ''
-let spriteStyle = ''
+let wrapStyle = ref('')
+let spriteStyle = ref('')
 
 function calculatedSize() {
   const innerWidth = window.innerWidth;

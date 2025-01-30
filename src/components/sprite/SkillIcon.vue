@@ -1,6 +1,6 @@
 <script setup>
 
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce.js";
 
 
@@ -10,6 +10,10 @@ const props = defineProps({
     default: ""
   },
   rounded: {
+    type: Boolean,
+    default: false
+  },
+  border: {
     type: Boolean,
     default: false
   },
@@ -23,8 +27,9 @@ const props = defineProps({
   }
 });
 
-let wrapStyle = ''
-let spriteStyle = ''
+let wrapStyle = ref('')
+let spriteStyle = ref('')
+let borderStyle = ref('')
 
 function calculatedSize() {
   const innerWidth = window.innerWidth;
@@ -35,10 +40,16 @@ function calculatedSize() {
     size = props.mobileSize;
   }
 
+  if (props.border) {
+    borderStyle.value = `background: rgb(33, 150, 243);border-radius: 4px;padding:2px`
+    wrapStyle.value += `border-radius:4px;`
+    size -= 4
+  }
 
-  wrapStyle = `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
+  wrapStyle.value += `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
+
   if (props.rounded) {
-    wrapStyle += `;border-radius:60px;`
+    wrapStyle.value += `;border-radius:60px;`
   }
 
   spriteStyle = `position: absolute;transform: scale(${size / 128});
@@ -49,18 +60,16 @@ function calculatedSize() {
 
 calculatedSize()
 
-onMounted(() => {
-  window.addEventListener('resize', debounce(calculatedSize));
-})
+window.addEventListener('resize', debounce(calculatedSize));
 
 
 </script>
 
 <template>
-
-  <div :style="wrapStyle">
-    <div :style="spriteStyle" :class="`bg-skill_icon_${icon}`">
+  <div :style="borderStyle">
+    <div :style="wrapStyle">
+      <div :style="spriteStyle" :class="`bg-skill_icon_${icon}`">
+      </div>
     </div>
   </div>
-
 </template>
