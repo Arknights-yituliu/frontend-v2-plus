@@ -150,11 +150,11 @@ let scheduleOptions = [
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2024/02/15 23:59:59').getTime(),]
   },
   {
-    name: '6周年',
+    name: '6周年(05.11)',
     start: new Date('2025/05/01 16:00:00'),
     end: new Date('2025/05/15 04:01:00'),
     activityType: '周年限定',
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true,
     historicalPackTimeRange: [new Date('2024/04/26 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
   },
