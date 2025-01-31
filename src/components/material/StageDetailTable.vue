@@ -35,7 +35,8 @@ function replaceZoneName(str) {
         v-model:sort-by="sortBy"
         :headers="headers"
         :items="props.modelValue"
-        density="compact">
+        density="compact"
+        class="v-mobile-table freeze-first-column">
       <template v-slot:item.stageCode="{ item }">
         {{ replaceZoneName(item.stageCode) }}
       </template>

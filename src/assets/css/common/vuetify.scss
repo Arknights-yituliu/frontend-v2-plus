@@ -1,0 +1,35 @@
+
+@media screen and (max-width: 600px){
+  .v-mobile-table{
+
+    td{
+      font-size: 12px;
+      padding: 0 8px !important;
+      white-space: nowrap;
+    }
+
+    .v-data-table__th{
+      font-size: 12px;
+      padding: 0 4px !important;
+      white-space: nowrap;
+      text-align: center;
+    }
+  }
+
+  .freeze-first-column{
+    td:first-child{
+      background: rgb(var(--v-theme-surface));
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+
+    th:first-child{
+      background: rgb(var(--v-theme-surface));
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+
+  }
+}

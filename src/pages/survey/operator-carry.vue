@@ -262,7 +262,7 @@ onMounted(() => {
             :items="operatorCarryResult"
             hide-default-footer
             items-per-page="-1"
-            class="operator-carry-table">
+            class="v-mobile-table">
           <template v-slot:item="{item,index}">
             <tr>
               <td>{{ index + 1 }}</td>

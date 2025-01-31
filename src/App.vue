@@ -14,6 +14,7 @@ import '/src/assets/css/common/popover.scss'
 import '/src/assets/css/common/icon.scss'
 
 import '/src/assets/css/common/app.scss'
+import '/src/assets/css/common/vuetify.scss'
 import '/src/assets/css/layout/basic.scss'
 import '/src/assets/css/common/theme.scss'
 import '/src/assets/css/common/atomic.scss'

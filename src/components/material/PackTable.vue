@@ -97,7 +97,7 @@ hiddenKernel()
         :search="search"
         hide-default-footer
         items-per-page="-1"
-        class="no-wrap"
+        class="v-mobile-table freeze-first-column"
     >
       <template v-slot:item="{ item }">
         <tr>
