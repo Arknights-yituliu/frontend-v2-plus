@@ -383,40 +383,7 @@ onMounted(() => {
                  </tr>
               </template>
             </v-data-table>
-            <div v-for="(recommend,index) in operatorRecommendList" :key="index">
-                {{recommend}}
-            </div>
-<!--            <div class="operator-recommend-popup-container operator-recommend-avatar-variables">-->
-<!--              <div class="operator-recommend-card-wrap">-->
-<!--                <div class="operator-recommend-card"-->
-<!--                     v-for="(recommend,index) in operatorRecommendList" :key="index">-->
-<!--                  <div class="operator-avatar-wrap">-->
-<!--                    <div class="operator-avatar">-->
-<!--                      <div :class="getAvatar(recommend.charId)"></div>-->
-<!--                    </div>-->
-<!--                    <span class="operator-name">{{ recommend.name }}</span>-->
-<!--                  </div>-->
 
-<!--                  <div class="operator-skill-icon-item"-->
-<!--                       v-show="recommend.info.type==='skill'">-->
-<!--                    <div class="operator-skill-icon-sprite">-->
-<!--                      <div :class="getSkillSprite(recommend.info.iconId)"></div>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash;              <div class="skill-name">{{ recommend.info.name }}</div>&ndash;&gt;-->
-<!--                  </div>-->
-<!--                  <div v-show="recommend.info.type==='equip'" class="operator-equip-image-wrap">-->
-<!--                    <EquipIcon :icon="recommend.info.iconId" mobile-size="28" size="40"></EquipIcon>-->
-<!--                    <div class="equip-name">{{ recommend.info.iconId }}</div>-->
-<!--                  </div>-->
-
-<!--                  <div class="recommend-text">-->
-<!--                    {{ `平均等级为${recommend.avg.toFixed(2)}级` }} <br>-->
-<!--                    {{ `3级占比为${(recommend.ratio * 100).toFixed(2)}%` }}-->
-<!--                  </div>-->
-
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
           </v-tabs-window-item>
         </v-tabs-window>
 

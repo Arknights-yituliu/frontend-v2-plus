@@ -1,3 +1,15 @@
+<script setup>
+import developmentRelated from "/src/static/json/about/developmentRelated.json";
+import informationRelease from "/src/static/json/about/informationRelease.json";
+import developmentChat from "/src/static/json/about/developmentChat.json";
+
+import DevCard from "/src/components/DevCard.vue";
+
+function openNewPage() {
+  window.open(`https://docs.qq.com/sheet/DRVJ6UlBDb3NWYmxF?tab=hlop1l`)
+}
+
+</script>
 <template>
   <div class="donate_page">
     <div>
@@ -6,30 +18,26 @@
         感谢每一位捐助者的支持。
       </div>
     </div>
-    <!--    <div class="donate_image_wrap">-->
-    <!--      <div class="donate_card">-->
-    <!--        <img class="donate_image" src="/image/website/zfb.png" alt="" />-->
-    <!--        <div class="donate_image_desc">支付宝</div>-->
-    <!--      </div>-->
-    <!--      <div class="donate_card">-->
-    <!--        <img class="donate_image" src="/image/website/wx.png" alt="1" />-->
-    <!--        <div class="donate_image_desc">微信</div>-->
-    <!--      </div>-->
-    <!--    </div>-->
-
-
-    <div>
-      <div class="donate_bill">
-        <a class="href" href="https://docs.qq.com/sheet/DRVJ6UlBDb3NWYmxF?tab=hlop1l">
-          <div class="">
-            查看收支一览
-            <el-icon :size="24">
-              <Link class="donate_bill_icon"/>
-            </el-icon>
-          </div>
-        </a>
+    <div class="flex flex-wrap justify-center">
+      <div class="m-12">
+        <img class="donate-image" src="/image/website/zfb-1.png" alt=""/>
+        <div class="donate-image-label">支付宝</div>
+      </div>
+      <div class="m-12">
+        <img class="donate-image" src="/image/website/wx-1.png" alt="1"/>
+        <div class="donate-image-label">微信</div>
       </div>
     </div>
+
+
+    <div class="flex justify-center">
+      <v-btn @click="openNewPage()" text=" 查看收支一览" color="primary">
+        <template v-slot:prepend>
+          <v-icon icon="mdi-link"></v-icon>
+        </template>
+      </v-btn>
+    </div>
+
 
     <div>
       <div class="donate_content">
@@ -69,6 +77,16 @@
   padding: 10px;
 }
 
+.donate-image {
+  width: 240px;
+  display: block;
+}
+
+.donate-image-label {
+  font-size: 20px;
+  text-align: center;
+}
+
 .donate_content {
   width: 96%;
   margin: auto;
@@ -106,10 +124,3 @@
 }
 
 </style>
-<script setup>
-import developmentRelated from "/src/static/json/about/developmentRelated.json";
-import informationRelease from "/src/static/json/about/informationRelease.json";
-import developmentChat from "/src/static/json/about/developmentChat.json";
-
-import DevCard from "/src/components/DevCard.vue";
-</script>

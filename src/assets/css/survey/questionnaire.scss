@@ -102,10 +102,11 @@
 
     .cancel-icon {
       width: 16px;
+      height: 16px;
       position: absolute;
       top: -2px;
       left: 32px;
-
+      z-index: 1;
     }
 
     .operator-option {
