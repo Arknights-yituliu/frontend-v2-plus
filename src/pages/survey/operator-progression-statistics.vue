@@ -3,10 +3,9 @@ import "/src/assets/css/survey/rank.v2.scss";
 import "/src/assets/css/survey/rank.phone.scss";
 import {onMounted, ref} from "vue";
 import {operatorTable} from "/src/utils/gameData.js";
-
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorDataApi from "/src/api/operatorData";
-
+import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
 import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
 import {debounce} from "/src/utils/debounce.js";
 import OperatorStatisticsDetail from "/src/components/survey/OperatorStatisticsDetail.vue";
@@ -54,41 +53,42 @@ for (const item of headers2) {
 }
 
 
-function getCharStatisticsResult() {
-  operatorDataApi.getOperatorStatisticsResult().then((response) => {
-    let {result, userCount, updateTime} = response.data
-    for (const item of result) {
-      let charInfo = operatorTable[item.charId]
-      if (charInfo) {
-        item.name = charInfo.name
-        item.rarity = charInfo.rarity
-        item.profession = charInfo.profession
-        item.itemObtainApproach = charInfo.itemObtainApproach
-        item.skill = charInfo.skill
-        item.equip = charInfo.equip
-        item.eliteS = item.elite.rank2
-        item.skill1S = item.skill1.rank3
-        item.skill2S = item.skill2.rank3
-        item.skill3S = item.skill3.rank3
-        item.modXS = item.modX.rank3
-        item.modYS = item.modY.rank3
-        item.modDS = item.modD.rank3
-        item.modAS = item.modA.rank3
-        item.available = true
-        item.date = charInfo.date
-      } else {
-        item.available = false
-      }
+async function getCharStatisticsResult() {
+
+  const data = await operatorProgressionStatisticsDataCache.getData();
+
+  let {result, userCount, updateTime} = data
+  userCountText.value = userCount;
+  updateTimeText.value = updateTime;
+  for (const item of result) {
+    let charInfo = operatorTable[item.charId]
+    if (charInfo) {
+      item.name = charInfo.name
+      item.rarity = charInfo.rarity
+      item.profession = charInfo.profession
+      item.itemObtainApproach = charInfo.itemObtainApproach
+      item.skill = charInfo.skill
+      item.equip = charInfo.equip
+      item.eliteS = item.elite.rank2
+      item.skill1S = item.skill1.rank3
+      item.skill2S = item.skill2.rank3
+      item.skill3S = item.skill3.rank3
+      item.modXS = item.modX.rank3
+      item.modYS = item.modY.rank3
+      item.modDS = item.modD.rank3
+      item.modAS = item.modA.rank3
+      item.available = true
+      item.date = charInfo.date
+    } else {
+      item.available = false
     }
-    result = result.filter(e => e.name)
+  }
+  result = result.filter(e => e.name)
 
-    operatorsStatisticsList.value = result
-    displayOperatorsList.value = filterOperatorList(operatorsStatisticsList.value)
+  operatorsStatisticsList.value = result
+  displayOperatorsList.value = filterOperatorList(operatorsStatisticsList.value)
 
-    userCountText.value = userCount;
-    updateTimeText.value = updateTime;
 
-  });
 }
 
 
@@ -110,7 +110,6 @@ function quickSort(arr, compare = (a, b) => a - b) {
 
   return [...quickSort(less, compare), pivot, ...quickSort(greater, compare)];
 }
-
 
 
 // 后端返回的数据为如下格式，下面的部分函数为格式化数据函数
@@ -167,7 +166,7 @@ onMounted(() => {
           hide-default-footer
           items-per-page="-1">
         <template v-slot:item.charId="{ item }">
-          <OperatorAvatar rounded :char-id="item.charId" size="60"></OperatorAvatar>
+          <OperatorAvatar rounded :char-id="item.charId" :size="60"></OperatorAvatar>
         </template>
         <template v-slot:item.own="{ item }">
           {{ formatCellData(item.own) }}
@@ -199,8 +198,8 @@ onMounted(() => {
         <template v-slot:item.modXS="{ item }">
           <div class="display-data">
             {{ formatCellData(item.modXS) }}
-              <OperatorStatisticsDetail :data="item.modX" class="display-detail-data">
-              </OperatorStatisticsDetail>
+            <OperatorStatisticsDetail :data="item.modX" class="display-detail-data">
+            </OperatorStatisticsDetail>
           </div>
         </template>
         <template v-slot:item.modYS="{ item }">

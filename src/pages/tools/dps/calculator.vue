@@ -77,7 +77,7 @@ function isActive(current, value) {
           <v-list-item v-for="(operator,index) in selectedOperator" :key="index">
             <v-list>
               <v-list-item title="头像">
-                <OperatorAvatar :char-id="operator.charId" size="60" class="m-0-8">
+                <OperatorAvatar :char-id="operator.charId" :size="60" :class="m-0-8">
                 </OperatorAvatar>
               </v-list-item>
               <v-list-item title="潜能等级">
@@ -120,7 +120,7 @@ function isActive(current, value) {
             </v-btn>
           </div>
           <div class="flex flex-wrap">
-            <OperatorAvatar v-for="(item,index) in displayOperatorList" :char-id="item.charId" size="50" class="m-4"
+            <OperatorAvatar v-for="(item,index) in displayOperatorList" :char-id="item.charId" :size="50" class="m-4"
                             @click="addOperator(item.charId)"></OperatorAvatar>
           </div>
         </v-card-text>

@@ -361,7 +361,7 @@ onMounted(() => {
               <template v-slot:item="{ item }">
                  <tr>
                    <td>
-                     <OperatorAvatar size="50" mobile-size="50" :border="true" :char-id="item.charId"></OperatorAvatar>
+                     <OperatorAvatar :size="50" :mobile-size="50" :border="true" :char-id="item.charId"></OperatorAvatar>
                    </td>
                    <td>
                      <SkillIcon :icon="item.info.iconId" size="40" mobile-size="40" v-show="item.info.type==='skill'">

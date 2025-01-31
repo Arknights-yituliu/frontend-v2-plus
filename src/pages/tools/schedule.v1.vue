@@ -1144,7 +1144,7 @@ function useNewUI() {
               <div class="flex align-center ">
                 <div class="opacity-70">{{ translate('schedule', 'schedule.RecoveryTarget') }}</div>
                 <div class="spacer-12"></div>
-                <OperatorAvatar size="50" class="shadow-md" @click="openFiammettaDialog(scheduleIndex)"
+                <OperatorAvatar :size="50" class="shadow-md" @click="openFiammettaDialog(scheduleIndex)"
                                 :char-id="getCharId(plansTemplate[scheduleIndex].Fiammetta.target)"></OperatorAvatar>
               </div>
 
@@ -1267,7 +1267,7 @@ function useNewUI() {
             <div class="selected-operator"
                  v-for="(charName, index) in getRoomOperators(selectedScheduleIndex,selectedRoomType, selectedRoomIndex)"
                  :key="index">
-              <OperatorAvatar size="60" mobile-size="32" @click="deleteOperator(charName)"
+              <OperatorAvatar :size="60" :mobile-size="32" @click="deleteOperator(charName)"
                               :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
               <v-icon icon="mdi-close" class="selected-operator-icon-close" @click="deleteOperator(charName)"></v-icon>
             </div>
@@ -1299,7 +1299,7 @@ function useNewUI() {
                    @click="chooseOperator(operator.name)"
                    :text="operator.name" variant="tonal" color="primary" class="m-2">
               <template v-slot:prepend>
-                <OperatorAvatar size="28" mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
+                <OperatorAvatar :size="28" :mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
               </template>
             </v-btn>
           </div>
@@ -1337,7 +1337,7 @@ function useNewUI() {
                  @click="setFiammetta(selectedScheduleIndex,'target', operator.name)"
                  :text="operator.name" variant="tonal" color="primary" class="m-2">
             <template v-slot:prepend>
-              <OperatorAvatar size="28" mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
+              <OperatorAvatar :size="28" :mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
             </template>
           </v-btn>
         </div>

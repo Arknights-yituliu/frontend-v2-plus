@@ -19,7 +19,7 @@ const props = defineProps(["modelValue", 'operatorInfo',]);
 
   <v-card class="operator-info-card">
     <div class="operator-info-bar">
-      <OperatorAvatar size="50" mobile-size="40" :char-id="operatorInfo.charId" class="m-0-4" :border="true"></OperatorAvatar>
+      <OperatorAvatar :size="50" :mobile-size="40" :char-id="operatorInfo.charId" class="m-0-4" :border="true"></OperatorAvatar>
       <div class="operator-info">
         <div class="operator-name">{{ operatorInfo.name }}</div>
         <img :src="`/image/survey/rank/elite${operatorInfo.elite}.png`" class="operator-elite-image" alt="">

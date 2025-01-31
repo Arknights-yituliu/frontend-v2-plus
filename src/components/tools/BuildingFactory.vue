@@ -62,7 +62,7 @@ const translateKey = {
       <OperatorAvatar
           v-for="(name, operatorIndex) in props.operators"
           :key="operatorIndex"
-          :char-id="characterIdAndName[name]" class="m-4" size="44" mobile-size="44">
+          :char-id="characterIdAndName[name]" class="m-4" :size="44" :mobile-size="44">
       </OperatorAvatar>
     </div>
   </div>

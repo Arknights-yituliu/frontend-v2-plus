@@ -9,7 +9,7 @@
     <div v-show="userInfo.status>0">
       <v-menu>
         <template v-slot:activator="{ props }">
-          <OperatorAvatar :char-id="userInfo.avatar" size="44" mobile-size="44"
+          <OperatorAvatar :char-id="userInfo.avatar" :size="44" :mobile-size="44"
                           rounded v-bind="props">
           </OperatorAvatar>
           <!--        <v-btn  ></v-btn>-->

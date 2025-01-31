@@ -212,7 +212,7 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, index) of operatorTeam" :key="index" class="operator-team-item"
                  @click="removeOperator(operator)">
-              <OperatorAvatar :char-id="operator.charId" size="80" mobile-size="44"></OperatorAvatar>
+              <OperatorAvatar :char-id="operator.charId" :size="80" :mobile-size="44"></OperatorAvatar>
               <img src="/image/icon/cancel.png" alt="" class="cancel-icon">
 
             </div>
@@ -239,7 +239,7 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
                  @click="chooseOperator(operator)" >
-              <OperatorAvatar :border="true" :char-id="operator.charId" size="60" mobile-size="50"></OperatorAvatar>
+              <OperatorAvatar :border="true" :char-id="operator.charId" :size="60" :mobile-size="50"></OperatorAvatar>
               <div :class="selectedOperatorClass(operator.charId)" >
 
               </div>

@@ -197,7 +197,7 @@ onMounted(() => {
           <v-list-item>
             <div class="opacity-70 user-card-label">头像</div>
             <div class="m-4 flex align-center user-card-bar justify-between">
-              <OperatorAvatar :char-id="userInfo.avatar" rounded size="50"></OperatorAvatar>
+              <OperatorAvatar :char-id="userInfo.avatar" rounded :size="50"></OperatorAvatar>
               <v-btn color="primary" variant="text" text="修改头像" @click="displayOrUpdateInfo = 'avatar'"></v-btn>
             </div>
           </v-list-item>

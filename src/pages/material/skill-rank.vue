@@ -212,7 +212,7 @@ const data = [
 
   <div style="display: flex;flex-wrap: wrap">
     <div class="operator-114-card" v-for="(item,index) in data" :key="index">
-      <OperatorAvatar style="margin: auto" :char-id="charIdMap.get(item.name)" size="80">
+      <OperatorAvatar style="margin: auto" :char-id="charIdMap.get(item.name)" :size="80">
       </OperatorAvatar>
       {{charIdMap[item.name]}}
       <p><span v-for="(skill,index) in item.skill" :key="index" style="padding: 0 4px">{{skill}}</span></p>
