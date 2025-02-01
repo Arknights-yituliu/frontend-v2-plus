@@ -144,7 +144,7 @@ async function getOperatorCarryStatisticsResult() {
   })
 
 
-  const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatistics');
+  const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatisticsV2');
   let ownMap = new Map()
   for(const item of data.result){
      ownMap.set(item.charId,item.own)
