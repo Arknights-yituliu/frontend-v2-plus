@@ -125,32 +125,36 @@ let carryRateSampleSize = ref('')
 
 
 async function getOperatorCarryStatisticsResult() {
-  const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatistics');
-  questionnaireAPI.getQuestionnaireResult(1).then(response => {
+
+  await questionnaireAPI.getQuestionnaireResult(1).then(response => {
     operatorCarryResult.value = []
     updateTime.value = dateFormat(response.data.updateTime, 'yyyy/MM/dd HH:mm')
     carryRateSampleSize.value = response.data.sampleSize
     const carryRateData = new Map()
-    const carryRateList = response.data.list
-    for (const item of response.data.list) {
-      const {charId, carryRate} = item
-      carryRateData.set(charId, carryRate)
+    let carryRateList = response.data.list
+
+    for (const item of carryRateList) {
+      console.log(item)
+      item.carryCount = formatNumber(carryRateSampleSize.value * item.carryRate, 0)
     }
 
-  console.log( data)
-    for (let item of data.result) {
+    carryRateList.sort((a, b) => b.carryRate - a.carryRate)
+    operatorCarryResult.value = carryRateList
 
-      const carryRate = carryRateData.get(item.charId);
-      if (carryRate) {
-        item.carryRate = carryRate
-        item.carryCount = formatNumber(carryRateSampleSize.value * carryRate, 0)
-        // item.ownCount = formatNumber(item.own * ownSampleSize.value, 0)
-        operatorCarryResult.value.push(item)
-      }
-    }
-
-    operatorCarryResult.value.sort((a, b) => b.carryRate - a.carryRate)
   })
+
+
+  const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatistics');
+  let ownMap = new Map()
+  for(const item of data.result){
+     ownMap.set(item.charId,item.own)
+  }
+
+  for (const item of operatorCarryResult.value) {
+    console.log(item)
+    item.own = ownMap.get(item.charId)
+  }
+
 }
 
 getOperatorCarryStatisticsResult()
