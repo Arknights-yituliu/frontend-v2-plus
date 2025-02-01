@@ -122,23 +122,24 @@ let listOperators = ref([])
 let operatorCarryResult = ref([])
 let updateTime = ref('')
 let carryRateSampleSize = ref('')
-let ownSampleSize = ref('')
 
 
 async function getOperatorCarryStatisticsResult() {
-  const data = await operatorProgressionStatisticsDataCache.getData();
+  const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatistics');
   questionnaireAPI.getQuestionnaireResult(1).then(response => {
     operatorCarryResult.value = []
     updateTime.value = dateFormat(response.data.updateTime, 'yyyy/MM/dd HH:mm')
     carryRateSampleSize.value = response.data.sampleSize
     const carryRateData = new Map()
+    const carryRateList = response.data.list
     for (const item of response.data.list) {
       const {charId, carryRate} = item
       carryRateData.set(charId, carryRate)
     }
 
+  console.log( data)
     for (let item of data.result) {
-      // ownSampleSize.value = data.userCount
+
       const carryRate = carryRateData.get(item.charId);
       if (carryRate) {
         item.carryRate = carryRate

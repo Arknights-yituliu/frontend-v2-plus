@@ -1,35 +1,33 @@
 import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
 import operatorDataAPI from "/src/api/operatorData.js";
-import checkCache from '/src/utils/indexedDB/cacheExpireTime.js'
 
 
-function insert(data) {
-    myDatabase.operator_progression_statistics.put(data)
+function putCache(data) {
+    myDatabase.cache_data.put(data)
 }
 
-async function getData() {
-    let result = await myDatabase.operator_progression_statistics.get("operatorProgressionStatistics");
+async function getData(cacheKey) {
+    let cacheData = await myDatabase.cache_data.get(cacheKey)
 
-    const expireFlag = await checkCache.checkResourceIsExpire("operatorProgressionStatistics", 60 * 60 * 1000);
-
-
-    if (!result || expireFlag) {
-        await operatorDataAPI.getOperatorStatisticsResult().then(response => {
-            insert({result:'operatorProgressionStatistics',data:response.data})
-            checkCache.insert({resource: "operatorProgressionStatistics", version: 11111, createTime: new Date().getTime()})
-
-            result = response.data
-        })
-        console.log("返回服务器的干员练度统计数据")
-        return result
+    if (cacheData&&cacheData.resource.result.length) {
+        if (new Date().getTime() - cacheData.createTime < 60 * 60 * 24 * 7 * 1000) {
+            console.log(cacheKey,'返回缓存的数据')
+            return cacheData.resource
+        }
     }
 
-    console.log("返回缓存的干员练度统计数据")
+    await operatorDataAPI.getOperatorStatisticsResult().then(response => {
+        console.log(cacheKey,'返回来自服务器的数据')
+        const data = response.data
+        const cacheData = {id: cacheKey, resource: data, version: "automated", createTime: new Date().getTime()}
+        putCache(cacheData)
+        console.log(response.data)
+        return data
+    })
 
-    return result.data
 }
 
 
 export default {
-    insert, getData
+   getData
 }

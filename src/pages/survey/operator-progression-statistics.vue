@@ -55,7 +55,7 @@ for (const item of headers2) {
 
 async function getCharStatisticsResult() {
 
-  const data = await operatorProgressionStatisticsDataCache.getData();
+  const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatistics');
 
   let {result, userCount, updateTime} = data
   userCountText.value = userCount;
