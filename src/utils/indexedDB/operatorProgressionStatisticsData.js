@@ -2,9 +2,6 @@ import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
 import operatorDataAPI from "/src/api/operatorData.js";
 import checkCache from '/src/utils/indexedDB/cacheExpireTime.js'
 
-// myDatabase.version(1).stores({
-//     operator_progression_statistics: 'result,data',
-// });
 
 function insert(data) {
     myDatabase.operator_progression_statistics.put(data)

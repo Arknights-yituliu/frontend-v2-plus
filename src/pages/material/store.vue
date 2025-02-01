@@ -23,11 +23,12 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 const stageConfig = getStageConfig()
 
 async function StorePermComputed() {
-  const itemValueList = await itemValueCache.queryByVersion(stageConfig)
+  const itemValueList = await itemValueCache.getCacheByVersion("itemValue",stageConfig)
   let itemValueMap = new Map()
   for (const item of itemValueList) {
     itemValueMap.set(item.itemId, item.itemValueAp)
   }
+
   for (const storeInfo of storeTypeList) {
     const data = STORE_PERM_DATA[storeInfo.typeName]
     for (const item of data) {

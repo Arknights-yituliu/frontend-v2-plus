@@ -2,7 +2,6 @@
 import FixedNav from "/src/components/FixedNav.vue";
 import ModuleHeader from '@/components/ModuleHeader.vue';
 import {ref, onMounted} from "vue";
-import materialAPI from "/src/api/material.js";
 import {exportExcel} from "/src/utils/exportExcel";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
@@ -65,9 +64,9 @@ function formattedItemDisplayList(itemList) {
 
 
 onMounted(() => {
-  const config = getStageConfig()
+  const stageConfig = getStageConfig()
 
-  itemValueCache.queryByVersion().then(response => {
+  itemValueCache.getCacheByVersion("itemValue",stageConfig).then(response => {
     itemValueList.value = response
     let tmpList = []
     for (const item of response) {

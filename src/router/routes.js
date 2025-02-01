@@ -110,6 +110,15 @@ const routes = [
         component: () => import('/src/pages/tools/schedule.v2.vue')
     },
     {
+        path: '/tools/schedule',
+        text: '排班表生成器',
+        name: 'Schedule',
+        display: false,
+        module: 'tools',
+        icon: "mdi-calendar-clock",
+        component: () => import('/src/pages/tools/schedule.v2.vue')
+    },
+    {
         path: '/tools/scheduleV1',
         text: '排班表生成器',
         name: 'ScheduleV1',

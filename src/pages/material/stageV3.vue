@@ -18,7 +18,7 @@ import StageDetailTable from "/src/components/material/StageDetailTable.vue";
 import OrundumTable from "/src/components/material/OrundumTable.vue";
 import {useDisplay} from "vuetify";
 const {mobile} = useDisplay()
-// import {getButtonSize} from '/src/plugins/vuetify/getDisplaySize'
+
 
 const stageConfig = getStageConfig();
 
@@ -440,6 +440,7 @@ onMounted(() => {
   getOrundumRecommendedStage()
   getHistoryActStage()
   getStageResult()
+
 })
 </script>
 

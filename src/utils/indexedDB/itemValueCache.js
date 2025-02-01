@@ -1,44 +1,34 @@
 import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
 import materialAPI from "/src/api/material.js";
-import {getStageConfig} from "/src/utils/user/userConfig.js";
-import checkCache from '/src/utils/indexedDB/cacheExpireTime.js'
 
-// myDatabase.version(1).stores({
-//     item_value: 'itemId,itemName,itemValueAp,rarity,cardNum,version',
-// });
 
-function insert(data) {
-    myDatabase.item_value.add(data)
+function putCache(data) {
+    myDatabase.cache_data.put(data)
 }
 
-function insertBatch(list) {
-    myDatabase.item_value.bulkPut(list)
-}
+async function getCacheByVersion(cacheKey, stageConfig) {
+    let cacheData = await myDatabase.cache_data.get(cacheKey)
 
-function list(key) {
-    return myDatabase.item_value.toArray()
-}
-
-async function queryByVersion() {
-    let list = await myDatabase.item_value.toArray();
-
-    const expireFlag = await checkCache.checkResourceIsExpire("itemValue", 60 * 60 * 1000);
-    if (list.length < 10 || expireFlag) {
-        const stageConfig = getStageConfig()
-        await materialAPI.getItemValueTableV4(stageConfig).then(response => {
-            insertBatch(response.data)
-            checkCache.insert({resource: "itemValue", version: stageConfig.id, createTime: new Date().getTime()})
-            list = response.data
-        })
-
-        console.log("返回服务器的材料价值表")
-         return list
+    if (cacheData) {
+        if (new Date().getTime() - cacheData.createTime < 60 * 60 * 24 * 7 * 1000) {
+            console.log('返回缓存的数据')
+            return cacheData.resource
+        }
     }
-    console.log("返回缓存的材料价值表")
-    return list
+
+
+    await materialAPI.getItemValueTableV4(stageConfig).then(response => {
+        console.log('返回来自服务器的数据')
+        const data = response.data
+        const cacheData = {id: cacheKey, resource: data, version: "automated", createTime: new Date().getTime()}
+        myDatabase.cache_data.put(cacheData)
+        return data
+    })
+
+
 }
 
 
 export default {
-    insert, list, queryByVersion
+    getCacheByVersion
 }
