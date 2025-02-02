@@ -322,6 +322,13 @@ const routes = [
         component: () => import('/src/pages/dev/dev.vue')
     },
     {
+        path: '/dev/stageEfficiency',
+        text: '测试页面',
+        display: false,
+        component: () => import('/src/pages/dev/stageEfficiency.vue')
+
+    },
+    {
         path: '/material/sssl',
         text: '收益速览做图用',
         display: false,

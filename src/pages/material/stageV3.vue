@@ -1,31 +1,33 @@
 <script setup>
 import stageApi from '/src/api/material'
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import ITEM_SERIES from '/src/static/json/material/item_series.json'
 import FixedNav from "/src/components/FixedNav.vue";
 import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
-import { dateFormat } from '/src/utils/dateUtil.js'
 import {getStageConfig} from '/src/utils/user/userConfig.js'
-import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 
-import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
-import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
-import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
+// import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
+// import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
+// import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
 import StageLegend from "/src/components/material/StageLegend.vue";
 import StageDetailTable from "/src/components/material/StageDetailTable.vue";
 import OrundumTable from "/src/components/material/OrundumTable.vue";
+import HistoryActivity from "/src/components/material/HistoryActivity.vue";
 import {useDisplay} from "vuetify";
-const {mobile} = useDisplay()
+import {getStageData} from '/src/utils/stageEfficiencyCal.js'
+import {formatNumber} from "/src/utils/format.js";
 
+
+const {mobile} = useDisplay()
 
 const stageConfig = getStageConfig();
 
 let legendDisplay = ref(false)
 
 
-function getButtonSize(){
+function getButtonSize() {
   if (mobile.value) {
 
     return 'small'
@@ -35,47 +37,54 @@ function getButtonSize(){
 //漫游导航指引
 const guideOpen = ref(false)
 
-let itemIdList = [] // 材料表
-
-const itemIdListInit = () => {
-  itemIdList = []
-  // 先把当作表头的材料表转为一个集合
-  for (const itemId in ITEM_SERIES) {
-    const item = ITEM_SERIES[itemId]
-    itemIdList.push({
-      id: item.id,
-      name: item.name,
-      lastUp: false,
-      lastUpInterval: 0
-    })
-  }
-}
-
 
 // 根据物品系列进行分组的推荐关卡
-let stageResultGroup = ref(TMP_STAGE_RESULT.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId))
+let stageResultGroup = ref([])
 
 
 //材料卡片数据
 let stageCardData = ref([])
 
 
-let updateTime = ref(TMP_STAGE_RESULT.updateTime)
+let updateTime = ref()
+
+let orundumRecommendedStage = ref([])
+let historyActivityList = ref([])
 
 // 获取关卡推荐数据
 function getStageResult() {
 
-  stageApi.getRecommendedStage(stageConfig).then(response => {
-
-    updateTime.value = response.data.updateTime
-    if(!response.data.recommendedStageList){
-      return
+  const config = {
+    "id": new Date().getTime() / 1000,
+    "expCoefficient": 0.633,
+    "sampleSize": 300,
+    "stageBlacklist": ['main_01-07'],
+    "customItemValue": {
+      "30073": 1.8
     }
-    stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+  }
+
+  getStageData(config).then(response => {
+    const {recommendedStage, recommendedStageOrundum, historyActStage} = response
+    stageResultGroup.value = recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
+    orundumRecommendedStage.value = recommendedStageOrundum
+    console.log(historyActStage)
+    historyActivityList.value = historyActStage
     getItemCardData()
     getItemTableData(0, false)
   })
+  // stageApi.getRecommendedStage(stageConfig).then(response => {
+  //
+  //   updateTime.value = response.data.updateTime
+  //   if(!response.data.recommendedStageList){
+  //     return
+  //   }
+  //   stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+  //   //将后端返回的数据组装为卡片需要的数据格式
+  //   getItemCardData()
+  //   getItemTableData(0, false)
+  // })
 }
 
 
@@ -91,14 +100,14 @@ function getItemCardData() {
     //推荐关卡集合
     let stageList = recommendedStageList.stageResultList;
 
-    let leT4MaxEfficiencyStage = { leT4Efficiency: 0 }
-    let leT3MaxEfficiencyStage = { leT3Efficiency: 0 }
-    let leT2MaxEfficiencyStage = { leT2Efficiency: 0 }
-    let maxEfficiencyStage = { stageEfficiency: 0 }
+    let leT4MaxEfficiencyStage = {leT4Efficiency: 0}
+    let leT3MaxEfficiencyStage = {leT3Efficiency: 0}
+    let leT2MaxEfficiencyStage = {leT2Efficiency: 0}
+    let maxEfficiencyStage = {stageEfficiency: 0}
 
     for (const stage of stageList) {
 
-      const { stageEfficiency, leT4Efficiency, leT3Efficiency, leT2Efficiency } = stage
+      const {stageEfficiency, leT4Efficiency, leT3Efficiency, leT2Efficiency} = stage
 
       // console.log(leT4MaxEfficiencyStage.leT4Efficiency, '<' ,leT4Efficiency ,'---', leT4MaxEfficiencyStage.leT4Efficiency < leT4Efficiency  )
 
@@ -122,7 +131,7 @@ function getItemCardData() {
       leT4MaxEfficiencyStage: leT4MaxEfficiencyStage,
       leT3MaxEfficiencyStage: leT3MaxEfficiencyStage,
       leT2MaxEfficiencyStage: leT2MaxEfficiencyStage,
-      series: { r4: '', r3: '', r2: '', r1: '' }
+      series: {r4: '', r3: '', r2: '', r1: ''}
     }
 
     //获得该材料系列的上下级材料的物品id
@@ -154,7 +163,7 @@ function getItemTableData(index, isJump) {
   recommendedStageDetailTable.value = stageResultList.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
 
   if (isJump) {
-    document.getElementById('StageDetailTable').scrollIntoView({ behavior: 'smooth', block: 'center' })
+    document.getElementById('StageDetailTable').scrollIntoView({behavior: 'smooth', block: 'center'})
   }
 }
 
@@ -182,28 +191,28 @@ onMounted(() => {
  * 滚动到图例说明
  */
 function scrollToLegendDescription() {
-  document.getElementById('description').scrollIntoView({ behavior: 'smooth' })
+  document.getElementById('description').scrollIntoView({behavior: 'smooth'})
 }
 
 /**
  * 滚动到搓玉关卡表
  */
 function scrollToOrundumTable() {
-  document.getElementById('orundum-table').scrollIntoView({ behavior: 'smooth' })
+  document.getElementById('orundum-table').scrollIntoView({behavior: 'smooth'})
 }
 
 /**
  * 滚动到历史活动关卡表
  */
 function scrollToHistoryStageTable() {
-  document.getElementById('history-stage-table').scrollIntoView({ behavior: 'smooth' })
+  document.getElementById('history-stage-table').scrollIntoView({behavior: 'smooth'})
 }
 
 /**
  * 滚动到常见问题
  */
 function scrollToFrequentlyAskedQuestion() {
-  document.getElementById('frequently-asked-question').scrollIntoView({ behavior: 'smooth' })
+  document.getElementById('frequently-asked-question').scrollIntoView({behavior: 'smooth'})
 }
 
 
@@ -220,225 +229,9 @@ function getCardIconSprite(id) {
 }
 
 
-function getDetailTableItemSprite(id) {
-  return "bg-" + id + " table-item-sprite";
-}
-
-function getActTableItemSprite(id) {
-  return "bg-" + id + " act-table-item-sprite";
-}
-
-function getActTableSimpleItemSprite(id) {
-  return "bg-" + id + " act-table-simple-item-sprite";
-}
-
-
-/**
- * 格式化数字
- * @param {number} num 数字
- * @param {number} acc 位数
- * @returns {string} 格式化后的数字
- */
-function formatNumber(num, acc) {
-  acc = typeof acc !== "undefined" ? acc : 2;
-  if (typeof num === "undefined") return ''
-  return parseFloat(num.toString()).toFixed(acc);
-}
-
 onMounted(() => {
 
-})
 
-
-let historyActivityTable = ref([]) // 历史活动up材料表
-let historyActivityList = ref(TMP_HISTORY_STAGE)
-
-let historyActivityDisplayType = ref('')
-
-/**
- * 传入一个设备类型，将其赋值给 actHistoryTableType 按钮通过 actHistoryTableType 进行判断是什么形式的表格
- * @param {string} device
- */
-function chooseHistoryActDevice(device) {
-  historyActivityDisplayType.value = device
-  const pcElement = document.getElementById('act-table-pc')
-  const phoneElement = document.getElementById('act-table-phone')
-  if (device === 'pc') {
-    pcElement.style.display = 'block'
-    phoneElement.style.display = 'none'
-  } else if (device === 'phone') {
-    pcElement.style.display = 'none'
-    phoneElement.style.display = 'block'
-  }
-
-}
-
-
-function formatPcHistoryTableData() {
-  historyActivityTable.value = []
-  // 每种材料距离上次up间隔
-  let lastUpInterval = 0;
-  itemIdListInit()
-
-  // 循环历史活动数据
-  for (const act of historyActivityList.value) {
-    if (act.zoneName === '落叶逐火') {
-      continue
-    }
-    lastUpInterval++
-    //复刻不计入
-    // if(act.zoneName.indexOf('复刻')>-1) {
-    //   continue;
-    // }
-    //每行数据
-    let rowData = {
-      activityName: act.zoneName, //活动名
-      startTime: dateFormat(new Date(act.endTime), 'yyyy/MM'),
-      itemList: {} //材料up情况
-    }
-
-
-    for (const stage of act.actStageList) {
-      rowData.itemList[stage.itemId] = {
-        itemId: stage.itemId,
-        stageEfficiency: stage.stageEfficiency * 100,
-        stageCode: stage.stageCode
-      }
-    }
-
-    for (const itemIndex in itemIdList) {
-      const item = itemIdList[itemIndex]
-      //材料up标记
-      let isUpFlag = false;
-
-      //如果当前材料up了,将标记记为true
-      if (rowData.itemList[item.id]) {
-        isUpFlag = true
-      }
-
-      //如果这个材料已经up了，则将这个材料的上次up标记为true
-      if (isUpFlag) {
-        itemIdList[itemIndex].lastUp = true;
-      }
-
-      //如果这个材料这个活动没up,更新up间隔次数,表格根据这个间隔进行背景色的渲染
-      if (!itemIdList[itemIndex].lastUp) {
-        itemIdList[itemIndex].lastUpInterval = lastUpInterval;
-      }
-    }
-
-    //循环复刻活动的数据
-    for (const reprintActivity of REPRODUCTION_ACTIVITY) {
-      //通过判断同名的活动和复刻活动，将up材料赋予给复刻活动
-      if (reprintActivity.activityName === rowData.activityName) {
-        //将up材料赋予给复刻活动
-        reprintActivity.itemList = rowData.itemList
-      }
-    }
-
-    historyActivityTable.value.push(rowData)
-  }
-
-  historyActivityTable.value[0].divider = true
-
-  //将复刻活动按首位插入进活动表格的集合中
-  for (const reprintActivity of REPRODUCTION_ACTIVITY) {
-    historyActivityTable.value.unshift(reprintActivity)
-  }
-
-  itemIdList.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
-}
-
-/**
- * 获取历史活动关卡数据
- */
-function getHistoryActStage() {
-
-  // 获取历史活动up材料信息
-  stageApi.getHistoryActStageV4(stageConfig).then(response => {
-    if(!response.data){
-      return
-    }
-    // 历史活动数据
-    historyActivityList.value = response.data
-    formatPcHistoryTableData()
-  })
-}
-
-
-function getCellBgColor(rowIndex, maxIndex) {
-
-  if (rowIndex < REPRODUCTION_ACTIVITY.length) {
-    return ''
-  }
-
-  if ((rowIndex - REPRODUCTION_ACTIVITY.length) < maxIndex) {
-    return 'background-color: #82beff80'
-  }
-  return ''
-}
-
-function getTableDividerClass(divider) {
-  if (divider) {
-    return 'act-history-table-divider'
-  }
-}
-
-
-let orundumRecommendedStage = ref([])
-let displayOrundumRecommendedStage = ref([])
-let onlyShowActStage = ref(false)
-
-
-/**
- * 过滤搓玉推荐关卡，只显示1-7，CW-6和当前活动关
- */
-function filterOrundumStage() {
-  onlyShowActStage.value = !onlyShowActStage.value
-  if (onlyShowActStage.value) {
-    displayOrundumRecommendedStage.value = []
-    for (const stage of orundumRecommendedStage.value) {
-      const { stageCode, stageType } = stage
-
-      if (stageCode === '1-7' || stageCode === 'CW-6' || stageType === 'ACT' || stageType === 'ACT_REP') {
-        displayOrundumRecommendedStage.value.push(stage)
-      }
-    }
-  } else {
-    displayOrundumRecommendedStage.value = orundumRecommendedStage.value
-  }
-}
-
-function getOrundumRecommendedStage() {
-
-  stageApi.getOrundumRecommendedStageV4(stageConfig).then(response => {
-    formatOrundumRecommendedStage(response.data)
-  })
-}
-
-function formatOrundumRecommendedStage(list) {
-  orundumRecommendedStage.value = []
-  for (const stage of list) {
-    orundumRecommendedStage.value.push({
-      stageCode: stage.stageCode,
-      orundumPerAp: stage.orundumPerAp.toFixed(2),
-      lmdcost: stage.lmdcost.toFixed(2) + 'w',
-      orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
-      stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
-      stageType: stage.stageType ? stage.stageType : ''
-    })
-  }
-  displayOrundumRecommendedStage.value = orundumRecommendedStage.value
-}
-
-getItemCardData()
-getItemTableData(0, false)
-formatPcHistoryTableData()
-formatOrundumRecommendedStage(TMP_STAGE_ORUNDUM)
-
-onMounted(() => {
-  getOrundumRecommendedStage()
-  getHistoryActStage()
   getStageResult()
 
 })
@@ -464,7 +257,7 @@ onMounted(() => {
   <!--        description="将光标悬停至此处可唤出该页面的标题导航栏，其它页面也可能会有哦=w="-->
   <!--    />-->
   <!--  </el-tour>-->
-  <tour-guide v-if="guideOpen" @close="guideOpen = false" :s1="`#sStageLegend`" :s2="`#c-0`" :s3="`#fixedNav`" />
+  <tour-guide v-if="guideOpen" @close="guideOpen = false" :s1="`#sStageLegend`" :s2="`#c-0`" :s3="`#fixedNav`"/>
 
 
   <!-- 地图效率Start -->
@@ -476,41 +269,29 @@ onMounted(() => {
         <h1>推荐关卡</h1>
         <h4>Best Stages</h4>
       </div>
-      <v-btn-group >
+      <v-btn-group>
         <v-btn color="primary" :size="getButtonSize()"
-          @click="scrollToOrundumTable()" style="margin: 10px 0px 2px 8px;">搓玉数据
+               @click="scrollToOrundumTable()" style="margin: 10px 0px 2px 8px;">搓玉数据
         </v-btn>
         <v-btn color="primary" :size="getButtonSize()"
-          @click="scrollToHistoryStageTable()" style="margin: 10px 0px 2px 0px;">往期活动
+               @click="scrollToHistoryStageTable()" style="margin: 10px 0px 2px 0px;">往期活动
         </v-btn>
         <v-btn color="primary" :size="getButtonSize()"
-          @click="scrollToFrequentlyAskedQuestion()" style="margin: 10px 4px 2px 0px;">常见问题
+               @click="scrollToFrequentlyAskedQuestion()" style="margin: 10px 4px 2px 0px;">常见问题
         </v-btn>
       </v-btn-group>
       <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
-        @click="legendDisplay = !legendDisplay">显示图例
+             @click="legendDisplay = !legendDisplay">显示图例
       </v-btn>
-<!--      <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"-->
-<!--        @click="scrollToFrequentlyAskedQuestion()">旧版入口-->
-<!--      </v-btn>-->
       <span class="module-tip">更新时间：{{ updateTime }}</span>
-      <!-- <v-chip color="primary" variant="tonal" class="v-btn" :size="getButtonSize()">
-        更新时间：{{ updateTime }}
-      </v-chip> -->
-
     </div>
-
-
     <!-- 说明区域 -->
-
-
-
     <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
 
     <!-- 卡片区域 -->
     <div id="stageForCards" class="stage-card-wrap">
       <div class="stage-card" v-for="(stage, index) in stageCardData" :key="index"
-        @click="getItemTableData(index, true)" :id="`c-${index}`">
+           @click="getItemTableData(index, true)" :id="`c-${index}`">
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.r3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">
@@ -594,98 +375,17 @@ onMounted(() => {
 
 
     <!-- 材料情报卡 -->
-    <div class="module-header" >
-      <div class="module-title">
-        <h1>材料详情</h1>
-        <h4>Item Info</h4>
-      </div>
-      <span class="module-tip">*移动端可左右拖动查看</span>
-    </div>
-     <span id="StageDetailTable"></span>
-    <StageDetailTable  v-model="recommendedStageDetailTable"></StageDetailTable>
+    <StageDetailTable v-model="recommendedStageDetailTable"></StageDetailTable>
 
-    <!-- 搓玉 -->
-    <!--    <div class="op_title" id="orundum-table">-->
-    <!--      <div class="op_title_text">-->
-    <!--        <div class="op_title_ctext">搓玉数据表</div>-->
-    <!--        <div class="op_title_etext_light">Orundum</div>-->
-    <!--      </div>-->
-    <!--      <div class="op_title_tag">-->
-    <!--        &lt;!&ndash; <div class="op_tag_0">图例</div> &ndash;&gt;-->
-    <!--        <div class="op_tag_0" @click="filterOrundumStage()">仅显示活动关</div>-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <div class="module-header" id="orundum-table">
-      <div class="module-title">
-        <h1>搓玉数据表</h1>
-        <h4>Orundum</h4>
-      </div>
-      <v-btn color="primary" variant="tonal" :size="getButtonSize()" @click="filterOrundumStage()">
-        仅显示1-7、CW-6和活动关
-      </v-btn>
-    </div>
 
-    <OrundumTable v-model="displayOrundumRecommendedStage"></OrundumTable>
+    <!-- 搓玉推荐表 -->
+    <OrundumTable v-model="orundumRecommendedStage"></OrundumTable>
+
+
     <!-- 历史活动 -->
-    <div class="module-header" id="history-stage-table">
-      <div class="module-title">
-        <h1>往期活动数据</h1>
-        <h4>History Event</h4>
-      </div>
-      <v-btn color="primary" variant="tonal" class="tag-button" @click="chooseHistoryActDevice('phone')">列表模式
-      </v-btn>
-      <v-btn color="primary" variant="tonal" class="tag-button" @click="chooseHistoryActDevice('pc')">表格模式</v-btn>
-    </div>
+    <HistoryActivity v-model="historyActivityList"></HistoryActivity>
 
-    <!-- pc端大表格 -->
-    <v-card class="activity-table-pc-card" id="act-table-pc">
-      <table class="activity-table-pc">
-        <tbody>
-          <tr>
-            <td class="activity-name-pc">活动名称</td>
-            <td v-for="(item, index) in itemIdList" :key="index">
-              <div class="activity-pickup-item-pc">
-                <div :class="getActTableItemSprite(item.id)"></div>
-              </div>
-            </td>
-          </tr>
-          <tr v-for="(act, rowIndex) in historyActivityTable" :key="rowIndex"
-            :class="getTableDividerClass(act.divider)">
-            <td class="activity-name-pc">
-              {{ act.activityName }} <br>
-              {{ act.startTime }}
-            </td>
-            <td v-for="(item, index) in itemIdList" :key="index" :style="getCellBgColor(rowIndex, item.lastUpInterval)">
-              <div class="activity-pickup-item-pc" v-if="act.itemList[item.id]">
-                <div :class="getActTableItemSprite(item.id)"></div>
-              </div>
-              <div class="activity-stage-efficiency-pc" v-if="act.itemList[item.id]">
-                {{ formatNumber(act.itemList[item.id].stageEfficiency, 2) }}%
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </v-card>
-    <!-- 移动端小列表 -->
-    <v-card class="activity-table-phone-card" id="act-table-phone">
-      <table class="activity-table-phone">
-        <tr v-for="(act, index) in historyActivityList" :key="index">
-          <td class="activity-name-phone">{{ act.zoneName }}</td>
-          <td v-for="(stage, index) in act.actStageList" :key="index">
-            <div class="activity-drop">
-              <div class="activity-pickup-item">
-                <div :class="getActTableSimpleItemSprite(stage.itemId)"></div>
-              </div>
-              <span class="activity-drop-detail">
-                {{ stage.stageCode }} <br>
-                {{ formatNumber(stage.stageEfficiency * 100, 2) }}%
-              </span>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </v-card>
+
     <!-- 常见问题 -->
     <div class="module-header" id="frequently-asked-question">
       <div class="module-title">
@@ -693,16 +393,6 @@ onMounted(() => {
         <h4>FAQ</h4>
       </div>
     </div>
-    <!--    <div class="op_title" id="frequently-asked-question">-->
-    <!--      <div class="op_title_text">-->
-    <!--        <div class="op_title_ctext">常见问题</div>-->
-    <!--        <div class="op_title_etext_light">FAQ</div>-->
-    <!--      </div>-->
-    <!--      <div class="op_title_tag" style="height: 24px">-->
-    <!--        <div class="tab_text">-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
 
     <div id="foot_main">
       <div class="foot_unit" style="width: 100%; white-space: normal">
@@ -714,7 +404,7 @@ onMounted(() => {
                   <i class="iconfont icon-legend"></i><b style="margin-left: 4px">算法简述与图例</b></span>
               </template>
               <b>通过[物品价值表]中的物品价值和[企鹅物流数据统计]中的材料掉率计算各个关卡的效率</b>
-              <hr />
+              <hr/>
               <ul style="padding-left: 2em">
                 <li>只有多于300样本的关卡才会被收录。</li>
                 <li>仅收录由自动刷图软件上报的掉落数据。</li>
@@ -722,85 +412,85 @@ onMounted(() => {
                 <li>插曲和别传常驻后重新计算效率，该效率与活动时无关。</li>
               </ul>
               <b>图例</b>
-              <hr />
+              <hr/>
               <div class="stage-legend">
                 <table class="stage-legend-table">
                   <tbody>
-                    <tr>
-                      <td>
-                        <div class="stage-legend-sprite">
-                          <div :class="getLegendSprite('AP_GAMEPLAY')"></div>
-                        </div>
-                      </td>
-                      <td>
-                        <span class="stage-legend-text-1">需要所有材料→</span>
-                      </td>
-                      <td>
-                        <span class="stage-legend-text-2">14-17</span>
-                      </td>
-                      <td>
-                        <span class="stage-legend-text-3">[综合效率]<br>所有掉落物的价值之和/理智消耗</span>
-                      </td>
-                      <td>
-                        <span class="stage-legend-text-4">[综合效率]</span>
-                      </td>
-                    </tr>
+                  <tr>
+                    <td>
+                      <div class="stage-legend-sprite">
+                        <div :class="getLegendSprite('AP_GAMEPLAY')"></div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="stage-legend-text-1">需要所有材料→</span>
+                    </td>
+                    <td>
+                      <span class="stage-legend-text-2">14-17</span>
+                    </td>
+                    <td>
+                      <span class="stage-legend-text-3">[综合效率]<br>所有掉落物的价值之和/理智消耗</span>
+                    </td>
+                    <td>
+                      <span class="stage-legend-text-4">[综合效率]</span>
+                    </td>
+                  </tr>
 
-                    <tr>
-                      <td>
-                        <div class="stage-legend-sprite">
-                          <div :class="getLegendSprite('30024')"></div>
-                        </div>
-                      </td>
-                      <td>
+                  <tr>
+                    <td>
+                      <div class="stage-legend-sprite">
+                        <div :class="getLegendSprite('30024')"></div>
+                      </div>
+                    </td>
+                    <td>
                         <span class="stage-legend-text-1">
                           需要<span style="color: #c01dd7;font-weight: bold">紫材料→</span>
                         </span>
-                      </td>
-                      <td>
-                        <span class="stage-legend-text-2">14-17</span>
-                      </td>
-                      <td>
+                    </td>
+                    <td>
+                      <span class="stage-legend-text-2">14-17</span>
+                    </td>
+                    <td>
                         <span class="stage-legend-text-3">
                           [<span style="color: #c01dd7;font-weight: bold">T4</span>效率]<br>
                           <span style="color: #c01dd7;font-weight: bold">紫</span>
                           <span style="color: #0276f8;font-weight: bold">蓝</span>
                           <span style="color: #01c028;font-weight: bold">绿</span>白糖价值之和/理智消耗
                         </span>
-                      </td>
-                      <td>
-                        <span class="stage-legend-text-4">[综合效率]</span>
-                      </td>
-                    </tr>
+                    </td>
+                    <td>
+                      <span class="stage-legend-text-4">[综合效率]</span>
+                    </td>
+                  </tr>
 
-                    <tr>
-                      <td>
-                        <div class="stage-legend-sprite">
-                          <div :class="getLegendSprite('30023')"></div>
-                        </div>
-                      </td>
-                      <td>
+                  <tr>
+                    <td>
+                      <div class="stage-legend-sprite">
+                        <div :class="getLegendSprite('30023')"></div>
+                      </div>
+                    </td>
+                    <td>
                         <span class="stage-legend-text-1">
                           需要<span style="color: #0276f8;font-weight: bold">蓝材料→</span>
                         </span>
-                      </td>
-                      <td>
-                        <span class="stage-legend-text-2">MB-6</span>
-                      </td>
-                      <td>
+                    </td>
+                    <td>
+                      <span class="stage-legend-text-2">MB-6</span>
+                    </td>
+                    <td>
                         <span class="stage-legend-text-3">
                           [<span style="color: #0276f8;font-weight: bold">T3</span>效率]<br>
                           <span style="color: #0276f8;font-weight: bold">蓝</span>
                           <span style="color: #01c028;font-weight: bold">绿</span>白糖价值之和/理智消耗
                         </span>
-                      </td>
-                      <td>
-                        <span class="stage-legend-text-4">[综合效率]</span>
-                      </td>
-                    </tr>
-                    <tr>
+                    </td>
+                    <td>
+                      <span class="stage-legend-text-4">[综合效率]</span>
+                    </td>
+                  </tr>
+                  <tr>
 
-                    </tr>
+                  </tr>
                   </tbody>
                 </table>
 
@@ -815,32 +505,32 @@ onMounted(() => {
               </template>
               <table id="al_card">
                 <tbody>
-                  <tr>
-                    <td>算法代号</td>
-                    <td>一图流_标准 v6.0</td>
-                    <td>更新时间</td>
-                    <td>
-                      <!-- {{ updateTime }} -->
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>数据源</td>
-                    <td>企鹅物流</td>
-                    <td>基准</td>
-                    <td>常驻关卡</td>
-                  </tr>
-                  <tr>
-                    <td>计算引擎</td>
-                    <td>yituliuBackEnd</td>
-                    <td>样本阈值</td>
-                    <td>300</td>
-                  </tr>
-                  <tr>
-                    <td>需求目标</td>
-                    <td>无限需求</td>
-                    <td>EXP系数</td>
-                    <td>0.633</td>
-                  </tr>
+                <tr>
+                  <td>算法代号</td>
+                  <td>一图流_标准 v6.0</td>
+                  <td>更新时间</td>
+                  <td>
+                    <!-- {{ updateTime }} -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>数据源</td>
+                  <td>企鹅物流</td>
+                  <td>基准</td>
+                  <td>常驻关卡</td>
+                </tr>
+                <tr>
+                  <td>计算引擎</td>
+                  <td>yituliuBackEnd</td>
+                  <td>样本阈值</td>
+                  <td>300</td>
+                </tr>
+                <tr>
+                  <td>需求目标</td>
+                  <td>无限需求</td>
+                  <td>EXP系数</td>
+                  <td>0.633</td>
+                </tr>
                 </tbody>
               </table>
             </el-collapse-item>
@@ -853,9 +543,10 @@ onMounted(() => {
               网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于
               Arknights/上海鹰角网络科技有限公司。<br>
               除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享
-                署名-非商业性使用 4.0 国际
-                许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
-              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
+              署名-非商业性使用 4.0 国际
+              许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
+              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a
+                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
             </el-collapse-item>
           </el-collapse>
         </el-card>
@@ -864,7 +555,7 @@ onMounted(() => {
     <!-- <foot-component></foot-component> -->
   </div>
 
-  <fixed-nav id="fixedNav" />
+  <fixed-nav id="fixedNav"/>
 </template>
 
 

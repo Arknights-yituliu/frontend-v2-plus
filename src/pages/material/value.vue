@@ -5,7 +5,7 @@ import {ref, onMounted} from "vue";
 import {exportExcel} from "/src/utils/exportExcel";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
-import itemValueCache from '/src/utils/indexedDB/itemValueCache.js'
+import itemValueCache from '/src/utils/indexedDB/itemDataCache.js'
 
 let value_unit = ref('itemValueAp')
 
@@ -66,7 +66,7 @@ function formattedItemDisplayList(itemList) {
 onMounted(() => {
   const stageConfig = getStageConfig()
 
-  itemValueCache.getCacheByVersion("itemValue",stageConfig).then(response => {
+  itemValueCache.getItemValueCacheByConfig(stageConfig).then(response => {
     itemValueList.value = response
     let tmpList = []
     for (const item of response) {
