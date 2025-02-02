@@ -2,6 +2,23 @@ import request from "/src/api/request";
 
 export default {
 
+
+  getItemValueTableV4(data){
+    return request({
+      url: `/item/value/custom`,
+      method:"post",
+      data:data
+    })
+  },
+
+  getStageInfo(){
+    return request({
+      url: `/stage/info`,
+      method:"get"
+    })
+  },
+
+
   /**
    * 获取关卡效率，按材料系列分组
    * @param expCoefficient 经验书价值系数
@@ -90,13 +107,7 @@ export default {
     })
   },
 
-  getItemValueTableV4(data){
-    return request({
-      url: `/custom/item/value`,
-      method:"post",
-      data:data
-    })
-  },
+
 
 
   getHistoryActStageV4(data) {

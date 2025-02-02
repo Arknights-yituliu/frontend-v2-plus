@@ -1,20 +1,22 @@
-import itemDataCache from "/src/utils/indexedDB/itemDataCache.js";
-import stageInfo from '/src/static/json/material/tmp_stage_info.json'
+import stageDataCache from "/src/utils/indexedDB/stageDataCache.js";
 import ITEM_SERIES_TABLE from '/src/static/json/material/item_series_table.json'
 import ITEM_TYPE_TABLE from '/src/static/json/material/item_type_table.json'
+import {getStageConfig} from "@/utils/user/userConfig.js";
 
-async function loadingData(config) {
+
+async function loadingData(stageConfig) {
 
     let itemMap = new Map()
     let stageInfoMap = new Map()
     let stageDropCollect = new Map()
 
+    let stageInfo = await stageDataCache.getStageInfoCache()
 
     for (const stage of stageInfo) {
         stageInfoMap.set(stage.stageId, stage)
     }
 
-    let penguinMatrix = await itemDataCache.getPenguinMatrixCache()
+    let penguinMatrix = await stageDataCache.getPenguinMatrixCache()
 
     let toughStage = penguinMatrix.filter(e => e.stageId.indexOf("tough") > -1)
     let toughStageMap = new Map()
@@ -24,7 +26,7 @@ async function loadingData(config) {
         toughStageMap.set(key, item)
     }
 
-    const itemList = await itemDataCache.getItemValueCacheByConfig(config)
+    const itemList = await stageDataCache.getItemValueCacheByConfig(stageConfig)
     for (const item of itemList) {
         if (item.cardNum > 99) {
             continue
@@ -33,14 +35,19 @@ async function loadingData(config) {
     }
 
     let stageBlacklistMap = new Map()
-    for (const item of config.stageBlacklist) {
-        stageBlacklistMap.set(item, 1)
+
+    if(stageConfig.stageBlacklist){
+        for (const item of stageConfig.stageBlacklist) {
+            stageBlacklistMap.set(item.stageId, item.stageCode)
+        }
     }
+
 
 
     for (let item of penguinMatrix) {
 
         if (stageBlacklistMap.get(item.stageId)) {
+            console.log(item.stageId)
             continue
         }
 
@@ -81,9 +88,9 @@ async function loadingData(config) {
 }
 
 
-async function calculationStageEfficiency(config) {
+async function calculationStageEfficiency(stageConfig) {
 
-    const {itemMap, stageInfoMap, stageDropCollect} = await loadingData(config)
+    const {itemMap, stageInfoMap, stageDropCollect} = await loadingData(stageConfig)
 
     let stageResultList = []
 
@@ -267,9 +274,10 @@ async function calculationStageEfficiency(config) {
 }
 
 
-async function getStageData(config) {
-
-    let stageResultList = await calculationStageEfficiency(config)
+async function getStageData() {
+    const stageConfig = getStageConfig()
+    console.log(stageConfig)
+    let stageResultList = await calculationStageEfficiency(stageConfig)
     let openStageResult = stageResultList.filter(e => e.end > new Date().getTime())
     const recommendedStage = getRecommendedStage(openStageResult)
     const recommendedStageOrundum = getRecommendedStageOrundum(openStageResult)
@@ -312,7 +320,11 @@ function getRecommendedStageOrundum(stageResultList) {
     stageResultList = stageResultList
         .filter(e => e.orundumPerAp > 0.5||(e.stageType === 'ACT' || e.stageType === "ACT_REP"))
         .sort((a, b) => b.orundumPerAp - a.orundumPerAp)
-    let maxOrundumPerAp = stageResultList[0].orundumPerAp
+    let maxOrundumPerAp = 1.0898
+    if(stageResultList.length>1){
+        maxOrundumPerAp = stageResultList[0].orundumPerAp
+    }
+
     for (let item of stageResultList) {
         item.orundumPerApEfficiency = item.orundumPerAp / maxOrundumPerAp
     }

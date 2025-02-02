@@ -7,7 +7,7 @@ import '/src/assets/css/material/store.scss';
 import '/src/assets/css/material/store.phone.scss';
 import '/src/assets/css/sprite/sprite_plane_icon.css';
 import STORE_PERM_DATA from '/src/static/json/material/store_perm_table.json'
-import itemValueCache from "/src/utils/indexedDB/itemDataCache.js";
+import itemValueCache from "/src/utils/indexedDB/stageDataCache.js";
 
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表

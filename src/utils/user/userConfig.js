@@ -1,28 +1,32 @@
-const config1 ={
-    "id": 202412050001,
-    "expCoefficient": 0.633,
-    "sampleSize": 300
+import {ref} from "vue";
+
+
+
+const defaultConfig = {
+    id: 202412050004,
+    expCoefficient: 0.633,
+    lmdCoefficient: 1,
+    useActivityStage: false,
+    stageBlacklist: [],
+    customItem: [{
+        itemId:'30073',
+        itemValue:1.8
+    }]
 }
 
-const config2 ={
-    "id": 202412050002,
-    "expCoefficient": 0.633,
-    "sampleSize": 300,
-    "customItemValue": {
-        "30073": 1.8
-    }
-}
+let stageConfig = ref(defaultConfig)
 
-function getStageConfig(){
+function getStageConfig() {
     const item = localStorage.getItem("StageConfig");
-    if(item){
-        return JSON.parse(item);
-    }else {
-
-        return config2
+    if (item) {
+        const config = JSON.parse(item);
+        stageConfig.value = config
+        return config;
+    } else {
+        return defaultConfig
     }
 }
 
-export  {
-    getStageConfig
+export {
+    getStageConfig, stageConfig
 }

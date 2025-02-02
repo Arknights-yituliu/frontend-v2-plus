@@ -8,9 +8,6 @@ import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import {getStageConfig} from '/src/utils/user/userConfig.js'
 
-// import TMP_HISTORY_STAGE from '/src/static/json/material/tmp_history_stage.json'
-// import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
-// import TMP_STAGE_ORUNDUM from '/src/static/json/material/tmp_stage_orundum.json'
 import StageLegend from "/src/components/material/StageLegend.vue";
 import StageDetailTable from "/src/components/material/StageDetailTable.vue";
 import OrundumTable from "/src/components/material/OrundumTable.vue";
@@ -22,7 +19,7 @@ import {formatNumber} from "/src/utils/format.js";
 
 const {mobile} = useDisplay()
 
-const stageConfig = getStageConfig();
+
 
 let legendDisplay = ref(false)
 
@@ -54,22 +51,12 @@ let historyActivityList = ref([])
 // 获取关卡推荐数据
 function getStageResult() {
 
-  const config = {
-    "id": new Date().getTime() / 1000,
-    "expCoefficient": 0.633,
-    "sampleSize": 300,
-    "stageBlacklist": ['main_01-07'],
-    "customItemValue": {
-      "30073": 1.8
-    }
-  }
-
-  getStageData(config).then(response => {
+  getStageData().then(response => {
     const {recommendedStage, recommendedStageOrundum, historyActStage} = response
     stageResultGroup.value = recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
     orundumRecommendedStage.value = recommendedStageOrundum
-    console.log(historyActStage)
+
     historyActivityList.value = historyActStage
     getItemCardData()
     getItemTableData(0, false)

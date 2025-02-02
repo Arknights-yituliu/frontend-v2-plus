@@ -5,7 +5,7 @@ import {ref, onMounted} from "vue";
 import {exportExcel} from "/src/utils/exportExcel";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
-import itemValueCache from '/src/utils/indexedDB/itemDataCache.js'
+import itemValueCache from '/src/utils/indexedDB/stageDataCache.js'
 
 let value_unit = ref('itemValueAp')
 
