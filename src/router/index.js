@@ -12,13 +12,13 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
 
-    if ('AccountHome'===to.name) {
-        const userInfo = await getUserInfo("Route");
-        if(userInfo.status<0){
-            cMessage("未登录")
-            return false;
-        }
-    }
+    // if ('AccountHome'===to.name) {
+    //     const userInfo = await getUserInfo("Route");
+    //     if(userInfo.status<0){
+    //         cMessage("未登录")
+    //         return false;
+    //     }
+    // }
 
 })
 

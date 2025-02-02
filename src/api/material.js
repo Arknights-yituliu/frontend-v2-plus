@@ -5,7 +5,7 @@ export default {
 
   getItemValueTableV4(data){
     return request({
-      url: `/item/value/custom`,
+      url: `/item/value/v5`,
       method:"post",
       data:data
     })
@@ -150,12 +150,6 @@ export default {
     });
   },
 
-  checkItemValue(data){
-    return request({
-      url: `/check/item/value`,
-      method:"post",
-      data:data
-    })
-  }
+
 
 };

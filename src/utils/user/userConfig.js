@@ -3,7 +3,7 @@ import {ref} from "vue";
 
 
 const defaultConfig = {
-    id: 202412050004,
+    id: 202412050002,
     expCoefficient: 0.633,
     lmdCoefficient: 1,
     useActivityStage: false,

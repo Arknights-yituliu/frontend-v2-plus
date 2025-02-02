@@ -55,7 +55,7 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import {getUserInfo, userInfo} from "/src/utils/user/userInfo.js";
-import {useRoute, useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 
 const router = useRouter();
@@ -80,12 +80,7 @@ onMounted(() => {
   getUserInfoByToken()
 });
 
-const route = useRoute();
 
-// watch(() => route.fullPath, (newVal, oldValue) => {
-//
-//   getUserInfoByToken()
-// })
 
 </script>
 

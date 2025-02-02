@@ -24,6 +24,9 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
 
     await materialAPI.getItemValueTableV4(stageConfig).then(response => {
         console.log(`${cacheKey}.返回来自服务器的数据`)
+        if(forceRefresh){
+            cMessage("强制刷新材料价值成功")
+        }
         const itemList = response.data
         const info = {
             id: cacheKey,

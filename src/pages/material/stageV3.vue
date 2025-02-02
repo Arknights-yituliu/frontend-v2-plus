@@ -1,13 +1,10 @@
 <script setup>
-import stageApi from '/src/api/material'
 import {onMounted, ref} from "vue";
 import ITEM_SERIES from '/src/static/json/material/item_series.json'
 import FixedNav from "/src/components/FixedNav.vue";
 import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
-import {getStageConfig} from '/src/utils/user/userConfig.js'
-
 import StageLegend from "/src/components/material/StageLegend.vue";
 import StageDetailTable from "/src/components/material/StageDetailTable.vue";
 import OrundumTable from "/src/components/material/OrundumTable.vue";
@@ -15,7 +12,8 @@ import HistoryActivity from "/src/components/material/HistoryActivity.vue";
 import {useDisplay} from "vuetify";
 import {getStageData} from '/src/utils/stageEfficiencyCal.js'
 import {formatNumber} from "/src/utils/format.js";
-
+import {useRouter} from "vue-router";
+const router = useRouter();
 
 const {mobile} = useDisplay()
 
@@ -267,10 +265,14 @@ onMounted(() => {
                @click="scrollToFrequentlyAskedQuestion()" style="margin: 10px 4px 2px 0px;">常见问题
         </v-btn>
       </v-btn-group>
+      <v-btn color="primary"  class="v-btn" :size="getButtonSize()"
+             @click="router.push({name:'AccountHome'})">自定义一图流
+      </v-btn>
       <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
              @click="legendDisplay = !legendDisplay">显示图例
       </v-btn>
-      <span class="module-tip">更新时间：{{ updateTime }}</span>
+
+<!--      <span class="module-tip">更新时间：{{ updateTime }}</span>-->
     </div>
     <!-- 说明区域 -->
     <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>

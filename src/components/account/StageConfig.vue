@@ -176,6 +176,9 @@ onMounted(() => {
 <template>
 
   <v-card title="材料价值自定义参数" class="user-card m-4">
+    <span class="card-description m-0-16">
+            材料价值自定义参数暂时只能保存于当前设备，后续将会通过一图流账号保存至服务器
+    </span>
     <div>
       <v-list>
         <v-list-item>
@@ -253,7 +256,6 @@ onMounted(() => {
           </v-list>
 
 
-
         </v-list-item>
         <v-list-item>
           <v-list-item-title>
@@ -261,7 +263,7 @@ onMounted(() => {
           </v-list-item-title>
           <v-btn color="primary" variant="outlined"
                  size="small" text="新增自定义材料"
-                 @click="customItemDialog = true" ></v-btn>
+                 @click="customItemDialog = true"></v-btn>
           <v-table>
             <thead>
             <tr>
@@ -292,7 +294,7 @@ onMounted(() => {
           <v-list-item-title>
             debug
           </v-list-item-title>
-          <textarea v-model="debugText" style="height: 300px" class="m-4">
+          <textarea v-model="debugText" style="height: 300px;width: 80%" class="m-4">
           </textarea>
         </v-list-item>
       </v-list>

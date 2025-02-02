@@ -49,7 +49,7 @@ let formData = ref({
   cred: '',
 })
 
-let displayOrUpdateInfo = ref('display')
+let displayOrUpdateInfo = ref(userInfo.value.status>0?'display':'')
 
 //选中的头像id
 let selectedAvatar = ref('')
@@ -154,6 +154,12 @@ onMounted(() => {
 <template>
 
   <v-card class="user-card" title="用户信息" >
+
+    <v-alert
+        title="未登录"
+        type="error"
+        class="m-12"
+    ></v-alert>
     <div v-show="displayOrUpdateInfo === 'display'">
       <v-list>
         <v-list-item>
@@ -191,7 +197,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="flex justify-between p-4" v-show="displayOrUpdateInfo !== 'display'">
+    <div class="flex justify-between p-4" v-show="displayOrUpdateInfo !== 'display'&&displayOrUpdateInfo">
       <v-btn variant="text" color="primary" text="返回" @click="displayOrUpdateInfo = 'display'"></v-btn>
     </div>
 
