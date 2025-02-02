@@ -1,7 +1,54 @@
 <script setup>
 
+import {ref, watch} from "vue";
+import {formatNumber} from "@/utils/format.js";
+
 const props = defineProps(['modelValue'])
 
+
+let orundumRecommendedStage = ref([])
+let displayOrundumRecommendedStage = ref([])
+let onlyShowActStage = ref(false)
+
+
+/**
+ * 过滤搓玉推荐关卡，只显示1-7，CW-6和当前活动关
+ */
+function filterOrundumStage() {
+  onlyShowActStage.value = !onlyShowActStage.value
+  if (onlyShowActStage.value) {
+    displayOrundumRecommendedStage.value = []
+    for (const stage of orundumRecommendedStage.value) {
+      const { stageCode, stageType } = stage
+
+      if (stageCode === '1-7' || stageCode === 'CW-6' || stageType === 'ACT' || stageType === 'ACT_REP') {
+        displayOrundumRecommendedStage.value.push(stage)
+      }
+    }
+  } else {
+    displayOrundumRecommendedStage.value = orundumRecommendedStage.value
+  }
+}
+
+
+function formatOrundumRecommendedStage() {
+  orundumRecommendedStage.value = []
+  for (const stage of props.modelValue) {
+    orundumRecommendedStage.value.push({
+      stageCode: stage.stageCode,
+      orundumPerAp: formatNumber(stage.orundumPerAp,2),
+      lmdcost: formatNumber(stage.lmdcost,2) + 'w',
+      orundumPerApEfficiency: formatNumber((stage.orundumPerApEfficiency * 100),2) + '%',
+      stageEfficiency: formatNumber((stage.stageEfficiency * 100),2) + '%',
+      stageType: stage.stageType ? stage.stageType : ''
+    })
+  }
+  displayOrundumRecommendedStage.value = orundumRecommendedStage.value
+}
+
+watch(()=>props.modelValue.length,(newVal)=>{
+     formatOrundumRecommendedStage()
+})
 
 const headers = [
   {title: '关卡名', key: 'stageCode'},
@@ -15,10 +62,21 @@ const headers = [
 </script>
 
 <template>
+
+  <div class="module-header" id="orundum-table">
+    <div class="module-title">
+      <h1>搓玉数据表</h1>
+      <h4>Orundum</h4>
+    </div>
+    <v-btn color="primary" variant="tonal"  @click="filterOrundumStage()">
+      仅显示1-7、CW-6和活动关
+    </v-btn>
+  </div>
+
   <v-card >
     <v-data-table
         :headers="headers"
-        :items="props.modelValue"
+        :items="displayOrundumRecommendedStage"
         density="compact">
       <template v-slot:item.orundumPerAp="{ item }">
         <div style="display: flex;align-items: center">
