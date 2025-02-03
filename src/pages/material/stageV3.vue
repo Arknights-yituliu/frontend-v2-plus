@@ -117,6 +117,11 @@ function getItemCardData() {
 
     }
 
+
+    if(maxEfficiencyStage.stageEfficiency<0.8){
+      continue
+    }
+
     const recommendStage = {
       maxEfficiencyStage: maxEfficiencyStage,
       leT4MaxEfficiencyStage: leT4MaxEfficiencyStage,
