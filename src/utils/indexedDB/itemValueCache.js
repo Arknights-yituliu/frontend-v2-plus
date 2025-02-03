@@ -10,7 +10,7 @@ async function getCacheByVersion(cacheKey, stageConfig) {
     let cacheData = await myDatabase.cache_data.get(cacheKey)
 
     if (cacheData) {
-        if (new Date().getTime() - cacheData.createTime < 60 * 60 * 24 * 7 * 1000) {
+        if (new Date().getTime() - cacheData.createTime < 60 * 60  * 1000) {
             console.log('返回缓存的数据')
             return cacheData.resource
         }
