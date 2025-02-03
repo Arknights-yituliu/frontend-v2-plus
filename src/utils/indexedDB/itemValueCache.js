@@ -20,11 +20,12 @@ async function getCacheByVersion(cacheKey, stageConfig) {
     await materialAPI.getItemValueTableV4(stageConfig).then(response => {
         console.log('返回来自服务器的数据')
         const data = response.data
-        const cacheData = {id: cacheKey, resource: data, version: "automated", createTime: new Date().getTime()}
-        myDatabase.cache_data.put(cacheData)
-        return data
+        const serverData = {id: cacheKey, resource: data, version: "automated", createTime: new Date().getTime()}
+        putCache(serverData)
+        cacheData = data
     })
 
+   return   cacheData
 
 }
 
