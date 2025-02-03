@@ -89,8 +89,10 @@ async function loadingData(stageConfig) {
 
 
 async function calculationStageEfficiency(stageConfig) {
-
+    const start = new Date().getTime()
     const {itemMap, stageInfoMap, stageDropCollect} = await loadingData(stageConfig)
+    const loading = new Date().getTime()
+    console.log("加载数据",loading-start,'ms')
 
     let stageResultList = []
 
@@ -268,6 +270,8 @@ async function calculationStageEfficiency(stageConfig) {
         stageResultList.push(stageResult)
     }
 
+
+    console.log("计算效率",loading-start,'ms')
     return stageResultList
 
 
@@ -276,12 +280,15 @@ async function calculationStageEfficiency(stageConfig) {
 
 async function getStageData() {
     const stageConfig = getStageConfig()
-    console.log(stageConfig)
+    const start = new Date().getTime()
     let stageResultList = await calculationStageEfficiency(stageConfig)
+    const getData = new Date().getTime()
+    console.log("获取关卡效率",getData-start,'ms')
     let openStageResult = stageResultList.filter(e => e.end > new Date().getTime())
     const recommendedStage = getRecommendedStage(openStageResult)
     const recommendedStageOrundum = getRecommendedStageOrundum(openStageResult)
     const historyActStage = getHistoryActStage(stageResultList)
+    console.log("返回结果",new Date().getTime()-getData,'ms')
     return {
         recommendedStage: recommendedStage,
         recommendedStageOrundum: recommendedStageOrundum,
