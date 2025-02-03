@@ -21,6 +21,15 @@ const stageTypeMap = {
 }
 
 
+const numberRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
+
+const inputRules = [
+  value => numberRegex.test(value) || '仅可输入0.0-1.0间的小数，小数点后位数不限',
+  value => (value === 0 || (value != null && value !== '')) || '不能为空',
+  value => (value >= 0 && value <= 1) || '仅可输入0.0-1.0间的小数，小数点后位数不限',
+]
+
+
 function getStageCollectByZone() {
   stageDataCache.getStageInfoCache().then(response => {
 
@@ -110,12 +119,14 @@ function deleteStageBlackList(stageId) {
 
 
 function getItemList() {
+  checkStageConfig()
   stageDataCache.getItemValueCacheByConfig(stageConfig.value).then(response => {
     itemList.value = response
   })
 }
 
 function forceRefreshItemValue() {
+  checkStageConfig()
   stageDataCache.getItemValueCacheByConfig(stageConfig.value, true)
 }
 
@@ -159,10 +170,26 @@ function deleteCustomItem(itemId) {
 const debugText = ref('')
 
 
+function checkStageConfig() {
+  if (!_check(stageConfig.value.expCoefficient)) {
+    stageConfig.value.expCoefficient = 0
+  }
+
+  if (!_check(stageConfig.value.lmdCoefficient)){
+    stageConfig.value.lmdCoefficient = 0
+  }
+
+  function _check(value) {
+    console.log('不为数字',numberRegex.test(value))
+    console.log('为空',(value === 0 || (value != null && value !== '')))
+    console.log('超限', (value >= 0 && value <= 1))
+    return numberRegex.test(value) && (value === 0 || (value != null && value !== '')) && (value >= 0 && value <= 1)
+  }
+}
+
 watch(stageConfig, (newVal, oldVal) => {
   debugText.value = JSON.stringify(stageConfig.value, null, 2)
   localStorage.setItem("StageConfig", JSON.stringify(stageConfig.value))
-  console.log(JSON.stringify(stageConfig.value), -1)
 }, {deep: true});
 
 getStageCollectByZone()
@@ -188,13 +215,12 @@ onMounted(() => {
           <span class="card-description">
             用于调整经验书的价值，经验书价值=0.0036*价值系数
           </span>
-          <v-slider
+          <v-text-field
               v-model="stageConfig.expCoefficient"
-              :max="1"
-              :min="0"
-              color="primary"
-              thumb-label
-          ></v-slider>
+              :rules="inputRules"
+              variant="outlined"
+              density="compact">
+          </v-text-field>
         </v-list-item>
         <v-list-item>
           <v-list-item-title>
@@ -203,13 +229,12 @@ onMounted(() => {
           <span class="card-description">
             用于调整龙门币的价值，龙门币价值=0.0036*价值系数
           </span>
-          <v-slider
+          <v-text-field
               v-model="stageConfig.lmdCoefficient"
-              :max="1"
-              :min="0"
-              color="primary"
-              thumb-label
-          ></v-slider>
+              :rules="inputRules"
+              variant="outlined"
+              density="compact">
+          </v-text-field>
         </v-list-item>
         <v-list-item>
           <v-list-item-title>
