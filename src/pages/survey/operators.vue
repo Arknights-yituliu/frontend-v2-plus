@@ -100,11 +100,10 @@ function getOperatorData() {
  * @param func 筛选函数
  * @param index 传入筛选条件索引
  */
-const addFilterConditionAndFilterOperator = debounce((func, index) => {
+function addFilterConditionAndFilterOperator (func, index){
   func(index)
   displayOperatorList.value = filterOperatorList(operatorList.value)
-
-}, 500)
+}
 
 /**
  * 根据按钮点击状态返回按钮样式
