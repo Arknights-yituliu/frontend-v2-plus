@@ -6,7 +6,8 @@ import "/src/assets/css/account/home.scss";
 import {userInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {operatorTable} from '/src/utils/gameData.js'
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
 const englishNumberRegex = /^[A-Za-z0-9]+$/;
 
@@ -145,6 +146,10 @@ function logout() {
   }, 1000);
 }
 
+function toRetrieve() {
+  router.push({name: "RETRIEVE"})
+}
+
 onMounted(() => {
   getUserInfoByToken()
   // getOperatorData()
@@ -155,7 +160,7 @@ onMounted(() => {
 
   <v-card class="user-card" title="用户信息" >
 
-    <v-alert
+    <v-alert v-show="userInfo.status<1"
         title="未登录"
         type="error"
         class="m-12"
@@ -193,6 +198,11 @@ onMounted(() => {
       </v-list>
 
       <div class="flex justify-center">
+
+      </div>
+
+      <div class="flex justify-center">
+        <v-btn color="primary" variant="outlined" text="修改密码" @click="toRetrieve()" class="m-8"></v-btn>
         <v-btn color="red" variant="outlined" text="退出登录" @click="logout" class="m-8"></v-btn>
       </div>
     </div>
