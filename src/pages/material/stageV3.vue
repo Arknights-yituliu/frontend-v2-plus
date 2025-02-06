@@ -71,7 +71,9 @@ function getStageResult() {
     if(!response.data.recommendedStageList){
       return
     }
+
     stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+    console.log(stageResultGroup.value)
     //将后端返回的数据组装为卡片需要的数据格式
     getItemCardData()
     getItemTableData(0, false)
@@ -118,15 +120,13 @@ function getItemCardData() {
     }
 
 
-    if(maxEfficiencyStage.stageEfficiency<0.8){
-      continue
-    }
 
     const recommendStage = {
       maxEfficiencyStage: maxEfficiencyStage,
       leT4MaxEfficiencyStage: leT4MaxEfficiencyStage,
       leT3MaxEfficiencyStage: leT3MaxEfficiencyStage,
       leT2MaxEfficiencyStage: leT2MaxEfficiencyStage,
+      display:maxEfficiencyStage.stageEfficiency>0.8,
       series: { r4: '', r3: '', r2: '', r1: '' }
     }
 
@@ -515,7 +515,7 @@ onMounted(() => {
     <!-- 卡片区域 -->
     <div id="stageForCards" class="stage-card-wrap">
       <div class="stage-card" v-for="(stage, index) in stageCardData" :key="index"
-        @click="getItemTableData(index, true)" :id="`c-${index}`">
+        @click="getItemTableData(index, true)" :id="`c-${index}`" v-show="stage.display">
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.r3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">
