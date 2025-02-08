@@ -150,6 +150,12 @@ export default {
     });
   },
 
-
+  getStageDrop(data){
+    return request({
+      url: `/stage/drop`,
+      method:"post",
+      data:data
+    });
+  }
 
 };

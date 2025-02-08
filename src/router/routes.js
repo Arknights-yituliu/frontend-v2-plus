@@ -75,6 +75,15 @@ const routes = [
         component: () => import('/src/pages/material/elite')
     },
     {
+        path: '/material/drop',
+        text: '关卡掉落查询',
+        name: 'StageDrop',
+        display: true,
+        module: 'material',
+        icon: "mdi-account-details",
+        component: () => import('/src/pages/material/drop.vue')
+    },
+    {
         path: '/material/scatter-diagram',
         text: '干员练度需求散点图',
         name: 'ScatterDiagram',

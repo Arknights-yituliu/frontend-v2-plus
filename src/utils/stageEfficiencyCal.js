@@ -2,6 +2,7 @@ import stageDataCache from "/src/utils/indexedDB/stageDataCache.js";
 import ITEM_SERIES_TABLE from '/src/static/json/material/item_series_table.json'
 import ITEM_TYPE_TABLE from '/src/static/json/material/item_type_table.json'
 import {getStageConfig} from "@/utils/user/userConfig.js";
+import tmpData from '/src/static/json/tmp/yituliu.json'
 
 
 async function loadingData(stageConfig) {
@@ -16,7 +17,9 @@ async function loadingData(stageConfig) {
         stageInfoMap.set(stage.stageId, stage)
     }
 
-    let penguinMatrix = await stageDataCache.getPenguinMatrixCache()
+    // let penguinMatrix = await stageDataCache.getPenguinMatrixCache()
+    let penguinMatrix = tmpData.matrix
+
 
     let toughStage = penguinMatrix.filter(e => e.stageId.indexOf("tough") > -1)
     let toughStageMap = new Map()
@@ -42,39 +45,54 @@ async function loadingData(stageConfig) {
         }
     }
 
+    let sampleSize = 300
+    if(stageConfig.sampleSize){
+        sampleSize = stageConfig.sampleSize
+    }
 
 
     for (let item of penguinMatrix) {
 
-        if (stageBlacklistMap.get(item.stageId)) {
-            console.log(item.stageId)
+        const {stageId,itemId,quantity,times,start,end} = item
+
+        if (stageBlacklistMap.get(stageId)) {
+            console.log(stageId)
             continue
         }
 
-        if (item.stageId.indexOf("main_14") > -1) {
-            if (item.end) {
-                continue
-            }
+
+
+        // if (item.stageId.indexOf("main_14") > -1) {
+        //     if (item.end) {
+        //         continue
+        //     }
+        // }
+
+        if (stageId.indexOf('tough') > -1) {
+            continue
         }
 
-        if (item.stageId.indexOf('tough') > -1) {
+        if(times<sampleSize){
             continue
         }
 
         const toughKey = `${item.stageId}-${item.itemId}`
 
         if (toughStageMap.get(toughKey)) {
-            const {quantity, times} = toughStageMap.get(toughKey)
-
+            const toughData = toughStageMap.get(toughKey)
+            // if(stageId==='main_14-13'){
+            //     console.log(toughData)
+            // }
             item = {
-                stageId: item.stageId,
-                itemId: item.itemId,
-                quantity: item.quantity + quantity,
-                times: item.times + times,
-                start: item.start,
-                end: item.end
+                stageId: stageId,
+                itemId: itemId,
+                quantity: toughData.quantity + quantity,
+                times: toughData.times + times,
+                start:start,
+                end: end
             }
         }
+
 
 
         if (stageDropCollect.get(item.stageId)) {
@@ -104,7 +122,7 @@ async function calculationStageEfficiency(stageConfig) {
             continue;
         }
 
-        const {apCost, stageCode, zoneName, stageType} = stageInfo
+        const {apCost, stageCode, zoneName, stageType,end} = stageInfo
 
 
         let stageEfficiency = 0.0;
@@ -132,7 +150,7 @@ async function calculationStageEfficiency(stageConfig) {
         let endTimeStamp = 4073691312000
 
         for (const drop of list) {
-            const {itemId, stageId, quantity, times, start, end} = drop
+            const {itemId, stageId, quantity, times} = drop
             const itemInfo = itemMap.get(itemId);
             //如果查不到材料信息则跳过
             if (!itemInfo) {
@@ -151,13 +169,24 @@ async function calculationStageEfficiency(stageConfig) {
                 value: value,
                 knockRating: knockRating,
                 rarity: parseInt(rarity),
+                quantity:quantity,
+                times:times,
                 sampleSize: times,
                 end: end,
             }
 
 
+            // if(stageId==='main_08-13'){
+            //     console.log(dropValue)
+            // }
+
+            // if(stageId==='main_14-13'){
+            //     console.log(dropValue)
+            // }
             stageDropValue.push(dropValue)
         }
+
+
 
         stageDropValue.sort((a, b) => b.value - a.value)
 
