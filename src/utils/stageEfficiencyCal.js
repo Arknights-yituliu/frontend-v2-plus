@@ -16,9 +16,15 @@ async function loadingData(stageConfig) {
     for (const stage of stageInfo) {
         stageInfoMap.set(stage.stageId, stage)
     }
+    let penguinMatrix = []
+    const source =  stageConfig.source
+    if('yituliu'===source){
+         penguinMatrix = tmpData.matrix
+    }else {
+         penguinMatrix = await stageDataCache.getPenguinMatrixCache()
+    }
 
-    // let penguinMatrix = await stageDataCache.getPenguinMatrixCache()
-    let penguinMatrix = tmpData.matrix
+
 
 
     let toughStage = penguinMatrix.filter(e => e.stageId.indexOf("tough") > -1)
@@ -62,11 +68,11 @@ async function loadingData(stageConfig) {
 
 
 
-        // if (item.stageId.indexOf("main_14") > -1) {
-        //     if (item.end) {
-        //         continue
-        //     }
-        // }
+        if (item.stageId.indexOf("main_14") > -1&&'penguin'===source) {
+            if (item.end) {
+                continue
+            }
+        }
 
         if (stageId.indexOf('tough') > -1) {
             continue

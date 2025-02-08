@@ -85,13 +85,19 @@ let stageConfig = ref({
   lmdCoefficient: 1,
   useActivityStage: false,
   stageBlacklist: [],
+  source:'yituliu',
   customItem: [{
     itemId: '30073',
     itemValue: 1.8
   }]
 })
 
-stageConfig.value = getStageConfig()
+const config = getStageConfig()
+for(const key in config){
+  stageConfig.value.source = 'penguin'
+  stageConfig.value[key] = config[key]
+}
+
 
 const getStageList = (value) => {
   stageList.value = stageGroupByZoneName.value[value[1]]
@@ -127,6 +133,7 @@ function getItemList() {
 
 function forceRefreshItemValue() {
   checkStageConfig()
+  localStorage.setItem("StageConfig", JSON.stringify(stageConfig.value))
   stageDataCache.getItemValueCacheByConfig(stageConfig.value, true)
 }
 
@@ -175,14 +182,14 @@ function checkStageConfig() {
     stageConfig.value.expCoefficient = 0
   }
 
-  if (!_check(stageConfig.value.lmdCoefficient)){
+  if (!_check(stageConfig.value.lmdCoefficient)) {
     stageConfig.value.lmdCoefficient = 0
   }
 
   function _check(value) {
-    console.log('不为数字',numberRegex.test(value))
-    console.log('为空',(value === 0 || (value != null && value !== '')))
-    console.log('超限', (value >= 0 && value <= 1))
+    // console.log('不为数字', numberRegex.test(value))
+    // console.log('为空', (value === 0 || (value != null && value !== '')))
+    // console.log('超限', (value >= 0 && value <= 1))
     return numberRegex.test(value) && (value === 0 || (value != null && value !== '')) && (value >= 0 && value <= 1)
   }
 }
@@ -319,8 +326,8 @@ onMounted(() => {
           <v-list-item-title>
             debug
           </v-list-item-title>
-          <textarea v-model="debugText" style="height: 300px;width: 80%" class="m-4">
-          </textarea>
+<!--          <textarea v-model="debugText" style="height: 300px;width: 80%" class="m-4">-->
+<!--          </textarea>-->
         </v-list-item>
       </v-list>
 
