@@ -142,14 +142,14 @@ const headers = [
 </script>
 <template>
 
-  <v-card>
+  <v-card max-width="600" class="m-12-a">
     <v-card-text>
       <v-list>
         <v-list-item title="选择关卡">
           <v-btn :text="stageIdBtnText" color="primary" @click="stageTableDialog = true"></v-btn>
         </v-list-item>
         <v-list-item title="时间粒度">
-          <v-select
+          <v-select width="300"
               :items="timeGranularityTable"
               item-title="label"
               item-value="value"
@@ -219,7 +219,7 @@ const headers = [
     </v-card-text>
   </v-card>
 
-  <v-dialog v-model="stageTableDialog">
+  <v-dialog v-model="stageTableDialog" max-width="600">
     <v-card>
       <v-card-text>
         <v-list>
