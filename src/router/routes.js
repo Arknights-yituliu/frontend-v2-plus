@@ -78,7 +78,7 @@ const routes = [
         path: '/material/drop',
         text: '关卡掉落查询',
         name: 'StageDrop',
-        display: true,
+        display: false,
         module: 'material',
         icon: "mdi-account-details",
         component: () => import('/src/pages/material/drop.vue')

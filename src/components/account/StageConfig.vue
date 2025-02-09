@@ -94,9 +94,10 @@ let stageConfig = ref({
 
 const config = getStageConfig()
 for(const key in config){
-  stageConfig.value.source = 'penguin'
   stageConfig.value[key] = config[key]
 }
+
+stageConfig.value.source = 'yituliu'
 
 
 const getStageList = (value) => {
@@ -326,8 +327,8 @@ onMounted(() => {
           <v-list-item-title>
             debug
           </v-list-item-title>
-<!--          <textarea v-model="debugText" style="height: 300px;width: 80%" class="m-4">-->
-<!--          </textarea>-->
+          <textarea v-model="debugText" style="height: 300px;width: 80%" class="m-4">
+          </textarea>
         </v-list-item>
       </v-list>
 
