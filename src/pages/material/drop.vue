@@ -107,7 +107,7 @@ function getStageDropByStageId() {
         times: times,
         quantity: quantity,
         knockRating: formatNumber(knockRating * 100),
-        apExpect: formatNumber(apCost * knockRating),
+        apExpect: formatNumber(apCost / knockRating),
         end: dateFormat(end, 'yyyy-MM-dd HH'),
         start: dateFormat(start, 'yyyy-MM-dd HH')
       }
