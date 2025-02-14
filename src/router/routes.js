@@ -7,6 +7,9 @@ import RETRIEVE from '/src/pages/account/retrieve.vue'
 import IMPORT_BY_SKLAND from '/src/pages/survey/importdata.vue'
 import SURVEY_OPERATOR from '/src/pages/survey/operators.vue'
 import USER_HOME from '/src/pages/account/home.vue'
+import STORE from '/src/pages/material/store.vue'
+import PACK from '/src/pages/material/pack.vue'
+import ITEM_VALUE from '/src/pages/material/value.vue'
 
 // {
 //     path: '/',  访问路径
@@ -45,7 +48,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-circle-multiple",
-        component: () => import('/src/pages/material/store.vue')
+        component: STORE
     },
     {
         path: '/material/pack',
@@ -54,7 +57,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-cart",
-        component: () => import('/src/pages/material/pack.vue')
+        component: PACK
     },
     {
         path: '/material/value',
@@ -63,7 +66,7 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-gold",
-        component: () => import('/src/pages/material/value.vue')
+        component: ITEM_VALUE
     },
     {
         path: '/material/elite',
@@ -82,15 +85,6 @@ const routes = [
         module: 'material',
         icon: "mdi-account-details",
         component: () => import('/src/pages/material/drop.vue')
-    },
-    {
-        path: '/material/scatter-diagram',
-        text: '干员练度需求散点图',
-        name: 'ScatterDiagram',
-        display: false,
-        module: 'material',
-        icon: "mdi-codepen",
-        component: () => import('/src/pages/material/scatter-diagram.vue')
     },
     {
         path: '/tools/gachaCal',
@@ -144,16 +138,6 @@ const routes = [
         module: 'tools',
         icon: "mdi-calendar-clock",
         component: () => import('/src/pages/tools/dps/calculator.vue')
-    },
-
-    {
-        path: '/tools/rogue',
-        text: '种子收集站',
-        name: 'RogueCollect',
-        display: true,
-        module: 'tools',
-        icon: "mdi-chart-timeline-variant",
-        component: () => import('/src/pages/tools/rogue/index.vue')
     },
     {
         path: '/tools/specializationTimeCalculate',

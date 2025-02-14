@@ -8,6 +8,7 @@ const defaultConfig = {
     lmdCoefficient: 1,
     useActivityStage: false,
     stageBlacklist: [],
+    source:'penguin',
     customItem: [{
         itemId:'30073',
         itemValue:1.8
@@ -19,7 +20,10 @@ let stageConfig = ref(defaultConfig)
 function getStageConfig() {
     const item = localStorage.getItem("StageConfig");
     if (item) {
-        const config = JSON.parse(item);
+        let config = JSON.parse(item);
+        if(!config.source){
+            config.source = 'penguin'
+        }
         stageConfig.value = config
         return config;
     } else {
