@@ -3,6 +3,7 @@ import ITEM_SERIES_TABLE from '/src/static/json/material/item_series_table.json'
 import ITEM_TYPE_TABLE from '/src/static/json/material/item_type_table.json'
 import {getStageConfig} from "@/utils/user/userConfig.js";
 import tmpData from '/src/static/json/tmp/yituliu.json'
+import {dateFormat} from "@/utils/dateUtil.js";
 
 
 async function loadingData(stageConfig) {
@@ -321,13 +322,14 @@ async function getStageData() {
     console.log("获取关卡效率",getData-start,'ms')
     let openStageResult = stageResultList.filter(e => e.end > new Date().getTime())
     const recommendedStage = getRecommendedStage(openStageResult)
-    const recommendedStageOrundum = getRecommendedStageOrundum(openStageResult)
+    const orundumRecommendedStage = getOrundumRecommendedStage(openStageResult)
     const historyActStage = getHistoryActStage(stageResultList)
     console.log("返回结果",new Date().getTime()-getData,'ms')
     return {
         recommendedStage: recommendedStage,
-        recommendedStageOrundum: recommendedStageOrundum,
-        historyActStage: historyActStage
+        orundumRecommendedStageVO: orundumRecommendedStage,
+        historyActStage: historyActStage,
+        updateTimeVO:dateFormat(new Date(),'yyyy/MM/dd HH:mm')
     }
 }
 
@@ -358,7 +360,7 @@ function getRecommendedStage(stageResultList) {
     return recommendedStage
 }
 
-function getRecommendedStageOrundum(stageResultList) {
+function getOrundumRecommendedStage(stageResultList) {
     stageResultList = stageResultList
         .filter(e => e.orundumPerAp > 0.5||(e.stageType === 'ACT' || e.stageType === "ACT_REP"))
         .sort((a, b) => b.orundumPerAp - a.orundumPerAp)

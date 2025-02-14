@@ -9,6 +9,8 @@ let sortBy = ref([
   {key: 'stageEfficiency', order: 'desc'},
 ])
 
+
+
 const headers = [
   {title: '关卡名', sortable: false, key: 'stageCode'},
   {title: '主产物', sortable: false, key: 'itemId'},

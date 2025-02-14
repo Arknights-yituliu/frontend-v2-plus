@@ -13,6 +13,7 @@ import {useDisplay} from "vuetify";
 import {getStageData} from '/src/utils/stageEfficiencyCal.js'
 import {formatNumber} from "/src/utils/format.js";
 import {useRouter} from "vue-router";
+import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 const router = useRouter();
 
 const {mobile} = useDisplay()
@@ -35,41 +36,32 @@ const guideOpen = ref(false)
 
 // 根据物品系列进行分组的推荐关卡
 let stageResultGroup = ref([])
-
-
 //材料卡片数据
 let stageCardData = ref([])
-
-
 let updateTime = ref()
-
+//搓玉推荐关卡
 let orundumRecommendedStage = ref([])
+//历史活动关卡数据
 let historyActivityList = ref([])
+//根据物品id获得对应的关卡推荐数据集合
+let recommendedStageDetailTable = ref([])
+
+
 
 // 获取关卡推荐数据
 function getStageResult() {
-
   getStageData().then(response => {
-    const {recommendedStage, recommendedStageOrundum, historyActStage} = response
+    const {recommendedStage, orundumRecommendedStageVO, historyActStage,updateTimeVO} = response
+    updateTime.value = updateTimeVO
     stageResultGroup.value = recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
-    orundumRecommendedStage.value = recommendedStageOrundum
+    orundumRecommendedStage.value = orundumRecommendedStageVO
 
     historyActivityList.value = historyActStage
     getItemCardData()
     getItemTableData(0, false)
   })
-  // stageApi.getRecommendedStage(stageConfig).then(response => {
-  //
-  //   updateTime.value = response.data.updateTime
-  //   if(!response.data.recommendedStageList){
-  //     return
-  //   }
-  //   stageResultGroup.value = response.data.recommendedStageList.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
-  //   //将后端返回的数据组装为卡片需要的数据格式
-  //   getItemCardData()
-  //   getItemTableData(0, false)
-  // })
+
 }
 
 
@@ -116,6 +108,7 @@ function getItemCardData() {
       leT4MaxEfficiencyStage: leT4MaxEfficiencyStage,
       leT3MaxEfficiencyStage: leT3MaxEfficiencyStage,
       leT2MaxEfficiencyStage: leT2MaxEfficiencyStage,
+      display:maxEfficiencyStage.stageEfficiency>0.8,
       series: {r4: '', r3: '', r2: '', r1: ''}
     }
 
@@ -130,8 +123,7 @@ function getItemCardData() {
 }
 
 
-//根据物品id获得对应的关卡推荐数据集合
-let recommendedStageDetailTable = ref([])
+
 
 /**
  * 根据索引获得对应材料系列的所有推荐关卡
@@ -215,7 +207,12 @@ function getCardIconSprite(id) {
 
 
 onMounted(() => {
-
+  stageResultGroup.value = TMP_STAGE_RESULT.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+  orundumRecommendedStage.value = TMP_STAGE_RESULT.orundumRecommendedStage
+  historyActivityList.value = TMP_STAGE_RESULT.historyActStage
+  updateTime.value = TMP_STAGE_RESULT.updateTime
+  getItemCardData()
+  getItemTableData(0, false)
 
   getStageResult()
 
@@ -266,13 +263,13 @@ onMounted(() => {
         </v-btn>
       </v-btn-group>
       <v-btn color="primary"  class="v-btn" :size="getButtonSize()"
-             @click="router.push({name:'AccountHome'})">自定义一图流
+             @click="router.push({name:'AccountHome'})" disabled>自定义一图流
       </v-btn>
       <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
              @click="legendDisplay = !legendDisplay">显示图例
       </v-btn>
 
-<!--      <span class="module-tip">更新时间：{{ updateTime }}</span>-->
+      <span class="module-tip">更新时间：{{ updateTime }}</span>
     </div>
     <!-- 说明区域 -->
     <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
@@ -280,7 +277,7 @@ onMounted(() => {
     <!-- 卡片区域 -->
     <div id="stageForCards" class="stage-card-wrap">
       <div class="stage-card" v-for="(stage, index) in stageCardData" :key="index"
-           @click="getItemTableData(index, true)" :id="`c-${index}`">
+           @click="getItemTableData(index, true)" :id="`c-${index}`" v-show="stage.display">
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.r3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">

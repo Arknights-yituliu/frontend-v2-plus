@@ -85,7 +85,7 @@ let stageConfig = ref({
   lmdCoefficient: 1,
   useActivityStage: false,
   stageBlacklist: [],
-  source:'yituliu',
+  source:'penguin',
   customItem: [{
     itemId: '30073',
     itemValue: 1.8
@@ -97,7 +97,7 @@ for(const key in config){
   stageConfig.value[key] = config[key]
 }
 
-stageConfig.value.source = 'yituliu'
+stageConfig.value.source = 'penguin'
 
 
 const getStageList = (value) => {
