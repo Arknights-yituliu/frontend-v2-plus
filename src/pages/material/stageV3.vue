@@ -262,7 +262,7 @@ onMounted(() => {
                @click="scrollToFrequentlyAskedQuestion()" style="margin: 10px 4px 2px 0px;">常见问题
         </v-btn>
       </v-btn-group>
-      <v-btn color="primary"  class="v-btn" :size="getButtonSize()"
+      <v-btn color="primary"  style="display:none" class="v-btn" :size="getButtonSize()"
              @click="router.push({name:'AccountHome'})" disabled>自定义一图流
       </v-btn>
       <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
