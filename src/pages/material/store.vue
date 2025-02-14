@@ -7,7 +7,7 @@ import '/src/assets/css/material/store.scss';
 import '/src/assets/css/material/store.phone.scss';
 import '/src/assets/css/sprite/sprite_plane_icon.css';
 import STORE_PERM_DATA from '/src/static/json/material/store_perm_table.json'
-import itemValueCache from "/src/utils/indexedDB/itemValueCache.js";
+import itemValueCache from "/src/utils/indexedDB/stageDataCache.js";
 
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表
@@ -23,7 +23,7 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 const stageConfig = getStageConfig()
 
 async function StorePermComputed() {
-  const itemValueList = await itemValueCache.getCacheByVersion("itemValue",stageConfig)
+  const itemValueList = await itemValueCache.getItemValueCacheByConfig(stageConfig)
   let itemValueMap = new Map()
   for (const item of itemValueList) {
     itemValueMap.set(item.itemId, item.itemValueAp)

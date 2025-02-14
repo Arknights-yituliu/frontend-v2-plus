@@ -1,0 +1,152 @@
+[
+  {
+    "times": 0,
+    "quantity": 0,
+    "knockRating": "NaN",
+    "time": "2024-07-29 00:00"
+  },
+  {
+    "times": 217,
+    "quantity": 100,
+    "knockRating": 0.4608294930875576,
+    "time": "2024-08-05 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 1,
+    "knockRating": 1.0,
+    "time": "2024-08-12 00:00"
+  },
+  {
+    "times": 5,
+    "quantity": 1,
+    "knockRating": 0.2,
+    "time": "2024-08-19 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 0,
+    "knockRating": 0.0,
+    "time": "2024-08-26 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 1,
+    "knockRating": 1.0,
+    "time": "2024-09-02 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 1,
+    "knockRating": 1.0,
+    "time": "2024-09-09 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 1,
+    "knockRating": 1.0,
+    "time": "2024-09-16 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 1,
+    "knockRating": 1.0,
+    "time": "2024-09-23 00:00"
+  },
+  {
+    "times": 71,
+    "quantity": 29,
+    "knockRating": 0.4084507042253521,
+    "time": "2024-09-30 00:00"
+  },
+  {
+    "times": 691,
+    "quantity": 303,
+    "knockRating": 0.4384949348769899,
+    "time": "2024-10-07 00:00"
+  },
+  {
+    "times": 268,
+    "quantity": 139,
+    "knockRating": 0.5186567164179104,
+    "time": "2024-10-14 00:00"
+  },
+  {
+    "times": 6,
+    "quantity": 4,
+    "knockRating": 0.6666666666666666,
+    "time": "2024-10-21 00:00"
+  },
+  {
+    "times": 340,
+    "quantity": 143,
+    "knockRating": 0.42058823529411765,
+    "time": "2024-10-28 00:00"
+  },
+  {
+    "times": 117,
+    "quantity": 53,
+    "knockRating": 0.452991452991453,
+    "time": "2024-11-04 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 0,
+    "knockRating": 0.0,
+    "time": "2024-11-11 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 1,
+    "knockRating": 1.0,
+    "time": "2024-11-18 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 0,
+    "knockRating": 0.0,
+    "time": "2024-11-25 00:00"
+  },
+  {
+    "times": 52,
+    "quantity": 23,
+    "knockRating": 0.4423076923076923,
+    "time": "2024-12-02 00:00"
+  },
+  {
+    "times": 66,
+    "quantity": 36,
+    "knockRating": 0.5454545454545454,
+    "time": "2024-12-09 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 1,
+    "knockRating": 1.0,
+    "time": "2024-12-16 00:00"
+  },
+  {
+    "times": 1,
+    "quantity": 1,
+    "knockRating": 1.0,
+    "time": "2024-12-23 00:00"
+  },
+  {
+    "times": 83,
+    "quantity": 36,
+    "knockRating": 0.43373493975903615,
+    "time": "2024-12-30 00:00"
+  },
+  {
+    "times": 384,
+    "quantity": 175,
+    "knockRating": 0.4557291666666667,
+    "time": "2025-01-06 00:00"
+  },
+  {
+    "times": 410,
+    "quantity": 184,
+    "knockRating": 0.44878048780487806,
+    "time": "2025-01-13 00:00"
+  }
+]

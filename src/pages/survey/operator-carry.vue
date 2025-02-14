@@ -134,7 +134,7 @@ async function getOperatorCarryStatisticsResult() {
     let carryRateList = response.data.list
 
     for (const item of carryRateList) {
-      console.log(item)
+
       item.carryCount = formatNumber(carryRateSampleSize.value * item.carryRate, 0)
     }
 

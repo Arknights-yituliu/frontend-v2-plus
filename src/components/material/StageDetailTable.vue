@@ -9,6 +9,8 @@ let sortBy = ref([
   {key: 'stageEfficiency', order: 'desc'},
 ])
 
+
+
 const headers = [
   {title: '关卡名', sortable: false, key: 'stageCode'},
   {title: '主产物', sortable: false, key: 'itemId'},
@@ -30,6 +32,15 @@ function replaceZoneName(str) {
 </script>
 
 <template>
+
+  <div class="module-header">
+    <div class="module-title">
+      <h1>材料详情</h1>
+      <h4>Item Info</h4>
+    </div>
+    <span class="module-tip">*移动端可左右拖动查看</span>
+  </div>
+  <span id="StageDetailTable"></span>
   <v-card>
     <v-data-table
         v-model:sort-by="sortBy"

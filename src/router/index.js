@@ -12,13 +12,13 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
 
-    if ('AccountHome'===to.name) {
-        const userInfo = await getUserInfo("Route");
-        if(userInfo.status<0){
-            cMessage("未登录")
-            return false;
-        }
-    }
+    // if ('AccountHome'===to.name) {
+    //     const userInfo = await getUserInfo("Route");
+    //     if(userInfo.status<0){
+    //         cMessage("未登录")
+    //         return false;
+    //     }
+    // }
 
 })
 
@@ -33,14 +33,14 @@ function updateVisits(pathName) {
 
     //访问"/"直接更新
     if (pathName === "/") {
-        console.log("访问的是首页");
+        console.log("当前路径 {}",pathName);
         toolApi.updateVisits(pathName).then(r => {
         });
         return;
     }
 
     pathName = removeTrailingSlash(pathName, 2);
-    console.log("访问的页面是：", pathName);
+    console.log("当前路径 {}", pathName);
     toolApi.updateVisits(pathName).then(r => {
     });
 

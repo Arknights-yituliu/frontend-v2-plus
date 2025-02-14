@@ -167,6 +167,15 @@ let scheduleOptions = [
     dailyGiftResources: true,
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
   },
+  {
+    name: '敬请期待',
+    start: new Date('2024/11/01 16:00:00'),
+    end: new Date('2024/11/15 04:01:00'),
+    activityType: '周年限定',
+    disabled: true,
+    dailyGiftResources: true,
+    historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
+  },
 ]
 
 
