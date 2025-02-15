@@ -222,7 +222,7 @@ async function calculationStageEfficiency(stageConfig) {
                     endTimeStamp = end
                 }
                 itemRarity = rarity
-                mainApExpect = knockRating * apCost;
+                mainApExpect = apCost/knockRating ;
                 mainKnockRating = knockRating;
                 mainSampleSize = sampleSize
             }
