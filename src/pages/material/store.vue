@@ -110,6 +110,7 @@ function getEfficiency(num, acc = 2) {
 
 // 切换采购中心商店显隐
 function switchStore(item) {
+  console.log(item)
   item.hide = !item.hide
   const storeStatusList = storeListFormat.value.map(t => t.hide)
   localStorage.setItem('storeStatusList', JSON.stringify(storeStatusList))
@@ -181,10 +182,10 @@ onMounted(() => {
     <div id="store">
       <!-- 标题区域 -->
       <ModuleHeader title="采购中心" title-en="Store Ranking" :tips="['*点击图标切换']">
-        <div class="permanent-store-checkbox">
+        <div class="flex">
           <div
               class="permanent-store-checkbox-button"
-              v-for="(item, index) in storeTypeList"
+              v-for="(item, index) in storeListFormat"
               :key="index"
               :style="item.hide ? '' : 'filter: none;'"
               @click="switchStore(item)"
