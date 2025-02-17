@@ -104,7 +104,7 @@ const feedbackTable = [
     url: 'https://github.com/Arknights-yituliu/frontend-v2-plus/issues'
   },
   {
-    label: "B站@罗德岛基建BETA",
+    label: "B站@逻辑元LogicalByte",
     description: '直接私信反馈',
     url: 'https://space.bilibili.com/688411531'
   },

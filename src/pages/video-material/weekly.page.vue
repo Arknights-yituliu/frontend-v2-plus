@@ -753,7 +753,7 @@ onMounted(() => {
       <span>代币仅在第14章掉落，优先搬空商店。<br>效率计算：明日方舟一图流 https://ark.yituliu.cn<br>掉落数据：企鹅物流数据统计
         https://penguin-stats.cn<br></span>
 
-      <!--      <span style="text-align: right;">制图：&emsp;B站@罗德岛基建BETA</span>-->
+      <!--      <span style="text-align: right;">制图：&emsp;B站@逻辑元LogicalByte</span>-->
       <span style="text-align: right;">数据收集时间：&emsp;2024.5.3 09:00</span>
     </div>
 

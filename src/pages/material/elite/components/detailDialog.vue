@@ -26,8 +26,8 @@ const deleteOperator = () => {
   emits('update:modelValue', false)
 }
 
-function getEquipIcon(typeIcon){
-  if(typeIcon){
+function getEquipIcon(item){
+  if(item.typeIcon){
     return `https://cos.yituliu.cn/equip-icon/${item.typeIcon}.png`
   }
   return noModIcon

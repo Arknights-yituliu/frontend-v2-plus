@@ -1,5 +1,6 @@
 <script setup>
 import { getSpriteImg } from '../js/utils'
+import '/src/pages/material/elite/style.scss'
 const props = defineProps({
   info: Object,
   skillIndex: Number,

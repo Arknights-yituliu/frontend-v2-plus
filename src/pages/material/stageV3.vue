@@ -14,10 +14,10 @@ import {getStageData} from '/src/utils/stageEfficiencyCal.js'
 import {formatNumber} from "/src/utils/format.js";
 import {useRouter} from "vue-router";
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
+
 const router = useRouter();
 
 const {mobile} = useDisplay()
-
 
 
 let legendDisplay = ref(false)
@@ -47,11 +47,10 @@ let historyActivityList = ref([])
 let recommendedStageDetailTable = ref([])
 
 
-
 // 获取关卡推荐数据
 function getStageResult() {
   getStageData().then(response => {
-    const {recommendedStage, orundumRecommendedStageVO, historyActStage,updateTimeVO} = response
+    const {recommendedStage, orundumRecommendedStageVO, historyActStage, updateTimeVO} = response
     updateTime.value = updateTimeVO
     stageResultGroup.value = recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
@@ -108,7 +107,7 @@ function getItemCardData() {
       leT4MaxEfficiencyStage: leT4MaxEfficiencyStage,
       leT3MaxEfficiencyStage: leT3MaxEfficiencyStage,
       leT2MaxEfficiencyStage: leT2MaxEfficiencyStage,
-      display:maxEfficiencyStage.stageEfficiency>0.8,
+      display: maxEfficiencyStage.stageEfficiency > 0.8,
       series: {r4: '', r3: '', r2: '', r1: ''}
     }
 
@@ -121,8 +120,6 @@ function getItemCardData() {
 
   stageCardData.value = list
 }
-
-
 
 
 /**
@@ -205,6 +202,11 @@ function getCardIconSprite(id) {
   return "bg-" + id;
 }
 
+function openNewPage() {
+  window.open('https://www.bilibili.com/video/BV1jPALeTEtP')
+}
+
+
 
 onMounted(() => {
   stageResultGroup.value = TMP_STAGE_RESULT.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
@@ -262,7 +264,7 @@ onMounted(() => {
                @click="scrollToFrequentlyAskedQuestion()" style="margin: 10px 4px 2px 0px;">常见问题
         </v-btn>
       </v-btn-group>
-      <v-btn color="primary"  style="display:none" class="v-btn" :size="getButtonSize()"
+      <v-btn color="primary" style="display:none" class="v-btn" :size="getButtonSize()"
              @click="router.push({name:'AccountHome'})" disabled>自定义一图流
       </v-btn>
       <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
@@ -273,6 +275,16 @@ onMounted(() => {
     </div>
     <!-- 说明区域 -->
     <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
+
+    <v-alert
+        border="start"
+        type="warning"
+        title="BUG修复提示"
+        variant="tonal"
+        density="compact"
+    >
+      <p> 官方修复了12-17掉率偏低的bug，数据源还需要一段时间更新，切削液推荐从12-17获取，详情可点击<a style="color: orangered;cursor: pointer"  @click="openNewPage()">《史无前例的掉率降低！全网最速复盘12-17Bug事件始末！》</a>查看</p>
+    </v-alert>
 
     <!-- 卡片区域 -->
     <div id="stageForCards" class="stage-card-wrap">
@@ -358,6 +370,7 @@ onMounted(() => {
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
     </div>
+
 
 
     <!-- 材料情报卡 -->
