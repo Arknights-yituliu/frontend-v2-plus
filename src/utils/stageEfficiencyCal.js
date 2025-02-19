@@ -292,6 +292,7 @@ async function calculationStageEfficiency(stageConfig) {
             zoneName: zoneName,
             itemName: mainItemName,
             itemId: mainItemId,
+            itemSeriesId:seriesInfo.seriesId,
             itemRarity: itemRarity,
             secondaryItemId: secondaryItemId,
             apExpect: mainApExpect,
@@ -347,11 +348,11 @@ function getRecommendedStage(stageResultList) {
 
     let recommendedStageCollect = new Map()
     for (const item of stageResultList) {
-        const {itemName, itemId} = item
-        if (recommendedStageCollect.get(itemId)) {
-            recommendedStageCollect.get(itemId).push(item)
+        const {itemName, itemId,itemSeriesId} = item
+        if (recommendedStageCollect.get(itemSeriesId)) {
+            recommendedStageCollect.get(itemSeriesId).push(item)
         } else {
-            recommendedStageCollect.set(itemId, [item])
+            recommendedStageCollect.set(itemSeriesId, [item])
         }
     }
 

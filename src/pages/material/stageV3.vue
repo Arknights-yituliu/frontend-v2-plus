@@ -130,6 +130,7 @@ function getItemCardData() {
 function getItemTableData(index, isJump) {
   //当前材料系列的推荐关卡
   let recommendedStage = stageResultGroup.value[index];
+  console.log(stageResultGroup.value)
 
   //推荐关卡集合
   let stageResultList = recommendedStage.stageResultList;
