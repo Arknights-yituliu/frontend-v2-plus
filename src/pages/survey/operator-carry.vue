@@ -151,7 +151,7 @@ async function getOperatorCarryStatisticsResult() {
   }
 
   for (const item of operatorCarryResult.value) {
-    console.log(item)
+
     item.own = ownMap.get(item.charId)
   }
 
