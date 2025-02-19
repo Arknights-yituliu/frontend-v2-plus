@@ -4,6 +4,7 @@ import ITEM_TYPE_TABLE from '/src/static/json/material/item_type_table.json'
 import {getStageConfig} from "@/utils/user/userConfig.js";
 import tmpData from '/src/static/json/tmp/yituliu.json'
 import {dateFormat} from "@/utils/dateUtil.js";
+import {cMessage} from "@/utils/message.js";
 
 
 async function loadingData(stageConfig) {
@@ -209,7 +210,8 @@ async function calculationStageEfficiency(stageConfig) {
         let orundumPerAp = 0.0
         let itemRarity = 0
         let LMDCostPerAp = 0
-
+        let mainItemId = '0'
+        let mainItemName = '0'
         for (let i = 0; i < stageDropValue.length; i++) {
 
             const element = stageDropValue[i];
@@ -221,6 +223,8 @@ async function calculationStageEfficiency(stageConfig) {
                 if (end) {
                     endTimeStamp = end
                 }
+                mainItemId = itemId
+                mainItemName = itemName
                 itemRarity = rarity
                 mainApExpect = apCost/knockRating ;
                 mainKnockRating = knockRating;
@@ -286,8 +290,8 @@ async function calculationStageEfficiency(stageConfig) {
             stageId: stageId,
             stageType: stageType,
             zoneName: zoneName,
-            itemName: seriesInfo.series,
-            itemId: seriesInfo.seriesId,
+            itemName: mainItemName,
+            itemId: mainItemId,
             itemRarity: itemRarity,
             secondaryItemId: secondaryItemId,
             apExpect: mainApExpect,
@@ -325,11 +329,13 @@ async function getStageData() {
     const orundumRecommendedStage = getOrundumRecommendedStage(openStageResult)
     const historyActStage = getHistoryActStage(stageResultList)
     console.log("返回结果",new Date().getTime()-getData,'ms')
+    const updateTime = dateFormat(new Date(), 'yyyy/MM/dd HH:mm');
+    cMessage(`已从企鹅数据同步掉率——${updateTime}`)
     return {
         recommendedStage: recommendedStage,
         orundumRecommendedStageVO: orundumRecommendedStage,
         historyActStage: historyActStage,
-        updateTimeVO:dateFormat(new Date(),'yyyy/MM/dd HH:mm')
+        updateTimeVO:updateTime
     }
 }
 
