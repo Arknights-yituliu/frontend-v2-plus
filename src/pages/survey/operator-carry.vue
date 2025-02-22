@@ -225,7 +225,7 @@ onMounted(() => {
               未选择
             </div>
           </div>
-          <p style="text-align: center" class="m-8-0" >无须填满12人，填满6人即可提交</p>
+          <p style="text-align: center" class="m-8-0" >填写不需要登录，最低填满6人即可提交</p>
           <div class="flex justify-center">
             <v-btn color="primary" text="上传编队" @click="uploadQuestionnaire()"></v-btn>
           </div>

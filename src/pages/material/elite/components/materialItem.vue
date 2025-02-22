@@ -1,5 +1,6 @@
 <script setup>
 import '/src/pages/material/elite/style.scss'
+import ItemImage from "@/components/sprite/ItemImage.vue";
 const props = defineProps({
   info: Object,
   skillIndex: Number,
@@ -17,10 +18,8 @@ const rankList = Object.keys(props.info).filter(key => key.includes('rank'))
     <slot name="block-label"></slot>
     <div class="row" v-for="(rank, index) in rankList" :key="index">
       <slot name="row-label" :rankIndex="index"></slot>
-      <div v-for="(item, index) in info[rank].materials" :key="index" class="material-item permanent-store-good">
-        <div class="permanent-store-good-sprite">
-          <div :class="`bg-${item.itemId}`"></div>
-        </div>
+      <div v-for="(item, index) in info[rank].materials" :key="index" class="material-item">
+        <ItemImage :item-id="item.itemId" :size="50"></ItemImage>
         <span class="num">{{ item.quantity }}</span>
       </div>
     </div>

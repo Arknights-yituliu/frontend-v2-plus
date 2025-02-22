@@ -199,10 +199,8 @@ const addNewOperator = async () => {
       <div class="row" v-for="(item, index) in [...newOperatorInfo.elite, ...newOperatorInfo.skills.flat(), ...newOperatorInfo.mods]" :key="index">
         <label>{{ item.title }}</label>
         <div class="fixed-material">
-          <div class="material-item permanent-store-good" v-for="(t, i) in item.materialList" :key="i">
-            <div class="permanent-store-good-sprite">
-              <div :class="`bg-${t.itemId}`"></div>
-            </div>
+          <div class="material-item" v-for="(t, i) in item.materialList" :key="i">
+            <ItemImage :item-id="t.itemId" :size="50"></ItemImage>
             <span class="num">{{ t.quantity }}</span>
           </div>
         </div>

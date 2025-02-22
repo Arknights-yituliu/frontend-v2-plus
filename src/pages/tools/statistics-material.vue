@@ -2,8 +2,18 @@
 import {operatorTable} from "/src/utils/gameData.js";
 
 import {ref} from "vue";
-import {statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical.js";
+import {splitMaterialByTier, statisticsOperatorInfo} from "/src/utils/survey/operatorStatistical.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
+import {dateFormat} from "@/utils/dateUtil.js";
+
+let operatorList = []
+
+for (const charId in operatorTable) {
+  operatorList.push(operatorTable[charId])
+}
+
+operatorList.sort((a, b) => a.data - b.data)
+
 
 let listItemCollect = ref({})
 let logList = ref([])
@@ -31,38 +41,38 @@ const T3ItemId = [
 
 let T3Material = ref([])
 
-function statistics() {
-  let list = []
-  for (const charId in operatorTable) {
-    const info = operatorTable[charId]
-    _formatData(info)
-  }
-  list.sort((a, b) => b.rarity - a.rarity)
 
+// 按 date 分组并排序
+function groupAndSortByDate(items) {
+  // 创建一个 Map 来存储分组结果
+  const groups = new Map();
 
-  const {itemCostCollect, logs} = statisticsOperatorInfo(list)
-  logList.value = logs
-
-
-  listItemCollect.value = splitMaterialByTier(3, itemCostCollect);
-
-
-
-  for (const id in listItemCollect.value[2]) {
-    const item = listItemCollect.value[2][id]
-    if (item.id > 30000) {
-      T3Material.value.push(item)
+  // 遍历集合，按 date 分组
+  items.forEach(item => {
+    const date = item.date;
+    if (!groups.has(date)) {
+      groups.set(date, []);
     }
-  }
+    groups.get(date).push(item);
+  });
 
-  T3Material.value.sort((a,b)=> b.count-a.count)
+  // 将 Map 转换为数组，并按 date 排序
+  return Array.from(groups.entries())
+      .map(([date, group]) => ({date, group}))
+      .sort((a, b) => a.date - b.date);
+}
 
 
-  function _formatData(info) {
+function formatData(list) {
 
-    const {charId, name, rarity} = info;
+  let newList = []
+  let index = 0
+  for (const info of list) {
+
+    index++
+    const {charId, name, rarity, date} = info;
     if (rarity < 3) {
-      return
+      continue
     }
 
     let formatData = {
@@ -77,7 +87,8 @@ function statistics() {
       skill3: 0,
       modX: 0,
       modY: 0,
-      modD: 0
+      modD: 0,
+      date: date,
     }
 
     if (info.equip) {
@@ -113,22 +124,85 @@ function statistics() {
       formatData.level = 55
       formatData.mainSkill = 7
     }
-
-    list.push(formatData)
+    newList.push(formatData)
   }
+
+
+  return newList
+}
+
+let statisticsResult = []
+
+
+function statistics(list) {
+
+  let result = []
+
+  list.sort((a, b) => b.rarity - a.rarity)
+
+
+  const {itemCostCollect, logs} = statisticsOperatorInfo(list)
+  logList.value = logs
+
+
+  listItemCollect.value = splitMaterialByTier(3, itemCostCollect);
+
+
+  for (const id in listItemCollect.value[2]) {
+    const item = listItemCollect.value[2][id]
+
+
+    if (T3ItemId.includes(item.id.toString())) {
+      result.push(item)
+    }
+  }
+
+  result.sort((a, b) => b.count - a.count)
+  return result
 }
 
 
-statistics()
+console.log(operatorList)
+const formatDataList = formatData(operatorList);
+console.log(formatDataList)
+const groupData = groupAndSortByDate(formatDataList);
+
+
+for (const item of groupData) {
+  const result = statistics(item.group);
+  statisticsResult.push({
+    time: dateFormat(item.date),
+    date: item.date,
+    result: result
+  })
+}
+
+console.log(statisticsResult)
+
+// let xData = []
+// let yData = []
+//
+// for(const item of statisticsResult){
+//   if(item.date<1704115863000){
+//     continue
+//   }
+//
+//
+// }
+
+// statistics()
 
 </script>
 <template>
 
 
-  <div class="flex flex-wrap" style="width: 520px">
-    <div v-for="(item,index) in T3Material" v-show="T3ItemId.includes(item.id)" class="m-8">
-      <ItemImage size="60" :item-id="item.id"></ItemImage>
-      <div style="text-align: center">{{ item.count }}</div>
+  <div v-for="group in statisticsResult">
+    <div>{{ group.time }}</div>
+    <div class="flex flex-wrap" style="width: 520px">
+      <div v-for="item in group.result" class="m-8">
+        <ItemImage size="60" :item-id="item.id"></ItemImage>
+        <div style="text-align: center">{{ item.count }}</div>
+      </div>
     </div>
   </div>
 

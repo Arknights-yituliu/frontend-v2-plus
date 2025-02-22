@@ -38,7 +38,7 @@
   .material-item-wrapper {
     min-width: max-content;
     .row label {
-      width: 50px;
+      width: 70px;
     }
   }
   .row {
@@ -54,8 +54,9 @@
 
     .num {
       position: absolute;
-      right: 2px;
-      bottom: 0;
+      right: 10px;
+      bottom: 7px;
+      line-height: normal;
       font-size: 18px;
       font-weight: bold;
       color: #000;
@@ -63,31 +64,6 @@
       -2px 2px 4px #ffffff, 2px 2px 4px #ffffff;
     }
   }
-}
-
-.permanent-store-good {
-  text-align: center;
-  border-collapse: collapse;
-  border: none;
-  height: 75px;
-  width: 80px;
-  margin: 4px;
-  margin-top: 8px;
-  margin-bottom: 12px;
-}
-
-.permanent-store-good-sprite {
-  position: relative;
-  width: 60px;
-  height: 60px;
-  margin: auto;
-}
-
-.permanent-store-good-sprite div {
-  position: absolute;
-  transform: scale(calc(60 / 183));
-  top: calc((-183px + 60px) / 2);
-  left: calc((-183px + 60px) / 2);
 }
 
 @media screen and (max-width: 600px) {
