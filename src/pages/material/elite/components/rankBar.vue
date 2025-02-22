@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getZoomScale, getBasePosition, getIconTop, getSpriteImg, getMaterialIdByName } from "../js/utils"
+import { getZoomScale, getBasePosition, getIconTop, getMaterialIdByName } from "../js/utils"
 import { materialMap } from '../js/maps' // 材料总映射
 import { barWidth, barHeight } from '../js/baseData' // 条的宽高
 
@@ -42,7 +42,7 @@ onMounted(() => {
     <div
       v-for="(item, index) in bgIconList"
       :key="index"
-      :class="['bg-icon', 'bar-icon', getSpriteImg(getMaterialIdByName(item.name, materialMap))]"
+      :class="['bg-icon', 'bar-icon', `bg-${getMaterialIdByName(item.name, materialMap)}`]"
       :style="item.style"
     ></div>
     <!-- 内容 -->
