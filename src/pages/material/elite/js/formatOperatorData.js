@@ -209,7 +209,7 @@ const formatRankMaterials = (element) => {
 
 // 根据itemId获取材料信息
 const getItemInfo = (itemId, quantity, map) => {
-  const item = map.get(itemId) // 材料对象
+  const item = map.get(itemId) || {} // 材料对象
   const { itemName, rarity, itemValueAp } = item
 
   return {

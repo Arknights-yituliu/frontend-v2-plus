@@ -34,7 +34,7 @@
 }
 
 .material-list {
-  padding-left: 60px;
+  padding-left: 30px;
   .material-item-wrapper {
     min-width: max-content;
     .row label {
@@ -54,7 +54,7 @@
 
     .num {
       position: absolute;
-      right: -7px;
+      right: 2px;
       bottom: 0;
       font-size: 18px;
       font-weight: bold;
@@ -63,6 +63,31 @@
       -2px 2px 4px #ffffff, 2px 2px 4px #ffffff;
     }
   }
+}
+
+.permanent-store-good {
+  text-align: center;
+  border-collapse: collapse;
+  border: none;
+  height: 75px;
+  width: 80px;
+  margin: 4px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.permanent-store-good-sprite {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin: auto;
+}
+
+.permanent-store-good-sprite div {
+  position: absolute;
+  transform: scale(calc(60 / 183));
+  top: calc((-183px + 60px) / 2);
+  left: calc((-183px + 60px) / 2);
 }
 
 @media screen and (max-width: 600px) {
