@@ -64,7 +64,7 @@ function getOperatorItemCost(charId, rarity, current, target) {
     const currentLevel = current.level
     const currentMainSkill = current.mainSkill
     const currentSkill1 = current.skill1
-    const currentSkill2 = current.skill3
+    const currentSkill2 = current.skill2
     const currentSkill3 = current.skill3
     const currentModX = current.modX
     const currentModY = current.modY
@@ -121,12 +121,13 @@ function getOperatorItemCost(charId, rarity, current, target) {
     }
 
     // 通用技能消耗的材料
-    for (let m = currentMainSkill; m <= targetMainSkill; m++) {
-        const list = allSkill[m]
+    for (let mainSkillRank = currentMainSkill; mainSkillRank < targetMainSkill; mainSkillRank++) {
+        console.log('test',mainSkillRank,'----',targetMainSkill)
+        const list = allSkill[mainSkillRank]
         for (let itemId in list) {
-            let count = allSkill[m][itemId];
+            let count = allSkill[mainSkillRank][itemId];
             _addItemCost(itemId, count)
-            debug(`主技能等级'+${m}`, target, itemId, count)
+            debug(`主技能等级'+${mainSkillRank}`, target, itemId, count)
         }
     }
 
@@ -333,7 +334,7 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
 
 
 function statisticsOperatorInfo(operatorList) {
-
+    console.log(operatorList)
     try {
 
         let logs = []
@@ -624,18 +625,9 @@ function splitMaterialByTier(tier, itemCollect) {
 
 
 function debug(breakpoint, operator, value1, value2, value3) {
+   return
 
-    return;
-    const {name, rarity} = operator
-    // if (rarity < 6) {
-    //     return
-    // }
-
-    if ('摩根' !== name) {
-        return;
-    }
-
-    console.log(breakpoint, ' {} ', name, ' {} ', value1, ' {} ', value2, ' {} ', value3)
+   console.log(breakpoint, ' {} ', name, ' {} ', value1, ' {} ', value2, ' {} ', value3)
 }
 
 export {
