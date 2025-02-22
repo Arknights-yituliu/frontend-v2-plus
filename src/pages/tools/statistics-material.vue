@@ -1,7 +1,7 @@
 <script setup>
 import {operatorTable} from "/src/utils/gameData.js";
 
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {splitMaterialByTier, statisticsOperatorInfo} from "/src/utils/survey/operatorStatistical.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {dateFormat} from "@/utils/dateUtil.js";
@@ -143,58 +143,56 @@ function statistics(list) {
 
   const {itemCostCollect, logs} = statisticsOperatorInfo(list)
   logList.value = logs
-
+  console.log(itemCostCollect)
 
   listItemCollect.value = splitMaterialByTier(3, itemCostCollect);
 
 
   for (const id in listItemCollect.value[2]) {
     const item = listItemCollect.value[2][id]
-
-
     if (T3ItemId.includes(item.id.toString())) {
       result.push(item)
     }
   }
 
   result.sort((a, b) => b.count - a.count)
+
+
   return result
 }
 
 
-console.log(operatorList)
+
 const formatDataList = formatData(operatorList);
-console.log(formatDataList)
+
 const groupData = groupAndSortByDate(formatDataList);
 
 
-for (const item of groupData) {
-  const result = statistics(item.group);
-  statisticsResult.push({
-    time: dateFormat(item.date),
-    date: item.date,
-    result: result
-  })
-}
-
-console.log(statisticsResult)
-
-// let xData = []
-// let yData = []
-//
-// for(const item of statisticsResult){
-//   if(item.date<1704115863000){
-//     continue
-//   }
-//
-//
+// for (const item of groupData) {
+//   const result = statistics(item.group);
+//   statisticsResult.push({
+//     time: dateFormat(item.date),
+//     date: item.date,
+//     result: result
+//   })
 // }
 
-// statistics()
+
+let statisticsResultCount = statistics(formatDataList)
+
+
+
 
 </script>
 <template>
-
+  <div>
+    <div class="flex flex-wrap" style="width: 520px">
+      <div v-for="item in statisticsResultCount" class="m-8">
+        <ItemImage size="60" :item-id="item.id"></ItemImage>
+        <div style="text-align: center">{{ item.count }}</div>
+      </div>
+    </div>
+  </div>
 
   <div v-for="group in statisticsResult">
     <div>{{ group.time }}</div>
