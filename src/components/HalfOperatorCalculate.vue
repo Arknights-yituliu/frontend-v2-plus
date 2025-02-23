@@ -262,7 +262,7 @@ function calculateTime() {
                 effect="light"
                 placement="top"
             >
-              若控制中枢入驻了阿斯卡纶，则启用“阿斯卡纶是否入驻控制中枢”
+              若控制中枢入驻了阿斯卡纶/烛煌，则启用“阿斯卡纶/烛煌是否入驻控制中枢”
             </el-tooltip>
           </li>
           <li>
