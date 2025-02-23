@@ -18,11 +18,6 @@ export const getIconTop = (iconBasePosition, ...params) => {
   return iconBasePosition + getOffsetTop(params)
 };
 
-// 材料图标
-export const getSpriteImg = (id, type) => {
-  return type === "icon" ? `bg-${id}_icon sprite_store_icon` : `bg-${id} store_sprite_${type}`;
-}
-
 // 通过材料名查询材料id
 export const getMaterialIdByName = (name, itemMap) => {
   for (const [itemId, { itemName }] of itemMap) {

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import materialAPI from "/src/api/material"; // 材料字典
+import stageDataCache from "/src/utils/indexedDB/stageDataCache.js";
 import surveyAPI from "/src/api/operatorData"; // 练度调查结果
 import {operatorTable} from "/src/utils/gameData.js";
 import operatorMaterialJSON from "/src/static/json/operator/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
@@ -18,11 +18,11 @@ const initFlag = ref(false)
 
 // 拆分出精英材料
 const materialTypeList = [
-  { type: 'orange', cardNums: [1] },
-  { type: 'purple', cardNums: [2, 3] },
-  { type: 'blue', cardNums: [4, 5] },
-  { type: 'green', cardNums: [6] },
-  { type: 'grey', cardNums: [7] }
+  { type: 'orange', rarity: 5, cardNums: [1] },
+  { type: 'purple', rarity: 4, cardNums: [2] },
+  { type: 'blue', rarity: 3, cardNums: [3] },
+  { type: 'green', rarity: 2, cardNums: [4] },
+  { type: 'grey', rarity: 1, cardNums: [5] }
 ].map(item => {
   // cardNums长度多一位兼容未来YJ可能出新的材料
   const lastCardNum = item.cardNums.at(-1);
@@ -31,9 +31,9 @@ const materialTypeList = [
 })
 // 芯片
 const chipsTypeList = [
-  { type: 'orange', cardNums: [11] },
-  { type: 'purple', cardNums: [10] },
-  { type: 'blue', cardNums: [9] }
+  { type: 'orange', rarity: 5, cardNums: [9] },
+  { type: 'purple', rarity: 4, cardNums: [8] },
+  { type: 'blue', rarity: 3, cardNums: [7] }
 ]
 const allTypeLists = [...materialTypeList, ...chipsTypeList];
 // 基础材料(数值固定不变的)
@@ -134,7 +134,7 @@ const init = async () => {
   result.forEach(item => statisticsMap.set(item.charId, item))
   // 材料总映射
   const stageConfig = getStageConfig()
-  const { data = [] } = await materialAPI.getItemValueTableV4(stageConfig)
+  const data = await stageDataCache.getItemValueCacheByConfig(stageConfig)
   data.forEach(item => materialMap.set(item.itemId, item))
   
   // 添加不存在的材料
@@ -157,8 +157,8 @@ const init = async () => {
   for (const [_, item] of materialMap.entries()) {
     for (const typeItem of allTypeLists) {
       if (!typeItem.materialList) typeItem.materialList = []
-      const { type, cardNums } = typeItem
-      if (cardNums.includes(item.cardNum) && item.type === type) {
+      const { rarity, cardNums } = typeItem
+      if (cardNums.includes(item.cardNum) && item.rarity === rarity) {
         typeItem.materialList.push(item);
       }
     }

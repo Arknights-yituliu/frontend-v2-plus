@@ -18,6 +18,15 @@ const collapseActive = ref(['1'])
 
 const emits = defineEmits(['update:modelValue', 'reset'])
 
+const options = [
+  { key: 'name', title: '开销项目', minWidth: '100' },
+  { key: 'icon', title: '图标', width: '100' },
+  { key: 'totalCost', title: '材料开销', formatter: costFormatter },
+  { key: 'position', title: '排名' },
+  { key: 'percent', title: '位于' },
+  { key: 'rank3', title: '精二/专三/开三级模组率' },
+]
+
 // 删除自定义干员
 const deleteOperator = () => {
   deleteOperatorData(detailData.value.charId) // 删除此自定义干员
@@ -26,11 +35,8 @@ const deleteOperator = () => {
   emits('update:modelValue', false)
 }
 
-function getEquipIcon(item){
-  if(item.typeIcon){
-    return `https://cos.yituliu.cn/equip-icon/${item.typeIcon}.png`
-  }
-  return noModIcon
+function getEquipIcon(typeIcon){
+  return typeIcon ? `https://cos.yituliu.cn/equip-icon/${typeIcon}.png` : noModIcon
 }
 
 </script>
@@ -54,25 +60,37 @@ function getEquipIcon(item){
             <h3>在 <span>{{ detailData.rarity }}</span> 星干员中, 材料消耗排名表:</h3>
           </template>
           <!-- 表格 -->
-          <el-table :data="detailTableData">
-            <el-table-column prop="name" label="开销项目" min-width="100"/>
-            <el-table-column label="图标" v-slot="{ row }">
-              <div :class="['bar-icon', row.iconClass]" :style="row.style" v-if="row.iconClass"></div>
-              <div :class="['mod-icon', 'bar-icon']"  v-else>
-                <img class="operator-equip-image" :src="getEquipIcon(row.typeIcon)">
-              </div>
-            </el-table-column>
-            <el-table-column prop="totalCost" label="材料开销" :formatter="costFormatter"/>
-            <el-table-column label="排名" v-slot="{ row }">
-              {{ row.position }}/{{ row.totalPosition }}
-            </el-table-column>
-            <el-table-column label="位于" v-slot="{ row }">
-              {{ ((row.position - 1) / (row.totalPosition - 1) * 100).toFixed(1) }}%
-            </el-table-column>
-            <el-table-column label="精二/专三/开三级模组率" v-slot="{ row }" width="200">
-              {{ percentFormatter(row, {property: row.rank3 ? 'rank3.rate' : 'rank2.rate' }) }}
-            </el-table-column>
-          </el-table>
+          <v-data-table
+            :headers="options"
+            :items="detailTableData"
+            hide-default-footer
+            striped
+            items-per-page="-1"
+          >
+            <template v-slot:item="{ item }">
+              <tr>
+                <!-- 开销项目 -->
+                <td>{{ item.name }}</td>
+                <!-- 图标 -->
+                <td>
+                  <div class="icon-container">
+                    <div :class="['bar-icon', item.iconClass]" :style="item.style" v-if="item.iconClass"></div>
+                    <div :class="['mod-icon', 'bar-icon']" v-else>
+                      <img class="operator-equip-image" :src="getEquipIcon(item.typeIcon)">
+                    </div>
+                  </div>
+                </td>
+                <!-- 材料开销 -->
+                <td>{{ costFormatter(item, 'totalCost') }}</td>
+                <!-- 排名 -->
+                <td>{{ item.position }}/{{ item.totalPosition }}</td>
+                <!-- 位于 -->
+                <td>{{ ((item.position - 1) / (item.totalPosition - 1) * 100).toFixed(1) }}%</td>
+                <!-- 精二/专三/开三级模组率 -->
+                <td>{{ percentFormatter(item, item.rank3 ? 'rank3.rate' : 'rank2.rate') }}</td>
+              </tr>
+            </template>
+          </v-data-table>
         </el-collapse-item>
         <el-collapse-item title="消耗排名柱状图" name="2">
           <!-- 柱状图 -->
@@ -188,12 +206,13 @@ function getEquipIcon(item){
         height: 128px;
         background-image: url('../imgs/no_mod_icon_128.png');
       }
-      .el-table__row .cell {
-        position: relative;
-        height: 55px;
-        line-height: 55px;
-        padding-left: 0;
-        margin-left: 12px;
+      .v-table__wrapper tr td {
+        padding-top: 6px;
+        .icon-container {
+          position: relative;
+          height: 55px;
+          line-height: 55px;
+        }
       }
     
       .bar-group {

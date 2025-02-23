@@ -34,11 +34,11 @@
 }
 
 .material-list {
-  padding-left: 60px;
+  padding-left: 30px;
   .material-item-wrapper {
     min-width: max-content;
     .row label {
-      width: 50px;
+      width: 70px;
     }
   }
   .row {
@@ -54,8 +54,9 @@
 
     .num {
       position: absolute;
-      right: -7px;
-      bottom: 0;
+      right: 10px;
+      bottom: 7px;
+      line-height: normal;
       font-size: 18px;
       font-weight: bold;
       color: #000;
