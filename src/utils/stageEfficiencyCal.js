@@ -5,37 +5,31 @@ import {getStageConfig} from "@/utils/user/userConfig.js";
 import tmpData from '/src/static/json/tmp/yituliu.json'
 import {dateFormat} from "@/utils/dateUtil.js";
 import {cMessage} from "@/utils/message.js";
+import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
+import ITEM_INFO from '/src/static/json/material/item_info.json'
+import {getStageDropCollect} from "/src/utils/penguinData.js";
 
 
+/**
+ * 读取材料信息、关卡信息
+ * @param stageConfig  刷图推荐自定义配置
+ * @returns {Promise<{itemMap: Map<any, any>, stageInfoMap: Map<any, any>}>}
+ */
 async function loadingData(stageConfig) {
 
+    //材料信息
     let itemMap = new Map()
+    //关卡信息
     let stageInfoMap = new Map()
-    let stageDropCollect = new Map()
+
 
     let stageInfo = await stageDataCache.getStageInfoCache()
 
     for (const stage of stageInfo) {
         stageInfoMap.set(stage.stageId, stage)
     }
-    let penguinMatrix = []
-    const source =  stageConfig.source
-    if('yituliu'===source){
-         penguinMatrix = tmpData.matrix
-    }else {
-         penguinMatrix = await stageDataCache.getPenguinMatrixCache()
-    }
 
 
-
-
-    let toughStage = penguinMatrix.filter(e => e.stageId.indexOf("tough") > -1)
-    let toughStageMap = new Map()
-
-    for (const item of toughStage) {
-        const key = `${item.stageId.replace('tough', 'main')}-${item.itemId}`
-        toughStageMap.set(key, item)
-    }
 
     const itemList = await stageDataCache.getItemValueCacheByConfig(stageConfig)
     for (const item of itemList) {
@@ -45,80 +39,20 @@ async function loadingData(stageConfig) {
         itemMap.set(item.itemId, item)
     }
 
-    let stageBlacklistMap = new Map()
 
-    if(stageConfig.stageBlacklist){
-        for (const item of stageConfig.stageBlacklist) {
-            stageBlacklistMap.set(item.stageId, item.stageCode)
-        }
-    }
-
-    let sampleSize = 300
-    if(stageConfig.sampleSize){
-        sampleSize = stageConfig.sampleSize
-    }
-
-
-    for (let item of penguinMatrix) {
-
-        const {stageId,itemId,quantity,times,start,end} = item
-
-        if (stageBlacklistMap.get(stageId)) {
-            console.log(stageId)
-            continue
-        }
-
-
-
-        if (item.stageId.indexOf("main_14") > -1&&'penguin'===source) {
-            if (item.end) {
-                continue
-            }
-        }
-
-        if (stageId.indexOf('tough') > -1) {
-            continue
-        }
-
-        if(times<sampleSize){
-            continue
-        }
-
-        const toughKey = `${item.stageId}-${item.itemId}`
-
-        if (toughStageMap.get(toughKey)) {
-            const toughData = toughStageMap.get(toughKey)
-            // if(stageId==='main_14-13'){
-            //     console.log(toughData)
-            // }
-            item = {
-                stageId: stageId,
-                itemId: itemId,
-                quantity: toughData.quantity + quantity,
-                times: toughData.times + times,
-                start:start,
-                end: end
-            }
-        }
-
-
-
-        if (stageDropCollect.get(item.stageId)) {
-            stageDropCollect.get(item.stageId).push(item)
-        } else {
-            stageDropCollect.set(item.stageId, [item])
-        }
-    }
-
-    return {itemMap, stageInfoMap, stageDropCollect}
+    return {itemMap, stageInfoMap}
 }
+
+
+
 
 
 async function calculationStageEfficiency(stageConfig) {
     const start = new Date().getTime()
-    const {itemMap, stageInfoMap, stageDropCollect} = await loadingData(stageConfig)
+    const {itemMap, stageInfoMap} = await loadingData(stageConfig)
+    const stageDropCollect =await  getStageDropCollect(stageConfig)
     const loading = new Date().getTime()
-    console.log("加载数据",loading-start,'ms')
+    console.log("加载数据", loading - start, 'ms')
 
     let stageResultList = []
 
@@ -130,7 +64,7 @@ async function calculationStageEfficiency(stageConfig) {
             continue;
         }
 
-        const {apCost, stageCode, zoneName, stageType,end} = stageInfo
+        const {apCost, stageCode, zoneName, stageType, end} = stageInfo
 
 
         let stageEfficiency = 0.0;
@@ -177,8 +111,8 @@ async function calculationStageEfficiency(stageConfig) {
                 value: value,
                 knockRating: knockRating,
                 rarity: parseInt(rarity),
-                quantity:quantity,
-                times:times,
+                quantity: quantity,
+                times: times,
                 sampleSize: times,
                 end: end,
             }
@@ -193,7 +127,6 @@ async function calculationStageEfficiency(stageConfig) {
             // }
             stageDropValue.push(dropValue)
         }
-
 
 
         stageDropValue.sort((a, b) => b.value - a.value)
@@ -226,7 +159,7 @@ async function calculationStageEfficiency(stageConfig) {
                 mainItemId = itemId
                 mainItemName = itemName
                 itemRarity = rarity
-                mainApExpect = apCost/knockRating ;
+                mainApExpect = apCost / knockRating;
                 mainKnockRating = knockRating;
                 mainSampleSize = sampleSize
             }
@@ -292,7 +225,7 @@ async function calculationStageEfficiency(stageConfig) {
             zoneName: zoneName,
             itemName: mainItemName,
             itemId: mainItemId,
-            itemSeriesId:seriesInfo.seriesId,
+            itemSeriesId: seriesInfo.seriesId,
             itemRarity: itemRarity,
             secondaryItemId: secondaryItemId,
             apExpect: mainApExpect,
@@ -303,7 +236,7 @@ async function calculationStageEfficiency(stageConfig) {
             leT3Efficiency: leT3Efficiency,
             leT4Efficiency: leT4Efficiency,
             orundumPerAp: orundumPerAp,
-            lmdcost:LMDCostPerAp*600/apCost/orundumPerAp/10000,
+            lmdcost: LMDCostPerAp * 600 / apCost / orundumPerAp / 10000,
             end: endTimeStamp
         }
 
@@ -312,7 +245,7 @@ async function calculationStageEfficiency(stageConfig) {
     }
 
 
-    console.log("计算效率",loading-start,'ms')
+    console.log("计算效率", loading - start, 'ms')
     return stageResultList
 
 
@@ -324,19 +257,19 @@ async function getStageData() {
     const start = new Date().getTime()
     let stageResultList = await calculationStageEfficiency(stageConfig)
     const getData = new Date().getTime()
-    console.log("获取关卡效率",getData-start,'ms')
+    console.log("获取关卡效率", getData - start, 'ms')
     let openStageResult = stageResultList.filter(e => e.end > new Date().getTime())
     const recommendedStage = getRecommendedStage(openStageResult)
     const orundumRecommendedStage = getOrundumRecommendedStage(openStageResult)
     const historyActStage = getHistoryActStage(stageResultList)
-    console.log("返回结果",new Date().getTime()-getData,'ms')
+    console.log("返回结果", new Date().getTime() - getData, 'ms')
     const updateTime = dateFormat(new Date(), 'yyyy/MM/dd HH:mm');
     cMessage(`已从企鹅数据同步掉率——${updateTime}`)
     return {
         recommendedStage: recommendedStage,
         orundumRecommendedStageVO: orundumRecommendedStage,
         historyActStage: historyActStage,
-        updateTimeVO:updateTime
+        updateTimeVO: updateTime
     }
 }
 
@@ -348,7 +281,7 @@ function getRecommendedStage(stageResultList) {
 
     let recommendedStageCollect = new Map()
     for (const item of stageResultList) {
-        const {itemName, itemId,itemSeriesId} = item
+        const {itemName, itemId, itemSeriesId} = item
         if (recommendedStageCollect.get(itemSeriesId)) {
             recommendedStageCollect.get(itemSeriesId).push(item)
         } else {
@@ -369,10 +302,10 @@ function getRecommendedStage(stageResultList) {
 
 function getOrundumRecommendedStage(stageResultList) {
     stageResultList = stageResultList
-        .filter(e => e.orundumPerAp > 0.5||(e.stageType === 'ACT' || e.stageType === "ACT_REP"))
+        .filter(e => e.orundumPerAp > 0.5 || (e.stageType === 'ACT' || e.stageType === "ACT_REP"))
         .sort((a, b) => b.orundumPerAp - a.orundumPerAp)
     let maxOrundumPerAp = 1.0898
-    if(stageResultList.length>1){
+    if (stageResultList.length > 1) {
         maxOrundumPerAp = stageResultList[0].orundumPerAp
     }
 

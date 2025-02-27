@@ -6,12 +6,15 @@ import {exportExcel} from "/src/utils/exportExcel";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import itemValueCache from '/src/utils/indexedDB/stageDataCache.js'
+import {getCustomItemList} from "/src/utils/itemValue.js";
 
 let value_unit = ref('itemValueAp')
 
 let itemValueCollect = ref([])
 
 let itemValueList = ref([])
+
+
 
 function exportItemValueJson() {
   let itemList = []
@@ -65,7 +68,9 @@ function formattedItemDisplayList(itemList) {
 
 onMounted(() => {
   const stageConfig = getStageConfig()
-
+  getCustomItemList(stageConfig).then(response=>{
+    console.log(response)
+  })
   itemValueCache.getItemValueCacheByConfig(stageConfig).then(response => {
     itemValueList.value = response
     let tmpList = []

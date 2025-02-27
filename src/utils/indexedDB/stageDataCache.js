@@ -74,7 +74,7 @@ async function getPenguinMatrixCache(forceRefresh = false) {
 }
 
 async function getStageInfoCache(forceRefresh = false) {
-    const cacheKey = 'stageInfo'
+    const cacheKey = 'stageInfo202502251'
     let cacheData
     if (!forceRefresh) {
         let cacheData = await myDatabase.cache_data.get(cacheKey)
