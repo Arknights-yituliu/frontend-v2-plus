@@ -130,7 +130,7 @@ function getItemCardData() {
 function getItemTableData(index, isJump) {
   //当前材料系列的推荐关卡
   let recommendedStage = stageResultGroup.value[index];
-  console.log(stageResultGroup.value)
+  // console.log(stageResultGroup.value)
 
   //推荐关卡集合
   let stageResultList = recommendedStage.stageResultList;
@@ -208,7 +208,6 @@ function openNewPage() {
 }
 
 
-
 onMounted(() => {
   stageResultGroup.value = TMP_STAGE_RESULT.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
   orundumRecommendedStage.value = TMP_STAGE_RESULT.orundumRecommendedStage
@@ -284,7 +283,9 @@ onMounted(() => {
         variant="tonal"
         density="compact"
     >
-      <p> 官方修复了12-17掉率偏低的bug，数据源还需要一段时间更新，切削液推荐从12-17获取，详情可点击<a style="color: orangered;cursor: pointer"  @click="openNewPage()">《史无前例的掉率降低！全网最速复盘12-17Bug事件始末！》</a>查看</p>
+      <p> 官方修复了12-17掉率偏低的bug，数据源还需要一段时间更新，切削液推荐从12-17获取，详情可点击<a
+          style="color: orangered;cursor: pointer"
+          @click="openNewPage()">《史无前例的掉率降低！全网最速复盘12-17Bug事件始末！》</a>查看</p>
     </v-alert>
 
     <!-- 卡片区域 -->
@@ -371,7 +372,6 @@ onMounted(() => {
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
     </div>
-
 
 
     <!-- 材料情报卡 -->

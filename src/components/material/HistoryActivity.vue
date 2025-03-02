@@ -53,7 +53,20 @@ function getStageEfficiency(info) {
 
 }
 
+
+let dataLength = ref(0)
+
 function formatPcHistoryTableData() {
+
+  if(dataLength.value === props.modelValue.length){
+    console.log('数据未更新')
+    return
+  }
+
+  dataLength.value = props.modelValue.length
+  console.log('数据更新')
+  historyActivityList.value = props.modelValue
+
   historyActivityTable.value = []
   // 每种材料距离上次up间隔
   let lastUpInterval = 0;
@@ -128,6 +141,8 @@ function formatPcHistoryTableData() {
   historyActivityTableHeaders.value.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
 }
 
+setInterval(formatPcHistoryTableData, 500)
+
 function getCellBgColor(rowIndex, maxIndex) {
 
   if (rowIndex < REPRODUCTION_ACTIVITY.length) {
@@ -146,12 +161,14 @@ function getTableDividerClass(divider) {
   }
 }
 
-watch(() => props.modelValue.length, () => {
-  historyActivityList.value = props.modelValue
-  formatPcHistoryTableData()
-})
+
+
+
+
 
 </script>
+
+
 
 <template>
   <div class="module-header" id="history-stage-table">
