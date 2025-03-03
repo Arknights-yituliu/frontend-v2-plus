@@ -10,9 +10,7 @@ import POTENTIAL_TABLE from '/src/static/json/tools/potential_gacha_resources.js
 import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'
 import FIXED_TABLE from '/src/static/json/tools/schedule_fixed.json'
 import materialAPI from "/src/api/material.js";
-import {cMessage} from "/src/utils/message.js";
-import {ElNotification} from "element-plus";
-
+import {createMessage} from "/src/utils/message.js";
 
 import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
@@ -917,7 +915,7 @@ function gachaResourcesCalculation() {
         let purchaseQuantity = Math.ceil(dailyReward.value.daily / 30)
         //加上额外购买的月卡数量,判断是否额外购买了超过3个月
         if (rechargeOption.value.additionalMonthlyCardPurchase > 3) {
-          cMessage('月卡一次性只能最大购买90天', 'error')
+          createMessage({type:'error',text:'月卡一次性只能最大购买90天'})
         } else {
           //加上额外购买的月卡数量
           purchaseQuantity += rechargeOption.value.additionalMonthlyCardPurchase

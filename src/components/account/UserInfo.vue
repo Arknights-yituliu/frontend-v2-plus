@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import {cMessage} from "/src/utils/message";
+import {createMessage} from "/src/utils/message";
 import userInfoAPI from "/src/api/userInfo"
 import "/src/assets/css/account/home.scss";
 import {userInfo} from '/src/utils/user/userInfo.js'
@@ -71,7 +71,7 @@ function updateAvatar() {
   }
 
   userInfoAPI.updateUserDataV2(data).then(response => {
-    cMessage('头像更新成功')
+    createMessage({type:'success',text:'头像更新成功'})
     userInfo.value.avatar = response.data.avatar
 
   })
@@ -80,14 +80,14 @@ function updateAvatar() {
 
 function sendUpdateEmailVerificationCode() {
   userInfoAPI.sendUpdateEmailVerificationCode(formData.value).then(response => {
-    cMessage('验证码已发送')
+    createMessage({type:'success',text:'验证码已发送'})
   })
 }
 
 function sendVerificationCode() {
   formData.value.mailUsage = "register"
   userInfoAPI.sendVerificationCodeV2(formData.value).then(response => {
-    cMessage('验证码已发送')
+    createMessage({type:'success',text:'验证码已发送'})
   })
 }
 
@@ -102,7 +102,7 @@ function checkVerificationCode(){
 
 function bindEmail() {
   userInfoAPI.bindEmail(formData.value).then(response => {
-    cMessage('邮箱绑定成功')
+    createMessage({type:'success',text:'邮箱绑定成功'})
     setTimeout(() => {
       location.reload();
     }, 2000)
@@ -120,7 +120,7 @@ function updateUserName() {
     property: "userName"
   }
   userInfoAPI.updateUserDataV2(data).then(response => {
-    cMessage('用户名更改成功')
+    createMessage({type:'success',text:'用户名更改成功'})
     userInfo.value.userName = response.data.userName
 
   })

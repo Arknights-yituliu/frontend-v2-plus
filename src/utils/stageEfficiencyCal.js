@@ -2,11 +2,7 @@ import stageDataCache from "/src/utils/indexedDB/stageDataCache.js";
 import ITEM_SERIES_TABLE from '/src/static/json/material/item_series_table.json'
 import ITEM_TYPE_TABLE from '/src/static/json/material/item_type_table.json'
 import {getStageConfig} from "@/utils/user/userConfig.js";
-import tmpData from '/src/static/json/tmp/yituliu.json'
 import {dateFormat} from "@/utils/dateUtil.js";
-import {cMessage} from "@/utils/message.js";
-import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
-import ITEM_INFO from '/src/static/json/material/item_info.json'
 import {getStageDropCollect} from "/src/utils/penguinData.js";
 
 
@@ -264,7 +260,7 @@ async function getStageData() {
     const historyActStage = getHistoryActStage(stageResultList)
     console.log("返回结果", new Date().getTime() - getData, 'ms')
     const updateTime = dateFormat(new Date(), 'yyyy/MM/dd HH:mm');
-    cMessage(`已从企鹅数据同步掉率——${updateTime}`)
+
     return {
         recommendedStage: recommendedStage,
         orundumRecommendedStageVO: orundumRecommendedStage,

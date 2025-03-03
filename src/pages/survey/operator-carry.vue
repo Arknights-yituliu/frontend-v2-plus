@@ -3,7 +3,7 @@ import {professionDict} from '/src/utils/survey/common.js'
 import {operatorTable} from "/src/utils/gameData.js";
 import {onMounted, ref} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
-import {cMessage} from "/src/utils/message.js";
+import {createMessage} from "/src/utils/message.js";
 import questionnaireAPI from "/src/api/questionnaire.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
@@ -44,7 +44,7 @@ function chooseOperatorProfession(profession) {
 
 function chooseOperator(operator) {
   if (operatorTeam.value.length > 11) {
-    cMessage('不能选择超过12位干员', 'error')
+    createMessage({type:'error',text:'不能选择超过12位干员'})
     return;
   }
 
@@ -98,7 +98,7 @@ function uploadQuestionnaire() {
     operatorList: charIdList.value
   }
   questionnaireAPI.uploadQuestionnaireInfo(data).then(response=>{
-    cMessage('提交成功')
+    createMessage({type:'success',text:'提交成功'})
   })
 }
 

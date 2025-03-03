@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue";
 import '/src/assets/css/account/login.v2.scss'
 import '/src/assets/css/account/login.v2.phone.scss'
 import userAPI from '/src/api/userInfo.js'
-import {cMessage} from "/src/utils/message.js";
+import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
 
 
@@ -76,7 +76,7 @@ function toRegister() {
   const param = getParam()
   userAPI.registerV3(param).then(response => {
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
-    cMessage('登录成功，即将转跳到森空岛导入页面')
+    createMessage({type:'success',text:'登录成功，即将转跳到森空岛导入页面'})
     setTimeout(() => {
       router.push({name:'IMPORT_BY_SKLAND'})
     }, 3000)
@@ -90,7 +90,7 @@ function sendVerificationCode() {
   }
   userAPI.sendVerificationCodeV2(data).then(response => {
 
-    cMessage('验证码发送成功')
+    createMessage({type:'success',text:'验证码发送成功'})
   })
 }
 

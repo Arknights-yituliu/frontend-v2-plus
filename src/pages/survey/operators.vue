@@ -1,6 +1,5 @@
 <script setup>
-import {cMessage} from "/src/utils/message.js";
-import userAPI from "/src/api/userInfo";
+import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/operatorData.js"
 import {onMounted, ref} from "vue";
 import {operatorRecommend} from "/src/utils/survey/operatorRecommend";
@@ -90,7 +89,7 @@ function getOperatorData() {
 
     operatorList.value = tmpList
     displayOperatorList.value = filterOperatorList(operatorList.value)
-    cMessage("导入了 " + list.length + " 条数据");
+    createMessage({type:'success',text:"导入了 " + list.length + " 条数据"});
 
   });
 }
@@ -168,7 +167,7 @@ const upload = debounce(() => {
   let uploadList = createUploadData();
   operatorDataAPI.uploadOperatorInfo(uploadList).then((response) => {
     uploadMessage.value = response.data;
-    cMessage("保存成功");
+    createMessage({type:'success',text:"保存成功"});
     selectedCharId.value = {};
   });
 }, 5000)

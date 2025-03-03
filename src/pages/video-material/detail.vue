@@ -54,7 +54,7 @@
 <script setup>
 import stageApi from "/src/api/material";
 import {onMounted, ref} from "vue";
-import {cMessage} from '/src/utils/message'
+import { createMessage} from '/src/utils/message'
 
 
 
@@ -100,7 +100,7 @@ function getStageDetailByStageId(stage_id) {
   let stage_result_detail = all_stage_result_detail.value[stage_id];
   if (typeof stage_result_detail === "undefined") {
     stage_result_detail = []
-    cMessage(`${stage_id}没有掉落数据`, 'error')
+    createMessage({type:'error',text:`${stage_id}没有掉落数据`})
     return;
   }
 

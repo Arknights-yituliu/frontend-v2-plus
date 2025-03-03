@@ -1,5 +1,5 @@
 import axios from "axios";
-import {cMessage} from "/src/utils/message.js";
+import {createMessage} from "/src/utils/message.js";
 import {DOMAIN} from "/src/api/BASE_URL";
 import {getUid,getUserTokenV2} from "/src/utils/user/userInfo.js";
 
@@ -26,7 +26,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response) => {
         if (response.data.code !== 200) {
-            cMessage(response.data.msg, "error");
+            createMessage({text:response.data.msg, type:"error"});
             return Promise.reject(response.data);
         } else {
             return response.data;

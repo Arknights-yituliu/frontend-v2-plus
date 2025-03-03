@@ -53,6 +53,10 @@ function dateDiff(startDate, endDate) {
 
 }
 
+
+
+
+
 function checkType(input) {
     if (typeof input === 'object' && input instanceof Date) {
         return input

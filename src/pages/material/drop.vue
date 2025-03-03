@@ -3,7 +3,7 @@ import {ref} from "vue";
 import stageDataCache from "@/utils/indexedDB/stageDataCache.js";
 import materialAPI from "@/api/material.js";
 import {NDatePicker} from 'naive-ui'
-import {cMessage} from "@/utils/message.js";
+import {createMessage} from "@/utils/message.js";
 import {formatNumber} from "@/utils/format.js";
 import {dateFormat} from "@/utils/dateUtil.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
@@ -126,7 +126,7 @@ function getStageDropByStageId() {
     }
 
     stageDropCollect.value.sort((a, b) => a.timeStamp - b.timeStamp)
-    cMessage("查询成功")
+    createMessage({type:'success',text:"查询成功"})
   })
 }
 
