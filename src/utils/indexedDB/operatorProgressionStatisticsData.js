@@ -19,10 +19,12 @@ async function getData(cacheKey) {
     await operatorDataAPI.getOperatorStatisticsResult().then(response => {
         console.log(cacheKey,'返回来自服务器的数据')
         const data = response.data
-        const cacheData = {id: cacheKey, resource: data, version: "automated", createTime: new Date().getTime()}
-        putCache(cacheData)
-        return data
+        const responseCache = {id: cacheKey, resource: data, version: "automated", createTime: new Date().getTime()}
+        putCache(responseCache)
+        cacheData = data
     })
+
+    return  cacheData
 
 }
 

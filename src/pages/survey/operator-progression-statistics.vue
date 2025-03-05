@@ -4,11 +4,12 @@ import "/src/assets/css/survey/rank.phone.scss";
 import {onMounted, ref} from "vue";
 import {operatorTable} from "/src/utils/gameData.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import operatorDataApi from "/src/api/operatorData";
 import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
 import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
-import {debounce} from "/src/utils/debounce.js";
-import OperatorStatisticsDetail from "/src/components/survey/OperatorStatisticsDetail.vue";
+
+import {formatNumber} from "@/utils/format.js";
+import EquipIcon from "@/components/sprite/EquipIcon.vue";
+import SkillIcon from "@/components/sprite/SkillIcon.vue";
 
 
 let operatorsStatisticsList = ref([]);
@@ -18,10 +19,13 @@ let displayOperatorsList = ref([])
 
 const displayFilterCondition = ['profession', 'rarity', 'date', 'itemObtainApproach']
 
-const addFilterConditionAndFilterOperator = debounce((func, index) => {
+
+function addFilterConditionAndFilterOperator(func, index) {
+
   func(index)
   displayOperatorsList.value = filterOperatorList(operatorsStatisticsList.value)
-}, 500)
+
+}
 
 function btnAction(action) {
   if (!action) {
@@ -53,6 +57,15 @@ for (const item of headers2) {
 }
 
 
+// 后端返回的数据为如下格式，下面的部分函数为格式化数据函数
+// {
+// count: 1-3级合计占比,
+// rank0:0级、未开启占比，
+// rank1:1级占比
+// rank2:2级占比
+// rank3:3级占比
+// }
+
 async function getCharStatisticsResult() {
 
   const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatisticsV2');
@@ -69,14 +82,14 @@ async function getCharStatisticsResult() {
       item.itemObtainApproach = charInfo.itemObtainApproach
       item.skill = charInfo.skill
       item.equip = charInfo.equip
-      item.eliteS = item.elite.rank2
-      item.skill1S = item.skill1.rank3
-      item.skill2S = item.skill2.rank3
-      item.skill3S = item.skill3.rank3
-      item.modXS = item.modX.rank3
-      item.modYS = item.modY.rank3
-      item.modDS = item.modD.rank3
-      item.modAS = item.modA.rank3
+      item.eliteS = formatNumber(item.elite.rank2 * 100, 1)
+      item.skill1S = formatNumber(item.skill1.rank3 * 100, 1)
+      item.skill2S = formatNumber(item.skill2.rank3 * 100, 1)
+      item.skill3S = formatNumber(item.skill3.rank3 * 100, 1)
+      item.modXS = formatNumber(item.modX.rank3 * 100, 1)
+      item.modYS = formatNumber(item.modY.rank3 * 100, 1)
+      item.modDS = formatNumber(item.modD.rank3 * 100, 1)
+      item.modAS = formatNumber(item.modA.rank3 * 100, 1)
       item.available = true
       item.date = charInfo.date
     } else {
@@ -86,8 +99,8 @@ async function getCharStatisticsResult() {
   result = result.filter(e => e.name)
 
   operatorsStatisticsList.value = result
-  displayOperatorsList.value = filterOperatorList(operatorsStatisticsList.value)
 
+  displayOperatorsList.value = filterOperatorList(operatorsStatisticsList.value)
 
 }
 
@@ -112,18 +125,63 @@ function quickSort(arr, compare = (a, b) => a - b) {
 }
 
 
-// 后端返回的数据为如下格式，下面的部分函数为格式化数据函数
-// {
-// count: 1-3级合计占比,
-// rank0:0级、未开启占比，
-// rank1:1级占比
-// rank2:2级占比
-// rank3:3级占比
-// }
+let operatorsStatisticsDetail = ref({})
 
-const formatCellData = (data) => {
-  return `${(data * 100).toFixed(1)}%`
+let operatorsStatisticsDetailDialog = ref(false)
+
+function openOperatorsStatisticsDetail(operator) {
+
+
+  const {skill, equip} = operator
+  const data = []
+
+  for (let index = 0; index < 3; index++) {
+    const info = skill[index]
+    const num = index + 1
+    const ranks = operator[`skill${num}`]
+    const item = {
+      label: info.name,
+      type: 'skill',
+      iconId: info.iconId,
+      ranks: [
+        formatNumber(ranks.rank1 * 100, 1),
+        formatNumber(ranks.rank2 * 100, 1),
+        formatNumber(ranks.rank3 * 100, 1)
+      ]
+    }
+    data.push(item)
+  }
+
+  for (const info of equip) {
+    const ranks = operator[`mod${info.typeName2}`]
+    const item = {
+      label: info.uniEquipName,
+      type: 'equip',
+      iconId: info.typeIcon,
+      ranks: [
+        formatNumber(ranks.rank1 * 100, 1),
+        formatNumber(ranks.rank2 * 100, 1),
+        formatNumber(ranks.rank3 * 100, 1)
+      ]
+    }
+    data.push(item)
+  }
+
+  operatorsStatisticsDetail.value = data
+  operatorsStatisticsDetailDialog.value = true
+
+
+
 }
+
+const detailHeader = [
+  {title: '查看项目', sortable: false},
+  {title: '图标', sortable: false},
+  {title: '等级一', sortable: false},
+  {title: '等级二', sortable: false},
+  {title: '等级三', sortable: false}
+]
+
 
 onMounted(() => {
   getCharStatisticsResult()
@@ -157,7 +215,7 @@ onMounted(() => {
 
     <v-card class="rank-card">
       <v-card-subtitle>
-        表格展示数据为技能专三率和模组3级开启率，将鼠标移至技能和模组数字上方可查看所有等级的详细数据
+        表格展示数据为技能专三率和模组3级开启率，点击干员的头像查看完整数据
       </v-card-subtitle>
       <v-data-table
           v-model:sort-by="sortBy"
@@ -165,66 +223,50 @@ onMounted(() => {
           :items="displayOperatorsList"
           hide-default-footer
           items-per-page="-1">
-        <template v-slot:item.charId="{ item }">
-          <OperatorAvatar rounded :char-id="item.charId" :size="60"></OperatorAvatar>
+        <template v-slot:item="{ item }">
+          <tr @click="openOperatorsStatisticsDetail(item)">
+            <td>
+              <OperatorAvatar rounded :char-id="item.charId" :size="60"></OperatorAvatar>
+            </td>
+            <td>{{ item.own }}%</td>
+            <td>{{ item.eliteS }}%</td>
+            <td>{{ item.skill1S }}%</td>
+            <td>{{ item.skill2S }}%</td>
+            <td>{{ item.skill3S }}%</td>
+            <td>{{ item.modXS }}%</td>
+            <td>{{ item.modYS }}%</td>
+            <td>{{ item.modDS }}%</td>
+            <td>{{ item.modAS }}%</td>
+          </tr>
         </template>
-        <template v-slot:item.own="{ item }">
-          {{ formatCellData(item.own) }}
-        </template>
-        <template v-slot:item.eliteS="{ item }">
-          {{ formatCellData(item.eliteS) }}
-        </template>
-        <template v-slot:item.skill1S="{ item }">
-          <div class="display-data">
-            {{ formatCellData(item.skill1S) }}
-            <OperatorStatisticsDetail :data="item.skill1" class="display-detail-data">
-            </OperatorStatisticsDetail>
-          </div>
-        </template>
-        <template v-slot:item.skill2S="{ item }">
-          <div class="display-data">
-            {{ formatCellData(item.skill2S) }}
-            <OperatorStatisticsDetail :data="item.skill2" class="display-detail-data">
-            </OperatorStatisticsDetail>
-          </div>
-        </template>
-        <template v-slot:item.skill3S="{ item }">
-          <div class="display-data">
-            {{ formatCellData(item.skill3S) }}
-            <OperatorStatisticsDetail :data="item.skill3" class="display-detail-data">
-            </OperatorStatisticsDetail>
-          </div>
-        </template>
-        <template v-slot:item.modXS="{ item }">
-          <div class="display-data">
-            {{ formatCellData(item.modXS) }}
-            <OperatorStatisticsDetail :data="item.modX" class="display-detail-data">
-            </OperatorStatisticsDetail>
-          </div>
-        </template>
-        <template v-slot:item.modYS="{ item }">
-          <div class="display-data">
-            {{ formatCellData(item.modYS) }}
-            <OperatorStatisticsDetail :data="item.modY" class="display-detail-data">
-            </OperatorStatisticsDetail>
-          </div>
-        </template>
-        <template v-slot:item.modDS="{ item }">
-          <div class="display-data">
-            {{ formatCellData(item.modDS) }}
-            <OperatorStatisticsDetail :data="item.modD" class="display-detail-data">
-            </OperatorStatisticsDetail>
-          </div>
-        </template>
-        <template v-slot:item.modAS="{ item }">
-          <div class="display-data">
-            {{ formatCellData(item.modAS) }}
-            <OperatorStatisticsDetail :data="item.modA" class="display-detail-data">
-            </OperatorStatisticsDetail>
-          </div>
-        </template>
+
       </v-data-table>
     </v-card>
+
+    <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
+      <v-card>
+        <v-card-text>
+          <v-data-table
+              :headers="detailHeader"
+              :items="operatorsStatisticsDetail"
+              hide-default-footer
+              items-per-page="-1">
+            <template v-slot:item="{ item }">
+              <tr>
+                <td>{{item.label}}</td>
+                <td>
+                  <EquipIcon :icon="item.iconId"  :size="36"  v-show="item.type==='equip'"></EquipIcon>
+                  <SkillIcon size="40" :mobile-size="30" :border="true" :icon="`${item.iconId}`" v-show="item.type==='skill'"></SkillIcon>
+                </td>
+                <td v-for="rank in item.ranks">
+                  {{rank}}%
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
   </div>
 </template>

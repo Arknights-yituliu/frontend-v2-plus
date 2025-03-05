@@ -14,7 +14,7 @@ import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/ope
 
 import OperatorStatisticalTable from "/src/components/survey/OperatorStatisticalTable.vue";
 import deepClone from "/src/utils/deepClone.js";
-import EquipIcon from "/src/components/EquipIcon.vue";
+import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import {formatNumber} from "../../utils/format.js";

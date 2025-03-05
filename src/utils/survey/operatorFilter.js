@@ -145,13 +145,10 @@ function filterOperatorList(list) {
                 }
             }
             display = display&&flag
-            // logText+=`{  }结果:${flag}`
+
         }
-        // logText+=`{  }最终结果${display}`
-        // console.log(logText)
 
         if (display) {
-            // console.log('加入了')
             displayList.push(operator)
         }
     }
