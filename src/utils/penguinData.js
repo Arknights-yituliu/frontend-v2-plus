@@ -1,4 +1,4 @@
-import tmpData from "@/static/json/tmp/yituliu.json";
+// import tmpData from "@/static/json/tmp/yituliu.json";
 import stageDataCache from "@/utils/indexedDB/stageDataCache.js";
 
 async function getStageDropCollect(stageConfig) {
@@ -6,7 +6,7 @@ async function getStageDropCollect(stageConfig) {
     let penguinMatrix = []
 
     if ('yituliu' === source) {
-        penguinMatrix = tmpData.matrix
+        // penguinMatrix = tmpData.matrix
     } else {
         penguinMatrix = await stageDataCache.getPenguinMatrixCache()
     }

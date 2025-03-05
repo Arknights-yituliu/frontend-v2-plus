@@ -82,6 +82,7 @@ async function getCharStatisticsResult() {
       item.itemObtainApproach = charInfo.itemObtainApproach
       item.skill = charInfo.skill
       item.equip = charInfo.equip
+      item.own = formatNumber(item.own * 100, 1)
       item.eliteS = formatNumber(item.elite.rank2 * 100, 1)
       item.skill1S = formatNumber(item.skill1.rank3 * 100, 1)
       item.skill2S = formatNumber(item.skill2.rank3 * 100, 1)
