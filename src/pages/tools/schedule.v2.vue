@@ -16,14 +16,14 @@ import {cMessage} from '/src/utils/message.js'
 import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {downloadJsonFile} from "/src/utils/download.js";
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
+
 const router = useRouter();
 
 let operatorOwnMap = new Map()
 
 
 async function getOperatorDataByAccount() {
-
 
 
   operatorDataAPI.getOperatorData().then(response => {
@@ -323,7 +323,8 @@ const filterOperatorByTag = debounce((condition, key) => {
 
 //干员搜索输入框输入内容
 let searchInputText = ref('')
-
+let searchOperatorOnlyName = ref(false)
+let searchOperatorOnlyBuffName = ref(false)
 /**
  * 根据输入的名称和技能描述搜索干员
  */
@@ -376,9 +377,29 @@ function commonFilterOperator() {
  * @return {boolean} 是否包含关键词
  */
 function operatorHasKeyword(operator) {
-  return operator.name.indexOf(searchInputText.value) > -1 ||
-      operator.description.indexOf(searchInputText.value) > -1 ||
-      operator.buffName.indexOf(searchInputText.value) > -1
+
+  if(searchOperatorOnlyName.value){
+    return operator.name.indexOf(searchInputText.value) > -1;
+  }
+
+  if(searchOperatorOnlyBuffName.value){
+    return operator.buffName.indexOf(searchInputText.value) > -1;
+  }
+
+  if(operator.name.indexOf(searchInputText.value) > -1){
+    return true
+  }
+
+  if (operator.description.indexOf(searchInputText.value) > -1) {
+    return true
+  }
+
+  if (operator.buffName.indexOf(searchInputText.value) > -1) {
+    return true
+  }
+
+  return false
+
 }
 
 const roomPopupStyle = "width:550px;"
@@ -872,8 +893,8 @@ onMounted(() => {
   getOperatorDataByAccount()
 })
 
-function useLegacyUI(){
-  router.push({name:'ScheduleV1'})
+function useLegacyUI() {
+  router.push({name: 'ScheduleV1'})
 }
 
 </script>
@@ -881,23 +902,23 @@ function useLegacyUI(){
 
 <template>
   <div class="schedule-page">
-    <div >
+    <div>
       <!--选择基建布局和换班次数-->
-      <v-btn color="red"  class="m-2"
+      <v-btn color="red" class="m-2"
              @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
         {{ translate('schedule', 'schedule.InfrastructureLayout') }}
       </v-btn>
-      <v-btn color="orange"  class="m-2"
+      <v-btn color="orange" class="m-2"
              @click="useLegacyUI()" text="切换到竖版UI">
       </v-btn>
       <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
       <!--根据文件导入排版-->
-      <v-btn color="primary"  class="m-2" @click="chooseFile()">{{
+      <v-btn color="primary" class="m-2" @click="chooseFile()">{{
           translate('schedule', 'schedule.ImportScheduleFile')
         }}
       </v-btn>
       <!--下载排版文件-->
-      <v-btn color="primary"  class="m-2" @click="saveAndDownloadScheduleFile()">
+      <v-btn color="primary" class="m-2" @click="saveAndDownloadScheduleFile()">
         {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
       </v-btn>
 
@@ -912,7 +933,7 @@ function useLegacyUI(){
                   v-model="scheduleImportId">
       <template v-slot:append>
         <!--根据id导入排班-->
-        <v-btn color="primary"   @click="importScheduleById()">
+        <v-btn color="primary" @click="importScheduleById()">
           {{ translate('schedule', 'schedule.ImportScheduleById') }}
         </v-btn>
 
@@ -1358,13 +1379,18 @@ function useLegacyUI(){
           </div>
 
           <v-text-field hide-details density="compact" :label=" translate('schedule', 'schedule.SearchInputTip')"
-                        variant="outlined" width="500" class="m-8"
+                        variant="outlined" width="800" class="m-8"
                         @input="searchOperatorDebounce()" v-model="searchInputText">
             <template v-slot:append>
+              <v-switch color="primary" label="仅搜索干员名"  density="compact" v-model="searchOperatorOnlyName" @change="searchOperatorDebounce()" hide-details>
+              </v-switch>
+              <v-switch color="primary" label="仅搜索技能名称"  density="compact"  v-model="searchOperatorOnlyBuffName" @change="searchOperatorDebounce()" hide-details>
+              </v-switch>
+
               <v-btn color="primary" text="隐藏未招募干员" @click="filterOperatorByOwn()">
               </v-btn>
               <v-tooltip text="此功能需要登录并导入过干员数据后才可使用" location="top">
-                <template v-slot:activator="{ props }" >
+                <template v-slot:activator="{ props }">
                   <v-icon icon="mdi-help-circle" v-bind="props"></v-icon>
                 </template>
               </v-tooltip>
