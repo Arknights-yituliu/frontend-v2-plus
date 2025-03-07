@@ -184,7 +184,6 @@ const routes = [
         icon: "mdi-routes",
         component: () => import('/src/pages/information/integratedStrategies.vue')
     },
-
     {
         path: '/account/register',
         text: '注册账号',
@@ -375,6 +374,12 @@ const routes = [
         text: '材料统计',
         display: false,
         component: () => import('/src/pages/tools/statistics-material.vue')
+    },
+    {
+        path: '/operator-add-time',
+        text: '材料统计',
+        display: false,
+        component: () => import('/src/pages/dev/operator-add-time.vue')
     },
     {
         path: '/:catchAll(.*)',
