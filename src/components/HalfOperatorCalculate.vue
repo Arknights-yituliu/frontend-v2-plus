@@ -69,11 +69,6 @@ function calculateTime() {
   }
 }
 
-//使用指南作者彩蛋
-function revealAuthor() {
-  window.open('https://space.bilibili.com/22606843?spm_id_from=333.337.0.0', '_blank');
-}
-
 </script>
 
 <template>
@@ -84,11 +79,25 @@ function revealAuthor() {
     </template>
     <el-form :model="halfOperatorParams">
       <transition-group name="list" tag="ul">
+        <li :key="0">
+          <el-text :type="state">用于计算训练x分钟后换艾丽妮/逻各斯，恰好可以触发下次专精减半效果</el-text>
+        </li>
         <li :key="1">
-          <el-form-item label="当前已入驻的专精助手干员提供的效率">
+          <el-form-item label="当前显示的专精剩余时间">
+            <el-time-picker
+                v-model="halfOperatorParams.remainder"
+                format="HH:mm:ss"
+                placeholder="显示多少填多少"
+                @change="calculateTime"
+            />
+          </el-form-item>
+        </li>
+        <li :key="7">
+          <el-form-item label="当前入驻的专精助手提供的效率">
             <el-input-number
                 v-model="halfOperatorParams.efficiency"
-                :max="10"
+                placeholder="小数，例如0.3"
+                :max="1"
                 :min="0"
                 :precision="2"
                 :step="0.01"
@@ -99,6 +108,22 @@ function revealAuthor() {
           </el-form-item>
         </li>
         <li :key="2">
+          <el-form-item label="当前实际专精剩余时间（供参考）">
+            {{ Math.floor(zeroEffRemainSeconds / 3600) }}:{{ Math.floor((zeroEffRemainSeconds % 3600) / 60).toString().padStart(2, '0') }}:{{ Math.floor(zeroEffRemainSeconds % 60).toString().padStart(2, '0') }}
+          </el-form-item>
+        </li>
+        <li :key="3">
+          <el-form-item label="提前提醒（分钟）">
+            <el-input-number
+                v-model="halfOperatorParams.leadTime"
+                :min="1"
+                :step="1"
+                controls-position="right"
+                @change="calculateTime"
+            />
+          </el-form-item>
+        </li>
+        <li :key="4">
           <el-form-item label="阿斯卡纶/烛煌是否入驻控制中枢">
             <el-switch
                 v-model="halfOperatorParams.hasAscalon"
@@ -106,21 +131,21 @@ function revealAuthor() {
             />
           </el-form-item>
         </li>
-        <li :key="3">
-          <el-form-item label="减半干员是否可对专精干员触发职业效率加成">
+        <li :key="5">
+          <el-form-item label="减半干员本身是否有训练速度加成">
             <el-switch
                 v-model="halfOperatorParams.isFit"
                 @change="calculateTime"
             />
           </el-form-item>
         </li>
-        <li v-if="halfOperatorParams.isFit" :key="4" style="display: inline-block">
+        <li v-if="halfOperatorParams.isFit" :key="6" style="display: inline-block">
           <el-tooltip
               content="示例数据：艾丽妮-30% 覆盖近卫/狙击职业；逻各斯-30% 覆盖术师/辅助职业"
               effect="light"
               placement="right"
           >
-            <el-form-item label="减半干员提供的职业效率加成">
+            <el-form-item label="减半干员训练速度加成数值(目前版本只有0.3)">
               <el-input-number
                   v-model="halfOperatorParams.halfOperatorAddition"
                   :min="0"
@@ -132,31 +157,10 @@ function revealAuthor() {
             </el-form-item>
           </el-tooltip>
         </li>
-        <li :key="5">
-          <el-form-item label="当前显示的专精剩余时间">
-            <el-time-picker
-                v-model="halfOperatorParams.remainder"
-                format="HH:mm:ss"
-                placeholder="点此选择"
-                @change="calculateTime"
-            />
-          </el-form-item>
-        </li>
-        <li :key="6">
-          <el-form-item label="提前提醒（分钟）">
-            <el-input-number
-                v-model="halfOperatorParams.leadTime"
-                :min="1"
-                :step="1"
-                controls-position="right"
-                @change="calculateTime"
-            />
-          </el-form-item>
-        </li>
-        <li :key="7">
+        <li :key="8">
           <el-text :type="state">{{ remindText }}</el-text>
         </li>
-        <li :key="8">
+        <li :key="9">
           <el-link :underline="false" style="float: right; color: blue;margin-right: 10px" type="primary"
                    @click="algorithmVisible = true">算法标注
           </el-link>
@@ -238,7 +242,7 @@ function calculateTime() {
         <el-text class="tip-text" size="small" tag="sub">感谢网友“一般路过魔界人”的提醒(・∀・)</el-text>
       </div>
     </el-drawer>
-    <el-drawer
+    <!-- <el-drawer
         v-model="usageGuideVisible"
         direction="rtl"
         size="70%"
@@ -272,11 +276,8 @@ function calculateTime() {
             填写完成即可自动计算输出结果，提示需要替换减半干员（艾丽妮/逻各斯）的时间点，或者提示期望余裕时间不足，亦或者已无法触发减半效果
           </li>
         </ol>
-        <el-text class="easterEgg-text" size="small" tag="sub" @click="revealAuthor">
-          本文档由一位不愿透露名称的热心网友提供(⁎˃ᴗ˂⁎)
-        </el-text>
       </div>
-    </el-drawer>
+    </el-drawer> -->
   </el-collapse-item>
 </template>
 
