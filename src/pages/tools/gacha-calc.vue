@@ -199,52 +199,52 @@ function getAndSortPackData() {
   const config = getStageConfig()
   materialAPI.getStorePackV4(config).then(response => {
 
-      packInfoInitList.value = response.data
-      for (let pack of packInfoInitList.value) {
+    packInfoInitList.value = response.data
+    for (let pack of packInfoInitList.value) {
 
-        if (pack.officialName.indexOf('如死亦终') > -1) {
-          continue
-        }
-
-        //没有抽卡资源不写入
-        if (!(pack.drawPrice > 0)) {
-          continue;
-        }
-
-        //如果是每月寻访礼包或者源石不写入
-        if (pack.officialName === '每月寻访组合包' || pack.officialName.indexOf('普通源石') > -1) {
-          continue
-        }
-
-        if (pack.end < currentTimeStamp) {
-          continue
-        }
-
-        pack.parentIndex = index
-        //将礼包写入全部礼包集合
-        packList.value.push(pack)
-        //礼包索引递增
-        index++
-
-        //根据礼包类型进行分类
-        if (pack.saleType === 'newbie') {
-          packListGroupByOnce.value.push(pack)
-        }
-
-        if (pack.saleType === 'originium2') {
-          packListGroupByrOiginium.value.push(pack)
-        }
-
-        if (pack.saleType === 'monthly') {
-          packListGroupByMonthly.value.push(pack)
-        }
-
-        if (pack.saleType === 'activity') {
-          packListGroupByActivity.value.push(pack)
-        }
+      if (pack.officialName.indexOf('如死亦终') > -1) {
+        continue
       }
-      getHistoryPackInfo()
-      batchGenerationMonthlyPack(index)
+
+      //没有抽卡资源不写入
+      if (!(pack.drawPrice > 0)) {
+        continue;
+      }
+
+      //如果是每月寻访礼包或者源石不写入
+      if (pack.officialName === '每月寻访组合包' || pack.officialName.indexOf('普通源石') > -1) {
+        continue
+      }
+
+      if (pack.end < currentTimeStamp) {
+        continue
+      }
+
+      pack.parentIndex = index
+      //将礼包写入全部礼包集合
+      packList.value.push(pack)
+      //礼包索引递增
+      index++
+
+      //根据礼包类型进行分类
+      if (pack.saleType === 'newbie') {
+        packListGroupByOnce.value.push(pack)
+      }
+
+      if (pack.saleType === 'originium2') {
+        packListGroupByrOiginium.value.push(pack)
+      }
+
+      if (pack.saleType === 'monthly') {
+        packListGroupByMonthly.value.push(pack)
+      }
+
+      if (pack.saleType === 'activity') {
+        packListGroupByActivity.value.push(pack)
+      }
+    }
+    getHistoryPackInfo()
+    batchGenerationMonthlyPack(index)
   })
 }
 
@@ -913,15 +913,24 @@ function gachaResourcesCalculation() {
         packList.value[i].orundum = dailyReward.value.daily * 200
         //卡池结束前可以购买月卡的数量
         let purchaseQuantity = Math.ceil(dailyReward.value.daily / 30)
+
         //加上额外购买的月卡数量,判断是否额外购买了超过3个月
         if (rechargeOption.value.additionalMonthlyCardPurchase > 3) {
-          createMessage({type:'error',text:'月卡一次性只能最大购买90天'})
-        } else {
-          //加上额外购买的月卡数量
-          purchaseQuantity += rechargeOption.value.additionalMonthlyCardPurchase
-          //计算通过月卡总计获得多少源石
-          packList.value[i].originium = purchaseQuantity * 6
+          createMessage({type: 'error', text: '月卡一次性只能最大购买90天'})
+          return
         }
+
+        console.log(rechargeOption.value.additionalMonthlyCardPurchase)
+        if (rechargeOption.value.additionalMonthlyCardPurchase < 0) {
+          createMessage({type: 'error', text: '不可填入负数'})
+          return
+        }
+
+        //加上额外购买的月卡数量
+        purchaseQuantity += rechargeOption.value.additionalMonthlyCardPurchase
+        //计算通过月卡总计获得多少源石
+        packList.value[i].originium = purchaseQuantity * 6
+
 
         //月卡的价格=购买月卡的数量*30
         packList.value[i].price = purchaseQuantity * 30
