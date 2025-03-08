@@ -98,10 +98,11 @@ const openDetailDialog = (v) => {
       </div>
     </div>
     <!-- 分页 -->
+    <div>
     <v-tabs v-model="tabsActiveName" bg-color="primary">
       <v-tab v-for="item in tabs" :key="item.name" :value="item.name" @click="tabClick(item)">{{ item.label }}</v-tab>
     </v-tabs>
-
+    </div>
     <v-card-text>
       <v-tabs-window v-model="tabsActiveName">
         <v-tabs-window-item v-for="item in tabs" :key="item.name" :value="item.name">
@@ -131,7 +132,7 @@ const openDetailDialog = (v) => {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    height: 45px;
+
 
     .el-checkbox-group {
       margin-bottom: 12px;
