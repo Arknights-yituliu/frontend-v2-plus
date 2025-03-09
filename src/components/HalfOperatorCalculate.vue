@@ -20,7 +20,7 @@ let nowEfficiency = ref(0) //当前效率
 let extraEfficiency = 0 //额外效率
 let state = ref("info") /*倒计时提醒状态标签*/
 let remainSeconds //当前显示剩余的总秒数
-let zeroEffRemainSeconds //实际剩余总秒数
+const zeroEffRemainSeconds = ref(0) //实际剩余总秒数
 let zeroEffNeedTime //零效率下，减半干员的减半效果触发所需秒数
 let halfOperatorEfficiency = ref(0) //减半干员的实际效率
 let timeDifference //极限触发时差，当前显示剩余时间等价秒数 和 到换减半干员专精时间点时显示时间等价秒数 的差
@@ -41,9 +41,9 @@ function calculateTime() {
   halfOperatorEfficiency.value = halfOperatorParams.isFit ? 1 + halfOperatorParams.halfOperatorAddition + extraEfficiency : 1 + extraEfficiency;
   if (halfOperatorParams.efficiency != null && halfOperatorParams.remainder != null) {
     remainSeconds = convertToSeconds(halfOperatorParams.remainder) //获取当前显示剩余时间的总秒数
-    zeroEffRemainSeconds = remainSeconds * nowEfficiency.value //计算零效率下，当前剩余的秒数，考虑额外加成
+    zeroEffRemainSeconds.value = remainSeconds * nowEfficiency.value //计算零效率下，当前剩余的秒数，考虑额外加成
     zeroEffNeedTime = halfOperatorEfficiency.value * 5 * 60 * 60 //零效率下减半干员需要的秒数
-    timeDifference = zeroEffRemainSeconds - zeroEffNeedTime //同效率秒差
+    timeDifference = zeroEffRemainSeconds.value - zeroEffNeedTime //同效率秒差
     timeDifference /= nowEfficiency.value //补上已有的效率加成条件
     ampleTime = timeDifference - halfOperatorParams.leadTime * 60 //计算余裕时间秒数
     if (ampleTime > 0) {
@@ -107,9 +107,13 @@ function calculateTime() {
             />
           </el-form-item>
         </li>
-        <li :key="2">
-          <el-form-item label="当前实际专精剩余时间（供参考）">
-            {{ Math.floor(zeroEffRemainSeconds / 3600) }}:{{ Math.floor((zeroEffRemainSeconds % 3600) / 60).toString().padStart(2, '0') }}:{{ Math.floor(zeroEffRemainSeconds % 60).toString().padStart(2, '0') }}
+        <li v-if="zeroEffRemainSeconds" :key="2">
+          <el-form-item label="训练室专精效率为零的情况下，当前实际剩余的专精时间">
+            {{
+              Math.floor(zeroEffRemainSeconds / 3600)
+            }}:{{
+              Math.floor((zeroEffRemainSeconds % 3600) / 60).toString().padStart(2, '0')
+            }}:{{ Math.floor(zeroEffRemainSeconds % 60).toString().padStart(2, '0') }}
           </el-form-item>
         </li>
         <li :key="3">
