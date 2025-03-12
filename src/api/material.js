@@ -5,7 +5,7 @@ export default {
 
   getItemValueTableV4(data){
     return request({
-      url: `/item/value/v5`,
+      url: `/item/v5/value`,
       method:"post",
       data:data
     })

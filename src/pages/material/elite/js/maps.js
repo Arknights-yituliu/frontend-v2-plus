@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import stageDataCache from "/src/utils/indexedDB/stageDataCache.js";
+import itemCache from "/src/utils/indexedDB/itemCache.js";
 import surveyAPI from "/src/api/operatorData"; // 练度调查结果
 import {operatorTable} from "/src/utils/gameData.js";
 import operatorMaterialJSON from "/src/static/json/operator/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
@@ -134,7 +134,7 @@ const init = async () => {
   result.forEach(item => statisticsMap.set(item.charId, item))
   // 材料总映射
   const stageConfig = getStageConfig()
-  const data = await stageDataCache.getItemValueCacheByConfig(stageConfig)
+  const data = await itemCache.getItemValueCacheByConfig(stageConfig)
   data.forEach(item => materialMap.set(item.itemId, item))
   
   // 添加不存在的材料

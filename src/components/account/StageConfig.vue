@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import {formatNumber} from "/src/utils/format.js";
-import stageDataCache from "/src/utils/indexedDB/stageDataCache.js";
+import itemCache from "/src/utils/indexedDB/itemCache.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
 import {getUid} from "/src/utils/user/userInfo.js";
 import {getStageConfig} from "@/utils/user/userConfig.js";
@@ -31,7 +31,7 @@ const inputRules = [
 
 
 function getStageCollectByZone() {
-  stageDataCache.getStageInfoCache().then(response => {
+  itemCache.getStageInfoCache().then(response => {
 
     let zoneMap = new Map()
     let zoneTmp = {}
@@ -127,7 +127,7 @@ function deleteStageBlackList(stageId) {
 
 function getItemList() {
   checkStageConfig()
-  stageDataCache.getItemValueCacheByConfig(stageConfig.value).then(response => {
+  itemCache.getItemValueCacheByConfig(stageConfig.value).then(response => {
     itemList.value = response
   })
 }
@@ -135,7 +135,7 @@ function getItemList() {
 function forceRefreshItemValue() {
   checkStageConfig()
   localStorage.setItem("StageConfig", JSON.stringify(stageConfig.value))
-  stageDataCache.getItemValueCacheByConfig(stageConfig.value, true)
+  itemCache.getItemValueCacheByConfig(stageConfig.value, true)
 }
 
 getItemList()

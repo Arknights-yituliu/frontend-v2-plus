@@ -7,7 +7,9 @@ import '/src/assets/css/material/store.scss';
 import '/src/assets/css/material/store.phone.scss';
 import '/src/assets/css/sprite/sprite_plane_icon.css';
 import STORE_PERM_DATA from '/src/static/json/material/store_perm_table.json'
-import itemValueCache from "/src/utils/indexedDB/stageDataCache.js";
+import itemCache from "/src/utils/indexedDB/itemCache.js";
+import itemAPI from '/src/api/itemAPI.js'
+
 
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表
@@ -21,13 +23,20 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 ]
 
 const stageConfig = getStageConfig()
+let itemValueMap = new Map()
 
-async function StorePermComputed() {
-  const itemValueList = await itemValueCache.getItemValueCacheByConfig(stageConfig)
-  let itemValueMap = new Map()
+async function loadingStoreData(){
+  const itemValueList = await itemCache.getItemValueCacheByConfig(stageConfig)
+
   for (const item of itemValueList) {
     itemValueMap.set(item.itemId, item.itemValueAp)
   }
+
+  permStoreComputed()
+  activityStoreComputed()
+}
+
+function permStoreComputed() {
 
   for (const storeInfo of storeTypeList) {
     const data = STORE_PERM_DATA[storeInfo.typeName]
@@ -48,28 +57,37 @@ async function StorePermComputed() {
 
 }
 
-StorePermComputed()
 
-function getStoreData() {
 
-  materialAPI.getActStoreV4(stageConfig).then(response => {
+function activityStoreComputed() {
+
+  itemAPI.getActivityStore().then(response=>{
     actStoreList.value = response.data
     // 遍历活动列表
-    actStoreList.value.forEach(act => {
-      // 格式化活动商店材料
-      if (!act.actStoreFormat) {
-        act.actStoreFormat = []
-      }
-      // 商店区域(通常为三个区域)
-      const areas = [...new Set(act.actStore.map(t => t.itemArea))].sort()
-      // 每个区域独立数组
-      areas.forEach(areaNo => {
-        const areaItems = act.actStore.filter(item => item.itemArea === areaNo)
-
-        act.actStoreFormat.push(areaItems)
-      })
-    })
+    for(let item of actStoreList.value){
+      item.actStoreFormat = _formatActStore(item.actStore)
+    }
   })
+
+
+  function _formatActStore(data){
+    let actStoreFormat = [[],[],[],[],[]]
+    for(let item of data){
+      const {itemArea,itemId,itemPrice,itemQuantity,itemName} = item
+      const itemValueAp = itemValueMap.get(itemId)
+      const itemPPR = itemValueAp * itemQuantity/itemPrice
+      actStoreFormat[itemArea-1].push({
+        itemPrice:itemPrice,
+        itemId:itemId,
+        itemName:itemName,
+        itemPPR:itemPPR
+      })
+    }
+
+    return actStoreFormat
+  }
+
+
 }
 
 const opETextTheme = ref('op_title_etext_light')
@@ -117,7 +135,7 @@ function switchStore(item) {
 }
 
 onMounted(() => {
-  getStoreData()
+  loadingStoreData()
   const storeStatusList = JSON.parse(localStorage.getItem('storeStatusList') || '[]')
   for (let i = 0; i < storeListFormat.value.length; i++) {
     storeListFormat.value[i].hide = storeStatusList[i]

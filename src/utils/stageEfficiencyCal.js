@@ -1,51 +1,57 @@
-import stageDataCache from "/src/utils/indexedDB/stageDataCache.js";
+import itemCache from "/src/utils/indexedDB/itemCache.js";
 import ITEM_SERIES_TABLE from '/src/static/json/material/item_series_table.json'
 import ITEM_TYPE_TABLE from '/src/static/json/material/item_type_table.json'
 import {getStageConfig} from "@/utils/user/userConfig.js";
-import {dateFormat} from "@/utils/dateUtil.js";
+import {dateFormat} from "/src/utils/dateUtil.js";
 import {getStageDropCollect} from "/src/utils/penguinData.js";
 
 
 /**
- * 读取材料信息、关卡信息
- * @param stageConfig  刷图推荐自定义配置
- * @returns {Promise<{itemMap: Map<any, any>, stageInfoMap: Map<any, any>}>}
+ * 获取关卡信息
+ * @param stageConfig
+ * @returns {Promise<Map<any, any>>}
  */
-async function loadingData(stageConfig) {
+async function getStageInfo(stageConfig) {
 
-    //材料信息
-    let itemMap = new Map()
+
     //关卡信息
     let stageInfoMap = new Map()
 
 
-    let stageInfo = await stageDataCache.getStageInfoCache()
+    let stageInfo = await itemCache.getStageInfoCache()
 
     for (const stage of stageInfo) {
         stageInfoMap.set(stage.stageId, stage)
     }
 
-
-
-    const itemList = await stageDataCache.getItemValueCacheByConfig(stageConfig)
-    for (const item of itemList) {
-        if (item.cardNum > 99) {
-            continue
-        }
-        itemMap.set(item.itemId, item)
-    }
-
-
-    return {itemMap, stageInfoMap}
+    return stageInfoMap
 }
 
+/**
+ * 获取材料价值
+ * @param stageConfig
+ * @returns {Promise<Map<any, any>>}
+ */
+async function getItemMap(stageConfig) {
+    let itemMap = new Map()
 
+    await itemCache.getItemValueCacheByConfig(stageConfig).then(response=>{
+         for(let item of response){
+             if (item.cardNum > 99) {
+                 continue
+             }
+             itemMap.set(item.itemId, item)
+         }
+    })
 
+    return itemMap
+}
 
 
 async function calculationStageEfficiency(stageConfig) {
     const start = new Date().getTime()
-    const {itemMap, stageInfoMap} = await loadingData(stageConfig)
+    const stageInfoMap = await getStageInfo(stageConfig)
+    const itemMap = await getItemMap(stageConfig)
     const stageDropCollect =await  getStageDropCollect(stageConfig)
     const loading = new Date().getTime()
     console.log("加载数据", loading - start, 'ms')
@@ -114,9 +120,7 @@ async function calculationStageEfficiency(stageConfig) {
             }
 
 
-            // if(stageId==='main_08-13'){
-            //     console.log(dropValue)
-            // }
+
 
             // if(stageId==='main_14-13'){
             //     console.log(dropValue)
@@ -124,6 +128,9 @@ async function calculationStageEfficiency(stageConfig) {
             stageDropValue.push(dropValue)
         }
 
+        if(stageId==='main_01-07'){
+            console.table(stageDropValue)
+        }
 
         stageDropValue.sort((a, b) => b.value - a.value)
 
@@ -300,15 +307,31 @@ function getOrundumRecommendedStage(stageResultList) {
     stageResultList = stageResultList
         .filter(e => e.orundumPerAp > 0.5 || (e.stageType === 'ACT' || e.stageType === "ACT_REP"))
         .sort((a, b) => b.orundumPerAp - a.orundumPerAp)
-    let maxOrundumPerAp = 1.0898
-    if (stageResultList.length > 1) {
-        maxOrundumPerAp = stageResultList[0].orundumPerAp
+
+    let list = []
+    for(const item of stageResultList){
+        if(item.orundumPerAp>0.5){
+            list.push(item)
+            continue
+        }
+        if(item.stageType === 'ACT' || item.stageType === "ACT_REP"){
+            if(item.orundumPerAp>0.1){
+                list.push(item)
+            }
+        }
     }
 
-    for (let item of stageResultList) {
+    list.sort((a, b) => b.orundumPerAp - a.orundumPerAp)
+
+    let maxOrundumPerAp = 1.0898
+    if (list.length > 1) {
+        maxOrundumPerAp = list[0].orundumPerAp
+    }
+
+    for (let item of list) {
         item.orundumPerApEfficiency = item.orundumPerAp / maxOrundumPerAp
     }
-    return stageResultList
+    return list
 }
 
 function getHistoryActStage(stageResultList) {

@@ -1,5 +1,5 @@
 // import tmpData from "@/static/json/tmp/yituliu.json";
-import stageDataCache from "@/utils/indexedDB/stageDataCache.js";
+import itemCache from "@/utils/indexedDB/itemCache.js";
 
 async function getStageDropCollect(stageConfig) {
     const source = stageConfig.source
@@ -8,7 +8,7 @@ async function getStageDropCollect(stageConfig) {
     if ('yituliu' === source) {
         // penguinMatrix = tmpData.matrix
     } else {
-        penguinMatrix = await stageDataCache.getPenguinMatrixCache()
+        penguinMatrix = await itemCache.getPenguinMatrixCache()
     }
 
     let toughStage = penguinMatrix.filter(e => e.stageId.indexOf("tough") > -1)

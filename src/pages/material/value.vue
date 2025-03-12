@@ -5,7 +5,6 @@ import {ref, onMounted} from "vue";
 import {exportExcel} from "/src/utils/exportExcel";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
-import itemValueCache from '/src/utils/indexedDB/stageDataCache.js'
 import {getCustomItemList} from "/src/utils/itemValue.js";
 
 let value_unit = ref('itemValueAp')
@@ -61,50 +60,47 @@ function getItemRarityColor(rarity) {
   if (rarity === 5) return 'border-color: var(--orange)'
 }
 
-function formattedItemDisplayList(itemList) {
 
-}
 
 
 onMounted(() => {
   const stageConfig = getStageConfig()
   getCustomItemList(stageConfig).then(response=>{
-    console.log(response)
-  })
-  itemValueCache.getItemValueCacheByConfig(stageConfig).then(response => {
-    itemValueList.value = response
-    let tmpList = []
-    for (const item of response) {
-      const sortId = item.cardNum
-      if (sortId > 90) {
-        continue
-      }
-      let list = tmpList[sortId]
-      if (list) {
-        list.push(item)
-      } else {
-        list = [item]
-      }
-      tmpList[sortId] = list
-    }
-
-
-    for (const list of tmpList) {
-      if (!list || list.length < 1) {
-        continue
-      }
-      // itemValueCollect.value.push(list)
-      if (list.length < 9) {
-        itemValueCollect.value.push(list)
-      } else {
-        itemValueCollect.value.push(list.slice(0, 9))
-        itemValueCollect.value.push(list.slice(9))
-      }
-
-
-    }
+    formatItem(response)
   })
 });
+
+function formatItem(data){
+  itemValueList.value = data
+  let tmpList = []
+  for (const item of data) {
+    const sortId = item.cardNum
+    if (sortId > 90) {
+      continue
+    }
+    let list = tmpList[sortId]
+    if (list) {
+      list.push(item)
+    } else {
+      list = [item]
+    }
+    tmpList[sortId] = list
+  }
+
+
+  for (const list of tmpList) {
+    if (!list || list.length < 1) {
+      continue
+    }
+    // itemValueCollect.value.push(list)
+    if (list.length < 9) {
+      itemValueCollect.value.push(list)
+    } else {
+      itemValueCollect.value.push(list.slice(0, 9))
+      itemValueCollect.value.push(list.slice(9))
+    }
+  }
+}
 
 
 </script>

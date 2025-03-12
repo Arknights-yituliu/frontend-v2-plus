@@ -1,6 +1,6 @@
 import ITEM_INFO from "@/static/json/material/item_info.json";
 import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
-import stageDataCache from "@/utils/indexedDB/stageDataCache.js";
+import itemCache from "@/utils/indexedDB/itemCache.js";
 import {getStageDropCollect} from "@/utils/penguinData.js";
 import ITEM_SERIES_TABLE from "@/static/json/material/item_series_table.json";
 
@@ -88,6 +88,7 @@ function calculatedItemValue(stageConfig) {
         const rarity = item.rarity
         let newValue = 0.0
         if (resolve) {
+            //灰，绿色品质是向下拆解   灰，绿色材料 = （蓝材料价值 + 副产物 - 龙门币）/合成蓝材料的所需灰绿材料数量
             const expectProductsValue = workShopProducts[`t${rarity}`]
             for (const cost of pathway) {
                 const rawItem = itemMap.get(cost.itemId)
@@ -95,6 +96,7 @@ function calculatedItemValue(stageConfig) {
                 // console.log(item.itemName + '=' + rawItem.itemName + '=(' + rawItem.itemValueAp + "+" + expectProductsValue + '-' + (0.36 * rarity) + ')/' + cost.count + '=' + newValue)
             }
         } else {
+            //紫，金色品质是向上合成    紫，金色材料 =  合成所需蓝材料价值之和  + 龙门币 - 副产物
             const expectProductsValue = workShopProducts[`t${rarity - 1}`]
             for (const cost of pathway) {
                 const rawItem = itemMap.get(cost.itemId)
@@ -102,6 +104,7 @@ function calculatedItemValue(stageConfig) {
                 // console.log(item.itemName + '=' + rawItem.itemName + '*' + cost.count + '=' + newValue)
 
             }
+
             newValue = newValue + 0.36 * (rarity - 1) - expectProductsValue
             // console.log(item.itemName + '=' + (0.36 * (rarity - 1)) + '-' + expectProductsValue + '=' + newValue)
 
@@ -153,7 +156,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
     }
 
     let stageInfoMap = new Map()
-    let stageInfo = await stageDataCache.getStageInfoCache()
+    let stageInfo = await itemCache.getStageInfoCache()
     for (const stage of stageInfo) {
         stageInfoMap.set(stage.stageId, stage)
     }
@@ -209,7 +212,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
                 mainItemId = itemId
                 maxValue = value
             }
-            // console.log(stageCode, '---', itemName, '=', itemValueAp, '*', knockRating, '=', value, '=', dropValueCount)
+            console.log(stageCode, '---', itemName, '=', itemValueAp, '*', knockRating, '=', value, '=', dropValueCount)
             dropValueCount += value
         }
 
@@ -278,15 +281,17 @@ async function getCustomItemList(stageConfig) {
         // console.log(`第${i + 1}次迭代`)
         // console.table(itemList)
         calculatedItemValue(stageConfig)
-        const {nextItemCorrectionTerm, nextStageDropCollect} = await getItemValueCorrectionTerm(stageConfig);
+        let complete =  true
+        const {nextItemCorrectionTerm, nextStageDropCollect} = await getItemValueCorrectionTerm(stageConfig,i);
         for (const [seriesId, item] of nextItemCorrectionTerm) {
             itemValueCorrectionTerm[seriesId].correctionTerm = item.correctionTerm
-            // console.log(item)
+
         }
         // console.table(workShopProducts)
         stageDropCollect = nextStageDropCollect
     }
 
+    console.log("材料价值：",itemList)
 
     return itemList
 }

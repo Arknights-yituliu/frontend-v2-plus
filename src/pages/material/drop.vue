@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from "vue";
-import stageDataCache from "@/utils/indexedDB/stageDataCache.js";
+import itemCache from "@/utils/indexedDB/itemCache.js";
 import materialAPI from "@/api/material.js";
 import {NDatePicker} from 'naive-ui'
 import {createMessage} from "@/utils/message.js";
@@ -24,7 +24,7 @@ let groupedByZoneName = ref({})
 let stageInfo = ref({})
 
 function getStageCollectByZone() {
-  stageDataCache.getStageInfoCache().then(response => {
+  itemCache.getStageInfoCache().then(response => {
 
     const collect = {}; // 初始化一个空对象用于存储分组结果
 
