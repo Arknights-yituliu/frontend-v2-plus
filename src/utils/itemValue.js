@@ -212,7 +212,10 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
                 mainItemId = itemId
                 maxValue = value
             }
-            // console.log(stageCode, '---', itemName, '=', itemValueAp, '*', knockRating, '=', value, '=', dropValueCount)
+            // if(stageId==='main_01-07'){
+            //     console.log(stageCode, '---', itemName, '=', itemValueAp, '*', knockRating, '=', value, '=', dropValueCount)
+            //
+            // }
             dropValueCount += value
         }
 
@@ -221,10 +224,10 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         // console.log(stageCode, '---', stageEfficiency, '=', dropValueCount, '/', apCost)
 
 
-        if (stageEfficiency < 0.7) {
-            // console.log('效率低于0.7')
-            continue
-        }
+        // if (stageEfficiency < 0.7) {
+        //     // console.log('效率低于0.7')
+        //     continue
+        // }
 
         let seriesInfo = ITEM_SERIES_TABLE[mainItemId]
 
@@ -233,11 +236,11 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             continue
         }
 
-        if (stageType === 'ACT' || stageType === 'ACT_REP') {
-            if (!useActivityStage) {
-                // console.log('跳过活动关卡')
+        if (['MAIN', 'ACT_PERM'].includes(stageType)) {
+
+        }else if (!useActivityStage) {
                 continue
-            }
+
         }
 
 
@@ -285,7 +288,7 @@ async function getCustomItemList(stageConfig) {
         const {nextItemCorrectionTerm, nextStageDropCollect} = await getItemValueCorrectionTerm(stageConfig,i);
         for (const [seriesId, item] of nextItemCorrectionTerm) {
             itemValueCorrectionTerm[seriesId].correctionTerm = item.correctionTerm
-
+            // console.log(item)
         }
         // console.table(workShopProducts)
         stageDropCollect = nextStageDropCollect
