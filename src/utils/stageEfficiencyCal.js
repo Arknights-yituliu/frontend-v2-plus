@@ -128,9 +128,9 @@ async function calculationStageEfficiency(stageConfig) {
             stageDropValue.push(dropValue)
         }
 
-        if(stageId==='main_01-07'){
-            console.table(stageDropValue)
-        }
+        // if(stageId==='main_01-07'){
+        //     console.table(stageDropValue)
+        // }
 
         stageDropValue.sort((a, b) => b.value - a.value)
 

@@ -20,6 +20,9 @@ const router = useRouter();
 const {mobile} = useDisplay()
 
 
+
+
+
 let legendDisplay = ref(false)
 
 
@@ -46,6 +49,15 @@ let historyActivityList = ref([])
 //根据物品id获得对应的关卡推荐数据集合
 let recommendedStageDetailTable = ref([])
 
+loadingLocalHostData()
+function loadingLocalHostData(){
+  stageResultGroup.value = TMP_STAGE_RESULT.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
+  orundumRecommendedStage.value = TMP_STAGE_RESULT.orundumRecommendedStage
+  historyActivityList.value = TMP_STAGE_RESULT.historyActStage
+  updateTime.value = TMP_STAGE_RESULT.updateTime
+  getItemCardData()
+  getItemTableData(0, false)
+}
 
 // 获取关卡推荐数据
 function getStageResult() {
@@ -209,12 +221,7 @@ function openNewPage() {
 
 
 onMounted(() => {
-  stageResultGroup.value = TMP_STAGE_RESULT.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
-  orundumRecommendedStage.value = TMP_STAGE_RESULT.orundumRecommendedStage
-  historyActivityList.value = TMP_STAGE_RESULT.historyActStage
-  updateTime.value = TMP_STAGE_RESULT.updateTime
-  getItemCardData()
-  getItemTableData(0, false)
+
 
   getStageResult()
 

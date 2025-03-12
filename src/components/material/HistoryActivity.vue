@@ -1,6 +1,6 @@
 <script setup>
 import ITEM_SERIES from '/src/static/json/material/item_series.json'
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import ItemImage from "@/components/sprite/ItemImage.vue";
 import {dateFormat} from "@/utils/dateUtil.js";
 
@@ -17,16 +17,23 @@ let historyActivityDisplayType = ref('')
 
 
 let historyActivityTableHeaders = ref([]) // 材料表
-// 历史活动表表头
-for (const itemId in ITEM_SERIES) {
-  const item = ITEM_SERIES[itemId]
-  historyActivityTableHeaders.value.push({
-    itemId: item.id,
-    itemName: item.name,
-    lastUp: false,
-    lastUpInterval: 0
-  })
+
+function initTableHeader(){
+  let list = []
+  for (const itemId in ITEM_SERIES) {
+    const item = ITEM_SERIES[itemId]
+
+    list.push({
+      itemId: item.id,
+      itemName: item.name,
+      lastUp: false,
+      lastUpInterval: 0
+    })
+  }
+  return list
 }
+
+
 
 /**
  * 传入一个设备类型，将其赋值给 actHistoryTableType 按钮通过 actHistoryTableType 进行判断是什么形式的表格
@@ -58,10 +65,12 @@ let dataLength = ref(0)
 
 function formatPcHistoryTableData() {
 
-  if(dataLength.value === props.modelValue.length){
+  if(dataLength.value === props.modelValue.length||dataLength.value>props.modelValue.length){
     console.log('数据未更新')
     return
   }
+
+  historyActivityTableHeaders.value = initTableHeader()
 
   dataLength.value = props.modelValue.length
   console.log('数据更新')
@@ -139,6 +148,7 @@ function formatPcHistoryTableData() {
 
 
   historyActivityTableHeaders.value.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
+
 }
 
 setInterval(formatPcHistoryTableData, 500)

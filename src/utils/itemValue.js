@@ -212,7 +212,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
                 mainItemId = itemId
                 maxValue = value
             }
-            console.log(stageCode, '---', itemName, '=', itemValueAp, '*', knockRating, '=', value, '=', dropValueCount)
+            // console.log(stageCode, '---', itemName, '=', itemValueAp, '*', knockRating, '=', value, '=', dropValueCount)
             dropValueCount += value
         }
 
