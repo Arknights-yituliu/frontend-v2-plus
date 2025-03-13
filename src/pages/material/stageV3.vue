@@ -14,6 +14,8 @@ import {getStageData} from '/src/utils/stageEfficiencyCal.js'
 import {formatNumber} from "/src/utils/format.js";
 import {useRouter} from "vue-router";
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
+import NoticeBoard from "@/components/NoticeBoard.vue";
+import ModuleHeader from "@/components/ModuleHeader.vue";
 
 const router = useRouter();
 
@@ -393,174 +395,14 @@ onMounted(() => {
     <HistoryActivity v-model="historyActivityList"></HistoryActivity>
 
 
-    <!-- 常见问题 -->
-    <div class="module-header" id="frequently-asked-question">
-      <div class="module-title">
-        <h1>常见问题</h1>
-        <h4>FAQ</h4>
-      </div>
-    </div>
+    <NoticeBoard module="stage">
 
-    <div id="foot_main">
-      <div class="foot_unit" style="width: 100%; white-space: normal">
-        <el-card class="box-card">
-          <el-collapse>
-            <el-collapse-item name="2" style="">
-              <template #title>
-                <span style="font-size: large; display: flex; align-items: center">
-                  <i class="iconfont icon-legend"></i><b style="margin-left: 4px">算法简述与图例</b></span>
-              </template>
-              <b>通过[物品价值表]中的物品价值和[企鹅物流数据统计]中的材料掉率计算各个关卡的效率</b>
-              <hr/>
-              <ul style="padding-left: 2em">
-                <li>只有多于300样本的关卡才会被收录。</li>
-                <li>仅收录由自动刷图软件上报的掉落数据。</li>
-                <li>活动关卡只在活动期间出现。</li>
-                <li>插曲和别传常驻后重新计算效率，该效率与活动时无关。</li>
-              </ul>
-              <b>图例</b>
-              <hr/>
-              <div class="stage-legend">
-                <table class="stage-legend-table">
-                  <tbody>
-                  <tr>
-                    <td>
-                      <div class="stage-legend-sprite">
-                        <div :class="getLegendSprite('AP_GAMEPLAY')"></div>
-                      </div>
-                    </td>
-                    <td>
-                      <span class="stage-legend-text-1">需要所有材料→</span>
-                    </td>
-                    <td>
-                      <span class="stage-legend-text-2">14-17</span>
-                    </td>
-                    <td>
-                      <span class="stage-legend-text-3">[综合效率]<br>所有掉落物的价值之和/理智消耗</span>
-                    </td>
-                    <td>
-                      <span class="stage-legend-text-4">[综合效率]</span>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <div class="stage-legend-sprite">
-                        <div :class="getLegendSprite('30024')"></div>
-                      </div>
-                    </td>
-                    <td>
-                        <span class="stage-legend-text-1">
-                          需要<span style="color: #c01dd7;font-weight: bold">紫材料→</span>
-                        </span>
-                    </td>
-                    <td>
-                      <span class="stage-legend-text-2">14-17</span>
-                    </td>
-                    <td>
-                        <span class="stage-legend-text-3">
-                          [<span style="color: #c01dd7;font-weight: bold">T4</span>效率]<br>
-                          <span style="color: #c01dd7;font-weight: bold">紫</span>
-                          <span style="color: #0276f8;font-weight: bold">蓝</span>
-                          <span style="color: #01c028;font-weight: bold">绿</span>白糖价值之和/理智消耗
-                        </span>
-                    </td>
-                    <td>
-                      <span class="stage-legend-text-4">[综合效率]</span>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>
-                      <div class="stage-legend-sprite">
-                        <div :class="getLegendSprite('30023')"></div>
-                      </div>
-                    </td>
-                    <td>
-                        <span class="stage-legend-text-1">
-                          需要<span style="color: #0276f8;font-weight: bold">蓝材料→</span>
-                        </span>
-                    </td>
-                    <td>
-                      <span class="stage-legend-text-2">MB-6</span>
-                    </td>
-                    <td>
-                        <span class="stage-legend-text-3">
-                          [<span style="color: #0276f8;font-weight: bold">T3</span>效率]<br>
-                          <span style="color: #0276f8;font-weight: bold">蓝</span>
-                          <span style="color: #01c028;font-weight: bold">绿</span>白糖价值之和/理智消耗
-                        </span>
-                    </td>
-                    <td>
-                      <span class="stage-legend-text-4">[综合效率]</span>
-                    </td>
-                  </tr>
-                  <tr>
-
-                  </tr>
-                  </tbody>
-                </table>
-
-              </div>
+    </NoticeBoard>
 
 
-            </el-collapse-item>
-            <el-collapse-item name="3" style="">
-              <template #title>
-                <span style="font-size: large; display: flex; align-items: center">
-                  <i class="iconfont icon-publicity"></i><b style="margin-left: 4px">算法公示卡</b></span>
-              </template>
-              <table id="al_card">
-                <tbody>
-                <tr>
-                  <td>算法代号</td>
-                  <td>一图流_标准 v6.0</td>
-                  <td>更新时间</td>
-                  <td>
-                    <!-- {{ updateTime }} -->
-                  </td>
-                </tr>
-                <tr>
-                  <td>数据源</td>
-                  <td>企鹅物流</td>
-                  <td>基准</td>
-                  <td>常驻关卡</td>
-                </tr>
-                <tr>
-                  <td>计算引擎</td>
-                  <td>yituliuBackEnd</td>
-                  <td>样本阈值</td>
-                  <td>300</td>
-                </tr>
-                <tr>
-                  <td>需求目标</td>
-                  <td>无限需求</td>
-                  <td>EXP系数</td>
-                  <td>0.633</td>
-                </tr>
-                </tbody>
-              </table>
-            </el-collapse-item>
-            <el-collapse-item name="4" style="">
-              <template #title>
-                <span style="font-size: large; display: flex; align-items: center">
-                  <i class="iconfont icon-copyright"></i><b style="margin-left: 4px">版权声明与许可协议</b>
-                </span>
-              </template>
-              网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于
-              Arknights/上海鹰角网络科技有限公司。<br>
-              除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享
-              署名-非商业性使用 4.0 国际
-              许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
-              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a
-                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
-            </el-collapse-item>
-          </el-collapse>
-        </el-card>
-      </div>
-    </div>
-    <!-- <foot-component></foot-component> -->
   </div>
+
+
 
   <fixed-nav id="fixedNav"/>
 </template>
