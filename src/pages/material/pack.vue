@@ -1,5 +1,5 @@
 <script setup>
-import materialAPI from "/src/api/material.js";
+import itemAPI from "/src/api/itemAPI.js";
 import {ref} from 'vue';
 import PackCardContainer from '/src/components/material/PackCardGroup.vue'
 import ModuleHeader from '/src/components/ModuleHeader.vue';
@@ -8,8 +8,9 @@ import PackTable from "/src/components/material/PackTable.vue";
 import deepClone from "/src/utils/deepClone.js";
 import '/src/assets/css/material/pack.scss';
 import '/src/assets/css/material/pack.phone.scss';
+import itemCache from "/src/utils/indexedDB/itemCache.js";
+import NoticeBoard from "@/components/NoticeBoard.vue";
 
-const currentPackInfoList = ref([])
 const date = new Date() // 当前日期
 const fixedPacks = ref({})
 
@@ -26,33 +27,170 @@ const packTags = [
   {label: "龙门币礼包", value: "lmd"},
   {label: "定向抽卡类礼包", value: "operator"},
 ]
+
+
 const packSalePriceList = [
   {label: '0-100RMB', min: 0, max: 100},
   {label: '100-200RMB', min: 100, max: 200},
   {label: '200-648RMB', min: 200, max: 648},
 ]
+
+
 const selectedPackTag = ref([])
 const selectedPackSaleDate = ref([])
 const selectedPackSalePrice = ref([])
-const filteredPackMap = ref(new Map()) // 筛选后的礼包列表
-let packInfoListFromAPI = []
-let packInfoList = []
-//FromAPI是原始数据，用于重置packinfolist
 
-const getPackInfoData = async () => {
-  // 等待获取接口返回的全部礼包信息
-  const config = getStageConfig()
-  materialAPI.getStorePackV4(config).then(rep => {
-    const data = rep.data
-    packInfoListFromAPI = deepClone(data)
-    packInfoList = data
-    initData()
+// 筛选后的礼包列表
+const filteredPackMap = ref(new Map())
+
+//缓存的礼包数据，用于切换中坚性价比的数据时，直接用这个数据去覆盖
+let packInfoVOListCache = []
+//礼包性价比数据
+let packInfoVOList = []
+//当前在售的礼包性价比数据，用于礼包总表
+let packInfoVOListOnSale = ref([])
+
+
+let itemValueMap = new Map()
+
+function loadingItemValue() {
+  const stageConfig = getStageConfig()
+  itemCache.getItemValueCacheByConfig(stageConfig).then(response => {
+    for (const item of response) {
+      const {itemId, itemValueAp} = item
+      itemValueMap.set(itemId, itemValueAp)
+    }
+
+    itemAPI.listCustomItem().then(response => {
+      for (const item of response.data) {
+        const {itemId, itemValue} = item
+        itemValueMap.set(itemId, itemValue)
+      }
+      getPackInfoData()
+    })
+
+
   })
 }
 
-const initData = () => {
 
-  const currentTimeStamp = date.getTime() // 获取时间戳
+
+function getPackInfoData() {
+
+  // 等待获取接口返回的全部礼包信息
+  itemAPI.listPackStoreInfo().then(response => {
+    packInfoVOListOnSale.value = []
+    packInfoVOList = []
+    for (const item of response.data) {
+      const packInfoVO = _packPromotionRatioCalc(item)
+      packInfoVOList.push(packInfoVO)
+      packInfoVOListCache.push(packInfoVO)
+    }
+    console.table(packInfoVOList)
+    collectPackInfoVO()
+  })
+
+
+  /**
+   * 根据传入的礼包算出性价比
+   * @param packInfoVO 礼包基本信息
+   * @returns {*}  礼包各种性价比
+   * @private
+   */
+  function _packPromotionRatioCalc(packInfoVO) {
+    // 源石性价比基准
+    const eachOriginalOriginiumPrice = 648 / 185.0;
+    // 抽卡性价比基准
+    const eachOriginalDrawPrice = 648.0 / 185 / 0.3;
+
+    let draws = 0.0; // 抽数
+    let drawPrice = 0.0; // 每一抽价格
+    let packedOriginiumPrice = 0.0; // 每源石（折算物资后）价格
+    let drawEfficiency = 0.0; // 仅抽卡性价比
+    let packEfficiency = 0.0; // 综合性价比
+    let packedOriginium = 0.0; // 礼包总价值折合成源石
+
+    let drawsKernel = 0.0; // 抽数（含蓝抽）
+    let drawPriceKernel = 0.0; // 每一抽价格（含蓝抽）
+    let packedOriginiumPriceKernel = 0.0; // 每源石（折算物资后）价格（含蓝抽）
+    let drawEfficiencyKernel = 0.0; // 仅抽卡性价比（含蓝抽）
+    let packEfficiencyKernel = 0.0; // 综合性价比（含蓝抽）
+    let packedOriginiumKernel = 0.0; // 礼包总价值折合成源石（含蓝抽）
+
+    let apCount = 0.0; // 总价值（理智）
+    let apCountKernel = 0.0; // 总价值（理智，含蓝抽）
+
+    // 礼包内的物品的集合
+    const packContentVOList = packInfoVO.packContent || [];
+    // 直接计算抽数
+    draws = (packInfoVO.orundum || 0) / 600 + (packInfoVO.originium || 0) * 0.3 + (packInfoVO.gachaTicket || 0) + (packInfoVO.tenGachaTicket || 0) * 10;
+    apCount += draws * 450;
+    drawsKernel += draws;
+    apCountKernel += apCount;
+
+    if (packContentVOList.length > 0) {
+      for (let i = 0; i < packContentVOList.length; i++) {
+        const packContentVO = packContentVOList[i];
+        // 判断是否有不存在物品表中的物品
+        if (itemValueMap.get(packContentVO.itemId)) {
+          const itemValueAp = itemValueMap.get(packContentVO.itemId);
+          // 蓝抽单独计算
+          if (packContentVO.itemId === "classic_gacha") {
+            drawsKernel += packContentVO.quantity;
+          } else if (packContentVO.itemId === "classic_gacha_10") {
+            drawsKernel += packContentVO.quantity * 10;
+          } else {
+            apCount += itemValueAp * packContentVO.quantity;
+          }
+          apCountKernel += itemValueAp * packContentVO.quantity;
+        }
+      }
+    }
+
+    // 总价值计算
+    packedOriginium = apCount / 135; // 总源石
+    packedOriginiumKernel += apCountKernel / 135; // 总源石（含蓝抽）
+
+    // 每源石花费计算
+    packedOriginiumPrice = packedOriginium > 0 ? packInfoVO.price / packedOriginium : 0;
+    packedOriginiumPriceKernel = packedOriginiumKernel > 0 ? packInfoVO.price / packedOriginiumKernel : 0;
+
+    // 综合性价比计算
+    packEfficiency = packedOriginiumPrice > 0 ? eachOriginalOriginiumPrice / packedOriginiumPrice : 0;
+    packEfficiencyKernel = packedOriginiumPriceKernel > 0 ? eachOriginalOriginiumPrice / packedOriginiumPriceKernel : 0;
+
+    // 抽卡性价比计算
+    drawPrice = draws > 0 ? packInfoVO.price / draws : 0;
+    drawEfficiency = drawPrice > 0 ? eachOriginalDrawPrice / drawPrice : 0;
+
+    // 抽卡性价比计算(含蓝抽)
+    drawPriceKernel = drawsKernel > 0 ? packInfoVO.price / drawsKernel : 0;
+    drawEfficiencyKernel = drawPriceKernel > 0 ? eachOriginalDrawPrice / drawPriceKernel : 0;
+
+    // 设置返回值
+    packInfoVO.draws = draws;
+    packInfoVO.drawPrice = drawPrice;
+    packInfoVO.packedOriginiumPrice = packedOriginiumPrice;
+    packInfoVO.drawEfficiency = drawEfficiency;
+    packInfoVO.packedOriginium = packedOriginium;
+    packInfoVO.packEfficiency = packEfficiency;
+
+    packInfoVO.drawsKernel = drawsKernel;
+    packInfoVO.drawPriceKernel = drawPriceKernel;
+    packInfoVO.packedOriginiumPriceKernel = packedOriginiumPriceKernel;
+    packInfoVO.drawEfficiencyKernel = drawEfficiencyKernel;
+    packInfoVO.packedOriginiumKernel = packedOriginiumKernel;
+    packInfoVO.packEfficiencyKernel = packEfficiencyKernel;
+
+    return packInfoVO
+  }
+}
+
+
+const collectPackInfoVO = () => {
+
+  // const currentTimeStamp = date.getTime()-60*60*24*100*1000 // 获取时间戳
+  const currentTimeStamp = date.getTime()
 
   // 获取礼包性价比条
   const getLineChartData = pack => {
@@ -66,25 +204,33 @@ const initData = () => {
   }
 
   const packs = {}
-  currentPackInfoList.value = []
-  packInfoList.forEach(packInfo => {
-    packInfo.lineChartData = getLineChartData(packInfo);
-    packInfo.packRmbPerDraw = packInfo.packRmbPerDraw || 0;
-    if (!packs[packInfo.saleType]) packs[packInfo.saleType] = []
-    // 龙门币模板礼包不放入总表所以单独放入
-    if (packInfo.saleType === 'lmd') {
-      return packs.lmd.push(packInfo)
+  packInfoVOListOnSale.value = []
+
+  packInfoVOList.forEach(packInfoVO => {
+    packInfoVO.lineChartData = getLineChartData(packInfoVO);
+    packInfoVO.packRmbPerDraw = packInfoVO.packRmbPerDraw || 0;
+    const {saleType} = packInfoVO;
+    if (!packs[saleType]) {
+      packs[saleType] = []
     }
+    // 龙门币模板礼包不放入总表所以单独放入
+    if (saleType === 'lmd') {
+      return packs.lmd.push(packInfoVO)
+    }
+
     // 除龙门币模板礼包外, 不放入过期礼包
-    if (packInfo.end < currentTimeStamp) {
+    if (packInfoVO.end < currentTimeStamp) {
       return
     }
 
-    packInfo.originiumUnitPrice = packInfo.originium?(packInfo.price/packInfo.originium).toFixed(1):packInfo.originium
+    packInfoVO.originiumUnitPrice = packInfoVO.originium ?
+        (packInfoVO.price / packInfoVO.originium).toFixed(1) : packInfoVO.originium
 
-    currentPackInfoList.value.push(packInfo) // 放入总表
-    packs[packInfo.saleType].push(packInfo) // 放入各个类型
+    packInfoVOListOnSale.value.push(packInfoVO) // 放入总表
+    packs[saleType].push(packInfoVO) // 放入各个类型
   })
+
+
   fixedPacks.value = [
     {
       title: '在售/即将开售的礼包',
@@ -121,9 +267,8 @@ let isKernelValuable = ref(false)
 
 //如果是true就覆写数据，如果是false就用原始数据重置
 function changeKernelValue() {
-  // isKernelValuable.value = !isKernelValuable.value
   if (isKernelValuable.value) {
-    for (const pack of packInfoList) {
+    for (const pack of packInfoVOList) {
       pack.draws = pack.drawsKernel
       pack.packEfficiency = pack.packEfficiencyKernel
       pack.packedOriginium = pack.packedOriginiumKernel
@@ -132,9 +277,9 @@ function changeKernelValue() {
       pack.drawPrice = pack.drawPriceKernel
     }
   } else {
-    packInfoList = deepClone(packInfoListFromAPI)
+    packInfoVOList = deepClone(packInfoVOListCache)
   }
-  initData()
+  collectPackInfoVO()
 }
 
 // 筛选按钮是否激活
@@ -143,7 +288,6 @@ const buttonActive = (v) => {
     return 'elevated'
   }
   return 'tonal'
-
 }
 
 // 筛选礼包: 当前筛选逻辑是按照之前的"满足其中任何一个条件的礼包都会展示", 而不是"同时满足所有筛选条件的礼包才展示"
@@ -151,7 +295,7 @@ const filterPacks = () => {
   for (let year = date.getFullYear(); year >= 2019; year--) {
     filteredPackMap.value.set(year, [])
   }
-  const filterData = packInfoList.filter(item => {
+  const filterData = packInfoVOList.filter(item => {
     // 根据标签筛选
     for (const tag of selectedPackTag.value) {
       if (item.tags.includes(tag)) return true
@@ -175,6 +319,7 @@ const filterPacks = () => {
     filteredPackMap.value.set(itemYear, [...filteredPackMap.value.get(itemYear), item])
   })
 }
+
 // 重置筛选
 const resetPackFilterOption = () => {
   selectedPackTag.value = []
@@ -182,17 +327,16 @@ const resetPackFilterOption = () => {
   selectedPackSalePrice.value = []
   filterPacks()
 }
+
 // 选择筛选条件时向筛选列表添加或删除
-const choosePackOption = (list, value) => {
+function choosePackOption (list, value){
   const index = list.indexOf(value);
   index > -1 ? list.splice(index, 1) : list.push(value)
   filterPacks()
 }
 
 
-
-
-getPackInfoData()
+loadingItemValue()
 
 </script>
 <template>
@@ -203,7 +347,7 @@ getPackInfoData()
         <module-header :title="item.title" :title-en="item.titleEn" :tips="item.tips"/>
         <div v-if="item.titleEn === 'New Packs'">
           <v-chip text="点击图片可查看礼包内容" color="deep-orange" class="m-4"></v-chip>
-          <v-chip text="折合成源石：135理智=1源石" color="deep-orange" class="m-4"> </v-chip>
+          <v-chip text="折合成源石：135理智=1源石" color="deep-orange" class="m-4"></v-chip>
           <v-chip text="中坚寻访：1蓝抽也记为1抽，但价值视为0.837抽" color="deep-orange" class="m-4"></v-chip>
         </div>
         <v-switch v-if="item.titleEn === 'New Packs'"
@@ -216,7 +360,8 @@ getPackInfoData()
           <v-chip v-if="packInfo.title === '新人/回归礼包'"
                   text="由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”"
                   color="red" class="m-4"></v-chip>
-          <v-chip v-if="packInfo.title === '源石/首充源石'" text="每年周年庆会重置源石首充" color="red" class="m-4"></v-chip>
+          <v-chip v-if="packInfo.title === '源石/首充源石'" text="每年周年庆会重置源石首充" color="red"
+                  class="m-4"></v-chip>
           <PackCardContainer v-model="packInfo.packs"/>
         </template>
       </template>
@@ -262,89 +407,19 @@ getPackInfoData()
               color="red" class="m-4"></v-chip>
       <v-chip text="性价比基准为648￥源石，移动端可左右滑动表格" color="red" class="m-4"></v-chip>
 
-      <PackTable v-model="currentPackInfoList">
+      <PackTable v-model="packInfoVOListOnSale">
 
       </PackTable>
 
     </div>
-      <module-header title="算法说明" title-en="Algorithm"></module-header>
-      <div id="foot_main">
-        <div class="foot_unit" style="width: 100%; white-space: normal">
-          <el-card class="box-card">
-            <el-collapse>
-              <el-collapse-item name="2" style="">
-                <template #title>
-                <span style="font-size: large; display: flex; align-items: center">
-                  <i class="iconfont icon-calculator"></i><b style="margin-left: 4px">计算方式</b></span>
-                </template>
 
-                <ul style="padding-left: 2em">
-                  <li>仅计抽卡：仅计算礼包内的抽卡资源</li>
-                  <li>材料折合源石：将所有材料折算成源石再计算性价比</li>
-                  <li>性价比的基准为可无限购买的648源石，材料价值取自[物品价值表]</li>
-                  <li>每月芯片自选包和每月材料自选包都用价值最高的材料进行计价</li>
-                  <li>精二券暂以平均价值计价，详情可查阅[精二性价比]</li>
-                  <li>模组块暂以120红票计价，模组条无法计价，请自行权衡</li>
-                  <li>标准寻访是258黄票38抽，中坚寻访是216黄票38抽，因此价值暂定为216/258=0.837抽</li>
-                  <li>家具零件视为0价值</li>
-                </ul>
-              </el-collapse-item>
-              <el-collapse-item name="4" style="">
-                <template #title>
-                <span style="font-size: large; display: flex; align-items: center"><i
-                    class="iconfont icon-publicity"></i><b style="margin-left: 4px">算法公示卡</b></span>
-                </template>
-                <table id="al_card">
-                  <tbody>
-                  <tr>
-                    <td>算法代号</td>
-                    <td>一图流_标准 v6.0</td>
-                    <td>更新时间</td>
-                    <td>
-                      <!-- {{ updateTime }} -->
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>数据源</td>
-                    <td>企鹅物流</td>
-                    <td>基准</td>
-                    <td>常驻关卡</td>
-                  </tr>
-                  <tr>
-                    <td>计算引擎</td>
-                    <td>yituliuBackEnd</td>
-                    <td>样本阈值</td>
-                    <td>300</td>
-                  </tr>
-                  <tr>
-                    <td>需求目标</td>
-                    <td>无限需求</td>
-                    <td>EXP系数</td>
-                    <td>0.625</td>
-                  </tr>
-                  </tbody>
-                </table>
-              </el-collapse-item>
-              <el-collapse-item name="5" style="">
-                <template #title>
-                <span style="font-size: large; display: flex; align-items: center">
-                  <i class="iconfont icon-copyright"></i><b style="margin-left: 4px">版权声明与许可协议</b>
-                </span>
-                </template>
-                网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于
-                Arknights/上海鹰角网络科技有限公司。<br>
-                除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享
-                署名-非商业性使用 4.0 国际
-                许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
-                本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a
-                  href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
-              </el-collapse-item>
-            </el-collapse>
-          </el-card>
-        </div>
-      </div>
-      <!-- <foot></foot> -->
-    </div>
+    <NoticeBoard module="pack">
+
+    </NoticeBoard>
+
+
+    <!-- <foot></foot> -->
+  </div>
 </template>
 
 <style lang="scss">

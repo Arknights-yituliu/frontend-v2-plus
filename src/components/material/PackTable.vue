@@ -9,6 +9,7 @@ const saleTypes = [
   {value: 'elite', text: '直升礼包'},
   {value: 'chip', text: '芯片'},
   {value: 'lmd', text: '龙门币'},
+  {value: 'return', text: '回归'},
   {value: 'activity', text: '活动礼包'},
   {value: 'originium', text: '非双倍源石'},
   {value: 'originium2', text: '双倍源石'},
