@@ -6,8 +6,9 @@ import {exportExcel} from "/src/utils/exportExcel";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {getCustomItemList} from "/src/utils/itemValue.js";
+import {formatNumber} from "@/utils/format.js";
 
-let value_unit = ref('itemValueAp')
+
 
 let itemValueCollect = ref([])
 
@@ -71,6 +72,7 @@ onMounted(() => {
 });
 
 function formatItem(data){
+
   itemValueList.value = data
   let tmpList = []
   for (const item of data) {
@@ -78,6 +80,7 @@ function formatItem(data){
     if (sortId > 90) {
       continue
     }
+    item.itemValueAp = formatNumber(item.itemValueAp,4)
     let list = tmpList[sortId]
     if (list) {
       list.push(item)
@@ -121,7 +124,7 @@ function formatItem(data){
              :style="getItemRarityColor(item.rarity)">
           <ItemImage :item-id="item.itemId"></ItemImage>
           <div class="item-value">
-            {{ item[value_unit].toFixed(4) }}
+            {{ item.itemValueAp }}
           </div>
         </div>
       </div>
