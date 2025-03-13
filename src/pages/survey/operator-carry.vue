@@ -92,9 +92,11 @@ function getCharIdList() {
 
 }
 
+let moduleCode = ref(101)
+
 function uploadQuestionnaire() {
   const data = {
-    questionnaireType: 1,
+    questionnaireType: moduleCode.value,
     operatorList: charIdList.value
   }
   questionnaireAPI.uploadQuestionnaireInfo(data).then(response=>{
@@ -200,7 +202,7 @@ onMounted(() => {
       >
         <v-expansion-panel-text>
         <p class="font-bold m-12-0">Q：这个问卷是干什么的</p>
-        <p>A：用于收集博士心目中的最强队伍</p>
+        <p>A：用于收集博士各模式的喜欢用的开荒队伍</p>
         <p class="font-bold m-12-0">Q：可以当练卡参考吗</p>
         <p>A：由于提交的博士每个人的玩法有差异，有博士倾向日常挂机，也有博士倾向肉鸽，故本问卷的调查结果仅供参考</p>
         <p class="font-bold m-12-0">Q：如果我想再填一份怎么办</p>
@@ -212,8 +214,26 @@ onMounted(() => {
 
 
     <div class="operator-form-and-checkbox">
-      <v-card title="选出你心目中的最强编队" class="operator-form">
+      <v-card title="选出最强编队" class="operator-form">
         <v-card-text>
+          <v-radio-group
+              v-model="moduleCode"
+              inline
+          >
+            <v-radio
+                label="日常关卡"
+                value="101"
+            ></v-radio>
+            <v-radio
+                label="集成战略"
+                value="102"
+            ></v-radio>
+            <v-radio
+                label="高难模式"
+                value="103"
+            ></v-radio>
+          </v-radio-group>
+
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, index) of operatorTeam" :key="index" class="operator-team-item"
                  @click="removeOperator(operator)">
