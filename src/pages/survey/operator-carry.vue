@@ -92,11 +92,11 @@ function getCharIdList() {
 
 }
 
-let moduleCode = ref(101)
+let moduleCode = ref('101')
 
 function uploadQuestionnaire() {
   const data = {
-    questionnaireType: moduleCode.value,
+    questionnaireCode: moduleCode.value,
     operatorList: charIdList.value
   }
   questionnaireAPI.uploadQuestionnaireInfo(data).then(response=>{
@@ -128,7 +128,7 @@ let carryRateSampleSize = ref('')
 
 async function getOperatorCarryStatisticsResult() {
 
-  await questionnaireAPI.getQuestionnaireResult(1).then(response => {
+  await questionnaireAPI.getQuestionnaireResult().then(response => {
     operatorCarryResult.value = []
     updateTime.value = dateFormat(response.data.updateTime, 'yyyy/MM/dd HH:mm')
     carryRateSampleSize.value = response.data.sampleSize
@@ -233,6 +233,10 @@ onMounted(() => {
                 value="103"
             ></v-radio>
           </v-radio-group>
+
+          <div>
+            {{moduleCode}}
+          </div>
 
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, index) of operatorTeam" :key="index" class="operator-team-item"
