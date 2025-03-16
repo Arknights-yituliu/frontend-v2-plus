@@ -8,10 +8,9 @@ import {getStageDropCollect} from "/src/utils/penguinData.js";
 
 /**
  * 获取关卡信息
- * @param stageConfig
  * @returns {Promise<Map<any, any>>}
  */
-async function getStageInfo(stageConfig) {
+async function getStageInfo() {
 
 
     //关卡信息
@@ -50,7 +49,7 @@ async function getItemMap(stageConfig) {
 
 async function calculationStageEfficiency(stageConfig) {
     const start = new Date().getTime()
-    const stageInfoMap = await getStageInfo(stageConfig)
+    const stageInfoMap = await getStageInfo()
     const itemMap = await getItemMap(stageConfig)
     const stageDropCollect =await  getStageDropCollect(stageConfig)
     const loading = new Date().getTime()
@@ -266,13 +265,12 @@ async function getStageData() {
     const orundumRecommendedStage = getOrundumRecommendedStage(openStageResult)
     const historyActStage = getHistoryActStage(stageResultList)
     console.log("返回结果", new Date().getTime() - getData, 'ms')
-    const updateTime = dateFormat(new Date(), 'yyyy/MM/dd HH:mm');
+
 
     return {
         recommendedStage: recommendedStage,
         orundumRecommendedStageVO: orundumRecommendedStage,
         historyActStage: historyActStage,
-        updateTimeVO: updateTime
     }
 }
 

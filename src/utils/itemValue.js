@@ -238,8 +238,8 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
         if (['MAIN', 'ACT_PERM'].includes(stageType)) {
 
-        }else if (!useActivityStage) {
-                continue
+        } else if (!useActivityStage) {
+            continue
 
         }
 
@@ -280,21 +280,37 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 async function getCustomItemList(stageConfig) {
     stageDropCollect = await getStageDropCollect(stageConfig)
 
-    for (let i = 0; i < 10; i++) {
+    const customItem = stageConfig.customItem
+    let customItemMap = new Map()
+    for (const item of customItem) {
+        const {itemId, itemValue} = item
+        customItemMap.set(itemId, itemValue)
+    }
+
+    for (let i = 0; i < 50; i++) {
         // console.log(`第${i + 1}次迭代`)
         // console.table(itemList)
         calculatedItemValue(stageConfig)
-        let complete =  true
-        const {nextItemCorrectionTerm, nextStageDropCollect} = await getItemValueCorrectionTerm(stageConfig,i);
+        let complete = true
+        const {nextItemCorrectionTerm, nextStageDropCollect} = await getItemValueCorrectionTerm(stageConfig, i);
+        let completionFlag = true;
         for (const [seriesId, item] of nextItemCorrectionTerm) {
             itemValueCorrectionTerm[seriesId].correctionTerm = item.correctionTerm
-            // console.log(item)
+            if (!customItemMap.get(seriesId)) {
+                // console.log(item.series, '————', item.correctionTerm, '————', Math.abs(1 - item.correctionTerm))
+                completionFlag = completionFlag && Math.abs(1 - item.correctionTerm) < 0.001
+            }
         }
+
+        if (completionFlag) {
+            break;
+        }
+
         // console.table(workShopProducts)
         stageDropCollect = nextStageDropCollect
     }
 
-    console.log("材料价值：",itemList)
+    // console.log("材料价值：",itemList)
 
     return itemList
 }

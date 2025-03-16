@@ -11,11 +11,13 @@ import OrundumTable from "/src/components/material/OrundumTable.vue";
 import HistoryActivity from "/src/components/material/HistoryActivity.vue";
 import {useDisplay} from "vuetify";
 import {getStageData} from '/src/utils/stageEfficiencyCal.js'
+import itemCache from '/src/utils/indexedDB/itemCache.js'
 import {formatNumber} from "/src/utils/format.js";
 import {useRouter} from "vue-router";
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import NoticeBoard from "@/components/NoticeBoard.vue";
 import ModuleHeader from "@/components/ModuleHeader.vue";
+import {dateFormat} from "@/utils/dateUtil.js";
 
 const router = useRouter();
 
@@ -65,7 +67,7 @@ function loadingLocalHostData(){
 function getStageResult() {
   getStageData().then(response => {
     const {recommendedStage, orundumRecommendedStageVO, historyActStage, updateTimeVO} = response
-    updateTime.value = updateTimeVO
+
     stageResultGroup.value = recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
     orundumRecommendedStage.value = orundumRecommendedStageVO
@@ -224,7 +226,10 @@ function openNewPage() {
 
 onMounted(() => {
 
+  itemCache.getLastSynchronizationTime().then(response=>{
 
+    updateTime.value = dateFormat(response.createTime,'yyyy/MM/dd HH:mm')
+  })
   getStageResult()
 
 })
@@ -280,7 +285,7 @@ onMounted(() => {
              @click="legendDisplay = !legendDisplay">显示图例
       </v-btn>
 
-      <span class="module-tip">更新时间：{{ updateTime }}</span>
+      <span class="module-tip">上次同步企鹅物流时间：{{ updateTime }}</span>
     </div>
     <!-- 说明区域 -->
     <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>

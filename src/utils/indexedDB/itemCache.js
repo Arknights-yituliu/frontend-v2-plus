@@ -1,4 +1,4 @@
-import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
+import myDatabase from "/src/utils/indexedDB/indexedDB.js";
 import materialAPI from "/src/api/material.js";
 import axios from "axios";
 import {createMessage} from "@/utils/message.js";
@@ -50,12 +50,6 @@ async function getPenguinMatrixCache(forceRefresh = false) {
         let cacheData = await myDatabase.cache_data.get(cacheKey)
         if (cacheData) {
             if (new Date().getTime() - cacheData.createTime < 60 * 60 * 1000) {
-
-                createMessage({
-                    type: 'info',
-                    text: `上次从企鹅数据同步时间为：——${dateFormat(cacheData.createTime, 'yyyy/MM/dd HH:mm')}`
-                })
-
                 console.log(`${cacheKey}.返回缓存的数据`)
                 return cacheData.resource
             }
@@ -78,6 +72,10 @@ async function getPenguinMatrixCache(forceRefresh = false) {
     })
 
     return cacheData
+}
+
+function getLastSynchronizationTime(){
+    return myDatabase.cache_data.get('penguinMatrix')
 }
 
 async function getStageInfoCache(forceRefresh = false) {
@@ -111,5 +109,5 @@ async function getStageInfoCache(forceRefresh = false) {
 
 
 export default {
-    getItemValueCacheByConfig, getPenguinMatrixCache, getStageInfoCache
+    getItemValueCacheByConfig, getPenguinMatrixCache, getStageInfoCache,getLastSynchronizationTime
 }
