@@ -1,6 +1,6 @@
 <script setup>
 
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce.js";
 
 
@@ -84,7 +84,7 @@ window.addEventListener('resize', debounce(calculatedSize));
 
   <div :style="borderStyle">
     <div v-bind:style="wrapStyle">
-      <div v-bind:style="spriteStyle" :class="`bg-${charId}`">
+      <div v-bind:style="spriteStyle" :class="`sprite bg-${charId}`">
       </div>
     </div>
   </div>

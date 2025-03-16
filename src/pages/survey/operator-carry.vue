@@ -235,7 +235,7 @@ onMounted(() => {
       >
         <v-expansion-panel-text>
           <p class="font-bold m-12-0">Q：这个问卷是干什么的</p>
-          <p>A：用于收集博士各模式携带的编队</p>
+          <p>A：用于收集博士各模式优先携带的干员</p>
           <p class="font-bold m-12-0">Q：可以当练卡参考吗</p>
           <p>A：由于提交的博士每个人的玩法有差异，故本问卷的调查结果仅供参考</p>
           <p class="font-bold m-12-0">Q：如果我想再填一份怎么办</p>
@@ -246,7 +246,7 @@ onMounted(() => {
 
 
     <div class="operator-form-and-checkbox">
-      <v-card title="选择各模式下携带的编队" class="operator-form">
+      <v-card title="选择各模式下会优先携带的干员" class="operator-form">
         <v-card-text>
           <v-radio-group
               v-model="gameModuleCode"
