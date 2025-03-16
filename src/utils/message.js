@@ -48,7 +48,13 @@ let messageBars = [];
 
 /**
  *
- * @param config  消息配置  {type:消息类型,text:消息内容,duration:持续时间}
+ * @param config  消息配置
+ * @example
+ * {
+ * type:消息类型,
+ * text:消息内容,
+ * duration:持续时间
+ * }
  */
 function createMessage(config){
     let {text,duration,type} = config;
