@@ -13,6 +13,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  rarity: {
+    type: Number,
+    default: 6
+  },
   border: {
     type: Boolean,
     default: false
@@ -41,19 +45,31 @@ function calculatedSize() {
     size = props.mobileSize;
   }
 
+  const rarityColor = {
+    6: 'linear-gradient(45deg, #FF5722, #FDD835)',
+    5: 'linear-gradient(45deg, #9C27B0, #1E88E5)',
+    4: 'linear-gradient(45deg, #2196F3, #B3E5FC)',
+    3: 'linear-gradient(45deg, #B0BEC5, #ECEFF1)',
+    2: 'linear-gradient(45deg, #B0BEC5, #ECEFF1)',
+    1: 'linear-gradient(45deg, #B0BEC5, #ECEFF1)'
+  }
+
+
+
+  const background = rarityColor[props.rarity]
 
   if (props.border) {
 
-    borderStyle.value = `width:${size}px;height: ${size}px;background: linear-gradient(45deg, #FF5722, #FDD835);border-radius: 4px;`
+    borderStyle.value = `width:${size}px;height: ${size}px;background: ${background};border-radius: 4px;`
     wrapStyle.value += `border-radius:4px;`
   }
 
   if (innerWidth < 600) {
     size -= 2
-    borderStyle.value +=`padding:1px;`
-  }else {
+    borderStyle.value += `padding:1px;`
+  } else {
     size -= 4
-    borderStyle.value +=`padding:2px;`
+    borderStyle.value += `padding:2px;`
   }
 
   wrapStyle.value += `overflow: hidden;background-color:var(--c-background-color);position: relative;width: ${size}px;height: ${size}px;`
@@ -61,7 +77,6 @@ function calculatedSize() {
   if (props.rounded) {
     wrapStyle.value += `border-radius:100px;`
   }
-
 
 
   spriteStyle.value = `position: absolute;transform: scale(${size / 180});

@@ -147,22 +147,26 @@ function getOperatorCarryStatisticsResult() {
       operatorOwnMap.set(item.charId, item.own)
     }
     ownDataLoadingStatus.value = true;
-    console.log(operatorOwnMap)
   });
 
 
 }
 
 let selectedGameModuleCode = ref('101')
+let lastSelectedGameModuleCode = ref('101')
 
 function changeOperatorCarryDataByModule() {
   const data = operatorCarryResultGroupByModule[selectedGameModuleCode.value]
-  if (!data) {
+
+  if (!data.list) {
+    selectedGameModuleCode.value = lastSelectedGameModuleCode.value
     createMessage({
       type: 'warn',
       text: '该模式无统计数据'
     })
+    return
   }
+
   const {list, questionnaireType, questionnaireCode, updateTime, sampleSize} = data
   let voList = []
   for (let item of list) {
@@ -185,6 +189,8 @@ function changeOperatorCarryDataByModule() {
     sampleSize:sampleSize,
     voList:voList,
   }
+
+  lastSelectedGameModuleCode.value = selectedGameModuleCode.value
 }
 
 getOperatorCarryStatisticsResult()
@@ -228,21 +234,20 @@ onMounted(() => {
     <!--              description="大数据仅统计60天内的答卷，您的答卷将保留，但不参与统计"-->
     <!--              style="margin: 8px 0px;"/>-->
 
-    <v-expansion-panels class="m-4">
-      <v-expansion-panel
-          title="Q&A"
-          color="primary"
-      >
-        <v-expansion-panel-text>
-          <p class="font-bold m-12-0">Q：这个问卷是干什么的</p>
-          <p>A：用于收集博士各模式优先携带的干员</p>
-          <p class="font-bold m-12-0">Q：可以当练卡参考吗</p>
-          <p>A：由于提交的博士每个人的玩法有差异，故本问卷的调查结果仅供参考</p>
-          <p class="font-bold m-12-0">Q：如果我想再填一份怎么办</p>
-          <p>A：7天内提交的结果是可以被覆盖的</p>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
+    <v-alert
+        border="start"
+        type="info"
+        title="填写前须知"
+        variant="tonal"
+        density="compact"
+    >
+      <p class="font-bold m-12-0">Q：这个问卷是干什么的？可以当练卡参考吗？</p>
+      <p>A：用于收集博士各模式优先携带的干员。由于提交的博士每个人的玩法有差异，故本问卷的调查结果仅供参考。</p>
+      <p class="font-bold m-12-0">Q：需要登录吗？需要填满12人吗？如果我想再填一份怎么办？</p>
+      <p>A：无需登录。最少填上6人即可提交。7天内提交的结果是可以被覆盖的。</p>
+      <p class="font-bold m-12-0">Q：集成战略以那个主题为主？</p>
+      <p>A：考虑到时效性的问题，以当前主题为主要权重，填写在该主题下的抓位。</p>
+    </v-alert>
 
 
     <div class="operator-form-and-checkbox">
@@ -254,7 +259,7 @@ onMounted(() => {
               density="compact"
           >
             <v-radio
-                label="日常关卡"
+                label="主线&SideStory"
                 value="101"
             ></v-radio>
             <v-radio
@@ -278,7 +283,7 @@ onMounted(() => {
               未选择
             </div>
           </div>
-          <p style="text-align: center" class="m-8-0">填写不需要登录，最低填满6人即可提交</p>
+
           <div class="flex justify-center">
             <v-btn color="primary" text="上传编队" @click="uploadQuestionnaire()"></v-btn>
           </div>
@@ -298,7 +303,7 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
                  @click="chooseOperator(operator)">
-              <OperatorAvatar :border="true" :char-id="operator.charId" :size="60" :mobile-size="50"></OperatorAvatar>
+              <OperatorAvatar :border="true" :char-id="operator.charId" :rarity="operator.rarity" :size="60" :mobile-size="50"></OperatorAvatar>
               <div :class="selectedOperatorClass(operator.charId)">
 
               </div>
@@ -319,7 +324,7 @@ onMounted(() => {
             @change="changeOperatorCarryDataByModule()"
         >
           <v-radio
-              label="日常关卡"
+              label="主线&SideStory"
               value="101"
           ></v-radio>
           <v-radio
