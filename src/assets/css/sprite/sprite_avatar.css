@@ -1,2727 +1,393 @@
-.bg-char_002_amiya {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -10px;
-}
-
-
-
-.bg-char_003_kalts {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -10px;
-}
-
-
-
-.bg-char_009_12fce {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -210px;
-}
-
-
-
-.bg-char_010_chen {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -210px;
-}
-
-
-
-.bg-char_017_huang {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -10px;
-}
-
-
-
-.bg-char_101_sora {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -210px;
-}
-
-
-
-.bg-char_102_texas {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -410px;
-}
-
-
-
-.bg-char_103_angel {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -410px;
-}
-
-
-
-.bg-char_106_franka {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -410px;
-}
-
-
-
-.bg-char_107_liskam {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -10px;
-}
-
-
-
-.bg-char_108_silent {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -210px;
-}
-
-
-
-.bg-char_109_fmout {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -410px;
-}
-
-
-
-.bg-char_110_deepcl {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -610px;
-}
-
-
-
-.bg-char_113_cqbw {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -610px;
-}
-
-
-
-.bg-char_115_headbr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -610px;
-}
-
-
-
-.bg-char_117_myrrh {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -610px;
-}
-
-
-
-.bg-char_118_yuki {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -10px;
-}
-
-
-
-.bg-char_120_hibisc {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -210px;
-}
-
-
-
-.bg-char_121_lava {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -410px;
-}
-
-
-
-.bg-char_122_beagle {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -610px;
-}
-
-
-
-.bg-char_123_fang {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -810px;
-}
-
-
-
-.bg-char_124_kroos {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -810px;
-}
-
-
-
-.bg-char_126_shotst {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -810px;
-}
-
-
-
-.bg-char_128_plosis {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -810px;
-}
-
-
-
-.bg-char_129_bluep {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -810px;
-}
-
-
-
-.bg-char_130_doberm {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -10px;
-}
-
-
-
-.bg-char_131_flameb {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -210px;
-}
-
-
-
-.bg-char_133_mm {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -410px;
-}
-
-
-
-.bg-char_134_ifrit {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -610px;
-}
-
-
-
-.bg-char_135_halo {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -810px;
-}
-
-
-
-.bg-char_136_hsguma {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -1010px;
-}
-
-
-
-.bg-char_137_brownb {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -1010px;
-}
-
-
-
-.bg-char_140_whitew {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -1010px;
-}
-
-
-
-.bg-char_141_nights {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -1010px;
-}
-
-
-
-.bg-char_143_ghost {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -1010px;
-}
-
-
-
-.bg-char_144_red {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -1010px;
-}
-
-
-
-.bg-char_145_prove {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -10px;
-}
-
-
-
-.bg-char_147_shining {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -210px;
-}
-
-
-
-.bg-char_148_nearl {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -410px;
-}
-
-
-
-.bg-char_149_scave {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -610px;
-}
-
-
-
-.bg-char_150_snakek {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -810px;
-}
-
-
-
-.bg-char_151_myrtle {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -1010px;
-}
-
-
-
-.bg-char_154_morgan {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -1210px;
-}
-
-
-
-.bg-char_155_tiger {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -1210px;
-}
-
-
-
-.bg-char_157_dagda {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -1210px;
-}
-
-
-
-.bg-char_158_milu {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -1210px;
-}
-
-
-
-.bg-char_159_peacok {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -1210px;
-}
-
-
-
-.bg-char_163_hpsts {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -1210px;
-}
-
-
-
-.bg-char_164_nightm {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -1210px;
-}
-
-
-
-.bg-char_166_skfire {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -10px;
-}
-
-
-
-.bg-char_171_bldsk {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -210px;
-}
-
-
-
-.bg-char_172_svrash {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -410px;
-}
-
-
-
-.bg-char_173_slchan {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -610px;
-}
-
-
-
-.bg-char_174_slbell {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -810px;
-}
-
-
-
-.bg-char_179_cgbird {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -1010px;
-}
-
-
-
-.bg-char_180_amgoat {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -1210px;
-}
-
-
-
-.bg-char_181_flower {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -1410px;
-}
-
-
-
-.bg-char_183_skgoat {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -1410px;
-}
-
-
-
-.bg-char_185_frncat {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -1410px;
-}
-
-
-
-.bg-char_187_ccheal {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -1410px;
-}
-
-
-
-.bg-char_188_helage {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -1410px;
-}
-
-
-
-.bg-char_190_clour {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -1410px;
-}
-
-
-
-.bg-char_192_falco {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -1410px;
-}
-
-
-
-.bg-char_193_frostl {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -1410px;
-}
-
-
-
-.bg-char_194_leto {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -10px;
-}
-
-
-
-.bg-char_195_glassb {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -210px;
-}
-
-
-
-.bg-char_196_sunbr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -410px;
-}
-
-
-
-.bg-char_197_poca {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -610px;
-}
-
-
-
-.bg-char_198_blackd {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -810px;
-}
-
-
-
-.bg-char_199_yak {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -1010px;
-}
-
-
-
-.bg-char_201_moeshd {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -1210px;
-}
-
-
-
-.bg-char_202_demkni {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -1410px;
-}
-
-
-
-.bg-char_204_platnm {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -1610px;
-}
-
-
-
-.bg-char_206_gnosis {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -1610px;
-}
-
-
-
-.bg-char_208_melan {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -1610px;
-}
-
-
-
-.bg-char_209_ardign {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -1610px;
-}
-
-
-
-.bg-char_210_stward {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -1610px;
-}
-
-
-
-.bg-char_211_adnach {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -1610px;
-}
-
-
-
-.bg-char_212_ansel {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -1610px;
-}
-
-
-
-.bg-char_213_mostma {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -1610px;
-}
-
-
-
-.bg-char_214_kafka {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -1610px;
-}
-
-
-
-.bg-char_218_cuttle {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -10px;
-}
-
-
-
-.bg-char_219_meteo {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -210px;
-}
-
-
-
-.bg-char_220_grani {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -410px;
-}
-
-
-
-.bg-char_222_bpipe {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -610px;
-}
-
-
-
-.bg-char_225_haak {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -810px;
-}
-
-
-
-.bg-char_226_hmau {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -1010px;
-}
-
-
-
-.bg-char_230_savage {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -1210px;
-}
-
-
-
-.bg-char_235_jesica {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -1410px;
-}
-
-
-
-.bg-char_236_rope {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -1610px;
-}
-
-
-
-.bg-char_237_gravel {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -1810px;
-}
-
-
-
-.bg-char_240_wyvern {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -1810px;
-}
-
-
-
-.bg-char_241_panda {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -1810px;
-}
-
-
-
-.bg-char_242_otter {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -1810px;
-}
-
-
-
-.bg-char_243_waaifu {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -1810px;
-}
-
-
-
-.bg-char_245_cello {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -1810px;
-}
-
-
-
-.bg-char_248_mgllan {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -1810px;
-}
-
-
-
-.bg-char_249_mlyss {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -1810px;
-}
-
-
-
-.bg-char_250_phatom {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -1810px;
-}
-
-
-
-.bg-char_252_bibeak {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -1810px;
-}
-
-
-
-.bg-char_253_greyy {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -10px;
-}
-
-
-
-.bg-char_254_vodfox {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -210px;
-}
-
-
-
-.bg-char_258_podego {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -410px;
-}
-
-
-
-.bg-char_260_durnar {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -610px;
-}
-
-
-
-.bg-char_261_sddrag {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -810px;
-}
-
-
-
-.bg-char_263_skadi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -1010px;
-}
-
-
-
-.bg-char_264_f12yin {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -1210px;
-}
-
-
-
-.bg-char_265_sophia {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -1410px;
-}
-
-
-
-.bg-char_271_spikes {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -1610px;
-}
-
-
-
-.bg-char_272_strong {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -1810px;
-}
-
-
-
-.bg-char_274_astesi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -2010px;
-}
-
-
-
-.bg-char_275_breeze {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -2010px;
-}
-
-
-
-.bg-char_277_sqrrel {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -2010px;
-}
-
-
-
-.bg-char_278_orchid {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -2010px;
-}
-
-
-
-.bg-char_279_excu {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -2010px;
-}
-
-
-
-.bg-char_281_popka {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -2010px;
-}
-
-
-
-.bg-char_282_catap {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -2010px;
-}
-
-
-
-.bg-char_283_midn {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -2010px;
-}
-
-
-
-.bg-char_284_spot {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -2010px;
-}
-
-
-
-.bg-char_285_medic2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -2010px;
-}
-
-
-
-.bg-char_286_cast3 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -2010px;
-}
-
-
-
-.bg-char_290_vigna {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -10px;
-}
-
-
-
-.bg-char_291_aglina {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -210px;
-}
-
-
-
-.bg-char_293_thorns {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -410px;
-}
-
-
-
-.bg-char_294_ayer {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -610px;
-}
-
-
-
-.bg-char_297_hamoni {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -810px;
-}
-
-
-
-.bg-char_298_susuro {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -1010px;
-}
-
-
-
-.bg-char_300_phenxi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -1210px;
-}
-
-
-
-.bg-char_301_cutter {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -1410px;
-}
-
-
-
-.bg-char_302_glaze {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -1610px;
-}
-
-
-
-.bg-char_304_zebra {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -1810px;
-}
-
-
-
-.bg-char_308_swire {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -2010px;
-}
-
-
-
-.bg-char_311_mudrok {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -2210px;
-}
-
-
-
-.bg-char_322_lmlee {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -2210px;
-}
-
-
-
-.bg-char_325_bison {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -2210px;
-}
-
-
-
-.bg-char_326_glacus {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -2210px;
-}
-
-
-
-.bg-char_328_cammou {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -2210px;
-}
-
-
-
-.bg-char_332_archet {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -2210px;
-}
-
-
-
-.bg-char_333_sidero {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -2210px;
-}
-
-
-
-.bg-char_336_folivo {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -2210px;
-}
-
-
-
-.bg-char_337_utage {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -2210px;
-}
-
-
-
-.bg-char_338_iris {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -2210px;
-}
-
-
-
-.bg-char_340_shwaz {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -2210px;
-}
-
-
-
-.bg-char_341_sntlla {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -2210px;
-}
-
-
-
-.bg-char_343_tknogi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -10px;
-}
-
-
-
-.bg-char_344_beewax {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -210px;
-}
-
-
-
-.bg-char_345_folnic {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -410px;
-}
-
-
-
-.bg-char_346_aosta {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -610px;
-}
-
-
-
-.bg-char_347_jaksel {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -810px;
-}
-
-
-
-.bg-char_348_ceylon {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -1010px;
-}
-
-
-
-.bg-char_349_chiave {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -1210px;
-}
-
-
-
-.bg-char_350_surtr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -1410px;
-}
-
-
-
-.bg-char_355_ethan {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -1610px;
-}
-
-
-
-.bg-char_356_broca {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -1810px;
-}
-
-
-
-.bg-char_358_lisa {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -2010px;
-}
-
-
-
-.bg-char_362_saga {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -2210px;
-}
-
-
-
-.bg-char_363_toddi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -2410px;
-}
-
-
-
-.bg-char_365_aprl {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -2410px;
-}
-
-
-
-.bg-char_366_acdrop {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -2410px;
-}
-
-
-
-.bg-char_367_swllow {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -2410px;
-}
-
-
-
-.bg-char_369_bena {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -2410px;
-}
-
-
-
-.bg-char_373_lionhd {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -2410px;
-}
-
-
-
-.bg-char_376_therex {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -2410px;
-}
-
-
-
-.bg-char_377_gdglow {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -2410px;
-}
-
-
-
-.bg-char_378_asbest {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -2410px;
-}
-
-
-
-.bg-char_379_sesa {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -2410px;
-}
-
-
-
-.bg-char_381_bubble {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -2410px;
-}
-
-
-
-.bg-char_383_snsant {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -2410px;
-}
-
-
-
-.bg-char_385_finlpp {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -2410px;
-}
-
-
-
-.bg-char_388_mint {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -10px;
-}
-
-
-
-.bg-char_400_weedy {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -210px;
-}
-
-
-
-.bg-char_401_elysm {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -410px;
-}
-
-
-
-.bg-char_402_tuye {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -610px;
-}
-
-
-
-.bg-char_405_absin {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -810px;
-}
-
-
-
-.bg-char_411_tomimi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -1010px;
-}
-
-
-
-.bg-char_415_flint {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -1210px;
-}
-
-
-
-.bg-char_416_zumama {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -1410px;
-}
-
-
-
-.bg-char_421_crow {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -1610px;
-}
-
-
-
-.bg-char_422_aurora {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -1810px;
-}
-
-
-
-.bg-char_426_billro {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -2010px;
-}
-
-
-
-.bg-char_430_fartth {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -2210px;
-}
-
-
-
-.bg-char_433_windft {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -2410px;
-}
-
-
-
-.bg-char_436_whispr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -2610px;
-}
-
-
-
-.bg-char_437_mizuki {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -2610px;
-}
-
-
-
-.bg-char_440_pinecn {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -2610px;
-}
-
-
-
-.bg-char_446_aroma {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -2610px;
-}
-
-
-
-.bg-char_449_glider {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -2610px;
-}
-
-
-
-.bg-char_450_necras {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -2610px;
-}
-
-
-
-.bg-char_451_robin {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -2610px;
-}
-
-
-
-.bg-char_452_bstalk {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -2610px;
-}
-
-
-
-.bg-char_455_nothin {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -2610px;
-}
-
-
-
-.bg-char_456_ash {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -2610px;
-}
-
-
-
-.bg-char_457_blitz {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -2610px;
-}
-
-
-
-.bg-char_458_rfrost {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -2610px;
-}
-
-
-
-.bg-char_459_tachak {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -2610px;
-}
-
-
-
-.bg-char_464_cement {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -2610px;
-}
-
-
-
-.bg-char_466_qanik {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -10px;
-}
-
-
-
-.bg-char_469_indigo {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -210px;
-}
-
-
-
-.bg-char_472_pasngr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -410px;
-}
-
-
-
-.bg-char_473_mberry {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -610px;
-}
-
-
-
-.bg-char_474_glady {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -810px;
-}
-
-
-
-.bg-char_476_blkngt {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -1010px;
-}
-
-
-
-.bg-char_478_kirara {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -1210px;
-}
-
-
-
-.bg-char_479_sleach {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -1410px;
-}
-
-
-
-.bg-char_484_robrta {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -1610px;
-}
-
-
-
-.bg-char_485_pallas {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -1810px;
-}
-
-
-
-.bg-char_486_takila {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -2010px;
-}
-
-
-
-.bg-char_487_bobb {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -2210px;
-}
-
-
-
-.bg-char_488_buildr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -2410px;
-}
-
-
-
-.bg-char_489_serum {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -2610px;
-}
-
-
-
-.bg-char_492_quercu {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -2810px;
-}
-
-
-
-.bg-char_493_firwhl {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -2810px;
-}
-
-
-
-.bg-char_494_vendla {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -2810px;
-}
-
-
-
-.bg-char_497_ctable {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -2810px;
-}
-
-
-
-.bg-char_498_inside {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -2810px;
-}
-
-
-
-.bg-char_499_kaitou {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -2810px;
-}
-
-
-
-.bg-char_500_noirc {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -2810px;
-}
-
-
-
-.bg-char_501_durin {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -2810px;
-}
-
-
-
-.bg-char_502_nblade {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -2810px;
-}
-
-
-
-.bg-char_503_rang {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -2810px;
-}
-
-
-
-.bg-char_504_rguard {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -2810px;
-}
-
-
-
-.bg-char_505_rcast {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -2810px;
-}
-
-
-
-.bg-char_506_rmedic {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -2810px;
-}
-
-
-
-.bg-char_507_rsnipe {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -2810px;
-}
-
-
-
-.bg-char_508_aguard {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -2810px;
-}
-
-
-
-.bg-char_509_acast {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -10px;
-}
-
-
-
-.bg-char_510_amedic {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -210px;
-}
-
-
-
-.bg-char_511_asnipe {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -410px;
-}
-
-
-
-.bg-char_4025_aprot2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -610px;
-}
-
-
-
-.bg-char_512_aprot {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -810px;
-}
-
-
-
-.bg-char_513_apionr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -1010px;
-}
-
-
-
-.bg-char_514_rdfend {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -1210px;
-}
-
-
-
-.bg-char_600_cpione {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -1410px;
-}
-
-
-
-.bg-char_601_cguard {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -1610px;
-}
-
-
-
-.bg-char_602_cdfend {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -1810px;
-}
-
-
-
-.bg-char_603_csnipe {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -2010px;
-}
-
-
-
-.bg-char_604_ccast {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -2210px;
-}
-
-
-
-.bg-char_605_cmedic {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -2410px;
-}
-
-
-
-.bg-char_606_csuppo {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -2610px;
-}
-
-
-
-.bg-char_607_cspec {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -2810px;
-}
-
-
-
-.bg-char_609_acguad {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -3010px;
-}
-
-
-
-.bg-char_610_acfend {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -3010px;
-}
-
-
-
-.bg-char_611_acnipe {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -3010px;
-}
-
-
-
-.bg-char_612_accast {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -3010px;
-}
-
-
-
-.bg-char_613_acmedc {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -3010px;
-}
-
-
-
-.bg-char_614_acsupo {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -3010px;
-}
-
-
-
-.bg-char_615_acspec {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -3010px;
-}
-
-
-
-.bg-char_1011_lava2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -3010px;
-}
-
-
-
-.bg-char_1012_skadi2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -3010px;
-}
-
-
-
-.bg-char_1013_chen2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -3010px;
-}
-
-
-
-.bg-char_1014_nearl2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -3010px;
-}
-
-
-
-.bg-char_1016_agoat2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -3010px;
-}
-
-
-
-.bg-char_1020_reed2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -3010px;
-}
-
-
-
-.bg-char_1021_kroos2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -3010px;
-}
-
-
-
-.bg-char_1023_ghost2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -3010px;
-}
-
-
-
-.bg-char_1024_hbisc2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -3010px;
-}
-
-
-
-.bg-char_1026_gvial2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -10px;
-}
-
-
-
-.bg-char_1027_greyy2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -210px;
-}
-
-
-
-.bg-char_1028_texas2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -410px;
-}
-
-
-
-.bg-char_1030_noirc2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -610px;
-}
-
-
-
-.bg-char_1031_slent2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -810px;
-}
-
-
-
-.bg-char_1032_excu2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -1010px;
-}
-
-
-
-.bg-char_1033_swire2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -1210px;
-}
-
-
-
-.bg-char_1036_fang2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -1410px;
-}
-
-
-
-.bg-char_1038_whitw2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -1610px;
-}
-
-
-
-.bg-char_1039_thorn2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -1810px;
-}
-
-
-
-.bg-char_1502_crosly {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -2010px;
-}
-
-
-
-.bg-char_2013_cerber {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -2210px;
-}
-
-
-
-.bg-char_2014_nian {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -2410px;
-}
-
-
-
-.bg-char_2015_dusk {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -2610px;
-}
-
-
-
-.bg-char_2023_ling {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -2810px;
-}
-
-
-
-.bg-char_2024_chyue {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -3010px;
-}
-
-
-
-.bg-char_2025_shu {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -3210px;
-}
-
-
-
-.bg-char_2026_yu {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -3210px;
-}
-
-
-
-.bg-char_4000_jnight {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -3210px;
-}
-
-
-
-.bg-char_4004_pudd {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -3210px;
-}
-
-
-
-.bg-char_4006_melnte {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -3210px;
-}
-
-
-
-.bg-char_4009_irene {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -3210px;
-}
-
-
-
-.bg-char_4010_etlchi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -3210px;
-}
-
-
-
-.bg-char_4011_lessng {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -3210px;
-}
-
-
-
-.bg-char_4013_kjera {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -3210px;
-}
-
-
-
-.bg-char_4014_lunacu {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -3210px;
-}
-
-
-
-.bg-char_4015_spuria {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -3210px;
-}
-
-
-
-.bg-char_4016_kazema {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -3210px;
-}
-
-
-
-.bg-char_112_siege {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -3210px;
-}
-
-
-
-.bg-char_4017_puzzle {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -3210px;
-}
-
-
-
-.bg-char_4019_ncdeer {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -3210px;
-}
-
-
-
-.bg-char_4023_rfalcn {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -3210px;
-}
-
-
-
-.bg-char_4026_vulpis {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -3210px;
-}
-
-
-
-.bg-char_4027_heyak {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -10px;
-}
-
-
-
-.bg-char_4032_provs {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -210px;
-}
-
-
-
-.bg-char_127_estell {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -410px;
-}
-
-
-
-.bg-char_4036_forcer {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -610px;
-}
-
-
-
-.bg-char_4039_horn {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -810px;
-}
-
-
-
-.bg-char_4040_rockr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -1010px;
-}
-
-
-
-.bg-char_4041_chnut {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -1210px;
-}
-
-
-
-.bg-char_4042_lumen {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -1410px;
-}
-
-
-
-.bg-char_4043_erato {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -1610px;
-}
-
-
-
-.bg-char_4045_heidi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -1810px;
-}
-
-
-
-.bg-char_4046_ebnhlz {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -2010px;
-}
-
-
-
-.bg-char_4047_pianst {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -2210px;
-}
-
-
-
-.bg-char_4048_doroth {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -2410px;
-}
-
-
-
-.bg-char_4052_surfer {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -2610px;
-}
-
-
-
-.bg-char_4054_malist {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -2810px;
-}
-
-
-
-.bg-char_4055_bgsnow {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -3010px;
-}
-
-
-
-.bg-char_4058_pepe {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -3210px;
-}
-
-
-
-.bg-char_4062_totter {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -3410px;
-}
-
-
-
-.bg-char_4063_quartz {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -3410px;
-}
-
-
-
-.bg-char_4064_mlynar {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -3410px;
-}
-
-
-
-.bg-char_4065_judge {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -3410px;
-}
-
-
-
-.bg-char_4066_highmo {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -3410px;
-}
-
-
-
-.bg-char_4067_lolxh {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -3410px;
-}
-
-
-
-.bg-char_4071_peper {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -3410px;
-}
-
-
-
-.bg-char_4072_ironmn {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -3410px;
-}
-
-
-
-.bg-char_4077_palico {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -3410px;
-}
-
-
-
-.bg-char_4078_bdhkgt {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -3410px;
-}
-
-
-
-.bg-char_4079_haini {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -3410px;
-}
-
-
-
-.bg-char_4080_lin {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -3410px;
-}
-
-
-
-.bg-char_4081_warmy {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -3410px;
-}
-
-
-
-.bg-char_215_mantic {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -3410px;
-}
-
-
-
-.bg-char_4082_qiubai {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -3410px;
-}
-
-
-
-.bg-char_4083_chimes {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -3410px;
-}
-
-
-
-.bg-char_4087_ines {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -3410px;
-}
-
-
-
-.bg-char_4088_hodrer {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -3410px;
-}
-
-
-
-.bg-char_4091_ulika {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -10px;
-}
-
-
-
-.bg-char_4093_frston {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -210px;
-}
-
-
-
-.bg-char_4100_caper {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -410px;
-}
-
-
-
-.bg-char_4102_threye {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -610px;
-}
-
-
-
-.bg-char_4105_almond {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -810px;
-}
-
-
-
-.bg-char_4106_bryota {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -1010px;
-}
-
-
-
-.bg-char_4107_vrdant {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -1210px;
-}
-
-
-
-.bg-char_4109_baslin {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -1410px;
-}
-
-
-
-.bg-char_4110_delphn {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -1610px;
-}
-
-
-
-.bg-char_4116_blkkgt {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -1810px;
-}
-
-
-
-.bg-char_4117_ray {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -2010px;
-}
-
-
-
-.bg-char_4119_wanqin {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -2210px;
-}
-
-
-
-.bg-char_4121_zuole {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -2410px;
-}
-
-
-
-.bg-char_4122_grabds {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -2610px;
-}
-
-
-
-.bg-char_4123_ela {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -2810px;
-}
-
-
-
-.bg-char_4124_iana {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -3010px;
-}
-
-
-
-.bg-char_4125_rdoc {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -3210px;
-}
-
-
-
-.bg-char_4126_fuze {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -3410px;
-}
-
-
-
-.bg-char_4130_luton {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -3610px;
-}
-
-
-
-.bg-char_4131_odda {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -3610px;
-}
-
-
-
-.bg-char_4133_logos {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -3610px;
-}
-
-
-
-.bg-char_4134_cetsyr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -3610px;
-}
-
-
-
-.bg-char_4136_phonor {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -3610px;
-}
-
-
-
-.bg-char_4137_udflow {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -3610px;
-}
-
-
-
-.bg-char_4139_papyrs {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -3610px;
-}
-
-
-
-.bg-char_4140_lasher {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -3610px;
-}
-
-
-
-.bg-char_4141_marcil {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -3610px;
-}
-
-
-
-.bg-char_4142_laios {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -3610px;
-}
-
-
-
-.bg-char_4143_sensi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2010px -3610px;
-}
-
-
-
-.bg-char_4144_chilc {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2210px -3610px;
-}
-
-
-
-.bg-char_4145_ulpia {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2410px -3610px;
-}
-
-
-
-.bg-char_4146_nymph {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2610px -3610px;
-}
-
-
-
-.bg-char_4147_mitm {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -2810px -3610px;
-}
-
-
-
-.bg-char_4148_philae {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3010px -3610px;
-}
-
-
-
-.bg-char_4151_tinman {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3210px -3610px;
-}
-
-
-
-.bg-char_4155_talr {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3410px -3610px;
-}
-
-
-
-.bg-char_4163_rosesa {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3610px -3610px;
-}
-
-
-
-.bg-char_4164_tecno {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -10px;
-}
-
-
-
-.bg-char_4165_ctrail {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -210px;
-}
-
-
-
-.bg-char_4171_wulfen {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -410px;
-}
-
-
-
-.bg-char_4172_xingzh {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -610px;
-}
-
-
-
-.bg-char_4173_nowell {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -810px;
-}
-
-
-
-.bg-char_4177_brigid {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -1010px;
-}
-
-
-
-.bg-char_289_gyuki {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -1210px;
-}
-
-
-
-.bg-char_306_leizi {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -1410px;
-}
-
-
-
-.bg-char_391_rosmon {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -1610px;
-}
-
-
-
-.bg-char_420_flamtl {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -1810px;
-}
-
-
-
-.bg-char_423_blemsh {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -2010px;
-}
-
-
-
-.bg-char_427_vigil {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -2210px;
-}
-
-
-
-.bg-char_431_ashlok {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -2410px;
-}
-
-
-
-.bg-char_475_akafyu {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -2610px;
-}
-
-
-
-.bg-char_491_humus {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -2810px;
-}
-
-
-
-.bg-char_496_wildmn {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -3010px;
-}
-
-
-
-.bg-char_608_acpion {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -3210px;
-}
-
-
-
-.bg-char_1019_siege2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -3410px;
-}
-
-
-
-.bg-char_1029_yato2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -3810px -3610px;
-}
-
-
-
-.bg-char_1034_jesca2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -10px -3810px;
-}
-
-
-
-.bg-char_1035_wisdel {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -210px -3810px;
-}
-
-
-
-.bg-char_1040_blaze2 {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -410px -3810px;
-}
-
-
-
-.bg-char_2012_typhon {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -610px -3810px;
-}
-
-
-
-.bg-char_4098_vvana {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -810px -3810px;
-}
-
-
-
-.bg-char_4104_coldst {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1010px -3810px;
-}
-
-
-
-.bg-char_4114_harold {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1210px -3810px;
-}
-
-
-
-.bg-char_4132_ascln {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1410px -3810px;
-}
-
-
-
-.bg-char_4138_narant {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1610px -3810px;
-}
-
-
-
-.bg-char_4162_cathy {
-    width: 180px; height: 180px;
-    background: url('https://cos.yituliu.cn/sprite/avatar20250312.webp') -1810px -3810px;
-}
+.sprite { background: url('https://cos.yituliu.cn/sprite/avatar20250316.webp') no-repeat top left; width: 180px; height: 180px;  }
+.bg-char_002_amiya { background-position: 0 0; }
+.bg-char_003_kalts { background-position: -182px 0; }
+.bg-char_009_12fce { background-position: -364px 0; }
+.bg-char_010_chen { background-position: -546px 0; }
+.bg-char_017_huang { background-position: -728px 0; }
+.bg-char_101_sora { background-position: -910px 0; }
+.bg-char_102_texas { background-position: 0 -182px; }
+.bg-char_103_angel { background-position: -182px -182px; }
+.bg-char_106_franka { background-position: -364px -182px; }
+.bg-char_107_liskam { background-position: -546px -182px; }
+.bg-char_108_silent { background-position: -728px -182px; }
+.bg-char_109_fmout { background-position: -910px -182px; }
+.bg-char_110_deepcl { background-position: 0 -364px; }
+.bg-char_113_cqbw { background-position: -182px -364px; }
+.bg-char_115_headbr { background-position: -364px -364px; }
+.bg-char_117_myrrh { background-position: -546px -364px; }
+.bg-char_118_yuki { background-position: -728px -364px; }
+.bg-char_120_hibisc { background-position: -910px -364px; }
+.bg-char_121_lava { background-position: 0 -546px; }
+.bg-char_122_beagle { background-position: -182px -546px; }
+.bg-char_123_fang { background-position: -364px -546px; }
+.bg-char_124_kroos { background-position: -546px -546px; }
+.bg-char_126_shotst { background-position: -728px -546px; }
+.bg-char_128_plosis { background-position: -910px -546px; }
+.bg-char_129_bluep { background-position: 0 -728px; }
+.bg-char_130_doberm { background-position: -182px -728px; }
+.bg-char_131_flameb { background-position: -364px -728px; }
+.bg-char_133_mm { background-position: -546px -728px; }
+.bg-char_134_ifrit { background-position: -728px -728px; }
+.bg-char_135_halo { background-position: -910px -728px; }
+.bg-char_136_hsguma { background-position: 0 -910px; }
+.bg-char_137_brownb { background-position: -182px -910px; }
+.bg-char_140_whitew { background-position: -364px -910px; }
+.bg-char_141_nights { background-position: -546px -910px; }
+.bg-char_143_ghost { background-position: -728px -910px; }
+.bg-char_144_red { background-position: -910px -910px; }
+.bg-char_145_prove { background-position: 0 -1092px; }
+.bg-char_147_shining { background-position: -182px -1092px; }
+.bg-char_148_nearl { background-position: -364px -1092px; }
+.bg-char_149_scave { background-position: -546px -1092px; }
+.bg-char_150_snakek { background-position: -728px -1092px; }
+.bg-char_151_myrtle { background-position: -910px -1092px; }
+.bg-char_154_morgan { background-position: 0 -1274px; }
+.bg-char_155_tiger { background-position: -182px -1274px; }
+.bg-char_157_dagda { background-position: -364px -1274px; }
+.bg-char_158_milu { background-position: -546px -1274px; }
+.bg-char_159_peacok { background-position: -728px -1274px; }
+.bg-char_163_hpsts { background-position: -910px -1274px; }
+.bg-char_164_nightm { background-position: 0 -1456px; }
+.bg-char_166_skfire { background-position: -182px -1456px; }
+.bg-char_171_bldsk { background-position: -364px -1456px; }
+.bg-char_172_svrash { background-position: -546px -1456px; }
+.bg-char_173_slchan { background-position: -728px -1456px; }
+.bg-char_174_slbell { background-position: -910px -1456px; }
+.bg-char_179_cgbird { background-position: 0 -1638px; }
+.bg-char_180_amgoat { background-position: -182px -1638px; }
+.bg-char_181_flower { background-position: -364px -1638px; }
+.bg-char_183_skgoat { background-position: -546px -1638px; }
+.bg-char_185_frncat { background-position: -728px -1638px; }
+.bg-char_187_ccheal { background-position: -910px -1638px; }
+.bg-char_188_helage { background-position: 0 -1820px; }
+.bg-char_190_clour { background-position: -182px -1820px; }
+.bg-char_192_falco { background-position: -364px -1820px; }
+.bg-char_193_frostl { background-position: -546px -1820px; }
+.bg-char_194_leto { background-position: -728px -1820px; }
+.bg-char_195_glassb { background-position: -910px -1820px; }
+.bg-char_196_sunbr { background-position: 0 -2002px; }
+.bg-char_197_poca { background-position: -182px -2002px; }
+.bg-char_198_blackd { background-position: -364px -2002px; }
+.bg-char_199_yak { background-position: -546px -2002px; }
+.bg-char_201_moeshd { background-position: -728px -2002px; }
+.bg-char_202_demkni { background-position: -910px -2002px; }
+.bg-char_204_platnm { background-position: 0 -2184px; }
+.bg-char_206_gnosis { background-position: -182px -2184px; }
+.bg-char_208_melan { background-position: -364px -2184px; }
+.bg-char_209_ardign { background-position: -546px -2184px; }
+.bg-char_210_stward { background-position: -728px -2184px; }
+.bg-char_211_adnach { background-position: -910px -2184px; }
+.bg-char_212_ansel { background-position: 0 -2366px; }
+.bg-char_213_mostma { background-position: -182px -2366px; }
+.bg-char_214_kafka { background-position: -364px -2366px; }
+.bg-char_218_cuttle { background-position: -546px -2366px; }
+.bg-char_219_meteo { background-position: -728px -2366px; }
+.bg-char_220_grani { background-position: -910px -2366px; }
+.bg-char_222_bpipe { background-position: 0 -2548px; }
+.bg-char_225_haak { background-position: -182px -2548px; }
+.bg-char_226_hmau { background-position: -364px -2548px; }
+.bg-char_230_savage { background-position: -546px -2548px; }
+.bg-char_235_jesica { background-position: -728px -2548px; }
+.bg-char_236_rope { background-position: -910px -2548px; }
+.bg-char_237_gravel { background-position: 0 -2730px; }
+.bg-char_240_wyvern { background-position: -182px -2730px; }
+.bg-char_241_panda { background-position: -364px -2730px; }
+.bg-char_242_otter { background-position: -546px -2730px; }
+.bg-char_243_waaifu { background-position: -728px -2730px; }
+.bg-char_245_cello { background-position: -910px -2730px; }
+.bg-char_248_mgllan { background-position: 0 -2912px; }
+.bg-char_249_mlyss { background-position: -182px -2912px; }
+.bg-char_250_phatom { background-position: -364px -2912px; }
+.bg-char_252_bibeak { background-position: -546px -2912px; }
+.bg-char_253_greyy { background-position: -728px -2912px; }
+.bg-char_254_vodfox { background-position: -910px -2912px; }
+.bg-char_258_podego { background-position: 0 -3094px; }
+.bg-char_260_durnar { background-position: -182px -3094px; }
+.bg-char_112_siege { background-position: -364px -3094px; }
+.bg-char_127_estell { background-position: -546px -3094px; }
+.bg-char_261_sddrag { background-position: -728px -3094px; }
+.bg-char_263_skadi { background-position: -910px -3094px; }
+.bg-char_264_f12yin { background-position: 0 -3276px; }
+.bg-char_265_sophia { background-position: -182px -3276px; }
+.bg-char_271_spikes { background-position: -364px -3276px; }
+.bg-char_272_strong { background-position: -546px -3276px; }
+.bg-char_274_astesi { background-position: -728px -3276px; }
+.bg-char_275_breeze { background-position: -910px -3276px; }
+.bg-char_277_sqrrel { background-position: 0 -3458px; }
+.bg-char_278_orchid { background-position: -182px -3458px; }
+.bg-char_279_excu { background-position: -364px -3458px; }
+.bg-char_281_popka { background-position: -546px -3458px; }
+.bg-char_282_catap { background-position: -728px -3458px; }
+.bg-char_283_midn { background-position: -910px -3458px; }
+.bg-char_284_spot { background-position: 0 -3640px; }
+.bg-char_285_medic2 { background-position: -182px -3640px; }
+.bg-char_286_cast3 { background-position: -364px -3640px; }
+.bg-char_290_vigna { background-position: -546px -3640px; }
+.bg-char_291_aglina { background-position: -728px -3640px; }
+.bg-char_293_thorns { background-position: -910px -3640px; }
+.bg-char_294_ayer { background-position: 0 -3822px; }
+.bg-char_297_hamoni { background-position: -182px -3822px; }
+.bg-char_298_susuro { background-position: -364px -3822px; }
+.bg-char_300_phenxi { background-position: -546px -3822px; }
+.bg-char_301_cutter { background-position: -728px -3822px; }
+.bg-char_302_glaze { background-position: -910px -3822px; }
+.bg-char_304_zebra { background-position: 0 -4004px; }
+.bg-char_308_swire { background-position: -182px -4004px; }
+.bg-char_311_mudrok { background-position: -364px -4004px; }
+.bg-char_322_lmlee { background-position: -546px -4004px; }
+.bg-char_325_bison { background-position: -728px -4004px; }
+.bg-char_326_glacus { background-position: -910px -4004px; }
+.bg-char_328_cammou { background-position: 0 -4186px; }
+.bg-char_332_archet { background-position: -182px -4186px; }
+.bg-char_333_sidero { background-position: -364px -4186px; }
+.bg-char_336_folivo { background-position: -546px -4186px; }
+.bg-char_337_utage { background-position: -728px -4186px; }
+.bg-char_338_iris { background-position: -910px -4186px; }
+.bg-char_340_shwaz { background-position: 0 -4368px; }
+.bg-char_341_sntlla { background-position: -182px -4368px; }
+.bg-char_343_tknogi { background-position: -364px -4368px; }
+.bg-char_344_beewax { background-position: -546px -4368px; }
+.bg-char_345_folnic { background-position: -728px -4368px; }
+.bg-char_346_aosta { background-position: -910px -4368px; }
+.bg-char_347_jaksel { background-position: 0 -4550px; }
+.bg-char_348_ceylon { background-position: -182px -4550px; }
+.bg-char_349_chiave { background-position: -364px -4550px; }
+.bg-char_350_surtr { background-position: -546px -4550px; }
+.bg-char_355_ethan { background-position: -728px -4550px; }
+.bg-char_356_broca { background-position: -910px -4550px; }
+.bg-char_358_lisa { background-position: 0 -4732px; }
+.bg-char_362_saga { background-position: -182px -4732px; }
+.bg-char_363_toddi { background-position: -364px -4732px; }
+.bg-char_365_aprl { background-position: -546px -4732px; }
+.bg-char_366_acdrop { background-position: -728px -4732px; }
+.bg-char_367_swllow { background-position: -910px -4732px; }
+.bg-char_369_bena { background-position: 0 -4914px; }
+.bg-char_373_lionhd { background-position: -182px -4914px; }
+.bg-char_376_therex { background-position: -364px -4914px; }
+.bg-char_377_gdglow { background-position: -546px -4914px; }
+.bg-char_378_asbest { background-position: -728px -4914px; }
+.bg-char_379_sesa { background-position: -910px -4914px; }
+.bg-char_381_bubble { background-position: 0 -5096px; }
+.bg-char_383_snsant { background-position: -182px -5096px; }
+.bg-char_385_finlpp { background-position: -364px -5096px; }
+.bg-char_388_mint { background-position: -546px -5096px; }
+.bg-char_400_weedy { background-position: -728px -5096px; }
+.bg-char_401_elysm { background-position: -910px -5096px; }
+.bg-char_402_tuye { background-position: 0 -5278px; }
+.bg-char_405_absin { background-position: -182px -5278px; }
+.bg-char_411_tomimi { background-position: -364px -5278px; }
+.bg-char_415_flint { background-position: -546px -5278px; }
+.bg-char_416_zumama { background-position: -728px -5278px; }
+.bg-char_421_crow { background-position: -910px -5278px; }
+.bg-char_422_aurora { background-position: 0 -5460px; }
+.bg-char_426_billro { background-position: -182px -5460px; }
+.bg-char_430_fartth { background-position: -364px -5460px; }
+.bg-char_433_windft { background-position: -546px -5460px; }
+.bg-char_436_whispr { background-position: -728px -5460px; }
+.bg-char_437_mizuki { background-position: -910px -5460px; }
+.bg-char_440_pinecn { background-position: 0 -5642px; }
+.bg-char_446_aroma { background-position: -182px -5642px; }
+.bg-char_449_glider { background-position: -364px -5642px; }
+.bg-char_450_necras { background-position: -546px -5642px; }
+.bg-char_451_robin { background-position: -728px -5642px; }
+.bg-char_452_bstalk { background-position: -910px -5642px; }
+.bg-char_455_nothin { background-position: 0 -5824px; }
+.bg-char_456_ash { background-position: -182px -5824px; }
+.bg-char_457_blitz { background-position: -364px -5824px; }
+.bg-char_458_rfrost { background-position: -546px -5824px; }
+.bg-char_459_tachak { background-position: -728px -5824px; }
+.bg-char_464_cement { background-position: -910px -5824px; }
+.bg-char_466_qanik { background-position: 0 -6006px; }
+.bg-char_469_indigo { background-position: -182px -6006px; }
+.bg-char_472_pasngr { background-position: -364px -6006px; }
+.bg-char_473_mberry { background-position: -546px -6006px; }
+.bg-char_474_glady { background-position: -728px -6006px; }
+.bg-char_476_blkngt { background-position: -910px -6006px; }
+.bg-char_478_kirara { background-position: 0 -6188px; }
+.bg-char_479_sleach { background-position: -182px -6188px; }
+.bg-char_484_robrta { background-position: -364px -6188px; }
+.bg-char_485_pallas { background-position: -546px -6188px; }
+.bg-char_486_takila { background-position: -728px -6188px; }
+.bg-char_487_bobb { background-position: -910px -6188px; }
+.bg-char_488_buildr { background-position: 0 -6370px; }
+.bg-char_489_serum { background-position: -182px -6370px; }
+.bg-char_492_quercu { background-position: -364px -6370px; }
+.bg-char_493_firwhl { background-position: -546px -6370px; }
+.bg-char_494_vendla { background-position: -728px -6370px; }
+.bg-char_497_ctable { background-position: -910px -6370px; }
+.bg-char_498_inside { background-position: 0 -6552px; }
+.bg-char_499_kaitou { background-position: -182px -6552px; }
+.bg-char_500_noirc { background-position: -364px -6552px; }
+.bg-char_501_durin { background-position: -546px -6552px; }
+.bg-char_502_nblade { background-position: -728px -6552px; }
+.bg-char_503_rang { background-position: -910px -6552px; }
+.bg-char_504_rguard { background-position: 0 -6734px; }
+.bg-char_505_rcast { background-position: -182px -6734px; }
+.bg-char_506_rmedic { background-position: -364px -6734px; }
+.bg-char_507_rsnipe { background-position: -546px -6734px; }
+.bg-char_508_aguard { background-position: -728px -6734px; }
+.bg-char_509_acast { background-position: -910px -6734px; }
+.bg-char_510_amedic { background-position: 0 -6916px; }
+.bg-char_511_asnipe { background-position: -182px -6916px; }
+.bg-char_4025_aprot2 { background-position: -364px -6916px; }
+.bg-char_512_aprot { background-position: -546px -6916px; }
+.bg-char_513_apionr { background-position: -728px -6916px; }
+.bg-char_514_rdfend { background-position: -910px -6916px; }
+.bg-char_600_cpione { background-position: 0 -7098px; }
+.bg-char_601_cguard { background-position: -182px -7098px; }
+.bg-char_602_cdfend { background-position: -364px -7098px; }
+.bg-char_603_csnipe { background-position: -546px -7098px; }
+.bg-char_604_ccast { background-position: -728px -7098px; }
+.bg-char_605_cmedic { background-position: -910px -7098px; }
+.bg-char_606_csuppo { background-position: 0 -7280px; }
+.bg-char_607_cspec { background-position: -182px -7280px; }
+.bg-char_609_acguad { background-position: -364px -7280px; }
+.bg-char_610_acfend { background-position: -546px -7280px; }
+.bg-char_611_acnipe { background-position: -728px -7280px; }
+.bg-char_612_accast { background-position: -910px -7280px; }
+.bg-char_613_acmedc { background-position: 0 -7462px; }
+.bg-char_614_acsupo { background-position: -182px -7462px; }
+.bg-char_615_acspec { background-position: -364px -7462px; }
+.bg-char_1001_amiya2 { background-position: -546px -7462px; }
+.bg-char_1011_lava2 { background-position: -728px -7462px; }
+.bg-char_1012_skadi2 { background-position: -910px -7462px; }
+.bg-char_1013_chen2 { background-position: 0 -7644px; }
+.bg-char_1014_nearl2 { background-position: -182px -7644px; }
+.bg-char_1016_agoat2 { background-position: -364px -7644px; }
+.bg-char_1020_reed2 { background-position: -546px -7644px; }
+.bg-char_1021_kroos2 { background-position: -728px -7644px; }
+.bg-char_1023_ghost2 { background-position: -910px -7644px; }
+.bg-char_1024_hbisc2 { background-position: 0 -7826px; }
+.bg-char_1026_gvial2 { background-position: -182px -7826px; }
+.bg-char_1027_greyy2 { background-position: -364px -7826px; }
+.bg-char_1028_texas2 { background-position: -546px -7826px; }
+.bg-char_1030_noirc2 { background-position: -728px -7826px; }
+.bg-char_1031_slent2 { background-position: -910px -7826px; }
+.bg-char_1032_excu2 { background-position: 0 -8008px; }
+.bg-char_1033_swire2 { background-position: -182px -8008px; }
+.bg-char_1036_fang2 { background-position: -364px -8008px; }
+.bg-char_1038_whitw2 { background-position: -546px -8008px; }
+.bg-char_1039_thorn2 { background-position: -728px -8008px; }
+.bg-char_1502_crosly { background-position: -910px -8008px; }
+.bg-char_2013_cerber { background-position: 0 -8190px; }
+.bg-char_2014_nian { background-position: -182px -8190px; }
+.bg-char_2015_dusk { background-position: -364px -8190px; }
+.bg-char_2023_ling { background-position: -546px -8190px; }
+.bg-char_2024_chyue { background-position: -728px -8190px; }
+.bg-char_2025_shu { background-position: -910px -8190px; }
+.bg-char_2026_yu { background-position: 0 -8372px; }
+.bg-char_4000_jnight { background-position: -182px -8372px; }
+.bg-char_4004_pudd { background-position: -364px -8372px; }
+.bg-char_4006_melnte { background-position: -546px -8372px; }
+.bg-char_4009_irene { background-position: -728px -8372px; }
+.bg-char_4010_etlchi { background-position: -910px -8372px; }
+.bg-char_4011_lessng { background-position: 0 -8554px; }
+.bg-char_4013_kjera { background-position: -182px -8554px; }
+.bg-char_4014_lunacu { background-position: -364px -8554px; }
+.bg-char_4015_spuria { background-position: -546px -8554px; }
+.bg-char_4016_kazema { background-position: -728px -8554px; }
+.bg-char_4017_puzzle { background-position: -910px -8554px; }
+.bg-char_4019_ncdeer { background-position: 0 -8736px; }
+.bg-char_4023_rfalcn { background-position: -182px -8736px; }
+.bg-char_4026_vulpis { background-position: -364px -8736px; }
+.bg-char_4027_heyak { background-position: -546px -8736px; }
+.bg-char_4032_provs { background-position: -728px -8736px; }
+.bg-char_4036_forcer { background-position: -910px -8736px; }
+.bg-char_4039_horn { background-position: 0 -8918px; }
+.bg-char_4040_rockr { background-position: -182px -8918px; }
+.bg-char_4041_chnut { background-position: -364px -8918px; }
+.bg-char_4042_lumen { background-position: -546px -8918px; }
+.bg-char_4043_erato { background-position: -728px -8918px; }
+.bg-char_4045_heidi { background-position: -910px -8918px; }
+.bg-char_4046_ebnhlz { background-position: 0 -9100px; }
+.bg-char_4047_pianst { background-position: -182px -9100px; }
+.bg-char_4048_doroth { background-position: -364px -9100px; }
+.bg-char_4052_surfer { background-position: -546px -9100px; }
+.bg-char_4054_malist { background-position: -728px -9100px; }
+.bg-char_4055_bgsnow { background-position: -910px -9100px; }
+.bg-char_4058_pepe { background-position: 0 -9282px; }
+.bg-char_4062_totter { background-position: -182px -9282px; }
+.bg-char_4063_quartz { background-position: -364px -9282px; }
+.bg-char_4064_mlynar { background-position: -546px -9282px; }
+.bg-char_4065_judge { background-position: -728px -9282px; }
+.bg-char_4066_highmo { background-position: -910px -9282px; }
+.bg-char_4067_lolxh { background-position: 0 -9464px; }
+.bg-char_4071_peper { background-position: -182px -9464px; }
+.bg-char_4072_ironmn { background-position: -364px -9464px; }
+.bg-char_4077_palico { background-position: -546px -9464px; }
+.bg-char_4078_bdhkgt { background-position: -728px -9464px; }
+.bg-char_4079_haini { background-position: -910px -9464px; }
+.bg-char_4080_lin { background-position: 0 -9646px; }
+.bg-char_4081_warmy { background-position: -182px -9646px; }
+.bg-char_4082_qiubai { background-position: -364px -9646px; }
+.bg-char_4083_chimes { background-position: -546px -9646px; }
+.bg-char_4087_ines { background-position: -728px -9646px; }
+.bg-char_4088_hodrer { background-position: -910px -9646px; }
+.bg-char_4091_ulika { background-position: 0 -9828px; }
+.bg-char_4093_frston { background-position: -182px -9828px; }
+.bg-char_4100_caper { background-position: -364px -9828px; }
+.bg-char_4102_threye { background-position: -546px -9828px; }
+.bg-char_4105_almond { background-position: -728px -9828px; }
+.bg-char_4106_bryota { background-position: -910px -9828px; }
+.bg-char_4107_vrdant { background-position: 0 -10010px; }
+.bg-char_4109_baslin { background-position: -182px -10010px; }
+.bg-char_4110_delphn { background-position: -364px -10010px; }
+.bg-char_4116_blkkgt { background-position: -546px -10010px; }
+.bg-char_4117_ray { background-position: -728px -10010px; }
+.bg-char_4119_wanqin { background-position: -910px -10010px; }
+.bg-char_4121_zuole { background-position: 0 -10192px; }
+.bg-char_4122_grabds { background-position: -182px -10192px; }
+.bg-char_4123_ela { background-position: -364px -10192px; }
+.bg-char_4124_iana { background-position: -546px -10192px; }
+.bg-char_4125_rdoc { background-position: -728px -10192px; }
+.bg-char_4126_fuze { background-position: -910px -10192px; }
+.bg-char_4130_luton { background-position: 0 -10374px; }
+.bg-char_4131_odda { background-position: -182px -10374px; }
+.bg-char_4133_logos { background-position: -364px -10374px; }
+.bg-char_4134_cetsyr { background-position: -546px -10374px; }
+.bg-char_4136_phonor { background-position: -728px -10374px; }
+.bg-char_4137_udflow { background-position: -910px -10374px; }
+.bg-char_4139_papyrs { background-position: 0 -10556px; }
+.bg-char_4140_lasher { background-position: -182px -10556px; }
+.bg-char_4141_marcil { background-position: -364px -10556px; }
+.bg-char_4142_laios { background-position: -546px -10556px; }
+.bg-char_4143_sensi { background-position: -728px -10556px; }
+.bg-char_4144_chilc { background-position: -910px -10556px; }
+.bg-char_4145_ulpia { background-position: 0 -10738px; }
+.bg-char_4146_nymph { background-position: -182px -10738px; }
+.bg-char_4147_mitm { background-position: -364px -10738px; }
+.bg-char_4148_philae { background-position: -546px -10738px; }
+.bg-char_4151_tinman { background-position: -728px -10738px; }
+.bg-char_4155_talr { background-position: -910px -10738px; }
+.bg-char_4163_rosesa { background-position: 0 -10920px; }
+.bg-char_4164_tecno { background-position: -182px -10920px; }
+.bg-char_4165_ctrail { background-position: -364px -10920px; }
+.bg-char_4171_wulfen { background-position: -546px -10920px; }
+.bg-char_4172_xingzh { background-position: -728px -10920px; }
+.bg-char_4173_nowell { background-position: -910px -10920px; }
+.bg-char_4177_brigid { background-position: 0 -11102px; }
+.bg-char_215_mantic { background-position: -182px -11102px; }
+.bg-char_289_gyuki { background-position: -364px -11102px; }
+.bg-char_306_leizi { background-position: -546px -11102px; }
+.bg-char_391_rosmon { background-position: -728px -11102px; }
+.bg-char_420_flamtl { background-position: -910px -11102px; }
+.bg-char_423_blemsh { background-position: 0 -11284px; }
+.bg-char_427_vigil { background-position: -182px -11284px; }
+.bg-char_431_ashlok { background-position: -364px -11284px; }
+.bg-char_475_akafyu { background-position: -546px -11284px; }
+.bg-char_491_humus { background-position: -728px -11284px; }
+.bg-char_496_wildmn { background-position: -910px -11284px; }
+.bg-char_608_acpion { background-position: 0 -11466px; }
+.bg-char_1019_siege2 { background-position: -182px -11466px; }
+.bg-char_1029_yato2 { background-position: -364px -11466px; }
+.bg-char_1034_jesca2 { background-position: -546px -11466px; }
+.bg-char_1035_wisdel { background-position: -728px -11466px; }
+.bg-char_1037_amiya3 { background-position: -910px -11466px; }
+.bg-char_1040_blaze2 { background-position: 0 -11648px; }
+.bg-char_2012_typhon { background-position: -182px -11648px; }
+.bg-char_4098_vvana { background-position: -364px -11648px; }
+.bg-char_4104_coldst { background-position: -546px -11648px; }
+.bg-char_4114_harold { background-position: -728px -11648px; }
+.bg-char_4132_ascln { background-position: -910px -11648px; }
+.bg-char_4138_narant { background-position: 0 -11830px; }
+.bg-char_4162_cathy { background-position: -182px -11830px; }

@@ -8,10 +8,9 @@ import {getStageDropCollect} from "/src/utils/penguinData.js";
 
 /**
  * 获取关卡信息
- * @param stageConfig
  * @returns {Promise<Map<any, any>>}
  */
-async function getStageInfo(stageConfig) {
+async function getStageInfo() {
 
 
     //关卡信息
@@ -50,11 +49,11 @@ async function getItemMap(stageConfig) {
 
 async function calculationStageEfficiency(stageConfig) {
     const start = new Date().getTime()
-    const stageInfoMap = await getStageInfo(stageConfig)
+    const stageInfoMap = await getStageInfo()
     const itemMap = await getItemMap(stageConfig)
     const stageDropCollect =await  getStageDropCollect(stageConfig)
     const loading = new Date().getTime()
-    console.log("加载数据", loading - start, 'ms')
+    // console.log("加载数据", loading - start, 'ms')
 
     let stageResultList = []
 
@@ -248,7 +247,7 @@ async function calculationStageEfficiency(stageConfig) {
     }
 
 
-    console.log("计算效率", loading - start, 'ms')
+    // console.log("计算效率", loading - start, 'ms')
     return stageResultList
 
 
@@ -260,19 +259,18 @@ async function getStageData() {
     const start = new Date().getTime()
     let stageResultList = await calculationStageEfficiency(stageConfig)
     const getData = new Date().getTime()
-    console.log("获取关卡效率", getData - start, 'ms')
+    // console.log("获取关卡效率", getData - start, 'ms')
     let openStageResult = stageResultList.filter(e => e.end > new Date().getTime())
     const recommendedStage = getRecommendedStage(openStageResult)
     const orundumRecommendedStage = getOrundumRecommendedStage(openStageResult)
     const historyActStage = getHistoryActStage(stageResultList)
-    console.log("返回结果", new Date().getTime() - getData, 'ms')
-    const updateTime = dateFormat(new Date(), 'yyyy/MM/dd HH:mm');
+    // console.log("返回结果", new Date().getTime() - getData, 'ms')
+
 
     return {
         recommendedStage: recommendedStage,
         orundumRecommendedStageVO: orundumRecommendedStage,
         historyActStage: historyActStage,
-        updateTimeVO: updateTime
     }
 }
 

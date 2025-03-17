@@ -4,15 +4,15 @@ export default {
 
     uploadQuestionnaireInfo(data){
         return request({
-            url:`/survey/questionnaire/upload`,
+            url:`/questionnaire/upload`,
             method:'post',
             data:data
         })
     },
 
-    getQuestionnaireResult(type){
+    getQuestionnaireResult(){
         return request({
-            url:`/survey/questionnaire/result?questionnaireType=${type}`,
+            url:`/questionnaire/operator-carry`,
             method:'get'
         })
     },

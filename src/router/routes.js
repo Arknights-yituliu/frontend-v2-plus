@@ -376,6 +376,12 @@ const routes = [
         component: () => import('/src/pages/tools/statistics-material.vue')
     },
     {
+        path: '/action-table',
+        text: '材料统计',
+        display: false,
+        component: () => import('/src/pages/dev/action-table.vue')
+    },
+    {
         path: '/operator-add-time',
         text: '材料统计',
         display: false,
@@ -425,6 +431,7 @@ const LinkedTable = {
         icon: 'mdi-application-cog',
         child: []
     },
+
     about: {
         path: '/',
         text: "其他信息",

@@ -1,4 +1,4 @@
-import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
+import myDatabase from "/src/utils/indexedDB/indexedDB.js";
 
 // myDatabase.version(1).stores({
 //     user_action_on_Seed: 'id,seedId,action,create_time', // Primary key and indexed props

@@ -38,6 +38,7 @@ let itemValueCorrectionTerm = {
 let itemList = ITEM_INFO.filter(e => e.cardNum < 100)
 let stageDropCollect = void 0
 const baseLMDValue = 0.0036
+let stageInfoMap = new Map()
 
 function calculatedItemValue(stageConfig) {
     const {expCoefficient, lmdCoefficient, customItem} = stageConfig
@@ -134,7 +135,7 @@ function calculatedItemValue(stageConfig) {
         for (const [rarity, group] of collect) {
             let expectValue = 0.0
             for (const item of group) {
-                const {itemValueAp, itemName, weight} = item
+                const {itemValueAp, weight} = item
                 expectValue += itemValueAp * weight
                 // console.log('+=',itemName+'='+itemValueAp+'*'+weight,'=',expectValue)
             }
@@ -155,11 +156,8 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         itemMap.set(item.itemId, item)
     }
 
-    let stageInfoMap = new Map()
-    let stageInfo = await itemCache.getStageInfoCache()
-    for (const stage of stageInfo) {
-        stageInfoMap.set(stage.stageId, stage)
-    }
+
+
 
     let nextStageDropCollect = new Map()
     let nextItemCorrectionTerm = new Map()
@@ -171,7 +169,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             continue;
         }
 
-        const {apCost, stageCode, zoneName, stageType, end} = stageInfo
+        const {apCost, stageCode, stageType} = stageInfo
 
         let stageEfficiency = 0.0
         let dropValueCount = 0.0
@@ -199,13 +197,13 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         let maxValue = 0
 
         for (const drop of list) {
-            const {itemId, stageId, quantity, times} = drop
+            const {itemId, quantity, times} = drop
             const itemInfo = itemMap.get(itemId);
             //如果查不到材料信息则跳过
             if (!itemInfo) {
                 continue
             }
-            const {itemValueAp, itemName} = itemInfo;
+            const {itemValueAp} = itemInfo;
             const knockRating = quantity / times
             const value = knockRating * itemValueAp
             if (value > maxValue) {
@@ -238,8 +236,8 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
         if (['MAIN', 'ACT_PERM'].includes(stageType)) {
 
-        }else if (!useActivityStage) {
-                continue
+        } else if (!useActivityStage) {
+            continue
 
         }
 
@@ -280,21 +278,44 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 async function getCustomItemList(stageConfig) {
     stageDropCollect = await getStageDropCollect(stageConfig)
 
-    for (let i = 0; i < 10; i++) {
+    let stageInfoList = await itemCache.getStageInfoCache()
+    for (const stage of stageInfoList) {
+        const {stageId} = stage
+        stageInfoMap.set(stageId, stage)
+    }
+
+
+    const customItem = stageConfig.customItem
+    let customItemMap = new Map()
+    for (const item of customItem) {
+        const {itemId, itemValue} = item
+        customItemMap.set(itemId, itemValue)
+    }
+
+    for (let i = 0; i < 50; i++) {
         // console.log(`第${i + 1}次迭代`)
         // console.table(itemList)
         calculatedItemValue(stageConfig)
-        let complete =  true
-        const {nextItemCorrectionTerm, nextStageDropCollect} = await getItemValueCorrectionTerm(stageConfig,i);
+
+        const {nextItemCorrectionTerm, nextStageDropCollect} = await getItemValueCorrectionTerm(stageConfig, i);
+        let completionFlag = true;
         for (const [seriesId, item] of nextItemCorrectionTerm) {
             itemValueCorrectionTerm[seriesId].correctionTerm = item.correctionTerm
-            // console.log(item)
+            if (!customItemMap.get(seriesId)) {
+                // console.log(item.series, '————', item.correctionTerm, '————', Math.abs(1 - item.correctionTerm))
+                completionFlag = completionFlag && Math.abs(1 - item.correctionTerm) < 0.0001
+            }
         }
+
+        if (completionFlag) {
+            break;
+        }
+
         // console.table(workShopProducts)
         stageDropCollect = nextStageDropCollect
     }
 
-    console.log("材料价值：",itemList)
+    // console.log("材料价值：",itemList)
 
     return itemList
 }
