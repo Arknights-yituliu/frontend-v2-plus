@@ -3,9 +3,9 @@ import {operatorTable} from "/src/utils/gameData.js";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 
 let charIdMap = new Map()
-for(const charId in operatorTable){
-  const {name} =   operatorTable[charId]
-  charIdMap.set(name,charId)
+for (const charId in operatorTable) {
+  const {name} = operatorTable[charId]
+  charIdMap.set(name, charId)
 }
 
 const actionTable = [
@@ -48,12 +48,17 @@ const actionTable = [
 
   <div class="flex flex-wrap" style="width: 540px;">
     <div class="flex align-center" v-for="(item,index) in actionTable" style="border: 1px solid #686868">
-      <div style="font-size: 20px;padding: 8px">{{index+1}}</div>
-      <div><OperatorAvatar :char-id="charIdMap.get(item.name)"></OperatorAvatar></div>
+      <div style="font-size: 20px;padding: 8px">{{ index + 1 }}</div>
+      <div>
+        <OperatorAvatar :char-id="charIdMap.get(item.name)"></OperatorAvatar>
+      </div>
       <div class="m-8"></div>
-      <img :src="`/image/action/${item.direction}.png`"  style="width: 24px" alt="">
+      <img :src="`/image/action/${item.direction}.png`" style="width: 24px" alt="">
       <div class="m-8"></div>
     </div>
   </div>
+
+
+
 
 </template>
