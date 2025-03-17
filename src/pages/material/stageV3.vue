@@ -54,6 +54,7 @@ let historyActivityList = ref([])
 let recommendedStageDetailTable = ref([])
 
 loadingLocalHostData()
+
 function loadingLocalHostData(){
   stageResultGroup.value = TMP_STAGE_RESULT.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
   orundumRecommendedStage.value = TMP_STAGE_RESULT.orundumRecommendedStage
@@ -62,6 +63,8 @@ function loadingLocalHostData(){
   getItemCardData()
   getItemTableData(0, false)
 }
+
+
 
 // 获取关卡推荐数据
 function getStageResult() {
@@ -73,6 +76,7 @@ function getStageResult() {
     orundumRecommendedStage.value = orundumRecommendedStageVO
 
     historyActivityList.value = historyActStage
+
     getItemCardData()
     getItemTableData(0, false)
   })

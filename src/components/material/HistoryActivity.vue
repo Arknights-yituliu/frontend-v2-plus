@@ -65,7 +65,7 @@ let dataLength = ref(0)
 
 function formatPcHistoryTableData() {
 
-  if(dataLength.value === props.modelValue.length||dataLength.value>props.modelValue.length){
+  if(dataLength.value>=props.modelValue.length){
     console.log('数据未更新')
     return
   }
