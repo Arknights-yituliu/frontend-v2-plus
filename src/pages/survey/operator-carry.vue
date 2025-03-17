@@ -115,8 +115,8 @@ function selectedOperatorClass(charId) {
 const headers = [
   {title: '序号', sortable: false, key: 'index'},
   {title: '干员', sortable: false, key: 'charId'},
-  {title: '携带人数', sortable: true, key: 'carryCount'},
-  {title: '携带率', sortable: true, key: 'carryRate'},
+  {title: '使用次数', sortable: true, key: 'carryCount'},
+  {title: '使用率', sortable: true, key: 'carryRate'},
   {title: '持有率', sortable: true, key: 'own'},
 ]
 

@@ -229,7 +229,7 @@ const routes = [
     },
     {
         path: '/survey/questionnaire',
-        text: '干员携带率问卷',
+        text: '干员使用率问卷',
         name: 'Questionnaire',
         display: true,
         module: 'survey',
