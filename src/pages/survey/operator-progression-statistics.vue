@@ -223,7 +223,10 @@ onMounted(() => {
           :headers="headers2"
           :items="displayOperatorsList"
           hide-default-footer
-          items-per-page="-1">
+          items-per-page="-1"
+          fixed-header
+          height="100%"
+          class="full-height-table">
         <template v-slot:item="{ item }">
           <tr @click="openOperatorsStatisticsDetail(item)">
             <td>
