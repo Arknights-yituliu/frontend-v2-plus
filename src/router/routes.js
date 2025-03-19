@@ -266,16 +266,7 @@ const routes = [
         component: () => import('/src/pages/about/dev.page.vue')
     },
     {
-        path: '/about/log',
-        text: '开发日志',
-        name: 'Log',
-        display: false,
-        module: 'about',
-        icon: "log",
-        component: () => import('/src/pages/about/log.page.vue')
-    },
-    {
-        path: '/dev/join-development',
+        path: '/doc/join-development',
         text: '参与开发',
         name: 'JoinDevelopment',
         display: true,
