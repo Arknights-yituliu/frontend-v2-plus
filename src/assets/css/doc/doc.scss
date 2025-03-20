@@ -1,5 +1,15 @@
 .doc-page {
-  max-width: 80%;
+
+  padding: 8px;
+  display: flex;
+
+  .doc-menu{
+    min-width: 200px;
+  }
+
+  .menu-item{
+    padding-left: 28px !important;
+  }
 
   h1 {
     margin: 16px 0;
@@ -9,7 +19,16 @@
     margin: 12px 0;
   }
 
+  h3 {
+    margin: 8px 0;
+  }
+
+  h4 {
+    margin: 4px 0;
+  }
+
   img{
+    width: 600px;
     margin: auto;
     display: block;
   }
