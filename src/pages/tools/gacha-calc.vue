@@ -148,13 +148,13 @@ let scheduleOptions = [
     historicalPackTimeRange: [new Date('2024/04/26 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
   },
   {
-    name: '敬请期待',
-    start: new Date('2024/11/01 16:00:00'),
-    end: new Date('2024/11/15 04:01:00'),
-    activityType: '周年限定',
-    disabled: true,
+    name: '夏活(0801-0815)',
+    start: new Date('2025/08/01 16:00:00'),
+    end: new Date('2025/08/15 04:01:00'),
+    activityType: '夏活限定',
+    disabled: false,
     dailyGiftResources: true,
-    historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
+    historicalPackTimeRange: [new Date('2024/07/23 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
   },
   {
     name: '敬请期待',
