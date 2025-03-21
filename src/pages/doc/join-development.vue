@@ -3,7 +3,7 @@ import '/src/assets/css/doc/doc.scss'
 import {copyTextToClipboard} from "/src/utils/copyText.js";
 import {onMounted, ref} from "vue";
 
-let menu = ref([])
+
 
 
 
@@ -13,36 +13,47 @@ const admins = [
   ['Settings', 'mdi-cog-outline'],
 ]
 
+let menu = ref([])
+
 onMounted(()=>{
   const hElement = document.querySelectorAll('h1, h2, h3, h3, h5, h6');
-
-  console.log(hElement)
-  
-  let h1Index = [];
-  let h2Index = [];
-  let h3Index = [];
-  let h4Index = [];
-
-
 
   for(const item of hElement) {
 
     const {nodeName,innerText} = item;
+
+    const level = parseInt(nodeName.replace('H',''))-1
+
+    const newItem = { title: innerText, child: [] };
+
+    if(level>0){
+      menu.value
+    }else {
+      menu.value.push(newItem)
+    }
+
     if('H1'===nodeName){
-      menu.value[h1Index] = {
+      menu.value.push({
         title:innerText,
         child:[]
-      }
+      })
+
     }
 
     if('H2'===nodeName){
-      menu.value[h1Index][h2Index] = {
+      menu.value[menu.value.length-1].child.push({
         title:innerText,
         child:[]
-      }
-
+      })
     }
-    
+
+    if('H3'===nodeName){
+      menu.value[menu.value.length-1].child[menu.value[menu.value.length-1].child.length-1].child.push({
+        title:innerText,
+        child:[]
+      })
+    }
+
   }
 
   console.log(menu.value)
