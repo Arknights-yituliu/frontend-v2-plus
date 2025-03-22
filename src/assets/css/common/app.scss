@@ -4,6 +4,11 @@ html {
   }
 }
 
+.href-black {
+  text-decoration: none;
+  color: inherit;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -12,10 +17,7 @@ body {
   overscroll-behavior: none;
 }
 
-.href-black {
-  text-decoration: none;
-  color: rgb(255, 255, 255);
-}
+
 
 .navigation-drawer {
 

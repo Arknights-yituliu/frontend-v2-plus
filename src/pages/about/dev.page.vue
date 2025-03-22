@@ -86,10 +86,7 @@ import developResources from '/src/static/json/about/developResources.json'
    padding: 12px;
 }
 
-.href-black {
-  text-decoration: none;
-  color: rgb(57, 57, 57);
-}
+
 
 .card-module {
   display: flex;

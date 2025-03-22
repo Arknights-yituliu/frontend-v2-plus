@@ -3,41 +3,74 @@
   padding: 8px;
   display: flex;
 
-  .doc-menu{
-    min-width: 200px;
+  .doc-menu {
+
+    min-width: 180px;
+    position: sticky;
+    top: 80px;
+    height: 400px;
+    margin:20px;
+    border-right: 1px solid grey;
+  }
+
+  .doc-menu-title{
+    font-size: 24px;
   }
 
   .menu-item{
-    padding-left: 28px !important;
+    opacity: 0.8;
+    padding:4px 0;
+    cursor: pointer;
+    display: flex;
+  }
+
+  .current-menu{
+    border-right: 2px solid #3264ff;
+  }
+
+  .menu-item-h2 {
+    padding-left: 12px;
+  }
+
+  .menu-item-h3 {
+    padding-left: 20px;
+  }
+
+  .menu-item-h4 {
+    padding-left: 28px;
   }
 
   h1 {
     margin: 16px 0;
+    scroll-margin-top: 70px; /* 根据header的实际高度进行调整 */
   }
 
   h2 {
     margin: 12px 0;
+    scroll-margin-top: 70px; /* 根据header的实际高度进行调整 */
   }
 
   h3 {
     margin: 8px 0;
+    scroll-margin-top: 70px; /* 根据header的实际高度进行调整 */
   }
 
   h4 {
     margin: 4px 0;
+    scroll-margin-top: 70px; /* 根据header的实际高度进行调整 */
   }
 
-  img{
+  img {
     width: 600px;
     margin: auto;
     display: block;
   }
 
-  p{
+  p {
     margin: 16px 0;
   }
 
-  code{
+  code {
     background-color: #222222;
     color: white;
     padding: 12px;
@@ -46,7 +79,7 @@
     border-radius: 4px;
   }
 
-  button{
+  button {
     background-color: rgba(0, 102, 255, 0.5);
     padding: 4px 8px;
     border-radius: 4px;
