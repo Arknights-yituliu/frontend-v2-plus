@@ -11,7 +11,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "SideStory1(非准确排期)": {
+  "SideStory模板1": {
     "originium": 28,
     "orundum": 0,
     "gachaTicket": 3,
@@ -21,10 +21,34 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": true
+    "defaultStatus": false
   },
-  "SideStory2(非准确排期)": {
+  "SideStory模板2": {
     "originium": 28,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2025/07/03 16:00:00",
+    "end": "2025/07/06 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "SideStory模板3": {
+    "originium": 28,
+    "orundum": 0,
+    "gachaTicket":3,
+    "tenGachaTicket": 0,
+    "start": "2025/07/03 16:00:00",
+    "end": "2025/07/06 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "故事集模板1": {
+    "originium": 16,
     "orundum": 0,
     "gachaTicket": 0,
     "tenGachaTicket": 0,
@@ -33,7 +57,19 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": true
+    "defaultStatus": false
+  },
+  "故事集模板2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2025/07/03 16:00:00",
+    "end": "2025/07/06 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": false
   },
   "------------------------复刻活动分界线--------------------------": {
     "originium": 39,

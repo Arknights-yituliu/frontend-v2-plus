@@ -122,11 +122,11 @@ function padZero(num, size) {
 batchGenerationServerMaintenanceRewards()
 
 //用户选择的活动
-let selectedScheduleName = ref('周年限定(5.15)')
+let currentScheduleName = ref('周年限定(5.15)')
 //用户选择的活动的结束时间
 let endDate = ref(new Date(1711008000000))
 //用户选择的活动
-let selectedSchedule = ref({})
+let currentSchedule = ref({})
 //用户选择的活动的类型
 let activityType = ref('联动限定')
 
@@ -135,6 +135,7 @@ let activityType = ref('联动限定')
 // start: Date 起始时间
 // end: Date 结束时间
 // disabled: boolean 是否禁用选项
+// accuracyFlag:true, 是否是准确排期
 // activityType: string 活动类型
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
@@ -145,6 +146,7 @@ let scheduleOptions = [
     activityType: '周年限定',
     disabled: false,
     dailyGiftResources: true,
+    accuracyFlag:true,
     historicalPackTimeRange: [new Date('2024/04/26 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
   },
   {
@@ -154,6 +156,7 @@ let scheduleOptions = [
     activityType: '夏活限定',
     disabled: false,
     dailyGiftResources: true,
+    accuracyFlag:false,
     historicalPackTimeRange: [new Date('2024/07/23 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
   },
   {
@@ -163,6 +166,7 @@ let scheduleOptions = [
     activityType: '周年限定',
     disabled: true,
     dailyGiftResources: true,
+    accuracyFlag:false,
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
   },
 ]
@@ -250,9 +254,9 @@ function getAndSortPackData() {
 
 function getHistoryPackInfo() {
 
-  const [historicalPackStart, historicalPackEnd] = selectedSchedule.value.historicalPackTimeRange
-  const scheduleStart = selectedSchedule.value.start
-  const scheduleEnd = selectedSchedule.value.end
+  const [historicalPackStart, historicalPackEnd] = currentSchedule.value.historicalPackTimeRange
+  const scheduleStart = currentSchedule.value.start
+  const scheduleEnd = currentSchedule.value.end
   let list = []
   for (let pack of packInfoInitList.value) {
     const {officialName, drawEfficiency, start, end, saleType} = pack
@@ -357,8 +361,8 @@ function getPackPriorityColor(drawEfficiency) {
  */
 function updateScheduleOption(index) {
   const schedule = scheduleOptions[index]
-  selectedScheduleName.value = schedule.name
-  selectedSchedule.value = schedule
+  currentScheduleName.value = schedule.name
+  currentSchedule.value = schedule
   endDate.value = schedule.end
   activityType.value = schedule.activityType
   gachaResourcesCalculation()
@@ -540,9 +544,9 @@ function gachaResourcesCalculation() {
   logs = []
 
   if (calPoolEnd.value) {
-    endDate.value = selectedSchedule.value.end
+    endDate.value = currentSchedule.value.end
   } else {
-    endDate.value = selectedSchedule.value.start
+    endDate.value = currentSchedule.value.start
   }
 
   //饼图数据暂存区
@@ -1058,7 +1062,7 @@ function gachaResourcesCalculation() {
       }
 
       //判断当前卡池是否有每日赠送奖励
-      if (selectedSchedule.value.dailyGiftResources) {
+      if (currentSchedule.value.dailyGiftResources) {
 
         //奖励结束日期
         let end = honeyCake.end
@@ -1343,7 +1347,7 @@ function handleResize() {
 
           <!--选择攒到某个活动的单选框-->
           <div class="radio-group-wrap" style="margin: 0px auto;">
-            <el-radio-group v-model="selectedScheduleName" size="large" style="margin: 8px auto;">
+            <el-radio-group v-model="currentScheduleName" size="large" style="margin: 8px auto;">
               <el-radio-button v-for="(activity, index) in scheduleOptions" :key="index" :value="activity.name"
                                :label="activity.name" :disabled="activity.disabled"
                                @change="updateScheduleOption(index)"
@@ -1922,7 +1926,9 @@ function handleResize() {
           <div class="collapse-content-subheading">
             <span></span> 未来活动
           </div>
-
+          <v-alert type="warning" density="compact"  class="collapse-alert" v-show="!currentSchedule.accuracyFlag">
+                 无准确排期，可自行勾选
+          </v-alert>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(activity, name) in activityBySchedules" :key="name" :value="name"
                                 v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)"

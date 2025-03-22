@@ -208,6 +208,11 @@
     position: relative;
   }
 
+  .collapse-alert{
+    width: 500px;
+    margin: 12px;
+  }
+
   /*折叠面板内的副标题的图标*/
   .collapse-content-subheading > span {
     border-left: 12px solid transparent;
