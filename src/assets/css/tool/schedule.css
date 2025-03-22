@@ -573,10 +573,15 @@
     justify-content: center;
 }
 
+.room-operator{
+    position: relative;
+    width: 50px;
+}
+
 .operator-delete-icon {
     cursor: pointer;
     font-weight: 600;
-    position: relative;
+    position: absolute;
     left: 32px;
     top: -3px;
     background-color: var(--c-page-background-color);

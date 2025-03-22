@@ -154,7 +154,7 @@ let scheduleOptions = [
     start: new Date('2025/08/01 16:00:00'),
     end: new Date('2025/08/15 04:01:00'),
     activityType: '夏活限定',
-    disabled: false,
+    disabled: true,
     dailyGiftResources: true,
     accuracyFlag:false,
     historicalPackTimeRange: [new Date('2024/07/23 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
