@@ -169,9 +169,9 @@ const openDetailDialog = (v) => {
 
   .v-table__wrapper {
     border: 1px solid #eee;
-    tbody tr:nth-child(even) {
-      background-color: #fafafa;
-    }
+    //tbody tr:nth-child(even) {
+    //  background-color: #fafafa;
+    //}
   }
 
   .v-card-text {
