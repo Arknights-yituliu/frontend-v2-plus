@@ -199,8 +199,8 @@ let roomSettlementOperatorMaxQuantity = {
  * @return {string} 雪碧图样式
  */
 function getAvatar(name) {
-  name = characterIdAndName[name]
-  return `bg-${name} room-avatar-sprite`
+  return  characterIdAndName[name]
+
 }
 
 /**
@@ -378,15 +378,15 @@ function commonFilterOperator() {
  */
 function operatorHasKeyword(operator) {
 
-  if(searchOperatorOnlyName.value){
+  if (searchOperatorOnlyName.value) {
     return operator.name.indexOf(searchInputText.value) > -1;
   }
 
-  if(searchOperatorOnlyBuffName.value){
+  if (searchOperatorOnlyBuffName.value) {
     return operator.buffName.indexOf(searchInputText.value) > -1;
   }
 
-  if(operator.name.indexOf(searchInputText.value) > -1){
+  if (operator.name.indexOf(searchInputText.value) > -1) {
     return true
   }
 
@@ -1117,9 +1117,13 @@ function useLegacyUI() {
               <!--  <div :class="getAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
               <!--</div>-->
 
-              <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible = true">
-                <div :class="getOptionAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>
-              </div>
+              <OperatorAvatar @click="FiammettaTargetVisible = true"
+                  :size="60" :char-id="getCharId(plansTemplate[selectedPlanIndex].Fiammetta.target)">
+              </OperatorAvatar>
+
+<!--              <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible = true">-->
+<!--                <div :class="getOptionAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
+<!--              </div>-->
             </div>
           </div>
 
@@ -1163,11 +1167,17 @@ function useLegacyUI() {
               </div>
 
               <div class="operator-check-box-group">
-                <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"
-                     @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
-                  <div :class="getOptionAvatar(operator.charId)"></div>
-                  <div class="operator-check-label">{{ operator.name }}</div>
+                <div v-for="(operator, charId) in filterOperatorList" :key="charId" class="operator-check-box-option-v2">
+                <OperatorAvatar
+                                :size="60" :char-id="operator.charId">
+                </OperatorAvatar>
+                  <div class="operator-check-label-v2">{{ operator.name }}</div>
                 </div>
+<!--                <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"-->
+<!--                     @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">-->
+<!--                  <div :class="getOptionAvatar(operator.charId)"></div>-->
+<!--                  <div class="operator-check-label">{{ operator.name }}</div>-->
+<!--                </div>-->
               </div>
             </v-card-text>
           </v-card>
@@ -1342,12 +1352,15 @@ function useLegacyUI() {
             <!--入驻的干员-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsStationed') }}</span>
             <div class="selected-operator-wrap">
-              <div class="room-avatar-sprite-wrap"
-                   v-for="(charId, index) in getRoomOperators(selectedRoomType, selectedRoomIndex)" :key="index">
-                <div :class="getAvatar(charId)"></div>
-                <i class="iconfont icon-error operator-delete-icon" @click="deleteOperator(charId)">
-                </i>
-              </div>
+              <OperatorAvatar  v-for="(charId, index) in getRoomOperators(selectedRoomType, selectedRoomIndex)" :key="index"
+                              :size="40" :char-id="getCharId(charId)" >
+              </OperatorAvatar>
+<!--              <div class="room-avatar-sprite-wrap"-->
+<!--                   v-for="(charId, index) in getRoomOperators(selectedRoomType, selectedRoomIndex)" :key="index">-->
+<!--                <div :class="getAvatar(charId)"></div>-->
+<!--                <i class="iconfont icon-error operator-delete-icon" @click="deleteOperator(charId)">-->
+<!--                </i>-->
+<!--              </div>-->
             </div>
             <v-btn color="primary" variant="tonal" @click="copyOperatorList()"
                    :text="translate('schedule', 'schedule.Copy')">
@@ -1358,9 +1371,12 @@ function useLegacyUI() {
             <!--复制的干员-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsClipboard') }}</span>
             <div class="selected-operator-wrap">
-              <div class="room-avatar-sprite-wrap" v-for="(charId, index) in tmpOperatorList" :key="index">
-                <div :class="getAvatar(charId)"></div>
-              </div>
+              <OperatorAvatar v-for="(charId, index) in tmpOperatorList" :key="index"
+                  :size="40" :char-id="getCharId(charId)">
+              </OperatorAvatar>
+<!--              <div class="room-avatar-sprite-wrap" v-for="(charId, index) in tmpOperatorList" :key="index">-->
+<!--                <div :class="getAvatar(charId)"></div>-->
+<!--              </div>-->
             </div>
           </div>
 
@@ -1382,9 +1398,11 @@ function useLegacyUI() {
                         variant="outlined" width="800" class="m-8"
                         @input="searchOperatorDebounce()" v-model="searchInputText">
             <template v-slot:append>
-              <v-switch color="primary" label="仅搜索干员名"  density="compact" v-model="searchOperatorOnlyName" @change="searchOperatorDebounce()" hide-details>
+              <v-switch color="primary" label="仅搜索干员名" density="compact" v-model="searchOperatorOnlyName"
+                        @change="searchOperatorDebounce()" hide-details>
               </v-switch>
-              <v-switch color="primary" label="仅搜索技能名称"  density="compact"  v-model="searchOperatorOnlyBuffName" @change="searchOperatorDebounce()" hide-details>
+              <v-switch color="primary" label="仅搜索技能名称" density="compact" v-model="searchOperatorOnlyBuffName"
+                        @change="searchOperatorDebounce()" hide-details>
               </v-switch>
 
               <v-btn color="primary" text="隐藏未招募干员" @click="filterOperatorByOwn()">
@@ -1398,13 +1416,22 @@ function useLegacyUI() {
           </v-text-field>
 
           <div class="operator-check-box-group">
-            <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"
-                 :id="operator.charId" class="operator-check-box-option">
-              <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>
-              <div class="operator-check-label">{{ operator.name }}</div>
-              <span class="operator-building-skill-description" :id="`${operator.charId}-description`"
-                    v-html="operator.description"></span>
+            <div v-for="(operator, charId) in filterOperatorList" :key="charId"
+                 class="operator-check-box-option-v2">
+              <OperatorAvatar
+                              @click="chooseOperator(operator.name)"
+                              :size="60" :char-id="operator.charId">
+
+              </OperatorAvatar>
+              <div class="operator-check-label-v2">{{ operator.name }}</div>
             </div>
+<!--            <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"-->
+<!--                 :id="operator.charId" class="operator-check-box-option">-->
+<!--              <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>-->
+<!--              <div class="operator-check-label">{{ operator.name }}</div>-->
+<!--              <span class="operator-building-skill-description" :id="`${operator.charId}-description`"-->
+<!--                    v-html="operator.description"></span>-->
+<!--            </div>-->
           </div>
         </div>
       </div>

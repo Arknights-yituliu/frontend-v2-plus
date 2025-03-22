@@ -165,7 +165,7 @@
     border-radius: 3px;
     flex-wrap: wrap;
     font-weight: 600;
-    height: 70px;
+    height: 80px;
     --room-operator-short: 180px;
     --room-operator-long: 300px;
     border: 1px solid var(--c-page-background-color);
@@ -449,7 +449,6 @@
     --avatar-scale: scale(calc(44 / 180));
     border-radius: var(--base-border-radius);
     box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
-    background-color: var(--c-background-white-transparent);
 }
 
 .room-avatar-sprite {
@@ -628,6 +627,15 @@
     .operator-check-box-description {
         display: block;
     }
+}
+.operator-check-box-option-v2{
+    width: 60px;
+
+}
+
+.operator-check-label-v2{
+    font-size: 12px;
+    text-align: center;
 }
 
 .operator-check-label {
