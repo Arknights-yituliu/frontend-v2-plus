@@ -57,20 +57,21 @@ function calculatedSize() {
 
 
   const background = rarityColor[props.rarity]
-
+  borderStyle.value = `width:${size}px;height: ${size}px;`
   if (props.border) {
-
-    borderStyle.value = `width:${size}px;height: ${size}px;background: ${background};border-radius: 4px;`
+    borderStyle.value += `background: ${background};border-radius: 4px;`
     wrapStyle.value += `border-radius:4px;`
+
+    if (innerWidth < 600) {
+      size -= 2
+      borderStyle.value += `padding:1px;`
+    } else {
+      size -= 4
+      borderStyle.value += `padding:2px;`
+    }
   }
 
-  if (innerWidth < 600) {
-    size -= 2
-    borderStyle.value += `padding:1px;`
-  } else {
-    size -= 4
-    borderStyle.value += `padding:2px;`
-  }
+
 
   wrapStyle.value += `overflow: hidden;background-color:var(--c-background-color);position: relative;width: ${size}px;height: ${size}px;`
 
