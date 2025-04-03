@@ -634,8 +634,9 @@
     }
 }
 .operator-check-box-option-v2{
-    width: 60px;
-
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
 }
 
 .operator-check-label-v2{

@@ -20,10 +20,29 @@ function createPopover(childId,width='200px'){
         return
     }
     container.appendChild(popover)
+    document.getElementById('app').onclick = closePopover()
 }
 
 let lastParentId = ''
 let lastChildId = ''
+
+function closePopover(parentId,childId){
+    const popover =  document.getElementById(popoverId)
+    if(!popover){
+        return
+    }
+
+    const popoverArrow = document.getElementById(popoverArrowId)
+    if(!popoverArrow){
+        return
+    }
+
+    popover.style.display='block'
+    setPopupStyle(popover,popoverArrow,parent)
+    lastChildId = ''
+    lastParentId = ''
+
+}
 
 function popoverOnOpen(parentId,childId){
 
