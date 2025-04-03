@@ -7,8 +7,8 @@ import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {formatNumber} from "@/utils/format.js";
 import itemCache from "/src/utils/indexedDB/itemCache.js";
-import NoticeBoard from "@/components/NoticeBoard.vue";
-
+import NoticeBoard from "/src/components/NoticeBoard.vue";
+import {exportToJsonFile} from "/src/utils/fileUtils.js";
 
 
 let itemValueCollect = ref([])
@@ -27,10 +27,12 @@ function exportItemValueJson() {
       rarity: item.rarity
     })
   }
-  let link = document.createElement('a')
-  link.download = `item_value_table.json`
-  link.href = 'data:text/plain,' + JSON.stringify(itemList)
-  link.click()
+
+  exportToJsonFile(itemList,'item.json')
+  // let link = document.createElement('a')
+  // link.download = `item_value_table.json`
+  // link.href = 'data:text/plain,' + JSON.stringify(itemList)
+  // link.click()
 }
 
 function exportItemValueExcel() {

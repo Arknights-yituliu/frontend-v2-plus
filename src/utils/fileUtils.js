@@ -1,4 +1,4 @@
-function getText(file){
+function readFileToString(file){
     return new Promise((resolve,reject)=>{
         const reader = new FileReader()
         reader.onload = () =>{
@@ -71,5 +71,26 @@ async function compressImage(file, targetSize = 100 * 1024) {
 }
 
 
+// 导出 JSON 的函数
+function exportToJsonFile(data, fileName = 'data.json') {
+    // 将对象转换为 JSON 字符串
+    const jsonString = JSON.stringify(data, null, 2);
 
-export { getText , getDataUrl ,compressImage}
+    // 创建 Blob 对象
+    const blob = new Blob([jsonString], { type: 'application/json' });
+
+    // 创建下载链接
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+
+    // 模拟点击下载
+    a.click();
+
+    // 清理 URL 对象
+    URL.revokeObjectURL(url);
+}
+
+
+export { readFileToString , getDataUrl ,compressImage,exportToJsonFile}

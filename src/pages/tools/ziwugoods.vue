@@ -80,6 +80,7 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue';
+import {exportToJsonFile} from "@/utils/fileUtils.js";
 
 export default {
     setup() {
@@ -168,13 +169,14 @@ export default {
         }
 
         function exportOrders() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(orders.value, null, 2));
-            const downloadAnchor = document.createElement("a");
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "orders.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            document.body.removeChild(downloadAnchor);
+          exportToJsonFile(orders.value,'orders.json')
+            // const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(orders.value, null, 2));
+            // const downloadAnchor = document.createElement("a");
+            // downloadAnchor.setAttribute("href", dataStr);
+            // downloadAnchor.setAttribute("download", "orders.json");
+            // document.body.appendChild(downloadAnchor);
+            // downloadAnchor.click();
+            // document.body.removeChild(downloadAnchor);
         }
 
         onMounted(loadOrders);

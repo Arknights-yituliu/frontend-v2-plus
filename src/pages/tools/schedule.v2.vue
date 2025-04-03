@@ -10,7 +10,7 @@ import buildingApi from '/src/api/building.js'
 import operatorDataAPI from '/src/api/operatorData.js'
 import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
 import {translate} from '/src/utils/i18n.js'
-import {getText} from '/src/utils/fileConversion.js'
+import {readFileToString} from '/src/utils/fileUtils.js'
 import {debounce} from "/src/utils/debounce.js";
 import {cMessage} from '/src/utils/message.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
@@ -745,7 +745,7 @@ async function importScheduleByFile() {
   const inputElement = document.getElementById('scheduleFile')
   let fileContent = ')'
   if (inputElement.files) {
-    fileContent = await getText(inputElement.files[0])
+    fileContent = await readFileToString(inputElement.files[0])
   }
 
   let schedule = ''
