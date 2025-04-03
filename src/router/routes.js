@@ -380,7 +380,7 @@ const routes = [
     },
     {
         path: '/zwg',
-        text: '子午谷',
+        text: '子午谷收银台',
         display: false,
         component: () => import('/src/pages/tools/ziwugoods.vue')
     },

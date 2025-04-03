@@ -1904,7 +1904,7 @@ function handleResize() {
           <div class="collapse-content-subheading">
             <span></span> 限时礼包
           </div>
-          <span class="tip">"未致蒙尘"寻访包仅能用于10月维娜池，不能用于任何限定池</span>
+          <span class="tip">"指令重构"寻访包仅能用于4月M3池，不能用于任何限定池</span>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByActivity" :key="index" :value="pack.parentIndex"
               class="el-checkbox-button">
