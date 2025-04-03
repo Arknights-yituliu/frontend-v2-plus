@@ -379,6 +379,12 @@ const routes = [
         component: () => import('/src/pages/dev/operator-add-time.vue')
     },
     {
+        path: '/zwg',
+        text: '子午谷',
+        display: false,
+        component: () => import('/src/pages/tools/ziwugoods.vue')
+    },
+    {
         path: '/:catchAll(.*)',
         display: false,
         component: Error404
