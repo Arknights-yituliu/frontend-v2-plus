@@ -122,7 +122,7 @@ function getOperatorItemCost(charId, rarity, current, target) {
 
     // 通用技能消耗的材料
     for (let mainSkillRank = currentMainSkill; mainSkillRank < targetMainSkill; mainSkillRank++) {
-        console.log('test',mainSkillRank,'----',targetMainSkill)
+        // console.log('test',mainSkillRank,'----',targetMainSkill)
         const list = allSkill[mainSkillRank]
         for (let itemId in list) {
             let count = allSkill[mainSkillRank][itemId];
@@ -334,7 +334,7 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
 
 
 function statisticsOperatorInfo(operatorList) {
-    console.log(operatorList)
+    // console.log(operatorList)
     try {
 
         let logs = []

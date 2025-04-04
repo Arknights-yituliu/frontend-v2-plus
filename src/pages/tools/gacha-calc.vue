@@ -20,7 +20,7 @@ import { getStageConfig } from "/src/utils/user/userConfig.js";
 // 罗德岛蜜饼工坊预测的其他奖励排期
 let otherRewardBySchedules = ref([])
 // 罗德岛蜜饼工坊预测的活动排期
-let activityBySchedules = ref({})
+let activitySchedule = ref({})
 
 //当前时间戳
 const currentTimestamp = new Date().getTime();
@@ -35,6 +35,9 @@ let selectedPackIndex = ref([])
 
 let selectedHistoryPackIndex = ref([])
 
+//活动排期临时集合，用于将俩个json文件内的排序合并排序
+let activityScheduleList = []
+
 //将预测活动排期分类
 for (const name in HONEY_CAKE_TABLE) {
   let activityData = HONEY_CAKE_TABLE[name]
@@ -46,7 +49,10 @@ for (const name in HONEY_CAKE_TABLE) {
   if (activityData.rewardModule === 'otherResources') {
     otherRewardBySchedules.value.push(activityData)
   } else {
-    activityBySchedules.value[name] = activityData
+    //先将活动排期写入临时集合
+    activityData.name = name
+    activityScheduleList.push(activityData)
+    // activitySchedule.value[name] = activityData
     if (activityData.defaultStatus) {
       selectedActivityName.value.push(activityData.name)
     }
@@ -63,12 +69,24 @@ for (const name in FIXED_TABLE) {
   if (activityData.rewardModule === 'otherResources') {
     otherRewardBySchedules.value.push(activityData)
   } else {
-    activityBySchedules.value[name] = activityData
+    //先将活动排期写入临时集合
+    activityData.name = name
+    activityScheduleList.push(activityData)
+    // activitySchedule.value[name] = activityData
     if (activityData.defaultStatus) {
       selectedActivityName.value.push(activityData.name)
     }
   }
 }
+
+//将活动排期先排序一下
+activityScheduleList.sort((a, b) => a.start - b.start)
+
+//再将这个集合转为一个对象
+for(const item of activityScheduleList){
+  activitySchedule.value[item.name] = item
+}
+
 
 /**
  * 批量生成服务器维护奖励列表，以10天为一个时间段生成，每个时间段有400合成玉
@@ -154,7 +172,7 @@ let scheduleOptions = [
     start: new Date('2025/08/01 16:00:00'),
     end: new Date('2025/08/15 04:01:00'),
     activityType: '夏活限定',
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true,
     accuracyFlag: false,
     historicalPackTimeRange: [new Date('2024/07/23 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
@@ -1022,8 +1040,8 @@ function gachaResourcesCalculation() {
     let tenGachaTicket = 0
 
     //循环活动排期，计算活动可获得的奖励
-    for (const activityName in activityBySchedules.value) {
-      const activity = activityBySchedules.value[activityName]
+    for (const activityName in activitySchedule.value) {
+      const activity = activitySchedule.value[activityName]
       //判断这个活动是否在当前选择的时间段内
       if (!rewardIsExpired(activity)) {
         continue
@@ -1963,7 +1981,7 @@ function handleResize() {
             <span></span> 复刻活动
           </div>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(activity, name) in activityBySchedules" :key="name" :value="name"
+            <el-checkbox-button v-for="(activity, name) in activitySchedule" :key="name" :value="name"
               v-show="activity.rewardModule === 'actRe' && rewardIsExpired(activity)" class="el-checkbox-button">
               <pack-button-content :data="activity">
               </pack-button-content>
@@ -1978,7 +1996,7 @@ function handleResize() {
             无准确排期，可自行勾选
           </v-alert>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(activity, name) in activityBySchedules" :key="name" :value="name"
+            <el-checkbox-button v-for="(activity, name) in activitySchedule" :key="name" :value="name"
               v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)" class="el-checkbox-button">
               <pack-button-content :data="activity">
               </pack-button-content>

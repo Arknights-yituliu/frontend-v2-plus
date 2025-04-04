@@ -12,6 +12,9 @@ for (const charId in operatorTable) {
   operatorList.push(operatorTable[charId])
 }
 
+
+
+
 operatorList.sort((a, b) => a.data - b.data)
 
 
@@ -141,7 +144,8 @@ function statistics(list) {
   list.sort((a, b) => b.rarity - a.rarity)
 
 
-  const {itemCostCollect, logs} = statisticsOperatorInfo(list)
+  const {itemCostCollect, logs,apCostCount} = statisticsOperatorInfo(list)
+  console.log("满练度消耗：",apCostCount)
   logList.value = logs
   console.log(itemCostCollect)
 

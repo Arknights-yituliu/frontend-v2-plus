@@ -21,7 +21,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": false
+    "defaultStatus": true
   },
   "SideStory模板2": {
     "originium": 28,
@@ -57,7 +57,7 @@
     "rewardType": "公共",
     "rewardModule": "act",
     "probability": "",
-    "defaultStatus": false
+    "defaultStatus": true
   },
   "故事集模板2": {
     "originium": 16,
