@@ -102,7 +102,7 @@ function batchGenerationServerMaintenanceRewards() {
       currentDay = date.getDay()
     }
 
-    for (let d = currentDay; d < 29; d += 4) {
+    for (let d = currentDay; d < 29; d += 5) {
       let reward = {
         name: `游戏维护(${month}月)`,
         originium: 0,
