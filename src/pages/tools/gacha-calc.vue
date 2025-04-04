@@ -1,10 +1,9 @@
 <!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
 <script setup>
-import { h, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import '/src/assets/css/tool/gacha_calc.scss'
 import '/src/assets/css/sprite/sprite_plane_icon.css'
 import '/src/assets/css/tool/gacha_calc.phone.scss'
-// import * as echarts from "echarts";
 
 import POTENTIAL_TABLE from '/src/static/json/tools/potential_gacha_resources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'
@@ -15,7 +14,46 @@ import { createMessage } from "/src/utils/message.js";
 import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
 import { getStageConfig } from "/src/utils/user/userConfig.js";
+import deepClone from "@/utils/deepClone.js";
 
+const OriginiumTable = ref([
+  {
+    packName: "6元源石",
+    price: 6.0,
+    originium: 1,
+    quantity:0
+  },
+  {
+    packName: "30元源石",
+    price: 30.0,
+    originium: 7,
+    quantity:0
+  },
+  {
+    packName: "98元源石",
+    price: 98.0,
+    originium: 24,
+    quantity:0
+  },
+  {
+    packName: "198元源石",
+    price: 198.0,
+    originium: 50,
+    quantity:0
+  },
+  {
+    packName: "328元源石",
+    price: 328.0,
+    originium: 90,
+    quantity:0
+  },
+  {
+    packName: "648元源石",
+    price: 648.0,
+    originium: 185,
+    quantity:0
+  }
+])
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
 let otherRewardBySchedules = ref([])
@@ -192,8 +230,10 @@ let scheduleOptions = [
 
 //新人礼包集合
 let packListGroupByOnce = ref([])
-//每年重置的礼包集合
+//每年重置的首充源石
 let packListGroupByrOiginium = ref([])
+//上一年年重置的首充源石
+let packListGroupByrOiginiumLastYear = ref([])
 //每月重置的礼包集合
 let packListGroupByMonthly = ref([])
 //限时礼包集合
@@ -242,11 +282,13 @@ function getAndSortPackData() {
         continue
       }
 
+      //给每个礼包都绑定一个索引
       pack.parentIndex = index
       //将礼包写入全部礼包集合
       packList.value.push(pack)
       //礼包索引递增
       index++
+
 
       //根据礼包类型进行分类
       if (pack.saleType === 'newbie') {
@@ -257,6 +299,17 @@ function getAndSortPackData() {
         packListGroupByrOiginium.value.push(pack)
       }
 
+      if (pack.saleType === 'originium2') {
+        let packClone = deepClone(pack);
+        packClone.parentIndex = index
+        //将礼包写入全部礼包集合
+        packList.value.push(pack)
+        //礼包索引递增
+        index++
+        packListGroupByrOiginiumLastYear.value.push(packClone)
+      }
+
+
       if (pack.saleType === 'monthly') {
         packListGroupByMonthly.value.push(pack)
       }
@@ -265,6 +318,8 @@ function getAndSortPackData() {
         packListGroupByActivity.value.push(pack)
       }
     }
+
+
     getHistoryPackInfo()
     batchGenerationMonthlyPack(index)
   })
@@ -1001,6 +1056,15 @@ function gachaResourcesCalculation() {
       gachaTicket += pack.gachaTicket
       tenGachaTicket += pack.tenGachaTicket
       totalAmountOfRecharge += pack.price
+    }
+
+    for(const item of OriginiumTable.value){
+      if(item.quantity>0){
+        originium+=item.originium*item.quantity
+        totalAmountOfRecharge+=item.price*item.quantity
+      }
+
+
     }
 
     if (!originiumIsUsed.value) {
@@ -1945,7 +2009,20 @@ function handleResize() {
 
           <!--首次充值源石-->
           <div class="collapse-content-subheading">
-            <span></span> 首次充值源石
+            <span></span> 首次充值源石（周年刷新前）
+          </div>
+          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(pack, index) in packListGroupByrOiginiumLastYear" :key="index" :value="pack.parentIndex"
+                                class="el-checkbox-button">
+              <pack-button-content :data="pack">
+              </pack-button-content>
+            </el-checkbox-button>
+          </el-checkbox-group>
+
+
+          <!--首次充值源石-->
+          <div class="collapse-content-subheading">
+            <span></span> 首次充值源石（周年刷新后）
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByrOiginium" :key="index" :value="pack.parentIndex"
@@ -1965,6 +2042,21 @@ function handleResize() {
               </pack-button-content>
             </el-checkbox-button>
           </el-checkbox-group>
+
+          <div class="collapse-content-subheading">
+            <span></span> 额外购买非首充源石
+          </div>
+
+          <div class="resources-line" v-for="item in OriginiumTable">
+            <span class="resources-line-label">{{item.packName}}</span>
+            <el-input-number v-model="item.quantity"  @change="gachaResourcesCalculation" >
+            <template #suffix>
+              <span>次</span>
+            </template>
+            </el-input-number>
+          </div>
+
+
 
         </el-collapse-item>
 
