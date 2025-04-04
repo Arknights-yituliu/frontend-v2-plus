@@ -203,7 +203,7 @@ let scheduleOptions = [
     disabled: false,
     dailyGiftResources: true,
     accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2024/04/26 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
+    historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
   },
   {
     name: '夏活(0801-0815)',
@@ -213,7 +213,7 @@ let scheduleOptions = [
     disabled: false,
     dailyGiftResources: true,
     accuracyFlag: false,
-    historicalPackTimeRange: [new Date('2024/07/23 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
+    historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
   },
   {
     name: '敬请期待',
@@ -332,12 +332,12 @@ function getHistoryPackInfo() {
   const scheduleEnd = currentSchedule.value.end
   let list = []
   for (let pack of packInfoInitList.value) {
-    const { drawEfficiency, start, end, saleType } = pack
+    const { officialName,drawEfficiency, start, end, saleType } = pack
 
     if ('activity' !== saleType || drawEfficiency < 0.1) {
       continue
     }
-    // console.log(officialName,start ,'>', historicalPackStart,'——',start > historicalPackStart,end,'<',historicalPackEnd,'——',end<historicalPackEnd)
+    console.log(officialName,start ,'>', historicalPackStart,'——',start > historicalPackStart,end,'<',historicalPackEnd,'——',end<historicalPackEnd)
     if (start > historicalPackStart && start < historicalPackEnd) {
       let item = JSON.parse(JSON.stringify(pack))
       item.start = scheduleStart.getTime()
