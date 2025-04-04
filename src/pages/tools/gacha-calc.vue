@@ -231,9 +231,9 @@ let scheduleOptions = [
 //新人礼包集合
 let packListGroupByOnce = ref([])
 //每年重置的首充源石
-let packListGroupByrOiginium = ref([])
+let packListGroupByrOriginium = ref([])
 //上一年年重置的首充源石
-let packListGroupByrOiginiumLastYear = ref([])
+let packListGroupByrOriginiumLastYear = ref([])
 //每月重置的礼包集合
 let packListGroupByMonthly = ref([])
 //限时礼包集合
@@ -296,7 +296,7 @@ function getAndSortPackData() {
       }
 
       if (pack.saleType === 'originium2') {
-        packListGroupByrOiginium.value.push(pack)
+        packListGroupByrOriginium.value.push(pack)
       }
 
       if (pack.saleType === 'originium2') {
@@ -306,7 +306,7 @@ function getAndSortPackData() {
         packList.value.push(pack)
         //礼包索引递增
         index++
-        packListGroupByrOiginiumLastYear.value.push(packClone)
+        packListGroupByrOriginiumLastYear.value.push(packClone)
       }
 
 
@@ -332,7 +332,7 @@ function getHistoryPackInfo() {
   const scheduleEnd = currentSchedule.value.end
   let list = []
   for (let pack of packInfoInitList.value) {
-    const { officialName, drawEfficiency, start, end, saleType } = pack
+    const { drawEfficiency, start, end, saleType } = pack
 
     if ('activity' !== saleType || drawEfficiency < 0.1) {
       continue
@@ -1160,15 +1160,13 @@ function gachaResourcesCalculation() {
    * 计算预测奖励结果
    */
   function honeyCakeCalculate() {
-    let totalDraw = 0
+
     let orundum = 0
     let originium = 0
     let gachaTicket = 0
     let tenGachaTicket = 0
 
 
-    const currentMonth = endDate.value.getMonth() + 1
-    const MaintenanceTimes = endDate.value.getDate() - new Date().getDate()
     //循环预测奖励排期
     for (const honeyCake of otherRewardBySchedules.value) {
       // 判断奖励是否在当前选择的时间段内
@@ -1420,9 +1418,7 @@ function keepTheDecimalPoint(num, decimalPlaces) {
   return num.toFixed(decimalPlaces)
 }
 
-function getIconByItemId(id) {
-  return `bg-${id}icon `
-}
+
 
 
 // 创建一个窗口尺寸变化的监听器
@@ -1460,7 +1456,7 @@ function handleResize() {
             </span>
           </template>
           <!--选择攒到某个活动的单选框-->
-          <div class="radio-group-wrap" style="margin: 0px auto;">
+          <div class="radio-group-wrap" style="margin: 0 auto;">
             <el-radio-group v-model="currentScheduleName" size="large" style="margin: 8px auto;">
               <el-radio-button v-for="(activity, index) in scheduleOptions" :key="index" :value="activity.name"
                 :label="activity.name" :disabled="activity.disabled" @change="updateScheduleOption(index)"
@@ -1469,13 +1465,13 @@ function handleResize() {
           </div>
 
           <!-- <span class="tip" style="text-align: center">日期为卡池结束日期</span> -->
-          <div class="resources-line" style="padding-left: 20px;margin: 0px;">
+          <div class="resources-line" style="padding-left: 20px;margin: 0;">
             <el-switch v-model="calPoolEnd" @click="gachaResourcesCalculation"
               style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" active-text="计算到卡池结束当天"
               inactive-text="计算到卡池开放当天" />
           </div>
           <!-- <div class="result-content"> -->
-          <div class="resources-line" style="padding-top: 0px;margin: 0px;display: flex;">
+          <div class="resources-line" style="padding-top: 0;margin: 0;display: flex;">
             <!--饼状图-->
             <div class="gacha-resources-chart-pie" id="calculationResultPieChart">
             </div>
@@ -1798,7 +1794,7 @@ function handleResize() {
           </el-checkbox-group>
           <span class="tip">请根据自身情况填入合适的理智数</span>
           <el-checkbox-group>
-            <el-checkbox-button v-for="(stage, index) in coEfficientList" :key="coEfficient" :value="coEfficient" @click="updateCoEfficient(stage.coEfficient)">
+            <el-checkbox-button v-for="stage in coEfficientList" :key="coEfficient" :value="coEfficient" @click="updateCoEfficient(stage.coEfficient)">
               <div style="padding: 4px;">
                 {{stage.stage}}({{stage.coEfficient}})
               </div>
@@ -2012,7 +2008,7 @@ function handleResize() {
             <span></span> 首次充值源石（周年刷新前）
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByrOiginiumLastYear" :key="index" :value="pack.parentIndex"
+            <el-checkbox-button v-for="(pack, index) in packListGroupByrOriginiumLastYear" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
@@ -2025,8 +2021,8 @@ function handleResize() {
             <span></span> 首次充值源石（周年刷新后）
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByrOiginium" :key="index" :value="pack.parentIndex"
-              class="el-checkbox-button">
+            <el-checkbox-button v-for="(pack, index) in packListGroupByrOriginium" :key="index" :value="pack.parentIndex"
+                                class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
             </el-checkbox-button>
@@ -2049,6 +2045,10 @@ function handleResize() {
 
           <div class="resources-line" v-for="item in OriginiumTable">
             <span class="resources-line-label">{{item.packName}}</span>
+            <div class="resources-line-content">
+              <div class="image-sprite"><div class="bg-icon_4002"></div></div>
+              <span>{{item.originium}}</span>
+            </div>
             <el-input-number v-model="item.quantity"  @change="gachaResourcesCalculation" >
             <template #suffix>
               <span>次</span>
