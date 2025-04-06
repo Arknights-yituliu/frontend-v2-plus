@@ -10,10 +10,11 @@ import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/ope
 import {formatNumber} from "@/utils/format.js";
 import EquipIcon from "@/components/sprite/EquipIcon.vue";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
+import {dateFormat} from "@/utils/dateUtil.js";
 
 
 let operatorsStatisticsList = ref([]);
-let userCountText = ref(0);
+let dataSampleSize = ref(1);
 let updateTimeText = ref("2023-05-01");
 let displayOperatorsList = ref([])
 
@@ -36,7 +37,7 @@ function btnAction(action) {
 //表头标题
 let headers2 = [
   {title: '干员', align: 'start', sortable: false, key: 'charId'},
-  {title: '持有率', sortable: true, key: 'own'},
+  {title: '持有率', sortable: true, key: 'ownS'},
   {title: '精二率', sortable: true, key: 'eliteS'},
   {title: '一技能', sortable: true, key: 'skill1S'},
   {title: '二技能', sortable: true, key: 'skill2S'},
@@ -70,9 +71,10 @@ async function getCharStatisticsResult() {
 
   const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatisticsV2');
 
-  let {result, userCount, updateTime} = data
-  userCountText.value = userCount;
-  updateTimeText.value = updateTime;
+  let {result, sampleSize, createTime} = data
+  dataSampleSize.value = sampleSize;
+  updateTimeText.value = dateFormat(createTime, 'yyyy-MM-dd HH:mm:ss');
+
   for (const item of result) {
     let charInfo = operatorTable[item.charId]
     if (charInfo) {
@@ -82,19 +84,18 @@ async function getCharStatisticsResult() {
       item.itemObtainApproach = charInfo.itemObtainApproach
       item.skill = charInfo.skill
       item.equip = charInfo.equip
-      item.own = formatNumber(item.own * 100, 1)
-      item.eliteS = formatNumber(item.elite.rank2 * 100, 1)
-      item.skill1S = formatNumber(item.skill1.rank3 * 100, 1)
-      item.skill2S = formatNumber(item.skill2.rank3 * 100, 1)
-      item.skill3S = formatNumber(item.skill3.rank3 * 100, 1)
-      item.modXS = formatNumber(item.modX.rank3 * 100, 1)
-      item.modYS = formatNumber(item.modY.rank3 * 100, 1)
-      item.modDS = formatNumber(item.modD.rank3 * 100, 1)
-      item.modAS = formatNumber(item.modA.rank3 * 100, 1)
-      item.available = true
+      const {own, elite, skill1, skill2, skill3, modX, modY, modD, modA} = item
+
+      item.ownS = resultFormat(own, sampleSize)
+      item.eliteS = resultFormat(elite[2], own)
+      item.skill1S = resultFormat(skill1[3], own)
+      item.skill2S = resultFormat(skill2[3], own)
+      item.skill3S = resultFormat(skill3[3], own)
+      item.modXS = resultFormat(modX[3], own)
+      item.modYS = resultFormat(modY[3], own)
+      item.modDS = resultFormat(modD[3], own)
+      item.modAS = resultFormat(modA[3], own)
       item.date = charInfo.date
-    } else {
-      item.available = false
     }
   }
   result = result.filter(e => e.name)
@@ -103,6 +104,14 @@ async function getCharStatisticsResult() {
 
   displayOperatorsList.value = filterOperatorList(operatorsStatisticsList.value)
 
+}
+
+function resultFormat(dividend, divisor) {
+  if (dividend) {
+    return formatNumber(dividend / divisor * 100, 1)
+  } else {
+    return 0
+  }
 }
 
 
@@ -133,21 +142,22 @@ let operatorsStatisticsDetailDialog = ref(false)
 function openOperatorsStatisticsDetail(operator) {
 
 
-  const {skill, equip} = operator
+  const {skill, equip,own} = operator
   const data = []
 
   for (let index = 0; index < 3; index++) {
     const info = skill[index]
     const num = index + 1
     const ranks = operator[`skill${num}`]
+
     const item = {
       label: info.name,
       type: 'skill',
       iconId: info.iconId,
       ranks: [
-        formatNumber(ranks.rank1 * 100, 1),
-        formatNumber(ranks.rank2 * 100, 1),
-        formatNumber(ranks.rank3 * 100, 1)
+        resultFormat(ranks[1], own),
+        resultFormat(ranks[2], own),
+        resultFormat(ranks[3], own)
       ]
     }
     data.push(item)
@@ -160,9 +170,9 @@ function openOperatorsStatisticsDetail(operator) {
       type: 'equip',
       iconId: info.typeIcon,
       ranks: [
-        formatNumber(ranks.rank1 * 100, 1),
-        formatNumber(ranks.rank2 * 100, 1),
-        formatNumber(ranks.rank3 * 100, 1)
+        resultFormat(ranks[1], own),
+        resultFormat(ranks[2], own),
+        resultFormat(ranks[3], own)
       ]
     }
     data.push(item)
@@ -206,7 +216,7 @@ onMounted(() => {
       </div>
     </v-card>
     <v-chip color="primary">
-      调查人数{{ userCountText }}
+      调查人数{{ dataSampleSize }}
     </v-chip>
     <v-chip color="primary">
       更新时间{{ updateTimeText }}
@@ -230,7 +240,7 @@ onMounted(() => {
             <td>
               <OperatorAvatar rounded :char-id="item.charId" :size="60"></OperatorAvatar>
             </td>
-            <td>{{ item.own }}%</td>
+            <td>{{ item.ownS }}%</td>
             <td>{{ item.eliteS }}%</td>
             <td>{{ item.skill1S }}%</td>
             <td>{{ item.skill2S }}%</td>
@@ -255,13 +265,14 @@ onMounted(() => {
               items-per-page="-1">
             <template v-slot:item="{ item }">
               <tr>
-                <td>{{item.label}}</td>
+                <td>{{ item.label }}</td>
                 <td>
-                  <EquipIcon :icon="item.iconId"  :size="36"  v-show="item.type==='equip'"></EquipIcon>
-                  <SkillIcon size="40" :mobile-size="30" :border="true" :icon="`${item.iconId}`" v-show="item.type==='skill'"></SkillIcon>
+                  <EquipIcon :icon="item.iconId" :size="36" v-show="item.type==='equip'"></EquipIcon>
+                  <SkillIcon size="40" :mobile-size="30" :border="true" :icon="`${item.iconId}`"
+                             v-show="item.type==='skill'"></SkillIcon>
                 </td>
                 <td v-for="rank in item.ranks">
-                  {{rank}}%
+                  {{ rank }}%
                 </td>
               </tr>
             </template>

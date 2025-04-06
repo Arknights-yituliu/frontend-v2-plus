@@ -20,6 +20,7 @@ import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import {formatNumber} from "../../utils/format.js";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/utils/indexedDB/operatorProgressionStatisticsData.js";
+import {dateFormat} from "@/utils/dateUtil.js";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 
@@ -40,7 +41,8 @@ async function getCharStatisticsResult() {
 
   const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatisticsV2');
 
-  let {result} = data
+  let {result, sampleSize} = data
+
   for (const item of result) {
     let charInfo = operatorTable[item.charId]
     if (charInfo) {
@@ -50,19 +52,28 @@ async function getCharStatisticsResult() {
       item.itemObtainApproach = charInfo.itemObtainApproach
       item.skill = charInfo.skill
       item.equip = charInfo.equip
-      item.own = formatNumber(item.own * 100, 1)
-      item.eliteS = formatNumber(item.elite.rank2 * 100, 1)
-      item.skill1S = formatNumber(item.skill1.rank3 * 100, 1)
-      item.skill2S = formatNumber(item.skill2.rank3 * 100, 1)
-      item.skill3S = formatNumber(item.skill3.rank3 * 100, 1)
-      item.modXS = formatNumber(item.modX.rank3 * 100, 1)
-      item.modYS = formatNumber(item.modY.rank3 * 100, 1)
-      item.modDS = formatNumber(item.modD.rank3 * 100, 1)
-      item.modAS = formatNumber(item.modA.rank3 * 100, 1)
+      const {own, elite, skill1, skill2, skill3, modX, modY, modD, modA} = item
+      item.ownS = resultFormat(own, sampleSize)
+      item.eliteS = resultFormat(elite[2], own)
+      item.skill1S = resultFormat(skill1[3], own)
+      item.skill2S = resultFormat(skill2[3], own)
+      item.skill3S = resultFormat(skill3[3], own)
+      item.modXS = resultFormat(modX[3], own)
+      item.modYS = resultFormat(modY[3], own)
+      item.modDS = resultFormat(modD[3], own)
+      item.modAS = resultFormat(modA[3], own)
       item.date = charInfo.date
 
       operatorProgressionStatisticsMap.set(item.charId,item)
     }
+  }
+}
+
+function resultFormat(dividend, divisor) {
+  if (dividend) {
+    return formatNumber(dividend / divisor * 100, 1)
+  } else {
+    return 0
   }
 }
 
@@ -89,7 +100,7 @@ function openOperatorsStatisticsDetail(charId) {
   }
 
   const operator = operatorProgressionStatisticsMap.get(charId)
-  const {skill, equip} = operator
+  const {skill,equip,own} = operator
   const data = []
 
   for (let index = 0; index < 3; index++) {
@@ -101,9 +112,9 @@ function openOperatorsStatisticsDetail(charId) {
       type: 'skill',
       iconId: info.iconId,
       ranks: [
-        formatNumber(ranks.rank1 * 100, 1),
-        formatNumber(ranks.rank2 * 100, 1),
-        formatNumber(ranks.rank3 * 100, 1)
+        resultFormat(ranks[1], own),
+        resultFormat(ranks[2], own),
+        resultFormat(ranks[3], own)
       ]
     }
     data.push(item)
@@ -116,9 +127,9 @@ function openOperatorsStatisticsDetail(charId) {
       type: 'equip',
       iconId: info.typeIcon,
       ranks: [
-        formatNumber(ranks.rank1 * 100, 1),
-        formatNumber(ranks.rank2 * 100, 1),
-        formatNumber(ranks.rank3 * 100, 1)
+        resultFormat(ranks[1], own),
+        resultFormat(ranks[2], own),
+        resultFormat(ranks[3], own)
       ]
     }
     data.push(item)
