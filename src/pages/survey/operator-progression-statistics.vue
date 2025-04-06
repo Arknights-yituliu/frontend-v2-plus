@@ -171,8 +171,6 @@ function openOperatorsStatisticsDetail(operator) {
   operatorsStatisticsDetail.value = data
   operatorsStatisticsDetailDialog.value = true
 
-
-
 }
 
 const detailHeader = [

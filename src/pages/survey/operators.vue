@@ -19,6 +19,7 @@ import OperatorBar from "/src/components/survey/OperatorBar.vue";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import {formatNumber} from "../../utils/format.js";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
+import operatorProgressionStatisticsDataCache from "@/utils/indexedDB/operatorProgressionStatisticsData.js";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 
@@ -32,6 +33,101 @@ let operatorList = ref([])  //干员列表
 //前端筛选后的干员信息
 let displayOperatorList = ref([])  //干员列表
 let operatorIdAndIndexDict = ref({})
+
+let operatorProgressionStatisticsMap = new Map()
+
+async function getCharStatisticsResult() {
+
+  const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatisticsV2');
+
+  let {result} = data
+  for (const item of result) {
+    let charInfo = operatorTable[item.charId]
+    if (charInfo) {
+      item.name = charInfo.name
+      item.rarity = charInfo.rarity
+      item.profession = charInfo.profession
+      item.itemObtainApproach = charInfo.itemObtainApproach
+      item.skill = charInfo.skill
+      item.equip = charInfo.equip
+      item.own = formatNumber(item.own * 100, 1)
+      item.eliteS = formatNumber(item.elite.rank2 * 100, 1)
+      item.skill1S = formatNumber(item.skill1.rank3 * 100, 1)
+      item.skill2S = formatNumber(item.skill2.rank3 * 100, 1)
+      item.skill3S = formatNumber(item.skill3.rank3 * 100, 1)
+      item.modXS = formatNumber(item.modX.rank3 * 100, 1)
+      item.modYS = formatNumber(item.modY.rank3 * 100, 1)
+      item.modDS = formatNumber(item.modD.rank3 * 100, 1)
+      item.modAS = formatNumber(item.modA.rank3 * 100, 1)
+      item.date = charInfo.date
+
+      operatorProgressionStatisticsMap.set(item.charId,item)
+    }
+  }
+}
+
+getCharStatisticsResult()
+
+let operatorsStatisticsDetail = ref({})
+
+let operatorsStatisticsDetailDialog = ref(false)
+
+const detailHeader = [
+  {title: '查看项目', sortable: false},
+  {title: '图标', sortable: false},
+  {title: '等级一', sortable: false},
+  {title: '等级二', sortable: false},
+  {title: '等级三', sortable: false}
+]
+
+
+
+function openOperatorsStatisticsDetail(charId) {
+
+  if(!operatorProgressionStatisticsMap.get(charId)){
+    return
+  }
+
+  const operator = operatorProgressionStatisticsMap.get(charId)
+  const {skill, equip} = operator
+  const data = []
+
+  for (let index = 0; index < 3; index++) {
+    const info = skill[index]
+    const num = index + 1
+    const ranks = operator[`skill${num}`]
+    const item = {
+      label: info.name,
+      type: 'skill',
+      iconId: info.iconId,
+      ranks: [
+        formatNumber(ranks.rank1 * 100, 1),
+        formatNumber(ranks.rank2 * 100, 1),
+        formatNumber(ranks.rank3 * 100, 1)
+      ]
+    }
+    data.push(item)
+  }
+
+  for (const info of equip) {
+    const ranks = operator[`mod${info.typeName2}`]
+    const item = {
+      label: info.uniEquipName,
+      type: 'equip',
+      iconId: info.typeIcon,
+      ranks: [
+        formatNumber(ranks.rank1 * 100, 1),
+        formatNumber(ranks.rank2 * 100, 1),
+        formatNumber(ranks.rank3 * 100, 1)
+      ]
+    }
+    data.push(item)
+  }
+
+  operatorsStatisticsDetail.value = data
+  operatorsStatisticsDetailDialog.value = true
+
+}
 
 
 /**
@@ -394,9 +490,36 @@ onMounted(() => {
     <!--   干员表单-->
     <div class="operator-form">
 
-      <OperatorBar v-for="(operator, charId) in displayOperatorList"  :operator-info="operator"></OperatorBar>
+      <OperatorBar @click="openOperatorsStatisticsDetail(operator.charId)" v-for="(operator, charId) in displayOperatorList"  :operator-info="operator"></OperatorBar>
 
     </div>
+
+
+    <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
+      <v-card title="干员练度统计结果">
+        <v-card-text>
+          <v-data-table
+              :headers="detailHeader"
+              :items="operatorsStatisticsDetail"
+              hide-default-footer
+              items-per-page="-1">
+            <template v-slot:item="{ item }">
+              <tr>
+                <td>{{item.label}}</td>
+                <td>
+                  <EquipIcon :icon="item.iconId"  :size="36"  v-show="item.type==='equip'"></EquipIcon>
+                  <SkillIcon size="40" :mobile-size="30" :border="true" :icon="`${item.iconId}`" v-show="item.type==='skill'"></SkillIcon>
+                </td>
+                <td v-for="rank in item.ranks">
+                  {{rank}}%
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <!-- 数据声明 -->
     <!-- <div class="char_card">此处安放版权声明/开发信息</div> -->
     <div class="footer_info">
