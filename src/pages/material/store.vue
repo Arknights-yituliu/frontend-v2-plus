@@ -24,6 +24,7 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 
 const stageConfig = getStageConfig()
 let itemValueMap = new Map()
+itemValueMap.set("1873450981701000",21.518115440178397)
 
 async function loadingStoreData(){
   const itemValueList = await itemCache.getItemValueCacheByConfig(stageConfig)
@@ -82,6 +83,10 @@ function activityStoreComputed() {
         itemName:itemName,
         itemPPR:itemPPR
       })
+    }
+
+    for (let list of actStoreFormat){
+      list = list.sort((a,b)=>b.itemPPR-a.itemPPR)
     }
 
     return actStoreFormat
