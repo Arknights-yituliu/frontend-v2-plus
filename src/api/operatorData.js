@@ -56,7 +56,7 @@ export default {
 
     getOperatorStatisticsResult() {
         return request({
-            url: `/survey/operator/result`,
+            url: `/survey/operator/result/v2`,
             method: "get",
         })
     },

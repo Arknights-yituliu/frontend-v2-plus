@@ -142,7 +142,7 @@ function getOperatorCarryStatisticsResult() {
 
   })
 
-  operatorProgressionStatisticsDataCache.getData('operatorProgressionStatisticsV2').then(response => {
+  operatorProgressionStatisticsDataCache.getData().then(response => {
     const {sampleSize,result} = response
     for (const item of result) {
       operatorOwnMap.set(item.charId, item.own/sampleSize)

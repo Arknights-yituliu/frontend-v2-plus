@@ -39,7 +39,7 @@ let operatorProgressionStatisticsMap = new Map()
 
 async function getCharStatisticsResult() {
 
-  const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatisticsV2');
+  const data = await operatorProgressionStatisticsDataCache.getData();
 
   let {result, sampleSize} = data
 
