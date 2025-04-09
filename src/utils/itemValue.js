@@ -32,7 +32,8 @@ let itemValueCorrectionTerm = {
     31053: {correctionTerm: 1.000006210539448, itemName: '化合切削液'},
     31063: {correctionTerm: 0.9999981294168673, itemName: '转质盐组'},
     31073: {correctionTerm: 1.0001889176671603, itemName: '褐素纤维'},
-    31083: {correctionTerm: 0.9996130718228801, itemName: '环烃聚质'}
+    31083: {correctionTerm: 0.9996130718228801, itemName: '环烃聚质'},
+    31093: {correctionTerm: 0.9996130718228801, itemName: '类凝结核'}
 }
 
 let itemList = ITEM_INFO.filter(e => e.cardNum < 100)

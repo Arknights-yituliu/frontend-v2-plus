@@ -94,10 +94,12 @@ function formatItem(data){
   }
 
 
-  for (const list of tmpList) {
+
+  for (let list of tmpList) {
     if (!list || list.length < 1) {
       continue
     }
+    list  = list.sort((a,b)=>b.itemValueAp-a.itemValueAp)
     // itemValueCollect.value.push(list)
     if (list.length < 9) {
       itemValueCollect.value.push(list)

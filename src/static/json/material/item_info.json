@@ -40,6 +40,22 @@
     "weight": 0
   },
   {
+    "itemId": "30165",
+    "itemName": "重相位对映体",
+    "itemValueAp": 300,
+    "rarity": 5,
+    "cardNum": 1,
+    "weight": 0
+  },
+  {
+    "itemId": "31094",
+    "itemName": "手性屈光体",
+    "itemValueAp": 90,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.040917
+  },
+  {
     "itemId": "30044",
     "itemName": "异铁块",
     "itemValueAp": 108.0739687470553,
@@ -187,6 +203,14 @@
     "itemId": "31083",
     "itemName": "环烃聚质",
     "itemValueAp": 38.369090794589674,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.040917
+  },
+  {
+    "itemId": "31093",
+    "itemName": "类凝结核",
+    "itemValueAp": 40,
     "rarity": 3,
     "cardNum": 3,
     "weight": 0.040917

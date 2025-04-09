@@ -305,6 +305,12 @@ const routes = [
         component: () => import('/src/pages/dev/dev.vue')
     },
     {
+        path: '/pie-chart',
+        text: '测试页面',
+        display: false,
+        component: () => import('/src/pages/dev/pie-chart.vue')
+    },
+    {
         path: '/dev/stageEfficiency',
         text: '测试页面',
         display: false,
