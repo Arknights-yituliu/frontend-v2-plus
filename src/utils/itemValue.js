@@ -158,8 +158,6 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
     }
 
 
-
-
     let nextStageDropCollect = new Map()
     let nextItemCorrectionTerm = new Map()
 
@@ -198,7 +196,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         let maxValue = 0
 
         for (const drop of list) {
-            const {itemId, quantity, times} = drop
+            const {itemId, itemName, quantity, times} = drop
             const itemInfo = itemMap.get(itemId);
             //如果查不到材料信息则跳过
             if (!itemInfo) {
@@ -211,7 +209,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
                 mainItemId = itemId
                 maxValue = value
             }
-            // if(stageId==='main_01-07'){
+            // if(stageId==='main_02-05'){
             //     console.log(stageCode, '---', itemName, '=', itemValueAp, '*', knockRating, '=', value, '=', dropValueCount)
             //
             // }
@@ -219,9 +217,9 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         }
 
         stageEfficiency = dropValueCount / apCost
-
-        // console.log(stageCode, '---', stageEfficiency, '=', dropValueCount, '/', apCost)
-
+        // if (stageId === 'main_02-05') {
+        //     console.log(stageCode, '---', stageEfficiency, '=', dropValueCount, '/', apCost)
+        // }
 
         // if (stageEfficiency < 0.7) {
         //     // console.log('效率低于0.7')
@@ -294,7 +292,7 @@ async function getCustomItemList(stageConfig) {
     }
 
     for (let i = 0; i < 50; i++) {
-        // console.log(`第${i + 1}次迭代`)
+        // console.log(`第${i + 1}次迭代1`)
         // console.table(itemList)
         calculatedItemValue(stageConfig)
 
@@ -309,6 +307,7 @@ async function getCustomItemList(stageConfig) {
         }
 
         if (completionFlag) {
+            console.log(`第${i + 1}次迭代完成`)
             break;
         }
 

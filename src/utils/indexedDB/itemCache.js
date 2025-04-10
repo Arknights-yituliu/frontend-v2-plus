@@ -12,6 +12,8 @@ async function putCache(data) {
 async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
     const cacheKey = 'itemValue'
     let cacheData
+
+
     // if (!forceRefresh) {
     //     let cacheData = await myDatabase.cache_data.get(cacheKey)
     //     if (cacheData) {

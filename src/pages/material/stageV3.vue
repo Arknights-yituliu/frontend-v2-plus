@@ -16,18 +16,16 @@ import {formatNumber} from "/src/utils/format.js";
 import {useRouter} from "vue-router";
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import NoticeBoard from "@/components/NoticeBoard.vue";
-import ModuleHeader from "@/components/ModuleHeader.vue";
 import {dateFormat} from "@/utils/dateUtil.js";
 
 const router = useRouter();
 
 const {mobile} = useDisplay()
 
-
-
-
-
+let dataSource = ref("Local")
 let legendDisplay = ref(false)
+let hiddenPermStageFlag = ref(true)
+let currentItemTableIndex = ref(0)
 
 
 function getButtonSize() {
@@ -55,7 +53,7 @@ let recommendedStageDetailTable = ref([])
 
 loadingLocalHostData()
 
-function loadingLocalHostData(){
+function loadingLocalHostData() {
   stageResultGroup.value = TMP_STAGE_RESULT.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
   orundumRecommendedStage.value = TMP_STAGE_RESULT.orundumRecommendedStage
   historyActivityList.value = TMP_STAGE_RESULT.historyActStage
@@ -63,7 +61,6 @@ function loadingLocalHostData(){
   getItemCardData()
   getItemTableData(0, false)
 }
-
 
 
 // 获取关卡推荐数据
@@ -76,7 +73,7 @@ function getStageResult() {
     orundumRecommendedStage.value = orundumRecommendedStageVO
 
     historyActivityList.value = historyActStage
-
+    dataSource.value = 'Web'
     getItemCardData()
     getItemTableData(0, false)
   })
@@ -103,9 +100,15 @@ function getItemCardData() {
 
     for (const stage of stageList) {
 
-      const {stageEfficiency, leT4Efficiency, leT3Efficiency, leT2Efficiency} = stage
+      const {stageEfficiency, leT4Efficiency, leT3Efficiency, leT2Efficiency, stageType} = stage
 
       // console.log(leT4MaxEfficiencyStage.leT4Efficiency, '<' ,leT4Efficiency ,'---', leT4MaxEfficiencyStage.leT4Efficiency < leT4Efficiency  )
+
+      if (hiddenPermStageFlag.value && 'Local' !== dataSource.value) {
+        if (stageType === "ACT_PERM") {
+          continue
+        }
+      }
 
       if (maxEfficiencyStage.stageEfficiency < stageEfficiency) {
         maxEfficiencyStage = stage
@@ -154,14 +157,33 @@ function getItemTableData(index, isJump) {
 
   //推荐关卡集合
   let stageResultList = recommendedStage.stageResultList;
+  recommendedStageDetailTable.value = []
   //拼接表格数据,默认按总效率排序
-  recommendedStageDetailTable.value = stageResultList.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
+  stageResultList = stageResultList.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
+
+
+  for (const item of stageResultList) {
+    const {stageType} = item
+    if (hiddenPermStageFlag.value && 'Local' !== dataSource.value) {
+      if (stageType === "ACT_PERM") {
+        continue
+      }
+    }
+    recommendedStageDetailTable.value.push(item)
+  }
+
+  currentItemTableIndex.value = index
 
   if (isJump) {
     document.getElementById('StageDetailTable').scrollIntoView({behavior: 'smooth', block: 'center'})
   }
 }
 
+
+function hiddenPermStage() {
+  getItemCardData()
+  getItemTableData(currentItemTableIndex.value, false)
+}
 
 function replaceZoneName(str) {
   if (typeof str === "undefined") return ''
@@ -230,9 +252,9 @@ function openNewPage() {
 
 onMounted(() => {
 
-  itemCache.getLastSynchronizationTime().then(response=>{
+  itemCache.getLastSynchronizationTime().then(response => {
 
-    updateTime.value = dateFormat(response.createTime,'yyyy/MM/dd HH:mm')
+    updateTime.value = dateFormat(response.createTime, 'yyyy/MM/dd HH:mm')
   })
   getStageResult()
 
@@ -266,30 +288,58 @@ onMounted(() => {
   <div id="stage" class="stage-page">
     <!-- 标题区域 -->
 
+
+
     <div class="module-header">
       <div class="module-title">
-        <h1>推荐关卡</h1>
+        <h1 style="font-size: 36px">推荐关卡</h1>
         <h4>Best Stages</h4>
       </div>
-      <v-btn-group>
-        <v-btn color="primary" :size="getButtonSize()"
-               @click="scrollToOrundumTable()" style="margin: 10px 0px 2px 8px;">搓玉数据
-        </v-btn>
-        <v-btn color="primary" :size="getButtonSize()"
-               @click="scrollToHistoryStageTable()" style="margin: 10px 0px 2px 0px;">往期活动
-        </v-btn>
-        <v-btn color="primary" :size="getButtonSize()"
-               @click="scrollToFrequentlyAskedQuestion()" style="margin: 10px 4px 2px 0px;">常见问题
-        </v-btn>
-      </v-btn-group>
-      <v-btn color="primary" style="display:none" class="v-btn" :size="getButtonSize()"
-             @click="router.push({name:'AccountHome'})" disabled>自定义一图流
-      </v-btn>
-      <v-btn color="secondary" variant="tonal" class="v-btn" :size="getButtonSize()"
-             @click="legendDisplay = !legendDisplay">显示图例
-      </v-btn>
 
-      <span class="module-tip">上次同步企鹅物流时间：{{ updateTime }}</span>
+      <div style="display: flex;flex-wrap: wrap;align-items: center;margin-top: 20px;">
+        <v-btn-group style="height: 36px;margin: 0 8px">
+          <v-btn color="primary" :size="getButtonSize()"
+                 @click="scrollToOrundumTable()">搓玉数据
+          </v-btn>
+          <v-btn color="primary" :size="getButtonSize()"
+                 @click="scrollToHistoryStageTable()">往期活动
+          </v-btn>
+          <v-btn color="primary" :size="getButtonSize()"
+                 @click="scrollToFrequentlyAskedQuestion()">常见问题
+          </v-btn>
+        </v-btn-group>
+        <v-btn color="primary" style="display:none" class="m-0-8" :size="getButtonSize()"
+               @click="router.push({name:'AccountHome'})" disabled>自定义一图流
+        </v-btn>
+        <v-btn color="secondary" variant="tonal" class="m-0-8" :size="getButtonSize()"
+               @click="legendDisplay = !legendDisplay">显示图例
+        </v-btn>
+
+        <v-switch hide-details v-model="hiddenPermStageFlag" @change="hiddenPermStage()"
+                  color="primary" class="m-0-8"
+                  label="隐藏常驻活动关卡">
+          <template v-slot:append>
+            <v-tooltip
+
+                location="top"
+            >
+              <template v-slot:activator="{ props }">
+                <v-btn
+                    icon
+                    v-bind="props"
+                    size="xs"
+                >
+                  <v-icon icon="mdi-help">
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span>常驻活动关卡在部分活动中不掉落活动代币</span>
+            </v-tooltip>
+          </template>
+        </v-switch>
+
+        <span class="module-tip">上次同步企鹅物流时间：{{ updateTime }}</span>
+      </div>
     </div>
     <!-- 说明区域 -->
     <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
@@ -403,14 +453,13 @@ onMounted(() => {
     <!-- 历史活动 -->
     <HistoryActivity v-model="historyActivityList"></HistoryActivity>
 
-
+    <div id="frequently-asked-question"></div>
     <NoticeBoard module="stage">
 
     </NoticeBoard>
 
 
   </div>
-
 
 
   <fixed-nav id="fixedNav"/>

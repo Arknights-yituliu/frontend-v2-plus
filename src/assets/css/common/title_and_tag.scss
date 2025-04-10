@@ -2,7 +2,7 @@
     padding: 12px 0;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+
     //border: 1px solid red;
 }
 
@@ -32,7 +32,7 @@
 }
 
 .module-tip {
-    padding: 24px 4px 0px 4px;
+    padding:0 12px;
     font-style: italic;
     color: #00a1d6;
     font-size: 14px;
