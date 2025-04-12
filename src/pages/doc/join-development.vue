@@ -88,7 +88,7 @@ function getCurrentMenu() {
       break
     }
 
-    if(rect.top>0){
+    if (rect.top > 0) {
       break
     }
   }
@@ -119,6 +119,7 @@ onMounted(() => {
   addScrollListener(debounce(getCurrentMenu, 300))
 })
 
+let open = ref([])
 
 </script>
 
@@ -128,15 +129,53 @@ onMounted(() => {
   <div class="doc-page">
     <div class="doc-menu">
       <div class="doc-menu-title">目录</div>
-      <div v-for="h1 in menuList">
-       <a :href="`#${h1.id}`" class="href-black menu-item" :class="currentMenuClass(h1.id)">{{ h1.title }}</a>
-        <div v-for="h2 in h1.child" >
-          <a :href="`#${h2.id}`" class="href-black menu-item menu-item-h2" :class="currentMenuClass(h2.id)"> {{ h2.title }}</a>
-          <div v-for="h3 in h2.child" >
-            <a :href="`#${h3.id}`" class="href-black menu-item menu-item-h3" :class="currentMenuClass(h3.id)"> {{ h3.title }}</a>
-          </div>
-        </div>
-      </div>
+      {{open}}
+      <v-list :opened="open" color="primary">
+
+        <v-list-group v-for="h1 in menuList">
+          <template v-slot:activator="{ props }">
+            <v-list-item
+                v-bind="props"
+                :title="h1.title"
+            ></v-list-item>
+          </template>
+
+<!--          <v-list-item v-show="h2.child"-->
+<!--              v-for="h2 in h1.child"-->
+<!--              :title="h2.title"-->
+<!--              :value="h2.title"-->
+<!--          ></v-list-item>-->
+
+
+          <v-list-group :value="h2.title" v-for="h2 in h1.child" >
+            <template v-slot:activator="{ props }">
+              <v-list-item
+                  v-bind="props"
+                  :title="h2.title"
+              ></v-list-item>
+            </template>
+            <v-list-item
+                v-for="h3 in h2.child"
+                :title="h3.title"
+                :value="h3.title"
+            ></v-list-item>
+          </v-list-group>
+        </v-list-group>
+
+      </v-list>
+
+<!--      <div v-for="h1 in menuList">-->
+<!--        <a :href="`#${h1.id}`" class="href-black menu-item" :class="currentMenuClass(h1.id)">{{ h1.title }}</a>-->
+<!--        <div v-for="h2 in h1.child">-->
+<!--          <a :href="`#${h2.id}`" class="href-black menu-item menu-item-h2" :class="currentMenuClass(h2.id)"> {{-->
+<!--              h2.title-->
+<!--            }}</a>-->
+<!--          <div v-for="h3 in h2.child">-->
+<!--            <a :href="`#${h3.id}`" class="href-black menu-item menu-item-h3" :class="currentMenuClass(h3.id)">-->
+<!--              {{ h3.title }}</a>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
 
 
@@ -166,6 +205,11 @@ onMounted(() => {
 
       <h1 id="join-us">参与开发</h1>
       <v-divider class="border-opacity-50"></v-divider>
+      <h2 id="project">简单的PR方式</h2>
+      <v-alert variant="tonal" type="info">
+        此方法适用于想提交一些json、文档、错字之类的修改
+      </v-alert>
+
       <h2 id="preparations-before-development">开发前准备</h2>
       <h3 id="development-environment">准备开发环境</h3>
       <p></p>
@@ -196,6 +240,9 @@ onMounted(() => {
       <p>在弹出的终端中输入命令：npm install，安装项目的依赖包</p>
       <code>npm install</code>
       <img src="/image/doc/安装依赖.jpg" alt="">
+
+
+
     </div>
   </div>
 </template>

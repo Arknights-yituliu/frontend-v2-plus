@@ -1,31 +1,37 @@
 .doc-page {
 
-  padding: 8px;
+
   display: flex;
 
-  .doc-menu {
 
-    min-width: 180px;
+  .doc-menu {
+    min-width: 240px;
     position: sticky;
+    padding: 0 8px;
     top: 80px;
-    height: 400px;
-    margin:20px;
-    border-right: 1px solid grey;
+    height: 100vh;
+    margin-right: 40px;
+    box-shadow: 8px 0 4px -5px rgba(0, 0, 0, 0.1);
   }
 
-  .doc-menu-title{
+  .doc-menu-title {
     font-size: 24px;
   }
 
-  .menu-item{
+  .menu-item {
     opacity: 0.8;
-    padding:4px 0;
+    padding: 4px 0;
     cursor: pointer;
     display: flex;
+
   }
 
-  .current-menu{
-    border-right: 2px solid #3264ff;
+  .current-menu {
+    background-color: #3264ff20;
+    font-weight: bolder;
+    border-radius: 4px;
+    color: rgb(var(--v-theme-primary));
+    //border-right: 2px solid rgb(var(--v-theme-primary));
   }
 
   .menu-item-h2 {
@@ -64,10 +70,15 @@
     width: 600px;
     margin: auto;
     display: block;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
   }
 
   p {
     margin: 16px 0;
+  }
+
+  li {
+    margin: 8px 0;
   }
 
   code {
