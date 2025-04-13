@@ -54,7 +54,23 @@ function dateDiff(startDate, endDate) {
 }
 
 
+function formatDateString(dateStr) {
+    if(!dateStr){
+        return  dateFormat(new Date())
+    }
+    // 使用正则表达式匹配日期字符串的格式
+    const match = dateStr.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+    if (!match) {
+        throw new Error("Invalid date format. Expected format: YYYY/MM/DD");
+    }
 
+    const year = match[1]; // 年份
+    const month = match[2].padStart(2, '0'); // 月份补零
+    const day = match[3].padStart(2, '0'); // 天数补零
+
+    // 返回格式化后的日期字符串
+    return `${year}/${month}/${day}`;
+}
 
 
 function checkType(input) {
@@ -70,4 +86,4 @@ function checkType(input) {
 
 }
 
-export {dateFormat, dateDiff}
+export {dateFormat, dateDiff,formatDateString}

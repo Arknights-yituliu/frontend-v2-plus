@@ -2,6 +2,7 @@
   {
     "itemId": "30012",
     "itemName": "固源岩",
+    "rarity": 2,
     "resolve": true,
     "pathway": [
       {
@@ -14,6 +15,7 @@
   {
     "itemId": "30022",
     "itemName": "糖",
+    "rarity": 2,
     "resolve": true,
     "pathway": [
       {
@@ -26,6 +28,7 @@
   {
     "itemId": "30032",
     "itemName": "聚酸酯",
+    "rarity": 2,
     "resolve": true,
     "pathway": [
       {
@@ -38,6 +41,7 @@
   {
     "itemId": "30042",
     "itemName": "异铁",
+    "rarity": 2,
     "resolve": true,
     "pathway": [
       {
@@ -50,6 +54,7 @@
   {
     "itemId": "30052",
     "itemName": "酮凝集",
+    "rarity": 2,
     "resolve": true,
     "pathway": [
       {
@@ -62,6 +67,7 @@
   {
     "itemId": "30062",
     "itemName": "装置",
+    "rarity": 2,
     "resolve": true,
     "pathway": [
       {
@@ -74,6 +80,7 @@
   {
     "itemId": "30011",
     "itemName": "源岩",
+    "rarity": 1,
     "resolve": true,
     "pathway": [
       {
@@ -86,6 +93,7 @@
   {
     "itemId": "30021",
     "itemName": "代糖",
+    "rarity": 1,
     "resolve": true,
     "pathway": [
       {
@@ -98,6 +106,7 @@
   {
     "itemId": "30031",
     "itemName": "酯原料",
+    "rarity": 1,
     "resolve": true,
     "pathway": [
       {
@@ -110,6 +119,7 @@
   {
     "itemId": "30041",
     "itemName": "异铁碎片",
+    "rarity": 1,
     "resolve": true,
     "pathway": [
       {
@@ -122,6 +132,7 @@
   {
     "itemId": "30051",
     "itemName": "双酮",
+    "rarity": 1,
     "resolve": true,
     "pathway": [
       {
@@ -134,6 +145,7 @@
   {
     "itemId": "30061",
     "itemName": "破损装置",
+    "rarity": 1,
     "resolve": true,
     "pathway": [
       {
@@ -146,23 +158,20 @@
   {
     "itemId": "30014",
     "itemName": "提纯源岩",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
         "itemId": "30013",
         "itemName": "固源岩组",
-        "count": 2
-      },
-      {
-        "itemId": "30013",
-        "itemName": "固源岩组",
-        "count": 2
+        "count": 4
       }
     ]
   },
   {
     "itemId": "30024",
     "itemName": "糖聚块",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -185,6 +194,7 @@
   {
     "itemId": "30034",
     "itemName": "聚酸酯块",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -207,6 +217,7 @@
   {
     "itemId": "30044",
     "itemName": "异铁块",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -229,6 +240,7 @@
   {
     "itemId": "30054",
     "itemName": "酮阵列",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -251,6 +263,7 @@
   {
     "itemId": "30064",
     "itemName": "改量装置",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -273,6 +286,7 @@
   {
     "itemId": "30074",
     "itemName": "白马醇",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -295,6 +309,7 @@
   {
     "itemId": "30084",
     "itemName": "三水锰矿",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -317,6 +332,7 @@
   {
     "itemId": "30094",
     "itemName": "五水研磨石",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -339,6 +355,7 @@
   {
     "itemId": "30104",
     "itemName": "RMA70-24",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -361,6 +378,7 @@
   {
     "itemId": "31014",
     "itemName": "聚合凝胶",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -383,6 +401,7 @@
   {
     "itemId": "31024",
     "itemName": "炽合金块",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -405,6 +424,7 @@
   {
     "itemId": "31034",
     "itemName": "晶体电路",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -427,6 +447,7 @@
   {
     "itemId": "31054",
     "itemName": "切削原液",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -449,6 +470,7 @@
   {
     "itemId": "31044",
     "itemName": "精炼溶剂",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -471,6 +493,7 @@
   {
     "itemId": "31064",
     "itemName": "转质盐聚块",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -493,6 +516,7 @@
   {
     "itemId": "31074",
     "itemName": "固化纤维板",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -515,6 +539,7 @@
   {
     "itemId": "31084",
     "itemName": "环烃预制体",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -537,6 +562,7 @@
   {
     "itemId": "31094",
     "itemName": "手性屈光体",
+    "rarity": 4,
     "resolve": false,
     "pathway": [
       {
@@ -559,6 +585,7 @@
   {
     "itemId": "30165",
     "itemName": "重相位对映体",
+    "rarity": 5,
     "resolve": false,
     "pathway": [
       {
@@ -581,6 +608,7 @@
   {
     "itemId": "30145",
     "itemName": "晶体电子单元",
+    "rarity": 5,
     "resolve": false,
     "pathway": [
       {
@@ -603,6 +631,7 @@
   {
     "itemId": "30115",
     "itemName": "聚合剂",
+    "rarity": 5,
     "resolve": false,
     "pathway": [
       {
@@ -625,6 +654,7 @@
   {
     "itemId": "30125",
     "itemName": "双极纳米片",
+    "rarity": 5,
     "resolve": false,
     "pathway": [
       {
@@ -642,6 +672,7 @@
   {
     "itemId": "30135",
     "itemName": "D32钢",
+    "rarity": 5,
     "resolve": false,
     "pathway": [
       {
@@ -665,6 +696,7 @@
     "itemId": "30155",
     "itemName": "烧结核凝晶",
     "resolve": false,
+    "rarity": 5,
     "pathway": [
       {
         "itemId": "31064",

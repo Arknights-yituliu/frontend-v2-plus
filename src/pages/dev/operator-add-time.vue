@@ -1,5 +1,5 @@
 <script setup>
-import operatorAddTime from '/src/static/json/operator/operator_add_time.json'
+import operatorAddTime from '/src/static/json/operator/operator_update_time.json'
 
 
 </script>

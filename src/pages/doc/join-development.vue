@@ -119,6 +119,8 @@ onMounted(() => {
   addScrollListener(debounce(getCurrentMenu, 300))
 })
 
+console.log(menuList.value)
+
 let open = ref([])
 
 </script>
@@ -128,9 +130,8 @@ let open = ref([])
 
   <div class="doc-page">
     <div class="doc-menu">
-      <div class="doc-menu-title">目录</div>
-      {{open}}
-      <v-list :opened="open" color="primary">
+
+      <v-list :opened="open" color="primary" title="目录" open-strategy="multiple">
 
         <v-list-group v-for="h1 in menuList">
           <template v-slot:activator="{ props }">
@@ -140,14 +141,16 @@ let open = ref([])
             ></v-list-item>
           </template>
 
-<!--          <v-list-item v-show="h2.child"-->
-<!--              v-for="h2 in h1.child"-->
-<!--              :title="h2.title"-->
-<!--              :value="h2.title"-->
-<!--          ></v-list-item>-->
+
+          <v-list-item v-show="h2.child.length===0"
+              v-for="h2 in h1.child"
+              :title="h2.title"
+              :value="h2.title"
+          >
+          </v-list-item>
 
 
-          <v-list-group :value="h2.title" v-for="h2 in h1.child" >
+          <v-list-group :value="h2.title" v-for="h2 in h1.child" v-show="h2.child.length>0">
             <template v-slot:activator="{ props }">
               <v-list-item
                   v-bind="props"

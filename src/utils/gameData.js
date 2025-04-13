@@ -1,5 +1,5 @@
 import operator_table_simple from '/src/static/json/operator/character_table_simple.json'
-import operator_add_time from '/src/static/json/operator/operator_add_time.json'
+import operator_add_time from '/src/static/json/operator/operator_update_time.json'
 
 
 

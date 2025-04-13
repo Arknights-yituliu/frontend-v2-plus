@@ -370,7 +370,7 @@ const routes = [
         path: '/statistics-material',
         text: '材料统计',
         display: false,
-        component: () => import('/src/pages/tools/statistics-material.vue')
+        component: () => import('/src/pages/tools/material-statistics.vue')
     },
     {
         path: '/action-table',
