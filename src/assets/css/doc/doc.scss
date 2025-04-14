@@ -1,49 +1,20 @@
 .doc-page {
 
-
   display: flex;
-
 
   .doc-menu {
     min-width: 240px;
     position: sticky;
     padding: 0 8px;
-    top: 80px;
+    top: 60px;
     height: 100vh;
     margin-right: 40px;
     box-shadow: 8px 0 4px -5px rgba(0, 0, 0, 0.1);
   }
 
-  .doc-menu-title {
-    font-size: 24px;
-  }
-
-  .menu-item {
-    opacity: 0.8;
-    padding: 4px 0;
-    cursor: pointer;
-    display: flex;
-
-  }
-
-  .current-menu {
-    background-color: #3264ff20;
-    font-weight: bolder;
-    border-radius: 4px;
-    color: rgb(var(--v-theme-primary));
-    //border-right: 2px solid rgb(var(--v-theme-primary));
-  }
-
-  .menu-item-h2 {
-    padding-left: 12px;
-  }
-
-  .menu-item-h3 {
-    padding-left: 20px;
-  }
-
-  .menu-item-h4 {
-    padding-left: 28px;
+  .doc-container {
+     box-sizing: border-box;
+     padding-right: 36px;
   }
 
   h1 {
@@ -67,13 +38,15 @@
   }
 
   img {
-    width: 600px;
-    margin: auto;
+    width: 500px;
+    margin: 24px;
     display: block;
     box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
   }
 
   p {
+    line-height: 28px;
+    font-size: 16px;
     margin: 16px 0;
   }
 
