@@ -66,7 +66,6 @@ function removeOperator(operator) {
   getCharIdList()
 }
 
-
 chooseOperatorProfession('SNIPER')
 
 
@@ -133,76 +132,81 @@ let operatorCarryResultGroupByModule = {
 
 let ownDataLoadingStatus = ref(false)
 
-function getOperatorCarryStatisticsResult() {
-  questionnaireAPI.getQuestionnaireResult().then(response => {
-    for (const item of response.data) {
-      const {questionnaireCode} = item
-      operatorCarryResultGroupByModule[questionnaireCode] = item
-    }
 
-  })
+operatorProgressionStatisticsDataCache.getData().then(response => {
+  const {sampleSize, result} = response
+  for (const item of result) {
+    operatorOwnMap.set(item.charId, item.own / sampleSize)
+  }
+  ownDataLoadingStatus.value = true;
+});
 
-  operatorProgressionStatisticsDataCache.getData().then(response => {
-    const {sampleSize,result} = response
-    for (const item of result) {
-      operatorOwnMap.set(item.charId, item.own/sampleSize)
-    }
-    ownDataLoadingStatus.value = true;
-  });
-
-
-}
 
 let selectedGameModuleCode = ref('101')
-let lastSelectedGameModuleCode = ref('101')
+let selectedTimeGranularity = ref({code: 31, label: "过去7天内"})
 
-function changeOperatorCarryDataByModule() {
-  const data = operatorCarryResultGroupByModule[selectedGameModuleCode.value]
+const timeGranularity = [
+  {code: 0, label: "自收集数据开始—至今"},
+  {code: 31, label: "过去7天内"},
+  {code: 32, label: "过去14天内"}
+]
 
-  if (!data.list) {
-    selectedGameModuleCode.value = lastSelectedGameModuleCode.value
-    createMessage({
-      type: 'warn',
-      text: '该模式无统计数据'
-    })
+const OperatorCarryDataCache = ref({})
+
+function getOperatorCarryDataByModuleAndTime() {
+  const cacheKey = selectedGameModuleCode.value + "-" + selectedTimeGranularity.value.code
+  const dataCache = OperatorCarryDataCache.value[cacheKey];
+  if (dataCache) {
+    formatOperatorCarryData(dataCache)
     return
   }
+  console.log(selectedTimeGranularity.value)
+  questionnaireAPI.getQuestionnaireResultV2(selectedGameModuleCode.value, selectedTimeGranularity.value.code).then(response => {
+    const data = response.data;
+    OperatorCarryDataCache.value[cacheKey] = data
+    formatOperatorCarryData(data)
+  })
+}
 
+
+function formatOperatorCarryData(data) {
   const {list, questionnaireType, questionnaireCode, updateTime, sampleSize} = data
   let voList = []
   for (let item of list) {
     const {charId, carryCount} = item
-    const carryRate = formatNumber(carryCount / sampleSize*100, 2)
-    const ownRate = formatNumber(operatorOwnMap.get(charId)*100, 2)
+    const carryRate = formatNumber(carryCount / sampleSize * 100, 2)
+    const ownRate = formatNumber(operatorOwnMap.get(charId) * 100, 2)
     const vo = {
       charId: charId,
       carryCount: carryCount,
-      carryRate:`${carryRate}%`,
+      carryRate: `${carryRate}%`,
       ownRate: `${ownRate}%`,
     }
     voList.push(vo)
   }
 
   operatorCarryResult.value = {
-    questionnaireCode:questionnaireCode,
-    questionnaireType:questionnaireType,
-    updateTime:dateFormat(updateTime,'yyyy/MM/dd HH:mm'),
-    sampleSize:sampleSize,
-    voList:voList,
+    questionnaireCode: questionnaireCode,
+    questionnaireType: questionnaireType,
+    updateTime: dateFormat(updateTime, 'yyyy/MM/dd HH:mm'),
+    sampleSize: sampleSize,
+    voList: voList,
   }
 
-  lastSelectedGameModuleCode.value = selectedGameModuleCode.value
+
 }
 
-getOperatorCarryStatisticsResult()
+
 
 onMounted(() => {
-  const intervalId = setInterval(()=>{
-    changeOperatorCarryDataByModule()
-    if(ownDataLoadingStatus.value){
-      clearInterval(intervalId); // 停止定时器
-    }
-  }, 1000);
+  // const intervalId = setInterval(()=>{
+  //   changeOperatorCarryDataByModule()
+  //   if(ownDataLoadingStatus.value){
+  //     clearInterval(intervalId); // 停止定时器
+  //   }
+  // }, 1000);
+
+  getOperatorCarryDataByModuleAndTime()
 
 })
 
@@ -304,7 +308,8 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
                  @click="chooseOperator(operator)">
-              <OperatorAvatar :border="true" :char-id="operator.charId" :rarity="operator.rarity" :size="60" :mobile-size="50"></OperatorAvatar>
+              <OperatorAvatar :border="true" :char-id="operator.charId" :rarity="operator.rarity" :size="60"
+                              :mobile-size="50"></OperatorAvatar>
               <div :class="selectedOperatorClass(operator.charId)">
 
               </div>
@@ -322,7 +327,7 @@ onMounted(() => {
             v-model="selectedGameModuleCode"
             inline
             density="compact"
-            @change="changeOperatorCarryDataByModule()"
+            @change="getOperatorCarryDataByModuleAndTime()"
         >
           <v-radio
               label="主线&SideStory"
@@ -337,6 +342,17 @@ onMounted(() => {
               value="103"
           ></v-radio>
         </v-radio-group>
+
+        <v-select
+            density="compact"
+            label="时间区间" color="primary"
+            :items="timeGranularity"
+            item-value="code"
+            item-title="label"
+            return-object
+            v-model="selectedTimeGranularity"
+            @update:modelValue="getOperatorCarryDataByModuleAndTime()"
+        ></v-select>
 
         <v-chip color="primary" :text="`更新时间：${operatorCarryResult.updateTime}`" class="m-4"></v-chip>
         <v-chip color="primary" :text="`提交人数：${operatorCarryResult.sampleSize}`" class="m-4"></v-chip>

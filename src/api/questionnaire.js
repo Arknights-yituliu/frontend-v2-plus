@@ -17,4 +17,11 @@ export default {
         })
     },
 
+    getQuestionnaireResultV2(questionnaireType,timeGranularity){
+        return request({
+            url:`/questionnaire/operator-carry/v2?questionnaireType=${questionnaireType}&timeGranularity=${timeGranularity}`,
+            method:'get'
+        })
+    },
+
 }
