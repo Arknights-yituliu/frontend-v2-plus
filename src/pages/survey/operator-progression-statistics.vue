@@ -37,15 +37,15 @@ function btnAction(action) {
 //表头标题
 let headers2 = [
   {title: '干员', align: 'start', sortable: false, key: 'charId'},
-  {title: '持有率', sortable: true, key: 'ownS'},
-  {title: '精二率', sortable: true, key: 'eliteS'},
-  {title: '一技能', sortable: true, key: 'skill1S'},
-  {title: '二技能', sortable: true, key: 'skill2S'},
-  {title: '三技能', sortable: true, key: 'skill3S'},
-  {title: 'X模组', sortable: true, key: 'modXS'},
-  {title: 'Y模组', sortable: true, key: 'modYS'},
-  {title: 'D模组', sortable: true, key: 'modDS'},
-  {title: 'A模组', sortable: true, key: 'modAS'},
+  {title: '持有率', sortable: true, key: 'ownRate'},
+  {title: '精二率', sortable: true, key: 'eliteRank3'},
+  {title: '一技能', sortable: true, key: 'skill1Rank3'},
+  {title: '二技能', sortable: true, key: 'skill2Rank3'},
+  {title: '三技能', sortable: true, key: 'skill3Rank3'},
+  {title: 'X模组', sortable: true, key: 'modXRank3'},
+  {title: 'Y模组', sortable: true, key: 'modYRank3'},
+  {title: 'D模组', sortable: true, key: 'modDRank3'},
+  {title: 'A模组', sortable: true, key: 'modARank3'},
 ]
 
 
@@ -74,34 +74,7 @@ async function getCharStatisticsResult() {
   let {result, sampleSize, createTime} = data
   dataSampleSize.value = sampleSize;
   updateTimeText.value = dateFormat(createTime, 'yyyy-MM-dd HH:mm:ss');
-
-  for (const item of result) {
-    let charInfo = operatorTable[item.charId]
-    if (charInfo) {
-      item.name = charInfo.name
-      item.rarity = charInfo.rarity
-      item.profession = charInfo.profession
-      item.itemObtainApproach = charInfo.itemObtainApproach
-      item.skill = charInfo.skill
-      item.equip = charInfo.equip
-      const {own, elite, skill1, skill2, skill3, modX, modY, modD, modA} = item
-
-      item.ownS = resultFormat(own, sampleSize)
-      item.eliteS = resultFormat(elite[2], own)
-      item.skill1S = resultFormat(skill1[3], own)
-      item.skill2S = resultFormat(skill2[3], own)
-      item.skill3S = resultFormat(skill3[3], own)
-      item.modXS = resultFormat(modX[3], own)
-      item.modYS = resultFormat(modY[3], own)
-      item.modDS = resultFormat(modD[3], own)
-      item.modAS = resultFormat(modA[3], own)
-      item.date = charInfo.date
-    }
-  }
-  result = result.filter(e => e.name)
-
   operatorsStatisticsList.value = result
-
   displayOperatorsList.value = filterOperatorList(operatorsStatisticsList.value)
 
 }
@@ -240,15 +213,15 @@ onMounted(() => {
             <td>
               <OperatorAvatar rounded :char-id="item.charId" :size="60"></OperatorAvatar>
             </td>
-            <td>{{ item.ownS }}%</td>
-            <td>{{ item.eliteS }}%</td>
-            <td>{{ item.skill1S }}%</td>
-            <td>{{ item.skill2S }}%</td>
-            <td>{{ item.skill3S }}%</td>
-            <td>{{ item.modXS }}%</td>
-            <td>{{ item.modYS }}%</td>
-            <td>{{ item.modDS }}%</td>
-            <td>{{ item.modAS }}%</td>
+            <td>{{ item.ownRate }}%</td>
+            <td>{{ item.eliteRank3 }}%</td>
+            <td>{{ item.skill1Rank3 }}%</td>
+            <td>{{ item.skill2Rank3 }}%</td>
+            <td>{{ item.skill3Rank3 }}%</td>
+            <td>{{ item.modXRank3 }}%</td>
+            <td>{{ item.modYRank3 }}%</td>
+            <td>{{ item.modDRank3 }}%</td>
+            <td>{{ item.modARank3 }}%</td>
           </tr>
         </template>
 
