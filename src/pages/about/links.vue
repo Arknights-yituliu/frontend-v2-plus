@@ -48,7 +48,7 @@ function extraLinks(){
 
   toolLinks.value.push({
     name:'Arknights-Mower',
-    description:'Mirror酱是一个第三方应用分发平台，让开源应用的更新更简单。用户付费使用，收益与开发者共享。此外，Mirror酱本身也是开源的。',
+    description:'动态换班',
     links:[{name:'项目地址',url:'https://github.com/ArkMowers/arknights-mower'}],
     iconUrl:'https://ark.yituliu.cn/image/website/mower.webp',
     slogan:'',
