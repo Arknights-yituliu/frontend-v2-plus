@@ -169,6 +169,9 @@ function getOperatorCarryDataByModuleAndTime() {
   //   startTime:dateRange.value[0],
   //   endTime:
   // }
+
+  dateRange.value[1] = _adjustToLastSecond(dateRange.value[1])
+
   questionnaireAPI.getQuestionnaireResultV2(selectedGameModuleCode.value, dateRange.value).then(response => {
     const data = response.data;
     OperatorCarryDataCache.value[cacheKey] = data
@@ -176,6 +179,13 @@ function getOperatorCarryDataByModuleAndTime() {
 
     formatOperatorCarryData(data)
   })
+
+  // 将时间戳调整到当天的 23:59:59
+  function _adjustToLastSecond(timestamp) {
+    const date = new Date(timestamp);
+    date.setHours(23, 59, 59, 999); // 设置时间为 23:59:59.999
+    return date.getTime();
+  }
 }
 
 watch([()=>dateRange.value[0],()=>dateRange.value[1]],([newStartTime, newEndTime])=>{
