@@ -17,9 +17,9 @@ export default {
         })
     },
 
-    getQuestionnaireResultV2(questionnaireType,timeGranularity){
+    getQuestionnaireResultV2(questionnaireType,dateRange){
         return request({
-            url:`/questionnaire/operator-carry/v2?questionnaireType=${questionnaireType}&timeGranularity=${timeGranularity}`,
+            url:`/questionnaire/operator-carry/v2?questionnaireType=${questionnaireType}&startTime=${dateRange[0]}&endTime=${dateRange[1]}`,
             method:'get'
         })
     },

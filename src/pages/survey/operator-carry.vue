@@ -9,6 +9,7 @@ import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";
 import {dateFormat} from "/src/utils/dateUtil.js";
+import {NDatePicker}  from 'naive-ui'
 
 let operatorGroupByProfession = new Map()
 
@@ -153,24 +154,34 @@ const timeGranularity = [
 
 const OperatorCarryDataCache = ref({})
 
+let dateRange = ref([new Date(Date.now()-60*60*24*7*1000).getTime(),Date.now()])
+
 function getOperatorCarryDataByModuleAndTime() {
   const cacheKey = selectedGameModuleCode.value + "-" + selectedTimeGranularity.value.code
   const dataCache = OperatorCarryDataCache.value[cacheKey];
-  if (dataCache) {
-    formatOperatorCarryData(dataCache)
-    return
-  }
-  console.log(selectedTimeGranularity.value)
-  questionnaireAPI.getQuestionnaireResultV2(selectedGameModuleCode.value, selectedTimeGranularity.value.code).then(response => {
+  // if (dataCache) {
+  //   formatOperatorCarryData(dataCache)
+  //   return
+  // }
+
+  // const data = {
+  //   questionnaireType:selectedGameModuleCode.value,
+  //   startTime:dateRange.value[0],
+  //   endTime:
+  // }
+  questionnaireAPI.getQuestionnaireResultV2(selectedGameModuleCode.value, dateRange.value).then(response => {
     const data = response.data;
     OperatorCarryDataCache.value[cacheKey] = data
+    console.log(data)
+
     formatOperatorCarryData(data)
   })
 }
 
 
 function formatOperatorCarryData(data) {
-  const {list, questionnaireType, questionnaireCode, updateTime, sampleSize} = data
+  let {list, questionnaireType, questionnaireCode, updateTime, sampleSize} = data
+  list = list.sort((a,b)=>b.carryCount-a.carryCount)
   let voList = []
   for (let item of list) {
     const {charId, carryCount} = item
@@ -343,16 +354,19 @@ onMounted(() => {
           ></v-radio>
         </v-radio-group>
 
-        <v-select
-            density="compact"
-            label="时间区间" color="primary"
-            :items="timeGranularity"
-            item-value="code"
-            item-title="label"
-            return-object
-            v-model="selectedTimeGranularity"
-            @update:modelValue="getOperatorCarryDataByModuleAndTime()"
-        ></v-select>
+<!--        <v-select-->
+<!--            density="compact"-->
+<!--            label="时间区间" color="primary"-->
+<!--            :items="timeGranularity"-->
+<!--            item-value="code"-->
+<!--            item-title="label"-->
+<!--            return-object-->
+<!--            v-model="selectedTimeGranularity"-->
+<!--            @update:modelValue="getOperatorCarryDataByModuleAndTime()"-->
+<!--        ></v-select>-->
+
+        <n-date-picker v-model:value="dateRange" type="daterange" clearable
+                       @input="getOperatorCarryDataByModuleAndTime()" />
 
         <v-chip color="primary" :text="`更新时间：${operatorCarryResult.updateTime}`" class="m-4"></v-chip>
         <v-chip color="primary" :text="`提交人数：${operatorCarryResult.sampleSize}`" class="m-4"></v-chip>
