@@ -1,7 +1,7 @@
 <script setup>
 import {professionDict} from '/src/utils/survey/common.js'
 import {operatorTable} from "/src/utils/gameData.js";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
 import {createMessage} from "/src/utils/message.js";
 import questionnaireAPI from "/src/api/questionnaire.js";
@@ -178,10 +178,14 @@ function getOperatorCarryDataByModuleAndTime() {
   })
 }
 
+watch([()=>dateRange.value[0],()=>dateRange.value[1]],([newStartTime, newEndTime])=>{
+  getOperatorCarryDataByModuleAndTime()
+})
+
 
 function formatOperatorCarryData(data) {
-  let {list, questionnaireType, questionnaireCode, updateTime, sampleSize} = data
-  list = list.sort((a,b)=>b.carryCount-a.carryCount)
+  let {list, questionnaireType, questionnaireCode,  sampleSize} = data
+  // list = list.sort((a,b)=>b.carryCount-a.carryCount)
   let voList = []
   for (let item of list) {
     const {charId, carryCount} = item
@@ -199,7 +203,6 @@ function formatOperatorCarryData(data) {
   operatorCarryResult.value = {
     questionnaireCode: questionnaireCode,
     questionnaireType: questionnaireType,
-    updateTime: dateFormat(updateTime, 'yyyy/MM/dd HH:mm'),
     sampleSize: sampleSize,
     voList: voList,
   }
@@ -210,6 +213,7 @@ function formatOperatorCarryData(data) {
 
 
 onMounted(() => {
+
   // const intervalId = setInterval(()=>{
   //   changeOperatorCarryDataByModule()
   //   if(ownDataLoadingStatus.value){
@@ -365,10 +369,8 @@ onMounted(() => {
 <!--            @update:modelValue="getOperatorCarryDataByModuleAndTime()"-->
 <!--        ></v-select>-->
 
-        <n-date-picker v-model:value="dateRange" type="daterange" clearable
-                       @input="getOperatorCarryDataByModuleAndTime()" />
-
-        <v-chip color="primary" :text="`更新时间：${operatorCarryResult.updateTime}`" class="m-4"></v-chip>
+        <n-date-picker v-model:value="dateRange" type="daterange" clearable />
+<!--         {{dateRange}}-->
         <v-chip color="primary" :text="`提交人数：${operatorCarryResult.sampleSize}`" class="m-4"></v-chip>
 
         <v-data-table

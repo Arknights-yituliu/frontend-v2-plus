@@ -263,7 +263,7 @@ const routes = [
         display: true,
         module: 'about',
         icon: "mdi-source-branch",
-        component: () => import('/src/pages/about/dev.page.vue')
+        component: () => import('/src/pages/about/dev.vue')
     },
     {
         path: '/doc/join-development',
@@ -281,7 +281,7 @@ const routes = [
         display: true,
         module: 'about',
         icon: "mdi-thumb-up",
-        component: () => import('/src/pages/about/donate.page.vue')
+        component: () => import('/src/pages/about/donate.vue')
     },
     {
         path: '/about/links',
@@ -290,7 +290,7 @@ const routes = [
         display: true,
         module: 'about',
         icon: "mdi-link-variant",
-        component: () => import('/src/pages/about/links.page.vue')
+        component: () => import('/src/pages/about/links.vue')
     },
     {
         path: '/material/detail',

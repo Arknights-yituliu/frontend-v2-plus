@@ -1,7 +1,9 @@
 <script setup>
 import '/src/assets/svg/iconfont.css'
 import '/src/assets/css/elite.css';
-
+import { NConfigProvider } from 'naive-ui'
+import { zhCN, dateZhCN } from 'naive-ui'
+import { darkTheme } from 'naive-ui'
 //雪碧图
 import '/src/assets/css/sprite/sprite_avatar.css'
 import '/src/assets/css/sprite/sprite_icon.css';
@@ -29,6 +31,16 @@ import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "/src/components/ComponentsContainer.vue";
 
 
+const themeOverrides = {
+  common: {
+    primaryColor: '#1867C0FF',
+    borderColor: "rgba(93,162,248,0.3)",
+    primaryColorHover: "#60acff",
+  },
+  // ...
+}
+
+
 const theme = useTheme()
 
 let customTheme = ref("")
@@ -36,11 +48,17 @@ let drawer = ref(true)
 
 
 let currentTheme = ref('dark')
+let naiveTheme = ref()
 
 function setTheme(value){
   theme.global.name.value = value
   document.getElementsByTagName("html").item(0).className = value;
   customTheme.value = `theme-${value}`
+  if(value==='dark'){
+    naiveTheme.value = darkTheme
+  }else {
+    naiveTheme.value = ''
+  }
   localStorage.setItem("Theme", value)
 }
 
@@ -136,7 +154,9 @@ onMounted(() => {
 </script>
 
 <template>
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN"  :theme="naiveTheme" :theme-overrides="themeOverrides">
   <v-responsive>
+
     <v-app class="app" :class="customTheme" >
       <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
         <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
@@ -213,7 +233,7 @@ onMounted(() => {
     </v-app>
 
   </v-responsive>
-
+  </n-config-provider>
 </template>
 
 
