@@ -115,7 +115,7 @@ let operatorsStatisticsDetailDialog = ref(false)
 function openOperatorsStatisticsDetail(operator) {
 
 
-  const {skill, equip,own} = operator
+  const {skill, equip, own} = operator
   const data = []
 
   for (let index = 0; index < 3; index++) {
@@ -128,9 +128,9 @@ function openOperatorsStatisticsDetail(operator) {
       type: 'skill',
       iconId: info.iconId,
       ranks: [
-        resultFormat(ranks[1], own),
-        resultFormat(ranks[2], own),
-        resultFormat(ranks[3], own)
+        formatNumber(ranks.rank1 * 100),
+        formatNumber(ranks.rank2 * 100),
+        formatNumber(ranks.rank3 * 100)
       ]
     }
     data.push(item)
@@ -143,9 +143,9 @@ function openOperatorsStatisticsDetail(operator) {
       type: 'equip',
       iconId: info.typeIcon,
       ranks: [
-        resultFormat(ranks[1], own),
-        resultFormat(ranks[2], own),
-        resultFormat(ranks[3], own)
+        formatNumber(ranks.rank1 * 100),
+        formatNumber(ranks.rank2 * 100),
+        formatNumber(ranks.rank3 * 100)
       ]
     }
     data.push(item)

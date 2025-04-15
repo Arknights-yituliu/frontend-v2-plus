@@ -13,26 +13,26 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
     let operatorStatisticsResult = {}
 
-    const {result, sampleSize} = operatorProgressionStatistics
-    console.log(result,sampleSize)
+    const {result} = operatorProgressionStatistics
+
 
     for (const item of result) {
         if (item.rarity < 6) continue;
         operatorStatisticsResult[item.charId] = {
-            skill1: _average(item.skill1, sampleSize),
-            skill2: _average(item.skill2, sampleSize),
-            skill3: _average(item.skill3, sampleSize),
-            modX: _average(item.modX, sampleSize),
-            modY: _average(item.modY, sampleSize),
+            skill1: _average(item.skill1),
+            skill2: _average(item.skill2),
+            skill3: _average(item.skill3),
+            modX: _average(item.modX),
+            modY: _average(item.modY),
         }
     }
 
-    console.log(operatorStatisticsResult)
 
-    function _average(result, sampleSize) {
+    function _average(result) {
+
         return {
-            avg: result[0] / sampleSize + result[1] / sampleSize * 2 + result[2] / sampleSize * 3,
-            ratio: result[2] / sampleSize
+            avg: result.rank1 + result.rank2 * 2 + result.rank3 * 3,
+            ratio: result.rank3
         }
     }
 
@@ -45,7 +45,7 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
         const result = operatorStatisticsResult[operator.charId]
         for (const property in result) {
             const single = result[property]
-           console.log(single)
+
             if (operator[property] < single.avg && single.avg > 1.0) {
                 recommend.push({
                     name: operator.name,

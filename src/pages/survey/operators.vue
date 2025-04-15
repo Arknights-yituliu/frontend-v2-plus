@@ -75,13 +75,13 @@ const detailHeader = [
 
 
 function openOperatorsStatisticsDetail(charId) {
-
+console.log(operatorProgressionStatisticsMap.get(charId))
   if(!operatorProgressionStatisticsMap.get(charId)){
     return
   }
 
   const operator = operatorProgressionStatisticsMap.get(charId)
-  const {skill,equip,own} = operator
+  const {skill,equip} = operator
   const data = []
 
   for (let index = 0; index < 3; index++) {
@@ -93,13 +93,15 @@ function openOperatorsStatisticsDetail(charId) {
       type: 'skill',
       iconId: info.iconId,
       ranks: [
-        resultFormat(ranks[1], own),
-        resultFormat(ranks[2], own),
-        resultFormat(ranks[3], own)
+        formatNumber(ranks.rank1 * 100),
+        formatNumber(ranks.rank2 * 100),
+        formatNumber(ranks.rank3 * 100)
       ]
     }
     data.push(item)
   }
+
+
 
   for (const info of equip) {
     const ranks = operator[`mod${info.typeName2}`]
@@ -108,9 +110,9 @@ function openOperatorsStatisticsDetail(charId) {
       type: 'equip',
       iconId: info.typeIcon,
       ranks: [
-        resultFormat(ranks[1], own),
-        resultFormat(ranks[2], own),
-        resultFormat(ranks[3], own)
+        formatNumber(ranks.rank1 * 100),
+        formatNumber(ranks.rank2 * 100),
+        formatNumber(ranks.rank3 * 100)
       ]
     }
     data.push(item)

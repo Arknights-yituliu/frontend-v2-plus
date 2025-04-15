@@ -8,7 +8,6 @@ import questionnaireAPI from "/src/api/questionnaire.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";
-import {dateFormat} from "/src/utils/dateUtil.js";
 import {NDatePicker}  from 'naive-ui'
 
 let operatorGroupByProfession = new Map()
@@ -137,9 +136,12 @@ let ownDataLoadingStatus = ref(false)
 operatorProgressionStatisticsDataCache.getData().then(response => {
   const {sampleSize, result} = response
   for (const item of result) {
-    operatorOwnMap.set(item.charId, item.own / sampleSize)
+
+    operatorOwnMap.set(item.charId, item.own)
   }
   ownDataLoadingStatus.value = true;
+
+  console.log(operatorOwnMap)
 });
 
 
@@ -200,7 +202,8 @@ function formatOperatorCarryData(data) {
   for (let item of list) {
     const {charId, carryCount} = item
     const carryRate = formatNumber(carryCount / sampleSize * 100, 2)
-    const ownRate = formatNumber(operatorOwnMap.get(charId) * 100, 2)
+    console.log(charId)
+    const ownRate = operatorOwnMap.get(charId)
     const vo = {
       charId: charId,
       carryCount: carryCount,
