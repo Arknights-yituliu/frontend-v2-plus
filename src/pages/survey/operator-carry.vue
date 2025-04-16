@@ -278,13 +278,13 @@ onMounted(() => {
       <p>A：用于收集博士各模式优先携带的干员。由于提交的博士每个人的玩法有差异，故本问卷的调查结果仅供参考。</p>
       <p class="font-bold m-12-0">Q：需要登录吗？需要填满12人吗？如果我想再填一份怎么办？</p>
       <p>A：无需登录。最少填上6人即可提交。7天内提交的结果是可以被覆盖的。</p>
-      <p class="font-bold m-12-0">Q：集成战略以那个主题为主？</p>
-      <p>A：考虑到时效性的问题，以当前主题为主要权重，填写在该主题下的抓位。</p>
+      <p class="font-bold m-12-0">Q：集成战略以那个主题为主？怎么填写</p>
+      <p>A：考虑到时效性的问题，以当前主题为主要权重。集成战略模式填写你的高抓位干员。</p>
     </v-alert>
 
 
     <div class="operator-form-and-checkbox">
-      <v-card title="选择各模式下会优先携带的干员" class="operator-form">
+      <v-card title="选择各模式下会优先携带/高抓位的干员" class="operator-form">
         <v-card-text>
           <v-radio-group
               v-model="gameModuleCode"
