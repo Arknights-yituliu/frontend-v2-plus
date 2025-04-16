@@ -15,9 +15,10 @@ fetch("https://server-cdn.ceobecanteen.top/api/v1/cdn/operate/toolLink/list", re
     .then(result => {
       for (const item of result.data) {
         const formatItem = formatLinkData(item);
+        console.log(formatItem)
         toolLinks.value.push(formatItem)
       }
-
+      extraLinks()
     })
     .catch(error => console.log('error', error));
 
@@ -26,6 +27,37 @@ function openNewPage(url) {
   window.open(url)
 }
 
+function extraLinks(){
+  toolLinks.value.push({
+    name:'MaaAssistantArknights',
+    description:'《明日方舟》小助手，自动刷图、智能基建换班，全日常一键长草',
+    links:[{name:'官网',url:'https://maa.plus'}],
+    iconUrl:'https://maa.plus/docs/images/maa-logo_512x512.png',
+    slogan:'',
+    tags:["图像识别", "自动刷图", "一键长草"]
+  })
+
+  toolLinks.value.push({
+    name:'Mirror酱',
+    description:'Mirror酱是一个第三方应用分发平台，让开源应用的更新更简单。用户付费使用，收益与开发者共享。此外，Mirror酱本身也是开源的。',
+    links:[{name:'官网',url:'https://mirrorchyan.com/zh/get-start'}],
+    iconUrl:'https://mirrorchyan.com/favicon.ico',
+    slogan:'',
+    tags:['开源分发平台','高速下载']
+  })
+
+  toolLinks.value.push({
+    name:'Arknights-Mower',
+    description:'动态换班',
+    links:[{name:'项目地址',url:'https://github.com/ArkMowers/arknights-mower'}],
+    iconUrl:'https://ark.yituliu.cn/image/website/mower.webp',
+    slogan:'',
+    tags:["动态换班", "支持跑单操作", "支持调用MAA"]
+  })
+}
+
+
+
 
 const formatLinkData = (data, localized = 'zh_CN') => {
 
@@ -33,17 +65,19 @@ const formatLinkData = (data, localized = 'zh_CN') => {
     localized_name, localized_description, localized_slogan,
     localized_tags, icon_url, links
   } = data
+
+
   return {
     name: localized_name[localized],
     description: localized_description[localized],
     slogan: localized_slogan[localized],
     tags: localized_tags[localized],
-    icon_url: icon_url,
-    links: formatLinks(links)
+    iconUrl: icon_url,
+    links: _formatLinks(links)
   }
 
 
-  function formatLinks(links, localized = 'zh_CN') {
+  function _formatLinks(links, localized = 'zh_CN') {
     let list = []
     for (const item of links) {
       const {localized_name, url} = item
@@ -56,15 +90,20 @@ const formatLinkData = (data, localized = 'zh_CN') => {
   }
 }
 
+
+
+
+
 </script>
 
 <template>
 
   <div class="tool-link-page">
     <v-card v-for="(item,index) in toolLinks" :key="index" class="tool-link-card">
+      <v-card-text>
       <div class="tool-link-card-content">
         <div class="f-link-card-header">
-          <img :src="item.icon_url" alt="" class="f-link-avatar" @click="openNewPage(item.url)">
+          <img :src="item.iconUrl" alt="" class="f-link-avatar" @click="openNewPage(item.url)">
           <span class="f-link-name">{{ item.name }}</span>
         </div>
         <div class="f-link-tag-wrap">
@@ -77,6 +116,7 @@ const formatLinkData = (data, localized = 'zh_CN') => {
       <v-btn rounded="x-large" color="primary"  class="tool-link-button"  v-for="(link,index) in item.links" @click="openNewPage(link.url)">
         {{ link.name }}
       </v-btn>
+      </v-card-text>
     </v-card>
 
   </div>

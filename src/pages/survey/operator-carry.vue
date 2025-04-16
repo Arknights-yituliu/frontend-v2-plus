@@ -1,14 +1,13 @@
 <script setup>
 import {professionDict} from '/src/utils/survey/common.js'
 import {operatorTable} from "/src/utils/gameData.js";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
 import {createMessage} from "/src/utils/message.js";
 import questionnaireAPI from "/src/api/questionnaire.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";
-import {dateFormat} from "/src/utils/dateUtil.js";
 import {NDatePicker}  from 'naive-ui'
 
 let operatorGroupByProfession = new Map()
@@ -137,9 +136,12 @@ let ownDataLoadingStatus = ref(false)
 operatorProgressionStatisticsDataCache.getData().then(response => {
   const {sampleSize, result} = response
   for (const item of result) {
-    operatorOwnMap.set(item.charId, item.own / sampleSize)
+
+    operatorOwnMap.set(item.charId, item.own)
   }
   ownDataLoadingStatus.value = true;
+
+  console.log(operatorOwnMap)
 });
 
 
@@ -169,6 +171,9 @@ function getOperatorCarryDataByModuleAndTime() {
   //   startTime:dateRange.value[0],
   //   endTime:
   // }
+
+  dateRange.value[1] = _adjustToLastSecond(dateRange.value[1])
+
   questionnaireAPI.getQuestionnaireResultV2(selectedGameModuleCode.value, dateRange.value).then(response => {
     const data = response.data;
     OperatorCarryDataCache.value[cacheKey] = data
@@ -176,17 +181,29 @@ function getOperatorCarryDataByModuleAndTime() {
 
     formatOperatorCarryData(data)
   })
+
+  // 将时间戳调整到当天的 23:59:59
+  function _adjustToLastSecond(timestamp) {
+    const date = new Date(timestamp);
+    date.setHours(23, 59, 59, 999); // 设置时间为 23:59:59.999
+    return date.getTime();
+  }
 }
+
+watch([()=>dateRange.value[0],()=>dateRange.value[1]],([newStartTime, newEndTime])=>{
+  getOperatorCarryDataByModuleAndTime()
+})
 
 
 function formatOperatorCarryData(data) {
-  let {list, questionnaireType, questionnaireCode, updateTime, sampleSize} = data
-  list = list.sort((a,b)=>b.carryCount-a.carryCount)
+  let {list, questionnaireType, questionnaireCode,  sampleSize} = data
+  // list = list.sort((a,b)=>b.carryCount-a.carryCount)
   let voList = []
   for (let item of list) {
     const {charId, carryCount} = item
     const carryRate = formatNumber(carryCount / sampleSize * 100, 2)
-    const ownRate = formatNumber(operatorOwnMap.get(charId) * 100, 2)
+    console.log(charId)
+    const ownRate = operatorOwnMap.get(charId)
     const vo = {
       charId: charId,
       carryCount: carryCount,
@@ -199,7 +216,6 @@ function formatOperatorCarryData(data) {
   operatorCarryResult.value = {
     questionnaireCode: questionnaireCode,
     questionnaireType: questionnaireType,
-    updateTime: dateFormat(updateTime, 'yyyy/MM/dd HH:mm'),
     sampleSize: sampleSize,
     voList: voList,
   }
@@ -210,6 +226,7 @@ function formatOperatorCarryData(data) {
 
 
 onMounted(() => {
+
   // const intervalId = setInterval(()=>{
   //   changeOperatorCarryDataByModule()
   //   if(ownDataLoadingStatus.value){
@@ -365,10 +382,8 @@ onMounted(() => {
 <!--            @update:modelValue="getOperatorCarryDataByModuleAndTime()"-->
 <!--        ></v-select>-->
 
-        <n-date-picker v-model:value="dateRange" type="daterange" clearable
-                       @input="getOperatorCarryDataByModuleAndTime()" />
-
-        <v-chip color="primary" :text="`更新时间：${operatorCarryResult.updateTime}`" class="m-4"></v-chip>
+        <n-date-picker v-model:value="dateRange" type="daterange" clearable />
+<!--         {{dateRange}}-->
         <v-chip color="primary" :text="`提交人数：${operatorCarryResult.sampleSize}`" class="m-4"></v-chip>
 
         <v-data-table

@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import itemCache from "/src/utils/indexedDB/itemCache.js";
-import surveyAPI from "/src/api/operatorData"; // 练度调查结果
+
+import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";// 练度调查结果
 import {operatorTable} from "/src/utils/gameData.js";
 import operatorMaterialJSON from "/src/static/json/operator/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
 import professionDictJSON from "/src/static/json/operator/profession_dict"; // 职业字典JSON
@@ -130,7 +131,7 @@ const createOperatorRarityBaseMaterialMap = () => {
 
 const init = async () => {
   // 练度调查映射
-  const { data: { result = [] } } = await surveyAPI.getOperatorStatisticsResult()
+  const {  result = []  } = await operatorProgressionStatisticsDataCache.getData()
   result.forEach(item => statisticsMap.set(item.charId, item))
   // 材料总映射
   const stageConfig = getStageConfig()

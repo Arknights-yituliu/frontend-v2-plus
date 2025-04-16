@@ -17,7 +17,7 @@ import deepClone from "/src/utils/deepClone.js";
 import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
-import {formatNumber} from "../../utils/format.js";
+import {formatNumber} from "/src/utils/format.js";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/utils/indexedDB/operatorProgressionStatisticsData.js";
 import {dateFormat} from "@/utils/dateUtil.js";
@@ -37,35 +37,16 @@ let operatorIdAndIndexDict = ref({})
 
 let operatorProgressionStatisticsMap = new Map()
 
+let operatorProgressionStatistics = ref()
+
 async function getCharStatisticsResult() {
 
   const data = await operatorProgressionStatisticsDataCache.getData();
-
-  let {result, sampleSize} = data
+  operatorProgressionStatistics.value = data
+  let {result} = data
 
   for (const item of result) {
-    let charInfo = operatorTable[item.charId]
-    if (charInfo) {
-      item.name = charInfo.name
-      item.rarity = charInfo.rarity
-      item.profession = charInfo.profession
-      item.itemObtainApproach = charInfo.itemObtainApproach
-      item.skill = charInfo.skill
-      item.equip = charInfo.equip
-      const {own, elite, skill1, skill2, skill3, modX, modY, modD, modA} = item
-      item.ownS = resultFormat(own, sampleSize)
-      item.eliteS = resultFormat(elite[2], own)
-      item.skill1S = resultFormat(skill1[3], own)
-      item.skill2S = resultFormat(skill2[3], own)
-      item.skill3S = resultFormat(skill3[3], own)
-      item.modXS = resultFormat(modX[3], own)
-      item.modYS = resultFormat(modY[3], own)
-      item.modDS = resultFormat(modD[3], own)
-      item.modAS = resultFormat(modA[3], own)
-      item.date = charInfo.date
-
       operatorProgressionStatisticsMap.set(item.charId,item)
-    }
   }
 }
 
@@ -94,13 +75,13 @@ const detailHeader = [
 
 
 function openOperatorsStatisticsDetail(charId) {
-
+console.log(operatorProgressionStatisticsMap.get(charId))
   if(!operatorProgressionStatisticsMap.get(charId)){
     return
   }
 
   const operator = operatorProgressionStatisticsMap.get(charId)
-  const {skill,equip,own} = operator
+  const {skill,equip} = operator
   const data = []
 
   for (let index = 0; index < 3; index++) {
@@ -112,13 +93,15 @@ function openOperatorsStatisticsDetail(charId) {
       type: 'skill',
       iconId: info.iconId,
       ranks: [
-        resultFormat(ranks[1], own),
-        resultFormat(ranks[2], own),
-        resultFormat(ranks[3], own)
+        formatNumber(ranks.rank1 * 100),
+        formatNumber(ranks.rank2 * 100),
+        formatNumber(ranks.rank3 * 100)
       ]
     }
     data.push(item)
   }
+
+
 
   for (const info of equip) {
     const ranks = operator[`mod${info.typeName2}`]
@@ -127,9 +110,9 @@ function openOperatorsStatisticsDetail(charId) {
       type: 'equip',
       iconId: info.typeIcon,
       ranks: [
-        resultFormat(ranks[1], own),
-        resultFormat(ranks[2], own),
-        resultFormat(ranks[3], own)
+        formatNumber(ranks.rank1 * 100),
+        formatNumber(ranks.rank2 * 100),
+        formatNumber(ranks.rank3 * 100)
       ]
     }
     data.push(item)
@@ -376,7 +359,7 @@ function sortOperatorList(property) {
  * 控制干员练度推荐折叠栏的显示状态
  */
 async function getOperatorRecommend() {
-  operatorRecommendList.value = await operatorRecommend(operatorList.value)
+  operatorRecommendList.value = await operatorRecommend(operatorList.value,operatorProgressionStatistics.value)
 }
 
 
@@ -392,6 +375,7 @@ function getSkillSprite(id) {
 const headers = [
   {title: '干员',key:"charId"},
   {title: '推荐技能or模组'},
+  {title: '当前等级'},
   {title: '平均等级'},
   {title: '三级占比'},
 ]
@@ -478,6 +462,9 @@ onMounted(() => {
                          <div class="equip-name">{{ item.info.iconId }}</div>
                        </div>
                      </div>
+                   </td>
+                   <td>
+                     {{item.current}}级
                    </td>
                    <td>
                     {{formatNumber(item.avg,2)}}级

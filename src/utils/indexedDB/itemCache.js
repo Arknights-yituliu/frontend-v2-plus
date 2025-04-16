@@ -13,18 +13,6 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
     const cacheKey = 'itemValue'
     let cacheData
 
-
-    // if (!forceRefresh) {
-    //     let cacheData = await myDatabase.cache_data.get(cacheKey)
-    //     if (cacheData) {
-    //         if (new Date().getTime() - cacheData.createTime < 60 * 60 * 1000) {
-    //             console.log(`${cacheKey}.返回缓存的数据`)
-    //             return cacheData.resource
-    //         }
-    //     }
-    // }
-
-
     await getCustomItemList(stageConfig).then(response => {
         console.log(`${cacheKey}.返回来自服务器的数据`)
         if (forceRefresh) {
@@ -58,7 +46,9 @@ async function getPenguinMatrixCache(forceRefresh = false) {
         }
     }
 
-    await axios.get('https://penguin-stats.io/PenguinStats/api/v2/_private/result/matrix/CN/global/automated').then(response => {
+    await axios.get('https://penguin-stats.io/PenguinStats/api/v2/_private/result/matrix/CN/global/automated',{
+        timeout: 20000 // 设置超时时间为20秒
+    }).then(response => {
         console.log(`${cacheKey}.返回来自服务器的数据`)
         const matrix = response.data.matrix
         const info = {
