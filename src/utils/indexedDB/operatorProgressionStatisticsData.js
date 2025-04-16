@@ -8,7 +8,7 @@ function putCache(data) {
 }
 
 async function getData() {
-    const cacheKey = 'operatorProgressionStatisticsV4'
+    const cacheKey = 'operatorProgressionStatisticsV5'
     let cacheData = await myDatabase.cache_data.get(cacheKey)
 
     if (cacheData && cacheData.resource.result.length) {
@@ -49,7 +49,7 @@ async function getData() {
                     date: charInfo.date,
                     own: _resultFormat(own, sampleSize),
                     ownRate: _resultFormat(own, sampleSize),
-                    eliteRank: _resultFormat(elite[2], own),
+                    eliteRank2: _resultFormat(elite[2], own),
                     skill1Rank3: _resultFormat(skill1[3], own),
                     skill2Rank3: _resultFormat(skill2[3], own),
                     skill3Rank3: _resultFormat(skill3[3], own),

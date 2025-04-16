@@ -38,7 +38,7 @@ function btnAction(action) {
 let headers2 = [
   {title: '干员', align: 'start', sortable: false, key: 'charId'},
   {title: '持有率', sortable: true, key: 'ownRate'},
-  {title: '精二率', sortable: true, key: 'eliteRank3'},
+  {title: '精二率', sortable: true, key: 'eliteRank2'},
   {title: '一技能', sortable: true, key: 'skill1Rank3'},
   {title: '二技能', sortable: true, key: 'skill2Rank3'},
   {title: '三技能', sortable: true, key: 'skill3Rank3'},
@@ -214,7 +214,7 @@ onMounted(() => {
               <OperatorAvatar rounded :char-id="item.charId" :size="60"></OperatorAvatar>
             </td>
             <td>{{ item.ownRate }}%</td>
-            <td>{{ item.eliteRank3 }}%</td>
+            <td>{{ item.eliteRank2 }}%</td>
             <td>{{ item.skill1Rank3 }}%</td>
             <td>{{ item.skill2Rank3 }}%</td>
             <td>{{ item.skill3Rank3 }}%</td>

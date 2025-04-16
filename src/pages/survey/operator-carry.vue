@@ -156,7 +156,7 @@ const timeGranularity = [
 
 const OperatorCarryDataCache = ref({})
 
-let dateRange = ref([new Date(Date.now()-60*60*24*7*1000).getTime(),Date.now()])
+let dateRange = ref([new Date(Date.now()-60*60*24*14*1000).getTime(),Date.now()])
 
 function getOperatorCarryDataByModuleAndTime() {
   const cacheKey = selectedGameModuleCode.value + "-" + selectedTimeGranularity.value.code
