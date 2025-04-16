@@ -296,6 +296,22 @@
     "packType": "main"
   },
   {
+    "packName": "第十五章 离解复合",
+    "gachaOriginium": "41",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "磨难/H关/隐藏",
+    "gachaOriginium": "23",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
     "packName": "骑兵与猎人",
     "gachaOriginium": "15",
     "gachaOrundum": "0",
@@ -538,6 +554,14 @@
   {
     "packName": "巴别塔",
     "gachaOriginium": "39",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main"
+  },
+  {
+    "packName": "追迹日落以西",
+    "gachaOriginium": "28",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
