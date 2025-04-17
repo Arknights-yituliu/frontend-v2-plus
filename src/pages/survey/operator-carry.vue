@@ -418,8 +418,8 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
                  @click="chooseOperator(operator)">
-              <OperatorAvatar :border="true" :char-id="operator.charId" :rarity="operator.rarity" :size="70"
-                              :mobile-size="60"></OperatorAvatar>
+              <OperatorAvatar :border="true" :char-id="operator.charId" :rarity="operator.rarity" :size="60"
+                              :mobile-size="40"></OperatorAvatar>
               <div>{{ operator.name }}</div>
               <div :class="selectedOperatorClass(operator.charId)"></div>
             </div>
