@@ -17,11 +17,18 @@ export default {
         })
     },
 
-    getQuestionnaireResultV2(questionnaireType,dateRange){
+    getQuestionnaireResultV2(questionnaireCode,dateRange){
         return request({
-            url:`/questionnaire/operator-carry/v2?questionnaireType=${questionnaireType}&startTime=${dateRange[0]}&endTime=${dateRange[1]}`,
+            url:`/questionnaire/operator-carry/v2?questionnaireCode=${questionnaireCode}&startTime=${dateRange[0]}&endTime=${dateRange[1]}`,
             method:'get'
         })
     },
 
+    getOperatorCarryRateDailyData(data) {
+        return request({
+            url:`/questionnaire/operator-carry/daily`,
+            method:'post',
+            data:data
+        })
+    }
 }

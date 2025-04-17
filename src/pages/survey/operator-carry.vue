@@ -8,16 +8,20 @@ import questionnaireAPI from "/src/api/questionnaire.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";
-import {NDatePicker}  from 'naive-ui'
+import {NDatePicker} from 'naive-ui'
+import {dateFormat} from "@/utils/dateUtil.js";
 
 let operatorGroupByProfession = new Map()
 
+let operatorNameMap = new Map()
+
 for (const charId in operatorTable) {
   const character = operatorTable[charId]
-  const {profession, rarity} = character
+  const {profession, rarity, name} = character
   if (rarity < 4) {
     continue
   }
+  operatorNameMap.set(charId, name)
   let list = operatorGroupByProfession.get(profession);
   if (list) {
     list.push(character)
@@ -99,7 +103,7 @@ function uploadQuestionnaire() {
     operatorList: charIdList.value
   }
   questionnaireAPI.uploadQuestionnaireInfo(data).then(response => {
-    console.log(response)
+
     createMessage({type: 'success', text: '提交成功'})
   })
 }
@@ -114,7 +118,8 @@ function selectedOperatorClass(charId) {
 
 const headers = [
   {title: '序号', sortable: false, key: 'index'},
-  {title: '干员', sortable: false, key: 'charId'},
+  {title: '头像', sortable: false, key: 'charId'},
+  {title: '名称', sortable: false, key: 'name'},
   {title: '使用次数', sortable: true, key: 'carryCount'},
   {title: '使用率', sortable: true, key: 'carryRate'},
   {title: '持有率', sortable: true, key: 'own'},
@@ -141,7 +146,7 @@ operatorProgressionStatisticsDataCache.getData().then(response => {
   }
   ownDataLoadingStatus.value = true;
 
-  console.log(operatorOwnMap)
+
 });
 
 
@@ -156,7 +161,7 @@ const timeGranularity = [
 
 const OperatorCarryDataCache = ref({})
 
-let dateRange = ref([new Date(Date.now()-60*60*24*14*1000).getTime(),Date.now()])
+let dateRange = ref([new Date(Date.now() - 60 * 60 * 24 * 14 * 1000).getTime(), Date.now()])
 
 function getOperatorCarryDataByModuleAndTime() {
   const cacheKey = selectedGameModuleCode.value + "-" + selectedTimeGranularity.value.code
@@ -177,7 +182,7 @@ function getOperatorCarryDataByModuleAndTime() {
   questionnaireAPI.getQuestionnaireResultV2(selectedGameModuleCode.value, dateRange.value).then(response => {
     const data = response.data;
     OperatorCarryDataCache.value[cacheKey] = data
-    console.log(data)
+
 
     formatOperatorCarryData(data)
   })
@@ -190,21 +195,21 @@ function getOperatorCarryDataByModuleAndTime() {
   }
 }
 
-watch([()=>dateRange.value[0],()=>dateRange.value[1]],([newStartTime, newEndTime])=>{
+watch([() => dateRange.value[0], () => dateRange.value[1]], ([newStartTime, newEndTime]) => {
   getOperatorCarryDataByModuleAndTime()
 })
 
 
 function formatOperatorCarryData(data) {
-  let {list, questionnaireType, questionnaireCode,  sampleSize} = data
+  let {list, questionnaireType, questionnaireCode, sampleSize} = data
   // list = list.sort((a,b)=>b.carryCount-a.carryCount)
   let voList = []
   for (let item of list) {
     const {charId, carryCount} = item
     const carryRate = formatNumber(carryCount / sampleSize * 100, 2)
-    console.log(charId)
     const ownRate = operatorOwnMap.get(charId)
     const vo = {
+      name: operatorNameMap.get(charId),
       charId: charId,
       carryCount: carryCount,
       carryRate: `${carryRate}%`,
@@ -219,13 +224,90 @@ function formatOperatorCarryData(data) {
     sampleSize: sampleSize,
     voList: voList,
   }
+}
+
+
+let lineChartDialog = ref(false)
+
+
+function getOperatorCarryRateDailyData(charId) {
+
+  lineChartDialog.value = true
+  let xData = []
+  let yData = []
+
+  const data = {
+    questionnaireCode: selectedGameModuleCode.value,
+    charId: charId,
+    start: dateRange.value[0],
+    end: dateRange.value[1],
+  }
+
+
+
+
+  questionnaireAPI.getOperatorCarryRateDailyData(data).then(response => {
+
+    const lineChart = echarts.init(document.getElementById('carry-rate-chart'));
+
+
+    const {list, date} = response.data
+    for (let item of list) {
+      const {carryCount, sampleSize} = item
+      yData.push(formatNumber(carryCount / sampleSize * 100, 2))
+    }
+
+    for (const item of date) {
+      xData.push(dateFormat(item))
+    }
+
+    const options = {
+      title: {
+        text: `${operatorNameMap.get(charId)}的携带率变化趋势`,
+        left: 'center'
+      },
+      tooltip: {
+        show: true,
+        trigger: 'axis', // 触发方式为坐标轴触发
+        alwaysShowContent: true, // 始终显示提示框
+      },
+      xAxis: {
+        type: 'category',
+        data: xData
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [{
+        data: yData, // 确保数据是数组
+        type: 'line',
+        label: {
+          show: true, // 显示数据标签
+          position: 'top', // 标签位置（例如柱状图顶部）
+          formatter: '{c}%', // 显示 y 轴的值（{c} 表示当前数据值）
+          textStyle: {
+            fontSize:'10'
+          }
+        },
+
+      }]
+    }
+
+    console.log(lineChart)
+
+    lineChart.setOption(options)
+  })
+
+
+
 
 
 }
 
 
-
 onMounted(() => {
+
+  //
 
   // const intervalId = setInterval(()=>{
   //   changeOperatorCarryDataByModule()
@@ -336,11 +418,10 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
                  @click="chooseOperator(operator)">
-              <OperatorAvatar :border="true" :char-id="operator.charId" :rarity="operator.rarity" :size="60"
-                              :mobile-size="50"></OperatorAvatar>
-              <div :class="selectedOperatorClass(operator.charId)">
-
-              </div>
+              <OperatorAvatar :border="true" :char-id="operator.charId" :rarity="operator.rarity" :size="70"
+                              :mobile-size="60"></OperatorAvatar>
+              <div>{{ operator.name }}</div>
+              <div :class="selectedOperatorClass(operator.charId)"></div>
             </div>
           </div>
         </v-card-text>
@@ -371,20 +452,21 @@ onMounted(() => {
           ></v-radio>
         </v-radio-group>
 
-<!--        <v-select-->
-<!--            density="compact"-->
-<!--            label="时间区间" color="primary"-->
-<!--            :items="timeGranularity"-->
-<!--            item-value="code"-->
-<!--            item-title="label"-->
-<!--            return-object-->
-<!--            v-model="selectedTimeGranularity"-->
-<!--            @update:modelValue="getOperatorCarryDataByModuleAndTime()"-->
-<!--        ></v-select>-->
+        <!--        <v-select-->
+        <!--            density="compact"-->
+        <!--            label="时间区间" color="primary"-->
+        <!--            :items="timeGranularity"-->
+        <!--            item-value="code"-->
+        <!--            item-title="label"-->
+        <!--            return-object-->
+        <!--            v-model="selectedTimeGranularity"-->
+        <!--            @update:modelValue="getOperatorCarryDataByModuleAndTime()"-->
+        <!--        ></v-select>-->
 
-        <n-date-picker v-model:value="dateRange" type="daterange" clearable />
-<!--         {{dateRange}}-->
+        <n-date-picker v-model:value="dateRange" type="daterange" clearable/>
+        <!--         {{dateRange}}-->
         <v-chip color="primary" :text="`提交人数：${operatorCarryResult.sampleSize}`" class="m-4"></v-chip>
+
 
         <v-data-table
             :headers="headers"
@@ -393,11 +475,12 @@ onMounted(() => {
             items-per-page="-1"
             class="v-mobile-table">
           <template v-slot:item="{item,index}">
-            <tr>
+            <tr >
               <td>{{ index + 1 }}</td>
               <td>
-                <OperatorAvatar :border="true" :char-id="item.charId"></OperatorAvatar>
+                <OperatorAvatar :border="true" :char-id="item.charId" :size="50" class="m-4-0"></OperatorAvatar>
               </td>
+              <td>{{ item.name }}</td>
               <td>
                 {{ item.carryCount }}
               </td>
@@ -408,6 +491,16 @@ onMounted(() => {
         </v-data-table>
       </v-card-text>
     </v-card>
+
+
+    <v-dialog v-model="lineChartDialog" max-width="700">
+      <v-card>
+        <v-card-text>
+          <div class="carry-rate-line-chart" id="carry-rate-chart">
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
 
     <!-- 个人结果展示模块 -->
