@@ -74,6 +74,12 @@
   }
 
 
+  .operator-info{
+    width: 80px;
+    font-size: 12px;
+
+    text-align: center;
+  }
 
 }
 
@@ -131,6 +137,7 @@
       height: 52px;
       overflow: hidden;
       font-size: 8px;
+      line-height: 12px;
       margin: 4px;
     }
 

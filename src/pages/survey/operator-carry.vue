@@ -118,8 +118,7 @@ function selectedOperatorClass(charId) {
 
 const headers = [
   {title: '序号', sortable: false, key: 'index'},
-  {title: '头像', sortable: false, key: 'charId'},
-  {title: '名称', sortable: false, key: 'name'},
+  {title: '干员', sortable: false, key: 'charId'},
   {title: '使用次数', sortable: true, key: 'carryCount'},
   {title: '使用率', sortable: true, key: 'carryRate'},
   {title: '持有率', sortable: true, key: 'own'},
@@ -244,8 +243,6 @@ function getOperatorCarryRateDailyData(charId) {
   }
 
 
-
-
   questionnaireAPI.getOperatorCarryRateDailyData(data).then(response => {
 
     const lineChart = echarts.init(document.getElementById('carry-rate-chart'));
@@ -286,7 +283,7 @@ function getOperatorCarryRateDailyData(charId) {
           position: 'top', // 标签位置（例如柱状图顶部）
           formatter: '{c}%', // 显示 y 轴的值（{c} 表示当前数据值）
           textStyle: {
-            fontSize:'10'
+            fontSize: '10'
           }
         },
 
@@ -297,9 +294,6 @@ function getOperatorCarryRateDailyData(charId) {
 
     lineChart.setOption(options)
   })
-
-
-
 
 
 }
@@ -475,12 +469,20 @@ onMounted(() => {
             items-per-page="-1"
             class="v-mobile-table">
           <template v-slot:item="{item,index}">
-            <tr >
+            <tr>
               <td>{{ index + 1 }}</td>
               <td>
-                <OperatorAvatar :border="true" :char-id="item.charId" :size="50" class="m-4-0"></OperatorAvatar>
+<!--                <div class="operator-info">-->
+<!--                  <OperatorAvatar :border="true" :char-id="item.charId" :size="50" class="m-4-a"></OperatorAvatar>-->
+<!--                  {{ item.name }}-->
+<!--                </div>-->
+
+
+                  <OperatorAvatar :border="true" :char-id="item.charId" :size="50" class="m-4-0"></OperatorAvatar>
+
+
               </td>
-              <td>{{ item.name }}</td>
+
               <td>
                 {{ item.carryCount }}
               </td>

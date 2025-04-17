@@ -3,7 +3,7 @@
   .v-mobile-table{
 
     td{
-      font-size: 12px;
+      font-size: 10px;
       padding: 0 8px !important;
       white-space: nowrap;
     }
@@ -13,6 +13,11 @@
       padding: 0 4px !important;
       white-space: nowrap;
       text-align: center;
+      justify-content: center;
+    }
+
+    .v-data-table-header__content{
+      justify-content: center;
     }
   }
 
