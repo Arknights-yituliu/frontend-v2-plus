@@ -18,7 +18,7 @@ let historyActivityDisplayType = ref('')
 
 let historyActivityTableHeaders = ref([]) // 材料表
 
-function initTableHeader(){
+function initTableHeader() {
   let list = []
   for (const itemId in ITEM_SERIES) {
     const item = ITEM_SERIES[itemId]
@@ -32,7 +32,6 @@ function initTableHeader(){
   }
   return list
 }
-
 
 
 /**
@@ -63,12 +62,24 @@ function getStageEfficiency(info) {
 
 let dataLength = ref(0)
 
+const startTime = Date.now()
+
+
+const intervalId = setInterval(formatPcHistoryTableData, 500);
+
 function formatPcHistoryTableData() {
 
-  if(dataLength.value>=props.modelValue.length){
-    console.log('数据未更新')
+  console.log(Date.now() - startTime)
+  if (Date.now() - startTime > 30 * 1000) {
+    console.log('取消更新任务')
+    clearInterval(intervalId)
+  }
+
+  if (dataLength.value >= props.modelValue.length) {
+    // console.log('数据未更新')
     return
   }
+
 
   historyActivityTableHeaders.value = initTableHeader()
 
@@ -151,7 +162,6 @@ function formatPcHistoryTableData() {
 
 }
 
-setInterval(formatPcHistoryTableData, 500)
 
 function getCellBgColor(rowIndex, maxIndex) {
 
@@ -172,12 +182,7 @@ function getTableDividerClass(divider) {
 }
 
 
-
-
-
-
 </script>
-
 
 
 <template>

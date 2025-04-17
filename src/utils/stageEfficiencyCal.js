@@ -2,7 +2,6 @@ import itemCache from "/src/utils/indexedDB/itemCache.js";
 import ITEM_SERIES_TABLE from '/src/static/json/material/item_series_table.json'
 import ITEM_TYPE_TABLE from '/src/static/json/material/item_type_table.json'
 import {getStageConfig} from "@/utils/user/userConfig.js";
-import {dateFormat} from "/src/utils/dateUtil.js";
 import {getStageDropCollect} from "/src/utils/penguinData.js";
 
 

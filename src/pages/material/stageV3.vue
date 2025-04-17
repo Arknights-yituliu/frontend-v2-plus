@@ -70,7 +70,7 @@ function getStageResult() {
 
     const {recommendedStage, orundumRecommendedStageVO, historyActStage} = response
 
-    console.log(JSON.stringify(response))
+
 
     stageResultGroup.value = recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式

@@ -34,22 +34,28 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
 
 
 async function getPenguinMatrixCache(forceRefresh = false) {
-    const cacheKey = 'penguinMatrix'
-    let cacheData
+    const cacheKey = 'penguinMatrixV1'
+
+    let penguinData = []
+
+    //非强制刷新情况下，先判断是否有缓存
     if (!forceRefresh) {
+        //获取indexDB中的缓存数据
         let cacheData = await myDatabase.cache_data.get(cacheKey)
+        //有缓存判断缓存时间是否超过设定时间，未超过直接返回缓存
         if (cacheData) {
-            if (new Date().getTime() - cacheData.createTime < 60 * 60 * 1000) {
+            if (new Date().getTime() - cacheData.createTime < 60 * 60 * 24 * 2 * 1000) {
                 console.log(`${cacheKey}.返回缓存的数据`)
                 return cacheData.resource
             }
         }
     }
 
-    await axios.get('https://penguin-stats.io/PenguinStats/api/v2/_private/result/matrix/CN/global/automated',{
-        timeout: 20000 // 设置超时时间为20秒
+    //如果超过设定缓存时间，从企鹅物流获取新的数据，如果10s企鹅物流未响应，则去加载一图流的企鹅物流数据镜像
+    await axios.get('https://penguin-stats.io/PenguinStats/api/v2/_private/result/matrix/CN/global/automated', {
+        timeout: 10000 // 设置超时时间为10秒
     }).then(response => {
-        console.log(`${cacheKey}.返回来自服务器的数据`)
+        console.log(`${cacheKey}.返回来自企鹅物流的数据`)
         const matrix = response.data.matrix
         const info = {
             id: cacheKey,
@@ -58,15 +64,37 @@ async function getPenguinMatrixCache(forceRefresh = false) {
             createTime: new Date().getTime()
         }
         putCache(info)
-        cacheData = matrix
+        penguinData = matrix
     }).catch(e => {
-        createMessage(e)
+        if (e.message === "请求超时") {
+            console.log("企鹅物流请求超时")
+        } else {
+            createMessage(e);
+        }
     })
 
-    return cacheData
+     //企鹅物流请求超时，加载一图流的企鹅物流数据镜像
+    if (penguinData.length === 0) {
+        console.log(1111)
+        await axios.get('https://cos.yituliu.cn/stage-drop/matrix.json').then(response => {
+            console.log(`${cacheKey}.返回来自企鹅物流的镜像数据`)
+            const matrix = response.data.matrix
+            const info = {
+                id: cacheKey,
+                resource: matrix,
+                version: "automated",
+                createTime: new Date().getTime()
+            }
+            putCache(info)
+            penguinData = matrix
+        })
+    }
+
+
+    return penguinData
 }
 
-function getLastSynchronizationTime(){
+function getLastSynchronizationTime() {
     return myDatabase.cache_data.get('penguinMatrix')
 }
 
@@ -101,5 +129,5 @@ async function getStageInfoCache(forceRefresh = false) {
 
 
 export default {
-    getItemValueCacheByConfig, getPenguinMatrixCache, getStageInfoCache,getLastSynchronizationTime
+    getItemValueCacheByConfig, getPenguinMatrixCache, getStageInfoCache, getLastSynchronizationTime
 }
