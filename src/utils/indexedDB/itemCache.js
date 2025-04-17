@@ -73,8 +73,8 @@ async function getPenguinMatrixCache(forceRefresh = false) {
         }
     })
 
-     //企鹅物流请求超时，加载一图流的企鹅物流数据镜像
-    if (penguinData.length === 0) {
+    //企鹅物流请求超时，加载一图流的企鹅物流数据镜像
+    if (penguinData.length < 100) {
         console.log(1111)
         await axios.get('https://cos.yituliu.cn/stage-drop/matrix.json').then(response => {
             console.log(`${cacheKey}.返回来自企鹅物流的镜像数据`)
