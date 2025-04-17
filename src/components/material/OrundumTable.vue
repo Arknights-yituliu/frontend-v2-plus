@@ -47,7 +47,10 @@ function formatOrundumRecommendedStage() {
 }
 
 watch(()=>props.modelValue.length,(newVal)=>{
-     formatOrundumRecommendedStage()
+     if(newVal>0){
+       formatOrundumRecommendedStage()
+     }
+
 })
 
 const headers = [

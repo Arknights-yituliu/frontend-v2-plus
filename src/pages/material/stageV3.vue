@@ -55,7 +55,7 @@ loadingLocalHostData()
 
 function loadingLocalHostData() {
   stageResultGroup.value = TMP_STAGE_RESULT.recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
-  orundumRecommendedStage.value = TMP_STAGE_RESULT.orundumRecommendedStage
+  orundumRecommendedStage.value = TMP_STAGE_RESULT.orundumRecommendedStageVO
   historyActivityList.value = TMP_STAGE_RESULT.historyActStage
   updateTime.value = TMP_STAGE_RESULT.updateTime
   getItemCardData()
@@ -65,8 +65,12 @@ function loadingLocalHostData() {
 
 // 获取关卡推荐数据
 function getStageResult() {
+
   getStageData().then(response => {
-    const {recommendedStage, orundumRecommendedStageVO, historyActStage, updateTimeVO} = response
+
+    const {recommendedStage, orundumRecommendedStageVO, historyActStage} = response
+
+    console.log(JSON.stringify(response))
 
     stageResultGroup.value = recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
@@ -76,6 +80,10 @@ function getStageResult() {
     dataSource.value = 'Web'
     getItemCardData()
     getItemTableData(0, false)
+
+    itemCache.getLastSynchronizationTime().then(response => {
+      updateTime.value = dateFormat(response.createTime, 'yyyy/MM/dd HH:mm')
+    })
   })
 
 }
@@ -252,10 +260,7 @@ function openNewPage() {
 
 onMounted(() => {
 
-  itemCache.getLastSynchronizationTime().then(response => {
 
-    updateTime.value = dateFormat(response.createTime, 'yyyy/MM/dd HH:mm')
-  })
   getStageResult()
 
 })
