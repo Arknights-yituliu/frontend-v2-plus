@@ -49,15 +49,17 @@
   }
 
   .operator-option {
+    width: 60px;
+    height: 76px;
+    overflow: hidden;
     margin: 8px;
     border-radius: 4px;
     box-shadow: 2px 2px 2px #80808080;
     text-align: center;
-    font-size: 11px;
-    line-height: 18px;
+    font-size: 12px;
+    line-height: 16px;
     background-color: #505050;
     color: whitesmoke;
-    overflow: hidden;
     position: relative;
     //border: 1px solid red;
   }
@@ -72,6 +74,12 @@
   }
 
 
+  .operator-info{
+    width: 80px;
+    font-size: 12px;
+
+    text-align: center;
+  }
 
 }
 
@@ -125,8 +133,11 @@
     }
 
     .operator-option {
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 52px;
+      overflow: hidden;
+      font-size: 8px;
+      line-height: 12px;
       margin: 4px;
     }
 
