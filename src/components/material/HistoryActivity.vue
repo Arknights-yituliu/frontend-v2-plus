@@ -69,7 +69,6 @@ const intervalId = setInterval(formatPcHistoryTableData, 500);
 
 function formatPcHistoryTableData() {
 
-  console.log(Date.now() - startTime)
   if (Date.now() - startTime > 30 * 1000) {
     console.log('取消更新任务')
     clearInterval(intervalId)
