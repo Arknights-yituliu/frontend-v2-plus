@@ -24,7 +24,7 @@ const {mobile} = useDisplay()
 
 let dataSource = ref("Local")
 let legendDisplay = ref(false)
-let hiddenPermStageFlag = ref(true)
+let hiddenPermStageFlag = ref(false)
 let currentItemTableIndex = ref(0)
 
 
@@ -200,9 +200,7 @@ function replaceZoneName(str) {
 }
 
 let legendStyle = ref('')
-onMounted(() => {
-  legendStyle.value = localStorage.getItem('itemLegend') ? localStorage.getItem('itemLegend') : ''
-})
+
 
 /**
  * 隐藏图例
@@ -260,7 +258,7 @@ function openNewPage() {
 
 onMounted(() => {
 
-
+  legendStyle.value = localStorage.getItem('itemLegend') ? localStorage.getItem('itemLegend') : ''
   getStageResult()
 
 })
