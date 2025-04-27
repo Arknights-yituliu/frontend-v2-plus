@@ -338,7 +338,7 @@ function getHistoryPackInfo() {
     if ('activity' !== saleType || drawEfficiency < 0.1) {
       continue
     }
-    console.log(officialName, start, '>', historicalPackStart, '——', start > historicalPackStart, end, '<', historicalPackEnd, '——', end < historicalPackEnd)
+    // console.log(officialName, start, '>', historicalPackStart, '——', start > historicalPackStart, end, '<', historicalPackEnd, '——', end < historicalPackEnd)
     if (start > historicalPackStart && start < historicalPackEnd) {
       let item = JSON.parse(JSON.stringify(pack))
       item.start = scheduleStart.getTime()
