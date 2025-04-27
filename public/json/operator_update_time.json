@@ -1,0 +1,1843 @@
+{
+  "char_4179_monstr": {
+    "updateTime": "2025/04/07 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "Mon3tr"
+  },
+  "char_4178_alanna": {
+    "updateTime": "2025/04/07 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "阿兰娜"
+  },
+  "char_445_wscoot": {
+    "updateTime": "2025/04/07 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "骋风"
+  },
+  "char_450_necras": {
+    "updateTime": "2025/03/07 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "死芒"
+  },
+  "char_4177_brigid": {
+    "updateTime": "2025/03/07 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "水灯心"
+  },
+  "char_4171_wulfen": {
+    "updateTime": "2025/03/07 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "钼铅"
+  },
+  "char_4173_nowell": {
+    "updateTime": "2025/02/14 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "诺威尔"
+  },
+  "char_4010_etlchi": {
+    "updateTime": "2025/02/14 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "隐德来希"
+  },
+  "char_1040_blaze2": {
+    "updateTime": "2025/01/22 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "烛煌"
+  },
+  "char_2026_yu": {
+    "updateTime": "2025/01/22 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "余"
+  },
+  "char_4052_surfer": {
+    "updateTime": "2025/01/22 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "寻澜"
+  },
+  "char_4172_xingzh": {
+    "updateTime": "2025/01/22 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "行箸"
+  },
+  "char_4163_rosesa": {
+    "updateTime": "2024/12/05 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "瑰盐"
+  },
+  "char_1039_thorn2": {
+    "updateTime": "2024/12/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "引星棘刺"
+  },
+  "char_4164_tecno": {
+    "updateTime": "2024/12/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "特克诺"
+  },
+  "char_1038_whitw2": {
+    "updateTime": "2024/11/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "荒芜拉普兰德"
+  },
+  "char_1502_crosly": {
+    "updateTime": "2024/11/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "弑君者"
+  },
+  "char_4026_vulpis": {
+    "updateTime": "2024/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "忍冬"
+  },
+  "char_4148_philae": {
+    "updateTime": "2024/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "菲莱"
+  },
+  "char_4155_talr": {
+    "updateTime": "2024/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "裁度"
+  },
+  "char_4165_ctrail": {
+    "updateTime": "2024/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "云迹"
+  },
+  "char_1019_siege2": {
+    "updateTime": "2024/10/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "维娜·维多利亚"
+  },
+  "char_4162_cathy": {
+    "updateTime": "2024/10/09 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "凯瑟琳"
+  },
+  "char_487_bobb": {
+    "updateTime": "2024/10/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "波卜"
+  },
+  "char_4141_marcil": {
+    "updateTime": "2024/09/02 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "玛露西尔"
+  },
+  "char_4142_laios": {
+    "updateTime": "2024/09/02 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "莱欧斯"
+  },
+  "char_4143_sensi": {
+    "updateTime": "2024/09/02 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "森西"
+  },
+  "char_4144_chilc": {
+    "updateTime": "2024/09/02 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "齐尔查克"
+  },
+  "char_4058_pepe": {
+    "updateTime": "2024/08/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "佩佩"
+  },
+  "char_4138_narant": {
+    "updateTime": "2024/08/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "娜仁图亚"
+  },
+  "char_4139_papyrs": {
+    "updateTime": "2024/08/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "莎草"
+  },
+  "char_4140_lasher": {
+    "updateTime": "2024/08/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "衡沙"
+  },
+  "char_4151_tinman": {
+    "updateTime": "2024/07/16 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "锡人"
+  },
+  "char_4146_nymph": {
+    "updateTime": "2024/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "妮芙"
+  },
+  "char_4147_mitm": {
+    "updateTime": "2024/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "渡桥"
+  },
+  "char_4079_haini": {
+    "updateTime": "2024/06/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "海霓"
+  },
+  "char_4137_udflow": {
+    "updateTime": "2024/06/05 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "深巡"
+  },
+  "char_4145_ulpia": {
+    "updateTime": "2024/06/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "乌尔比安"
+  },
+  "char_1037_amiya3": {
+    "updateTime": "2024/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "阿米娅（医疗）"
+  },
+  "char_1035_wisdel": {
+    "updateTime": "2024/05/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "维什戴尔"
+  },
+  "char_1036_fang2": {
+    "updateTime": "2024/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "历阵锐枪芬"
+  },
+  "char_4133_logos": {
+    "updateTime": "2024/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "逻各斯"
+  },
+  "char_4134_cetsyr": {
+    "updateTime": "2024/05/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "魔王"
+  },
+  "char_4136_phonor": {
+    "updateTime": "2024/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "PhonoR-0"
+  },
+  "char_4130_luton": {
+    "updateTime": "2024/04/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "露托"
+  },
+  "char_4131_odda": {
+    "updateTime": "2024/04/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "奥达"
+  },
+  "char_4132_ascln": {
+    "updateTime": "2024/04/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "阿斯卡纶"
+  },
+  "char_446_aroma": {
+    "updateTime": "2024/04/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "阿罗玛"
+  },
+  "char_4123_ela": {
+    "updateTime": "2024/03/07 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "艾拉"
+  },
+  "char_4124_iana": {
+    "updateTime": "2024/03/07 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "双月"
+  },
+  "char_4125_rdoc": {
+    "updateTime": "2024/03/07 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "医生"
+  },
+  "char_4126_fuze": {
+    "updateTime": "2024/03/07 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "导火索"
+  },
+  "char_2025_shu": {
+    "updateTime": "2024/02/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "黍"
+  },
+  "char_4119_wanqin": {
+    "updateTime": "2024/02/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "万顷"
+  },
+  "char_4121_zuole": {
+    "updateTime": "2024/02/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "左乐"
+  },
+  "char_4122_grabds": {
+    "updateTime": "2024/02/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "小满"
+  },
+  "char_4023_rfalcn": {
+    "updateTime": "2024/02/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "红隼"
+  },
+  "char_4081_warmy": {
+    "updateTime": "2024/01/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "温米"
+  },
+  "char_4117_ray": {
+    "updateTime": "2024/01/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "莱伊"
+  },
+  "char_194_leto": {
+    "updateTime": "2023/12/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "烈夏"
+  },
+  "char_4114_harold": {
+    "updateTime": "2023/12/05 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "哈洛德"
+  },
+  "char_4116_blkkgt": {
+    "updateTime": "2023/12/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "锏"
+  },
+  "char_245_cello": {
+    "updateTime": "2023/11/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "塑心"
+  },
+  "char_4011_lessng": {
+    "updateTime": "2023/11/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "止颂"
+  },
+  "char_4098_vvana": {
+    "updateTime": "2023/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "薇薇安娜"
+  },
+  "char_4100_caper": {
+    "updateTime": "2023/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "跃跃"
+  },
+  "char_4109_baslin": {
+    "updateTime": "2023/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "深律"
+  },
+  "char_499_kaitou": {
+    "updateTime": "2023/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "折光"
+  },
+  "char_4088_hodrer": {
+    "updateTime": "2023/10/08 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "赫德雷"
+  },
+  "char_4107_vrdant": {
+    "updateTime": "2023/10/08 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "维荻"
+  },
+  "char_4110_delphn": {
+    "updateTime": "2023/10/08 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "戴菲恩"
+  },
+  "char_494_vendla": {
+    "updateTime": "2023/10/08 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "刺玫"
+  },
+  "char_1034_jesca2": {
+    "updateTime": "2023/09/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "涤火杰西卡"
+  },
+  "char_4104_coldst": {
+    "updateTime": "2023/09/05 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "冰酿"
+  },
+  "char_4105_almond": {
+    "updateTime": "2023/09/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "杏仁"
+  },
+  "char_1016_agoat2": {
+    "updateTime": "2023/08/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "纯烬艾雅法拉"
+  },
+  "char_1033_swire2": {
+    "updateTime": "2023/08/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "琳琅诗怀雅"
+  },
+  "char_4102_threye": {
+    "updateTime": "2023/08/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "凛视"
+  },
+  "char_4106_bryota": {
+    "updateTime": "2023/08/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "苍苔"
+  },
+  "char_488_buildr": {
+    "updateTime": "2023/08/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "青枳"
+  },
+  "char_2012_typhon": {
+    "updateTime": "2023/07/06 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "提丰"
+  },
+  "char_341_sntlla": {
+    "updateTime": "2023/07/06 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "寒檀"
+  },
+  "char_1032_excu2": {
+    "updateTime": "2023/06/08 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "圣约送葬人"
+  },
+  "char_4015_spuria": {
+    "updateTime": "2023/06/08 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "空构"
+  },
+  "char_498_inside": {
+    "updateTime": "2023/06/08 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "隐现"
+  },
+  "char_4093_frston": {
+    "updateTime": "2023/05/22 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "Friston-3"
+  },
+  "char_1031_slent2": {
+    "updateTime": "2023/05/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "淬羽赫默"
+  },
+  "char_249_mlyss": {
+    "updateTime": "2023/05/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "缪尔赛思"
+  },
+  "char_4006_melnte": {
+    "updateTime": "2023/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "玫拉"
+  },
+  "char_4027_heyak": {
+    "updateTime": "2023/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "霍尔海雅"
+  },
+  "char_154_morgan": {
+    "updateTime": "2023/04/06 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "摩根"
+  },
+  "char_4087_ines": {
+    "updateTime": "2023/04/06 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "伊内丝"
+  },
+  "char_464_cement": {
+    "updateTime": "2023/04/06 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "洋灰"
+  },
+  "char_491_humus": {
+    "updateTime": "2023/04/06 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "休谟斯"
+  },
+  "char_4091_ulika": {
+    "updateTime": "2023/04/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "U-Official"
+  },
+  "char_1029_yato2": {
+    "updateTime": "2023/03/07 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "麒麟R夜刀"
+  },
+  "char_1030_noirc2": {
+    "updateTime": "2023/03/07 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "火龙S黑角"
+  },
+  "char_4077_palico": {
+    "updateTime": "2023/03/07 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "泰拉大陆调查团"
+  },
+  "char_4082_qiubai": {
+    "updateTime": "2023/02/14 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "仇白"
+  },
+  "char_4083_chimes": {
+    "updateTime": "2023/02/14 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "铎铃"
+  },
+  "char_2024_chyue": {
+    "updateTime": "2023/01/17 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "重岳"
+  },
+  "char_4078_bdhkgt": {
+    "updateTime": "2023/01/17 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "截云"
+  },
+  "char_4080_lin": {
+    "updateTime": "2023/01/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "林"
+  },
+  "char_493_firwhl": {
+    "updateTime": "2023/01/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "火哨"
+  },
+  "char_1020_reed2": {
+    "updateTime": "2022/12/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "焰影苇草"
+  },
+  "char_297_hamoni": {
+    "updateTime": "2022/12/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "和弦"
+  },
+  "char_4017_puzzle": {
+    "updateTime": "2022/12/15 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "谜图"
+  },
+  "char_1028_texas2": {
+    "updateTime": "2022/11/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "缄默德克萨斯"
+  },
+  "char_4014_lunacu": {
+    "updateTime": "2022/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "子月"
+  },
+  "char_4063_quartz": {
+    "updateTime": "2022/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "石英"
+  },
+  "char_4065_judge": {
+    "updateTime": "2022/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "斥罪"
+  },
+  "char_427_vigil": {
+    "updateTime": "2022/11/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "伺夜"
+  },
+  "char_466_qanik": {
+    "updateTime": "2022/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "雪绒"
+  },
+  "char_157_dagda": {
+    "updateTime": "2022/10/11 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "达格达"
+  },
+  "char_4062_totter": {
+    "updateTime": "2022/10/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "铅踝"
+  },
+  "char_4071_peper": {
+    "updateTime": "2022/10/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "明椒"
+  },
+  "char_4072_ironmn": {
+    "updateTime": "2022/10/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "白铁"
+  },
+  "char_4066_highmo": {
+    "updateTime": "2022/09/27 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "海沫"
+  },
+  "char_4067_lolxh": {
+    "updateTime": "2022/09/15 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "罗小黑"
+  },
+  "char_1001_amiya2": {
+    "updateTime": "2022/09/08 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "阿米娅（近卫）"
+  },
+  "char_4032_provs": {
+    "updateTime": "2022/09/08 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "但书"
+  },
+  "char_4064_mlynar": {
+    "updateTime": "2022/09/08 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "玛恩纳"
+  },
+  "char_1026_gvial2": {
+    "updateTime": "2022/08/11 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "百炼嘉维尔"
+  },
+  "char_4054_malist": {
+    "updateTime": "2022/08/11 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "至简"
+  },
+  "char_4055_bgsnow": {
+    "updateTime": "2022/08/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "鸿雪"
+  },
+  "char_497_ctable": {
+    "updateTime": "2022/08/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "晓歌"
+  },
+  "char_1027_greyy2": {
+    "updateTime": "2022/07/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "承曦格雷伊"
+  },
+  "char_135_halo": {
+    "updateTime": "2022/07/05 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "星源"
+  },
+  "char_4048_doroth": {
+    "updateTime": "2022/07/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "多萝西"
+  },
+  "char_1024_hbisc2": {
+    "updateTime": "2022/06/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "濯尘芙蓉"
+  },
+  "char_4046_ebnhlz": {
+    "updateTime": "2022/06/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "黑键"
+  },
+  "char_4047_pianst": {
+    "updateTime": "2022/06/09 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "车尔尼"
+  },
+  "char_4043_erato": {
+    "updateTime": "2022/05/19 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "埃拉托"
+  },
+  "char_1023_ghost2": {
+    "updateTime": "2022/05/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "归溟幽灵鲨"
+  },
+  "char_4009_irene": {
+    "updateTime": "2022/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "艾丽妮"
+  },
+  "char_4042_lumen": {
+    "updateTime": "2022/05/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "流明"
+  },
+  "char_433_windft": {
+    "updateTime": "2022/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "掠风"
+  },
+  "char_4039_horn": {
+    "updateTime": "2022/04/14 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "号角"
+  },
+  "char_4040_rockr": {
+    "updateTime": "2022/04/14 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "洛洛"
+  },
+  "char_4041_chnut": {
+    "updateTime": "2022/04/14 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "褐果"
+  },
+  "char_4045_heidi": {
+    "updateTime": "2022/04/14 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "海蒂"
+  },
+  "char_300_phenxi": {
+    "updateTime": "2022/03/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "菲亚梅塔"
+  },
+  "char_4016_kazema": {
+    "updateTime": "2022/03/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "风丸"
+  },
+  "char_4036_forcer": {
+    "updateTime": "2022/03/15 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "见行者"
+  },
+  "char_377_gdglow": {
+    "updateTime": "2022/02/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "澄闪"
+  },
+  "char_492_quercu": {
+    "updateTime": "2022/02/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "夏栎"
+  },
+  "char_1021_kroos2": {
+    "updateTime": "2022/01/25 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "寒芒克洛丝"
+  },
+  "char_2023_ling": {
+    "updateTime": "2022/01/25 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "令"
+  },
+  "char_322_lmlee": {
+    "updateTime": "2022/01/25 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "老鲤"
+  },
+  "char_476_blkngt": {
+    "updateTime": "2022/01/25 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "夜半"
+  },
+  "char_4019_ncdeer": {
+    "updateTime": "2022/01/10 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "九色鹿"
+  },
+  "char_4025_aprot2": {
+    "updateTime": "2022/01/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "暮落"
+  },
+  "char_206_gnosis": {
+    "updateTime": "2021/12/21 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "灵知"
+  },
+  "char_4013_kjera": {
+    "updateTime": "2021/12/21 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "耶拉"
+  },
+  "char_422_aurora": {
+    "updateTime": "2021/12/21 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "极光"
+  },
+  "char_1014_nearl2": {
+    "updateTime": "2021/11/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "耀骑士临光"
+  },
+  "char_4000_jnight": {
+    "updateTime": "2021/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "正义骑士号"
+  },
+  "char_4004_pudd": {
+    "updateTime": "2021/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "布丁"
+  },
+  "char_420_flamtl": {
+    "updateTime": "2021/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "焰尾"
+  },
+  "char_449_glider": {
+    "updateTime": "2021/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "蜜莓"
+  },
+  "char_489_serum": {
+    "updateTime": "2021/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "蚀清"
+  },
+  "char_496_wildmn": {
+    "updateTime": "2021/11/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "野鬃"
+  },
+  "char_430_fartth": {
+    "updateTime": "2021/10/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "远牙"
+  },
+  "char_431_ashlok": {
+    "updateTime": "2021/10/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "灰毫"
+  },
+  "char_473_mberry": {
+    "updateTime": "2021/09/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "桑葚"
+  },
+  "char_479_sleach": {
+    "updateTime": "2021/09/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "琴柳"
+  },
+  "char_484_robrta": {
+    "updateTime": "2021/09/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "罗比菈塔"
+  },
+  "char_1013_chen2": {
+    "updateTime": "2021/08/03 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "假日威龙陈"
+  },
+  "char_421_crow": {
+    "updateTime": "2021/08/03 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "羽毛笔"
+  },
+  "char_437_mizuki": {
+    "updateTime": "2021/08/03 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "水月"
+  },
+  "char_486_takila": {
+    "updateTime": "2021/08/03 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "龙舌兰"
+  },
+  "char_485_pallas": {
+    "updateTime": "2021/07/02 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "帕拉斯"
+  },
+  "char_369_bena": {
+    "updateTime": "2021/06/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "贝娜"
+  },
+  "char_426_billro": {
+    "updateTime": "2021/06/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "卡涅利安"
+  },
+  "char_469_indigo": {
+    "updateTime": "2021/06/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "深靛"
+  },
+  "char_478_kirara": {
+    "updateTime": "2021/06/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "绮良"
+  },
+  "char_003_kalts": {
+    "updateTime": "2021/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "凯尔希"
+  },
+  "char_1012_skadi2": {
+    "updateTime": "2021/05/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "浊心斯卡蒂"
+  },
+  "char_474_glady": {
+    "updateTime": "2021/05/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "歌蕾蒂娅"
+  },
+  "char_475_akafyu": {
+    "updateTime": "2021/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "赤冬"
+  },
+  "char_304_zebra": {
+    "updateTime": "2021/04/15 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "暴雨"
+  },
+  "char_363_toddi": {
+    "updateTime": "2021/04/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "熔泉"
+  },
+  "char_472_pasngr": {
+    "updateTime": "2021/04/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "异客"
+  },
+  "char_456_ash": {
+    "updateTime": "2021/03/09 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "灰烬"
+  },
+  "char_457_blitz": {
+    "updateTime": "2021/03/09 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "闪击"
+  },
+  "char_458_rfrost": {
+    "updateTime": "2021/03/09 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "霜华"
+  },
+  "char_459_tachak": {
+    "updateTime": "2021/03/09 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "战车"
+  },
+  "char_1011_lava2": {
+    "updateTime": "2021/02/05 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "炎狱炎熔"
+  },
+  "char_2015_dusk": {
+    "updateTime": "2021/02/05 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "夕"
+  },
+  "char_362_saga": {
+    "updateTime": "2021/02/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "嵯峨"
+  },
+  "char_455_nothin": {
+    "updateTime": "2021/02/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "乌有"
+  },
+  "char_402_tuye": {
+    "updateTime": "2021/01/19 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "图耶"
+  },
+  "char_332_archet": {
+    "updateTime": "2021/01/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "空弦"
+  },
+  "char_338_iris": {
+    "updateTime": "2021/01/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "爱丽丝"
+  },
+  "char_452_bstalk": {
+    "updateTime": "2021/01/05 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "豆苗"
+  },
+  "char_214_kafka": {
+    "updateTime": "2020/12/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "卡夫卡"
+  },
+  "char_264_f12yin": {
+    "updateTime": "2020/12/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "山"
+  },
+  "char_440_pinecn": {
+    "updateTime": "2020/12/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "松果"
+  },
+  "char_451_robin": {
+    "updateTime": "2020/12/17 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "罗宾"
+  },
+  "char_311_mudrok": {
+    "updateTime": "2020/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "泥岩"
+  },
+  "char_347_jaksel": {
+    "updateTime": "2020/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "杰克"
+  },
+  "char_391_rosmon": {
+    "updateTime": "2020/11/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "迷迭香"
+  },
+  "char_436_whispr": {
+    "updateTime": "2020/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "絮雨"
+  },
+  "char_265_sophia": {
+    "updateTime": "2020/10/15 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "鞭刃"
+  },
+  "char_346_aosta": {
+    "updateTime": "2020/10/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "奥斯塔"
+  },
+  "char_381_bubble": {
+    "updateTime": "2020/10/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "泡泡"
+  },
+  "char_423_blemsh": {
+    "updateTime": "2020/10/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "瑕光"
+  },
+  "char_271_spikes": {
+    "updateTime": "2020/09/24 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "芳汀"
+  },
+  "char_350_surtr": {
+    "updateTime": "2020/09/24 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "史尔特尔"
+  },
+  "char_365_aprl": {
+    "updateTime": "2020/09/24 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "四月"
+  },
+  "char_388_mint": {
+    "updateTime": "2020/09/24 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "薄绿"
+  },
+  "char_366_acdrop": {
+    "updateTime": "2020/08/25 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "酸糖"
+  },
+  "char_411_tomimi": {
+    "updateTime": "2020/08/25 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "特米米"
+  },
+  "char_415_flint": {
+    "updateTime": "2020/08/25 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "燧石"
+  },
+  "char_416_zumama": {
+    "updateTime": "2020/08/25 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "森蚺"
+  },
+  "char_218_cuttle": {
+    "updateTime": "2020/08/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "安哲拉"
+  },
+  "char_272_strong": {
+    "updateTime": "2020/08/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "孑"
+  },
+  "char_293_thorns": {
+    "updateTime": "2020/08/11 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "棘刺"
+  },
+  "char_336_folivo": {
+    "updateTime": "2020/07/28 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "稀音"
+  },
+  "char_344_beewax": {
+    "updateTime": "2020/07/28 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "蜜蜡"
+  },
+  "char_349_chiave": {
+    "updateTime": "2020/07/28 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "贾维"
+  },
+  "char_294_ayer": {
+    "updateTime": "2020/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "断崖"
+  },
+  "char_328_cammou": {
+    "updateTime": "2020/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "卡达"
+  },
+  "char_345_folnic": {
+    "updateTime": "2020/07/09 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "亚叶"
+  },
+  "char_358_lisa": {
+    "updateTime": "2020/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "铃兰"
+  },
+  "char_197_poca": {
+    "updateTime": "2020/06/18 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "早露"
+  },
+  "char_258_podego": {
+    "updateTime": "2020/06/18 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "波登可"
+  },
+  "char_373_lionhd": {
+    "updateTime": "2020/06/18 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "莱恩哈特"
+  },
+  "char_405_absin": {
+    "updateTime": "2020/06/18 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "苦艾"
+  },
+  "char_343_tknogi": {
+    "updateTime": "2020/06/02 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "月禾"
+  },
+  "char_378_asbest": {
+    "updateTime": "2020/06/02 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "石棉"
+  },
+  "char_113_cqbw": {
+    "updateTime": "2020/05/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "W"
+  },
+  "char_376_therex": {
+    "updateTime": "2020/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "THRM-EX"
+  },
+  "char_400_weedy": {
+    "updateTime": "2020/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "温蒂"
+  },
+  "char_401_elysm": {
+    "updateTime": "2020/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "极境"
+  },
+  "char_250_phatom": {
+    "updateTime": "2020/04/21 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "傀影"
+  },
+  "char_254_vodfox": {
+    "updateTime": "2020/04/21 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "巫恋"
+  },
+  "char_301_cutter": {
+    "updateTime": "2020/04/21 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "刻刀"
+  },
+  "char_333_sidero": {
+    "updateTime": "2020/04/21 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "铸铁"
+  },
+  "char_159_peacok": {
+    "updateTime": "2020/04/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "断罪者"
+  },
+  "char_222_bpipe": {
+    "updateTime": "2020/03/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "风笛"
+  },
+  "char_252_bibeak": {
+    "updateTime": "2020/03/17 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "柏喙"
+  },
+  "char_337_utage": {
+    "updateTime": "2020/03/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "宴"
+  },
+  "char_379_sesa": {
+    "updateTime": "2020/03/17 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "慑砂"
+  },
+  "char_385_finlpp": {
+    "updateTime": "2020/03/03 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "清流"
+  },
+  "char_2013_cerber": {
+    "updateTime": "2020/02/25 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "刻俄柏"
+  },
+  "char_306_leizi": {
+    "updateTime": "2020/02/25 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "惊蛰"
+  },
+  "char_2014_nian": {
+    "updateTime": "2020/01/16 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "年"
+  },
+  "char_225_haak": {
+    "updateTime": "2020/01/16 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "阿"
+  },
+  "char_226_hmau": {
+    "updateTime": "2020/01/16 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "吽"
+  },
+  "char_383_snsant": {
+    "updateTime": "2020/01/09 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "雪雉"
+  },
+  "char_017_huang": {
+    "updateTime": "2019/12/24 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "煌"
+  },
+  "char_302_glaze": {
+    "updateTime": "2019/12/24 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "安比尔"
+  },
+  "char_367_swllow": {
+    "updateTime": "2019/12/24 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "灰喉"
+  },
+  "char_261_sddrag": {
+    "updateTime": "2019/12/10 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "苇草"
+  },
+  "char_356_broca": {
+    "updateTime": "2019/12/10 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "布洛卡"
+  },
+  "char_133_mm": {
+    "updateTime": "2019/11/19 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "梅"
+  },
+  "char_213_mostma": {
+    "updateTime": "2019/11/19 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "莫斯提马"
+  },
+  "char_243_waaifu": {
+    "updateTime": "2019/11/19 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "槐琥"
+  },
+  "char_325_bison": {
+    "updateTime": "2019/11/19 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "拜松"
+  },
+  "char_275_breeze": {
+    "updateTime": "2019/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "微风"
+  },
+  "char_355_ethan": {
+    "updateTime": "2019/11/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "伊桑"
+  },
+  "char_131_flameb": {
+    "updateTime": "2019/10/15 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "炎客"
+  },
+  "char_190_clour": {
+    "updateTime": "2019/10/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "红云"
+  },
+  "char_248_mgllan": {
+    "updateTime": "2019/10/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "麦哲伦"
+  },
+  "char_279_excu": {
+    "updateTime": "2019/10/15 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "送葬人"
+  },
+  "char_260_durnar": {
+    "updateTime": "2019/10/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "坚雷"
+  },
+  "char_151_myrtle": {
+    "updateTime": "2019/09/10 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "桃金娘"
+  },
+  "char_188_helage": {
+    "updateTime": "2019/09/10 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "赫拉格"
+  },
+  "char_274_astesi": {
+    "updateTime": "2019/09/10 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "星极"
+  },
+  "char_298_susuro": {
+    "updateTime": "2019/08/27 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "苏苏洛"
+  },
+  "char_326_glacus": {
+    "updateTime": "2019/08/27 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "格劳克斯"
+  },
+  "char_340_shwaz": {
+    "updateTime": "2019/08/27 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "黑"
+  },
+  "char_348_ceylon": {
+    "updateTime": "2019/08/27 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "锡兰"
+  },
+  "char_010_chen": {
+    "updateTime": "2019/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "陈"
+  },
+  "char_253_greyy": {
+    "updateTime": "2019/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "格雷伊"
+  },
+  "char_281_popka": {
+    "updateTime": "2019/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "泡普卡"
+  },
+  "char_284_spot": {
+    "updateTime": "2019/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "斑点"
+  },
+  "char_308_swire": {
+    "updateTime": "2019/07/09 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "诗怀雅"
+  },
+  "char_137_brownb": {
+    "updateTime": "2019/05/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "猎蜂"
+  },
+  "char_164_nightm": {
+    "updateTime": "2019/05/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "夜魔"
+  },
+  "char_220_grani": {
+    "updateTime": "2019/05/30 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "格拉尼"
+  },
+  "char_263_skadi": {
+    "updateTime": "2019/05/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "斯卡蒂"
+  },
+  "char_283_midn": {
+    "updateTime": "2019/05/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "月见夜"
+  },
+  "char_282_catap": {
+    "updateTime": "2019/05/23 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "空爆"
+  },
+  "char_002_amiya": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "阿米娅"
+  },
+  "char_009_12fce": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "12F"
+  },
+  "char_101_sora": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "空"
+  },
+  "char_102_texas": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "德克萨斯"
+  },
+  "char_103_angel": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "能天使"
+  },
+  "char_106_franka": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "芙兰卡"
+  },
+  "char_107_liskam": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "雷蛇"
+  },
+  "char_108_silent": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "赫默"
+  },
+  "char_109_fmout": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "远山"
+  },
+  "char_110_deepcl": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "深海色"
+  },
+  "char_112_siege": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "推进之王"
+  },
+  "char_115_headbr": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "凛冬"
+  },
+  "char_117_myrrh": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "末药"
+  },
+  "char_118_yuki": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "白雪"
+  },
+  "char_120_hibisc": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "芙蓉"
+  },
+  "char_121_lava": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "炎熔"
+  },
+  "char_122_beagle": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "米格鲁"
+  },
+  "char_123_fang": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "芬"
+  },
+  "char_124_kroos": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "克洛丝"
+  },
+  "char_126_shotst": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "流星"
+  },
+  "char_127_estell": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "艾丝黛尔"
+  },
+  "char_128_plosis": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "白面鸮"
+  },
+  "char_129_bluep": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "蓝毒"
+  },
+  "char_130_doberm": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "杜宾"
+  },
+  "char_134_ifrit": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "伊芙利特"
+  },
+  "char_136_hsguma": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "星熊"
+  },
+  "char_140_whitew": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "拉普兰德"
+  },
+  "char_141_nights": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "夜烟"
+  },
+  "char_143_ghost": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "幽灵鲨"
+  },
+  "char_144_red": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "红"
+  },
+  "char_145_prove": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "普罗旺斯"
+  },
+  "char_147_shining": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "闪灵"
+  },
+  "char_148_nearl": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "临光"
+  },
+  "char_149_scave": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "清道夫"
+  },
+  "char_150_snakek": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "蛇屠箱"
+  },
+  "char_155_tiger": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "因陀罗"
+  },
+  "char_158_milu": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "守林人"
+  },
+  "char_163_hpsts": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "火神"
+  },
+  "char_166_skfire": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "天火"
+  },
+  "char_171_bldsk": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "华法琳"
+  },
+  "char_172_svrash": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "银灰"
+  },
+  "char_173_slchan": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "崖心"
+  },
+  "char_174_slbell": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "初雪"
+  },
+  "char_179_cgbird": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "夜莺"
+  },
+  "char_180_amgoat": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "艾雅法拉"
+  },
+  "char_181_flower": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "调香师"
+  },
+  "char_183_skgoat": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "地灵"
+  },
+  "char_185_frncat": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "慕斯"
+  },
+  "char_187_ccheal": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "嘉维尔"
+  },
+  "char_192_falco": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "翎羽"
+  },
+  "char_193_frostl": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "霜叶"
+  },
+  "char_195_glassb": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "真理"
+  },
+  "char_196_sunbr": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "古米"
+  },
+  "char_198_blackd": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "讯使"
+  },
+  "char_199_yak": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "角峰"
+  },
+  "char_201_moeshd": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "可颂"
+  },
+  "char_202_demkni": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "塞雷娅"
+  },
+  "char_204_platnm": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "白金"
+  },
+  "char_208_melan": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "玫兰莎"
+  },
+  "char_209_ardign": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "卡缇"
+  },
+  "char_210_stward": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "史都华德"
+  },
+  "char_211_adnach": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "安德切尔"
+  },
+  "char_212_ansel": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "安赛尔"
+  },
+  "char_215_mantic": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "狮蝎"
+  },
+  "char_219_meteo": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "陨星"
+  },
+  "char_230_savage": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "暴行"
+  },
+  "char_235_jesica": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "杰西卡"
+  },
+  "char_236_rope": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "暗索"
+  },
+  "char_237_gravel": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "砾"
+  },
+  "char_240_wyvern": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "香草"
+  },
+  "char_241_panda": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "食铁兽"
+  },
+  "char_242_otter": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "梅尔"
+  },
+  "char_277_sqrrel": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "阿消"
+  },
+  "char_278_orchid": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "梓兰"
+  },
+  "char_285_medic2": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "Lancet-2"
+  },
+  "char_286_cast3": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "Castle-3"
+  },
+  "char_289_gyuki": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "缠丸"
+  },
+  "char_290_vigna": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "红豆"
+  },
+  "char_291_aglina": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "安洁莉娜"
+  },
+  "char_500_noirc": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "黑角"
+  },
+  "char_501_durin": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "杜林"
+  },
+  "char_502_nblade": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "夜刀"
+  },
+  "char_503_rang": {
+    "updateTime": "2019/04/30 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "巡林者"
+  }
+}
+

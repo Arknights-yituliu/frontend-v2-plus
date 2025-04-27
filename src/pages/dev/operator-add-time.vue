@@ -1,5 +1,5 @@
 <script setup>
-import operatorAddTime from '/src/static/json/operator/operator_update_time.json'
+import operatorAddTime from '/public/json/operator_update_time.json'
 
 
 </script>
@@ -11,7 +11,7 @@ import operatorAddTime from '/src/static/json/operator/operator_update_time.json
           {{name}}
       </td>
       <td>
-        {{item.addTime}}
+        {{item.updateTime}}
       </td>
     </tr>
     </tbody>
