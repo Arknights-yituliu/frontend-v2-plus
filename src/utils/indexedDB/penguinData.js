@@ -1,4 +1,3 @@
-// import tmpData from "@/static/json/tmp/yituliu.json";
 import itemCache from "@/utils/indexedDB/itemCache.js";
 
 async function getStageDropCollect(stageConfig) {

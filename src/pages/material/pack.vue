@@ -1,5 +1,6 @@
 <script setup>
-import itemAPI from "/src/api/itemAPI.js";
+import itemAPI from "/src/api/materialV5.js";
+import packInfoCache from "/src/utils/indexedDB/packInfoCache.js";
 import {ref} from 'vue';
 import PackCardContainer from '/src/components/material/PackCardGroup.vue'
 import ModuleHeader from '/src/components/ModuleHeader.vue';
@@ -75,20 +76,30 @@ function loadingItemValue() {
 
 
 
-function getPackInfoData() {
-
+async function getPackInfoData() {
+  packInfoVOListOnSale.value = []
+  packInfoVOList = []
   // 等待获取接口返回的全部礼包信息
-  itemAPI.listPackStoreInfo().then(response => {
-    packInfoVOListOnSale.value = []
-    packInfoVOList = []
-    for (const item of response.data) {
-      const packInfoVO = _packPromotionRatioCalc(item)
-      packInfoVOList.push(packInfoVO)
-      packInfoVOListCache.push(packInfoVO)
-    }
-    console.table(packInfoVOList)
-    collectPackInfoVO()
-  })
+  const data  =  await packInfoCache.listPackInfo()
+  for (const item of data) {
+    const packInfoVO = _packPromotionRatioCalc(item)
+    packInfoVOList.push(packInfoVO)
+    packInfoVOListCache.push(packInfoVO)
+  }
+
+  collectPackInfoVO()
+
+  // itemAPI.listPackStoreInfo().then(response => {
+  //   packInfoVOListOnSale.value = []
+  //   packInfoVOList = []
+  //   for (const item of response.data) {
+  //     const packInfoVO = _packPromotionRatioCalc(item)
+  //     packInfoVOList.push(packInfoVO)
+  //     packInfoVOListCache.push(packInfoVO)
+  //   }
+  //   // console.table(packInfoVOList)
+  //   collectPackInfoVO()
+  // })
 
 
   /**

@@ -1,8 +1,7 @@
 import myDatabase from "/src/utils/indexedDB/indexedDB.js";
-import materialAPI from "/src/api/material.js";
+import materialAPI from "/src/api/materialV5.js";
 import axios from "axios";
 import {createMessage} from "@/utils/message.js";
-import {dateFormat} from "@/utils/dateUtil.js";
 import {getCustomItemList} from "/src/utils/itemValue.js";
 
 async function putCache(data) {
@@ -15,7 +14,7 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
     let cacheData
 
     await getCustomItemList(stageConfig).then(response => {
-        console.log(`${cacheKey}.返回来自服务器的数据`)
+        console.log(`材料价值计算完毕`)
         if (forceRefresh) {
             createMessage({text: "强制刷新材料价值成功", type: 'success'})
         }
@@ -163,7 +162,7 @@ async function getStageInfoCache(forceRefresh = false) {
     //     }
     // }
 
-    await materialAPI.getStageInfo().then(response => {
+    await materialAPI.listStageInfo().then(response => {
         console.log(`${cacheKey}.返回来自服务器的数据`)
         const stageInfo = response.data
         const info = {

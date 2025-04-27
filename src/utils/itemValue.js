@@ -1,7 +1,7 @@
 import ITEM_INFO from "@/static/json/material/item_info.json";
 import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
 import itemCache from "@/utils/indexedDB/itemCache.js";
-import {getStageDropCollect} from "@/utils/penguinData.js";
+import {getStageDropCollect} from "@/utils/indexedDB/penguinData.js";
 import ITEM_SERIES_TABLE from "@/static/json/material/item_series_table.json";
 
 

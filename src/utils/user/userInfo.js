@@ -36,7 +36,7 @@ function getUid(){
 
     const isNumeric = /^-?\d+$/.test(uid); // 检查是否为整数
     if(uid !== null && isNumeric && !isNaN(Number(uid))) {
-        console.log("uid：",uid)
+        // console.log("uid：",uid)
         return uid;
     }else {
         const time = new Date().getTime();

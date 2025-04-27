@@ -22,27 +22,7 @@ let stageCardData = ref([])
 //当前时间的时间戳
 let nowTimeStamp = new Date().getTime();
 
-let itemValueMap = ref({})
 
-let selectedItem = ref({
-  itemId: '30013',
-  itemValueAp: 17.32,
-  itemName: '固源岩组',
-  lastUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  nextUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  storeCostPerf: [
-    {token: '4005', costPerf: 0.75},
-    {token: 'EPGS_COIN', costPerf: 0.75},
-    {token: 'REP_COIN', costPerf: 0.75},
-    {token: '4004', costPerf: 0.75}
-  ]
-})
 
 
 let updateTime = ref('')
@@ -55,12 +35,9 @@ function getStageResult() {
     //将后端返回的数据组装为卡片需要的数据格式
     getItemCardData()
     //获取材料价值数据
-    stageApi.getItemValueTable(0.633).then(response => {
-      for (const item of response.data) {
-        itemValueMap.value[item.itemId] = item;
-      }
+
       getItemTableData(0, false)
-    })
+
   })
 
 
