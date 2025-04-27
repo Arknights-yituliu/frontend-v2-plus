@@ -11,32 +11,32 @@ async function getData() {
     const cacheKey = 'operatorProgressionStatisticsV5'
     let cacheData = await myDatabase.cache_data.get(cacheKey)
 
-    if (cacheData && cacheData.resource.result.length) {
-        if (new Date().getTime() - cacheData.createTime < 60 * 60 * 24 * 1000) {
-            console.log(cacheKey, '返回缓存的数据')
-            return cacheData.resource
-        }
-    }
+    // if (cacheData && cacheData.resource.result.length) {
+    //     if (new Date().getTime() - cacheData.createTime < 60 * 60 * 24 * 1000) {
+    //         console.log(cacheKey, '返回缓存的数据')
+    //         return cacheData.resource
+    //     }
+    // }
 
     await operatorDataAPI.getOperatorStatisticsResult().then(response => {
         console.log(cacheKey, '返回来自服务器的数据')
         let data = response.data
-        let {result, sampleSize} = data
+        let {result} = data
 
-        data.result = _formatData(result, sampleSize)
+        data.result = _formatData(result)
         const responseCache = {id: cacheKey, resource: data, version: "automated", createTime: new Date().getTime()}
         putCache(responseCache)
         cacheData = data
     })
 
 
-    function _formatData(result, sampleSize) {
+    function _formatData(result) {
         let list = []
         for (const item of result) {
             let charInfo = operatorTable[item.charId]
             // console.log(item)
             if (charInfo) {
-                const {own, elite, skill1, skill2, skill3, modX, modY, modD, modA} = item
+                const {own,sampleSize, elite, skill1, skill2, skill3, modX, modY, modD, modA} = item
 
                 let vo = {
                     charId:item.charId,
