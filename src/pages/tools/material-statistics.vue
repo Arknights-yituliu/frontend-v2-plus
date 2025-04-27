@@ -4,7 +4,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 import equipUpdateTime from '/src/static/json/operator/equip_update_time.json'
 import {dateFormat, formatDateString} from "@/utils/dateUtil.js";
 import operatorTableSimple from '/src/static/json/operator/character_table_simple.json'
-import operatorUpdateTime from '/src/static/json/operator/operator_update_time.json'
+import operatorUpdateTime from '/public/json/operator_update_time.json'
 import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
 import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
@@ -67,7 +67,7 @@ for (const charId in operatorTableSimple) {
   let updateTime = new Date()
   let updateTimeText = dateFormat(new Date())
   if (operatorUpdateTimeElement) {
-    updateTime = new Date(operatorUpdateTimeElement.addTime)
+    updateTime = new Date(operatorUpdateTimeElement.updateTime)
     updateTimeText = dateFormat(updateTime)
   }
   let collect = operatorAndEquipCollectByDate.get(updateTimeText);

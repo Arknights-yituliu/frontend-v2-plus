@@ -14,8 +14,7 @@ async function listPackInfo() {
     const version = versionResponse.data
     const cacheData = await myDatabase.cache_data.get(packInfoCacheKey);
     if (cacheData) {
-        console.log(cacheData)
-        console.log(cacheData.version,version,cacheData.version === version)
+
         if (cacheData.version === version) {
             console.log(`${packInfoCacheKey}——返回缓存的数据——版本${version}`)
             return cacheData.resource

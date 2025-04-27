@@ -152,15 +152,17 @@ function getLastSynchronizationTime() {
 async function getStageInfoCache(forceRefresh = false) {
     const cacheKey = 'stageInfo'
     let cacheData
-    // if (!forceRefresh) {
-    //     let cacheData = await myDatabase.cache_data.get(cacheKey)
-    //     if (cacheData) {
-    //         if (new Date().getTime() - cacheData.createTime < 60 * 60 * 2 * 1000) {
-    //             console.log(`${cacheKey}.返回缓存的数据`)
-    //             return cacheData.resource
-    //         }
-    //     }
-    // }
+
+
+    if (!forceRefresh) {
+        let cacheData = await myDatabase.cache_data.get(cacheKey)
+        if (cacheData) {
+            if (new Date().getTime() - cacheData.createTime < 60 * 30 * 1000) {
+                console.log(`${cacheKey}.返回缓存的数据`)
+                return cacheData.resource
+            }
+        }
+    }
 
     await materialAPI.listStageInfo().then(response => {
         console.log(`${cacheKey}.返回来自服务器的数据`)
