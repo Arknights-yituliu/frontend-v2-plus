@@ -43,10 +43,13 @@ function dateFormat(input, template = 'yyyy/MM/dd') {
  */
 function dateDiff(startDate, endDate) {
     // 将输入的字符串日期转换为Date对象
-    const firstDate = checkType(startDate);
-    const secondDate = checkType(endDate);
+    const startTimeStamp = checkType(startDate);
+    const endTimeStamp = checkType(endDate);
+    if(startTimeStamp>endTimeStamp){
+        return 0
+    }
     // 计算两个日期的毫秒差
-    const diff = Math.abs(firstDate.getTime() - secondDate.getTime());
+    const diff = Math.abs(startTimeStamp - endTimeStamp);
     // 将毫秒差转换为天数
     // 使用Math.ceil如果想要包含开始和结束日期都算一天
     return Math.ceil(diff / (1000 * 3600 * 24));

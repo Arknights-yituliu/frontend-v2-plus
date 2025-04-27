@@ -1,6 +1,6 @@
 <!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
 <script setup>
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import '/src/assets/css/tool/gacha_calc.scss'
 import '/src/assets/css/sprite/sprite_plane_icon.css'
 import '/src/assets/css/tool/gacha_calc.phone.scss'
@@ -9,49 +9,50 @@ import POTENTIAL_TABLE from '/src/static/json/tools/potential_gacha_resources.js
 import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'
 import FIXED_TABLE from '/src/static/json/tools/schedule_fixed.json'
 import materialAPI from "/src/api/material.js";
-import { createMessage } from "/src/utils/message.js";
+import {createMessage} from "/src/utils/message.js";
 
 import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
-import { getStageConfig } from "/src/utils/user/userConfig.js";
-import deepClone from "@/utils/deepClone.js";
+import {getStageConfig} from "/src/utils/user/userConfig.js";
+import deepClone from "/src/utils/deepClone.js";
+import {dateDiff} from "/src/utils/dateUtil.js";
 
 const OriginiumTable = ref([
   {
     packName: "6元源石",
     price: 6.0,
     originium: 1,
-    quantity:0
+    quantity: 0
   },
   {
     packName: "30元源石",
     price: 30.0,
     originium: 7,
-    quantity:0
+    quantity: 0
   },
   {
     packName: "98元源石",
     price: 98.0,
     originium: 24,
-    quantity:0
+    quantity: 0
   },
   {
     packName: "198元源石",
     price: 198.0,
     originium: 50,
-    quantity:0
+    quantity: 0
   },
   {
     packName: "328元源石",
     price: 328.0,
     originium: 90,
-    quantity:0
+    quantity: 0
   },
   {
     packName: "648元源石",
     price: 648.0,
     originium: 185,
-    quantity:0
+    quantity: 0
   }
 ])
 
@@ -121,7 +122,7 @@ for (const name in FIXED_TABLE) {
 activityScheduleList.sort((a, b) => a.start - b.start)
 
 //再将这个集合转为一个对象
-for(const item of activityScheduleList){
+for (const item of activityScheduleList) {
   activitySchedule.value[item.name] = item
 }
 
@@ -332,12 +333,12 @@ function getHistoryPackInfo() {
   const scheduleEnd = currentSchedule.value.end
   let list = []
   for (let pack of packInfoInitList.value) {
-    const { officialName,drawEfficiency, start, end, saleType } = pack
+    const {officialName, drawEfficiency, start, end, saleType} = pack
 
     if ('activity' !== saleType || drawEfficiency < 0.1) {
       continue
     }
-    console.log(officialName,start ,'>', historicalPackStart,'——',start > historicalPackStart,end,'<',historicalPackEnd,'——',end<historicalPackEnd)
+    console.log(officialName, start, '>', historicalPackStart, '——', start > historicalPackStart, end, '<', historicalPackEnd, '——', end < historicalPackEnd)
     if (start > historicalPackStart && start < historicalPackEnd) {
       let item = JSON.parse(JSON.stringify(pack))
       item.start = scheduleStart.getTime()
@@ -531,17 +532,17 @@ const updateCoEfficient = (value) => {
 
 const coEfficientList = [
   {
-    stage:'1-7',
-    coEfficient:1.09
-  },{
-    stage:'活动关',
-    coEfficient:0.7
-  },{
-    stage:'活动关',
-    coEfficient:0.56
-  },{
-    stage:'活动关',
-    coEfficient:0.35
+    stage: '1-7',
+    coEfficient: 1.09
+  }, {
+    stage: '活动关',
+    coEfficient: 0.7
+  }, {
+    stage: '活动关',
+    coEfficient: 0.56
+  }, {
+    stage: '活动关',
+    coEfficient: 0.35
   }
 ]
 
@@ -583,12 +584,12 @@ let originiumIsUsed = ref(true)
 
 //饼图的数据
 let pieChartData = ref([
-  { value: 22, name: "现有" },
-  { value: 33, name: "潜在" },
-  { value: 44, name: "日常" },
-  { value: 22, name: "氪金" },
-  { value: 33, name: "活动" },
-  { value: 44, name: "其它" }
+  {value: 22, name: "现有"},
+  {value: 33, name: "潜在"},
+  {value: 44, name: "日常"},
+  {value: 22, name: "氪金"},
+  {value: 33, name: "活动"},
+  {value: 44, name: "其它"}
 ])
 
 //氪金选项
@@ -640,9 +641,9 @@ let singleResourceDraws = ref({
 
 let logs = []
 
-// let officialMonthlyCardReward = ref(0)
-// const officialMonthlyCardEndDate = new Date('2024/05/27 03:58:00')
-// let officialMonthlyCardRemainingDays = ref(0)
+let officialMonthlyCardReward = ref(0)
+const officialMonthlyCardEndDate = new Date('2025/05/27 03:58:00')
+let officialMonthlyCardRemainingDays = ref(0)
 
 /**
  * 计算抽卡资源
@@ -774,16 +775,16 @@ function gachaResourcesCalculation() {
     // }
 
 
-    //计算官方月卡
-    // if (endDate.value < officialMonthlyCardEndDate) {
-    //   officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value) - 1
-    // } else {
-    //   officialMonthlyCardRemainingDays.value = dateDiff(new Date(), officialMonthlyCardEndDate) - 1
-    // }
+    // 计算官方月卡
+    if (endDate.value < officialMonthlyCardEndDate) {
+      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value) - 1
+    } else {
+      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), officialMonthlyCardEndDate) - 1
+    }
 
 
-    // officialMonthlyCardReward.value = officialMonthlyCardRemainingDays.value * 200
-    // orundum += officialMonthlyCardReward.value
+    officialMonthlyCardReward.value = officialMonthlyCardRemainingDays.value * 200
+    orundum += officialMonthlyCardReward.value
 
     //判断源石是否用于抽卡
     if (!originiumIsUsed.value) {
@@ -798,14 +799,14 @@ function gachaResourcesCalculation() {
     //计算日常总抽数
     calculationResult.value.dailyTotalDraw = orundum / 600 + gachaTicket + tenGachaTicket * 10
 
-    logs.push({ key: "日常-合成玉", value: orundum })
-    logs.push({ key: "日常-源石", value: originium })
-    logs.push({ key: "日常-单抽", value: gachaTicket })
-    logs.push({ key: "日常-十连", value: tenGachaTicket })
+    logs.push({key: "日常-合成玉", value: orundum})
+    logs.push({key: "日常-源石", value: originium})
+    logs.push({key: "日常-单抽", value: gachaTicket})
+    logs.push({key: "日常-十连", value: tenGachaTicket})
 
     //向饼图数据中写入日常的抽卡次数
     if (calculationResult.value.dailyTotalDraw > 0) {
-      pieChartDataTmp.push({ value: Math.floor(calculationResult.value.dailyTotalDraw), name: "日常" })
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.dailyTotalDraw), name: "日常"})
     }
 
   }
@@ -866,15 +867,15 @@ function gachaResourcesCalculation() {
     calculationResult.value.tenGachaTicket += tenGachaTicket
 
     calculationResult.value.existTotalDraw = orundum / 600 + originium * 0.3
-      + gachaTicket + tenGachaTicket * 10
+        + gachaTicket + tenGachaTicket * 10
 
-    logs.push({ key: "库存-合成玉", value: orundum })
-    logs.push({ key: "库存-源石", value: originium })
-    logs.push({ key: "库存-单抽", value: gachaTicket })
-    logs.push({ key: "库存-十连", value: tenGachaTicket })
+    logs.push({key: "库存-合成玉", value: orundum})
+    logs.push({key: "库存-源石", value: originium})
+    logs.push({key: "库存-单抽", value: gachaTicket})
+    logs.push({key: "库存-十连", value: tenGachaTicket})
 
     if (calculationResult.value.existTotalDraw > 0) {
-      pieChartDataTmp.push({ value: Math.floor(calculationResult.value.existTotalDraw), name: "库存" })
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.existTotalDraw), name: "库存"})
     }
 
   }
@@ -904,10 +905,10 @@ function gachaResourcesCalculation() {
     }
     //计算用材料产出的合成玉数量
     produceOrundum.value.outputByItem = Math.ceil(stringToNumber(produceOrundum.value.itemId30012) * 5 +
-      stringToNumber(produceOrundum.value.itemId30062) * 10)
+        stringToNumber(produceOrundum.value.itemId30062) * 10)
     //计算用材料产出合成玉时的龙门币消耗
     produceOrundum.value.itemId4001 = stringToNumber(produceOrundum.value.itemId30012) * 800 +
-      stringToNumber(produceOrundum.value.itemId30062) * 1000
+        stringToNumber(produceOrundum.value.itemId30062) * 1000
     //可用于兑换商店第三层的凭证数量
     let certificates = stringToNumber(certificateStoreF3.value.certificates)
     //如果凭证数量大于11590(搬空前两层的凭证消耗量),曾可以兑换合成玉
@@ -930,7 +931,7 @@ function gachaResourcesCalculation() {
     calculationResult.value.produceOrundumTotalDraw = orundum / 600 + gachaTicket + tenGachaTicket * 10
 
     if (calculationResult.value.produceOrundumTotalDraw > 0) {
-      pieChartDataTmp.push({ value: Math.floor(calculationResult.value.produceOrundumTotalDraw), name: "搓玉" })
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.produceOrundumTotalDraw), name: "搓玉"})
     }
 
   }
@@ -966,11 +967,11 @@ function gachaResourcesCalculation() {
 
     calculationResult.value.potentialTotalDraw = orundum / 600 + originium * 0.3
 
-    logs.push({ key: "潜在-合成玉", value: orundum })
-    logs.push({ key: "潜在-源石", value: originium })
+    logs.push({key: "潜在-合成玉", value: orundum})
+    logs.push({key: "潜在-源石", value: originium})
 
     if (calculationResult.value.potentialTotalDraw > 0) {
-      pieChartDataTmp.push({ value: Math.floor(calculationResult.value.potentialTotalDraw), name: "潜在" })
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.potentialTotalDraw), name: "潜在"})
     }
   }
 
@@ -1026,13 +1027,13 @@ function gachaResourcesCalculation() {
 
         //加上额外购买的月卡数量,判断是否额外购买了超过3个月
         if (rechargeOption.value.additionalMonthlyCardPurchase > 3) {
-          createMessage({ type: 'error', text: '月卡一次性只能最大购买90天' })
+          createMessage({type: 'error', text: '月卡一次性只能最大购买90天'})
           return
         }
 
         console.log(rechargeOption.value.additionalMonthlyCardPurchase)
         if (rechargeOption.value.additionalMonthlyCardPurchase < 0) {
-          createMessage({ type: 'error', text: '不可填入负数' })
+          createMessage({type: 'error', text: '不可填入负数'})
           return
         }
 
@@ -1058,10 +1059,10 @@ function gachaResourcesCalculation() {
       totalAmountOfRecharge += pack.price
     }
 
-    for(const item of OriginiumTable.value){
-      if(item.quantity>0){
-        originium+=item.originium*item.quantity
-        totalAmountOfRecharge+=item.price*item.quantity
+    for (const item of OriginiumTable.value) {
+      if (item.quantity > 0) {
+        originium += item.originium * item.quantity
+        totalAmountOfRecharge += item.price * item.quantity
       }
 
 
@@ -1078,16 +1079,16 @@ function gachaResourcesCalculation() {
     calculationResult.value.totalAmountOfRecharge = totalAmountOfRecharge
 
     calculationResult.value.rechargeTotalDraw = orundum / 600 + originium * 0.3 +
-      gachaTicket + tenGachaTicket * 10
+        gachaTicket + tenGachaTicket * 10
 
-    logs.push({ key: "氪金-合成玉", value: orundum })
-    logs.push({ key: "氪金-源石", value: originium })
-    logs.push({ key: "氪金-单抽", value: gachaTicket })
-    logs.push({ key: "氪金-十连", value: tenGachaTicket })
+    logs.push({key: "氪金-合成玉", value: orundum})
+    logs.push({key: "氪金-源石", value: originium})
+    logs.push({key: "氪金-单抽", value: gachaTicket})
+    logs.push({key: "氪金-十连", value: tenGachaTicket})
 
 
     if (calculationResult.value.rechargeTotalDraw > 0) {
-      pieChartDataTmp.push({ value: Math.floor(calculationResult.value.rechargeTotalDraw), name: "氪金" })
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.rechargeTotalDraw), name: "氪金"})
     }
 
   }
@@ -1142,15 +1143,15 @@ function gachaResourcesCalculation() {
     calculationResult.value.tenGachaTicket += tenGachaTicket
 
     calculationResult.value.activityTotalDraw = orundum / 600 + originium * 0.3 +
-      gachaTicket + tenGachaTicket * 10
+        gachaTicket + tenGachaTicket * 10
 
-    logs.push({ key: "活动-合成玉", value: orundum })
-    logs.push({ key: "活动-源石", value: originium })
-    logs.push({ key: "活动-单抽", value: gachaTicket })
-    logs.push({ key: "活动-十连", value: tenGachaTicket })
+    logs.push({key: "活动-合成玉", value: orundum})
+    logs.push({key: "活动-源石", value: originium})
+    logs.push({key: "活动-单抽", value: gachaTicket})
+    logs.push({key: "活动-十连", value: tenGachaTicket})
 
     if (calculationResult.value.activityTotalDraw > 0) {
-      pieChartDataTmp.push({ value: Math.floor(calculationResult.value.activityTotalDraw), name: "活动" })
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.activityTotalDraw), name: "活动"})
     }
 
   }
@@ -1217,21 +1218,21 @@ function gachaResourcesCalculation() {
 
 
     calculationResult.value.otherTotalDraw = orundum / 600 + originium * 0.3 +
-      gachaTicket + tenGachaTicket * 10
+        gachaTicket + tenGachaTicket * 10
 
-    logs.push({ key: "预测-合成玉", value: orundum })
-    logs.push({ key: "预测-源石", value: originium })
-    logs.push({ key: "预测-单抽", value: gachaTicket })
-    logs.push({ key: "预测-十连", value: tenGachaTicket })
+    logs.push({key: "预测-合成玉", value: orundum})
+    logs.push({key: "预测-源石", value: originium})
+    logs.push({key: "预测-单抽", value: gachaTicket})
+    logs.push({key: "预测-十连", value: tenGachaTicket})
 
     if (calculationResult.value.otherTotalDraw > 0) {
-      pieChartDataTmp.push({ value: Math.floor(calculationResult.value.otherTotalDraw), name: "其他" })
+      pieChartDataTmp.push({value: Math.floor(calculationResult.value.otherTotalDraw), name: "其他"})
     }
   }
 
 
   calculationResult.value.totalDraw = Math.floor(calculationResult.value.orundum / 600 +
-    calculationResult.value.gachaTicket + calculationResult.value.tenGachaTicket * 10)
+      calculationResult.value.gachaTicket + calculationResult.value.tenGachaTicket * 10)
 
   singleResourceDraws.value.orundum = Math.floor(calculationResult.value.orundum / 600)
   singleResourceDraws.value.gachaTicket = calculationResult.value.gachaTicket
@@ -1240,16 +1241,16 @@ function gachaResourcesCalculation() {
 
   pieChartData.value = pieChartDataTmp
 
-  logs.push({ key: "计算源石前", value: calculationResult.value.totalDraw })
+  logs.push({key: "计算源石前", value: calculationResult.value.totalDraw})
 
   if (originiumIsUsed.value) {
     calculationResult.value.totalDraw = calculationResult.value.totalDraw + Math.floor(
-      calculationResult.value.originium * 0.3)
+        calculationResult.value.originium * 0.3)
     singleResourceDraws.value.originium = Math.floor(calculationResult.value.originium * 0.3)
   }
 
 
-  logs.push({ key: "计算源石后", value: calculationResult.value.totalDraw })
+  logs.push({key: "计算源石后", value: calculationResult.value.totalDraw})
 
   // console.table(logs)
 
@@ -1349,7 +1350,7 @@ function setPieChart(data) {
         itemStyle: {},
         label: {
           show: true,
-          textStyle: { color: "rgb(255,69,0)", fontSize: "12" },
+          textStyle: {color: "rgb(255,69,0)", fontSize: "12"},
         },
         labelLine: {
           length: 4,
@@ -1419,8 +1420,6 @@ function keepTheDecimalPoint(num, decimalPlaces) {
 }
 
 
-
-
 // 创建一个窗口尺寸变化的监听器
 window.addEventListener('resize', handleResize);
 
@@ -1459,16 +1458,18 @@ function handleResize() {
           <div class="radio-group-wrap" style="margin: 0 auto;">
             <el-radio-group v-model="currentScheduleName" size="large" style="margin: 8px auto;">
               <el-radio-button v-for="(activity, index) in scheduleOptions" :key="index" :value="activity.name"
-                :label="activity.name" :disabled="activity.disabled" @change="updateScheduleOption(index)"
-                class="gacha-actselector" />
+                               :label="activity.name" :disabled="activity.disabled"
+                               @change="updateScheduleOption(index)"
+                               class="gacha-actselector"/>
             </el-radio-group>
           </div>
 
           <!-- <span class="tip" style="text-align: center">日期为卡池结束日期</span> -->
           <div class="resources-line" style="padding-left: 20px;margin: 0;">
             <el-switch v-model="calPoolEnd" @click="gachaResourcesCalculation"
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" active-text="计算到卡池结束当天"
-              inactive-text="计算到卡池开放当天" />
+                       style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                       active-text="计算到卡池结束当天"
+                       inactive-text="计算到卡池开放当天"/>
           </div>
           <!-- <div class="result-content"> -->
           <div class="resources-line" style="padding-top: 0;margin: 0;display: flex;">
@@ -1478,45 +1479,45 @@ function handleResize() {
             <!--抽卡次数总览-->
             <table class="gacha-resources-table">
               <tbody>
-                <tr>
-                  <td class="gacha-resources-table-title">现有</td>
-                  <td class="gacha-resources-table-quantity">{{
+              <tr>
+                <td class="gacha-resources-table-title">现有</td>
+                <td class="gacha-resources-table-quantity">{{
                     keepTheDecimalPoint(calculationResult.existTotalDraw, 0)
                   }}
-                  </td>
-                  <td>抽</td>
-                </tr>
-                <tr>
-                  <td>日常</td>
-                  <td>{{ keepTheDecimalPoint(calculationResult.dailyTotalDraw, 0) }}</td>
-                  <td>抽</td>
-                </tr>
-                <tr>
-                  <td>搓玉/黄绿票</td>
-                  <td>{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw, 0) }}</td>
-                  <td>抽</td>
-                </tr>
-                <tr>
-                  <td>潜在</td>
-                  <td>{{ keepTheDecimalPoint(calculationResult.potentialTotalDraw, 0) }}</td>
-                  <td>抽
-                  </td>
-                </tr>
-                <tr>
-                  <td>氪金</td>
-                  <td>{{ keepTheDecimalPoint(calculationResult.rechargeTotalDraw, 0) }}</td>
-                  <td>抽</td>
-                </tr>
-                <tr>
-                  <td>活动(估算)</td>
-                  <td>{{ keepTheDecimalPoint(calculationResult.activityTotalDraw, 0) }}</td>
-                  <td>抽</td>
-                </tr>
-                <tr>
-                  <td>其它(估算)</td>
-                  <td>{{ keepTheDecimalPoint(calculationResult.otherTotalDraw, 0) }}</td>
-                  <td>抽</td>
-                </tr>
+                </td>
+                <td>抽</td>
+              </tr>
+              <tr>
+                <td>日常</td>
+                <td>{{ keepTheDecimalPoint(calculationResult.dailyTotalDraw, 0) }}</td>
+                <td>抽</td>
+              </tr>
+              <tr>
+                <td>搓玉/黄绿票</td>
+                <td>{{ keepTheDecimalPoint(calculationResult.produceOrundumTotalDraw, 0) }}</td>
+                <td>抽</td>
+              </tr>
+              <tr>
+                <td>潜在</td>
+                <td>{{ keepTheDecimalPoint(calculationResult.potentialTotalDraw, 0) }}</td>
+                <td>抽
+                </td>
+              </tr>
+              <tr>
+                <td>氪金</td>
+                <td>{{ keepTheDecimalPoint(calculationResult.rechargeTotalDraw, 0) }}</td>
+                <td>抽</td>
+              </tr>
+              <tr>
+                <td>活动(估算)</td>
+                <td>{{ keepTheDecimalPoint(calculationResult.activityTotalDraw, 0) }}</td>
+                <td>抽</td>
+              </tr>
+              <tr>
+                <td>其它(估算)</td>
+                <td>{{ keepTheDecimalPoint(calculationResult.otherTotalDraw, 0) }}</td>
+                <td>抽</td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -1614,7 +1615,7 @@ function handleResize() {
           </div>
           <span class="tip"> 例如给轮换池预留、其它来源等，可填负数</span>
           <el-slider v-model="existResources.skinBudget" :step="1" :min="0" :max="10" show-stops show-input
-            @change="gachaResourcesCalculation()" style="width: 90%;margin: 0 5%">
+                     @change="gachaResourcesCalculation()" style="width: 90%;margin: 0 5%">
           </el-slider>
           <span class="tip">预留皮肤（18石/件）</span>
         </el-collapse-item>
@@ -1639,18 +1640,16 @@ function handleResize() {
               <span>{{ dailyReward.dailyOrundumReward }}</span>
             </div>
           </div>
-          <!--          <div class="resources-line">-->
-          <!--              <span class="resources-line-label">-->
-          <!--                官方月卡{{ officialMonthlyCardRemainingDays }}次-->
-          <!--              </span>-->
-          <!--            <div class="resources-line-content">-->
-          <!--              <div class="image-sprite">-->
-          <!--                <div class="bg-icon_4003"></div>-->
-          <!--              </div>-->
-          <!--              <span>{{ officialMonthlyCardReward }}</span>-->
-          <!--            </div>-->
-          <!--          </div>-->
-          <!--          <el-divider></el-divider>-->
+          <div class="resources-line">
+          <span class="resources-line-label">官方月卡{{ officialMonthlyCardRemainingDays }}次</span>
+            <div class="resources-line-content">
+              <div class="image-sprite">
+                <div class="bg-icon_4003"></div>
+              </div>
+              <span>{{ officialMonthlyCardReward }}</span>
+            </div>
+          </div>
+
           <v-divider></v-divider>
           <div class="resources-line">
             <span class="resources-line-label">
@@ -1700,7 +1699,7 @@ function handleResize() {
             </div>
             <div class="gc-resources-bar-btn">
               <el-switch v-model="dailyReward.certificateStoreCompleted"
-                @change="gachaResourcesCalculation"></el-switch>
+                         @change="gachaResourcesCalculation"></el-switch>
               本月已兑换
             </div>
           </div>
@@ -1732,7 +1731,8 @@ function handleResize() {
             <span></span>黄票换抽
           </div>
           <el-checkbox-button v-for="(pack, name) in certificatePackList" :key="name" :value="name" size="small"
-            v-show="rewardIsExpired(pack)" v-model="selectedCertificatePack" @change="gachaResourcesCalculation">
+                              v-show="rewardIsExpired(pack)" v-model="selectedCertificatePack"
+                              @change="gachaResourcesCalculation">
             <div class="checkbox-button">
               <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
               <div class="checkbox-button-pack-gacha-resources">
@@ -1750,7 +1750,7 @@ function handleResize() {
           <v-divider></v-divider>
           <!-- 换不完38抽 -->
           <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation"
-            v-model="selectedCertificateT2Group" size="small">
+                             v-model="selectedCertificateT2Group" size="small">
             <el-checkbox-button v-for="(price, index) in certificateT2Group" :key="price" :value="price">
               <div class="checkbox-button">
                 <span>{{ price.text }}</span>
@@ -1794,9 +1794,10 @@ function handleResize() {
           </el-checkbox-group>
           <span class="tip">请根据自身情况填入合适的理智数</span>
           <el-checkbox-group>
-            <el-checkbox-button v-for="stage in coEfficientList" :key="coEfficient" :value="coEfficient" @click="updateCoEfficient(stage.coEfficient)">
+            <el-checkbox-button v-for="stage in coEfficientList" :key="coEfficient" :value="coEfficient"
+                                @click="updateCoEfficient(stage.coEfficient)">
               <div style="padding: 4px;">
-                {{stage.stage}}({{stage.coEfficient}})
+                {{ stage.stage }}({{ stage.coEfficient }})
               </div>
             </el-checkbox-button>
           </el-checkbox-group>
@@ -1866,9 +1867,9 @@ function handleResize() {
           </div>
 
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px" @change="gachaResourcesCalculation"
-            size="small">
+                             size="small">
             <el-checkbox-button v-for="(potential, index) in POTENTIAL_TABLE" :key="index" :value="index"
-              v-show="potential.packType === 'train'" class="el-checkbox-button" :border="true">
+                                v-show="potential.packType === 'train'" class="el-checkbox-button" :border="true">
               <div class="checkbox-button">
                 <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
                 <div class="checkbox-button-gacha-resources">
@@ -1885,12 +1886,12 @@ function handleResize() {
           </div>
 
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px" @change="gachaResourcesCalculation"
-            size="small">
+                             size="small">
             <el-checkbox-button v-for="(potential, index) in POTENTIAL_TABLE" :key="index" :value="index"
-              v-show="potential.packType === 'main'" class="el-checkbox-button" :border="true">
+                                v-show="potential.packType === 'main'" class="el-checkbox-button" :border="true">
               <div class="checkbox-button">
                 <span
-                  :class="potential.packName.length < 4 ? 'checkbox-button-zone-label-short' : 'checkbox-button-zone-label-long'">
+                    :class="potential.packName.length < 4 ? 'checkbox-button-zone-label-short' : 'checkbox-button-zone-label-long'">
                   {{ potential.packName }}
                 </span>
                 <div class="checkbox-button-gacha-resources">
@@ -1907,9 +1908,9 @@ function handleResize() {
             <span></span> 插曲
           </div>
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
-            @change="gachaResourcesCalculation">
+                             @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(potential, index) in POTENTIAL_TABLE" :border="true" :key="index" :value="index"
-              v-show="potential.packType === 'activity-main'" class="el-checkbox-button">
+                                v-show="potential.packType === 'activity-main'" class="el-checkbox-button">
               <div class="checkbox-button">
                 <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
                 <div class="checkbox-button-gacha-resources">
@@ -1926,9 +1927,9 @@ function handleResize() {
             <span></span> 别传
           </div>
           <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
-            @change="gachaResourcesCalculation">
+                             @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(potential, index) in POTENTIAL_TABLE" :border="true" :key="index" :value="index"
-              v-show="potential.packType === 'activity'" class="el-checkbox-button">
+                                v-show="potential.packType === 'activity'" class="el-checkbox-button">
               <div class="checkbox-button">
                 <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
                 <div class="checkbox-button-gacha-resources">
@@ -1961,7 +1962,7 @@ function handleResize() {
           <!-- <div class="switch-wrap"> -->
           <div class="resources-line">
             <el-switch v-model="rechargeOption.monthlyCardPurchasedThisMonth"
-              @change="gachaResourcesCalculation"></el-switch>
+                       @change="gachaResourcesCalculation"></el-switch>
             <span>本月月卡已购买(选中则扣除6源石)</span>
           </div>
           <div class="resources-line">
@@ -1972,7 +1973,7 @@ function handleResize() {
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByMonthly" :key="index" :value="pack.parentIndex"
-              class="el-checkbox-button" v-show="rewardIsExpired(pack)">
+                                class="el-checkbox-button" v-show="rewardIsExpired(pack)">
               <pack-button-content :data="pack">
               </pack-button-content>
             </el-checkbox-button>
@@ -1985,7 +1986,7 @@ function handleResize() {
           <span class="tip">"指令重构"寻访包仅能用于4月M3池，不能用于任何限定池</span>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByActivity" :key="index" :value="pack.parentIndex"
-              class="el-checkbox-button">
+                                class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
             </el-checkbox-button>
@@ -1997,7 +1998,7 @@ function handleResize() {
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByOnce" :key="index" :value="pack.parentIndex"
-              class="el-checkbox-button">
+                                class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
             </el-checkbox-button>
@@ -2008,7 +2009,8 @@ function handleResize() {
             <span></span> 首次充值源石（周年刷新前）
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByrOriginiumLastYear" :key="index" :value="pack.parentIndex"
+            <el-checkbox-button v-for="(pack, index) in packListGroupByrOriginiumLastYear" :key="index"
+                                :value="pack.parentIndex"
                                 class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
@@ -2021,7 +2023,8 @@ function handleResize() {
             <span></span> 首次充值源石（周年刷新后）
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByrOriginium" :key="index" :value="pack.parentIndex"
+            <el-checkbox-button v-for="(pack, index) in packListGroupByrOriginium" :key="index"
+                                :value="pack.parentIndex"
                                 class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
@@ -2033,7 +2036,7 @@ function handleResize() {
           </div>
           <el-checkbox-group v-model="selectedHistoryPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByHistory" :key="index" :value="index"
-              class="el-checkbox-button">
+                                class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
             </el-checkbox-button>
@@ -2044,18 +2047,19 @@ function handleResize() {
           </div>
 
           <div class="resources-line" v-for="item in OriginiumTable">
-            <span class="resources-line-label">{{item.packName}}</span>
+            <span class="resources-line-label">{{ item.packName }}</span>
             <div class="resources-line-content">
-              <div class="image-sprite"><div class="bg-icon_4002"></div></div>
-              <span>{{item.originium}}</span>
+              <div class="image-sprite">
+                <div class="bg-icon_4002"></div>
+              </div>
+              <span>{{ item.originium }}</span>
             </div>
-            <el-input-number v-model="item.quantity"  @change="gachaResourcesCalculation" >
-            <template #suffix>
-              <span>次</span>
-            </template>
+            <el-input-number v-model="item.quantity" @change="gachaResourcesCalculation">
+              <template #suffix>
+                <span>次</span>
+              </template>
             </el-input-number>
           </div>
-
 
 
         </el-collapse-item>
@@ -2074,7 +2078,8 @@ function handleResize() {
           </div>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(activity, name) in activitySchedule" :key="name" :value="name"
-              v-show="activity.rewardModule === 'actRe' && rewardIsExpired(activity)" class="el-checkbox-button">
+                                v-show="activity.rewardModule === 'actRe' && rewardIsExpired(activity)"
+                                class="el-checkbox-button">
               <pack-button-content :data="activity">
               </pack-button-content>
             </el-checkbox-button>
@@ -2089,7 +2094,8 @@ function handleResize() {
           </v-alert>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(activity, name) in activitySchedule" :key="name" :value="name"
-              v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)" class="el-checkbox-button">
+                                v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)"
+                                class="el-checkbox-button">
               <pack-button-content :data="activity">
               </pack-button-content>
             </el-checkbox-button>
@@ -2104,7 +2110,7 @@ function handleResize() {
             </span>
           </template>
           <activity-gacha-resources v-for="(honeyCake, label) in otherRewardBySchedules" :key="label" :info="honeyCake"
-            v-show="rewardIsExpired(honeyCake)">
+                                    v-show="rewardIsExpired(honeyCake)">
           </activity-gacha-resources>
 
         </el-collapse-item>
