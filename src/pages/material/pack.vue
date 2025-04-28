@@ -15,7 +15,7 @@ import NoticeBoard from "@/components/NoticeBoard.vue";
 const date = new Date() // 当前日期
 const fixedPacks = ref({})
 
-
+//售卖类型
 const packTags = [
   {label: "新人", value: "newbie"},
   {label: "含有模组块", value: "mod"},
@@ -29,16 +29,18 @@ const packTags = [
   {label: "定向抽卡类礼包", value: "operator"},
 ]
 
-
+//价格区间
 const packSalePriceList = [
   {label: '0-100RMB', min: 0, max: 100},
   {label: '100-200RMB', min: 100, max: 200},
   {label: '200-648RMB', min: 200, max: 648},
 ]
 
-
+//选择的礼包tag
 const selectedPackTag = ref([])
+//选择的礼包售卖类型
 const selectedPackSaleDate = ref([])
+//选择的礼包售卖价格
 const selectedPackSalePrice = ref([])
 
 // 筛选后的礼包列表
@@ -51,55 +53,50 @@ let packInfoVOList = []
 //当前在售的礼包性价比数据，用于礼包总表
 let packInfoVOListOnSale = ref([])
 
-
+//材料价值表
 let itemValueMap = new Map()
 
+//获取材料价值表
 function loadingItemValue() {
   const stageConfig = getStageConfig()
+  //获取本地计算的材料价值
   itemCache.getItemValueCacheByConfig(stageConfig).then(response => {
     for (const item of response) {
       const {itemId, itemValueAp} = item
       itemValueMap.set(itemId, itemValueAp)
     }
 
+    //获取服务器上的自定义材料价值
     itemAPI.listCustomItem().then(response => {
       for (const item of response.data) {
         const {itemId, itemValue} = item
         itemValueMap.set(itemId, itemValue)
       }
+      //开始计算礼包性价比
       getPackInfoData()
     })
-
-
   })
 }
 
 
-
+/**
+ * 计算礼包性价比
+ * @returns {Promise<void>}
+ */
 async function getPackInfoData() {
   packInfoVOListOnSale.value = []
   packInfoVOList = []
   // 等待获取接口返回的全部礼包信息
   const data  =  await packInfoCache.listPackInfo()
+  //先计算礼包的性价比
   for (const item of data) {
     const packInfoVO = _packPromotionRatioCalc(item)
     packInfoVOList.push(packInfoVO)
     packInfoVOListCache.push(packInfoVO)
   }
 
+  //礼包分类
   collectPackInfoVO()
-
-  // itemAPI.listPackStoreInfo().then(response => {
-  //   packInfoVOListOnSale.value = []
-  //   packInfoVOList = []
-  //   for (const item of response.data) {
-  //     const packInfoVO = _packPromotionRatioCalc(item)
-  //     packInfoVOList.push(packInfoVO)
-  //     packInfoVOListCache.push(packInfoVO)
-  //   }
-  //   // console.table(packInfoVOList)
-  //   collectPackInfoVO()
-  // })
 
 
   /**
@@ -127,6 +124,7 @@ async function getPackInfoData() {
     let drawEfficiencyKernel = 0.0; // 仅抽卡性价比（含蓝抽）
     let packEfficiencyKernel = 0.0; // 综合性价比（含蓝抽）
     let packedOriginiumKernel = 0.0; // 礼包总价值折合成源石（含蓝抽）
+    let originiumUnitPrice = 0.0;
 
     let apCount = 0.0; // 总价值（理智）
     let apCountKernel = 0.0; // 总价值（理智，含蓝抽）
@@ -162,6 +160,12 @@ async function getPackInfoData() {
     packedOriginium = apCount / 135; // 总源石
     packedOriginiumKernel += apCountKernel / 135; // 总源石（含蓝抽）
 
+    if(packInfoVO.originium>0){
+      originiumUnitPrice = packInfoVO.price/packInfoVO.originium
+    }
+
+
+
     // 每源石花费计算
     packedOriginiumPrice = packedOriginium > 0 ? packInfoVO.price / packedOriginium : 0;
     packedOriginiumPriceKernel = packedOriginiumKernel > 0 ? packInfoVO.price / packedOriginiumKernel : 0;
@@ -192,13 +196,16 @@ async function getPackInfoData() {
     packInfoVO.drawEfficiencyKernel = drawEfficiencyKernel;
     packInfoVO.packedOriginiumKernel = packedOriginiumKernel;
     packInfoVO.packEfficiencyKernel = packEfficiencyKernel;
+    packInfoVO.originiumUnitPrice = originiumUnitPrice;
 
     return packInfoVO
   }
 }
 
-
-const collectPackInfoVO = () => {
+/**
+ * 分类礼包
+ */
+function collectPackInfoVO  () {
 
   // const currentTimeStamp = date.getTime()-60*60*24*100*1000 // 获取时间戳
   const currentTimeStamp = date.getTime()
@@ -215,11 +222,13 @@ const collectPackInfoVO = () => {
   }
 
   const packs = {}
+
   packInfoVOListOnSale.value = []
 
   packInfoVOList.forEach(packInfoVO => {
     packInfoVO.lineChartData = getLineChartData(packInfoVO);
     packInfoVO.packRmbPerDraw = packInfoVO.packRmbPerDraw || 0;
+
     const {saleType} = packInfoVO;
     if (!packs[saleType]) {
       packs[saleType] = []
@@ -234,8 +243,7 @@ const collectPackInfoVO = () => {
       return
     }
 
-    packInfoVO.originiumUnitPrice = packInfoVO.originium ?
-        (packInfoVO.price / packInfoVO.originium).toFixed(1) : packInfoVO.originium
+    //计算每个礼包的源石单价
 
     packInfoVOListOnSale.value.push(packInfoVO) // 放入总表
     packs[saleType].push(packInfoVO) // 放入各个类型

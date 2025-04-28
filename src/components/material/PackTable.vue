@@ -108,7 +108,7 @@ hiddenKernel()
           <td>{{ formatNumber(item.draws, 1) }}</td>
           <td v-show="displayKernel"> {{ formatNumber(item.drawsKernel, 1) }}</td>
           <td> {{ item.originium }}</td>
-          <td> {{ item.originiumUnitPrice }}</td>
+          <td> {{ formatNumber(item.originiumUnitPrice) }}</td>
           <td> {{ formatNumber(item.drawEfficiency) }}</td>
           <td> {{ formatNumber(item.packEfficiency) }}</td>
           <td v-show="displayKernel"> {{ formatNumber(item.drawEfficiencyKernel) }}</td>

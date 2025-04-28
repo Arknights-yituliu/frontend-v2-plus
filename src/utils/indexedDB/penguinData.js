@@ -4,11 +4,13 @@ async function getStageDropCollect(stageConfig) {
     const source = stageConfig.source
     let penguinMatrix = []
 
-    if ('yituliu' === source) {
-        // penguinMatrix = tmpData.matrix
-    } else {
-        penguinMatrix = await itemCache.getPenguinMatrixCache()
-    }
+    // if ('yituliu' === source) {
+    //     // penguinMatrix = tmpData.matrix
+    // } else {
+    //     penguinMatrix = await itemCache.getPenguinMatrixCache()
+    // }
+
+    penguinMatrix = await itemCache.getPenguinMatrixCache()
 
     let toughStage = penguinMatrix.filter(e => e.stageId.indexOf("tough") > -1)
     let toughStageMap = new Map()
@@ -43,7 +45,7 @@ async function getStageDropCollect(stageConfig) {
         }
 
 
-        if (item.stageId.indexOf("main_14") > -1 && 'penguin' === source) {
+        if (item.stageId.indexOf("main_14") > -1) {
             if (item.end) {
                 continue
             }

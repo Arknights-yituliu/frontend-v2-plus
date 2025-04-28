@@ -16,6 +16,7 @@ import ActivityGachaResources from "/src/components/tools/ActivityGachaResources
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import deepClone from "/src/utils/deepClone.js";
 import {dateDiff} from "/src/utils/dateUtil.js";
+import packInfoCache from "@/utils/indexedDB/packInfoCache.js";
 
 const OriginiumTable = ref([
   {
@@ -230,100 +231,119 @@ let scheduleOptions = [
 
 
 //新人礼包集合
-let packListGroupByOnce = ref([])
+let listNewBiePackInfo = ref([])
 //每年重置的首充源石
-let packListGroupByrOriginium = ref([])
+let listOriginiumPack = ref([])
 //上一年年重置的首充源石
-let packListGroupByrOriginiumLastYear = ref([])
+let listLastYearOriginiumPack = ref([])
 //每月重置的礼包集合
-let packListGroupByMonthly = ref([])
+let listMonthlyPackInfo = ref([])
 //限时礼包集合
-let packListGroupByActivity = ref([])
+let listActivityPackInfo = ref([])
 
 let packListGroupByHistory = ref([])
 
 //全部礼包集合
-let packList = ref([])
+let listDisplayPackInfo = ref([])
 //每月黄票兑换抽卡券(视为礼包)集合
 let certificatePackList = ref([])
 
-let packInfoInitList = ref([])
+let listPackInfoCache = ref([])
 
 /**
  * 获取和分类礼包数据
  */
-function getAndSortPackData() {
+async function getAndSortPackData() {
   //礼包唯一索引
   let index = 0;
 
   const currentTimeStamp = new Date().getTime()
 
-  //从服务器获取礼包数据，将其进行分类
-  const config = getStageConfig()
-  materialAPI.getStorePackV4(config).then(response => {
+  // 等待获取接口返回的全部礼包信息
+  const data  =  await packInfoCache.listPackInfo()
+  //先计算礼包的性价比
+  for (const item of data) {
+    let packInfoVO = _packPromotionRatioCalc(item)
 
-    packInfoInitList.value = response.data
-    for (let pack of packInfoInitList.value) {
+    listPackInfoCache.value.push(packInfoVO)
 
-      if (pack.officialName.indexOf('如死亦终') > -1) {
-        continue
-      }
+    if (packInfoVO.drawPrice===0) {
+      continue;
+    }
 
-      //没有抽卡资源不写入
-      if (!(pack.drawPrice > 0)) {
-        continue;
-      }
+    if (packInfoVO.end < currentTimeStamp) {
+      continue
+    }
 
-      //如果是每月寻访礼包或者源石不写入
-      if (pack.officialName === '每月寻访组合包' || pack.officialName.indexOf('普通源石') > -1) {
-        continue
-      }
+    //给每个礼包都绑定一个索引
+    packInfoVO.parentIndex = index
+    //将礼包写入全部礼包集合
+    listDisplayPackInfo.value.push(packInfoVO)
+    //礼包索引递增
+    index++
 
-      if (pack.end < currentTimeStamp) {
-        continue
-      }
 
-      //给每个礼包都绑定一个索引
-      pack.parentIndex = index
+    //根据礼包类型进行分类
+    if (packInfoVO.saleType === 'newbie') {
+      listNewBiePackInfo.value.push(packInfoVO)
+    }
+
+    if (packInfoVO.saleType === 'originium2') {
+      listOriginiumPack.value.push(packInfoVO)
+      let packClone = deepClone(packInfoVO);
+      packClone.parentIndex = index
       //将礼包写入全部礼包集合
-      packList.value.push(pack)
+      listDisplayPackInfo.value.push(packInfoVO)
       //礼包索引递增
       index++
 
-
-      //根据礼包类型进行分类
-      if (pack.saleType === 'newbie') {
-        packListGroupByOnce.value.push(pack)
-      }
-
-      if (pack.saleType === 'originium2') {
-        packListGroupByrOriginium.value.push(pack)
-      }
-
-      if (pack.saleType === 'originium2') {
-        let packClone = deepClone(pack);
-        packClone.parentIndex = index
-        //将礼包写入全部礼包集合
-        packList.value.push(pack)
-        //礼包索引递增
-        index++
-        packListGroupByrOriginiumLastYear.value.push(packClone)
-      }
-
-
-      if (pack.saleType === 'monthly') {
-        packListGroupByMonthly.value.push(pack)
-      }
-
-      if (pack.saleType === 'activity') {
-        packListGroupByActivity.value.push(pack)
-      }
+      listLastYearOriginiumPack.value.push(packClone)
     }
+
+    if (packInfoVO.saleType === 'monthly') {
+      listMonthlyPackInfo.value.push(packInfoVO)
+    }
+
+    if (packInfoVO.saleType === 'activity') {
+      listActivityPackInfo.value.push(packInfoVO)
+    }
+
+  }
+
+
+  /**
+   * 根据传入的礼包算出性价比
+   * @param packInfoVO 礼包基本信息
+   * @returns {*}  礼包各种性价比
+   * @private
+   */
+  function _packPromotionRatioCalc(packInfoVO) {
+    // 抽卡性价比基准
+    const eachOriginalDrawPrice = 648.0 / 185 / 0.3;
+    let draws = 0.0; // 抽数
+    let drawPrice = 0.0; // 每一抽价格
+    let drawEfficiency = 0.0; // 仅抽卡性价比
+    // 直接计算抽数
+    draws = (packInfoVO.orundum || 0) / 600 + (packInfoVO.originium || 0) * 0.3
+        + (packInfoVO.gachaTicket || 0) + (packInfoVO.tenGachaTicket || 0) * 10;
+
+    // 抽卡性价比计算
+    drawPrice = draws > 0 ? packInfoVO.price / draws : 0;
+    drawEfficiency = drawPrice > 0 ? eachOriginalDrawPrice / drawPrice : 0;
+
+    // 设置返回值
+    packInfoVO.draws = draws;
+    packInfoVO.drawPrice = drawPrice;
+    packInfoVO.drawEfficiency = drawEfficiency;
+
+    return packInfoVO
+  }
+
 
 
     getHistoryPackInfo()
     batchGenerationMonthlyPack(index)
-  })
+
 }
 
 function getHistoryPackInfo() {
@@ -332,7 +352,7 @@ function getHistoryPackInfo() {
   const scheduleStart = currentSchedule.value.start
   const scheduleEnd = currentSchedule.value.end
   let list = []
-  for (let pack of packInfoInitList.value) {
+  for (let pack of listPackInfoCache.value) {
     const {officialName, drawEfficiency, start, end, saleType} = pack
 
     if ('activity' !== saleType || drawEfficiency < 0.1) {
@@ -394,9 +414,9 @@ function batchGenerationMonthlyPack(index) {
     //写入预生成的每月黄票兑换单抽
     certificatePackList.value.push(certificatePack)
     //写入每月寻访组合包
-    packListGroupByMonthly.value.push(pack)
+    listMonthlyPackInfo.value.push(pack)
     //写入全部礼包
-    packList.value.push(pack)
+    listDisplayPackInfo.value.push(pack)
 
     //月份大于12，年数加1
     if (month >= 12) {
@@ -1009,7 +1029,7 @@ function gachaResourcesCalculation() {
 
     //循环选中的礼包索引，获得对应的礼包
     for (const i of selectedPackIndex.value) {
-      const pack = packList.value[i]
+      const pack = listDisplayPackInfo.value[i]
       if (!pack) {
         continue
       }
@@ -1021,7 +1041,7 @@ function gachaResourcesCalculation() {
       //月卡单独处理
       if (pack.displayName === '月卡') {
         //计算卡池结束前月卡可以拿到多少合成玉
-        packList.value[i].orundum = dailyReward.value.daily * 200
+        listDisplayPackInfo.value[i].orundum = dailyReward.value.daily * 200
         //卡池结束前可以购买月卡的数量
         let purchaseQuantity = Math.ceil(dailyReward.value.daily / 30)
 
@@ -1040,14 +1060,14 @@ function gachaResourcesCalculation() {
         //加上额外购买的月卡数量
         purchaseQuantity += rechargeOption.value.additionalMonthlyCardPurchase
         //计算通过月卡总计获得多少源石
-        packList.value[i].originium = purchaseQuantity * 6
+        listDisplayPackInfo.value[i].originium = purchaseQuantity * 6
 
 
         //月卡的价格=购买月卡的数量*30
-        packList.value[i].price = purchaseQuantity * 30
+        listDisplayPackInfo.value[i].price = purchaseQuantity * 30
         //当月月卡已购买源石-6
         if (rechargeOption.value.monthlyCardPurchasedThisMonth) {
-          packList.value[i].originium -= 6
+          listDisplayPackInfo.value[i].originium -= 6
           totalAmountOfRecharge -= 30
         }
       }
@@ -1972,7 +1992,7 @@ function handleResize() {
             <span>张月卡（每张月卡可预支6石）</span>
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByMonthly" :key="index" :value="pack.parentIndex"
+            <el-checkbox-button v-for="(pack, index) in listMonthlyPackInfo" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button" v-show="rewardIsExpired(pack)">
               <pack-button-content :data="pack">
               </pack-button-content>
@@ -1985,7 +2005,7 @@ function handleResize() {
           </div>
           <span class="tip">"指令重构"寻访包仅能用于4月M3池，不能用于任何限定池</span>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByActivity" :key="index" :value="pack.parentIndex"
+            <el-checkbox-button v-for="(pack, index) in listActivityPackInfo" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
@@ -1997,7 +2017,7 @@ function handleResize() {
             <span></span> 新人礼包
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByOnce" :key="index" :value="pack.parentIndex"
+            <el-checkbox-button v-for="(pack, index) in listNewBiePackInfo" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
               <pack-button-content :data="pack">
               </pack-button-content>
@@ -2009,7 +2029,7 @@ function handleResize() {
             <span></span> 首次充值源石（周年刷新前）
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByrOriginiumLastYear" :key="index"
+            <el-checkbox-button v-for="(pack, index) in listLastYearOriginiumPack" :key="index"
                                 :value="pack.parentIndex"
                                 class="el-checkbox-button">
               <pack-button-content :data="pack">
@@ -2023,7 +2043,7 @@ function handleResize() {
             <span></span> 首次充值源石（周年刷新后）
           </div>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByrOriginium" :key="index"
+            <el-checkbox-button v-for="(pack, index) in listOriginiumPack" :key="index"
                                 :value="pack.parentIndex"
                                 class="el-checkbox-button">
               <pack-button-content :data="pack">
