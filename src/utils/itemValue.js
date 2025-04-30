@@ -158,7 +158,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
     }
 
 
-    let nextStageDropCollect = new Map()
+    // let nextStageDropCollect = new Map()
     let nextItemCorrectionTerm = new Map()
 
     for (const [stageId, list] of stageDropCollect) {
@@ -250,7 +250,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             correctionTerm: stageEfficiency,
         }
 
-        nextStageDropCollect.set(stageId, list)
+        // nextStageDropCollect.set(stageId, list)
 
         if (nextItemCorrectionTerm.get(seriesId)) {
 
@@ -266,8 +266,10 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
     }
 
+
+
     return {
-        nextStageDropCollect: nextStageDropCollect,
+
         nextItemCorrectionTerm: nextItemCorrectionTerm
     }
 
@@ -296,7 +298,7 @@ async function getCustomItemList(stageConfig) {
         // console.table(itemList)
         calculatedItemValue(stageConfig)
 
-        const {nextItemCorrectionTerm, nextStageDropCollect} = await getItemValueCorrectionTerm(stageConfig, i);
+        const {nextItemCorrectionTerm} = await getItemValueCorrectionTerm(stageConfig, i);
         let completionFlag = true;
         for (const [seriesId, item] of nextItemCorrectionTerm) {
             itemValueCorrectionTerm[seriesId].correctionTerm = item.correctionTerm
@@ -312,7 +314,7 @@ async function getCustomItemList(stageConfig) {
         }
 
         // console.table(workShopProducts)
-        stageDropCollect = nextStageDropCollect
+        // stageDropCollect = nextStageDropCollect
     }
 
     // console.log("材料价值：",itemList)
