@@ -138,13 +138,13 @@ let ownDataLoadingStatus = ref(false)
 
 
 operatorProgressionStatisticsDataCache.getData().then(response => {
-  const {sampleSize, result} = response
+  const {result} = response
   for (const item of result) {
 
     operatorOwnMap.set(item.charId, item.own)
   }
   ownDataLoadingStatus.value = true;
-
+  getOperatorCarryDataByModuleAndTime()
 
 });
 
