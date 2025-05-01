@@ -100,7 +100,7 @@ window.addEventListener('resize', debounce(calculatedSize));
 
   <div :style="borderStyle">
     <div v-bind:style="wrapStyle">
-      <div v-bind:style="spriteStyle" :class="`sprite bg-${charId}`">
+      <div v-bind:style="spriteStyle" :class="`sprite-avatar bg-${charId}`">
       </div>
     </div>
   </div>

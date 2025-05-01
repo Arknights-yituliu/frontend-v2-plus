@@ -63,7 +63,7 @@ for (const charId in operatorTableSimple) {
     continue
   }
   const {skills, allSkill, elite} = operatorItemCostTableElement
-  let operatorUpdateTimeElement = operatorUpdateTime[name]
+  let operatorUpdateTimeElement = operatorUpdateTime[charId]
   let updateTime = new Date()
   let updateTimeText = dateFormat(new Date())
   if (operatorUpdateTimeElement) {
