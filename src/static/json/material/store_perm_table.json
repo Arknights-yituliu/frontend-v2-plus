@@ -531,6 +531,14 @@
       "rarity": 3
     },
     {
+      "itemId": "31093",
+      "itemName": "类凝结核",
+      "storeType": "green",
+      "price": 40.0,
+      "quantity": 1,
+      "rarity": 3
+    },
+    {
       "itemId": "7001",
       "itemName": "招聘许可",
       "storeType": "green",
