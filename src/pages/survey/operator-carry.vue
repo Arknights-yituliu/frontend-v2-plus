@@ -229,74 +229,7 @@ function formatOperatorCarryData(data) {
 let lineChartDialog = ref(false)
 
 
-function getOperatorCarryRateDailyData(charId) {
 
-  lineChartDialog.value = true
-  let xData = []
-  let yData = []
-
-  const data = {
-    questionnaireCode: selectedGameModuleCode.value,
-    charId: charId,
-    start: dateRange.value[0],
-    end: dateRange.value[1],
-  }
-
-
-  questionnaireAPI.getOperatorCarryRateDailyData(data).then(response => {
-
-    const lineChart = echarts.init(document.getElementById('carry-rate-chart'));
-
-
-    const {list, date} = response.data
-    for (let item of list) {
-      const {carryCount, sampleSize} = item
-      yData.push(formatNumber(carryCount / sampleSize * 100, 2))
-    }
-
-    for (const item of date) {
-      xData.push(dateFormat(item))
-    }
-
-    const options = {
-      title: {
-        text: `${operatorNameMap.get(charId)}的携带率变化趋势`,
-        left: 'center'
-      },
-      tooltip: {
-        show: true,
-        trigger: 'axis', // 触发方式为坐标轴触发
-        alwaysShowContent: true, // 始终显示提示框
-      },
-      xAxis: {
-        type: 'category',
-        data: xData
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        data: yData, // 确保数据是数组
-        type: 'line',
-        label: {
-          show: true, // 显示数据标签
-          position: 'top', // 标签位置（例如柱状图顶部）
-          formatter: '{c}%', // 显示 y 轴的值（{c} 表示当前数据值）
-          textStyle: {
-            fontSize: '10'
-          }
-        },
-
-      }]
-    }
-
-    console.log(lineChart)
-
-    lineChart.setOption(options)
-  })
-
-
-}
 
 
 onMounted(() => {
