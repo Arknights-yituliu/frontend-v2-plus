@@ -15,7 +15,7 @@ const defaultConfig = {
         },
         {
             itemId: '30083',
-            itemValue: 1.8
+            itemValue: 2.16
         }
     ]
 }
@@ -23,6 +23,11 @@ const defaultConfig = {
 const classicItem = {
     30073:'no-exist',
     30083:'no-exist'
+}
+
+const classicItemValue = {
+    30073:1.8,
+    30083:2.16
 }
 
 let stageConfig = ref(defaultConfig)
@@ -52,7 +57,7 @@ function getStageConfig() {
 
                 config.customItem.push({
                     itemId: itemId,
-                    itemValue: 1.8
+                    itemValue: classicItemValue[itemId]
                 })
             }
 
