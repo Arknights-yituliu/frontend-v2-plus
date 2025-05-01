@@ -1,4 +1,29 @@
 {
+  "char_1041_angel2": {
+    "updateTime": "2025/05/01 16:00:00",
+    "obtainApproach": "限定干员",
+    "name": "新约能天使"
+  },
+  "char_4193_lemuen": {
+    "updateTime": "2025/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "蕾缪安"
+  },
+  "char_4194_rmixer": {
+    "updateTime": "2025/05/01 16:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "信仰搅拌机"
+  },
+  "char_4187_graceb": {
+    "updateTime": "2025/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "聆音"
+  },
+  "char_4188_confes": {
+    "updateTime": "2025/05/01 16:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "CONFESS-47"
+  },
   "char_4179_monstr": {
     "updateTime": "2025/04/07 16:00:00",
     "obtainApproach": "常驻干员",
