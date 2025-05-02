@@ -104,6 +104,10 @@ function openNewPage(url) {
 
 watch(currentPath, (newPath, oldPath) => {
   pageTitle.value = routeMap.get(normalizePath(newPath)) || '未定义路径'
+
+  if(route.name==='材料统计'){
+    drawer.value = false
+  }
   // 在这里执行你想要的操作
 });
 
@@ -159,6 +163,7 @@ onMounted(() => {
 
     <v-app class="app" :class="customTheme" >
       <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
+
         <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
           明日方舟一图流
         </div>

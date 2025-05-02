@@ -293,6 +293,13 @@ const routes = [
         component: () => import('/src/pages/about/links.vue')
     },
     {
+        path: '/statistics-material',
+        text: '材料统计',
+        name:'材料统计',
+        display: false,
+        component: () => import('/src/pages/tools/material-statistics.vue')
+    },
+    {
         path: '/material/detail',
         text: '关卡详情',
         display: false,
@@ -366,12 +373,7 @@ const routes = [
         component: () => import('/src/pages/video-material/stageV3.vue')
     },
 
-    {
-        path: '/statistics-material',
-        text: '材料统计',
-        display: false,
-        component: () => import('/src/pages/tools/material-statistics.vue')
-    },
+
     {
         path: '/action-table',
         text: '材料统计',
