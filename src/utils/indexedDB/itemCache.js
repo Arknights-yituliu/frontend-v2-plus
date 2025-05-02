@@ -38,7 +38,7 @@ async function getPenguinMatrixCache() {
     let cacheData = await myDatabase.cache_data.get(penguinCacheKey)
     //有缓存判断缓存时间是否超过设定时间，未超过直接返回缓存
     if (cacheData) {
-        if (Date.now() - cacheData.createTime < 60 * 60 * 24 * 2 * 1000) {
+        if (Date.now() - cacheData.createTime < 60 * 60 * 24  * 1000) {
             console.log(`${penguinCacheKey}.返回缓存的数据`)
             // await loadingPenguinData(penguinCacheKey)
             return cacheData.resource
