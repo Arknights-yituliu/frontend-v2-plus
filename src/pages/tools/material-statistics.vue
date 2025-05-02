@@ -7,8 +7,6 @@ import operatorTableSimple from '/src/static/json/operator/character_table_simpl
 import OperatorUpdateTime from '/public/json/operator_update_time.json'
 import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
 import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
-import EquipIcon from "@/components/sprite/EquipIcon.vue";
 import itemInfo from '/src/static/json/material/item_info.json'
 
 let compositeTable = {}
@@ -516,9 +514,9 @@ onMounted(() => {
                  :class="itemOptionStatus(el.display)"></ItemImage>
     </div>
 
-<!--    <div style="width: 1700px;height: 800px" id="material-statistics-line">-->
+    <div style="width: 1700px;height: 800px;display: none" id="material-statistics-line" >
 
-<!--    </div>-->
+    </div>
 
 
     <div class="flex flex-wrap">

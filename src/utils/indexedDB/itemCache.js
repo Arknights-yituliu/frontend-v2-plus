@@ -26,10 +26,9 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
     return itemValue
 }
 
-const penguinCacheKey = "penguin-cache-v1";
+const penguinCacheKey = "penguin-cache-v2";
 
 async function getPenguinMatrixCache() {
-    const cacheKey = 'penguinMatrixV1'
 
     let penguinData = []
 
