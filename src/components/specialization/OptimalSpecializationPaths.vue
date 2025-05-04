@@ -176,7 +176,7 @@ function generateSavingsTooltip(optimizedTime) {
   const savedPercentage = (savedHours / defaultTime * 100).toFixed(1);
 
   return `节省时间计算详情: | ` +
-      `无专精助手情况下总耗时: | ` +
+      `无专精助手情况下总耗时: ${defaultTime.toFixed(2)}小时 | ` +
       `专精1: ${(baseHours[1] / baseReduceFactor).toFixed(2)}小时 | ` +
       `专精2: ${(baseHours[2] / baseReduceFactor).toFixed(2)}小时 | ` +
       `专精3: ${(baseHours[3] / baseReduceFactor).toFixed(2)}小时 | ` +
@@ -445,7 +445,7 @@ function calculateSavingsFromDefault(optimizedTime) {
           </button>
         </div>
       </div>
-      
+
       <!-- 控制中枢设置 -->
       <div class="ascalon-setting">
         <el-switch
@@ -535,7 +535,10 @@ function calculateSavingsFromDefault(optimizedTime) {
                         <span class="assistant-name">{{ step.assistant.name }}</span>
                         <span v-if="step.assistant.note" class="assistant-note">{{ step.assistant.note }}</span>
                         <div class="efficiency-badges">
-                          <span :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{ (extraEfficiency * 100).toFixed(0) }}%</span>
+                          <span
+                              :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{
+                              (extraEfficiency * 100).toFixed(0)
+                            }}%</span>
                           <span v-if="step.assistant.canApplyEfficiency !== false"
                                 class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
                         </div>
@@ -623,7 +626,10 @@ function calculateSavingsFromDefault(optimizedTime) {
                         <span class="assistant-name">{{ step.assistant.name }}</span>
                         <span v-if="step.assistant.note" class="assistant-note">{{ step.assistant.note }}</span>
                         <div class="efficiency-badges">
-                          <span :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{ (extraEfficiency * 100).toFixed(0) }}%</span>
+                          <span
+                              :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{
+                              (extraEfficiency * 100).toFixed(0)
+                            }}%</span>
                           <span v-if="step.assistant.canApplyEfficiency !== false"
                                 class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
                         </div>
