@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {Location} from "@element-plus/icons-vue";
 import optimalSpecialization from "@/static/json/build/optimal_specialization.json";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
@@ -10,6 +10,12 @@ const professions = ref([
 
 const activeProfession = ref("近卫");
 const activeTab = ref("general");
+const hasAscalon = ref(false); // 控制中枢入驻阿斯卡纶/烛煌
+
+// 计算额外效率
+const extraEfficiency = computed(() => {
+  return 0.05 + (hasAscalon.value ? 0.05 : 0); // 基础5% + 阿斯卡纶5%
+});
 
 // 每个职业的分支
 const branchesByProfession = {
@@ -134,13 +140,13 @@ function formatTime(hours) {
 // 生成耗时计算的详细提示
 function generateTimeTooltip(baseTime, efficiency) {
   const efficiencyDisplay = efficiency > 0 ? `${(efficiency * 100).toFixed(0)}%` : "0%";
-  const baseReduceFactor = 1 + 0.05 + (efficiency || 0);
+  const baseReduceFactor = 1 + extraEfficiency.value + (efficiency || 0);
   const calculatedTime = baseTime / baseReduceFactor;
 
   return `基础时间: ${baseTime.toFixed(2)}小时 | ` +
-      `基础减免: 5% (所有助手固有) | ` +
+      `基础减免: ${(extraEfficiency.value * 100).toFixed(0)}% ${hasAscalon.value ? '(所有助手固有5% + 阿斯卡纶/烛煌5%)' : '(所有助手固有)'} | ` +
       `助手效率: ${efficiencyDisplay} | ` +
-      `助手总效率: ${((efficiency || 0) + 0.05) * 100}% | ` +
+      `助手总效率: ${((efficiency || 0) + extraEfficiency.value) * 100}% | ` +
       `计算公式: ${baseTime.toFixed(2)} / ${baseReduceFactor.toFixed(2)} | ` +
       `计算结果: ${calculatedTime.toFixed(2)}小时`;
 }
@@ -164,7 +170,7 @@ function generateTotalTimeTooltip(steps) {
 
 // 生成节省时间计算的提示信息
 function generateSavingsTooltip(optimizedTime) {
-  const baseReduceFactor = 1.05; // 基础的5%减少
+  const baseReduceFactor = 1 + extraEfficiency.value; // 基础减免
   const defaultTime = baseHours[1] / baseReduceFactor + baseHours[2] / baseReduceFactor + baseHours[3] / baseReduceFactor;
   const savedHours = defaultTime - optimizedTime;
   const savedPercentage = (savedHours / defaultTime * 100).toFixed(1);
@@ -191,14 +197,14 @@ function calculateOptimalPath(profession, branch = null) {
   const bestOperatorS2 = getBestAssistant(profession, 2, branch);
   const bestOperatorS3 = getBestAssistant(profession, 3, branch);
 
-  // 计算各个干员的实际效率（基础+效率+额外5%）
-  const bestS1TotalEff = 1 + bestOperatorS1?.efficiency + 0.05;
-  const bestS2TotalEff = 1 + bestOperatorS2?.efficiency + 0.05;
-  const bestS3TotalEff = 1 + bestOperatorS3?.efficiency + 0.05;
+  // 计算各个干员的实际效率（基础+效率+额外效率）
+  const bestS1TotalEff = 1 + bestOperatorS1?.efficiency + extraEfficiency.value;
+  const bestS2TotalEff = 1 + bestOperatorS2?.efficiency + extraEfficiency.value;
+  const bestS3TotalEff = 1 + bestOperatorS3?.efficiency + extraEfficiency.value;
 
   // 减半干员效率，根据是否能应用效率加成判断
   const halfOperatorEff = halfOperator.canApplyEfficiency ? halfOperator.efficiency : 0;
-  const halfOpTotalEff = 1 + halfOperatorEff + 0.05;
+  const halfOpTotalEff = 1 + halfOperatorEff + extraEfficiency.value;
 
   // 减半干员需要工作的实际时间（5小时 * 效率）
   const halfOpRequiredHours = 5 * halfOpTotalEff;
@@ -380,10 +386,25 @@ function initializePaths() {
   });
 }
 
+// 当hasAscalon变化时重新计算路径
+function recalculatePaths() {
+  initializePaths();
+}
+
+// 初始化最优路径计算
+onMounted(() => {
+  initializePaths();
+});
+
+// 监听hasAscalon变化
+watch(hasAscalon, () => {
+  recalculatePaths();
+});
+
 // 计算相对于无助手情况的时间节省
 function calculateSavingsFromDefault(optimizedTime) {
-  // 无专精助手情况下的时间计算 (只有基础5%减少)
-  const baseReduceFactor = 1.05; // 基础的5%减少
+  // 无专精助手情况下的时间计算 (只有基础减免)
+  const baseReduceFactor = 1 + extraEfficiency.value; // 基础减免
   const defaultTime = baseHours[1] / baseReduceFactor + baseHours[2] / baseReduceFactor + baseHours[3] / baseReduceFactor;
 
   const savedHours = defaultTime - optimizedTime;
@@ -391,11 +412,6 @@ function calculateSavingsFromDefault(optimizedTime) {
 
   return {savedHours, savedPercentage};
 }
-
-// 初始化最优路径计算
-onMounted(() => {
-  initializePaths();
-});
 </script>
 
 <template>
@@ -428,6 +444,16 @@ onMounted(() => {
             {{ profession }}
           </button>
         </div>
+      </div>
+      
+      <!-- 控制中枢设置 -->
+      <div class="ascalon-setting">
+        <el-switch
+            v-model="hasAscalon"
+            active-color="#13ce66"
+            class="mr-2"
+        />
+        <span class="ascalon-label">控制中枢入驻阿斯卡纶/烛煌 (+5%效率)</span>
       </div>
 
       <!-- 通用/分支选择 -->
@@ -509,7 +535,7 @@ onMounted(() => {
                         <span class="assistant-name">{{ step.assistant.name }}</span>
                         <span v-if="step.assistant.note" class="assistant-note">{{ step.assistant.note }}</span>
                         <div class="efficiency-badges">
-                          <span class="assistant-efficiency base-efficiency">5%</span>
+                          <span :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{ (extraEfficiency.value * 100).toFixed(0) }}%</span>
                           <span v-if="step.assistant.canApplyEfficiency !== false"
                                 class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
                         </div>
@@ -597,7 +623,7 @@ onMounted(() => {
                         <span class="assistant-name">{{ step.assistant.name }}</span>
                         <span v-if="step.assistant.note" class="assistant-note">{{ step.assistant.note }}</span>
                         <div class="efficiency-badges">
-                          <span class="assistant-efficiency base-efficiency">5%</span>
+                          <span :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{ (extraEfficiency.value * 100).toFixed(0) }}%</span>
                           <span v-if="step.assistant.canApplyEfficiency !== false"
                                 class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
                         </div>
@@ -795,6 +821,12 @@ onMounted(() => {
   color: #409EFF;
 }
 
+.base-efficiency-enhanced {
+  background-color: #eaf4fe;
+  color: #409EFF;
+  border: 1px dashed #409EFF;
+}
+
 .time {
   color: var(--c-text-tip-color);
   font-size: 14px;
@@ -827,5 +859,26 @@ onMounted(() => {
 
 :deep(.el-step__description) {
   padding-right: 0;
+}
+
+/* 中枢设置样式 */
+.ascalon-setting {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  background-color: var(--c-page-background-color);
+  padding: 12px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 var(--c-box-shadow-color);
+}
+
+.ascalon-label {
+  font-size: 14px;
+  color: var(--c-text-color);
+}
+
+.mr-2 {
+  margin-right: 8px;
 }
 </style> 
