@@ -1,5 +1,5 @@
 <script setup>
-import {computed, defineEmits, defineProps} from 'vue';
+import {defineEmits, defineProps} from 'vue';
 import {Search} from '@element-plus/icons-vue'
 
 const props = defineProps({
@@ -155,7 +155,6 @@ const handleFilterChange = () => {
   min-width: 200px;
 }
 
-/* 响应式调整 */
 @media (max-width: 768px) {
   .filter-options {
     flex-direction: column;
@@ -168,7 +167,6 @@ const handleFilterChange = () => {
   }
 }
 
-/* Dark theme enhancements */
 :global(.theme-dark) .filter-container {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }

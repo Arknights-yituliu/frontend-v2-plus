@@ -234,7 +234,7 @@ const getSpecialEffectInfo = (operator) => {
 
 <template>
   <div class="ranking-container">
-    <!-- 使用自定义筛选组件 -->
+    <!-- 筛选栏 -->
     <SpecializationFilter
         v-model:filters="filters"
         :count-text="countText"
@@ -373,7 +373,6 @@ const getSpecialEffectInfo = (operator) => {
   white-space: nowrap;
 }
 
-/* Dark theme enhancements */
 :global(.theme-dark) .operator-ranking {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }

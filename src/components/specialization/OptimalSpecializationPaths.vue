@@ -107,7 +107,7 @@ function getHalfOperator(profession) {
 // 计算综合效率 (根据总耗时来算)
 function calculateOverallEfficiency(totalTime) {
   // 标准总时间 48 小时 (8 + 16 + 24)
-  const standardTime = 48;
+  const standardTime = baseHours[1] + baseHours[2] + baseHours[3];
   // 效率 = 标准时间 / 优化后时间
   const efficiency = standardTime / totalTime;
   return (efficiency * 100).toFixed(0);
@@ -115,7 +115,7 @@ function calculateOverallEfficiency(totalTime) {
 
 // 生成高亮的时间点文本
 function highlightTimePoint(timeString, assistantName) {
-  return `训练<span class="time-highlight">${timeString}</span>后替换为${assistantName}`;
+  return `训练<b>${timeString}</b>后替换为${assistantName}`;
 }
 
 // 格式化时间为小时分钟
@@ -132,18 +132,17 @@ function formatTime(hours) {
 }
 
 // 生成耗时计算的详细提示
-function generateTimeTooltip(baseTime, efficiency, halfEffect) {
+function generateTimeTooltip(baseTime, efficiency) {
   const efficiencyDisplay = efficiency > 0 ? `${(efficiency * 100).toFixed(0)}%` : "0%";
   const baseReduceFactor = 1 + 0.05 + (efficiency || 0);
   const calculatedTime = baseTime / baseReduceFactor;
-  const finalTime = halfEffect ? calculatedTime * 0.5 : calculatedTime;
 
   return `基础时间: ${baseTime.toFixed(2)}小时
 基础减免: 5% (所有助手固有)
 助手效率: ${efficiencyDisplay}
 助手总效率: ${((efficiency || 0) + 0.05) * 100}%
-计算公式: ${baseTime.toFixed(2)} / ${baseReduceFactor.toFixed(2)} ${halfEffect ? '× 0.5' : ''}
-计算结果: ${finalTime.toFixed(2)}小时`;
+计算公式: ${baseTime.toFixed(2)} / ${baseReduceFactor.toFixed(2)}
+计算结果: ${calculatedTime.toFixed(2)}小时`;
 }
 
 // 生成总耗时计算的提示信息
@@ -222,8 +221,8 @@ function calculateOptimalPath(profession, branch = null) {
   const totalTimeS1 = s1HalfOpWorkTime + s1BestOpWorkTime;
 
   // 生成专精一各段的计算提示
-  const tooltipS1HalfOp = generateTimeTooltip(s1HalfOpTimeInZeroEff, halfOperatorEff, false);
-  const tooltipS1BestOp = generateTimeTooltip(s1RemainingTimeInZeroEff, bestOperatorS1?.efficiency, false);
+  const tooltipS1HalfOp = generateTimeTooltip(s1HalfOpTimeInZeroEff, halfOperatorEff);
+  const tooltipS1BestOp = generateTimeTooltip(s1RemainingTimeInZeroEff, bestOperatorS1?.efficiency);
 
   // 专精二计算（已有减半效果）
   const s2TotalTimeInZeroEff = baseHours[2]; // 总时间（零效率下）
@@ -251,7 +250,7 @@ function calculateOptimalPath(profession, branch = null) {
       true
   );
   const tooltipS2BestOp = s2RemainingTimeInZeroEff > 0 ?
-      generateTimeTooltip(s2RemainingTimeInZeroEff, bestOperatorS2?.efficiency, true) :
+      generateTimeTooltip(s2RemainingTimeInZeroEff, bestOperatorS2?.efficiency) :
       "没有足够时间使用最高效率干员";
 
   // 专精三计算（已有减半效果）
@@ -260,7 +259,7 @@ function calculateOptimalPath(profession, branch = null) {
   const timeS3 = s3ActualTotalTimeInZeroEff / bestS3TotalEff; // 最佳干员实际工作时间
 
   // 生成专精三的计算提示
-  const tooltipS3 = generateTimeTooltip(s3ActualTotalTimeInZeroEff, bestOperatorS3?.efficiency, true);
+  const tooltipS3 = generateTimeTooltip(s3ActualTotalTimeInZeroEff, bestOperatorS3?.efficiency);
 
   // 计算总耗时
   const totalTime = totalTimeS1 + totalTimeS2 + timeS3;
@@ -395,7 +394,7 @@ function calculateSavingsFromDefault(optimizedTime) {
   return {savedHours, savedPercentage};
 }
 
-// 组件挂载时初始化
+// 初始化最优路径计算
 onMounted(() => {
   initializePaths();
 });
@@ -500,7 +499,8 @@ onMounted(() => {
                           />
                         </el-tooltip>
                         <!-- 如果有替代头像，显示两个头像 -->
-                        <el-tooltip v-if="step.assistant.alternativeCharId" :content="'进驻训练室协助位时，专精训练可以触发减半效果'" effect="light"
+                        <el-tooltip v-if="step.assistant.alternativeCharId"
+                                    :content="'进驻训练室协助位时，专精训练可以触发减半效果'" effect="light"
                                     placement="top">
                           <OperatorAvatar
                               :char-id="step.assistant.alternativeCharId"
@@ -587,7 +587,8 @@ onMounted(() => {
                           />
                         </el-tooltip>
                         <!-- 如果有替代头像，显示两个头像 -->
-                        <el-tooltip v-if="step.assistant.alternativeCharId" :content="'进驻训练室协助位时，专精训练可以触发减半效果'" effect="light"
+                        <el-tooltip v-if="step.assistant.alternativeCharId"
+                                    :content="'进驻训练室协助位时，专精训练可以触发减半效果'" effect="light"
                                     placement="top">
                           <OperatorAvatar
                               :char-id="step.assistant.alternativeCharId"
@@ -747,11 +748,6 @@ onMounted(() => {
   line-height: 1.5;
 }
 
-.time-highlight {
-  color: var(--c-text-color);
-  font-weight: bold;
-}
-
 .step-details {
   display: flex;
   justify-content: space-between;
@@ -831,7 +827,7 @@ onMounted(() => {
   margin-bottom: 15px;
 }
 
-::v-deep(.el-step__description) {
+:deep(.el-step__description) {
   padding-right: 0;
 }
 </style> 
