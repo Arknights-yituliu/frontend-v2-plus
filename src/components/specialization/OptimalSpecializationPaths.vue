@@ -107,7 +107,7 @@ function getHalfOperator(profession) {
 // 计算综合效率 (根据总耗时来算)
 function calculateOverallEfficiency(totalTime) {
   // 标准总时间 48 小时 (8 + 16 + 24)
-  const standardTime = baseHours[1] + baseHours[2] + baseHours[3];
+  const standardTime = Object.values(baseHours).reduce((acc, cur) => acc + cur, 0);
   // 效率 = 标准时间 / 优化后时间
   const efficiency = standardTime / totalTime;
   return (efficiency * 100).toFixed(0);
