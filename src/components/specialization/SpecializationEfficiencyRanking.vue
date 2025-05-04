@@ -3,7 +3,7 @@ import {computed, onMounted, ref} from "vue";
 import maxEfficiency from "@/static/json/build/maximum_efficiency.json";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import SpecializationFilter from "@/components/specialization/SpecializationFilter.vue";
-import { calculateEfficiency, getEfficiencyExplanation } from "@/utils/specializationEfficiencyCalculator";
+import {calculateEfficiency, getEfficiencyExplanation} from "@/utils/specializationEfficiencyCalculator";
 
 const operatorData = ref([]);
 const isLoading = ref(true);
@@ -79,7 +79,7 @@ onMounted(async () => {
         efficiency_explanation: getEfficiencyExplanation(operator)
       };
     });
-    
+
     sortOperatorsByEfficiency();
   } catch (error) {
     console.error("计算效率时发生错误:", error);
@@ -217,12 +217,12 @@ const getSpecialEffectInfo = (operator) => {
 <template>
   <div>
     <!-- 使用自定义筛选组件 -->
-    <SpecializationFilter 
-      v-model:filters="filters"
-      :options="filterOptions"
-      :count-text="countText"
-      @filter-change="handleFilterChange"
-      @reset="resetFilters"
+    <SpecializationFilter
+        v-model:filters="filters"
+        :count-text="countText"
+        :options="filterOptions"
+        @reset="resetFilters"
+        @filter-change="handleFilterChange"
     />
 
     <!-- 数据表格 -->
@@ -235,22 +235,35 @@ const getSpecialEffectInfo = (operator) => {
           :data="sortedOperators"
           max-height="500"
           stripe
-          style="width: 100%"
       >
         <el-table-column :index="1" label="排名" type="index" width="70"/>
 
         <!-- 干员头像和名称 -->
-        <el-table-column label="干员" width="150">
+        <el-table-column fixed="left" label="干员" width="170">
           <template #default="scope">
             <div class="flex align-center">
-              <OperatorAvatar v-if="scope.row.charId" :char-id="scope.row.charId" :size="50" rounded />
+              <OperatorAvatar v-if="scope.row.charId" :char-id="scope.row.charId" :size="50" rounded/>
               <span class="ml-2">{{ scope.row.name }}</span>
             </div>
           </template>
         </el-table-column>
 
-        <!-- 职业 -->
-        <el-table-column label="职业" prop="profession" width="100"/>
+        <!-- 效率加成职业 -->
+        <el-table-column label="效率加成职业" prop="profession" width="130"/>
+
+        <!-- 效率生效职业 -->
+        <el-table-column label="效率生效职业" width="120">
+          <template #default="scope">
+            <span v-if="scope.row.conditions.target_profession">
+              {{
+                Array.isArray(scope.row.conditions.target_profession)
+                    ? scope.row.conditions.target_profession.join('、')
+                    : scope.row.conditions.target_profession
+              }}
+            </span>
+            <span v-else>通用</span>
+          </template>
+        </el-table-column>
 
         <!-- 纸面效率 -->
         <el-table-column label="纸面效率" width="100">
@@ -264,30 +277,16 @@ const getSpecialEffectInfo = (operator) => {
         <!-- 实际效率 -->
         <el-table-column label="实际效率" width="100">
           <template #default="scope">
-            <el-tooltip 
-              :content="scope.row.efficiency_explanation" 
-              :show-after="200" 
-              placement="top"
-              effect="light"
+            <el-tooltip
+                :content="scope.row.efficiency_explanation"
+                :show-after="200"
+                effect="light"
+                placement="top"
             >
               <span :class="getEfficiencyColorClass(scope.row.actual_efficiency)">
                 {{ formatEfficiency(scope.row.actual_efficiency) }}
               </span>
             </el-tooltip>
-          </template>
-        </el-table-column>
-
-        <!-- 职业要求 -->
-        <el-table-column label="职业要求" width="120">
-          <template #default="scope">
-            <span v-if="scope.row.conditions.target_profession">
-              {{
-                Array.isArray(scope.row.conditions.target_profession)
-                    ? scope.row.conditions.target_profession.join('、')
-                    : scope.row.conditions.target_profession
-              }}
-            </span>
-            <span v-else>通用</span>
           </template>
         </el-table-column>
 
@@ -305,8 +304,8 @@ const getSpecialEffectInfo = (operator) => {
           </template>
         </el-table-column>
 
-        <!-- 技能描述 -->
-        <el-table-column label="技能名称">
+        <!-- 技能名称 -->
+        <el-table-column label="技能名称" width="150">
           <template #default="scope">
             <el-tooltip :content="scope.row.skill_name" :show-after="500" placement="top">
               <span>{{ scope.row.conditions.skill_name || '无特殊描述' }}</span>
@@ -317,13 +316,13 @@ const getSpecialEffectInfo = (operator) => {
         <!-- 特殊效果 -->
         <el-table-column label="特殊效果" width="120">
           <template #default="scope">
-            <el-tooltip 
-              v-if="getSpecialEffectInfo(scope.row).tooltip" 
-              :content="getSpecialEffectInfo(scope.row).tooltip"
-              :show-after="500" 
-              placement="top"
+            <el-tooltip
+                v-if="getSpecialEffectInfo(scope.row).tooltip"
+                :content="getSpecialEffectInfo(scope.row).tooltip"
+                :show-after="500"
+                placement="top"
             >
-              <el-tag size="small" :type="getSpecialEffectInfo(scope.row).type">
+              <el-tag :type="getSpecialEffectInfo(scope.row).type" size="small">
                 {{ getSpecialEffectInfo(scope.row).tag }}
               </el-tag>
             </el-tooltip>
