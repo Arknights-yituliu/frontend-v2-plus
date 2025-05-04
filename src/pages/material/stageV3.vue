@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import ITEM_SERIES from '/src/static/json/material/item_series.json'
+import {itemSeriesObj} from "/src/utils/item/itemSeries.js";
 import FixedNav from "/src/components/FixedNav.vue";
 import TourGuide from "/src/components/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
@@ -10,13 +10,14 @@ import StageDetailTable from "/src/components/material/StageDetailTable.vue";
 import OrundumTable from "/src/components/material/OrundumTable.vue";
 import HistoryActivity from "/src/components/material/HistoryActivity.vue";
 import {useDisplay} from "vuetify";
-import {getStageData} from '/src/utils/stageEfficiencyCal.js'
+import {getStageData} from '/src/utils/item/stageEfficiencyCal.js'
 import itemCache from '/src/utils/indexedDB/itemCache.js'
 import {formatNumber} from "/src/utils/format.js";
 import {useRouter} from "vue-router";
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
-import NoticeBoard from "@/components/NoticeBoard.vue";
-import {dateFormat} from "@/utils/dateUtil.js";
+import NoticeBoard from "/src/components/NoticeBoard.vue";
+import {dateFormat} from "/src/utils/dateUtil.js";
+import {getStageConfig} from "/src/utils/user/userConfig.js";
 
 const router = useRouter();
 
@@ -65,12 +66,12 @@ function loadingLocalHostData() {
 
 // 获取关卡推荐数据
 function getStageResult() {
-
-  getStageData().then(response => {
+  const stageConfig = getStageConfig()
+  getStageData(stageConfig).then(response => {
 
     const {recommendedStage, orundumRecommendedStageVO, historyActStage} = response
 
-   // console.log(JSON.stringify(response))
+    // console.log(JSON.stringify(response))
 
     stageResultGroup.value = recommendedStage.sort((a, b) => a.itemSeriesId - b.itemSeriesId)
     //将后端返回的数据组装为卡片需要的数据格式
@@ -139,11 +140,14 @@ function getItemCardData() {
       leT3MaxEfficiencyStage: leT3MaxEfficiencyStage,
       leT2MaxEfficiencyStage: leT2MaxEfficiencyStage,
       display: maxEfficiencyStage.stageEfficiency > 0.8,
-      series: {r4: '', r3: '', r2: '', r1: ''}
+      series: {T4: '', T3: '', T2: '', T1: ''}
     }
 
     //获得该材料系列的上下级材料的物品id
-    recommendStage.series = ITEM_SERIES[recommendedStageList.itemSeriesId].series
+
+
+
+    recommendStage.series = itemSeriesObj[recommendedStageList.itemSeriesId]
 
     list.push(recommendStage)
     // console.log(item_recommend_stage)
@@ -365,7 +369,7 @@ onMounted(() => {
     <div id="stageForCards" class="stage-card-wrap">
       <div class="stage-card" v-for="(stage, index) in stageCardData" :key="index"
            @click="getItemTableData(index, true)" :id="`c-${index}`" v-show="stage.display">
-        <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.r3)"></div>
+        <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.T3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">
             <div class="stage-card-item-icon">
@@ -387,7 +391,7 @@ onMounted(() => {
           </div>
           <div class="stage-card-bar">
             <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.r4)"></div>
+              <div :class="getCardIconSprite(stage.series.T4)"></div>
             </div>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT4MaxEfficiencyStage.stageCode }}
@@ -401,7 +405,7 @@ onMounted(() => {
           </div>
           <div class="stage-card-bar">
             <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.r3)"></div>
+              <div :class="getCardIconSprite(stage.series.T3)"></div>
             </div>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT3MaxEfficiencyStage.stageCode }}
@@ -413,9 +417,9 @@ onMounted(() => {
               {{ formatNumber(stage.leT3MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>
           </div>
-          <div class="stage-card-bar" v-show="stage.series.r2">
+          <div class="stage-card-bar" v-show="stage.series.T2">
             <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.r2)"></div>
+              <div :class="getCardIconSprite(stage.series.T2)"></div>
             </div>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT2MaxEfficiencyStage.stageCode }}

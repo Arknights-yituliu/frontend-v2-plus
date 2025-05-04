@@ -2,7 +2,7 @@ import ITEM_INFO from "@/static/json/material/item_info.json";
 import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
 import itemCache from "@/utils/indexedDB/itemCache.js";
 import {getStageDropCollect} from "@/utils/indexedDB/penguinData.js";
-import ITEM_SERIES_TABLE from "@/static/json/material/item_series_table.json";
+import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
 
 
 //加工站每级期望产出理智
@@ -226,12 +226,13 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         //     continue
         // }
 
-        let seriesInfo = ITEM_SERIES_TABLE[mainItemId]
-
-        if (!seriesInfo) {
-            // console.log('不在18种材料中')
+        if(!itemSeriesInfoByItemId.has(mainItemId)){
+            // console.log(mainItemId,'不在18种材料中')
             continue
         }
+
+        let seriesInfo = itemSeriesInfoByItemId.get(mainItemId)
+
 
         if (['MAIN', 'ACT_PERM'].includes(stageType)) {
 
@@ -241,12 +242,12 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         }
 
 
-        const {seriesId, series} = seriesInfo
+        const {seriesId, seriesName} = seriesInfo
 
         const seriesCorrectionTerm = {
             stageCode: stageCode,
             seriesId: seriesId,
-            series: series,
+            seriesName: seriesName,
             correctionTerm: stageEfficiency,
         }
 
@@ -299,11 +300,13 @@ async function getCustomItemList(stageConfig) {
         calculatedItemValue(stageConfig)
 
         const {nextItemCorrectionTerm} = await getItemValueCorrectionTerm(stageConfig, i);
+
         let completionFlag = true;
+
         for (const [seriesId, item] of nextItemCorrectionTerm) {
             itemValueCorrectionTerm[seriesId].correctionTerm = item.correctionTerm
             if (!customItemMap.get(seriesId)) {
-                // console.log(item.series, '————', item.correctionTerm, '————', Math.abs(1 - item.correctionTerm))
+                // console.log(item.seriesName, '————', item.correctionTerm, '————', Math.abs(1 - item.correctionTerm))
                 completionFlag = completionFlag && Math.abs(1 - item.correctionTerm) < 0.0001
             }
         }

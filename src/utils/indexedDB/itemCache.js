@@ -2,7 +2,7 @@ import myDatabase from "/src/utils/indexedDB/indexedDB.js";
 import materialAPI from "/src/api/materialV5.js";
 import axios from "axios";
 import {createMessage} from "@/utils/message.js";
-import {getCustomItemList} from "/src/utils/itemValue.js";
+import {getCustomItemList} from "/src/utils/item/itemValue.js";
 
 async function putCache(data) {
     myDatabase.cache_data.put(data)

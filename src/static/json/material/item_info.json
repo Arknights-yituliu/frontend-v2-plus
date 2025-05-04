@@ -53,7 +53,7 @@
     "itemValueAp": 90,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.040917
+    "weight": 0.05677290836653386
   },
   {
     "itemId": "30044",
@@ -61,7 +61,7 @@
     "itemValueAp": 108.0739687470553,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.04963
+    "weight": 0.046812749003984064
   },
   {
     "itemId": "31084",
@@ -69,7 +69,7 @@
     "itemValueAp": 101.43032212022688,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.052798
+    "weight": 0.049800796812749
   },
   {
     "itemId": "30054",
@@ -77,7 +77,7 @@
     "itemValueAp": 103.09697128509515,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.04963
+    "weight": 0.046812749003984064
   },
   {
     "itemId": "30064",
@@ -85,7 +85,7 @@
     "itemValueAp": 98.37265131010771,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.036959
+    "weight": 0.0348605577689243
   },
   {
     "itemId": "30104",
@@ -93,7 +93,7 @@
     "itemValueAp": 95.09689148560895,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.04963
+    "weight": 0.046812749003984064
   },
   {
     "itemId": "30094",
@@ -101,7 +101,7 @@
     "itemValueAp": 90.59304054145186,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.055966
+    "weight": 0.052788844621513946
   },
   {
     "itemId": "31074",
@@ -109,7 +109,7 @@
     "itemValueAp": 91.41701730272722,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.055966
+    "weight": 0.052788844621513946
   },
   {
     "itemId": "30024",
@@ -117,7 +117,7 @@
     "itemValueAp": 0,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.055966
+    "weight": 0.052788844621513946
   },
   {
     "itemId": "31034",
@@ -125,7 +125,7 @@
     "itemValueAp": 90.48956670485926,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.04963
+    "weight": 0.046812749003984064
   },
   {
     "itemId": "31024",
@@ -133,7 +133,7 @@
     "itemValueAp": 89.08113237539693,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.055966
+    "weight": 0.052788844621513946
   },
   {
     "itemId": "31044",
@@ -141,7 +141,7 @@
     "itemValueAp": 86.58915809205733,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.055966
+    "weight": 0.052788844621513946
   },
   {
     "itemId": "31054",
@@ -149,7 +149,7 @@
     "itemValueAp": 83.08856988133711,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.055966
+    "weight": 0.052788844621513946
   },
   {
     "itemId": "31064",
@@ -157,7 +157,7 @@
     "itemValueAp": 82.39627190405268,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.06019
+    "weight": 0.05677290836653386
   },
   {
     "itemId": "31014",
@@ -165,7 +165,7 @@
     "itemValueAp": 78.12656774439871,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.064414
+    "weight": 0.060756972111553786
   },
   {
     "itemId": "30084",
@@ -173,7 +173,7 @@
     "itemValueAp": 77.22472808887177,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.055966
+    "weight": 0.052788844621513946
   },
   {
     "itemId": "30034",
@@ -181,7 +181,7 @@
     "itemValueAp": 69.11110241792049,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.055966
+    "weight": 0.052788844621513946
   },
   {
     "itemId": "30014",
@@ -189,7 +189,7 @@
     "itemValueAp": 64.69211840668608,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.074974
+    "weight": 0.07071713147410359
   },
   {
     "itemId": "30074",
@@ -197,7 +197,7 @@
     "itemValueAp": 58.79582232353405,
     "rarity": 4,
     "cardNum": 2,
-    "weight": 0.064414
+    "weight": 0.060756972111553786
   },
   {
     "itemId": "31083",
@@ -205,7 +205,7 @@
     "itemValueAp": 38.369090794589674,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.040917
+    "weight": 0.03894080996884735
   },
   {
     "itemId": "31093",
@@ -213,7 +213,7 @@
     "itemValueAp": 40,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.040917
+    "weight": 0.048286604361370715
   },
   {
     "itemId": "30063",
@@ -221,7 +221,7 @@
     "itemValueAp": 36.912178440561796,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.040917
+    "weight": 0.03894080996884735
   },
   {
     "itemId": "30103",
@@ -229,7 +229,7 @@
     "itemValueAp": 37.4318305240997,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.040917
+    "weight": 0.03894080996884735
   },
   {
     "itemId": "31073",
@@ -237,7 +237,7 @@
     "itemValueAp": 34.28473014854342,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.045827
+    "weight": 0.04361370716510903
   },
   {
     "itemId": "31063",
@@ -245,7 +245,7 @@
     "itemValueAp": 32.90787360606186,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.045827
+    "weight": 0.04361370716510903
   },
   {
     "itemId": "30093",
@@ -253,7 +253,7 @@
     "itemValueAp": 31.18009988068693,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.050736
+    "weight": 0.048286604361370715
   },
   {
     "itemId": "31053",
@@ -261,7 +261,7 @@
     "itemValueAp": 30.290544981389615,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.050736
+    "weight": 0.048286604361370715
   },
   {
     "itemId": "31013",
@@ -269,7 +269,7 @@
     "itemValueAp": 30.505579041079308,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.050736
+    "weight": 0.048286604361370715
   },
   {
     "itemId": "31043",
@@ -277,7 +277,7 @@
     "itemValueAp": 29.924406498556493,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.050736
+    "weight": 0.048286604361370715
   },
   {
     "itemId": "30083",
@@ -285,7 +285,7 @@
     "itemValueAp": 28.76360354036034,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.05892
+    "weight": 0.056074766355140186
   },
   {
     "itemId": "30053",
@@ -293,7 +293,7 @@
     "itemValueAp": 27.384687972650237,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.05892
+    "weight": 0.056074766355140186
   },
   {
     "itemId": "30043",
@@ -301,7 +301,7 @@
     "itemValueAp": 26.632134649171206,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.05892
+    "weight": 0.056074766355140186
   },
   {
     "itemId": "30073",
@@ -309,7 +309,7 @@
     "itemValueAp": 1.8,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.06874
+    "weight": 0.06542056074766354
   },
   {
     "itemId": "31023",
@@ -317,7 +317,7 @@
     "itemValueAp": 25.12022648311628,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.05892
+    "weight": 0.056074766355140186
   },
   {
     "itemId": "30033",
@@ -325,7 +325,7 @@
     "itemValueAp": 22.028893437119166,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.06874
+    "weight": 0.06542056074766354
   },
   {
     "itemId": "30023",
@@ -333,7 +333,7 @@
     "itemValueAp": 23.69536422840241,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.06874
+    "weight": 0.06542056074766354
   },
   {
     "itemId": "31033",
@@ -341,7 +341,7 @@
     "itemValueAp": 19.497566804815868,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.05892
+    "weight": 0.056074766355140186
   },
   {
     "itemId": "30013",
@@ -349,7 +349,7 @@
     "itemValueAp": 17.20587270891354,
     "rarity": 3,
     "cardNum": 3,
-    "weight": 0.081833
+    "weight": 0.0778816199376947
   },
   {
     "itemId": "30062",
@@ -447,7 +447,6 @@
     "cardNum": 5,
     "weight": 0.175
   },
-
   {
     "itemId": "30021",
     "itemName": "代糖",

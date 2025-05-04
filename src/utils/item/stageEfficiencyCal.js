@@ -1,8 +1,7 @@
 import itemCache from "/src/utils/indexedDB/itemCache.js";
-import ITEM_SERIES_TABLE from '/src/static/json/material/item_series_table.json'
-import ITEM_TYPE_TABLE from '/src/static/json/material/item_type_table.json'
 import {getStageConfig} from "@/utils/user/userConfig.js";
 import {getStageDropCollect} from "/src/utils/indexedDB/penguinData.js";
+import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
 
 
 /**
@@ -33,13 +32,13 @@ async function getStageInfo() {
 async function getItemMap(stageConfig) {
     let itemMap = new Map()
 
-    await itemCache.getItemValueCacheByConfig(stageConfig).then(response=>{
-         for(let item of response){
-             if (item.cardNum > 99) {
-                 continue
-             }
-             itemMap.set(item.itemId, item)
-         }
+    await itemCache.getItemValueCacheByConfig(stageConfig).then(response => {
+        for (let item of response) {
+            if (item.cardNum > 99) {
+                continue
+            }
+            itemMap.set(item.itemId, item)
+        }
     })
 
     return itemMap
@@ -50,7 +49,7 @@ async function calculationStageEfficiency(stageConfig) {
     const start = new Date().getTime()
     const stageInfoMap = await getStageInfo()
     const itemMap = await getItemMap(stageConfig)
-    const stageDropCollect =await  getStageDropCollect(stageConfig)
+    const stageDropCollect = await getStageDropCollect(stageConfig)
     const loading = new Date().getTime()
     // console.log("加载数据", loading - start, 'ms')
 
@@ -118,8 +117,6 @@ async function calculationStageEfficiency(stageConfig) {
             }
 
 
-
-
             // if(stageId==='main_14-13'){
             //     console.log(dropValue)
             // }
@@ -133,7 +130,7 @@ async function calculationStageEfficiency(stageConfig) {
         stageDropValue.sort((a, b) => b.value - a.value)
 
 
-        let seriesInfo = void 0
+        let mainSeriesInfo = void 0
         let leT4Value = 0.0
         let leT3Value = 0.0
         let leT2Value = 0.0
@@ -153,7 +150,7 @@ async function calculationStageEfficiency(stageConfig) {
 
             if (i === 0) {
 
-                seriesInfo = ITEM_SERIES_TABLE[itemId]
+                mainSeriesInfo = itemSeriesInfoByItemId.get(itemId)
                 if (end) {
                     endTimeStamp = end
                 }
@@ -165,7 +162,7 @@ async function calculationStageEfficiency(stageConfig) {
                 mainSampleSize = sampleSize
             }
 
-            if (!seriesInfo) {
+            if (!mainSeriesInfo) {
                 break;
             }
 
@@ -191,32 +188,37 @@ async function calculationStageEfficiency(stageConfig) {
             }
 
 
-            if (ITEM_TYPE_TABLE[seriesInfo.series]) {
-                if (ITEM_TYPE_TABLE[seriesInfo.series][itemName]) {
-                    if (1 === rarity || 2 === rarity) {
-                        leT2Value += value / apCost;
-                    }
-                    if (3 === rarity) {
-                        leT3Value += value / apCost;
-                    }
-                    if (4 === rarity) {
-                        leT4Value += value / apCost;
-                    }
+            const seriesInfo = itemSeriesInfoByItemId.get(itemId)
+
+
+            if (seriesInfo && seriesInfo.seriesId === mainSeriesInfo.seriesId) {
+
+                if (1 === rarity || 2 === rarity) {
+                    leT2Value += value;
                 }
+                if (3 === rarity) {
+                    leT3Value += value;
+                }
+                if (4 === rarity) {
+                    leT4Value += value;
+                }
+
             }
+
+
+        }
+
+        if (!mainSeriesInfo) {
+            continue
         }
 
         orundumPerAp = orundumPerAp / apCost
 
 
         stageEfficiency = dropValueCount / apCost
-        const leT4Efficiency = leT2Value + leT3Value + leT4Value
-        const leT3Efficiency = leT2Value + leT3Value
-        const leT2Efficiency = leT2Value
-
-        if (!seriesInfo) {
-            continue
-        }
+        const leT4Efficiency = (leT2Value + leT3Value + leT4Value) / apCost
+        const leT3Efficiency = (leT2Value + leT3Value) / apCost
+        const leT2Efficiency = leT2Value / apCost
 
 
         const stageResult = {
@@ -226,7 +228,7 @@ async function calculationStageEfficiency(stageConfig) {
             zoneName: zoneName,
             itemName: mainItemName,
             itemId: mainItemId,
-            itemSeriesId: seriesInfo.seriesId,
+            itemSeriesId: mainSeriesInfo.seriesId,
             itemRarity: itemRarity,
             secondaryItemId: secondaryItemId,
             apExpect: mainApExpect,
@@ -253,8 +255,8 @@ async function calculationStageEfficiency(stageConfig) {
 }
 
 
-async function getStageData() {
-    const stageConfig = getStageConfig()
+async function getStageData(stageConfig) {
+
     const start = new Date().getTime()
     let stageResultList = await calculationStageEfficiency(stageConfig)
     const getData = new Date().getTime()
@@ -306,13 +308,13 @@ function getOrundumRecommendedStage(stageResultList) {
         .sort((a, b) => b.orundumPerAp - a.orundumPerAp)
 
     let list = []
-    for(const item of stageResultList){
-        if(item.orundumPerAp>0.5){
+    for (const item of stageResultList) {
+        if (item.orundumPerAp > 0.5) {
             list.push(item)
             continue
         }
-        if(item.stageType === 'ACT' || item.stageType === "ACT_REP"){
-            if(item.orundumPerAp>0.1){
+        if (item.stageType === 'ACT' || item.stageType === "ACT_REP") {
+            if (item.orundumPerAp > 0.1) {
                 list.push(item)
             }
         }

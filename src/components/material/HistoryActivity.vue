@@ -1,11 +1,11 @@
 <script setup>
-import ITEM_SERIES from '/src/static/json/material/item_series.json'
 import {ref} from "vue";
-import ItemImage from "@/components/sprite/ItemImage.vue";
-import {dateFormat} from "@/utils/dateUtil.js";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
+import {dateFormat} from "/src/utils/dateUtil.js";
+import {itemSeriesIdList} from "/src/utils/item/itemSeries.js";
 
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
-import {formatNumber} from "@/utils/format.js";
+import {formatNumber} from "/src/utils/format.js";
 
 const props = defineProps(['modelValue'])
 
@@ -20,12 +20,9 @@ let historyActivityTableHeaders = ref([]) // 材料表
 
 function initTableHeader() {
   let list = []
-  for (const itemId in ITEM_SERIES) {
-    const item = ITEM_SERIES[itemId]
-
+  for (const itemId of itemSeriesIdList) {
     list.push({
-      itemId: item.id,
-      itemName: item.name,
+      itemId: itemId,
       lastUp: false,
       lastUpInterval: 0
     })

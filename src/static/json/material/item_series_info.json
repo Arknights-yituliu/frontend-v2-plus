@@ -1,0 +1,366 @@
+[
+  {
+    "seriesId": "30013",
+    "seriesName": "固源岩组",
+    "itemSeries": [
+      {
+        "itemId": "30014",
+        "itemName": "提纯源岩",
+        "rarity": 4
+      },
+      {
+        "itemId": "30013",
+        "itemName": "固源岩组",
+        "rarity": 3
+      },
+      {
+        "itemId": "30012",
+        "itemName": "固源岩",
+        "rarity": 2
+      },
+      {
+        "itemId": "30011",
+        "itemName": "源岩",
+        "rarity": 1
+      }
+    ]
+  },
+  {
+    "seriesId": "30023",
+    "seriesName": "糖组",
+    "itemSeries": [
+      {
+        "itemId": "30024",
+        "itemName": "糖聚块",
+        "rarity": 4
+      },
+      {
+        "itemId": "30023",
+        "itemName": "糖组",
+        "rarity": 3
+      },
+      {
+        "itemId": "30022",
+        "itemName": "糖",
+        "rarity": 2
+      },
+      {
+        "itemId": "30021",
+        "itemName": "代糖",
+        "rarity": 1
+      }
+    ]
+  },
+  {
+    "seriesId": "30033",
+    "seriesName": "聚酸酯组",
+    "itemSeries": [
+      {
+        "itemId": "30034",
+        "itemName": "聚酸酯块",
+        "rarity": 4
+      },
+      {
+        "itemId": "30033",
+        "itemName": "聚酸酯组",
+        "rarity": 3
+      },
+      {
+        "itemId": "30032",
+        "itemName": "聚酸酯",
+        "rarity": 2
+      },
+      {
+        "itemId": "30031",
+        "itemName": "酯原料",
+        "rarity": 1
+      }
+    ]
+  },
+  {
+    "seriesId": "30043",
+    "seriesName": "异铁组",
+    "itemSeries": [
+      {
+        "itemId": "30044",
+        "itemName": "异铁块",
+        "rarity": 4
+      },
+      {
+        "itemId": "30043",
+        "itemName": "异铁组",
+        "rarity": 3
+      },
+      {
+        "itemId": "30042",
+        "itemName": "异铁",
+        "rarity": 2
+      },
+      {
+        "itemId": "30041",
+        "itemName": "异铁碎片",
+        "rarity": 1
+      }
+    ]
+  },
+  {
+    "seriesId": "30053",
+    "seriesName": "酮凝集组",
+    "itemSeries": [
+      {
+        "itemId": "30054",
+        "itemName": "酮阵列",
+        "rarity": 4
+      },
+      {
+        "itemId": "30053",
+        "itemName": "酮凝集组",
+        "rarity": 3
+      },
+      {
+        "itemId": "30052",
+        "itemName": "酮凝集",
+        "rarity": 2
+      },
+      {
+        "itemId": "30051",
+        "itemName": "双酮",
+        "rarity": 1
+      }
+    ]
+  },
+  {
+    "seriesId": "30063",
+    "seriesName": "全新装置",
+    "itemSeries": [
+      {
+        "itemId": "30064",
+        "itemName": "改量装置",
+        "rarity": 4
+      },
+      {
+        "itemId": "30063",
+        "itemName": "全新装置",
+        "rarity": 3
+      },
+      {
+        "itemId": "30062",
+        "itemName": "装置",
+        "rarity": 2
+      },
+      {
+        "itemId": "30061",
+        "itemName": "破损装置",
+        "rarity": 1
+      }
+    ]
+  },
+  {
+    "seriesId": "30073",
+    "seriesName": "扭转醇",
+    "itemSeries": [
+      {
+        "itemId": "30074",
+        "itemName": "白马醇",
+        "rarity": 4
+      },
+      {
+        "itemId": "30073",
+        "itemName": "扭转醇",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "30083",
+    "seriesName": "轻锰矿",
+    "itemSeries": [
+      {
+        "itemId": "30084",
+        "itemName": "三水锰矿",
+        "rarity": 4
+      },
+      {
+        "itemId": "30083",
+        "itemName": "轻锰矿",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "30093",
+    "seriesName": "研磨石",
+    "itemSeries": [
+      {
+        "itemId": "30094",
+        "itemName": "五水研磨石",
+        "rarity": 4
+      },
+      {
+        "itemId": "30093",
+        "itemName": "研磨石",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "30103",
+    "seriesName": "RMA70-12",
+    "itemSeries": [
+      {
+        "itemId": "30104",
+        "itemName": "RMA70-24",
+        "rarity": 4
+      },
+      {
+        "itemId": "30103",
+        "itemName": "RMA70-12",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31013",
+    "seriesName": "凝胶",
+    "itemSeries": [
+      {
+        "itemId": "31014",
+        "itemName": "聚合凝胶",
+        "rarity": 4
+      },
+      {
+        "itemId": "31013",
+        "itemName": "凝胶",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31023",
+    "seriesName": "炽合金",
+    "itemSeries": [
+      {
+        "itemId": "31024",
+        "itemName": "炽合金块",
+        "rarity": 4
+      },
+      {
+        "itemId": "31023",
+        "itemName": "炽合金",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31033",
+    "seriesName": "晶体元件",
+    "itemSeries": [
+      {
+        "itemId": "31034",
+        "itemName": "晶体电路",
+        "rarity": 4
+      },
+      {
+        "itemId": "31033",
+        "itemName": "晶体元件",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31043",
+    "seriesName": "半自然溶剂",
+    "itemSeries": [
+      {
+        "itemId": "31044",
+        "itemName": "精炼溶剂",
+        "rarity": 4
+      },
+      {
+        "itemId": "31043",
+        "itemName": "半自然溶剂",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31053",
+    "seriesName": "化合切削液",
+    "itemSeries": [
+      {
+        "itemId": "31054",
+        "itemName": "切削原液",
+        "rarity": 4
+      },
+      {
+        "itemId": "31053",
+        "itemName": "化合切削液",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31063",
+    "seriesName": "转质盐组",
+    "itemSeries": [
+      {
+        "itemId": "31064",
+        "itemName": "转质盐聚块",
+        "rarity": 4
+      },
+      {
+        "itemId": "31063",
+        "itemName": "转质盐组",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31073",
+    "seriesName": "褐素纤维",
+    "itemSeries": [
+      {
+        "itemId": "31074",
+        "itemName": "固化纤维板",
+        "rarity": 4
+      },
+      {
+        "itemId": "31073",
+        "itemName": "褐素纤维",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31083",
+    "seriesName": "环烃聚质",
+    "itemSeries": [
+      {
+        "itemId": "31084",
+        "itemName": "环烃预制体",
+        "rarity": 4
+      },
+      {
+        "itemId": "31083",
+        "itemName": "环烃聚质",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31093",
+    "seriesName": "类凝结核",
+    "itemSeries": [
+      {
+        "itemId": "31094",
+        "itemName": "手性屈光体",
+        "rarity": 4
+      },
+      {
+        "itemId": "31093",
+        "itemName": "类凝结核",
+        "rarity": 3
+      }
+    ]
+  }
+]
