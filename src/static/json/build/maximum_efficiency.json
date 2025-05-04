@@ -86,10 +86,6 @@
     "profession": "术师/辅助",
     "max_efficiency": 0.3,
     "conditions": {
-      "target_profession": [
-        "术师",
-        "辅助"
-      ],
       "skill_name": "女妖之力",
       "time_effect": "技能'言语之义'：单次协助一名干员训练时长达5小时，则该名干员下次训练所需时间-50%"
     },
@@ -321,10 +317,6 @@
     "profession": "近卫/狙击",
     "max_efficiency": 0.3,
     "conditions": {
-      "target_profession": [
-        "近卫",
-        "狙击"
-      ],
       "skill_name": "剑与手炮",
       "time_effect": "技能'精神锻炼'：单次协助一名干员训练时长达5小时，则该名干员下次训练所需时间-50%"
     },
