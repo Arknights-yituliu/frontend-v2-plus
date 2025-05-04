@@ -535,7 +535,7 @@ function calculateSavingsFromDefault(optimizedTime) {
                         <span class="assistant-name">{{ step.assistant.name }}</span>
                         <span v-if="step.assistant.note" class="assistant-note">{{ step.assistant.note }}</span>
                         <div class="efficiency-badges">
-                          <span :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{ (extraEfficiency.value * 100).toFixed(0) }}%</span>
+                          <span :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{ (extraEfficiency * 100).toFixed(0) }}%</span>
                           <span v-if="step.assistant.canApplyEfficiency !== false"
                                 class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
                         </div>
@@ -623,7 +623,7 @@ function calculateSavingsFromDefault(optimizedTime) {
                         <span class="assistant-name">{{ step.assistant.name }}</span>
                         <span v-if="step.assistant.note" class="assistant-note">{{ step.assistant.note }}</span>
                         <div class="efficiency-badges">
-                          <span :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{ (extraEfficiency.value * 100).toFixed(0) }}%</span>
+                          <span :class="['assistant-efficiency', hasAscalon ? 'base-efficiency-enhanced' : 'base-efficiency']">{{ (extraEfficiency * 100).toFixed(0) }}%</span>
                           <span v-if="step.assistant.canApplyEfficiency !== false"
                                 class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
                         </div>
