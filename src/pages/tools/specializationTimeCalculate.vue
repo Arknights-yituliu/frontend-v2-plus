@@ -10,7 +10,7 @@ const collapseVisible = ref(['HalfOperatorCalculate']);
 </script>
 
 <template>
-  <el-collapse v-model="collapseVisible" accordion style="max-width: 90%;margin: auto">
+  <el-collapse v-model="collapseVisible" style="max-width: 90%;margin: auto">
     <half-operator-calculate/>
     <optimal-specialization-paths/>
     <el-collapse-item name="EfficiencyRanking">
@@ -26,7 +26,5 @@ const collapseVisible = ref(['HalfOperatorCalculate']);
 </template>
 
 <style scoped>
-.el-collapse {
-  //height: 93vh; /* 暂时先设这个值 */
-}
+
 </style>

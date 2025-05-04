@@ -65,8 +65,7 @@ function getHalfOperator(profession) {
   const irene = optimalSpecialization.half_time_operators.irene;
   const logos = optimalSpecialization.half_time_operators.logos;
 
-  let canApplyEfficiency = false;
-  let halfOperator = null;
+  let halfOperator;
 
   if (["近卫", "狙击"].includes(profession)) {
     halfOperator = {
@@ -103,14 +102,6 @@ function getHalfOperator(profession) {
   }
 
   return halfOperator;
-}
-
-// 计算实际专精时间（小时）
-function calculateSpecializationTime(baseTime, efficiency, halfTimeEffect = false) {
-  // 先计算基础时间减少
-  const calculated = baseTime / (1 + 0.05 + efficiency);
-  // 如果有减半效果，再除以2
-  return halfTimeEffect ? calculated * 0.5 : calculated;
 }
 
 // 计算综合效率 (根据总耗时来算)

@@ -9,13 +9,6 @@ const operatorData = ref([]);
 const isLoading = ref(true);
 const sortedOperators = ref([]);
 
-// 基础专精时间（小时）
-const baseTrainingHours = {
-  1: 8,   // 专精一
-  2: 16,  // 专精二
-  3: 24   // 专精三
-};
-
 // 过滤条件
 const filters = ref({
   profession: "",
