@@ -291,6 +291,7 @@ function splitItem(map) {
   for (const [itemId, value] of copyMap) {
     if (tempMap.get(itemId) === 0) {
       tempMap.set(itemId, value)
+      console.log(itemInfoMap.get(itemId).itemName,'：',tempMap.get(itemId))
     }
     const compositeTableElement = compositeTable[itemId];
     if (!compositeTableElement) {
@@ -305,7 +306,7 @@ function splitItem(map) {
         let oldValue = copyMap.get(item.itemId);
         oldValue = oldValue ? oldValue : 0
         copyMap.set(item.itemId, oldValue + item.count * value)
-        // console.log(itemInfoMap.get(itemId).itemName,'*',item.count,'==',itemInfoMap.get(item.itemId).itemName,'--->',copyMap.get(item.itemId))
+        console.log(itemInfoMap.get(itemId).itemName,':',value,'*',item.count,'==',itemInfoMap.get(item.itemId).itemName,'--->',copyMap.get(item.itemId))
       }
     }
   }
@@ -326,7 +327,8 @@ function splitItem(map) {
         let oldValue = tempMap.get(item.itemId);
         oldValue = oldValue ? oldValue : 0
         tempMap.set(item.itemId, oldValue + item.count * value)
-        // console.log(itemInfoMap.get(item.itemId).itemName,'---',tempMap.get(item.itemId))
+
+        console.log(itemInfoMap.get(itemId).itemName,':',value,'*',item.count,'==',itemInfoMap.get(item.itemId).itemName,'--->',tempMap.get(item.itemId))
       }
     }
   }
