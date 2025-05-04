@@ -850,12 +850,12 @@ function calculateSavingsFromDefault(optimizedTime) {
 }
 
 .base-efficiency {
-  background-color: #eaf4fe;
+  background-color: var(--c-page-background-color-secondary);
   color: #409EFF;
 }
 
 .base-efficiency-enhanced {
-  background-color: #eaf4fe;
+  background-color: var(--c-page-background-color-secondary);
   color: #409EFF;
   border: 1px dashed #409EFF;
 }
