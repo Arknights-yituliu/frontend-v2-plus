@@ -233,7 +233,7 @@ const getSpecialEffectInfo = (operator) => {
           v-else
           v-loading="isLoading"
           :data="sortedOperators"
-          max-height="500"
+          max-height="600"
           stripe
       >
         <el-table-column :index="1" label="排名" type="index" width="70"/>
@@ -248,9 +248,6 @@ const getSpecialEffectInfo = (operator) => {
           </template>
         </el-table-column>
 
-        <!-- 效率加成职业 -->
-        <el-table-column label="效率加成职业" prop="profession" width="130"/>
-
         <!-- 效率生效职业 -->
         <el-table-column label="效率生效职业" width="120">
           <template #default="scope">
@@ -264,6 +261,9 @@ const getSpecialEffectInfo = (operator) => {
             <span v-else>通用</span>
           </template>
         </el-table-column>
+
+        <!-- 效率加成职业 -->
+        <el-table-column label="效率加成职业" prop="profession" width="130"/>
 
         <!-- 纸面效率 -->
         <el-table-column label="纸面效率" width="100">
