@@ -1,7 +1,10 @@
 <script setup>
-import RankBar from "./rankBar";
-import RankBarContent from "./rankBarContent";
+// import RankBar from "./rankBar";
+// import RankBarContent from "./rankBarContent";
 import MaterialItem from "./materialItem";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import SkillIcon from "/src/components/sprite/SkillIcon.vue";
+import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 
 import { ref } from 'vue';
 import { detailData, detailTableData, costFormatter, percentFormatter } from '../js/table'
@@ -74,10 +77,9 @@ function getEquipIcon(typeIcon){
                 <!-- 图标 -->
                 <td>
                   <div class="icon-container">
-                    <div :class="['bar-icon', item.iconClass]" :style="item.style" v-if="item.iconClass"></div>
-                    <div :class="['mod-icon', 'bar-icon']" v-else>
-                      <img class="operator-equip-image" :src="getEquipIcon(item.typeIcon)">
-                    </div>
+                    <OperatorAvatar :size="48" :mobile-size="40" :char-id="item.charId" v-if="item.iconType === 'operator'"></OperatorAvatar>
+                    <SkillIcon :size="50" :mobile-size="42" :icon="item.iconId" v-else-if="item.iconType === 'skill'"></SkillIcon>
+                    <EquipIcon :size="50" :mobile-size="42" :icon="item.typeIcon" class="equip-icon" v-else="item.iconType === 'equip'"></EquipIcon>
                   </div>
                 </td>
                 <!-- 材料开销 -->
@@ -92,10 +94,9 @@ function getEquipIcon(typeIcon){
             </template>
           </v-data-table>
         </el-collapse-item>
+        <!-- 感觉没人看这个, 维护还麻烦, 扬了
         <el-collapse-item title="消耗排名柱状图" name="2">
-          <!-- 柱状图 -->
           <div class="bar-group">
-            <!-- 精二材料消耗排名 -->
             <RankBar>
               <RankBarContent :costs="totalCostObj[detailData.rarity].eliteCosts" :items="[detailData.elite]">
                 <template #label>
@@ -103,7 +104,6 @@ function getEquipIcon(typeIcon){
                 </template>
               </RankBarContent>
             </RankBar>
-            <!-- 技能材料消耗排名 -->
             <RankBar>
               <RankBarContent :costs="totalCostObj[detailData.rarity].skillCosts" :items="detailData.skills">
                 <template #label="{ item, index }">
@@ -111,7 +111,6 @@ function getEquipIcon(typeIcon){
                 </template>
               </RankBarContent>
             </RankBar>
-            <!-- 模组材料消耗排名 -->
             <RankBar>
               <RankBarContent :costs="totalCostObj[detailData.rarity].modCosts" :items="detailData.mods">
                 <template #label="{ item }">
@@ -120,7 +119,8 @@ function getEquipIcon(typeIcon){
               </RankBarContent>
             </RankBar>
           </div>
-        </el-collapse-item>
+        </el-collapse-item> 
+        -->
         <el-collapse-item title="消耗材料一览" name="3">
           <div class="material-list">
             <MaterialItem v-for="(item, index) in [detailData.elite]" :info="item" :skillIndex="index" :key="index">

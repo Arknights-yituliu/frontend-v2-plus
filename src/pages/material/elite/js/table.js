@@ -43,19 +43,18 @@ export const initDetailData = (row) => {
     const rarityObj = totalCostObj.value[row.rarity];
     const { eliteCosts, skillCosts, modCosts } = rarityObj;
     const { charId, elite, skills, mods } = row;
-    let iconClass = elite.iconClass = `char-icon bg-${charId.includes('custom') ? 'custom' : charId}`
     setIconInfo('char', eliteCosts, elite, {
       name: '精英化二',
-      iconClass,
+      charId,
+      iconType: 'operator',
       style: {
         top: `${charIconBasePosition}px`,
       }
     });
     skills.forEach((item, index) => {
-      iconClass = item.iconClass = `skill-icon bg-skill_icon_${item.iconId}`
       setIconInfo('skill', skillCosts, item, {
         name: charId.includes('custom') ? item.name : `${index + 1}技能：${item.name}`, 
-        iconClass,
+        iconType: 'skill',
         style: {
           top: `${skillIconBasePosition}px`,
         }
@@ -65,6 +64,7 @@ export const initDetailData = (row) => {
     mods.forEach(item => {
       setIconInfo('mods', modCosts, item, {
         name: charId.includes('custom') ? item.typeName2 : `${item.typeName2}模组：${item.uniEquipName}`, 
+        iconType: 'equip',
       });
     });
   }
