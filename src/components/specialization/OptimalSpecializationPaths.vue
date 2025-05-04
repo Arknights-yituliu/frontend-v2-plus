@@ -1,6 +1,6 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
-import {Location, Refresh} from "@element-plus/icons-vue";
+import {onMounted, ref} from "vue";
+import {Location} from "@element-plus/icons-vue";
 import optimalSpecialization from "@/static/json/build/optimal_specialization.json";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 
@@ -34,18 +34,29 @@ const baseHours = {
 function getBestAssistant(profession, level, branch = null) {
   const professionData = optimalSpecialization.professions[profession];
   if (!professionData) return null;
-  
+
+  let bestAssistant = null;
+
   // 检查是否有分支特定的数据
   if (branch && professionData.branches && professionData.branches[branch]) {
     const branchData = professionData.branches[branch];
     // 分支数据存在，直接返回最佳助手
     if (branchData.best_assistant) {
-      return branchData.best_assistant;
+      bestAssistant = {...branchData.best_assistant};
     }
   }
-  
+
   // 没有分支特定数据或无效分支，使用通用数据
-  return professionData.general[`specialization_${level}`]?.best_assistant;
+  if (!bestAssistant) {
+    bestAssistant = {...professionData.general[`specialization_${level}`]?.best_assistant};
+  }
+
+  if (bestAssistant) {
+    // 添加canApplyEfficiency标志，这里通常都可以应用效率
+    bestAssistant.canApplyEfficiency = true;
+  }
+
+  return bestAssistant;
 }
 
 // 获取职业对应的减半干员
@@ -54,36 +65,44 @@ function getHalfOperator(profession) {
   const irene = optimalSpecialization.half_time_operators.irene;
   const logos = optimalSpecialization.half_time_operators.logos;
 
+  let canApplyEfficiency = false;
+  let halfOperator = null;
+
   if (["近卫", "狙击"].includes(profession)) {
-    return {
+    halfOperator = {
       name: irene.name,
       efficiency: irene.efficiency,
       charId: irene.charId,
       note: "适用于所有干员",
       skill_name: irene.skill_name,
-      description: irene.description
+      description: irene.description,
+      canApplyEfficiency: true
     };
   } else if (["术师", "辅助"].includes(profession)) {
-    return {
+    halfOperator = {
       name: logos.name,
       efficiency: logos.efficiency,
       charId: logos.charId,
       note: "适用于所有干员",
       skill_name: logos.skill_name,
-      description: logos.description
+      description: logos.description,
+      canApplyEfficiency: true
     };
   } else {
     // 医疗、重装、特种、先锋 - 返回单一选项，但在描述中包括两个选项
-    return {
+    halfOperator = {
       name: `${irene.name}/${logos.name}`,
       efficiency: irene.efficiency, // 两者效率相同
       charId: irene.charId, // 默认显示艾丽妮的头像
       note: "可选择艾丽妮或逻各斯",
       skill_name: "特训指导/战术分析",
       description: "进驻训练室协助位时，专精训练可以触发减半效果",
-      alternativeCharId: logos.charId // 添加替代头像
+      alternativeCharId: logos.charId, // 添加替代头像
+      canApplyEfficiency: false
     };
   }
+
+  return halfOperator;
 }
 
 // 计算实际专精时间（小时）
@@ -123,31 +142,32 @@ function formatTime(hours) {
 
 // 生成耗时计算的详细提示
 function generateTimeTooltip(baseTime, efficiency, halfEffect) {
-  const baseReduceFactor = 1 + 0.05 + efficiency;
+  const efficiencyDisplay = efficiency > 0 ? `${(efficiency * 100).toFixed(0)}%` : "0%";
+  const baseReduceFactor = 1 + 0.05 + (efficiency || 0);
   const calculatedTime = baseTime / baseReduceFactor;
   const finalTime = halfEffect ? calculatedTime * 0.5 : calculatedTime;
-  
-  return `基础时间: ${baseTime}小时
+
+  return `基础时间: ${baseTime.toFixed(2)}小时
 基础减免: 5% (所有助手固有)
-助手效率: ${(efficiency * 100).toFixed(0)}%
-助手总效率: ${((efficiency + 0.05) * 100).toFixed(0)}%
-计算公式: ${baseTime} / ${baseReduceFactor.toFixed(2)} ${halfEffect ? '× 0.5' : ''}
+助手效率: ${efficiencyDisplay}
+助手总效率: ${((efficiency || 0) + 0.05) * 100}%
+计算公式: ${baseTime.toFixed(2)} / ${baseReduceFactor.toFixed(2)} ${halfEffect ? '× 0.5' : ''}
 计算结果: ${finalTime.toFixed(2)}小时`;
 }
 
 // 生成总耗时计算的提示信息
 function generateTotalTimeTooltip(steps) {
   if (!steps || steps.length === 0) return '';
-  
+
   let tooltipText = '总耗时计算详情:\n\n';
   let totalTime = 0;
-  
+
   steps.forEach((step, index) => {
     const stepTime = step.time;
     totalTime += stepTime;
     tooltipText += `${index + 1}. 专精${step.level}${step.part > 1 ? `-${step.part}` : ''} (${step.assistant.name}): ${stepTime.toFixed(2)}小时\n`;
   });
-  
+
   tooltipText += `\n总计: ${totalTime.toFixed(2)}小时`;
   return tooltipText;
 }
@@ -158,7 +178,7 @@ function generateSavingsTooltip(optimizedTime) {
   const defaultTime = baseHours[1] / baseReduceFactor + baseHours[2] / baseReduceFactor + baseHours[3] / baseReduceFactor;
   const savedHours = defaultTime - optimizedTime;
   const savedPercentage = (savedHours / defaultTime * 100).toFixed(1);
-  
+
   return `节省时间计算详情:
 
 无专精助手情况下总耗时:
@@ -183,89 +203,162 @@ function calculateOptimalPath(profession, branch = null) {
   const bestOperatorS2 = getBestAssistant(profession, 2, branch);
   const bestOperatorS3 = getBestAssistant(profession, 3, branch);
 
-  // 专精一分两段：
-  // 前半段用最高效率助手
-  const timeS1FirstHalf = calculateSpecializationTime(baseHours[1] * 0.5, bestOperatorS1?.efficiency);
-  // 后半段用减半助手
-  const timeS1SecondHalf = calculateSpecializationTime(baseHours[1] * 0.5, halfOperator?.efficiency);
-  const totalTimeS1 = timeS1FirstHalf + timeS1SecondHalf;
-  
+  // 计算各个干员的实际效率（基础+效率+额外5%）
+  const bestS1TotalEff = 1 + bestOperatorS1?.efficiency + 0.05;
+  const bestS2TotalEff = 1 + bestOperatorS2?.efficiency + 0.05;
+  const bestS3TotalEff = 1 + bestOperatorS3?.efficiency + 0.05;
+
+  // 减半干员效率，根据是否能应用效率加成判断
+  const halfOperatorEff = halfOperator.canApplyEfficiency ? halfOperator.efficiency : 0;
+  const halfOpTotalEff = 1 + halfOperatorEff + 0.05;
+
+  // 减半干员需要工作的实际时间（5小时 * 效率）
+  const halfOpRequiredHours = 5 * halfOpTotalEff;
+
+  // 专精一计算
+  // 如果专精一总时间（8小时）大于减半干员所需时间
+  const s1TotalTimeInZeroEff = baseHours[1]; // 总时间（零效率下）
+
+  // 计算减半干员需要的时间（实际工作时间）
+  const s1HalfOpTimeInZeroEff = halfOpRequiredHours; // 减半干员需要的时间（零效率下）
+  const s1HalfOpWorkTime = s1HalfOpTimeInZeroEff / halfOpTotalEff; // 减半干员实际工作时间
+
+  // 计算剩余时间（给最高效率干员）
+  const s1RemainingTimeInZeroEff = s1TotalTimeInZeroEff - s1HalfOpTimeInZeroEff; // 剩余时间（零效率下）
+  const s1BestOpWorkTime = s1RemainingTimeInZeroEff / bestS1TotalEff; // 最佳干员实际工作时间
+
+  // 专精一总工作时间
+  const totalTimeS1 = s1HalfOpWorkTime + s1BestOpWorkTime;
+
   // 生成专精一各段的计算提示
-  const tooltipS1FirstHalf = generateTimeTooltip(baseHours[1] * 0.5, bestOperatorS1?.efficiency, false);
-  const tooltipS1SecondHalf = generateTimeTooltip(baseHours[1] * 0.5, halfOperator?.efficiency, false);
-  
-  // 计算专精一的替换时间点
-  const switchTimeS1 = formatTime(timeS1FirstHalf);
+  const tooltipS1HalfOp = generateTimeTooltip(s1HalfOpTimeInZeroEff, halfOperatorEff, false);
+  const tooltipS1BestOp = generateTimeTooltip(s1RemainingTimeInZeroEff, bestOperatorS1?.efficiency, false);
 
-  // 专精二分两段：
-  // 前半段使用最高效率助手（已经触发了专精一的减半效果）
-  const timeS2FirstHalf = calculateSpecializationTime(baseHours[2] * 0.5, bestOperatorS2?.efficiency, true);
-  // 后半段使用减半助手
-  const timeS2SecondHalf = calculateSpecializationTime(baseHours[2] * 0.5, halfOperator?.efficiency, true);
-  const totalTimeS2 = timeS2FirstHalf + timeS2SecondHalf;
-  
+  // 专精二计算（已有减半效果）
+  const s2TotalTimeInZeroEff = baseHours[2]; // 总时间（零效率下）
+  const s2ActualTotalTimeInZeroEff = s2TotalTimeInZeroEff * 0.5; // 实际总时间（有减半效果）
+
+  // 计算减半干员需要的时间（已有减半效果）
+  const s2HalfOpTimeInZeroEff = halfOpRequiredHours; // 减半干员需要的时间（零效率下）
+  const s2HalfOpWorkTime = s2HalfOpTimeInZeroEff / halfOpTotalEff; // 减半干员实际工作时间
+
+  // 计算剩余时间（给最高效率干员，已有减半效果）
+  const s2RemainingTimeInZeroEff = s2ActualTotalTimeInZeroEff - s2HalfOpTimeInZeroEff; // 剩余时间（零效率下）
+  // 如果剩余时间小于0，则全部给减半干员
+  const s2BestOpWorkTime = s2RemainingTimeInZeroEff > 0 ?
+      s2RemainingTimeInZeroEff / bestS2TotalEff : 0; // 最佳干员实际工作时间
+  const adjustedS2HalfOpWorkTime = s2RemainingTimeInZeroEff > 0 ?
+      s2HalfOpWorkTime : s2ActualTotalTimeInZeroEff / halfOpTotalEff;
+
+  // 专精二总工作时间
+  const totalTimeS2 = adjustedS2HalfOpWorkTime + s2BestOpWorkTime;
+
   // 生成专精二各段的计算提示
-  const tooltipS2FirstHalf = generateTimeTooltip(baseHours[2] * 0.5, bestOperatorS2?.efficiency, true);
-  const tooltipS2SecondHalf = generateTimeTooltip(baseHours[2] * 0.5, halfOperator?.efficiency, true);
-  
-  // 计算专精二的替换时间点
-  const switchTimeS2 = formatTime(timeS2FirstHalf);
+  const tooltipS2HalfOp = generateTimeTooltip(
+      s2RemainingTimeInZeroEff > 0 ? s2HalfOpTimeInZeroEff : s2ActualTotalTimeInZeroEff,
+      halfOperatorEff,
+      true
+  );
+  const tooltipS2BestOp = s2RemainingTimeInZeroEff > 0 ?
+      generateTimeTooltip(s2RemainingTimeInZeroEff, bestOperatorS2?.efficiency, true) :
+      "没有足够时间使用最高效率干员";
 
-  // 专精三：使用专精三最高效率干员（已经触发了专精二的减半效果）
-  const timeS3 = calculateSpecializationTime(baseHours[3], bestOperatorS3?.efficiency, true);
-  
+  // 专精三计算（已有减半效果）
+  const s3TotalTimeInZeroEff = baseHours[3]; // 总时间（零效率下）
+  const s3ActualTotalTimeInZeroEff = s3TotalTimeInZeroEff * 0.5; // 实际总时间（有减半效果）
+  const timeS3 = s3ActualTotalTimeInZeroEff / bestS3TotalEff; // 最佳干员实际工作时间
+
   // 生成专精三的计算提示
-  const tooltipS3 = generateTimeTooltip(baseHours[3], bestOperatorS3?.efficiency, true);
+  const tooltipS3 = generateTimeTooltip(s3ActualTotalTimeInZeroEff, bestOperatorS3?.efficiency, true);
 
+  // 计算总耗时
   const totalTime = totalTimeS1 + totalTimeS2 + timeS3;
 
-  const steps = [
-    {
+  // 确定专精一的替换顺序（先用最高效率干员还是先用减半干员）
+  const s1FirstIsHalfOp = s1HalfOpTimeInZeroEff >= s1TotalTimeInZeroEff;
+  // 确定专精二的替换顺序
+  const s2FirstIsHalfOp = s2RemainingTimeInZeroEff <= 0;
+
+  const steps = [];
+
+  // 专精一的步骤
+  if (s1FirstIsHalfOp) {
+    // 如果时间不够，仅使用减半干员
+    steps.push({
+      level: 1,
+      part: 1,
+      assistant: halfOperator,
+      time: totalTimeS1,
+      timeTooltip: tooltipS1HalfOp,
+      halfEffect: false,
+      description: `专精一时间较短，直接使用${halfOperator.name}进行专精一训练，积累减半效果（需至少${halfOperator.canApplyEfficiency ? '5小时' : '5小时15分钟'}）`
+    });
+  } else {
+    // 先用最佳干员再用减半干员
+    steps.push({
       level: 1,
       part: 1,
       assistant: bestOperatorS1,
-      time: timeS1FirstHalf,
-      timeTooltip: tooltipS1FirstHalf,
+      time: s1BestOpWorkTime,
+      timeTooltip: tooltipS1BestOp,
       halfEffect: false,
-      description: `使用${bestOperatorS1.name}开始专精一训练，效率${(bestOperatorS1?.efficiency * 100).toFixed(0)}%，${highlightTimePoint(switchTimeS1, halfOperator.name)}`
-    },
-    {
+      description: `使用${bestOperatorS1.name}开始专精一训练，效率${(bestOperatorS1?.efficiency * 100).toFixed(0)}%，${highlightTimePoint(formatTime(s1BestOpWorkTime), halfOperator.name)}`
+    });
+    steps.push({
       level: 1,
       part: 2,
       assistant: halfOperator,
-      time: timeS1SecondHalf,
-      timeTooltip: tooltipS1SecondHalf,
+      time: s1HalfOpWorkTime,
+      timeTooltip: tooltipS1HalfOp,
       halfEffect: false,
-      description: `使用${halfOperator.name}完成专精一训练，积累减半效果`
-    },
-    {
+      description: `使用${halfOperator.name}完成专精一训练，积累减半效果（需至少${halfOperator.canApplyEfficiency ? '5小时' : '5小时15分钟'}）`
+    });
+  }
+
+  // 专精二的步骤
+  if (s2FirstIsHalfOp) {
+    // 如果时间不够，仅使用减半干员
+    steps.push({
+      level: 2,
+      part: 1,
+      assistant: halfOperator,
+      time: totalTimeS2,
+      timeTooltip: tooltipS2HalfOp,
+      halfEffect: true,
+      description: `专精二时间较短，直接使用${halfOperator.name}进行专精二训练，享受并积累减半效果（需至少${halfOperator.canApplyEfficiency ? '5小时' : '5小时15分钟'}）`
+    });
+  } else {
+    // 先用最佳干员再用减半干员
+    steps.push({
       level: 2,
       part: 1,
       assistant: bestOperatorS2,
-      time: timeS2FirstHalf,
-      timeTooltip: tooltipS2FirstHalf,
+      time: s2BestOpWorkTime,
+      timeTooltip: tooltipS2BestOp,
       halfEffect: true,
-      description: `使用${bestOperatorS2.name}开始专精二训练，效率${(bestOperatorS2?.efficiency * 100).toFixed(0)}%，享受减半效果，${highlightTimePoint(switchTimeS2, halfOperator.name)}`
-    },
-    {
+      description: `使用${bestOperatorS2.name}开始专精二训练，效率${(bestOperatorS2?.efficiency * 100).toFixed(0)}%，享受减半效果，${highlightTimePoint(formatTime(s2BestOpWorkTime), halfOperator.name)}`
+    });
+    steps.push({
       level: 2,
       part: 2,
       assistant: halfOperator,
-      time: timeS2SecondHalf,
-      timeTooltip: tooltipS2SecondHalf,
+      time: adjustedS2HalfOpWorkTime,
+      timeTooltip: tooltipS2HalfOp,
       halfEffect: true,
-      description: `使用${halfOperator.name}完成专精二训练，积累减半效果`
-    },
-    {
-      level: 3,
-      part: 1,
-      assistant: bestOperatorS3,
-      time: timeS3,
-      timeTooltip: tooltipS3,
-      halfEffect: true,
-      description: `使用${bestOperatorS3.name}进行专精三训练，效率${(bestOperatorS3?.efficiency * 100).toFixed(0)}%，享受减半效果`
-    }
-  ];
+      description: `使用${halfOperator.name}完成专精二训练，继续积累减半效果（需至少${halfOperator.canApplyEfficiency ? '5小时' : '5小时15分钟'}）`
+    });
+  }
+
+  // 专精三步骤
+  steps.push({
+    level: 3,
+    part: 1,
+    assistant: bestOperatorS3,
+    time: timeS3,
+    timeTooltip: tooltipS3,
+    halfEffect: true,
+    description: `使用${bestOperatorS3.name}进行专精三训练，效率${(bestOperatorS3?.efficiency * 100).toFixed(0)}%，享受减半效果`
+  });
 
   return {
     totalTime: totalTime,
@@ -285,10 +378,10 @@ function initializePaths() {
     if (!optimalPaths.value[profession]) {
       optimalPaths.value[profession] = {};
     }
-    
+
     // 计算通用路径
     optimalPaths.value[profession].general = calculateOptimalPath(profession);
-    
+
     // 计算分支路径
     if (branchesByProfession[profession].length > 0) {
       optimalPaths.value[profession].branches = {};
@@ -304,11 +397,11 @@ function calculateSavingsFromDefault(optimizedTime) {
   // 无专精助手情况下的时间计算 (只有基础5%减少)
   const baseReduceFactor = 1.05; // 基础的5%减少
   const defaultTime = baseHours[1] / baseReduceFactor + baseHours[2] / baseReduceFactor + baseHours[3] / baseReduceFactor;
-  
+
   const savedHours = defaultTime - optimizedTime;
   const savedPercentage = ((savedHours / defaultTime) * 100).toFixed(0);
-  
-  return { savedHours, savedPercentage };
+
+  return {savedHours, savedPercentage};
 }
 
 // 组件挂载时初始化
@@ -327,7 +420,7 @@ onMounted(() => {
     <div class="optimal-path-container">
       <el-alert
           :closable="false"
-          description="本功能展示从专精零到专精三的最优路线，综合应用最高效率干员与时间减半策略。专精一前半段使用效率最高助手，后半段换上专精减半助手（近卫/狙击换艾丽妮，术师/辅助换逻各斯，其它职业换艾丽妮/逻各斯均可）；专精二前半段使用效率最高助手（享受减半效果），后半段换上专精减半助手；专精三使用效率最高助手（享受减半效果）。每个职业均选用最高效率助手，如95%效率的归溟幽灵鲨（特种专精3）等。"
+          description="本功能展示从专精零到专精三的最优路线，综合应用最高效率干员与时间减半策略。专精减半需要减半干员(艾丽妮/逻各斯)工作达到效率换算后的时间才能生效。近卫/狙击使用艾丽妮，术师/辅助使用逻各斯，它们各需5小时；其它职业（医疗/重装/特种/先锋）使用时，由于无法获得30%效率加成，需工作约5小时15分钟。若训练时间足够，先使用最高效率助手，再换减半干员以积累减半效果；专精二、专精三则享受累积的减半效果。"
           show-icon
           style="margin-bottom: 15px"
           title="专精路线说明"
@@ -338,11 +431,11 @@ onMounted(() => {
       <div class="profession-filter">
         <div class="filter-title">选择职业:</div>
         <div class="filter-buttons">
-          <button 
-            v-for="profession in professions" 
-            :key="profession" 
-            :class="['profession-button', 'profession', {'active': activeProfession === profession}]"
-            @click="activeProfession = profession"
+          <button
+              v-for="profession in professions"
+              :key="profession"
+              :class="['profession-button', 'profession', {'active': activeProfession === profession}]"
+              @click="activeProfession = profession"
           >
             {{ profession }}
           </button>
@@ -369,9 +462,12 @@ onMounted(() => {
               <div class="path-summary">
                 <div class="time-info">
                   <span class="label">总耗时:</span>
-                  <span class="value highlight tooltip-target" :title="optimalPaths[activeProfession].general.totalTimeTooltip">{{
-                      formatTime(optimalPaths[activeProfession].general.totalTime)
-                    }}</span>
+                  <el-tooltip :content="optimalPaths[activeProfession].general.totalTimeTooltip" effect="light"
+                              placement="top">
+                    <span class="value highlight">{{
+                        formatTime(optimalPaths[activeProfession].general.totalTime)
+                      }}</span>
+                  </el-tooltip>
                 </div>
                 <div class="time-info">
                   <span class="label">综合效率:</span>
@@ -381,9 +477,14 @@ onMounted(() => {
                 </div>
                 <div class="time-info">
                   <span class="label">相对无专精辅助干员节省:</span>
-                  <span class="value success tooltip-target" :title="optimalPaths[activeProfession].general.savingsTooltip">{{
-                      formatTime(calculateSavingsFromDefault(optimalPaths[activeProfession].general.totalTime).savedHours)
-                    }} ({{ calculateSavingsFromDefault(optimalPaths[activeProfession].general.totalTime).savedPercentage }}%)</span>
+                  <el-tooltip :content="optimalPaths[activeProfession].general.savingsTooltip" effect="light"
+                              placement="top">
+                    <span class="value success">{{
+                        formatTime(calculateSavingsFromDefault(optimalPaths[activeProfession].general.totalTime).savedHours)
+                      }} ({{
+                        calculateSavingsFromDefault(optimalPaths[activeProfession].general.totalTime).savedPercentage
+                      }}%)</span>
+                  </el-tooltip>
                 </div>
               </div>
             </div>
@@ -399,27 +500,37 @@ onMounted(() => {
                     <div v-if="step.description" class="step-action" v-html="step.description"></div>
                     <div class="step-details">
                       <div class="assistant-info">
-                        <OperatorAvatar 
-                          v-if="step.assistant.charId" 
-                          :char-id="step.assistant.charId" 
-                          :size="40" 
-                          rounded
-                        />
+                        <el-tooltip :content="step.assistant.description" effect="light" placement="top">
+                          <OperatorAvatar
+                              v-if="step.assistant.charId"
+                              :char-id="step.assistant.charId"
+                              :size="40"
+                              rounded
+                          />
+                        </el-tooltip>
                         <!-- 如果有替代头像，显示两个头像 -->
-                        <OperatorAvatar 
-                          v-if="step.assistant.alternativeCharId" 
-                          :char-id="step.assistant.alternativeCharId" 
-                          :size="40" 
-                          rounded
-                        />
+                        <el-tooltip v-if="step.assistant.alternativeCharId" :content="'进驻训练室协助位时，专精训练可以触发减半效果'" effect="light"
+                                    placement="top">
+                          <OperatorAvatar
+                              :char-id="step.assistant.alternativeCharId"
+                              :size="40"
+                              rounded
+                          />
+                        </el-tooltip>
                         <span class="assistant-name">{{ step.assistant.name }}</span>
                         <span v-if="step.assistant.note" class="assistant-note">{{ step.assistant.note }}</span>
-                        <span class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
+                        <div class="efficiency-badges">
+                          <span class="assistant-efficiency base-efficiency">5%</span>
+                          <span v-if="step.assistant.canApplyEfficiency !== false"
+                                class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
+                        </div>
                       </div>
-                      <span :class="['time', step.halfEffect ? 'half-effect' : '', 'tooltip-target']" :title="step.timeTooltip">
-                        耗时: {{ formatTime(step.time) }}
-                        <span v-if="step.halfEffect" class="half-time-tag">减半效果</span>
-                      </span>
+                      <el-tooltip :content="step.timeTooltip" effect="light" placement="top">
+                        <span :class="['time', step.halfEffect ? 'half-effect' : '']">
+                          耗时: {{ formatTime(step.time) }}
+                          <span v-if="step.halfEffect" class="half-time-tag">减半效果</span>
+                        </span>
+                      </el-tooltip>
                     </div>
                   </div>
                 </template>
@@ -438,9 +549,12 @@ onMounted(() => {
               <div class="path-summary">
                 <div class="time-info">
                   <span class="label">总耗时:</span>
-                  <span class="value highlight tooltip-target" :title="optimalPaths[activeProfession].branches[activeTab].totalTimeTooltip">{{
-                      formatTime(optimalPaths[activeProfession].branches[activeTab].totalTime)
-                    }}</span>
+                  <el-tooltip :content="optimalPaths[activeProfession].branches[activeTab].totalTimeTooltip"
+                              effect="light" placement="top">
+                    <span class="value highlight">{{
+                        formatTime(optimalPaths[activeProfession].branches[activeTab].totalTime)
+                      }}</span>
+                  </el-tooltip>
                 </div>
                 <div class="time-info">
                   <span class="label">综合效率:</span>
@@ -450,9 +564,14 @@ onMounted(() => {
                 </div>
                 <div class="time-info">
                   <span class="label">相对无专精辅助干员节省:</span>
-                  <span class="value success tooltip-target" :title="optimalPaths[activeProfession].branches[activeTab].savingsTooltip">{{
-                      formatTime(calculateSavingsFromDefault(optimalPaths[activeProfession].branches[activeTab].totalTime).savedHours)
-                    }} ({{ calculateSavingsFromDefault(optimalPaths[activeProfession].branches[activeTab].totalTime).savedPercentage }}%)</span>
+                  <el-tooltip :content="optimalPaths[activeProfession].branches[activeTab].savingsTooltip"
+                              effect="light" placement="top">
+                    <span class="value success">{{
+                        formatTime(calculateSavingsFromDefault(optimalPaths[activeProfession].branches[activeTab].totalTime).savedHours)
+                      }} ({{
+                        calculateSavingsFromDefault(optimalPaths[activeProfession].branches[activeTab].totalTime).savedPercentage
+                      }}%)</span>
+                  </el-tooltip>
                 </div>
               </div>
             </div>
@@ -468,27 +587,37 @@ onMounted(() => {
                     <div v-if="step.description" class="step-action" v-html="step.description"></div>
                     <div class="step-details">
                       <div class="assistant-info">
-                        <OperatorAvatar 
-                          v-if="step.assistant.charId" 
-                          :char-id="step.assistant.charId" 
-                          :size="40" 
-                          rounded
-                        />
+                        <el-tooltip :content="step.assistant.description" effect="light" placement="top">
+                          <OperatorAvatar
+                              v-if="step.assistant.charId"
+                              :char-id="step.assistant.charId"
+                              :size="40"
+                              rounded
+                          />
+                        </el-tooltip>
                         <!-- 如果有替代头像，显示两个头像 -->
-                        <OperatorAvatar 
-                          v-if="step.assistant.alternativeCharId" 
-                          :char-id="step.assistant.alternativeCharId" 
-                          :size="40" 
-                          rounded
-                        />
+                        <el-tooltip v-if="step.assistant.alternativeCharId" :content="'进驻训练室协助位时，专精训练可以触发减半效果'" effect="light"
+                                    placement="top">
+                          <OperatorAvatar
+                              :char-id="step.assistant.alternativeCharId"
+                              :size="40"
+                              rounded
+                          />
+                        </el-tooltip>
                         <span class="assistant-name">{{ step.assistant.name }}</span>
                         <span v-if="step.assistant.note" class="assistant-note">{{ step.assistant.note }}</span>
-                        <span class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
+                        <div class="efficiency-badges">
+                          <span class="assistant-efficiency base-efficiency">5%</span>
+                          <span v-if="step.assistant.canApplyEfficiency !== false"
+                                class="assistant-efficiency">{{ (step.assistant?.efficiency * 100).toFixed(0) }}%</span>
+                        </div>
                       </div>
-                      <span :class="['time', step.halfEffect ? 'half-effect' : '', 'tooltip-target']" :title="step.timeTooltip">
-                        耗时: {{ formatTime(step.time) }}
-                        <span v-if="step.halfEffect" class="half-time-tag">减半效果</span>
-                      </span>
+                      <el-tooltip :content="step.timeTooltip" effect="light" placement="top">
+                        <span :class="['time', step.halfEffect ? 'half-effect' : '']">
+                          耗时: {{ formatTime(step.time) }}
+                          <span v-if="step.halfEffect" class="half-time-tag">减半效果</span>
+                        </span>
+                      </el-tooltip>
                     </div>
                   </div>
                 </template>
@@ -614,17 +743,6 @@ onMounted(() => {
   font-weight: bold;
 }
 
-/* 工具提示样式 */
-.tooltip-target {
-  border-bottom: 1px dotted var(--c-border-color);
-  cursor: help;
-  position: relative;
-}
-
-.tooltip-target:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
 /* 步骤样式 */
 .step-description {
   display: flex;
@@ -647,27 +765,29 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   background-color: var(--c-page-background-color-secondary);
   padding: 8px 12px;
   border-radius: 6px;
+  gap: 10px;
 }
 
 .assistant-info {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
+  flex: 1;
 }
 
 .assistant-name {
   font-weight: bold;
   color: var(--c-text-color);
-  margin-right: 5px;
 }
 
 .assistant-note {
   font-size: 12px;
   color: var(--c-text-tip-color);
-  margin-right: 10px;
 }
 
 .assistant-efficiency {
@@ -679,12 +799,24 @@ onMounted(() => {
   border: 1px solid var(--c-border-color);
 }
 
+.efficiency-badges {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.base-efficiency {
+  background-color: #eaf4fe;
+  color: #409EFF;
+}
+
 .time {
   color: var(--c-text-tip-color);
   font-size: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: 10px;
 }
 
 .half-effect {
@@ -706,5 +838,9 @@ onMounted(() => {
 /* 分支标签样式 */
 .branch-tabs {
   margin-bottom: 15px;
+}
+
+::v-deep(.el-step__description) {
+  padding-right: 0;
 }
 </style> 

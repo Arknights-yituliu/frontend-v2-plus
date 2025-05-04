@@ -136,6 +136,31 @@ const sortOperatorsByEfficiency = () => {
 
   // 根据实际效率降序排序
   sortedOperators.value = filtered.sort((a, b) => b.actual_efficiency - a.actual_efficiency);
+  
+  // 计算每个干员的排名，相同效率的干员排名相同
+  let currentRank = 1;
+  let previousEfficiency = null;
+  let skipCount = 0;
+
+  sortedOperators.value.forEach((operator, index) => {
+    if (index === 0) {
+      // 第一个干员的排名始终为1
+      operator.rank = currentRank;
+      previousEfficiency = operator.actual_efficiency;
+    } else {
+      // 如果当前干员的效率与前一个干员相同，则排名保持不变
+      if (operator.actual_efficiency === previousEfficiency) {
+        operator.rank = currentRank;
+        skipCount++;
+      } else {
+        // 如果效率不同，排名为当前索引加1
+        currentRank = currentRank + skipCount + 1;
+        operator.rank = currentRank;
+        skipCount = 0;
+        previousEfficiency = operator.actual_efficiency;
+      }
+    }
+  });
 };
 
 // 监听过滤器变化
@@ -215,7 +240,7 @@ const getSpecialEffectInfo = (operator) => {
 </script>
 
 <template>
-  <div>
+  <div class="ranking-container">
     <!-- 使用自定义筛选组件 -->
     <SpecializationFilter
         v-model:filters="filters"
@@ -236,7 +261,11 @@ const getSpecialEffectInfo = (operator) => {
           max-height="600"
           stripe
       >
-        <el-table-column :index="1" label="排名" type="index" width="70"/>
+        <el-table-column label="排名" width="70">
+          <template #default="scope">
+            {{ scope.row.rank }}
+          </template>
+        </el-table-column>
 
         <!-- 干员头像和名称 -->
         <el-table-column fixed="left" label="干员" width="170">
@@ -335,6 +364,10 @@ const getSpecialEffectInfo = (operator) => {
 </template>
 
 <style scoped>
+.ranking-container {
+  padding: 15px;
+}
+
 .operator-ranking {
   background-color: var(--c-page-background-color);
   border-radius: 12px;

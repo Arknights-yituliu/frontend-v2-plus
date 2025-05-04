@@ -1,7 +1,7 @@
 <script setup>
-import {onMounted, reactive, ref} from "vue"
+import {computed, onMounted, reactive, ref} from "vue"
 import {convertToSeconds, getSecondsSinceMidnight, secondsToTimeString,} from "/src/utils/dateHanding"
-import {Clock} from "@element-plus/icons-vue";
+import {Clock, QuestionFilled} from "@element-plus/icons-vue";
 
 const algorithmVisible = ref(false) //算法标识
 const usageGuideVisible = ref(false) //使用指南
@@ -69,111 +69,171 @@ function calculateTime() {
   }
 }
 
+const statusColors = {
+  success: 'var(--el-color-success)',
+  warning: 'var(--el-color-warning)',
+  danger: 'var(--el-color-danger)',
+  info: 'var(--el-color-info)'
+}
+
+// Format remaining time for display
+const formattedRemainingTime = computed(() => {
+  if (!zeroEffRemainSeconds.value) return '00:00:00'
+  const hours = Math.floor(zeroEffRemainSeconds.value / 3600)
+  const minutes = Math.floor((zeroEffRemainSeconds.value % 3600) / 60).toString().padStart(2, '0')
+  const seconds = Math.floor(zeroEffRemainSeconds.value % 60).toString().padStart(2, '0')
+  return `${hours}:${minutes}:${seconds}`
+})
 </script>
 
 <template>
   <el-collapse-item name="HalfOperatorCalculate">
     <template #title>
-      <Clock style="width: 13px;margin-inline: 8px"/>
-      <el-text size="large" tag="b">换专精时间减半干员的专精时间点计算</el-text>
+      <div class="title-container">
+        <el-icon class="title-icon">
+          <Clock/>
+        </el-icon>
+        <span class="title-text">专精时间减半计算器</span>
+      </div>
     </template>
-    <el-form :model="halfOperatorParams">
-      <transition-group name="list" tag="ul">
-        <li :key="0">
-          <el-text :type="state">用于计算训练x分钟后换艾丽妮/逻各斯，恰好可以触发下次专精减半效果</el-text>
-        </li>
-        <li :key="1">
-          <el-form-item label="当前显示的专精剩余时间">
-            <el-time-picker
-                v-model="halfOperatorParams.remainder"
-                format="HH:mm:ss"
-                placeholder="显示多少填多少"
-                @change="calculateTime"
-            />
-          </el-form-item>
-        </li>
-        <li :key="7">
-          <el-form-item label="当前入驻的专精助手提供的效率">
-            <el-input-number
-                v-model="halfOperatorParams.efficiency"
-                placeholder="小数，例如0.3"
-                :max="1"
-                :min="0"
-                :precision="2"
-                :step="0.01"
-                :value-on-clear="0"
-                controls-position="right"
-                @change="calculateTime"
-            />
-          </el-form-item>
-        </li>
-        <li v-if="zeroEffRemainSeconds" :key="2">
-          <el-form-item label="训练室专精效率为零的情况下，当前实际剩余的专精时间">
-            {{
-              Math.floor(zeroEffRemainSeconds / 3600)
-            }}:{{
-              Math.floor((zeroEffRemainSeconds % 3600) / 60).toString().padStart(2, '0')
-            }}:{{ Math.floor(zeroEffRemainSeconds % 60).toString().padStart(2, '0') }}
-          </el-form-item>
-        </li>
-        <li :key="3">
-          <el-form-item label="提前提醒（分钟）">
-            <el-input-number
-                v-model="halfOperatorParams.leadTime"
-                :min="1"
-                :step="1"
-                controls-position="right"
-                @change="calculateTime"
-            />
-          </el-form-item>
-        </li>
-        <li :key="4">
-          <el-form-item label="阿斯卡纶/烛煌是否入驻控制中枢">
-            <el-switch
-                v-model="halfOperatorParams.hasAscalon"
-                @change="calculateTime"
-            />
-          </el-form-item>
-        </li>
-        <li :key="5">
-          <el-form-item label="减半干员本身是否有训练速度加成">
-            <el-switch
-                v-model="halfOperatorParams.isFit"
-                @change="calculateTime"
-            />
-          </el-form-item>
-        </li>
-        <li v-if="halfOperatorParams.isFit" :key="6" style="display: inline-block">
-          <el-tooltip
-              content="示例数据：艾丽妮-30% 覆盖近卫/狙击职业；逻各斯-30% 覆盖术师/辅助职业"
-              effect="light"
-              placement="right"
-          >
-            <el-form-item label="减半干员训练速度加成数值(目前版本只有0.3)">
+
+    <div class="calculator-container">
+      <!-- Description Card -->
+      <div class="description-card">
+        <el-alert
+            :closable="false"
+            :type="state"
+            show-icon
+        >
+          <template #title>
+            <span class="description-text">计算换艾丽妮/逻各斯的最佳时间点，恰好触发专精减半效果</span>
+          </template>
+        </el-alert>
+      </div>
+
+      <div class="calculator-content">
+        <!-- Left Panel - Inputs -->
+        <div class="input-panel">
+          <h3 class="panel-title">参数设置</h3>
+
+          <el-form :model="halfOperatorParams" label-position="top">
+            <el-form-item label="当前专精剩余时间">
+              <el-time-picker
+                  v-model="halfOperatorParams.remainder"
+                  class="full-width-input"
+                  format="HH:mm:ss"
+                  placeholder="显示多少填多少"
+                  @change="calculateTime"
+              />
+            </el-form-item>
+
+            <el-form-item label="当前专精助手提供的效率">
               <el-input-number
-                  v-model="halfOperatorParams.halfOperatorAddition"
+                  v-model="halfOperatorParams.efficiency"
+                  :max="1"
                   :min="0"
+                  :precision="2"
                   :step="0.01"
                   :value-on-clear="0"
+                  class="full-width-input"
+                  controls-position="right"
+                  placeholder="小数，例如0.3"
+                  @change="calculateTime"
+              />
+            </el-form-item>
+
+            <el-form-item label="提前提醒（分钟）">
+              <el-input-number
+                  v-model="halfOperatorParams.leadTime"
+                  :min="1"
+                  :step="1"
+                  class="full-width-input"
                   controls-position="right"
                   @change="calculateTime"
               />
             </el-form-item>
-          </el-tooltip>
-        </li>
-        <li :key="8">
-          <el-text :type="state">{{ remindText }}</el-text>
-        </li>
-        <li :key="9">
-          <el-link :underline="false" style="float: right; color: blue;margin-right: 10px" type="primary"
-                   @click="algorithmVisible = true">算法标注
-          </el-link>
-          <el-link :underline="false" style="float: right; color: blue;margin-right: 10px" type="primary"
-                   @click="usageGuideVisible = true">使用指南
-          </el-link>
-        </li>
-      </transition-group>
-    </el-form>
+
+            <div class="switch-settings">
+              <el-form-item label="控制中枢入驻阿斯卡纶/烛煌">
+                <el-switch
+                    v-model="halfOperatorParams.hasAscalon"
+                    active-color="#13ce66"
+                    @change="calculateTime"
+                />
+              </el-form-item>
+
+              <el-form-item label="减半干员有职业加成效果">
+                <el-switch
+                    v-model="halfOperatorParams.isFit"
+                    active-color="#13ce66"
+                    @change="calculateTime"
+                />
+              </el-form-item>
+            </div>
+
+            <el-form-item v-if="halfOperatorParams.isFit" label="减半干员训练速度加成数值">
+              <el-tooltip
+                  content="示例数据：艾丽妮-30% 覆盖近卫/狙击职业；逻各斯-30% 覆盖术师/辅助职业"
+                  effect="light"
+                  placement="top"
+              >
+                <el-input-number
+                    v-model="halfOperatorParams.halfOperatorAddition"
+                    :min="0"
+                    :step="0.01"
+                    :value-on-clear="0"
+                    class="full-width-input"
+                    controls-position="right"
+                    @change="calculateTime"
+                />
+              </el-tooltip>
+            </el-form-item>
+          </el-form>
+        </div>
+
+        <!-- Right Panel - Results -->
+        <div class="result-panel">
+          <h3 class="panel-title">计算结果</h3>
+
+          <div class="result-card">
+            <div class="efficiency-display">
+              <div class="efficiency-item">
+                <div class="efficiency-label">当前总效率</div>
+                <div class="efficiency-value">{{ ((nowEfficiency - 1) * 100).toFixed(0) }}%</div>
+              </div>
+              <div class="efficiency-item">
+                <div class="efficiency-label">减半干员效率</div>
+                <div class="efficiency-value">{{ ((halfOperatorEfficiency - 1) * 100).toFixed(0) }}%</div>
+              </div>
+            </div>
+
+            <div v-if="zeroEffRemainSeconds" class="remaining-time">
+              <div class="time-label">实际剩余专精时间</div>
+              <div class="time-value">{{ formattedRemainingTime }}</div>
+            </div>
+
+            <div :style="{ color: statusColors[state] }" class="result-message">
+              <span>{{ remindText }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer with links -->
+      <div class="calculator-footer">
+        <el-button plain size="small" type="primary" @click="usageGuideVisible = true">
+          <el-icon>
+            <QuestionFilled/>
+          </el-icon>
+          <span>使用指南</span>
+        </el-button>
+        <el-button plain size="small" type="primary" @click="algorithmVisible = true">
+          <span>算法详情</span>
+        </el-button>
+      </div>
+    </div>
+
+    <!-- Algorithm Drawer -->
     <el-drawer
         v-model="algorithmVisible"
         direction="rtl"
@@ -242,50 +302,202 @@ function calculateTime() {
     }
   }
 }
-    </pre>
-        <el-text class="tip-text" size="small" tag="sub">感谢网友“一般路过魔界人”的提醒(・∀・)</el-text>
+        </pre>
+        <el-text class="tip-text" size="small" tag="sub">感谢网友"一般路过魔界人"的提醒(・∀・)</el-text>
       </div>
     </el-drawer>
-    <!-- <el-drawer
+
+    <!-- Usage Guide Drawer -->
+    <el-drawer
         v-model="usageGuideVisible"
         direction="rtl"
         size="70%"
         title="使用指南"
     >
-      <div style="position: relative">
-        <img src="/image/specialization/introduce.png" style="width: 100%;"/>
-        <ol style="font-size:medium">
-          <li>
-            点击查看并记录专精剩余时间，填入“当前显示的专精剩余时间”栏中，如04:50:28
-          </li>
-          <li>
-            以小数形式将先手干员的专精效率填入“当前已入驻的专精助手干员提供的效率”栏中，如0.6
-          </li>
-          <li>
-            根据专精干员职业情况，选择是否启用“减半干员是否可对专精干员触发职业效率加成”，如艾丽妮对近卫、狙击职业有0.3加成，逻各斯对术士、辅助职业有0.3加成
-          </li>
-          <li>
-            <el-tooltip
-                content="若有阿斯卡纶等训练室外提供额外专精效率的干员，则额外效率补充至先手干员和减半干员的效率中，如0.6→0.65，0.3→0.35"
-                effect="light"
-                placement="top"
-            >
-              若控制中枢入驻了阿斯卡纶/烛煌，则启用“阿斯卡纶/烛煌是否入驻控制中枢”
-            </el-tooltip>
-          </li>
-          <li>
-            提前提醒（分钟）默认为5分钟，对应结果文本“可以制定XX:XX:XX时间点的闹钟”
-          </li>
-          <li>
-            填写完成即可自动计算输出结果，提示需要替换减半干员（艾丽妮/逻各斯）的时间点，或者提示期望余裕时间不足，亦或者已无法触发减半效果
-          </li>
-        </ol>
+      <div class="usage-guide">
+        <el-timeline>
+          <el-timeline-item type="primary">
+            <h4>查看专精剩余时间</h4>
+            <p>点击查看并记录专精剩余时间，填入"当前显示的专精剩余时间"栏中，如04:50:28</p>
+          </el-timeline-item>
+
+          <el-timeline-item type="primary">
+            <h4>输入干员效率</h4>
+            <p>以小数形式将先手干员的专精效率填入"当前专精助手提供的效率"栏中，如0.6</p>
+          </el-timeline-item>
+
+          <el-timeline-item type="primary">
+            <h4>设置职业效率加成</h4>
+            <p>
+              根据专精干员职业情况，选择是否启用"减半干员有职业加成效果"，如艾丽妮对近卫、狙击职业有0.3加成，逻各斯对术士、辅助职业有0.3加成</p>
+          </el-timeline-item>
+
+          <el-timeline-item type="primary">
+            <h4>控制中枢设置</h4>
+            <p>
+              若控制中枢入驻了阿斯卡纶/烛煌，则启用对应开关。这会将额外效率补充至先手干员和减半干员的效率中，如0.6→0.65，0.3→0.35</p>
+          </el-timeline-item>
+
+          <el-timeline-item type="primary">
+            <h4>设置提醒时间</h4>
+            <p>提前提醒（分钟）默认为5分钟，对应结果文本"可以制定XX:XX:XX时间点的闹钟"</p>
+          </el-timeline-item>
+
+          <el-timeline-item type="success">
+            <h4>查看计算结果</h4>
+            <p>
+              填写完成即可自动计算输出结果，提示需要替换减半干员（艾丽妮/逻各斯）的时间点，或者提示期望余裕时间不足，亦或者已无法触发减半效果</p>
+          </el-timeline-item>
+        </el-timeline>
       </div>
-    </el-drawer> -->
+    </el-drawer>
   </el-collapse-item>
 </template>
 
 <style lang="scss" scoped>
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-icon {
+  color: var(--el-color-primary);
+}
+
+.title-text {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.calculator-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--el-bg-color);
+}
+
+.description-card {
+  margin-bottom: 10px;
+}
+
+.description-text {
+  font-size: 14px;
+}
+
+.calculator-content {
+  display: flex;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.input-panel, .result-panel {
+  flex: 1;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--el-fill-color-light);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+}
+
+.panel-title {
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: var(--el-text-color-primary);
+  border-bottom: 1px solid var(--el-border-color-light);
+  padding-bottom: 10px;
+}
+
+.full-width-input {
+  width: 100%;
+}
+
+.switch-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.efficiency-display {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.efficiency-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--el-color-primary-light-9);
+  padding: 12px;
+  border-radius: 8px;
+  width: calc(50% - 10px);
+}
+
+.efficiency-label {
+  font-size: 14px;
+  color: var(--el-text-color-secondary);
+  margin-bottom: 8px;
+}
+
+.efficiency-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--el-color-primary);
+}
+
+.remaining-time {
+  background-color: var(--el-fill-color);
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.time-label {
+  font-size: 14px;
+  color: var(--el-text-color-secondary);
+  margin-bottom: 8px;
+}
+
+.time-value {
+  font-family: monospace;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+}
+
+.result-message {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--el-fill-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.calculator-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--el-border-color-light);
+}
+
 .algorithm-content {
   font-family: Arial, sans-serif;
   line-height: 25px;
@@ -293,10 +505,12 @@ function calculateTime() {
 }
 
 .code-block {
-  background-color: var(--c-page-background-color);
-  color: var(--c-text-color);
-  padding: 10px;
-  border-radius: 5px;
+  background-color: var(--el-bg-color-page);
+  color: var(--el-text-color-primary);
+  padding: 16px;
+  border-radius: 8px;
+  font-family: monospace;
+  overflow-x: auto;
 }
 
 .tip-text {
@@ -304,40 +518,23 @@ function calculateTime() {
   bottom: -15px;
   right: 0;
   font-style: italic;
-  color: lightgray;
+  color: var(--el-text-color-secondary);
+  opacity: 0.6;
   user-select: none;
 }
 
-.easterEgg-text {
-  position: absolute;
-  bottom: -25px;
-  right: 0;
-  font-style: italic;
-  color: lightgray;
-  user-select: none;
+.usage-guide {
+  padding: 20px;
 }
 
-ul {
-  padding-left: 1vw;
-
-  li {
-    list-style: none;
-  }
+/* Animation */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
 }
 
-.list-move,
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease;
-}
-
-.list-enter-from,
-.list-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
-  transform: translateX(30px);
-}
-
-.list-leave-active {
-  position: absolute;
 }
 </style>

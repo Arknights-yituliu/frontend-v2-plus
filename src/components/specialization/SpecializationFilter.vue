@@ -43,114 +43,117 @@ const hasActiveFilters = computed(() => {
 </script>
 
 <template>
+  <div class="filter-container">
+      <div class="filter-count">{{ countText }}</div>
+      <!-- Search input -->
+      <div class="filter-input">
+        <div class="input-wrapper">
+          <svg class="search-icon" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M15.5 15.5L19 19M10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10C17 13.866 13.866 17 10 17Z"
+                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+          </svg>
+          <input
+              v-model="localFilters.searchTerm"
+              placeholder="搜索干员名称或技能"
+              type="text"
+              @input="updateFilter('searchTerm', localFilters.searchTerm)"
+          />
+          <button
+              v-if="localFilters.searchTerm"
+              class="clear-button"
+              @click="updateFilter('searchTerm', '')"
+          >
+            <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
 
-  <div class="filter-body">
-    <div class="filter-count">{{ countText }}</div>
-    <!-- Search input -->
-    <div class="filter-input">
-      <div class="input-wrapper">
-        <svg class="search-icon" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path
-              d="M15.5 15.5L19 19M10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10C17 13.866 13.866 17 10 17Z"
-              stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-        </svg>
-        <input
-            v-model="localFilters.searchTerm"
-            placeholder="搜索干员名称或技能"
-            type="text"
-            @input="updateFilter('searchTerm', localFilters.searchTerm)"
-        />
-        <button
-            v-if="localFilters.searchTerm"
-            class="clear-button"
-            @click="updateFilter('searchTerm', '')"
-        >
-          <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+      <!-- Select filters -->
+      <div class="filter-selects">
+        <!-- Profession filter -->
+        <div class="select-wrapper">
+          <select
+              v-model="localFilters.profession"
+              @change="updateFilter('profession', localFilters.profession)"
+          >
+            <option value="">选择职业</option>
+            <option v-for="profession in options.professions" :key="profession" :value="profession">
+              {{ profession }}
+            </option>
+          </select>
+          <svg class="dropdown-icon" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                   stroke-width="2"/>
           </svg>
+        </div>
+
+        <!-- Branch filter -->
+        <div class="select-wrapper">
+          <select
+              v-model="localFilters.branch"
+              @change="updateFilter('branch', localFilters.branch)"
+          >
+            <option value="">选择分支</option>
+            <option v-for="branch in options.branches" :key="branch" :value="branch">
+              {{ branch }}
+            </option>
+          </select>
+          <svg class="dropdown-icon" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"/>
+          </svg>
+        </div>
+
+        <!-- Mastery level filter -->
+        <div class="select-wrapper">
+          <select
+              v-model="localFilters.masteryLevel"
+              @change="updateFilter('masteryLevel', localFilters.masteryLevel)"
+          >
+            <option value="">选择专精阶段</option>
+            <option v-for="level in options.masteryLevels" :key="level" :value="level">
+              {{ level }}
+            </option>
+          </select>
+          <svg class="dropdown-icon" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Reset button -->
+      <div class="filter-actions">
+        <button
+            :class="{ 'active': hasActiveFilters }"
+            class="reset-button"
+            @click="handleReset"
+        >
+          重置筛选
         </button>
       </div>
-    </div>
-
-    <!-- Select filters -->
-    <div class="filter-selects">
-      <!-- Profession filter -->
-      <div class="select-wrapper">
-        <select
-            v-model="localFilters.profession"
-            @change="updateFilter('profession', localFilters.profession)"
-        >
-          <option value="">选择职业</option>
-          <option v-for="profession in options.professions" :key="profession" :value="profession">
-            {{ profession }}
-          </option>
-        </select>
-        <svg class="dropdown-icon" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="2"/>
-        </svg>
-      </div>
-
-      <!-- Branch filter -->
-      <div class="select-wrapper">
-        <select
-            v-model="localFilters.branch"
-            @change="updateFilter('branch', localFilters.branch)"
-        >
-          <option value="">选择分支</option>
-          <option v-for="branch in options.branches" :key="branch" :value="branch">
-            {{ branch }}
-          </option>
-        </select>
-        <svg class="dropdown-icon" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="2"/>
-        </svg>
-      </div>
-
-      <!-- Mastery level filter -->
-      <div class="select-wrapper">
-        <select
-            v-model="localFilters.masteryLevel"
-            @change="updateFilter('masteryLevel', localFilters.masteryLevel)"
-        >
-          <option value="">选择专精阶段</option>
-          <option v-for="level in options.masteryLevels" :key="level" :value="level">
-            {{ level }}
-          </option>
-        </select>
-        <svg class="dropdown-icon" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="2"/>
-        </svg>
-      </div>
-    </div>
-
-    <!-- Reset button -->
-    <div class="filter-actions">
-      <button
-          :class="{ 'active': hasActiveFilters }"
-          class="reset-button"
-          @click="handleReset"
-      >
-        重置筛选
-      </button>
-    </div>
   </div>
 </template>
 
 <style scoped>
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  background-color: var(--c-page-background-color);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 var(--c-box-shadow-color);
+}
+
 .filter-count {
   font-size: 14px;
   color: var(--c-text-tip-color);
-}
-
-.filter-body {
-  padding: 15px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
 }
 
 .filter-input {
