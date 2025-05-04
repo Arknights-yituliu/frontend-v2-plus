@@ -315,6 +315,7 @@ function calculateTime() {
         title="使用指南"
     >
       <div class="usage-guide">
+        <img src="/image/specialization/introduce.png" style="width: 100%;margin-bottom: 20px;" alt="使用指南"/>
         <el-timeline>
           <el-timeline-item type="primary">
             <h4>查看专精剩余时间</h4>
