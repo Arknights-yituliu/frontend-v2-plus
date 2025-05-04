@@ -206,7 +206,25 @@ function calculateOptimalPath(profession, branch = null) {
   const halfOperatorEff = halfOperator.canApplyEfficiency ? halfOperator.efficiency : 0;
   const halfOpTotalEff = 1 + halfOperatorEff + extraEfficiency.value;
 
-  // 减半干员需要工作的实际时间（5小时 * 效率）
+  // 计算触发减半效果所需的实际工作时间
+  // 艾丽妮/逻各斯技能需要协助5小时才能触发减半效果
+  // 零效率专精时长 = 5小时 × 总效率
+  const getRequiredHalfTime = () => {
+    // 艾丽妮/逻各斯需要协助5小时才能触发减半效果
+    const requiredRawHours = 5;
+    // 计算零效率专精时长 = 所需时间 / 总效率
+    const actualWorkHours = requiredRawHours * halfOpTotalEff;
+    return {
+      hours: actualWorkHours,
+      text: formatTime(actualWorkHours),
+      tooltip: `触发减半效果所需零效率时长计算: ${requiredRawHours}小时 × ${halfOpTotalEff.toFixed(2)} = ${actualWorkHours.toFixed(2)}小时`
+    };
+  };
+
+  // 获取触发减半效果所需时间的信息
+  const requiredHalfTimeInfo = getRequiredHalfTime();
+
+  // 减半干员需要工作的零效率时间（5小时 * 效率）
   const halfOpRequiredHours = 5 * halfOpTotalEff;
 
   // 专精一计算
@@ -285,7 +303,8 @@ function calculateOptimalPath(profession, branch = null) {
       time: totalTimeS1,
       timeTooltip: tooltipS1HalfOp,
       halfEffect: false,
-      description: `专精一时间较短，直接使用${halfOperator.name}进行专精一训练，积累减半效果（需至少${halfOperator.canApplyEfficiency ? '5小时' : '5小时15分钟'}）`
+      description: `专精一时间较短，直接使用${halfOperator.name}进行专精一训练，积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
+      halfTimeTooltip: requiredHalfTimeInfo.tooltip
     });
   } else {
     // 先用最佳干员再用减半干员
@@ -305,7 +324,8 @@ function calculateOptimalPath(profession, branch = null) {
       time: s1HalfOpWorkTime,
       timeTooltip: tooltipS1HalfOp,
       halfEffect: false,
-      description: `使用${halfOperator.name}完成专精一训练，积累减半效果（需至少${halfOperator.canApplyEfficiency ? '5小时' : '5小时15分钟'}）`
+      description: `使用${halfOperator.name}完成专精一训练，积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
+      halfTimeTooltip: requiredHalfTimeInfo.tooltip
     });
   }
 
@@ -319,7 +339,8 @@ function calculateOptimalPath(profession, branch = null) {
       time: totalTimeS2,
       timeTooltip: tooltipS2HalfOp,
       halfEffect: true,
-      description: `专精二时间较短，直接使用${halfOperator.name}进行专精二训练，享受并积累减半效果（需至少${halfOperator.canApplyEfficiency ? '5小时' : '5小时15分钟'}）`
+      description: `专精二时间较短，直接使用${halfOperator.name}进行专精二训练，享受并积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
+      halfTimeTooltip: requiredHalfTimeInfo.tooltip
     });
   } else {
     // 先用最佳干员再用减半干员
@@ -339,7 +360,8 @@ function calculateOptimalPath(profession, branch = null) {
       time: adjustedS2HalfOpWorkTime,
       timeTooltip: tooltipS2HalfOp,
       halfEffect: true,
-      description: `使用${halfOperator.name}完成专精二训练，继续积累减半效果（需至少${halfOperator.canApplyEfficiency ? '5小时' : '5小时15分钟'}）`
+      description: `使用${halfOperator.name}完成专精二训练，继续积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
+      halfTimeTooltip: requiredHalfTimeInfo.tooltip
     });
   }
 
@@ -511,7 +533,12 @@ function calculateSavingsFromDefault(optimizedTime) {
               >
                 <template #description>
                   <div class="step-description">
-                    <div v-if="step.description" class="step-action" v-html="step.description"></div>
+                    <el-tooltip v-if="step.halfTimeTooltip && step.description" :content="step.halfTimeTooltip"
+                                effect="light" placement="top">
+                      <div class="step-action" v-html="step.description"></div>
+                    </el-tooltip>
+                    <div v-else-if="step.description" class="step-action" v-html="step.description"></div>
+
                     <div class="step-details">
                       <div class="assistant-info">
                         <el-tooltip :content="step.assistant.description" effect="light" placement="top">
@@ -558,7 +585,7 @@ function calculateSavingsFromDefault(optimizedTime) {
         </div>
 
         <!-- 分支路线显示 -->
-        <div v-else-if="branchesByProfession[activeProfession].includes(activeTab) && 
+        <div v-else-if="branchesByProfession[activeProfession].includes(activeTab) &&
                       optimalPaths[activeProfession].branches && 
                       optimalPaths[activeProfession].branches[activeTab]">
           <div class="path-info">
