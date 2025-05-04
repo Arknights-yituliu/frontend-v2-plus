@@ -1,14 +1,25 @@
 <script setup>
 import {ref} from "vue";
-import HalfOperatorCalculate from "/src/components/HalfOperatorCalculate.vue";
+import HalfOperatorCalculate from "/src/components/specialization/HalfOperatorCalculate.vue";
+import SpecializationEfficiencyRanking from "/src/components/specialization/SpecializationEfficiencyRanking.vue";
+import {SortUp} from "@element-plus/icons-vue";
 
-let collapseVisible = ref(['HalfOperatorCalculate'])
+const collapseVisible = ref(['HalfOperatorCalculate']);
 
 </script>
 
 <template>
-  <el-collapse style="max-width: 90%;margin: auto" v-model="collapseVisible" accordion>
+  <el-collapse v-model="collapseVisible" accordion style="max-width: 90%;margin: auto">
     <half-operator-calculate/>
+    <el-collapse-item name="EfficiencyRanking">
+      <template #title>
+        <el-icon style="width: 13px;margin-inline: 8px">
+          <SortUp/>
+        </el-icon>
+        <el-text size="large" tag="b">专精效率排行榜</el-text>
+      </template>
+      <specialization-efficiency-ranking/>
+    </el-collapse-item>
   </el-collapse>
 </template>
 
