@@ -137,28 +137,28 @@ function generateTimeTooltip(baseTime, efficiency) {
   const baseReduceFactor = 1 + 0.05 + (efficiency || 0);
   const calculatedTime = baseTime / baseReduceFactor;
 
-  return `基础时间: ${baseTime.toFixed(2)}小时
-基础减免: 5% (所有助手固有)
-助手效率: ${efficiencyDisplay}
-助手总效率: ${((efficiency || 0) + 0.05) * 100}%
-计算公式: ${baseTime.toFixed(2)} / ${baseReduceFactor.toFixed(2)}
-计算结果: ${calculatedTime.toFixed(2)}小时`;
+  return `基础时间: ${baseTime.toFixed(2)}小时 | ` +
+      `基础减免: 5% (所有助手固有) | ` +
+      `助手效率: ${efficiencyDisplay} | ` +
+      `助手总效率: ${((efficiency || 0) + 0.05) * 100}% | ` +
+      `计算公式: ${baseTime.toFixed(2)} / ${baseReduceFactor.toFixed(2)} | ` +
+      `计算结果: ${calculatedTime.toFixed(2)}小时`;
 }
 
 // 生成总耗时计算的提示信息
 function generateTotalTimeTooltip(steps) {
   if (!steps || steps.length === 0) return '';
 
-  let tooltipText = '总耗时计算详情:\n\n';
+  let tooltipText = '总耗时计算详情: ';
   let totalTime = 0;
 
   steps.forEach((step, index) => {
     const stepTime = step.time;
     totalTime += stepTime;
-    tooltipText += `${index + 1}. 专精${step.level}${step.part > 1 ? `-${step.part}` : ''} (${step.assistant.name}): ${stepTime.toFixed(2)}小时\n`;
+    tooltipText += `${index + 1}. 专精${step.level}${step.part > 1 ? `-${step.part}` : ''} (${step.assistant.name}): ${stepTime.toFixed(2)}小时 | `;
   });
 
-  tooltipText += `\n总计: ${totalTime.toFixed(2)}小时`;
+  tooltipText += `总计: ${totalTime.toFixed(2)}小时`;
   return tooltipText;
 }
 
@@ -169,16 +169,14 @@ function generateSavingsTooltip(optimizedTime) {
   const savedHours = defaultTime - optimizedTime;
   const savedPercentage = (savedHours / defaultTime * 100).toFixed(1);
 
-  return `节省时间计算详情:
-
-无专精助手情况下总耗时:
-- 专精1: ${(baseHours[1] / baseReduceFactor).toFixed(2)}小时
-- 专精2: ${(baseHours[2] / baseReduceFactor).toFixed(2)}小时
-- 专精3: ${(baseHours[3] / baseReduceFactor).toFixed(2)}小时
-- 总计: ${defaultTime.toFixed(2)}小时
-
-优化后总耗时: ${optimizedTime.toFixed(2)}小时
-节省时间: ${savedHours.toFixed(2)}小时 (${savedPercentage}%)`;
+  return `节省时间计算详情: | ` +
+      `无专精助手情况下总耗时: | ` +
+      `专精1: ${(baseHours[1] / baseReduceFactor).toFixed(2)}小时 | ` +
+      `专精2: ${(baseHours[2] / baseReduceFactor).toFixed(2)}小时 | ` +
+      `专精3: ${(baseHours[3] / baseReduceFactor).toFixed(2)}小时 | ` +
+      `总计: ${defaultTime.toFixed(2)}小时 | ` +
+      `优化后总耗时: ${optimizedTime.toFixed(2)}小时 | ` +
+      `节省时间: ${savedHours.toFixed(2)}小时 (${savedPercentage}%)`;
 }
 
 // 计算完整专精路径
