@@ -324,7 +324,7 @@ function calculateOptimalPath(profession, branch = null) {
       time: s1HalfOpWorkTime,
       timeTooltip: tooltipS1HalfOp,
       halfEffect: false,
-      description: `使用${halfOperator.name}完成专精一训练，积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
+      description: `使用${halfOperator.name}完成专精一训练，效率${((halfOperatorEff + extraEfficiency.value) * 100).toFixed(0)}%，积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
       halfTimeTooltip: requiredHalfTimeInfo.tooltip
     });
   }
@@ -360,7 +360,7 @@ function calculateOptimalPath(profession, branch = null) {
       time: adjustedS2HalfOpWorkTime,
       timeTooltip: tooltipS2HalfOp,
       halfEffect: true,
-      description: `使用${halfOperator.name}完成专精二训练，继续积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
+      description: `使用${halfOperator.name}完成专精二训练，效率${((halfOperatorEff + extraEfficiency.value) * 100).toFixed(0)}%，继续积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
       halfTimeTooltip: requiredHalfTimeInfo.tooltip
     });
   }
