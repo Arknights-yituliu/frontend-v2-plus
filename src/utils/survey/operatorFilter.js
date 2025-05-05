@@ -76,8 +76,9 @@ let operatorFilterCondition = ref({
             {label: "2020", value: {start: 1577808000000, end: 1609344000000}, func: filterByYear, action: false},
             {label: "2021", value: {start: 1609430400000, end: 1640880000000}, func: filterByYear, action: false},
             {label: "2022", value: {start: 1640966400000, end: 1672416000000}, func: filterByYear, action: false},
-            {label: "2023", value: {start: 1672502400000, end: 1703952000000}, func: filterByYear, action: false},
-            {label: "2024", value: {start: 1704038400000, end: 1735660799000}, func: filterByYear, action: false}
+            {label: "2023", value: {start: 1672502400000, end: 1704038400000}, func: filterByYear, action: false},
+            {label: "2024", value: {start: 1704038400000, end: 1735660800000}, func: filterByYear, action: false},
+            {label: "2025", value: {start: 1735660800000, end: 1767196800000}, func: filterByYear, action: false}
         ]
     },
     'itemObtainApproach': {
