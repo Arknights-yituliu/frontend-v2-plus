@@ -317,13 +317,7 @@ const routes = [
         display: false,
         component: () => import('/src/pages/dev/pie-chart.vue')
     },
-    {
-        path: '/dev/stageEfficiency',
-        text: '测试页面',
-        display: false,
-        component: () => import('/src/pages/dev/stageEfficiency.vue')
 
-    },
     {
         path: '/material/sssl',
         text: '收益速览做图用',
@@ -372,8 +366,6 @@ const routes = [
         display: false,
         component: () => import('/src/pages/video-material/stageV3.vue')
     },
-
-
     {
         path: '/action-table',
         text: '材料统计',
