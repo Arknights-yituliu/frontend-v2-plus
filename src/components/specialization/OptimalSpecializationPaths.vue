@@ -315,7 +315,7 @@ function calculateOptimalPath(profession, branch = null) {
       time: s1BestOpWorkTime,
       timeTooltip: tooltipS1BestOp,
       halfEffect: false,
-      description: `使用${bestOperatorS1.name}开始专精一训练，效率${(bestOperatorS1?.efficiency * 100).toFixed(0)}%，${highlightTimePoint(formatTime(s1BestOpWorkTime), halfOperator.name)}`
+      description: `使用${bestOperatorS1.name}开始专精一训练，效率${((bestOperatorS1?.efficiency + extraEfficiency.value) * 100).toFixed(0)}%，${highlightTimePoint(formatTime(s1BestOpWorkTime), halfOperator.name)}`
     });
     steps.push({
       level: 1,
@@ -324,7 +324,7 @@ function calculateOptimalPath(profession, branch = null) {
       time: s1HalfOpWorkTime,
       timeTooltip: tooltipS1HalfOp,
       halfEffect: false,
-      description: `使用${halfOperator.name}完成专精一训练，积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
+      description: `使用${halfOperator.name}完成专精一训练，效率${((halfOperatorEff + extraEfficiency.value) * 100).toFixed(0)}%，积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
       halfTimeTooltip: requiredHalfTimeInfo.tooltip
     });
   }
@@ -351,7 +351,7 @@ function calculateOptimalPath(profession, branch = null) {
       time: s2BestOpWorkTime,
       timeTooltip: tooltipS2BestOp,
       halfEffect: true,
-      description: `使用${bestOperatorS2.name}开始专精二训练，效率${(bestOperatorS2?.efficiency * 100).toFixed(0)}%，享受减半效果，${highlightTimePoint(formatTime(s2BestOpWorkTime), halfOperator.name)}`
+      description: `使用${bestOperatorS2.name}开始专精二训练，效率${((bestOperatorS2?.efficiency + extraEfficiency.value) * 100).toFixed(0)}%，享受减半效果，${highlightTimePoint(formatTime(s2BestOpWorkTime), halfOperator.name)}`
     });
     steps.push({
       level: 2,
@@ -360,7 +360,7 @@ function calculateOptimalPath(profession, branch = null) {
       time: adjustedS2HalfOpWorkTime,
       timeTooltip: tooltipS2HalfOp,
       halfEffect: true,
-      description: `使用${halfOperator.name}完成专精二训练，继续积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
+      description: `使用${halfOperator.name}完成专精二训练，效率${((halfOperatorEff + extraEfficiency.value) * 100).toFixed(0)}%，继续积累减半效果（需至少${requiredHalfTimeInfo.text}）`,
       halfTimeTooltip: requiredHalfTimeInfo.tooltip
     });
   }
@@ -373,7 +373,7 @@ function calculateOptimalPath(profession, branch = null) {
     time: timeS3,
     timeTooltip: tooltipS3,
     halfEffect: true,
-    description: `使用${bestOperatorS3.name}进行专精三训练，效率${(bestOperatorS3?.efficiency * 100).toFixed(0)}%，享受减半效果`
+    description: `使用${bestOperatorS3.name}进行专精三训练，效率${((bestOperatorS3?.efficiency + extraEfficiency.value) * 100).toFixed(0)}%，享受减半效果`
   });
 
   return {
