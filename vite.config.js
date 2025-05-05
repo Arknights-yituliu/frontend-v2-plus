@@ -14,7 +14,7 @@ export default defineConfig({
     plugins: [
         vue(),
         visualizer({
-            open:true,
+            open:false,
             gzipSize:true,
         })
     ],
