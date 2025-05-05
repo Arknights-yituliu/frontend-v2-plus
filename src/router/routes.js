@@ -5,7 +5,7 @@ import REGISTER from '/src/pages/account/register.vue'
 import LOGIN from '/src/pages/account/login.vue'
 import RETRIEVE from '/src/pages/account/retrieve.vue'
 import IMPORT_BY_SKLAND from '/src/pages/survey/importdata.vue'
-import SURVEY_OPERATOR from '/src/pages/survey/operators.vue'
+import SURVEY_OPERATOR from '/src/pages/survey/operator.vue'
 import USER_HOME from '/src/pages/account/home.vue'
 import STORE from '/src/pages/material/store.vue'
 import PACK from '/src/pages/material/pack.vue'
@@ -228,15 +228,6 @@ const routes = [
         component: SURVEY_OPERATOR
     },
     {
-        path: '/survey/questionnaire',
-        text: '干员携带优先级问卷',
-        name: 'Questionnaire',
-        display: true,
-        module: 'survey',
-        icon: "mdi-chart-bar",
-        component: () => import('/src/pages/survey/operator-carry.vue')
-    },
-    {
         path: '/survey/operator-progression-statistics',
         text: '干员练度调查结果',
         name: 'OperatorRank',
@@ -244,7 +235,15 @@ const routes = [
         module: 'survey',
         icon: "mdi-chart-bar-stacked",
         component: () => import('/src/pages/survey/operator-progression-statistics.vue')
-        // component: Notice
+    },
+    {
+        path: '/survey/questionnaire',
+        text: '干员携带优先级问卷',
+        name: 'Questionnaire',
+        display: true,
+        module: 'survey',
+        icon: "mdi-chart-bar",
+        component: () => import('/src/pages/survey/operator-carry.vue')
     },
     {
         path: '/survey/maarecruitdata',

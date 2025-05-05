@@ -74,28 +74,42 @@ const detailHeader = [
 
 
 
-function openOperatorsStatisticsDetail(charId) {
-console.log(operatorProgressionStatisticsMap.get(charId))
+function openOperatorsStatisticsDetail(operator) {
+
+  const {charId,elite,skill1,skill2,skill3} = operator
+
   if(!operatorProgressionStatisticsMap.get(charId)){
     return
   }
 
-  const operator = operatorProgressionStatisticsMap.get(charId)
-  const {skill,equip} = operator
+  const result = operatorProgressionStatisticsMap.get(charId)
+  const {skill,equip} = result
   const data = []
+
+  const playerSkillRankList = [skill1,skill2,skill3]
 
   for (let index = 0; index < 3; index++) {
     const info = skill[index]
-    const num = index + 1
-    const ranks = operator[`skill${num}`]
+    const playerSkillRank = playerSkillRankList[index]
+
+    const ranks = result[`skill${index + 1}`]
     const item = {
       label: info.name,
       type: 'skill',
       iconId: info.iconId,
       ranks: [
-        formatNumber(ranks.rank1 * 100),
-        formatNumber(ranks.rank2 * 100),
-        formatNumber(ranks.rank3 * 100)
+        {
+          highlight: playerSkillRank === 1,
+          rate:formatNumber(ranks.rank1 * 100)
+        },
+        {
+          highlight: playerSkillRank === 2,
+          rate:formatNumber(ranks.rank2 * 100)
+        },
+        {
+          highlight: playerSkillRank === 3,
+          rate:formatNumber(ranks.rank3 * 100)
+        }
       ]
     }
     data.push(item)
@@ -104,15 +118,25 @@ console.log(operatorProgressionStatisticsMap.get(charId))
 
 
   for (const info of equip) {
-    const ranks = operator[`mod${info.typeName2}`]
+    const playerEquipRank = 2
+    const ranks = result[`mod${info.typeName2}`]
     const item = {
       label: info.uniEquipName,
       type: 'equip',
       iconId: info.typeIcon,
       ranks: [
-        formatNumber(ranks.rank1 * 100),
-        formatNumber(ranks.rank2 * 100),
-        formatNumber(ranks.rank3 * 100)
+        {
+          highlight: playerEquipRank === 1,
+          rate:formatNumber(ranks.rank1 * 100)
+        },
+        {
+          highlight: playerEquipRank === 2,
+          rate:formatNumber(ranks.rank2 * 100)
+        },
+        {
+          highlight: playerEquipRank === 3,
+          rate:formatNumber(ranks.rank3 * 100)
+        }
       ]
     }
     data.push(item)
@@ -123,6 +147,12 @@ console.log(operatorProgressionStatisticsMap.get(charId))
 
 }
 
+
+function playProgressionHighlight(highlight){
+  if(highlight){
+    return 'highlight'
+  }
+}
 
 /**
  * 找回填写过的角色信息
@@ -488,9 +518,10 @@ onMounted(() => {
     <!--   干员表单-->
     <div class="operator-form">
 
-      <OperatorBar @click="openOperatorsStatisticsDetail(operator.charId)" v-for="(operator, charId) in displayOperatorList"  :operator-info="operator"></OperatorBar>
+      <OperatorBar @click="openOperatorsStatisticsDetail(operator)" v-for="(operator, charId) in displayOperatorList"  :operator-info="operator"></OperatorBar>
 
     </div>
+
 
 
     <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
@@ -508,8 +539,10 @@ onMounted(() => {
                   <EquipIcon :icon="item.iconId"  :size="36"  v-show="item.type==='equip'"></EquipIcon>
                   <SkillIcon size="40" :mobile-size="30" :border="true" :icon="`${item.iconId}`" v-show="item.type==='skill'"></SkillIcon>
                 </td>
-                <td v-for="rank in item.ranks">
-                  {{rank}}%
+                <td v-for="rank in item.ranks" >
+                  <div :class="playProgressionHighlight(rank.highlight)" class="p-8">
+                    {{rank.rate}}%
+                  </div>
                 </td>
               </tr>
             </template>

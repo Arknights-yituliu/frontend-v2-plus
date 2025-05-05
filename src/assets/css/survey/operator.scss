@@ -8,7 +8,12 @@
     justify-content: center;
   }
 
-  .operator-recommend-table{
+  .highlight {
+    background-color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-on-primary));
+  }
+
+  .operator-recommend-table {
     .operator-equip-group {
       width: 40px;
       height: 40px;
@@ -75,7 +80,6 @@
 
 /*干员统计容器样式*/
 .operator-statistical-page {
-
 
 
   .operator-statistical-card {
