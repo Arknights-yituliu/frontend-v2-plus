@@ -87,12 +87,12 @@ async function getPackInfoData() {
   packInfoVOListOnSale.value = []
   packInfoVOList = []
   // 等待获取接口返回的全部礼包信息
-  const data  =  await packInfoCache.listPackInfo()
+  const data = await packInfoCache.listPackInfo()
   //先计算礼包的性价比
   for (const item of data) {
     const packInfoVO = _packPromotionRatioCalc(item)
     packInfoVOList.push(packInfoVO)
-    packInfoVOListCache.push(packInfoVO)
+    packInfoVOListCache.push(deepClone(packInfoVO))
   }
 
   //礼包分类
@@ -160,10 +160,9 @@ async function getPackInfoData() {
     packedOriginium = apCount / 135; // 总源石
     packedOriginiumKernel += apCountKernel / 135; // 总源石（含蓝抽）
 
-    if(packInfoVO.originium>0){
-      originiumUnitPrice = packInfoVO.price/packInfoVO.originium
+    if (packInfoVO.originium > 0) {
+      originiumUnitPrice = packInfoVO.price / packInfoVO.originium
     }
-
 
 
     // 每源石花费计算
@@ -205,7 +204,7 @@ async function getPackInfoData() {
 /**
  * 分类礼包
  */
-function collectPackInfoVO  () {
+function collectPackInfoVO() {
 
   // const currentTimeStamp = date.getTime()-60*60*24*100*1000 // 获取时间戳
   const currentTimeStamp = date.getTime()
@@ -286,7 +285,9 @@ let isKernelValuable = ref(false)
 
 //如果是true就覆写数据，如果是false就用原始数据重置
 function changeKernelValue() {
+  console.log(isKernelValuable.value)
   if (isKernelValuable.value) {
+    console.log("中坚")
     for (const pack of packInfoVOList) {
       pack.draws = pack.drawsKernel
       pack.packEfficiency = pack.packEfficiencyKernel
@@ -296,8 +297,10 @@ function changeKernelValue() {
       pack.drawPrice = pack.drawPriceKernel
     }
   } else {
+    console.log("非中坚")
     packInfoVOList = deepClone(packInfoVOListCache)
   }
+
   collectPackInfoVO()
 }
 
@@ -348,7 +351,7 @@ const resetPackFilterOption = () => {
 }
 
 // 选择筛选条件时向筛选列表添加或删除
-function choosePackOption (list, value){
+function choosePackOption(list, value) {
   const index = list.indexOf(value);
   index > -1 ? list.splice(index, 1) : list.push(value)
   filterPacks()
