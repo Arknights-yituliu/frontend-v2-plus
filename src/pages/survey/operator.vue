@@ -514,18 +514,16 @@ onMounted(() => {
 
 
 
-
+    <p>点击干员卡片可查看当前干员的练度统计结果</p>
     <!--   干员表单-->
     <div class="operator-form">
-
       <OperatorBar @click="openOperatorsStatisticsDetail(operator)" v-for="(operator, charId) in displayOperatorList"  :operator-info="operator"></OperatorBar>
-
     </div>
 
 
 
     <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
-      <v-card title="干员练度统计结果">
+      <v-card title="干员练度统计结果" subtitle="蓝色高亮为博士当前练度">
         <v-card-text>
           <v-data-table
               :headers="detailHeader"
