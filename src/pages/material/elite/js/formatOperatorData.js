@@ -72,7 +72,13 @@ export const initOperatorData = () => {
 // 创建单个干员数据
 export const createOperatorData = (charId, charInfo) => {
   const { name, profession, subProfessionId, rarity, itemObtainApproach, equip, skill } = charInfo;
-  const { skills, elite } = operatorMaterialMap.get(charId);
+  let { skills, elite } = operatorMaterialMap.get(charId);
+
+  // 20250504为解决重复计算阿米娅养成材料问题删掉了阿米娅其他升变形态的精英化材料 char_002_amiya char_1001_amiya2 char_1037_amiya3
+  if (charId.includes('amiya')) {
+    // 所有阿米娅升变形态皆取术兔精英化材料
+    elite = operatorMaterialMap.get('char_002_amiya').elite
+  }
   // 手动添加精英化所需的龙门币数量
   const filteredElite = elite.filter(obj => Object.keys(obj).length !== 0)
   // 精英化材料数据里面没有龙门币数据, 添加精英化时消耗的龙门币数量
