@@ -9,6 +9,9 @@ import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_
 import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
 import itemInfo from '/src/static/json/material/item_info.json'
 
+
+let activeTab = ref('1')
+
 let compositeTable = {}
 for (const item of compositeTableJson) {
   const {itemId, resolve, pathway, rarity} = item
@@ -115,6 +118,7 @@ for (const charId in operatorTableSimple) {
 
   const list = [allSkill, elite]
 
+  //统计材料消耗
   for (const table of list) {
     if (!table) {
       continue
@@ -134,6 +138,7 @@ for (const charId in operatorTableSimple) {
     }
   }
 
+  //统计材料消耗
   if (skills) {
     for (const skill of skills) {
       for (const item of skill) {
@@ -143,7 +148,6 @@ for (const charId in operatorTableSimple) {
             let oldValue = collectByOperator.itemCost.get(itemId);
             oldValue = oldValue ? oldValue : 0
             collectByOperator.itemCost.set(itemId, oldValue + cost)
-
             _updateItemCostStatisticsMap(itemId, cost)
           }
         }
@@ -197,6 +201,12 @@ for (const charId in operatorTableSimple) {
     }
   }
 
+  /**
+   * 更新全干员统计消耗
+   * @param itemId 材料id
+   * @param cost 消耗个数
+   * @private
+   */
   function _updateItemCostStatisticsMap(itemId, cost) {
     let allCount = mapItemCostStatistics.get(itemId);
     allCount = allCount ? allCount : 0
@@ -204,11 +214,13 @@ for (const charId in operatorTableSimple) {
   }
 }
 
+
 for (const [k, v] in operatorAndEquipCollectByDate) {
   updateTimeList.push(v.updateTime)
 }
 
 updateTimeList.sort((a, b) => a - b)
+
 
 for (const [key, value] of mapItemCostStatistics) {
   const {rarity} = itemInfoMap.get(key)
@@ -226,9 +238,15 @@ let listDisplayItem = ref([])
 let itemCostTableData = ref([])
 let itemCostTableHeader = ref([])
 
+/**
+ * 选择材料展示材料消耗
+ * @param index
+ */
 function selectItem(index) {
   itemInfoList[index].display = !itemInfoList[index].display
   listDisplayItem.value = []
+
+  //被选择的材料写入到材料展示对象
   for (const item of itemInfoList) {
     if (item.display) {
       listDisplayItem.value.push({
@@ -238,6 +256,7 @@ function selectItem(index) {
       })
     }
   }
+
 
   let dateLength = 0;
   const startTime = new Date('2024/01/01 00:00:00').getTime()
@@ -299,7 +318,32 @@ function getItemCostByItemId(item) {
 }
 
 
+//将按版本分类的材料拆解为三级材料
 let r3ItemCostList = splitItem(mapItemCostStatistics)
+let r3ItemCostListByDate = []
+
+for (const [key, value] of operatorAndEquipCollectByDate) {
+  const {updateTime, itemCost} = value
+  const r3List = splitItem(itemCost)
+  let count = 0
+  for (const item of r3List) {
+    count += item.count
+  }
+
+  for (const item of r3List) {
+    item.rate = item.count / count
+  }
+
+  r3ItemCostListByDate.push({
+    updateTime,
+    list: r3List
+  })
+
+  r3ItemCostListByDate.sort((a, b) => b.updateTime - a.updateTime)
+}
+
+
+console.log(r3ItemCostListByDate)
 
 
 function splitItem(map) {
@@ -503,77 +547,86 @@ function loadingLine() {
 }
 
 onMounted(() => {
-  const chartDom = document.getElementById('material-statistics-line');
-  lineChart = echarts.init(chartDom)
+  // const chartDom = document.getElementById('material-statistics-line');
+  // lineChart = echarts.init(chartDom)
   // loadingLine()
 })
 
 </script>
 <template>
   <div class="statistics-material">
-
-    <h2>原始材料需求</h2>
-    <div style="display: flex;flex-wrap: wrap;">
-      <div style="text-align: center;margin:8px" v-for="[key,value] in mapItemCostStatistics">
-        <ItemImage :item-id="key"></ItemImage>
-        {{ value }}
-      </div>
-    </div>
-
-    <h2>拆解为蓝材料后的需求</h2>
-    <div style="display: flex;flex-wrap: wrap">
-      <div style="text-align: center;margin:8px" v-for="item in r3ItemCostList">
-        <ItemImage :item-id="item.itemId" :size="60" :mobile-size="60"></ItemImage>
-        {{ item.count }}
-      </div>
-    </div>
-
-    <h2>点击材料展示每个版本的材料消耗</h2>
-    <div class="flex flex-wrap">
-      <ItemImage :item-id="el.itemId" :size="60" v-for="(el,index) in itemInfoList" @click="selectItem(index)"
-                 :class="itemOptionStatus(el.display)"></ItemImage>
-    </div>
-
-    <div style="width: 1700px;height: 800px;display: none" id="material-statistics-line">
-
-    </div>
+    <v-tabs v-model="activeTab" bg-color="primary">
+      <v-tab value="1">未拆解材料需求</v-tab>
+      <v-tab value="2">未拆解材料需求(按版本)</v-tab>
+      <v-tab value="3">拆解后材料需求</v-tab>
+      <v-tab value="4">拆解后材料需求(按版本)</v-tab>
+      <!--      <v-tab value="RollSeed" >Roll种子</v-tab>-->
+    </v-tabs>
 
 
-    <table class="item-table">
-      <tbody>
-      <tr>
-        <th v-for="(item,index) in itemCostTableHeader">
-          <ItemImage :item-id="item" :size="50" :mobile-size="50" class="m-a" v-show="index>0"></ItemImage>
-        </th>
-      </tr>
-      <tr v-for="list in itemCostTableData">
-        <td v-for="item in list">
-          {{ item }}
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <v-tabs-window v-model="activeTab">
+      <v-tabs-window-item value="1">
+        <div style="display: flex;flex-wrap: wrap;">
+          <div style="text-align: center;margin:8px" v-for="[key,value] in mapItemCostStatistics">
+            <ItemImage :item-id="key" :size="60"></ItemImage>
+            {{ value }}
+          </div>
+        </div>
+      </v-tabs-window-item>
 
-<!--    <div class="flex flex-wrap">-->
-<!--      <table class="m-8 item-table" v-for="item in listDisplayItem">-->
-<!--        <tbody>-->
-<!--        <tr>-->
-<!--          <td colspan="2">-->
-<!--            <ItemImage :item-id="item.itemId" :size="60" :mobile-size="60" class="m-a"></ItemImage>-->
-<!--          </td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--          <td>日期</td>-->
-<!--          <td>消耗</td>-->
-<!--        </tr>-->
-<!--        <tr v-for="element in item.list">-->
-<!--          <td>{{ dateFormat(element.updateTime) }}</td>-->
-<!--          <td>{{ element.count }}</td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
-<!--    </div>-->
+      <v-tabs-window-item value="2">
+        <div class="flex flex-wrap">
+          <ItemImage :item-id="el.itemId" :size="60" v-for="(el,index) in itemInfoList" @click="selectItem(index)"
+                     :class="itemOptionStatus(el.display)"></ItemImage>
+        </div>
 
+        <table class="item-table">
+          <tbody>
+          <tr>
+            <th v-for="(item,index) in itemCostTableHeader">
+              <ItemImage :item-id="item" :size="50" :mobile-size="50" class="m-a" v-show="index>0"></ItemImage>
+            </th>
+          </tr>
+          <tr v-for="list in itemCostTableData">
+            <td v-for="item in list">
+              {{ item }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </v-tabs-window-item>
+
+      <v-tabs-window-item value="3">
+        <div style="display: flex;flex-wrap: wrap">
+          <div style="text-align: center;margin:8px" v-for="item in r3ItemCostList">
+            <ItemImage :item-id="item.itemId" :size="60" :mobile-size="60"></ItemImage>
+            {{ item.count }}
+          </div>
+        </div>
+      </v-tabs-window-item>
+
+      <v-tabs-window-item value="4">
+        <table class="item-table">
+          <tbody>
+          <tr>
+            <th></th>
+            <th v-for="item in r3ItemIdList">
+              <ItemImage :item-id="item.itemId" :size="50" :mobile-size="50" class="m-a"></ItemImage>
+            </th>
+          </tr>
+          <tr v-for="r3List in r3ItemCostListByDate">
+            <td>{{ dateFormat(r3List.updateTime) }}</td>
+            <td v-for="item in r3List.list">
+              {{ item.count }}
+              <!--          {{formatNumber(item.rate*100)}}%-->
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+      </v-tabs-window-item>
+
+    </v-tabs-window>
 
   </div>
 </template>
@@ -585,7 +638,7 @@ onMounted(() => {
   .item-table {
     border-collapse: collapse;
 
-    td {
+    td, th {
       border: 1px solid #646464;
       text-align: center;
       padding: 4px;
