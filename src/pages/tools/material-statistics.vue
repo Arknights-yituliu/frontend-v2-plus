@@ -204,11 +204,11 @@ for (const charId in operatorTableSimple) {
   }
 }
 
-for(const [k,v] in operatorAndEquipCollectByDate){
+for (const [k, v] in operatorAndEquipCollectByDate) {
   updateTimeList.push(v.updateTime)
 }
 
-updateTimeList.sort((a,b)=>a-b)
+updateTimeList.sort((a, b) => a - b)
 
 for (const [key, value] of mapItemCostStatistics) {
   const {rarity} = itemInfoMap.get(key)
@@ -222,10 +222,9 @@ for (const [key, value] of mapItemCostStatistics) {
 listItemCostStatistics.sort((a, b) => b.rarity - a.rarity)
 
 
-
-
-
 let listDisplayItem = ref([])
+let itemCostTableData = ref([])
+let itemCostTableHeader = ref([])
 
 function selectItem(index) {
   itemInfoList[index].display = !itemInfoList[index].display
@@ -240,10 +239,37 @@ function selectItem(index) {
     }
   }
 
+  let dateLength = 0;
   const startTime = new Date('2024/01/01 00:00:00').getTime()
-  loadingItemCostTable()
-  const timeRange = updateTimeList.filter(e=>e>startTime&&e<Date.now())
-  const params = {itemList:listDisplayItem.value,timeRange:timeRange, startTime:startTime, endTime:Date.now()}
+  for (const item of listDisplayItem.value) {
+    item.list = getItemCostByItemId(item)
+    dateLength = item.list.length
+  }
+
+  itemCostTableData.value = []
+  itemCostTableHeader.value = ['日期']
+  for (const item of listDisplayItem.value) {
+    itemCostTableHeader.value.push(item.itemId)
+  }
+
+  for (let i = 0; i < listDisplayItem.value.length; i++) {
+    for (let t = 0; t < dateLength; t++) {
+      if (!itemCostTableData.value[t]) {
+        itemCostTableData.value[t] = []
+      }
+      const {list} = listDisplayItem.value[i]
+      if (i === 0) {
+        itemCostTableData.value[t].push(dateFormat(list[t].updatetime))
+      }
+      itemCostTableData.value[t].push(list[t].count)
+    }
+  }
+
+
+  console.log(itemCostTableData.value)
+
+  const timeRange = updateTimeList.filter(e => e > startTime && e < Date.now())
+  const params = {itemList: listDisplayItem.value, timeRange: timeRange, startTime: startTime, endTime: Date.now()}
   createLineChart(params)
 }
 
@@ -253,12 +279,6 @@ function itemOptionStatus(display) {
   }
 }
 
-
-function loadingItemCostTable() {
-  for (const item of listDisplayItem.value) {
-    item.list = getItemCostByItemId(item)
-  }
-}
 
 function getItemCostByItemId(item) {
   let list = []
@@ -291,7 +311,7 @@ function splitItem(map) {
   for (const [itemId, value] of copyMap) {
     if (tempMap.get(itemId) === 0) {
       tempMap.set(itemId, value)
-      console.log(itemInfoMap.get(itemId).itemName,'：',tempMap.get(itemId))
+      // console.log(itemInfoMap.get(itemId).itemName, '：', tempMap.get(itemId))
     }
     const compositeTableElement = compositeTable[itemId];
     if (!compositeTableElement) {
@@ -306,7 +326,7 @@ function splitItem(map) {
         let oldValue = copyMap.get(item.itemId);
         oldValue = oldValue ? oldValue : 0
         copyMap.set(item.itemId, oldValue + item.count * value)
-        console.log(itemInfoMap.get(itemId).itemName,':',value,'*',item.count,'==',itemInfoMap.get(item.itemId).itemName,'--->',copyMap.get(item.itemId))
+        // console.log(itemInfoMap.get(itemId).itemName, ':', value, '*', item.count, '==', itemInfoMap.get(item.itemId).itemName, '--->', copyMap.get(item.itemId))
       }
     }
   }
@@ -328,7 +348,7 @@ function splitItem(map) {
         oldValue = oldValue ? oldValue : 0
         tempMap.set(item.itemId, oldValue + item.count * value)
 
-        console.log(itemInfoMap.get(itemId).itemName,':',value,'*',item.count,'==',itemInfoMap.get(item.itemId).itemName,'--->',tempMap.get(item.itemId))
+        // console.log(itemInfoMap.get(itemId).itemName, ':', value, '*', item.count, '==', itemInfoMap.get(item.itemId).itemName, '--->', tempMap.get(item.itemId))
       }
     }
   }
@@ -351,12 +371,10 @@ function splitItem(map) {
 let lineChart = void 0;
 
 
-
-
 function createLineChart(params) {
 
   const lineData = _initLineData(params);
-  console.log(lineData)
+  // console.log(lineData)
   const option = {
 
     title: {
@@ -383,7 +401,7 @@ function createLineChart(params) {
 
 
   function _initLineData(params) {
-    const {itemList,timeRange, startTime, endTime} = params
+    const {itemList, timeRange, startTime, endTime} = params
 
     const yData = []
     const xData = timeRange
@@ -412,7 +430,7 @@ function createLineChart(params) {
             coord: [0, data[0]], // 初始位置，需根据实际最后一个点动态调整
             symbol: `image://https://cos.yituliu.cn/image2/item/${item.itemId}.png`,
             symbolSize: [50, 50],
-            symbolOffset:[offset*10,0]
+            symbolOffset: [offset * 10, 0]
           }]
         }
       })
@@ -469,11 +487,11 @@ function loadingLine() {
 
   const intervalId = setInterval(() => {
     timeRange.push(dateFormat(dateList[index]))
-    if(dateList[index]){
+    if (dateList[index]) {
       console.log(dateList[index])
-      const params = {itemList:itemList,timeRange:timeRange, startTime:startTimeStamp, endTime:dateList[index]}
+      const params = {itemList: itemList, timeRange: timeRange, startTime: startTimeStamp, endTime: dateList[index]}
       createLineChart(params)
-    }else {
+    } else {
       clearInterval(intervalId)
     }
 
@@ -516,30 +534,47 @@ onMounted(() => {
                  :class="itemOptionStatus(el.display)"></ItemImage>
     </div>
 
-    <div style="width: 1700px;height: 800px;display: none" id="material-statistics-line" >
+    <div style="width: 1700px;height: 800px;display: none" id="material-statistics-line">
 
     </div>
 
 
-    <div class="flex flex-wrap">
-      <table class="m-8 item-table" v-for="item in listDisplayItem">
-        <tbody>
-        <tr>
-          <td colspan="2">
-            <ItemImage :item-id="item.itemId" :size="60" :mobile-size="60" class="m-a"></ItemImage>
-          </td>
-        </tr>
-        <tr>
-          <td>日期</td>
-          <td>消耗</td>
-        </tr>
-        <tr v-for="element in item.list">
-          <td>{{ dateFormat(element.updateTime) }}</td>
-          <td>{{ element.count }}</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="item-table">
+      <tbody>
+      <tr>
+        <th v-for="(item,index) in itemCostTableHeader">
+          <ItemImage :item-id="item" :size="50" :mobile-size="50" class="m-a" v-show="index>0"></ItemImage>
+        </th>
+      </tr>
+      <tr v-for="list in itemCostTableData">
+        <td v-for="item in list">
+          {{ item }}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+<!--    <div class="flex flex-wrap">-->
+<!--      <table class="m-8 item-table" v-for="item in listDisplayItem">-->
+<!--        <tbody>-->
+<!--        <tr>-->
+<!--          <td colspan="2">-->
+<!--            <ItemImage :item-id="item.itemId" :size="60" :mobile-size="60" class="m-a"></ItemImage>-->
+<!--          </td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          <td>日期</td>-->
+<!--          <td>消耗</td>-->
+<!--        </tr>-->
+<!--        <tr v-for="element in item.list">-->
+<!--          <td>{{ dateFormat(element.updateTime) }}</td>-->
+<!--          <td>{{ element.count }}</td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
+
+
   </div>
 </template>
 
@@ -555,6 +590,27 @@ onMounted(() => {
       text-align: center;
       padding: 4px;
     }
+  }
+
+  .div-table {
+
+  }
+
+  .div-table-td {
+
+    text-align: center;
+    border: 1px solid #646464;
+  }
+
+  .div-table-td {
+
+    text-align: center;
+    border: 1px solid #646464;
+  }
+
+  .div-table div:nth-child(n+1):nth-child(odd) {
+    background-color: rgb(var(--c-theme-primary));
+    color: rgb(var(--c-theme-on-primary));
   }
 
   .not-selected {
