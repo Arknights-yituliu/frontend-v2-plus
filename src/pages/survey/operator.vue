@@ -76,7 +76,7 @@ const detailHeader = [
 
 function openOperatorsStatisticsDetail(operator) {
 
-  const {charId,elite,skill1,skill2,skill3} = operator
+  const {charId,elite,skill1,skill2,skill3,modX,modY,modD,modA} = operator
 
   if(!operatorProgressionStatisticsMap.get(charId)){
     return
@@ -118,7 +118,7 @@ function openOperatorsStatisticsDetail(operator) {
 
 
   for (const info of equip) {
-    const playerEquipRank = 2
+    const playerEquipRank = operator[`mod${info.typeName2}`]
     const ranks = result[`mod${info.typeName2}`]
     const item = {
       label: info.uniEquipName,
