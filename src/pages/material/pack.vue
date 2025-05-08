@@ -201,6 +201,9 @@ async function getPackInfoData() {
   }
 }
 
+
+let displayPackEfficiencyFlag = ref(false)
+
 /**
  * 分类礼包
  */
@@ -212,10 +215,10 @@ function collectPackInfoVO() {
   // 获取礼包性价比条
   const getLineChartData = pack => {
     const lineChartData = [
-      {label: '大月卡', value: 1.57, color: 'rgb(65,147,220)'},
-      {label: '648源石', value: 1.00, color: 'rgb(65,147,220)'},
-      {label: '全物品', value: pack.drawEfficiency, color: 'rgb(255, 135, 55)'},
-      {label: '本礼包', value: pack.packEfficiency, color: 'rgb(250, 83, 83)'}
+      {label: '大月卡', value: 1.57, color: 'rgb(65,147,220)',display:true},
+      {label: '648源石', value: 1.00, color: 'rgb(65,147,220)',display:true},
+      {label: '仅抽卡', value: pack.drawEfficiency, color: 'rgb(250, 83, 83)',display:!displayPackEfficiencyFlag.value},
+      {label: '全物品', value: pack.packEfficiency, color: 'rgb(250, 83, 83)',display:displayPackEfficiencyFlag.value}
     ];
     return lineChartData.sort((a, b) => b.value - a.value);
   }
@@ -283,11 +286,14 @@ function collectPackInfoVO() {
 
 let isKernelValuable = ref(false)
 
+function displayPackEfficiency(){
+  collectPackInfoVO()
+}
+
 //如果是true就覆写数据，如果是false就用原始数据重置
 function changeKernelValue() {
-  console.log(isKernelValuable.value)
+
   if (isKernelValuable.value) {
-    console.log("中坚")
     for (const pack of packInfoVOList) {
       pack.draws = pack.drawsKernel
       pack.packEfficiency = pack.packEfficiencyKernel
@@ -297,7 +303,7 @@ function changeKernelValue() {
       pack.drawPrice = pack.drawPriceKernel
     }
   } else {
-    console.log("非中坚")
+
     packInfoVOList = deepClone(packInfoVOListCache)
   }
 
@@ -372,11 +378,18 @@ loadingItemValue()
           <v-chip text="折合成源石：135理智=1源石" color="deep-orange" class="m-4"></v-chip>
           <v-chip text="中坚寻访：1蓝抽也记为1抽，但价值视为0.837抽" color="deep-orange" class="m-4"></v-chip>
         </div>
+
+        <div class="flex flex-wrap">
         <v-switch v-if="item.titleEn === 'New Packs'"
                   color="primary" label="中坚寻访视为有价值"
-                  @change="changeKernelValue" v-model="isKernelValuable" style="width: 200px">
+                  @change="changeKernelValue" v-model="isKernelValuable" class="m-0-8">
         </v-switch>
 
+        <v-switch v-if="item.titleEn === 'New Packs'"
+                  color="primary" label="展示全物品的综合性价比"
+                  @change="displayPackEfficiency" v-model="displayPackEfficiencyFlag" class="m-0-8">
+        </v-switch>
+        </div>
         <template v-for="(packInfo, packIndex) in item.list" :key="packIndex">
           <h2 style="margin: 12px;" v-if="packInfo.title">{{ packInfo.title }}</h2>
           <v-chip v-if="packInfo.title === '新人/回归礼包'"
@@ -384,7 +397,7 @@ loadingItemValue()
                   color="red" class="m-4"></v-chip>
           <v-chip v-if="packInfo.title === '源石/首充源石'" text="每年周年庆会重置源石首充" color="red"
                   class="m-4"></v-chip>
-          <PackCardContainer v-model="packInfo.packs"/>
+          <PackCardContainer v-model="packInfo.packs" />
         </template>
       </template>
       <!-- 不会因为筛选改变的礼包 End -->

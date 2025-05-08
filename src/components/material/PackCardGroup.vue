@@ -13,7 +13,7 @@ function generateRandomString(length) {
   return result;
 }
 
-const props = defineProps(["modelValue"]);
+const props = defineProps(["modelValue","displayPackEfficiency"]);
 
 function getPackImageLink(link) {
   return `https://cos.yituliu.cn/${link}`
@@ -80,7 +80,7 @@ watch(() => window.screen.width, (newVal) => {
           </div>
 
           <div class="pack-chart-line">
-            <div class="pack-chart-line-item" v-for="(line, index) in packInfo.lineChartData">
+            <div class="pack-chart-line-item" v-for="(line, index) in packInfo.lineChartData" v-show="line.display">
               <span class="pack-chart-line-label">{{ line.label }}</span>
               <div class="pack-line-bar" :style="getLineBarStyle(line)">
                 <span>{{ getFixed(line.value * 100, 0) }}%</span>
