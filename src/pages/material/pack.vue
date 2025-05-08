@@ -214,7 +214,7 @@ function collectPackInfoVO() {
     const lineChartData = [
       {label: '大月卡', value: 1.57, color: 'rgb(65,147,220)'},
       {label: '648源石', value: 1.00, color: 'rgb(65,147,220)'},
-      {label: '仅抽卡', value: pack.drawEfficiency, color: 'rgb(255, 135, 55)'},
+      {label: '全物品', value: pack.drawEfficiency, color: 'rgb(255, 135, 55)'},
       {label: '本礼包', value: pack.packEfficiency, color: 'rgb(250, 83, 83)'}
     ];
     return lineChartData.sort((a, b) => b.value - a.value);
