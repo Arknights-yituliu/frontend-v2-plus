@@ -3,6 +3,13 @@
   color: rgb(var(--v-theme-on-primary));
 }
 
+.bg-color-primary {
+  background-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+
+
+
 
 @media screen and (max-width: 600px){
   .v-mobile-table{

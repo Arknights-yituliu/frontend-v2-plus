@@ -500,7 +500,7 @@ function calculateSavingsFromDefault(optimizedTime) {
                   <span class="label">总耗时:</span>
                   <el-tooltip :content="optimalPaths[activeProfession].general.totalTimeTooltip" effect="light"
                               placement="top">
-                    <span class="value highlight">{{
+                    <span class="value underline">{{
                         formatTime(optimalPaths[activeProfession].general.totalTime)
                       }}</span>
                   </el-tooltip>
@@ -596,7 +596,7 @@ function calculateSavingsFromDefault(optimizedTime) {
                   <span class="label">总耗时:</span>
                   <el-tooltip :content="optimalPaths[activeProfession].branches[activeTab].totalTimeTooltip"
                               effect="light" placement="top">
-                    <span class="value highlight">{{
+                    <span class="value underline">{{
                         formatTime(optimalPaths[activeProfession].branches[activeTab].totalTime)
                       }}</span>
                   </el-tooltip>
@@ -777,7 +777,7 @@ function calculateSavingsFromDefault(optimizedTime) {
   font-size: 14px;
 }
 
-.highlight {
+.underline {
   color: var(--c-text-color);
   text-decoration: underline;
 }

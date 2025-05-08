@@ -9,11 +9,9 @@
   --c-card-background-color:#ffffff;
   --c-background-color:#FFFFFF;
 
-
-  //每个页面的自定义样式变量
-
-
-
+  //vuetify的默认变量
+  --c-theme-primary:var(--v-theme-primary);
+  --c-theme-on-primary:var(--v-theme-on-primary);
 
 }
 
@@ -28,9 +26,9 @@
   --c-card-background-color:#323232;
   --c-background-color:#222222;
 
-  //每个页面的自定义样式变量
-
-
+  //vuetify的默认变量
+  --c-theme-primary:var(--v-theme-primary);
+  --c-theme-on-primary:var(--v-theme-on-primary);
 
 
 }
