@@ -381,12 +381,12 @@ loadingItemValue()
 
         <div class="flex flex-wrap">
         <v-switch v-if="item.titleEn === 'New Packs'"
-                  color="primary" label="中坚寻访视为有价值"
+                  color="primary" label="中坚寻访视为有价值" hide-details
                   @change="changeKernelValue" v-model="isKernelValuable" class="m-0-8">
         </v-switch>
 
         <v-switch v-if="item.titleEn === 'New Packs'"
-                  color="primary" label="展示全物品的综合性价比"
+                  color="primary" label="展示全物品的综合性价比" hide-details
                   @change="displayPackEfficiency" v-model="displayPackEfficiencyFlag" class="m-0-8">
         </v-switch>
         </div>

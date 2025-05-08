@@ -7,12 +7,12 @@
 
   .pack-card {
     margin: 8px;
-    width: 530px;
+    width: 500px;
   }
 
   .pack-card-part-left {
-    width: 160px;
-    height: 120px;
+    width: 150px;
+    height: 110px;
     position: relative;
     border-radius: 8px;
     overflow: hidden;
@@ -20,9 +20,9 @@
   }
 
   .pack-image {
-    width: 160px;
-    height: 120px;
-    box-shadow: 2px 2px 4px var(--c-box-shadow-color);
+    width: 150px;
+    height: 110px;
+    //box-shadow: 2px 2px 4px var(--c-box-shadow-color);
   }
 
   .pack-corner {
@@ -40,12 +40,12 @@
 
   .pack-display-name {
     position: absolute;
-    top: 96px;
+    top: 86px;
     left: 0;
-    width: 160px;
+    width: 150px;
     height: 24px;
-    background-color: rgba(0, 0, 0, 0.6902);
-    font-size: 14px;
+    background-color: rgba(0, 0, 0, 0.8);
+    font-size: 12px;
     font-weight: 600;
     color: white;
     text-align: center;
@@ -56,10 +56,10 @@
 
   .pack-info {
     z-index: 10;
-    height: 112px;
-    width: 370px;
+    height: 100px;
+    width: 350px;
     margin-top: 4px;
-    margin-left: -8px;
+    margin-left: -4px;
     border-radius: 4px;
     box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5);
     display: flex;
@@ -68,7 +68,7 @@
 
   .pack-info-text {
     margin-left: 8px;
-    width: 100px;
+    width:90px;
     height: 100%;
     font-size: 16px;
     box-sizing: border-box;
@@ -366,8 +366,9 @@
   }
   
   .pack-note {
-    width: 100%;
-    margin: 0px 24px;
+    width: 96%;
+    font-size: 14px;
+    margin: 0 1%;
     font-style: italic
   }
 

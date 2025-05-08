@@ -74,7 +74,7 @@ watch(() => window.screen.width, (newVal) => {
           <div class="pack-info-text">
             <span style="color: #ffb46e">折合{{ getFixed(packInfo.packedOriginium, 1) }}石</span>
             <span style="color: #ffb46e">￥{{ getFixed(packInfo.packedOriginiumPrice, 1) }}/石</span>
-            <span style="height: 12px"></span>
+            <span style="height: 8px"></span>
             <span style="color: #ff6d6d;">共{{ getFixed(packInfo.draws, 1) }}抽</span>
             <span style="color: #ff6d6d;">￥{{ getFixed(packInfo.drawPrice, 1) }}/抽</span>
           </div>
