@@ -1,5 +1,6 @@
 <script setup>
 import {ref, watch} from "vue"
+import ItemImage from "@/components/sprite/ItemImage.vue";
 
 const id = generateRandomString(5)
 
@@ -13,7 +14,7 @@ function generateRandomString(length) {
   return result;
 }
 
-const props = defineProps(["modelValue","displayPackEfficiency"]);
+const props = defineProps(["modelValue", "displayPackEfficiency"]);
 
 function getPackImageLink(link) {
   return `https://cos.yituliu.cn/${link}`
@@ -93,14 +94,19 @@ watch(() => window.screen.width, (newVal) => {
       <!-- 详情部分 -->
       <div class="pack-content" :id="`${packInfo.id}${id}`">
         <div class="pack-content-gacha">
-          <span>源石</span><span>X{{ packInfo.originium }}</span>
-          <span>合成玉</span><span>X{{ packInfo.orundum }}</span>
-          <span>单抽</span><span>X{{ packInfo.gachaTicket }}</span>
-          <span>十连</span><span>X{{ packInfo.tenGachaTicket }}</span>
+          <ItemImage :item-id="'4002'" :size="40" :mobile-size="30"></ItemImage>
+          <span>X{{ packInfo.originium }}</span>
+          <ItemImage :item-id="'4003'" :size="40" :mobile-size="30"></ItemImage>
+          <span>X{{ packInfo.orundum }}</span>
+          <ItemImage :item-id="'7003'" :size="40" :mobile-size="30"></ItemImage>
+          <span>X{{ packInfo.gachaTicket }}</span>
+          <ItemImage :item-id="'7004'" :size="40" :mobile-size="30"></ItemImage>
+          <span>X{{ packInfo.tenGachaTicket }}</span>
         </div>
         <div class="pack-content-material">
           <div class="pack-content-material-item" v-for="(item, index) in packInfo.packContent" :key="index">
-            <span class="pack-content-material-item-name">{{ item.itemName }}</span>
+            <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" v-show="!item.custom"></ItemImage>
+            <span class="pack-content-material-item-name" v-show="item.custom">{{ item.itemName }}</span>
             <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
           </div>
         </div>

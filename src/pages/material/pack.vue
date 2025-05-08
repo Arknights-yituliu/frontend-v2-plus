@@ -55,6 +55,7 @@ let packInfoVOListOnSale = ref([])
 
 //材料价值表
 let itemValueMap = new Map()
+let customItemValueMap = new Map()
 
 //获取材料价值表
 function loadingItemValue() {
@@ -71,6 +72,7 @@ function loadingItemValue() {
       for (const item of response.data) {
         const {itemId, itemValue} = item
         itemValueMap.set(itemId, itemValue)
+        customItemValueMap.set(itemId,itemValue)
       }
       //开始计算礼包性价比
       getPackInfoData()
@@ -140,6 +142,9 @@ async function getPackInfoData() {
     if (packContentVOList.length > 0) {
       for (let i = 0; i < packContentVOList.length; i++) {
         const packContentVO = packContentVOList[i];
+        if(customItemValueMap.has(packContentVO.itemId)){
+          packContentVOList[i].custom = true
+        }
         // 判断是否有不存在物品表中的物品
         if (itemValueMap.get(packContentVO.itemId)) {
           const itemValueAp = itemValueMap.get(packContentVO.itemId);

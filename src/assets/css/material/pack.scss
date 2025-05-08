@@ -151,19 +151,19 @@
   }
 
   .pack-content {
-    margin-left: 20px;
+    margin-left: 10px;
     margin-top: -20px;
     padding-top: 20px;
     padding-left: 8px;
     padding-right: 8px;
-    width: 460px;
+    width: 480px;
     display: none;
     flex-wrap: wrap;
     // background-color: var(--c-pack-card-background-color);
     background: #ffffff40;
     font-size: 14px;
     border-radius: 4px;
-    box-shadow: 1px 1px 4px var(--c-box-shadow-color);
+    box-shadow: 0 2px 4px var(--c-box-shadow-color);
     box-sizing: border-box;
     overflow: hidden;
   }
@@ -172,44 +172,45 @@
     width: 100%;
     padding: 4px;
     display: flex;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content:space-between;
     font-weight: bold;
     box-sizing: border-box;
   }
 
   .pack-content-gacha span {
     display: block;
-    width: 13%;
+    padding:0 12px;
   }
 
   .pack-content-material {
+    width: 100%;
     padding: 4px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-between;
     box-sizing: border-box;
 
   }
 
   .pack-content-material-item {
-    width: 200px;
-
+    width: 140px;
     display: flex;
+    align-items: center;
+    //border:1px saddlebrown solid;
   }
 
   .pack-content-material-item span {
-    padding: 4px 0;
-    display: block;
+    padding: 4px;
   }
 
   .pack-content-material-item-name {
+
     overflow: hidden;
-    /*height: 16px;*/
-    width: 160px;
   }
 
   .pack-content-material-item-quantity {
-    width: 80px;
+
   }
 
   .pack_info {

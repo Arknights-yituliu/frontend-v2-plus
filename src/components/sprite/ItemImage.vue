@@ -28,6 +28,7 @@ let wrapStyle = ref('')
 let spriteStyle = ref('')
 
 function calculatedSize() {
+
   const innerWidth = window.innerWidth;
 
   let size = props.size;
@@ -36,12 +37,12 @@ function calculatedSize() {
     size = props.mobileSize;
   }
 
-  wrapStyle = `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
+  wrapStyle.value = `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
   if (props.rounded) {
-    wrapStyle += `;border-radius:60px;`
+    wrapStyle.value += `;border-radius:60px;`
   }
 
-  spriteStyle = `position: absolute;transform: scale(${size / 183});
+  spriteStyle.value = `position: absolute;transform: scale(${size / 183});
   top: ${(size - 183) / 2}px;left: ${(size - 183) / 2}px;`
 
 }
