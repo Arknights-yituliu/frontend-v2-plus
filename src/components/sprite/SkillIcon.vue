@@ -1,6 +1,6 @@
 <script setup>
 
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 import {debounce} from "/src/utils/debounce.js";
 
 
@@ -73,12 +73,38 @@ calculatedSize()
 window.addEventListener('resize', debounce(calculatedSize));
 
 
+function replaceId(str) {
+  // 找到最后一个 '_' 的位置
+  const lastUnderscoreIndex = str.lastIndexOf('_');
+
+  // 如果没有找到 '_'，直接返回原字符串
+  if (lastUnderscoreIndex === -1) {
+    return str;
+  }
+
+  // 替换最后一个 '_' 为 'x5d'
+  const replacedLast = str.slice(0, lastUnderscoreIndex) + 'x5d' + str.slice(lastUnderscoreIndex + 1);
+
+  // 再次查找倒数第二个 '_'
+  const secondLastUnderscoreIndex = replacedLast.lastIndexOf('_', lastUnderscoreIndex - 1);
+
+  // 如果没有找到倒数第二个 '_'，直接返回当前结果
+  if (secondLastUnderscoreIndex === -1) {
+    return replacedLast;
+  }
+
+  // 替换倒数第二个 '_' 为 'x5b'
+  return replacedLast.slice(0, secondLastUnderscoreIndex) +
+      'x5b' +
+      replacedLast.slice(secondLastUnderscoreIndex + 1);
+}
+
 </script>
 
 <template>
   <div :style="borderStyle">
     <div :style="wrapStyle">
-      <div :style="spriteStyle" :class="`sprite-skill bg-skill_icon_${icon}`">
+      <div :style="spriteStyle" :class="`sprite-skill bg-skill_icon_${icon} bg-skill_icon_${replaceId(icon)}`">
       </div>
     </div>
   </div>
