@@ -549,6 +549,12 @@ function splitMaterialByTier(tier, itemCollect) {
                 let t4ItemCount = newCollect[lowerTier][needItemId].count;
                 t4ItemCount = t4ItemCount ? t4ItemCount : 0
                 console.log(newCollect[lowerTier][needItemId])
+                if(!newCollect[lowerTier][needItemId]){
+                    newCollect[lowerTier][needItemId] = {
+                        id:needItemId,
+                        count:0
+                    }
+                }
                 newCollect[lowerTier][needItemId].count = t4ItemCount + needCount * t5ItemCount
                 newCollect[higherTier][itemId].count = 0
                 // console.log(itemInfoMap.get(itemId).itemName, ':', value, '*', item.count, '==', itemInfoMap.get(item.itemId).itemName, '--->', copyMap.get(item.itemId))
