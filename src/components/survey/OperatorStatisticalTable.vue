@@ -73,7 +73,7 @@ async function updateData(list) {
  */
 function splitMaterialByRarity(highestRarity) {
   itemCostCollectData.value = splitMaterialByTier(highestRarity, itemCostCollectOriginal.value);
-  console.log(itemCostCollectData.value)
+  // console.log(itemCostCollectData.value)
 }
 
 /**
