@@ -256,6 +256,15 @@ const routes = [
         // component: Notice
     },
     {
+        path: '/account/home',
+        text: '个人中心',
+        name: 'User Center',
+        display: true,
+        module: 'about',
+        icon: "mdi-pencil",
+        component: () => import('/src/pages/account/home.vue')
+    },
+    {
         path: '/about/dev',
         text: '开发相关',
         name: 'Develop',
