@@ -524,12 +524,7 @@ async function statisticsOperatorInfo(operatorList) {
 function splitMaterialByTier(tier, itemCollect) {
 
     let newCollect = deepClone(itemCollect)
-    console.log("材料消耗：", newCollect)
-
-    let T5ItemCost = newCollect["T5"]
-
-    console.log(T5ItemCost)
-
+    // console.log("材料消耗：", newCollect)
 
     for (let t = 5; t > tier; t--) {
         const  higherTier = `T${t}`
@@ -548,7 +543,7 @@ function splitMaterialByTier(tier, itemCollect) {
                 const needItemId = item.itemId
                 let t4ItemCount = newCollect[lowerTier][needItemId].count;
                 t4ItemCount = t4ItemCount ? t4ItemCount : 0
-                console.log(newCollect[lowerTier][needItemId])
+                // console.log(newCollect[lowerTier][needItemId])
                 if(!newCollect[lowerTier][needItemId]){
                     newCollect[lowerTier][needItemId] = {
                         id:needItemId,
