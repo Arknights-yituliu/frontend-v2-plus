@@ -1,8 +1,16 @@
 import OPERATOR_ITEM_COST_TABLE from "/src/static/json/operator/operator_item_cost_table.json";
 import LEVEL_COST_TABLE from "/src/static/json/operator/level_cost_table.json";
 import COMPOSITE_TABLE from "/src/static/json/operator/composite_table.json";
-import ITEM_TABLE from "/src/static/json/operator/item_table.json";
 import deepClone from "/src/utils/deepClone.js";
+import ItemInfo from '/src/static/json/material/item_info.json'
+
+let itemMap = new Map()
+
+for(const item of ItemInfo){
+   itemMap.set(item.itemId,item)
+}
+
+console.log(itemMap)
 
 // 初始练度
 const InitialRanks = {
@@ -181,11 +189,11 @@ function getOperatorItemCost(charId, rarity, current, target) {
     }
 
     function _addItemCost(id, count) {
-        if (!ITEM_TABLE[id]) {
+        if (!itemMap.has(id)) {
             return;
         }
 
-        const {rarity, name, itemValueAp} = ITEM_TABLE[id]
+        const {rarity, itemName, itemValueAp} = itemMap.get(id)
         let lastCount = 0;
         if (itemCost[id]) {
             lastCount = itemCost[id].count
@@ -193,7 +201,7 @@ function getOperatorItemCost(charId, rarity, current, target) {
         itemCost[id] = {
             id: id,
             rarity: rarity,
-            name: name,
+            name: itemName,
             count: lastCount + count,
             itemValueAp: itemValueAp
         }
@@ -240,18 +248,20 @@ function getItemList(itemCost) {
  * @param count 材料消耗总和
  */
 function updateItemCostCount(result, id, count) {
-    if (!ITEM_TABLE[id]) return;
+    if (!itemMap.has(id)) return;
 
     if (result[id]) {
         count += result[id].count
     }
 
+    const {itemName,rarity,itemValueAp} = itemMap.get(id)
+
     result[id] = {
         id: id,
-        name: ITEM_TABLE[id].name,
-        rarity: ITEM_TABLE[id].rarity,
+        name: itemName,
+        rarity: rarity,
         count: count,
-        itemValueAp: ITEM_TABLE[id].itemValueAp
+        itemValueAp: itemValueAp
     }
 
 }
