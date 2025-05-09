@@ -6,6 +6,9 @@ import '/src/assets/css/survey/operator.phone.scss'
 import {statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical"
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
+import {getStageConfig} from "/src/utils/user/userConfig.js";
+import itemCache from "/src/utils/indexedDB/itemCache.js";
+
 
 const props = defineProps(["modelValue"]);
 
@@ -16,12 +19,14 @@ let itemCostCollectData = ref([])
 let apCostRankingData = ref([])
 let notOwnData = ref([])
 
-function updateData(list) {
+async function updateData(list) {
 
-  const statisticsOperatorInfo1 = statisticsOperatorInfo(list);
+
+
+  const statisticsOperatorInfo1 = await statisticsOperatorInfo(list);
 
   const {notOwn, apCostRanking, itemCostCollect, apCostCount, info} = statisticsOperatorInfo1
-  console.log(apCostRanking)
+
 
   operatorInfo.value = _setData(info)
 

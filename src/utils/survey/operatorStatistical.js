@@ -2,15 +2,21 @@ import OPERATOR_ITEM_COST_TABLE from "/src/static/json/operator/operator_item_co
 import LEVEL_COST_TABLE from "/src/static/json/operator/level_cost_table.json";
 import COMPOSITE_TABLE from "/src/static/json/operator/composite_table.json";
 import deepClone from "/src/utils/deepClone.js";
-import ItemInfo from '/src/static/json/material/item_info.json'
+import {getStageConfig} from "@/utils/user/userConfig.js";
+import itemCache from "@/utils/indexedDB/itemCache.js";
 
-let itemMap = new Map()
+const stageConfig = getStageConfig()
 
-for(const item of ItemInfo){
-   itemMap.set(item.itemId,item)
+
+async function getItemInfoMap() {
+    const itemList = await itemCache.getItemValueCacheByConfig(stageConfig)
+    let map = new Map()
+    for (const item of itemList) {
+        map.set(item.itemId, item)
+    }
+
+    return map
 }
-
-console.log(itemMap)
 
 // 初始练度
 const InitialRanks = {
@@ -25,45 +31,19 @@ const InitialRanks = {
     modD: 0
 }
 
-/**
- * 计算干员消耗材料
- * @param operatorTable 干员列表
- * @returns {{apCostCount: number, itemList: [], itemMap: {}}} 理智消耗总量，物品列表，物品列表
- */
-function calAPCost(operatorTable) {
-
-    let itemCostCount = {};
-
-    // 计算已持有干员用掉的材料总和
-    for (let charId in operatorTable) {
-        const operator = operatorTable[charId];
-        // 获得每个干员的材料消耗
-        const item_cost = getOperatorItemCost(operator.charId, operator.rarity, InitialRanks, operator)
-        //将材料消耗情况进行统计
-        for (let id in item_cost) {
-            updateItemCostCount(itemCostCount, id, item_cost[id].count)
-        }
-
-    }
-
-    //计算已持有干员用掉的材料明细集合
-    const {itemList, apCost} = getItemList(itemCostCount)
-
-    return {
-        itemList: itemList, apCostCount: apCost, itemMap: itemCostCount
-    }
-}
-
 
 /**
  *
- * @param charId 干员id
- * @param rarity 干员星级
+
  * @param current 当前干员练度
  * @param target 目标干员练度
+ * @param itemInfoMap
  * @returns {{}}
  */
-function getOperatorItemCost(charId, rarity, current, target) {
+function getOperatorItemCost(current, target, itemInfoMap) {
+
+    const charId = target.charId
+    const rarity = target.rarity
 
 
     let itemCost = {}
@@ -143,7 +123,7 @@ function getOperatorItemCost(charId, rarity, current, target) {
     _statisticsSkills(1, currentSkill2, targetSkill2)
     _statisticsSkills(2, currentSkill3, targetSkill3)
 
-    debug("11111", target,currentSkill2, targetSkill2 )
+    debug("11111", target, currentSkill2, targetSkill2)
 
     function _statisticsSkills(index, currentSkill, targetSkill) {
         const list = skills[index]
@@ -189,11 +169,11 @@ function getOperatorItemCost(charId, rarity, current, target) {
     }
 
     function _addItemCost(id, count) {
-        if (!itemMap.has(id)) {
+        if (!itemInfoMap.has(id)) {
             return;
         }
 
-        const {rarity, itemName, itemValueAp} = itemMap.get(id)
+        const {rarity, itemName, itemValueAp} = itemInfoMap.get(id)
         let lastCount = 0;
         if (itemCost[id]) {
             lastCount = itemCost[id].count
@@ -240,31 +220,6 @@ function getItemList(itemCost) {
     return {itemList, apCost}
 }
 
-
-/**
- * 更新材料统计对象的结果
- * @param result 统计对象
- * @param id 材料id
- * @param count 材料消耗总和
- */
-function updateItemCostCount(result, id, count) {
-    if (!itemMap.has(id)) return;
-
-    if (result[id]) {
-        count += result[id].count
-    }
-
-    const {itemName,rarity,itemValueAp} = itemMap.get(id)
-
-    result[id] = {
-        id: id,
-        name: itemName,
-        rarity: rarity,
-        count: count,
-        itemValueAp: itemValueAp
-    }
-
-}
 
 const rarity_level_table = {
     6: {elite0_max_level: 50, elite1_max_level: 80},
@@ -343,7 +298,9 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
 }
 
 
-function statisticsOperatorInfo(operatorList) {
+async function statisticsOperatorInfo(operatorList) {
+    const itemInfoMap = await getItemInfoMap()
+    console.log(itemInfoMap)
     // console.log(operatorList)
     try {
 
@@ -407,7 +364,7 @@ function statisticsOperatorInfo(operatorList) {
                 _statistics(operator, _checkRarity(operator.rarity))
             }
 
-            const itemCost = getOperatorItemCost(operator.charId, operator.rarity, InitialRanks, operator)
+            const itemCost = getOperatorItemCost(InitialRanks, operator, itemInfoMap)
             debug("统计方法调用获取材料方法后返回的干员的材料消耗", operator, itemCost)
 
             const apCost = _calcApCost(itemCost);
@@ -550,30 +507,6 @@ function statisticsOperatorInfo(operatorList) {
 }
 
 
-function operatorPlanCal(operator_data, operator_plan) {
-
-    // 更新练度计划的材料明细集合
-    let itemCostDetail = {};
-
-    //计算练度计划的材料消耗
-    for (const char_id in operator_plan) {
-        if (!operator_data[char_id]) continue
-        const item_cost = getOperatorItemCost(char_id, operator_plan[char_id].rarity,
-            operator_data[char_id], operator_plan[char_id])
-        // 更新练度计划的材料明细集合
-        for (let id in item_cost) {
-            updateItemCostCount(itemCostDetail, id, item_cost[id].count)
-        }
-    }
-
-    //计算练度计划的材料明细集合
-    const {itemList, apCost} = getItemList(itemCostDetail)
-
-    return {
-        itemList: itemList, apCostCount: apCost, itemMap: itemCostDetail
-    }
-}
-
 /**
  * 按材料等级拆分材料
  * @param tier 最高材料等级 int
@@ -635,11 +568,11 @@ function splitMaterialByTier(tier, itemCollect) {
 
 
 function debug(breakpoint, operator, value1, value2, value3) {
-   return
+    return
 
-   console.log(breakpoint, ' {} ', name, ' {} ', value1, ' {} ', value2, ' {} ', value3)
+    console.log(breakpoint, ' {} ', name, ' {} ', value1, ' {} ', value2, ' {} ', value3)
 }
 
 export {
-    calAPCost, InitialRanks, splitMaterialByTier, operatorPlanCal, statisticsOperatorInfo
+    InitialRanks, splitMaterialByTier, statisticsOperatorInfo
 }
