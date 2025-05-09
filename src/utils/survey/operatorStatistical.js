@@ -4,9 +4,15 @@ import COMPOSITE_TABLE from "/src/static/json/operator/composite_table.json";
 import deepClone from "/src/utils/deepClone.js";
 import {getStageConfig} from "@/utils/user/userConfig.js";
 import itemCache from "@/utils/indexedDB/itemCache.js";
+import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
+
 
 const stageConfig = getStageConfig()
-
+let compositeTable = {}
+for (const item of compositeTableJson) {
+    const {itemId, resolve, pathway, rarity} = item
+    compositeTable[itemId] = {resolve, pathway, rarity}
+}
 
 async function getItemInfoMap() {
     const itemList = await itemCache.getItemValueCacheByConfig(stageConfig)
@@ -300,7 +306,7 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
 
 async function statisticsOperatorInfo(operatorList) {
     const itemInfoMap = await getItemInfoMap()
-    console.log(itemInfoMap)
+    // console.log(itemInfoMap)
     // console.log(operatorList)
     try {
 
@@ -498,6 +504,8 @@ async function statisticsOperatorInfo(operatorList) {
 
         statisticalData.logs = logs
 
+        // console.log(statisticalData)
+
         return statisticalData
 
     } catch (error) {
@@ -516,50 +524,43 @@ async function statisticsOperatorInfo(operatorList) {
 function splitMaterialByTier(tier, itemCollect) {
 
     let newCollect = deepClone(itemCollect)
+    console.log("材料消耗：", newCollect)
 
-    // console.log("材料消耗：", newCollect)
+    let T5ItemCost = newCollect["T5"]
+
+    console.log(T5ItemCost)
+
+
     for (let t = 5; t > tier; t--) {
-        // console.log(`tier${tier}`)
-        _splitMaterial(t)
-    }
+        const  higherTier = `T${t}`
+        const  lowerTier = `T${t-1}`
+        for (const itemId in newCollect[higherTier]) {
+            const t5Item = newCollect[higherTier][itemId]
+            const t5ItemCount = t5Item.count
+            const compositeTableElement = compositeTable[itemId];
+            if (!compositeTableElement) {
+                continue
+            }
 
-    function _splitMaterial(tier) {
-        const advancedMaterials = newCollect[`T${tier}`]
-        const baseMaterials = newCollect[`T${tier - 1}`]
-        // console.log(`T${tier}：`, advancedMaterials)
-        // console.log(`T${tier - 1}：`, advancedMaterials)
-        for (const itemId in advancedMaterials) {
-            const item = advancedMaterials[itemId]
-
-            const productId = item.id   //材料id
-            const productCount = item.count; //材料总数
-
-            if (COMPOSITE_TABLE[productId]) {
-                //材料的合成列表
-                let {itemCost} = COMPOSITE_TABLE[productId];
-
-                for (const cost of itemCost) {
-                    const materialId = cost.id;  //合成原料id
-                    const materialCount = cost.count;  //合成原料总数
-                    if (baseMaterials[materialId]) {
-                        let newItem = baseMaterials[materialId];
-                        newItem.count += (productCount * materialCount);
-                        newCollect[`T${tier - 1}`][materialId] = newItem
-                    } else {
-                        newCollect[`T${tier - 1}`][materialId] = {
-                            count: productCount * materialCount,
-                            id: materialId,
-                        }
-                    }
-                }
-                newCollect[`T${tier}`][productId] = {
-                    count: 0,
-                    id: productId,
-                }
+            const {pathway, rarity} = compositeTableElement
+            for (const item of pathway) {
+                const needCount = item.count
+                const needItemId = item.itemId
+                let t4ItemCount = newCollect[lowerTier][needItemId].count;
+                t4ItemCount = t4ItemCount ? t4ItemCount : 0
+                console.log(newCollect[lowerTier][needItemId])
+                newCollect[lowerTier][needItemId].count = t4ItemCount + needCount * t5ItemCount
+                newCollect[higherTier][itemId].count = 0
+                // console.log(itemInfoMap.get(itemId).itemName, ':', value, '*', item.count, '==', itemInfoMap.get(item.itemId).itemName, '--->', copyMap.get(item.itemId))
             }
         }
     }
 
+    
+     
+    
+
+    
 
     // console.log("拆分后材料消耗：", newCollect)
     const {T5, T4, T3, T2, T1} = newCollect
