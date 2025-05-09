@@ -42,7 +42,7 @@ function calculatedSize() {
     size = props.mobileSize;
   }
 
-  imageStyle.value =  `width:${size}px;height:${size}px;filter: drop-shadow(2px 2px 2px rgb(100, 100, 100));`
+  imageStyle.value =  `width:${size}px;height:${size}px;filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));`
 }
 
 

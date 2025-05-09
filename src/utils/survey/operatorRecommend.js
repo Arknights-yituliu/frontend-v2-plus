@@ -32,7 +32,7 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
         return {
             avg: result.rank1 + result.rank2 * 2 + result.rank3 * 3,
-            ratio: result.rank3
+            ranks:[result.rank1,result.rank2,result.rank3],
         }
     }
 
@@ -46,14 +46,14 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
         for (const property in result) {
             const single = result[property]
 
-            if (operator[property] < single.avg && single.avg > 1.0) {
+            if (operator[property] < single.avg && single.avg > 1.1) {
                 recommend.push({
                     name: operator.name,
                     charId: operator.charId,
                     current:operator[property],
                     info: getPropertyName(property, operator),
                     avg: single.avg,
-                    ratio: single.ratio
+                    ranks: single.ranks
                 })
             }
         }
@@ -61,6 +61,9 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
     // sort the operators by average in the reverse order
     recommend.sort((a, b) => (b.avg - a.avg))
+
+
+
     return recommend;
 }
 

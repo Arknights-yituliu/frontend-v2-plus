@@ -404,9 +404,11 @@ function getSkillSprite(id) {
 
 const headers = [
   {title: '干员',key:"charId"},
-  {title: '推荐技能or模组'},
+  {title: '图标'},
+  {title: '模组/技能名称'},
   {title: '当前等级'},
-  {title: '平均等级'},
+  {title: '一级占比'},
+  {title: '二级占比'},
   {title: '三级占比'},
 ]
 
@@ -418,7 +420,7 @@ onMounted(() => {
 
 
 <template>
-  <div class="survey-operator-page survey-common">
+  <div class="survey-operator-page">
     <v-card>
       <v-tabs
           v-model="displayTabHeader"
@@ -476,7 +478,7 @@ onMounted(() => {
 
           <v-tabs-window-item value="干员练度推荐" v-loading>
             <v-data-table :headers="headers" :items="operatorRecommendList" hide-default-footer
-            items-per-page="-1" class="operator-recommend-table">
+            items-per-page="-1" class="operator-recommend-table" >
               <template v-slot:item="{ item }">
                  <tr>
                    <td>
@@ -484,23 +486,25 @@ onMounted(() => {
                    </td>
                    <td>
                      <SkillIcon :icon="item.info.iconId" size="40" mobile-size="40" v-show="item.info.type==='skill'">
-
                      </SkillIcon>
                      <div class="operator-equip-group" v-show="item.info.type==='equip'">
                        <div class="operator-equip">
-                         <EquipIcon :icon="item.info.iconId" mobile-size="22" size="22" class="equip-icon" ></EquipIcon>
+                         <EquipIcon :icon="item.info.iconId" mobile-size="30" size="30" class="block m-a" ></EquipIcon>
                          <div class="equip-name">{{ item.info.iconId }}</div>
                        </div>
                      </div>
                    </td>
                    <td>
+                     {{item.info.name}}
+                   </td>
+                   <td>
                      {{item.current}}级
                    </td>
-                   <td>
-                    {{formatNumber(item.avg,2)}}级
-                   </td>
-                   <td>
-                     {{formatNumber(item.ratio*100,2)}}%
+<!--                   <td>-->
+<!--                    {{formatNumber(item.avg,2)}}级-->
+<!--                   </td>-->
+                   <td v-for="rank in item.ranks">
+                     {{formatNumber(rank*100,2)}}%
                    </td>
                  </tr>
               </template>
