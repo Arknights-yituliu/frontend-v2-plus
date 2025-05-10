@@ -137,6 +137,7 @@ const init = async () => {
   const stageConfig = getStageConfig()
   const data = await itemCache.getItemValueCacheByConfig(stageConfig)
   data.forEach(item =>{
+    //由于材料价值计算挪到前端，现统一材料价值字段名为itemValue，这行代码是为了兼容写下的
     item.itemValueAp = item.itemValue
     materialMap.set(item.itemId, item)
   } )
