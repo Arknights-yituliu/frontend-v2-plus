@@ -66,8 +66,6 @@ function getItemRarityColor(rarity) {
 }
 
 
-
-
 onMounted(() => {
   const stageConfig = getStageConfig()
   itemCache.getItemValueCacheByConfig(stageConfig).then(response=>{

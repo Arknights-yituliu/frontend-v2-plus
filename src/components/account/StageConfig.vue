@@ -6,14 +6,13 @@ import ItemImage from "@/components/sprite/ItemImage.vue";
 import {getUid} from "/src/utils/user/userInfo.js";
 import {getStageConfig} from "@/utils/user/userConfig.js";
 import ActionButton from "@/components/account/ActionButton.vue";
+import ActStoreUnlimitedExchangeItem from '/src/static/json/material/act_store_unlimited_exchange_item.json'
+import PresetParameter from "/src/static/json/material/preset_parameter.json"
+import {createMessage} from "/src/utils/message.js";
+
+const presetParameter = ref(PresetParameter)
 
 // 数据源映射与正则校验
-const stageTypeMap = {
-  ACT: "SideStory",
-  ACT_REP: "SideStory",
-  MAIN: "主线",
-  ACT_PERM: "插曲别传"
-};
 
 // 正则表达式：用于验证0到1之间的数字，包括小数
 const numberRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
@@ -56,43 +55,11 @@ const stageCollect = ref({
 });
 const itemList = ref([]);
 const customItemDialog = ref(false);
-const customItem = ref({itemId: '30073', itemValue: 1.8});
+const customItem = ref({itemId: '30073', itemName: "扭转醇", itemValue: 1.8});
 const debugText = ref('');
 
-const outItem = ref(
-    [
-      {
-        itemId: "30073",
-        itemName:"扭转醇",
-        itemValue: 1.8,
-        active: true
-      },
-      {
-        itemId: "30083",
-        itemName:"轻锰矿",
-        itemValue: 2.16,
-        active: true
-      },
-      {
-        itemId: "30093",
-        itemName:"研磨石",
-        itemValue: 2.52,
-        active: false
-      },
-      {
-        itemId: "30103",
-        itemName: "RMA70-12",
-        itemValue: 2.88,
-        active: false
-      },
-      {
-        itemId: "31013",
-        itemName: "凝胶",
-        itemValue: 2.52,
-        active: false
-      }
-    ]
-)
+const actStoreUnlimitedExchangeItem = ref(ActStoreUnlimitedExchangeItem.slice(6, 12))
+
 
 // 初始化默认配置
 const stageConfig = ref({
@@ -102,7 +69,7 @@ const stageConfig = ref({
   useActivityStage: false, // 是否使用活动本定价
   stageBlacklist: [], // 关卡黑名单
   source: 'penguin', // 数据来源
-  customItem: [{itemId: '30073', itemValue: 1.8}] // 自定义物品列表
+  customItem: [{itemId: '30073', itemName: "扭转醇", itemValue: 1.8}] // 自定义物品列表
 });
 
 // 合并本地配置
@@ -112,6 +79,48 @@ for (const key in config) {
 }
 
 stageConfig.value.source = 'penguin';
+
+
+function choosePresetParameter(presetParameter) {
+  const parameters = presetParameter.parameters
+
+  let text = ""
+  for (const name in parameters) {
+    _buildMessage(name, parameters[name])
+    stageConfig.value[name] = parameters[name];
+  }
+
+  createMessage({
+    type: 'info',
+    text: text,
+    duration: 1000000
+  })
+
+  function _buildMessage(key, value) {
+    if (key === "expCoefficient") {
+      text += `经验书系数已修改为${value}；`
+    }
+    if (key === "lmdCoefficient") {
+      text += `龙门币系数已修改为${value}；`
+    }
+    if (key === "useActivityStage") {
+      if(value){
+        text += '已使用活动关卡作为基准；'
+      }else {
+        text += '已使用主线与常驻活动关卡作为基准；'
+      }
+    }
+  }
+}
+
+//------------------从这里开始是关卡相关的代码------------------
+
+const stageTypeMap = {
+  ACT: "SideStory",
+  ACT_REP: "SideStory",
+  MAIN: "主线",
+  ACT_PERM: "插曲别传"
+};
 
 // 获取分区信息并构建阶段数据
 function getStageCollectByZone() {
@@ -183,27 +192,75 @@ function getStageCollectByZone() {
       const index = indexMap.get(zoneName);
       stageCollect.value.Act[index].list.push(stage);
     }
-    console.log(stageCollect.value)
+    // console.log(stageCollect.value)
   });
 }
 
-function updateStageBlacklist(stage){
+function updateStageBlacklist(stage) {
   stage.active = !stage.active
-  saveStageConfig()
+  updateStageConfig()
 }
 
 function updateBeastsStageActive(stage) {
   stage.active = !stage.active
   stageCollect.value.Main[stage.zoneIndex].list[stage.stageIndex].active = stage.active
-  saveStageConfig()
+  updateStageConfig()
 }
 
 
-// 选择自定义物品
+//------------------从这里开始是自定义材料价值相关的代码------------------
+
+/**
+ * 获取物品列表
+ */
+function getItemList() {
+  checkStageConfig(); // 校验配置
+  itemCache.getItemValueCacheByConfig(stageConfig.value).then(response => {
+    itemList.value = response; // 更新物品列表
+  });
+}
+
+/**
+ * 选择预设材料，参数为一个材料对象
+ * @param {{itemId:string,itemName:string,itemValue:number}} item 预设材料
+ */
+function chooseActStoreUnlimitedExchangeItem(item) {
+  if (item.active) {
+    deleteCustomItem(item.itemId)
+  } else {
+    const existing = stageConfig.value.customItem.find(e => e.itemId === item.itemId);
+    if (existing) {
+      existing.itemValue = item.itemValue; // 更新现有物品
+    } else {
+      stageConfig.value.customItem.push(item); // 新增物品
+    }
+  }
+  item.active = !item.active
+}
+
+/**
+ * 传入预设材料的状态，返回对应的样式
+ * @param {boolean} active 是否选中，false返回灰度样式
+ * @returns {string} 灰度样式
+ */
+function actStoreUnlimitedExchangeItemActiveClass(active) {
+  if (!active) {
+    return "out-item-unselected"
+  }
+}
+
+/**
+ * 选择自定义材料，参数为一个材料对象
+ * @param {{itemId:string,itemName:string,itemValue:number}} item 自定义材料
+ */
 function chooseCustomItem(item) {
-  customItem.value = {itemId: item.itemId, itemValue: item.itemValue};
+  customItem.value = {itemId: item.itemId, itemName: item.itemName, itemValue: item.itemValue};
 }
 
+
+/**
+ * 添加自定义材料
+ */
 // 添加或更新自定义物品
 function addCustomItem() {
   const existing = stageConfig.value.customItem.find(item => item.itemId === customItem.value.itemId);
@@ -215,32 +272,19 @@ function addCustomItem() {
   customItemDialog.value = false; // 关闭对话框
 }
 
-function chooseOutItem(item){
-  if(item.active){
-    deleteCustomItem(item.itemId)
-  }else {
-    const existing = stageConfig.value.customItem.find(e => e.itemId === item.itemId);
-    if (existing) {
-      existing.itemValue = item.itemValue; // 更新现有物品
-    } else {
-      stageConfig.value.customItem.push(item); // 新增物品
-    }
-  }
-  item.active = !item.active
-}
 
-// 删除自定义物品
+/**
+ * 根据材料id删除自定义一图流配置中的自定义材料
+ * @param itemId 材料id
+ */
 function deleteCustomItem(itemId) {
   stageConfig.value.customItem = stageConfig.value.customItem.filter(e => e.itemId !== itemId);
 }
 
-function outItemActive(active){
-  if(!active){
-    return "out-item-unselected"
-  }
-}
 
-// 校验阶段配置是否正确
+/**
+ * 校验自定义一图流配置是否正确
+ */
 function checkStageConfig() {
   function _check(value) {
     return numberRegex.test(value) && (value === 0 || (value != null && value !== '')) && (value >= 0 && value <= 1);
@@ -250,29 +294,27 @@ function checkStageConfig() {
   if (!_check(stageConfig.value.lmdCoefficient)) stageConfig.value.lmdCoefficient = 0; // 设置默认值
 }
 
-// 获取物品列表
-function getItemList() {
-  checkStageConfig(); // 校验配置
-  itemCache.getItemValueCacheByConfig(stageConfig.value).then(response => {
-    itemList.value = response; // 更新物品列表
-  });
-}
 
-// 强制刷新物品价值
+/**
+ * 强制刷新物品价值
+ */
 function forceRefreshItemValue() {
-  saveStageConfig()
+  updateStageConfig()
   checkStageConfig(); // 校验配置
   localStorage.setItem("StageConfig", JSON.stringify(stageConfig.value)); // 保存配置
   itemCache.getItemValueCacheByConfig(stageConfig.value, true); // 强制刷新
 }
 
-function saveStageConfig() {
+/**
+ * 保存自定义一图流配置
+ */
+function updateStageConfig() {
   stageConfig.value.stageBlacklist = []
-  for(const type in stageCollect.value){
-    const collect =  stageCollect.value[type]
-    for(const element of collect){
-      for(const stage of element.list){
-        if(!stage.active){
+  for (const type in stageCollect.value) {
+    const collect = stageCollect.value[type]
+    for (const element of collect) {
+      for (const stage of element.list) {
+        if (!stage.active) {
           stageConfig.value.stageBlacklist.push(stage.stageId)
         }
       }
@@ -281,7 +323,9 @@ function saveStageConfig() {
   debugText.value = JSON.stringify(stageConfig.value, null, 2);
 }
 
-setInterval(saveStageConfig,2000)
+
+//定时更新自定义一图流配置
+setInterval(updateStageConfig, 2000)
 
 // // 监听stageConfig的变化，保存配置到localStorage
 // watch(stageConfig, () => {
@@ -317,22 +361,21 @@ onMounted(() => {
           <v-expansion-panel-title>
             快速设置
           </v-expansion-panel-title>
+
           <v-expansion-panel-text>
             这里预制了一些参数，供大家快速选择
-            <v-btn>恢复默认</v-btn>
+
             <v-divider></v-divider>
-            <v-btn>我是萌新</v-btn>
-            <v-btn>我是成长中的博士</v-btn>
-            <v-btn>我是老登</v-btn>
-            <v-divider></v-divider>
-            <v-btn>我是无氪党</v-btn>
-            <v-btn>我是月卡党</v-btn>
-            <v-btn>我嘎嘎氪金</v-btn>
-            <v-divider></v-divider>
-            <v-btn>还没想好要加什么</v-btn>
+            <div v-for="group in presetParameter">
+              <v-btn v-for="item in group" class="m-4"
+                     @click="choosePresetParameter(item)" :color="item.color">
+                {{ item.name }}
+              </v-btn>
+              <v-divider class="m-8-0"></v-divider>
+            </div>
+
           </v-expansion-panel-text>
         </v-expansion-panel>
-
 
         <v-expansion-panel>
           <v-expansion-panel-title>
@@ -383,7 +426,7 @@ onMounted(() => {
               </v-switch>
               <div class="m-8-0 font-bold color-primary">主线三幻神</div>
               <ActionButton v-for="(stage,stageCode) in BeastsStage" :btn-text="stageCode"
-                        :active="stage.active" @click="updateBeastsStageActive(stage)">
+                            :active="stage.active" @click="updateBeastsStageActive(stage)">
               </ActionButton>
 
               <div class="m-8-0 font-bold color-primary">正在开放的活动</div>
@@ -391,7 +434,7 @@ onMounted(() => {
               <div v-for="(collect, index) in stageCollect.Open" :key="index">
                 <div class="m-4"> {{ collect.zoneName }}</div>
                 <ActionButton v-for="(stage,index) in collect.list" :btn-text="stage.stageCode"
-                          :active="stage.active" @click="updateStageBlacklist(stage)">
+                              :active="stage.active" @click="updateStageBlacklist(stage)">
                 </ActionButton>
                 <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
               </div>
@@ -407,7 +450,7 @@ onMounted(() => {
                   </template>
                 </v-checkbox>
                 <ActionButton v-for="(stage,index) in collect.list" :btn-text="stage.stageCode"
-                          :active="stage.active" @click="updateStageBlacklist(stage)">
+                              :active="stage.active" @click="updateStageBlacklist(stage)">
                 </ActionButton>
                 <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
               </div>
@@ -418,7 +461,7 @@ onMounted(() => {
               <div v-for="(collect, index) in stageCollect.ActPerm" :key="index">
                 <div class="m-4"> {{ collect.zoneName }}</div>
                 <ActionButton v-for="(stage,index) in collect.list" :btn-text="stage.stageCode"
-                          :active="stage.active" @click="updateStageBlacklist(stage)">
+                              :active="stage.active" @click="updateStageBlacklist(stage)">
                 </ActionButton>
                 <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
               </div>
@@ -451,8 +494,10 @@ onMounted(() => {
                   材料退环境预测
                 </v-list-item-title>
                 <div class="flex flex-wrap">
-                <ItemImage v-for="item in outItem" :item-id="item.itemId" :size="50" :mobile-size="40"
-                           :class="outItemActive(item.active)" @click="chooseOutItem(item)"> </ItemImage>
+                  <ItemImage v-for="item in actStoreUnlimitedExchangeItem" :item-id="item.itemId" :size="50"
+                             :mobile-size="40"
+                             :class="actStoreUnlimitedExchangeItemActiveClass(item.active)"
+                             @click="chooseActStoreUnlimitedExchangeItem(item)"></ItemImage>
                 </div>
               </v-list-item>
 

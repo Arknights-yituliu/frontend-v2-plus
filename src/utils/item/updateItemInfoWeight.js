@@ -1,5 +1,8 @@
 import itemInfo from '/src/static/json/material/item_info.json'
 import extraOutComeGroup from '/src/static/json/material/extraOutcomeGroup.json'
+import actStoreUnlimitedExchange from '/src/static/json/material/act_store_unlimited_exchange_item.json'
+import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
+
 
 let t4WeightCount = 0
 let t5WeightCount = 0
@@ -23,15 +26,57 @@ for (const item of extraOutComeGroup.T5) {
 
 
 for (const item of itemInfo) {
-
     if (weightMap.has(item.itemId)) {
         item.weight = weightMap.get(item.itemId)
     }
+}
+
+
+let workShopProducts = {
+    t3: 0.46,
+    t4: 1.643578947
+}
+
+
+const exchangeItemMap = new Map()
+for(const item of actStoreUnlimitedExchange){
+    item.itemValue = item.min
+    exchangeItemMap.set(item.itemId,item.min)
+}
+
+for (const table of COMPOSITE_TABLE) {
+    const {itemId,itemName,resolve,rarity, pathway} = table
+
+    if(resolve){
+        continue
+    }
+
+    let newValue = 0.0
+    if (!resolve) {
+        //紫，金色品质是向上合成    紫，金色材料 =  合成所需蓝材料价值之和  + 龙门币 - 副产物
+        const expectProductsValue = workShopProducts[`t${rarity - 1}`]
+        for (const cost of pathway) {
+            const rawItemValue = exchangeItemMap.get(cost.itemId)
+            newValue += rawItemValue * cost.count
+            // console.log(item.itemName + '=' + rawItem.itemName + '*' + cost.count + '=' + newValue)
+        }
+
+        newValue = newValue + 0.36 * (rarity - 1) - expectProductsValue
+        // console.log(item.itemName + '=' + (0.36 * (rarity - 1)) + '-' + expectProductsValue + '=' + newValue)
+    }
+    exchangeItemMap.set(itemId,newValue)
+    actStoreUnlimitedExchange.push({
+        "itemId": itemId,
+        "itemName": itemName,
+        "active": false,
+        itemValue:newValue,
+        "min": newValue
+    })
 
 }
 
 
-
+console.log(JSON.stringify(actStoreUnlimitedExchange))
 
 console.log(JSON.stringify(itemInfo))
 
