@@ -1,10 +1,11 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
-import { formatNumber } from "/src/utils/format.js";
+import {onMounted, ref, watch} from "vue";
+import {formatNumber} from "/src/utils/format.js";
 import itemCache from "/src/utils/indexedDB/itemCache.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
-import { getUid } from "/src/utils/user/userInfo.js";
-import { getStageConfig } from "@/utils/user/userConfig.js";
+import {getUid} from "/src/utils/user/userInfo.js";
+import {getStageConfig} from "@/utils/user/userConfig.js";
+import ActionButton from "@/components/account/ActionButton.vue";
 
 // 数据源映射与正则校验
 const stageTypeMap = {
@@ -24,15 +25,74 @@ const inputRules = [
   value => (value >= 0 && value <= 1) || '仅可输入0.0-1.0间的小数，小数点后位数不限',
 ];
 
+
+//Beasts
+
+const BeastsStage = ref({
+  "1-7": {
+    zoneIndex: 0,
+    stageIndex: 0,
+    active: true
+  },
+  "12-17": {
+    zoneIndex: 0,
+    stageIndex: 0,
+    active: true
+  },
+  "R8-11": {
+    zoneIndex: 0,
+    stageIndex: 0,
+    active: true
+  },
+})
+
 // 响应式数据
-const stageList = ref([]);
-const zoneOptions = ref([]);
-const stageGroupByZoneName = ref({});
-const selectedZoneName = ref('');
+
+const stageCollect = ref({
+  "Open": [],
+  "Main": [],
+  "Act": [],
+  "ActPerm": []
+});
 const itemList = ref([]);
 const customItemDialog = ref(false);
-const customItem = ref({ itemId: '30073', itemValue: 1.8 });
+const customItem = ref({itemId: '30073', itemValue: 1.8});
 const debugText = ref('');
+
+const outItem = ref(
+    [
+      {
+        itemId: "30073",
+        itemName:"扭转醇",
+        itemValue: 1.8,
+        active: true
+      },
+      {
+        itemId: "30083",
+        itemName:"轻锰矿",
+        itemValue: 2.16,
+        active: true
+      },
+      {
+        itemId: "30093",
+        itemName:"研磨石",
+        itemValue: 2.52,
+        active: false
+      },
+      {
+        itemId: "30103",
+        itemName: "RMA70-12",
+        itemValue: 2.88,
+        active: false
+      },
+      {
+        itemId: "31013",
+        itemName: "凝胶",
+        itemValue: 2.52,
+        active: false
+      }
+    ]
+)
 
 // 初始化默认配置
 const stageConfig = ref({
@@ -42,7 +102,7 @@ const stageConfig = ref({
   useActivityStage: false, // 是否使用活动本定价
   stageBlacklist: [], // 关卡黑名单
   source: 'penguin', // 数据来源
-  customItem: [{ itemId: '30073', itemValue: 1.8 }] // 自定义物品列表
+  customItem: [{itemId: '30073', itemValue: 1.8}] // 自定义物品列表
 });
 
 // 合并本地配置
@@ -50,66 +110,98 @@ const config = getStageConfig();
 for (const key in config) {
   stageConfig.value[key] = config[key]; // 合并配置
 }
+
 stageConfig.value.source = 'penguin';
 
 // 获取分区信息并构建阶段数据
 function getStageCollectByZone() {
   itemCache.getStageInfoCache().then(response => {
-    const zoneMap = new Map(); // 存储分区数据
-    const zoneTmp = {}; // 临时存储区，用于去重
-
+    response = response.sort((a, b) => b.end - a.end)
+    const indexMap = new Map();
     for (const stage of response) {
-      const { zoneName, stageType } = stage;
-      if (!stageTypeMap[stageType]) continue; // 过滤掉不需要的阶段类型
+      const {zoneName, zoneId, stageCode, stageType, end} = stage;
+      stage.active = true
+      // 过滤掉不需要的阶段类型
+      if (!stageTypeMap[stageType]) {
+        continue;
+      }
 
-      // 初始化分区数据
-      if (!zoneTmp[zoneName]) {
-        if (zoneMap.get(stageType)) {
-          zoneMap.get(stageType).children.push({ value: zoneName, label: zoneName });
-        } else {
-          zoneMap.set(stageType, {
-            value: stageType,
-            label: stageTypeMap[stageType],
-            children: [{ value: zoneName, label: zoneName }]
-          });
+      if (zoneId.indexOf('tough') > -1) {
+        continue
+      }
+
+      if (stageType === "MAIN") {
+        if (!indexMap.has(zoneName)) {
+          stageCollect.value.Main.push({
+            zoneName, zoneId, list: []
+          })
+          indexMap.set(zoneName, stageCollect.value.Main.length - 1)
         }
-        zoneTmp[zoneName] = true;
+        const index = indexMap.get(zoneName);
+        if (BeastsStage.value[stageCode]) {
+          BeastsStage.value[stageCode] = {
+            zoneIndex: index,
+            stageIndex: stageCollect.value.Main[index].list.length,
+            active: true
+          }
+        }
+        stageCollect.value.Main[index].list.push(stage);
+        continue;
       }
 
-      // 根据分区名称分组阶段数据
-      if (!stageGroupByZoneName.value[zoneName]) {
-        stageGroupByZoneName.value[zoneName] = [];
+      if (stageType === "ACT_PERM") {
+        if (!indexMap.has(zoneName)) {
+          stageCollect.value.ActPerm.push({
+            zoneName, zoneId, list: []
+          })
+          indexMap.set(zoneName, stageCollect.value.ActPerm.length - 1)
+        }
+        const index = indexMap.get(zoneName);
+        stageCollect.value.ActPerm[index].list.push(stage);
+        continue;
       }
-      stageGroupByZoneName.value[zoneName].push(stage);
-    }
 
-    // 填充zoneOptions
-    for (const [, v] of zoneMap) {
-      zoneOptions.value.push(v);
+      if (end > Date.now()) {
+        if (!indexMap.has(zoneName)) {
+          stageCollect.value.Open.push({
+            zoneName, zoneId, list: []
+          })
+          indexMap.set(zoneName, stageCollect.value.Open.length - 1)
+        }
+        const index = indexMap.get(zoneName);
+        stageCollect.value.Open[index].list.push(stage);
+        continue;
+      }
+
+
+      if (!indexMap.has(zoneName)) {
+        stageCollect.value.Act.push({
+          zoneName, zoneId, list: []
+        })
+        indexMap.set(zoneName, stageCollect.value.Act.length - 1)
+      }
+      const index = indexMap.get(zoneName);
+      stageCollect.value.Act[index].list.push(stage);
     }
+    console.log(stageCollect.value)
   });
 }
 
-// 获取指定分区下的所有阶段
-function getStageList(value) {
-  stageList.value = stageGroupByZoneName.value[value[1]];
+function updateStageBlacklist(stage){
+  stage.active = !stage.active
+  saveStageConfig()
 }
 
-// 添加关卡到黑名单
-function addStageBlackList(stage) {
-  if (!stageConfig.value.stageBlacklist.find(item => item.stageId === stage.stageId)) {
-    stageConfig.value.stageBlacklist.push({ stageId: stage.stageId, stageCode: stage.stageCode });
-  }
+function updateBeastsStageActive(stage) {
+  stage.active = !stage.active
+  stageCollect.value.Main[stage.zoneIndex].list[stage.stageIndex].active = stage.active
+  saveStageConfig()
 }
 
-// 从黑名单中删除关卡
-function deleteStageBlackList(stageId) {
-  stageConfig.value.stageBlacklist = stageConfig.value.stageBlacklist.filter(e => e.stageId !== stageId);
-}
 
 // 选择自定义物品
 function chooseCustomItem(item) {
-  customItem.value = { itemId: item.itemId, itemValue: item.itemValueAp };
+  customItem.value = {itemId: item.itemId, itemValue: item.itemValueAp};
 }
 
 // 添加或更新自定义物品
@@ -118,14 +210,34 @@ function addCustomItem() {
   if (existing) {
     existing.itemValue = customItem.value.itemValue; // 更新现有物品
   } else {
-    stageConfig.value.customItem.push({ ...customItem.value }); // 新增物品
+    stageConfig.value.customItem.push({...customItem.value}); // 新增物品
   }
   customItemDialog.value = false; // 关闭对话框
+}
+
+function chooseOutItem(item){
+  if(item.active){
+    deleteCustomItem(item.itemId)
+  }else {
+    const existing = stageConfig.value.customItem.find(e => e.itemId === item.itemId);
+    if (existing) {
+      existing.itemValue = item.itemValue; // 更新现有物品
+    } else {
+      stageConfig.value.customItem.push(item); // 新增物品
+    }
+  }
+  item.active = !item.active
 }
 
 // 删除自定义物品
 function deleteCustomItem(itemId) {
   stageConfig.value.customItem = stageConfig.value.customItem.filter(e => e.itemId !== itemId);
+}
+
+function outItemActive(active){
+  if(!active){
+    return "out-item-unselected"
+  }
 }
 
 // 校验阶段配置是否正确
@@ -148,22 +260,40 @@ function getItemList() {
 
 // 强制刷新物品价值
 function forceRefreshItemValue() {
+  saveStageConfig()
   checkStageConfig(); // 校验配置
   localStorage.setItem("StageConfig", JSON.stringify(stageConfig.value)); // 保存配置
   itemCache.getItemValueCacheByConfig(stageConfig.value, true); // 强制刷新
 }
 
-// 监听stageConfig的变化，保存配置到localStorage
-watch(stageConfig, () => {
+function saveStageConfig() {
+  stageConfig.value.stageBlacklist = []
+  for(const type in stageCollect.value){
+    const collect =  stageCollect.value[type]
+    for(const element of collect){
+      for(const stage of element.list){
+        if(!stage.active){
+          stageConfig.value.stageBlacklist.push(stage.stageId)
+        }
+      }
+    }
+  }
   debugText.value = JSON.stringify(stageConfig.value, null, 2);
-  localStorage.setItem("StageConfig", JSON.stringify(stageConfig.value));
-}, { deep: true });
+}
+
+setInterval(saveStageConfig,2000)
+
+// // 监听stageConfig的变化，保存配置到localStorage
+// watch(stageConfig, () => {
+//   debugText.value = JSON.stringify(stageConfig.value, null, 2);
+//   localStorage.setItem("StageConfig", JSON.stringify(stageConfig.value));
+// }, {deep: true});
 
 // 初始化数据
 onMounted(() => {
   getStageCollectByZone(); // 获取关卡信息
   getItemList(); // 获取物品列表
-  debugText.value = JSON.stringify(stageConfig.value, null, 2);
+
 });
 </script>
 
@@ -176,129 +306,155 @@ onMounted(() => {
       材料价值自定义参数暂时只能保存于当前设备，后续将会通过一图流账号保存至服务器
     </span>
 
+
     <!-- 主体内容 -->
     <div>
       <!-- <v-list> -->
-        <!-- 重要参数设置 -->
-        <!-- 折叠面板：基础价值参数 -->
-        <v-expansion-panels multiple>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              快速设置
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              这里预制了一些参数，供大家快速选择
-              <v-btn>恢复默认</v-btn>
-              <v-divider></v-divider>
-              <v-btn>我是萌新</v-btn>
-              <v-btn>我是成长中的博士</v-btn>
-              <v-btn>我是老登</v-btn>
-              <v-divider></v-divider>
-              <v-btn>我是无氪党</v-btn>
-              <v-btn>我是月卡党</v-btn>
-              <v-btn>我嘎嘎氪金</v-btn>
-              <v-divider></v-divider>
-              <v-btn>还没想好要加什么</v-btn>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
+      <!-- 重要参数设置 -->
+      <!-- 折叠面板：基础价值参数 -->
+      <v-expansion-panels multiple>
+        <v-expansion-panel>
+          <v-expansion-panel-title>
+            快速设置
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            这里预制了一些参数，供大家快速选择
+            <v-btn>恢复默认</v-btn>
+            <v-divider></v-divider>
+            <v-btn>我是萌新</v-btn>
+            <v-btn>我是成长中的博士</v-btn>
+            <v-btn>我是老登</v-btn>
+            <v-divider></v-divider>
+            <v-btn>我是无氪党</v-btn>
+            <v-btn>我是月卡党</v-btn>
+            <v-btn>我嘎嘎氪金</v-btn>
+            <v-divider></v-divider>
+            <v-btn>还没想好要加什么</v-btn>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
 
-        <v-expansion-panels multiple>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              基础材料价值参数设置
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <!-- 经验书价值系数设置 -->
-              <v-list-item>
-                <v-list-item-title>
-                  经验书价值系数 — {{ formatNumber(stageConfig.expCoefficient, 4) }}
-                </v-list-item-title>
-                <span class="card-description">
+
+        <v-expansion-panel>
+          <v-expansion-panel-title>
+            基础材料价值参数设置
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <!-- 经验书价值系数设置 -->
+            <v-list-item>
+              <v-list-item-title>
+                经验书价值系数 — {{ formatNumber(stageConfig.expCoefficient, 4) }}
+              </v-list-item-title>
+              <span class="card-description">
                   用于调整经验书的价值，经验书价值 = 0.0036 × 价值系数
                 </span>
-                <v-text-field v-model="stageConfig.expCoefficient" :rules="inputRules" variant="outlined"
-                  density="compact"></v-text-field>
-              </v-list-item>
+              <v-text-field v-model="stageConfig.expCoefficient" :rules="inputRules" variant="outlined"
+                            density="compact"></v-text-field>
+            </v-list-item>
 
-              <!-- 龙门币价值系数设置 -->
-              <v-list-item>
-                <v-list-item-title>
-                  龙门币价值系数 — {{ formatNumber(stageConfig.lmdCoefficient, 4) }}
-                </v-list-item-title>
-                <span class="card-description">
+            <!-- 龙门币价值系数设置 -->
+            <v-list-item>
+              <v-list-item-title>
+                龙门币价值系数 — {{ formatNumber(stageConfig.lmdCoefficient, 4) }}
+              </v-list-item-title>
+              <span class="card-description">
                   用于调整龙门币的价值，龙门币价值 = 0.0036 × 价值系数
                 </span>
-                <v-text-field v-model="stageConfig.lmdCoefficient" :rules="inputRules" variant="outlined"
-                  density="compact"></v-text-field>
-              </v-list-item>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-
+              <v-text-field v-model="stageConfig.lmdCoefficient" :rules="inputRules" variant="outlined"
+                            density="compact"></v-text-field>
+            </v-list-item>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
 
 
         <!-- 折叠面板：关卡选择范围 -->
 
-        <v-expansion-panels>
-          <v-expansion-panel title="关卡计算范围选择">
-            <v-expansion-panel-text>
 
-              <!-- 是否使用活动本定价 -->
-              <!-- <v-list-item>
-                <v-list-item-title>
-                  是否使用活动本定价 {{ stageConfig.useActivityStage }}
-                </v-list-item-title>
-                <span class="card-description">
-                  选择此选项后，计算过程将会包括过去的所有活动本<br>
-                  由于掉率有统计浮动，因此可能出现当期活动本不为100%，实际的最高收益本为过去的活动本<br>
-                  此选项对尚未up过的新材料无效，同时不建议新玩家完全了解方舟活动收益机制前打开此开关
-                </span>
-                <v-switch hide-details color="primary" v-model="stageConfig.useActivityStage"></v-switch>
-              </v-list-item> -->
+        <v-expansion-panel title="关卡计算范围选择">
+          <v-expansion-panel-text>
+           <span class="card-description">
+              这里用于选择材料价值计算的基准关卡
+            </span>
 
-              <!-- 新增模块：选择计算范围的关卡区域 -->
-              <v-list-item>
-                <v-list-item-title>这里用于选择材料价值计算的基准关卡</v-list-item-title>
-                <span class="card-description">
-                  深色为选中，默认为全主线关卡+常驻SideStory关卡：
-                </span>
-                <div class="flex flex-wrap gap-2 mt-2">
-                  <!-- <v-btn v-for="zone in zoneOptions" :key="zone.zoneCode"
-                    :color="selectedZones.includes(zone.zoneCode) ? 'primary' : 'default'"
-                    :variant="selectedZones.includes(zone.zoneCode) ? 'flat' : 'outlined'" size="small"
-                    @click="toggleZone(zone.zoneCode)">
-                    {{ zone.zoneName }}
-                  </v-btn> -->
-                  <v-btn>恢复默认</v-btn>
-                  <v-divider></v-divider>
-                  <v-btn>第0章</v-btn>
-                  <v-btn>第1章</v-btn>
-                  <v-btn>第2章</v-btn>
-                  <v-divider></v-divider>
-                  <v-btn>骑兵与猎人</v-btn>
-                  <v-divider></v-divider>
-                  <v-btn>SideStory活动期间</v-btn>
 
-                </div>
-              </v-list-item>
+            <div class="stage-checkbox">
+              <v-switch hide-details label="是否使用活动关为基准"
+                        color="primary" v-model="stageConfig.useActivityStage">
 
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
+              </v-switch>
+              <div class="m-8-0 font-bold color-primary">主线三幻神</div>
+              <ActionButton v-for="(stage,stageCode) in BeastsStage" :btn-text="stageCode"
+                        :active="stage.active" @click="updateBeastsStageActive(stage)">
+              </ActionButton>
+
+              <div class="m-8-0 font-bold color-primary">正在开放的活动</div>
+              <v-divider color="primary" class="opacity-70"></v-divider>
+              <div v-for="(collect, index) in stageCollect.Open" :key="index">
+                <div class="m-4"> {{ collect.zoneName }}</div>
+                <ActionButton v-for="(stage,index) in collect.list" :btn-text="stage.stageCode"
+                          :active="stage.active" @click="updateStageBlacklist(stage)">
+                </ActionButton>
+                <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
+              </div>
+
+              <div class="m-8-0 font-bold color-primary">主题曲</div>
+              <v-divider color="primary" class="opacity-50"></v-divider>
+              <div v-for="(collect, index) in stageCollect.Main" :key="index">
+
+                <!--              <div class="m-4">  {{ collect.zoneName}} </div>-->
+                <v-checkbox density="compact" hide-details>
+                  <template v-slot:prepend>
+                    {{ collect.zoneName }}
+                  </template>
+                </v-checkbox>
+                <ActionButton v-for="(stage,index) in collect.list" :btn-text="stage.stageCode"
+                          :active="stage.active" @click="updateStageBlacklist(stage)">
+                </ActionButton>
+                <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
+              </div>
+
+
+              <div class="m-8-0 font-bold color-primary">别传/插曲</div>
+              <v-divider color="primary" class="opacity-50"></v-divider>
+              <div v-for="(collect, index) in stageCollect.ActPerm" :key="index">
+                <div class="m-4"> {{ collect.zoneName }}</div>
+                <ActionButton v-for="(stage,index) in collect.list" :btn-text="stage.stageCode"
+                          :active="stage.active" @click="updateStageBlacklist(stage)">
+                </ActionButton>
+                <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
+              </div>
+
+            </div>
+            <!-- 是否使用活动本定价 -->
+            <!-- <v-list-item>
+              <v-list-item-title>
+                是否使用活动本定价 {{ stageConfig.useActivityStage }}
+              </v-list-item-title>
+              <span class="card-description">
+                选择此选项后，计算过程将会包括过去的所有活动本<br>
+                由于掉率有统计浮动，因此可能出现当期活动本不为100%，实际的最高收益本为过去的活动本<br>
+                此选项对尚未up过的新材料无效，同时不建议新玩家完全了解方舟活动收益机制前打开此开关
+              </span>
+              <v-switch hide-details color="primary" v-model="stageConfig.useActivityStage"></v-switch>
+            </v-list-item> -->
+          </v-expansion-panel-text>
+        </v-expansion-panel>
 
 
         <!-- 折叠面板：自定义材料价值设置 -->
-        <v-expansion-panels>
-          <v-expansion-panel title="自定义材料价值">
-            <v-expansion-panel-text>
+
+        <v-expansion-panel title="自定义材料价值">
+          <v-expansion-panel-text>
+
+            <v-list>
               <v-list-item>
                 <v-list-item-title>
                   材料退环境预测
                 </v-list-item-title>
-                这里糊一排材料，点哪个自动添加到哪个材料为止，再点全部取消
+                <div class="flex flex-wrap">
+                <ItemImage v-for="item in outItem" :item-id="item.itemId" :size="50" :mobile-size="40"
+                           :class="outItemActive(item.active)" @click="chooseOutItem(item)"> </ItemImage>
+                </div>
               </v-list-item>
-
 
               <v-list-item>
                 <v-list-item-title>
@@ -306,57 +462,58 @@ onMounted(() => {
                 </v-list-item-title>
                 <!-- 按钮：打开自定义材料弹窗 -->
                 <v-btn color="primary" variant="outlined" size="small" text="新增自定义材料"
-                  @click="customItemDialog = true"></v-btn>
-
+                       @click="customItemDialog = true" class="m-12-0"></v-btn>
                 <!-- 自定义材料列表：显示已添加的自定义材料及其价值 -->
                 <v-table>
                   <thead>
-                    <tr>
-                      <th>材料</th>
-                      <th>自定义价值</th>
-                      <th>操作</th>
-                    </tr>
+                  <tr>
+                    <th>材料</th>
+                    <th>自定义价值</th>
+                    <th>操作</th>
+                  </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in stageConfig.customItem">
-                      <td>
-                        <!-- 显示材料的图标 -->
-                        <ItemImage :size="60" :mobile-size="40" :item-id="item.itemId"></ItemImage>
-                      </td>
-                      <td>{{ item.itemValue }}</td>
-                      <td>
-                        <!-- 删除按钮：用于移除自定义材料 -->
-                        <v-btn color="red" text="删除" @click="deleteCustomItem(item.itemId)"></v-btn>
-                      </td>
-                    </tr>
+                  <tr v-for="item in stageConfig.customItem">
+                    <td>
+                      <!-- 显示材料的图标 -->
+                      <ItemImage :size="60" :mobile-size="40" :item-id="item.itemId"></ItemImage>
+                    </td>
+                    <td>{{ item.itemValue }}</td>
+                    <td>
+                      <!-- 删除按钮：用于移除自定义材料 -->
+                      <v-btn color="red" text="删除" @click="deleteCustomItem(item.itemId)"></v-btn>
+                    </td>
+                  </tr>
                   </tbody>
                 </v-table>
               </v-list-item>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
+            </v-list>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
 
 
-        <!-- 刷新材料参数按钮 -->
-        <div class="flex justify-center">
-          <v-btn text="加载新的材料参数" color="primary" @click="forceRefreshItemValue()"></v-btn>
-        </div>
+      <!-- 刷新材料参数按钮 -->
+      <div class="flex justify-center m-8">
+        <v-btn text="加载新的材料参数" color="primary" @click="forceRefreshItemValue()"></v-btn>
+      </div>
 
-        <!-- 调试文本区域 -->
+      <!-- 调试文本区域 -->
 
-        <v-expansion-panels>
-          <v-expansion-panel title="debug区">
-            <v-expansion-panel-text></v-expansion-panel-text>
+      <v-expansion-panels>
+        <v-expansion-panel title="debug区">
+          <v-expansion-panel-text>
             <v-list-item>
               <v-list-item-title>
                 debug
               </v-list-item-title>
               <!-- 显示调试信息 -->
-              <textarea v-model="debugText" style="height: 300px;width: 80%" class="m-4">
+              <textarea v-model="debugText" style="height: 700px;width: 100%" class="m-4">
           </textarea>
             </v-list-item>
-          </v-expansion-panel>
-        </v-expansion-panels>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
 
 
     </div>
@@ -387,7 +544,7 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <!-- 显示所有可选的材料图标，点击后选择该材料 -->
             <ItemImage v-for="item in itemList" :item-id="item.itemId" :size="60" :mobile-size="40"
-              @click="chooseCustomItem(item)">
+                       @click="chooseCustomItem(item)">
             </ItemImage>
           </div>
         </v-list-item>

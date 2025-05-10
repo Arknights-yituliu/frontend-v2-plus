@@ -12,16 +12,25 @@
 
   .card-description {
     opacity: 0.8;
+    display: block;
     font-size: 12px;
+    margin: 0 0 12px 0;
   }
 
   .user-avatar-checkbox {
     height: 300px;
   }
 
-  .stage-checkbox{
 
+  .stage-checkbox{
+     height: 500px;
+     overflow-y: auto;
   }
+
+  .out-item-unselected{
+    filter: grayscale(1);
+  }
+
 }
 
 @media screen and (max-width: 600px) {

@@ -9,6 +9,10 @@
 }
 
 
+.color-primary{
+  color:rgb(var(--v-theme-primary));
+}
+
 .disabled {
   filter: grayscale(1);
   opacity: 0.6;
