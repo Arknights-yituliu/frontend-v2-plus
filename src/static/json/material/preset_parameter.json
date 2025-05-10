@@ -13,12 +13,12 @@
         "useActivityStage": false,
         "customItem": [
           {
-            "itemId": " '30073'",
+            "itemId": "30073",
             "itemName": "扭转醇",
             "itemValue": 1.8
           },
           {
-            "itemId": " '30083'",
+            "itemId": "30083",
             "itemName": "轻锰矿",
             "itemValue": 2.16
           }
