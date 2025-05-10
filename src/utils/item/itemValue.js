@@ -221,10 +221,6 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         //     console.log(stageCode, '---', stageEfficiency, '=', dropValueCount, '/', apCost)
         // }
 
-        // if (stageEfficiency < 0.7) {
-        //     // console.log('效率低于0.7')
-        //     continue
-        // }
 
         if(!itemSeriesInfoByItemId.has(mainItemId)){
             // console.log(mainItemId,'不在18种材料中')
@@ -316,8 +312,7 @@ async function getCustomItemList(stageConfig) {
             break;
         }
 
-        // console.table(workShopProducts)
-        // stageDropCollect = nextStageDropCollect
+
     }
 
     // console.log("材料价值：",itemList)
