@@ -63,8 +63,8 @@ function loadingItemValue() {
   //获取本地计算的材料价值
   itemCache.getItemValueCacheByConfig(stageConfig).then(response => {
     for (const item of response) {
-      const {itemId, itemValueAp} = item
-      itemValueMap.set(itemId, itemValueAp)
+      const {itemId, itemValue} = item
+      itemValueMap.set(itemId, itemValue)
     }
 
     //获取服务器上的自定义材料价值
@@ -147,16 +147,16 @@ async function getPackInfoData() {
         }
         // 判断是否有不存在物品表中的物品
         if (itemValueMap.get(packContentVO.itemId)) {
-          const itemValueAp = itemValueMap.get(packContentVO.itemId);
+          const itemValue = itemValueMap.get(packContentVO.itemId);
           // 蓝抽单独计算
           if (packContentVO.itemId === "classic_gacha") {
             drawsKernel += packContentVO.quantity;
           } else if (packContentVO.itemId === "classic_gacha_10") {
             drawsKernel += packContentVO.quantity * 10;
           } else {
-            apCount += itemValueAp * packContentVO.quantity;
+            apCount += itemValue * packContentVO.quantity;
           }
-          apCountKernel += itemValueAp * packContentVO.quantity;
+          apCountKernel += itemValue * packContentVO.quantity;
         }
       }
     }

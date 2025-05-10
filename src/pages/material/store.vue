@@ -30,7 +30,7 @@ async function loadingStoreData(){
   const itemValueList = await itemCache.getItemValueCacheByConfig(stageConfig)
 
   for (const item of itemValueList) {
-    itemValueMap.set(item.itemId, item.itemValueAp)
+    itemValueMap.set(item.itemId, item.itemValue)
   }
 
   permStoreComputed()
@@ -42,8 +42,8 @@ function permStoreComputed() {
   for (const storeInfo of storeTypeList) {
     const data = STORE_PERM_DATA[storeInfo.typeName]
     for (const item of data) {
-      const itemValueAp = itemValueMap.get(item.itemId)
-      let apEfficiency = itemValueAp * item.quantity / item.price
+      const itemValue = itemValueMap.get(item.itemId)
+      let apEfficiency = itemValue * item.quantity / item.price
       if (storeInfo.typeName === 'grey') {
         apEfficiency *= 100
       }
@@ -75,8 +75,8 @@ function activityStoreComputed() {
     let actStoreFormat = [[],[],[],[],[]]
     for(let item of data){
       const {itemArea,itemId,itemPrice,itemQuantity,itemName} = item
-      const itemValueAp = itemValueMap.get(itemId)
-      const itemPPR = itemValueAp * itemQuantity/itemPrice
+      const itemValue = itemValueMap.get(itemId)
+      const itemPPR = itemValue * itemQuantity/itemPrice
       actStoreFormat[itemArea-1].push({
         itemPrice:itemPrice,
         itemId:itemId,

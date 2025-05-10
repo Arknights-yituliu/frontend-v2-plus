@@ -100,25 +100,7 @@ let nowTimeStamp = new Date().getTime();
 
 let item_value_obj = ref({})
 
-let selected_item = ref({
-  itemId: '30013',
-  itemValueAp: 17.32,
-  itemName: '固源岩组',
-  lastUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  nextUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  storeCostPerf: [
-    { token: '4005', costPerf: 0.75 },
-    { token: 'EPGS_COIN', costPerf: 0.75 },
-    { token: 'REP_COIN', costPerf: 0.75 },
-    { token: '4004', costPerf: 0.75 }
-  ]
-})
+
 
 
 let updateTime = ref('')

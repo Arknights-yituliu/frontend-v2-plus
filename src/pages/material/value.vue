@@ -9,7 +9,7 @@ import {formatNumber} from "@/utils/format.js";
 import itemCache from "/src/utils/indexedDB/itemCache.js";
 import NoticeBoard from "/src/components/NoticeBoard.vue";
 import {exportToJsonFile} from "/src/utils/fileUtils.js";
-
+// import {weightMap} from "/src/utils/item/updateItemInfoWeight.js";
 
 
 let itemValueCollect = ref([])
@@ -24,7 +24,7 @@ function exportItemValueJson() {
     itemList.push({
       id: item.itemId,
       name: item.itemName,
-      apValue: item.itemValueAp,
+      apValue: item.itemValue,
       rarity: item.rarity
     })
   }
@@ -44,7 +44,7 @@ function exportItemValueExcel() {
     itemList.push([
       item.itemId,
       item.itemName,
-      item.itemValueAp,
+      item.itemValue,
       item.rarity
     ])
   }
@@ -84,7 +84,7 @@ function formatItem(data){
     if (sortId > 90) {
       continue
     }
-    item.itemValueAp = formatNumber(item.itemValueAp,4)
+    item.itemValue = formatNumber(item.itemValue,4)
     let list = tmpList[sortId]
     if (list) {
       list.push(item)
@@ -100,7 +100,7 @@ function formatItem(data){
     if (!list || list.length < 1) {
       continue
     }
-    list  = list.sort((a,b)=>b.itemValueAp-a.itemValueAp)
+    list  = list.sort((a,b)=>b.itemValue-a.itemValue)
     // itemValueCollect.value.push(list)
     if (list.length < 9) {
       itemValueCollect.value.push(list)
@@ -130,7 +130,7 @@ function formatItem(data){
              :style="getItemRarityColor(item.rarity)">
           <ItemImage :item-id="item.itemId"></ItemImage>
           <div class="item-value">
-            {{ item.itemValueAp }}
+            {{ item.itemValue }}
           </div>
         </div>
       </div>

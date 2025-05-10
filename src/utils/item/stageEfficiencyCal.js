@@ -98,15 +98,15 @@ async function calculationStageEfficiency(stageConfig) {
                 continue
             }
 
-            const {itemName, itemValueAp, rarity} = itemInfo;
+            const {itemName, itemValue, rarity} = itemInfo;
             const knockRating = quantity / times
-            const value = knockRating * itemValueAp
+            const value = knockRating * itemValue
             dropValueCount += value
 
             const dropValue = {
                 itemName: itemName,
                 itemId: itemId,
-                itemValue: itemValueAp,
+                itemValue: itemValue,
                 value: value,
                 knockRating: knockRating,
                 rarity: parseInt(rarity),

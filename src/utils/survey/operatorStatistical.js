@@ -179,7 +179,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
             return;
         }
 
-        const {rarity, itemName, itemValueAp} = itemInfoMap.get(id)
+        const {rarity, itemName, itemValue} = itemInfoMap.get(id)
         let lastCount = 0;
         if (itemCost[id]) {
             lastCount = itemCost[id].count
@@ -189,7 +189,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
             rarity: rarity,
             name: itemName,
             count: lastCount + count,
-            itemValueAp: itemValueAp
+            itemValue: itemValue
         }
     }
 
@@ -211,9 +211,9 @@ function getItemList(itemCost) {
     for (const itemId in itemCost) {
         const item = itemCost[itemId]
         const rarity = item.rarity;
-        const itemValueAp = item.itemValueAp
+        const itemValue = item.itemValue
         const count = item.count;
-        apCost += (itemValueAp * count)
+        apCost += (itemValue * count)
         itemList[(5 - rarity)].push(item)
     }
 
@@ -376,18 +376,6 @@ async function statisticsOperatorInfo(operatorList) {
             const apCost = _calcApCost(itemCost);
 
 
-            const logId = '30155'
-
-            if (itemCost[logId] && itemCostCollect.T5[logId]) {
-                let log = {
-                    charId: operator.charId,
-                    name: operator.name,
-                    cost: itemCost[logId].count,
-                    count: itemCostCollect.T5[logId].count
-                }
-                logs.push(log)
-            }
-
             operator.apCost = apCost;
 
             statisticalData.apCostCount += apCost;
@@ -479,8 +467,8 @@ async function statisticsOperatorInfo(operatorList) {
 
             for (const itemId in itemCost) {
                 const item = itemCost[itemId]
-                const {id, name, rarity, itemValueAp, count} = item
-                apCost += (itemValueAp * count)
+                const {id, name, rarity, itemValue, count} = item
+                apCost += (itemValue * count)
                 const tier = `T${rarity}`
 
 
@@ -492,7 +480,7 @@ async function statisticsOperatorInfo(operatorList) {
                         rarity: rarity,
                         name: name,
                         count: itemCostCollect[tier][itemId].count + count,
-                        itemValueAp: itemValueAp
+                        itemValue: itemValue
                     }
                 }
             }

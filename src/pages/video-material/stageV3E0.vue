@@ -206,46 +206,7 @@
       </div>
     </div>
     <!-- 材料信息 -->
-    <!-- <div id="itemDetail">
-      <div class="item-detail-bar">
-        <div class="detail-bar-item-wrap">
-          <div :class="getDetailTableHeaderItemSprite(selected_item.itemId)"></div>
-          <span class="detail-bar-item-text">
-            {{ selected_item.itemName }}
-          </span>
 
-          <div :class="`bg-AP_GAMEPLAY value-icon`"></div>
-          <span class="item-value-text">
-            {{ formatNumber(selected_item.itemValueAp, 2) }}
-          </span>
-        </div>
-
-        <div class="activity-wrap">
-          上次up：{{ selected_item.lastUp.activityName }}
-        </div>
-        <div class="activity-wrap">
-          即将up：{{ selected_item.lastUp.activityName }}
-        </div>
-      </div>
-
-      <div class="item-detail-bar">
-        <div>
-          <div class="cost-perf-bar" v-for="(costPerf, index) in selected_item.storeCostPerf" :key="index">
-            <div :class="`bg-${costPerf.token} token-icon`"></div>
-            <span class="cost-perf-text">
-              {{ formatNumber(costPerf.costPerf, 2) }}
-            </span>
-          </div>
-        </div>
-      </div>
-      <div id="detailRight">
-        绿票商店兑换优先级：0.6（低）[蓝材料]<br>
-        寻访数据契约商店：0.4（低）/0.3（极低）[蓝/紫材料]<br>
-        信用商店：0.4（低）/0.3（极低）[绿/白材料]<br>
-        合约商店无限池：0.4（低）/0.3（极低）[蓝材料]<br>
-        查看所有商店性价比
-      </div>
-    </div> -->
     <!-- 详情表 -->
     <div class="tableArea" style="margin : 8px;max-width: 1080px;" id="detail-table">
       <el-table class="detailTable" stripe :data="item_table_data_by_item_id" max-height="450">
@@ -612,25 +573,7 @@ let nowTimeStamp = new Date().getTime();
 
 let item_value_obj = ref({})
 
-let selected_item = ref({
-  itemId: '30013',
-  itemValueAp: 17.32,
-  itemName: '固源岩组',
-  lastUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  nextUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  storeCostPerf: [
-    { token: '4005', costPerf: 0.75 },
-    { token: 'EPGS_COIN', costPerf: 0.75 },
-    { token: 'REP_COIN', costPerf: 0.75 },
-    { token: '4004', costPerf: 0.75 }
-  ]
-})
+
 
 // 获取关卡推荐数据
 stageApi.getStageResultGroupByItemSeries(0, 300).then(response => {

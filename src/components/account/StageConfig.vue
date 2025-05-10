@@ -201,7 +201,7 @@ function updateBeastsStageActive(stage) {
 
 // 选择自定义物品
 function chooseCustomItem(item) {
-  customItem.value = {itemId: item.itemId, itemValue: item.itemValueAp};
+  customItem.value = {itemId: item.itemId, itemValue: item.itemValue};
 }
 
 // 添加或更新自定义物品

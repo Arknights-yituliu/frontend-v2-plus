@@ -250,9 +250,9 @@ backend.yituliu.cn/item/value
       "itemId": "30145",
       //材料名称
       "itemName": "晶体电子单元",
-      //材料价值（单位：绿票）
+      //材料价值
       "itemValue": 403.770201,
-      //材料价值（单位：理智）
+      //材料价值(兼容字段)
       "itemValueAp": 323.016161,
       "type": "orange",
       //材料稀有度

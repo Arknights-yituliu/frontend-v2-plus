@@ -136,7 +136,10 @@ const init = async () => {
   // 材料总映射
   const stageConfig = getStageConfig()
   const data = await itemCache.getItemValueCacheByConfig(stageConfig)
-  data.forEach(item => materialMap.set(item.itemId, item))
+  data.forEach(item =>{
+    item.itemValueAp = item.itemValue
+    materialMap.set(item.itemId, item)
+  } )
   
   // 添加不存在的材料
   const addDefaultItem = (materialMap, itemId, itemName, rarity) => {

@@ -54,28 +54,28 @@ function calculatedItemValue(stageConfig) {
     for (let item of itemList) {
         const itemId = item.itemId
         if (itemId === "2004") {
-            item.itemValueAp = baseLMDValue * expCoefficient * 2000
+            item.itemValue = baseLMDValue * expCoefficient * 2000
         }
         if (itemId === "2003") {
-            item.itemValueAp = baseLMDValue * expCoefficient * 1000
+            item.itemValue = baseLMDValue * expCoefficient * 1000
         }
         if (itemId === "2002") {
-            item.itemValueAp = baseLMDValue * expCoefficient * 400
+            item.itemValue = baseLMDValue * expCoefficient * 400
         }
         if (itemId === "2001") {
-            item.itemValueAp = baseLMDValue * expCoefficient * 200
+            item.itemValue = baseLMDValue * expCoefficient * 200
         }
         if (itemId === "4001") {
-            item.itemValueAp = baseLMDValue * lmdCoefficient
+            item.itemValue = baseLMDValue * lmdCoefficient
         }
 
         if (itemValueCorrectionTerm[itemId]) {
-            // console.log(item.itemName, item.itemValueAp, '/', itemValueCorrectionTerm[itemId].correctionTerm)
-            item.itemValueAp = item.itemValueAp / itemValueCorrectionTerm[itemId].correctionTerm
+            // console.log(item.itemName, item.itemValue, '/', itemValueCorrectionTerm[itemId].correctionTerm)
+            item.itemValue = item.itemValue / itemValueCorrectionTerm[itemId].correctionTerm
         }
 
         if (customItemMap.get(itemId)) {
-            item.itemValueAp = customItemMap.get(itemId)
+            item.itemValue = customItemMap.get(itemId)
         }
 
         itemMap.set(itemId, item)
@@ -94,15 +94,15 @@ function calculatedItemValue(stageConfig) {
             const expectProductsValue = workShopProducts[`t${rarity}`]
             for (const cost of pathway) {
                 const rawItem = itemMap.get(cost.itemId)
-                newValue = (rawItem.itemValueAp + expectProductsValue - 0.36 * rarity) / cost.count
-                // console.log(item.itemName + '=' + rawItem.itemName + '=(' + rawItem.itemValueAp + "+" + expectProductsValue + '-' + (0.36 * rarity) + ')/' + cost.count + '=' + newValue)
+                newValue = (rawItem.itemValue + expectProductsValue - 0.36 * rarity) / cost.count
+                // console.log(item.itemName + '=' + rawItem.itemName + '=(' + rawItem.itemValue + "+" + expectProductsValue + '-' + (0.36 * rarity) + ')/' + cost.count + '=' + newValue)
             }
         } else {
             //紫，金色品质是向上合成    紫，金色材料 =  合成所需蓝材料价值之和  + 龙门币 - 副产物
             const expectProductsValue = workShopProducts[`t${rarity - 1}`]
             for (const cost of pathway) {
                 const rawItem = itemMap.get(cost.itemId)
-                newValue += rawItem.itemValueAp * cost.count
+                newValue += rawItem.itemValue * cost.count
                 // console.log(item.itemName + '=' + rawItem.itemName + '*' + cost.count + '=' + newValue)
 
             }
@@ -114,7 +114,7 @@ function calculatedItemValue(stageConfig) {
         // console.log(newValue)
         // console.log(item)
 
-        item.itemValueAp = newValue
+        item.itemValue = newValue
         // console.log(newValue)
     }
 
@@ -136,9 +136,9 @@ function calculatedItemValue(stageConfig) {
         for (const [rarity, group] of collect) {
             let expectValue = 0.0
             for (const item of group) {
-                const {itemValueAp, weight} = item
-                expectValue += itemValueAp * weight
-                // console.log('+=',itemName+'='+itemValueAp+'*'+weight,'=',expectValue)
+                const {itemValue, weight} = item
+                expectValue += itemValue * weight
+                // console.log('+=',itemName+'='+itemValue+'*'+weight,'=',expectValue)
             }
 
             expectValue = expectValue * knockRating
@@ -202,15 +202,15 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             if (!itemInfo) {
                 continue
             }
-            const {itemValueAp} = itemInfo;
+            const {itemValue} = itemInfo;
             const knockRating = quantity / times
-            const value = knockRating * itemValueAp
+            const value = knockRating * itemValue
             if (value > maxValue) {
                 mainItemId = itemId
                 maxValue = value
             }
             // if(stageId==='main_02-05'){
-            //     console.log(stageCode, '---', itemName, '=', itemValueAp, '*', knockRating, '=', value, '=', dropValueCount)
+            //     console.log(stageCode, '---', itemName, '=', itemValue, '*', knockRating, '=', value, '=', dropValueCount)
             //
             // }
             dropValueCount += value

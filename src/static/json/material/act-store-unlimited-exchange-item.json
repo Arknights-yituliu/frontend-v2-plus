@@ -1,0 +1,86 @@
+[
+  {
+    "itemId": "30073",
+    "itemName":"扭转醇",
+    "itemValue": 1.8,
+    "active": true,
+    "min": 1.8
+  },
+  {
+    "itemId": "30083",
+    "itemName":"轻锰矿",
+    "itemValue": 2.16,
+    "active": true,
+    "min": 2.16
+  },
+  {
+    "itemId": "30093",
+    "itemName":"研磨石",
+    "itemValue": 2.52,
+    "active": false,
+    "min": 2.52
+  },
+  {
+    "itemId": "30103",
+    "itemName": "RMA70-12",
+    "itemValue": 2.88,
+    "active": false,
+    "min": 2.88
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "itemValue": 2.52,
+    "active": false,
+    "min": 2.52
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "itemValue": 2.52,
+    "active": false,
+    "min": 2.52
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "itemValue": 2.52,
+    "active": false,
+    "min": 2.52
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "itemValue": 2.52,
+    "active": false,
+    "min": 2.52
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "itemValue": 2.52,
+    "active": false,
+    "min": 2.52
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "itemValue": 2.52,
+    "active": false,
+    "min": 2.52
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "itemValue": 2.52,
+    "active": false,
+    "min": 2.52
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "itemValue": 2.52,
+    "active": false,
+    "min": 2.52
+  }
+]
