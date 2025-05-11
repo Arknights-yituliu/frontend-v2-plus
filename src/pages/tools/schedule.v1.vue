@@ -1081,7 +1081,7 @@ function useNewUI() {
               <v-list-item-title>
                 <span class="font-bold">{{ translate('schedule', 'schedule.DronesSet') }}</span>
               </v-list-item-title>
-              <div class="flex justify-space-between align-center">
+              <div class="flex justify-between align-center">
                 <span class="opacity-70">{{ translate('schedule', 'schedule.UseDrones') }}</span>
 
                 <v-switch color="success" density="compact" hide-details
@@ -1122,7 +1122,7 @@ function useNewUI() {
               <v-list-item-title>
                 <span class="font-bold">{{ translate('schedule', 'schedule.FiammettaSet') }}</span>
               </v-list-item-title>
-              <div class="flex align-center justify-space-between">
+              <div class="flex align-center justify-between">
                 <div class="opacity-70">{{ translate('schedule', 'schedule.UseFiammetta') }}</div>
                 <v-switch color="success" density="compact" hide-details
                           v-model="plansTemplate[scheduleIndex].Fiammetta.enable"></v-switch>
@@ -1234,7 +1234,7 @@ function useNewUI() {
     <v-dialog v-model="operatorCheckBoxDialog" max-width="800" class="schedule-dialog">
       <v-card class="m-a">
         <v-card-text>
-          <div class="flex align-center justify-space-between" style="width: 300px">
+          <div class="flex align-center justify-between" style="width: 300px">
             <!--按顺序入驻-->
             <span class="room-set-label">{{ translate('schedule', 'schedule.OrderedStationing') }}</span>
             <v-switch color="success" density="compact" hide-details
