@@ -2,10 +2,15 @@
   [
     {
       "name": "默认设置",
-      "doc": [
+      "description": [
         "适合已无压力拿满蚀刻章，且仓库资源丰富的博士",
         "已充分了解明日方舟活动机制",
         "蓝材料的主要来源为SS，且均有100或更多的储备"
+      ],
+      "paraDescription": [
+        "经验书系数=0.633",
+        "龙门币系数=1",
+        "主线定价"
       ],
       "parameters": {
         "expCoefficient": 0.633,
@@ -29,10 +34,15 @@
     },
     {
       "name": "萌新",
-      "doc": [
+      "description": [
         "适合初入坑的博士",
         "未解锁所有关卡",
         "基建尚未成型"
+      ],
+      "paraDescription": [
+        "经验书系数=0.633",
+        "龙门币系数=1",
+        "主线定价"
       ],
       "parameters": {
         "expCoefficient": 1.04,
@@ -48,10 +58,15 @@
     },
     {
       "name": "成长中的博士",
-      "doc": [
+      "description": [
         "适合能攻克高难以外的活动关卡，但尚未材料自由的博士",
         "已解锁或有能力解锁大部分关卡",
         "基建已基本成型"
+      ],
+      "paraDescription": [
+        "经验书系数=0.633",
+        "龙门币系数=1",
+        "主线定价"
       ],
       "parameters": {
         "expCoefficient": 0.633,
@@ -63,10 +78,15 @@
     },
     {
       "name": "老登",
-      "doc": [
+      "description": [
         "适合已无压力拿满蚀刻章，且仓库资源丰富的博士",
         "已充分了解明日方舟活动机制",
         "蓝材料的主要来源为SS，且均有100或更多的储备"
+      ],
+      "paraDescription": [
+        "经验书系数=0.633",
+        "龙门币系数=1",
+        "主线定价"
       ],
       "parameters": {
         "expCoefficient": 0.633,
@@ -80,7 +100,12 @@
   [
     {
       "name": "我会刷龙门币",
-      "doc": [],
+      "description": [],
+      "paraDescription": [
+        "经验书系数=0.633",
+        "龙门币系数=1",
+        "主线定价"
+      ],
       "parameters": {
         "lmdCoefficient": 1
       },
@@ -89,7 +114,12 @@
     },
     {
       "name": "我龙门币溢出",
-      "doc": [],
+      "description": [],
+      "paraDescription": [
+        "经验书系数=0.633",
+        "龙门币系数=1",
+        "主线定价"
+      ],
       "parameters": {
         "lmdCoefficient": 0
       },
@@ -98,7 +128,12 @@
     },
     {
       "name": "我会刷经验书",
-      "doc": [],
+      "description": [],
+      "paraDescription": [
+        "经验书系数=0.633",
+        "龙门币系数=1",
+        "主线定价"
+      ],
       "parameters": {
         "expCoefficient": 1
       },
@@ -107,7 +142,12 @@
     },
     {
       "name": "我经验书溢出",
-      "doc": [],
+      "description": [],
+      "paraDescription": [
+        "经验书系数=0.633",
+        "龙门币系数=1",
+        "主线定价"
+      ],
       "parameters": {
         "expCoefficient": 0
       },

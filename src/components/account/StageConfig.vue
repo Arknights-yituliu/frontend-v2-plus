@@ -373,9 +373,25 @@ onMounted(() => {
 
               <v-divider></v-divider>
               <div v-for="group in presetParameter">
-                <v-btn v-for="item in group" class="m-4" @click="choosePresetParameter(item)" :color="item.color">
-                  {{ item.name }}
-                </v-btn>
+                <v-card v-for="item in group">
+                  <v-card-item>
+                    <v-card-title>{{ item.name }}</v-card-title>
+                    <v-card-subtitle>
+                      {{ item.description[0] }}<br>
+                      {{ item.description[1] }}<br>
+                      {{ item.description[2] }}
+                    </v-card-subtitle>
+                  </v-card-item>
+
+                  <v-card-text>
+                    {{ item.paraDescription[0] }}<br>
+                    {{ item.paraDescription[1] }}<br>
+                    {{ item.paraDescription[2] }}
+                    <v-btn class="m-4" @click="choosePresetParameter(item)" :color="item.color">
+                      应用
+                    </v-btn>
+                  </v-card-text>
+                </v-card>
                 <v-divider class="m-8-0"></v-divider>
               </div>
 
