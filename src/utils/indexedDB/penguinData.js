@@ -1,14 +1,10 @@
 import itemCache from "@/utils/indexedDB/itemCache.js";
 
 async function getStageDropCollect(stageConfig) {
-    const source = stageConfig.source
+
     let penguinMatrix = []
 
-    // if ('yituliu' === source) {
-    //     // penguinMatrix = tmpData.matrix
-    // } else {
-    //     penguinMatrix = await itemCache.getPenguinMatrixCache()
-    // }
+
 
     penguinMatrix = await itemCache.getPenguinMatrixCache()
 

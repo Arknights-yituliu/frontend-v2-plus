@@ -149,30 +149,52 @@ function calculatedItemValue(stageConfig) {
 
 }
 
-
+/**
+ *  * 获取材料价值迭代系数
+ * @param stageConfig 关卡配置
+ * @param index  迭代次数
+ * @returns {Promise<{nextItemCorrectionTerm: Map<any, any>}>}
+ */
 async function getItemValueCorrectionTerm(stageConfig, index) {
+
+    //是否使用活动关作为基准
     const useActivityStage = stageConfig.useActivityStage
+
+    //材料表
     let itemMap = new Map()
+
+    //将材料信息集合转为一个材料表
     for (const item of itemList) {
         itemMap.set(item.itemId, item)
     }
 
-
-    // let nextStageDropCollect = new Map()
+    //下一轮的材料价值迭代系数表
     let nextItemCorrectionTerm = new Map()
 
+    //循环关卡的材料掉落集合，每个集合是根据关卡id分组的
     for (const [stageId, list] of stageDropCollect) {
+        //关卡信息，包括关卡消耗理智灯箱信息
         const stageInfo = stageInfoMap.get(stageId)
         //如果查不到关卡信息则跳过
         if (!stageInfo) {
             continue;
         }
 
-        const {apCost, stageCode, stageType} = stageInfo
+        if (['MAIN', 'ACT_PERM'].includes(stageType)) {
 
+            //如果不使用活动关定价则推出
+        } else if (!useActivityStage) {
+            continue
+        }
+
+        //关卡消耗理智，关卡代号，关卡类型
+        const {apCost, stageCode, stageType} = stageInfo
+        //关卡效率
         let stageEfficiency = 0.0
+        //关卡期望产出总理智
         let dropValueCount = 0.0
 
+        //如果是第一次迭代，需要给每个关卡的材料掉落添加一个龙门币掉落，
         if (index === 0) {
             list.push({
                 stageId: stageId,
@@ -180,7 +202,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
                 quantity: apCost * 12,
                 times: 1
             })
-
+            //如果是活动再添加一个无限兑换龙门币，视为关卡掉落物
             if ("ACT" === stageType || "ACT_REP" === stageType) {
                 list.push({
                     stageId: stageId,
@@ -191,20 +213,28 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             }
         }
 
-
+         //主产物材料id
         let mainItemId = ''
+        //最高的单项材料产出价值
         let maxValue = 0
 
+        //循环关卡的材料掉落集合
         for (const drop of list) {
+            //解构出材料id，掉落次数，样本数
             const {itemId, itemName, quantity, times} = drop
+            // 从材料表里面取出对应掉落物的信息
             const itemInfo = itemMap.get(itemId);
             //如果查不到材料信息则跳过
             if (!itemInfo) {
                 continue
             }
+            //从材料信息中解构出材料价值
             const {itemValue} = itemInfo;
+            //计算材料掉率
             const knockRating = quantity / times
+            //计算单项材料期望产出价值
             const value = knockRating * itemValue
+            //比较单项材料最大产出，最大的为主产物
             if (value > maxValue) {
                 mainItemId = itemId
                 maxValue = value
@@ -213,33 +243,30 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             //     console.log(stageCode, '---', itemName, '=', itemValue, '*', knockRating, '=', value, '=', dropValueCount)
             //
             // }
+
+            //计算关卡期望产出总理智
             dropValueCount += value
         }
 
+        //计算关卡效率
         stageEfficiency = dropValueCount / apCost
         // if (stageId === 'main_02-05') {
         //     console.log(stageCode, '---', stageEfficiency, '=', dropValueCount, '/', apCost)
         // }
 
-
+        //查询这个关卡的主产物是否是精英材料
         if(!itemSeriesInfoByItemId.has(mainItemId)){
             // console.log(mainItemId,'不在18种材料中')
             continue
         }
 
+         //获取精英材料对应系列的信息  如凝胶系为[凝胶、聚合凝胶]
         let seriesInfo = itemSeriesInfoByItemId.get(mainItemId)
 
-
-        if (['MAIN', 'ACT_PERM'].includes(stageType)) {
-
-        } else if (!useActivityStage) {
-            continue
-
-        }
-
-
+        //材料系列的id和名称
         const {seriesId, seriesName} = seriesInfo
 
+        //下次迭代值
         const seriesCorrectionTerm = {
             stageCode: stageCode,
             seriesId: seriesId,
@@ -249,14 +276,15 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
         // nextStageDropCollect.set(stageId, list)
 
-        if (nextItemCorrectionTerm.get(seriesId)) {
-
+        //判断是否有对应精英材料系列的迭代值
+        if (nextItemCorrectionTerm.has(seriesId)) {
+            //判断迭代值是否和已有的迭代值大小，如果更大则更新
             const correctionTerm = nextItemCorrectionTerm.get(seriesId).correctionTerm
             if (stageEfficiency > correctionTerm) {
                 nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
             }
         } else {
-
+            //没有对应材料系列迭代值新增
             nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
         }
 

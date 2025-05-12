@@ -322,6 +322,7 @@ function forceRefreshItemValue() {
   checkStageConfig(); // 校验配置
   localStorage.setItem("StageConfig", JSON.stringify(stageConfig.value)); // 保存配置
   itemCache.getItemValueCacheByConfig(stageConfig.value, true); // 强制刷新
+  location.reload();
 }
 
 /**
