@@ -40,7 +40,7 @@ async function calculationStageEfficiency(stageConfig) {
 
         const {apCost, stageCode, zoneName,spm, stageType, end} = list[0]
 
-        if(!stageConfig.useActivityStage) {
+        if(!stageConfig.useActivityAverageStage){
             if("YTL_VIRTUAL"===stageType){
                 continue
             }

@@ -200,7 +200,7 @@ function getStageCollectByZone() {
   });
 }
 
-function updateStageActive(){
+function updateStageActive() {
 
 }
 
@@ -228,6 +228,10 @@ function updateBeastsStageActive(stage) {
   stage.active = !stage.active
   stageCollect.value.Main[stage.zoneIndex].list[stage.stageIndex].active = stage.active
   updateStageConfig()
+}
+
+function useActivityAverageStage(){
+  stageConfig.value.useActivityAverageStage = !stageConfig.value.useActivityAverageStage
 }
 
 
@@ -287,12 +291,12 @@ function chooseCustomItem(item) {
 // 添加或更新自定义物品
 function addCustomItem() {
   const existing = stageConfig.value.customItem.find(item => item.itemId === customItem.value.itemId);
-  let {itemId,itemValue,itemName} = customItem.value
+  let {itemId, itemValue, itemName} = customItem.value
   itemValue = stringToNumber(itemValue)
   if (existing) {
     existing.itemValue = itemValue; // 更新现有物品
   } else {
-    stageConfig.value.customItem.push({itemId,itemValue,itemName}); // 新增物品
+    stageConfig.value.customItem.push({itemId, itemValue, itemName}); // 新增物品
   }
   customItemDialog.value = false; // 关闭对话框
 }
@@ -474,11 +478,16 @@ onMounted(() => {
                 <ActionButton v-for="(stage, stageCode) in BeastsStage" :btn-text="stageCode" :active="stage.active"
                               @click="updateBeastsStageActive(stage)">
                 </ActionButton>
-                <ActionButton :btn-text="'使用活动关为基准'" :active="stageConfig.useActivityStage"
+
+
+                <div class="m-8-0 font-bold color-primary">活动关</div>
+
+
+                <ActionButton :btn-text="'活动关'" :active="stageConfig.useActivityStage"
                               @click="stageConfig.useActivityStage=!stageConfig.useActivityStage">
                 </ActionButton>
-                <ActionButton :btn-text="'使用历次活动掉率平均值为基准'" :active="stageConfig.useActivityAverageStage"
-                              @click="stageConfig.useActivityAverageStage=!stageConfig.useActivityAverageStage">
+                <ActionButton :btn-text="'活动关测试集'" :active="stageConfig.useActivityAverageStage"
+                              @click="useActivityAverageStage()">
                 </ActionButton>
 
                 <div class="m-8-0 font-bold color-primary">主题曲</div>
