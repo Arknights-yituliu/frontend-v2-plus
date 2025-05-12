@@ -82,6 +82,8 @@ function loadingStageConfig() {
     stageConfig.value[key] = config[key]; // 合并配置
   }
 
+  stageConfig.value.useActivityStage = false
+
   // stageConfig.value =stageConfigDebug
   getStageCollectByZone(); // 获取关卡信息
 }
@@ -481,12 +483,7 @@ onMounted(() => {
 
 
                 <div class="m-8-0 font-bold color-primary">活动关</div>
-
-
-                <ActionButton :btn-text="'活动关'" :active="stageConfig.useActivityStage"
-                              @click="stageConfig.useActivityStage=!stageConfig.useActivityStage">
-                </ActionButton>
-                <ActionButton :btn-text="'活动关测试集'" :active="stageConfig.useActivityAverageStage"
+                <ActionButton :btn-text="'SideStory定价测试集'" :active="stageConfig.useActivityAverageStage"
                               @click="useActivityAverageStage()">
                 </ActionButton>
 
@@ -524,18 +521,8 @@ onMounted(() => {
                 </div>
 
               </div>
-              <!-- 是否使用活动本定价 -->
-              <!-- <v-list-item>
-              <v-list-item-title>
-                是否使用活动本定价 {{ stageConfig.useActivityStage }}
-              </v-list-item-title>
-              <span class="card-description">
-                选择此选项后，计算过程将会包括过去的所有活动本<br>
-                由于掉率有统计浮动，因此可能出现当期活动本不为100%，实际的最高收益本为过去的活动本<br>
-                此选项对尚未up过的新材料无效，同时不建议新玩家完全了解方舟活动收益机制前打开此开关
-              </span>
-              <v-switch hide-details color="primary" v-model="stageConfig.useActivityStage"></v-switch>
-            </v-list-item> -->
+
+
             </v-expansion-panel-text>
           </v-expansion-panel>
 
