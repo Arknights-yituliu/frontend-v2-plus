@@ -67,7 +67,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <span>14-17</span>
         </td>
         <td class="stage-legend-text-3">
-          <span class="stage-legend-text-bold" style="font-size: 20px;">[综合效率]</span>
+          <span class="stage-legend-text-bold" >[综合效率]</span>
           <br>
           <span class="stage-legend-text-underline">
                 所有掉落物的价值之和
@@ -76,7 +76,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <span>理智消耗</span>
         </td>
         <td class="stage-legend-text-4">
-          <span style="font-size: 20px;font-weight: bold;">[综合效率]</span>
+          <span class="stage-legend-text-bold">[综合效率]</span>
         </td>
       </tr>
 
@@ -93,7 +93,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <span>14-17</span>
         </td>
         <td class="stage-legend-text-3">
-          <span class="stage-legend-text-bold" style="color: #c01dd7;font-size: 20px;">[T4效率]</span>
+          <span class="stage-legend-text-bold" style="color: #c01dd7;">[T4效率]</span>
           <br>
           <span class="stage-legend-text-underline">
               <span style="color: #c01dd7;font-weight: bold">紫</span>
@@ -106,7 +106,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 
         </td>
         <td class="stage-legend-text-4">
-          <span style="font-size: 20px;font-weight: bold;">[综合效率]</span>
+          <span class="stage-legend-text-bold">[综合效率]</span>
         </td>
       </tr>
 
@@ -123,7 +123,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <span>MB-6</span>
         </td>
         <td class="stage-legend-text-3">
-          <span class="stage-legend-text-bold" style="color: #0276f8;font-size: 20px;">[T3效率]</span>
+          <span class="stage-legend-text-bold" style="color: #0276f8;">[T3效率]</span>
           <br>
           <span class="stage-legend-text-underline">
               <span style="color: #0276f8;font-weight: bold">蓝</span>
@@ -132,10 +132,9 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
             </span>
           <br>
           <span>理智消耗</span>
-
         </td>
         <td class="stage-legend-text-4">
-          <span style="font-size: 20px;font-weight: bold;">[综合效率]</span>
+          <span class="stage-legend-text-bold">[综合效率]</span>
         </td>
       </tr>
       </tbody>

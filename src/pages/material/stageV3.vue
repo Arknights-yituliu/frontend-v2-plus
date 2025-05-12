@@ -18,6 +18,7 @@ import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import NoticeBoard from "/src/components/NoticeBoard.vue";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
+import ItemImage from "@/components/sprite/ItemImage.vue";
 
 const router = useRouter();
 
@@ -297,8 +298,6 @@ onMounted(() => {
   <div id="stage" class="stage-page">
     <!-- 标题区域 -->
 
-
-
     <div class="module-header">
       <div class="module-title">
         <h1 style="font-size: 36px">推荐关卡</h1>
@@ -353,17 +352,17 @@ onMounted(() => {
     <!-- 说明区域 -->
     <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
 
-    <v-alert
-        border="start"
-        type="warning"
-        title="BUG修复提示"
-        variant="tonal"
-        density="compact"
-    >
-      <p> 官方修复了12-17掉率偏低的bug，数据源还需要一段时间更新，切削液推荐从12-17获取，详情可点击<a
-          style="color: orangered;cursor: pointer"
-          @click="openNewPage()">《史无前例的掉率降低！全网最速复盘12-17Bug事件始末！》</a>查看</p>
-    </v-alert>
+<!--    <v-alert-->
+<!--        border="start"-->
+<!--        type="warning"-->
+<!--        title="BUG修复提示"-->
+<!--        variant="tonal"-->
+<!--        density="compact"-->
+<!--    >-->
+<!--      <p> 官方修复了12-17掉率偏低的bug，数据源还需要一段时间更新，切削液推荐从12-17获取，详情可点击<a-->
+<!--          style="color: orangered;cursor: pointer"-->
+<!--          @click="openNewPage()">《史无前例的掉率降低！全网最速复盘12-17Bug事件始末！》</a>查看</p>-->
+<!--    </v-alert>-->
 
     <!-- 卡片区域 -->
     <div id="stageForCards" class="stage-card-wrap">
@@ -372,11 +371,8 @@ onMounted(() => {
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.T3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite('AP_GAMEPLAY')"></div>
-            </div>
+            <ItemImage :item-id="'AP_GAMEPLAY'" size="30" mobile-size="20"></ItemImage>
             <div class="stage_card_3_2" style="display: none;">
-
               {{ stage.maxEfficiencyStage.zoneName }}
             </div>
             <div class="stage-card-bar-stage-code">
@@ -390,9 +386,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="stage-card-bar">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.T4)"></div>
-            </div>
+            <ItemImage :item-id="stage.series.T4" size="30" mobile-size="20"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT4MaxEfficiencyStage.stageCode }}
             </div>
@@ -404,9 +398,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="stage-card-bar">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.T3)"></div>
-            </div>
+            <ItemImage :item-id="stage.series.T3" size="30" mobile-size="20"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT3MaxEfficiencyStage.stageCode }}
             </div>
@@ -418,9 +410,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="stage-card-bar" v-show="stage.series.T2">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.T2)"></div>
-            </div>
+            <ItemImage :item-id="stage.series.T2" size="30" mobile-size="20"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT2MaxEfficiencyStage.stageCode }}
             </div>
