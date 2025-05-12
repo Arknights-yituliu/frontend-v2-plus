@@ -1,28 +1,8 @@
 import itemCache from "/src/utils/indexedDB/itemCache.js";
-import {getStageConfig} from "@/utils/user/userConfig.js";
 import {getStageDropCollect} from "/src/utils/indexedDB/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
 
 
-/**
- * 获取关卡信息
- * @returns {Promise<Map<any, any>>}
- */
-async function getStageInfo() {
-
-
-    //关卡信息
-    let stageInfoMap = new Map()
-
-
-    let stageInfo = await itemCache.getStageInfoCache()
-
-    for (const stage of stageInfo) {
-        stageInfoMap.set(stage.stageId, stage)
-    }
-
-    return stageInfoMap
-}
 
 /**
  * 获取材料价值
@@ -47,7 +27,7 @@ async function getItemMap(stageConfig) {
 
 async function calculationStageEfficiency(stageConfig) {
     const start = new Date().getTime()
-    const stageInfoMap = await getStageInfo()
+
     const itemMap = await getItemMap(stageConfig)
     const stageDropCollect = await getStageDropCollect(stageConfig)
     const loading = new Date().getTime()
@@ -56,34 +36,34 @@ async function calculationStageEfficiency(stageConfig) {
     let stageResultList = []
 
     for (const [stageId, list] of stageDropCollect) {
-        const stageInfo = stageInfoMap.get(stageId)
 
-        //如果查不到关卡信息则跳过
-        if (!stageInfo) {
-            continue;
+
+        const {apCost, stageCode, zoneName,spm, stageType, end} = list[0]
+
+        if(!stageConfig.useActivityStage) {
+            if("YTL_VIRTUAL"===stageType){
+                continue
+            }
         }
-
-        const {apCost, stageCode, zoneName, stageType, end} = stageInfo
-
 
         let stageEfficiency = 0.0;
         let dropValueCount = 0.0
 
-        list.push({
-            stageId: stageId,
-            itemId: "4001",
-            quantity: apCost * 12,
-            times: 1
-        })
-
-        if ("ACT" === stageType || "ACT_REP" === stageType) {
-            list.push({
-                stageId: stageId,
-                itemId: "4001",
-                quantity: apCost * 20,
-                times: 1
-            })
-        }
+        // list.push({
+        //     stageId: stageId,
+        //     itemId: "4001",
+        //     quantity: apCost * 12,
+        //     times: 1
+        // })
+        //
+        // if ("ACT" === stageType || "ACT_REP" === stageType) {
+        //     list.push({
+        //         stageId: stageId,
+        //         itemId: "4001",
+        //         quantity: apCost * 20,
+        //         times: 1
+        //     })
+        // }
 
 
         let stageDropValue = []
@@ -240,7 +220,8 @@ async function calculationStageEfficiency(stageConfig) {
             leT4Efficiency: leT4Efficiency,
             orundumPerAp: orundumPerAp,
             lmdcost: LMDCostPerAp * 600 / apCost / orundumPerAp / 10000,
-            end: endTimeStamp
+            end: endTimeStamp,
+            spm:spm
         }
 
 
@@ -304,21 +285,11 @@ function getRecommendedStage(stageResultList) {
 
 function getOrundumRecommendedStage(stageResultList) {
     stageResultList = stageResultList
-        .filter(e => e.orundumPerAp > 0.5 || (e.stageType === 'ACT' || e.stageType === "ACT_REP"))
+        .filter(e => e.orundumPerAp > 0.2)
         .sort((a, b) => b.orundumPerAp - a.orundumPerAp)
 
-    let list = []
-    for (const item of stageResultList) {
-        if (item.orundumPerAp > 0.5) {
-            list.push(item)
-            continue
-        }
-        if (item.stageType === 'ACT' || item.stageType === "ACT_REP") {
-            if (item.orundumPerAp > 0.1) {
-                list.push(item)
-            }
-        }
-    }
+    let list = stageResultList
+
 
     list.sort((a, b) => b.orundumPerAp - a.orundumPerAp)
 

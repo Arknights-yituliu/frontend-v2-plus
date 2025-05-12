@@ -37,6 +37,35 @@ let workShopProducts = {
     t4: 1.643578947
 }
 
+let ytlStageList = {}
+let index = 1
+for(const item of actStoreUnlimitedExchange){
+    const {itemId,itemName} = item
+
+    if(itemId.slice(4)>3){
+        continue
+    }
+
+    const stageId = `ytl_${index.toString().padStart(2, '0')}`
+    ytlStageList[itemId] = {
+        stageId:stageId,
+        stageCode:`ytl-${index.toString().padStart(2, '0')}`,
+        itemId:itemId,
+        itemName:itemName,
+        quality:0,
+        times:0,
+        apCost:21,
+        zoneId:"ytl_virtual",
+        zoneName:"SS平均掉率",
+        stageType:'ACT',
+        start:new Date('2025/05/12 00:00:00').getTime(),
+        end:new Date('2099/05/01 00:00:00').getTime(),
+    }
+    index++
+}
+
+console.log(JSON.stringify(ytlStageList))
+
 
 const exchangeItemMap = new Map()
 for(const item of actStoreUnlimitedExchange){

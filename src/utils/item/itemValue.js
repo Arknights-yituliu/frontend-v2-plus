@@ -1,9 +1,9 @@
 import ITEM_INFO from "@/static/json/material/item_info.json";
 import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
-import itemCache from "@/utils/indexedDB/itemCache.js";
+
 import {getStageDropCollect} from "@/utils/indexedDB/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
-
+// import {weightMap} from "/src/utils/item/updateItemInfoWeight.js";
 
 //加工站每级期望产出理智
 let workShopProducts = {
@@ -39,7 +39,7 @@ let itemValueCorrectionTerm = {
 let itemList = ITEM_INFO.filter(e => e.cardNum < 100)
 let stageDropCollect = void 0
 const baseLMDValue = 0.0036
-let stageInfoMap = new Map()
+
 
 function calculatedItemValue(stageConfig) {
     const {expCoefficient, lmdCoefficient, customItem} = stageConfig
@@ -157,8 +157,7 @@ function calculatedItemValue(stageConfig) {
  */
 async function getItemValueCorrectionTerm(stageConfig, index) {
 
-    //是否使用活动关作为基准
-    const useActivityStage = stageConfig.useActivityStage
+
 
     //材料表
     let itemMap = new Map()
@@ -170,26 +169,20 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
     //下一轮的材料价值迭代系数表
     let nextItemCorrectionTerm = new Map()
+    let activityAverageStageEfficiency = new Map()
 
     //循环关卡的材料掉落集合，每个集合是根据关卡id分组的
     for (const [stageId, list] of stageDropCollect) {
-        //关卡信息，包括关卡消耗理智灯箱信息
-        const stageInfo = stageInfoMap.get(stageId)
-        //如果查不到关卡信息则跳过
-        if (!stageInfo) {
-            continue;
-        }
 
+        console.log(list)
         //关卡消耗理智，关卡代号，关卡类型
-        const {apCost, stageCode, stageType} = stageInfo
+        const {apCost, stageCode, stageType} = list[0]
 
         if (['MAIN', 'ACT_PERM'].includes(stageType)) {
-
-            //如果不使用活动关定价则推出
-        } else if (!useActivityStage) {
+            //如果不使用活动关定价则跳出循环
+        } else if (!stageConfig.useActivityStage) {
             continue
         }
-
 
         //关卡效率
         let stageEfficiency = 0.0
@@ -197,25 +190,25 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         let dropValueCount = 0.0
 
         //如果是第一次迭代，需要给每个关卡的材料掉落添加一个龙门币掉落，
-        if (index === 0) {
-            list.push({
-                stageId: stageId,
-                itemId: "4001",
-                quantity: apCost * 12,
-                times: 1
-            })
-            //如果是活动再添加一个无限兑换龙门币，视为关卡掉落物
-            if ("ACT" === stageType || "ACT_REP" === stageType) {
-                list.push({
-                    stageId: stageId,
-                    itemId: "4001",
-                    quantity: apCost * 20,
-                    times: 1
-                })
-            }
-        }
+        // if (index === 0) {
+        //     list.push({
+        //         stageId: stageId,
+        //         itemId: "4001",
+        //         quantity: apCost * 12,
+        //         times: 1
+        //     })
+        //     // 如果是活动再添加一个无限兑换龙门币，视为关卡掉落物
+        //     if ("ACT" === stageType || "ACT_REP" === stageType||"ACT_REP" === 'YTL_VIRTUAL') {
+        //         list.push({
+        //             stageId: stageId,
+        //             itemId: "4001",
+        //             quantity: apCost * 20,
+        //             times: 1
+        //         })
+        //     }
+        // }
 
-         //主产物材料id
+        //主产物材料id
         let mainItemId = ''
         //最高的单项材料产出价值
         let maxValue = 0
@@ -256,13 +249,15 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         //     console.log(stageCode, '---', stageEfficiency, '=', dropValueCount, '/', apCost)
         // }
 
+
+
         //查询这个关卡的主产物是否是精英材料
-        if(!itemSeriesInfoByItemId.has(mainItemId)){
+        if (!itemSeriesInfoByItemId.has(mainItemId)) {
             // console.log(mainItemId,'不在18种材料中')
             continue
         }
 
-         //获取精英材料对应系列的信息  如凝胶系为[凝胶、聚合凝胶]
+        //获取精英材料对应系列的信息  如凝胶系为[凝胶、聚合凝胶]
         let seriesInfo = itemSeriesInfoByItemId.get(mainItemId)
 
         //材料系列的id和名称
@@ -278,6 +273,14 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
         // nextStageDropCollect.set(stageId, list)
 
+
+        if(stageType==='YTL_VIRTUAL'){
+            activityAverageStageEfficiency.set(seriesId,seriesCorrectionTerm)
+        }
+
+
+
+
         //判断是否有对应精英材料系列的迭代值
         if (nextItemCorrectionTerm.has(seriesId)) {
             //判断迭代值是否和已有的迭代值大小，如果更大则更新
@@ -289,10 +292,13 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             //没有对应材料系列迭代值新增
             nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
         }
-
-
     }
 
+    if(stageConfig.useActivityAverageStage){
+         for(const [seriesId,seriesCorrectionTerm] of activityAverageStageEfficiency){
+             nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
+         }
+    }
 
 
     return {
@@ -306,11 +312,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 async function getCustomItemList(stageConfig) {
     stageDropCollect = await getStageDropCollect(stageConfig)
 
-    let stageInfoList = await itemCache.getStageInfoCache()
-    for (const stage of stageInfoList) {
-        const {stageId} = stage
-        stageInfoMap.set(stageId, stage)
-    }
+
 
 
     const customItem = stageConfig.customItem

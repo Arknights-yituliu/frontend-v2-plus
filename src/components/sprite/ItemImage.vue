@@ -37,7 +37,7 @@ function calculatedSize() {
     size = props.mobileSize;
   }
 
-  wrapStyle.value = `overflow: hidden;position: relative;width: ${size}px;height: ${size}px`
+  wrapStyle.value = `position: relative;width: ${size}px;height: ${size}px`
   if (props.rounded) {
     wrapStyle.value += `;border-radius:60px;`
   }

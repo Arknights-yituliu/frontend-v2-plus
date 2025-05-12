@@ -9,7 +9,7 @@ import {formatNumber} from "@/utils/format.js";
 import itemCache from "/src/utils/indexedDB/itemCache.js";
 import NoticeBoard from "/src/components/NoticeBoard.vue";
 import {exportToJsonFile} from "/src/utils/fileUtils.js";
-// import {weightMap} from "/src/utils/item/updateItemInfoWeight.js";
+
 
 
 let itemValueCollect = ref([])

@@ -70,6 +70,7 @@ const stageConfig = ref({
   useActivityStage: false, // 是否使用活动本定价
   stageBlacklist: [], // 关卡黑名单
   source: 'penguin', // 数据来源
+  useActivityAverageStage: false,
   customItem: [{itemId: '30073', itemName: "扭转醇", itemValue: 1.8}] // 自定义物品列表
 });
 
@@ -469,15 +470,16 @@ onMounted(() => {
 
               <div class="stage-checkbox">
 
-                <div class="m-8-0 font-bold color-primary">常刷关卡</div>
+                <div class="m-8-0 font-bold color-primary">快捷选择</div>
                 <ActionButton v-for="(stage, stageCode) in BeastsStage" :btn-text="stageCode" :active="stage.active"
                               @click="updateBeastsStageActive(stage)">
                 </ActionButton>
-                <ActionButton :btn-text="'活动关'" :active="stageConfig.useActivityStage"
+                <ActionButton :btn-text="'使用活动关为基准'" :active="stageConfig.useActivityStage"
                               @click="stageConfig.useActivityStage=!stageConfig.useActivityStage">
-
                 </ActionButton>
-
+                <ActionButton :btn-text="'使用历次活动掉率平均值为基准'" :active="stageConfig.useActivityAverageStage"
+                              @click="stageConfig.useActivityAverageStage=!stageConfig.useActivityAverageStage">
+                </ActionButton>
 
                 <div class="m-8-0 font-bold color-primary">主题曲</div>
                 <v-divider color="primary" class="opacity-50"></v-divider>
