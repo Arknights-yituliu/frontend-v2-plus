@@ -180,6 +180,9 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             continue;
         }
 
+        //关卡消耗理智，关卡代号，关卡类型
+        const {apCost, stageCode, stageType} = stageInfo
+
         if (['MAIN', 'ACT_PERM'].includes(stageType)) {
 
             //如果不使用活动关定价则推出
@@ -187,8 +190,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             continue
         }
 
-        //关卡消耗理智，关卡代号，关卡类型
-        const {apCost, stageCode, stageType} = stageInfo
+
         //关卡效率
         let stageEfficiency = 0.0
         //关卡期望产出总理智

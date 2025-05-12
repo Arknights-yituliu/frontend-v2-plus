@@ -9,6 +9,7 @@ import ActionButton from "@/components/account/ActionButton.vue";
 import ActStoreUnlimitedExchangeItem from '/src/static/json/material/act_store_unlimited_exchange_item.json'
 import PresetParameter from "/src/static/json/material/preset_parameter.json"
 import {createMessage} from "/src/utils/message.js";
+import {stringToNumber} from '/src/utils/stringUtils.js'
 
 const presetParameter = ref(PresetParameter)
 
@@ -79,6 +80,8 @@ function loadingStageConfig() {
   for (const key in config) {
     stageConfig.value[key] = config[key]; // 合并配置
   }
+
+  // stageConfig.value =stageConfigDebug
   getStageCollectByZone(); // 获取关卡信息
 }
 
@@ -283,10 +286,12 @@ function chooseCustomItem(item) {
 // 添加或更新自定义物品
 function addCustomItem() {
   const existing = stageConfig.value.customItem.find(item => item.itemId === customItem.value.itemId);
+  let {itemId,itemValue,itemName} = customItem.value
+  itemValue = stringToNumber(itemValue)
   if (existing) {
-    existing.itemValue = customItem.value.itemValue; // 更新现有物品
+    existing.itemValue = itemValue; // 更新现有物品
   } else {
-    stageConfig.value.customItem.push({...customItem.value}); // 新增物品
+    stageConfig.value.customItem.push({itemId,itemValue,itemName}); // 新增物品
   }
   customItemDialog.value = false; // 关闭对话框
 }

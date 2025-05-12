@@ -1,5 +1,5 @@
 import {ref} from "vue";
-
+import {stringToNumber} from '/src/utils/stringUtils.js'
 
 const defaultConfig = {
     id: 202412050002,
@@ -20,14 +20,10 @@ const defaultConfig = {
     ]
 }
 
-const classicItem = {
-    30073:'no-exist',
-    30083:'no-exist'
-}
 
-const classicItemValue = {
-    30073:1.8,
-    30083:2.16
+const actStoreUnlimitedExchangeItem = {
+    "30073":1.8,
+    "30083":2.16
 }
 
 let stageConfig = ref(defaultConfig)
@@ -44,26 +40,30 @@ function getStageConfig() {
             config.source = 'penguin'
         }
 
-        for(const item of config.customItem){
+        let customItemMap = new Map()
 
-            if(classicItem[item.itemId]){
-                classicItem[item.itemId] = 'exist'
-            }
+        for(const item of config.customItem){
+            item.itemValue = stringToNumber( item.itemValue)
+            customItemMap.set(item.itemId, item)
         }
 
-        for(const itemId in classicItem){
-            const value = classicItem[itemId]
-            if(value==='no-exist'){
-
-                config.customItem.push({
-                    itemId: itemId,
-                    itemValue: classicItemValue[itemId]
+        for(const itemId in actStoreUnlimitedExchangeItem){
+            if(!customItemMap.has(itemId)){
+                customItemMap.set(itemId,{
+                    itemId:itemId,
+                    itemValue:actStoreUnlimitedExchangeItem[itemId],
                 })
             }
+        }
 
+        let list = []
+        for(const [key,value] of customItemMap){
+            list.push(value)
         }
 
 
+
+        config.customItem = list
         stageConfig.value = config
         return config;
     } else {

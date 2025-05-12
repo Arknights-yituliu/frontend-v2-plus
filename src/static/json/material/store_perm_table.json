@@ -677,6 +677,14 @@
       "rarity": 4
     },
     {
+      "itemId": "31094",
+      "itemName": "手性屈光体",
+      "storeType": "yellow",
+      "price": 15.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
       "itemId": "mod_unlock_token",
       "itemName": "模组数据块",
       "storeType": "yellow",
