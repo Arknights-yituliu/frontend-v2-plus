@@ -6,6 +6,7 @@ const defaultConfig = {
     expCoefficient: 0.633,
     lmdCoefficient: 1,
     useActivityStage: false,
+    useActivityAverageStage:false,
     stageBlacklist: [],
     source: 'penguin',
     customItem: [
