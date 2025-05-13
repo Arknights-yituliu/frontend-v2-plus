@@ -176,7 +176,7 @@ function calculatedItemValue(stageConfig) {
 
         const t3workShopProductsValue = workShopProducts.t3
 
-        const itemValueYinGuo = 10 / 9 * (1 - workShopProductKnockRating) * t3workShopProductsValue / 36
+        const itemValueYinGuo = 10 / 9 * (1 - workShopProductKnockRating) * t3workShopProductsValue/0.2 / 36
         const itemValue3114 = 240 / 19 * 0 + 4 * itemValueYinGuo - 4000 / 19 * itemValueLMD
         const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo
         const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo
@@ -437,7 +437,7 @@ async function getCustomItemList(stageConfig) {
         for (const [seriesId, item] of nextItemCorrectionTerm) {
             itemValueCorrectionTerm[seriesId].correctionTerm = item.correctionTerm
             if (!customItemMap.get(seriesId)) {
-                console.log(item.seriesName, '————', item.stageCode, '————', item.correctionTerm, '————', Math.abs(1 - item.correctionTerm))
+                // console.log(item.seriesName, '————', item.stageCode, '————', item.correctionTerm, '————', Math.abs(1 - item.correctionTerm))
                 completionFlag = completionFlag && Math.abs(1 - item.correctionTerm) < 0.0001
             }
         }
