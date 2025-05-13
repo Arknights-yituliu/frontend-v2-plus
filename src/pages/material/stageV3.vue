@@ -25,7 +25,7 @@ const router = useRouter();
 const {mobile} = useDisplay()
 
 let dataSource = ref("Local")
-let legendDisplay = ref(false)
+let legendDisplay = ref(true)
 let hiddenPermStageFlag = ref(false)
 let currentItemTableIndex = ref(0)
 
@@ -114,7 +114,7 @@ function getItemCardData() {
 
       // console.log(leT4MaxEfficiencyStage.leT4Efficiency, '<' ,leT4Efficiency ,'---', leT4MaxEfficiencyStage.leT4Efficiency < leT4Efficiency  )
 
-      if (hiddenPermStageFlag.value && 'Local' !== dataSource.value) {
+      if (hiddenPermStageFlag.value ) {
         if (stageType === "ACT_PERM") {
           continue
         }
@@ -177,7 +177,7 @@ function getItemTableData(index, isJump) {
 
   for (const item of stageResultList) {
     const {stageType} = item
-    if (hiddenPermStageFlag.value && 'Local' !== dataSource.value) {
+    if (hiddenPermStageFlag.value ) {
       if (stageType === "ACT_PERM") {
         continue
       }
