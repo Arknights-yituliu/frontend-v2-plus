@@ -180,9 +180,15 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
         if (['MAIN', 'ACT_PERM'].includes(stageType)) {
             //如果不使用活动关定价则跳出循环
-        } else if (!stageConfig.useActivityStage) {
-            continue
         }
+
+        if(stageType==='ACT'){
+            if (!stageConfig.useActivityStage) {
+                continue
+            }
+        }
+
+
 
         //关卡效率
         let stageEfficiency = 0.0
@@ -296,7 +302,16 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
     if(stageConfig.useActivityAverageStage){
          for(const [seriesId,seriesCorrectionTerm] of activityAverageStageEfficiency){
-             nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
+             if (nextItemCorrectionTerm.has(seriesId)) {
+                 //判断迭代值是否和已有的迭代值大小，如果更大则更新
+                 const correctionTerm = nextItemCorrectionTerm.get(seriesId).correctionTerm
+                 if (seriesCorrectionTerm.correctionTerm > correctionTerm) {
+                     nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
+                 }
+             } else {
+                 //没有对应材料系列迭代值新增
+                 nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
+             }
          }
     }
 
