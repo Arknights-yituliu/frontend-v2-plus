@@ -153,7 +153,7 @@ async function getStageDropCollect(stageConfig) {
         }
     }
 
-    console.log(stageDropCollect)
+
 
 
     return stageDropCollect

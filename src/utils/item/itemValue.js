@@ -174,7 +174,6 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
     //循环关卡的材料掉落集合，每个集合是根据关卡id分组的
     for (const [stageId, list] of stageDropCollect) {
 
-        console.log(list)
         //关卡消耗理智，关卡代号，关卡类型
         const {apCost, stageCode, stageType} = list[0]
 
@@ -301,18 +300,12 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
     }
 
     if(stageConfig.useActivityAverageStage){
-         for(const [seriesId,seriesCorrectionTerm] of activityAverageStageEfficiency){
-             if (nextItemCorrectionTerm.has(seriesId)) {
-                 //判断迭代值是否和已有的迭代值大小，如果更大则更新
-                 const correctionTerm = nextItemCorrectionTerm.get(seriesId).correctionTerm
-                 if (seriesCorrectionTerm.correctionTerm > correctionTerm) {
-                     nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
-                 }
-             } else {
-                 //没有对应材料系列迭代值新增
-                 nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
-             }
-         }
+        for(const [seriesId,seriesCorrectionTerm] of activityAverageStageEfficiency){
+            if(!('31053'===seriesId||'31033'===seriesId)){
+                nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
+            }
+
+        }
     }
 
 
