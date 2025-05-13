@@ -8,18 +8,30 @@ async function putCache(data) {
     myDatabase.cache_data.put(data)
 }
 
-
-
+let localItemValueCache = new Map()
+let localItemValueCacheKey = Date.now()
 
 async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
     const cacheKey = 'itemValue'
     let itemValue = []
 
+    if(!forceRefresh){
+        if(localItemValueCache.has(localItemValueCacheKey)){
+            console.log("返回了临时缓存材料价值——key:",localItemValueCacheKey)
+            return  localItemValueCache.get(localItemValueCacheKey)
+        }
+    }else {
+        console.log("强制刷新了材料价值")
+        localItemValueCacheKey = Date.now()
+    }
+
     await getCustomItemList(stageConfig).then(response => {
         console.log(`材料价值计算完毕`)
         if (forceRefresh) {
-            createMessage({text: "强制刷新材料价值成功", type: 'success'})
+            createMessage({text: "强制刷新材料价值成功", type: 'success',duration:4000})
         }
+
+        localItemValueCache.set(localItemValueCacheKey,response)
         itemValue = response
     })
 

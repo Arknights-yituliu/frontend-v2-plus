@@ -5,6 +5,7 @@ import {getStageDropCollect} from "@/utils/indexedDB/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
 // import {weightMap} from "/src/utils/item/updateItemInfoWeight.js";
 
+
 //加工站每级期望产出理智
 let workShopProducts = {
     t1: 1.9622015949221407,
@@ -413,9 +414,8 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
 
 async function getCustomItemList(stageConfig) {
+
     stageDropCollect = await getStageDropCollect(stageConfig)
-
-
     const customItem = stageConfig.customItem
     let customItemMap = new Map()
     for (const item of customItem) {
