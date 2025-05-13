@@ -42,7 +42,8 @@ const baseLMDValue = 0.0036
 
 
 function calculatedItemValue(stageConfig) {
-    const {expCoefficient, lmdCoefficient, customItem} = stageConfig
+    const {expCoefficient, lmdCoefficient, workShopProductKnockRating, customItem} = stageConfig
+
 
     let customItemMap = new Map()
     for (const item of customItem) {
@@ -120,8 +121,104 @@ function calculatedItemValue(stageConfig) {
 
     _getWorkShopProductValue(itemList)
 
+    // EXP价值 = 龙门币价值 * EXP系数 = 36/10000 * 145/229 = 261/114500
+    // 基础作战记录价值 = 200 * EXP价值 = 522/1145
+    // 初级作战记录价值 = 400 * EXP价值 = 1044/1145
+    // 中级作战记录价值 = 1000 * EXP价值 = 522/229
+    // 高级作战记录价值 = 2000 * EXP价值 = 1044/229
+    // 无人机价值 = EXP价值 * 无人机生产EXP数量 =  261/114500 * 50/3 = 87/2290
+    // 赤金价值 = 无人机价值 / 无人机生产赤金数量 = 1044/1145
+    // 芯片组价值 = 36 * (1 - 12 * 龙门币价值) = 21528/625
+    // 采购凭证价值 = AP-5消耗理智 * (1 - 12 * 龙门币价值) / AP-5掉落采购凭证 = 1196/875
+    // 芯片助剂价值 = 90 * 采购凭证价值 = 21528/175
+    // 双芯片价值 = 2 * 芯片组价值 + 芯片助剂价值 + 20 * 无人机价值 = 193027818/1001875
+    // 模组数据块价值 = 120 * 采购凭证价值 = 28704/175
+    // 事相碎片价值 = 20 * 采购凭证价值 = 4784/175
+
+    // - θ 为合成精英材料时的副产物出率（θ = 20%），
+    // - BM 为蓝材料价值关于加工站副产物出率的加权平均（简单来说就是 1 个随机蓝材料的价值），
+    // 解得：
+    // - 因果价值 = 10/9 * (1 - θ) * BM / 36
+    // - 碳素组价值 = 240/19 * 家具零件价值 + 4 * 因果价值 - 4000/19 * 龙门币价值
+    // - 碳素价值 = 11/30 * 碳素组价值 + 6/5 * 因果价值
+    // - 碳价值 = 11/30 * 碳素价值 + 3/5 * 因果价值
+
+    _calculatedCommonItemValue(stageConfig)
+
+    function _calculatedCommonItemValue(stageConfig) {
+        const itemValueLMD = itemMap.get('4001').itemValue
+        const itemValueEXP = itemMap.get('2001').itemValue / 200
+        //无人机
+        const itemValueBaseAp = itemValueEXP * 50 / 3
+        //采购凭证  （关卡AP - 龙门币价值*关卡掉落*倍率*关卡AP)/掉落数
+        const itemValue4006 = (30 - itemValueLMD * 12 * 30) / 21;
+        //芯片助剂
+        const itemValue32001 = itemValue4006 * 90;
+        //赤金
+        const itemValue3003 = itemValueBaseAp * 24
+        //技能书3
+        const itemValue3303 = (30 - itemValueLMD * 12 * 30) / (2 + 1.5 * (1 + 0.18) / 3 + 1.5 * (1 + 0.18) * (1 + 0.18) / 9);
+        //技能书2
+        const itemValue3302 = 1.18 * itemValue3303 / 3;
+        //技能书1
+        const itemValue3301 = 1.18 * itemValue3302 / 3;
+
+        //芯片 扣除龙门币
+        const chip1Value = 18 - 18 * itemValueLMD * 12;
+        //芯片组 扣除龙门币
+        const chip2Value = 36 - 36 * itemValueLMD * 12;
+        //双芯片
+        const chip3Value = chip2Value * 2 + itemValue32001;
+        //模组数据块
+        const itemValueModUnlockToken = 120 * itemValue4006;
+        //模组数据块
+        const itemValueSTORYREVIEWCOIN = 20 * itemValue4006;
+
+        const t3workShopProductsValue = workShopProducts.t3
+
+        const itemValueYinGuo = 10 / 9 * (1 - workShopProductKnockRating) * t3workShopProductsValue / 36
+        const itemValue3114 = 240 / 19 * 0 + 4 * itemValueYinGuo - 4000 / 19 * itemValueLMD
+        const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo
+        const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo
+
+
+        const itemValue4003sp = (itemMap.get('30012').itemValue * 2 + 1600 * itemValueLMD + 40 * itemValueBaseAp) / 10
+
+        itemMap.get("base_ap").itemValue = itemValueBaseAp;
+        itemMap.get("3003").itemValue = itemValue3003;
+        itemMap.get("4006").itemValue = itemValue4006;
+        itemMap.get("32001").itemValue = itemValue32001;
+        itemMap.get("3303").itemValue = itemValue3303;
+        itemMap.get("3302").itemValue = itemValue3302;
+        itemMap.get("3301").itemValue = itemValue3301;
+        itemMap.get("mod_unlock_token").itemValue = itemValueModUnlockToken;
+        itemMap.get("STORY_REVIEW_COIN").itemValue = itemValueSTORYREVIEWCOIN;
+        itemMap.get("3303").itemValue = itemValue3303;
+        itemMap.get("3302").itemValue = itemValue3302;
+        itemMap.get("3301").itemValue = itemValue3301;
+        itemMap.get("4003sp").itemValue = itemValue4003sp;
+        itemMap.get("3114").itemValue = itemValue3114;
+        itemMap.get("3113").itemValue = itemValue3113;
+        itemMap.get("3112").itemValue = itemValue3112;
+
+        const chip1 = ['3211', '3221', '3231', '3241', '3251', '3261', '3271', '3281']
+        const chip2 = ['3212', '3222', '3232', '3242', '3252', '3262', '3272', '3282']
+        const chip3 = ['3213', '3223', '3233', '3243', '3253', '3263', '3273', '3283']
+        for (const chipId of chip1) {
+            itemMap.get(chipId).itemValue = chip1Value;
+        }
+        for (const chipId of chip2) {
+            itemMap.get(chipId).itemValue = chip2Value;
+        }
+        for (const chipId of chip3) {
+            itemMap.get(chipId).itemValue = chip3Value;
+        }
+
+    }
+
+
     function _getWorkShopProductValue(itemList) {
-        const knockRating = 0.2
+
         let collect = new Map()
         for (const item of itemList) {
             if (item.weight === 0) {
@@ -141,7 +238,7 @@ function calculatedItemValue(stageConfig) {
                 // console.log('+=',itemName+'='+itemValue+'*'+weight,'=',expectValue)
             }
 
-            expectValue = expectValue * knockRating
+            expectValue = expectValue * workShopProductKnockRating
             // console.log(expectValue)
             workShopProducts[`t${rarity}`] = expectValue
         }
@@ -156,7 +253,6 @@ function calculatedItemValue(stageConfig) {
  * @returns {Promise<{nextItemCorrectionTerm: Map<any, any>}>}
  */
 async function getItemValueCorrectionTerm(stageConfig, index) {
-
 
 
     //材料表
@@ -181,12 +277,17 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             //如果不使用活动关定价则跳出循环
         }
 
-        if(stageType==='ACT'){
+        if (['ACT', 'ACT_REP'].includes(stageType)) {
             if (!stageConfig.useActivityStage) {
                 continue
             }
         }
 
+        if ('YTL_VIRTUAL' === stageType) {
+            if (!stageConfig.useActivityAverageStage) {
+                continue
+            }
+        }
 
 
         //关卡效率
@@ -255,7 +356,6 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         // }
 
 
-
         //查询这个关卡的主产物是否是精英材料
         if (!itemSeriesInfoByItemId.has(mainItemId)) {
             // console.log(mainItemId,'不在18种材料中')
@@ -279,11 +379,9 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         // nextStageDropCollect.set(stageId, list)
 
 
-        if(stageType==='YTL_VIRTUAL'){
-            activityAverageStageEfficiency.set(seriesId,seriesCorrectionTerm)
+        if (stageType === 'YTL_VIRTUAL') {
+            activityAverageStageEfficiency.set(seriesId, seriesCorrectionTerm)
         }
-
-
 
 
         //判断是否有对应精英材料系列的迭代值
@@ -299,12 +397,11 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         }
     }
 
-    if(stageConfig.useActivityAverageStage){
-        for(const [seriesId,seriesCorrectionTerm] of activityAverageStageEfficiency){
-            if(!('31053'===seriesId||'31033'===seriesId)){
+    if (stageConfig.useActivityAverageStage) {
+        for (const [seriesId, seriesCorrectionTerm] of activityAverageStageEfficiency) {
+            if (!('31053' === seriesId || '31033' === seriesId)) {
                 nextItemCorrectionTerm.set(seriesId, seriesCorrectionTerm)
             }
-
         }
     }
 
@@ -319,8 +416,6 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
 async function getCustomItemList(stageConfig) {
     stageDropCollect = await getStageDropCollect(stageConfig)
-
-
 
 
     const customItem = stageConfig.customItem
@@ -342,7 +437,7 @@ async function getCustomItemList(stageConfig) {
         for (const [seriesId, item] of nextItemCorrectionTerm) {
             itemValueCorrectionTerm[seriesId].correctionTerm = item.correctionTerm
             if (!customItemMap.get(seriesId)) {
-                // console.log(item.seriesName, '————', item.correctionTerm, '————', Math.abs(1 - item.correctionTerm))
+                console.log(item.seriesName, '————', item.stageCode, '————', item.correctionTerm, '————', Math.abs(1 - item.correctionTerm))
                 completionFlag = completionFlag && Math.abs(1 - item.correctionTerm) < 0.0001
             }
         }

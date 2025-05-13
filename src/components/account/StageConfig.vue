@@ -70,6 +70,7 @@ const stageConfig = ref({
   useActivityStage: false, // 是否使用活动本定价
   stageBlacklist: [], // 关卡黑名单
   source: 'penguin', // 数据来源
+  workShopProductKnockRating:0.2,
   useActivityAverageStage: false,
   customItem: [{itemId: '30073', itemName: "扭转醇", itemValue: 1.8}] // 自定义物品列表
 });
