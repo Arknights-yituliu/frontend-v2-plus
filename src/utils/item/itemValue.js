@@ -7,10 +7,10 @@ import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
 
 //加工站每级期望产出理智
 let workShopProducts = {
-    t1: 0.393,
-    t2: 1.172,
-    t3: 5.204,
-    t4: 17.598
+    t1: 1.9622015949221407,
+    t2: 5.853670784766422,
+    t3: 24.578868967312253,
+    t4: 79.8592285162492
 }
 
 //加工站每级期望产出理智
@@ -92,7 +92,7 @@ function calculatedItemValue(stageConfig) {
         let newValue = 0.0
         if (resolve) {
             //灰，绿色品质是向下拆解   灰，绿色材料 = （蓝材料价值 + 副产物 - 龙门币）/合成蓝材料的所需灰绿材料数量
-            const expectProductsValue = workShopProducts[`t${rarity}`]
+            const expectProductsValue = workShopProducts[`t${rarity}`] * workShopProductKnockRating
             for (const cost of pathway) {
                 const rawItem = itemMap.get(cost.itemId)
                 newValue = (rawItem.itemValue + expectProductsValue - 0.36 * rarity) / cost.count
@@ -100,7 +100,7 @@ function calculatedItemValue(stageConfig) {
             }
         } else {
             //紫，金色品质是向上合成    紫，金色材料 =  合成所需蓝材料价值之和  + 龙门币 - 副产物
-            const expectProductsValue = workShopProducts[`t${rarity - 1}`]
+            const expectProductsValue = workShopProducts[`t${rarity - 1}`] * workShopProductKnockRating
             for (const cost of pathway) {
                 const rawItem = itemMap.get(cost.itemId)
                 newValue += rawItem.itemValue * cost.count
@@ -176,7 +176,7 @@ function calculatedItemValue(stageConfig) {
 
         const t3workShopProductsValue = workShopProducts.t3
 
-        const itemValueYinGuo = 10 / 9 * (1 - workShopProductKnockRating) * t3workShopProductsValue/0.2 / 36
+        const itemValueYinGuo = 10 / 9 * (1 - workShopProductKnockRating) * t3workShopProductsValue / 0.2 / 36
         const itemValue3114 = 240 / 19 * 0 + 4 * itemValueYinGuo - 4000 / 19 * itemValueLMD
         const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo
         const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo
@@ -233,13 +233,11 @@ function calculatedItemValue(stageConfig) {
         for (const [rarity, group] of collect) {
             let expectValue = 0.0
             for (const item of group) {
-                const {itemValue, weight} = item
+                const {itemValue, itemName, weight} = item
                 expectValue += itemValue * weight
                 // console.log('+=',itemName+'='+itemValue+'*'+weight,'=',expectValue)
             }
 
-            expectValue = expectValue * workShopProductKnockRating
-            // console.log(expectValue)
             workShopProducts[`t${rarity}`] = expectValue
         }
     }
