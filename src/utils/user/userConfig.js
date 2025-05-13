@@ -9,6 +9,7 @@ const defaultConfig = {
     useActivityAverageStage:false,
     stageBlacklist: [],
     source: 'penguin',
+    workShopProductKnockRating:0.2,
     customItem: [
         {
             itemId: '30073',
