@@ -11,7 +11,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "30023": {
     "stageId": "ytl_02",
@@ -25,7 +26,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "30033": {
     "stageId": "ytl_03",
@@ -39,7 +41,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "30043": {
     "stageId": "ytl_04",
@@ -53,7 +56,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "30053": {
     "stageId": "ytl_05",
@@ -67,7 +71,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "30063": {
     "stageId": "ytl_06",
@@ -81,7 +86,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "30073": {
     "stageId": "ytl_07",
@@ -95,7 +101,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "30083": {
     "stageId": "ytl_08",
@@ -109,7 +116,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "30093": {
     "stageId": "ytl_09",
@@ -123,7 +131,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "30103": {
     "stageId": "ytl_10",
@@ -137,7 +146,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "31013": {
     "stageId": "ytl_11",
@@ -151,7 +161,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "31023": {
     "stageId": "ytl_12",
@@ -165,7 +176,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "31033": {
     "stageId": "ytl_13",
@@ -179,7 +191,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": false
   },
   "31043": {
     "stageId": "ytl_14",
@@ -193,7 +206,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "31053": {
     "stageId": "ytl_15",
@@ -207,7 +221,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": false
   },
   "31063": {
     "stageId": "ytl_16",
@@ -221,7 +236,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "31073": {
     "stageId": "ytl_17",
@@ -235,7 +251,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "31083": {
     "stageId": "ytl_18",
@@ -249,7 +266,8 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   },
   "31093": {
     "stageId": "ytl_19",
@@ -263,6 +281,7 @@
     "zoneName": "SS平均掉率",
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
-    "end": 4081248000000
+    "end": 4081248000000,
+    "status": true
   }
 }
