@@ -85,6 +85,19 @@ function loadingStageConfig() {
 
   stageConfig.value.useActivityStage = false
 
+  let customItemMap = new Map()
+  for(const item of stageConfig.value.customItem){
+    customItemMap.set(item.itemId,item.itemValue)
+  }
+
+  for(const item of actStoreUnlimitedExchangeItem.value){
+    if(customItemMap.has(item.itemId)){
+      if(customItemMap.get(item.itemId)===item.itemValue){
+        item.active = true
+      }
+    }
+  }
+
   // stageConfig.value =stageConfigDebug
   getStageCollectByZone(); // 获取关卡信息
 }
@@ -97,6 +110,8 @@ function choosePresetParameter(presetParameter) {
   for (const name in parameters) {
     stageConfig.value[name] = parameters[name];
   }
+
+
 
   updateStageActive()
 

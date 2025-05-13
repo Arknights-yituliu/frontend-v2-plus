@@ -15,7 +15,7 @@
       "parameters": {
         "expCoefficient": 1,
         "lmdCoefficient": 1,
-        "useActivityStage": false
+        "useActivityAverageStage":false
       },
       "message": "经验书系数已修改为1.04；龙门币系数已修改为1.04；已使用主线与常驻活动关卡作为基准",
       "color": "primary",
@@ -36,7 +36,7 @@
       "parameters": {
         "expCoefficient": 0.633,
         "lmdCoefficient": 1,
-        "useActivityStage": false
+        "useActivityAverageStage":false
       },
       "message": "经验书系数已修改为0.633；龙门币系数已修改为1；已使用主线与常驻活动关卡作为基准",
       "color": "primary",
@@ -57,9 +57,9 @@
       "parameters": {
         "expCoefficient": 0.633,
         "lmdCoefficient": 1,
-        "useActivityStage": true
+        "useActivityAverageStage":true
       },
-      "message": "经验书系数已修改为0.633；龙门币系数已修改为1；已使用活动关卡作为基准",
+      "message": "经验书系数已修改为0.633；龙门币系数已修改为1；已使用活动掉率作为基准",
       "color": "primary",
       "active": false
     }
