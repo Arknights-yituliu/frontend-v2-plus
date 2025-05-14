@@ -1,8 +1,9 @@
 import {ref} from "vue";
 import {stringToNumber} from '/src/utils/stringUtils.js'
+import {getUid} from "@/utils/user/userInfo.js";
 
 const defaultConfig = {
-    id: 202412050002,
+    id: getUid(),
     expCoefficient: 0.633,
     lmdCoefficient: 1,
     useActivityStage: false,
@@ -13,10 +14,12 @@ const defaultConfig = {
     customItem: [
         {
             itemId: '30073',
+            itemName: "扭转醇",
             itemValue: 1.8
         },
         {
             itemId: '30083',
+            itemName: "轻锰矿",
             itemValue: 2.16
         }
     ]
@@ -74,5 +77,5 @@ function getStageConfig() {
 }
 
 export {
-    getStageConfig, stageConfig
+    getStageConfig, stageConfig,defaultConfig
 }

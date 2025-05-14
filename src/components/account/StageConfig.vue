@@ -3,13 +3,13 @@ import {onMounted, ref, watch} from "vue";
 import {formatNumber} from "/src/utils/format.js";
 import itemCache from "/src/utils/indexedDB/itemCache.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
-import {getUid} from "/src/utils/user/userInfo.js";
-import {getStageConfig} from "@/utils/user/userConfig.js";
+import {getStageConfig,defaultConfig} from "@/utils/user/userConfig.js";
 import ActionButton from "@/components/account/ActionButton.vue";
 import ActStoreUnlimitedExchangeItem from '/src/static/json/material/act_store_unlimited_exchange_item.json'
 import PresetParameter from "/src/static/json/material/preset_parameter.json"
 import {createMessage} from "/src/utils/message.js";
 import {stringToNumber} from '/src/utils/stringUtils.js'
+import deepClone from "@/utils/deepClone.js";
 
 const presetParameter = ref(PresetParameter)
 
@@ -61,19 +61,13 @@ const debugText = ref('');
 
 const actStoreUnlimitedExchangeItem = ref(ActStoreUnlimitedExchangeItem.slice(6, 12))
 
+function resetConfig(){
+  stageConfig.value = deepClone(defaultConfig)
+  forceRefreshItemValue()
+}
 
 // 初始化默认配置
-const stageConfig = ref({
-  id: getUid(),
-  expCoefficient: 0.633, // 经验书价值系数
-  lmdCoefficient: 1, // 龙门币价值系数
-  useActivityStage: false, // 是否使用活动本定价
-  stageBlacklist: [], // 关卡黑名单
-  source: 'penguin', // 数据来源
-  workShopProductKnockRating:0.2,
-  useActivityAverageStage: false,
-  customItem: [{itemId: '30073', itemName: "扭转醇", itemValue: 1.8}] // 自定义物品列表
-});
+const stageConfig = ref(deepClone(defaultConfig));
 
 
 function loadingStageConfig() {
@@ -405,8 +399,8 @@ onMounted(() => {
     <v-card-text class="stage-config-card-text">
       <!-- 刷新材料参数按钮 -->
       <div class="flex justify-center m-8">
-        <v-btn text="修改参数后点我应用新的参数" color="primary" @click="forceRefreshItemValue()"></v-btn>
-        <v-btn text="重置为初始参数" color="red" @click="forceRefreshItemValue()"></v-btn>
+        <v-btn text="修改参数后点我应用新的参数" color="primary" @click="forceRefreshItemValue()" class="m-4"></v-btn>
+        <v-btn text="重置为初始参数" color="red" @click="resetConfig()" class="m-4"></v-btn>
       </div>
 
       <!-- 主体内容 -->
