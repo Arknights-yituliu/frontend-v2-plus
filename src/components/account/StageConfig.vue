@@ -406,6 +406,7 @@ onMounted(() => {
       <!-- 刷新材料参数按钮 -->
       <div class="flex justify-center m-8">
         <v-btn text="修改参数后点我应用新的参数" color="primary" @click="forceRefreshItemValue()"></v-btn>
+        <v-btn text="重置为初始参数" color="red" @click="forceRefreshItemValue()"></v-btn>
       </div>
 
       <!-- 主体内容 -->

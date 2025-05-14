@@ -369,6 +369,12 @@ const routes = [
         component: () => import('/src/pages/video-material/stageV3.vue')
     },
     {
+        path: '/video/ytl/main1',
+        text: '视频-一图流-主页1',
+        display: false,
+        component: () => import('/src/pages/video/stage.vue')
+    },
+    {
         path: '/action-table',
         text: '材料统计',
         display: false,
