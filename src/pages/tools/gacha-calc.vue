@@ -204,25 +204,25 @@ let scheduleOptions = [
     activityType: '夏活限定',
     disabled: false,
     dailyGiftResources: true,
-    accuracyFlag: false,
+    accuracyFlag: true,
     historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
   },
   {
-    name: 'Ave Mujica联动',
-    start: new Date('2025/05/01 16:00:00'),
-    end: new Date('2025/05/15 04:01:00'),
-    activityType: '周年限定',
+    name: 'Ave Mujica联动(待定)',
+    start: new Date('2025/09/15 16:00:00'),
+    end: new Date('2025/09/29 04:01:00'),
+    activityType: '联动限定',
     disabled: true,
     dailyGiftResources: true,
     accuracyFlag: true,
     historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
   },
   {
-    name: '敬请期待',
-    start: new Date('2024/11/01 16:00:00'),
-    end: new Date('2024/11/15 04:01:00'),
+    name: '感谢庆典(1101-1115)',
+    start: new Date('2025/11/01 16:00:00'),
+    end: new Date('2025/11/15 04:01:00'),
     activityType: '周年限定',
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true,
     accuracyFlag: false,
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
@@ -1476,11 +1476,11 @@ function handleResize() {
           </template>
           <!--选择攒到某个活动的单选框-->
           <div class="radio-group-wrap" style="margin: 0 auto;">
-            <el-radio-group v-model="currentScheduleName" size="large" style="margin: 8px auto;">
+            <el-radio-group v-model="currentScheduleName" size="large" >
               <el-radio-button v-for="(activity, index) in scheduleOptions" :key="index" :value="activity.name"
                                :label="activity.name" :disabled="activity.disabled"
                                @change="updateScheduleOption(index)"
-                               class="gacha-actselector"/>
+                               class="gacha-act-selector m-4-a"/>
             </el-radio-group>
           </div>
 

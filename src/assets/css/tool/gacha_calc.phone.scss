@@ -19,10 +19,18 @@
       box-shadow: 1px 1px 8px var(--c-box-shadow-color);
     }
 
+
     /*卡池时间单选框的外容器*/
     .radio-group-wrap {
-      width: 100%;
-      margin: 4px auto;
+      justify-content: center;
+      .el-radio-group{
+        width: 330px;
+      }
+
+      .el-radio-button__inner{
+        width: 110px;
+        padding:12px 8px;
+      }
     }
 
     .el-radio-button__inner {
@@ -66,7 +74,7 @@
     }
 
 
-    .gacha-actselector{
+    .gacha-act-selector{
 
     }
     .gacha-resources-chart-pie {

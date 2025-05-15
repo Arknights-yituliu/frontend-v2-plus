@@ -278,18 +278,19 @@ function selectItem(index) {
       }
       const {list} = listDisplayItem.value[i]
       if (i === 0) {
-        itemCostTableData.value[t].push(dateFormat(list[t].updatetime))
+        console.log(list[t].updateTime)
+        itemCostTableData.value[t].push(dateFormat(list[t].updateTime))
       }
       itemCostTableData.value[t].push(list[t].count)
     }
   }
 
 
-  console.log(itemCostTableData.value)
+  // console.log(itemCostTableData.value)
 
   const timeRange = updateTimeList.filter(e => e > startTime && e < Date.now())
   const params = {itemList: listDisplayItem.value, timeRange: timeRange, startTime: startTime, endTime: Date.now()}
-  createLineChart(params)
+  // createLineChart(params)
 }
 
 function itemOptionStatus(display) {
@@ -567,9 +568,9 @@ onMounted(() => {
     <v-tabs-window v-model="activeTab">
       <v-tabs-window-item value="1">
         <div style="display: flex;flex-wrap: wrap;">
-          <div style="text-align: center;margin:8px" v-for="[key,value] in mapItemCostStatistics">
-            <ItemImage :item-id="key" :size="60"></ItemImage>
-            {{ value }}
+          <div style="text-align: center;margin:8px" v-for="item in listItemCostStatistics">
+            <ItemImage :item-id="item.itemId" :size="60"></ItemImage>
+            {{ item.count }}
           </div>
         </div>
       </v-tabs-window-item>
