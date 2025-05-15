@@ -198,16 +198,6 @@ let activityType = ref('联动限定')
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
   {
-    name: '6周年(0501-0515)',
-    start: new Date('2025/05/01 16:00:00'),
-    end: new Date('2025/05/15 04:01:00'),
-    activityType: '周年限定',
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
-  },
-  {
     name: '夏活(0801-0815)',
     start: new Date('2025/08/01 16:00:00'),
     end: new Date('2025/08/15 04:01:00'),
@@ -216,6 +206,16 @@ let scheduleOptions = [
     dailyGiftResources: true,
     accuracyFlag: false,
     historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
+  },
+  {
+    name: 'Ave Mujica联动',
+    start: new Date('2025/05/01 16:00:00'),
+    end: new Date('2025/05/15 04:01:00'),
+    activityType: '周年限定',
+    disabled: true,
+    dailyGiftResources: true,
+    accuracyFlag: true,
+    historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
   },
   {
     name: '敬请期待',
