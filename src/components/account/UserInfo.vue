@@ -152,6 +152,7 @@ function toRetrieve() {
 
 onMounted(() => {
   getUserInfoByToken()
+  displayOrUpdateInfo.value = userInfo.value.status>0?'display':''
   // getOperatorData()
 })
 </script>
@@ -161,12 +162,15 @@ onMounted(() => {
   <v-card class="user-card" title="用户信息" >
 
     {{userInfo}}
+    <br>
+    {{`状态${displayOrUpdateInfo}`}}
 
     <v-alert v-show="userInfo.status<1"
         title="未登录"
         type="error"
         class="m-12"
     ></v-alert>
+
     <div v-show="displayOrUpdateInfo === 'display'">
       <v-list>
         <v-list-item>
