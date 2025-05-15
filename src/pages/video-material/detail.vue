@@ -36,7 +36,7 @@
         </div>
 
       </v-card>
-      <v-card class="m-4" >
+      <v-card width="600" class="m-4" style="padding: 12px;">
         <div >
           <span>{{ selectedStageCode }}的理智转化效率是{{ stageEfficiency.toFixed(2) }}%</span>
         </div>
@@ -236,7 +236,7 @@ onMounted(() => {
 
 
 .pieChartBlock {
-  width: 500px;
+  width: 600px;
   height: 500px;
 }
 
