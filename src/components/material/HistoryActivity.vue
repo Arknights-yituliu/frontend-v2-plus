@@ -200,7 +200,7 @@ function getTableDividerClass(divider) {
         <td class="activity-name-pc">活动名称</td>
         <td v-for="(item, index) in historyActivityTableHeaders" :key="index">
           <div>
-            <ItemImage :item-id="item.itemId" class="m-a"></ItemImage>
+            <ItemImage :item-id="item.itemId" class="m-a" ></ItemImage>
           </div>
         </td>
       </tr>

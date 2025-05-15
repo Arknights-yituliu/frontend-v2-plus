@@ -192,6 +192,10 @@
     font-weight: 600;
   }
 
+  .activity-stage-efficiency-pc {
+    padding-top: 4px;
+  }
+
 
   .activity-pickup-item-pc {
     width: 40px;
@@ -205,10 +209,6 @@
     transform: scale(calc(40 / 183));
     top: calc((-183px + 40px) / 2);
     left: calc((-183px + 40px) / 2);
-  }
-
-  .activity-stage-efficiency-pc {
-    padding-top: 4px;
   }
 
   .act-history-table-divider{

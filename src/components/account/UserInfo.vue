@@ -160,6 +160,8 @@ onMounted(() => {
 
   <v-card class="user-card" title="用户信息" >
 
+    {{userInfo}}
+
     <v-alert v-show="userInfo.status<1"
         title="未登录"
         type="error"
