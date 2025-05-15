@@ -9,7 +9,6 @@ import {operatorTable} from '/src/utils/gameData.js'
 import {useRouter} from "vue-router";
 const router = useRouter()
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
-const englishNumberRegex = /^[A-Za-z0-9]+$/;
 
 const accountRules = [
   value => !!value || '不能为空',
@@ -36,6 +35,8 @@ async function getUserInfoByToken() {
   formData.value.userName = userInfo.value.userName
 
   selectedAvatar.value = userInfo.value.avatar
+
+  displayOrUpdateInfo.value = userInfo.value.status>0?'display':''
 }
 
 
@@ -150,9 +151,11 @@ function toRetrieve() {
   router.push({name: "RETRIEVE"})
 }
 
+
+
 onMounted(() => {
   getUserInfoByToken()
-  displayOrUpdateInfo.value = userInfo.value.status>0?'display':''
+
   // getOperatorData()
 })
 </script>
@@ -161,9 +164,6 @@ onMounted(() => {
 
   <v-card class="user-card" title="用户信息" >
 
-    {{userInfo}}
-    <br>
-    {{`状态${displayOrUpdateInfo}`}}
 
     <v-alert v-show="userInfo.status<1"
         title="未登录"
