@@ -388,7 +388,7 @@ function batchGenerationMonthlyPack(index) {
     //获取每月的最后一天，用于写入礼包的起始日期（每月1号）和结束日期（每月最后一天）
     const lastDay = new Date(year, month, 0).getDate().toString().padStart(2, '');
     const pack = {
-      "displayName": `${month}月寻访组合包`,
+      "officialName": `${month}月寻访组合包`,
       "gachaTicket": 0,
       "tenGachaTicket": 1,
       "originium": 42,
@@ -402,7 +402,7 @@ function batchGenerationMonthlyPack(index) {
     }
 
     const certificatePack = {
-      "displayName": `${month}月黄票兑换单抽`,
+      "officialName": `${month}月黄票兑换单抽`,
       "gachaTicket": 8,
       "tenGachaTicket": 3,
       "originium": 0,
@@ -1039,7 +1039,7 @@ function gachaResourcesCalculation() {
       }
 
       //月卡单独处理
-      if (pack.displayName === '月卡') {
+      if (pack.officialName === '月卡') {
         //计算卡池结束前月卡可以拿到多少合成玉
         listDisplayPackInfo.value[i].orundum = dailyReward.value.daily * 200
         //卡池结束前可以购买月卡的数量
@@ -1754,7 +1754,7 @@ function handleResize() {
                               v-show="rewardIsExpired(pack)" v-model="selectedCertificatePack"
                               @change="gachaResourcesCalculation">
             <div class="checkbox-button">
-              <span class="checkbox-button-pack-label">{{ pack.displayName }}</span>
+              <span class="checkbox-button-pack-label">{{ pack.officialName }}</span>
               <div class="checkbox-button-pack-gacha-resources">
                 <div class="image-sprite">
                   <div class="bg-icon_7003"></div>
@@ -1994,8 +1994,8 @@ function handleResize() {
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in listMonthlyPackInfo" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button" v-show="rewardIsExpired(pack)">
-              <pack-button-content :data="pack">
-              </pack-button-content>
+              <PackButtonContent :data="pack">
+              </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2007,8 +2007,8 @@ function handleResize() {
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in listActivityPackInfo" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
-              <pack-button-content :data="pack">
-              </pack-button-content>
+              <PackButtonContent :data="pack">
+              </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2019,8 +2019,8 @@ function handleResize() {
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in listNewBiePackInfo" :key="index" :value="pack.parentIndex"
                                 class="el-checkbox-button">
-              <pack-button-content :data="pack">
-              </pack-button-content>
+              <PackButtonContent :data="pack">
+              </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2032,8 +2032,8 @@ function handleResize() {
             <el-checkbox-button v-for="(pack, index) in listLastYearOriginiumPack" :key="index"
                                 :value="pack.parentIndex"
                                 class="el-checkbox-button">
-              <pack-button-content :data="pack">
-              </pack-button-content>
+              <PackButtonContent :data="pack">
+              </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2046,8 +2046,8 @@ function handleResize() {
             <el-checkbox-button v-for="(pack, index) in listOriginiumPack" :key="index"
                                 :value="pack.parentIndex"
                                 class="el-checkbox-button">
-              <pack-button-content :data="pack">
-              </pack-button-content>
+              <PackButtonContent :data="pack">
+              </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2057,8 +2057,8 @@ function handleResize() {
           <el-checkbox-group v-model="selectedHistoryPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByHistory" :key="index" :value="index"
                                 class="el-checkbox-button">
-              <pack-button-content :data="pack">
-              </pack-button-content>
+              <PackButtonContent :data="pack">
+              </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2100,8 +2100,8 @@ function handleResize() {
             <el-checkbox-button v-for="(activity, name) in activitySchedule" :key="name" :value="name"
                                 v-show="activity.rewardModule === 'actRe' && rewardIsExpired(activity)"
                                 class="el-checkbox-button">
-              <pack-button-content :data="activity">
-              </pack-button-content>
+              <PackButtonContent :data="activity">
+              </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2116,8 +2116,8 @@ function handleResize() {
             <el-checkbox-button v-for="(activity, name) in activitySchedule" :key="name" :value="name"
                                 v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)"
                                 class="el-checkbox-button">
-              <pack-button-content :data="activity">
-              </pack-button-content>
+              <PackButtonContent :data="activity">
+              </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
         </el-collapse-item>

@@ -64,7 +64,7 @@ watch(() => window.screen.width, (newVal) => {
         <div class="pack-card-part-left" @click="displayPackContent(packInfo.id)">
           <img :src="getPackImageLink(packInfo.imageLink)" alt="" class="pack-image">
           <span class="pack-display-name">
-              {{ packInfo.displayName }}
+              {{ packInfo.officialName }}
             </span>
           <!-- 角标部分 -->
           <div class="pack-corner corner-orange"> ￥{{ packInfo.price }}</div>

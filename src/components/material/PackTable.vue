@@ -40,7 +40,7 @@ function hiddenKernel() {
   displayKernel.value = !displayKernel.value
   if (displayKernel.value) {
     headers.value = [
-      {title: '名称', sortable: false, key: 'displayName'},
+      {title: '名称', sortable: false, key: 'officialName'},
       {title: '类型', key: 'saleType'},
       {title: '售价', key: 'price'},
       {title: '抽数(不含中坚)', key: 'draws'},
@@ -54,7 +54,7 @@ function hiddenKernel() {
     ]
   } else {
     headers.value = [
-      {title: '名称', sortable: false, key: 'displayName'},
+      {title: '名称', sortable: false, key: 'officialName'},
       {title: '类型', key: 'saleType'},
       {title: '售价', key: 'price'},
       {title: '抽数', key: 'draws'},
@@ -102,7 +102,7 @@ hiddenKernel()
     >
       <template v-slot:item="{ item }">
         <tr>
-          <td>{{ item.displayName }}</td>
+          <td>{{ item.officialName }}</td>
           <td> {{ saleTypeMap.get(item.saleType) }}</td>
           <td> {{ `${item.price}元` }}</td>
           <td>{{ formatNumber(item.draws, 1) }}</td>

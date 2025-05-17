@@ -338,12 +338,7 @@ const routes = [
         display: false,
         component: () => import('/src/pages/video-material/sssl2.vue')
     },
-    {
-        path: '/material/sssl3',
-        text: '收益速览做图用',
-        display: false,
-        component: () => import('/src/pages/video-material/pack.page.vue')
-    },
+
     {
         path: '/media/weekly',
         text: '周报做图用',
