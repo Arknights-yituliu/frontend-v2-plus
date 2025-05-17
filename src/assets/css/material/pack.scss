@@ -186,6 +186,7 @@
   .pack-content-material {
     width: 100%;
     padding: 4px;
+    font-size: 12px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -196,6 +197,7 @@
   .pack-content-material-item {
     width: 140px;
     display: flex;
+    height: 50px;
     align-items: center;
     //border:1px saddlebrown solid;
   }
