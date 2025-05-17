@@ -30,7 +30,7 @@ for (const module in LinkedTable) {
         </v-list-item>
       </template>
       <router-link v-for="(child,index) in parent.child" :key="index"
-                   :to="child.path" :href="child.path" class="router-link">
+                   :to="{ path: child.path, hash: child.hash }" :href="child.path" class="router-link">
         <v-list-item color="primary" rounded :value="child.text">
           <div class="navigation-item-content">
             <v-icon :icon="child.icon"></v-icon>
