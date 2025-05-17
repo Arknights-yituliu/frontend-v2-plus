@@ -30,6 +30,33 @@ import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "/src/components/ComponentsContainer.vue";
 
 
+//sail 修改标记
+  
+  
+import { onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const scrollToHash = () => {
+  const hash = route.hash?.replace('#', '')
+  if (hash) {
+    setTimeout(() => {
+      const el = document.getElementById(hash)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
+  }
+}
+
+onMounted(scrollToHash)
+watch(() => route.hash, scrollToHash)
+
+
+//sail修改标记
+  
+
 const themeOverrides = {
   common: {
     primaryColor: '#1867C0FF',
