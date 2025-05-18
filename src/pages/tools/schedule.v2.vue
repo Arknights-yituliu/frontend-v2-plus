@@ -14,9 +14,8 @@ import {readFileToString} from '/src/utils/fileUtils.js'
 import {debounce} from "/src/utils/debounce.js";
 import {cMessage} from '/src/utils/message.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import {downloadJsonFile} from "/src/utils/download.js";
+import { saveAs } from 'file-saver';
 import {useRouter} from 'vue-router';
-
 const router = useRouter();
 
 let operatorOwnMap = new Map()
@@ -705,7 +704,8 @@ function saveAndDownloadScheduleFile() {
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
-    downloadJsonFile(scheduleInfo.value, scheduleId.value)
+    const blob = new Blob([JSON.stringify(scheduleInfo.value, null, 2)], {type: "application/json"});
+    saveAs(blob, `${scheduleId.value}.json`)
     cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value)
   })
 }
