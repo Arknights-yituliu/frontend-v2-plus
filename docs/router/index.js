@@ -1,7 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router";
 import {routes} from "./routes.js";
-import toolApi from "../api/tool.js";
-import {getUserInfo} from "/src/utils/user/userInfo.js";
+import toolApi from "/src/api/tool.js";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -10,24 +9,13 @@ const router = createRouter({
 
 
 router.beforeEach(async (to, from) => {
-
-    if(to.path.indexOf("docs")>-1){
-        window.open('/docs?path', '_blank');
-    }
-    // if ('AccountHome'===to.name) {
-    //     const userInfo = await getUserInfo("Route");
-    //     if(userInfo.status<0){
-    //         cMessage("未登录")
-    //         return false;
-    //     }
-    // }
-
+    updateVisits(to.path)
 })
 
 
 // 可选地，在导航完成时重置加载状态
 router.afterEach((to) => {
-    updateVisits(to.path)
+
 })
 
 

@@ -1,9 +1,8 @@
 <script setup>
 import '/src/assets/css/doc/doc.scss'
-import {copyTextToClipboard} from "/src/utils/copyText.js";
 import {onMounted, ref} from "vue";
-import {addScrollListener} from "@/utils/windowListener.js";
-import {debounce} from "@/utils/debounce.js";
+import {addScrollListener} from "/src/utils/windowListener.js";
+import {debounce} from "/src/utils/debounce.js";
 
 
 let menuList = ref([])

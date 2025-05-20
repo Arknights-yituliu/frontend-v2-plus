@@ -25,6 +25,10 @@ export default defineConfig({
         target: "es2015",
         cssTarget: "chrome61",
         rollupOptions: {
+            input: {
+                main: resolve(__dirname, 'index.html'),
+                docs: resolve(__dirname, 'docs.html')
+            },
             external:['xlsx'],
             output:{
                 globals:{

@@ -265,24 +265,6 @@ const routes = [
         component: () => import('/src/pages/account/home.vue')
     },
     {
-        path: '/about/dev',
-        text: '开发相关',
-        name: 'Develop',
-        display: true,
-        module: 'about',
-        icon: "mdi-source-branch",
-        component: () => import('/src/pages/about/dev.vue')
-    },
-    {
-        path: '/doc/join-development',
-        text: '参与开发',
-        name: 'JoinDevelopment',
-        display: true,
-        module: 'dev',
-        icon: "mdi-pencil",
-        component: () => import('/src/pages/doc/join-development.vue')
-    },
-    {
         path: '/about/donate',
         text: '支持我们',
         name: 'Donate',
