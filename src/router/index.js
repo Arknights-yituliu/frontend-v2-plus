@@ -12,8 +12,10 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
 
     if(to.path.indexOf("docs")>-1){
-        window.open('/docs?path', '_blank');
+
+        window.open(`/docs?path=${to.path}`, '_self');
     }
+
     // if ('AccountHome'===to.name) {
     //     const userInfo = await getUserInfo("Route");
     //     if(userInfo.status<0){

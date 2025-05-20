@@ -17,7 +17,7 @@ const routes = [
     {
         path: '/docs/ark',
         text: '项目简介',
-        name: 'ProjectOverview',
+        name: 'ArkProjectOverview',
         display: true,
         module: 'ark',
         icon: 'mdi-view-grid-plus',
@@ -26,7 +26,7 @@ const routes = [
     {
         path: '/docs/ark/item-value-algorithm',
         text: '材料价值算法',
-        name: 'ItemValueAlgorithm',
+        name: 'ArkItemValueAlgorithm',
         display: true,
         module: 'ark',
         icon: 'mdi-view-grid-plus',

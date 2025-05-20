@@ -7,13 +7,35 @@ import '/src/assets/css/common/atomic.scss'
 //引用库
 import {onMounted, ref} from "vue";
 import {LinkedTable} from "/docs/router/routes.js";
-
+import {useRouter} from "vue-router";
+const router = useRouter()
 
 let customTheme = ref("theme-light")
 const drawer = ref(true)
 
 onMounted(() => {
+// 获取当前 URL 的查询参数部分
+  const queryString = window.location.search;
 
+// 使用 URLSearchParams 解析参数
+  const urlParams = new URLSearchParams(queryString);
+
+// 获取单个参数值
+  const path = urlParams.get('path'); // 比如 ?id=123 → "123"
+  console.log(path)
+  const name =  _formatPath(path)
+  console.log(name)
+
+  router.push({name: name})
+
+  function _formatPath(str) {
+    str = str.replace('/docs/','').replace('docs/','')
+
+    // 将剩下的路径重新组合，然后按照 "-" 或 "_" 进行分割
+    return str.split(/[\/\-_]/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('');
+  }
 })
 
 
