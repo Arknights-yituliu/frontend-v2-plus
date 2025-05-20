@@ -13,7 +13,7 @@ router.beforeEach(async (to, from) => {
 
     if(to.path.indexOf("docs")>-1){
 
-        window.open(`/docs?path=${to.path}`, '_self');
+        window.open(`/docs.html?path=${to.path}`, '_self');
     }
 
     // if ('AccountHome'===to.name) {
