@@ -1,24 +1,24 @@
-function readFileToString(file){
-    return new Promise((resolve,reject)=>{
+function readFileToString(file) {
+    return new Promise((resolve, reject) => {
         const reader = new FileReader()
-        reader.onload = () =>{
+        reader.onload = () => {
             resolve(reader.result)
         }
 
-        reader.onerror = () =>{
+        reader.onerror = () => {
             reject(reader.error)
         }
-        reader.readAsText(file,'UTF-8')
+        reader.readAsText(file, 'UTF-8')
     })
 }
 
-function getDataUrl(file){
-    return new Promise((resolve,reject)=>{
+function getDataUrl(file) {
+    return new Promise((resolve, reject) => {
         const reader = new FileReader()
-        reader.onload = () =>{
+        reader.onload = () => {
             resolve(reader.result)
         }
-        reader.onerror = () =>{
+        reader.onerror = () => {
             reject(reader.error)
         }
         reader.readAsDataURL(file)
@@ -77,7 +77,7 @@ function exportToJsonFile(data, fileName = 'data.json') {
     const jsonString = JSON.stringify(data, null, 2);
 
     // 创建 Blob 对象
-    const blob = new Blob([jsonString], { type: 'application/json' });
+    const blob = new Blob([jsonString], {type: 'application/json'});
 
     // 创建下载链接
     const url = URL.createObjectURL(blob);
@@ -93,4 +93,4 @@ function exportToJsonFile(data, fileName = 'data.json') {
 }
 
 
-export { readFileToString , getDataUrl ,compressImage,exportToJsonFile}
+export {readFileToString, getDataUrl, compressImage, exportToJsonFile}

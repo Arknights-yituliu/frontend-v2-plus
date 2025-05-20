@@ -19,7 +19,6 @@ function downloadJsonFile(jsonData, fileName) {
             document.body.appendChild(aTag);
             aTag.click();
 
-            // 清理工作
             document.body.removeChild(aTag);
             URL.revokeObjectURL(aTag.href);
         });
