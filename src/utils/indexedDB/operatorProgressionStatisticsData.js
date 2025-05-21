@@ -3,6 +3,7 @@ import operatorDataAPI from "/src/api/operatorData.js";
 import {operatorTable} from "/src/utils/gameData.js";
 import {formatNumber} from "@/utils/format.js";
 
+
 function putCache(data) {
     myDatabase.cache_data.put(data)
 }

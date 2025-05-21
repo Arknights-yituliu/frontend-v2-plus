@@ -8,12 +8,10 @@ import '/src/assets/css/tool/gacha_calc.phone.scss'
 import POTENTIAL_TABLE from '/src/static/json/tools/potential_gacha_resources.json'
 import HONEY_CAKE_TABLE from '/src/static/json/tools/schedule_by_honeycake.json'
 import FIXED_TABLE from '/src/static/json/tools/schedule_fixed.json'
-import materialAPI from "/src/api/material.js";
 import {createMessage} from "/src/utils/message.js";
 
 import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
-import {getStageConfig} from "/src/utils/user/userConfig.js";
 import deepClone from "/src/utils/deepClone.js";
 import {dateDiff} from "/src/utils/dateUtil.js";
 import packInfoCache from "@/utils/indexedDB/packInfoCache.js";

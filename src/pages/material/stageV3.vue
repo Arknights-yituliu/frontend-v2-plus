@@ -21,7 +21,6 @@ import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
 
 const router = useRouter();
-
 const {mobile} = useDisplay()
 
 let dataSource = ref("Local")

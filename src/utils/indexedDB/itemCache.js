@@ -4,6 +4,7 @@ import axios from "axios";
 import {createMessage} from "@/utils/message.js";
 import {getCustomItemList} from "/src/utils/item/itemValue.js";
 
+
 async function putCache(data) {
     myDatabase.cache_data.put(data)
 }
