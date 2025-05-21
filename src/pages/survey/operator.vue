@@ -19,7 +19,7 @@ import OperatorBar from "/src/components/survey/OperatorBar.vue";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import {formatNumber} from "/src/utils/format.js";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
-import operatorProgressionStatisticsDataCache from "@/utils/indexedDB/operatorProgressionStatisticsData.js";
+import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {dateFormat} from "@/utils/dateUtil.js";
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级

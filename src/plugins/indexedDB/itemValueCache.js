@@ -1,4 +1,4 @@
-import myDatabase from "/src/utils/indexedDB/IndexedDB.js";
+import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
 import materialAPI from "/src/api/material.js";
 
 

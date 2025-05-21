@@ -14,7 +14,7 @@ import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
 import deepClone from "/src/utils/deepClone.js";
 import {dateDiff} from "/src/utils/dateUtil.js";
-import packInfoCache from "@/utils/indexedDB/packInfoCache.js";
+import packInfoCache from "@/plugins/indexedDB/packInfoCache.js";
 
 const OriginiumTable = ref([
   {

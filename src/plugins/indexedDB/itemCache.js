@@ -1,4 +1,4 @@
-import myDatabase from "/src/utils/indexedDB/indexedDB.js";
+import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
 import materialAPI from "/src/api/materialV5.js";
 import axios from "axios";
 import {createMessage} from "@/utils/message.js";

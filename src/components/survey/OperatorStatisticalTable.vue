@@ -7,7 +7,7 @@ import {statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/ope
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
-import itemCache from "/src/utils/indexedDB/itemCache.js";
+import itemCache from "/src/plugins/indexedDB/itemCache.js";
 
 
 const props = defineProps(["modelValue"]);

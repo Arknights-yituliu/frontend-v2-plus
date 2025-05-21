@@ -11,7 +11,7 @@ import OrundumTable from "/src/components/material/OrundumTable.vue";
 import HistoryActivity from "/src/components/material/HistoryActivity.vue";
 import {useDisplay} from "vuetify";
 import {getStageData} from '/src/utils/item/stageEfficiencyCal.js'
-import itemCache from '/src/utils/indexedDB/itemCache.js'
+import itemCache from '/src/plugins/indexedDB/itemCache.js'
 import {formatNumber} from "/src/utils/format.js";
 import {useRouter} from "vue-router";
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'

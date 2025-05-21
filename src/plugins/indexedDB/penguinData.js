@@ -1,4 +1,4 @@
-import itemCache from "@/utils/indexedDB/itemCache.js";
+import itemCache from "@/plugins/indexedDB/itemCache.js";
 import ytlStageInfo from '/src/static/json/material/ytl_stage_info.json'
 
 async function getStageDropCollect(stageConfig) {

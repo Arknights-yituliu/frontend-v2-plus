@@ -3,7 +3,7 @@ import LEVEL_COST_TABLE from "/src/static/json/operator/level_cost_table.json";
 import COMPOSITE_TABLE from "/src/static/json/operator/composite_table.json";
 import deepClone from "/src/utils/deepClone.js";
 import {getStageConfig} from "@/utils/user/userConfig.js";
-import itemCache from "@/utils/indexedDB/itemCache.js";
+import itemCache from "@/plugins/indexedDB/itemCache.js";
 import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
 
 

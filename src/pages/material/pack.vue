@@ -1,6 +1,6 @@
 <script setup>
 import itemAPI from "/src/api/materialV5.js";
-import packInfoCache from "/src/utils/indexedDB/packInfoCache.js";
+import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import {ref} from 'vue';
 import PackCardContainer from '/src/components/material/PackCardGroup.vue'
 import ModuleHeader from '/src/components/ModuleHeader.vue';
@@ -9,7 +9,7 @@ import PackTable from "/src/components/material/PackTable.vue";
 import deepClone from "/src/utils/deepClone.js";
 import '/src/assets/css/material/pack.scss';
 import '/src/assets/css/material/pack.phone.scss';
-import itemCache from "/src/utils/indexedDB/itemCache.js";
+import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import NoticeBoard from "@/components/NoticeBoard.vue";
 
 const date = new Date() // 当前日期

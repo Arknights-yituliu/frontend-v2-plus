@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import {formatNumber} from "/src/utils/format.js";
-import itemCache from "/src/utils/indexedDB/itemCache.js";
+import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
 import {getStageConfig,defaultConfig} from "@/utils/user/userConfig.js";
 import ActionButton from "@/components/account/ActionButton.vue";

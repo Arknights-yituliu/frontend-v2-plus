@@ -1,7 +1,7 @@
 import { ref } from 'vue'
-import itemCache from "/src/utils/indexedDB/itemCache.js";
+import itemCache from "/src/plugins/indexedDB/itemCache.js";
 
-import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";// 练度调查结果
+import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";// 练度调查结果
 import {operatorTable} from "/src/utils/gameData.js";
 import operatorMaterialJSON from "/src/static/json/operator/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
 import professionDictJSON from "/src/static/json/operator/profession_dict"; // 职业字典JSON

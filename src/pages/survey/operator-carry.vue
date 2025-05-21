@@ -6,7 +6,7 @@ import '/src/assets/css/survey/questionnaire.scss'
 import {createMessage} from "/src/utils/message.js";
 import questionnaireAPI from "/src/api/questionnaire.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
+import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";
 import {NDatePicker} from 'naive-ui'
 import {dateFormat} from "@/utils/dateUtil.js";

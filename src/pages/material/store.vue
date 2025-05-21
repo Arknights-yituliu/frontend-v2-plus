@@ -6,7 +6,7 @@ import '/src/assets/css/material/store.scss';
 import '/src/assets/css/material/store.phone.scss';
 import '/src/assets/css/sprite/sprite_plane_icon.css';
 import STORE_PERM_DATA from '/src/static/json/material/store_perm_table.json'
-import itemCache from "/src/utils/indexedDB/itemCache.js";
+import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import itemAPI from '/src/api/materialV5.js'
 import NoticeBoard from "@/components/NoticeBoard.vue";
 

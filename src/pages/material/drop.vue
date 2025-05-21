@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from "vue";
-import itemCache from "@/utils/indexedDB/itemCache.js";
+import itemCache from "@/plugins/indexedDB/itemCache.js";
 import materialAPI from "@/api/material.js";
 import {NDatePicker} from 'naive-ui'
 import {createMessage} from "@/utils/message.js";

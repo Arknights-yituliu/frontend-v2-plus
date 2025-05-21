@@ -3,7 +3,7 @@ import "/src/assets/css/survey/rank.v2.scss";
 import "/src/assets/css/survey/rank.phone.scss";
 import {onMounted, ref} from "vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
+import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
 
 import {formatNumber} from "@/utils/format.js";
