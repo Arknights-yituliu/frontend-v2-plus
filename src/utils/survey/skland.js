@@ -1,7 +1,7 @@
 import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
 
-import {cMessage} from "/src/utils/message";
+import { createMessage} from "/src/utils/message";
 import toolAPI from '/src/api/tool.js'
 import {operatorTable} from "/src/utils/gameData.js";
 
@@ -59,7 +59,7 @@ async function getPlayBindingV2(defaultAkUid, params, cred, token) {
         response = response.data
         // console.log(response)
         if (response.code !== 0) {
-            cMessage("森空岛CRED错误或失效")
+            createMessage({type:'error',text:"森空岛CRED错误或失效"})
         } else {
             const list = response.data.list
 
@@ -114,7 +114,7 @@ async function getPlayBindingV2(defaultAkUid, params, cred, token) {
         }
         toolAPI.collectLog(log)
         console.log(error)
-        cMessage('森空岛：' + error.response.data.message, 'error')
+        createMessage({type:'error',text:'森空岛：' + error.response.data.message})
         return void 0
     })
 
@@ -130,7 +130,7 @@ async function getPlayBindingV2(defaultAkUid, params, cred, token) {
 function getCredAndSecret(text) {
 
     if (!text.includes(',')) {
-        cMessage('输入格式不正确,应是一个中间包含逗号的一串字母', 'error')
+        createMessage({type:'error',text:'输入格式不正确,应是一个中间包含逗号的一串字母'})
     }
     text = text.replace(/\s+/g, '')
         .replace(/["']/g, '')
@@ -161,7 +161,7 @@ async function getPlayerInfo(params, characterTable) {
     ).then(response => {
         response = response.data
         if (response.code !== 0) {
-            cMessage("读取森空岛数据失败")
+            createMessage({type:'error',text:"读取森空岛数据失败"})
         } else {
             const data = response.data
             const chars = data.chars;
@@ -185,7 +185,7 @@ async function getPlayerInfo(params, characterTable) {
             logType: 'error'
         }
         toolAPI.collectLog(log)
-        cMessage('森空岛：' + error, 'error')
+        createMessage({type:'error',text:'森空岛：' + error})
         return void 0
     })
 

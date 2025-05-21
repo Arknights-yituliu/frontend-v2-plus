@@ -1,4 +1,4 @@
-import {cMessage} from "./message.js";
+import {createMessage} from "./message.js";
 
 /**
  * 函数防抖
@@ -30,7 +30,7 @@ function throttle(func,begin, delay = 500,message = '操作过于频繁') {
         if(current - begin >=delay){
             func.apply(this, args);
         }else {
-            cMessage(message)
+            createMessage({type:'error',text:message})
         }
     };
 }

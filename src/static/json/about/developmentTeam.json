@@ -124,5 +124,12 @@
     "title": "bodayw",
     "description": "开发",
     "tags": ["前端"]
+  },
+  {
+    "url": "https://github.com/BiologyHazard",
+    "avatar": "https://avatars.githubusercontent.com/u/44924110?v=4",
+    "title": "BioHazard",
+    "description": "算法",
+    "tags": ["前端"]
   }
 ]

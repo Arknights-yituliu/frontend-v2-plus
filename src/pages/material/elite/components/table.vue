@@ -10,7 +10,7 @@ import {
   formatNumber,
   getCellValue,
 } from '../js/table'
-import { vLoadmore } from '../js/directives'
+// import { vLoadmore } from '../js/directives'
 
 const props = defineProps({
   tableKey: String,
@@ -22,11 +22,11 @@ const { current, tableData, options, loadmore, getTableData, sortChange } = useP
 // 表格数据
 const tableRef = ref(null);
 
-// 监听页数变化
-watch(current, () => {
-  // 重置表格滚动条
-  if (current.value === 0) resetTableScrollTop(tableRef.value)
-})
+// // 监听页数变化
+// watch(current, () => {
+//   // 重置表格滚动条
+//   if (current.value === 0) resetTableScrollTop(tableRef.value)
+// })
 
 // 监听初始化完成 
 watch(initFlag, getTableData)
@@ -34,50 +34,34 @@ watch(initFlag, getTableData)
 // 暴露给父组件
 defineExpose({
   getTableData,
-  current,
+  // current,
 })
 </script>
 
 <template>
-  <el-auto-resizer>
-    <template #default="{ height }">
-      <el-table
-        class="cost-table"
-        :data="tableData"
-        :height="height"
-        width="100%"
-        stripe
-        border
-        highlight-current-row
-        ref="tableRef"
-        v-loadmore="loadmore"
-        @sort-change="sortChange"
-        @row-click="rowClick($event, emits)"
-        row-class-name="clickable"
-      >
-        <el-table-column v-for="item in options" v-bind="item">
-          <template #header>
-            <div v-if="item.prop === 'elite.totalCost'">
-              材料开销
-              <el-tooltip content="仅计算精1和精2过程中龙门币、精英材料及芯片的价值（点击行查看材料消耗详情）" placement="bottom" effect="dark">
-                <i class="iconfont icon-question"></i>
-              </el-tooltip>
-            </div>
-          </template>
-          <template v-slot="{ row, column }">
-            <!-- 二级模组材料消耗 -->
-            <p v-if="tableKey === 'mods' && item.prop === 'rank2.totalCost'">{{ formatNumber(row.rank1.totalCost + row.rank2.totalCost) }}</p>
-            <!-- 材料消耗列 -->
-            <p v-else-if="item.prop.includes('totalCost')">{{ costFormatter(row, column) }}</p>
-            <!-- 精二/专三/模组升级率列 -->
-            <p v-else-if="item.prop.includes('rate')">{{ percentFormatter(row, column) }}</p>
-            <!-- 其他列 -->
-            <p v-else>{{ getCellValue(row, column) || '-' }}</p>
-          </template>
-        </el-table-column>
-      </el-table>
+  <v-data-table
+    :headers="options"
+    :items="tableData"
+    hide-default-footer
+    striped
+    items-per-page="-1"
+    height="calc(100vh - 213px - 2rem)"
+  >
+    <template v-slot:item="{ item }">
+      <tr @click="rowClick(item, emits)" class="clickable">
+        <td v-for="(t, i) in options" :key="i">
+          <!-- 二级模组材料消耗 -->
+          <span v-if="tableKey === 'mods' && t.key === 'rank2.totalCost'">{{ formatNumber(item.rank1.totalCost + item.rank2.totalCost) }}</span>
+          <!-- 材料消耗列 -->
+          <span v-else-if="t.key.includes('totalCost')">{{ costFormatter(item, t.key) }}</span>
+          <!-- 精二/专三/模组升级率列 -->
+          <span v-else-if="t.key.includes('rate')">{{ percentFormatter(item, t.key) }}</span>
+          <!-- 其他列 -->
+          <span v-else>{{ getCellValue(item, t.key) || '-' }}</span>
+        </td>
+      </tr>
     </template>
-  </el-auto-resizer>
+  </v-data-table>
 </template>
 
 <style lang="scss" scoped>
@@ -85,5 +69,8 @@ defineExpose({
   p {
     margin: 0;
   }
+}
+.clickable {
+  cursor: pointer;
 }
 </style>

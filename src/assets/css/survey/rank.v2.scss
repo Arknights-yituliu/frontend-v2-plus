@@ -30,7 +30,16 @@
     z-index:10;
   }
 
+  .full-height-table {
+    height: calc(100vh - 104px);
+  }
 
+  .full-height-table::v-deep(.v-data-table-header) {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: white;
+  }
 
 
 }

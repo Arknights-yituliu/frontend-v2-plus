@@ -8,12 +8,15 @@
     justify-content: center;
   }
 
-  .operator-recommend-table{
+  .highlight {
+    background-color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-on-primary));
+  }
+
+  .operator-recommend-table {
     .operator-equip-group {
       width: 40px;
-      height: 40px;
-      background-color: #4A90E2;
-      padding: 2px;
+      height: 50px;
       border-radius: 4px;
     }
 
@@ -27,18 +30,12 @@
       background-color: var(--c-background-color);
     }
 
-    .equip-icon {
-      display: block;
-      margin: auto;
-    }
-
-
     .equip-name {
       width: 100%;
       text-align: center;
       font-size: 12px;
       position: absolute;
-      top: 22px;
+      top: 32px;
     }
   }
 
@@ -75,7 +72,6 @@
 
 /*干员统计容器样式*/
 .operator-statistical-page {
-
 
 
   .operator-statistical-card {

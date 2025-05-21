@@ -46,8 +46,8 @@ function formatOrundumRecommendedStage() {
   displayOrundumRecommendedStage.value = orundumRecommendedStage.value
 }
 
-watch(()=>props.modelValue.length,(newVal)=>{
-     formatOrundumRecommendedStage()
+watch(()=>props.modelValue,(newVal)=>{
+       formatOrundumRecommendedStage()
 })
 
 const headers = [

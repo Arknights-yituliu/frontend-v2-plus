@@ -1,0 +1,310 @@
+[
+  {
+    "itemId": "30013",
+    "itemName": "固源岩组",
+    "active": true,
+    "min": 1.44,
+    "itemValue": 1.44
+  },
+  {
+    "itemId": "30023",
+    "itemName": "糖组",
+    "active": true,
+    "min": 1.8,
+    "itemValue": 1.8
+  },
+  {
+    "itemId": "30033",
+    "itemName": "聚酸酯组",
+    "active": true,
+    "min": 1.8,
+    "itemValue": 1.8
+  },
+  {
+    "itemId": "30043",
+    "itemName": "异铁组",
+    "active": true,
+    "min": 2.16,
+    "itemValue": 2.16
+  },
+  {
+    "itemId": "30053",
+    "itemName": "酮凝集组",
+    "active": true,
+    "min": 2.16,
+    "itemValue": 2.16
+  },
+  {
+    "itemId": "30063",
+    "itemName": "全新装置",
+    "active": true,
+    "min": 2.88,
+    "itemValue": 2.88
+  },
+  {
+    "itemId": "30073",
+    "itemName": "扭转醇",
+    "active": true,
+    "min": 1.8,
+    "itemValue": 1.8
+  },
+  {
+    "itemId": "30083",
+    "itemName": "轻锰矿",
+    "active": true,
+    "min": 2.16,
+    "itemValue": 2.16
+  },
+  {
+    "itemId": "30093",
+    "itemName": "研磨石",
+    "active": false,
+    "min": 2.52,
+    "itemValue": 2.52
+  },
+  {
+    "itemId": "30103",
+    "itemName": "RMA70-12",
+    "active": false,
+    "min": 2.88,
+    "itemValue": 2.88
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "active": false,
+    "min": 2.52,
+    "itemValue": 2.52
+  },
+  {
+    "itemId": "31023",
+    "itemName": "炽合金",
+    "active": false,
+    "min": 2.16,
+    "itemValue": 2.16
+  },
+  {
+    "itemId": "31033",
+    "itemName": "晶体元件",
+    "active": false,
+    "min": 1.8,
+    "itemValue": 1.8
+  },
+  {
+    "itemId": "31043",
+    "itemName": "半自然溶剂",
+    "active": false,
+    "min": 2.52,
+    "itemValue": 2.52
+  },
+  {
+    "itemId": "31053",
+    "itemName": "化合切削液",
+    "active": false,
+    "min": 2.52,
+    "itemValue": 2.52
+  },
+  {
+    "itemId": "31063",
+    "itemName": "转质盐组",
+    "active": false,
+    "min": 2.88,
+    "itemValue": 2.88
+  },
+  {
+    "itemId": "31073",
+    "itemName": "褐素纤维",
+    "active": false,
+    "min": 2.52,
+    "itemValue": 2.52
+  },
+  {
+    "itemId": "31083",
+    "itemName": "环烃聚质",
+    "active": false,
+    "min": 2.88,
+    "itemValue": 2.88
+  },
+  {
+    "itemId": "31093",
+    "itemName": "类凝结核",
+    "active": false,
+    "min": 2.52,
+    "itemValue": 2.52
+  },
+  {
+    "itemId": "30014",
+    "itemName": "提纯源岩",
+    "active": false,
+    "min": 6.38,
+    "itemValue": 6.38
+  },
+  {
+    "itemId": "30024",
+    "itemName": "糖聚块",
+    "active": false,
+    "min": 8.54,
+    "itemValue": 8.54
+  },
+  {
+    "itemId": "30034",
+    "itemName": "聚酸酯块",
+    "active": false,
+    "min": 8.18,
+    "itemValue": 8.18
+  },
+  {
+    "itemId": "30044",
+    "itemName": "异铁块",
+    "active": false,
+    "min": 9.62,
+    "itemValue": 9.62
+  },
+  {
+    "itemId": "30054",
+    "itemName": "酮阵列",
+    "active": false,
+    "min": 8.9,
+    "itemValue": 8.9
+  },
+  {
+    "itemId": "30064",
+    "itemName": "改量装置",
+    "active": false,
+    "min": 8.899999999999999,
+    "itemValue": 8.899999999999999
+  },
+  {
+    "itemId": "30074",
+    "itemName": "白马醇",
+    "active": false,
+    "min": 7.1000000000000005,
+    "itemValue": 7.1000000000000005
+  },
+  {
+    "itemId": "30084",
+    "itemName": "三水锰矿",
+    "active": false,
+    "min": 8.54,
+    "itemValue": 8.54
+  },
+  {
+    "itemId": "30094",
+    "itemName": "五水研磨石",
+    "active": false,
+    "min": 8.18,
+    "itemValue": 8.18
+  },
+  {
+    "itemId": "30104",
+    "itemName": "RMA70-24",
+    "active": false,
+    "min": 8.54,
+    "itemValue": 8.54
+  },
+  {
+    "itemId": "31014",
+    "itemName": "聚合凝胶",
+    "active": false,
+    "min": 7.46,
+    "itemValue": 7.46
+  },
+  {
+    "itemId": "31024",
+    "itemName": "炽合金块",
+    "active": false,
+    "min": 8.18,
+    "itemValue": 8.18
+  },
+  {
+    "itemId": "31034",
+    "itemName": "晶体电路",
+    "active": false,
+    "min": 8.9,
+    "itemValue": 8.9
+  },
+  {
+    "itemId": "31054",
+    "itemName": "切削原液",
+    "active": false,
+    "min": 7.820000000000001,
+    "itemValue": 7.820000000000001
+  },
+  {
+    "itemId": "31044",
+    "itemName": "精炼溶剂",
+    "active": false,
+    "min": 8.18,
+    "itemValue": 8.18
+  },
+  {
+    "itemId": "31064",
+    "itemName": "转质盐聚块",
+    "active": false,
+    "min": 7.820000000000001,
+    "itemValue": 7.820000000000001
+  },
+  {
+    "itemId": "31074",
+    "itemName": "固化纤维板",
+    "active": false,
+    "min": 8.18,
+    "itemValue": 8.18
+  },
+  {
+    "itemId": "31084",
+    "itemName": "环烃预制体",
+    "active": false,
+    "min": 8.9,
+    "itemValue": 8.9
+  },
+  {
+    "itemId": "31094",
+    "itemName": "手性屈光体",
+    "active": false,
+    "min": 7.820000000000001,
+    "itemValue": 7.820000000000001
+  },
+  {
+    "itemId": "30165",
+    "itemName": "重相位对映体",
+    "active": false,
+    "min": 32.516421052999995,
+    "itemValue": 32.516421052999995
+  },
+  {
+    "itemId": "30145",
+    "itemName": "晶体电子单元",
+    "active": false,
+    "min": 31.796421052999996,
+    "itemValue": 31.796421052999996
+  },
+  {
+    "itemId": "30115",
+    "itemName": "聚合剂",
+    "active": false,
+    "min": 24.696421053,
+    "itemValue": 24.696421053
+  },
+  {
+    "itemId": "30125",
+    "itemName": "双极纳米片",
+    "active": false,
+    "min": 22.896421053000005,
+    "itemValue": 22.896421053000005
+  },
+  {
+    "itemId": "30135",
+    "itemName": "D32钢",
+    "active": false,
+    "min": 25.056421053,
+    "itemValue": 25.056421053
+  },
+  {
+    "itemId": "30155",
+    "itemName": "烧结核凝晶",
+    "active": false,
+    "min": 31.796421052999996,
+    "itemValue": 31.796421052999996
+  }
+]

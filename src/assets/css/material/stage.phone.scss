@@ -1,21 +1,8 @@
 @media screen and (max-width: 600px) {
   .stage-page {
-    .stage-legend {
-      width: 90%;
-      font-size: 8px;
-      line-height: 10px;
-    }
 
-    .stage-legend-sprite {
-      width: 24px;
-      height: 24px;
-      position: relative;
-    }
-
-    .stage-legend-sprite div {
-      transform: scale(calc(24 / 183));
-      top: calc((-183px + 24px) / 2);
-      left: calc((-183px + 24px) / 2);
+    .stage-legend-table {
+      font-size: 9px;
     }
 
     .stage-legend-text-1 {
@@ -23,7 +10,6 @@
     }
 
     .stage-legend-text-2 {
-      font-size: 12px;
       font-weight: bold;
     }
 
@@ -34,12 +20,13 @@
 
     .stage-legend-text-bold {
       font-weight: bold;
-      font-size: 12px;
+
     }
 
     .stage-legend-text-underline {
       border-bottom: 1px solid var(--c-border-color);
       line-height: 16px;
+
     }
 
     .stage-legend-text-4 {
@@ -55,17 +42,19 @@
       font-size: 10px;
       width: 160px;
       height: 82px;
+      margin: 4px;
     }
 
     .stage-card-bar-container {
-      width: calc(100% - 30px);
-      left: 30px;
+      width: calc(100% - 24px);
+      left: 24px;
       height: 82px;
     }
 
     .stage-card-bar {
       height: 20px;
       line-height: 14px;
+      font-size: 8px;
     }
 
     .stage-card-bg-sprite {
@@ -87,11 +76,12 @@
     }
 
     .stage-card-bar-stage-code {
-      font-size: 12px;
+      width: 40px;
+      font-size: 10px;
     }
 
     .stage-card-bar-stage-efficiency {
-      width: 50px;
+      width: fit-content;
     }
 
     .stage-detail-table {

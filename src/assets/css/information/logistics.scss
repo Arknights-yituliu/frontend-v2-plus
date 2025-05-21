@@ -37,12 +37,17 @@
         font-size: 16px;
     }
 
+    .logistics-table-wrap{
+        width: 100%;
+        overflow-x: scroll;
+    }
+
     .logistics-table {
         text-align: center;
         border-collapse: collapse;
         box-shadow: 1px 1px 10px var(--c-box-shadow-color);
         margin: 12px auto;
-        width: 95%;
+        min-width: 800px;
         border-radius: 4px;
         font-size: 14px;
         line-height: 24px;

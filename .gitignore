@@ -8,6 +8,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+pnpm-lock.yaml
 
 node_modules
 .DS_Store
@@ -41,4 +42,4 @@ coverage
 /public/image/portrait-ori-5/
 /public/image/portrait-ori-6/
 /src/test/
-/src/pages/doc/sklandTest.vue
+/docs/sklandTest.vue

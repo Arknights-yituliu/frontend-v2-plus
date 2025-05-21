@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/account/login.v2.scss'
-import {cMessage} from "/src/utils/message.js";
+import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
 
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
@@ -71,7 +71,7 @@ function sendVerificationCode() {
     email: inputContent.value.email
   }
   userAPI.sendVerificationCodeV2(data).then(response => {
-    cMessage('验证码发送成功')
+    createMessage({type:'success',text:'验证码发送成功'})
   })
 }
 
@@ -100,7 +100,7 @@ function toRetrieveAuthentication(step) {
     nextStep(step)
     inputContent.value.token = response.data.tmpToken
     inputContent.value.userName = response.data.userName
-    cMessage('请在10分钟内修改您的密码')
+    createMessage({type:'success',text:'请在10分钟内修改您的密码'})
   })
 }
 

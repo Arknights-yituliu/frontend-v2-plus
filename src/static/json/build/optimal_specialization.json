@@ -1,0 +1,341 @@
+{
+  "professions": {
+    "近卫": {
+      "general": {
+        "specialization_1": {
+          "best_assistant": {
+            "name": "赤冬",
+            "efficiency": 0.75,
+            "skill_name": "信影流",
+            "description": "进驻训练室协助位时，近卫干员的专精技能训练速度+30%，如果本次训练专精技能至1级，则训练速度额外+45%",
+            "charId": "char_475_akafyu"
+          }
+        },
+        "specialization_2": {
+          "best_assistant": {
+            "name": "燧石",
+            "efficiency": 0.75,
+            "skill_name": "苦行",
+            "description": "进驻训练室协助位时，近卫干员的专精技能训练速度+30%，如果本次训练专精技能至2级，则训练速度额外+45%",
+            "charId": "char_415_flint"
+          }
+        },
+        "specialization_3": {
+          "best_assistant": {
+            "name": "百炼嘉维尔",
+            "efficiency": 0.95,
+            "skill_name": "实战指导",
+            "description": "进驻训练室协助位时，近卫干员的专精技能训练速度+30%，如果本次训练专精技能至3级，则训练速度额外+65%",
+            "charId": "char_1026_gvial2"
+          }
+        }
+      },
+      "branches": {
+        "领主": {
+          "best_assistant": {
+            "name": "仇白",
+            "efficiency": 0.75,
+            "skill_name": "实战技巧：领主",
+            "description": "进驻训练室协助位时，近卫干员的专精技能训练速度+30%，如果训练位干员分支为领主，则训练速度额外+45%",
+            "charId": "char_4082_qiubai"
+          }
+        },
+        "斗士": {
+          "best_assistant": {
+            "name": "达格达",
+            "efficiency": 0.75,
+            "skill_name": "实战技巧：斗士",
+            "description": "进驻训练室协助位时，近卫干员的专精技能训练速度+30%，如果训练位干员分支为斗士，则训练速度额外+45%",
+            "charId": "char_157_dagda"
+          }
+        }
+      }
+    },
+    "狙击": {
+      "general": {
+        "specialization_1": {
+          "best_assistant": {
+            "name": "假日威龙陈",
+            "efficiency": 0.95,
+            "skill_name": "以身作则",
+            "description": "进驻训练室协助位时，狙击干员的专精技能训练速度+30%，如果本次训练专精技能至1级，则训练速度额外+65%",
+            "charId": "char_1013_chen2"
+          }
+        },
+        "specialization_2": {
+          "best_assistant": {
+            "name": "埃拉托",
+            "efficiency": 0.75,
+            "skill_name": "拂弦",
+            "description": "进驻训练室协助位时，狙击干员的专精技能训练速度+30%，如果本次训练专精技能至2级，则训练速度额外+45%",
+            "charId": "char_4043_erato"
+          }
+        },
+        "specialization_3": {
+          "best_assistant": {
+            "name": "W",
+            "efficiency": 0.95,
+            "skill_name": "伺机而动",
+            "description": "进驻训练室协助位时，狙击干员的专精技能训练速度+30%，如果本次训练专精技能至3级，则训练速度额外+65%",
+            "charId": "char_113_cqbw"
+          }
+        }
+      },
+      "branches": {
+        "攻城手": {
+          "best_assistant": {
+            "name": "提丰",
+            "efficiency": 0.75,
+            "skill_name": "实战技巧：攻城手",
+            "description": "进驻训练室协助位时，狙击干员的专精技能训练速度+30%，如果训练位干员分支为攻城手，则训练速度额外+45%",
+            "charId": "char_2012_typhon"
+          }
+        },
+        "速射手": {
+          "best_assistant": {
+            "name": "寒芒克洛丝",
+            "efficiency": 0.75,
+            "skill_name": "实战技巧：速射",
+            "description": "进驻训练室协助位时，狙击干员的专精技能训练速度+30%，如果训练位干员分支为速射手，则训练速度额外+45%",
+            "charId": "char_1021_kroos2"
+          }
+        }
+      }
+    },
+    "术师": {
+      "general": {
+        "specialization_1": {
+          "best_assistant": {
+            "name": "特米米",
+            "efficiency": 0.75,
+            "skill_name": "一知半解",
+            "description": "进驻训练室协助位时，术师干员的专精技能训练速度+30%，如果本次训练专精技能至1级，则训练速度额外+45%",
+            "charId": "char_411_tomimi"
+          }
+        },
+        "specialization_2": {
+          "best_assistant": {
+            "name": "薄绿",
+            "efficiency": 0.75,
+            "skill_name": "博览群书",
+            "description": "进驻训练室协助位时，术师干员的专精技能训练速度+30%，如果本次训练专精技能至2级，则训练速度额外+45%",
+            "charId": "char_388_mint"
+          }
+        },
+        "specialization_3": {
+          "best_assistant": {
+            "name": "死芒",
+            "efficiency": 0.95,
+            "skill_name": "死焰指引",
+            "description": "进驻训练室协助位时，术师干员的专精技能训练速度+30%，如果本次训练专精技能至3级，则训练速度额外+65%",
+            "charId": "char_450_necras"
+          }
+        }
+      }
+    },
+    "医疗": {
+      "general": {
+        "specialization_1": {
+          "best_assistant": {
+            "name": "阿",
+            "efficiency": 0.6,
+            "skill_name": "精准手术",
+            "description": "进驻训练室协助位时，医疗干员的专精技能训练速度+60%",
+            "charId": "char_225_haak"
+          }
+        },
+        "specialization_2": {
+          "best_assistant": {
+            "name": "濯尘芙蓉",
+            "efficiency": 0.75,
+            "skill_name": "护理专精",
+            "description": "进驻训练室协助位时，医疗干员的专精技能训练速度+30%，如果本次训练专精技能至2级，则训练速度额外+45%",
+            "charId": "char_1024_hbisc2"
+          }
+        },
+        "specialization_3": {
+          "best_assistant": {
+            "name": "阿",
+            "efficiency": 0.6,
+            "skill_name": "精准手术",
+            "description": "进驻训练室协助位时，医疗干员的专精技能训练速度+60%",
+            "charId": "char_225_haak"
+          }
+        }
+      },
+      "branches": {
+        "链愈师": {
+          "best_assistant": {
+            "name": "莎草",
+            "efficiency": 0.75,
+            "skill_name": "实战技巧：链愈师",
+            "description": "进驻训练室协助位时，医疗干员的专精技能训练速度+30%，如果训练位干员分支为链愈师，则训练速度额外+45%",
+            "charId": "char_4139_papyrs"
+          }
+        },
+        "行医": {
+          "best_assistant": {
+            "name": "纯烬艾雅法拉",
+            "efficiency": 0.75,
+            "skill_name": "实战技巧：行医",
+            "description": "进驻训练室协助位时，医疗干员的专精技能训练速度+30%，如果训练位干员分支为行医，则训练速度额外+45%",
+            "charId": "char_1016_agoat2"
+          }
+        }
+      }
+    },
+    "特种": {
+      "general": {
+        "specialization_1": {
+          "best_assistant": {
+            "name": "罗宾",
+            "efficiency": 0.75,
+            "skill_name": "陷阱对焦",
+            "description": "进驻训练室协助位时，特种干员的专精技能训练速度+30%，如果本次训练专精技能至1级，则训练速度额外+45%",
+            "charId": "char_451_robin"
+          }
+        },
+        "specialization_2": {
+          "best_assistant": {
+            "name": "缄默德克萨斯",
+            "efficiency": 0.8,
+            "skill_name": "破斩桎梏",
+            "description": "进驻训练室协助位时，特种与先锋干员的专精技能训练速度+30%，如果本次训练专精技能至2级，则训练速度额外+50%",
+            "charId": "char_1028_texas2"
+          }
+        },
+        "specialization_3": {
+          "best_assistant": {
+            "name": "归溟幽灵鲨",
+            "efficiency": 0.95,
+            "skill_name": "阿戈尔战术",
+            "description": "进驻训练室协助位时，特种干员的专精技能训练速度+30%，如果本次训练专精技能至3级，则训练速度额外+65%",
+            "charId": "char_1023_ghost2"
+          }
+        }
+      }
+    },
+    "先锋": {
+      "general": {
+        "specialization_1": {
+          "best_assistant": {
+            "name": "夜半",
+            "efficiency": 0.75,
+            "skill_name": "战术研习",
+            "description": "进驻训练室协助位时，先锋干员的专精技能训练速度+30%，如果本次训练专精技能至1级，则训练速度额外+45%",
+            "charId": "char_476_blkngt"
+          }
+        },
+        "specialization_2": {
+          "best_assistant": {
+            "name": "缄默德克萨斯",
+            "efficiency": 0.8,
+            "skill_name": "破斩桎梏",
+            "description": "进驻训练室协助位时，特种与先锋干员的专精技能训练速度+30%，如果本次训练专精技能至2级，则训练速度额外+50%",
+            "charId": "char_1028_texas2"
+          }
+        },
+        "specialization_3": {
+          "best_assistant": {
+            "name": "嵯峨",
+            "efficiency": 0.6,
+            "skill_name": "入世",
+            "description": "进驻训练室协助位时，先锋干员的专精技能训练速度+60%",
+            "charId": "char_362_saga"
+          }
+        }
+      }
+    },
+    "重装": {
+      "general": {
+        "specialization_1": {
+          "best_assistant": {
+            "name": "极光",
+            "efficiency": 0.75,
+            "skill_name": "极地生存",
+            "description": "进驻训练室协助位时，重装干员的专精技能训练速度+30%，如果本次训练专精技能至1级，则训练速度额外+45%",
+            "charId": "char_422_aurora"
+          }
+        },
+        "specialization_2": {
+          "best_assistant": {
+            "name": "暴雨",
+            "efficiency": 0.75,
+            "skill_name": "阵地经验",
+            "description": "进驻训练室协助位时，重装干员的专精技能训练速度+30%，如果本次训练专精技能至2级，则训练速度额外+45%",
+            "charId": "char_304_zebra"
+          }
+        },
+        "specialization_3": {
+          "best_assistant": {
+            "name": "星熊",
+            "efficiency": 0.6,
+            "skill_name": "般若",
+            "description": "进驻训练室协助位时，重装干员的专精技能训练速度+60%",
+            "charId": "char_136_hsguma"
+          }
+        }
+      },
+      "branches": {
+        "驭法铁卫": {
+          "best_assistant": {
+            "name": "暮落",
+            "efficiency": 0.75,
+            "skill_name": "实战技巧：驭法铁卫",
+            "description": "进驻训练室协助位时，重装干员的专精技能训练速度+30%，如果训练位干员分支为驭法铁卫，则训练速度额外+45%",
+            "charId": "char_4025_aprot2"
+          }
+        }
+      }
+    },
+    "辅助": {
+      "general": {
+        "specialization_1": {
+          "best_assistant": {
+            "name": "铃兰",
+            "efficiency": 0.6,
+            "skill_name": "共鸣",
+            "description": "进驻训练室协助位时，辅助干员的专精技能训练速度+60%",
+            "charId": "char_358_lisa"
+          }
+        },
+        "specialization_2": {
+          "best_assistant": {
+            "name": "铃兰",
+            "efficiency": 0.6,
+            "skill_name": "共鸣",
+            "description": "进驻训练室协助位时，辅助干员的专精技能训练速度+60%",
+            "charId": "char_358_lisa"
+          }
+        },
+        "specialization_3": {
+          "best_assistant": {
+            "name": "浊心斯卡蒂",
+            "efficiency": 0.95,
+            "skill_name": "同化",
+            "description": "进驻训练室协助位时，辅助干员的专精技能训练速度+30%，如果本次训练专精技能至3级，则训练速度额外+65%",
+            "charId": "char_1012_skadi2"
+          }
+        }
+      }
+    }
+  },
+  "half_time_operators": {
+    "irene": {
+      "name": "艾丽妮",
+      "efficiency": 0.3,
+      "skill_name": "特训指导",
+      "description": "进驻训练室协助位时，专精训练可以触发减半效果",
+      "charId": "char_4009_irene",
+      "applicable_professions": ["近卫", "狙击", "医疗", "重装", "特种", "先锋"]
+    },
+    "logos": {
+      "name": "逻各斯",
+      "efficiency": 0.3,
+      "skill_name": "战术分析",
+      "description": "进驻训练室协助位时，专精训练可以触发减半效果",
+      "charId": "char_4133_logos", 
+      "applicable_professions": ["术师", "辅助", "医疗", "重装", "特种", "先锋"]
+    }
+  }
+} 

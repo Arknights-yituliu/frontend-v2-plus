@@ -1,23 +1,27 @@
 <script setup>
 import {professionDict} from '/src/utils/survey/common.js'
 import {operatorTable} from "/src/utils/gameData.js";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
-import {cMessage} from "/src/utils/message.js";
+import {createMessage} from "/src/utils/message.js";
 import questionnaireAPI from "/src/api/questionnaire.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "/src/utils/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";
-import {dateFormat} from "/src/utils/dateUtil.js";
+import {NDatePicker} from 'naive-ui'
+import {dateFormat} from "@/utils/dateUtil.js";
 
 let operatorGroupByProfession = new Map()
 
+let operatorNameMap = new Map()
+
 for (const charId in operatorTable) {
   const character = operatorTable[charId]
-  const {profession, rarity} = character
+  const {profession, rarity, name} = character
   if (rarity < 4) {
     continue
   }
+  operatorNameMap.set(charId, name)
   let list = operatorGroupByProfession.get(profession);
   if (list) {
     list.push(character)
@@ -27,7 +31,7 @@ for (const charId in operatorTable) {
   }
 }
 
-operatorGroupByProfession.forEach((v, k) => {
+operatorGroupByProfession.forEach((v) => {
   v.sort((a, b) => b.rarity - a.rarity)
 })
 
@@ -44,7 +48,7 @@ function chooseOperatorProfession(profession) {
 
 function chooseOperator(operator) {
   if (operatorTeam.value.length > 11) {
-    cMessage('不能选择超过12位干员', 'error')
+    createMessage({type: 'error', text: '不能选择超过12位干员'})
     return;
   }
 
@@ -66,25 +70,24 @@ function removeOperator(operator) {
   getCharIdList()
 }
 
-
 chooseOperatorProfession('SNIPER')
 
 
 function getCharIdList() {
   let list = []
 
-  const initData = [
-    {count: 0, value: "PIONEER"},
-    {count: 0, value: "WARRIOR"},
-    {count: 0, value: "TANK"},
-    {count: 0, value: "SNIPER"},
-    {count: 0, value: "CASTER"},
-    {count: 0, value: "MEDIC"},
-    {count: 0, value: "SUPPORT"},
-    {count: 0, value: "SPECIAL"},
-  ]
+  // const initData = [
+  //   {count: 0, value: "PIONEER"},
+  //   {count: 0, value: "WARRIOR"},
+  //   {count: 0, value: "TANK"},
+  //   {count: 0, value: "SNIPER"},
+  //   {count: 0, value: "CASTER"},
+  //   {count: 0, value: "MEDIC"},
+  //   {count: 0, value: "SUPPORT"},
+  //   {count: 0, value: "SPECIAL"},
+  // ]
 
-  for (const {charId, profession} of operatorTeam.value) {
+  for (const {charId} of operatorTeam.value) {
 
     list.push(charId)
   }
@@ -92,13 +95,16 @@ function getCharIdList() {
 
 }
 
+let gameModuleCode = ref('101')
+
 function uploadQuestionnaire() {
   const data = {
-    questionnaireType: 1,
+    questionnaireCode: gameModuleCode.value,
     operatorList: charIdList.value
   }
-  questionnaireAPI.uploadQuestionnaireInfo(data).then(response=>{
-    cMessage('提交成功')
+  questionnaireAPI.uploadQuestionnaireInfo(data).then(response => {
+
+    createMessage({type: 'success', text: '提交成功'})
   })
 }
 
@@ -113,54 +119,131 @@ function selectedOperatorClass(charId) {
 const headers = [
   {title: '序号', sortable: false, key: 'index'},
   {title: '干员', sortable: false, key: 'charId'},
-  {title: '携带人数', sortable: true, key: 'carryCount'},
-  {title: '携带率', sortable: true, key: 'carryRate'},
+  {title: '使用次数', sortable: true, key: 'carryCount'},
+  {title: '使用率', sortable: true, key: 'carryRate'},
   {title: '持有率', sortable: true, key: 'own'},
 ]
 
 let listOperators = ref([])
-let operatorCarryResult = ref([])
-let updateTime = ref('')
-let carryRateSampleSize = ref('')
+let operatorCarryResult = ref({})
+let operatorOwnMap = new Map()
 
-
-async function getOperatorCarryStatisticsResult() {
-
-  await questionnaireAPI.getQuestionnaireResult(1).then(response => {
-    operatorCarryResult.value = []
-    updateTime.value = dateFormat(response.data.updateTime, 'yyyy/MM/dd HH:mm')
-    carryRateSampleSize.value = response.data.sampleSize
-    const carryRateData = new Map()
-    let carryRateList = response.data.list
-
-    for (const item of carryRateList) {
-
-      item.carryCount = formatNumber(carryRateSampleSize.value * item.carryRate, 0)
-    }
-
-    carryRateList.sort((a, b) => b.carryRate - a.carryRate)
-    operatorCarryResult.value = carryRateList
-
-  })
-
-
-  const data = await operatorProgressionStatisticsDataCache.getData('operatorProgressionStatisticsV2');
-  let ownMap = new Map()
-  for(const item of data.result){
-     ownMap.set(item.charId,item.own)
-  }
-
-  for (const item of operatorCarryResult.value) {
-    console.log(item)
-    item.own = ownMap.get(item.charId)
-  }
-
+let operatorCarryResultGroupByModule = {
+  101: {},
+  102: {},
+  103: {},
 }
 
-getOperatorCarryStatisticsResult()
+let ownDataLoadingStatus = ref(false)
+
+
+operatorProgressionStatisticsDataCache.getData().then(response => {
+  const {result} = response
+  for (const item of result) {
+
+    operatorOwnMap.set(item.charId, item.own)
+  }
+  ownDataLoadingStatus.value = true;
+  getOperatorCarryDataByModuleAndTime()
+
+});
+
+
+let selectedGameModuleCode = ref('101')
+let selectedTimeGranularity = ref({code: 31, label: "过去7天内"})
+
+const timeGranularity = [
+  {code: 0, label: "自收集数据开始—至今"},
+  {code: 31, label: "过去7天内"},
+  {code: 32, label: "过去14天内"}
+]
+
+const OperatorCarryDataCache = ref({})
+
+let dateRange = ref([new Date(Date.now() - 60 * 60 * 24 * 14 * 1000).getTime(), Date.now()])
+
+function getOperatorCarryDataByModuleAndTime() {
+  const cacheKey = selectedGameModuleCode.value + "-" + selectedTimeGranularity.value.code
+  const dataCache = OperatorCarryDataCache.value[cacheKey];
+  // if (dataCache) {
+  //   formatOperatorCarryData(dataCache)
+  //   return
+  // }
+
+  // const data = {
+  //   questionnaireType:selectedGameModuleCode.value,
+  //   startTime:dateRange.value[0],
+  //   endTime:
+  // }
+
+  dateRange.value[1] = _adjustToLastSecond(dateRange.value[1])
+
+  questionnaireAPI.getQuestionnaireResultV2(selectedGameModuleCode.value, dateRange.value).then(response => {
+    const data = response.data;
+    OperatorCarryDataCache.value[cacheKey] = data
+
+
+    formatOperatorCarryData(data)
+  })
+
+  // 将时间戳调整到当天的 23:59:59
+  function _adjustToLastSecond(timestamp) {
+    const date = new Date(timestamp);
+    date.setHours(23, 59, 59, 999); // 设置时间为 23:59:59.999
+    return date.getTime();
+  }
+}
+
+watch([() => dateRange.value[0], () => dateRange.value[1]], ([newStartTime, newEndTime]) => {
+  getOperatorCarryDataByModuleAndTime()
+})
+
+
+function formatOperatorCarryData(data) {
+  let {list, questionnaireType, questionnaireCode, sampleSize} = data
+  // list = list.sort((a,b)=>b.carryCount-a.carryCount)
+  let voList = []
+  for (let item of list) {
+    const {charId, carryCount} = item
+    const carryRate = formatNumber(carryCount / sampleSize * 100, 2)
+    const ownRate = operatorOwnMap.get(charId)
+    const vo = {
+      name: operatorNameMap.get(charId),
+      charId: charId,
+      carryCount: carryCount,
+      carryRate: `${carryRate}%`,
+      ownRate: `${ownRate}%`,
+    }
+    voList.push(vo)
+  }
+
+  operatorCarryResult.value = {
+    questionnaireCode: questionnaireCode,
+    questionnaireType: questionnaireType,
+    sampleSize: sampleSize,
+    voList: voList,
+  }
+}
+
+
+let lineChartDialog = ref(false)
+
+
+
 
 
 onMounted(() => {
+
+  //
+
+  // const intervalId = setInterval(()=>{
+  //   changeOperatorCarryDataByModule()
+  //   if(ownDataLoadingStatus.value){
+  //     clearInterval(intervalId); // 停止定时器
+  //   }
+  // }, 1000);
+
+  getOperatorCarryDataByModuleAndTime()
 
 })
 
@@ -193,27 +276,44 @@ onMounted(() => {
     <!--              description="大数据仅统计60天内的答卷，您的答卷将保留，但不参与统计"-->
     <!--              style="margin: 8px 0px;"/>-->
 
-    <v-expansion-panels class="m-4">
-      <v-expansion-panel
-          title="Q&A"
-          color="primary"
-      >
-        <v-expansion-panel-text>
-        <p class="font-bold m-12-0">Q：这个问卷是干什么的</p>
-        <p>A：用于收集博士心目中的最强队伍</p>
-        <p class="font-bold m-12-0">Q：可以当练卡参考吗</p>
-        <p>A：由于提交的博士每个人的玩法有差异，有博士倾向日常挂机，也有博士倾向肉鸽，故本问卷的调查结果仅供参考</p>
-        <p class="font-bold m-12-0">Q：如果我想再填一份怎么办</p>
-        <p>A：7天内提交的结果是可以被覆盖的</p>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
-
+    <v-alert
+        border="start"
+        type="info"
+        title="填写前须知"
+        variant="tonal"
+        density="compact"
+    >
+      <p class="font-bold m-12-0">Q：这个问卷是干什么的？可以当练卡参考吗？</p>
+      <p>A：用于收集博士各模式优先携带的干员。由于提交的博士每个人的玩法有差异，故本问卷的调查结果仅供参考。</p>
+      <p class="font-bold m-12-0">Q：需要登录吗？需要填满12人吗？如果我想再填一份怎么办？</p>
+      <p>A：无需登录。最少填上6人即可提交。7天内提交的结果是可以被覆盖的。</p>
+      <p class="font-bold m-12-0">Q：集成战略以那个主题为主？怎么填写</p>
+      <p>A：考虑到时效性的问题，以当前主题为主要权重。集成战略模式填写你的高抓位干员。</p>
+    </v-alert>
 
 
     <div class="operator-form-and-checkbox">
-      <v-card title="选出你心目中的最强编队" class="operator-form">
+      <v-card title="选择各模式下会优先携带/高抓位的干员" class="operator-form">
         <v-card-text>
+          <v-radio-group
+              v-model="gameModuleCode"
+              inline
+              density="compact"
+          >
+            <v-radio
+                label="主线&SideStory"
+                value="101"
+            ></v-radio>
+            <v-radio
+                label="集成战略"
+                value="102"
+            ></v-radio>
+            <v-radio
+                label="高难模式"
+                value="103"
+            ></v-radio>
+          </v-radio-group>
+
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, index) of operatorTeam" :key="index" class="operator-team-item"
                  @click="removeOperator(operator)">
@@ -221,11 +321,11 @@ onMounted(() => {
               <img src="/image/icon/cancel.png" alt="" class="cancel-icon">
 
             </div>
-            <div v-for="x in placeholder" class="operator-team-item item-placeholder">
+            <div v-for="x in placeholder" :key="x" class="operator-team-item item-placeholder">
               未选择
             </div>
           </div>
-          <p style="text-align: center" class="m-8-0" >无须填满12人，填满6人即可提交</p>
+
           <div class="flex justify-center">
             <v-btn color="primary" text="上传编队" @click="uploadQuestionnaire()"></v-btn>
           </div>
@@ -239,15 +339,16 @@ onMounted(() => {
             <img :src="`/image/survey/bg/${p.value}.png`" alt=""
                  class="profession-option"
                  v-for="(p, index) in professionDict"
+                 :key="index"
                  @click="chooseOperatorProfession(p.value)">
           </div>
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
-                 @click="chooseOperator(operator)" >
-              <OperatorAvatar :border="true" :char-id="operator.charId" :size="60" :mobile-size="50"></OperatorAvatar>
-              <div :class="selectedOperatorClass(operator.charId)" >
-
-              </div>
+                 @click="chooseOperator(operator)">
+              <OperatorAvatar :border="true" :char-id="operator.charId" :rarity="operator.rarity" :size="60"
+                              :mobile-size="40"></OperatorAvatar>
+              <div>{{ operator.name }}</div>
+              <div :class="selectedOperatorClass(operator.charId)"></div>
             </div>
           </div>
         </v-card-text>
@@ -255,16 +356,48 @@ onMounted(() => {
     </div>
 
 
-
-
     <v-card class="m-a" max-width="700">
       <v-card-text>
-        <v-chip color="primary" :text="`更新时间：${updateTime}`" class="m-4"></v-chip>
-        <v-chip color="primary" :text="`提交人数：${carryRateSampleSize}`" class="m-4"></v-chip>
+
+        <v-radio-group
+            v-model="selectedGameModuleCode"
+            inline
+            density="compact"
+            @change="getOperatorCarryDataByModuleAndTime()"
+        >
+          <v-radio
+              label="主线&SideStory"
+              value="101"
+          ></v-radio>
+          <v-radio
+              label="集成战略"
+              value="102"
+          ></v-radio>
+          <v-radio
+              label="高难模式"
+              value="103"
+          ></v-radio>
+        </v-radio-group>
+
+        <!--        <v-select-->
+        <!--            density="compact"-->
+        <!--            label="时间区间" color="primary"-->
+        <!--            :items="timeGranularity"-->
+        <!--            item-value="code"-->
+        <!--            item-title="label"-->
+        <!--            return-object-->
+        <!--            v-model="selectedTimeGranularity"-->
+        <!--            @update:modelValue="getOperatorCarryDataByModuleAndTime()"-->
+        <!--        ></v-select>-->
+
+        <n-date-picker v-model:value="dateRange" type="daterange" clearable/>
+        <!--         {{dateRange}}-->
+        <v-chip color="primary" :text="`提交人数：${operatorCarryResult.sampleSize}`" class="m-4"></v-chip>
+
 
         <v-data-table
             :headers="headers"
-            :items="operatorCarryResult"
+            :items="operatorCarryResult.voList"
             hide-default-footer
             items-per-page="-1"
             class="v-mobile-table">
@@ -272,18 +405,37 @@ onMounted(() => {
             <tr>
               <td>{{ index + 1 }}</td>
               <td>
-                <OperatorAvatar :border="true" :char-id="item.charId"></OperatorAvatar>
+<!--                <div class="operator-info">-->
+<!--                  <OperatorAvatar :border="true" :char-id="item.charId" :size="50" class="m-4-a"></OperatorAvatar>-->
+<!--                  {{ item.name }}-->
+<!--                </div>-->
+
+
+                  <OperatorAvatar :border="true" :char-id="item.charId" :size="50" class="m-4-0"></OperatorAvatar>
+
+
               </td>
+
               <td>
-                {{item.carryCount}}
+                {{ item.carryCount }}
               </td>
-              <td>{{ formatNumber(item.carryRate * 100, 2) }}%</td>
-              <td>{{ formatNumber(item.own * 100, 2) }}%</td>
+              <td>{{ item.carryRate }}</td>
+              <td>{{ item.ownRate }}</td>
             </tr>
           </template>
         </v-data-table>
       </v-card-text>
     </v-card>
+
+
+    <v-dialog v-model="lineChartDialog" max-width="700">
+      <v-card>
+        <v-card-text>
+          <div class="carry-rate-line-chart" id="carry-rate-chart">
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
 
 
     <!-- 个人结果展示模块 -->

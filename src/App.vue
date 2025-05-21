@@ -1,7 +1,9 @@
 <script setup>
 import '/src/assets/svg/iconfont.css'
 import '/src/assets/css/elite.css';
-
+import { NConfigProvider } from 'naive-ui'
+import { zhCN, dateZhCN } from 'naive-ui'
+import { darkTheme } from 'naive-ui'
 //雪碧图
 import '/src/assets/css/sprite/sprite_avatar.css'
 import '/src/assets/css/sprite/sprite_icon.css';
@@ -10,7 +12,6 @@ import "/src/assets/css/sprite/sprite_skill.css";
 
 // 通用样式
 import '/src/assets/css/common/title_and_tag.scss'
-import '/src/assets/css/common/popover.scss'
 import '/src/assets/css/common/icon.scss'
 
 import '/src/assets/css/common/app.scss'
@@ -27,6 +28,17 @@ import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "/src/components/ComponentsContainer.vue";
+import FeedbackTable from '/src/static/json/about/feedback_table.json'
+  
+
+const themeOverrides = {
+  common: {
+    primaryColor: '#1867C0FF',
+    borderColor: "rgba(93,162,248,0.3)",
+    primaryColorHover: "#60acff",
+  },
+  // ...
+}
 
 
 const theme = useTheme()
@@ -36,11 +48,17 @@ let drawer = ref(true)
 
 
 let currentTheme = ref('dark')
+let naiveTheme = ref()
 
 function setTheme(value){
   theme.global.name.value = value
   document.getElementsByTagName("html").item(0).className = value;
   customTheme.value = `theme-${value}`
+  if(value==='dark'){
+    naiveTheme.value = darkTheme
+  }else {
+    naiveTheme.value = ''
+  }
   localStorage.setItem("Theme", value)
 }
 
@@ -72,12 +90,6 @@ function normalizePath(path) {
 
 let feedbackPopupVisible = ref(false)
 
-const feedbackLinkList = {
-  "GitHubIssues": 'https://github.com/Arknights-yituliu/frontend-v2-plus/issues',
-  "OfficialAccount": 'https://space.bilibili.com/688411531',
-  "QQFan": 'https://jq.qq.com/?_wv=1027&k=q1z3p9Yj',
-  "QQDocs": 'https://docs.qq.com/form/page/DVVNyd2J5RmV2UndQ#/fill'
-}
 
 
 function openNewPage(url) {
@@ -86,39 +98,17 @@ function openNewPage(url) {
 
 watch(currentPath, (newPath, oldPath) => {
   pageTitle.value = routeMap.get(normalizePath(newPath)) || '未定义路径'
+
+  if(route.name==='材料统计'){
+    drawer.value = false
+  }
   // 在这里执行你想要的操作
 });
 
 
 
 
-const feedbackTable = [
-  {
-    label: "反馈QQ：3831811497",
-    description: '一图流问题反馈专用QQ',
-    url: void 0
-  },
-  {
-    label: "Github issues",
-    description: '国内访问体验稍差一点',
-    url: 'https://github.com/Arknights-yituliu/frontend-v2-plus/issues'
-  },
-  {
-    label: "B站@罗德岛基建BETA",
-    description: '直接私信反馈',
-    url: 'https://space.bilibili.com/688411531'
-  },
-  {
-    label: "粉丝群539600566",
-    description: '进群@山桜反馈，如果不在找管理员',
-    url: 'https://jq.qq.com/?_wv=1027&k=q1z3p9Yj'
-  },
-  {
-    label: "开发群938710832",
-    description: '如果有能力自己解决问题，可以加开发群',
-    url: void 0
-  }
-]
+
 
 
 onMounted(() => {
@@ -136,8 +126,10 @@ onMounted(() => {
 </script>
 
 <template>
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN"  :theme="naiveTheme" :theme-overrides="themeOverrides">
   <v-responsive>
-    <v-app class="app" :class="customTheme">
+
+    <v-app class="app" :class="customTheme" >
       <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
         <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
           明日方舟一图流
@@ -154,20 +146,6 @@ onMounted(() => {
         <div class="app-bar-content">
           <v-btn text="反馈" variant="text" @click="feedbackPopupVisible=true"></v-btn>
           <div class="app-bar-content-spacer"/>
-          <!--          <v-menu>-->
-          <!--            <template v-slot:activator="{ props }">-->
-          <!--              <v-icon icon="mdi-translate" size="28" v-bind="props"></v-icon>-->
-          <!--            </template>-->
-          <!--            <v-list>-->
-          <!--              <v-list-item>-->
-          <!--                <v-btn variant="text" @click="language='cn'" text="中文"></v-btn>-->
-          <!--              </v-list-item>-->
-          <!--              <v-list-item>-->
-          <!--                <v-btn variant="text" @click="language='en'" text="English"></v-btn>-->
-          <!--              </v-list-item>-->
-          <!--            </v-list>-->
-          <!--          </v-menu>-->
-          <!--          <div class="app-bar-content-spacer"/>-->
           <v-icon icon="mdi-theme-light-dark" size="28" @click="changeTheme"></v-icon>
           <div class="app-bar-content-spacer"/>
           <User></User>
@@ -188,7 +166,7 @@ onMounted(() => {
               </tr>
               </thead>
               <tbody>
-              <tr v-for="item in feedbackTable" :key="item.name">
+              <tr v-for="item in FeedbackTable" :key="item.name">
                 <td>{{ item.label }}</td>
                 <td>{{ item.description }}</td>
                 <td>
@@ -213,7 +191,7 @@ onMounted(() => {
     </v-app>
 
   </v-responsive>
-
+  </n-config-provider>
 </template>
 
 

@@ -110,6 +110,10 @@
       {
         "value": "artsprotector",
         "label": "驭法铁卫"
+      },
+      {
+        "value": "primprotector",
+        "label": "本源铁卫"
       }
     ]
   },

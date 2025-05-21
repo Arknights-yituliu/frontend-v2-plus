@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
 import SklandAPI from '/src/utils/survey/skland.js'
 import {userInfo} from "/src/utils/user/userInfo.js";
-import {cMessage} from "/src/utils/message.js";
+import {createMessage} from "/src/utils/message.js";
 import sklandApi from "../../utils/survey/skland.js";
 import operatorDataAPI from '/src/api/operatorData.js'
 import {useRouter} from "vue-router";
@@ -64,7 +64,7 @@ function canBeParsedAsObject(str) {
     return JSON.parse(str); // 如果没有抛出错误，说明字符串可以被解析为JS对象
   } catch (e) {
     console.error(str)
-    cMessage(e, 'error')
+    createMessage({type:'error',text:e})
     return false; // 捕获到错误，说明字符串不能被解析为JS对象
   }
 }
@@ -106,7 +106,7 @@ const router = useRouter();
 function uploadSKLandData(data) {
   operatorDataAPI.importSkLandOperatorDataV3(data)
       .then(response => {
-        cMessage("森空岛数据导入成功，即将转跳到干员调查页面");
+        createMessage({type:'success',text:"森空岛数据导入成功，即将转跳到干员调查页面"});
         setTimeout(() => {
           router.push({name: 'OperatorSurvey'})
         }, 3000)
@@ -154,7 +154,7 @@ function checkUserStatus(notice) {
 
   if (!userInfo.value.token) {
     if (notice) {
-      cMessage('请先注册或登录一图流账号', 'error')
+      createMessage({type:'error',text:'请先注册或登录一图流账号'})
     }
     return true;
   }

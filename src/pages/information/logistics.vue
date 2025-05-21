@@ -8,6 +8,7 @@ import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce";
 import {translate} from "/src/utils/i18n";
 import DescriptionExplain from "/src/components/DescriptionExplain.vue";
+import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 
 let buildingTable = {}
 for (const operator of building_table) {
@@ -44,7 +45,7 @@ function btnAction(key, label) {
  * @param condition 筛选条件
  * @param key 筛选条件的按钮文本
  */
-function filterOperatorByTag(condition, key){
+function filterOperatorByTag(condition, key) {
   //清空干员列表
   filterOperatorList.value = []
   const btnKey = `${key}+${condition.label}`
@@ -207,7 +208,7 @@ onMounted(() => {
         <v-btn :color="conditionType.color" variant="text" :text="translate('schedule',conditionType.name)"></v-btn>
         <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
                class="m-2" color="primary" :variant="btnAction(key,condition.label)"
-               @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"> </v-btn>
+               @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"></v-btn>
 
       </div>
     </div>
@@ -216,50 +217,52 @@ onMounted(() => {
       <v-text-field density="compact"
                     variant="outlined"
                     @input="searchOperatorDebounce()"
-                    v-model="searchInputText" >
+                    v-model="searchInputText">
         <template v-slot:append>
           <v-btn color="primary" :variant="hideIrrelevantSkillsFlag?void 0:'tonal'"
                  class="m-4" @click="hideIrrelevantSkills">隐藏无关技能
           </v-btn>
         </template>
       </v-text-field>
-      <span class="logistics-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
+      <span
+          class="logistics-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
     </div>
 
-    <table class="logistics-table">
-      <tbody>
-      <tr class="logistics-table-title">
-        <td class="logistics-table-title-1">干员</td>
-        <td class="logistics-table-title-2">解锁</td>
-        <td class="logistics-table-title-3">设施</td>
-        <td class="logistics-table-title-4">技能</td>
-        <td class="logistics-table-title-5">描述</td>
-      </tr>
+    <div class="logistics-table-wrap">
+      <table class="logistics-table">
+        <tbody>
+        <tr class="logistics-table-title">
+          <td class="logistics-table-title-1">干员</td>
+          <td class="logistics-table-title-2">解锁</td>
+          <td class="logistics-table-title-3">设施</td>
+          <td class="logistics-table-title-4">技能</td>
+          <td class="logistics-table-title-5">描述</td>
+        </tr>
 
-      <tr v-for="(operator,index) in filterOperatorList" :key="index">
-        <td :rowspan="mergeRow(operator.charId,index).rowCount"
-            v-if="mergeRow(operator.charId,index).index===index">
-          <div class="operator-avatar-wrap">
-            <div class="operator-avatar-sprite">
-              <div :class="getAvatar(operator.charId)"></div>
-              <span>{{ operator.name }}</span>
+        <tr v-for="(operator,index) in filterOperatorList" :key="index">
+          <td :rowspan="mergeRow(operator.charId,index).rowCount"
+              v-if="mergeRow(operator.charId,index).index===index">
+            <div class="flex flex-col align-center ">
+              <OperatorAvatar :char-id="operator.charId" :size="50">
+              </OperatorAvatar>
+              <div>{{ operator.name }}</div>
             </div>
-          </div>
-        </td>
-        <td>{{ getUnlock(operator.phase, operator.level) }}</td>
-        <td>{{ getRoomLabel(operator.roomType) }}</td>
-        <td>
+          </td>
+          <td>{{ getUnlock(operator.phase, operator.level) }}</td>
+          <td>{{ getRoomLabel(operator.roomType) }}</td>
+          <td>
         <span :style="`background:${operator.buffColor};color:${operator.textColor}`"
               class="logistics-skill-name">
           {{ operator.buffName }}
         </span>
-        </td>
-        <td>
-          <span v-html="operator.description"></span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+          </td>
+          <td>
+            <span v-html="operator.description"></span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <!--启用术语解释插件，绑定监听数组filterOperatorList-->
   <description-explain :operatorList="filterOperatorList"/>

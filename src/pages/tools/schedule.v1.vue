@@ -10,14 +10,13 @@ import buildingApi from '/src/api/building.js'
 import operatorDataAPI from '/src/api/operatorData.js'
 import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
 import {translate} from '/src/utils/i18n.js'
-import {getText} from '/src/utils/fileConversion.js'
+import {readFileToString} from '/src/utils/fileUtils.js'
 import {debounce} from "/src/utils/debounce.js";
-import {cMessage} from '/src/utils/message.js'
+import { createMessage} from '/src/utils/message.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import {downloadJsonFile} from "/src/utils/download.js";
 import {useDisplay} from 'vuetify'
 import {useRouter} from 'vue-router';
-
+import { saveAs } from 'file-saver';
 
 const router = useRouter();
 
@@ -146,12 +145,12 @@ function getRoomOperators(scheduleIndex, room, index) {
     return []
   }
   if (!plansTemplate.value[scheduleIndex].rooms[room]) {
-    cMessage('Facility#' + room + '-' + translate('schedule', 'schedule.FacilityNotExist'), 'error')
+    createMessage({type:'error',text:'Facility#' + room + '-' + translate('schedule', 'schedule.FacilityNotExist')})
     return []
   }
 
   if (!plansTemplate.value[scheduleIndex].rooms[room][index]) {
-    cMessage('Operator#' + index + '-' + translate('schedule', 'schedule.OperatorIndexOutOfBounds'), 'error')
+    createMessage({type:'error',text:'Operator#' + index + '-' + translate('schedule', 'schedule.OperatorIndexOutOfBounds')})
     return []
   }
 
@@ -425,7 +424,7 @@ const roomPopupStyle = "width:550px;"
 const filterOperatorByOwn = debounce(() => {
   filterNotOwnOperator.value = !filterNotOwnOperator.value
   if (operatorOwnMap.size < 10) {
-    cMessage('未登录或未导入', 'error')
+    createMessage({type:'error',text:'未登录或未导入'})
     return
   }
 
@@ -486,7 +485,7 @@ function checkRoomDuplicateOperator(charName) {
   if (plansTemplate.value[selectedScheduleIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.includes(charName)) {
-    cMessage(translate('schedule', 'schedule.OperatorAlreadyStationed'), 'error')
+    createMessage({type:'error',text:translate('schedule', 'schedule.OperatorAlreadyStationed')})
     return false;
   }
 
@@ -502,7 +501,7 @@ function checkRoomMaximum() {
   if (plansTemplate.value[selectedScheduleIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
-    cMessage(translate('schedule', 'schedule.FacilityFull'), 'error')
+    createMessage({type:'error',text:translate('schedule', 'schedule.FacilityFull')})
     return false;
   }
 
@@ -541,7 +540,7 @@ function checkPlanDuplicateOperator(index, charName, status) {
   //如果是入驻干员并且检查表里干员状态是已经入驻，弹出警告
   if (duplicateOperatorTable.value[index][charName] && status) {
 
-    cMessage(translate('schedule', 'schedule.OperatorStationedDifferent'), 'error')
+    createMessage({type:'error',text:translate('schedule', 'schedule.OperatorStationedDifferent')})
     return false;
   }
   // 更新检查表里干员状态
@@ -626,7 +625,7 @@ function getRoomProduct(scheduleIndex, roomType, index) {
 function fillOperatorConflict(index) {
   if (plansTemplate.value[selectedScheduleIndex.value].rooms['dormitory'][index].autofill) {
     if (plansTemplate.value[selectedScheduleIndex.value].rooms['dormitory'][index].operators) {
-      cMessage(translate('schedule', 'schedule.AutofillDormTip'), 'warn')
+      createMessage({type:'error',text:translate('schedule', 'schedule.AutofillDormTip')})
     }
   }
 }
@@ -667,7 +666,7 @@ watch(() => plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomT
       if (newVal && selectedRoomType.value === 'dormitory') {
         if (plansTemplate.value[selectedScheduleIndex.value].rooms
             [selectedRoomType.value][selectedRoomIndex.value].operators.length > 0) {
-          cMessage(translate('schedule', 'schedule.AutofillDormTip'), 'warn')
+          createMessage({type:'warn',text:translate('schedule', 'schedule.AutofillDormTip')})
         }
       }
     }
@@ -746,8 +745,10 @@ function saveAndDownloadScheduleFile() {
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
-    downloadJsonFile(scheduleInfo.value, scheduleId.value)
-    cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value)
+    const blob = new Blob([JSON.stringify(scheduleInfo.value, null, 2)], {type: "application/json"});
+    saveAs(blob, `${scheduleId.value}.json`)
+
+    createMessage({type:'success',text:translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value})
   })
 }
 
@@ -786,14 +787,15 @@ async function importScheduleByFile() {
   const inputElement = document.getElementById('scheduleFile')
   let fileContent = ')'
   if (inputElement.files) {
-    fileContent = await getText(inputElement.files[0])
+    fileContent = await readFileToString(inputElement.files[0])
   }
 
   let schedule = ''
   try {
     schedule = JSON.parse(fileContent)
   } catch (e) {
-    return cMessage(e.toString(), 'error')
+    createMessage({type:'error',text:e.toString()})
+    return
   }
   importSchedule(schedule)
 }
@@ -896,7 +898,7 @@ function importSchedule(schedule) {
 
   function getHourAndMinute(str) {
     if (str.indexOf(":") < 0) {
-      cMessage(translate('schedule', 'schedule.ShiftTimesError'), 'error')
+      createMessage({type:'error',text:translate('schedule', 'schedule.ShiftTimesError')})
     }
     const strSplit = str.split(":")
     return {
@@ -1080,7 +1082,7 @@ function useNewUI() {
               <v-list-item-title>
                 <span class="font-bold">{{ translate('schedule', 'schedule.DronesSet') }}</span>
               </v-list-item-title>
-              <div class="flex justify-space-between align-center">
+              <div class="flex justify-between align-center">
                 <span class="opacity-70">{{ translate('schedule', 'schedule.UseDrones') }}</span>
 
                 <v-switch color="success" density="compact" hide-details
@@ -1121,7 +1123,7 @@ function useNewUI() {
               <v-list-item-title>
                 <span class="font-bold">{{ translate('schedule', 'schedule.FiammettaSet') }}</span>
               </v-list-item-title>
-              <div class="flex align-center justify-space-between">
+              <div class="flex align-center justify-between">
                 <div class="opacity-70">{{ translate('schedule', 'schedule.UseFiammetta') }}</div>
                 <v-switch color="success" density="compact" hide-details
                           v-model="plansTemplate[scheduleIndex].Fiammetta.enable"></v-switch>
@@ -1233,7 +1235,7 @@ function useNewUI() {
     <v-dialog v-model="operatorCheckBoxDialog" max-width="800" class="schedule-dialog">
       <v-card class="m-a">
         <v-card-text>
-          <div class="flex align-center justify-space-between" style="width: 300px">
+          <div class="flex align-center justify-between" style="width: 300px">
             <!--按顺序入驻-->
             <span class="room-set-label">{{ translate('schedule', 'schedule.OrderedStationing') }}</span>
             <v-switch color="success" density="compact" hide-details

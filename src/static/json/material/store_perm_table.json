@@ -129,6 +129,14 @@
       "rarity": 4
     },
     {
+      "itemId": "31094",
+      "itemName": "手性屈光体",
+      "storeType": "orange",
+      "price": 70.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
       "itemId": "30083",
       "itemName": "轻锰矿",
       "storeType": "orange",
@@ -253,6 +261,14 @@
       "itemName": "转质盐组",
       "storeType": "orange",
       "price": 55.0,
+      "quantity": 2,
+      "rarity": 3
+    },
+    {
+      "itemId": "31093",
+      "itemName": "类凝结核",
+      "storeType": "orange",
+      "price": 50.0,
       "quantity": 2,
       "rarity": 3
     },
@@ -531,6 +547,14 @@
       "rarity": 3
     },
     {
+      "itemId": "31093",
+      "itemName": "类凝结核",
+      "storeType": "green",
+      "price": 40.0,
+      "quantity": 1,
+      "rarity": 3
+    },
+    {
       "itemId": "7001",
       "itemName": "招聘许可",
       "storeType": "green",
@@ -649,6 +673,14 @@
       "itemName": "白马醇",
       "storeType": "yellow",
       "price": 10.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "31094",
+      "itemName": "手性屈光体",
+      "storeType": "yellow",
+      "price": 15.0,
       "quantity": 1,
       "rarity": 4
     },

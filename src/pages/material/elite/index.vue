@@ -12,7 +12,7 @@ import { rarityList } from './js/baseData' // 星级列表
 import { initTableData, searchParams } from './js/table'
 
 const placeholder = ref('干员名称')
-const tabsActiveName = ref('operatorTable')
+const tabsActiveName = ref(null)
 const detailDialog = ref(false)
 const createDialog = ref(false)
 const tableRefs = ref([])
@@ -60,9 +60,9 @@ const exportData = () => {
   exportExcel('精英化与专精性价比', itemList)
 }
 
-const tabClick = ({props}) => {
-  if (props.name === 'operatorTable') placeholder.value = '干员名称'
-  else if (props.name === 'skillTable') placeholder.value = '干员/技能名称'
+const tabClick = (item) => {
+  if (item.name === 'operatorTable') placeholder.value = '干员名称'
+  else if (item.name === 'skillTable') placeholder.value = '干员/技能名称'
   else placeholder.value = '干员/模组名称'
 }
 // 唤起详情弹窗
@@ -98,11 +98,18 @@ const openDetailDialog = (v) => {
       </div>
     </div>
     <!-- 分页 -->
-    <el-tabs v-model="tabsActiveName" type="card" @tab-click="tabClick">
-      <el-tab-pane v-for="item in tabs" :key="item.name" :label="item.label" :name="item.name">
-        <Table :tableKey="item.tableKey" ref="tableRefs" @openDetailDialog="openDetailDialog"></Table>
-      </el-tab-pane>
-    </el-tabs>
+    <div>
+    <v-tabs v-model="tabsActiveName" bg-color="primary">
+      <v-tab v-for="item in tabs" :key="item.name" :value="item.name" @click="tabClick(item)">{{ item.label }}</v-tab>
+    </v-tabs>
+    </div>
+    <v-card-text>
+      <v-tabs-window v-model="tabsActiveName">
+        <v-tabs-window-item v-for="item in tabs" :key="item.name" :value="item.name">
+          <Table :tableKey="item.tableKey" ref="tableRefs" @openDetailDialog="openDetailDialog"></Table>
+        </v-tabs-window-item>
+      </v-tabs-window>
+    </v-card-text>
     <!-- 内容区域End -->
 
     <DetailDialog v-model="detailDialog" @reset="reset"></DetailDialog>
@@ -124,11 +131,11 @@ const openDetailDialog = (v) => {
   .option {
     display: flex;
     align-items: center;
-    margin-left: 10px;
     flex-wrap: wrap;
 
+
     .el-checkbox-group {
-      margin-bottom: 6px;
+      margin-bottom: 12px;
       margin-right: 10px;
 
       .el-checkbox-button {
@@ -160,35 +167,15 @@ const openDetailDialog = (v) => {
     }
   }
 
-  .el-tabs {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    .el-tabs__header {
-      margin-bottom: 1px;
-      border-bottom: none;
-    }
-    .el-tabs__content {
-      flex: 1;
-      display: flex;
-      .el-tab-pane {
-        flex: 1;
-        overflow: hidden;
-        .el-table {
-          box-shadow: var(--el-box-shadow-light);
-          .el-table__header .cell:has(.iconfont) {
-            display: flex;
-            align-items: center;
-            .iconfont {
-              padding-left: 5px;
-            }
-          }
-          .clickable {
-            cursor: pointer;
-          }
-        }
-      }
-    }
+  .v-table__wrapper {
+    border: 1px solid #eee;
+    //tbody tr:nth-child(even) {
+    //  background-color: #fafafa;
+    //}
+  }
+
+  .v-card-text {
+    padding: 0;
   }
 
   .el-cascader-menu__wrap.el-scrollbar__wrap {

@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/account/login.v2.scss'
-import {cMessage} from "/src/utils/message.js";
+import { createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
 
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
@@ -41,7 +41,7 @@ function toLogin() {
     const {token,uid} = response.data
     localStorage.setItem("USER_TOKEN", token);
     localStorage.setItem("UID",uid);
-    cMessage('登录成功，即将转跳到首页')
+    createMessage({type:'success',text:'登录成功，即将转跳到首页'})
     setTimeout(() => {
       // router.push({name: 'IMPORT_BY_SKLAND'})
       window.location.href = '/';
@@ -62,7 +62,7 @@ function sendVerificationCode() {
     email: inputContent.value.email
   }
   userAPI.sendVerificationCodeV2(data).then(response => {
-    cMessage('验证码发送成功')
+    createMessage({type:'success',text:'验证码发送成功'})
   })
 }
 

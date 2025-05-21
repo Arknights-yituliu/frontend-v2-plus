@@ -1,3 +1,66 @@
+.elite-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 68px);
+
+  .op_title {
+    margin-bottom: 6px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    //height: 45px;
+
+    .el-checkbox-group {
+      margin-bottom: 12px;
+      margin-right: 10px;
+
+      .el-checkbox-button {
+        &.is-focus .el-checkbox-button__inner {
+          border-color: var(--el-checkbox-button-checked-border-color);
+        }
+
+        &:first-child .el-checkbox-button__inner {
+          border-left: var(--el-border);
+        }
+
+        .el-checkbox-button__inner {
+          border-left-style: solid;
+          border-left-color: transparent;
+          border-left-width: 1px;
+        }
+      }
+    }
+
+    .right {
+      > .el-input, .el-cascader, .el-button {
+        margin-bottom: 6px;
+      }
+    }
+
+    .el-input {
+      width: 200px;
+      margin-right: 10px;
+    }
+  }
+
+  .v-table__wrapper {
+    border: 1px solid #eee;
+    tbody tr:nth-child(even) {
+      //background-color: #fafafa;
+    }
+  }
+
+  .v-card-text {
+    padding: 0;
+  }
+
+  .el-cascader-menu__wrap.el-scrollbar__wrap {
+    height: 285px;
+  }
+}
+
 .bar-icon {
   position: absolute;
   &.bg-icon {
@@ -34,11 +97,11 @@
 }
 
 .material-list {
-  padding-left: 60px;
+  padding-left: 30px;
   .material-item-wrapper {
     min-width: max-content;
     .row label {
-      width: 50px;
+      width: 70px;
     }
   }
   .row {
@@ -54,8 +117,9 @@
 
     .num {
       position: absolute;
-      right: -7px;
-      bottom: 0;
+      right: 10px;
+      bottom: 7px;
+      line-height: normal;
       font-size: 18px;
       font-weight: bold;
       color: #000;
@@ -77,6 +141,7 @@
     }
 
     .option {
+
       .right {
         .el-input {
           width: 160px;

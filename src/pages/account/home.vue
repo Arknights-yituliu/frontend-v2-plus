@@ -9,7 +9,7 @@ import StageConfig from "@/components/account/StageConfig.vue";
 
     <UserInfo></UserInfo>
 
-<!--    <StageConfig></StageConfig>-->
+    <StageConfig></StageConfig>
   </div>
 
 </template>

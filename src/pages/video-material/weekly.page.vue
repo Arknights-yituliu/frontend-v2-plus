@@ -100,25 +100,7 @@ let nowTimeStamp = new Date().getTime();
 
 let item_value_obj = ref({})
 
-let selected_item = ref({
-  itemId: '30013',
-  itemValueAp: 17.32,
-  itemName: '固源岩组',
-  lastUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  nextUp: {
-    activityName: '叙拉古人',
-    date: '2023-12-31'
-  },
-  storeCostPerf: [
-    { token: '4005', costPerf: 0.75 },
-    { token: 'EPGS_COIN', costPerf: 0.75 },
-    { token: 'REP_COIN', costPerf: 0.75 },
-    { token: '4004', costPerf: 0.75 }
-  ]
-})
+
 
 
 let updateTime = ref('')
@@ -753,7 +735,7 @@ onMounted(() => {
       <span>代币仅在第14章掉落，优先搬空商店。<br>效率计算：明日方舟一图流 https://ark.yituliu.cn<br>掉落数据：企鹅物流数据统计
         https://penguin-stats.cn<br></span>
 
-      <!--      <span style="text-align: right;">制图：&emsp;B站@罗德岛基建BETA</span>-->
+      <!--      <span style="text-align: right;">制图：&emsp;B站@逻辑元LogicalByte</span>-->
       <span style="text-align: right;">数据收集时间：&emsp;2024.5.3 09:00</span>
     </div>
 

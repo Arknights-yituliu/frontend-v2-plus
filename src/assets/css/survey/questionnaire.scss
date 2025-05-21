@@ -50,32 +50,55 @@
 
   .operator-option {
     width: 60px;
-    height: 60px;
+    height: 76px;
+    overflow: hidden;
     margin: 8px;
     border-radius: 4px;
     box-shadow: 2px 2px 2px #80808080;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
+    line-height: 16px;
     background-color: #505050;
     color: whitesmoke;
-    overflow: hidden;
     position: relative;
     //border: 1px solid red;
   }
 
   .operator-selected {
-    background: linear-gradient(to top, rgb(255, 174, 127) 3%, rgba(255, 174, 127, 0.3) 3%, rgba(255, 174, 127, 0) 40%);
+    background: linear-gradient(to top, rgb(255, 174, 127,0.7) 5%, rgba(255, 174, 127, 0.5) 5%, rgba(255, 174, 127, 0) 40%);
     position: absolute;
     top: 0;
     left: 0;
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
+  }
+
+
+  .operator-info{
+    width: 80px;
+    font-size: 12px;
+
+    text-align: center;
   }
 
 }
 
 
+.carry-rate-line-chart{
+  width: 600px;
+  height: 600px;
+  margin: auto;
+}
+
+
 @media screen and (max-width: 600px) {
+
+  .carry-rate-line-chart{
+    width: 300px;
+    height: 300px;
+    margin: auto;
+  }
+
   .questionnaire-page {
     width: 99%;
 
@@ -110,8 +133,11 @@
     }
 
     .operator-option {
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 52px;
+      overflow: hidden;
+      font-size: 8px;
+      line-height: 12px;
       margin: 4px;
     }
 

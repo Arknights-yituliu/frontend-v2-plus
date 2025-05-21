@@ -1,7 +1,10 @@
 <script setup>
-import RankBar from "./rankBar";
-import RankBarContent from "./rankBarContent";
+// import RankBar from "./rankBar";
+// import RankBarContent from "./rankBarContent";
 import MaterialItem from "./materialItem";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import SkillIcon from "/src/components/sprite/SkillIcon.vue";
+import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 
 import { ref } from 'vue';
 import { detailData, detailTableData, costFormatter, percentFormatter } from '../js/table'
@@ -18,6 +21,15 @@ const collapseActive = ref(['1'])
 
 const emits = defineEmits(['update:modelValue', 'reset'])
 
+const options = [
+  { key: 'name', title: '开销项目', minWidth: '100' },
+  { key: 'icon', title: '图标', width: '100' },
+  { key: 'totalCost', title: '材料开销', formatter: costFormatter },
+  { key: 'position', title: '排名' },
+  { key: 'percent', title: '位于' },
+  { key: 'rank3', title: '精二/专三/开三级模组率' },
+]
+
 // 删除自定义干员
 const deleteOperator = () => {
   deleteOperatorData(detailData.value.charId) // 删除此自定义干员
@@ -27,10 +39,7 @@ const deleteOperator = () => {
 }
 
 function getEquipIcon(typeIcon){
-  if(typeIcon){
-    return `https://cos.yituliu.cn/equip-icon/${item.typeIcon}.png`
-  }
-  return noModIcon
+  return typeIcon ? `https://cos.yituliu.cn/equip-icon/${typeIcon}.png` : noModIcon
 }
 
 </script>
@@ -54,30 +63,40 @@ function getEquipIcon(typeIcon){
             <h3>在 <span>{{ detailData.rarity }}</span> 星干员中, 材料消耗排名表:</h3>
           </template>
           <!-- 表格 -->
-          <el-table :data="detailTableData">
-            <el-table-column prop="name" label="开销项目" min-width="100"/>
-            <el-table-column label="图标" v-slot="{ row }">
-              <div :class="['bar-icon', row.iconClass]" :style="row.style" v-if="row.iconClass"></div>
-              <div :class="['mod-icon', 'bar-icon']"  v-else>
-                <img class="operator-equip-image" :src="getEquipIcon(row.typeIcon)">
-              </div>
-            </el-table-column>
-            <el-table-column prop="totalCost" label="材料开销" :formatter="costFormatter"/>
-            <el-table-column label="排名" v-slot="{ row }">
-              {{ row.position }}/{{ row.totalPosition }}
-            </el-table-column>
-            <el-table-column label="位于" v-slot="{ row }">
-              {{ ((row.position - 1) / (row.totalPosition - 1) * 100).toFixed(1) }}%
-            </el-table-column>
-            <el-table-column label="精二/专三/开三级模组率" v-slot="{ row }" width="200">
-              {{ percentFormatter(row, {property: row.rank3 ? 'rank3.rate' : 'rank2.rate' }) }}
-            </el-table-column>
-          </el-table>
+          <v-data-table
+            :headers="options"
+            :items="detailTableData"
+            hide-default-footer
+            striped
+            items-per-page="-1"
+          >
+            <template v-slot:item="{ item }">
+              <tr>
+                <!-- 开销项目 -->
+                <td>{{ item.name }}</td>
+                <!-- 图标 -->
+                <td>
+                  <div class="icon-container">
+                    <OperatorAvatar :size="48" :mobile-size="40" :char-id="item.charId" v-if="item.iconType === 'operator'"></OperatorAvatar>
+                    <SkillIcon :size="50" :mobile-size="42" :icon="item.iconId" v-else-if="item.iconType === 'skill'"></SkillIcon>
+                    <EquipIcon :size="50" :mobile-size="42" :icon="item.typeIcon" class="equip-icon" v-else="item.iconType === 'equip'"></EquipIcon>
+                  </div>
+                </td>
+                <!-- 材料开销 -->
+                <td>{{ costFormatter(item, 'totalCost') }}</td>
+                <!-- 排名 -->
+                <td>{{ item.position }}/{{ item.totalPosition }}</td>
+                <!-- 位于 -->
+                <td>{{ ((item.position - 1) / (item.totalPosition - 1) * 100).toFixed(1) }}%</td>
+                <!-- 精二/专三/开三级模组率 -->
+                <td>{{ percentFormatter(item, item.rank3 ? 'rank3.rate' : 'rank2.rate') }}</td>
+              </tr>
+            </template>
+          </v-data-table>
         </el-collapse-item>
+        <!-- 感觉没人看这个, 维护还麻烦, 扬了
         <el-collapse-item title="消耗排名柱状图" name="2">
-          <!-- 柱状图 -->
           <div class="bar-group">
-            <!-- 精二材料消耗排名 -->
             <RankBar>
               <RankBarContent :costs="totalCostObj[detailData.rarity].eliteCosts" :items="[detailData.elite]">
                 <template #label>
@@ -85,7 +104,6 @@ function getEquipIcon(typeIcon){
                 </template>
               </RankBarContent>
             </RankBar>
-            <!-- 技能材料消耗排名 -->
             <RankBar>
               <RankBarContent :costs="totalCostObj[detailData.rarity].skillCosts" :items="detailData.skills">
                 <template #label="{ item, index }">
@@ -93,7 +111,6 @@ function getEquipIcon(typeIcon){
                 </template>
               </RankBarContent>
             </RankBar>
-            <!-- 模组材料消耗排名 -->
             <RankBar>
               <RankBarContent :costs="totalCostObj[detailData.rarity].modCosts" :items="detailData.mods">
                 <template #label="{ item }">
@@ -102,7 +119,8 @@ function getEquipIcon(typeIcon){
               </RankBarContent>
             </RankBar>
           </div>
-        </el-collapse-item>
+        </el-collapse-item> 
+        -->
         <el-collapse-item title="消耗材料一览" name="3">
           <div class="material-list">
             <MaterialItem v-for="(item, index) in [detailData.elite]" :info="item" :skillIndex="index" :key="index">
@@ -188,12 +206,13 @@ function getEquipIcon(typeIcon){
         height: 128px;
         background-image: url('../imgs/no_mod_icon_128.png');
       }
-      .el-table__row .cell {
-        position: relative;
-        height: 55px;
-        line-height: 55px;
-        padding-left: 0;
-        margin-left: 12px;
+      .v-table__wrapper tr td {
+        padding-top: 6px;
+        .icon-container {
+          position: relative;
+          height: 55px;
+          line-height: 55px;
+        }
       }
     
       .bar-group {

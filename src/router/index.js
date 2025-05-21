@@ -2,7 +2,6 @@ import {createRouter, createWebHistory} from "vue-router";
 import {routes} from "./routes.js";
 import toolApi from "../api/tool.js";
 import {getUserInfo} from "/src/utils/user/userInfo.js";
-import {cMessage} from "/src/utils/message.js";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -11,6 +10,11 @@ const router = createRouter({
 
 
 router.beforeEach(async (to, from) => {
+
+    if(to.path.indexOf("docs")>-1){
+
+        window.open(`/docs.html?path=${to.path}`, '_self');
+    }
 
     // if ('AccountHome'===to.name) {
     //     const userInfo = await getUserInfo("Route");

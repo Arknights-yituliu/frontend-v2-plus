@@ -1,9 +1,9 @@
 <script setup>
 import {ref} from "vue";
-import stageDataCache from "@/utils/indexedDB/stageDataCache.js";
+import itemCache from "@/utils/indexedDB/itemCache.js";
 import materialAPI from "@/api/material.js";
 import {NDatePicker} from 'naive-ui'
-import {cMessage} from "@/utils/message.js";
+import {createMessage} from "@/utils/message.js";
 import {formatNumber} from "@/utils/format.js";
 import {dateFormat} from "@/utils/dateUtil.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
@@ -24,7 +24,7 @@ let groupedByZoneName = ref({})
 let stageInfo = ref({})
 
 function getStageCollectByZone() {
-  stageDataCache.getStageInfoCache().then(response => {
+  itemCache.getStageInfoCache().then(response => {
 
     const collect = {}; // 初始化一个空对象用于存储分组结果
 
@@ -126,7 +126,7 @@ function getStageDropByStageId() {
     }
 
     stageDropCollect.value.sort((a, b) => a.timeStamp - b.timeStamp)
-    cMessage("查询成功")
+    createMessage({type:'success',text:"查询成功"})
   })
 }
 

@@ -1,11 +1,11 @@
 <script setup>
-import ITEM_SERIES from '/src/static/json/material/item_series.json'
-import {ref, watch} from "vue";
-import ItemImage from "@/components/sprite/ItemImage.vue";
-import {dateFormat} from "@/utils/dateUtil.js";
+import {ref} from "vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
+import {dateFormat} from "/src/utils/dateUtil.js";
+import {itemSeriesIdList} from "/src/utils/item/itemSeries.js";
 
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
-import {formatNumber} from "@/utils/format.js";
+import {formatNumber} from "/src/utils/format.js";
 
 const props = defineProps(['modelValue'])
 
@@ -17,16 +17,19 @@ let historyActivityDisplayType = ref('')
 
 
 let historyActivityTableHeaders = ref([]) // 材料表
-// 历史活动表表头
-for (const itemId in ITEM_SERIES) {
-  const item = ITEM_SERIES[itemId]
-  historyActivityTableHeaders.value.push({
-    itemId: item.id,
-    itemName: item.name,
-    lastUp: false,
-    lastUpInterval: 0
-  })
+
+function initTableHeader() {
+  let list = []
+  for (const itemId of itemSeriesIdList) {
+    list.push({
+      itemId: itemId,
+      lastUp: false,
+      lastUpInterval: 0
+    })
+  }
+  return list
 }
+
 
 /**
  * 传入一个设备类型，将其赋值给 actHistoryTableType 按钮通过 actHistoryTableType 进行判断是什么形式的表格
@@ -53,7 +56,33 @@ function getStageEfficiency(info) {
 
 }
 
+
+let dataLength = ref(0)
+
+const startTime = Date.now()
+
+
+const intervalId = setInterval(formatPcHistoryTableData, 500);
+
 function formatPcHistoryTableData() {
+
+  if (Date.now() - startTime > 30 * 1000) {
+    console.log('取消更新任务')
+    clearInterval(intervalId)
+  }
+
+  if (dataLength.value >= props.modelValue.length) {
+    // console.log('数据未更新')
+    return
+  }
+
+
+  historyActivityTableHeaders.value = initTableHeader()
+
+  dataLength.value = props.modelValue.length
+  console.log('数据更新')
+  historyActivityList.value = props.modelValue
+
   historyActivityTable.value = []
   // 每种材料距离上次up间隔
   let lastUpInterval = 0;
@@ -126,7 +155,9 @@ function formatPcHistoryTableData() {
 
 
   historyActivityTableHeaders.value.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
+
 }
+
 
 function getCellBgColor(rowIndex, maxIndex) {
 
@@ -146,12 +177,9 @@ function getTableDividerClass(divider) {
   }
 }
 
-watch(() => props.modelValue.length, () => {
-  historyActivityList.value = props.modelValue
-  formatPcHistoryTableData()
-})
 
 </script>
+
 
 <template>
   <div class="module-header" id="history-stage-table">
@@ -172,7 +200,7 @@ watch(() => props.modelValue.length, () => {
         <td class="activity-name-pc">活动名称</td>
         <td v-for="(item, index) in historyActivityTableHeaders" :key="index">
           <div>
-            <ItemImage :item-id="item.itemId" class="m-a"></ItemImage>
+            <ItemImage :item-id="item.itemId" class="m-a" ></ItemImage>
           </div>
         </td>
       </tr>

@@ -1,13 +1,15 @@
 <script setup>
 import ModuleHeader from '@/components/ModuleHeader.vue';
 import {onMounted, ref} from 'vue'
-import materialAPI from '/src/api/material.js'
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import '/src/assets/css/material/store.scss';
 import '/src/assets/css/material/store.phone.scss';
 import '/src/assets/css/sprite/sprite_plane_icon.css';
 import STORE_PERM_DATA from '/src/static/json/material/store_perm_table.json'
-import itemValueCache from "/src/utils/indexedDB/stageDataCache.js";
+import itemCache from "/src/utils/indexedDB/itemCache.js";
+import itemAPI from '/src/api/materialV5.js'
+import NoticeBoard from "@/components/NoticeBoard.vue";
+
 
 const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表
@@ -21,19 +23,27 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 ]
 
 const stageConfig = getStageConfig()
+let itemValueMap = new Map()
+itemValueMap.set("1873450981701000",21.518115440178397)
 
-async function StorePermComputed() {
-  const itemValueList = await itemValueCache.getItemValueCacheByConfig(stageConfig)
-  let itemValueMap = new Map()
+async function loadingStoreData(){
+  const itemValueList = await itemCache.getItemValueCacheByConfig(stageConfig)
+
   for (const item of itemValueList) {
-    itemValueMap.set(item.itemId, item.itemValueAp)
+    itemValueMap.set(item.itemId, item.itemValue)
   }
+
+  permStoreComputed()
+  activityStoreComputed()
+}
+
+function permStoreComputed() {
 
   for (const storeInfo of storeTypeList) {
     const data = STORE_PERM_DATA[storeInfo.typeName]
     for (const item of data) {
-      const itemValueAp = itemValueMap.get(item.itemId)
-      let apEfficiency = itemValueAp * item.quantity / item.price
+      const itemValue = itemValueMap.get(item.itemId)
+      let apEfficiency = itemValue * item.quantity / item.price
       if (storeInfo.typeName === 'grey') {
         apEfficiency *= 100
       }
@@ -48,28 +58,41 @@ async function StorePermComputed() {
 
 }
 
-StorePermComputed()
 
-function getStoreData() {
 
-  materialAPI.getActStoreV4(stageConfig).then(response => {
+function activityStoreComputed() {
+
+  itemAPI.listActivityStore().then(response=>{
     actStoreList.value = response.data
     // 遍历活动列表
-    actStoreList.value.forEach(act => {
-      // 格式化活动商店材料
-      if (!act.actStoreFormat) {
-        act.actStoreFormat = []
-      }
-      // 商店区域(通常为三个区域)
-      const areas = [...new Set(act.actStore.map(t => t.itemArea))].sort()
-      // 每个区域独立数组
-      areas.forEach(areaNo => {
-        const areaItems = act.actStore.filter(item => item.itemArea === areaNo)
-
-        act.actStoreFormat.push(areaItems)
-      })
-    })
+    for(let item of actStoreList.value){
+      item.actStoreFormat = _formatActStore(item.actStore)
+    }
   })
+
+
+  function _formatActStore(data){
+    let actStoreFormat = [[],[],[],[],[]]
+    for(let item of data){
+      const {itemArea,itemId,itemPrice,itemQuantity,itemName} = item
+      const itemValue = itemValueMap.get(itemId)
+      const itemPPR = itemValue * itemQuantity/itemPrice
+      actStoreFormat[itemArea-1].push({
+        itemPrice:itemPrice,
+        itemId:itemId,
+        itemName:itemName,
+        itemPPR:itemPPR
+      })
+    }
+
+    for (let list of actStoreFormat){
+      list = list.sort((a,b)=>b.itemPPR-a.itemPPR)
+    }
+
+    return actStoreFormat
+  }
+
+
 }
 
 const opETextTheme = ref('op_title_etext_light')
@@ -110,13 +133,14 @@ function getEfficiency(num, acc = 2) {
 
 // 切换采购中心商店显隐
 function switchStore(item) {
+  console.log(item)
   item.hide = !item.hide
   const storeStatusList = storeListFormat.value.map(t => t.hide)
   localStorage.setItem('storeStatusList', JSON.stringify(storeStatusList))
 }
 
 onMounted(() => {
-  getStoreData()
+  loadingStoreData()
   const storeStatusList = JSON.parse(localStorage.getItem('storeStatusList') || '[]')
   for (let i = 0; i < storeListFormat.value.length; i++) {
     storeListFormat.value[i].hide = storeStatusList[i]
@@ -181,10 +205,10 @@ onMounted(() => {
     <div id="store">
       <!-- 标题区域 -->
       <ModuleHeader title="采购中心" title-en="Store Ranking" :tips="['*点击图标切换']">
-        <div class="permanent-store-checkbox">
+        <div class="flex">
           <div
               class="permanent-store-checkbox-button"
-              v-for="(item, index) in storeTypeList"
+              v-for="(item, index) in storeListFormat"
               :key="index"
               :style="item.hide ? '' : 'filter: none;'"
               @click="switchStore(item)"
@@ -216,87 +240,11 @@ onMounted(() => {
     </div>
     <!-- 采购中心end -->
 
-    <!-- 算法说明 -->
-    <ModuleHeader title="算法说明" title-en="Algorithm"/>
-    <div id="foot_main">
-      <div class="foot_unit" style="width: 100%; white-space: normal">
-        <el-card class="box-card">
-          <el-collapse>
-            <el-collapse-item name="2" style="">
-              <template #title>
+    <NoticeBoard module="store">
 
-                <span style="font-size: large; display: flex; align-items: center">
-                  <i class="iconfont icon-calculator"></i>
-                  <b style="margin-left: 4px">计算方式</b></span>
-              </template>
-
-              单位：理智/各货币
-              <ul style="padding-left: 2em">
-                <li>各商店之间货币不同，故<b>不可跨店对比数值</b>。</li>
-                <li>根据<b>物品价值表</b>中的价格和商店售价得到的性价比值。</li>
-                <li>活动商店采用相同算法。</li>
-                <li>信用商店计价单位为100信用点。</li>
-                <li>若源岩系材料的主要来源是1-7以外的关卡，则源岩系材料价值<a class="popover_color">+6%</a>。</li>
-              </ul>
+    </NoticeBoard>
 
 
-            </el-collapse-item>
-            <el-collapse-item name="4" style="">
-              <template #title>
-                <span style="font-size: large; display: flex; align-items: center">
-                  <i class="iconfont icon-publicity"></i>
-                  <b style="margin-left: 4px">算法公示卡</b></span>
-              </template>
-              <table id="al_card">
-                <tbody>
-                <tr>
-                  <td>算法代号</td>
-                  <td>一图流_标准 v6.0</td>
-                  <td>更新时间</td>
-                  <td>
-                    <!-- {{ updateTime }} -->
-                  </td>
-                </tr>
-                <tr>
-                  <td>数据源</td>
-                  <td>企鹅物流</td>
-                  <td>基准</td>
-                  <td>常驻关卡</td>
-                </tr>
-                <tr>
-                  <td>计算引擎</td>
-                  <td>yituliuBackEnd</td>
-                  <td>样本阈值</td>
-                  <td>300</td>
-                </tr>
-                <tr>
-                  <td>需求目标</td>
-                  <td>无限需求</td>
-                  <td>EXP系数</td>
-                  <td>0.625</td>
-                </tr>
-                </tbody>
-              </table>
-            </el-collapse-item>
-            <el-collapse-item name="5" style="">
-              <template #title>
-                <span style="font-size: large; display: flex; align-items: center"> <i
-                    class="iconfont icon-copyright"></i>
-                  <b style="margin-left: 4px">版权声明与许可协议</b>
-                </span>
-              </template>
-              网站所涉及的公司名称、商标、产品等均为其各自所有者的资产，仅供识别。网站内使用的游戏图片、动画、音频、文本原文，仅用于更好地表现游戏资料，其版权属于
-              Arknights/上海鹰角网络科技有限公司。<br>
-              除非另有声明，网站其他内容采用<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh">知识共享
-              署名-非商业性使用 4.0 国际
-              许可协议</a>进行许可。转载、公开或以任何形式复制、发行、再传播本页任何内容时，必须注明从明日方舟一图流转载，并提供版权标识、许可协议标识、免责标识和直接指向被引用页面的链接；且未经许可不得将本站内容或由其衍生作品用于商业目的。<br>
-              本项目为无偿开源项目，致力于方便明日方舟玩家。如有开发/数据分析/设计/美工经验，欢迎来<a
-                href="https://jq.qq.com/?_wv=1027&k=ZmORnr5F">开发群</a>一叙。
-            </el-collapse-item>
-          </el-collapse>
-        </el-card>
-      </div>
-    </div>
     <!-- 算法说明end -->
   </div>
 

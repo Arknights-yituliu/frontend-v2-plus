@@ -1,28 +1,40 @@
-import surveyApi from '/src/api/operatorData'
+
 
 
 /**
  *
  * @param operatorTable
+ * @param operatorProgressionStatistics
  * @returns {Promise<[]>}
  */
-async function operatorRecommend(operatorTable) {
+async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
     let recommend = []
 
     let operatorStatisticsResult = {}
-    await surveyApi.getOperatorStatisticsResult().then(response => {
-        for (const result of response.data.result) {
-            if (result.rarity < 6) continue;
-            operatorStatisticsResult[result.charId] = {
-                skill1: average(result.skill1),
-                skill2: average(result.skill2),
-                skill3: average(result.skill3),
-                modX: average(result.modX),
-                modY: average(result.modY),
-            }
+
+    const {result} = operatorProgressionStatistics
+
+
+    for (const item of result) {
+        if (item.rarity < 6) continue;
+        operatorStatisticsResult[item.charId] = {
+            skill1: _average(item.skill1),
+            skill2: _average(item.skill2),
+            skill3: _average(item.skill3),
+            modX: _average(item.modX),
+            modY: _average(item.modY),
         }
-    })
+    }
+
+
+    function _average(result) {
+
+        return {
+            avg: result.rank1 + result.rank2 * 2 + result.rank3 * 3,
+            ranks:[result.rank1,result.rank2,result.rank3],
+        }
+    }
 
 
     for (const index in operatorTable) {
@@ -34,60 +46,56 @@ async function operatorRecommend(operatorTable) {
         for (const property in result) {
             const single = result[property]
 
-            if (operator[property] < single.avg && single.avg>1.4) {
+            if (operator[property] < single.avg && single.avg > 1.1) {
                 recommend.push({
-                    name:operator.name,
+                    name: operator.name,
                     charId: operator.charId,
-                    info: getPropertyName(property,operator),
-                    avg:single.avg,
-                    ratio:single.ratio
+                    current:operator[property],
+                    info: getPropertyName(property, operator),
+                    avg: single.avg,
+                    ranks: single.ranks
                 })
             }
         }
     }
 
-   // sort the operators by average in the reverse order
-   recommend.sort((a, b) => (b.avg - a.avg))
-   return recommend;
-}
+    // sort the operators by average in the reverse order
+    recommend.sort((a, b) => (b.avg - a.avg))
 
 
-function average(result) {
-    return {
-        avg: result.rank1 * 1 + result.rank2 * 2 + result.rank3 * 3,
-        ratio: result.rank3
-    }
+
+    return recommend;
 }
+
 
 function getPropertyName(property, operator) {
 
 
-    if(property.indexOf('skill')>-1){
+    if (property.indexOf('skill') > -1) {
         let index = 0;
-        if(property==='skill2') index = 1
-        if(property==='skill3') index = 2
+        if (property === 'skill2') index = 1
+        if (property === 'skill3') index = 2
         return {
-            name:operator.skill[index].name,
+            name: operator.skill[index].name,
             iconId: operator.skill[index].iconId,
-            type:'skill'
+            type: 'skill'
         }
     }
 
-    if(property.indexOf('mod')>-1) {
-       for(const equip of operator.equip) {
-          if(property === `mod${equip.typeName2}`) {
-              return {
-                  name:equip.uniEquipName,
-                  iconId:equip.typeIcon,
-                  type: 'equip'
-              }
-          }
-       }
+    if (property.indexOf('mod') > -1) {
+        for (const equip of operator.equip) {
+            if (property === `mod${equip.typeName2}`) {
+                return {
+                    name: equip.uniEquipName,
+                    iconId: equip.typeIcon,
+                    type: 'equip'
+                }
+            }
+        }
     }
 
 
 }
 
 
-
-export  { operatorRecommend }
+export {operatorRecommend}

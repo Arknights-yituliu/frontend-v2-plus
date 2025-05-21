@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import {cMessage} from "/src/utils/message";
+import {createMessage} from "/src/utils/message";
 import userInfoAPI from "/src/api/userInfo"
 import "/src/assets/css/account/home.scss";
 import {userInfo} from '/src/utils/user/userInfo.js'
@@ -9,7 +9,6 @@ import {operatorTable} from '/src/utils/gameData.js'
 import {useRouter} from "vue-router";
 const router = useRouter()
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
-const englishNumberRegex = /^[A-Za-z0-9]+$/;
 
 const accountRules = [
   value => !!value || '不能为空',
@@ -36,6 +35,8 @@ async function getUserInfoByToken() {
   formData.value.userName = userInfo.value.userName
 
   selectedAvatar.value = userInfo.value.avatar
+
+  displayOrUpdateInfo.value = userInfo.value.status>0?'display':''
 }
 
 
@@ -71,7 +72,7 @@ function updateAvatar() {
   }
 
   userInfoAPI.updateUserDataV2(data).then(response => {
-    cMessage('头像更新成功')
+    createMessage({type:'success',text:'头像更新成功'})
     userInfo.value.avatar = response.data.avatar
 
   })
@@ -80,14 +81,14 @@ function updateAvatar() {
 
 function sendUpdateEmailVerificationCode() {
   userInfoAPI.sendUpdateEmailVerificationCode(formData.value).then(response => {
-    cMessage('验证码已发送')
+    createMessage({type:'success',text:'验证码已发送',duration:4000})
   })
 }
 
 function sendVerificationCode() {
   formData.value.mailUsage = "register"
   userInfoAPI.sendVerificationCodeV2(formData.value).then(response => {
-    cMessage('验证码已发送')
+    createMessage({type:'success',text:'验证码已发送',duration:4000})
   })
 }
 
@@ -102,7 +103,7 @@ function checkVerificationCode(){
 
 function bindEmail() {
   userInfoAPI.bindEmail(formData.value).then(response => {
-    cMessage('邮箱绑定成功')
+    createMessage({type:'success',text:'邮箱绑定成功',duration:4000})
     setTimeout(() => {
       location.reload();
     }, 2000)
@@ -120,7 +121,7 @@ function updateUserName() {
     property: "userName"
   }
   userInfoAPI.updateUserDataV2(data).then(response => {
-    cMessage('用户名更改成功')
+    createMessage({type:'success',text:'用户名更改成功',duration:4000})
     userInfo.value.userName = response.data.userName
 
   })
@@ -150,8 +151,11 @@ function toRetrieve() {
   router.push({name: "RETRIEVE"})
 }
 
+
+
 onMounted(() => {
   getUserInfoByToken()
+
   // getOperatorData()
 })
 </script>
@@ -160,11 +164,13 @@ onMounted(() => {
 
   <v-card class="user-card" title="用户信息" >
 
+
     <v-alert v-show="userInfo.status<1"
         title="未登录"
         type="error"
         class="m-12"
     ></v-alert>
+
     <div v-show="displayOrUpdateInfo === 'display'">
       <v-list>
         <v-list-item>

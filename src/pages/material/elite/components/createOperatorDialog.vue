@@ -14,7 +14,7 @@ import {
   operatorList, // 干员列表
   insertOperatorData, initOperatorData
 } from '../js/formatOperatorData'
-import { getSpriteImg } from '../js/utils'
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 import { ElNotification } from 'element-plus'
 
 const props = defineProps({
@@ -134,7 +134,7 @@ const validate = async (obj) => {
       })
       
       for (const selectItem of flattenedSelectLists) { // selectItem: { itemId, quantity }
-        if (!selectItem.hasOwnProperty('itemId') || !selectItem.hasOwnProperty('quantity')) {
+        if (!selectItem.hasOwnProperty('itemId') || !selectItem.quantity) {
           ElNotification({
             title: '提示',
             message: '材料没填满',
@@ -149,7 +149,7 @@ const validate = async (obj) => {
 }
 // 新增干员
 const addNewOperator = async () => {
-  if (!await validate(newOperatorInfo.value)) return
+  // if (!await validate(newOperatorInfo.value)) return
   const { elite, skills, name, mods } = newOperatorInfo.value
   const newCharId = `char_${operatorList.value.length}_custom` // 自定义干员ID
   const operatorMaterial = {
@@ -200,17 +200,17 @@ const addNewOperator = async () => {
         <label>{{ item.title }}</label>
         <div class="fixed-material">
           <div class="material-item" v-for="(t, i) in item.materialList" :key="i">
-            <div :class="getSpriteImg(t.itemId, 'perm')"></div>
+            <ItemImage :item-id="t.itemId" :size="50"></ItemImage>
             <span class="num">{{ t.quantity }}</span>
           </div>
         </div>
         <div class="select-material" v-for="(dic, dicIndex) in item.materialDicList" :key="dicIndex">
           <el-select v-model="item.selectList[dicIndex].itemId" filterable popper-class="material-popper" placeholder="材料" @change="disabledItem($event, dicIndex, item.materialDicList)">
             <template #prefix>
-              <div :class="getSpriteImg(item.selectList[dicIndex].itemId, 'perm')"></div>
+              <ItemImage :item-id="item.selectList[dicIndex].itemId"></ItemImage>
             </template>
             <el-option v-for="t in dic" :key="t.itemId" :value="t.itemId" :label="t.itemName" :disabled="t.disabled">
-              <div :class="getSpriteImg(t.itemId, 'perm')"></div>
+              <ItemImage :item-id="t.itemId"></ItemImage>
               <p>{{t.itemName}}</p>
             </el-option>
           </el-select>
@@ -251,7 +251,7 @@ const addNewOperator = async () => {
     .row {
       padding-left: 0px;
       .fixed-material {
-        width: 180px;
+        width: 210px;
         display: flex;
         align-items: center;
         justify-content: flex-end;
@@ -261,34 +261,39 @@ const addNewOperator = async () => {
       .select-material {
         display: flex;
         align-items: center;
-        
+        width: 280px;
+        .el-select {
+          margin-left: 10px;
+          width: 180px;
+          flex: 1;
+          .el-select__wrapper {
+            position: relative;
+            padding-right: 5px;
+            height: 56px;
+            .store_sprite_perm {
+              top: -63px;
+              left: -63px;
+            }
+          }
+        }
         span {
           padding: 10px;
         }
-      }
-      .el-select {
-        flex-shrink: 0;
-        width: 160px;
-        margin-left: 30px;
-        .el-select__wrapper {
-          position: relative;
-          padding-right: 5px;
-          padding-left: 55px;
-          height: 56px;
-          .store_sprite_perm {
-            top: -63px;
-            left: -63px;
+        .num-input {
+          width: 50px;
+          .el-input__wrapper {
+            height: 56px;
+            box-shadow: none;
+            border-bottom: 1px solid var(--el-border-color);
+            border-radius: 0;
+            width: 50px;
           }
         }
       }
-      .el-input__wrapper {
-        height: 56px;
-        box-shadow: none;
-        border-bottom: 1px solid var(--el-border-color);
-        border-radius: 0;
-        width: 40px;
-      }
     }
+  }
+  .el-button--primary {
+    color: white;
   }
 }
 
@@ -300,10 +305,11 @@ const addNewOperator = async () => {
       text-align: right;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      padding-left: 65px;
+      justify-content: flex-start;
       padding-right: 0;
-      justify-content: center;
+      p {
+        padding-left: 10px;
+      }
     }
   }
 }

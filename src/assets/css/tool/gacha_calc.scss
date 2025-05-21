@@ -7,16 +7,14 @@
   flex-wrap: wrap;
 }
 
-.gacha-actselector {
-  // width: 33%;
+.gacha-act-selector {
+   width: 32%;
 }
 
 #gachaCalculate {
 
 
-  .el-radio-button__inner {
-    width: 150px;
-  }
+
 
   .el-collapse-item__content {
     padding-bottom: 0px;
@@ -82,7 +80,16 @@
   /*卡池时间单选框的外容器*/
   .radio-group-wrap {
     display: flex;
+
     justify-content: center;
+    .el-radio-group{
+      width: 500px;
+    }
+
+    .el-radio-button__inner{
+      width: 166px;
+      padding:12px 8px;
+    }
   }
 
   .gacha-resources-chart-pie {
@@ -206,6 +213,11 @@
     font-size: 18px;
     padding: 0 32px;
     position: relative;
+  }
+
+  .collapse-alert{
+    width: 500px;
+    margin: 12px;
   }
 
   /*折叠面板内的副标题的图标*/

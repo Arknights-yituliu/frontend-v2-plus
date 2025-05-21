@@ -6,12 +6,8 @@ const props = defineProps({
   items: Array,
 });
 
-
 function getEquipIcon(typeIcon){
-  if(typeIcon){
-    return `https://cos.yituliu.cn/equip-icon/${item.typeIcon}.png`
-  }
-  return noModIcon
+  return typeIcon ? `https://cos.yituliu.cn/equip-icon/${typeIcon}.png` : noModIcon
 }
 
 </script>

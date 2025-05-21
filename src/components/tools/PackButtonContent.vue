@@ -3,8 +3,8 @@
 const props = defineProps(["modelValue", 'data']);
 
 function getName(item){
-   if(item.displayName){
-     return item.displayName
+   if(item.officialName){
+     return item.officialName
    }
    if(item.name){
      return  item.name

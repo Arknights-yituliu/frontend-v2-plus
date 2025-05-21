@@ -10,20 +10,18 @@ import buildingApi from '/src/api/building.js'
 import operatorDataAPI from '/src/api/operatorData.js'
 import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
 import {translate} from '/src/utils/i18n.js'
-import {getText} from '/src/utils/fileConversion.js'
+import {readFileToString} from '/src/utils/fileUtils.js'
 import {debounce} from "/src/utils/debounce.js";
 import {cMessage} from '/src/utils/message.js'
-import {createPopover, popoverOnOpen} from "/src/utils/popover.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import {downloadJsonFile} from "/src/utils/download.js";
-import { useRouter } from 'vue-router';
+import { saveAs } from 'file-saver';
+import {useRouter} from 'vue-router';
 const router = useRouter();
 
 let operatorOwnMap = new Map()
 
 
 async function getOperatorDataByAccount() {
-
 
 
   operatorDataAPI.getOperatorData().then(response => {
@@ -199,8 +197,8 @@ let roomSettlementOperatorMaxQuantity = {
  * @return {string} 雪碧图样式
  */
 function getAvatar(name) {
-  name = characterIdAndName[name]
-  return `bg-${name} room-avatar-sprite`
+  return characterIdAndName[name]
+
 }
 
 /**
@@ -280,7 +278,7 @@ function chooseRoom(roomType, index) {
         .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
   }
 
-  popoverOnOpen(`${roomType}#${index}`, 'room-set')
+
 }
 
 let selectBtnKey = ref({})
@@ -323,7 +321,8 @@ const filterOperatorByTag = debounce((condition, key) => {
 
 //干员搜索输入框输入内容
 let searchInputText = ref('')
-
+let searchOperatorOnlyName = ref(false)
+let searchOperatorOnlyBuffName = ref(false)
 /**
  * 根据输入的名称和技能描述搜索干员
  */
@@ -376,9 +375,29 @@ function commonFilterOperator() {
  * @return {boolean} 是否包含关键词
  */
 function operatorHasKeyword(operator) {
-  return operator.name.indexOf(searchInputText.value) > -1 ||
-      operator.description.indexOf(searchInputText.value) > -1 ||
-      operator.buffName.indexOf(searchInputText.value) > -1
+
+  if (searchOperatorOnlyName.value) {
+    return operator.name.indexOf(searchInputText.value) > -1;
+  }
+
+  if (searchOperatorOnlyBuffName.value) {
+    return operator.buffName.indexOf(searchInputText.value) > -1;
+  }
+
+  if (operator.name.indexOf(searchInputText.value) > -1) {
+    return true
+  }
+
+  if (operator.description.indexOf(searchInputText.value) > -1) {
+    return true
+  }
+
+  if (operator.buffName.indexOf(searchInputText.value) > -1) {
+    return true
+  }
+
+  return false
+
 }
 
 const roomPopupStyle = "width:550px;"
@@ -685,7 +704,8 @@ function saveAndDownloadScheduleFile() {
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
-    downloadJsonFile(scheduleInfo.value, scheduleId.value)
+    const blob = new Blob([JSON.stringify(scheduleInfo.value, null, 2)], {type: "application/json"});
+    saveAs(blob, `${scheduleId.value}.json`)
     cMessage(translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value)
   })
 }
@@ -725,7 +745,7 @@ async function importScheduleByFile() {
   const inputElement = document.getElementById('scheduleFile')
   let fileContent = ')'
   if (inputElement.files) {
-    fileContent = await getText(inputElement.files[0])
+    fileContent = await readFileToString(inputElement.files[0])
   }
 
   let schedule = ''
@@ -868,12 +888,12 @@ function setPosition() {
 
 onMounted(() => {
   filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], 'room')
-  createPopover('room-set', `auto`)
+
   getOperatorDataByAccount()
 })
 
-function useLegacyUI(){
-  router.push({name:'ScheduleV1'})
+function useLegacyUI() {
+  router.push({name: 'ScheduleV1'})
 }
 
 </script>
@@ -881,23 +901,23 @@ function useLegacyUI(){
 
 <template>
   <div class="schedule-page">
-    <div >
+    <div>
       <!--选择基建布局和换班次数-->
-      <v-btn color="red"  class="m-2"
+      <v-btn color="red" class="m-2"
              @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
         {{ translate('schedule', 'schedule.InfrastructureLayout') }}
       </v-btn>
-      <v-btn color="orange"  class="m-2"
+      <v-btn color="orange" class="m-2"
              @click="useLegacyUI()" text="切换到竖版UI">
       </v-btn>
       <input type="file" id="scheduleFile" hidden @change="importScheduleByFile()">
       <!--根据文件导入排版-->
-      <v-btn color="primary"  class="m-2" @click="chooseFile()">{{
+      <v-btn color="primary" class="m-2" @click="chooseFile()">{{
           translate('schedule', 'schedule.ImportScheduleFile')
         }}
       </v-btn>
       <!--下载排版文件-->
-      <v-btn color="primary"  class="m-2" @click="saveAndDownloadScheduleFile()">
+      <v-btn color="primary" class="m-2" @click="saveAndDownloadScheduleFile()">
         {{ translate('schedule', 'schedule.DownloadScheduleFile') }}
       </v-btn>
 
@@ -912,7 +932,7 @@ function useLegacyUI(){
                   v-model="scheduleImportId">
       <template v-slot:append>
         <!--根据id导入排班-->
-        <v-btn color="primary"   @click="importScheduleById()">
+        <v-btn color="primary" @click="importScheduleById()">
           {{ translate('schedule', 'schedule.ImportScheduleById') }}
         </v-btn>
 
@@ -1096,9 +1116,13 @@ function useLegacyUI(){
               <!--  <div :class="getAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
               <!--</div>-->
 
-              <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible = true">
-                <div :class="getOptionAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>
-              </div>
+              <OperatorAvatar @click="FiammettaTargetVisible = true"
+                              :size="60" :char-id="getCharId(plansTemplate[selectedPlanIndex].Fiammetta.target)">
+              </OperatorAvatar>
+
+              <!--              <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible = true">-->
+              <!--                <div :class="getOptionAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
+              <!--              </div>-->
             </div>
           </div>
 
@@ -1142,11 +1166,19 @@ function useLegacyUI(){
               </div>
 
               <div class="operator-check-box-group">
-                <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"
+                <div v-for="(operator, charId) in filterOperatorList" :key="charId"
+                     class="operator-check-box-option-v2"
                      @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">
-                  <div :class="getOptionAvatar(operator.charId)"></div>
-                  <div class="operator-check-label">{{ operator.name }}</div>
+                  <OperatorAvatar
+                      :size="60" :char-id="operator.charId">
+                  </OperatorAvatar>
+                  <div class="operator-check-label-v2">{{ operator.name }}</div>
                 </div>
+                <!--                <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"-->
+                <!--                     @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">-->
+                <!--                  <div :class="getOptionAvatar(operator.charId)"></div>-->
+                <!--                  <div class="operator-check-label">{{ operator.name }}</div>-->
+                <!--                </div>-->
               </div>
             </v-card-text>
           </v-card>
@@ -1204,7 +1236,7 @@ function useLegacyUI(){
                 <div :class="getRoomProduct('trading', index)"></div>
               </div>
               <div class="settlement-operator">
-                <OperatorAvatar v-for="(charName, index) in getRoomOperators('trading', index)" :key="index"
+                <OperatorAvatar :size="44" v-for="(charName, index) in getRoomOperators('trading', index)" :key="index"
                                 :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
               </div>
             </div>
@@ -1219,7 +1251,8 @@ function useLegacyUI(){
                 <div :class="getRoomProduct('manufacture', index)"></div>
               </div>
               <div class="settlement-operator">
-                <OperatorAvatar v-for="(charName, index) in getRoomOperators('manufacture', index)" :key="index"
+                <OperatorAvatar :size="44" v-for="(charName, index) in getRoomOperators('manufacture', index)"
+                                :key="index"
                                 :char-id="getCharId(charName)" class="m-4">
 
                 </OperatorAvatar>
@@ -1232,7 +1265,7 @@ function useLegacyUI(){
                  v-for="(num, index) in scheduleTypeV2.power" :key="index"
                  @click="chooseRoom('power', index)">
               <div class="room-name">{{ translate('schedule', 'schedule.PowerPlant') }}#{{ num }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('power', index)" :key="index"
+              <OperatorAvatar :size="44" v-for="(charName, index) in getRoomOperators('power', index)" :key="index"
                               :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
 
@@ -1255,7 +1288,7 @@ function useLegacyUI(){
                  :class="roomSelectedClass('control', 0)"
                  @click="chooseRoom('control', 0)">
               <div class="room-name">{{ translate('schedule', 'schedule.ControlCenter') }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('control', 0)" :key="index"
+              <OperatorAvatar :size="44" v-for="(charName, index) in getRoomOperators('control', 0)" :key="index"
                               :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
             <!--     宿舍-->
@@ -1264,7 +1297,7 @@ function useLegacyUI(){
                  v-for="(num, index) in scheduleTypeV2.dormitory" :key="index"
                  @click="chooseRoom('dormitory', index)">
               <div class="room-name">{{ translate('schedule', 'schedule.Dormitory') }}#{{ num }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('dormitory', index)" :key="index"
+              <OperatorAvatar :size="44" v-for="(charName, index) in getRoomOperators('dormitory', index)" :key="index"
                               :char-id="getCharId(charName)" class="m-4">
 
               </OperatorAvatar>
@@ -1279,7 +1312,7 @@ function useLegacyUI(){
                  @click="chooseRoom('meeting', 0)"
             >
               <div class="room-name">{{ translate('schedule', 'schedule.ReceptionRoom') }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('meeting', 0)" :key="index"
+              <OperatorAvatar :size="44" v-for="(charName, index) in getRoomOperators('meeting', 0)" :key="index"
                               :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
             <!--      加工站-->
@@ -1287,7 +1320,7 @@ function useLegacyUI(){
                  :class="roomSelectedClass('processing', 0)"
                  @click="chooseRoom('processing', 0)">
               <div class="room-name">{{ translate('schedule', 'schedule.Workshop') }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('processing', 0)" :key="index"
+              <OperatorAvatar :size="44" v-for="(charName, index) in getRoomOperators('processing', 0)" :key="index"
                               :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
 
@@ -1295,7 +1328,7 @@ function useLegacyUI(){
             <div class="room-template hire" :id="`hire#0`"
                  :class="roomSelectedClass('hire', 0)" @click="chooseRoom('hire', 0)">
               <div class="room-name">{{ translate('schedule', 'schedule.Office') }}</div>
-              <OperatorAvatar v-for="(charName, index) in getRoomOperators('hire', 0)" :key="index"
+              <OperatorAvatar :size="44" v-for="(charName, index) in getRoomOperators('hire', 0)" :key="index"
                               :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
             </div>
             <div class="room-template blank" style="width: 100px;"></div>
@@ -1321,12 +1354,24 @@ function useLegacyUI(){
             <!--入驻的干员-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsStationed') }}</span>
             <div class="selected-operator-wrap">
-              <div class="room-avatar-sprite-wrap"
+              <div class="room-operator"
                    v-for="(charId, index) in getRoomOperators(selectedRoomType, selectedRoomIndex)" :key="index">
-                <div :class="getAvatar(charId)"></div>
-                <i class="iconfont icon-error operator-delete-icon" @click="deleteOperator(charId)">
-                </i>
+                <OperatorAvatar
+                    :size="40" :char-id="getCharId(charId)">
+
+                </OperatorAvatar>
+                <v-icon icon="mdi-close" size="16" @click="deleteOperator(charId)"
+                        class=" operator-delete-icon"></v-icon>
               </div>
+
+
+              <!--              <i class="iconfont icon-error operator-delete-icon" >-->
+              <!--              <div class="room-avatar-sprite-wrap"-->
+              <!--                   v-for="(charId, index) in getRoomOperators(selectedRoomType, selectedRoomIndex)" :key="index">-->
+              <!--                <div :class="getAvatar(charId)"></div>-->
+              <!--                <i class="iconfont icon-error operator-delete-icon" @click="deleteOperator(charId)">-->
+              <!--                </i>-->
+              <!--              </div>-->
             </div>
             <v-btn color="primary" variant="tonal" @click="copyOperatorList()"
                    :text="translate('schedule', 'schedule.Copy')">
@@ -1337,9 +1382,12 @@ function useLegacyUI(){
             <!--复制的干员-->
             <span class="room-set-description">{{ translate('schedule', 'schedule.OperatorsClipboard') }}</span>
             <div class="selected-operator-wrap">
-              <div class="room-avatar-sprite-wrap" v-for="(charId, index) in tmpOperatorList" :key="index">
-                <div :class="getAvatar(charId)"></div>
-              </div>
+              <OperatorAvatar v-for="(charId, index) in tmpOperatorList" :key="index"
+                              :size="40" :char-id="getCharId(charId)">
+              </OperatorAvatar>
+              <!--              <div class="room-avatar-sprite-wrap" v-for="(charId, index) in tmpOperatorList" :key="index">-->
+              <!--                <div :class="getAvatar(charId)"></div>-->
+              <!--              </div>-->
             </div>
           </div>
 
@@ -1358,13 +1406,20 @@ function useLegacyUI(){
           </div>
 
           <v-text-field hide-details density="compact" :label=" translate('schedule', 'schedule.SearchInputTip')"
-                        variant="outlined" width="500" class="m-8"
+                        variant="outlined" width="800" class="m-8"
                         @input="searchOperatorDebounce()" v-model="searchInputText">
             <template v-slot:append>
+              <v-switch color="primary" label="仅搜索干员名" density="compact" v-model="searchOperatorOnlyName"
+                        @change="searchOperatorDebounce()" hide-details>
+              </v-switch>
+              <v-switch color="primary" label="仅搜索技能名称" density="compact" v-model="searchOperatorOnlyBuffName"
+                        @change="searchOperatorDebounce()" hide-details>
+              </v-switch>
+
               <v-btn color="primary" text="隐藏未招募干员" @click="filterOperatorByOwn()">
               </v-btn>
               <v-tooltip text="此功能需要登录并导入过干员数据后才可使用" location="top">
-                <template v-slot:activator="{ props }" >
+                <template v-slot:activator="{ props }">
                   <v-icon icon="mdi-help-circle" v-bind="props"></v-icon>
                 </template>
               </v-tooltip>
@@ -1372,13 +1427,42 @@ function useLegacyUI(){
           </v-text-field>
 
           <div class="operator-check-box-group">
-            <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"
-                 :id="operator.charId" class="operator-check-box-option">
-              <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>
-              <div class="operator-check-label">{{ operator.name }}</div>
-              <span class="operator-building-skill-description" :id="`${operator.charId}-description`"
-                    v-html="operator.description"></span>
-            </div>
+
+            <el-popover v-for="(operator, charId) in filterOperatorList" :key="charId"
+                        placement="top-start"
+                        title="技能描述"
+                        width="400"
+                        trigger="hover"
+            >
+              <template #reference>
+                <div class="operator-check-box-option-v2">
+                  <OperatorAvatar
+                      @click="chooseOperator(operator.name)"
+                      :size="60" :char-id="operator.charId" class="m-a">
+                  </OperatorAvatar>
+                  <div class="operator-check-label-v2">{{ operator.name }}</div>
+                </div>
+              </template>
+              <span v-html="operator.description"></span>
+            </el-popover>
+
+            <!--            <div v-for="(operator, charId) in filterOperatorList" :key="charId"-->
+            <!--                 class="operator-check-box-option-v2">-->
+            <!--              <OperatorAvatar-->
+            <!--                  @click="chooseOperator(operator.name)"-->
+            <!--                  :size="60" :char-id="operator.charId" class="m-a">-->
+            <!--              </OperatorAvatar>-->
+            <!--              <div class="operator-check-label-v2">{{ operator.name }}</div>-->
+            <!--              <span class="operator-building-skill-description" :id="`${operator.charId}-description`"-->
+            <!--                                v-html="operator.description"></span>-->
+            <!--            </div>-->
+            <!--            <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"-->
+            <!--                 :id="operator.charId" class="operator-check-box-option">-->
+            <!--              <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>-->
+            <!--              <div class="operator-check-label">{{ operator.name }}</div>-->
+            <!--              <span class="operator-building-skill-description" :id="`${operator.charId}-description`"-->
+            <!--                    v-html="operator.description"></span>-->
+            <!--            </div>-->
           </div>
         </div>
       </div>

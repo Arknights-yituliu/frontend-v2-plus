@@ -5,7 +5,7 @@ import REGISTER from '/src/pages/account/register.vue'
 import LOGIN from '/src/pages/account/login.vue'
 import RETRIEVE from '/src/pages/account/retrieve.vue'
 import IMPORT_BY_SKLAND from '/src/pages/survey/importdata.vue'
-import SURVEY_OPERATOR from '/src/pages/survey/operators.vue'
+import SURVEY_OPERATOR from '/src/pages/survey/operator.vue'
 import USER_HOME from '/src/pages/account/home.vue'
 import STORE from '/src/pages/material/store.vue'
 import PACK from '/src/pages/material/pack.vue'
@@ -184,7 +184,6 @@ const routes = [
         icon: "mdi-routes",
         component: () => import('/src/pages/information/integratedStrategies.vue')
     },
-
     {
         path: '/account/register',
         text: '注册账号',
@@ -229,15 +228,6 @@ const routes = [
         component: SURVEY_OPERATOR
     },
     {
-        path: '/survey/questionnaire',
-        text: '干员携带率问卷',
-        name: 'Questionnaire',
-        display: true,
-        module: 'survey',
-        icon: "mdi-chart-bar",
-        component: () => import('/src/pages/survey/operator-carry.vue')
-    },
-    {
         path: '/survey/operator-progression-statistics',
         text: '干员练度调查结果',
         name: 'OperatorRank',
@@ -245,7 +235,15 @@ const routes = [
         module: 'survey',
         icon: "mdi-chart-bar-stacked",
         component: () => import('/src/pages/survey/operator-progression-statistics.vue')
-        // component: Notice
+    },
+    {
+        path: '/survey/questionnaire',
+        text: '干员携带优先级问卷',
+        name: 'Questionnaire',
+        display: true,
+        module: 'survey',
+        icon: "mdi-chart-bar",
+        component: () => import('/src/pages/survey/operator-carry.vue')
     },
     {
         path: '/survey/maarecruitdata',
@@ -258,31 +256,13 @@ const routes = [
         // component: Notice
     },
     {
-        path: '/about/dev',
-        text: '开发相关',
-        name: 'Develop',
+        path: '/account/home',
+        text: '个人中心',
+        name: 'User Center',
         display: true,
         module: 'about',
-        icon: "mdi-source-branch",
-        component: () => import('/src/pages/about/dev.page.vue')
-    },
-    {
-        path: '/about/log',
-        text: '开发日志',
-        name: 'Log',
-        display: false,
-        module: 'about',
-        icon: "log",
-        component: () => import('/src/pages/about/log.page.vue')
-    },
-    {
-        path: '/dev/join-development',
-        text: '参与开发',
-        name: 'JoinDevelopment',
-        display: true,
-        module: 'dev',
         icon: "mdi-pencil",
-        component: () => import('/src/pages/doc/join-development.vue')
+        component: () => import('/src/pages/account/home.vue')
     },
     {
         path: '/about/donate',
@@ -291,7 +271,7 @@ const routes = [
         display: true,
         module: 'about',
         icon: "mdi-thumb-up",
-        component: () => import('/src/pages/about/donate.page.vue')
+        component: () => import('/src/pages/about/donate.vue')
     },
     {
         path: '/about/links',
@@ -300,7 +280,14 @@ const routes = [
         display: true,
         module: 'about',
         icon: "mdi-link-variant",
-        component: () => import('/src/pages/about/links.page.vue')
+        component: () => import('/src/pages/about/links.vue')
+    },
+    {
+        path: '/statistics-material',
+        text: '材料统计',
+        name:'材料统计',
+        display: false,
+        component: () => import('/src/pages/tools/material-statistics.vue')
     },
     {
         path: '/material/detail',
@@ -315,12 +302,12 @@ const routes = [
         component: () => import('/src/pages/dev/dev.vue')
     },
     {
-        path: '/dev/stageEfficiency',
+        path: '/pie-chart',
         text: '测试页面',
         display: false,
-        component: () => import('/src/pages/dev/stageEfficiency.vue')
-
+        component: () => import('/src/pages/dev/pie-chart.vue')
     },
+
     {
         path: '/material/sssl',
         text: '收益速览做图用',
@@ -328,23 +315,12 @@ const routes = [
         component: () => import('/src/pages/video-material/sssl.vue')
     },
     {
-        path: '/skill-rank',
-        text: '收益速览做图用',
-        display: false,
-        component: () => import('/src/pages/material/skill-rank.vue')
-    },
-    {
         path: '/material/sssl2',
         text: '收益速览做图用',
         display: false,
         component: () => import('/src/pages/video-material/sssl2.vue')
     },
-    {
-        path: '/material/sssl3',
-        text: '收益速览做图用',
-        display: false,
-        component: () => import('/src/pages/video-material/pack.page.vue')
-    },
+
     {
         path: '/media/weekly',
         text: '周报做图用',
@@ -369,12 +345,29 @@ const routes = [
         display: false,
         component: () => import('/src/pages/video-material/stageV3.vue')
     },
-
     {
-        path: '/statistics-material',
+        path: '/video/ytl/main1',
+        text: '视频-一图流-主页1',
+        display: false,
+        component: () => import('/src/pages/video/stage.vue')
+    },
+    {
+        path: '/action-table',
         text: '材料统计',
         display: false,
-        component: () => import('/src/pages/tools/statistics-material.vue')
+        component: () => import('/src/pages/dev/action-table.vue')
+    },
+    {
+        path: '/operator-add-time',
+        text: '材料统计',
+        display: false,
+        component: () => import('/src/pages/dev/operator-add-time.vue')
+    },
+    {
+        path: '/zwg',
+        text: '子午谷收银台',
+        display: false,
+        component: () => import('/src/pages/tools/ziwugoods.vue')
     },
     {
         path: '/:catchAll(.*)',
@@ -420,6 +413,7 @@ const LinkedTable = {
         icon: 'mdi-application-cog',
         child: []
     },
+
     about: {
         path: '/',
         text: "其他信息",

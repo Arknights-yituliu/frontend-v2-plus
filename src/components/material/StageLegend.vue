@@ -49,7 +49,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 <!--    <span>*关卡效率：关卡掉落物品的总价值 / 关卡理智消耗，数值越大越推荐刷。<br>图上数据非最终结论，仅供参考，其他材料up关卡未必差。后续可查看一图流网站实时更新的材料一图流</span>-->
 <!--    <span>代币仅在第14章掉落，优先搬空商店。<br>效率计算：明日方舟一图流 https://ark.yituliu.cn<br>掉落数据：企鹅物流数据统计 https://penguin-stats.cn<br></span>-->
 
-<!--    &lt;!&ndash;      <span style="text-align: right;">制图：&emsp;B站@罗德岛基建BETA</span>&ndash;&gt;-->
+<!--    &lt;!&ndash;      <span style="text-align: right;">制图：&emsp;B站@逻辑元LogicalByte</span>&ndash;&gt;-->
 <!--    <span style="text-align: right;">数据收集时间：&emsp;2024.5.3 09:00</span>-->
 <!--  </div>-->
 
@@ -67,7 +67,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <span>14-17</span>
         </td>
         <td class="stage-legend-text-3">
-          <span class="stage-legend-text-bold" style="font-size: 20px;">[综合效率]</span>
+          <span class="stage-legend-text-bold" >[综合效率]</span>
           <br>
           <span class="stage-legend-text-underline">
                 所有掉落物的价值之和
@@ -76,7 +76,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <span>理智消耗</span>
         </td>
         <td class="stage-legend-text-4">
-          <span style="font-size: 20px;font-weight: bold;">[综合效率]</span>
+          <span class="stage-legend-text-bold">[综合效率]</span>
         </td>
       </tr>
 
@@ -93,7 +93,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <span>14-17</span>
         </td>
         <td class="stage-legend-text-3">
-          <span class="stage-legend-text-bold" style="color: #c01dd7;font-size: 20px;">[T4效率]</span>
+          <span class="stage-legend-text-bold" style="color: #c01dd7;">[T4效率]</span>
           <br>
           <span class="stage-legend-text-underline">
               <span style="color: #c01dd7;font-weight: bold">紫</span>
@@ -106,7 +106,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 
         </td>
         <td class="stage-legend-text-4">
-          <span style="font-size: 20px;font-weight: bold;">[综合效率]</span>
+          <span class="stage-legend-text-bold">[综合效率]</span>
         </td>
       </tr>
 
@@ -123,7 +123,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <span>MB-6</span>
         </td>
         <td class="stage-legend-text-3">
-          <span class="stage-legend-text-bold" style="color: #0276f8;font-size: 20px;">[T3效率]</span>
+          <span class="stage-legend-text-bold" style="color: #0276f8;">[T3效率]</span>
           <br>
           <span class="stage-legend-text-underline">
               <span style="color: #0276f8;font-weight: bold">蓝</span>
@@ -132,10 +132,9 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
             </span>
           <br>
           <span>理智消耗</span>
-
         </td>
         <td class="stage-legend-text-4">
-          <span style="font-size: 20px;font-weight: bold;">[综合效率]</span>
+          <span class="stage-legend-text-bold">[综合效率]</span>
         </td>
       </tr>
       </tbody>

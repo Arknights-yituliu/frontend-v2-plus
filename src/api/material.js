@@ -3,20 +3,8 @@ import request from "/src/api/request";
 export default {
 
 
-  getItemValueTableV4(data){
-    return request({
-      url: `/item/value/v5`,
-      method:"post",
-      data:data
-    })
-  },
 
-  getStageInfo(){
-    return request({
-      url: `/stage/info`,
-      method:"get"
-    })
-  },
+
 
 
   /**
@@ -98,49 +86,6 @@ export default {
     });
   },
 
-
-  getRecommendedStage(data){
-    return request({
-      url: `/custom/stage/result`,
-      method: "post",
-      data:data
-    })
-  },
-
-
-
-
-  getHistoryActStageV4(data) {
-    return request({
-      url: `/custom/stage/history`,
-      method:"post",
-      data:data
-    });
-  },
-
-  getOrundumRecommendedStageV4(data) {
-    return request({
-      url: `/custom/stage/orundum`,
-      method:"post",
-      data:data
-    });
-  },
-
-  getStorePermDataV4(data){
-    return request({
-      url: `/custom/store/perm`,
-      method:"post",
-      data:data
-    })
-  },
-
-  getActStoreV4(data) {
-    return request({
-      url: `/custom/store/act`,
-      method:"post",
-      data:data
-    });
-  },
 
   getStorePackV4(data) {
     return request({

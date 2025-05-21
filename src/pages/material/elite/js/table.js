@@ -11,20 +11,20 @@ export const formatNumber = (value, suffix = '', decimalPlaces = 1) => {
 }
 
 // 表格材料开销格式化
-export const costFormatter = (row, col) => {
-  const value = getCellValue(row, col);
+export const costFormatter = (row, key) => {
+  const value = getCellValue(row, key);
   return formatNumber(value);
 }
 
 // 表格百分比格式化
-export const percentFormatter = (row, col) => {
-  const value = getCellValue(row, col);
+export const percentFormatter = (row, key) => {
+  const value = getCellValue(row, key);
   return formatNumber(value * 100, '%');
 }
 
 // 获取表格单元格的值
-export const getCellValue = (row, col) => {
-  return row[col.property] || getNestedProperty(row, col.property) || 0;
+export const getCellValue = (row, key) => {
+  return row[key] || getNestedProperty(row, key) || 0;
 }
 
 const charIconBaseSize = 180;
@@ -43,19 +43,18 @@ export const initDetailData = (row) => {
     const rarityObj = totalCostObj.value[row.rarity];
     const { eliteCosts, skillCosts, modCosts } = rarityObj;
     const { charId, elite, skills, mods } = row;
-    let iconClass = elite.iconClass = `char-icon bg-${charId.includes('custom') ? 'custom' : charId}`
     setIconInfo('char', eliteCosts, elite, {
       name: '精英化二',
-      iconClass,
+      charId,
+      iconType: 'operator',
       style: {
         top: `${charIconBasePosition}px`,
       }
     });
     skills.forEach((item, index) => {
-      iconClass = item.iconClass = `skill-icon bg-skill_icon_${item.iconId}`
       setIconInfo('skill', skillCosts, item, {
         name: charId.includes('custom') ? item.name : `${index + 1}技能：${item.name}`, 
-        iconClass,
+        iconType: 'skill',
         style: {
           top: `${skillIconBasePosition}px`,
         }
@@ -65,6 +64,7 @@ export const initDetailData = (row) => {
     mods.forEach(item => {
       setIconInfo('mods', modCosts, item, {
         name: charId.includes('custom') ? item.typeName2 : `${item.typeName2}模组：${item.uniEquipName}`, 
+        iconType: 'equip',
       });
     });
   }
@@ -124,38 +124,37 @@ const searchParams = ref({
   professionCheckedList: [], // 已选择的职业列表
   searchKey: '', // 搜索关键词
 })
-
 // 分页参数
 const size = 50
 const tableDataMap = new Map()
 const tableOptions = new Map([
   ['elite', [
-    { prop: 'index', label: '排名', width: '60', fixed: true },
-    { prop: 'name', label: '干员代号', minWidth: '140' },
-    { prop: 'elite.rank2.rate', label: '精二率', minWidth: '120', sortable: true },
-    { prop: 'elite.totalCost', label: '材料开销', minWidth: '140', sortable: true },
-    { prop: 'professionName', label: '职业', minWidth: '80' },
-    { prop: 'subProfessionName', label: '分支', minWidth: '100' },
-    { prop: 'itemObtainApproach', label: '获取方式', minWidth: '100' },
+    { key: 'index', title: '排名', minWidth: '90'},
+    { key: 'name', title: '干员代号', minWidth: '140', sortable: false },
+    { key: 'elite.rank2.rate', title: '精二率', minWidth: '120' },
+    { key: 'elite.totalCost', title: '材料开销', minWidth: '140' },
+    { key: 'professionName', title: '职业', minWidth: '90' },
+    { key: 'subProfessionName', title: '分支', minWidth: '100' },
+    { key: 'itemObtainApproach', title: '获取方式', minWidth: '110' },
   ]],
   ['skills', [
-    { prop: 'index', label: '排名', width: '60', fixed: true },
-    { prop: 'name', label: '技能名称', minWidth: '140' },
-    { prop: 'totalCost', label: '材料开销', minWidth: '120', sortable: true },
-    { prop: 'rank3.rate', label: '专三率', minWidth: '100', sortable: true },
-    { prop: 'operatorName', label: '所属干员', minWidth: '140' },
+    { key: 'index', title: '排名', minWidth: '90' },
+    { key: 'name', title: '技能名称', sortable: false },
+    { key: 'totalCost', title: '材料开销' },
+    { key: 'rank3.rate', title: '专三率' },
+    { key: 'operatorName', title: '所属干员' },
     ]],
   ['mods', [
-    { prop: 'index', label: '排名', width: '60', fixed: true },
-    { prop: 'uniEquipName', label: '模组名称', minWidth: '200' },
-    { prop: 'typeName2', label: '模组类型', minWidth: '100' },
-    { prop: 'rank1.rate', label: '开一级模组率', minWidth: '140', sortable: true },
-    { prop: 'rank1.totalCost', label: '材料开销', minWidth: '120', sortable: true },
-    { prop: 'rank2.rate', label: '开二级模组率', minWidth: '140', sortable: true },
-    { prop: 'rank2.totalCost', label: '材料开销', minWidth: '120', sortable: true },
-    { prop: 'rank3.rate', label: '开三级模组率', minWidth: '140', sortable: true },
-    { prop: 'totalCost', label: '材料开销', minWidth: '120', sortable: true },
-    { prop: 'operatorName', label: '所属干员', minWidth: '140' },
+    { key: 'index', title: '排名', minWidth: '90' },
+    { key: 'uniEquipName', title: '模组名称', sortable: false, minWidth: '220' },
+    { key: 'typeName2', title: '模组类型', minWidth: '110' },
+    { key: 'rank1.rate', title: '开一级模组率', minWidth: '140' },
+    { key: 'rank1.totalCost', title: '材料开销', minWidth: '110' },
+    { key: 'rank2.rate', title: '开二级模组率', minWidth: '140' },
+    { key: 'rank2.totalCost', title: '材料开销', minWidth: '110' },
+    { key: 'rank3.rate', title: '开三级模组率', minWidth: '140' },
+    { key: 'totalCost', title: '材料开销', minWidth: '110' },
+    { key: 'operatorName', title: '所属干员', sortable: false, minWidth: '140' },
   ]],
 ])
 
@@ -223,6 +222,10 @@ export const usePaginationParams = (key) => {
     // 分页
     const currentData = tableListFormat.slice(current.value * size, (current.value + 1) * size)
     tableData.value = current.value === 0 ? currentData : tableData.value.concat(currentData)
+
+
+
+    tableData.value = tableListFormat
   }
   
   // 表格排序

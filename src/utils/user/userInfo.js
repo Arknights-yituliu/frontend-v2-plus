@@ -1,6 +1,6 @@
 import {ref} from "vue";
 import {DOMAIN} from '/src/api/BASE_URL.js'
-import {cMessage} from "/src/utils/message.js";
+import {createMessage} from "/src/utils/message.js";
 import axios from "axios";
 
 let userInfo = ref({uid: 0, userName: "未登录",email:'',avatar:'', akUid: "0", status: -100, token: void 0}); //用户信息(用户名，用户id，用户状态)
@@ -18,11 +18,11 @@ async function getUserInfo(page,errorMessage=false) {
             localStorage.setItem("UID",info.uid);
         } else {
             if(errorMessage){
-                cMessage('未登录','error')
+                createMessage({type:'error',text:'未登录'})
             }
         }
     }).catch((error) => {
-          cMessage(error)
+        createMessage({type:'error',text:error})
     })
 
 
@@ -36,7 +36,7 @@ function getUid(){
 
     const isNumeric = /^-?\d+$/.test(uid); // 检查是否为整数
     if(uid !== null && isNumeric && !isNaN(Number(uid))) {
-        console.log("uid：",uid)
+        // console.log("uid：",uid)
         return uid;
     }else {
         const time = new Date().getTime();

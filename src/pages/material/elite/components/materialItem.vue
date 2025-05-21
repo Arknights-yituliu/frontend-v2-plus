@@ -1,5 +1,6 @@
 <script setup>
-import { getSpriteImg } from '../js/utils'
+import '/src/pages/material/elite/style.scss'
+import ItemImage from "@/components/sprite/ItemImage.vue";
 const props = defineProps({
   info: Object,
   skillIndex: Number,
@@ -18,7 +19,7 @@ const rankList = Object.keys(props.info).filter(key => key.includes('rank'))
     <div class="row" v-for="(rank, index) in rankList" :key="index">
       <slot name="row-label" :rankIndex="index"></slot>
       <div v-for="(item, index) in info[rank].materials" :key="index" class="material-item">
-        <div :class="getSpriteImg(item.itemId, 'perm')"></div>
+        <ItemImage :item-id="item.itemId" :size="50"></ItemImage>
         <span class="num">{{ item.quantity }}</span>
       </div>
     </div>

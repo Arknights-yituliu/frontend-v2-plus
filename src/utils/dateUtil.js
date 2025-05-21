@@ -43,15 +43,38 @@ function dateFormat(input, template = 'yyyy/MM/dd') {
  */
 function dateDiff(startDate, endDate) {
     // 将输入的字符串日期转换为Date对象
-    const firstDate = checkType(startDate);
-    const secondDate = checkType(endDate);
+    const startTimeStamp = checkType(startDate);
+    const endTimeStamp = checkType(endDate);
+    if(startTimeStamp>endTimeStamp){
+        return 0
+    }
     // 计算两个日期的毫秒差
-    const diff = Math.abs(firstDate.getTime() - secondDate.getTime());
+    const diff = Math.abs(startTimeStamp - endTimeStamp);
     // 将毫秒差转换为天数
     // 使用Math.ceil如果想要包含开始和结束日期都算一天
     return Math.ceil(diff / (1000 * 3600 * 24));
 
 }
+
+
+function formatDateString(dateStr) {
+    if(!dateStr){
+        return  dateFormat(new Date())
+    }
+    // 使用正则表达式匹配日期字符串的格式
+    const match = dateStr.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+    if (!match) {
+        throw new Error("Invalid date format. Expected format: YYYY/MM/DD");
+    }
+
+    const year = match[1]; // 年份
+    const month = match[2].padStart(2, '0'); // 月份补零
+    const day = match[3].padStart(2, '0'); // 天数补零
+
+    // 返回格式化后的日期字符串
+    return `${year}/${month}/${day}`;
+}
+
 
 function checkType(input) {
     if (typeof input === 'object' && input instanceof Date) {
@@ -66,4 +89,4 @@ function checkType(input) {
 
 }
 
-export {dateFormat, dateDiff}
+export {dateFormat, dateDiff,formatDateString}
