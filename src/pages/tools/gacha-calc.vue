@@ -208,16 +208,6 @@ let scheduleOptions = [
     historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
   },
   {
-    name: 'Ave Mujica联动(待定)',
-    start: new Date('2025/09/15 16:00:00'),
-    end: new Date('2025/09/29 04:01:00'),
-    activityType: '联动限定',
-    disabled: true,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
-  },
-  {
     name: '感谢庆典(1101-1115)',
     start: new Date('2025/11/01 16:00:00'),
     end: new Date('2025/11/15 04:01:00'),
@@ -227,6 +217,16 @@ let scheduleOptions = [
     accuracyFlag: false,
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
   },
+  {
+    name: 'Ave Mujica联动(待定)',
+    start: new Date('2025/09/15 16:00:00'),
+    end: new Date('2025/09/29 04:01:00'),
+    activityType: '联动限定',
+    disabled: true,
+    dailyGiftResources: true,
+    accuracyFlag: true,
+    historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
+  }
 ]
 
 
