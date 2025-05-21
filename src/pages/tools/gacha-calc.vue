@@ -210,7 +210,7 @@ let scheduleOptions = [
     start: new Date('2025/11/01 16:00:00'),
     end: new Date('2025/11/15 04:01:00'),
     activityType: '周年限定',
-    disabled: false,
+    disabled: true,
     dailyGiftResources: true,
     accuracyFlag: false,
     historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
