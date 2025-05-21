@@ -3,7 +3,7 @@ import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
 
 import {getStageDropCollect} from "@/plugins/indexedDB/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
-// import {weightMap} from "/src/utils/item/updateItemInfoWeight.js";
+import {updateItemInfoWeight} from "/src/utils/item/updateItemInfoWeight.js";
 
 
 //加工站每级期望产出理智
@@ -318,10 +318,12 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         //最高的单项材料产出价值
         let maxValue = 0
 
+        let dropItemList = []
+
         //循环关卡的材料掉落集合
         for (const drop of list) {
             //解构出材料id，掉落次数，样本数
-            const {itemId, itemName, quantity, times} = drop
+            const {itemId,  quantity, times} = drop
             // 从材料表里面取出对应掉落物的信息
             const itemInfo = itemMap.get(itemId);
             //如果查不到材料信息则跳过
@@ -329,7 +331,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
                 continue
             }
             //从材料信息中解构出材料价值
-            const {itemValue} = itemInfo;
+            const {itemValue,itemName} = itemInfo;
             //计算材料掉率
             const knockRating = quantity / times
             //计算单项材料期望产出价值
@@ -339,14 +341,22 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
                 mainItemId = itemId
                 maxValue = value
             }
-            // if(stageId==='main_02-05'){
-            //     console.log(stageCode, '---', itemName, '=', itemValue, '*', knockRating, '=', value, '=', dropValueCount)
-            //
-            // }
+
+            if(stageId==='main_12-15'){
+                // console.log(stageCode, '---', itemName, '=', itemValue, '*', knockRating, '=', value, '=', dropValueCount)
+                dropItemList.push({
+                    itemId,
+                    itemName,
+                    knockRating,
+                    itemValue
+                })
+            }
 
             //计算关卡期望产出总理智
             dropValueCount += value
         }
+
+        console.log(JSON.stringify(dropItemList))
 
         //计算关卡效率
         stageEfficiency = dropValueCount / apCost

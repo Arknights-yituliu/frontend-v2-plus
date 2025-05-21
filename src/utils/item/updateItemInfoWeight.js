@@ -4,111 +4,128 @@ import actStoreUnlimitedExchange from '/src/static/json/material/act_store_unlim
 import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
 
 
-let t4WeightCount = 0
-let t5WeightCount = 0
-let weightMap = new Map()
-for (const item of extraOutComeGroup.T4) {
-    t4WeightCount += item.weight
-}
+function updateItemInfoWeight() {
 
-for (const item of extraOutComeGroup.T5) {
-    t5WeightCount += item.weight
-}
+    let list = []
 
-for (const item of extraOutComeGroup.T4) {
-    weightMap.set(item.itemId, item.weight / t4WeightCount)
-}
-
-for (const item of extraOutComeGroup.T5) {
-    weightMap.set(item.itemId, item.weight / t5WeightCount)
-}
-
-
-
-for (const item of itemInfo) {
-    if (weightMap.has(item.itemId)) {
-        item.weight = weightMap.get(item.itemId)
-    }
-}
-
-
-let workShopProducts = {
-    t3: 0.46,
-    t4: 1.643578947
-}
-
-let ytlStageList = {}
-let index = 1
-for(const item of actStoreUnlimitedExchange){
-    const {itemId,itemName} = item
-
-    if(itemId.slice(4)>3){
-        continue
+    let t4WeightCount = 0
+    let t5WeightCount = 0
+    let weightMap = new Map()
+    for (const item of extraOutComeGroup.T4) {
+        t4WeightCount += item.weight
     }
 
-    const stageId = `ytl_${index.toString().padStart(2, '0')}`
-    ytlStageList[itemId] = {
-        stageId:stageId,
-        stageCode:`ytl-${index.toString().padStart(2, '0')}`,
-        itemId:itemId,
-        itemName:itemName,
-        quality:0,
-        times:0,
-        apCost:21,
-        zoneId:"ytl_virtual",
-        zoneName:"SS平均掉率",
-        stageType:'ACT',
-        start:new Date('2025/05/12 00:00:00').getTime(),
-        end:new Date('2099/05/01 00:00:00').getTime(),
-    }
-    index++
-}
-
-console.log(JSON.stringify(ytlStageList))
-
-
-const exchangeItemMap = new Map()
-for(const item of actStoreUnlimitedExchange){
-    item.itemValue = item.min
-    exchangeItemMap.set(item.itemId,item.min)
-}
-
-for (const table of COMPOSITE_TABLE) {
-    const {itemId,itemName,resolve,rarity, pathway} = table
-
-    if(resolve){
-        continue
+    for (const item of extraOutComeGroup.T5) {
+        t5WeightCount += item.weight
     }
 
-    let newValue = 0.0
-    if (!resolve) {
-        //紫，金色品质是向上合成    紫，金色材料 =  合成所需蓝材料价值之和  + 龙门币 - 副产物
-        const expectProductsValue = workShopProducts[`t${rarity - 1}`]
-        for (const cost of pathway) {
-            const rawItemValue = exchangeItemMap.get(cost.itemId)
-            newValue += rawItemValue * cost.count
-            // console.log(item.itemName + '=' + rawItem.itemName + '*' + cost.count + '=' + newValue)
+    for (const item of extraOutComeGroup.T4) {
+        weightMap.set(item.itemId, item.weight / t4WeightCount)
+    }
+
+    for (const item of extraOutComeGroup.T5) {
+        weightMap.set(item.itemId, item.weight / t5WeightCount)
+    }
+
+    for (const item of itemInfo) {
+        if (weightMap.has(item.itemId)) {
+            item.weight = weightMap.get(item.itemId)
+        }
+        if (item.weight > 0) {
+            list.push(item)
+        }
+    }
+
+    list.sort((a, b) => a.rarity - b.rarity)
+    console.log(JSON.stringify(list))
+    console.log(JSON.stringify(itemInfo))
+}
+
+
+function getYTLStageList() {
+
+
+    let workShopProducts = {
+        t3: 0.46,
+        t4: 1.643578947
+    }
+
+    let ytlStageList = {}
+    let index = 1
+    for (const item of actStoreUnlimitedExchange) {
+        const {itemId, itemName} = item
+
+        if (itemId.slice(4) > 3) {
+            continue
         }
 
-        newValue = newValue + 0.36 * (rarity - 1) - expectProductsValue
-        // console.log(item.itemName + '=' + (0.36 * (rarity - 1)) + '-' + expectProductsValue + '=' + newValue)
+        const stageId = `ytl_${index.toString().padStart(2, '0')}`
+        ytlStageList[itemId] = {
+            stageId: stageId,
+            stageCode: `ytl-${index.toString().padStart(2, '0')}`,
+            itemId: itemId,
+            itemName: itemName,
+            quality: 0,
+            times: 0,
+            apCost: 21,
+            zoneId: "ytl_virtual",
+            zoneName: "SS平均掉率",
+            stageType: 'ACT',
+            start: new Date('2025/05/12 00:00:00').getTime(),
+            end: new Date('2099/05/01 00:00:00').getTime(),
+        }
+        index++
     }
-    exchangeItemMap.set(itemId,newValue)
-    actStoreUnlimitedExchange.push({
-        "itemId": itemId,
-        "itemName": itemName,
-        "active": false,
-        itemValue:newValue,
-        "min": newValue
-    })
+
+    console.log(JSON.stringify(ytlStageList))
 
 }
 
+function getItemMinValue() {
 
-console.log(JSON.stringify(actStoreUnlimitedExchange))
 
-console.log(JSON.stringify(itemInfo))
+    const exchangeItemMap = new Map()
+    for (const item of actStoreUnlimitedExchange) {
+        item.itemValue = item.min
+        exchangeItemMap.set(item.itemId, item.min)
+    }
+
+    for (const table of COMPOSITE_TABLE) {
+        const {itemId, itemName, resolve, rarity, pathway} = table
+
+        if (resolve) {
+            continue
+        }
+
+        let newValue = 0.0
+        if (!resolve) {
+            //紫，金色品质是向上合成    紫，金色材料 =  合成所需蓝材料价值之和  + 龙门币 - 副产物
+            const expectProductsValue = workShopProducts[`t${rarity - 1}`]
+            for (const cost of pathway) {
+                const rawItemValue = exchangeItemMap.get(cost.itemId)
+                newValue += rawItemValue * cost.count
+                // console.log(item.itemName + '=' + rawItem.itemName + '*' + cost.count + '=' + newValue)
+            }
+
+            newValue = newValue + 0.36 * (rarity - 1) - expectProductsValue
+            // console.log(item.itemName + '=' + (0.36 * (rarity - 1)) + '-' + expectProductsValue + '=' + newValue)
+        }
+        exchangeItemMap.set(itemId, newValue)
+        actStoreUnlimitedExchange.push({
+            "itemId": itemId,
+            "itemName": itemName,
+            "active": false,
+            itemValue: newValue,
+            "min": newValue
+        })
+
+    }
+    console.log(JSON.stringify(actStoreUnlimitedExchange))
+}
+
+updateItemInfoWeight()
+
 
 export {
-    weightMap
+    updateItemInfoWeight
 }
