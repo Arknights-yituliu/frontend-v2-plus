@@ -16,12 +16,12 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
     const cacheKey = 'itemValue'
     let itemValue = []
 
-    if(!forceRefresh){
-        if(localItemValueCache.has(localItemValueCacheKey)){
-            console.log("返回了临时缓存材料价值——key:",localItemValueCacheKey)
-            return  localItemValueCache.get(localItemValueCacheKey)
+    if (!forceRefresh) {
+        if (localItemValueCache.has(localItemValueCacheKey)) {
+            console.log("返回了临时缓存材料价值——key:", localItemValueCacheKey)
+            return localItemValueCache.get(localItemValueCacheKey)
         }
-    }else {
+    } else {
         console.log("强制刷新了材料价值")
         localItemValueCacheKey = Date.now()
     }
@@ -29,10 +29,10 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
     await getCustomItemList(stageConfig).then(response => {
         console.log(`材料价值计算完毕`)
         if (forceRefresh) {
-            createMessage({text: "强制刷新材料价值成功", type: 'success',duration:4000})
+            createMessage({text: "强制刷新材料价值成功", type: 'success', duration: 4000})
         }
 
-        localItemValueCache.set(localItemValueCacheKey,response)
+        localItemValueCache.set(localItemValueCacheKey, response)
         itemValue = response
     })
 
@@ -51,7 +51,7 @@ async function getPenguinMatrixCache() {
     let cacheData = await myDatabase.cache_data.get(penguinCacheKey)
     //有缓存判断缓存时间是否超过设定时间，未超过直接返回缓存
     if (cacheData) {
-        if (Date.now() - cacheData.createTime < 60 * 60 * 24  * 1000) {
+        if (Date.now() - cacheData.createTime < 60 * 60 * 12 * 1000) {
             console.log(`${penguinCacheKey}.返回缓存的数据`)
             // await loadingPenguinData(penguinCacheKey)
             return cacheData.resource
@@ -156,13 +156,13 @@ function getLastSynchronizationTime() {
 }
 
 async function getStageInfoCache() {
-    const cacheKey = 'stageInfo'
+    const cacheKey = 'stageInfo-v1'
     let stageInfo
 
 
     let cacheData = await myDatabase.cache_data.get(cacheKey)
     if (cacheData) {
-        if (new Date().getTime() - cacheData.createTime < 60 * 30 * 1000) {
+        if (new Date().getTime() - cacheData.createTime < 60 * 60 * 12 * 1000) {
             console.log(`${cacheKey}.返回缓存的数据`)
             return cacheData.resource
         }
