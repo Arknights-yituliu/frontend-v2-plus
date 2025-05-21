@@ -47,7 +47,7 @@ function replaceZoneName(str) {
         :headers="headers"
         :items="props.modelValue"
         density="compact"
-        class="v-mobile-table freeze-first-column">
+        class="freeze-table-first-column">
       <template v-slot:item.stageCode="{ item }">
         {{ replaceZoneName(item.stageCode) }}
       </template>

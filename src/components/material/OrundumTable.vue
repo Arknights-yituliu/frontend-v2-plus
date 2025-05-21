@@ -73,11 +73,12 @@ const headers = [
     </v-btn>
   </div>
 
-  <v-card >
+  <v-card>
     <v-data-table
         :headers="headers"
         :items="displayOrundumRecommendedStage"
-        density="compact">
+        density="compact"
+     class="freeze-table-first-column">
       <template v-slot:item.orundumPerAp="{ item }">
         <div style="display: flex;align-items: center">
           {{ item.orundumPerAp }}
