@@ -1,0 +1,82 @@
+[
+  {
+    "itemId": "4001",
+    "itemName": "龙门币",
+    "knockRating": 252,
+    "itemValue": 0.0036
+  },
+  {
+    "itemId": "31054",
+    "itemName": "切削原液",
+    "knockRating": 0.04811409385636618,
+    "itemValue": 79.24450363263657
+  },
+  {
+    "itemId": "3003",
+    "itemName": "赤金",
+    "knockRating": 0.09957029986600749,
+    "itemValue": 0.91152
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "knockRating": 0.01568379820008522,
+    "itemValue": 32
+  },
+  {
+    "itemId": "30062",
+    "itemName": "装置",
+    "knockRating": 0.1452406988146026,
+    "itemValue": 9.8514
+  },
+  {
+    "itemId": "30073",
+    "itemName": "扭转醇",
+    "knockRating": 0.020432575069178126,
+    "itemValue": 1.8
+  },
+  {
+    "itemId": "31053",
+    "itemName": "化合切削液",
+    "knockRating": 0.46965146544687275,
+    "itemValue": 32
+  },
+  {
+    "itemId": "30012",
+    "itemName": "固源岩",
+    "knockRating": 0.3638384491778199,
+    "itemValue": 4.8514
+  },
+  {
+    "itemId": "30013",
+    "itemName": "固源岩组",
+    "knockRating": 0.02567933178292186,
+    "itemValue": 20
+  },
+  {
+    "itemId": "30063",
+    "itemName": "全新装置",
+    "knockRating": 0.01201312202559719,
+    "itemValue": 36
+  },
+  {
+    "itemId": "30011",
+    "itemName": "源岩",
+    "knockRating": 0.21547639216169456,
+    "itemValue": 1.377133333
+
+  },
+  {
+    "itemId": "30061",
+    "itemName": "破损装置",
+    "knockRating": 0.08554985702331265,
+    "itemValue": 3.0438
+
+  },
+  {
+    "itemId": "31073",
+    "itemName": "褐素纤维",
+    "knockRating": 0.01599696078280378,
+    "itemValue": 32
+  }
+]

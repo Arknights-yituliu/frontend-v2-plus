@@ -18,7 +18,7 @@ import '/src/assets/css/common/app.scss'
 import '/src/assets/css/common/vuetify.scss'
 import '/src/assets/css/layout/basic.scss'
 import '/src/assets/css/common/theme.scss'
-import '/src/assets/css/common/atomic.scss'
+import '/src/assets/css/atomic/atomic.scss'
 
 import Navigation from '/src/components/Navigation.vue'
 import {useTheme} from 'vuetify'

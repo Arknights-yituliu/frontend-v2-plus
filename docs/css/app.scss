@@ -1,5 +1,6 @@
 .app {
   line-height: 1.5;
+  font-size: 15px;
 }
 
 .navigation-drawer {
@@ -27,5 +28,13 @@
 
 
 .v-container1 {
-  width: calc(100% - 60px) !important;
+  //width: calc(100% - 60px) !important;
+}
+
+@media screen and (max-width: 600px) {
+
+  .app{
+    font-size: 12px;
+  }
+
 }

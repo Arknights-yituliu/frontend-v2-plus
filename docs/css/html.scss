@@ -21,3 +21,23 @@ h4{
 ul{
   padding:8px 12px;
 }
+
+
+@media screen and (max-width: 600px) {
+
+  h1{
+   font-size: 20px;
+  }
+
+  h2{
+    font-size: 16px;
+  }
+
+  h3{
+    font-size: 12px;
+  }
+
+
+
+
+}

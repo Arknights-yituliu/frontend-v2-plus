@@ -1146,7 +1146,7 @@ function useNewUI() {
               <div class="flex align-center ">
                 <div class="opacity-70">{{ translate('schedule', 'schedule.RecoveryTarget') }}</div>
                 <div class="spacer-12"></div>
-                <OperatorAvatar :size="50" class="shadow-md" @click="openFiammettaDialog(scheduleIndex)"
+                <OperatorAvatar :size="50" rounded @click="openFiammettaDialog(scheduleIndex)"
                                 :char-id="getCharId(plansTemplate[scheduleIndex].Fiammetta.target)"></OperatorAvatar>
               </div>
 

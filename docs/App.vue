@@ -2,7 +2,9 @@
 //引用css
 import '/docs/css/app.scss'
 import '/docs/css/html.scss'
-import '/src/assets/css/common/atomic.scss'
+import '/src/assets/css/atomic/atomic.scss'
+import '/src/assets/css/sprite/sprite_item.css'
+import '/src/assets/css/common/vuetify.scss'
 
 //引用库
 import {onMounted, ref} from "vue";
@@ -16,6 +18,9 @@ const drawer = ref(true)
 onMounted(() => {
 // 获取当前 URL 的查询参数部分
   const queryString = window.location.search;
+  if(!queryString){
+    return
+  }
 
 // 使用 URLSearchParams 解析参数
   const urlParams = new URLSearchParams(queryString);
