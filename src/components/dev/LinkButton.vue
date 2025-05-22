@@ -12,7 +12,6 @@ const props = defineProps(["link", 'text']);
 
 .link-button{
   font-weight: bolder;
-  padding: 0 4px;
 }
 
 </style>

@@ -1,7 +1,6 @@
-import Error404 from "/src/components/Error404.vue";
 import ProjectOverview from "/docs/pages/ark/project-overview.vue";
 import ItemValueAlgorithm from "/docs/pages/ark/item-value-algorithm.vue";
-
+import JoinDevelopmentQuickly from "/docs/pages/ark/join-development-quickly.vue";
 // {
 //     path: '/',  访问路径
 //     text: '关卡推荐',  导航展示的文本
@@ -15,23 +14,36 @@ import ItemValueAlgorithm from "/docs/pages/ark/item-value-algorithm.vue";
 
 const routes = [
     {
-        path: '/docs/ark',
+        path: '/docs',
         text: '项目简介',
-        name: 'ArkProjectOverview',
+        name: 'ProjectOverview',
         display: true,
         module: 'ark',
-        icon: 'mdi-view-grid-plus',
+        icon: 'mdi-application-outline',
         component: ProjectOverview
     },
     {
-        path: '/docs/ark/item-value-algorithm',
-        text: '材料价值算法',
-        name: 'ArkItemValueAlgorithm',
+        path: '/docs/join-development-quickly',
+        text: '快速参与开发',
+        name: 'JoinDevelopmentQuickly',
         display: true,
         module: 'ark',
-        icon: 'mdi-view-grid-plus',
+        icon: 'mdi-code-braces',
+        component: JoinDevelopmentQuickly
+    },
+    {
+        path: '/docs/item-value-algorithm',
+        text: '材料价值算法',
+        name: 'ItemValueAlgorithm',
+        display: true,
+        module: 'ark',
+        icon: 'mdi-function',
         component: ItemValueAlgorithm
     },
+
+
+
+
     // {
     //     path: '/:catchAll(.*)',
     //     display: false,
@@ -45,7 +57,7 @@ const LinkedTable = {
         path: '/',
         text: "开发文档",
         display: true,
-        icon: 'mdi-view-grid-plus',
+        icon: 'mdi-application-cog',
         child: []
     },
 }
@@ -57,7 +69,7 @@ let routeMap = new Map()
 
 for (const route of routes) {
 
-    routeMap.set(route.path, route.text)
+    routeMap.set(route.name, route.text)
 
     if (!route.module||!route.display) {
         continue

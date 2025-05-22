@@ -19,8 +19,9 @@ dropValueSum()
 
 <template>
 
-  <h1>1.给蓝色品质材料（T3）和加工副产物期望价值设定一个初始价值</h1>
+  <h1>1.设定初始值</h1>
   <v-divider ></v-divider>
+  给蓝色品质材料（T3）和加工副产物期望价值设定一个初始价值
   <p>注1：初始值可随意写入，单位为理智，推荐用绿票商店的材料标价（可以直接/1.25,能更快得出结果)，写入其他值也可以</p>
   <p>注2：加工副产物期望价值不用很准确，仅作为初始值使用</p>
   <v-card>
@@ -53,25 +54,27 @@ dropValueSum()
   </v-card>
 
 
-  <h1>2.通过蓝色品质材料（T3）获取其他品质（T1、T2、T4）材料的价值</h1>
+  <h1>2.计算材料价值</h1>
   <v-divider ></v-divider>
-  <h2>以下为计算示例：</h2>
-  <h3><span class="green">固源岩</span>的价值</h3>
+  通过蓝色品质材料（T3）获取其他品质（T1、T2、T4）材料的价值
+  <h2>计算示例</h2>
+  <span class="green">固源岩</span>的价值
   <p>已知<span class="blue">固源岩组</span>的合成公式为：
     5 * <span class="green">固源岩</span> + 合成消耗龙门币 = <span
         class="blue">固源岩组</span> + 加工副产物 * 加工爆率</p>
   <p><span class="green">固源岩</span>价值 = <span class="blue">固源岩组</span>价值
     ÷ 5 - 合成消耗龙门币 + 加工副产物 * 加工爆率 </p>
-  <h3><span class="purple">提纯源岩</span>的价值</h3>
+  <span class="purple">提纯源岩</span>的价值
   <p>已知<span class="purple">提纯源岩</span>的合成公式为 4 * <span
       class="blue">固源岩组</span> + 合成消耗龙门币 = <span
       class="purple">提纯源岩</span> + 加工副产物 * 加工爆率</p>
   <p><span class="purple">提纯源岩</span>价值 = <span
       class="blue">固源岩组</span>价值 * 4 + 合成消耗龙门币 - 加工副产物 * 加工爆率</p>
 
-  <h1>3.计算企鹅物流上每个材料关卡的期望产出理智</h1>
+  <h1>3.计算关卡期望产出理智</h1>
   <v-divider ></v-divider>
-  <h2>以下为计算示例：</h2>
+  根据企鹅物流上每个材料关卡的材料掉率计算该关卡的期望产出理智
+  <h2>计算示例</h2>
   <p>计算12-17的期望产出（数值仅为示例，非准确值）</p>
   <v-card>
     <v-table class="freeze-table-first-column">
@@ -103,8 +106,9 @@ dropValueSum()
     </v-table>
   </v-card>
 
-  <h1>4.计算各级材料的加工副产物期望产出</h1>
+  <h1>4.计算加工副产物期望产出</h1>
   <v-divider ></v-divider>
+  计算各级材料的加工副产物期望产出
   <v-expansion-panels >
     <v-expansion-panel title="加工站副产物爆率表">
       <v-expansion-panel-text>
@@ -128,8 +132,9 @@ dropValueSum()
     </v-expansion-panel>
   </v-expansion-panels>
 
-  <h1> 5.根据上面得到的关卡期望产出对蓝色等级材料的价值进行处理</h1>
+  <h1> 5.平衡蓝色等级材料价值</h1>
   <v-divider ></v-divider>
+  根据上面得到的关卡期望产出对蓝色等级材料的价值进行处理
   <p>认为关卡理智转化率不得大于1</p>
   <p>12-17消耗理智为21理智</p>
   <p>12-17期望产出为25.59理智</p>

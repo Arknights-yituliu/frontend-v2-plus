@@ -1,7 +1,41 @@
 .app {
+
   line-height: 1.5;
   font-size: 15px;
 }
+
+.side-menu {
+  position: fixed;
+
+  .side-menu-title {
+    font-weight: bold;
+    font-size: 24px;
+    padding: 24px 0 0 0;
+  }
+
+  opacity: 0.7;
+
+  .side-menu-H1 {
+    display: block;
+    cursor: pointer;
+    padding: 4px 4px 4px 12px;
+  }
+
+  .side-menu-H2 {
+    display: block;
+    padding: 4px 4px 4px 24px;
+  }
+
+  .side-menu-H3 {
+    display: block;
+    padding: 4px 4px 4px 36px;
+  }
+
+  .current-menu {
+    border-left: 3px solid rgb(var(--v-theme-primary));;
+  }
+}
+
 
 .navigation-drawer {
 
@@ -9,15 +43,8 @@
     --indent-padding: 32px;
   }
 
-  .navigation-item-content {
-    display: flex;
-    align-items: center;
-
-
-  }
-
-  .navigation-item-content-spacer {
-    width: 16px;
+  .v-list-item__spacer {
+    width: 12px !important;
   }
 
   .router-link {
@@ -26,15 +53,21 @@
   }
 }
 
-
-.v-container1 {
-  //width: calc(100% - 60px) !important;
+.v-container {
+  padding-left: 100px !important;
+  padding-right: 300px !important;
 }
 
-@media screen and (max-width: 600px) {
-
-  .app{
-    font-size: 12px;
+@media screen and (max-width: 1280px) {
+  .v-container {
+    padding: 0 48px !important;
   }
+}
 
+
+@media screen and (max-width: 700px) {
+  .app {
+    font-size: 12px;
+
+  }
 }

@@ -25,7 +25,6 @@ function getMenuList() {
 
   for (const item of hElement) {
 
-
     const {nodeName, innerText, id} = item;
 
     let h1LastChild = 0
@@ -88,7 +87,6 @@ function getCurrentMenu() {
   for (const item of hElement) {
     let rect = item.getBoundingClientRect();
     console.log(item.id)
-
     window.history.replaceState({}, '', '#' + item.id);
     currentMenu.value = item.id
 
@@ -100,7 +98,6 @@ function getCurrentMenu() {
       break
     }
   }
-
 
   // 判断一个元素是否接近视口顶部的方法
   function _isElementInViewport(rect) {
