@@ -11,7 +11,7 @@ import {onMounted, ref, watch} from "vue";
 import {LinkedTable, routeMap} from "/docs/router/routes.js";
 import {useRouter, useRoute} from "vue-router";
 import {menuList, getMenuList} from '/docs/utils/menu.js'
-import router from "/docs/router/index.js";
+import {addImageClickEvent,imageDialog,imageUrl} from '/docs/utils/viewLargerImage.js'
 import LinkButton from "@/components/dev/LinkButton.vue";
 
 const useRouterFunc = useRouter()
@@ -72,6 +72,7 @@ watch(
             clearInterval(intervalId)
           }
           getMenuList()
+          addImageClickEvent()
           max++
         }, 500)
 
@@ -145,6 +146,10 @@ onMounted(() => {
         </router-view>
       </v-container>
     </v-main>
+
+    <v-dialog v-model="imageDialog" max-width="80%">
+      <img :src="imageUrl" alt="" style="width: 100%">
+    </v-dialog>
   </v-app>
 
   <!--  <v-app :class="customTheme" class="app">-->

@@ -1,6 +1,7 @@
 import ProjectOverview from "/docs/pages/ark/project-overview.vue";
 import ItemValueAlgorithm from "/docs/pages/ark/item-value-algorithm.vue";
 import JoinDevelopmentQuickly from "/docs/pages/ark/join-development-quickly.vue";
+import JoinDevelopment from "/docs/pages/ark/join-development.vue";
 // {
 //     path: '/',  访问路径
 //     text: '关卡推荐',  导航展示的文本
@@ -24,12 +25,21 @@ const routes = [
     },
     {
         path: '/docs/join-development-quickly',
-        text: '快速参与开发',
+        text: '纯网页参与开发',
         name: 'JoinDevelopmentQuickly',
         display: true,
         module: 'ark',
         icon: 'mdi-code-braces',
         component: JoinDevelopmentQuickly
+    },
+    {
+        path: '/docs/join-development',
+        text: '参与开发',
+        name: 'JoinDevelopment',
+        display: true,
+        module: 'ark',
+        icon: 'mdi-code-braces',
+        component: JoinDevelopment
     },
     {
         path: '/docs/item-value-algorithm',
