@@ -11,8 +11,9 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
 
-    if(to.path.indexOf("docs")>-1){
 
+
+    if(to.path.indexOf("docs")>-1){
         window.open(`/docs.html?path=${to.path}`, '_self');
     }
 

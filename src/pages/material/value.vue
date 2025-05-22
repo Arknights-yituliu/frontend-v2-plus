@@ -1,13 +1,13 @@
 <script setup>
-import FixedNav from "/src/components/FixedNav.vue";
-import ModuleHeader from '@/components/ModuleHeader.vue';
+import FixedNav from "/src/components/layout/FixedNav.vue";
+import ModuleHeader from '@/components/layout/ModuleHeader.vue';
 import {ref, onMounted} from "vue";
 import {exportExcel} from "/src/utils/exportExcel";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {formatNumber} from "@/utils/format.js";
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
-import NoticeBoard from "/src/components/NoticeBoard.vue";
+import NoticeBoard from "/src/components/layout/NoticeBoard.vue";
 import {exportToJsonFile} from "/src/utils/fileUtils.js";
 
 

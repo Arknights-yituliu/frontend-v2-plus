@@ -2,8 +2,8 @@
 import stageApi from '/src/api/material'
 import {onMounted, ref} from "vue";
 import itemSeries from '/src/static/json/material/item_series.json'
-import FixedNav from "/src/components/FixedNav.vue";
-import TourGuide from "/src/components/TourGuide.vue";
+import FixedNav from "/src/components/layout/FixedNav.vue";
+import TourGuide from "/src/components/layout/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import {dateFormat} from '/src/utils/dateUtil.js'

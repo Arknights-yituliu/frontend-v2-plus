@@ -1,5 +1,5 @@
 <script setup>
-import ModuleHeader from '@/components/ModuleHeader.vue';
+import ModuleHeader from '@/components/layout/ModuleHeader.vue';
 import {onMounted, ref} from 'vue'
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import '/src/assets/css/material/store.scss';
@@ -8,7 +8,7 @@ import '/src/assets/css/sprite/sprite_plane_icon.css';
 import STORE_PERM_DATA from '/src/static/json/material/store_perm_table.json'
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import itemAPI from '/src/api/materialV5.js'
-import NoticeBoard from "@/components/NoticeBoard.vue";
+import NoticeBoard from "@/components/layout/NoticeBoard.vue";
 
 
 const storeListFormat = ref([]) // 常驻商店性价比集合

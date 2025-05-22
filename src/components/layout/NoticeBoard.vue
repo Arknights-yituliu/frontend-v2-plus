@@ -1,6 +1,6 @@
 <script setup >
 import StageLegend from "@/components/material/StageLegend.vue";
-import ModuleHeader from "@/components/ModuleHeader.vue";
+import ModuleHeader from "@/components/layout/ModuleHeader.vue";
 
 const props = defineProps(["modelValue","module"]);
 

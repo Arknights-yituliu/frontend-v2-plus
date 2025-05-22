@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import DevCard from "/src/components/DevCard.vue";
+import DevCard from "/src/components/dev/DevCard.vue";
 
 import developmentRelated from '/src/static/json/about/developmentRelated.json'
 import developmentChat from '/src/static/json/about/developmentChat.json'

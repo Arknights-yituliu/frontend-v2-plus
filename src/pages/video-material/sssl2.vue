@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from 'vue'
-import FixedNav from "/src/components/FixedNav.vue";
+import FixedNav from "/src/components/layout/FixedNav.vue";
 import storeAPI from '/src/api/store.js'
 import '/src/assets/css/material/store.scss'
 import '/src/assets/css/material/store.phone.scss'

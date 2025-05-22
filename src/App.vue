@@ -20,14 +20,14 @@ import '/src/assets/css/layout/basic.scss'
 import '/src/assets/css/common/theme.scss'
 import '/src/assets/css/atomic/atomic.scss'
 
-import Navigation from '/src/components/Navigation.vue'
+import Navigation from '/src/components/layout/Navigation.vue'
 import {useTheme} from 'vuetify'
 
 import User from '/src/pages/account/user.vue'
 import {computed, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
-import ComponentsContainer from "/src/components/ComponentsContainer.vue";
+import ComponentsContainer from "/src/components/layout/ComponentsContainer.vue";
 import FeedbackTable from '/src/static/json/about/feedback_table.json'
   
 

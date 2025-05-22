@@ -3,14 +3,14 @@ import itemAPI from "/src/api/materialV5.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import {ref} from 'vue';
 import PackCardContainer from '/src/components/material/PackCardGroup.vue'
-import ModuleHeader from '/src/components/ModuleHeader.vue';
+import ModuleHeader from '/src/components/layout/ModuleHeader.vue';
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import PackTable from "/src/components/material/PackTable.vue";
 import deepClone from "/src/utils/deepClone.js";
 import '/src/assets/css/material/pack.scss';
 import '/src/assets/css/material/pack.phone.scss';
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
-import NoticeBoard from "@/components/NoticeBoard.vue";
+import NoticeBoard from "@/components/layout/NoticeBoard.vue";
 
 const date = new Date() // 当前日期
 const fixedPacks = ref({})

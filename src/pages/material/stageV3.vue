@@ -1,8 +1,8 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {itemSeriesObj} from "/src/utils/item/itemSeries.js";
-import FixedNav from "/src/components/FixedNav.vue";
-import TourGuide from "/src/components/TourGuide.vue";
+import FixedNav from "/src/components/layout/FixedNav.vue";
+import TourGuide from "/src/components/layout/TourGuide.vue";
 import '/src/assets/css/material/stage.scss'
 import '/src/assets/css/material/stage.phone.scss'
 import StageLegend from "/src/components/material/StageLegend.vue";
@@ -15,7 +15,7 @@ import itemCache from '/src/plugins/indexedDB/itemCache.js'
 import {formatNumber} from "/src/utils/format.js";
 import {useRouter} from "vue-router";
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
-import NoticeBoard from "/src/components/NoticeBoard.vue";
+import NoticeBoard from "/src/components/layout/NoticeBoard.vue";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";

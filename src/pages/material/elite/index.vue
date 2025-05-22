@@ -2,7 +2,7 @@
 import Table from './components/table'; // 模组排名表
 import DetailDialog from './components/detailDialog'; // 详情弹窗
 import CreateOperatorDialog from './components/createOperatorDialog'; // 新建自定义干员弹窗
-import ModuleHeader from '@/components/ModuleHeader.vue';
+import ModuleHeader from '@/components/layout/ModuleHeader.vue';
 
 import { ref } from 'vue';
 import { exportExcel } from '@/utils/exportExcel.js'; // 表格导出

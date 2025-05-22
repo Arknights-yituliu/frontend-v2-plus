@@ -3,7 +3,7 @@ import developmentRelated from "/src/static/json/about/developmentRelated.json";
 import informationRelease from "/src/static/json/about/informationRelease.json";
 import developmentChat from "/src/static/json/about/developmentChat.json";
 
-import DevCard from "/src/components/DevCard.vue";
+import DevCard from "/src/components/dev/DevCard.vue";
 
 function openNewPage() {
   window.open(`https://docs.qq.com/sheet/DRVJ6UlBDb3NWYmxF?tab=hlop1l`)
