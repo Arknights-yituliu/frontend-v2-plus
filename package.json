@@ -25,6 +25,7 @@
     "vuetify": "^3.7.5"
   },
   "devDependencies": {
+    "@mdi/font": "^7.4.47",
     "@vitejs/plugin-vue": "5.0.4",
     "naive-ui": "^2.41.0",
     "rollup-plugin-visualizer": "^5.12.0",
