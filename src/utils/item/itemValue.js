@@ -3,6 +3,7 @@ import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
 
 import {getStageDropCollect} from "@/plugins/indexedDB/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
+import {stageConfig} from "@/utils/user/userConfig.js";
 // import {updateItemInfoWeight} from "/src/utils/item/updateItemInfoWeight.js";
 
 
@@ -427,6 +428,7 @@ async function getCustomItemList(stageConfig) {
 
     stageDropCollect = await getStageDropCollect(stageConfig)
     const customItem = stageConfig.customItem
+
     let customItemMap = new Map()
     for (const item of customItem) {
         const {itemId, itemValue} = item

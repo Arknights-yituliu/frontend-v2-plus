@@ -1,9 +1,9 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import {formatNumber} from "/src/utils/format.js";
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
-import {getStageConfig,defaultConfig} from "@/utils/user/userConfig.js";
+import {defaultConfig, getStageConfig} from "@/utils/user/userConfig.js";
 import ActionButton from "@/components/account/ActionButton.vue";
 import ActStoreUnlimitedExchangeItem from '/src/static/json/material/act_store_unlimited_exchange_item.json'
 import PresetParameter from "/src/static/json/material/preset_parameter.json"
@@ -61,33 +61,32 @@ const debugText = ref('');
 
 const actStoreUnlimitedExchangeItem = ref(ActStoreUnlimitedExchangeItem.slice(6, 12))
 
-function resetConfig(){
+function resetConfig() {
   stageConfig.value = deepClone(defaultConfig)
   forceRefreshItemValue()
 }
 
 // 初始化默认配置
-const stageConfig = ref(deepClone(defaultConfig));
+const stageConfig = ref({});
 
 
 function loadingStageConfig() {
 // 合并本地配置
-  const config = getStageConfig();
-  for (const key in config) {
-    stageConfig.value[key] = config[key]; // 合并配置
-  }
+  stageConfig.value = getStageConfig(); // 合并配置
 
   stageConfig.value.useActivityStage = false
 
   let customItemMap = new Map()
 
-  for(const item of stageConfig.value.customItem){
-    customItemMap.set(item.itemId,item.itemValue)
+  for (const item of stageConfig.value.customItem) {
+    customItemMap.set(item.itemId, item.itemValue)
   }
 
-  for(const item of actStoreUnlimitedExchangeItem.value){
-    if(customItemMap.has(item.itemId)){
-      if(customItemMap.get(item.itemId)===item.itemValue){
+
+
+  for (const item of actStoreUnlimitedExchangeItem.value) {
+    if (customItemMap.has(item.itemId)) {
+      if (customItemMap.get(item.itemId) < 3) {
         item.active = true
       }
     }
@@ -105,7 +104,6 @@ function choosePresetParameter(presetParameter) {
   for (const name in parameters) {
     stageConfig.value[name] = parameters[name];
   }
-
 
 
   updateStageActive()
@@ -243,7 +241,7 @@ function updateBeastsStageActive(stage) {
   updateStageConfig()
 }
 
-function useActivityAverageStage(){
+function useActivityAverageStage() {
   stageConfig.value.useActivityAverageStage = !stageConfig.value.useActivityAverageStage
 }
 
@@ -266,12 +264,15 @@ function getItemList() {
  */
 function chooseActStoreUnlimitedExchangeItem(item) {
   if (item.active) {
+    console.log("删除")
     deleteCustomItem(item.itemId)
   } else {
     const existing = stageConfig.value.customItem.find(e => e.itemId === item.itemId);
     if (existing) {
+      console.log("更新")
       existing.itemValue = item.itemValue; // 更新现有物品
     } else {
+      console.log("新增")
       stageConfig.value.customItem.push(item); // 新增物品
     }
   }
@@ -306,6 +307,14 @@ function addCustomItem() {
   const existing = stageConfig.value.customItem.find(item => item.itemId === customItem.value.itemId);
   let {itemId, itemValue, itemName} = customItem.value
   itemValue = stringToNumber(itemValue)
+  for (const index in actStoreUnlimitedExchangeItem.value) {
+    const item = actStoreUnlimitedExchangeItem.value[index];
+    if (item.itemId === itemId) {
+      if (itemValue < 5) {
+        actStoreUnlimitedExchangeItem.value[index].active = true;
+      }
+    }
+  }
   if (existing) {
     existing.itemValue = itemValue; // 更新现有物品
   } else {
@@ -320,6 +329,12 @@ function addCustomItem() {
  * @param itemId 材料id
  */
 function deleteCustomItem(itemId) {
+  for (const index in actStoreUnlimitedExchangeItem.value) {
+    const item = actStoreUnlimitedExchangeItem.value[index];
+    if (item.itemId === itemId) {
+      actStoreUnlimitedExchangeItem.value[index].active = false;
+    }
+  }
   stageConfig.value.customItem = stageConfig.value.customItem.filter(e => e.itemId !== itemId);
 }
 
@@ -379,10 +394,9 @@ setInterval(updateStageConfig, 2000)
 
 // 初始化数据
 onMounted(() => {
-
-  getItemList(); // 获取物品列表
   loadingStageConfig()
-});
+  getItemList(); // 获取物品列表
+})
 </script>
 
 

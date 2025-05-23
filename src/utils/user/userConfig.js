@@ -41,8 +41,12 @@ function getStageConfig() {
     const cacheStageConfig = localStorage.getItem("StageConfig");
     if (cacheStageConfig) {
         let config = JSON.parse(cacheStageConfig);
+        if(!config.customItem){
+            config.customItem = []
+        }
 
         stageConfig.value = config
+
         return config;
     } else {
         return defaultConfig

@@ -26,6 +26,7 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
         localItemValueCacheKey = Date.now()
     }
 
+
     await getCustomItemList(stageConfig).then(response => {
         console.log(`材料价值计算完毕`)
         if (forceRefresh) {
