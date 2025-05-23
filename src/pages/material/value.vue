@@ -82,7 +82,7 @@ function formatItem(data){
     if (sortId > 90) {
       continue
     }
-    item.itemValue = formatNumber(item.itemValue,4)
+    item.itemValueText = formatNumber(item.itemValue,4)
     let list = tmpList[sortId]
     if (list) {
       list.push(item)
@@ -128,7 +128,7 @@ function formatItem(data){
              :style="getItemRarityColor(item.rarity)">
           <ItemImage :item-id="item.itemId"></ItemImage>
           <div class="item-value">
-            {{ item.itemValue }}
+            {{ item.itemValueText }}
           </div>
         </div>
       </div>
