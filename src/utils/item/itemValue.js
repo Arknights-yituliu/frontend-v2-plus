@@ -3,7 +3,7 @@ import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
 
 import {getStageDropCollect} from "@/plugins/indexedDB/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
-import {updateItemInfoWeight} from "/src/utils/item/updateItemInfoWeight.js";
+// import {updateItemInfoWeight} from "/src/utils/item/updateItemInfoWeight.js";
 
 
 //加工站每级期望产出理智
@@ -356,7 +356,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             dropValueCount += value
         }
 
-        console.log(JSON.stringify(dropItemList))
+        // console.log(JSON.stringify(dropItemList))
 
         //计算关卡效率
         stageEfficiency = dropValueCount / apCost

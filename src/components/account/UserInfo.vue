@@ -171,7 +171,7 @@ onMounted(() => {
 
   <v-card class="user-card" title="用户信息" >
 
-    {{`状态：${displayOrUpdateInfo}`}}
+<!--    {{`状态：${displayOrUpdateInfo}`}}-->
 
     <v-alert v-show="userInfo.status<1"
         title="未登录"
