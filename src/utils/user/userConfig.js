@@ -41,34 +41,7 @@ function getStageConfig() {
     const cacheStageConfig = localStorage.getItem("StageConfig");
     if (cacheStageConfig) {
         let config = JSON.parse(cacheStageConfig);
-        if (!config.source) {
-            config.source = 'penguin'
-        }
 
-        let customItemMap = new Map()
-
-        for(const item of config.customItem){
-            item.itemValue = stringToNumber( item.itemValue)
-            customItemMap.set(item.itemId, item)
-        }
-
-        for(const itemId in actStoreUnlimitedExchangeItem){
-            if(!customItemMap.has(itemId)){
-                customItemMap.set(itemId,{
-                    itemId:itemId,
-                    itemValue:actStoreUnlimitedExchangeItem[itemId],
-                })
-            }
-        }
-
-        let list = []
-        for(const [key,value] of customItemMap){
-            list.push(value)
-        }
-
-
-
-        config.customItem = list
         stageConfig.value = config
         return config;
     } else {
@@ -76,6 +49,28 @@ function getStageConfig() {
     }
 }
 
+
+// let customItemMap = new Map()
+//
+// for(const item of config.customItem){
+//     item.itemValue = stringToNumber( item.itemValue)
+//     customItemMap.set(item.itemId, item)
+// }
+//
+// for(const itemId in actStoreUnlimitedExchangeItem){
+//     if(!customItemMap.has(itemId)){
+//         customItemMap.set(itemId,{
+//             itemId:itemId,
+//             itemValue:actStoreUnlimitedExchangeItem[itemId],
+//         })
+//     }
+// }
+//
+// let list = []
+// for(const [key,value] of customItemMap){
+//     list.push(value)
+// }
+// config.customItem = list
 
 export {
     getStageConfig, stageConfig,defaultConfig

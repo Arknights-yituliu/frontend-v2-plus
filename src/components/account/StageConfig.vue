@@ -80,6 +80,7 @@ function loadingStageConfig() {
   stageConfig.value.useActivityStage = false
 
   let customItemMap = new Map()
+
   for(const item of stageConfig.value.customItem){
     customItemMap.set(item.itemId,item.itemValue)
   }
