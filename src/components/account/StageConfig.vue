@@ -275,8 +275,9 @@ function chooseActStoreUnlimitedExchangeItem(item) {
       console.log("新增")
       stageConfig.value.customItem.push(item); // 新增物品
     }
+    item.active = true
   }
-  item.active = !item.active
+
 }
 
 /**
@@ -307,11 +308,10 @@ function addCustomItem() {
   const existing = stageConfig.value.customItem.find(item => item.itemId === customItem.value.itemId);
   let {itemId, itemValue, itemName} = customItem.value
   itemValue = stringToNumber(itemValue)
-  for (const index in actStoreUnlimitedExchangeItem.value) {
-    const item = actStoreUnlimitedExchangeItem.value[index];
+  for (const item of actStoreUnlimitedExchangeItem.value) {
     if (item.itemId === itemId) {
       if (itemValue < 5) {
-        actStoreUnlimitedExchangeItem.value[index].active = true;
+        item.active = true;
       }
     }
   }
@@ -329,10 +329,9 @@ function addCustomItem() {
  * @param itemId 材料id
  */
 function deleteCustomItem(itemId) {
-  for (const index in actStoreUnlimitedExchangeItem.value) {
-    const item = actStoreUnlimitedExchangeItem.value[index];
+  for (const item of actStoreUnlimitedExchangeItem.value) {
     if (item.itemId === itemId) {
-      actStoreUnlimitedExchangeItem.value[index].active = false;
+      item.active = false;
     }
   }
   stageConfig.value.customItem = stageConfig.value.customItem.filter(e => e.itemId !== itemId);
@@ -568,6 +567,7 @@ onMounted(() => {
                                :mobile-size="40" :class="actStoreUnlimitedExchangeItemActiveClass(item.active)"
                                @click="chooseActStoreUnlimitedExchangeItem(item)"></ItemImage>
                   </div>
+                  {{actStoreUnlimitedExchangeItem}}
                 </v-list-item>
 
                 <v-list-item>
