@@ -36,7 +36,7 @@ async function getUserInfoByToken() {
 
   selectedAvatar.value = userInfo.value.avatar
 
-  displayOrUpdateInfo.value = userInfo.value.status>0?'display':''
+  displayOrUpdateInfo.value = userInfo.value.status>0?'online':''
 }
 
 
@@ -51,7 +51,7 @@ let formData = ref({
   cred: '',
 })
 
-let displayOrUpdateInfo = ref(userInfo.value.status>0?'display':'')
+let displayOrUpdateInfo = ref("online")
 
 //选中的头像id
 let selectedAvatar = ref('')
@@ -151,11 +151,18 @@ function toRetrieve() {
   router.push({name: "RETRIEVE"})
 }
 
-
+let max = 0
+const intervalId =  setInterval(()=>{
+  if(max>9){
+    clearInterval(intervalId)
+  }
+  displayOrUpdateInfo.value = userInfo.value.status>0?'online':''
+  max++
+},500)
 
 onMounted(() => {
   getUserInfoByToken()
-
+  displayOrUpdateInfo.value = userInfo.value.status>0?'online':''
   // getOperatorData()
 })
 </script>
@@ -164,6 +171,7 @@ onMounted(() => {
 
   <v-card class="user-card" title="用户信息" >
 
+    {{`状态：${displayOrUpdateInfo}`}}
 
     <v-alert v-show="userInfo.status<1"
         title="未登录"
@@ -171,7 +179,7 @@ onMounted(() => {
         class="m-12"
     ></v-alert>
 
-    <div v-show="displayOrUpdateInfo === 'display'">
+    <div v-show="displayOrUpdateInfo === 'online'">
       <v-list>
         <v-list-item>
           <v-list-item-title>
@@ -213,8 +221,8 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="flex justify-between p-4" v-show="displayOrUpdateInfo !== 'display'&&displayOrUpdateInfo">
-      <v-btn variant="text" color="primary" text="返回" @click="displayOrUpdateInfo = 'display'"></v-btn>
+    <div class="flex justify-between p-4" v-show="displayOrUpdateInfo !== 'online'&&displayOrUpdateInfo">
+      <v-btn variant="text" color="primary" text="返回" @click="displayOrUpdateInfo = 'online'"></v-btn>
     </div>
 
     <div v-show="displayOrUpdateInfo==='avatar'">
