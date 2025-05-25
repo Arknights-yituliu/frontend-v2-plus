@@ -62,17 +62,18 @@ function getYTLStageList() {
         const stageId = `ytl_${index.toString().padStart(2, '0')}`
         ytlStageList[itemId] = {
             stageId: stageId,
-            stageCode: `ytl-${index.toString().padStart(2, '0')}`,
+            // stageCode: `ytl-${index.toString().padStart(2, '0')}`,
+            stageCode:'活动关',
             itemId: itemId,
             itemName: itemName,
-            quality: 0,
+            quantity: 0,
             times: 0,
             apCost: 21,
             zoneId: "ytl_virtual",
             zoneName: "SS平均掉率",
-            stageType: 'ACT',
+            stageType: 'YTL_VIRTUAL',
             start: new Date('2025/05/12 00:00:00').getTime(),
-            end: new Date('2099/05/01 00:00:00').getTime(),
+            end: new Date('2099/05/01 00:00:00').getTime()
         }
         index++
     }
@@ -123,8 +124,8 @@ function getItemMinValue() {
     console.log(JSON.stringify(actStoreUnlimitedExchange))
 }
 
-updateItemInfoWeight()
-
+// updateItemInfoWeight()
+getYTLStageList()
 
 export {
     updateItemInfoWeight
