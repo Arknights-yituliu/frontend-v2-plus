@@ -3,7 +3,7 @@
 const props = defineProps({
   btnText:{
     type:String,
-    default:''
+    default:'false'
   },
   active:{
     type:Boolean,

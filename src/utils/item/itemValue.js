@@ -3,7 +3,7 @@ import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
 
 import {getStageDropCollect} from "@/plugins/indexedDB/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
-import {updateItemInfoWeight} from "/src/utils/item/updateItemInfoWeight.js";
+// import {updateItemInfoWeight} from "/src/utils/item/updateItemInfoWeight.js";
 
 
 //加工站每级期望产出理智
@@ -47,9 +47,12 @@ function calculatedItemValue(stageConfig) {
 
 
     let customItemMap = new Map()
-    for (const item of customItem) {
-        customItemMap.set(item.itemId, item.itemValue)
+    if(customItem){
+        for (const item of customItem) {
+            customItemMap.set(item.itemId, item.itemValue)
+        }
     }
+
 
     let itemMap = new Map()
 
@@ -292,7 +295,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         //关卡效率
         let stageEfficiency = 0.0
         //关卡期望产出总理智
-        let dropValueCount = 0.0
+        let stageExpectedOutput = 0.0
 
         //如果是第一次迭代，需要给每个关卡的材料掉落添加一个龙门币掉落，
         // if (index === 0) {
@@ -335,15 +338,15 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             //计算材料掉率
             const knockRating = quantity / times
             //计算单项材料期望产出价值
-            const value = knockRating * itemValue
+            const expectedOutput = knockRating * itemValue
             //比较单项材料最大产出，最大的为主产物
-            if (value > maxValue) {
+            if (expectedOutput > maxValue) {
                 mainItemId = itemId
-                maxValue = value
+                maxValue = expectedOutput
             }
 
             if(stageId==='main_12-15'){
-                // console.log(stageCode, '---', itemName, '=', itemValue, '*', knockRating, '=', value, '=', dropValueCount)
+                // console.log(stageCode, '---', itemName, '=', itemValue, '*', knockRating, '=', expectedOutput, '=', dropValueCount)
                 dropItemList.push({
                     itemId,
                     itemName,
@@ -353,13 +356,13 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             }
 
             //计算关卡期望产出总理智
-            dropValueCount += value
+            stageExpectedOutput += expectedOutput
         }
 
         // console.log(JSON.stringify(dropItemList))
 
         //计算关卡效率
-        stageEfficiency = dropValueCount / apCost
+        stageEfficiency = stageExpectedOutput / apCost
         // if (stageId === 'main_02-05') {
         //     console.log(stageCode, '---', stageEfficiency, '=', dropValueCount, '/', apCost)
         // }
@@ -429,10 +432,13 @@ async function getCustomItemList(stageConfig) {
     const customItem = stageConfig.customItem
 
     let customItemMap = new Map()
-    for (const item of customItem) {
-        const {itemId, itemValue} = item
-        customItemMap.set(itemId, itemValue)
+    if(customItem){
+        for (const item of customItem) {
+            const {itemId, itemValue} = item
+            customItemMap.set(itemId, itemValue)
+        }
     }
+
 
     for (let i = 0; i < 50; i++) {
         // console.log(`第${i + 1}次迭代1`)

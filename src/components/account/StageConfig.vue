@@ -46,20 +46,13 @@ const BeastsStage = ref({
   },
 })
 
-// 响应式数据
+const stageConfigPanel = ref(['preset-parameter'])
 
-const stageCollect = ref({
-  "Open": [],
-  "Main": [],
-  "Act": [],
-  "ActPerm": []
-});
+// 响应式数据
 const itemList = ref([]);
-const customItemDialog = ref(false);
-const customItem = ref({itemId: '30073', itemName: "扭转醇", itemValue: 1.8});
+
 const debugText = ref('');
 
-const actStoreUnlimitedExchangeItem = ref(ActStoreUnlimitedExchangeItem.slice(6, 12))
 
 function resetConfig() {
   stageConfig.value = deepClone(defaultConfig)
@@ -117,9 +110,17 @@ function choosePresetParameter(presetParameter) {
 
 }
 
-const stageConfigPanel = ref(['preset-parameter'])
+
 
 //------------------从这里开始是关卡相关的代码------------------
+
+
+const stageCollect = ref({
+  "Open": [],
+  "Main": [],
+  "Act": [],
+  "ActPerm": []
+});
 
 const stageTypeMap = {
   ACT: "SideStory",
@@ -247,6 +248,10 @@ function useActivityAverageStage() {
 
 
 //------------------从这里开始是自定义材料价值相关的代码------------------
+
+const customItemDialog = ref(false);
+const customItem = ref({itemId: '30073', itemName: "扭转醇", itemValue: 1.8});
+const actStoreUnlimitedExchangeItem = ref(ActStoreUnlimitedExchangeItem.slice(6, 12))
 
 /**
  * 获取物品列表
@@ -567,7 +572,7 @@ onMounted(() => {
                                :mobile-size="40" :class="actStoreUnlimitedExchangeItemActiveClass(item.active)"
                                @click="chooseActStoreUnlimitedExchangeItem(item)"></ItemImage>
                   </div>
-                  {{actStoreUnlimitedExchangeItem}}
+<!--                  {{actStoreUnlimitedExchangeItem}}-->
                 </v-list-item>
 
                 <v-list-item>

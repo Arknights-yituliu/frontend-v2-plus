@@ -3,7 +3,6 @@ import {getStageDropCollect} from "/src/plugins/indexedDB/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
 
 
-
 /**
  * 获取材料价值
  * @param stageConfig
@@ -35,19 +34,20 @@ async function calculationStageEfficiency(stageConfig) {
 
     let stageResultList = []
 
+
     for (const [stageId, list] of stageDropCollect) {
 
 
-        const {apCost, stageCode, zoneName,spm, stageType, end} = list[0]
+        const {apCost, stageCode, zoneName, spm, stageType, end} = list[0]
 
-        if(!stageConfig.useActivityAverageStage){
-            if("YTL_VIRTUAL"===stageType){
+        if (!stageConfig.useActivityAverageStage) {
+            if ("YTL_VIRTUAL" === stageType) {
                 continue
             }
         }
 
         let stageEfficiency = 0.0;
-        let dropValueCount = 0.0
+        let stageExpectedOutput = 0.0
 
         // list.push({
         //     stageId: stageId,
@@ -66,7 +66,7 @@ async function calculationStageEfficiency(stageConfig) {
         // }
 
 
-        let stageDropValue = []
+        let stageDropDetailList = []
 
         let endTimeStamp = 4073691312000
 
@@ -80,14 +80,14 @@ async function calculationStageEfficiency(stageConfig) {
 
             const {itemName, itemValue, rarity} = itemInfo;
             const knockRating = quantity / times
-            const value = knockRating * itemValue
-            dropValueCount += value
+            const expectedOutput = knockRating * itemValue
+            stageExpectedOutput += expectedOutput
 
             const dropValue = {
                 itemName: itemName,
                 itemId: itemId,
                 itemValue: itemValue,
-                value: value,
+                expectedOutput: expectedOutput,
                 knockRating: knockRating,
                 rarity: parseInt(rarity),
                 quantity: quantity,
@@ -100,14 +100,14 @@ async function calculationStageEfficiency(stageConfig) {
             // if(stageId==='main_14-13'){
             //     console.log(dropValue)
             // }
-            stageDropValue.push(dropValue)
+            stageDropDetailList.push(dropValue)
         }
 
         // if(stageId==='main_01-07'){
         //     console.table(stageDropValue)
         // }
 
-        stageDropValue.sort((a, b) => b.value - a.value)
+        stageDropDetailList.sort((a, b) => b.expectedOutput - a.expectedOutput)
 
 
         let mainSeriesInfo = void 0
@@ -123,10 +123,11 @@ async function calculationStageEfficiency(stageConfig) {
         let LMDCostPerAp = 0
         let mainItemId = '0'
         let mainItemName = '0'
-        for (let i = 0; i < stageDropValue.length; i++) {
 
-            const element = stageDropValue[i];
-            const {itemId, itemName, rarity, knockRating, sampleSize, value, end} = element
+        for (let i = 0; i < stageDropDetailList.length; i++) {
+
+            const element = stageDropDetailList[i];
+            const {itemId, itemName, rarity, knockRating, sampleSize, expectedOutput, end} = element
 
             if (i === 0) {
 
@@ -146,6 +147,7 @@ async function calculationStageEfficiency(stageConfig) {
                 break;
             }
 
+            //计算四种可搓玉的材料可以搓多少玉
             if ("30011" === itemId) {
                 orundumPerAp += knockRating * 5 / 3
                 LMDCostPerAp += knockRating * 800 / 3
@@ -163,31 +165,31 @@ async function calculationStageEfficiency(stageConfig) {
                 LMDCostPerAp += knockRating * 1000
             }
 
-            if (i === 1) {
+            //产出排名第二,并且理智转化率大于0.1的材料是副产物
+            if (i === 1 && (expectedOutput / apCost > 0.1)) {
                 secondaryItemId = itemId
             }
 
-
+            //获取关卡的主产物的材料系列信息
             const seriesInfo = itemSeriesInfoByItemId.get(itemId)
 
 
+            //计算关卡中所有是主产物系列的材料的t2、t3、t4效率
             if (seriesInfo && seriesInfo.seriesId === mainSeriesInfo.seriesId) {
-
                 if (1 === rarity || 2 === rarity) {
-                    leT2Value += value;
+                    leT2Value += expectedOutput;
                 }
                 if (3 === rarity) {
-                    leT3Value += value;
+                    leT3Value += expectedOutput;
                 }
                 if (4 === rarity) {
-                    leT4Value += value;
+                    leT4Value += expectedOutput;
                 }
 
             }
-
-
         }
 
+        //如果主产物信息不存在，则结束循环
         if (!mainSeriesInfo) {
             continue
         }
@@ -195,7 +197,7 @@ async function calculationStageEfficiency(stageConfig) {
         orundumPerAp = orundumPerAp / apCost
 
 
-        stageEfficiency = dropValueCount / apCost
+        stageEfficiency = stageExpectedOutput / apCost
         const leT4Efficiency = (leT2Value + leT3Value + leT4Value) / apCost
         const leT3Efficiency = (leT2Value + leT3Value) / apCost
         const leT2Efficiency = leT2Value / apCost
@@ -221,8 +223,12 @@ async function calculationStageEfficiency(stageConfig) {
             orundumPerAp: orundumPerAp,
             lmdcost: LMDCostPerAp * 600 / apCost / orundumPerAp / 10000,
             end: endTimeStamp,
-            spm:spm
+            spm: spm,
+            apCost,
+            stageExpectedOutput: stageExpectedOutput,
+            dropDetail:stageDropDetailList
         }
+
 
 
         stageResultList.push(stageResult)
@@ -331,5 +337,5 @@ function getHistoryActStage(stageResultList) {
 
 
 export {
-    getStageData
+    getStageData,calculationStageEfficiency
 }
