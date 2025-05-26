@@ -59,7 +59,7 @@ function calculatedItemValue(stageConfig) {
     let customItemMap = new Map()
 
     //将自定义物品列表转为一个map
-    if(customItem){
+    if (customItem) {
         for (const item of customItem) {
             customItemMap.set(item.itemId, item.itemValue)
         }
@@ -127,7 +127,7 @@ function calculatedItemValue(stageConfig) {
             const expectProductsValue = workShopProducts[`t${rarity}`] * workShopProductKnockRating
             for (const cost of pathway) {
                 const rawItem = itemInfoMap.get(cost.itemId)
-                newValue = (rawItem.itemValue + expectProductsValue - 0.36 * rarity) / cost.count
+                newValue = (rawItem.itemValue + expectProductsValue - 0.36 * lmdCoefficient * rarity) / cost.count
                 // console.log(item.itemName + '=' + rawItem.itemName + '=(' + rawItem.itemValue + "+" + expectProductsValue + '-' + (0.36 * rarity) + ')/' + cost.count + '=' + newValue)
             }
         } else {
@@ -140,7 +140,7 @@ function calculatedItemValue(stageConfig) {
 
             }
 
-            newValue = newValue + 0.36 * (rarity - 1) - expectProductsValue
+            newValue = newValue + 0.36 * lmdCoefficient * (rarity - 1) - expectProductsValue
             // console.log(item.itemName + '=' + (0.36 * (rarity - 1)) + '-' + expectProductsValue + '=' + newValue)
 
         }
@@ -368,7 +368,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         for (const drop of list) {
 
             //解构出物品id，掉落次数，样本数
-            const {itemId,  quantity, times} = drop
+            const {itemId, quantity, times} = drop
 
             // 从物品表里面取出对应掉落物的信息
             const itemInfo = itemMap.get(itemId);
@@ -379,7 +379,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             }
 
             //从物品信息中解构出物品价值
-            const {itemValue,itemName} = itemInfo;
+            const {itemValue, itemName} = itemInfo;
 
             //计算物品掉率
             const knockRating = quantity / times
@@ -472,7 +472,7 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
             //     maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
             // }
 
-            if (seriesCorrectionTerm.correctionTerm>correctionTerm) {
+            if (seriesCorrectionTerm.correctionTerm > correctionTerm) {
                 maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
             }
         }
@@ -501,7 +501,7 @@ async function getCustomItemList(stageConfig) {
     let customItemMap = new Map()
 
     //将自定义物品列表转为一个map
-    if(customItem){
+    if (customItem) {
         for (const item of customItem) {
             const {itemId, itemValue} = item
             customItemMap.set(itemId, itemValue)
