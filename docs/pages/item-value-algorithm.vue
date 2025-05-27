@@ -3,7 +3,7 @@ import itemWeightTable from '/docs/static/json/item-weight.json'
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {formatNumber} from "/src/utils/format.js";
 import {ref} from "vue";
-import StageDrop12_17 from  '/docs/static/json/drop_12-17.json'
+import StageDrop12_17 from '/docs/static/json/drop_12-17.json'
 
 const stageDropValue = ref(0)
 
