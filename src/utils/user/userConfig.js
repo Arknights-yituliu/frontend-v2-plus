@@ -5,7 +5,7 @@ import {getUid} from "@/utils/user/userInfo.js";
 const defaultConfig = {
     id: getUid(),
     expCoefficient: 0.633,
-    lmdCoefficient: 0.9568,
+    lmdCoefficient: 1,
     useActivityStage: false,
     useActivityAverageStage:false,
     stageBlacklist: [],
