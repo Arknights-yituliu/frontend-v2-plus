@@ -8,25 +8,30 @@
   position: fixed;
 
   .side-menu-title {
+    color: rgb(0,0,0);
     font-weight: bold;
-    font-size: 24px;
+    display: block;
+    font-size: 20px;
     padding: 24px 0 0 0;
   }
 
-  opacity: 0.7;
+  opacity: 0.8;
 
   .side-menu-H1 {
+    color: rgba(0,0,0,0.8);
     display: block;
     cursor: pointer;
     padding: 4px 4px 4px 12px;
   }
 
   .side-menu-H2 {
+    color: rgba(0,0,0,0.8);
     display: block;
     padding: 4px 4px 4px 24px;
   }
 
   .side-menu-H3 {
+    color: rgba(0,0,0,0.8);
     display: block;
     padding: 4px 4px 4px 36px;
   }
@@ -34,6 +39,7 @@
   .current-menu {
     border-left: 3px solid rgb(var(--v-theme-primary));;
   }
+
 }
 
 

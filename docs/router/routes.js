@@ -2,8 +2,8 @@ import ProjectOverview from "/docs/pages/project-overview.vue";
 import ItemValueAlgorithm from "/docs/pages/item-value-algorithm.vue";
 import JoinDevelopmentQuickly from "/docs/pages/join-development-quickly.vue";
 import JoinDevelopment from "/docs/pages/join-development.vue";
-import WritingDocumentation from "/docs/pages/writing-docs.vue";
-
+import WritingDocumentation from "/docs/pages/writing-documentation.vue";
+import WritingPage from "/docs/pages/writing-page.vue";
 // {
 //     path: '/',  访问路径
 //     text: '关卡推荐',  导航展示的文本
@@ -53,13 +53,22 @@ const routes = [
         component: ItemValueAlgorithm
     },
     {
-        path: '/docs/writing-docs',
-        text: '编写文档',
+        path: '/docs/writing-documentation',
+        text: '编写文档站页面',
         name: 'WritingDocumentation',
         display: true,
         module: 'DevelopmentDocumentation',
-        icon: 'mdi-code-braces',
+        icon: 'mdi-file-document',
         component: WritingDocumentation
+    },
+    {
+        path: '/docs/writing-page',
+        text: '编写主站点页面',
+        name: 'WritingPage',
+        display: true,
+        module: 'DevelopmentDocumentation',
+        icon: 'mdi-file-sign',
+        component: WritingPage
     }
 
 
@@ -84,7 +93,6 @@ const LinkedTable = {
 }
 
 
-
 let routeMap = new Map()
 
 
@@ -92,7 +100,7 @@ for (const route of routes) {
 
     routeMap.set(route.name, route.text)
 
-    if (!route.module||!route.display) {
+    if (!route.module || !route.display) {
         continue
     }
 

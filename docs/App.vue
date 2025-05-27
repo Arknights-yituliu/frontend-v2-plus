@@ -13,6 +13,7 @@ import {useRouter, useRoute} from "vue-router";
 import {menuList, getMenuList} from '/docs/utils/menu.js'
 import {addImageClickEvent,imageDialog,imageUrl} from '/docs/utils/viewLargerImage.js'
 import LinkButton from "@/components/dev/LinkButton.vue";
+import {formatCodeElement} from "/docs/utils/formatCode.js";
 
 const useRouterFunc = useRouter()
 const useRouteFunc = useRoute()
@@ -22,11 +23,33 @@ for (const module in LinkedTable) {
   open.value.push(module)
 }
 
-let customTheme = ref("theme-light")
+
 const drawer = ref(true)
 
 
 
+watch(
+    () => useRouteFunc.path,
+    (newPath, oldPath) => {
+      if (newPath !== oldPath) {
+        let max = 0
+        const intervalId = setInterval(() => {
+          if (max > 10) {
+            clearInterval(intervalId)
+          }
+          getMenuList()
+          formatCodeElement()
+          addImageClickEvent()
+          max++
+        }, 500)
+
+      }
+    }
+)
+
+// router.afterEach((to, from) => {
+//      // 确保DOM已经更新
+// })
 
 
 function toPage() {
@@ -62,28 +85,6 @@ function toPage() {
   }
 }
 
-watch(
-    () => useRouteFunc.path,
-    (newPath, oldPath) => {
-      if (newPath !== oldPath) {
-        let max = 0
-        const intervalId = setInterval(() => {
-          if (max > 10) {
-            clearInterval(intervalId)
-          }
-          getMenuList()
-          addImageClickEvent()
-          max++
-        }, 500)
-
-      }
-    }
-)
-
-// router.afterEach((to, from) => {
-//      // 确保DOM已经更新
-// })
-
 onMounted(() => {
   toPage()
 
@@ -94,7 +95,7 @@ onMounted(() => {
 
 <template>
 
-  <v-app :class="customTheme" class="app">
+  <v-app  class="app">
     <v-app-bar :elevation="1" color="primary">
       <template v-slot:prepend>
         <v-app-bar-nav-icon @click="drawer=!drawer"></v-app-bar-nav-icon>
@@ -128,7 +129,9 @@ onMounted(() => {
     <v-navigation-drawer location="right" permanent>
       <div class="side-menu">
         <span class="side-menu-title">目录</span>
-       <LinkButton v-for="item in menuList" :link="`#${item.id}`" :text="item.title" :class="`side-menu-${item.nodeName}`"></LinkButton>
+       <a v-for="item in menuList" :href="`#${item.id}`"  :class="`side-menu-${item.nodeName}`">
+         {{item.title}}
+       </a>
 <!--        <a v-for="h1 in menuList" class="side-menu-h1" :href="`#${h1.id}`" >-->
 <!--          {{ h1.title }}-->
 <!--          <a v-for="h2 in h1.child" class="side-menu-h2" :href="`#${h2.id}`" >-->

@@ -207,36 +207,36 @@ let h1Open = ref(['project', 'join-us'])
         此方法适用于想提交一些修改JSON文件、文档、错字之类的修改
       </v-alert>
       <p>1.首先来到前端仓库，点击右上角的<b> Fork </b>按钮复制一份代码</p>
-      <img src="/image/doc/fork.jpg" alt="" @click="viewLargerImage('/image/doc/fork.jpg')">
+      <img src="/image/docs/fork.jpg" alt="" @click="viewLargerImage('/image/doc/fork.jpg')">
       <p>2.然后直接点击<b> Create Fork </b>按钮</p>
-      <img src="/image/doc/create-fork.jpg" alt="" @click="viewLargerImage('/image/doc/create-fork.jpg')">
+      <img src="/image/docs/create-fork.jpg" alt="" @click="viewLargerImage('/image/doc/create-fork.jpg')">
       <p>
         3.接下来来到了你的个人仓库，可以看到标题是 “用户名称/frontend-v2-plus”，下面一行小字 forked from
         Arknights-yituliu/frontend-v2-plus
       </p>
-      <img src="/image/doc/my-repositories.jpg" alt="" @click="viewLargerImage('/image/doc/my-repositories.jpg')">
+      <img src="/image/docs/my-repositories.jpg" alt="" @click="viewLargerImage('/image/doc/my-repositories.jpg')">
       <p>4.找到你要改的文件，一般数据文件在<b> src/static/ </b>目录下，这里演示如何修改攒抽计算器的活动排期，
         活动排期文件为src/static/json/tools/schedule_by_honeycake.json（非固定活动）或
         src/static/json/tools/schedule_fixed.json（固定活动，如周年、夏活等）</p>
       <p>5.点击对应文件页面的右上角编辑按钮</p>
-      <img src="/image/doc/web-edit.jpg" alt="" @click="viewLargerImage('/image/doc/web-edit.jpg')">
+      <img src="/image/docs/web-edit.jpg" alt="" @click="viewLargerImage('/image/doc/web-edit.jpg')">
       <p>6.到这步就可以随便修改了，如果涉及大量修改还是直接拉取代码到本地用编译器编辑，编译器一般带JSON格式检查</p>
       <p>7.修改完后点击右上角绿色的<b> Commit-changes </b>按钮</p>
-      <img src="/image/doc/web-commit-changes-1.jpg" alt="" @click="viewLargerImage('/image/doc/web-commit-changes-1.jpg')">
+      <img src="/image/docs/web-commit-changes-1.jpg" alt="" @click="viewLargerImage('/image/doc/web-commit-changes-1.jpg')">
       <p>8.这时会弹出一个弹窗，在弹窗表单上的Commit message填写本次提交的大概描述，建议按统一格式写，填写完毕后点击<b> Commit
         changes </b>按钮</p>
       <v-alert variant="tonal" type="info" title="Commit message格式">
         提交类型(例如：更新-update、修复-fix)(修改区域):本次修改的大概描述
       </v-alert>
-      <img src="/image/doc/web-commit-changes-2.jpg" alt="" @click="viewLargerImage('/image/doc/web-commit-changes-2.jpg')">
+      <img src="/image/docs/web-commit-changes-2.jpg" alt="" @click="viewLargerImage('/image/doc/web-commit-changes-2.jpg')">
       <p>9.当你完成上述步骤，回到你fork的仓库主页，或者点击<b> code </b>按钮回到主页，此时会有两种情况：</p>
       <p>① 如果出现<b> Compare & Pull Requeste </b>按钮，直接点就行了。</p>
       <p>② 没有出现，就点击<b> Contribute </b>按钮，再点击<b> Open Pull Request </b></p>
-      <img src="/image/doc/open-pull-request.jpg" alt="" @click="viewLargerImage('/image/doc/open-pull-request.jpg')">
+      <img src="/image/docs/open-pull-request.jpg" alt="" @click="viewLargerImage('/image/doc/open-pull-request.jpg')">
       <p>10.此时会跳转到pull-request页面，可查看提交的内容是否是你想提交的。<br>
         之后填写Add a title和Add a description， title也最好按commit message格式填写。<br>
         以上都确认无误后，点击绿色的<b> Create pull request </b>按钮</p>
-      <img src="/image/doc/create-pull-request.jpg" alt="" @click="viewLargerImage('/image/doc/create-pull-request.jpg')">
+      <img src="/image/docs/create-pull-request.jpg" alt="" @click="viewLargerImage('/image/doc/create-pull-request.jpg')">
       <p>11.提交后等待组织仓库的持有人merge即可</p>
 
 
@@ -251,24 +251,24 @@ let h1Open = ref(['project', 'join-us'])
       <p>前往前端仓库，地址：<a href="https://github.com/Arknights-yituliu/frontend-v2-plus">https://github.com/Arknights-yituliu/frontend-v2-plus</a>,
         此时你可以看到这样的一个页面，点击上面的code按钮会弹窗一个小窗口，有三种下载方式，但是只推荐前两种，把前两种下载方式挑一个复制下来
       </p>
-      <img src="/image/doc/pull-code.jpg" alt="" @click="viewLargerImage('/image/doc/pull-code.jpg')">
+      <img src="/image/docs/pull-code.jpg" alt="" @click="viewLargerImage('/image/doc/pull-code.jpg')">
       <p>
         复制好上面的链接后，在你的电脑上新建一个文件夹，例如frontend（你可以随便取，建议英文，避免一些不必要的问题），进入到frontend文件夹后，在文件夹内空白处点击鼠标右键唤出菜单</p>
-      <img src="/image/doc/right-click-menu.jpg" alt="" @click="viewLargerImage('/image/doc/right-click-menu.jpg')">
+      <img src="/image/docs/right-click-menu.jpg" alt="" @click="viewLargerImage('/image/doc/right-click-menu.jpg')">
       <p>点击上面的Open Git Bash here，此时会出现一个这样的终端页面，此时输入命令：git clone 加上从第一步复制的仓库链接
       </p>
       <code>git clone git@github.com:Arknights-yituliu/frontend-v2-plus.git</code>
-      <img src="/image/doc/git-terminal.jpg" alt="" @click="viewLargerImage('/image/doc/git-terminal.jpg')">
+      <img src="/image/docs/git-terminal.jpg" alt="" @click="viewLargerImage('/image/doc/git-terminal.jpg')">
       <p>
         输入上述命令后按确认，会出现如下打印内容，由于仓库的提交历史过大，需要下载一会，也可以通过追加命名参数选择不下载历史提交记录</p>
-      <img src="/image/doc/download-repository.jpg" alt="" @click="viewLargerImage('/image/docdownload-repository.jpg')">
+      <img src="/image/docs/download-repository.jpg" alt="" @click="viewLargerImage('/image/docdownload-repository.jpg')">
       <h3 id="install dependencies">安装依赖</h3>
       <p>
         等待下载完成后你的frontend文件夹里会出现一个新的文件夹frontend-v2-plus，点击进入这个文件夹，点击文件夹上的地址栏，输入命令cmd</p>
-      <img src="/image/doc/repository-folder.jpg" alt="">
+      <img src="/image/docs/repository-folder.jpg" alt="">
       <p>在弹出的终端中输入命令：npm install，安装项目的依赖包</p>
       <code>npm install</code>
-      <img src="/image/doc/install-package.jpg" alt="" @click="viewLargerImage('/image/doc/install-package.jpg')">
+      <img src="/image/docs/install-package.jpg" alt="" @click="viewLargerImage('/image/doc/install-package.jpg')">
 
 
       <v-dialog v-model="imageDialog" max-width="80%">
