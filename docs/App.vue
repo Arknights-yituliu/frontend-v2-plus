@@ -96,12 +96,15 @@ onMounted(() => {
 <template>
 
   <v-app  class="app">
-    <v-app-bar :elevation="1" color="primary">
+    <v-app-bar :elevation="1" >
       <template v-slot:prepend>
-        <v-app-bar-nav-icon @click="drawer=!drawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon class="drawer-btn" @click="drawer=!drawer"></v-app-bar-nav-icon>
       </template>
       <v-app-bar-title>
+        <div class="flex align-center">
+        <img alt="" src="/image/website/ico64.webp" style="width: 40px;height: 40px;margin: 0 4px 0 0;border-radius: 4px">
         <span class="font-bold"> 明日方舟一图流</span>
+        </div>
       </v-app-bar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" width="240">

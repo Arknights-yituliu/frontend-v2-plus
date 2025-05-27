@@ -45,6 +45,10 @@
 }
 
 
+.drawer-btn{
+  display: none !important;
+}
+
 .navigation-drawer {
 
   .v-list-item {
@@ -71,6 +75,10 @@
     padding: 0 12px !important;
   }
 
+  .drawer-btn{
+    display: grid;
+  }
+
   .right-drawer{
        display: none !important;
   }
@@ -81,6 +89,11 @@
   .app {
     font-size: 12px;
   }
+
+  .drawer-btn{
+    display: grid;
+  }
+
   .right-drawer{
     display: none !important;
   }
