@@ -4,6 +4,8 @@
   font-size: 15px;
 }
 
+
+
 .side-menu {
   position: fixed;
 
@@ -66,7 +68,11 @@
 
 @media screen and (max-width: 1280px) {
   .v-container {
-    padding: 0 48px !important;
+    padding: 0 12px !important;
+  }
+
+  .right-drawer{
+       display: none !important;
   }
 }
 
@@ -74,6 +80,8 @@
 @media screen and (max-width: 700px) {
   .app {
     font-size: 12px;
-
+  }
+  .right-drawer{
+    display: none !important;
   }
 }

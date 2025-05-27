@@ -126,7 +126,7 @@ onMounted(() => {
         </v-list-group>
       </v-list>
     </v-navigation-drawer>
-    <v-navigation-drawer location="right" permanent>
+    <v-navigation-drawer location="right"  class="right-drawer">
       <div class="side-menu">
         <span class="side-menu-title">目录</span>
        <a v-for="item in menuList" :href="`#${item.id}`"  :class="`side-menu-${item.nodeName}`">
