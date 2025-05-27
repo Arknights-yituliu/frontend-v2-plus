@@ -5,7 +5,7 @@ import {getUid} from "@/utils/user/userInfo.js";
 const defaultConfig = {
     id: getUid(),
     expCoefficient: 0.633,
-    lmdCoefficient: 1,
+    lmdCoefficient: 0.9568,
     useActivityStage: false,
     useActivityAverageStage:false,
     stageBlacklist: [],
@@ -26,10 +26,7 @@ const defaultConfig = {
 }
 
 
-const actStoreUnlimitedExchangeItem = {
-    "30073":1.8,
-    "30083":2.16
-}
+
 
 let stageConfig = ref(defaultConfig)
 
