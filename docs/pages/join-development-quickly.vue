@@ -14,7 +14,7 @@ import {ref} from "vue";
 
   <h1 id="join-development-quickly">纯网页参与开发</h1>
   <v-divider ></v-divider>
-  <v-alert variant="tonal" type="info"  >
+  <v-alert  border variant="tonal" type="info"  >
     <v-alert-title><span class="font-bold">注意事项</span></v-alert-title>
     此方法适用于想提交一些修改JSON文件、文档、错字之类的修改，涉及代码的修改建议使用IDE工具。
   </v-alert>
@@ -38,7 +38,7 @@ import {ref} from "vue";
   <img src="/docs/public/image/docs/web-commit-changes-1.jpg" alt="" >
   <p>8.这时会弹出一个弹窗，在弹窗表单上的Commit message填写本次提交的大概描述，建议按统一格式写，填写完毕后点击<b> Commit
     changes </b>按钮</p>
-  <v-alert variant="tonal" type="info" title="Commit message格式">
+  <v-alert  border variant="tonal" type="info" title="Commit message格式">
     提交类型(例如：更新-update、修复-fix)(修改区域):本次修改的大概描述
   </v-alert>
   <img src="/docs/public/image/docs/web-commit-changes-2.jpg" alt="" >

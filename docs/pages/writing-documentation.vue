@@ -6,7 +6,7 @@ import LinkButton from "@/components/dev/LinkButton.vue";
 
   <h1 id="edit-page">编写文档站页面</h1>
   <v-divider></v-divider>
-  <v-alert variant="tonal" type="info"  >
+  <v-alert  border variant="tonal" type="info"  >
     <v-alert-title><span class="font-bold">注意事项</span></v-alert-title>
     编写页面需要对以下技术或语言有一定了解：<br>
     <LinkButton text="Vue" link="https://cn.vuejs.org/guide/introduction"></LinkButton>、
