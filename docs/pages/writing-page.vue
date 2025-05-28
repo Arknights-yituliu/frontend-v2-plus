@@ -47,6 +47,8 @@ import LinkButton from "@/components/dev/LinkButton.vue";
   //先将组件引入到路由文件中
  import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
   import STORE from '/src/pages/material/store.vue'
+
+  //在路由数组中追加组件，按格式填写即可
   const routes = [
    {
         path: '/',

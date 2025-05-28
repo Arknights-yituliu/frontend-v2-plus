@@ -47,6 +47,7 @@ import LinkButton from "@/components/dev/LinkButton.vue";
 <code>
   //先将组件引入到路由文件中
   import WritingDocumentation from "/docs/pages/writing-documentation.vue";
+  //在路由数组中追加组件，按格式填写即可
   const routes = [
     {
       path: '/docs',
