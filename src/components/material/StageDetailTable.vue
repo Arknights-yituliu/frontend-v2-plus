@@ -35,7 +35,7 @@ function replaceZoneName(str) {
 <template>
 
 
-  <div class="flex flex-wrap">
+  <div class="flex flex-wrap align-center">
     <ModuleHeader title="材料详情" title-en="Item Info"></ModuleHeader>
     <span class="module-tip">*移动端可左右拖动查看</span>
   </div>

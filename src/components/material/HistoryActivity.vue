@@ -183,7 +183,7 @@ function getTableDividerClass(divider) {
 
 
 <template>
-  <div class="flex-wrap flex">
+  <div class="flex-wrap flex  align-center">
     <ModuleHeader title="往期活动数据" title-en="History Event"></ModuleHeader>
     <v-btn color="primary" variant="tonal" class="tag-button" @click="chooseHistoryActDevice('phone')">列表模式
     </v-btn>

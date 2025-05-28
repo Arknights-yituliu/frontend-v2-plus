@@ -65,7 +65,7 @@ const headers = [
 <template>
 
 
-  <div class="flex-wrap flex">
+  <div class="flex-wrap flex align-center">
     <ModuleHeader title="搓玉数据表" title-en="Orundum"></ModuleHeader>
     <v-btn color="primary" variant="tonal"  @click="filterOrundumStage()">
       仅显示1-7、CW-6和活动关
