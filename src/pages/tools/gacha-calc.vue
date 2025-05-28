@@ -16,6 +16,8 @@ import deepClone from "/src/utils/deepClone.js";
 import {dateDiff} from "/src/utils/dateUtil.js";
 import packInfoCache from "@/plugins/indexedDB/packInfoCache.js";
 
+
+//源石充值
 const OriginiumTable = ref([
   {
     packName: "6元源石",
@@ -57,24 +59,30 @@ const OriginiumTable = ref([
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
 let otherRewardBySchedules = ref([])
+
 // 罗德岛蜜饼工坊预测的活动排期
-let activitySchedule = ref({})
+let activityScheduleList = ref({})
 
 //当前时间戳
 const currentTimestamp = new Date().getTime();
+
 //选中的黄票兑换抽卡券
 let selectedCertificatePack = ref([])
+
 //选中的潜在章节
 let selectedPermanentZoneName = ref([])
+
 //选中的活动名称
 let selectedActivityName = ref([])
+
 //选择的礼包索引
 let selectedPackIndex = ref([])
 
+//选择的历史礼包索引
 let selectedHistoryPackIndex = ref([])
 
 //活动排期临时集合，用于将俩个json文件内的排序合并排序
-let activityScheduleList = []
+let tempActivityScheduleList = []
 
 //将预测活动排期分类
 for (const name in HONEY_CAKE_TABLE) {
@@ -89,7 +97,7 @@ for (const name in HONEY_CAKE_TABLE) {
   } else {
     //先将活动排期写入临时集合
     activityData.name = name
-    activityScheduleList.push(activityData)
+    tempActivityScheduleList.push(activityData)
     // activitySchedule.value[name] = activityData
     if (activityData.defaultStatus) {
       selectedActivityName.value.push(activityData.name)
@@ -109,7 +117,7 @@ for (const name in FIXED_TABLE) {
   } else {
     //先将活动排期写入临时集合
     activityData.name = name
-    activityScheduleList.push(activityData)
+    tempActivityScheduleList.push(activityData)
     // activitySchedule.value[name] = activityData
     if (activityData.defaultStatus) {
       selectedActivityName.value.push(activityData.name)
@@ -118,16 +126,16 @@ for (const name in FIXED_TABLE) {
 }
 
 //将活动排期先排序一下
-activityScheduleList.sort((a, b) => a.start - b.start)
+tempActivityScheduleList.sort((a, b) => a.start - b.start)
 
 //再将这个集合转为一个对象
-for (const item of activityScheduleList) {
-  activitySchedule.value[item.name] = item
+for (const item of tempActivityScheduleList) {
+  activityScheduleList.value[item.name] = item
 }
 
 
 /**
- * 批量生成服务器维护奖励列表，以10天为一个时间段生成，每个时间段有400合成玉
+ * 批量生成服务器维护奖励列表，以5天为一个时间段生成，每个时间段有200合成玉
  */
 function batchGenerationServerMaintenanceRewards() {
   const date = new Date();
@@ -147,13 +155,12 @@ function batchGenerationServerMaintenanceRewards() {
         orundum: 200,
         gachaTicket: 0,
         tenGachaTicket: 0,
-        start: new Date(`${year}/${padZero(month, 2)}/${padZero(d, 2)} 00:00:00`).getTime(),
-        end: new Date(`${year}/${padZero(month, 2)}/${padZero(d, 2)} 23:00:00`).getTime(),
+        start: new Date(`${year}/${_padZero(month, 2)}/${_padZero(d, 2)} 00:00:00`).getTime(),
+        end: new Date(`${year}/${_padZero(month, 2)}/${_padZero(d, 2)} 23:00:00`).getTime(),
         rewardType: "公共",
         rewardModule: "otherResources",
         probability: ""
       }
-
       otherRewardBySchedules.value.push(reward)
     }
 
@@ -163,26 +170,34 @@ function batchGenerationServerMaintenanceRewards() {
       year++
     }
   }
-}
 
-
-function padZero(num, size) {
-  let s = num.toString();
-  while (s.length < size) {
-    s = '0' + s;
+  /**
+   * 传入一个数字和长度进行补零
+   * @param num 数字
+   * @param size 长度
+   * @returns {string} 返回补零后的字符
+   * @private
+   */
+  function _padZero(num, size) {
+    let s = num.toString();
+    while (s.length < size) {
+      s = '0' + s;
+    }
+    return s;
   }
-  return s;
 }
-
 
 batchGenerationServerMaintenanceRewards()
 
 //用户选择的活动
 let currentScheduleName = ref('周年限定(5.15)')
+
 //用户选择的活动的结束时间
 let endDate = ref(new Date(1711008000000))
+
 //用户选择的活动
 let currentSchedule = ref({})
+
 //用户选择的活动的类型
 let activityType = ref('联动限定')
 
@@ -230,22 +245,29 @@ let scheduleOptions = [
 
 //新人礼包集合
 let listNewBiePackInfo = ref([])
+
 //每年重置的首充源石
 let listOriginiumPack = ref([])
+
 //上一年年重置的首充源石
 let listLastYearOriginiumPack = ref([])
+
 //每月重置的礼包集合
 let listMonthlyPackInfo = ref([])
+
 //限时礼包集合
 let listActivityPackInfo = ref([])
 
+//历史礼包集合
 let packListGroupByHistory = ref([])
 
 //全部礼包集合
 let listDisplayPackInfo = ref([])
+
 //每月黄票兑换抽卡券(视为礼包)集合
 let certificatePackList = ref([])
 
+//礼包缓存数据
 let listPackInfoCache = ref([])
 
 /**
@@ -383,6 +405,7 @@ function batchGenerationMonthlyPack(index) {
 
   // 预生成8个月的每月寻访组合包和每月黄票兑换单抽
   for (let i = 0; i < 8; i++) {
+
     //获取每月的最后一天，用于写入礼包的起始日期（每月1号）和结束日期（每月最后一天）
     const lastDay = new Date(year, month, 0).getDate().toString().padStart(2, '');
     const pack = {
@@ -411,8 +434,10 @@ function batchGenerationMonthlyPack(index) {
 
     //写入预生成的每月黄票兑换单抽
     certificatePackList.value.push(certificatePack)
+
     //写入每月寻访组合包
     listMonthlyPackInfo.value.push(pack)
+
     //写入全部礼包
     listDisplayPackInfo.value.push(pack)
 
@@ -427,25 +452,6 @@ function batchGenerationMonthlyPack(index) {
     index++
   }
 }
-
-
-/**
- * 根据礼包抽卡性价比获取背景色
- * @param drawEfficiency 抽卡性价比
- * @return {string} 角标背景色
- */
-function getPackPriorityColor(drawEfficiency) {
-  if (drawEfficiency > 1.57) {
-    return `background-color:${'#ff6400'};color:white`
-  }
-
-  if (drawEfficiency > 1) {
-    return `background-color:${'#a16fff'};color:white`
-  }
-
-  return `background-color:${'#4380ff'};color:white`
-}
-
 
 /**
  * 用户点击单选框选择排期
@@ -463,7 +469,7 @@ function updateScheduleOption(index) {
 
 
 //折叠面板绑定的集合，如果集合中有折叠面板的name，面板会默认展开，当点击展开面板时，面板组件也会将面板组件的name赋值给这个集合
-// 值有'exist', 'custom', 'daily', 'potential','recharge', 'activity', 'other'
+// 值有 'exist', 'custom', 'daily', 'potential','recharge', 'activity', 'other'
 let resultCollapseActiveNames = ref(['calculationResult'])
 let optionsCollapseActiveNames = ref(['exist', 'daily',
   'activity', 'other'])
@@ -1123,8 +1129,8 @@ function gachaResourcesCalculation() {
     let tenGachaTicket = 0
 
     //循环活动排期，计算活动可获得的奖励
-    for (const activityName in activitySchedule.value) {
-      const activity = activitySchedule.value[activityName]
+    for (const activityName in activityScheduleList.value) {
+      const activity = activityScheduleList.value[activityName]
       //判断这个活动是否在当前选择的时间段内
       if (!rewardIsExpired(activity)) {
         continue
@@ -2095,7 +2101,7 @@ function handleResize() {
             <span></span> 复刻活动
           </div>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(activity, name) in activitySchedule" :key="name" :value="name"
+            <el-checkbox-button v-for="(activity, name) in activityScheduleList" :key="name" :value="name"
                                 v-show="activity.rewardModule === 'actRe' && rewardIsExpired(activity)"
                                 class="el-checkbox-button">
               <PackButtonContent :data="activity">
@@ -2111,7 +2117,7 @@ function handleResize() {
             无准确排期，可自行勾选
           </v-alert>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(activity, name) in activitySchedule" :key="name" :value="name"
+            <el-checkbox-button v-for="(activity, name) in activityScheduleList" :key="name" :value="name"
                                 v-show="activity.rewardModule === 'act' && rewardIsExpired(activity)"
                                 class="el-checkbox-button">
               <PackButtonContent :data="activity">
