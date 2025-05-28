@@ -45,7 +45,7 @@ const routes = [
     },
     {
         path: '/docs/item-value-algorithm',
-        text: '材料价值算法',
+        text: '物品价值算法',
         name: 'ItemValueAlgorithm',
         display: true,
         module: 'DevelopmentDocumentation',
