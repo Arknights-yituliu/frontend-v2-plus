@@ -370,52 +370,49 @@ onMounted(() => {
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.T3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">
-            <ItemImage :item-id="'AP_GAMEPLAY'" size="30" mobile-size="20"></ItemImage>
-            <div class="stage_card_3_2" style="display: none;">
-              {{ stage.maxEfficiencyStage.zoneName }}
-            </div>
+            <ItemImage :item-id="'AP_GAMEPLAY'" size="30" mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.maxEfficiencyStage.stageCode }}
             </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
-            </div>
+<!--            <div class="stage-card-bar-stage-efficiency">-->
+<!--              {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%-->
+<!--            </div>-->
             <div class="stage-card-bar-stage-efficiency">
               {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>
           </div>
           <div class="stage-card-bar">
-            <ItemImage :item-id="stage.series.T4" size="30" mobile-size="20"></ItemImage>
+            <ItemImage :item-id="stage.series.T4" size="30" mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT4MaxEfficiencyStage.stageCode }}
             </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT4MaxEfficiencyStage.leT4Efficiency * 100, 1) }}%
-            </div>
+<!--            <div class="stage-card-bar-stage-efficiency">-->
+<!--              {{ formatNumber(stage.leT4MaxEfficiencyStage.leT4Efficiency * 100, 1) }}%-->
+<!--            </div>-->
             <div class="stage-card-bar-stage-efficiency">
               {{ formatNumber(stage.leT4MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>
           </div>
           <div class="stage-card-bar">
-            <ItemImage :item-id="stage.series.T3" size="30" mobile-size="20"></ItemImage>
+            <ItemImage :item-id="stage.series.T3" size="30" mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT3MaxEfficiencyStage.stageCode }}
             </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT3MaxEfficiencyStage.leT3Efficiency * 100, 1) }}%
-            </div>
+<!--            <div class="stage-card-bar-stage-efficiency">-->
+<!--              {{ formatNumber(stage.leT3MaxEfficiencyStage.leT3Efficiency * 100, 1) }}%-->
+<!--            </div>-->
             <div class="stage-card-bar-stage-efficiency">
               {{ formatNumber(stage.leT3MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>
           </div>
           <div class="stage-card-bar" v-show="stage.series.T2">
-            <ItemImage :item-id="stage.series.T2" size="30" mobile-size="20"></ItemImage>
+            <ItemImage :item-id="stage.series.T2" size="30" mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT2MaxEfficiencyStage.stageCode }}
             </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT2MaxEfficiencyStage.leT2Efficiency * 100, 1) }}%
-            </div>
+<!--            <div class="stage-card-bar-stage-efficiency">-->
+<!--              {{ formatNumber(stage.leT2MaxEfficiencyStage.leT2Efficiency * 100, 1) }}%-->
+<!--            </div>-->
             <div class="stage-card-bar-stage-efficiency">
               {{ formatNumber(stage.leT2MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>

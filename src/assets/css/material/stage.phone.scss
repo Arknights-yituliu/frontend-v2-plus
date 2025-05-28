@@ -39,45 +39,32 @@
     }
 
     .stage-card {
-      font-size: 10px;
       width: 160px;
-      height: 82px;
+      height: 96px;
       margin: 2px;
     }
 
     .stage-card-bar-container {
-      width: calc(100% - 24px);
-      left: 24px;
-      height: 82px;
+      width: calc(100% - 40px);
+      left: 36px;
+      height: 96px;
     }
 
     .stage-card-bar {
       height: 20px;
       line-height: 14px;
-      font-size: 9px;
+      font-size: 12px;
     }
 
     .stage-card-bg-sprite {
-      transform: scale(0.7);
+      transform: scale(0.8);
       left: -100px;
-      top: -50px;
-    }
-
-
-    .stage-card-item-icon {
-      width: 20px;
-      height: 20px;
-    }
-
-    .stage-card-item-icon div {
-      transform: scale(calc(20 / 183));
-      top: calc((-183px + 20px) / 2);
-      left: calc((-183px + 20px) / 2);
+      top: -44px;
     }
 
     .stage-card-bar-stage-code {
       width: 50px;
-      font-size: 11px;
+      font-size: 14px;
     }
 
     .stage-card-bar-stage-efficiency {
