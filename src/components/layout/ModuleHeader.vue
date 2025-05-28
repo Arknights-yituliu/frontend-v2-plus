@@ -10,7 +10,7 @@ const props = defineProps(["modelValue","title","titleEn",'tips']);
       <h4>{{ props.titleEn }}</h4>
     </div>
     <slot></slot>
-    <span class="module-tip" v-for="(tip,index) in tips" :key="index">{{tip}}</span>
+    <div class="module-tip" v-for="(tip,index) in tips" :key="index">{{tip}}</div>
   </div>
 
 </template>
