@@ -42,9 +42,11 @@ function getStageConfig() {
             config.customItem = []
         }
 
-        stageConfig.value = config
+        for(const key in config) {
+            stageConfig.value[key] = config[key];
+        }
 
-        return config;
+        return stageConfig.value;
     } else {
         return defaultConfig
     }

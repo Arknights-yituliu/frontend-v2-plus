@@ -86,7 +86,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         </td>
         <td class="stage-legend-text-1">
             <span>
-              需要<span style="color: #c01dd7;font-weight: bold">紫色材料→</span>
+              仅需对应材料（<span class="purple">紫</span><span class="blue">蓝</span><span class="green">绿</span>白材料）→
               </span>
         </td>
         <td class="stage-legend-text-2">
@@ -116,7 +116,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         </td>
         <td class="stage-legend-text-1">
             <span>
-              需要<span style="color: #0276f8;font-weight: bold;">蓝色材料→</span>
+              仅需对应材料（<span class="blue">蓝</span><span class="green">绿</span>白材料）→
               </span>
         </td>
         <td class="stage-legend-text-2">
@@ -133,6 +133,33 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 <!--          <br>-->
 <!--          <span>理智消耗</span>-->
 <!--        </td>-->
+        <td class="stage-legend-text-4">
+          <span class="stage-legend-text-bold">[综合效率]</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <ItemImage :item-id="'30022'"></ItemImage>
+        </td>
+        <td class="stage-legend-text-1">
+            <span>
+              仅需对应材料（<span class="green">绿</span>白材料）→
+              </span>
+        </td>
+        <td class="stage-legend-text-2">
+          <span>S3-1</span>
+        </td>
+        <!--        <td class="stage-legend-text-3">-->
+        <!--          <span class="stage-legend-text-bold" style="color: #0276f8;">[T3效率]</span>-->
+        <!--          <br>-->
+        <!--          <span class="stage-legend-text-underline">-->
+        <!--              <span style="color: #0276f8;font-weight: bold">蓝</span>-->
+        <!--              <span style="color: #01c028;font-weight: bold">绿</span>-->
+        <!--              <span>白[糖]价值之和 </span>-->
+        <!--            </span>-->
+        <!--          <br>-->
+        <!--          <span>理智消耗</span>-->
+        <!--        </td>-->
         <td class="stage-legend-text-4">
           <span class="stage-legend-text-bold">[综合效率]</span>
         </td>

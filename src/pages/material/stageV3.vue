@@ -363,6 +363,17 @@ onMounted(() => {
 <!--          @click="openNewPage()">《史无前例的掉率降低！全网最速复盘12-17Bug事件始末！》</a>查看</p>-->
 <!--    </v-alert>-->
 
+        <v-alert
+            border="start"
+            type="warning"
+            title="数据加载失败解决方式"
+            variant="tonal"
+            density="compact"
+            class="m-12"
+        >
+          <p>如果遇到数据没有正常加载，请在<a href="/account/home">个人中心</a>点击自定义材料价值参数面板的重置为初始参数按钮</p>
+        </v-alert>
+
     <!-- 卡片区域 -->
     <div id="stageForCards" class="stage-card-wrap">
       <div class="stage-card" v-for="(stage, index) in stageCardData" :key="index"
