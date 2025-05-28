@@ -452,8 +452,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <p>将二者相除，得到加速 1 龙门币所需要的无人机是加速 1 EXP 所需要的无人机的 229 / 145 = 1.5793 倍，因此龙门币的价值是 EXP 的 229 / 145 = 1.5793 倍。</p>
     <p>明日方舟一图流的<b>默认</b>经验书价值系数就是这么算出来的，等于 145 / 229 = 0.6332。</p>
 
-    <v-alert variant="tonal" type="info">
-      <p>46.7586 是怎么算出来的？</p>
+    <v-alert variant="tonal" type="info" title="46.7586 是怎么算出来的？">
       <p>3 级贸易站，不使用龙舌兰、但书、裁缝类技能的情况下，</p>
       <ul>
         <li><p>2 赤金订单的出现概率为 30%，消耗 2 赤金，获得 1000 龙门币，加速完成需要 48 无人机；</p></li>
