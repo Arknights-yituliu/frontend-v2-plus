@@ -280,14 +280,14 @@ async function getAndSortPackData() {
   const currentTimeStamp = new Date().getTime()
 
   // 等待获取接口返回的全部礼包信息
-  const data  =  await packInfoCache.listPackInfo()
+  const data = await packInfoCache.listPackInfo()
   //先计算礼包的性价比
   for (const item of data) {
     let packInfoVO = _packPromotionRatioCalc(item)
 
     listPackInfoCache.value.push(packInfoVO)
 
-    if (packInfoVO.drawPrice===0) {
+    if (packInfoVO.drawPrice === 0) {
       continue;
     }
 
@@ -360,9 +360,8 @@ async function getAndSortPackData() {
   }
 
 
-
-    getHistoryPackInfo()
-    batchGenerationMonthlyPack(index)
+  getHistoryPackInfo()
+  batchGenerationMonthlyPack(index)
 
 }
 
@@ -750,12 +749,14 @@ function gachaResourcesCalculation() {
       startDate.setDate(startDate.getDate() + 1)
     }
 
+    //总周数
+    let weeks = mondayCount
 
-    let weeks = mondayCount  //总周数
-    let annihilationTimes = mondayCount //打剿次数
+    //打剿次数
+    let annihilationTimes = mondayCount
+
     //如果本周周常已经做完则周数减1
     if (dailyReward.value.weeklyTaskCompleted) {
-
       weeks = mondayCount > 0 ? mondayCount - 1 : mondayCount
     }
 
@@ -766,7 +767,6 @@ function gachaResourcesCalculation() {
 
     //如果本月已清空绿票商店则购买商店次数减1
     if (dailyReward.value.certificateStoreCompleted) {
-
       shoppingTimes = shoppingTimes > 0 ? shoppingTimes - 1 : shoppingTimes
     }
 
@@ -801,11 +801,10 @@ function gachaResourcesCalculation() {
 
     // 计算官方月卡
     if (endDate.value < officialMonthlyCardEndDate) {
-      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value) - 1
+      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value)
     } else {
-      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), officialMonthlyCardEndDate) - 1
+      officialMonthlyCardRemainingDays.value = dateDiff(new Date(), officialMonthlyCardEndDate)
     }
-
 
     officialMonthlyCardReward.value = officialMonthlyCardRemainingDays.value * 200
     orundum += officialMonthlyCardReward.value
@@ -1480,7 +1479,7 @@ function handleResize() {
           </template>
           <!--选择攒到某个活动的单选框-->
           <div class="radio-group-wrap" style="margin: 0 auto;">
-            <el-radio-group v-model="currentScheduleName" size="large" >
+            <el-radio-group v-model="currentScheduleName" size="large">
               <el-radio-button v-for="(activity, index) in scheduleOptions" :key="index" :value="activity.name"
                                :label="activity.name" :disabled="activity.disabled"
                                @change="updateScheduleOption(index)"
@@ -1664,15 +1663,15 @@ function handleResize() {
               <span>{{ dailyReward.dailyOrundumReward }}</span>
             </div>
           </div>
-          <div class="resources-line">
-          <span class="resources-line-label">官方月卡{{ officialMonthlyCardRemainingDays }}次</span>
-            <div class="resources-line-content">
-              <div class="image-sprite">
-                <div class="bg-icon_4003"></div>
-              </div>
-              <span>{{ officialMonthlyCardReward }}</span>
-            </div>
-          </div>
+<!--          <div class="resources-line">-->
+<!--            <span class="resources-line-label">官方月卡{{ officialMonthlyCardRemainingDays }}次</span>-->
+<!--            <div class="resources-line-content">-->
+<!--              <div class="image-sprite">-->
+<!--                <div class="bg-icon_4003"></div>-->
+<!--              </div>-->
+<!--              <span>{{ officialMonthlyCardReward }}</span>-->
+<!--            </div>-->
+<!--          </div>-->
 
           <v-divider></v-divider>
           <div class="resources-line">
