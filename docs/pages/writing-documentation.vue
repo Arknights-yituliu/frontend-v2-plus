@@ -1,7 +1,4 @@
 <script setup>
-
-
-
 import LinkButton from "@/components/dev/LinkButton.vue";
 </script>
 

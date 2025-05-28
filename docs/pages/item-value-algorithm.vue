@@ -2,19 +2,6 @@
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 </script>
 
-
-<style scoped>
-.quote {
-  padding: 10px;
-  margin: 10px 0;
-  border-left: 4px solid #BBBBBB;
-  background-color: #F8F8F8;
-  color: #555555;
-  /* font-style: italic; */
-}
-</style>
-
-
 <template>
   <div>
     <h1 id="物品价值算法">物品价值算法</h1>
@@ -35,11 +22,11 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <h2 id="ArkPlanner">ArkPlanner</h2>
     <v-divider></v-divider>
 
-    <blockquote class="quote">
+    <v-alert border>
       明日方舟最优刷图策略规划工具，基于开源的掉落统计数据、素材合成规则以及线性规划实现。由于混合掉落、额外掉落副本的存在且各种材料掉落概率不同，在材料需求较复杂时，要刷哪些副本并不直观，大多情况下需要通过比较复杂的计算得到最优解。同时，了解刷所需材料预计消耗多少体力也会帮助你更好的规划体力。原理：将素材合成也看作一种掉落在约束中加以考虑（目标材料掉落 1，消耗的材料掉落为 -1），其 cost 为 0 或合成所需代币的等价体力消耗。
-    </blockquote>
+    </v-alert>
     <p>简单来说，ArkPlanner 通过求解如下的线性规划问题来计算精英材料的价值（假设精英材料以外的物品的价值已知）。</p>
-    <blockquote class="quote">
+    <v-alert border>
       <ul>
         <li>
           <p><b>【决策变量】</b></p>
@@ -57,7 +44,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           </ol>
         </li>
       </ul>
-    </blockquote>
+    </v-alert>
     <p>（仅为框架，省去了很多细节）</p>
     <p>ArkPlanner 算法是<b>需求敏感的</b>。新的精英材料刚加入时，需求量非常少，ArkPlanner 会认为“通过加工其他精英材料获得的副产物足够满足新材料的需求”，而误将新材料的价值估计得比较低。</p>
 
@@ -72,10 +59,10 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <v-divider></v-divider>
 
     <p>罗德岛物价局的思路与明日方舟一图流类似。</p>
-    <blockquote class="quote">
+    <v-alert border>
       <p>上千关卡的约束条件对应几十种材料价值作为未知数，其中大多关卡带来的条件会成为松约束，那么如何筛选参与定价的关卡就是问题本质所在了。</p>
       <p>本项目迭代选择与待定价材料相等数量的定价关卡，解一次方程组就得到了材料的定价，判断筛选范围内的关卡是否服从定价：不服从的关卡替代现有定价关卡成为新的定价关卡并重新进行方程组求解；而所有关卡都服从定价时就确定了最终的材料定价。 再通过定价结果计算各商店的兑换货币性价比，从而指导“在什么商店买什么”的问题。</p>
-    </blockquote>
+    </v-alert>
 
     <h1 id="名词解释">名词解释</h1>
     <v-divider></v-divider>
@@ -118,7 +105,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         <p>给加工<span class="green">绿</span>、<span class="blue">蓝</span>、<span class="purple">紫</span>、<span class="yellow">金</span>材料时副产品价值的期望分别设定初始值。</p>
       </li>
     </ul>
-    <v-alert variant="tonal" type="info">
+    <v-alert border variant="tonal" type="info">
       <p>初始值可写入任意正值。</p>
       <p><span class="blue">蓝</span>材料价值的初始值推荐使用绿票商店售价 × 0.8，可以更快收敛。</p>
     </v-alert>
@@ -139,24 +126,24 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <li>
         <p><b><span class="green">装置</span>的价值</b></p>
         <p>已知<span class="blue">全新装置</span>的加工配方为</p>
-        <blockquote class="quote">
+        <v-alert border>
           4 <span class="green">装置</span> + 200 龙门币 → 1 <span class="blue">全新装置</span> + θ 随机<span class="green">绿</span>材料，
-        </blockquote>
+        </v-alert>
         <p>把配方中的“→”改成“=”，移项得到</p>
-        <blockquote class="quote">
+        <v-alert border>
           <span class="green">装置</span>价值 = (<span class="blue">全新装置</span>价值 - 200 × 龙门币价值 + θ × 加工<span class="blue">蓝</span>材料时副产品价值的期望) ÷ 4
-        </blockquote>
+        </v-alert>
       </li>
       <li>
         <p><b><span class="purple">改量装置</span>的价值</b></p>
         <p>已知<span class="purple">改量装置</span>的加工配方为</p>
-        <blockquote class="quote">
+        <v-alert border>
           1 <span class="blue">全新装置</span> + 2 固源岩组 + 1 研磨石 + 300 龙门币 → 1 <span class="purple">改量装置</span> + θ 随机<span class="blue">蓝</span>材料，
-        </blockquote>
+        </v-alert>
         <p>得到</p>
-        <blockquote class="quote">
+        <v-alert border>
           <span class="purple">改量装置</span>价值 = <span class="blue">全新装置</span>价值 + 2 × 固源岩组价值 + 研磨石价值 + 300 × 龙门币价值 - θ × 加工<span class="purple">紫</span>材料时副产品价值的期望。
-        </blockquote>
+        </v-alert>
       </li>
     </ol>
 
@@ -164,7 +151,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <v-divider></v-divider>
 
     <p>使用上一步计算出的所有精英材料的价值，计算加工<span class="green">绿</span>、<span class="blue">蓝</span>、<span class="purple">紫</span>、<span class="yellow">金</span>材料时副产品价值的期望。</p>
-    <v-alert variant="tonal" type="info">
+    <v-alert border variant="tonal" type="info">
       <p>加工产出副产品时，各种副产品的出现概率各不相同。</p>
       <p>加工特定材料时，各种副产品的出现概率可以在 <a href="https://prts.wiki/w/%E5%9B%BA%E6%BA%90%E5%B2%A9" target="_blank" rel="noopener noreferrer">PRTS Wiki</a> 目标材料页面中找到。</p>
     </v-alert>
@@ -234,9 +221,9 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <v-divider></v-divider>
 
     <p>根据 <a href="https://penguin-stats.io/" target="_blank" rel="noopener noreferrer">企鹅物流数据统计</a> 的掉率数据，对于每个作战，计算期望掉落物品的总价值，进而计算作战效率。</p>
-    <blockquote class="quote">
+    <v-alert border>
       <p><b>作战效率 = 作战期望掉落物品的总价值 ÷ 作战的理智消耗</b></p>
-    </blockquote>
+    </v-alert>
 
     <h3 id="计算作战期望掉落物品的总价值-计算示例">计算示例</h3>
 
@@ -409,7 +396,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <li><p>中坚寻访凭证价值 = 216 ÷ 38 × <span class="yellow">高级凭证</span>价值</p></li>
       <li><p>十连中坚寻访凭证价值 = 10 × 中坚寻访凭证价值</p></li>
     </ul>
-    <v-alert variant="tonal" type="info">
+    <v-alert border variant="tonal" type="info">
       <p>自定义合成玉价值、中坚寻访凭证价值的功能正在开发中。</p>
       <p>搓玉的博士可以根据搓玉成本确定合成玉价值。此时<br/>
         合成玉价值 = (2 × 固源岩价值 + 1600 × 龙门币价值 + 40 × 无人机价值) ÷ 10。</p>
@@ -427,7 +414,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <li><p>龙门币价值 = (36 ÷ 10000) × 龙门币价值系数</p></li>
       <li><p>EXP 价值 = (36 ÷ 10000) × 经验书价值系数</p></li>
     </ul>
-    <v-alert variant="tonal" type="info">
+    <v-alert border variant="tonal" type="info">
       <p>龙门币价值系数和经验书价值系数可以在 <a href="/account/home">个人中心</a> 中设置。</p>
     </v-alert>
     <ul>
@@ -452,7 +439,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <p>将二者相除，得到加速 1 龙门币所需要的无人机是加速 1 EXP 所需要的无人机的 229 / 145 = 1.5793 倍，因此龙门币的价值是 EXP 的 229 / 145 = 1.5793 倍。</p>
     <p>明日方舟一图流的<b>默认</b>经验书价值系数就是这么算出来的，等于 145 / 229 = 0.6332。</p>
 
-    <v-alert variant="tonal" type="info" title="46.7586 是怎么算出来的？">
+    <v-alert border variant="tonal" type="info" title="46.7586 是怎么算出来的？">
       <p>3 级贸易站，不使用龙舌兰、但书、裁缝类技能的情况下，</p>
       <ul>
         <li><p>2 赤金订单的出现概率为 30%，消耗 2 赤金，获得 1000 龙门币，加速完成需要 48 无人机；</p></li>
@@ -594,7 +581,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     </v-card>
     <p>其中，近卫芯片的需求量远大于特种芯片。若博士甲的养成目标为全干员满练（或者养成需求与全干员满练的需求近似成正比），则博士甲很可能需要消耗特种芯片来加工近卫芯片。</p>
     <p>由于 3 特种芯片仅能加工 2 近卫芯片，故可以直观地知道近卫芯片是比较“贵”的，特种芯片是比较“贱”的。</p>
-    <v-alert variant="tonal" type="info">
+    <v-alert border variant="tonal" type="info">
       <p>使用九色鹿加工芯片类材料必定产出副产品，但是需要消耗因果。</p>
     </v-alert>
     <p>对于博士甲以及类似的博士来说，我们可以将芯片划分为“强势芯片”、“弱势芯片”和“均势芯片”3 类。在同一个掉落芯片的作战中，需求量相对较大的为“强势芯片”，需求量相对较小的为“弱势芯片”，若需求量没有明显区别，则称为“均势芯片”。</p>

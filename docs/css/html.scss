@@ -18,7 +18,7 @@ h4{
 }
 
 p{
-  padding: 2px 0;
+  padding: 4px 0;
 }
 
 ul{
@@ -37,7 +37,8 @@ code{
   background-color: #111111;
   padding: 12px;
   color: white;
-
+  //white-space: wrap
+  overflow: auto;
 }
 
 
