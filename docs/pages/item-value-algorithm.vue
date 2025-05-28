@@ -22,7 +22,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 
     <p>文档使用自然语言介绍算法细节，具体实现请参考代码。若发现代码与文档中的内容不一致，欢迎提出反馈。</p>
 
-    <h1 id="相关工作">相关工作</h1>
+    <h2 id="相关工作">相关工作</h2>
     <v-divider></v-divider>
 
     <p>物品价值至少有以下 3 种算法，按时间顺序列出。</p>
@@ -42,15 +42,15 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <blockquote class="quote">
       <ul>
         <li>
-          <p><strong>【决策变量】</strong></p>
+          <p><b>【决策变量】</b></p>
           <p>每种精英材料的价值</p>
         </li>
         <li>
-          <p><strong>【目标函数】</strong></p>
+          <p><b>【目标函数】</b></p>
           <p>最大化全干员满练需求物品的总价值</p>
         </li>
         <li>
-          <p><strong>【约束条件】</strong></p>
+          <p><b>【约束条件】</b></p>
           <ol>
             <li>作战期望掉落物品的总价值 ≤ 作战的理智消耗（对任意的作战）；</li>
             <li>加工期望得到的物品的总价值 ≤ 加工消耗的物品的总价值（对任意的加工配方）。</li>
@@ -59,13 +59,13 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       </ul>
     </blockquote>
     <p>（仅为框架，省去了很多细节）</p>
-    <p>ArkPlanner 算法是<strong>需求敏感的</strong>。新的精英材料刚加入时，需求量非常少，ArkPlanner 会认为“通过加工其他精英材料获得的副产物足够满足新材料的需求”，而误将新材料的价值估计得比较低。</p>
+    <p>ArkPlanner 算法是<b>需求敏感的</b>。新的精英材料刚加入时，需求量非常少，ArkPlanner 会认为“通过加工其他精英材料获得的副产物足够满足新材料的需求”，而误将新材料的价值估计得比较低。</p>
 
     <h2 id="明日方舟一图流">明日方舟一图流</h2>
     <v-divider></v-divider>
 
-    <p>明日方舟一图流在计算精英材料的价值时不以需求作为变量，从而是需求不敏感的。在 ArkPlanner 算法的 2 类约束条件中，明日方舟一图流算法完全保留约束条件 1，即<strong>所有作战的作战效率 ≤ 1</strong>；对于约束条件 2，在明日方舟一图流算法中，直接要求<strong>精英材料配方的不等号取等</strong>，即要求<strong>所有精英材料配方的<span class="red">消耗总价值</span>等于<span class="red">产出总价值</span>。</strong></p>
-    <p>由于精英材料的加工配方都变成了等式，在知道了<span class="blue">蓝</span>材料的价值后就能知道全部精英材料的价值。因此，明日方舟一图流算法<strong>以<span class="blue">蓝</span>材料价值为核心</strong>，<strong>额外要求每一系列材料</strong>（源岩、固源岩、固源岩组、提纯源岩算一系列材料，其他类似）<strong>都至少存在 1 个以该系列材料为主产物且效率等于 1 的作战。</strong></p>
+    <p>明日方舟一图流在计算精英材料的价值时不以需求作为变量，从而是需求不敏感的。在 ArkPlanner 算法的 2 类约束条件中，明日方舟一图流算法完全保留约束条件 1，即<b>所有作战的作战效率 ≤ 1</b>；对于约束条件 2，在明日方舟一图流算法中，直接要求<b>精英材料配方的不等号取等</b>，即要求<b>所有精英材料配方的<span class="red">消耗总价值</span>等于<span class="red">产出总价值</span>。</b></p>
+    <p>由于精英材料的加工配方都变成了等式，在知道了<span class="blue">蓝</span>材料的价值后就能知道全部精英材料的价值。因此，明日方舟一图流算法<b>以<span class="blue">蓝</span>材料价值为核心</b>，<b>额外要求每一系列材料</b>（源岩、固源岩、固源岩组、提纯源岩算一系列材料，其他类似）<b>都至少存在 1 个以该系列材料为主产物且效率等于 1 的作战。</b></p>
     <p>算法细节将在后文中详述。</p>
 
     <h2 id="罗德岛物价局">罗德岛物价局</h2>
@@ -92,19 +92,19 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 
     <ul>
       <li>
-        <p><strong><span class="red">定价作战集</span></strong>指用于物品价值计算的基准作战。定价作战集可以在 <a href="/account/home">个人中心</a> 中设置。</p>
+        <p><b><span class="red">定价作战集</span></b>指用于物品价值计算的基准作战。定价作战集可以在 <a href="/account/home">个人中心</a> 中设置。</p>
         <p>通常，定价作战集包含样本数足够的常驻作战。博士可以根据个人需求来选择定价作战集是否包含历史活动作战。</p>
-        <p>根据 <a href="https://space.bilibili.com/37179776" target="_blank" rel="noopener noreferrer">BioHazard</a> 的文章 <a href="https://www.bilibili.com/read/cv39716633/" target="_blank" rel="noopener noreferrer">SideStory 作战历史掉率</a>，可以认为<strong>同一种<span class="blue">蓝</span>材料在不同 SideStory 作战中的<span class="purple">单位理智掉落数量</span>以及<span class="purple">单件期望理智</span>是<span class="red">固定的数</span>，不会随着作战的不同而改变。</strong></p>
-        <p>因此，明日方舟一图流对每种曾经在 SideStory 作战中出现过的<span class="blue">蓝</span>材料都创建了一个虚拟作战，其掉率取为历史上掉这种<span class="blue">蓝</span>材料的 SideStory 作战的<strong>平均掉率</strong>。</p>
+        <p>根据 <a href="https://space.bilibili.com/37179776" target="_blank" rel="noopener noreferrer">BioHazard</a> 的文章 <a href="https://www.bilibili.com/read/cv39716633/" target="_blank" rel="noopener noreferrer">SideStory 作战历史掉率</a>，可以认为<b>同一种<span class="blue">蓝</span>材料在不同 SideStory 作战中的<span class="purple">单位理智掉落数量</span>以及<span class="purple">单件期望理智</span>是<span class="red">固定的数</span>，不会随着作战的不同而改变。</b></p>
+        <p>因此，明日方舟一图流对每种曾经在 SideStory 作战中出现过的<span class="blue">蓝</span>材料都创建了一个虚拟作战，其掉率取为历史上掉这种<span class="blue">蓝</span>材料的 SideStory 作战的<b>平均掉率</b>。</p>
       </li>
       <li>
-        <p><strong>活动商店无限池中的材料</strong>价值根据活动商店来确定，即<strong>认为活动代币兑换无限龙门币与兑换无限池材料的<span class="red">性价比相同</span>。</strong></p>
+        <p><b>活动商店无限池中的材料</b>价值根据活动商店来确定，即<b>认为活动代币兑换无限龙门币与兑换无限池材料的<span class="red">性价比相同</span>。</b></p>
         <ul>
           <li>扭转醇价值 = 25 × 20 × 龙门币价值，</li>
           <li>轻锰矿价值 = 30 × 20 × 龙门币价值。</li>
         </ul>
         <p>其他活动商店无限池中的材料价值可以类似计算。</p>
-        <p>把活动商店无限池中的材料价值写入<strong>自定义物品价值</strong>。自定义物品价值可以在 <a href="/account/home">个人中心</a> 中设置。</p>
+        <p>把活动商店无限池中的材料价值写入<b>自定义物品价值</b>。自定义物品价值可以在 <a href="/account/home">个人中心</a> 中设置。</p>
       </li>
     </ul>
 
@@ -127,7 +127,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <v-divider></v-divider>
 
     <p>在已知所有<span class="blue">蓝</span>材料价值的情况下，根据加工配方，计算<span class="gray">白</span>、<span class="green">绿</span>、<span class="purple">紫</span>、<span class="yellow">金</span>材料的价值。</p>
-    <p><strong>思想：所有精英材料配方的消耗总价值等于产出总价值</strong></p>
+    <p><b>思想：所有精英材料配方的消耗总价值等于产出总价值</b></p>
 
     <h3 id="计算所有精英材料的价值-计算示例">计算示例</h3>
 
@@ -137,7 +137,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     </ul>
     <ol>
       <li>
-        <p><strong><span class="green">装置</span>的价值</strong></p>
+        <p><b><span class="green">装置</span>的价值</b></p>
         <p>已知<span class="blue">全新装置</span>的加工配方为</p>
         <blockquote class="quote">
           4 <span class="green">装置</span> + 200 龙门币 → 1 <span class="blue">全新装置</span> + θ 随机<span class="green">绿</span>材料，
@@ -148,7 +148,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         </blockquote>
       </li>
       <li>
-        <p><strong><span class="purple">改量装置</span>的价值</strong></p>
+        <p><b><span class="purple">改量装置</span>的价值</b></p>
         <p>已知<span class="purple">改量装置</span>的加工配方为</p>
         <blockquote class="quote">
           1 <span class="blue">全新装置</span> + 2 固源岩组 + 1 研磨石 + 300 龙门币 → 1 <span class="purple">改量装置</span> + θ 随机<span class="blue">蓝</span>材料，
@@ -223,8 +223,8 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <tr>
             <td></td>
             <td></td>
-            <td><strong>副产品价值期望</strong></td>
-            <td><strong>1.7149</strong></td>
+            <td><b>副产品价值期望</b></td>
+            <td><b>1.7149</b></td>
           </tr>
         </tbody>
       </v-table>
@@ -235,7 +235,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 
     <p>根据 <a href="https://penguin-stats.io/" target="_blank" rel="noopener noreferrer">企鹅物流数据统计</a> 的掉率数据，对于每个作战，计算期望掉落物品的总价值，进而计算作战效率。</p>
     <blockquote class="quote">
-      <p><strong>作战效率 = 作战期望掉落物品的总价值 ÷ 作战的理智消耗</strong></p>
+      <p><b>作战效率 = 作战期望掉落物品的总价值 ÷ 作战的理智消耗</b></p>
     </blockquote>
 
     <h3 id="计算作战期望掉落物品的总价值-计算示例">计算示例</h3>
@@ -254,91 +254,91 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         </thead>
         <tbody>
           <tr>
-            <td><ItemImage :item-id="4001"/></td>
+            <td><ItemImage :item-id="'4001'"/></td>
             <td>龙门币</td>
             <td>0.004</td>
             <td>252</td>
             <td>0.907</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="31054"/></td>
+            <td><ItemImage :item-id="'31054'"/></td>
             <td>切削原液</td>
             <td>79.245</td>
             <td>0.048</td>
             <td>3.813</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="3003"/></td>
+            <td><ItemImage :item-id="'3003'"/></td>
             <td>赤金</td>
             <td>0.912</td>
             <td>0.1</td>
             <td>0.091</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="31013"/></td>
+            <td><ItemImage :item-id="'31013'"/></td>
             <td>凝胶</td>
             <td>32</td>
             <td>0.016</td>
             <td>0.502</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30062"/></td>
+            <td><ItemImage :item-id="'30062'"/></td>
             <td>装置</td>
             <td>9.851</td>
             <td>0.145</td>
             <td>1.431</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30073"/></td>
+            <td><ItemImage :item-id="'30073'"/></td>
             <td>扭转醇</td>
             <td>1.8</td>
             <td>0.02</td>
             <td>0.037</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="31053"/></td>
+            <td><ItemImage :item-id="'31053'"/></td>
             <td>化合切削液</td>
             <td>32</td>
             <td>0.47</td>
             <td>15.029</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30012"/></td>
+            <td><ItemImage :item-id="'30012'"/></td>
             <td>固源岩</td>
             <td>4.851</td>
             <td>0.364</td>
             <td>1.765</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30013"/></td>
+            <td><ItemImage :item-id="'30013'"/></td>
             <td>固源岩组</td>
             <td>20</td>
             <td>0.026</td>
             <td>0.514</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30063"/></td>
+            <td><ItemImage :item-id="'30063'"/></td>
             <td>全新装置</td>
             <td>36</td>
             <td>0.012</td>
             <td>0.432</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30011"/></td>
+            <td><ItemImage :item-id="'30011'"/></td>
             <td>源岩</td>
             <td>1.377</td>
             <td>0.215</td>
             <td>0.297</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30061"/></td>
+            <td><ItemImage :item-id="'30061'"/></td>
             <td>破损装置</td>
             <td>3.044</td>
             <td>0.086</td>
             <td>0.26</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="31073"/></td>
+            <td><ItemImage :item-id="'31073'"/></td>
             <td>褐素纤维</td>
             <td>32</td>
             <td>0.016</td>
@@ -348,8 +348,8 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
             <td></td>
             <td></td>
             <td></td>
-            <td><strong>作战掉落总价值</strong></td>
-            <td><strong>25.59</strong></td>
+            <td><b>作战掉落总价值</b></td>
+            <td><b>25.59</b></td>
           </tr>
           <tr>
             <td></td>
@@ -362,8 +362,8 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
             <td></td>
             <td></td>
             <td></td>
-            <td><strong>作战效率</strong></td>
-            <td><strong>121.86%</strong></td>
+            <td><b>作战效率</b></td>
+            <td><b>121.86%</b></td>
           </tr>
         </tbody>
       </v-table>
@@ -372,13 +372,13 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <h2 id="修正蓝材料的价值">6. 修正蓝材料的价值</h2>
     <v-divider></v-divider>
 
-    <strong>
+    <b>
       <p>思想：</p>
       <ol>
         <li>定价作战集中的所有作战效率 ≤ 1；</li>
         <li>对于每一系列材料，在定价作战集中至少存在 1 个以该系列材料为主产物且效率等于 1 的作战。</li>
       </ol>
-    </strong>
+    </b>
     <p>固定一类材料，在定价作战集中寻找以该系列材料为主产物的所有作战，取其中作战效率最高的那个作战，作战效率记为 E。然后把对应的<span class="blue">蓝</span>材料的价值进行修正，将对应<span class="blue">蓝</span>材料的价值除以 E，得到新的价值。</p>
     <p>这个步骤需要对每系列材料都做一遍（除了已经在步骤 1 自定义价值的材料）。</p>
 
@@ -392,7 +392,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <v-divider></v-divider>
 
     <p>重复步骤 3、4、5、6，直到满足停机准则。</p>
-    <p><strong>停机准则：对于每种未自定义价值的<span class="blue">蓝</span>材料，定价作战集中以该系列材料为主产物的最高效率作战的作战效率在 (99.99%, 100.01%) 之间。</strong></p>
+    <p><b>停机准则：对于每种未自定义价值的<span class="blue">蓝</span>材料，定价作战集中以该系列材料为主产物的最高效率作战的作战效率在 (99.99%, 100.01%) 之间。</b></p>
 
     <h1 id="其他物品价值">其他物品价值</h1>
     <v-divider></v-divider>
@@ -441,16 +441,16 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 
     <h3 id="如何确定龙门币价值系数与经验书价值系数？">如何确定龙门币价值系数与经验书价值系数？</h3>
 
-    <p>龙门币价值可以根据 <strong>CE-6</strong> 来确定，即 36 理智 = 10000 龙门币，1 龙门币 = (9 / 2500) 理智。</p>
+    <p>龙门币价值可以根据 <b>CE-6</b> 来确定，即 36 理智 = 10000 龙门币，1 龙门币 = (9 / 2500) 理智。</p>
     <p>EXP 价值有多种方法来确定。</p>
     <p>对于刷 LS-6 的博士来说，36 理智 = 10000 EXP + (36 × 12) 龙门币，EXP 价值 = 36 × (1 - 12 × 龙门币价值) ÷ 10000。</p>
     <p>对于不刷 LS-6 的博士来说，可以通过基建来确定 EXP 的价值。</p>
-    <p>在基建中，可以把<strong>无人机看作一般等价物</strong>。假如加速 1 龙门币所需要的无人机是加速 1 EXP 所需要的无人机的 x 倍，那么按照无人机是等价物的观点，龙门币的价值就是 EXP 的 x 倍。x 称为“钱书价值比”。</p>
+    <p>在基建中，可以把<b>无人机看作一般等价物</b>。假如加速 1 龙门币所需要的无人机是加速 1 EXP 所需要的无人机的 x 倍，那么按照无人机是等价物的观点，龙门币的价值就是 EXP 的 x 倍。x 称为“钱书价值比”。</p>
     <p>还有一种理解方法：假如少加速 1 龙门币省下来的无人机可以用来加速 x EXP，那么把这 1 龙门币和 x EXP 视为价值相同，即认为龙门币的价值是 EXP 的 x 倍。</p>
-    <p>下面我们来具体计算 x。以 <strong>3 级贸易站，不使用龙舌兰、但书、裁缝类技能为例。</strong></p>
+    <p>下面我们来具体计算 x。以 <b>3 级贸易站，不使用龙舌兰、但书、裁缝类技能为例。</b></p>
     <p>为了加速 1000 EXP，需要消耗 60 无人机。而想要使用无人机获取 1000 龙门币，则需要先在制造站中消耗 48 无人机加速 2 赤金，再在贸易站中消耗 1356 / 29 = 46.7586 无人机加速贵金属订单，总共需要消耗 2748 / 29 = 94.7586 无人机。</p>
     <p>将二者相除，得到加速 1 龙门币所需要的无人机是加速 1 EXP 所需要的无人机的 229 / 145 = 1.5793 倍，因此龙门币的价值是 EXP 的 229 / 145 = 1.5793 倍。</p>
-    <p>明日方舟一图流的<strong>默认</strong>经验书价值系数就是这么算出来的，等于 145 / 229 = 0.6332。</p>
+    <p>明日方舟一图流的<b>默认</b>经验书价值系数就是这么算出来的，等于 145 / 229 = 0.6332。</p>
 
     <v-alert variant="tonal" type="info">
       <p>46.7586 是怎么算出来的？</p>
@@ -483,9 +483,9 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <p><a href="https://space.bilibili.com/688411531" target="_blank" rel="noopener noreferrer">逻辑元LogicalByte</a>（当时账号名称为“罗德岛基建BETA”）于 2024-11-06 发布 <a href="https://t.bilibili.com/996644575476973568" target="_blank" rel="noopener noreferrer">投票“平时会加工芯片吗？”</a>。</p>
     <p>参与投票的博士中，68% 的博士选择了“缺啥合啥！小亏就小亏！”选项。</p>
     <img src="/public/image/website/投票“平时会合成芯片吗？”.png" alt="投票“平时会合成芯片吗？”"/>
-    <p>对于这部分博士，可以认为<strong>各芯片的价值相等</strong>。明日方舟一图流就是这么做的。</p>
-    <p>另一个选项是“只合特定芯片！反向不合！（什么职业队）”。选择这个选项的博士也许是考虑到了<strong>各芯片的需求量存在差异</strong>。</p>
-    <p>我们列出<strong>全干员满练</strong>需求的芯片类材料数量（开服 ~ 2025-05「众生行记」版本（含））。</p>
+    <p>对于这部分博士，可以认为<b>各芯片的价值相等</b>。明日方舟一图流就是这么做的。</p>
+    <p>另一个选项是“只合特定芯片！反向不合！（什么职业队）”。选择这个选项的博士也许是考虑到了<b>各芯片的需求量存在差异</b>。</p>
+    <p>我们列出<b>全干员满练</b>需求的芯片类材料数量（开服 ~ 2025-05「众生行记」版本（含））。</p>
     <v-card>
       <v-table style="white-space: nowrap;">
       <thead>
@@ -503,90 +503,90 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       </thead>
       <tbody>
         <tr>
-          <td><ItemImage :item-id="3213"/></td>
+          <td><ItemImage :item-id="'3213'"/></td>
           <td>先锋双芯片</td>
           <td>87</td>
-          <td><ItemImage :item-id="3212"/></td>
+          <td><ItemImage :item-id="'3212'"/></td>
           <td>先锋芯片组</td>
           <td>25</td>
-          <td><ItemImage :item-id="3211"/></td>
+          <td><ItemImage :item-id="'3211'"/></td>
           <td>先锋芯片</td>
           <td>128</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="3223"/></td>
+          <td><ItemImage :item-id="'3223'"/></td>
           <td>近卫双芯片</td>
           <td>190</td>
-          <td><ItemImage :item-id="3222"/></td>
+          <td><ItemImage :item-id="'3222'"/></td>
           <td>近卫芯片组</td>
           <td>75</td>
-          <td><ItemImage :item-id="3221"/></td>
+          <td><ItemImage :item-id="'3221'"/></td>
           <td>近卫芯片</td>
           <td>290</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="3233"/></td>
+          <td><ItemImage :item-id="'3233'"/></td>
           <td>重装双芯片</td>
           <td>105</td>
-          <td><ItemImage :item-id="3232"/></td>
+          <td><ItemImage :item-id="'3232'"/></td>
           <td>重装芯片组</td>
           <td>30</td>
-          <td><ItemImage :item-id="3231"/></td>
+          <td><ItemImage :item-id="'3231'"/></td>
           <td>重装芯片</td>
           <td>154</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="3243"/></td>
+          <td><ItemImage :item-id="'3243'"/></td>
           <td>狙击双芯片</td>
           <td>127</td>
-          <td><ItemImage :item-id="3242"/></td>
+          <td><ItemImage :item-id="'3242'"/></td>
           <td>狙击芯片组</td>
           <td>50</td>
-          <td><ItemImage :item-id="3241"/></td>
+          <td><ItemImage :item-id="'3241'"/></td>
           <td>狙击芯片</td>
           <td>194</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="3253"/></td>
+          <td><ItemImage :item-id="'3253'"/></td>
           <td>术师双芯片</td>
           <td>140</td>
-          <td><ItemImage :item-id="3252"/></td>
+          <td><ItemImage :item-id="'3252'"/></td>
           <td>术师芯片组</td>
           <td>30</td>
-          <td><ItemImage :item-id="3251"/></td>
+          <td><ItemImage :item-id="'3251'"/></td>
           <td>术师芯片</td>
           <td>198</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="3263"/></td>
+          <td><ItemImage :item-id="'3263'"/></td>
           <td>医疗双芯片</td>
           <td>79</td>
-          <td><ItemImage :item-id="3262"/></td>
+          <td><ItemImage :item-id="'3262'"/></td>
           <td>医疗芯片组</td>
           <td>30</td>
-          <td><ItemImage :item-id="3261"/></td>
+          <td><ItemImage :item-id="'3261'"/></td>
           <td>医疗芯片</td>
           <td>121</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="3273"/></td>
+          <td><ItemImage :item-id="'3273'"/></td>
           <td>辅助双芯片</td>
           <td>103</td>
-          <td><ItemImage :item-id="3272"/></td>
+          <td><ItemImage :item-id="'3272'"/></td>
           <td>辅助芯片组</td>
           <td>20</td>
-          <td><ItemImage :item-id="3271"/></td>
+          <td><ItemImage :item-id="'3271'"/></td>
           <td>辅助芯片</td>
           <td>146</td>
         </tr>
         <tr>
-        <td><ItemImage :item-id="3283"/></td>
+        <td><ItemImage :item-id="'3283'"/></td>
           <td>特种双芯片</td>
           <td>124</td>
-          <td><ItemImage :item-id="3282"/></td>
+          <td><ItemImage :item-id="'3282'"/></td>
           <td>特种芯片组</td>
           <td>35</td>
-          <td><ItemImage :item-id="3281"/></td>
+          <td><ItemImage :item-id="'3281'"/></td>
           <td>特种芯片</td>
           <td>181</td>
         </tr>
@@ -618,7 +618,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <h2 id="碳系材料">碳系材料</h2>
     <v-divider></v-divider>
 
-    <p><strong>碳系材料的价值按照“给九色鹿垫刀”来确定，获取的因果用于加工<span class="purple">紫</span>材料。</strong></p>
+    <p><b>碳系材料的价值按照“给九色鹿垫刀”来确定，获取的因果用于加工<span class="purple">紫</span>材料。</b></p>
     <p>具体来说，设</p>
     <ul>
       <li><p>θ 为加工精英材料时的副产品产出概率（使用年、芳汀、白铁加工精英材料时，θ = 20%），</p></li>
@@ -660,11 +660,11 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <h2 id="招聘许可">招聘许可</h2>
     <v-divider></v-divider>
 
-    <p><strong>招聘许可的价值等于公开招募期望获得的<span class="green">资质凭证</span>与<span class="yellow">高级凭证</span>的总价值。</strong></p>
+    <p><b>招聘许可的价值等于公开招募期望获得的<span class="green">资质凭证</span>与<span class="yellow">高级凭证</span>的总价值。</b></p>
     <ul>
       <li><p>公开招募各稀有度标签组合出现概率由 <a href="https://maa.plus/" target="_blank" rel="noopener noreferrer">MAA</a> 统计，可以在 <a href="/survey/maarecruitdata">公招tag调查</a> 页面中找到。</p></li>
       <li>
-        <p>认为<strong>公开招募结果的星级分布</strong>与<strong>公开招募标签组合的稀有度分布</strong>相同。</p>
+        <p>认为<b>公开招募结果的星级分布</b>与<b>公开招募标签组合的稀有度分布</b>相同。</p>
         <p>尽管有可能标签被划，或者无标签出 4★，但是我们忽略这些情况，认为公开招募标签组合的稀有度决定公开招募结果的星级。</p>
       </li>
       <li><p><span class="green">资质凭证</span>价值取为 0.8。</p></li>

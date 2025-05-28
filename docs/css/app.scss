@@ -8,6 +8,8 @@
 
 .side-menu {
   position: fixed;
+  height: 70vh;
+  overflow: auto;
 
   .side-menu-title {
     color: rgb(0,0,0);
