@@ -6,6 +6,7 @@ import {itemSeriesIdList} from "/src/utils/item/itemSeries.js";
 
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 import {formatNumber} from "/src/utils/format.js";
+import ModuleHeader from "@/components/layout/ModuleHeader.vue";
 
 const props = defineProps(['modelValue'])
 
@@ -182,11 +183,8 @@ function getTableDividerClass(divider) {
 
 
 <template>
-  <div class="module-header" id="history-stage-table">
-    <div class="module-title">
-      <h1>往期活动数据</h1>
-      <h4>History Event</h4>
-    </div>
+  <div class="flex-wrap flex">
+    <ModuleHeader title="往期活动数据" title-en="History Event"></ModuleHeader>
     <v-btn color="primary" variant="tonal" class="tag-button" @click="chooseHistoryActDevice('phone')">列表模式
     </v-btn>
     <v-btn color="primary" variant="tonal" class="tag-button" @click="chooseHistoryActDevice('pc')">表格模式</v-btn>

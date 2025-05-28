@@ -19,6 +19,7 @@ import NoticeBoard from "/src/components/layout/NoticeBoard.vue";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
+import ModuleHeader from "@/components/layout/ModuleHeader.vue";
 
 const router = useRouter();
 const {mobile} = useDisplay()
@@ -297,57 +298,52 @@ onMounted(() => {
   <div id="stage" class="stage-page">
     <!-- 标题区域 -->
 
-    <div class="module-header">
-      <div class="module-title">
-        <h1 style="font-size: 36px">推荐关卡</h1>
-        <h4>Best Stages</h4>
-      </div>
-
-      <div style="display: flex;flex-wrap: wrap;align-items: center;margin-top: 20px;">
-        <v-btn-group style="height: 36px;margin: 0 8px">
-          <v-btn color="primary" :size="getButtonSize()"
-                 @click="scrollToOrundumTable()">搓玉数据
-          </v-btn>
-          <v-btn color="primary" :size="getButtonSize()"
-                 @click="scrollToHistoryStageTable()">往期活动
-          </v-btn>
-          <v-btn color="primary" :size="getButtonSize()"
-                 @click="scrollToFrequentlyAskedQuestion()">常见问题
-          </v-btn>
-        </v-btn-group>
-        <v-btn color="primary" style="display:none" class="m-0-8" :size="getButtonSize()"
-               @click="router.push({name:'AccountHome'})" disabled>自定义一图流
+    <div class="flex flex-wrap align-center">
+      <ModuleHeader title="推荐关卡" title-en="Recommended Stage"></ModuleHeader>
+      <v-btn-group style="height: 36px;margin: 0 8px">
+        <v-btn color="primary" :size="getButtonSize()"
+               @click="scrollToOrundumTable()">搓玉数据
         </v-btn>
-        <v-btn color="secondary" variant="tonal" class="m-0-8" :size="getButtonSize()"
+        <v-btn color="primary" :size="getButtonSize()"
+               @click="scrollToHistoryStageTable()">往期活动
+        </v-btn>
+        <v-btn color="primary" :size="getButtonSize()"
+               @click="scrollToFrequentlyAskedQuestion()">常见问题
+        </v-btn>
+        <v-btn color="secondary"   :size="getButtonSize()"
                @click="legendDisplay = !legendDisplay">显示图例
         </v-btn>
+      </v-btn-group>
+      <v-btn color="primary" style="display:none" class="m-0-8" :size="getButtonSize()"
+             @click="router.push({name:'AccountHome'})" disabled>自定义一图流
+      </v-btn>
 
-        <v-switch hide-details v-model="hiddenPermStageFlag" @change="hiddenPermStage()"
-                  color="primary" class="m-0-8"
-                  label="隐藏常驻活动关卡">
-          <template v-slot:append>
-            <v-tooltip
+      <v-switch hide-details v-model="hiddenPermStageFlag" @change="hiddenPermStage()"
+                color="primary" class="m-0-8"
+                label="隐藏常驻活动关卡">
+        <template v-slot:append>
+          <v-tooltip
 
-                location="top"
-            >
-              <template v-slot:activator="{ props }">
-                <v-btn
-                    icon
-                    v-bind="props"
-                    size="xs"
-                >
-                  <v-icon icon="mdi-help">
-                  </v-icon>
-                </v-btn>
-              </template>
-              <span>常驻活动关卡在部分活动中不掉落活动代币</span>
-            </v-tooltip>
-          </template>
-        </v-switch>
+              location="top"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                  icon
+                  v-bind="props"
+                  size="xs"
+              >
+                <v-icon icon="mdi-help">
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>常驻活动关卡在部分活动中不掉落活动代币</span>
+          </v-tooltip>
+        </template>
+      </v-switch>
 
-        <span class="module-tip">上次同步企鹅物流时间：{{ updateTime }}</span>
-      </div>
+      <span class="module-tip">上次同步企鹅物流时间：{{ updateTime }}</span>
     </div>
+
     <!-- 说明区域 -->
     <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
 

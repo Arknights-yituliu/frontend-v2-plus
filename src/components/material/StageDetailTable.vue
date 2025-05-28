@@ -2,6 +2,7 @@
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {formatNumber} from "/src/utils/format.js";
 import {ref} from "vue";
+import ModuleHeader from "@/components/layout/ModuleHeader.vue";
 
 const props = defineProps(['modelValue'])
 
@@ -33,11 +34,9 @@ function replaceZoneName(str) {
 
 <template>
 
-  <div class="module-header">
-    <div class="module-title">
-      <h1>材料详情</h1>
-      <h4>Item Info</h4>
-    </div>
+
+  <div class="flex flex-wrap">
+    <ModuleHeader title="材料详情" title-en="Item Info"></ModuleHeader>
     <span class="module-tip">*移动端可左右拖动查看</span>
   </div>
   <span id="StageDetailTable"></span>

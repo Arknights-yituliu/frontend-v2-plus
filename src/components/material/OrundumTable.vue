@@ -2,6 +2,7 @@
 
 import {ref, watch} from "vue";
 import {formatNumber} from "@/utils/format.js";
+import ModuleHeader from "@/components/layout/ModuleHeader.vue";
 
 const props = defineProps(['modelValue'])
 
@@ -63,11 +64,9 @@ const headers = [
 
 <template>
 
-  <div class="module-header" id="orundum-table">
-    <div class="module-title">
-      <h1>搓玉数据表</h1>
-      <h4>Orundum</h4>
-    </div>
+
+  <div class="flex-wrap flex">
+    <ModuleHeader title="搓玉数据表" title-en="Orundum"></ModuleHeader>
     <v-btn color="primary" variant="tonal"  @click="filterOrundumStage()">
       仅显示1-7、CW-6和活动关
     </v-btn>

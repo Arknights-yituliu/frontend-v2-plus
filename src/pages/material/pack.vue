@@ -377,6 +377,7 @@ loadingItemValue()
     <div id="pack" class="pack-efficiency-page">
       <!-- 不会因为筛选改变的礼包 Start -->
       <template v-for="item in fixedPacks" :key="item.titleEn">
+
         <module-header :title="item.title" :title-en="item.titleEn" :tips="item.tips"/>
         <div v-if="item.titleEn === 'New Packs'">
           <v-chip text="点击图片可查看礼包内容" color="deep-orange" class="m-4"></v-chip>
