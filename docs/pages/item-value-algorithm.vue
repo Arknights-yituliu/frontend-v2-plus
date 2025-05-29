@@ -19,7 +19,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <li><a href="https://github.com/Bidgecfah/Rhodes-Island-Bureau-of-Price" target="_blank" rel="noopener noreferrer">罗德岛物价局</a></li>
     </ul>
 
-    <h2 id="ArkPlanner">ArkPlanner</h2>
+    <h3 id="ArkPlanner">ArkPlanner</h3>
     <v-divider></v-divider>
 
     <v-alert border>
@@ -27,35 +27,27 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     </v-alert>
     <p>简单来说，ArkPlanner 通过求解如下的线性规划问题来计算精英材料的价值（假设精英材料以外的物品的价值已知）。</p>
     <v-alert border>
-      <ul>
-        <li>
-          <p><b>【决策变量】</b></p>
-          <p>每种精英材料的价值</p>
-        </li>
-        <li>
-          <p><b>【目标函数】</b></p>
-          <p>最大化全干员满练需求物品的总价值</p>
-        </li>
-        <li>
-          <p><b>【约束条件】</b></p>
-          <ol>
-            <li>作战期望掉落物品的总价值 ≤ 作战的理智消耗（对任意的作战）；</li>
-            <li>加工期望得到的物品的总价值 ≤ 加工消耗的物品的总价值（对任意的加工配方）。</li>
-          </ol>
-        </li>
-      </ul>
+      <p><b>【决策变量】</b></p>
+      <p>每种精英材料的价值</p>
+      <p><b>【目标函数】</b></p>
+      <p>最大化全干员满练需求物品的总价值</p>
+      <p><b>【约束条件】</b></p>
+      <ol>
+        <li>作战期望掉落物品的总价值 ≤ 作战的理智消耗（对任意的作战）；</li>
+        <li>加工期望得到的物品的总价值 ≤ 加工消耗的物品的总价值（对任意的加工配方）。</li>
+      </ol>
     </v-alert>
     <p>（仅为框架，省去了很多细节）</p>
-    <p>ArkPlanner 算法是<b>需求敏感的</b>。新的精英材料刚加入时，需求量非常少，ArkPlanner 会认为“通过加工其他精英材料获得的副产物足够满足新材料的需求”，而误将新材料的价值估计得比较低。</p>
+    <p>ArkPlanner 算法是<b>需求敏感的</b>。新的精英材料刚加入时，需求量非常少，ArkPlanner 会认为“通过加工其他精英材料获得的副产品足够满足新材料的需求”，而误将新材料的价值估计得比较低。</p>
 
-    <h2 id="明日方舟一图流">明日方舟一图流</h2>
+    <h3 id="明日方舟一图流">明日方舟一图流</h3>
     <v-divider></v-divider>
 
     <p>明日方舟一图流在计算精英材料的价值时不以需求作为变量，从而是需求不敏感的。在 ArkPlanner 算法的 2 类约束条件中，明日方舟一图流算法完全保留约束条件 1，即<b>所有作战的作战效率 ≤ 1</b>；对于约束条件 2，在明日方舟一图流算法中，直接要求<b>精英材料配方的不等号取等</b>，即要求<b>所有精英材料配方的<span class="red">消耗总价值</span>等于<span class="red">产出总价值</span>。</b></p>
     <p>由于精英材料的加工配方都变成了等式，在知道了<span class="blue">蓝</span>材料的价值后就能知道全部精英材料的价值。因此，明日方舟一图流算法<b>以<span class="blue">蓝</span>材料价值为核心</b>，<b>额外要求每一系列材料</b>（源岩、固源岩、固源岩组、提纯源岩算一系列材料，其他类似）<b>都至少存在 1 个以该系列材料为主产物且效率等于 1 的作战。</b></p>
     <p>算法细节将在后文中详述。</p>
 
-    <h2 id="罗德岛物价局">罗德岛物价局</h2>
+    <h3 id="罗德岛物价局">罗德岛物价局</h3>
     <v-divider></v-divider>
 
     <p>罗德岛物价局的思路与明日方舟一图流类似。</p>
@@ -64,17 +56,17 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <p>本项目迭代选择与待定价材料相等数量的定价关卡，解一次方程组就得到了材料的定价，判断筛选范围内的关卡是否服从定价：不服从的关卡替代现有定价关卡成为新的定价关卡并重新进行方程组求解；而所有关卡都服从定价时就确定了最终的材料定价。 再通过定价结果计算各商店的兑换货币性价比，从而指导“在什么商店买什么”的问题。</p>
     </v-alert>
 
-    <h1 id="名词解释">名词解释</h1>
+    <h2 id="名词解释">名词解释</h2>
     <v-divider></v-divider>
 
     <p>精英材料的稀有度从低到高依次称为<span class="gray">白</span>、<span class="green">绿</span>、<span class="blue">蓝</span>、<span class="purple">紫</span>、<span class="yellow">金</span>，或者 <span class="gray">T1</span>、<span class="green">T2</span>、<span class="blue">T3</span>、<span class="purple">T4</span>、<span class="yellow">T5</span>。</p>
 
-    <h1 id="精英材料价值">精英材料价值</h1>
+    <h2 id="精英材料价值">精英材料价值</h2>
     <v-divider></v-divider>
 
     <p>明日方舟一图流算法按照以下步骤计算精英材料的价值。在计算精英材料的价值时，会用到龙门币、EXP、赤金等其他物品的价值，这些物品的价值需要提前算出。</p>
 
-    <h2 id="确定定价作战集和自定义物品价值">1. 确定定价作战集和自定义物品价值</h2>
+    <h3 id="确定定价作战集和自定义物品价值">1. 确定定价作战集和自定义物品价值</h3>
     <v-divider></v-divider>
 
     <ul>
@@ -95,7 +87,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       </li>
     </ul>
 
-    <h2 id="设定初始值">2. 设定初始值</h2>
+    <h3 id="设定初始值">2. 设定初始值</h3>
     <v-divider></v-divider>
 
     <ul>
@@ -110,13 +102,15 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <p><span class="blue">蓝</span>材料价值的初始值推荐使用绿票商店售价 × 0.8，可以更快收敛。</p>
     </v-alert>
 
-    <h2 id="计算所有精英材料的价值">3. 计算所有精英材料的价值</h2>
+    <h3 id="计算所有精英材料的价值">3. 计算所有精英材料的价值</h3>
     <v-divider></v-divider>
 
     <p>在已知所有<span class="blue">蓝</span>材料价值的情况下，根据加工配方，计算<span class="gray">白</span>、<span class="green">绿</span>、<span class="purple">紫</span>、<span class="yellow">金</span>材料的价值。</p>
-    <p><b>思想：所有精英材料配方的消耗总价值等于产出总价值</b></p>
+    <v-alert border>
+      <b>思想：所有精英材料配方的消耗总价值等于产出总价值</b>
+    </v-alert>
 
-    <h3 id="计算所有精英材料的价值-计算示例">计算示例</h3>
+    <h4 id="计算所有精英材料的价值-计算示例">计算示例</h4>
 
     <p>以装置系材料为例。其他精英材料的价值可以类似算出。</p>
     <ul>
@@ -147,7 +141,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       </li>
     </ol>
 
-    <h2 id="计算副产品价值的期望">4. 计算副产品价值的期望</h2>
+    <h3 id="计算副产品价值的期望">4. 计算副产品价值的期望</h3>
     <v-divider></v-divider>
 
     <p>使用上一步计算出的所有精英材料的价值，计算加工<span class="green">绿</span>、<span class="blue">蓝</span>、<span class="purple">紫</span>、<span class="yellow">金</span>材料时副产品价值的期望。</p>
@@ -156,7 +150,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <p>加工特定材料时，各种副产品的出现概率可以在 <a href="https://prts.wiki/w/%E5%9B%BA%E6%BA%90%E5%B2%A9" target="_blank" rel="noopener noreferrer">PRTS Wiki</a> 目标材料页面中找到。</p>
     </v-alert>
 
-    <h3 id="计算副产品价值的期望-计算示例">计算示例</h3>
+    <h4 id="计算副产品价值的期望-计算示例">计算示例</h4>
 
     <p>例如，加工<span class="green">绿</span>材料时，副产品为<span class="gray">白</span>材料。根据各种<span class="gray">白</span>材料的价值以及各种<span class="gray">白</span>材料作为副产品的概率，计算加工<span class="green">绿</span>材料时副产品价值的期望。（数值仅为示例，非准确值）</p>
 
@@ -217,7 +211,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       </v-table>
     </v-card>
 
-    <h2 id="计算作战期望掉落物品的总价值">5. 计算作战期望掉落物品的总价值</h2>
+    <h3 id="计算作战期望掉落物品的总价值">5. 计算作战期望掉落物品的总价值</h3>
     <v-divider></v-divider>
 
     <p>根据 <a href="https://penguin-stats.io/" target="_blank" rel="noopener noreferrer">企鹅物流数据统计</a> 的掉率数据，对于每个作战，计算期望掉落物品的总价值，进而计算作战效率。</p>
@@ -225,7 +219,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <p><b>作战效率 = 作战期望掉落物品的总价值 ÷ 作战的理智消耗</b></p>
     </v-alert>
 
-    <h3 id="计算作战期望掉落物品的总价值-计算示例">计算示例</h3>
+    <h4 id="计算作战期望掉落物品的总价值-计算示例">计算示例</h4>
 
     <p>计算主题曲 12-17 的期望掉落物品的总价值和作战效率（数值仅为示例，非准确值）。</p>
     <v-card>
@@ -356,35 +350,35 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       </v-table>
     </v-card>
 
-    <h2 id="修正蓝材料的价值">6. 修正蓝材料的价值</h2>
+    <h3 id="修正蓝材料的价值">6. 修正蓝材料的价值</h3>
     <v-divider></v-divider>
 
-    <b>
-      <p>思想：</p>
+    <v-alert border>
+      <b>思想：</b>
       <ol>
-        <li>定价作战集中的所有作战效率 ≤ 1；</li>
-        <li>对于每一系列材料，在定价作战集中至少存在 1 个以该系列材料为主产物且效率等于 1 的作战。</li>
+        <li><b>定价作战集中的所有作战效率 ≤ 1；</b></li>
+        <li><b>对于每一系列材料，在定价作战集中至少存在 1 个以该系列材料为主产物且效率等于 1 的作战。</b></li>
       </ol>
-    </b>
+    </v-alert>
     <p>固定一类材料，在定价作战集中寻找以该系列材料为主产物的所有作战，取其中作战效率最高的那个作战，作战效率记为 E。然后把对应的<span class="blue">蓝</span>材料的价值进行修正，将对应<span class="blue">蓝</span>材料的价值除以 E，得到新的价值。</p>
     <p>这个步骤需要对每系列材料都做一遍（除了已经在步骤 1 自定义价值的材料）。</p>
 
-    <h3 id="修正蓝材料的价值-计算示例">计算示例</h3>
+    <h4 id="修正蓝材料的价值-计算示例">计算示例</h4>
 
     <p>以切削液系材料为例。</p>
     <p>上一步已经计算出了主题曲 12-17 的作战效率为 121.86%。假设这就是以切削液系材料为主产物的作战中，效率最高的那个。</p>
     <p>此时需要把化合切削液的价值除以 121.86%，得到新的化合切削液价值。</p>
 
-    <h2 id="迭代直到收敛">7. 迭代直到收敛</h2>
+    <h3 id="迭代直到收敛">7. 迭代直到收敛</h3>
     <v-divider></v-divider>
 
     <p>重复步骤 3、4、5、6，直到满足停机准则。</p>
     <p><b>停机准则：对于每种未自定义价值的<span class="blue">蓝</span>材料，定价作战集中以该系列材料为主产物的最高效率作战的作战效率在 (99.99%, 100.01%) 之间。</b></p>
 
-    <h1 id="其他物品价值">其他物品价值</h1>
+    <h2 id="其他物品价值">其他物品价值</h2>
     <v-divider></v-divider>
 
-    <h2 id="寻访资源">寻访资源</h2>
+    <h3 id="寻访资源">寻访资源</h3>
     <v-divider></v-divider>
 
     <ul>
@@ -402,12 +396,12 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         合成玉价值 = (2 × 固源岩价值 + 1600 × 龙门币价值 + 40 × 无人机价值) ÷ 10。</p>
     </v-alert>
 
-    <h2 id="家具零件、加急许可">家具零件、加急许可</h2>
+    <h3 id="家具零件、加急许可">家具零件、加急许可</h3>
     <v-divider></v-divider>
 
     <p>认为家具零件、加急许可的价值为 0。</p>
 
-    <h2 id="龙门币、作战记录、无人机、赤金">龙门币、作战记录、无人机、赤金</h2>
+    <h3 id="龙门币、作战记录、无人机、赤金">龙门币、作战记录、无人机、赤金</h3>
     <v-divider></v-divider>
 
     <ul>
@@ -426,7 +420,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <li><p>赤金价值 = 无人机价值 ÷ 无人机生产赤金数量 = 无人机价值 ÷ (180 ÷ 4320)</p></li>
     </ul>
 
-    <h3 id="如何确定龙门币价值系数与经验书价值系数？">如何确定龙门币价值系数与经验书价值系数？</h3>
+    <h4 id="如何确定龙门币价值系数与经验书价值系数？">如何确定龙门币价值系数与经验书价值系数？</h4>
 
     <p>龙门币价值可以根据 <b>CE-6</b> 来确定，即 36 理智 = 10000 龙门币，1 龙门币 = (9 / 2500) 理智。</p>
     <p>EXP 价值有多种方法来确定。</p>
@@ -452,7 +446,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 
     <p>不同博士的基建布局、使用龙舌兰、但书、裁缝类技能的情况各不相同。其他情况下的钱书价值比，可以参考 <a href="https://space.bilibili.com/37179776" target="_blank" rel="noopener noreferrer">BioHazard</a> 的文章 <a href="https://www.bilibili.com/read/cv28230294/" target="_blank" rel="noopener noreferrer">各情形下贸易站数据</a>。文章中的“钱书基础工时成本比”就是这里的“钱书价值比”。</p>
 
-    <h2 id="采购凭证、芯片相关材料、模组数据块、事相碎片">采购凭证、芯片相关材料、模组数据块、事相碎片</h2>
+    <h3 id="采购凭证、芯片相关材料、模组数据块、事相碎片">采购凭证、芯片相关材料、模组数据块、事相碎片</h3>
     <v-divider></v-divider>
 
     <ul>
@@ -465,10 +459,10 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <li><p>事相碎片价值 = 20 × 采购凭证价值</p></li>
     </ul>
 
-    <h3 id="芯片类材料价值的进一步讨论">芯片类材料价值的进一步讨论</h3>
+    <h4 id="芯片类材料价值的进一步讨论">芯片类材料价值的进一步讨论</h4>
     <p><a href="https://space.bilibili.com/688411531" target="_blank" rel="noopener noreferrer">逻辑元LogicalByte</a>（当时账号名称为“罗德岛基建BETA”）于 2024-11-06 发布 <a href="https://t.bilibili.com/996644575476973568" target="_blank" rel="noopener noreferrer">投票“平时会加工芯片吗？”</a>。</p>
     <p>参与投票的博士中，68% 的博士选择了“缺啥合啥！小亏就小亏！”选项。</p>
-    <img src="/public/image/website/投票“平时会合成芯片吗？”.png" alt="投票“平时会合成芯片吗？”"/>
+    <img src="/image/website/投票“平时会合成芯片吗？”.png" alt="投票“平时会合成芯片吗？”"/>
     <p>对于这部分博士，可以认为<b>各芯片的价值相等</b>。明日方舟一图流就是这么做的。</p>
     <p>另一个选项是“只合特定芯片！反向不合！（什么职业队）”。选择这个选项的博士也许是考虑到了<b>各芯片的需求量存在差异</b>。</p>
     <p>我们列出<b>全干员满练</b>需求的芯片类材料数量（开服 ~ 2025-05「众生行记」版本（含））。</p>
@@ -601,7 +595,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <li><p>弱势芯片价值 = (4 + η) ÷ 5 × 18 × (1 - 12 × 龙门币价值)。</p></li>
     </ul>
     <p>芯片组的价值可以类似考虑，不再赘述。</p>
-    <h2 id="碳系材料">碳系材料</h2>
+    <h3 id="碳系材料">碳系材料</h3>
     <v-divider></v-divider>
 
     <p><b>碳系材料的价值按照“给九色鹿垫刀”来确定，获取的因果用于加工<span class="purple">紫</span>材料。</b></p>
@@ -629,7 +623,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       <li><p>碳价值 = (11 / 30) × 碳素价值 + (3 / 5) × 因果价值。</p></li>
     </ul>
 
-    <h2 id="技巧概要">技巧概要</h2>
+    <h3 id="技巧概要">技巧概要</h3>
     <v-divider></v-divider>
 
     <ul>
@@ -643,7 +637,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     </ol>
     <p>把以上路径中的“→”改成“=”，可以解出技巧概要的价值。</p>
 
-    <h2 id="招聘许可">招聘许可</h2>
+    <h3 id="招聘许可">招聘许可</h3>
     <v-divider></v-divider>
 
     <p><b>招聘许可的价值等于公开招募期望获得的<span class="green">资质凭证</span>与<span class="yellow">高级凭证</span>的总价值。</b></p>
@@ -665,7 +659,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       </li>
     </ul>
 
-    <h1 id="参考资料">参考资料</h1>
+    <h2 id="参考资料">参考资料</h2>
     <v-divider></v-divider>
     <ol>
       <li><p>ArkPlanner，<a href="https://github.com/penguin-statistics/ArkPlanner" target="_blank" rel="noopener noreferrer">https://github.com/penguin-statistics/ArkPlanner</a></p></li>
