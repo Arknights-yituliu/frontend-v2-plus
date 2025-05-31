@@ -61,7 +61,10 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
           <ItemImage :item-id="'AP_GAMEPLAY'" ></ItemImage>
         </td>
         <td class="stage-legend-text-1">
-          <span>需要所有材料→</span>
+          <span>需要所有材料</span>
+        </td>
+        <td>
+          <img src="/image/icon/arrow.png" style="width: 36px"  alt="">
         </td>
         <td class="stage-legend-text-2">
           <span>14-17</span>
@@ -86,8 +89,11 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         </td>
         <td class="stage-legend-text-1">
             <span>
-              仅需对应材料（<span class="purple">紫</span><span class="blue">蓝</span><span class="green">绿</span>白材料）→
+              仅需<span class="purple">紫</span><span class="blue">蓝</span><span class="green">绿</span>白材料
               </span>
+        </td>
+        <td>
+          <img src="/image/icon/arrow.png" style="width: 36px"  alt="">
         </td>
         <td class="stage-legend-text-2">
           <span>14-17</span>
@@ -116,8 +122,11 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         </td>
         <td class="stage-legend-text-1">
             <span>
-              仅需对应材料（<span class="blue">蓝</span><span class="green">绿</span>白材料）→
+              仅需<span class="blue">蓝</span><span class="green">绿</span>白材料
               </span>
+        </td>
+        <td>
+          <img src="/image/icon/arrow.png" style="width: 36px"  alt="">
         </td>
         <td class="stage-legend-text-2">
           <span>MB-6</span>
@@ -143,8 +152,11 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         </td>
         <td class="stage-legend-text-1">
             <span>
-              仅需对应材料（<span class="green">绿</span>白材料）→
+              仅需<span class="green">绿</span>白材料
               </span>
+        </td>
+        <td>
+          <img src="/image/icon/arrow.png" style="width: 36px"  alt="">
         </td>
         <td class="stage-legend-text-2">
           <span>S3-1</span>
