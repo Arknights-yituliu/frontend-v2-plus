@@ -16,7 +16,7 @@
     font-weight: bold;
     display: block;
     font-size: 20px;
-    padding: 24px 0 0 0;
+    padding: 24px 4px 4px 6px;
   }
 
   opacity: 0.8;
@@ -25,19 +25,25 @@
     color: rgba(0,0,0,0.8);
     display: block;
     cursor: pointer;
-    padding: 4px 4px 4px 12px;
+    padding: 4px 4px 4px 6px;
   }
 
   .side-menu-H2 {
     color: rgba(0,0,0,0.8);
     display: block;
-    padding: 4px 4px 4px 24px;
+    padding: 4px 4px 4px 18px;
   }
 
   .side-menu-H3 {
     color: rgba(0,0,0,0.8);
     display: block;
-    padding: 4px 4px 4px 36px;
+    padding: 4px 4px 4px 30px;
+  }
+
+  .side-menu-H4 {
+    color: rgba(0,0,0,0.8);
+    display: block;
+    padding: 4px 4px 4px 42px;
   }
 
   .current-menu {
