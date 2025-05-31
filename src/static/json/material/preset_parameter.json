@@ -8,16 +8,16 @@
         "基建尚未成型"
       ],
       "paramDescription": [
-        "经验书系数=1",
+        "经验书系数=0.9568",
         "龙门币系数=1",
         "主线定价"
       ],
       "parameters": {
-        "expCoefficient": 1,
+        "expCoefficient": 0.9568,
         "lmdCoefficient": 1,
         "useActivityAverageStage":false
       },
-      "message": "经验书系数已修改为1；龙门币系数已修改为1；已使用主线与常驻活动关卡作为基准",
+      "message": "经验书系数已修改为0.9568；龙门币系数已修改为1；已使用主线与常驻活动关卡作为基准",
       "color": "primary",
       "active": false
     },
