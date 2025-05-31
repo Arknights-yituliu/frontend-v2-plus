@@ -54,74 +54,28 @@ async function getPenguinMatrixCache() {
     if (cacheData) {
         if (Date.now() - cacheData.createTime < 60 * 60 * 12 * 1000) {
             console.log(`${penguinCacheKey}.返回缓存的数据`)
-            // await loadingPenguinData(penguinCacheKey)
+
             return cacheData.resource
         }
     }
 
 
     //如果超过设定缓存时间，从企鹅物流获取新的数据，如果10s企鹅物流未响应，则去加载一图流的企鹅物流数据镜像
-    penguinData = await loadingPenguinData(penguinCacheKey)
-    console.log(penguinData)
-    // await axios.get('https://penguin-stats.io/PenguinStats/api/v2/_private/result/matrix/CN/global/automated', {
-    //     timeout: 10000 // 设置超时时间为10秒
-    // }).then(response => {
-    //     console.log(`${cacheKey}.返回来自企鹅物流的数据`)
-    //     const matrix = response.data.matrix
-    //     const info = {
-    //         id: cacheKey,
-    //         resource: matrix,
-    //         version: "automated",
-    //         createTime: new Date().getTime()
-    //     }
-    //     putCache(info)
-    //     penguinData = matrix
-    // }).catch(e => {
-    //     if (e.message === "请求超时") {
-    //         console.log("企鹅物流请求超时")
-    //     } else {
-    //         createMessage(e);
-    //     }
-    // })
-
-    //企鹅物流请求超时，加载一图流的企鹅物流数据镜像
-    if (penguinData.length < 100) {
-        penguinData = loadingPenguinImageData(penguinCacheKey)
-        // await axios.get('https://cos.yituliu.cn/stage-drop/matrix.json').then(response => {
-        //     console.log(`${cacheKey}.返回来自企鹅物流的镜像数据`)
-        //     const matrix = response.data.matrix
-        //     const info = {
-        //         id: cacheKey,
-        //         resource: matrix,
-        //         version: "automated",
-        //         createTime: new Date().getTime()
-        //     }
-        //     putCache(info)
-        //     penguinData = matrix
-        // })
-    }
-
-
-    return penguinData
-}
-
-
-async function loadingPenguinData(cacheKey) {
-    let responseData = []
-    //如果超过设定缓存时间，从企鹅物流获取新的数据，如果10s企鹅物流未响应，则去加载一图流的企鹅物流数据镜像
+    // penguinData = await loadingPenguinData(penguinCacheKey)
+    // console.log(penguinData)
     await axios.get('https://penguin-stats.io/PenguinStats/api/v2/_private/result/matrix/CN/global/automated', {
         timeout: 10000 // 设置超时时间为10秒
     }).then(response => {
-        console.log(`${cacheKey}.返回来自企鹅物流的数据`)
+        console.log(`${penguinCacheKey}.返回来自企鹅物流的数据`)
         const matrix = response.data.matrix
         const info = {
-            id: cacheKey,
+            id: penguinCacheKey,
             resource: matrix,
             version: "automated",
-            createTime: Date.now()
+            createTime: new Date().getTime()
         }
         putCache(info)
-        responseData = matrix
+        penguinData = matrix
     }).catch(e => {
         if (e.message === "请求超时") {
             console.log("企鹅物流请求超时")
@@ -130,27 +84,28 @@ async function loadingPenguinData(cacheKey) {
         }
     })
 
-    return responseData
+    //企鹅物流请求超时，加载一图流的企鹅物流数据镜像
+    if (penguinData.length < 100) {
+        // penguinData = loadingPenguinImageData(penguinCacheKey)
+        await axios.get('https://cos.yituliu.cn/stage-drop/matrix.json').then(response => {
+            console.log(`${penguinCacheKey}.返回来自企鹅物流的镜像数据`)
+            const matrix = response.data.matrix
+            const info = {
+                id: penguinCacheKey,
+                resource: matrix,
+                version: "automated",
+                createTime: new Date().getTime()
+            }
+            putCache(info)
+            penguinData = matrix
+        })
+    }
+
+
+    return penguinData
 }
 
 
-async function loadingPenguinImageData(cacheKey) {
-    let responseData = []
-    await axios.get('https://cos.yituliu.cn/stage-drop/matrix.json').then(response => {
-        console.log(`${cacheKey}.返回来自企鹅物流的镜像数据`)
-        const matrix = response.data.matrix
-        const info = {
-            id: cacheKey,
-            resource: matrix,
-            version: "automated",
-            createTime: new Date().getTime()
-        }
-        putCache(info)
-        responseData = matrix
-    })
-
-    return responseData
-}
 
 function getLastSynchronizationTime() {
     return myDatabase.cache_data.get(penguinCacheKey)
@@ -188,5 +143,5 @@ async function getStageInfoCache() {
 
 
 export default {
-    getItemValueCacheByConfig, loadingPenguinData, getPenguinMatrixCache, getStageInfoCache, getLastSynchronizationTime
+    getItemValueCacheByConfig, getPenguinMatrixCache, getStageInfoCache, getLastSynchronizationTime
 }
