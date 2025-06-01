@@ -1,0 +1,607 @@
+[
+  {
+    "itemId": "30145",
+    "itemName": "晶体电子单元",
+    "zone": 1
+  },
+  {
+    "itemId": "30155",
+    "itemName": "烧结核凝晶",
+    "zone": 1
+  },
+  {
+    "itemId": "30115",
+    "itemName": "聚合剂",
+    "zone": 1
+  },
+  {
+    "itemId": "30135",
+    "itemName": "D32钢",
+    "zone": 1
+  },
+  {
+    "itemId": "30125",
+    "itemName": "双极纳米片",
+    "zone": 1
+  },
+  {
+    "itemId": "30165",
+    "itemName": "重相位对映体",
+    "zone": 1
+  },
+  {
+    "itemId": "31094",
+    "itemName": "手性屈光体",
+    "zone": 2
+  },
+  {
+    "itemId": "30044",
+    "itemName": "异铁块",
+    "zone": 2
+  },
+  {
+    "itemId": "31084",
+    "itemName": "环烃预制体",
+    "zone": 2
+  },
+  {
+    "itemId": "30054",
+    "itemName": "酮阵列",
+    "zone": 2
+  },
+  {
+    "itemId": "30064",
+    "itemName": "改量装置",
+    "zone": 2
+  },
+  {
+    "itemId": "30104",
+    "itemName": "RMA70-24",
+    "zone": 2
+  },
+  {
+    "itemId": "30094",
+    "itemName": "五水研磨石",
+    "zone": 2
+  },
+  {
+    "itemId": "31074",
+    "itemName": "固化纤维板",
+    "zone": 2
+  },
+  {
+    "itemId": "30024",
+    "itemName": "糖聚块",
+    "zone": 2
+  },
+  {
+    "itemId": "31034",
+    "itemName": "晶体电路",
+    "zone": 2
+  },
+  {
+    "itemId": "31024",
+    "itemName": "炽合金块",
+    "zone": 2
+  },
+  {
+    "itemId": "31044",
+    "itemName": "精炼溶剂",
+    "zone": 2
+  },
+  {
+    "itemId": "31054",
+    "itemName": "切削原液",
+    "zone": 2
+  },
+  {
+    "itemId": "31064",
+    "itemName": "转质盐聚块",
+    "zone": 2
+  },
+  {
+    "itemId": "31014",
+    "itemName": "聚合凝胶",
+    "zone": 2
+  },
+  {
+    "itemId": "30084",
+    "itemName": "三水锰矿",
+    "zone": 2
+  },
+  {
+    "itemId": "30034",
+    "itemName": "聚酸酯块",
+    "zone": 2
+  },
+  {
+    "itemId": "30014",
+    "itemName": "提纯源岩",
+    "zone": 2
+  },
+  {
+    "itemId": "30074",
+    "itemName": "白马醇",
+    "zone": 2
+  },
+  {
+    "itemId": "31083",
+    "itemName": "环烃聚质",
+    "zone": 3
+  },
+  {
+    "itemId": "31093",
+    "itemName": "类凝结核",
+    "zone": 3
+  },
+  {
+    "itemId": "30063",
+    "itemName": "全新装置",
+    "zone": 3
+  },
+  {
+    "itemId": "30103",
+    "itemName": "RMA70-12",
+    "zone": 3
+  },
+  {
+    "itemId": "31073",
+    "itemName": "褐素纤维",
+    "zone": 3
+  },
+  {
+    "itemId": "31063",
+    "itemName": "转质盐组",
+    "zone": 3
+  },
+  {
+    "itemId": "30093",
+    "itemName": "研磨石",
+    "zone": 3
+  },
+  {
+    "itemId": "31053",
+    "itemName": "化合切削液",
+    "zone": 3
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "zone": 3
+  },
+  {
+    "itemId": "31043",
+    "itemName": "半自然溶剂",
+    "zone": 3
+  },
+  {
+    "itemId": "30083",
+    "itemName": "轻锰矿",
+    "zone": 3
+  },
+  {
+    "itemId": "30053",
+    "itemName": "酮凝集组",
+    "zone": 3
+  },
+  {
+    "itemId": "30043",
+    "itemName": "异铁组",
+    "zone": 3
+  },
+  {
+    "itemId": "30073",
+    "itemName": "扭转醇",
+    "zone": 3
+  },
+  {
+    "itemId": "31023",
+    "itemName": "炽合金",
+    "zone": 3
+  },
+  {
+    "itemId": "30033",
+    "itemName": "聚酸酯组",
+    "zone": 3
+  },
+  {
+    "itemId": "30023",
+    "itemName": "糖组",
+    "zone": 3
+  },
+  {
+    "itemId": "31033",
+    "itemName": "晶体元件",
+    "zone": 3
+  },
+  {
+    "itemId": "30013",
+    "itemName": "固源岩组",
+    "zone": 3
+  },
+  {
+    "itemId": "30062",
+    "itemName": "装置",
+    "zone": 4
+  },
+  {
+    "itemId": "30052",
+    "itemName": "酮凝集",
+    "zone": 4
+  },
+  {
+    "itemId": "30042",
+    "itemName": "异铁",
+    "zone": 4
+  },
+  {
+    "itemId": "30032",
+    "itemName": "聚酸酯",
+    "zone": 4
+  },
+  {
+    "itemId": "30022",
+    "itemName": "糖",
+    "zone": 4
+  },
+  {
+    "itemId": "30012",
+    "itemName": "固源岩",
+    "zone": 4
+  },
+  {
+    "itemId": "30061",
+    "itemName": "破损装置",
+    "zone": 5
+  },
+  {
+    "itemId": "30051",
+    "itemName": "双酮",
+    "zone": 5
+  },
+  {
+    "itemId": "30041",
+    "itemName": "异铁碎片",
+    "zone": 5
+  },
+  {
+    "itemId": "30031",
+    "itemName": "酯原料",
+    "zone": 5
+  },
+  {
+    "itemId": "30021",
+    "itemName": "代糖",
+    "zone": 5
+  },
+  {
+    "itemId": "30011",
+    "itemName": "源岩",
+    "zone": 5
+  },
+  {
+    "itemId": "2004",
+    "itemName": "高级作战记录",
+    "zone": 6
+  },
+  {
+    "itemId": "2003",
+    "itemName": "中级作战记录",
+    "zone": 6
+  },
+  {
+    "itemId": "2002",
+    "itemName": "初级作战记录",
+    "zone": 6
+  },
+  {
+    "itemId": "2001",
+    "itemName": "基础作战记录",
+    "zone": 6
+  },
+  {
+    "itemId": "4001",
+    "itemName": "龙门币",
+    "zone": 6
+  },
+  {
+    "itemId": "3301",
+    "itemName": "技巧概要·卷1",
+    "zone": 6
+  },
+  {
+    "itemId": "3302",
+    "itemName": "技巧概要·卷2",
+    "zone": 6
+  },
+  {
+    "itemId": "3303",
+    "itemName": "技巧概要·卷3",
+    "zone": 6
+  },
+  {
+    "itemId": "3003",
+    "itemName": "赤金",
+    "zone": 6
+  },
+  {
+    "itemId": "3261",
+    "itemName": "医疗芯片",
+    "zone": 7
+  },
+  {
+    "itemId": "3271",
+    "itemName": "辅助芯片",
+    "zone": 7
+  },
+  {
+    "itemId": "3211",
+    "itemName": "先锋芯片",
+    "zone": 7
+  },
+  {
+    "itemId": "3281",
+    "itemName": "特种芯片",
+    "zone": 7
+  },
+  {
+    "itemId": "3221",
+    "itemName": "近卫芯片",
+    "zone": 7
+  },
+  {
+    "itemId": "3231",
+    "itemName": "重装芯片",
+    "zone": 7
+  },
+  {
+    "itemId": "3241",
+    "itemName": "狙击芯片",
+    "zone": 7
+  },
+  {
+    "itemId": "3251",
+    "itemName": "术师芯片",
+    "zone": 7
+  },
+  {
+    "itemId": "3262",
+    "itemName": "医疗芯片组",
+    "zone": 8
+  },
+  {
+    "itemId": "3272",
+    "itemName": "辅助芯片组",
+    "zone": 8
+  },
+  {
+    "itemId": "3212",
+    "itemName": "先锋芯片组",
+    "zone": 8
+  },
+  {
+    "itemId": "3282",
+    "itemName": "特种芯片组",
+    "zone": 8
+  },
+  {
+    "itemId": "3222",
+    "itemName": "近卫芯片组",
+    "zone": 8
+  },
+  {
+    "itemId": "3232",
+    "itemName": "重装芯片组",
+    "zone": 8
+  },
+  {
+    "itemId": "3242",
+    "itemName": "狙击芯片组",
+    "zone": 8
+  },
+  {
+    "itemId": "3252",
+    "itemName": "术师芯片组",
+    "zone": 8
+  },
+  {
+    "itemId": "3263",
+    "itemName": "医疗双芯片",
+    "zone": 9
+  },
+  {
+    "itemId": "3273",
+    "itemName": "辅助双芯片",
+    "zone": 9
+  },
+  {
+    "itemId": "3213",
+    "itemName": "先锋双芯片",
+    "zone": 9
+  },
+  {
+    "itemId": "3283",
+    "itemName": "特种双芯片",
+    "zone": 9
+  },
+  {
+    "itemId": "3223",
+    "itemName": "近卫双芯片",
+    "zone": 9
+  },
+  {
+    "itemId": "3233",
+    "itemName": "重装双芯片",
+    "zone": 9
+  },
+  {
+    "itemId": "3243",
+    "itemName": "狙击双芯片",
+    "zone": 9
+  },
+  {
+    "itemId": "3253",
+    "itemName": "术师双芯片",
+    "zone": 9
+  },
+  {
+    "itemId": "4003",
+    "itemName": "合成玉",
+    "zone": 10
+  },
+  {
+    "itemId": "7001",
+    "itemName": "招聘许可",
+    "zone": 10
+  },
+  {
+    "itemId": "4006",
+    "itemName": "采购凭证",
+    "zone": 10
+  },
+  {
+    "itemId": "7003",
+    "itemName": "寻访凭证",
+    "zone": 10
+  },
+  {
+    "itemId": "32001",
+    "itemName": "芯片助剂",
+    "zone": 10
+  },
+  {
+    "itemId": "4004",
+    "itemName": "高级凭证 ",
+    "zone": 10
+  },
+  {
+    "itemId": "4003sp",
+    "itemName": "合成玉(搓玉)",
+    "zone": 10
+  },
+  {
+    "itemId": "classic_gacha",
+    "itemName": "中坚寻访凭证",
+    "zone": 10
+  },
+  {
+    "itemId": "classic_gacha_10",
+    "itemName": "十连中坚寻访凭证",
+    "zone": 10
+  },
+  {
+    "itemId": "mod_unlock_token",
+    "itemName": "模组数据块",
+    "zone": 11
+  },
+  {
+    "itemId": "STORY_REVIEW_COIN",
+    "itemName": "事相碎片",
+    "zone": 11
+  },
+  {
+    "itemId": "4002",
+    "itemName": "至纯源石",
+    "zone": 11
+  },
+  {
+    "itemId": "base_ap",
+    "itemName": "无人机",
+    "zone": 11
+  },
+  {
+    "itemId": "3112",
+    "itemName": "碳",
+    "zone": 11
+  },
+  {
+    "itemId": "3113",
+    "itemName": "碳素",
+    "zone": 11
+  },
+  {
+    "itemId": "3114",
+    "itemName": "碳素组",
+    "zone": 11
+  },
+  {
+    "itemId": "ap_supply_lt_010",
+    "itemName": "应急理智小样",
+    "zone": 100
+  },
+  {
+    "itemId": "randomMaterial_8",
+    "itemName": "罗德岛物资补给Ⅳ",
+    "zone": 100
+  },
+  {
+    "itemId": "charm_coin_1",
+    "itemName": "黄金筹码",
+    "zone": 100
+  },
+  {
+    "itemId": "charm_coin_2",
+    "itemName": "错版硬币",
+    "zone": 100
+  },
+  {
+    "itemId": "charm_coin_3",
+    "itemName": "双日城大乐透",
+    "zone": 100
+  },
+  {
+    "itemId": "charm_coin_4",
+    "itemName": "翡翠庭院至臻",
+    "zone": 100
+  },
+  {
+    "itemId": "charm_r1",
+    "itemName": "标志物 - 20代金券",
+    "zone": 100
+  },
+  {
+    "itemId": "charm_r2",
+    "itemName": "标志物 - 40代金券",
+    "zone": 100
+  },
+  {
+    "itemId": "trap_oxygen_3",
+    "itemName": "沙兹专业镀膜装置",
+    "zone": 100
+  },
+  {
+    "itemId": "act24side_melding_1",
+    "itemName": "破碎的骨片",
+    "zone": 100
+  },
+  {
+    "itemId": "act24side_melding_2",
+    "itemName": "源石虫的硬壳",
+    "zone": 100
+  },
+  {
+    "itemId": "act24side_melding_3",
+    "itemName": "鬣犄兽的尖锐齿",
+    "zone": 100
+  },
+  {
+    "itemId": "act24side_melding_4",
+    "itemName": "凶豕兽的厚实皮",
+    "zone": 100
+  },
+  {
+    "itemId": "act24side_melding_5",
+    "itemName": "兽之泪",
+    "zone": 100
+  },
+  {
+    "itemId": "act24side_gacha",
+    "itemName": "炼金池",
+    "zone": 100
+  },
+  {
+    "itemId": "0",
+    "itemName": "0",
+    "zone": 999
+  }
+]

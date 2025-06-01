@@ -210,9 +210,9 @@ function calculatedItemValue(stageConfig) {
         const t3workShopProductsValue = workShopProducts.t3
 
         const itemValueYinGuo = 10 / 9 * (1 - workShopProductKnockRating) * t3workShopProductsValue  / 36
-        console.log(itemValueYinGuo)
-        console.log(workShopProductKnockRating)
-        console.log(t3workShopProductsValue)
+        // console.log(itemValueYinGuo)
+        // console.log(workShopProductKnockRating)
+        // console.log(t3workShopProductsValue)
         const itemValue3114 = 240 / 19 * 0 + 4 * itemValueYinGuo - 4000 / 19 * itemValueLMD
         const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo
         const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo
