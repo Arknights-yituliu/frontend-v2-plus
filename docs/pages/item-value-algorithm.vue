@@ -462,7 +462,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <h4 id="芯片类材料价值的进一步讨论">芯片类材料价值的进一步讨论</h4>
     <p><a href="https://space.bilibili.com/688411531" target="_blank" rel="noopener noreferrer">逻辑元LogicalByte</a>（当时账号名称为“罗德岛基建BETA”）于 2024-11-06 发布 <a href="https://t.bilibili.com/996644575476973568" target="_blank" rel="noopener noreferrer">投票“平时会加工芯片吗？”</a>。</p>
     <p>参与投票的博士中，68% 的博士选择了“缺啥合啥！小亏就小亏！”选项。</p>
-    <img src="/image/website/投票“平时会合成芯片吗？”.png" alt="投票“平时会合成芯片吗？”"/>
+    <img src="/docs/public/image/docs/投票“平时会合成芯片吗？”.png" alt="投票“平时会合成芯片吗？”"/>
     <p>对于这部分博士，可以认为<b>各芯片的价值相等</b>。明日方舟一图流就是这么做的。</p>
     <p>另一个选项是“只合特定芯片！反向不合！（什么职业队）”。选择这个选项的博士也许是考虑到了<b>各芯片的需求量存在差异</b>。</p>
     <p>我们列出<b>全干员满练</b>需求的芯片类材料数量（开服 ~ 2025-05「众生行记」版本（含））。</p>
