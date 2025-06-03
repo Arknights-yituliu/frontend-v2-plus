@@ -3,13 +3,12 @@ import {onMounted, ref} from "vue";
 import {formatNumber} from "/src/utils/format.js";
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
-import {defaultConfig, getStageConfig} from "@/utils/user/userConfig.js";
+import {getStageConfig} from "@/utils/user/userConfig.js";
 import ActionButton from "@/components/account/ActionButton.vue";
 import ActStoreUnlimitedExchangeItem from '/src/static/json/material/act_store_unlimited_exchange_item.json'
 import PresetParameter from "/src/static/json/material/preset_parameter.json"
 import {createMessage} from "/src/utils/message.js";
 import {stringToNumber} from '/src/utils/stringUtils.js'
-import deepClone from "@/utils/deepClone.js";
 
 const presetParameter = ref(PresetParameter)
 
@@ -54,8 +53,32 @@ const itemList = ref([]);
 const debugText = ref('');
 
 
+
+
 function resetConfig() {
-  stageConfig.value = deepClone(defaultConfig)
+  stageConfig.value = {
+    expCoefficient: 0.633,
+    lmdCoefficient: 1,
+    useActivityStage: false,
+    useActivityAverageStage: false,
+    stageBlacklist: [],
+    source: 'penguin',
+    workShopProductKnockRating: 0.2,
+    customItem: [
+      {
+        itemId: '30073',
+        itemName: "扭转醇",
+        itemValue: 1.8
+      },
+      {
+        itemId: '30083',
+        itemName: "轻锰矿",
+        itemValue: 2.16
+      }
+    ]
+  }
+
+
   forceRefreshItemValue()
 }
 
