@@ -121,7 +121,7 @@ const headers = [
   {title: '干员', sortable: false, key: 'charId'},
   {title: '使用次数', sortable: true, key: 'carryCount'},
   {title: '使用率', sortable: true, key: 'carryRate'},
-  {title: '持有率', sortable: true, key: 'own'},
+  {title: '持有率', sortable: true, key: 'ownRate'},
 ]
 
 let listOperators = ref([])
@@ -211,8 +211,8 @@ function formatOperatorCarryData(data) {
       name: operatorNameMap.get(charId),
       charId: charId,
       carryCount: carryCount,
-      carryRate: `${carryRate}%`,
-      ownRate: `${ownRate}%`,
+      carryRate: carryCount / sampleSize * 100,
+      ownRate: ownRate,
     }
     voList.push(vo)
   }
@@ -224,6 +224,8 @@ function formatOperatorCarryData(data) {
     voList: voList,
   }
 }
+
+
 
 
 let lineChartDialog = ref(false)
@@ -419,8 +421,8 @@ onMounted(() => {
               <td>
                 {{ item.carryCount }}
               </td>
-              <td>{{ item.carryRate }}</td>
-              <td>{{ item.ownRate }}</td>
+              <td>{{ formatNumber(item.carryRate) }}%</td>
+              <td>{{ item.ownRate }}%</td>
             </tr>
           </template>
         </v-data-table>
