@@ -29,6 +29,15 @@ function openNewPage(url) {
 
 function extraLinks(){
   toolLinks.value.push({
+    name:'Bilibili游戏中心',
+    description:'哔哩哔哩游戏中心明日方舟专区',
+    links:[{name:'明日方舟-攻略区',url:'https://app.biligame.com/detail?tab=2&id=101772&directory_id=DR1914546352407318556'}],
+    iconUrl:'https://ark.yituliu.cn/image/website/bilibili.webp',
+    slogan:'',
+    tags:["新闻动态", "攻略合集"]
+  })
+
+    toolLinks.value.push({
     name:'MaaAssistantArknights',
     description:'《明日方舟》小助手，自动刷图、智能基建换班，全日常一键长草',
     links:[{name:'官网',url:'https://maa.plus'}],
