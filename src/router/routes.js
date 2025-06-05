@@ -334,12 +334,6 @@ const routes = [
         component: () => import('/src/pages/sandbox/sb.page.vue')
     },
     {
-        path: '/material/exp0',
-        text: '收益速览做图用',
-        display: false,
-        component: () => import('/src/pages/material/stageV3E0.vue')
-    },
-    {
         path: '/material/skland',
         text: '收益速览做图用',
         display: false,
