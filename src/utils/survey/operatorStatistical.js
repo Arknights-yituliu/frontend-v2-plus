@@ -115,11 +115,10 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     }
 
     // 通用技能消耗的材料
-    for (let mainSkillRank = currentMainSkill; mainSkillRank < targetMainSkill; mainSkillRank++) {
-        // console.log('test',mainSkillRank,'----',targetMainSkill)
-        const list = allSkill[mainSkillRank]
+    for (let mainSkillRank = currentMainSkill; mainSkillRank <= targetMainSkill; mainSkillRank++) {
+        const list = allSkill[mainSkillRank-1]
         for (let itemId in list) {
-            let count = allSkill[mainSkillRank][itemId];
+            let count = list[itemId];
             _addItemCost(itemId, count)
             debug(`主技能等级'+${mainSkillRank}`, target, itemId, count)
         }
@@ -370,8 +369,10 @@ async function statisticsOperatorInfo(operatorList) {
                 _statistics(operator, _checkRarity(operator.rarity))
             }
 
+
             const itemCost = getOperatorItemCost(InitialRanks, operator, itemInfoMap)
             debug("统计方法调用获取材料方法后返回的干员的材料消耗", operator, itemCost)
+
 
             const apCost = _calcApCost(itemCost);
 
@@ -408,6 +409,8 @@ async function statisticsOperatorInfo(operatorList) {
 
                 statisticalData.info[index].module = _getModule(index);
             }
+
+
 
             statisticalData.info[index].rarity = rarity
 

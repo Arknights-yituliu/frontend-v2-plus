@@ -4,6 +4,21 @@ import actStoreUnlimitedExchange from '/src/static/json/material/act_store_unlim
 import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
 
 
+function getNewItemInfo(){
+    const list = []
+    for(const item of itemInfo){
+        const {itemId,itemName,itemValue,rarity,weight} = item
+        list.push({
+            itemId,itemName,itemValue,rarity,weight
+        })
+    }
+
+    console.log(JSON.stringify(list))
+}
+
+
+getNewItemInfo()
+
 function updateItemInfoWeight() {
 
     let list = []
