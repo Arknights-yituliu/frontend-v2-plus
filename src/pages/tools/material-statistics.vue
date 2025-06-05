@@ -340,10 +340,10 @@ for (const [key, value] of operatorAndEquipCollectByDate) {
     list: r3List
   })
 
-  r3ItemCostListByDate.sort((a, b) => b.updateTime - a.updateTime)
+
 }
 
-
+r3ItemCostListByDate.sort((a, b) => b.updateTime - a.updateTime)
 console.log(r3ItemCostListByDate)
 
 
@@ -617,6 +617,7 @@ onMounted(() => {
           </tr>
           <tr v-for="r3List in r3ItemCostListByDate">
             <td>{{ dateFormat(r3List.updateTime) }}</td>
+<!--            <td>{{ r3List.updateTime }}</td>-->
             <td v-for="item in r3List.list">
               {{ item.count }}
               <!--          {{formatNumber(item.rate*100)}}%-->
