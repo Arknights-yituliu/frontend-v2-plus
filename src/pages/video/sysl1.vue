@@ -112,7 +112,7 @@ function getItemTableData(index, isJump) {
   //推荐关卡集合
   let stage_result_list = recommended_stage.stageResultList;
   //拼接表格数据,默认按总效率排序
-  item_table_data_by_item_id.value = stage_result_list.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
+  item_table_data_by_item_id.value = stage_result_list.sort((a, b) => b.stageEfficiency - a.stageEfficiency).slice(0, 6);
 
   if (isJump) {
     document.getElementById('detail-table').scrollIntoView({behavior: 'smooth', block: 'center'})
@@ -412,24 +412,7 @@ onMounted(() => {
 
 
 <template>
-  <!--漫游导航指引，先停用-->
-  <!--  <el-tour v-model="guideOpen" :target-area-clickable="false">-->
-  <!--    <el-tour-step-->
-  <!--        target="#sStageLegend"-->
-  <!--        title="效率详情"-->
-  <!--        description="点击这个卡片可查看相对应的效率计算信息哦">-->
-  <!--    </el-tour-step>-->
-  <!--    <el-tour-step-->
-  <!--        target="#c-0"-->
-  <!--        title="材料详情"-->
-  <!--        description="点击这里的卡片可以查看相对应的材料掉落信息哦">-->
-  <!--    </el-tour-step>-->
-  <!--    <el-tour-step-->
-  <!--        target="#fixedNav"-->
-  <!--        title="标题导航栏"-->
-  <!--        description="将光标悬停至此处可唤出该页面的标题导航栏，其它页面也可能会有哦=w="-->
-  <!--    />-->
-  <!--  </el-tour>-->
+
   <tour-guide v-if="guideOpen" @close="guideOpen=false" :s1="`#sStageLegend`" :s2="`#c-0`" :s3="`#fixedNav`"/>
 
 
@@ -438,15 +421,6 @@ onMounted(() => {
     <!-- 标题区域 -->
 
     <div class="module-header">
-      <div class="module-title">
-        <h1>推荐关卡</h1>
-        <h4>Best Stages</h4>
-      </div>
-      <button class="tag-button" @click="scrollToOrundumTable()">搓玉数据</button>
-      <button class="tag-button" @click="scrollToHistoryStageTable()">往期活动</button>
-      <button class="tag-button" @click="scrollToFrequentlyAskedQuestion()">常见问题</button>
-      <!--      <button class="tag-button" @click="guideOpen=true">*点我查看操作指引</button>-->
-      <!--      <span class="c-module-tip"></span>-->
       <span class="module-tip">更新时间：{{ updateTime }}</span>
     </div>
     <!-- 说明区域 -->
@@ -599,75 +573,13 @@ onMounted(() => {
 
 
     <!-- 卡片区域 -->
-    <div id="stageForCards" class="stage-card-wrap" style="background-color: rgb(45,45,45);max-width: 420px;">
+    <div id="stageForCards" class="stage-card-wrap" style="background-color: rgb(45,45,45);max-width: 1200px;">
       <div class="stage-card" v-for="(stage, index) in stageCardData" :key="index"
            @click="getItemTableData(index, true)"
            :id="`c-${index}`"
-           style="background-color: rgb(61,61,61);margin: 4px;"
+           style="background-color: rgb(61,61,61);margin: 4px;max-width: 120px;"
       >
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.r3)"></div>
-        <div class="stage-card-bar-container">
-          <div class="stage-card-bar">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite('AP_GAMEPLAY')"></div>
-            </div>
-            <div class="stage_card_3_2" style="display: none;">
-
-              {{ stage.maxEfficiencyStage.zoneName }}
-            </div>
-            <div class="stage-card-bar-stage-code">
-              {{ stage.maxEfficiencyStage.stageCode }}
-            </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
-            </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
-            </div>
-          </div>
-          <div class="stage-card-bar">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.r4)"></div>
-            </div>
-            <div class="stage-card-bar-stage-code">
-              {{ stage.leT4MaxEfficiencyStage.stageCode }}
-            </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT4MaxEfficiencyStage.leT4Efficiency * 100, 1) }}%
-            </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT4MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
-            </div>
-          </div>
-          <div class="stage-card-bar">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.r3)"></div>
-            </div>
-            <div class="stage-card-bar-stage-code">
-              {{ stage.leT3MaxEfficiencyStage.stageCode }}
-            </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT3MaxEfficiencyStage.leT3Efficiency * 100, 1) }}%
-            </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT3MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
-            </div>
-          </div>
-          <div class="stage-card-bar" v-show="stage.series.r2">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.r2)"></div>
-            </div>
-            <div class="stage-card-bar-stage-code">
-              {{ stage.leT2MaxEfficiencyStage.stageCode }}
-            </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT2MaxEfficiencyStage.leT2Efficiency * 100, 1) }}%
-            </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT2MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
-            </div>
-          </div>
-        </div>
       </div>
       <div class="stage-card" style="height: 0px;border: 1px;flex-grow: 1;"></div>
       <div class="stage-card" style="height: 0px;border: 1px;flex-grow: 1;"></div>
@@ -683,17 +595,17 @@ onMounted(() => {
       <span class="module-tip">*移动端可左右拖动查看</span>
     </div>
     <!-- 详情表 -->
-    <div id="detail-table" style="margin:0px 8px;width: 900px;height: 495px;border: 1px solid #00000040;font-size: 18px;padding: 15px 22px;">
+    <div id="detail-table" style="margin:0px 8px;width: 870px;height: 492px;font-size: 18px;padding: 8px 8px;">
       <el-table stripe :data="item_table_data_by_item_id" max-height="495" max-width="892" class="stage-detail-table">
-        <el-table-column fixed prop="stageCode" label="关卡名" width="96px" >
+        <el-table-column fixed prop="stageCode" label="关卡名" width="120px" >
           <template #default="scope">
-            <div style="font-size: 16px;line-height: 20px;font-weight: 600;color: #000000;">
+            <div style="font-size: 18px;line-height: 18px;font-weight: 400;color: #000000;height: 44px;">
               <span style="font-size: 12px;line-height: 8px;font-weight: 400;color: #000000;">{{ replaceZoneName(scope) }}</span><br>
               {{ scope.row.stageCode }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="primary" label="主产物" width="93px">
+        <el-table-column prop="primary" label="主产物" width="78px">
           <template #default="scope">
             <div class="stage-detail-table-item-icon" style="margin-left: 6px;">
               <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
@@ -717,12 +629,11 @@ onMounted(() => {
             <div style="margin-left: 8px;">{{ formatNumber(scope.row.apExpect, 1) }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="eff" label="综合效率" width="96px">
+        <el-table-column prop="eff" label="综合收益率" width="120px">
           <template #default="scope">
             <div style="margin-left: 4px;">{{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%</div> 
           </template>
         </el-table-column>
-        <el-table-column prop="spm" label="SPM" :width="72"/>
         <el-table-column prop="leT4Efficiency" label="T4材料效率" width="120px">
           <template #default="scope">
             <div style="margin-left: 16px;">{{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%</div>
@@ -839,7 +750,7 @@ onMounted(() => {
     <div class="activity-table-phone-card" id="act-table-phone">
       <table class="activity-table-phone">
         <tr v-for="(act, index) in historyActItemList" :key="index">
-          <td class="activity-name-phone">{{ act.zoneName }}</td>
+          <td class="activity-name-phone" style="padding-left: 16px;">{{ act.zoneName }}</td>
           <td v-for="(stage, index) in  act.actStageList" :key="index">
             <div class="activity-drop">
               <div class="activity-pickup-item">
@@ -1040,7 +951,9 @@ onMounted(() => {
 <style scoped>
 .el-table{
   font-size: 18px;
-  color: #000;
+}
+.el-table thead {
+  color: #000 !important;
 }
 .cell{
   color: #000;
