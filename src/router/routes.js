@@ -285,7 +285,7 @@ const routes = [
     {
         path: '/statistics-material',
         text: '材料统计',
-        name:'材料统计',
+        name: '材料统计',
         display: false,
         component: () => import('/src/pages/tools/material-statistics.vue')
     },
@@ -306,19 +306,6 @@ const routes = [
         text: '测试页面',
         display: false,
         component: () => import('/src/pages/dev/pie-chart.vue')
-    },
-
-    {
-        path: '/material/sssl',
-        text: '收益速览做图用',
-        display: false,
-        component: () => import('/src/pages/video-material/sssl.vue')
-    },
-    {
-        path: '/material/sssl2',
-        text: '收益速览做图用',
-        display: false,
-        component: () => import('/src/pages/video-material/sssl2.vue')
     },
 
     {
@@ -343,7 +330,25 @@ const routes = [
         path: '/video/ytl/main1',
         text: '视频-一图流-主页1',
         display: false,
-        component: () => import('/src/pages/video/stage.vue')
+        component: () => import('/src/pages/video/ytl1.vue')
+    },
+    {
+        path: '/video/sysl/main1',
+        text: '视频-收益速览-掉率',
+        display: false,
+        component: () => import('/src/pages/video/sysl1.vue')
+    },
+    {
+        path: '/video/sysl/main2',
+        text: '视频-收益速览-商店性价比',
+        display: false,
+        component: () => import('/src/pages/video/sysl2.vue')
+    },
+    {
+        path: '/video/sysl/main3',
+        text: '视频-收益速览-礼包性价比',
+        display: false,
+        component: () => import('/src/pages/video/sysl3.vue')
     },
     {
         path: '/action-table',
@@ -426,7 +431,7 @@ for (const route of routes) {
 
     routeMap.set(route.path, route.text)
 
-    if (!route.module||!route.display) {
+    if (!route.module || !route.display) {
         continue
     }
 
