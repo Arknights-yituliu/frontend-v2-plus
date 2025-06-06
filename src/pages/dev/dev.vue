@@ -6,6 +6,6 @@ import CompositeTable from "@/pages/dev/composite_table.vue";
 
 
 <template>
-<!--<CompositeTable></CompositeTable>-->
-<Atomic></Atomic>
+<CompositeTable></CompositeTable>
+<!--<Atomic></Atomic>-->
 </template>
