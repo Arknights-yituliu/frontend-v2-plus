@@ -7,10 +7,11 @@ const defaultConfig = {
     expCoefficient: 0.633,
     lmdCoefficient: 1,
     useActivityStage: false,
-    useActivityAverageStage:false,
+    useActivityAverageStage: false,
     stageBlacklist: [],
     source: 'penguin',
-    workShopProductKnockRating:0.2,
+    workshopEliteMaterialByProductRate: 0.2,
+    workshopSkillSummaryByProductRate: 0.18,
     customItem: [
         {
             itemId: '30073',
@@ -32,7 +33,17 @@ let stageConfig = ref(defaultConfig)
 
 /**
  * 获取关卡配置
- * @returns {any|{customItem: [{itemId: string, itemValue: number}], expCoefficient: number, lmdCoefficient: number, useActivityStage: boolean, id: number, stageBlacklist: *[], source: string}}
+ * @returns {any | {
+ *     id: number,
+ *     expCoefficient: number,
+ *     lmdCoefficient: number,
+ *     useActivityStage: boolean,
+ *     stageBlacklist: *[],
+ *     source: string,
+ *     workshopEliteMaterialByProductRate: number,
+ *     workshopSkillSummaryByProductRate: number,
+ *     customItem: [{itemId: string, itemName: string, itemValue: number}]
+ * }}
  */
 function getStageConfig() {
     const cacheStageConfig = localStorage.getItem("StageConfig");
