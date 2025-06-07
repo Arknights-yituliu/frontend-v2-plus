@@ -46,6 +46,22 @@ let stageDropCollect = void 0
 //基础龙门币价值（按CE6  10000龙门币=36理智）
 const baseLMDValue = 0.0036
 
+// 公开招募结果的星级概率分布
+let recuritRarity = {
+    "3": 0.7882,
+    "4": 0.2027,
+    "5": 0.0069,
+    "6": 0.0022,
+}
+
+// 公开招募获得的凭证数量
+let recuritToken = {
+    "3": {"4005": 10, "4004": 0},
+    "4": {"4005": 30, "4004": 1},
+    "5": {"4005": 0,  "4004": 5},
+    "6": {"4005": 0,  "4004": 10},
+}
+
 
 /**
  * 计算物品价值
@@ -53,7 +69,7 @@ const baseLMDValue = 0.0036
  */
 function calculatedItemValue(stageConfig) {
     //解构关卡自定义配置  经验书系数  龙门币系数  加工站爆率  自定义物品列表
-    const {expCoefficient, lmdCoefficient, workShopProductKnockRating, customItem} = stageConfig
+    const {expCoefficient, lmdCoefficient, workshopEliteMaterialByProductRate, workshopSkillSummaryByProductRate, customItem} = stageConfig
 
     //自定义物品map
     let customItemMap = new Map()
@@ -124,7 +140,7 @@ function calculatedItemValue(stageConfig) {
 
         if (resolve) {
             //灰，绿色品质是向下拆解   灰，绿色物品 = （蓝物品价值 + 副产物 - 龙门币）/合成蓝物品的所需灰绿物品数量
-            const expectProductsValue = workShopProducts[`t${rarity}`] * workShopProductKnockRating
+            const expectProductsValue = workShopProducts[`t${rarity}`] * workshopEliteMaterialByProductRate
             for (const cost of pathway) {
                 const rawItem = itemInfoMap.get(cost.itemId)
                 newValue = (rawItem.itemValue + expectProductsValue - 0.36 * lmdCoefficient * rarity) / cost.count
@@ -132,7 +148,7 @@ function calculatedItemValue(stageConfig) {
             }
         } else {
             //紫，金色品质是向上合成    紫，金色物品 =  合成所需蓝物品价值之和  + 龙门币 - 副产物
-            const expectProductsValue = workShopProducts[`t${rarity - 1}`] * workShopProductKnockRating
+            const expectProductsValue = workShopProducts[`t${rarity - 1}`] * workshopEliteMaterialByProductRate
             for (const cost of pathway) {
                 const rawItem = itemInfoMap.get(cost.itemId)
                 newValue += rawItem.itemValue * cost.count
@@ -154,88 +170,104 @@ function calculatedItemValue(stageConfig) {
 
     _getWorkShopProductValue(itemInfoList)
 
-    // EXP价值 = 龙门币价值 * EXP系数 = 36/10000 * 145/229 = 261/114500
-    // 基础作战记录价值 = 200 * EXP价值 = 522/1145
-    // 初级作战记录价值 = 400 * EXP价值 = 1044/1145
-    // 中级作战记录价值 = 1000 * EXP价值 = 522/229
-    // 高级作战记录价值 = 2000 * EXP价值 = 1044/229
-    // 无人机价值 = EXP价值 * 无人机生产EXP数量 =  261/114500 * 50/3 = 87/2290
-    // 赤金价值 = 无人机价值 / 无人机生产赤金数量 = 1044/1145
-    // 芯片组价值 = 36 * (1 - 12 * 龙门币价值) = 21528/625
-    // 采购凭证价值 = AP-5消耗理智 * (1 - 12 * 龙门币价值) / AP-5掉落采购凭证 = 1196/875
-    // 芯片助剂价值 = 90 * 采购凭证价值 = 21528/175
-    // 双芯片价值 = 2 * 芯片组价值 + 芯片助剂价值 + 20 * 无人机价值 = 193027818/1001875
-    // 模组数据块价值 = 120 * 采购凭证价值 = 28704/175
-    // 事相碎片价值 = 20 * 采购凭证价值 = 4784/175
-
-    // - θ 为合成精英物品时的副产物出率（θ = 20%），
-    // - BM 为蓝物品价值关于加工站副产物出率的加权平均（简单来说就是 1 个随机蓝物品的价值），
-    // 解得：
-    // - 因果价值 = 10/9 * (1 - θ) * BM / 36
-    // - 碳素组价值 = 240/19 * 家具零件价值 + 4 * 因果价值 - 4000/19 * 龙门币价值
-    // - 碳素价值 = 11/30 * 碳素组价值 + 6/5 * 因果价值
-    // - 碳价值 = 11/30 * 碳素价值 + 3/5 * 因果价值
-
     _calculatedCommonItemValue(stageConfig)
 
     function _calculatedCommonItemValue(stageConfig) {
-        const itemValueLMD = itemInfoMap.get('4001').itemValue
-        const itemValueEXP = itemInfoMap.get('2001').itemValue / 200
-        //无人机
-        const itemValueBaseAp = itemValueEXP * 50 / 3
-        //采购凭证  （关卡AP - 龙门币价值*关卡掉落*倍率*关卡AP)/掉落数
-        const itemValue4006 = (30 - itemValueLMD * 12 * 30) / 21;
-        //芯片助剂
-        const itemValue32001 = itemValue4006 * 90;
-        //赤金
-        const itemValue3003 = itemValueBaseAp * 24
-        //技能书3
-        const itemValue3303 = (30 - itemValueLMD * 12 * 30) / (2 + 1.5 * (1 + 0.18) / 3 + 1.5 * (1 + 0.18) * (1 + 0.18) / 9);
-        //技能书2
-        const itemValue3302 = 1.18 * itemValue3303 / 3;
-        //技能书1
-        const itemValue3301 = 1.18 * itemValue3302 / 3;
+        // 至纯源石
+        const itemValue4002 = 135;
+        // 合成玉
+        const itemValue4003 = itemValue4002 / 180;
+        // 寻访凭证
+        const itemValue7003 = 600 * itemValue4003;
+        // 十连寻访凭证
+        const itemValue7004 = 10 * itemValue7003;
+        // 资质凭证价值根据经验法则定价为 0.8
+        const itemValue4005 = 0.8;
+        // 高级凭证
+        const itemValue4004 = 38 / 258 * itemValue7003;
+        // 中坚寻访凭证
+        const itemValueClassicGacha = 216 / 38 * itemValue4004;
+        // 十连中坚寻访凭证
+        const itemValueClassicGacha10 = 10 * itemValueClassicGacha;
 
-        //芯片 扣除龙门币
-        const chip1Value = 18 - 18 * itemValueLMD * 12;
-        //芯片组 扣除龙门币
-        const chip2Value = 36 - 36 * itemValueLMD * 12;
-        //双芯片
+        // 家具零件
+        const itemValue3401 = 0;
+        // 加急许可
+        const itemValue7002 = 0;
+
+        // 龙门币
+        const itemValueLMD = itemInfoMap.get('4001').itemValue;
+        // EXP
+        const itemValueEXP = itemInfoMap.get('2001').itemValue / 200;
+        // 无人机
+        const itemValueBaseAp = itemValueEXP * 50 / 3;
+        // 赤金
+        const itemValue3003 = itemValueBaseAp * 24;
+
+        // 采购凭证
+        const itemValue4006 = 30 * (1 - itemValueLMD * 12) / 21;
+        // 芯片助剂
+        const itemValue32001 = itemValue4006 * 90;
+        // 芯片
+        const chip1Value = 18 * (1 - itemValueLMD * 12);
+        // 芯片组
+        const chip2Value = 36 * (1 - itemValueLMD * 12);
+        // 双芯片，省略 1 秒制造站基础工时
         const chip3Value = chip2Value * 2 + itemValue32001;
-        //模组数据块
+        // 模组数据块
         const itemValueModUnlockToken = 120 * itemValue4006;
-        //模组数据块
+        // 事相碎片
         const itemValueSTORYREVIEWCOIN = 20 * itemValue4006;
 
-        const t3workShopProductsValue = workShopProducts.t3
+        const t3workShopProductsValue = workShopProducts.t3;
+        // 因果
+        const itemValueYinGuo = 10 / 9 * (1 - workshopEliteMaterialByProductRate) * t3workShopProductsValue / 36;
+        // 碳素组
+        const itemValue3114 = 240 / 19 * itemValue3401 + 4 * itemValueYinGuo - 4000 / 19 * itemValueLMD;
+        const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo;
+        const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo;
 
-        const itemValueYinGuo = 10 / 9 * (1 - workShopProductKnockRating) * t3workShopProductsValue  / 36
-        // console.log(itemValueYinGuo)
-        // console.log(workShopProductKnockRating)
-        // console.log(t3workShopProductsValue)
-        const itemValue3114 = 240 / 19 * 0 + 4 * itemValueYinGuo - 4000 / 19 * itemValueLMD
-        const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo
-        const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo
+        // 技巧概要·卷3
+        const itemValue3303 = (30 * (1 - itemValueLMD * 12)
+            / (2 + 3 / 2 * (1 + workshopSkillSummaryByProductRate) / 3 + 1.5 * (1 + workshopSkillSummaryByProductRate) ** 2 / 3 ** 2));
+        // 技能概要·卷2
+        const itemValue3302 = (1 + workshopSkillSummaryByProductRate) * itemValue3303 / 3;
+        // 技能概要·卷1
+        const itemValue3301 = (1 + workshopSkillSummaryByProductRate) * itemValue3302 / 3;
 
+        // 招聘许可
+        let itemValue7001 = 0;
+        for (const rarity in recuritToken) {
+            itemValue7001 += recuritRarity[rarity] * (recuritToken[rarity]["4005"] * itemValue4005 + recuritToken[rarity]["4004"] * itemValue4004);
+        }
 
-        const itemValue4003sp = (itemInfoMap.get('30012').itemValue * 2 + 1600 * itemValueLMD + 40 * itemValueBaseAp) / 10
+        // 合成玉（搓玉）
+        const itemValue4003sp = (itemInfoMap.get('30012').itemValue * 2 + 1600 * itemValueLMD + 40 * itemValueBaseAp) / 10;
 
+        itemInfoMap.get("4002").itemValue = itemValue4002;
+        itemInfoMap.get("4003").itemValue = itemValue4003;
+        itemInfoMap.get("7003").itemValue = itemValue7003;
+        itemInfoMap.get("7004").itemValue = itemValue7004;
+        itemInfoMap.get("4005").itemValue = itemValue4005;
+        itemInfoMap.get("4004").itemValue = itemValue4004;
+        itemInfoMap.get("classic_gacha").itemValue = itemValueClassicGacha;
+        itemInfoMap.get("classic_gacha_10").itemValue = itemValueClassicGacha10;
+        itemInfoMap.get("3401").itemValue = itemValue3401;
+        // itemInfoMap.get("7002").itemValue = itemValue7002;
         itemInfoMap.get("base_ap").itemValue = itemValueBaseAp;
         itemInfoMap.get("3003").itemValue = itemValue3003;
         itemInfoMap.get("4006").itemValue = itemValue4006;
         itemInfoMap.get("32001").itemValue = itemValue32001;
-        itemInfoMap.get("3303").itemValue = itemValue3303;
-        itemInfoMap.get("3302").itemValue = itemValue3302;
-        itemInfoMap.get("3301").itemValue = itemValue3301;
         itemInfoMap.get("mod_unlock_token").itemValue = itemValueModUnlockToken;
         itemInfoMap.get("STORY_REVIEW_COIN").itemValue = itemValueSTORYREVIEWCOIN;
-        itemInfoMap.get("3303").itemValue = itemValue3303;
-        itemInfoMap.get("3302").itemValue = itemValue3302;
-        itemInfoMap.get("3301").itemValue = itemValue3301;
-        itemInfoMap.get("4003sp").itemValue = itemValue4003sp;
         itemInfoMap.get("3114").itemValue = itemValue3114;
         itemInfoMap.get("3113").itemValue = itemValue3113;
         itemInfoMap.get("3112").itemValue = itemValue3112;
+        itemInfoMap.get("3303").itemValue = itemValue3303;
+        itemInfoMap.get("3302").itemValue = itemValue3302;
+        itemInfoMap.get("3301").itemValue = itemValue3301;
+        itemInfoMap.get("7001").itemValue = itemValue7001;
+        itemInfoMap.get("4003sp").itemValue = itemValue4003sp;
 
         const chip1 = ['3211', '3221', '3231', '3241', '3251', '3261', '3271', '3281']
         const chip2 = ['3212', '3222', '3232', '3242', '3252', '3262', '3272', '3282']

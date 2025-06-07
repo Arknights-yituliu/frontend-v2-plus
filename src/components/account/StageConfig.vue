@@ -63,7 +63,8 @@ function resetConfig() {
     useActivityAverageStage: false,
     stageBlacklist: [],
     source: 'penguin',
-    workShopProductKnockRating: 0.2,
+    workshopEliteMaterialByProductRate: 0.2,
+    workshopSkillSummaryByProductRate: 0.18,
     customItem: [
       {
         itemId: '30073',

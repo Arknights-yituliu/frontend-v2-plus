@@ -642,19 +642,18 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 
     <p><b>招聘许可的价值等于公开招募期望获得的<span class="green">资质凭证</span>与<span class="yellow">高级凭证</span>的总价值。</b></p>
     <ul>
-      <li><p>公开招募各稀有度标签组合出现概率由 <a href="https://maa.plus/" target="_blank" rel="noopener noreferrer">MAA</a> 统计，可以在 <a href="/survey/maarecruitdata">公招tag调查</a> 页面中找到。</p></li>
       <li>
-        <p>认为<b>公开招募结果的星级分布</b>与<b>公开招募标签组合的稀有度分布</b>相同。</p>
-        <p>尽管有可能标签被划，或者无标签出 4★，但是我们忽略这些情况，认为公开招募标签组合的稀有度决定公开招募结果的星级。</p>
+        <p>公开招募结果的星级分布参考 <a href="https://space.bilibili.com/2268014" target="_blank" rel="noopener noreferrer">教捐</a> 的统计结果，见下图。（可能过时，仅供参考。）</p>
+        <img src="/docs/public/image/docs/教捐统计的公开招募概率.jpg" alt="教捐统计的公开招募概率"/>
       </li>
       <li><p><span class="green">资质凭证</span>价值取为 0.8。</p></li>
       <li>
-        <p>假设所有干员全满潜，即认为：</p>
+        <p>假设 3★、4★ 干员潜能均已满，5★、6★ 干员均已获得但潜能未满，即认为</p>
         <ul>
           <li><p>获得 3★ 干员时，转化为 10 <span class="green">资质凭证</span>，</p></li>
           <li><p>获得 4★ 干员时，转化为 30 <span class="green">资质凭证</span> + 1 <span class="yellow">高级凭证</span>，</p></li>
-          <li><p>获得 5★ 干员时，转化为 13 <span class="yellow">高级凭证</span>，</p></li>
-          <li><p>获得 6★ 干员时，转化为 25 <span class="yellow">高级凭证</span>。</p></li>
+          <li><p>获得 5★ 干员时，转化为 5 <span class="yellow">高级凭证</span>，</p></li>
+          <li><p>获得 6★ 干员时，转化为 10 <span class="yellow">高级凭证</span>。</p></li>
         </ul>
       </li>
     </ul>
