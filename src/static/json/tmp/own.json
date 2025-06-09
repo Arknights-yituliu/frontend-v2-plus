@@ -1,0 +1,150 @@
+{
+  "charId": "char_003_kalts",
+  "name": "凯尔希",
+  "rarity": 6,
+  "profession": "MEDIC",
+  "itemObtainApproach": "常驻干员",
+  "skill": [
+    {
+      "iconId": "skchr_kalts_1",
+      "name": "指令：结构加固"
+    },
+    {
+      "iconId": "skchr_kalts_2",
+      "name": "指令：战术协同"
+    },
+    {
+      "iconId": "skchr_kalts_3",
+      "name": "指令：熔毁"
+    }
+  ],
+  "equip": [
+    {
+      "typeName1": "PHY",
+      "typeName2": "X",
+      "charId": "char_003_kalts",
+      "uniEquipIcon": "uniequip_002_kalts",
+      "itemCost": [
+        {
+          "4001": 80000,
+          "30135": 2,
+          "mod_unlock_token": 4
+        },
+        {
+          "4001": 100000,
+          "30145": 3,
+          "mod_unlock_token": 4,
+          "mod_update_token_1": 60
+        },
+        {
+          "4001": 120000,
+          "30115": 4,
+          "mod_unlock_token": 4,
+          "mod_update_token_2": 20
+        }
+      ],
+      "typeIcon": "phy-x",
+      "uniEquipName": "Mon2tr",
+      "uniEquipId": "uniequip_002_kalts"
+    },
+    {
+      "typeName1": "PHY",
+      "typeName2": "Y",
+      "charId": "char_003_kalts",
+      "uniEquipIcon": "uniequip_003_kalts",
+      "itemCost": [
+        {
+          "4001": 80000,
+          "30145": 2,
+          "mod_unlock_token": 4
+        },
+        {
+          "4001": 100000,
+          "30115": 3,
+          "mod_unlock_token": 4,
+          "mod_update_token_1": 60
+        },
+        {
+          "4001": 120000,
+          "30125": 4,
+          "mod_unlock_token": 4,
+          "mod_update_token_2": 20
+        }
+      ],
+      "typeIcon": "phy-y",
+      "uniEquipName": "医者",
+      "uniEquipId": "uniequip_003_kalts"
+    },
+    {
+      "typeName1": "ISW",
+      "typeName2": "A",
+      "charId": "char_003_kalts",
+      "uniEquipIcon": "uniequip_004_kalts",
+      "itemCost": [
+        {
+          "mod_unlock_token": 1
+        },
+        {
+          "mod_unlock_token": 1
+        },
+        {
+          "mod_unlock_token": 1
+        }
+      ],
+      "typeIcon": "isw-a",
+      "uniEquipName": "凯尔希特限证章",
+      "uniEquipId": "uniequip_004_kalts"
+    }
+  ],
+  "date": 1619856000000,
+  "own": "78.6",
+  "ownRate": "78.6",
+  "eliteRank2": "97.2",
+  "skill1Rank3": "1.8",
+  "skill2Rank3": "47.5",
+  "skill3Rank3": "87.8",
+  "modXRank3": "30.0",
+  "modYRank3": "14.6",
+  "modDRank3": 0,
+  "modARank3": "42.0",
+  "elite": {
+    "rank1": 0.015539638217797741,
+    "rank2": 0.9720772125773947,
+    "rank3": null
+  },
+  "skill1": {
+    "rank1": 0.0020638582008012628,
+    "rank2": 0.0006677188296709967,
+    "rank3": 0.018210513536481728
+  },
+  "skill2": {
+    "rank1": 0.03362874833070292,
+    "rank2": 0.029136821658370764,
+    "rank3": 0.4748694913196552
+  },
+  "skill3": {
+    "rank1": 0.018271215248270002,
+    "rank2": 0.026769454898628142,
+    "rank3": 0.8783537695763021
+  },
+  "modX": {
+    "rank1": 0.09190239164744446,
+    "rank2": 0.29136821658370765,
+    "rank3": 0.3004127716401602
+  },
+  "modY": {
+    "rank1": 0.05056452591963093,
+    "rank2": 0.04607259924729877,
+    "rank3": 0.145502003156489
+  },
+  "modD": {
+    "rank1": null,
+    "rank2": null,
+    "rank3": null
+  },
+  "modA": {
+    "rank1": 0.033325239771761564,
+    "rank2": 0.004916838654850067,
+    "rank3": 0.4196916353041156
+  }
+}
