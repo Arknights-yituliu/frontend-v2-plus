@@ -1,9 +1,9 @@
 <script setup>
 import '/src/assets/svg/iconfont.css'
 import '/src/assets/css/elite.css';
-import { NConfigProvider } from 'naive-ui'
-import { zhCN, dateZhCN } from 'naive-ui'
-import { darkTheme } from 'naive-ui'
+import {NConfigProvider} from 'naive-ui'
+import {zhCN, dateZhCN} from 'naive-ui'
+import {darkTheme} from 'naive-ui'
 //雪碧图
 import '/src/assets/css/sprite/sprite_avatar.css'
 import '/src/assets/css/sprite/sprite_icon.css';
@@ -29,7 +29,7 @@ import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import ComponentsContainer from "/src/components/layout/ComponentsContainer.vue";
 import FeedbackTable from '/src/static/json/about/feedback_table.json'
-  
+import {language} from '/src/utils/i18n.js'
 
 const themeOverrides = {
   common: {
@@ -50,13 +50,13 @@ let drawer = ref(true)
 let currentTheme = ref('dark')
 let naiveTheme = ref()
 
-function setTheme(value){
+function setTheme(value) {
   theme.global.name.value = value
   document.getElementsByTagName("html").item(0).className = value;
   customTheme.value = `theme-${value}`
-  if(value==='dark'){
+  if (value === 'dark') {
     naiveTheme.value = darkTheme
-  }else {
+  } else {
     naiveTheme.value = ''
   }
   localStorage.setItem("Theme", value)
@@ -91,7 +91,6 @@ function normalizePath(path) {
 let feedbackPopupVisible = ref(false)
 
 
-
 function openNewPage(url) {
   window.open(url)
 }
@@ -99,20 +98,15 @@ function openNewPage(url) {
 watch(currentPath, (newPath, oldPath) => {
   pageTitle.value = routeMap.get(normalizePath(newPath)) || '未定义路径'
 
-  if(route.name==='材料统计'){
+  if (route.name === '材料统计') {
     drawer.value = false
   }
   // 在这里执行你想要的操作
 });
 
 
-
-
-
-
-
 onMounted(() => {
-  currentTheme.value = localStorage.getItem("Theme")=== 'dark' ? 'dark' : 'light';
+  currentTheme.value = localStorage.getItem("Theme") === 'dark' ? 'dark' : 'light';
   setTheme(currentTheme.value)
   // initResource()
   // getDataByKey('OperatorTable').then(rep=>{
@@ -126,71 +120,86 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-config-provider :locale="zhCN" :date-locale="dateZhCN"  :theme="naiveTheme" :theme-overrides="themeOverrides">
-  <v-responsive>
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN" :theme="naiveTheme" :theme-overrides="themeOverrides">
+    <v-responsive>
 
-    <v-app class="app" :class="customTheme" >
-      <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
-        <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
-          明日方舟一图流
-        </div>
-        <Navigation></Navigation>
-      </v-navigation-drawer>
+      <v-app class="app" :class="customTheme">
+        <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
+          <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
+            明日方舟一图流
+          </div>
+          <Navigation></Navigation>
+        </v-navigation-drawer>
 
-      <v-app-bar :elevation="1" color="primary">
-        <template v-slot:prepend>
-          <v-app-bar-nav-icon @click="drawer=!drawer"></v-app-bar-nav-icon>
-        </template>
-        <v-app-bar-title>{{ pageTitle }}
-        </v-app-bar-title>
-        <div class="app-bar-content">
-          <v-btn text="反馈" variant="text" @click="feedbackPopupVisible=true"></v-btn>
-          <div class="app-bar-content-spacer"/>
-          <v-icon icon="mdi-theme-light-dark" size="28" @click="changeTheme"></v-icon>
-          <div class="app-bar-content-spacer"/>
-          <User></User>
-        </div>
-      </v-app-bar>
-      <v-main>
-        <v-dialog v-model="feedbackPopupVisible" max-width="500">
-          <v-card>
-            <div class="flex justify-end m-8" @click="feedbackPopupVisible=false">
-              <v-icon icon="mdi-close"></v-icon>
-            </div>
-            <v-table>
-              <thead>
-              <tr>
-                <th>反馈方式</th>
-                <th>说明</th>
-                <th>操作</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="item in FeedbackTable" :key="item.name">
-                <td>{{ item.label }}</td>
-                <td>{{ item.description }}</td>
-                <td>
-                  <v-btn v-show="item.url" color="green" @click="openNewPage(item.url)">点击前往</v-btn>
-                </td>
-              </tr>
-              </tbody>
-            </v-table>
+        <v-app-bar :elevation="1" color="primary">
+          <template v-slot:prepend>
+            <v-app-bar-nav-icon @click="drawer=!drawer"></v-app-bar-nav-icon>
+          </template>
+          <v-app-bar-title>{{ pageTitle }}
+          </v-app-bar-title>
+          <div class="app-bar-content">
+            <v-btn text="反馈" variant="text" @click="feedbackPopupVisible=true"></v-btn>
+            <div class="app-bar-content-spacer"/>
+            <v-icon icon="mdi-theme-light-dark" size="28" @click="changeTheme"></v-icon>
+            <div class="app-bar-content-spacer"/>
+            <v-menu>
+              <template v-slot:activator="{ props }">
+              <v-icon icon="mdi-translate" size="28" v-bind="props"></v-icon>
+              </template>
+              <v-list>
+                <v-list-item>
+                  <v-btn variant="text" text="中文" color="primary" @click="language='cn'"></v-btn>
+                </v-list-item>
+                <v-list-item>
+                  <v-btn variant="text" text="English" color="primary" @click="language='en'"></v-btn>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <div class="app-bar-content-spacer"/>
+            <User></User>
 
-          </v-card>
-        </v-dialog>
-        <v-container>
-          <router-view>
-          </router-view>
-          <ComponentsContainer></ComponentsContainer>
-        </v-container>
-        <v-footer class="flex justify-center" color="primary">
-          <img src="/image/website/备案图标.png" style="width: 20px; height: 20px;margin: 0 12px" alt=""/>
-          <a href="https://beian.miit.gov.cn/" style="color: white">豫ICP备2024043594号-1</a>
-        </v-footer>
-      </v-main>
-    </v-app>
+          </div>
+        </v-app-bar>
+        <v-main>
+          <v-dialog v-model="feedbackPopupVisible" max-width="500">
+            <v-card>
+              <div class="flex justify-end m-8" @click="feedbackPopupVisible=false">
+                <v-icon icon="mdi-close"></v-icon>
+              </div>
+              <v-table>
+                <thead>
+                <tr>
+                  <th>反馈方式</th>
+                  <th>说明</th>
+                  <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="item in FeedbackTable" :key="item.name">
+                  <td>{{ item.label }}</td>
+                  <td>{{ item.description }}</td>
+                  <td>
+                    <v-btn v-show="item.url" color="green" @click="openNewPage(item.url)">点击前往</v-btn>
+                  </td>
+                </tr>
+                </tbody>
+              </v-table>
 
-  </v-responsive>
+            </v-card>
+          </v-dialog>
+          <v-container>
+            <router-view>
+            </router-view>
+            <ComponentsContainer></ComponentsContainer>
+          </v-container>
+          <v-footer class="flex justify-center" color="primary">
+            <img src="/image/website/备案图标.png" style="width: 20px; height: 20px;margin: 0 12px" alt=""/>
+            <a href="https://beian.miit.gov.cn/" style="color: white">豫ICP备2024043594号-1</a>
+          </v-footer>
+        </v-main>
+      </v-app>
+
+    </v-responsive>
   </n-config-provider>
 </template>
 
