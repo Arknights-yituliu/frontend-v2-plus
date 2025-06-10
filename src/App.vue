@@ -140,7 +140,7 @@ onMounted(() => {
           <div class="app-bar-content">
             <v-btn text="反馈" variant="text" @click="feedbackPopupVisible=true"></v-btn>
             <div class="app-bar-content-spacer"/>
-            <v-icon icon="mdi-theme-light-dark" size="28" @click="changeTheme"></v-icon>
+            <v-icon icon="mdi-theme-light-dark"  @click="changeTheme"></v-icon>
             <div class="app-bar-content-spacer"/>
             <v-menu>
               <template v-slot:activator="{ props }">
