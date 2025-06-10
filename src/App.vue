@@ -144,7 +144,10 @@ onMounted(() => {
             <div class="app-bar-content-spacer"/>
             <v-menu>
               <template v-slot:activator="{ props }">
-              <v-icon icon="mdi-translate" size="28" v-bind="props"></v-icon>
+<!--              <v-icon icon="mdi-translate" size="28" v-bind="props" >-->
+<!--              </v-icon>-->
+                <v-btn :text="language" prepend-icon="mdi-translate" v-bind="props"></v-btn>
+
               </template>
               <v-list>
                 <v-list-item>
