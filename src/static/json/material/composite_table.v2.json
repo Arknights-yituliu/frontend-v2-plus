@@ -583,29 +583,6 @@
     ]
   },
   {
-    "itemId": "30165",
-    "itemName": "重相位对映体",
-    "rarity": 5,
-    "resolve": false,
-    "pathway": [
-      {
-        "itemId": "31094",
-        "itemName": "手性屈光体",
-        "count": 2
-      },
-      {
-        "itemId": "31084",
-        "itemName": "环烃预制体",
-        "count": 1
-      },
-      {
-        "itemId": "31074",
-        "itemName": "固化纤维板",
-        "count": 1
-      }
-    ]
-  },
-  {
     "itemId": "30145",
     "itemName": "晶体电子单元",
     "rarity": 5,
@@ -712,6 +689,29 @@
         "itemId": "31044",
         "itemName": "精炼溶剂",
         "count": 2
+      }
+    ]
+  },
+  {
+    "itemId": "30165",
+    "itemName": "重相位对映体",
+    "rarity": 5,
+    "resolve": false,
+    "pathway": [
+      {
+        "itemId": "31094",
+        "itemName": "手性屈光体",
+        "count": 2
+      },
+      {
+        "itemId": "31084",
+        "itemName": "环烃预制体",
+        "count": 1
+      },
+      {
+        "itemId": "31074",
+        "itemName": "固化纤维板",
+        "count": 1
       }
     ]
   }
