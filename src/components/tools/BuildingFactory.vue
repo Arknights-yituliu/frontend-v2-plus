@@ -51,7 +51,7 @@ const translateKey = {
 </script>
 
 <template>
-  <div class="room-template" :class="props.roomType">
+  <div class="building-factory-template" :class="props.roomType">
     <div class="flex flex-wrap align-center justify-center">
       <div>{{ translate('schedule', `schedule.${translateKey[props.roomType]}`) }}#{{ props.roomIndex }}</div>
       <div class="spacer-12"></div>

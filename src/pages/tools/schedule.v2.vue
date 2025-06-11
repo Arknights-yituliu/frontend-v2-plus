@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref, watch} from "vue"
-import '/src/assets/css/tool/schedule.css'
+import '/src/assets/css/tool/schedule.v2.css'
 import '/src/assets/css/information/building_skill_font_color.css'
 import SCHEDULE_TEMPLATE from '/src/static/json/build/plans_template.json'
 import {operatorTable} from "/src/utils/gameData.js";
