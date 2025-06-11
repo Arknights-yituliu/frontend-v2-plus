@@ -13,7 +13,7 @@
     }
 
     .schedule-item-card {
-        width: 300px;
+        width: 330px;
         margin: 8px;
 
         .v-list-item__content {
@@ -23,14 +23,23 @@
 
 
     .building-factory-template {
-        padding: 4px;
+        padding: 4px 0;
         justify-content: center;
         margin: 4px auto;
         border-radius: 3px;
         font-weight: 600;
-        width: 280px;
-        height: 80px;
+        width: 310px;
+        height: 100px;
         user-select: none;
+    }
+
+    .building-factory-group{
+        padding-inline:0 !important;
+        padding: 0;
+    }
+
+    .building-factory-name{
+        font-size: 20px;
     }
 
     .room-template {
@@ -54,43 +63,43 @@
     /* 设施样式 */
 
     .trading {
-        background-color: #0288d115;
+        background-color: #0288d130;
         color: #0288d1;
     }
 
     .manufacture {
-        background-color: #ffb50015;
+        background-color: #ffb50030;
         color: #ffb500;
     }
 
     .power {
-        background-color: #43a04715;
+        background-color: #43a04730;
         color: #43a047;
     }
 
     .control {
-        background-color: #43a04715;
+        background-color: #43a04730;
         color: #43a047;
     }
 
     .dormitory {
-        background-color: #009fb415;
+        background-color: #009fb430;
         color: #009fb4;
     }
 
     .meeting {
-        background-color: #7e7e7e15;
+        background-color: #7e7e7e30;
         color: #7e7e7e;
     }
 
     .processing {
-        background-color: #7e7e7e15;
+        background-color: #7e7e7e30;
         color: #7e7e7e;
 
     }
 
     .hire {
-        background-color: #7e7e7e15;
+        background-color: #7e7e7e30;
         color: #7e7e7e;
 
     }

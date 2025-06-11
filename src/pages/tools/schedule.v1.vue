@@ -1164,7 +1164,7 @@ function useNewUI() {
                               style="width: 120px"/>
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item class="building-factory-group">
               <!--中枢-->
               <BuildingFactory :room-index="0"
                                room-type="control"
