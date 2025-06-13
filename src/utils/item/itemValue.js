@@ -47,7 +47,7 @@ let stageDropCollect = void 0
 const baseLMDValue = 0.0036
 
 // 公开招募结果的星级概率分布
-let recuritRarity = {
+let recruitRarity = {
     "3": 0.7882,
     "4": 0.2027,
     "5": 0.0069,
@@ -55,11 +55,11 @@ let recuritRarity = {
 }
 
 // 公开招募获得的凭证数量
-let recuritToken = {
+let recruitToken = {
     "3": {"4005": 10, "4004": 0},
     "4": {"4005": 30, "4004": 1},
-    "5": {"4005": 0,  "4004": 5},
-    "6": {"4005": 0,  "4004": 10},
+    "5": {"4005": 0, "4004": 5},
+    "6": {"4005": 0, "4004": 10},
 }
 
 
@@ -69,7 +69,7 @@ let recuritToken = {
  */
 function calculatedItemValue(stageConfig) {
     //解构关卡自定义配置  经验书系数  龙门币系数  加工站爆率  自定义物品列表
-    const {expCoefficient, lmdCoefficient, workshopEliteMaterialByProductRate, workshopSkillSummaryByProductRate, customItem} = stageConfig
+    const {expCoefficient, lmdCoefficient, workshopEliteMaterialByProductRate,workshopSkillSummaryByProductRate, customItem} = stageConfig
 
     //自定义物品map
     let customItemMap = new Map()
@@ -153,7 +153,6 @@ function calculatedItemValue(stageConfig) {
                 const rawItem = itemInfoMap.get(cost.itemId)
                 newValue += rawItem.itemValue * cost.count
                 // console.log(item.itemName + '=' + rawItem.itemName + '*' + cost.count + '=' + newValue)
-
             }
 
             newValue = newValue + 0.36 * lmdCoefficient * (rarity - 1) - expectProductsValue
@@ -230,6 +229,7 @@ function calculatedItemValue(stageConfig) {
         // 技巧概要·卷3
         const itemValue3303 = (30 * (1 - itemValueLMD * 12)
             / (2 + 3 / 2 * (1 + workshopSkillSummaryByProductRate) / 3 + 1.5 * (1 + workshopSkillSummaryByProductRate) ** 2 / 3 ** 2));
+
         // 技能概要·卷2
         const itemValue3302 = (1 + workshopSkillSummaryByProductRate) * itemValue3303 / 3;
         // 技能概要·卷1
@@ -237,8 +237,8 @@ function calculatedItemValue(stageConfig) {
 
         // 招聘许可
         let itemValue7001 = 0;
-        for (const rarity in recuritToken) {
-            itemValue7001 += recuritRarity[rarity] * (recuritToken[rarity]["4005"] * itemValue4005 + recuritToken[rarity]["4004"] * itemValue4004);
+        for (const rarity in recruitToken) {
+            itemValue7001 += recruitRarity[rarity] * (recruitToken[rarity]["4005"] * itemValue4005 + recruitToken[rarity]["4004"] * itemValue4004);
         }
 
         // 合成玉（搓玉）
@@ -272,6 +272,7 @@ function calculatedItemValue(stageConfig) {
         const chip1 = ['3211', '3221', '3231', '3241', '3251', '3261', '3271', '3281']
         const chip2 = ['3212', '3222', '3232', '3242', '3252', '3262', '3272', '3282']
         const chip3 = ['3213', '3223', '3233', '3243', '3253', '3263', '3273', '3283']
+
         for (const chipId of chip1) {
             itemInfoMap.get(chipId).itemValue = chip1Value;
         }
@@ -326,10 +327,9 @@ function calculatedItemValue(stageConfig) {
 /**
  *  * 获取物品价值迭代系数
  * @param stageConfig 关卡配置
- * @param index  迭代次数
  * @returns {Promise<{nextItemCorrectionTerm: Map<any, any>}>}
  */
-async function getItemValueCorrectionTerm(stageConfig, index) {
+async function getItemValueCorrectionTerm(stageConfig) {
 
 
     //物品map
@@ -473,10 +473,10 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
 
         // nextStageDropCollect.set(stageId, list)
 
-        //如果关卡系列为
-        if (stageType === 'YTL_VIRTUAL') {
-            activityAverageStageEfficiency.set(seriesId, seriesCorrectionTerm)
-        }
+        // //如果关卡系列为
+        // if (stageType === 'YTL_VIRTUAL') {
+        //     activityAverageStageEfficiency.set(seriesId, seriesCorrectionTerm)
+        // }
 
 
         //判断是否有对应精英物品系列的迭代值
@@ -495,23 +495,23 @@ async function getItemValueCorrectionTerm(stageConfig, index) {
         }
     }
 
-    //如果自定义关卡配置将虚拟关卡作为定价关，重新再判断一次定价关
-    if (stageConfig.useActivityAverageStage) {
-
-        for (const [seriesId, seriesCorrectionTerm] of activityAverageStageEfficiency) {
-
-            //获取当前物品系列的迭代值
-            const correctionTerm = maxStageEfficiencyMap.get(seriesId).correctionTerm
-
-            // if (!('31053' === seriesId || '31033' === seriesId)) {
-            //     maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
-            // }
-
-            if (seriesCorrectionTerm.correctionTerm > correctionTerm) {
-                maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
-            }
-        }
-    }
+    // //如果自定义关卡配置将虚拟关卡作为定价关，重新再判断一次定价关
+    // if (stageConfig.useActivityAverageStage) {
+    //
+    //     for (const [seriesId, seriesCorrectionTerm] of activityAverageStageEfficiency) {
+    //
+    //         //获取当前物品系列的迭代值
+    //         const correctionTerm = maxStageEfficiencyMap.get(seriesId).correctionTerm
+    //
+    //         // if (!('31053' === seriesId || '31033' === seriesId)) {
+    //         //     maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
+    //         // }
+    //
+    //         if (seriesCorrectionTerm.correctionTerm > correctionTerm) {
+    //             maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
+    //         }
+    //     }
+    // }
 
 
     return {
@@ -550,7 +550,7 @@ async function getCustomItemList(stageConfig) {
         // console.table(itemList)
         calculatedItemValue(stageConfig)
 
-        const {nextItemCorrectionTerm} = await getItemValueCorrectionTerm(stageConfig, i);
+        const {nextItemCorrectionTerm} = await getItemValueCorrectionTerm(stageConfig);
 
         //是否迭代完成的标记
         let completionFlag = true;
