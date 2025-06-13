@@ -54,7 +54,7 @@
 
 
 .drawer-btn{
-  display: none !important;
+  display: none;
 }
 
 .navigation-drawer {
@@ -83,9 +83,6 @@
     padding: 0 12px !important;
   }
 
-  .drawer-btn{
-    display: grid;
-  }
 
   .right-drawer{
        display: none !important;
@@ -98,9 +95,6 @@
     font-size: 12px;
   }
 
-  .drawer-btn{
-    display: grid;
-  }
 
   .right-drawer{
     display: none !important;
