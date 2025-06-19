@@ -528,7 +528,7 @@ async function getItemValueCorrectionTerm(stageConfig) {
 async function getCustomItemList(stageConfig) {
 
     //获取根据关卡id分类的关卡掉落数据
-    stageDropCollect = await getStageDropCollect(stageConfig)
+    stageDropCollect = await getStageDropCollect(stageConfig,true)
 
     const customItem = stageConfig.customItem
 

@@ -1,10 +1,9 @@
 import itemCache from "@/plugins/indexedDB/itemCache.js";
 import ytlStageInfo from '/src/static/json/material/ytl_stage_info.json'
 
-async function getStageDropCollect(stageConfig) {
+async function getStageDropCollect(stageConfig, useStageBlacklist) {
 
     let penguinMatrix = []
-
 
 
     penguinMatrix = await itemCache.getPenguinMatrixCache()
@@ -26,9 +25,9 @@ async function getStageDropCollect(stageConfig) {
 
     let stageBlacklistMap = new Map()
 
-    if (stageConfig.stageBlacklist) {
+    if (stageConfig.stageBlacklist&&useStageBlacklist) {
         for (const item of stageConfig.stageBlacklist) {
-            stageBlacklistMap.set(item.stageId, item.stageCode)
+            stageBlacklistMap.set(item, 1)
         }
     }
 
@@ -61,7 +60,7 @@ async function getStageDropCollect(stageConfig) {
             continue
         }
 
-        if(!stageInfoMap.has(stageId)){
+        if (!stageInfoMap.has(stageId)) {
             continue
         }
 
@@ -84,26 +83,26 @@ async function getStageDropCollect(stageConfig) {
             }
         }
 
-        const {stageCode,apCost,spm,stageType,zoneName,zoneId} = stageInfo
+        const {stageCode, apCost, spm, stageType, zoneName, zoneId} = stageInfo
 
-        if(stageType==='ACT'&&apCost===21&&ytlStageInfo[itemId]){
-            ytlStageInfo[itemId].quantity+=item.quantity
-            ytlStageInfo[itemId].times+=item.times
+        if (stageType === 'ACT' && apCost === 21 && ytlStageInfo[itemId]) {
+            ytlStageInfo[itemId].quantity += item.quantity
+            ytlStageInfo[itemId].times += item.times
         }
 
         const mergeItem = {
             stageId: stageId,
             itemId: itemId,
-            quantity:item.quantity,
-            times:item.times,
-            start:stageInfo.start,
-            end:stageInfo.end,
-            stageCode:stageCode,
-            apCost:apCost,
-            spm:spm,
+            quantity: item.quantity,
+            times: item.times,
+            start: stageInfo.start,
+            end: stageInfo.end,
+            stageCode: stageCode,
+            apCost: apCost,
+            spm: spm,
             stageType: stageType,
-            zoneName:zoneName,
-            zoneId:zoneId
+            zoneName: zoneName,
+            zoneId: zoneId
         }
 
 
@@ -125,17 +124,17 @@ async function getStageDropCollect(stageConfig) {
         if (stageDropCollect.get(stageId)) {
             stageDropCollect.get(stageId).push(mergeItem)
         } else {
-            stageDropCollect.set(stageId, [mergeItem,lmdDrop])
-            if("ACT" === stageType || "ACT_REP" === stageType){
+            stageDropCollect.set(stageId, [mergeItem, lmdDrop])
+            if ("ACT" === stageType || "ACT_REP" === stageType) {
                 stageDropCollect.get(stageId).push(storeUnlimitedExchangeDrop)
             }
         }
     }
 
 
-    for(const itemId in ytlStageInfo){
+    for (const itemId in ytlStageInfo) {
         const drop = ytlStageInfo[itemId]
-        if(drop.times>0){
+        if (drop.times > 0) {
             const lmdDrop = {
                 stageId: drop.stageId,
                 itemId: "4001",
@@ -149,11 +148,9 @@ async function getStageDropCollect(stageConfig) {
                 quantity: 21 * 20,
                 times: 1
             }
-             stageDropCollect.set(drop.stageId, [drop,lmdDrop,storeUnlimitedExchangeDrop])
+            stageDropCollect.set(drop.stageId, [drop, lmdDrop, storeUnlimitedExchangeDrop])
         }
     }
-
-
 
 
     return stageDropCollect
