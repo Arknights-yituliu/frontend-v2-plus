@@ -20,8 +20,7 @@
   <img src="/docs/public/image/docs/right-click-menu.jpg" alt="">
   <p>点击上面的Open Git Bash here，此时会出现一个这样的终端页面，此时输入命令：git clone 加上从第一步复制的仓库链接
   </p>
-  <pre>
-<code>git clone git@github.com:Arknights-yituliu/frontend-v2-plus.git</code></pre>
+  <pre><code>git clone git@github.com:Arknights-yituliu/frontend-v2-plus.git</code></pre>
   <img src="/docs/public/image/docs/git-terminal.jpg" alt="">
   <p>
     输入上述命令后按确认，会出现如下打印内容，由于仓库的提交历史过大，需要下载一会，也可以通过追加命名参数选择不下载历史提交记录</p>
@@ -31,9 +30,7 @@
     等待下载完成后你的frontend文件夹里会出现一个新的文件夹frontend-v2-plus，点击进入这个文件夹，点击文件夹上的地址栏，输入命令cmd</p>
   <img src="/docs/public/image/docs/repository-folder.jpg" alt="">
   <p>在弹出的终端中输入命令：npm install，安装项目的依赖包</p>
-  <pre>
-    <code>npm install</code>
-  </pre>
+  <pre><code>npm install</code></pre>
 <!--  <v-sheet color="black" :elevation="2">-->
 <!--  </v-sheet>-->
   <img src="/docs/public/image/docs/install-package.jpg" alt="">
