@@ -449,10 +449,12 @@ onMounted(() => {
 
 
     <!-- 搓玉推荐表 -->
+    <div id="orundum-table"></div>
     <OrundumTable v-model="orundumRecommendedStage"></OrundumTable>
 
 
     <!-- 历史活动 -->
+    <div id="history-stage-table"></div>
     <HistoryActivity v-model="historyActivityList"></HistoryActivity>
 
     <div id="frequently-asked-question"></div>
