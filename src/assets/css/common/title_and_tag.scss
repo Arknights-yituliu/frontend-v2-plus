@@ -14,21 +14,19 @@
 .module-title h1 {
     line-height: 1;
     font-size: 36px;
-    padding-left: 8px;
+    padding: 0 4px 0 12px;
     font-weight: bolder;
     position: relative;
     z-index: 1;
 }
 
 .module-title h4 {
-    padding-top: 12px;
+    padding: 12px 4px 0 4px;
+    margin-top: -8px;
     background-color: #959595;
-    width: 100%;
     color: #ffffff;
     border-left: 8px solid #6495ed;
     font-size: 14px;
-    position: absolute;
-    top: 28px;
 }
 
 .module-tip {
