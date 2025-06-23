@@ -1031,6 +1031,22 @@
       "price": 200.0,
       "quantity": 3,
       "rarity": 3
+    },
+    {
+      "itemId": "7002",
+      "itemName": "加急许可",
+      "storeType": "grey",
+      "price": 160.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "3401",
+      "itemName": "家具零件",
+      "storeType": "grey",
+      "price": 160.0,
+      "quantity": 20,
+      "rarity": 3
     }
   ]
 }
