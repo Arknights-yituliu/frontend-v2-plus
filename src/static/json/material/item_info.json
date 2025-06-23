@@ -594,6 +594,15 @@
     "itemValue": 24.068
   },
   {
+    "itemId": "7002",
+    "itemName": "加急许可",
+    "itemValueAp": 0,
+    "rarity": 4,
+    "cardNum": 12,
+    "weight": 0,
+    "itemValue": 0
+  },
+  {
     "itemId": "4006",
     "itemName": "采购凭证",
     "itemValueAp": 1.366857142857143,
@@ -864,15 +873,6 @@
     "itemValue": 0.8
   },
   {
-    "itemId": "4003sp",
-    "itemName": "合成玉(搓玉)",
-    "itemValueAp": 1.43438,
-    "rarity": 5,
-    "cardNum": 10,
-    "weight": 0,
-    "itemValue": 1.43438
-  },
-  {
     "itemId": "classic_gacha",
     "itemName": "中坚寻访凭证",
     "itemValueAp": 376.7442,
@@ -1112,15 +1112,6 @@
     "itemValueAp": 0,
     "rarity": 3,
     "cardNum": 12,
-    "weight": 0,
-    "itemValue": 0
-  },
-  {
-    "itemId": "7002",
-    "itemName": "加急许可",
-    "itemValueAp": 0,
-    "rarity": 4,
-    "cardNum": 100,
     "weight": 0,
     "itemValue": 0
   }

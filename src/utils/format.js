@@ -9,7 +9,7 @@ import {h} from 'vue'
 const formatNumber = (num, acc = 2) => {
     acc = typeof acc !== "undefined" ? acc : 2;
     if (typeof num === "undefined") return ''
-    return parseFloat(num.toString()).toFixed(acc);
+    return parseFloat(num?.toString()).toFixed(acc);
 }
 
 // 将 HTML 字符串转换成包含层级结构的 VNode

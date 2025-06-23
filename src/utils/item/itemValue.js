@@ -1,9 +1,7 @@
+import { getStageDropCollect } from "@/plugins/indexedDB/penguinData.js";
 import ITEM_INFO from "@/static/json/material/item_info.json";
-import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
-
-import {getStageDropCollect} from "@/plugins/indexedDB/penguinData.js";
-import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
-// import {updateItemInfoWeight} from "/src/utils/item/updateItemInfoWeight.js";
+import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json';
+import { itemSeriesInfoByItemId } from "/src/utils/item/itemSeries.js";
 
 
 //加工站每级期望产出理智初始值
@@ -16,25 +14,25 @@ let workShopProducts = {
 
 //每种精英物品的初始迭代值
 let itemValueCorrectionTerm = {
-    30013: {correctionTerm: 1.00000137324044, itemName: '固源岩组'},
-    30023: {correctionTerm: 1.0000040009822255, itemName: '糖组'},
-    30033: {correctionTerm: 1.0000019925398336, itemName: '聚酸酯组'},
-    30043: {correctionTerm: 0.9999483750088554, itemName: '异铁组'},
-    30053: {correctionTerm: 1.0000022954075312, itemName: '酮凝集组'},
-    30063: {correctionTerm: 1.0000013169421755, itemName: '全新装置'},
-    30073: {correctionTerm: 0.9999649132885954, itemName: '扭转醇'},
-    30083: {correctionTerm: 1.000002240727396, itemName: '轻锰矿'},
-    30093: {correctionTerm: 1.0000022806201772, itemName: '研磨石'},
-    30103: {correctionTerm: 1.0000130948559616, itemName: 'RMA70-12'},
-    31013: {correctionTerm: 0.9999904276257087, itemName: '凝胶'},
-    31023: {correctionTerm: 1.0000248495124442, itemName: '炽合金'},
-    31033: {correctionTerm: 1.00000158366126, itemName: '晶体元件'},
-    31043: {correctionTerm: 0.999997836003829, itemName: '半自然溶剂'},
-    31053: {correctionTerm: 1.000006210539448, itemName: '化合切削液'},
-    31063: {correctionTerm: 0.9999981294168673, itemName: '转质盐组'},
-    31073: {correctionTerm: 1.0001889176671603, itemName: '褐素纤维'},
-    31083: {correctionTerm: 0.9996130718228801, itemName: '环烃聚质'},
-    31093: {correctionTerm: 0.9996130718228801, itemName: '类凝结核'}
+    30013: { correctionTerm: 1.00000137324044, itemName: '固源岩组' },
+    30023: { correctionTerm: 1.0000040009822255, itemName: '糖组' },
+    30033: { correctionTerm: 1.0000019925398336, itemName: '聚酸酯组' },
+    30043: { correctionTerm: 0.9999483750088554, itemName: '异铁组' },
+    30053: { correctionTerm: 1.0000022954075312, itemName: '酮凝集组' },
+    30063: { correctionTerm: 1.0000013169421755, itemName: '全新装置' },
+    30073: { correctionTerm: 0.9999649132885954, itemName: '扭转醇' },
+    30083: { correctionTerm: 1.000002240727396, itemName: '轻锰矿' },
+    30093: { correctionTerm: 1.0000022806201772, itemName: '研磨石' },
+    30103: { correctionTerm: 1.0000130948559616, itemName: 'RMA70-12' },
+    31013: { correctionTerm: 0.9999904276257087, itemName: '凝胶' },
+    31023: { correctionTerm: 1.0000248495124442, itemName: '炽合金' },
+    31033: { correctionTerm: 1.00000158366126, itemName: '晶体元件' },
+    31043: { correctionTerm: 0.999997836003829, itemName: '半自然溶剂' },
+    31053: { correctionTerm: 1.000006210539448, itemName: '化合切削液' },
+    31063: { correctionTerm: 0.9999981294168673, itemName: '转质盐组' },
+    31073: { correctionTerm: 1.0001889176671603, itemName: '褐素纤维' },
+    31083: { correctionTerm: 0.9996130718228801, itemName: '环烃聚质' },
+    31093: { correctionTerm: 0.9996130718228801, itemName: '类凝结核' }
 }
 
 //物品信息列表
@@ -45,9 +43,10 @@ let stageDropCollect = void 0
 
 //基础龙门币价值（按CE6  10000龙门币=36理智）
 const baseLMDValue = 0.0036
+const baseEXPValue = 0.0036
 
 // 公开招募结果的星级概率分布
-let recruitRarity = {
+const recruitRarity = {
     "3": 0.7882,
     "4": 0.2027,
     "5": 0.0069,
@@ -55,12 +54,32 @@ let recruitRarity = {
 }
 
 // 公开招募获得的凭证数量
-let recruitToken = {
-    "3": {"4005": 10, "4004": 0},
-    "4": {"4005": 30, "4004": 1},
-    "5": {"4005": 0, "4004": 5},
-    "6": {"4005": 0, "4004": 10},
+const recruitTokenMap = {
+    "RECRUITMENT_PERMIT_PRICING_3_4": {
+        "3": { "4005": 10, "4004": 0 },
+        "4": { "4005": 30, "4004": 1 },
+        "5": { "4005": 0, "4004": 5 },
+        "6": { "4005": 0, "4004": 10 },
+    },
+    "RECRUITMENT_PERMIT_PRICING_3_4_5": {
+        "3": { "4005": 10, "4004": 0 },
+        "4": { "4005": 30, "4004": 1 },
+        "5": { "4005": 0, "4004": 13 },
+        "6": { "4005": 0, "4004": 10 },
+    },
+    "RECRUITMENT_PERMIT_PRICING_3_4_5_6": {
+        "3": { "4005": 10, "4004": 0 },
+        "4": { "4005": 30, "4004": 1 },
+        "5": { "4005": 0, "4004": 13 },
+        "6": { "4005": 0, "4004": 25 },
+    }
 }
+
+/**
+ *
+ * @param {*} stageConfig 关卡自定义配置
+ */
+function preCalculateCommonItemValue(stageConfig) { }
 
 
 /**
@@ -69,12 +88,15 @@ let recruitToken = {
  */
 function calculatedItemValue(stageConfig) {
     //解构关卡自定义配置  经验书系数  龙门币系数  加工站爆率  自定义物品列表
-    const {expCoefficient, lmdCoefficient, workshopEliteMaterialByProductRate,workshopSkillSummaryByProductRate, customItem} = stageConfig
+    const { expCoefficient, lmdCoefficient, workshopEliteMaterialByProductRate, workshopSkillSummaryByProductRate, customItem } = stageConfig
 
-    //自定义物品map
+    /**
+     * 自定义物品价值表，key 为物品 ID，value 为物品价值
+     * @type {Map<string, number>}
+     */
     let customItemMap = new Map()
 
-    //将自定义物品列表转为一个map
+    // 将自定义物品列表转为一个map
     if (customItem) {
         for (const item of customItem) {
             customItemMap.set(item.itemId, item.itemValue)
@@ -87,25 +109,9 @@ function calculatedItemValue(stageConfig) {
 
     //将物品信息列表循环处理一下，写入到物品信息map
     for (let item of itemInfoList) {
-        const itemId = item.itemId
-        //这里处理经验书和龙门币的价值，根据经验书和龙门币系数计算价值
-        if (itemId === "2004") {
-            item.itemValue = baseLMDValue * expCoefficient * 2000
-        }
-        if (itemId === "2003") {
-            item.itemValue = baseLMDValue * expCoefficient * 1000
-        }
-        if (itemId === "2002") {
-            item.itemValue = baseLMDValue * expCoefficient * 400
-        }
-        if (itemId === "2001") {
-            item.itemValue = baseLMDValue * expCoefficient * 200
-        }
-        if (itemId === "4001") {
-            item.itemValue = baseLMDValue * lmdCoefficient
-        }
+        const itemId = item.itemId;
 
-        //迭代物品价值，  物品价值/对应最高效率关的理智转化率
+        //迭代物品价值，物品价值/对应最高效率关的理智转化率
         if (itemValueCorrectionTerm[itemId]) {
             // console.log(item.itemName, item.itemValue, '/', itemValueCorrectionTerm[itemId].correctionTerm)
             item.itemValue = item.itemValue / itemValueCorrectionTerm[itemId].correctionTerm
@@ -123,7 +129,7 @@ function calculatedItemValue(stageConfig) {
     //将白绿紫金物品通过加工站合成路径得出价值
     for (const table of COMPOSITE_TABLE) {
         //解构加工路径表   合成或拆解的物品id  判断拆解还是合成  合成路径
-        const {itemId, resolve, pathway} = table
+        const { itemId, resolve, pathway } = table
         //如果这个物品被自定义了，不再通过合成路径得到价值
         if (customItemMap.get(itemId)) {
             continue
@@ -172,10 +178,38 @@ function calculatedItemValue(stageConfig) {
     _calculatedCommonItemValue(stageConfig)
 
     function _calculatedCommonItemValue(stageConfig) {
-        // 至纯源石
-        const itemValue4002 = 135;
+        // 龙门币
+        const itemValue4001 = stageConfig.lmdCoefficient * baseLMDValue;
+        // EXP
+        const itemValueEXP = stageConfig.expCoefficient * baseEXPValue;
+        const itemValue2001 = itemValueEXP * 200;
+        const itemValue2002 = itemValueEXP * 400;
+        const itemValue2003 = itemValueEXP * 1000;
+        const itemValue2004 = itemValueEXP * 2000;
+        // 无人机
+        const itemValueBaseAp = itemValueEXP * 50 / 3;
+        // 赤金
+        const itemValue3003 = itemValueBaseAp * 24;
+
         // 合成玉
-        const itemValue4003 = itemValue4002 / 180;
+        let itemValue4003;
+        switch (stageConfig.orundumPricingStrategy) {
+            case "ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE":
+                itemValue4003 = (itemInfoMap.get('30012').itemValue * 2 + 1600 * itemValue4001 + 40 * itemValueBaseAp) / 10;
+                break;
+            case "ORUNDUM_PRICING_ORININUM_FARMING_DEVICE":
+                itemValue4003 = (itemInfoMap.get('30062').itemValue + 1000 * itemValue4001 + 40 * itemValueBaseAp) / 10;
+                break;
+            default:
+                itemValue4003 = stageConfig.orundumValue;
+        }
+        // 至纯源石
+        let itemValue4002;
+        if (stageConfig.originitePrimeCoefficient === Infinity) {
+            itemValue4002 = Infinity;
+        } else {
+            itemValue4002 = stageConfig.originitePrimeCoefficient * itemValue4003;
+        }
         // 寻访凭证
         const itemValue7003 = 600 * itemValue4003;
         // 十连寻访凭证
@@ -185,36 +219,61 @@ function calculatedItemValue(stageConfig) {
         // 高级凭证
         const itemValue4004 = 38 / 258 * itemValue7003;
         // 中坚寻访凭证
-        const itemValueClassicGacha = 216 / 38 * itemValue4004;
+        let itemValueClassicGacha;
+        if (stageConfig.kernalHeadhuntingPermitCoefficient === 0) {
+            itemValueClassicGacha = 0;
+        } else {
+            itemValueClassicGacha = stageConfig.kernalHeadhuntingPermitCoefficient * itemValue7003;
+        }
         // 十连中坚寻访凭证
         const itemValueClassicGacha10 = 10 * itemValueClassicGacha;
 
-        // 家具零件
-        const itemValue3401 = 0;
+        // 招聘许可
+        let itemValue7001 = 0;
+        if (itemValue4004 === Infinity) {
+            itemValue7001 = Infinity;
+        }
+        else {
+            for (const [rarity, recruitToken] of Object.entries(recruitTokenMap[stageConfig.recruitmentPermitPricingStrategy])) {
+                itemValue7001 += recruitRarity[rarity] * (recruitToken["4005"] * itemValue4005 + recruitToken["4004"] * itemValue4004);
+            }
+        }
         // 加急许可
-        const itemValue7002 = 0;
-
-        // 龙门币
-        const itemValueLMD = itemInfoMap.get('4001').itemValue;
-        // EXP
-        const itemValueEXP = itemInfoMap.get('2001').itemValue / 200;
-        // 无人机
-        const itemValueBaseAp = itemValueEXP * 50 / 3;
-        // 赤金
-        const itemValue3003 = itemValueBaseAp * 24;
+        let itemValue7002;
+        switch (stageConfig.expeditedPlanPricingStrategy) {
+            case "EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT":
+                itemValue7002 = itemValue7001;
+                break;
+            default:
+                itemValue7002 = stageConfig.expeditedPlanValue;
+        }
+        // 家具零件
+        // TODO: 按 SK-5 定价
+        const itemValue3401 = stageConfig.furniturePartValue;
 
         // 采购凭证
-        const itemValue4006 = 30 * (1 - itemValueLMD * 12) / 21;
+        const itemValue4006 = 30 * (1 - itemValue4001 * 12) / 21;
         // 芯片助剂
         const itemValue32001 = itemValue4006 * 90;
         // 芯片
-        const chip1Value = 18 * (1 - itemValueLMD * 12);
+        const chip1Value = 18 * (1 - itemValue4001 * 12);
         // 芯片组
-        const chip2Value = 36 * (1 - itemValueLMD * 12);
-        // 双芯片，省略 1 秒制造站基础工时
-        const chip3Value = chip2Value * 2 + itemValue32001;
+        const chip2Value = 36 * (1 - itemValue4001 * 12);
+        // 双芯片
+        const chip3Value = chip2Value * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
         // 模组数据块
-        const itemValueModUnlockToken = 120 * itemValue4006;
+        let itemValueModUnlockToken;
+        switch (stageConfig.modUnlockTokenPricingStrategy) {
+            case "MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE":
+                itemValueModUnlockToken = 120 * itemValue4006;
+                break;
+            case "MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE":
+                itemValueModUnlockToken = 20 * itemValue4004;
+                break;
+            case "MOD_UNLOCK_TOKEN_PRICING_CUSTOM":
+                itemValueModUnlockToken = stageConfig.modUnlockTokenValue;
+                break;
+        }
         // 事相碎片
         const itemValueSTORYREVIEWCOIN = 20 * itemValue4006;
 
@@ -222,12 +281,12 @@ function calculatedItemValue(stageConfig) {
         // 因果
         const itemValueYinGuo = 10 / 9 * (1 - workshopEliteMaterialByProductRate) * t3workShopProductsValue / 36;
         // 碳素组
-        const itemValue3114 = 240 / 19 * itemValue3401 + 4 * itemValueYinGuo - 4000 / 19 * itemValueLMD;
+        const itemValue3114 = 240 / 19 * itemValue3401 + 4 * itemValueYinGuo - 4000 / 19 * itemValue4001;
         const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo;
         const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo;
 
         // 技巧概要·卷3
-        const itemValue3303 = (30 * (1 - itemValueLMD * 12)
+        const itemValue3303 = (30 * (1 - itemValue4001 * 12)
             / (2 + 3 / 2 * (1 + workshopSkillSummaryByProductRate) / 3 + 1.5 * (1 + workshopSkillSummaryByProductRate) ** 2 / 3 ** 2));
 
         // 技能概要·卷2
@@ -235,17 +294,9 @@ function calculatedItemValue(stageConfig) {
         // 技能概要·卷1
         const itemValue3301 = (1 + workshopSkillSummaryByProductRate) * itemValue3302 / 3;
 
-        // 招聘许可
-        let itemValue7001 = 0;
-        for (const rarity in recruitToken) {
-            itemValue7001 += recruitRarity[rarity] * (recruitToken[rarity]["4005"] * itemValue4005 + recruitToken[rarity]["4004"] * itemValue4004);
-        }
 
-        // 合成玉（搓玉）
-        const itemValue4003sp = (itemInfoMap.get('30012').itemValue * 2 + 1600 * itemValueLMD + 40 * itemValueBaseAp) / 10;
-
-        itemInfoMap.get("4002").itemValue = itemValue4002;
         itemInfoMap.get("4003").itemValue = itemValue4003;
+        itemInfoMap.get("4002").itemValue = itemValue4002;
         itemInfoMap.get("7003").itemValue = itemValue7003;
         itemInfoMap.get("7004").itemValue = itemValue7004;
         itemInfoMap.get("4005").itemValue = itemValue4005;
@@ -253,7 +304,12 @@ function calculatedItemValue(stageConfig) {
         itemInfoMap.get("classic_gacha").itemValue = itemValueClassicGacha;
         itemInfoMap.get("classic_gacha_10").itemValue = itemValueClassicGacha10;
         itemInfoMap.get("3401").itemValue = itemValue3401;
-        // itemInfoMap.get("7002").itemValue = itemValue7002;
+        itemInfoMap.get("7002").itemValue = itemValue7002;
+        itemInfoMap.get("4001").itemValue = itemValue4001;
+        itemInfoMap.get("2001").itemValue = itemValue2001;
+        itemInfoMap.get("2002").itemValue = itemValue2002;
+        itemInfoMap.get("2003").itemValue = itemValue2003;
+        itemInfoMap.get("2004").itemValue = itemValue2004;
         itemInfoMap.get("base_ap").itemValue = itemValueBaseAp;
         itemInfoMap.get("3003").itemValue = itemValue3003;
         itemInfoMap.get("4006").itemValue = itemValue4006;
@@ -267,7 +323,6 @@ function calculatedItemValue(stageConfig) {
         itemInfoMap.get("3302").itemValue = itemValue3302;
         itemInfoMap.get("3301").itemValue = itemValue3301;
         itemInfoMap.get("7001").itemValue = itemValue7001;
-        itemInfoMap.get("4003sp").itemValue = itemValue4003sp;
 
         const chip1 = ['3211', '3221', '3231', '3241', '3251', '3261', '3271', '3281']
         const chip2 = ['3212', '3222', '3232', '3242', '3252', '3262', '3272', '3282']
@@ -282,7 +337,9 @@ function calculatedItemValue(stageConfig) {
         for (const chipId of chip3) {
             itemInfoMap.get(chipId).itemValue = chip3Value;
         }
-
+        // for (const [itemId, item] of itemInfoMap) {
+        //     console.log(itemId, item.itemName, item.itemValue)
+        // }
     }
 
 
@@ -313,7 +370,7 @@ function calculatedItemValue(stageConfig) {
         for (const [rarity, group] of collect) {
             let expectValue = 0.0
             for (const item of group) {
-                const {itemValue, itemName, weight} = item
+                const { itemValue, itemName, weight } = item
                 expectValue += itemValue * weight
                 // console.log('+=',itemName+'='+itemValue+'*'+weight,'=',expectValue)
             }
@@ -349,7 +406,7 @@ async function getItemValueCorrectionTerm(stageConfig) {
     for (const [stageId, list] of stageDropCollect) {
 
         //关卡消耗理智，关卡代号，关卡类型
-        const {apCost, stageCode, stageType} = list[0]
+        const { apCost, stageCode, stageType } = list[0]
 
         if (['MAIN', 'ACT_PERM'].includes(stageType)) {
             //如果不使用活动关定价则跳出循环
@@ -403,7 +460,7 @@ async function getItemValueCorrectionTerm(stageConfig) {
         for (const drop of list) {
 
             //解构出物品id，掉落次数，样本数
-            const {itemId, quantity, times} = drop
+            const { itemId, quantity, times } = drop
 
             // 从物品表里面取出对应掉落物的信息
             const itemInfo = itemMap.get(itemId);
@@ -414,7 +471,7 @@ async function getItemValueCorrectionTerm(stageConfig) {
             }
 
             //从物品信息中解构出物品价值
-            const {itemValue, itemName} = itemInfo;
+            const { itemValue, itemName } = itemInfo;
 
             //计算物品掉率
             const knockRating = quantity / times
@@ -461,7 +518,7 @@ async function getItemValueCorrectionTerm(stageConfig) {
         let seriesInfo = itemSeriesInfoByItemId.get(mainItemId)
 
         //物品系列的id和名称
-        const {seriesId, seriesName} = seriesInfo
+        const { seriesId, seriesName } = seriesInfo
 
         //物品系列的迭代值
         const seriesCorrectionTerm = {
@@ -528,7 +585,7 @@ async function getItemValueCorrectionTerm(stageConfig) {
 async function getCustomItemList(stageConfig) {
 
     //获取根据关卡id分类的关卡掉落数据
-    stageDropCollect = await getStageDropCollect(stageConfig,true)
+    stageDropCollect = await getStageDropCollect(stageConfig, true)
 
     const customItem = stageConfig.customItem
 
@@ -538,7 +595,7 @@ async function getCustomItemList(stageConfig) {
     //将自定义物品列表转为一个map
     if (customItem) {
         for (const item of customItem) {
-            const {itemId, itemValue} = item
+            const { itemId, itemValue } = item
             customItemMap.set(itemId, itemValue)
         }
     }
@@ -550,7 +607,7 @@ async function getCustomItemList(stageConfig) {
         // console.table(itemList)
         calculatedItemValue(stageConfig)
 
-        const {nextItemCorrectionTerm} = await getItemValueCorrectionTerm(stageConfig);
+        const { nextItemCorrectionTerm } = await getItemValueCorrectionTerm(stageConfig);
 
         //是否迭代完成的标记
         let completionFlag = true;
@@ -582,4 +639,4 @@ async function getCustomItemList(stageConfig) {
 
 export {
     getCustomItemList
-}
+};
