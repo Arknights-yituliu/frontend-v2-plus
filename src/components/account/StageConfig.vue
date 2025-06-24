@@ -706,7 +706,7 @@ onMounted(() => {
                     中坚寻访系数
                     <span class="card-description">
                       1 中坚寻访凭证 = {{ typeof stageConfig.kernalHeadhuntingPermitCoefficient === "number" ?
-                        stageConfig.kernalHeadhuntingPermitCoefficient : "?" }} 寻访凭证
+                      stageConfig.kernalHeadhuntingPermitCoefficient : "?" }} 寻访凭证
                     </span>
                   </div>
                 </template>
@@ -828,7 +828,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'">
                       1 模组数据块 = {{ typeof stageConfig.modUnlockTokenValue === "number" ? stageConfig.modUnlockTokenValue
-                        : "?" }} 理智
+                      : "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -864,7 +864,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_CUSTOM'">
                       1 招聘许可 = {{ typeof stageConfig.recruitmentPermitValue === "number" ?
-                        stageConfig.recruitmentPermitValue : "?" }} 理智
+                      stageConfig.recruitmentPermitValue : "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -897,7 +897,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_CUSTOM'">
                       1 加急许可 = {{ typeof stageConfig.expeditedPlanValue === "number" ? stageConfig.expeditedPlanValue :
-                        "?" }} 理智
+                      "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -929,7 +929,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_CUSTOM'">
                       1 家具零件 = {{ typeof stageConfig.furniturePartValue === "number" ? stageConfig.furniturePartValue :
-                        "?" }} 理智
+                      "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -1109,6 +1109,7 @@ onMounted(() => {
 
         <!-- 可选材料列表 -->
         <v-list-item title="可选材料">
+          <p>不建议自定义<span class="green">绿</span>、<span class="gray">白</span>材料的价值，这可能导致不自洽的结果</p>
           <div class="flex flex-wrap justify-center">
             <!-- 显示所有可选的材料图标，点击后选择该材料 -->
             <ItemImage v-for="item in itemList.filter((item) => isEliteMaterial(item.itemId))" :item-id="item.itemId"
