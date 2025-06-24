@@ -60,23 +60,33 @@ const BeastsStage = ref({
   },
 })
 
-const stageConfigPanel = ref(['preset-parameter'])
-
-// 响应式数据
+/**
+ * 物品定价策略
+ */
+const stageConfig = ref({});
+/**
+ * 已打开的物品定价策略设置面板
+ */
+const stageConfigPanel = ref(['preset-parameter']);
+/**
+ * 物品列表
+ */
 const itemList = ref([]);
-
+/**
+ * 显示在 debug 区的文本
+ */
 const debugText = ref('');
 
-
+/**
+ * 重置为默认参数
+ */
 function resetConfig() {
   console.log("重置配置");
   console.log(defaultConfig);
-  stageConfig.value = JSON.parse(JSON.stringify(defaultConfig));  // 重置为默认配置，用 JSON 深拷贝
+  stageConfig.value = parseConfig(stringifyConfig(defaultConfig));  // 重置为默认配置，用 JSON 深拷贝
   forceRefreshItemValue();
 }
 
-// 初始化默认配置
-const stageConfig = ref({});
 
 
 function loadingStageConfig() {
