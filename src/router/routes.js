@@ -283,6 +283,15 @@ const routes = [
         component: () => import('/src/pages/about/links.vue')
     },
     {
+        path: '/docs',
+        text: '文档',
+        name: 'Docs',
+        display: true,
+        module: 'dev',
+        icon: "mdi-code-braces",
+        component: () => import('/src/pages/about/donate.vue')
+    },
+    {
         path: '/statistics-material',
         text: '材料统计',
         name: '材料统计',

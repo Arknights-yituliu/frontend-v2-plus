@@ -4,8 +4,7 @@ import toolApi from "/src/api/tool.js";
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: routes,
-
+    routes: routes
 })
 
 
