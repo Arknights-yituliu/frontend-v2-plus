@@ -40,12 +40,6 @@ function isEliteMaterial(item_id) {
  */
 const itemInfoList = ITEM_INFO.filter(e => e.cardNum < 100);
 
-/**
- * 物品信息映射，key 为物品 ID，value 为物品信息
- * @type {Map<string, ItemInfo>}
- */
-const itemInfoMap = new Map(itemInfoList.map(item => [item.itemId, item]));
-
 
 /**
  * 加工产出副产品时，各种物品作为副产品的概率
@@ -180,6 +174,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      * @type {Map<string, number>}
      */
     const itemValueMap = new Map(itemInfoList.map(({ itemId, rarity }) => [itemId, isEliteMaterial(itemId) ? 3 ** rarity : 0]));
+    itemValueMap.set("causality", 0);  // 因果价值初始值为 0
 
     /**
      * 白、绿、蓝、紫副产品价值的期望，也即一个随机材料的价值
@@ -246,40 +241,90 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         /** 龙门币价值 */
         const lmdValue = itemValueMap.get("4001");
 
+        // 计算因果价值
+
+        /** 随机蓝材料的价值 */
+        const t3workShopProductsValue = workshopByproductExpectedValue.get(3);
+        const { strategy, byproductRateIncreasement } = stageConfig.workshopStrategy.eliteMaterialT3toT4;
+        /** 蓝合紫时消耗的龙门币数量 */
+        const lmdCost = (strategy === "WORKSHOP_STRATEGY_BLEMISHINE") ? (0) : (300);
+        /** 蓝合紫时的实际副产品产出概率 */
+        const byproductRate = (strategy === "WORKSHOP_STRATEGY_BLEMISHINE") ? (0.14) : (0.1 * (1 + byproductRateIncreasement));
+        /** 因果价值 */
+        const causalityValue = ((1 - byproductRate) * t3workShopProductsValue - (300 - lmdCost) * lmdValue) / (9 / 10 * 36);
+        itemValueMap.set("causality", causalityValue);
+
+
         for (const table of COMPOSITE_TABLE) {
-            // 解构加工路径表：合成或拆解的物品id、判断拆解还是合成、合成路径
-            const { itemId, resolve, pathway } = table;
+            // 解构加工路径表：合成或拆解的物品 ID、判断拆解还是合成（resolve === true 为拆解）、合成路径、稀有度
+            const { itemId, resolve, pathway, rarity } = table;
 
             // 如果这个物品被自定义了，不再通过合成路径得到价值
             if (customEliteMaterialValueMap.has(itemId)) {
                 continue;
             }
 
-            // 通过id得到对应的物品信息
-            const rarity = itemInfoMap.get(itemId).rarity;
+            // 消耗材料和目标材料的稀有度
+            const sourceRarity = (new Map([[1, 1], [2, 2], [4, 3], [5, 4]])).get(rarity);
+            const targetRarity = sourceRarity + 1;
+
+            // 消耗的心情
+            const morale = 2 ** (sourceRarity - 1);
+
+            // 获取自定义加工策略和副产品产出概率提升量
+            const strategyPropertyName = `eliteMaterialT${sourceRarity}toT${targetRarity}`;
+            const { strategy, byproductRateIncreasement } = stageConfig.workshopStrategy[strategyPropertyName];
+
+            /**
+             * 实际的副产品产出概率
+             */
+            let byproductRate;
+            switch (strategy) {
+                case "WORKSHOP_STRATEGY_NCDEER_OBTAIN":
+                    byproductRate = 0.1; break;
+                case "WORKSHOP_STRATEGY_BLEMISHINE":
+                    byproductRate = 0.14; break;
+                case "WORKSHOP_STRATEGY_COMMON":
+                    byproductRate = 0.1 * (1 + byproductRateIncreasement); break;
+            }
+
+            /**
+             * 副产品价值的期望
+             */
+            const expectedByproductValue = workshopByproductExpectedValue.get(sourceRarity);
+
+            /**
+             * 加工消耗的龙门币
+             * 对于精英材料，不使用瑕光的情况下，消耗的龙门币 = 100 * 原材料稀有度
+             */
+            const lmdCost = (strategy === "WORKSHOP_STRATEGY_BLEMISHINE") ? (0) : (sourceRarity * 100);
+
+            /**
+             * 期望获取的因果数量
+             */
+            const expectedCausalityObtained = (strategy === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9 * morale) : (0);
 
             // 物品新价值
-            let newValue = 0.0;
+            let thisItemValue = 0.0;
 
             if (resolve) {
-                // 灰、绿色品质是向下拆解   灰、绿色物品 = （蓝物品价值 + 副产品 - 龙门币）/合成蓝物品的所需灰绿物品数量
-                const expectProductsValue = workshopByproductExpectedValue.get(rarity) * stageConfig.workshopEliteMaterialByProductRate;
-                for (const cost of pathway) {
-                    const rawItemValue = itemValueMap.get(cost.itemId);
-                    newValue = (rawItemValue + expectProductsValue - 100 * rarity * lmdValue) / cost.count;
-                }
+                // 灰、绿色品质是向下拆解   灰、绿色物品 = （蓝物品价值 + 副产品 - 龙门币）/ 合成蓝物品的所需灰绿物品数量
+                const target = pathway[0];  // 拆解路径只有一个物品
+                /** 目标材料价值 */
+                const targetItemValue = itemValueMap.get(target.itemId);
+                thisItemValue = (targetItemValue + expectedByproductValue * byproductRate + expectedCausalityObtained * causalityValue - lmdCost * lmdValue) / target.count;
             } else {
                 // 紫、金色品质是向上合成    紫、金色物品 = 合成所需蓝物品价值之和 + 龙门币 - 副产品
-                const expectProductsValue = workshopByproductExpectedValue.get(rarity - 1) * stageConfig.workshopEliteMaterialByProductRate;
                 for (const cost of pathway) {
-                    const rawItemValue = itemValueMap.get(cost.itemId);
-                    newValue += rawItemValue * cost.count;
+                    /** 消耗材料价值 */
+                    const sourceItemValue = itemValueMap.get(cost.itemId);
+                    thisItemValue += sourceItemValue * cost.count;
                 }
-                newValue += 100 * (rarity - 1) * lmdValue - expectProductsValue;
+                thisItemValue += lmdCost * lmdValue - expectedByproductValue * byproductRate;
             }
 
             // 更新物品新价值
-            itemValueMap.set(itemId, newValue);
+            itemValueMap.set(itemId, thisItemValue);
         }
     }
 
@@ -428,6 +473,9 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      * 步骤 7. 计算非精英材料的价值
      */
     function calculateCommonItemValue() {
+        // 因果
+        const causalityValue = itemValueMap.get("causality");
+
         // 龙门币
         const itemValue4001 = stageConfig.lmdCoefficient * baseLMDValue;
         // EXP
@@ -500,14 +548,55 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
 
         // 采购凭证
         const itemValue4006 = 30 * (1 - itemValue4001 * 12) / 21;
+
         // 芯片助剂
         const itemValue32001 = itemValue4006 * 90;
+
         // 芯片
-        const chip1Value = 18 * (1 - itemValue4001 * 12);
+        const balancedChipValue = 18 * (1 - itemValue4001 * 12);
+        let strongChipValue, weakChipValue;
+        let { strategy, byproductRateIncreasement } = stageConfig.workshopStrategy.chip;
+        switch (strategy) {
+            case "WORKSHOP_STRATEGY_COMMON":
+                const byproductRate = 0.1 * (1 + byproductRateIncreasement);
+                strongChipValue = (6 - byproductRate) / 5 * 18 * (1 - itemValue4001 * 12);
+                weakChipValue = (4 + byproductRate) / 5 * 18 * (1 - itemValue4001 * 12);
+                break;
+            case "WORKSHOP_STRATEGY_NCDEER_OBTAIN":
+                strongChipValue = ((6 - 0.1) * 18 * (1 - itemValue4001 * 12) - causalityValue) / 5;
+                weakChipValue = ((4 + 0.1) * 18 * (1 - itemValue4001 * 12) + causalityValue) / 5;
+                break;
+            case "WORKSHOP_STRATEGY_NCDEER_CONSUME":
+                strongChipValue = (6 * 18 * (1 - itemValue4001 * 12) + 9 / 10 * 36 * causalityValue) / 6;
+                weakChipValue = (6 * 18 * (1 - itemValue4001 * 12) - 9 / 10 * 36 * causalityValue) / 6;
+                break;
+        }
+
         // 芯片组
-        const chip2Value = 36 * (1 - itemValue4001 * 12);
+        const balancedChipPackValue = 36 * (1 - itemValue4001 * 12);
+        let strongChipPackValue, weakChipPackValue;
+        ({ strategy, byproductRateIncreasement } = stageConfig.workshopStrategy.chipPack);
+        switch (strategy) {
+            case "WORKSHOP_STRATEGY_COMMON":
+                const byproductRate = 0.1 * (1 + byproductRateIncreasement);
+                strongChipPackValue = (6 - byproductRate) / 5 * 36 * (1 - itemValue4001 * 12);
+                weakChipPackValue = (4 + byproductRate) / 5 * 36 * (1 - itemValue4001 * 12);
+                break;
+            case "WORKSHOP_STRATEGY_NCDEER_OBTAIN":
+                strongChipPackValue = ((6 - 0.1) * 36 * (1 - itemValue4001 * 12) - 2 * causalityValue) / 5;
+                weakChipPackValue = ((4 + 0.1) * 36 * (1 - itemValue4001 * 12) + 2 * causalityValue) / 5;
+                break;
+            case "WORKSHOP_STRATEGY_NCDEER_CONSUME":
+                strongChipPackValue = (6 * 36 * (1 - itemValue4001 * 12) + 9 / 10 * 36 * causalityValue) / 6;
+                weakChipPackValue = (6 * 36 * (1 - itemValue4001 * 12) - 9 / 10 * 36 * causalityValue) / 6;
+                break;
+        }
+
         // 双芯片
-        const chip3Value = chip2Value * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
+        const balancedDualchipValue = balancedChipPackValue * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
+        const strongDualchipValue = strongChipPackValue * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
+        const weakDualchipValue = weakChipPackValue * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
+
         // 模组数据块
         let itemValueModUnlockToken;
         switch (stageConfig.modUnlockTokenPricingStrategy) {
@@ -521,22 +610,20 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         // 事相碎片
         const itemValueSTORYREVIEWCOIN = 20 * itemValue4006;
 
-        const t3workShopProductsValue = workshopByproductExpectedValue.get(3);
-        // 因果
-        const itemValueYinGuo = 10 / 9 * (1 - stageConfig.workshopEliteMaterialByProductRate) * t3workShopProductsValue / 36;
         // 碳素组
-        const itemValue3114 = 240 / 19 * itemValue3401 + 4 * itemValueYinGuo - 4000 / 19 * itemValue4001;
-        const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo;
-        const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo;
+        const itemValue3114 = 240 / 19 * itemValue3401 + 4 * causalityValue - 4000 / 19 * itemValue4001;
+        const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * causalityValue;
+        const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * causalityValue;
 
-        // 技巧概要·卷3
-        const itemValue3303 = (30 * (1 - itemValue4001 * 12)
-            / (2 + 3 / 2 * (1 + stageConfig.workshopSkillSummaryByProductRate) / 3 + 1.5 * (1 + stageConfig.workshopSkillSummaryByProductRate) ** 2 / 3 ** 2));
-
-        // 技能概要·卷2
-        const itemValue3302 = (1 + stageConfig.workshopSkillSummaryByProductRate) * itemValue3303 / 3;
-        // 技能概要·卷1
-        const itemValue3301 = (1 + stageConfig.workshopSkillSummaryByProductRate) * itemValue3302 / 3;
+        // 技巧概要
+        const { itemValue3301, itemValue3302, itemValue3303 } = caculateSkillSummaryValue(
+            stageConfig.workshopStrategy.skillSummary1to2.strategy,
+            stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncreasement,
+            stageConfig.workshopStrategy.skillSummary2to3.strategy,
+            stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncreasement,
+            itemValue4001,
+            causalityValue,
+        );
 
         // 回写物品价值
         itemValueMap.set("4003", itemValue4003);
@@ -568,18 +655,110 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         itemValueMap.set("3301", itemValue3301);
         itemValueMap.set("7001", itemValue7001);
 
-        const chipIdList = ["3211", "3221", "3231", "3241", "3251", "3261", "3271", "3281"];
-        const chipPackIdList = ["3212", "3222", "3232", "3242", "3252", "3262", "3272", "3282"];
-        const dualChipIdList = ["3213", "3223", "3233", "3243", "3253", "3263", "3273", "3283"];
+        const chipPreferenceMap = new Map();
+        switch (stageConfig.chipPreference.TANK_MEDIC) {
+            case "TANK":
+                chipPreferenceMap.set("3", "STRONG");
+                chipPreferenceMap.set("6", "WEAK");
+                break;
+            case "MEDIC":
+                chipPreferenceMap.set("3", "WEAK");
+                chipPreferenceMap.set("6", "STRONG");
+                break;
+            case "BALANCED":
+                chipPreferenceMap.set("3", "BALANCED");
+                chipPreferenceMap.set("6", "BALANCED");
+                break;
+        }
+        switch (stageConfig.chipPreference.SNIPER_CASTER) {
+            case "SNIPER":
+                chipPreferenceMap.set("4", "STRONG");
+                chipPreferenceMap.set("5", "WEAK");
+                break;
+            case "CASTER":
+                chipPreferenceMap.set("4", "WEAK");
+                chipPreferenceMap.set("5", "STRONG");
+                break;
+            case "BALANCED":
+                chipPreferenceMap.set("4", "BALANCED");
+                chipPreferenceMap.set("5", "BALANCED");
+                break;
+        }
+        switch (stageConfig.chipPreference.PIONEER_SUPPORT) {
+            case "PIONEER":
+                chipPreferenceMap.set("1", "STRONG");
+                chipPreferenceMap.set("7", "WEAK");
+                break;
+            case "SUPPORT":
+                chipPreferenceMap.set("1", "WEAK");
+                chipPreferenceMap.set("7", "STRONG");
+                break;
+            case "BALANCED":
+                chipPreferenceMap.set("1", "BALANCED");
+                chipPreferenceMap.set("7", "BALANCED");
+                break;
+        }
+        switch (stageConfig.chipPreference.WARRIOR_SPECIAL) {
+            case "WARRIOR":
+                chipPreferenceMap.set("2", "STRONG");
+                chipPreferenceMap.set("8", "WEAK");
+                break;
+            case "SPECIAL":
+                chipPreferenceMap.set("2", "WEAK");
+                chipPreferenceMap.set("8", "STRONG");
+                break;
+            case "BALANCED":
+                chipPreferenceMap.set("2", "BALANCED");
+                chipPreferenceMap.set("8", "BALANCED");
+                break;
+        }
+        for (const [key, value] of chipPreferenceMap) {
+            switch (value) {
+                case "STRONG":
+                    itemValueMap.set(`32${key}1`, strongChipValue);
+                    itemValueMap.set(`32${key}2`, strongChipPackValue);
+                    itemValueMap.set(`32${key}3`, strongDualchipValue);
+                    break;
+                case "WEAK":
+                    itemValueMap.set(`32${key}1`, weakChipValue);
+                    itemValueMap.set(`32${key}2`, weakChipPackValue);
+                    itemValueMap.set(`32${key}3`, weakDualchipValue);
+                    break;
+                case "BALANCED":
+                    itemValueMap.set(`32${key}1`, balancedChipValue);
+                    itemValueMap.set(`32${key}2`, balancedChipPackValue);
+                    itemValueMap.set(`32${key}3`, balancedDualchipValue);
+                    break;
+            }
+        }
 
-        for (const chipId of chipIdList) {
-            itemValueMap.set(chipId, chip1Value);
-        }
-        for (const chipId of chipPackIdList) {
-            itemValueMap.set(chipId, chip2Value);
-        }
-        for (const chipId of dualChipIdList) {
-            itemValueMap.set(chipId, chip3Value);
+
+        /**
+         * 计算技巧概要的价值
+         * 你别管是怎么算的，总之这个方程有点复杂
+         * @param {string} strategy1to2
+         * @param {number} rateIncreasement1to2
+         * @param {string} strategy2to3
+         * @param {number} rateIncreasement2to3
+         * @param {number} lmdValue
+         * @param {number} causalityValue
+         */
+        function caculateSkillSummaryValue(
+            strategy1to2,
+            rateIncreasement1to2,
+            strategy2to3,
+            rateIncreasement2to3,
+            lmdValue,
+            causalityValue,
+        ) {
+            const a1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncreasement1to2));
+            const a2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncreasement2to3));
+            const b1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
+            const b2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
+            const itemValue3302 = (30 * (1 - lmdValue * 12) - b1 * causalityValue / 2 + 4 * b2 * causalityValue / a2) / (a1 / 2 + 3 / 2 + 6 / a2);
+            const itemValue3301 = (a1 * itemValue3302 + b1 * causalityValue) / 3;
+            const itemValue3303 = (3 * itemValue3302 - 2 * b2 * causalityValue) / a2;
+            return { itemValue3301, itemValue3302, itemValue3303 };
         }
     }
 

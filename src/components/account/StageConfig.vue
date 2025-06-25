@@ -138,6 +138,18 @@ const recruitmentPermitValueInput = ref(null);
 const expeditedPlanValueInput = ref(null);
 const furniturePartValueInput = ref(null);
 
+const eliteMaterialT1toT2Input = ref(null);
+const eliteMaterialT2toT3Input = ref(null);
+const eliteMaterialT3toT4Input = ref(null);
+const eliteMaterialT4toT5Input = ref(null);
+const skillSummary1to2Input = ref(null);
+const skillSummary2to3Input = ref(null);
+const baseMaterialInput = ref(null);
+const chipInput = ref(null);
+const chipPackInput = ref(null);
+
+
+
 // 监听 orundumPricingStrategy 变化
 watch(
   () => stageConfig.value.orundumPricingStrategy,
@@ -577,9 +589,10 @@ onMounted(() => {
     <v-card-item>
       <v-card-title>物品定价策略设置</v-card-title>
       <div class="cover-v-card-subtitle">
-        <span>自定义参数用于定制更适合自己的刷图方案和购买策略<br>自定义参数保存于当前设备，后续将可通过一图流账号保存和同步</span>
+        <p>自定义参数用于定制更适合自己的刷图方案和购买策略</p>
+        <p>自定义参数保存于当前设备，后续将可通过一图流账号保存和同步</p>
       </div>
-
+      <v-alert type="warning" variant="tonal" border><b>如不清楚自定义参数的含义，请保持默认设置！</b></v-alert>
     </v-card-item>
 
     <v-card-text class="stage-config-card-text">
@@ -601,7 +614,7 @@ onMounted(() => {
 
             <v-expansion-panel-text class="expansion-panel-text">
               <span class="cover-v-expansion-panel-subtitle">
-                这里预制了一些参数，供大家快速选择
+                这里预制了一些参数，供各位博士快速选择
               </span>
               <v-divider></v-divider>
               <div v-for="group in presetParameter" class="flex flex-wrap">
@@ -621,15 +634,15 @@ onMounted(() => {
                     应用
                   </v-btn>
                 </v-card>
-
               </div>
-
             </v-expansion-panel-text>
           </v-expansion-panel>
 
+
+          <!-- 折叠面板：自定义非精英材料价值 -->
           <v-expansion-panel value="base-item-parameter">
             <v-expansion-panel-title>
-              基础材料价值参数设置
+              自定义非精英材料价值
             </v-expansion-panel-title>
             <v-expansion-panel-text class="expansion-panel-text">
 
@@ -703,7 +716,7 @@ onMounted(() => {
                     中坚寻访系数
                     <span class="card-description">
                       1 中坚寻访凭证 = {{ typeof stageConfig.kernelHeadhuntingPermitCoefficient === "number" ?
-                      stageConfig.kernelHeadhuntingPermitCoefficient : "?" }} 寻访凭证
+                        stageConfig.kernelHeadhuntingPermitCoefficient : "?" }} 寻访凭证
                     </span>
                   </div>
                 </template>
@@ -825,7 +838,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'">
                       1 模组数据块 = {{ typeof stageConfig.modUnlockTokenValue === "number" ? stageConfig.modUnlockTokenValue
-                      : "?" }} 理智
+                        : "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -861,7 +874,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_CUSTOM'">
                       1 招聘许可 = {{ typeof stageConfig.recruitmentPermitValue === "number" ?
-                      stageConfig.recruitmentPermitValue : "?" }} 理智
+                        stageConfig.recruitmentPermitValue : "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -894,7 +907,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_CUSTOM'">
                       1 加急许可 = {{ typeof stageConfig.expeditedPlanValue === "number" ? stageConfig.expeditedPlanValue :
-                      "?" }} 理智
+                        "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -926,7 +939,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_CUSTOM'">
                       1 家具零件 = {{ typeof stageConfig.furniturePartValue === "number" ? stageConfig.furniturePartValue :
-                      "?" }} 理智
+                        "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -943,71 +956,7 @@ onMounted(() => {
           </v-expansion-panel>
 
 
-          <!-- 折叠面板：关卡选择范围 -->
-
-
-          <v-expansion-panel title="关卡计算范围选择" value="stage-range-parameter">
-            <v-expansion-panel-text class="expansion-panel-text">
-              <span class="card-description">
-                这里用于选择材料价值计算的基准关卡
-              </span>
-
-
-              <div class="stage-checkbox">
-
-                <div class="m-8-0 font-bold color-primary">快捷选择</div>
-                <ActionButton v-for="(stage, stageCode) in BeastsStage" :btn-text="stageCode" :active="stage.active"
-                  @click="updateBeastsStageActive(stage)">
-                </ActionButton>
-
-
-                <div class="m-8-0 font-bold color-primary">活动关</div>
-                <ActionButton :btn-text="'SideStory定价测试集'" :active="stageConfig.useActivityAverageStage"
-                  @click="useActivityAverageStage()">
-                </ActionButton>
-
-                <div class="m-8-0 font-bold color-primary">主题曲</div>
-                <v-divider color="primary" class="opacity-50"></v-divider>
-                <div v-for="(collect, index) in stageCollect.Main" :key="index">
-
-                  <!--              <div class="m-4">  {{ collect.zoneName}} </div>-->
-                  <v-checkbox density="compact" hide-details color="primary" v-model="collect.selectAll"
-                    @click="selectAllStage(collect)">
-                    <template v-slot:prepend>
-                      {{ collect.zoneName }}
-                    </template>
-                  </v-checkbox>
-                  <ActionButton v-for="(stage, index) in collect.list" :btn-text="stage.stageCode"
-                    :active="stage.active" @click="updateStageBlacklist(collect, stage)">
-                  </ActionButton>
-                  <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
-                </div>
-
-
-                <div class="m-8-0 font-bold color-primary">别传/插曲</div>
-                <v-divider color="primary" class="opacity-50"></v-divider>
-                <div v-for="(collect, index) in stageCollect.ActPerm" :key="index">
-                  <v-checkbox density="compact" hide-details color="primary" v-model="collect.selectAll"
-                    @click="selectAllStage(collect)">
-                    <template v-slot:prepend>
-                      {{ collect.zoneName }}
-                    </template>
-                  </v-checkbox>
-                  <ActionButton v-for="(stage, index) in collect.list" :btn-text="stage.stageCode"
-                    :active="stage.active" @click="updateStageBlacklist(collect, stage)">
-                  </ActionButton>
-                  <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
-                </div>
-
-              </div>
-
-
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-
-
           <!-- 折叠面板：自定义精英材料价值设置 -->
-
           <v-expansion-panel title="自定义精英材料价值" value="custom-item-value">
             <v-expansion-panel-text class="expansion-panel-text">
 
@@ -1058,17 +1007,344 @@ onMounted(() => {
               </v-list>
             </v-expansion-panel-text>
           </v-expansion-panel>
-        </v-expansion-panels>
 
 
-        <!-- 调试文本区域 -->
-        <v-expansion-panels>
-          <v-expansion-panel title="debug区">
+          <!-- 折叠面板：自定义加工站策略 -->
+          <v-expansion-panel value="custom-workshop-strategy">
+            <v-expansion-panel-title>
+              自定义加工站策略
+            </v-expansion-panel-title>
+            <v-expansion-panel-text class="expansion-panel-text">
+              <span class="card-description">
+                自定义加工站策略的描述
+              </span>
+              <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy" @change="() => {
+                if (stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                  nextTick(() => eliteMaterialT1toT2Input?.focus());
+                }
+              }">
+                <template v-slot:label>
+                  <div>
+                    精英材料 <span class="gray">白</span> → <span class="green">绿</span>
+                  </div>
+                </template>
+                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                <v-text-field ref="eliteMaterialT1toT2Input"
+                  v-model.number="stageConfig.workshopStrategy.eliteMaterialT1toT2.byproductRateIncreasement"
+                  :rules="numberGe0"
+                  @focus="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                  label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
+                  style="margin-left: 40px; width: 200px;">
+                </v-text-field>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy" @change="() => {
+                if (stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                  nextTick(() => eliteMaterialT2toT3Input?.focus());
+                }
+              }">
+                <template v-slot:label>
+                  <div>
+                    精英材料 <span class="green">绿</span> → <span class="blue">蓝</span>
+                  </div>
+                </template>
+                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                <v-text-field ref="eliteMaterialT2toT3Input"
+                  v-model.number="stageConfig.workshopStrategy.eliteMaterialT2toT3.byproductRateIncreasement"
+                  :rules="numberGe0"
+                  @focus="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                  label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
+                  style="margin-left: 40px; width: 200px;">
+                </v-text-field>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy" @change="() => {
+                if (stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                  nextTick(() => eliteMaterialT3toT4Input?.focus());
+                }
+              }">
+                <template v-slot:label>
+                  <div>
+                    <p>精英材料 <span class="blue">蓝</span> → <span class="purple">紫</span></p>
+                    <span class="card-description">
+                      <p><b>默认使用九色鹿消耗因果</b>，此处请选择因果用尽后的加工策略。</p>
+                      <p>不垫刀的九色鹿等效 +90% 副产品产出概率</p>
+                    </span>
+                  </div>
+                </template>
+                <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                <v-text-field ref="eliteMaterialT3toT4Input"
+                  v-model.number="stageConfig.workshopStrategy.eliteMaterialT3toT4.byproductRateIncreasement"
+                  :rules="numberGe0"
+                  @focus="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                  label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined" density="compact"
+                  style="margin-left: 40px; width: 200px;">
+                </v-text-field>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy" @change="() => {
+                if (stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                  nextTick(() => eliteMaterialT4toT5Input?.focus());
+                }
+              }">
+                <template v-slot:label>
+                  <div>
+                    <p>精英材料 <span class="purple">紫</span> → <span class="yellow">金</span></p>
+                    <span class="card-description">
+                      <p>不垫刀的九色鹿等效 +90% 副产品产出概率</p>
+                    </span>
+                  </div>
+                </template>
+                <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                <v-text-field ref="eliteMaterialT4toT5Input"
+                  v-model.number="stageConfig.workshopStrategy.eliteMaterialT4toT5.byproductRateIncreasement"
+                  :rules="numberGe0"
+                  @focus="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                  label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined" density="compact"
+                  style="margin-left: 40px; width: 200px;">
+                </v-text-field>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary1to2.strategy" @change="() => {
+                if (stageConfig.workshopStrategy.skillSummary1to2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                  nextTick(() => skillSummary1to2Input?.focus());
+                }
+              }">
+                <template v-slot:label>
+                  <div>
+                    <p><span class="gray">技巧概要·卷1</span> → <span class="green">技巧概要·卷2</span></p>
+                  </div>
+                </template>
+                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
+                <v-text-field ref="skillSummary1to2Input"
+                  v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncreasement"
+                  :rules="numberGe0"
+                  @focus="stageConfig.workshopStrategy.skillSummary1to2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                  label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
+                  style="margin-left: 40px; width: 200px;">
+                </v-text-field>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary2to3.strategy" @change="() => {
+                if (stageConfig.workshopStrategy.skillSummary2to3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                  nextTick(() => skillSummary2to3Input?.focus());
+                }
+              }">
+                <template v-slot:label>
+                  <div>
+                    <p><span class="green">技巧概要·卷2</span> → <span class="blue">技巧概要·卷3</span></p>
+                  </div>
+                </template>
+                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
+                <v-text-field ref="skillSummary2to3Input"
+                  v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncreasement"
+                  :rules="numberGe0"
+                  @focus="stageConfig.workshopStrategy.skillSummary2to3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                  label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
+                  style="margin-left: 40px; width: 200px;">
+                </v-text-field>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.workshopStrategy.baseMaterial.strategy" @change="() => {
+                if (stageConfig.workshopStrategy.baseMaterial.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                  nextTick(() => baseMaterialInput?.focus());
+                }
+              }">
+                <template v-slot:label>
+                  <div>
+                    <p>加工基建材料</p>
+                  </div>
+                </template>
+                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用煌等通用干员" disabled></v-radio>
+                <v-text-field ref="baseMaterialInput"
+                  v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncreasement"
+                  :rules="numberGe0"
+                  @focus="stageConfig.workshopStrategy.baseMaterial.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                  label="副产品出率提升量" hint="煌 0.8" variant="outlined" density="compact"
+                  style="margin-left: 40px; width: 200px;" disabled>
+                </v-text-field>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.workshopStrategy.chip.strategy" @change="() => {
+                if (stageConfig.workshopStrategy.chip.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                  nextTick(() => chipInput?.focus());
+                }
+              }">
+                <template v-slot:label>
+                  <div>
+                    <p>加工芯片</p>
+                  </div>
+                </template>
+                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
+                <v-text-field ref="chipInput"
+                  v-model.number="stageConfig.workshopStrategy.chip.byproductRateIncreasement" :rules="numberGe0"
+                  @focus="stageConfig.workshopStrategy.chip.strategy = 'WORKSHOP_STRATEGY_COMMON'" label="副产品出率提升量"
+                  hint="风笛 0.8" variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
+                </v-text-field>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.workshopStrategy.chipPack.strategy" @change="() => {
+                if (stageConfig.workshopStrategy.chipPack.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                  nextTick(() => chipPackInput?.focus());
+                }
+              }">
+                <template v-slot:label>
+                  <div>
+                    <p>加工芯片组</p>
+                  </div>
+                </template>
+                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
+                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
+                <v-text-field ref="chipPackInput"
+                  v-model.number="stageConfig.workshopStrategy.chipPack.byproductRateIncreasement" :rules="numberGe0"
+                  @focus="stageConfig.workshopStrategy.chipPack.strategy = 'WORKSHOP_STRATEGY_COMMON'" label="副产品出率提升量"
+                  hint="风笛 0.8" variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
+                </v-text-field>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.chipPreference.TANK_MEDIC">
+                <template v-slot:label>
+                  <div>
+                    <p>重装 − 医疗芯片加工策略</p>
+                    <span class="card-description">
+                      一般从 需求量小的芯片 往 需求量大的芯片 加工
+                    </span>
+                  </div>
+                </template>
+                <v-radio value="MEDIC" label="重装芯片 → 医疗芯片"></v-radio>
+                <v-radio value="TANK" label="医疗芯片 → 重装芯片"></v-radio>
+                <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.chipPreference.SNIPER_CASTER">
+                <template v-slot:label>
+                  <div>
+                    <p>狙击 − 术师芯片加工策略</p>
+                    <span class="card-description">
+                      一般从 需求量小的芯片 往 需求量大的芯片 加工
+                    </span>
+                  </div>
+                </template>
+                <v-radio value="CASTER" label="狙击芯片 → 术师芯片"></v-radio>
+                <v-radio value="SNIPER" label="术师芯片 → 狙击芯片"></v-radio>
+                <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.chipPreference.PIONEER_SUPPORT">
+                <template v-slot:label>
+                  <div>
+                    <p>先锋 − 辅助芯片加工策略</p>
+                    <span class="card-description">
+                      一般从 需求量小的芯片 往 需求量大的芯片 加工
+                    </span>
+                  </div>
+                </template>
+                <v-radio value="SUPPORT" label="先锋芯片 → 辅助芯片"></v-radio>
+                <v-radio value="PIONEER" label="辅助芯片 → 先锋芯片"></v-radio>
+                <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
+              </v-radio-group>
+
+              <v-divider></v-divider>
+              <v-radio-group v-model="stageConfig.chipPreference.WARRIOR_SPECIAL">
+                <template v-slot:label>
+                  <div>
+                    <p>近卫 − 特种芯片加工策略</p>
+                    <span class="card-description">
+                      一般从 需求量小的芯片 往 需求量大的芯片 加工
+                    </span>
+                  </div>
+                </template>
+                <v-radio value="SPECIAL" label="近卫芯片 → 特种芯片"></v-radio>
+                <v-radio value="WARRIOR" label="特种芯片 → 近卫芯片"></v-radio>
+                <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
+              </v-radio-group>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+
+          <!-- 折叠面板：定价作战集 -->
+          <v-expansion-panel title="定价作战集" value="stage-range-parameter">
+            <v-expansion-panel-text class="expansion-panel-text">
+              <span class="card-description">
+                这里用于选择材料价值计算的基准关卡
+              </span>
+
+
+              <div class="stage-checkbox">
+
+                <div class="m-8-0 font-bold color-primary">快捷选择</div>
+                <ActionButton v-for="(stage, stageCode) in BeastsStage" :btn-text="stageCode" :active="stage.active"
+                  @click="updateBeastsStageActive(stage)">
+                </ActionButton>
+
+                <div class="m-8-0 font-bold color-primary">活动关</div>
+                <ActionButton :btn-text="'SideStory定价测试集'" :active="stageConfig.useActivityAverageStage"
+                  @click="useActivityAverageStage()">
+                </ActionButton>
+
+                <div class="m-8-0 font-bold color-primary">主题曲</div>
+                <v-divider color="primary" class="opacity-50"></v-divider>
+                <div v-for="(collect, index) in stageCollect.Main" :key="index">
+
+                  <!--              <div class="m-4">  {{ collect.zoneName}} </div>-->
+                  <v-checkbox density="compact" hide-details color="primary" v-model="collect.selectAll"
+                    @click="selectAllStage(collect)">
+                    <template v-slot:prepend>
+                      {{ collect.zoneName }}
+                    </template>
+                  </v-checkbox>
+                  <ActionButton v-for="(stage, index) in collect.list" :btn-text="stage.stageCode"
+                    :active="stage.active" @click="updateStageBlacklist(collect, stage)">
+                  </ActionButton>
+                  <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
+                </div>
+
+                <div class="m-8-0 font-bold color-primary">别传/插曲</div>
+                <v-divider color="primary" class="opacity-50"></v-divider>
+                <div v-for="(collect, index) in stageCollect.ActPerm" :key="index">
+                  <v-checkbox density="compact" hide-details color="primary" v-model="collect.selectAll"
+                    @click="selectAllStage(collect)">
+                    <template v-slot:prepend>
+                      {{ collect.zoneName }}
+                    </template>
+                  </v-checkbox>
+                  <ActionButton v-for="(stage, index) in collect.list" :btn-text="stage.stageCode"
+                    :active="stage.active" @click="updateStageBlacklist(collect, stage)">
+                  </ActionButton>
+                  <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
+                </div>
+              </div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+
+          <!-- 调试文本区域 -->
+          <v-expansion-panel title="debug 区" value="debug-panel">
             <v-expansion-panel-text>
               <v-list-item>
-                <v-list-item-title>
-                  debug
-                </v-list-item-title>
                 <!-- 显示调试信息 -->
                 <pre><code style="white-space: pre-wrap; font-family: 'Jetbrains Mono', Consolas, 'Courier New', monospace;">{{
                   debugText }}</code></pre>
@@ -1076,10 +1352,7 @@ onMounted(() => {
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
-
-
       </div>
-
     </v-card-text>
   </v-card>
 

@@ -13,7 +13,7 @@ const defaultConfig = {
     useActivityAverageStage: false,
     sampleSize: 300,
     stageBlacklist: [],
-    stageWhitelist: [],  // 关卡白名单，该配置暂未实现
+    stageWhitelist: [],  // 作战白名单，该配置暂未实现
 
 
     // 自定义其他物品价值
@@ -47,27 +47,24 @@ const defaultConfig = {
     // 自定义精英材料价值
     customItem: [
         {
-            itemId: "30073",  // 轻锰矿
+            itemId: "30073",  // 扭转醇
             itemValue: 1.8,
         },
         {
-            itemId: "30083",  // 扭转醇
+            itemId: "30083",  // 轻锰矿
             itemValue: 2.16,
         },
     ],
 
-    workshopEliteMaterialByProductRate: 0.2,  // 待弃用的配置项
-    workshopSkillSummaryByProductRate: 0.18,  // 待弃用的配置项
-
-    // TODO: 加工站副产品策略，该配置暂未实现
+    // 加工站策略
     workshopStrategy: {
         eliteMaterialT1toT2: {
-            strategy: "WORKSHOP_STRATEGY_NCDEER",
-            byproductRateIncreasement: null,
+            strategy: "WORKSHOP_STRATEGY_COMMON",
+            byproductRateIncreasement: 1,
         },
         eliteMaterialT2toT3: {
-            strategy: "WORKSHOP_STRATEGY_NCDEER",
-            byproductRateIncreasement: null,
+            strategy: "WORKSHOP_STRATEGY_COMMON",
+            byproductRateIncreasement: 1,
         },
         eliteMaterialT3toT4: {
             strategy: "WORKSHOP_STRATEGY_COMMON",
@@ -78,28 +75,28 @@ const defaultConfig = {
             byproductRateIncreasement: 1,
         },
         skillSummary1to2: {
-            strategy: "WORKSHOP_STRATEGY_NCDEER",
-            byproductRateIncreasement: null,
+            strategy: "WORKSHOP_STRATEGY_COMMON",
+            byproductRateIncreasement: 0.8,
         },
         skillSummary2to3: {
-            strategy: "WORKSHOP_STRATEGY_NCDEER",
+            strategy: "WORKSHOP_STRATEGY_COMMON",
+            byproductRateIncreasement: 0.8,
+        },
+        baseMaterial: {
+            strategy: "WORKSHOP_STRATEGY_NCDEER_OBTAIN",
             byproductRateIncreasement: null,
         },
-        // TODO: 芯片策略暂未实现（因为芯片组用九色鹿是赚的，还需要思考细节）
-        // chipStrategy: {
-        //     strategy: "WORKSHOP_STRATEGY_NCDEER",
-        //     byproductRateIncreasement: null,
-        // },
-        // chipPackStrategy: {
-        //     strategy: "WORKSHOP_STRATEGY_NCDEER",
-        //     byproductRateIncreasement: null,
-        // },
-        baseMaterial: {
-            strategy: "WORKSHOP_STRATEGY_NCDEER",
-            byproductRateIncreasement: null,
+        chip: {
+            strategy: "WORKSHOP_STRATEGY_COMMON",
+            byproductRateIncreasement: 0.8,
+        },
+        chipPack: {
+            strategy: "WORKSHOP_STRATEGY_COMMON",
+            byproductRateIncreasement: 0.8,
         },
     },
 
+    // 芯片加工策略
     chipPreference: {
         TANK_MEDIC: "BALANCED",
         SNIPER_CASTER: "BALANCED",
