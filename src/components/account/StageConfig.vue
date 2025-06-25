@@ -761,8 +761,8 @@ onMounted(() => {
               <v-divider></v-divider>
               <v-radio-group v-model="stageConfig.expPricingStrategy">
                 <template v-slot:label>
-                  <ItemImage item-id="2004"></ItemImage>
                   <div>
+                    <ItemImage item-id="2004"></ItemImage>
                     EXP 价值系数 — {{ formatNumber(stageConfig.expCoefficient, 4) }}
                     <span class="card-description">
                       用于调整 EXP 的价值，EXP 价值 = 0.0036 × EXP 价值系数
@@ -953,7 +953,7 @@ onMounted(() => {
                   </div>
                 </template>
                 <v-radio value="FURNITURE_PART_PRICING_ZERO" label="家具零件价值为 0（默认）"></v-radio>
-                <v-radio value="FURNITURE_PART_PRICING_SK-5" label="按 SK-5 定价（暂未实现）"></v-radio>
+                <v-radio value="FURNITURE_PART_PRICING_SK-5" label="按 SK-5 定价" disabled></v-radio>
                 <v-radio value="FURNITURE_PART_PRICING_CUSTOM" label="自定义"></v-radio>
                 <v-text-field ref="furniturePartValueInput" v-model.number='stageConfig.furniturePartValue'
                   :rules="numberGe0" @focus="stageConfig.furniturePartPricingStrategy = 'FURNITURE_PART_PRICING_CUSTOM'"
