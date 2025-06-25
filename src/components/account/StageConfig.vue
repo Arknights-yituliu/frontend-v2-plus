@@ -650,6 +650,7 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.orundumPricingStrategy">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="4003"></ItemImage>
                     合成玉定价策略
                     <span class="card-description"
                       v-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORIGINITE_PRIME'">
@@ -690,6 +691,7 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.originitePrimePricingStrategy">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="4002"></ItemImage>
                     至纯源石价值系数 — {{ formatNumber(stageConfig.originitePrimeCoefficient, 4) }}
                     <span class="card-description">
                       用于计算礼包性价比，至纯源石价值 = 合成玉价值 × 至纯源石价值系数
@@ -713,10 +715,11 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.kernelHeadhuntingPermitPricingStrategy">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="classic_gacha"></ItemImage>
                     中坚寻访系数
                     <span class="card-description">
                       1 中坚寻访凭证 = {{ typeof stageConfig.kernelHeadhuntingPermitCoefficient === "number" ?
-                        stageConfig.kernelHeadhuntingPermitCoefficient : "?" }} 寻访凭证
+                      stageConfig.kernelHeadhuntingPermitCoefficient : "?" }} 寻访凭证
                     </span>
                   </div>
                 </template>
@@ -737,6 +740,7 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.lmdPricingStrategy">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="4001"></ItemImage>
                     龙门币价值系数 — {{ formatNumber(stageConfig.lmdCoefficient, 4) }}
                     <span class="card-description">
                       用于调整龙门币的价值，龙门币价值 = 0.0036 × 龙门币价值系数
@@ -757,6 +761,7 @@ onMounted(() => {
               <v-divider></v-divider>
               <v-radio-group v-model="stageConfig.expPricingStrategy">
                 <template v-slot:label>
+                  <ItemImage item-id="2004"></ItemImage>
                   <div>
                     EXP 价值系数 — {{ formatNumber(stageConfig.expCoefficient, 4) }}
                     <span class="card-description">
@@ -826,6 +831,7 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.modUnlockTokenPricingStrategy">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="mod_unlock_token"></ItemImage>
                     模组数据块定价策略
                     <span class="card-description"
                       v-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE'">
@@ -838,7 +844,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'">
                       1 模组数据块 = {{ typeof stageConfig.modUnlockTokenValue === "number" ? stageConfig.modUnlockTokenValue
-                        : "?" }} 理智
+                      : "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -858,6 +864,7 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.recruitmentPermitPricingStrategy">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="7001"></ItemImage>
                     招聘许可定价策略
                     <span class="card-description"
                       v-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4'">
@@ -874,7 +881,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_CUSTOM'">
                       1 招聘许可 = {{ typeof stageConfig.recruitmentPermitValue === "number" ?
-                        stageConfig.recruitmentPermitValue : "?" }} 理智
+                      stageConfig.recruitmentPermitValue : "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -895,6 +902,7 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.expeditedPlanPricingStrategy">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="7002"></ItemImage>
                     加急许可定价策略
                     <span class="card-description"
                       v-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_ZERO'">
@@ -907,7 +915,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_CUSTOM'">
                       1 加急许可 = {{ typeof stageConfig.expeditedPlanValue === "number" ? stageConfig.expeditedPlanValue :
-                        "?" }} 理智
+                      "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -927,6 +935,7 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.furniturePartPricingStrategy">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="3401"></ItemImage>
                     家具零件定价策略
                     <span class="card-description"
                       v-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_ZERO'">
@@ -939,7 +948,7 @@ onMounted(() => {
                     <span class="card-description"
                       v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_CUSTOM'">
                       1 家具零件 = {{ typeof stageConfig.furniturePartValue === "number" ? stageConfig.furniturePartValue :
-                        "?" }} 理智
+                      "?" }} 理智
                     </span>
                   </div>
                 </template>
@@ -1025,6 +1034,7 @@ onMounted(() => {
               }">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="30012"></ItemImage>
                     精英材料 <span class="gray">白</span> → <span class="green">绿</span>
                   </div>
                 </template>
@@ -1048,6 +1058,7 @@ onMounted(() => {
               }">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="30013"></ItemImage>
                     精英材料 <span class="green">绿</span> → <span class="blue">蓝</span>
                   </div>
                 </template>
@@ -1071,6 +1082,7 @@ onMounted(() => {
               }">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="30014"></ItemImage>
                     <p>精英材料 <span class="blue">蓝</span> → <span class="purple">紫</span></p>
                     <span class="card-description">
                       <p><b>默认使用九色鹿消耗因果</b>，此处请选择因果用尽后的加工策略。</p>
@@ -1097,6 +1109,7 @@ onMounted(() => {
               }">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="30115"></ItemImage>
                     <p>精英材料 <span class="purple">紫</span> → <span class="yellow">金</span></p>
                     <span class="card-description">
                       <p>不垫刀的九色鹿等效 +90% 副产品产出概率</p>
@@ -1122,6 +1135,7 @@ onMounted(() => {
               }">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="3302"></ItemImage>
                     <p><span class="gray">技巧概要·卷1</span> → <span class="green">技巧概要·卷2</span></p>
                   </div>
                 </template>
@@ -1144,6 +1158,7 @@ onMounted(() => {
               }">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="3303"></ItemImage>
                     <p><span class="green">技巧概要·卷2</span> → <span class="blue">技巧概要·卷3</span></p>
                   </div>
                 </template>
@@ -1166,6 +1181,7 @@ onMounted(() => {
               }">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="3112"></ItemImage>
                     <p>加工基建材料</p>
                   </div>
                 </template>
@@ -1188,6 +1204,7 @@ onMounted(() => {
               }">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="3211"></ItemImage>
                     <p>加工芯片</p>
                   </div>
                 </template>
@@ -1209,6 +1226,7 @@ onMounted(() => {
               }">
                 <template v-slot:label>
                   <div>
+                    <ItemImage item-id="3212"></ItemImage>
                     <p>加工芯片组</p>
                   </div>
                 </template>
@@ -1226,6 +1244,10 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.chipPreference.TANK_MEDIC">
                 <template v-slot:label>
                   <div>
+                    <div class="flex items-center">
+                      <ItemImage item-id="3231"></ItemImage>
+                      <ItemImage item-id="3261"></ItemImage>
+                    </div>
                     <p>重装 − 医疗芯片加工策略</p>
                     <span class="card-description">
                       一般从 需求量小的芯片 往 需求量大的芯片 加工
@@ -1241,6 +1263,10 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.chipPreference.SNIPER_CASTER">
                 <template v-slot:label>
                   <div>
+                    <div class="flex items-center">
+                      <ItemImage item-id="3241"></ItemImage>
+                      <ItemImage item-id="3251"></ItemImage>
+                    </div>
                     <p>狙击 − 术师芯片加工策略</p>
                     <span class="card-description">
                       一般从 需求量小的芯片 往 需求量大的芯片 加工
@@ -1256,6 +1282,10 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.chipPreference.PIONEER_SUPPORT">
                 <template v-slot:label>
                   <div>
+                    <div class="flex items-center">
+                      <ItemImage item-id="3211"></ItemImage>
+                      <ItemImage item-id="3271"></ItemImage>
+                    </div>
                     <p>先锋 − 辅助芯片加工策略</p>
                     <span class="card-description">
                       一般从 需求量小的芯片 往 需求量大的芯片 加工
@@ -1271,6 +1301,10 @@ onMounted(() => {
               <v-radio-group v-model="stageConfig.chipPreference.WARRIOR_SPECIAL">
                 <template v-slot:label>
                   <div>
+                    <div class="flex items-center">
+                      <ItemImage item-id="3221"></ItemImage>
+                      <ItemImage item-id="3281"></ItemImage>
+                    </div>
                     <p>近卫 − 特种芯片加工策略</p>
                     <span class="card-description">
                       一般从 需求量小的芯片 往 需求量大的芯片 加工
