@@ -13,18 +13,24 @@ router.beforeEach(async (to, from) => {
 
 
 
-    if(to.path.indexOf("docs")>-1){
-        window.open(`/docs.html?path=${to.path}`, '_self');
+    if (to.path.indexOf("docs") > -1) {
+        // 获取当前页面的 hash，并去除开头的 '#'（后面拼接时再添加）
+        let currentHash = window.location.hash.replace(/^#/, '');
+        currentHash = decodeURIComponent(currentHash);
+        // 构建新的 URL，带 path 和 hash
+
+        const targetUrl = `/docs.html?path=${to.path}${currentHash ? `#${currentHash}` : ''}`;
+
+        // 使用 window.location 跳转，而不是 open，避免浏览器拦截
+        window.location.href = targetUrl;
+
+        // 或者使用 assign：
+        // window.location.assign(targetUrl);
+
+        return; // 终止后续流程
     }
 
-    // if ('AccountHome'===to.name) {
-    //     const userInfo = await getUserInfo("Route");
-    //     if(userInfo.status<0){
-    //         cMessage("未登录")
-    //         return false;
-    //     }
-    // }
-
+    next(); // 如果不满足上面条件，继续导航
 })
 
 
